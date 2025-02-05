@@ -1,223 +1,95 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F276922CBCF;
-	Wed,  5 Feb 2025 12:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB462288C3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738758296; cv=none; b=EPCXoLJeQiG/HJY0lMZKhPK6UBdZPE7F2PYYlL9Ll/jFsriQLXmcee3v5IhixyRYpuUzIcguvqsp28OziUjCLvgh9yaOtqUKe3hpqeuVblA7IZ4nfH5wNtAHixh6+BGcnKJajwq+fNoKMwf45xWTbEMSv31eg8RYjGKIKZtuY5g=
+	t=1738758343; cv=none; b=cAXDXpmmPrLMBVmEA2Bc8kNnw5PHiGKZJoXxljkF7cPGVDtG5YKlF5GgbAgqq84qMXGkHRnOQpctlvYEDtFPr39njam+JM9MCoOnw2Wk+o/zH93/yW+ZRNoc4HjQDhIeyKSG6PfgY0fSE1vZJrod8HDt61pb71enryRc8Xvc1Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738758296; c=relaxed/simple;
-	bh=dpc/3d2Ymx8Og5qx3RhHpAeonikVzPi3qyOCTmn2pvg=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=qDJ5ve851gEcGwdNKrI3MfnQwwvrKq0zT9iC8dRr75xve16tM4/jLAbNQ7h/KZ+mGNqgswQzEMNkYTT8K55WIjSkFhRmThQoFH18dntmb9POCgkn9T2LmhZNDoLoHrnrJfU9IgeORtzDADup2Fh6/Zq8DLqiU39wrpm+lXG8f18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=T95rmct+; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1738758343; c=relaxed/simple;
+	bh=ooy5ncT7BqeOTnR4CZhHUxTwE8iw0Mgd5KrKs2DKXWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RI7ym+Qg167u3M+STymrz4el0XqQbSwzbkW2CaQhhNlbDzAXAnITBJ2AyeWa7UfOqQDXcnqsk7Q7053Szgc4vT6govopJwUIz1lMP/aFdIKc19GmUF6DtTVFrm/oN0FXp/Zt7f8LlhuFv0o44xdym1iueEirCc2F6qWyGoakb+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VECwJkH2; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="T95rmct+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=IX6S+s8EeF017CitJ0Amm6YZClGj6PE4I3uBra4Hybs=; b=T95rmct+50ggaPOhZQXO5EXRKt
-	SzqAyadJCTHnS47NVlioNc1Nb+vLxPAxMOpb/Lr8N6osbpDCcdN63v47oQwPxLG9TM8iHpJQGOcKa
-	mxfUIaLig+XCLE6k9KiHg/bwRQnirwkz8TUnYUGxFYUA5/ViyGYXOD+hP/JKOT4u8l3VSMrvUFPlm
-	H/6yUK/K85IztWd1blooChHX+1sMKPOM64Hw8RUycuWB/maiQfnh2Sfo1LsHYBqhUiOwHa9mWe0MP
-	LjtL2DQdm+BjakRd2wBYDjyWZnV9nem3EjF5AOtcxBURpkKNPC8nI4D4Hdx72wTfsOCuQneF/etw4
-	X1lMPdKA==;
-Received: from [122.175.9.182] (port=21369 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <basharath@couthit.com>)
-	id 1tfeSP-0007fK-0V;
-	Wed, 05 Feb 2025 17:54:41 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 91D1A1783F46;
-	Wed,  5 Feb 2025 17:54:32 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 708381783FF1;
-	Wed,  5 Feb 2025 17:54:32 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NEkAupy8cBz9; Wed,  5 Feb 2025 17:54:32 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 003331783F46;
-	Wed,  5 Feb 2025 17:54:31 +0530 (IST)
-Date: Wed, 5 Feb 2025 17:54:31 +0530 (IST)
-From: Basharath Hussain Khaja <basharath@couthit.com>
-To: horms <horms@kernel.org>
-Cc: basharath <basharath@couthit.com>, danishanwar <danishanwar@ti.com>, 
-	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
-	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
-	kuba <kuba@kernel.org>, pabeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
-	conor+dt <conor+dt@kernel.org>, nm <nm@ti.com>, 
-	ssantosh <ssantosh@kernel.org>, tony <tony@atomide.com>, 
-	richardcochran <richardcochran@gmail.com>, 
-	parvathi <parvathi@couthit.com>, schnelle <schnelle@linux.ibm.com>, 
-	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-omap <linux-omap@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, prajith <prajith@ti.com>, 
-	vigneshr <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>
-Message-ID: <1980208448.516541.1738758271732.JavaMail.zimbra@couthit.local>
-In-Reply-To: <20250131103352.GH24105@kernel.org>
-References: <20250124122353.1457174-1-basharath@couthit.com> <20250124134056.1459060-7-basharath@couthit.com> <20250131103352.GH24105@kernel.org>
-Subject: Re: [RFC v2 PATCH 06/10] net: ti: prueth: Adds HW timestamping
- support for PTP using PRU-ICSS IEP module
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VECwJkH2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738758342; x=1770294342;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ooy5ncT7BqeOTnR4CZhHUxTwE8iw0Mgd5KrKs2DKXWA=;
+  b=VECwJkH2TkcnsYhy24raD2VW8RW4iefRxoh4IS0aNa/ny5R3K+GA1APK
+   QP8HCWvLpcKJseLiI4wP/enzJOiQ+k/nSrN7vNpoAjue4mIKjLU20sWF1
+   LwBG+U7I05IdRiPkB8cyUR6Hf5ymdIBPNvEHnBur5HPNhfMeJHOnblQuv
+   TKRPpB4MuhOxPUvyItjV5Vj0Zp0XckCAR5XTysXzBGxtOAHXFwlf+ysDX
+   g5IIDcLr53qC+QJXdyDVDrPG/7OiL8rpj1w1giDVMDODPG2f9CxDFRvId
+   3cxLO+/cp9CGS2zKvMxA0RdcGThDzv4OS5V8tUd/GytV2W2ypIFjw9T+t
+   w==;
+X-CSE-ConnectionGUID: Bb7p80/6R3OtnrXjj+yKCA==
+X-CSE-MsgGUID: lcfKIEgwSjiettDGz/HrXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43073354"
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="43073354"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 04:25:41 -0800
+X-CSE-ConnectionGUID: MRIsGiLRTYiSUmLXcnoFkQ==
+X-CSE-MsgGUID: WW9r/ZqaQTajraDwFK5rmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="111071574"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Feb 2025 04:25:39 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 18D79399; Wed, 05 Feb 2025 14:25:38 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>
+Subject: [PATCH v1 1/1] mfd: upboard-fpga: Remove ACPI_PTR() annotation
+Date: Wed,  5 Feb 2025 14:25:36 +0200
+Message-ID: <20250205122536.631252-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds HW timestamping support for PTP using PRU-ICSS IEP module
-Thread-Index: hqQUi4g5G9OQqwwgSSWJWploNUaQCQ==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 
+The ACPI ID table is defined globally without an #ifdef check for CONFIG_ACPI,
+so ACPI_PTR() makes no sense here. Also note, driver depends on ACPI anyway.
 
-> On Fri, Jan 24, 2025 at 07:10:52PM +0530, Basharath Hussain Khaja wrote:
->> From: Roger Quadros <rogerq@ti.com>
->> 
->> PRU-ICSS IEP module, which is capable of timestamping RX and
->> TX packets at HW level, is used for time synchronization by PTP4L.
->> 
->> This change includes interaction between firmware and user space
->> application (ptp4l) with required packet timestamps. The driver
->> initializes the PRU firmware with appropriate mode and configuration
->> flags. Firmware updates local registers with the flags set by driver
->> and uses for further operation. RX SOF timestamp comes along with
->> packet and firmware will rise interrupt with TX SOF timestamp after
->> pushing the packet on to the wire.
->> 
->> IEP driver is available in upstream and we are reusing for hardware
->> configuration for ICSSM as well. On top of that we have extended it
->> with the changes for AM57xx SoC.
->> 
->> Extended ethtool for reading HW timestamping capability of the PRU
->> interfaces.
->> 
->> Currently ordinary clock (OC) configuration has been validated with
->> Linux ptp4l.
->> 
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
->> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-> 
-> ...
-> 
->> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
->> b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-> 
-> ...
-> 
->> @@ -682,9 +899,22 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16
->> *bd_rd_ptr,
->>  		src_addr += actual_pkt_len;
->>  	}
->>  
->> +	if (pkt_info->timestamp) {
->> +		src_addr = (void *)roundup((uintptr_t)src_addr,
->> +					   ICSS_BLOCK_SIZE);
-> 
-> Can PTR_ALIGN() be used here?
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/upboard-fpga.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-We are making sure Both roundup() and PTR_ALIGN() will point to 
-the same address location. We will change this in the next version.
+diff --git a/drivers/mfd/upboard-fpga.c b/drivers/mfd/upboard-fpga.c
+index 1f6131126547..6696c82ca4dd 100644
+--- a/drivers/mfd/upboard-fpga.c
++++ b/drivers/mfd/upboard-fpga.c
+@@ -11,7 +11,6 @@
+  * Author: Thomas Richard <thomas.richard@bootlin.com>
+  */
+ 
+-#include <linux/acpi.h>
+ #include <linux/bitfield.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+@@ -311,7 +310,7 @@ MODULE_DEVICE_TABLE(acpi, upboard_fpga_acpi_match);
+ static struct platform_driver upboard_fpga_driver = {
+ 	.driver = {
+ 		.name = "upboard-fpga",
+-		.acpi_match_table = ACPI_PTR(upboard_fpga_acpi_match),
++		.acpi_match_table = upboard_fpga_acpi_match,
+ 		.dev_groups	= upboard_fpga_groups,
+ 	},
+ 	.probe = upboard_fpga_probe,
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
->> +		dst_addr = &ts;
->> +		memcpy(dst_addr, src_addr, sizeof(ts));
->> +	}
->> +
->>  	if (!pkt_info->sv_frame) {
->>  		skb_put(skb, actual_pkt_len);
->>  
->> +		if (icssm_prueth_ptp_rx_ts_is_enabled(emac) &&
->> +		    pkt_info->timestamp) {
->> +			ssh = skb_hwtstamps(skb);
->> +			memset(ssh, 0, sizeof(*ssh));
->> +			ssh->hwtstamp = ns_to_ktime(ts);
->> +		}
->>  		/* send packet up the stack */
->>  		skb->protocol = eth_type_trans(skb, ndev);
->>  		local_bh_disable();
-> 
-> The code preceding the hunk below is:
-> 
-> static int icssm_emac_request_irqs(struct prueth_emac *emac)
-> {
->	struct net_device *ndev = emac->ndev;
->	int ret;
-> 
->	ret = request_threaded_irq(emac->rx_irq, NULL, icssm_emac_rx_thread,
->				   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
->				   ndev->name, ndev);
->	if (ret) {
->		netdev_err(ndev, "unable to request RX IRQ\n");
->		return ret;
->	}
-> 
->> @@ -855,9 +1085,64 @@ static int icssm_emac_request_irqs(struct prueth_emac
->> *emac)
->>  		return ret;
->>  	}
->>  
->> +	if (emac->emac_ptp_tx_irq) {
->> +		ret = request_threaded_irq(emac->emac_ptp_tx_irq,
->> +					   icssm_prueth_ptp_tx_irq_handle,
->> +					   icssm_prueth_ptp_tx_irq_work,
->> +					   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
->> +					   ndev->name, ndev);
->> +		if (ret) {
->> +			netdev_err(ndev, "unable to request PTP TX IRQ\n");
->> +			free_irq(emac->rx_irq, ndev);
->> +			free_irq(emac->tx_irq, ndev);
-> 
-> This seems somewhat asymmetric. This function does request emac->rx_irq
-> but not emac->tx_irq. So I don't think it is appropriate to free emac->tx_irq
-> here.
-> 
-> Also, I would suggest using a goto label for unwind here.
-> 
-
-Sure. We will clean this in the next version.
-
->> +		}
->> +	}
->> +
->>  	return ret;
->>  }
->>  
-> 
-> ...
-
-Thanks & Best Regards,
-Basharath
