@@ -1,113 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC0C21C180;
-	Wed,  5 Feb 2025 05:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C23021C180;
+	Wed,  5 Feb 2025 05:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738734793; cv=none; b=LNMFEpqCsxNGOTgwp8auoFtpYSIAO3ySO5U7NZVEp6CR/P+2yrIZIaLW/ylOesuORU2S0pEA1rMSaHRbh/8qq2Ls1OW+KTuXnECHNhcb3Dhj9GnZPOMajaP4DnnXs2FxAyXfS+FQHkSoS5mpSF2AMlFuyKlDvnURfVkqn3Y2h5I=
+	t=1738734838; cv=none; b=jKNWnxq15lsr5aIIXb+DPG/5y55/zUgPK9p0BT1bgSAZSqXi8wubNlPN9ow9y9uogAWWVfNJ72wNKrDyrHjpN5vVecKnPlpw7XAX3G54J+o4xF7f27hNuzh7U537MRUENdT3nOS1fbmD2odWpbFI5PAVbN9qr7U5bhUZbDDG+0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738734793; c=relaxed/simple;
-	bh=8mwSHqZQKhJOlaXESW0xdhEaUn92ll4wFZkP/ap6cgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXxarMp0bMsaoMfCP9pibVOs3duUZzW/eIG5Y7On7OlipTaWOeBQrk8AaKmKpaS8wefJzM/NcLFJbTWGbmSar8c5xO0mpV0eZ7/hCMTR2tOGn360MaYtTPnzIPtEKbDXmz06moXl2mihyCyzU5ElMgkZQ1X3ObSong29qH5H1EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VlfG/DEF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738734838; c=relaxed/simple;
+	bh=JeMriPXBCMtMZcRdoaP2GNPIOVqWwAxZYkHWo6fAoYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IHll4nbYJGcAegYoErT84ofVUUdEmHVBkSzGFcsX8WYiAiki4E+KKIUx3ZBU5UHt4J5OYOBW9oEk6Kp0GsYtXReQM7zqUYLR//ccrX4amrGLmVxxex9viw6LttC1UW6KnEFLfIS/g41QAUMjPwJmTIMFaH21xbhrmksOA6OeUQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MYaPiSsz; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VlfG/DEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C801BC4CED1;
-	Wed,  5 Feb 2025 05:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738734792;
-	bh=8mwSHqZQKhJOlaXESW0xdhEaUn92ll4wFZkP/ap6cgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VlfG/DEFprwAW7T8CFJ7mKnVsyCA2qqyyoncwqpW65blJmNDol3pD/Zn64mSpc4IF
-	 VbyRIZQF/up8iUaiHt+EVu5FRAG0XUpQLw8URJ3oOThoimi4aChEyo6ihY8R3gSkbu
-	 Yp49Q+JjhPCLO+YdPvv/wf++mfkjcgXwxxcGTwcA=
-Date: Wed, 5 Feb 2025 06:53:09 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <2025020518-outcome-harbor-6281@gregkh>
-References: <2025020421-poster-moisture-534b@gregkh>
- <2025020424-retrain-recharger-407c@gregkh>
- <fd6250102ea9d869448e7a40a60a02f8b167d4ac.camel@redhat.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MYaPiSsz"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5155rOGr2539826
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 23:53:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738734804;
+	bh=L+Es0Z7ExR1BfvlZ8zpT2vGl+Yi893ljUGmHDmA3OqQ=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=MYaPiSszI6ZiIWmc2IWCuR5Mt7Et2a7+thy8BPTO4tFp26ehmwgmOUFu5ZvZNRFxV
+	 tfNCjLvWgPEaCRTkYUhYi4KmnG87votnt9tBn8xBn6Qnzp1Jx5Zk97e/Sw8UulvsA+
+	 4YKLL+5wwD+4+0XWD4f+HWuMntOo4jKy1HzfDnfs=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5155rOV2068555
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Feb 2025 23:53:24 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Feb 2025 23:53:23 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Feb 2025 23:53:23 -0600
+Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5155rHMa048688;
+	Tue, 4 Feb 2025 23:53:17 -0600
+Message-ID: <5f122a31-771f-93c9-57fe-bc5766c1fccc@ti.com>
+Date: Wed, 5 Feb 2025 11:23:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd6250102ea9d869448e7a40a60a02f8b167d4ac.camel@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 2/2] drm/tidss: Add support for AM62L display subsystem
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        "jyri.sarha@iki.fi"
+	<jyri.sarha@iki.fi>,
+        "airlied@gmail.com" <airlied@gmail.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "tzimmermann@suse.de"
+	<tzimmermann@suse.de>,
+        "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>,
+        "simona@ffwll.ch" <simona@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh@kernel.org"
+	<robh@kernel.org>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>
+CC: "Bajjuri, Praneeth" <praneeth@ti.com>,
+        "Raghavendra, Vignesh"
+	<vigneshr@ti.com>,
+        "Jain, Swamil" <s-jain1@ti.com>,
+        "Donadkar, Rishikesh"
+	<r-donadkar@ti.com>,
+        "Choudhary, Jayesh" <j-choudhary@ti.com>,
+        "Shenoy,
+ Harikrishna" <h-shenoy@ti.com>,
+        Aradhya Bhatia <aradhya.bhatia@linux.dev>
+References: <20241231090432.3649158-1-devarsht@ti.com>
+ <20241231090432.3649158-3-devarsht@ti.com>
+ <eab600f6-bfc2-489c-b384-5b620164a556@linux.dev>
+ <dea025e1-98d4-2dcf-e729-19c9d49bf3ae@ti.com>
+ <c6179f0b-c93f-483b-bfeb-322d800e5170@ideasonboard.com>
+Content-Language: en-US
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <c6179f0b-c93f-483b-bfeb-322d800e5170@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Feb 04, 2025 at 06:10:36PM -0500, Lyude Paul wrote:
-> OK I definitely should have waited to write the actual bindings before review
-> - sorry! There was one other small thing I ended up noticing:
+Hi Tomi
+
+>> Thanks for pointing out, I probably missed this since the use-case still
+>> worked since VP interrupts were still enabled and those were sufficient to
+>> drive the display
+>> but the VID underflow interrupts and VID specific bits were probably not
+>> enabled at-all due to above miss, so agreed
+>> we should probably go ahead with a different reg space for AM62L due to
+>> aforementioned differences.
 > 
-> On Tue, 2025-02-04 at 12:09 +0100, Greg Kroah-Hartman wrote:
-> > diff --git a/include/linux/device/faux.h b/include/linux/device/faux.h
-> > new file mode 100644
-> > index 000000000000..2c8ae5bd7ae8
-> > --- /dev/null
-> > +++ b/include/linux/device/faux.h
-> > @@ -0,0 +1,31 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > + * Copyright (c) 2025 The Linux Foundation
-> > + *
-> > + * A "simple" faux bus that allows devices to be created and added
-> > + * automatically to it.  This is to be used whenever you need to create a
-> > + * device that is not associated with any "real" system resources, and do
-> > + * not want to have to deal with a bus/driver binding logic.  It is
-> > + * intended to be very simple, with only a create and a destroy function
-> > + * available.
-> > + */
-> > +#ifndef _FAUX_DEVICE_H_
-> > +#define _FAUX_DEVICE_H_
-> > +
-> > +#include <linux/device.h>
-> > +
-> > +struct faux_device {
-> > +	struct device dev;
-> > +};
-> > +#define to_faux_device(x) container_of_const((x), struct faux_device, dev)
-> > +
-> > +struct faux_driver_ops {
-> > +	int (*probe)(struct faux_device *faux_dev);
-> > +	void (*remove)(struct faux_device *faux_dev);
-> > +};
-> > +
-> > +struct faux_device *faux_device_create(const char *name, struct faux_driver_ops *faux_ops);
-> > +void faux_device_destroy(struct faux_device *faux_dev);
+> I think I disagree here. Afaiu, AM62L has plane at hw index 1 (VIDL1), but the
+> plane at hw index 0 (VID1) is not instantiated in the hardware. But the
+> registers are the same, i.e. AM62L's registers for VIDL1 match AM65x/AM62x
+> registers, right?
 > 
-> Should we add faux_get_drvdata()/faux_set_drvdata() since we've got a
-> probe/remove function? Doesn't really look like the platform driver equivalent
-> does mcuh, but I assume just having an inline function for this would make
-> things a little less confusing for users.
+> If so, we just need to tell the driver the hw index, instead of creating new
+> register offsets as done in v2.
+> 
+> Or am I missing something here? (I haven't looked at the HW manual yet).
+> 
 
-You already have a reference counted object returned to you, why do you
-need to increment/decrement it again?  All of the users I've found in
-the kernel so far didn't need that, do you have a specific example where
-it would be useful?
+No that's not the only difference. For AM62L, the VID_IRQENABLE/STATUS
+registers start at +0x4 as compared to AM65x/AM62x/ :
 
-I'll be glad to add it, I just didn't think anyone would ever call it.
+AM62L:
+        [DISPC_VID_IRQENABLE_OFF] =             0x48,
 
-thanks,
+        [DISPC_VID_IRQSTATUS_OFF] =             0x5c,
 
-greg k-h
+AM62x/AM65x:
+
+        [DISPC_VID_IRQENABLE_OFF] =             0x44,
+
+        [DISPC_VID_IRQSTATUS_OFF] =             0x58,
+
+So it seems okay to me to have a separate reg offset struct.
+
+Regards
+Devarsh
