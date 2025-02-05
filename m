@@ -1,319 +1,290 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F6516DC28
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738766323; cv=none; b=OK0Mc0c5D3nLL5iTv2k04DAUhWBYY9YKpcHLNzrgTmH6AZJ0w/G7m++6sD/SwJMFXTDaN+JMwMTBzqZR3evRKAwY6cZoed7I8D4l6f00gzseU54+VlmBGNDEhkh1f44B05KmEXg8dW2hLpMeL8LFSOQYZWgLrxTZ+KGwfePxSnM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738766323; c=relaxed/simple;
-	bh=W8pTV2F5CfjNvMsVyaS37HH67zy6RULqeWFDQxut2AQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e3yCNJ/01OUk/YxuvtqB+vzcsIh2qGq+RCQab7yWF6Fnz9WMwfBsL4uYkU5VXlWRT/PcCGpjkbegIzlrj4bxB241B3T64eSdBJxD3jzjrY7h4ZswfvFHkiiqyLHsjtlT4Sxu6e4dNkLq3ka/KWdGV/dDJW011iZ2UwyQKfEjblA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vqu6duD1; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E027155747;
+	Wed,  5 Feb 2025 14:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738766343; cv=fail; b=P0Tks6fI7ZjzLUqSjQDPitCIiIY1Rq3kXcqHSBFqDhHDEIR1hfkKcCyH20HEX19B1USPoet3BAtCj27Ab7MzEVpgxFfnrpHrg/KvPz7b9WWYtM8jh02VEPfcOhujbo4tncFByg0W3HAPty93uzz/KSXohfIhzC6reOc9K4/WfE8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738766343; c=relaxed/simple;
+	bh=ILVvxnj64HGc7qFPUGvD9VbY0Wa0GvkdPCjlXqjlLWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QlXs+HsY1Km0/ou+qBPtdp4kHTtjPKqxhnGe7ao8xUAbDFhcRm/AWzkh4M7+ckRATTlNL6zxjxD19tkOMs/ZkEGaMLQ24yOQOFbT0xnV0ruxK8f9e5DpgpuUDMSOHrXP84g3A9Am/fRnkCNVrHcnmh4m5EuDbasew2IC3xq7SG4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oNQao9qx; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=KYBnuScU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vqu6duD1"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38daf14018eso1317384f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 06:38:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oNQao9qx";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="KYBnuScU"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515DRVp2009923;
+	Wed, 5 Feb 2025 14:38:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=6eCLctPfXbcvAw21jr5HvOYM25ReMVQ+szvsiXgAPx4=; b=
+	oNQao9qxKrXwq8YjBI924EFyty+tWGm4OZzXyiK2OwdxPfYnLg1+F67B2OC8RoCw
+	aeKQVd28UX/zw+DjPrKZKn7v3QoMbVzV17teSCKfs7m5KMaXrdrCqR2x1IxjqSwu
+	9HNMwRPgddbASyFeAm/kJ9Uu3UFMrjnYkrnss7MBpfNOjGhWCI/Fng5FhIy106EY
+	pspoAPEK0P06o9yzTlkmgN/rP2lM/+PrCjjRY/qzQSvyF0qUJxwbZBcRWk6RI41j
+	LWV+bZJxvlRNQl0oootf/UgNAj9SR2ic0kGxCbU5VyBrXOqNk5PNVodV/Kl9YJwk
+	Pgduhb6aXsWY+vAgERjFJA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44hhjty7p5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 05 Feb 2025 14:38:23 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 515Crp3b027068;
+	Wed, 5 Feb 2025 14:38:22 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8fnnfq8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 05 Feb 2025 14:38:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Lvs/PiPEElc1XObKc+ol20yLkq3j5oCu87vwzzHl79Qh1KseebJaCH5u4Kikfi+rffTzBb4a9N3a9ytcoA/zdMKdHYmiP1CC0xZ1f+uhERBHN20KOuGuqsil89w42Kq1QwmYFHPUd95+Uu25wgajK4O3SrsmaLzTN9iq+NJN1jwYMFj96WpDwf2/gzWMYQa1eTiMlqAq0Gq4edQsRSYV/AgVeGxxWqCIKGCizZiVGceHXQOO7apzuqXRvLoBpTWyYlLVn/J0lCNIu227O7K6hM0eoTO0Ec4aKTNP70mjgH+cw9qj6k+WT/Lf2cnVWEPX9/e329CgLY7CHBbwlT2NgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6eCLctPfXbcvAw21jr5HvOYM25ReMVQ+szvsiXgAPx4=;
+ b=ja77w/JYM6AA7GxmhN8CPuVA8Te4USMXk8X763BG4LKA4dcXmkKJjJxgd6nxuk1cklPsB++pUwmgOeKuxS6c4Ps01xMekCNqwYUjZVACVpJ7oWYfI9GETSkkQe25kut68ST1HNHmo4yruQMPO2fFeW2RofTciquUrIItlYebOsyEK7KAwGokXHiHvTo35Xsr3dUeYhaZ3J+bLC8yoVs4vqZFICcjLe7SmmBu5XWbIhvxnF44m3hM8B+hCICh2nh9YbbIhohWmceyQrYLHa5rAsSrGF2C9P+svXktyxFvby7VDbyhMP1EUpf0BRYbI5xJ1AGPVytGaxtYaGIXGP0mdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738766319; x=1739371119; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6SylEMFUGGjut9Z/r0Vs1FQy1begfn1Z+13Ei115fRk=;
-        b=Vqu6duD1e2nIqPQqtehpr7YxVvVE0Q6IF7A4X8aG6iJVv2RJOaMgCtTY0ab9Pev6TD
-         K+t6unWt3z9ZSrnYQemnpsAJC7OrF1yNY/8ACwnCfE5a3tgjOwUmccFA0wAjelp7RS6L
-         eV8OJ5iu553uMmK0/QWoIKTNfEVTQ2w67EWe+3WgFIvBj20roZicXe4gKbVy2JvDWKNG
-         D+9NY3Y5Wax8dMwksl0XbE5DFngnBl72Hl0/zRaxOTA+qeITyA3kKKWnyk6df6B4U2mQ
-         bxGxpd7V5R6QUDorGl2/GK29XGEQk3KOs0xMAlX7lQ27esSkTdjZZDXiM1f8P3DUeIe8
-         pMyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738766319; x=1739371119;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6SylEMFUGGjut9Z/r0Vs1FQy1begfn1Z+13Ei115fRk=;
-        b=pPz6LeroPC+axU1bBtljJbwbUMuuzAYDNAA7uDQPG+pUieC235Rl9aa0PPUyAB50sM
-         HuDEziadm7WwUs9ZYydE68do4gZirNoQ922pRzDT2RhKIsbX0+tvztaJDonE7/LJu/qn
-         ko5fGhgPAMTHKObDtLGoOUOFi85cPfEOlC/RNTcGwOnqsFKcvcIvvtVQN3PKHM0jdkKN
-         wkwL3fsUN4Y2xGpg+mbTJ/RxlUk5T0jm+k9WyuKdvsYuso9bF/CLDMkwGRDPf59cu7D+
-         ra0d9YLQZGhXfvqAvlOfYUsgyxQNcRsMeBcP4a5dZodXQXyMUhTVcxVVCPb4s+MWbX7m
-         bhGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsy7beZ0K7IAAh7/62brBmBjmuCvX0Omiw6dRh9KLlm3cKLkN6Dc5KxvGppqOtlPXDfN6UeRRMnzC5Zjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxhw/kqIvGOfaq3ZVz+d0XmrbqUGDDmAUgUe/JStVdPTsrhehkY
-	gO/JEqfIlfXapy/rpwvf99EzHkjonEWbEZP23mrbbjQlAuABF76h9LPeDwacpvw=
-X-Gm-Gg: ASbGncuH7MNZqBslW99rf3M2mEwbK7LQ8ns/dIPjgj8dpVgaqg6zzCInV0uceqdBsuk
-	XXrzJq05/O9OXWgMICrgA4XNA19B3T1TyN/oNlVdUMXJAXL0rrMdQXw+zraOCB8+XxvcJUFfdgP
-	BuD0vo5NmpEB2MOiH20fKVl8fZCATX8TVc2TAQBHsNsBjrt3Zm+6LgtwJb2X2vbbbe/f2n1UrdP
-	g/ho/IzV0YTZTKm73RkzZqDzPY9UpZW7Za6rmE+hIoHlIz9hkkFGuASg/M/4C51Aaxqmge0POrg
-	RVGCSmlUjuYCRfZdSXkegfRH0w==
-X-Google-Smtp-Source: AGHT+IF9xdlTonnwajQxmm/s81j9yPZ4l8Yo6pPEF/b8p2ODFzyRC4+PB3bu63yEZdkCTZrHfqloFw==
-X-Received: by 2002:adf:f243:0:b0:38a:5df9:f86a with SMTP id ffacd0b85a97d-38db48d34e5mr1766240f8f.26.1738766318785;
-        Wed, 05 Feb 2025 06:38:38 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.66.245])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38da8f6691bsm4950042f8f.42.2025.02.05.06.38.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 06:38:38 -0800 (PST)
-Message-ID: <3c7e1ce0-9a5d-43fb-9767-8e4ca92a450d@linaro.org>
-Date: Wed, 5 Feb 2025 14:38:37 +0000
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6eCLctPfXbcvAw21jr5HvOYM25ReMVQ+szvsiXgAPx4=;
+ b=KYBnuScUiKOQXhOupZtjrlPU9fBYQTF8kuB1+3LytPRcVRNI/XQ7cp97dIgrpQp/yYYP5cBsCYcVimEj/kddPax1URXT190t6RM56xawzkE+0bOJoR8oazYDA6kuTXcUt8dMSdVNDyXGEhTbkqiczJYk3FRt79OXBaNeSQvkqHo=
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
+ by PH0PR10MB5794.namprd10.prod.outlook.com (2603:10b6:510:f4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
+ 2025 14:37:55 +0000
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
+ 14:37:55 +0000
+Date: Wed, 5 Feb 2025 09:37:51 -0500
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+        Gary Guo <gary@garyguo.net>,
+        =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Andreas Hindborg <a.hindborg@kernel.org>,
+        Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v13 2/8] mm: rust: add vm_area_struct methods that
+ require read access
+Message-ID: <ndell4l7fo2pkixo6q5xgdaryuj6wrmnyzthhe42wtumpacak5@oxlrwuwa5e5g>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, John Hubbard <jhubbard@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, rust-for-linux@vger.kernel.org
+References: <20250203-vma-v13-0-2b998268a396@google.com>
+ <20250203-vma-v13-2-2b998268a396@google.com>
+ <r5xkc2i3tk4za3xkrrvbeqto4kf5l425ursytc3n6tmcy2gylb@eusudybb5dqa>
+ <CAH5fLgj00hRAEBvNc8RR8iBwKQ2okDqmWWQ+kqmNkr9mOjfU0w@mail.gmail.com>
+ <ymjkf2l2otosunrs3e3mmsj2wr3tvrfmgl4aav5dcpm3gtdulh@dzz4njdwkspc>
+ <CAH5fLggd75BvB6VXPjR=_jxn1u7kOfix2rynvMHU4CeUUDHnVA@mail.gmail.com>
+ <ebwiebbxomsjamv2uk6gnpg2uzjpqw25llvcz7njadklfi66nk@ab5uyq4bvwlb>
+ <CAH5fLgh2Y0rG5ntpdiK-ycn9eBvrSXekxPsjDaYWuHBDUYNppw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAH5fLgh2Y0rG5ntpdiK-ycn9eBvrSXekxPsjDaYWuHBDUYNppw@mail.gmail.com>
+User-Agent: NeoMutt/20240425
+X-ClientProxiedBy: YT1P288CA0004.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01::17)
+ To PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
- <0415d354-0c44-4fff-b92b-b0f5c9c72b11@linaro.org>
- <CAL_JsqKTNDQn9omG3g=6Rb4Nwt6hG9Gw7-VXL_fjQeEQmmtJQg@mail.gmail.com>
- <630f630d-241e-45f5-b449-243147fb888b@linaro.org>
- <CAL_JsqKY8MjD=iFf6MiT04WmCHYUxGtWG9JfX5-5fuG32F77qQ@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAL_JsqKY8MjD=iFf6MiT04WmCHYUxGtWG9JfX5-5fuG32F77qQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|PH0PR10MB5794:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf472ec5-e208-485d-9ddc-08dd45f2adcb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MFhVREMyNHBTd25FRm9kUm5XSDh2dGd6dlRZTXhJRGJsYWdCeHA0ZXJINlVP?=
+ =?utf-8?B?RElNYnN1czJmZGJCU2JTSHZVazVQeFF6TGUrRUlubUdUeko0UTBnRTZZb1NV?=
+ =?utf-8?B?V09UQWN1NGRFVUZOZTBuTTdQVXQ1a1d6QTdCTEQyUGgrOUlRNXI2RzdnekF0?=
+ =?utf-8?B?Y214Z0NkM1pqdXpuQk84ZHFvekZydkZVbVhJNVU2Nm5tUGhnNG5mRWcyVnI4?=
+ =?utf-8?B?WkZJVi9xZzR0bkRXbmtzVFNyaDFOZUZ2NWJDbGpvSTlOWVVWSTZTd2QveG5D?=
+ =?utf-8?B?Y1NuWFYzUW5ZRmFsNkFVaUVaSmlqRnRkSzJFU0VjM01uUnRxS3RxRDVKVmtw?=
+ =?utf-8?B?Mlh6RGQvWjFjOG9OQnZBZWJ1V1BSWDd6YzlwWldjbkNGRmo2aGRlK29JL3dl?=
+ =?utf-8?B?NVN0MVNJOWRhUU1jY2JTTEt6a2tmNVVDNmgvdWNwb1ZuaFhyUUtPK1B0cll0?=
+ =?utf-8?B?d3RiYkF1UVlHV3A0OFRyOE1vdUYyUzdseHFPYTgyK0UwZzJkNFJ3RkVRSTZP?=
+ =?utf-8?B?ckcvRlNkTlM0elRxNE9MNlkwelBzRHBBMzRtQVBZNHloUDluK0FEL0UrTEQw?=
+ =?utf-8?B?dTk5Nm5RaXRRL1dxUkdiVGJ1TkFQbkJkOFVCTDlZQ1dSdGhUeEFIS3BFL1Y2?=
+ =?utf-8?B?bjJ5SjgrN0taeHpEeldyRGQwaFBRcWJZQU5uaW5Ec3JQTGZzSno5d0tweGxl?=
+ =?utf-8?B?NndESnQrbTYwTFd6bWh6bkxFaHZhQ255S2lJTlkzVklUSnRpQUF1ejVMQ21T?=
+ =?utf-8?B?OHdjeEJtOGVSMWJvSVgycFFINHYrU0tkTitZa2JDT2QvbGhIVDcyZ0pxWmZz?=
+ =?utf-8?B?Uy83ZmtuRTlUemVxUmE3Y3lxVHJYTnZuUEdocVNlTGpJdmtmT3pJVzNRSWZ4?=
+ =?utf-8?B?TmlmTGJRcUFBalB0T1JlOHZPenpGbFlZczhIeU9ITEdKL2psQ3NKYW53K1ds?=
+ =?utf-8?B?bzZBSmJEMHpDemIzZXhqZDcxM0JkOUo0VnNIVFNGTnlDb0xaUmpFdHZwOUtx?=
+ =?utf-8?B?MTU4OFU4MG1oclJOUkpBdmFDaDlDY1JiVkFYVVpyaW1nMDFsYXZzOHg1QjIy?=
+ =?utf-8?B?Q096cXl6Wkl6ZTd0RXhBYlFhWEhpbTNmaG80UFJkMTFERGFHdG9Uc0hMTVBL?=
+ =?utf-8?B?TENQTG1DREFReFNrUHZ3ak5GTUFTMWdiNzRRUXQ3Z2Q3MU5sT3JMUVRTRGpw?=
+ =?utf-8?B?L2lqS014VDB3eEM5RTNhRDU2YWo1d29rbWU5eWYvTWh3eWtnMFo4aDU0UjB3?=
+ =?utf-8?B?c2NvekpJdFVCUGtIVy9TN0dUQVlLbXhUSDQ1c05kblJiMEdIOFhFaTUyY0l2?=
+ =?utf-8?B?ZVFLSUJsT20vNUd2T3FNRHpvQTM4MGJrRjZGUHA4K1dIais3eWFQRUxuUXpB?=
+ =?utf-8?B?bzBTZGZyT1BGV0hOUlN2ajhYSGhndGNhcFFnN3ZBM0tDSzdvN3czczNlc0ZJ?=
+ =?utf-8?B?TjNlemFzREY2MWVxU1ZOYTVOSWJjNzY2WlE2YTI3N0Z6K2h6c2w1STd6c3hx?=
+ =?utf-8?B?S05nL2luRUI4N3RXUlFubW4wemtUZWdyRnJPNVY4MGk0d1h6OG9sQUxEeksx?=
+ =?utf-8?B?alVVYVNtNWcxTHBvSDRrNWNEUzA2UVhHeFRPa1BuREE5NE0xZHhYYXBCcmZ6?=
+ =?utf-8?B?UEZZdTZYWTk5eDloUEtBcWNYdlRmc2F3U2FLSnNwRVhib0NRTHc2aGNlcGlC?=
+ =?utf-8?B?dW9oUGNxcEtCRlNIMzJhaFBzbytpWTF0UHBCcDcwYThXcEZJVzUxeEpybXpn?=
+ =?utf-8?B?VHFOenE4Y25MbUtzNmN0cko5ZlNSNEM0YW1FZk1qWS91UzhEK0o4N1dUUjMx?=
+ =?utf-8?B?YlZFdFF4MThYRmtxZFZNYzQwaUwzOGxmN2FVVzZ1Z0F6Qk9keTRFTG42dDd2?=
+ =?utf-8?Q?kTTv9fusDN2ja?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T3lHRjlHMnlpZjZGUGM3U3k2VHcvWWV0T1NJWm54OUFxZE1rY0NEbVM3ekJl?=
+ =?utf-8?B?WFBpL2h0MXJpYmZ3azhvdi9Cc21NbDcxNkJOM3gwRVhNeVloQTIzbUMwcnNI?=
+ =?utf-8?B?N05BMVFWU1BtMTRDUkhtWnJmdzJoNzlVSWVDQXlEcEpON3lJUHpqNUErb29K?=
+ =?utf-8?B?cVErdDdldjIrMngyTzdMeWJHMEdKMkJnVGU3R0srNkpUeWdsZjFGMkEzelVU?=
+ =?utf-8?B?a3k0UmZuK1p3RytFWitMSDczdjV3NGFBSVdFRDJQdi9sb1gwNmo2Ny9pZHBl?=
+ =?utf-8?B?ZUxiNW5HTHd0OE5rZTQzTktZYUd1a0xnN2tRdSs1TGtPaEJOdzJ3STRGRWdP?=
+ =?utf-8?B?MmgrVDBxeFF0K0FnNkt1YWoreTY1V2VNMEFqYlAxV25idU5nUCtNOWxCRFlF?=
+ =?utf-8?B?RzZJa3VWay9pYUlpYzQvWGREQXBoZW1tYlpkTVpkNTJPa1k5TmE2N2ZmUmVk?=
+ =?utf-8?B?alJxb1FrWDZRUVBHVlNpZm9wZnA1ZlliU3A5Mm9MRDlEVWZJYmg0Z1VzQStx?=
+ =?utf-8?B?bnBVOFA0TWxxUWVnMStrZlkzdzFoWlVXMURETGpQOUtzR2N6bW1LSEJQc3hx?=
+ =?utf-8?B?WVVTdjZlM0hEUVRzbHBhRmt0M3VkVDFLcGw4c21kNjNrK1ZSbU9OTW9XUkF5?=
+ =?utf-8?B?QnhBME5pWmNYcGo5OEZaZ0JuSjJhTjJTT3p1STBsVGpQSlFtQXlOangrMnFR?=
+ =?utf-8?B?Z3BwdTVzcDQwTERlUGVpQzRrR3RWZHhmcWdldFlRMUU2d1FYM2VqOHJRTkQ4?=
+ =?utf-8?B?eEhXeWVCMHJJbUc4NnRZSlhaaTZ2MVdZNFA0b3RqWWVUbWJZL2J2ajBENm42?=
+ =?utf-8?B?d25FZUNNMkRZVC9abDhLRFFZMWFFL284cUNablpocUY4NThvQ1B0d2ovTEVm?=
+ =?utf-8?B?aCtiVWJtTUhobkxlNmJJNWdnZ0VhVy9QZ3M1dlRRaHVWVzh2azlUaDBFZlFr?=
+ =?utf-8?B?bUN4L2dPNkN3WWxKVkdKWTZHbk5uV250Z0JnTUJGZTFkM0UycmtOVFdQOHlZ?=
+ =?utf-8?B?cVR0aE5LSml3RWxzaEZGZ2tnYWMrMHVFbXlmV0hBLzRWZExTaFNLZ3FWTU5I?=
+ =?utf-8?B?ZXI4K3UxdmdnRnRzUDRCdjJuWG9RY3B6R2ZJWGtRWHozeWVKeWZlNGFZRTJX?=
+ =?utf-8?B?NUtGTHpuSkZZWVJOK2VTUjYzSlU1VndTMzNGeDRGNXJNWXlWSmdJbDhQbUky?=
+ =?utf-8?B?aVRnYUdkbFlzMUZaZHZKaWlGN0xyc0x2aEwrb0wvNk9MWGg5K1lSQ20zTmMw?=
+ =?utf-8?B?TlAxc0Vqd0dlTU8ybGNpalVySSszWis3ZzE1RFY4NG9XOXg1dGFTMEg5UDJi?=
+ =?utf-8?B?TjdmWGFRTkwzNjhHUjNIdUdBaEpBeThoRW5jZGp3bFlYNml3Ny9wNG94NWE3?=
+ =?utf-8?B?WHpEZE05WDlZUzhZNTNNNzRteDZrUmUvRTJUNkpRUVM2VGZKT2dKdnJwR3RB?=
+ =?utf-8?B?TjdxNHMyWkpobEY3dk90eFNQeWlVNFFRa0JnNlhXaFJKSVNVTFV5Mzc1OEMz?=
+ =?utf-8?B?b3B0cE9RZ2Q3R3RWV0lKaGtKYlBxTEllQi9qM2ZXWkJhWDNuS2E0Y1VZdVVR?=
+ =?utf-8?B?Zlp2UlpwLzZhOUx3ZytFblcrQXYxOXFkVHg2dmZYcjZjb1Y0eUZTcm12ejd1?=
+ =?utf-8?B?VmNpVTFBQkpnV0Q3bSs4QjN3aDBEa3JrRlBwbTBpemR4a0Z3S1k0b21yU2c4?=
+ =?utf-8?B?dklYRmhCZFdxbGw2a1RscGZ4U1ZEYWc4NE1xb25FL25mTWJ1RWxyQlNraDJy?=
+ =?utf-8?B?bllxRzN6eHlHWDEvejhlTk44WjdDYkJSMWhId0FKQW9QMnYrYThMdjd5SjR0?=
+ =?utf-8?B?WmxUVFNnMCtjZzh0ckNPRjgvRUFSQjlpTkVLVlozb1pRYnhNc1VNSU11eGRi?=
+ =?utf-8?B?aTEvMnZiaXE1c2lUdldKVkJjR0thblNRZlhMVzdNVFdEMzB3eFBnMXEzOWdV?=
+ =?utf-8?B?NlpLZThTRkloOWxZSTYrWUtXWGhqejQzOGFqWTNET003SGhmRWlBRE5YT1A4?=
+ =?utf-8?B?U0dFUGZzaTJ4azlKMFdKbVFFWFRZMkRxWGc2bmlhbTEwVlJYUCtPSlk5K2J0?=
+ =?utf-8?B?bWo0Skd0dFY2RktGZVZBY2NTS21RTlgyZTNsSWo0ZkxSZHp6N29PTWRlYlYv?=
+ =?utf-8?Q?ROvq3Ps1W2TxGXP4xPFPPAgSq?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Ja6nNMb4DP4+E0o6fgTiUjyWOK3DwqeBMLQ0Wmw75y4+t6CJFJQmKEvAPnSH9M4zCLaW08kq7s2ZoZ9cS3osiQR7sArJsJPhmD1JTPlwbtSev2U9Uab36/eH3a4crvh/djVV/BaF9tglydbCHD8/M5zJT3yHiDHV3x2F9xDV3p/HMY8o+Em6jthCSSS8WsIjvKEsigf8mFRPsmJfmNpntESwALPM/vaJY5plcy/8Q+Nt5e6gXFuvzbAY5XABIkjBc6Xjfyze2D6n9bBXIfyKd1978pxtrSiIiG/AE8paI8WrAUiYJF1wPhFxYeZYnz3PlLvfb4yhvz63vTZ4IWheeLNjouNTHDWGo1BYPCLDVdxMITE9hkDlS5bgzQaSe6Qn9ivX7th0OvYWL2YeeP9vvEeYRzhxjOn7MmM+ljk10mi47i02i458XuGo74MEc4BZy1Bp2qNOPd1DcUcHi06Sxn6ndy3/dBnjRkE3m9I3UfHXfLpaQgczYY0rxvhpqzH0dM6sKD41iqwO6jf7ZW+YBVzy7L1G12QRlik0s54jLYhcBz/JB/PKx+EMmoZMjGl/UMIz+x9ZBvlzh6AGoffDz5J0Dbs8TpM9kHCrMPhplds=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf472ec5-e208-485d-9ddc-08dd45f2adcb
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 14:37:55.8556
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wLAA+PaU+la3zSb98RWJRvDwksgtrOEA6RmWH7nMqaFJDlsOB4Up4PhNod4CWPb1sP49GTsAZMsypI3xu1OyQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5794
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_06,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
+ suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=776 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
+ definitions=main-2502050115
+X-Proofpoint-GUID: kXlqn8CgchrsalP9K7D3shV_1Xp0pIVf
+X-Proofpoint-ORIG-GUID: kXlqn8CgchrsalP9K7D3shV_1Xp0pIVf
 
+* Alice Ryhl <aliceryhl@google.com> [250205 07:10]:
+> On Tue, Feb 4, 2025 at 4:46=E2=80=AFPM Liam R. Howlett <Liam.Howlett@orac=
+le.com> wrote:
+> > > > > > > +        let vma =3D unsafe { bindings::vma_lookup(self.mm.as=
+_raw(), vma_addr) };
+> > > > > > > +
+> > > > > > > +        if vma.is_null() {
+> > > > > > > +            None
+> > > > > > > +        } else {
+> > > > > > > +            // SAFETY: We just checked that a vma was found,=
+ so the pointer is valid. Furthermore,
+> > > > > > > +            // the returned area will borrow from this read =
+lock guard, so it can only be used
+> > > > > > > +            // while the mmap read lock is still held.
+> > > > > >
+> > > > > > So We have complicated the locking of the vmas with rcu and per=
+-vma
+> > > > > > locking recently.  We are now able to look up and use a vma und=
+er the
+> > > > > > rcu read lock.  Does this translate to rust model?
+> > > > > >
+> > > > > > I believe this is true in recent version of binder as well?
+> > > > >
+> > > > > Yes. The safety requirements of VmAreaRef is that you must hold t=
+he
+> > > > > mmap read lock *or* the vma read lock while you have a VmAreaRef
+> > > > > reference. This particular method achieves that requirement by ho=
+lding
+> > > > > the mmap read lock. But there is also a Rust lock_vma_under_rcu()=
+, see
+> > > > > patch 4 for that.
+> > > >
+> > > > Right, okay.  Thanks.  You can get the reference by only holding th=
+e rcu
+> > > > read lock, but you should hold the vma lock to ensure that the vma
+> > > > itself (and not just the pointer) is safe to use.
+> > >
+> > > Hmm... To modify the vma, you must hold the mmap *and* vma write lock=
+,
+> > > so holding the mmap read lock prevents mutations?
+> >
+> > Sorry, I think I confused things with my answer.  Your code is fine.
+> > The phrasing of the "only be used while the mmap read lock is still
+> > held" made me wonder about further clarification on the locking here
+> > (because the locking is confusing).
+> >
+> > Yes, mmap read lock means there are no writers that can modify the vma.
+> > Essentially, you are using the lock to ensure the entire vma space isn'=
+t
+> > changed during your operation - which is heavier than just locking one
+> > vma.
+>=20
+> I could extend the safety comment like this:
+>=20
+> SAFETY: We just checked that a vma was found, so the pointer is valid.
+> Furthermore, the returned area will borrow from this read lock guard,
+> so it can only be used while the mmap read lock is still held. This
+> ensures that there are no writers because writers must hold both the
+> mmap and vma write lock.
 
+How about just changing the last part to:
 
-On 04/02/2025 3:03 pm, Rob Herring wrote:
-> On Tue, Feb 4, 2025 at 6:03 AM James Clark <james.clark@linaro.org> wrote:
->>
->>
->>
->> On 03/02/2025 5:58 pm, Rob Herring wrote:
->>> On Mon, Feb 3, 2025 at 10:53 AM James Clark <james.clark@linaro.org> wrote:
->>>>
->>>>
->>>>
->>>> On 03/02/2025 12:43 am, Rob Herring (Arm) wrote:
->>>>> From: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>>
->>>>> The ARMv9.2 architecture introduces the optional Branch Record Buffer
->>>>> Extension (BRBE), which records information about branches as they are
->>>>> executed into set of branch record registers. BRBE is similar to x86's
->>>>> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
->>>>> (BHRB).
-> 
-> [...]
-> 
->>>>> +     /*
->>>>> +      * Require that the event filter and branch filter permissions match.
->>>>> +      *
->>>>> +      * The event and branch permissions can only mismatch if the user set
->>>>> +      * at least one of the privilege branch filters in PERF_SAMPLE_BRANCH_PLM_ALL.
->>>>> +      * Otherwise, the core will set the branch sample permissions in
->>>>> +      * perf_copy_attr().
->>>>> +      */
->>>>> +     if ((event->attr.exclude_user != !(branch_type & PERF_SAMPLE_BRANCH_USER)) ||
->>>>> +         (event->attr.exclude_kernel != !(branch_type & PERF_SAMPLE_BRANCH_KERNEL)) ||
->>>>
->>>> I don't think this one is right. By default perf_copy_attr() copies the
->>>> exclude_ settings into the branch settings so this works, but if the
->>>> user sets any _less_ permissive branch setting this fails. For example:
->>>>
->>>>     # perf record -j any,u -- true
->>>>     Error:
->>>>     cycles:PH: PMU Hardware or event type doesn't support branch stack
->>>>     sampling.
->>>>
->>>> Here we want the default sampling permissions (exclude_kernel == 0,
->>>> exclude_user == 0), but only user branch records, which doesn't match.
->>>> It should be allowed because it doesn't include anything that we're not
->>>> allowed to see.
->>>
->>> I know it is allowed(on x86), but why would we want that? If you do
->>> something even more restricted:
->>>
->>> perf record -e cycles:k -j any,u -- true
->>>
->>> That's allowed on x86 and gives you samples with user addresses. But
->>> all the events happened in the kernel. How does that make any sense?
->>>
->>> I suppose in your example, we could avoid attaching branch stack on
->>> samples from the kernel. However, given how my example works, I'm
->>> pretty sure that's not what x86 does.
->>>
->>> There's also combinations that are allowed, but record no samples.
->>> Though I think that was with guest events. I've gone with reject
->>> non-sense combinations as much as possible. We can easily remove those
->>> restrictions later if needed. Changing the behavior later (for the
->>> same configuration) wouldn't be good.
->>>
->>>
->>
->> Rejecting ones that produce no samples is fair enough, but my example
->> does produce samples. To answer the question "why would we want that?",
->> nothing major, but there are a few small reasons:
->>
->>    * Perf includes both user and kernel by default, so the shortest
->>      command to only gather user branches doesn't work (-j any,u)
->>    * The test already checks for branch stack support like this, so old
->>      Perf test versions don't work
-> 
-> I would be more concerned about this one except that *we* wrote that
-> test. (I'm not sure why we wrote a new test rather than adapting
-> record_lbr.sh...)
-> 
+Furthermore, the returned vma is still under the protection of the read
+lock guard and can be used while the mmap read lock is still held.
 
-record_lbr.sh was added 6 months ago, test_brstack.sh 3 years ago so 
-it's the other way around.
-
-Although record_lbr.sh also tests --call-graph and --stitch-lbr as well, 
-so I think it's fine for test_brstack.sh to test only --branch-filter 
-options at the lowest level.
-
-Looking at that test though I see there is a capability 
-"/sys/devices/cpu/caps/branches". I'm wondering whether we should be 
-adding that on the Arm PMU for BRBE?
-
-Ignoring the tests, the man pages (and some pages on the internet) give 
-this example: "--branch-filter any_ret,u,k". This doesn't work either 
-because it doesn't match the default exclude_hv option. It just seems a 
-bit awkward and incompatible to me, for not much gain.
-
->>    * You might only be optimising userspace, but still interested in the
->>      proportion of time spent or particular place in the kernel
-> 
-> How do you see that? It looks completely misleading to me. 'perf
-> report' seems to only list branch stack addresses in this case. There
-> doesn't seem to be any matching of the event address to branch stack
-> addresses.
-> 
-
-Perf script will show everything with all it's various options, or 
---branch-history on perf report will show both too. Also there are tools 
-other than Perf, AutoFDO seems like something that BRBE can be used with.
-
->>    * Consistency with existing implementations and for people porting
->>      existing tools to Arm
->>    * It doesn't cost anything to support it (I think we just
->>      only check if exclude_* is set rather than !=)
->>    * Permissions checks should be handled by the core code so that
->>      they're consistent
->>    * What's the point of separate branch filters anyway if they always
->>      have to match the event filter?
-> 
-> IDK, I wish someone could tell me. I don't see the usecase for them
-> being mismatched.
-> 
-> In any case, I don't care too much one way or the other what we do
-> here. If everyone thinks we should relax this, then that's fine with
-> me.
-> 
-
-Seeing the branch history from userspace that led up to a certain thing 
-in the kernel happening doesn't seem like that much of an edge case to 
-me. If you always have to have both on then you lose the userspace 
-branch history because the buffer isn't that big and gets overwritten.
-
->> Some of these things could be fixed in Perf, but not in older versions.
->> Even if we can't think of a real use case now, it doesn't sound like the
->> driver should be so restrictive of an option that doesn't do any harm.
->>
->>>> This also makes the Perf branch test skip because it uses
->>>> any,save_type,u to see if BRBE exists.
->>>
->>> Yes, I plan to update that if we keep this behavior.
->>>
->>>>> +         (!is_kernel_in_hyp_mode() &&
->>>>> +          (event->attr.exclude_hv != !(branch_type & PERF_SAMPLE_BRANCH_HV))))
->>>>> +             return false;
->>>>> +
->>>>> +     event->hw.branch_reg.config = branch_type_to_brbfcr(event->attr.branch_sample_type);
->>>>> +     event->hw.extra_reg.config = branch_type_to_brbcr(event->attr.branch_sample_type);
->>>>> +
->>>>> +     return true;
->>>>> +}
->>>>> +
->>>> [...]
->>>>> +static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2] = {
->>>>> +     [BRBINFx_EL1_TYPE_DIRECT_UNCOND] = { PERF_BR_UNCOND, 0 },
->>>>
->>>> Does the second field go into 'new_type'? They all seem to be zero so
->>>> I'm not sure why new_type isn't ignored instead of having it mapped.
->>>
->>> Well, left over from when all the Arm specific types were supported.
->>> So yeah, that can be simplified.
->>>
->>>>> +     [BRBINFx_EL1_TYPE_INDIRECT] = { PERF_BR_IND, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_DIRECT_LINK] = { PERF_BR_CALL, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_INDIRECT_LINK] = { PERF_BR_IND_CALL, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_RET] = { PERF_BR_RET, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_DIRECT_COND] = { PERF_BR_COND, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_CALL] = { PERF_BR_CALL, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_ERET] = { PERF_BR_ERET, 0 },
->>>>> +     [BRBINFx_EL1_TYPE_IRQ] = { PERF_BR_IRQ, 0 },
->>>>
->>>> How do ones that don't map to anything appear in Perf? For example
->>>> BRBINFx_EL1_TYPE_TRAP is missing, and the test that was attached to the
->>>> previous versions fails because it doesn't see the trap that jumps to
->>>> the kernel, but it does still see the ERET back to userspace:
->>>>
->>>>      [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
->>>>
->>>> In older versions we'd also have BRBINFx_EL1_TYPE_TRAP mapping to
->>>> PERF_BR_SYSCALL so you could see it go into the kernel before the return:
->>>>
->>>>      trap_bench+0x1C/[unknown]/-/-/-/0/SYSCALL/-
->>>>      [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
->>>
->>> My read of that was we should see a CALL in this case. Whether SVC
->>> generates a TRAP or CALL depends on HFGITR_EL2.SVC_EL0 (table D18-2).
->>> I assumed "SVC due to HFGITR_EL2.SVC_EL0" means when SVC_EL0 is set
->>> (and set has additional conditions). We have SVC_EL0 cleared, so that
->>> should be a CALL. Maybe the FVP has this wrong?
->>>
->>
->> The test is doing this rather than a syscall:
->>
->>     asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
->>
->> So I think trap is right. Whether that should be mapped to SYSCALL or
->> some other branch type I don't know, but the point is that it's missing now.
-> 
-> We aren't supporting any of the Arm specific traps/exceptions. One
-> reason is for consistency with x86 like you just argued for. The only
-
-Does x86 leave holes in the program flow though, or is it complete? IMO 
-it makes it harder for tools to make sense of the branch buffer if there 
-are things like an ERET with no previous trap to match it up to.
-
-> exception types supported are syscall and IRQ. Part of the issue is
-> there is no userspace control over enabling all the extra Arm ones.
-> There's no way to say enable all branches except debug, fault, etc.
-> exceptions. If we want to support these, I think there should be user
-> control over enabling them. But that can come later if there's any
-> demand for them.
-> 
-> Rob
-
-In this patchset we enable PERF_BR_IRQ with PERF_SAMPLE_BRANCH_ANY, 
-without any way to selectively disable it. I would assume trap could be 
-done with the same option.
-
-If we're filtering some of them out it might be worth documenting that 
-"PERF_SAMPLE_BRANCH_ANY" doesn't actually mean 'any' branch type on Arm, 
-and some types are recorded but discarded out before sending to userspace.
-
-There could be some confusion when there are partially filled or empty 
-branch buffers, and the reason wouldn't be that there weren't any 
-branches recorded, but they were all filtered out even with the 'any' 
-option.
-
+Thanks,
+Liam
