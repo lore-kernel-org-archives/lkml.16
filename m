@@ -1,106 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E038C22D4CB;
-	Wed,  5 Feb 2025 12:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8661322D4F1;
+	Wed,  5 Feb 2025 12:25:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738758345; cv=none; b=G5Myn47SO2m+qe6Ng8yrUzJzn/e+J/m+yxYvj4H8smIqMUX/Q8VltwJoIzV/N+edK8Epq+3BuhZVcPJVs66ewAA6fAuGLTqJ+VBcS8H7oKby5TXZmVpAYbSDEeWLImEoWvCHqGq5IAkOgGzUUMiSh2EIxUjaLLu/5BkAr+WLu1Y=
+	t=1738758347; cv=none; b=XUYBQkokSaPAmvJBzNQ6SyYshpqqzRU/DZNkXQ1dNif1dQLIrEwBzf8zw1qeLT6kjBrmb1g8YCC65NKH4gljGwGSUigMl3JWgWrC1ZFaXO1b4ViFBplEd/pqZShv5PRqBA5H1ZRkP33zt9Y6JB71YELZYp1vnLhcxwndjFRFlAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738758345; c=relaxed/simple;
-	bh=Yw42UYrTyinasU5Qu2fQg6mCOFtop1VHNJFftU7VMTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=at8Lm2/IU0i1I68GEGhGxfaS9Kze5M1s7u7bAvpQxnRGjkVXYjZlCVWSBaMhnLRpgMKxcQqkmCQT3cmHbHILj9pGwO8IP8+znhUGvSOvvZRqnLO/SWFjCZUj1A1DRi8iBdR5a4ZPI1rqXI02NRP0vYPPhXHDZHKUq2ieU4h8oAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b/SsaiqP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738758347; c=relaxed/simple;
+	bh=ggoaN55ddTjO79DYzE/IRBUIulmCS4JeJwzkFnfz7xg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JPI5T50QyvlbTphlA724EKGiGAabpo/WeJssh+bqJQlkUwLD0GL8uC2Va5faE9WQ0dmfnSbW/6OY45Ikr3OHHxiiPjDWRSYlksRrVG7ovakuoCMagci925hOzc94rfnLOsohfTsulm3vbumCHoBRem2hj8sh5f2aUP/h71NYi1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzDYxQH+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b/SsaiqP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F0A5C4CEE3;
-	Wed,  5 Feb 2025 12:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738758344;
-	bh=Yw42UYrTyinasU5Qu2fQg6mCOFtop1VHNJFftU7VMTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b/SsaiqPMMxvm0kNuHggp7/30o+JNHYoncM158ZEK/yUUuEjI8X9l0IqfHNx94iko
-	 vizTEO94hFx1Tdq1PCUg3rw04ol5rEU35FlN8Tsp5/+1PFF9W3L1XMIwg9EXfmcwjs
-	 9TSPHEA2nw1YFpBUCoR5IUEO5ffZufUMiN+KcOaU=
-Date: Wed, 5 Feb 2025 13:25:11 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Dave Penkler <dpenkler@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Nihar Chaithanya <niharchaithanya@gmail.com>,
-	Rohit Chavan <roheetchavan@gmail.com>,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpib: mark pnp_device_id tables as __maybe_unused
-Message-ID: <2025020532-roast-shortage-4086@gregkh>
-References: <20250205121244.322054-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzDYxQH+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C829C4CED1;
+	Wed,  5 Feb 2025 12:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738758347;
+	bh=ggoaN55ddTjO79DYzE/IRBUIulmCS4JeJwzkFnfz7xg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GzDYxQH+Oazd2qhIazHDBqPtQ92DgCBrI59o1S0PZZbuLvJOQCKMua15R1ZSgB15+
+	 QSLJ11UVpO9SjAzJLfW3Sj+/hm2390z5+092e+KpQQCXaHa5n+i9uu+lTru/jN37Ig
+	 k9D+2y2/75aH6H0H4qnbNowSnNW7/wF9ILAnuam1LI/4MuEpTqolnIo1FF9HtjYjDx
+	 fug50dN5GilR5tjqXrXDPIOuSzVyAGHWqvvoOifx+B0bKbCZ81PtBHm5cu56iShLM3
+	 BeLBE4uJUzimxCuYRFswofXcP6BBVe6iBzcrpvaqVDohIg7hOvgeeL6c2SNFJ8Stl3
+	 u0Ol60sFuupQQ==
+Date: Wed, 5 Feb 2025 21:25:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] tracing: Introduce relative stacktrace
+Message-Id: <20250205212543.42bd11a8093a074e9df27670@kernel.org>
+In-Reply-To: <20250203103234.79c4a388@gandalf.local.home>
+References: <173839458022.2009498.14495253908367838065.stgit@devnote2>
+	<20250203103234.79c4a388@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205121244.322054-1-arnd@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 01:12:26PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> This variable is not referenced in either of these two drivers driver,
-> causing a warning when they are built-in and W=1 warnings are enabled
-> with gcc:
-> 
-> drivers/staging/gpib/tnt4882/tnt4882_gpib.c:1507:35: error: 'tnt4882_pnp_table' defined but not used [-Werror=unused-const-variable=]
->  1507 | static const struct pnp_device_id tnt4882_pnp_table[] = {
->       |                                   ^~~~~~~~~~~~~~~~~
-> drivers/staging/gpib/hp_82341/hp_82341.c:811:35: error: 'hp_82341_pnp_table' defined but not used [-Werror=unused-const-variable=]
->   811 | static const struct pnp_device_id hp_82341_pnp_table[] = {
-> 
-> The MODULE_DEVICE_TABLE() entry does have the effect of loading
-> the module when the PNP device is detected, so it is still needed
-> for the modular case.
-> 
-> Ideally the drivers should be converted to pnp_register_driver(),
-> which would lead to the ID table actually being used.
-> 
-> As a simpler workaround, add a __maybe_unused annotation to shut
-> up the warning.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/staging/gpib/hp_82341/hp_82341.c    | 2 +-
->  drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/gpib/hp_82341/hp_82341.c b/drivers/staging/gpib/hp_82341/hp_82341.c
-> index 800f99c05566..7284311e04e2 100644
-> --- a/drivers/staging/gpib/hp_82341/hp_82341.c
-> +++ b/drivers/staging/gpib/hp_82341/hp_82341.c
-> @@ -808,7 +808,7 @@ static void hp_82341_detach(gpib_board_t *board)
->  	hp_82341_free_private(board);
->  }
->  
-> -static const struct pnp_device_id hp_82341_pnp_table[] = {
-> +static __maybe_unused const struct pnp_device_id hp_82341_pnp_table[] = {
->  	{.id = "HWP1411"},
->  	{.id = ""}
->  };
-> diff --git a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-> index 2e1c3cbebaca..cf3b2a0eb93d 100644
-> --- a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-> +++ b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-> @@ -1390,7 +1390,7 @@ static struct pci_driver tnt4882_pci_driver = {
->  	.probe = &tnt4882_pci_probe
->  };
->  
-> -static const struct pnp_device_id tnt4882_pnp_table[] = {
-> +static __maybe_unused const struct pnp_device_id tnt4882_pnp_table[] = {
+On Mon, 3 Feb 2025 10:32:34 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-I see this happening in many different drivers right now, what is so
-unique about pnp that causes this?  Shouldn't we fix up the
-MODULE_DEVICE_TABLE() macro to not require stuff like this instead?
+> On Sat,  1 Feb 2025 16:23:00 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > Hi,
+> > 
+> > Here is the 2nd version of adding relative stacktrace for tracing.
+> > The previous version is here;
+> > 
+> > https://lore.kernel.org/all/173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com/
+> > 
+> > In this version, I changed the idea to only use the first 32bit of
+> > the build_id of the modules instead of using live hash/id to identify
+> > the module. Also, save the offset from the .text section for each
+> > module instead of using the offset from the _stext for the module
+> > address. (For the core kernel text address, keep using the offset
+> > from _stext.)
+> > 
+> > This brings the following benefits:
+> >  - Do not need to save the live module allocation information on
+> >    somewhere in the reserved memory.
+> >  - Easy to find the module offline.
+> >  - We can ensure there are only offsets from the base, no KASLR info.
+> > 
+> > Moreover, encode/decode module build_id, we can show the module name
+> > with the symbols on stacktrace.
+> > 
+> > Thus, this relative stacktrace is a better option for the persistent
+> > ring buffer with security restricted environment (e.g. no kallsyms
+> > access from user.)
+> > 
+> >  # echo 1 > options/relative-stacktrace 
+> >  # modprobe trace_events_sample
+> >  # echo stacktrace > events/sample-trace/foo_bar/trigger 
+> >  # cat trace 
+> >     event-sample-1622    [004] ...1.   397.542659: <stack trace>
+> >  => event_triggers_post_call
+> >  => trace_event_raw_event_foo_bar [trace_events_sample]
+> >  => do_simple_thread_func [trace_events_sample]
+> >  => simple_thread [trace_events_sample]
+> >  => kthread
+> >  => ret_from_fork
+> >  => ret_from_fork_asm  
+> >
+> 
+> I thought we decided that we didn't need the relative stack trace? That all
+> we need to do is to expose the offset from the last boot, and a list of
+> modules that were loaded and their addresses, and then we can easily
+> decipher the stack traces into human readable format?
 
-thanks,
+Hmm, if it is for the last boot, it is OK. So when the user mmapped the
+buffer before using it for trace, such base-address metadata will be
+exposed, and after using the trace, it is not exposed because that will
+leak the current boot base address? (Or we can expose that?)
 
-greg k-h
+I meant that exposing the table for previous boot is safe, but it may
+not be allowed for the live tracing. That is my concern.
+
+Anyway, let me try storing the module table.
+
+Thank you,
+
+> 
+> -- Steve
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
