@@ -1,179 +1,204 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DEC192D83;
-	Wed,  5 Feb 2025 22:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794813; cv=fail; b=HIZawR0DWZE7xzciAi/Iee2j/Gt3iu6WkSnOvZRVPjdR1hmmebIuLIy+RcsqhDDhFgNQ3gLs0YmYXOpIdVcmqzqtIobwUoVkZJsNgc1zkIayjMSjEvW9Mk/4YK0AblUP5DBsoRxbzuwZLv7scXeBl9ixo4K8U2pt7dcTxKDLfss=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794813; c=relaxed/simple;
-	bh=etUTZfhdjZdSPD4ghAeTccrrK/6YTpY+DY6piuUFjsM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rv3ZOgJ01QMx+MU40CvwteV0hbdOZiSVehu3pBfzIpTlxufsOSYgyZdXvxk3obmYnJ81IysVhKEGX0YuelmZCNcbKi39HII3R5AUDmh4lnS7J+UZPsL8DkqA9eaY1bfcV1WxRJ/+aYzOj9h/pRwjCmw7uwFY3Ulw+KC8ft5SPZs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=HTdtcuyg; arc=fail smtp.client-ip=40.107.223.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8765021505E;
+	Wed,  5 Feb 2025 22:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738794843; cv=none; b=GZ3x/T5G/hxSOoNCHBox06JkZTgqtGCLInOL2j8BxJKweE2aB8VfLJuJaWc0atg42MErA73mc7slwO1+v8oBGv5szjrJZA/ZeqGxVX/nMIXfle6u89WoTUGpVy6BsIVZ+y/QfUSF158pbeVFlf+7iOp7uCxMdmo7DIVXyTu6WR8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738794843; c=relaxed/simple;
+	bh=adQTj1m3gmGYNXK4mStiHNB3LW4uOX5cg557NJXyWLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mo2ubjuW0x1cQWwQagfzfTZytmk0taIDPP+FMUwki9qQiIHJJDWANpCFSgEd0+zrj9CuDJB56j6b8Ao6p+ZTzDE6ssXXdFJi2TlHyYkDVPr6anrY3J1CD0TQhD7qZM+bu+rdTG19IQfV7mdh5PTNA4D0d7EAd/P7o9jx08U3kUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UnQI3naM; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="HTdtcuyg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u4c77iYd8IjqgCUfp8Yus9hegTV1urSFreIB+n9Ot4fVHPbL7g+IQOUjHiAuCg6UpXhsnIcvUV7oTZC2BTP5K+rtdzhnaWZMdDf4pY2K37UqTVeldIO49E4tfhRFpPblXZheQ/iGIEmwiN+Itq4foRJ2J1TGQxZ2qrmG1SPMaq9uvkXY0VhfF/tvTI3eExJ2ZMAHn7zONCugUAU58kZ7GAdE2s0BvPLK5jVHDUA2bzJUk1tFUca604+kLjtOs+Srm9DCyyJPfk4UOqiYkbXQ2LG0FSuhleAIo9T2DFexG1AsC8124WBiA91AM0I83FpM2Anna2xUiRztXVXKW8Elcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zy8uWZdBqGC2At119VwnopHj+ygWcWcoJ9ZHUpNo/gM=;
- b=v0WJ/knriHVLnJpmKdOq6Z11jcT7QijsRFVtmsPbsQhz5JvAo8BD5RiNIgGOw0nGymj4G4lI8l+1NF1im0gZmw8mGqYEDgBv6UalFWPLIPD8wd6mRzH8YSuLjZR52uudOeQZ2BOMeqRUjLFhdY+Oj63W3E+IGMNSTjMemBovqKuZZmo0/gBfXScsdFuoWSytjgRgc02HO5D+aKDDjnWjZ4218RB671igzTZ3cw4gyPSkG9ZjiUCE6NytosFlFmEFprCSLym07F7SEnlK9gDCBPJt5B5LKCcy8F5YopCR72uxk5xg+Cm/V6y/DxjX2Uzw1CB49tFehPlzvtMdzWRA/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zy8uWZdBqGC2At119VwnopHj+ygWcWcoJ9ZHUpNo/gM=;
- b=HTdtcuygKj0XWYxysZBwoYx3z4k3JmXrvLyv6hEB0yTkxiG5zD7eKP8PlofO393UK+vmeGGmxLGBMfgwiEpThFODH7tcwcVch3PcVLQL6ED7k4O0FNKzDIvtuM1c8JFRP/Tn7bn7j8GmQDQHV1oTLrcZOtRxcFp5F5nYAVX7zbYYJ3v+9PN7MLG6Elkj+E22QZk10VTKG5MhhXNNnDyuHcZ40icUDqqWCWRlJejLXsG+e3iWX5zx2aYEXiqJlusG+LLKd6VWerPvTCkkkNeadL0O+TayCvwtMf0rIqd7zAoOnCNO58UIAbWyvNkmQsydxXvuDvGpDJuXSEJau4Pw7g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA1PR12MB7272.namprd12.prod.outlook.com (2603:10b6:806:2b6::7)
- by DM6PR12MB4450.namprd12.prod.outlook.com (2603:10b6:5:28e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Wed, 5 Feb
- 2025 22:33:28 +0000
-Received: from SA1PR12MB7272.namprd12.prod.outlook.com
- ([fe80::a970:b87e:819a:1868]) by SA1PR12MB7272.namprd12.prod.outlook.com
- ([fe80::a970:b87e:819a:1868%7]) with mapi id 15.20.8398.018; Wed, 5 Feb 2025
- 22:33:28 +0000
-Message-ID: <d51bab17-b3d4-410b-be2a-e1d9150fa57d@nvidia.com>
-Date: Thu, 6 Feb 2025 09:33:22 +1100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-To: Shakeel Butt <shakeel.butt@linux.dev>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, linux-mm@kvack.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
-Content-Language: en-US
-From: Balbir Singh <balbirs@nvidia.com>
-In-Reply-To: <20250205222029.2979048-1-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0218.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::13) To SA1PR12MB7272.namprd12.prod.outlook.com
- (2603:10b6:806:2b6::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnQI3naM"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso308433a91.1;
+        Wed, 05 Feb 2025 14:34:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738794841; x=1739399641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aH0PP844QcNcNPk9KJKcMheXTiPkxbPOA82ZgA1T/p4=;
+        b=UnQI3naMTvjl10Ht1JAwpbY89sVJF+46jwAiEiQNojjrCZa0YPVP68vBI2DclVwZsj
+         DwqPjOCBEUZ1DKEaLzsiND+8rytrXpT+q+PI3T76gxT2QzFYxjG/PrHxzST7k9+G9ogx
+         5OGHPjNlHSDyEKy27nXqVB2Nqju1AV47yJvNl/UWLyeSr0+VpqYfqNzAsch6KbSAklwQ
+         2lDoGP372BjO5qAkmvmqkMUx0CoHApgSmzvn3vkREqEek0Ewi63GstUzofO5B08KnRDl
+         qLTxOwSHiaM/c/UPDNqHdYwvAPhzyQnHSkgl8ffp8gANl928G8IpAHFmX/T7SiA06D7u
+         xQzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738794841; x=1739399641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aH0PP844QcNcNPk9KJKcMheXTiPkxbPOA82ZgA1T/p4=;
+        b=WdqdRkZaC6TN0ydHf8CcziUm/EwSYrYcASDu2Pqpcvp0ZNVyfxlb6YzJne9pOuj81o
+         RMW3A9bZh1OgW3JAwLbN/CsT0OqCSxhFkNqdStdGPPa02r120mBqH5xgY8Biolv0+quy
+         kHRYCtWtbwhFflcWnbSEWxPV9ulfjkeVOGpXmZIIyqlPBrRuBKiirvT37m6sfUZjVkcO
+         3y8LXXlS0VhpsZVfHBpTDDgl9KiXa4QEplhOdFMe1u3NJPcoQitpyEqbfnKvRTULBVaS
+         lxUVPZwgqw6MX/ISntQbeNk2fUNOmBrZ6QJFcichGs2PFnYW77LwBnGnbKX6NnFWCfum
+         dvXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpKVvuy1P4QkLo8PRAkYEj4N0L4cOxCzXx+J/PnUjCUYINB/0U6HqAk41nkSczscOss4Q=@vger.kernel.org, AJvYcCVBbF3BP59MCcPkMlz4Zz+4w79+TOOq5zeZjTeNm7JbeVrtMWWHbqku6Y1CB8ZWWWhs9Gf8y61k0NVHs2qCZYGY@vger.kernel.org, AJvYcCXzAyF2Y5Tk8k1nxr1LWUZg9EvTeMFVf4G+cA+8r23lz9SR9SgFLGzqSl4V2k4NmpDFoqkRrtiwylbty6b6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze13gyABpoXoaMk/jr2tViXDxGCfzGjJ2IKHZxi3oDjWCvf16i
+	eUJW/vJqFxr5rWH9DH+lzUHxYi7xZMTJppb77mt70RJSXYfUE9tnAbTR4tycP4MWgMS/w3YtRas
+	DQw3crhHLnbfIKBz1AqPsZ0RhTK8=
+X-Gm-Gg: ASbGncv4H/JpBzP/ZoYuPJKM/lh29aHuRbFxx/x34aEJD+hJMxM9IW4bi/LwMlCCqft
+	pNVWy0jln40ESB08rLl3JlLYatzb6qGODM8tMUyV8bak8lnlMs49cNBA96DPbT3bw8gqv92tM39
+	ub2sBnVLerrw7W
+X-Google-Smtp-Source: AGHT+IH6yHRsB9eq9KiZric8SOM0t9kXIeXj+JN4o1GstUwwyKafghnVHjlRCz9+B53uZayNYUHtcYUXxEAC5jbqe60=
+X-Received: by 2002:a17:90b:4c4b:b0:2ee:741c:e9f4 with SMTP id
+ 98e67ed59e1d1-2f9e0761162mr7556140a91.11.1738794840681; Wed, 05 Feb 2025
+ 14:34:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR12MB7272:EE_|DM6PR12MB4450:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91f38158-aed7-4466-db72-08dd46351c5a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TDFqemF0RTlueDBpZ2FGd1BhQ3VoUERtVWlrSWRrUkg2dE05V2d3NTA0eGYv?=
- =?utf-8?B?QzlieGtkYldWNS80aGlEbUcrWE9hL0xRZmxGS2lONVVIc2JQdnpOb1VkcU1w?=
- =?utf-8?B?TzN5T3hCNjZCYnBhb0ZsRlVRczhNNnkwdjRCZzhlOWM0OUluNUxmOTZyZ2pT?=
- =?utf-8?B?dWJ5VVZ1UWZVSDgvQTR4OXVDdFVZVkR0Z0kyZHdNcklnWlhHMmswQ3BBeXJz?=
- =?utf-8?B?QmRhN1RtOWx6bnVzTzRMMFVTZ052T0dzLzNyc3pWemZwREIyU2M4Mms1aU4r?=
- =?utf-8?B?MytGS3pVV0dXNVhvbnZ3R3pLalJ0RG5aVHoySGVXWW83aTNwSTM3SzZWblFW?=
- =?utf-8?B?NmtvTjNrbFhUTURwOFJhbWlyM0dLdnRPRE5mNytSNkJtdGRuQk56dllWaEhW?=
- =?utf-8?B?bXQzVEtlbnd4ZWZWa2JjWGNVcFVFUE9XUkh6b245eVIwMnA0TlVTZnA5bnNC?=
- =?utf-8?B?S1RpR3VaOVVoOVB1d0tJMmpBNEphY3pLcitJMlRyRWJFNGh0dzcwM1ZaZ2RU?=
- =?utf-8?B?SFQ0UTBuN2ppbFdWOTluUXFKZTNHQUcwYWlGWmRFVmpqbHJkWDFFYkR2bkZI?=
- =?utf-8?B?NnF1bGw0VjQwZ0NVc2ZJU3F4ZXovNXJkWFV3NnJvWVovaFpJd3NqcFBtMTZO?=
- =?utf-8?B?dWpObXVRZmZDTmRSUE90a0NVbGJ5Nit3eDFRTUlQY3RlaHMzRnl4Y1lIcnhi?=
- =?utf-8?B?ZWNOcE9JRkN3NWxaTkxXL3d4R0w2TXNSdGYyM0FhTWhmZytscXdOQldVTFE5?=
- =?utf-8?B?WHFqSmt3VzRCSTNGTG4wS1Btbk94YkxMbGZWZ2FnQ0w1bktxTS9Qbm4yNXUr?=
- =?utf-8?B?alJIVW9DaFlXVkFEWHZrcVFRYmlEc2Yxa3pwZVI3Qkk4U1hNeWg1cHd6R256?=
- =?utf-8?B?aDloRkc4ZzczUXF6L0o4N0YxZEcvWHlPWGpzKzErclU5YmNicTlScjNxTUth?=
- =?utf-8?B?KzlTYTN2YksrT2IyUnJWODJFZEI2YkhNZDNseW5yZjE0U3lUZDhJTGJEWmha?=
- =?utf-8?B?UkdXaWxJMUZ6cTBoK3JoNmZWRVp5MkxPMXJ6R1puMXNzSS9aNUU3ZUZFWCtt?=
- =?utf-8?B?Q0NBZXlXUDFHSzFFeXRIaXlDQVozdE1QWjJaQ29xN3NiRFVVc04vTWlrdjBN?=
- =?utf-8?B?UVRKdENidlpaQzFyZW5ZYU1CVHc0azk1Mjl6eklxc2pIZEJ1SnhEVDVEQmdY?=
- =?utf-8?B?UzhLV2J6dEQwNHUrNURjNDcrYkUza3BQemxJamU3UG9UVEhiYy9OS0JFZUhD?=
- =?utf-8?B?Q2Z5K3F4d2dUSGdQOFJ3bWRxS1c5UkhOL0l5ZS9CZTNXaHZDUHFiVTBGZy9I?=
- =?utf-8?B?cUhkTk4rcEwyYUh3V1NsbE9LWlcvenJRejlJWkl2bENLR3JQcFdEeDQ3cnRa?=
- =?utf-8?B?eFh1dG5wS0NJMC81YVFSQkFYVmRVZ0xBSHkzcVJEci9oMWxTUmEyai8rVU1O?=
- =?utf-8?B?SHZDbDNtTkNjWXRjTUpPWlFjL05uNndiSU9veTNaeUtBb1hCVGxWQmZtWlpv?=
- =?utf-8?B?Mk5leVM4M0FLU3Q3RlNaN1hnRWowYk9WVVZFVmtFc2ZLUHJLVDhSN0VsSGw2?=
- =?utf-8?B?cTc3R0EzSDkyU2MxcDI5Q3JzbExENWh3bGVTbGFORmhiUFJ0dG1NNG1iTkE3?=
- =?utf-8?B?ci9zbERnT3YwMEVtNXFXL0kzQnpOWUNDQ2lUbWY5RWg4KzNISVQzTjYybWE3?=
- =?utf-8?B?YTdmelR2VzFBMzFKdTJZbnplUEx4MVdnNmJpWkJvWktoRGNkQUhFajV5U1pV?=
- =?utf-8?B?Z1lScXFOWEtjL2NJWFpaZW0xejh2V25zUEpKakwwVUdLM3hmV0JwbEJSeGhU?=
- =?utf-8?B?bGNpVys2c1R3Vm1UWURKTDJHdlY3T09ZTjNYdE1mR0h0ZmVwL1NwQU1meG1s?=
- =?utf-8?Q?Xf+pUor3QnyKq?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7272.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NTZsL1lFTmdUR09uSmF0ZmFMd2tyYjRlcXE4dXdxamtKNEFBekZEaVpCSmxE?=
- =?utf-8?B?M1BmSFd3R3pFaFdCU1B4aFpXN0E2UWNmd0Z3TGk5RDFFbG9wa0ZuV1RrMFpG?=
- =?utf-8?B?Wjh3alYxK1hGdTV0MDI0cjhlR2NTOFdqbVRPaE96SmkwOEFCVVUyWjZlUDU2?=
- =?utf-8?B?WVgyR3RQTml6NmFxaVBUcFUvQVBiZDMzR1RCSVNYSWNmbFVyd01kRWxUMDNI?=
- =?utf-8?B?djdhaTJ6SitUZkNlVGhiN3VMbXJRYXBCdC85amF6WkdiYUQ2cVh4WEtyUUpx?=
- =?utf-8?B?T1BpYjhGVW9SZG5SVGxnUUhoWG5ldTlpNENTVVNTTUNqYlZkdUVmVS8wbzVp?=
- =?utf-8?B?NGR6eTNMcmZ4ZWNHZGRmTWFrejJOTmg1dVAvZmdtenBJcnVWWG5OdFNya3hU?=
- =?utf-8?B?T3FabWpmSG5jb0hMQjBHVlR6Q3h1RDVGeUNFR0o2clZsUzZ2c2c0eHJDVUlB?=
- =?utf-8?B?cWNzQ05CZFhEVHRQWEdmaDJ3M1hOOEQ3SFBQRUlyc2JVbHYzUWUvNVZ1L1l4?=
- =?utf-8?B?NEErV2FuTXFSSEE5dmdubjFmTk1FZnUvekQ4YUQ5OCtkTVJPRWVSTytkaFpC?=
- =?utf-8?B?M1dnWUpKakFZNWlWRFViZTdBeUxpUEUzQUo4RUk3cktpS3pRNDBabG5UaVlk?=
- =?utf-8?B?MG1qeTNXNlI5MjF4cXhpT1NYWndkYnZhYUVOck5VQnlLbzFnaGNwTlRqdlh2?=
- =?utf-8?B?SzFvYjZGSitxOWgva0YxbEdwZDdXUVdEZXB1MllUR3ZETE4vQmJJNFcrTHNU?=
- =?utf-8?B?Sk9scEVtZEcvbzM2T0l0NmxrS2p3L3oxOUFURnJjVCtlR3RTVkhHTCsxNWJp?=
- =?utf-8?B?KytVQnNRZG1oU1daajlZUEJlTHplWXFmU0FUNXRQYlhlb011UFdLYkpJM3dl?=
- =?utf-8?B?aC9GMFFrMjk2MjA0SEcvVk5oSzU3V3VVYUpLSFNRSjJRMU1xS2UrcWltK1pG?=
- =?utf-8?B?anByci9HZEV4eEhNYS9OM1pFMEsvRlFWTDRMZCtId1lpeXFHdUJ5Sm02aFJE?=
- =?utf-8?B?R2dZRzA5b1kxNlZodkFobE4zVGQ1U24walg3dXhiTzVZeURsV1g4bHVkOFFq?=
- =?utf-8?B?SzlYWkxwR01kYTVESEhZMUVrK2NZZlprSUtDWFJ1dGdaNkEzbzYwVkxSeENY?=
- =?utf-8?B?Smt2Rkx3OVV3Rm9FUkI2RWx0Nzl1Y2RlK1lxKzVab2VDNElxWkJwVzdVbExp?=
- =?utf-8?B?ak9GM2VOcHlGaUY3V2JvbDkraTZXejdFWDBQd3lIWWZlazBrQUtPaVhZRGE4?=
- =?utf-8?B?NlZGQ3lwWm94NWVBcGFIcDQwQzlJV0ZjajdITGcwa0liTTRLVXNub0VCRmEv?=
- =?utf-8?B?M1BrVVBnUmpIT1A2b0lLZjBxSlV2MEZZUVczTDhFRW45QkI3ZnRKdWdwWGt5?=
- =?utf-8?B?UHhRVEg2KytIRFJ1N3hDY0hjVGVwWHhRQ0hVdktkVlhFMTE2TWdMQ3NmRVl2?=
- =?utf-8?B?Y1oyTjhDVXJCQlN3QU9DZFh0dnNKeVl4aitxcmhEbFFLbGMwR01HZEJkc3A2?=
- =?utf-8?B?QWtNRitpZWhPbVZjTFNNbkdERnFuYlR2QmlISDVNQlF4cENqRktheEFtSVB5?=
- =?utf-8?B?cHN2MHF3eHFKYTRFVGtkSVd5amwwaXpIOU9Pd1N0bXRUZVU4Z2JHVUowdmxH?=
- =?utf-8?B?UmVHZ1JpalFHZkhSTU1jenNnSkpNMDhQckk1MWFscys2VlFGRWt5dFpJWlF2?=
- =?utf-8?B?MG41ZGRQU05Hck1ZVDhCR1FqU1FReGdpVUFydk9HTUxQK0tMYytrVFIyWmZ0?=
- =?utf-8?B?RGQvcGFRcEZSWmJPMnc2VjYrcktIZjJnMXdBS2gzVm5UQmJZZ0l4MFlWTjA5?=
- =?utf-8?B?cHlCL0EvbVlYZzN6c3JRWlhwdXlUZzEwRmQvdWw1UlBjbUpLdmxIL2VWWmxx?=
- =?utf-8?B?dzhFTSt3WVJIb3Z4R0FsS0FwTDZqL0pJYUk5MnBlK0xla0pyL2ZtYUhnc0kv?=
- =?utf-8?B?eHB2VzAwWnQyMlR0cmJ3ZDEwOW0yNmZ4RUJzN0gvcnJENy92a3NmcUN4ZU12?=
- =?utf-8?B?T1Uwd1BVbDhYMkg1b3dTT09ZYUxDWkwxSEk5UEtUcE84Ukx5SXlFNHBxRnNx?=
- =?utf-8?B?SWNxVng5VnpUbFJ3T21BYTd2NDNkYS9TUUUraHpMRnV0TVZObGFFQlFhcnd4?=
- =?utf-8?Q?XDTHzr1+0Eb/5AJr/k12nFyh3?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91f38158-aed7-4466-db72-08dd46351c5a
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7272.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 22:33:28.0899
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UL6kz6QRad8s4yw5KsSM8BUexRmW3YNTnkFcfCU5N2SXp/iLlAy7w5xSdcU2A70e+HdHQH4qbRaObteT8o8rIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4450
+References: <20250122215206.59859-1-slava.imameev@crowdstrike.com>
+ <20250122215206.59859-2-slava.imameev@crowdstrike.com> <CAEf4Bzajxh4xvg-aCaBhLQdNOZdhwceYUD2UsCcWku4ZBca_Hw@mail.gmail.com>
+ <8831ed8fa183f76fefd71244360fa0ca35b11910.camel@crowdstrike.com>
+In-Reply-To: <8831ed8fa183f76fefd71244360fa0ca35b11910.camel@crowdstrike.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 5 Feb 2025 14:33:46 -0800
+X-Gm-Features: AWEUYZko0wvNCjmlnOayQjsFSvvwvnSSwF6aSmRgeSYD_fPO9Zvi5IoEhUcXP2E
+Message-ID: <CAEf4BzYWe0KCzA4-qwAGp5n_ydJ0_zyLSO=Crr_vewFHzZ0t6Q@mail.gmail.com>
+Subject: Re: Re: [PATCH 2/2] libbpf: BPF programs dynamic loading and attaching
+To: Martin Kelly <martin.kelly@crowdstrike.com>
+Cc: Slava Imameev <slava.imameev@crowdstrike.com>, "mykolal@fb.com" <mykolal@fb.com>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "song@kernel.org" <song@kernel.org>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, Mark Fontana <mark.fontana@crowdstrike.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"ast@kernel.org" <ast@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"daniel@iogearbox.net" <daniel@iogearbox.net>, "sdf@fomichev.me" <sdf@fomichev.me>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"haoluo@google.com" <haoluo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/6/25 09:20, Shakeel Butt wrote:
-> Memcg-v1 exposes hierarchical_[memory|memsw]_limit counters in its
-> memory.stat file which applications can use to get their effective limit
-> which is the minimum of limits of itself and all of its ancestors. This
-> is pretty useful in environments where cgroup namespace is used and the
-> application does not have access to the full view of the cgroup
-> hierarchy. Let's expose effective limits for memcg v2 as well.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+On Tue, Jan 28, 2025 at 3:08=E2=80=AFPM Martin Kelly
+<martin.kelly@crowdstrike.com> wrote:
+>
+> On Fri, 2025-01-24 at 10:31 -0800, Andrii Nakryiko wrote:
+> > > On Wed, Jan 22, 2025 at 1:53=E2=80=AFPM Slava Imameev
+> > > <slava.imameev@crowdstrike.com> wrote:
+> > > > >
+> > > > > BPF programs designated as dynamically loaded can be loaded and
+> > > > > attached independently after the initial bpf_object loading and
+> > > > > attaching.
+> > > > >
+> > > > > These programs can also be reloaded and reattached multiple
+> > > > > times,
+> > > > > enabling more flexible management of a resident BPF program
+> > > > > set.
+> > > > >
+> > > > > A key motivation for this feature is to reduce load times for
+> > > > > utilities that include hundreds of BPF programs. When the
+> > > > > selection
+> > > > > of a resident BPF program set cannot be determined at the time
+> > > > > of
+> > > > > bpf_object loading and attaching, all BPF programs would
+> > > > > otherwise
+> > > > > need to be marked as autoload, leading to unnecessary overhead.
+> > > > > This patch addresses that inefficiency.
+> > >
+> > > Can you elaborate on why it's impossible to determine which BPF
+> > > programs should be loaded before BPF object load step?
+> > >
+>
+> The main use case for this patch is large applications that need to
+> dynamically load/unload BPF programs. Our specific use case is a
+> continuously-running security application with a dynamically-
+> reconfigurable feature set. As part of that reconfiguration, BPF
+> programs may get loaded/unloaded on-the-fly. Restarting the entire
+> application during reconfiguration is undesirable, as critical state
+> data can be lost and loading hundreds of BPF programs is time-
+> consuming.
 
+Thanks for the details (and sorry for late reply, been traveling lately)!
 
-Even without namespaces, in a hierarchy the application might be restricted
-in reading the parent cgroup information (read permission removed for example)
+I don't want to complicate bpf_object internals with this third
+autoload state, as this creates tons of non-obvious gotchas that have
+to constantly be checked whenever any new feature is added to
+bpf_object (or even during refactorings). It does seem like you have a
+pretty complicated use case, and so maybe some of the alternatives
+would be just fine for you.
 
-Otherwise looks good to me
+I see two ways forward for you. Either you can break apart your BPF
+object of ~100 BPF programs into more independent BPF objects (seeing
+that programs can be independently loaded/unloaded depending on
+configuration, seems like you do have a bunch of logic independence,
+right?). I assume shared BPF maps are the biggest reason to keep all
+those programs together in one BPF object. To share BPF maps between
+multiple BPF objects libbpf provides two complementary interfaces:
 
-Reviewed-by: Balbir Singh <balbirs@nvidia.com>
+  - bpf_map__reuse_fd() for manual control
+  - BPF map pinning (could be declarative or manual)
+
+This way you can ensure that all BPF objects would use the same BPF
+map, where necessary.
+
+Alternatively, we can look at this problem as needing libbpf to only
+prepare BPF program code (doing all the relocations and stuff like
+that), but then application actually taking care of loading/unloading
+BPF program with bpf_prog_load() outside of bpf_object abstraction.
+I've had an almost ready patches splitting bpf_object__load() into two
+steps: bpf_object__prepare() and bpf_object__load() after that.
+"prepare" step would create BPF maps, load BTF information, perform
+necessary relocations and arrive at final state of BPF program code
+(which you can get with bpf_program__insns() API), but stopping just
+short of actually doing bpf_prog_load() step.
+
+This seems like it would solve your problem as well. You'd use libbpf
+to do all the low-level ELF processing and relocation, but then take
+over managing BPF program lifetime. Loading/unloading as you see fit,
+including in parallel.
+
+Is this something that would work for you?
+
+>
+> The above points apply more generically to *any* application that
+> requires dynamic loading/unloading. Reconfiguration can be done via a
+> restart, but that has drawbacks:
+> (a) Losing any non-persistent application state on restart. In our
+> case, this creates a lapse in security that could be exploited by
+> adversaries.
+> (b) In applications with many programs, load+attach can take a long
+> time. We measured load+attach of ~100 BPF programs taking ~10 seconds
+> when done with current libbpf serially. Dynamically loading only the
+> programs needed avoids wasting memory and CPU cycles.
+> (c) The application itself might take a long time to restart, separate
+> from the BPF load/attach time. By loading dynamically, the BPF programs
+> can take effect much sooner and avoid wasted restart cycles.
+>
+> This patch set also permits loading BPF programs in parallel if the
+> application wishes. We tested parallel loading with 200+ BPF programs
+> and found the load time dropped from 18 seconds to 5 seconds when done
+> in parallel on a 6.8 kernel.
+
+bpf_object is intentionally single-threaded, so I don't think we'll be
+supporting parallel BPF program loading in the paradigm of bpf_object
+(but see the bpf_object__prepare() proposal). Even from API standpoint
+this is problematic with logging and log buffers basically assuming
+single-threaded execution of BPF program loading.
+
+All that could be changed or worked around, but your use case is not
+really a typical case, so I'm a bit hesitant at this point.
+
+>
+> In the future, this approach could also allow maps to not be
+> autoloaded, further saving on memory if no program needs the underlying
+> map.
+>
+> In summary, we believe dynamic loading of BPF programs is an important
+> capability that will improve the performance of CrowdStrike's security
+> applications as well as being useful to other applications that want to
+> avoid restarts.
+> >
