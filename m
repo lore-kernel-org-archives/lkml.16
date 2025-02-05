@@ -1,59 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0E92770B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C5C38F82;
+	Wed,  5 Feb 2025 05:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738734010; cv=none; b=uDqLf/+gFecu0FOwML6WPPEudNT5iA8MXSWGXRq1kJqimP0WiM0gpIEbTSTBgd4QIst5yJmKCBF8F7CGWTSDNqIp/w93ldd6vInD4pn0sG9Fikky23z70n0fAL8SMERp8sk/1jRUon5yD0lFmxHsMNm4pvq/t+BulDAemiQ2hPk=
+	t=1738734087; cv=none; b=ShU1R8+0iD8rPIVu6dIB6d7mHI1Zu7FoWqDq4gf7SLH3JgOPhwrvytLuFMas6SnV2DATVXwrdRieKUFCm4fCPEyYHeuXeXHe2mthqGtBPisL7HaxBHCuObd4rJywKdJV6XDJv86ggYNZWzQ2WhKHDTjkwsU643X/j+PRs4NW2Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738734010; c=relaxed/simple;
-	bh=ezmPad5fsmR8mnI+YmWvBH5TB9LNW6msTsAkmuugELw=;
+	s=arc-20240116; t=1738734087; c=relaxed/simple;
+	bh=1znfjpmGQuBCHLJwkeEX/T+iTnl+W6hHb8DyxGwflCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gSJ2jyuzwDQHoZh+DeE0hwyFCgvx5qv7w+/pnzqqACsrYYaN6lardyQ/mPc7503D9C4PLfN7wUaAKsHNLp8BDl6zAaBpxLucFgWRu5g3lOZDXi/54MnE7NBA147cPtnESetfT5mM2GkEad5s38s7+yYqkqCCDKtGkiVulfs3ZGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W77+REdq; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLcR2gQH/qKCyiL7qDqBpX0LmAv1d6m+uGla9DP/CjCLTX6u1cWK0gjNfbZHUu5Q4FfC+oQfBLF78vBFIWJaO+MyZ2MC7Wuuo7fS+ksU0F9Zidq2R4jqB2pc5aGdpbfdxiQ7pl45F8bUWMejs06Sg0CFQ/vgKHGO5ox8gRe00ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hRUnCidD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W77+REdq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738734009; x=1770270009;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ezmPad5fsmR8mnI+YmWvBH5TB9LNW6msTsAkmuugELw=;
-  b=W77+REdqvH9FtT5eFcjfiwa4TwVAuL7h3SITP3exEexiGVwIBQG4BGy2
-   6DXKN2ilIHrX6c/e6J+0TWuuI+DPTwDbwAGCbnO7jvc4/9U2O+MQLw78o
-   nLGQwMYVxMpO+ySwPIoXNT/He226zty0UZcsjLlVGLZ2q2n9jVLdSXRYC
-   K+Z6zBAvpQDMGoy2PMIbqQtqnTSrxMDQ7Hi5qcWCRLDCrRfoARpbQBVc/
-   XU2BVIyaNGmkbVdYbQFgoZYRRXhgd4waZt9kw/1uXiB1Mx+K7X3H1sQsm
-   4KtwP6huHZOXN1Evn45A39NJiRddGLiKnLyD+nwhp2tod+hL5QPDUmAR+
-   A==;
-X-CSE-ConnectionGUID: fy2kMyuZQGWU9KnegBOOhA==
-X-CSE-MsgGUID: hRo4xTifQAiSmPGyIuWSqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39315347"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="39315347"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 21:40:09 -0800
-X-CSE-ConnectionGUID: o9W/FGUHRaCt2OsfqK702Q==
-X-CSE-MsgGUID: vZwK1uLkQnaF/k1e6UOQoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="141690945"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 04 Feb 2025 21:40:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 82C9925B; Wed, 05 Feb 2025 07:40:06 +0200 (EET)
-Date: Wed, 5 Feb 2025 07:40:06 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] MAINTAINERS: Add pin control and GPIO to the
- Intel MID record
-Message-ID: <20250205054006.GP3713119@black.fi.intel.com>
-References: <20250204170100.48263-1-andriy.shevchenko@linux.intel.com>
- <Z6JQTdXEDWPaupZp@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hRUnCidD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F050C4CED1;
+	Wed,  5 Feb 2025 05:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738734087;
+	bh=1znfjpmGQuBCHLJwkeEX/T+iTnl+W6hHb8DyxGwflCo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hRUnCidDOUJ+NbY0Xbfn7IcJPjqfsxguURSXJa50UgyIwUz51lxPDlvaYKZTSvqA1
+	 kwVT49l2uAAAsMWWcbwsWVbfbbUfEU8C+j9mexTpArvlGwTdgCp63dbylHq/LyHmzL
+	 ZMm6Hs7q4Kn+X7402XQJBLaJNRtfXUyZOuHXUAdY=
+Date: Wed, 5 Feb 2025 06:41:23 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
+ location
+Message-ID: <2025020507-anteater-icy-44ab@gregkh>
+References: <2025020304-chip-trench-4e56@gregkh>
+ <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
+ <2025020444-chivalry-wanting-7f0c@gregkh>
+ <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,16 +51,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6JQTdXEDWPaupZp@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
 
-On Tue, Feb 04, 2025 at 07:37:17PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 04, 2025 at 07:01:00PM +0200, Andy Shevchenko wrote:
-> > Intel MID record is not listed all related files. Add to there
-> > pin control and GPIO drivers along with HSU (High Speed UART)
-> > and HSU DMA.
+On Tue, Feb 04, 2025 at 10:17:17AM -0800, Ian Rogers wrote:
+> On Mon, Feb 3, 2025 at 11:05 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Feb 03, 2025 at 11:44:13AM -0800, Ian Rogers wrote:
+> > > On Mon, Feb 3, 2025 at 11:25 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> [snip]
+> > > > Note, if you all don't like "pmu_bus" for the name, that's fine, please
+> > > > let me know and I can rename it to something else, but it should be
+> > > > something to get these objects out of the root sysfs directory.
+> > >
+> > > Excuse my ignorance, does the event_source bus already provide a
+> > > similar solution?
+> > > ```
+> > > $ ls /sys/bus/event_source/devices
+> > > breakpoint   i915       msr         uncore_arb     uncore_cbox_3
+> > > uncore_cbox_7              uprobe
+> > > cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  uncore_clock
+> > > cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
+> > > uncore_imc_free_running_0
+> > > cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
+> > > uncore_imc_free_running_1
+> > > $ ls /sys/devices
+> > > breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
+> > >          uprobe
+> > > cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
+> > >          virtual
+> > > cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
+> > > cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
+> > > i915         msr          system      uncore_cbox_3  uncore_imc_free_running_0
+> > > intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_free_running_1
+> > > ```
+> >
+> > Those are the exact same device structures :)
+> >
+> > Look at /sys/bus/event_source/devices/ those are symlinks back to
+> > /sys/devices.  In other words, that's the exact same structures, and
+> > the mess in /sys/devices/ with these event devices is what I am trying
+> > to clean up.
 > 
-> Mika, JFYI, it's supposed to go via Intel pin control tree.
+> Thanks! Again my ignorance, why do we need pmu_bus?
 
-Got it :)
+You need some sort of "bus" to group all of your devices on.  It could
+also be a class, your call.  This is how the driver model in the kernel
+works.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Could the symlinks in event_source be the actual devices?
+
+That's not how the driver model works.
+
+> Perhaps for temporary compatibility some symlinks could be placed in
+> /sys/devices?
+
+No, /sys/devices/ is never guaranteed to have stable placement.
+
+And define "temporary" :)
+
+thanks,
+
+greg k-h
