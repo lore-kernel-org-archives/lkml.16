@@ -1,41 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D494B2770B;
-	Wed,  5 Feb 2025 05:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E12B2770B;
+	Wed,  5 Feb 2025 05:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738732904; cv=none; b=id3P4wwv9EzdFiLUDMwaggAlMlzxtLrTqTeTWAPBDLOv2VPenqTcws3jChGCQdpGoxsSDRsCgqU2jTfDlRZFK3puZAtpU3ODdIoThr20wgyWYLoj4zsAIC6Tp4nAxPZ7riEiC8hmYQLoLqjlrPWohJyX3AYf529BtT6maVPEA/o=
+	t=1738732945; cv=none; b=qnls9MsvsP1sLX6BLmfVJl38DOwy81OvTm3nF0gGAXoG299TyfRqPaiV/3RjdmBSGbP6gy/5Kq1PhuxcNcXvA6Wj4Uj1qRyOj05eg+WgfhX0UN1st7mFqbn8PYoRbeaUY6MUJ3r6Y/5uk9QtqHSgtGHs6gzRyLmlCRtbzbjmHiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738732904; c=relaxed/simple;
-	bh=09NqadQ03is0WWFn8/nGxcD921BY37Q99Gp3kueAsrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PY31lbnWa7hEdfGZim2r60/CQxw/iF2S3kY73QQui9i5Y5nhJ3hgtysuoKtrQno8BipZa2UGRJr85apOmKgj8/vzJCOAoSbzF/dt31gPv8MEh7BwA5UwREXtXY+0aWFVEZHiYYVxzq66IKlXONa2eqBmKfgPs2X1POw0NphyWQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQ9uZzfv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738732945; c=relaxed/simple;
+	bh=teAmRA/glxpd4DiIqY2xWP0ql5pxdUqg7CzHOFSUFIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iPK9oIQNCkcJO5TuVcYIWjqIpRLJzZ0NiDy1MYb9N0U7YxAo5WnaTzn/VTr2xMmrPsJZ4RlYvWnPfpKKWuYjSQOC6zXfeNu+Ovq6kzXhPOoxUQd+9cfJHH8HJrNFjoZlbuOCLOOzWuLekHrUYmviHUrOJMO5v+/B90oi176jLBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLjtJx3c; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQ9uZzfv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E99C4CED1;
-	Wed,  5 Feb 2025 05:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738732903;
-	bh=09NqadQ03is0WWFn8/nGxcD921BY37Q99Gp3kueAsrI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=HQ9uZzfvEba6Oem+5SLrLX6z/vohbJKJMpSGwxNCST6nk+mFG5X/wtss/q2JUTO3Z
-	 DWtIm8OXAnJijKJNrbq92wDcWZ1Ca1ESuPtwEEDoQaA/e+a93n51Oxq0uic7qDgf5v
-	 c8sfu5rinvC9Ev3yBUUf3JF0Ti2WvTRN1QHjy1jtL1MMJZYDRjH7FGeROhYReP1fW9
-	 MNwr3O7TCvBjiTCwz0j8GEamCvHXjcGxyr8DKdY94XdjpvBF9sLzEYNrF5PtYv8SEM
-	 qQ7M0AWj5Bb6Zi2qqOG1YspM75vfC/4zOd59gpm4eZwo043PDs6hAGPIr+xm9idy3A
-	 pmjt6CidCjw/w==
-Date: Wed, 5 Feb 2025 15:51:35 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] tty: tty_buffer: Avoid hundreds of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z6L1XwE-WEzcGFwv@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLjtJx3c"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so72889315e9.0;
+        Tue, 04 Feb 2025 21:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738732941; x=1739337741; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=21hP7bpdvokUxQxofV+KNEVpID3xm7+fvYQNUaPIP6I=;
+        b=eLjtJx3c1JM9P3wPGj7x78Afnegjr4uQm6gJEPoG4pP8NyqkAeyAjbsizpmVfnyElJ
+         kupFLvAM42HGkIb49+P+GEKvM/ktAC+FJ2G8qw0vnTP5r1joq356aPL9Eq1plOGeoKYx
+         3WYEajYJei/cXMSF7xt/qI5gTUk3hoQl0jkbe95lQlq2KTHq47bB43U0m9v7rQ3rnxl6
+         lFbTE8irU7f7P03gJHawbqsoO5xocqciHYjqTE1yvATcLaba/qIS0hHDyEBhHz380/QR
+         UCOMFYbci8zWPRMU90tGL7ft11K+SeNn6M5jrTrSH4WwDpsuTIUI+fHbvGsMuB6JIkVF
+         SK5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738732941; x=1739337741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21hP7bpdvokUxQxofV+KNEVpID3xm7+fvYQNUaPIP6I=;
+        b=sX36P8DhivzqxaocU7Wtx6gw//w2tA6BX5rMPK6bHC/8XGKGBHciSxj841KOrHfdTu
+         xUPAthTT7KCj55nfESTSj9nraNzX7ydPm0vqzwmc4cktZ5o20b7jsmH+lOySxz2/RK4d
+         jXv9byes2MGbh3jk3mItmEK8wQhhcvZHn3oDfqKxUSZjXRhYbjH8qJzkprDQUH1FvBWR
+         zpTy9FHDrLG4N8m1r8X/G/o1hSoiZRI/nZR07f66VoFjoM4nKNG0O3dSsS3SY32lA0Wl
+         InG86An7BRO7SnJsXiTTbMwQVKmtwjs1xDvWUCvLi+uZAD6FJc6bVMhf5wTskG/nik4u
+         7gWA==
+X-Forwarded-Encrypted: i=1; AJvYcCWagE/VGv3FNmmn0QikqdmaTNTKQKQT47OAfcOfqZYNeBqpLzWjj7cLw3/go2luLeEzzP0nvqDnp/Hb@vger.kernel.org, AJvYcCXcoMVg/tnkab3logrMExDhyyfh54pumRZcqKoyZNnJnua5s6r8l27Oh6bQeXZDlpEQbk4GHsJE4AMsDGqh@vger.kernel.org, AJvYcCXlAJ8yMa6e6Sk2zWh2g4KEHLHXoiImfIo8ymEMP4AHiT8JgCI3ne1GXxKEhOsS1htZd84O7fIK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPX6n3ohohgp0ZwitDvW2+4EnnlHp5oowFnfXcxo9ZQFnVO9H3
+	DRxmNF7RM5LkhQ8qCL/Ks3QFw9gUCl0LhDLGhHwlOyExWCqKN9Ov
+X-Gm-Gg: ASbGncupk/UXcf8W+9n2nSRFyH2dNGSzoXQ+RO08oW2WJfdXU8+tPH6tO55FCzNvJVi
+	/pHwgIM2eiWrdOHZ/MR6bxB39SVlH69kTa1OQJmYWf/H3n2/h6ZJwMI3oa2/j6HjtDMpPTLUtSg
+	x9bUogYRWHQCJSi0M9ql9Z2PvIQ3Qdj5l7KWzIk0dvVfzUaWsAjL6xrL+EcpWlE8amzc+I9vc2R
+	vhm6LI+Umm3XpupcTFz8fLun2PQjpEVeURfCB5XrhODJIVg5Cm2pC679/UEwOfPGS0y50OdaA4l
+	eNUx1V+rDiUV
+X-Google-Smtp-Source: AGHT+IHj+FMgfhyJJ0oFoOUI5MqNe+dA1CICeYNUtW99AhsoLmOYnMg9M/knYT0ZemyuxGW8Rnlntw==
+X-Received: by 2002:a05:600c:3b98:b0:434:a781:f5d5 with SMTP id 5b1f17b1804b1-4390d574e18mr8415565e9.30.1738732941277;
+        Tue, 04 Feb 2025 21:22:21 -0800 (PST)
+Received: from debian ([2a00:79c0:661:ad00:45fb:7d1a:5e4d:9727])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d965438sm9366515e9.22.2025.02.04.21.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 21:22:20 -0800 (PST)
+Date: Wed, 5 Feb 2025 06:22:18 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: dimitri.fedrau@liebherr.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/3] net: phy: Add helper for getting tx
+ amplitude gain
+Message-ID: <20250205052218.GC3831@debian>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
+ <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,159 +84,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Am Tue, Feb 04, 2025 at 05:54:53PM +0000 schrieb Russell King (Oracle):
+> On Tue, Feb 04, 2025 at 02:09:16PM +0100, Dimitri Fedrau via B4 Relay wrote:
+> >  #if IS_ENABLED(CONFIG_OF_MDIO)
+> > -static int phy_get_int_delay_property(struct device *dev, const char *name)
+> > +static int phy_get_u32_property(struct device *dev, const char *name)
+> >  {
+> >  	s32 int_delay;
+> >  	int ret;
+> > @@ -3108,7 +3108,7 @@ static int phy_get_int_delay_property(struct device *dev, const char *name)
+> >  	return int_delay;
+> 
+> Hmm. You're changing the name of this function from "int" to "u32", yet
+> it still returns "int".
+>
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of other structs, we use the `struct_group_tagged()` helper
-to create a new tagged `struct tty_buffer_hdr`. This structure
-groups together all the members of the flexible `struct tty_buffer`
-except the flexible array.
+I just wanted to reuse code for retrieving the u32, I found
+phy_get_int_delay_property and renamed it. But the renaming from "int"
+to "u32" is wrong as you outlined.
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct tty_buffer` to `struct tty_buffer_hdr`.
+> What range of values are you expecting to be returned by this function?
+> If it's the full range of u32 values, then that overlaps with the error
+> range returned by device_property_read_u32().
+>
 
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
+Values are in percent, u8 would already be enough, so it wouldn't
+overlap with the error range.
 
-This approach avoids having to implement `struct tty_buffer_hdr` as a
-completely separate structure, thus preventing having to maintain two
-independent but basically identical structures, closing the door to
-potential bugs in the future.
+> I'm wondering whether it would be better to follow the example set by
+> these device_* functions, and pass a pointer for the value to them, and
+> just have the return value indicating success/failure.
+>
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
+I would prefer this, but this would mean changes in phy_get_internal_delay
+if we don't want to duplicate code, as phy_get_internal_delay relies on
+phy_get_int_delay_property and we change function parameters of
+phy_get_int_delay_property as you described. I would switch from
+static int phy_get_int_delay_property(struct device *dev, const char *name)
+to
+static int phy_get_u32_property(struct device *dev, const char *name, u32 *val)
 
-So, with these changes, fix 384 of the following warnings:
-include/linux/tty_buffer.h:40:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Do you agree ?
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/tty/tty_buffer.c   | 18 ++++++++++------
- include/linux/tty_buffer.h | 43 +++++++++++++++++++++-----------------
- 2 files changed, 36 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 79f0ff94ce00..f4e7520df7b1 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -120,11 +120,14 @@ static void tty_buffer_reset(struct tty_buffer *p, size_t size)
- void tty_buffer_free_all(struct tty_port *port)
- {
- 	struct tty_bufhead *buf = &port->buf;
-+	struct tty_buffer *buf_sentinel;
- 	struct tty_buffer *p, *next;
- 	struct llist_node *llist;
- 	unsigned int freed = 0;
- 	int still_used;
- 
-+	buf_sentinel = container_of(&buf->sentinel, struct tty_buffer, __hdr);
-+
- 	while ((p = buf->head) != NULL) {
- 		buf->head = p->next;
- 		freed += p->size;
-@@ -135,9 +138,9 @@ void tty_buffer_free_all(struct tty_port *port)
- 	llist_for_each_entry_safe(p, next, llist, free)
- 		kfree(p);
- 
--	tty_buffer_reset(&buf->sentinel, 0);
--	buf->head = &buf->sentinel;
--	buf->tail = &buf->sentinel;
-+	tty_buffer_reset(buf_sentinel, 0);
-+	buf->head = buf_sentinel;
-+	buf->tail = buf_sentinel;
- 
- 	still_used = atomic_xchg(&buf->mem_used, 0);
- 	WARN(still_used != freed, "we still have not freed %d bytes!",
-@@ -576,11 +579,14 @@ int tty_insert_flip_string_and_push_buffer(struct tty_port *port,
- void tty_buffer_init(struct tty_port *port)
- {
- 	struct tty_bufhead *buf = &port->buf;
-+	struct tty_buffer *buf_sentinel;
-+
-+	buf_sentinel = container_of(&buf->sentinel, struct tty_buffer, __hdr);
- 
- 	mutex_init(&buf->lock);
--	tty_buffer_reset(&buf->sentinel, 0);
--	buf->head = &buf->sentinel;
--	buf->tail = &buf->sentinel;
-+	tty_buffer_reset(buf_sentinel, 0);
-+	buf->head = buf_sentinel;
-+	buf->tail = buf_sentinel;
- 	init_llist_head(&buf->free);
- 	atomic_set(&buf->mem_used, 0);
- 	atomic_set(&buf->priority, 0);
-diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
-index 31125e3be3c5..4f705045d175 100644
---- a/include/linux/tty_buffer.h
-+++ b/include/linux/tty_buffer.h
-@@ -8,19 +8,24 @@
- #include <linux/workqueue.h>
- 
- struct tty_buffer {
--	union {
--		struct tty_buffer *next;
--		struct llist_node free;
--	};
--	unsigned int used;
--	unsigned int size;
--	unsigned int commit;
--	unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
--	unsigned int read;
--	bool flags;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(tty_buffer_hdr, __hdr,
-+		union {
-+			struct tty_buffer *next;
-+			struct llist_node free;
-+		};
-+		unsigned int used;
-+		unsigned int size;
-+		unsigned int commit;
-+		unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
-+		unsigned int read;
-+		bool flags;
-+	);
- 	/* Data points here */
- 	u8 data[] __aligned(sizeof(unsigned long));
- };
-+static_assert(offsetof(struct tty_buffer, data) == sizeof(struct tty_buffer_hdr),
-+              "struct member likely outside of struct_group_tagged()");
- 
- static inline u8 *char_buf_ptr(struct tty_buffer *b, unsigned int ofs)
- {
-@@ -33,15 +38,15 @@ static inline u8 *flag_buf_ptr(struct tty_buffer *b, unsigned int ofs)
- }
- 
- struct tty_bufhead {
--	struct tty_buffer *head;	/* Queue head */
--	struct work_struct work;
--	struct mutex	   lock;
--	atomic_t	   priority;
--	struct tty_buffer sentinel;
--	struct llist_head free;		/* Free queue head */
--	atomic_t	   mem_used;    /* In-use buffers excluding free list */
--	int		   mem_limit;
--	struct tty_buffer *tail;	/* Active buffer */
-+	struct tty_buffer	*head;	/* Queue head */
-+	struct work_struct	work;
-+	struct mutex		lock;
-+	atomic_t		priority;
-+	struct tty_buffer_hdr	sentinel;
-+	struct llist_head	free;		/* Free queue head */
-+	atomic_t		mem_used;    /* In-use buffers excluding free list */
-+	int			mem_limit;
-+	struct tty_buffer	*tail;	/* Active buffer */
- };
- 
- /*
--- 
-2.43.0
-
+Best regards,
+Dimitri Fedrau
