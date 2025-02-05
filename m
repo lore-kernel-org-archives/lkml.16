@@ -1,110 +1,165 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032C4186284;
-	Wed,  5 Feb 2025 15:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F89718D649
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738768238; cv=none; b=oV6lu1fm2naFvtqk4g9W9ImlTnS16nHcZQfiR4YBcubO9DNth/mJMIdpmllyJfA3taX1Qge5GT+blMnlfuGzV5BbAqRlH6Gnal6CH0d6u3OgZNCZEfIgyDBH1qdn4siGa2qYiyx+2mWTa6I8orbeYfdTs0cE38Z4O6j8TdpLf4c=
+	t=1738768240; cv=none; b=O+zOxkAy8N+lQHPSlDThDvbXUuXC4Ci21y+VsgzS1PkgUq1oaRGdsWJM9+cwu5gPkbFV7V0+L8BorHW4jh3zeI7TwVBF/VRpw8O3n3+JuR4/XI+nm4SfoBawFs8R7UyYbTWNxJeUoFlkngwO+vlHQqujglr79igliCTmLehnVoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738768238; c=relaxed/simple;
-	bh=5bnC+RMJy9Go74Xk7wf5n2n16fM9EiwTk6qRnyxUz0M=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=e/ecxW3EvZ+86i/+kIu72eDcNKFUI0YGbRH6bT1wrWqV3DUWvJUyfFe24pUuQHuqnMlJjc7tNrZHwliU7lS31LTV8FT2wCJlZnXcEaNOSUKZVJnLwnuTfu6u4Gm/CD6GPeCcqqhjbmGb6hmQ2TbztEpfkEDSh5roj8xwCvJR+vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FuNkhrAH; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FuNkhrAH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738768233; x=1739373033; i=markus.elfring@web.de;
-	bh=ZTYLfFE7cC+DQ7FxXv045p/gA84CPFiSe7CIyfB3gPw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FuNkhrAHcHpgcrJ1R8UThkvUXb5tSzPA65qjDDR8C+8Ln1RsWNgPC1kwuWw+D2x+
-	 sQSA6o1sB6KWw63NXRridI7fAinIMGr/b3iLr1jUSlI4jMll9qL4wTAWVTf0na6Z7
-	 wmHGUDV9/JW0uFeN2jr/R6pBXHGPsFFSWNWdCi9/WFzZN2UVUOF3t8QTJOjsGNa8X
-	 wUMd9HJt1vyPv/2ZwKQ2Zi4engNWhj7TPap7MeOJ7KSuPzfwRA7W9EaHS5Gf2pAeH
-	 b7J8fE3F+tiebfZ2ULuUM8rZ+jrnh8O92salF599hYHKM/A9SZKqoW6+P1UTFw9sR
-	 DYA37Pen7SJ5SHGgTw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.30]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M5Qq9-1tgVrR1wk1-00EhNq; Wed, 05
- Feb 2025 16:10:32 +0100
-Message-ID: <f5462109-1603-4866-895c-b5c349261296@web.de>
-Date: Wed, 5 Feb 2025 16:10:29 +0100
+	s=arc-20240116; t=1738768240; c=relaxed/simple;
+	bh=nG0dEu8OskEFWpJvNUYYdqhbCpLn3sLULzDXgSAaafw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WWmJ2/8OBYKWZyZ0ljm9BgrWYeAdbHpEZ4F85WsK8r3AySb9qf+kj+OpsKFOpCkoXZPBAt9ZS0tUDtKDAhwIIlmVDQNCwdhwWV8GT/2rXA4PKJVvzYROTc5SdekHBVtmEbkCXb8cKuRc01K4cnoQVuDZ7AkErHGMuqR2AFU4k4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DD511515;
+	Wed,  5 Feb 2025 07:11:02 -0800 (PST)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11E403F5A1;
+	Wed,  5 Feb 2025 07:10:35 -0800 (PST)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Steve Capper <steve.capper@linaro.org>,
+	Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 04/16] arm64: hugetlb: Refine tlb maintenance scope
+Date: Wed,  5 Feb 2025 15:09:44 +0000
+Message-ID: <20250205151003.88959-5-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250205151003.88959-1-ryan.roberts@arm.com>
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84s?=
- =?UTF-8?Q?ki?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
- Jingoo Han <jingoohan1@gmail.com>, Michal Simek <michal.simek@amd.com>
-References: <20250129113029.64841-4-thippeswamy.havalige@amd.com>
-Subject: Re: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250129113029.64841-4-thippeswamy.havalige@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hHjPFyBsqQkZjlLdf4YmgMoKUnnN3S+V7S4jHFw41yxYr9N7tJm
- tLjQOZeqby2CZ2iUWA3XQisRnZinluElcoVSzF7Bk2mYG17d8pYNmBL0m7ASl2N3jNxeP9d
- ENWs60isQuYfdknyekw1fol5plBXXIY3jEo8iXA0aqWglpqMUbV7v49SscFmXL8tO40I+y0
- GOUr8Tmt2HhKeRQM2ZYYw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:y5KBcZ97QHc=;mvS+lr44qC0nRsDpM6iISqhJSIV
- GodAgrZ7cY5pH7w+jTGJjqHQiK6hgXyN8SyvMhAOOL2vk0yckSftL0a82908aQjXmaSfmVKRJ
- sjAxdzdKIcPpGS1rIYDN0apgN+Bph7qsh1yyG0knegLgYahfN4EJhhNwjqFHnpCkbn8uaUwy8
- FSUTC6vA4isva94mNFMOdVZDtDJHzlvQVN5ZToOiA71QOp1VDKOy0ipSCT1Ty335UltlKtVm2
- eClKjwNUpYmkHWni9MNGXLCpyCd1Ai+aQtOw7mQcSCy9u3NjweqlqAtwF0iIXV/e59IFRDm06
- 5dsyD4wI4PLBKKNaKRm7YdX4b1MgagmAQy45J3zhWw/2MU0+/QvPUEuXJ8J/54vpI8fKKivVF
- YrbK+CcuHhTMtZ7rJkrccr0qw2m4dO0hAYX8avPX3AYxUoSvgj5FHU0uI5/Ue4H3UJTUuJ8kr
- 1uERLFdPHa+9LLgAFipXP/c2hn0GRnqUvkbCgnfTAERITqCIcPQSWoZ5gt/fAR5TBC63CH4t7
- 1bUf9GHLT30ma6kY84DgDgtvfoomE4fh5OHy1ltgiVIlAqj3eHmj9u9eZ2k1wpFkegIXqcNBY
- n18Nsc9e9Mky517yjzAz31PemdczFALiyaw1oboy092+0HufoLsG57xJSJqJx6VEc0Z01e0rv
- fP1rwhnkxHuFjyY8U4rsa0G11qTvjmc39vTRm/LI/zdZTZI5OtB4kn4ZGZNFJHArWxyEvpvqb
- tJHxIrsI08EUo+iiCGggg6rjn0OwM6hzaWfY2/qd9kYL5qDgHWJqAKHoPi0HxzKsitOKoWy7t
- U8fcmz338g0+xeVGUn+1Ig1DZPundegragMR7tKXQwBHIwPJNexdIL+S2GVKRxybre1YL4oM1
- U68jlEHc/02IZtqyNgKR5a3YGf9MXO/gB5IrZ/OOdqhmc2TV0m0r4NmVYmFWxWKoCmmpLUaN5
- svQthnALpcUVwG+qQS29uLJtUD4UrpNU/82pZGVb51mKYUvjDWoCJQ3eF37dqPOtqQOkvgSMY
- ep2TSANTlVfqBwB1izge1VFblK8YHmrJPvCdw+VwwXJr4U6g/eGDqAG5oRJyz4F+zzApmW8Qd
- DLcJn4Mctuu5hzGzoDQCv8Ta+ThXjxUQVldjJGrfM0I8CZpPZaWGuFMhEAoxsaqCB/RQVIen5
- DK0xCI5GxGFg0W2llqFmNz+XKm/vojNOjkpn0HFkx+zw+AvWIRgBMB/LYfhaemArqRkREUA2i
- Mk6n6Bw5jF2A7IigPioCpWXTjdsjm1kzWJ+Dvdb/jJE+HgDYUskzmj13RBDn6OU+SQ5MeuTTC
- trD4t/q9h8e+R0fn6lqAGcxb2d6otOD6hITu3s9Nv7Qe5pyIJiaJ5lD+Dt0DEZKApLZE7W3Zb
- ye5/HolT3GB4cOXPmvd+6wgke0n0Mrkm1oWznoCEl3SmXiqkD+VCmVdPy2yEikaRi9yJIesZu
- 32uoDKjN8otSwfT7w7aO5NgggYMU=
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
-> @@ -0,0 +1,476 @@
-=E2=80=A6
-> +static void amd_mdb_mask_intx_irq(struct irq_data *data)
-> +{
-=E2=80=A6
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-> +	pcie_write(pcie, (val & (~mask)), AMD_MDB_TLP_IR_ENABLE_MISC);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-=E2=80=A6
+When operating on contiguous blocks of ptes (or pmds) for some hugetlb
+sizes, we must honour break-before-make requirements and clear down the
+block to invalid state in the pgtable then invalidate the relevant tlb
+entries before making the pgtable entries valid again.
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(raw_spinlock_irqsave)(&port->lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/spinlock.h#L=
-551
+However, the tlb maintenance is currently always done assuming the worst
+case stride (PAGE_SIZE), last_level (false) and tlb_level
+(TLBI_TTL_UNKNOWN). We can do much better with the hinting; In reality,
+we know the stride from the huge_pte pgsize, we are always operating
+only on the last level, and we always know the tlb_level, again based on
+pgsize. So let's start providing these hints.
 
-Regards,
-Markus
+Additionally, avoid tlb maintenace in set_huge_pte_at().
+Break-before-make is only required if we are transitioning the
+contiguous pte block from valid -> valid. So let's elide the
+clear-and-flush ("break") if the pte range was previously invalid.
+
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+---
+ arch/arm64/include/asm/hugetlb.h | 29 +++++++++++++++++++----------
+ arch/arm64/mm/hugetlbpage.c      |  9 ++++++---
+ 2 files changed, 25 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+index 8ab9542d2d22..c38f2944c20d 100644
+--- a/arch/arm64/include/asm/hugetlb.h
++++ b/arch/arm64/include/asm/hugetlb.h
+@@ -69,27 +69,36 @@ extern void huge_ptep_modify_prot_commit(struct vm_area_struct *vma,
+ 
+ #include <asm-generic/hugetlb.h>
+ 
+-#define __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
+-static inline void flush_hugetlb_tlb_range(struct vm_area_struct *vma,
+-					   unsigned long start,
+-					   unsigned long end)
++static inline void __flush_hugetlb_tlb_range(struct vm_area_struct *vma,
++					     unsigned long start,
++					     unsigned long end,
++					     unsigned long stride,
++					     bool last_level)
+ {
+-	unsigned long stride = huge_page_size(hstate_vma(vma));
+-
+ 	switch (stride) {
+ 	case PUD_SIZE:
+-		__flush_tlb_range(vma, start, end, PUD_SIZE, false, 1);
++		__flush_tlb_range(vma, start, end, PUD_SIZE, last_level, 1);
+ 		break;
+ 	case CONT_PMD_SIZE:
+ 	case PMD_SIZE:
+-		__flush_tlb_range(vma, start, end, PMD_SIZE, false, 2);
++		__flush_tlb_range(vma, start, end, PMD_SIZE, last_level, 2);
+ 		break;
+ 	case CONT_PTE_SIZE:
+-		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, 3);
++		__flush_tlb_range(vma, start, end, PAGE_SIZE, last_level, 3);
+ 		break;
+ 	default:
+-		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, TLBI_TTL_UNKNOWN);
++		__flush_tlb_range(vma, start, end, PAGE_SIZE, last_level, TLBI_TTL_UNKNOWN);
+ 	}
+ }
+ 
++#define __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
++static inline void flush_hugetlb_tlb_range(struct vm_area_struct *vma,
++					   unsigned long start,
++					   unsigned long end)
++{
++	unsigned long stride = huge_page_size(hstate_vma(vma));
++
++	__flush_hugetlb_tlb_range(vma, start, end, stride, false);
++}
++
+ #endif /* __ASM_HUGETLB_H */
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 328eec4bfe55..e870d01d12ea 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -190,8 +190,9 @@ static pte_t get_clear_contig_flush(struct mm_struct *mm,
+ {
+ 	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pgsize, ncontig);
+ 	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
++	unsigned long end = addr + (pgsize * ncontig);
+ 
+-	flush_tlb_range(&vma, addr, addr + (pgsize * ncontig));
++	__flush_hugetlb_tlb_range(&vma, addr, end, pgsize, true);
+ 	return orig_pte;
+ }
+ 
+@@ -216,7 +217,7 @@ static void clear_flush(struct mm_struct *mm,
+ 	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+ 		__ptep_get_and_clear(mm, addr, ptep);
+ 
+-	flush_tlb_range(&vma, saddr, addr);
++	__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
+ }
+ 
+ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+@@ -245,7 +246,9 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 	dpfn = pgsize >> PAGE_SHIFT;
+ 	hugeprot = pte_pgprot(pte);
+ 
+-	clear_flush(mm, addr, ptep, pgsize, ncontig);
++	/* Only need to "break" if transitioning valid -> valid. */
++	if (pte_valid(__ptep_get(ptep)))
++		clear_flush(mm, addr, ptep, pgsize, ncontig);
+ 
+ 	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
+ 		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
+-- 
+2.43.0
+
