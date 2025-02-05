@@ -1,105 +1,85 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F6F2147F9;
-	Wed,  5 Feb 2025 21:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4D0204C1A;
+	Wed,  5 Feb 2025 21:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738790056; cv=none; b=dVM1ApuqymJTtdE8T4n3KEupDy59rph23tBAwZm1c5eVyBNRDoY5FTtGxLVukY0YhdtFQwFtruP/Of/yQq0un5oUy6P762AezhlSb38WR8DNjDZC3MfRw1sWO8NWehiSpZhx399DclqlFhpz/ai6wpjO6KJMCtum0N9nO/z11TE=
+	t=1738790349; cv=none; b=r+TzoLP0k+0Y7NrsDKiTu6tVqRTpo+G5o04f+hEU5Rb2FtdYfvcL9HPTEAyBPajvSvQtV83GcDRMQmxsHb1F3SuoVo2OtwWXCXMnXJbirkSXqknbBGQqkfHbB8Ie2tUKVd4v/ndwzaCULWupF+qwvieZRTca4DeCwPYCT6xZ7Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738790056; c=relaxed/simple;
-	bh=KugHMl11lphY7X+eKVMkQ7YSdoECqG16VgpjtDZyfhw=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=nY7U3349dl2D51eEUsq+0LtJ8EzM4jAkYe5zmxC5hnYyKQ6eAn/f+jhdF++QbpglagyhNJ+NyxPPUheGt8Sjmo8jPUdjxbyDqNjXxXHLTHwjhDUXhPMGgmej9a+KLkzCPrUsBrEfe6+cPlXcLcCQKxDjJtSeochQ1rW3JzEQ+yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k1fK+JId; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1fK+JId"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-518799f2828so114981e0c.0;
-        Wed, 05 Feb 2025 13:14:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738790054; x=1739394854; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Atkob+jpFe5XAV3H/mgAKiaXJzCzAm2xhYQkiL8EHq0=;
-        b=k1fK+JIdLhnCCE3Kvmmq8zsNE4vboWZbFWLrCJCFfdslo418YUBJXyNvM+WLXzvtGF
-         9zAHFmr8WvhL9tTPLa3eB4ftCYyzmZnvfl9Xx2U30WmbbM8R2d7y9pbMKxUg7GA3HTe3
-         vcHAhDh7GWzy5073s0WpheeZkwouX6CwO7orHcdjFG2YjC2lcu/9Ev9eCGy7yQk8ZE9H
-         IhPuFnMUTliBACpH9iQuImlowfm+BHWCs5SQJ4aFFyUW7F/SE8TMV+e14kf8EmRP2NPt
-         IrDjrLzhjfpA7irraCoNqEoAk7ZS7M6jNOXoYwZGwtpUmAJGxCg0OSsg7skOWJW2NATZ
-         f7dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738790054; x=1739394854;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Atkob+jpFe5XAV3H/mgAKiaXJzCzAm2xhYQkiL8EHq0=;
-        b=PPyQOjJyx0Q/jFmhDBM5F97RxL/KBDpemwvI0R+PkCln4Q4pKfreHk7aKqn1G4eP0A
-         3XJMiZY48K0a+fY1KIoUCTz8zIU278JnrrSAQppC04RD9Ti2is7VbonrTuI5iypLu/un
-         819l9vJAI1PgYYjVc9JV3beKBe/dJVNIeF2L4doTQrVsRlL9b7daFcrpqa+aTlBRqd5l
-         zFDEalJiOTh2llIM2E96ZXVKuYjsc1J76rcHXqLAhwamkUR78p9YrOgMzkLT3m1wN9Uy
-         zIUFo87gjkLG1TI+e23WLEzXX78X4EzVil2Y+iDm578gUzDGryADbZ1wjXKJCF11xXIu
-         RYWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqcDYVA18eeyA0F+mW9ci5w1lLgzxFK7c7Wpi61HE4FxRRcGIsxuAB4xWVgyec2Vu4eH587mx3RkXc@vger.kernel.org, AJvYcCVbLnbLN0V+keht+g4Flx6KrXLPAlv9XKJGA+ON7vd4SYyDKcFseMV33YOEm7y9YEHIl5WWGg3q@vger.kernel.org, AJvYcCWi3VlYVyBqN76UxEyPY3nO6P0SZ/rR5aL3RQ88+Ui6YjfHdl7yAR9JHnRzmKncp1OWIWA=@vger.kernel.org, AJvYcCWn/riV5acF52CATpKQHJzXGduUET31p/Es5wUym5ycY7YFwGLuPifXScubZID07/n520RubWOrS6Xg/DlYu77r@vger.kernel.org, AJvYcCXGFLtT/AejPsgnOyPDiOhkj9sv7cZU6iPI87hSxamUuPtuXE32EniAwR/b5Xoj85h9gOCXvLuKD2bqkk7c@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6OTjSmYMk6FuZUdCNHgZUPO5W5Yw3ZSo8sn7brUWkyIfI8bnS
-	3cUsAzJNVM9QnaTUUwn6Y3fcIcPnsUNozBATSNAYtWTrk325xjxI
-X-Gm-Gg: ASbGncuxm/hwAlOnnh15YwM2RJmLV3Pt1qCu2kluyFo1MBGBdYt8wcB/hGOrGHv0pcg
-	UkLZhPI8x0co5FxAhrIYjEJBnv0QLu1+i1nPavFXQPBK+5lxcPqD5vNTOtFFCkTTnedfjHN0SVI
-	OutLKAym26gVX5K/3G9Iw45Hy2fMd4ZubTw/IBueTotUhnLcnHdanZc2ilysgsyuN64PF66/5Am
-	z6ULJWxSqQsHrbuRLMG3nGXOfW54QtUiUwwc7LYCsQZz8BFi9aGFOmUdcNeGiKo31rq4qif/8RS
-	/J8pVY+fziyaYVaChFBUnps53wafyFR8xST2w+mU4NGuF1gcw7DunoZQ4C6R6Qs=
-X-Google-Smtp-Source: AGHT+IEfZi+/l4M87UPw5/vyc7KRKZkS3vvwSExWhswz2jpE396W7WJFjzoCPLOYlEnFqXotGyeJHQ==
-X-Received: by 2002:a05:6122:1b0e:b0:50d:39aa:7881 with SMTP id 71dfb90a1353d-51f1b96557emr632876e0c.0.1738790053731;
-        Wed, 05 Feb 2025 13:14:13 -0800 (PST)
-Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1be86fasm1914516e0c.3.2025.02.05.13.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 13:14:13 -0800 (PST)
-Date: Wed, 05 Feb 2025 16:14:12 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Akihiko Odaki <akihiko.odaki@daynix.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- Shuah Khan <shuah@kernel.org>, 
- linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- kvm@vger.kernel.org, 
- virtualization@lists.linux-foundation.org, 
- linux-kselftest@vger.kernel.org, 
- Yuri Benditovich <yuri.benditovich@daynix.com>, 
- Andrew Melnychenko <andrew@daynix.com>, 
- Stephen Hemminger <stephen@networkplumber.org>, 
- gur.stavi@huawei.com, 
- devel@daynix.com, 
- Akihiko Odaki <akihiko.odaki@daynix.com>
-Message-ID: <67a3d4a47801f_170d392943c@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250205-tun-v5-7-15d0b32e87fa@daynix.com>
-References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
- <20250205-tun-v5-7-15d0b32e87fa@daynix.com>
-Subject: Re: [PATCH net-next v5 7/7] tap: Use tun's vnet-related code
+	s=arc-20240116; t=1738790349; c=relaxed/simple;
+	bh=TXjJa2DAg7tFzurNG6XXhDuq/rBlGzBXwXz5iXljRkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hau7BYIWIDqAg8rO90iJXx82Yw/BF4FQ5biTn5utOfSwgM/HPsouHacW33bKuZ4KHmtDD8DpKSyF38aIvAAzjxUYWW5yGDwwimem5jabTq31ooaB1ElKTnfQqhub1F2Lbllz/5rUw2PzRl15Zl/705m5Q+hKgmc+eJhaWSPk8Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7DA0C4CED1;
+	Wed,  5 Feb 2025 21:19:05 +0000 (UTC)
+Date: Wed, 5 Feb 2025 16:19:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>, Peter Zijlstra
+ <peterz@infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "x86@kernel.org" <x86@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, "luto@kernel.org" <luto@kernel.org>,
+ "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>,
+ "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+ "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+ "willy@infradead.org" <willy@infradead.org>, "mgorman@suse.de"
+ <mgorman@suse.de>, "jon.grimm@amd.com" <jon.grimm@amd.com>,
+ "bharata@amd.com" <bharata@amd.com>, "raghavendra.kt@amd.com"
+ <raghavendra.kt@amd.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Konrad Wilk <konrad.wilk@oracle.com>, "jgross@suse.com" <jgross@suse.com>,
+ "Andrew.Cooper3@citrix.com" <Andrew.Cooper3@citrix.com>, Vineeth Pillai
+ <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
+ <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Clark Williams <clark.williams@gmail.com>, "bigeasy@linutronix.de"
+ <bigeasy@linutronix.de>, "daniel.wagner@suse.com" <daniel.wagner@suse.com>,
+ Joseph Salisbury <joseph.salisbury@oracle.com>, "broonie@gmail.com"
+ <broonie@gmail.com>
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250205161945.44daf018@gandalf.local.home>
+In-Reply-To: <1A67C4F1-F07E-477C-9781-071546AE3A8B@oracle.com>
+References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
+	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+	<20250204220418.35949317@gandalf.local.home>
+	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+	<20250205081635.397eacb0@gandalf.local.home>
+	<1A67C4F1-F07E-477C-9781-071546AE3A8B@oracle.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Akihiko Odaki wrote:
-> tun and tap implements the same vnet-related features so reuse the code.
-> 
-> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+On Wed, 5 Feb 2025 21:08:47 +0000
+Prakash Sangappa <prakash.sangappa@oracle.com> wrote:
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+> The new syscall/API proposed was to provide per thread shared mapped 
+> area(shared structure) that are allocated from memory pages that are pinned. 
+> So the kernel could access it without the need for a copyin/copyout. 
+> 
+> The idea is that it would be helpful in places where we cannot take a page 
+> fault in the kernel codepath.
+
+What places do we need to decided this in a critical path? If we follow my
+proposal, where we set NEED_RESCHED_LAZY on sched_tick when it interrupts
+user space, then it should all work out.
+
+I agree with Peter about not caring about system calls. If you can do a
+system call in a critical path, then just use futexes.
+
+The only reason I support system calls is for debugging. That's because I
+write into the trace_marker from user space to see if things are working,
+and that requires a system call. But once things are working, I'll make it
+not work for system calls too.
+
+-- Steve
