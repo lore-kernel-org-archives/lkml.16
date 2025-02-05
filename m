@@ -1,105 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919DD218AC4;
-	Wed,  5 Feb 2025 12:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141E022B8D0;
+	Wed,  5 Feb 2025 12:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757569; cv=none; b=eYissbsvbyskoLFSQXyM4o19sKqsETEAm7VPg9afZikMPf1kF9CMP8UTpjSWupjvtn5ht83KEojic9vN1wk4pOs+FiKx3esZEhZOFgv7w2b0A3HJRG8UTHi/8wY1QSHv8DMc9MIumV3V7YPu+xgiS5HfzZga4ljgfSoHssYuzeI=
+	t=1738757571; cv=none; b=Uy77gCd+Z85S3JZUazXZhMnShRPscufSdfWocuAHJ8RRiHWDZdDSFVYoe9lTKv1psXYR1829wwzOe9QhAtVm52yqWlZ7Hj3zb62x/GnlPPOLKHoB9hUpv95ZkOsWOteCmvJrGjyaPb1y9xc+gim0vNP3gKSjmJLOGT7cP/k4hQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757569; c=relaxed/simple;
-	bh=MgNQbHA+Uss8ZdAh8/lhXo3Fi03Bha3FNW9V7RjPhMI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FmN+XQyMnWtM1IaV4V9JWsiihGCEGSQdbMqdpvcMKQVLWPyIXJBirgrCxqplcRqBoG0/sgR2ZD9VOToNWJSG4ZieGHUEOpPDaHIS8EolhclEI+dZX5yOaz3RIbKsHOWN93mu++Tk1riTuxovL2S+jsDQmnXgjn4jUw5UHD1BRME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7UwiYWv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738757571; c=relaxed/simple;
+	bh=zEhI8pKRp7Rru8p9R1drtIFnel3SBMPqhlIHthqnADo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rwXXrmUSygA0bd0qoyhbr6E1qFNhgEkPIzR06pB8r0VrZAY4xVkPUr7ppl/y7w7yL6m/gg6aYaiAuaLS566cQspPwOVa/MzWEut47hFU/dt8gFQUveQkrLwmwIJHB9lhEjy+Bbroe+kHUVca0o/gRyu2jg8LAUpnYUc9QmtE63s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6iZxNrx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7UwiYWv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA0FC4CED1;
-	Wed,  5 Feb 2025 12:12:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6iZxNrx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B5FC4CEE2;
+	Wed,  5 Feb 2025 12:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738757569;
-	bh=MgNQbHA+Uss8ZdAh8/lhXo3Fi03Bha3FNW9V7RjPhMI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H7UwiYWvpezsH8tPIyUBWNs2FDJXNEhxkLH4nu862BUEzOSUYB4IBsLQZ9v3a4h8J
-	 7Mb77pKFAOyLdBtO/2SBWkoWlzVth0SlLSHR2wvvysQhsrT60g5RaLxGvK5dr6oGBP
-	 ePtdRWcRfiUVAMpukiiCuz7f3OkAFEo0vKqByLmOSNa0oXUvKwbbwEbbErZDN6N0FD
-	 lcOWqfBh1Tg6/T2IKddz58aHq996x1Vplw/Pg3I3YdBnjVGUibrWTk/RU+7kNiWx2r
-	 DJB5CvVZGKe87+Fh7Vf8Fk+sd3O4blBdV3seVeHO149dD48MNwmi015IeqPFVFcLyx
-	 cNSV+akt51bAA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Dave Penkler <dpenkler@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Nihar Chaithanya <niharchaithanya@gmail.com>,
-	Rohit Chavan <roheetchavan@gmail.com>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpib: mark pnp_device_id tables as __maybe_unused
-Date: Wed,  5 Feb 2025 13:12:26 +0100
-Message-Id: <20250205121244.322054-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1738757570;
+	bh=zEhI8pKRp7Rru8p9R1drtIFnel3SBMPqhlIHthqnADo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y6iZxNrxPOpkDDL1NfflO7qDnxYFPAEYYN4LxbNO/XZ53Dm/pGTlLXbNLaMdv3O00
+	 C6L139b0cTHQ6LWucqp7opAfaHrDoy+LEtq4FpwYAffZxvMIuP8T79/f1xGlxr9bDA
+	 pMcSGIXoCQkZNRRsUzRRJ6mLBuyYZGOp8ExfKCQODLyKRS3ctZFReCsOCgQ+oK06ya
+	 Oc1ySGL3KWW7N1fiRMC3qovzN1bmoNd3yQZTHE8bCR6f7hobnLELkpKrA9Ka04+wHV
+	 d/QSgZ3Y4NYfouE/U/04rq5wjT686f8OD7OeIyngkfpXkudmZm7DGSbBqdfv4YZqeT
+	 NvA2YmnvvOVPA==
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] vfs: sanity check the length passed to inode_set_cached_link()
+Date: Wed,  5 Feb 2025 13:11:57 +0100
+Message-ID: <20250205-fangen-bibliothek-5cc2d9fc4460@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250204213207.337980-1-mjguzik@gmail.com>
+References: <20250204213207.337980-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1254; i=brauner@kernel.org; h=from:subject:message-id; bh=zEhI8pKRp7Rru8p9R1drtIFnel3SBMPqhlIHthqnADo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQvDt39dMmm7Ud3KCRWqcWyurgq20YsD5sp//++wc+wB 4qV695f7ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIrb8M/4uUnKfYil01Cmp9 fDRcXu9wygLDF8dzy4ynz01XjQycdIWRofvXYtHlK36/TnjOKTclKmvnjoe3v9VpPZcv4o/7qPd vKgsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, 04 Feb 2025 22:32:07 +0100, Mateusz Guzik wrote:
+> This costs a strlen() call when instatianating a symlink.
+> 
+> Preferably it would be hidden behind VFS_WARN_ON (or compatible), but
+> there is no such facility at the moment. With the facility in place the
+> call can be patched out in production kernels.
+> 
+> In the meantime, since the cost is being paid unconditionally, use the
+> result to a fixup the bad caller.
+> 
+> [...]
 
-This variable is not referenced in either of these two drivers driver,
-causing a warning when they are built-in and W=1 warnings are enabled
-with gcc:
+Seems ok if ugly.
 
-drivers/staging/gpib/tnt4882/tnt4882_gpib.c:1507:35: error: 'tnt4882_pnp_table' defined but not used [-Werror=unused-const-variable=]
- 1507 | static const struct pnp_device_id tnt4882_pnp_table[] = {
-      |                                   ^~~~~~~~~~~~~~~~~
-drivers/staging/gpib/hp_82341/hp_82341.c:811:35: error: 'hp_82341_pnp_table' defined but not used [-Werror=unused-const-variable=]
-  811 | static const struct pnp_device_id hp_82341_pnp_table[] = {
-
-The MODULE_DEVICE_TABLE() entry does have the effect of loading
-the module when the PNP device is detected, so it is still needed
-for the modular case.
-
-Ideally the drivers should be converted to pnp_register_driver(),
-which would lead to the ID table actually being used.
-
-As a simpler workaround, add a __maybe_unused annotation to shut
-up the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/gpib/hp_82341/hp_82341.c    | 2 +-
- drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/gpib/hp_82341/hp_82341.c b/drivers/staging/gpib/hp_82341/hp_82341.c
-index 800f99c05566..7284311e04e2 100644
---- a/drivers/staging/gpib/hp_82341/hp_82341.c
-+++ b/drivers/staging/gpib/hp_82341/hp_82341.c
-@@ -808,7 +808,7 @@ static void hp_82341_detach(gpib_board_t *board)
- 	hp_82341_free_private(board);
- }
- 
--static const struct pnp_device_id hp_82341_pnp_table[] = {
-+static __maybe_unused const struct pnp_device_id hp_82341_pnp_table[] = {
- 	{.id = "HWP1411"},
- 	{.id = ""}
- };
-diff --git a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-index 2e1c3cbebaca..cf3b2a0eb93d 100644
---- a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-+++ b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-@@ -1390,7 +1390,7 @@ static struct pci_driver tnt4882_pci_driver = {
- 	.probe = &tnt4882_pci_probe
- };
- 
--static const struct pnp_device_id tnt4882_pnp_table[] = {
-+static __maybe_unused const struct pnp_device_id tnt4882_pnp_table[] = {
- 	{.id = "NICC601"},
- 	{.id = ""}
- };
--- 
-2.39.5
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] vfs: sanity check the length passed to inode_set_cached_link()
+      https://git.kernel.org/vfs/vfs/c/c1c84bb08cc7
