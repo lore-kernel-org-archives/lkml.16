@@ -1,133 +1,99 @@
-Received: from esa.hc1631-21.eu.iphmx.com (esa.hc1631-21.eu.iphmx.com [23.90.122.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9F412EBEA;
-	Wed,  5 Feb 2025 13:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.122.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8878132111
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738762786; cv=none; b=KNMJ9BOSAGW1m+qUiMHOB215RtZ3VgsCXDTqbtK4WcH1AKSwVYTR9n3BHgwLZmAdjHIQOfMQOdO7zRytGcT2l2rqCkXvd0FZ+icdPvJ6SH+SkRj54A0WIbp9qEbFtjaRA9CTJeZOo462I0W3j9uqrvNaRtnA5/C0E4LIbUa6ks8=
+	t=1738762804; cv=none; b=KCZd/bRCkuqMhTWN6tfftj2vwuc1mzR3lCHaxMJvmjMrP2m3puadqOk8fN5TjR2zoso6C/gyh5JRa1TSISZW+UoEVi7nQFBykow0jbbvuK7TFJE8o5doc90MNeVBETC6+7n/c8cyIGsIInlHRl52XUIaVcprykUsyBNYZjtI8V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738762786; c=relaxed/simple;
-	bh=xx1KM5z16al4ID4kukkEVWnUudNZ1JhFx2Qas0+7Tog=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WLG6LmxWeIDgLQJGrIZLUTZ62rVo6ejjlisBKVWXoi8OJBD0lt8Ki3qH8S7e1LMQfeIC0u57E4cbbSh70nz/SiFp8wFDFRxFOz6O/RoYeSIxM/20uXtt9HMneBESz2vMsoJ26PkG66sQMPej8s63I0HMPkp2Z0ha9PU5pb0RKRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thalesgroup.com; spf=pass smtp.mailfrom=thalesgroup.com; dkim=pass (2048-bit key) header.d=thalesgroup.com header.i=@thalesgroup.com header.b=x4wfEhLH; arc=none smtp.client-ip=23.90.122.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thalesgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thalesgroup.com
+	s=arc-20240116; t=1738762804; c=relaxed/simple;
+	bh=PLo9ekNb2mKGhOqPJ5jYEscWQR6GzGgX5mDmmyYgIDQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dk1S4L7uuuLnwT3EO2MGS6tEIJvUa/bfRgceSxSN2PyGJJY5QS/BcZHEbtAGvmnl/k9Lg+lXeQacwk6y7PsbJwoeo7t41bva9mFVkQiVzwA/xGbJlfJLe7DMn368T5OlayMC0cgsl98Va2LVWf+2EKS1Ol6dzXgN/Fu+Mu2OSO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tPhjCD1v; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thalesgroup.com header.i=@thalesgroup.com header.b="x4wfEhLH"
-X-CSE-ConnectionGUID: 1q7d95LtS1q7Mc6NC2Q4mg==
-X-CSE-MsgGUID: GZZoiLI/RRSL35n8i8jpaw==
-Authentication-Results: ob1.hc1631-21.eu.iphmx.com; dkim=pass (signature verified) header.i=@thalesgroup.com
-X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="25679662"
-X-IronPort-AV: E=Sophos;i="6.13,221,1732575600"; 
-   d="scan'208";a="25679662"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tPhjCD1v"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso5462955e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 05:40:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=thalesgroup.com; i=@thalesgroup.com; s=bbmfo20230504;
-  t=1738762714;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=hXK05cqlZ9cZyN/m6/nx739KmMO7Ld02nRkYNkBU9lI=;
-  b=x4wfEhLHG41h81z88Ca4M8m62sTUHY3EbdCkT9R3XJCIvZtBzVMS0sYV
-   X5pDntB0xKKHghSpmn1tWDOLMJwmHimABGF6dJZeF/zAl85PV8c9eqVqO
-   tuW0FdxjuREerPYeG+mGiAMfqaVd2xSSI62z1zrvcbLhRv/Aa645en0LW
-   /tlHWQ31djRGULlORIy7TdVjaIm6kW0Z1mlGn3nlXHwnTRujC9dEqkvlD
-   etuE4aRaDNEHOQ7qfY0TdpvHA4v392fnSZvlcgjPZSD5widm90AxL2Pgo
-   6NNWRURMPg5hPHc3gxo3zBaBXxHnI+yXYlQL74Vzxk3yCbeeRPXqy5X0m
-   Q==;
-X-CSE-ConnectionGUID: kw5DrnbaR8yn4ohGetljXg==
-X-CSE-MsgGUID: TnlGGTSYSDmj+ZdKcrVJcQ==
-X-CSE-ConnectionGUID: DIdceQhtReSMJDZ67/xDGg==
-X-CSE-MsgGUID: HzWhxkqNQpKfvAi7Bx5W5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="40762103"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732575600"; 
-   d="scan'208";a="40762103"
-From: LECOINTRE Philippe <philippe.lecointre@thalesgroup.com>
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "LENAIN
- Simon" <simon.lenain@thalesgroup.com>, LEJEUNE Sebastien
-	<sebastien.lejeune@thalesgroup.com>, BARBEAU Etienne
-	<etienne.barbeau@thalesgroup.com>, RENAULT Xavier
-	<xavier.renault@thalesgroup.com>
-Subject: [PATCH] dmaengine: dw-axi-dmac: optional reset support
-Thread-Topic: [PATCH] dmaengine: dw-axi-dmac: optional reset support
-Thread-Index: Adt3z3Y2yWnkRdAqTHGNYv7obAEStw==
-Date: Wed, 5 Feb 2025 13:38:32 +0000
-Message-ID: <bf8f02ced6604f80acb84e82ea3a9268@thalesgroup.com>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-endpointsecurity-0xde81-ev: v:7.9.19.477, d:out, a:y, w:t, t:21,
- sv:1738730589, ts:1738762712
-x-ms-exchange-nodisclaimer: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738762801; x=1739367601; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PASFoT5mXyDxz1C4PLJNUKTV2eZ6J8+dyrWeDE9Wios=;
+        b=tPhjCD1v5xtcnFBTxS3b1UpfzRUrh2Vupb6ur0F0WPd+EvUjwI6qH7Bv0uOMuoYQW6
+         E7IFjr8Spe9rLnzuZM8f56xz2hlPZEF6b8aHZ/KWdR/8+HU4gJcpybEpm+PEfC9UDGZ/
+         yMwlpK7DVzZgf8wc8xA/cze+gUAPOPOV4zE1dWcZLUhM/PtapmqtDr+1atdWyAI9OPWo
+         vEI0zGx7Wt7ropzn0V30PisdVa4YV284HIQCjhzrdN+R0rjF2pUeLB12SS0I4PcpXCqx
+         DO+9aPYsbk69qj5JXa839VhZ0B/S3mFMaySFbQTDiubvqhe8Zmv4x4v377VcUYzLGl3a
+         ilQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738762801; x=1739367601;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PASFoT5mXyDxz1C4PLJNUKTV2eZ6J8+dyrWeDE9Wios=;
+        b=c3LpokxXCMf0RxzWcEfkKBWoeFEYfekP2kcwkZNpYdCtSjleIyRF+OQU6cL5acGxT4
+         JO1qHL3TwVL3msg76zVcHTtxuO1/RPnO0PlNWWiaZvV5QPXRcCG+tuyEmuvRao0EGn/2
+         qr0L6WhKqYv353zWa00rB33IOLWisgx4pU2uBJoFQD8QFSofJXYsN5yVtG3S3XYAZ1lV
+         3vm3Y7wlY04wyyES2DQzeK8vloh1uxPeQn+Sn9XNY3+2ZS9u/d8uzTpsLC8hx7dm5vGc
+         CAcjU4Nv9wIAqKDW3DzUe0eB96r9DOa2tq7gbrNgTtiT3qljJzNg4zFaLT1EBDkTPSj3
+         e4iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1JSnXkxHEkCFfkOb3zHShRALaKqdTrXHKFmaKYCkilW/kpHyXG4na9vFvV41pBkmCvn0PDNCf4KfHCw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYszehlSvW/rrBRgKtb2zvt2n3RWV00U71tMAlnJqrPFM2gh+n
+	Sm5ShlB9e0gRrl5/WD+VTOi6gNCCmlUDtvjnQ9xflUHqvkbRL/dMYxkeKYdLkYxCuQs6F6lLDnz
+	nSpE=
+X-Gm-Gg: ASbGncsWCl7PMCD+T4hwajVNQkM8Dr3GydxIi9eA9oS2GSqNBJL8o/ES+v7hyDPsmIz
+	DMwDplMVr8MP5wNjCHUxqmeR/xl4wcqmaDBPj/TFxBdSWtnKCDnL/Oiy2nrqQOr2ADdX+ye6GfV
+	Nnc9lI1xlUX96OR8bujbcc1+m78O8r69Tz52zIMy21vZ0sqk+hKaERmiJfvqFi5rqJad38fgAOa
+	gDU0UdNHDnm6dHk+KFP2fWo3j/RKFwY6nLx3gmj0RwTTJlIf5d0l1/jTsDfKS3P7Jo4jYx8G2ij
+	UdMQppUNnJs8NGc=
+X-Google-Smtp-Source: AGHT+IFq5CZt4RefqVhDnLXc5QwlgFsHEvvq6JuF5fgkAmxF3evmOI2s0at43EjpigaLCtH9U/Rjww==
+X-Received: by 2002:a05:600c:4693:b0:434:ffb2:f9cf with SMTP id 5b1f17b1804b1-4390cfbda73mr22108905e9.14.1738762800604;
+        Wed, 05 Feb 2025 05:40:00 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3239:b668:f15e:fed8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d93369fsm21974185e9.3.2025.02.05.05.39.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 05:40:00 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Koichiro Den <koichiro.den@canonical.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sim: lock hog configfs items if present
+Date: Wed,  5 Feb 2025 14:39:56 +0100
+Message-ID: <173876277706.18360.299205391890654246.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250203110123.87701-1-brgl@bgdev.pl>
+References: <20250203110123.87701-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Use optional reset support to avoid having to add a new entry to dw_dma_of_=
-id_table for each target requiring reset support
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Philippe Lecointre <philippe.lecointre@thalesgroup.com>
-Acked-by: Simon Lenain <simon.lenain@thalesgroup.com>
----
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 20 ++++++++-----------
- 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/d=
-w-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..186bfb35b9eb 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -48,8 +48,7 @@
- 	DMA_SLAVE_BUSWIDTH_64_BYTES)
-=20
- #define AXI_DMA_FLAG_HAS_APB_REGS	BIT(0)
--#define AXI_DMA_FLAG_HAS_RESETS		BIT(1)
--#define AXI_DMA_FLAG_USE_CFG2		BIT(2)
-+#define AXI_DMA_FLAG_USE_CFG2		BIT(1)
-=20
- static inline void
- axi_dma_iowrite32(struct axi_dma_chip *chip, u32 reg, u32 val)
-@@ -1498,15 +1497,13 @@ static int dw_probe(struct platform_device *pdev)
- 			return PTR_ERR(chip->apb_regs);
- 	}
-=20
--	if (flags & AXI_DMA_FLAG_HAS_RESETS) {
--		resets =3D devm_reset_control_array_get_exclusive(&pdev->dev);
--		if (IS_ERR(resets))
--			return PTR_ERR(resets);
-+	resets =3D devm_reset_control_array_get_optional_exclusive(&pdev->dev);
-+	if (IS_ERR(resets))
-+		return PTR_ERR(resets);
-=20
--		ret =3D reset_control_deassert(resets);
--		if (ret)
--			return ret;
--	}
-+	ret =3D reset_control_deassert(resets);
-+	if (ret)
-+		return ret;
-=20
- 	chip->dw->hdata->use_cfg2 =3D !!(flags & AXI_DMA_FLAG_USE_CFG2);
-=20
-@@ -1665,10 +1662,9 @@ static const struct of_device_id dw_dma_of_id_table[=
-] =3D {
- 		.data =3D (void *)AXI_DMA_FLAG_HAS_APB_REGS,
- 	}, {
- 		.compatible =3D "starfive,jh7110-axi-dma",
--		.data =3D (void *)(AXI_DMA_FLAG_HAS_RESETS | AXI_DMA_FLAG_USE_CFG2),
-+		.data =3D (void *)AXI_DMA_FLAG_USE_CFG2,
- 	}, {
- 		.compatible =3D "starfive,jh8100-axi-dma",
--		.data =3D (void *)AXI_DMA_FLAG_HAS_RESETS,
- 	},
- 	{}
- };
---=20
-2.44.1
+On Mon, 03 Feb 2025 12:01:23 +0100, Bartosz Golaszewski wrote:
+> Depending on the user config, the leaf entry may be the hog directory,
+> not line. Check it and lock the correct item.
+> 
+> 
+
+Applied, thanks!
+
+[1/1] gpio: sim: lock hog configfs items if present
+      commit: 015b7dae084fa95465ff89f6cbf15fe49906a370
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
