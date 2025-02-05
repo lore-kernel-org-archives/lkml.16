@@ -1,123 +1,144 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF3422B8B6;
-	Wed,  5 Feb 2025 12:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101921C19F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757373; cv=none; b=uh7Goj1rcsu4l9qwMLdvvxNzsdy1XT2h1GmjTCHscfvWk+VHW1sNI0HQty1mo0ehViaFgXViOXLnIQPetzoLsN/H+ZIkR4S7h35AYgsyMVJw1fd6i2PpyEgAzWQrEzKyrLPNtElJ+QJuFePUEGgbWeb56gvaiU478VGOmtxKX1Y=
+	t=1738757434; cv=none; b=BNvc9shIyFscB12Uk8jQPos0FgEGJ7sCCpY+1GkDOvVjtY5hdOpsH4QQ9XweiRxaz0zS5SsaKHcrNgUPQFUBLvdYPDSjdbNV6B9c9mKO6w1ZaEYtDrjg3GKP772kjHipDMnOczcFpRzCU8zqaTc5E0PtJadt/d4ctoeSayF+q7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757373; c=relaxed/simple;
-	bh=aV2PT2ZWUXires+2k4JBLhOJuhQtJ4KlbgLJI7iKoNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iD143FUzJGooKy5Te/DXOyL6MoNnnaqQjXPoE8GF50Z+Tvl+ve2yoV6xLOuebFAs0yYFQY0OE0GUs8aI1UGOBp++ppTSycz6ncNiat17WaF/3AVx/GXpTPG+Ytut138Tcms7vor4Nb3OgBiZZ7gdChw2LDmNjWidwMyx8J/LyQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=W1FkzNF3; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1738757434; c=relaxed/simple;
+	bh=LAJkZr3j590h9Mmjm3sT0QGmWd4n4HFqQNH1WXZZWwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=fP+r72BvsRL3P7BGOV/Q5X3ZDiU9vCYvuT9aCgpkLarXMczZNv7OSrtYneIlyxHFCnq0/RYYCb5hh9NIuL0AZ04U36mAv6uOmDie8vwrXjO/E7FxH6YMZgOllwO7uXYQSZtHV1JOO5l1f4K+mqqFgbTMilRKQJbEgdWZHx6t15Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZCTQDt1I; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="W1FkzNF3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1738757362; x=1739362162; i=ps.report@gmx.net;
-	bh=5Ly310pRw4VvwxO8ViwTJZkXUc0ccrejTROPbkFRmdk=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=W1FkzNF3wZg687JDp9JeHDl5UI2Q9PvH1PbpN8F6BwHOgd/n6tno9CwzE5mpycgt
-	 e5IGmuypvzIzxBH20ZGskcUG6fV0PRGf77CvA651q0lCcZIvEooTrog9jXYfK9mUu
-	 ks6SJogoBCnfEIM95NUmUEuDwkXFjaKCtSdJs2rZBwfe8dFD1RBIl9OEurK9yYNL4
-	 HCVW5TrxUzchDB/W3qbNliJ1qryaumCATrLdZfHgXqOzHm4FepvxFmvgL7cCada0G
-	 UZr/MBPZna1Vv5zNC0h/Mlh69i35B52kK4dZKm+V/Q/ArEfsHmmN5TXYqDnrobOkW
-	 oLaXfjUb6mGHae+LIg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost ([82.135.81.162]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MnJlc-1syuwA0aGq-00cHzb; Wed, 05
- Feb 2025 13:09:22 +0100
-Date: Wed, 5 Feb 2025 13:09:21 +0100
-From: Peter Seiderer <ps.report@gmx.net>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: shuah@kernel.org, brauner@kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] selftests: pidfd: Fix compiling warning of pidfs_setns
-Message-ID: <20250205130921.137aab7a@gmx.net>
-In-Reply-To: <20250205055031.259710-1-richard120310@gmail.com>
-References: <20250205055031.259710-1-richard120310@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZCTQDt1I"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38da586ef14so1232072f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 04:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738757430; x=1739362230; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CM9edJiBMXn21mPbe8Qk4uoLTtdcK1HokgiZWsmiPV8=;
+        b=ZCTQDt1In4NJq11mC03sJj9DMXGt0nY6PiPfhI/cWLFLo3JXcOGBAWvO5yMENIY4iP
+         26U63ac94q/Ce6AXuJ2Ox+iuAmgS6Fm4V0OoFEoRq3cWhFyFlCO2vscwm4+hHJ1jTj3q
+         YFZBGT4EoWGWlKrGuaJ/0qIf3lFa2qkO74j1zevEMLQpTGapMjwcIn1YYiT6J875FfRS
+         HBoONKCVX0VtQYdCgbiah+5Mc7z6MWijcKEANclXTnMPCykh5KQgM+iLAC1CdTikT7YR
+         wf4CPAxEPXm/FoQfxSTKlkW79qm4nGeWa1R6nOjOVRGCLyYH5Z/LGMhDK4kpN6oh2X7L
+         xiuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738757430; x=1739362230;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CM9edJiBMXn21mPbe8Qk4uoLTtdcK1HokgiZWsmiPV8=;
+        b=sjA/Z72cL588Qvy48eRsfnGHmUROlY9kKj8FUxdARxjursuXiSD5+Ou44gdm43V9SE
+         XtlGlfiWI0NnR5a60gCl5eTvUZhh1O+pKAScH2dGgbiVYJeTQj0Ijv+P+xSeD/BNuX2m
+         SlgHJfIt461Rcj1iSvomWAw8rBMki8bzpQBV4quLQ45NMthUKoPDuI20f71xnvW+/D0r
+         K1j3oZYDO+TQMM1CExtlPuiJpROuxAe6ll3NIzRktsf7MpJkdeU2Zw39wsVjVrFPYyZD
+         FUC1q8F5xiC49DciTgV8T44gjnGhbsydiPjTVq98V8faT8OK34lpzrO00IoG7inYQ2cg
+         MMtw==
+X-Forwarded-Encrypted: i=1; AJvYcCV26nDreSdWjxrj7UOsaVH9ydNAuro2fL1nw9sSm/msJRbAwh4Bwr1DISA66aIpzYp/firNua06hCVar3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+/DSeByiCSYRiDcNKhys4TJshN2nDbCILHOJmECAG+kNrWsNI
+	28P5ktqWB/BC3rFp8C1qnSCKh8D2yzKTMeFoxCQP9CToWbwRwODCsbHyTubnRRpz9eAamI1C8Zb
+	lmKv4g3RCSFxes2XiG1MoTF1NQsfV3yPMxU8y
+X-Gm-Gg: ASbGncts08uyzh2Q8o1u+fPFSMzroX4c0P+9DCA0oX3tszKGIPEe8M/u+TqSySEgFok
+	rTELeYU8rQC0RGVg+80K5Q+CMRyEQE9/zfwE30q07Oj/H9CIcAJXA9oK2vGypD3oMz8L9ZbtG8Z
+	BKDZwjE1xfXfZk42Z1mKP/KGlb7iY=
+X-Google-Smtp-Source: AGHT+IEJRX8Gawq5uTZWc7gghQE3VD3b5s1utE8n3fNb/Dxuk/7Rl4NYgvzDN4Jo2pf/N+jO5EMKYukFZfnclOVEP6g=
+X-Received: by 2002:adf:fdc4:0:b0:385:fd07:85f4 with SMTP id
+ ffacd0b85a97d-38db488960amr1453466f8f.31.1738757429509; Wed, 05 Feb 2025
+ 04:10:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250203-vma-v13-0-2b998268a396@google.com> <20250203-vma-v13-2-2b998268a396@google.com>
+ <r5xkc2i3tk4za3xkrrvbeqto4kf5l425ursytc3n6tmcy2gylb@eusudybb5dqa>
+ <CAH5fLgj00hRAEBvNc8RR8iBwKQ2okDqmWWQ+kqmNkr9mOjfU0w@mail.gmail.com>
+ <ymjkf2l2otosunrs3e3mmsj2wr3tvrfmgl4aav5dcpm3gtdulh@dzz4njdwkspc>
+ <CAH5fLggd75BvB6VXPjR=_jxn1u7kOfix2rynvMHU4CeUUDHnVA@mail.gmail.com> <ebwiebbxomsjamv2uk6gnpg2uzjpqw25llvcz7njadklfi66nk@ab5uyq4bvwlb>
+In-Reply-To: <ebwiebbxomsjamv2uk6gnpg2uzjpqw25llvcz7njadklfi66nk@ab5uyq4bvwlb>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 5 Feb 2025 13:10:16 +0100
+X-Gm-Features: AWEUYZlj_xoYsvNCca0RfpQ0eQ7nYggzNeG2vXSDC6JyOIm_4a-qi1ks5bLCsaM
+Message-ID: <CAH5fLgh2Y0rG5ntpdiK-ycn9eBvrSXekxPsjDaYWuHBDUYNppw@mail.gmail.com>
+Subject: Re: [PATCH v13 2/8] mm: rust: add vm_area_struct methods that require
+ read access
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Zh4QcND3OhVSbDjJlrCRXEpzfFhi9oUFwtnon7+rXl4IL/CD9nN
- bCsG2sWT3L3optJVlb78GkplX7TUWvOgjFBRSO4PRF6pvKkYZ2wXzWXCL5oELHKjgVBv4s9
- s2GNXQpNyntu6RIUPHYXp7zt9+J0qKX5Vetr1Lti8kS2PXkA24kFgGFhGAwMPv2WblhnJbS
- NcTkRKDSaewN2QD9jILMg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nkwF0ENKBuk=;zEC+ZXsdZyfKk3EXWWj+HFLfML5
- FL6dHh41XdqsruXcbf+LMcn1fckG7TxWPf1GbkwA3C3tJCNzxaET161YDQRV8eiGRkT/ZBeQM
- PzeK+vkUOtLpibsbCB1mWICsCUN62bwsb3RvXiIsWD9kYkuOjMyLqmIvb4GrMroUeXE/pTN/z
- jjuYUDdQQcooFJrBW7+lAl7477QiHLI8Quaagfp7o/CRnWSNmzirwN1BslMbKHISeECuUwgkL
- +vxC57lOJAkRESD6R178FdbzwAiYT4zBKBAlfJMr0J/H6iMAvRo96jaAO7cXeny7T1AA53G3Z
- jU75EeYg1T8zDBjQO+leB0CYMnZ5BN/7hfM4fkxew4euEYbLEckZNIZO2uZ40qFcdHABGAdO2
- YQGeudGBSNUbuxCJTzFhQeiNPCdSSf6PvjagsmWvHhhzBdWfVbxLexSQEmcT8IU7PgeQdWjE4
- IGpP+P6jwC7nnMe+Ez9NsvxukDT7mQaUc+T3IIx2scosTV9S9wsRx7xcA9eJ4/X0WlwW/hDbr
- TSeKQDVo7DLh06OrekK9R1+3Iu8C9xcvvoIRdv1U+fS4VZf4QMHevhhGD+Ff/1ZY3Od/KfAtc
- l61IBoklJMNmApIwc/If9nG5z7FuYuBmKQyyqbsSI6le9MXTzW6/dm1SeCVW6V+zw/JE58oad
- 4cxjXguCucSCHyEkkOgDUB2B/immLiZQpHiijWcUps1p/pUxFr0JrEXWPKE2bl9aILLzkQPWR
- VLCnFoVhNRHnatAKPUoMTDDpsPYbtYRydasmWZjaX2oVDdidp1t5LoMlGeLlupTBkop/Xghny
- JjF8ye5S5siEVojUgXtajM3jeHof9LsEe66TsqxhVFWt+UxKIwa/veX7mNhWtb1LHyANNogAE
- JGzykPJfEgdoB9GxFJP/kD321J4FaKJda9G18+HPxiHXu+6bHwZnCY5Sq39y+v1jgpHt6ZjR4
- p4UCkJjgJT58SGlvTW2lg+67YevYWQiPZ7rDOdDpCxuy1SHzdrFBBW9BGFc/ws5DxQdSpuy4B
- XTBrWE54rkZ35vmtqRM6n5c3mwakY5JVlqzknB+EQysR6ir5OmZwNb6UNeJ+Z9xd7mchOw1/d
- d4AgPGxGJ+yN+q637G8dM+1PmoALFnWH13F7elFmGPVZVz9JazoKtMJTVHP2C8luRp0WSdnFo
- oxft+NfJZF83gqDuYks7Iyf70ZCLyR98gR5eT2r/aRQwG/l5Fl9+keUelGRCS2WkB28ycRGgz
- wWHhoK51ItS0A7cttaN++Oqru7CkeoXJJY73Kegx3IaP2x7VHKEJ67COPgeuMbq8NDuUTrEIg
- brErLTpvYbDf1Ok1fRCiBh0iA==
 
-Hello *,
+On Tue, Feb 4, 2025 at 4:46=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
+.com> wrote:
+> > > > > > +        let vma =3D unsafe { bindings::vma_lookup(self.mm.as_r=
+aw(), vma_addr) };
+> > > > > > +
+> > > > > > +        if vma.is_null() {
+> > > > > > +            None
+> > > > > > +        } else {
+> > > > > > +            // SAFETY: We just checked that a vma was found, s=
+o the pointer is valid. Furthermore,
+> > > > > > +            // the returned area will borrow from this read lo=
+ck guard, so it can only be used
+> > > > > > +            // while the mmap read lock is still held.
+> > > > >
+> > > > > So We have complicated the locking of the vmas with rcu and per-v=
+ma
+> > > > > locking recently.  We are now able to look up and use a vma under=
+ the
+> > > > > rcu read lock.  Does this translate to rust model?
+> > > > >
+> > > > > I believe this is true in recent version of binder as well?
+> > > >
+> > > > Yes. The safety requirements of VmAreaRef is that you must hold the
+> > > > mmap read lock *or* the vma read lock while you have a VmAreaRef
+> > > > reference. This particular method achieves that requirement by hold=
+ing
+> > > > the mmap read lock. But there is also a Rust lock_vma_under_rcu(), =
+see
+> > > > patch 4 for that.
+> > >
+> > > Right, okay.  Thanks.  You can get the reference by only holding the =
+rcu
+> > > read lock, but you should hold the vma lock to ensure that the vma
+> > > itself (and not just the pointer) is safe to use.
+> >
+> > Hmm... To modify the vma, you must hold the mmap *and* vma write lock,
+> > so holding the mmap read lock prevents mutations?
+>
+> Sorry, I think I confused things with my answer.  Your code is fine.
+> The phrasing of the "only be used while the mmap read lock is still
+> held" made me wonder about further clarification on the locking here
+> (because the locking is confusing).
+>
+> Yes, mmap read lock means there are no writers that can modify the vma.
+> Essentially, you are using the lock to ensure the entire vma space isn't
+> changed during your operation - which is heavier than just locking one
+> vma.
 
-On Wed,  5 Feb 2025 13:50:31 +0800, I Hsin Cheng <richard120310@gmail.com> =
-wrote:
+I could extend the safety comment like this:
 
-> In the compilation of pidfs_setns_test.c , a warning as the following
-> will pop out.
->=20
-> pidfd_setns_test.c: In function =E2=80=98current_nsset_setup=E2=80=99:
-> pidfd_setns_test.c:173:54: warning: implicit declaration of function \
-> =E2=80=98ioctl=E2=80=99 [-Wimplicit-function-declaration]
->   173 |                 self->child_pidfd_derived_nsfds[i] =3D \
-> ioctl(self->pidfd, info->pidfd_ioctl, 0);
->=20
-> It's caused by wrong import of header file <linux/ioctl.h>, fix it to
-> <sys/ioctl.h>.
->=20
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
->  tools/testing/selftests/pidfd/pidfd_setns_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/tes=
-ting/selftests/pidfd/pidfd_setns_test.c
-> index 7c2a43491..3ed42f1eb 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_setns_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-> @@ -16,7 +16,7 @@
->  #include <unistd.h>
->  #include <sys/socket.h>
->  #include <sys/stat.h>
-> -#include <linux/ioctl.h>
-> +#include <sys/ioctl.h>
-> =20
->  #include "pidfd.h"
->  #include "../clone3/clone3_selftests.h"
+SAFETY: We just checked that a vma was found, so the pointer is valid.
+Furthermore, the returned area will borrow from this read lock guard,
+so it can only be used while the mmap read lock is still held. This
+ensures that there are no writers because writers must hold both the
+mmap and vma write lock.
 
-Predated patch already available, see
-
-	https://lore.kernel.org/linux-kselftest/20250115105211.390370-2-ps.report@=
-gmx.net/
-
-Regards,
-Peter
+Alice
