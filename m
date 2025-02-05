@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3909F18CBFB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BABA1DDA0C;
 	Wed,  5 Feb 2025 14:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738767487; cv=none; b=OgH6zHHKdLa+E4TuMYsCyRnx+mK7RE2pffsNzuAJwDdZpMm2a0ZE8S9X9ltsHHsV8fiq0BfXPojcKlCeGJh//a1CblMaVC71+zKDcbmgrrR4HKAwLnQfK7LhlbkiyOXkZTzeru48QRRYR4Wwkc9vPfjNZqdwCCtkBukBeNTmvbA=
+	t=1738767487; cv=none; b=FcGupI68LWSKMW4jmVTsyuGFHGv0oJbpwWl4MMB7aKaMzempeba3toeMkAjH2+ea7PU+yVb0EOF5vvILlVwn4Q5eJU0F4IODovOvCijglTA1xjr7U0vZSbuGCM2erOQsYsn1/jaBIuNjkzBp+bibdfSSu817KR7S3x/7PzgpZqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738767487; c=relaxed/simple;
-	bh=M41KJpPTgtZC1kvfB0ok8XtGl6qr+rtNSYSFho5CTIc=;
+	bh=uvnNcC/P2j4xylOfl/Tcg9K+1wXoPmdsdMK/xVegdEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uE85Ww/CuDLGTvoN181s9ZQpnuw9Etz/GA3os2COpTOm9NvNlu3fNyYUf+HFTzbT2X+s07C2IPlNrkA6RueLKqllShlKhBsNS5hTjTy2MQ+wnPS4K7d9Qk6TUiZywNRjeOXzXVtR3EokT5B0qMI3O9XjWQPwpk4OAUmY+z+JcOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SJCZmW8c; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=KM7pA/fpNVOzQSRCWwa5Zula/hsW/SPdzWwl9tn3scoBjUbCj6HUj7KkyYHokSQyVVFg5UYn34tHRNuE9loGN1JwrK40Cb+UstgnqK15zHxIO2G/kfu280sQOu7dq5xMYn3DkEf1QHjzeGoNzca/EpIBRiy2ITJYp/gQxf5AuC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hwdmDFsR; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SJCZmW8c"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hwdmDFsR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738767487; x=1770303487;
+  t=1738767486; x=1770303486;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=M41KJpPTgtZC1kvfB0ok8XtGl6qr+rtNSYSFho5CTIc=;
-  b=SJCZmW8c4/crNZmYDauA01NMD2Oc8jhgBZVjIP+JC9YP85FD3UgGXiuw
-   HS72OUEfy+s74SZjYn4zUkZHzjDz3EjyrxMcrIHBTOMRd3uWgKb1WGX0C
-   NukW9ES5ilgfRJSRvunmWWN6lqMGEHUBtTSXPM+0BxpKG09lYa2pBKc82
-   gu7k8Ym5a8mn53KSDKGUxNlj1PNs3dSEwwgX+yANWZfIynZbbuVrc4OhD
-   mToG6xDeiy5r87xCZKHCMt3/tJnNINpsR6EDe14QTdIn9ejaZ3/c4gayH
-   H9vHqmY2MF8I5e2nzgK7pfcghFR3ZHdY1rxBXb8H9/jcketw7J3v7D5Bf
-   A==;
-X-CSE-ConnectionGUID: psi4DFEATBS46/F7Gixd8A==
-X-CSE-MsgGUID: Ke2N1bDcR8SFIaO8NFXT2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39232354"
+  bh=uvnNcC/P2j4xylOfl/Tcg9K+1wXoPmdsdMK/xVegdEE=;
+  b=hwdmDFsRS98kpLMH5PtB6zrZP6pvjly0Yk2NRNRZNd4VwMhsRhK8wjbB
+   loSckU5anpKMXgUZwa5VuK+pvf1HACRGbUTUu6Fno50zFhxzObZ4R1NLB
+   RXHBeEqg88btOMYKSHQcCUOTY0HdlgOx/B2WX693aStg8+zGS7Y+JSflJ
+   KrY/JTChJxlLk1vyd41PcD58TZGJBPu8asoesjUay6odgelMU4/A5UwO+
+   QQbTjuMYLufbZSliLFjIyl+kzhnyajTTAAYDl5BpvTjpM+epmyWP5Ep8X
+   TZFf0PKDaPrkuYkg6qq94NSvoCOVkFRmaBwyEx7Eosj03lDxp72tzWpgm
+   w==;
+X-CSE-ConnectionGUID: Ibip8meeT2mePsPrrGP1sA==
+X-CSE-MsgGUID: mszqPtG6QMe/mH6zlMOtUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39232344"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="39232354"
+   d="scan'208";a="39232344"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 06:58:04 -0800
-X-CSE-ConnectionGUID: +/C1jtaVQV+6by6EwWF+9w==
-X-CSE-MsgGUID: hG1snVx5SUO/cR2QZ8CmNw==
+X-CSE-ConnectionGUID: ve7rhMT8RhOcIscPbAcCeQ==
+X-CSE-MsgGUID: 4IezkWDmRTGdOzeqUX5fIw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111806975"
+   d="scan'208";a="111806976"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa008.jf.intel.com with ESMTP; 05 Feb 2025 06:58:00 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C7EE5164; Wed, 05 Feb 2025 16:57:58 +0200 (EET)
+	id AE98D10A; Wed, 05 Feb 2025 16:57:58 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Amelie Delaunay <amelie.delaunay@foss.st.com>,
@@ -60,9 +60,9 @@ Cc: Shawn Guo <shawnguo@kernel.org>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 3/4] dmaengine: Add a comment on why it's okay when kasprintf() fails
-Date: Wed,  5 Feb 2025 16:57:11 +0200
-Message-ID: <20250205145757.889247-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 1/4] dmaengine: Replace dma_request_slave_channel() by dma_request_chan()
+Date: Wed,  5 Feb 2025 16:57:09 +0200
+Message-ID: <20250205145757.889247-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20250205145757.889247-1-andriy.shevchenko@linux.intel.com>
 References: <20250205145757.889247-1-andriy.shevchenko@linux.intel.com>
@@ -74,29 +74,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a comment in dma_request_chan() to clarify kasprintf() missing return
-value check and it is correct functionality.
+Replace dma_request_slave_channel() by dma_request_chan() as suggested
+since the former is deprecated.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/dmaengine.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/imx-sdma.c    | 5 ++---
+ include/linux/dmaengine.h | 4 ++--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index c1357d7f3dc6..dd4224d90f07 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -854,8 +854,8 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 3449006cd14b..02a85d6f1bea 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1459,9 +1459,8 @@ static int sdma_alloc_chan_resources(struct dma_chan *chan)
+ 	 * dmatest, thus create 'struct imx_dma_data mem_data' for this case.
+ 	 * Please note in any other slave case, you have to setup chan->private
+ 	 * with 'struct imx_dma_data' in your own filter function if you want to
+-	 * request dma channel by dma_request_channel() rather than
+-	 * dma_request_slave_channel(). Othwise, 'MEMCPY in case?' will appear
+-	 * to warn you to correct your filter function.
++	 * request DMA channel by dma_request_channel(), otherwise, 'MEMCPY in
++	 * case?' will appear to warn you to correct your filter function.
+ 	 */
+ 	if (!data) {
+ 		dev_dbg(sdmac->sdma->dev, "MEMCPY in case?\n");
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 346251bf1026..83cbf7197a76 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1639,8 +1639,8 @@ static inline struct dma_chan
+ {
+ 	struct dma_chan *chan;
  
- found:
- #ifdef CONFIG_DEBUG_FS
--	chan->dbg_client_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev),
--					  name);
-+	chan->dbg_client_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev), name);
-+	/* No functional issue if it fails, users are supposed to test before use */
- #endif
+-	chan = dma_request_slave_channel(dev, name);
+-	if (chan)
++	chan = dma_request_chan(dev, name);
++	if (!IS_ERR(chan))
+ 		return chan;
  
- 	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+ 	if (!fn || !fn_param)
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
