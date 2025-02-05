@@ -1,47 +1,40 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB47151995;
-	Wed,  5 Feb 2025 11:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CE015199C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738753826; cv=none; b=OQrSW0LgSZeONOyeTzSgdZ8nVo0Ri/4W/z92pH9Nt12ZAdMV54Rork9kD0MwlAKSAZJpqUMtuAljYFtsTw+Lpz/I8sF6otLlWBRLRQEno5QThFLn8wScAvjBvLahw1/5SHxHVrIKZ0IGeZZL2tb1Uxq2u614u9q7ku6wfxx8NLQ=
+	t=1738753847; cv=none; b=m7KEseguj/NL8OSWdOZ7R/jf+4mDOS35ySw0mFHWYH+xXWXEcnRmqR4odWjosx7dBq4voAGc+LfRVmRY/Kjak/IiLjPCBgX1HbaExxRvYQ+nds8bNtYyRKcsnlh38I9q+8RHQw8Ei1Rnc2dABaC9WL4md0DvGpv1vQNqsosMOco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738753826; c=relaxed/simple;
-	bh=WHS1z4S2pW9TUixaKFqSRj95qxK9MEieGBVP9HebYHc=;
+	s=arc-20240116; t=1738753847; c=relaxed/simple;
+	bh=kiqjJI5Dlb0VBATIqTD3fk/ZCJL2G+hYjgNO/d/+Ros=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tkn+lBnQT2a7zPZEIL8tG20pMEm120pL0yn0LnqrEDJ73AxGeUlBRzIfqZdLoRrcXKJjVSJ9xjPsCc4dzp1Lj/90gB8haAXc5aogL7l+ZKJlTyb7oCEmKMAuGNGuhOPWc2dI8qLPTBkXvRH3xqexdK2/1rQ5fh1VYsRDJ/iIJYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=bYLsH0Pe; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFFCB70iXbxemD/zw0qFHKN59tItGlZv5FEuZF9n4MteXpd4W7Ikm4TOtO7Dsf+UHdh5bi5oS1YQL9qb4WAsB86CMQP8Ev+3NHYg+t7vDz3Q+CBC8CDS8icOMFoNta/jlwrW4NpspCPJH5XcBKNqqO3HbAapnaJVN2QT/fNdKtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKbp4xkd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="bYLsH0Pe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lSa38rUrscbTFzyMkucxLavPbKPbT/c+ByJbj4TeKKo=; b=bYLsH0PeEzYqIve54qUrIJKU9A
-	v5ns7mkJkI/kUpfqU6oc3A5REOG8Rnrg80JMzEmKa6uXjE6uRUoaOUhHhI9vAfdJThd2RB9Z3y5Ag
-	3TE7dxfnY7BqGnKK6/2752HlvwgmMu6gg00ao0d/+fq3U437AgQZ7QX2vmKn5gaFtrJ8g1I1joCQC
-	WM/EIJDx9VcPSzudbv9Rjn0mDG2F9yV2H2UqXeCP4U8Tg5iTO7wcJYF+K9qHQ3QoCT84m8HO6uDjO
-	WA0SunR1W5LHL06dp82ciLqEjMN5zgqaHNEuxpmsgaoAvv+9ghGWDxf5uiNq1L3IXZbcJ7gHVjIDY
-	sVlLrGRg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1tfdIJ-001rDS-PV; Wed, 05 Feb 2025 11:10:12 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 21C64BE2EE7; Wed, 05 Feb 2025 12:10:11 +0100 (CET)
-Date: Wed, 5 Feb 2025 12:10:11 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: wireless: broadcom: b43: Replace outdated
- firmware URL
-Message-ID: <Z6NHE0cL2SaIiJbi@eldamar.lan>
-References: <20250205110614.216958-1-carnil@debian.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKbp4xkd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D5BC4CED1;
+	Wed,  5 Feb 2025 11:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738753846;
+	bh=kiqjJI5Dlb0VBATIqTD3fk/ZCJL2G+hYjgNO/d/+Ros=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SKbp4xkd5aqotUKkwvPw1ID7LgHlTRIfbSMgB9ULHDkzlGlkm1DIeH8tYy7Yx57un
+	 KjHCnpXZ9njLfe/WIxNxigoz3UIUi22H5Xk1q6/fq6+mb3QRR0h8D2GqpxZTqjo9CB
+	 H4OFOArDEfp1ausWf1apx/JRjFArK8YrcKXzscRpYGi0ORuAxa05/RdUfOq9Z2hfo4
+	 hhM/JXjdtoz7gSFCSLtzwTtWgpFGeggVINkPTj7zDGYXbGQmlA2OxDo/Opni41dPMx
+	 oKj5FvMW/UyCietfpf8WcqI6Yjw13QdVnJxeV13oZds7NRw0jCs/aMW0FiXoH0mFj7
+	 KdZeJusiWxCCQ==
+Date: Wed, 5 Feb 2025 12:10:43 +0100
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend] platform: cznic: CZNIC_PLATFORMS should depend on
+ MACH_ARMADA_38X || ARCH_MVEBU || PPC_P2020
+Message-ID: <zqpuww4lpgxui6slhx7c4dh6v25djhd4lxjtw7posregrfulwi@z2s5eyxa25qt>
+References: <021800db3f75e31bff96842c7d7e9ee840fe3e7a.1738752438.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,42 +43,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205110614.216958-1-carnil@debian.org>
-X-Debian-User: carnil
+In-Reply-To: <021800db3f75e31bff96842c7d7e9ee840fe3e7a.1738752438.git.geert+renesas@glider.be>
 
-On Wed, Feb 05, 2025 at 12:06:14PM +0100, Salvatore Bonaccorso wrote:
-> https://wireless.wiki.kernel.org site now redirects to
-> https://wireless.docs.kernel.org/en/latest/ making the reference
-> information for the b43 firmware inaccessible. Update the URL to the
-> current location.
+On Wed, Feb 05, 2025 at 11:48:14AM +0100, Geert Uytterhoeven wrote:
+> CZ.NIC's Turris devices are based on Marvell Armada 385 or 3720, or on
+> Freescale P2020 SoCs.  Hence add dependencies on MACH_ARMADA_38X,
+> ARCH_MVEBU, and PPC_P2020, to prevent asking the user about these
+> drivers when configuring a kernel that cannot run on any CZ.NIC Turris
+> system.
 > 
-> Link: https://bugs.debian.org/1095062
-> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+> Fixes: 992f1a3d4e88498d ("platform: cznic: Add preliminary support for Turris Omnia MCU")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  drivers/net/wireless/broadcom/b43/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Perhaps the dependency on PPC_P2020 should be dropped?
+> ---
+>  drivers/platform/cznic/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-> index 25b4ef9d3c9a..7529afd24aed 100644
-> --- a/drivers/net/wireless/broadcom/b43/main.c
-> +++ b/drivers/net/wireless/broadcom/b43/main.c
-> @@ -2166,7 +2166,7 @@ static void b43_print_fw_helptext(struct b43_wl *wl, bool error)
->  {
->  	const char text[] =
->  		"You must go to " \
-> -		"https://wireless.wiki.kernel.org/en/users/Drivers/b43#devicefirmware " \
-> +		"https://wireless.docs.kernel.org/en/latest/en/users/drivers/b43/developers.html#list-of-firmware " \
->  		"and download the correct firmware for this driver version. " \
->  		"Please carefully read all instructions on this website.\n";
+> diff --git a/drivers/platform/cznic/Kconfig b/drivers/platform/cznic/Kconfig
+> index 49c383eb67854173..bf4bd7f00e32de09 100644
+> --- a/drivers/platform/cznic/Kconfig
+> +++ b/drivers/platform/cznic/Kconfig
+> @@ -6,6 +6,7 @@
 >  
+>  menuconfig CZNIC_PLATFORMS
+>  	bool "Platform support for CZ.NIC's Turris hardware"
+> +	depends on MACH_ARMADA_38X || ARCH_MVEBU || PPC_P2020 || COMPILE_TEST
+
+Not PPC_P2020. No driver yet in this directory for Turris 1.x.
+
+>  	help
+>  	  Say Y here to be able to choose driver support for CZ.NIC's Turris
+>  	  devices. This option alone does not add any kernel code.
 > -- 
-> 2.47.2
-
-FWIW, I think there are more such outdated references and should be
-updated to the current docs location.  So feel free to reject this one
-in favour of a better ovehaul.
-
-Or maybe the old locations could be redirected to the new place?
-
-Regards,
-Salvatore
+> 2.43.0
+> 
