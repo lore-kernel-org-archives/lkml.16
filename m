@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DC722B5A1;
-	Wed,  5 Feb 2025 08:45:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6433621A424;
+	Wed,  5 Feb 2025 08:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745156; cv=none; b=HJW22qC09nJANQuisBqEvRwHJfoE4pk8VKgLdo+WiCaGREIf2EnapP5n2JruRDQSoIPfNShCCYGDZ5k0cbVS0owMIzX46Wipd/0+7jHnyMKFv5LUg2IlQRxhV/XdR1WUKE+RFTdMsk8mMuZ0DaNE+qjcqUgWZTqJepAQyMhIMQU=
+	t=1738745158; cv=none; b=DSxpT9ynWNuDYg11RbYxoiHa1qO87WSerRJpGO2t76HlekIzIsi3+h93n9bC3e2IR/rpbYZbiwyeohCW9DKe78JT+BshKpIfjL9udzHn7lgl4sNaK/dBilhtfPdtX89iYj8egvtLpqsWJ7r7utKn9Dilmuiv4ovbdHduSedX7vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745156; c=relaxed/simple;
-	bh=tpQLrL6yGyYPGe+Z0z/WmWEgqashSuelP7d/UbrX2VU=;
+	s=arc-20240116; t=1738745158; c=relaxed/simple;
+	bh=K3FAivrpPlLPNl4RBGmK10gjJmU9EqWFX8UKyNd1wWc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h/3+s7iN8YyXqn717f1V1S55aUK+EFJ5dl8CFQFbykfmjq5LblqBaN7yZDii7QnGB8dfM8eiMgFoyhSOLsKnvWF7trD+bIHWHBDAFV+iDv1uzinzGAAq82FLfLv19r+y2Jo/j4eKi1Y1j9w3nhM51xGzyeg2oJk+hd1hpLHUjmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WLCUz//J; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=WSh25yYsWeLZVwXgaQIPx820O2LvTwB6HUt3Vlc5XZoXDtsGlXYuEbEf0zOFZUJ0FigpGOox1ewWQrY03KvhNp2cy2tAWLp4+PZ1D+fNqVO0tJKe87EEDSj2uBrzQAKxNdN7J0rAzi6yQqB2Fc7qP77zXgoD3KO4hV1npeEfklo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OE1+8CCk; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WLCUz//J"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OE1+8CCk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738745154; x=1770281154;
+  t=1738745156; x=1770281156;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tpQLrL6yGyYPGe+Z0z/WmWEgqashSuelP7d/UbrX2VU=;
-  b=WLCUz//JdIiG7Q2sUXukliRIrjwyEh62Iwo8qUhQVUHe3cBF+OSQaOj3
-   brvsexYcxGBh3sLLhHIXLSwQ7BcXLEGn8AC8APk8d8CLvhbj1+StGUI25
-   QgajlpsaYrsmfQxBeMnyuVbB7zPfeBhJBO78YFz8F7z4YiJAs4W0N6KG9
-   lX38RGldcDdFeUbmeu50oYcGw/kcpvD1QYFJfhBdphn4l1Bnk5AXEIWSP
-   A6P0+vUO7s26MOyNqIssjBVKe6cyczxE0evA1g1iGdP/ZUtiW3MsfeVRa
-   0a2z0hjH2AJNS55xQVKdvXOXovuaOoGrbGxJOESorXroJk8PEFCEr4LNP
-   w==;
-X-CSE-ConnectionGUID: 9HRIk6NDQfuRwZ+/oTKNRw==
-X-CSE-MsgGUID: eYcLmurWQ/6b5FtwwgX6Zw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532530"
+  bh=K3FAivrpPlLPNl4RBGmK10gjJmU9EqWFX8UKyNd1wWc=;
+  b=OE1+8CCkfbjHkOPBACntFs2WuH1RbQQCgKH17Rlk7q6g8caQnKm/8lJE
+   iRyNsrzEQ4oPVcAkS8yJk/UCk4M+Db98F/aLC56FFEjbcuC4a91pOvDw3
+   W6XBXYVo0DhCJd6Ik2zscG1koJNAHgbKiTfR6Ft/HWvmbfKy4Uk3nOuI8
+   p/Q1/M4ADnUvBq9qypF+TVZ43A4onvz0ohHQOgJ2HnyjPTvUB/QbmAhRL
+   HbWygz1sZa4sqVFN8zcEGklnlleq5VsN89Thcjt1Ersj4IBRXuzzPmhpI
+   PjmnJImL6k8m+71jOUnbVdSvYKwB/YolANewiVrx4idu3hp8BP1aho5oK
+   A==;
+X-CSE-ConnectionGUID: q4jrtP4uT+OPBfc69/8ATQ==
+X-CSE-MsgGUID: dTM6tqcbRI+ecos48EFzyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532543"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="38532530"
+   d="scan'208";a="38532543"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:53 -0800
-X-CSE-ConnectionGUID: 2ZIU4M+tTtuV4QwpVJHZJQ==
-X-CSE-MsgGUID: gNj7BKaRRjiVcs0Giyb/bw==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:56 -0800
+X-CSE-ConnectionGUID: LVCLrboBS0eMWfATQG1Zog==
+X-CSE-MsgGUID: SnxDjCVaSIGn0GNcsuQjgg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="115887874"
+   d="scan'208";a="115887899"
 Received: from mdroper-mobl2.amr.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.223.241])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:52 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:56 -0800
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: linux-sound@vger.kernel.org,
 	vkoul@kernel.org
@@ -50,9 +50,9 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH 09/16] soundwire: cadence: add BTP/BRA helpers to format data
-Date: Wed,  5 Feb 2025 16:45:23 +0800
-Message-ID: <20250205084531.158763-10-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH 11/16] ASoC: SOF: Intel: hda-sdw-bpt: add helpers for SoundWire BPT DMA
+Date: Wed,  5 Feb 2025 16:45:25 +0800
+Message-ID: <20250205084531.158763-12-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
 References: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
@@ -67,12 +67,10 @@ Content-Transfer-Encoding: 8bit
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
-The Cadence IP expects a specific format (detailed in the
-Documentation). Add helpers to copy the data into the DMA buffer.
+Add SoundWire BPT DMA helpers as a separate module to avoid circular
+dependencies.
 
-The crc8 table is for now only used by the Cadence driver. This table
-might be moved to a common module at a later point if needed by other
-controller implementations.
+For now this assumes no link DMA, only coupled mode.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
@@ -80,715 +78,460 @@ Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 ---
- drivers/soundwire/Kconfig          |   1 +
- drivers/soundwire/cadence_master.c | 646 +++++++++++++++++++++++++++++
- drivers/soundwire/cadence_master.h |  20 +
- 3 files changed, 667 insertions(+)
+ include/sound/hda-sdw-bpt.h       |  69 +++++++
+ sound/soc/sof/intel/Kconfig       |   7 +
+ sound/soc/sof/intel/Makefile      |   4 +
+ sound/soc/sof/intel/hda-sdw-bpt.c | 318 ++++++++++++++++++++++++++++++
+ 4 files changed, 398 insertions(+)
+ create mode 100644 include/sound/hda-sdw-bpt.h
+ create mode 100644 sound/soc/sof/intel/hda-sdw-bpt.c
 
-diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-index f66f869dff2e..ad56393e4c93 100644
---- a/drivers/soundwire/Kconfig
-+++ b/drivers/soundwire/Kconfig
-@@ -31,6 +31,7 @@ config SOUNDWIRE_AMD
- 
- config SOUNDWIRE_CADENCE
- 	tristate
-+	select CRC8
- 
- config SOUNDWIRE_INTEL
- 	tristate "Intel SoundWire Master driver"
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index f7654a7fd53f..35b28320f466 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/cleanup.h>
-+#include <linux/crc8.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/debugfs.h>
-@@ -1960,5 +1961,650 @@ struct sdw_cdns_pdi *sdw_cdns_alloc_pdi(struct sdw_cdns *cdns,
- }
- EXPORT_SYMBOL(sdw_cdns_alloc_pdi);
- 
+diff --git a/include/sound/hda-sdw-bpt.h b/include/sound/hda-sdw-bpt.h
+new file mode 100644
+index 000000000000..f649549b75d5
+--- /dev/null
++++ b/include/sound/hda-sdw-bpt.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
 +/*
-+ * the MIPI SoundWire CRC8 polynomial is X^8 + X^6 + X^3 + X^2 + 1, MSB first
-+ * The value is (1)01001101 = 0x4D
++ * This file is provided under a dual BSD/GPLv2 license.  When using or
++ * redistributing this file, you may do so under either license.
 + *
-+ * the table below was generated with
-+ *
-+ *	u8 crc8_lookup_table[CRC8_TABLE_SIZE];
-+ *	crc8_populate_msb(crc8_lookup_table, SDW_CRC8_POLY);
-+ *
++ * Copyright(c) 2025 Intel Corporation.
 + */
-+#define SDW_CRC8_SEED 0xFF
-+#define SDW_CRC8_POLY 0x4D
 +
-+static const u8 sdw_crc8_lookup_msb[CRC8_TABLE_SIZE] = {
-+	0x00, 0x4d, 0x9a, 0xd7, 0x79, 0x34, 0xe3, 0xae, /* 0 - 7 */
-+	0xf2, 0xbf, 0x68, 0x25, 0x8b, 0xc6, 0x11, 0x5c, /* 8 -15 */
-+	0xa9, 0xe4, 0x33, 0x7e, 0xd0, 0x9d, 0x4a, 0x07, /* 16 - 23 */
-+	0x5b, 0x16, 0xc1, 0x8c, 0x22, 0x6f, 0xb8, 0xf5, /* 24 - 31 */
-+	0x1f, 0x52, 0x85, 0xc8, 0x66, 0x2b, 0xfc, 0xb1, /* 32 - 39 */
-+	0xed, 0xa0, 0x77, 0x3a, 0x94, 0xd9, 0x0e, 0x43, /* 40 - 47 */
-+	0xb6, 0xfb, 0x2c, 0x61, 0xcf, 0x82, 0x55, 0x18, /* 48 - 55 */
-+	0x44, 0x09, 0xde, 0x93, 0x3d, 0x70, 0xa7, 0xea, /* 56 - 63 */
-+	0x3e, 0x73, 0xa4, 0xe9, 0x47, 0x0a, 0xdd, 0x90, /* 64 - 71 */
-+	0xcc, 0x81, 0x56, 0x1b, 0xb5, 0xf8, 0x2f, 0x62, /* 72 - 79 */
-+	0x97, 0xda, 0x0d, 0x40, 0xee, 0xa3, 0x74, 0x39, /* 80 - 87 */
-+	0x65, 0x28, 0xff, 0xb2, 0x1c, 0x51, 0x86, 0xcb, /* 88 - 95 */
-+	0x21, 0x6c, 0xbb, 0xf6, 0x58, 0x15, 0xc2, 0x8f, /* 96 - 103 */
-+	0xd3, 0x9e, 0x49, 0x04, 0xaa, 0xe7, 0x30, 0x7d, /* 104 - 111 */
-+	0x88, 0xc5, 0x12, 0x5f, 0xf1, 0xbc, 0x6b, 0x26, /* 112 - 119 */
-+	0x7a, 0x37, 0xe0, 0xad, 0x03, 0x4e, 0x99, 0xd4, /* 120 - 127 */
-+	0x7c, 0x31, 0xe6, 0xab, 0x05, 0x48, 0x9f, 0xd2, /* 128 - 135 */
-+	0x8e, 0xc3, 0x14, 0x59, 0xf7, 0xba, 0x6d, 0x20, /* 136 - 143 */
-+	0xd5, 0x98, 0x4f, 0x02, 0xac, 0xe1, 0x36, 0x7b, /* 144 - 151 */
-+	0x27, 0x6a, 0xbd, 0xf0, 0x5e, 0x13, 0xc4, 0x89, /* 152 - 159 */
-+	0x63, 0x2e, 0xf9, 0xb4, 0x1a, 0x57, 0x80, 0xcd, /* 160 - 167 */
-+	0x91, 0xdc, 0x0b, 0x46, 0xe8, 0xa5, 0x72, 0x3f, /* 168 - 175 */
-+	0xca, 0x87, 0x50, 0x1d, 0xb3, 0xfe, 0x29, 0x64, /* 176 - 183 */
-+	0x38, 0x75, 0xa2, 0xef, 0x41, 0x0c, 0xdb, 0x96, /* 184 - 191 */
-+	0x42, 0x0f, 0xd8, 0x95, 0x3b, 0x76, 0xa1, 0xec, /* 192 - 199 */
-+	0xb0, 0xfd, 0x2a, 0x67, 0xc9, 0x84, 0x53, 0x1e, /* 200 - 207 */
-+	0xeb, 0xa6, 0x71, 0x3c, 0x92, 0xdf, 0x08, 0x45, /* 208 - 215 */
-+	0x19, 0x54, 0x83, 0xce, 0x60, 0x2d, 0xfa, 0xb7, /* 216 - 223 */
-+	0x5d, 0x10, 0xc7, 0x8a, 0x24, 0x69, 0xbe, 0xf3, /* 224 - 231 */
-+	0xaf, 0xe2, 0x35, 0x78, 0xd6, 0x9b, 0x4c, 0x01, /* 232 - 239 */
-+	0xf4, 0xb9, 0x6e, 0x23, 0x8d, 0xc0, 0x17, 0x5a, /* 240 - 247 */
-+	0x06, 0x4b, 0x9c, 0xd1, 0x7f, 0x32, 0xe5, 0xa8  /* 248 - 255 */
-+};
++#ifndef __HDA_SDW_BPT_H
++#define __HDA_SDW_BPT_H
 +
-+/* BPT/BRA helpers */
++#include <linux/device.h>
 +
-+#define SDW_CDNS_BRA_HDR			6 /* defined by MIPI */
-+#define SDW_CDNS_BRA_HDR_CRC			1 /* defined by MIPI */
-+#define SDW_CDNS_BRA_HDR_CRC_PAD		1 /* Cadence only */
-+#define SDW_CDNS_BRA_HDR_RESP			1 /* defined by MIPI */
-+#define SDW_CDNS_BRA_HDR_RESP_PAD		1 /* Cadence only */
++struct hdac_ext_stream;
++struct snd_dma_buffer;
 +
-+#define SDW_CDNS_BRA_DATA_PAD			1 /* Cadence only */
-+#define SDW_CDNS_BRA_DATA_CRC			1 /* defined by MIPI */
-+#define SDW_CDNS_BRA_DATA_CRC_PAD		1 /* Cadence only */
++#if IS_ENABLED(CONFIG_SND_SOF_SOF_HDA_SDW_BPT)
++int hda_sdw_bpt_open(struct device *dev, int link_id, struct hdac_ext_stream **bpt_tx_stream,
++		     struct snd_dma_buffer *dmab_tx_bdl, u32 bpt_tx_num_bytes,
++		     u32 tx_dma_bandwidth, struct hdac_ext_stream **bpt_rx_stream,
++		     struct snd_dma_buffer *dmab_rx_bdl, u32 bpt_rx_num_bytes,
++		     u32 rx_dma_bandwidth);
 +
-+#define SDW_CDNS_BRA_FOOTER_RESP		1 /* defined by MIPI */
-+#define SDW_CDNS_BRA_FOOTER_RESP_PAD		1 /* Cadence only */
++int hda_sdw_bpt_send_async(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++			   struct hdac_ext_stream *bpt_rx_stream);
 +
-+static unsigned int sdw_cdns_bra_actual_data_size(unsigned int allocated_bytes_per_frame)
++int hda_sdw_bpt_wait(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++		     struct hdac_ext_stream *bpt_rx_stream);
++
++int hda_sdw_bpt_close(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++		      struct snd_dma_buffer *dmab_tx_bdl, struct hdac_ext_stream *bpt_rx_stream,
++		      struct snd_dma_buffer *dmab_rx_bdl);
++#else
++static inline int hda_sdw_bpt_open(struct device *dev, int link_id,
++				   struct hdac_ext_stream **bpt_tx_stream,
++				   struct snd_dma_buffer *dmab_tx_bdl, u32 bpt_tx_num_bytes,
++				   u32 tx_dma_bandwidth, struct hdac_ext_stream **bpt_rx_stream,
++				   struct snd_dma_buffer *dmab_rx_bdl, u32 bpt_rx_num_bytes,
++				   u32 rx_dma_bandwidth)
 +{
-+	unsigned int total;
++	WARN_ONCE(1, "SoundWire BPT is disabled");
++	return -EOPNOTSUPP;
++}
 +
-+	if (allocated_bytes_per_frame < (SDW_CDNS_BRA_HDR + SDW_CDNS_BRA_HDR_CRC +
-+					 SDW_CDNS_BRA_HDR_RESP + SDW_CDNS_BRA_DATA_CRC +
-+					 SDW_CDNS_BRA_FOOTER_RESP))
++static inline int hda_sdw_bpt_send_async(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++					 struct hdac_ext_stream *bpt_rx_stream)
++{
++	WARN_ONCE(1, "SoundWire BPT is disabled");
++	return -EOPNOTSUPP;
++}
++
++static inline int hda_sdw_bpt_wait(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++				   struct hdac_ext_stream *bpt_rx_stream)
++{
++	WARN_ONCE(1, "SoundWire BPT is disabled");
++	return -EOPNOTSUPP;
++}
++
++static inline int hda_sdw_bpt_close(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++				    struct snd_dma_buffer *dmab_tx_bdl,
++				    struct hdac_ext_stream *bpt_rx_stream,
++				    struct snd_dma_buffer *dmab_rx_bdl)
++{
++	WARN_ONCE(1, "SoundWire BPT is disabled");
++	return -EOPNOTSUPP;
++}
++#endif
++
++#endif /* __HDA_SDW_BPT_H */
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index 2c43558d96b9..fae3598fd601 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -268,6 +268,7 @@ config SND_SOC_SOF_INTEL_LNL
+ 	tristate
+ 	select SND_SOC_SOF_HDA_GENERIC
+ 	select SND_SOC_SOF_INTEL_SOUNDWIRE_LINK_BASELINE
++	select SND_SOF_SOF_HDA_SDW_BPT if SND_SOC_SOF_INTEL_SOUNDWIRE
+ 	select SND_SOC_SOF_IPC4
+ 	select SND_SOC_SOF_INTEL_MTL
+ 
+@@ -342,6 +343,12 @@ config SND_SOC_SOF_HDA_AUDIO_CODEC
+ 
+ endif ## SND_SOC_SOF_HDA_GENERIC
+ 
++config SND_SOF_SOF_HDA_SDW_BPT
++	tristate
++	help
++	  This option is not user-selectable but automagically handled by
++	  'select' statements at a higher level.
++
+ config SND_SOC_SOF_HDA_LINK_BASELINE
+ 	tristate
+ 	select SND_SOC_SOF_HDA if SND_SOC_SOF_HDA_LINK
+diff --git a/sound/soc/sof/intel/Makefile b/sound/soc/sof/intel/Makefile
+index f40daa616803..af30af92f21e 100644
+--- a/sound/soc/sof/intel/Makefile
++++ b/sound/soc/sof/intel/Makefile
+@@ -12,6 +12,8 @@ snd-sof-intel-hda-generic-y := hda.o hda-common-ops.o
+ 
+ snd-sof-intel-hda-mlink-y := hda-mlink.o
+ 
++snd-sof-intel-hda-sdw-bpt-objs := hda-sdw-bpt.o
++
+ snd-sof-intel-hda-common-$(CONFIG_SND_SOC_SOF_HDA_PROBES) += hda-probes.o
+ 
+ snd-sof-intel-hda-y := hda-codec.o
+@@ -26,6 +28,8 @@ obj-$(CONFIG_SND_SOC_SOF_HDA_GENERIC) += snd-sof-intel-hda-generic.o
+ obj-$(CONFIG_SND_SOC_SOF_HDA_MLINK) += snd-sof-intel-hda-mlink.o
+ obj-$(CONFIG_SND_SOC_SOF_HDA) += snd-sof-intel-hda.o
+ 
++obj-$(CONFIG_SND_SOF_SOF_HDA_SDW_BPT) += snd-sof-intel-hda-sdw-bpt.o
++
+ snd-sof-pci-intel-tng-y := pci-tng.o
+ snd-sof-pci-intel-skl-y := pci-skl.o skl.o hda-loader-skl.o
+ snd-sof-pci-intel-apl-y := pci-apl.o apl.o
+diff --git a/sound/soc/sof/intel/hda-sdw-bpt.c b/sound/soc/sof/intel/hda-sdw-bpt.c
+new file mode 100644
+index 000000000000..f75a7b39293e
+--- /dev/null
++++ b/sound/soc/sof/intel/hda-sdw-bpt.c
+@@ -0,0 +1,318 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
++//
++// This file is provided under a dual BSD/GPLv2 license.  When using or
++// redistributing this file, you may do so under either license.
++//
++// Copyright(c) 2025 Intel Corporation.
++//
++
++/*
++ * Hardware interface for SoundWire BPT support with HDA DMA
++ */
++
++#include <sound/hdaudio_ext.h>
++#include <sound/hda-mlink.h>
++#include <sound/hda-sdw-bpt.h>
++#include <sound/sof.h>
++#include "../ops.h"
++#include "../sof-priv.h"
++#include "hda.h"
++
++#define BPT_FREQUENCY		192000 /* The max rate defined in rate_bits[] hdac_device.c */
++#define BPT_MULTIPLIER		((BPT_FREQUENCY / 48000) - 1)
++
++static int hda_sdw_bpt_dma_prepare(struct device *dev, struct hdac_ext_stream **sdw_bpt_stream,
++				   struct snd_dma_buffer *dmab_bdl, u32 bpt_num_bytes,
++				   unsigned int num_channels, int direction)
++{
++	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
++	struct hdac_ext_stream *bpt_stream;
++	unsigned int format = HDA_CL_STREAM_FORMAT;
++
++	/*
++	 * the baseline format needs to be adjusted to
++	 * bandwidth requirements
++	 */
++	format |= (num_channels - 1);
++	format |= BPT_MULTIPLIER << AC_FMT_MULT_SHIFT;
++
++	dev_dbg(dev, "direction %d format_val %#x\n", direction, format);
++
++	bpt_stream = hda_cl_prepare(dev, format, bpt_num_bytes, dmab_bdl, false, direction, false);
++	if (IS_ERR(bpt_stream)) {
++		dev_err(sdev->dev, "%s: SDW BPT DMA prepare failed: dir %d\n",
++			__func__, direction);
++		return PTR_ERR(bpt_stream);
++	}
++	*sdw_bpt_stream = bpt_stream;
++
++	if (hdac_stream(bpt_stream)->direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		struct hdac_bus *bus = sof_to_bus(sdev);
++		struct hdac_ext_link *hlink;
++		int stream_tag;
++
++		stream_tag = hdac_stream(bpt_stream)->stream_tag;
++		hlink = hdac_bus_eml_sdw_get_hlink(bus);
++
++		snd_hdac_ext_bus_link_set_stream_id(hlink, stream_tag);
++	}
++	return 0;
++}
++
++static int hda_sdw_bpt_dma_deprepare(struct device *dev, struct hdac_ext_stream *sdw_bpt_stream,
++				     struct snd_dma_buffer *dmab_bdl)
++{
++	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
++	int ret;
++
++	ret = hda_cl_cleanup(sdev->dev, dmab_bdl, true, sdw_bpt_stream);
++	if (ret < 0) {
++		dev_err(sdev->dev, "%s: SDW BPT DMA cleanup failed\n",
++			__func__);
++		return ret;
++	}
++
++	if (hdac_stream(sdw_bpt_stream)->direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		struct hdac_bus *bus = sof_to_bus(sdev);
++		struct hdac_ext_link *hlink;
++		int stream_tag;
++
++		stream_tag = hdac_stream(sdw_bpt_stream)->stream_tag;
++		hlink = hdac_bus_eml_sdw_get_hlink(bus);
++
++		snd_hdac_ext_bus_link_clear_stream_id(hlink, stream_tag);
++	}
++
++	return 0;
++}
++
++static int hda_sdw_bpt_dma_enable(struct device *dev, struct hdac_ext_stream *sdw_bpt_stream)
++{
++	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
++	int ret;
++
++	ret = hda_cl_trigger(sdev->dev, sdw_bpt_stream, SNDRV_PCM_TRIGGER_START);
++	if (ret < 0)
++		dev_err(sdev->dev, "%s: SDW BPT DMA trigger start failed\n", __func__);
++
++	return ret;
++}
++
++static int hda_sdw_bpt_dma_disable(struct device *dev, struct hdac_ext_stream *sdw_bpt_stream)
++{
++	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
++	int ret;
++
++	ret = hda_cl_trigger(sdev->dev, sdw_bpt_stream, SNDRV_PCM_TRIGGER_STOP);
++	if (ret < 0)
++		dev_err(sdev->dev, "%s: SDW BPT DMA trigger stop failed\n", __func__);
++
++	return ret;
++}
++
++int hda_sdw_bpt_open(struct device *dev, int link_id, struct hdac_ext_stream **bpt_tx_stream,
++		     struct snd_dma_buffer *dmab_tx_bdl, u32 bpt_tx_num_bytes,
++		     u32 tx_dma_bandwidth, struct hdac_ext_stream **bpt_rx_stream,
++		     struct snd_dma_buffer *dmab_rx_bdl, u32 bpt_rx_num_bytes,
++		     u32 rx_dma_bandwidth)
++{
++	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
++	unsigned int num_channels_tx;
++	unsigned int num_channels_rx;
++	int ret1;
++	int ret;
++
++	num_channels_tx = DIV_ROUND_UP(tx_dma_bandwidth, BPT_FREQUENCY * 32);
++
++	ret = hda_sdw_bpt_dma_prepare(dev, bpt_tx_stream, dmab_tx_bdl, bpt_tx_num_bytes,
++				      num_channels_tx, SNDRV_PCM_STREAM_PLAYBACK);
++	if (ret < 0) {
++		dev_err(dev, "%s: hda_sdw_bpt_dma_prepare failed for TX: %d\n",
++			__func__, ret);
++		return ret;
++	}
++
++	num_channels_rx = DIV_ROUND_UP(rx_dma_bandwidth, BPT_FREQUENCY * 32);
++
++	ret = hda_sdw_bpt_dma_prepare(dev, bpt_rx_stream, dmab_rx_bdl, bpt_rx_num_bytes,
++				      num_channels_rx, SNDRV_PCM_STREAM_CAPTURE);
++	if (ret < 0) {
++		dev_err(dev, "%s: hda_sdw_bpt_dma_prepare failed for RX: %d\n",
++			__func__, ret);
++
++		ret1 = hda_sdw_bpt_dma_deprepare(dev, *bpt_tx_stream, dmab_tx_bdl);
++		if (ret1 < 0)
++			dev_err(dev, "%s: hda_sdw_bpt_dma_deprepare failed for TX: %d\n",
++				__func__, ret1);
++		return ret;
++	}
++
++	/* we need to map the channels in PCMSyCM registers */
++	ret = hdac_bus_eml_sdw_map_stream_ch(sof_to_bus(sdev), link_id,
++					     0, /* cpu_dai->id -> PDI0 */
++					     GENMASK(num_channels_tx - 1, 0),
++					     hdac_stream(*bpt_tx_stream)->stream_tag,
++					     SNDRV_PCM_STREAM_PLAYBACK);
++	if (ret < 0) {
++		dev_err(dev, "%s: hdac_bus_eml_sdw_map_stream_ch failed for TX: %d\n",
++			__func__, ret);
++		goto close;
++	}
++
++	ret = hdac_bus_eml_sdw_map_stream_ch(sof_to_bus(sdev), link_id,
++					     1, /* cpu_dai->id -> PDI1 */
++					     GENMASK(num_channels_rx - 1, 0),
++					     hdac_stream(*bpt_rx_stream)->stream_tag,
++					     SNDRV_PCM_STREAM_CAPTURE);
++	if (!ret)
 +		return 0;
 +
-+	total = allocated_bytes_per_frame - SDW_CDNS_BRA_HDR - SDW_CDNS_BRA_HDR_CRC -
-+		SDW_CDNS_BRA_HDR_RESP - SDW_CDNS_BRA_DATA_CRC - SDW_CDNS_BRA_FOOTER_RESP;
++	dev_err(dev, "%s: hdac_bus_eml_sdw_map_stream_ch failed for RX: %d\n",
++		__func__, ret);
 +
-+	return total;
++close:
++	ret1 = hda_sdw_bpt_close(dev, *bpt_tx_stream, dmab_tx_bdl, *bpt_rx_stream, dmab_rx_bdl);
++	if (ret1 < 0)
++		dev_err(dev, "%s: hda_sdw_bpt_close failed: %d\n",
++			__func__, ret1);
++
++	return ret;
 +}
++EXPORT_SYMBOL_NS(hda_sdw_bpt_open, "SND_SOC_SOF_INTEL_HDA_SDW_BPT");
 +
-+static unsigned int sdw_cdns_write_pdi0_buffer_size(unsigned int actual_data_size)
++int hda_sdw_bpt_send_async(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++			   struct hdac_ext_stream *bpt_rx_stream)
 +{
-+	unsigned int total;
-+
-+	total = SDW_CDNS_BRA_HDR + SDW_CDNS_BRA_HDR_CRC + SDW_CDNS_BRA_HDR_CRC_PAD;
-+
-+	total += actual_data_size;
-+	if (actual_data_size & 1)
-+		total += SDW_CDNS_BRA_DATA_PAD;
-+
-+	total += SDW_CDNS_BRA_DATA_CRC + SDW_CDNS_BRA_DATA_CRC_PAD;
-+
-+	return total * 2;
-+}
-+
-+static unsigned int sdw_cdns_write_pdi1_buffer_size(unsigned int actual_data_size)
-+{
-+	unsigned int total;
-+
-+	total = SDW_CDNS_BRA_HDR_RESP +	SDW_CDNS_BRA_HDR_RESP_PAD +
-+		SDW_CDNS_BRA_FOOTER_RESP + SDW_CDNS_BRA_FOOTER_RESP_PAD;
-+
-+	return total * 2;
-+}
-+
-+static unsigned int sdw_cdns_read_pdi0_buffer_size(unsigned int actual_data_size)
-+{
-+	unsigned int total;
-+
-+	total = SDW_CDNS_BRA_HDR + SDW_CDNS_BRA_HDR_CRC + SDW_CDNS_BRA_HDR_CRC_PAD;
-+
-+	return total * 2;
-+}
-+
-+static unsigned int sdw_cdns_read_pdi1_buffer_size(unsigned int actual_data_size)
-+{
-+	unsigned int total;
-+
-+	total = SDW_CDNS_BRA_HDR_RESP + SDW_CDNS_BRA_HDR_RESP_PAD;
-+
-+	total += actual_data_size;
-+	if (actual_data_size & 1)
-+		total += SDW_CDNS_BRA_DATA_PAD;
-+
-+	total += SDW_CDNS_BRA_HDR_CRC +	SDW_CDNS_BRA_HDR_CRC_PAD;
-+
-+	total += SDW_CDNS_BRA_FOOTER_RESP + SDW_CDNS_BRA_FOOTER_RESP_PAD;
-+
-+	return total * 2;
-+}
-+
-+int sdw_cdns_bpt_find_buffer_sizes(int command, /* 0: write, 1: read */
-+				   int row, int col, unsigned int data_bytes,
-+				   unsigned int requested_bytes_per_frame,
-+				   unsigned int *data_per_frame, unsigned int *pdi0_buffer_size,
-+				   unsigned int *pdi1_buffer_size, unsigned int *num_frames)
-+{
-+	unsigned int bpt_bits = row * (col - 1);
-+	unsigned int bpt_bytes = bpt_bits >> 3;
-+	unsigned int actual_bpt_bytes;
-+	unsigned int pdi0_tx_size;
-+	unsigned int pdi1_rx_size;
-+	unsigned int remainder;
-+
-+	if (!data_bytes)
-+		return -EINVAL;
-+
-+	actual_bpt_bytes = sdw_cdns_bra_actual_data_size(bpt_bytes);
-+	if (!actual_bpt_bytes)
-+		return -EINVAL;
-+
-+	if (data_bytes < actual_bpt_bytes)
-+		actual_bpt_bytes = data_bytes;
-+
-+	/*
-+	 * the caller may want to set the number of bytes per frame,
-+	 * allow when possible
-+	 */
-+	if (requested_bytes_per_frame < actual_bpt_bytes)
-+		actual_bpt_bytes = requested_bytes_per_frame;
-+
-+	*data_per_frame = actual_bpt_bytes;
-+
-+	if (command == 0) {
-+		/*
-+		 * for writes we need to send all the data_bytes per frame,
-+		 * even for the last frame which may only transport fewer bytes
-+		 */
-+
-+		*num_frames = DIV_ROUND_UP(data_bytes, actual_bpt_bytes);
-+
-+		pdi0_tx_size = sdw_cdns_write_pdi0_buffer_size(actual_bpt_bytes);
-+		pdi1_rx_size = sdw_cdns_write_pdi1_buffer_size(actual_bpt_bytes);
-+
-+		*pdi0_buffer_size = pdi0_tx_size * *num_frames;
-+		*pdi1_buffer_size = pdi1_rx_size * *num_frames;
-+	} else {
-+		/*
-+		 * for reads we need to retrieve only what is requested in the BPT
-+		 * header, so the last frame needs to be special-cased
-+		 */
-+		*num_frames = data_bytes / actual_bpt_bytes;
-+
-+		pdi0_tx_size = sdw_cdns_read_pdi0_buffer_size(actual_bpt_bytes);
-+		pdi1_rx_size = sdw_cdns_read_pdi1_buffer_size(actual_bpt_bytes);
-+
-+		*pdi0_buffer_size = pdi0_tx_size * *num_frames;
-+		*pdi1_buffer_size = pdi1_rx_size * *num_frames;
-+
-+		remainder = data_bytes % actual_bpt_bytes;
-+		if (remainder) {
-+			pdi0_tx_size = sdw_cdns_read_pdi0_buffer_size(remainder);
-+			pdi1_rx_size = sdw_cdns_read_pdi1_buffer_size(remainder);
-+
-+			*num_frames = *num_frames + 1;
-+			*pdi0_buffer_size += pdi0_tx_size;
-+			*pdi1_buffer_size += pdi1_rx_size;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(sdw_cdns_bpt_find_buffer_sizes);
-+
-+static int sdw_cdns_copy_write_data(u8 *data, int data_size, u8 *dma_buffer, int dma_buffer_size)
-+{
-+	/*
-+	 * the implementation copies the data one byte at a time. Experiments with
-+	 * two bytes at a time did not seem to improve the performance
-+	 */
-+	int i, j;
-+
-+	/* size check to prevent out of bounds access */
-+	i = data_size - 1;
-+	j = (2 * i) - (i & 1);
-+	if (data_size & 1)
-+		j++;
-+	j += 2;
-+	if (j >= dma_buffer_size)
-+		return -EINVAL;
-+
-+	/* copy data */
-+	for (i = 0; i < data_size; i++) {
-+		j = (2 * i) - (i & 1);
-+		dma_buffer[j] = data[i];
-+	}
-+	/* add required pad */
-+	if (data_size & 1)
-+		dma_buffer[++j] = 0;
-+	/* skip last two bytes */
-+	j += 2;
-+
-+	/* offset and data are off-by-one */
-+	return j + 1;
-+}
-+
-+static int sdw_cdns_prepare_write_pd0_buffer(u8 *header, unsigned int header_size,
-+					     u8 *data, unsigned int data_size,
-+					     u8 *dma_buffer, unsigned int dma_buffer_size,
-+					     unsigned int *dma_data_written,
-+					     unsigned int frame_counter)
-+{
-+	int data_written;
-+	u8 *last_byte;
-+	u8 crc;
-+
-+	*dma_data_written = 0;
-+
-+	data_written = sdw_cdns_copy_write_data(header, header_size, dma_buffer, dma_buffer_size);
-+	if (data_written < 0)
-+		return data_written;
-+	dma_buffer[3] = BIT(7);
-+	dma_buffer[3] |= frame_counter & GENMASK(3, 0);
-+
-+	dma_buffer += data_written;
-+	dma_buffer_size -= data_written;
-+	*dma_data_written += data_written;
-+
-+	crc = SDW_CRC8_SEED;
-+	crc = crc8(sdw_crc8_lookup_msb, header, header_size, crc);
-+
-+	data_written = sdw_cdns_copy_write_data(&crc, 1, dma_buffer, dma_buffer_size);
-+	if (data_written < 0)
-+		return data_written;
-+	dma_buffer += data_written;
-+	dma_buffer_size -= data_written;
-+	*dma_data_written += data_written;
-+
-+	data_written = sdw_cdns_copy_write_data(data, data_size, dma_buffer, dma_buffer_size);
-+	if (data_written < 0)
-+		return data_written;
-+	dma_buffer += data_written;
-+	dma_buffer_size -= data_written;
-+	*dma_data_written += data_written;
-+
-+	crc = SDW_CRC8_SEED;
-+	crc = crc8(sdw_crc8_lookup_msb, data, data_size, crc);
-+	data_written = sdw_cdns_copy_write_data(&crc, 1, dma_buffer, dma_buffer_size);
-+	if (data_written < 0)
-+		return data_written;
-+	dma_buffer += data_written;
-+	dma_buffer_size -= data_written;
-+	*dma_data_written += data_written;
-+
-+	/* tag last byte */
-+	last_byte = dma_buffer - 1;
-+	last_byte[0] = BIT(6);
-+
-+	return 0;
-+}
-+
-+static int sdw_cdns_prepare_read_pd0_buffer(u8 *header, unsigned int header_size,
-+					    u8 *dma_buffer, unsigned int dma_buffer_size,
-+					    unsigned int *dma_data_written,
-+					    unsigned int frame_counter)
-+{
-+	int data_written;
-+	u8 *last_byte;
-+	u8 crc;
-+
-+	*dma_data_written = 0;
-+
-+	data_written = sdw_cdns_copy_write_data(header, header_size, dma_buffer, dma_buffer_size);
-+	if (data_written < 0)
-+		return data_written;
-+	dma_buffer[3] = BIT(7);
-+	dma_buffer[3] |= frame_counter & GENMASK(3, 0);
-+
-+	dma_buffer += data_written;
-+	dma_buffer_size -= data_written;
-+	*dma_data_written += data_written;
-+
-+	crc = SDW_CRC8_SEED;
-+	crc = crc8(sdw_crc8_lookup_msb, header, header_size, crc);
-+
-+	data_written = sdw_cdns_copy_write_data(&crc, 1, dma_buffer, dma_buffer_size);
-+	if (data_written < 0)
-+		return data_written;
-+	dma_buffer += data_written;
-+	dma_buffer_size -= data_written;
-+	*dma_data_written += data_written;
-+
-+	/* tag last byte */
-+	last_byte = dma_buffer - 1;
-+	last_byte[0] = BIT(6);
-+
-+	return 0;
-+}
-+
-+#define CDNS_BPT_ROLLING_COUNTER_START 1
-+
-+int sdw_cdns_prepare_write_dma_buffer(u8 dev_num, u32 start_register, u8 *data, int data_size,
-+				      int data_per_frame, u8 *dma_buffer, int dma_buffer_size,
-+				      int *dma_buffer_total_bytes)
-+{
-+	int total_dma_data_written = 0;
-+	u8 *p_dma_buffer = dma_buffer;
-+	u8 header[SDW_CDNS_BRA_HDR];
-+	int dma_data_written;
-+	u8 *p_data = data;
-+	u8 counter;
++	int ret1;
 +	int ret;
 +
-+	counter = CDNS_BPT_ROLLING_COUNTER_START;
-+
-+	header[0] = BIT(1);		/* write command: BIT(1) set */
-+	header[0] |= GENMASK(7, 6);	/* header is active */
-+	header[0] |= (dev_num << 2);
-+
-+	while (data_size >= data_per_frame) {
-+		header[1] = data_per_frame;
-+		header[2] = start_register >> 24 & 0xFF;
-+		header[3] = start_register >> 16 & 0xFF;
-+		header[4] = start_register >> 8 & 0xFF;
-+		header[5] = start_register >> 0 & 0xFF;
-+
-+		ret = sdw_cdns_prepare_write_pd0_buffer(header, SDW_CDNS_BRA_HDR,
-+							p_data, data_per_frame,
-+							p_dma_buffer, dma_buffer_size,
-+							&dma_data_written, counter);
-+		if (ret < 0)
-+			return ret;
-+
-+		counter++;
-+
-+		p_data += data_per_frame;
-+		data_size -= data_per_frame;
-+
-+		p_dma_buffer += dma_data_written;
-+		dma_buffer_size -= dma_data_written;
-+		total_dma_data_written += dma_data_written;
-+
-+		start_register += data_per_frame;
-+	}
-+
-+	if (data_size) {
-+		header[1] = data_size;
-+		header[2] = start_register >> 24 & 0xFF;
-+		header[3] = start_register >> 16 & 0xFF;
-+		header[4] = start_register >> 8 & 0xFF;
-+		header[5] = start_register >> 0 & 0xFF;
-+
-+		ret = sdw_cdns_prepare_write_pd0_buffer(header, SDW_CDNS_BRA_HDR,
-+							p_data, data_size,
-+							p_dma_buffer, dma_buffer_size,
-+							&dma_data_written, counter);
-+		if (ret < 0)
-+			return ret;
-+
-+		total_dma_data_written += dma_data_written;
-+	}
-+
-+	*dma_buffer_total_bytes = total_dma_data_written;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(sdw_cdns_prepare_write_dma_buffer);
-+
-+int sdw_cdns_prepare_read_dma_buffer(u8 dev_num, u32 start_register, int data_size,
-+				     int data_per_frame, u8 *dma_buffer, int dma_buffer_size,
-+				     int *dma_buffer_total_bytes)
-+{
-+	int total_dma_data_written = 0;
-+	u8 *p_dma_buffer = dma_buffer;
-+	u8 header[SDW_CDNS_BRA_HDR];
-+	int dma_data_written;
-+	u8 counter;
-+	int ret;
-+
-+	counter = CDNS_BPT_ROLLING_COUNTER_START;
-+
-+	header[0] = 0;			/* read command: BIT(1) cleared */
-+	header[0] |= GENMASK(7, 6);	/* header is active */
-+	header[0] |= (dev_num << 2);
-+
-+	while (data_size >= data_per_frame) {
-+		header[1] = data_per_frame;
-+		header[2] = start_register >> 24 & 0xFF;
-+		header[3] = start_register >> 16 & 0xFF;
-+		header[4] = start_register >> 8 & 0xFF;
-+		header[5] = start_register >> 0 & 0xFF;
-+
-+		ret = sdw_cdns_prepare_read_pd0_buffer(header, SDW_CDNS_BRA_HDR, p_dma_buffer,
-+						       dma_buffer_size, &dma_data_written,
-+						       counter);
-+		if (ret < 0)
-+			return ret;
-+
-+		counter++;
-+
-+		data_size -= data_per_frame;
-+
-+		p_dma_buffer += dma_data_written;
-+		dma_buffer_size -= dma_data_written;
-+		total_dma_data_written += dma_data_written;
-+
-+		start_register += data_per_frame;
-+	}
-+
-+	if (data_size) {
-+		header[1] = data_size;
-+		header[2] = start_register >> 24 & 0xFF;
-+		header[3] = start_register >> 16 & 0xFF;
-+		header[4] = start_register >> 8 & 0xFF;
-+		header[5] = start_register >> 0 & 0xFF;
-+
-+		ret = sdw_cdns_prepare_read_pd0_buffer(header, SDW_CDNS_BRA_HDR, p_dma_buffer,
-+						       dma_buffer_size, &dma_data_written,
-+						       counter);
-+		if (ret < 0)
-+			return ret;
-+
-+		total_dma_data_written += dma_data_written;
-+	}
-+
-+	*dma_buffer_total_bytes = total_dma_data_written;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(sdw_cdns_prepare_read_dma_buffer);
-+
-+static int check_counter(u32 val, u8 counter)
-+{
-+	u8 frame;
-+
-+	frame = (val >> 24) & GENMASK(3, 0);
-+	if (counter != frame)
-+		return -EIO;
-+	return 0;
-+}
-+
-+static int check_response(u32 val)
-+{
-+	u8 response;
-+
-+	response = (val >> 3) & GENMASK(1, 0);
-+	if (response == 0) /* Ignored */
-+		return -ENODATA;
-+	if (response != 1) /* ACK */
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int check_frame_start(u32 header, u8 counter)
-+{
-+	int ret;
-+
-+	/* check frame_start marker */
-+	if (!(header & BIT(31)))
-+		return -EIO;
-+
-+	ret = check_counter(header, counter);
-+	if (ret < 0)
++	ret = hda_sdw_bpt_dma_enable(dev, bpt_tx_stream);
++	if (ret < 0) {
++		dev_err(dev, "%s: hda_sdw_bpt_dma_enable failed for TX: %d\n",
++			__func__, ret);
 +		return ret;
++	}
 +
-+	return check_response(header);
++	ret = hda_sdw_bpt_dma_enable(dev, bpt_rx_stream);
++	if (ret < 0) {
++		dev_err(dev, "%s: hda_sdw_bpt_dma_enable failed for RX: %d\n",
++			__func__, ret);
++
++		ret1 = hda_sdw_bpt_dma_disable(dev, bpt_tx_stream);
++		if (ret1 < 0)
++			dev_err(dev, "%s: hda_sdw_bpt_dma_disable failed for TX: %d\n",
++				__func__, ret1);
++	}
++
++	return ret;
 +}
++EXPORT_SYMBOL_NS(hda_sdw_bpt_send_async, "SND_SOC_SOF_INTEL_HDA_SDW_BPT");
 +
-+static int check_frame_end(u32 footer)
++/*
++ * 3s is several orders of magnitude larger than what is needed for a
++ * typical firmware download.
++ */
++#define HDA_BPT_IOC_TIMEOUT_MS 3000
++
++int hda_sdw_bpt_wait(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++		     struct hdac_ext_stream *bpt_rx_stream)
 +{
-+	/* check frame_end marker */
-+	if (!(footer & BIT(30)))
-+		return -EIO;
++	struct sof_intel_hda_stream *hda_tx_stream;
++	struct sof_intel_hda_stream *hda_rx_stream;
++	snd_pcm_uframes_t tx_position;
++	snd_pcm_uframes_t rx_position;
++	unsigned long time_tx_left;
++	unsigned long time_rx_left;
++	int ret = 0;
++	int ret1;
++	int i;
 +
-+	return check_response(footer);
++	hda_tx_stream = container_of(bpt_tx_stream, struct sof_intel_hda_stream, hext_stream);
++	hda_rx_stream = container_of(bpt_rx_stream, struct sof_intel_hda_stream, hext_stream);
++
++	time_tx_left = wait_for_completion_timeout(&hda_tx_stream->ioc,
++						   msecs_to_jiffies(HDA_BPT_IOC_TIMEOUT_MS));
++	if (!time_tx_left) {
++		tx_position = hda_dsp_stream_get_position(hdac_stream(bpt_tx_stream),
++							  SNDRV_PCM_STREAM_PLAYBACK, false);
++		dev_err(dev, "%s: SDW BPT TX DMA did not complete: %ld\n",
++			__func__, tx_position);
++		ret = -ETIMEDOUT;
++		goto dma_disable;
++	}
++
++	/* Make sure the DMA is flushed */
++	i = 0;
++	do {
++		tx_position = hda_dsp_stream_get_position(hdac_stream(bpt_tx_stream),
++							  SNDRV_PCM_STREAM_PLAYBACK, false);
++		usleep_range(1000, 1010);
++		i++;
++	} while (tx_position && i < HDA_BPT_IOC_TIMEOUT_MS);
++	if (tx_position) {
++		dev_err(dev, "%s: SDW BPT TX DMA position %ld was not cleared\n",
++			__func__, tx_position);
++		ret = -ETIMEDOUT;
++		goto dma_disable;
++	}
++
++	/* the wait should be minimal here */
++	time_rx_left = wait_for_completion_timeout(&hda_rx_stream->ioc,
++						   msecs_to_jiffies(HDA_BPT_IOC_TIMEOUT_MS));
++	if (!time_rx_left) {
++		rx_position = hda_dsp_stream_get_position(hdac_stream(bpt_rx_stream),
++							  SNDRV_PCM_STREAM_CAPTURE, false);
++		dev_err(dev, "%s: SDW BPT RX DMA did not complete: %ld\n",
++			__func__, rx_position);
++		ret = -ETIMEDOUT;
++		goto dma_disable;
++	}
++
++	/* Make sure the DMA is flushed */
++	i = 0;
++	do {
++		rx_position = hda_dsp_stream_get_position(hdac_stream(bpt_rx_stream),
++							  SNDRV_PCM_STREAM_CAPTURE, false);
++		usleep_range(1000, 1010);
++		i++;
++	} while (rx_position && i < HDA_BPT_IOC_TIMEOUT_MS);
++	if (rx_position) {
++		dev_err(dev, "%s: SDW BPT RX DMA position %ld was not cleared\n",
++			__func__, rx_position);
++		ret = -ETIMEDOUT;
++		goto dma_disable;
++	}
++
++dma_disable:
++	ret1 = hda_sdw_bpt_dma_disable(dev, bpt_rx_stream);
++	if (!ret)
++		ret = ret1;
++
++	ret1 = hda_sdw_bpt_dma_disable(dev, bpt_tx_stream);
++	if (!ret)
++		ret = ret1;
++
++	return ret;
 +}
++EXPORT_SYMBOL_NS(hda_sdw_bpt_wait, "SND_SOC_SOF_INTEL_HDA_SDW_BPT");
 +
-+int sdw_cdns_check_write_response(struct device *dev, u8 *dma_buffer,
-+				  int dma_buffer_size, int num_frames)
++int hda_sdw_bpt_close(struct device *dev, struct hdac_ext_stream *bpt_tx_stream,
++		      struct snd_dma_buffer *dmab_tx_bdl, struct hdac_ext_stream *bpt_rx_stream,
++		      struct snd_dma_buffer *dmab_rx_bdl)
 +{
-+	u32 *p_data;
-+	int counter;
-+	u32 header;
-+	u32 footer;
 +	int ret;
-+	int i;
++	int ret1;
 +
-+	/* paranoia check on buffer size */
-+	if (dma_buffer_size != num_frames * 8)
-+		return -EINVAL;
++	ret = hda_sdw_bpt_dma_deprepare(dev, bpt_rx_stream, dmab_rx_bdl);
 +
-+	counter = CDNS_BPT_ROLLING_COUNTER_START;
-+	p_data = (u32 *)dma_buffer;
++	ret1 = hda_sdw_bpt_dma_deprepare(dev, bpt_tx_stream, dmab_tx_bdl);
++	if (!ret)
++		ret = ret1;
 +
-+	for (i = 0; i < num_frames; i++) {
-+		header = *p_data++;
-+		footer = *p_data++;
-+
-+		ret = check_frame_start(header, counter);
-+		if (ret < 0) {
-+			dev_err(dev, "%s: bad frame %d/%d start header %x\n",
-+				__func__, i, num_frames, header);
-+			return ret;
-+		}
-+
-+		ret = check_frame_end(footer);
-+		if (ret < 0) {
-+			dev_err(dev, "%s: bad frame %d/%d end footer %x\n",
-+				__func__, i, num_frames, footer);
-+			return ret;
-+		}
-+
-+		counter++;
-+		counter &= GENMASK(3, 0);
-+	}
-+	return 0;
++	return ret;
 +}
-+EXPORT_SYMBOL(sdw_cdns_check_write_response);
++EXPORT_SYMBOL_NS(hda_sdw_bpt_close, "SND_SOC_SOF_INTEL_HDA_SDW_BPT");
 +
-+static u8 extract_read_data(u32 *data, int num_bytes, u8 *buffer)
-+{
-+	u32 val;
-+	int i;
-+	u8 crc;
-+	u8 b0;
-+	u8 b1;
-+
-+	crc = SDW_CRC8_SEED;
-+
-+	/* process two bytes at a time */
-+	for (i = 0; i < num_bytes / 2; i++) {
-+		val = *data++;
-+
-+		b0 = val & 0xff;
-+		b1 = (val >> 8) & 0xff;
-+
-+		*buffer++ = b0;
-+		crc = crc8(sdw_crc8_lookup_msb, &b0, 1, crc);
-+
-+		*buffer++ = b1;
-+		crc = crc8(sdw_crc8_lookup_msb, &b1, 1, crc);
-+	}
-+	/* handle remaining byte if it exists */
-+	if (num_bytes & 1) {
-+		val = *data;
-+
-+		b0 = val & 0xff;
-+
-+		*buffer++ = b0;
-+		crc = crc8(sdw_crc8_lookup_msb, &b0, 1, crc);
-+	}
-+	return crc;
-+}
-+
-+int sdw_cdns_check_read_response(struct device *dev, u8 *dma_buffer, int dma_buffer_size,
-+				 u8 *buffer, int buffer_size, int num_frames, int data_per_frame)
-+{
-+	int total_num_bytes = 0;
-+	u32 *p_data;
-+	u8 *p_buf;
-+	int counter;
-+	u32 header;
-+	u32 footer;
-+	u8 expected_crc;
-+	u8 crc;
-+	int len;
-+	int ret;
-+	int i;
-+
-+	counter = CDNS_BPT_ROLLING_COUNTER_START;
-+	p_data = (u32 *)dma_buffer;
-+	p_buf = buffer;
-+
-+	for (i = 0; i < num_frames; i++) {
-+		header = *p_data++;
-+
-+		ret = check_frame_start(header, counter);
-+		if (ret < 0) {
-+			dev_err(dev, "%s: bad frame %d/%d start header %x\n",
-+				__func__, i, num_frames, header);
-+			return ret;
-+		}
-+
-+		len = data_per_frame;
-+		if (total_num_bytes + data_per_frame > buffer_size)
-+			len = buffer_size - total_num_bytes;
-+
-+		crc = extract_read_data(p_data, len, p_buf);
-+
-+		p_data += (len + 1) / 2;
-+		expected_crc = *p_data++ & 0xff;
-+
-+		if (crc != expected_crc) {
-+			dev_err(dev, "%s: bad frame %d/%d crc %#x expected %#x\n",
-+				__func__, i, num_frames, crc, expected_crc);
-+			return -EIO;
-+		}
-+
-+		p_buf += len;
-+		total_num_bytes += len;
-+
-+		footer = *p_data++;
-+		ret = check_frame_end(footer);
-+		if (ret < 0) {
-+			dev_err(dev, "%s: bad frame %d/%d end footer %x\n",
-+				__func__, i, num_frames, footer);
-+			return ret;
-+		}
-+
-+		counter++;
-+		counter &= GENMASK(3, 0);
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL(sdw_cdns_check_read_response);
-+
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_DESCRIPTION("Cadence Soundwire Library");
-diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
-index c34fb050fe4f..9373426c7f63 100644
---- a/drivers/soundwire/cadence_master.h
-+++ b/drivers/soundwire/cadence_master.h
-@@ -208,4 +208,24 @@ void sdw_cdns_check_self_clearing_bits(struct sdw_cdns *cdns, const char *string
- void sdw_cdns_config_update(struct sdw_cdns *cdns);
- int sdw_cdns_config_update_set_wait(struct sdw_cdns *cdns);
- 
-+/* SoundWire BPT/BRA helpers to format data */
-+int sdw_cdns_bpt_find_buffer_sizes(int command, /* 0: write, 1: read */
-+				   int row, int col, unsigned int data_bytes,
-+				   unsigned int requested_bytes_per_frame,
-+				   unsigned int *data_per_frame, unsigned int *pdi0_buffer_size,
-+				   unsigned int *pdi1_buffer_size, unsigned int *num_frames);
-+
-+int sdw_cdns_prepare_write_dma_buffer(u8 dev_num, u32 start_register, u8 *data, int data_size,
-+				      int data_per_frame, u8 *dma_buffer, int dma_buffer_size,
-+				      int *dma_buffer_total_bytes);
-+
-+int sdw_cdns_prepare_read_dma_buffer(u8 dev_num, u32 start_register, int data_size,
-+				     int data_per_frame, u8 *dma_buffer, int dma_buffer_size,
-+				     int *dma_buffer_total_bytes);
-+
-+int sdw_cdns_check_write_response(struct device *dev, u8 *dma_buffer,
-+				  int dma_buffer_size, int num_frames);
-+
-+int sdw_cdns_check_read_response(struct device *dev, u8 *dma_buffer, int dma_buffer_size,
-+				 u8 *buffer, int buffer_size, int num_frames, int data_per_frame);
- #endif /* __SDW_CADENCE_H */
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_IMPORT_NS("SND_SOC_SOF_INTEL_HDA_COMMON");
++MODULE_IMPORT_NS("SND_SOC_SOF_HDA_MLINK");
 -- 
 2.43.0
 
