@@ -1,194 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454351FFC4B;
-	Wed,  5 Feb 2025 21:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5BB1FFC4B;
+	Wed,  5 Feb 2025 21:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738792547; cv=none; b=s4yEgY7lnD+nz5gSqkLLjJ7jPqha2YQMRnzodzO1ZlgL7Tq/x2Ifs2+o9TPdVIGoIVQmqAmfbfjvrXJeNO5prVfyCTaFqcUJ0ZtaiwwrGZMsPiroOU+cOh2DxaZod8r2teM1x3r9BaaBDv8Xo4SYbQpoa3d8vc+OQQx8h626iYA=
+	t=1738792585; cv=none; b=rXb9b/BRrusTPPK1fmfc7+aAA7a5TjZ6zXFqg3Fi9riQygd5eIMSecjtK4vYLB7908w+YLK8Ah8YnFpP3SZKxLHoG8NajK6esnxHYHnq24V2EbUqB9PPCRGwqrCK4v5LkZwwaMaIumqglPqBhNZCOw4J7e76JH6Eei+bfODCvOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738792547; c=relaxed/simple;
-	bh=yfjw1WVbr3v23A4GuT3d2uGdZhEl7n/fUcuk9hvPcUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZU2EzOdck06V73UfnMD5IU2HDGzjWRocoKXPcYz4PA+hktJbsmoIMZWPO8/903k8Py2w7IaV4Rdyf9FEzrpWQMhb6hJYwcooCFkhPiJCqUO1RPupml9V+yfZ+baBV+h0+oRrl2STJfxtCOnOm4kKe1abPXkLTrn+XEtCvBpOLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qw0mF2bq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738792585; c=relaxed/simple;
+	bh=aK4znbSBlzCXvDjjmG56/kAUnE1HtKriM2kwXRXVdL0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=iY2PcAUKDnqKiGcBb5zBd5J9dUE7Sku9A7zGJkqV66WJ103jaouyqEHAIykRo+py8Vgu38f8+BEsMdmTZGnAYxvjBr0CJaLxtUgV6jN0RE6XhgWkioJ06FzU1BTfpDOjS42z9hEleUKZsiFGvSLm8EelH3iwtI370xf/B2fOk1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7IhoDSW; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qw0mF2bq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AADA2C4CEE4;
-	Wed,  5 Feb 2025 21:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738792546;
-	bh=yfjw1WVbr3v23A4GuT3d2uGdZhEl7n/fUcuk9hvPcUc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=qw0mF2bqoIDS28Fu3wDgWhh3oNNDmEWer85N1ATtUDKuubec3PmBcggphMjYpld4f
-	 n4B4fFCoNd548AbQLemfltmCTE1f4VqFwkYlsaz+Li/D9bknEZeWfaZkEekKvQUb0u
-	 w/+EZOdePIyTXpueNGremUGooxDHbC0kb+s66AEyFEgubT1NL2jtV2cRBZFwEZDpTY
-	 Ym8T+y5azt/FdSCmG5Kt0m2GjRDqBco+OVm1Guu/aI3+zF8foaTTZWrRJZe1IMmIX4
-	 7N2PWGFgvJEFu//LgYxsbtxXte5YUGPVjDJRbgpDTVOnOuanL4t6IblUVXgDc2HriX
-	 IKQh5pbvFCf4Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4AB0CCE0749; Wed,  5 Feb 2025 13:55:46 -0800 (PST)
-Date: Wed, 5 Feb 2025 13:55:46 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250130185320.1651910-4-paulmck@kernel.org>
- <20250204102611.OVuHn9rS@linutronix.de>
- <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
- <20250204163409.ueObHFje@linutronix.de>
- <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
- <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
- <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
- <84ed0c1401.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7IhoDSW"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467838e75ffso3947641cf.3;
+        Wed, 05 Feb 2025 13:56:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738792582; x=1739397382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/oernhFzJvDHR/AMo6PZewM8ZACtPVAaEoHou4hT+kg=;
+        b=G7IhoDSWwWkSbx9xTVJtB4F9fsqxovwCg+C0AZH6/ty9c53Mn2BDhBbjWk1gPCAgFc
+         r+NJ6yzBGt2b17+SWD7sJSaWkgpS5/cAD8qIH8oJjwHKrf7dmc/UEMno81ImRnVNVnN5
+         yGAWRGawW17zqwkIrkW6tPDS77BsvA/qwPNklaSdvMrgsqjRbrrftZZ/7+cDDKW0A30N
+         TadGitxpARisG6jyVaQGkeD15SLxo5BfCXC99G7EIcIzEL40mWhVQf06ISveI0Lh+rdT
+         nJ67c+7CH9kBjcAVlRq9wLvCV+GyrY0dvl1XQQ50ZKEc41xTfY2fhbKhFNlDcIRik3ri
+         Xz4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738792582; x=1739397382;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/oernhFzJvDHR/AMo6PZewM8ZACtPVAaEoHou4hT+kg=;
+        b=Ny1+Ey57wG95ShHd7Djq+QMW+P+XKYR4QMGEykjpTGn5nr77/eWYZBKNSrygWMybol
+         1zFTZ2snn91oQw/eM65bt/wJ9bTexqghAOBRtBruyKmJHXoUuDxrqjjYVfrPyERmMg6n
+         TVyZp+Fc4lszNa6dW/Rbehm4GiBAtYDu/mivQa05CbS+TbKHLmqvxoIP92bgn1QobAlM
+         qWbAR5QLQFIdtJuDgW9AJo0Ot/YPGH8J1pijioN6mWQLoL634/8NZ/5unMMZIV06qkMk
+         wbO9lMoQnjEy2k5aHH2QlR5Gb5C7chkbsJz8hO3zpgIhNAsfROfKcGBP4i+4a8kWaldI
+         ZO0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUD2VwjJPZKy4IPJlBdCSRyquLvKZ3b5KuX+JuFpUNz2Hi0vJA6gS9YGIaMFSeauKQJiK0M+kaAMvYwwx5N@vger.kernel.org, AJvYcCUY7yo2Lqm7N/ln85gs1Ox1UEHUEc9Fk37ocryMmVxgQkCKUmQy1ITIass6I4aEZchXh516KaHC5gFFw9JDi0gl@vger.kernel.org, AJvYcCUZR3DRp6fRAjgqqvqehSzDxNksb/0/J/DVkqCX45UdzQ5KZk7LpfSzBnd41GZQ0O0GI7IYYBmLplZc@vger.kernel.org, AJvYcCUoGZZWYSHQ1efy8RWDU6G11K5uLiDpO76goPZJ2Rf1Ie6ubmR8d4LkFoW0xXAsOO+5YYr5ssnP@vger.kernel.org, AJvYcCWUGYK8MiIpTW7KLXH+iA8Ies+ZewmhhLVkTwY18ZKTy1b0CgsPUONWulc8i78ybmdCAHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDMYFaTLsx286IPUbHAGgAw89F9gI+H57iAji5IhCai/b9S5WK
+	lbkdn022YzEuoBj0oP4e0VZjLSIW7C4xijtpn2PXLADvB41yx12h
+X-Gm-Gg: ASbGnctvkrN5W2+BHgE8Ota1iSb41tSw5PSIEOFuZBRio/IRVQw2Z4XsDJK7N7N4ejK
+	ougQ/iASMvsM2fTvUDRZe8wzHcg/pNrBFtUBJIGuIPROPQm9xIAexL10gj9IO35fzCL1esVmeVv
+	sY6RYzd9nbmxGaYpdsFBxxedUaMAlhk2St+EaO3y2C4DKebHkowF7fxseNbRVfNiKFCd+OXgddV
+	HGAmME6grMqssQhbZdhrXTP0npqYctxvNcAzDwBppIPMOhg3ioE6Z5r2RKOwckOBddyzyNttnzx
+	EXWIrzxSiqncaQawpIfChVgZPDGV7/OnoKI/GbkGYn6kvrjyb6irtO6KUwI/wXI=
+X-Google-Smtp-Source: AGHT+IHbOY388ZmdWR7rHmoL/oJ6pGDlUDUjpam1RRzlDYT8ShKi0Qn4oZw9X5+02UC859r3BHlW4g==
+X-Received: by 2002:ac8:7fc4:0:b0:46d:faa2:b6e0 with SMTP id d75a77b69052e-47028168976mr62005331cf.18.1738792582288;
+        Wed, 05 Feb 2025 13:56:22 -0800 (PST)
+Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf189497sm74858601cf.73.2025.02.05.13.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 13:56:21 -0800 (PST)
+Date: Wed, 05 Feb 2025 16:56:21 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Mina Almasry <almasrymina@google.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, 
+ kvm@vger.kernel.org, 
+ virtualization@lists.linux.dev, 
+ linux-kselftest@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, 
+ Donald Hunter <donald.hunter@gmail.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Neal Cardwell <ncardwell@google.com>, 
+ David Ahern <dsahern@kernel.org>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?UTF-8?B?RXVnZW5pbyBQw6lyZXo=?= <eperezma@redhat.com>, 
+ Stefan Hajnoczi <stefanha@redhat.com>, 
+ Stefano Garzarella <sgarzare@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, 
+ sdf@fomichev.me, 
+ asml.silence@gmail.com, 
+ dw@davidwei.uk, 
+ Jamal Hadi Salim <jhs@mojatatu.com>, 
+ Victor Nogueira <victor@mojatatu.com>, 
+ Pedro Tammela <pctammela@mojatatu.com>, 
+ Samiullah Khawaja <skhawaja@google.com>, 
+ Kaiyuan Zhang <kaiyuanz@google.com>
+Message-ID: <67a3de8559316_17745c29479@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250203223916.1064540-6-almasrymina@google.com>
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <20250203223916.1064540-6-almasrymina@google.com>
+Subject: Re: [PATCH net-next v3 5/6] net: devmem: Implement TX path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84ed0c1401.fsf@jogness.linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 10:28:06PM +0106, John Ogness wrote:
-> On 2025-02-05, "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> >> Would it make sense to put a call to pr_flush() at the beginning of the
-> >> kernel_power_off() function?  I suspect that would take care of much
-> >> more than just rcutorture.
-> >> 
-> >> Or maybe after the pr_emerg("Power down\n"), since that is normally
-> >> the last thing that shows up on rcutorture's console logs.
+Mina Almasry wrote:
+> Augment dmabuf binding to be able to handle TX. Additional to all the RX
+> binding, we also create tx_vec needed for the TX path.
 > 
-> Yes, after the pr_emerg("Power down\n"), as in your patch below.
+> Provide API for sendmsg to be able to send dmabufs bound to this device:
 > 
-> > And that does the trick!  I specified 500ms, but maybe -1 would be
-> > better?  You tell me!  ;-)
+> - Provide a new dmabuf_tx_cmsg which includes the dmabuf to send from.
+> - MSG_ZEROCOPY with SCM_DEVMEM_DMABUF cmsg indicates send from dma-buf.
 > 
-> I probably would have chosen 1000ms, but if the kthread has made no
-> forward progress after a few max timeslices, it probably is dead or will
-> not be scheduled anyway.
+> Devmem is uncopyable, so piggyback off the existing MSG_ZEROCOPY
+> implementation, while disabling instances where MSG_ZEROCOPY falls back
+> to copying.
+> 
+> We additionally pipe the binding down to the new
+> zerocopy_fill_skb_from_devmem which fills a TX skb with net_iov netmems
+> instead of the traditional page netmems.
+> 
+> We also special case skb_frag_dma_map to return the dma-address of these
+> dmabuf net_iovs instead of attempting to map pages.
+> 
+> Based on work by Stanislav Fomichev <sdf@fomichev.me>. A lot of the meat
+> of the implementation came from devmem TCP RFC v1[1], which included the
+> TX path, but Stan did all the rebasing on top of netmem/net_iov.
+> 
+> Cc: Stanislav Fomichev <sdf@fomichev.me>
+> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> 
+> ---
+> 
+> v3:
+> - Use kvmalloc_array instead of kcalloc (Stan).
+> - Fix unreachable code warning (Simon).
+> 
+> v2:
+> - Remove dmabuf_offset from the dmabuf cmsg.
+> - Update zerocopy_fill_skb_from_devmem to interpret the
+>   iov_base/iter_iov_addr as the offset into the dmabuf to send from
+>   (Stan).
+> - Remove the confusing binding->tx_iter which is not needed if we
+>   interpret the iov_base/iter_iov_addr as offset into the dmabuf (Stan).
+> - Remove check for binding->sgt and binding->sgt->nents in dmabuf
+>   binding.
+> - Simplify the calculation of binding->tx_vec.
+> - Check in net_devmem_get_binding that the binding we're returning
+>   has ifindex matching the sending socket (Willem).
+> ---
+>  include/linux/skbuff.h                  | 15 +++-
+>  include/net/sock.h                      |  1 +
+>  include/uapi/linux/uio.h                |  6 +-
+>  net/core/datagram.c                     | 41 ++++++++++-
+>  net/core/devmem.c                       | 97 +++++++++++++++++++++++--
+>  net/core/devmem.h                       | 42 ++++++++++-
+>  net/core/netdev-genl.c                  | 64 +++++++++++++++-
+>  net/core/skbuff.c                       |  6 +-
+>  net/core/sock.c                         |  8 ++
+>  net/ipv4/tcp.c                          | 36 ++++++---
+>  net/vmw_vsock/virtio_transport_common.c |  3 +-
+>  11 files changed, 285 insertions(+), 34 deletions(-)
+> 
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index bb2b751d274a..3ff8f568c382 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -1711,9 +1711,12 @@ struct ubuf_info *msg_zerocopy_realloc(struct sock *sk, size_t size,
+>  
+>  void msg_zerocopy_put_abort(struct ubuf_info *uarg, bool have_uref);
+>  
+> +struct net_devmem_dmabuf_binding;
+> +
+>  int __zerocopy_sg_from_iter(struct msghdr *msg, struct sock *sk,
+>  			    struct sk_buff *skb, struct iov_iter *from,
+> -			    size_t length);
+> +			    size_t length,
+> +			    struct net_devmem_dmabuf_binding *binding);
+>  
+>  int zerocopy_fill_skb_from_iter(struct sk_buff *skb,
+>  				struct iov_iter *from, size_t length);
+> @@ -1721,12 +1724,14 @@ int zerocopy_fill_skb_from_iter(struct sk_buff *skb,
+>  static inline int skb_zerocopy_iter_dgram(struct sk_buff *skb,
+>  					  struct msghdr *msg, int len)
+>  {
+> -	return __zerocopy_sg_from_iter(msg, skb->sk, skb, &msg->msg_iter, len);
+> +	return __zerocopy_sg_from_iter(msg, skb->sk, skb, &msg->msg_iter, len,
+> +				       NULL);
+>  }
+>  
+>  int skb_zerocopy_iter_stream(struct sock *sk, struct sk_buff *skb,
+>  			     struct msghdr *msg, int len,
+> -			     struct ubuf_info *uarg);
+> +			     struct ubuf_info *uarg,
+> +			     struct net_devmem_dmabuf_binding *binding);
+>  
+>  /* Internal */
+>  #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB)))
+> @@ -3697,6 +3702,10 @@ static inline dma_addr_t __skb_frag_dma_map(struct device *dev,
+>  					    size_t offset, size_t size,
+>  					    enum dma_data_direction dir)
+>  {
+> +	if (skb_frag_is_net_iov(frag)) {
+> +		return netmem_to_net_iov(frag->netmem)->dma_addr + offset +
+> +		       frag->offset;
+> +	}
+>  	return dma_map_page(dev, skb_frag_page(frag),
+>  			    skb_frag_off(frag) + offset, size, dir);
+>  }
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 8036b3b79cd8..09eb918525b6 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -1822,6 +1822,7 @@ struct sockcm_cookie {
+>  	u32 tsflags;
+>  	u32 ts_opt_id;
+>  	u32 priority;
+> +	u32 dmabuf_id;
+>  };
+>  
+>  static inline void sockcm_init(struct sockcm_cookie *sockc,
+> diff --git a/include/uapi/linux/uio.h b/include/uapi/linux/uio.h
+> index 649739e0c404..866bd5dfe39f 100644
+> --- a/include/uapi/linux/uio.h
+> +++ b/include/uapi/linux/uio.h
+> @@ -38,10 +38,14 @@ struct dmabuf_token {
+>  	__u32 token_count;
+>  };
+>  
+> +struct dmabuf_tx_cmsg {
+> +	__u32 dmabuf_id;
+> +};
+> +
 
-I picked 500ms randomly, so I am happy to make it be 1000ms.
+Why a wrapper struct instead of just __u32?
 
-> If there is no backlog, pr_flush() returns immediately.
 
-OK, so I don't need to add "if (IS_ENABLED(CONFIG_PREEMPT_RT))" to guard
-it, then?
-
-> I recommend _not_ using timeout_ms=-1 here, in case the kthread cannot
-> be scheduled (for whatever reason).
-
-Sounds eminently reasonable to me!
-
-> > ------------------------------------------------------------------------
-> >
-> > commit 172b692a79ec5801eab57cb55d2f9c398f244c62
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Wed Feb 5 12:27:23 2025 -0800
-> >
-> >     printk: Flush console log from kernel_power_off()
-> >     
-> >     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
-> >     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
-> >     Therefore, make pr_flush() public and invoke it after then last print
-> >     in kernel_power_off().
-> >     
-> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> >     Cc: Petr Mladek <pmladek@suse.com>
-> >     Cc: Steven Rostedt <rostedt@goodmis.org>
-> >     Cc: John Ogness <john.ogness@linutronix.de>
-> >     Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> >
-> > diff --git a/include/linux/printk.h b/include/linux/printk.h
-> > index 4217a9f412b2..b3e88ff1ecc3 100644
-> > --- a/include/linux/printk.h
-> > +++ b/include/linux/printk.h
-> > @@ -806,4 +806,6 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
-> >  #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
-> >  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
-> >  
-> > +
-> > +bool pr_flush(int timeout_ms, bool reset_on_progress);
-> 
-> This will fail to link for !CONFIG_PRINTK.
-> 
-> In kernel/printk/printk.c currently there is:
-> 
-> #ifdef CONFIG_PRINTK
-> static bool pr_flush(int timeout_ms, bool reset_on_progress);
-> #else
-> static bool pr_flush(int timeout_ms, bool reset_on_progress) { return true; }
-> #endif
-> 
-> This would need to move to include/linux/printk.h
-> 
-> There you will find an existing CONFIG_PRINTK if/else block to move
-> those to.
-
-Thank you, will do!
-
-> >  #endif
-> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> > index 80910bc3470c..e0c6e5a99897 100644
-> > --- a/kernel/printk/printk.c
-> > +++ b/kernel/printk/printk.c
-> > @@ -2461,7 +2461,7 @@ asmlinkage __visible int _printk(const char *fmt, ...)
-> >  }
-> >  EXPORT_SYMBOL(_printk);
-> >  
-> > -static bool pr_flush(int timeout_ms, bool reset_on_progress);
-> > +bool pr_flush(int timeout_ms, bool reset_on_progress);
-> >  static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress);
-> >  
-> >  #else /* CONFIG_PRINTK */
-> > @@ -4466,7 +4466,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
-> >   * Context: Process context. May sleep while acquiring console lock.
-> >   * Return: true if all usable printers are caught up.
-> >   */
-> > -static bool pr_flush(int timeout_ms, bool reset_on_progress)
-> > +bool pr_flush(int timeout_ms, bool reset_on_progress)
-> >  {
-> >  	return __pr_flush(NULL, timeout_ms, reset_on_progress);
-> >  }
-> > diff --git a/kernel/reboot.c b/kernel/reboot.c
-> > index a701000bab34..3448e6ae3556 100644
-> > --- a/kernel/reboot.c
-> > +++ b/kernel/reboot.c
-> > @@ -704,6 +704,7 @@ void kernel_power_off(void)
-> >  	migrate_to_reboot_cpu();
-> >  	syscore_shutdown();
-> >  	pr_emerg("Power down\n");
-> > +	pr_flush(500, 1);
-> 
-> I would have chosen:
-> 
-> 	pr_flush(1000, true);
-> 
-> but I really don't have an argument either way.
-
-Hey, of the two of us, you are the printk() expert, so I will make it
-be 1000.  ;-)
-
-							Thanx, Paul
-
-> >  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
-> >  	machine_power_off();
-> >  }
-> 
-> John Ogness
