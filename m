@@ -1,126 +1,87 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACFA23CE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A06A1FC7FC;
+	Wed,  5 Feb 2025 21:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738790979; cv=none; b=rjqd0MX+x07TqhiIEDz+HY9b//7XquKbe0q0Nv/oFCQeOQ1V2+DbwJM2GoAotgIJXGz9AeAZcXwsGQXbvzE+o4MYdAmHuJHVzVwuOO6XPM/sX1Yl9Htz9dsxW5T9OM51AymipvG4rO5pdiE9Tg9LXpzZnxjdXG5ESUBdKb1At/Y=
+	t=1738791148; cv=none; b=RvRZjCpbTopnL6offxIRr3RlGfVakHQHplhIgJAlXRtlEctG0Zvb7SFyvfiBMicdJZIEmu4BdSTdcT9H06+zdbz/RcLqVW4IIvc8DYeidvg0ffkL1cPX29AIbK0wZyRtmv4I+RyosWo/1Xp8Izc8edf4HnnoTyHCoW+A9l2mMkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738790979; c=relaxed/simple;
-	bh=DzaZIGVGm7qxgynff/1jUjJ5vq84RX5hbBIwIAnkfQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKy4kyrOG60OYweEpCY+dPWKW44FYE2ptQG9Zk8FyZ7aymTvLsCb92QztoYh44yWD6DNSaeKsJUNFCzy/kybSZYP6TswZG5D/IE0PFdr5gMNSrjm8WKEt2PKm6f3PLjsdNRWj3gNhWW2TthEkJnux5uQCc1RsJ6TsMDe7KFHNqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgL62QAn; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgL62QAn"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f01fe1ce8so3493065ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 13:29:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738790977; x=1739395777; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BsjoJB7HDSrSJA02r+vmBeTBw6vIoTH7OoO05MDvcE0=;
-        b=AgL62QAnTMsvgWLxdYZW8N9EKyoEAOQ3QKchXCjJwu0JZFK38XFYeWZZvW1dvYNg63
-         jUHYe5y+kDMnDMiFmxyuu+hTb4ad74LsWZ0WWHYkjtKvCuNwW/paQRmqgjFY7K18P7Qm
-         PQyEPyauzR9tKmQDObESvldn9HrWKCkMgGR5dryMyWuiNUcZcda2/RBpibhveifRRaaA
-         Hf8Y2OsYm+SZDFCKhH/DqqUqRKyBS3FVH9kIRpK3DozKh3vj4k+1W5k+/anF9yPFtYhA
-         hg+eUHopF3D2tPZnvjtlHeU6PpHooaibe0d2prMUOWdyyHjLQMfvQbi/5aij+t6QqAA3
-         HFqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738790977; x=1739395777;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BsjoJB7HDSrSJA02r+vmBeTBw6vIoTH7OoO05MDvcE0=;
-        b=ihSIUwuSxxaQDnRJWRuwzW860MBKFmW08yXroLSQ8x47ofh1HCG79D0J7+OuiEh9Q6
-         lFAkDTJpDr6nFz9hZ7dnmEcYPb65E5pCL0c7aX4FvN5e6YBqFTXV8wKE7TxbfVzbV7Fh
-         kMKYo7jMBaJsADB43bVTseaEtJACV+FKIi9udhUD0fhsnmqIttS9/3anXv+A9x504rnB
-         nukOvyUBlndOv3TwBcgYkLetA6ACwBNX0JaVuw5lPAwCkVYYdKf811rBMWFaY9GMv6Yl
-         R8chcVvxFB/ok3CXuQiQK3JcWOVDlMKEAYiesUpyG0B/LU/bk+Kn1hPII69qNA3Vnig8
-         WvNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhosPjIvKWjM/+fpzWrNlBIIXs8e2VJXdeguQvXS3Wwug0QpYpimyaHLthzGYQfMPAbQKx3BYEAxv+IZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdSGugYRWl09XB+oC6EQ9MJ6pi7GkJT0wNoD4QcQv6RUbBqPVX
-	YEV+hTYPCq/UulCAHCSS+6UEZlMK32rlqs+pnrNhlG/hcyXqqY2d
-X-Gm-Gg: ASbGncvGxTvzFcg0hDHkxhrRbuPzrDFPk0zpFSI65IDc5mO+cgoVU57o1QoRpJA4gKP
-	26FN0c3YksKxNxoqn89QmpZF0CXXKRfxqKS951dZzhmBERdV4qeTYSpMh1+wNrCC4fkWrmT2bYm
-	07jzuTVLft6Me8Du78GlPB2HmJcSuSoYSI6Bj4Vk+Si7l1uL+qfn2GuRh2yhvWyuYAlTXs9C1Ja
-	Kd+AuM6F7zl15vv+WCg9Px9HTXgIfNTm5+pBgV6o3oemtPm7PdmwFy6uz9bt4rCZE8T4mxh24Xs
-	CsTuhGFg6V9cpss=
-X-Google-Smtp-Source: AGHT+IHhzYDNMW2DahlJRENyuy6/UOMNqwVg8iWKNVysPefqFop+9Sn0/Bcx97VFtzq0tHNsbU8NaQ==
-X-Received: by 2002:a05:6a20:7f92:b0:1e1:b44f:cff1 with SMTP id adf61e73a8af0-1ede88bc471mr6561441637.33.1738790976805;
-        Wed, 05 Feb 2025 13:29:36 -0800 (PST)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bf82sm13450584b3a.17.2025.02.05.13.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 13:29:36 -0800 (PST)
-From: Yury Norov <yury.norov@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-	Heiko Carstens <heiko.carstens@de.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-	linux-kernel@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Joe Perches <joe@perches.com>
-Subject: [PATCH] lib/zlib: drop EQUAL macro
-Date: Wed,  5 Feb 2025 16:29:32 -0500
-Message-ID: <20250205212933.68695-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1738791148; c=relaxed/simple;
+	bh=LAF55b2VOhUvWPEgC7SRkW4/zaanQll9Ujc4+1KleSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e/fi4OOPqNwppxpnruR5DNiqm8WmFq9jA+kSMWIYCppHB19qYSwbZN/Vde7zh/xQW3Cqe3fpDohoBwSyEkI3RVbIgFgrA4A/9iphYPWBt8zHoM86sExO8HUXlPNwMq/HVm8YczkoXar/E/Nw4FCS+ZQz28XiyMaAL8ZnDuPxlTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352C5C4CED1;
+	Wed,  5 Feb 2025 21:32:24 +0000 (UTC)
+Date: Wed, 5 Feb 2025 16:33:03 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>, Peter Zijlstra
+ <peterz@infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "x86@kernel.org" <x86@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, "luto@kernel.org" <luto@kernel.org>,
+ "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>,
+ "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+ "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+ "willy@infradead.org" <willy@infradead.org>, "mgorman@suse.de"
+ <mgorman@suse.de>, "jon.grimm@amd.com" <jon.grimm@amd.com>,
+ "bharata@amd.com" <bharata@amd.com>, "raghavendra.kt@amd.com"
+ <raghavendra.kt@amd.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Konrad Wilk <konrad.wilk@oracle.com>, "jgross@suse.com" <jgross@suse.com>,
+ "Andrew.Cooper3@citrix.com" <Andrew.Cooper3@citrix.com>, Vineeth Pillai
+ <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
+ <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Clark Williams <clark.williams@gmail.com>, "bigeasy@linutronix.de"
+ <bigeasy@linutronix.de>, "daniel.wagner@suse.com" <daniel.wagner@suse.com>,
+ Joseph Salisbury <joseph.salisbury@oracle.com>, "broonie@gmail.com"
+ <broonie@gmail.com>
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250205163303.6f45db37@gandalf.local.home>
+In-Reply-To: <20250205161945.44daf018@gandalf.local.home>
+References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
+	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+	<20250204220418.35949317@gandalf.local.home>
+	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+	<20250205081635.397eacb0@gandalf.local.home>
+	<1A67C4F1-F07E-477C-9781-071546AE3A8B@oracle.com>
+	<20250205161945.44daf018@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The macro is pre-historic, and only exists to help those readers who
-don't know what memcmp() returns if memory areas differ. This is pretty
-well documented, so the macro looks excessive.
+On Wed, 5 Feb 2025 16:19:45 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Now that the only user of the macro depends on DEBUG_ZLIB config, GCC
-warns about unused macro if the library is built with W=2 against
-defconfig. So drop it for good.
+> On Wed, 5 Feb 2025 21:08:47 +0000
+> Prakash Sangappa <prakash.sangappa@oracle.com> wrote:
+> 
+> > The new syscall/API proposed was to provide per thread shared mapped 
+> > area(shared structure) that are allocated from memory pages that are pinned. 
+> > So the kernel could access it without the need for a copyin/copyout. 
+> > 
+> > The idea is that it would be helpful in places where we cannot take a page 
+> > fault in the kernel codepath.  
+> 
+> What places do we need to decided this in a critical path? If we follow my
+> proposal, where we set NEED_RESCHED_LAZY on sched_tick when it interrupts
+> user space, then it should all work out.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
-scripts/get_maintainer.pl failed to attribute this patch, so adding
-Andrew and recent active developers, and Joe Perches for the script.
+Actually, it doesn't need to be pinned for kernel critical paths (like an
+interrupt handler). That's because when entering the user critical path, it
+writes to the location, which will fault that memory in. If the page isn't
+there when the kernel accesses it, it most likely means the task isn't in a
+critical section and there's no reason to extend the tick.
 
-$ scripts/get_maintainer.pl 0001-zlib-drop-EQUAL-macro.patch
-Bad divisor in main::vcs_assign: 0
-"GitAuthor: Yury Norov" <yury.norov@gmail.com> (authored:1/1=100%,added_lines:1/1=100%,removed_lines:5/5=100%)
-linux-kernel@vger.kernel.org (open list)
-
- lib/zlib_deflate/deflate.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/lib/zlib_deflate/deflate.c b/lib/zlib_deflate/deflate.c
-index 3a1d8d34182e..8fb2a3e17c0e 100644
---- a/lib/zlib_deflate/deflate.c
-+++ b/lib/zlib_deflate/deflate.c
-@@ -151,9 +151,6 @@ static const config configuration_table[10] = {
-  * meaning.
-  */
- 
--#define EQUAL 0
--/* result of memcmp for equal strings */
--
- /* ===========================================================================
-  * Update a hash value with the given input byte
-  * IN  assertion: all calls to UPDATE_HASH are made with consecutive
-@@ -713,8 +710,7 @@ static void check_match(
- )
- {
-     /* check that the match is indeed a match */
--    if (memcmp((char *)s->window + match,
--                (char *)s->window + start, length) != EQUAL) {
-+    if (memcmp((char *)s->window + match, (char *)s->window + start, length)) {
-         fprintf(stderr, " start %u, match %u, length %d\n",
- 		start, match, length);
-         do {
--- 
-2.43.0
-
+-- Steve
