@@ -1,179 +1,113 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from mail.bues.ch (bues.ch [116.203.120.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE15C8C7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA69A1519AD;
+	Wed,  5 Feb 2025 17:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.120.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738776628; cv=none; b=l0pYzcQr4vNfJPcWcgPX7e3Q70Z25A+38ly7E0lQ/oJcNlrwbszlzQ8u97c/Ie7e1oMAS4bSaKHPoFaAIFrMz3169nC4LxiaktsagIN6XdFN7W94suA8tX/jyOd8DXuZqJNq26llOj4xlJg6mT4vELEmYxUap99qa1WZsvys1Vg=
+	t=1738776636; cv=none; b=Bd+egcDGUYXpjmRiPdZzZ0w/nQhyAA4FOR8v3kJgu6G3AzXYXarlqP7eiEqWnLKBQ9VvY/T2IFcF2B9tqspvSrir0PAjDO7R51SlAgp+BeJTwCPVr9BxxmXI5e5siss8po0pvEYacWEdX8IkLe6c55Hhsz0SLB47jsbRFOrAj8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738776628; c=relaxed/simple;
-	bh=f2yEvU4TM3aZYdPhq5G+l+SmpWWP3YrRm11kspLYSHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MyLazmFfJ8rbH6zVUDJywJK4ErKjH4FM0vYp0+RtIgbFvZgHrG51PWvNL50kBczFmk0Mnvtt1/g3LP97nsZQ7Nr5MGPc18snMA1pCWpaoPqwM/ZjZgfmKqg25mSLlKOItpSI/I9x7I83DPcJQfTi0VdU53quA+Zfpf4sKFxGEXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=PL1hactd; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1738776636; c=relaxed/simple;
+	bh=gzt3Y6bMwaAwDTrMqO5l1QM/P5g3nv4A3cPONKMK3Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ehewibiVNJ7s6kIjD8iYExr/7suhjd5Z548G/A2Cywgal3Kky9P3TNuHKddgynwn7fWVK5JpRoctfn/LGpDD8UOWmEXjxw0I5qaGd9IHmjBtgzgnnX9KblGSjWQy2oigQuqdEXNUWHLnfYQCgYuTKXiZoz5Ile68irljxG5eW0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; dkim=pass (2048-bit key) header.d=bues.ch header.i=@bues.ch header.b=QSaC9KZd; arc=none smtp.client-ip=116.203.120.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bues.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="PL1hactd"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 69215240104
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:30:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1738776622; bh=f2yEvU4TM3aZYdPhq5G+l+SmpWWP3YrRm11kspLYSHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=PL1hactd8RdLkszMUmEdepRdB2nlcyk9mAUuzhmQDw87OY0Wy6vu09upgrTLphbd1
-	 HQwrtbjeGyVijzLY1XSUIT7ybkpqK1tOeUFfgt9m6LvXqiyyTwugJHUVhxkzSj+WaJ
-	 1aF5YpEbpw+E9NOC09TRUTFgVL+FHNk/u3IHwDGZYqnvTFN6orpvybyLfPDAJeLDGY
-	 Z31ALiMFc9Hx21frrtnfjRFp5SJ9IpR3PhkFNTIgAvxmEVof7+/3tVtU26RSdGekr/
-	 C8SqW2TzhnJk5F4oYnh69j5tuebBTEelGWnF1K1zmCTK2volCF56HaVepfjXvtuumd
-	 2fZzdoQxB3snw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Yp6gv6fyqz9rxK;
-	Wed,  5 Feb 2025 18:30:19 +0100 (CET)
-From: =?UTF-8?q?Martin=20Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
-To: laurent.pinchart@ideasonboard.com,
-	mchehab@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-media@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Martin=20Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
-Subject: [PATCH] media: nxp: imx8-isi: check return value of media_pad_remote_pad_first()
-Date: Wed,  5 Feb 2025 17:29:57 +0000
-Message-Id: <20250205172957.182362-1-martink@posteo.de>
+	dkim=pass (2048-bit key) header.d=bues.ch header.i=@bues.ch header.b="QSaC9KZd"
+Date: Wed, 5 Feb 2025 18:23:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bues.ch; s=main;
+	t=1738776242;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jXHa2sqBdx5kl+URkaqFGorX131D990W5SanQ/p4o1k=;
+	b=QSaC9KZdyLhpEGGWBCi1SxDSKvk/gQWhHj/GwqSvLTNQQdndAigeCDl7A4AhRU8V72rDtW
+	UbsB+Fa5gg6TwIUdYgshdhRO+X4rx5F81BrP10VbdrSZbNDFczw509rqi9tjZVDmrC/svr
+	69eRX2mdbPCNWK58J2yfwVoonixzmkX2R/RsLDbhqlMqOMJKOkvLB1EgPh7SnHV+xeb0I+
+	0vmlmZUWIUK3gWJNG2fN8MN9CWqNpuW+wmOmZwQZJy2jOacLdIq4DBH9S6H3VipsR9tgUq
+	u5JtttZ5xICxjiI9p6deypa2QqdXNfbhNCq+XXxy2AFvAWKE1QK99t2sy90U3w==
+From: Michael =?UTF-8?B?QsO8c2No?= <mb@bues.ch>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org,
+ b43-dev@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: wireless: broadcom: b43: Replace outdated
+ firmware URL
+Message-ID: <20250205182325.5a38c736@barney>
+In-Reply-To: <20250205110614.216958-1-carnil@debian.org>
+References: <20250205110614.216958-1-carnil@debian.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/uuMKLn01GWEcG6Sbf8AZzW/";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+
+--Sig_/uuMKLn01GWEcG6Sbf8AZzW/
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-media_pad_remote_pad_first() return NULL if "no enabled link has been found".
-Check for that.
+On Wed,  5 Feb 2025 12:06:14 +0100
+Salvatore Bonaccorso <carnil@debian.org> wrote:
 
-backstory
-=========
-While trying to get a (Y10 grey) sensor working on imx8mp (v6.12.12 now and
-I know the hardware works on an ancient nxp-kernel),
-I tried to enable the sensor link, set formats and stream:
+> https://wireless.wiki.kernel.org site now redirects to
+> https://wireless.docs.kernel.org/en/latest/ making the reference
+> information for the b43 firmware inaccessible. Update the URL to the
+> current location.
+>=20
+> Link: https://bugs.debian.org/1095062
+> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+> ---
+>  drivers/net/wireless/broadcom/b43/main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wirel=
+ess/broadcom/b43/main.c
+> index 25b4ef9d3c9a..7529afd24aed 100644
+> --- a/drivers/net/wireless/broadcom/b43/main.c
+> +++ b/drivers/net/wireless/broadcom/b43/main.c
+> @@ -2166,7 +2166,7 @@ static void b43_print_fw_helptext(struct b43_wl *wl=
+, bool error)
+>  {
+>  	const char text[] =3D
+>  		"You must go to " \
+> -		"https://wireless.wiki.kernel.org/en/users/Drivers/b43#devicefirmware =
+" \
+> +		"https://wireless.docs.kernel.org/en/latest/en/users/drivers/b43/devel=
+opers.html#list-of-firmware " \
+>  		"and download the correct firmware for this driver version. " \
+>  		"Please carefully read all instructions on this website.\n";
+> =20
 
-media-ctl -d 1 --links "'vc-mipi-cam 3-001a':0->'csis-32e50000.csi':0[1]"
-media-ctl -d "platform:32e00000.isi" --set-v4l2 '"vc-mipi-cam 3-001a":0[fmt:Y10_1X10/2592x1944 field:none]'
-media-ctl -d "platform:32e00000.isi" --set-v4l2 '"csis-32e50000.csi":0[fmt:Y10_1X10/2592x1944 field:none colorspace:srgb]'
-media-ctl -d "platform:32e00000.isi" --set-v4l2 '"crossbar":0[fmt:Y10_1X10/2592x1944 field:none colorspace:srgb]'
-media-ctl -d "platform:32e00000.isi" --set-v4l2 '"mxc_isi.0":0[fmt:Y10_1X10/2592x1944 field:none colorspace:srgb]'
-v4l2-ctl -d /dev/video1 --set-fmt-video=width=2592,height=1944,pixelformat="Y10 "
-v4l2-ctl --verbose --device /dev/video1 --stream-mmap
+Acked-by: Michael B=C3=BCsch <m@bues.ch>
 
-and what I got was the NULL pointer deref, I append below. With this patch I
-at least get a nice "VIDIOC_STREAMON returned -1 (Broken pipe)".
+--=20
+Michael B=C3=BCsch
+https://bues.ch/
 
-[   29.936640] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000020
-[   29.947993] Mem abort info:
-[   29.950791]   ESR = 0x0000000096000006
-[   29.954544]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   29.959861]   SET = 0, FnV = 0
-[   29.962935]   EA = 0, S1PTW = 0
-[   29.966084]   FSC = 0x06: level 2 translation fault
-[   29.970977] Data abort info:
-[   29.973860]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
-[   29.979358]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[   29.984414]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[   29.989740] user pgtable: 4k pages, 48-bit VAs, pgdp=000000004536d000
-[   29.996186] [0000000000000020] pgd=08000000452ec003, p4d=08000000452ec003, pud=080000004361a003, pmd=0000000000000000
-[   30.006820] Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
-[   30.013087] Modules linked in:
-[   30.016143] CPU: 3 UID: 0 PID: 433 Comm: v4l2-ctl Not tainted 6.12.12-ge-24.09+-gd7393141dd76 #104
-[   30.025102] Hardware name: MMI4.0 i.MX8MPlus (DT)
-[   30.029804] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   30.036766] pc : mxc_isi_crossbar_xlate_streams+0xb0/0x10c
-[   30.042258] lr : mxc_isi_crossbar_xlate_streams+0xac/0x10c
-[   30.047745] sp : ffff800083db3930
-[   30.051058] x29: ffff800083db3930 x28: ffff800083db39e8 x27: ffff800083db39f0
-[   30.058200] x26: ffff800083db39ec x25: ffff000002eff0a8 x24: 0000000000000000
-[   30.065339] x23: 0000000000000001 x22: 0000000000000001 x21: 0000000000000001
-[   30.072478] x20: 0000000000000003 x19: ffff000003e3c4b8 x18: 0000000000000000
-[   30.079616] x17: 0000000000000000 x16: ffff800080000000 x15: 000000000099e000
-[   30.086756] x14: 0000000000000002 x13: 0000000000036754 x12: 0000000000000010
-[   30.093894] x11: 0000000000000001 x10: 0000000000000064 x9 : 0000000000000004
-[   30.101032] x8 : ffff00000348332c x7 : ffff000003483200 x6 : ffff800083db39ec
-[   30.108172] x5 : ffff000003483000 x4 : 000000000fffffff x3 : ffff000002eff110
-[   30.115312] x2 : ffff0000048a5270 x1 : 0000000000000000 x0 : 0000000000000000
-[   30.122453] Call trace:
-[   30.124898]  mxc_isi_crossbar_xlate_streams+0xb0/0x10c
-[   30.130038]  mxc_isi_crossbar_enable_streams+0x44/0x16c
-[   30.135263]  v4l2_subdev_enable_streams.part.0+0x130/0x2ac
-[   30.140750]  v4l2_subdev_enable_streams+0x48/0x68
-[   30.145454]  mxc_isi_pipe_enable+0x1d4/0x24c
-ed 0 (Success)
-		[V  I D3I0O.C149725]  mxc_isi_vb2_start_streaming+0xa0/0xe4
-[   30.156596]  vb2_start_streaming+0x6c/0x180
-[   30.160782]  vb2_core_streamon+0x100/0x1c4
-[   30.164880]  vb2_streamon+0x18/0x64
-[   30.168369]  mxc_isi_video_streamon+0x284/0x2f4
-[   30.172901]  v4l_streamon+0x24/0x30
-[   30.176391]  __video_do_ioctl+0x15c/0x3c0
-[   30.180402]  video_usercopy+0x1a4/0x67c
-[   30.184240]  video_ioctl2+0x18/0x24
-[   30.187732]  v4l2_ioctl+0x40/0x60
-[   30.191047]  __arm64_sys_ioctl+0xac/0xf0
-[   30.194972]  invoke_syscall+0x48/0x110
-[   30.198726]  el0_svc_common.constprop.0+0x40/0xe0
-[   30.203431]  do_el0_svc+0x1c/0x28
-[   30.206747]  el0_svc+0x30/0xd0
-[   30.209806]  el0t_64_sync_handler+0x100/0x12c
-[   30.214164]  el0t_64_sync+0x190/0x194
-[   30.217830] Code: 937a7f00 8b000020 97fec7a3 aa0003e1 (f9401000)
-[   30.223923] ---[ end trace 0000000000000000 ]---
-_QBUF returned 0 (Success)
-		VIDIOC_QBUF returned 0 (Success)
-		VIDIOC_QBUF returned 0 (Success)
-		VIDIOC_QBUF returned 0 (Success)
+--Sig_/uuMKLn01GWEcG6Sbf8AZzW/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Signed-off-by: Martin Kepplinger-Novaković <martink@posteo.de>
----
+-----BEGIN PGP SIGNATURE-----
 
-the real problem
-================
-Obviously "broken pipe" for "stream on" is still not what I want :)
+iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmejno0ACgkQ9TK+HZCN
+iw5FtBAAsu35avxN0BF/zlRtr8E4sVnqfLRz1sfAFmVTYr6zrEMmv/wZ/7SAfH5o
+pBq/n4jLFRSZAh+DvYOcH+W0y1lAKOAgAeTrNVWblVXcqOCzwrFsi2KbKlrzyc+b
+MQ2MpKKW9T62YS/mYtgIaNHKXjdWKkVqCIQM6VuBs6OokwWs70IyESDhY4QHTK7M
+oZONxaWnR2O5lAvenvILGMZdK+nEu3MMwAVSC/ckyLVv326RMOKhTTMcpcVlAb8l
+8TJFq70upEQIFEULAcyuHBqy3mwUNHJIKW5k2HzJ6UCN8OqZnBCQE8HVdyzZzjNm
+W1S2ZXZCtC9Z8Td6gveEv+ZjEg8W5Jsxbc0d4vG0oDrE1LtCNbN8ofMjmg/UmvW2
+7YfEuKuQ+RiSahYAGKdarAOe2dMlxQaCcx/iC73pZM5I9eaPU62tJ9DsVAzU7hu1
+neZeVJUzXCo/dpyw98yU+xnM6fsmYRaXgvNTFPk8BNabRMv9nxt6Ne731pFxwN97
+0sirlPmEhBT6aGkm47gOIY79xD3Swoo7xFpelCPFLBAOEEkuwii+RnL8hWyVfbb9
+oxVcFUWpTZOY+TCQ1rqqTc6b2xj/mN7Na25f2C7HIwB8ByRRu3jPPcLznK5XB1cS
+1tQLN7vaL9OWFg26pDuhcb6hdeaUkKolwclyyOgb39sX9o92kNg=
+=8mHz
+-----END PGP SIGNATURE-----
 
-The "no enabled link has been found" seems to happen during "VIDIOC_QBUF".
-
-Does anything come to mind what goes wrong here for me?
-
-thanks a lot for having a look,
-
-                                      martin
-
-
-
-
- drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-index 93a55c97cd173..e53a8e01c8be1 100644
---- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-+++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-@@ -160,6 +160,11 @@ mxc_isi_crossbar_xlate_streams(struct mxc_isi_crossbar *xbar,
- 	}
- 
- 	pad = media_pad_remote_pad_first(&xbar->pads[sink_pad]);
-+	if (!pad) {
-+		dev_warn(xbar->isi->dev, "no enabled link has been found.\n");
-+		return ERR_PTR(-EPIPE);
-+	}
-+
- 	sd = media_entity_to_v4l2_subdev(pad->entity);
- 	if (!sd) {
- 		dev_dbg(xbar->isi->dev,
--- 
-2.39.5
-
+--Sig_/uuMKLn01GWEcG6Sbf8AZzW/--
