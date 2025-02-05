@@ -1,136 +1,226 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0EB14F9FD;
-	Wed,  5 Feb 2025 21:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F59A14F9FD;
+	Wed,  5 Feb 2025 21:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738792017; cv=none; b=GFZfTBL3W5JHNnLKqdV/rMfHG6+ibxs/RhWlie3EVAlerr0kqgkKGHeWsy3S4XCc193K+ZhjuNzZCPy69zyMmva4MvIpzF8i7D7tehNjykamm/BJXL2nCPVjfLT946Dkk6OilVZCyjtrSss0Ugrm9y1+o385FV8vq6xhc5B5xSc=
+	t=1738792082; cv=none; b=XRqnY2wM/+TcHqKvACK5ZmWC0br/kFmEfEXV4PqXhvknp2Pu6X31E9eOKNCSNsqkGAFcsKgEkIrbVGEPKPBBzrDVn5IaNeFTdaSJXF1+up7QS6m58Gt+2ilB7Aw8WCQ5W42qWl9eCLlURniSbqBBGtkgndhvoPOIOsWTgYIcZnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738792017; c=relaxed/simple;
-	bh=ZZlo5vlv8E6Ym59lxdbP8O+5omSGNQvE9oCYPT6Vmg4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=W87IKWzDWjTc2eZcRetAqLH7CV0fC9kaaKiXmQ41v5NfPSMnnaQWU2sb+RO00FSI1SwyGp3i16mFuDvAN7l0Ij3d7WsTR82oQgWIPfocJoquGJx3ngHMUJcSIpNYYseg4aUiJZLi4pliKow+dpY6DNVxQzZSPZlz2FteJySEo/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HM3mRbqu; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738792082; c=relaxed/simple;
+	bh=8AwJCVv7v2zMQx4IM6ZpSqPdwVrU547BaOZtfqNOoCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tj8VDFNJAn1R6Mwe6lsWV5FfLoIvJbJgPn37MSNmKtsO3Wu64b0ID/a1rxoXX5XQoXSuFBT/DmjpjIInNb2UatctC1kx0ZCqA+PcXopGQ42ZGsGyf3nSh1PtBwBG1NhkygA7CXUX/jb/lC8IYUBCsOjz5dLp8DMlchPamf/iyAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXVQK7Ep; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HM3mRbqu"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515LkmER3500201
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 15:46:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738792008;
-	bh=5iHMFagFUzTBrSi6prGvxicOIdtThcnaj/EYibmT6U8=;
-	h=Date:Subject:From:To:CC:References:In-Reply-To;
-	b=HM3mRbquemiJxIED2iweuAsNO8vY4bLESJH6ovOI7sRE9XKPMMYWw7530q6qL6JaR
-	 ToqoapeSdJVmmMYbtE2MxGIHEytf+gaDAyC0a7dBj6OvbAKRzGJg7Z/CmSL+hnxlP3
-	 9aS4Os7iqkBrBorYCKbpkzYPYuXtE9O5jtsni7mc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515LkmZV060068
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 15:46:48 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 15:46:47 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 15:46:47 -0600
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515LklsK035372;
-	Wed, 5 Feb 2025 15:46:47 -0600
-Message-ID: <16cb75e2-8321-4acb-a04a-15027930bdca@ti.com>
-Date: Wed, 5 Feb 2025 15:46:47 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXVQK7Ep"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so493311a12.0;
+        Wed, 05 Feb 2025 13:48:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738792079; x=1739396879; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y6i+YHxCQF5tGzp+tynIdxn0d/qSZ4zyFVpI/YTgnME=;
+        b=dXVQK7EpR51+EBk6fuLAZvc7H2wbC9O3Wf84df3UdFUZ32z6fL7D0Dn+2/h97Yj9Hb
+         G34WVSNQRbPmLRCGKFesakDs56EEPDZUfb0JG/6Xirm5xl0wRlD7YPcTlZVr/vsCypv+
+         C8NLrbIp2vg7YMWvr8aVgpf5MymBjpZGAa15dSHO5mLtOp4InwtQSb1KdQegZcSpHFnb
+         KAjBwU3w+JXZS7iMCTd4Jix7rYNAxnRYywvAUD9UxL+Xz0UEEpqNO7zETdsuqcMezgl7
+         VWUrIF9nwUPgJJuhgJdhsgVojPlrn8WkVeA+aol5D15wzDPuOKLIhtJPGKaO6K7Ega7Q
+         YecQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738792079; x=1739396879;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y6i+YHxCQF5tGzp+tynIdxn0d/qSZ4zyFVpI/YTgnME=;
+        b=NSbQdahNLCaSYN2gYBSONQQHWARN0tA1Mg+/Xnrf6jndmEp0XJMMGrUrJ/NyssFxm+
+         ElK8Wm0kJITGJpm9oISL6qcB8kriVyLV/TrWJmfe2NdcFFhPO8g1avE4rj5arRiZnoOz
+         rSmaTVM9vXzcKj/3LWJzuA0lcvg5GEL2r/Cusrvhl6mnuXVjnNhEAfAnjoOvMzIg+PUK
+         ElmbRbYyNNuAp2qz8d0LWe65FazCsK2VqEMg6UY4C2HQ3rp8W1y6ojLbaOkAQsphAv0A
+         iDRGUSQnvWPXA+NlHpklrOXOhli+qak4lgwilJRuCIuad7N+BJTrit9X19gilheA+qZ7
+         jgRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYgiYQkDhLtLsXQKdP/An2le8wYCjEYF0CsctA1s1l4ZRZylYr8zsKhPK6WsBmO1CGqZyuHkiz3mga@vger.kernel.org, AJvYcCW3Q+5i2g+1aS3Wk8V00lEGp5Syapno4SvXpnQznvkn8AZXQ25QZEx91xvDr6cFdxwxUU4WikPq5MnACYOv@vger.kernel.org, AJvYcCXmiS6/jsFultjaNs7N9AWe4xZ2vQMzb6QQRZaFTI+RkxcGYh6ay7X9YFPZqsXxNKZQb9Gq6/pTcRJV7lZkeA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBIjF5YnYLkoeNhcYYewYSCTZxZOs0wwxtF10SReOlx8abOxZa
+	pA2yMgzwE3X4m36l3Su4bLpnUzsCKiYQhi8f45IwNUzOnkWMm1c3nhGcccjPqQ6DgC13Di6ICcC
+	YdEpYUBJzxxixughJz1YSHfkuNak=
+X-Gm-Gg: ASbGncvL9ca1O0+Pd+2JeRxANl0o3WRRcMYf2dEtL5oPg51PFaiX43NhXK54TGhUqsA
+	KLsizQGdEzL3kMm3JdN/uL8XJJ1TGhsYxTDTMqyHU7ZY4YtpQ2KdaPhSwIBFBidN3eo/CrsU8
+X-Google-Smtp-Source: AGHT+IHuIm9TVX2/szx/f6rvESqIiVKGpbxWTxtp1L9/8uypxPz9Nt5HgI5n2b13ogw7E5/q4gU1H2eLlH6Wzm1pHRU=
+X-Received: by 2002:a05:6402:2087:b0:5dc:c3c6:5826 with SMTP id
+ 4fb4d7f45d1cf-5dcecca9240mr896823a12.7.1738792078232; Wed, 05 Feb 2025
+ 13:47:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/9] arm64: dts: ti: k3-am62-wakeup: Add wakeup R5F
- node
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>,
-        Hari Nagalla
-	<hnagalla@ti.com>
-References: <20250204011641.1523561-1-jm@ti.com>
- <20250204011641.1523561-2-jm@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250204011641.1523561-2-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250117185947.ylums2dhmo3j6hol@pali> <20250202152343.ahy4hnzbfuzreirz@pali>
+ <CAOQ4uxgjbHTyQ53u=abWhyQ81ATL4cqSeWKDfOjz-EaR0NGmug@mail.gmail.com>
+ <20250203221955.bgvlkp273o3wnzmf@pali> <CAOQ4uxhkB6oTJm7DvQxFbxkQ1u_KMUFEL0eWKVYf39hnuYrnfQ@mail.gmail.com>
+ <20250203233403.5a5pcgl5xylj47nb@pali> <CAOQ4uxisXgDOuE1oDH6qtLYoiFeG55kjpUJaXDxZ+tp2ck++Sg@mail.gmail.com>
+ <20250204212638.3hhlbc5muutnlluw@pali> <CAOQ4uxg5k5FP43y93FRujj54kVk8TyXD2AeO_VFJ2m+aB=b1_Q@mail.gmail.com>
+ <20250205181645.4ps3kzafyasg4dgj@pali> <20250205190445.ceffnr4vipxsybhn@pali>
+In-Reply-To: <20250205190445.ceffnr4vipxsybhn@pali>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 5 Feb 2025 22:47:46 +0100
+X-Gm-Features: AWEUYZmuFn7hrrwub0e6n0y_WkZc8m_cenbqemcvv3rXpzYE8Kx-kuRkhWVpFiU
+Message-ID: <CAOQ4uxhtgX4V-zcrkcobZpULvbH2X2RtahM-FJ2JH_S511J+7Q@mail.gmail.com>
+Subject: Re: Immutable vs read-only for Windows compatibility
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, ronnie sahlberg <ronniesahlberg@gmail.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Steve French <sfrench@samba.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+> > > > What could be useful for userspace is also ability to figure out which
+> > > > FS_DOSATTRIB_* are supported by the filesystem. Because for example UDF
+> > > > on-disk format supports only FS_DOSATTRIB_HIDDEN bit. And FAT only those
+> > > > attributes which are in the lowest byte.
+> > > >
+> > >
+> > > Exactly.
+> > > statx has this solved with the stx_attributes_mask field.
+> > >
+> > > We could do the same for FS_IOC_FS[GS]ETXATTR, but because
+> > > right now, this API does not verify that fsx_pad is zero, we will need to
+> > > define a new set of ioctl consants FS_IOC_[GS]ETFSXATTR2
+> > > with the exact same functionality but that userspace knows that they
+> > > publish and respect the dosattrib mask:
+> >
+> > I understand and this is a problem.
+> >
+> > > --- a/fs/ioctl.c
+> > > +++ b/fs/ioctl.c
+> > > @@ -868,9 +868,11 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+> > >         case FS_IOC_SETFLAGS:
+> > >                 return ioctl_setflags(filp, argp);
+> > >
+> > > +       case FS_IOC_GETFSXATTR2:
+> > >         case FS_IOC_FSGETXATTR:
+> > >                 return ioctl_fsgetxattr(filp, argp);
+> > >
+> > > +       case FS_IOC_SETFSXATTR2:
+> > >         case FS_IOC_FSSETXATTR:
+> > >                 return ioctl_fssetxattr(filp, argp);
+> > > --- a/include/uapi/linux/fs.h
+> > > +++ b/include/uapi/linux/fs.h
+> > > @@ -145,7 +145,8 @@ struct fsxattr {
+> > >         __u32           fsx_nextents;   /* nextents field value (get)   */
+> > >         __u32           fsx_projid;     /* project identifier (get/set) */
+> > >         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > > -       unsigned char   fsx_pad[8];
+> > > +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
+> > > +       __u32           fsx_dosattrib_mask; /* dosattrib field validity mask */
+> > >  };
+> > >
+> > >  /*
+> > > @@ -238,6 +248,9 @@ struct fsxattr {
+> > >  #define FS_IOC32_SETFLAGS              _IOW('f', 2, int)
+> > >  #define FS_IOC32_GETVERSION            _IOR('v', 1, int)
+> > >  #define FS_IOC32_SETVERSION            _IOW('v', 2, int)
+> > > +#define FS_IOC_GETFSXATTR2              _IOR('x', 31, struct fsxattr)
+> > > +#define FS_IOC_SETFSXATTR2              _IOW('x', 32, struct fsxattr)
+> > > +/* Duplicate legacy ioctl numbers for backward compact */
+> > >  #define FS_IOC_FSGETXATTR              _IOR('X', 31, struct fsxattr)
+> > >  #define FS_IOC_FSSETXATTR              _IOW('X', 32, struct fsxattr)
+> > >  #define FS_IOC_GETFSLABEL              _IOR(0x94, 49, char[FSLABEL_MAX])
+> > >
+> > > We could also use this opportunity to define a larger fsxattr2 struct
+> > > that also includes an fsx_xflags_mask field, so that the xflags namespace
+> > > could also be extended in a backward compat way going forward:
+> > >
+> > > @@ -145,7 +145,21 @@ struct fsxattr {
+> > >         __u32           fsx_nextents;   /* nextents field value (get)   */
+> > >         __u32           fsx_projid;     /* project identifier (get/set) */
+> > >         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > >         unsigned char   fsx_pad[8];
+> > >
+> > >  };
+> > > +
+> > > +/*
+> > > + * Structure for FS_IOC_[GS]ETFSXATTR2.
+> > > + */
+> > > +struct fsxattr2 {
+> > > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
+> > > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
+> > > +       __u32           fsx_nextents;   /* nextents field value (get)   */
+> > > +       __u32           fsx_projid;     /* project identifier (get/set) */
+> > > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > > +       __u32           fsx_xflags_mask; /* xflags field validity mask */
+> > > +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
+> > > +       __u32           fsx_dosattrib_mask; /* dosattrib field validity mask */
+> > > +};
+> > >
+> > > And you'd also need to flug those new mask and dosattrib
+> > > via struct fileattr into filesystems - too much to explain.
+> > > try to figure it out (unless someone objects) and if you can't figure
+> > > it out let me know.
+> >
+> > Yea, I think that this is thing which I should be able to figure out
+> > once I start changing it.
+> >
+> > Anyway, I have alternative idea to the problem with fsx_pad. What about
+> > introducing new fsx_xflags flag which would say that fsx_pad=fsx_dosattrib
+> > is present? E.g.
+> >
+> > #define FS_XFLAG_HASDOSATTRIB 0x40000000
+> >
+> > Then we would not need new FS_IOC_GETFSXATTR2/FS_IOC_SETFSXATTR2 ioctls.
+> >
+> > Also fsx_pad has 8 bytes, which can store both attrib and mask, so new
+> > struct fsxattr2 would not be needed too.
+>
+> In case we decide to not do 1-to-1 mapping of Windows FILE_ATTRIBUTE_*
 
-Please do not merge this patch series version.
+The 1-to-1 is definitely not a requirement of the API.
 
-I will be including one more node and send out v4, thanks!
+> constants to these new Linux DOSATTRIB_* constants then we do not need
+> 32-bit variable, but just 16-bit variable (I counted that we need just
+> 10 bits for now).
 
-~ Judith
+The "for now" part is what worries me in this sentence.
 
-On 2/3/25 7:16 PM, Judith Mendez wrote:
-> From: Hari Nagalla <hnagalla@ti.com>
-> 
-> AM62 SoC devices have a single core R5F processor in wakeup domain.
-> The R5F processor in wakeup domain is used as a device manager
-> for the SoC.
-> 
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
-> Changes since v2:
-> - Fix commit header, capitalize R5F
-> - Fix whitespace issues
-> ---
->   arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi | 25 ++++++++++++++++++++++
->   1 file changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
-> index 9b8a1f85aa15c..061819a64300f 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
-> @@ -106,6 +106,31 @@ wkup_rti0: watchdog@2b000000 {
->   		status = "reserved";
->   	};
->   
-> +	wkup_r5fss0: r5fss@78000000 {
-> +		compatible = "ti,am62-r5fss";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x78000000 0x00 0x78000000 0x8000>,
-> +			 <0x78100000 0x00 0x78100000 0x8000>;
-> +		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +
-> +		wkup_r5fss0_core0: r5f@78000000 {
-> +			compatible = "ti,am62-r5f";
-> +			reg = <0x78000000 0x00008000>,
-> +			      <0x78100000 0x00008000>;
-> +			reg-names = "atcm", "btcm";
-> +			ti,sci = <&dmsc>;
-> +			ti,sci-dev-id = <121>;
-> +			ti,sci-proc-ids = <0x01 0xff>;
-> +			resets = <&k3_reset 121 1>;
-> +			firmware-name = "am62-wkup-r5f0_0-fw";
-> +			ti,atcm-enable = <1>;
-> +			ti,btcm-enable = <1>;
-> +			ti,loczrama = <1>;
-> +		};
-> +	};
-> +
->   	wkup_vtm0: temperature-sensor@b00000 {
->   		compatible = "ti,j7200-vtm";
->   		reg = <0x00 0xb00000 0x00 0x400>,
+> fsx_pad has currently 64 bits and we could use it for:
+> - 32 bits for fsx_xflags_mask
+> - 16 bits for fsx_dosattrib
+> - 16 bits for fsx_dosattrib_mask
 
+This is possible.
+
+> And therefore no need for FS_IOC_GETFSXATTR2/FS_IOC_SETFSXATTR2 iocl or
+> struct fsxattr2. Just an idea how to simplify new API. Maybe together
+
+no need for struct fsxattr2.
+but regarding no new ioctl I am not so sure.
+
+> with new fsx_xflags bit to indicate that fsx_xflags_mask field is present:
+> #define FS_XFLAG_HASXFLAGSMASK 0x20000000
+>
+
+I don't think that this flag is needed because there is no filesystem
+with empty xflags_mask, so any non zero value of xflags_mask
+is equivalent to setting this flag.
+
+This is for the get side. For the set side things are more complicated.
+A proper backward compat API should reject (-EINVAL) unknown flags.
+As far as I can tell ioctl_fssetxattr() does not at any time verify that
+fsx_pad is zero and as far as I can tell xfs_fileattr_set() does not
+check for unsupported fsx_xflags.
+
+So unless I am missing something, FS_IOC_FSSETXATTR will silently
+ignore dosattrib flags (and mask) when called on an old kernel.
+This is the justification of FS_IOC_SETFSXATTR2 - it will fail on an
+old kernel, so application can trust that if it works - it also respects
+dosattib and the masks.
+
+Yes, applications can call FS_IOC_FSGETXATTR, check non zero
+mask and deduce that FS_IOC_FSSETXATTR will respect the mask
+This will probably work, but it is not a very clean API IMO.
+
+Thanks,
+Amir.
