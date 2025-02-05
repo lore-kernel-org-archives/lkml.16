@@ -1,190 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087218A6BA;
-	Wed,  5 Feb 2025 16:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C45617F7;
+	Wed,  5 Feb 2025 16:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773622; cv=none; b=pBtiHqYXSfYUxZPFy6mVWmcy/MynBfZBCzVudpFJr8L4VmBL1YNt/8BoNK8WDPFjntkqPbtzVTVPjfltgB0/ZBMXqhX3WkA9YXZQSm/YXLkmYwsDrwPkDGCuQxMxJZp9yLwChr/MkjyBzHRUDBFxEE77ghzknXRmXRcoXq1hh6g=
+	t=1738773796; cv=none; b=lHgu1g8/dp2KOY6r/ZYG6l1EXHio3usQY650+Z4M6PnQjC7RFrsLK8Ey8y1UGqJsvHQvFX1TsRfP1XUlYWhJ2j/jGhrS8OkbWn9+dyGbJgez0bfL9nsKKPRPFLlWw2p52o0FsWUKF6+VmZFt0helgOUYkRAF+PIzA49BIYMvnuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773622; c=relaxed/simple;
-	bh=fZs/OAmjFCT482JymNcEu3wCL57eRyj9F/vXr3lzllw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T00DP9jo96tcp+gjKAL85Y005iS40vPFG0KgbLxe9CeQj5oytkXKEAvPxtQoiWBHTiaGFI+FvVMBad0FNx0+pchuNE16XK46l+JsDdd/YHKiHaMbs477n6A9pjGzYMqg8ipuqVp6lGcxayg5s3z4MOgnaXZpN7mk4vRtSOjYin4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JWcuMIXl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a+MNxdhA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JWcuMIXl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a+MNxdhA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738773796; c=relaxed/simple;
+	bh=LnxzeaNBBEUtj9BXIHK5+BlPkmKrMSnMNW9nlPGze8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C6wkJL/5Rxc/9RLi6HteyvzXLAYq5UvztIP7BQBsrzOx+ZFRzQIAeOpliNE48j501CRG/gMPMYdS2zh4rL+BVYQ5RsgPHauGpEzQf6xWzPXCLWckbMfdTenpBGtT6f/5EqnTt4j4kTcC/dy/UclL1vfLRg58V9XvhEHtTodelxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNw6AoV4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JWcuMIXl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a+MNxdhA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JWcuMIXl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a+MNxdhA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 18E8E215D0;
-	Wed,  5 Feb 2025 16:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738773619;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=njiCdnx+9RlYGgbEMg4uPaVX/eisLEx30KxioVp5A64=;
-	b=JWcuMIXl5CDrmW/SqQQV6AQrNguGAYZ1qyzLuX0CJmwvJ33113koT/vOIrjr2xU4l8SNU7
-	nENmfWESKmLAYFd2EMkAcJre0tjR4DNHWCV0I59C/f8Jd0l/NY/LPSxGDP8/Xky8XUgjjn
-	8i7ryBtUay5XuG2GCuybRUpAQQRVjEE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738773619;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=njiCdnx+9RlYGgbEMg4uPaVX/eisLEx30KxioVp5A64=;
-	b=a+MNxdhAfufo7hnuR/NDOABzULdXY1/ckIxn1jXgkVvNOJ2VMETyLYP3wcDco9PRejpHlm
-	irWr4soBeoaRp9AQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=JWcuMIXl;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=a+MNxdhA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738773619;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=njiCdnx+9RlYGgbEMg4uPaVX/eisLEx30KxioVp5A64=;
-	b=JWcuMIXl5CDrmW/SqQQV6AQrNguGAYZ1qyzLuX0CJmwvJ33113koT/vOIrjr2xU4l8SNU7
-	nENmfWESKmLAYFd2EMkAcJre0tjR4DNHWCV0I59C/f8Jd0l/NY/LPSxGDP8/Xky8XUgjjn
-	8i7ryBtUay5XuG2GCuybRUpAQQRVjEE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738773619;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=njiCdnx+9RlYGgbEMg4uPaVX/eisLEx30KxioVp5A64=;
-	b=a+MNxdhAfufo7hnuR/NDOABzULdXY1/ckIxn1jXgkVvNOJ2VMETyLYP3wcDco9PRejpHlm
-	irWr4soBeoaRp9AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E666313694;
-	Wed,  5 Feb 2025 16:40:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id V07UN3KUo2dqOgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 05 Feb 2025 16:40:18 +0000
-Date: Wed, 5 Feb 2025 17:40:12 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs/zstd: enable negative compression levels mount
- option
-Message-ID: <20250205164012.GJ5777@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250124075558.530088-1-neelx@suse.com>
- <20250127180250.GQ5777@twin.jikos.cz>
- <CAPjX3FdaxfzULnRjN7TqyS9uK_ZJSk2PRzLgQCLVGBrR0yKLGw@mail.gmail.com>
- <20250129224253.GF5777@twin.jikos.cz>
- <CAPjX3FdJynRY91N-1aJ0wOrMJY+cKvSuhLDPGAuCybEvSzS0KA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNw6AoV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C194C4CED6;
+	Wed,  5 Feb 2025 16:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738773795;
+	bh=LnxzeaNBBEUtj9BXIHK5+BlPkmKrMSnMNW9nlPGze8c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FNw6AoV4lbJnUZVo+6+M+z7DuNfCTyGgcMZgQl3xJB5YBxlKKRf8rWDxquB28SIP5
+	 Vkn3psh0z9/sTwCh6A0bfGkUeuKp/KG85jvzjWvWs9YMT923yNgFNsP5zhiTUy1NDZ
+	 DEm8S4bAjFGxo9CkeISIv0IvmkQ7rY7bNQmiWFTAzhwE2ekfs1pMsqNuW5P68muvAz
+	 DE6krs0tkYzDd0W/bbIes0lsXQJgusPYHrhhDjNkleBECtOiV8hmztCeJfCgl05W0z
+	 mTjDYZpQOrcazV9JqO5B+PbFw+WMlLbAWiksQdf1ol132XY6IGwES5k3185ejw4uQL
+	 81LUs21fiwugQ==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa67ac42819so3492966b.0;
+        Wed, 05 Feb 2025 08:43:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVWglMGvBSVM33I2UAumJHUyifiIifRlzonD/1H5bv3UeCsv+hY3OdCDXvatGwdhzgKrrB81b7vXeXYcXgSOWM=@vger.kernel.org, AJvYcCWDmCYxcxYmtb7k8axmx0Jikwe2kJG2rjLr+xKM8BrkDFkcVz6uiDJVTlgF4A84TUMauAvgNegnMNz40Ds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzltT6ZbzSYT7Jl2BJByJP8+IadlVEmnuBxXeKwkMFAUPjqgwXA
+	4HV2xyGyxK6zImqzQm9uf2lIyDvbvLgZXY2AiFxAyLMhusyZUD7r3T/gv5sIfcnfFS51LTSVqzp
+	NpUEHds5fPaTuclds6rmz/ntPWA==
+X-Google-Smtp-Source: AGHT+IE8RkOzCIGHeIN9KACrRk7cJI9RU88cBKMkL6N/N5/62aH9kSdjTJoESXLsiQ1IJyT2hlNFIjQJmrLmCD/FWkI=
+X-Received: by 2002:a17:907:944b:b0:ab3:83c2:755a with SMTP id
+ a640c23a62f3a-ab75e33da55mr373475866b.49.1738773794041; Wed, 05 Feb 2025
+ 08:43:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPjX3FdJynRY91N-1aJ0wOrMJY+cKvSuhLDPGAuCybEvSzS0KA@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 18E8E215D0
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.cz:replyto,suse.cz:dkim,suse.cz:mid];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
-X-Spam-Flag: NO
+References: <20250204232824.3819437-1-robh@kernel.org> <a6ecdb6b0a50e1fe7b0293eaaed27880e99a5258.camel@collabora.com>
+ <3b8147f56eb0ea1c9815102edaa023d95b2d84f7.camel@collabora.com>
+In-Reply-To: <3b8147f56eb0ea1c9815102edaa023d95b2d84f7.camel@collabora.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 5 Feb 2025 10:43:02 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK_6ttLT-u-BzgOrCg=GWtNi4OP_Zw8iivXqKQ=t_ZA3Q@mail.gmail.com>
+X-Gm-Features: AWEUYZnA8ntL0J0w-ctVS0DtgfypMmUxEJ-driJVUfwJfvXAvagxzVnH55NZ7jk
+Message-ID: <CAL_JsqK_6ttLT-u-BzgOrCg=GWtNi4OP_Zw8iivXqKQ=t_ZA3Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/panthor: Convert IOCTL defines to an enum
+To: Erik Faye-Lund <erik.faye-lund@collabora.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Beata Michalska <beata.michalska@arm.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 30, 2025 at 10:13:36AM +0100, Daniel Vacek wrote:
-> On Wed, 29 Jan 2025 at 23:42, David Sterba <dsterba@suse.cz> wrote:
-> > Up to -15 it's 3x improvement which translates to about 33% of the
-> > original size. And this is only for rough estimate, kernel compression
-> > could be slightly worse due to slightly different parameters.
+On Wed, Feb 5, 2025 at 8:17=E2=80=AFAM Erik Faye-Lund
+<erik.faye-lund@collabora.com> wrote:
+>
+> On Wed, 2025-02-05 at 11:53 +0100, Erik Faye-Lund wrote:
+> > On Tue, 2025-02-04 at 17:28 -0600, Rob Herring (Arm) wrote:
+> > > Use an enum instead of #defines for panthor IOCTLs. This allows the
+> > > header to be used with Rust code as bindgen can't handle complex
+> > > defines.
+> > >
 > >
-> > We can let it to -15, so it's same number as the upper limit.
-> 
-> I was getting less favorable results with my testing which leads me to
-> the ultimate rhetorical question:
-> 
-> What do we know about the dataset users are possibly going to apply?
+> >
+> > Unfortunately, this goes in the opposite direction than what I was
+> > asked to do here:
+> >
+> > https://lore.kernel.org/dri-devel/20241029140125.0607c26f@collabora.com=
+/
+> >
+> > ...I still intend to get around to doing that, because we have
+> > problems
+> > with C enum and large values. I don't know if we can solve that while
+> > making Rust happy without requiring C23 (which allows to specify the
+> > underlying type of an enum), unfortunately...
+> >
+>
+> Seems I misunderstood Boris, and he was referring to flags. The enums
+> are of course fine to make into real enums.
 
-This does not need to be a rhetorical question, this is what needs to be
-asked when adding a new feature or use case. We do not know exactly but
-in this case we can evaluate expected types of data regarding
-compressibility, run benchmarks and do some predictions.
+Maybe we're relying on compiler specific behavior, but that's nothing
+new in the kernel. This worked fine for me with both gcc and clang:
 
-> And how do you want to assess the right cut-off having incomplete
-> information about the nature of the data?
+#include <stdio.h>
 
-Analyze typical use cases, suggest a solution, evaluate and either take
-it or repeat.
+enum foo {
+        BAR =3D (1UL << 63),
+};
 
-> Why doesn't zstd enforce any limit itself?
+int main(void)
+{
+        printf("%lx\n", BAR);
+        return 0;
+}
 
-That can be answered by ZSTD people, that the realtime level number
-translates to the internal parameters may be an outlier because the
-normal level are defined in a big table that specifically defines what
-each level should do so there's not predictable pattern.
-
-https://elixir.bootlin.com/linux/v6.13.1/source/lib/zstd/compress/clevels.h#L23
-
-> Is this even a matter (or responsibility) of the filesystem to force
-> some arbitrary limit here? Maybe yes?
-
-Yes and this is for practical reasons.
-
-> As mentioned before, personally I'd leave it to the users so that they
-> can freely choose whatever suits them the best. I don't see any
-> technical or maintenance issues opening this limit.
-
-As a user I see an unbounded number for relatime limit level and have no
-idea which one to use. So I go to the documentation and see that
-somebody evaluated the levels on various data sets with description of
-compressibility and says that levels -1 and -15 can give some reasonable
-results. I can also reevaluate it for my own data set or take some
-recommendation.
-
-What would IMHO look really strange is to see another 1000 levels
-allowed by the parameter but docuented as "no obvious benefit, only
-extra overhead".
-
-If somebody comes later with a concrete numbers that it would be good to
-have a few more levels allowed we can talk about it and adjust it again.
-
-The level is currently not stored anywhere but we will want that
-eventually for the properties so limiting the number is necessay anyway.
-So this is a technical and compatibility reason.
+Rob
