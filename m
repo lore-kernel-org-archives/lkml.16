@@ -1,129 +1,199 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521F0151986;
-	Wed,  5 Feb 2025 12:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71BA2288C3;
+	Wed,  5 Feb 2025 12:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756874; cv=none; b=P8/CnJg6cJrbzlchRVVYCABC4yqleitZvP8qZDkJdqeYpHqS+8HkDU3FzKfZGSeifn02NSOUgoq7KQBB0ryuqPcB5P3mV0lQ90YtBurtvPijA5QpbngmOHRf9XwVZy5V+gxsEkkR+MvuaKgesuRgbdcgC4s/SkG/q5AMOoFnocA=
+	t=1738756897; cv=none; b=e69epGyTy8kytlhOBUCliS/p8qm8VvT/MuHiyJ142/kPhyrlPs8JEoSjDaea2rvCxOgcnPnUu8pSYBNGfxQqMwcr2p71ruFHLZsKrvnw+YMhEPRGXwSpaeDlT1SBtSV6VUUA8bkxSVfIHYJ5TQjitkVfJsXl6UiT2+9ZzzTnZus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756874; c=relaxed/simple;
-	bh=9n6a9uQl9i/L5M+Gtt/Zbkst7PZzAhCGCzvZ1sOdLME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLZRkQ21ViOrp8h+3s1I8yXhdTSMEiC7QDqcM456uibcvzRyJE+Uedd373vH0KmrtYunOXHGycZeokZYspje2tonBppYTRCJQiwMSlF164VnrX/94qHHyZLvDV/MGfSnmxtiID0hypDrM9sRZFNni8ZbDDBkCRwoxbScs2SzrKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmptyAqV; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmptyAqV"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2163dc5155fso117591315ad.0;
-        Wed, 05 Feb 2025 04:01:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738756872; x=1739361672; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nsWH4bkHCYOuJvzfoXTwaNIHGXBOrXdOaMsxD9Y32S0=;
-        b=KmptyAqVXGVhSC5OYFkiVV9UpDTUFPYN7+lhhZKol4R0nNMrl0FBf8ZVyopBmeaE88
-         HnuzMude+wI/rZim5qGHY/8F4zF/v1sY66eA/6n3AqO1x2xw3kzbDVBGOFjKSFoOWEPZ
-         2jxXZ3B7/Vd7i8w65Z+siLvZBovJ9+S4nZ7vEacn3EwiuHXZp5zVrU5pl01rZY2jKD7M
-         Wa9E/pkpSHsUc1PuLKyLM/AJf8Yv6urhkFkNqdRdgkn+cn3WsMk0/FMt0e8RNKfK7Xcv
-         GfTIKVKKyEg1dmpSXjEZQR7xLSVCatij3xfiAnBYh9NsTEy4VAo984/h3CvGET7t2S5c
-         wxFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738756872; x=1739361672;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nsWH4bkHCYOuJvzfoXTwaNIHGXBOrXdOaMsxD9Y32S0=;
-        b=RUSx76NHaSqHfolTwCzUoAfUS5aHmF2gwWaSqu0cS5OtzCJuStG3WwN657F1ZTGHOR
-         BIPnTtYjgn1SeeeHVAFsnYXpsOtouOVzobwoH/VI/rurxYxqN/XzLD1QWvmvLILLtIEn
-         tddcvZUH74NNFZN5qKOKSfw4/8yO0gpK8yzopSRdu3qGh6BOhaslCkBog4ydUssOJY3z
-         4TZ20zLUhtoc7qNBmqcTw+5SQod6vDjJXCrbS6VkMoqlmNrf+S/yChLdVxk0np9y6kLw
-         hOxcQ0oi3WHww4nK8gUCXEgyd8GNf2XJ7AnSY2GHDxhh2vCUgsOJlXnE+vHpGxFDA8vd
-         rEhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpS6KrBQxnIGnfjRqAzXuJTHISXZRCHeduYMQejWEdcXDF2o0PlKHTErEo0L13hsixgBVDuhO7oIrgX24=@vger.kernel.org, AJvYcCVqy08wUL+2v+hme/FV4d2NVsuj7ASHm3SEewJrFCNNp2HpeZBGgRJoiu5AEV1/ysgbruQoorQlkc/F4SB6PoNs@vger.kernel.org
-X-Gm-Message-State: AOJu0YybVwKnC2srDcl+yMFzxplWGlDaYRXeNgS6soEZrKcCDEWSigOn
-	mmahw7uOkYQSasl3FEmL/J7Bf2ODHw1av/bBQEhV1WOiPpfLdxkvIVckQXY2eh8=
-X-Gm-Gg: ASbGncvEePbbKaLANyoo1po9OVSNMxCkaNjMQwezLZRRmtokDl+k2nrCWBOaPMj+DCz
-	UJ56DrR0A+wp9e80SOERrZkhrxVvlxszb0dzR+rM3cuoJMfONLKPu/b59ybACCE5zyfWnqtuK8s
-	s3pQm9AGsya5q24i7Al4TmjFvLcKgjGx6j53q2s8EXK3GQuKLWZ5ABl0cO9SDxEgiyYcwPsoRSl
-	WkLBaV7+rZJ+rMsBQ72SXKk2rY0i+3qAqMz+DymQPl2hc/CdDZW4xzOBlbQpVJRFZkrKKiFQmff
-	VDbzzUxeeINPVh43HFT7
-X-Google-Smtp-Source: AGHT+IHbUO12GorCrmQIRZNcPoHPznkzO7CbXQYcdmUxThQjrieOYuKxhwBHCmv49y5FFm7+e7PUHg==
-X-Received: by 2002:a05:6a21:6e41:b0:1e1:a829:bfb6 with SMTP id adf61e73a8af0-1ede881baecmr4405764637.3.1738756871955;
-        Wed, 05 Feb 2025 04:01:11 -0800 (PST)
-Received: from fedora ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ba38bsm12566007b3a.90.2025.02.05.04.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 04:01:11 -0800 (PST)
-Date: Wed, 5 Feb 2025 12:01:03 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>, Jianbo Liu <jianbol@nvidia.com>,
-	Boris Pismenny <borisp@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/2] bonding: fix incorrect MAC address setting to
- receive NA messages
-Message-ID: <Z6NS_7rbUVLy_yJn@fedora>
-References: <20250205080336.2197369-1-liuhangbin@gmail.com>
- <20250205080336.2197369-2-liuhangbin@gmail.com>
+	s=arc-20240116; t=1738756897; c=relaxed/simple;
+	bh=WAeq4BEFXXSX6jShyygg3gjPfLk6uyqHt8itTUj+cwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EdzT0wSgfkZXsn7metGx3lhH5um+nOPjuqvjDzFFteJ9QpmBVkkW3NFniMA9tQPwRV5WAnqqHl1BzrbbxumA74foHsT0UXzM1AT5tigNmm7R7TWSBgJsOIl0djG4FVW8lHtnEqj8dvX+tkEG6udAz9LrlLosKivDL3Jg7PYZkO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 515C0S39015867;
+	Wed, 5 Feb 2025 06:00:28 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 515C0QIm015866;
+	Wed, 5 Feb 2025 06:00:26 -0600
+Date: Wed, 5 Feb 2025 06:00:26 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Greg Wettstein <greg@enjellic.com>, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jmorris@namei.org
+Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
+Message-ID: <20250205120026.GA15809@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205080336.2197369-2-liuhangbin@gmail.com>
+In-Reply-To: <8642afa96650e02f50709aa3361b62c4@paul-moore.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 05 Feb 2025 06:00:28 -0600 (CST)
 
+On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
 
-Oh, I just found the subject is incorrect. We want to receive the NS
-message, not NA message on backup slaves.
+Good morning, I hope mid-week is going well for everyone.
 
-Thanks
-Hangbin
-On Wed, Feb 05, 2025 at 08:03:35AM +0000, Hangbin Liu wrote:
-> In order to receive the neighbor solicitation messages on the backup slave,
-> we should add the NS target's corresponding MAC address. But the target in
-> bonding is a unicast addresses. We can't use it directly. Instead, we should
-> convert it to a Solicited-Node Multicast Address first and then convert
-> the multicast address to the right MAC address.
+After the issue of the functionality of modern cryptographic
+primitives, a discussion of the second most important issue Paul
+raises.
+
+> > > > +In an externally modeled namespace, the event type and parameters are
+> > > > +exported to userspace for processing by a trust orchestrator with an
+> > > > +associated TMA.  The trust orchestrator communicates the result of the
+> > > > +modeling back to the kernel to support the setting of the process
+> > > > +trust status.
+> > > > +
+> > > > +The exception to this model are for security event handlers that are
+> > > > +called in atomic, ie. non-sleeping context.  The export of these
+> > > > +security event descriptions are done asynchronously in order to avoid
+> > > > +having the TSEM implementation attempt to sleep in atomic context
+> > > > +while the userspace trust orchestrator is scheduled for execution.
+> > > > +
+> > > > +It is up to the trust orchestrator and its security policy to
+> > > > +determine how it handles events that violate the security model being
+> > > > +enforced in this model.  The Quixote trust orchestrators shut down the
+> > > > +entire workload running in the security namespace if an asynchronously
+> > > > +modeled event violates the security model being enforced and the model
+> > > > +is running in enforcing mode.
+
+> > > I understand your desire to simply pass off the non-blocking/async
+> > > access control hole as a security policy issue, but it seems to me
+> > > that this is a fundamental flaw with an externally modeled TSEM
+> > > namespace.  If an externally modeled namespace was configured with
+> > > an enforcing policy, it doesn't appear that there is a mechanism for
+> > > TSEM to properly enforce that policy as there is an unbounded delay
+> > > between the undesired access and a denial verdict being processed by
+> > > the kernel.
+> > >
+> > > Unless you can resolve this somehow, and I'm not sure how, I would
+> > > suggest dropping external/userspace trust orchestrators.  They
+> > > simply don't seem able to reliably implement their security
+> > > policies.
+
+> > An important issue.
+> >
+> > Some reflections on why we would, respectfully, disagree.
+> >
+> > A business assessment of the current security market suggests that the
+> > mindset in security has changed from prevention to detection.  TSEM is
+> > about providing kernel infrastructure to enable better solutions for
+> > the detection model.
+
+> I believe the LSM can support both the enforcement of security policy
+> and the observation of security relevant events on a system.  In fact
+> most of the existing LSMs do both, at least to some extent.
 > 
-> Fixes: 8eb36164d1a6 ("bonding: add ns target multicast address to slave device")
-> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-> ---
->  drivers/net/bonding/bond_options.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
-> index 327b6ecdc77e..63cf209dcdc9 100644
-> --- a/drivers/net/bonding/bond_options.c
-> +++ b/drivers/net/bonding/bond_options.c
-> @@ -1246,6 +1246,7 @@ static void slave_set_ns_maddrs(struct bonding *bond, struct slave *slave, bool
->  {
->  	struct in6_addr *targets = bond->params.ns_targets;
->  	char slot_maddr[MAX_ADDR_LEN];
-> +	struct in6_addr mcaddr;
->  	int i;
->  
->  	if (!slave_can_set_ns_maddr(bond, slave))
-> @@ -1255,7 +1256,8 @@ static void slave_set_ns_maddrs(struct bonding *bond, struct slave *slave, bool
->  		if (ipv6_addr_any(&targets[i]))
->  			break;
->  
-> -		if (!ndisc_mc_map(&targets[i], slot_maddr, slave->dev, 0)) {
-> +		addrconf_addr_solict_mult(&targets[i], &mcaddr);
-> +		if (!ndisc_mc_map(&mcaddr, slot_maddr, slave->dev, 0)) {
->  			if (add)
->  				dev_mc_add(slave->dev, slot_maddr);
->  			else
-> -- 
-> 2.39.5 (Apple Git-154)
-> 
+> However, while logging of security events likely needs to be
+> asynchronous for performance reasons, enforcement of security policy
+> likely needs to be synchronous to have any reasonable level of
+> assurance.  You are welcome to propose LSMs which provide
+> observability functionality that is either sync, async, or some
+> combination of both (? it would need to make sense to do both ?), but
+> I'm not currently interested in accepting LSMs that provide
+> asynchronous enforcement as I don't view that as a "reasonable"
+> enforcement mechanism.
+
+This is an artificial distinction that will prove limiting to the
+security that Linux will be able to deliver in the future.
+	
+Based on your response, is it your stated position as Linux security
+maintainer, that you consider modern Endpoint Detection and Response
+Systems (EDRS) lacking with respect to their ability to implement a
+"reasonable" enforcement and assurance mechanism?
+
+If this is the case, your philosophy leaves Linux in a position that
+is inconsistent with how the industry is choosing to implement
+security.
+
+Let me cite an example from one of our project advisors.
+
+This individual is a senior principal at a reasonably large technology
+products company that depends on Linux almost exclusively to support
+its operations.  At any given instant he participates in supervising a
+fleet of around 6,000 virtual machines running about 50,000-60,000
+containerized workloads.
+
+All of the Linux deployments are Ansible orchestrated.  The security
+deployment consists of disabling SeLinux and installing an EDRS
+solution.  Doing the latter checks all the boxes they need for their
+corporate security compliance policies.
+
+He, and others, have watched this discussion closely over the last two
+years that we have tried to get TSEM reviewed and just recently phoned
+me with the following comment:
+
+"I think the problem is that these guys don't understand how security
+is being done and the reasons why".
+
+There is probably not a modern EDRS solution that does not involve
+going to the cloud for its decision making enforcement, in most cases
+based on Indicators Of Compromise (IOC) trained machine learning
+models.  Asynchronous detection, enforcement and remediation is now
+standard practice.  In the security industry, a 1 minute response to a
+security event is considered the 'gold' standard.
+
+For the sake of discussion, lets take a Quixote userspace Trusted
+Modeling Agent (TMA) running TSEM based deterministic modeling of a
+containerized workload.  As we've discussed previously, demonstrated
+average response times are on the order of 170 micro-seconds.
+
+For an event that needs asynchronous enforcement, ie. running in
+atomic context, that represents a 3.5 order of magnitude advantage in
+response over the industry standard, without the attendant challenges
+of going off machine or installing kernel based infrastructure.
+
+What would be the rationale or advantage of denying those that desire
+this type of security option, a 3,500 fold increase in security
+response times?
+
+Let's take another need for running in userspace, trusted execution
+environments.  Support is available in our userspace package for
+running a TMA model in either an SGX enclave or in an independent
+hypervisor protected execution context, both of which significantly
+harden the enforcement implementation against attack by adversaries.
+
+As Linux security maintainer, we assume that you have read Executive
+Order 14144 signed on January 16th 2025.  That document specifically
+calls out the requirement for the increased use of trusted execution
+environments in combination with advancements in endpoint detection.
+
+It shouldn't be a leap in imagination as to the regulatory compliance
+advantages associated with hardware attestation that the security
+implementation is operational and in a known good enforcement state.
+
+Finally, at this point in time, it would seem unwise in the technology
+industry, to discount the importance of 'AI', or more correctly
+machine learning.  As we've noted before in our discussions, it is
+unlikely that we are going to see synchronous LSM enforcement using a
+machine learning model trained on potentially trillions of data
+observations and indicators.
+
+The LSM is designed to provide security services to the users of
+Linux, not to be a kingdom.
+
+Linux is/was about 'choice' as to how users want to use their
+hardware.
+
+Artifically limiting the types of security that can be implemented by
+the LSM works to the detriment of the security innovation that Linux
+can deliver and the Linux user community writ large.
+
+> paul-moore.com
+
+Best wishes for a productive remainder of the week.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
