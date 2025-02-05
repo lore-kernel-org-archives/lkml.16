@@ -1,126 +1,290 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A5718CC1C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C46154C1D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771353; cv=none; b=bQjU7KAl1CSmL9ufRxkFnTcfMNZCGXtFI0DSaJ4affc2/Urfqk2r5tJuNk8gh3qReEHjiqNjny5NIr3bjcrQYUgXgB6EthFv30EAlC33u+UJWTkyya0ZwbDTitaCVZ0j/joGtsbT+bbO4romiqy2trg15wRBvlejw1cJ5y292ZY=
+	t=1738771398; cv=none; b=GQyqtiJj5hvxXpDphgGS1QPtzPRVp+ipBZND2pnPJyFSoC7SOw5lXU5yw3pSvT2gEMJVHNZIWia9dPsfh4uOtb+3tets+sm4rixsK496p7tjb/Ib9W+aOPiJf578D01j7VX51HiEg3VSntyEkQqUtr0uvg/rLuS6sIsZUu7E3xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771353; c=relaxed/simple;
-	bh=yu5I0Tytb8ykUcd1Cm9mqQfxQOKtln6I/FcAG0UK1zA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LC5m9bVxzFe5qmlIn6+z0JMnJ6t3jovbJjeFQZWOBqEgkMcShuR2HeJECE16c//XOkyDYaoeMSD9pSfK9IFWcXYy1UUpl8GK7UHwSr1628LCWgJPNe/ZFaE7WjrzW3w/WvTHfOsnwN+mq8KooIR+XPX6dgL6ePKrNVAzhvoS0Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrPi7x9B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738771398; c=relaxed/simple;
+	bh=/I9bodOOum1qi+yw5e6vSTcQvXL2vgNuqh105IqCHF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PoMs0P3I36IY/ycTU3uSZAANpVWjltUzLNbuKVJYaH9yM0Uhhr0xfQoHL5SQINSY4eBITgdoRq1d+PTaJ98oFUy11LrZeuyaCD3s+bVLx0AEtjcYCy8AIj0NNmGV7FtEut8pt7i4QFI3R+7M19mXTYIDO8gm5F4OtSh6NnLfOug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IBf4Ow/l; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrPi7x9B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64EAC4CED1;
-	Wed,  5 Feb 2025 16:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738771353;
-	bh=yu5I0Tytb8ykUcd1Cm9mqQfxQOKtln6I/FcAG0UK1zA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mrPi7x9BEI5+gy1codsY62i9uSO/W6xP5dCiiUTT59n76gwUuGFCe/AFoUviYzS0x
-	 yXP+4qGpo9W+S/rmWEfuL9DqGwGTGLAf/e0Oj3aVzDc9nVRWb8wEelIB1SxNJCLLle
-	 dtYqLam/KO0I7skFv0GeJNCNS8LCrk/eVdRV3LcQnjlkfOExBYMfkSSs76Ic1tg9wz
-	 8O1xDv038Xc3H7Fg1s6wSgkmKEYizIC6WWrKDwFNMnFdYQVuek9ON37c0jl15HpAm/
-	 1NDL4IgGxidFF6V1dRXw94F6aryrMV3zxvQNW8Gr6rLemGU/TETci07YB5dHApWqvO
-	 034FcNeukOtrg==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	anna-maria@linutronix.de,
-	Matt Fleming <mfleming@cloudflare.com>
-Subject: [PATCH] timer/migration: Fix off-by-one root mis-connection
-Date: Wed,  5 Feb 2025 17:02:20 +0100
-Message-ID: <20250205160220.39467-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IBf4Ow/l"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab76aa0e6fcso33830666b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:03:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738771394; x=1739376194; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=b2Dnyw/RxLmsfabwG1syRfowM1VSlsvP6Um0OBGBw+A=;
+        b=IBf4Ow/lkljdyhLtk8ix1sZRwFMxOuqGo2ytbff7R+7WfpY5pz4hPGqcAWq5kXTzEO
+         DSefpq0prRTaGNWtZQHgl/EwqbVv0kzS+9i7mW5JIcJ3rlL0KYn+deUNiug9OrMv8Jsl
+         kk45290zKdV2SyDsKOK/32YJB1hItbEgrP4JcnqtaWpN8rUF4MkM0N9jlgrnDivUCKMw
+         WQs0RUnc24HkMCYYLmGExvmGePsIfU7VdJjRnXUuGDbrEjY/EkKrXm2+WYjAhiOgqgJb
+         3tcop2csJAni94vye/dPv7Rz/nV7Umt3sqHgwdw09P1lzeDMAcQLz9nKIwHZUO2oAr40
+         RLWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738771394; x=1739376194;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b2Dnyw/RxLmsfabwG1syRfowM1VSlsvP6Um0OBGBw+A=;
+        b=OXTIQw1oSZ+5ExJF+c++sqe3DO8I9wLFZwzLxWZyY6LXgudAWc3Y+GnwPATXY6xh3U
+         FVsDnb7Jm5vpsw+rMA37v2+VchqeJmNCd+lNbb7RkpUE+3o12eyxcl5Be/Eaw5UrcN8S
+         7XlS9cLaVJBl8PSwWkLxMY+lT/qFRD4Tm/WiKWUrThm/AuuJvxXkFNs/5ahUA9brbGA7
+         WFy2K1gSH7N15PBnrQI2OZchFTKBisZ+QJUeYuNJjElpaDxCp8+d8/chciz9GIGYGOaL
+         9+OeH9toHmjIHasmEMvqdmBnN0rw8XGhdLcFv0+IrhZp4W//t4LZD44ebxKqkNgQ32HP
+         MZcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUu3Gj41mkh3ZcEQxc0Ilwn94vUnPCBrwixIrtWii9Cfu36V4p7dRophNRQ4Ovhq0psP+vulmHRFUFDNtQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/RK9H1ZxUoSFrlH/JOI2YFJ1h6UIofn1HDXPLFR5ZETlDs7U3
+	DvDAZSM5rXqqQ8aZAVlSzIId4d5blp2WHShTYs+zAHVYQaxYPchCkC3ASISKZjs=
+X-Gm-Gg: ASbGncuYVsa878aU+4znSywubi0uY/1nVw/W7z5kSv8Cv1pQKZXZDTBwO32MtSR6FvX
+	6Cmjva1Iijo2A2WreCD6cd1HY4Ff63LCvshaGX+2L1Lf3Yk8dov3Cc3ATYf//g5TQIJaiUqhg/i
+	9iaxbPCZZGopUkG4hQ8uX0WdZP632uOeTDEiQUBhlvgXlUmXIZb8WZboukY6P/P0635WyU9UEuy
+	YMcjJn/Bw6G3QRSK0qt//UMsjdJQMUdXV7PYs8oXPBI5/uW177r3ZIO/zq/DHagO/MKE8JdyPsx
+	XfNaJy8t/sLeAIDW4Q==
+X-Google-Smtp-Source: AGHT+IEhzhth1iRS/5lDkEkc+uffYLvkJ/xTNnYqRTVOlBAddvX5E4aEuVGV7RFDknR6c/05kShn3Q==
+X-Received: by 2002:a05:6402:3216:b0:5db:e7eb:1b4c with SMTP id 4fb4d7f45d1cf-5dcdb71277bmr10890874a12.10.1738771392978;
+        Wed, 05 Feb 2025 08:03:12 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc72405806sm11560551a12.36.2025.02.05.08.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 08:03:12 -0800 (PST)
+Date: Wed, 5 Feb 2025 17:03:09 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz,
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Implement livepatch hybrid mode
+Message-ID: <Z6OLvQ6KlVeuOkoO@pathway.suse.cz>
+References: <20250127063526.76687-1-laoar.shao@gmail.com>
+ <20250127063526.76687-3-laoar.shao@gmail.com>
+ <Z5eYzcF5JLR4o5Yl@pathway.suse.cz>
+ <CALOAHbANtpY+ee9Wd+HV6-uPOw+Kq1JcU5UdOXjz8m_UJ_-XRA@mail.gmail.com>
+ <Z6IUcbeCSAzlZEGP@pathway.suse.cz>
+ <CALOAHbBWKL5MJz3DB+y02oqOrxy5xa3WZwTg0JPpqeQsMSVXmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALOAHbBWKL5MJz3DB+y02oqOrxy5xa3WZwTg0JPpqeQsMSVXmA@mail.gmail.com>
 
-Before attaching a new root to the old root, the children counter of the
-new root is checked to verify that only the upcoming CPU's top group
-have been connected to it. However since the recently added commit:
+On Wed 2025-02-05 10:54:47, Yafang Shao wrote:
+> On Tue, Feb 4, 2025 at 9:21 PM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > On Mon 2025-01-27 23:34:50, Yafang Shao wrote:
+> > > On Mon, Jan 27, 2025 at 10:31 PM Petr Mladek <pmladek@suse.com> wrote:
+> > > >
+> > > > On Mon 2025-01-27 14:35:26, Yafang Shao wrote:
+> > > > > The atomic replace livepatch mechanism was introduced to handle scenarios
+> > > > > where we want to unload a specific livepatch without unloading others.
+> > > > > However, its current implementation has significant shortcomings, making
+> > > > > it less than ideal in practice. Below are the key downsides:
+> > > >
+> > > > [...]
+> > > >
+> > > > > In the hybrid mode:
+> > > > >
+> > > > > - Specific livepatches can be marked as "non-replaceable" to ensure they
+> > > > >   remain active and unaffected during replacements.
+> > > > >
+> > > > > - Other livepatches can be marked as "replaceable," allowing targeted
+> > > > >   replacements of only those patches.
+> > > > >
+> > > > > This selective approach would reduce unnecessary transitions, lower the
+> > > > > risk of temporary patch loss, and mitigate performance issues during
+> > > > > livepatch replacement.
+> > > > >
+> > > > > --- a/kernel/livepatch/core.c
+> > > > > +++ b/kernel/livepatch/core.c
+> > > > > @@ -658,6 +658,8 @@ static int klp_add_nops(struct klp_patch *patch)
+> > > > >               klp_for_each_object(old_patch, old_obj) {
+> > > > >                       int err;
+> > > > >
+> > > > > +                     if (!old_patch->replaceable)
+> > > > > +                             continue;
+> > > >
+> > > > This is one example where things might get very complicated.
+> > >
+> > > Why does this example even exist in the first place?
+> > > If hybrid mode is enabled, this scenario could have been avoided entirely.
+> >
+> 
+> You have many questions, but it seems you haven’t taken the time to read even
+> a single line of this patchset. I’ll try to address them to save you some time.
 
-	b729cc1ec21a ("timers/migration: Fix another race between hotplug and idle entry/exit")
+What?
 
-this check is not valid anymore because the old root is pre-accounted
-as a child to the new root. Therefore after connecting the upcoming
-CPU's top group to the new root, the children count to be expected must
-be 2 and not 1 anymore.
+> > How exactly this scenario could be avoided, please?
+> >
+> > In the real life, livepatches are used to fix many bugs.
+> > And every bug is fixed by livepatching several functions.
+> >
+> > Fix1 livepatches: funcA
+> > Fix2 livepatches: funcA, funcB
+> > Fix3 livepatches: funcB
+> >
+> > How would you handle this with the hybrid model?
+> 
+> In your scenario, each Fix will replace the applied livepatches, so
+> they must be set to replaceable.
+> To clarify the hybrid model, I'll illustrate it with the following Fixes:
+> 
+> Fix1 livepatches: funcA
+> Fix2  livepatches: funcC
+> Fix3 livepatches: funcA, funcB
 
-This omission results in the old root to not be connected to the new
-root. Then eventually the system may run with more than one top level,
-which defeats the purpose of a single idle migrator.
+How does look the livepatched FuncA here?
+Does it contain changes only for Fix3?
+Or is it cummulative livepatches_funA includes both Fix1 + Fix3?
 
-Also the old root is pre-accounted but not connected upon the new root
-creation. But it can be connected to the new root later on. Therefore
-the old root may be accounted twice to the new root. The propagation of
-such overcommit can end up creating a double final top-level root with a
-groupmask incorrectly initialized. Although harmless given that the final
-top level roots will never have a parent to walk up to, this oddity
-opportunistically reported the core issue:
+> Fix4  livepatches: funcD
+> Fix5 livepatches: funcB
+> 
+> Each FixN represents a single /sys/kernel/livepatch/FixN.
+> By default, all Fixes are set to non-replaceable.
+> 
+> Step-by-step process:
+> 1. Loading Fix1
+>    Loaded Fixes: Fix1
+> 2. Loading Fix2
+>    Loaded Fixes: Fix1 Fix2
+> 3. Loading Fix3
+>     Before loading, set Fix1 to replaceable and replace it with Fix3,
+> which is a cumulative patch of Fix1 and Fix3.
 
-	 WARNING: CPU: 8 PID: 0 at kernel/time/timer_migration.c:543 tmigr_requires_handle_remoet
-	 CPU: 8 UID: 0 PID: 0 Comm: swapper/8
-	 RIP: 0010:tmigr_requires_handle_remote
-	 Call Trace:
-	  <IRQ>
-	  ? tmigr_requires_handle_remote
-	  ? hrtimer_run_queues
-	  update_process_times
-	  tick_periodic
-	  tick_handle_periodic
-	  __sysvec_apic_timer_interrupt
-	  sysvec_apic_timer_interrupt
-	  </IRQ>
+Who will modify the "replaceable" flag of "Fix1"? Userspace or kernel?
 
-Fix the problem with taking into account the old root in the children
-count of the new root so the connection is not omitted.
+How the livepatch modules would get installed/removed to/from the
+filesystem?
 
-Also warn when more than one top level group coexist to better detect
-similar issues in the future.
+We (SUSE) distribute the livepatches using RPM packages. Every new
+version of the livepatch module is packaged in a RPM package with
+the same name and higher version. A post install script loads
+the module into the kernel and removes disabled livepatch modules.
 
-Reported-by: Matt Fleming <mfleming@cloudflare.com>
-Fixes: b729cc1ec21a ("timers/migration: Fix another race between hotplug and idle entry/exit")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/time/timer_migration.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+The package update causes that the new version of the livepatch module
+is enabled and the old version is removed. And also the old version
+of the module and is removed from the filesystem together with the old
+version of the RPM package.
 
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 9cb9b6584ea1..2f6330831f08 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -1675,6 +1675,9 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
- 
- 	} while (i < tmigr_hierarchy_levels);
- 
-+	/* Assert single root */
-+	WARN_ON_ONCE(!err && !group->parent && !list_is_singular(&tmigr_level_list[top]));
-+
- 	while (i > 0) {
- 		group = stack[--i];
- 
-@@ -1716,7 +1719,12 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
- 		WARN_ON_ONCE(top == 0);
- 
- 		lvllist = &tmigr_level_list[top];
--		if (group->num_children == 1 && list_is_singular(lvllist)) {
-+
-+		/*
-+		 * Newly created root level should have accounted the upcoming
-+		 * CPU's child group and pre-accounted the old root.
-+		 */
-+		if (group->num_children == 2 && list_is_singular(lvllist)) {
- 			/*
- 			 * The target CPU must never do the prepare work, except
- 			 * on early boot when the boot CPU is the target. Otherwise
--- 
-2.46.0
+This matches the behavior of the atomic replace. There is always only
+one version of the livepatch RPM package installed and only one
+livepatch module loaded/enabled. And when it works correcly then
+the version of the installed package matches the version of the loaded
+livepatch module.
 
+This might be hard to achieve with the hybrid model. Every livepatch
+module would need to be packaged in a separate (different name)
+RPM package. And some userspace service would need to clean up both
+kernel modules and livepatch RPM packages (remove the unused ones).
+
+This might add a lot of extra complexity.
+
+>     Loaded Fixes:  Fix2 Fix3
+> 4. Loading Fix4
+>     Loaded Fixes:  Fix2 Fix3 Fix4
+> 5. Loading Fix5
+>     Similar to Step 3, set Fix3 to replaceable and replace it with Fix5.
+>     Loaded Fixes:  Fix2 Fix4 Fix5
+
+Let's imagine another situation:
+
+Fix1 livepatches: funcA, funcB
+Fix2  livepatches: funcB, funcC
+Fix3 livepatches: funcA, funcC
+
+Variant A:
+
+ 1. Loading Fix1
+    Loaded Fixes: Fix1
+    In use:: funcA_fix1, funcB_fix1
+
+ 2. Loading Fix2
+    Loaded Fixes: Fix1 Fix2
+    In use: funcA_fix1, funcB_fix2, funcC_fix2
+
+ 3. Loading Fix3
+    Loaded Fixes: Fix2 Fix3
+    In use: funcA_fix3, funcB_fix2, funcC_fix3
+
+    This will be correct only when:
+
+	+ funcA_fix3 contains both changes from Fix1 and Fix3
+	+ funcC_fix3 contains both changes from Fix2 and Fix3
+
+
+Variant B:
+
+ 1. Loading Fix1
+    Loaded Fixes: Fix1
+    In use:: funcA_fix1, funcB_fix1
+
+ 2. Loading Fix2 (fails from some reason or is skipped)
+    Loaded Fixes: Fix1
+    In use:: funcA_fix1, funcB_fix1
+
+ 3. Loading Fix3
+    Loaded Fixes: Fix1 Fix2
+    In use: funcA_fix3, funcB_fix1, funcC_fix3
+
+    This will be correct only when:
+
+	+ funcA_fix3 contains both changes from Fix1 and Fix3
+	    and stays funcB_fix1 is compatible with funcA_fix3
+	+ funcC_fix3 contains changes only from Fix3,
+	    it must be compatible with the original funcB because
+
+I want to say that this would work only when all livepatches
+are loaded in the right order. Otherwise, it might break
+the system.
+
+How do you want to ensure this?
+
+Is it really that easy?
+
+> 3. Loading Fix3
+>     Before loading, set Fix1 to replaceable and replace it with Fix3,
+
+> This hybrid model ensures that irrelevant Fixes remain unaffected
+> during replacements.
+
+It makes some some now. But IMHO, it is not as easy as it looks.
+The complexity is in details.
+
+> >
+> > Which fix will be handled by livepatches installed in parallel?
+> > Which fix will be handled by atomic replace?
+> > How would you keep it consistent?
+> >
+> > How would it work when there are hundreds of fixes and thousands
+> > of livepatched functions?
+> 
+> The key point is that if a new Fix modifies a function already changed
+> by previous Fixes, all the affected old Fixes should be set to
+> replaceable, merged into the new Fix, and then the old Fixes should be
+> replaced with the new one.
+
+As I tried to explain above. This might be hard to use in practice.
+
+We would either need to enforce loading all livepatches in the right
+order. It might be hard to make it user friendly.
+
+Or it would need a lot of extra code which would ensure that only
+compatible livepatches can be loaded.
+
+Best Regards,
+Petr
