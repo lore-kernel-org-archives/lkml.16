@@ -1,483 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A2A22836C;
-	Wed,  5 Feb 2025 00:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9D3227BA9
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 00:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738716929; cv=none; b=Fj50rhc0csZvhTRh2AzYRxBB5/wZcsCf+vpeAYm0ZGc+KQZUhqor04sYB+UgzJ4zzoZnZ12azl9j6xK99IVSPutSmLaP9881CxabT6ByXpEOUQ9hOhYJSvlveZN5w0105paG1iIstLV2Oyt9J+BNC1H99aYzHJKVjpi20mLV9Lc=
+	t=1738716984; cv=none; b=pCQo7CwkDgs/wUfJx5tjKnCZ4PlbwTj4Pkc2+hc3elnhcfOhCSvGxQpn+wabXsFP3QdebTZardt+YL6TdaS5867zNFxc3n794vt7PeeZh4ZbCmnFUhVZ/JDbyunHKKdDTmyWuJtY92861gTa2vSJRqV7O1LBlFMurzAGMVsPuP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738716929; c=relaxed/simple;
-	bh=lBC1BrpFiDrGI2511zP3uNz5UFrs07Yw3d94W4PSi9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ATWe06G9ftbvJta0EhuZhYMTpi3dCvLDr4gimybUAUoXSJHeU5Tf8oID4T8IrNEeXMUuyLjdP3VSs2ZT1v4qUIIIfBukuckwkiO+b13GTaXgfgoL8aoE7uFD3mya0PxQKQE8ERDpsxPy6n8gVOE2uwZNIHSQDxSxL8tVvYX+Nc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8u1fzyg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8u1fzyg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BCDCC4CEE5;
-	Wed,  5 Feb 2025 00:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738716929;
-	bh=lBC1BrpFiDrGI2511zP3uNz5UFrs07Yw3d94W4PSi9E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c8u1fzygYzUsyFYTUYNcLWuFQ0sq5gq4y89LR9toNTRvVwIRPDDSWeO3KjGUlHaHl
-	 qv10z0tDLOSmjfwHVcSzls+EtVH++8pbFLo4uJgfjIIwcJLNMuEWluSIrBTiBPK8cx
-	 bLF6Di28GM69DEWSZAUDUd9n0Zat+95P3cmTx3fYQBGy6Wi8osxCqcmWdbv82h5zY4
-	 SO6g4VSGwJJAaRyGsOBLJN5nhk6mbeK3t6YEvTgH2cwtmVNSCVw4LfpBwICpV620yH
-	 BeHC3fzsy+LwG2aNPWGXgh8YbzJ56haVDwBep4txr5LcavHNsdO6+osk+u7AoLP8YA
-	 GeUydEYuHHPbw==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 5/5] lib/crc32: remove "_le" from crc32c base and arch functions
-Date: Tue,  4 Feb 2025 16:54:03 -0800
-Message-ID: <20250205005403.136082-6-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250205005403.136082-1-ebiggers@kernel.org>
-References: <20250205005403.136082-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1738716984; c=relaxed/simple;
+	bh=EBrWifbanb0zc7pvQ3Kv7DlRRrhDIFrvcaH/WW27vrw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OMc24gbfkx6rLr/XlIlngktJCoXJ5Cn1+84XMmAKBrHc6i1awzOUria0cBjBY/+2/mM21rai0f2y/4aGeTGGBnNkAqlfT8W5D03nTU+q2KT13J+6Ixl4Uc50detGszEOTncmKRFKNQBazzcYoWO7F/q6EbFS3/DPz2xUqCppe3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3cfb3c4fc77so3014825ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 16:56:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738716981; x=1739321781;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WT/8rt6aNwDyzyNN8ZEeHlZbNcUqHd4pkLgsMoyF++E=;
+        b=vtuhcKMXim7UF2GfbE67XWDVm8boJz6THqavNXnRKbQxcgxGDrPyJjDUboQiozhkX0
+         FMf0HDeERdeTQJ8z9843rWXIKXibVBLaz8akY+T2ITMTY8KTPyfKoun4RWteMB4yCPw/
+         TAuXj9CmQRbRGqPUiGYUNupl2lqIfQHAPepwRypif12pGMzBe+N2mE178PrpktvdMIBj
+         n1WiuoNyRci34DBR6Mm6kzwpJSIFSu95/yZYRIs5EyPMGAvXIG6EpkWnYTNvboWVFDsq
+         RuIoU+hWlfrjKJyaG4oF4PR3Usl/IaYH2Nukaz4IdtHgfeU2QVm7b75T1yhq8BzjZ7L4
+         1ejA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWjLuPyDInbHMp0uZYe3M2EXqOuM+9Rcv9LstE/fgBQAAlcckUUwPO+yJCY7zIx+LyDJa9BSipALQZOc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMA7FfncvicvkTLbUaRdEJdjaLe7cIYJ40kLZ9sFxjd5jidCCc
+	J+jBI8l9XnBaCa8/p74rr1AWBNFyuvdYuW2F0Xrf+xSvrvaxA2jHLF6vSQPYWDml0nG3JFKP8AY
+	Mpbzt9ZWNAqnQLYIL7pWTTuk25IqWSpif6GW1OVGJ0I4Z6y0VzUqsToM=
+X-Google-Smtp-Source: AGHT+IFYipUdm09vPq/WGzwoQ6GyJRX5tdfolbVS2nwUQW3DxbvgvX2zapDRKz646jquYjNjpbZext2NbbA9TuSuaR8J2pJ1LXyZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1ca3:b0:3cf:ba90:6ad9 with SMTP id
+ e9e14a558f8ab-3d04f97651cmr8076805ab.9.1738716981658; Tue, 04 Feb 2025
+ 16:56:21 -0800 (PST)
+Date: Tue, 04 Feb 2025 16:56:21 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a2b735.050a0220.50516.0004.GAE@google.com>
+Subject: [syzbot] [bcachefs?] BUG: corrupted list in new_inode
+From: syzbot <syzbot+2dabb3dce04e28763712@syzkaller.appspotmail.com>
+To: dakr@kernel.org, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rafael@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Eric Biggers <ebiggers@google.com>
+Hello,
 
-Following the standardization on crc32c() as the lib entry point for the
-Castagnoli CRC32 instead of the previous mix of crc32c(), crc32c_le(),
-and __crc32c_le(), make the same change to the underlying base and arch
-functions that implement it.
+syzbot found the following issue on:
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f023df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=147b7d49d83b8036
+dashboard link: https://syzkaller.appspot.com/bug?extid=2dabb3dce04e28763712
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f03724580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d96aac16c63b/disk-0de63bb7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/cec7aa6a6ed3/vmlinux-0de63bb7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8601bc76fa6b/bzImage-0de63bb7.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/492e4b80ab1e/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2dabb3dce04e28763712@syzkaller.appspotmail.com
+
+ slab debugfs_inode_cache start ffff88805b66d978 pointer offset 448 size 1176
+list_add corruption. next->prev should be prev (ffff8881422a49c0), but was ffffffff9a43e100. (next=ffff88805b66db38).
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:31!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 UID: 0 PID: 5946 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:__list_add_valid_or_report+0xf3/0x130 lib/list_debug.c:29
+Code: 13 1b fd 42 80 7c 2d 00 00 74 08 48 89 df e8 14 52 3c fd 49 8b 56 08 48 c7 c7 c0 b7 5f 8c 4c 89 e6 4c 89 f1 e8 1e e3 3f fc 90 <0f> 0b 4c 89 e7 e8 f3 12 1b fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 e4
+RSP: 0018:ffffc90003c46d98 EFLAGS: 00010246
+RAX: 0000000000000075 RBX: ffff88805b66db40 RCX: 2a333a4c251a8c00
+RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
+RBP: 1ffff1100b6cdb68 R08: ffffffff819f140c R09: 1ffff110170e519a
+R10: dffffc0000000000 R11: ffffed10170e519b R12: ffff8881422a49c0
+R13: dffffc0000000000 R14: ffff88805b66db38 R15: ffff88805b66e050
+FS:  000055555cae1500(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c008a79000 CR3: 0000000027990000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __list_add_valid include/linux/list.h:88 [inline]
+ __list_add include/linux/list.h:150 [inline]
+ list_add include/linux/list.h:169 [inline]
+ inode_sb_list_add fs/inode.c:617 [inline]
+ new_inode+0xc7/0x1d0 fs/inode.c:1195
+ debugfs_get_inode fs/debugfs/inode.c:72 [inline]
+ debugfs_create_dir+0xf6/0x430 fs/debugfs/inode.c:597
+ wiphy_register+0x1b8f/0x27b0 net/wireless/core.c:1015
+ ieee80211_register_hw+0x354e/0x4240 net/mac80211/main.c:1587
+ mac80211_hwsim_new_radio+0x2a9f/0x4aa0 drivers/net/wireless/virtual/mac80211_hwsim.c:5558
+ hwsim_new_radio_nl+0xece/0x2290 drivers/net/wireless/virtual/mac80211_hwsim.c:6242
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:713 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:728
+ __sys_sendto+0x363/0x4c0 net/socket.c:2182
+ __do_sys_sendto net/socket.c:2189 [inline]
+ __se_sys_sendto net/socket.c:2185 [inline]
+ __x64_sys_sendto+0xde/0x100 net/socket.c:2185
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f33d418ec3c
+Code: 2a 5f 02 00 44 8b 4c 24 2c 4c 8b 44 24 20 89 c5 44 8b 54 24 28 48 8b 54 24 18 b8 2c 00 00 00 48 8b 74 24 10 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 34 89 ef 48 89 44 24 08 e8 70 5f 02 00 48 8b
+RSP: 002b:00007ffc9ca207b0 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00007f33d4ed4620 RCX: 00007f33d418ec3c
+RDX: 0000000000000024 RSI: 00007f33d4ed4670 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 00007ffc9ca20804 R09: 000000000000000c
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000003
+R13: 0000000000000000 R14: 00007f33d4ed4670 R15: 0000000000000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__list_add_valid_or_report+0xf3/0x130 lib/list_debug.c:29
+Code: 13 1b fd 42 80 7c 2d 00 00 74 08 48 89 df e8 14 52 3c fd 49 8b 56 08 48 c7 c7 c0 b7 5f 8c 4c 89 e6 4c 89 f1 e8 1e e3 3f fc 90 <0f> 0b 4c 89 e7 e8 f3 12 1b fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 e4
+RSP: 0018:ffffc90003c46d98 EFLAGS: 00010246
+RAX: 0000000000000075 RBX: ffff88805b66db40 RCX: 2a333a4c251a8c00
+RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
+RBP: 1ffff1100b6cdb68 R08: ffffffff819f140c R09: 1ffff110170e519a
+R10: dffffc0000000000 R11: ffffed10170e519b R12: ffff8881422a49c0
+R13: dffffc0000000000 R14: ffff88805b66db38 R15: ffff88805b66e050
+FS:  000055555cae1500(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c008a79000 CR3: 0000000027990000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- arch/arm/lib/crc32-glue.c            | 12 ++++++------
- arch/arm64/lib/crc32-glue.c          |  6 +++---
- arch/loongarch/lib/crc32-loongarch.c |  6 +++---
- arch/mips/lib/crc32-mips.c           |  6 +++---
- arch/powerpc/lib/crc32-glue.c        | 10 +++++-----
- arch/riscv/lib/crc32-riscv.c         |  6 +++---
- arch/s390/lib/crc32-glue.c           |  2 +-
- arch/sparc/lib/crc32_glue.c          | 10 +++++-----
- arch/x86/lib/crc32-glue.c            |  6 +++---
- crypto/crc32c_generic.c              |  4 ++--
- include/linux/crc32.h                |  8 ++++----
- lib/crc32.c                          |  4 ++--
- 12 files changed, 40 insertions(+), 40 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm/lib/crc32-glue.c b/arch/arm/lib/crc32-glue.c
-index 2c30ba3d80e6a..4340351dbde8c 100644
---- a/arch/arm/lib/crc32-glue.c
-+++ b/arch/arm/lib/crc32-glue.c
-@@ -57,39 +57,39 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- 	}
- 	return crc32_le_scalar(crc, p, len);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--static u32 crc32c_le_scalar(u32 crc, const u8 *p, size_t len)
-+static u32 crc32c_scalar(u32 crc, const u8 *p, size_t len)
- {
- 	if (static_branch_likely(&have_crc32))
- 		return crc32c_armv8_le(crc, p, len);
--	return crc32c_le_base(crc, p, len);
-+	return crc32c_base(crc, p, len);
- }
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (len >= PMULL_MIN_LEN + 15 &&
- 	    static_branch_likely(&have_pmull) && crypto_simd_usable()) {
- 		size_t n = -(uintptr_t)p & 15;
- 
- 		/* align p to 16-byte boundary */
- 		if (n) {
--			crc = crc32c_le_scalar(crc, p, n);
-+			crc = crc32c_scalar(crc, p, n);
- 			p += n;
- 			len -= n;
- 		}
- 		n = round_down(len, 16);
- 		kernel_neon_begin();
- 		crc = crc32c_pmull_le(p, n, crc);
- 		kernel_neon_end();
- 		p += n;
- 		len -= n;
- 	}
--	return crc32c_le_scalar(crc, p, len);
-+	return crc32c_scalar(crc, p, len);
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_be_base(crc, p, len);
- }
-diff --git a/arch/arm64/lib/crc32-glue.c b/arch/arm64/lib/crc32-glue.c
-index 265fbf36914b6..ed3acd71178f8 100644
---- a/arch/arm64/lib/crc32-glue.c
-+++ b/arch/arm64/lib/crc32-glue.c
-@@ -41,14 +41,14 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- 
- 	return crc32_le_arm64(crc, p, len);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!alternative_has_cap_likely(ARM64_HAS_CRC32))
--		return crc32c_le_base(crc, p, len);
-+		return crc32c_base(crc, p, len);
- 
- 	if (len >= min_len && cpu_have_named_feature(PMULL) && crypto_simd_usable()) {
- 		kernel_neon_begin();
- 		crc = crc32c_le_arm64_4way(crc, p, len);
- 		kernel_neon_end();
-@@ -60,11 +60,11 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- 			return crc;
- 	}
- 
- 	return crc32c_le_arm64(crc, p, len);
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!alternative_has_cap_likely(ARM64_HAS_CRC32))
- 		return crc32_be_base(crc, p, len);
-diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/crc32-loongarch.c
-index 8af8113ecd9d3..c44ee4f325578 100644
---- a/arch/loongarch/lib/crc32-loongarch.c
-+++ b/arch/loongarch/lib/crc32-loongarch.c
-@@ -63,14 +63,14 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- 
- 	return crc;
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!static_branch_likely(&have_crc32))
--		return crc32c_le_base(crc, p, len);
-+		return crc32c_base(crc, p, len);
- 
- 	while (len >= sizeof(u64)) {
- 		u64 value = get_unaligned_le64(p);
- 
- 		CRC32C(crc, value, d);
-@@ -98,11 +98,11 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- 		CRC32C(crc, value, b);
- 	}
- 
- 	return crc;
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_be_base(crc, p, len);
- }
-diff --git a/arch/mips/lib/crc32-mips.c b/arch/mips/lib/crc32-mips.c
-index 083e5d693a169..9d79af2254a95 100644
---- a/arch/mips/lib/crc32-mips.c
-+++ b/arch/mips/lib/crc32-mips.c
-@@ -115,14 +115,14 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- 
- 	return crc;
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!static_branch_likely(&have_crc32))
--		return crc32c_le_base(crc, p, len);
-+		return crc32c_base(crc, p, len);
- 
- 	if (IS_ENABLED(CONFIG_64BIT)) {
- 		for (; len >= sizeof(u64); p += sizeof(u64), len -= sizeof(u64)) {
- 			u64 value = get_unaligned_le64(p);
- 
-@@ -156,11 +156,11 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- 
- 		CRC32C(crc, value, b);
- 	}
- 	return crc;
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_be_base(crc, p, len);
- }
-diff --git a/arch/powerpc/lib/crc32-glue.c b/arch/powerpc/lib/crc32-glue.c
-index 79cc954f499f1..dbd10f339183d 100644
---- a/arch/powerpc/lib/crc32-glue.c
-+++ b/arch/powerpc/lib/crc32-glue.c
-@@ -21,22 +21,22 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_le_base(crc, p, len);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	unsigned int prealign;
- 	unsigned int tail;
- 
- 	if (len < (VECTOR_BREAKPOINT + VMX_ALIGN) ||
- 	    !static_branch_likely(&have_vec_crypto) || !crypto_simd_usable())
--		return crc32c_le_base(crc, p, len);
-+		return crc32c_base(crc, p, len);
- 
- 	if ((unsigned long)p & VMX_ALIGN_MASK) {
- 		prealign = VMX_ALIGN - ((unsigned long)p & VMX_ALIGN_MASK);
--		crc = crc32c_le_base(crc, p, prealign);
-+		crc = crc32c_base(crc, p, prealign);
- 		len -= prealign;
- 		p += prealign;
- 	}
- 
- 	if (len & ~VMX_ALIGN_MASK) {
-@@ -50,16 +50,16 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- 	}
- 
- 	tail = len & VMX_ALIGN_MASK;
- 	if (tail) {
- 		p += len & ~VMX_ALIGN_MASK;
--		crc = crc32c_le_base(crc, p, tail);
-+		crc = crc32c_base(crc, p, tail);
- 	}
- 
- 	return crc;
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_be_base(crc, p, len);
- }
-diff --git a/arch/riscv/lib/crc32-riscv.c b/arch/riscv/lib/crc32-riscv.c
-index a50f8e010417d..b5cb752847c40 100644
---- a/arch/riscv/lib/crc32-riscv.c
-+++ b/arch/riscv/lib/crc32-riscv.c
-@@ -222,16 +222,16 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- 	return crc32_le_generic(crc, p, len, CRC32_POLY_LE, CRC32_POLY_QT_LE,
- 				crc32_le_base);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_le_generic(crc, p, len, CRC32C_POLY_LE,
--				CRC32C_POLY_QT_LE, crc32c_le_base);
-+				CRC32C_POLY_QT_LE, crc32c_base);
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- static inline u32 crc32_be_unaligned(u32 crc, unsigned char const *p,
- 				     size_t len)
- {
- 	size_t bits = len * 8;
-diff --git a/arch/s390/lib/crc32-glue.c b/arch/s390/lib/crc32-glue.c
-index 137080e61f901..124214a273401 100644
---- a/arch/s390/lib/crc32-glue.c
-+++ b/arch/s390/lib/crc32-glue.c
-@@ -60,11 +60,11 @@ static DEFINE_STATIC_KEY_FALSE(have_vxrs);
- 	}								    \
- 	EXPORT_SYMBOL(___fname);
- 
- DEFINE_CRC32_VX(crc32_le_arch, crc32_le_vgfm_16, crc32_le_base)
- DEFINE_CRC32_VX(crc32_be_arch, crc32_be_vgfm_16, crc32_be_base)
--DEFINE_CRC32_VX(crc32c_le_arch, crc32c_le_vgfm_16, crc32c_le_base)
-+DEFINE_CRC32_VX(crc32c_arch, crc32c_le_vgfm_16, crc32c_base)
- 
- static int __init crc32_s390_init(void)
- {
- 	if (cpu_have_feature(S390_CPU_FEATURE_VXRS))
- 		static_branch_enable(&have_vxrs);
-diff --git a/arch/sparc/lib/crc32_glue.c b/arch/sparc/lib/crc32_glue.c
-index 41076d2b1fd2d..a70752c729cf6 100644
---- a/arch/sparc/lib/crc32_glue.c
-+++ b/arch/sparc/lib/crc32_glue.c
-@@ -25,35 +25,35 @@ u32 crc32_le_arch(u32 crc, const u8 *data, size_t len)
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
- void crc32c_sparc64(u32 *crcp, const u64 *data, size_t len);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *data, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *data, size_t len)
- {
- 	size_t n = -(uintptr_t)data & 7;
- 
- 	if (!static_branch_likely(&have_crc32c_opcode))
--		return crc32c_le_base(crc, data, len);
-+		return crc32c_base(crc, data, len);
- 
- 	if (n) {
- 		/* Data isn't 8-byte aligned.  Align it. */
- 		n = min(n, len);
--		crc = crc32c_le_base(crc, data, n);
-+		crc = crc32c_base(crc, data, n);
- 		data += n;
- 		len -= n;
- 	}
- 	n = len & ~7U;
- 	if (n) {
- 		crc32c_sparc64(&crc, (const u64 *)data, n);
- 		data += n;
- 		len -= n;
- 	}
- 	if (len)
--		crc = crc32c_le_base(crc, data, len);
-+		crc = crc32c_base(crc, data, len);
- 	return crc;
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *data, size_t len)
- {
- 	return crc32_be_base(crc, data, len);
- }
-diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
-index 2dd18a886ded8..131c305e9ea0d 100644
---- a/arch/x86/lib/crc32-glue.c
-+++ b/arch/x86/lib/crc32-glue.c
-@@ -59,16 +59,16 @@ EXPORT_SYMBOL(crc32_le_arch);
-  */
- #define CRC32C_PCLMUL_BREAKEVEN	512
- 
- asmlinkage u32 crc32c_x86_3way(u32 crc, const u8 *buffer, size_t len);
- 
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
- {
- 	size_t num_longs;
- 
- 	if (!static_branch_likely(&have_crc32))
--		return crc32c_le_base(crc, p, len);
-+		return crc32c_base(crc, p, len);
- 
- 	if (IS_ENABLED(CONFIG_X86_64) && len >= CRC32C_PCLMUL_BREAKEVEN &&
- 	    static_branch_likely(&have_pclmulqdq) && crypto_simd_usable()) {
- 		kernel_fpu_begin();
- 		crc = crc32c_x86_3way(crc, p, len);
-@@ -83,11 +83,11 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- 	for (len %= sizeof(unsigned long); len; len--, p++)
- 		asm("crc32b %1, %0" : "+r" (crc) : "rm" (*p));
- 
- 	return crc;
- }
--EXPORT_SYMBOL(crc32c_le_arch);
-+EXPORT_SYMBOL(crc32c_arch);
- 
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_be_base(crc, p, len);
- }
-diff --git a/crypto/crc32c_generic.c b/crypto/crc32c_generic.c
-index 770533d19b813..b1a36d32dc50c 100644
---- a/crypto/crc32c_generic.c
-+++ b/crypto/crc32c_generic.c
-@@ -83,11 +83,11 @@ static int chksum_setkey(struct crypto_shash *tfm, const u8 *key,
- static int chksum_update(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length)
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	ctx->crc = crc32c_le_base(ctx->crc, data, length);
-+	ctx->crc = crc32c_base(ctx->crc, data, length);
- 	return 0;
- }
- 
- static int chksum_update_arch(struct shash_desc *desc, const u8 *data,
- 			      unsigned int length)
-@@ -106,11 +106,11 @@ static int chksum_final(struct shash_desc *desc, u8 *out)
- 	return 0;
- }
- 
- static int __chksum_finup(u32 *crcp, const u8 *data, unsigned int len, u8 *out)
- {
--	put_unaligned_le32(~crc32c_le_base(*crcp, data, len), out);
-+	put_unaligned_le32(~crc32c_base(*crcp, data, len), out);
- 	return 0;
- }
- 
- static int __chksum_finup_arch(u32 *crcp, const u8 *data, unsigned int len,
- 			       u8 *out)
-diff --git a/include/linux/crc32.h b/include/linux/crc32.h
-index fd6541920bfad..9adcbda153c7a 100644
---- a/include/linux/crc32.h
-+++ b/include/linux/crc32.h
-@@ -10,12 +10,12 @@
- 
- u32 crc32_le_arch(u32 crc, const u8 *p, size_t len);
- u32 crc32_le_base(u32 crc, const u8 *p, size_t len);
- u32 crc32_be_arch(u32 crc, const u8 *p, size_t len);
- u32 crc32_be_base(u32 crc, const u8 *p, size_t len);
--u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len);
--u32 crc32c_le_base(u32 crc, const u8 *p, size_t len);
-+u32 crc32c_arch(u32 crc, const u8 *p, size_t len);
-+u32 crc32c_base(u32 crc, const u8 *p, size_t len);
- 
- static inline u32 crc32_le(u32 crc, const void *p, size_t len)
- {
- 	if (IS_ENABLED(CONFIG_CRC32_ARCH))
- 		return crc32_le_arch(crc, p, len);
-@@ -30,12 +30,12 @@ static inline u32 crc32_be(u32 crc, const void *p, size_t len)
- }
- 
- static inline u32 crc32c(u32 crc, const void *p, size_t len)
- {
- 	if (IS_ENABLED(CONFIG_CRC32_ARCH))
--		return crc32c_le_arch(crc, p, len);
--	return crc32c_le_base(crc, p, len);
-+		return crc32c_arch(crc, p, len);
-+	return crc32c_base(crc, p, len);
- }
- 
- /*
-  * crc32_optimizations() returns flags that indicate which CRC32 library
-  * functions are using architecture-specific optimizations.  Unlike
-diff --git a/lib/crc32.c b/lib/crc32.c
-index 554ef6827b80d..fddd424ff2245 100644
---- a/lib/crc32.c
-+++ b/lib/crc32.c
-@@ -43,17 +43,17 @@ u32 crc32_le_base(u32 crc, const u8 *p, size_t len)
- 		crc = (crc >> 8) ^ crc32table_le[(crc & 255) ^ *p++];
- 	return crc;
- }
- EXPORT_SYMBOL(crc32_le_base);
- 
--u32 crc32c_le_base(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_base(u32 crc, const u8 *p, size_t len)
- {
- 	while (len--)
- 		crc = (crc >> 8) ^ crc32ctable_le[(crc & 255) ^ *p++];
- 	return crc;
- }
--EXPORT_SYMBOL(crc32c_le_base);
-+EXPORT_SYMBOL(crc32c_base);
- 
- /*
-  * This multiplies the polynomials x and y modulo the given modulus.
-  * This follows the "little-endian" CRC convention that the lsbit
-  * represents the highest power of x, and the msbit represents x^0.
--- 
-2.48.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
