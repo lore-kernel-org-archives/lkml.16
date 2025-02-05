@@ -1,120 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D105222ACF7;
-	Wed,  5 Feb 2025 10:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A9522CBDF;
+	Wed,  5 Feb 2025 10:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749961; cv=none; b=WF4qgZicYos7iyfsmAVURsEwIcpMWHZn5oiIMeSgSGZU6pHTYjNtz9urikebsy3+Uv9ZesCBcTz9wQldZflIC21FnIYJychPrsbGxxIvvlXFIWbNXD+kn4DAioIV36npXHLXKJ7UQL5jnYjq6m/igvAN5RAQuuDui9yGg9cg1rs=
+	t=1738749963; cv=none; b=tGD510dXMSXsrSNX23T8N27hM2XoY/IGf99MBY267rmSt5eEYIoysRDKOnXIyaKO58FlaY8B0xA+W71f+8PIiVdiS0UnlOTBdISdFLbi7xdsNl2rmWtWDnQXARRUyycrjTjJT1j5pkY38WN6/udE7JilfaVj4m0H44SiIXbhOhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749961; c=relaxed/simple;
-	bh=0OdUdx+lahN2+LUJ2jOFDFj83SCLzyn+8zKWv0oeisM=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cbNnnnQRyIpLjD2MsZ58UUI46PVz2gTsg3g2Oe3uFZn0slN8lUelWg1h49s667IGoOht1tYvTjsYokXN1+SiG9lsb6yfmteeVLWsCL5XKls3nM39SMMP60j+Ootxwuvj+F0ZGkeu4z4OWHHpjBSpKiBgxeWn2N1xCB4PQaPEKSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PdzDGmu2; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738749963; c=relaxed/simple;
+	bh=hkYngXU+6IeLPNhNvs13cKpx26XKj3YSH/OAeRpga3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yx8jX9EVcoWxSaHyBI/G5LP/MZjnTuhOj8snDvajDD0JbsMxn1JUM9PS/OYuASHrkCZGVN/afrJaLcsCNzC8uoASfHyPn+3xlqm/SO/Y6b83xr5NkTAQUxmwKXV/nv+nvb2t71pdeNK0JjAXxPlo/i0+8JbORUZTi6n8AC6WAGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qunve0Yx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PdzDGmu2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738749959; x=1770285959;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=0OdUdx+lahN2+LUJ2jOFDFj83SCLzyn+8zKWv0oeisM=;
-  b=PdzDGmu2Gdg2ISe+844STd0FKAxPRuJ6NE03n2XE8N0cT1M/baOBRrMQ
-   kZNuqBWDLgMZMQfOlnQJn0qPjCZmbgPw2SuxoQo477LZD9k8BsT4idKlE
-   vCZQ+9VOUW28pMyIE83JBlvURJZAugv+x/2dsmafPtJUbH4QYonwdEm4q
-   5bpGlt3Z3B3VEmtMo3AUpLLvAIydrMLVEVNIJHP042uPYYStAIJ4n4WZw
-   p/nQPChmWXQ51I6hPSu9YbJv7rl8D2V0KC6/XAyG4gSRLr7N/6RKjxjQi
-   n7B0m/Iv7gtO63yMMAh5l/Q1q7v0nCGbFbDJERI0KfnD79PVHsJlOIe6v
-   Q==;
-X-CSE-ConnectionGUID: joDccVFPT7yFWVfHGTEFAQ==
-X-CSE-MsgGUID: cgUYhPUVR9SO4AIJnLkoxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39204699"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="39204699"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 02:05:59 -0800
-X-CSE-ConnectionGUID: w4+X2uWMRSiBqd4c+mmb3g==
-X-CSE-MsgGUID: kprGnA/oS7Cxwm+v3SIPjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111297712"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa007.jf.intel.com with ESMTP; 05 Feb 2025 02:05:51 -0800
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Furong Xu <0x1207@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Petr Tesarik <petr@tesarici.cz>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v2 3/9] igc: Optimize the TX packet buffer utilization
-Date: Wed,  5 Feb 2025 05:05:18 -0500
-Message-Id: <20250205100524.1138523-4-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qunve0Yx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11214C4CEE5;
+	Wed,  5 Feb 2025 10:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738749962;
+	bh=hkYngXU+6IeLPNhNvs13cKpx26XKj3YSH/OAeRpga3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qunve0YxKKubq7KmDTNg1Ed8RfUlCXKjxIzL3LUwAiVW1oCrwBK5KmsdpdmdLog6h
+	 6n+BNwajJMcrhwjfhHINnbjyzOtnfW7+CXcTbMRF83YaLZpw/c17deWk5eDDDAPvos
+	 Gvkcy+Mo/BdB31t1Bfg7hxlg5PW/8+JBtbOt+x83ZBTFKTonl2WC+atoe3V/1bFV76
+	 KOrQk1YUV4sjzM2de+xrK7o58Y6OOy3ui3BKNW7JACcvTM1DKfrz/QaeqH+fz1cdWK
+	 D2nFniznztdCTJjRskVTZBt1mIJShJ8WwchuDTQ4SUGZ5wSQ14tVKmBJU9awZ7FNJI
+	 bu5WcyXuPSBIQ==
+Date: Wed, 5 Feb 2025 11:05:59 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marek Vasut <marex@denx.de>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shawn Guo <shawnguo@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: memory-controllers:
+ samsung,exynos4210-srom: Split out child node properties
+Message-ID: <20250205-wild-classic-ringtail-98cbc2@krzk-bin>
+References: <20250203-dt-lan9115-fix-v1-0-eb35389a7365@kernel.org>
+ <20250203-dt-lan9115-fix-v1-3-eb35389a7365@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250203-dt-lan9115-fix-v1-3-eb35389a7365@kernel.org>
 
-Packet buffers (RX + TX) total 64KB. Neither RX or TX buffers can be
-larger than 34KB. So divide the buffer equally, 32KB for each.
+On Mon, Feb 03, 2025 at 03:29:15PM -0600, Rob Herring (Arm) wrote:
+> In order to validate devices in child nodes, the device schemas need to
+> reference any child node properties. In order to do that, the properties
+> for child nodes need to be included in mc-peripheral-props.yaml.
+> 
+> "reg: { maxItems: 1 }" was also incorrect. It's up to the device schemas
+> how many reg entries they have.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/memory-controllers/exynos-srom.yaml   | 35 ----------------------
+>  .../memory-controllers/mc-peripheral-props.yaml    |  1 +
+>  .../samsung,exynos4210-srom-peripheral-props.yaml  | 35 ++++++++++++++++++++++
+>  3 files changed, 36 insertions(+), 35 deletions(-)
 
-Co-developed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_defines.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-index 8e449904aa7d..516ef70c98e9 100644
---- a/drivers/net/ethernet/intel/igc/igc_defines.h
-+++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -400,7 +400,8 @@
- #define I225_TXPBSIZE_DEFAULT	0x04000014 /* TXPBSIZE default */
- #define IGC_RXPBS_CFG_TS_EN	0x80000000 /* Timestamp in Rx buffer */
- 
--#define IGC_TXPBSIZE_TSN	0x04145145 /* 5k bytes buffer for each queue */
-+ /* 7KB bytes buffer for each tx queue (total 4 queues) + 4KB for BMC*/
-+#define IGC_TXPBSIZE_TSN	0x041c71c7
- 
- #define IGC_DTXMXPKTSZ_TSN	0x19 /* 1600 bytes of max TX DMA packet size */
- #define IGC_DTXMXPKTSZ_DEFAULT	0x98 /* 9728-byte Jumbo frames */
--- 
-2.34.1
+Best regards,
+Krzysztof
 
