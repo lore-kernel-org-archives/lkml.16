@@ -1,115 +1,142 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CF21DDA32
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B071DDA32;
+	Wed,  5 Feb 2025 17:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738776318; cv=none; b=BND5ZrK0sttNMzJc2E2N7RKCuPCoBRnqkNzTd5SiRpwnJNBFFrVwpNBP+gWi7d0ND18QG3Wn8scKcLLweq/vgq2N/ex5mnZfS5H254cu5PEjouNHgLyRVQmwGzc91FxXrzDgSmY0gkha2e2uU3Z2NFQvzC+XYxpA9FeYQSX/3xs=
+	t=1738776357; cv=none; b=iSEej1/kqYoW+orgbi3PuHtbbBgcOiQgdhmsh2rxZDudSLdfjO79NWzfaHxLbF+mnPutmvLmTQkRZiLeDUnP7MBzsemgq0RwUTonMn7P0L963fxrN/RqRYtRAh/1kHcmsCviDs5DizxrJTDSg8+ntA917/6US4vwlIPOwHSmPjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738776318; c=relaxed/simple;
-	bh=TqpyMDmpf1W/tOsNu70NlE8XSP5Scatc1vKtxjeZOSE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TUGiYUUGyMIguIEEMGemhF/oQMD1NmD/x5W7dwxpj4RORT5hm1Y9UIVTxSVFCUKgi5hoJ76rRzDSXkMvk1PGzJ/YXLQ5RQjJo3yNQqUVVA/+WxS1wp3ebbes3I9iu1EEJztfS9o4ixl5apk6mkL/CKjPIE0gzf1jsFMCBYqP2yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IXDzd1Hk; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1738776357; c=relaxed/simple;
+	bh=4fZ2waS4Le6CZjqkUYNRfumY2c2UMR6bpbsXUZLjIQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m0mNLSs97b+/km9512Wj6gpHVvxp5kznO9GAprPGneRmxd5G811GEWe8UkZVdsk50X1uTopHE81svbHqkqOXBDneWy4DA5nQcFUsfFQHbactaX1AnyPkFhOIwaOpHukEnPqzED2WmKpLN/AYJm9bsNYgVpwFDQ4s3QYeciB7Lvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jKiCWz4l; arc=none smtp.client-ip=209.85.167.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXDzd1Hk"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2165448243fso1734805ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 09:25:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKiCWz4l"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3ebc678b5c9so9553b6e.3;
+        Wed, 05 Feb 2025 09:25:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738776315; x=1739381115; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UPLKWwOU4d47zpTN4AWOYWgVD0yi3bCcn+ErGfR89Lg=;
-        b=IXDzd1HkV1q19CYxZeBPF+/HjXhTC8WQu4ebD7oscWJf6Nd11ljaQte+xpshIQ4oN3
-         ErJRtFa3u2bSlLXsP48Bj2zriCHY3GD5AVfUBUCzvWaao6NF531A7orr32bB+z0wSy9v
-         h8xB2Vdf5v5ofEqffJcqTls6MglV0taaSN9dQWUn5ZJ2QsGXewcirxZXb8oLcRPOF9GL
-         P9T/K5cf7wXqNnp22R7iOfwLo4difFVnzoILmQXTgetrOQkd+5l0PS3eYzjQD8aDFwp5
-         AneW8o5CeR64C8KuIhQs85Dd8Bb9K+iFlQOIf9b7cf7dtgcSe1tSk4Sd1cEzwpX/8oLQ
-         2H6g==
+        d=gmail.com; s=20230601; t=1738776354; x=1739381154; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/ljvoAbrblzPWSlWGaI+of7Rx9z5FMvqfx035HSCoM=;
+        b=jKiCWz4lYzsHtULvYhKPxF/BlCcFhpuPRUvhbKtsiKH9JmRYXxHDKQXjUrhQw62srj
+         2c5FxFt+FTPNO6nULpS/tsKubXkM8olmo9Rm5DKLAvt+W77MQwhCMy2SgS6iH42h/0tM
+         ji8PvTvDHLUqz47GGZF0KMVZhmznGezdEGdr9UGuiRCGFh0E4dHDdSl1h7BH6jLiIXKm
+         26D21PEkurVtL9IC82za3Sxi9QHGjowtaSX7guK/Z1V4kB/htnL4lWu9uUQo8Y9iH9kW
+         Sf6u7UF039n/5YoRP2/6QuZH+LgKV9wvNfryGvHE3gphjiGuJPCA7xzogz6Mqc6gDcvH
+         E+ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738776315; x=1739381115;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UPLKWwOU4d47zpTN4AWOYWgVD0yi3bCcn+ErGfR89Lg=;
-        b=G97OsBz7DcX1+mFUUMMDK9gAhX1YshDEtNp5kXVpAGy/PAiePIzd6Tfbe8+8rI1urX
-         WGL1fivDBvBP69DPRoQBI4FKkDTZc9sZ86fYpzQnx9CXzGBE4HbebufKEv9jXWOkxN2p
-         uunnCLO1dTTVLqagRrU/BwC4KdRDzVhNEXUR6f8AJrlrFnOmkE1rlKCBUs8G6AysQGnS
-         EcB3xY2PmPRQPc0L4iCiUWb4RlErB2ThPz6KnDnrZCSC9yXZAQx/cNWh30wfsmgmsdAi
-         /r5IKBnNTRduLmUzQs6TmJ9tVFueCeITss36XBp1eCDb5eTkh6kp43LynFHfBVfVmDjP
-         6Fsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtcZBhBB9enQU94UV2aNNwby7rbv87hcPsaFKa+Du5E/ib3crYJjXmZdoHM6X7/Rd47Rjy04Iig9HisZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsY8x9AI/Qmm8MNsAG7jPFkCTUXHFfoYei7w2bD9DWYMVeHVs0
-	MsoS/0usqSB5Poxfj0RJhuxZRKEvkpHyqNcJd5tjyYEHg/Mb7ImM
-X-Gm-Gg: ASbGncsdVS8BhVA0b4OXguhWwR8EGsL/b0eEd14VHKVTX4MCN5Hx1CwZg7/0nW6zORJ
-	bYECc2q/aQyqUA19i3jQr6D9B3eqN7sBwO/dtPZI3UWZQdP7DblPtvAkGGJaiP/CUPg8fx7Oo30
-	ASQhspkbnYmGlkvmINBUc24U1kVv2SZyvoK9w/lK623Z7leEQgUykgphyE7gRHpsGJfOr0TV+dk
-	n1Ed0EqjZBAq7HWlsya4X9GCBMbkrXJ2tnjgHlI693Zv/OWUd1irsEW8qDH1wPLGvq6ZWQwnhoH
-	1LxNW9bKsL6lWgZmcvKV1ge6yIFjnjvIMy011AMjxEgcNg==
-X-Google-Smtp-Source: AGHT+IEWJOXoWeC/VFuQ1owcOXgHiHraEYlmitwfwG4RZPhhWGOMpXQkIDBSxp+a95pIDRcjlcr8TA==
-X-Received: by 2002:a05:6a00:3a19:b0:72d:8d98:c250 with SMTP id d2e1a72fcca58-730351080a5mr6024541b3a.4.1738776315187;
-        Wed, 05 Feb 2025 09:25:15 -0800 (PST)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:e6df:5ab5:fc4f:a680])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631be8fsm12731719b3a.24.2025.02.05.09.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 09:25:14 -0800 (PST)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: pmladek@suse.com
-Cc: rostedt@goodmis.org,
-	andriy.shevchenko@linux.intel.com,
-	linux@rasmusvillemoes.dk,
-	senozhatsky@chromium.org,
-	akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	shuah@kernel.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH] vsprintf: Drop unused assignment of fmt.state
-Date: Thu,  6 Feb 2025 01:25:07 +0800
-Message-ID: <20250205172508.55358-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1738776354; x=1739381154;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z/ljvoAbrblzPWSlWGaI+of7Rx9z5FMvqfx035HSCoM=;
+        b=TNCFrKS7Q3fHn3ZNhfE7qWFlyw/ftY6XYY7iS6khLCJxf7bu18C8eLGaii13CcAXOE
+         smv5rEsDLXiE5u+vc2upyeIPgc4+HEq59bcDkRT98bkxO0MmqxqD/fGKqRPtsW+nH3Uq
+         pjxI7hsIE+7g+99BW2eLPPN5pBcjJ3Wvxb366R4JdoTF/0hGsrdphaNZl0LRi/cC1gvP
+         gPfrr0h5+JRRt0rcjTRUka4EwTZBtzkzhWufMnoC8Rb6amuZZq9qIHqQMJnp2nZzjKAn
+         q2qoEvUhS8JgB5P6vpbFcuYNyVdd1BZmUFvdNpDMrfPx6ne9q5/inYb2wPwm61FhO/2Z
+         f2tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW14WqAUL3OkBI10pJa2m5Ma5FP8RNcLhu3mVuo6oB/WjIymgizt0k6X2Eu++UF40jXEdg3tw/CTYh0VDQ=@vger.kernel.org, AJvYcCW6+d/wp8JJdb7ENitjdSIvvn/ZUG9gpLaiUKhp156Yoj2pRlkT5lQz9vViuCDs3FCsSoNwXt7a@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLWMgU2YOR0u97S+0coEofSmJdxetPlpFkFz/Sn9t6TFxOcDYm
+	yqvnjwVx55/IXPJXvRETzVYAMaDGifOFtklPPvD4Z92K0hdqLCH5
+X-Gm-Gg: ASbGncvw+cjcoebeMqM8lNJJm7XtjsmtuH9RfeyGSr4nBk9KaIgQ19T0vUthQQ/wvYY
+	e9T7eMLCGk0GjePBq1UwfxLqUafxla+j5Q8uiDT5dGDFZibybORj2t8C/RsS9+dag73EgqiySr5
+	83UDHKx9yGWgRGWE6t1erx3Rt0h/gB35drUv3a0EkY9171yYAOX0c5jiHd3+dgIVu8QsOfFDjiI
+	lQtPm9CSPhuTmAeiuNLzQsI4xddz3wOvPrN3VyLpKXT2Z/5xl5GLpkEzMVkrlK2e6c1bafErM2I
+	icEy7prw/iw9fH0d++c08NoVj2oPjtdAHLO2uDIO5Yc=
+X-Google-Smtp-Source: AGHT+IElJOEwGJXcpxepx+lPh9mZuSv1BA33+xNsWiHFiM16bUf+mtRCpLAXHEId4Tc49SoAgkWDLQ==
+X-Received: by 2002:a05:6808:13c4:b0:3ea:6533:f19d with SMTP id 5614622812f47-3f37c178fd3mr2824741b6e.30.1738776354479;
+        Wed, 05 Feb 2025 09:25:54 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f333523f8asm3614380b6e.6.2025.02.05.09.25.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 09:25:53 -0800 (PST)
+Message-ID: <ea7aaade-b942-47a1-85f1-1a222efbf545@gmail.com>
+Date: Wed, 5 Feb 2025 09:25:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/393] 6.6.76-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250205134420.279368572@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250205134420.279368572@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Remove unused assignment of "fmt.state", in both cases the value of
-"fmt.state" will be overwritten by either "FORMAT_STATE_PRECISION" or
-"FORMAT_STATE_NUM", the value "FORMAT_STATE_NONE" isn't going to be used
-after the assignment.
+On 2/5/25 05:38, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.76 release.
+> There are 393 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 07 Feb 2025 13:43:04 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.76-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- lib/vsprintf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 56fe96319292..400299465875 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -2569,7 +2569,7 @@ struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
- 			spec->field_width = -spec->field_width;
- 			spec->flags |= LEFT;
- 		}
--		fmt.state = FORMAT_STATE_NONE;
-+
- 		goto precision;
- 	}
- 
-@@ -2578,7 +2578,7 @@ struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
- 		if (spec->precision < 0)
- 			spec->precision = 0;
- 
--		fmt.state = FORMAT_STATE_NONE;
-+
- 		goto qualifier;
- 	}
- 
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.43.0
-
+Florian
