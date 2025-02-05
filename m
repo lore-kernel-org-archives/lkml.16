@@ -1,103 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFE01FC7F9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D161FDA96;
+	Wed,  5 Feb 2025 17:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777457; cv=none; b=r0tI3u/ItUNQolzrcMNtFhhw6zrMzsD9H+Ph186bpEV0JKFYcLCle6RRXfko+7mUnpJscj3DE2WlXIFOEkAYkerX37qMFE5oZZDPvyLKlRvy9w3JP0JWj7HIi8Hevs/TslE4vjRJPd4UQGct4xf5wher6hjLhjJl8jpBiXGAfOo=
+	t=1738777517; cv=none; b=vAs5P6PeG5Hd3h4Limjxy642saz0g1zeG3AyV9LH3lY997v7V3BYSZLkaexnL97GWtkGjmIiZAuBERFVo30F6UaPb2WoLHPtuBDhk0hFqAyhUvU6jdmKp/OsQNNJpcEVjZ9KF2EyLkUpF5+RG0RygQzg2T/l8rNdpYYXhW7dwpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777457; c=relaxed/simple;
-	bh=E6uwQ2kxNgc+rDx5CYdoWHlMu6FPslTzwxlYXYE8OVE=;
+	s=arc-20240116; t=1738777517; c=relaxed/simple;
+	bh=Y8aAjOf3AT4BufOpk3zqdSx3kA3F965v0KtHpTlTJW0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jpo/grbk27XWkjVlXHhD+ZK2D1EdmYZvnULCdU1uFgP5/TRq2XjLMgJiGjoupxfwO11Aqs2xmuJUKnlhHkXjxfr5ZI2uIhNzouO/QyXLd+7GsDfbQa1AMiIjH5AryCHmEezehQSbmwLGckdlxu9Vb3cjiGWyweuOY/owlMqXnFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdHtr7Vp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qkKibm6opgz9160uQqZkLUPlu5fvPZQjQiTxZllnRrolvGTAr5fgu4HE6tmDTizhmGMdpCNCiKovTMkD/c5bltxkPMr2VxFXsjrGHKZVeE49SFicLy313SQNH5Ngz5xJxCS+riAZNtDgZ2yg63QNCs+aOLiF4Df1EjrDGt8JKpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=YFke/Ib8; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdHtr7Vp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A68BCC4CED1;
-	Wed,  5 Feb 2025 17:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738777454;
-	bh=E6uwQ2kxNgc+rDx5CYdoWHlMu6FPslTzwxlYXYE8OVE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=hdHtr7VpKAb4YcceLo24wgi5Psy///gcAnK41PD65wSLppwWZtUjy3gNvHuL6KwZ6
-	 5Un90iLHp21qpTBPmBBzDqI+DBYCrHoJna8O7+CbxC9zoNOoVroFqTKtrtDWw8kK07
-	 r1XF/CMb22qFg2x6IEFeNmr3fSV5OTq4hOHM8fBt2U2viBfbRqPHeadc77i5wV1g9S
-	 SJytgsjkw11lEbxmBLG87sQuRJr97gWjl836FoYvgC9DAqkox4YK+0Rt2xbhjqkCuk
-	 AigbR/koLkHn5+QjCOpD63pOJiVCnY8bArwxaeLPzjWFwTJR7hID9CznJduxP3p1W4
-	 lrDIC+sbpZIjQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 42DFCCE0749; Wed,  5 Feb 2025 09:44:14 -0800 (PST)
-Date: Wed, 5 Feb 2025 09:44:14 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, vschneid@redhat.com, leitao@debian.org
-Subject: Re: [PATCH RFC context_tracking] Make RCU watch
- ct_kernel_exit_state() warning
-Message-ID: <85c23bc1-d271-4c0b-98d4-b727edd48935@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <19bebbeb-db36-4801-bc3d-2c39989b6152@paulmck-laptop>
- <Z6OaKXsPuyl2hO0J@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="YFke/Ib8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=a51LPLjOt3wwZB6mg+Y3S9/fHKpsOrF0RHXl8dP5K9o=; b=YFke/Ib8EU5hGyNz5OI18D/jXb
+	LgKzeb6g4CeABgLgLmj3yzRSwdQnFVfTrNyBnLB5+V6yIz8fDaBI2KMVhjMYTVO2Tc92tOL4IFXtM
+	myCRnncf5o8lh85f8iYKOTArbHfFqFTA3wgxnkFM9Ws3L2Zxg8WwpPPZ66uOiIhNTkwou8AEj0yQG
+	Xx7m1YTkkBfv+9n80iYQ3U+/s9B9mBadOs6h5bTqCmNqY8QA+fk9zw6p2xOkO6U0a4ctamQHzFlOM
+	KxyMPIqjLiaq9/7m6gfVLlVIU/wQ3V6JLsRlheTDy89eWAL5MsvXtiHAIwcbkIpv++7MN0a7plBaA
+	3XSQWG0w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52386)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tfjSR-0007tq-0B;
+	Wed, 05 Feb 2025 17:45:03 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tfjSN-0002bu-08;
+	Wed, 05 Feb 2025 17:44:59 +0000
+Date: Wed, 5 Feb 2025 17:44:58 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Simon Horman <horms@kernel.org>
+Cc: Chen-Yu Tsai <wens@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Steven Price <steven.price@arm.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH netdev] net: stmmac: dwmac-rk: Provide FIFO sizes for
+ DWMAC 1000
+Message-ID: <Z6OjmtiZ4A8BzvsP@shell.armlinux.org.uk>
+References: <20250204161359.3335241-1-wens@kernel.org>
+ <20250204134331.270d5c4e@kernel.org>
+ <CAGb2v641vvtVKv8QbiEfHnMWngcKYTJZAgfH5k+G_nOvZcbC9g@mail.gmail.com>
+ <20250205173824.GJ554665@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6OaKXsPuyl2hO0J@localhost.localdomain>
+In-Reply-To: <20250205173824.GJ554665@kernel.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Feb 05, 2025 at 06:04:41PM +0100, Frederic Weisbecker wrote:
-> Le Sat, Feb 01, 2025 at 10:44:02AM -0800, Paul E. McKenney a écrit :
-> > The WARN_ON_ONCE() in ct_kernel_exit_state() follows the call to
-> > ct_state_inc(), which means that RCU is not watching this WARN_ON_ONCE().
-> > This can (and does) result in extraneous lockdep warnings when this
-> > WARN_ON_ONCE() triggers.  These extraneous warnings are the opposite
-> > of helpful.
+On Wed, Feb 05, 2025 at 05:38:24PM +0000, Simon Horman wrote:
+> On Wed, Feb 05, 2025 at 11:45:17AM +0800, Chen-Yu Tsai wrote:
+> > On Wed, Feb 5, 2025 at 5:43â€¯AM Jakub Kicinski <kuba@kernel.org> wrote:
+> > >
+> > > On Wed,  5 Feb 2025 00:13:59 +0800 Chen-Yu Tsai wrote:
+> > > > Since a fix for stmmac in general has already been sent [1] and a revert
+> > > > was also proposed [2], I'll refrain from sending mine.
+> > >
+> > > No, no, please do. You need to _submit_ the revert like a normal patch.
+> > > With all the usual details in the commit message.
 > > 
-> > Therefore, invert the WARN_ON_ONCE() condition and move it before the
-> > call to ct_state_inc().  This does mean that the ct_state_inc() return
-> > value can no longer be used in the WARN_ON_ONCE() condition, so discard
-> > this return value and instead use a call to rcu_is_watching_curr_cpu().
-> > This call is executed only in CONFIG_RCU_EQS_DEBUG=y kernels, so there
-> > is no added overhead in production use.
-> > 
-> > Reported-by: Breno Leitao <leitao@debian.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Frederic Weisbecker <frederic@kernel.org>
-> > Cc: Valentin Schneider <vschneid@redhat.com>
+> > Mine isn't a revert, but simply downgrading the error to a warning.
+> > So... yet another workaround approach.
 > 
-> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+> I think the point is that someone needs to formally
+> submit the revert. And I assume it should target the net tree.
 
-Thank you!  I will apply this on my next rebase.
+For what I think is the third time today (fourth if you include the
+actual patch...)
 
-							Thanx, Paul
+https://lore.kernel.org/r/E1tfeyR-003YGJ-Gb@rmk-PC.armlinux.org.uk
 
-> > diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-> > index 938c48952d26..fb5be6e9b423 100644
-> > --- a/kernel/context_tracking.c
-> > +++ b/kernel/context_tracking.c
-> > @@ -80,17 +80,16 @@ static __always_inline void rcu_task_trace_heavyweight_exit(void)
-> >   */
-> >  static noinstr void ct_kernel_exit_state(int offset)
-> >  {
-> > -	int seq;
-> > -
-> >  	/*
-> >  	 * CPUs seeing atomic_add_return() must see prior RCU read-side
-> >  	 * critical sections, and we also must force ordering with the
-> >  	 * next idle sojourn.
-> >  	 */
-> >  	rcu_task_trace_heavyweight_enter();  // Before CT state update!
-> > -	seq = ct_state_inc(offset);
-> > -	// RCU is no longer watching.  Better be in extended quiescent state!
-> > -	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && (seq & CT_RCU_WATCHING));
-> > +	// RCU is still watching.  Better not be in extended quiescent state!
-> > +	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !rcu_is_watching_curr_cpu());
-> > +	(void)ct_state_inc(offset);
-> > +	// RCU is no longer watching.
-> >  }
-> >  
-> >  /*
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
