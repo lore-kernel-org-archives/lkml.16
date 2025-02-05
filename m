@@ -1,197 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68B7155335;
-	Wed,  5 Feb 2025 19:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27CE1E0DE4
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785163; cv=none; b=uYo2USIc9ArQOy+amGX0+s6YpdMw1wvdCirYKHVFvT4jcZevJHgAzCHxMgdVApwjJS7zayIZgCh+wqJ2tRUClm/Yr5KQFGf38M6lMgkcff4p253jepb4JHNRt9Y+0QPXBBzj1AUvG0bEcc3b9Rjuf/dr3CW11ewbyvVJA41w1eU=
+	t=1738785223; cv=none; b=rXoZyPMe8HwihgMUI71xW86BEBHkn2fSbf2QIwjAaVIgkDPnEvxl07ONTnkNV+4ECIVUCJZI/e9kBv7EwtkmD5jyqUlfuyOi/1IIVJNkWbqHQU8vHzjs5VrNW96L0vR2qjKgK6h8DKGAMDE01x1JyZRTE0uKDFUSICapJ0u7epE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785163; c=relaxed/simple;
-	bh=Bv6VrTP0baa+38fXseu4H6lY+zxHwgylRB0FdkDUSv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aYPFi0qA328nLsbRRc+l5flrBGt8v/I1nf95aHkkyIKJtKkXyjaOGri/dRtKG3AYVdJ96p3ylVhzZ/1ght2HV6SJEMm92fOOoRk7qGeoEtYCGwXtCXMqJpGCNE/c4kk0doAsGKvIfKEBJOCYNMtAtHKbWNpfIRjMPYTAc2pzmVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDykrvRI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738785223; c=relaxed/simple;
+	bh=6q5v84lcktHrl3Z/XuzQ2h/3k5A/dQfZvkx4mZLUD3I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WTWzTu4ZqKG1WvTpabYfwilrMkY5zliAi12suxCgHuL7P7uSrDdESCnM8LEudxJ5qHJqJqK7SIb6tj5JuerFC+PvW4F9TM1nyGw9+2OG/icoh0h2WUrZrHtHbhG44WAsSTpXup8lbdSC/nJlM+FyLzfV2G7km3KJ22VXsF1gieM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uFqmbNS0; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDykrvRI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805E4C4CED1;
-	Wed,  5 Feb 2025 19:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738785163;
-	bh=Bv6VrTP0baa+38fXseu4H6lY+zxHwgylRB0FdkDUSv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sDykrvRIMHbvX2mkngYAekcdYAG5dkg+dAn3mJ2JH1XFIT9ma3sgfRLwhaJuxO7Ju
-	 F9+udl/dTzHzQ14BLhanNF81ncBD8jux3Ete2Hk3iOA1Z+NCusnqGtu48Fxw7+F99V
-	 8GEylz8uYSUIAWMgzDyZUu/91RETYGwprdnEI9Pe9nkffkJ0jbxcTQvnpxnAZ4J3rf
-	 gUWl+jcgEwJgrcnJq3l0E8kQLvCy8D9Q0MQZqZkLPwN1vX9Y2YU1C5uw1zLI180r56
-	 eyy7K+q4urdcy9FzmGLhjqrih5+Kouj7FV62nX+xizjCIsCzqqtqWmXPd24fyd+9Nm
-	 4X1NZcgc0Q20Q==
-Date: Wed, 5 Feb 2025 19:52:37 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: Robert Budai <robert.budai@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Nuno Sa <nuno.sa@analog.com>,
-	Ramona Gradinariu <ramona.gradinariu@analog.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Paul Cercueil <paul@crapouillou.net>,
-	David Lechner <dlechner@baylibre.com>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] dt-bindings: iio: Add adis16550 bindings
-Message-ID: <20250205-styling-chirpy-79eae9437b3b@spud>
-References: <20250204143612.85939-1-robert.budai@analog.com>
- <20250204143612.85939-5-robert.budai@analog.com>
- <20250204-helium-marbled-a0863a0a18a8@spud>
- <15065d0cd19f39d92ce860cd03802c368df74b34.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uFqmbNS0"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2163affd184so24295ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:53:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738785221; x=1739390021; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6q5v84lcktHrl3Z/XuzQ2h/3k5A/dQfZvkx4mZLUD3I=;
+        b=uFqmbNS0aBRnuo9pIv0WlRbfYcyfLCZgY3fhAFoYmNRMInar7ONTMyWfrwIkc1o7Tu
+         h/NNa5g8HMGIKel+KVJG+yqOExkoR0MXGAcvEWi5OElTbZVVa6GJ43In2ZXxNYEPdotq
+         etguEabJ4EeAKgyL4y4RQ0WuNhvShkm/Zo7zDY4m1GjCqkwTiQLy0Jv9sObNcQ0uA+DA
+         KdbhALjjkfSubZV5ENAirfaLKmMu5+CCXre1AqVY+e/09ztZMNm970g/tCTnmM9d9tEc
+         QTzh7NbdC0EsuH3LEukcps4R6JpRPT1fNoAOylP+0Vq0tAcx2+AjhY1aXtI1sF/yyNOW
+         kUqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738785221; x=1739390021;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6q5v84lcktHrl3Z/XuzQ2h/3k5A/dQfZvkx4mZLUD3I=;
+        b=xPchh0DggbjUdAZ3fmbjodFJ/mdQmgN+0vghmt7fFGzJD98HkMy1Yrk0CrQ3yg0mhv
+         j7LRAwXKfGOkau42wZp6ulqaLBPGQUBAhiyg4W2O6AawxTqJJgvq3xB1C6spPlDBxZwm
+         5yiPOZyxS0u06xgKWr57EnJOmrIhkqIUkU8HOCQniQ0YN1MMYiEdo35rloH2JdqILuj4
+         seVIY35k8Axrt5n13v4DiXuMQshyxstJS75OQe8wPTF/gOcQHjCVbxyMe7cQD+w8qD7g
+         /EK0er0RyEtTRhCP8YLS+g4A6UzP4WxtmW6JaTesm6thSc0Lx2p57tnxN/X2de8LjZHa
+         i6XA==
+X-Forwarded-Encrypted: i=1; AJvYcCUP5sSnyKooPWaQBU8DmBjI7EptcFLqWo7eVsNl5PH8zz/DpJcfmy42xiiZCwdNxuxn2NZWBEGlvvSqOi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmdNmfJ+HJBtokL7eRB97MWicQr0a2cAPYfIcObN+tbIAQY4UE
+	QcWWVMTdzwKfSYMq/hdSmDYDSEuwNQxuQk1Fzz+XW0W522Ss9Leyt0JncM7fa3GIx9enPjBlRdZ
+	qCD8aSwNo3NN0T3FGUau3kMG9I1n7lq1ZJhe/
+X-Gm-Gg: ASbGnctT/8Sg9TzL56mhg4FzMB/N9ZQxU1NRFTCmSoXkb3z5GDHeVaI3WgnmethOXi3
+	8HoWvOeub9oTXPZlT26FX9qa+HPBd9eo79JpQu/px7BApe5mHxnXYaomr96sEQ5NyQz8N6+Ab
+X-Google-Smtp-Source: AGHT+IFDcob/TSEuYMXb3hSVO++9mpu4Se8Bnl44BpJBOAaoFodhFrUGSu2xVB4BmBZwjRYxoARZ3TUatoE/oCz5blg=
+X-Received: by 2002:a17:902:a9c3:b0:21a:87e8:3897 with SMTP id
+ d9443c01a7336-21f3022831bmr337775ad.4.1738785220998; Wed, 05 Feb 2025
+ 11:53:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qKt5HoGX5mxGGLac"
-Content-Disposition: inline
-In-Reply-To: <15065d0cd19f39d92ce860cd03802c368df74b34.camel@gmail.com>
-
-
---qKt5HoGX5mxGGLac
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com> <CAHS8izNZrKVXSXxL3JG3BuZdho2OQZp=nhLuVCrLZjJD1R0EPg@mail.gmail.com>
+ <Z6JXFRUobi-w73D0@mini-arch> <60550f27-ea6a-4165-8eaa-a730d02a5ddc@redhat.com>
+ <CAHS8izMkfQpUQQLAkyfn8=YkGS1MhPN4DXbxFM6jzCKLAVhM2A@mail.gmail.com>
+ <Z6JtVUtsZL6cxsTO@mini-arch> <20250204180605.268609c9@kernel.org>
+In-Reply-To: <20250204180605.268609c9@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 5 Feb 2025 11:53:28 -0800
+X-Gm-Features: AWEUYZmMVG6gb-GClyYhPSsDJYW5WzEYrdAHF0Dz0FhMB9-YcVD_emeIkz00f9E
+Message-ID: <CAHS8izNPxqUHNcE-mtnLSMEpD+xH9yNCxEAkvn01dLekkuvT_Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Stanislav Fomichev <stfomichev@gmail.com>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Neal Cardwell <ncardwell@google.com>, 
+	David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 04:11:51PM +0000, Nuno S=E1 wrote:
-> On Tue, 2025-02-04 at 19:25 +0000, Conor Dooley wrote:
-> > On Tue, Feb 04, 2025 at 04:36:08PM +0200, Robert Budai wrote:
-> > > Document the ADIS16550 device devicetree bindings.
-> > >=20
-> > > Co-developed-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > > Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> > > Signed-off-by: Robert Budai <robert.budai@analog.com>
-> > > ---
-> > >=20
-> > > v6:
-> > > - applied blank line suggestions
-> > > - added clock-frequency dependency change suggestions
-> > > - yamllint corrections
-> > >=20
-> > > =A0.../bindings/iio/imu/adi,adis16550.yaml=A0=A0=A0=A0=A0=A0 | 83 +++=
-++++++++++++++++
-> > > =A0MAINTAINERS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 9 ++
-> > > =A02 files changed, 92 insertions(+)
-> > > =A0create mode 100644
-> > > Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16550.=
-yaml
-> > > b/Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> > > new file mode 100644
-> > > index 000000000000..8750bb937979
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> > > @@ -0,0 +1,83 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/imu/adi,adis16550.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices ADIS16550 and similar IMUs
-> > > +
-> > > +maintainers:
-> > > +=A0 - Nuno Sa <nuno.sa@analog.com>
-> > > +=A0 - Ramona Gradinariu <ramona.gradinariu@analog.com>
-> > > +=A0 - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > > +
-> > > +properties:
-> > > +=A0 compatible:
-> > > +=A0=A0=A0 enum:
-> > > +=A0=A0=A0=A0=A0 - adi,adis16550
-> > > +
-> > > +=A0 reg:
-> > > +=A0=A0=A0 maxItems: 1
-> > > +
-> > > +=A0 spi-cpha: true
-> > > +=A0 spi-cpol: true
-> > > +
-> > > +=A0 spi-max-frequency:
-> > > +=A0=A0=A0 maximum: 15000000
-> > > +
-> > > +=A0 vdd-supply: true
-> > > +
-> > > +=A0 interrupts:
-> > > +=A0=A0=A0 maxItems: 1
-> > > +
-> > > +=A0 reset-gpios:
-> > > +=A0=A0=A0 description:
-> > > +=A0=A0=A0=A0=A0 Must be the device tree identifier of the RESET pin.=
- If specified,
-> > > +=A0=A0=A0=A0=A0 it will be asserted during driver probe. As the line=
- is active low,
-> > > +=A0=A0=A0=A0=A0 it should be marked GPIO_ACTIVE_LOW.
-> > > +=A0=A0=A0 maxItems: 1
-> > > +
-> > > +=A0 clocks:
-> > > +=A0=A0=A0 description: If not provided, then the internal clock is u=
-sed.
-> > > +=A0=A0=A0 maxItems: 1
-> > > +
-> > > +=A0 clock-frequency:
-> > > +=A0=A0=A0 description: Clock frequency in Hz when an external clock =
-is used.
-> > > +=A0=A0=A0 oneOf:
-> > > +=A0=A0=A0=A0=A0 - minimum: 1
-> > > +=A0=A0=A0=A0=A0=A0=A0 maximum: 128
-> > > +=A0=A0=A0=A0=A0 - minimum: 3000
-> > > +=A0=A0=A0=A0=A0=A0=A0 maximum: 4500
-> >=20
-> > I don't get why this is a property, to be honest. When you've got an
-> > external clock, why isn't the frequency obtained from the clock provider
-> > node?
-> >=20
->=20
-> The main purpose of this property is actually to show/document the constr=
-ains of
-> the external clock. We can very well just error out in the driver (and we=
- do
-> that) and not have this property. I mentioned this property to Robert some
-> revisions ago and I also pointed out that I wasn't really sure if it shou=
-ld be
-> used or not=A0(I guess this is more for fixed clock providers...). IIRC, =
-I did
-> asked for some advice/comments but we got none so I assume Robert just de=
-cided
-> to use it and see what you guys had to say about it.
+On Tue, Feb 4, 2025 at 6:06=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
+te:
+>
+> On Tue, 4 Feb 2025 11:41:09 -0800 Stanislav Fomichev wrote:
+> > > > Don't we need some way for the device to opt-in (or opt-out) and av=
+oid
+> > > > such issues?
+> > > >
+> > >
+> > > Yeah, I think likely the driver needs to declare support (i.e. it's
+> > > not using dma-mapping API with dma-buf addresses).
+> >
+> > netif_skb_features/ndo_features_check seems like a good fit?
+>
+> validate_xmit_skb()
 
-NGL, this is one of the kinda of things where if you're relying on
-dt-bindings to avoid cocking up your board design, things have already
-gotten pretty badly wrong! That said, "clock-frequency" is a
-property for cpus, fixed-frequency clock providers and i2c buses, you'd
-need a vendor prefix and a unit suffix here IMO. Also, I don't really
-think that it actually does anything at all, given it does not constrain the
-clock you're linking to with the clocks property. This may as well just be
-a comment in the description of the clocks property, for all that it does.
+I was thinking I'd check dev->features during the dmabuf tx binding
+and check the binding completely if the feature is not supported. I'm
+guessing another check in validate_xmit_skb() is needed anyway for
+cases such as forwarding at what not?
 
---qKt5HoGX5mxGGLac
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6PBhQAKCRB4tDGHoIJi
-0jALAP9HiOmol4F0aUFuG4sftrs9MLQ+t4nmrapcxBFu3CQq9QD/XltVxGmoV5j0
-Hh57FFzdGdKr5OdxpNhJMsJo9aQ6OQw=
-=jbCM
------END PGP SIGNATURE-----
-
---qKt5HoGX5mxGGLac--
+--=20
+Thanks,
+Mina
