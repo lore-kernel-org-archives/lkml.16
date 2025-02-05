@@ -1,110 +1,138 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9478B67F;
-	Wed,  5 Feb 2025 12:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED51151987;
+	Wed,  5 Feb 2025 12:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738758625; cv=none; b=BVzVxjPFgtL4EDksXwOnq9+0X8U3uOzEzWX/otBb5XQSHSmTGIUrKH4se/CBx3fKL+8WC9nzoZmW78hHA88nkwiKmDXMiBW5V9fOMYz7z53Av4W3FOuDDBisTrt3qo6nDvXSMviSsei2At9iHUFHcsZYw6OR27Lf4ZtcYDkYkFM=
+	t=1738758712; cv=none; b=apcC749tBuAspe1K5tpw95BISBZbiEBXCOcFvzE1pEhcA/5QapciRbuOt/8ShAQmFSApaaZVmcIYj+iehNyTLK/Ywb4UMFS6/blmxna6yJUSNDki1LXERRxdrarxr524UzfL2ndDOtFaQecR4AAnxjr+gzzB6pRMrgroPaA/yXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738758625; c=relaxed/simple;
-	bh=mCjWIdJqwk2lQi47nbBZc9EXpDi08Psv7W0YrNqCxeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i0M7TyfELnGJlnnRREJ2sm9vhT4uGWMVrB2Xi+yIUit5K6b7UJyYuCZUg8VJZQKIO/qsaEUdqvmbw6vUYtMvpay51sxGLguHzcQSWAjhy8Rqvof3efjpbo4fYSNPImt82xpSQxaSjdTi5ywVMnuD+gSSwdcjwWDB19urvTkh13E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sty5wfFx; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738758712; c=relaxed/simple;
+	bh=B4ApR9j40l5CmOzxcfj5E/SuOauGNanQrjKbH41LKRs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a6pfpqTXZVdDCM6G7RyBEmpP05HyY0qOaZuIrqETwr6b7oNDezrYKBxKQ4Zt33XDx0D/6n03u1o9r37kWwovZnzabyl2jEJf6z/G0BE1R05ua2glMq9z4cH3kuutI5r6oI5YI+IjZem3/SwQzS1nOknm6KhocFyOvF/1VpelJY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sW7qDWjl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sty5wfFx"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7be8f28172dso345402085a.3;
-        Wed, 05 Feb 2025 04:30:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738758622; x=1739363422; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mK8nmwdmhbmc1ayKJlNj2WSUqxN/1Xx63MHppM5uQLY=;
-        b=Sty5wfFxgR4rGpLJymu8VO3MC2dMnJ+eQm6R2kuO6AtGXPJTmZkZoV+jeM0b+WoMfk
-         R0+lDpeoEEcPlPEg78d8MTukKBrOecWFhM6SQToC1G/ARfAq3FFExifaUYMRpaxLQg2T
-         iCIO9rzIypSXwpc5Rzt0wurcyFLGHI3olmAojwg+V7GBSCUAoIXd2hHjH8j0IKrgmq7z
-         yo+5+2fRZSDia7zHBorIH2oytQT0DFO+sjvHV//gpebVz73l+nW3FnabT9Fh5QoBefDn
-         J4LMI++oWKQRG4T3y1+fCvwLVDUNDjoUUTC90qGyyVAaQEb39CRzan01kbtfh6PbT0nG
-         J1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738758622; x=1739363422;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mK8nmwdmhbmc1ayKJlNj2WSUqxN/1Xx63MHppM5uQLY=;
-        b=hHJgBOtrN1pPqtbX9NRZ0I2XjyrEaLQDVECG/yewX6OrPOwDld2ZyqcOLcJ1Ain0g1
-         bfhwbmAKD9MlUqE1pMESZvjJnyToPDRvwNDYD2/vzlpvS2VPI00s0DEDWa0mouDKXXo4
-         5WO9N7Q+ti0zwWbR5s6dcoiBLvlqJMlQ4bELHTyYW1LJBNV+3+NnMwZ1Xi5jZmjkPfC5
-         8ARB2y8GMTViDiqn9X+VpnTKoAfjRroUKM0M771DApwYM+8+9wZSsBRx2eWTjYqBvs/b
-         RyL2K8o+MOMzh8zXplDQ7pKxsBMViMKFLHyROGAphPYr/dbZ9NcQvC2hnLjaBFK8Tz+T
-         H8kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaKh+61wlZ3RhtPID51FdGpxBWaBBV7fyOopwseJgqwW59c57pQOPQXbx9nvUd/MU77CcsfuftdoB9/g==@vger.kernel.org, AJvYcCXWCqxaJshgh5Uz6Wh/ukqLzZLxEgGuQcDPwFxoag4RPf0nsE3GG9c1E2KIEzrpPNcFdL73xhJ2oBWObhdu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbd/Ta1Iw0udCPZBUPvV9h294Jtgk81E83ywG47mzlrMZzHyYA
-	YQ4UyogFN8KAwKYPr6S0t8kix+ZWoDZWUKcmC6eds5fHx01hqFuI
-X-Gm-Gg: ASbGncuSZW73RTyiNraYh2QXv4OcDwfxg0+KvJXt5azornBzL640W+Z1IrUz9La2jxn
-	Wic4ht6lZJWZI+L9sw5Z0d26Rcd26lSAR84Sr5wJLPhEmHi9GglKXjXR3ImVgUGzFDYe6NfeX9f
-	eHRH5MD8DltaKIW5xXPP4DM1rs/wEb9RRGFcKUAFK8xC4RtivuLR2rJE+kKAFxm84R7Y0bb/Bbj
-	lXSLIKswH4cqWhH9OrtZ0GccHOaVemMLz0kZaE7dmRyiA095/CZXqLDCmYdUV7fEPA=
-X-Google-Smtp-Source: AGHT+IEk6eLmHw43EbSWAFyU4BJH8ghdVFOWWaZUgvM/Hy/8fIVc2j6UFwztQHthI+euaXaF3SUZzA==
-X-Received: by 2002:ad4:5ca1:0:b0:6d8:850a:4d77 with SMTP id 6a1803df08f44-6e42fb6b15dmr48151266d6.7.1738758622414;
-        Wed, 05 Feb 2025 04:30:22 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e254814d0csm73397806d6.43.2025.02.05.04.30.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 04:30:22 -0800 (PST)
-Date: Wed, 5 Feb 2025 20:28:56 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Arnd Bergmann <arnd@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Inochi Amaoto <inochiama@outlook.com>, 
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: sg2042: add back module description/author tags
-Message-ID: <kdvu3xjreyycftkbsomqzc3e3y6mkom5u25co5rqwqem4n7p47@xnmhg7mkxsmw>
-References: <20250205121419.373464-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sW7qDWjl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3D8C4CED1;
+	Wed,  5 Feb 2025 12:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738758711;
+	bh=B4ApR9j40l5CmOzxcfj5E/SuOauGNanQrjKbH41LKRs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sW7qDWjlNIGw5WOumZyY32oHAB5tlFkokhadotqUZzsaC5ANFmpBhLa/rhiEtMuOp
+	 k3RI5y+zKp7D6wCaDHp/9A5smTdKxPuIry59fbQyvg+DUuWrze7i0fCHJZcgt0SFMf
+	 tp6NDXjJT1vhSTTgaXPENK+EcL8G1kuSO1Jw+NHkPPIGLBH1LZWQu0hyQQzWoMg2dI
+	 x8qC+XUWM1yFewYuRmpkPFuHJ2QX9ftT3TOsThDqHtVv5t9WyIpl/qXFaICqw99otC
+	 PEIOiwXmaIdv1jlvdjonEXzkghzsVcw3GRFWmMVV24f7uedgkcSpFIELwqLZ0hzYug
+	 U2AvG/veLfB0w==
+Message-ID: <f6afba27-b8e6-469f-913b-c7631881875f@kernel.org>
+Date: Wed, 5 Feb 2025 13:31:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205121419.373464-1-arnd@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 1/2] arm64: dts: qcom: qcs6490-rb3gen: add and enable
+ BT node
+To: Janaki Ramaiah Thota <quic_janathot@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: quic_mohamull@quicinc.com, quic_hbandi@quicinc.com,
+ quic_anubhavg@quicinc.com, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org
+References: <20250130183434.2394058-2-quic_janathot@quicinc.com>
+ <4de200f8-5924-449d-a5a7-cf08306cb916@quicinc.com>
+ <3c0746c2-ec51-4ce9-82e4-80191c4894bc@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <3c0746c2-ec51-4ce9-82e4-80191c4894bc@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 01:14:08PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> A previous code reorganization inadvertently dropped the two tags,
-> which leads to a "make W=1" warning:
-> 
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/sg2042-mcu.o
-> 
-> Add these back.
-> 
-> Fixes: cd4db38c4368 ("hwmon: (sg2042) Use per-client debugfs entry")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 05/02/2025 12:55, Janaki Ramaiah Thota wrote:
 
-Reviewed-by: Inochi Amaoto <inochiama@gmail.com>
+[trim entire unrelated stuff]
 
-> ---
->  drivers/hwmon/sg2042-mcu.c | 2 ++
->  1 file changed, 2 insertions(+)
+>> +
+>> +    bluetooth: bluetooth {
+>> +        compatible = "qcom,wcn6750-bt";
+>> +        vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
+>> +        vddaon-supply = <&vreg_pmu_aon_0p59>;
+>> +        vddbtcmx-supply = <&vreg_pmu_btcmx_0p85>;
+>> +        vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
+>> +        vddrfa1p7-supply = <&vreg_pmu_rfa_1p7>;
+>> +        vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
+>> +        max-speed = <3200000>;
+>> +    };
+
+Please kindly trim the replies from unnecessary context. It makes it
+much easier to find new content.
+
+>> +};
+>> +
+>>   &usb_1 {
+>>       status = "okay";
+>>   };
 > 
-> diff --git a/drivers/hwmon/sg2042-mcu.c b/drivers/hwmon/sg2042-mcu.c
-> index 74c35945d169..105131c4acf7 100644
-> --- a/drivers/hwmon/sg2042-mcu.c
-> +++ b/drivers/hwmon/sg2042-mcu.c
-> @@ -355,4 +355,6 @@ static struct i2c_driver sg2042_mcu_driver = {
->  };
->  module_i2c_driver(sg2042_mcu_driver);
->  
-> +MODULE_AUTHOR("Inochi Amaoto <inochiama@outlook.com>");
-> +MODULE_DESCRIPTION("MCU I2C driver for SG2042 soc platform");
->  MODULE_LICENSE("GPL");
-> -- 
-> 2.39.5
-> 
+> Could you please help to review this change? Thanks!
+
+You sent it while there was merge window. You ping us after 6 days, but
+counting merge window only 3 days. 3 days, instead of expected 14.
+
+Please relax, and help out by reviewing other patches on the mailing
+lists in order to relieve the burden of maintainers and move your
+patches higher up the list.
+
+
+Best regards,
+Krzysztof
