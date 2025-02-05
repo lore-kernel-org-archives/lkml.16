@@ -1,218 +1,160 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70121517A;
-	Wed,  5 Feb 2025 06:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924D1227BB7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738306; cv=none; b=hEmUwMxFV8CfmkM4PA4o7/fshc2SDFWvtcGeXPC/sa0KUCFGo03hdzTbeCyeETm0NP6BR2rVK7Mxnhxx1baH+e5Jdcajuya7aa5S7n1oek73RxMU5nSfHBiQ8xXzfcRVzjcwmZem3sl8j5R7xGvXfZYG5++ed5BodRPrYNPW65c=
+	t=1738738445; cv=none; b=cSs5OtAnOKsFxDFCF8mH4r35cSRUmq0t1t43spQJ19/ryIcAMDaufvNmdnR4MRMHTy5hn7gSBlMYPDBmNwBWu4wCi3vwyFsoSwiayd2m6hn4jdu0ElRoTibuUeoqbV0OVmsWx67Fva0KyJNxmlkSI/x1JUrLrWp9TcV7/7cScjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738306; c=relaxed/simple;
-	bh=9L3ouej3/FjEPM8eSSsN0/ylTSUIsq7lgz1T2WQyOwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MTTwva4pUpZYTZz8IZ2et4eBcePqo9/aaotziD9GXUfysTSsRyVqsyU1nIVuDiUAyi1AhIJQ1OjT13aJ5wY1YixA/sA2n/2G7GK7qyAX7cxwYKe86ARAG8W/OMqkekGF87R2VWBttx1fDnWKWx9p19Q04WGkYfxd6ZC0ngF6XEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=PyOUS7DV; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=KQF44lI1 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1738738445; c=relaxed/simple;
+	bh=cWbO8HKmw8z2ZMTH0xbgQo1v4JbWKY6SdNB1Q44Twjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qf+OM10kFlCZqKK94149c2nhr49luq/vvTm3vHX7xJd3MjkIVk1Oux8wU7kTIyAwRqzFbj9uzXF1CV/+cXQu+EFgRXoPZ8OEv4iF6PJJpIragKbfuhoCznkStcTAZz3OHC6e4d9nJAPpIRoPV4KIMuJNDxV0dGCxhi7lOkD3WEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fC65TRMs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="PyOUS7DV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="KQF44lI1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1738738303; x=1770274303;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KeHFLkjfWtRxfDUQFOy9gyg8C+i7BEnpkwJhjjc+Qik=;
-  b=PyOUS7DVl5HPeOyeJtFZvWwqJfRHR8BYOmhT2Hhmyua1lAuxlSrw02Ya
-   zNN7gyML0YZ7VwbzXEWZ0tG14UgNJs6e/8ESTxLpOEQALaurArJ1XwpOC
-   /Aufs3Kpqh/6FMcReMmvsMiQQbTHYpQzEH+qKVwHUAcbjCcSt1IKH3BLV
-   FU4h4zNsLFxcNwJ/+cRae2Zgi8chUO8l2H6TVSqxScrwj5YxzhCC823kf
-   1sIdYDc6GHkVtDWiEKD1m9rZ+maJQL0Vr9c1wjqD45s++WjDhbKqyhOiL
-   W5swqZFSJsqiUXOtEgIaLEdZE5Ape3f24pRhSIwZh1AA62noJH52PnvkA
-   Q==;
-X-CSE-ConnectionGUID: qXX3ANZUTFGznOjv2F6fwQ==
-X-CSE-MsgGUID: CvaGeVioTTKTcoJs2PiBKg==
-X-IronPort-AV: E=Sophos;i="6.13,260,1732575600"; 
-   d="scan'208";a="41557887"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 05 Feb 2025 07:51:32 +0100
-X-CheckPoint: {67A30A74-1-C6D8D88D-F91F9E6B}
-X-MAIL-CPID: 97E800B69666A87223C2F728F94B1646_2
-X-Control-Analysis: str=0001.0A682F29.67A30A76.0429,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C89E0160ABA;
-	Wed,  5 Feb 2025 07:51:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1738738287;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fC65TRMs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738738442;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KeHFLkjfWtRxfDUQFOy9gyg8C+i7BEnpkwJhjjc+Qik=;
-	b=KQF44lI123mj3JI+bf1eNCEaDG/8mACwABZMZTbulko216vyebIMHv/cs1YCtv9nquxibY
-	pCX2ncwQbFbh1gKAYpIOhwy9+2QJMXch0x0twjmFmKD9a/T5W5w0pLxC7x0xJ8UTJ+Jwrs
-	zpkg9dv0FWNO4wEnGX1TZfh0fch/Wacc0HD2s1pMFy+o8J+QfDtCVujLIICSK8XX1PMy10
-	v44b6FbQtSK2ZJwAl2DFMlqhEPtfCAi7zrMSLxrvzeDWso1pZNLygVQdD1twcbIxy5CH6U
-	+JcjuC7fds99m02Uqwi2WGePQfZecM6qRukJYTCZ9hSBM7uzYb58gdDNUG56vQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
-Date: Wed, 05 Feb 2025 07:51:23 +0100
-Message-ID: <6396921.lOV4Wx5bFT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <Z5z0/382k8MkcZpP@lizhi-Precision-Tower-5810>
-References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com> <4961006.GXAFRqVoOG@steina-w> <Z5z0/382k8MkcZpP@lizhi-Precision-Tower-5810>
+	bh=Ig+/O8/8C9meWS9i5E5x4FYET8uunPEIglzfgflUkxo=;
+	b=fC65TRMs313PcjAlVEGq2TbAjCKHxmxNziFJQbrFTDsDPEK4vPwA51tCvFixqY68Ty0gGt
+	BRv2+bcNrRW6fsl2EzTP2mU3weV4PL51Oe0LqRjUQhUeHjj6Hk+EmuF83o9YRMu6gQ0MFy
+	eQatS9isVGS8LoXAolrjIsxixbuNLUE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-596-JcsjEwTqNCqDBcEszw9ljA-1; Wed, 05 Feb 2025 01:53:58 -0500
+X-MC-Unique: JcsjEwTqNCqDBcEszw9ljA-1
+X-Mimecast-MFC-AGG-ID: JcsjEwTqNCqDBcEszw9ljA
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38db0b5405bso214606f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 22:53:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738738437; x=1739343237;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ig+/O8/8C9meWS9i5E5x4FYET8uunPEIglzfgflUkxo=;
+        b=inKSQGX2H19hnEmT1O+cOWrjDcl99NMJr6GKeZ9PcXfMW2zL9Fa6D8PB/aWm3gWFHr
+         b5PQ94L/D0DNSyHxiXJnNbCFWb+mSmYq1A+6UeqgRbrsrx/NROJvX6O/LL6c9m36BfOj
+         9FZK1rAXb+ng5VQa1bqIw8kmebLEfC3nWtfQXAwRBD/aFFiKqKd4u0ICcA1RSETHgD4y
+         PylBrrxqV0yzqmP10hACHywGiYiSYAuLlq9Ie+WKDl8bnRUkZAqmHO+R0NCjcYWVeQep
+         mz6eXyWDDeZkRErmz11DdlhhtxppoVBtN0vlcVIx1+pojnXFI2aNwksa6Tcipq8UQPiV
+         tx8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWf2OeWc2ssEj6sbDXARujUpRjd4bzygTcR/y2xqH1C65NYgJLRxpkJiqB3TeMRPojoJ8/jRPptK+n17ik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzB1Edde23zo9/AK1K/CJ5LMWbJUv2otKJebYncgwbEnsoT/W3I
+	zktUK2JC2QsSsrLPuideK5ghUM488T59+RhX7piHDoih+o0ag6Vge+aEKPCOs83GTAklKuAlGFx
+	V+o/ogKrMEkPzc63UQg9CQNYs/UMFw78osSmF4I8gI8Fd9cmSZ2oOwDXxSJJyJw==
+X-Gm-Gg: ASbGncv/pBriUV8QvgispSyB8QGX5UzKnNGtECocA/RsMBCGHPdL7Uk/rXTeqtGnLEr
+	NSZS42Yfz0EGTBjh6G6HgahxOcLJewsZrCfLcSkCcc0o8J7cZHur3JJU6CEAqWflyytCv5O3woC
+	q1gyxP5TlwOW/Yz8fxjYE6bRD67owzCN50JCQy0mVxA5PMfsHAoI+80qilw4TBejKYXqqlwhX8Z
+	Zz0TlpWBm4/sinCeyCVzJ8+GUEhR6WRUBiAyIftAugIiNaCEkHAT5UJYO0YFoRf0lY0Xi9pdtlX
+	EJvuXTFyc/gpo7ejBtrfo2JS3ZQcFmwr2Vyd
+X-Received: by 2002:a05:6000:184c:b0:38d:b7dc:30b8 with SMTP id ffacd0b85a97d-38db7dc3509mr21306f8f.18.1738738436786;
+        Tue, 04 Feb 2025 22:53:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFGpckBtgHNmxTU7R59xIWWBoy3feR6+6IjsVYrKHmwkhizPVL0uHMyp9QXQa1ReNMzYO5Zcg==
+X-Received: by 2002:a05:6000:184c:b0:38d:b7dc:30b8 with SMTP id ffacd0b85a97d-38db7dc3509mr21291f8f.18.1738738436348;
+        Tue, 04 Feb 2025 22:53:56 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d96536asm11146655e9.18.2025.02.04.22.53.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 22:53:55 -0800 (PST)
+Date: Wed, 5 Feb 2025 07:53:53 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
+References: <ba51a43f-796d-4b79-808a-b8185905638a@nvidia.com>
+ <Z4FAhF5Nvx2N_Zu6@jlelli-thinkpadt14gen4.remote.csb>
+ <5d7e5c02-00ee-4891-a8cf-09abe3e089e1@nvidia.com>
+ <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
+ <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
+ <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
+ <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
+ <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
+ <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
+ <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
 
-Am Freitag, 31. Januar 2025, 17:06:23 CET schrieb Frank Li:
-> On Fri, Jan 31, 2025 at 02:54:06PM +0100, Alexander Stein wrote:
-> > Hi,
-> >
-> > Am Donnerstag, 30. Januar 2025, 17:42:32 CET schrieb Frank Li:
-> > > On Thu, Jan 30, 2025 at 02:01:00PM +0100, Alexander Stein wrote:
-> > > > i.MX8M OCOTP supports a specific peripheral or function being fused
-> > > > which means disabled, so
-> > > >  - Introduce disable_fuse for a list of possible fused peripherals.
-> > > >  - Iterate all nodes to check accessing permission. If not
-> > > >    allowed to be accessed, detach the node
-> > > >
-> > > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > > > ---
-> > > >  drivers/nvmem/Kconfig     |   3 ++
-> > > >  drivers/nvmem/imx-ocotp.c | 105 ++++++++++++++++++++++++++++++++++=
-+++-
-> > > >  2 files changed, 107 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> > > > index 8671b7c974b93..ba5c928cab520 100644
-> > > > --- a/drivers/nvmem/Kconfig
-> > > > +++ b/drivers/nvmem/Kconfig
-> > > > @@ -84,6 +84,9 @@ config NVMEM_IMX_OCOTP
-> > > >  	  This driver can also be built as a module. If so, the module
-> > > >  	  will be called nvmem-imx-ocotp.
-> > > >
-> > > > +	  If built as modules, any other driver relying on this working
-> > > > +	  as access controller also needs to be a module as well.
-> > > > +
-> > > >  config NVMEM_IMX_OCOTP_ELE
-> > > >  	tristate "i.MX On-Chip OTP Controller support"
-> > > >  	depends on ARCH_MXC || COMPILE_TEST
-> > > > diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> > > > index c5086a16450ac..e3ea026a37d0d 100644
-> > > > --- a/drivers/nvmem/imx-ocotp.c
-> > > > +++ b/drivers/nvmem/imx-ocotp.c
-> > > > @@ -23,6 +23,7 @@
-> > > >  #include <linux/of.h>
-> > > >  #include <linux/platform_device.h>
-> > > >  #include <linux/slab.h>
-> > > > +#include <dt-bindings/nvmem/fsl,imx8mn-ocotp.h>
-> > > >
-> > > >  #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address o=
-f the
-> > > >  					       * OTP Bank0 Word0
-> > > > @@ -91,11 +92,20 @@ struct ocotp_ctrl_reg {
-> > > >  	u32 bm_rel_shadows;
-> > > >  };
-> > > >
-> > > > +#define OCOTP_MAX_NUM_GATE_WORDS 4
-> > > > +
-> > > > +struct disable_fuse {
-> > > > +	u32 fuse_addr;
-> > > > +	u32 mask;
-> > > > +};
-> > > > +
-> > > >  struct ocotp_params {
-> > > >  	unsigned int nregs;
-> > > >  	unsigned int bank_address_words;
-> > > >  	void (*set_timing)(struct ocotp_priv *priv);
-> > > >  	struct ocotp_ctrl_reg ctrl;
-> > > > +	u32 num_disables;
-> > > > +	struct disable_fuse *disables;
-> > > >  };
-> > > >
-> > > >  static int imx_ocotp_wait_for_busy(struct ocotp_priv *priv, u32 fl=
-ags)
-> > > > @@ -552,11 +562,25 @@ static const struct ocotp_params imx8mm_param=
-s =3D {
-> > > >  	.ctrl =3D IMX_OCOTP_BM_CTRL_DEFAULT,
-> > > >  };
-> > > >
-> > > > +struct disable_fuse imx8mn_disable_fuse[] =3D {
-> > > > +		[IMX8MN_OCOTP_M7_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT=
-(8) },
-> > > > +		[IMX8MN_OCOTP_M7_MPU_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D=
- BIT(9) },
-> > > > +		[IMX8MN_OCOTP_M7_FPU_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D=
- BIT(10) },
-> > > > +		[IMX8MN_OCOTP_USB_OTG1_DISABLE]	=3D { .fuse_addr =3D 20, .mask =
-=3D BIT(11) },
-> > > > +		[IMX8MN_OCOTP_GPU3D_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D =
-BIT(24) },
-> > > > +		[IMX8MN_OCOTP_MIPI_DSI_DISABLE]	=3D { .fuse_addr =3D 20, .mask =
-=3D BIT(28) },
-> > > > +		[IMX8MN_OCOTP_ENET_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
-IT(29) },
-> > > > +		[IMX8MN_OCOTP_MIPI_CSI_DISABLE]	=3D { .fuse_addr =3D 20, .mask =
-=3D BIT(30) },
-> > > > +		[IMX8MN_OCOTP_ASRC_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
-IT(31) },
-> > > > +};
-> > >
-> > > Can we direct define IMX8MN_OCOTP_M7_DISABLE as BIT(8), so avoid this
-> > > map data?
-> >
-> > This would be possible for imx8mn, but not for imx8mp which uses
-> > multiples fuses for disables. This is an excerpt from imx8mp WIP
-> > > struct disable_fuse imx8mp_disable_fuse[] =3D {
-> > > 	[IMX8MP_OCOTP_CAN_DISABLE]		=3D { .fuse_addr =3D 16, .mask =3D BIT(2=
-8) },
-> > > 	[IMX8MP_OCOTP_CAN_FD_DISABLE]		=3D { .fuse_addr =3D 16, .mask =3D BI=
-T(29) },
-> > > 	[IMX8MP_OCOTP_VPU_VC8000E_DISABLE]	=3D { .fuse_addr =3D 16, .mask =
-=3D BIT(30) },
-> > > 	[IMX8MP_OCOTP_IMG_ISP1_DISABLE]		=3D { .fuse_addr =3D 20, .mask =3D =
-BIT(0) },
-> > > 	[IMX8MP_OCOTP_IMG_ISP2_DISABLE]		=3D { .fuse_addr =3D 20, .mask =3D =
-BIT(1) },
-> > > 	[IMX8MP_OCOTP_IMG_DEWARP_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D=
- BIT(2) },
-> > > };
-> >
-> > Notice the fuse_addr of 16 and 20.
->=20
-> Yes, I am not sure if it good idea to encode fuse_addr to IMX8MP_OCOTP_CA=
-N_DISABLE
->=20
-> like
->=20
-> #define IMX8MP_OCOTP_CAN_DISABLE  16 << 16 | BIT(28)
->=20
-> So dt-bindings/nvmem/fsl,imx8mn-ocotp.h can be moved to dts directory.
+On 03/02/25 11:01, Jon Hunter wrote:
+> Hi Juri,
+> 
+> On 16/01/2025 15:55, Juri Lelli wrote:
+> > On 16/01/25 13:14, Jon Hunter wrote:
 
-Mh, I personally don't like encoding offsets into bits. How about using
-> '#access-controller-cells =3D <2>'
-and using the defines like this
-> #define IMX8MP_OCOTP_CAN_DISABLE  16 0x10000000
+...
 
-DT stays the same:
-> access-controllers =3D <&ocotp IMX8MP_OCOTP_CAN_DISABLE>;
+> > > [  210.595431] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
+> > > [  210.606269] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
+> > > [  210.617281] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
+> > > [  210.627205] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=2
+> > > [  210.637752] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=1
+> >                                                                            ^
+> > Different than before but still not what I expected. Looks like there
+> > are conditions/path I currently cannot replicate on my setup, so more
+> > thinking. Unfortunately I will be out traveling next week, so this
+> > might required a bit of time.
+> 
+> 
+> I see that this is now in the mainline and our board is still failing to
+> suspend. Let me know if there is anything else you need me to test.
 
-Note: It seems BIT(x) is not usable in DT.
+Ah, can you actually add 'sched_verbose' and to your kernel cmdline? It
+should print our additional debug info on the console when domains get
+reconfigured by hotplug/suspends, e.g.
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+ dl_bw_manage: cpu=3 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
+ CPU0 attaching NULL sched-domain.
+ CPU3 attaching NULL sched-domain.
+ CPU4 attaching NULL sched-domain.
+ CPU5 attaching NULL sched-domain.
+ CPU0 attaching sched-domain(s):
+  domain-0: span=0,4-5 level=MC
+   groups: 0:{ span=0 cap=766 }, 4:{ span=4 cap=908 }, 5:{ span=5 cap=989 }
+ CPU4 attaching sched-domain(s):
+  domain-0: span=0,4-5 level=MC
+   groups: 4:{ span=4 cap=908 }, 5:{ span=5 cap=989 }, 0:{ span=0 cap=766 }
+ CPU5 attaching sched-domain(s):
+  domain-0: span=0,4-5 level=MC
+   groups: 5:{ span=5 cap=989 }, 0:{ span=0 cap=766 }, 4:{ span=4 cap=908 }
+ root domain span: 0,4-5
+ rd 0,4-5: Checking EAS, CPUs do not have asymmetric capacities
+ psci: CPU3 killed (polled 0 ms)
 
+Can you please share this information as well if you are able to collect
+it (while still running with my last proposed fix)?
+
+Thanks!
+Juri
 
