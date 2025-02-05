@@ -1,144 +1,302 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE65F228CAD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D621765E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738742268; cv=none; b=VDNi+mNY93gpxwXWXM3Wkr1cGrc4ORnWWEnCcyjfCwS8jgas0k27wIYk9myUl9JAK3eTvZeck5O/6fEKzMRXgGqVbj9panc+LSJktyHZ9WFJPICVQlJl7vAADT7RCfsvKgMCLWmuubLkQf/uLemsUIHf90tnDsL0bG9nwMAAcns=
+	t=1738742328; cv=none; b=HcUrNPlWyEgN5T8WBrkWlQwh0Gl5UOTGPtoP7zc85WfVhaYAcIzhbvYFgmua7Eh3mn3bRE46WgA+5arjls1PM6gwupO/0ShRbidszy8084AfZwStHqMifYF2D3/y25JqtvdGE0E0RBfVjGGDg80Te0CaZRxuyIA8e9++nccy2B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738742268; c=relaxed/simple;
-	bh=kCYpgBMK7Rzj+V3RRv0t4HfrublkMmMqXKbRjCktDYA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eqy6nXHJOFrN7374dG5LMr2VlQ0dWDOuZ17f+vwirGxAImWuF8ToUHprqHDSr0Soapragx4ly8SCYUGpuK3duTCmS/ChQscU1xDkprmf0PEjcEVbBhVoy6MYyXcPzZD8qPFoRb1k23xVWffHvW81MgTSIahNK64fbe+8AkK13Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.starfivetech.com; spf=none smtp.mailfrom=linux.starfivetech.com; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.starfivetech.com
-X-QQ-mid: bizesmtpsz8t1738742253t7hgm8u
-X-QQ-Originating-IP: LhoYFQ+iWEQs6p+Ju1KUL8CfXjPMNyGFDkrdyseJg5Y=
-Received: from [192.168.125.117] ( [113.72.145.41])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 05 Feb 2025 15:57:31 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4618514360899873354
-Message-ID: <25B3D8909DBCC21B+43663a76-4afa-44ae-95e2-3a8792de614c@linux.starfivetech.com>
-Date: Wed, 5 Feb 2025 15:57:31 +0800
+	s=arc-20240116; t=1738742328; c=relaxed/simple;
+	bh=ZopVieWijvzU+oBhZmofMrmf5ru4Ukq9wJt2t291gJA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ju62K5cu9TWpurRBLL3Kd5g1lBsihaY318bnTKQTdRQkZPGcfeB7w9ndnmyk07rSFHIyHUQBZzBtr9zFxjN26ClDXcBL4zR7acNXs/fECE5qRPnm9f7NCIEmmXkeSsnPYZ46wx9dBXXeg9LujawfQLb03cAkItn6bC05ybpiuTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEbwFEGs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEbwFEGs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3852AC4CED1;
+	Wed,  5 Feb 2025 07:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738742328;
+	bh=ZopVieWijvzU+oBhZmofMrmf5ru4Ukq9wJt2t291gJA=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=uEbwFEGsnvSLt6o1BOI/cwp2ZC5tEc/H2yJyATLIvXq/nQQzCxEkLlmnZlU1HHM+g
+	 qEY05IxJSikItCnu2u/uV+oPhN8Y/CofpaqCjmdBdVLLyZSMDP37d8ohCLDCkSn8dw
+	 Y9tmZMnRVHEZlcA+/szHIV7fIb5PHK3WjzJbWgoSoDf8/WT8daUD08Cdpqi0Y5EY/K
+	 pbxGkpMxULQnif2ohYwotYASO0B9d0Feo635FYz5gSAG1HLkMamsoBr8Ri2eUE9VW1
+	 vb36eFND0/eOteJ3Gcz1sVyImwFJiCs4Bk8pZcm5RnWOGZ4Tog5U/LV7EzStlvBDZv
+	 K76x8B+OXuIxA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22023C02192;
+	Wed,  5 Feb 2025 07:58:48 +0000 (UTC)
+From: Chuan Liu via B4 Relay <devnull+chuan.liu.amlogic.com@kernel.org>
+Date: Wed, 05 Feb 2025 15:58:43 +0800
+Subject: [PATCH v2] soc: amlogic: clk-measure: Optimize the memory size of
+ clk-measure
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common:
- bootph-pre-ram hinting needed by boot loader
-Content-Language: en-US
-To: E Shattow <e@freeshell.de>, Emil Renner Berthing <kernel@esmil.dk>,
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250203013730.269558-1-e@freeshell.de>
- <20250203013730.269558-6-e@freeshell.de>
-From: Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <20250203013730.269558-6-e@freeshell.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:linux.starfivetech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: N7M/927DZCmZgl3HV73i7XckDbUeZgeeSvf4+hE0xL6MCxxoe0n3+7Xx
-	04ggSSKrjWv0sQAoYO07nUH4OfyepHbEBFiOHD9qEYQ0QIVn70lnTki9Q6Qv9WxZ9xxGdRj
-	oKHusWBRUtXsmXWtdCj8yEyDZUo1uPkH+GdO1KFWUTBI2zw/wCnyCF+HNT9b/ApLO8LwFkj
-	YQiD+5OjnqQh5NxaOmgGryBo+0GNvFElTWwsB0dujHLRzd8BcMEB9nYaYMSnJPeNQrDSoVL
-	vAl7BXVSPMaK9K7XlVdx+syCNlS20xqSg8wlShw0zrjM1rfKLWCBqfqtSUxMWWuH97Xkuap
-	b9wdsj3LH15t78tTwOc76nhd1vdq2jzLsmOM31CVJ1/Iigy8ROnfJn4rVGt8wHq9n6cz2Kt
-	bI5+MxmY1ll9moWZkONOhnaLw4tK8qqUVHwY2Q2oNF7Pb+l2Ra0AeuIo4iXIk6vs/6176hq
-	l7bgooVl5xl/tX7m33HWWO6F27VsHB41OZ514w5GeexESH+ZHuYBqJS49tSFpIEG9bqm1hG
-	ck5ZcQBBcMNFI6goANGY5SagZvr8+NbiQJnQraxA64tSZM03lC0Dy73fIy5DoC2j/y5ma0g
-	yu0siJ+3BOy0cfH2i8j1c4w5TW5gyhDVCoOiO1ryVyOzBUQHZY4FxyBsjCnmaiGu4WoYyyD
-	duy/9mA57CtF1lXS4XFmo24utrpzG3tRdMsCkmdYlNEzALV4mP6eBhMNHtFcrG3SP1HK2LK
-	yWl/WPFm2MIMwwGHhhRvX8qLFujZhIBptJL2rONtOrteiPrgqGn7s26uB/YlTKeJljDqiVB
-	5IBjXBrbkA12D5eXJNLkWkuenN8KlJtTwyvEXXiwzAGoHdB30p9GsYye+p+M6XVFUzYEMvl
-	QjGDIvo5XkYgrLperely+0o/QwRk29uw37naBXPBQyzTij6yJ6E853f5P4o/XneZXRBGbv8
-	MpIob/rrB8cDkILVp7uvLYZpr6D39kKQhQPMMrOYwz1tib0hXc+XeTiX3+czcB2sF7Ik=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+Message-Id: <20250205-optimize_memory_size_of_clk_measure-v2-1-4f546053495d@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIADIao2cC/5WNWw6CMBREt0LutzVteYlf7sMQ0tRbuJFS0iJRS
+ fduYQf+zZlk5mwQ0BMGuGYbeFwpkJsSyFMGelBTj4weiUFyWXIhc+bmhSx9sbNonf90Yc/OdHp
+ 8pkqFl0dmGl1wvIiybgpIT7NHQ+/Dcm8TDxSWtD2kq9jb//5XwQTjlVKV4sKYvL4pO7qe9Fk7C
+ 22M8QfWd3ks2AAAAA==
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Chuan Liu <chuan.liu@amlogic.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738742326; l=7454;
+ i=chuan.liu@amlogic.com; s=20240902; h=from:subject:message-id;
+ bh=CmPH3b1j74K558ccUEKEAgqGmyZRPF8SYGNr1A0i6CM=;
+ b=JJUxo3NfEYFOoJCIwiriJ83d+KNiGzq1jcQ7AAQRhodrDHrguh/T49K5lXqMIA6/MlHve3lFP
+ s4xSfhbuf4ZBFeBNFKMh3Jf1wUXoMOCsh0Qa2hN9H1/mhH7nO53BjKH
+X-Developer-Key: i=chuan.liu@amlogic.com; a=ed25519;
+ pk=fnKDB+81SoWGKW2GJNFkKy/ULvsDmJZRGBE7pR5Xcpo=
+X-Endpoint-Received: by B4 Relay for chuan.liu@amlogic.com/20240902 with
+ auth_id=203
+X-Original-From: Chuan Liu <chuan.liu@amlogic.com>
+Reply-To: chuan.liu@amlogic.com
 
-On 2/3/2025 9:37 AM, E Shattow wrote:
-> Add bootph-pre-ram hinting to jh7110-common.dtsi:
->   - i2c5_pins and i2c-pins subnode for connection to eeprom
->   - eeprom node
->   - qspi flash configuration subnode
->   - memory node
->   - uart0 for serial console
-> 
->   With this the U-Boot SPL secondary program loader may drop such
->   overrides when using dt-rebasing with JH7110 OF_UPSTREAM board targets.
-> 
-> Signed-off-by: E Shattow <e@freeshell.de>
-> ---
->  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> index 30c5f3487c8b..c9e7ae59ee7c 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> @@ -28,6 +28,7 @@ chosen {
->  	memory@40000000 {
->  		device_type = "memory";
->  		reg = <0x0 0x40000000 0x1 0x0>;
-> +		bootph-pre-ram;
->  	};
->  
->  	gpio-restart {
-> @@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
->  	};
->  
->  	eeprom@50 {
-> +		bootph-pre-ram;
->  		compatible = "atmel,24c04";
->  		reg = <0x50>;
->  		pagesize = <16>;
-> @@ -323,6 +325,7 @@ &qspi {
->  	nor_flash: flash@0 {
->  		compatible = "jedec,spi-nor";
->  		reg = <0>;
-> +		bootph-pre-ram;
->  		cdns,read-delay = <2>;
->  		spi-max-frequency = <100000000>;
->  		cdns,tshsl-ns = <1>;
-> @@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
->  	};
->  
->  	i2c5_pins: i2c5-0 {
-> +		bootph-pre-ram;
->  		i2c-pins {
->  			pinmux = <GPIOMUX(19, GPOUT_LOW,
->  					      GPOEN_SYS_I2C5_CLK,
-> @@ -413,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
->  					      GPOEN_SYS_I2C5_DATA,
->  					      GPI_SYS_I2C5_DATA)>;
->  			bias-disable; /* external pull-up */
-> +			bootph-pre-ram;
->  			input-enable;
->  			input-schmitt-enable;
->  		};
-> @@ -641,6 +646,7 @@ GPOEN_DISABLE,
->  };
->  
->  &uart0 {
-> +	bootph-pre-ram;
->  	clock-frequency = <24000000>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&uart0_pins>;
+From: Chuan Liu <chuan.liu@amlogic.com>
 
-What about &mmc0, &mmc1, &qspi, &sysgpio, &mmc0_pins, &mmc1_pins, &i2c5?
-Why not add "bootph-pre-ram;" for them?
+Drop "CLK_MSR_MAX" and replace it with adding a member "msr_count" in
+the structure to specify the count of msr_id.
+
+Mark the table of msr_id as const.
+
+Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
+---
+The number of msr_ids for each chip is inconsistent. Defining a
+fixed-size array for each chip to store msr_ids would waste memory.
+---
+Changes in v2:
+- Discard the global variable and restore the "priv" member in the
+"struct meson_msr_id".
+- Mark msr_id_table as const.
+- Link to v1: https://lore.kernel.org/r/20250123-optimize_memory_size_of_clk_measure-v1-1-06aa6a01ff37@amlogic.com
+---
+ drivers/soc/amlogic/meson-clk-measure.c | 86 ++++++++++++++++++++++++---------
+ 1 file changed, 62 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
+index a6453ffeb753..39638d6a593c 100644
+--- a/drivers/soc/amlogic/meson-clk-measure.c
++++ b/drivers/soc/amlogic/meson-clk-measure.c
+@@ -33,23 +33,26 @@ static DEFINE_MUTEX(measure_lock);
+ #define DIV_STEP		32
+ #define DIV_MAX			640
+ 
+-#define CLK_MSR_MAX		128
+-
+ struct meson_msr_id {
+ 	struct meson_msr *priv;
+ 	unsigned int id;
+ 	const char *name;
+ };
+ 
++struct meson_msr_data {
++	struct meson_msr_id *msr_table;
++	unsigned int msr_count;
++};
++
+ struct meson_msr {
+ 	struct regmap *regmap;
+-	struct meson_msr_id msr_table[CLK_MSR_MAX];
++	struct meson_msr_data data;
+ };
+ 
+ #define CLK_MSR_ID(__id, __name) \
+ 	[__id] = {.id = __id, .name = __name,}
+ 
+-static struct meson_msr_id clk_msr_m8[CLK_MSR_MAX] = {
++static const struct meson_msr_id clk_msr_m8[] = {
+ 	CLK_MSR_ID(0, "ring_osc_out_ee0"),
+ 	CLK_MSR_ID(1, "ring_osc_out_ee1"),
+ 	CLK_MSR_ID(2, "ring_osc_out_ee2"),
+@@ -98,7 +101,7 @@ static struct meson_msr_id clk_msr_m8[CLK_MSR_MAX] = {
+ 	CLK_MSR_ID(63, "mipi_csi_cfg"),
+ };
+ 
+-static struct meson_msr_id clk_msr_gx[CLK_MSR_MAX] = {
++static const struct meson_msr_id clk_msr_gx[] = {
+ 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
+ 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
+ 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
+@@ -168,7 +171,7 @@ static struct meson_msr_id clk_msr_gx[CLK_MSR_MAX] = {
+ 	CLK_MSR_ID(82, "ge2d"),
+ };
+ 
+-static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
++static const struct meson_msr_id clk_msr_axg[] = {
+ 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
+ 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
+ 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
+@@ -242,7 +245,7 @@ static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
+ 	CLK_MSR_ID(109, "audio_locker_in"),
+ };
+ 
+-static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
++static const struct meson_msr_id clk_msr_g12a[] = {
+ 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
+ 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
+ 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
+@@ -358,7 +361,7 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
+ 	CLK_MSR_ID(122, "audio_pdm_dclk"),
+ };
+ 
+-static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
++static const struct meson_msr_id clk_msr_sm1[] = {
+ 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
+ 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
+ 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
+@@ -489,7 +492,7 @@ static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
+ };
+ 
+ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+-			       unsigned int duration)
++			    unsigned int duration)
+ {
+ 	struct meson_msr *priv = clk_msr_id->priv;
+ 	unsigned int val;
+@@ -573,13 +576,14 @@ DEFINE_SHOW_ATTRIBUTE(clk_msr);
+ static int clk_msr_summary_show(struct seq_file *s, void *data)
+ {
+ 	struct meson_msr_id *msr_table = s->private;
++	unsigned int msr_count = msr_table->priv->data.msr_count;
+ 	unsigned int precision = 0;
+ 	int val, i;
+ 
+ 	seq_puts(s, "  clock                     rate    precision\n");
+ 	seq_puts(s, "---------------------------------------------\n");
+ 
+-	for (i = 0 ; i < CLK_MSR_MAX ; ++i) {
++	for (i = 0 ; i < msr_count ; ++i) {
+ 		if (!msr_table[i].name)
+ 			continue;
+ 
+@@ -604,7 +608,7 @@ static const struct regmap_config meson_clk_msr_regmap_config = {
+ 
+ static int meson_msr_probe(struct platform_device *pdev)
+ {
+-	const struct meson_msr_id *match_data;
++	const struct meson_msr_data *match_data;
+ 	struct meson_msr *priv;
+ 	struct dentry *root, *clks;
+ 	void __iomem *base;
+@@ -621,7 +625,16 @@ static int meson_msr_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	memcpy(priv->msr_table, match_data, sizeof(priv->msr_table));
++	priv->data.msr_table = devm_kcalloc(&pdev->dev,
++					    match_data->msr_count,
++					    sizeof(struct meson_msr_id),
++					    GFP_KERNEL);
++	if (!priv->data.msr_table)
++		return -ENOMEM;
++
++	memcpy(priv->data.msr_table, match_data->msr_table,
++	       match_data->msr_count * sizeof(struct meson_msr_id));
++	priv->data.msr_count = match_data->msr_count;
+ 
+ 	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+@@ -636,45 +649,70 @@ static int meson_msr_probe(struct platform_device *pdev)
+ 	clks = debugfs_create_dir("clks", root);
+ 
+ 	debugfs_create_file("measure_summary", 0444, root,
+-			    priv->msr_table, &clk_msr_summary_fops);
++			    priv->data.msr_table, &clk_msr_summary_fops);
+ 
+-	for (i = 0 ; i < CLK_MSR_MAX ; ++i) {
+-		if (!priv->msr_table[i].name)
++	for (i = 0 ; i < priv->data.msr_count ; ++i) {
++		if (!priv->data.msr_table[i].name)
+ 			continue;
+ 
+-		priv->msr_table[i].priv = priv;
++		priv->data.msr_table[i].priv = priv;
+ 
+-		debugfs_create_file(priv->msr_table[i].name, 0444, clks,
+-				    &priv->msr_table[i], &clk_msr_fops);
++		debugfs_create_file(priv->data.msr_table[i].name, 0444, clks,
++				    &priv->data.msr_table[i], &clk_msr_fops);
+ 	}
+ 
+ 	return 0;
+ }
+ 
++static const struct meson_msr_data clk_msr_gx_data = {
++	.msr_table = (void *)clk_msr_gx,
++	.msr_count = ARRAY_SIZE(clk_msr_gx),
++};
++
++static const struct meson_msr_data clk_msr_m8_data = {
++	.msr_table = (void *)clk_msr_m8,
++	.msr_count = ARRAY_SIZE(clk_msr_m8),
++};
++
++static const struct meson_msr_data clk_msr_axg_data = {
++	.msr_table = (void *)clk_msr_axg,
++	.msr_count = ARRAY_SIZE(clk_msr_axg),
++};
++
++static const struct meson_msr_data clk_msr_g12a_data = {
++	.msr_table = (void *)clk_msr_g12a,
++	.msr_count = ARRAY_SIZE(clk_msr_g12a),
++};
++
++static const struct meson_msr_data clk_msr_sm1_data = {
++	.msr_table = (void *)clk_msr_sm1,
++	.msr_count = ARRAY_SIZE(clk_msr_sm1),
++};
++
+ static const struct of_device_id meson_msr_match_table[] = {
+ 	{
+ 		.compatible = "amlogic,meson-gx-clk-measure",
+-		.data = (void *)clk_msr_gx,
++		.data = &clk_msr_gx_data,
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson8-clk-measure",
+-		.data = (void *)clk_msr_m8,
++		.data = &clk_msr_m8_data,
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson8b-clk-measure",
+-		.data = (void *)clk_msr_m8,
++		.data = &clk_msr_m8_data,
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-axg-clk-measure",
+-		.data = (void *)clk_msr_axg,
++		.data = &clk_msr_axg_data,
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-g12a-clk-measure",
+-		.data = (void *)clk_msr_g12a,
++		.data = &clk_msr_g12a_data,
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-sm1-clk-measure",
+-		.data = (void *)clk_msr_sm1,
++		.data = &clk_msr_sm1_data,
+ 	},
+ 	{ /* sentinel */ }
+ };
+
+---
+base-commit: 1e1fd26ed4ca05cc1f0e5857918da4dd54967f7d
+change-id: 20250123-optimize_memory_size_of_clk_measure-f9c40e815794
 
 Best regards,
-Hal
+-- 
+Chuan Liu <chuan.liu@amlogic.com>
+
 
