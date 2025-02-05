@@ -1,288 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2D21420E;
-	Wed,  5 Feb 2025 02:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B3D211A0C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738723344; cv=none; b=nJZThwXhR4zQcTaTrJkSVTc7IybCM8C18sD3mI9EXTtFg4WOK06feeELIRpZfxFRGunOCmYd2oDyqVE9DXsTm0+E+rZ4YDdopGiUjsMg7aodFHpCMDIlKI3lOgihieqQq/2sP2Hs/OjyxBIOxG4+EpCDEs9fkV3me7u89e9CKIg=
+	t=1738723405; cv=none; b=KgtJKirbsB/UNNDw4v++bCg8puVcBearYX2YKeswHKZ9PTvnFTijll3KsZengTXLkuG0+/bhebhvax9vBZtZWr5puYAP8Oz+4COadUW1yX8euYCKhOXLa1wdFi/RtXsP9kAswBuNCtUmaDDcgFCXtBj88G6wa0sKNUY5TD42aDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738723344; c=relaxed/simple;
-	bh=ksaAaaoLVoDgCUczAlEVx+8YvcmGLf/2DZVsnOi+dMg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lEcnBPlx/BmzhtkITs+DZglXKMH71a/CWs3Ws0A3QeSBPm7XyteqZlGAkKuYk0a5t2fRMInu2WL8pAJuJoSBANrPasUAL+gPCxj5mbhynNUGrYfpDud5VlFzmIgk89jhQEkjz92yguLYxyFNVSG3GpJKu8NU0N45PC6s1xNGeg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dj9bqDRg; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738723405; c=relaxed/simple;
+	bh=NASyQf4OjOsLdXT6p0CJxsTqPKWQGG2LzhnWr0K/lik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvl5TM00PO9a8ZWZ5UoD+0MwfFQjJVRi2gKJuYVj0btfsjMcZASqIj30ahZBzq3gZfNoB11mtzV2gHrQ6+KYgsbDV3IA3LewF5uLIN4H3RD83T0xuJLqtetYBaaEeBa7qA5mhQYFQfuHMdupCW9djxYYh6/TP2MF2Y8uLKIV1IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hh5cIfSW; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dj9bqDRg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738723343; x=1770259343;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ksaAaaoLVoDgCUczAlEVx+8YvcmGLf/2DZVsnOi+dMg=;
-  b=dj9bqDRgG5GolZ0CLg3p5uXbs4gs6Aj3EMdOrntS0Xh4j8imF2dO+DB5
-   VfDo+HoYz0Z42RRJIJzFkj/AWrCvRcz2Qg2exYu6Q5yoGaNxkTDU0mGE6
-   rLtv+7skmrMlxUME37bQtCMV2yb/gOgzRwKWjBxwCSSaRK+EWOk7bsi8s
-   q8nMjB4p/f1lr6GuElfxA35KUwuAqV6bTMYLnbHasaSf05t93fbOLNOpF
-   sJWWv4tCUWLgHMo5KtMs7+zb9DmlLGeo9x49IlvaKFmF1v9FfGbVkuITR
-   tmZ4ATAYcE5bP7P0hKAY5KOKOjWjMLFVqOW6CVE0++l7zemkSIBFAAXcq
-   g==;
-X-CSE-ConnectionGUID: AgFIIUQ7SVCfKVZ7sCjSHg==
-X-CSE-MsgGUID: HxeJdSYnT5C81Ue6NYgNWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39303946"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="39303946"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 18:42:22 -0800
-X-CSE-ConnectionGUID: 2d39cPQ/SOaBgbXAfBQn9g==
-X-CSE-MsgGUID: /2zzmDmhTZ+9sGS70cNnQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="110666614"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Feb 2025 18:42:11 -0800
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Song Yoong Siang <yoong.siang.song@intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Bouska Zdenek <zdenek.bouska@siemens.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	intel-wired-lan@lists.osuosl.org,
-	xdp-hints@xdp-project.net
-Subject: [PATCH bpf-next v8 5/5] igc: Add launch time support to XDP ZC
-Date: Wed,  5 Feb 2025 10:41:16 +0800
-Message-Id: <20250205024116.798862-6-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205024116.798862-1-yoong.siang.song@intel.com>
-References: <20250205024116.798862-1-yoong.siang.song@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hh5cIfSW"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f0444b478so19801375ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 18:43:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738723403; x=1739328203; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PBrHPuVmyWNdWdsZVCF6A9XAzFkJOG30Q3Gn/3kEVpY=;
+        b=hh5cIfSWB8HDWFHpJktLUFHKUWqkryfVkgYPSu9KzX6pl+eodLhVo9B6u66tHW0KaP
+         Mxip0bQrvrkKECCYq0f5DN/SQfhhT/UI4lO06mnyYTgSwlcNXadTn5gNkew1gg+nleny
+         zH8w8hG02rfbrECgHOz5sDv923PMnR/oGMnmI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738723403; x=1739328203;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PBrHPuVmyWNdWdsZVCF6A9XAzFkJOG30Q3Gn/3kEVpY=;
+        b=YZNrpoKFmttwOLiQzQB8e4g+q8LK0nkkvAeDZH8mxY2RCLy4uC4sLMy8FCBcb2Oy9R
+         FI97cvYyJk8KG0CELRqB5X9qsuh7wULNcX/9T72MS9+RTT9Mn8Q35h8eUV5ntPAcB/g+
+         S3BbrqkQ6x7BsN+goUBdG4pHjrR8m9yogjDiwGlgeZN7cdliFYLjShB+GP7vgNcrDEGH
+         PE1hnlwMZQqceDXwWP4kwaaGdGP116kNmgIq0Dg456FSyQZj4vkbLrfbsFVQL67oAus1
+         +4QsOkXQCDh1T6HXLEhVFfls6fTseuv6iirw1OuEJQYoc8mQXOSBaJCKsytJAaLLbgAC
+         S5Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXM5eRWGWTkFljRtRDs4RofKEZBfpqnOHRAbwu5dlTVORBk0a+6MBIm24ByRtjDlrX7wHCF/+3cWv1L0CA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt8neYw+j/mVmWSyNj/Fao0sUvJ+sXf6RN0CFthPx4p9GiBSt2
+	EV+WKvgn4ye3cyluM/JlIddrvt+IKOmqvXY7acIj/qsONzlZiTb4RIPqbTkaxA==
+X-Gm-Gg: ASbGnctkeRNSqNmT9z10Ajvcxya7HAKUMBulbvPlf16iZijVT/RWN3/H+TagRlo473J
+	DkgqPnTIGNcp9Ma1iyb9gqQfSrD9Xl0ub6UNUyMY1JVas5UZN/QupUFIpd7O/dUOh0PcUfxs7ga
+	qlKVWNIon3QXO4mt//LNOntffwfGtH0URUrX9wW/zkWR4bpoRmkknDNqeHUWl+zMTfxBWjvLFpl
+	xxv8nwhMlYAHEvJQ78EK5XOweqfdrCyKyulmzufZU1AmgX45DvzQV8RUz965TubeHA/f8PszeX1
+	MnK457RdgmnbJQihvSE=
+X-Google-Smtp-Source: AGHT+IFWDIBI3L1G1wcU9fpNE+tjjiOnhkKSnDmkzKhD2iNyGiziKwAaNefN3LiNkKYbdp1TpT00YQ==
+X-Received: by 2002:a17:902:cec5:b0:21f:456:3afc with SMTP id d9443c01a7336-21f17e74b85mr18678125ad.29.1738723402571;
+        Tue, 04 Feb 2025 18:43:22 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:5d42:47ec:e16e:5797])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f836csm103708655ad.93.2025.02.04.18.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 18:43:21 -0800 (PST)
+Date: Wed, 5 Feb 2025 11:43:16 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
+Message-ID: <6vtpamir4bvn3snlj36tfmnmpcbd6ks6m3sdn7ewmoles7jhau@nbezqbnoukzv>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-15-senozhatsky@chromium.org>
+ <Z5zxlRkdseEJntFk@google.com>
+ <ecuos7w7m35fvzz7xvmvdvfxn7adzdahuulwn2j42mvjoqmlwi@ucel4kqetxg6>
+ <Z6Ew9AWNHacRIfhA@google.com>
+ <lxottj72e7jcqw634qwudpsyqckfrvpmlhra43en4zlrlz4cip@erufv6w4n5j6>
+ <Z6JMIKlO9U5P-5gE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6JMIKlO9U5P-5gE@google.com>
 
-Enable Launch Time Control (LTC) support for XDP zero copy via XDP Tx
-metadata framework.
+On (25/02/04 17:19), Yosry Ahmed wrote:
+> > sizeof(struct zs_page) change is one thing.  Another thing is that
+> > zspage->lock is taken from atomic sections, pretty much everywhere.
+> > compaction/migration write-lock it under pool rwlock and class spinlock,
+> > but both compaction and migration now EAGAIN if the lock is locked
+> > already, so that is sorted out.
+> > 
+> > The remaining problem is map(), which takes zspage read-lock under pool
+> > rwlock.  RFC series (which you hated with passion :P) converted all zsmalloc
+> > into preemptible ones because of this - zspage->lock is a nested leaf-lock,
+> > so it cannot schedule unless locks it's nested under permit it (needless to
+> > say neither rwlock nor spinlock permit it).
+> 
+> Hmm, so we want the lock to be preemtible, but we don't want to use an
+> existing preemtible lock because it may be held it from atomic context.
+> 
+> I think one problem here is that the lock you are introducing is a
+> spinning lock but the lock holder can be preempted. This is why spinning
+> locks do not allow preemption. Others waiting for the lock can spin
+> waiting for a process that is scheduled out.
+> 
+> For example, the compaction/migration code could be sleeping holding the
+> write lock, and a map() call would spin waiting for that sleeping task.
 
-This patch has been tested with tools/testing/selftests/bpf/xdp_hw_metadata
-on Intel I225-LM Ethernet controller. Below are the test steps and result.
+write-lock holders cannot sleep, that's the key part.
 
-Test 1: Send a single packet with the launch time set to 1 s in the future.
+So the rules are:
 
-Test steps:
-1. On the DUT, start the xdp_hw_metadata selftest application:
-   $ sudo ./xdp_hw_metadata enp2s0 -l 1000000000 -L 1
+1) writer cannot sleep
+   - migration/compaction runs in atomic context and grabs
+	 write-lock only from atomic context
+   - write-locking function disables preemption before lock(), just to be
+	 safe, and enables it after unlock()
 
-2. On the Link Partner, send a UDP packet with VLAN priority 1 to port 9091
-   of the DUT.
+2) writer does not spin waiting
+   - that's why there is only write_try_lock function
+	  - compaction and migration bail out when they cannot lock the
+		zspage
 
-Result:
-When the launch time is set to 1 s in the future, the delta between the
-launch time and the transmit hardware timestamp is 0.016 us, as shown in
-printout of the xdp_hw_metadata application below.
-  0x562ff5dc8880: rx_desc[4]->addr=84110 addr=84110 comp_addr=84110 EoP
-  rx_hash: 0xE343384 with RSS type:0x1
-  HW RX-time:   1734578015467548904 (sec:1734578015.4675)
-                delta to User RX-time sec:0.0002 (183.103 usec)
-  XDP RX-time:   1734578015467651698 (sec:1734578015.4677)
-                 delta to User RX-time sec:0.0001 (80.309 usec)
-  No rx_vlan_tci or rx_vlan_proto, err=-95
-  0x562ff5dc8880: ping-pong with csum=561c (want c7dd)
-                  csum_start=34 csum_offset=6
-  HW RX-time:   1734578015467548904 (sec:1734578015.4675)
-                delta to HW Launch-time sec:1.0000 (1000000.000 usec)
-  0x562ff5dc8880: complete tx idx=4 addr=4018
-  HW Launch-time:   1734578016467548904 (sec:1734578016.4675)
-                    delta to HW TX-complete-time sec:0.0000 (0.016 usec)
-  HW TX-complete-time:   1734578016467548920 (sec:1734578016.4675)
-                         delta to User TX-complete-time sec:0.0000
-                         (32.546 usec)
-  XDP RX-time:   1734578015467651698 (sec:1734578015.4677)
-                 delta to User TX-complete-time sec:0.9999
-                 (999929.768 usec)
-  HW RX-time:   1734578015467548904 (sec:1734578015.4675)
-                delta to HW TX-complete-time sec:1.0000 (1000000.016 usec)
-  0x562ff5dc8880: complete rx idx=132 addr=84110
+3) readers can sleep and can spin waiting for a lock
+   - other (even preempted) readers don't block new readers
+   - writers don't sleep, they always unlock
 
-Test 2: Send 1000 packets with a 10 ms interval and the launch time set to
-        500 us in the future.
+> I wonder if there's a way to rework the locking instead to avoid the
+> nesting. It seems like sometimes we lock the zspage with the pool lock
+> held, sometimes with the class lock held, and sometimes with no lock
+> held.
+> 
+> What are the rules here for acquiring the zspage lock?
 
-Test steps:
-1. On the DUT, start the xdp_hw_metadata selftest application:
-   $ sudo chrt -f 99 ./xdp_hw_metadata enp2s0 -l 500000 -L 1 > \
-     /dev/shm/result.log
+Most of that code is not written by me, but I think the rule is to disable
+"migration" be it via pool lock or class lock.
 
-2. On the Link Partner, send 1000 UDP packets with a 10 ms interval and
-   VLAN priority 1 to port 9091 of the DUT.
+> Do we need to hold another lock just to make sure the zspage does not go
+> away from under us?
 
-Result:
-When the launch time is set to 500 us in the future, the average delta
-between the launch time and the transmit hardware timestamp is 0.016 us,
-as shown in the analysis of /dev/shm/result.log below. The XDP launch time
-works correctly in sending 1000 packets continuously.
-  Min delta: 0.005 us
-  Avr delta: 0.016 us
-  Max delta: 0.031 us
-  Total packets forwarded: 1000
+Yes, the page cannot go away via "normal" path:
+   zs_free(last object) -> zspage becomes empty -> free zspage
 
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
----
- drivers/net/ethernet/intel/igc/igc.h      |  1 +
- drivers/net/ethernet/intel/igc/igc_main.c | 52 ++++++++++++++++++++++-
- 2 files changed, 51 insertions(+), 2 deletions(-)
+so when we have active mapping() it's only migration and compaction
+that can free zspage (its content is migrated and so it becomes empty).
 
-diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-index b8111ad9a9a8..cd1d7b6c1782 100644
---- a/drivers/net/ethernet/intel/igc/igc.h
-+++ b/drivers/net/ethernet/intel/igc/igc.h
-@@ -579,6 +579,7 @@ struct igc_metadata_request {
- 	struct xsk_tx_metadata *meta;
- 	struct igc_ring *tx_ring;
- 	u32 cmd_type;
-+	u16 used_desc;
- };
- 
- struct igc_q_vector {
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 553d6d82af0d..a4ec487da701 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -2954,9 +2954,39 @@ static u64 igc_xsk_fill_timestamp(void *_priv)
- 	return *(u64 *)_priv;
- }
- 
-+static void igc_xsk_request_launch_time(u64 launch_time, void *_priv)
-+{
-+	struct igc_metadata_request *meta_req = _priv;
-+	struct igc_ring *tx_ring = meta_req->tx_ring;
-+	__le32 launch_time_offset;
-+	bool insert_empty = false;
-+	bool first_flag = false;
-+
-+	if (!tx_ring->launchtime_enable)
-+		return;
-+
-+	launch_time_offset = igc_tx_launchtime(tx_ring,
-+					       ns_to_ktime(launch_time),
-+					       &first_flag, &insert_empty);
-+	if (insert_empty) {
-+		igc_insert_empty_packet(tx_ring);
-+		meta_req->tx_buffer =
-+			&tx_ring->tx_buffer_info[tx_ring->next_to_use];
-+		/* Inserting an empty packet requires two descriptors:
-+		 * one data descriptor and one context descriptor.
-+		 */
-+		meta_req->used_desc += 2;
-+	}
-+
-+	/* Use one context descriptor to specify launch time and first flag. */
-+	igc_tx_ctxtdesc(tx_ring, launch_time_offset, first_flag, 0, 0, 0);
-+	meta_req->used_desc += 1;
-+}
-+
- const struct xsk_tx_metadata_ops igc_xsk_tx_metadata_ops = {
- 	.tmo_request_timestamp		= igc_xsk_request_timestamp,
- 	.tmo_fill_timestamp		= igc_xsk_fill_timestamp,
-+	.tmo_request_launch_time	= igc_xsk_request_launch_time,
- };
- 
- static void igc_xdp_xmit_zc(struct igc_ring *ring)
-@@ -2979,7 +3009,13 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
- 	ntu = ring->next_to_use;
- 	budget = igc_desc_unused(ring);
- 
--	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget--) {
-+	/* Packets with launch time require one data descriptor and one context
-+	 * descriptor. When the launch time falls into the next Qbv cycle, we
-+	 * may need to insert an empty packet, which requires two more
-+	 * descriptors. Therefore, to be safe, we always ensure we have at least
-+	 * 4 descriptors available.
-+	 */
-+	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget >= 4) {
- 		struct igc_metadata_request meta_req;
- 		struct xsk_tx_metadata *meta = NULL;
- 		struct igc_tx_buffer *bi;
-@@ -3000,9 +3036,19 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
- 		meta_req.tx_ring = ring;
- 		meta_req.tx_buffer = bi;
- 		meta_req.meta = meta;
-+		meta_req.used_desc = 0;
- 		xsk_tx_metadata_request(meta, &igc_xsk_tx_metadata_ops,
- 					&meta_req);
- 
-+		/* xsk_tx_metadata_request() may have updated next_to_use */
-+		ntu = ring->next_to_use;
-+
-+		/* xsk_tx_metadata_request() may have updated Tx buffer info */
-+		bi = meta_req.tx_buffer;
-+
-+		/* xsk_tx_metadata_request() may use a few descriptors */
-+		budget -= meta_req.used_desc;
-+
- 		tx_desc = IGC_TX_DESC(ring, ntu);
- 		tx_desc->read.cmd_type_len = cpu_to_le32(meta_req.cmd_type);
- 		tx_desc->read.olinfo_status = cpu_to_le32(olinfo_status);
-@@ -3020,9 +3066,11 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
- 		ntu++;
- 		if (ntu == ring->count)
- 			ntu = 0;
-+
-+		ring->next_to_use = ntu;
-+		budget--;
- 	}
- 
--	ring->next_to_use = ntu;
- 	if (tx_desc) {
- 		igc_flush_tx_descriptors(ring);
- 		xsk_tx_release(pool);
--- 
-2.34.1
+> Can we use RCU or something similar to do that instead?
 
+Hmm, I don't know... zsmalloc is not "read-mostly", it's whatever data
+patterns the clients have.   I suspect we'd need to synchronize RCU every
+time a zspage is freed: zs_free() [this one is complicated], or migration,
+or compaction?  Sounds like anti-pattern for RCU?
