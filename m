@@ -1,93 +1,133 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321CB22AE45
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B18022B59A;
+	Wed,  5 Feb 2025 10:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752013; cv=none; b=rRxmPOwn2HjD5xePgq0PRJ+0O3kgThW17pzTmyOmxjBgq3mGhs4RNwqtpb9RUl1KtxCjyUGM88AIdf/ne5iIVaoz41B18wULUBvqSOMKBkLpbIXmyk14tHUcYHaFIeFkvOOQPNd4MayQc1pELAFQD64jCedvsiM9Wj9j7p2rJgY=
+	t=1738752162; cv=none; b=mxNJppqwqMQrsEb5KTJ9iZYxVjQILnTYDCvZLX6pJLwU5ZYjZX2rP58/iB4Z3xsklkCspnrGt4LBBygs5kpp0DDTAeFxw02Je/0G5rlydHas8Fgc3llQYf3PkjV3XMjxkbW750ri9On9By+GMpti8lP6NxZDSCNY9Eh2mnRvNGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752013; c=relaxed/simple;
-	bh=ok3L9NOrgiTrJ2G13cQv6YeWLMGqGxKCuRCJEVtHz3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MqjE/9xVIcNrstHGEOGTzc85EMGm0dGGW3YFIpEAHLvcgbXJ32J2l2QVRl2t2lk8pD9f1liOWys5odPAvXA0mlZ7CvpqGWLsN/WUwXoXWmVOVf4tvCuq8LskFJUAO1Xe+BQ6oMjP53x2+qoS6649dubzSHNQAgnKGNhwt2YFTE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a8Ueok+s; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738752162; c=relaxed/simple;
+	bh=LRquYjF41Qs3ozkMj7DtLWEVyZ1h1D3hkjDaHZat6z8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iTBrAmmUv39RqIn0VigqNa4z8nQufo5h7gg5WgSJ96Dc+XzU8/mm8f9PXoqGq6DP4cxKI5Hvag1+KZnrHCYxoDnbBO1SPhFCJaAyjkCwD69SJt1rBrg4NMaTZPK7YCKoKkoKgJO2mInVEXACTK9UNVQ0aqH3WQFJyGVhBVaq68s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=cnZHsYa/; arc=none smtp.client-ip=178.154.239.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a8Ueok+s"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dabb11eaaso887431f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:40:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738752010; x=1739356810; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ok3L9NOrgiTrJ2G13cQv6YeWLMGqGxKCuRCJEVtHz3s=;
-        b=a8Ueok+slO50osBNGGMXOQ1YbSzUZpzHSE5bTKGy0bDE662nE3VdigffVE3g9EHgJm
-         UTFLh5mzmI1ChJoYs2BmSEHv/3IURZH6aIgOV8lp3QkUbAn8tl1nU2B8t9udSIfvsuvC
-         jWbxQQlFF1wTV1LEqeBRdqP9VXIzCurvtpoCPL8GAeJRR8y1XW+LaWu9OK+5du95LSb9
-         i1NO2ItZ+THayqFJDfRWm3aN4TGrFc+LtikyGltHJDhW8UnnQiVHuSX9gmPn6cIIVry1
-         kjH3FxAVm4wxu46qhLhCR+xC8Y3FHHoV/LfDN4nghoPIuST5Rht3fBIP1I/AO+HjO5dk
-         E0dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738752010; x=1739356810;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ok3L9NOrgiTrJ2G13cQv6YeWLMGqGxKCuRCJEVtHz3s=;
-        b=sFErOPfHPvxwQUQ51YL1M87sEEmuNAZY+KBrtsiGzCzOuW+bWlDi/hHVwEcNOpNJ/5
-         PRiO2cEmmKUCSKQ/oZHoJIscsHUNAyvNV0rwaKTFmJK/8LbY0yOEmmEMSqOC+N06l+s3
-         +4lpECtu24XJrIw/UCkZz+7MdiG/UW9MsjB0yFKEsyx7BKApZbMV3pCou8cJWbpx0++v
-         IFLR9gpkMlFMfjXhlkMt1hM6JhgadhP6uKqWshETvFz5QwPSPlrrRNH+iptbAkGQ/jWC
-         B71eEIaedkNlcZ81A+IHJf1uXrqzpLRrdxqOymSrBYIhpHYHvmcgt0182fdDSiVcxCsv
-         au3w==
-X-Forwarded-Encrypted: i=1; AJvYcCX4563NV9+R5JCtM3Y4d8CnmdvYy6fgBJOnnK2ne7p7UkDIpwY3bVCGe+YOQP7ORnfZuTNcw32iG6n56aE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD5hteiFu7QnK5uiZ5rPn7gvEzHMz42r9V9C9vWxTnqF8XUwmU
-	txjBaSVgQe8vfD5dzDdX8r+bXULqLutCOFehma54nZMNVbQ3op3BqKx9XWEvADj/quYeA4VIe/8
-	1s1Xeqqz40VGl9vY3Utx1xRqFbx0k1cv13Sin
-X-Gm-Gg: ASbGnct7u14SUmQfkEkIH3n1YNtkp0T4+0DpK85oIBcn3+kN7mEAstnRRIfa22kyng7
-	YXzpBno5tD/Tp1ynpmCO8E9w/K1NTk071g39J8sVceQHsX3oRBflSwT0c7A0CRxjgyoHZuOO60f
-	GSv7LS4GtjYf3oyfyiL1+bQZLM7wg=
-X-Google-Smtp-Source: AGHT+IFgCfsYB5W3VJfmXRjdXwgsawgadfjC0P2QF+7DhKkGytDdoyEZ1kYgYvSLSTerc4B9u7Zm9jyi++oT3By96fY=
-X-Received: by 2002:a5d:64c3:0:b0:38d:b3c5:4a88 with SMTP id
- ffacd0b85a97d-38db492050amr1485678f8f.54.1738752010235; Wed, 05 Feb 2025
- 02:40:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="cnZHsYa/"
+Received: from mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net (mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net [IPv6:2a02:6b8:c10:4a4:0:640:7b31:0])
+	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id 19A0360B8B;
+	Wed,  5 Feb 2025 13:40:33 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:5::1:34])
+	by mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id TdiCnH3Ij4Y0-luTAzeim;
+	Wed, 05 Feb 2025 13:40:32 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1738752032;
+	bh=Pt9TK34WEMC8Wuyn6NT+uWaQA66Oaj1A7lok/fuTYG8=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=cnZHsYa/t5/roPh+OSek1SW2AuObAcdSlzeHzwt6tpYnkMSmzfXsCcCbGGWeDmVzd
+	 ttoiFQuvyM/lpN7Pp+Px0/7aqroqQVSvkvgo7Sxon7jUPYsYZ/PNoWwe20BM7mzCq9
+	 D06U+B5CiXzEFXUJ8CQV4KerWlXThoKEJp16oKvc=
+Authentication-Results: mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Wen Yang <wenyang@linux.alibaba.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kniv@yandex-team.ru
+Subject: Re: [PATCH] ftrace: Avoid potential division by zero in function_stat_show()
+Date: Wed,  5 Feb 2025 13:39:29 +0300
+Message-Id: <20250205103929.1538065-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250204194820.7ef50d96@gandalf.local.home>
+References: <20250204194820.7ef50d96@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204232824.3819437-1-robh@kernel.org>
-In-Reply-To: <20250204232824.3819437-1-robh@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 5 Feb 2025 11:39:57 +0100
-X-Gm-Features: AWEUYZnFbKuaN4rtly1lDrAUSflqt7pqmStwcS774dgD-QUDEKs-d5zWsQLWkUc
-Message-ID: <CAH5fLgjrYNek77De6SgCGiLRhWWXNe+PKc1_ecPp9MbYDSj43w@mail.gmail.com>
-Subject: Re: [PATCH] drm/panthor: Convert IOCTL defines to an enum
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Beata Michalska <beata.michalska@arm.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 5, 2025 at 12:30=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
->
-> Use an enum instead of #defines for panthor IOCTLs. This allows the
-> header to be used with Rust code as bindgen can't handle complex
-> defines.
->
-> Cc: Beata Michalska <beata.michalska@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Your approach should prevent both zero division and overflow in the
+denominator. We also should consider that the numerator
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> stddev = counter * rec->time_squared - rec->stddev_time * rec->stddev_time;
+
+may overflow too. Suppose 1000 ns per call case. On each function execution
+time_squared would get additional 10^6. So for 32-bit and
+MAX_STDDEV_COUNTER = 2072 we would have
+counter * rec->time_squared = 2071 * (2071 * 10^6) = 4289041000000,
+a 42-bit number.
+
+It looks like overflow prevention here is not viable with macro constants,
+since function execution time is dynamic in nature.
+
+My suggestion is to rewrite formula such as we perform division earlier
+and avoid overflow checks as much as possible. Note that doing divisions
+earlier may result in precision loss, but I think that is acceptable since
+rec->time is nanoseconds precision. Also this allows us to not care about
+counter overflow at all, because expression rec->time * rec->time will always
+overflow earlier than both counter and rec->time_square_sum. Renamed
+time_squared into time_square_sum just to clarify.
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 728ecda6e8d4..91e7185dd5de 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -419,7 +419,8 @@ struct ftrace_profile {
+ 	unsigned long			counter;
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	unsigned long long		time;
+-	unsigned long long		time_squared;
++	unsigned long long		time_square_sum;
++	unsigned long long		saved_stddev;
+ #endif
+ };
+ 
+@@ -560,22 +561,24 @@ static int function_stat_show(struct seq_file *m, void *v)
+ 	seq_puts(m, "    ");
+ 
+ 	/* Sample standard deviation (s^2) */
+-	if (rec->counter <= 1)
++	if (rec->counter <= 1 || !rec->time)
+ 		stddev = 0;
++	else if (div64_ul(rec->time * rec->time, rec->time) != rec->time)
++		stddev = rec->saved_stddev;
+ 	else {
+ 		/*
+-		 * Apply Welford's method:
+-		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
++		 * A formula for calculating the variance is:
++		 * s^2 = (\Sum (x_i)^2 - (\Sum x_i)^2 / n) / (n - 1)
+ 		 */
+-		stddev = rec->counter * rec->time_squared -
+-			 rec->time * rec->time;
+-
++		stddev = rec->time_square_sum -
++			 div64_ul(rec->time * rec->time, rec->counter);
++		stddev = div64_ul(stddev, rec->counter - 1);
+ 		/*
+ 		 * Divide only 1000 for ns^2 -> us^2 conversion.
+ 		 * trace_print_graph_duration will divide 1000 again.
+ 		 */
+-		stddev = div64_ul(stddev,
+-				  rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev, 1000);
++		rec->saved_stddev = stddev;
+ 	}
+ 
+ 	trace_seq_init(&s);
+@@ -888,7 +891,7 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ 	rec = ftrace_find_profiled_func(stat, trace->func);
+ 	if (rec) {
+ 		rec->time += calltime;
+-		rec->time_squared += calltime * calltime;
++		rec->time_square_sum += calltime * calltime;
+ 	}
+ }
+
