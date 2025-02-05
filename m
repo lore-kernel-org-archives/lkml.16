@@ -1,170 +1,209 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0FB22A4CB
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E453E22A4CB;
+	Wed,  5 Feb 2025 09:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738748304; cv=none; b=AsPrK29HTRMgDmI9svE9BdKOAWlvlyiLS/zt407Q5yuXdUMvkQ8uGLXbqubRP259jmPmgjdGOrN2TrQ/oaCdfvq1C6Zm6Cc7d3kdLpXsRuhfPfrkpmItXICOzVOHDqP3Fr1B99J+5nGeV5t11HTfF7mOGJYKZfCppTkdGQMVii4=
+	t=1738748332; cv=none; b=hfw394DBNZNsYd3nZUxU25HdAPSZBPGaB8NcHeWLjTADPfv5NMkSawOi0m/FNZqZv3kWdoBKKcjuoyTDrAGOmDoTswXsRXDeFpm9+Pgm6R7eJDh30Dt4I36ieRn9DAwxi0UKa1rmy8t53HxLxAtMjr1JKzbEI7wbBiZYHd1hKGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738748304; c=relaxed/simple;
-	bh=7c3hH/C0ty80foBKuB31iqczubI+r+OraZ1ZxIaqE7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NhQiTmMQfIJ26n6YgxTlR1dtbadaaDHC6dzf0yfR2MQlPGmNnCxqf7AtoRUtNBkrGA3ESt0bmLG0enEQuY/MVa9vY/yjbQPb2oQrtyRiE0mIA4R3F4UPJe+fbZ01k3+x5qxWLgdRg///F7+5QLoFFdOLZSfTSqfB1DLggRkR1HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=bP1AIq3w; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1738748332; c=relaxed/simple;
+	bh=0b5mcI3yeJ75R8RDJ6x2Nov//44hQ+llYC7WJeEYQLo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=VgzFQbMkeHgCinrxIBMm5cjsfiTWdDG1jp8rnsWByAjqFRrSBudlUYqeyTG2M6ZUsUgK3WgOemOoLDiRMdzgyguBTZ1enEgSxla/Wg/FVRhowdYppsRHnVm0KpDCDWeICLZsS5FC9km/x6owb6HqPDqcDwBY26MJ4ct6wYoQLIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2DRZ5iqj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kbyg+++d; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="bP1AIq3w"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38daf1f5091so743726f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 01:38:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1738748301; x=1739353101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=7c3hH/C0ty80foBKuB31iqczubI+r+OraZ1ZxIaqE7Y=;
-        b=bP1AIq3wlgIzgTBiAJ0CjQW/e3BYyEamzmU0Har5mcnsY8ZIReOOCRUXIKypMHmAUs
-         44/Pq1Y2/EexfnpViUeDNX32TX8AV1dgdCIiQq8vQIxHAgO+qlDMsEyykp9dsTKH1Scf
-         9icfUDLv+Midjrqaljb5dkS5I1UONGRXp2t5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738748301; x=1739353101;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7c3hH/C0ty80foBKuB31iqczubI+r+OraZ1ZxIaqE7Y=;
-        b=bm4KCobWnfqQpkQuX5KsUCRxm4V/DbsGOrJlabrMB1/Iallvz5qoln5ijxca9qAVxJ
-         u5+V/sLpncWdwd8g6uPP2pYdYA8LySoSqfV5btSdDfrAZHDrpQIQApBttWLuO/cX1wO9
-         DRi/bGdWOrpGP6qoAQ3KCpVqpLQKJWbOhbah4qpLDa6+3L7w2xUQ4boOubLtxmhnmaHZ
-         JhJc6E7j8kZvhL7iP3b7ynHbnxWFhkoZ4hbZ59xqsL82W7KSZLLNE6TFUY3aCqRXMyQu
-         Fw/p7nAgANIVYzP9yj4OAAm0KzmpkyG9t2XSfzKZMxJNvRjGteb3iqN129kx6CaVphw4
-         Ydcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu5uWTRC97xKtcUsFNrEATwfdTdlnSaGuWGFfO77rPVqQ4Qgm9kIQe6eMORNF3ltcRluHjD4RVV90DdP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGXvtVQWnaDYEb9xPsYL40v9PX0K/UZNdwoXvLjU39k4WEg1z4
-	VVYLe2qRhGPWwBy9CssAzPSYtjd6nC3H6VS91BEktryan7f7tUK9P3bTSIQJDpo=
-X-Gm-Gg: ASbGncsMj56FuMfIGjdn+4RI2pQCGOdDknVuSjeX5/AQKnyiHbH6OiVZaidUlEBW+Eb
-	TttEA0gr98dLLHZ8zzdNPmlaytAWaGAaxNn/wgA4nX/CLkHjga351/kz4l0N6b94sqoVHd2fYOW
-	v2w5uG5PyERQtb3ZwkRs5GSBfJ+5WfyU1PkuG+57QtcJax+XWnnRzV7fO3AmfW+tbRq56HsYsRL
-	y1ZvLoG6+B9vtPyJsJbadbken2BVqQ05IR3IZ7MwmjD7wu6InDBh7LnmqspKGMbbkoypftv/94u
-	nTxdC0/Uxpl4xinGvrNWqavv0ZVW4gNumEX9RdxhxrjM64WGHshrbM8=
-X-Google-Smtp-Source: AGHT+IGKiCTY7NdXJy7RVGHpio2VSFkQcy1N+pRmbgyKzcOOLI6LKDmi0Hp5/VBrGDDXcgZfdTMBvQ==
-X-Received: by 2002:a5d:47cc:0:b0:38b:ece5:5fe3 with SMTP id ffacd0b85a97d-38db48a3fbdmr1234354f8f.1.1738748301323;
-        Wed, 05 Feb 2025 01:38:21 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38db0e2f479sm3061238f8f.57.2025.02.05.01.38.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 01:38:20 -0800 (PST)
-Message-ID: <b70e246a-5e5e-431c-9b85-dc4644df7bd9@citrix.com>
-Date: Wed, 5 Feb 2025 09:38:19 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2DRZ5iqj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kbyg+++d"
+Date: Wed, 05 Feb 2025 09:38:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738748329;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/KQZ8804CMtE6Pk3lRhbfIVMIhwYpLY8YRjtIlBu528=;
+	b=2DRZ5iqjtd3eehdVEVG1YJFkkWg1FIwzQZ6gHkabrDaIF+LXPEMtV3F5wPwQgb1rOibzBW
+	E+q0fhvx+RpVb25xMJ2maAyICzWJALpphKZq4ZWLmpeTC2/lP4eHMiBDapBJKFMA47tSuD
+	vHfkQuqDYyacFXp3hBWRyVnwtmUDJjzkSk9a58cLVsFpbAbsVUBg2YQ8sKSmZHteUh36jn
+	UE5Ol60QoBGS/KBBDmeIhKlEIK4jqUKW2YNiR1Ic/2QFnXOZR0GTyVnH6dXxooSfXQu2Fp
+	Oaqz3GSqZsZh4lvmdQogdwS+Q5Zd0iJLvOgKIGim4hI0eltIYa5zDOClWnrZdw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738748329;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/KQZ8804CMtE6Pk3lRhbfIVMIhwYpLY8YRjtIlBu528=;
+	b=Kbyg+++d7Mm/mewFxSdoihUinyyJkfDgtpdDgCJpud42vdT37bJH7naUy/ojbc40PXu1vU
+	HiyyZIYrMy0cRSAQ==
+From: "tip-bot2 for Peter Zijlstra (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf: Avoid the read if the count is already updated
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250121152303.3128733-3-kan.liang@linux.intel.com>
+References: <20250121152303.3128733-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org
-References: <20250205091056.17796-1-jgross@suse.com>
- <121c5edb-9268-4258-9735-38e4e0f226ad@citrix.com>
- <3bb7aa63-9acd-4142-b7d6-bde3e92325ef@suse.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <3bb7aa63-9acd-4142-b7d6-bde3e92325ef@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <173874832869.10177.12492425394645250452.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 05/02/2025 9:17 am, Jürgen Groß wrote:
-> On 05.02.25 10:16, Andrew Cooper wrote:
->> On 05/02/2025 9:10 am, Juergen Gross wrote:
->>> xen_hypercall_hvm(), which is used when running as a Xen PVH guest at
->>> most only once during early boot, is clobbering %rbx. Depending on
->>> whether the caller relies on %rbx to be preserved across the call or
->>> not, this clobbering might result in an early crash of the system.
->>>
->>> This can be avoided by not modifying %rbx in xen_hypercall_hvm().
->>>
->>> Fixes: b4845bb63838 ("x86/xen: add central hypercall functions")
->>> Signed-off-by: Juergen Gross <jgross@suse.com>
->>> ---
->>>   arch/x86/xen/xen-head.S | 3 +--
->>>   1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
->>> index 9252652afe59..4378b817ed32 100644
->>> --- a/arch/x86/xen/xen-head.S
->>> +++ b/arch/x86/xen/xen-head.S
->>> @@ -117,8 +117,7 @@ SYM_FUNC_START(xen_hypercall_hvm)
->>
->> The 32bit case, out of context up here, also clobbers %ebx.
->>
->> ~Andrew
->>
->>>       pop %ebx
->
-> It does not, as this part of the context is showing.
+The following commit has been merged into the perf/core branch of tip:
 
-Hmm, so it is, and worse, it can't be changed to match the 64bit side. 
-That's nasty.
+Commit-ID:     8ce939a0fa194939cc1f92dbd8bc1a7806e7d40a
+Gitweb:        https://git.kernel.org/tip/8ce939a0fa194939cc1f92dbd8bc1a7806e7d40a
+Author:        Peter Zijlstra (Intel) <peterz@infradead.org>
+AuthorDate:    Tue, 21 Jan 2025 07:23:02 -08:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 05 Feb 2025 10:29:45 +01:00
 
-But while I'm here looking at the code, what's up with
+perf: Avoid the read if the count is already updated
 
-#ifdef CONFIG_FRAME_POINTER
-        pushq $0        /* Dummy push for stack alignment. */
-#endif
+The event may have been updated in the PMU-specific implementation,
+e.g., Intel PEBS counters snapshotting. The common code should not
+read and overwrite the value.
 
-?
+The PERF_SAMPLE_READ in the data->sample_type can be used to detect
+whether the PMU-specific value is available. If yes, avoid the
+pmu->read() in the common code. Add a new flag, skip_read, to track the
+case.
 
-That's covered by FRAME_{START,END} normally, and Linux's preferred
-stack alignment is 8 not 16.
+Factor out a perf_pmu_read() to clean up the code.
 
-~Andrew
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20250121152303.3128733-3-kan.liang@linux.intel.com
+---
+ include/linux/perf_event.h  |  8 +++++++-
+ kernel/events/core.c        | 33 ++++++++++++++++-----------------
+ kernel/events/ring_buffer.c |  1 +
+ 3 files changed, 24 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 8333f13..2d07bc1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1062,7 +1062,13 @@ struct perf_output_handle {
+ 	struct perf_buffer		*rb;
+ 	unsigned long			wakeup;
+ 	unsigned long			size;
+-	u64				aux_flags;
++	union {
++		u64			flags;		/* perf_output*() */
++		u64			aux_flags;	/* perf_aux_output*() */
++		struct {
++			u64		skip_read : 1;
++		};
++	};
+ 	union {
+ 		void			*addr;
+ 		unsigned long		head;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bcb09e0..0f8c559 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1191,6 +1191,12 @@ static void perf_assert_pmu_disabled(struct pmu *pmu)
+ 	WARN_ON_ONCE(*this_cpu_ptr(pmu->pmu_disable_count) == 0);
+ }
+ 
++static inline void perf_pmu_read(struct perf_event *event)
++{
++	if (event->state == PERF_EVENT_STATE_ACTIVE)
++		event->pmu->read(event);
++}
++
+ static void get_ctx(struct perf_event_context *ctx)
+ {
+ 	refcount_inc(&ctx->refcount);
+@@ -3473,8 +3479,7 @@ static void __perf_event_sync_stat(struct perf_event *event,
+ 	 * we know the event must be on the current CPU, therefore we
+ 	 * don't need to use it.
+ 	 */
+-	if (event->state == PERF_EVENT_STATE_ACTIVE)
+-		event->pmu->read(event);
++	perf_pmu_read(event);
+ 
+ 	perf_event_update_time(event);
+ 
+@@ -4618,15 +4623,8 @@ static void __perf_event_read(void *info)
+ 
+ 	pmu->read(event);
+ 
+-	for_each_sibling_event(sub, event) {
+-		if (sub->state == PERF_EVENT_STATE_ACTIVE) {
+-			/*
+-			 * Use sibling's PMU rather than @event's since
+-			 * sibling could be on different (eg: software) PMU.
+-			 */
+-			sub->pmu->read(sub);
+-		}
+-	}
++	for_each_sibling_event(sub, event)
++		perf_pmu_read(sub);
+ 
+ 	data->ret = pmu->commit_txn(pmu);
+ 
+@@ -7444,9 +7442,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+ 		values[n++] = running;
+ 
+-	if ((leader != event) &&
+-	    (leader->state == PERF_EVENT_STATE_ACTIVE))
+-		leader->pmu->read(leader);
++	if ((leader != event) && !handle->skip_read)
++		perf_pmu_read(leader);
+ 
+ 	values[n++] = perf_event_count(leader, self);
+ 	if (read_format & PERF_FORMAT_ID)
+@@ -7459,9 +7456,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	for_each_sibling_event(sub, leader) {
+ 		n = 0;
+ 
+-		if ((sub != event) &&
+-		    (sub->state == PERF_EVENT_STATE_ACTIVE))
+-			sub->pmu->read(sub);
++		if ((sub != event) && !handle->skip_read)
++			perf_pmu_read(sub);
+ 
+ 		values[n++] = perf_event_count(sub, self);
+ 		if (read_format & PERF_FORMAT_ID)
+@@ -7520,6 +7516,9 @@ void perf_output_sample(struct perf_output_handle *handle,
+ {
+ 	u64 sample_type = data->type;
+ 
++	if (data->sample_flags & PERF_SAMPLE_READ)
++		handle->skip_read = 1;
++
+ 	perf_output_put(handle, *header);
+ 
+ 	if (sample_type & PERF_SAMPLE_IDENTIFIER)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 1805091..59a52b1 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -185,6 +185,7 @@ __perf_output_begin(struct perf_output_handle *handle,
+ 
+ 	handle->rb    = rb;
+ 	handle->event = event;
++	handle->flags = 0;
+ 
+ 	have_lost = local_read(&rb->lost);
+ 	if (unlikely(have_lost)) {
