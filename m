@@ -1,95 +1,127 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E565944F;
-	Wed,  5 Feb 2025 19:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E60E944F;
+	Wed,  5 Feb 2025 19:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738782335; cv=none; b=H/jL4g8sMHQGDN+7Vuu5hptCNhtQ78u80XhECJVbFfbC3um3zeXtlDPg3ckxIaXF4bwPa/fA3tSUqAuoZdv6RAH0VSyfKvx3DSdYBSme5mHX4g8tOHbCv7BJGy5xybueFOSjujBsJJiMKAFbRcs37n1M8igVA1oJ2+GidRAsdnU=
+	t=1738782378; cv=none; b=A4PqORlKNqBEYTXXSMFmu6JlZN0G58WqRgffETlMFiDXVaUGn8exeMEF2Oq3LNQSbG3RsEuoRlFFsIeuC+b3E56gt1ZGzY9RnJOgHkqKGlm7I1nz1KfwQZ7fcTjVLoP4mklcDR0ltbOIboi3zFAZT2YJVNyU2+vSaFckFjHQJ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738782335; c=relaxed/simple;
-	bh=t7CLcELsQh973O7p17cqjk2r4r5zWT8nJXohkTPsaZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J71RZY41hQWzMH9kXEZb6mpjgIFtLckVqsGOv1ExbnaBYx4VWy/K+C4pyHMEkQ9gkm3sQtvJsnXxv+uNxL+KaIxPKbuKdcdMvYzcDU4iw3x0fq2esPeNSbe/D3ZNFkyI53SB21UQBD3AL4dETKvFfjLweYVbxW67lNUnK4qVvBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9rq1awu; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1738782378; c=relaxed/simple;
+	bh=wv7QUcMqmQJcMdaqtvzsXi7KdkhOSU6Nucm1BVG+rJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZJoDCQHjuD1YRPPrB7d4Cgb0sKhq6hW/KPBnIQNU3A88UsbbZTfOytEETmNiTaK/MtflQ96QgDNUVG0+n55DkhMC2RFBH7nnUOydjXHwRjsT/LNT/Hbx6LCTZDdRkFeXqUTDaGu9KVguyyKUbwQgZ1fLT3Q9leDMNRjp0APB/80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FE/vqXtO; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9rq1awu"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dca468c5e4so338381a12.1;
-        Wed, 05 Feb 2025 11:05:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FE/vqXtO"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2161eb95317so3741795ad.1;
+        Wed, 05 Feb 2025 11:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738782332; x=1739387132; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t7CLcELsQh973O7p17cqjk2r4r5zWT8nJXohkTPsaZA=;
-        b=E9rq1awukbOiLLJ1hdAPSsU8TVQpYAl2jRwEdqCG1mOKyDFcohUj/JOhNnsYBSqbYK
-         RO1/vUQP58VyR+JK2hGsiE2d8BasHxEgL1TPsMikqHiXPaJ/LAhBxZE1Vra7whk1JIpk
-         3K4JVbKxJe0CjkY1lL7FamNeRiWPSPL4NY6agLAP/xHDt1bDD9HINZsreW+x8tqeqlC6
-         Vo2+/PHdETFxHQCODMNgDpBFuSu60nluHxCxKveAVVlgFCp1TUyF/mMPSC3NZFD1awOv
-         xpD2LOJmyfKx1ZQNKAlmlC15n/a8upE3+eIgnQuDR0MqH29t3YVcG1vW5jNTBmAny7g3
-         eOsw==
+        d=gmail.com; s=20230601; t=1738782376; x=1739387176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2XTZ2XIu3m9RP+qJyYD+g3KKohZkkqFE7uro5AlY+lA=;
+        b=FE/vqXtOR1bXFzp2IVvlUZ0pUgiMzAOfX9OqJF7cXU0IH+w/wc+yDidzy1982rBMUi
+         rRv01F2DtYahbgdj7D4m4nC+lspvA7PPwHlQgjyN0n+y2RJquqscerEcWsTh5ZzU6/5g
+         pQoCL+fbB6lffHrewT9o8aHgnEadeHYuFK9dN5z29uKnylzEV9HWXmsQtWvbb1x0hwzl
+         c/P1Re2UAUdFvIMxMycXNwbIjxMg5TvplpbSLahXc88EW+fYz8+KdgvH8wcmDf03lhiP
+         3biBEMlzhCHbNwXkX1waZ2mD4zeOOdjuOKg+3Kl9hd8VUz1AV5mC9LdntGNa6kinZEhq
+         GWQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738782332; x=1739387132;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t7CLcELsQh973O7p17cqjk2r4r5zWT8nJXohkTPsaZA=;
-        b=eb3xi3YhXtRvg3jWVPexBc2O4Dl9Lj1N5QPRh/97W2TFfJAhAZk2p4Q/tSlg1lK4g1
-         rtKZWHbph/K9SsaXqty5oJhNfmfy2Rtz1FkATtLAN53X6yIl7QGKyOlUDfUzhJGpJpRu
-         H5LPa6KSqm+RBmAprbpSAN6VNIzv9rgc1oBuUvoaAVHTyXlHSUxvOYb70cXoVDtM7eB5
-         5nQx9c0cjWwT+eUh/rgfW9NgjkVyvjYdTba5q2m0RzY8ooFKRixgh8c5ksOfeiddo0tY
-         FmlejFrE26gCKPRwlYEbxKbU6HwhajbzruBNkT9ZN/bn9qQ93VaDcijKNHFmf1QAoU1j
-         vC4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUu4PBvaYMAlJVd1WkqHEYWMjD4/i4MyZcJUkb7cBontTPvTM9x7VSoqfwmhBjtMsDhvP+toyLZlDst@vger.kernel.org, AJvYcCXtsl8CuR0xqoEDivD0DWO2HTZXH5b8XIcOoDiDqw/+TCg+/mqvmaxGrEJRFtxXCHoazF8rRPrp3rCuvWKQ2A==@vger.kernel.org, AJvYcCXucnZkDT5qAF0h1BfIQMgoWD791MnWXHAsI0p7DUx8j13gMwDCNYzYVeMY6M+mk4ddvOAXrkFYE/mMe0aY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDorLfaJtQMOskquIlXDOpzhCdxP5hFWRfZWAFPMKZZFQnns48
-	eJI7L3ME8O2QT3M9l7eGNpU3OCswzwD/xz7FH8CXKDeG4HiUqs3eV/iV6KCtYW7toDjayoldmFG
-	lT5/0Iof2/r6KLpnTXywKM5kvKZCPEockf/4=
-X-Gm-Gg: ASbGnctSgLTpRfNjE9/KzFYhSKt6X7ef2pvIr7iglyAlivW0SGwnlboIYiV7/CwNoPm
-	xa0P0T0c/xnFofD/Dm2dbae6jcqeNTfIs0B8h55qCIF0ZEhhSeNbbuTgKtUKMUHuimnRGEqg=
-X-Google-Smtp-Source: AGHT+IG3mFXOSETMuRLYoBorSgJDSpYyNUtn5qdCuV7P8c/VZ9qYcepSmEhPEERHaWTVcONUV1ur0S+LuU0YsZiDq0E=
-X-Received: by 2002:a05:6402:321e:b0:5dc:88dd:38aa with SMTP id
- 4fb4d7f45d1cf-5dcdb7329d1mr3930229a12.8.1738782332358; Wed, 05 Feb 2025
- 11:05:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738782376; x=1739387176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2XTZ2XIu3m9RP+qJyYD+g3KKohZkkqFE7uro5AlY+lA=;
+        b=UA03pL6pOUsPZkyg00KKdjHpVWIdYN6v3e1NopWKE+rSqEcmw1VzER0ep99bDEJyEy
+         Rnjw67Ocjm7J9qu6eW11E8fVuaYzP3CsNF/oXu14o48HWbIvpRSzdbPebSDAOBKUdKFY
+         4Eo2NT4xds7lYdwkjAdwKRolWNkeJnWj9D3DrN3bgXVcfNFr8Lw3oG6KfpBJbFF3ooaq
+         hUwNb5ynWGr3nv5h6ZR8tNCzreqM6BAj8c+gq7GyPuNKGHlJYXmtXp6eHhnyFdEe17bs
+         0oHZoz+vL/CPxq49EemKQS0yeF/uZ4Y2JcPlAkP6dsj+ZQTA109FVGjlj3AuVET808mP
+         emvg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+omfGUaNIUheRIEKh0tTCK3gpE5xx6WhFYhKPUstBqMAGbC7uokAS5Mn2IKWkjOmXmUufNAwkKhBkPYs=@vger.kernel.org, AJvYcCVzk63DM8ift2kekK4EO5pMy3l1SoaivLMkfafD610u0QVivgISeF49DUVqlFPONh1eo9OyTdsrxIaceODHVLeepA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz91sxHqOI+eLd11uiYCY9fp6syo1N37RghVU9+QzUoW+NibyHL
+	4IrZP4mInyUY1TCdYSARGfbiBg9wKNtHf4zN5n0xic0vt2uH5Ul0
+X-Gm-Gg: ASbGncvULWS0ld1WssGsHqpYX1vS7O4H1mbNP+gWsDL2sIyUVaybK4O86MZezgZWdEe
+	prog0grVhmJrvs121jRujuW+3sqp0Brd+3tBpF/RW7LVQ8UKgR9sYkM6P8gUs2lxRtEkVJoyZ6z
+	PNJAnKQTNKQtHIIJoqb9zL1CqTnaBHCer+4hxHp77Aq3P8cJMes0wKWBLeDnYK+ajnZX9F99hCz
+	DJzZh0mz6e0bNT1xdS6EwqfvHyWAgL22+P6Q7WaiMu+cFnJQoCTyXTL3aPo/0F9u9fhYhhCgm2s
+	CZmbmoy8YQsgPTfv00wFDE6nWKHdc/4taytLuhXLsdBVVw==
+X-Google-Smtp-Source: AGHT+IHKqldEMmvfEqeRBZkBH83z+bWZgrX2UowzmDa9skIUAfl6ELjXshIVfFyh1cu/qWHsUGePzg==
+X-Received: by 2002:a17:902:e888:b0:215:4a31:47d8 with SMTP id d9443c01a7336-21f17dde27bmr58334165ad.9.1738782376224;
+        Wed, 05 Feb 2025 11:06:16 -0800 (PST)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:e6df:5ab5:fc4f:a680])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f07afc5c1sm34494785ad.170.2025.02.05.11.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 11:06:15 -0800 (PST)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: mark.rutland@arm.com
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	shuah@kernel.org,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH] perf/core: Prevent dereferencing NULL pointer
+Date: Thu,  6 Feb 2025 03:06:08 +0800
+Message-ID: <20250205190608.93508-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205162819.380864-1-mjguzik@gmail.com> <20250205172946.GD21791@frogsfrogsfrogs>
- <CAGudoHENg_G7KaJT15bE0wVOT_yXw0yiPPqTf40zm9YzuaUPkw@mail.gmail.com> <vci2ejpu7eirvku6eg5ajrbsdlpztu2wgvm2n75lkiaenuxw7p@7ag5gflkjhus>
-In-Reply-To: <vci2ejpu7eirvku6eg5ajrbsdlpztu2wgvm2n75lkiaenuxw7p@7ag5gflkjhus>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 5 Feb 2025 20:05:20 +0100
-X-Gm-Features: AWEUYZlEukpyDH6KkkJOMLlhg_MSebSSFDdpkMUnF0LkYkWDJQOFg-fGvZBow5c
-Message-ID: <CAGudoHGjrS30FZAM=Qwqi1vxpdkPQyXGsW7-xONeSE9aw8H3gg@mail.gmail.com>
-Subject: Re: [PATCH] ext4: pass strlen() of the symlink instead of i_size to inode_set_cached_link()
-To: Jan Kara <jack@suse.cz>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org, tytso@mit.edu, kees@kernel.org, 
-	viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, 
-	syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com, 
-	linux-ext4 <linux-ext4@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 5, 2025 at 7:10=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
->
-> On Wed 05-02-25 18:33:23, Mateusz Guzik wrote:
-> > If the ext4 folk do the right fix, I will be delighted to have this
-> > patch dropped. :)
->
-> Yeah, let me cook up proper ext4 fix for this (currently under testing).
->
+According to coverity scan check, there's possible cases where
+"ring_buffer_get()" returns a NULL in "perf_mmap_close".
 
-I see it got posted and tested:
-https://lore.kernel.org/linux-hardening/67a3b38f.050a0220.19061f.05ea.GAE@g=
-oogle.com/T/#mb782935cc6926dd5642984189d922135f023ec43
+Use a "BUG_ON()" to check for NULL pointer existence, panic if it does
+exist, otherwise it's safe to dereference "rb" and access its members.
 
-So I consider my patch self-NAKed.
+The scan check report link is:
+scan5.scan.coverity.com/#/project-view/63416/10063?selectedIssue=1636067
 
-Thanks for sorting it out.
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ kernel/events/core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bcb09e011e9e..fe83d4754746 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6410,11 +6410,17 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ {
+ 	struct perf_event *event = vma->vm_file->private_data;
+ 	struct perf_buffer *rb = ring_buffer_get(event);
+-	struct user_struct *mmap_user = rb->mmap_user;
+-	int mmap_locked = rb->mmap_locked;
+-	unsigned long size = perf_data_size(rb);
++	struct user_struct *mmap_user;
++	int mmap_locked;
++	unsigned long size;
+ 	bool detach_rest = false;
+ 
++	BUG_ON(!rb);
++
++	mmap_user = rb->mmap_user;
++	mmap_locked = rb->mmap_locked;
++	size = perf_data_size(rb);
++
+ 	if (event->pmu->event_unmapped)
+ 		event->pmu->event_unmapped(event, vma->vm_mm);
+ 
+-- 
+2.43.0
+
