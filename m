@@ -1,173 +1,722 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4681547D8
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DD1218AA2
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749728; cv=none; b=lBt7pYm8zYpgb/yFPqI7zikn2/zzUAPYEYqH3gQw7AaQLLuJ7zxAJytSVmBl5HsbwHZCwhuiejsLd2ptu0Tc7vrFKaEugzYnyqgTnbaTzAsm0zyChVYYW9aRVCBeAx4V9R9z3JltCx94LpdIPMdFQin0EF/o5u1FQYY0ZIeEBbY=
+	t=1738749759; cv=none; b=hiT6jSd1TZYyDQlpZZNcDcWl/wUDgmSox890dv+vJHz0MC19GcRsQuOnEVlllaKPYbbSXdoQnZrTFEz4beshqolX52gv4PfpSs0YAlK0vFz5d51U1vO+3Gjkaj3ZFmA31MMaGzh3aGybcFwDWGYE2HYtLoZjlTdIJobGTGNe0v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749728; c=relaxed/simple;
-	bh=E0PTNIwQS5JcJ66tT1ZxxvzSk70T0G2+/RcDJA8kSH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FD4agubw0ozVmqr4h/6ZQEKDDaYv3dJXCzZ7zheVXqr/XKkcUIJRpQgsb/GvQRAXwO+FBe3NXE4y4n3dcueigxOYDtUsYCLa++zGJ/JyS4Syav1wla5xIesk7sV/czqzYfVB5fei7cmD2pJIfixtoYk7Dot9/PQ/DhEeB/pxDNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NhHdZ4Ew; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738749759; c=relaxed/simple;
+	bh=5eWIJpacbpomxbrxfoP30ELUAw6yam+m3DPEvPr3+rk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pOsK9FxvZkL3WcDcP/1P03NWYJao+MlVccrWuRWmEMRfKZZ95iGvAag1hkVuMKnfEH2WNoPWDJaaPilPLB7wRyJSGT4Z8ajfWQ+Sg4u+qgpF3w7fC1IXOw4kACUdm6LPwi7OwLUCVvo9EI76qkfUzgomvpDmohAEMvwpbcpBTHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LlN4C5CB; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NhHdZ4Ew"
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 59E233F671
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738749722;
-	bh=lRkR+WYaons/jJVqBwYKIgchNhk8mrQWriNR5CVl3/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=NhHdZ4Ew/XkUXa222qi6TdUYpJQmVXy92bSTutSshYFoHdia9ILRwslnkAS8KgINC
-	 b27GkY6KpH5auJ3ytQAKU8JF9saQrnUipGCH378YDKykTXN3ve3b9NW5z5T4Q1t/hp
-	 XoY56BN/AHwDDB09j/g9SvFNrMcOUTV8PXTcK2Tg31hUbVwySSvDx6SRRshiZh+YFW
-	 edxlVILdbcZ7e8ipytC6ABSy2TVcavc31RovDsVVhDcvvNSw7PQ05CCVzN+GU/Zb2l
-	 +Ro4q8xgi7zyBe8u3M3lzg7eIU/yWEGQEO778TCR9E1Hww5uLXfPnRzB4eyAuotOE9
-	 4yj4ILZqw+dBg==
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43673af80a6so46333225e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:02:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LlN4C5CB"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-543e47e93a3so6996821e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738749754; x=1739354554; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6tthie2AMgfczBe+cPCWEPv8r35bgR8C8bmKfufzVOU=;
+        b=LlN4C5CBsxLZYqcU4JkEMKFtaFk/7OSpg7Y2qcnypGwXOb8ILmCmEh+x5Ygh8ijuQN
+         8aUQJmqdpmNpGa0fLk9ByoiLqY6DMUcgeZjGRakFwwA99VqkaW3BqBz/Acr9rZLjdY51
+         1A7g4HBtIc+EVoVKRabtpEmEKSi/aetjzjyzgyKgVzivnNkp8+44eTqY6IRO23zv6kef
+         QfANQjqpu3c41drb6UCIthcuft6gtQ6UARiHVzZa5RktIALMQPMSq8WvG/wosmn9/JyC
+         Nrw2UTGazlejIN5jKuFDHGJbaJpSdnOL3qiwfeCy3AI6+9WdyfkGO5cheLKxCCQP8cBr
+         Blrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738749722; x=1739354522;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lRkR+WYaons/jJVqBwYKIgchNhk8mrQWriNR5CVl3/0=;
-        b=LciONcu/bBoARuC+O1zyc79WQtppK2Yu2Dwd7k+LABz9w7WZeyMHtFJPyFxqW38azd
-         yklnSe0PMX/RUjVaBQ3/YPwFOsCYeYjZ5Dgo/A0b8iDWD2GB8lNw55znZmRj9xw/1QYk
-         BN6HrFzRYK+GEFVq9N9Uj9UMbx1uFINXb1X+dj8ZbH5MVyIL4fOljCvwJi+lQgGliy7K
-         iLK15C2mSaQnktaFHZR8XlXGwdomshuAsijE9vixt67XDfTsftkdKbC17i/L4g3alB+s
-         W64pgVrMjQUbiwpXTjXuDfUlHIMpR+WWptaEae1NIKijRD7wgaYQnJ27mA2yTUfxf7RV
-         DJ6w==
-X-Gm-Message-State: AOJu0YwqxXBLVSFUEtyh1C/Sf/qjeR8u2792V5F6RFe9jdPTAbCMa23/
-	BkX9e61AyOlOfc0Y2mu1Mu+07bdayVdMIgaTi2629+wlsrwEArSoRfZTPaFqx1pYlx8BmUxQhJn
-	9m59Xi10V3I2G2LFSwLTSq+BQO+zgQeKuF1gr3l4tKbt9u0CAd4uFcgZEE/UtT67agKY2lPpypM
-	qhvQ==
-X-Gm-Gg: ASbGnctadnlOC+GlHIqtqzD/CZrx5GS6Gp7UrRqkdwTRpnzQv1qw+T8Jj7ssAgJhwW8
-	PTasowsub6HiTK3Ru2USnAJmt8Av2zN0NJfL55vPXOSEoVAcf7EB/l+U9d35XJznVQuqQFEg18Q
-	DDgYp2+VGhYuecnZ2PqV4WrCkXCl5S/7mIVFnIJGkw+hEtrPqL18zgay1Bgp+c1JBOsF2YfTlB7
-	P0ftnGcBaS1hPdMNuM1O9gmC2gBEYGkbEJ/mj2kd/651GUKsOM3ND8x5SnXk4/z1vkUVy09PoNu
-	TvSvB49bKkWCSuRF9ohPupSo9nBT5Yr0FkIefhs7mymeXVqI9liDi3oP0zAOwWPEa/uiWcE=
-X-Received: by 2002:a05:600c:46d4:b0:42c:c28c:e477 with SMTP id 5b1f17b1804b1-4390d55fc82mr14932125e9.23.1738749721728;
-        Wed, 05 Feb 2025 02:02:01 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGq8om1DDyQcOOxkaGbGiKq7JJDXixn8Voguht0gmaJQbiYzhmBxXZIPIdniNSl3ZJ3CUhAFQ==
-X-Received: by 2002:a05:600c:46d4:b0:42c:c28c:e477 with SMTP id 5b1f17b1804b1-4390d55fc82mr14931765e9.23.1738749721365;
-        Wed, 05 Feb 2025 02:02:01 -0800 (PST)
-Received: from ?IPV6:2a02:3035:6e0:9052:36d8:1776:f263:97eb? ([2a02:3035:6e0:9052:36d8:1776:f263:97eb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf7dbcsm15922705e9.30.2025.02.05.02.01.59
+        d=1e100.net; s=20230601; t=1738749754; x=1739354554;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6tthie2AMgfczBe+cPCWEPv8r35bgR8C8bmKfufzVOU=;
+        b=D6ir24p1tHhA6xtXJ/Cy+39d5PnxwckzO3wu5Ym7QiURYdl4R8Ek7zWn2lQ6BDTQlR
+         p5qCE6FvVaLL0NhZ5eyEybXzcZ3Oodg74E1v/R3/KinU42L9wHqAovN0/tS8tpsRm2hl
+         e18/49NxvYc674KftNoZUTiorVOA1qM1BrnO8MubzHl9OL9VN+w8kEUyueHD5QEndSkb
+         juV14qmGlItT0UfbE6kTVqo+G3GjCIMlkPMynkymSu7yirEAHLutyUG9LKtP8M82o/qx
+         shrNDtlUgYr31l9Mz8QLU/pGOL/X0A2/sajWKRaggnnaBy3y3HOg+591fjFT0nBHcbML
+         nhHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKPBw9wwaCIU8vRK3vlyH4/rBXiyuKhSvwdhbv+YtFsC25Ea7WGvYqaNO1+CNXwoOWTfb1Lz2QAygDoNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBEmIfkPA7sf9DB7R/GoJn7S8FXJz6m5tEDEzF9hEgy66pdKlN
+	rnnqn72sXPJLPIv0KcOUCIiDvhiG9ab9HBB9nA3fh+UhRc+kEh5JiVVXuIO3qSOZbixUmJ3HNhC
+	Q
+X-Gm-Gg: ASbGncvGDCDV6PHEFLcOenU3aMadnWvVZmDnkB5PdzjsIN31sprrOdVj6/dwxlSICyW
+	0ddR3ExTl9xBRHZ2HgX+8le1LAyJBhTZJRjMtiAD6CjiB22y4mNLzV0awmiY228WrzqJtB6agPh
+	lYRDiEuER+bTwqcG9hprm/UBhurT/bOfoZb9d5qF7MWkLm4cRXfaa0LQkNryrt3+5ZVLBJRY9Jx
+	Zyf7mWkhaudeGu5xo6ED0rLetIglhDQFTpiVT1aQh9SBMXcf0vEGZeFgfEVYg1WxSpLoHWyQ9ds
+	hQHLR4kxRPYHl0rbIZ40o4ORMj5AhrFhQUD7/3jW7dgT/NM8bH8Wz+SN
+X-Google-Smtp-Source: AGHT+IGrVgsdJfeqSutmhZYYLCzNXW43RxqKlbaqEEOCIK4Z6umuyLbuTi/9uO8y00VrhQtJdGIUiw==
+X-Received: by 2002:a05:6512:2398:b0:543:f1a0:9e82 with SMTP id 2adb3069b0e04-54405a1069cmr582676e87.6.1738749754054;
+        Wed, 05 Feb 2025 02:02:34 -0800 (PST)
+Received: from [127.0.0.1] (85-76-37-138-nat.elisa-mobile.fi. [85.76.37.138])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe219e8sm1859539e87.106.2025.02.05.02.02.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 02:02:00 -0800 (PST)
-Message-ID: <206a6ada-1ef9-47f3-b1cf-fb1a1540e95c@canonical.com>
-Date: Wed, 5 Feb 2025 11:01:58 +0100
+        Wed, 05 Feb 2025 02:02:33 -0800 (PST)
+Date: Wed, 05 Feb 2025 12:02:31 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Yongbang Shi <shiyongbang@huawei.com>
+CC: xinliang.liu@linaro.org, tiantao6@hisilicon.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, daniel@ffwll.ch, kong.kongxinwei@hisilicon.com,
+ liangjian010@huawei.com, chenjianmin@huawei.com, lidongming5@huawei.com,
+ libaihan@huawei.com, shenjian15@huawei.com, shaojijie@huawei.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ shiyongbang@huawei.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_drm-dp_3/4=5D_dr?=
+ =?US-ASCII?Q?m/hisilicon/hibmc=3A_Add_debugf?=
+ =?US-ASCII?Q?s_interface_to_enable_colorbar_feature_and_get_link_status?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <4594feeb-abbd-4f73-b2e9-d375acf3d9c2@huawei.com>
+References: <20250127032024.1542219-1-shiyongbang@huawei.com> <20250127032024.1542219-4-shiyongbang@huawei.com> <wvulxrhuyzcsy5dwe7oaipjklqfgsurlkb74szungtq3vsvgs3@73v2lesfdvee> <4594feeb-abbd-4f73-b2e9-d375acf3d9c2@huawei.com>
+Message-ID: <AF758F07-1121-4A3F-8A51-85DA530A8B57@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common:
- bootph-pre-ram hinting needed by boot loader
-To: Hal Feng <hal.feng@linux.starfivetech.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, E Shattow <e@freeshell.de>,
- Emil Renner Berthing <kernel@esmil.dk>, Conor Dooley <conor@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-References: <20250203013730.269558-1-e@freeshell.de>
- <20250203013730.269558-6-e@freeshell.de>
- <25B3D8909DBCC21B+43663a76-4afa-44ae-95e2-3a8792de614c@linux.starfivetech.com>
-Content-Language: en-US
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <25B3D8909DBCC21B+43663a76-4afa-44ae-95e2-3a8792de614c@linux.starfivetech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2/5/25 08:57, Hal Feng wrote:
-> On 2/3/2025 9:37 AM, E Shattow wrote:
->> Add bootph-pre-ram hinting to jh7110-common.dtsi:
->>    - i2c5_pins and i2c-pins subnode for connection to eeprom
->>    - eeprom node
->>    - qspi flash configuration subnode
->>    - memory node
->>    - uart0 for serial console
->>
->>    With this the U-Boot SPL secondary program loader may drop such
->>    overrides when using dt-rebasing with JH7110 OF_UPSTREAM board targets.
->>
->> Signed-off-by: E Shattow <e@freeshell.de>
->> ---
->>   arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->> index 30c5f3487c8b..c9e7ae59ee7c 100644
->> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->> @@ -28,6 +28,7 @@ chosen {
->>   	memory@40000000 {
->>   		device_type = "memory";
->>   		reg = <0x0 0x40000000 0x1 0x0>;
->> +		bootph-pre-ram;
->>   	};
->>   
->>   	gpio-restart {
->> @@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
->>   	};
->>   
->>   	eeprom@50 {
->> +		bootph-pre-ram;
->>   		compatible = "atmel,24c04";
->>   		reg = <0x50>;
->>   		pagesize = <16>;
->> @@ -323,6 +325,7 @@ &qspi {
->>   	nor_flash: flash@0 {
->>   		compatible = "jedec,spi-nor";
->>   		reg = <0>;
->> +		bootph-pre-ram;
->>   		cdns,read-delay = <2>;
->>   		spi-max-frequency = <100000000>;
->>   		cdns,tshsl-ns = <1>;
->> @@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
->>   	};
->>   
->>   	i2c5_pins: i2c5-0 {
->> +		bootph-pre-ram;
->>   		i2c-pins {
->>   			pinmux = <GPIOMUX(19, GPOUT_LOW,
->>   					      GPOEN_SYS_I2C5_CLK,
->> @@ -413,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
->>   					      GPOEN_SYS_I2C5_DATA,
->>   					      GPI_SYS_I2C5_DATA)>;
->>   			bias-disable; /* external pull-up */
->> +			bootph-pre-ram;
->>   			input-enable;
->>   			input-schmitt-enable;
->>   		};
->> @@ -641,6 +646,7 @@ GPOEN_DISABLE,
->>   };
->>   
->>   &uart0 {
->> +	bootph-pre-ram;
->>   	clock-frequency = <24000000>;
->>   	pinctrl-names = "default";
->>   	pinctrl-0 = <&uart0_pins>;
-> 
-> What about &mmc0, &mmc1, &qspi, &sysgpio, &mmc0_pins, &mmc1_pins, &i2c5?
-> Why not add "bootph-pre-ram;" for them?
+On 5 February 2025 10:18:00 EET, Yongbang Shi <shiyongbang@huawei=2Ecom> wr=
+ote:
+>> On Mon, Jan 27, 2025 at 11:20:23AM +0800, Yongbang Shi wrote:
+>>> From: Baihan Li <libaihan@huawei=2Ecom>
+>>>=20
+>>> Create 3 files in drm debugfs:
+>> This definitely needs to be split=2E
+>
+>Hi Dmitry,
+>
+>Right, I got it=2E I will split any patch which has mutiple fileds changi=
+ng blended together=2E
+>
+>
+>>> colorbar-cfg: Get/Set colorbar cfg
+>> What does that mean?
+>>=20
+>It's a dp's color bar output, and we have a configuration that
+>we can set color bar's color type and stripe movement=2E
 
-Would they be needed before relocation of U-Boot to DRAM?
+What is a DP colour bar?
 
-Best regards
+>
+>
+>>> hibmc-dp: Get dp link status
+>>> hibmc-dp-edid: Print edid information
+>> edid-decode /sys/class/drm/card0-DP-1/edid ?
+>
+>Yeah, we can directly use "cat" to print edid info by it=2E I will add co=
+mments and
+>example in next series git log=2E
 
-Heinrich
+What is the benefit in having a nonstandard EDID decoder in the kernel if =
+you can use cat to get hexdump from sysfs and then use any of the tools ava=
+ilable for EDID deciding?
+
+>
+>
+>>> Signed-off-by: Baihan Li <libaihan@huawei=2Ecom>
+>>> Signed-off-by: Yongbang Shi <shiyongbang@huawei=2Ecom>
+>>> ---
+>>>   drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+>>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm=2Eh  |   3 +
+>>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Ec    |  58 +++++
+>>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Eh    |  44 ++++
+>>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_link=2Ec  |  40 +++-
+>>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg=2Eh   |   4 +-
+>>>   =2E=2E=2E/drm/hisilicon/hibmc/hibmc_drm_debugfs=2Ec   | 214 ++++++++=
+++++++++++
+>>>   =2E=2E=2E/gpu/drm/hisilicon/hibmc/hibmc_drm_dp=2Ec    |   2 +
+>>>   =2E=2E=2E/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Ec   |   3 +
+>>>   =2E=2E=2E/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Eh   |   2 +
+>>>   10 files changed, 363 insertions(+), 10 deletions(-)
+>>>   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs=
+=2Ec
+>>>=20
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Makefile b/drivers/gpu/dr=
+m/hisilicon/hibmc/Makefile
+>>> index 35a74cc10c80=2E=2Ec14f5182c067 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>>> @@ -1,5 +1,6 @@
+>>>   # SPDX-License-Identifier: GPL-2=2E0-only
+>>>   hibmc-drm-y :=3D hibmc_drm_drv=2Eo hibmc_drm_de=2Eo hibmc_drm_vdac=
+=2Eo hibmc_drm_i2c=2Eo \
+>>> -	       dp/dp_aux=2Eo dp/dp_link=2Eo dp/dp_hw=2Eo dp/dp_phy=2Eo hibmc=
+_drm_dp=2Eo
+>>> +	       dp/dp_aux=2Eo dp/dp_link=2Eo dp/dp_hw=2Eo dp/dp_phy=2Eo hibmc=
+_drm_dp=2Eo \
+>>> +	       hibmc_drm_debugfs=2Eo
+>>>     obj-$(CONFIG_DRM_HISI_HIBMC) +=3D hibmc-drm=2Eo
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm=2Eh b/drivers/=
+gpu/drm/hisilicon/hibmc/dp/dp_comm=2Eh
+>>> index 7edcecd5a5f0=2E=2E67f6c81a35ed 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm=2Eh
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm=2Eh
+>>> @@ -26,6 +26,9 @@ struct hibmc_link_status {
+>>>   struct hibmc_link_cap {
+>>>   	u8 link_rate;
+>>>   	u8 lanes;
+>>> +	int rx_dpcd_revision;
+>>> +	bool is_tps3;
+>>> +	bool is_tps4;
+>>>   };
+>>>     struct hibmc_dp_link {
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Ec b/drivers/gp=
+u/drm/hisilicon/hibmc/dp/dp_hw=2Ec
+>>> index 50050908606f=2E=2E9c8b91ff0e3b 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Ec
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Ec
+>>> @@ -226,3 +226,61 @@ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct=
+ drm_display_mode *mode)
+>>>     	return 0;
+>>>   }
+>>> +
+>>> +u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp)
+>>> +{
+>>> +	return dp->dp_dev->link=2Ecap=2Elink_rate;
+>>> +}
+>>> +
+>>> +u8 hibmc_dp_get_lanes(struct hibmc_dp *dp)
+>>> +{
+>>> +	return dp->dp_dev->link=2Ecap=2Elanes;
+>>> +}
+>>> +
+>>> +int hibmc_dp_get_dpcd(struct hibmc_dp *dp)
+>>> +{
+>>> +	return dp->dp_dev->link=2Ecap=2Erx_dpcd_revision;
+>>> +}
+>>> +
+>>> +static const struct hibmc_dp_color_raw g_rgb_raw[] =3D {
+>>> +	{CBAR_COLOR_BAR, 0x000, 0x000, 0x000},
+>>> +	{CBAR_WHITE,     0xfff, 0xfff, 0xfff},
+>>> +	{CBAR_RED,       0xfff, 0x000, 0x000},
+>>> +	{CBAR_ORANGE,    0xfff, 0x800, 0x000},
+>>> +	{CBAR_YELLOW,    0xfff, 0xfff, 0x000},
+>>> +	{CBAR_GREEN,     0x000, 0xfff, 0x000},
+>>> +	{CBAR_CYAN,      0x000, 0x800, 0x800},
+>>> +	{CBAR_BLUE,      0x000, 0x000, 0xfff},
+>>> +	{CBAR_PURPLE,    0x800, 0x000, 0x800},
+>>> +	{CBAR_BLACK,     0x000, 0x000, 0x000},
+>>> +};
+>>> +
+>>> +void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cba=
+r_cfg *cfg)
+>>> +{
+>>> +	struct hibmc_dp_dev *dp_dev =3D dp->dp_dev;
+>>> +	struct hibmc_dp_color_raw raw_data;
+>>> +
+>>> +	if (cfg->enable) {
+>>> +		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(9),
+>>> +					 cfg->self_timing);
+>>> +		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(8=
+, 1),
+>>> +					 cfg->dynamic_rate);
+>>> +		if (cfg->pattern =3D=3D CBAR_COLOR_BAR) {
+>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10),=
+ 0);
+>>> +		} else {
+>>> +			raw_data =3D g_rgb_raw[cfg->pattern];
+>>> +			drm_dbg_dp(dp->drm_dev, "r:%x g:%x b:%x\n", raw_data=2Er_value,
+>>> +				   raw_data=2Eg_value, raw_data=2Eb_value);
+>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10),=
+ 1);
+>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(=
+23, 12),
+>>> +						 raw_data=2Er_value);
+>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK=
+(23, 12),
+>>> +						 raw_data=2Eg_value);
+>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK=
+(11, 0),
+>>> +						 raw_data=2Eb_value);
+>>> +		}
+>>> +	}
+>>> +
+>>> +	hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(0), cf=
+g->enable);
+>>> +	writel(HIBMC_DP_SYNC_EN_MASK, dp_dev->base + HIBMC_DP_TIMING_SYNC_CT=
+RL);
+>>> +}
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Eh b/drivers/gp=
+u/drm/hisilicon/hibmc/dp/dp_hw=2Eh
+>>> index 53b6d0beecea=2E=2Ef2f59f2feb3c 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Eh
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw=2Eh
+>>> @@ -14,6 +14,44 @@
+>>>     struct hibmc_dp_dev;
+>>>   +enum hibmc_dp_cbar_pattern {
+>>> +	CBAR_COLOR_BAR,
+>>> +	CBAR_WHITE,
+>>> +	CBAR_RED,
+>>> +	CBAR_ORANGE,
+>>> +	CBAR_YELLOW,
+>>> +	CBAR_GREEN,
+>>> +	CBAR_CYAN,
+>>> +	CBAR_BLUE,
+>>> +	CBAR_PURPLE,
+>>> +	CBAR_BLACK,
+>>> +};
+>>> +
+>>> +struct hibmc_dp_color_raw {
+>>> +	enum hibmc_dp_cbar_pattern pattern;
+>>> +	u32 r_value;
+>>> +	u32 g_value;
+>>> +	u32 b_value;
+>>> +};
+>>> +
+>>> +struct hibmc_dp_cbar_cfg {
+>>> +	bool enable;
+>>> +	bool self_timing;
+>>> +	u8 dynamic_rate; /* 0:static, 1-255(frame):dynamic */
+>>> +	enum hibmc_dp_cbar_pattern pattern;
+>>> +};
+>>> +
+>>> +enum hibmc_dp_hpd_status {
+>>> +	HIBMC_DP_HPD_DETECTING,
+>>> +	HIBMC_DP_HPD_IN,
+>>> +	HIBMC_DP_HPD_OUT,
+>>> +	HIBMC_DP_HPD_SHORT, /* Short hpd (irq_hpd) */
+>>> +	HIBMC_DP_HPD_DET_FAIL,
+>>> +	HIBMC_DP_HPD_IN_SIMULATE,
+>>> +	HIBMC_DP_HPD_OUT_SIMULATE,
+>>> +	HIBMC_DP_HPD_SHORT_SIMULATE,
+>>> +};
+>>> +
+>>>   struct hibmc_dp {
+>>>   	struct hibmc_dp_dev *dp_dev;
+>>>   	struct drm_device *drm_dev;
+>>> @@ -21,10 +59,16 @@ struct hibmc_dp {
+>>>   	struct drm_connector connector;
+>>>   	void __iomem *mmio;
+>>>   	struct drm_dp_aux aux;
+>>> +	struct hibmc_dp_cbar_cfg cfg;
+>>> +	bool is_inited;
+>>>   };
+>>>     int hibmc_dp_hw_init(struct hibmc_dp *dp);
+>>>   int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *=
+mode);
+>>>   void hibmc_dp_display_en(struct hibmc_dp *dp, bool enable);
+>>> +int hibmc_dp_get_dpcd(struct hibmc_dp *dp);
+>>> +u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp);
+>>> +u8 hibmc_dp_get_lanes(struct hibmc_dp *dp);
+>>> +void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cba=
+r_cfg *cfg);
+>>>     #endif
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link=2Ec b/drivers/=
+gpu/drm/hisilicon/hibmc/dp/dp_link=2Ec
+>>> index 695cb9c0b643=2E=2E20849f1ebd0c 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link=2Ec
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link=2Ec
+>>> @@ -4,9 +4,11 @@
+>>>   #include <linux/delay=2Eh>
+>>>   #include <drm/drm_device=2Eh>
+>>>   #include <drm/drm_print=2Eh>
+>>> +
+>>>   #include "dp_comm=2Eh"
+>>>   #include "dp_reg=2Eh"
+>>>   #include "dp_phy=2Eh"
+>>> +#include "dp_config=2Eh"
+>>>     #define HIBMC_EQ_MAX_RETRY 5
+>>>   @@ -42,11 +44,7 @@ static int hibmc_dp_link_training_configure(struc=
+t hibmc_dp_dev *dp)
+>>>   		return ret >=3D 0 ? -EIO : ret;
+>>>   	}
+>>>   -	ret =3D drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
+>>> -	if (ret)
+>>> -		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
+>>> -
+>>> -	return ret;
+>>> +	return 0;
+>>>   }
+>>>     static int hibmc_dp_link_set_pattern(struct hibmc_dp_dev *dp, int =
+pattern)
+>>> @@ -189,15 +187,17 @@ static int hibmc_dp_link_training_cr(struct hibm=
+c_dp_dev *dp)
+>>>   	bool level_changed;
+>>>   	u32 voltage_tries;
+>>>   	u32 cr_tries;
+>>> +	u32 max_cr;
+>>>   	int ret;
+>>>     	/*
+>>>   	 * DP 1=2E4 spec define 10 for maxtries value, for pre DP 1=2E4 ver=
+sion set a limit of 80
+>>>   	 * (4 voltage levels x 4 preemphasis levels x 5 identical voltage r=
+etries)
+>>>   	 */
+>>> +	 max_cr =3D dp->link=2Ecap=2Erx_dpcd_revision >=3D DP_DPCD_REV_14 ? =
+10 : 80;
+>>>     	voltage_tries =3D 1;
+>>> -	for (cr_tries =3D 0; cr_tries < 80; cr_tries++) {
+>>> +	for (cr_tries =3D 0; cr_tries < max_cr; cr_tries++) {
+>>>   		drm_dp_link_train_clock_recovery_delay(dp->aux, dp->dpcd);
+>>>     		ret =3D drm_dp_dpcd_read_link_status(dp->aux, lane_status);
+>>> @@ -234,7 +234,7 @@ static int hibmc_dp_link_training_cr(struct hibmc_=
+dp_dev *dp)
+>>>   		voltage_tries =3D level_changed ? 1 : voltage_tries + 1;
+>>>   	}
+>>>   -	drm_err(dp->dev, "dp link training clock recovery 80 times failed\=
+n");
+>>> +	drm_err(dp->dev, "dp link training clock recovery %u times failed\n"=
+, max_cr);
+>>>   	dp->link=2Estatus=2Eclock_recovered =3D false;
+>>>     	return 0;
+>>> @@ -244,9 +244,17 @@ static int hibmc_dp_link_training_channel_eq(stru=
+ct hibmc_dp_dev *dp)
+>>>   {
+>>>   	u8 lane_status[DP_LINK_STATUS_SIZE] =3D {0};
+>>>   	u8 eq_tries;
+>>> +	int tps;
+>>>   	int ret;
+>>>   -	ret =3D hibmc_dp_link_set_pattern(dp, DP_TRAINING_PATTERN_2);
+>>> +	if (dp->link=2Ecap=2Eis_tps4)
+>>> +		tps =3D DP_TRAINING_PATTERN_4;
+>>> +	else if (dp->link=2Ecap=2Eis_tps3)
+>>> +		tps =3D DP_TRAINING_PATTERN_3;
+>>> +	else
+>>> +		tps =3D DP_TRAINING_PATTERN_2;
+>>> +
+>>> +	ret =3D hibmc_dp_link_set_pattern(dp, tps);
+>>>   	if (ret)
+>>>   		return ret;
+>>>   @@ -313,11 +321,27 @@ static int hibmc_dp_link_downgrade_training_eq=
+(struct hibmc_dp_dev *dp)
+>>>   	return hibmc_dp_link_reduce_rate(dp);
+>>>   }
+>>>   +static void hibmc_dp_update_caps(struct hibmc_dp_dev *dp)
+>>> +{
+>>> +	dp->link=2Ecap=2Erx_dpcd_revision =3D dp->dpcd[DP_DPCD_REV];
+>>> +
+>>> +	dp->link=2Ecap=2Eis_tps3 =3D (dp->dpcd[DP_DPCD_REV] >=3D DP_DPCD_REV=
+_13) &&
+>>> +			       (dp->dpcd[DP_MAX_LANE_COUNT] & DP_TPS3_SUPPORTED);
+>>> +	dp->link=2Ecap=2Eis_tps4 =3D (dp->dpcd[DP_DPCD_REV] >=3D DP_DPCD_REV=
+_14) &&
+>>> +			       (dp->dpcd[DP_MAX_DOWNSPREAD] & DP_TPS4_SUPPORTED);
+>>> +}
+>>> +
+>>>   int hibmc_dp_link_training(struct hibmc_dp_dev *dp)
+>>>   {
+>>>   	struct hibmc_dp_link *link =3D &dp->link;
+>>>   	int ret;
+>>>   +	ret =3D drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
+>>> +	if (ret)
+>>> +		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
+>>> +
+>>> +	hibmc_dp_update_caps(dp);
+>>> +
+>>>   	while (true) {
+>>>   		ret =3D hibmc_dp_link_training_cr_pre(dp);
+>>>   		if (ret)
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg=2Eh b/drivers/g=
+pu/drm/hisilicon/hibmc/dp/dp_reg=2Eh
+>>> index 99ba9c951c41=2E=2Ec43ad6b30c2c 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg=2Eh
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg=2Eh
+>>> @@ -23,6 +23,8 @@
+>>>   #define HIBMC_DP_VIDEO_MSA1			0x11c
+>>>   #define HIBMC_DP_VIDEO_MSA2			0x120
+>>>   #define HIBMC_DP_VIDEO_HORIZONTAL_SIZE		0X124
+>>> +#define HIBMC_DP_COLOR_BAR_CTRL			0x260
+>>> +#define HIBMC_DP_COLOR_BAR_CTRL1		0x264
+>>>   #define HIBMC_DP_TIMING_GEN_CONFIG0		0x26c
+>>>   #define HIBMC_DP_TIMING_GEN_CONFIG2		0x274
+>>>   #define HIBMC_DP_TIMING_GEN_CONFIG3		0x278
+>>> @@ -72,6 +74,6 @@
+>>>   #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
+>>>   #define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+>>>   #define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
+>>> -#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION GENMASK(31, 20)
+>>> +#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION	GENMASK(31, 20)
+>>>     #endif
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs=2Ec b/d=
+rivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs=2Ec
+>>> new file mode 100644
+>>> index 000000000000=2E=2Ef6885399c2b3
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs=2Ec
+>>> @@ -0,0 +1,214 @@
+>>> +// SPDX-License-Identifier: GPL-2=2E0-or-later
+>>> +// Copyright (c) 2024 Hisilicon Limited=2E
+>>> +
+>>> +#include <linux/debugfs=2Eh>
+>>> +#include <linux/device=2Eh>
+>>> +#include <linux/seq_file=2Eh>
+>>> +#include <linux/pci=2Eh>
+>>> +
+>>> +#include <drm/drm_drv=2Eh>
+>>> +#include <drm/drm_file=2Eh>
+>>> +#include <drm/drm_debugfs=2Eh>
+>>> +#include <drm/drm_edid=2Eh>
+>>> +
+>>> +#include "hibmc_drm_drv=2Eh"
+>>> +
+>>> +static void hibmc_dump_edid(struct seq_file *m, const struct edid *ed=
+id)
+>>> +{
+>>> +	const struct detailed_pixel_timing *pixel_data;
+>>> +	int i;
+>>> +
+>>> +	seq_puts(m, "EDID:\n");
+>>> +	seq_printf(m, "\theader: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0=
+x%02x 0x%02x\n",
+>>> +		   edid->header[0], edid->header[1], edid->header[2], edid->header[=
+3],
+>>> +		   edid->header[4], edid->header[5], edid->header[6], edid->header[=
+7]);
+>>> +
+>>> +	seq_puts(m, "Vendor & product info:\n");
+>>> +	seq_printf(m, "\tmfg_id: 0x%02x 0x%02x\n", edid->mfg_id[0], edid->mf=
+g_id[1]);
+>>> +	seq_printf(m, "\tprod_code: 0x%02x 0x%02x\n", edid->prod_code[0], ed=
+id->prod_code[1]);
+>>> +	seq_printf(m, "\tserial: 0x%08x\n", edid->serial);
+>>> +	seq_printf(m, "\tmfg_week/year: 0x%02x 0x%02x\n", edid->mfg_week, ed=
+id->mfg_year);
+>>> +
+>>> +	seq_puts(m, "EDID version:\n");
+>>> +	seq_printf(m, "\tversion: 0x%02x\n", edid->version);
+>>> +	seq_printf(m, "\trevision: 0x%02x\n", edid->revision);
+>>> +
+>>> +	seq_puts(m, "Display info:\n");
+>>> +	seq_printf(m, "\tinput: 0x%02x\n", edid->input);
+>>> +	seq_printf(m, "\twidth_cm: 0x%02x\n", edid->width_cm);
+>>> +	seq_printf(m, "\theight_cm: 0x%02x\n", edid->height_cm);
+>>> +	seq_printf(m, "\tgamma: 0x%02x\n", edid->gamma);
+>>> +	seq_printf(m, "\tfeatures: 0x%02x\n", edid->features);
+>>> +
+>>> +	seq_puts(m, "Color characteristics:\n");
+>>> +	seq_printf(m, "\tred_green_lo: 0x%02x\n", edid->red_green_lo);
+>>> +	seq_printf(m, "\tblue/black_white_lo: 0x%02x\n", *(&edid->red_green_=
+lo) + 1);
+>>> +	seq_printf(m, "\tred_x/y: 0x%02x 0x%02x\n", edid->red_x, edid->red_y=
+);
+>>> +	seq_printf(m, "\tgreen_x/y: 0x%02x 0x%02x\n", edid->green_x, edid->g=
+reen_y);
+>>> +	seq_printf(m, "\tblue_x/y: 0x%02x 0x%02x\n", edid->blue_x, edid->blu=
+e_y);
+>>> +	seq_printf(m, "\twhite_x/y: 0x%02x 0x%02x\n", edid->white_x, edid->w=
+hite_y);
+>>> +
+>>> +	seq_puts(m, "Est=2E timings and mfg rsvd timings:\n");
+>>> +	seq_printf(m, "\test_timings_t1/2: 0x%02x 0x%02x\n",
+>>> +		   edid->established_timings=2Et1, edid->established_timings=2Et2);
+>>> +
+>>> +	seq_puts(m, "Standard timings 1-8:\n");
+>>> +	for (i =3D 0; i < ARRAY_SIZE(edid->standard_timings); i++) {
+>>> +		seq_printf(m, "\tstandard_timings[%d] hsize/vfreq_aspect: 0x%02x 0x=
+%02x\n",
+>>> +			   i, edid->standard_timings[i]=2Ehsize,
+>>> +			   edid->standard_timings[i]=2Evfreq_aspect);
+>>> +	}
+>>> +
+>>> +	seq_puts(m, "Detailing timings 1-4:\n");
+>>> +	for (i =3D 0; i < ARRAY_SIZE(edid->detailed_timings); i++) {
+>>> +		pixel_data =3D &edid->detailed_timings[i]=2Edata=2Epixel_data;
+>>> +		seq_printf(m, "\tdetailed_timing[%d] pixel_clock: 0x%04x\n",
+>>> +			   i, edid->detailed_timings[i]=2Epixel_clock);
+>>> +		seq_printf(m, "\tdetailed_timing[%d] hactive: %u\n", i,
+>>> +			   (pixel_data->hactive_hblank_hi & 0xf0) << 4 | pixel_data->hacti=
+ve_lo);
+>>> +		seq_printf(m, "\tdetailed_timing[%d] vactive: %u\n", i,
+>>> +			   (pixel_data->vactive_vblank_hi & 0xf0) << 4 | pixel_data->vacti=
+ve_lo);
+>>> +	}
+>>> +
+>>> +	seq_puts(m, "Others:\n");
+>>> +	seq_printf(m, "\textensions: 0x%02x\n", edid->extensions);
+>>> +	seq_printf(m, "\tchecksum: 0x%02x\n", edid->checksum);
+>>> +}
+>>> +
+>>> +static int hibmc_dp_edid_show(struct seq_file *m, void *arg)
+>>> +{
+>>> +	struct drm_info_node *node =3D m->private;
+>>> +	struct drm_device *dev =3D node->minor->dev;
+>>> +	struct hibmc_drm_private *priv =3D to_hibmc_drm_private(dev);
+>>> +	struct edid *edid;
+>>> +	char name[20];
+>>> +	int idx;
+>>> +
+>>> +	if (!drm_dev_enter(dev, &idx))
+>>> +		return -ENODEV;
+>>> +
+>>> +	edid =3D drm_get_edid(&priv->dp=2Econnector, &priv->dp=2Eaux=2Eddc);
+>>> +	if (edid) {
+>>> +		drm_edid_get_monitor_name(edid, name, ARRAY_SIZE(name));
+>>> +		seq_printf(m, "Monitor name: %s\n", name);
+>>> +		hibmc_dump_edid(m, edid);
+>>> +		kfree(edid);
+>>> +	} else {
+>>> +		seq_puts(m, "No connector available!\n");
+>>> +	}
+>>> +
+>>> +	drm_dev_exit(idx);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int hibmc_dp_show(struct seq_file *m, void *arg)
+>>> +{
+>>> +	struct drm_info_node *node =3D m->private;
+>>> +	struct drm_device *dev =3D node->minor->dev;
+>>> +	struct hibmc_drm_private *priv =3D to_hibmc_drm_private(dev);
+>>> +	int idx;
+>>> +
+>>> +	if (!drm_dev_enter(dev, &idx))
+>>> +		return -ENODEV;
+>>> +
+>>> +	seq_printf(m, "enable lanes: %u\n", hibmc_dp_get_lanes(&priv->dp));
+>>> +	seq_printf(m, "link rate: %d\n", hibmc_dp_get_link_rate(&priv->dp) *=
+ 27);
+>>> +	seq_printf(m, "vfresh: %d\n", drm_mode_vrefresh(&priv->crtc=2Emode))=
+;
+>>> +	seq_printf(m, "dpcd version: 0x%x\n", hibmc_dp_get_dpcd(&priv->dp));
+>>> +
+>>> +	drm_dev_exit(idx);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static ssize_t hibmc_control_write(struct file *file, const char __us=
+er *user_buf,
+>>> +				   size_t size, loff_t *ppos)
+>>> +{
+>>> +	struct hibmc_drm_private *priv =3D file_inode(file)->i_private;
+>>> +	struct hibmc_dp_cbar_cfg *cfg =3D &priv->dp=2Ecfg;
+>>> +	u32 input =3D 0;
+>>> +	int ret, idx;
+>>> +	u8 val;
+>>> +
+>>> +	ret =3D kstrtou32_from_user(user_buf, size, 0, &input);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	val =3D FIELD_GET(GENMASK(13, 10), input);
+>>> +	if (val > 9)
+>>> +		return -EINVAL;
+>>> +	cfg->pattern =3D val;
+>>> +	cfg->enable =3D FIELD_GET(BIT(0), input);
+>>> +	cfg->self_timing =3D FIELD_GET(BIT(1), input);
+>>> +	cfg->dynamic_rate =3D FIELD_GET(GENMASK(9, 2), input);
+>>> +
+>>> +	ret =3D drm_dev_enter(&priv->dev, &idx);
+>>> +	if (!ret)
+>>> +		return -ENODEV;
+>>> +
+>>> +	hibmc_dp_set_cbar(&priv->dp, cfg);
+>>> +
+>>> +	drm_dev_exit(idx);
+>>> +
+>>> +	return size;
+>>> +}
+>>> +
+>>> +static int hibmc_dp_dbgfs_show(struct seq_file *m, void *arg)
+>>> +{
+>>> +	struct hibmc_drm_private *priv =3D m->private;
+>>> +	struct hibmc_dp_cbar_cfg *cfg =3D &priv->dp=2Ecfg;
+>>> +	u32 output =3D 0;
+>>> +	int idx;
+>>> +
+>>> +	if (!drm_dev_enter(&priv->dev, &idx))
+>>> +		return -ENODEV;
+>>> +
+>>> +	/* bit[0]: 0: enable colorbar, 1: disable colorbar
+>>> +	 * bit[1]: 0: timing follows XDP, 1: internal self timing
+>>> +	 * bit[2,9]: 0: static colorbar image,
+>>> +	 *           1~255: right shifting a type of color per (1~255)frames
+>>> +	 * bit[10,13]: 0~9: color bar, white, red, orange,
+>>> +	 *             yellow, green, cyan, bule, pupper, black
+>>> +	 */
+>>> +	output =3D cfg->enable | (cfg->self_timing << 1) |
+>>> +		 (cfg->dynamic_rate << 2) | (cfg->pattern << 10);
+>>> +
+>>> +	drm_dev_exit(idx);
+>>> +
+>>> +	seq_printf(m, "hibmc dp colorbar cfg: %u\n", output);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int hibmc_open(struct inode *inode, struct file *filp)
+>>> +{
+>>> +	return single_open(filp, hibmc_dp_dbgfs_show, inode->i_private);
+>>> +}
+>>> +
+>>> +static const struct file_operations hibmc_dbg_fops =3D {
+>>> +	=2Eowner   =3D THIS_MODULE,
+>>> +	=2Ewrite   =3D hibmc_control_write,
+>>> +	=2Eread    =3D seq_read,
+>>> +	=2Eopen    =3D hibmc_open,
+>>> +	=2Ellseek  =3D seq_lseek,
+>>> +	=2Erelease =3D single_release,
+>>> +};
+>>> +
+>>> +static struct drm_info_list hibmc_debugfs_list[] =3D {
+>>> +	{ "hibmc-dp", hibmc_dp_show },
+>>> +	{ "hibmc-dp-edid", hibmc_dp_edid_show },
+>>> +};
+>>> +
+>>> +void hibmc_debugfs_register(struct hibmc_drm_private *priv)
+>>> +{
+>>> +	struct drm_connector *dp_conn =3D &priv->dp=2Econnector;
+>>> +	struct drm_minor *minor =3D priv->dev=2Eprimary;
+>>> +
+>>> +	/* create the file in drm directory, so we don't need to remove manu=
+ally */
+>>> +	debugfs_create_file("colorbar-cfg", 0200,
+>>> +			    dp_conn->debugfs_entry, priv, &hibmc_dbg_fops);
+>>> +
+>>> +	drm_debugfs_create_files(hibmc_debugfs_list, ARRAY_SIZE(hibmc_debugf=
+s_list),
+>>> +				 minor->debugfs_root, minor);
+>>> +}
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp=2Ec b/driver=
+s/gpu/drm/hisilicon/hibmc/hibmc_drm_dp=2Ec
+>>> index fac8485a69d9=2E=2Ecc1f9ee0656f 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp=2Ec
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp=2Ec
+>>> @@ -146,5 +146,7 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
+>>>     	drm_connector_attach_encoder(connector, encoder);
+>>>   +	dp->is_inited =3D true;
+>>> +
+>>>   	return 0;
+>>>   }
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Ec b/drive=
+rs/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Ec
+>>> index bade693d9730=2E=2E3d4d5185c523 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Ec
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Ec
+>>> @@ -352,6 +352,9 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+>>>   		goto err_unload;
+>>>   	}
+>>>   +	if (priv->dp=2Eis_inited)
+>>> +		hibmc_debugfs_register(priv);
+>> Please use debugfs_init() callback for that
+>>=20
+>>=20
+>>> +
+>>>   	drm_client_setup(dev, NULL);
+>>>     	return 0;
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Eh b/drive=
+rs/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Eh
+>>> index 3ddd71aada66=2E=2Eff61efb8a2ab 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Eh
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv=2Eh
+>>> @@ -69,4 +69,6 @@ int hibmc_ddc_create(struct drm_device *drm_dev, str=
+uct hibmc_vdac *connector);
+>>>     int hibmc_dp_init(struct hibmc_drm_private *priv);
+>>>   +void hibmc_debugfs_register(struct hibmc_drm_private *priv);
+>>> +
+>>>   #endif
+>>> --=20
+>>> 2=2E33=2E0
+>>>=20
 
