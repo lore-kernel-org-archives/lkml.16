@@ -1,126 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from freeshell.de (freeshell.de [116.202.128.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EF882D98;
-	Wed,  5 Feb 2025 13:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58D71FC3;
+	Wed,  5 Feb 2025 13:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738761361; cv=none; b=r9UNZt32A1kC/E7RtRzL73fjJbV6Z+PJkLCEKCpVV274BwwhkagDX+L1V5eMgBpgNdiNIVCYOjYkZKB9zHgSvHkLxbw9cq0eNdSKXUiJYYxdWLjbcbDl//00aDJSikPxcqaCdZqRMeM7SLJblFLcZVS4uWX5qCqxUiRx9rV64pE=
+	t=1738761682; cv=none; b=YvfslDLBOOhXhKpSsfGyMBCBB6LbgAqHmO9J4YIl8kLqOiHub/JyIR5j+DGt9yTvXt+WNP3UM4lb/UmsOxvx394nnp4cVOXffTZ7YMvBp/he8JR6ry4HSz5JpuslItHTfG4Tq5BgGqLXzwsVBFqidcQvCKwdoQoeeuBau3wAOMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738761361; c=relaxed/simple;
-	bh=pVdKMTARG7PpXdtrGq5Ko9RnznvSf7QFclunD1yuew8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XclvMBj2RY7oJgo/jg6vv7WzWo93bjPfgkVhm5w5RFPd8MukKuj1qFLpW+PZ8nsX/yEsgVKUfx1DM5t43UfM5WlFg+PhPGkimN62yVzsyNle+AljGYWqI3SPd80m6f34cfqa67dnoo/GuNJTCrKcBAkNQYhxXW8aBnXmdKPO3NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261E1C4CEE2;
-	Wed,  5 Feb 2025 13:15:57 +0000 (UTC)
-Date: Wed, 5 Feb 2025 08:16:35 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: Prakash Sangappa <prakash.sangappa@oracle.com>, Peter Zijlstra
- <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, Andrew
- Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>,
- jgross@suse.com, Andrew.Cooper3@citrix.com, Vineeth Pillai
- <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
- <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
- daniel.wagner@suse.com, Joseph Salisbury <joseph.salisbury@oracle.com>,
- broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250205081635.397eacb0@gandalf.local.home>
-In-Reply-To: <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738761682; c=relaxed/simple;
+	bh=rKa2UHCvQ4bQfN0OJ0WErKQrq8jIIM1C07ItlR6oL3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bL3dnqoXfvA7X++2JcvHtECCX0umppS2bax2um23zEQa65BCuKaPMynzKIfGsFDJXEliHSL+wdYpf1WFj7rAQV+E5PPo2/DxFt0aUcXIuQwVqO8XyBqKN+N6sgMC/JJIaeEJp25U6I/kRLn5Imxav5Ud0DDGsDezea6Q+rdMyrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
+Received: from [192.168.2.35] (unknown [98.97.25.24])
+	(Authenticated sender: e)
+	by freeshell.de (Postfix) with ESMTPSA id E28DBB4C025C;
+	Wed,  5 Feb 2025 14:21:12 +0100 (CET)
+Message-ID: <33b971dc-1266-4d13-b9b7-620c58e5a804@freeshell.de>
+Date: Wed, 5 Feb 2025 05:21:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] riscv: dts: starfive: jh7110-common: qspi flash
+ setting read-delay 2 cycles max 100MHz
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Emil Renner Berthing <kernel@esmil.dk>, Conor Dooley <conor@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, Hal Feng <hal.feng@starfivetech.com>
+References: <20250203013730.269558-1-e@freeshell.de>
+ <20250203013730.269558-3-e@freeshell.de>
+ <CAJM55Z9s4FMCmGaGPGBdcJWxoTNO1gupMLAq2a1fExiho5W1jw@mail.gmail.com>
+Content-Language: en-US
+From: E Shattow <e@freeshell.de>
+In-Reply-To: <CAJM55Z9s4FMCmGaGPGBdcJWxoTNO1gupMLAq2a1fExiho5W1jw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Wed, 5 Feb 2025 00:09:51 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
+Hi Emil,
 
-> On Tue, Feb 4, 2025 at 10:03=E2=80=AFPM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Tue, 4 Feb 2025 19:56:09 -0500
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > =20
-> > > > Here is the RFC I had sent that Peter is referring =20
-> > >
-> > > FWIW, I second the idea of a new syscall for this than (ab)using rseq
-> > > and also independence from preemption method. I agree that something
-> > > generic is better than relying on preemption method. =20
-> >
-> > So you are for adding another user/kernel memory mapped section? =20
->=20
-> I don't personally mind that.
+On 2/5/25 02:18, Emil Renner Berthing wrote:
+> E Shattow wrote:
+>> Sync qspi flash setting to read-delay=2 and spi-max-frequency 100MHz for
+>> better compatibility with operating system and downstream boot loader SPL
+>> secondary program loader.
+> 
+> Here you should be explaining why these values better describe the hardware. To
+> me this just reads as "u-boot does this, so let's do the same" whith doesn't
+> really explain anything.
+> 
+> /Emil
+> 
+>>
+>> Signed-off-by: E Shattow <e@freeshell.de>
+>> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+>> ---
+>>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>> index a5661b677687..8a59c3001339 100644
+>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>> @@ -317,8 +317,8 @@ &qspi {
+>>  	nor_flash: flash@0 {
+>>  		compatible = "jedec,spi-nor";
+>>  		reg = <0>;
+>> -		cdns,read-delay = <5>;
+>> -		spi-max-frequency = <12000000>;
+>> +		cdns,read-delay = <2>;
+>> +		spi-max-frequency = <100000000>;
+>>  		cdns,tshsl-ns = <1>;
+>>  		cdns,tsd2d-ns = <1>;
+>>  		cdns,tchsh-ns = <1>;
+>> --
+>> 2.47.2
+>>
 
-I'm glad you don't personally mind it. Are you going to help maintain
-another memory mapped section?
+That is true, there's not much to explain. It works at delay 2 and
+100MHz max. I tried many delay values with the pre-existing 12MHz max,
+they did not work. I don't have more information than that except what I
+wrote about on the U-Boot mailing list [1]
 
->=20
-> > And you are also OK with allowing any task to make an RT task wait long=
-er?
-> >
-> > Putting my RT hat back on, I would definitely disable that on any system
-> > that requires RT. =20
->=20
-> Just so I understand, you are basically saying that you want this
-> feature only for FAIR tasks, and allowing RT tasks to extend time
-> slice might actually hurt the latency of (other) RT tasks on the
-> system right? This assumes PREEMPT_RT because the latency is 50us
-> right?
+[1]
+https://lore.kernel.org/u-boot/ZQ2PR01MB13072E932737DD9D65E3A250E637A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn/
 
-RT tasks don't have a time slice. They are affected by events. An external
-interrupt coming in, or a timer going off that states something is
-happening. Perhaps we could use this for SCHED_RR or maybe even
-SCHED_DEADLINE, as those do have time slices.
+The parameter training code in U-Boot when given max 100MHz has this at
+somewhere between delay 2 and delay 3, where delay 3 almost appears to
+work but there's data corruption, and delay 1 is totally non-functional.
+With all testing so far the delay 2 and max frequency 100MHz is reliable
+and also is a common occurrence in the Linux code base for similar qspi
+access.
 
-But if it does get used, it should only be used when the task being
-scheduled is the same SCHED_RR priority, or if SCHED_DEADLINE will not fail
-its guarantees.
+My testing methodology was pretty extensive and I wrote about the result
+on the U-Boot mailing list, however here we're taking the success of
+that in U-Boot and literally just applying it to Linux where it also
+happens to align with some common similar assignments for other boards
+in the devicetree code base. It works and there's no deeper insight here.
 
->=20
-> But in a poorly designed system, if you have RT tasks at higher
-> priority that preempt things lower in RT, that would already cause
-> latency anyway. Similarly, I would also consider any PREEMPT_RT system
+Welcome to hear from anyone that might actually understand this hardware?
 
-And that would be a poorly designed system, and not the problem of the
-kernel.
-
-> that (mis)uses this API in an RT task as also a poorly designed
-> system. I think PREEMPT_RT systems generally require careful design
-> anyway.  So the fact that a system is poorly designed and thus causes
-> latency is not the kernel's problem IMO.
-
-Correct. And why I don't think this should be used for RT. It's SCHED_OTHER
-that doesn't have any control of the sched tick, where this hint can help.
-
->=20
-> In any case, if you want this to only work on FAIR tasks and not RT
-> tasks, why is that only possible to do with rseq() + LAZY preemption
-> and not Prakash's new API + all preemption modes?
->=20
-> Also you can just ignore RT tasks (not that I'm saying that's a good
-> idea but..) in taskshrd_delay_resched() in that patch if you ever
-> wanted to do that.
->=20
-> I just feel the RT latency thing is a non-issue AFAICS.
-
-Have you worked on any RT projects before?
-
--- Steve
+-E
