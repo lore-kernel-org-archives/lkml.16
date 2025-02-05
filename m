@@ -1,180 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED87227BB7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660B0214A6B;
+	Wed,  5 Feb 2025 06:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738492; cv=none; b=FENDsKLJYAF41cWWs+zGApFlDBtOgoIkSJBHil5a+tosRe2Wy2x/6gLuhS/OV7fRmhO2Jg2/Ltk41lGRgvYtuLTa2lFL54//NJ5kCj8iNKqEKT/xhKiSnd/iUBfEzFCJeOpuFELk9RznTowPURALQSfLVnMcDEBqvpYKC5lh9Vw=
+	t=1738738622; cv=none; b=dUHBroxFBADZw5w9DIzyxqEnH/1zsETfSnr46sI+xpP7qb4ICchfjXWv6JITOYDqAW7M7HcfNW7Gku0xz6gzTjhqHj932uda5C8B4Jy7yoHYBq2/jVmYNu5Mv28ww0aBvsl4N3S7xKMtTnvMjQY/igyRvs3b9C7hoCqKpN0rEao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738492; c=relaxed/simple;
-	bh=oqv7jBSncpt9Oun63nIOrYg61g/GvpeccewqH2aHn9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=buXoimz+EGm+MI6Cl7co52klvhITTQY/d0gERtS3JUTjoI2twjFy0+/Jk8RqotTJFvESp3i6/E+L5D+ccHYlZNThHFpCkNeuG23XSRW8YaP+G9W/1gln/ddnM0qp/duuK4tkO76c9OMVDCG3tOag8LiUhHkC7Rwjfo1zqdjzqGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpCQv+5E; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738738622; c=relaxed/simple;
+	bh=wTAlPlOR+MYQRcwVVV1xfdmfe7enZp9ryKNE3mSZvbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QWswZvw6zmDK7DBLft9VQRO75yr4gevW/RyfTfqQFhZ2W2U6FgPBvL4cttwUuhs0ndlrwAe/+U4MPEvbsZ/ZVD8ZSSI9l895QtlM0TruM1UREEU21J8OTAHwfwkAHJtGALl9K7Ul/hp+RTPbSotfR2f/RUhvnrFACttgoHhetec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=BWbJPoFz; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpCQv+5E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738738489;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DU3mbDfOckusgvw3Q2V0BpSskMHFw4hNrktOktZ/6Jo=;
-	b=EpCQv+5Ef4/OiH8hye8c7Y2VN9oD3xUYlXJkTY1IdOFeTzfqPeXXSVorioXz+N2AivohLh
-	IE7WQ3Qtlx1blkRHgjwymQ0VoHFhxuWaflm1WSrJxFsRhi+NEg38vZfvs12iEnnRNrmbqs
-	B1EjfWFSgFuLNIuwy57qGbEg/TkuLDY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-xL-uatl0PrOpU5wwILoZBg-1; Wed,
- 05 Feb 2025 01:54:45 -0500
-X-MC-Unique: xL-uatl0PrOpU5wwILoZBg-1
-X-Mimecast-MFC-AGG-ID: xL-uatl0PrOpU5wwILoZBg
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4CB121956094;
-	Wed,  5 Feb 2025 06:54:44 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.64.7])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0F1821800360;
-	Wed,  5 Feb 2025 06:54:41 +0000 (UTC)
-From: Seiji Nishikawa <snishika@redhat.com>
-To: dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	snishika@redhat.com
-Subject: [PATCH] x86/mm: Harden copy_from_kernel_nofault_allowed() to prevent false MCEs
-Date: Wed,  5 Feb 2025 15:53:36 +0900
-Message-ID: <20250205065336.440890-1-snishika@redhat.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BWbJPoFz"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7E97B250;
+	Wed,  5 Feb 2025 07:55:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738738545;
+	bh=wTAlPlOR+MYQRcwVVV1xfdmfe7enZp9ryKNE3mSZvbE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BWbJPoFzXk7PORbSH2mpiNQ9XwARTnOqJmUEjxTdQSQTugc2ai+hKCvD4AwvMvLNo
+	 bSj4I3h0i+uk71hxojhKRET+LnKs3nNWQDccL0W8pQzCuPQ7wgwKxXKH0PASqTWYQO
+	 Xpp7oY6iAc4bH+4gSniqQmWVslBC5vesdS+2WsHQ=
+Message-ID: <f6b20a29-1205-4f5e-87b6-fec58bd43545@ideasonboard.com>
+Date: Wed, 5 Feb 2025 08:56:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/tidss: Add support for AM62L display subsystem
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: "Bajjuri, Praneeth" <praneeth@ti.com>,
+ "Raghavendra, Vignesh" <vigneshr@ti.com>, "Jain, Swamil" <s-jain1@ti.com>,
+ "Donadkar, Rishikesh" <r-donadkar@ti.com>,
+ "Choudhary, Jayesh" <j-choudhary@ti.com>,
+ "Shenoy, Harikrishna" <h-shenoy@ti.com>,
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+ "jyri.sarha@iki.fi" <jyri.sarha@iki.fi>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "simona@ffwll.ch" <simona@ffwll.ch>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
+References: <20241231090432.3649158-1-devarsht@ti.com>
+ <20241231090432.3649158-3-devarsht@ti.com>
+ <eab600f6-bfc2-489c-b384-5b620164a556@linux.dev>
+ <dea025e1-98d4-2dcf-e729-19c9d49bf3ae@ti.com>
+ <c6179f0b-c93f-483b-bfeb-322d800e5170@ideasonboard.com>
+ <5f122a31-771f-93c9-57fe-bc5766c1fccc@ti.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <5f122a31-771f-93c9-57fe-bc5766c1fccc@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Multiple instances have been observed where bpf_probe_read_kernel()
-triggers a machine check exception (MCE) due to an invalid address being
-accessed in copy_from_kernel_nofault(). The issue arises while
-pagefault_disable() is in effect, preventing normal fault handling and
-leading to an MCE.
+Hi,
 
-        ......
-mce: [Hardware Error]: CPU XX: Machine Check Exception: X Bank X: bf80000000200401
-mce: [Hardware Error]: RIP !INEXACT! 10:<ffffffffa8ce2d1e> {copy_from_kernel_nofault+0x3e/0xf0}
-mce: [Hardware Error]: TSC XXXXXXXXXXXXXXXX ADDR XXXXXXXX MISC XX PPIN XXXXXXXXXXXXXXXXXX
-mce: [Hardware Error]: PROCESSOR X:XXXXX TIME XXXXXXXXX SOCKET X APIC XX microcode XXXXXXX
-mce: [Hardware Error]: Run the above through 'mcelog --ascii'
-mce: [Hardware Error]: Machine check: Processor context corrupt
-Kernel panic - not syncing: Fatal machine check
-        ......
+On 05/02/2025 07:53, Devarsh Thakkar wrote:
+> Hi Tomi
+> 
+>>> Thanks for pointing out, I probably missed this since the use-case still
+>>> worked since VP interrupts were still enabled and those were sufficient to
+>>> drive the display
+>>> but the VID underflow interrupts and VID specific bits were probably not
+>>> enabled at-all due to above miss, so agreed
+>>> we should probably go ahead with a different reg space for AM62L due to
+>>> aforementioned differences.
+>>
+>> I think I disagree here. Afaiu, AM62L has plane at hw index 1 (VIDL1), but the
+>> plane at hw index 0 (VID1) is not instantiated in the hardware. But the
+>> registers are the same, i.e. AM62L's registers for VIDL1 match AM65x/AM62x
+>> registers, right?
+>>
+>> If so, we just need to tell the driver the hw index, instead of creating new
+>> register offsets as done in v2.
+>>
+>> Or am I missing something here? (I haven't looked at the HW manual yet).
+>>
+> 
+> No that's not the only difference. For AM62L, the VID_IRQENABLE/STATUS
+> registers start at +0x4 as compared to AM65x/AM62x/ :
+> 
+> AM62L:
+>          [DISPC_VID_IRQENABLE_OFF] =             0x48,
+> 
+>          [DISPC_VID_IRQSTATUS_OFF] =             0x5c,
+> 
+> AM62x/AM65x:
+> 
+>          [DISPC_VID_IRQENABLE_OFF] =             0x44,
+> 
+>          [DISPC_VID_IRQSTATUS_OFF] =             0x58,
 
-        ......
---- <NMI exception stack> ---
- #5 [fffffe00014f8e08] delay_tsc at ffffffffab3c5cfc
- #6 [fffffe00014f8e08] wait_for_panic at ffffffffaae4340d
- #7 [fffffe00014f8e18] mce_timed_out at ffffffffaae43de8
- #8 [fffffe00014f8e30] do_machine_check at ffffffffab9303e4
- #9 [fffffe00014f8f30] exc_machine_check at ffffffffab9308f5
-#10 [fffffe00014f8f50] asm_exc_machine_check at ffffffffaba00c3a
-    [exception RIP: copy_from_kernel_nofault+62]
-    RIP: ffffffffab0e2fee  RSP: ffff9de0b79b7d78  RFLAGS: 00000202
-    RAX: ffffffffffffffff  RBX: ffffffffff5fc34b  RCX: 0000000000000010
-    RDX: 0000000000000008  RSI: 0000000000000008  RDI: ffffffffff5fc34b
-    RBP: ffff9de0b79b7df8   R8: 0000000000000001   R9: 0000000000000000
-    R10: 0000000000000001  R11: ffff8e323b4f4710  R12: 0000000000000008
-    R13: 0000000002566780  R14: 0000000000000000  R15: ffff9de0b79b7e80
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
---- <MCE exception stack> ---
-#11 [ffff9de0b79b7d78] copy_from_kernel_nofault at ffffffffab0e2fee
-#12 [ffff9de0b79b7d90] bpf_probe_read_kernel at ffffffffab04d568
-#13 [ffff9de0b79b7e08] copy_from_kernel_nofault at ffffffffab0e2fcd
-#14 [ffff9de0b79b7e28] bpf_probe_read_kernel at ffffffffab04d568
-#15 [ffff9de0b79b7e90] bpf_trace_run2 at ffffffffab04e4e6
-#16 [ffff9de0b79b7ec0] syscall_exit_work at ffffffffaaf99a00
-#17 [ffff9de0b79b7ed8] syscall_exit_to_user_mode at ffffffffab931ce9
-#18 [ffff9de0b79b7ee8] do_syscall_64 at ffffffffab92e169
-#19 [ffff9de0b79b7f50] entry_SYSCALL_64_after_hwframe at ffffffffaba00121
-        ......
+But they actually don't start at different offsets.
 
-The root cause is that copy_from_kernel_nofault_allowed() currently only
-blocks access to the exact vsyscall page (0xffffffffff600000) but does
-not account for addresses slightly below or above it that result in
-similar failures.
+AM62L TRM has:
 
-Observed faulting addresses and their deltas from VSYSCALL_ADDR:
+DSS_COMMON_VID_IRQENABLE_1  3020 0048h
+DSS_COMMON_VID_IRQSTATUS_1  3020 005Ch
 
-- 0xffffffffff5fc294  (-0x3d6c)
-- 0xffffffffff6000c7  (+0xc7)
-- 0xffffffffff5fc3b0  (-0x3c50)
-- 0xffffffffff5fcde0  (-0x3220)
-- 0xffffffffff5fce94  (-0x316c)
-- 0xffffffffff600050  (+0x50)
-- 0xffffffffff5fc2f8  (-0x3d08)
-- 0xffffffffff6008a0  (+0x8a0)
-- 0xffffffffff5fc1c7  (-0x3e39)
-- 0xffffffffff60009d  (+0x9d)
-- 0xffffffffff600678  (+0x678)
-- 0xffffffffff6000c7  (+0xc7)
-- 0xffffffffff5fc34b  (-0x3cb5)
-- 0xffffffffff5fcde0  (-0x3220)
+AM65X TRM has:
 
-The invalid addresses are likely caused by incorrect pointer arithmetic,
-out-of-bounds accesses in a BPF program using bpf_probe_read_kernel(), or
-invalid user-space pointers. Other contributing factors include
-speculative execution, uninitialized or corrupted pointers, and SMAP
-restrictions when vsyscall=xonly is enabled. Additionally, the use of
-pagefault_disable() prevents proper fault handling, potentially leading
-to an MCE. Bugs in the JIT compiler or verifier, as well as exploit
-attempts, may also be responsible.
+DSS0_COMMON_VID_IRQENABLE_1  04A0 0048h
+DSS0_COMMON_VID_IRQSTATUS_1  04A0 005Ch
 
-The existing check that blocks access to the exact vsyscall page was
-introduced in patch 32019c659ecf ("x86/mm: Disallow vsyscall page read
-for copy_from_kernel_nofault()"). However, this check does not cover
-addresses slightly below or above it that exhibit similar failure
-patterns.
+It's just that on AM62L the VID0 isn't instantiated in the hardware. 
+VID1 is at the same place.
 
-This patch extends copy_from_kernel_nofault_allowed() to block access not
-only to the vsyscall page (0xffffffffff600000) but also to a range
-spanning four pages below it and one page above its start. This prevents
-unintended memory accesses that could otherwise lead to fatal MCEs.
-
-By preventing such invalid accesses, this patch improves the robustness
-of the kernel and mitigates the impact of potential BPF program
-misbehavior.
-
-Fixes: 32019c659ecf ("x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()")
-Signed-off-by: Seiji Nishikawa <snishika@redhat.com>
----
- arch/x86/mm/maccess.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
-index 42115ac079cf..0388577ebc91 100644
---- a/arch/x86/mm/maccess.c
-+++ b/arch/x86/mm/maccess.c
-@@ -18,11 +18,11 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- 		return false;
- 
- 	/*
--	 * Reading from the vsyscall page may cause an unhandled fault in
--	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
--	 * usually considered as a user space address.
--	 */
--	if (is_vsyscall_vaddr(vaddr))
-+ 	 * Block accesses to the vsyscall page and a surrounding range
-+ 	 * to prevent misaligned reads that could bypass the check.
-+ 	 */
-+	if (vaddr >= VSYSCALL_ADDR - (4 * PAGE_SIZE) &&
-+	    vaddr < VSYSCALL_ADDR + PAGE_SIZE)
- 		return false;
- 
- 	/*
--- 
-2.48.1
+  Tomi
 
