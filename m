@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B55822B8D9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1C422C35E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751140; cv=none; b=tChwClG/LCEMVlCLGQFbK2UwBIW2bcEjcQIBRil+ImSLZjnWgLYiZ+TfhaWJGRvXFMHaaRv60117WwAnyxC76os38fmQoLEuOn8RiWX3mzSXzanT5p0vvBdoRB/gwcRwKcKl8PU/oF/CpNFjNT2XmHZ0LwLMjF6Plonne9frcGo=
+	t=1738751140; cv=none; b=Zdkjsqu7pyMaRodbsbZ2tTV62BpLIyyINZV+OOi8QYhBFql0sQ4gAJS/EXKraQWV/Bdg1W5HE2lPzN2jFNjIROFxAYV3zcq9bGTskuXQYJT4YUm0pRAXKoEFQ35vp4fEkBlO1AgWKhXxhODSeTjei0o3W/OdPrG5a5708ZOt3vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751140; c=relaxed/simple;
-	bh=fb4yx1mLvfIivb42zEJ6sQ3mn7X1TYb8g7pYQvyHERQ=;
+	bh=VyZRdBAMs530KrDX/IvA+7ZtQx5J6svRBc1QlxxrPn4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=IMdqhZaOkQDYO0DJWFMJMEI4oyO63Godz9gW76P+5zrYWBdwHVbfT+vi7FlVwq3fgWR3I+4IJDdkWXtwv/ML8xv3szHubYEZrxT7nsoBTq6blVGIxZB4tP3eZ6jjjKlI225VGVxWzjlxRGH9Dj/02xr5uP3bYp/+wAoOl1nMsoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BOaNDxB+; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=uIk5KgtJ8JgN4E9X4Kl+FBcYMRP9eWu8iaCM+rTEBf2n/Ue93I8Q2RMS/pszlsUCGPcKveEH+zy0D81VgQJ3NFowBuEWyrP//BnC3LDpdLyU9k+xqENBw6jZs8AoaxOAkFIDQW0utg2L6TmRO+aqEvjQgGmMMjRK2qhoGjpfppI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UlswYVN8; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BOaNDxB+"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UlswYVN8"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=et62BZe26TSNPT9m7zmj3JkW+qnq8ZueXYHt8xkqpL4=; b=BOaNDxB+8qhm1WOH11iyiecxJn
-	fVFA/AfK8L/sNXJUpsGOsUpM1QTERb3e91fXdlp5KgPVQku1O9sAloZrvn43heerci7C9nxx/Ruiz
-	/1CxaRweBbHnR/rS+0tYmJ5BIGKmORcvN57X0b8vfRe5L7V+F66NWt5D3GWsroF0hN0ZfCQsKCR8A
-	hSnMnezrJqzAtDQtTj+fnxuk1EeXXt01EOyAGI2Yq0XoSmTJr7waCBjP4NcqYsNF6h7Wc3Az3VpPc
-	fQUpSvpU7jUqhZRifr2UQ+OmORjbXTYTan0YAyRqBQQIpMszBAGVucUibW4q7/88FSinCmyhzsvMT
-	4pjwMd8g==;
+	bh=eu5ZvhRBqGbSk6AaLgfzXy2QPVH2kRteBU9D7EL3a1k=; b=UlswYVN8AYGp3Qft4WUC8TZ31z
+	Q92UHUTApwYK7JqqUtGo265pLOuA5CYDJWcEKFH85ENAHSetAQUujLokh77gWL9ymz6wkacL4CvFG
+	SvKTPHx1Axfbg17rfKfeiAwUyfWgA6ghdtnogGhM8tRP5V8+Wqd7XCkvPdq5NhFvb6u+9kpSooWSw
+	5BZYHN58RNuNFMUcuH4Vt/t5hi29bCA0txiA9fHrxx21YBp2TwXWd9G4GWEgj/3UGcs66Wm2vnD3m
+	P+fn3oSNjLUhP8/9y/0TLKeMBPX+ptPLFRnHYoivcBcRlmlqjmjWl09C3OWQAQ2mJUuhBYBl5aK4+
+	wOvxis/g==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfcb3-00000004GPa-26uI;
-	Wed, 05 Feb 2025 10:25:29 +0000
+	id 1tfcb3-00000004GPe-2FDa;
+	Wed, 05 Feb 2025 10:25:30 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id D6E323061F6; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
-Message-ID: <20250205102449.451984422@infradead.org>
+	id DEA513078A4; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
+Message-ID: <20250205102449.682083733@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 05 Feb 2025 11:21:31 +0100
+Date: Wed, 05 Feb 2025 11:21:33 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  ravi.bangoria@amd.com,
@@ -50,7 +50,7 @@ Cc: linux-kernel@vger.kernel.org,
  irogers@google.com,
  adrian.hunter@intel.com,
  kan.liang@linux.intel.com
-Subject: [PATCH v2 11/24] perf: Simplify perf_pmu_register()
+Subject: [PATCH v2 13/24] perf: Simplify perf_event_alloc()
 References: <20250205102120.531585416@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,164 +60,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Using the previously introduced perf_pmu_free() and a new IDR helper,
-simplify the perf_pmu_register error paths.
+Using the previous simplifications, transition perf_event_alloc() to
+the cleanup way of things -- reducing error path magic.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/idr.h  |   17 ++++++++++++
- kernel/events/core.c |   71 ++++++++++++++++++++-------------------------------
- 2 files changed, 46 insertions(+), 42 deletions(-)
+ kernel/events/core.c |   60 +++++++++++++++++++--------------------------------
+ 1 file changed, 23 insertions(+), 37 deletions(-)
 
---- a/include/linux/idr.h
-+++ b/include/linux/idr.h
-@@ -15,6 +15,7 @@
- #include <linux/radix-tree.h>
- #include <linux/gfp.h>
- #include <linux/percpu.h>
-+#include <linux/cleanup.h>
- 
- struct idr {
- 	struct radix_tree_root	idr_rt;
-@@ -124,6 +125,22 @@ void *idr_get_next_ul(struct idr *, unsi
- void *idr_replace(struct idr *, void *, unsigned long id);
- void idr_destroy(struct idr *);
- 
-+struct __class_idr {
-+	struct idr *idr;
-+	int id;
-+};
-+
-+#define idr_null ((struct __class_idr){ NULL, -1 })
-+#define take_idr_id(id) __get_and_null(id, idr_null)
-+
-+DEFINE_CLASS(idr_alloc, struct __class_idr,
-+	     if (_T.id >= 0) idr_remove(_T.idr, _T.id),
-+	     ((struct __class_idr){
-+	     	.idr = idr,
-+		.id = idr_alloc(idr, ptr, start, end, gfp),
-+	     }),
-+	     struct idr *idr, void *ptr, int start, int end, gfp_t gfp);
-+
- /**
-  * idr_init_base() - Initialise an IDR.
-  * @idr: IDR handle.
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -11778,52 +11778,49 @@ static void perf_pmu_free(struct pmu *pm
- 	free_percpu(pmu->cpu_pmu_context);
+@@ -5360,6 +5361,8 @@ static void __free_event(struct perf_eve
+ 	call_rcu(&event->rcu_head, free_event_rcu);
  }
  
--int perf_pmu_register(struct pmu *pmu, const char *name, int type)
-+DEFINE_FREE(pmu_unregister, struct pmu *, if (_T) perf_pmu_free(_T))
++DEFINE_FREE(__free_event, struct perf_event *, if (_T) __free_event(_T))
 +
-+int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+ /* vs perf_event_alloc() success */
+ static void _free_event(struct perf_event *event)
  {
--	int cpu, ret, max = PERF_TYPE_MAX;
-+	int cpu, max = PERF_TYPE_MAX;
- 
--	pmu->type = -1;
-+	struct pmu *pmu __free(pmu_unregister) = _pmu;
-+	guard(mutex)(&pmus_lock);
- 
--	mutex_lock(&pmus_lock);
--	ret = -ENOMEM;
- 	pmu->pmu_disable_count = alloc_percpu(int);
- 	if (!pmu->pmu_disable_count)
--		goto unlock;
-+		return -ENOMEM;
- 
--	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
--		ret = -EINVAL;
--		goto free;
--	}
-+	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n"))
-+		return -EINVAL;
- 
--	if (WARN_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE, "Can not register a pmu with an invalid scope.\n")) {
--		ret = -EINVAL;
--		goto free;
--	}
-+	if (WARN_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE,
-+		      "Can not register a pmu with an invalid scope.\n"))
-+		return -EINVAL;
- 
- 	pmu->name = name;
- 
- 	if (type >= 0)
- 		max = type;
- 
--	ret = idr_alloc(&pmu_idr, NULL, max, 0, GFP_KERNEL);
--	if (ret < 0)
--		goto free;
-+	CLASS(idr_alloc, pmu_type)(&pmu_idr, NULL, max, 0, GFP_KERNEL);
-+	if (pmu_type.id < 0)
-+		return pmu_type.id;
- 
--	WARN_ON(type >= 0 && ret != type);
-+	WARN_ON(type >= 0 && pmu_type.id != type);
- 
--	pmu->type = ret;
-+	pmu->type = pmu_type.id;
- 	atomic_set(&pmu->exclusive_cnt, 0);
- 
- 	if (pmu_bus_running && !pmu->dev) {
--		ret = pmu_dev_alloc(pmu);
-+		int ret = pmu_dev_alloc(pmu);
- 		if (ret)
--			goto free;
-+			return ret;
+@@ -12238,7 +12241,6 @@ perf_event_alloc(struct perf_event_attr
+ 		 void *context, int cgroup_fd)
+ {
+ 	struct pmu *pmu;
+-	struct perf_event *event;
+ 	struct hw_perf_event *hwc;
+ 	long err = -EINVAL;
+ 	int node;
+@@ -12253,8 +12255,8 @@ perf_event_alloc(struct perf_event_attr
  	}
  
--	ret = -ENOMEM;
- 	pmu->cpu_pmu_context = alloc_percpu(struct perf_cpu_pmu_context);
- 	if (!pmu->cpu_pmu_context)
--		goto free;
-+		return -ENOMEM;
+ 	node = (cpu >= 0) ? cpu_to_node(cpu) : -1;
+-	event = kmem_cache_alloc_node(perf_event_cache, GFP_KERNEL | __GFP_ZERO,
+-				      node);
++	struct perf_event *event __free(__free_event) =
++		kmem_cache_alloc_node(perf_event_cache, GFP_KERNEL | __GFP_ZERO, node);
+ 	if (!event)
+ 		return ERR_PTR(-ENOMEM);
  
- 	for_each_possible_cpu(cpu) {
- 		struct perf_cpu_pmu_context *cpc;
-@@ -11864,32 +11861,22 @@ int perf_pmu_register(struct pmu *pmu, c
- 	/*
- 	 * Now that the PMU is complete, make it visible to perf_try_init_event().
+@@ -12361,65 +12363,53 @@ perf_event_alloc(struct perf_event_attr
+ 	 * See perf_output_read().
  	 */
--	if (!idr_cmpxchg(&pmu_idr, pmu->type, NULL, pmu)) {
--		ret = -EINVAL;
--		goto free;
+ 	if (has_inherit_and_sample_read(attr) && !(attr->sample_type & PERF_SAMPLE_TID))
+-		goto err;
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (!has_branch_stack(event))
+ 		event->attr.branch_sample_type = 0;
+ 
+ 	pmu = perf_init_event(event);
+-	if (IS_ERR(pmu)) {
+-		err = PTR_ERR(pmu);
+-		goto err;
 -	}
-+	if (!idr_cmpxchg(&pmu_idr, pmu->type, NULL, pmu))
-+		return -EINVAL;
- 	list_add_rcu(&pmu->entry, &pmus);
- 
--	ret = 0;
--unlock:
--	mutex_unlock(&pmus_lock);
--
--	return ret;
--
--free:
--	if (pmu->type >= 0)
--		idr_remove(&pmu_idr, pmu->type);
--	perf_pmu_free(pmu);
--	goto unlock;
-+	take_idr_id(pmu_type);
-+	_pmu = no_free_ptr(pmu); // let it rip
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(perf_pmu_register);
- 
- void perf_pmu_unregister(struct pmu *pmu)
- {
--	mutex_lock(&pmus_lock);
--	list_del_rcu(&pmu->entry);
--	idr_remove(&pmu_idr, pmu->type);
--	mutex_unlock(&pmus_lock);
-+	scoped_guard (mutex, &pmus_lock) {
-+		list_del_rcu(&pmu->entry);
-+		idr_remove(&pmu_idr, pmu->type);
-+	}
++	if (IS_ERR(pmu))
++		return (void*)pmu;
  
  	/*
- 	 * We dereference the pmu list under both SRCU and regular RCU, so
+ 	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
+ 	 * events (they don't make sense as the cgroup will be different
+ 	 * on other CPUs in the uncore mask).
+ 	 */
+-	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
+-		err = -EINVAL;
+-		goto err;
+-	}
++	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1))
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (event->attr.aux_output &&
+ 	    (!(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT) ||
+-	     event->attr.aux_pause || event->attr.aux_resume)) {
+-		err = -EOPNOTSUPP;
+-		goto err;
+-	}
++	     event->attr.aux_pause || event->attr.aux_resume))
++		return ERR_PTR(-EOPNOTSUPP);
+ 
+-	if (event->attr.aux_pause && event->attr.aux_resume) {
+-		err = -EINVAL;
+-		goto err;
+-	}
++	if (event->attr.aux_pause && event->attr.aux_resume)
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (event->attr.aux_start_paused) {
+-		if (!(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE)) {
+-			err = -EOPNOTSUPP;
+-			goto err;
+-		}
++		if (!(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE))
++			return ERR_PTR(-EOPNOTSUPP);
+ 		event->hw.aux_paused = 1;
+ 	}
+ 
+ 	if (cgroup_fd != -1) {
+ 		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+ 		if (err)
+-			goto err;
++			return ERR_PTR(err);
+ 	}
+ 
+ 	err = exclusive_event_init(event);
+ 	if (err)
+-		goto err;
++		return ERR_PTR(err);
+ 
+ 	if (has_addr_filter(event)) {
+ 		event->addr_filter_ranges = kcalloc(pmu->nr_addr_filters,
+ 						    sizeof(struct perf_addr_filter_range),
+ 						    GFP_KERNEL);
+-		if (!event->addr_filter_ranges) {
+-			err = -ENOMEM;
+-			goto err;
+-		}
++		if (!event->addr_filter_ranges)
++			return ERR_PTR(-ENOMEM);
+ 
+ 		/*
+ 		 * Clone the parent's vma offsets: they are valid until exec()
+@@ -12443,23 +12433,19 @@ perf_event_alloc(struct perf_event_attr
+ 		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN) {
+ 			err = get_callchain_buffers(attr->sample_max_stack);
+ 			if (err)
+-				goto err;
++				return ERR_PTR(err);
+ 			event->attach_state |= PERF_ATTACH_CALLCHAIN;
+ 		}
+ 	}
+ 
+ 	err = security_perf_event_alloc(event);
+ 	if (err)
+-		goto err;
++		return ERR_PTR(err);
+ 
+ 	/* symmetric to unaccount_event() in _free_event() */
+ 	account_event(event);
+ 
+-	return event;
+-
+-err:
+-	__free_event(event);
+-	return ERR_PTR(err);
++	return_ptr(event);
+ }
+ 
+ static int perf_copy_attr(struct perf_event_attr __user *uattr,
 
 
