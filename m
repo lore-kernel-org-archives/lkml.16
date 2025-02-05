@@ -1,46 +1,35 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F53120D51F;
-	Wed,  5 Feb 2025 02:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0003E25A65D;
+	Wed,  5 Feb 2025 02:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738721926; cv=none; b=Uuei1kU5NAykcJPjJT5Gqfdae+LMrXe5vUFUS8tsQKN1XaxRNa3i++63HWtyyGm/S3NxJPwL1PbBVe+I2mEoYM1WvXnOzxkwdxvEOGCHxHzJrkfmJY7oECiuWp49XtdxXvdmwgMv4365r8fhAcWFKOJsnYOKxdNhmRqNDo8e9rc=
+	t=1738722011; cv=none; b=jM6DE572jYkMZMN6fZiAVbrQyh7kEbHRfhLPqlY8tjn4ZaaQmzdrfIfumKzkNDam8LBBMHXLwDNGRZ5+52zxzgPqdhXh9ZR7qoXvWgzbqQEwHzJd6TyFbI3UZNeqX9+EbOGhxinY6Qpg/k3t9yj6E9zhafcoWBoOcZ0eMBFoa3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738721926; c=relaxed/simple;
-	bh=qUuT77iTdaXvCS87a5KrQ3Pbb0JYPN+p43d3YwVVnZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mwl316RuT3SOLk6U5JsfZSWWWtahNxQGvDn4u0TDOotzSmB4sAmrpcQJDrrekbaNyvJ58XrNPflGrSeKOJ+VSyudcgSE3B2dpRTPLElaZQgBHFgQyIGTHRz3qgg4Lm0Q2NmeYp9pps8G4pK1npEKpupJ63mo4k05lTz9dF8mojA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=hxBgZqX2; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738722011; c=relaxed/simple;
+	bh=NUZSa1vxr5EDFxVFDX5aCdrF7cT0eA6QoO3DDZvH3Tw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=jCAaEjDaP7KEEgS+w4wnWlzfm6AXtZWGZhrt2VpqSYvYeIhZYuAxoTrpgPsZS8WfyqTrD3K76a+J2NyMzNMQOKjuN7nn2rXnHwOr5CKBxSO8pu1wT/9gC24wsXWIqbOqPzsEnB1uX2jqi+QcJ+St4ejz5Eo7HSQxeZUxe5IogaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTqwmjDV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="hxBgZqX2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=+Yfw3YYmQ42RTILNlusHnxgsov7m4pIrTmZuZQJm8vg=; b=hxBgZqX2iUarOki1
-	7a8QWu65p+dX7+GDq0vp/w+ZILVpp2qBdA4nku4KqP6VOUBSh25RpghyzVjLwthCB6wnX0IfLOaZZ
-	Tb7v46rnlaxD3Zkj06Tl36F9Z4m7cGRWkHlYLPMH9wCcc5H46+A30QxA9MGrb4ACZcL3/2b5hPKT1
-	CQ5Lbt12GaQAnS8zifoKCZabue0jwxQ1CGhT882CaG7MMhlJuur1tYXiaCNl0VrOW828L4F1BpRr1
-	1nW4O+bfn4qJiZZpSNkUA1jv2YvvqGR+mldSsH7DlFWMKkIeJNqVu9i+ixJdbsIqVeWhT0EMEQ/Qp
-	MP9g3vWWbjQYHSaeRw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tfUzr-00De3m-20;
-	Wed, 05 Feb 2025 02:18:35 +0000
-From: linux@treblig.org
-To: mchehab@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: linux-media@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] media: platform: mtk-mdp3: Remove unused mdp_get_plat_device
-Date: Wed,  5 Feb 2025 02:18:34 +0000
-Message-ID: <20250205021834.497105-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTqwmjDV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE01C4CEDF;
+	Wed,  5 Feb 2025 02:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738722009;
+	bh=NUZSa1vxr5EDFxVFDX5aCdrF7cT0eA6QoO3DDZvH3Tw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jTqwmjDVIePtGhk3qGU2dSU4xDyIKnIcSke+R74P7qYGkzDvEoJq/k0upcPl/ZfMg
+	 mXr/RleTOUD99UmwPEy3PTmxGnI2LpkQRs3GzTdsLQNtBrxU2TDhO3I+eA+J1nvWn8
+	 ubXjeichkiGYFbf/uyUxYdjc0Gm9oFv2r2dHyL/BCgFN1fdxJXzfEjimA50G6yE2uu
+	 U9ifkvwjiDZ+9GuZG2/HdpiSUYGmnGnjHY2pf2POB4Qmwnuzjea4Glcf7YabaXTB1a
+	 pXI2jfCR7hOSthNpDaHYr+m3XqBIGO4P2uVUXv4i92ciwsFqg306L6f41SoKr73ycv
+	 wIcnsEaBnpn2Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0F2380AA7E;
+	Wed,  5 Feb 2025 02:20:37 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,65 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2][next] net: atlantic: Avoid -Wflex-array-member-not-at-end
+ warnings
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173872203681.246239.10910954158742758610.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Feb 2025 02:20:36 +0000
+References: <Z6F3KZVfnAZ2FoJm@kspp>
+In-Reply-To: <Z6F3KZVfnAZ2FoJm@kspp>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: irusskikh@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Hello:
 
-mdp_get_plat_device() was added in 2022 as part of
-commit 61890ccaefaf ("media: platform: mtk-mdp3: add MediaTek MDP3
-driver")
-but has remained unused.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Remove it.
+On Tue, 4 Feb 2025 12:40:49 +1030 you wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Remove unused flexible-array member `buf` and, with this, fix the following
+> warnings:
+> drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> [...]
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- .../platform/mediatek/mdp3/mtk-mdp3-cmdq.h    |  2 --
- .../platform/mediatek/mdp3/mtk-mdp3-core.c    | 19 -------------------
- 2 files changed, 21 deletions(-)
+Here is the summary with links:
+  - [v2,next] net: atlantic: Avoid -Wflex-array-member-not-at-end warnings
+    https://git.kernel.org/netdev/net-next/c/33b565fa2bc0
 
-diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h
-index 935ae9825728..222611e03a06 100644
---- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h
-+++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h
-@@ -12,8 +12,6 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- #include "mtk-img-ipi.h"
- 
--struct platform_device *mdp_get_plat_device(struct platform_device *pdev);
--
- struct mdp_cmdq_param {
- 	struct img_config *config;
- 	struct img_ipi_frameparam *param;
-diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
-index f571f561f070..8de2c8e4d333 100644
---- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
-+++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
-@@ -79,25 +79,6 @@ static struct platform_device *__get_pdev_by_id(struct platform_device *pdev,
- 	return mdp_pdev;
- }
- 
--struct platform_device *mdp_get_plat_device(struct platform_device *pdev)
--{
--	struct device *dev = &pdev->dev;
--	struct device_node *mdp_node;
--	struct platform_device *mdp_pdev;
--
--	mdp_node = of_parse_phandle(dev->of_node, MDP_PHANDLE_NAME, 0);
--	if (!mdp_node) {
--		dev_err(dev, "can't get node %s\n", MDP_PHANDLE_NAME);
--		return NULL;
--	}
--
--	mdp_pdev = of_find_device_by_node(mdp_node);
--	of_node_put(mdp_node);
--
--	return mdp_pdev;
--}
--EXPORT_SYMBOL_GPL(mdp_get_plat_device);
--
- int mdp_vpu_get_locked(struct mdp_dev *mdp)
- {
- 	int ret = 0;
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
