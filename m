@@ -1,77 +1,104 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4A620370C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 08:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C37920370C;
+	Wed,  5 Feb 2025 08:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745526; cv=none; b=XIQkugHRZ9N4AyR/k3r99USZfRetGq+iIBf/gwp0hhEtiqU/qXsZIJXJdI4cKivY1uJ421W6WeZEX139ofO7F2mGnIu58cQcIdvw98fFjznHobuGhJ8XAYH1r37kgCjBNqI1O1hHff+ELhVj+5Bt4dD7xkhOWXUNTdxsW4YrMvY=
+	t=1738745609; cv=none; b=cdc2eOnZhy/V9E1C5lxy+tsKmI1tYxK/8zpR02K9DTHAFMaP2V6rFT2MXucJMHMW/ZLU6BRsS9nmxPW9hTzqEJ46LT88rl6NIQHv4tK/4Eq5oHkhbdiFqdylesFyG90Wk9D6RaHXUPVZ8MbKGqU6TqvB05MrVu/YOG7CrxtLP3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745526; c=relaxed/simple;
-	bh=3rMbtXXkl6VX1pWFu09B/1FrKHNKlZlWEwEUq1fneko=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=sUleAmbwC1j3noM9HHbgkIhvW5YYaDZyfT+aanz1kGYRTUpv12xa3FfOXLz3X0zSxXda3OZuOWjDcFRC1pfrUbPc47rJO27cACcWLupKjVcMtAhHA0xZwPGBECIu+VaKK2Yzsuv7PXCR8+VGRDpFx6LjS0ksAKbg0NOsyLw1gok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ce8cdf1898so47109565ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 00:52:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738745524; x=1739350324;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6fWMi8f8UFZiTnjFB+mEtuSmquoY1j2DyxbT1jBkdz0=;
-        b=pYJSMgLSbHs0VI8UB9nsZDHYMwCdnOc7MwEmJqxQ53+mTDx+hjAPcePT3eTb12TNkK
-         Tp/OaVXcGrRvKd5k/7ls/y8dSqTohNVttSbNPdMqkfLJrE4ci7ulMHgpLg6ELdSx2Hzo
-         Chg7hQ2Gsppi+XGFhRmVMlk/c7dwE/GP8M1VgwsFqg6eaQE39TjubtIZ5svUD8Hsib3J
-         yMD3590JCLrwU+bOtIP7mxkWvWxJTwX+fm115liy+t4bdmPD7H8IrwFMrkZ8Nmf7VmOe
-         dqCymPDiRte1FwdN8wBn00HfLmJoWrzN2hMkyGp55sNkckY0sx+Fv/kJXlDkuKK9fY4S
-         UkXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYIyHQp7SYQbcqDn9TMO7SPpZ9g5itZ2mkvvAYjQrl9LyhlotPx7z6NdqKSZC/z0UIk2bqQtq8AoxIrIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYVv4XtThrmSZJnCDN2Ye0TcZPij/ccngBfv7uTNKssvRxo3by
-	/77hyoSLczIza5fgNylMUJzzqrNQ05Ll6xOx8s07a41FMJizuZkS+9KQiXO2Eu2kk1QRsRDubqq
-	PQvH/4zZozFgoCleGT2QrsxwylAiVRItXUDHMMmtitI8vbPqsWQ8Qyxg=
-X-Google-Smtp-Source: AGHT+IFXwvIR8Y5vDZJu1HcEo1sYAmhe4IxQ2/lHtkREqhjv+6JvENalhRxL3qxuNwTig7EwWKnTRvQ8Ovznu/iirQZC5OEkbQe4
+	s=arc-20240116; t=1738745609; c=relaxed/simple;
+	bh=Mx/hiLYA8u5CZDU8ZLhxLsxACP2y++BBtVO3RiUnK6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbGPnqCf6Y+gqvbyBl1ynNHgnyPc4j8yrJnb3F4nRZ6yhuUUHSKq/GupiHPO1fGrbpFb452a/UuHNFxGxzrDbVurpbDs2Qt9VOAux4hzPkaJcuOCOqBexPALdXQ5D3RTvd5Kn8O4KzKfg7pelaN1VAcYMbphc8qGMLbYCkJmKZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTz1zKwH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTz1zKwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFEDC4CED1;
+	Wed,  5 Feb 2025 08:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738745608;
+	bh=Mx/hiLYA8u5CZDU8ZLhxLsxACP2y++BBtVO3RiUnK6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kTz1zKwHNJxYnZ+oyxTOsYZQb/B8+nxN/2/NsZL73VZrQ/JqLeMWYB/gQJhOqfelY
+	 /bWec1gzKioMF8lfqfMvbXxXDwRaJToqfGKZnyp32/mVa2y96IT9oHHCcLNRmosjVl
+	 wQOd0K+331SR9zyx7KF8aNPy/wScoXQ0L4Js2LTIibmvecM4tS+MsGvzIC7CrklEtn
+	 gZbzX17jvDSbnHh0ke59sm5PBTRsD5UOWtDZS0RWK8aNOYZcZmKgAEvAa8gpQYglSe
+	 TRFuIsKw354zOot0DxAsd3SboMuNaczDUJKrfvUbjcssLUP7GRaheCUj0yvpe3PBqm
+	 C+GMZgv7XezzA==
+Date: Wed, 5 Feb 2025 09:53:25 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Vivek Gautam <gautam.vivek@samsung.com>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Sergey Lisov <sleirsgoevy@gmail.com>, linux-phy@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/4] phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and
+ SSC_REFCLKSEL masks in refclk
+Message-ID: <20250205-nice-amiable-lynx-a616b0@krzk-bin>
+References: <20250204-exynos7870-usbphy-v1-0-f30a9857efeb@disroot.org>
+ <20250204-exynos7870-usbphy-v1-1-f30a9857efeb@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2688:b0:3d0:2b88:116c with SMTP id
- e9e14a558f8ab-3d04f45aff3mr16373135ab.10.1738745524471; Wed, 05 Feb 2025
- 00:52:04 -0800 (PST)
-Date: Wed, 05 Feb 2025 00:52:04 -0800
-In-Reply-To: <677b4e8d.050a0220.380ff0.0022.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a326b4.050a0220.50516.0013.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] INFO: task hung in bch2_btree_node_update_key
- (2)
-From: syzbot <syzbot+5ef4c078ccd6970db1b6@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250204-exynos7870-usbphy-v1-1-f30a9857efeb@disroot.org>
 
-syzbot suspects this issue was fixed by commit:
+On Tue, Feb 04, 2025 at 02:10:12AM +0530, Kaustabh Chakraborty wrote:
+> In exynos5_usbdrd_{pipe3,utmi}_set_refclk(), the masks
+> PHYCLKRST_MPLL_MULTIPLIER_MASK and PHYCLKRST_SSC_REFCLKSEL_MASK are not
+> inverted when applied to the register values. Fix it.
+> 
+> Fixes: 59025887fb08 ("phy: Add new Exynos5 USB 3.0 PHY driver")
 
-commit 66951e4860d3c688bfa550ea4a19635b57e00eca
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Mon Jan 13 12:50:11 2025 +0000
+Missing Cc-stable and this should be sent separately.
 
-    sched/fair: Fix update_cfs_group() vs DELAY_DEQUEUE
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  drivers/phy/samsung/phy-exynos5-usbdrd.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> index c421b495eb0fe4396d76f8c9d7c198ad7cd08869..4a108fdab118c0edd76bd88dc9dbf6a498e064b3 100644
+> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> @@ -488,9 +488,9 @@ exynos5_usbdrd_pipe3_set_refclk(struct phy_usb_instance *inst)
+>  	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
+>  
+>  	/* FSEL settings corresponding to reference clock */
+> -	reg &= ~PHYCLKRST_FSEL_PIPE_MASK |
+> -		PHYCLKRST_MPLL_MULTIPLIER_MASK |
+> -		PHYCLKRST_SSC_REFCLKSEL_MASK;
+> +	reg &= ~(PHYCLKRST_FSEL_PIPE_MASK |
+> +		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
+> +		 PHYCLKRST_SSC_REFCLKSEL_MASK);
+>  	switch (phy_drd->extrefclk) {
+>  	case EXYNOS5_FSEL_50MHZ:
+>  		reg |= (PHYCLKRST_MPLL_MULTIPLIER_50M_REF |
+> @@ -532,9 +532,9 @@ exynos5_usbdrd_utmi_set_refclk(struct phy_usb_instance *inst)
+>  	reg &= ~PHYCLKRST_REFCLKSEL_MASK;
+>  	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
+>  
+> -	reg &= ~PHYCLKRST_FSEL_UTMI_MASK |
+> -		PHYCLKRST_MPLL_MULTIPLIER_MASK |
+> -		PHYCLKRST_SSC_REFCLKSEL_MASK;
+> +	reg &= ~(PHYCLKRST_FSEL_UTMI_MASK |
+> +		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
+> +		 PHYCLKRST_SSC_REFCLKSEL_MASK);
+>  	reg |= PHYCLKRST_FSEL(phy_drd->extrefclk);
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11336318580000
-start commit:   56e6a3499e14 Merge tag 'trace-v6.13-rc5' of git://git.kern..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ba7cde9482d6bb6
-dashboard link: https://syzkaller.appspot.com/bug?extid=5ef4c078ccd6970db1b6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144666c4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1244e8b0580000
+This part does not set MPLL_MULTIPLIER and SSC_REFCLKSEL fields later,
+but I also assume intention was to clear the fields.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-#syz fix: sched/fair: Fix update_cfs_group() vs DELAY_DEQUEUE
+Best regards,
+Krzysztof
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
