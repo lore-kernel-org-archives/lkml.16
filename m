@@ -1,242 +1,322 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999BC18A6BA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738799605; cv=none; b=IlzE9oA4bxOO7bhhjc1urILK06QaXNjRp5NcBNqKJPOEGJB+2HyfjLvEm7uRLX8rLOGsADJ++D37D6hi/DW1nDplOcVbLMhgkGKEq09PvOlCRJf1k5wGR7hfv6EQ5nTGDXWP8ZbkIaMSo07Wb5p10mE3FyI71cdlBXbMIEAa2aM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738799605; c=relaxed/simple;
-	bh=SAd6SHdx4HIO04A1WGKYhkGtorl+FeYxWO4BIDZSayw=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=VwM46LB3nSHTaotmgT6zS/zdCQzpEijxU6U2SmF5EhfmcXyMtreJRLX2d0tOKZHcDNt8gdKDUKuyJz3wpRcIOvKSXGkfo08kwRPqHAB16ssJGMpwe/aSQ8XZQSdrZLFkqXK4YO2Y+If7k31Gxxhme/gVFgPdZK+Smp6nLgN2mZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kYjTQcvm; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F12D18A6BA;
+	Wed,  5 Feb 2025 23:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738799846; cv=fail; b=f18mDKXGOvOtL3hQe7ImIrtEUd7V9rG1T6vM81Z1bjw7k0ckpp2WIdjyGiU+HQk4Z5nm/K2JAgAEgyAvW8Jq5I5ba6R3aPKR2574DemGVRWAAuPasLCk2QcQhh/vcnkmBO9C5BV/7cqD6EiU8FoKVbjrYEUHAHGJYmAeOI9tZk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738799846; c=relaxed/simple;
+	bh=6pg5YMqE5/Ck2ZR3Xs2B5NTvlnlryGsKqAyoubESV5Y=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pyQSEF5tFTsnrImgjfaUcMQo7fKgcY3nRl4/GEMkWYm6rq8eIgAg8vompKuKqOZ8YjWvFC6ntBn0UmpxexmFt9JzA5eKLOA/6uw+rkW65M/ylmClvkoOC75ltxCfJRQqHtI5AJIsc5DFnWiEOK9ym4gmMShtju9NznYRAjD/RWo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kym610A7; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kYjTQcvm"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fa0892f9bdso25468a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 15:53:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1738799603; x=1739404403; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ra5Mbg5OY3KVHpv79LQ4A0jzyK7crMbEFKoAz+DcSV8=;
-        b=kYjTQcvmmdmJnSL9lxKV8np22b5rjkqxNkAUrisG0eBVHlynK6H8r2n+2UG75oPI3b
-         MRm6meuMua12JBeS12UXSu/gGu43yLaBUCx7wSYfx8Rt2rFMUgShZ5cSsdDlUFA9hvd5
-         LCdU7wkWoZ6oviROGIUlfcJ56X2I3U61b3wNAfyBTqafbKf7nCJPPsnFzXlSCbYA/Fzo
-         2eaLXxINwT2/k+3RmulfBwNM5Ff/lRhMQYxNjloNM4N9+QODu91g5wZPCTMabg6wigDP
-         g3CRBdgmEh1QxBXxJ9oMbyIvHmRWbFejztLjAx7vYaDFirO+CRJf6TLpdm94XLbixeye
-         fgkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738799603; x=1739404403;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ra5Mbg5OY3KVHpv79LQ4A0jzyK7crMbEFKoAz+DcSV8=;
-        b=MjCRE7i/TRpx0wOaB9sUIfAxrvoHGKGnb1e9QR6jAOY0xgzweLpfmVrH2UiR6XhTZA
-         xOlkNiBv5SCPdL5vJ6qKjZu5vMMtvna+XAd3j7edqI+78hmNlk7eXyvFKoZ9sy8B53/U
-         6abBMD1DXeskQv/SU0ccEe4XqkcQDsDh1svp6rvGGjTz9AjZ/ihsb5IyxePXDJ/VbNuh
-         5aXEXcWgwHRPluzMzo4lDTSD11F2jeSbAkaH/0SsMSzPmcI8FOzbqM/0qOu9hLmcz63x
-         fguOmMqGExjp8TB9r5Hx4nmMI3WpwKqnpPPSYBcjbquw0TlCXtkjNMpqpXE6SQOUPqgG
-         jO7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUeazTt0h/X6swilwc3gfkgcB3De1JCpaMr7L/4RhwXfj+BKR1HxJ9AOqjB6e4y4C9wcwpiUwEFv1ND510=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPpJKzKpe+jlDKHJj/BkUcug3plJ5jYubKe8sqb2ztEnkNhFwN
-	3nXs32wnIeqLaAGX1KGUQQVoMkwxkjpnrImBD+Np/svPZ9ecmcFCWTw53oW4mxXU0ZwF9QowI8Y
-	UoTE=
-X-Gm-Gg: ASbGncsT6Euul7JW+NDH3caNnJsnVysEqiYTNw7mynyrYLfpmUHZfA6m15kNqppcEAm
-	iyQaRs6e9hSuQ3Eo18hp0o+Mc+Db5tQPxhA7Dwqdh9n2TX11fXeSORf93jldhs6SM7TwmkK8a/i
-	P+IXS6HsuHiIuMih68n7csMxdsk8UHzQXr0Gv0SThVK0EMKZcGdzlmIt+P5+DMhZ5cN4JexYQLd
-	h+h5ELNm0TUDTEOJnMkrSzrkq34uZNQQfmFvO4mNoK901P6rlsywhEb8M+suwAA8L8L6Bb8BNFZ
-	Xwl4+6VoUqIF
-X-Google-Smtp-Source: AGHT+IESlnEloTRkMdGmIgpHf3GHd5Z19yX7ObK7xTCBbFAJo4c09Hwxk6ijfuAekNIxp8Vwcvp0xg==
-X-Received: by 2002:a05:6a00:e84:b0:725:f097:ed21 with SMTP id d2e1a72fcca58-730351b9a07mr6070010b3a.15.1738799602709;
-        Wed, 05 Feb 2025 15:53:22 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048e1e792sm21788b3a.161.2025.02.05.15.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 15:53:21 -0800 (PST)
-Date: Wed, 05 Feb 2025 15:53:21 -0800 (PST)
-X-Google-Original-Date: Wed, 05 Feb 2025 12:41:24 PST (-0800)
-Subject:     Re: [PATCH v2] RISC-V: hwprobe: Use BIT macro to avoid warnings
-In-Reply-To: <422ee6c5-048d-498e-a823-97deef02326f@ghiti.fr>
-CC: jesse@rivosinc.com, linux-riscv@lists.infradead.org,
-  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, cleger@rivosinc.com, Conor Dooley <conor@kernel.org>,
-  Evan Green <evan@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>, ajones@ventanamicro.com,
-  linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: alex@ghiti.fr
-Message-ID: <mhng-2665f589-5f29-42fa-9c6e-3b00a39c38de@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kym610A7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738799845; x=1770335845;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=6pg5YMqE5/Ck2ZR3Xs2B5NTvlnlryGsKqAyoubESV5Y=;
+  b=Kym610A7xWH4dQgOSV+AaKjrAK4GopjntDHuF+OZQLYEAhoNpjvkU8Ew
+   fJ0/wh3s2bzplzQ9Q25FN1rOc16kbvrVvyKftSAM5tVg4dkC/EUXX6FNV
+   JGBzgW8JBcHwAdC/lIylf7fiklSZQH2sMZ+f5OqTipnWmTWBWVN1/8BKY
+   xgwQlzEtBwxj0OmGGPa9BUvWqWm5WIDcU6XXjS9UOan2j92c8EZjb9//y
+   1Atf0MT9ne6iDI8GxzpK9XilC9QvIz1iL5kFWQ6iPuSL+TZ8DzaYhRHls
+   qx0wuPfPdLdh1/xXKaCmmvCt9O0vm0nOxEgN8yIHNW6FtUipEHuaHddgV
+   g==;
+X-CSE-ConnectionGUID: +AT0DCfrT/6v+plEYvkEFg==
+X-CSE-MsgGUID: wpc74gn3RkKXYkLe+wvUBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61861825"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="61861825"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 15:57:23 -0800
+X-CSE-ConnectionGUID: W7m1E7HeRjCGhbbY1D8WTA==
+X-CSE-MsgGUID: x9++QbNmRbGZ/GpCCiW5ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111940641"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 15:57:21 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 5 Feb 2025 15:57:20 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 15:57:20 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.43) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 5 Feb 2025 15:57:19 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mvdlWWH2X92y3SEadZvi0/hYKvPiMb9yfSGZ+fpgu8mJpoDBvvXGlYB268VKmtGidahuNVgaWVaTYgSE1oTP2VROem1UtbEqSFyxJ+j4pwnK8rm/pkYXPXjUPmP+pY90WrZERYgptZnIhWAXpfSHInV+bDWEb7jitFRgjgfx8oL/LY8MLKxV9QQi4OKTPwPPmEj+SRqd9jzZ4hysMCSTG+5co6tx3AeHHjwXi5ym/irVokYOvmo1obtTCpmFZSb49Go1StWUxKduZlRGs1F5mMPbroO50brewC7WMBKIdjcGbEBbqAAr5IQnlFWJR9SuPqflLQrQsP7Ps0VAlBIXSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pBpCfHrvFeTI9utImezaUuOXkPOPkv5+DHZgYH6JKaI=;
+ b=joQQkwx7g2qrPLwCsz0Y5gZYkFvk6n3PD/tZ5hOFaZZy3HHwARQBZ3fhDKHMutcWwi2oH85NopVPAKEooU6TV4yCVYR+qUpZcV+z5fbzfOG8BqvPgNgOFmWFBucTm6amYb1cMBpVT5dWItRklahbZz7c4jOsyYK8Htpj6K7qA1hGfw9fP09GQHOmwnOaODpmI/AKf0E4mhLd1OgA4X6X6jbx8v07I9j9aEEccCfPcIlOhh4A0GOgdo5WxYK8qiuGqQNk2Gzi9e6JvqCqW9tYYdSDHuIjQ9yHBxvCDx2pttk+ohUW6AVoRiKAejdu6nfV4Qj72CKaKnxYTNaHnHvIdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by SA1PR11MB8448.namprd11.prod.outlook.com (2603:10b6:806:3a3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Wed, 5 Feb
+ 2025 23:57:17 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.8422.010; Wed, 5 Feb 2025
+ 23:57:17 +0000
+Message-ID: <b88868e1-52b2-4a66-bec2-e0846394b74b@intel.com>
+Date: Wed, 5 Feb 2025 15:57:14 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 11/23] x86/resctrl: Introduce mbm_cntr_cfg to track
+ assignable counters at domain
+To: Babu Moger <babu.moger@amd.com>, <corbet@lwn.net>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<tony.luck@intel.com>, <peternewman@google.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
+	<akpm@linux-foundation.org>, <thuth@redhat.com>, <rostedt@goodmis.org>,
+	<xiongwei.song@windriver.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<daniel.sneddon@linux.intel.com>, <jpoimboe@kernel.org>,
+	<perry.yuan@amd.com>, <sandipan.das@amd.com>, <kai.huang@intel.com>,
+	<xiaoyao.li@intel.com>, <seanjc@google.com>, <xin3.li@intel.com>,
+	<andrew.cooper3@citrix.com>, <ebiggers@google.com>,
+	<mario.limonciello@amd.com>, <james.morse@arm.com>,
+	<tan.shaopeng@fujitsu.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <maciej.wieczor-retman@intel.com>,
+	<eranian@google.com>
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <30652061d4a21eb5952a1323b76ca70927412a30.1737577229.git.babu.moger@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <30652061d4a21eb5952a1323b76ca70927412a30.1737577229.git.babu.moger@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4P221CA0009.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:303:8b::14) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SA1PR11MB8448:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd0fd3e9-7fa2-4b24-e326-08dd4640d1ff
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OS9OdFdrM1pwTUlUNDE5cGlqSkJFdCtPMnlLUUpkOG1iQnBJZmpDV3hjeUg4?=
+ =?utf-8?B?KzlMWTNsaFVqMHRzekc5bWxXK0l2b2VhOWJKZWI2SXVxbFVZbkhlWHN3Mmp2?=
+ =?utf-8?B?NVBqQmVKeXArc0I3ZVBTQ3JaOTZrTTVhSzBZcnczQUtvY1BSanlUNFUyYkZQ?=
+ =?utf-8?B?UDZSOGZMaVA1cGtadW9aclhoMDRrSjBycTlXSXNSTlduNEpyMVl6WUdrcVh6?=
+ =?utf-8?B?UDZBdG1SNUxsdjVrMkVSMkluZmc1WGlwRDNodUkreXQrYVBUZDZuc212eHk0?=
+ =?utf-8?B?Q3VQL3VaQmpMWTgyZ095UjlxbFJDQVk2Y2cwc3Z4WFplMUt5YTJLWjNmeWI4?=
+ =?utf-8?B?eEpIakMvVWo4ZVJ4YWptQWFiUXVkN0NjTHozLzNIbHdjRlk5TFhwNjdyWjBW?=
+ =?utf-8?B?Z2ZFNStJUklFMVV1dTVteVdEQ25GS2lXNy9BRXJvNHBXMzloWGYxaHJGNDNH?=
+ =?utf-8?B?N1QzMXJWSkRpaXRIUnlCU0p6Q1hJQlQ1bjhKSVgrbld2TDdYOVRPcWl6UmdS?=
+ =?utf-8?B?WW1xWUcvTHUvUGlvK0I3S3VobEtFNTl5MlQ3ZmVGdjhpL1l4RXZhdWkzeTVI?=
+ =?utf-8?B?UEp1N0hhNDErTVU1ZDJWUTFjbnFYZFFXVE1UZTg1Z2c3amlZSDVkM2dwcjBi?=
+ =?utf-8?B?YnNGRnNWVU94MVY0RWYrcEpRY3crT0JwQ05sQzgxWFdZN2lsdGFUMjFrTDd4?=
+ =?utf-8?B?RUR3dlVzYjZPdkhtczRiaVJ6UWpyK3JXTW5CdHFkUVk2Y1ZyTUVNM1hEcEt4?=
+ =?utf-8?B?WkwxRjRxYmpCWmQ1OGVUZldsVFpuRjkwU2xKanoxMXJTY21ZSjNGZnZNc0NM?=
+ =?utf-8?B?ZjhWek82TXM2U1JwUE4yMmY3RFd2eUY2RDAxM2VrQXRpNlBXR1VXRlVTSUt1?=
+ =?utf-8?B?Myt1cGtvTWlXOU5CZTdMbmZSWHVrQjRES0F1WGgvTzE5YzB6QngzTUlOdTRy?=
+ =?utf-8?B?NmdPZE5rUHpNSHFMcEg1dnVXSkF0NFIzVDVFUmZJSjVmSitUQ2dGemJnV0Ry?=
+ =?utf-8?B?cnNzZTRrYkp1MjROTDRpZWtLY0RIcEZYNFNJK2NRVnpJdjZXb0R0OHNub1d1?=
+ =?utf-8?B?RlZlOG8wcS90WlVTYnlaODdJTlUyNDhhQ2c2VXVDWnU2ZTVKRlJzbk5hc0JQ?=
+ =?utf-8?B?MitlQzlXZ3ZnOUZXWWVXUFErVEk0Y3Q0Zmc0TXBMT0N2c3ZudTMzYkRtWkd6?=
+ =?utf-8?B?RzF5WXNzdEwxWlNVWEtPT3IydXI0Z3ZOVjJqQnhUNm9keWpzdmZEdlFPWXcw?=
+ =?utf-8?B?WFp5ZnJNcEliSS80MDdVTHdLUFhPRlJpVXZkdGJmT01CYmJwSVk0RThRakdj?=
+ =?utf-8?B?QmxDalFyTkNtb0JrcTdla2RkN1hzcE9lY2EyVStQaG5sZmduVkE4T3ZWc1p0?=
+ =?utf-8?B?SE0xZkdta2NsSVZIRFgzVkoxUWRzaStJN3p3Z2dxb0ppL2xIY3YyQ3hNRkdO?=
+ =?utf-8?B?VUR2TTUvSnBDb0U5bVNhencxSE5ScUgvVHF3cXRneXcrV0FQeHh0bnNLanc0?=
+ =?utf-8?B?UnhLampxSTBKMEFjSEZiRUhFNlRDcUNvWGZ0RTlJQVNYck5tYnJ3NGlRSkhM?=
+ =?utf-8?B?emFKRmplRHFTM2RMSnFGcGtYZm51OW9mV1RjYndQV0JDL0JuZDRxNUVtMkl4?=
+ =?utf-8?B?NlJjczRkd2VtM0ozSW5EcnNZWWQ1aGFnSWF5RDk5UjJCNmlEMzE1NWg2emIw?=
+ =?utf-8?B?ODN3R0FZV3JFUHlQMDVGRGt2a25IRVlmVlN1eUpJUXpvVW80TVY0MDZxV3VP?=
+ =?utf-8?B?elp6U0xNYUFYcUgya1pXaGMvei9BM1JlOUpUdktDcWptNkFyTGhSSDVaZXhN?=
+ =?utf-8?B?TWhxNHF4ek9rK2lMeDRZblFxNDdtTnZjZzVMelJMcHV4QmxRVjgyUlAvc0g5?=
+ =?utf-8?Q?VWq1ZmWiTxeWh?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bkkyVmFBdFhQQkllOGEwenh3NDMzVXY0dTl6NEVkTHBlSHZGUjg1Y3FMd0JW?=
+ =?utf-8?B?VHNXRXAvbmRJYUIyaVJEYlNPdTF2Q1RUVmszNU5rb0NnMlFmMlpXL3poV1FB?=
+ =?utf-8?B?aHNYVTlDMWg1bi9LcGdmSjJGTUQ1SnE0VkJGQ2tZZU4xQmU2d1VOU0FrZ2xa?=
+ =?utf-8?B?MnpHeEFKU25PajJmSitNblJlUWhaSFlEWFl0c2dPRnJ2NEc0M3V5QVVVYkhT?=
+ =?utf-8?B?emtrRGFGaWIvY3FBazFXdDZmc2MwaFlTMmsrVVRQMU9seEJGZ0szTlRTTXJn?=
+ =?utf-8?B?YSt6azlicUtyc0thL3huL29uUGRvMWVDOWk3NGxnMzJDL2pVM3ZGWk85OERu?=
+ =?utf-8?B?UkRvb0FmK1dWZ2MzWkQ3cm9aRTJ6b25LWTFGUXp2cWd4WmdXTVpMRnhsN0RP?=
+ =?utf-8?B?MzJsUm1WWnZmZVhrMHY2NHoxajRLTG00Y2xrRWdLVHBXQXdYSVA5cmZROTlp?=
+ =?utf-8?B?RnR1d24zUFhJd1lpeVIwN0tZdnBiZ2hQcWg4TGxUVHRmNjlLYXd5TWtqMkZF?=
+ =?utf-8?B?bkxkTDBWNHZ2T0pKZ3ZqbEFaSkpZYkJra1N0UnhERW4xNTdRVjF1TE8rbjlD?=
+ =?utf-8?B?YUlKeFBSSFloZDQ3S0tMWVpBNVRKcG44ZHJlWTdmT1RqL0J6YVhGalE5V0tm?=
+ =?utf-8?B?VGFXSUFxNDlyVkxadzkzSWNpamdDN002cUdOcjdGelRBQWl0STdBL0IwSERa?=
+ =?utf-8?B?LzgxWG9VcVFWb1pkY0Z0aFZtYVg0eDdJUEpsZ0VTU3FSeWtUUGVjS1FOdDJk?=
+ =?utf-8?B?VTQ0RUhSNXhoTXpSNm82N2Mxa1BrdWdkZWFVOURtNVg4WEJWeEYzd2FlZmNH?=
+ =?utf-8?B?b1RYNVpQb2R1NEV2Vk9tUnYwWS9ldWlxVldYa1ZGRFQxL2RjS2czSWh5VTkv?=
+ =?utf-8?B?U2ZFbm50T3lyMnAxVHZLZW9UUzh3a1N0QzJxUXh4a1lOVktnMGZycmdZVndM?=
+ =?utf-8?B?S1ZMb1dCZzlGaXBDSjFxNVpYTUZoUzRZNUpFamd2bnRWWHBTaVNQNlVuSGw5?=
+ =?utf-8?B?VUt1WHR3YmIyaHV3Tk5GZS9sNWpLNlNPRlhjZkQxQ0lDY1EwSEtJNCttb0F5?=
+ =?utf-8?B?eDU3b3BCTFhBZnFvV1MzVE53Q0xpb1ZBNlNXd2xHYUJMU3lQd0pKRU81Szc4?=
+ =?utf-8?B?dUp4eHVpWEwwUlVNQ3N3a2F3S3kxcXg1YjNvMngwS3JHMXlUMXVhaTJwaTVj?=
+ =?utf-8?B?UHBiVkJuTGhFR0FJNUxsK2NxenB1NGdYdnJaRVhuZGFIYUZpVE0xSEJZY0tQ?=
+ =?utf-8?B?elg1Ym96NVFzdll3elY2cWVkbXBpMFRUdzZ6UkFLMXRETkNsRFJ2K0JMNS90?=
+ =?utf-8?B?L29VZWhrRnhtZ2FiRjJzbVhnbXVkK3ZqMGd2TXczUVFvUytMT3RqcjVEc0ti?=
+ =?utf-8?B?aWJxK0JSaUVRenVGUmd6dTVjNXRacjhITjdDZENmVVI1eW1YaXBqcVU1dWN1?=
+ =?utf-8?B?UGtHK3BnVmNNZmR2N1VFNzk1ejd0VCtJUE13K1cwYVlNOTdXek02cVU2YWJH?=
+ =?utf-8?B?NWlhdEd6UFM1Z0w0WXFveTY1WTJGVUFpclcxYlhPb1g3SnZuem5GNis0QkNX?=
+ =?utf-8?B?RWFMdU5TaWsyUk5oQzJOdEpRWTZ5NzNCSW9IUTRrS2FEaFI2V3pYYWFMR1dt?=
+ =?utf-8?B?K0RjZUdpQmJtOWRDMC9wQ3FERHRna1N6ZjhmOS9LZzV2QW45S3IxQnpWSTVp?=
+ =?utf-8?B?UThUM3d1TWJYNHdYM04ySTlDZE5iVnNZL3l3NnE0MUZSMnFFQnYxMHdocVZF?=
+ =?utf-8?B?U05CTFJjZmtSQkJJTnlub1BQdVNoVlZGQlpVT3NQZGZqcmZUNEJvbHNvVHM2?=
+ =?utf-8?B?RUFNejJvYlpNS08vZXhIeTJjWExJRmxseitoazgxdTlZZU1zbzJGcmdEOHM2?=
+ =?utf-8?B?VXhjWG5KVWJLaUxCV254RzJwdENBU0FCOW0xa1JMSmFnZkpmL21EYVoycGpY?=
+ =?utf-8?B?OUs1S0t3dWdUWUkxVG1PUTlMS2VVSlZHSTM0ZGtwRlZ2bVhTWkRHa1NLdWdC?=
+ =?utf-8?B?TW0yNGZ0VEFBL0x0RGNwWkF4TlhUM0lYYjYzam1NdnByVWpQM1VuOHFMSVlq?=
+ =?utf-8?B?b1NXYTBXd1FpeStiZUhQS2JrbkRMZmh5RS8rdzhtLzYyK1FpOUZXS2N3dkhK?=
+ =?utf-8?B?R1FsaXQxdStFV2tROC9rNUQrSDAxRXBua1dpb0hiQ015Q3ZqYk9xeGlyOG15?=
+ =?utf-8?B?V0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd0fd3e9-7fa2-4b24-e326-08dd4640d1ff
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 23:57:17.3814
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QHNBsekSR44/gJ89Tij8PLZ+T5fLiiC0sgnAX2zaPWizDycBTcz1/COyU7g0G2FQ03DFLZyL6y2VibShGCv5QCymf6hTpGeVNngral7g41c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8448
+X-OriginatorOrg: intel.com
 
-On Sun, 25 Aug 2024 23:28:17 PDT (-0700), alex@ghiti.fr wrote:
-> Hi Jesse,
->
-> On 22/08/2024 22:39, Jesse Taube wrote:
->> In uapi/asm/hwprobe.h file, (1 << N) is used to define the bit field
->> which causes checkpatch to warn. Use BIT(N) and BIT_ULL(N) to avoid
->> these warnings.
->>
->> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
->> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
->> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
->> ---
->> V1 -> V2:
->>   - Reword commit message
->> ---
->>   arch/riscv/include/uapi/asm/hwprobe.h | 102 +++++++++++++-------------
->>   1 file changed, 51 insertions(+), 51 deletions(-)
->>
->> diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
->> index b706c8e47b02..d0874ff2fd37 100644
->> --- a/arch/riscv/include/uapi/asm/hwprobe.h
->> +++ b/arch/riscv/include/uapi/asm/hwprobe.h
->> @@ -21,57 +21,57 @@ struct riscv_hwprobe {
->>   #define RISCV_HWPROBE_KEY_MARCHID	1
->>   #define RISCV_HWPROBE_KEY_MIMPID	2
->>   #define RISCV_HWPROBE_KEY_BASE_BEHAVIOR	3
->> -#define		RISCV_HWPROBE_BASE_BEHAVIOR_IMA	(1 << 0)
->> +#define		RISCV_HWPROBE_BASE_BEHAVIOR_IMA	BIT_ULL(0)
->>   #define RISCV_HWPROBE_KEY_IMA_EXT_0	4
->> -#define		RISCV_HWPROBE_IMA_FD		(1 << 0)
->> -#define		RISCV_HWPROBE_IMA_C		(1 << 1)
->> -#define		RISCV_HWPROBE_IMA_V		(1 << 2)
->> -#define		RISCV_HWPROBE_EXT_ZBA		(1 << 3)
->> -#define		RISCV_HWPROBE_EXT_ZBB		(1 << 4)
->> -#define		RISCV_HWPROBE_EXT_ZBS		(1 << 5)
->> -#define		RISCV_HWPROBE_EXT_ZICBOZ	(1 << 6)
->> -#define		RISCV_HWPROBE_EXT_ZBC		(1 << 7)
->> -#define		RISCV_HWPROBE_EXT_ZBKB		(1 << 8)
->> -#define		RISCV_HWPROBE_EXT_ZBKC		(1 << 9)
->> -#define		RISCV_HWPROBE_EXT_ZBKX		(1 << 10)
->> -#define		RISCV_HWPROBE_EXT_ZKND		(1 << 11)
->> -#define		RISCV_HWPROBE_EXT_ZKNE		(1 << 12)
->> -#define		RISCV_HWPROBE_EXT_ZKNH		(1 << 13)
->> -#define		RISCV_HWPROBE_EXT_ZKSED		(1 << 14)
->> -#define		RISCV_HWPROBE_EXT_ZKSH		(1 << 15)
->> -#define		RISCV_HWPROBE_EXT_ZKT		(1 << 16)
->> -#define		RISCV_HWPROBE_EXT_ZVBB		(1 << 17)
->> -#define		RISCV_HWPROBE_EXT_ZVBC		(1 << 18)
->> -#define		RISCV_HWPROBE_EXT_ZVKB		(1 << 19)
->> -#define		RISCV_HWPROBE_EXT_ZVKG		(1 << 20)
->> -#define		RISCV_HWPROBE_EXT_ZVKNED	(1 << 21)
->> -#define		RISCV_HWPROBE_EXT_ZVKNHA	(1 << 22)
->> -#define		RISCV_HWPROBE_EXT_ZVKNHB	(1 << 23)
->> -#define		RISCV_HWPROBE_EXT_ZVKSED	(1 << 24)
->> -#define		RISCV_HWPROBE_EXT_ZVKSH		(1 << 25)
->> -#define		RISCV_HWPROBE_EXT_ZVKT		(1 << 26)
->> -#define		RISCV_HWPROBE_EXT_ZFH		(1 << 27)
->> -#define		RISCV_HWPROBE_EXT_ZFHMIN	(1 << 28)
->> -#define		RISCV_HWPROBE_EXT_ZIHINTNTL	(1 << 29)
->> -#define		RISCV_HWPROBE_EXT_ZVFH		(1 << 30)
->> -#define		RISCV_HWPROBE_EXT_ZVFHMIN	(1ULL << 31)
->> -#define		RISCV_HWPROBE_EXT_ZFA		(1ULL << 32)
->> -#define		RISCV_HWPROBE_EXT_ZTSO		(1ULL << 33)
->> -#define		RISCV_HWPROBE_EXT_ZACAS		(1ULL << 34)
->> -#define		RISCV_HWPROBE_EXT_ZICOND	(1ULL << 35)
->> -#define		RISCV_HWPROBE_EXT_ZIHINTPAUSE	(1ULL << 36)
->> -#define		RISCV_HWPROBE_EXT_ZVE32X	(1ULL << 37)
->> -#define		RISCV_HWPROBE_EXT_ZVE32F	(1ULL << 38)
->> -#define		RISCV_HWPROBE_EXT_ZVE64X	(1ULL << 39)
->> -#define		RISCV_HWPROBE_EXT_ZVE64F	(1ULL << 40)
->> -#define		RISCV_HWPROBE_EXT_ZVE64D	(1ULL << 41)
->> -#define		RISCV_HWPROBE_EXT_ZIMOP		(1ULL << 42)
->> -#define		RISCV_HWPROBE_EXT_ZCA		(1ULL << 43)
->> -#define		RISCV_HWPROBE_EXT_ZCB		(1ULL << 44)
->> -#define		RISCV_HWPROBE_EXT_ZCD		(1ULL << 45)
->> -#define		RISCV_HWPROBE_EXT_ZCF		(1ULL << 46)
->> -#define		RISCV_HWPROBE_EXT_ZCMOP		(1ULL << 47)
->> -#define		RISCV_HWPROBE_EXT_ZAWRS		(1ULL << 48)
->> +#define		RISCV_HWPROBE_IMA_FD		BIT_ULL(0)
->> +#define		RISCV_HWPROBE_IMA_C		BIT_ULL(1)
->> +#define		RISCV_HWPROBE_IMA_V		BIT_ULL(2)
->> +#define		RISCV_HWPROBE_EXT_ZBA		BIT_ULL(3)
->> +#define		RISCV_HWPROBE_EXT_ZBB		BIT_ULL(4)
->> +#define		RISCV_HWPROBE_EXT_ZBS		BIT_ULL(5)
->> +#define		RISCV_HWPROBE_EXT_ZICBOZ	BIT_ULL(6)
->> +#define		RISCV_HWPROBE_EXT_ZBC		BIT_ULL(7)
->> +#define		RISCV_HWPROBE_EXT_ZBKB		BIT_ULL(8)
->> +#define		RISCV_HWPROBE_EXT_ZBKC		BIT_ULL(9)
->> +#define		RISCV_HWPROBE_EXT_ZBKX		BIT_ULL(10)
->> +#define		RISCV_HWPROBE_EXT_ZKND		BIT_ULL(11)
->> +#define		RISCV_HWPROBE_EXT_ZKNE		BIT_ULL(12)
->> +#define		RISCV_HWPROBE_EXT_ZKNH		BIT_ULL(13)
->> +#define		RISCV_HWPROBE_EXT_ZKSED		BIT_ULL(14)
->> +#define		RISCV_HWPROBE_EXT_ZKSH		BIT_ULL(15)
->> +#define		RISCV_HWPROBE_EXT_ZKT		BIT_ULL(16)
->> +#define		RISCV_HWPROBE_EXT_ZVBB		BIT_ULL(17)
->> +#define		RISCV_HWPROBE_EXT_ZVBC		BIT_ULL(18)
->> +#define		RISCV_HWPROBE_EXT_ZVKB		BIT_ULL(19)
->> +#define		RISCV_HWPROBE_EXT_ZVKG		BIT_ULL(20)
->> +#define		RISCV_HWPROBE_EXT_ZVKNED	BIT_ULL(21)
->> +#define		RISCV_HWPROBE_EXT_ZVKNHA	BIT_ULL(22)
->> +#define		RISCV_HWPROBE_EXT_ZVKNHB	BIT_ULL(23)
->> +#define		RISCV_HWPROBE_EXT_ZVKSED	BIT_ULL(24)
->> +#define		RISCV_HWPROBE_EXT_ZVKSH		BIT_ULL(25)
->> +#define		RISCV_HWPROBE_EXT_ZVKT		BIT_ULL(26)
->> +#define		RISCV_HWPROBE_EXT_ZFH		BIT_ULL(27)
->> +#define		RISCV_HWPROBE_EXT_ZFHMIN	BIT_ULL(28)
->> +#define		RISCV_HWPROBE_EXT_ZIHINTNTL	BIT_ULL(29)
->> +#define		RISCV_HWPROBE_EXT_ZVFH		BIT_ULL(30)
->> +#define		RISCV_HWPROBE_EXT_ZVFHMIN	BIT_ULL(31)
->> +#define		RISCV_HWPROBE_EXT_ZFA		BIT_ULL(32)
->> +#define		RISCV_HWPROBE_EXT_ZTSO		BIT_ULL(33)
->> +#define		RISCV_HWPROBE_EXT_ZACAS		BIT_ULL(34)
->> +#define		RISCV_HWPROBE_EXT_ZICOND	BIT_ULL(35)
->> +#define		RISCV_HWPROBE_EXT_ZIHINTPAUSE	BIT_ULL(36)
->> +#define		RISCV_HWPROBE_EXT_ZVE32X	BIT_ULL(37)
->> +#define		RISCV_HWPROBE_EXT_ZVE32F	BIT_ULL(38)
->> +#define		RISCV_HWPROBE_EXT_ZVE64X	BIT_ULL(39)
->> +#define		RISCV_HWPROBE_EXT_ZVE64F	BIT_ULL(40)
->> +#define		RISCV_HWPROBE_EXT_ZVE64D	BIT_ULL(41)
->> +#define		RISCV_HWPROBE_EXT_ZIMOP		BIT_ULL(42)
->> +#define		RISCV_HWPROBE_EXT_ZCA		BIT_ULL(43)
->> +#define		RISCV_HWPROBE_EXT_ZCB		BIT_ULL(44)
->> +#define		RISCV_HWPROBE_EXT_ZCD		BIT_ULL(45)
->> +#define		RISCV_HWPROBE_EXT_ZCF		BIT_ULL(46)
->> +#define		RISCV_HWPROBE_EXT_ZCMOP		BIT_ULL(47)
->> +#define		RISCV_HWPROBE_EXT_ZAWRS		BIT_ULL(48)
->>   #define RISCV_HWPROBE_KEY_CPUPERF_0	5
->>   #define		RISCV_HWPROBE_MISALIGNED_UNKNOWN	(0 << 0)
->>   #define		RISCV_HWPROBE_MISALIGNED_EMULATED	(1 << 0)
->
->
-> Why isn't this one ^ converted too? I did not look but are there other
-> occurrences in this file that should be converted too?
+Hi Babu,
 
-They're multi-bit values, I poked around looking for a macro and 
-couldn't find any.  That said, the "<< 0" doesn't do anything -- it was 
-there from back when we though we'd pack multiple values into this, but 
-we screwed up some of the value/bitmask on this one so it's deprecated.
+On 1/22/25 12:20 PM, Babu Moger wrote:
+> In mbm_cntr_assign mode hardware counters are assigned/unassigned to an
+> MBM event of a monitor group. Hardware counters are assigned/unassigned
+> at monitoring domain level.
+> 
+> Manage a monitoring domain's hardware counters using a per monitoring
+> domain array of struct mbm_cntr_cfg that is indexed by the hardware
+> counter	ID. A hardware counter's configuration contains the MBM event
 
-So I'm just dropping the "<< 0"
+Something strange in this changelog with a few random \t in the text.
 
-> And what about the rest of the riscv sources?
+> ID and points to the monitoring group that it is assigned to, with a
+> NULL pointer meaning that the hardware counter is available for assignment.
+> 
+> There is no direct way to determine which hardware counters are	assigned
 
-Probably Jesse was just squashing the checkpatch warnings in the files 
-she touched.  Either way I think it's a reasonable cleanup, I'll send a 
-v2.
+... another \t above 
 
->
-> Thanks,
->
-> Alex
->
->
->> @@ -85,6 +85,6 @@ struct riscv_hwprobe {
->>   /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
->>
->>   /* Flags */
->> -#define RISCV_HWPROBE_WHICH_CPUS	(1 << 0)
->> +#define RISCV_HWPROBE_WHICH_CPUS	BIT(0)
->>
->>   #endif
+> to a particular monitoring group. Check every entry of every hardware
+> counter	configuration array in every monitoring domain to query which
+
+... one more \t above
+
+> MBM events of a monitoring group is tracked by hardware. Such queries
+> are acceptable because of a very small number of assignable counters.
+
+It is not obvious what "very small number" means. Is it possible to give
+a range to help reader understand the motivation?
+
+> 
+> Suggested-by: Peter Newman <peternewman@google.com>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+
+> ---
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 11 +++++++++++
+>  include/linux/resctrl.h                | 14 ++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 18110a1afb6d..75a3b56996ca 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -4009,6 +4009,7 @@ static void __init rdtgroup_setup_default(void)
+>  
+>  static void domain_destroy_mon_state(struct rdt_mon_domain *d)
+>  {
+> +	kfree(d->cntr_cfg);
+>  	bitmap_free(d->rmid_busy_llc);
+>  	kfree(d->mbm_total);
+>  	kfree(d->mbm_local);
+> @@ -4082,6 +4083,16 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain
+>  			return -ENOMEM;
+>  		}
+>  	}
+> +	if (is_mbm_enabled() && r->mon.mbm_cntr_assignable) {
+> +		tsize = sizeof(*d->cntr_cfg);
+> +		d->cntr_cfg = kcalloc(r->mon.num_mbm_cntrs, tsize, GFP_KERNEL);
+> +		if (!d->cntr_cfg) {
+> +			bitmap_free(d->rmid_busy_llc);
+> +			kfree(d->mbm_total);
+> +			kfree(d->mbm_local);
+> +			return -ENOMEM;
+> +		}
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+> index 511cfce8fc21..9a54e307d340 100644
+> --- a/include/linux/resctrl.h
+> +++ b/include/linux/resctrl.h
+> @@ -94,6 +94,18 @@ struct rdt_ctrl_domain {
+>  	u32				*mbps_val;
+>  };
+>  
+> +/**
+> + * struct mbm_cntr_cfg - assignable counter configuration
+> + * @evtid:		 MBM event to which the counter is assigned. Only valid
+> + *			 if @rdtgroup is not NULL.
+> + * @rdtgroup:		 resctrl group assigned to the counter. NULL if the
+> + *			 counter is free.
+> + */
+> +struct mbm_cntr_cfg {
+> +	enum resctrl_event_id	evtid;
+> +	struct rdtgroup		*rdtgrp;
+> +};
+> +
+
+$ scripts/kernel-doc -v -none include/linux/resctrl.h                           
+...                                                                             
+include/linux/resctrl.h:107: warning: Function parameter or struct member 'rdtgrp' not described in 'mbm_cntr_cfg'
+include/linux/resctrl.h:107: warning: Excess struct member 'rdtgroup' description in 'mbm_cntr_cfg'
+...                                            
+
+>  /**
+>   * struct rdt_mon_domain - group of CPUs sharing a resctrl monitor resource
+>   * @hdr:		common header for different domain types
+> @@ -105,6 +117,7 @@ struct rdt_ctrl_domain {
+>   * @cqm_limbo:		worker to periodically read CQM h/w counters
+>   * @mbm_work_cpu:	worker CPU for MBM h/w counters
+>   * @cqm_work_cpu:	worker CPU for CQM h/w counters
+> + * @cntr_cfg:		assignable counters configuration
+>   */
+>  struct rdt_mon_domain {
+>  	struct rdt_domain_hdr		hdr;
+> @@ -116,6 +129,7 @@ struct rdt_mon_domain {
+>  	struct delayed_work		cqm_limbo;
+>  	int				mbm_work_cpu;
+>  	int				cqm_work_cpu;
+> +	struct mbm_cntr_cfg		*cntr_cfg;
+>  };
+>  
+>  /**
+
+Reinette
+
