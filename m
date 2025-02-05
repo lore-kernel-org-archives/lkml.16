@@ -1,183 +1,138 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE8F1EA91;
-	Wed,  5 Feb 2025 12:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11911EA91;
+	Wed,  5 Feb 2025 12:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759218; cv=none; b=qm5+RQbyP2WRMFmfY31zJijaVHb4tHdXFGHAmHJD9qKCzkWpjzKqOwO08fcp6ySUcp5pry0agCntrM6tY4jvq8nOj+rcE0/z4d8X9PNHPvS5NwttXsHx9fUoiTcbAJwGrtDCbWLZqK5+FE+ao8HolFHQmgsF3s1eeH6sDrkVKKA=
+	t=1738759269; cv=none; b=B6/WCrj66Mx2Ip2DYDNWnIqi2NcTDmsyaSl9AjJvNzIZT6VjnRtRzsHJuauQA7+ZqYcalmndTKMptr/H7zlx9wPQWppExttIe3XOOJsghGZINUQ9C3PuKim6lbrqnFWH9EFO1AvlZGRxyKKXECGvurzRPIfw4ojLh1koMlRnKVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759218; c=relaxed/simple;
-	bh=PPCkRW2lTJ5FItdZqHLTR+/qRX1KJ5PMMfD/itYTbco=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JWVq6+D6sVXlwBxdvkgKgjvM/kCC+MSQq1A7cWOxTDC6KskKqQM9ipRlxGxHL/wE1aQDA+zPe1Tvry3/gcvjOxpcdF3HcGuD3fdfH/EGvivPfppXP0h3nf4TQpcAvkTCGNY2Rsolz0LAbfW9pwlhuGD/cCRCL9nGuTw3K49m3NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=r9V09cHh; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738759269; c=relaxed/simple;
+	bh=pYhD+SHOxcSft14VFZBo/hBAX8Nxq+oO+kbTLpeDLGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GwlR4My36BryloBfLZLM43gfp0Qb/NqywaLWrsIRh0W4rPPVtUm99fzN0MnF9rP2H9l8sk2Sn+CQbalS1OC9iyg7JHsMa46N9bHk4nWERWbu5vy4ii0QTXRL6yxR08q5axq5Brk5agrMjCSZcFWq+0nQbfp2+SJIcInO2a3+rMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VpXQJGqi; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="r9V09cHh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Q+eHgl0RhcvCdFSHAR9cwfJIlu8RZ15O7xlRKsRH1SA=; b=r9V09cHhPjn7mJG9F+DA7CFL+5
-	vuPuu3l9NqKzCV1Dq6fKoWiiSzgAPTvNtjImlTFz0r+JBYVCg7C8ZIbmundzIDMSIqS5Gcqo+M8Gx
-	YAhniNvPNQQv+s9zjA0h5zSuAmMN7bOPlp7u5oM+mrLqkmlht0/cZjt662jvu4x1T2kOtVsJ6jTKW
-	AhH/RdjgjzZWZOGTmytNfXVRzD/Z4s+3blP08SQI4Okfi3FsIz2WjOP1UNgMPYxNGBOilCJ6YnHr7
-	q5RSceGvDRIo9+mjYQVBg4v6B6Of1R5iFZIqX3eaCZw1np8lskPeqqTVi7ppV0XTVJlR+lnfxPe24
-	sUPx02VA==;
-Received: from 179-125-64-239-dinamico.pombonet.net.br ([179.125.64.239] helo=quatroqueijos.cascardo.eti.br)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tfeOZ-003xMa-15; Wed, 05 Feb 2025 13:20:49 +0100
-From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Date: Wed, 05 Feb 2025 09:20:07 -0300
-Subject: [PATCH] tpm: do not start chip while suspended
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpXQJGqi"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso46683815e9.3;
+        Wed, 05 Feb 2025 04:41:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738759266; x=1739364066; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B2nY810+IaZK5n9EujS3czHJOBsB42FBjuOFqVzxuj0=;
+        b=VpXQJGqi+2bFlgONaqA0ICu/b+3eA3Thd6vDkjsfU5pop1q3MrgaKK3fQP8gbDQKFS
+         Sm75cFoAoVF0NXUXH2yyNd5kuCqFqQ5XjwDeXxZgVgkpC0SVunFQX5GmjLMejKZ6sUVO
+         OuCqD1iPt+holKjsZDnhxsWgH/ezbb92KsLIcd/3bAkA/bsmaTm95nXOzeXjgmsC3+uH
+         f5NlO/Uu2RLWAPkOp/iXYvBwlZPTx03TkVfsqLI4PqBqemu50QVv6NvVdQBc/r3oasjA
+         nb0WcA/m5xVWUF1mzJMdtF9ghK+UcxZ6G0Xk25eWGrHNjZ9FnlsV8INFql+l+BSf4sHv
+         wEcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738759266; x=1739364066;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B2nY810+IaZK5n9EujS3czHJOBsB42FBjuOFqVzxuj0=;
+        b=fDBvaiASZb3lC3UG+9svZyARYfs3SvMqeH6PLJD/1/a7DgEU2vMJjN4iLsNC2gPGFh
+         kacQdSEwNKi6HZmXP3d0OQB99WjUKrvlmrxYX8CFoBOP5ie821zQCpWFryTki4V7RBgJ
+         N56TQIJo5Md92UH/lYHHgKfp68eKrsh0B1HVVuFQJy4Um9k25l/hDciqgaPoHqkIbM3r
+         AeMqcTM6/dkTAarLv2TcrY8mSH8ogQAgqrKNWc7DeufhEAA0KobFARc/R0j+IBZeaM+t
+         zKv0uVTcbW0PKasF9cpyZOWbeHgphvVAnyf9daeTTe0awLzoOlXMCksiGQ/grGc1NPAP
+         DYqg==
+X-Forwarded-Encrypted: i=1; AJvYcCViSZhNqHZzsRDIvQ1AYGivk2x6n2ZZh8fg5zW6r7LRqk/q1IB3sMQmb0lxXh3lxMp29yIIHg5Y5uZ4/igt5HNk@vger.kernel.org, AJvYcCW/VXUSHvLFRgqxshZN3JSMgLmQd0O8PCeH4Ft/6RNMCaxB628KlA5Lg6AhDeHlb3V6/HU=@vger.kernel.org, AJvYcCWZRHW7VfwN7CwyeXoE+IIrBWXZxyoODcsBMCfcVCnK0SuCD+BvTVz4rNPCin/1AY9vwIBfX0TBX7ji@vger.kernel.org, AJvYcCWaWRU9gcosuIP6T28n9MYyQlEOlaHlfz2eVJbGhVOQW1Sy9LKcOZGZLv/Wf7ZdwtZLdmwj3+wYYBzC/9/x@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkbBNgkUi4faoF43F/yKxwh5H6CmEDjhTkJFB2KxDZ0xGOsibp
+	aFwqJmRNhaulfwdpP8OPD3olPaL4Kz3Qhlfb0wKQMJqV79kmVIyiQa4g7Qp9
+X-Gm-Gg: ASbGnctD4/FfDfFOipRFhnA/4QyJDKhXUIxdCb32vbmyp/xsGdCuQqCM8MQP+XugQVh
+	7bdfaGgphGQqYZPCDHcFQt8Ga88m1ICInM4lWRO+sj9FeIyQOCgPzY/N1jej4eLGS60OcZEjzQi
+	C+5X6+2RcVXheKbbfDnvAA00KYzBfXzY6/jv5M9IoXgBqAzdWT1/T8mUybo4ny8LbYXJQKyx/Dq
+	fvCWy1pFKsbPfTxWYK0XYoKjGSz1AFG4JZ8sHldZI3o0jpKW5Dou7wMVblCmEVxtDKL9yzTNLCc
+	SWUiVEyx5ojNQqgW7guTIp4=
+X-Google-Smtp-Source: AGHT+IGPDh0UCfW8C0UUaobE12fAfZcaYcWV+qO1/+Q7RfKKWpw6BN/Izj4F094IN//LhwjnBjSyNw==
+X-Received: by 2002:a5d:64af:0:b0:38b:ed6f:f012 with SMTP id ffacd0b85a97d-38db48868a1mr1958421f8f.9.1738759265611;
+        Wed, 05 Feb 2025 04:41:05 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.128.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d93383asm20448845e9.7.2025.02.05.04.41.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 04:41:04 -0800 (PST)
+Message-ID: <53192c45-df3c-4a65-9047-bbd59d4aee47@gmail.com>
+Date: Wed, 5 Feb 2025 12:41:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC net-next v1 5/5] net: devmem: Implement TX path
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Kaiyuan Zhang <kaiyuanz@google.com>, Willem de Bruijn <willemb@google.com>,
+ Samiullah Khawaja <skhawaja@google.com>, Stanislav Fomichev
+ <sdf@fomichev.me>, Joe Damato <jdamato@fastly.com>, dw@davidwei.uk
+References: <20241221004236.2629280-1-almasrymina@google.com>
+ <20241221004236.2629280-6-almasrymina@google.com>
+ <676dd022d1388_1d346b2947@willemb.c.googlers.com.notmuch>
+ <CAHS8izNzbEi_Dn+hDohF9Go=et7kts-BnmEpq=Znpot7o7B5wA@mail.gmail.com>
+ <6798ee97c73e1_987d9294d6@willemb.c.googlers.com.notmuch>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <6798ee97c73e1_987d9294d6@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-tpm-suspend-v1-1-fb89a29c0b69@igalia.com>
-X-B4-Tracking: v=1; b=H4sIAHZXo2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNT3ZKCXN3i0uKC1LwU3SQjozRzE9M0Y0MjEyWgjoKi1LTMCrBp0bG
- 1tQD0B/YtXQAAAA==
-X-Change-ID: 20250205-tpm-suspend-b22f745f3124
-To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mike Seo <mikeseohyungjin@gmail.com>, kernel-dev@igalia.com, 
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
 
-tpm_chip_start may issue IO that should not be done while the chip is
-suspended. In the particular case of I2C, it will issue the following
-warning:
+On 1/28/25 14:49, Willem de Bruijn wrote:
+>>>> +struct net_devmem_dmabuf_binding *
+>>>> +net_devmem_get_sockc_binding(struct sock *sk, struct sockcm_cookie *sockc)
+>>>> +{
+>>>> +     struct net_devmem_dmabuf_binding *binding;
+>>>> +     int err = 0;
+>>>> +
+>>>> +     binding = net_devmem_lookup_dmabuf(sockc->dmabuf_id);
+>>>
+>>> This lookup is from global xarray net_devmem_dmabuf_bindings.
+>>>
+>>> Is there a check that the socket is sending out through the device
+>>> to which this dmabuf was bound with netlink? Should there be?
+>>> (e.g., SO_BINDTODEVICE).
+>>>
+>>
+>> Yes, I think it may be an issue if the user triggers a send from a
+>> different netdevice, because indeed when we bind a dmabuf we bind it
+>> to a specific netdevice.
+>>
+>> One option is as you say to require TX sockets to be bound and to
+>> check that we're bound to the correct netdev. I also wonder if I can
+>> make this work without SO_BINDTODEVICE, by querying the netdev the
+>> sock is currently trying to send out on and doing a check in the
+>> tcp_sendmsg. I'm not sure if this is possible but I'll give it a look.
+> 
+> I was a bit quick on mentioning SO_BINDTODEVICE. Agreed that it is
+> vastly preferable to not require that, but infer the device from
+> the connected TCP sock.
 
-[35985.503769] ------------[ cut here ]------------
-[35985.503771] i2c i2c-1: Transfer while suspended
-[35985.503796] WARNING: CPU: 0 PID: 74 at drivers/i2c/i2c-core.h:56 __i2c_transfer+0xbe/0x810
-[35985.503802] Modules linked in:
-[35985.503808] CPU: 0 UID: 0 PID: 74 Comm: hwrng Tainted: G        W          6.13.0-next-20250203-00005-gfa0cb5642941 #19 9c3d7f78192f2d38e32010ac9c90fdc71109ef6f
-[35985.503814] Tainted: [W]=WARN
-[35985.503817] Hardware name: Google Morphius/Morphius, BIOS Google_Morphius.13434.858.0 10/26/2023
-[35985.503819] RIP: 0010:__i2c_transfer+0xbe/0x810
-[35985.503825] Code: 30 01 00 00 4c 89 f7 e8 40 fe d8 ff 48 8b 93 80 01 00 00 48 85 d2 75 03 49 8b 16 48 c7 c7 0a fb 7c a7 48 89 c6 e8 32 ad b0 fe <0f> 0b b8 94 ff ff ff e9 33 04 00 00 be 02 00 00 00 83 fd 02 0f 5
-[35985.503828] RSP: 0018:ffffa106c0333d30 EFLAGS: 00010246
-[35985.503833] RAX: 074ba64aa20f7000 RBX: ffff8aa4c1167120 RCX: 0000000000000000
-[35985.503836] RDX: 0000000000000000 RSI: ffffffffa77ab0e4 RDI: 0000000000000001
-[35985.503838] RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-[35985.503841] R10: 0000000000000004 R11: 00000001000313d5 R12: ffff8aa4c10f1820
-[35985.503843] R13: ffff8aa4c0e243c0 R14: ffff8aa4c1167250 R15: ffff8aa4c1167120
-[35985.503846] FS:  0000000000000000(0000) GS:ffff8aa4eae00000(0000) knlGS:0000000000000000
-[35985.503849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[35985.503852] CR2: 00007fab0aaf1000 CR3: 0000000105328000 CR4: 00000000003506f0
-[35985.503855] Call Trace:
-[35985.503859]  <TASK>
-[35985.503863]  ? __warn+0xd4/0x260
-[35985.503868]  ? __i2c_transfer+0xbe/0x810
-[35985.503874]  ? report_bug+0xf3/0x210
-[35985.503882]  ? handle_bug+0x63/0xb0
-[35985.503887]  ? exc_invalid_op+0x16/0x50
-[35985.503892]  ? asm_exc_invalid_op+0x16/0x20
-[35985.503904]  ? __i2c_transfer+0xbe/0x810
-[35985.503913]  tpm_cr50_i2c_transfer_message+0x24/0xf0
-[35985.503920]  tpm_cr50_i2c_read+0x8e/0x120
-[35985.503928]  tpm_cr50_request_locality+0x75/0x170
-[35985.503935]  tpm_chip_start+0x116/0x160
-[35985.503942]  tpm_try_get_ops+0x57/0x90
-[35985.503948]  tpm_find_get_ops+0x26/0xd0
-[35985.503955]  tpm_get_random+0x2d/0x80
-[35985.503960]  hwrng_fillfn+0x13b/0x2e0
-[35985.503964]  ? __cfi_hwrng_fillfn+0x10/0x10
-[35985.503969]  kthread+0x23d/0x250
-[35985.503974]  ? srso_return_thunk+0x5/0x5f
-[35985.503979]  ? lockdep_hardirqs_on+0x95/0x150
-[35985.503985]  ? __cfi_kthread+0x10/0x10
-[35985.503989]  ret_from_fork+0x44/0x50
-[35985.503994]  ? __cfi_kthread+0x10/0x10
-[35985.503998]  ret_from_fork_asm+0x11/0x20
-[35985.504013]  </TASK>
-[35985.504015] irq event stamp: 107462
-[35985.504017] hardirqs last  enabled at (107461): [<ffffffffa6b82d41>] _raw_spin_unlock_irqrestore+0x31/0x60
-[35985.504022] hardirqs last disabled at (107462): [<ffffffffa6b77309>] __schedule+0x159/0x16f0
-[35985.504027] softirqs last  enabled at (104760): [<ffffffffa4f62ef5>] __irq_exit_rcu+0x75/0x160
-[35985.504032] softirqs last disabled at (104755): [<ffffffffa4f62ef5>] __irq_exit_rcu+0x75/0x160
-[35985.504036] ---[ end trace 0000000000000000 ]---
-[35985.504126] tpm tpm0: i2c transfer failed (attempt 2/3): -108
-[35985.504207] tpm tpm0: i2c transfer failed (attempt 3/3): -108
-[35985.504395] tpm tpm0: i2c transfer failed (attempt 2/3): -108
-[35985.504474] tpm tpm0: i2c transfer failed (attempt 3/3): -108
+I wonder why so? I'd imagine something like SO_BINDTODEVICE is a
+better way to go. The user has to do it anyway, otherwise packets
+might go to a different device and the user would suddenly start
+getting errors with no good way to alleviate them (apart from
+likes of SO_BINDTODEVICE). It's even worse if it works for a while
+but starts to unpredictably fail as time passes. With binding at
+least it'd fail fast if the setup is not done correctly.
 
-Test for the suspended flag inside tpm_try_get_ops while holding the chip
-tpm_mutex before calling tpm_chip_start. That will also prevent
-tpm_get_random from doing IO while the TPM is suspended.
-
-Fixes: 9265fed6db60 ("tpm: Lock TPM chip in tpm_pm_suspend() first")
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Cc: stable@vger.kernel.org
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Mike Seo <mikeseohyungjin@gmail.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
----
- drivers/char/tpm/tpm-chip.c      | 5 +++++
- drivers/char/tpm/tpm-interface.c | 8 +-------
- 2 files changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 7df7abaf3e526bf7e85ac9dfbaa1087a51d2ab7e..6db864696a583bf59c534ec8714900a6be7b5156 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -168,6 +168,11 @@ int tpm_try_get_ops(struct tpm_chip *chip)
- 		goto out_ops;
- 
- 	mutex_lock(&chip->tpm_mutex);
-+
-+	/* tmp_chip_start may issue IO that is denied while suspended */
-+	if (chip->flags & TPM_CHIP_FLAG_SUSPENDED)
-+		goto out_lock;
-+
- 	rc = tpm_chip_start(chip);
- 	if (rc)
- 		goto out_lock;
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index b1daa0d7b341b1a4c71a200115f0d29d2e87512d..e6d786ce4e36970428b75d288a066e832c5b2af1 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -441,22 +441,16 @@ int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
- 	if (!out || max > TPM_MAX_RNG_DATA)
- 		return -EINVAL;
- 
-+	/* NULL will be returned if chip is suspended */
- 	chip = tpm_find_get_ops(chip);
- 	if (!chip)
- 		return -ENODEV;
- 
--	/* Give back zero bytes, as TPM chip has not yet fully resumed: */
--	if (chip->flags & TPM_CHIP_FLAG_SUSPENDED) {
--		rc = 0;
--		goto out;
--	}
--
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2)
- 		rc = tpm2_get_random(chip, out, max);
- 	else
- 		rc = tpm1_get_random(chip, out, max);
- 
--out:
- 	tpm_put_ops(chip);
- 	return rc;
- }
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250205-tpm-suspend-b22f745f3124
-
-Best regards,
 -- 
-Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Pavel Begunkov
 
