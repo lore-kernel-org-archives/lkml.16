@@ -1,161 +1,133 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA2722ACC5
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255F422ACCE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738736599; cv=none; b=RFV0STyYibW/QiBbkmP4sn5Kd/BPt1aa8rElXRjLhY5pgWxPWTIc96zd8+dQ4hGHE+nt+S7b0A5czKXUM/wqJBRNjGVmvA98XdNnbmpnbC8AvcskdQ1P4vHHw1YFdf2YWNm2P1SiISDmPviUoFXYnmWftTYLf5Wx+Ok6ACdz+yA=
+	t=1738736601; cv=none; b=pN8EyvbrU+dPBNThqXxdarDf7rSI4Sc2uKEkK8ScsuIRVOOGUpDhIZExN2a5oMpVuIHqCq41H2Y1SVANGtNiNOGPEukZYUdJTV8Y3BHO5eUIYOxw6jM4Bo9TpqD19ySYETZXFzvXFc/ceVhDSQv335wOF7MoHIMpSDAeope2K0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738736599; c=relaxed/simple;
-	bh=a8oH3PNmwIVYj2tKdIrFjYF4Tj+2irxY4kfMh7WOKvo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=lTxruTgQEp5JIybk0ci/FYHj7Oj7wKvqPZXNaFjccjbIlLX+v+xYSdYMx0FOT0PHsvmgFSbpqJhV6Qu1RaQnE5xI9l/OpUnTONC5xyvSYdhnTiXmXb3YZJWOvYpgBphIjphlGfoaRx5wz/QV/20jCcwYYUrkV0+mMk27tb6J3aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=RhWE+Q9Y; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1738736601; c=relaxed/simple;
+	bh=x6xsQBMkxQR+kvu3nVrcsNgeG/vG9ZtmXhYBW27xqRE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QviZiUFJ2zLtwvmnP/XalBz4I8OUgLuY8nybB7rGUVcabAEpWqqCVyIJrkRsI0XzsDS/0YXSElejxvzQAE6S6uu5Iy2unG+tii/BCG0k0SmKe8XC3QfmeTfdydlhjgnVZhSDHpZDmFjdoZLHIX1xmVbv8H7ZS/lz2Ib9ThWB1SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=M6kIYbzB; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="RhWE+Q9Y"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21670dce0a7so133684025ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 22:23:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1738736597; x=1739341397; darn=vger.kernel.org;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M8srIBeyhs4OWM9PodAkxe8Sc4dGj/gPqaYG7YjTXw0=;
-        b=RhWE+Q9YEROWBWGUSsYw4nh41epxfN9ekdl/kBLgKyRwQ/XWMNxfvCWGeJBidggLOG
-         twM0vPMHhK1Y8DeiC38RTqjBea6wvvmOJVW3RlkMBPs/u9tKbv5WfMExqbKBftGbyKg5
-         er7LClnJskywKV3zwzNZpCkak5i8VF3KY2vlGOtEkEAQ9qtWBcRqVpYw/IVcq+ZcqiEx
-         gtW1Iqi2IcPmtNBPB3Bs9Wi5QwCAf2IAiIvFgiJV3ns4SCSXOKZPYz9/SexaKIc9UC1Q
-         OpLpLGkuyz6RNuxUg0iHOcQBDTz9i6KEfHZOoLCmb+l+FcInIRKEmK2hKERtEE53Es1I
-         NsKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738736597; x=1739341397;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M8srIBeyhs4OWM9PodAkxe8Sc4dGj/gPqaYG7YjTXw0=;
-        b=lnSDxSgQKlcnJAzpp2QiWoyFYVr8tJ7sQhwX8vjt3J5c7sbj7hHyj4MR5Y/eh3HsEr
-         YS3Va7DnuIMD6A2aRzfmKdtrUe3L2jiW/oq/SmbfAtXp43XioHb/5EBn+Naw660mz8yV
-         vksIGKPEjK7bILABusBC8koHyAnn31XcRfxFRLwIlLGI9ALZo+rp1mI8X0tSQYkXaYAR
-         +o2Y8DjugJUNQCCjPKBqPmtwXdqVYIx4u6OpySYTfbfL6+hZ9+Fu+X/Qn2OMe8NsoDmu
-         XL05AE3q1sx0AunjoVGIMeXpWIMUFOUlbkMvXaCNl5h3m1oucJWrL5aCPoqetUXYQt5x
-         wLAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9G4vjEd8SHYtt/s2Z+ZxC/7D00XKpqJNpZT3c8oc+G3bS4qYz73mSsjUiUzBXqBPXjTjrEkifprjLBkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvv0NR5QW5eei3HpKjttLi7LMGp6a6wXMUOBBVsRzPEUaCHoym
-	k0om4I27wqbMHLr+ONVca69pEsJLiuh79vzLQ5Zvre/nvzFzdMhGHgOczFOMu0Y=
-X-Gm-Gg: ASbGncsQTJvtq8sogpmG2rIwb/11mLULvVIjd3H76buaIPP3fQId+Lk5gfwtN20hTUq
-	fOQ3rK55JemvlxUGrbnn53h3VJvcYRMgbJraXxnCV+nLHfJZ+R80jqOa1vsFPgBDt4yWIB9Hnvf
-	hXFbIfkJdqjLXqBQKnWgJAXgTTxRuccYzgCpfvNdO2bgoQy27lfWdL6MKj7t0AX409OBh+3OmkE
-	cXDAZmCssoChnhHDU8spdYODzXFiqOD85BrzMKexeS2cFqtACbwzw72kzXaAHGCCZQANJKQHbM3
-	CcA9VW73p3YjwjhokrE=
-X-Google-Smtp-Source: AGHT+IHg1+FvFT5HDL6SfSKULAJ1AqWAEtxmHva7Bnl4TG97CsA76lSGxTRKSfzGYdWpbEr3lj3N/w==
-X-Received: by 2002:a05:6a00:2e14:b0:725:ffe:4dae with SMTP id d2e1a72fcca58-73035122ac9mr1991170b3a.10.1738736596777;
-        Tue, 04 Feb 2025 22:23:16 -0800 (PST)
-Received: from localhost ([157.82.207.107])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72fe631be56sm11600664b3a.4.2025.02.04.22.23.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 22:23:16 -0800 (PST)
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Wed, 05 Feb 2025 15:22:28 +0900
-Subject: [PATCH net-next v5 6/7] tap: Keep hdr_len in tap_get_user()
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M6kIYbzB"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5156MaeQ3300929
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 00:22:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738736556;
+	bh=eqKxRAE0hEhB/gkwHUJjHYvFkAhY4M48O0HRCPE2xfU=;
+	h=From:To:CC:Subject:Date;
+	b=M6kIYbzB80Dul28IF5RJDxDRWcCqB/Jtb29S/cnvoqqeP2fKjEj2abTh9S4wQ/8nL
+	 TBnkjtXBptqBcNCNV9BrHaemf/9iSiyroyx21zZPqJoV5wd+GQ/FEjXDFWpEhUfgWw
+	 RjJl0vkckD26cbR5AVgWs7AaVBIWvwUNNOYkwjgQ=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5156Ma8w091493
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 5 Feb 2025 00:22:36 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
+ Feb 2025 00:22:35 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 5 Feb 2025 00:22:36 -0600
+Received: from uda0490681.. ([10.24.69.142])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5156MT6A076445;
+	Wed, 5 Feb 2025 00:22:30 -0600
+From: Vaishnav Achath <vaishnav.a@ti.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
+        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
+        <dmitry.baryshkov@linaro.org>, <arnd@arndb.de>,
+        <nfraprado@collabora.com>, <ebiggers@google.com>, <ardb@kernel.org>,
+        <nm@ti.com>, <vigneshr@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <nfrayer@baylibre.com>, <glaroque@baylibre.com>, <tglx@linutronix.de>,
+        <u-kumar1@ti.com>, <geert@linux-m68k.org>, <d-gole@ti.com>,
+        <vaishnav.a@ti.com>
+Subject: [PATCH v3] arm64: defconfig: Enable TISCI Interrupt Router and Aggregator
+Date: Wed, 5 Feb 2025 11:52:29 +0530
+Message-ID: <20250205062229.3869081-1-vaishnav.a@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-tun-v5-6-15d0b32e87fa@daynix.com>
-References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
-In-Reply-To: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, kvm@vger.kernel.org, 
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
- Yuri Benditovich <yuri.benditovich@daynix.com>, 
- Andrew Melnychenko <andrew@daynix.com>, 
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
- devel@daynix.com, Akihiko Odaki <akihiko.odaki@daynix.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-hdr_len is repeatedly used so keep it in a local variable.
+Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
+These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
+for core functionality like DMA, GPIO Interrupts which is necessary
+during boot, thus make them built-in.
 
-Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+bloat-o-meter summary on vmlinux:
+	add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
+	...
+	Total: Before=31615984, After=31778459, chg +0.51%
+
+These configs were previously selected for ARCH_K3 in respective Kconfigs
+till commit b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
+and commit 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
+dropped them and few driver configs (TI_K3_UDMA, TI_K3_RINGACC)
+dependent on these also got disabled due to this. While re-enabling the
+TI_SCI_INT_*_IRQCHIP configs, these configs with missing dependencies
+(which are already part of arm64 defconfig) also get re-enabled which
+explains the slightly larger size increase from the bloat-o-meter summary.
+
+Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
+Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
+
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Tested-by: Dhruva Gole <d-gole@ti.com>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 ---
- drivers/net/tap.c | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-index 5aa41d5f7765a6dcf185bccd3cba2299bad89398..c55c432bac48d395aebc9ceeaa74f7d07e25af4c 100644
---- a/drivers/net/tap.c
-+++ b/drivers/net/tap.c
-@@ -645,6 +645,7 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
- 	int err;
- 	struct virtio_net_hdr vnet_hdr = { 0 };
- 	int vnet_hdr_len = 0;
-+	int hdr_len = 0;
- 	int copylen = 0;
- 	int depth;
- 	bool zerocopy = false;
-@@ -663,13 +664,13 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
- 		if (!copy_from_iter_full(&vnet_hdr, sizeof(vnet_hdr), from))
- 			goto err;
- 		iov_iter_advance(from, vnet_hdr_len - sizeof(vnet_hdr));
--		if ((vnet_hdr.flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) &&
--		     tap16_to_cpu(q, vnet_hdr.csum_start) +
--		     tap16_to_cpu(q, vnet_hdr.csum_offset) + 2 >
--			     tap16_to_cpu(q, vnet_hdr.hdr_len))
--			vnet_hdr.hdr_len = cpu_to_tap16(q,
--				 tap16_to_cpu(q, vnet_hdr.csum_start) +
--				 tap16_to_cpu(q, vnet_hdr.csum_offset) + 2);
-+		hdr_len = tap16_to_cpu(q, vnet_hdr.hdr_len);
-+		if (vnet_hdr.flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) {
-+			hdr_len = max(tap16_to_cpu(q, vnet_hdr.csum_start) +
-+				      tap16_to_cpu(q, vnet_hdr.csum_offset) + 2,
-+				      hdr_len);
-+			vnet_hdr.hdr_len = cpu_to_tap16(q, hdr_len);
-+		}
- 		err = -EINVAL;
- 		if (tap16_to_cpu(q, vnet_hdr.hdr_len) > len)
- 			goto err;
-@@ -682,11 +683,8 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
- 	if (msg_control && sock_flag(&q->sk, SOCK_ZEROCOPY)) {
- 		struct iov_iter i;
- 
--		copylen = vnet_hdr.hdr_len ?
--			tap16_to_cpu(q, vnet_hdr.hdr_len) : GOODCOPY_LEN;
--		if (copylen > good_linear)
--			copylen = good_linear;
--		else if (copylen < ETH_HLEN)
-+		copylen = min(hdr_len ? hdr_len : GOODCOPY_LEN, good_linear);
-+		if (copylen < ETH_HLEN)
- 			copylen = ETH_HLEN;
- 		linear = copylen;
- 		i = *from;
-@@ -697,11 +695,9 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
- 
- 	if (!zerocopy) {
- 		copylen = len;
--		linear = tap16_to_cpu(q, vnet_hdr.hdr_len);
--		if (linear > good_linear)
--			linear = good_linear;
--		else if (linear < ETH_HLEN)
--			linear = ETH_HLEN;
-+		linear = min(hdr_len, good_linear);
-+		if (copylen < ETH_HLEN)
-+			copylen = ETH_HLEN;
- 	}
- 
- 	skb = tap_alloc_skb(&q->sk, TAP_RESERVE, copylen,
+V2 : https://lore.kernel.org/all/20250203150801.2399555-1-vaishnav.a@ti.com/
+V1 : https://lore.kernel.org/all/20250119182121.3956546-1-vaishnav.a@ti.com/
 
+V2->V3:
+	* Justify in commit message that the patch only restores
+	previous behaviour and also the reason for size increase.
+	* Collect Dhruva's T-by/R-by.
+V1->V2:
+	* Add Fixes tag.
+	* Add bloat-o-meter summary to commit message.
+
+Previously both of these configs were selected for ARCH_K3 in respective
+Kconfigs, but commit b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
+and commit 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
+dropped this recently without adding those back in arm64
+defconfig, this causes boot failure in all TI K3 platforms.
+
+Passing bootlog with configs enabled:
+https://gist.github.com/vaishnavachath/03d8d3ce0f22219643c2f4d1dd243fd1
+
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..1f25423de383 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1551,6 +1551,8 @@ CONFIG_PWM_VISCONTI=m
+ CONFIG_SL28CPLD_INTC=y
+ CONFIG_QCOM_PDC=y
+ CONFIG_QCOM_MPM=y
++CONFIG_TI_SCI_INTR_IRQCHIP=y
++CONFIG_TI_SCI_INTA_IRQCHIP=y
+ CONFIG_RESET_GPIO=m
+ CONFIG_RESET_IMX7=y
+ CONFIG_RESET_QCOM_AOSS=y
 -- 
-2.48.1
+2.34.1
 
