@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FCC22DF94;
-	Wed,  5 Feb 2025 12:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBEF22CBEC;
+	Wed,  5 Feb 2025 12:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759466; cv=none; b=F/ERfK//JPYRpbKXdWaK6e2FX/L+uzfOZUVjScHtqD05CWCuq5ZbnBR9sIyD/NY6ylFllh3L6wnxqk5zFMXc/4E/hZy8eU3+Lvqc8zzedHTHrv3Y8nVYp/XEepovheq4TXj2JDmlt+igLlS+UnunwNKmGkxrun/onfneNC4PyrE=
+	t=1738759468; cv=none; b=dtOBkL8/AC90W5Ult1GvohHgh7y3Brl9Lp8TLwB+dIUdF5qRXcSC05JbuSIegm6x5/ydFZ1POqVq7n9cwhCdrJHDJaqJFiX0C1tOS3cJeDCJkPzT2GK1i9wpx/EltOMC8m+ivnGeGMmxmGr0ORkH76T2agrHG/XBNVkWq/25/EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759466; c=relaxed/simple;
-	bh=8iLfXxhY+M8Fm+e3Wt34iJHyPl/Cf4DZ4AeRbBEWBC0=;
+	s=arc-20240116; t=1738759468; c=relaxed/simple;
+	bh=c+a2ooTDUH4jg5oYVZA+uQgTghv5GTN3oNYgRZ2T2Tk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=F1mk5PQqS/6MP5X8iOudQxvlxuXF0L9bO5pltF1sp/RLk4A88kAF0h0AFbt8TalhpP6XNYfhMwLLbuDgRqwVF3rc81iynUR0FFuD5gqCMqhowQYUQHR38kSgRGrgXHsn798Nb27l4Po7Dgzd8kxsCFNZG9XDSRNfPCllwNEEL1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTe1WtGJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=JnqylAnSAdvRwXnLb8oz1tsnd96Wqg7ofMlWpoGHdltEniCJKWUs6EzHVGq2FmMdz4xIHsjuKeQPLuPHZot9mSlbgBkMgi3JBz29ErSxGmtxGayTjwmcI9lEatQvW3MKG1QQtdMr/Xvgciot0Ojf2vH//sVcds9f1XjFOn99b00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljdLAke4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTe1WtGJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0915C4CED1;
-	Wed,  5 Feb 2025 12:44:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljdLAke4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 004D1C4CEE2;
+	Wed,  5 Feb 2025 12:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738759465;
-	bh=8iLfXxhY+M8Fm+e3Wt34iJHyPl/Cf4DZ4AeRbBEWBC0=;
+	s=k20201202; t=1738759468;
+	bh=c+a2ooTDUH4jg5oYVZA+uQgTghv5GTN3oNYgRZ2T2Tk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=MTe1WtGJDjMorHOW5FQDX7stZjlSIR5BKBb1nxgTOddR23mvtzJEQp2EjZVzmA3ZV
-	 ei0+GAEzHchEnUdtZuCOwUR70IAIDljD3wq+OGubiRws4c3KBEcXPM9JwFjqMDX6Gk
-	 lky7XZSV1SQQh52/glHKiLqJ/TdCv3IEsCErZxgT7Uxv/iL7+fAUtiW3MpcUjZFOBV
-	 SyoHRBf83M+wojx/QWZqkjyOvhGBY5WXJPrts5deDGTOo78yBsvNIeO/31PsWiXsYY
-	 RpRrzKbzFOfiJP7hgh6RT8xYP6wLyWG3c/UqBnSWoLrjM6cUKpQCbJ1T+HjrGNs4Ke
-	 ZapRkjw0hNyDQ==
+	b=ljdLAke4edizgDChqqyrMZXFXbzT0CLs6MJlafHGPBFsQ6ehphWDTB0iig76fxxIn
+	 0t3BMJOqA5ZmlwMIEuMrl1mPGYHGDufnvCc1cy9WViq84BVrSmJS4pDJKcdEerM99t
+	 6DPtZXvbwU6c6letH1DD8dJa45Fhqdo7F7vt8dDo2egmrUj0na2kvqh6+Q0MXdZRk3
+	 ortLesCaFPLEmR7a2uPHYj+h+kns5kxo4+mKHqx6XYnYn0ljfdfWK18WDPL7A7NHy0
+	 x90U60Wx6ws0JHiFdtRrinmRO/+C+3WzeilditD1UbDh2IXj5iU5GlbkT7yly5+igR
+	 /+53Cazawx7Xg==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
- Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-sound@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <db10e96fbda121e7456d70e97a013cbfc9755f4d.1737533954.git.geert+renesas@glider.be>
-References: <db10e96fbda121e7456d70e97a013cbfc9755f4d.1737533954.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] ASoC: soc-core: Stop using of_property_read_bool() for
- non-boolean properties
-Message-Id: <173875946347.32457.4558405909681470251.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 12:44:23 +0000
+To: vkoul@kernel.org, oder_chiou@realtek.com, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: jack.yu@realtek.com, shumingf@realtek.com, lgirdwood@gmail.com, 
+ peter.ujfalusi@linux.intel.com, yung-chuan.liao@linux.intel.com, 
+ sanyog.r.kale@intel.com, pierre-louis.bossart@linux.dev, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com
+In-Reply-To: <20250107154408.814455-1-ckeepax@opensource.cirrus.com>
+References: <20250107154408.814455-1-ckeepax@opensource.cirrus.com>
+Subject: Re: (subset) [PATCH v2 0/6] Expand SoundWire MBQ register map
+ support
+Message-Id: <173875946575.32457.11587009893936906812.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 12:44:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,13 +50,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Wed, 22 Jan 2025 09:21:27 +0100, Geert Uytterhoeven wrote:
-> On R-Car:
+On Tue, 07 Jan 2025 15:44:02 +0000, Charles Keepax wrote:
+> The current SDCA MBQ (Multi-Byte Quantities) register map only
+> supports 16-bit types, add support for more sizes and then update
+> the rt722 driver to use the new support. We also add support for
+> the deferring feature of MBQs to allow hardware to indicate it is
+> not currently ready to service a read/write.
 > 
->     OF: /sound: Read of boolean property 'simple-audio-card,bitclock-master' with a value.
->     OF: /sound: Read of boolean property 'simple-audio-card,frame-master' with a value.
-> 
-> or:
+> Afraid I don't have hardware to test the rt722 change so it is
+> only build tested, but I thought it good to include a change to
+> demonstrate the new features in use.
 > 
 > [...]
 
@@ -65,8 +69,10 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: soc-core: Stop using of_property_read_bool() for non-boolean properties
-      commit: 6eab7034579917f207ca6d8e3f4e11e85e0ab7d5
+[5/6] ASoC: rt722-sdca: Add some missing readable registers
+      commit: f9a5c4b6afc79073491acdab7f1e943ee3a19fbb
+[6/6] ASoC: rt722-sdca: Make use of new expanded MBQ regmap
+      commit: 299ce4beaf714abe76e3ad106f2e745748f693e9
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
