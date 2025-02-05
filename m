@@ -1,50 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790CF1547E9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113C618CC1C;
 	Wed,  5 Feb 2025 14:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738767485; cv=none; b=A1EZDgGZRoQaHAe4XsiItMtxQ6R7mZAgpijk86CT+C4jkHfh8NceBU7VSf/kk3uZavv5DyIg54i8izXwwPXp9PO0byUdb114O1CmiBZw6VB1Dm/sOoN+EtPo2pN2bIy78ifhFy8ISVwBaK+0YhTMKUiBqE6epE5Zn/bRJUrAE6Q=
+	t=1738767485; cv=none; b=k4omknKkoK0X7S3xs3SHatc18ud8tN63cl1LBs5M9tTwWaSBxA9oL26PnIFkU6k+6AqLMTiJ2ns+9h8b2YWDuvFoxxeWYcev/qRt9dOdx7lwF55nvhs3VfXgV+t3ALMqEYjC0ovt+WCfzkr3Sy59x4ZY7sWS7in2sqYk1Kz+1OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738767485; c=relaxed/simple;
-	bh=3EDPzq+QRjtF8ntIcn0E9PwMJhWnjlNrTN7MIeR80jo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gEgontPymk0LYhuQV2ch1uBLoWbLUMT391kgo650+oFbokP9TWkLPeLOUEWzEUtRQjEv0jMT7b3oAWG1TGlIi6jfQLTpbAQPzs7bO6ZXhNRPfNPub6LmoxxdQTFEIoVAaySg3nPggPSm/AFikDY4Ussy/b0X7AT65ItsMtKPLQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fuDeX3Ty; arc=none smtp.client-ip=192.198.163.14
+	bh=7H2ugvXbJPmCuRopy+9t0WK9d/y8xYbHP4xu7MXLSn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R6D+0iSXUidNl18850uospMLFofoEGwPwjql4ZC96wPahCT0lfC62uYGqE7O5OaZNsrd1bhATJCqiZL1IksVY9k+oNHvrRF6Kve5cHv3lsDlwXldE2ABD5RrDn24XzLn9Z/VuCspxvE/Os04Zj3GWM32hHj0NVfSWjL00jQQl+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kwuMfgpi; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fuDeX3Ty"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kwuMfgpi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1738767484; x=1770303484;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3EDPzq+QRjtF8ntIcn0E9PwMJhWnjlNrTN7MIeR80jo=;
-  b=fuDeX3TyaKrq78n0hv1djII8ph8BWdw1f2dbTM3vGGYVIGAn5rccS2vC
-   7C+nwvBz37e9h3v4Bj6Axqn6cQjOdOFR2BqdGULiaJ3S0/CbjJhX36ulU
-   VeXRRN/n6qNkvR81laTzU7jTzlhD3q3wTPUynxup9do/GeCyQcIjEHnLs
-   g8nIpef9B3P9q63yMAV1umGqBFkq8ulKokEadHq7Hk/3Mre7tdAPlmTt4
-   Al6W1FF76+c0ZAL70inXP53VEoUmObO267m2dHjUUgJnC/CO2PKqCyjAz
-   +d9h2OeEU2QvlLwHMhx42LNMIXYP6nqkDEjQBMk4JZK3MzGvsowWTwM4R
-   w==;
-X-CSE-ConnectionGUID: 3cyhpVFBSDiWB+4+HGAT+A==
-X-CSE-MsgGUID: G8fqZEFRQtWDYx9YTDj5KA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39599695"
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7H2ugvXbJPmCuRopy+9t0WK9d/y8xYbHP4xu7MXLSn4=;
+  b=kwuMfgpi1d/7LnEkKAcknGsvYMgpkTubgu9E6Wmo7Zj0hGi00BM6BQ1T
+   jQw774xW1KjGdcg3G4t7i3i9JxApyoYyO1e8RigcgzIT+qQZQTNx4Eb/7
+   cLryrVBrNQulgqGcTPSCQCf6qSGKfnGB/8FQb9RkuaiA/jMSiqgtyBILi
+   YUwMVbgdrwurfimvKW8d1x9w0DLKDCMqXNnUF1Rqcw4dMWURY7EZ19d7H
+   4v3p+dOwuf1IyC4zHk/QpuJPO3JMYfsiWcYI0WeRETpTnvYPbtS4QVoBW
+   OxJ/AA23z+7kx0Ezs/poP6j6fslmNSRruEpKair9x6cGB3IFtz9XOhpg6
+   A==;
+X-CSE-ConnectionGUID: fU0ONZa7Soe1vgfn2/EGdA==
+X-CSE-MsgGUID: P3lBJH9kS2KtBDmOpU4dWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39232333"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="39599695"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 06:58:03 -0800
-X-CSE-ConnectionGUID: LMxD6/3vSq6Xcb2+iczw9g==
-X-CSE-MsgGUID: TDg2oATYSdCw/H5cHCpDSA==
+   d="scan'208";a="39232333"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 06:58:04 -0800
+X-CSE-ConnectionGUID: NAfUT5uvTf2GQBabAJrOmg==
+X-CSE-MsgGUID: vZjT9jKDTv+KWp5c2VKFQg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="115968400"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111806974"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Feb 2025 06:58:00 -0800
+  by orviesa008.jf.intel.com with ESMTP; 05 Feb 2025 06:58:00 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B93DE13E; Wed, 05 Feb 2025 16:57:58 +0200 (EET)
+	id 9983710D; Wed, 05 Feb 2025 16:57:58 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Amelie Delaunay <amelie.delaunay@foss.st.com>,
@@ -60,12 +59,10 @@ Cc: Shawn Guo <shawnguo@kernel.org>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 2/4] dmaengine: Use dma_request_channel() instead of __dma_request_channel()
-Date: Wed,  5 Feb 2025 16:57:10 +0200
-Message-ID: <20250205145757.889247-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 0/4] dmaengine: dma_request_chan*() amendments
+Date: Wed,  5 Feb 2025 16:57:08 +0200
+Message-ID: <20250205145757.889247-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250205145757.889247-1-andriy.shevchenko@linux.intel.com>
-References: <20250205145757.889247-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,27 +71,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reduce use of internal __dma_request_channel() function in public
-dmaengine.h.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/dmaengine.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reduce the scope of the use of some rarely used DMA request channel APIs
+in order to make the step of their removal or making static in the
+future. No functional changes intended.
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 83cbf7197a76..a360e0330436 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1646,7 +1646,7 @@ static inline struct dma_chan
- 	if (!fn || !fn_param)
- 		return NULL;
- 
--	return __dma_request_channel(&mask, fn, fn_param, NULL);
-+	return dma_request_channel(mask, fn, fn_param);
- }
- 
- static inline char *
+In v3:
+- rebased on top of v6.14-rc1
+
+In v2:
+- updated the commit messages (Frank)
+
+Andy Shevchenko (4):
+  dmaengine: Replace dma_request_slave_channel() by dma_request_chan()
+  dmaengine: Use dma_request_channel() instead of
+    __dma_request_channel()
+  dmaengine: Add a comment on why it's okay when kasprintf() fails
+  dmaengine: Unify checks in dma_request_chan()
+
+ drivers/dma/dmaengine.c   | 16 ++++++++--------
+ drivers/dma/imx-sdma.c    |  5 ++---
+ include/linux/dmaengine.h |  6 +++---
+ 3 files changed, 13 insertions(+), 14 deletions(-)
+
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
