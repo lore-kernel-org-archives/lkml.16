@@ -1,124 +1,78 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFFBBA2E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C37524B0
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738760701; cv=none; b=a2dfKRwV8BKf7iwEXbvVcacrCx1SOKWTrFVU/ZPfxDtPPPdR52gMFNt6YVzWU6hW/zJqEistPIR+YT6t3C6j2kwCfScYyna1wY3124ph0E7uwZ/Z1W7zry1yNZi4DPv1NasNdyqaWeacP4i0HTCm//f60r86FHa1F9LfzfG82f0=
+	t=1738760715; cv=none; b=S/sICRVfkeplvQ+a/6UuCXXTXiOCTZ30nhl6a2cpkOBfk9/bh8jbpMR0gj67pcAUhL84I/sXp0hddIt+iFrz9bcGw0juSLow6mzd+mvZNLJtfqvNzEeZf+tsMNOs7w08AOKqur4iDZc9yYIixMgu4m/L/ausDoLCFWL9dXmD6gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738760701; c=relaxed/simple;
-	bh=+NBSWZpDWNiZ+g0G9+x9chkAzgB8xrxrcBYRgdsou40=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RHVrMwfPc6LPBG3x/w82yqPFCFLy3T4XhXhSRHKbJ6KtAykg6ChbvhJYKV44ex8eVGMbWkbTmduXghPMRFMlo315mDE3QeDCB/TQ2Alvt0sfzbipkZoyydxQiWLU7NNkKPoWQihq1fOwc0zYFJDBAn4ahSbpWpdi5y/jnxVCSr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HA5ovZ+y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=t4VBP/B9; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HA5ovZ+y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="t4VBP/B9"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id F275725400C7;
-	Wed,  5 Feb 2025 08:04:57 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Wed, 05 Feb 2025 08:04:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738760697;
-	 x=1738847097; bh=SCHItT6QcLiTwUenlw5c4ZeAjQ1AhCR3IiJ9jW3mjV0=; b=
-	HA5ovZ+yaLL4TiFQ3Ff21+W26FuMd19wh8/1oo6TJAn2zeoOLPRk55DuEjlpjHPv
-	pF+GmDfT+vY/1gSAvnw8TJQeqmob/retWrKkLU7OLlO7+wOH70E0Jyzj8ZXRzIsV
-	b/6Zqzl1EbHHtTXUedWik/0inL+pQASNUR92FDOaeAEcb+bxKxIuuoWVMQ58k4I1
-	kT5vEdcgMgSDMl5rSEsG1lU+PVaJFQgzyLii7JtXfWeuJYsoImLf3yxhasPN37J0
-	+ww7Sx75jZQpVmL0FdsV8JkJqaEP3kakz0i7oXzDqP9OR96O/tzHZvOaqswuegbh
-	c9+1wub0hBo5lI0eXopz5Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738760697; x=
-	1738847097; bh=SCHItT6QcLiTwUenlw5c4ZeAjQ1AhCR3IiJ9jW3mjV0=; b=t
-	4VBP/B9oSKg4v7czOmnBorKeN3mXv2jy95tr3pdeMb4RFgdFN8sYBI2o+5mQAylU
-	JMYHgfd+Rp7A3A21DRSJo/dar5yq4G9hYfBgz7LBtOpTSMLpA4U4ffSGfXqhAAnp
-	VuF/80shqgFWA4j/uAqiepYSMPwXfN/rFf/2+l/Yu3AlxlIB5MGof21WE6fCiJUX
-	Wj2k/fD/SMbquFhk5LhOf1iEQZg9R+TQH5sDPXDtE7VoXYMhArXTNQdJzhFv55rH
-	XJRcmc9szdiXlNRBw6GhLdLPuYIHle0nd48LJtqoEMaFnVZnanBIeiRbXREG9gGS
-	/3f6af8eBrl7bd4sy7cYA==
-X-ME-Sender: <xms:-WGjZ9PrOG1QnZo8Nx28LM6AsgnWmUq5tOO8oNy2DjjBdgwImq7mRQ>
-    <xme:-WGjZ_8Wlk1s_f5xNP-FKILExJk4p8kBf55PITdiGQdUJtT12OYLyVJrDvNice9Et
-    KjD6A-mYGz_qaNIGB4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeehvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeek
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguphgvnhhklhgvrhesghhmrghilh
-    drtghomhdprhgtphhtthhopehnihhhrghrtghhrghithhhrghnhigrsehgmhgrihhlrdgt
-    ohhmpdhrtghpthhtoheprhhohhgvvghttghhrghvrghnsehgmhgrihhlrdgtohhmpdhrtg
-    hpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnrdgtrghr
-    phgvnhhtvghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinh
-    hugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsthgrghhi
-    nhhgsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrh
-    hnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:-WGjZ8Q8BS4qf-MNMXgmjtx9sh1-INx-VkZ1BO1zgS7fd-REHZ6zTw>
-    <xmx:-WGjZ5tjZo7OxZo8VHW2V04yX6FZaAnrpfVbOqKIV7TCBYTRXpsa-A>
-    <xmx:-WGjZ1dvPRjGZ4cG7a00l4uLiY9IENP9LkJrnS6z7IFQNjG7lzLiiA>
-    <xmx:-WGjZ10uSxvNnYzBYkAg2zhsX6qJIlG3NU30WIKjVbGAjtcY3Gjtsg>
-    <xmx:-WGjZ_teP91Z-XpCzrjeFt6SZIft2RgsreCC86zDlVTSpmvLRfM63XR3>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5BE8D2220074; Wed,  5 Feb 2025 08:04:57 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1738760715; c=relaxed/simple;
+	bh=1lbD5u3awMB8FBEfYe3jiPTwSBQuoBo9YXz8XbKCjpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TfQootTIAb3h26NmXOTdn1U73kPpJKZX8785EoXIMg4J1YI3WdiwRXV8/Sdvek6QO8P9iehYoHObXKhcXEAA+z69K48bcolPOJfWuOykzPj13qg+tMxwgxrKn01J5jDWMlNUbsNghz9hFnBIiR+N7fDI3WD/ZYV6Ei7Mmy+D4Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:fa11:c14e:2df5:5273])
+	by andre.telenet-ops.be with cmsmtp
+	id 9p552E0053f221S01p55wz; Wed, 05 Feb 2025 14:05:05 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tff5I-0000000FvZS-3qWg;
+	Wed, 05 Feb 2025 14:05:05 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tff5U-00000006PqT-41G4;
+	Wed, 05 Feb 2025 14:05:04 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andreas Larsson <andreas@gaisler.com>
+Cc: linux-gpio@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 resend] gpio: GPIO_GRGPIO should depend on OF
+Date: Wed,  5 Feb 2025 14:05:03 +0100
+Message-ID: <db6da3d11bf850d89f199e5c740d8f133e38078d.1738760539.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 05 Feb 2025 14:04:37 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Dave Penkler" <dpenkler@gmail.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Nihar Chaithanya" <niharchaithanya@gmail.com>,
- "Rohit Chavan" <roheetchavan@gmail.com>, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Message-Id: <19cc695e-47e6-451a-a443-384e2b423953@app.fastmail.com>
-In-Reply-To: <2025020532-roast-shortage-4086@gregkh>
-References: <20250205121244.322054-1-arnd@kernel.org>
- <2025020532-roast-shortage-4086@gregkh>
-Subject: Re: [PATCH] gpib: mark pnp_device_id tables as __maybe_unused
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 5, 2025, at 13:25, Greg Kroah-Hartman wrote:
-> On Wed, Feb 05, 2025 at 01:12:26PM +0100, Arnd Bergmann wrote:
->>
->> @@ -1390,7 +1390,7 @@ static struct pci_driver tnt4882_pci_driver = {
->>  	.probe = &tnt4882_pci_probe
->>  };
->>  
->> -static const struct pnp_device_id tnt4882_pnp_table[] = {
->> +static __maybe_unused const struct pnp_device_id tnt4882_pnp_table[] = {
->
-> I see this happening in many different drivers right now, what is so
-> unique about pnp that causes this?  Shouldn't we fix up the
-> MODULE_DEVICE_TABLE() macro to not require stuff like this instead?
+While the Aeroflex Gaisler GRGPIO driver has no build-time dependency on
+gpiolib-of, it supports only DT-based configuration, and is used only on
+DT systems.  Hence add a dependency on OF, to prevent asking the user
+about this driver when configuring a kernel without DT support.
 
-I think the other drivers that produce a similar warning usually
-have a different bug, they have an incorrect of_match_ptr() or
-ACPI_PTR() around the reference to that table, and the correct
-fix is usually to just remove those macros. I have previously
-sent patches for all of these, and could resend those.
+Fixes: bc40668def384256 ("gpio: grgpio: drop Kconfig dependency on OF_GPIO")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+---
+v2:
+  - Add Reviewed-by,
+  - Depend on OF instead of OF_GPIO.
+---
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-These two pnp drivers are special because they predate the
-linux-2.6 driver model and there is no reference to the table
-at all in the drivers.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 68c5e69342571495..285a93061daee717 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -338,6 +338,7 @@ config GPIO_GRANITERAPIDS
+ 
+ config GPIO_GRGPIO
+ 	tristate "Aeroflex Gaisler GRGPIO support"
++	depends on OF || COMPILE_TEST
+ 	select GPIO_GENERIC
+ 	select IRQ_DOMAIN
+ 	help
+-- 
+2.43.0
 
-    Arnd
