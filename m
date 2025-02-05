@@ -1,148 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227E422AE59;
-	Wed,  5 Feb 2025 10:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BB822B5B9
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751313; cv=none; b=WCzUCsIqHfqBD7zHCT4maXraAq/L8TmUIRelulz554KKnmc4feg8EA8w6HvEHA8n1LSN7fLK8jhMsVqk5IQe81L7Gh7wR9PFB9dc4pRBbHWwRodsFwZtbwNxYgiWn/2fDuuZPIm50XckZ8kQjucDZzR4QegWX89EtwKB8i9NoyA=
+	t=1738751380; cv=none; b=lW8299QHUb16evWr42e2UwlNH/6FgogYjQJdU5o8hNUvg03O9GADGnm/Uy6+kKJYYj0uj4GECEvMHBeJ3nLg7bqk56UdJR6XXHG+4hoXhr5OAmPRT3ON9IjR6qxK8+RkSmd8Tl/726IJBqRgvIDVIYY8drapCyBJ3wpk2iCunOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751313; c=relaxed/simple;
-	bh=BO3vZ8coexN2Gg28q2FbNqKsK8IEU3cZORQCqX9qx+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJoaP8e9ZoLLYZlC+EKAwO1gnoVvUcDhMfct3KigBBBO4+a1WPMey4zUBDFf09/F/aB6MIfi0FQ3dISq/hfIT7spkoLOPEvKL3mYNtSFfhEN1dfHr8RvfOGe1JLJ1fT7tm3FgfDW/gsc2vYaLaXaG6YSuZ7/UQu03Q8h89g/r1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9ggFggQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738751380; c=relaxed/simple;
+	bh=WI78ijGtjowcHXJYrXtfWT/69d/eQD/yPSkusz9kD7Q=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mt125zZEmDG5XZ2O9C5UeQlNP7JPkyd2bKD6gtoTUHuV9oi6+A7VzEHz3CpCXrd1wk+6ng6bUpr529gOnXBqhqVK0dnU5IbpHWnYineOgAiKibSqlys/l+SobCfhw3IFxyDX0W2dkU9WlBTU5quSFMLy5r/iU+TIqlvBc166FOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=FAtARg6h; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9ggFggQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85683C4CED1;
-	Wed,  5 Feb 2025 10:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738751312;
-	bh=BO3vZ8coexN2Gg28q2FbNqKsK8IEU3cZORQCqX9qx+Y=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=A9ggFggQl/taQgyhAPaGTtFCh7yjztbIny4CO10YOvw7BVy1oWYpIGld2QuWFGwCs
-	 0XYdxUj1lbMiX6p+aerwtw/DqcbwN0REGZVqhU4wQM5S2sMKY0PgSGlpLOzSKU6kHS
-	 YJLbo1wtetLr5CmKKKItcw7abfKNocUqqDaassKXNtj/a5Zh7dqqw7jTqdsSVbtujH
-	 yk1cagKFGn73gvUQyIZcdHwkn/+LwODfisSkH5oQF5WvFRPN0dLdLISy+Pea9l6nL6
-	 0SyVy/BzijqF5ljHQ+QXTkSs5qV0zGpZ7P9uGKS3jWLkeARr/65BV2Ii694kdIOkBB
-	 d2J8/qt3qsIJQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 1F71DCE04A9; Wed,  5 Feb 2025 02:28:32 -0800 (PST)
-Date: Wed, 5 Feb 2025 02:28:32 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
-Message-ID: <e23ab8d2-1a64-458b-a83d-eabcf92a2382@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
- <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org>
- <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
- <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
- <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
- <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
- <999751de-b891-424d-a7b5-80bfa98793ff@paulmck-laptop>
- <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="FAtARg6h"
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 28C6D3F671
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738751372;
+	bh=6p5dlNzJ/YPPjs/DSFQLsa5sUOHCa5xG63IkAekOvh0=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=FAtARg6hgwwQSPh5y5NmSeKybqTMW5Owxwd563KoOAs7dd9Qu933kSYPe619Li8gn
+	 5LbeRVQdxwuNfc1ItPLJhdaEhX+yaDw9MgSgT8pKhVc44RuRKHSPwiHmv/65CwEqH0
+	 /TOJWWQAl8tGoAQoDIWnRocCGaAm8FqyoJC+Jyyrl+Yox4vFl9tw/qmLlyD1GQc3fh
+	 2cJuEmqeJpsVwCm/MwSQhCU95bKP7+Bb1gBcE8rWrnC1by16VHK6aolbHkxZLlIxg8
+	 /6KCnSgfpiLS8JGjcFI8zct7JzvpGjIoO8TIiv59OWtnasoKtpDOm31u63U8x6iT4I
+	 ZY54ZpU3PJIBA==
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2add2f6f16dso10505815fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:29:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738751370; x=1739356170;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6p5dlNzJ/YPPjs/DSFQLsa5sUOHCa5xG63IkAekOvh0=;
+        b=G/vAIlA0JYocoQA+wsnTI6uDvGlsJU88aBwRjt1rK2uYHMQSr8T421AFEUdx+UC5PN
+         Lgu2qGCmYPIvZLXRTAbq6vfUKp7LT17zynT3zao2qhUM2sEqDQMPDE4ga71vHbqrI3wD
+         yQsC5j7ydG/MfBqKA2RSR216X90IUWBCBgI54Fnt+UwtjiD75Vj/0rUVYeSiKVGG9ytg
+         oFqOZBUaiUcS2r3gdkPszpve4X+WK9Z/Fj5PNLKJ8rH0Y+cI66XwovAsfwxr69MuuKZY
+         C0OzRG7uu3UV9Gdd77beioy86xly41k9hkkUsm8esLKgoel2Ii0ybSJFOYEXq81bmml5
+         4YpA==
+X-Gm-Message-State: AOJu0YyocCNeM2b+AO7RfT3AXZhIELY5FVKhIW+48LEuAWn5F5pkeXrr
+	7c9S3LoVlX6r+gdiwA5g1019/S/zS/7qdVDn6X6BMbSQgcrUFUcqhs2AGzPTURg5wNOiGOqNTqv
+	pnjobx8ZJBPjI59LXfvdkHHRdybkqj5IUU6RuAjCDswjHW1ovWor+xgmivrM8uRXBmWiTGR0xZk
+	K/6v8O7o7IwIAtCxBnsO5+1d9Cxidl8zVM63WAcuaisYEKxym2zkCB
+X-Gm-Gg: ASbGncu7mhhymM+D6Wami+f8GSFlzViUCt0BCkiY0c+bIlKDbWIwD7j8+wSyXTMDb56
+	Uvzh8hkGxDgOdXK4iJK8Dr+YSiRV0sRuce9pR88XbEVPB/r6eYk71k6CkWWfFje3WfE+kjd0T3g
+	ol8ZrNeRamrixj4Js=
+X-Received: by 2002:a05:6870:15c4:b0:29d:c764:f873 with SMTP id 586e51a60fabf-2b8051189e7mr1412752fac.31.1738751370730;
+        Wed, 05 Feb 2025 02:29:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IED9P+bVZqPUW7UO2uWic3Ql/tfX6w4dwltPlCCIcZdxoXy1RTbFe/BWTDvYa6FU+eq3MorrYQsqOpUrQqy/Ck=
+X-Received: by 2002:a05:6870:15c4:b0:29d:c764:f873 with SMTP id
+ 586e51a60fabf-2b8051189e7mr1412739fac.31.1738751370456; Wed, 05 Feb 2025
+ 02:29:30 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 5 Feb 2025 10:29:30 +0000
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 5 Feb 2025 10:29:30 +0000
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20250203013730.269558-4-e@freeshell.de>
+References: <20250203013730.269558-1-e@freeshell.de> <20250203013730.269558-4-e@freeshell.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
+Mime-Version: 1.0
+Date: Wed, 5 Feb 2025 10:29:30 +0000
+X-Gm-Features: AWEUYZkWYCph906PZJ8Zu7NPROce5GWqOyVjvIksBicpE8lH4z17iclUJfeqp4U
+Message-ID: <CAJM55Z95pwTZmw-WPcUaB1BGpVoNgaRYYjUnqSFcLTNyVmZahg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] riscv: dts: starfive: jh7110-common: assign 24MHz
+ clock-frequency to uart0
+To: E Shattow <e@freeshell.de>, Conor Dooley <conor@kernel.org>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 04, 2025 at 08:28:29PM -0500, Joel Fernandes wrote:
-> On Tue, Feb 4, 2025 at 3:22 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Tue, Feb 04, 2025 at 10:44:45AM -0500, Joel Fernandes wrote:
-> > > On Thu, Jan 30, 2025 at 12:56 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > By "where we were initially", one might reasonably guess that you meant
-> > > > that the initial value and the target are one and the same.  But I suspect
-> > > > that you are thinking of a third value, the value of the underlying
-> > > > grace-period sequence number at the time of the call to rcu_seq_snap().
-> > > > But you might be thinking of something else entirely.
-> > > >
-> > > > > Now we move rcu_seq_done_exact. It has the exact same behavior except
-> > > > > that instead of ULONG_MAX/2, the above situations are shrunk to about
-> > > > > 10 counts from the target. So if target is 28, then the initial
-> > > > > sequence should have been at least 18 to avoid false-positive, but
-> > > > > again it is possible and I certain see in the code that it cannot be
-> > > > > used this way.. (at least so far).. So all we are left with is the
-> > > > > false-negative band of ~2.5 GPs..
-> > > >
-> > > > Here, I have the same questions.  As you no doubt guessed.
-> > > >
-> > > > > About "what are the consequences of failing to get this right".  I
-> > > > > believe false-positive is unacceptable unless it is maybe debug code -
-> > > > > that can break functionality in code, too short GPs and all that.
-> > > > > However false-negative is OK as long as the usecase can retry later
-> > > > > and can afford to wait. Did I get that much correct?
-> > > >
-> > > > Maybe?
-> > > >
-> > > > Please look at this on a per-use-case basis.
-> > >
-> > > Sure. FWIW, I started a world-editable document here. I am planning to
-> > > work on this a bit more before our meeting this week. If others
-> > > knowledgeable like Frederic and others could make edits/comments,
-> > > that'd be welcomed. But I basically summarized this whole thread here:
-> > > https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb1aG4goOJAnS6c6gQ/edit?usp=sharing
-> > >
-> > > My thought is (AFAICS), this patch is still valid and
-> > > rcu_seq_done_exact is a potentially better replacement to
-> > > rcu_seq_done. But famous last words...
-> >
-> > Let's start with the use case where the sequence number is being used
-> > by rcu_barrier().  What happens?
-> 
-> The rcu_state.barrier_sequence is used to keep track of barrier in
-> progress, as there can be concurrent rcu_barrier() calls happening so
-> we optimize by batching multiples of these calls.
-> 
-> It also handles the case where the entrain IPI came through but no
-> rcu_barrier() is currently in-flight (which would be weird but maybe
-> it happens somehow).
-> 
-> It is also used to make sure we don't need to entrain on a CPU again
-> if we already did an entraining for a certain rcu_barrier() invocation
-> already. This is tracked by rdp->barrier_seq_snap which copies the
-> value of rcu_state.barrier_sequence after the entraining. Al though I
-> am currently unable to envision why the IPI handler would be called
-> unnecessarily (hardware bug?) since we hold the rcu_barrier mutex
-> throughout the rcu_barrier() function, including while waiting on
-> CPUs.
-> 
-> Going back to my first point, for the rcu_seq_done() in rcu_barrier(),
-> we are checking if someone else did our work:
->     mutex_lock(&rcu_state.barrier_mutex);
->     /* Did someone else do our work for us? */
->     if (rcu_seq_done(&rcu_state.barrier_sequence, s))
-> 
-> Here I think rcu_seq_done_exact() is better, because if too many
-> rcu_barrier() calls concurrently made at the same time, the mutex may
-> be contended. If enough time passes and we have a wrap around, we
-> might end up in false-negative land which is much larger with
-> rcu_seq_done() than ..done_exact(). However, that does seem to be a
-> bug to begin with if the mutex contended for that long. OTOH, doing an
-> rcu_barrier() again when we didn't need to doesn't seem like the end
-> of the world especially if we contended on the mutex for that long.
-> But at least it shows that rcu_seq_done_exact() cannot seem to hurt
-> here.
-> 
-> Hmmm,
+E Shattow wrote:
+> Set uart0 clock-frequency for better compatibility with operating system
+> and downstream boot loader SPL secondary program loader.
+>
+> Signed-off-by: E Shattow <e@freeshell.de>
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> index 8a59c3001339..6bb13af82147 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> @@ -635,6 +635,7 @@ GPOEN_DISABLE,
+>  };
+>
+>  &uart0 {
+> +	clock-frequency = <24000000>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart0_pins>;
+>  	status = "okay";
 
-So...  Do we really care about the difference between rcu_seq_done()
-and rcu_seq_done_exact() in the rcu_barrier() case?
+The uart0 node already has a reference to the uart0_core clock, so it shouldn't
+need this property.
 
-							Thanx, Paul
+/Emil
