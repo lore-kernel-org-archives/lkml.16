@@ -1,64 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483E4208989;
-	Wed,  5 Feb 2025 21:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACFA23CE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738790917; cv=none; b=NgoFIi/SpeyelrZ61WSjxK39gEM1p8B75DJePm7Li7IwCzhOMscKcxLFxewWQy1hYMwFqHEXTG+H16C+xVPfHn30Jntv+O+QI2vM98R9h8vgUGBLE/Jm0tsAfbkJ5dRpX+9pJOqaagOXFDrE50JKDfbWVBPf/50HEM07F3JcJ54=
+	t=1738790979; cv=none; b=rjqd0MX+x07TqhiIEDz+HY9b//7XquKbe0q0Nv/oFCQeOQ1V2+DbwJM2GoAotgIJXGz9AeAZcXwsGQXbvzE+o4MYdAmHuJHVzVwuOO6XPM/sX1Yl9Htz9dsxW5T9OM51AymipvG4rO5pdiE9Tg9LXpzZnxjdXG5ESUBdKb1At/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738790917; c=relaxed/simple;
-	bh=7cTiWKja8ahpB4cG7xBn/0D3VBJyS3IVnXM+ObDED60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2PRcam2Cf+L0XLC27PTwnj2n6xbg2mWFwedhFK+fs1uMbcx8qJjB7IKjhsugPfMazKkcmWWU9o8wtcQ3j5YESwoUzLqHWJTc+teyQgMLE5eai7IjbUEpISNh5jgAgDll178ifMBW7AMD8BjrHgvBAo07LBr71KU3lvYqwjSwEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gzr7ovXh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738790979; c=relaxed/simple;
+	bh=DzaZIGVGm7qxgynff/1jUjJ5vq84RX5hbBIwIAnkfQ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKy4kyrOG60OYweEpCY+dPWKW44FYE2ptQG9Zk8FyZ7aymTvLsCb92QztoYh44yWD6DNSaeKsJUNFCzy/kybSZYP6TswZG5D/IE0PFdr5gMNSrjm8WKEt2PKm6f3PLjsdNRWj3gNhWW2TthEkJnux5uQCc1RsJ6TsMDe7KFHNqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgL62QAn; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gzr7ovXh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8B6C4CED1;
-	Wed,  5 Feb 2025 21:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738790916;
-	bh=7cTiWKja8ahpB4cG7xBn/0D3VBJyS3IVnXM+ObDED60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gzr7ovXhUYUByQb2QlVylFjDoipQApTHo9KjwVI/thJyLkYaAGqufTnV79TA6yBVi
-	 kK8kwiNV2rSJFf2e+iYVvi3yf9h1m2CQt8ovUSRuS5vMEtIEkTr814VlCbQqn/JUNX
-	 zIxM8n/ohq6moz+2S3MJz36IUl1W+wyK5R/NcoAM/qRnd9xlvU6akvdAxoyjcNwBSi
-	 UO+GHb0QWH47yanJ8ORSg+CaACYC/Em4pHP5XNmzMo1cXolqJULApqRDfBDh0xZY0t
-	 FWVBvRRZNFhZoDrfg9MZgZLuqwb/YrUIkJd+QQDx71OjbjmGQ2kK/BCY/uUY9DS2/Q
-	 s2GRJZ/ba9heg==
-Date: Wed, 5 Feb 2025 13:28:36 -0800
-From: Kees Cook <kees@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
-	nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
-	justinstitt@google.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] alloc_tag: work around clang-14 issue with
- __builtin_object_size()
-Message-ID: <202502051327.AE8C0706@keescook>
-References: <20250201200503.2532357-1-surenb@google.com>
- <202502051056.B910C691C@keescook>
- <jdnvctbd4kfzgjy4s4wpd24zpv66zsn3cjgnsialjbnrl3oa4e@vexb7u4ku2tr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgL62QAn"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f01fe1ce8so3493065ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 13:29:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738790977; x=1739395777; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BsjoJB7HDSrSJA02r+vmBeTBw6vIoTH7OoO05MDvcE0=;
+        b=AgL62QAnTMsvgWLxdYZW8N9EKyoEAOQ3QKchXCjJwu0JZFK38XFYeWZZvW1dvYNg63
+         jUHYe5y+kDMnDMiFmxyuu+hTb4ad74LsWZ0WWHYkjtKvCuNwW/paQRmqgjFY7K18P7Qm
+         PQyEPyauzR9tKmQDObESvldn9HrWKCkMgGR5dryMyWuiNUcZcda2/RBpibhveifRRaaA
+         Hf8Y2OsYm+SZDFCKhH/DqqUqRKyBS3FVH9kIRpK3DozKh3vj4k+1W5k+/anF9yPFtYhA
+         hg+eUHopF3D2tPZnvjtlHeU6PpHooaibe0d2prMUOWdyyHjLQMfvQbi/5aij+t6QqAA3
+         HFqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738790977; x=1739395777;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BsjoJB7HDSrSJA02r+vmBeTBw6vIoTH7OoO05MDvcE0=;
+        b=ihSIUwuSxxaQDnRJWRuwzW860MBKFmW08yXroLSQ8x47ofh1HCG79D0J7+OuiEh9Q6
+         lFAkDTJpDr6nFz9hZ7dnmEcYPb65E5pCL0c7aX4FvN5e6YBqFTXV8wKE7TxbfVzbV7Fh
+         kMKYo7jMBaJsADB43bVTseaEtJACV+FKIi9udhUD0fhsnmqIttS9/3anXv+A9x504rnB
+         nukOvyUBlndOv3TwBcgYkLetA6ACwBNX0JaVuw5lPAwCkVYYdKf811rBMWFaY9GMv6Yl
+         R8chcVvxFB/ok3CXuQiQK3JcWOVDlMKEAYiesUpyG0B/LU/bk+Kn1hPII69qNA3Vnig8
+         WvNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhosPjIvKWjM/+fpzWrNlBIIXs8e2VJXdeguQvXS3Wwug0QpYpimyaHLthzGYQfMPAbQKx3BYEAxv+IZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdSGugYRWl09XB+oC6EQ9MJ6pi7GkJT0wNoD4QcQv6RUbBqPVX
+	YEV+hTYPCq/UulCAHCSS+6UEZlMK32rlqs+pnrNhlG/hcyXqqY2d
+X-Gm-Gg: ASbGncvGxTvzFcg0hDHkxhrRbuPzrDFPk0zpFSI65IDc5mO+cgoVU57o1QoRpJA4gKP
+	26FN0c3YksKxNxoqn89QmpZF0CXXKRfxqKS951dZzhmBERdV4qeTYSpMh1+wNrCC4fkWrmT2bYm
+	07jzuTVLft6Me8Du78GlPB2HmJcSuSoYSI6Bj4Vk+Si7l1uL+qfn2GuRh2yhvWyuYAlTXs9C1Ja
+	Kd+AuM6F7zl15vv+WCg9Px9HTXgIfNTm5+pBgV6o3oemtPm7PdmwFy6uz9bt4rCZE8T4mxh24Xs
+	CsTuhGFg6V9cpss=
+X-Google-Smtp-Source: AGHT+IHhzYDNMW2DahlJRENyuy6/UOMNqwVg8iWKNVysPefqFop+9Sn0/Bcx97VFtzq0tHNsbU8NaQ==
+X-Received: by 2002:a05:6a20:7f92:b0:1e1:b44f:cff1 with SMTP id adf61e73a8af0-1ede88bc471mr6561441637.33.1738790976805;
+        Wed, 05 Feb 2025 13:29:36 -0800 (PST)
+Received: from localhost ([216.228.125.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bf82sm13450584b3a.17.2025.02.05.13.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 13:29:36 -0800 (PST)
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+	Heiko Carstens <heiko.carstens@de.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+	linux-kernel@vger.kernel.org
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Joe Perches <joe@perches.com>
+Subject: [PATCH] lib/zlib: drop EQUAL macro
+Date: Wed,  5 Feb 2025 16:29:32 -0500
+Message-ID: <20250205212933.68695-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jdnvctbd4kfzgjy4s4wpd24zpv66zsn3cjgnsialjbnrl3oa4e@vexb7u4ku2tr>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 03:16:12PM -0500, Kent Overstreet wrote:
-> ARRAY_SIZE() is sizeof() underneath, just used creatively to guarantee
-> that the input is an array - although that property is probably what we
-> want here, since strtomem_pad() really only makes sense on static or
-> flex-arrays, no?
+The macro is pre-historic, and only exists to help those readers who
+don't know what memcmp() returns if memory areas differ. This is pretty
+well documented, so the macro looks excessive.
 
-Exactly. strtomem*/memtostr* are very picky about the destination being
-compile-time sized, so sizeof() under the hood seems correct. I'm making
-my way through testing a patch now...
+Now that the only user of the macro depends on DEBUG_ZLIB config, GCC
+warns about unused macro if the library is built with W=2 against
+defconfig. So drop it for good.
 
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+---
+scripts/get_maintainer.pl failed to attribute this patch, so adding
+Andrew and recent active developers, and Joe Perches for the script.
+
+$ scripts/get_maintainer.pl 0001-zlib-drop-EQUAL-macro.patch
+Bad divisor in main::vcs_assign: 0
+"GitAuthor: Yury Norov" <yury.norov@gmail.com> (authored:1/1=100%,added_lines:1/1=100%,removed_lines:5/5=100%)
+linux-kernel@vger.kernel.org (open list)
+
+ lib/zlib_deflate/deflate.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/lib/zlib_deflate/deflate.c b/lib/zlib_deflate/deflate.c
+index 3a1d8d34182e..8fb2a3e17c0e 100644
+--- a/lib/zlib_deflate/deflate.c
++++ b/lib/zlib_deflate/deflate.c
+@@ -151,9 +151,6 @@ static const config configuration_table[10] = {
+  * meaning.
+  */
+ 
+-#define EQUAL 0
+-/* result of memcmp for equal strings */
+-
+ /* ===========================================================================
+  * Update a hash value with the given input byte
+  * IN  assertion: all calls to UPDATE_HASH are made with consecutive
+@@ -713,8 +710,7 @@ static void check_match(
+ )
+ {
+     /* check that the match is indeed a match */
+-    if (memcmp((char *)s->window + match,
+-                (char *)s->window + start, length) != EQUAL) {
++    if (memcmp((char *)s->window + match, (char *)s->window + start, length)) {
+         fprintf(stderr, " start %u, match %u, length %d\n",
+ 		start, match, length);
+         do {
 -- 
-Kees Cook
+2.43.0
+
