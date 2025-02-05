@@ -1,136 +1,137 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103A61519BC
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D918822B584
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738755682; cv=none; b=b9GyrGurMuRPYgh8z/RRDfoo/MMFwQjcNWdfcv0cw1FPZJAVk88BmhswZGHKcc7xsvD7baRw0LklgQ3rCFIIRzXToBDxS8PDCf2eySFXrth7vnu9Rwl95ffapodN3SNBDklk2i8YRS7TnLEFvBmPYjKMsZ0i0FGAfgwVlds4Afw=
+	t=1738755688; cv=none; b=FkhZrxHZwochFFHl0eye820CCg1fiNL+7k2PDUEdzgXcv6ncvEGHg99gYnAoLdTLx6qPD/Jnh8fpJf4vhIohhmE/UNw6ZlfZWJ/asMyw258HFWgkhLEOdZGntNq2M7JZ6kYIyewC+4e88UxZ32FCUiInFmBD+f1iQJ5rJld2wFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738755682; c=relaxed/simple;
-	bh=NNMOuqINQOhLqZp3Wlwm09HO0mcPsmGg81hfvH9yrlw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=gcOI9LKewM2yQd5cHpozxmK0j5sLEKDt0G0InOwe+CI7wBpKtdc/mU1Yp25ugoCCEMsWgAe4LvymIYvJhGJjd9A3DT+rj1Ya4TPb5sgQITyPrt6pA4nAQ0iMaCgCx3GybT8lN+12VRy0fqmMuxYhjNsgYh21lP+t+FheKfUQDFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ce3bbb2b9dso41227005ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:41:20 -0800 (PST)
+	s=arc-20240116; t=1738755688; c=relaxed/simple;
+	bh=tmMPXpx5vHEpl+JTTWtoevnJNE9U2FeQkDpgKur//8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ehDH53ylOaHkIkK1OnuVoTi3BOwnItzz32GSga1jyXifMOX1MFjfMeejHQAlODLF9wF837XGuJYtbq6z3SYwIum4kSLwMGzmR+dutXZ8ap6f785DufsYUQISdySU749a8nC57wbj3+hrz51TTeEY+dLdHBhoR9D8cm6fxyyaOGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=Em79hqij; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Em79hqij"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aafc9d75f8bso1332021966b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:41:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1738755685; x=1739360485; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xlF4W3XoYrWSf/kRCkmDrRhe1mWxG7hqTuWID8pFR4o=;
+        b=Em79hqijvQfoh8w9XUtwEGdQzZbW+usqKtfCKlWHDmW79GBgVGLmN794x/lkQnU3f9
+         KZuPkES2h7gU4tIA7S7UfjUJnk2K7CcFOeFH49ljx6b+7rCwgJcfxCnjLqGGH/zLFydx
+         jD/RKvkALe0rYel7YBqqxt0a0LVEHAi3aBE6w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738755680; x=1739360480;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kmQKBKwFMCE26N1dcZQXWysRKjvC/WnVWKkrsfbq70M=;
-        b=ncex+c/vOlSnOw6Eohwjk0FoBGEvPnM2vDj2RvyvgfAz66CvNf3r3eOBWvCTkf48sN
-         HTRMNAYG2GnS9CnwZmTEFn21t1eSf12trXHO+3qGew8P+VFT1hTIA0bDxjz6mNXpROPi
-         qAUqkibp2GKIfKaqH/bZoeAU0vfNB+aKgKdIY1knW820eMK0Cb+RXcp92DWfy6usip6C
-         /iAQc4sXgywCW+PqvP5fRBJ6xxb9xBcJsffNv8aHnr5ZfbfL/kzKajHuLCJZXZn98UEH
-         6Fiw88iBNxo6Uh+X+rLv7pZuuoAfW85ug1MArWDq0UxHflDsN8kJM+yvnLeL9fx008j8
-         rszA==
-X-Forwarded-Encrypted: i=1; AJvYcCUo2DWxrxKW+GjZYao3zxpFfpISZMwybkn3dHG5uJY3FQlZY4QhtkaB82xhRwEIoxGjF7/FGVtx3i0o2sY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy3rxYO1cKaLIBiCanw1TiLNav2wsUq/W/MUEf2pXjdSvX8jbz
-	Qd1NSTqo6uu2kekkZk1lmd/rEd4eOSuKmmonXmHnrmrT/pnpcr+NGPpZpBoYSiuiHWJ3xcR0e4O
-	0wHQYG8n8oSemX6i6azJ4BSJuXz1qCjFfQq4Z0QKRGboHn36ykeBZt2Q=
-X-Google-Smtp-Source: AGHT+IHY8KosqO8vAs2OYd00s6eQDHotfRAwhIQMNoxMVwahzbEA5LvPRGMnV8tuHvyvZqa92y1FRVDBhmXDANPBA75M7VNyceuN
+        d=1e100.net; s=20230601; t=1738755685; x=1739360485;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xlF4W3XoYrWSf/kRCkmDrRhe1mWxG7hqTuWID8pFR4o=;
+        b=jiYngp5YFTCjoRaq03vwv5loHmWXG1c9NKvmTcSDya0mi8UqD8l46zvDs60CpQW0NO
+         ozAyj5J2CIemjqJo+VIS8EmFoKNLAELHIrsnG3dn3i5w1wDGjzvdAMxIWbX0bsBXOUG0
+         LPbhEhg1CW/6kaFYztHqEiGBSnb4r88126Hk0MdQ6nw8M2LIJCmQC5rVyL5tWavl3g9/
+         SS37HiulS3Bfj1tU/djS0hmKHFDsDLZStdvdu2cGnj3U5opd9toB6Rw20PoEbJrhyYpS
+         TDxmeI17bE5cz3O/XlhSxCtXzNMrW+PCt7pdXbAwgrEvFSiP2YcP0SMitlZ714sCaKWf
+         IhYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPMFZtewZ13wMrs9ZjbpD2UV9niDcIN0kCOKLfQGW+E6TzF54D21GP4lQGwd7R6iE+9ur66u2d89cU32E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa8EKkwYjwVv3E3KptHimD8Y7pUvwcfcoqC3sWOFGm4vpH3SkA
+	Ejdd7LA2S+7oiErnG8T13Ij7gI/2k75Jma51AuPlFRLXP18H9GU7cTw7hNHY+Kw=
+X-Gm-Gg: ASbGncsTzuNeJO60GXkiRZEJMDjn6gTPkV3HWAbgJCUYURU2AjFymv5ME43OKl4Bw8j
+	840yfHolwk7c3hPk3U86yI8WHlOF5TeKk7h8+3+cmKwHHEXzHnhX29SXbUL7cSMGdvRH4OmDvo0
+	JOYS5Ooq0xgYaam2C0Lh5hf4RpbhkxLsVi1ftw977sui3ly+Nhqr/NjOKPVGZSKcAenqj6DMR3w
+	hM5kvi+H8AK0pzcC44WjI2yb1Nc2c1DB89X/NIdWS0wIKeF4Y4BiUqEYxrDrwbsoA9IGLAWNOJh
+	sYKw6+YvXhhXvS5Dbu6x4bP7
+X-Google-Smtp-Source: AGHT+IGyyeAqC49T09GxEsM+42n43RJ5s2fwXDPrHCHuZikSNgPzcQw+33wDdB5u+t1Yz+id5DU2lA==
+X-Received: by 2002:a17:907:94d5:b0:ab6:dd6c:e30c with SMTP id a640c23a62f3a-ab75e310520mr257819966b.45.1738755684920;
+        Wed, 05 Feb 2025 03:41:24 -0800 (PST)
+Received: from [10.81.35.177] ([46.149.103.9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7de5sm1089335066b.35.2025.02.05.03.41.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 03:41:24 -0800 (PST)
+Message-ID: <5c6d80bf-f090-4812-9620-5051e8ebb671@citrix.com>
+Date: Wed, 5 Feb 2025 11:41:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3309:b0:3cf:fc11:90ca with SMTP id
- e9e14a558f8ab-3d04f42561emr22613105ab.6.1738755680148; Wed, 05 Feb 2025
- 03:41:20 -0800 (PST)
-Date: Wed, 05 Feb 2025 03:41:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a34e60.050a0220.50516.0040.GAE@google.com>
-Subject: [syzbot] [mm?] KCSAN: data-race in mprotect_fixup / try_to_migrate_one
-From: syzbot <syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com>
-To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] x86/xen: some xen_hypercall_hvm() fixes
+To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org
+References: <20250205110651.26280-1-jgross@suse.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20250205110651.26280-1-jgross@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 05/02/2025 11:06 am, Juergen Gross wrote:
+> 3 fixes of the xen_hypercall_hvm() function, with the last one being
+> probably more a cleanup.
+>
+> Juergen Gross (3):
+>   x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+>   x86/xen: add FRAME_END to xen_hypercall_hvm()
+>   x86/xen: remove unneeded dummy push from xen_hypercall_hvm()
+>
+>  arch/x86/xen/xen-head.S | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
+>
 
-syzbot found the following issue on:
-
-HEAD commit:    d009de7d5428 Merge tag 'livepatching-for-6.14-rc2' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b678a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9e757e3762bd630b
-dashboard link: https://syzkaller.appspot.com/bug?extid=c2e5712cbb14c95d4847
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9235000a1b88/disk-d009de7d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/098ef82f8ab3/vmlinux-d009de7d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4f51f5eb5782/bzImage-d009de7d.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in mprotect_fixup / try_to_migrate_one
-
-write to 0xffff888114b41700 of 8 bytes by task 6432 on cpu 1:
- vm_flags_init include/linux/mm.h:875 [inline]
- vm_flags_reset include/linux/mm.h:887 [inline]
- mprotect_fixup+0x419/0x5e0 mm/mprotect.c:679
- do_mprotect_pkey+0x6cc/0x9a0 mm/mprotect.c:840
- __do_sys_mprotect mm/mprotect.c:861 [inline]
- __se_sys_mprotect mm/mprotect.c:858 [inline]
- __x64_sys_mprotect+0x48/0x60 mm/mprotect.c:858
- x64_sys_call+0x2770/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:11
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff888114b41700 of 8 bytes by task 6418 on cpu 0:
- try_to_migrate_one+0xb5a/0x12e0 mm/rmap.c:2321
- rmap_walk_anon+0x28f/0x440 mm/rmap.c:2646
- try_to_migrate+0x11f/0x150
- migrate_folio_unmap mm/migrate.c:1320 [inline]
- migrate_pages_batch+0x786/0x1930 mm/migrate.c:1866
- migrate_pages_sync mm/migrate.c:1989 [inline]
- migrate_pages+0xf02/0x1840 mm/migrate.c:2098
- do_mbind mm/mempolicy.c:1394 [inline]
- kernel_mbind mm/mempolicy.c:1537 [inline]
- __do_sys_mbind mm/mempolicy.c:1611 [inline]
- __se_sys_mbind+0xfd1/0x11c0 mm/mempolicy.c:1607
- __x64_sys_mbind+0x78/0x90 mm/mempolicy.c:1607
- x64_sys_call+0x2662/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:238
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x0000000000102077 -> 0x0000000000102071
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 6418 Comm: syz.0.1339 Not tainted 6.14.0-rc1-syzkaller-00026-gd009de7d5428 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
