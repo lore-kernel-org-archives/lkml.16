@@ -1,101 +1,97 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BA51F473C;
-	Wed,  5 Feb 2025 23:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C43F1DDA32;
+	Wed,  5 Feb 2025 23:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738797253; cv=none; b=RYoAPtSN3cUylXAqXSawYfLIzCkE9W+iVI9+l4B2yZm/DH0SQHT9c98ml1MOmXL5WLbHdXQxmMmH8hT7dvj7Z+E5QRHFJT8KMqsS2zAiVbmybSZjMJqITf8BzpvvmP7IKgYXKuSp3lrCbENs97XrkzC1XMg1LTfFHPa4DPkjkLc=
+	t=1738797314; cv=none; b=Oc3doZEhUm+1JyfH/8zGF4g5T+bLRaqKFm73riUeJ+sUtBEubImsREc33ygGyHafwCg6dsUh/fsGmz1fEEiryQ2kqZA1hEu7ACUji/QQPcMm30YdBozQDBs+x20trAdzEK0TipqJwOTZPsaWU4FG2GLfthesU6+REJfLbJtQUzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738797253; c=relaxed/simple;
-	bh=XBak1xKg27C24pRGkiTIhk8Ym8BsGSEKHgG87Z70UmY=;
+	s=arc-20240116; t=1738797314; c=relaxed/simple;
+	bh=Dj10eVu+ntr3XrwN5g7OfrQ3KctnqKbIx6NJh6I9nl4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sEaJzQVL5UmUDgadetiGvyAEOPdm/7yaE7mTcZhUFXuJGUpoqlP/BzOMmZc5xD1EoixN5h287Ci+uRqLp2uAYmWPgPb6QonLieX3wzNKtRJINBOBnjKpYgW9s1L+8hu4PhSRlu4THZqUmEfIp5LUR+dPX8BGwaMZvhFrXWyvSC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cpla6oZg; arc=none smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=HdOm8VI8SPxiadrRDYqDxyuVcM+9B2+LUFdI/48xRu1ME0Bfmw8ZcJWtkZVjRVn+5Qmgfknziz2FPm+SNoEpTqj0tePLig4yVjvCX/dCU9Q9UvvGVS5LwRBi6zXoC3FtBTz+A78Hm5STysp8noRSNTApKRcupfZyUbpF5Jv7gXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ULIjEPS6; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cpla6oZg"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f09fe247dso662635ad.3;
-        Wed, 05 Feb 2025 15:14:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULIjEPS6"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2f9f90103bbso51629a91.3;
+        Wed, 05 Feb 2025 15:15:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738797251; x=1739402051; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738797312; x=1739402112; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XBak1xKg27C24pRGkiTIhk8Ym8BsGSEKHgG87Z70UmY=;
-        b=Cpla6oZgHvpz0grSVJJHLjXILV696AKoVEazOzF6Vv1JLZOZrzG41th4el2pS5Wgkj
-         jOr7GMWSQg2jio2vsamdIXk3DkJ1ZJdAsPC6W8n1oBL46KjNZ0l0VysexhfFLYuv9KtG
-         WBVuznJvOMqbdfX8RPz3GK4S6I7JkoGvOTIn6TYh/kxYqAZt4wPlv8KZtTSTz0D8opTv
-         MTyRjxLaqWnkp7sjSJNtY7T9Hmfsr0Ro9Qt3EwAlL/nAJGKl01boePukP6do0btnC/a+
-         2NMvYQghxGRZvt7hIpFtCFq+mKyAjmeZXxmUbdtPkHxxxL5s8GknLjnSyXeEeJYUY5mV
-         yAcw==
+        bh=Dj10eVu+ntr3XrwN5g7OfrQ3KctnqKbIx6NJh6I9nl4=;
+        b=ULIjEPS6GZl2fyRSzIYJBmR0WYca9EmwI4VjGj9ZLx/ZklspXbrOZJ4o6+hWrRSYrK
+         hArQc4MXaD6EecZubdqiTCFdBkrM/IcR/riN+q8nT3UpySNEcZqM3fAS9/Fr5L3I6yyZ
+         Mf+HuRufzYCprI3d5L/jfTKITAoCgCS+NcqFKSrbyrpY73ApqT2DXzD5IoqtXHK6rSrE
+         xoUmsmplJ1GMAYWKkWNfxb414CdEn4O5SvEysIJPuqRAOG680LQz7pMimC0LJd8/HMk9
+         uNZCkBJO5NwsHleCxP3DaNiltcpu4amFSsN3a2E5nQGo/2NPfPyI4mJ+WgQtKppaFAwy
+         r2sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738797251; x=1739402051;
+        d=1e100.net; s=20230601; t=1738797312; x=1739402112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XBak1xKg27C24pRGkiTIhk8Ym8BsGSEKHgG87Z70UmY=;
-        b=f3auK78ZrNkSjj/NyG5N8Gnxw3ZepRlesjamvmP6ZM/JurLuNY+VfdW1oMGTCWIIwL
-         HVAfvRUM3rKW9H4ag+FpORi2X4aozm+S6eVgIlioxhJK5r6XSYxlpGNHxEu47KVC9Zhb
-         1MSR/WRGcbZOnggZbGC9mT7rh6t6lSTMnTJnKqoFXknYqhxkbXGsimow0Essh83jJ6A+
-         U99nn5BM7uz+mzQPFNZ3Ji/oLMvOeotQq7AUHKvyNaM3BGZ9Qcg5K4f1rnHhpA0vJVe+
-         9YQPb1wLBd6mK0U/yFMbtnUrRA/niSl/g80fomfZMyTJi/zrsXW7SVIZNCS4t7xtYTIS
-         HCgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUE/jllReXVWmsEGXGUmClNslpnli7cMkEkWXccV6LXG3kJdqj0udQY7KKTZ++xAG5ZQ682zhkd5oV17sY=@vger.kernel.org, AJvYcCVXWiVqK7Tv9RHpYI86Nbxh9rDsEGuLana0Jb6n1izMK/abrQJ6Cdh42aUEDmCkQ0t7LI68zPydLyqmu/W9c7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdyK6jLJvQoSe4WuVne0BfuRRurtOY0RD4pnk7kCJgWLUvxjHs
-	XAsy3JDUFOnJq3MnFddrM+q0Z8P9al6iCq6cxgCwIiNSErgTv6mxwl1LOGEc+JV6Uri6Rm4lY2I
-	Q94zMrDwqnCJBK6SRuVRjzV3d7Sw=
-X-Gm-Gg: ASbGncsdGNqv6TqgsY2DaSCLSguN3Ptcir7/bfc5E+NVCiGbHwuQ1rSGK2QDCvsY+BX
-	JNwKQxdftzuI8uRja7EJJ2aERpmFGBOzjWRzt/plx2oXut/WkHAQBJrrOrF56xuwuvlrjBDjT
-X-Google-Smtp-Source: AGHT+IE47H5+v8jfJ8Y2IwYB6H+MRbx/jP5G13Au1qZmx8XKD1VopKmgdUZ9IcWArGG1wLri2VIuSv7NnkLe+wfRs2U=
-X-Received: by 2002:a17:902:f550:b0:215:8721:30b7 with SMTP id
- d9443c01a7336-21f17eb4230mr28109845ad.11.1738797251096; Wed, 05 Feb 2025
- 15:14:11 -0800 (PST)
+        bh=Dj10eVu+ntr3XrwN5g7OfrQ3KctnqKbIx6NJh6I9nl4=;
+        b=qV/zO5TrCBmmb9GqoeuDBgct4c3MTcSS1Kmx9R+mBh6jSjja0TWUhkzTA/Xb5/Yc8J
+         Tzs3/qLoigMaSpGjfQaf4oTnKM3UZnoM9i5oQGY6NXY6UI1P3E1AV50Cb1F3f8ngVCXE
+         UVom3tv0ytSp7tGxMlid+NDA4tAod9Rbw9GsR+gPfr428jKDiI6MDll9NJGnCV+cvZpW
+         JIoK3mdD5Ck1O8NoVBLkAl59mE8PtG0FP8YTuCuDWuMsrUBTA01OQpZ0ya47U1bi1t72
+         ZEFr6dVF1+70cfR1R4yr1Cs6AiGtcyPkfVd/3fgnsoatarLDM2eIy4DWVx+ta39y7eeR
+         eY+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuTN9qCP0Gf2Afs1jbZr992T5IOlmGaSWekKyKf/x7bAZjw4tH6ceT9Wxm+HXpn8bdPdgzLjctl03+FaA=@vger.kernel.org, AJvYcCWxYd6rIlZ0hpy7Szjy4Ka4r5eJy+HCultpE2GjvXwdpKtR+IVXyd9HgFeLunncB9rOq2Ld7eHnFH3AWYjkhbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcSXcgeLPH6Sr91gbWzpnsDdBIVL6FX2WcI115g6thyMjh3Civ
+	N757dPydCmBPuDklQ74QxYhK8iYu7P5xJ3RwAM9kI2zRcjpDzYZQdYkSFckJBk3jfSrioGhzjqz
+	TC2VrsHMbx77K+3Zi7LyZcdn2ptvTW+CC+uQ=
+X-Gm-Gg: ASbGncudxiJupTmY6jYyx7hk1VtNH91fbFwPN4GVnHlDF2RNcVY2rzmkVkXfijnN2L+
+	brGiTv/3rbCnCsFGi+LfLit+r/qZkQv2lsEVtQJ5oUZT5FIJyAKStcRp9EIF65QPiyo0k0dXQ
+X-Google-Smtp-Source: AGHT+IFQ4lK/LPU4Y6LTOziWYVYQ3RkQP26tNWcbiNrsskBx1DezXDxwkqFkxG933Y3hdhdV/qRgzdwOWvyT4woQF1Y=
+X-Received: by 2002:a17:90b:2fcf:b0:2ee:acea:9ec4 with SMTP id
+ 98e67ed59e1d1-2f9e0800346mr2974729a91.3.1738797312505; Wed, 05 Feb 2025
+ 15:15:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122-gendwarfksyms-kasan-rust-v1-1-5ee5658f4fb6@google.com>
- <CANiq72nr9vTgUF9u0uyypzprQrEpGv4qbOUJS_QgYbMZhTTrRQ@mail.gmail.com>
- <CAGSQo02HFMn0b=d6LVFr35Bc06F0AY8XmPFtqWi4b17cQSF0+g@mail.gmail.com>
- <CANiq72mo66FCLQTsBMU+Sc-VeS617uYgQdtCXJF9PacpUhSbLA@mail.gmail.com>
- <CAGSQo00uUYdjeiRHEz465WyN_kDyiV2L0Ojaomr8ckMYipmp6w@mail.gmail.com>
- <CANiq72ksOc_ncUXycySPS+JUur8GZZSHSSEQYOg9aKtpBRvnPg@mail.gmail.com> <CAGSQo02wJrawHfCJ7HTo+_o0wgk2zv+SefMmORoNcM5NNS7LqA@mail.gmail.com>
-In-Reply-To: <CAGSQo02wJrawHfCJ7HTo+_o0wgk2zv+SefMmORoNcM5NNS7LqA@mail.gmail.com>
+References: <20250201-fix-mac-build-again-v1-1-ca665f5d7de7@gmail.com>
+In-Reply-To: <20250201-fix-mac-build-again-v1-1-ca665f5d7de7@gmail.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 6 Feb 2025 00:13:58 +0100
-X-Gm-Features: AWEUYZn8h5_SZM9ngK5OYZr7WrtyI84ZWB3G2pCKGR91Y2JF6muvemEXoFZZ1lk
-Message-ID: <CANiq72m63F41Ee4cNx5w3SVhvYauzNRBo9ojZtSvGYcNhcs5ig@mail.gmail.com>
-Subject: Re: [PATCH] rust: Do not export generated KASAN ODR symbols
-To: Matthew Maurer <mmaurer@google.com>
+Date: Thu, 6 Feb 2025 00:14:59 +0100
+X-Gm-Features: AWEUYZm-pBcBtUX022ajXpCvIExx131k4d7qv5c0XfPXNEBQvFB3aw7DQVoF2Oc
+Message-ID: <CANiq72komOixypkHcSurk1-tMc_FYacQfKLEOqv9pKaD=nJ-ug@mail.gmail.com>
+Subject: Re: [PATCH] rust: use host dylib naming in rusttestlib-kernel
+To: Tamir Duberstein <tamird@gmail.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
 	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
 	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 12:12=E2=80=AFAM Matthew Maurer <mmaurer@google.com>=
- wrote:
+On Sat, Feb 1, 2025 at 6:40=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
 >
-> Correct, I don't believe it needs to be backported. `gendwarfksyms` is
-> the only in-tree tool I am aware of breaking on this. It is possible
-> someone else is dumping DWARF for all exported symbols, but I don't
-> know of anyone specific other than Android for kernel ABI monitoring,
-> who already has this patch in-tree, and does that monitoring on
-> non-ASAN builds.
+> There seems to have been merge skew between commit b2c261fa8629 ("rust:
+> kbuild: expand rusttest target for macros") and commit 0730422bced5
+> ("rust: use host dylib naming convention to support macOS") ; the latter
+> replaced `libmacros.so` with `$(libmacros_name)` and the former added an
+> instance of `libmacros.so`. The former was not yet applied when the
+> latter was sent, resulting in a stray `libmacros.so`. Replace the stray
+> with `$(libmacros_name)` to allow `rusttest` to build on macOS.
+>
+> Fixes: 0730422bced5 ("rust: use host dylib naming convention to support m=
+acOS")
+> ---
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Then I guess we could add a Fixes tag to one of those recent commits
-(i.e. where `gendwarfksyms` is added), so that it doesn't trigger the
-stable team into a backport.
-
-But it is not a big deal -- if no recent commit really fits, I can
-still apply it into `rust-fixes` without a tag.
+Applied to `rust-fixes` -- thanks!
 
 Cheers,
 Miguel
