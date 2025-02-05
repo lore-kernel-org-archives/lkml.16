@@ -1,132 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EED71FCCE2;
-	Wed,  5 Feb 2025 18:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCFC13D897;
+	Wed,  5 Feb 2025 18:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738778976; cv=none; b=f0LFwYGblQwcyH68IMIHKJfLpqS59Tw76q9+oKfZk6QzfeGYB7QvAZP7CXp0J0owQC/UubV9Go4bUAO+d55EQgrmCe7EOcBkQUhBL0/B0F5J6vCn+MoS7RsQDVnWu/Tq37gTNKRj2JVl3ZkIem4UMBe8mNTGiNuPGb/P3LDn+MY=
+	t=1738779058; cv=none; b=TUm76BYIBBTT48oPq5gM/LgQ9WkYj2AV2ZH1Lyq+IhEBD8T5D+R8bXyYXqkBLOAbh3fbVn4NpKj34TefjfOMMJ39JBhibz9M9Z9LADg44r1UzUKzKL9MUhalRBk0fz0l4YM7s/JwE9vhkY1WkWEGY6Zk/oNQoqaWJbsKoeEZ1io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738778976; c=relaxed/simple;
-	bh=UgqCtBbMnL3YDT0zAGJzyptc/uBlUlezWyA5TcMQFys=;
+	s=arc-20240116; t=1738779058; c=relaxed/simple;
+	bh=Gdy9Vhztq09MzRQ6HHq+YvEXVWw5ao/tdIpFHqJaSDs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ybv89h7Kml2IEBoSQz5Kg3DG+ZADgu2G8QAwK+hWo4A5aezBIu/fV7dbSR1oDy5KL0pqsniOB8BlrOttfYYYfKc6l8rT8OtacLfb2dQyj+0NTlydk3tjyVAMn02Gn74jAREEjnoAbNecNAy+VbbhUxBOnZgFoYXzsdRIwx9xO58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ewFUZzoF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCHrfSobo+EYAGARrEyE/vR2U6f7xWPClLS7f4kdnKfrpeUc1/xNdQOLOKVicDeqnveD+Yqq2i0PasD1qcksrw84AFYmO902yb9U9NnyudtPc5blfiZa7rukj1SqvuUcEh9t7/HVIaY8V5xTRMN1d1luBMjjQ3Ut5SmfK16XTPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OYUUOYCg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=d1Qnv4EQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OYUUOYCg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=d1Qnv4EQ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ewFUZzoF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 424A1C4CED1;
-	Wed,  5 Feb 2025 18:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738778975;
-	bh=UgqCtBbMnL3YDT0zAGJzyptc/uBlUlezWyA5TcMQFys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ewFUZzoFh5gX6yzxQhJCIw7BP0jvb/lIzXdGrFFdRDIMInuHPYUfg0IFMN784YJ9m
-	 AjQ3ImMjNyfehJjuqbWXo4liEKcaEPIT6/a8GmCFJmqCH/Z2BfJhNhcIgbQw9DCw+b
-	 +AGT6msGqqTa824np0mmSGoKDYUoEY0W+m+ISxx6o4Y4DGT9AYYN5gpWuh8Bl/DD+h
-	 rMlFK9B17Zb2eE31c/wATHTVqHLq1UGPJK9MBwilwM62xnubS8cKBx0pBcXczChFh0
-	 UfOfRkNBFi6A1u4leLKCKiLFa68L/GJq+0n7/AY7sVmOv1AxctCBH0URxhJHVfXYZB
-	 L538vml1TfvOg==
-Date: Wed, 5 Feb 2025 19:09:32 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
-Message-ID: <2qnscxa3rzhnsslwzdms43m336l47qutk6ohfqny44lwofjiwh@r6cfdextnhwn>
-References: <20250205095547.536083-1-herve.codina@bootlin.com>
- <20250205095547.536083-3-herve.codina@bootlin.com>
- <ejdh76c4r44gxsdi7gwed65ste3wuunki2jgavc3wsfri5yaex@jccsywdfadgp>
- <20250205143737.1315baba@bootlin.com>
- <6js6k6xz3vuqshq2pfwqifby4t5q54ftztxxw2rau4j23xx2y5@u5xubi6v3uil>
- <20250205181930.3b800a13@bootlin.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OYUUOYCg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="d1Qnv4EQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OYUUOYCg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="d1Qnv4EQ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 06E9421134;
+	Wed,  5 Feb 2025 18:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738779054; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
+	b=OYUUOYCgYMIQ6aanDg3K22uOFKvOVKVhSGmsVr8Andq2KaQ2nPWM043enS4tE3jaeQzULh
+	Ww9cCLZuKbFv5AqB7GE+9ziVS+yKxWendfV4mwJHaNAW0yKTkdJ3nKgYOs8T7qSi5dhlN8
+	If4xtmDvrnvEaktDqNn4/fY956ONjF4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738779054;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
+	b=d1Qnv4EQpm9bG3SOuRp6ao+v9N3jEpg6JqrVHe/6e1ulBRHVN5Svl9v/f3/efZG4MdmctY
+	4Y1bqQE1ImLqr/Dw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=OYUUOYCg;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=d1Qnv4EQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738779054; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
+	b=OYUUOYCgYMIQ6aanDg3K22uOFKvOVKVhSGmsVr8Andq2KaQ2nPWM043enS4tE3jaeQzULh
+	Ww9cCLZuKbFv5AqB7GE+9ziVS+yKxWendfV4mwJHaNAW0yKTkdJ3nKgYOs8T7qSi5dhlN8
+	If4xtmDvrnvEaktDqNn4/fY956ONjF4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738779054;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
+	b=d1Qnv4EQpm9bG3SOuRp6ao+v9N3jEpg6JqrVHe/6e1ulBRHVN5Svl9v/f3/efZG4MdmctY
+	4Y1bqQE1ImLqr/Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE16F13694;
+	Wed,  5 Feb 2025 18:10:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6SwbOq2po2eZVAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 05 Feb 2025 18:10:53 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 67543A28E9; Wed,  5 Feb 2025 19:10:49 +0100 (CET)
+Date: Wed, 5 Feb 2025 19:10:49 +0100
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org, 
+	tytso@mit.edu, kees@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com, linux-ext4 <linux-ext4@vger.kernel.org>
+Subject: Re: [PATCH] ext4: pass strlen() of the symlink instead of i_size to
+ inode_set_cached_link()
+Message-ID: <vci2ejpu7eirvku6eg5ajrbsdlpztu2wgvm2n75lkiaenuxw7p@7ag5gflkjhus>
+References: <20250205162819.380864-1-mjguzik@gmail.com>
+ <20250205172946.GD21791@frogsfrogsfrogs>
+ <CAGudoHENg_G7KaJT15bE0wVOT_yXw0yiPPqTf40zm9YzuaUPkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dlmz6zrvchrky5ix"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250205181930.3b800a13@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHENg_G7KaJT15bE0wVOT_yXw0yiPPqTf40zm9YzuaUPkw@mail.gmail.com>
+X-Rspamd-Queue-Id: 06E9421134
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[48a99e426f29859818c0];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[appspotmail.com:email,suse.com:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.51
+X-Spam-Flag: NO
 
+On Wed 05-02-25 18:33:23, Mateusz Guzik wrote:
+> On Wed, Feb 5, 2025 at 6:29 PM Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > On Wed, Feb 05, 2025 at 05:28:19PM +0100, Mateusz Guzik wrote:
+> > > The call to nd_terminate_link() clamps the size to min(i_size,
+> > > sizeof(ei->i_data) - 1), while the subsequent call to
+> > > inode_set_cached_link() fails the possible update.
+> > >
+> > > The kernel used to always strlen(), so do it now as well.
+> > >
+> > > Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+> > > Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
+> > > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> > > ---
+> > >
+> > > Per my comments in:
+> > > https://lore.kernel.org/all/CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com/#t
+> > >
+> > > There is definitely a pre-existing bug in ext4 which the above happens
+> > > to run into. I suspect the nd_terminate_link thing will disappear once
+> > > that gets sorted out.
+> > >
+> > > In the meantime the appropriate fix for 6.14 is to restore the original
+> > > behavior of issuing strlen.
+> > >
+> > > syzbot verified the issue is fixed:
+> > > https://lore.kernel.org/linux-hardening/67a381a3.050a0220.50516.0077.GAE@google.com/T/#m340e6b52b9547ac85471a1da5980fe0a67c790ac
+> >
+> > Again, this is evidence of inconsistent inode metadata, which should be
+> > dealt with by returning EFSCORRUPTED, not arbitrarily truncating the
+> > contents of a bad inode.
+> >
+> 
+> I agree, rejecting the inode was something I was advocating for from the get go.
+> 
+> I don't know if a real patch(tm) will materialize for 6.14, so in the
+> meantime I can at least damage-control this back to the original
+> state.
+> 
+> If the ext4 folk do the right fix, I will be delighted to have this
+> patch dropped. :)
 
---dlmz6zrvchrky5ix
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
-MIME-Version: 1.0
+Yeah, let me cook up proper ext4 fix for this (currently under testing).
 
-Hello Herv=E9,
-
-On Wed, Feb 05, 2025 at 06:19:30PM +0100, Herve Codina wrote:
-> On Wed, 5 Feb 2025 17:29:30 +0100
-> Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
->=20
-> > On Wed, Feb 05, 2025 at 02:37:37PM +0100, Herve Codina wrote:
-> > > On Wed, 5 Feb 2025 12:38:32 +0100
-> > > Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote: =20
-> > > > Could I adapt the mapping that the effect is
-> > > >=20
-> > > > 	pwms =3D <&soc_pwm2 57000 0> =20
-> > >=20
-> > > In this one, I think you miss the PWM number
-> > >=20
-> > > If I read correctly this line you ask for the PWM 57000 from the soc_=
-pwm2
-> > > controller. This doesn't make sense :) =20
-> >=20
-> > Some pwm chip devices with only a single output line use this. The first
-> > paramter is the default period (which is passed in the 2nd parameter
-> > normally) and the 2nd paramter are flags (normally the 3rd parameter).
-> > Back then the rationale was that for such hardware, the line index is
-> > zero always anyhow, and so could better be skipped.
-> >=20
-> > Compare of_pwm_xlate_with_flags() to of_pwm_single_xlate(). pwm-pxa is
-> > the single offender using the latter. Thinking about that, it's easy
-> > enough to fix without breaking compatibility. I'll tackle that.
-> >=20
-> > So for a PWM on pxa `<&soc_pwm2 57000 0>` works fine.
->=20
-> I see. In this case, a parameter shift during translation would be needed=
- to
-> skip the PWM line index in the translated arguments. This is not currently
-> neither described in device-tree specicication [0] nor handled in the com=
-mon
-> code of_parse_phandle_with_args_map() in the kernel.
-
-OK, that's what I expected.
-
-> This use case can appear for resources other than PWMs and IMHO it should=
- be
-> nice to have it supported.
->=20
-> I think this support should proposed out of this series adding support for
-> PWM nexus nodes.
->=20
-> Is it blocking for this current series ?
-
-Not from my side. If I get an Ack from the dt guys, I'll merge it.
-
-Thanks
-Uwe
-
---dlmz6zrvchrky5ix
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejqVoACgkQj4D7WH0S
-/k5KjQf/fLoTm7YFevHSeyuYnbrV5Pl54qHfowekR7rk6ALrPj2U/1EJkeyLSsNo
-fBWzO/V85vn5nFmq25mPwn7PYQ8nKVi64k8XBYdJqiE3JB3R2SwbiZyaLI7a3wyP
-/DxIdYckHQYAYJGqNSss/gzjAJ5lN/oQBr5+AhlgfmdnBgKf0RfVsXOzr84L9csY
-xuWu+c/hPggx+4nRWHBy2iMp5O5ARZSb0Rp9z7hMtgcHQvgjPfcdixAoDs33jLkz
-yygabaqSXIyX3HONJDjUWZyEOgcnR3byVJTMY8/KPWbdMRH89Dqz8l6jduosGd/H
-iRj9cc66uU9q1xLohfAkLA3ncrQ1QQ==
-=qlka
------END PGP SIGNATURE-----
-
---dlmz6zrvchrky5ix--
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
