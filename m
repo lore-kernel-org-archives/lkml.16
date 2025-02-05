@@ -1,46 +1,47 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621FC151985;
-	Wed,  5 Feb 2025 11:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5A0151985;
+	Wed,  5 Feb 2025 11:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756263; cv=none; b=VM2ATDa9cgVr5Ag/nZPSNS8/SvQd/AaLplJz7kkGN8MSBsblpHh4xIUeRd53eDqTtepReiAKJo4+GA8PVANSVRQTugTt21Qer1JzMD57LtdWDMLvS4r9liAIYsOwpSkePK2LATKyF1bctjwPHy/w8mQ00Rnx+WBmVebqi0ZvHys=
+	t=1738756268; cv=none; b=oLtisSoJxvKzZOQIzcMDK0NUcFNgIJmSK95POw1tNJtGtt2zOd9hy+zTaU/ux/FnTklnNHPOhHwgDoTg4GWoIPnqKkZh7miAMU0V3qwovwSaPjhD6oVlGIs3gTg3Q1Qau332txp6c1A4dppkYmTbLsc8KeMtTaSuf6oV2TsV7qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756263; c=relaxed/simple;
-	bh=5g6YOzSe6fsyso+7WgRGs6/zKWKU+831tvNOxXcI50A=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Tbk1yQ0y7bnM8igmW14aDV4KPxTEob4HpKIFYyafSlaCA6Yf80OM0P2ve4yzSYau1lldw5BEe21+wX+S5wafYsYuij9M5VedWNqZ5ZVB4JQEd7y/18crOZJuNUE4IAj3Hzs7S/LEWLK6BlX8olllIaweOLwePY1Sp1C0DJhgWLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=btTndPV0; arc=none smtp.client-ip=198.47.19.245
+	s=arc-20240116; t=1738756268; c=relaxed/simple;
+	bh=0jjde1bLlKaytC/84IATIp4MCHe01xGwkBsd2JsCFK0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X1C4B5wq1ZWuAXoNNw5CYlvZEgSN/5XMGLHP3h+7qZ+T8C/mrdf75H1UTXMZetuYK7j2s76xH2N6rkHoOk+Afq2vyAvxbe4GWvme6DNRKP7Da8fwQ1jb92R/FLehVCrK990uU2Sw4l8WpnmXLfIPJ3l5z6BVVmIex7WWPDGktkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BYTbs25L; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="btTndPV0"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515BoYGR3346430
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BYTbs25L"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515Boerv2525990
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 05:50:34 -0600
+	Wed, 5 Feb 2025 05:50:40 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738756234;
-	bh=bHCZ6vkj1ClCs8UR+jdgMTD+0c/16hW0zlTlJVeP+oI=;
-	h=From:To:Subject:Date;
-	b=btTndPV07351tRAU28suYdXTRJYnTiPCBsaBpQ0nqtmcdQu7GXuRuSjmaLX8SbokC
-	 aFQhwHrnGB/UVEh4dAiXnBEXArbE72eBqruVvEyHN03UKaJuG2FUaIBv/d+tqro238
-	 roqk0USV4pZcJh1EnoJ+BLknQr6Od10z8uRsFC2E=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515BoYmI031815
+	s=ti-com-17Q1; t=1738756240;
+	bh=VCtGI+uCG2hWdsoWCIe4rbkbeS3s2t98T4jUhXD2A+c=;
+	h=From:To:Subject:Date:In-Reply-To:References;
+	b=BYTbs25La01gzes7U3VWPeKdIFbiB38mEOMZ2tjGXU28ns//v9JAOAIhx9a8Ffp/L
+	 utiaMWNrEBZdD5Eo/aAhb5FclsbjrHXD49+OMcFqEPYp3vq0Pc9Nr/T0uJeb/S4c+O
+	 k5XAvKGVUXUmFPBPfGxCc2ROuPSUJO1d1D1EUr50=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515Boesf101811
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 05:50:34 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 5 Feb 2025 05:50:40 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 05:50:33 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2025 05:50:40 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 05:50:33 -0600
+ Frontend Transport; Wed, 5 Feb 2025 05:50:40 -0600
 Received: from hkshenoy.dhcp.ti.com (hkshenoy.dhcp.ti.com [172.24.227.96])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515BoPCh043245;
-	Wed, 5 Feb 2025 05:50:26 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515BoPCi043245;
+	Wed, 5 Feb 2025 05:50:33 -0600
 From: Harikrishna Shenoy <h-shenoy@ti.com>
 To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
         <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
@@ -52,10 +53,12 @@ To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
         <r-ravikumar@ti.com>, <sjakhade@cadence.com>, <yamonkar@cadence.com>,
         <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 0/2] "no-hpd" support in CDNS DP bridge driver
-Date: Wed, 5 Feb 2025 17:20:23 +0530
-Message-ID: <20250205115025.3133487-1-h-shenoy@ti.com>
+Subject: [PATCH v3 1/2]  dt-bindings: drm/bridge: Add no-hpd property
+Date: Wed, 5 Feb 2025 17:20:24 +0530
+Message-ID: <20250205115025.3133487-2-h-shenoy@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250205115025.3133487-1-h-shenoy@ti.com>
+References: <20250205115025.3133487-1-h-shenoy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,30 +69,41 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-In J721s2 EVM, DP0 HPD is not connected to correct HPD pin on SOC
-which results in HPD detect as always connnected, so when display
-is not connected driver continuously retries to read EDID and DPCD
-registers.
+From: Rahul T R <r-ravikumar@ti.com>
 
-To handle such cases add support for no hpd configuration in
-cdns-mhdp driver.
+The mhdp bridge can work without its HPD pin hooked up to the connector,
+but the current bridge driver throws an error when hpd line is not
+connected to the connector. For such cases, we need an indication for
+no-hpd, using which we can bypass the hpd detection and instead use the
+auxiliary channels connected to the DP connector to confirm the
+connection.
+So add no-hpd property to the bindings, to disable hpd when not
+connected or unusable due to DP0-HPD not connected to correct HPD 
+pin on SOC like in case of J721S2.
 
-Changelog v2->v3:
-- update the mhdp->plugged status for no hpd configuration in
-cdns_mhdp_bridge_detect()
+Signed-off-by: Rahul T R <r-ravikumar@ti.com>
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ .../devicetree/bindings/display/bridge/cdns,mhdp8546.yaml   | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Link to v2: 
-<https://lore.kernel.org/all/20230406015207.GO9915@pendragon.ideasonboard.com/>
-
-Rahul T R (2):
-  dt-bindings: drm/bridge: Add no-hpd property
-  drm: bridge: cdns-mhdp8546: Add support for no-hpd
-
- .../display/bridge/cdns,mhdp8546.yaml         |  6 +++
- .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 54 ++++++++++++++++---
- .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  1 +
- 3 files changed, 55 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp8546.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp8546.yaml
+index c2b369456e4e..3a6c6d837593 100644
+--- a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp8546.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp8546.yaml
+@@ -57,6 +57,12 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
++  cdns,no-hpd:
++    type: boolean
++    description:
++      Set if the HPD line on the bridge isn't hooked up to anything or is
++      otherwise unusable.
++
+   ports:
+     $ref: /schemas/graph.yaml#/properties/ports
+ 
 -- 
 2.34.1
 
