@@ -1,216 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8361821CA1C;
-	Wed,  5 Feb 2025 20:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0261321D00E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786268; cv=none; b=kt+/OYHI5qn6hqPwFOcX3RtwWtgp/FI3zn3Y9puZJ6PtPQT4pAuFx/8gp562u/7k+fjbUfG9EvyU7hcqtlz30ORtBBsp8CeaaN6jCU5HHngY4F67CPr9h5hvkHg+EP3WqeByJDAwydTvuDyNq3cyeBeJqRGawQSdK5KK29gZm0M=
+	t=1738786276; cv=none; b=M0x5MyVfSd9RUIrVaEj18iiplx/S5Fggd/5SEpKUYtJ2VyEAWh4d5ohOFF3k/t6KcR4kV6utdDTWr7bK4nmESUBBXzHiGyz2XInkmqB84O6hrQEoQ49/Y9mMqyrOM9JkCOEjKqd1dgiPkp7SKHWMdY/2YqW4tJukU/6kFQ8eZ8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786268; c=relaxed/simple;
-	bh=06oElT4HZCrzpcyqk3Vc2Si6LDfhgg6xp2cCEicnK8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aMhHiAOXmFrLU3McNFC4wYJpbMUJxN88c2YSaRYoY0xgw2ZJBA2pgmXFphF2G5fkraqNdI8zavO4Avnm1ZMrhMRTzv7AHcKpS1SnXC6Hfu/cEvILWo+picZeHQ++jw3b3QiTcwfqjC7h29bKWSdjfLfw0lMJiQ1LXdXZwI9o0Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhUgC0eU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738786276; c=relaxed/simple;
+	bh=7+Q2lsuHInmFMU6F4dj3qB4yNCyOo0pZ9W9kufCkjVw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uym2eHgDSe/pYkKHrHGcEtO5GPJYQcKRfBQj9dJtYJGE+dJbitMsSV0o7ZOyoqF7D/OOyDMOFgB2bkVR47NSKiDbRJ4OaNjlql+bxAtY3//vEAne2gisTB/DnIt1yvdVP5WXatws/hrhFAOSnTJmnFJviT902rxsxsirRCl2Yd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cm44ddxb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhUgC0eU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09F39C4CEDD;
-	Wed,  5 Feb 2025 20:11:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738786268;
-	bh=06oElT4HZCrzpcyqk3Vc2Si6LDfhgg6xp2cCEicnK8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZhUgC0eUVyLZrbGBiolCp9SnkGtk5rmvNaMmoAQc+u8bYFcg6GnlldNLpAe8UfL2L
-	 jBNPkauWtRNS/sPJZKsI0ra0JmgmWUsdk2fcLm6/fMQv9IJdnHHpZOUjLSyELf52DM
-	 WISRui6RkzU5WQNjqzbev+b/Wm6ZXg841dqcEgErZqgxEnHj97dUqtfUq0BLPqSOkS
-	 aC306CFBB8MDKdVdThPPJOekEDCg2ZzP8O9gkzswHcyBiFiIDqK+Xz5yj4FihpIVTQ
-	 BQksmrTftE+19R3wf2HhCFdmv8G5Cf6EiC3piC4MWGmE74Xwx+zD5E8GABClUj5Mpk
-	 3oLTqom5uXjOA==
-Date: Wed, 5 Feb 2025 12:11:07 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com, martin.petersen@oracle.com
-Subject: Re: [PATCH RFC 03/10] iomap: Support CoW-based atomic writes
-Message-ID: <20250205201107.GA21808@frogsfrogsfrogs>
-References: <20250204120127.2396727-1-john.g.garry@oracle.com>
- <20250204120127.2396727-4-john.g.garry@oracle.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cm44ddxb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738786274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SZeGtn73Y88CUfVnHvmhJXIyAiaLqqpqwADZqySX09U=;
+	b=Cm44ddxb2OKViHdwzseSVHNaWLLRGZpT50zaTasGgYwCJ+DRLOKzJTM8fUTU2VKhy6jRGA
+	gRVJzKE2Qoqwdoz+KgBT/Q51qjqLHE/vg+XCrp1fLNe9JQVRcug/Czmy+tzeOS1p/RdkZP
+	TNOSsM08bFAJ61ZcTDqGZJU1k+cpBuE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-357-3WWc_lScOwmw5O8Fu9VkmA-1; Wed,
+ 05 Feb 2025 15:11:09 -0500
+X-MC-Unique: 3WWc_lScOwmw5O8Fu9VkmA-1
+X-Mimecast-MFC-AGG-ID: 3WWc_lScOwmw5O8Fu9VkmA
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B462D1800985;
+	Wed,  5 Feb 2025 20:11:07 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7C50519560A3;
+	Wed,  5 Feb 2025 20:10:57 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Wed, 05 Feb 2025 15:08:06 -0500
+Subject: [PATCH 10/12] drm/tiny: move to devm_platform_ioremap_resource()
+ usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204120127.2396727-4-john.g.garry@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250205-mem-cocci-newapi-v1-10-aebf2b0e2300@redhat.com>
+References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
+In-Reply-To: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
+To: Joel Stanley <joel@jms.id.au>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
+ Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
+ Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, 
+ Alain Volmat <alain.volmat@foss.st.com>, 
+ Raphael Gallais-Pou <rgallaispou@gmail.com>, 
+ Yannick Fertre <yannick.fertre@foss.st.com>, 
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
+ Philippe Cornu <philippe.cornu@foss.st.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Mikko Perttunen <mperttunen@nvidia.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Alexey Brodkin <abrodkin@synopsys.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
+ linux-rockchip@lists.infradead.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738786137; l=1744;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=7+Q2lsuHInmFMU6F4dj3qB4yNCyOo0pZ9W9kufCkjVw=;
+ b=760bfuqeQwB2H7jkE4dYuBDK73EXGEZNFWeKXn1Of96MzG/gKvOtfpspbFSJECAZcDlGGB/p8
+ CY4DM7EBirEA1qRG0o0TqcMkXSTVS6lZYO5NB4/ZPvsibEJrpSbIKQu
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Feb 04, 2025 at 12:01:20PM +0000, John Garry wrote:
-> Currently atomic write support requires dedicated HW support. This imposes
-> a restriction on the filesystem that disk blocks need to be aligned and
-> contiguously mapped to FS blocks to issue atomic writes.
-> 
-> XFS has no method to guarantee FS block alignment. As such, atomic writes
-> are currently limited to 1x FS block there.
-> 
-> To allow deal with the scenario that we are issuing an atomic write over
-> misaligned or discontiguous data blocks larger atomic writes - and raise
-> the atomic write limit - support a CoW-based software emulated atomic
-> write mode.
-> 
-> For this special mode, the FS will reserve blocks for that data to be
-> written and then atomically map that data in once the data has been
-> commited to disk.
-> 
-> It is the responsibility of the FS to detect discontiguous atomic writes
-> and switch to IOMAP_DIO_ATOMIC_COW mode and retry the write.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  fs/iomap/direct-io.c  | 23 ++++++++++++++++-------
->  include/linux/iomap.h |  9 +++++++++
->  2 files changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index 3dd883dd77d2..e63b5096bcd8 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -271,7 +271,7 @@ static int iomap_dio_zero(const struct iomap_iter *iter, struct iomap_dio *dio,
->   * clearing the WRITE_THROUGH flag in the dio request.
->   */
->  static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
-> -		const struct iomap *iomap, bool use_fua, bool atomic)
-> +		const struct iomap *iomap, bool use_fua, bool atomic_bio)
->  {
->  	blk_opf_t opflags = REQ_SYNC | REQ_IDLE;
->  
-> @@ -283,7 +283,7 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
->  		opflags |= REQ_FUA;
->  	else
->  		dio->flags &= ~IOMAP_DIO_WRITE_THROUGH;
-> -	if (atomic)
-> +	if (atomic_bio)
->  		opflags |= REQ_ATOMIC;
->  
->  	return opflags;
-> @@ -301,13 +301,19 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->  	blk_opf_t bio_opf;
->  	struct bio *bio;
->  	bool need_zeroout = false;
-> +	bool atomic_bio = false;
->  	bool use_fua = false;
->  	int nr_pages, ret = 0;
->  	size_t copied = 0;
->  	size_t orig_count;
->  
-> -	if (atomic && length != iter->len)
-> -		return -EINVAL;
-> +	if (atomic) {
-> +		if (!(iomap->flags & IOMAP_F_ATOMIC_COW)) {
-> +			if (length != iter->len)
-> +				return -EINVAL;
-> +			atomic_bio = true;
-> +		}
-> +	}
->  
->  	if ((pos | length) & (bdev_logical_block_size(iomap->bdev) - 1) ||
->  	    !bdev_iter_is_aligned(iomap->bdev, dio->submit.iter))
-> @@ -318,7 +324,7 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->  		need_zeroout = true;
->  	}
->  
-> -	if (iomap->flags & IOMAP_F_SHARED)
-> +	if (iomap->flags & (IOMAP_F_SHARED | IOMAP_F_ATOMIC_COW))
->  		dio->flags |= IOMAP_DIO_COW;
->  
->  	if (iomap->flags & IOMAP_F_NEW) {
-> @@ -383,7 +389,7 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->  			goto out;
->  	}
->  
-> -	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua, atomic);
-> +	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua, atomic_bio);
->  
->  	nr_pages = bio_iov_vecs_to_alloc(dio->submit.iter, BIO_MAX_VECS);
->  	do {
-> @@ -416,7 +422,7 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->  		}
->  
->  		n = bio->bi_iter.bi_size;
-> -		if (WARN_ON_ONCE(atomic && n != length)) {
-> +		if (WARN_ON_ONCE(atomic_bio && n != length)) {
->  			/*
->  			 * This bio should have covered the complete length,
->  			 * which it doesn't, so error. We may need to zero out
-> @@ -639,6 +645,9 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  		if (iocb->ki_flags & IOCB_DIO_CALLER_COMP)
->  			dio->flags |= IOMAP_DIO_CALLER_COMP;
->  
-> +		if (dio_flags & IOMAP_DIO_ATOMIC_COW)
-> +			iomi.flags |= IOMAP_ATOMIC_COW;
-> +
->  		if (dio_flags & IOMAP_DIO_OVERWRITE_ONLY) {
->  			ret = -EAGAIN;
->  			if (iomi.pos >= dio->i_size ||
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index 75bf54e76f3b..0a0b6798f517 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -56,6 +56,8 @@ struct vm_fault;
->   *
->   * IOMAP_F_BOUNDARY indicates that I/O and I/O completions for this iomap must
->   * never be merged with the mapping before it.
-> + *
-> + * IOMAP_F_ATOMIC_COW indicates that we require atomic CoW end IO handling.
+Replace platform_get_resource + devm_ioremap_resource
+with just devm_platform_ioremap_resource()
 
-It more indicates that the filesystem is using copy on write to handle
-an untorn write, and will provide the ioend support necessary to commit
-the remapping atomically, right?
+Used Coccinelle to do this change. SmPl patch:
+@rule_1@
+identifier res;
+expression ioremap_res;
+identifier pdev;
+@@
+-struct resource *res;
+...
+-res = platform_get_resource(pdev,...);
+-ioremap_res = devm_ioremap_resource(...);
++ioremap_res = devm_platform_ioremap_resource(pdev,0);
 
->   */
->  #define IOMAP_F_NEW		(1U << 0)
->  #define IOMAP_F_DIRTY		(1U << 1)
-> @@ -68,6 +70,7 @@ struct vm_fault;
->  #endif /* CONFIG_BUFFER_HEAD */
->  #define IOMAP_F_XATTR		(1U << 5)
->  #define IOMAP_F_BOUNDARY	(1U << 6)
-> +#define IOMAP_F_ATOMIC_COW	(1U << 7)
->  
->  /*
->   * Flags set by the core iomap code during operations:
-> @@ -183,6 +186,7 @@ struct iomap_folio_ops {
->  #define IOMAP_DAX		0
->  #endif /* CONFIG_FS_DAX */
->  #define IOMAP_ATOMIC		(1 << 9)
-> +#define IOMAP_ATOMIC_COW	(1 << 10)
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+ drivers/gpu/drm/tiny/arcpgu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-What does IOMAP_ATOMIC_COW do?  There's no description for it (or for
-IOMAP_ATOMIC).  Can you have IOMAP_ATOMIC and IOMAP_ATOMIC_COW both set?
-Or are they mutually exclusive?
+diff --git a/drivers/gpu/drm/tiny/arcpgu.c b/drivers/gpu/drm/tiny/arcpgu.c
+index 2748d1f21d8697275047886865a5518792a4dd7c..7cf0f0ea1bfe4fa82234a120b52837e26a8ee5b0 100644
+--- a/drivers/gpu/drm/tiny/arcpgu.c
++++ b/drivers/gpu/drm/tiny/arcpgu.c
+@@ -253,7 +253,6 @@ static int arcpgu_load(struct arcpgu_drm_private *arcpgu)
+ 	struct device_node *encoder_node = NULL, *endpoint_node = NULL;
+ 	struct drm_connector *connector = NULL;
+ 	struct drm_device *drm = &arcpgu->drm;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	arcpgu->clk = devm_clk_get(drm->dev, "pxlclk");
+@@ -270,8 +269,7 @@ static int arcpgu_load(struct arcpgu_drm_private *arcpgu)
+ 	drm->mode_config.max_height = 1080;
+ 	drm->mode_config.funcs = &arcpgu_drm_modecfg_funcs;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	arcpgu->regs = devm_ioremap_resource(&pdev->dev, res);
++	arcpgu->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(arcpgu->regs))
+ 		return PTR_ERR(arcpgu->regs);
+ 
 
-I'm guessing from the code that ATOMIC_COW requires ATOMIC to be set,
-but I wonder why because there's no documentation update in the header
-files or in Documentation/filesystems/iomap/.
+-- 
+2.47.0
 
---D
-
->  struct iomap_ops {
->  	/*
-> @@ -434,6 +438,11 @@ struct iomap_dio_ops {
->   */
->  #define IOMAP_DIO_PARTIAL		(1 << 2)
->  
-> +/*
-> + * Use CoW-based software emulated atomic write.
-> + */
-> +#define IOMAP_DIO_ATOMIC_COW		(1 << 3)
-> +
->  ssize_t iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  		const struct iomap_ops *ops, const struct iomap_dio_ops *dops,
->  		unsigned int dio_flags, void *private, size_t done_before);
-> -- 
-> 2.31.1
-> 
-> 
