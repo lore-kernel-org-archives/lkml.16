@@ -1,95 +1,102 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8641151982;
-	Wed,  5 Feb 2025 23:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 894A3215778
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738797518; cv=none; b=p1w4QwihJlNNwSoTBHiz2xm6OQEAPsQEj7cPanQgqadbjW5Zsp+5A8DEy45BJUDLwD0N2M+EHifp0lZIhdxwVwVPETfwst/OLd+cwpiExX9Y4u3evAIay7ZvRiV3Cr9PmyQ+mBDUbe8ov/lP9YGZ8f5tiN+yWwKiCwCxcGd1i94=
+	t=1738797815; cv=none; b=LWvjr3Zd4jUzn4zbXt4IsRR23psISiYEjWOl69oqS0NHYKYnEVtHPj/ZoNnU0/pQhAEQy6wAkCD4sqcmm+VLaUtR0HuMb4bDiPsLgFt6deZXl3ZkfKttp15VvYFn49obWmiyWfMtkyZHArJlcP7ALrF4mvxlMi4DlkWxRBYt+Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738797518; c=relaxed/simple;
-	bh=fTS5kkRiT5iov7u0NdIhvvBNlqd43XAj36fSoYjlcLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JufC3hWUTTHZuL4kAsZ9Q1lIcJJOMUXT38v9NCfJF2uTDCrdFo2IEcB+NCiC9GdgLoY2Xn1W9njfCwPlMDFxLWsPIXQ/0bJ/f5i+l39EIa90LH3DAVIeGuzT3jRbLNazfpCpDwH+pfWo+3TNfqUwRmxxr14Jajf5lIPjlfewLPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gUiUBRMT; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUiUBRMT"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21bb2c2a74dso837085ad.0;
-        Wed, 05 Feb 2025 15:18:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738797516; x=1739402316; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fTS5kkRiT5iov7u0NdIhvvBNlqd43XAj36fSoYjlcLs=;
-        b=gUiUBRMTCPQ0gi+4to9QaLRbEuVBmv/kKLpmCmPj6SLSLvRuXO8jL3+O3nmUzmkTJ/
-         wnqsgMky69h6kqGaLIqIfMAO5Wt1+XBNcvIj+pq6GBUfIqd8gYt+ZdTq4fRWWwX0cXv3
-         b5hJeiW6WNkno1GgQ2YVneMny7yJlziQIpGqGwk67TJVD4wVKYJCQCByGu8/pLrMkvIq
-         SXbRv/UgMbt7IKZ5ZqlxngoHvT/ZTMc1aqAwC19nZi0ZcyEnA2X42aypa4DSJWmwx6f4
-         kyD/c5DrDJTxaSLu+fTNOyxeTBMTogDRdN0eM3p86IjFwv5hk04KAWkyEU/82fByk4Oo
-         f35A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738797516; x=1739402316;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fTS5kkRiT5iov7u0NdIhvvBNlqd43XAj36fSoYjlcLs=;
-        b=o508wOP/NEraXgz6bkRumdOLw3OL/HnDVvXlCbxfKM5zB61mnLX58/QBLYsPp32QrA
-         IiUyAw3uHQzrPA3Y224tBVYzhEFzxmVFah6OAVEemZ8N+W9pm/R5hDS0mBqEBTlSbpcF
-         EpU+Sohou7rEJYgB4qTyXn6k36X0YP5FObUX9wuSdKYRC5Ef4+LOTxuyddu2zXHHSACB
-         dNFP6oceXGA2hJ4OZM5bBcF22hFasuE2wghsy7q6E4VaVJiATcHsg+WqplmOJmbvkxEa
-         QbwVO5Ljm0GhszdIuOsD2DU0X9kMYj+y2rFaXLsCFDcKBtf1hic8K3o8YHbn6/7j/DVP
-         4LKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHTmp9ZOaQrqJFAYh8rEY0kUNfiZW9B1aD/Ip5ar3i3oLslLknf2y+LaStzjH5bdRsaDAHF9fEeSCgZvUq514=@vger.kernel.org, AJvYcCVI0B5m3SEDs9zF+foqvKGgxKN9DGnXcfAkuGEslF9+Nf0/LX4GU+gHQirt67CRu3JZibUiaWkeoEm0m3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjFFlEd7raIvfp4qALNHb/+f95ukqB3ry9ivi1wXFzNIyIoV71
-	L0lYJcK4V+FFrEUJ4OgOAY+HMFQHhhuTg5vSWd7GbyYMb9SoOMCOMoFTY+rbZgZ+37G8jolwgFI
-	0WU3TnOz8Te6FPrAlDbRt8IOSHvU=
-X-Gm-Gg: ASbGncsX9gT8R5ciiXr5NJyvbIjSrhxkct54qmCOKeOfOdaNsVCyOVOz4PoobhASYIs
-	7y0tFVQTTT9rf+sLhMml2C4/f/POI/jW/XVueD6GL320pAQrL/BcRBWDyfSaODTNuKISB6p0X
-X-Google-Smtp-Source: AGHT+IFWRFp3qPYpdUxS+lP8VvZZad2txfBx/CfxCHzV3mHRF/MJNPdlgU17tBd768zBU2L5/J0QhSflOhL9Ap6f7qo=
-X-Received: by 2002:a17:902:d48c:b0:215:2f19:1dd with SMTP id
- d9443c01a7336-21f17ebe960mr28812655ad.11.1738797516180; Wed, 05 Feb 2025
- 15:18:36 -0800 (PST)
+	s=arc-20240116; t=1738797815; c=relaxed/simple;
+	bh=G+TXOunIv3Tr9PBEmAzSP/MWMhll2+g/orEIcMguvVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hcB9rIGYxIHSg5YUX1eVDKxM9yW79Csyt8d6mHCiw7MtUDcUdBDzLggOu/LuFTM2JzxuwUUf7uRS7sttAO1eMcp8ZL1U4rRx1nHBMvsp7LT4G9/q6rjJCSozjf6upIGQwvihxkJ4MHRphirwD9S0J+b5FJhm/G5n3KxQU1P4bMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA0CB1063;
+	Wed,  5 Feb 2025 15:23:54 -0800 (PST)
+Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51523F58B;
+	Wed,  5 Feb 2025 15:23:28 -0800 (PST)
+Message-ID: <86bee3f3-acf3-4b3e-ad9c-e7d021355214@arm.com>
+Date: Wed, 5 Feb 2025 17:23:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129215003.1736127-1-jforbes@fedoraproject.org>
-In-Reply-To: <20250129215003.1736127-1-jforbes@fedoraproject.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 6 Feb 2025 00:18:24 +0100
-X-Gm-Features: AWEUYZkHfbSzXVG3UDOVm2PdeFkOPbGi45OSGXrvCy3zTLZpmNXEuYakcDkpsLc
-Message-ID: <CANiq72=GpSe4stOb+EqiP_FGUNZbbLW0opTu_Bpqr3w0Cc=J4Q@mail.gmail.com>
-Subject: Re: [PATCH] Add -fzero-init-padding-bits to bindgen_skip_cflags
-To: "Justin M. Forbes" <jforbes@fedoraproject.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] riscv: Use of_property_present() to test for
+ non-boolean properties
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Sudeep Holla
+ <sudeep.holla@arm.com>, Sunil V L <sunilvl@ventanamicro.com>,
+ Yunhui Cui <cuiyunhui@bytedance.com>, Steffen Persvold
+ <spersvold@gmail.com>, =?UTF-8?Q?Miquel_Sabat=C3=A9_Sol=C3=A0?=
+ <mikisabate@gmail.com>
+References: <20250205143903.413959-1-emil.renner.berthing@canonical.com>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20250205143903.413959-1-emil.renner.berthing@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 10:50=E2=80=AFPM Justin M. Forbes
-<jforbes@fedoraproject.org> wrote:
->
-> This seems to break the build when building with gcc15.
->
-> Unable to generate bindings: ClangDiagnostic("error: unknown argument: '-=
-fzero-init-padding-bits=3Dall'\n")
->
-> Signed-off-by: Justin M. Forbes <jforbes@fedoraproject.org>
+On 2/5/25 8:39 AM, Emil Renner Berthing wrote:
+> The use of of_property_read_bool() for non-boolean properties is
+> deprecated and since
+> 
+> commit c141ecc3cecd ("of: Warn when of_property_read_bool() is used on non-boolean properties")
+> 
+> a warning is displayed when used incorrectly. Fix it by switching to
+> of_property_present() as recommended in the same commit.
+> 
+> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> ---
+>   arch/riscv/kernel/cacheinfo.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 2d40736fc37c..26b085dbdd07 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -108,11 +108,11 @@ int populate_cache_leaves(unsigned int cpu)
+>   	if (!np)
+>   		return -ENOENT;
+>   
+> -	if (of_property_read_bool(np, "cache-size"))
+> +	if (of_property_present(np, "cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> -	if (of_property_read_bool(np, "i-cache-size"))
+> +	if (of_property_present(np, "i-cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> -	if (of_property_read_bool(np, "d-cache-size"))
+> +	if (of_property_present(np, "d-cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+>   
+>   	prev = np;
+> @@ -125,11 +125,11 @@ int populate_cache_leaves(unsigned int cpu)
+>   			break;
+>   		if (level <= levels)
+>   			break;
+> -		if (of_property_read_bool(np, "cache-size"))
+> +		if (of_property_present(np, "cache-size"))
+>   			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> -		if (of_property_read_bool(np, "i-cache-size"))
+> +		if (of_property_present(np, "i-cache-size"))
+>   			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> -		if (of_property_read_bool(np, "d-cache-size"))
+> +		if (of_property_present(np, "d-cache-size"))
+>   			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+>   		levels = level;
+>   	}
 
-Applied to `rust-fixes` -- thanks!
+This looks sane to me:
 
-Fixes: dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=3Dall")
 
-[ Slightly reworded commit. - Miguel ]
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
 
-Cheers,
-Miguel
+
