@@ -1,198 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D44204092;
-	Wed,  5 Feb 2025 20:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4E71FCD07;
+	Wed,  5 Feb 2025 20:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785918; cv=none; b=FPUyeA6p757Tf9HNEKfGHFIRvpKVlZBlbTdqihmfajDNFKqaT92eeJ5mrAYmeZUNazQjbdVfR5L/j4ibIYpU3cmcNw7kn8L6tXoGy/LSN6RcO9Hbn302tk/5zWPFfw3ag9KsaoJGHEeaSyhGCD9/amCTTp0zxZginYjZpMHmbKU=
+	t=1738786022; cv=none; b=AXcrcx1t8PHmLvUUPFOSNxgd04Dfc2Zo0xC2NKCY/Z9etTlIcchVdptxOyUHOiqlWFS3HyBgnqFKZNyfpgH+mWoV4tYN+5zHd6h3GTqGVfhu0e9jLTIYdmuYKkfYmTDZAys+o+CquVKKh7oxedIXe1PBRVuP334loxHKtm9A2ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785918; c=relaxed/simple;
-	bh=FFwFNn5iA2ll4w2bavbJH1n0QsSgFHdVLfFyEJw242U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0MAxvK4Fb72p7+IxUMka7ukBge9hvlgl4lap0+RUSyy4pQ0ERtDqEL69lWrbeKCXY1+LhFcxoK8jCsDZbUxsWpFn+c1o0aWXyylD/1rlvcilonGUwzc7txz/Uy8cYrgs3EXj+MriW/604rMoRWBn2r1EG+bk2kGLKoQriRKIF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mf2nO994; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738786022; c=relaxed/simple;
+	bh=hhNuJ1lkwRYOxoxZ5+9NJr1VBJePReds7Zq6S1Dj/Ng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IPW7TSMFornAYKSVt8ax7dJ6y5agpvETP0sSFBLgNPrztfhpnEseC9xVHo1cMIEPNYZ7UhdBXASm9Ng4Rp22fIAns8eZRV9TG6skx5otN67WmB1bvP//9ToB/d3bknLWcewfvs/uS6wdBEt++wfIY0xrX9Z0318ofbtQkVY0wP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gULfGSXQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mf2nO994"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3AEC4CED1;
-	Wed,  5 Feb 2025 20:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738785917;
-	bh=FFwFNn5iA2ll4w2bavbJH1n0QsSgFHdVLfFyEJw242U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mf2nO994EQAuAigF4VlKpWnpG979tIt9dnEoc1KGCrdIoJ2OIBm77J21GDUa2Ofli
-	 quJqfh2rJVimEZMWfzqAJk/rFg4sMIviL3/2W6LelDro51sdkLEZLG4iI5W8SghI05
-	 3SP8EkzDUgp6V8K54Pox2W4DhJEWs/n48L2t97bEmczXJ5eKf8hNhy73LIR33or5DO
-	 5ZqwGJbwV0Hfonqy6oCUJ5MibJ5iYgDC52XJJ8WTmOZjt9PKFAzqAANdpvi73XpDcb
-	 zQy2ZRgYK7nmyUqazLdcxIST7FGdpHurR6Jrn1rCFIQZ42OitpSEa87dp/4iKz7Kcu
-	 hvGzQ7Qy167lQ==
-Date: Wed, 5 Feb 2025 12:05:17 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com, martin.petersen@oracle.com
-Subject: Re: [PATCH RFC 06/10] xfs: iomap CoW-based atomic write support
-Message-ID: <20250205200517.GZ21808@frogsfrogsfrogs>
-References: <20250204120127.2396727-1-john.g.garry@oracle.com>
- <20250204120127.2396727-7-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gULfGSXQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=fTUFYrWUOdqAxj4zuEvuU1bTUQ6LvvixMVGo4OVeyEg=; b=gULfGSXQt+Ns3R17/HYQzmjxNs
+	YF+qdocyxMbjzBnf7yCsiw8lLeCKERsmI23TWAaXfckqzajywc1c2PsAIJIsOZlES8zXedg67Pk83
+	Td1mq0RW2w/l7kEC9LJRGHkVkxeLYkmji944Cl6uWOcOttFCdmf5bP2tUT5XTNG8YFsH2a2jGjWdX
+	PPdf/00JVFn4gCSNvhClqeNJ3ORoMkzI0GSb/1YmJNWTJA4Lu4bE4ry6IAmfLn7qK5ZXNc2QrosNF
+	M9EQfuQ2ArpPnti8SqGK/85mUsevm9aNTh9mwIDEscakxVaHm4ddbDbrpWyxOynxfQvCGP7JBQQ22
+	FNIXHmBg==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tflfb-00000004wuN-2EAQ;
+	Wed, 05 Feb 2025 20:06:48 +0000
+Message-ID: <2ff640b5-a8cb-48ae-a91e-1a379aae40a1@infradead.org>
+Date: Wed, 5 Feb 2025 12:06:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204120127.2396727-7-john.g.garry@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] docs: hwmon: Fix spelling and grammatical issues
+To: Purva Yeshi <purvayeshi550@gmail.com>, jdelvare@suse.com,
+ linux@roeck-us.net, corbet@lwn.net
+Cc: skhan@linuxfoundation.org, linux-hwmon@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250205200134.12006-1-purvayeshi550@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250205200134.12006-1-purvayeshi550@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025 at 12:01:23PM +0000, John Garry wrote:
-> In cases of an atomic write occurs for misaligned or discontiguous disk
-> blocks, we will use a CoW-based method to issue the atomic write.
+Hi,
+
+On 2/5/25 12:01 PM, Purva Yeshi wrote:
+> Fix spelling and grammatical errors across hwmon driver
+> documentation files.
 > 
-> So, for that case, return -EAGAIN to request that the write be issued in
-> CoW atomic write mode. The dio write path should detect this, similar to
-> how misaligned regalar DIO writes are handled.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 > ---
->  fs/xfs/xfs_iomap.c | 68 ++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 66 insertions(+), 2 deletions(-)
+> V1 - https://lore.kernel.org/lkml/20250204134806.28218-1-purvayeshi550@gmail.com/
+> V2 - Removed unwanted changes and split changes per driver, creating a separate patch for hwmon.
 > 
-> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> index ae3755ed00e6..2c2867d728e4 100644
-> --- a/fs/xfs/xfs_iomap.c
-> +++ b/fs/xfs/xfs_iomap.c
-> @@ -809,9 +809,12 @@ xfs_direct_write_iomap_begin(
->  	struct xfs_bmbt_irec	imap, cmap;
->  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
->  	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, length);
-> +	bool			atomic = flags & IOMAP_ATOMIC;
->  	int			nimaps = 1, error = 0;
->  	bool			shared = false;
-> +	bool			found = false;
->  	u16			iomap_flags = 0;
-> +	bool			need_alloc;
->  	unsigned int		lockmode;
->  	u64			seq;
->  
-> @@ -832,7 +835,7 @@ xfs_direct_write_iomap_begin(
->  	 * COW writes may allocate delalloc space or convert unwritten COW
->  	 * extents, so we need to make sure to take the lock exclusively here.
->  	 */
-> -	if (xfs_is_cow_inode(ip))
-> +	if (xfs_is_cow_inode(ip) || atomic)
->  		lockmode = XFS_ILOCK_EXCL;
->  	else
->  		lockmode = XFS_ILOCK_SHARED;
-> @@ -857,12 +860,73 @@ xfs_direct_write_iomap_begin(
->  	if (error)
->  		goto out_unlock;
->  
-> +
-> +	if (flags & IOMAP_ATOMIC_COW) {
-> +		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
-> +				&lockmode,
-> +				(flags & IOMAP_DIRECT) || IS_DAX(inode), true);
-
-Weird nit not relate to this patch: Is there ever a case where
-IS_DAX(inode) and (flags & IOMAP_DAX) disagree?  I wonder if this odd
-construction could be simplified to:
-
-	(flags & (IOMAP_DIRECT | IOMAP_DAX))
-
-?
-
-> +		if (error)
-> +			goto out_unlock;
-> +
-> +		end_fsb = imap.br_startoff + imap.br_blockcount;
-> +		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
-> +
-> +		if (imap.br_startblock != HOLESTARTBLOCK) {
-> +			seq = xfs_iomap_inode_sequence(ip, 0);
-> +
-> +			error = xfs_bmbt_to_iomap(ip, srcmap, &imap, flags,
-> +				iomap_flags | IOMAP_F_ATOMIC_COW, seq);
-> +			if (error)
-> +				goto out_unlock;
-> +		}
-> +		seq = xfs_iomap_inode_sequence(ip, 0);
-> +		xfs_iunlock(ip, lockmode);
-> +		return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags,
-> +					iomap_flags | IOMAP_F_ATOMIC_COW, seq);
-> +	}
-
-/me wonders if this should be a separate helper so that the main
-xfs_direct_write_iomap_begin doesn't get even longer... but otherwise
-the logic in here looks sane.
-
-> +
-> +	need_alloc = imap_needs_alloc(inode, flags, &imap, nimaps);
-> +
-> +	if (atomic) {
-> +		/* Use CoW-based method if any of the following fail */
-> +		error = -EAGAIN;
-> +
-> +		/*
-> +		 * Lazily use CoW-based method for initial alloc of data.
-> +		 * Check br_blockcount for FSes which do not support atomic
-> +		 * writes > 1x block.
-> +		 */
-> +		if (need_alloc && imap.br_blockcount > 1)
-> +			goto out_unlock;
-> +
-> +		/* Misaligned start block wrt size */
-> +		if (!IS_ALIGNED(imap.br_startblock, imap.br_blockcount))
-> +			goto out_unlock;
-> +
-> +		/* Discontiguous or mixed extents */
-> +		if (!imap_spans_range(&imap, offset_fsb, end_fsb))
-> +			goto out_unlock;
-> +	}
-
-(Same two comments here.)
-
-> +
->  	if (imap_needs_cow(ip, flags, &imap, nimaps)) {
->  		error = -EAGAIN;
->  		if (flags & IOMAP_NOWAIT)
->  			goto out_unlock;
->  
-> +		if (atomic) {
-> +			/* Detect whether we're already covered in a cow fork */
-> +			error  = xfs_find_trim_cow_extent(ip, &imap, &cmap, &shared, &found);
-> +			if (error)
-> +				goto out_unlock;
-> +
-> +			if (shared) {
-> +				error = -EAGAIN;
-> +				goto out_unlock;
-
-What is this checking?  That something else already created a mapping in
-the COW fork, so we want to bail out to get rid of it?
-
---D
-
-> +			}
-> +		}
-> +
->  		/* may drop and re-acquire the ilock */
-> +		shared = false;
->  		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
->  				&lockmode,
->  				(flags & IOMAP_DIRECT) || IS_DAX(inode), false);
-> @@ -874,7 +938,7 @@ xfs_direct_write_iomap_begin(
->  		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
->  	}
->  
-> -	if (imap_needs_alloc(inode, flags, &imap, nimaps))
-> +	if (need_alloc)
->  		goto allocate_blocks;
->  
->  	/*
-> -- 
-> 2.31.1
+>  Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
+>  Documentation/hwmon/abituguru.rst           | 2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> 
+
+LGTM. Thanks.
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+
+-- 
+~Randy
+
