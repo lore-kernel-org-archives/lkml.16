@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A023222DFA8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7AD22DF9E
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751999; cv=none; b=ptLIa5OI9IRZTiCTXs2fIax6JFk8m2xF92wl5zSa/SSwu7dwzEe65E2hG6RYeza2I7BejPkq+lE2A/cBkjF7P5u01obNzVMafvMx+8OGXtB/h3Ylq4QbJ6hHLbfUJLTmapx9e+1DdWQ+eo4uWPG2ch0stOqqVFe/xvwRbRo7ZlY=
+	t=1738751998; cv=none; b=SJ3jdN2mHdxZ6M3zGmhe0ivvX767tPkUBAhXxZj4yCYOQ6n+kh3eW3B07TRiUmjauxcPzAzWny7pWKRRclsE8tx8bg5nn9ll2N3jZXvxh8TdkMjVmX4sss04nLTGXwskgBsmFgGmzJ4HyVoshmmXuEIdwUh/B44COfb/ZY1wx0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751999; c=relaxed/simple;
-	bh=vvk9VgHZ5HgTwbdh4w7mEa7Iljw0JHLYk31avvHA5NI=;
+	s=arc-20240116; t=1738751998; c=relaxed/simple;
+	bh=GGBXk6f48Of3riytdkya0PlY1YMazvmfX9MK1nyV4u0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UhFiDVEBJkYvMQ1EMFuatdlNsEpmphogUfSxGTHKmLsvZOn9N+gXgNbQA33a5edn+duBRdVTXBqE/bGNKTsUDDUNfCzDhCBRD161SQVvL2b9eTGnM8AKSHS9NirtdW1SDMvddhDFmZiRYDTfmRm8lAFLriFXp9rLp5XLw2uvbwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O+yQWMvh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bw47NZnk; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=AIk+X6Z76QLFFyACKOIIwpgt83bwiM2dsU62/zrg6jrukCfyg5qD5lzqotKoLUgMJdR/xm+FHykeNSdLJ86lGITAI878WchLyk/QyJopU1JfnAbdJ+9rSBk2Yu1tCR5hQVfkmN0Ta5h6an3EWAJrp0UEyNqP41PeZ1EDHTDwGN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4bXgrzJG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rkAJO11a; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O+yQWMvh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bw47NZnk"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4bXgrzJG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rkAJO11a"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738751994;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s39lbmV2IXqF2ss/8vs1KZOHzfRVzb/SaOq7s58i3mc=;
-	b=O+yQWMvhMWYn5XxbAjJNuTHxrxIjoUWETvelT45kKoeizs2cSvMgisooNZZ+JnDF4dAGn5
-	tKhoQUrNF0/OlkZtMI6MYW/lpBPLPJnIbwNKn/eNlYCX+QoUKb7FNnRHQ37H8/S6plftZ8
-	stM/zO56Skv8OdzAxMLxpd2ZoMw+LCL+dIAz7RdfIzlDYxSL4PRGB9URiHphHWWxWODGpC
-	iTzOW8n5waU8W5/9eFYe3Ia/qkytsCaTSCcQmiDvi3TURw9QvmJ1troldY2mFs2ksB/PQ/
-	KBJ6zSJsWb+z+YahWdoQ6Kh8yJPjfGMj0qJ25umR7xK+ZCfEcC1ZFwAFyv3FMw==
+	bh=vfzgxjYfbEWz4//KHQQPlOhiuQtZIwViWTzsUTh7j6s=;
+	b=4bXgrzJGWqZdQt/f1iANLvjzr4I1DSmJ2n3ZmMjvBE0hBX0AIFY2X3GcQaQntIX3WKEkFq
+	kTJrreUc3ZTcAYamtKlJSoy4Sj61kv5o9tGa+oKDFxDJalPvso4USV9qNFpdNxpW4oSxZG
+	guFUkR2hfrN7ApMKVXqwxEk6DlEZsPh8QlvfBLcmI9ptsfeNXzq2eQ5Iwv4buBZxrOWMYh
+	xXF3NiVTvHynLRBU1c+dDKb2Yi84MkqJ7Eq7iE1aClbb/L9LcH8IKv9qedm4G3mbCT8ng6
+	jOLfFaO2HXpRNWIZHA3To6Q1zdEiDP4lNvgldJ2//nqNkZa65gkJkf2g5Ey2GQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738751994;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s39lbmV2IXqF2ss/8vs1KZOHzfRVzb/SaOq7s58i3mc=;
-	b=bw47NZnkmnMHbrO7cDbrVtX4bBWx06kLO2Tscn4FulxgsQSsnOGbIM+N6H2nKkSDfjBZ5o
-	Dum7Nt30a/RaaQCw==
+	bh=vfzgxjYfbEWz4//KHQQPlOhiuQtZIwViWTzsUTh7j6s=;
+	b=rkAJO11ap8Y21IPB7VGZudr/SI9zSJeHWaI6zs5BMlJmxuGm8lPc1IdRDl7MoOkUVrCjoS
+	pO5GkTtYG9SjbYDw==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: [PATCH v2 26/31] ata: pata_octeon_cf: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:39:10 +0100
-Message-Id: <a36ae1e4be26f8359bf2777b1813bbf4d7a7983f.1738746821.git.namcao@linutronix.de>
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2 24/31] tracing/osnoise: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:39:08 +0100
+Message-Id: <ff8e6e11df5f928b2b97619ac847b4fa045376a1.1738746821.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
 References: <cover.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,29 +66,39 @@ hrtimer::function with the new setup mechanism.
 
 Patch was created by using Coccinelle.
 
-Acked-by: Damien Le Moal <dlemoal@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/ata/pata_octeon_cf.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ kernel/trace/trace_osnoise.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/ata/pata_octeon_cf.c b/drivers/ata/pata_octeon_cf.c
-index dce24806a052..2d32125c16fd 100644
---- a/drivers/ata/pata_octeon_cf.c
-+++ b/drivers/ata/pata_octeon_cf.c
-@@ -935,9 +935,8 @@ static int octeon_cf_probe(struct platform_device *pdev)
- 		ap->mwdma_mask	=3D enable_dma ? ATA_MWDMA4 : 0;
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index f3a2722ee4c0..15999532956a 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -1901,8 +1901,7 @@ static int timerlat_main(void *data)
+ 	tlat->count =3D 0;
+ 	tlat->tracing_thread =3D false;
 =20
- 		/* True IDE mode needs a timer to poll for not-busy.  */
--		hrtimer_init(&cf_port->delayed_finish, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL);
--		cf_port->delayed_finish.function =3D octeon_cf_delayed_finish;
-+		hrtimer_setup(&cf_port->delayed_finish, octeon_cf_delayed_finish, CLOCK_=
-MONOTONIC,
-+			      HRTIMER_MODE_REL);
- 	} else {
- 		/* 16 bit but not True IDE */
- 		base =3D cs0 + 0x800;
+-	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+-	tlat->timer.function =3D timerlat_irq;
++	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_A=
+BS_PINNED_HARD);
+ 	tlat->kthread =3D current;
+ 	osn_var->pid =3D current->pid;
+ 	/*
+@@ -2456,8 +2455,7 @@ static int timerlat_fd_open(struct inode *inode, stru=
+ct file *file)
+ 	tlat =3D this_cpu_tmr_var();
+ 	tlat->count =3D 0;
+=20
+-	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+-	tlat->timer.function =3D timerlat_irq;
++	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_A=
+BS_PINNED_HARD);
+=20
+ 	migrate_enable();
+ 	return 0;
 --=20
 2.39.5
 
