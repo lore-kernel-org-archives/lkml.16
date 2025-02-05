@@ -1,135 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E281FCD07;
-	Wed,  5 Feb 2025 16:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4E217F7;
+	Wed,  5 Feb 2025 16:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773015; cv=none; b=IwZTCxlIGwZKUM5dlBuw+CF0A2Sa9FK0eNOlS1aPZ6TPXda3XWUFNfj59iqHqDD8+/F7GkfO4d871mUshfO7e3K8kLRIeLXWNndpBcWXwh6xg3a1sDuGut6tNTOycZ/YiGIRagYpu8VTjdaR/fHxf15uLePCrX0mG5U4dyI9+74=
+	t=1738773072; cv=none; b=jRBsOIqqku1g7nqb+N8qM0+g6aTvuApVun1HB1ZGNKF4IV8HulHoTHvy8/SYWY1tPKg8eCptImNNH4rMYFWOke84AWRTdOupyma3s4b1JzeRGU/m48jNq94esFqNPil0ScuW3CARg6kaINerWa7Q1dsrGlJYU0EdVub7v124QFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773015; c=relaxed/simple;
-	bh=+6aRCaTOfyio0lD6Nw0WgylHhIrEaav3y6vOHne/HNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDi8Phek9eKTA+75vJs7NH1HreluFsyWAkh0T0TXGfEYDX7DJ/hdrKT/n6YHpgrm8TwTtAyR3T33bnEun9df2Lg0uxg6btbBlzlND8PrlrPkm1m44kMXL39xPQVvmCovo5/XRWs0ClvSJLzFINYBfnLpNhcEFxh1V1ardOd4geY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5k97lnm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738773072; c=relaxed/simple;
+	bh=o14HjDZwZTkbMjA1cDLGv53tXJJaET1yQGUKxvyX870=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bq3P0/TVqNs10fVd8MIsd7xZNg2wqnlZVlWjGqGULz1c8nNM+TPjZecnO3X10O/tVlbMjOk5nFy5hffeYvLgXaaQ6GAoih1+0033oqwC7sUp//pwNuwbkGw5OLOZcUzvGv+6iTDbX/jZ78++vqE8wCO2f+T5UESXla5ogYq7/a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N0MN5YGY; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5k97lnm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E9BC4CED1;
-	Wed,  5 Feb 2025 16:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738773014;
-	bh=+6aRCaTOfyio0lD6Nw0WgylHhIrEaav3y6vOHne/HNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O5k97lnmHoTCWPHwhXO4sMZQ+ZVHFuBDyOUF+AVba3Vvh1td7KZFGSP8TjEEKgY2f
-	 EbbEslN/TE620B2ceOqQ00z86QFEiH0yfElimctL165QIPD1M/UEKq3r2W8UASpOzu
-	 SBxMyNRBXavz6kIC6ntm7AQ4ugor0w/ND7eLB8HjRagjWsTDXs02lTf/ghNxnKU5ev
-	 v5mdhiPNYnm+BxBia25hS5WJy1TeHZuuNGGQFNW7Jb7KOnjEXYmrRuQ7i+vVuNCDKS
-	 ulfaC6xywoffDRvpFBSVg8UsWFlRgjpLWJrZ2FiOipmMiQ6XrA5nFbhHgNNhmCwSuu
-	 zzTrDBxsbpBVw==
-Date: Wed, 5 Feb 2025 08:30:12 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Zhihang Shao <zhihang.shao.iscas@gmail.com>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, ardb@kernel.org
-Subject: Re: [PATCH v3] riscv: Optimize crct10dif with zbc extension
-Message-ID: <20250205163012.GB1474@sol.localdomain>
-References: <20250205065815.91132-1-zhihang.shao.iscas@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0MN5YGY"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dc7eba78e6so13499033a12.3;
+        Wed, 05 Feb 2025 08:31:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738773068; x=1739377868; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o14HjDZwZTkbMjA1cDLGv53tXJJaET1yQGUKxvyX870=;
+        b=N0MN5YGYbYbpdaxvPtb8g2QTLhde5Xht7Nf8neLZLd+UJL2P3o/JaCrd3taaJgP8oG
+         MpvRptsTgaqHDARFwI/wkSv87oWpDVqxO/uGb0u6WDJNej+wHaF+UXmeFlZ0kTjfJqtq
+         Osyf+hnF9DpTFUPup1vOyTpGVNI6rT3EplJtR/u+BkKjwKipJoSzT5CiY4kpg2Nnuji7
+         +tWUbQumcKTjbLb4NcGkRS607FwrIB6RzgzhLMt73HH/tF0Qgsj+U9Wwou1XpmADpA7O
+         Ni3LZqZT/1xiExe/0988jpbkoNcFDVDnuZpSy039cQWV3FeuCKEhHq9Py8plSoIMHlqn
+         d3gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738773068; x=1739377868;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o14HjDZwZTkbMjA1cDLGv53tXJJaET1yQGUKxvyX870=;
+        b=vXxxvhlj7m4NKxeFWu+HX+zs6TwatM/9FZljl66PEVGmYTYYQS7ydvF+A8Jtufy7qg
+         8MN1mk8sIUu7vom8MWJjnHLms7xAdH0hfiqCi0tcxq+heegkEEqO/IKaj2bUA1+BgueS
+         YsYhhcC360v+rLWY/aKHGX0vARx9LsMfbPlO9HsXwICW1qrETILwloB7sIoX6Nevo6yN
+         UMWLu/BnrXkqAr8uFqbVjAvUOpjQvEzf7qJV3p923xEiOaAkJqz4c4PvtT+GqSewNGZ+
+         GFI2TMACLsEuH40h26k5jhgO9XPCbnYkJ/Imu3KRMuG8CS7oyY7g16KWF1se/NWh1/Dz
+         MGPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWbqU2qi1EjBfrH30EELejhAOyV5OOcwh+tY5V7VM7fBMGJ7Ot80zYDRWtj0mI1l7O43N85hvRAbzph6X9@vger.kernel.org, AJvYcCWSeBLcyhWKHSrD17cwAJO0TeA6Gez29ynFm3XzbMFZQWRSc0BWZEN23sbgzZ48LKk26bJchidDKA62di8n@vger.kernel.org
+X-Gm-Message-State: AOJu0YygIVjllMEWlvVJFKczeWAAJvtXtjrDvE1D4Fg23QIaW7BLn3Mz
+	0rLlERaCpm6hKoUXPjzr850kna2rlUb7T9XqcLQFA8L87gU1rXtGBX3WwSNYW9eeAc+Xr+w8Msy
+	dcoa0/xNnOFs1jTTED1PUuTarqGw=
+X-Gm-Gg: ASbGncvtgsE89OtzF3Yn7l0c2UczgoiNhOPuJDWtGEYAGNy/X7Cu2jAHKtbgC8QcdFr
+	hfCWmnR0W5rpLqE8Bh4vqL8A/hiKuOW18VUGhd3S4XozoDM9Y0BRfyT1txTg4B9ppmPOZa68=
+X-Google-Smtp-Source: AGHT+IHxG6bhcPqfA38pVpk693fXgtu/9m7JhvLkUr9xyn7wEZOi1JQxTvXhTq8e3CZx6m4JhobUmZkA2/OGpPL4wzE=
+X-Received: by 2002:a05:6402:239b:b0:5dc:ebb8:fe64 with SMTP id
+ 4fb4d7f45d1cf-5dcebb8feb1mr322780a12.14.1738773068259; Wed, 05 Feb 2025
+ 08:31:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205065815.91132-1-zhihang.shao.iscas@gmail.com>
+References: <20250205162819.380864-1-mjguzik@gmail.com>
+In-Reply-To: <20250205162819.380864-1-mjguzik@gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Feb 2025 17:30:56 +0100
+X-Gm-Features: AWEUYZnQWZmm4yFeYCY7BSuRaqPgq8W_OxCuWdOiAIXhyvJ5BIW06XONAvnSf-0
+Message-ID: <CAGudoHFTqtO+TN+LA+ga2t8-O_QwkOSNwnBEGr1mkj0YyPUARg@mail.gmail.com>
+Subject: Re: [PATCH] ext4: pass strlen() of the symlink instead of i_size to inode_set_cached_link()
+To: brauner@kernel.org, tytso@mit.edu
+Cc: kees@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 02:58:15PM +0800, Zhihang Shao wrote:
-> The current CRC-T10DIF algorithm on RISC-V platform is based on
-> table-lookup optimization.
-> Given the previous work on optimizing crc32 calculations with zbc
-> extension, it is believed that this will be equally effective for
-> accelerating crc-t10dif.
-> 
-> Therefore this patch offers an implementation of crc-t10dif using zbc
-> extension. This can detect whether the current runtime environment
-> supports zbc feature and, if so, uses it to accelerate crc-t10dif
-> calculations.
-> 
-> This patch is updated due to the patchset of updating kernel's
-> CRC-T10DIF library in 6.14, which is finished by Eric Biggers.
-> Also, I used crc_kunit.c to test the performance of crc-t10dif optimized
-> by crc extension.
-> 
-> Signed-off-by: Zhihang Shao <zhihang.shao.iscas@gmail.com>
-> ---
->  arch/riscv/Kconfig                |   1 +
->  arch/riscv/lib/Makefile           |   1 +
->  arch/riscv/lib/crc-t10dif-riscv.c | 132 ++++++++++++++++++++++++++++++
->  3 files changed, 134 insertions(+)
->  create mode 100644 arch/riscv/lib/crc-t10dif-riscv.c
+On Wed, Feb 5, 2025 at 5:28=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
+ote:
+>
+> The call to nd_terminate_link() clamps the size to min(i_size,
+> sizeof(ei->i_data) - 1), while the subsequent call to
+> inode_set_cached_link() fails the possible update.
+>
 
-Acked-by: Eric Biggers <ebiggers@kernel.org>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
+oof.. that should be:
+> inode_set_cached_link() fails to take it into account
 
-This can go through the riscv tree.
-
-Some minor comments below.
-
-> +static inline u64 crct10dif_prep(u16 crc, unsigned long const *ptr)
-> +{
-> +	return ((u64)crc << 48) ^ (__force u64)__cpu_to_be64(*ptr);
-> +}
-> +
-> +#elif __riscv_xlen == 32
-> +#define STEP_ORDER 2
-> +#define CRCT10DIF_POLY_QT_BE 0xf65a57f8
-> +
-> +static inline u32 crct10dif_prep(u16 crc, unsigned long const *ptr)
-> +{
-> +	return ((u32)crc << 16) ^ (__force u32)__cpu_to_be32(*ptr);
-> +}
-
-Maybe use 'const __be64 *' and 'const __be32 *' for the pointer, and use
-be64_to_cpu() and be32_to_cpu().  Then the __force cast won't be needed.
-
-> +static inline u16 crct10dif_zbc(unsigned long s)
-> +{
-> +	u16 crc;
-> +
-> +	asm volatile   (".option push\n"
-> +			".option arch,+zbc\n"
-> +			"clmulh %0, %1, %2\n"
-> +			"xor    %0, %0, %1\n"
-> +			"clmul  %0, %0, %3\n"
-> +			".option pop\n"
-> +			: "=&r" (crc)
-> +			: "r"(s),
-> +			  "r"(CRCT10DIF_POLY_QT_BE),
-> +			  "r"(CRCT10DIF_POLY)
-> +			:);
-> +
-> +	return crc;
-> +}
-
-A comment mentioning that this is using Barrett reduction would be helpful.
-
-BTW, this is fine for an initial implementation, but eventually we'll probably
-want to make it fold multiple words at a time to take advantage of
-instruction-level parallelism, like the x86 PCLMULQDQ code does.  We also might
-be able to share code among all the CRC variants like what I'm doing for x86.
-
-> +#define STEP (1 << STEP_ORDER)
-> +#define OFFSET_MASK (STEP - 1)
-
-You can just remove the above #defines and use 'sizeof(unsigned long)' directly.
-You can even use the % and / operators since the compiler optimizes them.
-arch/x86/lib/crc32-glue.c does this.
-
-> +	p = (unsigned char const *)p_ul;
-
-Please use 'const u8 *'.
-
-Thanks!
-
-- Eric
+--=20
+Mateusz Guzik <mjguzik gmail.com>
