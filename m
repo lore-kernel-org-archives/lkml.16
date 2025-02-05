@@ -1,107 +1,101 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0C42288C3;
-	Wed,  5 Feb 2025 12:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164C015198A;
+	Wed,  5 Feb 2025 12:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738758393; cv=none; b=LPH0GjCE3CLOsfY/ouasS6tUNdey+5SL46Z4lsICnbgTvojKgN1mJuXnvkKgaihEpvwWSQezGYUcRO2TTkkmKTPWNnuG88FAN1qJ/bfjwPyyJ3iRPzeAgSV1llQVw2BEDrKyawlJPJ8hoKtyzHDWbr6JkwDO3QPOg57k9OTKMrM=
+	t=1738758454; cv=none; b=AyxA6WvHypZowqYWv3gik3E2HccB7HKtcaO9+Y8Jxf2ARwzkJJETN6UGekVJ6i+VJZO12+H6pyE+asUZLz6luaom1ZmE1IFUmDjbrsjpkrUpSYLYdrvy+6FLUhBfDnU9LMASvoVPb9kA+E8Rbw5SgHOik3AEW6tAcHU6dEJncmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738758393; c=relaxed/simple;
-	bh=PqFzbWTGgd5L0Se3X2D+ewZzMsZZRBkaejmCFJ6jVG0=;
+	s=arc-20240116; t=1738758454; c=relaxed/simple;
+	bh=Hv+9xYQ9CAGfmXnWvUtaY/aBiYCQlbRi5+XZwb6tiGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwYVGWt5MWPYTzSa2AGO6BMjXhJdb+JlcGID8U+/ZLDqa+GLFBWpLQvQjZHL7+mP1P/0SNegGNcYFXEK5OP1Fi46PZwSbcol4ffcpmbb9xNEgc5buI5WOr+DaAlvDlhjEfw8nyH7d3IUqD2Yp2DWd292DC7Qy6cChsioVhV/3yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ejY8gblR; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qeajkpC1E5UbGBPdfibkiYFndtB/pq3bZPKheJK8NU3IWUETFqzgGvEk4rMNb08sbJgdB1+MTa+G7XPY1n8AzPZdwAhoX8aP2bNxoQIUgFyJpI461Tqd+Q5t26Z85xk7YYnOvF6kRu76twvMF8SwSdHldKGC+hFeJbdnZbPHAIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wLB2Lsgu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejY8gblR"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5d3cf094768so12080897a12.0;
-        Wed, 05 Feb 2025 04:26:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738758390; x=1739363190; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfNjTq55fsnw6SzCIB+YM+K27WJ5Up01sg+3YgXdq6M=;
-        b=ejY8gblR7KNqwPiM31fn2UqtgffFYTTg7PPeMwoZIOOdhIJlMruyNFu+BO0I4JQxWE
-         9jzvGhMqdL3URU0tyFj8FMh1VtYfcAuZua99ZBLeuu4V8v8uSs9cGJ7FrwUDWvXtUH01
-         qgOJV2RVPlwyNYFBaB5oYeggELLXwgRYB++iVZLUm+EeM9dPEJbXPIMuLWU48xd+oQv1
-         PeEu02dp1Zw/xEXpr/OlCgFkVsbqZLSAyeYSfvTh3O3IA09R8tDf3/vRddxTe3MZ+UY6
-         bPHvk/pSTRDJIhN593EQ3AbkxwcOS0tfiQFi8NP4xc9TeGFD5T5oYiGItsh91BbMSG7T
-         dYrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738758390; x=1739363190;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tfNjTq55fsnw6SzCIB+YM+K27WJ5Up01sg+3YgXdq6M=;
-        b=tK26kFuwLC7oQNUPsxhMDnBIqnhx854dDVGCbWpgITQU7noIrz+YX5NqQhGTqzKw3r
-         joOkLBkjUg8WOMUZntKC+tpMbB9RijrDh+3Mf0S4FlrUgGXhleJPyDeryj9LMJzCnTXc
-         8X/ZhV4N0m+j4TgscvO0+b1XcGiA09tVu58V/DflkstT380i95U8bxOy4Pb15UqlAiW7
-         Cvmit+xpQHpUzwecRfIUlV8TKtKmnRU8ev2VQE8ylt7Dqlinfi+QVnTh9dlQLE1iBZXd
-         FFwRE2ikIesdDwlt2BmLMn9XFvaOpLAAl8M1x5aCmrrXA4ftJ+xj7kIn16G6CLyViYRl
-         y7vA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0vAprVSinmIZ82QRKaEIWFvLUmhPWN09OLwvd4Mntg3eEGafg2yKYZeEtkfnPgopugFtmhKV3eHQCFrcb@vger.kernel.org, AJvYcCUabyo0c/HSJfIuO593qfRa0jziqDRgCRME3e5tPR7SQzKyYDGrNLrE6D2xh5qgXsfkI/WJMc1zevR82JeXzE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjURzlCQUzLT0WI1xioVezJ/mEP9dPMc3gO1UKczW2vzr+a3xn
-	G5mfwLyCxNn0TLM7CgZ8vCKoYkz8gyAL4X6IBhMTPTzQ6l9ZsXin
-X-Gm-Gg: ASbGncvzzF7tOlq4fd/F5EMQPhZJcZo+ozo+tPKi2GiBvwmHwEcs2F/FbQ9IMSUJXYw
-	9Uw+pe6KYNblNKIB1/Hf1T1DExfGgMRtjBNaeaLxZR3KNrD8OFR1QTIUepLHUX8y+nKlQQ5enkl
-	VSvm3/R9aMV+LGGZFbl3m39UHKHEUGr6mBVhgbZw+tLuCVQsfGFL2micuaQHIoWZ1oMPWdzzQ50
-	d05rxPcZVihJ4BNYSm1EcvcuceB22DpLCPyyv8k+qB93k5UBYu3WZCjoQQtnZDv9Fbw6w2e0AQd
-	r1Jn/7/yVnxOsG5yYRwJMQ2+tCcK
-X-Google-Smtp-Source: AGHT+IEm5IUWeYpZI0DEqaYXclltUvvUlq9Yatit08o6HaY+VbAx6auM5q2J1jw428G0gXDxJ7yhvA==
-X-Received: by 2002:a05:6402:278b:b0:5dc:d0be:c348 with SMTP id 4fb4d7f45d1cf-5dcdb77825fmr2802800a12.20.1738758389797;
-        Wed, 05 Feb 2025 04:26:29 -0800 (PST)
-Received: from f (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcdb6d16edsm1336465a12.3.2025.02.05.04.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 04:26:29 -0800 (PST)
-Date: Wed, 5 Feb 2025 13:26:18 +0100
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
-	kees@kernel.org, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-Message-ID: <zv5u3q3m7t5yehblaqnrcz2k73yozpx7nn5mvbkedrzw2jaowf@soiirioxlfbz>
-References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wLB2Lsgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1340C4CEE2;
+	Wed,  5 Feb 2025 12:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738758453;
+	bh=Hv+9xYQ9CAGfmXnWvUtaY/aBiYCQlbRi5+XZwb6tiGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wLB2LsguuDjrJK4Diz4d/2AQQANLOS821Tq9RcqF8B43gfkWg3C1w+jlaEBMRd7n9
+	 Y9g2YOzeiIKW/BE5zgGF87bJ95uTkcuTto0Va4MG8v9dukxSd4mgmlKCsPEpbnHj9c
+	 Mcs78Xu2aFHFVM65F2sb4tEebAQTsKqs7pqvWp84=
+Date: Wed, 5 Feb 2025 13:27:30 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Peter Chen <peter.chen@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] USB: phy: convert usb_phy_generic logic to use a
+ faux device
+Message-ID: <2025020505-harsh-divisibly-51cc@gregkh>
+References: <2025020421-poster-moisture-534b@gregkh>
+ <2025020424-overstock-scheming-6a30@gregkh>
+ <20250205101916.GA4083@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+In-Reply-To: <20250205101916.GA4083@nchen-desktop>
 
-On Tue, Feb 04, 2025 at 01:46:28AM -0800, syzbot wrote:
-> Hello,
+On Wed, Feb 05, 2025 at 06:19:16PM +0800, Peter Chen wrote:
+> On 25-02-04 12:09:15, Greg Kroah-Hartman wrote:
+> > The usb_phy_generic code was creating a "fake" platform device to pass
+> > around in different places.  Instead of doing that, use the faux bus
+> > instead as that is what is really wanted here.
 > 
-> syzbot found the following issue on:
+> Hi Greg,
 > 
-> HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
-> 
+> As far as I know, there are some platforms use the device-tree to get
+> the system resource (eg, clock, reset, regular) for this driver.
+> We may not use fake bus for this driver.
 
-#syz test  upstream  master
+But there is no system resources assigned to this device/driver at all,
+so how is it getting anything here?
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 7c54ae5fcbd4..30cff983e601 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5010,7 +5010,7 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
- 			nd_terminate_link(ei->i_data, inode->i_size,
- 				sizeof(ei->i_data) - 1);
- 			inode_set_cached_link(inode, (char *)ei->i_data,
--					      inode->i_size);
-+					      strlen((char *)ei->i_data));
- 		} else {
- 			inode->i_op = &ext4_symlink_inode_operations;
- 		}
+> $grep -rn "usb-nop-xceiv" arch/arm64/boot/dts/*
+> 
+> arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi:649:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/freescale/imx8mm.dtsi:275:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/freescale/imx8mm.dtsi:285:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/freescale/imx93.dtsi:238:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/freescale/imx93.dtsi:245:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/freescale/imx8mn.dtsi:1321:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:149:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi:133:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9132-db.dtsi:30:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9132-db.dtsi:44:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9131-db.dtsi:33:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/armada-3720-db.dts:43:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9130-crb.dtsi:49:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9130-crb.dtsi:53:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9130-db.dtsi:52:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/cn9130-db.dtsi:66:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/armada-8040-db.dts:53:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/armada-8040-db.dts:67:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts:36:		compatible = "usb-nop-xceiv";
+> arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dts:39:		compatible = "usb-nop-xceiv";
+
+Does this actually work at all?  There is no real resouces here that I
+can see, so what am I missing?
+
+thanks,
+
+greg k-h
