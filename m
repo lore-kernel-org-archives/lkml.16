@@ -1,124 +1,108 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2540825A650;
-	Wed,  5 Feb 2025 06:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAC3215048
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738737519; cv=none; b=P8Q4beBvgSbeQr3E+pKsRhk+hFvtfmiWqvZ3/j9v9eK39OWxuBIMzzS06msMasJJDWbMqnn6ysDyalhvjEUVu6sVDV9y6NCje5utydi7UIv8y69VGIThay8Tq5JexB2yMuBfP1g6NxdF4BBU7V0qepbw/KVkz9mOwBRnopFGdeA=
+	t=1738737530; cv=none; b=SSwtJyIHtWmxgT/c4ZsLYrpyJhJlgVDkcd30SJNXB9dAzyc88LbepE9S2dmbV1KGh1h5fEEiGi7cpbTucqcoAIeSTYle1qnzfrXy1wKxYY1sU05xdfW8ZaI/AIqEZsuKFUmcTgXTaF70TQPQj4eic0ASxJlQku2vWP/ChkeD06A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738737519; c=relaxed/simple;
-	bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=hiAFAL0geqJb5vB9BhFC6j7L266IDCgG/RrtrzyJRtlsH8jVGNMxTgIKPHQIethuf7/G4JZIuJabxtxG3uKprM+rcEBVY8Lo7FrJJzXRnCurvxNtQuCrlsqaiu2wA3OEzgwOcWB+FiEPIbo1LEkZ7LW9dembrlvxwddBODY4tYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=4mneROW1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bV/Gz4v/; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
+	s=arc-20240116; t=1738737530; c=relaxed/simple;
+	bh=3yIbEsVYQNywm9gxQa65JZ62puxncPOerZQqY4hA50s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YIitqHskRT+cNhwLp3sMy6RKe3Z8H/cxkJs+QoDTwmpYPe//XBHZ/NrdWgi8WpzYD1gRkvUDu69ZKiSosSpGJR4XDGjSqBksIiSNQzYQefhxNTqZ7KsB9XjiX5BZ2IUzY4XWq/0PGMnlTeJLyarzq2WaZh7cIF20ImZlXZbJ+y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FTOE8h2t; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="4mneROW1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bV/Gz4v/"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id E4B9811401B2;
-	Wed,  5 Feb 2025 01:38:35 -0500 (EST)
-Received: from phl-imap-06 ([10.202.2.83])
-  by phl-compute-01.internal (MEProxy); Wed, 05 Feb 2025 01:38:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1738737515;
-	 x=1738823915; bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=; b=
-	4mneROW1H/IX5MKJLxWnp/hOy3Z8/tSjkE+2l0Nrc2gt3h7UqM5QFVXvaAOyS3OL
-	dVfIJfjfWkO7ns4VAZGAU90nTRQBvRDXq0duN+smwXlp6cXQq8BQ0NNBcXfy5BEU
-	Q5afYbY33y3EgijMaKtraPzIb0c+vKrutrXNkttUWcrByHOqKgCcsYonHde1vvsz
-	R392rm42YVSh7hL9eujwDymu+9NWaAPinDbRktAEwN3Eq4YT1R88ehIGtCNLpUkd
-	/2U7dk97u9Cd2EXoBG4dJeEVp9e12z6oP4z2afgEHtpicX1WHZ055waCtjDPnFJl
-	vJL/tmTx7ol2H5zq4dQd5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738737515; x=
-	1738823915; bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=; b=b
-	V/Gz4v/TUbcnXxc+EJU4ym2v8A5YD1D+9/qCRCGmXBIjg47KLqLOPqMtabl+KHz3
-	jHAlKQhMVCQl5O6lHX22SwkprRqSLYROU8FM2oSGZwl9i9tcbjtG5D5zfFiOl9+g
-	rj0d6R2a4VN8cWXZg63/Fr7FLuxvm46PGuFlC8NSUO2aO+mbx2fdC27qhsCeSX+x
-	xUdxrMNPHeBRkv+X39xt0TSXDNBnlWTEzidBsjnlU9RAzAUSAKlLa49rKvdIM2TG
-	R+wpiJWzyO3sN6qXOauwoJIdePrvKBjLAkpQwKyzTLqzQOrklmBucKS6/4EubXw8
-	1nJgFq3Ea8NLd7fxVnjsA==
-X-ME-Sender: <xms:awejZ4WKsKdO1P9-RTrDUwWk8eoGAYNvR4Tdp3ZKTwdwizs1Jw5dEA>
-    <xme:awejZ8mUMFOfYv1y6YLHKx8rY-56Ivu-wVyDkIYGULv7OelM21jOQyZ4ot8tChYtW
-    TJ4C0RjhbU8Hdmssng>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetnhhishhsvgcutehsthhivghrfdcuoegrnhhishhsvgesrghsth
-    hivghrrdgvuheqnecuggftrfgrthhtvghrnhepkeevuddtgefhveefveejhfdvhfdtheet
-    teefvdfgvdfffeevueefudeutefhgeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgt
-    phhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhhohhkrdhrrg
-    hjrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhithhhuhdrjhhoshgv
-    phhhsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhonhihrdhluhgtkhesihhnthgvlh
-    drtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhht
-    vghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprh
-    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
-    hnvghlrdhorhhg
-X-ME-Proxy: <xmx:awejZ8ZHCID8xwg6zXZfxIyGHbVD1LNgzUc49RtIdgRRlcQ0kW5Quw>
-    <xmx:awejZ3XfbRdWeDMnsDFCCctbs9DEIewjG8QztEu3yC_M3TDF2UAKCw>
-    <xmx:awejZykHq2Lmth-IPFCPXcQRlXQjKfUV60ORGfGPvCDiq-Io75W6hA>
-    <xmx:awejZ8d-81P0ledixWQ38kemKHSrEhhygNcmx-C6lmnC_Fj9gA-kUQ>
-    <xmx:awejZwabmURMLsdbghyPCMuY_iYDGTq0EpnFeuKxLpL_GD-u2aOxRfuP>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5D48129C006F; Wed,  5 Feb 2025 01:38:35 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FTOE8h2t"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738737519; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=rXJPx/6YVFVcgvdCjt0biSyMkWzlix+vmTcNZ6Qc0pc=;
+	b=FTOE8h2tI0UP4WgNOYyIUU9043rbtoVFWdsnjiPSIEyf1Sv/pNcIUX9uLySfhvTP0LasuUS0cSWLhtRB2528ZzogCeUm4R8sCjxQf5j1lfgIf7jhy+n/TJQp9VCj6U6Bciyaw43+RNJpWNiFwpzy2FfcTZ0ropYZZheubrZGXVI=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WOoNxun_1738737517 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Feb 2025 14:38:37 +0800
+Message-ID: <5dd39b03-c40e-4f34-bf89-b3e5a12753dc@linux.alibaba.com>
+Date: Wed, 5 Feb 2025 14:38:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 05 Feb 2025 07:37:49 +0100
-From: "Anisse Astier" <anisse@astier.eu>
-To: "Joseph, Jithu" <jithu.joseph@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
- tony.luck@intel.com, ashok.raj.linux@gmail.com
-Message-Id: <6b2479c7-e82a-4239-a329-10082c4e7e80@app.fastmail.com>
-In-Reply-To: <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
-References: <20250131205315.1585663-1-jithu.joseph@intel.com>
- <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
- <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
- <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
- <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
-Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image download
- path
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hang when swapping huge=within_size tmpfs from zram
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>, linux-mm@kvack.org,
+ Daniel Gomez <da.gomez@samsung.com>
+Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Hugh Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Lance Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <1738717785.im3r5g2vxc.none.ref@localhost>
+ <1738717785.im3r5g2vxc.none@localhost>
+ <25e2d5e4-8214-40de-99d3-2b657181a9fd@linux.alibaba.com>
+In-Reply-To: <25e2d5e4-8214-40de-99d3-2b657181a9fd@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-Mer 05 f=C3=A9vr 2025, =C3=A0 07:31, Joseph, Jithu a =C3=A9crit=E2=80=AF:
-> On 2/4/2025 9:50 PM, Anisse Astier wrote:
->>=20
->> Thanks for the update, and the Reported-by tag.
->>=20
->> Does this patch mean you got confirmation that the scan tests firmwar=
-e images will stay restricted to Intel customers with an NDA?
->
-> On the contrary, Intel is making the images publicly available.=20
-> A new section has been added towards the end of the page[1], allowing=20
-> anyone to download the images without requiring an NDA.
+On 2025/2/5 09:55, Baolin Wang wrote:
+> Hi Alex,
+> 
+> On 2025/2/5 09:23, Alex Xu (Hello71) wrote:
+>> Hi all,
+>>
+>> On 6.14-rc1, I found that creating a lot of files in tmpfs then deleting
+>> them reliably hangs when tmpfs is mounted with huge=within_size, and it
+>> is swapped out to zram (zstd/zsmalloc/no backing dev). I bisected this
+>> to acd7ccb284b "mm: shmem: add large folio support for tmpfs".
+>>
+>> When the issue occurs, rm uses 100% CPU, cannot be killed, and has no
+>> output in /proc/pid/stack or wchan. Eventually, an RCU stall is
+>> detected:
+> 
+> Thanks for your report. Let me try to reproduce the issue locally and 
+> see what happens.
+> 
+>> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+>> rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-11): P25160
+>> rcu:     (detected by 10, t=2102 jiffies, g=532677, q=4997 ncpus=12)
+>> task:rm              state:R  running task     stack:0     pid:25160 
+>> tgid:25160 ppid:24309  task_flags:0x400000 flags:0x00004004
+>> Call Trace:
+>>   <TASK>
+>>   ? __schedule+0x388/0x1000
+>>   ? kmem_cache_free.part.0+0x23d/0x280
+>>   ? sysvec_apic_timer_interrupt+0xa/0x80
+>>   ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>>   ? xas_load+0x12/0xc0
+>>   ? xas_load+0x8/0xc0
+>>   ? xas_find+0x144/0x190
+>>   ? find_lock_entries+0x75/0x260
+>>   ? shmem_undo_range+0xe6/0x5f0
+>>   ? shmem_evict_inode+0xe4/0x230
+>>   ? mtree_erase+0x7e/0xe0
+>>   ? inode_set_ctime_current+0x2e/0x1f0
+>>   ? evict+0xe9/0x260
+>>   ? _atomic_dec_and_lock+0x31/0x50
+>>   ? do_unlinkat+0x270/0x2b0
+>>   ? __x64_sys_unlinkat+0x30/0x50
+>>   ? do_syscall_64+0x37/0xe0
+>>   ? entry_SYSCALL_64_after_hwframe+0x50/0x58
+>>   </TASK>
+>>
+>> Let me know what information is needed to further troubleshoot this
+>> issue.
 
-Wow, that's great news!
-(I had read the page a bit too quickly, sorry!)
+Sorry, I can't reproduce this issue, and my testing process is as follows:
+1. Mount tmpfs with huge=within_size
+2. Create and write a tmpfs file
+3. Swap out the large folios of the tmpfs file to zram
+4. Execute 'rm' command to remove the tmpfs file
 
-I see the download link for EMR, does it mean SRF and GNR are upcoming? =
-What about SPR?
-
-Kind regards,
-
-Anisse=20
+Do you have any reproduction scripts or reproduction steps guide? Thanks.
