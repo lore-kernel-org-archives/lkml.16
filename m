@@ -1,239 +1,88 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D85A21505A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C960721773C;
+	Wed,  5 Feb 2025 11:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738754598; cv=none; b=h1NeEm7OZAP5qrhkDg7AbzDs/GMpPDqgHFxfrRTFoH6bQuWx2wUyUMb40h26A5ChZXtyGTuENlISSOcPcWvVI0Y939xGJc1wOTpz4jcmv7QZ9uKwuH57SwgnEW3hwr8LuDaq8dO0hVcjzZx9iuMsp8jelIL7RLY13Fm+ve32jYY=
+	t=1738754604; cv=none; b=nIa+G4Mb58O1RDRZ9gys7f25ZOx9JE6ubx4RS6w9k6lCs7Q6uVTYj9oRHj2aXPwBJwCvmawQu7s0AwITPDZy+N1oemVIcy186eJtf3O6PqTzytYyHVXjbJ7YQ3JtR+d/e+THmHhtt/GAA4Hfuf4/0zbg0lDBO7DOG76N/qcnpHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738754598; c=relaxed/simple;
-	bh=AqZfcnSsRLIRU+F8qfTXzVLSe+zGLhUDza2QBN1I/Z4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AIMVpNeXQ6YOAB3CAh2Ur0N6TXCQnMZtV94/5NWUOnMbDUQfT0pMlk+8qjS7XacZ34Bmg0vjsOFSqomEzY2Bb9/reje2MLRR0MnKHFdKeKMDpEKrXP/xzZ+jFT6G6mXmo9y33WVtQ7BEbgmotBdDauf0vMmzD0RRwfQRHY4ItNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dYyDhUKj; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738754604; c=relaxed/simple;
+	bh=JrqrsMm6ZW+oqoQfZL1aSYhz6WrCI/BCa1fGwa6BylI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ijuo4Rc7sc49xVAedr3c8IvvixYRRdzU6iX7/QWkn5WJHyLrUfU8++nTLeg1hOBBj0CkNlG9LwiVabW9NA+G49Js/J0luYwT5tg9fiD3gpMYZLKID6YgjIWVXWQ7fNrafR+ymBtTg+9peyFR95W1P8kxcmettoLGduEhPp5DLDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFC1p+S4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dYyDhUKj"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f47ed1f40dso42805807b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:23:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738754595; x=1739359395; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fa9aGxXl6mZVn+FME8FAQRbgYiaB3nWrpoQsGxnG/Q8=;
-        b=dYyDhUKjdWuAJLGCFK5b8enLJj+t2ejSufYWeSCIUOmzhm+jCt6bG3eNgXOrTGs7f/
-         F1VqjhIF5O4IWxEpN6UW2BtfzxtJzXAeYAHXtYDPyLrrrIjTk5FHxjy4t65gUBt+lsrB
-         AYeC1BWgS5vT8Dt7UADtWvCWRC7fNfRktkrjx5KrAZkFoDd/ItXqoSC6p3ibXbgizxyU
-         MrSmBY0MpVqWzyRIhNXtGpTGJ9ZYOm9Ud58NonNhQcLegImn3tspg3mYMH9wuvZ8/hnW
-         fCsnMlrdqNoj2jjMxsOUu6yc5CSOfu//Zo6EBhGRaZ5TRaEjra+s9/BgCNKn/fMyqti7
-         z01A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738754595; x=1739359395;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fa9aGxXl6mZVn+FME8FAQRbgYiaB3nWrpoQsGxnG/Q8=;
-        b=RSDMlw3PqISkDcrGYF0SQbCaB9BcWcqaqmGGDlqoH994r9oXrbxUraqdqku+Esyrt4
-         xCKRpBOPbwdvkPXIFwKiox+1t5Y2keiK5i4kLWT0ULdtLhThBeW7uiajEde0nigvdy3X
-         auKHRG7eqpYZcTEtH4W1ox0jZK7hE/aff5avV22BjTmC6gjjNjgvVJhOnA76eUp3cDJD
-         vij5Sw/gL0CGthAvCmyJcTiV1QGwaO1xDky5/SiFdX5mgjzEZJjBnpvbufk3+CPCXyR/
-         fiAAg+v3H1LlIA+vqbFi0nhse/zULQxsYS84/LX1nT0QhCdobY7k6u7oh+Argw5zebWL
-         1zEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcec7E8IhYaC0PXttF0DJ192vzXU/R2naYgTQDCfUeKXmEaF2yXsS4OkcxNxOIn07xumqtuN01wt+i4tU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzUuB3kvm0GihrMhD/VirCuluJu11+6fX5lox4S0v/suuRwe2v
-	gwvP8mueBgth/TPcdHAJUAjCyu76yMiadG8vD/jy4gzN+oHvE3KdG3I97LGC+XCqypfS6apISce
-	2+yuprwKlnfJ4KTSG4orj2QqVuGmWyb5lXrS5bA==
-X-Gm-Gg: ASbGncsDO+F+E9SXOPCoE0IP4bCYWk0Q37ZCQW5X07JOsPIFytkAukHAz06ncAMRHc/
-	3GGYP8xq0Tr9TzbBmVnvpesNlHGGWzmR4C0WwClJVHDb+nkmVMXNXQCrYEoIvU3ebTEseTGk=
-X-Google-Smtp-Source: AGHT+IEW6RD+5VnO+7EsCnCeyhyA9cslgU2OmzAS1vQAeudwMDWyr87z1JVVpYOmr30QsWroSZRBnjtOK3EDe6HFwcw=
-X-Received: by 2002:a05:690c:6a03:b0:6ee:6c7d:4888 with SMTP id
- 00721157ae682-6f989ef890emr20596927b3.22.1738754595544; Wed, 05 Feb 2025
- 03:23:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFC1p+S4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19A0C4CED1;
+	Wed,  5 Feb 2025 11:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738754604;
+	bh=JrqrsMm6ZW+oqoQfZL1aSYhz6WrCI/BCa1fGwa6BylI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GFC1p+S48lksLC+tsQdYni6gO7v8MUOwnqzy4WHXjPJChjR13UeRI4B7l65KW33SH
+	 /Hp9zNgIyd9FNSb02vaeMak5i3fBagMBArBWrdwsnBAXdjjNfS8m0LvA2S+mjWNH3Z
+	 Nor+SMevFn3VA483slwZl0sT30pIDdOGvq50rwygMkxXX0uCA5AnZe737U/g22Ttm9
+	 lMeAUX4PEn7jjAXXCr4md0n8+pGt6V0gxvjikfWqcangUA+Oj80nbSxtaYgm2YlS9K
+	 b20b/QpxFWgg10OcAV9tXs0JsOGkSzKa7GDD+JlGtUMbFbvdSS8/fRWxtVlN4Z7Vx7
+	 RVIZtZ7v74PnA==
+Date: Wed, 5 Feb 2025 16:43:50 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 2/3] KVM: x86: Remove use of apicv_update_lock when
+ toggling guest debug state
+Message-ID: <acf2q5da7s2rmh5tugozwhwv5rqafacgah7kjicrfc2qhbuzc6@k6ic4xngr552>
+References: <cover.1738595289.git.naveen@kernel.org>
+ <dc6cf3403e29c0296926e3bd8f0d4e87b67f4600.1738595289.git.naveen@kernel.org>
+ <30fc469b5b2ec5e2d6703979a0d09ad0a9df29e1.camel@redhat.com>
+ <a7eb34n6gkwg6kafh7r76tkwtweuflyfoczgxya2k63al2qdoe@phmszu6ilk4w>
+ <Z6JTmvrkrLpaJ1nw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
- <20250203-drm-msm-phy-pll-cfg-reg-v2-2-862b136c5d22@linaro.org>
- <u4qho7u2nu2x6qxkfxpeakotmbdgoha3e5csmsamaanlxziiif@22kzxupzibj7>
- <12275e11-eadc-48be-b8c3-9463cdf92698@linaro.org> <vfqfbpxc3zrerrb2hyis6h4kgk7aqfljwb7sxlduwlkqprmodg@rjjfsgwr5c6j>
- <2e96ae62-3114-4c7b-bea7-27f6e2009634@linaro.org> <t4zn2gv3mbn3nqlh5h3l3ej5zxs4wa74ncgymonci7v45w47ai@qmmtxbelichw>
- <6cba59b9-4852-4cad-95eb-dfecb2e44dc4@linaro.org>
-In-Reply-To: <6cba59b9-4852-4cad-95eb-dfecb2e44dc4@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 5 Feb 2025 13:23:06 +0200
-X-Gm-Features: AWEUYZlJPJ9hwhYV7xEOL3gLUNVn5kAppOzW5Vg3bQGz2sNQ7dCZrFHi0WhZq70
-Message-ID: <CAA8EJppUkLYfHUcNcJA5or4ZVJsbTe74a6GGV1CR6zqCWmVjRA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
- clock driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6JTmvrkrLpaJ1nw@google.com>
 
-Hi,
+On Tue, Feb 04, 2025 at 09:51:22AM -0800, Sean Christopherson wrote:
+> On Tue, Feb 04, 2025, Naveen N Rao wrote:
+> > On Mon, Feb 03, 2025 at 09:00:05PM -0500, Maxim Levitsky wrote:
+> > > On Mon, 2025-02-03 at 22:33 +0530, Naveen N Rao (AMD) wrote:
+> > > > apicv_update_lock is not required when querying the state of guest
+> > > > debug in all the vcpus. Remove usage of the same, and switch to
+> > > > kvm_set_or_clear_apicv_inhibit() helper to simplify the code.
+> > > 
+> > > It might be worth to mention that the reason why the lock is not needed,
+> > > is because kvm_vcpu_ioctl from which this function is called takes 'vcpu->mutex'
+> > > and thus concurrent execution of this function is not really possible.
+> > 
+> > Looking at this again, that looks to be a vcpu-specific lock, so I guess 
+> > it is possible for multiple vcpus to run this concurrently?
+> 
+> Correct.
+> 
+> > In reality, this looks to be coming in from a vcpu ioctl from userspace, 
+> > so this is probably not being invoked concurrently today.
+> > 
+> > Regardless, I wonder if moving this to a per-vcpu inhibit might be a 
+> > better way to address this.
+> 
+> No, this is a slow path.
 
-On Wed, 5 Feb 2025 at 11:34, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 05/02/2025 03:51, Dmitry Baryshkov wrote:
-> > On Tue, Feb 04, 2025 at 04:46:04PM +0100, Krzysztof Kozlowski wrote:
-> >> On 04/02/2025 15:26, Dmitry Baryshkov wrote:
-> >>> On Tue, Feb 04, 2025 at 10:21:25AM +0100, Krzysztof Kozlowski wrote:
-> >>>> On 03/02/2025 18:41, Dmitry Baryshkov wrote:
-> >>>>> On Mon, Feb 03, 2025 at 06:29:19PM +0100, Krzysztof Kozlowski wrote:
-> >>>>>> PHY_CMN_CLK_CFG1 register is updated by the PHY driver and by a mux
-> >>>>>> clock from Common Clock Framework:
-> >>>>>> devm_clk_hw_register_mux_parent_hws().  There could be a path leading to
-> >>>>>> concurrent and conflicting updates between PHY driver and clock
-> >>>>>> framework, e.g. changing the mux and enabling PLL clocks.
-> >>>>>>
-> >>>>>> Add dedicated spinlock to be sure all PHY_CMN_CLK_CFG1 updates are
-> >>>>>> synchronized.
-> >>>>>>
-> >>>>>> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
-> >>>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >>>>>>
-> >>>>>> ---
-> >>>>>>
-> >>>>>> Changes in v2:
-> >>>>>> 1. Store BIT(4) and BIT(5) in local var in dsi_pll_enable_global_clk()
-> >>>>>> ---
-> >>>>>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 35 +++++++++++++++++++------------
-> >>>>>>  1 file changed, 22 insertions(+), 13 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> >>>>>> index c164f845653816291ad96c863257f75462ef58e7..e26f53f7cde8f0f6419a633f5d39784dc2e5bb98 100644
-> >>>>>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> >>>>>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> >>>>>> @@ -83,6 +83,9 @@ struct dsi_pll_7nm {
-> >>>>>>          /* protects REG_DSI_7nm_PHY_CMN_CLK_CFG0 register */
-> >>>>>>          spinlock_t postdiv_lock;
-> >>>>>>
-> >>>>>> +        /* protects REG_DSI_7nm_PHY_CMN_CLK_CFG1 register */
-> >>>>>> +        spinlock_t pclk_mux_lock;
-> >>>>>> +
-> >>>>>>          struct pll_7nm_cached_state cached_state;
-> >>>>>>
-> >>>>>>          struct dsi_pll_7nm *slave;
-> >>>>>> @@ -381,22 +384,32 @@ static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
-> >>>>>>          spin_unlock_irqrestore(&pll->postdiv_lock, flags);
-> >>>>>>  }
-> >>>>>>
-> >>>>>> -static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>>> +static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
-> >>>>>> +                                        u32 val)
-> >>>>>>  {
-> >>>>>> +        unsigned long flags;
-> >>>>>>          u32 data;
-> >>>>>>
-> >>>>>> +        spin_lock_irqsave(&pll->pclk_mux_lock, flags);
-> >>>>>>          data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-> >>>>>> -        writel(data & ~BIT(5), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-> >>>>>> +        data &= ~mask;
-> >>>>>> +        data |= val & mask;
-> >>>>>> +
-> >>>>>> +        writel(data, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-> >>>>>> +        spin_unlock_irqrestore(&pll->pclk_mux_lock, flags);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>>> +{
-> >>>>>> +        dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
-> >>>>>>  }
-> >>>>>>
-> >>>>>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>>>  {
-> >>>>>> -        u32 data;
-> >>>>>> +        u32 cfg_1 = BIT(5) | BIT(4);
-> >>>>>
-> >>>>> Please define these two bits too.
-> >>>>
-> >>>> Why? They were not defined before. This only moving existing code.
-> >>>
-> >>> Previously it was just a bit magic. Currently you are adding them as
-> >>
-> >> No, previous code:
-> >>
-> >> writel(data | BIT(5) | BIT(4), pll->phy->base +
-> >> REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-> >>
-> >> This is a mask and update in the same time, because:
-> >>      (data & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
-> >> is just redudant.
-> >>
-> >> I did not do any logical change, I did not add any mask or field.
-> >> Everything was already there.
-> >
-> > Yes... and no. Previously it was just writel(foo | BIT(5) | BIT(4)). Now
->
-> You did not address my comment. Previous code was:
->
-> (foo & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
->
-> Just for shorter syntax it was written different way:
->
-> foo | BIT(5) | BIT(4)
-
-Previously it was a simple writel() with some bit magic. Now you call
-dsi_pll_cmn_clk_cfg1_update() passing the register bit field through
-the 'mask' argument. I'm asking to get those masks defined. Is it
-possible?
-
-Yes, the code is equivalent and results in the same values being
-written to the same registers.
-At the same time you have added a logical entity, a masked write. I
-want to be able to understand if bits 4 and 5 are a part of the same
-register field or they belong to two different fields and can be
-written separately. I really don't understand why are we spending so
-much time arguing about a simple #define. Okay, in case of drm/msm it
-is not a #define, it is <reg><bitfield/></reg>. The net result is the
-same.
-
->
-> > your code adds BIT(5) as a 'mask' parameter. Is it a correct mask for
->
-> No, my code does not add it. It was already there, look:
->
-> foo | BIT(5) | BIT(4)
->       ^^^^^^^ here
->
->
-> > that field? That's why I'm asking you to define those - you have changed
->
-> No, I did not change bitwrites. The code is 100% equivalent, both
-> logically and assembly.
->
-> You mistake maybe with some other part doing "writel(data & ~BIT(5)" in
-> dsi_pll_disable_global_clk() but that's just poor diff.
->
-> > bitwrites to the masked bit writes. Masks should be defined.
-> >
-> >>
-> >>
-> >>> masks. I want to know if BIT(4) and BIT(5) are parts of the same
-> >>> bitfield (2 bits wide) or if they define two different bits.
-> >>
-> >> While in general you are right, it does not matter for this fix. If this
-> >> are separate bitfields - fix is correct. If this is one bitfield - fix
-> >> is still correct. You could claim that if this was one bitfield, using
-> >> 2xBIT() is not logical, but this was there already, so again my fix is
-> >> only fixing and keeping entire logic or inconsistencies intact.
-> >
->
->
-> Best regards,
-> Krzysztof
+My comment was more from the point of view of correctness, rather than 
+performance (with the goal of removing use of apicv_update_lock) -- 
+similar to the issue with IRQWIN needing to maintain per-vcpu state. My 
+naive understanding of Maxim's mail was that we would introduce per-vcpu 
+inhibit field to maintain per-vcpu inhibit state, but not actually 
+inhibit AVIC on a per-vcpu basis :)
 
 
-
--- 
-With best wishes
-Dmitry
+Thanks,
+Naveen
