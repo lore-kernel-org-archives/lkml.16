@@ -1,110 +1,127 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13214C76
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2733B4C76;
+	Wed,  5 Feb 2025 17:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738775257; cv=none; b=X0GIDcp6HDS3ZqfwqBVE5Y3jewH1STOXKpiOcMquOy6LFxc5AYk4W7nQDHqH8wPXqmC+uZCXZ2TIky3XbaRFiF+2pUArA0cJaGmVyaIhwm3BvtbQq9z4ok85fPtbBpBO/ZTUzRJUGFDa+l9rFkIanS2njMXlmqD86ZDCfe8A+KQ=
+	t=1738775347; cv=none; b=WFGmJ2w9xrSIwznLOswfJnOmriLkG5AEQ5G5i5dds8imQ42+D3L/EmHqBgh4o4A+8sCFRxEd3GLY0WUxTEYXJwNxsYqjU3KMKC61qlcqOUXVdj6aHdfPyv14fu7kxjoVsTL0iJQ9wbwVFPbGWb+e84FAAr6wIcZtvm1TE6J4EK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738775257; c=relaxed/simple;
-	bh=Axisx3pm6bDPHSIJCNK/7TzK1kfoFFEX/IWdwqu26wM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e7DNwPTN7j8mvgCVMuULmfcgMiKixY4uOqNAjroCvw1JvotjSNjXciBA2uC9b+JQSMgucpE4w/uz2kbX2YQXLMKBXbPhNvUQ0cYTwS9qSkOVhv34GtB8nqYNiFnacmpTjrOIP0fOCTW2tvGOFUiqPb7PS0aHKTnck0DexgDhpQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bPp4yLuv; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738775347; c=relaxed/simple;
+	bh=CbXagtJhrSGSS95bINrZ5cWssD3AwQsuc3B6gL6u2k4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXeUk0WolvQbXuiq+foW5mDXwRWHLEsQJPHCLNo2HXjMbXA7A8rdDJRnfisXhbDpw4DuFvMFXDsss3klEi+Ch682tTK2Qdm+0neMSMcLQ4DCwhEq4Lm7YoLr3obvDbgCKqxGTIpadA/IL6lw1c4yOvdthrtkTerLoWmF2veQVb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HHcL0D7e; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPp4yLuv"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30615661f98so74575661fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 09:07:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738775253; x=1739380053; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A9pzUnI3bZpyKxMnavBeRYl/Cm9qoQVfi6VhDVIZsWY=;
-        b=bPp4yLuv++Vytm5NOl15Rdmlo+IJ849PRVUBhMYAZWFqF+F59wEw1xcAUpQ4I/FqFu
-         USzQC+7gHkxT9n70YYHHjZLfSXcts0xy1JNJXMSWuZ14bTsCKBjkR+PG0QCVZml/Engb
-         +NQPfuYFRVWyzt72Zq4ikM7Hw/4ea3PAVgeqqcgf4Dq4YGIs0E6pp5vLmeR3R0yBhelr
-         yWDmyOvDH0Vmg4E00HRdLn5UveB6gHqh8T1A8KmvMjssDlg6YGq6IT8Jvv3UWgDr9BnM
-         APUqfgpmWdcSOGwSg6XautObkBxnUMX7JgNxoPrHQ8ijxPvr1Enzxn0j29HyP4TJyT+1
-         Z4WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738775253; x=1739380053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A9pzUnI3bZpyKxMnavBeRYl/Cm9qoQVfi6VhDVIZsWY=;
-        b=u5tbtBnK/750/PndWPaFjxOw5CIbMCtlQycqRC5242up3N8Zp3nSGVDXajIr0zH4Vg
-         cfOEXbk71iAO00kQDchghtG8qvXk6TBEieUFUi8uD+aNsJuf9vtWHYYzLTITsNDHM5qD
-         r5cPmG1aAPii8M2clyTwyt5rSnhm3Q1qRd1+pWdQUJzg98GpgsXMmUsTl4DrcZ+k0ibz
-         EcqT8NzQHDJ1TgN2Gdet7t8HZnJBW7HDRoHAPcpocA1dGe3KqeMLCiZF7kwFBUAtzDN8
-         ewWyTPYZEB3MyzLHHOOjIf73PfCO9+teSlYd1qIuPfXabPs0bX5wdLbsV5yhH3YJv27H
-         zNlw==
-X-Gm-Message-State: AOJu0Ywr4bEg0ekZzm9DeSVeD/2AZO6Hbd42CEO7D+X8dCVy2gsx6s5O
-	bSZAd9v8YpRVqXcomrJXi4b8OdG1lN6DxQxz1/pyKcuwtlos58wIMw7zQRAySDhPaMDsxWqF1By
-	o43i72HZz5yiAw9gw0dXEcybxFK8=
-X-Gm-Gg: ASbGncu5oRZiNj4uIuwtvJ/+l8WLOF7uZzAngabnq/h7PibFsPGseb44QGJxD0aORbo
-	hH02CIAO6Vwl9IqgGxz86vITTszMyb8Qcg7MhHlRl+N307z8F1r2CH5CWqy4x5oS8h00vqWs2
-X-Google-Smtp-Source: AGHT+IFGjnhHLKHodIf984gizCKLmKMe7YT6eOLnmzkUks/Hf+ZbBdeTnbF55hu3gaNh8CaCJPekENWFL+E8zYhy7Rk=
-X-Received: by 2002:a2e:a903:0:b0:2ff:d2e4:8dd9 with SMTP id
- 38308e7fff4ca-307cf39fa40mr12766311fa.32.1738775252384; Wed, 05 Feb 2025
- 09:07:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HHcL0D7e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5wOT3p+XzV1SocAEzl8vME7EDx+B302N3XwBDJwQTAw=; b=HHcL0D7eVudx5sZ9hoN8wpNrbI
+	t4b0+DaMY/lTfTeq+vCdBwadnnwopZA99yGVHx3/OGzYQOnTmxaG1p3NKzw/esjxyrB9ydYL7ovmV
+	MdI1fUeGPecHwBzGWYuWLR6PLvr2ovWboTs8+J/Urym3vnDNzAGn4QZ3CowwSyCtnRlQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tfitL-00BFNQ-QE; Wed, 05 Feb 2025 18:08:47 +0100
+Date: Wed, 5 Feb 2025 18:08:47 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	dimitri.fedrau@liebherr.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/3] net: phy: Add helper for getting tx
+ amplitude gain
+Message-ID: <b28755b0-9104-4295-8cd3-508818445a4b@lunn.ch>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
+ <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
+ <20250205052218.GC3831@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205092721.9395-1-bhe@redhat.com> <20250205092721.9395-5-bhe@redhat.com>
-In-Reply-To: <20250205092721.9395-5-bhe@redhat.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 6 Feb 2025 01:07:14 +0800
-X-Gm-Features: AWEUYZnzzofmPTfLgwnGGoJnYW4s7f9RdzKu-o6rq2ipILrHLFros8h4VJ03nvI
-Message-ID: <CAMgjq7CYC4xfAkp9Y7g=3rw=iqTj_pQAjrnwDC1orkdUhnOCSQ@mail.gmail.com>
-Subject: Re: [PATCH 04/12] mm/swap: skip scanning cluster range if it's empty cluster
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, chrisl@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205052218.GC3831@debian>
 
-On Wed, Feb 5, 2025 at 5:27=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
->
-> Since ci->lock has been taken when isolating cluster from
-> si->free_clusters or taking si->percpu_cluster->next[order],
-> it's unnecessary to scan and check the cluster range availability
-> if i'ts empty cluster, and this can accelerate the huge page
-> swapping.
->
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  mm/swapfile.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 9c9a4ec6d4c6..61efde853eea 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -729,6 +729,9 @@ static bool cluster_scan_range(struct swap_info_struc=
-t *si,
->         unsigned long offset, end =3D start + nr_pages;
->         unsigned char *map =3D si->swap_map;
->
-> +       if (cluster_is_empty(ci))
-> +               return true;
-> +
+On Wed, Feb 05, 2025 at 06:22:18AM +0100, Dimitri Fedrau wrote:
+> Am Tue, Feb 04, 2025 at 05:54:53PM +0000 schrieb Russell King (Oracle):
+> > On Tue, Feb 04, 2025 at 02:09:16PM +0100, Dimitri Fedrau via B4 Relay wrote:
+> > >  #if IS_ENABLED(CONFIG_OF_MDIO)
+> > > -static int phy_get_int_delay_property(struct device *dev, const char *name)
+> > > +static int phy_get_u32_property(struct device *dev, const char *name)
+> > >  {
+> > >  	s32 int_delay;
+> > >  	int ret;
+> > > @@ -3108,7 +3108,7 @@ static int phy_get_int_delay_property(struct device *dev, const char *name)
+> > >  	return int_delay;
+> > 
+> > Hmm. You're changing the name of this function from "int" to "u32", yet
+> > it still returns "int".
+> >
+> 
+> I just wanted to reuse code for retrieving the u32, I found
+> phy_get_int_delay_property and renamed it. But the renaming from "int"
+> to "u32" is wrong as you outlined.
+> 
+> > What range of values are you expecting to be returned by this function?
+> > If it's the full range of u32 values, then that overlaps with the error
+> > range returned by device_property_read_u32().
+> >
+> 
+> Values are in percent, u8 would already be enough, so it wouldn't
+> overlap with the error range.
+> 
+> > I'm wondering whether it would be better to follow the example set by
+> > these device_* functions, and pass a pointer for the value to them, and
+> > just have the return value indicating success/failure.
+> >
+> 
+> I would prefer this, but this would mean changes in phy_get_internal_delay
+> if we don't want to duplicate code, as phy_get_internal_delay relies on
+> phy_get_int_delay_property and we change function parameters of
+> phy_get_int_delay_property as you described. I would switch from
+> static int phy_get_int_delay_property(struct device *dev, const char *name)
+> to
+> static int phy_get_u32_property(struct device *dev, const char *name, u32 *val)
+> 
+> Do you agree ?
 
-Hi Baoquan,
+This looks O.K. You should also rename the local variable int_delay.
 
-Thanks for the series.
+Humm, that function has other issues.
 
-Most commits are looking great, but this one is a bit questionable.
-cluster_scan_range is only called by alloc_swap_scan_cluster, and it
-already checks if the cluster has enough empty slots to use, so this
-might be redundant.
+static int phy_get_int_delay_property(struct device *dev, const char *name)
+{
+	s32 int_delay;
+	int ret;
 
-It is possible that cluster_scan_range sees an empty cluster if the
-cluster lock was dropped for reclaiming HAS_CACHE, but the chance
-should be extremely low, that this might be a negative optimization.
+	ret = device_property_read_u32(dev, name, &int_delay);
+	if (ret)
+		return ret;
+
+	return int_delay;
+}
+
+int_delay should really be a u32. if ret is not an error, there should
+be a range check to ensure int_long actually fits in an s32, otherwise
+-EINVAL, or maybe -ERANGE.
+
+For delays, we never expect too much more than 2000ps, so no valid DT
+blob should trigger issues here.
+
+     Andrew
