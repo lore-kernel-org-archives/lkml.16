@@ -1,511 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481A01DE2C1;
-	Wed,  5 Feb 2025 18:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1381FCCF2;
+	Wed,  5 Feb 2025 18:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779419; cv=none; b=RrPNM2ZPr+HQ81cmUGZgqZQAjh5gjL36tiAT0ixi9/IUKpz59XFKQ9gMKEh08llBVtCKwaX7xJRUbiB2F3uNW+WADaiZYgEjtcjBf5SqJ7IxMNFTqZcYj6njbV36V34yTKWjpKLc7bZLwq5fPFF9MJe7iFD9q3SJM1of66WcXMY=
+	t=1738779430; cv=none; b=G78LBdhZYV6etWUDK9uCY5F/ncT9CSIDdKg5MOvEL0IRDupBx45fyoQ5eUjjhkEjZNHMgc58owVli3H6R52IAtFsO4nVW1ojgCTfUsMDfuw1aqC0r5l8LurYMa3fJ5zCuARtPwaHcYGenOkyJ5kYRMaPjGnz47f7Cm45k3Ss1Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779419; c=relaxed/simple;
-	bh=swy9UIt6rQ6rsisbYwB8QtBRf5xRoozbACII/GoFBZ0=;
+	s=arc-20240116; t=1738779430; c=relaxed/simple;
+	bh=BkQR2waoTAZKgITUbNMtnjCqTXW/9yjFpf4WkmVnNU4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZt24owpd7RgUUNxd7iBGKIoG8ne+p1qeqsmI2nyBm3a7P3tGXLS5zqK/1khFFeEipn2LTd+8YHd+TyF/g8G7jxNTH0dXdYkvsgFryEVOGjnkWio4FOXU/emmVk1oxHcNXvrEH35kRTMKZzmbZAPVLWIMd4us/BfCAGUd8oPIg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToHVoxxM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=g82T5j1EgnAGNSCBDX9rXhcRxNChs5DDFWfpts7jh5OcCEY9H55Yck2TC+bz551+TVkpFG9MCISdfdGHsT5cH1pLhzEB3Sw0CQvoZm0iE/c4uTywQl7x2yqawpZETi6aKH2k/lT5t1bLDfTVgNzy7nHx/RaTC9ka1hl3TA4luUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iPXbQZhH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tT2MiVE9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=H4rs0IHi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eNmkrXZL; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToHVoxxM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC6CC4CED1;
-	Wed,  5 Feb 2025 18:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738779418;
-	bh=swy9UIt6rQ6rsisbYwB8QtBRf5xRoozbACII/GoFBZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ToHVoxxMuEtdnprPYlsl+qi9dxbi70+iKvxe2L2aY1U9ft6B5wOLs2BpE9LBiJVnZ
-	 iZqYG3rjT5wABW8Ti1+rXMfayp038wWveYPVQSIlwlaAqNOF3jlonMp3psqWHQh2ZB
-	 73t8oib06PogNJqKBk5vSuGIciC49eL7v2VFxSsksn8UVybfW9a21Ol8zyzJchCm9w
-	 zoJTCH+i/fmeLB4AQopz0qrkhcIY1dNX0NtAsF3DE1oikm2a4szP/0Q457V5dOvR6V
-	 u/INHooODSDOaKFlSBTZ2zd0O8f/NJiCpZLjnpnOji9x5/T2MDjc2oE7Cdj2oidmQ0
-	 7jhPGdEwvFQgg==
-Received: by pali.im (Postfix)
-	id 25DF74FC; Wed,  5 Feb 2025 19:16:46 +0100 (CET)
-Date: Wed, 5 Feb 2025 19:16:45 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	ronnie sahlberg <ronniesahlberg@gmail.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steve French <sfrench@samba.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Immutable vs read-only for Windows compatibility
-Message-ID: <20250205181645.4ps3kzafyasg4dgj@pali>
-References: <CAOQ4uxhh1LDz5zXzqFENPhJ9k851AL3E7Xc2d7pSVVYX4Fu9Jw@mail.gmail.com>
- <20250117185947.ylums2dhmo3j6hol@pali>
- <20250202152343.ahy4hnzbfuzreirz@pali>
- <CAOQ4uxgjbHTyQ53u=abWhyQ81ATL4cqSeWKDfOjz-EaR0NGmug@mail.gmail.com>
- <20250203221955.bgvlkp273o3wnzmf@pali>
- <CAOQ4uxhkB6oTJm7DvQxFbxkQ1u_KMUFEL0eWKVYf39hnuYrnfQ@mail.gmail.com>
- <20250203233403.5a5pcgl5xylj47nb@pali>
- <CAOQ4uxisXgDOuE1oDH6qtLYoiFeG55kjpUJaXDxZ+tp2ck++Sg@mail.gmail.com>
- <20250204212638.3hhlbc5muutnlluw@pali>
- <CAOQ4uxg5k5FP43y93FRujj54kVk8TyXD2AeO_VFJ2m+aB=b1_Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iPXbQZhH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tT2MiVE9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="H4rs0IHi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eNmkrXZL"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id ED37621133;
+	Wed,  5 Feb 2025 18:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738779427;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
+	b=iPXbQZhH70vEQ4YmosOZqQlmm3Sf1qtPNhkOyPDdFl4u/jWVl5a9tJ9qYUMT99euBq0Wix
+	qCJYIHIs1WvCBBUCG444iajEhph78C72rnivmYxAm+BreI5Qz7IiyDfbO/WJUMF36kLYGn
+	ar0PFj+ceveqdS/3XDK5ruNIsi8VW2Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738779427;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
+	b=tT2MiVE9qMkiMHHBHVH0g9B4xGW6knqVz0g9zoBGYV/iCK56k14VUrGy6PNaGhM8SQjXXm
+	Nb4FBOK2UxY7JLDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=H4rs0IHi;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=eNmkrXZL
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738779426;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
+	b=H4rs0IHi97g8kH3sV7labgHBU6IXb0/UBgN000ZqmkvfRE2iI/rjpXO3firHqdmRi//f9b
+	rT1fRP4Tff9m18+tPoST/yGltQsjRECnW+NUaZyYu1MvcNXx+xz6orMi7sddL5khvFsn+G
+	jFKTHVX2ggWkmDX/EWW4vvbBEwX4uoQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738779426;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
+	b=eNmkrXZL6ViAF95eHA2ssnMk9/rXF2fY1VO1Hg1Xs9BSflXkkEEzP/fqA3cLcZ5V7PXz2K
+	I/P7g0XrvHcZBaBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BDBD913694;
+	Wed,  5 Feb 2025 18:17:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wK8dLSKro2d0VgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 05 Feb 2025 18:17:06 +0000
+Date: Wed, 5 Feb 2025 19:17:05 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] btrfs: zstd: enable negative compression levels mount
+ option
+Message-ID: <20250205181705.GL5777@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250130175821.1792279-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxg5k5FP43y93FRujj54kVk8TyXD2AeO_VFJ2m+aB=b1_Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20250130175821.1792279-1-neelx@suse.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: ED37621133
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,suse.cz:replyto]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.21
+X-Spam-Flag: NO
 
-On Wednesday 05 February 2025 17:33:30 Amir Goldstein wrote:
-> On Tue, Feb 4, 2025 at 10:26 PM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > On Tuesday 04 February 2025 12:54:01 Amir Goldstein wrote:
-> > > On Tue, Feb 4, 2025 at 12:34 AM Pali Rohár <pali@kernel.org> wrote:
-> > > >
-> > > > On Tuesday 04 February 2025 00:02:44 Amir Goldstein wrote:
-> > > > > On Mon, Feb 3, 2025 at 11:20 PM Pali Rohár <pali@kernel.org> wrote:
-> > > > > >
-> > > > > > On Monday 03 February 2025 22:59:46 Amir Goldstein wrote:
-> > > > > > > On Sun, Feb 2, 2025 at 4:23 PM Pali Rohár <pali@kernel.org> wrote:
-> > > > > > > > And there is still unresolved issue with FILE_ATTRIBUTE_READONLY.
-> > > > > > > > Its meaning is similar to existing Linux FS_IMMUTABLE_FL, just
-> > > > > > > > FILE_ATTRIBUTE_READONLY does not require root / CAP_LINUX_IMMUTABLE.
-> > > > > > > >
-> > > > > > > > I think that for proper support, to enforce FILE_ATTRIBUTE_READONLY
-> > > > > > > > functionality, it is needed to introduce new flag e.g.
-> > > > > > > > FS_IMMUTABLE_FL_USER to allow setting / clearing it also for normal
-> > > > > > > > users without CAP_LINUX_IMMUTABLE. Otherwise it would be unsuitable for
-> > > > > > > > any SMB client, SMB server or any application which would like to use
-> > > > > > > > it, for example wine.
-> > > > > > > >
-> > > > > > > > Just to note that FreeBSD has two immutable flags SF_IMMUTABLE and
-> > > > > > > > UF_IMMUTABLE, one settable only by superuser and second for owner.
-> > > > > > > >
-> > > > > > > > Any opinion?
-> > > > > > >
-> > > > > > > For filesystems that already support FILE_ATTRIBUTE_READONLY,
-> > > > > > > can't you just set S_IMMUTABLE on the inode and vfs will do the correct
-> > > > > > > enforcement?
-> > > > > > >
-> > > > > > > The vfs does not control if and how S_IMMUTABLE is set by filesystems,
-> > > > > > > so if you want to remove this vfs flag without CAP_LINUX_IMMUTABLE
-> > > > > > > in smb client, there is nothing stopping you (I think).
-> > > > > >
-> > > > > > Function fileattr_set_prepare() checks for CAP_LINUX_IMMUTABLE when
-> > > > > > trying to change FS_IMMUTABLE_FL bit. This function is called from
-> > > > > > ioctl(FS_IOC_SETFLAGS) and also from ioctl(FS_IOC_FSSETXATTR).
-> > > > > > And when function fileattr_set_prepare() fails then .fileattr_set
-> > > > > > callback is not called at all. So I think that it is not possible to
-> > > > > > remove the IMMUTABLE flag from userspace without capability for smb
-> > > > > > client.
-> > > > > >
-> > > > >
-> > > > > You did not understand what I meant.
-> > > > >
-> > > > > You cannot relax the CAP_LINUX_IMMUTABLE for setting FS_IMMUTABLE_FL
-> > > > > and there is no reason that you will need to relax it.
-> > > > >
-> > > > > The vfs does NOT enforce permissions according to FS_IMMUTABLE_FL
-> > > > > The vfs enforces permissions according to the S_IMMUTABLE in-memory
-> > > > > inode flag.
-> > > > >
-> > > > > There is no generic vfs code that sets S_IMMUTABLE inode flags, its
-> > > > > the filesystems that translate the on-disk FS_IMMUTABLE_FL to
-> > > > > in-memory S_IMMUTABLE inode flag.
-> > > > >
-> > > > > So if a filesystem already has an internal DOSATTRIB flags set, this
-> > > > > filesystem can set the in-memory S_IMMUTABLE inode flag according
-> > > > > to its knowledge of the DOSATTRIB_READONLY flag and the
-> > > > > CAP_LINUX_IMMUTABLE rules do not apply to the DOSATTRIB_READONLY
-> > > > > flag, which is NOT the same as the FS_IMMUTABLE_FL flag.
-> > > > >
-> > > > > > And it would not solve this problem for local filesystems (ntfs or ext4)
-> > > > > > when Samba server or wine would want to set this bit.
-> > > > > >
-> > > > >
-> > > > > The Samba server would use the FS_IOC_FS[GS]ETXATTR ioctl
-> > > > > API to get/set dosattrib, something like this:
-> > > > >
-> > > > > struct fsxattr fsxattr;
-> > > > > ret = ioctl_get_fsxattr(fd, &fsxattr);
-> > > > > if (!ret && fsxattr.fsx_xflags & FS_XFLAG_HASDOSATTR) {
-> > > > >     fsxattr.fsx_dosattr |= fs_dosattrib_readonly;
-> > > > >     ret = ioctl_set_fsxattr(fd, &fsxattr);
-> > > > > }
-> > > >
-> > > > Thanks for more explanation. First time I really did not understood it.
-> > > > But now I think I understood it. So basically there would be two flags
-> > > > which would result in setting S_IMMUTABLE on inode. One is the existing
-> > > > FS_IMMUTABLE_FL which requires the capability and some new flag (e.g.
-> > > > FS_XFLAG_HASDOSATTR) which would not require it and can be implemented
-> > > > for cifs, vfat, ntfs, ... Right?
-> > > >
-> > >
-> > > Well, almost right.
-> > > The flag that would correspond to FILE_ATTRIBUTE_READONLY
-> > > is FS_DOSATTRIB_READONLY from the new field fsx_dosattrib
-> > > (see below)
-> >
-> > Thank you for example, it is for sure good starting point for me.
-> >
-> > > --- a/include/uapi/linux/fs.h
-> > > +++ b/include/uapi/linux/fs.h
-> > > @@ -145,7 +145,8 @@ struct fsxattr {
-> > >         __u32           fsx_nextents;   /* nextents field value (get)   */
-> > >         __u32           fsx_projid;     /* project identifier (get/set) */
-> > >         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> > > -       unsigned char   fsx_pad[8];
-> > > +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
-> > > +       unsigned char   fsx_pad[4];
-> > >  };
-> > >
-> > >  /*
-> > > @@ -167,7 +168,16 @@ struct fsxattr {
-> > >  #define FS_XFLAG_FILESTREAM    0x00004000      /* use filestream allocator */
-> > >  #define FS_XFLAG_DAX           0x00008000      /* use DAX for IO */
-> > >  #define FS_XFLAG_COWEXTSIZE    0x00010000      /* CoW extent size
-> > > allocator hint */
-> > > -#define FS_XFLAG_HASATTR       0x80000000      /* no DIFLAG for this   */
-> > > +#define FS_XFLAG_HASATTR       0x80000000      /* has extended attributes */
-> > > +
-> > > +/*
-> > > + * Flags for the fsx_dosattrib field
-> > > + */
-> > > +#define FS_DOSATTRIB_READONLY  0x00000001      /* R - read-only */
-> > > +#define FS_DOSATTRIB_HIDDEN    0x00000002      /* H - hidden */
-> > > +#define FS_DOSATTRIB_SYSTEM    0x00000004      /* S - system */
-> > > +#define FS_DOSATTRIB_ARCHIVE   0x00000020      /* A - archive */
-> > > +#define FS_DOSATTRIB_HASATTR   0x80000000      /* has dos attributes */
-> >
-> > Should these FS_DOSATTRIB_* constants follows the Windows
-> > FILE_ATTRIBUTE_* constants? Because I see that you put a gap between
-> > system and archive.
-> >
+On Thu, Jan 30, 2025 at 06:58:19PM +0100, Daniel Vacek wrote:
+> This patch allows using the fast modes (negative compression levels) of zstd
+> as a mount option.
 > 
-> Well, no, they do not need to follow Windows contestants,
-> but then again, why not?
+> As per the results, the compression ratio is lower:
+> 
+> for level in {-15..-1} 1 2 3; \
+> do printf "level %3d\n" $level; \
+>   mount -o compress=zstd:$level /dev/sdb /mnt/test/; \
+>   grep sdb /proc/mounts; \
+>   cp -r /usr/bin       /mnt/test/; sync; compsize /mnt/test/bin; \
+>   cp -r /usr/share/doc /mnt/test/; sync; compsize /mnt/test/doc; \
+>   cp    enwik9         /mnt/test/; sync; compsize /mnt/test/enwik9; \
+>   cp    linux-6.13.tar /mnt/test/; sync; compsize /mnt/test/linux-6.13.tar; \
+>   rm -r /mnt/test/{bin,doc,enwik9,linux-6.13.tar}; \
+>   umount /mnt/test/; \
+> done |& tee results | \
+> awk '/^level/{print}/^TOTAL/{print$3"\t"$2"  |"}' | paste - - - - -
+> 
+> 		266M	bin  |	45M	doc  |	953M	wiki |	1.4G	source
+> =============================+===============+===============+===============+
+> level -15	180M	67%  |	30M	68%  |	694M	72%  |	598M	40%  |
+> level -14	180M	67%  |	30M	67%  |	683M	71%  |	581M	39%  |
+> level -13	177M	66%  |	29M	66%  |	671M	70%  |	566M	38%  |
+> level -12	174M	65%  |	29M	65%  |	658M	69%  |	548M	37%  |
+> level -11	174M	65%  |	28M	64%  |	645M	67%  |	530M	35%  |
+> level -10	171M	64%  |	28M	62%  |	631M	66%  |	512M	34%  |
+> level  -9	165M	62%  |	27M	61%  |	615M	64%  |	493M	33%  |
+> level  -8	161M	60%  |	27M	59%  |	598M	62%  |	475M	32%  |
+> level  -7	155M	58%  |	26M	58%  |	582M	61%  |	457M	30%  |
+> level  -6	151M	56%  |	25M	56%  |	565M	59%  |	437M	29%  |
+> level  -5	145M	54%  |	24M	55%  |	545M	57%  |	417M	28%  |
+> level  -4	139M	52%  |	23M	52%  |	520M	54%  |	391M	26%  |
+> level  -3	135M	50%  |	22M	50%  |	495M	51%  |	369M	24%  |
+> level  -2	127M	47%  |	22M	48%  |	470M	49%  |	349M	23%  |
+> level  -1	120M	45%  |	21M	47%  |	452M	47%  |	332M	22%  |
+> level   1	110M	41%  |	17M	39%  |	362M	38%  |	290M	19%  |
+> level   2	106M	40%  |	17M	38%  |	349M	36%  |	288M	19%  |
+> level   3	104M	39%  |	16M	37%  |	340M	35%  |	276M	18%  |
+> 
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
+> ---
+> Changes in v4:
+>  * Fix a bug with workspace lru_list.
+>  * Keep the levels down to -15 as agreed.
 
-I have just few cons:
-- there are gaps and unused bits (e.g. FILE_ATTRIBUTE_VOLUME)
-- there are bits which have more meanings (FILE_ATTRIBUTE_EA / FILE_ATTRIBUTE_RECALL_ON_OPEN)
-- there are bits used only by WinAPI and not by NT / SMB
-- there are bits which have different NT meaning in readdir() and in stat()
-- there are bits for which we already have FS_IOC_GETFLAGS API
-
-I think it that is is bad a idea if bit N in our ioctl() would have
-different meaning than in our statx().
-
-Should we duplicate FS_IOC_GETFLAGS FS_COMPR_FL and FS_ENCRYPT_FL into
-that new fsx_dosattrib? For me it sounds like that it is a better idea
-to have compression bit and encryption bit only in one field and not
-duplicated.
-
-But we can slightly follow Windows constants. Not exactly, but remove
-redundancy, remove reserved bits, modify bits to have exactly one
-meaning, etc... So basically do some sane modifications.
-
-> I mean if we only ever needed the 4 RHSA bits above, we could
-> have used the FS_XFLAG_* flags space, but if we extend the API
-> with a new 32bit field, why not use 1-to-1 mapping at least as a starting point.
-
-I understand it, for me it looks also a good idea, just needs to resolve
-those problems above... and it would result in incompatibility that it
-would not be 1-to-1 mapping at the end.
-
-> You can see that it is quite common that filesystems re-define the
-> same constants for these flags (e.g. EXT4_IMMUTABLE_FL).
-> I am a bit surprised that there is no build time assertion
-> BUILD_BUG_ON(EXT4_IMMUTABLE_FL != FS_IMMUTABLE_FL)
-> which would be the standard way to make sure that the constants
-> stay in sync if they need to be in sync, but some filesystems don't
-> even assume that these constants are in sync (e.g. f2fs_fsflags_map)
-> 
-> > > This last special flag is debatable and I am not really sure that we need it.
-> >
-> > This constant has very similar meaning to FILE_ATTRIBUTE_NORMAL. Both
-> > has some compatibility meaning that "field is valid or something is set".
-> > Just FILE_ATTRIBUTE_NORMAL is not 31th bit.
-> >
-> 
-> No it does not. I don't think that you understood the meaning of
-> FS_DOSATTRIB_HASATTR.
-> Nevermind it was a bad idea anyway. see more below.
-> 
-> > > It is needed for proper backward compat with existing userspace tools.
-> > > For example, if there was a backup tool storing the fsxattr blob result of
-> > > FS_IOC_FSGETXATTR and sets it later during restore with
-> > > FS_IOC_FSSETXATTR, then it would be better to ignore a zero
-> > > value of fsx_dosattrib instead of resetting all of the on-disk dosattrib flags
-> > > if the restore happens after ntfs gained support for setting dosattrib flags
-> > > via FS_IOC_FSSETXATTR.
-> > >
-> > > When using the standard tools to set fsxattr (chattr and xfs_io -c chattr)
-> > > the tool does FS_IOC_FSGETXATTR + modify + FS_IOC_FSSETXATTR,
-> > > so those tools are expected to leave new bits in fsx_dosattrib at their
-> > > value if ntfs gains support for get/set fsx_dosattrib.
-> > >
-> > > Setting the auxiliary FS_DOSATTRIB_HASATTR flag can help the
-> > > kernel/fs to explicitly state that the values returned in fsx_dosattrib
-> > > are valid and the tool to state that values set in fsx_dosattrib are valid.
-> > > But using a single flag will not help expanding ntfs support for more
-> > > fsx_dosattrib flags later, so I am not sure if it is useful (?).
-> >
-> > If the fsx_dosattrib would match all FILE_ATTRIBUTE_* then we can do it
-> > as the ntfs matches FILE_ATTRIBUTE_* and no extension is needed for
-> > future.
-> >
-> > And I think that this backward compatibility sounds good.
-> >
-> 
-> That's only true if you can support ALL the dosattrib flags from the
-> first version and that Windows will not add any of the reserved
-> flags in the future, which is hard to commit to.
-
-I see, it would not work. And Windows will for sure use some reserved
-bits in future.
-
-> > What could be useful for userspace is also ability to figure out which
-> > FS_DOSATTRIB_* are supported by the filesystem. Because for example UDF
-> > on-disk format supports only FS_DOSATTRIB_HIDDEN bit. And FAT only those
-> > attributes which are in the lowest byte.
-> >
-> 
-> Exactly.
-> statx has this solved with the stx_attributes_mask field.
-> 
-> We could do the same for FS_IOC_FS[GS]ETXATTR, but because
-> right now, this API does not verify that fsx_pad is zero, we will need to
-> define a new set of ioctl consants FS_IOC_[GS]ETFSXATTR2
-> with the exact same functionality but that userspace knows that they
-> publish and respect the dosattrib mask:
-
-I understand and this is a problem.
-
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -868,9 +868,11 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
->         case FS_IOC_SETFLAGS:
->                 return ioctl_setflags(filp, argp);
-> 
-> +       case FS_IOC_GETFSXATTR2:
->         case FS_IOC_FSGETXATTR:
->                 return ioctl_fsgetxattr(filp, argp);
-> 
-> +       case FS_IOC_SETFSXATTR2:
->         case FS_IOC_FSSETXATTR:
->                 return ioctl_fssetxattr(filp, argp);
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -145,7 +145,8 @@ struct fsxattr {
->         __u32           fsx_nextents;   /* nextents field value (get)   */
->         __u32           fsx_projid;     /* project identifier (get/set) */
->         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> -       unsigned char   fsx_pad[8];
-> +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
-> +       __u32           fsx_dosattrib_mask; /* dosattrib field validity mask */
->  };
-> 
->  /*
-> @@ -238,6 +248,9 @@ struct fsxattr {
->  #define FS_IOC32_SETFLAGS              _IOW('f', 2, int)
->  #define FS_IOC32_GETVERSION            _IOR('v', 1, int)
->  #define FS_IOC32_SETVERSION            _IOW('v', 2, int)
-> +#define FS_IOC_GETFSXATTR2              _IOR('x', 31, struct fsxattr)
-> +#define FS_IOC_SETFSXATTR2              _IOW('x', 32, struct fsxattr)
-> +/* Duplicate legacy ioctl numbers for backward compact */
->  #define FS_IOC_FSGETXATTR              _IOR('X', 31, struct fsxattr)
->  #define FS_IOC_FSSETXATTR              _IOW('X', 32, struct fsxattr)
->  #define FS_IOC_GETFSLABEL              _IOR(0x94, 49, char[FSLABEL_MAX])
-> 
-> We could also use this opportunity to define a larger fsxattr2 struct
-> that also includes an fsx_xflags_mask field, so that the xflags namespace
-> could also be extended in a backward compat way going forward:
-> 
-> @@ -145,7 +145,21 @@ struct fsxattr {
->         __u32           fsx_nextents;   /* nextents field value (get)   */
->         __u32           fsx_projid;     /* project identifier (get/set) */
->         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
->         unsigned char   fsx_pad[8];
-> 
->  };
-> +
-> +/*
-> + * Structure for FS_IOC_[GS]ETFSXATTR2.
-> + */
-> +struct fsxattr2 {
-> +       __u32           fsx_xflags;     /* xflags field value (get/set) */
-> +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-> +       __u32           fsx_nextents;   /* nextents field value (get)   */
-> +       __u32           fsx_projid;     /* project identifier (get/set) */
-> +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> +       __u32           fsx_xflags_mask; /* xflags field validity mask */
-> +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
-> +       __u32           fsx_dosattrib_mask; /* dosattrib field validity mask */
-> +};
-> 
-> And you'd also need to flug those new mask and dosattrib
-> via struct fileattr into filesystems - too much to explain.
-> try to figure it out (unless someone objects) and if you can't figure
-> it out let me know.
-
-Yea, I think that this is thing which I should be able to figure out
-once I start changing it.
-
-Anyway, I have alternative idea to the problem with fsx_pad. What about
-introducing new fsx_xflags flag which would say that fsx_pad=fsx_dosattrib
-is present? E.g.
-
-#define FS_XFLAG_HASDOSATTRIB 0x40000000
-
-Then we would not need new FS_IOC_GETFSXATTR2/FS_IOC_SETFSXATTR2 ioctls.
-
-Also fsx_pad has 8 bytes, which can store both attrib and mask, so new
-struct fsxattr2 would not be needed too.
-
-> > >
-> > > > > For ntfs/ext4, you will need to implement on-disk support for
-> > > > > set/get the dosattrib flags.
-> > > >
-> > > > ntfs has already on-disk support for FILE_ATTRIBUTE_READONLY.
-> > > >
-> > >
-> > > This is interesting.
-> >
-> > I mean that ntfs filesystem has support for FILE_ATTRIBUTE_READONLY.
-> > I did not mean linux ntfs implementation.
-> >
-> > But I'm aware of some of those details in linux fs implementations, but
-> > I did not wanted to mentioned it as basically every linux fs
-> > implementation has its own way how flags are handled or exported to
-> > userspace. It is good to know, but not important when designing or
-> > discussing the unified/generic standard API.
-> >
-> 
-> A good API will describe what the existing filesystems already support
-> and what they do not support.
-> 
-> > > fat/ntfs both already have a mount option sys_immutable to map
-> > > FILE_ATTRIBUTE_SYSTEM to S_IMMUTABLE in-memory.
-> > >
-> > > fat does not support fileattr_set(), but has a proprietary ioctl
-> > > FAT_IOCTL_SET_ATTRIBUTES which enforces
-> > > CAP_LINUX_IMMUTABLE for changing S_IMMUTABLE.
-> > >
-> > > ntfs also maps FILE_ATTRIBUTE_SYSTEM to S_IMMUTABLE
-> > > and it allows changing FILE_ATTRIBUTE_SYSTEM via ntfs_setxattr
-> > > of system.{dos,ntfs}_attrib without enforcing CAP_LINUX_IMMUTABLE,
-> > > or any other permissions at all (?)
-> > > This does not change S_IMMUTABLE in-memory, so change will
-> > > only apply on the next time inode is loaded from disk.
-> > > Bottom line: seems like *any user at all* can change the READONLY
-> > > and SYSTEM attributes on ntfs.
-> > >
-> > > OTOH, ntfs does support fileattr_set() - it allows changing
-> > > S_IMMUTABLE and S_APPEND in-memory, but as far as I can
-> > > tell, this change is not stored on-disk (?).
-> > >
-> > > Also in ntfs, FILE_ATTRIBUTE_READONLY is mapped
-> > > to not having posix write permissions on-disk:
-> > >                 /* Linux 'w' -> Windows 'ro'. */
-> > >                 if (0222 & inode->i_mode)
-> > >                         ni->std_fa &= ~FILE_ATTRIBUTE_READONLY;
-> > >                 else
-> > >                         ni->std_fa |= FILE_ATTRIBUTE_READONLY;
-> > >
-> > > So for ntfs, S_IMMUTABLE could be updated depending on three
-> > > independent flags: SYSTEM, READONLY and  FS_XFLAG_IMMUTABLE.
-> > >
-> > > Having ntfs treat FILE_ATTRIBUTE_READONLY as S_IMMUTABLE
-> > > internally, is completely confined to ntfs and has nothing to do with vfs
-> > > or with a new standard API.
-> > >
-> > > > On-disk support for ext4 and other linux filesystems can be discussed
-> > > > later. I think that this could be more controversial.
-> > > >
-> > >
-> > > Obviously there are existing users that need this.
-> > > Samba has its own xattr user.DOSATTRIB and if people really want
-> > > to be able to export those attributes in a standard way, I doubt there
-> > > will be objection to adding on-disk support (e.g. to ext4/xfs).
-> > > But somebody has to do the work and adding new on-disk support
-> > > is not so easy.
-> >
-> > Yes, it is not easy and on-disk support can be done later or basically
-> > independently of this work here. So I will let it for other people.
-> >
-> > > I can help with that when the time comes.
-> > > First thing first, try to propose patches to extend fsx_dosattrib and
-> > > support them in ntfs/fat/smb.
-> >
-> > Ok. Thanks.
-> >
-> > > > > I can certainly not change the meaning of existing on-disk
-> > > > > flag of FS_IMMUTABLE_FL to a flag that can be removed
-> > > > > without CAP_LINUX_IMMUTABLE. that changes the meaning
-> > > > > of the flag.
-> > > > >
-> > > > > If ext4 maintainers agrees, you may be able to reuse some
-> > > > > old unused on-disk flags (e.g.  EXT4_UNRM_FL) as storage
-> > > > > place for FS_DOSATTRIB_READONLY, but that would be
-> > > > > quite hackish.
-> > > > >
-> > > > > > > How about tackling this one small step at a time, not in that order
-> > > > > > > necessarily:
-> > > > > > >
-> > > > > > > 1. Implement the standard API with FS_IOC_FS[GS]ETXATTR ioctl
-> > > > > > >     and with statx to get/set some non-controversial dosattrib flags on
-> > > > > > >     ntfs/smb/vfat
-> > > > > > > 2. Wire some interesting dosattrib flags (e.g. compr/enrypt) to local
-> > > > > > >     filesystems that already support storing those bits
-> > > > > > > 3. Wire network servers (e.g. Samba) to use the generic API if supported
-> > > > > > > 4. Add on-disk support for storing the dosattrib flags to more local fs
-> > > > > > > 5. Update S_IMMUTABLE inode flag if either FS_XFLAG_IMMUTABLE
-> > > > > > >     or FS_DOSATTRIB_READONLY are set on the file
-> > > > > > >
-> > > > > > > Thoughts?
-> > > > > > >
-> > > > >
-> > > > > Anything wrong with the plan above?
-> > > > > It seems that you are looking for shortcuts and I don't think that
-> > > > > it is a good way to make progress.
-> > > > >
-> > > > > Thanks,
-> > > > > Amir.
-> > > >
-> > > > If other developers agree that the FS_IOC_FS[GS]ETXATTR ioctl is the
-> > > > right direction then for me it looks good.
-> > >
-> > > This thread has been going on for a while.
-> > > I did not see any objections to this idea that Darrick proposed,
-> > > so I think next step for you is to post patches, because some
-> > > developers will only engage when there are patches to discuss.
-> > >
-> > > Thanks,
-> > > Amir.
-> >
-> > Ok, I will try to prepare something. Just give me some weeks as would
-> > not have time for this right now. I just wanted to be sure that this
-> > is really the right direction and also that this is something which
-> > makes sense. I did not wanted to start doing something which could be
-> > completely useless... That is why I started rather longer discussion
-> > first.
-> 
-> No rush on my side.
-> You'd better wait a while to let other people comment before
-> going to implement anything.
-> 
-> People often have many and different opinions when it comes
-> to APIs design, so you will also need some patience to get to
-> consensus.
-> 
-> Thanks,
-> Amir.
-
-Yes, that is fine. And thank you for your input.
+Thanks, I'll add the patch to for-next soon. The information about times
+is only a changelog update so this can be done later once we have it.
