@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDF722A808;
-	Wed,  5 Feb 2025 08:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08B822AE49;
+	Wed,  5 Feb 2025 08:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745150; cv=none; b=P5lkgZ3tqjPcL8YTyDSxZMWJdciZ5CDgP9btZjFUMONv3ucpPCLQCvmPLw3muRyzXu7PqTSM12a1xYxtYtPRvTfcacTjr+MdyyVYY3R25PRZr7LmjLOUfRtfi6c/BXbTT0vj2sV8CBaMdNsX4T9xnp6UHKgLPRfrPc43sHtoIz8=
+	t=1738745153; cv=none; b=cBcctac5aEWJnxqqyuDO3v0nPIwBIwYwALeq6VWXIpMZap5FBMOGvAfyIyFShsaOGOwE+w7fcAOLg0TwliUyKB0B5C2lzjaWUOUp3JR8Bj3yf5FC9gqYpCaF7ko+pjSPxREgI8/FdYjKvixawl/DcbNugeoDw1APJfeNW++u+BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745150; c=relaxed/simple;
-	bh=XaDojdOvoqQ7CAcueK4U7yvXajn4LVmB3q1XG0Qjneg=;
+	s=arc-20240116; t=1738745153; c=relaxed/simple;
+	bh=n/tmGf7u2M+6dJ0HA/2jjiroZMIY7BNs+wBOXTsMTSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iVbtff2F9nXIxPCKQmrUQZq4qwT6MqbTji4u/rx63VxSG4wYbL9JXlq3y9ejIg9qAv80FGoahRL15bzNHq152DUpgUQYJWVFgUikxdCNsFT+ZdK51nkRWYlzyqUHw9gBvy0i1948QsvhNvYCwT8V6evLeGDqlimTixHdAn36Vws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DJqF8QGK; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=i3+AJYpY+lJ3AcxADC9CcC2Z1uEdjtbL0JyTzUzZNYs4anbKqeC3w0e9f3QEh84BWyTpgohb7yyRqsMDwOKJbkAgTfvgz7JOirhuMhQaamgLBNssmAMG0ss1NKSaPEJvC2PegGoBQickLOADEZFskzTB3xa5dJML0rQzkrvlAGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bssY+rEK; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DJqF8QGK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bssY+rEK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738745149; x=1770281149;
+  t=1738745151; x=1770281151;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=XaDojdOvoqQ7CAcueK4U7yvXajn4LVmB3q1XG0Qjneg=;
-  b=DJqF8QGKGcF5JvLGelVA44GuQAyEDut6pki2NZLw1mnznHi2+4NYS3Re
-   11ejM4IfhKiyzg4iQ5JU/kNKbnsAkmXj4HosvtSd2Twj+4OwJX7+yIr00
-   bKAQ8gk1MIBKv4JCf0BUHxVwNJawnVuB4S1n+/drtNfR4QMzo1o3ivI4e
-   dzT98qsegf84cxAD0dyyCTdAiL6EeXpEMAQvs4A3C6gAkiKy+ZdKVnqio
-   GHLj+cztTfCPFT5CLxXyLvMUZcDIlbHOt/WYPKO+oYsXVgviozbhaFG1J
-   aj2FWJWSuxyLQCl+vb4uhisrp1Ub2lTg3WOQtet0249YNIo+TDZ/DWDth
+  bh=n/tmGf7u2M+6dJ0HA/2jjiroZMIY7BNs+wBOXTsMTSg=;
+  b=bssY+rEK+1iW3yZLHpWOMRLMKv2KWXai6cF0X4WZZX7ith9DhAKN6i2v
+   ktm/pUZ8yX+RRgM70V9IW/wz52bS2qd8Zp7G81vUdNQC1LgeAG5zhyXSe
+   cK58h6/0JswGyIvTJ5GBnWo9za/V1GCN+v5GZrl634HaxUUGuoa+9YKoT
+   FuOrcjYYl6hdWddg5Vg2Rgvavwstocff1ifjmbXiHLhMGZP4w1m52GvNH
+   UpX2KIl0HNirz33AMLd+OB1Pfx0NtJ8CtW6RqsS+1Ui2LoqBZv8ZWLOTA
+   JVJViWfj43XMpMg+cqFPFUwxLbJZho7Zs2Vqysh13sw1Ksgv2CC2CNorp
    g==;
-X-CSE-ConnectionGUID: Dah0f/JFRAuNsYKkRz9ZTQ==
-X-CSE-MsgGUID: uI4zmeuTTxii+bEOBEWTjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532514"
+X-CSE-ConnectionGUID: o7w/AKW6QY+CwBiBSGs3VQ==
+X-CSE-MsgGUID: hseejEscQfC9qBfExfMqQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532524"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="38532514"
+   d="scan'208";a="38532524"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:48 -0800
-X-CSE-ConnectionGUID: ha1dcAXhS8SUp//pK9v56g==
-X-CSE-MsgGUID: uJEjQ6o0Tha638L5wuGqLA==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:51 -0800
+X-CSE-ConnectionGUID: mTmHM13UQuq2vfkuVpKiFA==
+X-CSE-MsgGUID: 69Fq1gM5TWC+OusQmCDn/A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="115887843"
+   d="scan'208";a="115887860"
 Received: from mdroper-mobl2.amr.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.223.241])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:48 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:51 -0800
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: linux-sound@vger.kernel.org,
 	vkoul@kernel.org
@@ -50,9 +50,9 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH 06/16] soundwire: stream: reuse existing code for BPT stream
-Date: Wed,  5 Feb 2025 16:45:20 +0800
-Message-ID: <20250205084531.158763-7-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH 08/16] soundwire: bus: add bpt_stream pointer
+Date: Wed,  5 Feb 2025 16:45:22 +0800
+Message-ID: <20250205084531.158763-9-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
 References: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
@@ -67,8 +67,10 @@ Content-Transfer-Encoding: 8bit
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
-DP0 (Data Port 0) is very similar to regular data ports, with minor
-tweaks we can reuse the same code.
+Add a convenience pointer to the 'sdw_bus' structure. BPT is a
+dedicated stream which will typically not be handled by DAIs or
+dailinks. Since there's only one BPT stream per link, storing the
+pointer at the link level seems rather natural.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
@@ -76,228 +78,29 @@ Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 ---
- drivers/soundwire/stream.c | 104 ++++++++++++++++++++++++++-----------
- 1 file changed, 73 insertions(+), 31 deletions(-)
+ include/linux/soundwire/sdw.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index b88d5332c7ba..45e69ed3168d 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -87,11 +87,14 @@ static int _sdw_program_slave_port_params(struct sdw_bus *bus,
- 		return ret;
- 	}
- 
--	/* Program DPN_BlockCtrl3 register */
--	ret = sdw_write_no_pm(slave, addr2, t_params->blk_pkg_mode);
--	if (ret < 0) {
--		dev_err(bus->dev, "DPN_BlockCtrl3 register write failed\n");
--		return ret;
-+	/* DP0 does not implement BlockCtrl3 */
-+	if (t_params->port_num) {
-+		/* Program DPN_BlockCtrl3 register */
-+		ret = sdw_write_no_pm(slave, addr2, t_params->blk_pkg_mode);
-+		if (ret < 0) {
-+			dev_err(bus->dev, "DPN_BlockCtrl3 register write failed\n");
-+			return ret;
-+		}
- 	}
- 
- 	/*
-@@ -130,18 +133,28 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- 	struct sdw_port_params *p_params = &p_rt->port_params;
- 	struct sdw_slave_prop *slave_prop = &s_rt->slave->prop;
- 	u32 addr1, addr2, addr3, addr4, addr5, addr6;
--	struct sdw_dpn_prop *dpn_prop;
-+	enum sdw_dpn_type port_type;
-+	bool read_only_wordlength;
- 	int ret;
- 	u8 wbuf;
- 
- 	if (s_rt->slave->is_mockup_device)
- 		return 0;
- 
--	dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave,
--					  s_rt->direction,
--					  t_params->port_num);
--	if (!dpn_prop)
--		return -EINVAL;
-+	if (t_params->port_num) {
-+		struct sdw_dpn_prop *dpn_prop;
-+
-+		dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave, s_rt->direction,
-+						  t_params->port_num);
-+		if (!dpn_prop)
-+			return -EINVAL;
-+
-+		read_only_wordlength = dpn_prop->read_only_wordlength;
-+		port_type = dpn_prop->type;
-+	} else {
-+		read_only_wordlength = false;
-+		port_type = SDW_DPN_FULL;
-+	}
- 
- 	addr1 = SDW_DPN_PORTCTRL(t_params->port_num);
- 	addr2 = SDW_DPN_BLOCKCTRL1(t_params->port_num);
-@@ -171,7 +184,7 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- 		return ret;
- 	}
- 
--	if (!dpn_prop->read_only_wordlength) {
-+	if (!read_only_wordlength) {
- 		/* Program DPN_BlockCtrl1 register */
- 		ret = sdw_write_no_pm(s_rt->slave, addr2, (p_params->bps - 1));
- 		if (ret < 0) {
-@@ -223,9 +236,9 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- 		}
- 	}
- 
--	if (dpn_prop->type != SDW_DPN_SIMPLE) {
-+	if (port_type != SDW_DPN_SIMPLE) {
- 		ret = _sdw_program_slave_port_params(bus, s_rt->slave,
--						     t_params, dpn_prop->type);
-+						     t_params, port_type);
- 		if (ret < 0)
- 			dev_err(&s_rt->slave->dev,
- 				"Transport reg write failed for port: %d\n",
-@@ -432,6 +445,9 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	struct completion *port_ready;
- 	struct sdw_dpn_prop *dpn_prop;
- 	struct sdw_prepare_ch prep_ch;
-+	u32 imp_def_interrupts;
-+	bool simple_ch_prep_sm;
-+	u32 ch_prep_timeout;
- 	bool intr = false;
- 	int ret = 0, val;
- 	u32 addr;
-@@ -439,20 +455,35 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	prep_ch.num = p_rt->num;
- 	prep_ch.ch_mask = p_rt->ch_mask;
- 
--	dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave,
--					  s_rt->direction,
--					  prep_ch.num);
--	if (!dpn_prop) {
--		dev_err(bus->dev,
--			"Slave Port:%d properties not found\n", prep_ch.num);
--		return -EINVAL;
-+	if (p_rt->num) {
-+		dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave, s_rt->direction, prep_ch.num);
-+		if (!dpn_prop) {
-+			dev_err(bus->dev,
-+				"Slave Port:%d properties not found\n", prep_ch.num);
-+			return -EINVAL;
-+		}
-+
-+		imp_def_interrupts = dpn_prop->imp_def_interrupts;
-+		simple_ch_prep_sm = dpn_prop->simple_ch_prep_sm;
-+		ch_prep_timeout = dpn_prop->ch_prep_timeout;
-+	} else {
-+		struct sdw_dp0_prop *dp0_prop = s_rt->slave->prop.dp0_prop;
-+
-+		if (!dp0_prop) {
-+			dev_err(bus->dev,
-+				"Slave DP0 properties not found\n");
-+			return -EINVAL;
-+		}
-+		imp_def_interrupts = dp0_prop->imp_def_interrupts;
-+		simple_ch_prep_sm =  dp0_prop->simple_ch_prep_sm;
-+		ch_prep_timeout = dp0_prop->ch_prep_timeout;
- 	}
- 
- 	prep_ch.prepare = prep;
- 
- 	prep_ch.bank = bus->params.next_bank;
- 
--	if (dpn_prop->imp_def_interrupts || !dpn_prop->simple_ch_prep_sm ||
-+	if (imp_def_interrupts || !simple_ch_prep_sm ||
- 	    bus->params.s_data_mode != SDW_PORT_DATA_MODE_NORMAL)
- 		intr = true;
- 
-@@ -463,7 +494,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	 */
- 	if (prep && intr) {
- 		ret = sdw_configure_dpn_intr(s_rt->slave, p_rt->num, prep,
--					     dpn_prop->imp_def_interrupts);
-+					     imp_def_interrupts);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -472,7 +503,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	sdw_do_port_prep(s_rt, prep_ch, prep ? SDW_OPS_PORT_PRE_PREP : SDW_OPS_PORT_PRE_DEPREP);
- 
- 	/* Prepare Slave port implementing CP_SM */
--	if (!dpn_prop->simple_ch_prep_sm) {
-+	if (!simple_ch_prep_sm) {
- 		addr = SDW_DPN_PREPARECTRL(p_rt->num);
- 
- 		if (prep)
-@@ -489,7 +520,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 		/* Wait for completion on port ready */
- 		port_ready = &s_rt->slave->port_ready[prep_ch.num];
- 		wait_for_completion_timeout(port_ready,
--			msecs_to_jiffies(dpn_prop->ch_prep_timeout));
-+			msecs_to_jiffies(ch_prep_timeout));
- 
- 		val = sdw_read_no_pm(s_rt->slave, SDW_DPN_PREPARESTATUS(p_rt->num));
- 		if ((val < 0) || (val & p_rt->ch_mask)) {
-@@ -506,7 +537,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	/* Disable interrupt after Port de-prepare */
- 	if (!prep && intr)
- 		ret = sdw_configure_dpn_intr(s_rt->slave, p_rt->num, prep,
--					     dpn_prop->imp_def_interrupts);
-+					     imp_def_interrupts);
- 
- 	return ret;
- }
-@@ -1007,7 +1038,8 @@ static int sdw_slave_port_is_valid_range(struct device *dev, int num)
- 
- static int sdw_slave_port_config(struct sdw_slave *slave,
- 				 struct sdw_slave_runtime *s_rt,
--				 const struct sdw_port_config *port_config)
-+				 const struct sdw_port_config *port_config,
-+				 bool is_bpt_stream)
- {
- 	struct sdw_port_runtime *p_rt;
- 	int ret;
-@@ -1019,9 +1051,13 @@ static int sdw_slave_port_config(struct sdw_slave *slave,
- 		 * TODO: Check valid port range as defined by DisCo/
- 		 * slave
- 		 */
--		ret = sdw_slave_port_is_valid_range(&slave->dev, port_config[i].num);
--		if (ret < 0)
--			return ret;
-+		if (!is_bpt_stream) {
-+			ret = sdw_slave_port_is_valid_range(&slave->dev, port_config[i].num);
-+			if (ret < 0)
-+				return ret;
-+		} else if (port_config[i].num) {
-+			return -EINVAL;
-+		}
- 
- 		ret = sdw_port_config(p_rt, port_config, i);
- 		if (ret < 0)
-@@ -1330,6 +1366,11 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
- 	u8 num_ports;
- 	int i;
- 
-+	if (!port_num) {
-+		dev_err(&slave->dev, "%s: port_num is zero\n", __func__);
-+		return NULL;
-+	}
-+
- 	if (direction == SDW_DATA_DIR_TX) {
- 		num_ports = hweight32(slave->prop.source_ports);
- 		dpn_prop = slave->prop.src_dpn_prop;
-@@ -2115,7 +2156,8 @@ int sdw_stream_add_slave(struct sdw_slave *slave,
- 	if (ret)
- 		goto unlock;
- 
--	ret = sdw_slave_port_config(slave, s_rt, port_config);
-+	ret = sdw_slave_port_config(slave, s_rt, port_config,
-+				    stream->type == SDW_STREAM_BPT);
- 	if (ret)
- 		goto unlock;
- 
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 69f3e700796d..2362f621d94c 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -979,6 +979,7 @@ struct sdw_stream_runtime {
+  * @stream_refcount: number of streams currently using this bus
+  * @btp_stream_refcount: number of BTP streams currently using this bus (should
+  * be zero or one, multiple streams per link is not supported).
++ * @bpt_stream: pointer stored to handle BTP streams.
+  * @ops: Master callback ops
+  * @port_ops: Master port callback ops
+  * @prop: Master properties
+@@ -1017,6 +1018,7 @@ struct sdw_bus {
+ 	struct sdw_bus_params params;
+ 	int stream_refcount;
+ 	int bpt_stream_refcount;
++	struct sdw_stream_runtime *bpt_stream;
+ 	const struct sdw_master_ops *ops;
+ 	const struct sdw_master_port_ops *port_ops;
+ 	struct sdw_master_prop prop;
 -- 
 2.43.0
 
