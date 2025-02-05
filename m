@@ -1,281 +1,142 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03olkn2058.outbound.protection.outlook.com [40.92.57.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A385679F5;
-	Wed,  5 Feb 2025 00:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.57.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738716025; cv=fail; b=ZgnS5DPn60grrO/Vixb12n+3Mnq6NCJx4Z/EMNgNBzKUd/nK5elFIsGWsIssz9pcSa8ep+mk+ei19M38BudsfQDPU80UMdy+KpHjYyvuoq6lPxr9vrsgUV9b2wD5c5PxtaAglZvZuix5eLM/90JTIKZBZ+3NA2TnvPKPT/PCuWY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738716025; c=relaxed/simple;
-	bh=IAROCoPDRCuTHFPZX1HUfzYQfVkZo95Er5V9/Ngtz4Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gYYkfOLquxpoSp5PVYvsBXs97L7tLUeNh9aXsdCBnpgwF4d/GzB/qRrtdvaxloNmYPkInfNf/PyR41LIDr4eKcuwEensW0a8I9AI8XX6Dl62O2cAKb8KTNJmFxcYZxRTTYab1jM85k80z3y0UNiPp0yMv1udiU57pgzRdV+Darw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Z8pyDg+N; arc=fail smtp.client-ip=40.92.57.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A75B1FE479
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 00:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738716145; cv=none; b=sV7Si3F++IyM7Y8NNZxIc0kCa4Noat1ijI4pIq33ZZ7YjzgUl+91HM7delncoHbruthCelpav5Faqris3+7fQUO763w2hOpRP3yXAth0Zfb+XRG9ye1XO5QhcFM8XdHfCpNsujDyDAy2EMCmGqojBv6G664muVd57PH4r110LnI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738716145; c=relaxed/simple;
+	bh=EqaPW3xdiUQmOYSjh5SnP1AS6mP2AmWp8x1emlxStAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=j7UB2wqV3TR3hKZgqZ1B3FsI2rEXErXSysoYdw1EFkSm9vz0bjQrN5VfXTdPSA5O+H0G4vuiQ7jzU2+JZIdz2UsBOniHIV/NYuUBb+WiKkBl/5qTVSNmvo/ehmWzoGAR2purywRMLianOqcTglXND+u5d89Iuou0pxasEFafDHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=F9DMb2JM; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Z8pyDg+N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GOIda45wultgTj0nftUZI1vMK+r3+/nP8BUi4qdY30mS0ou6pwilMRNIpYc9g+fKdxSpwLkCDMww0B+P8VxJ/QxdgYZ3kGMrzMeF+NzffVZfdDVZ+FeO0b3RLei4KomK6+1WFzMdPzO8AeaX7VH/MqOmwBPXUx4wTycoptPhNbmJZXa+5t2s+b0G8apaol8zP2/sVOJ1NncUsxW0jCH3w+SL43uK31fGNsAfCQ8FrCb/MKBydl2J7VVj6UEZ6Jj3fLXC8+kJNBvWrNs051WVnShBORIhrKFNz0b7VhUj7dkktJdFuGYUpqv7v6YOfQDyFJs3itbyd5kMHZW0j6N7sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=opEJyGLFdW4u/LMP+C1PTy7Z7NjlA/T/E04YxcF3WFU=;
- b=rZUvmN2Gd+5N7BOZgnejm3+WOZP30aZbI95D4NXIYQT8s0zWusrvJMF3HRGLhy1+QtakEyZiczQU+AiBNAWlRHtjlyqXx1Hv6A3r50LbOa+0kd18pXhrB69cmafXlP9BDvlVEvEE/4ZHQ8RNmnypoy7s10W6qJl8wISAsz6VNDgONRtmdX5CRzTzme8odvgPrhkGSheTOX+kbU3i76MqJ5dmWWbu/4DbB1F3NkC4IgcsB8qFxtBeA9lP5UIXFTgou6Sf9R07nUfKE8DF4Jc0PJun9gYVibXlh9PJbA4b4omYde3kx+uMi5Dg+qxurxS/AmIMCEDnWMHml3xZVjsHyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=opEJyGLFdW4u/LMP+C1PTy7Z7NjlA/T/E04YxcF3WFU=;
- b=Z8pyDg+NYE8V2kQpuRcFxKATrREC1vRSaB6ntATWJIgTPe4FB1ckzmVcsnxu+GU+Vp1zqoqoRW0xy9cKW0q588/A+dmy3VAl12YRl3l6Gy2cGWhW0oSedS+RYhHfRqvaVtZ5/EPaQNPJqThQOJjSYlQ/B3dWOknCcmZ6ZwncPZnuZHmZHJF0Gh8xrI+b/Q/IAwuglYP4Oj7FZqs/X+MRRvPY5P+uyNAAZeGZIxFW9fODXe08vdz86zcFKbjiJgmTXdIZQJpxt8vvjiE1Eiy9fPEAacNo+30eBrX26tyW8Be+tdyQJws+2YN98eiOvyspJLeFzIwnNuEurkMPvswTvw==
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
- by GV1PR03MB8094.eurprd03.prod.outlook.com (2603:10a6:150:1d::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Wed, 5 Feb
- 2025 00:40:19 +0000
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8%4]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
- 00:40:19 +0000
-Message-ID:
- <AM6PR03MB508011599420DB53480E8BF799F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-Date: Wed, 5 Feb 2025 00:40:18 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] bpf: Rethinking BPF safety, BPF open-coded iterators, and
- possible improvements (runtime protection)
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, snorcht@gmail.com,
- Christian Brauner <brauner@kernel.org>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <AM6PR03MB5080392CC36DB66E8EA202DE99F42@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <CAADnVQLb--LzFmXZPLPa5V+cD1A9YzTnZSgno9ftcA4-GGTi8w@mail.gmail.com>
-Content-Language: en-US
-From: Juntong Deng <juntong.deng@outlook.com>
-In-Reply-To: <CAADnVQLb--LzFmXZPLPa5V+cD1A9YzTnZSgno9ftcA4-GGTi8w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0381.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18f::8) To AM6PR03MB5080.eurprd03.prod.outlook.com
- (2603:10a6:20b:90::20)
-X-Microsoft-Original-Message-ID:
- <44341c49-9f12-4588-83f8-1d1c05cc1cc9@outlook.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="F9DMb2JM"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-29fb5257e05so1902514fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 16:42:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1738716142; x=1739320942; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=8HEL22nxOQOcwSnfkdtHhxWLtUiDi8VUF8TCzTHTO4I=;
+        b=F9DMb2JMtV8pgILuGt70YVQAA4vITRHVYz0USR8w5u4p54WlQDVF7FxOjWZcnwIFJ4
+         3FjVxBD7qjk5hQElWxPClnPqYOfYrZqXYCG21A7lk9nwCJvVBn+5rYN5OVgpy3rG0NhY
+         /0eOwiQc3sD+kxjud3hGqI2kxy6MU1lsNpgFk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738716142; x=1739320942;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8HEL22nxOQOcwSnfkdtHhxWLtUiDi8VUF8TCzTHTO4I=;
+        b=uhOHA53m7sdd8rNEb5WENXx6FYArUZKI0vZDBhOtoOyvKda8zv6lI2Cx7Fnfuacbl3
+         TefjAOjkl/6OQsZGOHXRDi4vPz4UhBKwTtpALMfPGnYj+6KP+VZGS92zpE/fG/R9gBe8
+         1rn5jM51eSKaU7V/IsBYy6MnLOPkfDi3lsQZLS8saspG7RlQb7nazmeVKRxFGBNGhODx
+         QiZcdrWwItH9WLeBqTTz3CzGpdg5hdeItSunp1w0bunwsoQasEAMwAptFIraYmMDiWp5
+         0nTD+jr6yI5WDV/T+sBkBa0776+Mg9MAVY4yAvIcF3SCSgLhOoAhhR4Gf7AtwfFXvtjf
+         /avA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXgj3wtVNRg9EfSi0FGCxF1rvpLTs38POvZtkYZHEIY+DhpR4gO3TH3IeAZ0UYD99AvaGU5QqhXuztaFU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKN4v8vxzyEuZj6Qo/9Lk9l0IZp/AeCp15weR5oEKeFQIexEyf
+	pFy49zq/Uq7uk4kp+N+6VhCGu0HIAgSa/6wznm3NHKaTpf1eKkvz94hG9q8IPg==
+X-Gm-Gg: ASbGncvQDYyY6cVqT4G4MT6dNZFHhcCcXOPIbes/wTMxy6viYkx9kayB8Zo/7e3wi/v
+	eqTMKmAfeFFokL+wHg30gdStCEYxALk5QUvECzxmGgx+ocoVdnDDfJcLR0hILlHf0nW73gb9zjD
+	vW5sy0ue84OqRWOMQgzycEupSKAqbbnGW4MeC3lUFzmF68LP4XEsVj9FZCQqVQjfKxb0f1wZQsp
+	r1nkd8i6nL1UR+6hqRjxPak0hRx0T7yOsbecOHKt+7kf3kEDUvaEIzChoXIpfRVC7QVge+SNZ0W
+	tKaipOm4SyG4FVKFXAV9wab1oJg5NbcSC6r9R0BVFL+Yh9rJUnefoAQ=
+X-Google-Smtp-Source: AGHT+IFgAjdHq+56Bk4WdO4hgdHaJGyuOu8aXb46B2HADIqWho9i/IEMEXW/4EWKjmKB6c6nSllcQQ==
+X-Received: by 2002:a05:6870:14d4:b0:27d:10f5:347 with SMTP id 586e51a60fabf-2b804f4ebd6mr660767fac.15.1738716142405;
+        Tue, 04 Feb 2025 16:42:22 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc105d8a17sm3452920eaf.38.2025.02.04.16.42.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 16:42:21 -0800 (PST)
+Message-ID: <f4adcf94-8a06-4a24-8359-917016b2c4d6@broadcom.com>
+Date: Tue, 4 Feb 2025 16:42:20 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|GV1PR03MB8094:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce037012-efb1-41e3-b4b4-08dd457daa9b
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|19110799003|8060799006|461199028|6090799003|15080799006|4302099013|3412199025|440099028|10035399004|12091999003|41001999003|1602099012;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K3Z6a3NHVm5yTFdKSWJsYmlUQjZaSXQ0TkxDL3B0cUg0ZnJwOG80eUZoeSsv?=
- =?utf-8?B?S3dLMUJqRFkvZEpwNjFMYXBTQ3N1UU1NU1RBYmpqNWJ5dDJQZDZza0lEdzBs?=
- =?utf-8?B?TFUzTXVoTnNzV0FFWWtPeElESW5ad2tmVEJxYnQ4RStzU1R5RmRFYVljd2oy?=
- =?utf-8?B?dytaMUJxZjB1dElDM1RuNmNxRWY2T1owYnB3VnRlOHNDd090TnlKdEh0dkxh?=
- =?utf-8?B?cWxsbmZ1TCtIMGdIc2VFT296dHJhKzRLSmpwSUFJemt5MFNhTWVZcGRTMWV3?=
- =?utf-8?B?UVViN3IyelRqZjlOekJYQldneW5wZy91L2Q0U2VtUFdzbzVqVjhCOGhpdjFN?=
- =?utf-8?B?bHFrR1BvUGE1dTBhT28zVFJaM09qWXFzR0hFRVJXV3dtd2JWZHlQVkhvaEgx?=
- =?utf-8?B?YUk3UXBlT3MyTDEraDNwQmdobUZiUkprdzc1bXA4KzFZK0owbUxRSEkwd0M1?=
- =?utf-8?B?dmJweEdHZ0ozdFk1T1krMGpOb2UybjV0ZHl3dUI2dHJaTU5aVnNnN3J5dUhk?=
- =?utf-8?B?WHFIZkJCcWJueUNXOFh2cDBqMCs3MHFTcVVFaVlNVzNyeVdqZzVZU0VSSDZN?=
- =?utf-8?B?MlM4RnVYcFFQUVQ1Y2hjUFIwK3F4eEpwZ3RocSttSE5IenZ5MXV1NmRzRlgr?=
- =?utf-8?B?NVBwbHpncFBsRXdON0VBaTFsVEhGc3crNEtybTBlZHczRms2R0czMjlZL1BI?=
- =?utf-8?B?b09ZckQwdGRyN0x0Z0tvcmdwVmJmYTg3Y2MwZjZBbjZXaCtoUEpzSGUzZktj?=
- =?utf-8?B?Tkk1UWJWZUI5dG1OVzdKbk5oUnVpY0dtbUlxd1FZNmkraEdGOUVDOUlKVktj?=
- =?utf-8?B?dmhmbGM2Wjdyc3h3WCtVQndRQnNPdFdiUHVIOWkwbnJROEprUFR1MXI4Uzc3?=
- =?utf-8?B?NkdwZnlyOVRncTVONm9zcTR2OHdsNlgzNmVXZ3ZFSTk0MXk5ZVN6NVU5NHhx?=
- =?utf-8?B?dFhSaThsL1lwOEU3U1kxNy9hdktRaUo5QmFFNzhvUjRwSWN6OU56MWJHTTNy?=
- =?utf-8?B?eXlycTlDQ25ZYXl1cjNqY1ZlOGlKMVFRUXg0QWNiZlR5Q3JkcFd4NGdnMUtl?=
- =?utf-8?B?NEVEUko4T2JQRGlPU2wxWEIxZTdDbk9rNmYzTmpmK1N6TXdEbkI4MUhvWGcr?=
- =?utf-8?B?QXVLRmZMMHZ5MHhyeUJuYnE0M3VyMlFwODVqb2tuWTZFRzRPSkI2NnE1Tno0?=
- =?utf-8?B?QWRNYjNDWXhTdFBzdXhLQ25VRHl0TFFCckRDenhPaUhkMXUxUlAraEFLMlc5?=
- =?utf-8?B?SzlVRDRNdnE2UWRHaFpWRjcrNm9SN0RLdlQrSFVhTU5IVTVQa0NLMitGRjhq?=
- =?utf-8?B?dnlyekZvVHVnZlFxREUrZC9JNWZjVWd2dFVQSG4remZ4ZnJNbjlTQlVVQXJN?=
- =?utf-8?B?VnpHeG80NVB6REdCZVQwMDIzU0RUSEorcVh0KytTd1NWa2RjR1FiV1F1OXZz?=
- =?utf-8?B?ekhFdnd0b2dRRktRcnBuZnQzWTdHcU80UE1ISGl4MVI1OG45SDQxU2p0b0NM?=
- =?utf-8?B?ZE5XV2FkSGYzTWlXQTBMaEVFWkZWVldTSXhlYk4yR0g0aG4zR290L1lZdzlF?=
- =?utf-8?B?QXdtbEJpWmdVazVSQmp0aXVpZTJyU3lzLzdrVi9YZzB2ZGdqL0R0cXJ5OGhs?=
- =?utf-8?B?T0d6RVNuaHJ3c0FpSXNCeExab1lNTmJTc2dwQ1hxcTQyN3VWdEF1Yml6YnpS?=
- =?utf-8?Q?/ExL9je2BklJXQ1Qwjdc?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TXovOEZsTkJlSDBPa0NlL3gyTFpmUCtORWFWMzE5UWoxcWQyMXEwSTVua3li?=
- =?utf-8?B?TGxjSUx5Wk5WaC9zbGVnS0QxejhVK3JEMkpRQVJvajRvNHZCTlZDTW9DeWRE?=
- =?utf-8?B?ZU04R3NJQnlnNnh2TkpzVTNSU3FYQU51amlQdUthYktNVWdDVEdqU0MwQmJ2?=
- =?utf-8?B?dUYvNHhjcmJwcWlnVk1YZ1ZlOUhTSm1zY1JlWThmQ0Q5OWlRdzRLMmdNZC9U?=
- =?utf-8?B?cXF4ZHY0U2pyZHF1bEwzdTBOVFFuTW1qRVNuZHZHNzQwbmQzQXNBMmJvQUk4?=
- =?utf-8?B?K2ZQVllaZHhRSHVEK1dVN1dCZHc3OEtHMTd0NmwxY2pVaU1EN09iZDFiNEFS?=
- =?utf-8?B?OEJYT1Y2enA0Y1JyS21wSjNMTFFwb1E2bTZuRlR0TmVuMy9mdjdjWVpVWG5s?=
- =?utf-8?B?WnByL3pBcjMxT0NaS3FLRHRtZ3lRYnlCVUo0bFkrNW44eHc4UWlBSU8zOTZm?=
- =?utf-8?B?S0Z1N08zRGpGUDlTY3gyaEJhRTlad251eG9uZXE0bFRRVnF3VnhMYkQ5TXRk?=
- =?utf-8?B?UWRRZklzT29PSUM3aTBkWEZhbEtNUFdLeEVaTFdZdE16ZHd6TWxnYk55OUtP?=
- =?utf-8?B?SmplTDZOY3E5UHdVamtiS0FKTjdabmdkT0l1VXpmc0NRZGkraXpNSlFSQW5s?=
- =?utf-8?B?UXJJZGdackloSTJhdHRvbzB3ZXpvMnF5YUlyd2lVMGpzeHgrUTlmaWpxc0dt?=
- =?utf-8?B?VzhoYjVIVWtwYTg4SjJhU1pCZERYTnN3WEJOcThsUEFQaGhpQkg4VDhzeUI3?=
- =?utf-8?B?QTI2emxRRmRSZzJwSDRJdU1RbmlpUG1hNE94YUg1V2dWcXRzdnFXT01mcTdF?=
- =?utf-8?B?ZDUxTTVYdC9hRDN5bnpxMEJWMVdqUDY5Yy9pYmRYc2xwRTFmK1RXMExTUyth?=
- =?utf-8?B?eWJhemUyVXVuUkZMWlVFZGRucU1nVnFpcmJKK0FlSmg3VG80Zk96WjI2K0tx?=
- =?utf-8?B?bnNJUGJ2dHFvWlJMc2F3OFNGK3JwaVNXZ0JMMVpnQWtCRzlpQjZQVXQrRytx?=
- =?utf-8?B?bTZMMm96SHVpR01KTEFmVUZHb01hdFFQNGlvSHFRUkU5REJWREhBVGJHZndN?=
- =?utf-8?B?TnJpQTkyWUM4bGVwNE5objhuTFJsQTBUT3hhOXNFYkxFYTBaRXVkUHdqellM?=
- =?utf-8?B?aldGc28yL1NIaDZiY0tndzdXWkNubXNIVnNDVG1GQUNLQllZenFwUFQ0RUNO?=
- =?utf-8?B?ZzZvVy9LTXNuREt3WE4zbFFvSFYrU0dEZTM2ZTJVaWpndk9ONWtVYkloS0Zm?=
- =?utf-8?B?NnBFUXE3ai9KSllPUENGR2sxTUJqTmRzOEJyb0lORDhLdGtCcTV3dDhzL2d5?=
- =?utf-8?B?N0J4QTNOOS9UZE1CQ1drMFZrNW5YZXhPQitadjNoMkd4Rk9hMmxPK2U4NzN0?=
- =?utf-8?B?QjA5L1NSU1hqdDZPWWdScVVqWkJmeGpFeWtVM041TzVmT2pVWlVuMGo3NDRy?=
- =?utf-8?B?QytnSkUwNFVjL1RTK3NFUzNkUWtPS1RaYUgxR0tCTTlKU2dtdUxkTDdHSkVV?=
- =?utf-8?B?RkhGNGtiVWp4Z0QvaUdxUnBpWlZSL2pkK1hISzNkUFdzZjVJM2JPdWdLZXU3?=
- =?utf-8?B?M0d5ZUZXUWxkbVU2N2hJQWhZcHhSWlo0WVVFMVVVL3lSSVdadmVxa3JqcllO?=
- =?utf-8?B?YUdIV0tmdHc1K0poRUloWkxEck1mN1ZEWTJPbWRaSFBoeXFnbStyUnFZbGtG?=
- =?utf-8?Q?Zwm3AxrVlhoUx/keWnCL?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce037012-efb1-41e3-b4b4-08dd457daa9b
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 00:40:19.4542
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB8094
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kconfig condition on BCM2835_TIMER (and others)
+To: Conor Dooley <conor@kernel.org>, daniel.lezcano@linaro.org,
+ tglx@linutronix.de, linux-kernel@vger.kernel.org, etienne.buira@free.fr
+References: <Z6C5BegftEGzwkN_@Z926fQmE5jqhFMgp6>
+ <Z6C6FQxsyX_D4jhY@Z926fQmE5jqhFMgp6>
+ <20250204-papaya-grudge-2b7dd5c73917@spud>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250204-papaya-grudge-2b7dd5c73917@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025/2/4 23:59, Alexei Starovoitov wrote:
-> On Tue, Feb 4, 2025 at 11:35 PM Juntong Deng <juntong.deng@outlook.com> wrote:
+On 2/4/25 15:31, Conor Dooley wrote:
+> On Mon, Feb 03, 2025 at 01:44:05PM +0100, Etienne Buira wrote:
+>> Resend with corrected email address.
 >>
->> This discussion comes from the patch series open-coded BPF file
->> iterator, which was Nack-ed and thus ended [0].
->>
->> Thanks for the feedback from Christian, Linus, and Al, all very helpful.
->>
->> The problems encountered in this patch series may also be encountered in
->> other BPF open-coded iterators to be added in the future, or in other
->> BPF usage scenarios.
->>
->> So maybe this is a good opportunity for us to discuss all of this and
->> rethink BPF safety, BPF open coded iterators, and possible improvements.
->>
->> [0]:
->> https://lore.kernel.org/bpf/AM6PR03MB50801990BD93BFA2297A123599EC2@AM6PR03MB5080.eurprd03.prod.outlook.com/T/#t
->>
->> What do we expect from BPF safety?
->> ----------------------------------
->>
->> Christian points out the important fact that BPF programs can hold
->> references for a long time and cause weird issues.
->>
->> This is an inherent flaw in BPF. Since the addition of bpf_loop and
->> BPF open-code iterators, the myth that BPF is "absolutely" safe has
->> been broken.
->>
->> The BPF verifier is a static verifier and has no way of knowing how
->> long a BPF program will actually run.
->>
->> For example, the following BPF program can freeze your computer, but
->> can pass the BPF verifier smoothly.
->>
->> SEC("raw_tp/sched_switch")
->> int BPF_PROG(on_switch)
->> {
->>          struct bpf_iter_num it;
->>          int *v;
->>          bpf_iter_num_new(&it, 0, 100000);
->>          while ((v = bpf_iter_num_next(&it))) {
->>                  struct bpf_iter_num it2;
->>                  bpf_iter_num_new(&it2, 0, 100000);
->>                  while ((v = bpf_iter_num_next(&it2))) {
->>                          bpf_printk("BPF Bomb\n");
->>                  }
->>                  bpf_iter_num_destroy(&it2);
->>          }
->>          bpf_iter_num_destroy(&it);
->>          return 0;
->> }
->>
->> This BPF program runs a huge loop at each schedule.
->>
->> bpf_iter_num_new is a common iterator that we can use in almost any
->> context, including LSM, sched-ext, tracing, etc.
->>
->> We can run large, long loops on any critical code path and freeze the
->> system, since the BPF verifier has no way of knowing how long the
->> iteration will run.
+>> On Mon, Feb 03, 2025 at 01:39:33PM +0100, Etienne Buira wrote:
+>>> Hi all,
+>>>
+>>> I want to build a kernel for Raspberry pi 4B, which, according to the
+>>> dtb, has a bc2835-system-timer. This device is handled by
+>>> drivers/clocksource/bcm2835_timer.c, which is built depending on
+>>> CONFIG_BCM2835_TIMER.
+>>>
+>>> However, the config option is guarded by "if COMPILE_TEST" condition.
+>>>
+>>> Shouldn't that condition be ARM64 || COMPILE_TEST (ie be selectable on
+>>> arm64 builds)?
 > 
-> This is completely orthogonal to the issue that Christian explained.
+> Perhaps, but I'd wonder why arm64 and arm32 are being treated differently.
+> Florian, why's there no select on arm64 when the BCM2835 family option
+> is enabled?
 
-Thanks for your reply!
+The Raspberry Pi 4B (Cortex-A72 CPU) primarily makes use of the ARM CPU 
+local timer under drivers/clocksource/arm_arch_timer.c, therefore using 
+bcm2835_timer.c is not necessary at all as a functional boot requirement.
 
-Completely orthogonal? Sorry, I may have some misunderstandings.
+There is no harm in enabling bcm2835_timer, and the arch_arm_timer.c 
+rating being greater (400) than the bcm2835_timer (300), you will get 
+the former to be selected anyway.
 
-Any more detailed explanation would be appreciated.
-
-Always willing to learn further.
-
-> The long runtime of *malicious* bpf progs is a known issue and
-> there are wip patches to address that.
-> 
-
-Glad to know this.
-
-Could you please share a link to the patch? I am curious how we can
-fix this.
-
->> Then holding references or holding locks in BPF programs doesn't seem
->> to be a problem?
-> 
-> It's a known issue.
-> 
->> This brings us back to the question at the beginning, what do we expect
->> from BPF safety?
-> 
-> Safety is paramount.
-> 
->> What do we expect from BPF and BPF open coded iterators?
-> 
-> They are not special. All progs can be exploited if bad actors
-> try hard enough. Including unprivileged progs like tcpdump.
-> That's why unpriv is disabled by default.
-> 
->> Would we expect BPF programs to have flexible access to more information
->> in the kernel?
-> 
-> yes, but the tracing progs must be free of side effects.
-> 
->> Would we expect to have more BPF open-coded iterators allowing BPF
->> programs to iterate through various data structures in the kernel?
-> 
-> true, but it's nuanced.
-> 
->> What are the boundaries of what we expect BPF to be able to do?
-> 
-> Tracing bpf progs are readonly. If they cause side effects
-> they must be fixed.
-> 
->> Of course, there may be risks, but maybe those risks can be solved by
->> improving BPF?
-> 
-> Please help by contributing patches instead of screaming "fire fire".
-
-Yes, I am willing to help, so I included a "Possible improvements"
-section.
-
-Since I am not sure if this is a good idea, I wanted to get some rough
-feedback first.
-
-I am also working on another patch about filters that we discussed
-earlier, although it still needs some time.
-
+Feel free to submit a patch to enable the driver for ARM64.
+-- 
+Florian
