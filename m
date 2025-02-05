@@ -1,100 +1,180 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7908A1FBEBF;
-	Wed,  5 Feb 2025 17:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881631FC7DA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777739; cv=none; b=arK0GVSdrLkxO5p95kHcu+dGiSfkhcORrlaAZLnQgk9LPdlYPzeVt6UUxfXvBM5qsTr2QMae/GPqUGZICU8HfFfFcjro1u3RH60CVSOk10DIEgGO6TrEO1DH6k6GSGf6uMan+IFiW3f4gwNfPRuh/V+3HhmmOnf0wxPsdyfow0g=
+	t=1738777745; cv=none; b=AI9a2i4T55r9GZwh4oN6gT225FtCiBnD48E7iQmGE4LvAwYgQBjpgbPLYEATiCMvQ0o3Bg9+m3o9meqdyuHa1c7g/VhlaQavasCzowC1CYKGvvC4oSfx6o9b8D/HG0l4d5dUFM/LNT/FwxVireg5/LLytYB3SEl69zaCpkuS/kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777739; c=relaxed/simple;
-	bh=2wGvyYMnVgwfZDd+X3Vz5ct1HNuTyg4x337XNUZTx1A=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=CkUQ1mz6hGqemC1NK6/VD63H6qJkeQeO2obnw3bWgHtUS5ybtjWeIiYIvhJok1B7TrmllY2diUqKDJMgTIfKqJZMEVkVAD+jw3P0YMsbCfqemnOUVtPHMqHBFGutn1dShvouxc/9wJXbaLe7fpltQIaNuZr1Om8tH9X1zjsUcQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KToc3Ji9; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738777745; c=relaxed/simple;
+	bh=/u62dmBR/ElLvSnF0c2PDOI2w0kdMLqx8LmycyWZfzE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oM1I7dafIJWrFdWYNGXy1ADpJOKLt2/De76dpe2MqI/YR9jMhhWag2twoaKFOwpCxK4e7LhfCjPjqdEuaqUofPXdNEcRvrBEULjjfIAztT1Yie9gPadGafLHqJn993z/hJc3EXyT2EEipbBJQGteG28huiJAYtZ4BAp5WX+zRys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uqpTAfY7; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KToc3Ji9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738777719; x=1739382519; i=markus.elfring@web.de;
-	bh=2wGvyYMnVgwfZDd+X3Vz5ct1HNuTyg4x337XNUZTx1A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=KToc3Ji9eKlJRjf9lLa5NGBwmaib1ECzHS9D5u+mYXvnUfFelN4U6VMVzOrH2DWF
-	 AUNIn6I4kQK56OVKS9dQY103EKmWgv0JmfFHBFOHAof5jFJJGj1IgU8dlqhkiVz2M
-	 GvzC2rU5wV//Dni/Dezv3nK3V/7yrkVTeojQslUaVI5zIbB3f/jInpf5OFoCZJDsb
-	 P8STSlmF9ZFa0tHRjSNSgtXBPRks5ExOenr4ImvZrZCkdYCb/SLGmLPFlfNF7CqsG
-	 IGA8MolEYDMlFrBTSnVifqAdZgKCqHjSRzqeFNTFrYdVhHMibVQdqj8HGcwYBEtcq
-	 Ft3y/z0bP2FHq1DL1A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.30]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MJWoe-1tzboc2sdE-00X3oZ; Wed, 05
- Feb 2025 18:48:39 +0100
-Message-ID: <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
-Date: Wed, 5 Feb 2025 18:48:35 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uqpTAfY7"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab7157cf352so236897766b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 09:49:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738777742; x=1739382542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zQSBOXqhcCachV8zft/ScV1fAUdaea+WUZiYV/mWDWA=;
+        b=uqpTAfY72ChwJxTgZzIEtB5RyCziQaK4TMUTFBYYzG8ALRiJI7YiWT3leZb/0EKebT
+         7baWKcC7je1Jy9aqd3Y4dMCgHlaH44ZmVJXlQtw82wDOA7b2YxbDjjr2T6rc4HuJBscp
+         rm2sXXR7VuJUj0kiSiN0OHhJF9G1X1uHmRHi5OWS9QokobsfrJF/KSGF8F9gH3pG720f
+         3m9+hu6UOlVgwNLvLhGXtoHwffmpT7T711s23ZZll9A778BCLgsVdBR6ANVN6iFK5ATv
+         2B6uB/jWkqBRZW07kyst+atf0lbcgAYcrgW2OSHcgiaLkz2u5F6WbvxxThGAkhAZZSxH
+         NiYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738777742; x=1739382542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zQSBOXqhcCachV8zft/ScV1fAUdaea+WUZiYV/mWDWA=;
+        b=HLHY/PgLVzWJRP7Vki+qQf8YWECys14VsMZJZ0EI4B67RdFZgtyEfvcpeiAM65ZD+o
+         Vzu6DyY7HJK4+L1I1BPsK6c4Ks6vIovr/IBGrr2cvP2u8mEGWlV5XKW81koLy75WzZIf
+         9ifgG/PfLWpnYEQQoGsxNtSxRqcPIOWiuvTtrm/xUzXtSRCI7Or72AjY/tslHsB00WEX
+         8XM2A3QG1B2kEb+gaNkq/U7YXLtzFtctalZz6KA2sKYs1Zh0Nb3LuBybEVegh+KKlJDy
+         lypwlgvTxEvq1CKOjWx6b8TKDsvw+A+162fNPvOKenv2cb8l02AS7DFtm/Y6/Y2nqHE5
+         4Iyw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9V6uu3DiKDsj+PuHhrF3jSQawaLVbeivJjvwVh2rGHHW4vhRKhS80+RlUftWm+oTjr6dsSgev4CWvJNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJUXDPiyeYpTFshVDoOrDgRjyo2iabUO5CqSVgZdquiPJkLKZM
+	ZhiK9OdVaPVg4aYdsJQCtCFxxe9nL2Z7btrFhsJVPjAdeFDGOFBs6c2vaIhSGHpR/3DnBdMcbCH
+	ocqWUo2glBEnD1bXT0FkRYWqxkwZcmi20Eok6
+X-Gm-Gg: ASbGnct6bo33Neif7hh26WFxGKHgnPBPLOyENRBUcTj0mIrwSejN/TWK3NXsytKFNjx
+	UetjFYvE6z4kYgouoNvGzMCCdtFPmoEAuQgMohgmjOlUltKIKWYppKauH1Cfb1QzOSwwkI98Z
+X-Google-Smtp-Source: AGHT+IHJ8jmvk2vlvaC+lS/sj7o4RSpBTPngYU6t0we792og/hqSw+9hG/n7P/6UGVrDc5IFt2nzYS57fa68T5dlKVI=
+X-Received: by 2002:a17:907:7fa3:b0:ab6:e04e:b29 with SMTP id
+ a640c23a62f3a-ab76e84c376mr17529966b.3.1738777741553; Wed, 05 Feb 2025
+ 09:49:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Feng Tang <feng.tang@linux.alibaba.com>, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
- hotplug events
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20250205163609.3208829-1-aleksander.lobakin@intel.com> <20250205163609.3208829-2-aleksander.lobakin@intel.com>
+In-Reply-To: <20250205163609.3208829-2-aleksander.lobakin@intel.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 5 Feb 2025 18:48:50 +0100
+X-Gm-Features: AWEUYZkuOxhIaitZ5J2JCfpt9TDbTEs11u0nOVrp_WhyR-akpJsCIQE0mTy2wI0
+Message-ID: <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 1/8] net: gro: decouple GRO from the NAPI layer
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, netdev@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Mf1TZS7zMuR+t1RajiJ5ezWp2B9JsBYz+0mHhuDgsZxlohT+5GG
- uXNlnBicAwYLHxd7d2x3dLw8emHRubFR2inyRREgpVY/44B5qQvqzOhP8uqs3wsR+L8x35p
- McfgO3rZi7FLC0gq3u7EhkwocNUThAkHItBqbB10NzFcqQxcUpH4tNv0UcoiVPZ2qxK4hUD
- 20nTQTR6ae12xnt8iK7Pw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:67Xz/2/uR7Y=;o1APCCmxO+pUUFUCCtaP8J9jK6C
- +o9/5SurHdnE93JNlRJqMiGWlK+fAvUqU3ybLF+FOPYUZ4TW/Y21r1ys/69a4DPLHMvSCpr2t
- /ej8UBepJjyiVGz8DDCMYIgaepJjHLljaHdh4x6Bxrhe2ZUvilc4XjlmsvO3pw68qV5ejUgeU
- lUDK4tWHfvlpFRqhlUJNzSxZOczKWIEpw1nZLhQpzgv7lUjaK0Pt5n4gwFyfeTeVtU05RuK7J
- ZaGW2P9xSamj9Riyxx8uZh/xLL8aeFhmK5PU6PWy2KubdGsZbNa8IEIScOVOuqjxnwp/L8dNX
- fmneLEb4pNQcxTl22fvhNM8U2AD9GGkp6uSt/CCu0Pxc3N0teSNxI7DQ+MkRZvB/yU1GpH9C9
- 872zD5Iz+Jjv2gct3WiK4lVUOlNJrLnU/qapM0xZs/iI8kmYjeYpOqvzPlgQdudPc/5Ah3POd
- ZO+cF46eDq0p7FFNram6sk47/Cqh7DedIn2eqsnXeb94PsxNh5LIVaOUHXx6hZBKhsLA14Kcx
- W8MK1JEJhj4nWUD78kzqKDGKTmZS9bwdIQusx1kVLutAy5b8kzGhkxY451KTjAj5HHebi8GxW
- /nWhbqlzCGgtWLY1ae4PuU0VuEKjsdUzXauVzsNoaWwutd0ACvFl1GmaHSHnSAs/q900fm8Sa
- 62/rwqTxKjM39pJx6/bYLav7aDQYSeKF4n2PlGVAFG1cAcxJY6yc0iRVqZEMwztEoOzWFdKMV
- q4eYk7NU6tfIIxrWF6el9OZDWu07A7MUJGP2X3PMYnp+xk2V2J2BJoHy4QmDoq5/OZHErUeEw
- Pm37CKx6LSVZqz25R/9Z3dfpGiV4cwTt1kVo5ZG8bT+4pV86Qw66P2IAnjmPLj0OIkKzOXFVk
- qVd9R4d5Q5pRxhZDV/54GUmqlKbshGZ8hma5cEJ72jCG4yJKsngsPizc5Po3HVaKHOiYJ1dQq
- fTjCSSD+KeYygM18/2OLOz6G+8xov+r3ZkI66ob10tkn7gyET5dzpMmSRB6AbZD7SX/j73Adt
- pcE+km3Db0NlUnYnOyZLL2hyY+QzXZAYcxiKttutC19xyJKdeLytn5CX+ymGuw0A/pyy8PTxl
- Y7kEHm9RF0k7++Q0CmHSWTFAhk2aHXFunL19KJEXG7N5vGXtG8XUQtAhLx4vvB7PHKJdh0rIQ
- z8saaldzHdx/YlbdsEuXJFGBph9SFmuVRzPjduJSO2L8MQJc7VDYqw7uIs+AGV+qSU3gG69Hy
- StALmGar+wA27MjGrEOP8VFJF5NyTwcgI+rE/v6W73FDN7ySTSj81W91Rv7N3jyB8prZdchSk
- /u0RAhMjzH+3KnqIFvW0KjlUvmucLCWO086sjUZCUJ+w0qDJcP2U5M/d6Da9pSbHEigmio823
- JZTQOWUnm9BbZUhZYPHUanYKZtrto0pZelhwkqylNIxeAuBRCQGBvq0/zAsM1OLPa2lo+Gy+e
- ymcGhWA==
 
-=E2=80=A6
-> Add the necessary wait to comply with PCIe spec. The waiting logic refer=
-s
-> existing pcie_poll_cmd().
+On Wed, Feb 5, 2025 at 5:46=E2=80=AFPM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
+>
+> In fact, these two are not tied closely to each other. The only
+> requirements to GRO are to use it in the BH context and have some
+> sane limits on the packet batches, e.g. NAPI has a limit of its
+> budget (64/8/etc.).
+> Move purely GRO fields into a new tagged group, &gro_node. Embed it
+> into &napi_struct and adjust all the references. napi_id doesn't
+> really belong to GRO, but:
+>
+> 1. struct gro_node has a 4-byte padding at the end anyway. If you
+>    leave napi_id outside, struct napi_struct takes additional 8 bytes
+>    (u32 napi_id + another 4-byte padding).
+> 2. gro_receive_skb() uses it to mark skbs. We don't want to split it
+>    into two functions or add an `if`, as this would be less efficient,
+>    but we need it to be NAPI-independent. The current approach doesn't
+>    change anything for NAPI-backed GROs; for standalone ones (which
+>    are less important currently), the embedded napi_id will be just
+>    zero =3D> no-op.
+>
+> Three Ethernet drivers use napi_gro_flush() not really meant to be
+> exported, so move it to <net/gro.h> and add that include there.
+> napi_gro_receive() is used in more than 100 drivers, keep it
+> in <linux/netdevice.h>.
+> This does not make GRO ready to use outside of the NAPI context
+> yet.
+>
+> Tested-by: Daniel Xu <dxu@dxuuu.xyz>
+> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> ---
+>  include/linux/netdevice.h                  | 26 +++++---
+>  include/net/busy_poll.h                    | 11 +++-
+>  include/net/gro.h                          | 35 +++++++----
+>  drivers/net/ethernet/brocade/bna/bnad.c    |  1 +
+>  drivers/net/ethernet/cortina/gemini.c      |  1 +
+>  drivers/net/wwan/t7xx/t7xx_hif_dpmaif_rx.c |  1 +
+>  net/core/dev.c                             | 60 ++++++++-----------
+>  net/core/gro.c                             | 69 +++++++++++-----------
+>  8 files changed, 112 insertions(+), 92 deletions(-)
+>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 2a59034a5fa2..d29b6ebde73f 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -340,8 +340,8 @@ struct gro_list {
+>  };
+>
+>  /*
+> - * size of gro hash buckets, must less than bit number of
+> - * napi_struct::gro_bitmask
+> + * size of gro hash buckets, must be <=3D the number of bits in
+> + * gro_node::bitmask
+>   */
+>  #define GRO_HASH_BUCKETS       8
+>
+> @@ -370,7 +370,6 @@ struct napi_struct {
+>         unsigned long           state;
+>         int                     weight;
+>         u32                     defer_hard_irqs_count;
+> -       unsigned long           gro_bitmask;
+>         int                     (*poll)(struct napi_struct *, int);
+>  #ifdef CONFIG_NETPOLL
+>         /* CPU actively polling if netpoll is configured */
+> @@ -379,11 +378,14 @@ struct napi_struct {
+>         /* CPU on which NAPI has been scheduled for processing */
+>         int                     list_owner;
+>         struct net_device       *dev;
+> -       struct gro_list         gro_hash[GRO_HASH_BUCKETS];
+>         struct sk_buff          *skb;
+> -       struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
+> -       int                     rx_count; /* length of rx_list */
+> -       unsigned int            napi_id; /* protected by netdev_lock */
+> +       struct_group_tagged(gro_node, gro,
+> +               unsigned long           bitmask;
+> +               struct gro_list         hash[GRO_HASH_BUCKETS];
+> +               struct list_head        rx_list; /* Pending GRO_NORMAL sk=
+bs */
+> +               int                     rx_count; /* length of rx_list */
+> +               u32                     napi_id; /* protected by netdev_l=
+ock */
+> +
 
-* How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and=
- =E2=80=9CCc=E2=80=9D) accordingly?
+I am old school, I would prefer a proper/standalone old C construct.
 
-* Will cover letters be usually helpful for such patch series?
+struct gro_node  {
+                unsigned long           bitmask;
+               struct gro_list         hash[GRO_HASH_BUCKETS];
+               struct list_head        rx_list; /* Pending GRO_NORMAL skbs =
+*/
+               int                     rx_count; /* length of rx_list */
+               u32                     napi_id; /* protected by netdev_lock=
+ */
+};
 
-* You would probably like to avoid a typo in an email address.
+Really, what struct_group_tagged() can possibly bring here, other than
+obfuscation ?
 
-
-Regards,
-Markus
+Less than 30 uses in the whole kernel tree...
