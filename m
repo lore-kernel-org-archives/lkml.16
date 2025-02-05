@@ -1,104 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5022158525
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1CE7BAEC;
+	Wed,  5 Feb 2025 14:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765773; cv=none; b=i8UDCtN7NL4c4kzy10omVoIBPAMLr59ziN3vIhPY4np7BVyksXbg2nKlLyw63Q/KGkztXI65z+mJmsm7CmmTm2AMz4eRHWnnAgns88w6ppsDQdF9+E9b668d961V2U+CAYotIDpPsSoXEI7qm+adUeA/XOOJGn9LUPR9ZJyHFrc=
+	t=1738765827; cv=none; b=OfOut4HgbRldNQdUMmzWHq1uZDxWjLqhJRJJN/nTEIlznHRAl9f2CarT81LmGBj/pQVfBxgFuBFLsAY4RYrtsF4cddnYK5mINAImSneroO87w5axoGKoHoHKBG77EEk6bE4+kzPXz6lD9gR6pdmtzDrv2OTfW1QgDS26P5L2q+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765773; c=relaxed/simple;
-	bh=eVeaTdpnOirbpMyaydQmbB7gizEyGhZBFyWrLI0D9Wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsp9zx8G1aQm9GFueUNfZ6kLknDKPzGHpxHEp8rGe0/AXNV2Gjf1o+TqAkmpILydfaCv6UcvCsLwXnw7+uIT3AMflaGjD0DxpHH8Yyf1JhyKhnVvxGyz6atlQ0//sBMqAIm/xotLVigwQaOmPnmJySEUz88z479C9EXdUeSbFGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qntclzv0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738765827; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=WwFCVPucBhSPtNwd2CQjjuCQz09uKnQg7QxtLBFbLWh0zaZceB610EjHNJ96V4IoOKja9cosiGDBxkRXBZd2XaxEhxLB5Q1btaLwEeGt8YCrvEJbfoPOIOhyxI+V2WE5miiPvaY7lUPAIr4i+hu72Vh+thJjmXBeBHakWMeV8UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=cCrFcTDA; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qntclzv0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29396C4CEE2;
-	Wed,  5 Feb 2025 14:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738765773;
-	bh=eVeaTdpnOirbpMyaydQmbB7gizEyGhZBFyWrLI0D9Wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qntclzv0y3WGko+YSgK+ZC/ug+5vv+FnO2rAfqFRrTVSJz6ClfXYfVGlXEvPjj+Wu
-	 ywkPWwWfXHFbGwlAnURWoJFY+5FFm7L9sbYG2TovDCJLuCfdnRffFGPSsXywPNSmYh
-	 tSd08naH68xs3YnePxibSsqawvNGTHl8agiW9SlRVD7vYa01Z7G9kCIpjwZivLwuFx
-	 8i4kfPMBSpwZzRmaeO1Aakyek0Vc8wzBZyMalfrNCwQbhn2LRsTfo5f9fiWSogfqTM
-	 ftTlT2PjASsahCF3eppzefqMx7tH4c3JBNGvNDHhRz4+rMm9Kbksd7Oj2lakc397nS
-	 4EYVemdO6zX2w==
-Date: Wed, 5 Feb 2025 15:29:31 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 09/10] drm/bridge: allow limiting I2S formats
-Message-ID: <20250205-eager-laughing-nightingale-de5cab@houat>
-References: <20250126-drm-hdmi-connector-cec-v3-0-5b5b2d4956da@linaro.org>
- <20250126-drm-hdmi-connector-cec-v3-9-5b5b2d4956da@linaro.org>
- <bd2eou4qqxwqn3bypvpvkcrw56m555jwlnlni277phds7vfklh@aacywioenkkq>
- <7nawswhaddasa4a2sytwspq62s4a2di3ukemfqsc3ueh2lftzl@kjq42eoq3ram>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="cCrFcTDA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738765822; x=1739370622; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=cCrFcTDAEGRBJh2TNJrRW5rNT3+t5g3eBMc3xn6lNCh5DQ4QD6CX9Wb0NVAJCdZC
+	 NNSY0BNxeLygDUf3NhZwRq+IKnv1AAWd/X5Z+lcEd87hra4RWlmLyCaFJvwRH1Wrf
+	 9RvVqmbcTSxDgfuFVlySjHcRICTNbPp9fnPEEP8Q0nw+jkpBy9Eja/WdnR2K0iGgZ
+	 GqpppLfdxwdNYRepq+FPSrY6XLSFUX1SKPoeuevrIuNokasf/0TH04ezfehEFleS6
+	 jLTA9fA+ZLtDVaMG/5SFzjsP0/zx9tu9WdBO3AbqtDwtJyQaQErA1vmCGe/H0LBh9
+	 rzUG9FHR7163CAHZrw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.34.104]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M4b1y-1tgENk1xCw-00F3Bk; Wed, 05
+ Feb 2025 15:30:22 +0100
+Message-ID: <f9f936a9-1a55-4b4f-a093-7b94ab726a51@gmx.de>
+Date: Wed, 5 Feb 2025 15:30:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="zl6wjwxauob5as6t"
-Content-Disposition: inline
-In-Reply-To: <7nawswhaddasa4a2sytwspq62s4a2di3ukemfqsc3ueh2lftzl@kjq42eoq3ram>
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:YO+z50rx9oBFRQTW6llk4tATg29xkVCXlF9fx1B+Ca1prNIJa4+
+ 26g7R3TiBVP5dQHvFk9TIaSx9o6Cgvbe2rnzw7i8+KB2drcX/diurNbWtuwj0mg1GmWUjXa
+ hnRCjGgQ6mcy082grU2HDR140FYquEem6XMwYy/qQ+7hTXN3fYLBOX3P2XQFXqdishUunCu
+ 66kDmUEIKl4FZY2mZzIOw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:b0b1eIE9X+g=;ozl6l71yTyyqppiD2fZ0GLiCZ3f
+ dpihhv6YlBZyLTDckELZ68r9SNjWCoyF0aBQjaNEf6X0np+Nwio8Oc3kAcbi70R1EIPvBQpgN
+ Mq4mitfCYahhXP7y+gnO0q5zlxKltW8cIUC40gDkWU7qUgif7ddLcVHOR84/nVba6PLfFm/xO
+ l1ixAYb6uNJIpROibRjrOCiQA0/QPipYezRQm6IVbFfKGiupg1gvGICxiVRqFxDp2gJna0r/L
+ lJePjPzgcZwsznW23azvO6Wyb33vJGfDYPv9GCk92NPkhJUnByJsJJTE0aPFKbA+1ZN/1XXQW
+ ZcMvQCcHxRrkuxRRsJ2UK/OLbf0vmWmugGtwFvx1zEhJIG/nLiJISYApkg51QtcKyGZHeSR9V
+ t7eNYJomaPmw3HZg7GqzePxdLBZpJNLpCLPt+GfIf0tD0GT1sm7Pp1fQ6fWWSZV+jHQP8f8Lr
+ mOQIXnQbS8ueqNkRU78S0Dn8y0/imI77ITQ6anA4GFKybermonGrGkCCAwBKkU6xhXDJ/JgRR
+ kv02cQy8CBL/va+7rYGpWhdNqHhxp1kaM5aopSS3Rliek4kYx7ZxoqrfR16ON4FRlYFhwKYqS
+ QCzmnXLwDFLzLQCHL4h/wUq/jPNPqrGesGTuUaCWoaTJkhaRBt9xFCqSIIFgyAlRU2oovx09B
+ 5aMgCay5tyeA0kuKkhzXt82XdG8U/TdymHGtuf4OEjTLeYvnLGbfmdN9ighBHW8+0ZBePQL2N
+ MOHQ+6Lq5VjNCYjbTrDhSWuIhmD/WSrAmWOvAkEU0f1hpE537uNc8aXxaobp9UHxVF+NBDDhL
+ 3qg7DL2uXdl6uz3nXbOMB/3EleWpBqofJgpkM3xoCAwwFNk8wY34pIluj2mtWp0JfsS2KAx2L
+ /ITtwlcZRRg22dThMjB0uTCloh8MkglE0aPXpX0E44/HNfWDKHWtYGM45vIFq8gSeCvRvPV4a
+ 0/3dHP45J6EJ/MDlku8PBIDkJOSYEK/ZC0/dGeqlIctxPeo1JBx3KHtS/Q1ZqBkydumQ13n6A
+ NBZH+yCU0y9Zfo9WKHLSYFoMDWusUYCqKMcsamo9kXsZ7/gHr0W0ArHuXt1355EQYN0yyWLtB
+ jqFhKQ/7Qj+TutvsoXNRSseDY+65g3rYGC87oRGBujhDxOxXT4qxsJ6OtjFrF19XWv0lCfj1z
+ X0nUYpGXI38HhStWDE/RVd153wM8y58tO5MbyIwJjyc1bJ1ADoYzTKcpEkl1cqW20jqnYTwkd
+ 0xC6gX/IrFNgBtdf6Ij3nirFpjY5Cg/kHFvk2tcSYPIb44IxTjmgZwDR+wqLe9G74MeNgJbC8
+ /Vg0MIktoweLyHEVMdUk90CID7oOQ3QZYyl9Tul5KigLUM=
 
+Hi Greg
 
---zl6wjwxauob5as6t
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 09/10] drm/bridge: allow limiting I2S formats
-MIME-Version: 1.0
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-On Wed, Jan 29, 2025 at 01:45:56AM +0200, Dmitry Baryshkov wrote:
-> On Tue, Jan 28, 2025 at 05:11:16PM +0100, Maxime Ripard wrote:
-> > On Sun, Jan 26, 2025 at 03:29:14PM +0200, Dmitry Baryshkov wrote:
-> > > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> > > index b55e80a57758e8b652eac0cd01cb245a04e221f5..d16af5fe90cb48f6671e7=
-98d9dee61a359c9233f 100644
-> > > --- a/include/drm/drm_bridge.h
-> > > +++ b/include/drm/drm_bridge.h
-> > > @@ -920,6 +920,11 @@ struct drm_bridge {
-> > >  	 */
-> > >  	int hdmi_audio_max_i2s_playback_channels;
-> > > =20
-> > > +	/**
-> > > +	 * @hdmi_audio_i2s_formats: supported I2S formats, optional
-> > > +	 */
-> > > +	u64 hdmi_audio_i2s_formats;
-> > > +
-> >=20
-> > We should document what the default value is if it's optional.
->=20
-> "The default is to allow all formats supported by the corresponding
-> I2S bus driver." Does that sound fine from your POV?
+Thanks
 
-Yep, sounds good.
-
-Maxime
-
---zl6wjwxauob5as6t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6N1ygAKCRAnX84Zoj2+
-dlrgAX9aDNuZXzFPiM/bM/7BcO7J8XzlRwFVr+i1N/QsnMdSLGZj87Zx/r639FZ2
-9xJiy4sBgJhgpOdA5fnB/hcAxS9dmow52Aqfbt7V+aCWL7aFCDnTWtgBAdQ7/Ook
-Ix+DjFHZKA==
-=pHPw
------END PGP SIGNATURE-----
-
---zl6wjwxauob5as6t--
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
