@@ -1,143 +1,133 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D238C207DE0
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D461D6DD4;
+	Wed,  5 Feb 2025 20:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785722; cv=none; b=GFoszr3NLRvgRZgn3Q1XlwgEobuRxFMSst7wHE+QYF5/cV7XCTN3h0QhBScNAQ1Lcfpcmkmq8grK9gknPkup9m97C04MOWttJqSrc0/3FihAzfCeQxmyCzzLraemB1WqthRUcLjquCWPrSSeIlGnKnp+Ve/VeI6esBm6ZEfBGlc=
+	t=1738785752; cv=none; b=u+P63traHTmetaKDlbqnrdY/HGpgd6TBtee7tg6ZrfWfkNShMBwlmmx/fPmdDLrbMdwxnti7vpjQpQbhwRwL/Dd7h5LoQbvCAMx0eKRHmIsV4JlfiQ09/49ZRMgyUty9OmVHt6mT5qxEvZ7488WA/KIGbYiIm2ZLobogXkDyZrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785722; c=relaxed/simple;
-	bh=DTEdzO1IPs/iSbUR9qTXfHT/WQX6NcWLD+GyM4n0aio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvr/u2ZitcK+iv0onwMFOrp1GRUk7lKUectX0CDTavAGPG63bC389Af5Oap8zKh4VfXnXiibxRo+W/pDPBV/gxLMwaMrJq86YBUpRfpjlcfHu4lv3ilEPd/mr4Bp9c65PGFcERkrbwVBSvuYc2oUjgUww+SwXfWEUvTuvz76QzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=iTizeO0r; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738785752; c=relaxed/simple;
+	bh=MVPoBLK5Lta8JO2yl1wG/kVgdC3BN+3WXypXj8ueEmM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LGg+fMPyD5+W0U+bfewNLcq4880z1hfBgrV9axo7Y0YwxynrtMuqhVPCAB/ashbNKZYw1P7A/OussXPNqgBl82H0RlLj7LTPf/bGyVPIc41St7JD08CLYNBeMeeMNwfgFKPeSkRRkhEo9PMvmYPN2IEaS/owJu0NqVd5HDwBdD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=URcnDuHR; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="iTizeO0r"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6e5c74cb7so8749885a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:02:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738785720; x=1739390520; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8VSpDNdk25O/o+fZMp288PyURrK/8ijexeUi7ezV/7c=;
-        b=iTizeO0r8Q+SRPcDmjAneRsrBLngOQZuafT9vZ/vSQRDumKLFpdr7DSF2z1JGnAdw3
-         hMnMBxrkLlV3iM7VYjqnqa9zh3xAHpC8GScBf28XzHnognANSaih+MXQzmWmvICOSLUb
-         83JILGv+KliLiSI2Xh1RuTARjLFjrBN2b9NiVam/PJEYOw41GHHiKfPOfSPLt/z/gzWh
-         tlW0WWvqEIuLiGF4KvChHc5wcsIr2w0IaHTup2aoNkNWwAupWpiofjdJay2hzFo4NLNI
-         mhQb05IAdSD4Bc11fMKZEUQyvcqrdhjWCLkRGEKKoYko4cPkl5AiBThijVBDBt/qqpUI
-         65mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738785720; x=1739390520;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8VSpDNdk25O/o+fZMp288PyURrK/8ijexeUi7ezV/7c=;
-        b=QVngWkxE9jCYSDC9FJyOvfSkQJOUkOMJT8kaXQec/sP6EVcGLYolybOn2ocxShf9g3
-         gV5+gQ+YGoQQOjAXh9CV5hev8Gbq9iy0TpPrVleBr1iAgA95oZZQzIUdTpRRxypx2u4E
-         vMa4vD0Z8kSZ+OaSn3aZLYWd5VU3MUhG8w7QASGOQzW8GCsxH6ZmJ1mg2xDfVXhkeWAz
-         HT91i8WVupKeMYdgYslAo/Wd0+V7K7NVJs8v2wAYh2XOFc/VqYPElqFYAVJy20xAK4/z
-         BRRv2f+VshfAF/3QgJ1gs4XRJ/i4n84ktNtl0PX25pD2UC6fC4ejUMahi0ffvUjAp4Ur
-         5gEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUN4CmO/01wdscDL9sGMylUpHWYLcztcPxuHhR1pianO+qUoiWiqPWFOcRgwVBfWNtEfyWx0Re5U76tfAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqsqUmLquaHJX3/yGEdk1as3A4iK1C+xMCEhQqXA1NBBlGs9mT
-	O8TTU075/yQPHTpcdkcZycO88c+4yiTksyyjUc1IMl02ZcGU7chdFrV0YGuJLyeshvKh+VSY9PP
-	j
-X-Gm-Gg: ASbGncu80Pb+n7aLs79DElHLYGn5mv7TYFwEIhqM6u77cvZWGsw8RoGwIbJw358Eg+t
-	yzZzB49AyIKKzFC/y/kToTxDTua2DIZG4A6WqneypNZBmSz0BZG51UfmDJoVWIQ9UF3c+sp4zLU
-	q3ZtAT84sAUD2UfYnegxJfnGbYt5n9ndfgpPUUy7jIqxy+1sojxbdbhakh/yAq2FOt1SnFPUhpw
-	6ynvdkFqLsKh36AWvFiKWFg94dhq3Opkojs+0SVpLQFqAzhEm2VrT9PQXqVWJFweqM6VgZ8cuRa
-	Zi9iMhExjvVGr5cgvQ2nh16gVMbASPfroHf/3d6BviHQjgSfDioUc4BXGX/5rRq/k9CYDmajJg=
-	=
-X-Google-Smtp-Source: AGHT+IEYVi/m8wptbaxkhbPZJ+EcqbJYgjUqN7w7U6N9+LnXprFFxitg56LH3NaoPg3BvPn36ADc1A==
-X-Received: by 2002:a05:6214:f6c:b0:6d8:8256:41d4 with SMTP id 6a1803df08f44-6e42fbacae6mr68306776d6.19.1738785719721;
-        Wed, 05 Feb 2025 12:01:59 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e4390abbf9sm2594556d6.94.2025.02.05.12.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 12:01:59 -0800 (PST)
-Date: Wed, 5 Feb 2025 15:01:57 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 6/6] cxl/pci: Add trace logging for CXL PCIe Port RAS
- errors
-Message-ID: <Z6PDtW0omzmMjjXN@gourry-fedora-PF4VCD3F>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-7-Smita.KoralahalliChannabasappa@amd.com>
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="URcnDuHR"
+From: Fiona Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1738785748; bh=Ol1X+RM/G7pFZ4iQsIUtvNm2GPmVCr2iNjwUsaYgXz0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=URcnDuHRu4GxRmr5lARpYIFTcEyAHyYbtXUqPJdZDcwqP98vJUyVXRGFtCuj+kyAr
+	 LQHp2Ng6+fR+6NSx3aHcnKoNjZIKqJOGXEep1uY7AUdoor/2uHkKKYpJsUlBXBqW6d
+	 Umoagtn3lntDvWuktf80wIAcWnhWi0imc+d/YlyU=
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>,  Miguel Ojeda <ojeda@kernel.org>,
+  Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,
+  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,
+  Benno Lossin <benno.lossin@proton.me>,  Alice Ryhl
+ <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,  Joel Becker
+ <jlbec@evilplan.org>,  Christoph Hellwig <hch@lst.de>,
+  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] rust: sync: change `<Arc<T> as
+ ForeignOwnable>::PointedTo` to `T`
+In-Reply-To: <20250131-configfs-v1-2-87947611401c@kernel.org> (Andreas
+	Hindborg's message of "Fri, 31 Jan 2025 14:30:09 +0100")
+References: <20250131-configfs-v1-0-87947611401c@kernel.org>
+	<20250131-configfs-v1-2-87947611401c@kernel.org>
+Date: Wed, 05 Feb 2025 21:02:27 +0100
+Message-ID: <875xlop3cc.fsf@kloenk.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-7-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain
 
-On Thu, Jan 23, 2025 at 08:44:21AM +0000, Smita Koralahalli wrote:
-> The CXL drivers use kernel trace functions for logging endpoint and
-> Restricted CXL host (RCH) Downstream Port RAS errors. Similar functionality
-> is required for CXL Root Ports, CXL Downstream Switch Ports, and CXL
-> Upstream Switch Ports.
-> 
-> Introduce trace logging functions for both RAS correctable and
-> uncorrectable errors specific to CXL PCIe Ports. Use them to trace
-> FW-First Protocol errors.
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Andreas Hindborg <a.hindborg@kernel.org> writes:
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+> Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation for
+> `Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove any
+> functionality, but allows `ArcInner` to be private. Further, it allows
+> downstream users to write code that is generic over `Box` and `Arc`, when
+> downstream users need access to `T` after calling `into_foreign`.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 9d4b5f39b21a..766447c169c8 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -1168,6 +1168,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  		pci_get_domain_bus_and_slot(data->prot_err.agent_addr.segment,
->  					    data->prot_err.agent_addr.bus,
->  					    devfn);
-> +	int port_type;
+Bit unfortunate that we first in the patch before made it public and now
+private again, but it makes sense to split patches.
+Think I also found this weird when I wrote my LED patch, so this makes
+a lot of sense as this is what I would expect.
+
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
+
+>
+> ---
+>
+> This patch is a dependency for Rust `configfs` abstractions. It allows both
+> `Box` and `Arc` to be used as pointer types in the `configfs` hierarchy.
+> ---
+>  rust/kernel/sync/arc.rs | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+>
+> diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+> index dfe4abf82c25cf18398628d9cd5345a292419351..503e318b4c4effa2f1499b6fee0944079fde99aa 100644
+> --- a/rust/kernel/sync/arc.rs
+> +++ b/rust/kernel/sync/arc.rs
+> @@ -143,7 +143,7 @@ pub struct Arc<T: ?Sized> {
+>  #[doc(hidden)]
+>  #[pin_data]
+>  #[repr(C)]
+> -pub struct ArcInner<T: ?Sized> {
+> +struct ArcInner<T: ?Sized> {
+>      refcount: Opaque<bindings::refcount_t>,
+>      data: T,
+>  }
+> @@ -345,18 +345,25 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
 >  
->  	if (!pdev)
->  		return;
-> @@ -1176,6 +1177,18 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  	if (pdev->driver != &cxl_pci_driver)
->  		return;
+>  // SAFETY: The `into_foreign` function returns a pointer that is well-aligned.
+>  unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
+> -    type PointedTo = ArcInner<T>;
+> +    type PointedTo = T;
+>      type Borrowed<'a> = ArcBorrow<'a, T>;
+>      type BorrowedMut<'a> = Self::Borrowed<'a>;
 >  
-> +	port_type = pci_pcie_type(pdev);
-> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT ||
-> +	    port_type == PCI_EXP_TYPE_DOWNSTREAM ||
-> +	    port_type == PCI_EXP_TYPE_UPSTREAM) {
-
-Almost wish this was a macro for the sake of style, but not worth it.
-
-"corr_prot_err" and "port_prot_err" kind of blend at first glance. Not
-worth holding anything up.
-
-> +		if (data->severity == AER_CORRECTABLE)
-> +			cxl_cper_trace_corr_port_prot_err(pdev, data->ras_cap);
-> +		else
-> +			cxl_cper_trace_uncorr_port_prot_err(pdev, data->ras_cap);
+>      fn into_foreign(self) -> *mut Self::PointedTo {
+> -        ManuallyDrop::new(self).ptr.as_ptr()
+> +        let x = ManuallyDrop::new(self).ptr.as_ptr();
+> +        // SAFETY: `x` is a valid pointer to `Self` so the projection below is
+> +        // in bounds of the allocation.
+> +        unsafe { core::ptr::addr_of_mut!((*x).data) }
+>      }
+>  
+>      unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
+> +        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
+> +        // the offset calculation below is in bounds of the allocation.
+> +        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
 > +
-> +		return;
-> +	}
+>          // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
+>          // call to `Self::into_foreign`.
+> -        let inner = unsafe { NonNull::new_unchecked(ptr) };
+> +        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
+>  
+>          // SAFETY: By the safety requirement of this function, we know that `ptr` came from
+>          // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
+> @@ -365,9 +372,13 @@ unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
+>      }
+>  
+>      unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> ArcBorrow<'a, T> {
+> +        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
+> +        // the offset calculation below is in bounds of the allocation.
+> +        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
 > +
->  	if (data->severity == AER_CORRECTABLE)
->  		cxl_cper_trace_corr_prot_err(pdev, data->ras_cap);
->  	else
-> -- 
-> 2.17.1
-> 
+>          // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
+>          // call to `Self::into_foreign`.
+> -        let inner = unsafe { NonNull::new_unchecked(ptr) };
+> +        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
+>  
+>          // SAFETY: The safety requirements of `from_foreign` ensure that the object remains alive
+>          // for the lifetime of the returned value.
