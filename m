@@ -1,57 +1,49 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598D3193436;
-	Wed,  5 Feb 2025 16:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211341FDE0E;
+	Wed,  5 Feb 2025 16:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738774105; cv=none; b=Fg+9MhpM9MB6LZca0gWlFrmGPKAoosa/1/bKoFgU9JWcXo8IeB5s4rm4WC7zhHU47A2ITB0RqR/cynfOLdkNRqz4R6RQlJnGxKXw5GZPpE+nS36IoPux7SKxMNXwfVkLI0+82YZMsxBz72xPbjnP7Za2fXIkFGdJpiPqinsXz24=
+	t=1738774112; cv=none; b=fteYvKw/XjpVyf5qeYlR9LDhCZvidmpuMPQPWlEL5uZA04WcAX4X4UZrGSWpS+eN4OlZf7SLKwPrDOQhLKFkQoZBz7PgU48jZm8kQxQLli2nEH4UcjgtpdYIRX0d+P3VqOtKuxCgKD9AIP4OQ2gML8eJ2gjGnlKF+U2XvvrmyB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738774105; c=relaxed/simple;
-	bh=BI3bjBco9tZG254KI6RaPflP15hfUJtypUrTq3SM2jo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N63HENRLiST2+5GanH4USGHFVbx767Yy8Cy/sWs0jUCsJNzwMmDl9j4J/WBeX79q8SeICwmPPgh5MWJHnKazCeAAH8oJn4creR9kBownAqUTgVXh9zc9wpxKGuBNzOSanTmPZB9PfSad5fi0hOKOgS3i1PZ6ECQAL7jL0bor1hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=bMhEr1Q7; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1738774112; c=relaxed/simple;
+	bh=BzXXA/cI0W1sFyho2VjDgr9ILcR75btGyHtzelRuuB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=az7Tdk7u99yRryM4cYC9P5kGu9hm9EWgAlPaMBcL80BI/HSkuhfTn40kOA1IbSj/a9vjbuk+QhFscbvRaZXTthCtkRq46cPLmUL4SnjOkBKO5+aVJuwA1VuCj3o0sl0QxoZOmRAon+XoR2EeSb6aasSrEwN2zmWZJsNCVZ5YMpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=O7xWhQTY; arc=none smtp.client-ip=173.249.15.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bMhEr1Q7"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515E9T1Q028452;
-	Wed, 5 Feb 2025 10:48:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=5jqd7EmYfSYVj5aE
-	NZdmgRqV9fqu9H0OVa048XIRD/8=; b=bMhEr1Q7bdh7/x7upDJl/QY+XxFYiUD3
-	+GrQ5WH3RVcIi6WtEHC/USkQMfJ4/z3059TzIi3GfUUe7qMVQ+/BurSWRYDSOJ/m
-	tB6q4EUDN2ySn6yp0+IYQRC2iU3KKgyN//Y5UcIXQ8dS69bh6HZjkNJ/iXc4UcHe
-	ktuNBWoteT72i6bD+Zcho40wO5L6wHNGB7L6xK3gvRO20d8ZmB4YwVr8tZsHuMR7
-	saochuDf1Kc/fGGEtVmVdwqyEuWwKdIRIz2NBoK6zr25Z87YE7UYiWboD0FLt9ci
-	PXFZsGWbTVhdrLiVqghVAOFxYCeeDuGexq9nCQIoHUP2eeM8vKUtBw==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44hgwm4sh0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:48:11 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Feb
- 2025 16:48:09 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 5 Feb 2025 16:48:09 +0000
-Received: from lonswws02.ad.cirrus.com (lonswws02.ad.cirrus.com [198.90.188.42])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id BAD83820248;
-	Wed,  5 Feb 2025 16:48:09 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Mark Brown <broonie@kernel.org>
-CC: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        Stefan Binding
-	<sbinding@opensource.cirrus.com>
-Subject: [PATCH v1] ASoC: cs35l41: Fallback to using HID for system_name if no SUB is available
-Date: Wed, 5 Feb 2025 16:48:04 +0000
-Message-ID: <20250205164806.414020-1-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="O7xWhQTY"
+dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
+	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Transfer-Encoding:In-Reply-To:References;
+	bh=UWzy9f37TLLTSuTbfCAgfOB34y28JpT9kZ7G8h4yvw8=;
+	b=O7xWhQTY+j6CDzuVj0bVlxJdGYjWrYYHy1bIpjot3z0OKBiZvA8+4A70qmAMbVmgiGWva+EQp5goWTKflZsZUgLvlfHkLZgC/VCDFQj//7euFFk5H/F5/dfCuGbSLSIs4twWsR2J8fGzUlqHHPTWavSkB5E8FTYBjj6f1vH0sOM=
+Received: from lukas-hpz440workstation.lan.sk100508.local (cm70-231.liwest.at [212.241.70.231])
+	by mail.netcube.li with ESMTPSA
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
+	; Wed, 5 Feb 2025 17:48:06 +0100
+From: Lukas Schmid <lukas.schmid@netcube.li>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>
+Cc: Lukas Schmid <lukas.schmid@netcube.li>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 1/4] dt-bindings: vendor-prefixes: Add NetCube Systems Austria name
+Date: Wed,  5 Feb 2025 17:47:10 +0100
+Message-Id: <20250205164716.2509650-2-lukas.schmid@netcube.li>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250205164716.2509650-1-lukas.schmid@netcube.li>
+References: <20250205164716.2509650-1-lukas.schmid@netcube.li>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,65 +51,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=EPv800ZC c=1 sm=1 tr=0 ts=67a3964b cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=gnEUMM8qirKkv39zU4sA:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-ORIG-GUID: KTC7nA-QbyDe-mAp3s2Suskua_Udz4lt
-X-Proofpoint-GUID: KTC7nA-QbyDe-mAp3s2Suskua_Udz4lt
-X-Proofpoint-Spam-Reason: safe
 
-For systems which load firmware on the cs35l41 which use ACPI, the
-_SUB value is used to differentiate firmware and tuning files for the
-individual systems. In the case where a system does not have a _SUB
-defined in ACPI node for cs35l41, there needs to be a fallback to
-allow the files for that system to be differentiated. Since all
-ACPI nodes for cs35l41 should have a HID defined, the HID should be a
-safe option.
+NetCube Systems Austria builds Embedded Systems for use in IoT, IIoT, or
+Smart Home scenarios.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+Website is still WIP, but the Links on it are active:
+https://netcubesystems.at/
+
+Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- sound/soc/codecs/cs35l41.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/cs35l41.c b/sound/soc/codecs/cs35l41.c
-index 07a5cab35fe1..30b89018b113 100644
---- a/sound/soc/codecs/cs35l41.c
-+++ b/sound/soc/codecs/cs35l41.c
-@@ -1150,19 +1150,28 @@ static int cs35l41_dsp_init(struct cs35l41_private *cs35l41)
- 
- static int cs35l41_acpi_get_name(struct cs35l41_private *cs35l41)
- {
--	acpi_handle handle = ACPI_HANDLE(cs35l41->dev);
-+	struct acpi_device *adev = ACPI_COMPANION(cs35l41->dev);
-+	acpi_handle handle = acpi_device_handle(adev);
-+	const char *hid;
- 	const char *sub;
- 
--	/* If there is no ACPI_HANDLE, there is no ACPI for this system, return 0 */
--	if (!handle)
-+	/* If there is no acpi_device, there is no ACPI for this system, return 0 */
-+	if (!adev)
- 		return 0;
- 
- 	sub = acpi_get_subsystem_id(handle);
- 	if (IS_ERR(sub)) {
--		/* If bad ACPI, return 0 and fallback to legacy firmware path, otherwise fail */
--		if (PTR_ERR(sub) == -ENODATA)
--			return 0;
--		else
-+		/* If no _SUB, fallback to _HID, otherwise fail */
-+		if (PTR_ERR(sub) == -ENODATA) {
-+			hid = acpi_device_hid(adev);
-+			/* If dummy hid, return 0 and fallback to legacy firmware path */
-+			if (!strcmp(hid, "device"))
-+				return 0;
-+			sub = kstrdup(hid, GFP_KERNEL);
-+			if (!sub)
-+				sub = ERR_PTR(-ENOMEM);
-+
-+		} else
- 			return PTR_ERR(sub);
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5079ca6ce1d1..499ab972f9d2 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1031,6 +1031,8 @@ patternProperties:
+     description: Neofidelity Inc.
+   "^neonode,.*":
+     description: Neonode Inc.
++  "^netcube,.*":
++    description: NetCube Systems Austria
+   "^netgear,.*":
+     description: NETGEAR
+   "^netlogic,.*":
 -- 
-2.43.0
+2.39.5
+
 
