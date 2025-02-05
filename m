@@ -1,110 +1,227 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5581156225;
-	Wed,  5 Feb 2025 14:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9830B158218;
+	Wed,  5 Feb 2025 14:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738766400; cv=none; b=U4MKrAu5rmEBB9CdcIoqxtNah82iqxkxo9jo2BwE1ROqPDOdrFy9CMb36qzkb77zoPcMnC8LGzYX20JalCE0/cg/uoKKTV1oGESVGJY6ohUnPfMToAlkasp8/QA25KpUkEaJewQR5EO0eMsjfSeVy2bXHXseAqDiluzckL67p+U=
+	t=1738766456; cv=none; b=fznHN6nkHDAA8UNnYtRUYgXFxH6o09KDtYsdaLl/tkrftdHz5sfWpIVNTOdtv4lBpzAIE3guuNyuAPQBniMrqYPnnxNj+oOnBTk5T1ZN4Go7mtPzO+tYWuxXtQRhcScMyRjZn4mn1aYqylZjQFvEbNyw+kTtbina5cTTE+pDbqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738766400; c=relaxed/simple;
-	bh=X6UZwehcqhpv5C0RCnqO0myW9qgvIO+fZ4sIewulYww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WfOcGWuNszPjR4WOR98+RY5nbtJ4iKFvpwBoVuIkT2kRqtB3ktdKSMNfJG3FEwYZWZjYwuV+rYEnrr1M9DYpc8T3aTLDm8UMMDsj266cmMfDFnTBzFHIrNS8i99tul2o+G3uoATNskzFgf6a5r5xELIvY05br5TGplypUN0V/pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=VeLMyF8b; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1738766456; c=relaxed/simple;
+	bh=Im+VBOTKpjrNCIlKnlAediWg4cQeXGnKU56wLhDT9oU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l9YpJzTX8gGYZ02KmtLxodejJaGWq4DgHzYmiX+r9cU4l1KXVWflFJQ+dtPRAVcVKnlkH893SqVaZs+SlUcI5KNOu9Gy7/3SkIp06vumW5lazbs5aWFrKG2VFBUtX8d0YHieVFZfM+rbrxYCYjOMPq7qcvrZIcY7wHs2p84OX4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5TpDLVi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VeLMyF8b"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0bL3gxLmyKoIOFUQltNWan7x+Q3hxZzBXfuqkmaS2PY=; b=VeLMyF8biNfumqmuZmc/C6wCWs
-	cYHL1aCStiFMh3q45g/T0gP/yblv4P2Sr/aG2NKh5HsTcytUdyGSRMXfQHuOl00YgiuU8X10nSp4d
-	kknFpGsZJs26ahI6wJZ5Np3T8QPegTgBgvDL/erMWki4TMPAzMFMssXY7J5BWBYT7glwODUwdaCkH
-	sVLbHj3pwXrk/oHU+rfSNeXfURFWx/Doph3ecygwITrKTsKOMC40Gb98HftgsxOQguZc+G0grkk46
-	E+l2hNjQaqhq46/kyWqSK8dor0UoSKkUpcC2R9AtG2kDqWJrcf1r7XUM9TdmkY+oKoFZni+5d3qWy
-	hoQTXHUw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54016)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tfgZ3-0007N2-1Q;
-	Wed, 05 Feb 2025 14:39:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tfgYx-0002Uc-2s;
-	Wed, 05 Feb 2025 14:39:35 +0000
-Date: Wed, 5 Feb 2025 14:39:35 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: Jakub Kicinski <kuba@kernel.org>, Steven Price <steven.price@arm.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Jose Abreu <joabreu@synopsys.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
-	Furong Xu <0x1207@gmail.com>, Petr Tesarik <petr@tesarici.cz>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
-Message-ID: <Z6N4J-_C3lq5a_VQ@shell.armlinux.org.uk>
-References: <20250203093419.25804-1-steven.price@arm.com>
- <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
- <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
- <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
- <20250203142342.145af901@kernel.org>
- <f728a006-e588-4eab-b667-b1ff7dfd66c5@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5TpDLVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D35C4CED1;
+	Wed,  5 Feb 2025 14:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738766456;
+	bh=Im+VBOTKpjrNCIlKnlAediWg4cQeXGnKU56wLhDT9oU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i5TpDLVigC52A1456psRIrtl7bLLBIDktmcw0zOI67fkQGwnp1mWIL5BJHncwuJWI
+	 mqpjzMII1KODdUrAyY+Oih69YDa2Cdcx+7oGlMcdjENnLejd/oM3xpmeuoenXD3eJR
+	 aN8KKUB6gkqvAfml4E7f7fJ+ScEUU33cuqGgGC9FoVesV98jhiumnS891acKPrOhvv
+	 Ufktq6S8vrLItFptTPYcVRFJODleDI3ASgS6uZmUWdekR6YHiVq6qTf2yBWgmm64a+
+	 WbDdK4GGu/LszXG1yIkuf3gbPOaVWmeBbgIGVEVpJi/PhQlHhCsyZxmhgZkOXngrYl
+	 me9VuYMeN/2Gw==
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Date: Wed,  5 Feb 2025 16:40:20 +0200
+Message-ID: <cover.1738765879.git.leonro@nvidia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f728a006-e588-4eab-b667-b1ff7dfd66c5@linux.dev>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Feb 05, 2025 at 10:22:00PM +0800, Yanteng Si wrote:
-> 
-> 在 2/4/25 06:23, Jakub Kicinski 写道:
-> > On Mon, 3 Feb 2025 11:16:34 +0000 Russell King (Oracle) wrote:
-> > > > I've no opinion whether the original series "had value" - I'm just
-> > > > trying to fix the breakage that entailed. My first attempt at a patch
-> > > > was indeed a (partial) revert, but Andrew was keen to find a better
-> > > > solution[1].
-> > > There are two ways to fix the breakage - either revert the original
-> > > patches (which if they have little value now would be the sensible
-> > > approach IMHO)
-> > +1, I also vote revert FWIW
-> 
-> +1, same here.
-> 
-> 
-> For a driver that runs on so much hardware, we need to act
-> 
-> cautiously. A crucial prerequisite is that code changes must
-> 
-> never cause some hardware to malfunction. I was too simplistic
-> 
-> in my thinking when reviewing this before, and I sincerely
-> 
-> apologize for that.
-> 
-> 
-> Steven, thank you for your tests, Let's revert it.
+From: Leon Romanovsky <leonro@nvidia.com>
 
-https://lore.kernel.org/r/E1tfeyR-003YGJ-Gb@rmk-PC.armlinux.org.uk
+Changelog:
+v7:
+ * Rebased to v6.14-rc1
+v6: https://lore.kernel.org/all/cover.1737106761.git.leon@kernel.org
+ * Changed internal __size variable to u64 to properly set private flag
+   in most significant bit.
+ * Added comment about why we check DMA_IOVA_USE_SWIOTLB
+ * Break unlink loop if phys is NULL, condition which we shouldn't get.
+v5: https://lore.kernel.org/all/cover.1734436840.git.leon@kernel.org
+ * Trimmed long lines in all patches.
+ * Squashed "dma-mapping: Add check if IOVA can be used" into
+   "dma: Provide an interface to allow allocate IOVA" patch.
+ * Added tags from Christoph and Will.
+ * Fixed spelling/grammar errors.
+ * Change title from "dma: Provide an  ..." to be "dma-mapping: Provide
+ * an ...".
+ * Slightly changed hmm patch to set sticky flags in one place.
+v4: https://lore.kernel.org/all/cover.1733398913.git.leon@kernel.org
+ * Added extra patch to add kernel-doc for iommu_unmap and
+ * iommu_unmap_fast
+ * Rebased to v6.13-rc1
+ * Added Will's tags
+v3: https://lore.kernel.org/all/cover.1731244445.git.leon@kernel.org
+ * Added DMA_ATTR_SKIP_CPU_SYNC to p2p pages in HMM.
+ * Fixed error unwind if dma_iova_sync fails in HMM.
+ * Clear all PFN flags which were set in map to make code.
+   more clean, the callers anyway cleaned them.
+ * Generalize sticky PFN flags logic in HMM.
+ * Removed not-needed #ifdef-#endif section.
+v2: https://lore.kernel.org/all/cover.1730892663.git.leon@kernel.org
+ * Fixed docs file as Randy suggested
+ * Fixed releases of memory in HMM path. It was allocated with kv..
+   variants but released with kfree instead of kvfree.
+ * Slightly changed commit message in VFIO patch.
+v1: https://lore.kernel.org/all/cover.1730298502.git.leon@kernel.org
+ * Squashed two VFIO patches into one
+ * Added Acked-by/Reviewed-by tags
+ * Fix docs spelling errors
+ * Simplified dma_iova_sync() API
+ * Added extra check in dma_iova_destroy() if mapped size to make code
+ * more clear
+ * Fixed checkpatch warnings in p2p patch
+ * Changed implementation of VFIO mlx5 mlx5vf_add_migration_pages() to
+   be more general
+ * Reduced the number of changes in VFIO patch
+v0: https://lore.kernel.org/all/cover.1730037276.git.leon@kernel.org
+
+----------------------------------------------------------------------------
+ No changes in checks, documentation and naming as no suggestion was
+ given. Everything like this can be improved in followup patches.
+----------------------------------------------------------------------------
+ LWN coverage:
+Dancing the DMA two-step - https://lwn.net/Articles/997563/
+----------------------------------------------------------------------------
+
+Currently the only efficient way to map a complex memory description through
+the DMA API is by using the scatterlist APIs. The SG APIs are unique in that
+they efficiently combine the two fundamental operations of sizing and allocating
+a large IOVA window from the IOMMU and processing all the per-address
+swiotlb/flushing/p2p/map details.
+
+This uniqueness has been a long standing pain point as the scatterlist API
+is mandatory, but expensive to use. It prevents any kind of optimization or
+feature improvement (such as avoiding struct page for P2P) due to the
+impossibility of improving the scatterlist.
+
+Several approaches have been explored to expand the DMA API with additional
+scatterlist-like structures (BIO, rlist), instead split up the DMA API
+to allow callers to bring their own data structure.
+
+The API is split up into parts:
+ - Allocate IOVA space:
+    To do any pre-allocation required. This is done based on the caller
+    supplying some details about how much IOMMU address space it would need
+    in worst case.
+ - Map and unmap relevant structures to pre-allocated IOVA space:
+    Perform the actual mapping into the pre-allocated IOVA. This is very
+    similar to dma_map_page().
+
+In this and the next series [1], examples of three different users are converted
+to the new API to show the benefits and its versatility. Each user has a unique
+flow:
+ 1. RDMA ODP is an example of "SVA mirroring" using HMM that needs to
+    dynamically map/unmap large numbers of single pages. This becomes
+    significantly faster in the IOMMU case as the map/unmap is now just
+    a page table walk, the IOVA allocation is pre-computed once. Significant
+    amounts of memory are saved as there is no longer a need to store the
+    dma_addr_t of each page.
+ 2. VFIO PCI live migration code is building a very large "page list"
+    for the device. Instead of allocating a scatter list entry per allocated
+    page it can just allocate an array of 'struct page *', saving a large
+    amount of memory.
+ 3. NVMe PCI demonstrates how a BIO can be converted to a HW scatter
+    list without having to allocate then populate an intermediate SG table.
+
+To make the use of the new API easier, HMM and block subsystems are extended
+to hide the optimization details from the caller. Among these optimizations:
+ * Memory reduction as in most real use cases there is no need to store mapped
+   DMA addresses and unmap them.
+ * Reducing the function call overhead by removing the need to call function
+   pointers and use direct calls instead.
+
+This step is first along a path to provide alternatives to scatterlist and
+solve some of the abuses and design mistakes.
+
+Thanks
+
+Christoph Hellwig (6):
+  PCI/P2PDMA: Refactor the p2pdma mapping helpers
+  dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+  iommu: generalize the batched sync after map interface
+  iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+  dma-mapping: add a dma_need_unmap helper
+  docs: core-api: document the IOVA-based API
+
+Leon Romanovsky (11):
+  iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+  dma-mapping: Provide an interface to allow allocate IOVA
+  dma-mapping: Implement link/unlink ranges API
+  mm/hmm: let users to tag specific PFN with DMA mapped bit
+  mm/hmm: provide generic DMA managing logic
+  RDMA/umem: Store ODP access mask information in PFN
+  RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+    linkage
+  RDMA/umem: Separate implicit ODP initialization from explicit ODP
+  vfio/mlx5: Explicitly use number of pages instead of allocated length
+  vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+  vfio/mlx5: Enable the DMA link API
+
+ Documentation/core-api/dma-api.rst   |  70 ++++
+ drivers/infiniband/core/umem_odp.c   | 250 +++++---------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+ drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+ drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+ drivers/iommu/dma-iommu.c            | 468 +++++++++++++++++++++++----
+ drivers/iommu/iommu.c                |  84 ++---
+ drivers/pci/p2pdma.c                 |  38 +--
+ drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
+ drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+ drivers/vfio/pci/mlx5/main.c         |  87 +++--
+ include/linux/dma-map-ops.h          |  54 ----
+ include/linux/dma-mapping.h          |  85 +++++
+ include/linux/hmm-dma.h              |  33 ++
+ include/linux/hmm.h                  |  21 ++
+ include/linux/iommu.h                |   4 +
+ include/linux/pci-p2pdma.h           |  84 +++++
+ include/rdma/ib_umem_odp.h           |  25 +-
+ kernel/dma/direct.c                  |  44 +--
+ kernel/dma/mapping.c                 |  18 ++
+ mm/hmm.c                             | 264 +++++++++++++--
+ 21 files changed, 1435 insertions(+), 693 deletions(-)
+ create mode 100644 include/linux/hmm-dma.h
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.48.1
+
