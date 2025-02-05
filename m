@@ -1,51 +1,50 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F751211A1E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C1781ACA;
+	Wed,  5 Feb 2025 06:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738201; cv=none; b=pVC5N71iSB516MOhOLcENXNK2vWXI8W52htpfNyDocLZvzkcD0x0u78DtT50pZh7yfUBfaoUq3PoAY08PH2Ho9615oIPJSWpQIdg10uojFXTs6r4G0D9wwF0sPhQZnwHSBKkpoQF2ShQzZZDemrJfCSZ8PJ0zOPePLx//lYyLrY=
+	t=1738738246; cv=none; b=H9/i2u+6qoiQAiBJPLBewl9NxZf5yUzp3gHI9wgqLo2QIvH7QILzriPysVepQTVjcvlz3+5PAYZDQHNMCotpuUV+pvaKpOgLplqsaZ0M6uMHkZOTttrUpq7ZTlrtRaI/5xZIUyaIZEhgw9oVM7ML/L0gI2QpwLjblC34v0MTUwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738201; c=relaxed/simple;
-	bh=67B6hUVPBinQpmk08ICFMsGn9WJVZDS8otyBuiKV2zY=;
+	s=arc-20240116; t=1738738246; c=relaxed/simple;
+	bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O9ys/AR4jQpUSVMDGAlzWHiZZi2suZwABNd5mM0J0pVCv89yDvLngNxGPmR7Z6+KF+cC/ZekT73T1FssWatXriUpxDhIqseZK/jZewn9z2lcO9MJTZCRQMqugGBW6GF70FtCx+BRj2s3J8GLcRd7+UvHCuj4IPDAM/KS2DPu3nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pbuzsQjU; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=e/EhxuY1VQiw0nvJF3TLZHpji+7makHByp2jbmjKgQFuMCoTmMEnNrRyTQ+5tvoyJ2ntJ/vhpV0UjfF/IzuwusTd+fXBvy9HWEI5ig48oIkCgcPAdofyQaXWY6CP4dOx9NXbSYKhTw+iOFJDlG1isczb4t+6KTagyHRt/N0XbyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhPqipja; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pbuzsQjU"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id fXUFtAEePAfjwfZEPtziKT; Wed, 05 Feb 2025 06:49:53 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id fZENtyetz3770fZENtEio8; Wed, 05 Feb 2025 06:49:52 +0000
-X-Authority-Analysis: v=2.4 cv=WYoKaVhX c=1 sm=1 tr=0 ts=67a30a10
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
- a=VVuO3mv09ikYbiyoNyIA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NztLlA3ZKfM2+rrwiVjTKlOzZwixvtKQZXFnqSNM7j8=; b=pbuzsQjUorXX446SHUDu80/qFT
-	rRM7awTS7Ynzh1gwe+UVba+UQIzUffzgd7wUw4vAxrRsYeLrEwou2atagsz4Zz2bVwWeBaxOT7pJt
-	eGVY668FFkkYoIDpyE7orkLGDQ+kRAVE2TJVKapWSH6aQrGunZ+2ZTR2Zt1rU9N2rzyH0BJrzRMOj
-	xnFt1kYTdNzxRuj5+wXyW/pyPrDGxTCBlI4zwjzL0rLAAPG/2H7w0B9kOqgVRU2n0/I0TgVTfMWtf
-	K2EbZh4T2HbANCuzD7JyPmYeD0YnfqDJg+i6DDf86GDwk3maFq4jB7JuBYwvMnNxNynLnymKAPllV
-	euAS+oYg==;
-Received: from [45.124.203.140] (port=54695 helo=[192.168.0.157])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tfZEM-001jSC-2u;
-	Wed, 05 Feb 2025 00:49:51 -0600
-Message-ID: <3befc536-3bf8-4a79-9815-3386912069b2@embeddedor.com>
-Date: Wed, 5 Feb 2025 17:19:35 +1030
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhPqipja"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738738245; x=1770274245;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
+  b=nhPqipjarUlvAQgFPw0DZquSzEriwI7ib5RgFAzJdk267ojoBmHAK8Cy
+   tHcEyJtyYY78etwxTeKwx7b7qP2fTdNVKSjDjO+6/dO9zY2OOYH2bJset
+   8AJI1Rbg0ihZ3Aouhib5q0cbPUK4t2RBfHRh8TVGgQdmaJAexL7Z/HBJG
+   c1EgAtctSooBTjxZ6Y5Xb6Ua+vr2agnxh/k2EFmtrmWSeT8aT2vlCWQi4
+   UO+Igk8as8CqNoYLXyk772FCOBE7tZXbBOx4F8eWYL6g/SLyUkfJ5LDcM
+   yrSzfV/plUwaPp+0EbbvrRgxnwF2zL8tz/Kn7j2icxVHoSRL9nqLaZm8A
+   A==;
+X-CSE-ConnectionGUID: n1DyovVeSVm4N8O9bareYg==
+X-CSE-MsgGUID: vES0pDkRRKabU9xeLDhYaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39175591"
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="39175591"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:44 -0800
+X-CSE-ConnectionGUID: oo32QqH1QrmHW2tYAHIDrw==
+X-CSE-MsgGUID: W8AT1xq9Tz+DU8R6MpUXgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="111400846"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.100.100]) ([10.247.100.100])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:35 -0800
+Message-ID: <c25c2da7-18fa-46b7-b992-fb5b17a01749@linux.intel.com>
+Date: Wed, 5 Feb 2025 14:50:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,120 +52,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] tty: tty_buffer: Avoid hundreds of
- -Wflex-array-member-not-at-end warnings
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z6L1XwE-WEzcGFwv@kspp>
- <2025020503-unnamable-canopener-ac71@gregkh>
+Subject: Re: [PATCH net-next v6 1/7] net: phylink: use act_link_an_mode to
+ determine PHY
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Andrew Halaney <ahalaney@redhat.com>, Serge Semin <fancer.lancer@gmail.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
+ <20250204061020.1199124-2-yong.liang.choong@linux.intel.com>
+ <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2025020503-unnamable-canopener-ac71@gregkh>
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1tfZEM-001jSC-2u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.157]) [45.124.203.140]:54695
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfILpYBIH9meySafqtO0mwTLwu31PC9lL4/PFfRnL6BolkXUdqj8n5g/4koGFsUsJFk8CUnwIchfj/dsu67cQXgOsaHt3yu2kw5DNIYR7nT2qWKpw1bEj
- hyEHHkJrvMu0Eu3jzgLUGwTcBlPT5QNPpq3mGCVmsXzcj03+QISF2gCCYxTpFmXC1G73Z8iBjAnPEwJV/k+1Imn/BLgiLzhG0pcgD+RC7I1FZqjnQNI4ryV7
 
 
 
-On 05/02/25 16:06, Greg Kroah-Hartman wrote:
-> On Wed, Feb 05, 2025 at 03:51:35PM +1030, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> So, in order to avoid ending up with a flexible-array member in the
->> middle of other structs, we use the `struct_group_tagged()` helper
->> to create a new tagged `struct tty_buffer_hdr`. This structure
->> groups together all the members of the flexible `struct tty_buffer`
->> except the flexible array.
->>
->> As a result, the array is effectively separated from the rest of the
->> members without modifying the memory layout of the flexible structure.
->> We then change the type of the middle struct member currently causing
->> trouble from `struct tty_buffer` to `struct tty_buffer_hdr`.
->>
->> We also want to ensure that when new members need to be added to the
->> flexible structure, they are always included within the newly created
->> tagged struct. For this, we use `static_assert()`. This ensures that the
->> memory layout for both the flexible structure and the new tagged struct
->> is the same after any changes.
->>
->> This approach avoids having to implement `struct tty_buffer_hdr` as a
->> completely separate structure, thus preventing having to maintain two
->> independent but basically identical structures, closing the door to
->> potential bugs in the future.
+On 4/2/2025 8:04 pm, Russell King (Oracle) wrote:
+> On Tue, Feb 04, 2025 at 02:10:14PM +0800, Choong Yong Liang wrote:
+>> When the interface mode is SGMII and act_link_an_mode is MLO_AN_INBAND,
+>> switching to the 2500BASE-X interface mode will trigger
+>> phylink_major_config, and act_link_an_mode will be updated to MLO_AN_PHY
+>> in phylink_pcs_neg_mode when the PCS does not support in-band mode.
+>> The MAC and PCS will configure according to the interface mode
+>> and act_link_an_mode.
 > 
-> Why not just have a separate structure and embed that in the places it
-> is used?  No duplication should be needed or am I missing something?
-
-The duplication of members in struct tty_buffer (all of them except the
-flexible array) and the new separate struct looks like this:
-
-diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
-index 31125e3be3c5..6f47a6ea5a05 100644
---- a/include/linux/tty_buffer.h
-+++ b/include/linux/tty_buffer.h
-@@ -22,6 +22,19 @@ struct tty_buffer {
-         u8 data[] __aligned(sizeof(unsigned long));
-  };
-
-+struct tty_buffer_hdr {
-+        union {
-+                struct tty_buffer *next;
-+                struct llist_node free;
-+        };
-+        unsigned int used;
-+        unsigned int size;
-+        unsigned int commit;
-+        unsigned int lookahead;         /* Lazy update on recv, can become less than "read" */
-+        unsigned int read;
-+        bool flags;
-+};
-+
-  static inline u8 *char_buf_ptr(struct tty_buffer *b, unsigned int ofs)
-  {
-         return b->data + ofs;
-@@ -37,7 +50,7 @@ struct tty_bufhead {
-         struct work_struct work;
-         struct mutex       lock;
-         atomic_t           priority;
--       struct tty_buffer sentinel;
-+       struct tty_buffer_hdr sentinel;
-         struct llist_head free;         /* Free queue head */
-         atomic_t           mem_used;    /* In-use buffers excluding free list */
-         int                mem_limit;
-
- > Did you change anything in this structure?  By reformatting it, it's
- > hard to tell what happened, so please don't do that :(
-
-Yes - the above change is the reason why I reformatted the whole thing.
-
+> act_link_an_mode must only ever be updated by phylink_major_config()
+> since it defines state for the currently configured mode, and must
+> stay in sync with how the hardware has been programmed at all times.
 > 
-> I don't mind that, it would make this all much simpler and more obvious
-> over time, and the tty layer needs all the "simplification" it can get
-> :)
+>> However, when the interface goes link down and then link up again, the MAC
+>> will attempt to attach the PHY.
+> 
+> Why is the MAC trying to disconnect and reconnect the PHY on link
+> changes? Do you really mean "link down" and "link up" as in "connection
+> with the link partner" or do you mean administratively taking the
+> interface down and up (which is a completely different thing.)
+> 
 
-If the above changes are better for you then I'll send a new patch. :)
+The "link down" and "link up" I mention in this part refer to using the 
+command:
+ifconfig <interface> down/up
 
-Thanks
--Gustavo
+>> The interface mode remains as 2500BASE-X,
+>> but cfg_link_an_mode still holds MLO_AN_INBAND. This causes a failure to
+>> attach the PHY.
+> 
+> Hmm.
+> 
+> pl->link_interface is the configured setting from firmware etc and doesn't
+> change.
+> 
+> pl->cfg_link_an_mode is the configured mode from firmware etc which was
+> passed to phylink_create(), and again doesn't change.
+> 
+> So there should be no difference unless something weird is going on,
+> which as you're talking about stmmac, could be the case.
+> 
+
+Thank you for pointing that out.
+
+I think I was confused between pl->link_interface and
+pl->link_config.interface. The function phylink_attach_phy() uses
+pl->link_interface, whereas phylink_expects_phy() uses
+pl->link_config.interface.
+
+When the interface switches from SGMII to 2500BASE-X,
+pl->link_config.interface is updated by phylink_major_config().
+So, when the STMMAC link goes down and comes up again,
+it is blocked by phylink_expects_phy().
+At this point, pl->cfg_link_an_mode is MLO_AN_INBAND and 
+pl->link_config.interface is 2500BASE-X.
+
+Since phylink_expects_phy() is trying to achieve the same checking 
+condition as phylink_attach_phy(), it should use pl->link_interface for the 
+check as well.
+
+Does that make sense to you?
+
+> More information needed, but as this patch currently stands, I deem it
+> to be incorrect, sorry.
+> 
+
