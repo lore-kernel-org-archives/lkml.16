@@ -1,143 +1,108 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25419522A;
-	Wed,  5 Feb 2025 14:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625471519BE;
+	Wed,  5 Feb 2025 14:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738764944; cv=none; b=aoftRN/Me+DCgrmCi4+gfXZxKW+F089rQWuOAjxH1W16EP4X/bPE72BzfQfZyGu5al4RDmwX3z6EixQ7T1HXtIzPtyYEjLtRrZLfNSdX7a8llDrUnVlQG/1BXQubLdnZqAgwuWvPcBXsh44D+FEWW2nD8//uujhbhGVI7AcAiWM=
+	t=1738764997; cv=none; b=WGqH4/lc66etkCORGpa3zrCe6MkX12dzkCJ8OowKcTwFBKivqEeLxfR0KfKSWngNcH87kjuytZ9vykjtVWrJwbqQc3b6BXeOBAWjaXnl0p1EYxEYsINdNTxsmLCKXus/FAuMShv9FhstCZCprwylMemBS/FqW2dwnCNM4I7NKIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738764944; c=relaxed/simple;
-	bh=cBFpTDklvHxoqphgQUoCnaTOLr6z/c/+f5R10v0mxvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mYfnF4rcKG1lHNgmqtbSxRbtwj2n5h4IUS9p36Fe6gXxLxJKbffew5M2+g5U/t5K54ewp5pIuECIiT0/IWdjaoJA3BWq4wrmrteV35sFybM8tc9sGS0ZG39UYUwkBcVKxbWwoe1Svk1jp+AlB09tK9eht1lmGFQVWmkwOX7hcJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B9bemfIg; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=u91dwL6E; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738764997; c=relaxed/simple;
+	bh=ytnuGd7Q2qXoBsvqoNaaIzEvhm8uBCFG9Rm4tRWce10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cQ1uM5JD0xYiSC77brUyYo+r4zrnvJ5WpDheOJlxRG5K8R5r6CSzNFQyDkUeGa/UAha3niOGsPhVisw2eRtbq51dH1OR08a/QMfeaseRLbcKrPye+S2hiUeaqNWdiQf2TUDejiuVgBKBajyCHRdSzfgAklXxnzdN7oAoqPccx28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfxywMgP; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B9bemfIg";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="u91dwL6E"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EF5EB2120A;
-	Wed,  5 Feb 2025 14:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1738764940; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=PVzUEmRLVscBr9CVyOYnFZKnVwiZFLCi5TbzwYW0KPU=;
-	b=B9bemfIglRUUan+FuIQRWdaOOvJfq/nSk9BtwV2mCL4yDE+yYIBRJ/KKctDiTUSJx/Jtf2
-	Q/wm/2uIgIPHCUesN+96H7PXKy1qcMkKsr1rWmzHeOD/ScCj70jUkER/JglWNhXJUVqcOw
-	mVvFvRE5NGCPf0NxJ2OsCm/zv6/Doz0=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=u91dwL6E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1738764939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=PVzUEmRLVscBr9CVyOYnFZKnVwiZFLCi5TbzwYW0KPU=;
-	b=u91dwL6EvXhpMUgGZh37oNzmAU0mU9qN4G1QDL43dkdYWK78HZl8lmU+fDIVz1x3K3chWX
-	AZ79wuAXE8ojJ6E+SCAh711/yxiDxDhSioiplrzptxg2CMlG+jq1I8MaIVAw/z7ERazFKD
-	3d7p48WvaICjNou5/xCjHzU1uivm7So=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E66DB13694;
-	Wed,  5 Feb 2025 14:15:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UC/9N4tyo2cPCwAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Wed, 05 Feb 2025 14:15:39 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.14-rc2
-Date: Wed,  5 Feb 2025 15:15:34 +0100
-Message-ID: <cover.1738764049.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfxywMgP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738764996; x=1770300996;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ytnuGd7Q2qXoBsvqoNaaIzEvhm8uBCFG9Rm4tRWce10=;
+  b=bfxywMgPA00vIOlwuakc4lmGXz9JN843nTt1zyL2Jx43Wzo0X17qj7qN
+   diUUSKN91mcFib92cgjtbNH29Vwc4jlURB2+HrcPnNGo4dxUFHFmAdc3v
+   cns9fUTJEB037vofLEjjer+pxFuOE30/HQjFScVu9O3XIx9dXdBxqMVyn
+   oFtIsABBXo6ZTLQVLPFlcakOueirExBSO0d50TZecHNKoryc+a27PgfKK
+   yiaQu4jUHjY6ryGV94lLCnqNYUsKoQfOwcZaMo4Uq9S5lHXQvvfrN49Rr
+   eR+rzdkI2RBAFuWaSHQnY0DvMH/T9kDthPum8kp/yKeAwPeaa6HiDiRUU
+   g==;
+X-CSE-ConnectionGUID: 1bhRCv8OTVycUix+3GxRYQ==
+X-CSE-MsgGUID: +nGrMYbbTK6FZTUJCWjCwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26935325"
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="26935325"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 06:16:35 -0800
+X-CSE-ConnectionGUID: 143MMiNlRHaIXhEvZWb7Zw==
+X-CSE-MsgGUID: GiGYv/mAQ1yJxLRtX0HmkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116114484"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa005.jf.intel.com with ESMTP; 05 Feb 2025 06:16:33 -0800
+Message-ID: <c746c10a-d504-48bc-bc8d-ba65230d13f6@linux.intel.com>
+Date: Wed, 5 Feb 2025 16:17:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EF5EB2120A
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
+ Etron xHCI host
+To: Kuangyi Chiang <ki.chiang65@gmail.com>, mathias.nyman@intel.com,
+ gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250205053750.28251-1-ki.chiang65@gmail.com>
+ <20250205053750.28251-2-ki.chiang65@gmail.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250205053750.28251-2-ki.chiang65@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 5.2.2025 7.37, Kuangyi Chiang wrote:
+> Unplugging a USB3.0 webcam while streaming results in errors like this:
+> 
+> [ 132.646387] xhci_hcd 0000:03:00.0: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 18 comp_code 13
+> [ 132.646446] xhci_hcd 0000:03:00.0: Looking for event-dma 000000002fdf8630 trb-start 000000002fdf8640 trb-end 000000002fdf8650 seg-start 000000002fdf8000 seg-end 000000002fdf8ff0
+> [ 132.646560] xhci_hcd 0000:03:00.0: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 18 comp_code 13
+> [ 132.646568] xhci_hcd 0000:03:00.0: Looking for event-dma 000000002fdf8660 trb-start 000000002fdf8670 trb-end 000000002fdf8670 seg-start 000000002fdf8000 seg-end 000000002fdf8ff0
+> 
+> If an error is detected while processing the last TRB of an isoc TD,
+> the Etron xHC generates two transfer events for the TRB where the
+> error was detected. The first event can be any sort of error (like
+> USB Transaction or Babble Detected, etc), and the final event is
+> Success.
+> 
+> The xHCI driver will handle the TD after the first event and remove it
+> from its internal list, and then print an "Transfer event TRB DMA ptr
+> not part of current TD" error message after the final event.
+> 
+> Commit 5372c65e1311 ("xhci: process isoc TD properly when there was a
+> transaction error mid TD.") is designed to address isoc transaction
+> errors, but unfortunately it doesn't account for this scenario.
+> 
+> To work around this by reusing the logic that handles isoc transaction
+> errors, but continuing to wait for the final event when this condition
+> occurs. Sometimes we see the Stopped event after an error mid TD, this
+> is a normal event for a pending TD and we can think of it as the final
+> event we are waiting for.
 
-please pull a few fixes for problems reported recently. Thanks.
+Not giving back the TD when we get an event for the last TRB in the
+TD sounds risky. With this change we assume all old and future ETRON hosts
+will trigger this additional spurious success event.
 
-- add lockdep annotation for relocation root to fix a splat warning
-  while merging roots
+I think we could handle this more like the XHCI_SPURIOUS_SUCCESS case seen
+with short transfers, and just silence the error message.
 
-- fix assertion failure when splitting ordered extent after transaction
-  abort
+Are there any other issues besides the error message seen?
 
-- don't print 'qgroup inconsistent' message when rescan process updates
-  qgroup data sooner than the subvolume deletion process
+Thanks
+Mathias
 
-- fix use-after-free (accessing the error number) when attempting to join
-  an aborted transaction
-
-- avoid starting new transaction if not necessary when cleaning qgroup
-  during subvolume drop
-
-----------------------------------------------------------------
-The following changes since commit 9d0c23db26cb58c9fc6ee8817e8f9ebeb25776e5:
-
-  btrfs: selftests: add a selftest for deleting two out of three extents (2025-01-14 15:57:55 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.14-rc1-tag
-
-for you to fetch changes up to fdef89ce6fada462aef9cb90a140c93c8c209f0f:
-
-  btrfs: avoid starting new transaction when cleaning qgroup during subvolume drop (2025-01-23 22:34:17 +0100)
-
-----------------------------------------------------------------
-Filipe Manana (4):
-      btrfs: fix lockdep splat while merging a relocation root
-      btrfs: fix use-after-free when attempting to join an aborted transaction
-      btrfs: avoid starting new transaction when cleaning qgroup during subvolume drop
-
-Qu Wenruo (1):
-      btrfs: do not output error message if a qgroup has been already cleaned up
-
- fs/btrfs/ctree.c        |  2 ++
- fs/btrfs/ordered-data.c | 12 ++++++++++++
- fs/btrfs/qgroup.c       | 11 +++++------
- fs/btrfs/transaction.c  |  4 +++-
- 4 files changed, 22 insertions(+), 7 deletions(-)
