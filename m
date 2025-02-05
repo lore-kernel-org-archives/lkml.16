@@ -1,104 +1,96 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22764228C91;
-	Wed,  5 Feb 2025 07:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B2821C16F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738740247; cv=none; b=XRv7VM9+umepuvrYNCVO3oZND9rRRzVIb+OUfY8D0Ac36Z+BhyPNI8emo7BR9RAjA3UfOOd/9erRqsFcEPQYv6wRkCH7QDed45DAv+/AmXpnh0cvPtvyBLi+z6gkXC160rHG+4SCYCg7E2fbDbRNjM0q3ufmRuCJX/QWwgkV1BM=
+	t=1738740248; cv=none; b=FWhyZvEQHfJLM6LyNXm1FvUKxwpmU7fOjVWyC95Vm5ZLjar4iHGTEQtmI80fHMdcIoStQGadn9kGHQO07mw5BPE4fGuG/zLcoAD2z1OVpKLvRghF9h+sZJEyd9aL3wYy9zClz9R5LdRRLUl7HyrQsEF9TYayzqgAf53HiZF+xTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738740247; c=relaxed/simple;
-	bh=Cj+Pbd2/n1KYGHKtDmEbSbjEAdbJy4st9tAoUhSsWuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iEYbVG6iquzznsi8XTDZLSBDUUvNSALXxDJzPJjPBA1HfmUyz/RYmQhqQ3tzG+Yo+WD67iufta3O9qTa9MmL1Gb2KX/q4PDcejNTBDYpBX3g1Hegf+Al8MZ5NWVbI7ZJXEfimMwFPH+U/4yBJ60qj9DVEaTnduxmTStjeTFOK8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JRD5kY+C; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738740248; c=relaxed/simple;
+	bh=JJNxobeaCxkBSDe6IQdD5rKIj62SyuCx2ls9RvwTWL0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OsYn/dKE/LUQfWJcvC7ZtbLrRgOeEVk7xmP9PWtZiLnhW1R51rjtZppxZlYSd7LObq80yxWkRNjYeWzaSHV1Z8C5X1BB57SwTcuYCT73Bj7rygs+sA45aPnCUgI1PQm7v1wV0oRyGlYGCq6QVzQ6eMW4jZyF1yy7aOWzxWTq88I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VBPck5cj; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JRD5kY+C"
-Received: from [10.95.84.73] (unknown [167.220.238.9])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 89ABC203F585;
-	Tue,  4 Feb 2025 23:24:01 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 89ABC203F585
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738740245;
-	bh=M5OQQ11HeiOo2qp+8sLAhdiGvT4ZXKIkzKf7G8IAmO4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JRD5kY+C9R5ef8/QcMU5axu1dttEyYFB/4dQvNdFAOgiM/L+aKx4soAdj7ug4jrVd
-	 SJmWcMthL9Aw19RU7G6WcITKUyIuRs4zIL5+DrGi1L1Y0FTTQwZj+FapQaPm8rgofz
-	 BlPuJY7Rl6YlayUXg+vWkeiGrdpqspU1Vr1c1tus=
-Message-ID: <ee7f3c75-b7f6-416b-b6e6-983c466f1c83@linux.microsoft.com>
-Date: Wed, 5 Feb 2025 12:53:58 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VBPck5cj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738740245; x=1770276245;
+  h=date:from:to:cc:subject:message-id;
+  bh=JJNxobeaCxkBSDe6IQdD5rKIj62SyuCx2ls9RvwTWL0=;
+  b=VBPck5cj76HpSixR9jl7g2cjRLxXcshbekSGuMeusNVD3XfaIMm5xRww
+   ntoCZH1Ew9dBc9PtwNMORHSR/qGtcvLnZyZD1H0x10wpr9+E9WnxP7rOS
+   RG9VvKcS13z0zV/1JxUClmvuB0MhOAgTOmH/8WLAIlg7InsFTJeCfG3mH
+   b7ZIpVTNJkjnjZfv+ITYDG36t22HyHYkSrhwIk4ccElKIGaJYOoCuN8rn
+   P0ytDcliDQ/4rmhDN1pqzj1AfzbqnUNAM6LsqxYhcp8hnpNr18hrbmXH2
+   gQiAPjYJ7IqTeIy1XA3OU1ZwkPdXJOn8iIZGxIiPxzxO4mA4Ux/uuNr7+
+   A==;
+X-CSE-ConnectionGUID: A9u6RppnQti173giNy7tCw==
+X-CSE-MsgGUID: JiaqgVPcQ7ODdUGM/dEz9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61761632"
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="61761632"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 23:24:04 -0800
+X-CSE-ConnectionGUID: zR7cvDzYSUCHNAIx+ipiYQ==
+X-CSE-MsgGUID: VLeFfqamR+WAduSFgM/X2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="110707777"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 04 Feb 2025 23:24:02 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tfZlQ-000tb1-04;
+	Wed, 05 Feb 2025 07:24:00 +0000
+Date: Wed, 05 Feb 2025 15:23:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/misc] BUILD SUCCESS
+ e3cd85963a20d2b92e77046a8d9f0777815f1f71
+Message-ID: <202502051559.RFuAWyz8-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
- for debug builds
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- Steve Wahl <steve.wahl@hpe.com>,
- Saurabh Singh Sengar <ssengar@linux.microsoft.com>, srivatsa@csail.mit.edu,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250203114738.3109-1-namjain@linux.microsoft.com>
- <bf469858-dedf-490a-abf2-b066aee6077e@amd.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <bf469858-dedf-490a-abf2-b066aee6077e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/misc
+branch HEAD: e3cd85963a20d2b92e77046a8d9f0777815f1f71  x86/mtrr: Use str_enabled_disabled() helper in print_mtrr_state()
 
+elapsed time: 795m
 
-On 2/5/2025 12:50 PM, K Prateek Nayak wrote:
-> Hello Naman,
-> 
-> On 2/3/2025 5:17 PM, Naman Jain wrote:
->> From: Saurabh Sengar <ssengar@linux.microsoft.com>
->>
->> On a x86 system under test with 1780 CPUs, topology_span_sane() takes
+configs tested: 19
+configs skipped: 127
 
-<.>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->>   {
->>       int i = cpu + 1;
->> +    /* Skip the topology sanity check for non-debug, as it is a time- 
->> consuming operatin */
-> 
-> s/operatin/operation/
-> 
->> +    if (!sched_debug()) {
->> +        pr_info_once("%s: Skipping topology span sanity check. Use 
->> `sched_verbose` boot parameter to enable it.\n",
-> 
-> This could be broken down as follows:
-> 
->          pr_info_once("%s: Skipping topology span sanity check."
->                   " Use `sched_verbose` boot parameter to enable it.\n",
->                   __func__);
-> 
-> Running:
-> 
->      grep -r -A 5 "pr_info(.*[^;,]$" kernel/
-> 
-> gives similar usage across kernel/*. Apart from those nits, feel
-> free to add:
-> 
-> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com> # x86
-> 
-> if the future version does not change much.
-> 
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250205    gcc-12
+i386    buildonly-randconfig-002-20250205    gcc-12
+i386    buildonly-randconfig-003-20250205    gcc-12
+i386    buildonly-randconfig-004-20250205    gcc-11
+i386    buildonly-randconfig-005-20250205    clang-19
+i386    buildonly-randconfig-006-20250205    clang-19
+i386                            defconfig    clang-19
+x86_64                        allnoconfig    clang-19
+x86_64                       allyesconfig    clang-19
+x86_64  buildonly-randconfig-001-20250205    clang-19
+x86_64  buildonly-randconfig-002-20250205    clang-19
+x86_64  buildonly-randconfig-003-20250205    clang-19
+x86_64  buildonly-randconfig-004-20250205    gcc-12
+x86_64  buildonly-randconfig-005-20250205    clang-19
+x86_64  buildonly-randconfig-006-20250205    clang-19
+x86_64                          defconfig    gcc-11
 
-Hello Prateek,
-Thanks for reviewing and testing this. I'll make changes based on your
-feedback in next version.
-
-Regards,
-Naman
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
