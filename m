@@ -1,55 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEA122D4DA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:44:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B429122DF92
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752244; cv=none; b=UNcqZQYhAQOceJOO8Er0PG7yU7SENF+mtwSnn8r3wZpGIM0vQsQUPRZMP1/VPBxMMHYqDVPB4sghdR9nXInDEnSDBW5+0l4mHle+3OBrh+GV8oD5v4qhaEr/o4UI26fpTrI4GbvC3J051BXJb3eNlvLlG3hREScB+qbcbcs3oJo=
+	t=1738752245; cv=none; b=qWfyJD9cB+OMotYo6CmIQ/Z8iuReu2w2BdQwLxMWrhMIrvlfYnK9GQxnenXKsIJf8vtFVe+aoRgF1bgU43NIGdPOSor0u/0KFy9PpIa4QL5Jqy1wbrkwrBtvgVir7Oi6Uzec7xwlv67fHeeURD7EFcTqimFASEo6v11Ff3u9I3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752244; c=relaxed/simple;
-	bh=XE70HxG67IlkX48CTskscYfrE2bRx5bl3ZYJplRPy9g=;
+	s=arc-20240116; t=1738752245; c=relaxed/simple;
+	bh=h0K6bmCS4q1BCFQok2IBhMbBrrfdAwg3rxMcmrQfzTw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oURe7kFLo4G1Y4jmAquz2lzenl+ntEwXifmj18cnacnOO0/b6M1Xkk5zsYu99KryQR2LsTfHbDqZ+Sb5Jep+aA+oICK+QTRsDYDXLVCSrjBGcTIJoOZLpdTO6FToolaDyM7pzjO5NsRQGfQxy+DRAccKeozEOQwW4Kx0U1636eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q54vI15a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yS7B4AY+; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=V0pSvW3+umnOpnCYh3SJFRGESJSy+OBwKKmS+rFtl5kIwSliMHsmQf2HBHLZIznFN8+b+FTuF5DEa5nlYUI68pCp/yMf7RwYJwbzuaZ88XaZ08bRmtMQj5VOFvukdwzJy3dRvsyLwcecY749l+su+uVmd8lnGEAqjPbJFCdio6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kDrRc/Eh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+ZBVEG49; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q54vI15a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yS7B4AY+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kDrRc/Eh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+ZBVEG49"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752239;
+	s=2020; t=1738752241;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O39YmRKm9gdAC27GK5e9vDarkb96t0m+oW8rCAxeFfU=;
-	b=Q54vI15aReIYxfTi+KjpqeDqc5x03prprYjTvVbSdPwMjMF32hSlzDmBB6QIMvnEIyNUmx
-	fEmQ05N/V2Xb0gOKgc/A0EeXF26AlfoOBFBVQ41taWMLGU/pIm1h/RBsGR5uxINkgEtZCu
-	F4p1ef9N64I0X1+kDIhle2pvRdPt3QiOT8a+MO4ADfSo3m63HKBUsSGfXRePYNPiy9YR0B
-	vCjA9CMf4bzJDJqA8xmcabkCwOmZ0UZTAZnseoYYLDPkaW79/h/zqw6Lw9tu0tAv6m0Mug
-	s4b/BT89I/cbuOYA91ShnbMf/3veefJs5wvSUN+71C8WEmeQX2qFJoAQoZIeuw==
+	bh=EgglCJ8InglBHTkmeAtwEjBiFRG6MBIw9I+Lo8fY/Ng=;
+	b=kDrRc/EhphAtHESQ9OkritBSFsoM66dpAO0u7MgjyMG6adhKM0vlTP4JrkA2lXzkCLKvDO
+	s2yoptTAsQ5zT/gnSk7QgytH7yYHGUGe7eHLfKu0w+p5in+svCLR2Tj/cH3Zdo030yIqTx
+	A3qBDdK0p8rNt43xk+06lu1wAKlSMiDDhNMcx+QWIPnQOjCvslpO4fFBF4kITfzek7FC3l
+	Vu/BCx3VxN27L2/VOyWwZHfC7FGNR/qPeUZWswl1ELEVX2PxSVRA0fTc9ck4Tpb/GMu7Ol
+	Vqm72891hHwl2UACuU8l5n+QRyJuQYxegZlAuOiTcDciwwkZwsOLfOK92CnIbw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752239;
+	s=2020e; t=1738752241;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O39YmRKm9gdAC27GK5e9vDarkb96t0m+oW8rCAxeFfU=;
-	b=yS7B4AY+NjwI3zPbWYA32j4gt6huj4SO79T40mVZI2mWBdUGKHJ2jQSAtrK3t++zN3FXvl
-	dGWFu1fUAtmJ6BDw==
+	bh=EgglCJ8InglBHTkmeAtwEjBiFRG6MBIw9I+Lo8fY/Ng=;
+	b=+ZBVEG49WUxOuH7aAfKA52bpC83Lyz2sHGMtFs2qRJcMApHblZt6c7sFvg8Gn8IdQMZcYe
+	4j6F2MzVEYerdCBg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH v2 07/24] can: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:43:27 +0100
-Message-Id: <a3a6be42c818722ad41758457408a32163bfd9a0.1738746872.git.namcao@linutronix.de>
+Subject: [PATCH v2 12/24] net: sparx5: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:43:32 +0100
+Message-Id: <d8f0e09bfa4bd4850e363645cc634afeb5779b88.1738746872.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746872.git.namcao@linutronix.de>
 References: <cover.1738746872.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,165 +65,27 @@ initializes the timer completely.
 Replace hrtimer_init() and the open coded initialization of
 hrtimer::function with the new setup mechanism.
 
-Most of this patch is generated by Coccinelle. Except for the TX thrtimer
-in bcm_tx_setup() because this timer is not used and the callback function
-is never set. For this particular case, set the callback to
-hrtimer_dummy_timeout()
-
-Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>
 ---
-v2:
-  - Use hrtimer_dummy_timeout() for bcm TX thrtimer
----
- include/linux/hrtimer.h   |  5 +++++
- kernel/time/hrtimer.c     |  5 -----
- net/can/bcm.c             | 20 ++++++++------------
- net/can/isotp.c           | 10 ++++------
- net/can/j1939/bus.c       |  4 ++--
- net/can/j1939/transport.c |  8 ++------
- 6 files changed, 21 insertions(+), 31 deletions(-)
+ drivers/net/ethernet/microchip/sparx5/sparx5_packet.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index f7bfdcf0dda3..acae379541c5 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -223,6 +223,11 @@ static inline void hrtimer_cancel_wait_running(struct =
-hrtimer *timer)
- }
- #endif
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_packet.c b/driver=
+s/net/ethernet/microchip/sparx5/sparx5_packet.c
+index 138ac58fae51..f713656f1fae 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_packet.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_packet.c
+@@ -375,6 +375,6 @@ irqreturn_t sparx5_xtr_handler(int irq, void *_sparx5)
 =20
-+static inline enum hrtimer_restart hrtimer_dummy_timeout(struct hrtimer *u=
-nused)
-+{
-+	return HRTIMER_NORESTART;
-+}
-+
- /* Exported timer functions: */
-=20
- /* Initialize timers: */
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index deb1aa32814e..47df6f50e12c 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1597,11 +1597,6 @@ static inline int hrtimer_clockid_to_base(clockid_t =
-clock_id)
- 	return HRTIMER_BASE_MONOTONIC;
- }
-=20
--static enum hrtimer_restart hrtimer_dummy_timeout(struct hrtimer *unused)
--{
--	return HRTIMER_NORESTART;
--}
--
- static void __hrtimer_init(struct hrtimer *timer, clockid_t clock_id,
- 			   enum hrtimer_mode mode)
+ void sparx5_port_inj_timer_setup(struct sparx5_port *port)
  {
-diff --git a/net/can/bcm.c b/net/can/bcm.c
-index 217049fa496e..526cb6cd901f 100644
---- a/net/can/bcm.c
-+++ b/net/can/bcm.c
-@@ -1011,13 +1011,12 @@ static int bcm_tx_setup(struct bcm_msg_head *msg_he=
-ad, struct msghdr *msg,
- 		op->ifindex =3D ifindex;
-=20
- 		/* initialize uninitialized (kzalloc) structure */
--		hrtimer_init(&op->timer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL_SOFT);
--		op->timer.function =3D bcm_tx_timeout_handler;
-+		hrtimer_setup(&op->timer, bcm_tx_timeout_handler, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL_SOFT);
-=20
- 		/* currently unused in tx_ops */
--		hrtimer_init(&op->thrtimer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL_SOFT);
-+		hrtimer_setup(&op->thrtimer, hrtimer_dummy_timeout, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL_SOFT);
-=20
- 		/* add this bcm_op to the list of the tx_ops */
- 		list_add(&op->list, &bo->tx_ops);
-@@ -1192,13 +1191,10 @@ static int bcm_rx_setup(struct bcm_msg_head *msg_he=
-ad, struct msghdr *msg,
- 		op->rx_ifindex =3D ifindex;
-=20
- 		/* initialize uninitialized (kzalloc) structure */
--		hrtimer_init(&op->timer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL_SOFT);
--		op->timer.function =3D bcm_rx_timeout_handler;
--
--		hrtimer_init(&op->thrtimer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL_SOFT);
--		op->thrtimer.function =3D bcm_rx_thr_handler;
-+		hrtimer_setup(&op->timer, bcm_rx_timeout_handler, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL_SOFT);
-+		hrtimer_setup(&op->thrtimer, bcm_rx_thr_handler, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL_SOFT);
-=20
- 		/* add this bcm_op to the list of the rx_ops */
- 		list_add(&op->list, &bo->rx_ops);
-diff --git a/net/can/isotp.c b/net/can/isotp.c
-index 16046931542a..442c343afe1f 100644
---- a/net/can/isotp.c
-+++ b/net/can/isotp.c
-@@ -1634,12 +1634,10 @@ static int isotp_init(struct sock *sk)
- 	so->rx.buflen =3D ARRAY_SIZE(so->rx.sbuf);
- 	so->tx.buflen =3D ARRAY_SIZE(so->tx.sbuf);
-=20
--	hrtimer_init(&so->rxtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
--	so->rxtimer.function =3D isotp_rx_timer_handler;
--	hrtimer_init(&so->txtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
--	so->txtimer.function =3D isotp_tx_timer_handler;
--	hrtimer_init(&so->txfrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
--	so->txfrtimer.function =3D isotp_txfr_timer_handler;
-+	hrtimer_setup(&so->rxtimer, isotp_rx_timer_handler, CLOCK_MONOTONIC, HRTI=
-MER_MODE_REL_SOFT);
-+	hrtimer_setup(&so->txtimer, isotp_tx_timer_handler, CLOCK_MONOTONIC, HRTI=
-MER_MODE_REL_SOFT);
-+	hrtimer_setup(&so->txfrtimer, isotp_txfr_timer_handler, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_SOFT);
-=20
- 	init_waitqueue_head(&so->wait);
- 	spin_lock_init(&so->rx_lock);
-diff --git a/net/can/j1939/bus.c b/net/can/j1939/bus.c
-index 486687901602..39844f14eed8 100644
---- a/net/can/j1939/bus.c
-+++ b/net/can/j1939/bus.c
-@@ -158,8 +158,8 @@ struct j1939_ecu *j1939_ecu_create_locked(struct j1939_=
-priv *priv, name_t name)
- 	ecu->addr =3D J1939_IDLE_ADDR;
- 	ecu->name =3D name;
-=20
--	hrtimer_init(&ecu->ac_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
--	ecu->ac_timer.function =3D j1939_ecu_timer_handler;
-+	hrtimer_setup(&ecu->ac_timer, j1939_ecu_timer_handler, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_SOFT);
- 	INIT_LIST_HEAD(&ecu->list);
-=20
- 	j1939_priv_get(priv);
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 95f7a7e65a73..a0d350871745 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -1510,12 +1510,8 @@ static struct j1939_session *j1939_session_new(struc=
-t j1939_priv *priv,
- 	skcb =3D j1939_skb_to_cb(skb);
- 	memcpy(&session->skcb, skcb, sizeof(session->skcb));
-=20
--	hrtimer_init(&session->txtimer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL_SOFT);
--	session->txtimer.function =3D j1939_tp_txtimer;
--	hrtimer_init(&session->rxtimer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL_SOFT);
--	session->rxtimer.function =3D j1939_tp_rxtimer;
-+	hrtimer_setup(&session->txtimer, j1939_tp_txtimer, CLOCK_MONOTONIC, HRTIM=
-ER_MODE_REL_SOFT);
-+	hrtimer_setup(&session->rxtimer, j1939_tp_rxtimer, CLOCK_MONOTONIC, HRTIM=
-ER_MODE_REL_SOFT);
-=20
- 	netdev_dbg(priv->ndev, "%s: 0x%p: sa: %02x, da: %02x\n",
- 		   __func__, session, skcb->addr.sa, skcb->addr.da);
+-	hrtimer_init(&port->inj_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	port->inj_timer.function =3D sparx5_injection_timeout;
++	hrtimer_setup(&port->inj_timer, sparx5_injection_timeout, CLOCK_MONOTONIC,
++		      HRTIMER_MODE_REL);
+ }
 --=20
 2.39.5
 
