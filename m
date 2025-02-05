@@ -1,109 +1,251 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FB11A83ED;
-	Wed,  5 Feb 2025 18:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD3D1FDA96
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779255; cv=none; b=HeFM9ThQ7sY6u5dvx3MWsuqgwb41LjDAtui4UrAsh7XSg0tJu3ZBoDlfrpTdPZAp3nKQt+3LibnMr+1dQMzDUaDix/BxsvL8+RyEB/OesEe0lqk9fELf/hVPXGeYqBEkBeDubeBNAc/67C8ZSoBWjC+ogQeJ5G3VFbdtm3mMsvA=
+	t=1738779258; cv=none; b=jy71lI+9dqTzdu/x/GtYANScYV+EIzsUYMoIlI3YfM+gjDGsIsn2wJBsXJRKOS3Rbh5cNPQk7+ojCYHbSr7eNzFrTqMVmCSJi1EY5WXbtJp18yb+RWMIVE5rAHM1xSX+o+RRc+y0iXgS1Q+FfMDP6EnK7/h3lU8NcPO88Ybz0k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779255; c=relaxed/simple;
-	bh=BNuuoIKCTW2XZ1ATUd3BE3PJ9sf5RKJy22TzPwiBTmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mvF2hDLCV+z2Zi4+AphXgStgokToDmmfXZWeoEloJVXrqRLBJ46025OwAsuaZ9tynPdR/mPczC3CRPzsyCPNY3yEfJGsq7AUDL+q+QdablWxJCxgUB7vdbd/NBom9oMcyvm8MUVEUSGRG5SVPPwzfj0hpml2ZxyLC7MimoSc4Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=abEViVS3; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738779258; c=relaxed/simple;
+	bh=aGuabOS4LqfMyI0Ve0MwUPAyjzUwV8Y4+QnAgikzrdM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V8iPPqToXYfa0vUBoW5NOpFQBWBUKZ3dl0IdGrNFlBbRK8oeWochkIi8N77LRTxOyX159spjlAL0WqlbvzE0KKpv6ZBSss7HG9pt6lQTwWEX5O8OAeMngrAB/Fv4ZiHIAqUkBkuP58XkM1ajdHz5w5J3W70Z6eXFalzX/3R7+UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=YGPFWydr; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="abEViVS3"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515HVweX000796;
-	Wed, 5 Feb 2025 18:14:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=N3/TgxWVs+9amURuIjA6GRq5FPbB7J4yXlYz2oN7e
-	SE=; b=abEViVS3/TzX4e6XTw01ULsj9In5RcdOzn6m3XO6xncUQPyIcV/k6Vxqx
-	Ea+esY3M76L9oPcK8jL9J0gtdCiFYoFZvSBz5R3KG5LnnVn1FlTDi9yfGidyUQbb
-	5S6olZEWG8cz9EXT9V2oRR4sU16CjWOnQs6HH6yWvdRggReE0EWo24E5FO6Ghurn
-	FFA1+NWYf5yyOJep6sBcEsSHuI49wSrw9SEV6T1/+ogg9nc93jZ8zp1+ln4wN8kG
-	TvQxPZi9FrSIsOBF2CXVbmpGMLNyVK4gpmfrH6Wj2j7FR04xCyV2KolPMzcVpGTG
-	h7WWtp9fGDHgu26KbcnEAMUm+Klww==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m3pnu45g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 18:14:03 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515HVlas021493;
-	Wed, 5 Feb 2025 18:14:02 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n1htty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 18:14:02 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515IDxaX33030528
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 18:13:59 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0BDB720143;
-	Wed,  5 Feb 2025 18:13:59 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C53F620141;
-	Wed,  5 Feb 2025 18:13:55 +0000 (GMT)
-Received: from li-34d1fccc-27cd-11b2-a85c-c167793e56f7.ibm.com.com (unknown [9.171.42.237])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 18:13:55 +0000 (GMT)
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: rafael@kernel.org, viresh.kumar@linaro.org, zhenglifeng1@huawei.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gautam@linux.ibm.com, aboorvad@linux.ibm.com
-Subject: [PATCH 1/1] cpufreq: prevent NULL dereference in cpufreq_online
-Date: Wed,  5 Feb 2025 23:43:47 +0530
-Message-ID: <20250205181347.2079272-1-aboorvad@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="YGPFWydr"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b6f75f61f9so2346885a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1738779256; x=1739384056; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ewgPkFmEX3mInvEnIhY/6iT5VC+yD3hq+wlM8kNCGHw=;
+        b=YGPFWydr6kC/cQzOHhXzzEeoDFGIBwIW/oomQ4Yacfi94yiqGBiFgDXajjwJATUt1w
+         WVHfXqWcmbGuLWLn66drjbxhFcK6xnGBHD1v03a6HMtp0mwXvPmYlX+YP+VITFfp0NOH
+         KoJ5H3M3WLyAy0vhJTdTa+w0Y2zmF6V2OUoBgNaDuzfMo5OcqQVbcA1ZdTgvwbroN7Qn
+         5RvzTxCdQFXezkJOeYTvfik3/9QoC5cV08M1OUefZAL8XBkMumXcq9jNKs+qs5UEinQd
+         joif/BDgx/DxbdwUaWPgZiupvPTCB9jjqcst8a0p1M2jLB5BWnB/gy6sBBaAaQYYqFYn
+         GbIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738779256; x=1739384056;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ewgPkFmEX3mInvEnIhY/6iT5VC+yD3hq+wlM8kNCGHw=;
+        b=otFLQuHj6BnpczR6SQOivfdKPuadtww0nie8JixsxPwJDtNxbjUSHDJufC0lW9jFwZ
+         11szZiDL+8vh3Exe4qyLbhXbvJN1P/j1rCfkbydXyD51e2IfuQpuzK91MexdoJvT6P6a
+         LcpgSnkp83oqqssdFuu1PdHRxNT9rxnw+w+M+odRal8Jf6KQKs8FslkyAFFZBf+2GKOR
+         y2xXukRbIpIoeknLTRXHTJ049Rwklt94UH3WqgOlInndELbvB0DcrprPOdH5qTgOLNol
+         otSCw2hamy+K2+uNjHcAScY9ypDE8tViQqnmNb+l3Dh/g4008HcfpZqzTBtJxXxqB5BS
+         icbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWSvlIQEt73jN6m5WbO6itmFYPfwon8wLczsIGStRdPr9g3H4+hSjy1JM7ePT9w13ILmxgasdhSboSzm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmcd9juuBGrww0RHOI1TPOJKFbncU9iUdQCyzTF5yIw4MT6lul
+	XBchAZINoVy02bNr1kB9YtEjfU0PEVfhEq4Q6AaKSayhohFoKktUX6QQWkbj2MU=
+X-Gm-Gg: ASbGncvHPTQoygpQUgjLsoAEc9RtwBaWHvoGv7WKref2JsMKJ2wHyX7rPrs+87D7Z5Z
+	1/IP6LkBntBav625eMwQBS4oANTmPjqlOiy7Sz6URmKwG6UrnNVzScViKoG5IbCNsO4byXT1BgX
+	sYQWNQ8hClvsLuXWeTWTU8ugb4RdYUlRxe85sdrqEnpU/uoy9QNLOIPc6cv3A+EcCH2VdJrZl2A
+	uB4jszlJWCR7Y3/8hZ3D5yhG3mH2DKNKIHUHo++KmJNeVP+2vOKtp+L9UwtAhJ2NFaRVcLUK8Vh
+	GqZQ+eXNwgGUTk/K
+X-Google-Smtp-Source: AGHT+IFnnl9J6glnO7ave49R6IT/Ma233dmOTJ29e9pjZONK8+NxUm972OtvZRgYYQ8KwgzNcY3a5Q==
+X-Received: by 2002:a05:620a:d8c:b0:7be:3d2f:16fc with SMTP id af79cd13be357-7c03a029359mr549685385a.51.1738779255841;
+        Wed, 05 Feb 2025 10:14:15 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2606:6d00:11:e976::7a9])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a9047eesm781781685a.72.2025.02.05.10.14.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 10:14:15 -0800 (PST)
+Message-ID: <2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
+ CSF GPUs
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Maxime Ripard <mripard@kernel.org>, Florent Tomasin
+	 <florent.tomasin@arm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Boris
+ Brezillon	 <boris.brezillon@collabora.com>, Steven Price
+ <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>,  Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
+ Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey	
+ <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier"	 <tjmercier@google.com>, Christian =?ISO-8859-1?Q?K=F6nig?=	
+ <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
+ Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
+ <akash.goel@arm.com>
+Date: Wed, 05 Feb 2025 13:14:14 -0500
+In-Reply-To: <20250205-amorphous-nano-agouti-b5baba@houat>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+	 <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+	 <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+	 <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+	 <9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+	 <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
+	 <20250205-amorphous-nano-agouti-b5baba@houat>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RmWeyWoMQL1qjyLhtIbtAIZbdrfxXXKk
-X-Proofpoint-GUID: RmWeyWoMQL1qjyLhtIbtAIZbdrfxXXKk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 malwarescore=0 mlxlogscore=921 spamscore=0
- mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050138
 
-Ensure `cpufreq_driver->set_boost` is non-NULL before using it in
-`cpufreq_online` to prevent a potential NULL pointer dereference.
+Le mercredi 05 f=C3=A9vrier 2025 =C3=A0 15:52 +0100, Maxime Ripard a =C3=A9=
+crit=C2=A0:
+> On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote:
+> > Hi Maxime, Nicolas
+> >=20
+> > On 30/01/2025 17:47, Nicolas Dufresne wrote:
+> > > Le jeudi 30 janvier 2025 =C3=A0 17:38 +0100, Maxime Ripard a =C3=A9cr=
+it=C2=A0:
+> > > > Hi Nicolas,
+> > > >=20
+> > > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wrote:
+> > > > > Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard a =C3=
+=A9crit=C2=A0:
+> > > > > > Hi,
+> > > > > >=20
+> > > > > > I started to review it, but it's probably best to discuss it he=
+re.
+> > > > > >=20
+> > > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote=
+:
+> > > > > > > Hi,
+> > > > > > >=20
+> > > > > > > This is a patch series covering the support for protected mod=
+e execution in
+> > > > > > > Mali Panthor CSF kernel driver.
+> > > > > > >=20
+> > > > > > > The Mali CSF GPUs come with the support for protected mode ex=
+ecution at the
+> > > > > > > HW level. This feature requires two main changes in the kerne=
+l driver:
+> > > > > > >=20
+> > > > > > > 1) Configure the GPU with a protected buffer. The system must=
+ provide a DMA
+> > > > > > >    heap from which the driver can allocate a protected buffer=
+.
+> > > > > > >    It can be a carved-out memory or dynamically allocated pro=
+tected memory region.
+> > > > > > >    Some system includes a trusted FW which is in charge of th=
+e protected memory.
+> > > > > > >    Since this problem is integration specific, the Mali Panth=
+or CSF kernel
+> > > > > > >    driver must import the protected memory from a device spec=
+ific exporter.
+> > > > > >=20
+> > > > > > Why do you need a heap for it in the first place? My understand=
+ing of
+> > > > > > your series is that you have a carved out memory region somewhe=
+re, and
+> > > > > > you want to allocate from that carved out memory region your bu=
+ffers.
+> > > > > >=20
+> > > > > > How is that any different from using a reserved-memory region, =
+adding
+> > > > > > the reserved-memory property to the GPU device and doing all yo=
+ur
+> > > > > > allocation through the usual dma_alloc_* API?
+> > > > >=20
+> > > > > How do you then multiplex this region so it can be shared between
+> > > > > GPU/Camera/Display/Codec drivers and also userspace ?
+> > > >=20
+> > > > You could point all the devices to the same reserved memory region,=
+ and
+> > > > they would all allocate from there, including for their userspace-f=
+acing
+> > > > allocations.
+> > >=20
+> > > I get that using memory region is somewhat more of an HW description,=
+ and
+> > > aligned with what a DT is supposed to describe. One of the challenge =
+is that
+> > > Mediatek heap proposal endup calling into their TEE, meaning knowing =
+the region
+> > > is not that useful. You actually need the TEE APP guid and its IPC pr=
+otocol. If
+> > > we can dell drivers to use a head instead, we can abstract that SoC s=
+pecific
+> > > complexity. I believe each allocated addressed has to be mapped to a =
+zone, and
+> > > that can only be done in the secure application. I can imagine simila=
+r needs
+> > > when the protection is done using some sort of a VM / hypervisor.
+> > >=20
+> > > Nicolas
+> > >=20
+> >=20
+> > The idea in this design is to abstract the heap management from the
+> > Panthor kernel driver (which consumes a DMA buffer from it).
+> >=20
+> > In a system, an integrator would have implemented a secure heap driver,
+> > and could be based on TEE or a carved-out memory with restricted access=
+,
+> > or else. This heap driver would be responsible of implementing the
+> > logic to: allocate, free, refcount, etc.
+> >=20
+> > The heap would be retrieved by the Panthor kernel driver in order to
+> > allocate protected memory to load the FW and allow the GPU to enter/exi=
+t
+> > protected mode. This memory would not belong to a user space process.
+> > The driver allocates it at the time of loading the FW and initializatio=
+n
+> > of the GPU HW. This is a device globally owned protected memory.
+>=20
+> The thing is, it's really not clear why you absolutely need to have the
+> Panthor driver involved there. It won't be transparent to userspace,
+> since you'd need an extra flag at allocation time, and the buffers
+> behave differently. If userspace has to be aware of it, what's the
+> advantage to your approach compared to just exposing a heap for those
+> secure buffers, and letting userspace allocate its buffers from there?
 
-Reported-by: Gautam Menghani <gautam@linux.ibm.com>
-Closes: https://lore.kernel.org/all/c9e56c5f54cc33338762c94e9bed7b5a0d5de812.camel@linux.ibm.com/
-Fixes: dd016f379ebc ("cpufreq: Introduce a more generic way to set default per-policy boost flag")
-Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
----
- drivers/cpufreq/cpufreq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Unless I'm mistaken, the Panthor driver loads its own firmware. Since loadi=
+ng
+the firmware requires placing the data in a protected memory region, and th=
+at
+this aspect has no exposure to userspace, how can Panthor not be implicated=
+ ?
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index e0048856ecee..30ffbddc7ece 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1571,7 +1571,8 @@ static int cpufreq_online(unsigned int cpu)
- 		policy->cdev = of_cpufreq_cooling_register(policy);
- 
- 	/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
--	if (policy->boost_enabled != cpufreq_boost_enabled()) {
-+	if (cpufreq_driver->set_boost &&
-+	    policy->boost_enabled != cpufreq_boost_enabled()) {
- 		policy->boost_enabled = cpufreq_boost_enabled();
- 		ret = cpufreq_driver->set_boost(policy, policy->boost_enabled);
- 		if (ret) {
--- 
-2.34.1
+>=20
+> > When I came across this patch series:
+> > -
+> > https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.co=
+m/#t
+> > I found it could help abstract the interface between the secure heap an=
+d
+> > the integration of protected memory in Panthor.
+> >=20
+> > A kernel driver would have to find the heap: `dma_heap_find()`, then
+> > request allocation of a DMA buffer from it. The heap driver would deal
+> > with the specifities of the protected memory on the system.
+>=20
+> Sure, but we still have to address *why* it would be a good idea for the
+> driver to do it in the first place. The mediatek series had the same
+> feedback.
+
+Which got pretty clear replies iirc. The drivers needs scratch buffers and
+secondary buffers to be protected, and these are not visible to userspace. =
+No
+one have made a proper counter argument yet. In MTK, the remote-proc driver=
+ for
+the SCP (a multi-purpose multimedia co-processor) will also need to place t=
+he
+firmware data into a protected buffer (with the help of the tee to copy the=
+ data
+into it of course).
+
+Nicolas
+
+>=20
+> Maxime
 
