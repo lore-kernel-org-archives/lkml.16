@@ -1,131 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B791157465;
-	Wed,  5 Feb 2025 16:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F171DB15F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773312; cv=none; b=iZfj5BYwW0/FALWf7s4zs8RjypH8Vo1IuxYUwBzajNNb/GmU4NdHhWGKVfh/dAfN3+0GDc47xycrtwmHXVsgZzU2/t8EmhPVh+1DlAf+OaingY95MJzFkJYl19Dv4K8qnGrnWYdpeI6kLXBtQ6rGUTApY1zm/+aLmgP8/0egRUE=
+	t=1738773314; cv=none; b=qJPbperzXHa7iG2Kyru8cLLPtUwpO7ABzwnQEtfVDU3tiSb9yBNeFvyYN5hpsIrJcWs78QqQ54do+zTgzLdMlBQCxcGoGpbTZZqwHUwTWbWZO97YHSW+nxrDFp2ivRUiPVoh5b3V8Ivsf5xVh1GTvGTpiJApoat96QGHl3zz1Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773312; c=relaxed/simple;
-	bh=poca9uM9KJpZdizcMGkf7+o6KyB/m+kgE3lsAIBam7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=COLAWQEXlImD87UlJOqWqCfPcduzC3Av0fOsK8Aw63ItqlGpowpCyToS8AeUcHR0ApKmN2Ee3mEmR7dFJrNaJyh2srsTrDd6nW9/S1FXRCvLoDQ9qBQ9JRcsWrQ+4HHHBTZwtnRWaGZxP3EIu5IO0amK6vZ3KCBvyy4V8Wxufio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ef2oW7TT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738773314; c=relaxed/simple;
+	bh=dvp1QCVxxQcqxWUgrzP1J6jShJ84IWNo4DvyPXhOUnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qb74475WRKXn1QRiKboieRfq1rbyciP6AEQBhrpJWRRngKZ+A/W0IhB+lrUJuCRQwArjh/fzkt8t1aL85rmuN9iP5OTqBfY50+gU9ra9+8LYPlEqXhky4s6WPD98+60EuruJwWcY9POTq0eZiHoUX9b/gEeWLB4Aq/OQUUg2hms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RyGzLloF; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ef2oW7TT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 229DFC4CED1;
-	Wed,  5 Feb 2025 16:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738773312;
-	bh=poca9uM9KJpZdizcMGkf7+o6KyB/m+kgE3lsAIBam7k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ef2oW7TTJWrSf2Ve/wzhV28PC5O0QqOYounibJQBYzLZOOTPburvta9Gr04vQTb67
-	 aXiJ49pFgFnSeu1fSgV+lBORCLC4MMuy/N2VhD+pZv54TzwhCiGSl1W7zXxuVtPyCl
-	 nZCq0jocPLauM2me+zmaKbbvxgq14IOmpgUJ1j8HStchKI5YT+B1pb8lC/ZBNz2uJA
-	 OcDmh5Hknaun6p8EJeS4SEFiQJK05z6MniHMR1/nlJqFclQsatwsrq1Xl8peCN8NrS
-	 7N50a6LPVorTdRrMUyLXWNbM4ele+9P5AfIsLTZ8jqTIQejsQT5jgC5Ova/lBoHPov
-	 iZ7XztwStjYwA==
-Message-ID: <25f61085-defa-4c5d-b243-6d51e72aee76@kernel.org>
-Date: Wed, 5 Feb 2025 17:35:01 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RyGzLloF"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so178905ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738773312; x=1739378112; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CeDW3SOPT0I7+guyMByE6uP86Z41s6fPZV6qcWyTgnI=;
+        b=RyGzLloF9kIVcBWhCsnkVQBGQ41bihbdA8eLhEzHXenjAJAWsxgJhvVUbGMyRpW2ld
+         xXo9b8UR9PQ+W/CbAgefTz/n6kRrbOsFN6b+Ln+4L3EUZEzBmfzjwnninQZ+FJ3uIijz
+         c3161FMCXB4saBGecUv0gpXIzZSUvB/1uZV4vS+C3CzpqCvKypU0/VaBjhbSTWumwl+R
+         avWgq2kcgDASsPg96FLa78tFoL+5Hd0nD73D7/1WGPwkDhiBMilIR3gCSTFIsPn2+CzF
+         aBpfe0odas+IM8Iw9mM7VDjFrwru95ReTUJiUirDnTKusTeCIQ6kyCiGGkrBkDcVumDF
+         jSPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738773312; x=1739378112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CeDW3SOPT0I7+guyMByE6uP86Z41s6fPZV6qcWyTgnI=;
+        b=M9wh48YxtA12WiVe+I0LuHQrQmh03dCnVxQXfImQW3mrXD+3VkCHGl2+dvjwX9Mtb7
+         033MujPxaK/fNfr2Vi0yGmUAIhDQ+Qce9OyPHPcEg941ADkOD9hYbzqIZWtz+gzuF2SN
+         c3uLtgNDnfubbIvEABC/A12CN6gusOCGeeXfAUUIP4LTUw/D4e1GLyv39ovDjPG51dUv
+         tY5sRuFNMRmePe7W1u+Wu0+tVQAoCWex098Rt2C/Wq9SmyGBoCMgBYkPcK1/c6YtLh4c
+         17gqwHK0uYcwKgQMjiEtQEO1hrRi+Zg8PEW5ebV+LwqtEGBzr+fJTQ5mlsnolwFrqUXB
+         bvfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBjdM5FwYO/aHpz2WhpUDyI4PhHoLarHDdqNMz1W/n+hXK+BnzS5eUJWXgjFHOhata/oCIrA5UbX671Q4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfCQwBNxdq5GhUVCpkAPIQPzE6JN8mZ0YAWcCUlt9WZFYqQHF3
+	AB/x02jJ9fA15Utm89X40830oF3F5BNqgr0fof87BhGMs3VW9Zvn7Eym+FHZ6s2oPHEtf4BJGpq
+	JDhkY8wIOy/A7MIWvYMTq0oXSzdIib31EE9y7
+X-Gm-Gg: ASbGnctnr6S2dwqesTtyFE/EpRGWn9g7BXCRH2dOFU5eeNie4MQ5ZxDODyFp+s/Cw4v
+	OMpOpAENbOG8rx4XEFGRBVKCsxu49EKqaga/vAmfEDH0ENMXb4hYO+hA0Y5DUperIgm3kpAl2lC
+	jJgJIFjgPU7vAifJIZQI9jdQtI
+X-Google-Smtp-Source: AGHT+IF/1cvo8Gb+iy3C21tsS3O07s4tko4EtPhMOkFSCFs9t9K/CXygGAtFKu1l5fy6ofdFJnQ7W/55GFIwVZIjuhw=
+X-Received: by 2002:a05:6e02:3c06:b0:3d0:507f:38dd with SMTP id
+ e9e14a558f8ab-3d0507f3b50mr3538025ab.5.1738773311918; Wed, 05 Feb 2025
+ 08:35:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 27/27] dt-bindings: net: pse-pd: ti,tps23881:
- Add interrupt description
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>,
- Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Simon Horman <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>,
- Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
- Maxime Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org
-References: <20250103-feature_poe_port_prio-v4-0-dc91a3c0c187@bootlin.com>
- <20250103-feature_poe_port_prio-v4-27-dc91a3c0c187@bootlin.com>
- <uv2grnchczucf4vxxzaprfkc6ap56z6uqzaew3qtjqpvmtaqbb@kuv62yntqyfr>
- <20250205151822.06f60e8d@kmaincent-XPS-13-7390>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250205151822.06f60e8d@kmaincent-XPS-13-7390>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250204213259.127939-1-irogers@google.com> <CAP-5=fXpuND+kNe16CJMETkMOW+__eQpB8No0ra5gyEcfqCCKQ@mail.gmail.com>
+ <d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com>
+ <CAP-5=fV8EcxVZR0Be6wb57_VvssE9FYFBTmbd415CqmidGWT7g@mail.gmail.com> <ca45ff5e-3d1a-4149-8efe-7615dd3581ff@linux.intel.com>
+In-Reply-To: <ca45ff5e-3d1a-4149-8efe-7615dd3581ff@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Feb 2025 08:35:00 -0800
+X-Gm-Features: AWEUYZmYPCX1ExEW0FD8i7hkzrOSM3YXwFUPDROL1WGpdGtGQFKZ-hVUs5o_THc
+Message-ID: <CAP-5=fW7gaskkJKnJcsfe0UO0V0wDsQaa-2NSNr3ho9urUeKBw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/23] Intel vendor events and TMA 5.01 metrics
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: "Falcon, Thomas" <thomas.falcon@intel.com>, "Baker, Edward" <edward.baker@intel.com>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"Biggers, Caleb" <caleb.biggers@intel.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
+	"Taylor, Perry" <perry.taylor@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/02/2025 15:18, Kory Maincent wrote:
->>> Add an interrupt property to the device tree bindings for the TI TPS23881
->>> PSE controller. The interrupt is primarily used to detect classification
->>> and disconnection events, which are essential for managing the PSE
->>> controller in compliance with the PoE standard.
->>>  
->>> @@ -62,6 +65,7 @@ unevaluatedProperties: false
->>>  required:
->>>    - compatible
->>>    - reg
->>> +  - interrupts  
->>
->> Why? That's an ABI change. Commit msg mentions something like "essential
->> for standard" so are you saying nothing here was working according to
->> standard before?
-> 
-> Yes indeed, the disconnection management did not follow the standard. Without
-> this series, the power on the ports of this controller is not shut down after a
-> Powered Device disconnection. Unfortunately, I did not noticed this before.
+On Wed, Feb 5, 2025 at 7:47=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+> On 2025-02-04 11:58 p.m., Ian Rogers wrote:
+> > On Tue, Feb 4, 2025 at 8:28=E2=80=AFPM Falcon, Thomas <thomas.falcon@in=
+tel.com> wrote:
+> >>
+> >> On Tue, 2025-02-04 at 13:35 -0800, Ian Rogers wrote:
+> >>> On Tue, Feb 4, 2025 at 1:33=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> >>>>
+> >>>> Update the Intel vendor events to the latest.
+> >>>> Update the metrics to TMA 5.01.
+> >>>> Add Arrowlake and Clearwaterforest support.
+> >>>> Add metrics for LNL and GNR.
+> >>>> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
+> >>>>
+> >>>> The perf json was generated using the script:
+> >>>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.=
+py
+> >>>> with the generated json being in:
+> >>>> https://github.com/intel/perfmon/tree/main/scripts/perf
+> >>>>
+> >>>> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+> >>>> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>
+> >>>> and
+> >>>> Weilin Wang <weilin.wang@intel.com> for helping get this patch
+> >>>> series
+> >>>> together.
+> >>>>
+> >>>> v4: Fix TSC events on hybrid mistakenly specifying the core PMU
+> >>>>     inhibiting the use of the msr PMU.
+> >>>> v3: Fixes for hybrid metrics that were missing PMU. Update to the
+> >>>>     latest events.
+> >>>> v2: Fix hybrid and Co-authored-by tag issues reported by
+> >>>>     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition
+> >>>> of
+> >>>>     Clearwaterforest.
+> >>>
+> >>> Sorry, forgot to add Thomas again.
+> >>> https://lore.kernel.org/lkml/20250204213259.127939-1-irogers@google.c=
+om/
+> >>
+> >> Hi, I'm seeing some warnings like this and the all metrics test is
+> >> skipped:
+> >>
+> >> Testing tma_info_inst_mix_iparith
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith:
+> >> cpu_core@INST_RETIRED.ANY@ / (cpu_core@FP_ARITH_INST_RETIRED.SCALAR@ +
+> >> cpu_core@FP_ARITH_INST_RETIRED.VECTOR@)
+> >> Testing tma_info_inst_mix_iparith_avx128
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_avx128:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> (cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE@ +
+> >> cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE@)
+> >> Testing tma_info_inst_mix_iparith_avx256
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_avx256:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> (cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE@ +
+> >> cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE@)
+> >> Testing tma_info_inst_mix_iparith_scalar_dp
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_dp:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_DOUBLE@
+> >> Testing tma_info_inst_mix_iparith_scalar_sp
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_sp:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_SINGLE@
+> >
+> > Thanks Tom, we've gone from a fail to skip - so progress! I think it
+> > actually isn't something to worry about. These metrics are measuring
+> > vector and floating point things. We run a workload, when testing the
+> > metrics, that doesn't have floating point and vector operations. This
+> > causes issues with metrics for these instructions as the counters
+> > don't count anything. Because of this I added some logic to just skip
+> > when we see these failures:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/tests/shell/stat_all_metrics.sh?h=3Dperf-tools-next#n51
+> > but a better fix would be to have a workload with FP and AMX operations=
+.
+> >
+> > You could test these metrics work manually, by running something like:
+> > $ perf stat -M tma_info_inst_mix_iparith <benchmark>
+> > where <benchmark> would need to contain FP or AMX instructions.
+> >
+>
+> It should be OK to skip the "FP issues", but the "Cannot resolve IDs"
+> seems a different issue.
+>
+> I found the similar error when I run perf stat on my Arrow Lake machine.
+>
+> $ sudo ./perf stat
+> Cannot resolve IDs for tma_memory_bound: topdown\-mem\-bound /
+> (topdown\-fe\-bound + topdown\-bad\-spec + topdown\-retiring +
+> topdown\-be\-bound) + 0 * slots
+>
+> I think the warning is because perf doesn't find all the matched events.
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/metricgroup.c?h=3Dtmp.perf-tools-next#n326
+>
+>
+> Then I go to check the event list of tma_memory_bound.
+> For cpu_atom, it requires slots and topdown-mem-bound, which should be
+> only available on p-core.
+>
+> +    {
+> +        "BriefDescription": "This metric represents fraction of slots
+> the Memory subsystem within the Backend was a bottleneck",
+> +        "DefaultMetricgroupName": "TopdownL2",
+> +        "MetricExpr": "topdown\\-mem\\-bound / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 *
+> slots",
+> +        "MetricGroup":
+> "Backend;Default;Slots;TmaL2;TopdownL2;tma_L2_group;tma_backend_bound_gro=
+up",
+> +        "MetricName": "tma_memory_bound",
+> +        "MetricThreshold": "tma_memory_bound > 0.2 & tma_backend_bound
+> > 0.2",
+> +        "MetricgroupNoGroup": "TopdownL2;Default",
+> +        "PublicDescription": "This metric represents fraction of slots
+> the Memory subsystem within the Backend was a bottleneck.  Memory Bound
+> estimates fraction of slots where pipeline is likely stalled due to
+> demand load or store instructions. This accounts mainly for (1)
+> non-completed in-flight memory demand loads which coincides with
+> execution units starvation; in addition to (2) cases where stores could
+> impose backpressure on the pipeline when many of them get buffered at
+> the same time (less common out of the two)",
+> +        "ScaleUnit": "100%",
+> +        "Unit": "cpu_atom"
+> +    },
+>
+> I didn't check the tma_info_inst_mix_iparith which Thomas mentioned
+> above yet. But I suspect it should be the same issue.
+>
+> The perf test may have to error out when the "Cannot resolve IDs"
+> message is detected.
 
-This would be useful part of commit msg.
+Agreed. I think I see the issue. We're adding the extra/Valkyrie
+metrics to both core types during conversion, a quick fix is to just
+skip doing this for atom. I'll cut a v4 with this.
 
-Best regards,
-Krzysztof
+Thanks,
+Ian
