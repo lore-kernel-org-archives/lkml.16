@@ -1,521 +1,179 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BBD21B1A3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794709; cv=none; b=In+cQlp76SOSTttqAsV+Ov1Uh3YoZ9LRChaONvev6e3t5K3lgdyB47jd8c0wLjmfTtdlomJsx+yL3h/qoNmNFTO3pm1UX1vYadcnHsydw6f4VSCYQgVyXU6x/UUHN1crQUYU1XAPjCBWP/Q5SshezntUqMehwX9Pe/n2xh/NxuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794709; c=relaxed/simple;
-	bh=BvL0PMNM+64aO6eWpOFHEfCG3Iup0dFwRGf6fl0NDRo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qe1XA7daKqzaKFbQPftntmHSE4MVo6opswpW8eWuKsVgUYhnQlfb0MBEguctomuv+IN463y3pu8i2wOdI903vPjxxrdW+i6UXDb466+tm+bIltJHH6nlUJktep3sBBhuGV9359jf+oqtl5fkhXS5BWGLE/EXGeF+mYnRcyZniJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDGDdV03; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DEC192D83;
+	Wed,  5 Feb 2025 22:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738794813; cv=fail; b=HIZawR0DWZE7xzciAi/Iee2j/Gt3iu6WkSnOvZRVPjdR1hmmebIuLIy+RcsqhDDhFgNQ3gLs0YmYXOpIdVcmqzqtIobwUoVkZJsNgc1zkIayjMSjEvW9Mk/4YK0AblUP5DBsoRxbzuwZLv7scXeBl9ixo4K8U2pt7dcTxKDLfss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738794813; c=relaxed/simple;
+	bh=etUTZfhdjZdSPD4ghAeTccrrK/6YTpY+DY6piuUFjsM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rv3ZOgJ01QMx+MU40CvwteV0hbdOZiSVehu3pBfzIpTlxufsOSYgyZdXvxk3obmYnJ81IysVhKEGX0YuelmZCNcbKi39HII3R5AUDmh4lnS7J+UZPsL8DkqA9eaY1bfcV1WxRJ/+aYzOj9h/pRwjCmw7uwFY3Ulw+KC8ft5SPZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=HTdtcuyg; arc=fail smtp.client-ip=40.107.223.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDGDdV03"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6f973c0808dso3216827b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 14:31:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738794706; x=1739399506; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+B9cE+XlZ6IAhrXTdMxWRlGCV2rcnPNikmawS1AsuFw=;
-        b=NDGDdV03bBZqAlx9oSkwvqUwIKefN6fdw+YKSmmFABifXTNDDFvPtipO1i1YZr7zhm
-         MSk1iILd2Hqg+T6KG9yn3syTqYFiul4gWW12tVqKPfFuK/xsq+csRq0OOapT7bD+B6qB
-         /+G2L9Hdw4YhN5ekTVEdPZZ7yMoNLR7x/zOL8z1qZSH8OcCpeoQgX5DQuzgydDf2ZVvS
-         BW8evRc9hMWEeSpAsM0nRAMyXy8pDQIkcM4sCjrImTCm9BWyZnPsdk8+DnubQqGcqw7W
-         VgHNv4j4MGBqQe0oElLtn/mepEroNczNJHyE3UQRl7HbHrKkCifBbtX0lzrASf8WWKtd
-         hoxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738794706; x=1739399506;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+B9cE+XlZ6IAhrXTdMxWRlGCV2rcnPNikmawS1AsuFw=;
-        b=Q4aY8gueDV31f5dK7Z/P3WNoQNmzlOb8213Jr692Ve/mO+pwNTMfFAKpKtaPhbAvxW
-         uKk1GWEkudtkAJE1ClSpXPVZe2NdRna1z8cqF2NnJ8Ban1o5P+Gu07rrle6RZDFTn3df
-         cn20OWHuUQmBTJlJA+VBatqkefTpl1tM3/7AC7w+x0ZKka4afvZDjTYWRuMlTITMjQkZ
-         myIYiGXJmvD1hGnv/6gRLjLHYXJZrprTOA4+Y3MNGHDO5YP4d02r4Kl5mCU6+lC/8RSX
-         +2veUWkezfn/d+OANvcN8oiTU2aYmV4/920CicDZCw1FookZ/3obKvfdMpw5BaS4A15R
-         fzQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwvwPgE4qNqU1r02FDFZm710Mm5WzPZmIKqlT9qCCB0g9hIE1b62mo1xJVnfu2h5WFoxylFh6A3zJUApI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGNrQagNM2ME7TuCbqbqrO2cKkOy6sH5e08JvCYpBw/sER6bD8
-	ONHOPV6xKZkrDhTqdrOhy0rVre2O7xSs+HdEkWoUiB8Pu1w5O0PL
-X-Gm-Gg: ASbGncuMUkdVEtUBkhTGhtJNuELP7M9v7+kqUGWju+bBa3SzAvflM3oofdnOL2wB2BN
-	asOhbfm0Jc8kqAZcaUoTY5tW9yJVVrxMlIZakibYB5mEpSOUqrD9q4u43uzw38ui1ZPIjZGvpaR
-	mwrYLOF7dz8K0nWuue5f9te1sBWdmbdy0LpVlA8+dVrNmWRo+MxdtAC5AemnK5Sv5tZ3IBvy/TK
-	eLqqG1lLyiS1EnZ6F9rMfgs99yzf81chrTFZuUQG346KU1115mYpTmAVykO+1xoXEO3CJ4hc5DL
-	Kd3FBDIa6JxZVTleNPYQ
-X-Google-Smtp-Source: AGHT+IG27HSq2Tr+8GZa1o+uZXkw4ehi5jHjqXnKHZ0EH/8Pkxjgby/mMGdRpCBbh+ddEQSiN9Kjsg==
-X-Received: by 2002:a05:690c:6910:b0:6f9:4bb6:eb4e with SMTP id 00721157ae682-6f989f4a07emr44422307b3.31.1738794706360;
-        Wed, 05 Feb 2025 14:31:46 -0800 (PST)
-Received: from DESKTOP-GL3U3CJ ([149.22.94.73])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f97ad9afadsm8734877b3.99.2025.02.05.14.31.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 14:31:46 -0800 (PST)
-From: Ian To <onlyian4981@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ian To <onlyian4981@gmail.com>
-Subject: [PATCH 3/3] staging: rtl8723bs: don't end lines with (
-Date: Wed,  5 Feb 2025 14:31:37 -0800
-Message-ID: <1cc81795a4fcaaa52e19000ebca7575cfeb11395.1738794631.git.onlyian4981@gmail.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <cover.1738794631.git.onlyian4981@gmail.com>
-References: <cover.1738794631.git.onlyian4981@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="HTdtcuyg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u4c77iYd8IjqgCUfp8Yus9hegTV1urSFreIB+n9Ot4fVHPbL7g+IQOUjHiAuCg6UpXhsnIcvUV7oTZC2BTP5K+rtdzhnaWZMdDf4pY2K37UqTVeldIO49E4tfhRFpPblXZheQ/iGIEmwiN+Itq4foRJ2J1TGQxZ2qrmG1SPMaq9uvkXY0VhfF/tvTI3eExJ2ZMAHn7zONCugUAU58kZ7GAdE2s0BvPLK5jVHDUA2bzJUk1tFUca604+kLjtOs+Srm9DCyyJPfk4UOqiYkbXQ2LG0FSuhleAIo9T2DFexG1AsC8124WBiA91AM0I83FpM2Anna2xUiRztXVXKW8Elcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zy8uWZdBqGC2At119VwnopHj+ygWcWcoJ9ZHUpNo/gM=;
+ b=v0WJ/knriHVLnJpmKdOq6Z11jcT7QijsRFVtmsPbsQhz5JvAo8BD5RiNIgGOw0nGymj4G4lI8l+1NF1im0gZmw8mGqYEDgBv6UalFWPLIPD8wd6mRzH8YSuLjZR52uudOeQZ2BOMeqRUjLFhdY+Oj63W3E+IGMNSTjMemBovqKuZZmo0/gBfXScsdFuoWSytjgRgc02HO5D+aKDDjnWjZ4218RB671igzTZ3cw4gyPSkG9ZjiUCE6NytosFlFmEFprCSLym07F7SEnlK9gDCBPJt5B5LKCcy8F5YopCR72uxk5xg+Cm/V6y/DxjX2Uzw1CB49tFehPlzvtMdzWRA/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zy8uWZdBqGC2At119VwnopHj+ygWcWcoJ9ZHUpNo/gM=;
+ b=HTdtcuygKj0XWYxysZBwoYx3z4k3JmXrvLyv6hEB0yTkxiG5zD7eKP8PlofO393UK+vmeGGmxLGBMfgwiEpThFODH7tcwcVch3PcVLQL6ED7k4O0FNKzDIvtuM1c8JFRP/Tn7bn7j8GmQDQHV1oTLrcZOtRxcFp5F5nYAVX7zbYYJ3v+9PN7MLG6Elkj+E22QZk10VTKG5MhhXNNnDyuHcZ40icUDqqWCWRlJejLXsG+e3iWX5zx2aYEXiqJlusG+LLKd6VWerPvTCkkkNeadL0O+TayCvwtMf0rIqd7zAoOnCNO58UIAbWyvNkmQsydxXvuDvGpDJuXSEJau4Pw7g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SA1PR12MB7272.namprd12.prod.outlook.com (2603:10b6:806:2b6::7)
+ by DM6PR12MB4450.namprd12.prod.outlook.com (2603:10b6:5:28e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Wed, 5 Feb
+ 2025 22:33:28 +0000
+Received: from SA1PR12MB7272.namprd12.prod.outlook.com
+ ([fe80::a970:b87e:819a:1868]) by SA1PR12MB7272.namprd12.prod.outlook.com
+ ([fe80::a970:b87e:819a:1868%7]) with mapi id 15.20.8398.018; Wed, 5 Feb 2025
+ 22:33:28 +0000
+Message-ID: <d51bab17-b3d4-410b-be2a-e1d9150fa57d@nvidia.com>
+Date: Thu, 6 Feb 2025 09:33:22 +1100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
+To: Shakeel Butt <shakeel.butt@linux.dev>, Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, linux-mm@kvack.org, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+Content-Language: en-US
+From: Balbir Singh <balbirs@nvidia.com>
+In-Reply-To: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0218.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::13) To SA1PR12MB7272.namprd12.prod.outlook.com
+ (2603:10b6:806:2b6::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR12MB7272:EE_|DM6PR12MB4450:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91f38158-aed7-4466-db72-08dd46351c5a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TDFqemF0RTlueDBpZ2FGd1BhQ3VoUERtVWlrSWRrUkg2dE05V2d3NTA0eGYv?=
+ =?utf-8?B?QzlieGtkYldWNS80aGlEbUcrWE9hL0xRZmxGS2lONVVIc2JQdnpOb1VkcU1w?=
+ =?utf-8?B?TzN5T3hCNjZCYnBhb0ZsRlVRczhNNnkwdjRCZzhlOWM0OUluNUxmOTZyZ2pT?=
+ =?utf-8?B?dWJ5VVZ1UWZVSDgvQTR4OXVDdFVZVkR0Z0kyZHdNcklnWlhHMmswQ3BBeXJz?=
+ =?utf-8?B?QmRhN1RtOWx6bnVzTzRMMFVTZ052T0dzLzNyc3pWemZwREIyU2M4Mms1aU4r?=
+ =?utf-8?B?MytGS3pVV0dXNVhvbnZ3R3pLalJ0RG5aVHoySGVXWW83aTNwSTM3SzZWblFW?=
+ =?utf-8?B?NmtvTjNrbFhUTURwOFJhbWlyM0dLdnRPRE5mNytSNkJtdGRuQk56dllWaEhW?=
+ =?utf-8?B?bXQzVEtlbnd4ZWZWa2JjWGNVcFVFUE9XUkh6b245eVIwMnA0TlVTZnA5bnNC?=
+ =?utf-8?B?S1RpR3VaOVVoOVB1d0tJMmpBNEphY3pLcitJMlRyRWJFNGh0dzcwM1ZaZ2RU?=
+ =?utf-8?B?SFQ0UTBuN2ppbFdWOTluUXFKZTNHQUcwYWlGWmRFVmpqbHJkWDFFYkR2bkZI?=
+ =?utf-8?B?NnF1bGw0VjQwZ0NVc2ZJU3F4ZXovNXJkWFV3NnJvWVovaFpJd3NqcFBtMTZO?=
+ =?utf-8?B?dWpObXVRZmZDTmRSUE90a0NVbGJ5Nit3eDFRTUlQY3RlaHMzRnl4Y1lIcnhi?=
+ =?utf-8?B?ZWNOcE9JRkN3NWxaTkxXL3d4R0w2TXNSdGYyM0FhTWhmZytscXdOQldVTFE5?=
+ =?utf-8?B?WHFqSmt3VzRCSTNGTG4wS1Btbk94YkxMbGZWZ2FnQ0w1bktxTS9Qbm4yNXUr?=
+ =?utf-8?B?alJIVW9DaFlXVkFEWHZrcVFRYmlEc2Yxa3pwZVI3Qkk4U1hNeWg1cHd6R256?=
+ =?utf-8?B?aDloRkc4ZzczUXF6L0o4N0YxZEcvWHlPWGpzKzErclU5YmNicTlScjNxTUth?=
+ =?utf-8?B?KzlTYTN2YksrT2IyUnJWODJFZEI2YkhNZDNseW5yZjE0U3lUZDhJTGJEWmha?=
+ =?utf-8?B?UkdXaWxJMUZ6cTBoK3JoNmZWRVp5MkxPMXJ6R1puMXNzSS9aNUU3ZUZFWCtt?=
+ =?utf-8?B?Q0NBZXlXUDFHSzFFeXRIaXlDQVozdE1QWjJaQ29xN3NiRFVVc04vTWlrdjBN?=
+ =?utf-8?B?UVRKdENidlpaQzFyZW5ZYU1CVHc0azk1Mjl6eklxc2pIZEJ1SnhEVDVEQmdY?=
+ =?utf-8?B?UzhLV2J6dEQwNHUrNURjNDcrYkUza3BQemxJamU3UG9UVEhiYy9OS0JFZUhD?=
+ =?utf-8?B?Q2Z5K3F4d2dUSGdQOFJ3bWRxS1c5UkhOL0l5ZS9CZTNXaHZDUHFiVTBGZy9I?=
+ =?utf-8?B?cUhkTk4rcEwyYUh3V1NsbE9LWlcvenJRejlJWkl2bENLR3JQcFdEeDQ3cnRa?=
+ =?utf-8?B?eFh1dG5wS0NJMC81YVFSQkFYVmRVZ0xBSHkzcVJEci9oMWxTUmEyai8rVU1O?=
+ =?utf-8?B?SHZDbDNtTkNjWXRjTUpPWlFjL05uNndiSU9veTNaeUtBb1hCVGxWQmZtWlpv?=
+ =?utf-8?B?Mk5leVM4M0FLU3Q3RlNaN1hnRWowYk9WVVZFVmtFc2ZLUHJLVDhSN0VsSGw2?=
+ =?utf-8?B?cTc3R0EzSDkyU2MxcDI5Q3JzbExENWh3bGVTbGFORmhiUFJ0dG1NNG1iTkE3?=
+ =?utf-8?B?ci9zbERnT3YwMEVtNXFXL0kzQnpOWUNDQ2lUbWY5RWg4KzNISVQzTjYybWE3?=
+ =?utf-8?B?YTdmelR2VzFBMzFKdTJZbnplUEx4MVdnNmJpWkJvWktoRGNkQUhFajV5U1pV?=
+ =?utf-8?B?Z1lScXFOWEtjL2NJWFpaZW0xejh2V25zUEpKakwwVUdLM3hmV0JwbEJSeGhU?=
+ =?utf-8?B?bGNpVys2c1R3Vm1UWURKTDJHdlY3T09ZTjNYdE1mR0h0ZmVwL1NwQU1meG1s?=
+ =?utf-8?Q?Xf+pUor3QnyKq?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7272.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NTZsL1lFTmdUR09uSmF0ZmFMd2tyYjRlcXE4dXdxamtKNEFBekZEaVpCSmxE?=
+ =?utf-8?B?M1BmSFd3R3pFaFdCU1B4aFpXN0E2UWNmd0Z3TGk5RDFFbG9wa0ZuV1RrMFpG?=
+ =?utf-8?B?Wjh3alYxK1hGdTV0MDI0cjhlR2NTOFdqbVRPaE96SmkwOEFCVVUyWjZlUDU2?=
+ =?utf-8?B?WVgyR3RQTml6NmFxaVBUcFUvQVBiZDMzR1RCSVNYSWNmbFVyd01kRWxUMDNI?=
+ =?utf-8?B?djdhaTJ6SitUZkNlVGhiN3VMbXJRYXBCdC85amF6WkdiYUQ2cVh4WEtyUUpx?=
+ =?utf-8?B?T1BpYjhGVW9SZG5SVGxnUUhoWG5ldTlpNENTVVNTTUNqYlZkdUVmVS8wbzVp?=
+ =?utf-8?B?NGR6eTNMcmZ4ZWNHZGRmTWFrejJOTmg1dVAvZmdtenBJcnVWWG5OdFNya3hU?=
+ =?utf-8?B?T3FabWpmSG5jb0hMQjBHVlR6Q3h1RDVGeUNFR0o2clZsUzZ2c2c0eHJDVUlB?=
+ =?utf-8?B?cWNzQ05CZFhEVHRQWEdmaDJ3M1hOOEQ3SFBQRUlyc2JVbHYzUWUvNVZ1L1l4?=
+ =?utf-8?B?NEErV2FuTXFSSEE5dmdubjFmTk1FZnUvekQ4YUQ5OCtkTVJPRWVSTytkaFpC?=
+ =?utf-8?B?M1dnWUpKakFZNWlWRFViZTdBeUxpUEUzQUo4RUk3cktpS3pRNDBabG5UaVlk?=
+ =?utf-8?B?MG1qeTNXNlI5MjF4cXhpT1NYWndkYnZhYUVOck5VQnlLbzFnaGNwTlRqdlh2?=
+ =?utf-8?B?SzFvYjZGSitxOWgva0YxbEdwZDdXUVdEZXB1MllUR3ZETE4vQmJJNFcrTHNU?=
+ =?utf-8?B?Sk9scEVtZEcvbzM2T0l0NmxrS2p3L3oxOUFURnJjVCtlR3RTVkhHTCsxNWJp?=
+ =?utf-8?B?KytVQnNRZG1oU1daajlZUEJlTHplWXFmU0FUNXRQYlhlb011UFdLYkpJM3dl?=
+ =?utf-8?B?aC9GMFFrMjk2MjA0SEcvVk5oSzU3V3VVYUpLSFNRSjJRMU1xS2UrcWltK1pG?=
+ =?utf-8?B?anByci9HZEV4eEhNYS9OM1pFMEsvRlFWTDRMZCtId1lpeXFHdUJ5Sm02aFJE?=
+ =?utf-8?B?R2dZRzA5b1kxNlZodkFobE4zVGQ1U24walg3dXhiTzVZeURsV1g4bHVkOFFq?=
+ =?utf-8?B?SzlYWkxwR01kYTVESEhZMUVrK2NZZlprSUtDWFJ1dGdaNkEzbzYwVkxSeENY?=
+ =?utf-8?B?Smt2Rkx3OVV3Rm9FUkI2RWx0Nzl1Y2RlK1lxKzVab2VDNElxWkJwVzdVbExp?=
+ =?utf-8?B?ak9GM2VOcHlGaUY3V2JvbDkraTZXejdFWDBQd3lIWWZlazBrQUtPaVhZRGE4?=
+ =?utf-8?B?NlZGQ3lwWm94NWVBcGFIcDQwQzlJV0ZjajdITGcwa0liTTRLVXNub0VCRmEv?=
+ =?utf-8?B?M1BrVVBnUmpIT1A2b0lLZjBxSlV2MEZZUVczTDhFRW45QkI3ZnRKdWdwWGt5?=
+ =?utf-8?B?UHhRVEg2KytIRFJ1N3hDY0hjVGVwWHhRQ0hVdktkVlhFMTE2TWdMQ3NmRVl2?=
+ =?utf-8?B?Y1oyTjhDVXJCQlN3QU9DZFh0dnNKeVl4aitxcmhEbFFLbGMwR01HZEJkc3A2?=
+ =?utf-8?B?QWtNRitpZWhPbVZjTFNNbkdERnFuYlR2QmlISDVNQlF4cENqRktheEFtSVB5?=
+ =?utf-8?B?cHN2MHF3eHFKYTRFVGtkSVd5amwwaXpIOU9Pd1N0bXRUZVU4Z2JHVUowdmxH?=
+ =?utf-8?B?UmVHZ1JpalFHZkhSTU1jenNnSkpNMDhQckk1MWFscys2VlFGRWt5dFpJWlF2?=
+ =?utf-8?B?MG41ZGRQU05Hck1ZVDhCR1FqU1FReGdpVUFydk9HTUxQK0tMYytrVFIyWmZ0?=
+ =?utf-8?B?RGQvcGFRcEZSWmJPMnc2VjYrcktIZjJnMXdBS2gzVm5UQmJZZ0l4MFlWTjA5?=
+ =?utf-8?B?cHlCL0EvbVlYZzN6c3JRWlhwdXlUZzEwRmQvdWw1UlBjbUpLdmxIL2VWWmxx?=
+ =?utf-8?B?dzhFTSt3WVJIb3Z4R0FsS0FwTDZqL0pJYUk5MnBlK0xla0pyL2ZtYUhnc0kv?=
+ =?utf-8?B?eHB2VzAwWnQyMlR0cmJ3ZDEwOW0yNmZ4RUJzN0gvcnJENy92a3NmcUN4ZU12?=
+ =?utf-8?B?T1Uwd1BVbDhYMkg1b3dTT09ZYUxDWkwxSEk5UEtUcE84Ukx5SXlFNHBxRnNx?=
+ =?utf-8?B?SWNxVng5VnpUbFJ3T21BYTd2NDNkYS9TUUUraHpMRnV0TVZObGFFQlFhcnd4?=
+ =?utf-8?Q?XDTHzr1+0Eb/5AJr/k12nFyh3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91f38158-aed7-4466-db72-08dd46351c5a
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7272.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 22:33:28.0899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UL6kz6QRad8s4yw5KsSM8BUexRmW3YNTnkFcfCU5N2SXp/iLlAy7w5xSdcU2A70e+HdHQH4qbRaObteT8o8rIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4450
 
-Prevented lines from ending with ( to adhere to coding style.
+On 2/6/25 09:20, Shakeel Butt wrote:
+> Memcg-v1 exposes hierarchical_[memory|memsw]_limit counters in its
+> memory.stat file which applications can use to get their effective limit
+> which is the minimum of limits of itself and all of its ancestors. This
+> is pretty useful in environments where cgroup namespace is used and the
+> application does not have access to the full view of the cgroup
+> hierarchy. Let's expose effective limits for memcg v2 as well.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-Signed-off-by: Ian To <onlyian4981@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_ap.c | 229 +++++++-----------------
- 1 file changed, 66 insertions(+), 163 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index 5907ec128d30..9912c6e18359 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -480,14 +480,12 @@ void update_sta_info_apmode(struct adapter *padapter, struct sta_info *psta)
- 		/* check if sta supports rx ampdu */
- 		phtpriv_sta->ampdu_enable = phtpriv_ap->ampdu_enable;
- 
--		phtpriv_sta->rx_ampdu_min_spacing = (
--			phtpriv_sta->ht_cap.ampdu_params_info & IEEE80211_HT_CAP_AMPDU_DENSITY
--		) >> 2;
-+		phtpriv_sta->rx_ampdu_min_spacing = (phtpriv_sta->ht_cap.ampdu_params_info &
-+						     IEEE80211_HT_CAP_AMPDU_DENSITY) >> 2;
- 
- 		/*  bwmode */
--		if ((
--			phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info
--		) & cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH))
-+		if ((phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info) &
-+		    cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH))
- 			psta->bw_mode = CHANNEL_WIDTH_40;
- 		else
- 			psta->bw_mode = CHANNEL_WIDTH_20;
-@@ -498,15 +496,13 @@ void update_sta_info_apmode(struct adapter *padapter, struct sta_info *psta)
- 		phtpriv_sta->ch_offset = pmlmeext->cur_ch_offset;
- 
- 		/* check if sta support s Short GI 20M */
--		if ((
--			phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info
--		) & cpu_to_le16(IEEE80211_HT_CAP_SGI_20))
-+		if ((phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info) &
-+		    cpu_to_le16(IEEE80211_HT_CAP_SGI_20))
- 			phtpriv_sta->sgi_20m = true;
- 
- 		/* check if sta support s Short GI 40M */
--		if ((
--			phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info
--		) & cpu_to_le16(IEEE80211_HT_CAP_SGI_40)) {
-+		if ((phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info) &
-+		    cpu_to_le16(IEEE80211_HT_CAP_SGI_40)) {
- 			if (psta->bw_mode == CHANNEL_WIDTH_40) /* according to psta->bw_mode */
- 				phtpriv_sta->sgi_40m = true;
- 			else
-@@ -624,9 +620,8 @@ static void update_hw_ht_param(struct adapter *padapter)
- 	/*  */
- 	/*  Config SM Power Save setting */
- 	/*  */
--	pmlmeinfo->SM_PS = (le16_to_cpu(
--		pmlmeinfo->HT_caps.u.HT_cap_element.HT_caps_info
--	) & 0x0C) >> 2;
-+	pmlmeinfo->SM_PS = (le16_to_cpu(pmlmeinfo->HT_caps.u.HT_cap_element.HT_caps_info) &
-+			    0x0C) >> 2;
- 
- 	/*  */
- 	/*  Config current HT Protection mode. */
-@@ -703,9 +698,7 @@ void start_bss_network(struct adapter *padapter)
- 	rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acparm));
- 
- 	/* Set Security */
--	val8 = (
--		psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X
--	) ? 0xcc : 0xcf;
-+	val8 = (psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) ? 0xcc : 0xcf;
- 	rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
- 
- 	/* Beacon Control related register */
-@@ -785,10 +778,8 @@ void start_bss_network(struct adapter *padapter)
- 	rtw_hal_set_hwreg(padapter, HW_VAR_BASIC_RATE, pnetwork->supported_rates);
- 
- 	/* update capability after cur_wireless_mode updated */
--	update_capinfo(
--		padapter,
--		rtw_get_capability((struct wlan_bssid_ex *)pnetwork)
--	);
-+	update_capinfo(padapter,
-+		       rtw_get_capability((struct wlan_bssid_ex *)pnetwork));
- 
- 	if (pmlmeext->bstart_bss) {
- 		update_beacon(padapter, WLAN_EID_TIM, NULL, true);
-@@ -854,12 +845,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	cap = get_unaligned_le16(ie);
- 
- 	/* SSID */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_SSID,
--		&ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_SSID, &ie_len,
-+		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && ie_len > 0) {
- 		memset(&pbss_network->ssid, 0, sizeof(struct ndis_802_11_ssid));
- 		memcpy(pbss_network->ssid.ssid, (p + 2), ie_len);
-@@ -869,11 +856,9 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	/* channel */
- 	channel = 0;
- 	pbss_network->configuration.length = 0;
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_DS_PARAMS, &ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
-+		       WLAN_EID_DS_PARAMS, &ie_len,
-+		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && ie_len > 0)
- 		channel = *(p + 2);
- 
-@@ -881,24 +866,18 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 
- 	memset(supportRate, 0, NDIS_802_11_LENGTH_RATES_EX);
- 	/*  get supported rates */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_SUPP_RATES,
--		&ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
-+		       WLAN_EID_SUPP_RATES, &ie_len,
-+		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p) {
- 		memcpy(supportRate, p + 2, ie_len);
- 		supportRateNum = ie_len;
- 	}
- 
- 	/* get ext_supported rates */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_EXT_SUPP_RATES,
--		&ie_len,
--		pbss_network->ie_length - _BEACON_IE_OFFSET_
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
-+		       WLAN_EID_EXT_SUPP_RATES, &ie_len,
-+		       pbss_network->ie_length - _BEACON_IE_OFFSET_);
- 	if (p) {
- 		memcpy(supportRate + supportRateNum, p + 2, ie_len);
- 		supportRateNum += ie_len;
-@@ -909,12 +888,9 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	rtw_set_supported_rate(pbss_network->supported_rates, network_type);
- 
- 	/* parsing ERP_IE */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_ERP_INFO,
--		&ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
-+		       WLAN_EID_ERP_INFO, &ie_len,
-+		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && ie_len > 0)
- 		ERP_IE_handler(padapter, (struct ndis_80211_var_ie *)p);
- 
-@@ -930,20 +906,12 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	group_cipher = 0; pairwise_cipher = 0;
- 	psecuritypriv->wpa2_group_cipher = _NO_PRIVACY_;
- 	psecuritypriv->wpa2_pairwise_cipher = _NO_PRIVACY_;
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_RSN,
--		&ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
-+		       WLAN_EID_RSN, &ie_len,
-+		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && ie_len > 0) {
--		if (rtw_parse_wpa2_ie(
--			p,
--			ie_len + 2,
--			&group_cipher,
--			&pairwise_cipher,
--			NULL
--		) == _SUCCESS) {
-+		if (rtw_parse_wpa2_ie(p, ie_len + 2, &group_cipher, &pairwise_cipher,
-+				      NULL) == _SUCCESS) {
- 			psecuritypriv->dot11AuthAlgrthm = dot11AuthAlgrthm_8021X;
- 
- 			psecuritypriv->dot8021xalg = 1;/* psk,  todo:802.1x */
-@@ -960,20 +928,11 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	psecuritypriv->wpa_group_cipher = _NO_PRIVACY_;
- 	psecuritypriv->wpa_pairwise_cipher = _NO_PRIVACY_;
- 	for (p = ie + _BEACON_IE_OFFSET_; ; p += (ie_len + 2)) {
--		p = rtw_get_ie(
--			p,
--			WLAN_EID_VENDOR_SPECIFIC,
--			&ie_len,
--			(pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2))
--		);
-+		p = rtw_get_ie(p, WLAN_EID_VENDOR_SPECIFIC, &ie_len,
-+			       (pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2)));
- 		if ((p) && (!memcmp(p + 2, OUI1, 4))) {
--			if (rtw_parse_wpa_ie(
--				p,
--				ie_len + 2,
--				&group_cipher,
--				&pairwise_cipher,
--				NULL
--			) == _SUCCESS) {
-+			if (rtw_parse_wpa_ie(p, ie_len + 2, &group_cipher, &pairwise_cipher,
-+					     NULL) == _SUCCESS) {
- 				psecuritypriv->dot11AuthAlgrthm = dot11AuthAlgrthm_8021X;
- 
- 				psecuritypriv->dot8021xalg = 1;/* psk,  todo:802.1x */
-@@ -996,12 +955,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	pmlmepriv->qospriv.qos_option = 0;
- 	if (pregistrypriv->wmm_enable) {
- 		for (p = ie + _BEACON_IE_OFFSET_; ; p += (ie_len + 2)) {
--			p = rtw_get_ie(
--				p,
--				WLAN_EID_VENDOR_SPECIFIC,
--				&ie_len,
--				(pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2))
--			);
-+			p = rtw_get_ie(p, WLAN_EID_VENDOR_SPECIFIC, &ie_len,
-+				       (pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2)));
- 			if ((p) && !memcmp(p + 2, WMM_PARA_IE, 6)) {
- 				pmlmepriv->qospriv.qos_option = 1;
- 
-@@ -1023,12 +978,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	}
- 
- 	/* parsing HT_CAP_IE */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_HT_CAPABILITY,
--		&ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_HT_CAPABILITY,
-+		       &ie_len, (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && ie_len > 0) {
- 		u8 max_rx_ampdu_factor = 0;
- 		struct ieee80211_ht_cap *pht_cap = (struct ieee80211_ht_cap *)(p + 2);
-@@ -1055,9 +1006,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 		if (!TEST_FLAG(pmlmepriv->htpriv.stbc_cap, STBC_HT_ENABLE_RX))
- 			pht_cap->cap_info &= cpu_to_le16(~(IEEE80211_HT_CAP_RX_STBC_3R));
- 
--		pht_cap->ampdu_params_info &= ~(
--			IEEE80211_HT_CAP_AMPDU_FACTOR | IEEE80211_HT_CAP_AMPDU_DENSITY
--		);
-+		pht_cap->ampdu_params_info &= ~(IEEE80211_HT_CAP_AMPDU_FACTOR |
-+						IEEE80211_HT_CAP_AMPDU_DENSITY);
- 
- 		if ((psecuritypriv->wpa_pairwise_cipher & WPA_CIPHER_CCMP) ||
- 		    (psecuritypriv->wpa2_pairwise_cipher & WPA_CIPHER_CCMP)) {
-@@ -1068,14 +1018,9 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 						       0x00);
- 		}
- 
--		rtw_hal_get_def_var(
--			padapter,
--			HW_VAR_MAX_RX_AMPDU_FACTOR,
--			&max_rx_ampdu_factor
--		);
--		pht_cap->ampdu_params_info |= (
--			IEEE80211_HT_CAP_AMPDU_FACTOR & max_rx_ampdu_factor
--		); /* set  Max Rx AMPDU size  to 64K */
-+		rtw_hal_get_def_var(padapter, HW_VAR_MAX_RX_AMPDU_FACTOR, &max_rx_ampdu_factor);
-+		pht_cap->ampdu_params_info |= (IEEE80211_HT_CAP_AMPDU_FACTOR &
-+					       max_rx_ampdu_factor); /* set  Max Rx AMPDU size  to 64K */
- 
- 		pht_cap->mcs.rx_mask[0] = 0xff;
- 		pht_cap->mcs.rx_mask[1] = 0x0;
-@@ -1084,12 +1029,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	}
- 
- 	/* parsing HT_INFO_IE */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_HT_OPERATION,
--		&ie_len,
--		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_HT_OPERATION, &ie_len,
-+		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && ie_len > 0)
- 		pHT_info_ie = p;
- 
-@@ -1131,9 +1072,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 		HT_info_handler(padapter, (struct ndis_80211_var_ie *)pHT_info_ie);
- 	}
- 
--	pbss_network->length = get_wlan_bssid_ex_sz(
--		(struct wlan_bssid_ex  *)pbss_network
--	);
-+	pbss_network->length = get_wlan_bssid_ex_sz((struct wlan_bssid_ex  *)pbss_network);
- 
- 	/* issue beacon to start bss network */
- 	/* start_bss_network(padapter, (u8 *)pbss_network); */
-@@ -1240,10 +1179,8 @@ void rtw_acl_remove_sta(struct adapter *padapter, u8 *addr)
- 	list_for_each_safe(plist, tmp, phead) {
- 		paclnode = list_entry(plist, struct rtw_wlan_acl_node, list);
- 
--		if (
--			!memcmp(paclnode->addr, addr, ETH_ALEN) ||
--			is_broadcast_ether_addr(addr)
--		) {
-+		if (!memcmp(paclnode->addr, addr, ETH_ALEN) ||
-+		    is_broadcast_ether_addr(addr)) {
- 			if (paclnode->valid) {
- 				paclnode->valid = false;
- 
-@@ -1356,13 +1293,7 @@ int rtw_ap_set_group_key(struct adapter *padapter, u8 *key, u8 alg, int keyid)
- 	return rtw_ap_set_key(padapter, key, alg, keyid, 1);
- }
- 
--int rtw_ap_set_wep_key(
--	struct adapter *padapter,
--	u8 *key,
--	u8 keylen,
--	int keyid,
--	u8 set_tx
--)
-+int rtw_ap_set_wep_key(struct adapter *padapter, u8 *key, u8 keylen, int keyid, u8 set_tx)
- {
- 	u8 alg;
- 
-@@ -1397,21 +1328,16 @@ static void update_bcn_erpinfo_ie(struct adapter *padapter)
- 		return;
- 
- 	/* parsing ERP_IE */
--	p = rtw_get_ie(
--		ie + _BEACON_IE_OFFSET_,
--		WLAN_EID_ERP_INFO,
--		&len,
--		(pnetwork->ie_length - _BEACON_IE_OFFSET_)
--	);
-+	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_ERP_INFO, &len,
-+		       (pnetwork->ie_length - _BEACON_IE_OFFSET_));
- 	if (p && len > 0) {
- 		struct ndis_80211_var_ie *pIE = (struct ndis_80211_var_ie *)p;
- 
- 		if (pmlmepriv->num_sta_non_erp == 1)
- 			pIE->data[0] |= RTW_ERP_INFO_NON_ERP_PRESENT | RTW_ERP_INFO_USE_PROTECTION;
- 		else
--			pIE->data[0] &= ~(
--				RTW_ERP_INFO_NON_ERP_PRESENT | RTW_ERP_INFO_USE_PROTECTION
--			);
-+			pIE->data[0] &= ~(RTW_ERP_INFO_NON_ERP_PRESENT |
-+					  RTW_ERP_INFO_USE_PROTECTION);
- 
- 		if (pmlmepriv->num_sta_no_short_preamble > 0)
- 			pIE->data[0] |= RTW_ERP_INFO_BARKER_PREAMBLE_MODE;
-@@ -1457,12 +1383,8 @@ static void update_bcn_wps_ie(struct adapter *padapter)
- 	unsigned char *ie = pnetwork->ies;
- 	u32 ielen = pnetwork->ie_length;
- 
--	pwps_ie = rtw_get_wps_ie(
--		ie + _FIXED_IE_LENGTH_,
--		ielen - _FIXED_IE_LENGTH_,
--		NULL,
--		&wps_ielen
--	);
-+	pwps_ie = rtw_get_wps_ie(ie + _FIXED_IE_LENGTH_, ielen - _FIXED_IE_LENGTH_, NULL,
-+				 &wps_ielen);
- 
- 	if (!pwps_ie || wps_ielen == 0)
- 		return;
-@@ -1647,10 +1569,9 @@ static int rtw_ht_operation_update(struct adapter *padapter)
- 	if (pmlmepriv->num_sta_no_ht ||
- 	    (pmlmepriv->ht_op_mode & IEEE80211_HT_OP_MODE_NON_GF_STA_PRSNT))
- 		new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_NONHT_MIXED;
--	else if (
--		(le16_to_cpu(phtpriv_ap->ht_cap.cap_info) & IEEE80211_HT_CAP_SUP_WIDTH)
--		&& pmlmepriv->num_sta_ht_20mhz)
--		new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_20MHZ;
-+	else if ((le16_to_cpu(phtpriv_ap->ht_cap.cap_info) & IEEE80211_HT_CAP_SUP_WIDTH) &&
-+		 pmlmepriv->num_sta_ht_20mhz)
-+		 new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_20MHZ;
- 	else if (pmlmepriv->olbc_ht)
- 		new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_NONMEMBER;
- 	else
-@@ -1870,12 +1791,7 @@ u8 bss_cap_update_on_sta_leave(struct adapter *padapter, struct sta_info *psta)
- 	return beacon_updated;
- }
- 
--u8 ap_free_sta(
--	struct adapter *padapter,
--	struct sta_info *psta,
--	bool active,
--	u16 reason
--)
-+u8 ap_free_sta(struct adapter *padapter, struct sta_info *psta, bool active, u16 reason)
- {
- 	u8 beacon_updated = false;
- 
-@@ -2004,25 +1920,16 @@ void rtw_ap_restore_network(struct adapter *padapter)
- 
- 	rtw_setopmode_cmd(padapter, Ndis802_11APMode, false);
- 
--	set_channel_bwmode(
--		padapter,
--		pmlmeext->cur_channel,
--		pmlmeext->cur_ch_offset,
--		pmlmeext->cur_bwmode
--	);
-+	set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset,
-+			   pmlmeext->cur_bwmode);
- 
- 	start_bss_network(padapter);
- 
- 	if ((padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
- 	    (padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
- 		/* restore group key, WEP keys is restored in ips_leave() */
--		rtw_set_key(
--			padapter,
--			psecuritypriv,
--			psecuritypriv->dot118021XGrpKeyid,
--			0,
--			false
--		);
-+		rtw_set_key(padapter, psecuritypriv, psecuritypriv->dot118021XGrpKeyid,
-+			    0, false);
- 	}
- 
- 	spin_lock_bh(&pstapriv->asoc_list_lock);
-@@ -2123,11 +2030,7 @@ void stop_ap_mode(struct adapter *padapter)
- 	pmlmeext->bstart_bss = false;
- 
- 	/* reset and init security priv , this can refine with rtw_reset_securitypriv */
--	memset(
--		(unsigned char *)&padapter->securitypriv,
--		0,
--		sizeof(struct security_priv)
--	);
-+	memset((unsigned char *)&padapter->securitypriv, 0, sizeof(struct security_priv));
- 	padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeOpen;
- 	padapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
- 
--- 
-2.45.3
+Even without namespaces, in a hierarchy the application might be restricted
+in reading the parent cgroup information (read permission removed for example)
 
+Otherwise looks good to me
+
+Reviewed-by: Balbir Singh <balbirs@nvidia.com>
