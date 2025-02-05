@@ -1,266 +1,175 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51821FECBC
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90C521771B;
+	Wed,  5 Feb 2025 22:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794144; cv=none; b=YccMcUoIAGyE471gQHq193qZHpjLNbi5qF/Eoqm81Rwtx42JvcJeqAoV0bE5hd4dKvxvxzoQw1d75EgBVoRc9Ilg9Z+mEE5B08F/aHcR21ITKvwFCz2qQPrYKqYQ67JwKERfbn5It3uF8JAAR+NXhoRJ4aqYTm2IcCnqKYhXK8g=
+	t=1738794148; cv=none; b=Y2LPiR6+hBd3tWWbwkzLOWmcEqewtYX55xAntqdxoD+ErafLE309MmxA5YrDc12xmlCTDiI+rAg2ftoQ9DFN4yAH1DKKjQOBaqf6b91OX25c7B/jrVjqr068RSfRV+hcSxCZtnbXXnsbZ3yuUxvOKwIxc1vV31CKg8b0QDOi5eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794144; c=relaxed/simple;
-	bh=bJFLp0XeWoy0Wbj14E0G32xDLGx8rBdaR0tauL5LNmU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pVlokepGoT+kD4KQNn91BFHqimGlOf63jxbgIItj6w/iSI/HLSo5pMhsndqja491H8H9p4/iFTBH7noGExuRJ85fT2HnHAE6mMpVx2P5zO1LUUVjt+EgUAkna7ok4JjqfuJTU5zkDL0X1hOfhC1RFczHTVT+cNRBZJ7xxmvmS5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce3bbb2b9dso1722225ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 14:22:22 -0800 (PST)
+	s=arc-20240116; t=1738794148; c=relaxed/simple;
+	bh=L5+gFo1PzgCs5Jp92HGhCtO8WHR+/AY/PyDVD8OBrdU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rqLcOqX243kNR5bPp6vwgaLWmRFy8E7BrZDasEzuIxJG6V1C7mBRGXmIzRhFB0xYi/xwTuYTT8lNmp6I3JuIbq8k0mGr7AlH9BHYCSlCdD2xYzTJlf444j5c4POj/YGo6ltLmUV2oCAwGSdbKkhLbCFmmMH1A1j+6kVdunArgQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ih9lYxWZ; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ih9lYxWZ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38daf09d37fso169179f8f.1;
+        Wed, 05 Feb 2025 14:22:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738794145; x=1739398945; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SwjF2roasaF9WKDWEuBN69sTQIF/a3x7vDSFw8cR7Hs=;
+        b=ih9lYxWZ5zk9Jkcmp0Az4W1tVNeRv3VwW3P5fze6qf+80vsg6890MTsR/2IH2ssrFA
+         fKJri5c//5gvCp1Or/Gq9dn2CDPSjrJhjyHV6DM1NCkTvKJHUIqx89+FmGs+ELXfD08t
+         vxX4tK9q5u5tvdpYWC9ToPd1fmsNzgTggJnDqoHZJinoLu5yQ8QNf2mnEqnFTGvCBIvS
+         Q4E4cQgDGcbKtRVq3huT7QAYZpMvmI1XQYDD6GrtDSkqIkfo6ukeAU5OQx3Dst3CFRWO
+         +HU+ClBJr78uqPmH8iOalJYy3HvFQKIF8oCaHhzGD0Am7dWi4LdGKoSpQiLZaXpskobP
+         HHww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738794142; x=1739398942;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=avAw4ndW1Mba+XlAfaMHMADvM10uoCqU4hpvq784fbw=;
-        b=E+MAvyLRCrzale/4Ps0/T56tf54uf8+ApcSN/IRZ8GR/UhSwN7DueFju9iSOhBkkPA
-         6i540lQfETWGZkQjfV1jh5J/d5r1FeIvf0tvuHpftzH/CMlobIyPwb+Ff9b2++4u+cjV
-         NugfZM5njuH61knugKeFtQpsORmTkFnCKsVd4u+rgDDQfieOfQPDF2vyXU7oVEFg8csC
-         2CkxSS0BQk+dK0ofVmXs9041Wll9VeV4g1T+6rMldP45BywKWWj9bBV8SqmskYUO0+Dx
-         4URV/Z6gT1Keecr4inEDGwK7tH5q7+IBlVAG/1WkBLskkhYwgHBpw6SIjLXIoVZmyhe7
-         iezw==
-X-Forwarded-Encrypted: i=1; AJvYcCWz9UNxcq+JJjREK96hh3xHe82BctjVAzInXG2ukhxKnY2a1RenAFYPi5T6a16+cazkTuFknBvtTeC6/o0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxil086DUEk4mZXbQq0bFOJwY+pZpg6KIZnXt9MIZ7ca1DkRZII
-	llpPPIaVZHG0mFQyK3cCiY1NRk4hhN0TVmJEkRE0vsFolAmsPYutKDe1OL05XZSEs3ZFH1YQkJT
-	k1/1phstwrtJTEwFrWih/CEYGJFW6mYedpEsz6Nn44BxU6bC8LllBoIs=
-X-Google-Smtp-Source: AGHT+IGwUqYYLWvK4yfvYFIaFjyq97vE5KTxe7rnR/C7y8lPlKntf43pmuN1Gyx2ysJNWfrr8m+Am/QZgN58vRBT3P6GaLEgjl1i
+        d=1e100.net; s=20230601; t=1738794145; x=1739398945;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SwjF2roasaF9WKDWEuBN69sTQIF/a3x7vDSFw8cR7Hs=;
+        b=DiyVYlYQ/H/BcCgcniRjwwNQpwMke6h8GQRyeT0sVZCk3o83PG2RlDZjVaPk0hAq9A
+         WFgIHV7YBycvZ/4SBfdnHIx1Y9/JvSQx8nf8TEYPt66V2taSZurTFNa4Kbj19l7dtuf5
+         Wymw8lD3ZjQ69VQ3nvY3yIsc8Bwdj0usBVv3UvbuiRuNETMoZfH+G5DIVTrmJRUiAtG1
+         1Ipb+DO/IPSoNwOOo3kVq6JmlCPbSPDypqeUM68o9RyukcPu02P36AYtt878IW7Dxkf9
+         xsHn+tbM3eSirmsfzATWLVClLDKEpHzjjxx/4nKqJhIUl4CFRS6IxoLoxfIv4zwrLM/b
+         x7YA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0SFEkgZqHzwnAmrP2hym1zkYHBDbLUYUj2FDF6tzxNGQsMpGRlwajDolcII1ADUXuPYk=@vger.kernel.org, AJvYcCUmzBclW09QaZW92/31enR+VOFSaP7YtgaO7kwFwB56JlWdUAhfW1i2AT0hnYOyj5bON9VSz5ifkjvUWz3P@vger.kernel.org, AJvYcCV+l3/1JxZ8d0fwmEmzn/lp8SpTQuoySQ1AauH3UQHoN1Hfs1rfyPUwanyVK55QHJBECabmfsuddU6A@vger.kernel.org, AJvYcCVS3jMTAzv/IDR1YPspkT7zU9A8FYMuHGT/zCHmqHjRWVKuKLt69TCvX7Hwt4bOFZ9uDHTkoCVg9uAZHs1bg8NG@vger.kernel.org, AJvYcCXKlx8s5xO5l/JAxw+0fO/K6rH25hLEi+XiHs4oQjYSUx1LAnPQliCbBHIfZ9HzImo4II2IKxAr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy31cLa8lhSrndhzAiqLyUJUa2OafqRNVe4zJuJOy6ppvVUSigj
+	Pbb18d6D5N2Y0cBD+pQnlMB7jz1nOgPp0IXRXDz+TeV/6Mu3OlAU
+X-Gm-Gg: ASbGncvs17tfBsX96eUFsggdsUyUVU5LfcxF5RRhxYypIDiQUheX+QD1vLzQMp53iwP
+	XZjndp1TZ8f9kAbSvobaL9dzvyz1rt6evpdToaodWkrtAdL6arfuQwAc2eH8xR20yKUlLwYOJSJ
+	05j/pRd8KJh+oq4idIY9VIKifzay0IsP/UXpCB/SEXFMwc/vXhV9c7j42LnLA1DUUjAwUb3ckGG
+	yChbqCSaFwAk/zstbK1wZ91kH1rEkcJJd31M7uDqoWu0e6pYZD3oE1ixqnnjOy+hw4D5qT6oJBr
+	h7fhZPgVDhtuVJ8ODCW0fUY=
+X-Google-Smtp-Source: AGHT+IGWIhR1wpIA15Y21sf5pVUB30nHoofpzKsEw372JxakdAjiAFVNteXkr2tTjpZZLcb+sr4t0g==
+X-Received: by 2002:a5d:588a:0:b0:38a:88ac:f115 with SMTP id ffacd0b85a97d-38db492a0e4mr3552492f8f.34.1738794144946;
+        Wed, 05 Feb 2025 14:22:24 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.128.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d9335b6sm35078125e9.2.2025.02.05.14.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 14:22:24 -0800 (PST)
+Message-ID: <76880ee8-d5ce-458d-b165-c11ce1a23c76@gmail.com>
+Date: Wed, 5 Feb 2025 22:22:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3309:b0:3cf:fc11:90ca with SMTP id
- e9e14a558f8ab-3d04f42561emr45209305ab.6.1738794141784; Wed, 05 Feb 2025
- 14:22:21 -0800 (PST)
-Date: Wed, 05 Feb 2025 14:22:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a3e49d.050a0220.19061f.05f0.GAE@google.com>
-Subject: [syzbot] [autofs?] possible deadlock in pipe_write (2)
-From: syzbot <syzbot+25dd3743576b83be4773@syzkaller.appspotmail.com>
-To: autofs@vger.kernel.org, linux-kernel@vger.kernel.org, raven@themaw.net, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC net-next v1 5/5] net: devmem: Implement TX path
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Kaiyuan Zhang <kaiyuanz@google.com>, Willem de Bruijn <willemb@google.com>,
+ Samiullah Khawaja <skhawaja@google.com>, Stanislav Fomichev
+ <sdf@fomichev.me>, Joe Damato <jdamato@fastly.com>, dw@davidwei.uk
+References: <20241221004236.2629280-1-almasrymina@google.com>
+ <20241221004236.2629280-6-almasrymina@google.com>
+ <676dd022d1388_1d346b2947@willemb.c.googlers.com.notmuch>
+ <CAHS8izNzbEi_Dn+hDohF9Go=et7kts-BnmEpq=Znpot7o7B5wA@mail.gmail.com>
+ <6798ee97c73e1_987d9294d6@willemb.c.googlers.com.notmuch>
+ <53192c45-df3c-4a65-9047-bbd59d4aee47@gmail.com>
+ <CAHS8izMcs=3qo1jhZSM499mxHh10-oBL6Fhb2W0eKWhJGax4Bg@mail.gmail.com>
+ <88cb8f03-7976-4846-a74d-e2d234c5cf8d@gmail.com>
+Content-Language: en-US
+In-Reply-To: <88cb8f03-7976-4846-a74d-e2d234c5cf8d@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On 2/5/25 22:16, Pavel Begunkov wrote:
+> On 2/5/25 20:22, Mina Almasry wrote:
+>> On Wed, Feb 5, 2025 at 4:41 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>>
+>>> On 1/28/25 14:49, Willem de Bruijn wrote:
+>>>>>>> +struct net_devmem_dmabuf_binding *
+>>>>>>> +net_devmem_get_sockc_binding(struct sock *sk, struct sockcm_cookie *sockc)
+>>>>>>> +{
+>>>>>>> +     struct net_devmem_dmabuf_binding *binding;
+>>>>>>> +     int err = 0;
+>>>>>>> +
+>>>>>>> +     binding = net_devmem_lookup_dmabuf(sockc->dmabuf_id);
+>>>>>>
+>>>>>> This lookup is from global xarray net_devmem_dmabuf_bindings.
+>>>>>>
+>>>>>> Is there a check that the socket is sending out through the device
+>>>>>> to which this dmabuf was bound with netlink? Should there be?
+>>>>>> (e.g., SO_BINDTODEVICE).
+>>>>>>
+>>>>>
+>>>>> Yes, I think it may be an issue if the user triggers a send from a
+>>>>> different netdevice, because indeed when we bind a dmabuf we bind it
+>>>>> to a specific netdevice.
+>>>>>
+>>>>> One option is as you say to require TX sockets to be bound and to
+>>>>> check that we're bound to the correct netdev. I also wonder if I can
+>>>>> make this work without SO_BINDTODEVICE, by querying the netdev the
+>>>>> sock is currently trying to send out on and doing a check in the
+>>>>> tcp_sendmsg. I'm not sure if this is possible but I'll give it a look.
+>>>>
+>>>> I was a bit quick on mentioning SO_BINDTODEVICE. Agreed that it is
+>>>> vastly preferable to not require that, but infer the device from
+>>>> the connected TCP sock.
+>>>
+>>> I wonder why so? I'd imagine something like SO_BINDTODEVICE is a
+>>> better way to go. The user has to do it anyway, otherwise packets
+>>> might go to a different device and the user would suddenly start
+>>> getting errors with no good way to alleviate them (apart from
+>>> likes of SO_BINDTODEVICE). It's even worse if it works for a while
+>>> but starts to unpredictably fail as time passes. With binding at
+>>> least it'd fail fast if the setup is not done correctly.
+>>>
+>>
+>> I think there may be a misunderstanding. There is nothing preventing
+>> the user from SO_BINDTODEVICE to make sure the socket is bound to the
+> 
+> Right, not arguing otherwise
+> 
+>> ifindex, and the test changes in the latest series actually do this
+>> binding.
+>>
+>> It's just that on TX, we check what device we happen to be going out
+>> over, and fail if we're going out of a different device.
+>>
+>> There are setups where the device will always be correct even without
+>> SO_BINDTODEVICE. Like if the host has only 1 interface or if the
+>> egress IP is only reachable over 1 interface. I don't see much reason
+>> to require the user to SO_BINDTODEVICE in these cases.
+> 
+> That's exactly the problem. People would test their code with one setup
+> where it works just fine, but then there will be a rare user of a
+> library used by some other framework or a lonely server where it starts
+> to fails for no apparent reason while "it worked before and nothing has
+> changed". It's more predictable if enforced.
+> 
+> I don't think we'd care about setup overhead one extra ioctl() here(?),
+> but with this option we'd need to be careful about not racing with
+> rebinding, if it's allowed.
 
-syzbot found the following issue on:
+FWIW, it's surely not a big deal, but it makes a clearer api.
+Hence my curiosity what are the other reasons.
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d2fddf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=25dd3743576b83be4773
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+-- 
+Pavel Begunkov
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7b9951b25c33/disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3814bbc0e86f/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/da44e7be7454/bzImage-69e858e0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+25dd3743576b83be4773@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-syzkaller-09760-g69e858e0b8b2 #0 Not tainted
-------------------------------------------------------
-syz.1.2997/15256 is trying to acquire lock:
-ffff888011f30468 (&pipe->mutex){+.+.}-{4:4}, at: pipe_write+0x1c6/0x1a30 fs/pipe.c:456
-
-but task is already holding lock:
-ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_write fs/autofs/waitq.c:55 [inline]
-ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_notify_daemon+0x71a/0xf70 fs/autofs/waitq.c:164
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&sbi->pipe_mutex){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
-       autofs_write fs/autofs/waitq.c:55 [inline]
-       autofs_notify_daemon+0x71a/0xf70 fs/autofs/waitq.c:164
-       autofs_wait+0x10b8/0x1b30 fs/autofs/waitq.c:426
-       autofs_mount_wait+0x170/0x330 fs/autofs/root.c:255
-       autofs_d_automount+0x555/0x710 fs/autofs/root.c:401
-       follow_automount fs/namei.c:1454 [inline]
-       __traverse_mounts+0x2ba/0x580 fs/namei.c:1499
-       traverse_mounts fs/namei.c:1528 [inline]
-       handle_mounts fs/namei.c:1631 [inline]
-       step_into+0x5e5/0x10b0 fs/namei.c:1952
-       lookup_last fs/namei.c:2612 [inline]
-       path_lookupat+0x16f/0x450 fs/namei.c:2636
-       filename_lookup+0x2a3/0x670 fs/namei.c:2665
-       kern_path+0x35/0x50 fs/namei.c:2773
-       lookup_bdev+0xc5/0x290 block/bdev.c:1163
-       resume_store+0x1a0/0x710 kernel/power/hibernate.c:1247
-       kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:586 [inline]
-       vfs_write+0xacf/0xd10 fs/read_write.c:679
-       ksys_write+0x18f/0x2b0 fs/read_write.c:731
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&of->mutex){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
-       kernfs_fop_write_iter+0x1ea/0x500 fs/kernfs/file.c:325
-       iter_file_splice_write+0xbfa/0x1510 fs/splice.c:743
-       do_splice_from fs/splice.c:941 [inline]
-       do_splice+0xd68/0x18b0 fs/splice.c:1354
-       __do_splice fs/splice.c:1436 [inline]
-       __do_sys_splice fs/splice.c:1639 [inline]
-       __se_sys_splice+0x2e0/0x450 fs/splice.c:1621
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&pipe->mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
-       pipe_write+0x1c6/0x1a30 fs/pipe.c:456
-       __kernel_write_iter+0x4b3/0x950 fs/read_write.c:612
-       __kernel_write+0x120/0x180 fs/read_write.c:632
-       autofs_write fs/autofs/waitq.c:57 [inline]
-       autofs_notify_daemon+0x72d/0xf70 fs/autofs/waitq.c:164
-       autofs_wait+0x10b8/0x1b30 fs/autofs/waitq.c:426
-       autofs_mount_wait+0x170/0x330 fs/autofs/root.c:255
-       autofs_d_automount+0x555/0x710 fs/autofs/root.c:401
-       follow_automount fs/namei.c:1454 [inline]
-       __traverse_mounts+0x2ba/0x580 fs/namei.c:1499
-       traverse_mounts fs/namei.c:1528 [inline]
-       handle_mounts fs/namei.c:1631 [inline]
-       step_into+0x5e5/0x10b0 fs/namei.c:1952
-       lookup_last fs/namei.c:2612 [inline]
-       path_lookupat+0x16f/0x450 fs/namei.c:2636
-       filename_lookup+0x2a3/0x670 fs/namei.c:2665
-       kern_path+0x35/0x50 fs/namei.c:2773
-       lookup_bdev+0xc5/0x290 block/bdev.c:1163
-       resume_store+0x1a0/0x710 kernel/power/hibernate.c:1247
-       kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:586 [inline]
-       vfs_write+0xacf/0xd10 fs/read_write.c:679
-       ksys_write+0x18f/0x2b0 fs/read_write.c:731
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &pipe->mutex --> &of->mutex --> &sbi->pipe_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&sbi->pipe_mutex);
-                               lock(&of->mutex);
-                               lock(&sbi->pipe_mutex);
-  lock(&pipe->mutex);
-
- *** DEADLOCK ***
-
-5 locks held by syz.1.2997/15256:
- #0: ffff888030adcd38 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x254/0x320 fs/file.c:1192
- #1: ffff8880359fa420 (sb_writers#8){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:3023 [inline]
- #1: ffff8880359fa420 (sb_writers#8){.+.+}-{0:0}, at: vfs_write+0x225/0xd10 fs/read_write.c:675
- #2: ffff88804665a888 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x1ea/0x500 fs/kernfs/file.c:325
- #3: ffff8881412ffa58 (kn->active#59){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x20e/0x500 fs/kernfs/file.c:326
- #4: ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_write fs/autofs/waitq.c:55 [inline]
- #4: ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_notify_daemon+0x71a/0xf70 fs/autofs/waitq.c:164
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 15256 Comm: syz.1.2997 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- __mutex_lock_common kernel/locking/mutex.c:585 [inline]
- __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
- pipe_write+0x1c6/0x1a30 fs/pipe.c:456
- __kernel_write_iter+0x4b3/0x950 fs/read_write.c:612
- __kernel_write+0x120/0x180 fs/read_write.c:632
- autofs_write fs/autofs/waitq.c:57 [inline]
- autofs_notify_daemon+0x72d/0xf70 fs/autofs/waitq.c:164
- autofs_wait+0x10b8/0x1b30 fs/autofs/waitq.c:426
- autofs_mount_wait+0x170/0x330 fs/autofs/root.c:255
- autofs_d_automount+0x555/0x710 fs/autofs/root.c:401
- follow_automount fs/namei.c:1454 [inline]
- __traverse_mounts+0x2ba/0x580 fs/namei.c:1499
- traverse_mounts fs/namei.c:1528 [inline]
- handle_mounts fs/namei.c:1631 [inline]
- step_into+0x5e5/0x10b0 fs/namei.c:1952
- lookup_last fs/namei.c:2612 [inline]
- path_lookupat+0x16f/0x450 fs/namei.c:2636
- filename_lookup+0x2a3/0x670 fs/namei.c:2665
- kern_path+0x35/0x50 fs/namei.c:2773
- lookup_bdev+0xc5/0x290 block/bdev.c:1163
- resume_store+0x1a0/0x710 kernel/power/hibernate.c:1247
- kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0xacf/0xd10 fs/read_write.c:679
- ksys_write+0x18f/0x2b0 fs/read_write.c:731
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f504898cda9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f50498d2038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f5048ba5fa0 RCX: 00007f504898cda9
-RDX: 0000000000000012 RSI: 0000000020000000 RDI: 0000000000000008
-RBP: 00007f5048a0e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f5048ba5fa0 R15: 00007ffe28e15a78
- </TASK>
-PM: Image not found (code -6)
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
