@@ -1,68 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A802185A8;
-	Wed,  5 Feb 2025 08:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3822131E2D;
+	Wed,  5 Feb 2025 08:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745812; cv=none; b=pMPdQdT0pE31p6eRPnRmp+J46R1mWAoG80xBIC0RYixAHowbxrWIjFXZpoM/0ivOaS8PxnmXxpSNfBvPyIRbregYQRgbRLMJzPcQKlh4aAynjWRQhNN2HpsEBRixlZdJ5vbbGs3RRe5vxbxQjKDTZ0WAk9Jf30wc6GxYn23AJhY=
+	t=1738745849; cv=none; b=QdNJECYgM9GJzH91SpUGVzCniMoFIHSH5rS9v7AB6yVP1Ql2beKmupiX3UpOujy6xo8ED8sRGyOEeIVXYBslK0k5KwKv5iEfBPZLuOSHodG2pZr2oTbibNRKrL/qhet4OomWjGK7kX6tIKQkFoSlMBrzlYsuq9zGLjxu3Aj0uh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745812; c=relaxed/simple;
-	bh=jDRflpWn/eNSVYWYsmChMhlBoAx8KSfDOFOxrHxoKr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D2b9SgtyGy1Ihf8R1QecUdREC+qIPY0iXuUds7By82aPImL823llKvYoCOCAYXZNRQMDqjE8jxjUdQxCQKe/dKrTvqZJpJam0iLF452MG7Nh6vd2huy8Z9FxVm27PhPzqPG5eML4U41suIXwrkb18nX3zrzTlB9D0XqvMAvmQBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMSlP1zt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738745849; c=relaxed/simple;
+	bh=tbAHO1ksqiKdFkCyBmXKxrwc88uErxSVVEVwNGTKJ4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=izNkURCjoLHSnBPSCe3CbrGyQq1cQacYZoU37QLjXNzUzo7lx/sSEnwEobrOAIW6WhfYpBothc86L2plvW5o60VIluuw5KVO89lsitCS3vKsgO+XwWxfnuDq6qJuGL721jW61WoXEjxVptjhpE91dy1GoNjqXn9TBz7d5290294=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=THZbnIV/; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMSlP1zt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0540CC4CED1;
-	Wed,  5 Feb 2025 08:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738745811;
-	bh=jDRflpWn/eNSVYWYsmChMhlBoAx8KSfDOFOxrHxoKr8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BMSlP1ztsEQ6urNcvZNA5LG4TmjqcVVFSqEmeOSjDrESzJZNO1oxJvblv8TodUMiU
-	 R6413G/mmomrMVFAsyr/c/jxrDbubulBDssRG796vFMpUqYBRklhxfoOIXNxWK5256
-	 /g+5HdjX08Opk7C/rVYaFxP4SrgpyAVp3aod4SgvN6wUvU2+Lr42bIK5Val/qGRG69
-	 989H0jpSNzdQBOyJ09htb446gC5YHaQb62BSj6j3W/RWS//qpBPxLqrBP52meOGVR6
-	 5dOHUnMbbujMt4eHY+7X0JzupJ+WI7ycN7P1ltK49yAExZJCYCb+y4hczpJ9duUxVU
-	 1H9i6UOY80maw==
-Date: Wed, 5 Feb 2025 09:56:48 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Vivek Gautam <gautam.vivek@samsung.com>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Sergey Lisov <sleirsgoevy@gmail.com>, linux-phy@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: phy: samsung,usb3-drd-phy: add
- exynos7870-usbdrd-phy compatible
-Message-ID: <20250205-honest-versatile-bettong-9c4c0e@krzk-bin>
-References: <20250204-exynos7870-usbphy-v1-0-f30a9857efeb@disroot.org>
- <20250204-exynos7870-usbphy-v1-3-f30a9857efeb@disroot.org>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="THZbnIV/"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 433F5A0031;
+	Wed,  5 Feb 2025 09:57:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=Q6Wy/9vN9ADDZZX+mcOi
+	wXk9RSq7RXtiVJ2ibQ0mqWg=; b=THZbnIV/ocLEg79CbULPv7eUwBqcR78AHGpK
+	vP+KbnpXW60Ouaj6hZBYYK9/uDmlwOBMt7FnsbA7U+/+jCzyuDAFH/UjMAzWvJj0
+	2DOd9MndfiOZU8MBpTY65qgvSAECEfN53GpUWF5Mx57ljwPA+XtHxAyCbWZFsTpy
+	tR7irtAxI13xYYipAuHYuEfWlaIhzpVtq9AitZJ0W38tlPbbupQoclHMU2ogInfl
+	D6T4x9MjOyq7xOQd58rGKBrdojt52OExX/DK6i2t1NUVGc9189hKZ1hCPiJsbVPE
+	HRXGvZRAJao06F4d9W40YTb8fsRo5KfcO6p2S+Y6oLuNd6HaFvrqOgcNv4E334vG
+	k7sz/drIHYFsSbJRlqXt2/p7TxxxoscQ4N9EjZloedwhqVVuPeAViHQmtbL/9agN
+	zYBBmMKCVS1yjRFWcQMytK5MxCjYY+vm5DN9ZwkWP5U21drz3UB9KxUAbIc3new9
+	SmLaPKjpecLFHXcaKS5g8edY7d7agRIbur/Q+F5S4lbYXNpKjOqz1Jrlq3W5YriG
+	7uJWnFptv3NAoIPAC/umt4OGOFSuVAbh3WtOi6P+Jnv5bV/6VioJA78DGemd+i5I
+	NgMGSRpN2uXLPLCVBiSz5Unmc0h/3itlit4nAxaCUmaGJ0X4dkMomEMo4JRMvWF+
+	drW7/Kw=
+Message-ID: <7b581014-a351-4077-8832-d3d347b4fdb5@prolan.hu>
+Date: Wed, 5 Feb 2025 09:57:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250204-exynos7870-usbphy-v1-3-f30a9857efeb@disroot.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] counter: microchip-tcb-capture: Add capture
+ extensions for registers RA-RC
+To: William Breathitt Gray <wbg@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>
+References: <20250203162955.102559-1-csokas.bence@prolan.hu>
+ <20250203162955.102559-2-csokas.bence@prolan.hu> <Z6KsrhUYoYF8n10J@ishi>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <Z6KsrhUYoYF8n10J@ishi>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852667264
 
-On Tue, Feb 04, 2025 at 02:10:14AM +0530, Kaustabh Chakraborty wrote:
-> Add the compatible string "samsung,exynos7870-usbdrd-phy" to the
-> documentation. The devicetree node requires two clocks, named "phy" and
-> "ref" (same as clocks required by Exynos5).
+Hi,
+
+On 2025. 02. 05. 1:11, William Breathitt Gray wrote:
+> On Mon, Feb 03, 2025 at 05:29:53PM +0100, Bence Csókás wrote:
+>> TCB hardware is capable of capturing the timer value to registers RA and
+>> RB. On top, it is capable of triggering on compare against a third
+>> register, RC. Add these registers as extensions.
+>>
+>> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
 > 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> What is the difference between RA and RB (your code looks like they
+> represent two distinct event channels, so I want to confirm)? Is RC a
+> threshold value set by the user, or is it another captured timer value?
+> The capture extension represents Count value specifically, so I want to
+> make sure we're using the right extension for these components.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+RA, RB and RC are three R/W-able "general purpose" hardware registers. 
+The HW additionally has the following capabilities:
+* in PWM mode (not used by this driver), send an interrupt on compare to 
+RA/B/C, and/or change output signals
+* in Counter Capture mode (used here):
+   * trigger interrupt on RC compare only
+   * on external trigger rising/falling edge, sample Counter Value 
+Register (CV) to RA/RB, optionally send an interrupt of this change
+   * stop counting after sampling to RB
+All of this is enable-able of course.
 
-Best regards,
-Krzysztof
+So yes, RA and RB can be thought of two near-identical, separate 
+channels. Since they both sample CV, it made sense to use 
+COUNTER_EVENT_CAPTURE. RC is indeed set by the user.
+
+Bence
 
