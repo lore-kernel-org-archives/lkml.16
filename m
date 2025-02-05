@@ -1,160 +1,180 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924D1227BB7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED87227BB7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738445; cv=none; b=cSs5OtAnOKsFxDFCF8mH4r35cSRUmq0t1t43spQJ19/ryIcAMDaufvNmdnR4MRMHTy5hn7gSBlMYPDBmNwBWu4wCi3vwyFsoSwiayd2m6hn4jdu0ElRoTibuUeoqbV0OVmsWx67Fva0KyJNxmlkSI/x1JUrLrWp9TcV7/7cScjg=
+	t=1738738492; cv=none; b=FENDsKLJYAF41cWWs+zGApFlDBtOgoIkSJBHil5a+tosRe2Wy2x/6gLuhS/OV7fRmhO2Jg2/Ltk41lGRgvYtuLTa2lFL54//NJ5kCj8iNKqEKT/xhKiSnd/iUBfEzFCJeOpuFELk9RznTowPURALQSfLVnMcDEBqvpYKC5lh9Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738445; c=relaxed/simple;
-	bh=cWbO8HKmw8z2ZMTH0xbgQo1v4JbWKY6SdNB1Q44Twjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qf+OM10kFlCZqKK94149c2nhr49luq/vvTm3vHX7xJd3MjkIVk1Oux8wU7kTIyAwRqzFbj9uzXF1CV/+cXQu+EFgRXoPZ8OEv4iF6PJJpIragKbfuhoCznkStcTAZz3OHC6e4d9nJAPpIRoPV4KIMuJNDxV0dGCxhi7lOkD3WEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fC65TRMs; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738738492; c=relaxed/simple;
+	bh=oqv7jBSncpt9Oun63nIOrYg61g/GvpeccewqH2aHn9E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=buXoimz+EGm+MI6Cl7co52klvhITTQY/d0gERtS3JUTjoI2twjFy0+/Jk8RqotTJFvESp3i6/E+L5D+ccHYlZNThHFpCkNeuG23XSRW8YaP+G9W/1gln/ddnM0qp/duuK4tkO76c9OMVDCG3tOag8LiUhHkC7Rwjfo1zqdjzqGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpCQv+5E; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fC65TRMs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpCQv+5E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738738442;
+	s=mimecast20190719; t=1738738489;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ig+/O8/8C9meWS9i5E5x4FYET8uunPEIglzfgflUkxo=;
-	b=fC65TRMs313PcjAlVEGq2TbAjCKHxmxNziFJQbrFTDsDPEK4vPwA51tCvFixqY68Ty0gGt
-	BRv2+bcNrRW6fsl2EzTP2mU3weV4PL51Oe0LqRjUQhUeHjj6Hk+EmuF83o9YRMu6gQ0MFy
-	eQatS9isVGS8LoXAolrjIsxixbuNLUE=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-JcsjEwTqNCqDBcEszw9ljA-1; Wed, 05 Feb 2025 01:53:58 -0500
-X-MC-Unique: JcsjEwTqNCqDBcEszw9ljA-1
-X-Mimecast-MFC-AGG-ID: JcsjEwTqNCqDBcEszw9ljA
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38db0b5405bso214606f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 22:53:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738738437; x=1739343237;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ig+/O8/8C9meWS9i5E5x4FYET8uunPEIglzfgflUkxo=;
-        b=inKSQGX2H19hnEmT1O+cOWrjDcl99NMJr6GKeZ9PcXfMW2zL9Fa6D8PB/aWm3gWFHr
-         b5PQ94L/D0DNSyHxiXJnNbCFWb+mSmYq1A+6UeqgRbrsrx/NROJvX6O/LL6c9m36BfOj
-         9FZK1rAXb+ng5VQa1bqIw8kmebLEfC3nWtfQXAwRBD/aFFiKqKd4u0ICcA1RSETHgD4y
-         PylBrrxqV0yzqmP10hACHywGiYiSYAuLlq9Ie+WKDl8bnRUkZAqmHO+R0NCjcYWVeQep
-         mz6eXyWDDeZkRErmz11DdlhhtxppoVBtN0vlcVIx1+pojnXFI2aNwksa6Tcipq8UQPiV
-         tx8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWf2OeWc2ssEj6sbDXARujUpRjd4bzygTcR/y2xqH1C65NYgJLRxpkJiqB3TeMRPojoJ8/jRPptK+n17ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB1Edde23zo9/AK1K/CJ5LMWbJUv2otKJebYncgwbEnsoT/W3I
-	zktUK2JC2QsSsrLPuideK5ghUM488T59+RhX7piHDoih+o0ag6Vge+aEKPCOs83GTAklKuAlGFx
-	V+o/ogKrMEkPzc63UQg9CQNYs/UMFw78osSmF4I8gI8Fd9cmSZ2oOwDXxSJJyJw==
-X-Gm-Gg: ASbGncv/pBriUV8QvgispSyB8QGX5UzKnNGtECocA/RsMBCGHPdL7Uk/rXTeqtGnLEr
-	NSZS42Yfz0EGTBjh6G6HgahxOcLJewsZrCfLcSkCcc0o8J7cZHur3JJU6CEAqWflyytCv5O3woC
-	q1gyxP5TlwOW/Yz8fxjYE6bRD67owzCN50JCQy0mVxA5PMfsHAoI+80qilw4TBejKYXqqlwhX8Z
-	Zz0TlpWBm4/sinCeyCVzJ8+GUEhR6WRUBiAyIftAugIiNaCEkHAT5UJYO0YFoRf0lY0Xi9pdtlX
-	EJvuXTFyc/gpo7ejBtrfo2JS3ZQcFmwr2Vyd
-X-Received: by 2002:a05:6000:184c:b0:38d:b7dc:30b8 with SMTP id ffacd0b85a97d-38db7dc3509mr21306f8f.18.1738738436786;
-        Tue, 04 Feb 2025 22:53:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFGpckBtgHNmxTU7R59xIWWBoy3feR6+6IjsVYrKHmwkhizPVL0uHMyp9QXQa1ReNMzYO5Zcg==
-X-Received: by 2002:a05:6000:184c:b0:38d:b7dc:30b8 with SMTP id ffacd0b85a97d-38db7dc3509mr21291f8f.18.1738738436348;
-        Tue, 04 Feb 2025 22:53:56 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d96536asm11146655e9.18.2025.02.04.22.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 22:53:55 -0800 (PST)
-Date: Wed, 5 Feb 2025 07:53:53 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Aashish Sharma <shraash@google.com>,
-	Shin Kawamura <kawasin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-Message-ID: <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
-References: <ba51a43f-796d-4b79-808a-b8185905638a@nvidia.com>
- <Z4FAhF5Nvx2N_Zu6@jlelli-thinkpadt14gen4.remote.csb>
- <5d7e5c02-00ee-4891-a8cf-09abe3e089e1@nvidia.com>
- <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
- <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
- <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
- <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
- <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
- <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
- <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DU3mbDfOckusgvw3Q2V0BpSskMHFw4hNrktOktZ/6Jo=;
+	b=EpCQv+5Ef4/OiH8hye8c7Y2VN9oD3xUYlXJkTY1IdOFeTzfqPeXXSVorioXz+N2AivohLh
+	IE7WQ3Qtlx1blkRHgjwymQ0VoHFhxuWaflm1WSrJxFsRhi+NEg38vZfvs12iEnnRNrmbqs
+	B1EjfWFSgFuLNIuwy57qGbEg/TkuLDY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-xL-uatl0PrOpU5wwILoZBg-1; Wed,
+ 05 Feb 2025 01:54:45 -0500
+X-MC-Unique: xL-uatl0PrOpU5wwILoZBg-1
+X-Mimecast-MFC-AGG-ID: xL-uatl0PrOpU5wwILoZBg
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4CB121956094;
+	Wed,  5 Feb 2025 06:54:44 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.64.7])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0F1821800360;
+	Wed,  5 Feb 2025 06:54:41 +0000 (UTC)
+From: Seiji Nishikawa <snishika@redhat.com>
+To: dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	snishika@redhat.com
+Subject: [PATCH] x86/mm: Harden copy_from_kernel_nofault_allowed() to prevent false MCEs
+Date: Wed,  5 Feb 2025 15:53:36 +0900
+Message-ID: <20250205065336.440890-1-snishika@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 03/02/25 11:01, Jon Hunter wrote:
-> Hi Juri,
-> 
-> On 16/01/2025 15:55, Juri Lelli wrote:
-> > On 16/01/25 13:14, Jon Hunter wrote:
+Multiple instances have been observed where bpf_probe_read_kernel()
+triggers a machine check exception (MCE) due to an invalid address being
+accessed in copy_from_kernel_nofault(). The issue arises while
+pagefault_disable() is in effect, preventing normal fault handling and
+leading to an MCE.
 
-...
+        ......
+mce: [Hardware Error]: CPU XX: Machine Check Exception: X Bank X: bf80000000200401
+mce: [Hardware Error]: RIP !INEXACT! 10:<ffffffffa8ce2d1e> {copy_from_kernel_nofault+0x3e/0xf0}
+mce: [Hardware Error]: TSC XXXXXXXXXXXXXXXX ADDR XXXXXXXX MISC XX PPIN XXXXXXXXXXXXXXXXXX
+mce: [Hardware Error]: PROCESSOR X:XXXXX TIME XXXXXXXXX SOCKET X APIC XX microcode XXXXXXX
+mce: [Hardware Error]: Run the above through 'mcelog --ascii'
+mce: [Hardware Error]: Machine check: Processor context corrupt
+Kernel panic - not syncing: Fatal machine check
+        ......
 
-> > > [  210.595431] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
-> > > [  210.606269] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
-> > > [  210.617281] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
-> > > [  210.627205] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=2
-> > > [  210.637752] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=1
-> >                                                                            ^
-> > Different than before but still not what I expected. Looks like there
-> > are conditions/path I currently cannot replicate on my setup, so more
-> > thinking. Unfortunately I will be out traveling next week, so this
-> > might required a bit of time.
-> 
-> 
-> I see that this is now in the mainline and our board is still failing to
-> suspend. Let me know if there is anything else you need me to test.
+        ......
+--- <NMI exception stack> ---
+ #5 [fffffe00014f8e08] delay_tsc at ffffffffab3c5cfc
+ #6 [fffffe00014f8e08] wait_for_panic at ffffffffaae4340d
+ #7 [fffffe00014f8e18] mce_timed_out at ffffffffaae43de8
+ #8 [fffffe00014f8e30] do_machine_check at ffffffffab9303e4
+ #9 [fffffe00014f8f30] exc_machine_check at ffffffffab9308f5
+#10 [fffffe00014f8f50] asm_exc_machine_check at ffffffffaba00c3a
+    [exception RIP: copy_from_kernel_nofault+62]
+    RIP: ffffffffab0e2fee  RSP: ffff9de0b79b7d78  RFLAGS: 00000202
+    RAX: ffffffffffffffff  RBX: ffffffffff5fc34b  RCX: 0000000000000010
+    RDX: 0000000000000008  RSI: 0000000000000008  RDI: ffffffffff5fc34b
+    RBP: ffff9de0b79b7df8   R8: 0000000000000001   R9: 0000000000000000
+    R10: 0000000000000001  R11: ffff8e323b4f4710  R12: 0000000000000008
+    R13: 0000000002566780  R14: 0000000000000000  R15: ffff9de0b79b7e80
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+--- <MCE exception stack> ---
+#11 [ffff9de0b79b7d78] copy_from_kernel_nofault at ffffffffab0e2fee
+#12 [ffff9de0b79b7d90] bpf_probe_read_kernel at ffffffffab04d568
+#13 [ffff9de0b79b7e08] copy_from_kernel_nofault at ffffffffab0e2fcd
+#14 [ffff9de0b79b7e28] bpf_probe_read_kernel at ffffffffab04d568
+#15 [ffff9de0b79b7e90] bpf_trace_run2 at ffffffffab04e4e6
+#16 [ffff9de0b79b7ec0] syscall_exit_work at ffffffffaaf99a00
+#17 [ffff9de0b79b7ed8] syscall_exit_to_user_mode at ffffffffab931ce9
+#18 [ffff9de0b79b7ee8] do_syscall_64 at ffffffffab92e169
+#19 [ffff9de0b79b7f50] entry_SYSCALL_64_after_hwframe at ffffffffaba00121
+        ......
 
-Ah, can you actually add 'sched_verbose' and to your kernel cmdline? It
-should print our additional debug info on the console when domains get
-reconfigured by hotplug/suspends, e.g.
+The root cause is that copy_from_kernel_nofault_allowed() currently only
+blocks access to the exact vsyscall page (0xffffffffff600000) but does
+not account for addresses slightly below or above it that result in
+similar failures.
 
- dl_bw_manage: cpu=3 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
- CPU0 attaching NULL sched-domain.
- CPU3 attaching NULL sched-domain.
- CPU4 attaching NULL sched-domain.
- CPU5 attaching NULL sched-domain.
- CPU0 attaching sched-domain(s):
-  domain-0: span=0,4-5 level=MC
-   groups: 0:{ span=0 cap=766 }, 4:{ span=4 cap=908 }, 5:{ span=5 cap=989 }
- CPU4 attaching sched-domain(s):
-  domain-0: span=0,4-5 level=MC
-   groups: 4:{ span=4 cap=908 }, 5:{ span=5 cap=989 }, 0:{ span=0 cap=766 }
- CPU5 attaching sched-domain(s):
-  domain-0: span=0,4-5 level=MC
-   groups: 5:{ span=5 cap=989 }, 0:{ span=0 cap=766 }, 4:{ span=4 cap=908 }
- root domain span: 0,4-5
- rd 0,4-5: Checking EAS, CPUs do not have asymmetric capacities
- psci: CPU3 killed (polled 0 ms)
+Observed faulting addresses and their deltas from VSYSCALL_ADDR:
 
-Can you please share this information as well if you are able to collect
-it (while still running with my last proposed fix)?
+- 0xffffffffff5fc294  (-0x3d6c)
+- 0xffffffffff6000c7  (+0xc7)
+- 0xffffffffff5fc3b0  (-0x3c50)
+- 0xffffffffff5fcde0  (-0x3220)
+- 0xffffffffff5fce94  (-0x316c)
+- 0xffffffffff600050  (+0x50)
+- 0xffffffffff5fc2f8  (-0x3d08)
+- 0xffffffffff6008a0  (+0x8a0)
+- 0xffffffffff5fc1c7  (-0x3e39)
+- 0xffffffffff60009d  (+0x9d)
+- 0xffffffffff600678  (+0x678)
+- 0xffffffffff6000c7  (+0xc7)
+- 0xffffffffff5fc34b  (-0x3cb5)
+- 0xffffffffff5fcde0  (-0x3220)
 
-Thanks!
-Juri
+The invalid addresses are likely caused by incorrect pointer arithmetic,
+out-of-bounds accesses in a BPF program using bpf_probe_read_kernel(), or
+invalid user-space pointers. Other contributing factors include
+speculative execution, uninitialized or corrupted pointers, and SMAP
+restrictions when vsyscall=xonly is enabled. Additionally, the use of
+pagefault_disable() prevents proper fault handling, potentially leading
+to an MCE. Bugs in the JIT compiler or verifier, as well as exploit
+attempts, may also be responsible.
+
+The existing check that blocks access to the exact vsyscall page was
+introduced in patch 32019c659ecf ("x86/mm: Disallow vsyscall page read
+for copy_from_kernel_nofault()"). However, this check does not cover
+addresses slightly below or above it that exhibit similar failure
+patterns.
+
+This patch extends copy_from_kernel_nofault_allowed() to block access not
+only to the vsyscall page (0xffffffffff600000) but also to a range
+spanning four pages below it and one page above its start. This prevents
+unintended memory accesses that could otherwise lead to fatal MCEs.
+
+By preventing such invalid accesses, this patch improves the robustness
+of the kernel and mitigates the impact of potential BPF program
+misbehavior.
+
+Fixes: 32019c659ecf ("x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()")
+Signed-off-by: Seiji Nishikawa <snishika@redhat.com>
+---
+ arch/x86/mm/maccess.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
+index 42115ac079cf..0388577ebc91 100644
+--- a/arch/x86/mm/maccess.c
++++ b/arch/x86/mm/maccess.c
+@@ -18,11 +18,11 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ 		return false;
+ 
+ 	/*
+-	 * Reading from the vsyscall page may cause an unhandled fault in
+-	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
+-	 * usually considered as a user space address.
+-	 */
+-	if (is_vsyscall_vaddr(vaddr))
++ 	 * Block accesses to the vsyscall page and a surrounding range
++ 	 * to prevent misaligned reads that could bypass the check.
++ 	 */
++	if (vaddr >= VSYSCALL_ADDR - (4 * PAGE_SIZE) &&
++	    vaddr < VSYSCALL_ADDR + PAGE_SIZE)
+ 		return false;
+ 
+ 	/*
+-- 
+2.48.1
 
