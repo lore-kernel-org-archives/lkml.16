@@ -1,92 +1,189 @@
 Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DCD1519B4;
-	Wed,  5 Feb 2025 23:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA34217F23;
+	Wed,  5 Feb 2025 23:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796716; cv=none; b=IHxyAezIYIZypJO8Cf4GPcVhbwnYxhk06hstj30TT4tRjkJ0bL5JCft7l7aDfvNVHqIXv+gDyfdiC7+7qVePGXSIuYsee5SYXPp6uw6xid+Al3/yKVwiWYt2M+7XTQhNuGYm/IfeCkrQoDXAwRjHBrKpePfypfhRIshsCMBhhjY=
+	t=1738796731; cv=none; b=UbdEHIuGdSeD+75KhVxADyaMZE2NG30fCvDfYcu3V9arnfoiYGdqkHWb7mbD/s/k/BXtOc7LzZIX+T+RMYu5/UUUT2YWc6iGbHX2tPMuGu/cKatmZzTYLp9XzEa1g/6QDOTQWxvXI4Cip0E/dlj083KChrcFaNxAfpc5HhSVxLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796716; c=relaxed/simple;
-	bh=VuNnUCNMGMxnYEe4tmIx7sCYp+4mZpJJQQwlDI5HWfI=;
+	s=arc-20240116; t=1738796731; c=relaxed/simple;
+	bh=QZs8oI8epbJ/roNmknquSVLCgBNVCyGNwQL/Gy2TGl8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WreKKkwEwupxUPMBN76wMu2ZKN1ivIEhMIkGwwPbLBJVYnRxK9ZCMedIO3ah3TOejWuhD0VCOXUuNia4SyR5HElpfQ5R3drOPDDprYrdJuN27vSSEsjUfEmsm2bbi60Cx7loYe31FUVXCmy9nasu/vCNMmoXXb2m5IhQpATm/fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OOfuPA6h; arc=none smtp.client-ip=209.85.216.48
+	 To:Cc:Content-Type; b=fr6X8DxNn8hCvMjK0lhaKGTaZu3Kv68WCSClK1KL3Rk3Lo3T5g7P0+xzydNzq9YC4D6x23WHlz1WgQ1NxMGNb5lhjQEQ7lg6zyJaIsGkvn8Tb9XaK97iF84z2tdH+TzLgDDifYAdjGsRaKJX530pXKfyN2iVfvpG2m//yMTQG64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYzyVVpp; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOfuPA6h"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f9c3ff9219so54885a91.1;
-        Wed, 05 Feb 2025 15:05:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYzyVVpp"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f42992f608so357613a91.0;
+        Wed, 05 Feb 2025 15:05:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738796714; x=1739401514; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738796729; x=1739401529; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VuNnUCNMGMxnYEe4tmIx7sCYp+4mZpJJQQwlDI5HWfI=;
-        b=OOfuPA6h78AIUmrsP2s/bnCUMhMu3IiI86bDU8HzV9VBRkj9rwHM3L9uZ0ByZpn86x
-         1IXeaGtRWE4T+BJzOmPTgWzpY0otwr4cQT3TBVRE3YIfhzL225Xs31Mt3TA635XNjyiB
-         KBSfsvACJVjToHLmtkgsK+Pq3BG0axfvyCBWr4pG5HBwFv6++1prdyqENIDWLm3C8iNx
-         9rtyb629VxAP70NGCQbAL7k5BS2chX9xinyjGAQcWAW7kVfzBDeVubHrFyRfm84GLPnu
-         AvCYSNWJKw/+xJL/YGSv7WOyHZLgkAdoRgCkqd62jpdj1yzSAJXVV/OQoRFq5oR+gLCZ
-         qsHw==
+        bh=/Tg9fVecprHSBkd8RZVVGCGxOSrmcjXLqlZW+aeAZvM=;
+        b=kYzyVVppQtr/Iv4QJdbPvFEj7pkEKZd2Ol4+0pzvn9zC2epdh3pfAWNS+XsHHdFD2y
+         hGAUfmJH22ojL9Zz3V+ovK6+ir4DX0Dih6Z4utMkqDDCENX/gGBYdm+xJDt4UsvNlkH4
+         js2JsyfFbzaHVMimjRKEvAB/NU+tOH2vLOkzgbXy9ajAn4Usm2KEPXWNV0cH2s2rPSXk
+         jSIZCQQ13zb9TCzXBoIreE9/c6vgUi/tRAQ7egmcsZ5munR7zD/Bl/vex3mXKDBE+vrx
+         PZhdY+JjxXeVO9qbjk4SCb8I8sj1w+q97a6BV5N52kPWkQy8inVUHUfdau++shiN9Miz
+         9YZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738796714; x=1739401514;
+        d=1e100.net; s=20230601; t=1738796729; x=1739401529;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VuNnUCNMGMxnYEe4tmIx7sCYp+4mZpJJQQwlDI5HWfI=;
-        b=wBxXqkNqOvl75sDG/yno+n7oZpg+/vB9SLTiCMB2oQKAXQIez8iXhciVEPEWiPauPZ
-         KJDvVqsQJOCFCvgvPw8bVAcA9HXy6EEC2xyMpdXbUIc4pQolsNIrtu/g1fPGyxrjfWLC
-         kJiHjS3TDfPeZy0mq5aGpUAYKCdJX6++9X3cLNUfHygkM4IIeezj5diRMaCtIAOFVCjw
-         SoAHy38+XMtBkX5gcFcNMEj6xsmwl9yVYW5O3ZDlthXawGeIMq4me95mc00G9Epixgac
-         kQ35H6R81p8UFDz468HETAZzZkQiOxxi/KHs3quqQDYBHibGxPaH91dwG+BE4BgAlCJd
-         GzEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIBLGpJSa2Y7wD7sKVuRGqA0Q03bNMgd76vElrs0njeQIqsc7UQkPWVUYLnRWNtcYKmgn1zDQrTrV0wxQ=@vger.kernel.org, AJvYcCVzLO71/5cp3rjf1jQ6DL6O0dkfFZZySLVJwan5Hi7z2vYoU9ziXr9NCcfjHSdfVBIHl6peyVqUxDnvQBdYEV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL3Gn6KnLyhvwjzHSQjHE6+Qpc+Kn9jQdb9RiRYetSBgBgSFI3
-	gHkMdTR8O+gE8dXHTQuTkXPCWVS8P0oZN22L04mIEb+2L08e+xNhVOIURQMCuvtonPjNvxDQuNm
-	t81osk/92mjcoIyPUjC+HLhI8SBo=
-X-Gm-Gg: ASbGncsGJ06zFctYBbMvNZd8Dfgw+gAx8MPTfVMHHKR9vI04ic8Z/DhcEahSR9RWvO4
-	BLQWZwFrHa9so4SLLSJsNz1v+T/A7fhK9FTFekC3G1ctbX9H3ehZgg1TAZrMLS7vEOD/W4Rmv
-X-Google-Smtp-Source: AGHT+IHEkdQuZ1xqXx5TR3RkT0RQ5tRkVPdi8J7oEfoodpxut2oDCBf/YRZYXgpJ3Jqdbdpb1SlcepxFfU7b/SmCZ9s=
-X-Received: by 2002:a17:90b:4b08:b0:2f2:f6e5:d28e with SMTP id
- 98e67ed59e1d1-2f9e080017dmr2799782a91.3.1738796714404; Wed, 05 Feb 2025
- 15:05:14 -0800 (PST)
+        bh=/Tg9fVecprHSBkd8RZVVGCGxOSrmcjXLqlZW+aeAZvM=;
+        b=qhdy5Uv8Oh6VxkHiGkgZap2Gim/8PeUS56kMm7tQ0Yd7ap2LDDfx3NBnI2fI469neD
+         4BKZIGGJGyn5EFw2KEkS1Xk1antj1P+W4g0zCXuizcp0YoqyGjsNzYkR00Bx4oTluWBP
+         PXy2CvJaAehPTbaJUyWAg9unLhDIlABxvRuU3dTW7N3hf0pM94ZaGXA25gu9EVYiUPKb
+         WFxVtnT00ZAuqMjNXONt/7IsHpE1XaYB9xP5ghaUDhZfBftzRXx4QZ3IEBwQujxvOuSx
+         IrR/X+bkCINzHJc7quCfE2WmY5imZi8eVfyyr5Tcbm6mLdUDtf4auUP/TM+t7eP6miq0
+         Tb5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUhLo7oXvPfNzBOohOnCqrjXEH9GvdFdUuL6bIOZQFhcufh0HXByV40k/lYKyMn35CvnRM2sCJcAOpneok=@vger.kernel.org, AJvYcCUjyIQbXdDpG8hVj1P781mkuXIcfmQp+vN2pSsuvRiXHUrQk7TpaX48fjHcffToMJsxZbK39nsVnGJOKMo5cysOog==@vger.kernel.org, AJvYcCWNSLfweXgCHLtK2Lkv7KhvUg910k08dBmUVEsoqoFBXd4FPKafJjhO/Crj5XMF8aOfPMRRNWAuY0sEEUwWX3vmbTRw@vger.kernel.org, AJvYcCXMLgza4xSeSOfSwJI6JAwG+GA7r/FgQj+8Px0x3Bw2HI6i1/+HKTkUmifXySalCuQ4FWRxMYw1gnllGGS8gcIvVQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm3cTTnkYkjaC5+26PuO9gfFQD0LYEqF5iApfFsxKScDeF6Li8
+	iYqsfzljBA/Fw0cdSQ+WiCEs74i+xoQFe3aOIB3MzZnba7S6knEu0gWS8VWovaHGUqlN7CJ0pqJ
+	AmLZcRXL4ZAiPGNyo3VWuVEGGwiM=
+X-Gm-Gg: ASbGnculywJxGfpy/Pcl/DuiaA4HGNZV1y2z9S4WmRvCFvLwtHnIZkjU45ezys6msBa
+	QXtXAt+9vm7kgJPU5FN0wRGVk3YOA0QYfJoXQI2EbiGeddALo5M0N1LROxIepsOFHbWxgODkYMq
+	GjZsXy6js7CTta
+X-Google-Smtp-Source: AGHT+IFlLS0YdzB4OxO+h0dwZPUj3Z/hL14JGgioWJMbMELb4zIrgvsNEwJV6WCu1wieOrVzJst3AZIIsefRV+sM2cc=
+X-Received: by 2002:a17:90a:d604:b0:2ee:5111:a54b with SMTP id
+ 98e67ed59e1d1-2f9e084041fmr6790567a91.31.1738796728715; Wed, 05 Feb 2025
+ 15:05:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201-fix-mac-build-again-v1-1-ca665f5d7de7@gmail.com>
-In-Reply-To: <20250201-fix-mac-build-again-v1-1-ca665f5d7de7@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 6 Feb 2025 00:05:02 +0100
-X-Gm-Features: AWEUYZn1oyg916x3vUhZdy48weoxz1NOh8dzVbRIYcaTvkuDvvMXx0QxXNSMkys
-Message-ID: <CANiq72kDzfDhzE4ZiZ2YEtOmFwh5u9pwy-_76xRURd9WabPEdA@mail.gmail.com>
-Subject: Re: [PATCH] rust: use host dylib naming in rusttestlib-kernel
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Fiona Behrens <me@kloenk.dev>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1737511963.git.jpoimboe@kernel.org> <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe> <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com> <0837be81-ec2e-4dac-bc42-91c626c22b9a@linux.ibm.com>
+In-Reply-To: <0837be81-ec2e-4dac-bc42-91c626c22b9a@linux.ibm.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 5 Feb 2025 15:05:14 -0800
+X-Gm-Features: AWEUYZmigCm675PTePq6ZBxFpy1cZX0yWJbw2d0okMyiHRAN7vj8ot3_pc-ooKE
+Message-ID: <CAEf4Bza2npJdh-aBcH98aNjiuwuw_kRB1fnMfTGCr+Y_Yv8gWA@mail.gmail.com>
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
+	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 1, 2025 at 6:40=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
+On Wed, Feb 5, 2025 at 3:02=E2=80=AFAM Jens Remus <jremus@linux.ibm.com> wr=
+ote:
 >
-> Fixes: 0730422bced5 ("rust: use host dylib naming convention to support m=
-acOS")
-> ---
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> On 28.01.2025 02:10, Andrii Nakryiko wrote:
+>
+> > So, currently in v2, FREs within FDEs use an array-of-structs layout.
+> > If we use preudo-C type definitions, it would be something like this
+> > for FDE + its FREs:
+> >
+> > struct FDE_and_FREs {
+> >      struct sframe_func_desc_entry fde_metadata;
+> >
+> >      union FRE {
+> >          struct FRE8 {
+> >              u8 sfre_start_address;
+> >              u8 sfre_info;
+> >              u8|u16|u32 offsets[M];
+> >          }
+> >          struct FRE16 {
+> >              u16 sfre_start_address;
+> >              u16 sfre_info;
+> >              u8|u16|u32 offsets[M];
+> >          }
+> >          struct FRE32 {
+> >              u32 sfre_start_address;
+> >              u32 sfre_info;
+> >              u8|u16|u32 offsets[M];
+> >          }
+> >      } fres[N] __packed;
+> > };
+> >
+> > where all fres[i]s are one of those FRE8/FRE16/FRE32, so start
+> > addresses have the same size, but each FRE has potentially different
+> > offsets sizing, so there is no common alignment, and so everything has
+> > to be packed and unaligned.
+>
+> Just for clarification of the SFrame V2 format, as there may be some
+> misconception. Using pseudo-C type definition:
+>
+> struct sframe_fre8 {
+>         u8 sfre_start_address;
+>         u8 sfre_info;
+>         s8|s16|s32 offsets[M];
+> };
+> struct sframe_fre16 {
+>         u16 sfre_start_address;
+>         u8 sfre_info;
+>         s8|s16|s32 offsets[M];
+> };
+> struct sframe_fre32 {
+>         u32 sfre_start_address;
+>         u8 sfre_info;
+>         s8|s16|s32 offsets[M];
+> };
+>
 
-Spurious `---`, but I have fixed it on my side.
+yeah, sorry, copy/paste error for those sfre_info, it's always u8
 
-I also noticed another recent message from you with an empty line
-between tags too. Something strange is going on with the tags you add.
+> struct sframe_section {
+>         /* Headers. */
+>         struct sframe_preamble preamble;
+>         struct sframe_header header;
+>         struct sframe_auxiliary_header auxhdr;
+>
+>         /* FDEs. */
+>         struct sframe_fde fdes[N_FDE];
+>
+>         /* FRE8s / FRE16s / FRE32s per FDE. */
+>         struct sframe_fre{8|16|32} fres_fde1[N_FRE_FDE1] __packed;
+>         ...
+>         struct sframe_fre{8|16|32} fres_fdeN[N_FRE_FDEN] __packed;
+> };
+>
+> Where:
+> - fdes[] can be binary searched: All fdes[i] are of equal size and
+>    sorted on start address.
+> - Each fdes[i] points at its fres_fdei[].
+> - fres_fdei[] cannot be binary searched: For each fdes[i] they are
+>    one of those FRE8/FRE16/FRE32, so start addresses have the same
+>    size, but each FRE has potentially different offsets sizing, so
+>    there is no common alignment, and so everything has to be packed
+>    and unaligned.
+>
 
-Cheers,
-Miguel
+yep
+
+> Regards,
+> Jens
+> --
+> Jens Remus
+> Linux on Z Development (D3303)
+> +49-7031-16-1128 Office
+> jremus@de.ibm.com
+>
+> IBM
+>
+> IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsra=
+ts: Wolfgang Wendt; Gesch=C3=A4ftsf=C3=BChrung: David Faller; Sitz der Gese=
+llschaft: B=C3=B6blingen; Registergericht: Amtsgericht Stuttgart, HRB 24329=
+4
+> IBM Data Privacy Statement: https://www.ibm.com/privacy/
+>
