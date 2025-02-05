@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD3122D4FA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BA122B5B6
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751997; cv=none; b=YN8/oZM2Lm71VXAl5q6igaFd4DL0APf9+NRDuYcCgqq2Rp5TbUhOesxqFp9TRDCQuMtsE66a9FrlYiqfhD8DIz9hxMo1OcAEdUSBnRKZJckCvqXrZee/h87nTnRjnVhEPu2SBdH4pCOLo5LIul2Hs0qIjPYaIm3oPlWo3+t+NAg=
+	t=1738751997; cv=none; b=BkBpnfJf2wOUwZcocgFpxgjLMEpB7ahmum+8fc/2ltphF9VyXjJJFn6frjTUL6VNy2NuNwwCg6F2DBIzc/wCVojnlrP421z1G0JZLUeqTG63KyPppJxN3rUXiVxAGbu+pVq9LUy7kkPni2liqtu2H5B+mqKfjp4r8IQmUExCZyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751997; c=relaxed/simple;
-	bh=CvoAJ16kV0lvWMkQs+qHm8R9UjaR8Zh9Owp9/4UQQDU=;
+	bh=7GUBoYMSq5znok224ISB6WAhFMAf727Cfbtk/NMb1QY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G0GOssAUnCv1Ru3HKtJuNt26r3+3NZT70GkQ32PsjbiW93cMqD5EUThE9994eTpfLbCJe/zDuvErmjy1bFphKa7NBjZhQ8/6G+zaEGPgv5jSle0s76Frt2hqL7uwgFyIXaccrDhyrYMaelP+bXGmr23ZoLN5Xppj/HVcxvCly4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YYzzH9P/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H/d5y7gg; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=scwfrhATX6ZiGWFPhIekGLjmSuQUGKBhrTFFT7LZNvVBg7yCkxDjCryG9u69rraI+a0DmTuLUEt/qpJd9d4ypqPObq+sso9I0o/ecl2KruoWWO1jKe+waS4ADyIhzZcCT1DbNKvTPp2S419EJ+5s1BfEeN6+KORMK2Gm0v9+uhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JY748rx+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JnCyxEW2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YYzzH9P/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H/d5y7gg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JY748rx+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JnCyxEW2"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738751992;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3Erq6ZPL0l/t9gxwTNufEWCUeKPTMeHf6c8zI/WqGgw=;
-	b=YYzzH9P//Y61Yg0K0dp5DdORjfpG3l07W7Sa7tqvcb6XFXARZJwiPUmMVXx+99Lm6/vOyd
-	WBNN0x8rsEndbkZZrQUV9Y277nFdEwIDVK8yxuBbi0BSnW2hsWXypK1yNcGP9UeyYHvN2I
-	/ZZK7Hgo2un8TRi42T8lxHh0CeTPw9Sa6K0OL3D3AIYpvgrJrQK9VFVT7cLpIRDA9JONyg
-	sp5xnkrdhXgNyeqoVuxubBJpwrIYuT3Y4qZEa5UWJOg5I64oItpy3hnQRlnn3iEJGN4iIH
-	oYLVVyLpxLXGp88e60zSFhnASxQ/BKVpBOPfXtYHTmvYOrLh68aUBrO6dip+DQ==
+	bh=fyDjhJUuIm8B4iVIaKBKH/sSiyImu7CJ1Rqr4iuPoXI=;
+	b=JY748rx+WYJjMtGSK2+5psjyyWC33xJNM5GqaPPnPmNINOCRqVCJwJyFZ8RsxpQmSGSxLM
+	KDvScTkdeE1F6eQ0KBiuxvZdtzF1VP9Bu4Z2n95ErB98MtmFgDGMMizcdfixtgJCuv202C
+	GfM2DOmTgo8toHXZII5c2O1U/O3eZoRFUbFvme+NwcI3b0aLqUefAnnKpknsUYPYzL7KWX
+	lEe+LUZonHiKlhVPKBKp07zzk2PdX72FuOTt4yhus3AZASoIayaPAry52ErdAPH7WY0TWw
+	hAWdmtJZcWg79U/1fl7LnDZa8CtKgib0eYP66TrwGd+VN4ogBgDty/Ka2PiU6g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738751992;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3Erq6ZPL0l/t9gxwTNufEWCUeKPTMeHf6c8zI/WqGgw=;
-	b=H/d5y7ggCePsW+rqe/PxzCeQT56CVBCLxB276qoUcYAN/Q4q44tmtzNc7g3RF7/xB/31rZ
-	hFbEPDozJ3tdzzAw==
+	bh=fyDjhJUuIm8B4iVIaKBKH/sSiyImu7CJ1Rqr4iuPoXI=;
+	b=JnCyxEW2DeVlZr6BbopHc/LUPNn7QkLaELPNn8/9a8XQULxuGjpPkQ6KEdWCjDFLSwWNby
+	ddVdbuWqaYqMClAA==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Christian Brauner <brauner@kernel.org>
-Subject: [PATCH v2 19/31] timerfd: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:39:03 +0100
-Message-Id: <2d1f26c2c2f3ad15f1ca1a09ecb9d760cafef4a6.1738746821.git.namcao@linutronix.de>
+	Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH v2 17/31] fork: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:39:01 +0100
+Message-Id: <174111145b945391e48936d6debcd43caec3e406.1738746821.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
 References: <cover.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
@@ -64,38 +64,30 @@ initializes the timer completely.
 Replace hrtimer_init() and the open coded initialization of
 hrtimer::function with the new setup mechanism.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Christian Brauner <brauner@kernel.org>
----
- fs/timerfd.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Patch was created by using Coccinelle.
 
-diff --git a/fs/timerfd.c b/fs/timerfd.c
-index 9f7eb451a60f..cee007e0d978 100644
---- a/fs/timerfd.c
-+++ b/fs/timerfd.c
-@@ -205,9 +205,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int f=
-lags,
- 			   ALARM_REALTIME : ALARM_BOOTTIME,
- 			   timerfd_alarmproc);
- 	} else {
--		hrtimer_init(&ctx->t.tmr, clockid, htmode);
-+		hrtimer_setup(&ctx->t.tmr, timerfd_tmrproc, clockid, htmode);
- 		hrtimer_set_expires(&ctx->t.tmr, texp);
--		ctx->t.tmr.function =3D timerfd_tmrproc;
- 	}
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Cc: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/fork.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 735405a9c5f3..e27fe5d5a15c 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1891,8 +1891,7 @@ static int copy_signal(unsigned long clone_flags, str=
+uct task_struct *tsk)
+ #ifdef CONFIG_POSIX_TIMERS
+ 	INIT_HLIST_HEAD(&sig->posix_timers);
+ 	INIT_HLIST_HEAD(&sig->ignored_posix_timers);
+-	hrtimer_init(&sig->real_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	sig->real_timer.function =3D it_real_fn;
++	hrtimer_setup(&sig->real_timer, it_real_fn, CLOCK_MONOTONIC, HRTIMER_MODE=
+_REL);
+ #endif
 =20
- 	if (texp !=3D 0) {
-@@ -429,7 +428,7 @@ SYSCALL_DEFINE2(timerfd_create, int, clockid, int, flag=
-s)
- 			   ALARM_REALTIME : ALARM_BOOTTIME,
- 			   timerfd_alarmproc);
- 	else
--		hrtimer_init(&ctx->t.tmr, clockid, HRTIMER_MODE_ABS);
-+		hrtimer_setup(&ctx->t.tmr, timerfd_tmrproc, clockid, HRTIMER_MODE_ABS);
-=20
- 	ctx->moffs =3D ktime_mono_to_real(0);
-=20
+ 	task_lock(current->group_leader);
 --=20
 2.39.5
 
