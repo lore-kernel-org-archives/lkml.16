@@ -1,157 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECA67083D;
-	Wed,  5 Feb 2025 13:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CCABA2E;
+	Wed,  5 Feb 2025 13:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738762631; cv=none; b=tmrGgC6mfY6ZAk3EvQ3AvHjFxJEjFvJs/nVwmmbGiA6gmjMh6UwR+GB9/OGEXtDwK0i3ExG+KuZoM7lipNlSEvAiDJYjh+Mmla7E4mFoU3nNOWEx4I9GxIn/h5/ul8pX2XxqdJKJDP7ZlqmaGGpcmy8U0wLf2usLc/G9nLHBiwo=
+	t=1738762663; cv=none; b=K/9tUmlh1d79WI7ojf2g3KrrGKpXABStIacIHe2N6ioBG7LCDUKSghCiv/2I67JofvBQcGcH5A/XFzGrF57qRPkrDHWtcOok8YXZ/ZJBCAP3SJYA5cfGqsOdZs4O7YU7RROgnTzKANNyTnwEmnyQnAvZBNZLJX5NT9Vuq/OZ+us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738762631; c=relaxed/simple;
-	bh=B6k4QAJLDUjryyKjlAgB+oDtHou0O0lXrrg8YSYtedQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R7Ic1xEAmB5st9bPkZm/b73c1lgiOBIPjOVpvvN4W9DCcV/anYRn5IUtsXxOl/mTIwcPOBz8DrllyehCW5d2/3gZaxHj86I8e8Gv3TG3n4/mEcohEAynqUPhiaZwXOIZRcGwlGEfUxSOMbV+X9rKwL3F1ozYw5vwcYENH7k+VbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBQxkeON; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738762663; c=relaxed/simple;
+	bh=Cmexci/AisDlPnaigJd6tGfVHKt40CfzuhrsGY0Fo7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PdDCxZ9e6spjl90y1DcNMNPMj1kQTxdTY3cY7VEZeeYqRB9x2IyA+ysJRdCKcqLDG9XuDTgCZlBwmP4UeAG58vqP4Eg7bbtdIl1oemUf2n+IQMypvKCqxSZTm6dZYQF6fJbcKz+rZXyTrGJWdgmZo61P4aU8Qoko5Pjukho6kfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RBd9J/y6; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBQxkeON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1461EC4CED1;
-	Wed,  5 Feb 2025 13:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738762630;
-	bh=B6k4QAJLDUjryyKjlAgB+oDtHou0O0lXrrg8YSYtedQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OBQxkeONvcr2vp3s4gZVJNwDke/0VT1Q6KYvksz7G43Ndfpvb7hKWl7bj7BHUta1U
-	 DrqpwyPuTX45nhkfEjtkJicqKtDSx4SOjomlHgFc7BKY7zsD+cUOnESCYNfujpUqJ0
-	 HaOqNP9ilb4lA88ECvdWOvdak1ywkkAyr1l8q234KOegb5j1hSLg0jfDEAgMOP4KH6
-	 M8QUYGLXh65wn5W/0Ci8f8U1WT8JbxQW7UeUqcBemFF8ECcMGhW2EGVYK5bUcPtObX
-	 S/2kQKunZy5RmvL+rsCasO2NpbQiA+MD4VmxvnI96+PTfhTUYF3ypVRpUUihayHm9a
-	 fQErmFVrcqzZQ==
-Date: Wed, 5 Feb 2025 07:37:07 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 1/1] PCI/ASPM: Fix L1SS saving
-Message-ID: <20250205133707.GA910099@bhelgaas>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RBd9J/y6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FAEF4428E;
+	Wed,  5 Feb 2025 13:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738762658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IAXIH0iwrP+W6cuqbsxVj379S6tYyAYuc6oOo58QvLE=;
+	b=RBd9J/y6TYd3m0JuSUKIIIF0LKkQRfoW8vuf6VVxLxQMd17YU7y0EGnSN5HFWGVHRcDCBR
+	6ae1KVpJ4+X96P6EntT44pRvK7RALE35ILjzeXCrwTyHgpLbr609Ph8mqQFqNLX0ITSdJr
+	kM+Zt8RGDMzp7R2/Ii6tkTr2GMbtzo7kRcGNkJFbyOR5ihRi6nz+/HY7R3p7gxSRGqITV2
+	Qh2QTpaY2k56WGN2QEckssUrb4TUeJoy+inR8Zqx+Wc00w0tFkLO8qRjZNrx4AUztA4VgT
+	WjPfEDUIBXjLQCTY4Lx1eHCY7lm1YgITRJfc8OuXpAZvY0mML4WkqgJu5p93dg==
+Date: Wed, 5 Feb 2025 14:37:37 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Ceresoli
+ <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
+Message-ID: <20250205143737.1315baba@bootlin.com>
+In-Reply-To: <ejdh76c4r44gxsdi7gwed65ste3wuunki2jgavc3wsfri5yaex@jccsywdfadgp>
+References: <20250205095547.536083-1-herve.codina@bootlin.com>
+	<20250205095547.536083-3-herve.codina@bootlin.com>
+	<ejdh76c4r44gxsdi7gwed65ste3wuunki2jgavc3wsfri5yaex@jccsywdfadgp>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <167dfe31-89cb-6135-aafc-ece0cb234daa@linux.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeehlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ heplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, Feb 05, 2025 at 10:38:24AM +0200, Ilpo Järvinen wrote:
-> On Tue, 4 Feb 2025, Bjorn Helgaas wrote:
-> 
-> > [+cc Rafael]
-> > 
-> > On Fri, Jan 31, 2025 at 05:29:13PM +0200, Ilpo Järvinen wrote:
-> > > The commit 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in
-> > > pci_save_aspm_l1ss_state()") aimed to perform L1SS config save for both
-> > > the Upstream Port and its upstream bridge when handling an Upstream
-> > > Port, which matches what the L1SS restore side does. However,
-> > > parent->state_saved can be set true at an earlier time when the
-> > > upstream bridge saved other parts of its state. 
-> > 
-> > So I guess the scenario is that we got here because some driver called
-> > pci_save_state(pdev):
-> > 
-> >   pci_save_state
-> >     dev->state_saved = true                <--
-> >     pci_save_pcie_state
-> >       pci_save_aspm_l1ss_state
-> >         if (pcie_downstream_port(pdev))
-> >           return
-> >         # save pdev L1SS state here
-> >         if (parent->state_saved)           <--
-> >           return
-> >         # save parent L1SS state here
-> > 
-> > and the problem is that we previously called pci_save_state(parent),
-> > which set "parent->state_saved = true" but did not save its L1SS state
-> > because pci_save_aspm_l1ss_state() is a no-op for Downstream Ports,
-> > right?
-> 
-> Yes! An unfortunate interaction between those two checks.
-> 
-> > But I would think this would be a very common situation because
-> > pcie_portdrv_probe() calls pci_save_state() for Downstream Ports when
-> > pciehp, AER, PME, etc, are enabled, and this would happen before the
-> > pci_save_state() calls from Endpoint drivers.
-> > 
-> > So I'm a little surprised that this didn't blow up for everybody
-> > immediately.  Is there something that makes this unusual?
-> 
-> I agree it should be very common and was quite surprised that -next
-> did not catch it. What I recall though is you modified the patch while 
-> applying it by adding those Downstream Port checks so the fix 
-> patch's Tested-by was for different code from what got applied (and it 
-> would have been caught would the original author have tested also the 
-> modified commit).
+Hi Uwe,
 
-Sigh, that makes sense, it's probably my fault, sorry.  I apologize
-for messing this up and causing all this extra work.
+On Wed, 5 Feb 2025 12:38:32 +0100
+Uwe Kleine-König <ukleinek@kernel.org> wrote:
 
-I applied this to pci/for-linus yesterday, so it should make it for
-v6.14-rc2.
-
-> Unfortunately, I cannot think of anything that would be so unusual to 
-> warrant not detecting it earlier. Maybe it was just the holiday period 
-> causing less testing and lower level of awareness in general? The machine 
-> doesn't always hang because of the problem as was the case with Niklāvs,
-> so it might have occurred but went unnoticed if it occurred for a device 
-> that is not critical.
+> Hello,
 > 
-> > > Then later when
-> > > attempting to save the L1SS config while handling the Upstream Port,
-> > > parent->state_saved is true in pci_save_aspm_l1ss_state() resulting in
-> > > early return and skipping saving bridge's L1SS config because it is
-> > > assumed to be already saved. Later on restore, junk is written into
-> > > L1SS config which causes issues with some devices.
-> > > 
-> > > Remove parent->state_saved check and unconditionally save L1SS config
-> > > also for the upstream bridge from an Upstream Port which ought to be
-> > > harmless from correctness point of view. With the Upstream Port check
-> > > now present, saving the L1SS config more than once for the bridge is no
-> > > longer a problem (unlike when the parent->state_saved check got
-> > > introduced into the fix during its development).
-> > > 
-> > > Fixes: 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()")
-> > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219731
-> > > Reported-by: Niklāvs Koļesņikovs <pinkflames.linux@gmail.com>
-> > > Tested-by: Niklāvs Koļesņikovs <pinkflames.linux@gmail.com>
-> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > > ---
-> > >  drivers/pci/pcie/aspm.c | 3 ---
-> > >  1 file changed, 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > index e0bc90597dca..da3e7edcf49d 100644
-> > > --- a/drivers/pci/pcie/aspm.c
-> > > +++ b/drivers/pci/pcie/aspm.c
-> > > @@ -108,9 +108,6 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
-> > >  	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL2, cap++);
-> > >  	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL1, cap++);
-> > >  
-> > > -	if (parent->state_saved)
-> > > -		return;
-> > > -
-> > >  	/*
-> > >  	 * Save parent's L1 substate configuration so we have it for
-> > >  	 * pci_restore_aspm_l1ss_state(pdev) to restore.
-> > > 
-> > > base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
-> > > -- 
-> > > 2.39.5
-> > > 
+> I really like this mechanism. Assuming the dt guys are happy yet, I
+> intend to merge it. Just some detail question below.
+> 
+> On Wed, Feb 05, 2025 at 10:55:43AM +0100, Herve Codina wrote:
+> > Nexus node support in PWM allows the following description:
+> > 	soc {
+> > 		soc_pwm1: pwm-controller1 {
+> > 			#pwm-cells = <3>;
+> > 		};
 > > 
+> > 		soc_pwm2: pwm-controller2 {
+> > 			#pwm-cells = <3>;
+> > 		};
+> > 	};
+> > 
+> > 	connector: connector {
+> > 		#pwm-cells = <3>;
+> > 		pwm-map = <0 0 0 &soc_pwm1 1 0 0>,
+> > 			  <1 0 0 &soc_pwm2 4 0 0>,
+> > 			  <2 0 0 &soc_pwm1 3 0 0>;
+> > 		pwm-map-mask = <0xffffffff 0x0 0x0>;
+> > 		pwm-map-pass-thru = <0x0 0xffffffff 0xffffffff>;
+> > 	};
+> > 
+> > 	expansion_device {
+> > 		pwms = <&connector 1 57000 0>;
+> > 	};  
 > 
-> -- 
->  i.
+> Does this also work if &soc_pwm2 has #pwm-cells = <2>? Would I need just
+> 
+> 	pwm-map = <0 0 0 &soc_pwm1 1 0 0>,
+> 		  <1 0 0 &soc_pwm2 4 0>,
+> 		  <2 0 0 &soc_pwm1 3 0 0>;
 
+Yes, exactly.
+
+> 
+> then and
+> 
+> 	pwms = <&connector 1 57000 0>;
+> 
+> would then have the same effect as
+> 
+> 	pwms = <&soc_pwm2 4 57000>
+
+Yes, the last 0 (or any other values) in pwms = <&connector 1 57000 0> is
+simply dropped in the translation (#pwm-cells = 3 in connector nexus to
+#pwm-cells = 2 in soc_pwm1 node).
+
+In more generic terms, it works in translation from #pwm-cells = N to
+#pwm-cells = M by simply dropping the last N-M values.
+
+Also note that even if values are dropped, you need to have them set when
+you point the nexus node because #pwm-cells = 3 is set in the connector
+node and need to be fixed and usable for all the entries in the
+pwm-map table.
+
+> 
+> and the 0 is dropped then? Could I adapt the mapping that the effect is
+> 
+> 	pwms = <&soc_pwm2 57000 0>
+
+In this one, I think you miss the PWM number
+If I read correctly this line you ask for the PWM 57000 from the soc_pwm2
+controller. This doesn't make sense :)
+
+If I didn't answer already, can you clarify your point here ?
+> 
+> instead?
+
+
+> 
+> This smells a bit ugly and I wonder if this gives a motivation to extend
+> the binding for PWMs that use #pwm-cells = <2> (or less) to also accept
+> the default 3-cell binding.
+
+With my understanding in the translation performed, this is not needed.
+
+Also the following translation works:
+
+	soc {
+ 		soc_pwm1: pwm-controller1 {
+ 			#pwm-cells = <2>;
+		};
+
+		soc_pwm2: pwm-controller2 {
+			#pwm-cells = <3>;
+		};
+ 	};
+
+	connector: connector {
+		#pwm-cells = <2>;   <--------- Note the 2 here
+ 		pwm-map = <0 0 &soc_pwm1 1 0>,
+ 			  <1 0 &soc_pwm2 4 0 123>,
+ 		pwm-map-mask = <0xffffffff 0x0>;   <---- #pwm-cells = <2> 
+ 		pwm-map-pass-thru = <0x0 0xffffffff>; <---- #pwm-cells = <2>
+ 	};
+
+pwms = <&connector 1 57000> translates to pwms = <&soc_pwm2 1 57000 123>
+
+The last value in the translation (i.e 123) was added during the translation
+(#pwm-cells = <2> to #pwm-cells = <3>) from the value set in the pwm-map
+table.
+
+Hope I answered your questions.
+
+Best regards,
+Hervé
