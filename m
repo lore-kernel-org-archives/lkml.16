@@ -1,177 +1,148 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BAD22B8D2;
-	Wed,  5 Feb 2025 10:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227E422AE59;
+	Wed,  5 Feb 2025 10:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751172; cv=none; b=BPh9iQxlX2Zk7YGQOf+qq8AEQB6N+KR09c9YG+Q/z3j6g3a3k0SciqQ6YTY2mc9RX3+IOzDTcZ8CL4h3FVkMa5dM1Db7VGIrN+WSbjHrwduQN5iNI4SfnDECQrs7ufnP4Qg6sSGXhuPh72P0W4XKF1xj1M8o31z1Iv4zoRfenZA=
+	t=1738751313; cv=none; b=WCzUCsIqHfqBD7zHCT4maXraAq/L8TmUIRelulz554KKnmc4feg8EA8w6HvEHA8n1LSN7fLK8jhMsVqk5IQe81L7Gh7wR9PFB9dc4pRBbHWwRodsFwZtbwNxYgiWn/2fDuuZPIm50XckZ8kQjucDZzR4QegWX89EtwKB8i9NoyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751172; c=relaxed/simple;
-	bh=kNuY9pTiA71TGN0k1KL8rYBqW4XfeUprFTz9eU0Hp1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KP0kS/EUfbVjc4urHIs5Kkfr0nTY08nEJCBOGEU7ZATI2gf8JG00ngn5PpBS+VyGPG6D+aReHOcYPwncsT/L6YZp1gFEhd7TaPoSowVWssQeX/Ju4Nz0RdlxyfqTK5FRwEQehQHODBKPi9jWPqauGQ3TMkcJwtxFyrOkmgRMrN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Dpy0VAf/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738751313; c=relaxed/simple;
+	bh=BO3vZ8coexN2Gg28q2FbNqKsK8IEU3cZORQCqX9qx+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJoaP8e9ZoLLYZlC+EKAwO1gnoVvUcDhMfct3KigBBBO4+a1WPMey4zUBDFf09/F/aB6MIfi0FQ3dISq/hfIT7spkoLOPEvKL3mYNtSFfhEN1dfHr8RvfOGe1JLJ1fT7tm3FgfDW/gsc2vYaLaXaG6YSuZ7/UQu03Q8h89g/r1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9ggFggQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dpy0VAf/"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51520ium009855;
-	Wed, 5 Feb 2025 10:25:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=39GbDh
-	2oCbRcovW+HgpZfevaZM0m5ogCHv73Pk6nFWo=; b=Dpy0VAf/acHdqDOm2ya/z/
-	OnEz7BlsnxBuS8heK24YigyGDQgOJhHCVPNpDnwi086+6aABxsdG4RnNkEJesmjQ
-	08ipiRYunZX0hxlD/WvgVxmzEv+U+j/+aquuWlTuQIK8JcAWhHvwR1rsNyUZaIkj
-	IgOak2GCuyTTz3REWWJSWkotKiu1UPaQo0yQ6J15qLNUdNSmM7q4b+5iOClDNo2e
-	X/pfB6b9kdqcDxgS9F3/gsUXznU4/f0BmK3ypIFVxRpMIU1AH/plE5aR2takMShT
-	4+ONqpPXm8fwN/9XwX3lS42Ge2qDuieb/4m3OCeAJgiXxM90xxGtVSQB70gyn10g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kxtyhxge-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:25:44 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515AMgDe018856;
-	Wed, 5 Feb 2025 10:25:44 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kxtyhxga-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:25:44 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5159GJuu005292;
-	Wed, 5 Feb 2025 10:25:43 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05k01cw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:25:43 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515APdev20578672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 10:25:39 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9313720189;
-	Wed,  5 Feb 2025 10:04:56 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D0DE20184;
-	Wed,  5 Feb 2025 10:04:55 +0000 (GMT)
-Received: from [9.171.163.71] (unknown [9.171.163.71])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 10:04:55 +0000 (GMT)
-Message-ID: <48231957-ef84-4329-9337-411a8fbf5fe6@linux.ibm.com>
-Date: Wed, 5 Feb 2025 11:04:55 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9ggFggQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85683C4CED1;
+	Wed,  5 Feb 2025 10:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738751312;
+	bh=BO3vZ8coexN2Gg28q2FbNqKsK8IEU3cZORQCqX9qx+Y=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=A9ggFggQl/taQgyhAPaGTtFCh7yjztbIny4CO10YOvw7BVy1oWYpIGld2QuWFGwCs
+	 0XYdxUj1lbMiX6p+aerwtw/DqcbwN0REGZVqhU4wQM5S2sMKY0PgSGlpLOzSKU6kHS
+	 YJLbo1wtetLr5CmKKKItcw7abfKNocUqqDaassKXNtj/a5Zh7dqqw7jTqdsSVbtujH
+	 yk1cagKFGn73gvUQyIZcdHwkn/+LwODfisSkH5oQF5WvFRPN0dLdLISy+Pea9l6nL6
+	 0SyVy/BzijqF5ljHQ+QXTkSs5qV0zGpZ7P9uGKS3jWLkeARr/65BV2Ii694kdIOkBB
+	 d2J8/qt3qsIJQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1F71DCE04A9; Wed,  5 Feb 2025 02:28:32 -0800 (PST)
+Date: Wed, 5 Feb 2025 02:28:32 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
+Message-ID: <e23ab8d2-1a64-458b-a83d-eabcf92a2382@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
+ <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org>
+ <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
+ <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
+ <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
+ <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
+ <999751de-b891-424d-a7b5-80bfa98793ff@paulmck-laptop>
+ <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
- output
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
- <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
- <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sjoZ26pCl11vMu4rdX37ChXw6CTlE3_A
-X-Proofpoint-ORIG-GUID: PcHiUz60VwhfqjfkWBzqnNpy4WiNAGpt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050080
+In-Reply-To: <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
 
-On 04.02.2025 20:10, Josh Poimboeuf wrote:
-> On Thu, Jan 30, 2025 at 05:17:33PM +0100, Jens Remus wrote:
->> On 22.01.2025 03:31, Josh Poimboeuf wrote:
-
->>> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
->>
->>> +static inline void dbg_init(struct sframe_section *sec)
->>> +{
->>> +	struct mm_struct *mm = current->mm;
->>> +	struct vm_area_struct *vma;
->>> +
->>> +	guard(mmap_read_lock)(mm);
->>> +	vma = vma_lookup(mm, sec->sframe_start);
->>> +	if (!vma)
->>> +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
->>> +	else if (vma->vm_file)
->>> +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
->>> +	else if (!vma->vm_mm)
->>
->> This condition does not appear to work for vdso on s390.
+On Tue, Feb 04, 2025 at 08:28:29PM -0500, Joel Fernandes wrote:
+> On Tue, Feb 4, 2025 at 3:22 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, Feb 04, 2025 at 10:44:45AM -0500, Joel Fernandes wrote:
+> > > On Thu, Jan 30, 2025 at 12:56 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > By "where we were initially", one might reasonably guess that you meant
+> > > > that the initial value and the target are one and the same.  But I suspect
+> > > > that you are thinking of a third value, the value of the underlying
+> > > > grace-period sequence number at the time of the call to rcu_seq_snap().
+> > > > But you might be thinking of something else entirely.
+> > > >
+> > > > > Now we move rcu_seq_done_exact. It has the exact same behavior except
+> > > > > that instead of ULONG_MAX/2, the above situations are shrunk to about
+> > > > > 10 counts from the target. So if target is 28, then the initial
+> > > > > sequence should have been at least 18 to avoid false-positive, but
+> > > > > again it is possible and I certain see in the code that it cannot be
+> > > > > used this way.. (at least so far).. So all we are left with is the
+> > > > > false-negative band of ~2.5 GPs..
+> > > >
+> > > > Here, I have the same questions.  As you no doubt guessed.
+> > > >
+> > > > > About "what are the consequences of failing to get this right".  I
+> > > > > believe false-positive is unacceptable unless it is maybe debug code -
+> > > > > that can break functionality in code, too short GPs and all that.
+> > > > > However false-negative is OK as long as the usecase can retry later
+> > > > > and can afford to wait. Did I get that much correct?
+> > > >
+> > > > Maybe?
+> > > >
+> > > > Please look at this on a per-use-case basis.
+> > >
+> > > Sure. FWIW, I started a world-editable document here. I am planning to
+> > > work on this a bit more before our meeting this week. If others
+> > > knowledgeable like Frederic and others could make edits/comments,
+> > > that'd be welcomed. But I basically summarized this whole thread here:
+> > > https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb1aG4goOJAnS6c6gQ/edit?usp=sharing
+> > >
+> > > My thought is (AFAICS), this patch is still valid and
+> > > rcu_seq_done_exact is a potentially better replacement to
+> > > rcu_seq_done. But famous last words...
+> >
+> > Let's start with the use case where the sequence number is being used
+> > by rcu_barrier().  What happens?
 > 
-> I had a fix for this which somehow got dropped:
+> The rcu_state.barrier_sequence is used to keep track of barrier in
+> progress, as there can be concurrent rcu_barrier() calls happening so
+> we optimize by batching multiples of these calls.
 > 
-> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
-> index 3bb3c5574aee..045e9c0b16c9 100644
-> --- a/kernel/unwind/sframe_debug.h
-> +++ b/kernel/unwind/sframe_debug.h
-> @@ -67,6 +67,10 @@ static inline void dbg_init(struct sframe_section *sec)
->   		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
->   	else if (vma->vm_file)
->   		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
-> +	else if (vma->vm_ops && vma->vm_ops->name)
-> +		sec->filename = kstrdup(vma->vm_ops->name(vma), GFP_KERNEL);
-> +	else if (arch_vma_name(vma))
-> +		sec->filename = kstrdup(arch_vma_name(vma), GFP_KERNEL);
->   	else if (!vma->vm_mm)
->   		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
->   	else
+> It also handles the case where the entrain IPI came through but no
+> rcu_barrier() is currently in-flight (which would be weird but maybe
+> it happens somehow).
+> 
+> It is also used to make sure we don't need to entrain on a CPU again
+> if we already did an entraining for a certain rcu_barrier() invocation
+> already. This is tracked by rdp->barrier_seq_snap which copies the
+> value of rcu_state.barrier_sequence after the entraining. Al though I
+> am currently unable to envision why the IPI handler would be called
+> unnecessarily (hardware bug?) since we hold the rcu_barrier mutex
+> throughout the rcu_barrier() function, including while waiting on
+> CPUs.
+> 
+> Going back to my first point, for the rcu_seq_done() in rcu_barrier(),
+> we are checking if someone else did our work:
+>     mutex_lock(&rcu_state.barrier_mutex);
+>     /* Did someone else do our work for us? */
+>     if (rcu_seq_done(&rcu_state.barrier_sequence, s))
+> 
+> Here I think rcu_seq_done_exact() is better, because if too many
+> rcu_barrier() calls concurrently made at the same time, the mutex may
+> be contended. If enough time passes and we have a wrap around, we
+> might end up in false-negative land which is much larger with
+> rcu_seq_done() than ..done_exact(). However, that does seem to be a
+> bug to begin with if the mutex contended for that long. OTOH, doing an
+> rcu_barrier() again when we didn't need to doesn't seem like the end
+> of the world especially if we contended on the mutex for that long.
+> But at least it shows that rcu_seq_done_exact() cannot seem to hurt
+> here.
+> 
+> Hmmm,
 
-Thanks! Your patch works fine on s390:
+So...  Do we really care about the difference between rcu_seq_done()
+and rcu_seq_done_exact() in the rcu_barrier() case?
 
-test_vdso    1087   104.721004:      10000 task-clock:ppp:
-              3ffd11f1702 __cvdso_clock_gettime_data.constprop.0+0x52 ([vdso])
-              3ffd11f14c6 __kernel_clock_gettime+0x16 ([vdso])
-              3ff8f6f113e clock_gettime@@GLIBC_2.17+0x1e (/usr/lib64/libc.so.6)
-              3ff8f6e20e8 __gettimeofday+0x38 (/usr/lib64/libc.so.6)
-                  100066e main+0x1e (/root/test/vdso/test_vdso)
-              3ff8f63459c __libc_start_call_main+0x8c (/usr/lib64/libc.so.6)
-              3ff8f63469e __libc_start_main@@GLIBC_2.34+0xae (/usr/lib64/libc.so.6)
-                  100073a _start+0x3a (/root/test/vdso/test_vdso)
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+							Thanx, Paul
