@@ -1,163 +1,167 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEC21519BA;
-	Wed,  5 Feb 2025 16:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7152F149C7B;
+	Wed,  5 Feb 2025 16:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738772337; cv=none; b=ZTIig3diR0Zc+haSYXmTaODluh19QAM8wxLWgUudgutcobTuSB0ego6l0g/Mid+/iOrR6dzfC7maql9e39PpGnRVyTGWQ+3eTdn9rfJmEAsZISsKmI3RMRLLXUdH9Ku+KU7D9Qlgz1F5MNOK2NYUk2kKsqRMmufxlAHxxKmaUeY=
+	t=1738772459; cv=none; b=uj2/HYJeNIy+eaVExDg73v1DIecMs+mv67mqmq0wWjlKEOo57H75sxF+Bt3/6rBf9lqJI/JrzXyiAeRB8TMgy+Df9LjoqaCvAGPw1laTfl8bDxwrPJIQxBe4uPhWscgFNmlr1TXdJz5earBwa8A84znUmVThvbpT555CObSiYts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738772337; c=relaxed/simple;
-	bh=2B10IHhwV+fD52/8ngYPa5UP9kbyA71ZWPhfsV+pCE4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=BXMcTxnMTACyShyY6PZIxdZ75NTKiFlHEzTl9ZMiBhb+fFUnqxQPQd7Eqj6IK4AZXaivy/YSEgat42ds8qUOC92GHfKRv1hPDrHChA1kqex3qGiRy59nQ0mFMAvuMkAGxhS8KUtRE4x7QO9TcY0g4E1LWKCUYj18NvG6g5EdHIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LTTqiC4M; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1738772459; c=relaxed/simple;
+	bh=aP2BzWrYzqtOxKGsLnRIEWiahrH1IhK3A/dN52whdfg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bovy9XltXfm8khbOE0q2hkJKKovIa7Zuob81teBNlzI6AGZ1p4m+tD3nrVYoIy4/liZvpZd8jvPSUV+txfO5bLIgqMww772N8bXLRDjAGAU0DN6w2hXgy9qVLfHe4tYCV656PZQ9yivciPvwg2K6XnQ5vDqnN7MnEH//AnBpHaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RR9wfEqE; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LTTqiC4M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=yYNYds3ilPbUKF8CC1VPmTA+jLg8X3b2oPBrNXV66HY=; b=LTTqiC4MRODsMQ14H/4j8BtQsp
-	E22EjNARwljjPncg99fuUSqKTiC+EMNCBgDQNnO0+X+cPF807+OonaHxEAPlon6TPwmSYdxO4d7Li
-	gXNB+mx1Jmgguf1xettw7KMQ744Le1ESiLU6W8mdgTTHJ3WnKQzkNxuehU+W9+10RU8PQKInPxfUz
-	aUvzOTOtE/9lbp6xjrjD+NeJ+d+GqOFXep+YbThhkD5KPraiZIEhin/X0BKx41rwvdR4Gf8sp3UrR
-	W7DdZi05YyXDHoUjYKP4J3iYmRRR/1U2My1ZzZdo49LZ4n0UWIrjVOcDDGttu+1om1X+0qtlSdAmr
-	J17GSFhw==;
-Received: from [2a00:23ee:1cc0:4ec:554b:727b:8793:1097] (helo=[IPv6:::1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfi71-0000000GhH7-1jro;
-	Wed, 05 Feb 2025 16:18:51 +0000
-Date: Wed, 05 Feb 2025 16:18:46 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-CC: Paolo Bonzini <pbonzini@redhat.com>, Paul Durrant <paul@xen.org>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com,
- Joao Martins <joao.m.martins@oracle.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/5=5D_KVM=3A_x86/xen=3A_Restrict_hy?=
- =?US-ASCII?Q?percall_MSR_to_unofficial_synthetic_range?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z6OI5VMDlgLbqytM@google.com>
-References: <20250201011400.669483-1-seanjc@google.com> <20250201011400.669483-2-seanjc@google.com> <43f702b383fb99d435f2cdb8ef35cc1449fe6c23.camel@infradead.org> <Z6N-kn1-p6nIWHeP@google.com> <cd3fb8dd79d7766f383748ec472de3943021eb39.camel@infradead.org> <Z6OI5VMDlgLbqytM@google.com>
-Message-ID: <48FAD370-09F1-47AA-8892-8BE29DC8A949@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR9wfEqE"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dce27a72e8so1173679a12.2;
+        Wed, 05 Feb 2025 08:20:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738772456; x=1739377256; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9dsklJ3NdwvShMVLaf0HLzIYtGuGTs4uDvsBBrNHhL0=;
+        b=RR9wfEqEyXvqm2SwpIRVBlClP/++4wzpuMJ1iXHA53o41yETxgYEX89zQI3Ttp18JH
+         ybrMKQ13tIfy5Pw1IcrULJb+4TDPENPPUmocgWkVTSrW9o2jQiPI5BGM8gqIc7W0yl+s
+         sArjqHLlFZgclT4VPVH9pVk4/UnuBGPR5oeS5/DzDdiGjyRU4q+9VsZ6fnZvfNRiX2gK
+         dHwvlMSGg76rjl96XR3TOz6ozNxNDiMgAhOceSY3NmBCMJoAFGM4n83s0J/egqhfZBOH
+         tnQBizdt2IbMmZgHwJzOdy0N+U/ywJFGekPe2DgnWj1dHskKHcyXG5b4Ij9tuX9Feo7V
+         xGWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738772456; x=1739377256;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9dsklJ3NdwvShMVLaf0HLzIYtGuGTs4uDvsBBrNHhL0=;
+        b=OLbzLCChc7Xhg9UbVRQdK76zeS3EMk3DZKMh3NiiZkT3xuJi+pTo6z+zlULh7uLGJ/
+         yV7fFjxEKPuUqNx9FD+7I8FWJHNw/TiF6SII91AVqnLKFK/oNUKE6b851X6OKS4Por7N
+         2q1gfGce8vjgWymrXUGDevA/lljecRGMdzviv4/fxZ1esZ/eCw5Jo15NkzfeAeehsaQ0
+         PySC5lHHQUMtUdVmCxzzyv7YQNjTHqPGots4CApE2niu7Sr/XvoX9Z+FMfqtOT2dkoNJ
+         LXNoQQv04NjSGdUlwTBunHnS/5yYVaq7sY0oPEHcn39CTB3dp0QU+c1wY+KA5FCniX3H
+         guKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCqdVOR3KVNKiorOnpmjv9DXbtVhivKMbKFlxXZjkBIrJ76X3QQWnzzva3U/9dg5CSDqBmPTonh4kXGyvs@vger.kernel.org, AJvYcCVNc7W68/A4wyhmQGcaxpzPayR+6OYqtEuJtOGSaXP3cu5iG8Izt5E9FEq2bL+XMViejAIxejyGmkTtTqqC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDNk8NwaBwK6kL0+b/C0Ss9Y09C4EaAcTx+gDAQHl/3/GQ3O6+
+	PXGZHZCTaX9nF9ppNjhnLV5Q4q/PS4xitn3dpgW0AQk500Wg7j2vo28D5L9yJ/a3EEyNqlO7Aeu
+	uZTOzcvmE4qQl98TdUn/lv2b3B8s=
+X-Gm-Gg: ASbGncvwYHmj2LHMUB0jWk3Xl8Cc6S/ijzonPpDL6QoaRWwApRBqa/X6FU/Da0BHCAW
+	MrCoc3KeLXY47jQgRNAcFsTHO6p4O785UPSum8LHirw45lU1YwuT0z3P+Mi0k0Uj0JJ/KaKk=
+X-Google-Smtp-Source: AGHT+IHg+2tc9SNm/MpbY8Mjia3MuZCcZPSalVG2ewveHhLFq4EtQZk0RvdLZy1VQRvsYt3h3NdCegkXV32tpo72Bcg=
+X-Received: by 2002:a05:6402:280d:b0:5db:d9ac:b302 with SMTP id
+ 4fb4d7f45d1cf-5dcdb77fcb0mr4292768a12.32.1738772455362; Wed, 05 Feb 2025
+ 08:20:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250204213207.337980-1-mjguzik@gmail.com> <zatx4ddmdvymae4454vrpci642gecbq4l6iuv4u64tssixeplc@h6rimv2lhicg>
+In-Reply-To: <zatx4ddmdvymae4454vrpci642gecbq4l6iuv4u64tssixeplc@h6rimv2lhicg>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Feb 2025 17:20:43 +0100
+X-Gm-Features: AWEUYZlGbG-o6X09GtoR8NsOMA1RTJpgO4SqC7ogM6ynpb-B7NOQV33ZZtjaDis
+Message-ID: <CAGudoHHeHKo6+R86pZTFSzAFRf2v=bc5LOGvbHmC0mCfkjRvgw@mail.gmail.com>
+Subject: Re: [PATCH] vfs: sanity check the length passed to inode_set_cached_link()
+To: Jan Kara <jack@suse.cz>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On 5 February 2025 15:51:01 GMT, Sean Christopherson <seanjc@google=2Ecom> =
-wrote:
->On Wed, Feb 05, 2025, David Woodhouse wrote:
->>=20
->> Save/restore on the MSR makes no sense=2E It's a write-only MSR; writin=
-g
->> to it has no effect *other* than populating the target page=2E In KVM w=
-e
->> don't implement reading from it at all; I don't think Xen does either?
+On Wed, Feb 5, 2025 at 5:12=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
 >
->Hah, that's another KVM bug, technically=2E  KVM relies on the MSR not be=
-ing handled
->in order to generate the write-only semantics, but if the MSR index colli=
-des with
->an MSR that KVM emulates, then the MSR would be readable=2E  KVM supports=
- Hyper-V's
->HV_X64_MSR_TSC_INVARIANT_CONTROL (0x40000118), so just a few hundred more=
- MSRs
->until fireworks :-)
-
-Nah, I don't see that as a bug=2E If there's a conflict then the Xen hyper=
-call MSR "steals" writes from the one it conflicts with, sure=2E But since =
-it's a write-only MSR the conflicting one still works fine for reads=2E Whi=
-ch means that Xen can "conflict" with a read-only MSR and nobody cares; arg=
-uably there's no bug at all in that case=2E
-
->> Those two happen in reverse chronological order, don't they? And in the
->> lower one the comment tells you that hyperv_enabled() doesn't work yet=
-=2E
->> When the higher one is called later, it calls kvm_xen_init() *again* to
->> put the MSR in the right place=2E
->>=20
->> It could be prettier, but I don't think it's broken, is it?
+> On Tue 04-02-25 22:32:07, Mateusz Guzik wrote:
+> > This costs a strlen() call when instatianating a symlink.
+> >
+> > Preferably it would be hidden behind VFS_WARN_ON (or compatible), but
+> > there is no such facility at the moment. With the facility in place the
+> > call can be patched out in production kernels.
+> >
+> > In the meantime, since the cost is being paid unconditionally, use the
+> > result to a fixup the bad caller.
+> >
+> > This is not expected to persist in the long run (tm).
+> >
+> > Sample splat:
+> > bad length passed for symlink [/tmp/syz-imagegen43743633/file0/file0] (=
+got 131109, expected 37)
+> > [rest of WARN blurp goes here]
+> >
+> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 >
->Gah, -ENOCOFFEE=2E
-
-I'll take the criticism though; that code is distinctly non-obvious, even =
-with that hint in the comment about hyperv_enabled() not being usable yet=
-=2E
-
-ISTR we needed to do the Xen init early on, even before we knew precisely =
-which MSR to use=2E And that's why we do it that way and then just call the=
- function again later if we need to change the MSR=2E I'll see if that can =
-be simplified, and at the very least I'll update the existing comment to ex=
-plicitly state that the function will get called again later if needed=2E
-
-You shouldn't *need* coffee to understand the code=2E
-
->> > Userspace breakage aside, disallowng host writes would fix the immedi=
-ate issue,
->> > and I think would mitigate all concerns with putting the host at risk=
-=2E=C2=A0 But it's
->> > not enough to actually make an overlapping MSR index work=2E=C2=A0 E=
-=2Eg=2E if the MSR is
->> > passed through to the guest, the write will go through to the hardwar=
-e MSR, unless
->> > the WRMSR happens to be emulated=2E
->> >=20
->> > I really don't want to broadly support redirecting any MSR, because t=
-o truly go
->> > down that path we'd need to deal with x2APIC, EFER, and other MSRs th=
-at have
->> > special treatment and meaning=2E
->> >=20
->> > While KVM's stance is usually that a misconfigured vCPU model is user=
-space's
->> > problem, in this case I don't see any value in letting userspace be s=
-tupid=2E=C2=A0 It
->> > can't work generally, it creates unique ABI for KVM_SET_MSRS, and unl=
-ess there's
->> > a crazy use case I'm overlooking, there's no sane reason for userspac=
-e to put the
->> > index in outside of the synthetic range (whereas defining seemingly n=
-onsensical
->> > CPUID feature bits is useful for testing purposes, implementing suppo=
-rt in
->> > userspace, etc)=2E
->>=20
->> Right, I think we should do *both*=2E Blocking host writes solves the
->> issue of locking problems with the hypercall page setup=2E All it would
->> take for that issue to recur is for us (or Microsoft) to invent a new
->> MSR in the synthetic range which is also written on vCPU init/reset=2E
->> And then the sanity check on where the VMM puts the Xen MSR doesn't
->> save us=2E
+> Yeah, it looks a bit pointless to pass the length in only to compare it
+> against strlen(). But as a quick fix until we figure out something more
+> clever it's fine I guess.
 >
->Ugh, indeed=2E  MSRs are quite the conundrum=2E  Userspace MSR filters ha=
-ve a similar
->problem, where it's impossible to know the semantics of future hardware M=
-SRs, and
->so it's impossible to document which MSRs userspace is allowed to interce=
-pt :-/
+
+There is some dayjob stuff I need to take care of.
+
+Once I'm both out from under the ruble *and* bored enough, I'll post
+provisional support for VFS_WARN_ON and VFS_BUG_ON macros.
+
+But that's for -next.
+
+> Feel free to add:
 >
->Oh!  It doesn't help KVM avoid breaking userspace, but a way for QEMU to =
-avoid a
->future collision would be to have QEMU start at 0x40000200 when Hyper-V i=
-s enabled,
->but then use KVM_GET_MSR_INDEX_LIST to detect a collision with KVM Hyper-=
-V, e=2Eg=2E
->increment the index until an available index is found (with sanity checks=
- and whatnot)=2E
-
-Makes sense=2E I think that's a third separate patch, yes?
-
->> But yes, we should *also* do that sanity check=2E
+> Reviewed-by: Jan Kara <jack@suse.cz>
 >
->Ah, I'm a-ok with that=2E
+>                                                                 Honza
+>
+> > ---
+> >
+> > This has a side effect of working around the panic reported in:
+> > https://lore.kernel.org/all/67a1e1f4.050a0220.163cdc.0063.GAE@google.co=
+m/
+> >
+> > I'm confident this merely exposed a bug in ext4, see:
+> > https://lore.kernel.org/all/CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNk=
+QoTMaDHg@mail.gmail.com/#t
+> >
+> > Nonethelss, should help catch future problems.
+> >
+> >  include/linux/fs.h | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index be3ad155ec9f..1437a3323731 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -791,6 +791,19 @@ struct inode {
+> >
+> >  static inline void inode_set_cached_link(struct inode *inode, char *li=
+nk, int linklen)
+> >  {
+> > +     int testlen;
+> > +
+> > +     /*
+> > +      * TODO: patch it into a debug-only check if relevant macros show=
+ up.
+> > +      * In the meantime, since we are suffering strlen even on product=
+ion kernels
+> > +      * to find the right length, do a fixup if the wrong value got pa=
+ssed.
+> > +      */
+> > +     testlen =3D strlen(link);
+> > +     if (testlen !=3D linklen) {
+> > +             WARN_ONCE(1, "bad length passed for symlink [%s] (got %d,=
+ expected %d)",
+> > +                       link, linklen, testlen);
+> > +             linklen =3D testlen;
+> > +     }
+> >       inode->i_link =3D link;
+> >       inode->i_linklen =3D linklen;
+> >       inode->i_opflags |=3D IOP_CACHED_LINK;
+> > --
+> > 2.43.0
+> >
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
+
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
