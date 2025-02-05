@@ -1,152 +1,182 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2062.outbound.protection.outlook.com [40.107.220.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5325E22A7EF;
-	Wed,  5 Feb 2025 11:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738754906; cv=fail; b=GT78jO9ACqdUtgLkBL7hk9uD7belpUJH4K3JO1FuU2WG5awBmLIOYTuGmzuMaGayWnuoFNq+73Hpbcg9bK57cpjKsYHVbZnb1WqS8XfzGMp9FbGgzJYGu7QyDk60xJ9bbh595+uWrCiZ1nP6G6OIxJakk/T6vx7S7vE7iofF8uo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738754906; c=relaxed/simple;
-	bh=BvvhyCXkmkuJlPF+dPWWWSt7tkL+CnyW2RbiOoEGE5Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XIJkTeIYNFDvluJLdLiLVYGfhr5nkfr0rN2Qhd/CRBwOCL3wy84dLzWH2CrYm2QhbrxQoZd1+G0wqotTqbtr3DK25BkjUrH6y5CjI39dkqhlmnATrswFPyJ94BVZploWv59+PMVzMcZ+Rq68H58E+90HnAs5BLNFV5OrPjB1eqU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xYNbkx/U; arc=fail smtp.client-ip=40.107.220.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D1C22B8A0;
+	Wed,  5 Feb 2025 11:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738754915; cv=none; b=MklmAEa0kRMQSVaj5uIgVqq1AH7DS2/gi/dNb20elXh9D64oId5ZG+TL8eKiM1wEQTEOZQHoIrukZSplNQ3qwbhYnoxKmcQcr/9HwQGFkekIOnGdQQ01Lb9zFshbc1v4wjVkvhhuQHVf49lRfODf/6b8DL0o9xLwI/+3G1usv98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738754915; c=relaxed/simple;
+	bh=h+wVNmyylYiGnfgPser+Aho0uLJrCJGw90EKVPYZExg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eRyrRwPEpPjH1OZ60rbvpHWS8cf3dZNfSNel2AiF/y6J/i4fZ4db0pbQEBxmF3ZvosOfaqFMS7VoNL7kkxnNC5HJjeD3Hp/Ty2KPc//3ygybdF7Xdwq4xltuA3SQr8+G7K56uvNPwkSWeDM/v+HNDkfhCnbGDheDVGTkx0RK21A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHFiPboo; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xYNbkx/U"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MWtIP7I5kHInDVlYonhMiGuTwoN+suEZPadJyuju65tJMDMDw4wUG1MA6odmi14NAI4Z8HtSyX/O6VyIbANfTXm/ISqDqPShMf5vo+eeIb+VMFPhfZE1sPeupFIFeUQq0uagBPAn0gNdb530crOeVLrda0FbuMy/0RQdhmd187gau5qDVbNw0Swg3m+o1Zctcd9YkwJr9WVPLy9KcHXLGdHzd6nLF9tBE3GI8pkro1E7dKSbvUdF1iL0l1x/HdhOLBXX3kK5p9yswqWGMo+m4gthfEJ6Tvd52omub8r4LMtSj1jGINEgIEVepiO+9ZNHPS7X9d3TZqmN10iRo0ijaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mHT3In+gwK3ezqHvinLssQaWhveVYDsByG6mBRVbrGI=;
- b=lb2yJklYENiPBpYjIntu0n8iu/uWV03V48ElD0TmR1Vag0kwrIWbsAw4GkoOgkQWzG2Imsu1loDIgJAj7vEm9WuItcoHw+dIqsq/txiLx0OLcpkhV5IQhF7KjyBB07hIMTBUlsuDQl4doP+gsADh3DKRm8MzHhqWUZdwHD+88iGkXeDh1I9vbwPlR/ctIcJEylW3nmq1D6s2g3K2zHaZa3RgpgYKoHftTtczPZdTExpxQHoLLYS3oW8wW35edeFGkCTlQ2qL2onCDRvkG69P0ZZyl+23eFXe2m1HmA/fqZBKF5hJ4rZQv2RyfEwWpAFxdZCqVy/6tciwmsXN9QTx9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mHT3In+gwK3ezqHvinLssQaWhveVYDsByG6mBRVbrGI=;
- b=xYNbkx/UXoSe655wiau4LqxqNqY+AL+zVrB6Dt10TrWbcwmefMuSITnkRX1L7In0mNn1Tro+KLj5RKnx+kWHXnzXHAmi6ZCu+Uw3HnSlMdSCn0hxTwWZyJ+YMfMFOwMjYHjtSOhl3/Y9L/f39ha/jMkRo3tHm+J4+lrOV54dgkU=
-Received: from BN8PR15CA0001.namprd15.prod.outlook.com (2603:10b6:408:c0::14)
- by SJ0PR12MB6711.namprd12.prod.outlook.com (2603:10b6:a03:44d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
- 2025 11:28:22 +0000
-Received: from BL02EPF0001A108.namprd05.prod.outlook.com
- (2603:10b6:408:c0:cafe::48) by BN8PR15CA0001.outlook.office365.com
- (2603:10b6:408:c0::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.27 via Frontend Transport; Wed,
- 5 Feb 2025 11:28:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A108.mail.protection.outlook.com (10.167.241.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Wed, 5 Feb 2025 11:28:21 +0000
-Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 05:28:18 -0600
-From: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-To: <gautham.shenoy@amd.com>, <mario.limonciello@amd.com>,
-	<rafael@kernel.org>, <viresh.kumar@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>, "Dhananjay
- Ugwekar" <dhananjay.ugwekar@amd.com>
-Subject: [PATCH 10/12] cpufreq/amd-pstate: Add missing NULL ptr check in amd_pstate_update
-Date: Wed, 5 Feb 2025 11:25:21 +0000
-Message-ID: <20250205112523.201101-11-dhananjay.ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205112523.201101-1-dhananjay.ugwekar@amd.com>
-References: <20250205112523.201101-1-dhananjay.ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHFiPboo"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-518954032b2so1991433e0c.0;
+        Wed, 05 Feb 2025 03:28:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738754906; x=1739359706; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Zfbqjn/+BTjGn3HRQo9g+ZrBnXWD2gznbIgT8os1cQ=;
+        b=QHFiPbooPXsLFS0T2/A+UmTqI7E1rEmH9KIBrRSkMYZz2wVWYSfk+GaBqd2S/cLQHk
+         YH82aJw6re+UGDghegxtxu0X7VibQW8w2+eMCIMwNtQx7l12CakYOD6KkDpovJ2tCZv9
+         tV84MNGFtE3KzDXAXrjyxHAFEklb27iOVQ1Pvy+0Ed5rftaLEnf5cKOt7SvmhDx2OoBB
+         MwlI9XZi1D91MYjvZQrRYCNZIgzgWVikY4MPRWO4a6VtGLf62bdU9zhTkx2nX/0mGE8h
+         S2wrw5mksrge+IdbjPm7x67rYrKZM1GtyDc3LuCVz0Y5Z3kjpNphtwAVBF+jmT7mLY4n
+         +eIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738754906; x=1739359706;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Zfbqjn/+BTjGn3HRQo9g+ZrBnXWD2gznbIgT8os1cQ=;
+        b=ea2H8eOspU+qlJRdX4sGnpPQgQ4YN07PvmF4xCQX53TEjgLCUTE2GZpHFy5/dCBoEa
+         7fOtYWTlo4hPPSqCn9jH/tqKTywgA1s1VPRoutEyJwezhJpLoUiKH8Rsjhnfv5700LA/
+         S65UPFKECK8cijO88Ghc7UqnZqOOfbN1qcszAEjXNITSkBZ4Gj6ZL3CBZa0fRY8w/ZVY
+         hKjyp8cMwxi1ALxHsG1SrAhozMqMOrCrRxPaolNGhaRsC5VMOdzH7zVjc0udoqVHoKYA
+         ec+9yfcxlpBJqb2TCOYUIq8ow64S6Ky0XBOLzgaW2ZwrDr3bhaGNHJmnbMqlsjqjHK0V
+         oizg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcb642A6R0in5NBar3bwYB5WQGHOuHbwjPsalMm49CARjdLAHOOGaF0Z0pSW6BfSey2gtvQNpElTPh@vger.kernel.org, AJvYcCWrX4V5wUHHjDOqMSweZYBRazZS3mSwtT9uoJ5si+cghnENap8CXJCrzWKDh+vFPshY3e4y+7/TnZmYmA+/@vger.kernel.org, AJvYcCXcL61OFBl4wreXaBs0ui0pD7CVZTpdo18DMsNMMJRu0Uww8UiVp/C+a4Dc3B8ParESZbQQddGdN2py/cyjiAIzaWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1Nx0IAx5pdCB5f0dVJ5P0KRHdtKedjRUAwutOy45lq5iT3WhI
+	SbrIP/oT1pcpctdAzO7SNG50I8Ckx3+ARldWgR7TdEFwbFlsd0etU0VdljpM3igR/vuxSQlImVi
+	ZtnzkCgNknbaVWR926RvAlkJ4yRYROec+Q2k=
+X-Gm-Gg: ASbGnctxCxUjMWpYBfmcOpAoexaoXACgQ/8WyiGxes9FAIMaMEsQjHRBfDH3ztnmTxo
+	MmtgqM3XEBYu9yEuhrgGLrrFUOuBeSTjp7NYTFBg2iXp+gTpi9N7AagpCBQr9OeWQRU2z4K7E
+X-Google-Smtp-Source: AGHT+IEiOtyV8TvJVJz+35M5l1s+wtDuJEj3wSUA7ZuKuOJo+VuTHNinmiau/J43XHvARudE69SFhEIjAco2Q5H0D94=
+X-Received: by 2002:a05:6122:4081:b0:516:157d:c5fb with SMTP id
+ 71dfb90a1353d-51f0c5126dcmr1233268e0c.10.1738754905728; Wed, 05 Feb 2025
+ 03:28:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A108:EE_|SJ0PR12MB6711:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c603354-15b3-4663-53fd-08dd45d83243
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aWzYmXcFps3taeyeaQriXad7Pd97tihDWIU5u6KF1USRR0V4oMMKuGYiqdhL?=
- =?us-ascii?Q?D0tCHD4OYDGjCfB8xWQehF6GMjdouBqP5mzdLLKVuNNkBKGOQhmO9MritYEo?=
- =?us-ascii?Q?kNGEabP8qEPDSv8+dgKDBDnXqiYZvJb6XOe8K+Zfl7xgB6faES5zPb03VBzD?=
- =?us-ascii?Q?IE6MadYj0xqWcEk+mf2I/q+VbrVUBYqeei2u8Lv4XpepyN+RJinU0jDObhUn?=
- =?us-ascii?Q?lCPX/fsZMX0+xokNOfHYgNWGiIf7tvMq8RLbx6SVipGYzPbwDGmo9sQUO/l1?=
- =?us-ascii?Q?z0YE9WAPA1dSOUNLZauhMfWPkkTIsvE0bHgvCVH/bLGQnLNbXCtO/4461yuc?=
- =?us-ascii?Q?f/nFLVYmbUE1yN1PpkTnMg1hHaRD6E2MtQldUgfBrW3p86hXwoutK4zqE2cy?=
- =?us-ascii?Q?gUaPmSpgOy7JfQ2NnF6lJ7KG7dVlYGJeeKjZ+S11y/iFD5fGbNGVWY3e8ywL?=
- =?us-ascii?Q?+5yH2AVlGlhldIKs99waJeruFfT4cVLfSqPlY/LZcddrF/Oo8sY3D70YNmxA?=
- =?us-ascii?Q?j32x1rKMNYuvx86KAU+hSHKZUdVZQyboOnqI4puPR9TuupMD+pi2Ye8SEke2?=
- =?us-ascii?Q?Nhz6nAXrwwd8RiIRG1rXfTyjjz/Q7Xui90aOTyBPO0wuwwm7Fw57/ipirbGc?=
- =?us-ascii?Q?MpuylWnTx0GXu/aZlpI36QFEwDhtBKA8FukHUwdWewVzQfW8aM3xwbJYswf1?=
- =?us-ascii?Q?Avl6fihhwaAfRR4qAd7uAm0bZry1w1Ny5CxUsCUqDY7URcJPv/WpjAlF4Spd?=
- =?us-ascii?Q?OpwDBxTwuYfOd1pLJ1ThI9Dh6nq2C8/6F4yfh5OU+TVlZIHQWoh2JzVlnkhT?=
- =?us-ascii?Q?1RXuLaj6HjaiNA5zR4AnSg1Re1XZbt/L9AWf2uxd2jq2NCsnwntjrFXMeuGj?=
- =?us-ascii?Q?zeWb/1Cwxg0GDoNaGV/Z9mdggWQ9DFPDRSzBD57dpeZQA2pPGxqgBWcrdUNy?=
- =?us-ascii?Q?ZDpyWH6Toe8GZMGamuaHI5u1/59ZjWl03iZD7WZ8to2n+kJjYd3s1/Uv4WmZ?=
- =?us-ascii?Q?OCQ4UNDfDRl3v9xRtTNzl2RweRB5pLdp2hWYj23orl3aRj3G8/ECyBNZ3NSa?=
- =?us-ascii?Q?8Nb4cElEYyML0WtqiiHsSGvJvYXFLhxHWIYn2LMMscPF0guARuOkTJoXZkxv?=
- =?us-ascii?Q?Q1xe3VkYuP6KcnE+4Jon6Y5HTObY+vt9br54BuHWc1PT/I0pSXyEkDCnV8Ga?=
- =?us-ascii?Q?46EDDaBU9M4F9Ftek8mRhyVuNKOI+2l/8BXG5nsPgsce9f7ke4VI42lmaBz6?=
- =?us-ascii?Q?a4OXwfP5S46F+IP5ClI1Q64J12D3070Xq7hpM8n/EDpUH5aApvSvoJmHVZY+?=
- =?us-ascii?Q?cnYhVQiJvSCee6iLewzdeLu+WkdMNSBGwT7kUCZaq/UM+ecUhG5Iey5/nwhy?=
- =?us-ascii?Q?OQrOX52OIVy4AZDz4I1bgQAk2BfVkt3PuFVdDeQzRk7gSDEU3K54k4MYjVci?=
- =?us-ascii?Q?SyTtBs9Vez6/mReMK5Xhya3PP8GgM5Zkrn4N42OVisnQY+DxBb85O2T/QjUw?=
- =?us-ascii?Q?EaACUO1bTxi8vlg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 11:28:21.4379
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c603354-15b3-4663-53fd-08dd45d83243
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A108.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6711
+References: <20250205100116.2032765-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250205100116.2032765-1-claudiu.beznea.uj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 5 Feb 2025 11:27:59 +0000
+X-Gm-Features: AWEUYZl9lUEDen7YN-g7ZtGYCoVQWpMYzvVY7RHscL8of6VR3asaUGW6PGI55-c
+Message-ID: <CA+V-a8sd6B+_dSqrQJTggO2mr4GRQ8sqg3ES205mhgp0yz-fLA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Add suspend/resume support for
+ pull up/down
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: geert+renesas@glider.be, linus.walleij@linaro.org, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Check if policy is NULL before dereferencing it in amd_pstate_update.
+On Wed, Feb 5, 2025 at 10:13=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+>
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The Renesas RZ/G3S supports a power-saving mode where power to most of th=
+e
+> SoC components is lost, including the PIN controller. Save and restore th=
+e
+> pull-up/pull-down register contents to ensure the functionality is
+> preserved after a suspend/resume cycle.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Fixes: e8f555daacd3 ("cpufreq/amd-pstate: fix setting policy current frequency value")
-Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 3 +++
- 1 file changed, 3 insertions(+)
+Cheers,
+Prabhakar
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 9c939be59042..6a604f0797d9 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -551,6 +551,9 @@ static void amd_pstate_update(struct amd_cpudata *cpudata, u8 min_perf,
- 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpudata->cpu);
- 	u8 nominal_perf = READ_ONCE(cpudata->nominal_perf);
- 
-+	if (!policy)
-+		return;
-+
- 	des_perf = clamp_t(u8, des_perf, min_perf, max_perf);
- 
- 	policy->cur = perf_to_freq(cpudata, des_perf);
--- 
-2.34.1
-
+> diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/re=
+nesas/pinctrl-rzg2l.c
+> index 4fae24453c11..7eb91ac5ba42 100644
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -318,6 +318,7 @@ struct rzg2l_pinctrl_pin_settings {
+>   * @pmc: PMC registers cache
+>   * @pfc: PFC registers cache
+>   * @iolh: IOLH registers cache
+> + * @pupd: PUPD registers cache
+>   * @ien: IEN registers cache
+>   * @sd_ch: SD_CH registers cache
+>   * @eth_poc: ET_POC registers cache
+> @@ -331,6 +332,7 @@ struct rzg2l_pinctrl_reg_cache {
+>         u32     *pfc;
+>         u32     *iolh[2];
+>         u32     *ien[2];
+> +       u32     *pupd[2];
+>         u8      sd_ch[2];
+>         u8      eth_poc[2];
+>         u8      eth_mode;
+> @@ -2712,6 +2714,11 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rz=
+g2l_pinctrl *pctrl)
+>                 if (!cache->ien[i])
+>                         return -ENOMEM;
+>
+> +               cache->pupd[i] =3D devm_kcalloc(pctrl->dev, nports, sizeo=
+f(*cache->pupd[i]),
+> +                                             GFP_KERNEL);
+> +               if (!cache->pupd[i])
+> +                       return -ENOMEM;
+> +
+>                 /* Allocate dedicated cache. */
+>                 dedicated_cache->iolh[i] =3D devm_kcalloc(pctrl->dev, n_d=
+edicated_pins,
+>                                                         sizeof(*dedicated=
+_cache->iolh[i]),
+> @@ -2953,7 +2960,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2=
+l_pinctrl *pctrl, bool suspen
+>         struct rzg2l_pinctrl_reg_cache *cache =3D pctrl->cache;
+>
+>         for (u32 port =3D 0; port < nports; port++) {
+> -               bool has_iolh, has_ien;
+> +               bool has_iolh, has_ien, has_pupd;
+>                 u32 off, caps;
+>                 u8 pincnt;
+>                 u64 cfg;
+> @@ -2965,6 +2972,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2=
+l_pinctrl *pctrl, bool suspen
+>                 caps =3D FIELD_GET(PIN_CFG_MASK, cfg);
+>                 has_iolh =3D !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B |=
+ PIN_CFG_IOLH_C));
+>                 has_ien =3D !!(caps & PIN_CFG_IEN);
+> +               has_pupd =3D !!(caps & PIN_CFG_PUPD);
+>
+>                 if (suspend)
+>                         RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + P=
+FC(off), cache->pfc[port]);
+> @@ -2983,6 +2991,15 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg=
+2l_pinctrl *pctrl, bool suspen
+>                         }
+>                 }
+>
+> +               if (has_pupd) {
+> +                       RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + P=
+UPD(off),
+> +                                                cache->pupd[0][port]);
+> +                       if (pincnt >=3D 4) {
+> +                               RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->=
+base + PUPD(off),
+> +                                                        cache->pupd[1][p=
+ort]);
+> +                       }
+> +               }
+> +
+>                 RZG2L_PCTRL_REG_ACCESS16(suspend, pctrl->base + PM(off), =
+cache->pm[port]);
+>                 RZG2L_PCTRL_REG_ACCESS8(suspend, pctrl->base + P(off), ca=
+che->p[port]);
+>
+> --
+> 2.43.0
+>
+>
