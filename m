@@ -1,129 +1,162 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878BA1DAC81;
-	Wed,  5 Feb 2025 16:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460C6192D6B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771625; cv=none; b=MLWBqZc2IKMiuda6pFVgMYhbCLPE3mqUQK8IWOeMMxgndQjhzRlDVI5AgAuxOq1LIjAfwCo/+avts6kHFw0HnP9dOGM2pbMzJS261WeLaW+l3aMjqXsgEmn6LFgajq0gjTtRD5G2dmB2Fzf1/L/rNwfKMR6JYouC+LPLY32WD5A=
+	t=1738771639; cv=none; b=k1yObto9iCVYdKxTsz/y2I0onOgeb9AAy1xV/sB9HDs9ECLf2Ynw16PruyDVpnQAwsz2TWfzh1YZ7SfmjHi7zCCScQMjFpxwCuOLWuWV3Q7ZnBcuxwAByr4+UrdHWJCM7lNVH2fAwGbEUTg9Tb2WMv4kV7SzxulnSZJDhS8dqvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771625; c=relaxed/simple;
-	bh=53VKuWOfgt52pZFgRpANs8PddOmYAtpCNlsKAnzd8KY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jBwoQrNWn7btq4MSBWhlYJMb528FE0i94Zrcf/BO2o4BDHtisRDz1qVb22lFCqqUcfiJcgiToeG1FOsEWYPjuEpn71dk+sjJ/ZgywRl35RGMUCEFtIaBhfKxcT6KZapi5cZTRIrqHlRYVutcHGQFcLXAOlzb/vV6ZyZ/TXmNiTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6afy8HNX; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1738771639; c=relaxed/simple;
+	bh=rmpeGPxJSN2OrTcMVT865F6mveKL4GDGOlMZX9SAmFA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=N/hQBlQUJI+XtUDuzM3IDy3oo8lxoLisPHFv9DGqP5YoQ9J2YNHNHBlfH/pdcVGFtfBrKr8+++tCakSqCf+ANUhFfrqwCY/ovPcCZmultLONhP2Oyuh9gCWq9/vpGwQPT1n8esjQbRy8xV2/z7zOFNBjUZsLJQfSKEcq5lYs3BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oIW0HSbc; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6afy8HNX"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515G0p1F031520;
-	Wed, 5 Feb 2025 17:06:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	YzSHclRpZjXdpbypTAK2KFPhVA+qCoQsT3woG1zZJrE=; b=6afy8HNXwQBSd43T
-	W8I2uCt96QhaXrBk5F49orAmd1WXv32fTK/pQNTq7dZ5sVTFqy3+EgJJLGjdmL4F
-	w+o7QnWoOP8w4G/Ej+ABVk5j0NCslt1Gv94j4UxzHBbV2e0x9k1N4uCqwngeuiru
-	j14PHwKduUWpfAf8VBOkUuMBsfX+/F9dqx0zLbw1yU0bcu/pcO84W2iL5BVFvPn5
-	xpDHWtADAoB3otEOEDiTJpsh+TGIuuL7GWt6VSDBOtOBTeDzf5r7pU+7fi5xXSpi
-	ayDUvTQB+njys7UJbC9LcsyTDFaMz+ru6iXiMDLGdaUiVusXhHRG9RYTzCTtG66/
-	qshRwA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44m2ru2mmc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 17:06:29 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0C44D40046;
-	Wed,  5 Feb 2025 17:05:01 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 489692AF21F;
-	Wed,  5 Feb 2025 17:02:21 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 17:02:20 +0100
-Message-ID: <6db6e1d4-a0b1-4ce3-9235-d92bb19da1d6@foss.st.com>
-Date: Wed, 5 Feb 2025 17:02:19 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oIW0HSbc"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250205160709epoutp041134a8407789866add0d2a80bf732e9a~hW5WmwBhT0710307103epoutp04W
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:07:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250205160709epoutp041134a8407789866add0d2a80bf732e9a~hW5WmwBhT0710307103epoutp04W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1738771629;
+	bh=2bByUiTilCfcRBjAZx/mUHa2iGdQsonj502SFhnDFDo=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=oIW0HSbc9DEUMzFLOvTKkNWPvToLtHnIiexm/sePEpAzu8pRv3KsPZQ6lpiCfCe6b
+	 327ACFLhZ8PHqoIZFFkcKQaY4OLEe85Aldb3Llqowua3xT79BlXy58aN+LIllORVWo
+	 2M44/LV1sAxIYtwY8C/ROD8/fFpS26xJQriQi8sk=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250205160708epcas5p295d47a52d8ad411be061ce90c0654e96~hW5VUTtmm1179611796epcas5p2s;
+	Wed,  5 Feb 2025 16:07:08 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Yp4qs5Phcz4x9Pp; Wed,  5 Feb
+	2025 16:07:05 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	EC.A3.19933.9AC83A76; Thu,  6 Feb 2025 01:07:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250205160705epcas5p4c645ccf4051eb12a252d7d9d4c3c300b~hW5SwVNy60758907589epcas5p4R;
+	Wed,  5 Feb 2025 16:07:05 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250205160705epsmtrp2113197f500872c205a384b66f5d74b61~hW5SveyX_0198701987epsmtrp2W;
+	Wed,  5 Feb 2025 16:07:05 +0000 (GMT)
+X-AuditID: b6c32a4a-c1fda70000004ddd-20-67a38ca90efb
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	85.89.18949.9AC83A76; Thu,  6 Feb 2025 01:07:05 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250205160703epsmtip2aa5667ef559938479af04ee473001a39~hW5RQ__Nz0781307813epsmtip2d;
+	Wed,  5 Feb 2025 16:07:03 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Sudeep Holla'" <sudeep.holla@arm.com>
+Cc: "'Devang Tailor'" <dev.tailor@samsung.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <faraz.ata@samsung.com>
+In-Reply-To: <Z5zPpz6WAbPJX701@bogus>
+Subject: RE: [PATCH v2] arm64: dts: add cpu cache information to
+ ExynosAuto-v920
+Date: Wed, 5 Feb 2025 21:37:02 +0530
+Message-ID: <090c01db77e7$ffa892b0$fef9b810$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] Add support for Priva E-Measuringbox board
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
-        "Rob Herring (Arm)"
-	<robh@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Woojung Huh
-	<woojung.huh@microchip.com>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
-	<andrew+netdev@lunn.ch>,
-        <devicetree@vger.kernel.org>, Eric Dumazet
-	<edumazet@google.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "David S.
- Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <kernel@pengutronix.de>
-References: <20250203085820.609176-1-o.rempel@pengutronix.de>
- <173859694746.2601652.11244969424431209545.robh@kernel.org>
- <Z6Msn8AxgG_JTVNs@pengutronix.de>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <Z6Msn8AxgG_JTVNs@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJnCMNmj1amGSmPwLixER7WDeLbQALDHLFMAzsAx8ICGgWRG7Hg+i6A
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmuu7KnsXpBpdb1CzW7D3HZHFvxzJ2
+	i/lHzrFaXLuxkN3i5ax7bBabHl9jtbi8aw6bxYzz+5gs/u/ZwW6x/NQOFgcujzXz1jB6bFrV
+	yeaxeUm9R9+WVYwenzfJBbBGZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynk
+	Jeam2iq5+AToumXmAB2lpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwKdArTswt
+	Ls1L18tLLbEyNDAwMgUqTMjOuNhZULCbu2LdoV2MDYwrObsYOTkkBEwk/r7cxN7FyMUhJLCb
+	UWL6pDXMEM4nRokvt3cyQTjfGCW+nexkhWl5tXsFVNVeRom3rzeyQjgvGSXmzuhlAaliE9CV
+	2LG4jQ3EFhHQlti8+xELSBGzwAwmid3LL4AVcQqoSkxs7WcHsYUFgiQWTD0CZrMIqEi87TzL
+	CGLzClhKNG9+xAJhC0qcnPkEzGYWkJfY/nYOM8RJChI/ny5jhVjmJvFk82JWiBpxiZdHj4B9
+	JyGwhUNiztG9UD+4SFxYtQbKFpZ4dXwLO4QtJfH53V42CLtaYv2GeSwQdgejROP2GgjbXmLn
+	o5tAcQ6gBZoS63fpQ+zik+j9/YQJJCwhwCvR0SYEUa0q0fzuKtQUaYmJ3d1QWz0k3l+bxTiB
+	UXEWks9mIflsFpIPZiEsW8DIsopRMrWgODc9tdi0wCgvtRwe4cn5uZsYwWlWy2sH48MHH/QO
+	MTJxMB5ilOBgVhLhPb19QboQb0piZVVqUX58UWlOavEhRlNgcE9klhJNzgcm+rySeEMTSwMT
+	MzMzE0tjM0Mlcd7mnS3pQgLpiSWp2ampBalFMH1MHJxSDUxblVVCP/CwBLebnpzyx7OE901I
+	yM1UvQPzeKVPTvf5Kcv6/zRXRbXuzMrjHMzlXpHGs3/OXDlvX4DH95lBqifeS+hr8R/9uPLj
+	vzovxW4ni2cfNt7JYjY0/SBmxBvEzZC+Oev+xtCyo1JLv66Tm7Hx0W0T/fUKE6U3Rr1lX9zc
+	tv7l3rmuHO/P79nTrL49xseyfdFVoQ3FnCUtgodXrZ/hovIn86vmpofL2u/fNY3/7nXKf9X8
+	E/u6BI3qts3/uXxq25Lw9zNtYxWf/Jn8s2jpHU/TBdb5hb98wlffsTjoo5J2UnrPkn6eE33O
+	cQpG3qU2Xt8/9C/Vutp194WFoH/CCxfBRZ+v/42ZJF/KV1qjxFKckWioxVxUnAgAYb4TWjwE
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJXndlz+J0g7stXBZr9p5jsri3Yxm7
+	xfwj51gtrt1YyG7xctY9NotNj6+xWlzeNYfNYsb5fUwW//fsYLdYfmoHiwOXx5p5axg9Nq3q
+	ZPPYvKTeo2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDIudhYU7OauWHdoF2MD40rOLkZODgkB
+	E4lXu1cwdzFycQgJ7GaUeLR8LhNEQlri+sYJ7BC2sMTKf8/ZIYqeM0o8O36LDSTBJqArsWNx
+	G5gtIqAtsXn3IxaQImaBRUwSm5ZeZ4XouMYo8efRUxaQKk4BVYmJrf1Aozg4hAUCJA7skQYJ
+	swioSLztPMsIYvMKWEo0b37EAmELSpyc+YQFpJxZQE+ibSNYCbOAvMT2t3OYIY5TkPj5dBkr
+	xA1uEk82L2aFqBGXeHn0CPsERuFZSCbNQpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYsMMpLLdcr
+	TswtLs1L10vOz93ECI4zLa0djHtWfdA7xMjEwXiIUYKDWUmE9/T2BelCvCmJlVWpRfnxRaU5
+	qcWHGKU5WJTEeb+97k0REkhPLEnNTk0tSC2CyTJxcEo1MPGGTY1b1Ty7r3jVxBqjsi0HeAJN
+	YuNyzl+Nk+8R18ngvCqtzVIRvn9D1feXdzz4dh/avHqrVDXbnObMiXu/mHCkfBPe6327bcq9
+	lDfe890efZ0TFiaccIZvn0LV8/+6wQ1nTx6e+kTQ8+syh0kuUkZc4ctqm42eLeSSydnPs0JZ
+	pW7aYU3TuL1u684b/foX/ng9/4ptSx4di/f6Kl0tXV+X6zjtZfvrOT6Si6QPB+9fnHFDNT3S
+	i6fwbWvj2Yi1D9vXuGh+DpKdlfp6g3H/lwbeIx/dSpm2Po38vpZZZVZ6HkvpGg7HPfVv9zRu
+	WDnl0zTTZ9KHuhS+v3ve+ER0feC6lfVn0komXmQL5l9fraDEUpyRaKjFXFScCADJ6BzEIgMA
+	AA==
+X-CMS-MailID: 20250205160705epcas5p4c645ccf4051eb12a252d7d9d4c3c300b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250108054224epcas5p399f3d734f8d9f82e5ae75d183d1a5344
+References: <CGME20250108054224epcas5p399f3d734f8d9f82e5ae75d183d1a5344@epcas5p3.samsung.com>
+	<20250108055012.1938530-1-dev.tailor@samsung.com>
+	<006401db73d6$2af35fb0$80da1f10$@samsung.com> <Z5zPpz6WAbPJX701@bogus>
 
-Hi Oleksij
+Hi Sudeep 
 
-On 2/5/25 10:17, Oleksij Rempel wrote:
-> Hi Alexandre,
+> -----Original Message-----
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> Sent: Friday, January 31, 2025 6:57 PM
+> To: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: 'Devang Tailor' <dev.tailor@samsung.com>; robh@kernel.org;
+> krzk+dt@kernel.org; conor+dt@kernel.org; devicetree@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org;
+> linux-kernel@vger.kernel.org; faraz.ata@samsung.com
+> Subject: Re: [PATCH v2] arm64: dts: add cpu cache information to
+> ExynosAuto-v920
 > 
-> On Mon, Feb 03, 2025 at 09:37:06AM -0600, Rob Herring (Arm) wrote:
->>
->> On Mon, 03 Feb 2025 09:58:16 +0100, Oleksij Rempel wrote:
->>> This patch series introduces support for the Priva E-Measuringbox board
->>> based on the ST STM32MP133 SoC. The set includes all the necessary
->>> changes for device tree bindings, vendor prefixes, thermal support, and
->>> board-specific devicetree to pass devicetree validation and checkpatch
->>> tests.
->>>
+[snip]
+> > You can add one node for cl0 and cl1, say "l3_cache_cl0_cl1" and
+> > Remove the specific node for CL1, because both are same.
+> >
 > 
-> ...
+> What do you mean by "both are same" ?
+> Do you mean both have exact same properties but are physically different
+> caches ? OR Do you mean it is just one shared cache ?
 > 
->> arch/arm/boot/dts/st/stm32mp133c-prihmb.dtb: adc@48004000: adc@0:interrupts: 0 was expected
->> 	from schema $id: http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#
->> arch/arm/boot/dts/st/stm32mp133c-prihmb.dtb: adc@48003000: adc@0:interrupts: 0 was expected
->> 	from schema $id: http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#
->
+Thanks for review and pointing it out, v920 has physically different caches 
+(two of them are same properties, but the 3rd has 1MB lesser size)
+Got you point about having distinct node for cacheinfo population
+So for this patch:
+
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
+> If former, we still need distinct node to get the cacheinfo about
+shareability
+> correct. If this is about avoiding duplication of errors, you can probably
+define
+> some macro and avoid it, but we need 2 nodes in the devicetree.
 > 
-> Can I please get your attention here. The reported issue is not related
-> to this patch set. adc@0:interrupts are set in the dtsi file.
+> If latter, you suggestion is correct.
+> 
+> --
+> Regards,
+> Sudeep
 
-Yes I saw this issue too when I tried to merge your series. I'm 
-discussing with STM32 ADC driver owner to fix the issue (either in stm32 
-adc yaml or maybe in schema).
-
-Anyway we also have the issue for STM32MP135F-DK board so I'll merge 
-your series as it doesn't introduce the issue.
-
-regards
-Alex
-
-
-
-
-> Kind regards,
-> Oleksij
