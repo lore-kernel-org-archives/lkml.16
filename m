@@ -1,67 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C86222566;
-	Wed,  5 Feb 2025 14:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC0B18FDA5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738766525; cv=none; b=RjLHpdaQkNdYCmcigxnAtDwzYXj96JBeXROeHQePj9VPZsjHR/enMEHOUriZLgOLHmd1ZeV8XvPx7GTs2hEwTGIbigfDepqJvauKMIZokxkA6qYV2CuPHqdPIMyFYYaHpQRhSIsRWVe0YbFxp3Lzw3RzhvL+cN5AUQ9Dqjz9goY=
+	t=1738766534; cv=none; b=og9HQ0JVRm8DV6VFqDR5rqFVepD9QasHnKgfJbdsuhoUimEITfvAvDsu3Zmuav3iggbyCFCHNiKyrO+236H9w3bIUW7Ne4a/rp/TeIFt+8vMJF+atkB/um+Jm60cJS111aEcHOZW4ziAqViVXCZFwiGkeYO4rTId3R6kh5QwIhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738766525; c=relaxed/simple;
-	bh=7aNBsgnJ1xpYJupIDdeW59JsJ73w9EGqwdcut5LVDS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ihRZQVYEdOmbRfz7cByQIfpAT4n6Mp8wL4VZL38J3z9dIk4WV64a09ASPb4zwAQUZK+/5HlIg/Q4Ir0+i3XEk0YVj5QGeyCj+jTeDWLgjFzgHcAFgvWgWxXljGJGhiQSS5JrTp5r9VXngTTDFv211IbtRRGxzOmKsVPUcqbgOzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2YNA18v; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2YNA18v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93270C4CEE3;
-	Wed,  5 Feb 2025 14:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738766525;
-	bh=7aNBsgnJ1xpYJupIDdeW59JsJ73w9EGqwdcut5LVDS4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W2YNA18v52GskOrMKLkrTwzfQn8Km0PjGIUu87kMojGGjoog/10G95TBZ6vnkCJOA
-	 YBN2VL9nccEhcQB+VjXd8HFCxCAmenqSYB1f1SLAze41y9IxYfGcUyvzovhFkucE4f
-	 p08Hgr2aFu7TPrkMKUHPLcHRhBWfTuIFNxLXuqn9BzHXEN+JSM2GV9t331JEbLcVO1
-	 GSPh9+fHX0PFZ54Xj0VKJbbudJl6ZriCoRRfT0mEAv2qtfV12c5C2YyCHBJpXp/Avp
-	 6rDEaptuPvVVvZW3SFE4g/gPs6SQsVGFwUV+bcIiAAsYiTd1k+zUacXb4F76FSGdZJ
-	 rbwrAoMwir3bw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org,
+	s=arc-20240116; t=1738766534; c=relaxed/simple;
+	bh=LIAew11mhguTF2BX4IO3e9boWaQIZ0S/uz3h7V4gidE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lZpXtvpFEHNwbGgkYZif049CN0aSVvMRcLHKVOM1X/z0LaebWR3gN120nAW9vvDuK9jnLRjE9gxRopVG4RNIYYqDnypKNuuUI+VPoccleWj2VIVg7SRKiRZb/8ydgT59cesyQ7HpNwPYvEgZGTJChw235ky1i04P/6wZiqBWd/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:fa11:c14e:2df5:5273])
+	by michel.telenet-ops.be with cmsmtp
+	id 9qi72E00h3f221S06qi7MH; Wed, 05 Feb 2025 15:42:10 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tfgbD-0000000FwWi-36dR;
+	Wed, 05 Feb 2025 15:42:07 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tfgbP-00000006bUL-3Iq0;
+	Wed, 05 Feb 2025 15:42:07 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: soc@lists.linux.dev,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v7 14/17] RDMA/umem: Separate implicit ODP initialization from explicit ODP
-Date: Wed,  5 Feb 2025 16:40:34 +0200
-Message-ID: <f6ae7422e8df156e18c5b5a98a334f09d95f3519.1738765879.git.leonro@nvidia.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1738765879.git.leonro@nvidia.com>
-References: <cover.1738765879.git.leonro@nvidia.com>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH resend] firmware: imx: IMX_SCMI_MISC_DRV should depend on ARCH_MXC
+Date: Wed,  5 Feb 2025 15:41:43 +0100
+Message-ID: <9638976432d8dfcb0c4df9d454b661f9022a2d7b.1738766259.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,156 +50,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+The i.MX System Controller Management Interface firmware is only present
+on Freescale i.MX SoCs.  Hence add a dependency on ARCH_MXC, to prevent
+asking the user about this driver when configuring a kernel without
+Freescale i.MX platform support.
 
-Create separate functions for the implicit ODP initialization
-which is different from the explicit ODP initialization.
-
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Fixes: 514b2262ade48a05 ("firmware: arm_scmi: Fix i.MX build dependency")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/infiniband/core/umem_odp.c | 91 +++++++++++++++---------------
- 1 file changed, 46 insertions(+), 45 deletions(-)
+ drivers/firmware/imx/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index 30cd8f353476..51d518989914 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -48,41 +48,44 @@
+diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
+index 907cd149c40a8b5f..c964f4924359fcd3 100644
+--- a/drivers/firmware/imx/Kconfig
++++ b/drivers/firmware/imx/Kconfig
+@@ -25,6 +25,7 @@ config IMX_SCU
  
- #include "uverbs.h"
- 
--static inline int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
--				   const struct mmu_interval_notifier_ops *ops)
-+static void ib_init_umem_implicit_odp(struct ib_umem_odp *umem_odp)
-+{
-+	umem_odp->is_implicit_odp = 1;
-+	umem_odp->umem.is_odp = 1;
-+	mutex_init(&umem_odp->umem_mutex);
-+}
-+
-+static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
-+			    const struct mmu_interval_notifier_ops *ops)
- {
- 	struct ib_device *dev = umem_odp->umem.ibdev;
-+	size_t page_size = 1UL << umem_odp->page_shift;
-+	unsigned long start;
-+	unsigned long end;
- 	int ret;
- 
- 	umem_odp->umem.is_odp = 1;
- 	mutex_init(&umem_odp->umem_mutex);
- 
--	if (!umem_odp->is_implicit_odp) {
--		size_t page_size = 1UL << umem_odp->page_shift;
--		unsigned long start;
--		unsigned long end;
--
--		start = ALIGN_DOWN(umem_odp->umem.address, page_size);
--		if (check_add_overflow(umem_odp->umem.address,
--				       (unsigned long)umem_odp->umem.length,
--				       &end))
--			return -EOVERFLOW;
--		end = ALIGN(end, page_size);
--		if (unlikely(end < page_size))
--			return -EOVERFLOW;
--
--		ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
--					(end - start) >> PAGE_SHIFT,
--					1 << umem_odp->page_shift);
--		if (ret)
--			return ret;
--
--		ret = mmu_interval_notifier_insert(&umem_odp->notifier,
--						   umem_odp->umem.owning_mm,
--						   start, end - start, ops);
--		if (ret)
--			goto out_free_map;
--	}
-+	start = ALIGN_DOWN(umem_odp->umem.address, page_size);
-+	if (check_add_overflow(umem_odp->umem.address,
-+			       (unsigned long)umem_odp->umem.length, &end))
-+		return -EOVERFLOW;
-+	end = ALIGN(end, page_size);
-+	if (unlikely(end < page_size))
-+		return -EOVERFLOW;
-+
-+	ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
-+				(end - start) >> PAGE_SHIFT,
-+				1 << umem_odp->page_shift);
-+	if (ret)
-+		return ret;
-+
-+	ret = mmu_interval_notifier_insert(&umem_odp->notifier,
-+					   umem_odp->umem.owning_mm, start,
-+					   end - start, ops);
-+	if (ret)
-+		goto out_free_map;
- 
- 	return 0;
- 
-@@ -106,7 +109,6 @@ struct ib_umem_odp *ib_umem_odp_alloc_implicit(struct ib_device *device,
- {
- 	struct ib_umem *umem;
- 	struct ib_umem_odp *umem_odp;
--	int ret;
- 
- 	if (access & IB_ACCESS_HUGETLB)
- 		return ERR_PTR(-EINVAL);
-@@ -118,16 +120,10 @@ struct ib_umem_odp *ib_umem_odp_alloc_implicit(struct ib_device *device,
- 	umem->ibdev = device;
- 	umem->writable = ib_access_writable(access);
- 	umem->owning_mm = current->mm;
--	umem_odp->is_implicit_odp = 1;
- 	umem_odp->page_shift = PAGE_SHIFT;
- 
- 	umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
--	ret = ib_init_umem_odp(umem_odp, NULL);
--	if (ret) {
--		put_pid(umem_odp->tgid);
--		kfree(umem_odp);
--		return ERR_PTR(ret);
--	}
-+	ib_init_umem_implicit_odp(umem_odp);
- 	return umem_odp;
- }
- EXPORT_SYMBOL(ib_umem_odp_alloc_implicit);
-@@ -248,7 +244,7 @@ struct ib_umem_odp *ib_umem_odp_get(struct ib_device *device,
- }
- EXPORT_SYMBOL(ib_umem_odp_get);
- 
--void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
-+static void ib_umem_odp_free(struct ib_umem_odp *umem_odp)
- {
- 	struct ib_device *dev = umem_odp->umem.ibdev;
- 
-@@ -258,14 +254,19 @@ void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
- 	 * It is the driver's responsibility to ensure, before calling us,
- 	 * that the hardware will not attempt to access the MR any more.
- 	 */
--	if (!umem_odp->is_implicit_odp) {
--		mutex_lock(&umem_odp->umem_mutex);
--		ib_umem_odp_unmap_dma_pages(umem_odp, ib_umem_start(umem_odp),
--					    ib_umem_end(umem_odp));
--		mutex_unlock(&umem_odp->umem_mutex);
--		mmu_interval_notifier_remove(&umem_odp->notifier);
--		hmm_dma_map_free(dev->dma_device, &umem_odp->map);
--	}
-+	mutex_lock(&umem_odp->umem_mutex);
-+	ib_umem_odp_unmap_dma_pages(umem_odp, ib_umem_start(umem_odp),
-+				    ib_umem_end(umem_odp));
-+	mutex_unlock(&umem_odp->umem_mutex);
-+	mmu_interval_notifier_remove(&umem_odp->notifier);
-+	hmm_dma_map_free(dev->dma_device, &umem_odp->map);
-+}
-+
-+void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
-+{
-+	if (!umem_odp->is_implicit_odp)
-+		ib_umem_odp_free(umem_odp);
-+
- 	put_pid(umem_odp->tgid);
- 	kfree(umem_odp);
- }
+ config IMX_SCMI_MISC_DRV
+ 	tristate "IMX SCMI MISC Protocol driver"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	default y if ARCH_MXC
+ 	help
+ 	  The System Controller Management Interface firmware (SCMI FW) is
 -- 
-2.48.1
+2.43.0
 
