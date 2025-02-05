@@ -1,142 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A93E1519BF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878291519B4
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738767930; cv=none; b=UjpGZUKX/v9kzw0WQQ9lhK6aMay008EhlrH7P+GzKUaE9Mm6azFu4Z1ssnus3JN8WGX6HWeriMuzPK6rylurZS4B0yaed+jvmuIfQabdrpCUIfk2zSNyuR6Ut7JWITSuWf8sqBJgNY51Xrc9H39mwiyVVAD9M41DMF8yNohuqEs=
+	t=1738768020; cv=none; b=UyYLA3iYZjWK7pcz9LFeyYGqVH+S9I2/IGX15N7CNFBOjcsioNJJGlaIB8vyUlZjlLdtN418JAJfRhuaAKVibrbi49Xr9DTnB4sCsqyyUn8oobW7WmMCXJMA97s/oBW4W/mBOnWJozgkv1PGIUBF5T/E+mIWpNJdYILkVcP5/xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738767930; c=relaxed/simple;
-	bh=ju1CvsdNGgvjOnVX1p49jYn9fWTSBVbRnizYCDow5eE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J03FPHNDYIhoMUc2fw0Kn2jcHIucTEjXoA0+p8laOZITTHVdbh5BnymH1xw3dLPKD3RlHR+IpQSGyoayAvTsl+k5RrSCAK18OF/cApA64sBOQBntOvjF7UqQ4t2eaPPo2ah291Lx7O+Kax0U2Qb0LYc8b31bSQ0kpEdf7E+x6q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaJVZ7kc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738768020; c=relaxed/simple;
+	bh=cDpSf7K63szEn5MofpSKLWQVoazZzcXhynJclxx9fgg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=I7vpOIjkFh+n3HfV0quVOCPD+RGG47gp380EbQke/Ucd/GyIi2WyPt3sWme5NrpR/wk3MbzfD5uEcpsG7lHjvZ31gegOqORC0imYWhu2RsTcn1vwPwYOuHfcZhLnuoitf4OllntXOgvASWeFDnDs1E6Sy3Nngx8Wg8QChr9YYNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=Y339i1pP; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaJVZ7kc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF97C4CED1;
-	Wed,  5 Feb 2025 15:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738767929;
-	bh=ju1CvsdNGgvjOnVX1p49jYn9fWTSBVbRnizYCDow5eE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=UaJVZ7kcZBdFMyLVQDcJsawpnQLyY1shXlA5Lf4R12k8gGpwrymdbd/We7ksD9xff
-	 MEQnYtvOqklf2BPnib1TzwXfIAViWqLaDmgKd42P8vqosIr45J8+xYWJHlKKlsIfww
-	 KbfdQKNyb5e1cG+1Mcuk2y4O2qy06r9joYIV8OLvDOW2wX4CNMElCQgngkh24dIH/2
-	 Isozsa3VuwvQqg/GUZk1om4Xr/s+Av0jhZvPyhsw6sqX2WD4z5Vj60cHyPWLxdyeaS
-	 ESJuxlJDftSiVO3O13Iax47OkHjVXaMm8L+xfdSXccdEBOTBHPociGTF52bwc+RhIg
-	 eNkMHX5izqTng==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 596B3CE0749; Wed,  5 Feb 2025 07:05:29 -0800 (PST)
-Date: Wed, 5 Feb 2025 07:05:29 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, frederic@kernel.org, leitao@debian.org
-Subject: Re: [PATCH RFC context_tracking] Make RCU watch
- ct_kernel_exit_state() warning
-Message-ID: <550b55a0-47b6-49e9-8939-dd5316bff71e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <19bebbeb-db36-4801-bc3d-2c39989b6152@paulmck-laptop>
- <xhsmhjza4k5e5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <b0a4a163-c372-4506-bd12-43f5b4f70e09@paulmck-laptop>
- <xhsmhh658jvq4.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="Y339i1pP"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b9bc648736so657973985a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:06:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1738768017; x=1739372817; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=41bSJri6zeqVSF2ytQuaV17DWUgqUBZ8rU11L7eRH7w=;
+        b=Y339i1pPotHeO/RPrOUZaCh+zrlT9uLnDJFUdJnpE1vwZVY+vDDecnOnZqxryAkEGC
+         ae1Fihsd4953zTPtDc0KI3bexafJdnxosP6Ia4wle+0Pg6ZINCglmfOJP/Ff4ftCptmd
+         WG7aaNyUcX7vS5vxqG6by5zUukS/d6drdb8iE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738768017; x=1739372817;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=41bSJri6zeqVSF2ytQuaV17DWUgqUBZ8rU11L7eRH7w=;
+        b=PgsEQ2987xRZSewWaft91wLlv8QgKMLMOkrerUyErkKCsNAg8h5Z1dqd9IO3+fzHP8
+         Y2Ps/g1KCXAUS8GuXLlJ3sAK443PJfML7dXJ/sjA1SrAeixHNDy/Wg3pXUFHpM7J/UEu
+         re1wp5Qt58XgZNjslh5DdwQLiiIwvynj43k2o0eADOFry9mv56FoNaiS2Uh4z0tD4r5I
+         59mgaNAfT1bxvvwcKRn1Ff8OoE1az7uZVmJ5210gUqk+98f6oRKsp988vHTTYuQVEdbV
+         tvpzD7cDbw0bHOqUaRX5omID3bNVJXH7FuJCsKLXc+KKBl9KiELGK6GmYniMvwDut5So
+         V2Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCW64DMKMxb0gxAizSZc7y1vFSa8vkAzwfM29IatBKHWWclirINBW6yvw1z4sZU+VHHsyj+5LLfTQP8uBkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0H4sZdO1PJATI03gczqQtOZDhnvIJ6lvMoILp81fJZuOPWnlW
+	3nM7xTDKcAb1SihIBnfTnG4aXNowaX53OyQ6eQA9DWnNytzwbESKL37qCWlW2wCHZ8bycGy6sbw
+	=
+X-Gm-Gg: ASbGnctwQL0nICDKGNhajUDBWoicNrwQGs95Q2Kmwx++kLBsXNBIryL3LCzEqmGjlhj
+	NZmPMpFEcIbrU7DnXbXfKwWUaKzSe3w385/RZ0nmHrXScsawRUeAvPSzQgxe6mXYSwsKXZMBQ9V
+	gZ/pOJRmvK9ssLSocM6RUPsQkSfu1d1lBhMu3bIk1GVzk4Y/0SFjS6hEr/XIoIKNc7eATAWtmQz
+	cofoYgvvoVBoPo6hKdZkoAgpLQslWW/wCtgfG2zpDwTF4lO6JuBCIhaR+axkMzy8r11KVVwKW0l
+	kqIEs9salW1U4ZaZmBpuJGbVfTe2kVLsHzz2mg==
+X-Google-Smtp-Source: AGHT+IGsA3qsLqyaOvqUI19MkoAMi9oWQ9uofuW1yU0R0BT1yXEQ4f1B2pdSCwg5Py+LpxQoAmAyPA==
+X-Received: by 2002:a05:620a:4246:b0:7be:3cec:ec4d with SMTP id af79cd13be357-7c039f9950dmr322585685a.24.1738768017372;
+        Wed, 05 Feb 2025 07:06:57 -0800 (PST)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a9047a4sm752748785a.80.2025.02.05.07.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 07:06:56 -0800 (PST)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Wed, 5 Feb 2025 10:06:55 -0500 (EST)
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Vince Weaver <vincent.weaver@maine.edu>, Ian Rogers <irogers@google.com>, 
+    Stephane Eranian <eranian@google.com>, 
+    "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
+ location
+In-Reply-To: <2025020535-curvature-citable-ab6a@gregkh>
+Message-ID: <6cdaf5a4-0043-5cde-9b48-06fb7c1fd9e2@maine.edu>
+References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com> <2025020408-apron-fled-d29e@gregkh> <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
+ <2025020447-gyration-wireless-f7da@gregkh> <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com> <2025020444-savage-latrine-0c31@gregkh> <97541134-7c32-94a8-7642-a82f3292dc38@maine.edu> <2025020535-curvature-citable-ab6a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmhh658jvq4.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Feb 05, 2025 at 03:45:55PM +0100, Valentin Schneider wrote:
-> On 05/02/25 04:16, Paul E. McKenney wrote:
-> > On Wed, Feb 05, 2025 at 12:17:06PM +0100, Valentin Schneider wrote:
-> >> On 01/02/25 10:44, Paul E. McKenney wrote:
-> >> > The WARN_ON_ONCE() in ct_kernel_exit_state() follows the call to
-> >> > ct_state_inc(), which means that RCU is not watching this WARN_ON_ONCE().
-> >> > This can (and does) result in extraneous lockdep warnings when this
-> >> > WARN_ON_ONCE() triggers.  These extraneous warnings are the opposite
-> >> > of helpful.
-> >> >
-> >> > Therefore, invert the WARN_ON_ONCE() condition and move it before the
-> >> > call to ct_state_inc().  This does mean that the ct_state_inc() return
-> >> > value can no longer be used in the WARN_ON_ONCE() condition, so discard
-> >> > this return value and instead use a call to rcu_is_watching_curr_cpu().
-> >> > This call is executed only in CONFIG_RCU_EQS_DEBUG=y kernels, so there
-> >> > is no added overhead in production use.
-> >> >
-> >> > Reported-by: Breno Leitao <leitao@debian.org>
-> >> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> >> > Cc: Frederic Weisbecker <frederic@kernel.org>
-> >> > Cc: Valentin Schneider <vschneid@redhat.com>
-> >> >
-> >> > diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-> >> > index 938c48952d26..fb5be6e9b423 100644
-> >> > --- a/kernel/context_tracking.c
-> >> > +++ b/kernel/context_tracking.c
-> >> > @@ -80,17 +80,16 @@ static __always_inline void rcu_task_trace_heavyweight_exit(void)
-> >> >   */
-> >> >  static noinstr void ct_kernel_exit_state(int offset)
-> >> >  {
-> >> > -	int seq;
-> >> > -
-> >> >       /*
-> >> >        * CPUs seeing atomic_add_return() must see prior RCU read-side
-> >> >        * critical sections, and we also must force ordering with the
-> >> >        * next idle sojourn.
-> >> >        */
-> >> >       rcu_task_trace_heavyweight_enter();  // Before CT state update!
-> >> > -	seq = ct_state_inc(offset);
-> >> > -	// RCU is no longer watching.  Better be in extended quiescent state!
-> >> > -	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && (seq & CT_RCU_WATCHING));
-> >> > +	// RCU is still watching.  Better not be in extended quiescent state!
-> >> > +	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !rcu_is_watching_curr_cpu());
-> >>
-> >> Isn't this equivalent to the check done in ct_kernel_enter_state()? That
-> >> is, it operates on the same context_tracking.state value that the
-> >> ct_kernel_enter_state() WARN_ON_ONCE() sees, so if the warning is to fire
-> >> it will fire there first.
-> >
-> > In theory, yes.  In practice, the bug we are trying to complain about
-> > might well be due to that call to ct_kernel_enter_state() having been
-> > left out completely.  Or, more likely, the call to one of its callers
-> > having been left out completely.  So we cannot rely on its WARN_ON_ONCE()
-> > to detect this sort of omitted-call bug.
-> >
-> > And these omitted-call bugs do happen when bringing up new hardware or
-> > implementing new exception paths for existing hardware.
-> 
-> Ah, quite so, it evens says so on the tin for ct_nmi_enter() & co.
-> 
-> >> I don't have any better idea than something like the ugly:
-> >>
-> >>      if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG)) {
-> >>              unsigned int new_state, state = atomic_read(&ct->state);
-> >>              bool ret;
-> >>
-> >>              do {
-> >>                      new_state = state + offset;
-> >>                      // RCU will no longer be watching. Better be in extended quiescent state!
-> >>                      WARN_ON_ONCE(new_state & CT_RCU_WATCHING);
-> >>
-> >>                      ret = atomic_try_cmpxchg(&ct->state, &state, new_state);
-> >>              } while (!ret);
-> >>      } else {
-> >>              (void)ct_state_inc(offset);
-> >>      }
-> >
-> > This would make sense if we need to detect a bug in ct_state_inc() itself.
-> > But that function is a one-liner invoking raw_atomic_add_return(),
-> > and we have other tests to find bugs in atomics, correct?
-> >
-> > Or am I missing a trick here?
-> 
-> Not at all; consider my suggestion revoked and my questioning answered :-)
-> 
-> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+On Wed, 5 Feb 2025, Greg Kroah-Hartman wrote:
 
-Thank you!  I will add this during my next rebase.
+> On Tue, Feb 04, 2025 at 08:21:17PM -0500, Vince Weaver wrote:
+> > 
+> > it doesn't matter if it's a one line change, your proposed change breaks 
+> > userspace.
+> 
+> It breaks broken userspace :)
 
-							Thanx, Paul
+no, it breaks working code that's been working for 15 years, apparently on 
+some whim by you.
+
+I thought we didn't break userspace.
+
+> > I thought the rule was Linux didn't break userspace.
+> > Has that changed recently?
+> 
+> No, which is why I am working to fix these tools so that it will not be
+> broken.
+
+that... is some impressive doublethink.
+
+> > libpfm4/PAPI are widely used and deployed and in some cases possibly 
+> > statically linked into other projects.  It will take years for the change 
+> > to filter out to all users.
+> 
+> Great, as it is easy to get this type of fix into the stable kernels,
+> and then fix these tools, by the time those old systems eventually
+> update to a newer kernel version, it should "just work".
+
+no, that is the worst case scenario.  PAPI is installed on older systems, 
+often custom non-vendor packages.  So if you get this into stable then 
+these older RHEL systems the kernel will be updated suddenly breaking the 
+users with no warning.
+
+Even if we manage to get a change into libpfm4 and PAPI it will probably 
+be months before the next stable release, and again people tend not to 
+upgrade PAPI releases that often.
+
+
+> I'm fixing up the bug where all of these devices accidentally got dumped
+> into the root of the device tree in the system.
+
+is this a "bug" or just you shuffling around files for no reason?
+
+> Again, /sys/devices/ is NEVER guaranteed to have specific placement,
+> that's the whole point of sysfs in the first place.  We can, and do,
+> move devices around in there all the time (even every other boot), it's
+> just that some tools accidentally didn't realize this and now need to be
+> fixed.
+
+great.  Slap a note about this happening in the appropriate "deprecated" 
+file with a timeline of 5 years out or whatever, and then when that comes 
+around then send your patch.
+
+Vince Weaver
+vincent.weaver@maine.edu
