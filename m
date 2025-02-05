@@ -1,190 +1,188 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02olkn2011.outbound.protection.outlook.com [40.92.49.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F33C207DED
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738783991; cv=none; b=ddzFkHRASuprYCs/MqXpTjfsGC/rLVNvGAiIGVyDT6ZvslPxfB0dMdjVuOqx8cyMBTZW0OD0Kw2dRclb+9cdh3pZAZEF1LzlcXpR0rCdMAgfxftgqamuz5Fsc5Uwt8q0YVZklg7DsWJW2yVxrYp2StJ8/8jIFKQ/qrkJJ7vvWt4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738783991; c=relaxed/simple;
-	bh=GJ2y/FCanDqhcGlPwrjJkUUipKVr30iT6x4rWzEDa78=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CB4204589;
+	Wed,  5 Feb 2025 19:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.49.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738784006; cv=fail; b=G9o/VdM5wVbKVcVLbsgObRvxmimQ7DJLnyMJrBfRebS9+WjhzvpfjqiH018IFVK1VCRFQLe8Y4rxbyF3ACcwU4EaNHS+7A3UIfetxzpf8KC1t2ZsDl6oUDPHx6PJ0RtETymuCQCI86AMiXiE+NscZKvO5ay4nSrAtGAieip7BhM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738784006; c=relaxed/simple;
+	bh=pV0bF+7v/QJHS+cQm1OZ9ubCa8eMx3av85ih8woHmbE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XgKBFms2k2Y0VsVdilhtMiUdBjFaTIA89yub3rT8ts+7PuZT4PLDtdrGBCtQ9P0Me15wDtSal1+STbXM8AGAC2MlyxCDvzmkLyBlbC7PnO7hnMhyPb9uXtRjuVRPH9EVkMtvQGgUvOZcxki/eummZSJDbY0y6rnyge2Itnb9Ivo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awdjGAUs; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:MIME-Version; b=HIjIOzrQqnCesfa9bJNCBOXbb6rx9+U++NqnRHufHMx66H8G9CEI4E9GlmZZIb/z8jLtFgTcrqqOKcPvLyWHJ6d/p+XCM35fAEA0cnBY/p3qn1L/d1yNr7I2w1BEo21pzWE6YivUtjIsL/3KbYGtkaHEdRubmz6h2mE2BaHo0p8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=rRzxVRcE; arc=fail smtp.client-ip=40.92.49.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awdjGAUs"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso38064866b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:33:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738783988; x=1739388788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6DMFX6YMCCpHUnKPYix3pzepx5ItpSalkZSrvWGNgEw=;
-        b=awdjGAUsKqL783Icn90tI3Dw0bxr0MoUH32HOVfLlWTOdOFbUD+IGy5V+WD1jJOgDp
-         egPRADv/r0sONCUhy0cknVhcxueNJqExJj0FeeDa0Rgn4Kex5cAKD3UPikTEtwqfW0+B
-         6tcEHfyMuMHbf9WnS7ohEsNmMzsfU8xl9OuNC1Tq2uDCOIyug7moHnYy54X+k1/2enn1
-         tCfIeuqFdNv9nlPSnUnOE5hWtWzTZAdkMdOaIpM3Xp/8Uuq0TbjRoOW73z4wBs73HTMa
-         OUUIkSN6YHqs4yrCFHjbm1xbuyIcPY1StaSHaEbwJJxfAfnpkYOr9vP01nSY6lqPWxYJ
-         tjJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738783988; x=1739388788;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6DMFX6YMCCpHUnKPYix3pzepx5ItpSalkZSrvWGNgEw=;
-        b=Q/onv9JtqM+gqWTacR5Rn4ZfcnCNNrndUnSVvi2dMdd3l2PMeRNd9Ot3viABi0NUGY
-         0f50GD0AANM0aZa7og8gnLVeofXY7qH3vEzAqDoGqpv8tGrmqzkyfJewxBKEXRxKVViQ
-         Dzd9XdYUn5MoadRBpCfc955h3EzFgBaG3+7QeLeMU0TpbZxdJrs/A0NMRrgNboUHZNuE
-         fD6WGg7KOqeuLkEfOia99cBQIX89k7ImgMOIOCIkogf7muInjONcmeRZeXeJQTgIGIsN
-         OaQyAXDc1bGPE1HRkJyWR/oo9tdD3riMPsZI+VfA4/e0MTUNHQDESNq2bIFhM0N2Aucq
-         P26g==
-X-Forwarded-Encrypted: i=1; AJvYcCU6kFCLLaqOirPSMSiaYqYWVyuDxOeDQz/wSbBcx0TDWTOeSgq599r/Fd5GZvSfxjyBHHn1/UdPNLqPOjQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSzWeQaTw7K7xBJGSoqEthZYv1a3xGW+pYNXi3MzVXV2HdcmWl
-	YjnWoh/YSA43Ikx5A2yVhppWQV+nLwuswt/ITXbN/4P72HSYxz4P
-X-Gm-Gg: ASbGncuHi0XkrRs8rLHzGANKpZ9eAsJ01LcoG4fcO8/LSPYo3Z0I1UZ88vnQzruMyVo
-	SFCaPcREHr+ndXya9hRuxFLIJPqT8rmljdYgmhZisF7JS2KCUml8RwWAT5QaLJPllt9cYgRsfBA
-	KOQc7BJcKrT90UPZDwZSG0BErhVXcBPFl5V2qXlNls9Q1FVSiRRUVgZ17GNXSTb0lhC+uYNGHZz
-	BuN2twXV4kzFLKWgKDb88FYlXK9N/ktTJ7sQCIUd1QaiyMSrwUE/MWt7Bp33Sf1zkEmBD3V8DXd
-	P3220++1ggP+eMmoZzMhKnj4zlckLsA=
-X-Google-Smtp-Source: AGHT+IEspfSoxqbLIt/wPS3oIyPyVwU5YXPwKuyWMm8XPvGckSHESK4eRb45elfXhYfcQxhI/KTf5w==
-X-Received: by 2002:a17:906:7315:b0:aaf:1183:ec2c with SMTP id a640c23a62f3a-ab75e221e80mr485372166b.5.1738783987681;
-        Wed, 05 Feb 2025 11:33:07 -0800 (PST)
-Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47d06e5sm1167625566b.63.2025.02.05.11.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 11:33:07 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: ebiederm@xmission.com,
-	oleg@redhat.com
-Cc: brauner@kernel.org,
-	akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v4 5/5] pid: drop irq disablement around pidmap_lock
-Date: Wed,  5 Feb 2025 20:32:21 +0100
-Message-ID: <20250205193221.402150-6-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205193221.402150-1-mjguzik@gmail.com>
-References: <20250205193221.402150-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="rRzxVRcE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Jetf9suCXy3fTYoGi4etYRSAUK8te2s2LcOQu1SnndOrtK+vZG8CJVHodPGeJs6setTMF1eqfFlpGCrrCtKwuOc8VncIYXyzRY+kmZ6/yxQ2A++7BlnxtcM7XKfipXFgKM8drFNxKVLC437FfPVByy6hzqQtcfqvzVmAGPEicEZAJBzBPtq5fxY75BaS5cKP0/T/5kDPrYhoJj/nA8K7xplm13lNsM52EGnUtXnelI/QrJN6zFRZsmOEO8l4jpCPeTOSrurGM9iDFtq6lss2uDD6NgLhB09bAp8D10e5BidvU90Fhv4dYRyM7AOTHVWrN2Bir8l7QtFhpumRoMamUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WqsG3ZdvKcatTTaWkqsiLB//W06/kprRGfcdGIv6J4U=;
+ b=xhSSWdiyFlmR4fGXDWGLN7bjdCjtq7LJCRWCMG9rwrbmUrTGVTgHyfTWL6pfWh/VcAveY30CNEV30cCNJYFnsNU2uReX9fJejrvVX8kTbTrnmlxOuwUk5zGYkuo+rHTX1D/+DRUREYaP1iYgPp/hwdsDZtxpBOYI+U0KFKr+MTnnpauIoJc0lz7RQixunkrHcYxsvEnVCuKJN2EiwDcoeuCP3irLXGxHl+lw3FRwrDtMonim7BG1advOghStBgtKge2uYHKwZI+QZWk4Gs5gsX8qGiiAVT06r5OzEOcIU2kq6dA1tePum0qMULG4NcwZf3VtnTBj+3kZLXIfunb3Mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WqsG3ZdvKcatTTaWkqsiLB//W06/kprRGfcdGIv6J4U=;
+ b=rRzxVRcEymRy0fE/jg4VGy+XDm4kz6/PansbhBYDJHeWDq34kC63klU06Qyxt0jJSbIxBpMexehriJgPidxzLid5kfcIYUepUzvPkoa8ZpPazyCxM2ZwIYwBHWOme9F0o0IYZgopZjbB8nYxB19xhf/fLXv+SaTGO63H5GB47vBMX5uBDNGIJigAa1ldsU+Y2n+Rp2puLyn0UXwyfWvRMWHkYB3mY6oN4bGhaJsSkpzfRWTba43D3XC6mxgFpnLaQ5AaVlfHjP/eCcx+u7UNlKY7Y2hnE/NXMprgtyjqVjVK/1nCbbEd2b/wBamtE7qRXO1ghEU22WbC9Bnmft6Z/Q==
+Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
+ by DU0PR03MB9077.eurprd03.prod.outlook.com (2603:10a6:10:464::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Wed, 5 Feb
+ 2025 19:33:21 +0000
+Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
+ ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
+ ([fe80::a16:9eb8:6868:f6d8%4]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
+ 19:33:21 +0000
+From: Juntong Deng <juntong.deng@outlook.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	memxor@gmail.com,
+	tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com,
+	changwoo@igalia.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH bpf-next 3/8] sched_ext: Add filter for scx_kfunc_ids_enqueue_dispatch
+Date: Wed,  5 Feb 2025 19:30:15 +0000
+Message-ID:
+ <AM6PR03MB50807BA3D5FF24BDA684974799F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0570.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:276::14) To AM6PR03MB5080.eurprd03.prod.outlook.com
+ (2603:10a6:20b:90::20)
+X-Microsoft-Original-Message-ID:
+ <20250205193020.184792-3-juntong.deng@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|DU0PR03MB9077:EE_
+X-MS-Office365-Filtering-Correlation-Id: a479b2b9-07c5-4ee6-a102-08dd461bf334
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|15080799006|8060799006|19110799003|5072599009|440099028|3412199025|41001999003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?U+Gjssou25Uj2iQ4wnNB5pEYxfeS+pxJA3McXAB/XPrK/LiPAfbqrMmre0c4?=
+ =?us-ascii?Q?Fv6Dl7l2o5yDS49vjM8OTkbQdEwd3gmCF/0jVYLFS4sHAbFYrcM8AP8eIcWi?=
+ =?us-ascii?Q?Gj2hmwmhtSTfIHsXK6If9GiPj5qGb8EKMzN+rXvFWpX24tVUa5zSIHTa0peq?=
+ =?us-ascii?Q?A28iLuh2VlhvVphdN2ig8+KLQR3eGbIN5CFuP5zBEiRaUxJ8y59drjqdrOd8?=
+ =?us-ascii?Q?I/ec7KItpJn5GACjp7ojba4dOcvpaVUzlh7SDm8Zz8+6CtkHieEFtdvUngsX?=
+ =?us-ascii?Q?z3kFGqXy3hhSFzGK7Iyhd7GLUTUHFl6fiebdunE4LuH61140uRjirD/Ulguk?=
+ =?us-ascii?Q?DjtrIyiFgN8Kj5Vtlw13cNSYLoO3QcblTicfkM38okLHwAEM15yUY5EiVXRg?=
+ =?us-ascii?Q?Wky9fJLhjfTpxXwNAWQ5Lrgg3y09Y7Ac9nUZMtI9N/qrBczJNShU/9D+gNYI?=
+ =?us-ascii?Q?OwkfFZYGxhi+J3iYu8pV3nQBViPp2YeE9IQ0WZUrgRA++ihu/swec73yQ9Dg?=
+ =?us-ascii?Q?xWMM/6Jm3ImlI99ijuZS71kZZxBRSO4lLDZqxWmIPj3vM6BafqCgRp44471V?=
+ =?us-ascii?Q?/wZRdqhwvjsrXgr0fJzPpjrULZdqbamvba/vQy1kHVmcZuMVjEjDD7UgzS+V?=
+ =?us-ascii?Q?JwLYmPuKq2lY08wKu+fxh55p07k0hvS7V5GuPTS1ZYEt9vydlf0KnOeLbBeG?=
+ =?us-ascii?Q?zs4vx8NTQbonfdzYIzSs8TYVVYPUjj94NFIjwekdi46qCwP4/L+0gD+um13B?=
+ =?us-ascii?Q?ru5cpJX0ji0sq+OJaIDPwyu3dsTLS8QymRQQwNiJCDr6DF1u3L5+GwxGaywH?=
+ =?us-ascii?Q?K3Cw+ltsMI8Oe6aI2ZDhe5Ur2mRw3KAUMumYctnfV4FeCMfc+MDGxnFLURZM?=
+ =?us-ascii?Q?uEaYs2rtHIkUcUWQkNN/ydhVgBltNnR/QWrJz1oiU5wraIywh7lvP+QxPl+D?=
+ =?us-ascii?Q?dRA3aIpLMxS4NYfLk/tv3cXqJwwA674Mx5XaIJD9T/83q7Dz1OW0xeHsc+tV?=
+ =?us-ascii?Q?BTx1LcjhyTNLI5hnlL8F/5RG55sbg0NaLsMNgl0z47uFDA1el2BWa7NyXQUv?=
+ =?us-ascii?Q?pV5zdACeU3M9tpixpcvukJyBFJhN9A=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SEIVkl8UKwwx4ji0z+5Fwk1tn9T9NbGMJioZBbdBm8o2SelYksEaj7Bt/dT+?=
+ =?us-ascii?Q?v7dlzzl0G5mNU0OF2pbLS/zHeNaMob48327QqMUDFx1YOMNIvRw/3G2X0Kfw?=
+ =?us-ascii?Q?W2JEyQjNF45r6XdUydKm6MUngdkJ9e+vL1Mn/CFLO/3IG08mffmJbc1v+ENo?=
+ =?us-ascii?Q?ajiSemItTANlznPR6PS9OEP43Qo/P115helwBtwMyglbfgtFKZKvBx/XID2+?=
+ =?us-ascii?Q?9z4AmCwzOx1OVPj4WFPeKOLXwUnguTg6CaO8wC5K1MU5uAMWmYDFStjY3Lpo?=
+ =?us-ascii?Q?RNnkrpA41ksHoFJW0XJSAMZU+x697aBzmPF4v7yFfE/4atfto/QDKmqJGqz3?=
+ =?us-ascii?Q?xtB+uYpoEW1GOpyNJuYuOD7a5ORs87vs2ZtDxUQc93A2pOArRRe+IUM39LKY?=
+ =?us-ascii?Q?SwsYoybxHzX+TeZ5YS0bTRNplKxJLK/LceODN4nXsD576Z9C0ix0OB0dWybl?=
+ =?us-ascii?Q?X3ElLyG7wm3PN+TtJ5nya77aSpbqr2z1ZjD3hdKsbuUZzpVVudYG7eG2ensE?=
+ =?us-ascii?Q?5KO+cQDpmIrz8vfIP3x3OpknW+NXjKSwHwLdsy2ivv8JGDsC32e1dvtdtib2?=
+ =?us-ascii?Q?ddT4/HwCzm0OWMFpEhm6xDFdRBUO/iiyLb5AvIwprxqFzJWbt/XBKQHBlGJ1?=
+ =?us-ascii?Q?uUrsNpv0BLhV/yae9a0FKM7RiuZFrf6IKg/fJlz682zMzArBP+QbFTlagXDU?=
+ =?us-ascii?Q?geMZymwaUexKUQ9obK0onoaiqahUnueoJo5OEfG45IzXh8bxz/SymrNO8E3p?=
+ =?us-ascii?Q?/PH665ZdX3VQQEedNux0xbFPWsoi9w1dP+EeJKZ3ZMCaw++ORvRTxWzoPJuU?=
+ =?us-ascii?Q?p9Mlo3XPicLbCfW2nNXM+5ZkvznhV5aRKfomIx3u14WvLcsIxI6MxVzwkk0g?=
+ =?us-ascii?Q?MT5YhWXBfBBC3HXvA83JXRwWFgiOeOA8964dp6FZmEx16vUvZF0kOwb93mjE?=
+ =?us-ascii?Q?LTeSd6dKliHJafBQ53E06k7ILoYd/XSZARSdMzNhJKSKEJekUFtcDXolCy/j?=
+ =?us-ascii?Q?jrcnJbT8DK39sz9mBLgDxOSpeosYtgBOdRCNIPVDJfDQxUzHL3wIvTntWQYg?=
+ =?us-ascii?Q?+VxISC1MgcCN1hTAwsFiF8WxXNrkH2FKT3x0JkboIoJLfmzVFok3H25U2Seb?=
+ =?us-ascii?Q?xSV07LusKQ6puj8n3r7ANgc7luA7JIhetGb58LZL9EpViGZD5tD6/U1iMyp4?=
+ =?us-ascii?Q?lYP/dVdiAfOGSZmf/RV+8AcApKBYzcmxdYpOBSZV08n2voDioUw5u4sODHzr?=
+ =?us-ascii?Q?jbIWAul/TZBkwmPzxf80?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a479b2b9-07c5-4ee6-a102-08dd461bf334
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 19:33:21.7486
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB9077
 
-It no longer serves any purpose now that the tasklist_lock ->
-pidmap_lock ordering got eliminated.
+This patch adds filter for scx_kfunc_ids_enqueue_dispatch.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+The kfuncs in the scx_kfunc_ids_enqueue_dispatch set can be used in
+enqueue, select_cpu, dispatch and other rq-locked operations.
+
+Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
 ---
- kernel/pid.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ kernel/sched/ext.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 73625f28c166..900193de4232 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -115,11 +115,10 @@ static void delayed_put_pid(struct rcu_head *rhp)
- void free_pid(struct pid *pid)
- {
- 	int i;
--	unsigned long flags;
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index c92949aa23f6..d782ee618d54 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -6605,9 +6605,27 @@ BTF_ID_FLAGS(func, scx_bpf_dispatch, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime, KF_RCU)
+ BTF_KFUNCS_END(scx_kfunc_ids_enqueue_dispatch)
  
- 	lockdep_assert_not_held(&tasklist_lock);
++static int scx_kfunc_ids_enqueue_dispatch_filter(const struct bpf_prog *prog, u32 kfunc_id)
++{
++	u32 moff;
++
++	if (!btf_id_set8_contains(&scx_kfunc_ids_enqueue_dispatch, kfunc_id) ||
++	    prog->aux->st_ops != &bpf_sched_ext_ops)
++		return 0;
++
++	moff = prog->aux->attach_st_ops_member_off;
++	if (moff == offsetof(struct sched_ext_ops, enqueue) ||
++	    moff == offsetof(struct sched_ext_ops, select_cpu) ||
++	    moff == offsetof(struct sched_ext_ops, dispatch))
++		return 0;
++
++	return scx_kfunc_ids_other_rqlocked_filter(prog, kfunc_id);
++}
++
+ static const struct btf_kfunc_id_set scx_kfunc_set_enqueue_dispatch = {
+ 	.owner			= THIS_MODULE,
+ 	.set			= &scx_kfunc_ids_enqueue_dispatch,
++	.filter			= scx_kfunc_ids_enqueue_dispatch_filter,
+ };
  
--	spin_lock_irqsave(&pidmap_lock, flags);
-+	spin_lock(&pidmap_lock);
- 	for (i = 0; i <= pid->level; i++) {
- 		struct upid *upid = pid->numbers + i;
- 		struct pid_namespace *ns = upid->ns;
-@@ -142,7 +141,7 @@ void free_pid(struct pid *pid)
- 		idr_remove(&ns->idr, upid->nr);
- 	}
- 	pidfs_remove_pid(pid);
--	spin_unlock_irqrestore(&pidmap_lock, flags);
-+	spin_unlock(&pidmap_lock);
- 
- 	call_rcu(&pid->rcu, delayed_put_pid);
- }
-@@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		}
- 
- 		idr_preload(GFP_KERNEL);
--		spin_lock_irq(&pidmap_lock);
-+		spin_lock(&pidmap_lock);
- 
- 		if (tid) {
- 			nr = idr_alloc(&tmp->idr, NULL, tid,
-@@ -237,7 +236,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
- 					      pid_max, GFP_ATOMIC);
- 		}
--		spin_unlock_irq(&pidmap_lock);
-+		spin_unlock(&pidmap_lock);
- 		idr_preload_end();
- 
- 		if (nr < 0) {
-@@ -271,7 +270,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- 	upid = pid->numbers + ns->level;
- 	idr_preload(GFP_KERNEL);
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	if (!(ns->pid_allocated & PIDNS_ADDING))
- 		goto out_unlock;
- 	pidfs_add_pid(pid);
-@@ -280,18 +279,18 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		idr_replace(&upid->ns->idr, pid, upid->nr);
- 		upid->ns->pid_allocated++;
- 	}
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 	idr_preload_end();
- 
- 	return pid;
- 
- out_unlock:
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 	idr_preload_end();
- 	put_pid_ns(ns);
- 
- out_free:
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	while (++i <= ns->level) {
- 		upid = pid->numbers + i;
- 		idr_remove(&upid->ns->idr, upid->nr);
-@@ -301,7 +300,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	if (ns->pid_allocated == PIDNS_ADDING)
- 		idr_set_cursor(&ns->idr, 0);
- 
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 
- 	kmem_cache_free(ns->pid_cachep, pid);
- 	return ERR_PTR(retval);
-@@ -309,9 +308,9 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- void disable_pid_allocation(struct pid_namespace *ns)
- {
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	ns->pid_allocated &= ~PIDNS_ADDING;
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- }
- 
- struct pid *find_pid_ns(int nr, struct pid_namespace *ns)
+ static bool scx_dsq_move(struct bpf_iter_scx_dsq_kern *kit,
 -- 
-2.43.0
+2.39.5
 
