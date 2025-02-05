@@ -1,340 +1,761 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EAE376;
-	Wed,  5 Feb 2025 00:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738714570; cv=fail; b=qsApT9ihkOyll8nzlleepqH53mAaDoDQ1DTa17vGiKo76oE/3XXXoTrCrR0DK2qu4byyl3/ckELMY3i8kUh5ArvjraPdkLdkf+xqm1d621Ha4GZO3YUFrwPq2Vit237xY2VEsNKCU/Kc1j3qHr1mL4m1a/3Ua6V5c2xQ55kazAY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738714570; c=relaxed/simple;
-	bh=oR60pMlPFN4yrvAuItz8CsWuBp80LzMSHx531JHB5ss=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uxmC7w/memj0NGua8ag1iB8CVtfCEqRlgMoyf5mPXWZdy+MxCZllq+O4xxGKO7PVZ5P6Jk8xskdJZUIxQcwpC/f9TsIUZSPyKVo+mXdXGjpHlMDfxyPUNj7dLODXCm3pxhHxiudTKROi1tV0gd6jtf0GQxh4pCZKAznkQ7Wu+Lk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJE86vfD; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DCE17E;
+	Wed,  5 Feb 2025 00:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738714709; cv=none; b=Bs2smneee3Uooy+NN2LYwy7WpRSOS4/TyiONBp8r0k9PXir3CmPXBKuEfAQFnGYBvix3/EGOjl+Xuyp5nb9MR4BfbvtSxOs/xE/J0kxc1MhlnGyFXukViB1i6cME+rpkDwOdGaFm6q7CIdFcJoQGrfJeGIyp7QvjR6zgoihYk9c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738714709; c=relaxed/simple;
+	bh=6rpNioCKtFoP05RhE8/qA9E5K5ZZ44Bw5ouwv+qtuE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GXShJ1UL/DA5T1+D0rv7ANKogzy7rHHRLvZFTp7jzf7P7zRBWpvFZ4bN+4lXCfgWZD6k3IxSPvy2urDiPIYiZkTGxcO6R4PImkXBigvgE57a6FETPhXQ2R3bAknIxBARv8dzxi8Vzr3A0TaFBjnqMaS19vbYsYL/y5V8AZbnsYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KeLbmgQN; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJE86vfD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738714568; x=1770250568;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=oR60pMlPFN4yrvAuItz8CsWuBp80LzMSHx531JHB5ss=;
-  b=CJE86vfDaW7inOK9ZITpXW+xea70y2+byl3uMZDWnRTM1TYaQ6x/CcHi
-   u2uAKz9c+cOAFQx02e0mt+X0QQ3WQEQYU5C2i708eFAStafE11oQabBIX
-   CxlSRtLnhiUgmrQwWGeKUHz3TXK9mFLwa2fBVTTZk6TOwddBOLH+/HOK6
-   qTW2FQvWdIywZwgX2/CO0WQIpGbPoPVQHGiBXfdiZyEwlZORy2s09K3LL
-   QlNW6Ae/IxbRQHFO0I2bhbpDjk0W7uETzWTkN+jJn9YrP5e/EzQQvYpeV
-   INuDLa4oBbgs83/W0OMi4iyJwFFRBOwcRnmvcMQrXHjCLPznrnE+ZnjPg
-   w==;
-X-CSE-ConnectionGUID: UyLP3gDYS9mcqoVZ3mWPrA==
-X-CSE-MsgGUID: A10q8sNLR0Gw+oMY+1oKRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50686250"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50686250"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:04 -0800
-X-CSE-ConnectionGUID: 5j5fXlLGTrGqCYVVMJddNw==
-X-CSE-MsgGUID: HPq5HxIqQASvxarX8cvc9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="115725206"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 16:16:05 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 4 Feb 2025 16:16:04 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 16:16:04 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 4 Feb 2025 16:16:02 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Li4RgATMeStmZ1O8H2P3r2/E+EzkeFo9+VdQSo4ZGP/YhRT8ivtjpGcnbI0Mq9JwJkdX0yFWYiALuTK8yg52wulALQvvkTdGdzZx06U0BGHTbAT5V6rCpM3wPvC5sIiDu75jodd42HtdKMoP7nRlq5ZcrfucFa93FeiisrQTR9ha7DSZ13z+EOF06mn6dBLNFwFJsy06abZB6KmGJ3F9vmReXDyFqm68WakqX8xWqGskXjiy4elRoeq3iQbB9NcftSG8GEcdhsER1lGbi9F3c7AInV3d7EJuIpOEqkSvoRKY3QZ7yXnic+40+74VtJJd8MeR2gkbaRZFr0mbI/vC7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2h5G10eFuRbv8aUaMIQEgcKHvpu+Y3C1irw9pLR0UIo=;
- b=TBcT3b3fZEaokrLnApHOb49lYK8whaMgitX3dtv1xy868BgKimjzZXzIo3n2Zt/VTp6Nt1vppMiljW4Gtdkg3GpOa6ppjTnm3+UMpgFt81LGaCDxElodVSLwU6R0+Tnp1ExlwpE+ZgFv1Aw1hiZORAc/Ts4VS2FGdlkB/RfyVkTrSSAy4dFg0W0NYmPxZ/pWd7a7wDXIBwXxS/JmcDCbd3zK0kBxG8+woObDzVHvWyPa91eHlDZ0c4HAqLEn1yyRCp80609yPHwJWV3aZNk7TCDMv/TXIVhkRECoamB5MHyewwJ1AItLT0rw5NCYm+ZqJ11kZ+qt64YWhpu6eiI7kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA1PR11MB8428.namprd11.prod.outlook.com (2603:10b6:806:38b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
- 2025 00:16:00 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 00:16:00 +0000
-Date: Tue, 4 Feb 2025 16:15:57 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Ira Weiny
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
- cxl_memdev_state
-Message-ID: <67a2adbdde7c6_2d2c294b5@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
- <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
- <67a28921ca0b5_2d2c29434@dwillia2-xfh.jf.intel.com.notmuch>
- <67a2a4d2519_2d383a29411@iweiny-mobl.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <67a2a4d2519_2d383a29411@iweiny-mobl.notmuch>
-X-ClientProxiedBy: MW4PR03CA0004.namprd03.prod.outlook.com
- (2603:10b6:303:8f::9) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeLbmgQN"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6f666c94285so43596447b3.3;
+        Tue, 04 Feb 2025 16:18:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738714706; x=1739319506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5rtdthpBJrwcgNAq4MLskdy0qqwWwNY3y4M9TWna4I4=;
+        b=KeLbmgQNKG2v5t2iZngdh96th5yeLTpbVfU/ee4lwv+tISQnQbsnDTk9sfFYc/rfW6
+         h6O28QQXPdKWmM+YRmftyMO7blTUo1yqjiPi97SQ6m6CJ8Tla0j/C5Lq1J3PV+cgLkcx
+         WQVrQ3x5Ebur1NpSz3/Yl9cinU1n0xB+M7W3lL2PWEU4uC4TXPCgOQ5mhMI0NF2lF9mK
+         nR+F9BgXrKGuHrS0xiicIKzTNXLhwOMaJU8DuIWqHEjHYyueY2sJlxgrKHAAz6vZ8Y+4
+         BWnoEQVgma4vdmdY8nlJli1KK4Mlmve/ZeEUg7uQe0ywKgBG/HGKKrKHbvckKp6308s7
+         NWqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738714706; x=1739319506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5rtdthpBJrwcgNAq4MLskdy0qqwWwNY3y4M9TWna4I4=;
+        b=w2kg0AjOsy3pA1PFQKayKOZ9k/9EErXVdoBjcZNsSvunauQue/yUWpShrKRqZAfequ
+         ZNXorfHM4BlOHvgt52FbaA/vWTFczMeb5OwkCKqCnx4n6McgXQOp0n3B6CTgZnRHW7Q/
+         xOSwtYb35PUhvy+53QDxwdr+a6rq2zW0uptaVoNvwMbwpCPp71oQPeIf+KEO4xt0tqNz
+         NpZUUSCV+TV4UMhjCkya8u+QWsWdH4Via5le8wn2/lXjUNhCTQGXo03gcn4IR4wmUEJT
+         ossirqsikPQ++pqJy1Onc/pDsWkO9EHC86U32xYzDtflos54g71MoHMf3L0OqIjID8jt
+         LoPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUe9epPZd1gjnCQeXF9R77qxXZk6IC1eHHoZ1iAR7Dnl6xE0pAqyKoJcnEnTuOG11BAZNjIAcVgi+UR@vger.kernel.org, AJvYcCV8a+4XGCIPx6QGXw0KFGNrSxSqJagJErqLivZ/ZSWXqWszH/VhXnDWCtKAJWhaVGA+/DL33im2pkchPBYjnSniuw==@vger.kernel.org, AJvYcCXSUuFyG4N95NCttfagY5AtgUKxiOGiVsPUjtxY8dXFqqZBK0GH4DZ3uqQpohViHOcTiRKGmd31Hd7HVwUJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxvgcbdeoDSDPfF/GgFOpkdyI8xU+kMj2SvEudoSdMGdPOJqiZ
+	17mHiBUaPS4a1obfun8QT5Xd2xsLWUR0UrqE+VsE28F2FyD7Msj/bEKnmfdCR9O2AgmGzQWOZKV
+	VHrI77oLb47b1fTHd0f5XY2pRobU=
+X-Gm-Gg: ASbGncsde5hpV3n5drxBhUeFggfIlofmczfKbcMlpZIv2UJrJNymFwD83wp3PrzgiPl
+	csgVnVaKG6azVQwWOe4FnppjjtJHIm0Y+nC5a3NRwyK+C5q/3N47JnCtv+yGWXYk2/2kDNzE=
+X-Google-Smtp-Source: AGHT+IF3QL4TV9dOUKXBDIW4smHixZqZ7eyBlAej1OtpZinafoFrVYf+NsTxW5fsk6+TsJa0eFgWGuStQ5v0p7b6AVs=
+X-Received: by 2002:a05:690c:6887:b0:6ee:ad00:f157 with SMTP id
+ 00721157ae682-6f989fbd804mr8890997b3.32.1738714705880; Tue, 04 Feb 2025
+ 16:18:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB8428:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5de0b37f-f8b3-4eb6-c328-08dd457a4518
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?MGQyPodTHxWPtoP+x0AcVgzanwA2qnNkKcJR1GKohO+LRAqwX0SRGn+/qwSa?=
- =?us-ascii?Q?A5mN1DtQyyPASWeR5SQPwQSeHBWcJ1S+tRNSwA+tVeidVGYNQA++Vu9Q24HH?=
- =?us-ascii?Q?QpRI0J93ApmsU9ubymUwChHjluoqXdyTCYVnr3puo3jVu8wXmWg4bgvSRsz+?=
- =?us-ascii?Q?OtShoXBIfM4z9YLiLrhXQHQtBVMADPxODQyPrGzctqtTqg32n+TM2MALVwTP?=
- =?us-ascii?Q?IZ/KExFEXbvrJQxP3qjxFQ4hXMtR0Z1/tCySryc49FFpC97jVmfqOuCpY19x?=
- =?us-ascii?Q?sB7/FWmFFIxPMv84Ptzb6KkgJMp/47IFRqPP422kNbErQr0jwslWavTMz8a6?=
- =?us-ascii?Q?jcj1t8VI9EL1Yf/C0P4KrUI3P4rOxjhtaZVGgN+1ROxOvW5czsliaCGTAuiM?=
- =?us-ascii?Q?x/OUJhlU/jWRxcSCK+EaxhuM/VTUu95fplxDkwo7sqyzmaKHmGDLbSZMBw7i?=
- =?us-ascii?Q?abuvmsdTAQNN+zmWrXU8y7Ow/J/mb52rn9on6Yfaru5+iAlignGI9cPLUjN3?=
- =?us-ascii?Q?Xs+9nSXCNhtylfi/JyAq8EiueHEY0YcV1lkKM7zCQuOb5EcH3YbB27qbtIB4?=
- =?us-ascii?Q?e6uWqAPxNmaL1y29Kka5IF0tBybZIJCaXMvJCEuQ3OChAUOjkODapUycpS6f?=
- =?us-ascii?Q?UYcYJKw9T1zz+soAlJAf7mwSWW4y74tV4Y/tqCp5RlqNrfpjb3Wd1RI0S3DW?=
- =?us-ascii?Q?zVGJq4p0yOB2B/xrAHBuDbQZzaFKqGk4zzWa0kWzy+QoDDCl0IKn8RF8gXtL?=
- =?us-ascii?Q?axMnFjc9idHhPU5Zv0QYKo1u/+vMkwkQCr3t3K6UfcKwQIyByQtLuu6BhK3h?=
- =?us-ascii?Q?AsiIM9L0mtq/qqV0FBiwRA7mfvtz5K/UZjSe68ikzYm5pFXSj2caRU1zp8Qv?=
- =?us-ascii?Q?p89gJuF9vMSsNtVFGf2Gfi6AiQXd3OuqvgG7YTS/Y9FQviwx3/CTIuw09coI?=
- =?us-ascii?Q?HrpWmV+xj35cTr84Kz7OqnLqxiGijcQpasrPlNop7EVn3QyvnUahYVhyeVwc?=
- =?us-ascii?Q?cvnyRsp9AeLNpq5Y7yeRGts4fa9qm5ggxNORC45sxsQ/GhuAtvBvxrNl5Kp9?=
- =?us-ascii?Q?ohOSb24E1yyUdGXWaxKj6Q4C+qcKydv6EvnxQWRrT4vFtxgLWesmOJxpDcqa?=
- =?us-ascii?Q?afw+QtXmbHI4Tz4zg9uwlpYddRKdZeg9AhLgb45+q5YMCh5c7IPnBvgUOrJl?=
- =?us-ascii?Q?5Jbg08lABf9wYH9jPLeoJoP9AzZzvez6hc2AENJ5gamymqZ7QOqpdDIqlWWw?=
- =?us-ascii?Q?Z8xZm0fS3KjjygtTbe03S/ZJrbYPMhkVNZY+qBuC3gE7eT5+LsU8esKLx2OO?=
- =?us-ascii?Q?Em8eO8HU/ChL2W56CWV7vnleN3BEvLv/Qvw3mjMHKA5ZwKNniw2HdPusS2a6?=
- =?us-ascii?Q?V6LxF2tQR+A+5dK9GGaaTLH0hdVj?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ViRBiO6/Hms23d2MpjSK4ruSnYBVPpiIW3Zn50XWaFqRy5f1JfnGIkZynSDt?=
- =?us-ascii?Q?Rm4iSKuafKk4R4P3hQwM+62cSdUSev/CJhLPMer+502gLqwZ2uTWalwN9j7+?=
- =?us-ascii?Q?h96yqMlmyne6HnbfDwdhEpFBBvXijF7+WfrFqKz+NjPreMOn6DEiOLhYDeLE?=
- =?us-ascii?Q?OZEsDcLBc3uWgYHUt82SN8KUy+sw4Gn3uh1gS4CZP14XgExKOFUBJITGwfoC?=
- =?us-ascii?Q?okIgWJ2A8GdxXJBZUeeqgsWeBCxxhiMjyeJ8sbszTOvaKI1wnNUJrpgFq2QY?=
- =?us-ascii?Q?/Q6i0VHFOwTYmjWDddAZpRIx7UrPb4oTTWtpDUXU+vhcNroVPEVokIGH6Txr?=
- =?us-ascii?Q?RRMDYaa5gr6vvQVmX50rAkWnyanRpnqZl+EFS6Ogkl8re8rzRlAkZ7eAXR3v?=
- =?us-ascii?Q?DeHSPgOgEPjWN17ReadmNLNpmcc4df79ipHJVZp7ZAOdJnhA31Y9E0a1tdkO?=
- =?us-ascii?Q?qd6g+ibfyBj8UOTminL7XN4c1w4W3FdaMlpnKcvmZMfAK0tkcB+IAHHweFo2?=
- =?us-ascii?Q?zhRqIhaimE9s8Nq06BmaAIOpjp7gzmm8P79tgTHT3IX/Kl4zUvUmkUK0R/WL?=
- =?us-ascii?Q?Mhd8Ou5v9nXCLA0J/iwRWurNYlSE5fR9rS/PvgAbsb3P0nqDn1LcxTOBc0ap?=
- =?us-ascii?Q?PfoXFsvVUe5D4m9tyB9C+jqccb42HRBHvRbl1S46bniXQho/Fl/S9Zqew5CF?=
- =?us-ascii?Q?qW2bW1I0CN+8nGrVkxSPyD6fAJYAzVaH5MjOMWBq6XyHpA48z8CXwGvta2iB?=
- =?us-ascii?Q?rQR98joegbGbsZETJC09zd9/NKHbs3W2vIz4uYLG3gE6WlbTiN4wqip+PAR3?=
- =?us-ascii?Q?ke9AmrnX+AVDN3oDppNusBw5d0R7Zgwq7x0W+H9ENWbp+G7KHBR5YV+qhC3O?=
- =?us-ascii?Q?6arjopeZoSdP73x6zMpEaQvfip2mzStY8H53GEPYMmPcduR4Id1n3EEF5pnQ?=
- =?us-ascii?Q?PxZI771qw9mXX/QimWcqz9Uo6jHncvx1Ce8O54oFB5GKasOAUMvvNXxjDQye?=
- =?us-ascii?Q?fGkdPfmzFwUxFiaupREKblBhHdLmaF4a2VdlrZsf1FT5diGcQHwPcUpIXKsC?=
- =?us-ascii?Q?aZiHELjjknoq/K5IM3jQqFf/zDyKlon3+czgdmWqozQvqz0ilK3CfViS3vhJ?=
- =?us-ascii?Q?S2GnsgQJjXwc7zNjPAY28mfuHwvhnvmqLBvL5bPGFvCpXyzIyQgRKiyyNiBB?=
- =?us-ascii?Q?B/7eIF5FPM3RjeR24P20kDkr3YZ5ShLWqelb2ufrwa5QEmbiQpmykODK3yBp?=
- =?us-ascii?Q?krArbm6AmIZ05xtw8XcxRj4W/BpMW4iGepQkBctx1Lu+JZYsjDjSN3jqS3Z4?=
- =?us-ascii?Q?yPAoJh/ho6f7Xd2KT+KwmOhObo6u/B4OqJBvNztvBmj7Sf4uC9IirKcnMxYn?=
- =?us-ascii?Q?4s1Vi41vRL23UyKdCBiJ9StVhclZccnvT+bYTwFctCdpAZB01wKafY8zEZ+i?=
- =?us-ascii?Q?JPb70+HOmFJ89F+5to1DGfekiUt/M6AUS+zXWI4DzWrroS2QvSCrrTl8YJ6U?=
- =?us-ascii?Q?vAbSVlAeDVhMmSwQjKRDlDazeLttldQGjueRxgVeAwjNDe9Tx4m+xYhNL2Dc?=
- =?us-ascii?Q?wRcGHMySpXj5yxGOWLc3QcyV6A7a6XH1AdvFcv/rBheLgkksLyC8So1/NGwb?=
- =?us-ascii?Q?pA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5de0b37f-f8b3-4eb6-c328-08dd457a4518
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 00:16:00.5588
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kl7AKR3Pnj4Iqt0/7I8buMHTJ/QUVQGlNZXiBtqe2lxZGYKwh64+3FBFSnc+DlF0uHapbn1SSPP8m4EuK6SN40VrEHJbJOyk+4hVDv3jR+k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8428
-X-OriginatorOrg: intel.com
+References: <20250201071455.718247-1-irogers@google.com> <20250201071455.718247-4-irogers@google.com>
+In-Reply-To: <20250201071455.718247-4-irogers@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Tue, 4 Feb 2025 16:18:15 -0800
+X-Gm-Features: AWEUYZnuMzmRVdL_FfRkW9jppkCICfaQ_wjHAwbcvcTmvJen8yb5sy5tfsisiX0
+Message-ID: <CAH0uvoi8J3mg8UxpiuHrCpH07jyGNkSfDFybs7EFcxgOoxYx7g@mail.gmail.com>
+Subject: Re: [PATCH v1 3/7] perf syscalltbl: Remove struct syscalltbl
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ira Weiny wrote:
-> Dan Williams wrote:
-> > Ira Weiny wrote:
-> 
-> Perhaps this would have been good to add to the commit message.
-> 
-> <quote>
-> 
-> The net-net of this change is to make partition set up 2 distinct steps.
-> 
-> 	1) query the device for total, ram, and pmem partition size information
-> 	2) create partitions using that information
-> 
-> While doing so it avoids storing the total, ram, pmem sizes tuple in favor of a
-> stack variable cxl_dev_info.
-> 
-> </quote>
-> 
-> [snip]
-> 
-> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > index 998e1df36db673c47c4e87b957df9c29bf3f291a..44618746ad79b0459501bb3001518f6b7d2ceaba 100644
-> > > --- a/drivers/cxl/core/mbox.c
-> > > +++ b/drivers/cxl/core/mbox.c
-> > > @@ -1068,6 +1068,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
-> > >  /**
-> > >   * cxl_mem_get_partition_info - Get partition info
-> > >   * @mds: The driver data for the operation
-> > > + * @dev_info: Device info results
-> > >   *
-> > >   * Retrieve the current partition info for the device specified.  The active
-> > >   * values are the current capacity in bytes.  If not 0, the 'next' values are
-> > > @@ -1075,9 +1076,10 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
-> > >   *
-> > >   * Return: 0 if no error: or the result of the mailbox command.
-> > >   *
-> > > - * See CXL @8.2.9.5.2.1 Get Partition Info
-> > > + * See CXL 3.1 @8.2.9.9.2.1 Get Partition Info
-> > >   */
-> > > -static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
-> > > +static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds,
-> > > +				      struct cxl_mem_dev_info *dev_info)
-> > 
-> > I was hoping this would get further away from new in/out arguments and
-> > look at centralizing all partition enumeration into one routine.
-> 
-> I don't understand?  get partition info is only required if the partition align
-> bytes is not 0.  IOW if the device allows for partitions to be changed.
-> cxl_mem_get_partition_info() is only called IFF that extra query is required.
-> So this does centralize byte information queries into one routine.  It leaves
-> creating partitions to the device driver which moves us toward these being
-> mailbox only calls...
+Hello Ian,
 
-The crux of the concern for me is less about the role of
-cxl_mem_get_partition_info() and more about the introduction of a new 'struct
-cxl_mem_dev_info' in/out parameter which is similar in function to
-'struct cxl_dpa_info'. If you can find a way to avoid another level of
-indirection or otherwise consolidate all these steps into a straight
-line routine that does "all the DPA enumeration" things.
-
-> What I did fail to do is change mds to a mailbox.  So add this hunk to this
-> call with the corresponding change in the caller.
-
-That's a whole separate conversion that can wait for an omnibus cleanup
-patch.
-
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 44618746ad79..873793dab68e 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1067,7 +1067,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
->  
->  /**
->   * cxl_mem_get_partition_info - Get partition info
-> - * @mds: The driver data for the operation
-> + * @mbox: Mailbox to query
->   * @dev_info: Device info results
->   *
->   * Retrieve the current partition info for the device specified.  The active
-> @@ -1078,10 +1078,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
->   *
->   * See CXL 3.1 @8.2.9.9.2.1 Get Partition Info
->   */
-> -static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds,
-> +static int cxl_mem_get_partition_info(struct cxl_mailbox *mbox,
->                                       struct cxl_mem_dev_info *dev_info)
+On Fri, Jan 31, 2025 at 11:15=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> The syscalltbl held entries of system call name and number pairs,
+> generated from a native syscalltbl at start up. As there are gaps in
+> the system call number there is a notion of index into the
+> table. Going forward we want the system call table to be identifiable
+> by a machine type, for example, i386 vs x86-64. Change the interface
+> to the syscalltbl so (1) a (currently unused machine type of EM_HOST)
+> is passed (2) the index to syscall number and system call name mapping
+> is computed at build time.
+>
+> Two tables are used for this, an array of system call number to name,
+> an array of system call numbers sorted by the system call name. The
+> sorted array doesn't store strings in part to save memory and
+> relocations. The index notion is carried forward and is an index into
+> the sorted array of system call numbers, the data structures are
+> opaque (held only in syscalltbl.c), and so the number of indices for a
+> machine type is exposed as a new API.
+>
+> The arrays are computed in the syscalltbl.sh script and so no start-up
+> time computation and storage is necessary.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-trace.c       |  88 +++++++++++++-----------
+>  tools/perf/scripts/syscalltbl.sh |  36 ++++------
+>  tools/perf/util/syscalltbl.c     | 113 ++++++++++---------------------
+>  tools/perf/util/syscalltbl.h     |  22 ++----
+>  4 files changed, 103 insertions(+), 156 deletions(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 10d3ad0d21f7..7e3aa2f6c5e2 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -143,7 +143,6 @@ struct syscall_fmt {
+>
+>  struct trace {
+>         struct perf_tool        tool;
+> -       struct syscalltbl       *sctbl;
+>         struct {
+>                 /** Sorted sycall numbers used by the trace. */
+>                 struct syscall  *table;
+> @@ -2100,7 +2099,7 @@ static int syscall__read_info(struct syscall *sc, s=
+truct trace *trace)
+>                 return 0;
+>         }
+>
+> -       name =3D syscalltbl__name(trace->sctbl, sc->id);
+> +       name =3D syscalltbl__name(sc->e_machine, sc->id);
+>         if (name =3D=3D NULL) {
+>                 sc->nonexistent =3D true;
+>                 return -EEXIST;
+> @@ -2196,10 +2195,14 @@ static int trace__validate_ev_qualifier(struct tr=
+ace *trace)
+>
+>         strlist__for_each_entry(pos, trace->ev_qualifier) {
+>                 const char *sc =3D pos->s;
+> -               int id =3D syscalltbl__id(trace->sctbl, sc), match_next =
+=3D -1;
+> +               /*
+> +                * TODO: Assume more than the validation/warnings are all=
+ for
+> +                * the same binary type as perf.
+> +                */
+> +               int id =3D syscalltbl__id(EM_HOST, sc), match_next =3D -1=
+;
+>
+>                 if (id < 0) {
+> -                       id =3D syscalltbl__strglobmatch_first(trace->sctb=
+l, sc, &match_next);
+> +                       id =3D syscalltbl__strglobmatch_first(EM_HOST, sc=
+, &match_next);
+>                         if (id >=3D 0)
+>                                 goto matches;
+>
+> @@ -2219,7 +2222,7 @@ static int trace__validate_ev_qualifier(struct trac=
+e *trace)
+>                         continue;
+>
+>                 while (1) {
+> -                       id =3D syscalltbl__strglobmatch_next(trace->sctbl=
+, sc, &match_next);
+> +                       id =3D syscalltbl__strglobmatch_next(EM_HOST, sc,=
+ &match_next);
+>                         if (id < 0)
+>                                 break;
+>                         if (nr_allocated =3D=3D nr_used) {
+> @@ -2673,6 +2676,7 @@ static int trace__sys_enter(struct trace *trace, st=
+ruct evsel *evsel,
+>         int id =3D perf_evsel__sc_tp_uint(evsel, id, sample), err =3D -1;
+>         int augmented_args_size =3D 0;
+>         void *augmented_args =3D NULL;
+> +       /* TODO: get e_machine from thread. */
+>         struct syscall *sc =3D trace__syscall_info(trace, evsel, EM_HOST,=
+ id);
+>         struct thread_trace *ttrace;
+>
+> @@ -2747,6 +2751,7 @@ static int trace__fprintf_sys_enter(struct trace *t=
+race, struct evsel *evsel,
+>         struct thread_trace *ttrace;
+>         struct thread *thread;
+>         int id =3D perf_evsel__sc_tp_uint(evsel, id, sample), err =3D -1;
+> +       /* TODO: get e_machine from thread. */
+>         struct syscall *sc =3D trace__syscall_info(trace, evsel, EM_HOST,=
+ id);
+>         char msg[1024];
+>         void *args, *augmented_args =3D NULL;
+> @@ -2822,6 +2827,7 @@ static int trace__sys_exit(struct trace *trace, str=
+uct evsel *evsel,
+>         struct thread *thread;
+>         int id =3D perf_evsel__sc_tp_uint(evsel, id, sample), err =3D -1,=
+ callchain_ret =3D 0, printed =3D 0;
+>         int alignment =3D trace->args_alignment;
+> +       /* TODO: get e_machine from thread. */
+>         struct syscall *sc =3D trace__syscall_info(trace, evsel, EM_HOST,=
+ id);
+>         struct thread_trace *ttrace;
+>
+> @@ -3175,6 +3181,7 @@ static int trace__event_handler(struct trace *trace=
+, struct evsel *evsel,
+>
+>         if (evsel =3D=3D trace->syscalls.events.bpf_output) {
+>                 int id =3D perf_evsel__sc_tp_uint(evsel, id, sample);
+> +               /* TODO: get e_machine from thread. */
+>                 struct syscall *sc =3D trace__syscall_info(trace, evsel, =
+EM_HOST, id);
+>
+>                 if (sc) {
+> @@ -3678,9 +3685,9 @@ static struct bpf_program *trace__find_syscall_bpf_=
+prog(struct trace *trace, str
+>         return trace->skel->progs.syscall_unaugmented;
+>  }
+>
+> -static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+> +static void trace__init_syscall_bpf_progs(struct trace *trace, int e_mac=
+hine, int id)
 >  {
-> -       struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->         struct cxl_mbox_get_partition_info pi;
->         struct cxl_mbox_cmd mbox_cmd;
->         int rc;
-> @@ -1091,7 +1090,7 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds,
->                 .size_out = sizeof(pi),
->                 .payload_out = &pi,
->         };
-> -       rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> +       rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
->         if (rc)
->                 return rc;
->  
-> 
-> > That
-> > was the intent of cxl_mem_dpa_fetch() to capture all generic Memory
-> > Expander DPA boundary information.
-> 
-> The problem with cxl_mem_dpa_fetch() is it mixes in the partition info mailbox
-> call after you have already supposedly set up volatile/persistent byte
-> settings.
-> 
-> IOW I don't think it is clean to have the cxl_mem_get_partition_info() call
-> hidden away in cxl_mem_dpa_fetch().
+> -       struct syscall *sc =3D trace__syscall_info(trace, NULL, EM_HOST, =
+id);
+> +       struct syscall *sc =3D trace__syscall_info(trace, NULL, e_machine=
+, id);
+>
+>         if (sc =3D=3D NULL)
+>                 return;
+> @@ -3689,22 +3696,22 @@ static void trace__init_syscall_bpf_progs(struct =
+trace *trace, int id)
+>         sc->bpf_prog.sys_exit  =3D trace__find_syscall_bpf_prog(trace, sc=
+, sc->fmt ? sc->fmt->bpf_prog_name.sys_exit  : NULL,  "exit");
+>  }
+>
+> -static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
+> +static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int e_machi=
+ne, int id)
+>  {
+> -       struct syscall *sc =3D trace__syscall_info(trace, NULL, EM_HOST, =
+id);
+> +       struct syscall *sc =3D trace__syscall_info(trace, NULL, e_machine=
+, id);
+>         return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program=
+__fd(trace->skel->progs.syscall_unaugmented);
+>  }
+>
+> -static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
+> +static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int e_machin=
+e, int id)
+>  {
+> -       struct syscall *sc =3D trace__syscall_info(trace, NULL, EM_HOST, =
+id);
+> +       struct syscall *sc =3D trace__syscall_info(trace, NULL, e_machine=
+, id);
+>         return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program_=
+_fd(trace->skel->progs.syscall_unaugmented);
+>  }
+>
+> -static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int key,=
+ unsigned int *beauty_array)
+> +static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_ma=
+chine, int key, unsigned int *beauty_array)
+>  {
+>         struct tep_format_field *field;
+> -       struct syscall *sc =3D trace__syscall_info(trace, NULL, EM_HOST, =
+key);
+> +       struct syscall *sc =3D trace__syscall_info(trace, NULL, e_machine=
+, key);
+>         const struct btf_type *bt;
+>         char *struct_offset, *tmp, name[32];
+>         bool can_augment =3D false;
+> @@ -3800,9 +3807,9 @@ static struct bpf_program *trace__find_usable_bpf_p=
+rog_entry(struct trace *trace
+>         return NULL;
+>
+>  try_to_find_pair:
+> -       for (int i =3D 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+> -               int id =3D syscalltbl__id_at_idx(trace->sctbl, i);
+> -               struct syscall *pair =3D trace__syscall_info(trace, NULL,=
+ EM_HOST, id);
+> +       for (int i =3D 0, num_idx =3D syscalltbl__num_idx(sc->e_machine);=
+ i < num_idx; ++i) {
+> +               int id =3D syscalltbl__id_at_idx(sc->e_machine, i);
+> +               struct syscall *pair =3D trace__syscall_info(trace, NULL,=
+ sc->e_machine, id);
+>                 struct bpf_program *pair_prog;
+>                 bool is_candidate =3D false;
+>
+> @@ -3886,7 +3893,7 @@ static struct bpf_program *trace__find_usable_bpf_p=
+rog_entry(struct trace *trace
+>         return NULL;
+>  }
+>
+> -static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+> +static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace,=
+ int e_machine)
+>  {
+>         int map_enter_fd =3D bpf_map__fd(trace->skel->maps.syscalls_sys_e=
+nter);
+>         int map_exit_fd  =3D bpf_map__fd(trace->skel->maps.syscalls_sys_e=
+xit);
+> @@ -3894,27 +3901,27 @@ static int trace__init_syscalls_bpf_prog_array_ma=
+ps(struct trace *trace)
+>         int err =3D 0;
+>         unsigned int beauty_array[6];
+>
+> -       for (int i =3D 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+> -               int prog_fd, key =3D syscalltbl__id_at_idx(trace->sctbl, =
+i);
+> +       for (int i =3D 0, num_idx =3D syscalltbl__num_idx(e_machine); i <=
+ num_idx; ++i) {
+> +               int prog_fd, key =3D syscalltbl__id_at_idx(e_machine, i);
+>
+>                 if (!trace__syscall_enabled(trace, key))
+>                         continue;
+>
+> -               trace__init_syscall_bpf_progs(trace, key);
+> +               trace__init_syscall_bpf_progs(trace, e_machine, key);
+>
+>                 // It'll get at least the "!raw_syscalls:unaugmented"
+> -               prog_fd =3D trace__bpf_prog_sys_enter_fd(trace, key);
+> +               prog_fd =3D trace__bpf_prog_sys_enter_fd(trace, e_machine=
+, key);
+>                 err =3D bpf_map_update_elem(map_enter_fd, &key, &prog_fd,=
+ BPF_ANY);
+>                 if (err)
+>                         break;
+> -               prog_fd =3D trace__bpf_prog_sys_exit_fd(trace, key);
+> +               prog_fd =3D trace__bpf_prog_sys_exit_fd(trace, e_machine,=
+ key);
+>                 err =3D bpf_map_update_elem(map_exit_fd, &key, &prog_fd, =
+BPF_ANY);
+>                 if (err)
+>                         break;
+>
+>                 /* use beauty_map to tell BPF how many bytes to collect, =
+set beauty_map's value here */
+>                 memset(beauty_array, 0, sizeof(beauty_array));
+> -               err =3D trace__bpf_sys_enter_beauty_map(trace, key, (unsi=
+gned int *)beauty_array);
+> +               err =3D trace__bpf_sys_enter_beauty_map(trace, e_machine,=
+ key, (unsigned int *)beauty_array);
+>                 if (err)
+>                         continue;
+>                 err =3D bpf_map_update_elem(beauty_map_fd, &key, beauty_a=
+rray, BPF_ANY);
+> @@ -3950,9 +3957,9 @@ static int trace__init_syscalls_bpf_prog_array_maps=
+(struct trace *trace)
+>          * first and second arg (this one on the raw_syscalls:sys_exit pr=
+og
+>          * array tail call, then that one will be used.
+>          */
+> -       for (int i =3D 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+> -               int key =3D syscalltbl__id_at_idx(trace->sctbl, i);
+> -               struct syscall *sc =3D trace__syscall_info(trace, NULL, E=
+M_HOST, key);
+> +       for (int i =3D 0, num_idx =3D syscalltbl__num_idx(e_machine); i <=
+ num_idx; ++i) {
+> +               int key =3D syscalltbl__id_at_idx(e_machine, i);
+> +               struct syscall *sc =3D trace__syscall_info(trace, NULL, e=
+_machine, key);
+>                 struct bpf_program *pair_prog;
+>                 int prog_fd;
+>
+> @@ -4389,8 +4396,13 @@ static int trace__run(struct trace *trace, int arg=
+c, const char **argv)
+>                 goto out_error_mem;
+>
+>  #ifdef HAVE_BPF_SKEL
+> -       if (trace->skel && trace->skel->progs.sys_enter)
+> -               trace__init_syscalls_bpf_prog_array_maps(trace);
+> +       if (trace->skel && trace->skel->progs.sys_enter) {
+> +               /*
+> +                * TODO: Initialize for all host binary machine types, no=
+t just
+> +                * those matching the perf binary.
+> +                */
+> +               trace__init_syscalls_bpf_prog_array_maps(trace, EM_HOST);
+> +       }
+>  #endif
+>
+>         if (trace->ev_qualifier_ids.nr > 0) {
+> @@ -4415,7 +4427,8 @@ static int trace__run(struct trace *trace, int argc=
+, const char **argv)
+>          *  So just disable this beautifier (SCA_FD, SCA_FDAT) when 'clos=
+e' is
+>          *  not in use.
+>          */
+> -       trace->fd_path_disabled =3D !trace__syscall_enabled(trace, syscal=
+ltbl__id(trace->sctbl, "close"));
+> +       /* TODO: support for more than just perf binary machine type clos=
+e. */
+> +       trace->fd_path_disabled =3D !trace__syscall_enabled(trace, syscal=
+ltbl__id(EM_HOST, "close"));
+>
+>         err =3D trace__expand_filters(trace, &evsel);
+>         if (err)
+> @@ -4688,8 +4701,7 @@ DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs=
+,
+>         entry->msecs   =3D stats ? (u64)stats->stats.n * (avg_stats(&stat=
+s->stats) / NSEC_PER_MSEC) : 0;
+>  }
+>
+> -static size_t thread__dump_stats(struct thread_trace *ttrace,
+> -                                struct trace *trace, FILE *fp)
+> +static size_t thread__dump_stats(struct thread_trace *ttrace, struct tra=
+ce *trace, int e_machine, FILE *fp)
+>  {
+>         size_t printed =3D 0;
+>         struct syscall *sc;
+> @@ -4717,7 +4729,7 @@ static size_t thread__dump_stats(struct thread_trac=
+e *ttrace,
+>                         pct =3D avg ? 100.0 * stddev_stats(&stats->stats)=
+ / avg : 0.0;
+>                         avg /=3D NSEC_PER_MSEC;
+>
+> -                       sc =3D trace__syscall_info(trace, /*evsel=3D*/NUL=
+L, EM_HOST,
+> +                       sc =3D trace__syscall_info(trace, /*evsel=3D*/NUL=
+L, e_machine,
+>                                                  syscall_stats_entry->sys=
+call);
+>                         if (!sc)
+>                                 continue;
+> @@ -4767,7 +4779,8 @@ static size_t trace__fprintf_thread(FILE *fp, struc=
+t thread *thread, struct trac
+>         else if (fputc('\n', fp) !=3D EOF)
+>                 ++printed;
+>
+> -       printed +=3D thread__dump_stats(ttrace, trace, fp);
+> +       /* TODO: get e_machine from thread. */
+> +       printed +=3D thread__dump_stats(ttrace, trace, EM_HOST, fp);
+>
+>         return printed;
+>  }
+> @@ -4999,8 +5012,9 @@ static int trace__parse_events_option(const struct =
+option *opt, const char *str,
+>                         *sep =3D '\0';
+>
+>                 list =3D 0;
+> -               if (syscalltbl__id(trace->sctbl, s) >=3D 0 ||
+> -                   syscalltbl__strglobmatch_first(trace->sctbl, s, &idx)=
+ >=3D 0) {
+> +               /* TODO: support for more than just perf binary machine t=
+ype syscalls. */
+> +               if (syscalltbl__id(EM_HOST, s) >=3D 0 ||
+> +                   syscalltbl__strglobmatch_first(EM_HOST, s, &idx) >=3D=
+ 0) {
+>                         list =3D 1;
+>                         goto do_concat;
+>                 }
+> @@ -5136,7 +5150,6 @@ static void trace__exit(struct trace *trace)
+>                         syscall__exit(&trace->syscalls.table[i]);
+>                 zfree(&trace->syscalls.table);
+>         }
+> -       syscalltbl__delete(trace->sctbl);
+>         zfree(&trace->perfconfig_events);
+>  }
+>
+> @@ -5282,9 +5295,8 @@ int cmd_trace(int argc, const char **argv)
+>         sigaction(SIGCHLD, &sigchld_act, NULL);
+>
+>         trace.evlist =3D evlist__new();
+> -       trace.sctbl =3D syscalltbl__new();
+>
+> -       if (trace.evlist =3D=3D NULL || trace.sctbl =3D=3D NULL) {
+> +       if (trace.evlist =3D=3D NULL) {
+>                 pr_err("Not enough memory to run!\n");
+>                 err =3D -ENOMEM;
+>                 goto out;
+> diff --git a/tools/perf/scripts/syscalltbl.sh b/tools/perf/scripts/syscal=
+ltbl.sh
+> index 1ce0d5aa8b50..a39b3013b103 100755
+> --- a/tools/perf/scripts/syscalltbl.sh
+> +++ b/tools/perf/scripts/syscalltbl.sh
+> @@ -50,37 +50,27 @@ fi
+>  infile=3D"$1"
+>  outfile=3D"$2"
+>
+> -nxt=3D0
+> -
+> -syscall_macro() {
+> -    nr=3D"$1"
+> -    name=3D"$2"
+> -
+> -    echo "     [$nr] =3D \"$name\","
+> -}
+> -
+> -emit() {
+> -    nr=3D"$1"
+> -    entry=3D"$2"
+> -
+> -    syscall_macro "$nr" "$entry"
+> -}
+> -
+> -echo "static const char *const syscalltbl[] =3D {" > $outfile
+> -
+>  sorted_table=3D$(mktemp /tmp/syscalltbl.XXXXXX)
+>  grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | sort -n > $sorted_table
+>
+> -max_nr=3D0
+> +echo "static const char *const syscall_num_to_name[] =3D {" > $outfile
+>  # the params are: nr abi name entry compat
+>  # use _ for intentionally unused variables according to SC2034
+>  while read nr _ name _ _; do
+> -    emit "$nr" "$name" >> $outfile
+> -    max_nr=3D$nr
+> +       echo "  [$nr] =3D \"$name\"," >> $outfile
+>  done < $sorted_table
+> +echo "};" >> $outfile
+>
+> -rm -f $sorted_table
+> +echo "static const uint16_t syscall_sorted_names[] =3D {" >> $outfile
+>
+> +# When sorting by name, add a suffix of 0s upto 20 characters so that sy=
+stem
+> +# calls that differ with a numerical suffix don't sort before those
+> +# without. This default behavior of sort differs from that of strcmp use=
+d at
+> +# runtime. Use sed to strip the trailing 0s suffix afterwards.
+> +grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | awk '{printf $3; for (i =
+=3D length($3); i < 20; i++) { printf "0"; }; print " " $1}'| sort | sed 's=
+/\([a-zA-Z1-9]\+\)0\+ \([0-9]\+\)/\1 \2/' > $sorted_table
+> +while read name nr; do
+> +       echo "  $nr,    /* $name */" >> $outfile
+> +done < $sorted_table
+>  echo "};" >> $outfile
+>
+> -echo "#define SYSCALLTBL_MAX_ID ${max_nr}" >> $outfile
+> +rm -f $sorted_table
+> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+> index 2f76241494c8..760ac4d0869f 100644
+> --- a/tools/perf/util/syscalltbl.c
+> +++ b/tools/perf/util/syscalltbl.c
+> @@ -9,6 +9,7 @@
+>  #include <stdlib.h>
+>  #include <asm/bitsperlong.h>
+>  #include <linux/compiler.h>
+> +#include <linux/kernel.h>
+>  #include <linux/zalloc.h>
+>
+>  #include <string.h>
+> @@ -20,112 +21,66 @@
+>    #include <asm/syscalls_32.h>
+>  #endif
+>
+> -const int syscalltbl_native_max_id =3D SYSCALLTBL_MAX_ID;
+> -static const char *const *syscalltbl_native =3D syscalltbl;
+> +const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> +{
+> +       if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
+> +               return syscall_num_to_name[id];
+> +       return NULL;
+> +}
+>
+> -struct syscall {
+> -       int id;
+> +struct syscall_cmp_key {
+>         const char *name;
+> +       const char *const *tbl;
+>  };
+>
+>  static int syscallcmpname(const void *vkey, const void *ventry)
+>  {
+> -       const char *key =3D vkey;
+> -       const struct syscall *entry =3D ventry;
+> +       const struct syscall_cmp_key *key =3D vkey;
+> +       const uint16_t *entry =3D ventry;
+>
+> -       return strcmp(key, entry->name);
+> +       return strcmp(key->name, key->tbl[*entry]);
+>  }
+>
+> -static int syscallcmp(const void *va, const void *vb)
+> +int syscalltbl__id(int e_machine __maybe_unused, const char *name)
+>  {
+> -       const struct syscall *a =3D va, *b =3D vb;
+> -
+> -       return strcmp(a->name, b->name);
+> +       struct syscall_cmp_key key =3D {
+> +               .name =3D name,
+> +               .tbl =3D syscall_num_to_name,
+> +       };
+> +       const int *id =3D bsearch(&key, syscall_sorted_names,
+> +                               ARRAY_SIZE(syscall_sorted_names),
+> +                               sizeof(syscall_sorted_names[0]),
+> +                               syscallcmpname);
 
-If it can save new in/out parameters and hide that thrash from
-cxl_pci_probe() outside of "get/set DPA information", then that's the
-final organization I would like to see for a cleanup like this.
+This has puzzled me several times lol. Searching in
+syscall_sorted_names returns an int id... I get that it's sorted by
+name, but maybe call it syscall_ids_sorted_by_name, syscall_ids, or
+syscall_ids_sorted instead?
 
-[..]
-> > Why does media_ready affect partition boundary enumeration?
-> 
-> We want the driver to load without any partitions so that the device can be
-> queried.
-> 
-[..]
-> I explored getting rid of media_ready but I think that is a bigger fish to fry
-> than I have time for ATM.  And you have ideas there which I need to explore
-> more.
+> +
+> +       return id ? *id : -1;
+>  }
+>
+> -static int syscalltbl__init_native(struct syscalltbl *tbl)
+> +int syscalltbl__num_idx(int e_machine __maybe_unused)
 
-It is jarring to see cxl_pci_probe() now handling this detail when
-previously cxl_pci_probe() just called a helper that either succeeds or
-fails without bothering cxl_pci_probe() with the details.
+I haven't found many instances of *num_idx in the source tree
+indicating the length of an array. Are you okay with
+syscalltbl__nr_idx()?
 
-Push / leave complexity and logic to leaf functions where possible.
+Otherwise LGTM.
 
-> > > +		range_info.size = dev_info.total_bytes;
-> > > +		cxl_add_partition(&range_info, 0, dev_info.volatile_bytes,
-> > > +				  CXL_PARTMODE_RAM);
-> > > +		cxl_add_partition(&range_info, dev_info.volatile_bytes,
-> > > +				  dev_info.persistent_bytes, CXL_PARTMODE_PMEM);
-> > > +	}
-> > 
-> > Why remove the cxl_mem_dpa_fetch() helper in favor of open-coding these
-> > cxl_add_partition() calls?
-> 
-> After removing the ugly hidden get partition info call in cxl_mem_dpa_fetch()
-> cxl_mem_dpa_fetch boiled down to 2 cxl_add_partition() calls.  That was very
-> tiny.
-> 
-> More importantly this exported a very clean cxl_add_parition() call for any
-> driver (ie type 2) to call without creating special structures to pass to the
-> cxl core.
-> 
-> I can put cxl_mem_dpa_fetch() back if you want...  I had changed it to
-> cxl_mem_create_partitions() to make it more clear what it was actually doing
-> before realizing it was so small it was probably best removed.
-> 
-> It would be used both here and cxl_test.
-
-The name does not matter to me, although it is unfortunate that this
-helper lived for all of 2 commits in the history, it is more about
-adding a new potentially redundant in/out object and adding logic to
-cxl_pci_probe().
+Thanks,
+Howard
+>  {
+> -       int nr_entries =3D 0, i, j;
+> -       struct syscall *entries;
+> -
+> -       for (i =3D 0; i <=3D syscalltbl_native_max_id; ++i)
+> -               if (syscalltbl_native[i])
+> -                       ++nr_entries;
+> -
+> -       entries =3D tbl->syscalls.entries =3D malloc(sizeof(struct syscal=
+l) * nr_entries);
+> -       if (tbl->syscalls.entries =3D=3D NULL)
+> -               return -1;
+> -
+> -       for (i =3D 0, j =3D 0; i <=3D syscalltbl_native_max_id; ++i) {
+> -               if (syscalltbl_native[i]) {
+> -                       entries[j].name =3D syscalltbl_native[i];
+> -                       entries[j].id =3D i;
+> -                       ++j;
+> -               }
+> -       }
+> -
+> -       qsort(tbl->syscalls.entries, nr_entries, sizeof(struct syscall), =
+syscallcmp);
+> -       tbl->syscalls.nr_entries =3D nr_entries;
+> -       tbl->syscalls.max_id     =3D syscalltbl_native_max_id;
+> -       return 0;
+> +       return ARRAY_SIZE(syscall_sorted_names);
+>  }
+>
+> -struct syscalltbl *syscalltbl__new(void)
+> +int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
+>  {
+> -       struct syscalltbl *tbl =3D malloc(sizeof(*tbl));
+> -       if (tbl) {
+> -               if (syscalltbl__init_native(tbl)) {
+> -                       free(tbl);
+> -                       return NULL;
+> -               }
+> -       }
+> -       return tbl;
+> -}
+> -
+> -void syscalltbl__delete(struct syscalltbl *tbl)
+> -{
+> -       zfree(&tbl->syscalls.entries);
+> -       free(tbl);
+> -}
+> -
+> -const char *syscalltbl__name(const struct syscalltbl *tbl __maybe_unused=
+, int id)
+> -{
+> -       return id <=3D syscalltbl_native_max_id ? syscalltbl_native[id]: =
+NULL;
+> -}
+> -
+> -int syscalltbl__id(struct syscalltbl *tbl, const char *name)
+> -{
+> -       struct syscall *sc =3D bsearch(name, tbl->syscalls.entries,
+> -                                    tbl->syscalls.nr_entries, sizeof(*sc=
+),
+> -                                    syscallcmpname);
+> -
+> -       return sc ? sc->id : -1;
+> -}
+> -
+> -int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx)
+> -{
+> -       struct syscall *syscalls =3D tbl->syscalls.entries;
+> -
+> -       return idx < tbl->syscalls.nr_entries ? syscalls[idx].id : -1;
+> +       return syscall_sorted_names[idx];
+>  }
+>
+> -int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *sy=
+scall_glob, int *idx)
+> +int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const ch=
+ar *syscall_glob, int *idx)
+>  {
+> -       int i;
+> -       struct syscall *syscalls =3D tbl->syscalls.entries;
+> +       for (int i =3D *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names=
+); ++i) {
+> +               const char *name =3D syscall_num_to_name[syscall_sorted_n=
+ames[i]];
+>
+> -       for (i =3D *idx + 1; i < tbl->syscalls.nr_entries; ++i) {
+> -               if (strglobmatch(syscalls[i].name, syscall_glob)) {
+> +               if (strglobmatch(name, syscall_glob)) {
+>                         *idx =3D i;
+> -                       return syscalls[i].id;
+> +                       return syscall_sorted_names[i];
+>                 }
+>         }
+>
+>         return -1;
+>  }
+>
+> -int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *s=
+yscall_glob, int *idx)
+> +int syscalltbl__strglobmatch_first(int e_machine, const char *syscall_gl=
+ob, int *idx)
+>  {
+>         *idx =3D -1;
+> -       return syscalltbl__strglobmatch_next(tbl, syscall_glob, idx);
+> +       return syscalltbl__strglobmatch_next(e_machine, syscall_glob, idx=
+);
+>  }
+> diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
+> index 362411a6d849..2bb628eff367 100644
+> --- a/tools/perf/util/syscalltbl.h
+> +++ b/tools/perf/util/syscalltbl.h
+> @@ -2,22 +2,12 @@
+>  #ifndef __PERF_SYSCALLTBL_H
+>  #define __PERF_SYSCALLTBL_H
+>
+> -struct syscalltbl {
+> -       struct {
+> -               int max_id;
+> -               int nr_entries;
+> -               void *entries;
+> -       } syscalls;
+> -};
+> +const char *syscalltbl__name(int e_machine, int id);
+> +int syscalltbl__id(int e_machine, const char *name);
+> +int syscalltbl__num_idx(int e_machine);
+> +int syscalltbl__id_at_idx(int e_machine, int idx);
+>
+> -struct syscalltbl *syscalltbl__new(void);
+> -void syscalltbl__delete(struct syscalltbl *tbl);
+> -
+> -const char *syscalltbl__name(const struct syscalltbl *tbl, int id);
+> -int syscalltbl__id(struct syscalltbl *tbl, const char *name);
+> -int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx);
+> -
+> -int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *s=
+yscall_glob, int *idx);
+> -int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *sy=
+scall_glob, int *idx);
+> +int syscalltbl__strglobmatch_first(int e_machine, const char *syscall_gl=
+ob, int *idx);
+> +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_glo=
+b, int *idx);
+>
+>  #endif /* __PERF_SYSCALLTBL_H */
+> --
+> 2.48.1.362.g079036d154-goog
+>
