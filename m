@@ -1,121 +1,158 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7172A14F9E7;
-	Wed,  5 Feb 2025 18:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE9814F9E7;
+	Wed,  5 Feb 2025 18:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779186; cv=none; b=QDoOxLd5EOfEssN6Dhl0hpnGNmwmc4gtu6/o6z/Wz4NLHGl69MEfl/mQXcGbOs8CazNhUblhFPkDxbJBPIKxw27J0AskRNMApVS1hZSc0UzaftIkJBSOCNyZiXIlqrFaM7YF4P5wwT/9cnfkYI79aXL7+tG9WCFwPBB2c3PEzug=
+	t=1738779226; cv=none; b=CHq7B6WouMwPqWFYiKMVx030RrsEK64cZQL9ixsQHWEKG6SXG9wfI3r3rlTgEmyS8/kSJy8yD3expMt8TDF3602TC/H2j9Ano0rygXQC/LHNnpBmUo4hg76gNVMMaMYw9V0SHJ/7x8a+lNkm8p26DrJ0foOUebCJTMHhxZI6PkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779186; c=relaxed/simple;
-	bh=Up/qq84r5S/UYhXFTh8In9C34CQSWCRxH4/J+jHx9Ws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CTc9bWQPkqI8CxO2tLsiN1n4BXz/D/8SGAxoPWDAUCtXyUEb1C918sJ3NCDIY47OvObCK05HbkfQF0v19HS3HgwQNYlTucg2XN8alB0XkUaL2JQ8br3ft6nGvmcXb9+RDo5mMRckOd8NViHQphr4/8V6dl7Bjo6Qy8Q1ijYXykM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=G0BKd4vC; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1738779226; c=relaxed/simple;
+	bh=/1HF8aKgRp6scy77I1Zd7Np36szkQ4W9868XTiFtW6Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XN0EAqWLHx/XAshlwJQzlSSPZxw/qMUV2s6bdfkDiI78oWa72ZLwwkpFS7voaNiyMhZaiQ1U7oooljW6c0ZBZBJvzfnbPuzPODPnbosOX4HRzj73spF9OlIv98YjHIWXTf6wW3A9GBeRvFKdAs097dvtoFAqvJrv2QrFn2MGzQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ksqztk+f; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="G0BKd4vC"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Yp7dC5dByz6CmLxY;
-	Wed,  5 Feb 2025 18:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1738779175; x=1741371176; bh=HEmpdHhzE2vU2QVoWRp2+Ebu
-	PduQnjFGmo2WB4b4xlk=; b=G0BKd4vCbygEYnk4FihlhKIYkoAwpDCDXlFiY5SR
-	dLTZF7iBDGbHfLNtd82jMjhOsNF/lt5te9akmECpZAAiRE3DtFRPSQWUuusvkv+W
-	G+5wYrDQqpaIkNJwMG0DSD1F8Gt/6JL5a+L7T8F4ulxKe4OIi70P9raftJF+SrK5
-	zS5XK0PoLVBWfsmX2CfvptE84mKPxduf+9YmAe8cxgo1zSRk7UarbOlEe9TKZJpA
-	9iuAOrgG3pLDVw+ckqRRqHH12XHZz+ln3jOm4o5jWMt9pN1f61YD2EOaQiBq3m8l
-	VJSRmJ1DX78qMA5R4c+gzWYWrfvQbbHVBL+RKcTgxzShJg==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id k9WYAbFLhfcS; Wed,  5 Feb 2025 18:12:55 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Yp7cy6KcTz6CmM6c;
-	Wed,  5 Feb 2025 18:12:50 +0000 (UTC)
-Message-ID: <07c3d640-d2d7-4edb-b62e-0926e5e7c7c8@acm.org>
-Date: Wed, 5 Feb 2025 10:12:49 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksqztk+f"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-467725245a2so1027061cf.3;
+        Wed, 05 Feb 2025 10:13:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738779224; x=1739384024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w/D9MnJCFkcjuwUXqpp70VuXXudp3QKXzPE6iWssawE=;
+        b=ksqztk+fSkHhNcMGe5nsT46ojckDm9XBKYLG8xBiBI+gEA/7pimv1MZdYRYD5icbgF
+         3HHx9TPsaGIqDMVMtNN9p6rUBWAHHzB/bheJJdx1hGOMrn/EkV3jKB3sizZ4TwvjTDCS
+         3Kj0Hu2xkWzWNi8VtFPlUm0DluEdN5ryWgV9kT9wAIeDsD0+dUGX+h6iHltAHh3HvjiR
+         Uy/DLm0YOciEERU9gbimYSDQfc73bCC6+69yG1LjriO/AboYXapidsuU+o7hZeROnLNJ
+         g5R1t2E11xZ3vbQyT1KatxY+QvMOLuIeQVjxUlaiA0k4XF9aJjo3CMYxDD+seh/eHq6k
+         Ik+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738779224; x=1739384024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w/D9MnJCFkcjuwUXqpp70VuXXudp3QKXzPE6iWssawE=;
+        b=gc4pS81yatCwmWF7QFApRU8B4ue9ToLVsJwVxtHwlaDZzSq8IIVrNYRXrMz8GA5sNU
+         skgGZi3P2m9gjG/QFvFmz+GPULdvSLAmuoWGOCdPoU89jQf0mYH3stLET54KVIpOq5+X
+         jhJ3RSjyC7AoSP+tYhJgTVoJ6b8HTiyKrGbGXdXd6kauZYIHGwPpbchwztwnNsUebHK/
+         +ASjcYfr0S2zQgGstWoY5RE0jdCNaZP97rj+U65YThMjntyrEVEnc07zwDMwTxFr2x4W
+         APn2tdpjQ7jX91oApVgWT/lt8NSaXX7huZ6jy0nyErsBBvXvxps046Xo2CkqNVj22g/a
+         Zj3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUm6yzVwqDEZIzdXJ41Ali6H2A7bYz7Ef+u90j+XzYEF3hlKxvc/pPc+9KtPxMfeGmoLgWHZjHmIEx6j5vc@vger.kernel.org, AJvYcCXTiNu3okLeiaK3KsYgzXURTmj77tz8ZX4jra233poeySW7iWcDnacudhSIBm1wv7+gUNNkwhADLUrvWluM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeDjyO5SGj1t5sg0+Vec2nBXqczfsOtFX3Ylhlf2hZv345wwtd
+	ZEJ+nUIlvxRtyukFYVnWXtSRhU6jbvSCkPtn6AV9dyV29yN6k/I48LezUcMKfImmetQrYUiaNFe
+	qyGqAjiUaOIICAsEF/57u5ofTsD8=
+X-Gm-Gg: ASbGnctXHVLdI0gJ6ov+AKTrKxHI/Pz0rucfSf4fyUJuB5jQltU2uWDrnxZBkg5Zc/J
+	7w6pUYxm+rNKjdnLTZlr+Lnayf8cdcYmK+Ku4Vvqg3ag5uWbwch9M0SNFhOhb2HgiiVWyrB+uy/
+	psVfL3UyDJNESS
+X-Google-Smtp-Source: AGHT+IEzTGZnhNuNC474OVgjAVnXn2L+DLA98Ge72+dnmnvXtvkNQ8EVpJV8eq4sMTi/Asa0wZ56gWLYgPKZ3WMUtK0=
+X-Received: by 2002:a05:622a:1b13:b0:46f:d6c3:2dc7 with SMTP id
+ d75a77b69052e-470281ced17mr60435171cf.23.1738779224037; Wed, 05 Feb 2025
+ 10:13:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 8/8] ABI: sysfs-driver-ufs: Add missing UFS sysfs
- attributes
-To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
- mani@kernel.org, beanhuo@micron.com, avri.altman@wdc.com,
- junwoo80.lee@samsung.com, martin.petersen@oracle.com,
- quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
- quic_rampraka@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- Keoseong Park <keosung.park@samsung.com>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
- <20250203081109.1614395-9-quic_ziqichen@quicinc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250203081109.1614395-9-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250204-fuse-fixes-v1-1-c1e1bed8cdb7@kernel.org>
+In-Reply-To: <20250204-fuse-fixes-v1-1-c1e1bed8cdb7@kernel.org>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Wed, 5 Feb 2025 10:13:33 -0800
+X-Gm-Features: AWEUYZnYUbado6oKip81jO3b775na0CY30Gqmx7j0wb6h8phMN9Hi1xi3zrNV4I
+Message-ID: <CAJnrk1YL==CtATQYEdA7M-HmpmP9o4ff5Jeg-_oaEa4XruA1Ag@mail.gmail.com>
+Subject: Re: [PATCH] fuse: don't set file->private_data in fuse_conn_waiting_read
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/3/25 12:11 AM, Ziqi Chen wrote:
+On Tue, Feb 4, 2025 at 7:09=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wro=
+te:
+>
+> I see no reason to set the private_data on the file to this value. Just
+> grab the result of the atomic_read() and output it without setting
+> private_data.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Please change the patch title from "Add missing UFS sysfs attributes" 
-into "Add missing UFS sysfs attribute documentation". This patch does 
-not add any sysfs attributes - it adds missing documentation.
+Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
 
-> +What:		/sys/bus/platform/drivers/ufshcd/*/clkscale_enable
-> +What:		/sys/bus/platform/devices/*.ufs/clkscale_enable
-> +Date:		January 2025
-> +Contact:	Ziqi Chen <quic_ziqichen@quicinc.com>
-> +Description:
-> +		This file shows whether the UFS clock scaling is enabled or not.
-> +		And it can be used to enable/disable the clock scaling by writing
-> +		1 or 0 to this file.
-> +
-> +		The file is read/write.
-> +
-> +What:		/sys/bus/platform/drivers/ufshcd/*/clkgate_enable
-> +What:		/sys/bus/platform/devices/*.ufs/clkgate_enable
-> +Date:		January 2025
-> +Contact:	Ziqi Chen <quic_ziqichen@quicinc.com>
-> +Description:
-> +		This file shows whether the UFS clock gating is enabled or not.
-> +		And it can be used to enable/disable the clock gating by writing
-> +		1 or 0 to this file.
-> +
-> +		The file is read/write.
-> +
-> +What:		/sys/bus/platform/drivers/ufshcd/*/clkgate_delay_ms
-> +What:		/sys/bus/platform/devices/*.ufs/clkgate_delay_ms
-> +Date:		January 2025
-> +Contact:	Ziqi Chen <quic_ziqichen@quicinc.com>
-> +Description:
-> +		This file shows and sets the number of milliseconds of idle time
-> +		before the UFS driver start to perform clock gating. This can
-                                       ^^^^^
-                                       starts
-> +		prevent the UFS from frequently performing clock gate/ungate.
-                                                                  ^^^^^^^
-                                                          gating/ungating
-> +
-> +		The file is read/write.
+> ---
+>  fs/fuse/control.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+> index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..17ef07cf0c38e44bd7eadb345=
+0bd53a8acc5e885 100644
+> --- a/fs/fuse/control.c
+> +++ b/fs/fuse/control.c
+> @@ -49,18 +49,17 @@ static ssize_t fuse_conn_waiting_read(struct file *fi=
+le, char __user *buf,
+>  {
+>         char tmp[32];
+>         size_t size;
+> +       int value;
+>
+
+It might be helpful if a "if (*ppos) return -EINVAL;" check gets added here=
+ too?
 
 
-Please change the word "file" into "attribute" to make the sysfs 
-attribute documentation consistent with the sysfs documentation for
-other kernel drivers.
+>         if (!*ppos) {
+> -               long value;
+>                 struct fuse_conn *fc =3D fuse_ctl_file_conn_get(file);
+>                 if (!fc)
+>                         return 0;
+>
+>                 value =3D atomic_read(&fc->num_waiting);
+> -               file->private_data =3D (void *)value;
+>                 fuse_conn_put(fc);
+>         }
+> -       size =3D sprintf(tmp, "%ld\n", (long)file->private_data);
+> +       size =3D sprintf(tmp, "%d\n", value);
+>         return simple_read_from_buffer(buf, len, ppos, tmp, size);
+>  }
+>
+>
+> ---
+> base-commit: 9afd7336f3acbe5678cca3b3bc5baefb51ce9564
+> change-id: 20250204-fuse-fixes-03882c05c1b1
+>
+> Best regards,
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
+>
 
-Thanks,
 
-Bart.
+>         if (!*ppos) {
+> -               long value;
+>                 struct fuse_conn *fc =3D fuse_ctl_file_conn_get(file);
+>                 if (!fc)
+>                         return 0;
+>
+>                 value =3D atomic_read(&fc->num_waiting);
+> -               file->private_data =3D (void *)value;
+>                 fuse_conn_put(fc);
+>         }
+> -       size =3D sprintf(tmp, "%ld\n", (long)file->private_data);
+> +       size =3D sprintf(tmp, "%d\n", value);
+>         return simple_read_from_buffer(buf, len, ppos, tmp, size);
+>  }
+>
+>
+> ---
+> base-commit: 9afd7336f3acbe5678cca3b3bc5baefb51ce9564
+> change-id: 20250204-fuse-fixes-03882c05c1b1
+>
+> Best regards,
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
+>
