@@ -1,120 +1,82 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C261FF1B3;
-	Wed,  5 Feb 2025 19:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379941FF1B3;
+	Wed,  5 Feb 2025 19:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738784359; cv=none; b=Wp2wN6ya3Dgjie0dnTtDlC+KtsZsGVlmec3xzN+vBHvlfI3qhEb0l50E7TxXupAlXGL9npjKSa0NEJqlATw51758jyHKmSAZvxnkeBdfX4hmNbKdsBdfQkNeq7jk+2MidISEol6TILxzoPVIv32Uo7Myd/TvpIJHPwVwnUwF1cw=
+	t=1738784396; cv=none; b=WPqHyGnKEHufa9K71UC8vf9k/DGbbNxftHBDguZGIrfW3SBdM2rb5MoaYU6kh1p82pe2KWpeRYUX+pQ2FIcJ9p6ObBpvvZK0vkYKnLqrZc8trcq7RexMiBfzCQIpsKajpQDn9dv8TiE3gJiBRgJpnTiCMux1HmxgHBYqioUC5VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738784359; c=relaxed/simple;
-	bh=zKOiOlHpbUp4kXpTzvoyfe5HyGDtgYP/N9y2FM6xobo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C8aAHBLOAhR33NXFuhmIigO8NhXnJ1+PgbiX5POzBhfmzm49n41PqNNZCP8xXRviLMI9H7Mo0iqQjn0dwpPNh5cbfN9xlEUnDXSEBqFd07lRzHqF1AZCYNRgn33uHnmUPX7kBgJrcdt+WzrnHlBQXqlGYdddTx6GZL+o4YSSrEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gEriVhBj; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738784396; c=relaxed/simple;
+	bh=1+pjZX0yI9VGx4g/jArQXgMJDFPmVY4mV4iNBwxFLzM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=al6Vj/WxNlk+raVv7RFUlxPLRHIh9Gthq/fgiRq5cpfIFz5Ukv4dUKL3paJqJsHoJUKFP6T87lzLPXU14WlK56qKLuIcqpO897lGVsoSoCYphv7qrWpW4vblHCOKtEno+ieB9c/G2bZsiNweSC3E9kTTUebBlmh2/IcIdNC0sVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=d7/N4yp8; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gEriVhBj"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515Jd8GQ3413358
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 13:39:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738784348;
-	bh=ZyjPaBbnb1ioUY1aZ/qbMWRhtW3CaVcbfAm0oTsy96M=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=gEriVhBjDKj6EJRF31VLgY0WLSgAG1iIbPaw4ULEj3TnywsHi2f5SKEE7UmorA8LL
-	 04aBEDy+Dw09lYoaLUJZb/ZCSG4ZHWkL8kaEPqw8yuHnjsSo5G9qIwgldrq1HX/fr7
-	 FzbYUnYqWr8ED1NhbtbB/hLfaR0OaeYv9CmmgWGI=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515Jd8r0056138
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 13:39:08 -0600
-Received: from lewvowa01.ent.ti.com (10.180.75.79) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 13:39:08 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by lewvowa01.ent.ti.com
- (10.180.75.79) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2507.34; Wed, 5 Feb
- 2025 13:39:08 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 13:39:07 -0600
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515Jd8Bk032794;
-	Wed, 5 Feb 2025 13:39:08 -0600
-Message-ID: <93d7e958-be62-45b3-ba8f-d3e4cf2839bf@ti.com>
-Date: Wed, 5 Feb 2025 13:39:07 -0600
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="d7/N4yp8"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515IaGGk002905;
+	Wed, 5 Feb 2025 13:39:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=Gll7V5YWZGjjh4jNat
+	GfF8hrFl9HCpALYIBVlqjYL58=; b=d7/N4yp8BjFx6/YQW2eIyoRtTb24U+cy9B
+	DfczJHy6EDs+Gpv0NLCGizb0RQ6o0RZDieVuLIJeL8kp+5XHraBxhNLc2jqsB7Le
+	9+397/S/v+ucGUuHILFfGpa8xcMT8CT8RMotcLQdqQ4+DUcaSYqQ7Ercgi7/EAOE
+	L7+Cirn12Cav8mP+SZSQlJV0nKUKZFRu65j4bPg/9JuFiCWH5Haf//AxVqJgrEjM
+	D2JzSYC/vx15dXKFq30q854jgdepF18rM+yPC8I2aI9mzoi3g9bScnQxV1KcfWvs
+	lTAx9sa2PBSD71RicguhWnGf0NZFHaIkF6bGmT3yqDzWHG1gXT9g==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44hgwm4x3m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 13:39:46 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Feb
+ 2025 19:39:44 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Wed, 5 Feb 2025 19:39:44 +0000
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 3D1FF822563;
+	Wed,  5 Feb 2025 19:39:44 +0000 (UTC)
+Date: Wed, 5 Feb 2025 19:39:43 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+CC: Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH] ASoC: arizona/madera: use fsleep() in up/down DAPM event
+ delays.
+Message-ID: <Z6O+f9nsGLcvYrHj@opensource.cirrus.com>
+References: <20250205160849.500306-1-vitalyr@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Revert "mmc: sdhci_am654: Add
- sdhci_am654_start_signal_voltage_switch"
-To: Josua Mayer <josua@solid-run.com>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rabeeh@solid-run.com>, <jon@solid-run.com>, <stable@vger.kernel.org>
-References: <20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250205160849.500306-1-vitalyr@opensource.cirrus.com>
+X-Authority-Analysis: v=2.4 cv=EPv800ZC c=1 sm=1 tr=0 ts=67a3be82 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=kj9zAlcOel0A:10 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=IdwRCrQQKRYHaIMh1wcA:9 a=CjuIK1q_8ugA:10
+ a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-ORIG-GUID: S1YYpSjcjYlhB9SsyIk807Z9UBPAob84
+X-Proofpoint-GUID: S1YYpSjcjYlhB9SsyIk807Z9UBPAob84
+X-Proofpoint-Spam-Reason: safe
 
-Hi all,
-
-On 1/27/25 2:12 PM, Josua Mayer wrote:
-> This reverts commit 941a7abd4666912b84ab209396fdb54b0dae685d.
+On Wed, Feb 05, 2025 at 04:08:46PM +0000, Vitaly Rodionov wrote:
+> Using `fsleep` instead of `msleep` resolves some customer complaints
+> regarding the precision of up/down DAPM event timing. `fsleep()`
+> automatically selects the appropriate sleep function, making the delay
+> time more predictable.
 > 
-> This commit uses presence of device-tree properties vmmc-supply and
-> vqmmc-supply for deciding whether to enable a quirk affecting timing of
-> clock and data.
-> The intention was to address issues observed with eMMC and SD on AM62
-> platforms.
-> 
-> This new quirk is however also enabled for AM64 breaking microSD access
-> on the SolidRun HimmingBoard-T which is supported in-tree since v6.11,
-> causing a regression. During boot microSD initialization now fails with
-> the error below:
-> 
-> [    2.008520] mmc1: SDHCI controller on fa00000.mmc [fa00000.mmc] using ADMA 64-bit
-> [    2.115348] mmc1: error -110 whilst initialising SD card
-> 
-> The heuristics for enabling the quirk are clearly not correct as they
-> break at least one but potentially many existing boards.
-> 
-> Revert the change and restore original behaviour until a more
-> appropriate method of selecting the quirk is derived.
+> Signed-off-by: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+> ---
 
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Somehow I missed these emails, apologies.
-
-Thanks for reporting this issue Josua.
-
-We do need this patch for am62x devices since it fixes timing issues
-with a variety of SD cards on those boards, but if there is a
-regression, too bad, patch had to be reverted.
-
-I will look again into how to implement this quirk, I think using the
-voltage regulator nodes to discover if we need this quirk might not have
-been a good idea, based on your explanation. I believe I did test the
-patch on am64x SK and am64x EVM boards and saw no boot issue there,
-so the issue seems related to the voltage regulator nodes existing in DT
-(the heuristics for enabling the quirk) as you call it.
-
-Again, thanks for reporting, will look into fixing this issue for am62x
-again soon.
-
-~ Judith
-
-
+Thanks,
+Charles
