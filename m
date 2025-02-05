@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19ED218AC4;
-	Wed,  5 Feb 2025 12:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C093C218AC4;
+	Wed,  5 Feb 2025 12:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757628; cv=none; b=o6bh31y2jXcWHqPOqwmoKr6ZXFbB2seByqNw71QWBxs7mA5meTJF+LOk4RDQYa9xqWfhLBAwXszSlSz4mS2/nTivlFFDhZFGRCf3syZWtpPpjoPfhW4XqqRZ/AqQ1E7A5+oblBHfajUo2wFd1Qvg6GgZIo9uw+t/aoosIv4XTlk=
+	t=1738757664; cv=none; b=qcggzqF8k20PnLkG12pFOT3PWgQm3ABnwUq5UDNNi08PxUeAW13lLdQD6M9HfURh+rRV/k0yxpkuUZXCKbtdFYsb1D8YXXrxoUtlKm6bgeLkAU1AlBDoELl2ojCTscUln6kZEv60T6C8IRg9LceySosN1qR6oBl2i9f5L16Eg2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757628; c=relaxed/simple;
-	bh=Z79+chHQqx4OtIJNShxIC+ZnIf3vo4Kti4bGWnyvkYY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=my4XbK8uyFkhc/P/mNDXMAEL7T7VQ/dLLqfWKX42WFjQWsbvX11YiUCgJAfX9W81H0aCzI795BSTNmJSrt6wRbb9aNh/+t0L+eA4ekq8Bd0wyRDfNeMb/SPgk9XZRyEMHY+89EVK+zmAZBXlO0yOYv1BTMT1IqXUo5I6HmSm4Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkqm8/Xz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738757664; c=relaxed/simple;
+	bh=rcI6f6OhT0wxgcN85+VRNHiqiMS0KrhoL6Bjehtb98Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j6v8rbx/4VuSyUacYG/4zmaA5K+gguKjl2ssClxyx+GbY9FeTLUNwaOxsaDvpMXRpVK2/lREw6kb+W57ciyKOJWTDzHamIKXjKj42hHvQlwLYA4Ta7/ug8n3iC4Oh+xe6eh8m9c5RvWbqcY9WoWk+VNyzeHH15SiaGq2sJIIdA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNntWyeg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkqm8/Xz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F8BC4CED1;
-	Wed,  5 Feb 2025 12:13:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNntWyeg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893EFC4CED1;
+	Wed,  5 Feb 2025 12:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738757628;
-	bh=Z79+chHQqx4OtIJNShxIC+ZnIf3vo4Kti4bGWnyvkYY=;
+	s=k20201202; t=1738757664;
+	bh=rcI6f6OhT0wxgcN85+VRNHiqiMS0KrhoL6Bjehtb98Q=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Dkqm8/XzYhU63+YbnX5WGXgcWAYs7eu9KLl+dNdBLLGVJFkk5I86pvFCelatQI33v
-	 efDu8GvWLOZV1vpmVhggebyWacQP/83jWtTh0TyAPa/I8sWlplYNxHPJ8op8S9sUU/
-	 mPd1FOWrW9LPg6+SF0TAtJ5vW0AyWwnG+M9c8w8dhDu3vkdlAghzcHvURemRtvtkdc
-	 GvNHKKCCkSLPg4jLfFXNJoLpWxjX/WI8GZotYqTehP6bR4DW6t2Mdp5q4fM1LrILm5
-	 zFCnHvy6RvXh8pxEZEK8avk67eD+fWFWtUXkLZpfvTUw6petFAEXsq2LkdQg2HS7+X
-	 KnnHRITtoevrQ==
+	b=tNntWyeg9gzbpLtFY9obNhZhKgzcIuzkPXccW74BxwuLWpuHbYMb1rWYVjQj97j82
+	 1Hn7lyRr14mwYoF61Guj6CW2uEcjQIyIamnpcOJYR4qh700IRtRMaK/qMCvDC9xiZS
+	 LYx8h5lWCQjtPtkC+aYYRvRiwfEIYDGT0UgzKMiKk/nS6udWWWj557VfKExYvBS9Ck
+	 qd0npDrIptUGn0CYMLpgDue/94AWcQdsirY8EsIDGju1roitNBzbbwC+fofzR47BDl
+	 d7e1pwUOVGDJl37gLTPukhQ1thkjZmtU9B8NTddJ9R/ZUxLMBXVxR23OPuBxFQ5CxX
+	 u/pAzmvnMGHxQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Eric Biggers <ebiggers@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Keith Busch <kbusch@kernel.org>,
-	linux-crypto@vger.kernel.org,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: testmgr - drop unused static const arrays
-Date: Wed,  5 Feb 2025 13:13:15 +0100
-Message-Id: <20250205121342.344475-1-arnd@kernel.org>
+Subject: [PATCH] hwmon: sg2042: add back module description/author tags
+Date: Wed,  5 Feb 2025 13:14:08 +0100
+Message-Id: <20250205121419.373464-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -52,39 +48,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The ones[] and zeroes[] definitions were previously used by the
-rocksoft tests that are now gone. With extra warnings enabled,
-gcc now complains about these:
+A previous code reorganization inadvertently dropped the two tags,
+which leads to a "make W=1" warning:
 
-crypto/testmgr.h:6021:17: error: 'ones' defined but not used [-Werror=unused-const-variable=]
- 6021 | static const u8 ones[4096] = { [0 ... 4095] = 0xff };
-      |                 ^~~~
-crypto/testmgr.h:6020:17: error: 'zeroes' defined but not used [-Werror=unused-const-variable=]
- 6020 | static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
-      |                 ^~~~~~
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/sg2042-mcu.o
 
-Drop them as well.
+Add these back.
 
-Fixes: dad9cb81bc30 ("crypto: crc64-rocksoft - remove from crypto API")
+Fixes: cd4db38c4368 ("hwmon: (sg2042) Use per-client debugfs entry")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- crypto/testmgr.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/hwmon/sg2042-mcu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index 4ab05046b734..61c7ae731052 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -6017,9 +6017,6 @@ static const struct hash_testvec rmd160_tv_template[] = {
- 	}
+diff --git a/drivers/hwmon/sg2042-mcu.c b/drivers/hwmon/sg2042-mcu.c
+index 74c35945d169..105131c4acf7 100644
+--- a/drivers/hwmon/sg2042-mcu.c
++++ b/drivers/hwmon/sg2042-mcu.c
+@@ -355,4 +355,6 @@ static struct i2c_driver sg2042_mcu_driver = {
  };
+ module_i2c_driver(sg2042_mcu_driver);
  
--static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
--static const u8 ones[4096] = { [0 ... 4095] = 0xff };
--
- static const struct hash_testvec crct10dif_tv_template[] = {
- 	{
- 		.plaintext	= "abc",
++MODULE_AUTHOR("Inochi Amaoto <inochiama@outlook.com>");
++MODULE_DESCRIPTION("MCU I2C driver for SG2042 soc platform");
+ MODULE_LICENSE("GPL");
 -- 
 2.39.5
 
