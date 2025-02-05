@@ -1,102 +1,109 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA48025A65D;
-	Wed,  5 Feb 2025 02:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DDD78F4C;
+	Wed,  5 Feb 2025 02:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738722236; cv=none; b=RftUyUwtUapNk637ouaIxgKEXTZhzKIT3VNHiGXFHte4MW3GiHNKw3tois15kOPUBhsr0v1l2byTUfWMGf/EqpRTNAfQIgNe0elhE0mWTshsT1BDLiF2uDRmHMb3uraOhpzJz3JSF2IPFqQGFE4O1Z6ZQ+POj5F1nwr6j0GB2Vc=
+	t=1738722304; cv=none; b=NHgNqLV2qE6fAeFbL2xeoxib5zV9yV2p7kcXMyyx8Ipa8k3oCw4ekKXo+kxSVLUqKVuqm0sBjSONqnUon7KDoYBYpskbsmVgnSHoa2Q8sZC9oS4s+O2wd5g0bgygLhmWgHBbvb//dRXuxX1KdDVOOdQOil0NX+DUB4LeTq65mxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738722236; c=relaxed/simple;
-	bh=p8vQGlVfdVKj9VZZn4Wj5rhVsvLVygb3V8gJ24z44vU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XNdBhoUaVp01jZd2wr/hUYZyvLnYR7C4TTi87d18jXPKdAqzpq7IgvOAU/kxyDHY/3YYrRcaFUVJGN6yJ8kLZlb2tZcpnkFmKPr2tYp2yi4hBvJBQAD9awylbSApFIphXbfDW3zaoR7yDnIQ32ah0LwVWh36ttyZZsWWZJev0LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Ynk875fYQz1V64K;
-	Wed,  5 Feb 2025 10:04:55 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF14518001B;
-	Wed,  5 Feb 2025 10:08:32 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 5 Feb 2025 10:08:32 +0800
-Received: from [10.67.121.59] (10.67.121.59) by kwepemn100009.china.huawei.com
- (7.202.194.112) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 5 Feb
- 2025 10:08:31 +0800
-Message-ID: <c447e37b-57b5-f4c5-d34b-86b8430d36da@huawei.com>
-Date: Wed, 5 Feb 2025 10:08:31 +0800
+	s=arc-20240116; t=1738722304; c=relaxed/simple;
+	bh=pufqpysQKd95ciAQ8Ar90FFziPH/uymLmauofbzInFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gAPq/lndGgGk4wAilPgHyrkzKyTyd5wNRuqnQrLbGgupP+YG4vgtRx/biUv6qXkQS5WzyTW8CZU1uSnqR1WKWETthH8kfyHEYUra+Xs8QmaNar9o8I0na+LbmoAXn6A3iTyn+otqoF3KDK3ffOFziZNPpieabDfiZItC0o+hekE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4K1CC0D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4K1CC0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 980CAC4CEDF;
+	Wed,  5 Feb 2025 02:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738722303;
+	bh=pufqpysQKd95ciAQ8Ar90FFziPH/uymLmauofbzInFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q4K1CC0DtiPBGVOrymzduhv0rmPRb0lHU5vZfwsbv/XLxlG+q1KZgGDOTNyzfmtVx
+	 trkPEYMgCwkY+AQHNuMGP0v3Tv2t6EvUW+VDJWhzwQQF3OXeBPaZWsEqF7wZqPbVOg
+	 V5bSH5km3qvNnkylN+D8UDGbovBnTVRFuNkPnkOmuLxMTVYt1m/QsEyQpMIiyys74S
+	 rSuUbpZbKeJHOdko/qXNlowP0ANy/IEHddNCnMKijL1xMTf0eSnHR4NwMP9QeKshwc
+	 tZwiDNafA39SKqlIiHYwwxoDGG1Kz+sZaCMlMom2Pjh1Ni3vueaQxzK0sWyjlR1efe
+	 IVpSae6kOXUow==
+Date: Tue, 4 Feb 2025 18:25:00 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250205022500.lnz3jlaetzh6gxds@jpoimboe>
+References: <e92fc832-ef46-4863-9316-24f30d8d82fd@efficios.com>
+ <20250123040533.e7guez5drz7mk6es@jpoimboe>
+ <20250123082534.GD3808@noisy.programming.kicks-ass.net>
+ <20250123184305.rjuxj7hs3ond3e7c@jpoimboe>
+ <20250123221326.GD969@noisy.programming.kicks-ass.net>
+ <20250124165803.565c29ed@gandalf.local.home>
+ <20250124224645.lcovfraeq53gegys@jpoimboe>
+ <20250124225011.aebigdykpmnnthfg@jpoimboe>
+ <20250124185744.69379ba6@gandalf.local.home>
+ <20250130152136.51bee69b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v1 0/9] Use HWMON_CHANNEL_INFO macro to simplify code
-To: Guenter Roeck <linux@roeck-us.net>, Andrew Lunn <andrew@lunn.ch>
-CC: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-rtc@vger.kernel.org>, <oss-drivers@corigine.com>, <matt@ranostay.sg>,
-	<mchehab@kernel.org>, <irusskikh@marvell.com>, <andrew+netdev@lunn.ch>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <louis.peens@corigine.com>, <hkallweit1@gmail.com>,
-	<linux@armlinux.org.uk>, <kabel@kernel.org>, <alexandre.belloni@bootlin.com>,
-	<krzk@kernel.org>, <zhanjie9@hisilicon.com>, <zhenglifeng1@huawei.com>,
-	<liuyonglong@huawei.com>
-References: <20250124022635.16647-1-lihuisong@huawei.com>
- <fca9ca93-16e4-44db-8fbb-90bc6af952e7@lunn.ch>
- <ca9e3821-b793-499c-8ae8-abc677adf375@roeck-us.net>
-From: "lihuisong (C)" <lihuisong@huawei.com>
-In-Reply-To: <ca9e3821-b793-499c-8ae8-abc677adf375@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250130152136.51bee69b@gandalf.local.home>
 
+On Thu, Jan 30, 2025 at 03:21:36PM -0500, Steven Rostedt wrote:
+> Coming back from this. It would be fine if we could do the back trace when
+> we come back from the scheduler, so it should not be an issue if the task
+> even has to schedule again to fault in the sframe information.
 
-在 2025/1/24 23:41, Guenter Roeck 写道:
-> On 1/24/25 07:08, Andrew Lunn wrote:
->> On Fri, Jan 24, 2025 at 10:26:26AM +0800, Huisong Li wrote:
->>> The HWMON_CHANNEL_INFO macro is provided by hwmon.h and used widely 
->>> by many
->>> other drivers. This series use HWMON_CHANNEL_INFO macro to simplify 
->>> code.
->>>
->>> Huisong Li (9):
->>>    media: video-i2c: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    net: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    net: nfp: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    net: phy: marvell: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    net: phy: marvell10g: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    rtc: ab-eoz9: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    rtc: ds3232: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    w1: w1_therm: w1: Use HWMON_CHANNEL_INFO macro to simplify code
->>>    net: phy: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
->>
->> Please split these patches per subsystem. Maintainers generally have
->> scripts to accept patches, and those scripts don't work when there are
->> patches for other Maintainers mixed in. So you need 4 patchsets,
->> media, net, rtc and w1.
->>
->> I would also like to see the HWMON Maintainers opinion on these. A
->> patchset containing these have already been NACKed once. These patches
->> do however look like valid cleanups. But are they just so you can do
->> something bad in your vendor tree, which will never make it to
->> mainline?
->>
->
-> I no longer comment on hwmon related changes outside drivers/hwmon/
-> unless there are blatant problems such as someone trying to use an 
-> obsolete
-> API or abusing the current API.
->
->
-All right. Let subsystem maintainer to decide if need to pick it up.
->
-> .
+So there would be two callback hook points:
+
+  - schedule() after enabling preemption
+
+  - task work
+
+and first one wins?
+
+> I was also wondering if the unwinder doesn't keep track of who requested
+> the back trace, just that someone did. Then it would just take a single
+> flag in the task struct to do the back trace. Return the "cookie" to the
+> tracer that requested the back trace, and when you do the back trace, just
+> call all callbacks with that cookie. Let the tracer decided if it wants to
+> record the back trace or ignore it based on the cookie.
+> 
+> That is, the tracers would need to keep track of the cookies that it cares
+> about, as if there's other tracers asking for stack traces on tasks that
+> this tracer doesn't care about it needs to handle being called when it
+> doesn't care about the stack trace. That said, if you want to trace all
+> tasks, you can just ignore the cookies and record the traces.
+
+Easy enough for the unwinder, but IIUC each tracer would have to
+maintain a global list of pending cookies (and corresponding ptrs to
+perf_event, trace_array, etc)?  Would that not create a lot of
+contention?
+
+Seems like there really needs to be some kind of per-task or per-request
+state.
+
+-- 
+Josh
