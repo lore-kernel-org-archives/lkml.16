@@ -1,175 +1,111 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282402139C9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 041C921C16F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738739915; cv=none; b=W4lGghI4ghSrFV55cMSnwo/Mx9ENBbVbf6REhJAmtts1ma3JD9fBw+yAK7625YGNse+LFaGLSmOZzeBT9o2UKRJcn92PVGHqL797XVzEyvQ/yUAGkKStVbzVIbgJAPl/ShLWdk+IIW8nCbBlGAZi4PUJNbQ5mTGtv6xf64T/ctI=
+	t=1738740005; cv=none; b=gAkErjaLMf3YqXQQFAUxb9UVJJdx1AwsFshfHOBo2CGU2aA/8/0ZNsl8amZERcMtaZWmfs4XGFSZItCvYztYIIz0dcKSFfbDgOJQUUAw/FBBMtc6xW/x9CHbc4OVxMlzVMjwOC1DpVM9Q2xGV2uVfKJ5CE5+uF+HpHon+nLKCvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738739915; c=relaxed/simple;
-	bh=c31GOFHmUOs+019a78t78hIBV/TSKrtiyoQf0m5l2B0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oDSYHT0FTKbiRhlMLry4Bsnsv9skuDH6kZnjwA1oZQcdYi75Rc0JwqgQF/ngknG3spCfqy0QI+WX8TsghY1bKkdQS6HcdjNRCdIhWVKuqAJVoYJ7m7ijaSxsU0xfx7jdR/GlpOd8dACNFJEytzDcOI4YbG+g1KLZF+w/YHV/zvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-84730592e44so442758739f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 23:18:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738739909; x=1739344709;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SRVdUExgpTeP2D/23IgvlLTBI1qzhVp7H8YiBe2djyw=;
-        b=iPicpC4U4KOjyx3khDD00r5mnuJu0ZYJfsmzX2ixedM77v4DABOmcipYg6C4FjZ1uo
-         yKkKfNBhljC/n4+0FqAB9cXkgkVgIwQ+zo+F+3XuKnFqgjxhir00W4DUk4f1FHnxpq6v
-         X4j+3NlUp5Ay41SvtKvPvRhxvw/BXKqm/TRNZv5MBmpyxpaCjGGbC7NQoFsmEOKLWkrh
-         Z7WHbOP2t/ORLfWOTeOjGccdn4s5HVZQRRfYDnWs8voG6B8XE74VAELxs76ikbA15R+o
-         D3cM82ULMZWhD53IUABVLQ8kcbkNxM0OfiCcHmbqPpOlBjwcx6KDWoJjru3tItvKcTRG
-         PEPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEfOUi0O/0KEMt+OLuCkFzjxRXyKpjgFU8HPuBmdcYhii1lccDi13QYoJOd4qKpklN8yC/VSUIuztpMvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRXJ+1Lh8zNUQlpKu4pLTHebWqF1d2YMNy2w3TRD13sv4kkSet
-	9she7TWh2O0ob0LDE8zvRKxdGmnydL1qMqju7l2+zTRxhqTLefPHrjVsXJnoyKg7fYqfVra2vgg
-	qcNn/q/EqRI2b31ovX8PXXVQOKB5EQX2AXRTlYj7aVIJgmkaOH/twBrI=
-X-Google-Smtp-Source: AGHT+IFTJhegFm9qBv+JshkaQ3AZLd/L7Cun/mAeyLkUkbORCFqEdyre+eeDBAaZLnsFJ3HWbsBV6uluYT2n079mZcpVbmO1lnVf
+	s=arc-20240116; t=1738740005; c=relaxed/simple;
+	bh=g6uOaiTz5SxuO0+8uDAIShIuR84JiEmgHPF6qzalGtI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G5x1WMwPNkYUIxaCk7DEsW6fCqqsRznJ7ePhCQtVJBwoxclHoRtyeJt7hET3P0wnmZxaHtc2gs0k+hd2BeKQLqzhU5HStcv78CW4M4Y3wKu+m5sJA11RFhuarKNtVA7bKE6d4QUcxeMx6aDyKczaEs+HxqadyGdNL+iDJOihXIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4YnrRj3MVVz9sS7;
+	Wed,  5 Feb 2025 07:48:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id puRhBqOAeMVL; Wed,  5 Feb 2025 07:48:49 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YnrQz089Jz9sPd;
+	Wed,  5 Feb 2025 07:48:11 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E763E8B765;
+	Wed,  5 Feb 2025 07:48:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id Pe9u4pJlBqwz; Wed,  5 Feb 2025 07:48:10 +0100 (CET)
+Received: from [10.25.207.138] (unknown [10.25.207.138])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5EDA48B763;
+	Wed,  5 Feb 2025 07:48:10 +0100 (CET)
+Message-ID: <cc9f0470-830b-471a-ac8d-33ba2e89dc8c@csgroup.eu>
+Date: Wed, 5 Feb 2025 07:48:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1547:b0:3d0:2314:26e5 with SMTP id
- e9e14a558f8ab-3d04f8f6f3bmr15673695ab.18.1738739909291; Tue, 04 Feb 2025
- 23:18:29 -0800 (PST)
-Date: Tue, 04 Feb 2025 23:18:29 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a310c5.050a0220.50516.0011.GAE@google.com>
-Subject: [syzbot] [bcachefs?] general protection fault in inode_permission (3)
-From: syzbot <syzbot+1facc65919790d188467@syzkaller.appspotmail.com>
-To: brauner@kernel.org, jack@suse.cz, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=117c3ddf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=1facc65919790d188467
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149d95f8580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/16b90949171c/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1facc65919790d188467@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 32768
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 1 UID: 0 PID: 6297 Comm: syz.0.44 Not tainted 6.13.0-syzkaller-09793-g69b8923f5003 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:do_inode_permission fs/namei.c:523 [inline]
-RIP: 0010:inode_permission+0x62/0x460 fs/namei.c:592
-Code: e3 02 48 89 5c 24 10 89 6c 24 0c 0f 85 cf 00 00 00 4d 89 e5 e8 ef c7 87 ff 4c 89 f5 4d 8d 66 02 4c 89 e3 48 c1 eb 03 4d 89 fe <42> 0f b6 04 3b 84 c0 0f 85 16 03 00 00 45 0f b7 3c 24 44 89 fe 83
-RSP: 0018:ffffc900034379c0 EFLAGS: 00010246
-RAX: ffffffff82379481 RBX: 0000000000000000 RCX: ffff88804d699e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff8237945b R09: ffffffff8238fda6
-R10: 0000000000000002 R11: ffff88804d699e00 R12: 0000000000000002
-R13: ffffffff8ea8dbc0 R14: dffffc0000000000 R15: dffffc0000000000
-FS:  00007f4ad8e416c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4acfbff000 CR3: 000000004c82c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- may_lookup fs/namei.c:1821 [inline]
- link_path_walk+0x204/0xea0 fs/namei.c:2427
- path_parentat fs/namei.c:2683 [inline]
- __filename_parentat+0x2a7/0x740 fs/namei.c:2707
- filename_parentat fs/namei.c:2725 [inline]
- filename_create+0xf6/0x540 fs/namei.c:4063
- do_mkdirat+0xbd/0x3a0 fs/namei.c:4328
- __do_sys_mkdirat fs/namei.c:4351 [inline]
- __se_sys_mkdirat fs/namei.c:4349 [inline]
- __x64_sys_mkdirat+0x87/0xa0 fs/namei.c:4349
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f4ad7f8b617
-Code: 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 02 01 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f4ad8e40e68 EFLAGS: 00000202 ORIG_RAX: 0000000000000102
-RAX: ffffffffffffffda RBX: 00007f4ad8e40ef0 RCX: 00007f4ad7f8b617
-RDX: 00000000000001ff RSI: 0000000020000040 RDI: 00000000ffffff9c
-RBP: 0000000020000000 R08: 0000000000000000 R09: 0000000000005939
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000020000040
-R13: 00007f4ad8e40eb0 R14: 000000000000593f R15: 0000000020000380
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:do_inode_permission fs/namei.c:523 [inline]
-RIP: 0010:inode_permission+0x62/0x460 fs/namei.c:592
-Code: e3 02 48 89 5c 24 10 89 6c 24 0c 0f 85 cf 00 00 00 4d 89 e5 e8 ef c7 87 ff 4c 89 f5 4d 8d 66 02 4c 89 e3 48 c1 eb 03 4d 89 fe <42> 0f b6 04 3b 84 c0 0f 85 16 03 00 00 45 0f b7 3c 24 44 89 fe 83
-RSP: 0018:ffffc900034379c0 EFLAGS: 00010246
-RAX: ffffffff82379481 RBX: 0000000000000000 RCX: ffff88804d699e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff8237945b R09: ffffffff8238fda6
-R10: 0000000000000002 R11: ffff88804d699e00 R12: 0000000000000002
-R13: ffffffff8ea8dbc0 R14: dffffc0000000000 R15: dffffc0000000000
-FS:  00007f4ad8e416c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-----------------
-Code disassembly (best guess):
-   0:	e3 02                	jrcxz  0x4
-   2:	48 89 5c 24 10       	mov    %rbx,0x10(%rsp)
-   7:	89 6c 24 0c          	mov    %ebp,0xc(%rsp)
-   b:	0f 85 cf 00 00 00    	jne    0xe0
-  11:	4d 89 e5             	mov    %r12,%r13
-  14:	e8 ef c7 87 ff       	call   0xff87c808
-  19:	4c 89 f5             	mov    %r14,%rbp
-  1c:	4d 8d 66 02          	lea    0x2(%r14),%r12
-  20:	4c 89 e3             	mov    %r12,%rbx
-  23:	48 c1 eb 03          	shr    $0x3,%rbx
-  27:	4d 89 fe             	mov    %r15,%r14
-* 2a:	42 0f b6 04 3b       	movzbl (%rbx,%r15,1),%eax <-- trapping instruction
-  2f:	84 c0                	test   %al,%al
-  31:	0f 85 16 03 00 00    	jne    0x34d
-  37:	45 0f b7 3c 24       	movzwl (%r12),%r15d
-  3c:	44 89 fe             	mov    %r15d,%esi
-  3f:	83                   	.byte 0x83
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ Ben Segall <bsegall@google.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
+ <20250204082223.6iNyq_KR@linutronix.de>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250204082223.6iNyq_KR@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Le 04/02/2025 à 09:22, Sebastian Andrzej Siewior a écrit :
+> Use preempt_model_str() instead of manually conducting the preemption
+> model. Use pr_emerg() instead of printk() to pass a loglevel.
+> 
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+> ---
+> v2…v3:
+>    - Use printk() instead of pr_emerg() to remain consistent with the
+>      other invocations in terms of printing context.
+> 
+>   arch/powerpc/kernel/traps.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> index edf5cabe5dfdb..d6d77d92b3358 100644
+> --- a/arch/powerpc/kernel/traps.c
+> +++ b/arch/powerpc/kernel/traps.c
+> @@ -263,10 +263,10 @@ static int __die(const char *str, struct pt_regs *regs, long err)
+>   {
+>   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+>   
+> -	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+> +	printk("%s PAGE_SIZE=%luK%s %s %s%s%s%s %s\n",
+>   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>   	       PAGE_SIZE / 1024, get_mmu_str(),
+> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+> +	       preempt_model_str(),
+>   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
+>   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
