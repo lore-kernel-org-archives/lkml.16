@@ -1,136 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E281FCF47
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00121FC10E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777958; cv=none; b=g3q6YVsQaJsC4rJDwmUcQaOJOuH4/VzUBXeymFNBKP4XXZcFAASby2Go0ZoGf5nuBYQWh5alGvfP71Ask5otbrHDF/ae710q5zE3/MfTnn21OT7WrES4UId6FstsznVWFck96ujhrmX5wJVl52SK6JCHxd8LeGdTmNEpsX+064Y=
+	t=1738778047; cv=none; b=TrN61Mf9zOeC0jUyK0gpLl1V4X2FDMjID4/lZ/pwl66+GbRW30r440jp83P5JI4FYMZk9qtAF5SRw8IL52xpdGSCpzRbQLbl/QogjPBcquWXP2FRHNvdDe7crGJXhhv5tu64k6R30oDs3mEamDGo4hBOBa7m/8RCnO2gPh20Xv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777958; c=relaxed/simple;
-	bh=q18aSFR6vq3KVvUaoHgvB1HGvkwaut4qgFwgISSuXIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dOQ0gNEjVUKQgFvLTCn7JsjUR7Woa8qEGM+E/9rn5ReAn6pafucweRBcoGG3sSD8YASBfUIwkfzAuS72zFG8rW4vb+WaJBKmNcxeRHNutbicUF9/XUY6RwVB+dqztufOMNC/a/W94pnsjGGmU29ssjF36tDjcC4kDHPhc39+DRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RflA5U4a; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738778047; c=relaxed/simple;
+	bh=970ezek36sjIWXHxxKSkpZRujwn3PK9qIFqn3uHzVlA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gk5KuvsNQ8jOA6CqJ0Hhu2syV66kLnmFXyMdmWUdAyTs9ZRMo7CaScAC1F0hH69HNfmZDF5hZqihYiPRCSeLohsK9nfcsEAw3eA6HArK0b34pZXrWf92l1wtouT6EMdKqnaMFOOOeXZvow9DrqigRfHzyc1U7+2ftYiLlvZ9eVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJ+8esyM; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RflA5U4a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738777955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WJ8jnjLaMNZnYZ2+cO3APeYG0LIlTFJ4mhKRkS5LVCY=;
-	b=RflA5U4aUb8o8gM20HKJQhrRV9xxZcVLIU55d8+pip/0QEiM4jWBRSQwFqE0lgcAQQ4KWB
-	qVFXOuUJrvfndC2d/IyIKACCNr9pqabkcH6w34SfHCxyybFuQFuLCm7HOf+aXwQkKe7a2m
-	YcF+NOQL2g9wG9AW5QvnllDPwZPrRPs=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-252-bgGwV7t_M9OTDI2E1-Q_Kw-1; Wed,
- 05 Feb 2025 12:52:31 -0500
-X-MC-Unique: bgGwV7t_M9OTDI2E1-Q_Kw-1
-X-Mimecast-MFC-AGG-ID: bgGwV7t_M9OTDI2E1-Q_Kw
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 469E11956094;
-	Wed,  5 Feb 2025 17:52:30 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.10])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 715BB1800360;
-	Wed,  5 Feb 2025 17:52:27 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Feb 2025 18:52:03 +0100 (CET)
-Date: Wed, 5 Feb 2025 18:51:59 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] exit: change the release_task() paths to call
- flush_sigqueue() lockless
-Message-ID: <20250205175159.GA8714@redhat.com>
-References: <20250205175136.GA8702@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJ+8esyM"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso2306049a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 09:54:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738778044; x=1739382844; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Np4ftru1I9LNGUJpROSYrAynMNzztpYVqqVw5kq6jwQ=;
+        b=DJ+8esyMJlODp7t90dC0rqU1mABZNWbPXgLhLqppIiUCC85utPFqd+cGZzFxMRea19
+         CT7IIGOgdCmiLYj/zECJ78wvzRNamMvFxgSAo6tCPVb1T0lfeq3dzA0mSEE+T5NqzYUA
+         zbSVD0OPkWwanCuirZ0FRboatDbtiUFSdwMMaSKf+MDE5sSE2n0gBNrFMvMUAjbK7GV9
+         Q/CZw35uBAkRYxsxdeQn3rkzRrj2IlOYRTOrPqQaKWVexs75hH/qgBp5U00hAcBlRsmR
+         HDilCup4/bOZc+A8TRwAP3MML9kKL/fwvHXxNVddhiAIAk5hhZwvTqXqjf178IdMTKU6
+         cppA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738778044; x=1739382844;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Np4ftru1I9LNGUJpROSYrAynMNzztpYVqqVw5kq6jwQ=;
+        b=aXCO1NrmBSKiSOnXWRe2sWm4WmXQWZkW7ANQb2wwLYkVODY4usFYtz5STLOkCWts8W
+         5TJQ+/bwQK8bigvO6vMi3LNLvaXlHb5+iiwRoz4IkTBovEGLlJ//ORZndfX01SvpSrlP
+         8CAKvAOpP/qxlrXy+Q/KfcN1RxU5brlz8sOmgtEsN8APr4nb3U/1kGXtKsznx71P+2o2
+         YBoDPPc/HZVczN+LRkO7h3Ym4JW36CfZzTV0OeDZ6riSFywshYBWKVrFlKcb0oxMt7wW
+         EoMCQ761uCLb1ISoJilqPYZ8BVLF3houc5J+xhIz2M1KhNs5X5++BHFNS7hf2tq32TPK
+         LRzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIKNhRRxgpWXKllxn4YT3bEJEvYqbIQ8l9oPojlSKayGMcRuSxGcFy4lRwMevMWnzOuA7RImI2UJ6IQCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDjdPT6mDPVJeSeBCbw+PA/ji0XPYHtIGldxK4FK1LS05o5QjR
+	d1RXeKHTJtZwQGexiccvr2Ul+zBCGEN8Rx0JQm5R0WRymZDnxhTDlKucjjOQopz/HqjAwFNOPdD
+	2md/qeNZWIjOttSoZJtIkp/996G0=
+X-Gm-Gg: ASbGncsxx/Z48geXfUlpfNr7XA8hYMcpEEZ0XAh1LuELgwtLajX7OahIanRP23VNfeg
+	HUq3R5akICqrwDN+l6sTd5JMflni7ICy4MmS5ImLGSjq7sXGl8qw110qwxNO56Z8YjFh2MBY=
+X-Google-Smtp-Source: AGHT+IHHMLn05Nj/+hMzbI90ilYEL2XlTSR/WIIIZEaG2XZIilXn29yD7z7FkWfF3Y3OSIXpZhfxgLYe7W133RDROm0=
+X-Received: by 2002:a05:6402:1e88:b0:5db:f40f:1a5f with SMTP id
+ 4fb4d7f45d1cf-5dcecd343a1mr190698a12.15.1738778044014; Wed, 05 Feb 2025
+ 09:54:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250205175136.GA8702@redhat.com>
 In-Reply-To: <20250205175136.GA8702@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Feb 2025 18:53:52 +0100
+X-Gm-Features: AWEUYZkWqMDewS9uln1v_8ga4J4p3gKOAr5BnpoVvOwZTii7KY5RhUlZGHR0LLg
+Message-ID: <CAGudoHGr+8fi14FnfE5K9k=EOhRXvpjw9BP1E3vS861ob0vE3Q@mail.gmail.com>
+Subject: Re: [PATCH 0/1] exit: change the release_task() paths to call
+ flush_sigqueue() lockless
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A task can block a signal, accumulate up to RLIMIT_SIGPENDING sigqueues,
-and exit. In this case __exit_signal()->flush_sigqueue() called with irqs
-disabled can triger a hard lockup, see
-https://lore.kernel.org/all/20190322114917.GC28876@redhat.com/
+On Wed, Feb 5, 2025 at 6:52=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
+>
+> Thomas, Frederic, could you review?
+>
+> Untested, and I'll recheck this patch tomorrow, perhaps I missed somethin=
+g...
+>
+> Mateusz, this patch has minor conflicts with your
+>
+>         [PATCH v3 0/6] reduce tasklist_lock hold time on exit and do some
+>
+> WIP changes. I can wait for v4 from you and rebase on top, but I'd like
+> to show this patch right now to simplify the review.
+>
 
-Fortunately, after the recent posixtimer changes sys_timer_delete() paths
-no longer try to clear SIGQUEUE_PREALLOC and/or free tmr->sigq, and after
-the exiting task passes __exit_signal() lock_task_sighand() can't succeed
-and pid_task(tmr->it_pid) will return NULL.
+I'm still waiting for feedback from Eric.
 
-This means that after __exit_signal(tsk) nobody can play with tsk->pending
-or (if group_dead) with tsk->signal->shared_pending, so release_task() can
-safely call flush_sigqueue() after write_unlock_irq(&tasklist_lock).
-
-Also, kill clear_tsk_thread_flag(TIF_SIGPENDING), it was never needed.
-
-TODO:
-	- we can probably shift posix_cpu_timers_exit() as well
-	- do_sigaction() can hit the similar problem
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/exit.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 3485e5fc499e..bc2c24ea4181 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -200,20 +200,12 @@ static void __exit_signal(struct task_struct *tsk)
- 	__unhash_process(tsk, group_dead);
- 	write_sequnlock(&sig->stats_lock);
- 
--	/*
--	 * Do this under ->siglock, we can race with another thread
--	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
--	 */
--	flush_sigqueue(&tsk->pending);
- 	tsk->sighand = NULL;
- 	spin_unlock(&sighand->siglock);
- 
- 	__cleanup_sighand(sighand);
--	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
--	if (group_dead) {
--		flush_sigqueue(&sig->shared_pending);
-+	if (group_dead)
- 		tty_kref_put(tty);
--	}
- }
- 
- static void delayed_put_task_struct(struct rcu_head *rhp)
-@@ -279,6 +271,11 @@ void release_task(struct task_struct *p)
- 	proc_flush_pid(thread_pid);
- 	put_pid(thread_pid);
- 	release_thread(p);
-+
-+	flush_sigqueue(&p->pending);
-+	if (thread_group_leader(p))
-+		flush_sigqueue(&p->signal->shared_pending);
-+
- 	put_task_struct_rcu_user(p);
- 
- 	p = leader;
--- 
-2.25.1.362.g51ebf55
-
-
+I'll rebase on whatever patch which lands.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
