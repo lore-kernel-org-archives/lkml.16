@@ -1,109 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DDD78F4C;
-	Wed,  5 Feb 2025 02:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C8878F4C;
+	Wed,  5 Feb 2025 02:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738722304; cv=none; b=NHgNqLV2qE6fAeFbL2xeoxib5zV9yV2p7kcXMyyx8Ipa8k3oCw4ekKXo+kxSVLUqKVuqm0sBjSONqnUon7KDoYBYpskbsmVgnSHoa2Q8sZC9oS4s+O2wd5g0bgygLhmWgHBbvb//dRXuxX1KdDVOOdQOil0NX+DUB4LeTq65mxQ=
+	t=1738722381; cv=none; b=hEwdwVaC25R+uI10H2gZeGSqaEdzilkIBkS0xGXLwlT0NRB0LXzdenGAEZwPPS+Z/m1hLzs9PkFvwgSYIbs4kgU94/u47lJkmZEGgfhgq/MJYJwcT1sLPYPt1PsdA1KW/mGu6fWDQ8OC0Y3hNAsKqMeQEeo3pUmSxUdeptTMDUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738722304; c=relaxed/simple;
-	bh=pufqpysQKd95ciAQ8Ar90FFziPH/uymLmauofbzInFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gAPq/lndGgGk4wAilPgHyrkzKyTyd5wNRuqnQrLbGgupP+YG4vgtRx/biUv6qXkQS5WzyTW8CZU1uSnqR1WKWETthH8kfyHEYUra+Xs8QmaNar9o8I0na+LbmoAXn6A3iTyn+otqoF3KDK3ffOFziZNPpieabDfiZItC0o+hekE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4K1CC0D; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4K1CC0D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 980CAC4CEDF;
-	Wed,  5 Feb 2025 02:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738722303;
-	bh=pufqpysQKd95ciAQ8Ar90FFziPH/uymLmauofbzInFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q4K1CC0DtiPBGVOrymzduhv0rmPRb0lHU5vZfwsbv/XLxlG+q1KZgGDOTNyzfmtVx
-	 trkPEYMgCwkY+AQHNuMGP0v3Tv2t6EvUW+VDJWhzwQQF3OXeBPaZWsEqF7wZqPbVOg
-	 V5bSH5km3qvNnkylN+D8UDGbovBnTVRFuNkPnkOmuLxMTVYt1m/QsEyQpMIiyys74S
-	 rSuUbpZbKeJHOdko/qXNlowP0ANy/IEHddNCnMKijL1xMTf0eSnHR4NwMP9QeKshwc
-	 tZwiDNafA39SKqlIiHYwwxoDGG1Kz+sZaCMlMom2Pjh1Ni3vueaQxzK0sWyjlR1efe
-	 IVpSae6kOXUow==
-Date: Tue, 4 Feb 2025 18:25:00 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250205022500.lnz3jlaetzh6gxds@jpoimboe>
-References: <e92fc832-ef46-4863-9316-24f30d8d82fd@efficios.com>
- <20250123040533.e7guez5drz7mk6es@jpoimboe>
- <20250123082534.GD3808@noisy.programming.kicks-ass.net>
- <20250123184305.rjuxj7hs3ond3e7c@jpoimboe>
- <20250123221326.GD969@noisy.programming.kicks-ass.net>
- <20250124165803.565c29ed@gandalf.local.home>
- <20250124224645.lcovfraeq53gegys@jpoimboe>
- <20250124225011.aebigdykpmnnthfg@jpoimboe>
- <20250124185744.69379ba6@gandalf.local.home>
- <20250130152136.51bee69b@gandalf.local.home>
+	s=arc-20240116; t=1738722381; c=relaxed/simple;
+	bh=oXc3Z/KC1NQ+sl7reJD3khhtese/luU+Yn32+xn6Cio=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GrFOrBIIAxGFfsImjDQJRDfWPBm19g2rockXhU1qcVe1a0AvBKAWNnOZB2ABGIiKul72KhrU+c/5sSAzYaB5EsuMLI3CSISoRZfkIKlc6JEW1JlnQ1EPh7mggyNrQ6iT7bzicgGmDoeOB6YmfpPR8JYwKjoLEJhvjG7bbFieVSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-4d-67a2cc3f7de9
+Message-ID: <5b9a3776-8661-423a-853f-87fa8b9a7633@sk.com>
+Date: Wed, 5 Feb 2025 11:26:06 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250130152136.51bee69b@gandalf.local.home>
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ ying.huang@linux.alibaba.com, rafael@kernel.org, lenb@kernel.org,
+ gregkh@linuxfoundation.org, akpm@linux-foundation.org, rakie.kim@sk.com,
+ dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+ horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+ 42.hyeyoo@gmail.com, Honggyu Kim <honggyu.km@gmail.com>
+Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
+Content-Language: ko
+To: Gregory Price <gourry@gourry.net>
+References: <20250202141247.2219681-1-joshua.hahnjy@gmail.com>
+ <a2b428ed-212a-4e39-bcf7-5ab67249132d@sk.com>
+ <Z6Di3oLQg64W0hAM@gourry-fedora-PF4VCD3F>
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <Z6Di3oLQg64W0hAM@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsXC9ZZnoa79mUXpBgcfc1lM7DGwmLN+DZvF
+	9KkXGC1O3Gxks/h59zi7RfPi9WwWqzf5WszZeYfZ4nb/OVaLVQuvsVkc3zqP3WLfRaCGnQ/f
+	slks39fPaHF51xw2i3tr/rNazP0yldli9ZoMByGPw2/eM3vsnHWX3aO77TK7R8uRt6wei/e8
+	ZPLYtKqTzWPTp0nsHidm/Gbx2PnQ0mNhw1Rmj/1z17B7nLtY4fF5k1wAbxSXTUpqTmZZapG+
+	XQJXxp//7gXbBSq+7kxoYDzH08XIySEhYCLRO2cyI4x9a+ldNhCbV8BS4supVjCbRUBF4u36
+	7+wQcUGJkzOfsIDYogLyEvdvzQCKc3EwC7xnllj0/xZrFyMHh7CAucTX5SogNcwCIhKzO9uY
+	QcIiAqoSbVfcQcqFBGYxStxaMxFsJpuAmsSVl5OYQGxOATOJgyt62CB6zSS6tnYxQtjyEtvf
+	zmEGaZYQOMcucWF2EzPE0ZJADTdYJjAKzkJy3ywku2chmTULyawFjCyrGIUy88pyEzNzTPQy
+	KvMyK/SS83M3MQLjd1ntn+gdjJ8uBB9iFOBgVOLhdWBclC7EmlhWXJl7iFGCg1lJhPf09gXp
+	QrwpiZVVqUX58UWlOanFhxilOViUxHmNvpWnCAmkJ5akZqemFqQWwWSZODilGhiZtsy+wrp8
+	/5+791d+d/hwwVsp5Y7g1inhavIh3xM/tS7t5bbYdujVca0fMc/qPna7ZuyLaW7dU3Pjxv9P
+	j7p/XZ5aLJmsPvVC0/HVxxdcL/zYw7iQf//Mu+elT3LZbbXZnJF8drFzj5co/8ayAyePPftu
+	fCNgUoy1+e3+qEVZDwUlLzzePHuepxJLcUaioRZzUXEiAIl8UlzbAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsXCNUNLT9fuzKJ0g/4b1hYTewws5qxfw2Yx
+	feoFRosTNxvZLH7ePc5u0bx4PZvF6k2+FnN23mG2uN1/jtVi1cJrbBbHt85jt9h3Eajh8NyT
+	rBY7H75ls1i+r5/R4vKuOWwW99b8Z7WY+2Uqs8Wha89ZLVavyXAQ8Tj85j2zx85Zd9k9utsu
+	s3u0HHnL6rF4z0smj02rOtk8Nn2axO5xYsZvFo+dDy09FjZMZfbYP3cNu8e5ixUe3257eCx+
+	8YHJ4/MmuQD+KC6blNSczLLUIn27BK6MP//dC7YLVHzdmdDAeI6ni5GTQ0LAROLW0rtsIDav
+	gKXEl1OtYDaLgIrE2/Xf2SHighInZz5hAbFFBeQl7t+aARTn4mAWeM8ssej/LdYuRg4OYQFz
+	ia/LVUBqmAVEJGZ3tjGDhEUEVCXarriDlAsJzGKUuLVmIthMNgE1iSsvJzGB2JwCZhIHV/Sw
+	QfSaSXRt7WKEsOUltr+dwzyBkW8WkjNmIVkxC0nLLCQtCxhZVjGKZOaV5SZm5pjqFWdnVOZl
+	Vugl5+duYgTG57LaPxN3MH657H6IUYCDUYmH14FxUboQa2JZcWXuIUYJDmYlEd7T2xekC/Gm
+	JFZWpRblxxeV5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTAefs74InNWj+iP
+	/QYdWpfdzH852DcYMEzdtefsxnMTFtybfE+uueBLW0JG8qSZAlbifzcHfJc+PSNuy5ILttc7
+	b3QyfbvNdTK4YnPCtkXyR7bFzVx3ae/y5wGra2OMl/w62Nld8U7iRfGtLW5m3Un76jU6DFfl
+	LuKaU27TtXmWnrAfo8v5ul+3lViKMxINtZiLihMB67xO2MsCAAA=
+X-CFilter-Loop: Reflected
 
-On Thu, Jan 30, 2025 at 03:21:36PM -0500, Steven Rostedt wrote:
-> Coming back from this. It would be fine if we could do the back trace when
-> we come back from the scheduler, so it should not be an issue if the task
-> even has to schedule again to fault in the sframe information.
+Hi Gregory,
 
-So there would be two callback hook points:
-
-  - schedule() after enabling preemption
-
-  - task work
-
-and first one wins?
-
-> I was also wondering if the unwinder doesn't keep track of who requested
-> the back trace, just that someone did. Then it would just take a single
-> flag in the task struct to do the back trace. Return the "cookie" to the
-> tracer that requested the back trace, and when you do the back trace, just
-> call all callbacks with that cookie. Let the tracer decided if it wants to
-> record the back trace or ignore it based on the cookie.
+On 2/4/2025 12:38 AM, Gregory Price wrote:
+> On Mon, Feb 03, 2025 at 09:44:29PM +0900, Honggyu Kim wrote:
+>> Hi Joshua,
+>>
+>>> A node offlining (or even onlining with no new bandwidth information)
+>>> will just mean that the node inherits whatever value is stored in
+>>> iw_table at that moment, whether that contains the default values
+>>> created on init or the last values that it had taken.
+>>
+>> It looks the call sequence is as follows.
+>>
+>>    cxl_region_perf_attrs_callback()
+>>    -> cxl_region_update_coordinates()
+>>    -> node_set_perf_attrs()
+>>    -> mempolicy_set_node_perf()
+>>    -> reduce_interleave_weights()
+>>
+>> I haven't searched all the paths of cxl_region_perf_attrs_callback() via
+>> cxlr->memory_notifier.notifier_call callback pointer, but maybe this
+>> function is not called when a node is offlined, then I get node
+>> offlining doesn't trigger re-weight calculation.
 > 
-> That is, the tracers would need to keep track of the cookies that it cares
-> about, as if there's other tracers asking for stack traces on tasks that
-> this tracer doesn't care about it needs to handle being called when it
-> doesn't care about the stack trace. That said, if you want to trace all
-> tasks, you can just ignore the cookies and record the traces.
+> This function is called any time a memory block status changes.
+> 
+> static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
+>                                            unsigned long action, void *arg)
+> {
+> ...
+>          if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
+>                  return NOTIFY_DONE;
+> ...
+> }
 
-Easy enough for the unwinder, but IIUC each tracer would have to
-maintain a global list of pending cookies (and corresponding ptrs to
-perf_event, trace_array, etc)?  Would that not create a lot of
-contention?
+Ah, that's clear now.
 
-Seems like there really needs to be some kind of per-task or per-request
-state.
+> 
+> But it doesn't do anything if it's not a call to online a memory block,
+> so the cached performance data in mempolicy won't change when blocks
+> are taken offline.
+> 
+> So the time the scenario you are proposing can arrise is when the device
+> does not provide performance information (missing CDAT).
+> 
+> 
+> If a user sets manual mode - they're on the hook to manage everything.
+> 
+> This is system-wide setting - not a per-task setting.  We've yet to see
+> any strong use-case for individual task weights. If there is a use case
+> for a task not being subject to system-wide weight changes then it's a
+> use case for task-local weights.
+> 
+> ~Gregory
 
--- 
-Josh
+Thanks for the explanation.  Then except for the nitpicks that I left,
+I'm fine with this.
+
+Thanks,
+Honggyu
