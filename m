@@ -1,374 +1,206 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606C01519BE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743261519BE;
+	Wed,  5 Feb 2025 14:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765189; cv=none; b=l7lmoBK1+8m2JPAddE397FGXqn+20JvpaJqOLrvfAsraGE+WhF9I7OYqX1j9hrQkDEOaEV+p8D8ZaAQS372eIUP7hHUyFQarGkjFX+Uz6QpnrTAP4RzGWsmXV69Q1nTtZpXRB2kUAoZdoadv1QJ0o68440NltPp1F8qtFue881Q=
+	t=1738765240; cv=none; b=RKC0Ui/9ybOI+s7vNtHetZB0KKqQLIBLv4K1seOhtjtNyzqRPU1deyw2w2OiJqmnlbg/rPnvZI15FOX5KzgHpuFEcLPubGgEX6fGpMcXMJQFDvVi839AFQJCfT96rzz9SsKUg6ilkhb01HTDlLIPQ98mbTbFUIzYKskHkCe7ROY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765189; c=relaxed/simple;
-	bh=lvt2eQB26+C/HBYtxc5XhZeMcHELe4Z+BdoK9M/qgFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tnVw8lpbB4Utd/2C3/y6y1+ize5nr9inbaCbEjglk2UXYTCvfSmymqaYmDtoLhGWV6OPncI7fx3n2J4bIPz9AiDcBKjui34qgdZxtpth70j0BmKZinR5VI9a49fY+A+lj7tFZ3kPwkxQJdtPBUBVsCCMlqE1eUDoTm77hFAwsLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BU8QosZy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738765240; c=relaxed/simple;
+	bh=yoec46gh87HaP4fDB1yuBhMWsZEwbV90eci8orhKPq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Pq/7mjc8RvLxwrHYPkDOKtPh0m/N6cr2cDNAFc1ykd2miflvLaRpMYUdU9WTWHDqa0egnaeE0rvcLLRosOsNOiS0VQ6OaKGDNVd1EkzhMacw+6rt24+KA7NSQ2fLbLXdIWhoj4aEJFekylzol8jlSUbHlpCyFWfyFl2pFDRW9JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlMAjmbo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BU8QosZy"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515AkSmA018946;
-	Wed, 5 Feb 2025 14:19:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sid6cT99hwgd2QZkqJS9677/liyznPn7z7EuqyWr5Kw=; b=BU8QosZyMg9K0pQy
-	SSKCjG3tQ3J11kDA9JErZDIIb5TXJUIUNQpiH4y5gfZ3uK+0kPMH8tggHV6dHAE/
-	RwV0dpsgI5ZHQ/NcD1L9384+5yhSbNUrUBXddPzX5ADzvgWhoaGa/8eplk58PIbm
-	uAgZub7RnmvyCivgnsem96jISTZbDcfSaR4Yi2eoe6wlTtsiOWlRvj97PdmW1G/3
-	iCJEAAgIg1rOJjACF6tPZmKSFq5utR2djZQpIEp9QL42Z8DE/HHlw7vsagKwfRoz
-	s49e2LcQ4B//KhbGptKnCmgfwC+zasbc6gdsJI1jQ1d1vnX8W05tcgerxr2UPrsX
-	5/ANFQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m6hfrgfq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 14:19:29 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 515EJS0E017549
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 5 Feb 2025 14:19:28 GMT
-Received: from [10.216.45.46] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
- 06:19:25 -0800
-Message-ID: <0435e96d-6786-4adc-83eb-a6aa3766c2d5@quicinc.com>
-Date: Wed, 5 Feb 2025 19:49:20 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlMAjmbo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA8DC4CED1;
+	Wed,  5 Feb 2025 14:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738765240;
+	bh=yoec46gh87HaP4fDB1yuBhMWsZEwbV90eci8orhKPq0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZlMAjmbohWFds9Oumf1XiNL+EsBOg0WoQK7nNbp/+kDfWUlvNPMpYVQpaivAlFElj
+	 +7R6QBiygD3F2p+gK8lxyl9aS8UodkDapsowSKXluihI9fkpsmLTqBjZDzorSQ604a
+	 CPt5TNQ+hTGIBSauGlaVEh0kgMmvPaA2iT3k6TABDPpnQc/ibOx++YU+2ElbJ4ML85
+	 i8NZRCChyNUm7sS95URe7ieZyzzyKrNc3uAszEjHZ+hOvt8g+j+ThPyQGXfakZUBm7
+	 +hjoQTm9ba5FFebh3qUyvv+oaLkQQO8RKtpD9DtDmtFdH6+bi97cahxF0HaCIP9ITD
+	 5f1uDYSN7+68Q==
+Date: Wed, 5 Feb 2025 08:20:38 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
+Subject: Re: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Message-ID: <20250205142038.GA910930@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] i3c: Add basic HDR support
-To: Frank Li <Frank.li@nxp.com>
-CC: Joshua Yeong <joshua.yeong@starfivetech.com>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        "linux-i3c@lists.infradead.org"
-	<linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "imx@lists.linux.dev" <imx@lists.linux.dev>
-References: <20250129-i3c_ddr-v1-0-028a7a5d4324@nxp.com>
- <20250129-i3c_ddr-v1-1-028a7a5d4324@nxp.com>
- <e09b50b8-dd65-4636-aa35-42efc86bba16@quicinc.com>
- <e28bda63-bd6f-41db-8c24-43f21cccb386@starfivetech.com>
- <Z6DmUIKn5usytjl3@lizhi-Precision-Tower-5810>
- <08098961-ab40-4bdf-af56-c77a24c55959@quicinc.com>
- <Z6I1jBx273o5GE5w@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <Z6I1jBx273o5GE5w@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: R0uuxeIBOeT_UVGaxoc6aE4qsGXAnqMl
-X-Proofpoint-GUID: R0uuxeIBOeT_UVGaxoc6aE4qsGXAnqMl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
- mlxlogscore=999 impostorscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN7PR12MB720115611148E80D555A1A1E8BF72@SN7PR12MB7201.namprd12.prod.outlook.com>
 
-Thanks Frank ! please review below.
+On Wed, Feb 05, 2025 at 11:53:53AM +0000, Havalige, Thippeswamy wrote:
+> > -----Original Message-----
+> > From: Havalige, Thippeswamy
+> > Sent: Wednesday, February 5, 2025 5:08 PM
+> > To: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> > manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
+> > <michal.simek@amd.com>; Gogada, Bharat Kumar
+> > <bharat.kumar.gogada@amd.com>
+> > Subject: RE: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
 
-On 2/4/2025 9:13 PM, Frank Li wrote:
-> On Tue, Feb 04, 2025 at 11:24:03AM +0530, Mukesh Kumar Savaliya wrote:
->>
->>
->> On 2/3/2025 9:22 PM, Frank Li wrote:
->>> On Mon, Feb 03, 2025 at 02:32:51AM +0000, Joshua Yeong wrote:
->>>> Hi Mukesh and Frank,
->>>>
->>>> On 02-Feb-2025 1:54 AM, Mukesh Kumar Savaliya wrote:
->>>>> Hi Frank,
->>>>>
->>>>> On 1/30/2025 1:35 AM, Frank Li wrote:
->>>>>> I3C HDR requires enter/exit patterns during each I3C transfer. Add a new
->>>>>> API i3c_device_do_priv_xfers_mode(). The existing
->>>>>> i3c_device_do_priv_xfers() now calls i3c_device_do_priv_xfers_mode(I3C_SDR)
->>>>>> to maintain backward compatibility.
->>>>>>
->>>>>> Introduce a 'cmd' field in 'struct i3c_priv_xfer', using an anonymous union
->>>>>> with 'rnw' since HDR mode relies on read/write commands instead of the
->>>>>> 'rnw' bit in the address as in SDR mode.
->>>>>>
->>>>>> Add a priv_xfers_mode callback for I3C master drivers. If priv_xfers_mode
->>>>>> is not implemented, fallback to SDR mode using the existing priv_xfers
->>>>>> callback.
->>>>>>
->>>>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
->>>>>> ---
->>>>>> Why not add hdr mode in struct i3c_priv_xfer because mode can't be mixed in
->>>>>> one i3c transfer. for example, can't send a HDR follow one SDR between
->>>>>> START and STOP.
->>>>>>
->>>>> Is it wise to add two function inside main funcion and separate SDR vs HDR ? so we don't need to change current function arguments.
->>>
->>> I am not sure if understand your means. HDR have difference mode, anyway
->>> need add new argument.
->>>
->> let me clarify, We can have main entry/hookup function as it is.
->>  From priv_xfer , we can call sdr_priv_xfer and hdr_priv_xfer ? based on the
->> structure information if its enum SDR or enum HDR.
->>
->>>>
->>>> I think the 'private transfers' are limited to SDR communications,
->>>> would it be better if we have a different interface/naming for hdr transfers?
->>>
->>> The key is what's difference between hdr and private transfers. So far only
->>> command vs rnw, any other differences I missed?
->>>
->> yes, but can we make it priv_xfer() = sdr_priv_xfer() + hdr_priv_xfer() ?
-> 
-> struct i3c_priv_xfer is array, each i3c_priv_xfer item is indepent. Can you
-> write a simple code to demostrate your idea.
-> 
-> Frank
+> > > > > It's kind of weird that these skip the odd-numbered bits,
+> > > > > since dw_pcie_rp_intx_flow(), amd_mdb_mask_intx_irq(),
+> > > > > amd_mdb_unmask_intx_irq() only use bits 19:16.  Something
+> > > > > seems wrong and needs either a fix or a comment about why
+> > > > > this is the way it is.
+> > > >
+> > > > ... the odd bits are meant for deasserting inta, intb intc &
+> > > > intd I ll include this in my next patch
 
-======
-Please see below. My only intention is to add hdr/sdr decision inside 
-i3c_priv_xfer and rest of the functions should remain as it is.
+Tangent: I don't know what "deassert" would mean here, since INTx is
+an *incoming* interrupt and the Root Port is the receiver and can mask
+or acknowledge the interrupt but not really deassert it.
 
-If you still need, may be we can add local function but no need to 
-change prototype of function being explosed to many vendors.
+> > > > > > +#define IMR(x) BIT(AMD_MDB_PCIE_INTR_ ##x)
+> > > > > > +#define AMD_MDB_PCIE_IMR_ALL_MASK			\
+> > > > > > +	(						\
+> > > > > > +		IMR(CMPL_TIMEOUT)	|		\
+> > > > > > +		IMR(INTA_ASSERT)	|		\
+> > > > > > +		IMR(INTB_ASSERT)	|		\
+> > > > > > +		IMR(INTC_ASSERT)	|		\
+> > > > > > +		IMR(INTD_ASSERT)	|		\
+> > > > > > +		IMR(PM_PME_RCVD)	|		\
+> > > > > > +		IMR(PME_TO_ACK_RCVD)	|		\
+> > > > > > +		IMR(MISC_CORRECTABLE)	|		\
+> > > > > > +		IMR(NONFATAL)		|		\
+> > > > > > +		IMR(FATAL)				\
+> > > > > > +	)
+> > > > > > +
+> > > > > > +#define AMD_MDB_TLP_PCIE_INTX_MASK	GENMASK(23, 16)
+> > > > >
+> > > > > I would drop AMD_MDB_PCIE_INTR_INTA_ASSERT, etc, and just
+> > > > > use AMD_MDB_TLP_PCIE_INTX_MASK in the
+> > > > > AMD_MDB_PCIE_IMR_ALL_MASK definition.
+> > > > >
+> > > > > If there are really eight bits of INTx-related things here
+> > > > > for the four INTx interrupts, I think you should make two
+> > > > > #defines to separate them out.
+> > >
+> > > > Yes, there are 8 intx related bits I ll define them in my next
+> > > > patch.  I was in confusion here regarding "PCI_NUM_INTX "
+> > > > since this macro indicates INTA INTB INTC INTD bits so I
+> > > > discarded deassert bits here.
+> > >
+> > > It seems like what you have is a single 8-bit field that
+> > > contains both assert and deassert info, interspersed.
+> > > GENMASK()/FIELD_GET() isn't enough to really separate them.
+> > > Maybe you can do something like this:
+> > >
+> > >   #define AMD_MDB_TLP_PCIE_INTX_MASK          GENMASK(23, 16)
+> > >
+> > >   #define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)    BIT(1 << x)
+> > >
+> > > If you don't need the deassert bits, a comment would be useful,
+> > > but there's no point in adding a #define for them.  If you do
+> > > need them, maybe this:
+> > >
+> > >   #define AMD_MDB_PCIE_INTR_INTX_DEASSERT(x)  BIT((1 << x) + 1)
+> > >
+> > > > > > +static irqreturn_t dw_pcie_rp_intx_flow(int irq, void *args) {
+> > > > > > +	struct amd_mdb_pcie *pcie = args;
+> > > > > > +	unsigned long val;
+> > > > > > +	int i;
+> > > > > > +
+> > > > > > +	val = FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
+> > > > > > +			pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
+> > > > > > +
+> > > > > > +	for_each_set_bit(i, &val, 4)
+> > > > >
+> > > > >   for_each_set_bit(..., PCI_NUM_INTX)
+> > >
+> > > > In next patch I will update value to 8 here.
+> > >
+> > > And here you could do:
+> > >
+> > >   val = FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
+> > >                   pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
+> > >
+> > >   for (i = 0; i < PCI_NUM_INTX; i++) {
+> > >     if (val & AMD_MDB_PCIE_INTR_INTX_ASSERT(i))
 
-I hope i am not missing any major thing.
+> > This condition never met observing zero here.
 
-struct i3c_priv_xfer {
-	u8 rnw;
-	u16 len;
-	union {
-		void *in;
-		const void *out;
-	} data;
-  	enum i3c_error_code err;
-// Just Add below two members and rest can be passed till end 
-point/function and can process as required.
-	enum i3c_hdr_mode mode;
-	union {
-		u8 rnw;
-		u8 cmd;
-	};
-  };
+> To satisfy this condition need to modify macros as following.
+> #define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)    BIT(x)
+> #define AMD_MDB_PCIE_INTR_INTX_DEASSERT(x)    BIT(x+1)
 
+Maybe I don't understand how the assert/deassert bits are laid out in
+the register.
 
-device.c :
-i3c_device_do_priv_xfers => i3c_dev_do_priv_xfers_locked
+The original patch has this:
 
-int i3c_device_do_priv_xfers(struct i3c_device *dev, struct 
-i3c_priv_xfer *xfers, int nxfers) {
-		
-ret = i3c_dev_do_priv_xfers_locked(dev->desc, xfers, xfers);
-	
-}
+  +#define AMD_MDB_PCIE_INTR_INTA_ASSERT    16
+  +#define AMD_MDB_PCIE_INTR_INTB_ASSERT    18
+  +#define AMD_MDB_PCIE_INTR_INTC_ASSERT    20
+  +#define AMD_MDB_PCIE_INTR_INTD_ASSERT    22
 
+and if the odd bits are for deassert I thought that meant they would
+look like this:
 
-master.c :
-int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev, struct 
-i3c_priv_xfer *xfers, int nxfers) {
+   #define AMD_MDB_PCIE_INTR_INTA_DEASSERT  17
+   #define AMD_MDB_PCIE_INTR_INTB_DEASSERT  19
+   #define AMD_MDB_PCIE_INTR_INTC_DEASSERT  21
+   #define AMD_MDB_PCIE_INTR_INTD_DEASSERT  23
 
-	if (master->ops->priv_xfers_mode)
-		return master->ops->priv_xfers_mode(dev, xfers, nxfers);
+  +#define AMD_MDB_TLP_PCIE_INTX_MASK     GENMASK(23, 16)
 
-	if (xfers->mode != I3C_SDR)
-		return -EINVAL;
-}
+If we extract AMD_MDB_TLP_PCIE_INTX_MASK with FIELD_GET(),
+the field gets shifted right by 16, so we should end up with
+something like this:
 
+  INTA assert     0000 0001  ==  BIT(0)
+  INTA deassert   0000 0010  ==  BIT(1)
+  INTB assert     0000 0100  ==  BIT(2)
+  INTB deassert   0000 1000  ==  BIT(3)
+  INTC assert     0001 0000  ==  BIT(4)
+  INTC deassert   0010 0000  ==  BIT(5)
+  INTD assert     0100 0000  ==  BIT(6)
+  INTD deassert   1000 0000  ==  BIT(7)
 
-svc-i3c-master.c
-//process everything using xfers.mode  and xfer.cmd.
+But maybe that's not how they're actually laid out?
 
-I hope you can add all rest of the changes inside this function itself.
-static int svc_i3c_master_priv_xfers(struct i3c_dev_desc *dev, struct 
-i3c_priv_xfer *xfers, int nxfers)
-==========
-> 
->>>>
->>>>>> i3c_priv_xfer should be treat as whole i3c transactions. If user want send
->>>>>> HDR follow SDR, should be call i3c_device_do_priv_xfers_mode() twice,
->>>>>> instead put into a big i3c_priv_xfer[n].
->>>>>> ---
->>>>>>     drivers/i3c/device.c       | 19 +++++++++++++------
->>>>>>     drivers/i3c/internals.h    |  2 +-
->>>>>>     drivers/i3c/master.c       |  8 +++++++-
->>>>>>     include/linux/i3c/device.h | 12 +++++++++++-
->>>>>>     include/linux/i3c/master.h |  3 +++
->>>>>>     5 files changed, 35 insertions(+), 9 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
->>>>>> index e80e487569146..e3db3a6a9e4f6 100644
->>>>>> --- a/drivers/i3c/device.c
->>>>>> +++ b/drivers/i3c/device.c
->>>>>> @@ -15,12 +15,13 @@
->>>>>>     #include "internals.h"
->>>>>>       /**
->>>>>> - * i3c_device_do_priv_xfers() - do I3C SDR private transfers directed to a
->>>>>> - *                specific device
->>>>>> + * i3c_device_do_priv_xfers_mode() - do I3C SDR private transfers directed to a
->>>>>> + *                     specific device
->>>>>>      *
->>>>>>      * @dev: device with which the transfers should be done
->>>>>>      * @xfers: array of transfers
->>>>>>      * @nxfers: number of transfers
->>>>>> + * @mode: transfer mode
->>>>>>      *
->>>>>>      * Initiate one or several private SDR transfers with @dev.
->>>>>>      *
->>>>>> @@ -32,9 +33,9 @@
->>>>>>      *            driver needs to resend the 'xfers' some time later.
->>>>>>      *            See I3C spec ver 1.1.1 09-Jun-2021. Section: 5.1.2.2.3.
->>>>>>      */
->>>>>> -int i3c_device_do_priv_xfers(struct i3c_device *dev,
->>>>>> -                 struct i3c_priv_xfer *xfers,
->>>>>> -                 int nxfers)
->>>>>> +int i3c_device_do_priv_xfers_mode(struct i3c_device *dev,
->>>>>> +                  struct i3c_priv_xfer *xfers,
->>>>>> +                  int nxfers, enum i3c_hdr_mode mode)
->>>>> why can't we pass mode as another structure member inside struct i3c_priv_xfer ? Adding function agrument parameter impacts existing drivers.
->>>
->>> If that, it will be possible, xfers[0] is sdr, xfers[1] is hdr. Actually,
->>> I3C can't do that.  we assume finish whole xfers between one whole traction
->>> (between START and STOP).
->>>
->>> Frank
->>>>>>     {
->>>>>>         int ret, i;
->>>>>>     @@ -47,11 +48,17 @@ int i3c_device_do_priv_xfers(struct i3c_device *dev,
->>>>>>         }
->>>>>>           i3c_bus_normaluse_lock(dev->bus);
->>>>>> -    ret = i3c_dev_do_priv_xfers_locked(dev->desc, xfers, nxfers);
->>>>>> +    ret = i3c_dev_do_priv_xfers_locked(dev->desc, xfers, nxfers, mode);
->>>>>>         i3c_bus_normaluse_unlock(dev->bus);
->>>>>>           return ret;
->>>>>>     }
->>>>>> +EXPORT_SYMBOL_GPL(i3c_device_do_priv_xfers_mode);
->>>>>> +
->>>>>> +int i3c_device_do_priv_xfers(struct i3c_device *dev, struct i3c_priv_xfer *xfers, int nxfers)
->>>>>> +{
->>>>>> +    return i3c_device_do_priv_xfers_mode(dev, xfers, nxfers, I3C_SDR);
->>>>>> +}
->>>>>>     EXPORT_SYMBOL_GPL(i3c_device_do_priv_xfers);
->>>>>>       /**
->>>>>> diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
->>>>>> index 433f6088b7cec..553edc9846ac0 100644
->>>>>> --- a/drivers/i3c/internals.h
->>>>>> +++ b/drivers/i3c/internals.h
->>>>>> @@ -16,7 +16,7 @@ void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
->>>>>>     int i3c_dev_setdasa_locked(struct i3c_dev_desc *dev);
->>>>>>     int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
->>>>>>                      struct i3c_priv_xfer *xfers,
->>>>>> -                 int nxfers);
->>>>>> +                 int nxfers, enum i3c_hdr_mode mode);
->>>>>>     int i3c_dev_disable_ibi_locked(struct i3c_dev_desc *dev);
->>>>>>     int i3c_dev_enable_ibi_locked(struct i3c_dev_desc *dev);
->>>>>>     int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
->>>>>> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
->>>>>> index d5dc4180afbcf..67aaba0a38db2 100644
->>>>>> --- a/drivers/i3c/master.c
->>>>>> +++ b/drivers/i3c/master.c
->>>>>> @@ -2945,7 +2945,7 @@ int i3c_dev_setdasa_locked(struct i3c_dev_desc *dev)
->>>>>>       int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
->>>>>>                      struct i3c_priv_xfer *xfers,
->>>>>> -                 int nxfers)
->>>>>> +                 int nxfers, enum i3c_hdr_mode mode)
->>>>>>     {
->>>>>>         struct i3c_master_controller *master;
->>>>>>     @@ -2956,9 +2956,15 @@ int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
->>>>>>         if (!master || !xfers)
->>>>>>             return -EINVAL;
->>>>>>     +    if (master->ops->priv_xfers_mode)
->>>>>> +        return master->ops->priv_xfers_mode(dev, xfers, nxfers, mode);
->>>>>> +
->>>>>>         if (!master->ops->priv_xfers)
->>>>>>             return -ENOTSUPP;
->>>>>>     +    if (mode != I3C_SDR)
->>>>>> +        return -EINVAL;
->>>>>> +
->>>>>>         return master->ops->priv_xfers(dev, xfers, nxfers);
->>>>>>     }
->>>>>>     diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
->>>>>> index b674f64d0822e..7ce70d0967e27 100644
->>>>>> --- a/include/linux/i3c/device.h
->>>>>> +++ b/include/linux/i3c/device.h
->>>>>> @@ -40,11 +40,13 @@ enum i3c_error_code {
->>>>>>       /**
->>>>>>      * enum i3c_hdr_mode - HDR mode ids
->>>>>> + * @I3C_SDR: SDR mode (NOT HDR mode)
->>>>>>      * @I3C_HDR_DDR: DDR mode
->>>>>>      * @I3C_HDR_TSP: TSP mode
->>>>>>      * @I3C_HDR_TSL: TSL mode
->>>>>>      */
->>>>>>     enum i3c_hdr_mode {
->>>>>> +    I3C_SDR,
->>>>>>         I3C_HDR_DDR,
->>>>>>         I3C_HDR_TSP,
->>>>>>         I3C_HDR_TSL,
->>>>>> @@ -53,6 +55,7 @@ enum i3c_hdr_mode {
->>>>>>     /**
->>>>>>      * struct i3c_priv_xfer - I3C SDR private transfer
->>>>>>      * @rnw: encodes the transfer direction. true for a read, false for a write
->>>>>> + * @cmd: Read/Write command in HDR mode, read: 0x80 - 0xff, write: 0x00 - 0x7f
->>>>>>      * @len: transfer length in bytes of the transfer
->>>>>>      * @actual_len: actual length in bytes are transferred by the controller
->>>>>>      * @data: input/output buffer
->>>>>> @@ -61,7 +64,10 @@ enum i3c_hdr_mode {
->>>>>>      * @err: I3C error code
->>>>>>      */
->>>>>>     struct i3c_priv_xfer {
->>>>>> -    u8 rnw;
->>>>>> +    union {
->>>>>> +        u8 rnw;
->>>>>> +        u8 cmd;
->>>>>> +    };
->>>>>>         u16 len;
->>>>>>         u16 actual_len;
->>>>>>         union {
->>>>>> @@ -301,6 +307,10 @@ int i3c_device_do_priv_xfers(struct i3c_device *dev,
->>>>>>                      struct i3c_priv_xfer *xfers,
->>>>>>                      int nxfers);
->>>>>>     +int i3c_device_do_priv_xfers_mode(struct i3c_device *dev,
->>>>>> +                  struct i3c_priv_xfer *xfers,
->>>>>> +                  int nxfers, enum i3c_hdr_mode mode);
->>>>>> +
->>>>>>     int i3c_device_do_setdasa(struct i3c_device *dev);
->>>>>>       void i3c_device_get_info(const struct i3c_device *dev, struct i3c_device_info *info);
->>>>>> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
->>>>>> index 12d532b012c5a..352bd41139569 100644
->>>>>> --- a/include/linux/i3c/master.h
->>>>>> +++ b/include/linux/i3c/master.h
->>>>>> @@ -472,6 +472,9 @@ struct i3c_master_controller_ops {
->>>>>>         int (*priv_xfers)(struct i3c_dev_desc *dev,
->>>>>>                   struct i3c_priv_xfer *xfers,
->>>>>>                   int nxfers);
->>>>>> +    int (*priv_xfers_mode)(struct i3c_dev_desc *dev,
->>>>>> +                   struct i3c_priv_xfer *xfers,
->>>>>> +                   int nxfers, enum i3c_hdr_mode mode);
->>>>>>         int (*attach_i2c_dev)(struct i2c_dev_desc *dev);
->>>>>>         void (*detach_i2c_dev)(struct i2c_dev_desc *dev);
->>>>>>         int (*i2c_xfers)(struct i2c_dev_desc *dev,
->>>>>>
->>>>>
->>>>>
->>>>
->>
+I think the argument to AMD_MDB_PCIE_INTR_INTX_ASSERT() should
+be the hwirq (0..3 for INTA..INTD), so if we use
 
+  #define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)    BIT(x)
+  #define AMD_MDB_PCIE_INTR_INTX_DEASSERT(x)  BIT(x+1)
+
+as you propose, don't the assert/deassert bits collide?
+
+  AMD_MDB_PCIE_INTR_INTX_ASSERT(0)   == BIT(0) for INTA assert
+  AMD_MDB_PCIE_INTR_INTX_ASSERT(1)   == BIT(1) for INTB assert
+
+  AMD_MDB_PCIE_INTR_INTX_DEASSERT(0) == BIT(1) for INTA deassert
+
+> > >       generic_handle_domain_irq(pcie->intx_domain, i);
+> > >
+> > > > > > +		generic_handle_domain_irq(pcie->intx_domain, i);
