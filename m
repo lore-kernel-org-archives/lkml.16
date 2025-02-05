@@ -1,58 +1,43 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581D8212F97
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 08:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBB7219A6E;
+	Wed,  5 Feb 2025 08:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745222; cv=none; b=KQy6pflGTeE+2uRPx0b7Fsup5lXVimuRafWrBTdLudD6JsIWHnwrhCnPOqwc9kzOo0kJb6rXtDmyiXLAvFQd9UIneNtm85BM0eyn8EeOR+Fn0CKL9X9t2dYl9WlfwaA9EIt3PFopNaXs4UkoTUjgAqA5ethNWCfHOeAzNizItew=
+	t=1738745243; cv=none; b=G0SlsNWbPlrhHiBcJ83b5WrUxuPVA87g148NjjBCCO0Q65mTQ6+QgSMEeqZj1XooDzIeYgZhtkSD6pEB1AYR16ID/UI+DJY5HwljjlbOEvAdwj4VhfxDKBVTQ5k0HXkyiXKCNaL6V0MwcBNimGKdrcmhjRHo2nSOZxYDczos6kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745222; c=relaxed/simple;
-	bh=TF8Vmh8LkLITaUeYWBLmgw2YaPLJqdX7GQ2EmZxtG90=;
+	s=arc-20240116; t=1738745243; c=relaxed/simple;
+	bh=uneNg+O/MbXGyjnuoovNGs4oaGpveM8WtUe65AIHv6Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V2ieG10quSDKxdEl/BJ16NbFgDr87P+yk469eB7dLTQfRfV5tOq0z6TgAt54kwqO6WH6WUrgo9zBn/5K6IX3GQduBSTKH5mbDErejMxzorGCOApEdpQUjK7BmSxeVj53KflJe4WEm2+hhBRnDBKLzEdoAdKLALE8hp8pzopCwxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LF9D+oDP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wQmb/FH7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1G23zkhPmRtktttpR5kOLN6dWC9KtM5ICUjTvyiBSV1WX8Zazi4wev56rw+8Dy9FENKyGOE4ze88cqKdAw2CHhtGbyr/DbDBiSXMLIZT+vwVMORT5+Q+2/YpYxp3u0CjDyJ6rgKZs867RYNlxTPbEM1L31MbG9p6aEBzwSOccI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyTw/sdD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LF9D+oDP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wQmb/FH7"
-Date: Wed, 5 Feb 2025 09:46:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738745219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWnQhEzppyo2s20CCYhmE147/yA5tbxR4dbIOWPkEXo=;
-	b=LF9D+oDPSuKi6w9CjpQ4tELjQWete+RSxmHGIk/Y7rpQKYfll7Hj+0Gp+peeC7CXjaZeJ4
-	jF/Kwl7U/yku0PO4bEij27Hai+3Mo3qhdyxBqK0tBnnjEivYDUNheU1CZO8PQg8aHFuPsO
-	Fgqs8/36pfZdVMPupP+kSrcA8pVquHiaxrs1NVFQdi3U82HTll7RVRmltrOY23w8Illi++
-	7Srd2XcKuvyLANl1nZvjruX75x3vC3eXife0L7X2DBE3Hti6ydtRmum1aRGh8WDn3J+Xms
-	AwY87x+KB8BZfoAe//wQg4FTTYIO/2WBbjk0HCGP1F9qk2Dw7WzYVFLnIaUCkw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738745219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWnQhEzppyo2s20CCYhmE147/yA5tbxR4dbIOWPkEXo=;
-	b=wQmb/FH7JiTQxwwe27bwFWjhD8q1nukxTqXcs3m7yModeqih34TGOmZrEskZm9fk3G0qHw
-	9ZNKdDNgfeKOW6DQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 00/15] futex: Add support task local hash maps.
-Message-ID: <20250205084658.iUmkP3_Z@linutronix.de>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250204151405.GW7145@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyTw/sdD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BEDFC4CED1;
+	Wed,  5 Feb 2025 08:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738745243;
+	bh=uneNg+O/MbXGyjnuoovNGs4oaGpveM8WtUe65AIHv6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DyTw/sdDiOx7NIo9rTHCia+SRptdfIeprG4LZHe0P1Qh5WKSCALQMPLxEzqVrJ84m
+	 wrt5OYQRa2DnuGE6Xlg7uetNaaE5zva7jyZ6t3VOfPrYyEsznS9L4gvOZUQ7ZJr/7E
+	 sjMl9HMDyYxJyIUyepFzzW6thdIleLPMh5jixajDMshZa/VbFsWC3PgYtlT40zEfmz
+	 e+UlB9oQyxO64HCJG7i8pF89xxcoAv0CDl82XB9uS/HoPlflBv9+zMbJ2OdYMJuieA
+	 bfYrfsRBFXQMlDOPtXWe+maVtbaDCm1TOE75rnT09dGd4JGVpnmGdDClAt6SVbiefd
+	 U1JyNeODHG7oA==
+Date: Wed, 5 Feb 2025 09:47:19 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Sergey Lisov <sleirsgoevy@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] usb: dwc3: exynos: add support for exynos7870
+Message-ID: <20250205-eager-ibex-of-pleasure-61e3bb@krzk-bin>
+References: <20250204-exynos7870-usb-v1-0-a7753f8183a4@disroot.org>
+ <20250204-exynos7870-usb-v1-2-a7753f8183a4@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,32 +46,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250204151405.GW7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250204-exynos7870-usb-v1-2-a7753f8183a4@disroot.org>
 
-On 2025-02-04 16:14:05 [+0100], Peter Zijlstra wrote:
-> On Mon, Feb 03, 2025 at 02:59:20PM +0100, Sebastian Andrzej Siewior wrote:
-> >   futex: Decrease the waiter count before the unlock operation.
-> >   futex: Prepare for reference counting of the process private hash end
-> >     of operation.
-> >   futex: Re-evaluate the hash bucket after dropping the lock
-> >   futex: Introduce futex_get_locked_hb().
->=20
-> I must admit to not being a fan of these patches. I find them very hard
-> to review.
->=20
-> In part because while you go stick _put() on various things, there is no
-> corresponding _get(), things like futex_hash() become an implicit get
-> -- this took a while to figure out.
+On Tue, Feb 04, 2025 at 02:09:30AM +0530, Kaustabh Chakraborty wrote:
+> Exynos7870 devices have a DWC3 compatible USB 2.0 controller.
+> Add support in the driver by:
+>  - Adding its own compatible string, "samsung,exynos7870-dwusb2".
+>  - Adding three USBDRD clocks named "usbdrd20", "usbdrd20_ctrl_clk", and
+>    "usbdrd20_ref_clk", to be controlled by the driver.
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  drivers/usb/dwc3/dwc3-exynos.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+> index f5d963fae9e069e1bd145ff5bd1b704da89fb74c..34f2b9e8529303cd2a957baed5819a45cbcf3309 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -163,6 +163,12 @@ static const struct dwc3_exynos_driverdata exynos7_drvdata = {
+>  	.suspend_clk_idx = 1,
+>  };
+>  
+> +static const struct dwc3_exynos_driverdata exynos7870_drvdata = {
+> +	.clk_names = { "usbdrd20", "usbdrd20_ctrl_clk", "usbdrd20_ref_clk" },
 
-There is one get in futex_hash() and multiple puts depending on the
-context usually after dropping the hash bucket lock.
+We already stopped this mad downstream pattern, so don't reintroduce it.
+Use proper names describing the purpose of the clock, not the source
+name. See Exynos850 or GS101.
 
-> I tried tying the whole get/put to the hb variable itself, using the
-> cleanup stuff. The patch is pretty massive because fairly large chunks
-> of code got re-indented, but perhaps the final result is clearer, not
-> sure.
+This is probably bus_early, "something?" and finally ref.
 
-=E2=80=A6 Let me find some time and dig through this.
+Best regards,
+Krzysztof
 
-Sebastian
