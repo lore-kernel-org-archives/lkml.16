@@ -1,94 +1,125 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461215CD74
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E861607B7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738768484; cv=none; b=SFzhMdM2wa4r/qxO/cejtDv+qAIt0oBTo/Q9pOMvWvTNad2xg0eoFo5NpETGwHNG0z7b4ZaSBpgQ1OOvvgyKBMjOzETHUcFcM3lYfT/ATk70KhPd9Z0THqSpuBrSa15GxKn+cO3uMI5U5a1xR3rAumgS9MCdjcdo/2UY0jbRn14=
+	t=1738768515; cv=none; b=Z/N7d+n/R3HAjnGAdMhGJlVSaI5/uZRmyITxjzF96A/gV0zeEo20O5VTxghkgTy2f+COXlMtbeWGzZorCcUtSjVh2qjukqUu3zxBsYiACO+u0V9339BA4E5oL8xFPNXhQ6z4zVDQYHcB+5qbD6yVlMUIC3nDuPMyvXnuP8otAtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738768484; c=relaxed/simple;
-	bh=+gTj1BAOP24vT4TV4X57y7cUp2WzqJzucUUVqO1EGGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZOYGU6xCklXX9+sDb0LFaWUbvj0MxntA9zr+1yXVYN/Rwl2U/UyiV6fBUiiVuFV4oLyq/rV8m2yhXEpjQbVfInbsl+O2rLg5NnoyUZCoMAYv5D4Pj4tbRTuQUf8Hf9g5NiH/JjsWDEKmSTNNJKLSVK5yybJo9qGeb6jGvFGuesc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D4u7AvBE; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1738768515; c=relaxed/simple;
+	bh=4szL1eJgPRArjYOVHDwKE/JvLZRZfgR79x/numwtyM4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hVBhJ0G9Sl9X5CM6SHqtFvXlkDcSpb2+bg7O4JrYXvBsiLiQUpsczGN1Msqt5liVSRJn7mx6JnK3dBdAg3rqnKl9ZV/Pfkpfq0b/8C+/WpHAkPlmB/ZxuS5Z6Krvf48+ZrbPro5icqz2bwsFg8NG08MnXQ6KbravcKv6M016ZUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y5L0KZP1; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D4u7AvBE"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d442f9d285so19948a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:14:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y5L0KZP1"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-216311faa51so20406205ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:15:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738768481; x=1739373281; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/dMhcmmKXbkc9E9Zmt8e1XybJHRzURBxdji1raWTTyk=;
-        b=D4u7AvBEHcMsAg5nzytSKY1gaklnqd1/U1j5HFkztlXqze8loDl1Y0hz97TXXvy5nD
-         5+BbZa0lb7zta047lttpaFVOpwvaWP0SkhzWQ/ertByBLOh/BFptIZxYCDxqSp1HSpAW
-         uv9c+tQ2lvTXsSLZdrBRFxzh1ZfdxJt/drMLUEU6NrmlchAVioaS+lYqH4osxbQHepV4
-         pj1oP14dnL2QeZ64eaWBu0R1x/fucoASYAcdbr6pclAn7P/FcdVeQxQN0ojqOaMMiWog
-         kI6721dF2GNMCKwUGj/Hptotc4KI8OByPLjyui8HDX/cF2etH+vpkxo0tUlPU38eqoPO
-         /c7Q==
+        d=google.com; s=20230601; t=1738768513; x=1739373313; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RjqsFlgPguDEnBdcgetC9zWFV3PjaxpPC075lKRZgFw=;
+        b=Y5L0KZP1UO6rB9GAHvnNcHiDP/hI1qsv4laQaR1ijSOSeZ+m+LlNJcr0OKnjTJZwhY
+         QJzhygz2wyqdrwWMpvSwT4FRdIwnirmI6qJSrOJDcaVyehr54atLs2NTCAx2r75nCYZl
+         UjiaYqGAK6IX899BY/VVI5M3tiyhdO+o1qagP3bmj7lPkML3qYdHZkdRPBFKChNJaCgU
+         ZLUtykGwweQQzuYP8nf2Hez7qFOcCf5atnOehG32qQVI+ghC1oAhGEb4tOSFRF4exkom
+         XYKvrkp33kHnXXoTu3TCa4kGQ5xpoosTluQ2Mrb3yext99/mpLd19K7TJXrBF6HQWLy5
+         gL0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738768481; x=1739373281;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/dMhcmmKXbkc9E9Zmt8e1XybJHRzURBxdji1raWTTyk=;
-        b=GiXOkBomkG573TTlUPYhvJCgLJUi+aFwZ2euHa2+n2BGDOiypfi4NnIXG086Zypg4E
-         lj14cKQ6FboSe+1aMwPEnvsZnoM34fW3SgICY3N20fL8pf8TYX/Z6jGUjxS6DNG2ubCQ
-         1TXS9xHQM+FoovtRIQ0KVxXk17uUwAI6eBwoNmylQ+Jzuf8fg3UGomfjaPDp52OptrC8
-         l8uITmQA05wCNtgjGfgWjzeIU5flhxtmjVAAgoVHmAPJiJVHkK5oMuNaN2E6TdVtbaaO
-         nVzjBfADy3Dh1Dp8+001BB456zYIFakI+aQKqvBOMryiRIxe3XNCn3KMuSkRamNc/4cL
-         U1NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGqnciQrbkfJrI6C7uHsvuwT+slf8lyv98Bc+BUTSBo7v5tuW6IiaczCFHMa17i9G4VAD2ddg6b/rLaYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzHioxEft44p2lrnh4mYWtxKgGozlqoKY6i41dWsfIEE9FvDH8
-	NsXiHoQ6RMjweKdsLXXJYyzJE/3Uu+z+pH97xverACPa//1vrK3eTtRDqiPYskeNY/Ds6s57W9G
-	PBG6mDTHCOedDlIGOWxnLhPAEvSwCPBd700/T
-X-Gm-Gg: ASbGnctk4AJYq5Ik4fpa7hzSNdg2WO+bhN+Ru+uuFKEgbCH6P+zPiMMTKemq1fnIHXI
-	nmfSbsfO2Ck1ONZEbP2hKRXYcyDtlIyZqkQyOVfFmHvB3fjLEV0MYVdcYqAXpP7CeG4lgM8mDKD
-	0MRpJ6bNj0yyh03PCrTiuqxxnVPg==
-X-Google-Smtp-Source: AGHT+IFP5s9LbxKzdUpVw6KOT0JD6CsduCiKeNhMgjR7o+3gGXORG6BzK2yeXtY1W6lfrJuWkXWgGynuoHAumc8cwgw=
-X-Received: by 2002:a50:8d44:0:b0:5dc:59ca:8f3b with SMTP id
- 4fb4d7f45d1cf-5dcc3e5a13emr241751a12.3.1738768480785; Wed, 05 Feb 2025
- 07:14:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738768513; x=1739373313;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RjqsFlgPguDEnBdcgetC9zWFV3PjaxpPC075lKRZgFw=;
+        b=gKHY20qPpC06vXw6kjOmenYCIFo3MtxgUg8ZS3LCm1cq/dDUr+8Y6QGddO93VZNqUc
+         /bBM3wL/wNkhw5X2Z7czCOmeokvusdLOWnLC1TwdoacEBFueLDW0zLGfAOVDmaXmn8Se
+         T56XgHNKhA6Z4UZouseTObM3nfBcHhOyIi4bi0O0frVyrdFGrbidJyW3BqdOyEl43JBU
+         I5CyTkhTvLbEET659V7mzkPI0xTCxSkh0HsqIQcvInoU4enrdmdw57W3s0BXW2cRz/JQ
+         yX14E6mydB5htwu1MKEOQ9w1a593mM+D4+yIMazbLFSqiCftC5UzJq80xAM4g9rDRDQq
+         Pd9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgQonB6gWlw9UueLeFBDrFYhD+bflKroGlSQgfyKAu1Rwx6jW9HISbHzrZQWk68Kn9LMr7Wv0IWdJ0CiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKex5IdxfX3JCvthI6rD0hNitr6pLwLprE4fu3tKTynyPLSgQ4
+	VkLnQZLZlMZfy++D+MDe+r93Mcym27aszJX0pcQ8g/qU1tXztafHCBxXYKIqYTzOh3YQOxyxVaJ
+	zPA==
+X-Google-Smtp-Source: AGHT+IFHs7tj+Q54d64NDKOfhfMfAS91bOZEx/8/ugogv1Ut4aJidKZIV/qdikwiSwu5m+q7+e5T4vD0P74=
+X-Received: from plgi6.prod.google.com ([2002:a17:902:cf06:b0:21c:144d:411b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:daca:b0:215:758c:52e8
+ with SMTP id d9443c01a7336-21f17a774a7mr66004375ad.12.1738768512794; Wed, 05
+ Feb 2025 07:15:12 -0800 (PST)
+Date: Wed, 5 Feb 2025 07:15:11 -0800
+In-Reply-To: <1969aa1a-e092-4a48-b4a0-9a50ec2ef3b6@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <67a34e60.050a0220.50516.0040.GAE@google.com> <9fc6212e-0f1e-435f-b7e5-72058f7fd6db@lucifer.local>
-In-Reply-To: <9fc6212e-0f1e-435f-b7e5-72058f7fd6db@lucifer.local>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 5 Feb 2025 16:14:03 +0100
-X-Gm-Features: AWEUYZldxeCbX_2Dy0eF8s-3URd_Gl5OD0fUnrqVhNYFKmDuQAtk5qP25TCS9eg
-Message-ID: <CAG48ez0DYnDKikFUrPQOppsW_-aa2_hcoyOcRJeCMRrEm6GVTA@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] KCSAN: data-race in mprotect_fixup / try_to_migrate_one
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, syzkaller <syzkaller@googlegroups.com>
-Cc: syzbot <syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com>, 
-	Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <cover.1738274758.git.ashish.kalra@amd.com> <afc1fb55dfcb1bccd8ee6730282b78a7e2f77a46.1738274758.git.ashish.kalra@amd.com>
+ <Z5wr5h03oLEA5WBn@google.com> <1969aa1a-e092-4a48-b4a0-9a50ec2ef3b6@amd.com>
+Message-ID: <Z6OAf02sRJTZkl5K@google.com>
+Subject: Re: [PATCH v2 4/4] iommu/amd: Enable Host SNP support after enabling
+ IOMMU SNP support
+From: Sean Christopherson <seanjc@google.com>
+To: Vasant Hegde <vasant.hegde@amd.com>
+Cc: Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, thomas.lendacky@amd.com, john.allen@amd.com, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, joro@8bytes.org, 
+	suravee.suthikulpanit@amd.com, will@kernel.org, robin.murphy@arm.com, 
+	michael.roth@amd.com, dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org, 
+	kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-coco@lists.linux.dev, iommu@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Feb 5, 2025 at 4:07=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> On Wed, Feb 05, 2025 at 03:41:20AM -0800, syzbot wrote:
-> > read to 0xffff888114b41700 of 8 bytes by task 6418 on cpu 0:
-> >  try_to_migrate_one+0xb5a/0x12e0 mm/rmap.c:2321
->
-> Be super nice if these reports could show the line of code!
->
-> It's:
->
->                 if (vma->vm_flags & VM_LOCKED)
+On Wed, Feb 05, 2025, Vasant Hegde wrote:
+> On 1/31/2025 7:18 AM, Sean Christopherson wrote:
+> > On Fri, Jan 31, 2025, Ashish Kalra wrote:
+> >> @@ -3426,18 +3431,23 @@ void __init amd_iommu_detect(void)
+> >>  	int ret;
+> >>  
+> >>  	if (no_iommu || (iommu_detected && !gart_iommu_aperture))
+> >> -		return;
+> >> +		goto disable_snp;
+> >>  
+> >>  	if (!amd_iommu_sme_check())
+> >> -		return;
+> >> +		goto disable_snp;
+> >>  
+> >>  	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
+> >>  	if (ret)
+> >> -		return;
+> >> +		goto disable_snp;
+> > 
+> > This handles initial failure, but it won't handle the case where amd_iommu_prepare()
+> > fails, as the iommu_go_to_state() call from amd_iommu_enable() will get
+> > short-circuited.  I don't see any pleasant options.  Maybe this?
+> > 
+> > diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> > index c5cd92edada0..436e47f13f8f 100644
+> > --- a/drivers/iommu/amd/init.c
+> > +++ b/drivers/iommu/amd/init.c
+> > @@ -3318,6 +3318,8 @@ static int __init iommu_go_to_state(enum iommu_init_state state)
+> >                 ret = state_next();
+> >         }
+> >  
+> > +       if (ret && !amd_iommu_snp_en && cc_platform_has(CC_ATTR_HOST_SEV_SNP))
+> 
+> I think we should clear when `amd_iommu_snp_en` is true.
 
-fwiw if you follow the "dashboard link" in the bug report, you'll get
-a version of this where the source locations are clickable links to
-git.kernel.org at the right commit.
+That doesn't address the case where amd_iommu_prepare() fails, because amd_iommu_snp_en
+will be %false (it's init value) and the RMP will be uninitialized, i.e.
+CC_ATTR_HOST_SEV_SNP will be incorrectly left set.
 
-Also note the "syzbot engineers can be reached at
-syzkaller@googlegroups.com" at the bottom of the message.
+And conversely, IMO clearing CC_ATTR_HOST_SEV_SNP after initializing the IOMMU
+and RMP is wrong as well.  Such a host is probably hosted regardless, but from
+the CPU's perspective, SNP is supported and enabled.
+
+> May be below check is enough?
+> 
+> 	if (ret && amd_iommu_snp_en)
+
+
