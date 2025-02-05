@@ -1,53 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4F022DFAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E709122DFBA
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752933; cv=none; b=p7YW6CSDkjSkP73yqSXcTkGOiL/DVfvXvGkb/dfXsxGpNmZS2bMbFwnw+0dBA/ZCFwL68UDSRGtY/pp4Uk0KvAlJWOKXqQ0GDoIoR8J9sYGcsTt/q4AfTlPm8An+xL++Fp1Vabd1z5ZUMmBt944g+U/RtxyqxPiNBXygH+nLQYA=
+	t=1738752933; cv=none; b=l6ZyESI1uoIWpCFJWX1QyIc7+m0WaDAwPEgvr1F6gv6eBTnAurrMJq9+YHtvnRqVghbdUUR+hNI1tJ502X8e3qAD0AgUXG6QmY8IdXmEWCCmc8o0K1xJpgxUHxVv/0zpxQms88dMAX+kaRs7GLmHcByem6ovW+f+NjxQDMU5Wmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752933; c=relaxed/simple;
-	bh=QS/KOr2KKixvHFIF0oYhVhXNWXV5cJkAvN6klHAB1f0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pLRkCZMSti/Fj/FVjGTBXa1WDr0ANY0GRkF/Wj97Gl7CDjYa/pugzElQ8vEshV55BoKrXJBjsBnYhvUSjIx3sghfIuA2c84Nkcv0LLQ3yL1j3yBx7j5rk33VBytMvsxU+7UleKHRdqlgWFliwwEunI3nRK+Z80qRb04Fix+Su38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rLeI24iN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0cNKxJz; arc=none smtp.client-ip=193.142.43.55
+	bh=+BQ0KwyiPKvaJ9UAVGGIhitG05ADENZrMDkUT3gVugk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j9KsKPDViXri5THg878/z+RlZqIH8vX9+NZDSnEDW0n22pW5qk5Br8Quhml8t3lBURCKThV6rp14PJrIXVoXfEHb7YZKDiEbofK1ndNz/iq6KbPvbEuq+wTLrRadtxwaSFt7Yi1NHh+uPzTepDn2eT1EXGU41DUR4SqnD+gCoyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iZEWG5To; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kEgJncZh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rLeI24iN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0cNKxJz"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iZEWG5To";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kEgJncZh"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752929;
+	s=2020; t=1738752930;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4LVO+yLgGfArkVhpCsxSSnhqiMbhZBebwQpGNkfPxWg=;
-	b=rLeI24iNWFCDzT7eEfBz5BQyyA8WnGhX8fB3W7KqU/O3EA4RIQuyv5KsTQXgXiK+5sY6YP
-	pDN7qsgwLJorwjBJi+GjZvnAPPEWzoER0aD0CJOuDOSEnfY2Tb2Odi8vA3E8JdhQW6r9P+
-	3irMHzq8JFJtzrddZFUGPGiMiiDJQFeOUyHMzbRcMWskRXTmbX5dLZRMJxfolmIp5E2gsy
-	WzqlVx6vj6nOXAzuzaVjqgZIsSyHTABc/HRsKlMv//RfXuX69M+FPlh78khwKKVuEUGwII
-	3o6MntPaubetkTorvSfIsjipQ3ko46nGAbeAEooNcjD/VAz/J0weQa2+J32lEA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HWfoZkSisdqMRbj+fTmgh5Ti8j758+enCkqKof8DO70=;
+	b=iZEWG5TocI1YAYLCGRwz8OBrsW4U96K+8eWWyFxgfQa5lNba1QDQmNcSE33b8PSXk66KeP
+	sDGReng1iWdqYlDejBXRqZI5eLDne6brq0gvM5cpbPL0PCDk72P6DBVWjbDcH8a9npr3ko
+	VhTX6DGmG7nYiTM7LTEs08v92OWTmbJP5jT4EMz932ky0tgy68fCvPJcDbkuI0BN5EvNCj
+	iJLKeqglB+ObRRkJZXlCWLVGRoP4ZrUsOsKe5doKS5hSYzgAmCNMOcaGq5hyaPbiiWPuDl
+	kADGMLOO30d0vzyZW1/tg77BGTkYEcuU3J6u1HElCvHyxHu5GwyHdd+6+Ze84w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752929;
+	s=2020e; t=1738752930;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4LVO+yLgGfArkVhpCsxSSnhqiMbhZBebwQpGNkfPxWg=;
-	b=G0cNKxJzSPoogyKOOTNI8M1p0H7yNvt3iwmbt6vMaFNqIeCMOMYc3lf8+6bS6eBUdaHSdT
-	o3XjAOsrQKDZGcAw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HWfoZkSisdqMRbj+fTmgh5Ti8j758+enCkqKof8DO70=;
+	b=kEgJncZhPK6ZwqlwU/A86iCCs/SquYFMafeh3sxsNu+IXQiBYflC1GQEw9H2cKsSUYnRGa
+	QyB4r57pdULKhzBA==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Kalle Valo <kvalo@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2 00/12] Consolidate hrtimer initialization - Part 5
-Date: Wed,  5 Feb 2025 11:55:09 +0100
-Message-Id: <cover.1738746927.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v2 02/12] hrtimers: Switch to use __htimer_setup()
+Date: Wed,  5 Feb 2025 11:55:11 +0100
+Message-Id: <d9a45a51b6a8aa0045310d63f73753bf6b33f385.1738746927.git.namcao@linutronix.de>
+In-Reply-To: <cover.1738746927.git.namcao@linutronix.de>
+References: <cover.1738746927.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,46 +57,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-All previous users of hrtimer_init() have been converted to use hrtimer_set=
-up()
-in the previous series:
+__hrtimer_init_sleeper() calls __hrtimer_init() and also setups the
+callback function. But there is already __hrtimer_setup() which does both
+actions.
 
-  https://lore.kernel.org/lkml/cover.1738746821.git.namcao@linutronix.de
-  https://lore.kernel.org/lkml/cover.1738746872.git.namcao@linutronix.de
-  https://lore.kernel.org/lkml/cover.1738746904.git.namcao@linutronix.de
+Switch to use __hrtimer_setup() to simplify the code.
 
-
-This series does the final cleanup:
-
-  - Delete hrtimer_init()
-  - Convert users who touch hrtimer::function to use hrtimer_update_functio=
-n().
-    Make hrtimer::function private afterward.
-  - Rename the remaining *hrtimer_init*() to *hrtimer_setup*() to keep the
-    names consistent
-
-v1 -> v2 https://lore.kernel.org/lkml/cover.1729865740.git.namcao@linutroni=
-x.de
-  - rebaes onto v6.14-rc1
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
----
- Documentation/trace/ftrace.rst                |  4 +-
- .../net/wireless/ralink/rt2x00/rt2800mmio.c   |  2 +-
- .../net/wireless/ralink/rt2x00/rt2800usb.c    |  2 +-
- drivers/tty/serial/xilinx_uartps.c            |  4 +-
- include/linux/hrtimer.h                       |  4 +-
- include/linux/hrtimer_types.h                 |  4 +-
- include/trace/events/timer.h                  |  8 +--
- io_uring/io_uring.c                           |  2 +-
- kernel/time/hrtimer.c                         | 69 +++++--------------
- kernel/time/timer_list.c                      |  2 +-
- tools/perf/tests/shell/trace_btf_enum.sh      |  2 +-
- 11 files changed, 35 insertions(+), 68 deletions(-)
+ kernel/time/hrtimer.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 6474089f65fb..d3e02c771b39 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -2066,8 +2066,7 @@ static void __hrtimer_init_sleeper(struct hrtimer_sle=
+eper *sl,
+ 			mode |=3D HRTIMER_MODE_HARD;
+ 	}
+=20
+-	__hrtimer_init(&sl->timer, clock_id, mode);
+-	sl->timer.function =3D hrtimer_wakeup;
++	__hrtimer_setup(&sl->timer, hrtimer_wakeup, clock_id, mode);
+ 	sl->task =3D current;
+ }
+=20
 --=20
 2.39.5
 
