@@ -1,162 +1,80 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A13352F46;
-	Wed,  5 Feb 2025 05:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20A22F46;
+	Wed,  5 Feb 2025 05:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738733659; cv=none; b=EmV2BehETkBrEzgKvIm9ciuK0650Lfri9RgPXb5oQ4MUq/3mRkms11hF67fxnLGc8P5vx0ZxzX9PLCiVI+rb6dMCOabnE0fQT2UceHK2D+QJ+dcyds+JNhFUUxMRsoJ/ilzdOwDCQTsgH+ou5ViDMj0yIcwb+xSLJSj4hTemSWs=
+	t=1738733795; cv=none; b=iAuPwHSHZQExrAXLVG8xCoSMMAfSa9x/GwAz3KbhfpFO4tQa1U6i8Elq+7FN52oyBKDFWjfZ2vTif4tQGIvRY8zUlHLzVNcG9YBKEaUH4zRxsKPrM8TkHrkDQnZMrZJs3GM4qL4z2DbdsEBED89PLyFVTWTtIodbSH/J2tzeKLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738733659; c=relaxed/simple;
-	bh=tVo6KyRYgklzOc5jF07ElkZiK+jTHyaGO/F2qJOCIwM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R8u5sROmpXQE3ePWcCh7JrEx2wtAfzKDn4qJQHGN9+AWYwOK81pon/qUSwwOImk3YXbQnvGAvXp3kZwHe3sLJr4chK1Kns0N8SDANuTLKmZgsmaYlbRcYSUyYEKRGRLGpqK02z0auR/Ln5NTPhCBr57DmJhFbpsRLm16rdty0k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-46-67a2f84f118f
-Message-ID: <92fb15d4-b8fe-4b73-ba2c-2ded3c9bd4ca@sk.com>
-Date: Wed, 5 Feb 2025 14:34:07 +0900
+	s=arc-20240116; t=1738733795; c=relaxed/simple;
+	bh=B4GbIB5xiMSYB/1OpNNVfAE7AOpoeYrDA2QF08ItPko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2ePJesXJk5BmoAw+azcY92LmKnrxYSZDveMfBEKNB9w3d7hDFeuQbBQXj4cfI+U5Qte7YzPAUG3QiOI5AfL96CzxPpyrU8gitxYl2Q8SFXXHzdrtuzH06Y06wo90rDfMckxSLBzPM01R93GmgMuBU5tFnr5xW8y2CPQYtNAMsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bwmv7RGL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bwmv7RGL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30B5C4CED1;
+	Wed,  5 Feb 2025 05:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738733794;
+	bh=B4GbIB5xiMSYB/1OpNNVfAE7AOpoeYrDA2QF08ItPko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bwmv7RGLkJBXmRSAwHlF1CBWtqJRoANKU1/VUHzobqB6STG6gpgjrgyhzqlN6jeWe
+	 RCaTKyTe4p3abAKfl20cLqjN/VhV1iI8d6KLO9fM3EjIlV3BzqhB3z34JvorxrToy+
+	 4SeX21s0QP68s/90Rg5Mg8p0cfYXCw/MGBKl+lKg=
+Date: Wed, 5 Feb 2025 06:36:26 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] tty: tty_buffer: Avoid hundreds of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <2025020503-unnamable-canopener-ac71@gregkh>
+References: <Z6L1XwE-WEzcGFwv@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, Joshua Hahn <joshua.hahnjy@gmail.com>,
- gourry@gourry.net, hyeonggon.yoo@sk.com, rafael@kernel.org, lenb@kernel.org,
- gregkh@linuxfoundation.org, akpm@linux-foundation.org, rakie.kim@sk.com,
- dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
- horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com
-Subject: Re: [PATCH v3] Weighted interleave auto-tuning
-Content-Language: ko
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-References: <20250115185854.1991771-1-joshua.hahnjy@gmail.com>
- <87ikq8h0w4.fsf@DESKTOP-5N7EMDA>
- <147aba6e-7e23-4ad1-9bd2-1ceac0f3d55b@sk.com>
- <87a5bjiqtk.fsf@DESKTOP-5N7EMDA>
-From: Honggyu Kim <honggyu.kim@sk.com>
-In-Reply-To: <87a5bjiqtk.fsf@DESKTOP-5N7EMDA>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsXC9ZZnoa7/j0XpBsv3GFjMWb+GzWL61AuM
-	FiduNrJZ/Lx7nN2iefF6NovVm3wtbvefY7VYtfAam8XxrfPYLfZdBKrd+fAtm8Xyff2MFpd3
-	zWGzuLfmP6vF3C9TmS1Wr8lwEPA4/OY9s8fOWXfZPbrbLrN7tBx5y+qxeM9LJo9NqzrZPDZ9
-	msTucWLGbxaPnQ8tPRY2TGX22D93DbvHuYsVHp83yQXwRnHZpKTmZJalFunbJXBltK+Zz17Q
-	JVOxdfUq5gbGo2JdjJwcEgImEtc2HmKEsXdsmssEYvMKWEq83XmRBcRmEVCRWDblOVRcUOLk
-	zCdgcVEBeYn7t2awdzFycTAL7GeWuHZ/PVhCWMBcYuKMrawgNrOAiMTszjZmEFtEwEDi75XJ
-	LCANQgJbGCVW7DrJBpJgE1CTuPJyEtgGTgFdiXMzt7BANJtJdG3tYoSw5SW2v53DDNIsIXCK
-	XeLj7itMEGdLShxccYNlAqPgLCQXzkKyfBaSWbOQzFrAyLKKUSgzryw3MTPHRC+jMi+zQi85
-	P3cTIzBql9X+id7B+OlC8CFGAQ5GJR5eB8ZF6UKsiWXFlbmHGCU4mJVEeE9vX5AuxJuSWFmV
-	WpQfX1Sak1p8iFGag0VJnNfoW3mKkEB6YklqdmpqQWoRTJaJg1OqgXFdzj634zYtJzgdJ3o9
-	XXF38dX+TRMDLI569N957P84sP3em8NBsrv6kmZc7G1tnNK4zM4xf3VJtlbxuVfnz4XYm/5N
-	mjTPLb5g6szM8/EW4aeUM+9f+HVZSMLlyImF7mdbJGImMwR1bnHZ+cAqLF1rltCxsv64lSI/
-	Nl5oMl+28fXa0+8OhUUosRRnJBpqMRcVJwIAxdgo+dYCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsXCNUNLT9f/x6J0g+/X5SzmrF/DZjF96gVG
-	ixM3G9ksft49zm7RvHg9m8XqTb4Wt/vPsVrMXJtksWrhNTaL41vnsVvsuwhUf3juSVaLnQ/f
-	slks39fPaHF51xw2i3tr/rNazP0yldni0LXnrBar12Q4CHscfvOe2WPnrLvsHt1tl9k9Wo68
-	ZfVYvOclk8emVZ1sHps+TWL3ODHjN4vHzoeWHgsbpjJ77J+7ht3j3MUKj2+3PTwWv/jA5PF5
-	k1wAfxSXTUpqTmZZapG+XQJXRvua+ewFXTIVW1evYm5gPCrWxcjJISFgIrFj01wmEJtXwFLi
-	7c6LLCA2i4CKxLIpz6HighInZz4Bi4sKyEvcvzWDvYuRi4NZYD+zxLX768ESwgLmEhNnbGUF
-	sZkFRCRmd7Yxg9giAgYSf69MZgFpEBLYwiixYtdJNpAEm4CaxJWXk8A2cAroSpybuYUFotlM
-	omtrFyOELS+x/e0c5gmMfLOQHDILyY5ZSFpmIWlZwMiyilEkM68sNzEzx1SvODujMi+zQi85
-	P3cTIzA6l9X+mbiD8ctl90OMAhyMSjy8DoyL0oVYE8uKK3MPMUpwMCuJ8J7eviBdiDclsbIq
-	tSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgZH19GbRRIsrLFw+LKff
-	792v3Su+TO/6pttftqtYu6dHxE5tzlBamrI567DU5ttpNkxMXnMvdPspbFO6XBP8yPk75yLx
-	NYL/G7+XivwrdL0p9CyzrsAiMpStyCLvfJjnsdobL8ptPkhO6Z2vdPIY++tzF1c+nrXvikXM
-	tX1/djDMcny8sIctr1eJpTgj0VCLuag4EQCBVzE/ygIAAA==
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6L1XwE-WEzcGFwv@kspp>
 
-Hi Ying,
-
-On 1/22/2025 10:24 AM, Huang, Ying wrote:
-
-[snip]
-
->>>> diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
->>>> index 0b7972de04e9..d30dc29c53ff 100644
->>>> --- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
->>>> +++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
->>>> @@ -20,6 +20,30 @@ Description:	Weight configuration interface for nodeN
->>>>    		Minimum weight: 1
->>>>    		Maximum weight: 255
->>>>    -		Writing an empty string or `0` will reset the weight
->>>> to the
->>>> -		system default. The system default may be set by the kernel
->>>> -		or drivers at boot or during hotplug events.
->>>> +		Writing invalid values (i.e. any values not in [1,255],
->>>> +		empty string, ...) will return -EINVAL.
->>>> +
->>>> +What:		/sys/kernel/mm/mempolicy/weighted_interleave/mode
->>>> +Date:		January 2025
->>>> +Contact:	Linux memory management mailing list <linux-mm@kvack.org>
->>>> +Description:	Auto-weighting configuration interface
->>>> +
->>>> +		Configuration modes for weighted interleave. Can take one of
->>>> +		two options: "manual" and "auto". Default is "auto".
->>>> +
->>>> +		In auto mode, all node weights are re-calculated and overwritten
->>>> +		(visible via the nodeN interfaces) whenever new bandwidth data
->>>> +		is made available either during boot or hotplug events.
->>>> +
->>>> +		In manual mode, node weights can only be updated by the user.
->>>> +		If a node is hotplugged while the user is in manual mode,
->>>> +		the node will have a default weight of 1.
->>>> +
->>>> +		Modes can be changed by writing either "auto" or "manual" to the
->>>> +		interface. All other strings will be ignored, and -EINVAL will
->>>> +		be returned. If "auto" is written to the interface but the
->>>> +		recalculation / updates fail at any point (-ENOMEM or -ENODEV)
->>>> +		then the mode will remain in manual mode.
->>>> +
->>>> +		Writing a new weight to a node directly via the nodeN interface
->>>> +		will also automatically update the system to manual mode.
->>> IMHO, this interface is somewhat hard to be used.  Users need to
->>> know
->>> which value is legal.  So, this will become something like,
->>> $ cat mode
->>> auto [manual]
->>> $ echo auto > mode
->>> $ cat mode
->>> [auto] manual
->>
->> This is exactly I internally proposed to Hyeonggon, but couldn't share
->> the idea directly here.
->>
->>> Unless it's possible we will add more modes in the future, this is
->>> kind
->>> of overkill for me.  How about something simpler as below?
->>> $ cat auto
->>> true
->>> $ echo 0 > auto
->>> $ cat auto
->>> false
->>
->> That also makes sense, but I feel like somewhat vague what "auto" false
->> means. The "auto" might be better to be "use_hmat" instead and this
->> makes "use_hmat" false more meaningful. "use_hmat_weight" or
->> "use_hmat_info" might be another candidates.
+On Wed, Feb 05, 2025 at 03:51:35PM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> As Gregory pointed out in another email.  hmat isn't good because it's
-> platform dependent.  We may use something else to get default weights on
-> another platform.
-
-Sorry for the late reply.  I prefered "mode" contains auto/manual and
-"hmat" names were my second thought, which may not be proper here as you
-mentioned.
-
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of other structs, we use the `struct_group_tagged()` helper
+> to create a new tagged `struct tty_buffer_hdr`. This structure
+> groups together all the members of the flexible `struct tty_buffer`
+> except the flexible array.
 > 
-> I'm open to other platform independent naming.  For example, use_default.
-
-I'm also fine to your another proposal "auto" with Y/N, which is used in
-v4.
-
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct member currently causing
+> trouble from `struct tty_buffer` to `struct tty_buffer_hdr`.
 > 
-> [snip]
+> We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
 > 
-> ---
-> Best Regards,
-> Huang, Ying
+> This approach avoids having to implement `struct tty_buffer_hdr` as a
+> completely separate structure, thus preventing having to maintain two
+> independent but basically identical structures, closing the door to
+> potential bugs in the future.
 
-Thanks,
-Honggyu
+Why not just have a separate structure and embed that in the places it
+is used?  No duplication should be needed or am I missing something?
+
+I don't mind that, it would make this all much simpler and more obvious
+over time, and the tty layer needs all the "simplification" it can get
+:)
+
+thanks,
+
+greg k-h
