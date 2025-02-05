@@ -1,134 +1,140 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail-m49218.qiye.163.com (mail-m49218.qiye.163.com [45.254.49.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBE6229B35;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0061E228CBA;
 	Wed,  5 Feb 2025 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746493; cv=none; b=ftYxRE1y0dtuQZFjVFYqjCeTqAaVFsduQRKW9RnrbmMsShYKq6ya69lbkC9Us3BsuCVMsgW07VOhKwqe0ksC1VN+VA7yl+QekuS6D8lBgekkgDikpjQVxg1kWbV4oMyA2mVLyrYkPh8s9e5ZCDldXcHJxYWS4tSWsyLapj7q7tI=
+	t=1738746495; cv=none; b=vCXbkyJ27stE31Sqf78lsg+edkomrAz7bND44wKmDQQ4/Ohz5m9DhLuFsF1SqNAWLPZRbfKuaVv92HENxNEEcuo/mu7ib5+pW/6+cGi+C/wYHDK9gO2xC7C5DT4MmgnfRctIInRLTDVR3EiHYU+x5RL2J4HQISi6LVeovTwvpz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746493; c=relaxed/simple;
-	bh=zK4BcCviFYKOci9GCdxPo1LHA6sklsGtzEQGEFH0p50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJj1SpOSrmcJ048ezVvaAuq1f7ZARIoHp/fgsSF0eUJ9sr8r/BPFIcWRc3PC9WrAE+NP0ZQ+IOimDP/3tSrILBdjEAW+MG/sWbznEwIi3bLIGj3hH+42+kB7psxJ63eCZbapwZaV6Ion8OFZvxmh5eiM+XFK7rDiMESqOf5EYgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CM3G/q47; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738746495; c=relaxed/simple;
+	bh=bZCdFFptngTG0hFG0P6Ls3pR19DeLNruPnqgWd3AOT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BtMJ4TVzeUL+NuNFGZb/fGB/p3Dx+yan3FwOJSDY3fYlDiDWVlonC5mFa93DkxdDcqeBJp7EBfU+03COb0TAnCxxm4X0HnKtDcK9E1hD9g//wGgcunTMrVdwzQn+xDPUNhIUWnL+TfUHB2gEtYcW6dMPneDkrvo37UvJm4N8w40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=btvd4bzt; arc=none smtp.client-ip=45.254.49.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CM3G/q47"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qkne+ZvkqwZNIJvySjfCkna8nyuLIRV8ik1o0AG9MyE=; b=CM3G/q47aJbqtCQ0AUoQetpyzV
-	cuJAP/abGed2N9qu1ydLrMdp8uUQzF5Rao21C7odP4h0tpTJBtorMkzXYcxsfQvWchUNAJaRM3uRF
-	wNCEqwJzS7+BCwd2nf3WoCWP+LWuKGLGz7eKIoht32jc4QPPV2TMFtCEkGWJ/zqRzyRJKs96XwGIV
-	mt9JlknaYHh/qdivsptOSn1/DLRHO+HfqYEnFIou5JHVgtf5LSXVN1pScmN1D6Fu4+ab8DjNkZnlz
-	eQsxwNDfFGNwsEA3NUnDNjzT+i+JoDq8mdygVC9dagfg8nViwk9W38tND56xGft3+H4+PQy51otQS
-	GDDnr4uA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfbNh-0000000GbAt-28dP;
-	Wed, 05 Feb 2025 09:07:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6C1A93002CE; Wed,  5 Feb 2025 10:07:36 +0100 (CET)
-Date: Wed, 5 Feb 2025 10:07:36 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
-	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
-	broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250205090736.GY7145@noisy.programming.kicks-ass.net>
-References: <20250201115906.GB8256@noisy.programming.kicks-ass.net>
- <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
- <20250201181129.GA34937@noisy.programming.kicks-ass.net>
- <20250201180617.491ce087@batman.local.home>
- <20250203084306.GC505@noisy.programming.kicks-ass.net>
- <20250203114537.6a30c7c0@gandalf.local.home>
- <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
- <20250204075100.3fcbfda8@gandalf.local.home>
- <20250204153053.GX7145@noisy.programming.kicks-ass.net>
- <20250204111119.10ee37c8@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="btvd4bzt"
+Received: from [172.16.12.30] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id a2f6aecf;
+	Wed, 5 Feb 2025 10:18:31 +0800 (GMT+08:00)
+Message-ID: <b85a4449-f178-4877-9ba7-65ddcc231052@rock-chips.com>
+Date: Wed, 5 Feb 2025 10:18:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204111119.10ee37c8@gandalf.local.home>
-
-On Tue, Feb 04, 2025 at 11:11:19AM -0500, Steven Rostedt wrote:
-> On Tue, 4 Feb 2025 16:30:53 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > If you go back and reread that initial thread, you'll find the 50us is
-> > below the scheduling latency that random test box already had.
-> > 
-> > I'm sure more modern systems will have a lower number, and slower
-> > systems will have a larger number, but we got to pick a number :/
-> > 
-> > I'm fine with making it 20us. Or whatever. Its just a stupid number.
-> > 
-> > But yes. If we're going to be doing this, there is absolutely no reason
-> > not to allow DEADLINE/FIFO threads the same. Misbehaving FIFO is already
-> > a problem, and we can make DL-CBS enforcement punch through it if we
-> > have to.
-> > 
-> > And less retries on the RSEQ for FIFO can equally improve performance.
-> > 
-> > There is no difference between a 'malicious/broken' userspace consuming
-> > the entire window in userspace (50us, 20us whatever it will be) and
-> > doing a system call which we know will cause similar delays because it
-> > does in-kernel locking.
-> 
-> This is where we will disagree for the reasons I explained in my second
-> email. This feature affects other tasks. And no, making it 20us doesn't
-> make it better. Because from what I get from you, if we implement this, it
-> will be available for all preemption methods (including PREEMPT_RT), where
-> we do have less than 50us latency, and and even a 20us will break those
-> applications.
-
-Then pick another number; RT too has a max scheduling latency number (on
-some random hardware). If you stay below that, all is fine. 
-
-> This was supposed to be only a hint to the kernel, not a complete feature
-
-That's a contradiction in terms -- even a hint is a feature.
-
-> that is hard coded and will override how other tasks behave. 
-
-Everything has some effect. My point is that if you limit this effect to
-be less than what it can already effect, you're not making things worse.
-
-> As system
-> calls themselves can make how things are scheduled depending on the
-> preemption method,
-
-What?
-
-> I didn't want to add something that will change how
-> things are scheduled that ignores the preemption method that was chosen.
-
-Userspace is totally oblivious to the preemption method chosen, and it
-damn well should be.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] Revert "arm64: dts: rockchip: Increase VOP clk
+ rate on RK3328"
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, kever.yang@rock-chips.com,
+ heiko@sntech.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, huangtao@rock-chips.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250125011545.15547-1-zhangqing@rock-chips.com>
+ <20250125011545.15547-3-zhangqing@rock-chips.com>
+ <d1ddec89-08d5-4eed-8ecc-7df47294230a@kwiboo.se>
+From: zhangqing <zhangqing@rock-chips.com>
+In-Reply-To: <d1ddec89-08d5-4eed-8ecc-7df47294230a@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQk9NTFZPGUtISk1NTUxLHh9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
+	9VSktLVUpCS0tZBg++
+X-HM-Tid: 0a94d3e6e17103a3kunma2f6aecf
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mz46Pyo6EjIJGhQyFyMPGg09
+	TEIaCUxVSlVKTEhDTElKQkpJTUNOVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQU9LTUk3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=btvd4bzt9LMDt9sePPl5TCU6js+OoOuX0XD0PnJMAA5dUVJif3cBsEOSWfFan99MzUBSvi5QTyGysRWh1s7jo2pfiS7gSJz3h2jiekDJaTNIAMNbhpDOGj7PDLa+aC0GdK5I0mzeyP7vrtTNgkc3wi/txmf0CmlAFb8S6ewZGt8=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=/1w0LAq2M+/NtKCh0lzYTdc188jbF90/W0yNry5dtdc=;
+	h=date:mime-version:subject:message-id:from;
 
 
+在 2025/1/26 5:39, Jonas Karlman 写道:
+> Hi Elaine,
+>
+> On 2025-01-25 02:15, Elaine Zhang wrote:
+>> This reverts commit 0f2ddb128fa20f8441d903285632f2c69e90fae1.
+>>
+>> Before changing the PLL frequency, in order to avoid overclocking the
+>> child clock, set the child clock to a large div first, and then set the
+>> CLK as required after the PLL is set.
+> This commit message does not match what this patch does. In this patch
+> you revert a change and in next patch you re-introduce same thing
+> slightly different.
+>
+> As mentioned in v1, see [1], you should merge both patches as a single
+> fix, if a fix really is needed.
+Ok, This will be fixed in the next release.
+>
+> Testing on a rk3328-rock64 I see no difference before or after these
+> changes. Please describe what this fixes because clk_summary show same
+> clock tree and rates before and after this fix.
+The clock tree might see the same result.
+
+It is not safe or correct to set the child clock frequency before 
+setting the PLL frequency, and the parent clock PLL frequency may not be 
+the final expected value at this time.
+Therefore, the correct setting of the child clock frequency should be 
+after the PLL frequency is set.
+
+The partial clock is set before the PLL setting frequency, which is to 
+prevent the child clock from overclocking when the PLL is set, so ensure 
+that the child clock is at a safe frequency before setting the PLL, and 
+reset the child clock frequency after the PLL is set.
+>
+> Also for next revert patch you send, please include the patch author in
+> the recipient list :-)
+>
+> [1] https://lore.kernel.org/all/cae9cb0a-1500-4fbc-bbf4-a6266549bcb9@kwiboo.se/
+>
+> Regards,
+> Jonas
+>
+>> Fixes: 0f2ddb128fa2 ("arm64: dts: rockchip: Increase VOP clk rate on RK3328")
+>>
+>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> index 7d992c3c01ce..f3ef8cbfbdae 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> @@ -852,8 +852,8 @@
+>>   			<0>, <24000000>,
+>>   			<24000000>, <24000000>,
+>>   			<15000000>, <15000000>,
+>> -			<300000000>, <100000000>,
+>> -			<400000000>, <100000000>,
+>> +			<100000000>, <100000000>,
+>> +			<100000000>, <100000000>,
+>>   			<50000000>, <100000000>,
+>>   			<100000000>, <100000000>,
+>>   			<50000000>, <50000000>,
+>
+-- 
+张晴
+瑞芯微电子股份有限公司
+Rockchip Electronics Co.,Ltd
+地址：福建省福州市铜盘路软件大道89号软件园A区21号楼
+Add:No.21 Building, A District, No.89 Software Boulevard Fuzhou, Fujian 350003, P.R.China
+Tel:+86-0591-83991906-8601
+邮编：350003
+E-mail:elaine.zhang@rock-chips.com
+****************************************************************************
+保密提示：本邮件及其附件含有机密信息，仅发送给本邮件所指特定收件人。若非该特定收件人，请勿复制、使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件或其他方式即刻告知发件人。福州瑞芯微电子有限公司拥有本邮件信息的著作权及解释权，禁止任何未经授权许可的侵权行为。
+
+IMPORTANT NOTICE: This email is from Fuzhou Rockchip Electronics Co., Ltd .The contents of this email and any attachments may contain information that is privileged, confidential and/or exempt from disclosure under applicable law and relevant NDA. If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or use of the information is STRICTLY PROHIBITED. Please immediately contact the sender as soon as possible and destroy the material in its entirety in any format. Thank you.
+
+****************************************************************************
 
