@@ -1,250 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5313E1FCF5B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D122D1779AE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779536; cv=none; b=aO+4u+yyjWJFBf50J05UopKo+v6AinIPtn5Ejsb+fk+kO9R35+vLUXG5Dg7w9lfThcXbXhvbzmt/XPfyiurQySG7GBi6cxezSYO/FScIg7cW4xer8OafzvV+fgJxu25Jf9iPUfnKUk/rmve4klf9XFwiBXCISq2ZXx0j+m7wYZY=
+	t=1738779589; cv=none; b=u1eDyQoubQXkUgUBIrRP5UV7Bh73X/BwmzI2kilc/YwChpXTsBD3UMkvxHrE295u+Rq1oSk+D1hUYxeFQ56+iUnht6Y8oL1mNMEGbD2YWadGkw5qDvY76F8yEbzNl3ovuUdf873UF+KYoqNaedE7RlG9Nm2mHQOlJI/ghoKAEVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779536; c=relaxed/simple;
-	bh=McltsGuhrdjKSLzYSZ2RB5cGI/ob/Aq3P+nHQ5SQmI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6D+SUu0eHSkNWBjwAplIgu31mVYaEEdtHCaYUxjUzMRCDsAgcWZ8vXxRWVD16oru65gUh0BohG2Revw1U8pSoW+7F79cMwvJYmGDuHKX/EYtECfXiZoGSNIWruacgPXQAVqJqDAn/YBd4K2SQflmXZV6Nhk0epMDzvhyL9kcuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=emBfVIXU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738779589; c=relaxed/simple;
+	bh=Y9cbveh2CwhVYwoFhmCN0UCeLgvgUnCU7TI71FPNIi0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ATmvPzht8LBvEr7gEeoDTCD2XKBK2YPyXcTWRXZi4cXNgyUrgyCmAHCORF5mykmLtwpdBb0Z1tYGZQd7sFVwRCNIveVR8jfTI5Q+PKsBs8czRhWo+BqsRcF9Cl2f0VMwEJQAkZpysHBTNcMd8LJTSf3CEVcmv6y/vJYT3Nl6FrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JriIhorM; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emBfVIXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738779532;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YAZPH6LoBdfmC4eKY2rMSg24boi4M+z/rfTpR2/KoTE=;
-	b=emBfVIXUDf1Jk3+EAIhqPB12nPCCDD9WO10wHaEUoiQh6zXbzcb8ljXKmDY5tLt+FTzR0L
-	oS9sfdZ4XyheMlQK4XrKUTPRVhdy71V8jYN/ioYkgrHZEzQ2UV0vraLdPalQb+RDfsIwEX
-	gFCckK9bZo4DkbKOv1EyOQhtyDvU3BM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-eyRvOxkLMm-K86gnIv0iOQ-1; Wed,
- 05 Feb 2025 13:18:47 -0500
-X-MC-Unique: eyRvOxkLMm-K86gnIv0iOQ-1
-X-Mimecast-MFC-AGG-ID: eyRvOxkLMm-K86gnIv0iOQ
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7D59A180087B;
-	Wed,  5 Feb 2025 18:18:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.10])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8DD721800265;
-	Wed,  5 Feb 2025 18:18:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Feb 2025 19:18:18 +0100 (CET)
-Date: Wed, 5 Feb 2025 19:18:12 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Howells <dhowells@redhat.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
-	Oliver Sang <oliver.sang@intel.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] pipe: don't update {a,c,m}time for anonymous pipes
-Message-ID: <20250205181812.GC13817@redhat.com>
-References: <20250205181716.GA13817@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JriIhorM"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-71e36b27b53so65900a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738779586; x=1739384386; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DYD314+kCrbyuPLEovXv8C/gyv8YrwaHmGXW6MFdMgQ=;
+        b=JriIhorMzBoE8KnKupnIP982bFi10iXqcO46sHLhaylKOPOo8iBxGo/27laZaoI/vZ
+         W4293dZMvJi3VwiqjFSdTgcVHHwg+NOGXD+vq/XC3NwHRsrSONcC/7xHla4pUdpKFmeO
+         AnxvtXkBdPYfJIYFvssGz1KrMrJG7a9uzBLYCFUxrRH+/tmY0w4hK+kodsz/3O1+oPWW
+         PNEMRUykRCeao2YNSYtdnKqFGCFDBGO6QDiLaBpo008Q+cr9bkTtRczx7+gCA3IrUK+s
+         CPINyAovI2oKE7s26tQYq0PzAfXGlyMElzq8h31BYypnd2wjzZR0lu51xjLMmF278fsr
+         y3yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738779586; x=1739384386;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DYD314+kCrbyuPLEovXv8C/gyv8YrwaHmGXW6MFdMgQ=;
+        b=saJ6bX/GHZNJg6rWN1C6xnWLrb7bwL449Ssbl3b4gZBkZ+R4REwUeSzOwKvi0cdHQf
+         gwwPyfYyX+080FGOuHIyMpI0viMxuFJMb9ZA1zCMQoZAmn+tj8lpLbGEQykA7wtZm+Y5
+         eRUDtxXJydOgrvRt3sI2OMP8anEjia4f/Fcw4IBjWjt3xh1B26bAKNFfb700CP3d2Ihv
+         fUAs0mPMhtNe7Npv/u8d74AYT2YaB4vhJNzyjV+K4REUUy7Vq7AOBLzKc/HfUkYqQChO
+         l8QSNN+8tUxuL92i1Ysy4aTE9ByyHGKOwJMjsWxJuKOwaOcHMafxolVxlzHuAqp2lgFk
+         spIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXtRIbNy5Gx3sN1DeDJvLyUMWLFkhqSuf89MouAevF6icgPwhqWl7y9SFNW9Zas887VivFSt7u4h9HEps=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk38lio7/KIMw2SN4KW8OXQqCHJTrlr935mk/tzSshLHUZL8zh
+	tZLT6fINrnsZaYkSKdNSsuzb4bT0zFltMMqGgP9i7o92AIjVMPRBFXwQaJtGfCdFTxkqMB76TFo
+	hd/3ol6vzf91OHIGR/7RrtEoCGjbWqLZjznCQ
+X-Gm-Gg: ASbGncvPtM2ZkE+Y3us9vCwDu10fu+u/EMibfjNwzNL2kJNj7FveuQcxz7uq117THIw
+	CP8x5jSfSz4rqwQ2Vsh+hU92X6URg2PYyrN6P2fGTLPR3bk13kbwUzDRB7OXwhinFDzEvQtu53y
+	3mLMrGSAL8SUMsQCpnbw8+RqUk1zUzeA==
+X-Google-Smtp-Source: AGHT+IGuWZdwDyLPOPSuzL97lJDl1x5nZAEdalBO0y1kiEQKuLwR5fdEC2+CwMSeq2b9Rl/wMIZG79qj6WwSZi2Yqko=
+X-Received: by 2002:a05:6830:4702:b0:71e:5a:f4f4 with SMTP id
+ 46e09a7af769-726a42882bcmr2685173a34.25.1738779585726; Wed, 05 Feb 2025
+ 10:19:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205181716.GA13817@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250202035100.31235-1-badhri@google.com> <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
+ <CAPTae5+j9N=RBpfHVE-As+dz7HzrxXAH1enWrmSdFzu6DuaTBA@mail.gmail.com> <80172550-a3d7-4d56-927c-ff63debc79f8@kernel.org>
+In-Reply-To: <80172550-a3d7-4d56-927c-ff63debc79f8@kernel.org>
+From: Badhri Jagan Sridharan <badhri@google.com>
+Date: Wed, 5 Feb 2025 10:19:09 -0800
+X-Gm-Features: AWEUYZnQ_MjYKPi3GzKBCYvuUST4PyFu-pF3hOKR55xFpZgNJeJuOBnJiMENe7c
+Message-ID: <CAPTae5+xF0B64AhT5fjMU9tcW8cT9smO5eUD=Wpsiw2CKAhDAQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: usb: snps,dwc3: Add property for imod
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
+	felipe.balbi@linux.intel.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, johnyoun@synopsys.com, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jameswei@google.com, 
+	stable@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These numbers are visible in fstat() but hopefully nobody uses this
-information and file_accessed/file_update_time are not that cheap.
-Stupid test-case:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <unistd.h>
-	#include <assert.h>
-	#include <sys/ioctl.h>
-	#include <sys/time.h>
-
-	static char buf[17 * 4096];
-	static struct timeval TW, TR;
-
-	int wr(int fd, int size)
-	{
-		int c, r;
-		struct timeval t0, t1;
-
-		gettimeofday(&t0, NULL);
-		for (c = 0; (r = write(fd, buf, size)) > 0; c += r);
-		gettimeofday(&t1, NULL);
-		timeradd(&TW, &t1, &TW);
-		timersub(&TW, &t0, &TW);
-
-		return c;
-	}
-
-	int rd(int fd, int size)
-	{
-		int c, r;
-		struct timeval t0, t1;
-
-		gettimeofday(&t0, NULL);
-		for (c = 0; (r = read(fd, buf, size)) > 0; c += r);
-		gettimeofday(&t1, NULL);
-		timeradd(&TR, &t1, &TR);
-		timersub(&TR, &t0, &TR);
-
-		return c;
-	}
-
-	int main(int argc, const char *argv[])
-	{
-		int fd[2], nb = 1, loop, size;
-
-		assert(argc == 3);
-		loop = atoi(argv[1]);
-		size = atoi(argv[2]);
-
-		assert(pipe(fd) == 0);
-		assert(ioctl(fd[0], FIONBIO, &nb) == 0);
-		assert(ioctl(fd[1], FIONBIO, &nb) == 0);
-
-		assert(size <= sizeof(buf));
-		while (loop--)
-			assert(wr(fd[1], size) == rd(fd[0], size));
-
-		struct timeval tt;
-		timeradd(&TW, &TR, &tt);
-		printf("TW = %lu.%03lu TR = %lu.%03lu TT = %lu.%03lu\n",
-			TW.tv_sec, TW.tv_usec/1000,
-			TR.tv_sec, TR.tv_usec/1000,
-			tt.tv_sec, tt.tv_usec/1000);
-
-		return 0;
-	}
-
-Before:
-	# for i in 1 2 3; do /host/tmp/test 10000 100; done
-	TW = 8.047 TR = 5.845 TT = 13.893
-	TW = 8.091 TR = 5.872 TT = 13.963
-	TW = 8.083 TR = 5.885 TT = 13.969
-After:
-	# for i in 1 2 3; do /host/tmp/test 10000 100; done
-	TW = 4.752 TR = 4.664 TT = 9.416
-	TW = 4.684 TR = 4.608 TT = 9.293
-	TW = 4.736 TR = 4.652 TT = 9.388
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- fs/pipe.c | 41 +++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 2eacfde61e74..2ae75adfba64 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -248,7 +248,7 @@ static inline unsigned int pipe_update_tail(struct pipe_inode_info *pipe,
- }
- 
- static ssize_t
--pipe_read(struct kiocb *iocb, struct iov_iter *to)
-+anon_pipe_read(struct kiocb *iocb, struct iov_iter *to)
- {
- 	size_t total_len = iov_iter_count(to);
- 	struct file *filp = iocb->ki_filp;
-@@ -404,8 +404,15 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 	if (wake_next_reader)
- 		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
- 	kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-+	return ret;
-+}
-+
-+static ssize_t
-+fifo_pipe_read(struct kiocb *iocb, struct iov_iter *to)
-+{
-+	int ret = anon_pipe_read(iocb, to);
- 	if (ret > 0)
--		file_accessed(filp);
-+		file_accessed(iocb->ki_filp);
- 	return ret;
- }
- 
-@@ -426,7 +433,7 @@ static inline bool pipe_writable(const struct pipe_inode_info *pipe)
- }
- 
- static ssize_t
--pipe_write(struct kiocb *iocb, struct iov_iter *from)
-+anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
- {
- 	struct file *filp = iocb->ki_filp;
- 	struct pipe_inode_info *pipe = filp->private_data;
-@@ -604,11 +611,21 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
- 	if (wake_next_writer)
- 		wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
--	if (ret > 0 && sb_start_write_trylock(file_inode(filp)->i_sb)) {
--		int err = file_update_time(filp);
--		if (err)
--			ret = err;
--		sb_end_write(file_inode(filp)->i_sb);
-+	return ret;
-+}
-+
-+static ssize_t
-+fifo_pipe_write(struct kiocb *iocb, struct iov_iter *from)
-+{
-+	int ret = anon_pipe_write(iocb, from);
-+	if (ret > 0) {
-+		struct file *filp = iocb->ki_filp;
-+		if (sb_start_write_trylock(file_inode(filp)->i_sb)) {
-+			int err = file_update_time(filp);
-+			if (err)
-+				ret = err;
-+			sb_end_write(file_inode(filp)->i_sb);
-+		}
- 	}
- 	return ret;
- }
-@@ -1234,8 +1251,8 @@ static int fifo_open(struct inode *inode, struct file *filp)
- 
- const struct file_operations pipefifo_fops = {
- 	.open		= fifo_open,
--	.read_iter	= pipe_read,
--	.write_iter	= pipe_write,
-+	.read_iter	= fifo_pipe_read,
-+	.write_iter	= fifo_pipe_write,
- 	.poll		= pipe_poll,
- 	.unlocked_ioctl	= pipe_ioctl,
- 	.release	= pipe_release,
-@@ -1245,8 +1262,8 @@ const struct file_operations pipefifo_fops = {
- 
- static const struct file_operations pipeanon_fops = {
- 	.open		= fifo_open,
--	.read_iter	= pipe_read,
--	.write_iter	= pipe_write,
-+	.read_iter	= anon_pipe_read,
-+	.write_iter	= anon_pipe_write,
- 	.poll		= pipe_poll,
- 	.unlocked_ioctl	= pipe_ioctl,
- 	.release	= pipe_release,
--- 
-2.25.1.362.g51ebf55
+On Wed, Feb 5, 2025 at 5:50=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On 05/02/2025 10:07, Badhri Jagan Sridharan wrote:
+> > .
+> >
+> > On Sun, Feb 2, 2025 at 6:11=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >>
+> >> On Sun, Feb 02, 2025 at 03:50:59AM +0000, Badhri Jagan Sridharan wrote=
+:
+> >>> This change adds `snps,device-mode-intrpt-mod-interval`
+> >>
+> >> Thank you for your patch. There is something to discuss/improve.
+> >
+> > Hi Krzysztof,
+> >
+> > Thanks for taking the time to review ! Happy to address them.
+> >
+> >>
+> >>> which allows enabling interrupt moderation through
+> >>> snps,dwc3 node.
+> >>>
+> >>> `snps,device-mode-intrpt-mod-interval`specifies the
+> >>> minimum inter-interrupt interval in 250ns increments
+> >>> during device mode operation. A value of 0 disables
+> >>> the interrupt throttling logic and interrupts are
+> >>> generated immediately if event count becomes non-zero.
+> >>> Otherwise, the interrupt is signaled when all of the
+> >>> following conditons are met which are, EVNT_HANDLER_BUSY
+> >>> is 0, event count is non-zero and at least 250ns increments
+> >>> of this value has elapsed since the last time interrupt
+> >>> was de-asserted.
+> >>
+> >> Please wrap commit message according to Linux coding style / submissio=
+n
+> >> process (neither too early nor over the limit):
+> >> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process=
+/submitting-patches.rst#L597
+> >
+> > Ack! will do in V2 of this patch.
+> >
+> >>
+> >>>
+> >>> Cc: stable@kernel.org
+> >>> Fixes: cf40b86b6ef6 ("usb: dwc3: Implement interrupt moderation")
+> >>
+> >> I don't understand what are you fixing here.  Above commit does not
+> >> introduce that property.
+> >
+> > Although the above commit does not add this property, it has
+> > implemented the entire feature except for the property so thought
+> > sending this with "Fixes:" while CCing  stable@ will allow the
+> > backport.  I am interested in having this patch in older kernel
+>
+> Not implementing DT bindings is not a bug. Otherwise provide any sort of
+> proof that this was not intentional.
 
 
+
+>
+> I can easily provide you proof why this was intentional: negative review
+> maintainers.
+>
+>
+> > versions as well where imod support has been added. Wondering what
+> > would be the right way to achieve this. Eager to know your thoughts !
+>
+> So again, downstream and forks... NAK, you cannot push things to stable
+> just because you want them backported by Greg.
+>
+> This is not acceptable.
+
+Hi Krzysztof,
+
+I totally agree that this is not a bug but the intention here is to
+not call it a bug but rather to land this in older versions of the
+kernel as well which I wasn't sure how to do and I was perceiving
+"Fixes:" while CCing  stable@ as a way to do that.
+I will drop "Fixes:" and the CC to  stable@.  Came across the following
+https://docs.kernel.org/process/backporting.html#submitting-backports-to-st=
+able.I
+will follow this and explicitly submit backports. Let me know if that
+isn't reasonable
+
+>
+> >
+> >>
+> >>
+> >>> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> >>> ---
+> >>>  .../devicetree/bindings/usb/snps,dwc3-common.yaml   | 13 +++++++++++=
+++
+> >>>  1 file changed, 13 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.y=
+aml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+> >>> index c956053fd036..3957f1dac3c4 100644
+> >>> --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+> >>> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+> >>> @@ -375,6 +375,19 @@ properties:
+> >>>      items:
+> >>>        enum: [1, 4, 8, 16, 32, 64, 128, 256]
+> >>>
+> >>> +  snps,device-mode-intrpt-mod-interval:
+> >>> +    description:
+> >>> +      Specifies the minimum inter-interrupt interval in 250ns increm=
+ents
+> >>
+> >> Then use proper property unit suffix.
+> >
+> > Ack ! changing to snps,device-mode-intrpt-mod-interval-ns in V2.
+> >
+> >>
+> >>> +      during device mode operation. A value of 0 disables the interr=
+upt
+> >>> +      throttling logic and interrupts are generated immediately if e=
+vent
+> >>> +      count becomes non-zero. Otherwise, the interrupt is signaled w=
+hen
+> >>> +      all of the following conditons are met which are, EVNT_HANDLER=
+_BUSY
+> >>> +      is 0, event count is non-zero and at least 250ns increments of=
+ this
+> >>> +      value has elapsed since the last time interrupt was de-asserte=
+d.
+> >>
+> >> Why is this property of a board? Why different boards would wait
+> >> different amount of time?
+> >
+> > Interrupt moderation allows batch processing of events reported by the
+> > controller.
+> > A very low value of snps,device-mode-intrpt-mod-interval-ns implies
+> > that the controller will interrupt more often to make the host
+> > processor process a smaller set of events Vs a larger value will wake
+> > up the host processor at longer intervals to process events (likely
+> > more). So depending what the board is designed for this can be tuned
+> > to achieve the needed outcome.
+>
+> I do not see dependency on the board. Host has the same CPU always, so
+> it processes with the same speed.
+
+ By "host processor", I am referring to the CPU which is scheduling
+the TRBs and responding to the events reported by the Synopsys DWC3
+controller. In a nutshell, the CPU which is driving the  Synopsys DWC3
+controller. The Synopsys DWC3 controller could be paired with any CPU
+configuration and therefore is "Host has the same CPU always" a fair
+assumption to be made ?
+
+As a reference,
+https://lore.kernel.org/linux-arm-kernel/9cb2e5fc-1bec-c19c-c04e-fe56e5c1bc=
+16@codeaurora.org/T/#m392cc1fe604499984c61ac07dacc840616194efe
+is the first patch which introduces IMOD as board specific property
+for XHCI based controllers.
+
+Thanks,
+Badhri
+
+>
+>
+> Best regards,
+> Krzysztof
