@@ -1,78 +1,43 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65C2040B5
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CBA38F82;
+	Wed,  5 Feb 2025 19:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738783120; cv=none; b=UOGD9HD6Th2ZNRAczN6z9H28AywR2iuemDwiZ37DgRfxP+GKGYR2TA2AswxQ4Z/Mqn/riENHQMKBAT35a5HVF70OMpDVbqtz7hdMXZDhfFatRb1djsZHmJ/JEmanaFrwHi3zJX2qU5yZ+vvIkdYGGB55jYdlB/Qha5inVJdUjcg=
+	t=1738783240; cv=none; b=t3wtrRRZpW0VXT6edZPTVwyyq2AfJ7m4K2B1QJ/EyDvGJknF5PUBvDwNHpPvPZex+9zCur3W//yklD2kqxY3hbyGn5EHTxOcuVOYKFDD9y/Tl5yfj4ynXBLG14lw7U7kwzG+++DXMrQtsijb8l9ShBRBRVGeN6hmESUTWwUkeo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738783120; c=relaxed/simple;
-	bh=oPEtVOpN+aKW2p42nBcWfhpXpIMCi7MvBIh1JiLFbt4=;
+	s=arc-20240116; t=1738783240; c=relaxed/simple;
+	bh=FXPG38E+cOITfwQN1B7FhCwJ0s8mSHsbSHIGisi/d4k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BoM/otNMdVU/hi36qJknNdVQGuDzXUOlbVVrEQoIvSl56ElgXTnr0hCcnN1TUVWzvJMeQuMREW1kNLR9rSxNwa/Gxgg/wdUCjjLWnVajw0sG/0DKI2ElEfc914uBzsyHbOqydb+PyLVsz0dhukPerluy3jn4e67AcxINh5D5YIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SBE/+U6p; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=EE14sK1r19AIx1rf/C6TQqAU+FBjyDZFl2gWdWZ8OxhBuY0kOYjk+1ViPVUh+yy0UN5KDDzQ+y4Bub3KukN7iJSND3qzKyU/kop2XcQICrQzSWg+EeboTdvhFM9IpmzzGSHC9gA8K5y6SJa65MnOfokWqSRcqg/OhhL7bSe4tP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSC15uXU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SBE/+U6p"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e429a885f6so2428186d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:18:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738783117; x=1739387917; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E8qwzDwdGFn2CeBU5qdUptdR+RuNYBJ5DWAN8nwQPu8=;
-        b=SBE/+U6pNqiac9f2AE+Mi+L/wB0n9/czpmR4d2yToZX5dDz6kVykMDfofxgKwFg1BH
-         L3R61OCJo3JCECKarg02v85VhM3jsj5aQysaK3vkQl/An2GOyZMsnJKnXyG3bdC/x1Mr
-         xI7VL7EbZy4ECa4sw1alBxw1vOnCMBkaoNOPZTzmYXRRDuGcT0vgVPrm1gnobXF9My/1
-         qL4gf/GX8MsJmtVPb8YeVJzgA1sa/qaSnZ2bnUl20qN7BYErG0vPkhw9adhlldd+RJOm
-         c/Gr/lmJ4UixOsDbeZBTJRXIlUD//xUlbq6alXtE8ZxuuDkHvAb0XKjY/jlGxeS8Ixss
-         Iq0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738783117; x=1739387917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E8qwzDwdGFn2CeBU5qdUptdR+RuNYBJ5DWAN8nwQPu8=;
-        b=MB4FGqGNfS5zfrAAdDC1bFHrvHtsIJC9uE0mtt6RJ5Fm7Qa1M1/wJSyRdfPuKOUIps
-         MFTMshB70wOiEc9jxKO0Qfx3QS94MHO0qW29naz03dVEM+EJyNj+DeCJTiEWcGNlp5Kn
-         9+n6NlXlfftgtsSjEx4mkQoRMqlX7FCKVQtNjqmH5qcxELwX/vQ7pOphgFueoCae17Hu
-         hLIhzbprOf255p5kWGOCOpqf8s1E/6WifIdGrxX1iFfazLGC4o7BYqam8KGW8OLfjk03
-         kFAEnIADbBxjRvvEd+YLk28ZXriFLGYe2dIcEzRoqyd6ro70/9yniwVKByY9awkU2FUF
-         EyWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIIFFmBWXNp0MVJlugx8ZqB/PBML3dTYUZ0f2CocjdWJXPyPLqtQmhXlxhGefo60sgGnpY1MkChBr8OnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9GyF3uHQNpucXeruryQlAqhjd8C7f1MHsjxalyxoe35PP4hr7
-	/qFLSQAv7ivHG0AMrhPDyk9oQown5zi91VpUqwVoApY50RKpdAxUzdWTqmc7GYY=
-X-Gm-Gg: ASbGncuOUU8pA9ZRaobH6PncExAkBsEvEx65HrWIP3ApafrvCrsH60k4gUSOu8XDLoK
-	rvl/efAwsV+Jikc68ZKP/dqgt0yDivF7ZhBq5qyhyTXmlZvQJmQ5kr0+/aCV1eKDAneq+3vXXXD
-	HFsEKmdGtHfDkwQ7UOGtnAa5kj8nTfWEAZZ2HogtAbx3dfePcKvJ/dCsi2NBx8+nwujbKlkwOJH
-	SHnifG45mIDXl2TNQOrt2b+KQ72TBzowRLLqCfqPVRvGaNg2LRb1IG7MajqPnSnL8vVbHIOe/Ea
-	RGxHbzYE7SwQy/V/tYM9ZW7ofpdOBDtOqNLHW0Bt+C4i6AYWftOwJmEbK6XBzrQeCluJSgP8HA=
-	=
-X-Google-Smtp-Source: AGHT+IFBZGVDEyC791dt6sAmkuAb3iqn/vqzDlTFUXbWrByVqgD+IDHPq9lEi6GiDD3ACBsbSTEaKw==
-X-Received: by 2002:a05:6214:e4e:b0:6d8:821d:736e with SMTP id 6a1803df08f44-6e42fc4fc9cmr64862866d6.36.1738783117509;
-        Wed, 05 Feb 2025 11:18:37 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2548141aasm77300476d6.28.2025.02.05.11.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 11:18:37 -0800 (PST)
-Date: Wed, 5 Feb 2025 14:18:35 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 3/6] efi/cper, cxl: Remove cper_cxl.h
-Message-ID: <Z6O5i1ic8lCgKN9z@gourry-fedora-PF4VCD3F>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-4-Smita.KoralahalliChannabasappa@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSC15uXU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2121AC4CED1;
+	Wed,  5 Feb 2025 19:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738783240;
+	bh=FXPG38E+cOITfwQN1B7FhCwJ0s8mSHsbSHIGisi/d4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OSC15uXUxXy/aU+/7rLkK0yI6ApEEoMQOFVEraEwz2lAlGuXEA0j5jK5Qssix5s0s
+	 zM5LC18x7RGGbiiMroH2Lvuyw3l0X4W9NBt23vJAnQ6qEzmIrQMeLyh6GcFxEqcRc+
+	 cbe/ZyZgqtqJv+JE0XnkRDNvcw993VfxTUUyFnUCyX2M4G/URdBksJBkqs5NEiHpqp
+	 qspao8+VQKVCHClPpcdAoOaU6c4l7oHBuT85iZbWv+V1vkNnDHVOGBqaFLmfOPBs3P
+	 dJZhfKKXyIY+HA1y4ta7EZv2RThTFaj/FTuSkUNSJpI9bmHtkhOwTdQRebDm53geA/
+	 7lIpw9dJHVgNA==
+Date: Wed, 5 Feb 2025 11:20:39 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com
+Subject: Re: [PATCH RFC 10/10] xfs: Allow block allocator to take an
+ alignment hint
+Message-ID: <20250205192039.GU21808@frogsfrogsfrogs>
+References: <20250204120127.2396727-1-john.g.garry@oracle.com>
+ <20250204120127.2396727-11-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,19 +46,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-4-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20250204120127.2396727-11-john.g.garry@oracle.com>
 
-On Thu, Jan 23, 2025 at 08:44:18AM +0000, Smita Koralahalli wrote:
-> Move the declaration of cxl_cper_print_prot_err() to include/linux/cper.h
-> to avoid maintaining a separate header file just for this function
-> declaration. Remove drivers/firmware/efi/cper_cxl.h as its contents have
-> been reorganized.
+On Tue, Feb 04, 2025 at 12:01:27PM +0000, John Garry wrote:
+> When issuing an atomic write by the CoW method, give the block allocator a
+> hint to naturally align the data blocks.
 > 
-> No functional changes.
+> This means that we have a better chance to issuing the atomic write via
+> HW offload next time.
 > 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/xfs/libxfs/xfs_bmap.c | 7 ++++++-
+>  fs/xfs/libxfs/xfs_bmap.h | 6 +++++-
+>  fs/xfs/xfs_reflink.c     | 8 ++++++--
+>  3 files changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index 40ad22fb808b..7a3910018dee 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -3454,6 +3454,12 @@ xfs_bmap_compute_alignments(
+>  		align = xfs_get_cowextsz_hint(ap->ip);
+>  	else if (ap->datatype & XFS_ALLOC_USERDATA)
+>  		align = xfs_get_extsz_hint(ap->ip);
+> +
+> +	if (align > 1 && ap->flags & XFS_BMAPI_NALIGN)
+> +		args->alignment = align;
+> +	else
+> +		args->alignment = 1;
+> +
+>  	if (align) {
+>  		if (xfs_bmap_extsize_align(mp, &ap->got, &ap->prev, align, 0,
+>  					ap->eof, 0, ap->conv, &ap->offset,
+> @@ -3781,7 +3787,6 @@ xfs_bmap_btalloc(
+>  		.wasdel		= ap->wasdel,
+>  		.resv		= XFS_AG_RESV_NONE,
+>  		.datatype	= ap->datatype,
+> -		.alignment	= 1,
+>  		.minalignslop	= 0,
+>  	};
+>  	xfs_fileoff_t		orig_offset;
+> diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+> index 4b721d935994..d68b594c3fa2 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.h
+> +++ b/fs/xfs/libxfs/xfs_bmap.h
+> @@ -87,6 +87,9 @@ struct xfs_bmalloca {
+>  /* Do not update the rmap btree.  Used for reconstructing bmbt from rmapbt. */
+>  #define XFS_BMAPI_NORMAP	(1u << 10)
+>  
+> +/* Try to naturally align allocations */
+> +#define XFS_BMAPI_NALIGN	(1u << 11)
+> +
+>  #define XFS_BMAPI_FLAGS \
+>  	{ XFS_BMAPI_ENTIRE,	"ENTIRE" }, \
+>  	{ XFS_BMAPI_METADATA,	"METADATA" }, \
+> @@ -98,7 +101,8 @@ struct xfs_bmalloca {
+>  	{ XFS_BMAPI_REMAP,	"REMAP" }, \
+>  	{ XFS_BMAPI_COWFORK,	"COWFORK" }, \
+>  	{ XFS_BMAPI_NODISCARD,	"NODISCARD" }, \
+> -	{ XFS_BMAPI_NORMAP,	"NORMAP" }
+> +	{ XFS_BMAPI_NORMAP,	"NORMAP" },\
+> +	{ XFS_BMAPI_NALIGN,	"NALIGN" }
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Tihs isn't really "naturally" aligned, is it?  It really means "try to
+align allocations to the extent size hint", which isn't required to be a
+power of two.
+
+--D
+
+>  
+>  
+>  static inline int xfs_bmapi_aflag(int w)
+> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+> index 60c986300faa..198fb5372f10 100644
+> --- a/fs/xfs/xfs_reflink.c
+> +++ b/fs/xfs/xfs_reflink.c
+> @@ -445,6 +445,11 @@ xfs_reflink_fill_cow_hole(
+>  	int			nimaps;
+>  	int			error;
+>  	bool			found;
+> +	uint32_t		bmapi_flags = XFS_BMAPI_COWFORK |
+> +					XFS_BMAPI_PREALLOC;
+> +
+> +	if (atomic)
+> +		bmapi_flags |= XFS_BMAPI_NALIGN;
+>  
+>  	resaligned = xfs_aligned_fsb_count(imap->br_startoff,
+>  		imap->br_blockcount, xfs_get_cowextsz_hint(ip));
+> @@ -478,8 +483,7 @@ xfs_reflink_fill_cow_hole(
+>  	/* Allocate the entire reservation as unwritten blocks. */
+>  	nimaps = 1;
+>  	error = xfs_bmapi_write(tp, ip, imap->br_startoff, imap->br_blockcount,
+> -			XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC, 0, cmap,
+> -			&nimaps);
+> +			bmapi_flags, 0, cmap, &nimaps);
+>  	if (error)
+>  		goto out_trans_cancel;
+>  
+> -- 
+> 2.31.1
+> 
+> 
