@@ -1,141 +1,214 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D1822CBD6
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F37022A800;
+	Wed,  5 Feb 2025 09:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747712; cv=none; b=UyHNqE63QGenu0IS+X8jVZcI0f5LroapDs+YJjto+alpNiniqSge0Ilo26aqWNJSgF8CTBHt7t/akZlgqKY5vAwONKRfkI22cKm/cb4SLzKE0kBdFrod9kcFLspFvwq6drHfP8/1YL1DvIrkxJQbCcXfLO/xUiNxBxRNtoaVQ5c=
+	t=1738747752; cv=none; b=CK/ivgleUJJM3z4ZChYRStZ27VghI4oqmOmh4UpNoxQEMFJdsvZEBFfIeVeQUySLJVxkKyWIp2jer/wxnLg9ObRNhBTY3NcNMlqNmeFztcX1CRD9zNH0v07VaRm+YZiRSaYvnWsS6fl3Y/czABDdOelIZDBaqD8jI4qDLQNhID4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747712; c=relaxed/simple;
-	bh=hpqBJBwb47MHOoGFyd/KF46dfDxV+GtQ8s3DgjwCeNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=JWGVaYyVY6g2QdJUY59MNkuiGwh8bh4RTT/hIUCwMiVfI1NooXaWwKakOD2JlhXMWY2fjPgdKHy8SgzW62Jwpqhui9VLwsMYu9H4mGS8YdyMHnpsm+gQ7AwaVDGjp555nI5elOmWwi5R+KScA6bdxHjganO53DFRc7C7jkmxJjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZpnRlDte; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738747752; c=relaxed/simple;
+	bh=Ms21WWQxt0hgCHNGn7VoI88OcIK4i02A5VsFEvG24mk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2qd4Jq2g1ITHYa3B5Ozu6lbiOl/WV3Md34Z9T+47oJnvRcGjvFKMOy5+fTjoeJA1HBzwyUZfPWMsffkeD9IiG3T4BM8nPzEUcC78jo4mBgAbu6NrSO7eWzdIWBJ/+uCE2ysJfu2ThisPeUoCvVONREI/1pPG+88Iu+f0Nbx+ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eg6yHtoI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZpnRlDte"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738747710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJxZpNwhXiHzAqXXfk54vRZnvA5qQBJ34Wvs1FodgiE=;
-	b=ZpnRlDtevZOYaFZXU8Gaow153cA6gOIgtqM/HZCy4m1jsS7JjTWrRxLZ61pzmSiYZlBJbl
-	DKsCGQ2//bFINl1rg+Qn+c5xwPTsB7fA+aGHp4m06Mijaw5hm5mS94saVWnScrqxOWDGmE
-	OyoDfOCS+k2D3UeTTpxJ1Yw4kOj9R4s=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-34-gOIRUj3mNiWKdkWAHtpU_w-1; Wed,
- 05 Feb 2025 04:28:26 -0500
-X-MC-Unique: gOIRUj3mNiWKdkWAHtpU_w-1
-X-Mimecast-MFC-AGG-ID: gOIRUj3mNiWKdkWAHtpU_w
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B858195608B;
-	Wed,  5 Feb 2025 09:28:25 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.72.112.190])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D381C300018D;
-	Wed,  5 Feb 2025 09:28:21 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	ryncsn@gmail.com,
-	chrisl@kernel.org,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 12/12] mm/swapfile.c: open code cluster_alloc_swap()
-Date: Wed,  5 Feb 2025 17:27:21 +0800
-Message-ID: <20250205092721.9395-13-bhe@redhat.com>
-In-Reply-To: <20250205092721.9395-1-bhe@redhat.com>
-References: <20250205092721.9395-1-bhe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eg6yHtoI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8972C4CEE3;
+	Wed,  5 Feb 2025 09:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738747751;
+	bh=Ms21WWQxt0hgCHNGn7VoI88OcIK4i02A5VsFEvG24mk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eg6yHtoIaP23lOBbUoIZktLdaXSm0/rQFB+Gu8dr+q6+oDohpMbSz2yg63hKd5qcR
+	 JIEQigQOx6zSCL8PfwFDkT74//d+oqTy+g/WnEeE9UP5rDeXqV9BLxGh+S9eSB5FCQ
+	 0EH4OaodiU249ytvGjb03wGCsyxxcB6ysVIfWcaagRWsD3RQE40qXgte1c/SSodkak
+	 STW8sPJ3yqHfZTCbEMSHiStohjiCgW6+p701EXd/PQ3EyNGW8ToP6boCW+4mBJYH6M
+	 9GZOR6yUYN177p9P2oqWDE9hTWfwmjDylNbdW650fOmV8bB+tmA0ieFWuJ9AWuGJmk
+	 SqgS9GzJbdTnQ==
+Date: Wed, 5 Feb 2025 10:29:03 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Shuah Khan <shuah@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Oliver Sang <oliver.sang@intel.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Koutny <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Elliott Hughes <enh@google.com>
+Subject: Re: [PATCH v7 0/6] introduce PIDFD_SELF* sentinels
+Message-ID: <20250205-gewahrsam-einnahmen-9b580054f501@brauner>
+References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+ <20250204-joggen-buddeln-29e5ca75abb7@brauner>
+ <7a8a1719-466f-4e10-b1eb-9e9e1ef8ad52@lucifer.local>
+ <CAJuCfpEUusRt_ss7RtxRPP9q_LRwi+Lw+SOq32EUA58s3JOx1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <CAJuCfpEUusRt_ss7RtxRPP9q_LRwi+Lw+SOq32EUA58s3JOx1A@mail.gmail.com>
 
-It's only called in scan_swap_map_slots().
+On Tue, Feb 04, 2025 at 09:43:31AM -0800, Suren Baghdasaryan wrote:
+> On Tue, Feb 4, 2025 at 2:01 AM Lorenzo Stoakes
+> <lorenzo.stoakes@oracle.com> wrote:
+> >
+> > On Tue, Feb 04, 2025 at 10:46:35AM +0100, Christian Brauner wrote:
+> > > On Thu, 30 Jan 2025 20:40:25 +0000, Lorenzo Stoakes wrote:
+> > > > If you wish to utilise a pidfd interface to refer to the current process or
+> > > > thread it is rather cumbersome, requiring something like:
+> > > >
+> > > >     int pidfd = pidfd_open(getpid(), 0 or PIDFD_THREAD);
+> > > >
+> > > >     ...
+> > > >
+> > > > [...]
+> > >
+> > > Updated merge message. I've slightly rearranged pidfd_send_signal() so
+> > > we don't have to call CLASS(fd, f)(pidfd) unconditionally anymore.
+> >
+> > Sounds good and thank you! Glad to get this in :)
+> 
+> Sorry, a bit late to the party...
+> 
+> We were discussing MADV_GUARD_INSTALL use with Android Bionic team and
+> the possibility of caching pidfd_open() result for reuse when
+> installing multiple guards, however doing that in libraries would pose
+> issues as we can't predict the user behavior, which can fork() in
+> between such calls. That would be an additional reason why having
+> these sentinels is beneficial.
 
-And also remove the stale code comment in scan_swap_map_slots()
-because it's not fit for the current cluster allocation mechanism.
+Ok, added this to the cover letter as well.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- mm/swapfile.c | 38 ++++++++++----------------------------
- 1 file changed, 10 insertions(+), 28 deletions(-)
+Note that starting with v6.14 pidfs supports file handles.
+This works because pidfs provides each pidfd with a unique 64bit inode
+number that is exposed in statx(). On 64-bit the ->st_ino simply is the
+inode number. On 32-bit the unique identifier can be reconstructed using
+->st_ino and the inode generation number which can be retrieved via the
+FS_IOC_GETVERSION ioctl. So the 64-bit identifier on 32-bit is
+reconstructed by using ->st_ino as the lower 32-bits and the 32-bit
+generation number as the upper 32-bits.
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 12bb7556c7f1..7448a387621d 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1158,39 +1158,13 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
- 	swap_usage_sub(si, nr_entries);
- }
- 
--static int cluster_alloc_swap(struct swap_info_struct *si,
--			     unsigned char usage, int nr,
--			     swp_entry_t slots[], int order)
--{
--	int n_ret = 0;
--
--	while (n_ret < nr) {
--		unsigned long offset = cluster_alloc_swap_entry(si, order, usage);
--
--		if (!offset)
--			break;
--		slots[n_ret++] = swp_entry(si->type, offset);
--	}
--
--	return n_ret;
--}
--
- static int scan_swap_map_slots(struct swap_info_struct *si,
- 			       unsigned char usage, int nr,
- 			       swp_entry_t slots[], int order)
- {
- 	unsigned int nr_pages = 1 << order;
-+	int n_ret = 0;
- 
--	/*
--	 * We try to cluster swap pages by allocating them sequentially
--	 * in swap.  Once we've allocated SWAPFILE_CLUSTER pages this
--	 * way, however, we resort to first-free allocation, starting
--	 * a new cluster.  This prevents us from scattering swap pages
--	 * all over the entire swap partition, so that we reduce
--	 * overall disk seek times between swap pages.  -- sct
--	 * But we do now try to find an empty cluster.  -Andrea
--	 * And we let swap pages go all over an SSD partition.  Hugh
--	 */
- 	if (order > 0) {
- 		/*
- 		 * Should not even be attempting large allocations when huge
-@@ -1210,7 +1184,15 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
- 			return 0;
- 	}
- 
--	return cluster_alloc_swap(si, usage, nr, slots, order);
-+	while (n_ret < nr) {
-+		unsigned long offset = cluster_alloc_swap_entry(si, order, usage);
-+
-+		if (!offset)
-+			break;
-+		slots[n_ret++] = swp_entry(si->type, offset);
-+	}
-+
-+	return n_ret;
- }
- 
- static bool get_swap_device_info(struct swap_info_struct *si)
--- 
-2.41.0
+Also note that since the introduction of pidfs each struct pid will
+refer to a different inode but the same struct pid will refer to the
+same inode if it's opened multiple times. In contrast to pre-pidfs
+pidfds where each struct pid refered to the same inode.
 
+IOW, with pidfs statx() is sufficient to compare to pidfds whether they
+refer to the same process. On 64-bit it's sufficient to do the usual
+st1->st_dev == st2->st_dev && st1->st_ino == st2->st_ino and on 32-bit
+you will want to also compare the generation number:
+
+TEST_F(pidfd_bind_mount, reopen)
+{
+        int pidfd;
+        char proc_path[PATH_MAX];
+
+        sprintf(proc_path, "/proc/self/fd/%d", self->pidfd);
+        pidfd = open(proc_path, O_RDONLY | O_NOCTTY | O_CLOEXEC);
+        ASSERT_GE(pidfd, 0);
+
+        ASSERT_GE(fstat(self->pidfd, &self->st2), 0);
+        ASSERT_EQ(ioctl(self->pidfd, FS_IOC_GETVERSION, &self->gen2), 0);
+
+        ASSERT_TRUE(self->st1.st_dev == self->st2.st_dev && self->st1.st_ino == self->st2.st_ino);
+        ASSERT_TRUE(self->gen1 == self->gen2);
+
+        ASSERT_EQ(close(pidfd), 0);
+}
+
+Plus, you can bind-mount them now.
+
+In any case, this allows us to create file handles that are unique for
+the lifetime of the system. Please see
+
+tools/testing/selftests/pidfd/pidfd_file_handle_test.c
+
+for how that works. The gist is that decoding and encoding for pidfs is
+unprivileged and the only requirement we have is that the process the
+file handle resolves to must be valid in the caller's pid namespace
+hierarchy:
+
+TEST_F(file_handle, file_handle_child_pidns)
+{
+        int mnt_id;
+        struct file_handle *fh;
+        int pidfd = -EBADF;
+        struct stat st1, st2;
+
+        fh = malloc(sizeof(struct file_handle) + MAX_HANDLE_SZ);
+        ASSERT_NE(fh, NULL);
+        memset(fh, 0, sizeof(struct file_handle) + MAX_HANDLE_SZ);
+        fh->handle_bytes = MAX_HANDLE_SZ;
+
+        ASSERT_EQ(name_to_handle_at(self->child_pidfd2, "", fh, &mnt_id, AT_EMPTY_PATH), 0);
+
+        ASSERT_EQ(fstat(self->child_pidfd2, &st1), 0);
+
+        pidfd = open_by_handle_at(self->pidfd, fh, 0);
+        ASSERT_GE(pidfd, 0);
+
+        ASSERT_EQ(fstat(pidfd, &st2), 0);
+        ASSERT_TRUE(st1.st_dev == st2.st_dev && st1.st_ino == st2.st_ino);
+
+        ASSERT_EQ(close(pidfd), 0);
+
+        pidfd = open_by_handle_at(self->pidfd, fh, O_CLOEXEC);
+        ASSERT_GE(pidfd, 0);
+
+        ASSERT_EQ(fstat(pidfd, &st2), 0);
+        ASSERT_TRUE(st1.st_dev == st2.st_dev && st1.st_ino == st2.st_ino);
+
+        ASSERT_EQ(close(pidfd), 0);
+
+        pidfd = open_by_handle_at(self->pidfd, fh, O_NONBLOCK);
+        ASSERT_GE(pidfd, 0);
+
+        ASSERT_EQ(fstat(pidfd, &st2), 0);
+        ASSERT_TRUE(st1.st_dev == st2.st_dev && st1.st_ino == st2.st_ino);
+
+        ASSERT_EQ(close(pidfd), 0);
+
+        free(fh);
+}
+
+So you don't need to keep the fd open.
+
+> 
+> 
+> >
+> > >
+> > > ---
+> > >
+> > > Applied to the vfs-6.15.pidfs branch of the vfs/vfs.git tree.
+> > > Patches in the vfs-6.15.pidfs branch should appear in linux-next soon.
+> > >
+> > > Please report any outstanding bugs that were missed during review in a
+> > > new review to the original patch series allowing us to drop it.
+> > >
+> > > It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> > > patch has now been applied. If possible patch trailers will be updated.
+> > >
+> > > Note that commit hashes shown below are subject to change due to rebase,
+> > > trailer updates or similar. If in doubt, please check the listed branch.
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> > > branch: vfs-6.15.pidfs
+> > >
+> > > [1/6] pidfd: add PIDFD_SELF* sentinels to refer to own thread/process
+> > >       https://git.kernel.org/vfs/vfs/c/e6e4ed42f8d8
+> > > [2/6] selftests/pidfd: add missing system header imcludes to pidfd tests
+> > >       https://git.kernel.org/vfs/vfs/c/c9f04f4a251d
+> > > [3/6] tools: testing: separate out wait_for_pid() into helper header
+> > >       https://git.kernel.org/vfs/vfs/c/fb67fe44116e
+> > > [4/6] selftests: pidfd: add pidfd.h UAPI wrapper
+> > >       https://git.kernel.org/vfs/vfs/c/ac331e56724d
+> > > [5/6] selftests: pidfd: add tests for PIDFD_SELF_*
+> > >       https://git.kernel.org/vfs/vfs/c/881a3515c191
+> > > [6/6] selftests/mm: use PIDFD_SELF in guard pages test
+> > >       https://git.kernel.org/vfs/vfs/c/b4703f056f42
