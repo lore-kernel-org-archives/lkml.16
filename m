@@ -1,97 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAF622A7EF;
-	Wed,  5 Feb 2025 11:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DE8151988
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738754982; cv=none; b=EJ7LTgS9jbTWBpa3Ndz985Fm5PgFHUyz0n0zhXX59ARX9cfBj+KeorMKr9NKJCe9qoBTr+S9mhAsBrtMfne9Z5famSHrWgeDZROEjB19NdCeznJXft7nwBHiRlq5eRUkBdLuLTM09CNsaKBF8jyenHGotzJ98B/p+8N2ul5nmgA=
+	t=1738755068; cv=none; b=D04f+KFgf+ooZww2H8ZzJ8B8n3Ro3nzk63gRDTOdnPVzSY9+fYWOgtOJGv5uxf6PuR6gT2b6H7DFIP971tXbW/+IwyGsSPts6dwIIWSVPDtmhfolR6PhAvjq3TSiJmnrrwHRLUP6jHSK0OxQ099UNEbF8kQYvrmAgTaBCwbpt6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738754982; c=relaxed/simple;
-	bh=Zg4CXwqpT5G7TRoRn6pGkMYWE2aidbzifflMeNWqaew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JM/EuW1C4YmS7ssvlttMdRKvo+phcQ1Z4RcsEMcKq7aIF3f4WTdU1NJXDDJwyI87vLxKls5rW94dZcT6Rvb5QbAS/hpsgbHVNeuUprWII5x8GHl6t3FE0wGI4L16QlD7oCqYpzuOgejrXhvp7xctLexiwZoJYd0UkOlDLxSAbhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Be0Pq/ma; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Be0Pq/ma"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738754980; x=1770290980;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Zg4CXwqpT5G7TRoRn6pGkMYWE2aidbzifflMeNWqaew=;
-  b=Be0Pq/ma1PyxBf/xb5pZ+/mSl0CfkHI99pSYNXHqJFcj8e0q5il/mgI3
-   BOjWEU50XW0ysYAJaZ9p3N+qXciTeURmNhieBVgm4dZEyqyiWVhiYRlZq
-   Q1ir1LT048eB7x9eapFMOSaDwlHLdIkxiSWMQ1HEBkNTjqXSiHl+xlqlK
-   CwwvgnFcHwwG2Sr5ef+DD+sDzLg8Opr9Nt4bJ3/he0ErVTsPnagnuWh19
-   zbk6eTrHsSddmF/H3xH14XsX5Q2ZgvLPcRSYExtq6YQbV9vpM3qAQR2IF
-   MA2MjZbepK9nyHul+UV+lq+gOP6FYDvmQ4jULOdDoHsyqo3u2gtVFK5Ux
-   Q==;
-X-CSE-ConnectionGUID: +LHtaIyJQPyTNtucUOPhdw==
-X-CSE-MsgGUID: aCpkuQRDTqa+8JcyiwEdoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61785535"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="61785535"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 03:29:40 -0800
-X-CSE-ConnectionGUID: T+ewD1r1QpGvqH7Wh+ynXw==
-X-CSE-MsgGUID: pbocRj04RXCyFpsKJFSr3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148079338"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 05 Feb 2025 03:29:38 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 17946399; Wed, 05 Feb 2025 13:29:36 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v1 1/1] gpiolib: Even more opportunities to use str_high_low() helper
-Date: Wed,  5 Feb 2025 13:29:36 +0200
-Message-ID: <20250205112936.575493-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1738755068; c=relaxed/simple;
+	bh=p9pTfNA91gQ8F24o7f+Xi8usFygXQvHP7QU7uUUdy2I=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Ax4wiN3iHGQLc5FmYnR0YYAbeOgGWmvQgyL43urZrv+iO0LAGUSI6xtDcNPpLJyjrYYZYFH5SfVesKYsdOJBdaxcE42o/bwjQMip/gfFSzTw69urggr/rJI64sMbl125W1PEpTcWmpPEURGgdQZMV046NkzWqLXFb24GEpsclxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so129377215ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:31:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738755065; x=1739359865;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uM1wHvZ0CSI8x/B7c6PYIzX+1M4pMcTrH+iiZ+5/lVo=;
+        b=G3ODyimU4WmZOVvWzDzRJtkZ3vYZpG2X8Fg/VlHXXlOjTzORhRwFYLqtParpqdgXNS
+         2izHuFBltk+mE4sD1nQmppnGM551hTIBHk6rqsXQx/KG/X2RzuuBRaGwOi4Vp87KHMKS
+         njtu53NneU3A5JZ+kFZjFKA+3ufYEGrWeb2caEuqvWf0gjBZDMfgoB8Drc1ZSgLZsDyO
+         mPCX9zBaHsO7sKvTyvg5JODfOAGmdQd9wJDQaNtQLJumh6rN8CIcmvF9drKT6ewnbXEO
+         9sKUtEoQvaLYnNeSOP835q8Skf4Tvtcdp3LUQstv1FNhkMHtFRUZOKsDLtUE+5Xw7g2v
+         oAyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBltys17qsQ2RwrWV2phs2aiFlFrOQVzH6Nw8Wtu3YGtC0YSkUgZww2QwzjdkJ1qww2jst//kgQiOg8qA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoursIO/TXsN0sOmIn0y+0HvN4VUAm4MOlkzAKm7bcm1H/xHtT
+	p/cCULlZyznuBi4wgY2akeidvqP+R9+3jhM1jvCZufKXgSWxZZ4bwVQVhZ7OkwOOP/lepke8Xii
+	TFuB+d/90M/+EL5C9TBTaLkyM6/dfyXDnzcIApUpyf58f81LdbxDLKC4=
+X-Google-Smtp-Source: AGHT+IHNQvq62cwbIR4uNZoTWWC7erfAEIB877G+i6Cnc4j3fw48y2JvPErUbO7pyYLGszO9BW0XdMJaKksGtcD33fVKxytjJVi9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1b0c:b0:3cf:bb3e:884c with SMTP id
+ e9e14a558f8ab-3d04f6e46cemr22684915ab.16.1738755065703; Wed, 05 Feb 2025
+ 03:31:05 -0800 (PST)
+Date: Wed, 05 Feb 2025 03:31:05 -0800
+In-Reply-To: <20250205110528.1938-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a34bf9.050a0220.50516.003f.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
+ skb_queue_purge_reason (2)
+From: syzbot <syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The one of previous changes modified the library code to use
-helpers from string_choices.h. Nevertheless it misses more
-opportunities to convert the code. Here is the second part
-of the conversion.
+Hello,
 
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 2a58b84766f8..98fba0c392ea 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4721,10 +4721,10 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
- 		return ret;
- 	}
- 
--	gpiod_dbg(desc, "hogged as %s%s\n",
-+	gpiod_dbg(desc, "hogged as %s/%s\n",
- 		(dflags & GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
- 		(dflags & GPIOD_FLAGS_BIT_DIR_OUT) ?
--		  (dflags & GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low" : "");
-+		  str_high_low(dflags & GPIOD_FLAGS_BIT_DIR_VAL) : "?");
- 
- 	return 0;
- }
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Reported-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
+Tested-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         ed88b8b8 Add linux-next specific files for 20250205
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=150a3eb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2d80d4f62382148d
+dashboard link: https://syzkaller.appspot.com/bug?extid=683f8cb11b94b1824c77
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1680e318580000
+
+Note: testing is done by a robot and is best-effort only.
