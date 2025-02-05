@@ -1,158 +1,133 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3E720FAA0
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58F420FAA0;
+	Wed,  5 Feb 2025 04:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738730146; cv=none; b=Hn/lVmNzd6uG+H7u67sSvZpU7bbz2cqfJ0b7pG/rPwTU+LRA7STonBEaHvNgFWSPxwEqbXUQr5zXcNwZlKyegXlPe/+hq9zJ8YRfUUJ/Au8tNs/E3VvA1NNOomQpq+fV9BBo1f29dzNCpActmbmX6+fD8UnnssINRyDcDh26Q4g=
+	t=1738730638; cv=none; b=TF3j9TSSKS3cpMC+8zhYx3hBXAuE5wWYyodVnJkNUUU3++QYTx3et+hOxh5XxQezENuoS+6NB1Chu/ISgfgi28wqYHI7wMRCAyx4d7lywHwEi9pkiw0d8IIsf7gtkS2A0OgY42WElQ+plK9Dvt2qic5+OKN96hzglxB4l4gmoPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738730146; c=relaxed/simple;
-	bh=D2nc3f11JUrmao1Ehpaxl4jeDlOVm96uFA0pBbXk9Go=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rhAy6Y8pHBpsJSj6pWGLSNO5U78oIOhLcH5sCOyPlKPunzLXqDpB+kLPw5nMOrU3r8LkO9GjHHbc3EwhZj3s7SQdzNVc/7h13uzQxsxDV4IGXzW1XSl6TJfDL3JxrtJwbXOwP5x0+9pNNOHR/ckKDunqud23+fhs2s/amFTBskE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net; spf=pass smtp.mailfrom=telus.net; dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b=OZJ2m0RB; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=telus.net
+	s=arc-20240116; t=1738730638; c=relaxed/simple;
+	bh=FCeGUPKsvvCyKeFqox4OE6RFUhrCVn+hS26N19D9xAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVrATZ5JirYjXz0dwXuLBDOy/4m0Adn0DobfUehmf1ugasZ6Lz/cb7a3kEr0kj9VZl6bIacwv0Ma2PqUcq5slALiGrS2TJUVTwVf/p4W5YhpIXBt4L4UCusxPSsqzF/y9OxwS+tvre5w1Wh0ea9WltDSeZn/HsH+kxeNZ3QsH6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvxmL/kz; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="OZJ2m0RB"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ee9a780de4so8416861a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 20:35:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvxmL/kz"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43634b570c1so44710995e9.0;
+        Tue, 04 Feb 2025 20:43:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=telus.net; s=google; t=1738730143; x=1739334943; darn=vger.kernel.org;
-        h=content-language:thread-index:content-transfer-encoding
-         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o0i7GnKV2tM1XKrg7ybPY0GD/aYFraHmPjzLGFtdcJA=;
-        b=OZJ2m0RBMvZ0DwSte1L8CVMtdfeRTMYIVcxEKfequ5Ew70DSEWzVB1XrCEfFWQVvjw
-         iI+ePU7z4XkYCEyVqqnKIUyGdjH/MKyScVdQQmN2wDKmWuSDBkBClWBipRxywK82e0nx
-         G9N/SZ4hWIl3auoYhKT+7igo/TIKzraiFjGP5qLL5W9+sPtAJMug0QHBVw3HCGFmgj6a
-         dZyFtASvX8Nwq8MxwLHKCs+i+qJ6CrBcPkAAUyhEnqsx4w0g5Au9yZ81Xww0WmU31D7Y
-         K6wATyl4w6eojqsRA2Wg03+aNlk/prBeshiRsiWohjtqJTFqxjJNnnwrYP1ONIg7jT/I
-         m48w==
+        d=gmail.com; s=20230601; t=1738730635; x=1739335435; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MeueWQH2gkF6PFSsIyc1iKuZuH/4fSL+B6k2prNZ2+w=;
+        b=YvxmL/kzgMIar9F7tXs7c+Enjt6/s1dipF31qgZ/sSml5+DlVj0YWEFU8omp9MuA14
+         nNgm6Rm3Q8ttrkupvFUcTkDNH3pyh8Wa68aR6CfiWEJdT+JDm2AjDpKNBV1C80NIbeZy
+         CLvdZLBWCG1Xu2sPCIW2B12lfHgEisNtLXHTTG0FFOR5UCoDjsotvEBWViEI/UprXIbU
+         /QTHFY/wcAv/2YHwjCbnRKVBD+Tpn/pX/v8ynTqItVozQBtydRA7hsjPJX/2APtToaEv
+         9PvdizbGYAmCzx4VX8Wm5RYVvzFQsVS/Jqi8N27unbUhamSGY+QODVsdJEqQhbzc1HxC
+         oJiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738730143; x=1739334943;
-        h=content-language:thread-index:content-transfer-encoding
-         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o0i7GnKV2tM1XKrg7ybPY0GD/aYFraHmPjzLGFtdcJA=;
-        b=V9f1rz3Y2kIuB/cKCMb72O5FsuNGuDl+zXxzyTjpfAT6qfFaGjKBp0mQrh/WgfzmqL
-         daCMMBVKITVwg4nWleaPAbolCKuBsnOcqcYyf/fkHkiimbGmGPA7viM9FBoYE64ppZmF
-         BulUHuNLSZ2pDeX06nYnACjK5ZBvqzp61gTrY30LsdYhpSsfIIga1pv6si1WoLBm7mtv
-         CAbDBgMhKMFyg3thJLXBvkhRyIZVKhF8d8MZH9UkJLp/S62qv/yqzHJ91pVHWY7m7OSF
-         Aduc6GQ8pwrQIQdkck1kbe40bFA9t9dQEp/RAUcbEcfoXnlki+4CNq49St8Y3axJI0Hu
-         zaGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqFPBncUdqRINSpFSR/sWhClI3bdSm47EbsJJUAo29DRaZ6RqYM7fJNaS96fcSauObbnoA0TslgZYnpYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHZvb0zsmd0+mAEvoBTW59UJzES66DxFu4208PMrgszI65bVSW
-	wa3ICFY1AGgScMKSig6l8r+eIOLRySiNmkLMqVRGfXpgp2h1Wm2sRvYvk7iz/14=
-X-Gm-Gg: ASbGnctD7EkaspE+QdOpPNwLLYq7gH4kuYsReVs9rJi86+tbXFZQPwqoMgA5m+8Jd4l
-	JDWkzV83WvBafOIQqVhKoMN0FuVkJnf2AsiDp4rmjhgUPBj3a5rzYDnAntHB96LiQFyRfloYSVJ
-	lsomzhz2MYWenGaJEeI8ybPkRwyiheRB9kzHqNX17EveGLLIE1D/JJtrWq3EuRIx6Eiec2jo27F
-	nLiDQFxlEoh5yp/WvIweZu42amZhWE50+XZ/IU6ybXwFGp3KLbbePGsvqj6sJQAaswrYWWjZeDA
-	elZ59rDxxqsRQxxyETuge3iK7Ie72uHEDi6qyC5bPxuKN2GA4pUTGknj
-X-Google-Smtp-Source: AGHT+IEx3NL6Eik+ychf6Kbh7ukJviC5f6VHJ0vVfCGb6wfOY6FaToj3HZSjylOnWePqMiVgwLatWg==
-X-Received: by 2002:a05:6a00:3a19:b0:728:b601:86df with SMTP id d2e1a72fcca58-7303511c20fmr1933950b3a.10.1738730140950;
-        Tue, 04 Feb 2025 20:35:40 -0800 (PST)
-Received: from DougS18 (s66-183-142-209.bc.hsia.telus.net. [66.183.142.209])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631be61sm11774723b3a.19.2025.02.04.20.35.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Feb 2025 20:35:40 -0800 (PST)
-From: "Doug Smythies" <dsmythies@telus.net>
-To: "'Vlastimil Babka'" <vbabka@suse.cz>,
-	"'Andrew Morton'" <akpm@linux-foundation.org>
-Cc: "'Michael Matz'" <matz@suse.de>,
-	"'Gabriel Krisman Bertazi'" <gabriel@krisman.be>,
-	"'Matthias Bodenbinder'" <matthias@bodenbinder.de>,
-	"'Lorenzo Stoakes'" <lorenzo.stoakes@oracle.com>,
-	"'Yang Shi'" <yang@os.amperecomputing.com>,
-	<linux-kernel@vger.kernel.org>,
-	"Doug Smythies" <dsmythies@telus.net>
-References: <019401db769f$961e7e20$c25b7a60$@telus.net> <8f84691b-4b48-46da-9c47-e1f41bd503e1@suse.cz>
-In-Reply-To: <8f84691b-4b48-46da-9c47-e1f41bd503e1@suse.cz>
-Subject: RE: REGRESSION BISECTED mm, mmap: limit THP alignment of anonymous mappings to PMD-aligned sizes
-Date: Tue, 4 Feb 2025 20:35:44 -0800
-Message-ID: <006801db7787$6ba88c60$42f9a520$@telus.net>
+        d=1e100.net; s=20230601; t=1738730635; x=1739335435;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MeueWQH2gkF6PFSsIyc1iKuZuH/4fSL+B6k2prNZ2+w=;
+        b=wlKBWkWyaWamtmFDd/Enim/L/MQpIfAHUU1J/vb3nTEK4oF0/lTKnpLjDlH0h/6jef
+         cGL6FQ8iJdTCgILw7oDOLdwArG+My3d2swGiN/BpE7mwPXxTZpR6fiASsSzudPvUP/sV
+         nDLn8JpmeDi3yWsFsr8KVvSgEqSZyBBfYsjrQAgX8JU80UhrHYl2mXYXSrxwGJAB5idn
+         x5MEUpn9YNcYu6aPS1vWh0WPB+e/XaUQZ2Cfb7jWZPDy2KSIuznMKJReDXBCNg+ixMY7
+         DfuYikfU5rtZO010l/FxprV+ipDDGZVOXYpbHJjsiPjiOWmqGqVijEcomor91hQ0eWPc
+         bdtg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKOlPFiwtSK6zKZXIovRK5YA1siQUg3y9MfXT6a0FIGgFh8NbuGvS4uIgWdc5TfG/E37GsLoJGu0IC@vger.kernel.org, AJvYcCWAuorW4xbVbJFbD8DcOnAq28xF7iuVRl8t/bMOR6DQh6hDJ2BLgdK6w92uYtgevOb95niamU/+NxfrSCcp@vger.kernel.org, AJvYcCXZx180l2s5HouA0qskPMQi+M+WIeVTYSzceLUSaBFpwC2aPcvLrYz+uoJLOqa6sQMsdyjU3yGl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz57iAOc1hK05P8cYXGBE2wPJXfpaFOtW+m63rLEXuN7gYhWVfW
+	X9ntPCiWxrOsz0yWxvms/O6v/jkX568+lnmNI8K0rxi0Rc8DI6df
+X-Gm-Gg: ASbGnctjOXwVOpNy/ZLAf7ynZ50E8881lTby/nMc4zEjQjq1QkzUhjEeFg5bA1UPNrt
+	BVGnHDT0zcxSy/tErc0IwSKOouo9etOWDNUCTRRoCMzYO3+4mSyrInEjjv/DnfsS21hOMsCYwdr
+	jEMcEch6W+LcPRlX8CjnZurPgs+m5DvXmqOFazGTUalPhuFFKhpopT2rVpOBj8uurCYIzrRR8EE
+	L0nQx22Ue47ApG4ed4BDiUyG7o1ux58G9eBkcsPTQT1P4nsUOJ65VsYcGzycJ5MMkTVesUjt3uk
+	E8wX9aclSbeC
+X-Google-Smtp-Source: AGHT+IHim/qQSXAp2trAKetGQxzqxN/o9+n5pBcBGfwYnNtjzFKGFwpRx5LFDGnn1oQq2RDf6KAWng==
+X-Received: by 2002:a05:6000:1445:b0:38d:b114:4be4 with SMTP id ffacd0b85a97d-38db490f4fbmr629649f8f.47.1738730634562;
+        Tue, 04 Feb 2025 20:43:54 -0800 (PST)
+Received: from debian ([2a00:79c0:661:ad00:45fb:7d1a:5e4d:9727])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dac89b519sm3390949f8f.100.2025.02.04.20.43.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 20:43:52 -0800 (PST)
+Date: Wed, 5 Feb 2025 05:43:49 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Davis <afd@ti.com>, Andrew Lunn <andrew@lunn.ch>,
+	linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 1/3] dt-bindings: net: ethernet-phy: add
+ property tx-amplitude-100base-tx-percent
+Message-ID: <20250205044349.GA3831@debian>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com>
+ <173867928985.2681882.12579959912610885418.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGbbLw3ETZQMoAhshCewrgzRiltpAFpZrO4s6zmikA=
-Content-Language: en-ca
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173867928985.2681882.12579959912610885418.robh@kernel.org>
 
-Hi, and thank you for your reply.
-
-On 2024.02.04 03:04 Vlastimil Babka wrote:
-On 2/4/25 01:56, Doug Smythies wrote:
->> Hello,
->> 
->> Note: The CC list is a guess, and I am not on the two vger.kernel.org lists.
->> 
->> After observing a 30% reduction in the ebizzy benchmark performance, I bisected the kernel and got:
->> 
->> doug@s19:~/kernel/linux$ git bisect bad
->> d4148aeab412432bf928f311eca8a2ba52bb05df is the first bad commit
->> commit d4148aeab412432bf928f311eca8a2ba52bb05df
->> Author: Vlastimil Babka <vbabka@suse.cz>
->> Date:   Thu Oct 24 17:12:29 2024 +0200
->> 
->>     mm, mmap: limit THP alignment of anonymous mappings to PMD-aligned sizes
+Am Tue, Feb 04, 2025 at 08:28:09AM -0600 schrieb Rob Herring (Arm):
+> 
+> On Tue, 04 Feb 2025 14:09:15 +0100, Dimitri Fedrau wrote:
+> > Add property tx-amplitude-100base-tx-percent in the device tree bindings
+> > for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
+> > necessary to compensate losses on the PCB and connector, so the voltages
+> > measured on the RJ45 pins are conforming.
+> > 
+> > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/ethernet-phy.yaml: properties:tx-amplitude-100base-tx-percent: '$ref' should not be valid under {'const': '$ref'}
+> 	hint: Standard unit suffix properties don't need a type $ref
+> 	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+> 
+> doc reference errors (make refcheckdocs):
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
 >
-> Thanks for the report. That commit fixed regressions of other workloads, but
-> since it's tweaking a heuristic related to THPs that can have both positive
-> and negative consequences, it's not surprising to see that another workload
-> can regress.
+Thanks, missed to check. Will fix it.
 
-Yes, I had read the related emails and thought that might be the response.
-
-> Since that commit is implicated, there should have been a matching
-> improvement for this workload in 6.7 thanks to commit efa7df3e3bb5 ?
-
-Yes, I also reverted efa7df3e3bb5, but must have made a mistake
-in my testing yesterday, because re-testing today
-I got the same reduction in performance.
-
-> I guess one option to proceed would be to check what kind of mappings ebizzy
-> creates for its performance sensitive operations, and see if they e.g. were
-> backed by THPs before d4148aeab41 and now they aren't. Maybe some simple
-> adjustment to ebizzy's allocations is possible to achieve the better
-> performance always and not rely on this particular heuristic.
-
-I'm not going to modify ebizzy, because I don't really care.
-I was just reporting what I thought was a regression was all.
-
->> As a double check I reverted the commit, on top of kernel 6.14-rc1.
->> I had to manually revert it, due to other changes since then.
->> The previous performance of the benchmark was restored.
->> 
->> I actually use the sleeping-ebizzy benchmark [1].
->> I use it for idle governor testing because it has yielded interesting results in the past.
->> And sweep over a range of sleep times. Example graphs attached.
->> 
->> Legend (regression average is over interval range from 400 to 3600 uSec):
->> 
->> teo611: kernel 6.11, teo idle governor. Reference.
->> teo614: kernel 6.14-rc1, teo idle governor. Regression 25.7%
->> teo612: kernel 6.12, teo idle governor. Regression 24.4%
->> teo613: kernel 6.13, teo idle governor. Regression 25.1%
->> teo614-revert: kernel 6.14-rc1, with this patch reverted, teo idle governor. No regression, 1.4%
->> menu: kernel 6.14-rc1, menu idle governor. Regression 26.4% 
-
-Kernel 6.14 with both d4148aeab41 and efa7df3e3bb5 reverted: Throughput reduced by 26.0%
- 
->> Example command:
->> ./ebizzy -m -S 20 -t 128 -a 1 -i 400
->>  
->> My processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
->> Distro: Ubuntu 24.04, server, no desktop GUI.
->> 
->> [1] https://github.com/pratiksampat/sleeping-ebizzy
->> 
->> Doug Smythies
-
-
+Best regards,
+Dimitri Fedrau
