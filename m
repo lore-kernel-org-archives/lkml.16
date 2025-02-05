@@ -1,136 +1,96 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05871519B4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B835A37160
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738769390; cv=none; b=ML0u3+9pJDUvHkt/S4MmLdkFAxGtlsqbFwy0rNoYPzM7nQpOTo3wAXby0X7kgHmkF2Pkl7wKAhGI2kTxNI0gszU7w3e5zQsguNCWqdz80Eml1VK6Hid79RK3+Ki99V39pJlnQ5I704dYOmFq+ab2coE6F+GrdWFgl0MYd22hhhY=
+	t=1738769458; cv=none; b=nuc5Gxyo3eHbxPnsp47HRX4dZHEjtuuTFm4brNkqgpicfNsiLa4S48ucaZAD79Bu2hu73JruwK+iZhIKKnakoR+tEsWepYDhYpisgmUHlGg87Tezk5UDRs8fKtKbW58xJaodMGOfNMN7WaSsPVKpgiCTtTIDuA8bJZLlCIyEoWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738769390; c=relaxed/simple;
-	bh=FvXY0J6HFmz+F4kGGhdiUtByaCV/93S7mXHV8f989j8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BZENCqlvV5EMQbL8C4KmPqwe8ycGrIctmclhL7EFAtoSkf/4r50AxI38rglLAHzgcNDOHCcr0/PsWOVxnl2zD1+scc2X5j3BNH0jPft/Y9g7u/oBa3h9uF1328wMCxjkJg5jxb0w0NyM1S3COyz0M5Vm2v838flHTLqXGiSe+E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=esxjg95g; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1738769458; c=relaxed/simple;
+	bh=6Adut7x6V6xQvTZtaeGcGI6AN8WxglbwfcIn/y0VqWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ILEg4FmvZBhh+BDICUjyTAPC/0sF6uiXEA4D4jYsbaE7acOGNLhKzl2a8YwMGBxo4xnitMUW7KevHg8ygH9kkmf8hJuG4E/7Fd3iW9Le1pZ2JNHcZDBoqq9+FzME5788p31iuM8uEsblr0x5/xUxZyqYkVKWr/zYjlRLRtdP6po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xx/Z87BR; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="esxjg95g"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so3652531f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:29:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xx/Z87BR"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21661be2c2dso118236475ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:30:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1738769387; x=1739374187; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jC9QV0bJcgZgqHHH3SUMbf/vptPD4PQ0vRL1kkv5HIw=;
-        b=esxjg95gxLvoL4tfhbUY+MXrYWaZG52vA3YB9LDe45kATW8TzQ6Di9tvF1iUim3o8B
-         /WgNjBvhPa+rmWw80lJW3lBaP4cXiJd/1G1kHhCe0HNdCD21hd5g5P+SNfruYh21OZKN
-         +AkurBHF2ueds0jGGnX5YMGz7gZ6shHMUgI7c=
+        d=gmail.com; s=20230601; t=1738769456; x=1739374256; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FqP3iK2lT7xQ0HRnqx334ocupkN/6HOvXfde+HjeQTU=;
+        b=Xx/Z87BR/MHcGcT+Mg7fj28xx7qzab9ZPEsd68+LuTbqi0NPZXlmgMICSVrm5EQUtE
+         6SzrgkD2IV2T3SawWs3fVPiCSFAZoYajMe06MpyRanuxW1rUxz0b5406RdffKa56zRxk
+         54BaVMtnMWvrb9VxWVzek4k8Ypq488JLgvrNzMLGhYhtD2vBQsqOy9DTxLC+ONUOZ8v0
+         f7hB4OgjSLMpo4kFojkOAEHtp+oN0TPwXdKnhH2C/HKqY7zTNQxaGjKltEm6/VXkQbPK
+         /po6YS1SCcuhz/wr4eU0l9hGQsBh9xTuRpEXvrxuybGiSzJ1ZX8pa9YuzcUz3iG8WcU6
+         ocvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738769387; x=1739374187;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jC9QV0bJcgZgqHHH3SUMbf/vptPD4PQ0vRL1kkv5HIw=;
-        b=iRRdkY6mZErZBZxTS1xn54q+TaWAJ8xZ6rYdQkQGqNYu2NyfzTk3qFEaB1OLbDO/f1
-         qdv0bN491fpe8awavfuNf8stHR/vMvE9cjZ1EtI3fuMy1Y0E51lzLv1FjttMdE+FmwrC
-         DTafZrXyb0UvHWRVUyCUFQAlucvfY0EsSdy7wRfDizzZyh/URVS/318dqza3XhxJYeAU
-         qphRhPwWspNeNZSUUH1PAyYyQ+ORzRfm9ykpgUIw0y7RI0bRa8LTYgSCHDmPfsbuFocC
-         Y4C64W9sc9O5nmOxkmLldNzgCl5quoRGZQtpNMs7QTjYGEmRsigRr83VosmP8PVSSbPc
-         WsHg==
-X-Gm-Message-State: AOJu0YwuNb/9JjHErKVTTg8ZVtv1CbczmmjQ1HTqTTCPgKxWKpDk9Bez
-	Rjk+CJxd9lKprAWYegxxFvK3EZ0cTRI2WhL8QUFUPQJV5s3C5PCj1r2EjJC1oOrolLUnF3/5KAI
-	Q
-X-Gm-Gg: ASbGncv39EDpnC3+wg+JrS9p2mnZEpInIktc9ioQZX4POO1Pv1JyOXrUJ9Wxxgppz6X
-	bXLTtwGwyM8afj6/TIQLmted7InKecxELXteFbBTTUWZttcKKwTN7l9lpibpwzDPWbYN3nq2Vfh
-	Yb4x1Qvfr2fRM1ct0VdHMYMkTSlTPnVYUT5ecE52cKSKsA/olOZ3HbsdObXo5cLZxu+if8Zs3Ei
-	tzl4crcBcEuXxP1LB35cyXys7t9nCyb+WdCGumD4pSVRq3IQ/tBwLg6xQJD6mL5NnNFF3xcrZ/t
-	GzdPpOjxLPSa6TDZAn/2WjELzntsmbOBiMJ00i/n71faj9HB3Lc8fo2w
-X-Google-Smtp-Source: AGHT+IHUegMKoF3Uu+JDrnonpKTLGgAqfUbpAC5vcQvzwsUpc+CNMtcSoxp8JpOvJyhpCCI3zm2NQA==
-X-Received: by 2002:a05:6000:1868:b0:38a:4184:151a with SMTP id ffacd0b85a97d-38db48fdf85mr2428469f8f.37.1738769386468;
-        Wed, 05 Feb 2025 07:29:46 -0800 (PST)
-Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.42.151])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38daf999747sm4475386f8f.19.2025.02.05.07.29.45
+        d=1e100.net; s=20230601; t=1738769456; x=1739374256;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FqP3iK2lT7xQ0HRnqx334ocupkN/6HOvXfde+HjeQTU=;
+        b=TEvpzOQtsm6jdto5Gn7AMdnaUQd2ku9iR6+7qLZA2dNSexVBha6xEkCeaphFtjepzE
+         evd98DJj2yXde/VlWPboX0ywgSt2i1z9KxuyyLF9hfO4olrZNsPeVnZNLPHJNG0acJeQ
+         vqAHJ24nYaG8vWPrRc39+HNv+XJyxCuL4sNDOGhVfkoJiKRD1Ydzn5QUMHbTzxyY4Ruy
+         3VdpxhSUnNDe6P88IuJlX8W+YVxFwNQGcZ/FH/fW0ajDa7Ywkzs4SbMNkEzyGjF8W6F+
+         sigfX1mJ/u5GbfiKFKZSKIYVf/7+O3Y3hjIgBEfe/ERlLs8xya08Vwdj9+hdf29IL7M1
+         A/rw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+eD/7a52T+tv+4AY+NnEkasG3oLuD6gtl3CasX53d/7+fYTBOOwEhuq+fiq8X/Xgix5LnsDT462YWeB8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsOq6mHCewcXBw+1mw51Ol5dVLUbBlg0iI74KAsbDxo2UsohDl
+	1MGDRSnQIJkuo3hcO+x8A2n9a5QyA3Ql8Jm+pU1Jojymu+iVqHBJ
+X-Gm-Gg: ASbGncsX/RQSgNh+Cud1OKN1/djZf3CTjth1cKSf/YosJ8eXgTAZPTLz51ZqxGtWVjB
+	/Xng4FfWmqSBTpqud9YcOoA44rq4+hBWjnrvcRjDBwJ6v0LTj9utI9CopUVm4I7VNZ/nMxPqPKa
+	+V7nBQnZtKpQv0BhZiEU38eYRq47v1FwQRfZBnr+02m6nd+vW2p0Zzl4dYZIoqNONa9I/UuUiTd
+	y8vOivUiIyhSew+hZSqXKpPw4ROrm1Zpsu1oP+n6Cf89ndw2wVj8A806pK1rticbl2DJzgSBr7N
+	dz/4MOeQ+0T/CX9y
+X-Google-Smtp-Source: AGHT+IGiauQLaccp7xXJv3nsoyF82ye16u6U356Jl2t+EHAnlHeWDjmfMyQiES8VZARAFDHzEadvow==
+X-Received: by 2002:a17:903:46d0:b0:21e:ffaf:8908 with SMTP id d9443c01a7336-21f17ecbd38mr57191675ad.34.1738769455588;
+        Wed, 05 Feb 2025 07:30:55 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:5c49:8415:dbd3:5f54])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f191ee04csm15371165ad.250.2025.02.05.07.30.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 07:29:46 -0800 (PST)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-amarula@amarulasolutions.com,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Michael Trimarchi <michael@amarulasolutions.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Marek Vasut <marex@denx.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Simona Vetter <simona@ffwll.ch>,
-	Stefan Agner <stefan@agner.ch>,
-	dri-devel@lists.freedesktop.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3] drm/mxsfb: Remove generic DRM drivers in probe function
-Date: Wed,  5 Feb 2025 16:29:36 +0100
-Message-ID: <20250205152942.954381-1-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
+        Wed, 05 Feb 2025 07:30:55 -0800 (PST)
+Date: Wed, 5 Feb 2025 07:30:52 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Zack Rusin <zack.rusin@broadcom.com>
+Subject: Re: [PATCH v2 26/45] Input: Switch to use hrtimer_setup()
+Message-ID: <Z6OELFCP6lepaZbD@google.com>
+References: <cover.1738746904.git.namcao@linutronix.de>
+ <62db561622799dfc8d58682ca41b54e3f1ff6949.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62db561622799dfc8d58682ca41b54e3f1ff6949.1738746904.git.namcao@linutronix.de>
 
-Use aperture helpers to remove all generic graphics drivers before
-loading mxsfb. Makes mxsfb compatible with simpledrm.
+On Wed, Feb 05, 2025 at 11:46:14AM +0100, Nam Cao wrote:
+> hrtimer_setup() takes the callback function pointer as argument and
+> initializes the timer completely.
+> 
+> Replace hrtimer_init() and the open coded initialization of
+> hrtimer::function with the new setup mechanism.
+> 
+> Patch was created by using Coccinelle.
+> 
+> Acked-by: Zack Rusin <zack.rusin@broadcom.com>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Applied, thank you.
 
----
-
-Changes in v3:
-- Add 'Reviewed-by' of  Thomas Zimmermann
-
-Changes in v2:
-- Use aperture_remove_all_conflicting_devices() instead of
-  drm_aperture_remove_framebuffers().
-
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 59020862cf65..e5eb644b54ae 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -8,6 +8,7 @@
-  * Copyright (C) 2008 Embedded Alley Solutions, Inc All Rights Reserved.
-  */
- 
-+#include <linux/aperture.h>
- #include <linux/clk.h>
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
-@@ -361,6 +362,15 @@ static int mxsfb_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_free;
- 
-+	/*
-+	 * Remove early framebuffers (ie. simplefb). The framebuffer can be
-+	 * located anywhere in RAM
-+	 */
-+	ret = aperture_remove_all_conflicting_devices(mxsfb_driver.name);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "can't kick out existing framebuffers\n");
-+
- 	ret = drm_dev_register(drm, 0);
- 	if (ret)
- 		goto err_unload;
 -- 
-2.43.0
-
+Dmitry
