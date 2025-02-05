@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD6722F399
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D747022FDE0
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751145; cv=none; b=J6Q1yt9HsFk3/tKZ2sF99xMaLeXmObdb4dabqJqQT/mD8VcGUQlto6w412mL8/wN3X3ADoEa/naD5Ostp6gk62vZAYimeMuyp+VIBe2tLGIyX7o51DHpDV2S9QLS4fWLXi9K9BS4NqH8sIQF4+Boanl2ugOqtKjG5fZeGslDv6Y=
+	t=1738751146; cv=none; b=qtbCoPQ5XC9oYZi3DZrNhjh+nSPb8hazZ2eG0Q8gQUPN38N+Dp9Rwigzw1QWSNawdFSx8ivr0clJqb8r0EgiRER9zxl/W32/c4rYQUZag9JDxoXtIBMa8xtPboAANxlcg/wsD1MlXRnc+efCZGvOYBnCcGh/M7GdVdFFif2mx5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751145; c=relaxed/simple;
-	bh=V5gRc9xaSn1o1EJddIrGLWliyFJt9NbqAOiRFB5WSpI=;
+	s=arc-20240116; t=1738751146; c=relaxed/simple;
+	bh=f5dpMh9AhzPjGGmswmBsQrHH1XA3sp2ngO2q5ZzvHoo=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MNPfjnOtvN1kUr7yMyJ2/UiSEN6+uomCgYChTGoI7hFYzT62izdn2+bZ69fjIB6lVat33qgddkrUpTbxPZdkSCuYGiK8MIl5QOe2E3oRprHA0+opNjkamWigEfvFj/IlhMd6soNqU4cUAgabMTJQ1+E4BkB6UtvD+YRaJyudxvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rvVT9Y6Q; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=qQ40Ri2p7Ha46MPC7t38qfu45rEKLWRmrlISQ9A8rbrPelwDADvcEiPZ/ZxkviFzHQ5AULNHIkUe66ZavT39tCpNfHYairHDg/7v2SN6auLfQQ6xOC0+b9MR2/MzLQJ3cw9UsbXTua5gRFp6B9IQaYk2LjzCt7iYSehfsSeloOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BI0PO8sG; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rvVT9Y6Q"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BI0PO8sG"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=caaHUBwU3FjXVkr/jMxyi0Xl6jcwm1jZ/HPyaNVGz1c=; b=rvVT9Y6QWlCkTCvxMkqE1VeA9T
-	i1JZFZO+NBH72LciNsxNNhiERji24+Emb7gdfGg8CeZHjfaTFxqHNnfJytzdyJJElcUwBko74iv2d
-	j4IlVXCuyeMfnTTJ+CjN6sULirxzXwQMJO7bGYiXp78dS1uzpOyRl7i6I63RqZ9dBYTioLcCQYevK
-	bKttlyLVu9A2TdJu8rvPMOh3Ak0lYYADhOsJo5ugy7BqfEIfRi22C88Cjr7VpBknoKM2euWlOZtJ6
-	bsD0QlbWgLLDphQP0FLWYdu0Xitl0fclSDWPsXKPiq4djky3WPUjtU5mVJppWaR9WuOmrQeN1iuZ8
-	pI4UYmGw==;
+	bh=mO36VRNVxK68SLi3Hxx0gi8+RzNHKpmki4ffDW+Vt6g=; b=BI0PO8sG8f/04Bu+03mBn0tg8/
+	6qTsRXSFvATfaPeQR2W8SihBK8thion04pKNaikCGNrq9VUVK+nwNNrdnGlqMSoYk2gPwFo1k7AHi
+	7U8DcslOIWSWOLmjYAKzFRRqbtp0cUKO8ZctA1NGHJN+UY8HF4pqZpnWq5kCy3ctr+i0+vvkQFn5S
+	SYWpzSX1clujYqL6PmZH/CnFJ697CLxlI2Ni730K1+fktFBfBZDLWYVQXY7lF7ArYAuMAm/go/kfd
+	XWsaqdrlFQxT3Za638epspI1ODlqk4190aDD09feJWp6wc04bijJvSVZRfDnTcjoqvg3MHm6mkdwT
+	gTkO5oag==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfcb3-00000004GPZ-24yU;
+	id 1tfcb3-00000004GPb-27OX;
 	Wed, 05 Feb 2025 10:25:29 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id CC50530619B; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
-Message-ID: <20250205102449.110145835@infradead.org>
+	id DAE713064EF; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
+Message-ID: <20250205102449.560323038@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 05 Feb 2025 11:21:28 +0100
+Date: Wed, 05 Feb 2025 11:21:32 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  ravi.bangoria@amd.com,
@@ -50,7 +50,7 @@ Cc: linux-kernel@vger.kernel.org,
  irogers@google.com,
  adrian.hunter@intel.com,
  kan.liang@linux.intel.com
-Subject: [PATCH v2 08/24] perf: Cleanup perf_try_init_event()
+Subject: [PATCH v2 12/24] perf: Simplify perf_init_event()
 References: <20250205102120.531585416@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,95 +60,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Make sure that perf_try_init_event() doesn't leave event->pmu nor
-event->destroy set on failure.
-
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   69 ++++++++++++++++++++++++++++++---------------------
- 1 file changed, 41 insertions(+), 28 deletions(-)
+ kernel/events/core.c |   31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -12019,38 +12019,51 @@ static int perf_try_init_event(struct pm
- 	if (ctx)
- 		perf_event_ctx_unlock(event->group_leader, ctx);
+@@ -11942,10 +11942,10 @@ static int perf_try_init_event(struct pm
+ static struct pmu *perf_init_event(struct perf_event *event)
+ {
+ 	bool extended_type = false;
+-	int idx, type, ret;
+ 	struct pmu *pmu;
++	int type, ret;
  
--	if (!ret) {
--		if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
--		    has_extended_regs(event))
--			ret = -EOPNOTSUPP;
--
--		if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
--		    event_has_any_exclude_flag(event))
--			ret = -EINVAL;
--
--		if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
--			const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
--			struct cpumask *pmu_cpumask = perf_scope_cpumask(pmu->scope);
--			int cpu;
--
--			if (pmu_cpumask && cpumask) {
--				cpu = cpumask_any_and(pmu_cpumask, cpumask);
--				if (cpu >= nr_cpu_ids)
--					ret = -ENODEV;
--				else
--					event->event_caps |= PERF_EV_CAP_READ_SCOPE;
--			} else {
--				ret = -ENODEV;
--			}
--		}
-+	if (ret)
-+		goto err_pmu;
+-	idx = srcu_read_lock(&pmus_srcu);
++	guard(srcu)(&pmus_srcu);
  
--		if (ret && event->destroy)
--			event->destroy(event);
-+	if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
-+	    has_extended_regs(event)) {
-+		ret = -EOPNOTSUPP;
-+		goto err_destroy;
+ 	/*
+ 	 * Save original type before calling pmu->event_init() since certain
+@@ -11958,7 +11958,7 @@ static struct pmu *perf_init_event(struc
+ 		pmu = event->parent->pmu;
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+-			goto unlock;
++			return pmu;
  	}
  
--	if (ret)
--		module_put(pmu->module);
-+	if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
-+	    event_has_any_exclude_flag(event)) {
-+		ret = -EINVAL;
-+		goto err_destroy;
-+	}
-+
-+	if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
-+		const struct cpumask *cpumask;
-+		struct cpumask *pmu_cpumask;
-+		int cpu;
-+
-+		cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
-+		pmu_cpumask = perf_scope_cpumask(pmu->scope);
-+
-+		ret = -ENODEV;
-+		if (!pmu_cpumask || !cpumask)
-+			goto err_destroy;
-+
-+		cpu = cpumask_any_and(pmu_cpumask, cpumask);
-+		if (cpu >= nr_cpu_ids)
-+			goto err_destroy;
-+
-+		event->event_caps |= PERF_EV_CAP_READ_SCOPE;
-+	}
-+
-+	return 0;
-+
-+err_destroy:
-+	if (event->destroy) {
-+		event->destroy(event);
-+		event->destroy = NULL;
-+	}
+ 	/*
+@@ -11977,13 +11977,12 @@ static struct pmu *perf_init_event(struc
+ 	}
  
-+err_pmu:
-+	event->pmu = NULL;
-+	module_put(pmu->module);
- 	return ret;
+ again:
+-	rcu_read_lock();
+-	pmu = idr_find(&pmu_idr, type);
+-	rcu_read_unlock();
++	scoped_guard (rcu)
++		pmu = idr_find(&pmu_idr, type);
+ 	if (pmu) {
+ 		if (event->attr.type != type && type != PERF_TYPE_RAW &&
+ 		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+-			goto fail;
++			return ERR_PTR(-ENOENT);
+ 
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+@@ -11992,27 +11991,21 @@ static struct pmu *perf_init_event(struc
+ 		}
+ 
+ 		if (ret)
+-			pmu = ERR_PTR(ret);
++			return ERR_PTR(ret);
+ 
+-		goto unlock;
++		return pmu;
+ 	}
+ 
+ 	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+-			goto unlock;
++			return pmu;
+ 
+-		if (ret != -ENOENT) {
+-			pmu = ERR_PTR(ret);
+-			goto unlock;
+-		}
++		if (ret != -ENOENT)
++			return ERR_PTR(ret);
+ 	}
+-fail:
+-	pmu = ERR_PTR(-ENOENT);
+-unlock:
+-	srcu_read_unlock(&pmus_srcu, idx);
+ 
+-	return pmu;
++	return ERR_PTR(-ENOENT);
  }
  
+ static void attach_sb_event(struct perf_event *event)
 
 
