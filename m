@@ -1,81 +1,91 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906392063D8;
-	Wed,  5 Feb 2025 10:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53BC2063D8
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751033; cv=none; b=uCQg2HzfL1TL+DtEpaXtf1vVpJzNWZEV3ExaefmVvMPepn/TBjUte5v/37D+ZtCwuQZOK+KidIZCpiScK9gpqoupcXg260JlTBBFLaU12O7gBA+0a1slG4j62mRi8Bj4HIK7l8U2RmvhV0WtO8gZbFj2tL/Zx/ssZjNoVr9yjks=
+	t=1738751135; cv=none; b=B/5Km54MWvZhNmfcCkMgcy431CqA2mzcBcPMNBCll+Uu3o3iHe78yYbOyaf4xuAPzC62WCqlqRfP/6Q0JS+xRdVmPr1umq2ussUER9YkbsuGoKq6RlogwY1B9FxtbtQIh64af6kQOIaQeeaG+LH/aoFpT+mJMY2eNwN+kVi9VkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751033; c=relaxed/simple;
-	bh=l8WUMCh4/bacxntxMeJpQkFivTbCQf82Fd87xLkpqaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eyedkiCT/O4K+Zw9NGYvQ2ok744E19GFjC1dEr48Fmmbqdk9bwWwQfygu6BmXd/KFCCNIjDOWIxNQ/4ZxAldWhgWq+a3gEeDnUD99YlUCabM9foiWldjeytPV82Bglv3JnugraYsgbh1u7KZhDmP3Jkv1E5rBBX+TeJG4RhSMPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pXUBfIoL; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738751135; c=relaxed/simple;
+	bh=2W3RwCqdWrSbI3AnIU7O9V1/QqhgCRodoKt377zeFEM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=RgpffQmO6tN/Wg2Z06qnRWY/wTuMZnqMc3FaZDASOPi/KcK4Lne+ppaOjjcr8ffk+FmKZxbyS8J7Rbp7X52TGoJZcuYaX9PDPWPSwJcybMRw5aqPaOyOXKLyBE5K4mRKYRQV3YFunCXcMpKvRrtRfy1kVvr4WgIv3DdTBFnrB0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nUpUfYO+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pXUBfIoL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B591520479;
-	Wed,  5 Feb 2025 10:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738751027;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OCgPDTwzHkVl8WwhlQzvIZcaXBEvz3BrPQEMI8PN0Po=;
-	b=pXUBfIoL9X29WYaV553bYN5PrfgONgLKE0knP7SlKPqVv8uGlYh9Bxe9QxV2k630fFi61g
-	8JRtqr1lglESNL4ldKtcPtWvovVbwaqyMR0Us/3eYh/dt/ecKtai3h5N+oQ8dALkZieMF8
-	NrQ3XW6n0EHwPolG4QhWEa3bXAy4FEXlyvt8LHrEMEFJiqeryImqpOCzfjOAb0QT1kXH+F
-	DVNnx+VR7FjW5+Y2NHaNxyO6fm+lRrj3Rg/HHOI5nfMjUf1aM4xPM0l6EYBbkGv9e/xKt4
-	mntXL3TnTl67ISClR5aS1I3sPi67Gh/ZwRD0iAkDtq2PmS/01ZNjbIl8GXJEMQ==
-Date: Wed, 5 Feb 2025 11:23:46 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, wqlinux@roeck-us.net, jdelvare@suse.com,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
-	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] rtc: Add Nuvoton NCT6694 RTC support
-Message-ID: <20250205102214a6357365@mail.local>
-References: <20250123091115.2079802-1-a0282524688@gmail.com>
- <20250123091115.2079802-8-a0282524688@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nUpUfYO+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=Hz7UCE6SpGqMPyTo25jsb7HnrcJHQ4a5YG8n6VtwtD0=; b=nUpUfYO+2FDb4M3TjV8sLJdP4C
+	5c0QznLIJ9Gh3vPhJV8pLp6ZhIlXK7RClAwo5YqCs8oiTJ1c1LpWkLAgjEnlOkzkyjD5efi39503h
+	6Sk0Y91oHLycdwRtaHxdJy8eHuntLQME/f6ByGeMlUHz2KfuHdNwvYydTmHLxOmfvy3nqd9hcXTLU
+	BFjFeaI6VyK8T6pqFqBEbT43cjZuFfx7lJOyloeNOnzayH84jO1pRMyED9quROIcqYjAfUWb5r/WW
+	eBF7+4NJ2I1qlK/C0qhMkqd4H050VUfpEcrl2SIv7hwv89jWzYrVgRFcNvnKAE1rO/nye7WH7UK83
+	Hh+EOTpQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfcb2-0000000Gbm6-132m;
+	Wed, 05 Feb 2025 10:25:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id B928930078C; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
+Message-ID: <20250205102448.563246589@infradead.org>
+User-Agent: quilt/0.66
+Date: Wed, 05 Feb 2025 11:21:23 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@kernel.org,
+ ravi.bangoria@amd.com,
+ lucas.demarchi@intel.com
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ willy@infradead.org,
+ acme@kernel.org,
+ namhyung@kernel.org,
+ mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org,
+ irogers@google.com,
+ adrian.hunter@intel.com,
+ kan.liang@linux.intel.com
+Subject: [PATCH v2 03/24] perf: Simplify child event tear-down
+References: <20250205102120.531585416@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123091115.2079802-8-a0282524688@gmail.com>
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheprgdtvdekvdehvdegieekkeesghhmrghilhdrtghomhdprhgtphhtthhopehtmhihuhdtsehnuhhvohhtohhnrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhus
- hdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhklhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepmhgrihhlhhholhdrvhhinhgtvghnthesfigrnhgrughoohdrfhhr
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Type: text/plain; charset=UTF-8
 
-On 23/01/2025 17:11:15+0800, Ming Yu wrote:
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +					nct6694_irq, IRQF_ONESHOT,
-> +					"rtc-nct6694", data);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to request irq\n");
-> +
-> +	ret = devm_rtc_register_device(data->rtc);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to register rtc\n");
+Currently perf_event_release_kernel() will iterate the child events and attempt
+tear-down. However, it removes them from the child_list using list_move(),
+notably skipping the state management done by perf_child_detach().
 
-This message is not necessary, all the error paths of
-devm_rtc_register_device already print a message
+Crucially, it fails to clear PERF_ATTACH_CHILD, which opens the door for a
+concurrent perf_remove_from_context() to race.
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This way child_list management stays fully serialized using child_mutex.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5526,8 +5526,8 @@ int perf_event_release_kernel(struct per
+ 		tmp = list_first_entry_or_null(&event->child_list,
+ 					       struct perf_event, child_list);
+ 		if (tmp == child) {
+-			perf_remove_from_context(child, DETACH_GROUP);
+-			list_move(&child->child_list, &free_list);
++			perf_remove_from_context(child, DETACH_GROUP | DETACH_CHILD);
++			list_add(&child->child_list, &free_list);
+ 			/*
+ 			 * This matches the refcount bump in inherit_event();
+ 			 * this can't be the last reference.
+
+
