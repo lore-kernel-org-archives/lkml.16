@@ -1,104 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932D438F82;
-	Wed,  5 Feb 2025 06:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C83538F82;
+	Wed,  5 Feb 2025 06:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738767; cv=none; b=jRoSNWd7PaGzFVS7voViylU+OpcVmqD126qMK4sGJtltR074m8RJ+tYiDsqOUbq71dTbMjzHplbRidoXxkbRSn6u/Kg9DtKQ8KbH5XnEqrKHe83Mh9ntqkpa6wm0IlScHPwivgT0Kb9iJVwLRloGvWEw5vl9jUSFVCS1y+JZNHE=
+	t=1738738777; cv=none; b=pOScXdoMmbb82+OfDcMfhNjQm1CXR8Ocjtc3bSAyDjhPM99Luo6QCxlNkyzc2nqamNkySi9Npothdgxu8d10Cx0f9klxpj4dHPOebyOzaFJryYFh5pPMq/rmAexQr16a+p36qJZA9mwyGF79Emz86mWtvSKFCjmtRM23r9nnedc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738767; c=relaxed/simple;
-	bh=06z3m6akCXZKyDCtqGZ2tTBezHC5B70EsGpdSLsK+mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W0Jy9V2uEhEdwmCbowvjihfHlH6gjCS6V+mi8qyjirJ2WDdGD+wuIVs0IIMvfl2s7YbBfty9Tq0UE465ppde65ILI7pN8m/5cbOFb+I2BWiNqvOE7ayyfbXqQ8EabUS24wuMnzsSVjDMaeHhcYLdnZQt6eExOexsHf3+SxfyzjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c55qWrM3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738738777; c=relaxed/simple;
+	bh=fRuzMNeIAnVp4Dufyy+ThQ4Ejb/BDdKzdbPr3bAUMh4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oP2X+gmGmH5zxAbdfIsOaOv2sJOzRt5CUXcDY41rEPH6VxpRzK6iqjyH2YTBLeOCxYzA4xwEpRN9gAUkQ3DdzxoBKIBYaV6+4OL3nZjmxKvWIsUzFQyDRnhSqcaD8K8EnZyiQEI75w11mVh8jdcj5BVofv3/VBEpSy7rnxqSxoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ck98GAYm; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c55qWrM3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC583C4CED1;
-	Wed,  5 Feb 2025 06:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738738767;
-	bh=06z3m6akCXZKyDCtqGZ2tTBezHC5B70EsGpdSLsK+mg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c55qWrM3eIYedud/RqDRbUGIzJ7+VqTzhZs9Xau78g5jXWaE+rdoFve0Z22Px4eTf
-	 59wuH0tSD3EhW2Hbpj2iEDQdHT0Bz8WKvnW0JiHyP1X9pZUPvkdpKPAam/ENtEbX+O
-	 Z6d/96NC/W7FKSmU0xCUabCQJeKRD8OVlpqbuVl8FV85XRdQGBuHj4zpgKZUf2OJKx
-	 iyqcNnFlYl1/s0E14Eb0fP8OQH19c/QAwQQo/zC0uqiE5JyTfiZibXSW+CG78nSTUl
-	 fCcHo2tl7bPffseFc7e5bKToKDJtaRsr+fDRvgpyYHmAlJ2fujXaTjsa453Fp1LFdK
-	 LWrfrNgxQUXyw==
-Message-ID: <44d7feed-173e-4e46-994b-e3136161efc9@kernel.org>
-Date: Wed, 5 Feb 2025 07:59:24 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ck98GAYm"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-71e2a32297dso344332a34.0;
+        Tue, 04 Feb 2025 22:59:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738738775; x=1739343575; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UUFk6TgopSWQITCEbcE120wI7n+sBN7sqpPKgJ7PFf0=;
+        b=Ck98GAYm+w8mzpSPw7dj/dnr6JSBmROmF2qb64SFxqqJpERSEmzcuySdqkXW8cVmUT
+         5f8oSSNoCT1mAy70IQatwisYWPvqTqYMzkoc7MpcERQdeOM50cKEuKyRcuh/WuRzDuqa
+         FG0eOlOK+0jp/sVClJ2fDMcxqBB1OCGKwdEjdS6drcSJt8BAamjhEkC6FAG9BojkaJ7S
+         ZAOwgRKoFu2tud5XXziDo0t3yOFIh3jEpoCb/c61OJs5FPnxeS5j7CeqKq+Vu8WiTbiS
+         HUR31iz5esF3vuzdqeTBPx1r5csFxIcDJmXYi8VpBFzr0IvlR7qzYaZVLKYjMicPZPCP
+         0KNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738738775; x=1739343575;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UUFk6TgopSWQITCEbcE120wI7n+sBN7sqpPKgJ7PFf0=;
+        b=QYo9t2AyVTgpFS5GIIDlQJAbj8Qpp6HkWdRgC7+nGhbzFiR92QxXaAw1wVi7afYPbh
+         09gIBMaaU8W4lb8PfZqRFeX4yM8e+oTMFLkFy1C0mbnTqvLbDobLESsAbKf98VOAntQ3
+         85121YQKQm3xJgbw8G3f4poluVmvIoKpXmwI1xxkU/ZaE7gLY0lCCNi3SuNRWMcSCaqi
+         b2BAwhkjY3G0IAjgIK6/eXTCYveh79olAR86H2WWpgUyrg5VBKJI3j2lBNx2CGHSRGeO
+         5fkswzytqj/3FDqFkkrChO0bysGgMJmDDORHSzZKzuQzVnRDnoMoA1broQz7CDG6c1qC
+         COpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUydahQgcDEh6NEbY+cwVRIEHflCDPg1oQv4PuVlQ3teKTBUoPcwob7mIR/d+Xrwmfaz81MCJIWW5EfkYKB@vger.kernel.org, AJvYcCWMIgZcJLbvWzy2ovbd/zICkCxgic7eCOyzM3ICKptnKxQs+1oubJtoy+RjS8prnrhuM3cz7RQAIixg@vger.kernel.org, AJvYcCWVwqNH88b4ybNg2rSUm6nC6WV2zBg7dq1TOXMOy78543NCxiQtH9v8ogsJNyU6hBZ3Ewbc0+XUxnMM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRTTPGdFn2CAZ6YcX/C3yzABAhHCr6WLrKNexw4sJvikBplY5M
+	XjcCiBSgOP5zLkI4eIVt8m6CUAKmh41fbBHrCkeVlwzK6GolecTz
+X-Gm-Gg: ASbGncs101oXPOOnLxWj1cqdp+P6F7r6zojRJzaT9boHsor6dgDNLjyGB9YZR2rjCM3
+	a+bNiCUNPELa1dlMrZ8DlkSUpz5/6X+98Bl5Y4qG+PQgh4FPSAYzOdQv7x4A686oECs9+L9ZE/R
+	bkbhXCkZAyJENSdu2tGcBuEW8nM2UY8R8bmYMGtLkBgmqRdds9juTp0txzDETsC8DEhI1p6E3qY
+	DZu5xwVILaUOqHJiMMrytX40/VnO2LtCXPlxwPqcLzNU1xkIY90fxuTJJpZCvWOZoHD+Cfspsk4
+	EBx19enyIDs5EnxlIVe1JKGUVQ==
+X-Google-Smtp-Source: AGHT+IFG1SDTKozMPahzThei5PB6whL1v2BM+EVscsLeVPRgrXAkEdyUvEUjkRuufTiB8wtsfVoRXA==
+X-Received: by 2002:a05:6830:3204:b0:71d:efeb:7c78 with SMTP id 46e09a7af769-726976bd30cmr3273225a34.14.1738738774982;
+        Tue, 04 Feb 2025 22:59:34 -0800 (PST)
+Received: from localhost.localdomain ([122.8.183.87])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726617cba50sm3804291a34.16.2025.02.04.22.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 22:59:33 -0800 (PST)
+From: Chen Wang <unicornxw@gmail.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	unicorn_wang@outlook.com,
+	inochiama@outlook.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com,
+	haijiao.liu@sophgo.com,
+	xiaoguang.xing@sophgo.com,
+	chunzhi.lin@sophgo.com
+Subject: [PATCH v7 0/3] pwm: Add pwm driver for Sophgo SG2042
+Date: Wed,  5 Feb 2025 14:59:16 +0800
+Message-Id: <cover.1738737617.git.unicorn_wang@outlook.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] tty: tty_buffer: Avoid hundreds of
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z6L1XwE-WEzcGFwv@kspp>
- <2025020503-unnamable-canopener-ac71@gregkh>
- <3befc536-3bf8-4a79-9815-3386912069b2@embeddedor.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <3befc536-3bf8-4a79-9815-3386912069b2@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 05. 02. 25, 7:49, Gustavo A. R. Silva wrote:
-> If the above changes are better for you then I'll send a new patch. :)
+From: Chen Wang <unicorn_wang@outlook.com>
 
-No, you are supposed to switch tty_buffer to tty_buffer_hdr too.
+Add driver for pwm controller of Sophgo SG2042 SoC.
 
-thanks,
+Thanks,
+Chen
+
+---
+
+Changes in v7:
+  The patch series is based on v6.14-rc1.
+
+  Fixed following issues as per comments from Uwe Kleine-König, thanks.
+
+  - dt-bindings: change value of "#pwm-cells" from 2 to 3.
+  - driver: rename variables period/hlperiod to period_ticks/hlperiod_ticks and
+    improve coding of apply()/get_state(); use
+    devm_reset_control_get_optional_shared_deasserted() instead of
+    devm_reset_control_get_optional_shared() and reset_control_deassert();
+    add more comments and other miscellaneous code improvements.
+
+Changes in v6:
+  Nothing major changes just rebased onto v6.13-rc1 and retested. You can
+  simply review or test the patches at the link [6].
+
+Changes in v5:
+  The patch series is based on v6.12-rc1. You can simply review or test
+  the patches at the link [5].
+
+  Updated driver to add resets property for pwm controller node as per
+  suggestion from Inochi.
+
+Changes in v4:
+  The patch series is based on v6.12-rc1. You can simply review or test
+  the patches at the link [4].
+
+  Updated driver to set property atomic of pwm_chip to true as per suggestion
+  from Sean.
+
+Changes in v3:
+  The patch series is catched up with v6.12-rc1. You can simply review or test
+  the patches at the link [3].
+
+  Add patch #3 for dts part change.
+
+Changes in v2:
+  The patch series is based on v6.11-rc6. You can simply review or test the
+  patches at the link [2].
+
+  Fixed following issues as per comments from Yixun Lan, Krzysztof Kozlowski
+  and Uwe Kleine-König, thanks.
+
+  - Some minor issues in dt-bindings.
+  - driver issues, use macros with name prefix for registers access; add
+    limitations comments; fixed potential calculation overflow problem;
+    add .get_state() callback and other miscellaneous code improvements.
+
+Changes in v1:
+  The patch series is based on v6.11-rc6. You can simply review or test the
+  patches at the link [1].
+
+Link: https://lore.kernel.org/linux-riscv/cover.1725536870.git.unicorn_wang@outlook.com/ [1]
+Link: https://lore.kernel.org/linux-riscv/cover.1725931796.git.unicorn_wang@outlook.com/ [2]
+Link: https://lore.kernel.org/linux-riscv/cover.1728355974.git.unicorn_wang@outlook.com/ [3]
+Link: https://lore.kernel.org/linux-riscv/cover.1729037302.git.unicorn_wang@outlook.com/ [4]
+Link: https://lore.kernel.org/linux-riscv/cover.1729843087.git.unicorn_wang@outlook.com/ [5]
+Link: https://lore.kernel.org/linux-riscv/cover.1733281657.git.unicorn_wang@outlook.com/ [6]
+---
+
+Chen Wang (3):
+  dt-bindings: pwm: sophgo: add PWM controller for SG2042
+  pwm: sophgo: add driver for Sophgo SG2042 PWM
+  riscv: sophgo: dts: add pwm controller for SG2042 SoC
+
+ .../bindings/pwm/sophgo,sg2042-pwm.yaml       |  58 ++++++
+ arch/riscv/boot/dts/sophgo/sg2042.dtsi        |   9 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sophgo-sg2042.c               | 196 ++++++++++++++++++
+ 5 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-sophgo-sg2042.c
+
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
 -- 
-js
-suse labs
+2.34.1
+
