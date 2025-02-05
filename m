@@ -1,198 +1,125 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5D322A4D3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B28A213240
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746513; cv=none; b=Q/LzsOLKxcvuxEqKKpFswuC75DR8i7DWrDcpxiBG33AEFa7gt8j4w6M2R6+UrzhO3SUTa7Z0k5rkCMHYYMXmuuB9tH8Zs/XI/tlfl3QiZ6/rNLN1JHhaI3Mi+BGuXJmGHmwqEWLAUuL2LY+FZRGhg7kXn9Knb49L/kjGmzmizW4=
+	t=1738746672; cv=none; b=cwSYfgj0WThEnRs6v+3OFfMaBhaQVLJWDljDWf0Dv4AHyQpywhA5Q+cNu78QM8NAHcDZ1cU9l94rlWCWfE61rINbv1M4W+eYELVDu44SAYfJ34YklG+4NnJMYUTOKwOLxh4ykBUijrav1AesfBLUHHN0NFUBMywFNzWXleD3Vew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746513; c=relaxed/simple;
-	bh=usR0FQgaPun7zX47de4ViGzhV1Dnd1psEq3MrpZDip4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ttG0HgbrO2LeqENqxsPKvgc3E49OPb5HNf3LgHPqXawlR4LgX1OFDHJm3pF3Pn4O2nQt+eOwt6lnxISarqBdM9wY0fSbRcIatkInoUcGYNvF7DuYJ4zRICdkXXq/yg+9G96JVrXNaXpg1P57wzWDDX2nkZxDKig1mfpeNOxONz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pnshSceJ; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738746672; c=relaxed/simple;
+	bh=9JrIQVzfjJW7ElJmkRBEC+KSEWAdw6372FX33D1qw3w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kWw3NyiajCuiGyftu/diFU3EOjPtmyHJBavzEZHBKMHd8yE9aX1imLhRgcL0seapxgDM7KHPbWcGYvKOlHpviIgdxNCJFcEAB1n3wlB8LxKq8KUJPfS0IBjqBkME28HtnS4sdtQhF5A5ul7DpnV4BKLTtka/eHGYqrEuklLaN8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=LOERfISb; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=LOERfISb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pnshSceJ"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3ebb2d8dac4so3657460b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 01:08:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738746510; x=1739351310; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p1Zgcdqg6IL3nBRvW2f+NbDge7cbx+gJvQXWunXhYqw=;
-        b=pnshSceJy0AQKWdaToO00t1zmpxhxYMmbs2R6cJz5xghp7fOlwFK3JbWYxbSJQJhAE
-         rdP+zA/StgfK12p/cxlDF9YUR2mlxETAXme8fd/TS632itcp6WnNLponRYSfZLMu1+8U
-         NI9qAv+Z0zxfpuzJoAp0LQhRfHAU341/AYbuDG1sOlpUwLFj7k76VBFw6QQEvoStQUAG
-         peluCi2D8PflvISPr0QSZizzbqM+bsinpV8UIhaMR0o7afqowdYA+2omzGUecKOchvSJ
-         fS9kaOo73GKFSxMN+NWuW6P2zxj53LoGDOWZYZRjf82fvHNB6i0oXW7WD9+uUlrPvDd9
-         /SkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738746510; x=1739351310;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p1Zgcdqg6IL3nBRvW2f+NbDge7cbx+gJvQXWunXhYqw=;
-        b=w8nPQiTYIulsMXEg/gwajPljW7vGLiXwv3AP6ynsrgouEiSb9eQH1JqsXueZF50lwK
-         ouRG+q2xu/p0bSwpeYsuo9kmofpyWawcdes1g6xLuC6fuGyy0GBT0hICtHO6AAvSZDIg
-         Yqy9BT0sIBPKt35M4rWTlXCNrPlJXXljazZAtsQXxjxCIzjC0ZPlI79bdqmVgizdxwQ+
-         lIeTEK2+Wbo4q19FGUgXT5eCrZT6d3GGO03qj4GTffWB5jzKCGc76eebH3o0eAbbIj8m
-         BFKwXFOWV9eIZnuhPh4mXFL8epxtS6HZrN4CXhIrgkTZ4B7sETxdtR8/DF0E4fQZ2EuD
-         ca3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXgigtcAK8irBSMM3wVX7wM1fOF2w+D7WIo9aGVsHwiMHCC1n7etWPQWpZoh4dZJUtQaAlbl9O+/zfgJIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgVLlhWbj/R5LhRqgrZ5Jl3IiwNuk1xhJofCKw5O77uUT5Vc1n
-	rVwo4aMWlQrtWG72pr4oVwSQ1dShR/3tF5/gfEUAKUaCV0p6E8pY86ZrHfEr6qmXO2K6DhBYFnx
-	3C7GXlS0CwUnbfqdS2WzfcSu4s6t4va7vzpI8
-X-Gm-Gg: ASbGncvOga96nlaI1BnJ7j/9Rm+sDn0G+QANDadFt4MotNyKjW8/WHAkSeWALwOp5QD
-	T1w0rwt6ahLtTI4MPeO1fIRhnUPIVAUGC7pqwc3iktYsWvS8SOxAfrefxOjJiqYAqUJiJ9z6vmX
-	5mAlLnuxxCAzIcfdhurlaNo+muCG77
-X-Google-Smtp-Source: AGHT+IFQCqAxhs4WZyxuuQhaM0diAycGJMiaMQ6rNLAfPcZp1rv47WnGGRv7bsWrRbFQIUM9hREHyKVADC24UDpGX08=
-X-Received: by 2002:a05:6808:2393:b0:3ea:3db5:ffe6 with SMTP id
- 5614622812f47-3f37c17dab9mr1285991b6e.31.1738746510227; Wed, 05 Feb 2025
- 01:08:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="LOERfISb";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="LOERfISb"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 03B2E1F455;
+	Wed,  5 Feb 2025 09:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1738746662; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=1qMmRxVIPypI1xC815rIwVGXXjNCPAkK8hThn5/x/rA=;
+	b=LOERfISb+g25ZuGhv73mD20GA7oXGW6Pb6C6xSeDCVvwkKVIQ4aNPmcL1c50pzqmvEi65y
+	Bt+BtBeetKB9dNEYTvHbdiMROa69F0k4e3GowabU0jMsGFNev/CWFZYRyJEkVG4NHV0YRU
+	2zCuPsgBj/orpvmGacjPYAAPANMsfLs=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1738746662; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=1qMmRxVIPypI1xC815rIwVGXXjNCPAkK8hThn5/x/rA=;
+	b=LOERfISb+g25ZuGhv73mD20GA7oXGW6Pb6C6xSeDCVvwkKVIQ4aNPmcL1c50pzqmvEi65y
+	Bt+BtBeetKB9dNEYTvHbdiMROa69F0k4e3GowabU0jMsGFNev/CWFZYRyJEkVG4NHV0YRU
+	2zCuPsgBj/orpvmGacjPYAAPANMsfLs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A659F139D8;
+	Wed,  5 Feb 2025 09:11:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id D+IfJyUro2d0KQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Wed, 05 Feb 2025 09:11:01 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH] x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+Date: Wed,  5 Feb 2025 10:10:56 +0100
+Message-ID: <20250205091056.17796-1-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202035100.31235-1-badhri@google.com> <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
-In-Reply-To: <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
-From: Badhri Jagan Sridharan <badhri@google.com>
-Date: Wed, 5 Feb 2025 01:07:53 -0800
-X-Gm-Features: AWEUYZlsLaPl0RCseB3hpPwL1zwP-Zbd_3h4jFyoYWHMscU1N-HH781WD_ssOyI
-Message-ID: <CAPTae5+j9N=RBpfHVE-As+dz7HzrxXAH1enWrmSdFzu6DuaTBA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: usb: snps,dwc3: Add property for imod
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	felipe.balbi@linux.intel.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, johnyoun@synopsys.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jameswei@google.com, 
-	stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-.
+xen_hypercall_hvm(), which is used when running as a Xen PVH guest at
+most only once during early boot, is clobbering %rbx. Depending on
+whether the caller relies on %rbx to be preserved across the call or
+not, this clobbering might result in an early crash of the system.
 
-On Sun, Feb 2, 2025 at 6:11=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On Sun, Feb 02, 2025 at 03:50:59AM +0000, Badhri Jagan Sridharan wrote:
-> > This change adds `snps,device-mode-intrpt-mod-interval`
->
-> Thank you for your patch. There is something to discuss/improve.
+This can be avoided by not modifying %rbx in xen_hypercall_hvm().
 
-Hi Krzysztof,
+Fixes: b4845bb63838 ("x86/xen: add central hypercall functions")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ arch/x86/xen/xen-head.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks for taking the time to review ! Happy to address them.
+diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+index 9252652afe59..4378b817ed32 100644
+--- a/arch/x86/xen/xen-head.S
++++ b/arch/x86/xen/xen-head.S
+@@ -117,8 +117,7 @@ SYM_FUNC_START(xen_hypercall_hvm)
+ 	pop %ebx
+ 	pop %eax
+ #else
+-	lea xen_hypercall_amd(%rip), %rbx
+-	cmp %rax, %rbx
++	cmp xen_hypercall_amd(%rip), %rax
+ #ifdef CONFIG_FRAME_POINTER
+ 	pop %rax	/* Dummy pop. */
+ #endif
+-- 
+2.43.0
 
->
-> > which allows enabling interrupt moderation through
-> > snps,dwc3 node.
-> >
-> > `snps,device-mode-intrpt-mod-interval`specifies the
-> > minimum inter-interrupt interval in 250ns increments
-> > during device mode operation. A value of 0 disables
-> > the interrupt throttling logic and interrupts are
-> > generated immediately if event count becomes non-zero.
-> > Otherwise, the interrupt is signaled when all of the
-> > following conditons are met which are, EVNT_HANDLER_BUSY
-> > is 0, event count is non-zero and at least 250ns increments
-> > of this value has elapsed since the last time interrupt
-> > was de-asserted.
->
-> Please wrap commit message according to Linux coding style / submission
-> process (neither too early nor over the limit):
-> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/su=
-bmitting-patches.rst#L597
-
-Ack! will do in V2 of this patch.
-
->
-> >
-> > Cc: stable@kernel.org
-> > Fixes: cf40b86b6ef6 ("usb: dwc3: Implement interrupt moderation")
->
-> I don't understand what are you fixing here.  Above commit does not
-> introduce that property.
-
-Although the above commit does not add this property, it has
-implemented the entire feature except for the property so thought
-sending this with "Fixes:" while CCing  stable@ will allow the
-backport.  I am interested in having this patch in older kernel
-versions as well where imod support has been added. Wondering what
-would be the right way to achieve this. Eager to know your thoughts !
-
->
->
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > ---
-> >  .../devicetree/bindings/usb/snps,dwc3-common.yaml   | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yam=
-l b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> > index c956053fd036..3957f1dac3c4 100644
-> > --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> > +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> > @@ -375,6 +375,19 @@ properties:
-> >      items:
-> >        enum: [1, 4, 8, 16, 32, 64, 128, 256]
-> >
-> > +  snps,device-mode-intrpt-mod-interval:
-> > +    description:
-> > +      Specifies the minimum inter-interrupt interval in 250ns incremen=
-ts
->
-> Then use proper property unit suffix.
-
-Ack ! changing to snps,device-mode-intrpt-mod-interval-ns in V2.
-
->
-> > +      during device mode operation. A value of 0 disables the interrup=
-t
-> > +      throttling logic and interrupts are generated immediately if eve=
-nt
-> > +      count becomes non-zero. Otherwise, the interrupt is signaled whe=
-n
-> > +      all of the following conditons are met which are, EVNT_HANDLER_B=
-USY
-> > +      is 0, event count is non-zero and at least 250ns increments of t=
-his
-> > +      value has elapsed since the last time interrupt was de-asserted.
->
-> Why is this property of a board? Why different boards would wait
-> different amount of time?
-
-Interrupt moderation allows batch processing of events reported by the
-controller.
-A very low value of snps,device-mode-intrpt-mod-interval-ns implies
-that the controller will interrupt more often to make the host
-processor process a smaller set of events Vs a larger value will wake
-up the host processor at longer intervals to process events (likely
-more). So depending what the board is designed for this can be tuned
-to achieve the needed outcome.
-
-This is very similar to the "imod-interval-ns" in
-https://elixir.bootlin.com/linux/v6.13.1/source/Documentation/devicetree/bi=
-ndings/usb/usb-xhci.yaml
-except that in this case the Synopsys DWC3 controller supports this
-for the device mode operation as well.
-
->
-> > +    $ref: /schemas/types.yaml#/definitions/uint16
->
-> Drop, use proper name suffix.
-
-Ack, will drop in V2.
-
-Thanks,
-Badhri
-
->
-> Best regards,
-> Krzysztof
->
