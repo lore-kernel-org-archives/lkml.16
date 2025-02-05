@@ -1,144 +1,161 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101921C19F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DFC218AC4
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757434; cv=none; b=BNvc9shIyFscB12Uk8jQPos0FgEGJ7sCCpY+1GkDOvVjtY5hdOpsH4QQ9XweiRxaz0zS5SsaKHcrNgUPQFUBLvdYPDSjdbNV6B9c9mKO6w1ZaEYtDrjg3GKP772kjHipDMnOczcFpRzCU8zqaTc5E0PtJadt/d4ctoeSayF+q7U=
+	t=1738757516; cv=none; b=rdhhIg1UUQlqBmQ8pIggoSBeXe55ZoBa/vw7X1bXAfvSLnzhaxTGL+Zjv09RdtwXSPmcawQRkLFFcOStN/pim9rq9gX1z6S7RovWtp5oCPARrhJ655aoIZmczk97/Mr0PZmvO5PZlIjpDNiFXK5MquYi0wtUV3KMYErYkbe6mfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757434; c=relaxed/simple;
-	bh=LAJkZr3j590h9Mmjm3sT0QGmWd4n4HFqQNH1WXZZWwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=fP+r72BvsRL3P7BGOV/Q5X3ZDiU9vCYvuT9aCgpkLarXMczZNv7OSrtYneIlyxHFCnq0/RYYCb5hh9NIuL0AZ04U36mAv6uOmDie8vwrXjO/E7FxH6YMZgOllwO7uXYQSZtHV1JOO5l1f4K+mqqFgbTMilRKQJbEgdWZHx6t15Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZCTQDt1I; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738757516; c=relaxed/simple;
+	bh=17eK7hlm0Vh6MFYgWAu6/aaoWi7mh12XE5hQT37ptmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ywd3erxxqjKXYetaFbil/mldt0TkbaOu/3bPUbXGJQRFj1wPhxvJJKUNnhwke+pH/WmNt9VRxKPNgU3n+ROO+fht7tCN16nAagnSIlSLAaHWzrmMgtXdflUR2lU4TQEaV8LffVaLz9AoELEAuSUWXM3sbdAfkrg3m5g/tJqejrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IvVVPXYa; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZCTQDt1I"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38da586ef14so1232072f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 04:10:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvVVPXYa"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2162c0f6a39so13678395ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 04:11:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738757430; x=1739362230; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CM9edJiBMXn21mPbe8Qk4uoLTtdcK1HokgiZWsmiPV8=;
-        b=ZCTQDt1In4NJq11mC03sJj9DMXGt0nY6PiPfhI/cWLFLo3JXcOGBAWvO5yMENIY4iP
-         26U63ac94q/Ce6AXuJ2Ox+iuAmgS6Fm4V0OoFEoRq3cWhFyFlCO2vscwm4+hHJ1jTj3q
-         YFZBGT4EoWGWlKrGuaJ/0qIf3lFa2qkO74j1zevEMLQpTGapMjwcIn1YYiT6J875FfRS
-         HBoONKCVX0VtQYdCgbiah+5Mc7z6MWijcKEANclXTnMPCykh5KQgM+iLAC1CdTikT7YR
-         wf4CPAxEPXm/FoQfxSTKlkW79qm4nGeWa1R6nOjOVRGCLyYH5Z/LGMhDK4kpN6oh2X7L
-         xiuw==
+        d=gmail.com; s=20230601; t=1738757514; x=1739362314; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4l0jPuO155iyusJQxGr4cBPwA4TtxgS02+IEgOYBku8=;
+        b=IvVVPXYaS7pgyZ7JuquEBsLqxrtTWVcJbqu3pqJSxhtlw0pWXVzSTT/0S19ABDfhHy
+         SHFhyG4+sI6zIxiFZR0eK1OSHS6bJl1mbqPjHUkJyu2ymUQmVyq+ALuIiCBqyW9xyKXi
+         q2KxL5YKvTkInwToHaGJXKo+zbJgsu8q0mMht8w/NDqc9Lk7rj0pp+S4ru6XX51Y49hZ
+         6bM3Xqz9GqXyig2x6xIHs1fV3Qwq6aQvRXvvLEGqxLdaLl2XVXYYNTFMAytRFsihPFT7
+         xrqZq1JwBCchJVJuxqI4ltbxeVjtV2IokXCL3bKvkghu8LSIKPmZW5FZUu6SEijOmbi8
+         jryw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738757430; x=1739362230;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CM9edJiBMXn21mPbe8Qk4uoLTtdcK1HokgiZWsmiPV8=;
-        b=sjA/Z72cL588Qvy48eRsfnGHmUROlY9kKj8FUxdARxjursuXiSD5+Ou44gdm43V9SE
-         XtlGlfiWI0NnR5a60gCl5eTvUZhh1O+pKAScH2dGgbiVYJeTQj0Ijv+P+xSeD/BNuX2m
-         SlgHJfIt461Rcj1iSvomWAw8rBMki8bzpQBV4quLQ45NMthUKoPDuI20f71xnvW+/D0r
-         K1j3oZYDO+TQMM1CExtlPuiJpROuxAe6ll3NIzRktsf7MpJkdeU2Zw39wsVjVrFPYyZD
-         FUC1q8F5xiC49DciTgV8T44gjnGhbsydiPjTVq98V8faT8OK34lpzrO00IoG7inYQ2cg
-         MMtw==
-X-Forwarded-Encrypted: i=1; AJvYcCV26nDreSdWjxrj7UOsaVH9ydNAuro2fL1nw9sSm/msJRbAwh4Bwr1DISA66aIpzYp/firNua06hCVar3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+/DSeByiCSYRiDcNKhys4TJshN2nDbCILHOJmECAG+kNrWsNI
-	28P5ktqWB/BC3rFp8C1qnSCKh8D2yzKTMeFoxCQP9CToWbwRwODCsbHyTubnRRpz9eAamI1C8Zb
-	lmKv4g3RCSFxes2XiG1MoTF1NQsfV3yPMxU8y
-X-Gm-Gg: ASbGncts08uyzh2Q8o1u+fPFSMzroX4c0P+9DCA0oX3tszKGIPEe8M/u+TqSySEgFok
-	rTELeYU8rQC0RGVg+80K5Q+CMRyEQE9/zfwE30q07Oj/H9CIcAJXA9oK2vGypD3oMz8L9ZbtG8Z
-	BKDZwjE1xfXfZk42Z1mKP/KGlb7iY=
-X-Google-Smtp-Source: AGHT+IEJRX8Gawq5uTZWc7gghQE3VD3b5s1utE8n3fNb/Dxuk/7Rl4NYgvzDN4Jo2pf/N+jO5EMKYukFZfnclOVEP6g=
-X-Received: by 2002:adf:fdc4:0:b0:385:fd07:85f4 with SMTP id
- ffacd0b85a97d-38db488960amr1453466f8f.31.1738757429509; Wed, 05 Feb 2025
- 04:10:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738757514; x=1739362314;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4l0jPuO155iyusJQxGr4cBPwA4TtxgS02+IEgOYBku8=;
+        b=HzseFruJuS/8Q4SkqQ+Y6DTpY/KUuEg3H/mGAAgq+vIvM9Mwht4sh4Plnc1f5y3BqR
+         2aAZNUQis1NUxHumMdKsodlCL11qr+LFIcTzD594IAXMnUne27wEewQKe5bpZ57EK4wH
+         k7WNFbFNJx18yqV4Ja9QhKuOU2YNVeeJZvLU+qAcU/rRLvNNN/l1vxA0x3sH2e63/V4e
+         C1MKGZoUVeE9wvmriv5g8SqnRK3ng239NSM6cyLLpTxDek/qlSs7hUT+oOeAywLLSm0A
+         jZQrPI+xVmYP33slsQSgAn6DV7pfjCnC1bzbssis/s1G7EfxuUrwa4V46k+ZBDrIwBoN
+         3AdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2FtvG57eUZwTEPj/eFvuCD9Y2IJXELkciA2+yOz9WK6CRn99OLYoVymB3wAOxZzyqo+7lHp4613dq2aA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7vT/g/0SLWav6XHPL6Vs9Kfxnc22hNRRQY8jzQ4OtsEmJPK9x
+	UGPYY+myJ6Au/hzqQcj9TjpcWKWY6i4WGMPN8eS2ZbCcUVr2OSgX
+X-Gm-Gg: ASbGncspWZuBkWXmdro+Cbo/3tE5LMirrtiTV9sVIu7vX816illlqmh21Z0f7yNPkMC
+	jg/EL07OWEA8K7d2AXSewGulidgWWAdGAtzVx+seMvhtbGqb2Cr4KPimnIPlQTJ6D25KtJC4JDi
+	NzmmzfUfXyQTBymp4hDZNlPuZvvCWsFLJwBiz3shIo0mjjkRZyAVTxKQd3ACPNM2wKAK1cgpw6c
+	eEAxeNvD6NzFxxSlnEI4mfaTFdOM3U2COWhC+9gRXplHEweHg4iTgcThKUT75tyBD3/RNSuPthN
+	OPXB6hFdewqXlN+waZbOj2Y+RbLHxfPiGfEPZMg=
+X-Google-Smtp-Source: AGHT+IG/258rcnOwOrODwIvQg5a0DV+qB9zbhbgl4QnTI8M/lB85TjbqnSUJAM0fdWIe0ZKyYuT5ug==
+X-Received: by 2002:a05:6a00:4096:b0:724:db17:f975 with SMTP id d2e1a72fcca58-73035243808mr5289890b3a.12.1738757513705;
+        Wed, 05 Feb 2025 04:11:53 -0800 (PST)
+Received: from MacBook-Air-5.local ([1.245.180.67])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69bbb7esm12753289b3a.106.2025.02.05.04.11.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 04:11:52 -0800 (PST)
+Date: Wed, 5 Feb 2025 21:11:45 +0900
+From: "Harry (Hyeonggon) Yoo" <42.hyeyoo@gmail.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>
+Subject: Re: [PATCH v2] mm/slab: simplify SLAB_* flag handling
+Message-ID: <Z6NVgVrXpXv6dDUp@MacBook-Air-5.local>
+References: <20250124164858.756425-1-kevin.brodsky@arm.com>
+ <CAB=+i9QJsQEzSTf=LxY_Kuqm++2MZDXLL1eshngDZ5dAg5UzUQ@mail.gmail.com>
+ <9c6e9064-89b0-4373-ae66-8aae5ade6fa2@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-vma-v13-0-2b998268a396@google.com> <20250203-vma-v13-2-2b998268a396@google.com>
- <r5xkc2i3tk4za3xkrrvbeqto4kf5l425ursytc3n6tmcy2gylb@eusudybb5dqa>
- <CAH5fLgj00hRAEBvNc8RR8iBwKQ2okDqmWWQ+kqmNkr9mOjfU0w@mail.gmail.com>
- <ymjkf2l2otosunrs3e3mmsj2wr3tvrfmgl4aav5dcpm3gtdulh@dzz4njdwkspc>
- <CAH5fLggd75BvB6VXPjR=_jxn1u7kOfix2rynvMHU4CeUUDHnVA@mail.gmail.com> <ebwiebbxomsjamv2uk6gnpg2uzjpqw25llvcz7njadklfi66nk@ab5uyq4bvwlb>
-In-Reply-To: <ebwiebbxomsjamv2uk6gnpg2uzjpqw25llvcz7njadklfi66nk@ab5uyq4bvwlb>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 5 Feb 2025 13:10:16 +0100
-X-Gm-Features: AWEUYZlj_xoYsvNCca0RfpQ0eQ7nYggzNeG2vXSDC6JyOIm_4a-qi1ks5bLCsaM
-Message-ID: <CAH5fLgh2Y0rG5ntpdiK-ycn9eBvrSXekxPsjDaYWuHBDUYNppw@mail.gmail.com>
-Subject: Re: [PATCH v13 2/8] mm: rust: add vm_area_struct methods that require
- read access
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9c6e9064-89b0-4373-ae66-8aae5ade6fa2@suse.cz>
 
-On Tue, Feb 4, 2025 at 4:46=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
-> > > > > > +        let vma =3D unsafe { bindings::vma_lookup(self.mm.as_r=
-aw(), vma_addr) };
-> > > > > > +
-> > > > > > +        if vma.is_null() {
-> > > > > > +            None
-> > > > > > +        } else {
-> > > > > > +            // SAFETY: We just checked that a vma was found, s=
-o the pointer is valid. Furthermore,
-> > > > > > +            // the returned area will borrow from this read lo=
-ck guard, so it can only be used
-> > > > > > +            // while the mmap read lock is still held.
-> > > > >
-> > > > > So We have complicated the locking of the vmas with rcu and per-v=
-ma
-> > > > > locking recently.  We are now able to look up and use a vma under=
- the
-> > > > > rcu read lock.  Does this translate to rust model?
-> > > > >
-> > > > > I believe this is true in recent version of binder as well?
-> > > >
-> > > > Yes. The safety requirements of VmAreaRef is that you must hold the
-> > > > mmap read lock *or* the vma read lock while you have a VmAreaRef
-> > > > reference. This particular method achieves that requirement by hold=
-ing
-> > > > the mmap read lock. But there is also a Rust lock_vma_under_rcu(), =
-see
-> > > > patch 4 for that.
-> > >
-> > > Right, okay.  Thanks.  You can get the reference by only holding the =
-rcu
-> > > read lock, but you should hold the vma lock to ensure that the vma
-> > > itself (and not just the pointer) is safe to use.
-> >
-> > Hmm... To modify the vma, you must hold the mmap *and* vma write lock,
-> > so holding the mmap read lock prevents mutations?
->
-> Sorry, I think I confused things with my answer.  Your code is fine.
-> The phrasing of the "only be used while the mmap read lock is still
-> held" made me wonder about further clarification on the locking here
-> (because the locking is confusing).
->
-> Yes, mmap read lock means there are no writers that can modify the vma.
-> Essentially, you are using the lock to ensure the entire vma space isn't
-> changed during your operation - which is heavier than just locking one
-> vma.
+On Wed, Feb 05, 2025 at 11:38:51AM +0100, Vlastimil Babka wrote:
+> On 2/2/25 07:57, Hyeonggon Yoo wrote:
+> > On Sat, Jan 25, 2025 at 1:49 AM Kevin Brodsky <kevin.brodsky@arm.com> wrote:
+> >>
+> >> SLUB is the only remaining allocator. We can therefore get rid of
+> >> the logic for allocator-specific flags:
+> >>
+> >> * Merge SLAB_CACHE_FLAGS into SLAB_CORE_FLAGS.
+> >>
+> >> * Remove CACHE_CREATE_MASK and instead mask out SLAB_DEBUG_FLAGS if
+> >>   !CONFIG_SLUB_DEBUG. SLAB_DEBUG_FLAGS is now defined
+> >>   unconditionally (no impact on existing code, which ignores it if
+> >>   !CONFIG_SLUB_DEBUG).
+> >>
+> >> * Define SLAB_FLAGS_PERMITTED in terms of SLAB_CORE_FLAGS and
+> >>   SLAB_DEBUG_FLAGS (no functional change).
+> >>
+> >> While at it also remove misleading comments that suggest that
+> >> multiple allocators are available.
+> >>
+> >> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 
-I could extend the safety comment like this:
+Apologizes for the noise. My previous feedback was deemed valid to me
+at the time of writing, but it's incorrect and doesn't add much value
+in improving the patch.
 
-SAFETY: We just checked that a vma was found, so the pointer is valid.
-Furthermore, the returned area will borrow from this read lock guard,
-so it can only be used while the mmap read lock is still held. This
-ensures that there are no writers because writers must hold both the
-mmap and vma write lock.
+FWIW,
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-Alice
+> > Hi Kevin,
+> > This patch in general looks fine to me.
+> > 
+> > However, there are subtle changes that were not documented by the changelog.
+> > SLUB currently does not _completely_ ignore debug flags even when
+> > CONFIG_SLUB_DEBUG=n. For example, calculate_sizes() relocate the free pointer
+> > regardless of CONFIG_SLUB_DEBUG.
+> 
+> I think the patch makes no difference there effectively? Before the patch,
+> CACHE_CREATE_MASK would be used to filter flags and not include the debug
+> flags, so that free pointer relocation due to SLAB_POISON or SLAB_RED_ZONE
+> would not happen. After the patch, it's filtered effectively the same? Am I
+> missing something?
+
+You're not missing anything, it just slipped my mind :/
+
+> > I believe completely ignoring debug flags should be acceptable
+> > when CONFIG_SLUB_DEBUG=n, but this change should at least be documented
+> > in the changelog.
+> > 
+> > Additionally, beyond what this patch currently does, we can remove several
+> > CONFIG_SLUB_DEBUG #ifdefs in some functions (e.g., in calculate_sizes())
+> > on top of this patch.
+> 
+> So AFAIK that should be possible both before and after this patch
+
+Right.
+
+> and you can try (it's out of scope of this patch).
+
+Yes. it is out of scope.
+
+> But I suspect the reason for the #ifdefs is that it the code would reference
+> structures or fields that don't exist without CONFIG_SLUB_DEBUG.
+> Maybe that's not (no longer?) true in some cases and we could clean up.
+
+Yes in most of cases it's it won't build without #ifdefs...
+There are only few cases we could clean up.
+
+> Another reason would be performance, but we shouldn't care in code that's
+> only executed during cache creation.
+
+Or perhaps due to a slight increase in code size, but I doubt the
+difference in code size will be significant.
+
+-- 
+Harry
