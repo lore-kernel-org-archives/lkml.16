@@ -1,53 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0EA22E413
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63F122E402
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752000; cv=none; b=QSkmTqTQcQjZa7vWs0zrzCaeqBAO+eaiBjfN5tMb5S6MSVuoNuuPEY2QBJ32ObL/Ps5cphikwuQWbxGqT/dUZx/qrnMaG3/mBkmU9k9VL+IqzJlnMuzVcnLGEVYn3xsPnxGygDecPv3XoChQlVKwH90ygg/U3Gdj6bw7c/Ocogg=
+	t=1738752000; cv=none; b=s1pCH4w+X3leuceDPnF9jopo/x2iQAx1Ya9Ro8jNPVMY9mXODeRJ2SExV/0Z4zNoEFUeuvq1KrwpMv/XnBkRz4jCWk+1hrrum6b2SKG6oDsrmhXdrKq9jI614uYsUOwx3mJeyhvvAL8rszrMq7yl+nykDLGvPnIENwnGPmjHwS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752000; c=relaxed/simple;
-	bh=bYsHlKikMLRNHtZBFjXoHsPnWT52wEwdSd4/ICUqqxo=;
+	bh=YP9HS0ptIzTEGC5ngli3p573WBUnzavxzSb8qjuKIEI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t0ZpKnZFkqQBXaWk1nS5rEzFXG9CCVyBrgX7oEbjtAhsoVreUbWPQkBPLNi7mSWtQCNs5l6FB7LPXiwmVxG/q+KNtokwmjhQ3896z7fCGXrthuifTVq6jj9+uBSqgFyGdvTJ2M2uaHoZdOBABccIkQ22A4O0RadzpW6CpHpjFwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BygJ3IwK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bFZTKcbo; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=N9QkNMQE7hb52VTEacGXepFlHiuwEAysdqIie6Vqn3L08WYQ3yZI0+I0Lb6lPPgOzkrzTZU4PS8WCim901CNlRXKVN/uGXsuZHoc8bI7k9nF9o1BmUgkrEAtTnOXX/quisDJmeOUOI6WLNlkscwWC/mT09VOSdzeBJY8kW8201E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uGkGTQUF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N9i+7Fb6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BygJ3IwK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bFZTKcbo"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uGkGTQUF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N9i+7Fb6"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738751996;
+	s=2020; t=1738751995;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YlZUudkxKiwKydn8CFoyh2y5DXuLVq+t1A6J7dtmCaw=;
-	b=BygJ3IwKwe8gthDEq7WjtOwOOkk9dR25Zh+VWxtxNN+dbu29p45J4CGnH/mwwkCbZ+v4es
-	AsUUVcynQZCCyshiRMn03+xovBVyXtB6s+EeaPE2vD0N/n8Xj4lzejWu4VH+7G4EKgWqkX
-	PZcKMThnS638KXxpf0q37UaUdA7TfXdWNU1STf66+vgDNWLEiWWGoLeaXdbr+UNgSM+x2c
-	nZlwJdndOQmzteQdOFyGfuxM3t3NIrnjwn8Cj9dt0W9RxtGn81KmbrxJ4JBjWTfX/hQQck
-	G7aENp4Art76+hoPB/Yi94m0PU1P3IYRowGdIDFRRUOiLK0z6qZ2pnnz0hrc1g==
+	bh=qQNxZsLOvb0JOc8RLLPe5wcuFpbkYljvCLJQYULWDzI=;
+	b=uGkGTQUFiSa/ABsiW/ub6veZTFhC+yBmIu674/3K4X5iklWfhvHoQ7QgEZKi2yna5BBkid
+	gAve7/gFdp7gOQUPsFkNY4I0TE3DRKd+fCeoyQ695fzkz2L+ds4/ejNHBhGhWXgIc+wOYR
+	HIsPBKzyFMHnnZVpLY3VajZv0aRDJm1ycCZsr4j+b28m3xYcKsXveS/QD0O6nOapCMqBBU
+	T4vOja83JK3CHa8neN1+5kM5/eG2SWaSsxWh1OMGF152pC9OiRmWN2UZSFbBI4c0Tqrgf+
+	DGLcu+u3GblgCgE69oOp3nljlI3KPruSI1Q6VCaY4F9zBGY5ybcEFXpwkMs7bw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738751996;
+	s=2020e; t=1738751995;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YlZUudkxKiwKydn8CFoyh2y5DXuLVq+t1A6J7dtmCaw=;
-	b=bFZTKcbonLLW8IGR0gMhPAny4+GE+mLbk7v0z0i6xWas9isxJq9digdcggHBs7qG54AucQ
-	piC5EePY6rCcHMDQ==
+	bh=qQNxZsLOvb0JOc8RLLPe5wcuFpbkYljvCLJQYULWDzI=;
+	b=N9i+7Fb6fXh97OOlAqu6latl06ZW0/D1xpoRgHa9qQF4TFtXSJAlGhvBMfINhQFGVgWoKf
+	6j6uBFvrcvXSPKCA==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH v2 31/31] hwrng: timeriomem: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:39:15 +0100
-Message-Id: <010640f1668d40894a1721037c56f7a684dbcc5f.1738746821.git.namcao@linutronix.de>
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 29/31] PM / devfreq: rockchip-dfi: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:39:13 +0100
+Message-Id: <dfb35fb45eacdba7b8767052aa8c29ca157ac1b0.1738746821.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
 References: <cover.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,29 +67,30 @@ hrtimer::function with the new setup mechanism.
 
 Patch was created by using Coccinelle.
 
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Heiko Stuebner <heiko@sntech.de>
 ---
- drivers/char/hw_random/timeriomem-rng.c | 3 +--
+ drivers/devfreq/event/rockchip-dfi.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/char/hw_random/timeriomem-rng.c b/drivers/char/hw_rand=
-om/timeriomem-rng.c
-index 7174bfccc7b3..b95f6d0f17ed 100644
---- a/drivers/char/hw_random/timeriomem-rng.c
-+++ b/drivers/char/hw_random/timeriomem-rng.c
-@@ -152,8 +152,7 @@ static int timeriomem_rng_probe(struct platform_device =
-*pdev)
+diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/r=
+ockchip-dfi.c
+index e2a1e4463b6f..0470d7c175f4 100644
+--- a/drivers/devfreq/event/rockchip-dfi.c
++++ b/drivers/devfreq/event/rockchip-dfi.c
+@@ -642,8 +642,7 @@ static int rockchip_ddr_perf_init(struct rockchip_dfi *=
+dfi)
+ 	if (ret)
+ 		return ret;
 =20
- 	priv->period =3D ns_to_ktime(period * NSEC_PER_USEC);
- 	init_completion(&priv->completion);
--	hrtimer_init(&priv->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
--	priv->timer.function =3D timeriomem_rng_trigger;
-+	hrtimer_setup(&priv->timer, timeriomem_rng_trigger, CLOCK_MONOTONIC, HRTI=
-MER_MODE_ABS);
+-	hrtimer_init(&dfi->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	dfi->timer.function =3D rockchip_dfi_timer;
++	hrtimer_setup(&dfi->timer, rockchip_dfi_timer, CLOCK_MONOTONIC, HRTIMER_M=
+ODE_REL);
 =20
- 	priv->rng_ops.name =3D dev_name(&pdev->dev);
- 	priv->rng_ops.read =3D timeriomem_rng_read;
+ 	switch (dfi->ddr_type) {
+ 	case ROCKCHIP_DDRTYPE_LPDDR2:
 --=20
 2.39.5
 
