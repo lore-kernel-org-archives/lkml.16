@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 196111E89C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19EBC1662EF;
+	Wed,  5 Feb 2025 15:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738768229; cv=none; b=Pqwv5BXKJ+62kkFYF1rsqUj9G71XBmvDZk8srTwKxOkAusaivQEG3NUZIhHm2jJj5rV01rDKW2ezPCaSUBX428BMj+puIfEF0PoNklfErza4hjCc4mNOnLGsyCFq/D5FZ4WsVcoKqX3tKja/N4yCqJ3By+tHPEQ2/iQrYfkBdo8=
+	t=1738768233; cv=none; b=Zr/H5jX0TCl9DBjhTHB+8ghVqmIblWeho0W7brChBFN39Fvbk4G9q5Gph9GWsZPZDGtdfmtGlIhyUdNsHEQtrC46+5iNKglsGEV+X0EQvQzLMR1OqvkvNGFbupzyGNfBMIJO3/s0/EVa2utON9L4I7WInReYVqNiKUEr1WKE2hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738768229; c=relaxed/simple;
-	bh=6JXU90L+Oj3sBAp9u9bCwIFdxjbwqKNeZ/AfVNVXDv4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VrU1pCxgvWMNx9CZVSI/vBdBsaLkGQSrK30BAqxl+J9k8iANO9cB9/r4XBmAzFXZaqeb2BBVGR1AbNmuR+uvQrwMVfwvv2s3LZepdcpvdFIutDwN/3H1OxhN3ZbJJqp7gkpEHF5RfTWQI/Rd8nRENa3hrLt/D/4xHjYQtZ79DDA=
+	s=arc-20240116; t=1738768233; c=relaxed/simple;
+	bh=0I1T16cHR3wAmg8N9hea5o9OSv+qSCJxkxldhLQxsY4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jI3pAqLayFh57K7RRagi+OGy02Phss8QzOItH/O15jWpCF4BjseiTmvvQbWlugz5Hkza5qGd18Ch2aI/Os4jXe10li6hFJOYQcQ78iGrnOxBONTLXulHBt2cA8PYVuWs6f+dli3zAko54TH2CrqO9At2pvBCDfZ7XO3ObY5TmiM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9035D1063;
-	Wed,  5 Feb 2025 07:10:48 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84921165C;
+	Wed,  5 Feb 2025 07:10:53 -0800 (PST)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 723113F5A1;
-	Wed,  5 Feb 2025 07:10:22 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 438EB3F5A1;
+	Wed,  5 Feb 2025 07:10:25 -0800 (PST)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -35,11 +36,29 @@ To: Catalin Marinas <catalin.marinas@arm.com>,
 Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 00/16] hugetlb and vmalloc fixes and perf improvements
-Date: Wed,  5 Feb 2025 15:09:40 +0000
-Message-ID: <20250205151003.88959-1-ryan.roberts@arm.com>
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v1 01/16] mm: hugetlb: Add huge page size param to huge_ptep_get_and_clear()
+Date: Wed,  5 Feb 2025 15:09:41 +0000
+Message-ID: <20250205151003.88959-2-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250205151003.88959-1-ryan.roberts@arm.com>
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,140 +67,368 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi All,
+In order to fix a bug, arm64 needs to be told the size of the huge page
+for which the huge_pte is being set in huge_ptep_get_and_clear().
+Provide for this by adding an `unsigned long sz` parameter to the
+function. This follows the same pattern as huge_pte_clear() and
+set_huge_pte_at().
 
-This series started out as a few simple bug fixes but evolved into some code
-cleanups and useful performance improvements too. It mainly touches arm64 arch
-code but there are a couple of supporting mm changes; I'm guessing that going in
-through the arm64 tree is the right approach here?
+This commit makes the required interface modifications to the core mm as
+well as all arches that implement this function (arm64, loongarch, mips,
+parisc, powerpc, riscv, s390, sparc). The actual arm64 bug will be fixed
+in a separate commit.
 
-Beyond the bug fixes and cleanups, the 2 key performance improvements are 1)
-enabling the use of contpte-mapped blocks in the vmalloc space when appropriate
-(which reduces TLB pressure). There were already hooks for this (used by
-powerpc) but they required some tidying and extending for arm64. And 2) batching
-up barriers when modifying the vmalloc address space for upto 30% reduction in
-time taken in vmalloc().
+Cc: <stable@vger.kernel.org>
+Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+---
+ arch/arm64/include/asm/hugetlb.h     |  4 ++--
+ arch/arm64/mm/hugetlbpage.c          |  8 +++++---
+ arch/loongarch/include/asm/hugetlb.h |  6 ++++--
+ arch/mips/include/asm/hugetlb.h      |  6 ++++--
+ arch/parisc/include/asm/hugetlb.h    |  2 +-
+ arch/parisc/mm/hugetlbpage.c         |  2 +-
+ arch/powerpc/include/asm/hugetlb.h   |  6 ++++--
+ arch/riscv/include/asm/hugetlb.h     |  3 ++-
+ arch/riscv/mm/hugetlbpage.c          |  2 +-
+ arch/s390/include/asm/hugetlb.h      | 12 ++++++++----
+ arch/s390/mm/hugetlbpage.c           | 10 ++++++++--
+ arch/sparc/include/asm/hugetlb.h     |  2 +-
+ arch/sparc/mm/hugetlbpage.c          |  2 +-
+ include/asm-generic/hugetlb.h        |  2 +-
+ include/linux/hugetlb.h              |  4 +++-
+ mm/hugetlb.c                         |  4 ++--
+ 16 files changed, 48 insertions(+), 27 deletions(-)
 
-vmalloc() performance was measured using the test_vmalloc.ko module. Tested on
-Apple M2 and Ampere Altra. Each test had loop count set to 500000 and the whole
-test was repeated 10 times.
+diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+index c6dff3e69539..03db9cb21ace 100644
+--- a/arch/arm64/include/asm/hugetlb.h
++++ b/arch/arm64/include/asm/hugetlb.h
+@@ -42,8 +42,8 @@ extern int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 				      unsigned long addr, pte_t *ptep,
+ 				      pte_t pte, int dirty);
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+-extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-				     unsigned long addr, pte_t *ptep);
++extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
++				     pte_t *ptep, unsigned long sz);
+ #define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ extern void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 				    unsigned long addr, pte_t *ptep);
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 98a2a0e64e25..06db4649af91 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -396,8 +396,8 @@ void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 		__pte_clear(mm, addr, ptep);
+ }
 
-legend:
-  - p: nr_pages (pages to allocate)
-  - h: use_huge (vmalloc() vs vmalloc_huge())
-  - (I): statistically significant improvement (95% CI does not overlap)
-  - (R): statistically significant regression (95% CI does not overlap)
-  - mearements are times; smaller is better
+-pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-			      unsigned long addr, pte_t *ptep)
++pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
++			      pte_t *ptep, unsigned long sz)
+ {
+ 	int ncontig;
+ 	size_t pgsize;
+@@ -549,6 +549,8 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
 
-+--------------------------------------------------+-------------+-------------+
-| Benchmark                                        |             |             |
-|   Result Class                                   |    Apple M2 | Ampere Alta |
-+==================================================+=============+=============+
-| micromm/vmalloc                                  |             |             |
-|   fix_align_alloc_test: p:1, h:0 (usec)          | (I) -12.93% |  (I) -7.89% |
-|   fix_size_alloc_test: p:1, h:0 (usec)           |   (R) 4.00% |       1.40% |
-|   fix_size_alloc_test: p:1, h:1 (usec)           |   (R) 5.28% |       1.46% |
-|   fix_size_alloc_test: p:2, h:0 (usec)           |  (I) -3.04% |      -1.11% |
-|   fix_size_alloc_test: p:2, h:1 (usec)           |      -3.24% |      -2.86% |
-|   fix_size_alloc_test: p:4, h:0 (usec)           | (I) -11.77% |  (I) -4.48% |
-|   fix_size_alloc_test: p:4, h:1 (usec)           |  (I) -9.19% |  (I) -4.45% |
-|   fix_size_alloc_test: p:8, h:0 (usec)           | (I) -19.79% | (I) -11.63% |
-|   fix_size_alloc_test: p:8, h:1 (usec)           | (I) -19.40% | (I) -11.11% |
-|   fix_size_alloc_test: p:16, h:0 (usec)          | (I) -24.89% | (I) -15.26% |
-|   fix_size_alloc_test: p:16, h:1 (usec)          | (I) -11.61% |   (R) 6.00% |
-|   fix_size_alloc_test: p:32, h:0 (usec)          | (I) -26.54% | (I) -18.80% |
-|   fix_size_alloc_test: p:32, h:1 (usec)          | (I) -15.42% |   (R) 5.82% |
-|   fix_size_alloc_test: p:64, h:0 (usec)          | (I) -30.25% | (I) -20.80% |
-|   fix_size_alloc_test: p:64, h:1 (usec)          | (I) -16.98% |   (R) 6.54% |
-|   fix_size_alloc_test: p:128, h:0 (usec)         | (I) -32.56% | (I) -21.79% |
-|   fix_size_alloc_test: p:128, h:1 (usec)         | (I) -18.39% |   (R) 5.91% |
-|   fix_size_alloc_test: p:256, h:0 (usec)         | (I) -33.33% | (I) -22.22% |
-|   fix_size_alloc_test: p:256, h:1 (usec)         | (I) -18.82% |   (R) 5.79% |
-|   fix_size_alloc_test: p:512, h:0 (usec)         | (I) -33.27% | (I) -22.23% |
-|   fix_size_alloc_test: p:512, h:1 (usec)         |       0.86% |      -0.71% |
-|   full_fit_alloc_test: p:1, h:0 (usec)           |       2.49% |      -0.62% |
-|   kvfree_rcu_1_arg_vmalloc_test: p:1, h:0 (usec) |       1.79% |      -1.25% |
-|   kvfree_rcu_2_arg_vmalloc_test: p:1, h:0 (usec) |      -0.32% |       0.61% |
-|   long_busy_list_alloc_test: p:1, h:0 (usec)     | (I) -31.06% | (I) -19.62% |
-|   pcpu_alloc_test: p:1, h:0 (usec)               |       0.06% |       0.47% |
-|   random_size_align_alloc_test: p:1, h:0 (usec)  | (I) -14.94% |  (I) -8.68% |
-|   random_size_alloc_test: p:1, h:0 (usec)        | (I) -30.22% | (I) -19.59% |
-|   vm_map_ram_test: p:1, h:0 (usec)               |       2.65% |   (R) 7.22% |
-+--------------------------------------------------+-------------+-------------+
+ pte_t huge_ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
+ {
++	unsigned long psize = huge_page_size(hstate_vma(vma));
++
+ 	if (alternative_has_cap_unlikely(ARM64_WORKAROUND_2645198)) {
+ 		/*
+ 		 * Break-before-make (BBM) is required for all user space mappings
+@@ -558,7 +560,7 @@ pte_t huge_ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr
+ 		if (pte_user_exec(__ptep_get(ptep)))
+ 			return huge_ptep_clear_flush(vma, addr, ptep);
+ 	}
+-	return huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
++	return huge_ptep_get_and_clear(vma->vm_mm, addr, ptep, psize);
+ }
 
-So there are some nice improvements but also some regressions to explain:
+ void huge_ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index c8e4057734d0..4dc4b3e04225 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -36,7 +36,8 @@ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
 
-First fix_size_alloc_test with h:1 and p:16,32,64,128,256 regress by ~6% on
-Altra. The regression is actually introduced by enabling contpte-mapped 64K
-blocks in these tests, and that regression is reduced (from about 8% if memory
-serves) by doing the barrier batching. I don't have a definite conclusion on the
-root cause, but I've ruled out the differences in the mapping paths in vmalloc.
-I strongly believe this is likely due to the difference in the allocation path;
-64K blocks are not cached per-cpu so we have to go all the way to the buddy. I'm
-not sure why this doesn't show up on M2 though. Regardless, I'm going to assert
-that it's better to choose 16x reduction in TLB pressure vs 6% on the vmalloc
-allocation call duration.
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-					    unsigned long addr, pte_t *ptep)
++					    unsigned long addr, pte_t *ptep,
++					    unsigned long sz)
+ {
+ 	pte_t clear;
+ 	pte_t pte = ptep_get(ptep);
+@@ -51,8 +52,9 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 					  unsigned long addr, pte_t *ptep)
+ {
+ 	pte_t pte;
++	unsigned long sz = huge_page_size(hstate_vma(vma));
 
-Next we have ~4% regression on M2 when vmalloc'ing a single page. (h is
-irrelevant because a single page is too small for contpte). I assume this is
-because there is some minor overhead in the barrier deferral mechanism and we
-are not getting to amortize it over multiple pages here. But I would assume
-vmalloc'ing 1 page is uncommon because it doesn't buy you anything over
-kmalloc?
+-	pte = huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
++	pte = huge_ptep_get_and_clear(vma->vm_mm, addr, ptep, sz);
+ 	flush_tlb_page(vma, addr);
+ 	return pte;
+ }
+diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+index d0a86ce83de9..fbc71ddcf0f6 100644
+--- a/arch/mips/include/asm/hugetlb.h
++++ b/arch/mips/include/asm/hugetlb.h
+@@ -27,7 +27,8 @@ static inline int prepare_hugepage_range(struct file *file,
 
-Applies on top of v6.14-rc1. All mm selftests run and pass.
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-					    unsigned long addr, pte_t *ptep)
++					    unsigned long addr, pte_t *ptep,
++					    unsigned long sz)
+ {
+ 	pte_t clear;
+ 	pte_t pte = *ptep;
+@@ -42,13 +43,14 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 					  unsigned long addr, pte_t *ptep)
+ {
+ 	pte_t pte;
++	unsigned long sz = huge_page_size(hstate_vma(vma));
 
-Thanks,
-Ryan
+ 	/*
+ 	 * clear the huge pte entry firstly, so that the other smp threads will
+ 	 * not get old pte entry after finishing flush_tlb_page and before
+ 	 * setting new huge pte entry
+ 	 */
+-	pte = huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
++	pte = huge_ptep_get_and_clear(vma->vm_mm, addr, ptep, sz);
+ 	flush_tlb_page(vma, addr);
+ 	return pte;
+ }
+diff --git a/arch/parisc/include/asm/hugetlb.h b/arch/parisc/include/asm/hugetlb.h
+index 5b3a5429f71b..21e9ace17739 100644
+--- a/arch/parisc/include/asm/hugetlb.h
++++ b/arch/parisc/include/asm/hugetlb.h
+@@ -10,7 +10,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
 
-Ryan Roberts (16):
-  mm: hugetlb: Add huge page size param to huge_ptep_get_and_clear()
-  arm64: hugetlb: Fix huge_ptep_get_and_clear() for non-present ptes
-  arm64: hugetlb: Fix flush_hugetlb_tlb_range() invalidation level
-  arm64: hugetlb: Refine tlb maintenance scope
-  mm/page_table_check: Batch-check pmds/puds just like ptes
-  arm64/mm: Refactor __set_ptes() and __ptep_get_and_clear()
-  arm64: hugetlb: Use ___set_ptes() and ___ptep_get_and_clear()
-  arm64/mm: Hoist barriers out of ___set_ptes() loop
-  arm64/mm: Avoid barriers for invalid or userspace mappings
-  mm/vmalloc: Warn on improper use of vunmap_range()
-  mm/vmalloc: Gracefully unmap huge ptes
-  arm64/mm: Support huge pte-mapped pages in vmap
-  mm: Don't skip arch_sync_kernel_mappings() in error paths
-  mm/vmalloc: Batch arch_sync_kernel_mappings() more efficiently
-  mm: Generalize arch_sync_kernel_mappings()
-  arm64/mm: Defer barriers when updating kernel mappings
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep);
++			      pte_t *ptep, unsigned long sz);
 
- arch/arm64/include/asm/hugetlb.h     |  33 +++-
- arch/arm64/include/asm/pgtable.h     | 225 ++++++++++++++++++++-------
- arch/arm64/include/asm/thread_info.h |   2 +
- arch/arm64/include/asm/vmalloc.h     |  40 +++++
- arch/arm64/kernel/process.c          |  20 ++-
- arch/arm64/mm/hugetlbpage.c          | 114 ++++++--------
- arch/loongarch/include/asm/hugetlb.h |   6 +-
- arch/mips/include/asm/hugetlb.h      |   6 +-
- arch/parisc/include/asm/hugetlb.h    |   2 +-
- arch/parisc/mm/hugetlbpage.c         |   2 +-
- arch/powerpc/include/asm/hugetlb.h   |   6 +-
- arch/riscv/include/asm/hugetlb.h     |   3 +-
- arch/riscv/mm/hugetlbpage.c          |   2 +-
- arch/s390/include/asm/hugetlb.h      |  12 +-
- arch/s390/mm/hugetlbpage.c           |  10 +-
- arch/sparc/include/asm/hugetlb.h     |   2 +-
- arch/sparc/mm/hugetlbpage.c          |   2 +-
- include/asm-generic/hugetlb.h        |   2 +-
- include/linux/hugetlb.h              |   4 +-
- include/linux/page_table_check.h     |  30 ++--
- include/linux/pgtable.h              |  24 +--
- include/linux/pgtable_modmask.h      |  32 ++++
- include/linux/vmalloc.h              |  55 +++++++
- mm/hugetlb.c                         |   4 +-
- mm/memory.c                          |  11 +-
- mm/page_table_check.c                |  34 ++--
- mm/vmalloc.c                         |  97 +++++++-----
- 27 files changed, 530 insertions(+), 250 deletions(-)
- create mode 100644 include/linux/pgtable_modmask.h
+ #define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+diff --git a/arch/parisc/mm/hugetlbpage.c b/arch/parisc/mm/hugetlbpage.c
+index e9d18cf25b79..a94fe546d434 100644
+--- a/arch/parisc/mm/hugetlbpage.c
++++ b/arch/parisc/mm/hugetlbpage.c
+@@ -126,7 +126,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
 
+
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep)
++			      pte_t *ptep, unsigned long sz)
+ {
+ 	pte_t entry;
+
+diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
+index dad2e7980f24..86326587e58d 100644
+--- a/arch/powerpc/include/asm/hugetlb.h
++++ b/arch/powerpc/include/asm/hugetlb.h
+@@ -45,7 +45,8 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
+
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-					    unsigned long addr, pte_t *ptep)
++					    unsigned long addr, pte_t *ptep,
++					    unsigned long sz)
+ {
+ 	return __pte(pte_update(mm, addr, ptep, ~0UL, 0, 1));
+ }
+@@ -55,8 +56,9 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 					  unsigned long addr, pte_t *ptep)
+ {
+ 	pte_t pte;
++	unsigned long sz = huge_page_size(hstate_vma(vma));
+
+-	pte = huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
++	pte = huge_ptep_get_and_clear(vma->vm_mm, addr, ptep, sz);
+ 	flush_hugetlb_page(vma, addr);
+ 	return pte;
+ }
+diff --git a/arch/riscv/include/asm/hugetlb.h b/arch/riscv/include/asm/hugetlb.h
+index faf3624d8057..446126497768 100644
+--- a/arch/riscv/include/asm/hugetlb.h
++++ b/arch/riscv/include/asm/hugetlb.h
+@@ -28,7 +28,8 @@ void set_huge_pte_at(struct mm_struct *mm,
+
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-			      unsigned long addr, pte_t *ptep);
++			      unsigned long addr, pte_t *ptep,
++			      unsigned long sz);
+
+ #define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index 42314f093922..b4a78a4b35cf 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -293,7 +293,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 			      unsigned long addr,
+-			      pte_t *ptep)
++			      pte_t *ptep, unsigned long sz)
+ {
+ 	pte_t orig_pte = ptep_get(ptep);
+ 	int pte_num;
+diff --git a/arch/s390/include/asm/hugetlb.h b/arch/s390/include/asm/hugetlb.h
+index 7c52acaf9f82..420c74306779 100644
+--- a/arch/s390/include/asm/hugetlb.h
++++ b/arch/s390/include/asm/hugetlb.h
+@@ -26,7 +26,11 @@ void __set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep);
+
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+-pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep);
++pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
++			      unsigned long addr, pte_t *ptep,
++			      unsigned long sz);
++pte_t __huge_ptep_get_and_clear(struct mm_struct *mm,
++			      unsigned long addr, pte_t *ptep);
+
+ static inline void arch_clear_hugetlb_flags(struct folio *folio)
+ {
+@@ -48,7 +52,7 @@ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 					  unsigned long address, pte_t *ptep)
+ {
+-	return huge_ptep_get_and_clear(vma->vm_mm, address, ptep);
++	return __huge_ptep_get_and_clear(vma->vm_mm, address, ptep);
+ }
+
+ #define  __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
+@@ -59,7 +63,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	int changed = !pte_same(huge_ptep_get(vma->vm_mm, addr, ptep), pte);
+
+ 	if (changed) {
+-		huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
++		__huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
+ 		__set_huge_pte_at(vma->vm_mm, addr, ptep, pte);
+ 	}
+ 	return changed;
+@@ -69,7 +73,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 					   unsigned long addr, pte_t *ptep)
+ {
+-	pte_t pte = huge_ptep_get_and_clear(mm, addr, ptep);
++	pte_t pte = __huge_ptep_get_and_clear(mm, addr, ptep);
+
+ 	__set_huge_pte_at(mm, addr, ptep, pte_wrprotect(pte));
+ }
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index d9ce199953de..52ee8e854195 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -188,8 +188,8 @@ pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ 	return __rste_to_pte(pte_val(*ptep));
+ }
+
+-pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-			      unsigned long addr, pte_t *ptep)
++pte_t __huge_ptep_get_and_clear(struct mm_struct *mm,
++				unsigned long addr, pte_t *ptep)
+ {
+ 	pte_t pte = huge_ptep_get(mm, addr, ptep);
+ 	pmd_t *pmdp = (pmd_t *) ptep;
+@@ -202,6 +202,12 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 	return pte;
+ }
+
++pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
++			      unsigned long addr, pte_t *ptep, unsigned long sz)
++{
++	return __huge_ptep_get_and_clear(mm, addr, ptep);
++}
++
+ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+ 			unsigned long addr, unsigned long sz)
+ {
+diff --git a/arch/sparc/include/asm/hugetlb.h b/arch/sparc/include/asm/hugetlb.h
+index c714ca6a05aa..e7a9cdd498dc 100644
+--- a/arch/sparc/include/asm/hugetlb.h
++++ b/arch/sparc/include/asm/hugetlb.h
+@@ -20,7 +20,7 @@ void __set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep);
++			      pte_t *ptep, unsigned long sz);
+
+ #define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
+index eee601a0d2cf..80504148d8a5 100644
+--- a/arch/sparc/mm/hugetlbpage.c
++++ b/arch/sparc/mm/hugetlbpage.c
+@@ -260,7 +260,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ }
+
+ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep)
++			      pte_t *ptep, unsigned long sz)
+ {
+ 	unsigned int i, nptes, orig_shift, shift;
+ 	unsigned long size;
+diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+index f42133dae68e..2afc95bf1655 100644
+--- a/include/asm-generic/hugetlb.h
++++ b/include/asm-generic/hugetlb.h
+@@ -90,7 +90,7 @@ static inline void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+
+ #ifndef __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-		unsigned long addr, pte_t *ptep)
++		unsigned long addr, pte_t *ptep, unsigned long sz)
+ {
+ 	return ptep_get_and_clear(mm, addr, ptep);
+ }
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index ec8c0ccc8f95..bf5f7256bd28 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -1004,7 +1004,9 @@ static inline void hugetlb_count_sub(long l, struct mm_struct *mm)
+ static inline pte_t huge_ptep_modify_prot_start(struct vm_area_struct *vma,
+ 						unsigned long addr, pte_t *ptep)
+ {
+-	return huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
++	unsigned long psize = huge_page_size(hstate_vma(vma));
++
++	return huge_ptep_get_and_clear(vma->vm_mm, addr, ptep, psize);
+ }
+ #endif
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 65068671e460..de9d49e521c1 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5447,7 +5447,7 @@ static void move_huge_pte(struct vm_area_struct *vma, unsigned long old_addr,
+ 	if (src_ptl != dst_ptl)
+ 		spin_lock_nested(src_ptl, SINGLE_DEPTH_NESTING);
+
+-	pte = huge_ptep_get_and_clear(mm, old_addr, src_pte);
++	pte = huge_ptep_get_and_clear(mm, old_addr, src_pte, sz);
+
+ 	if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
+ 		huge_pte_clear(mm, new_addr, dst_pte, sz);
+@@ -5622,7 +5622,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 			set_vma_resv_flags(vma, HPAGE_RESV_UNMAPPED);
+ 		}
+
+-		pte = huge_ptep_get_and_clear(mm, address, ptep);
++		pte = huge_ptep_get_and_clear(mm, address, ptep, sz);
+ 		tlb_remove_huge_tlb_entry(h, tlb, ptep, address);
+ 		if (huge_pte_dirty(pte))
+ 			set_page_dirty(page);
 --
 2.43.0
 
