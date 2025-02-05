@@ -1,69 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0307620DD45;
-	Wed,  5 Feb 2025 02:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F032913B280;
+	Wed,  5 Feb 2025 02:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738721317; cv=none; b=qg69FuqXAolG3GQ/W4dZuGAY6ALyi4SsJJl2/G8hbISy3hi0n6rGB8iRbdXPnh21l8VG6dAFCrjOI15AxMbTzGeIb1PabFPAYUKBqPANCzX+ORCg2gEFvTa7d1/ibdsfQjoDgmbE3rabORWHeyfzR1owv7iTkScoKvXKeItrA7Y=
+	t=1738721441; cv=none; b=TBM22v/2gpWImuE+4Oj2cXTGjDzKKZk/wMeJiAm265n5HR9OlDgN7ipRaWeI+YrCLd98YzYOtHny5xwMebYZuWxVK5Ia/qhnPBvnPOJZati4w8jSCG92rLa5OmyJnF3VQo7OB8EmBUObw3sWV74YIeP0G94YZ5VRBZIAlTTA7Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738721317; c=relaxed/simple;
-	bh=7mGvON76aOVSll1EQ1UpgCRp0itlDsHTpyTyDoSJjsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T17x98PmrQKvCHZMu0b00r6KTI/Fk4eEpKGkQsqqdlBumJFlp8+H9EYKEKiAu+yBZ7MT/WjgCOZv8zznY4LtK7MqEQvBs9MoZqdz27VZc6ikdd8Wv/QvrplnRc1MK0hk66EgHVg4aAvFmDhvn9aqL68nLgHWUzBa4o9M556Duq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivZjlLBT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivZjlLBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F97C4CEDF;
-	Wed,  5 Feb 2025 02:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738721316;
-	bh=7mGvON76aOVSll1EQ1UpgCRp0itlDsHTpyTyDoSJjsg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ivZjlLBTdS2rCYB5+K9xcl83RZhD5DhJ3yYaCpho/7AXEsYqjjESebQLp5CXMvh9D
-	 YwRTXfL+NkYxLtZd17ZCbOv8CMAsTbklFxdxpeoOvOb++Eutws+ab9YNxEnwVw61gC
-	 CU+z8mSlId0tOZGhko0DPEwst1is2qmaUuD6LBPBjYV9QKT1Kv6TnM2VmGH8vFqF9Y
-	 2uo0t/m/Ct9TnnXstE2zlfqfunwFWSRAu27GlU4ts6pTXj6Fd/Y/GDdRSoZLPBxRaG
-	 cFpsLkqv91AlEMzI1Co6ZSV4lw5s3DgNsrV8ZEUUEuO3JK1nZYIykd7N6/lv7Zp3Li
-	 +EeIFBzwmqG1A==
-Date: Tue, 4 Feb 2025 18:08:33 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, Donald
- Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Neal Cardwell <ncardwell@google.com>, David Ahern
- <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
- <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "Eugenio
- =?UTF-8?B?UMOpcmV6?=" <eperezma@redhat.com>, Stefan Hajnoczi
- <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan
- <shuah@kernel.org>, sdf@fomichev.me, asml.silence@gmail.com,
- dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira
- <victor@mojatatu.com>, Pedro Tammela <pctammela@mojatatu.com>, Samiullah
- Khawaja <skhawaja@google.com>
-Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
-Message-ID: <20250204180833.48cb40cb@kernel.org>
-In-Reply-To: <20250203223916.1064540-1-almasrymina@google.com>
-References: <20250203223916.1064540-1-almasrymina@google.com>
+	s=arc-20240116; t=1738721441; c=relaxed/simple;
+	bh=6zcxGJiXXsMTV8yi9NAfYXCej75ugBRIPxF4TqumUEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EQym3IvQrOjjRLWV31Nqg/1vDiPprf4JmzboZvBk3U2BhufS6W0nqWZ2tpa6elrZaf+W943Kn7R2L22lVES3+N3SiK59fZRx9s/JP6aE2LalhqMwtecXTCEtKxbRSf3Ud8ZzSVx7la5/IdO7IZctRC6x8Uok4uT2yf7CgR8lyhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Ynjq12K6zz2FcvB;
+	Wed,  5 Feb 2025 09:50:05 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id C939A1A016C;
+	Wed,  5 Feb 2025 09:53:41 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 5 Feb 2025 09:53:40 +0800
+Message-ID: <774bf740-28db-47e1-8a7e-dc32c435b6ec@huawei.com>
+Date: Wed, 5 Feb 2025 09:53:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH 1/2] nfsd: map the ELOOP to nfserr_symlink to avoid
+ warning
+To: Chuck Lever <chuck.lever@oracle.com>, <jlayton@kernel.org>,
+	<neilb@suse.de>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
+	<tom@talpey.com>, <trondmy@hammerspace.com>, <linux-nfs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250126095045.738902-1-lilingfeng3@huawei.com>
+ <20250126095045.738902-2-lilingfeng3@huawei.com>
+ <e9a10562-5c8e-4bc1-a767-20ee1b07e4b6@oracle.com>
+ <7edd3481-df5a-4d22-87f5-367263b19ea8@huawei.com>
+ <04b06966-ad5b-46ce-a629-b6de7b428360@oracle.com>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <04b06966-ad5b-46ce-a629-b6de7b428360@oracle.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On Mon,  3 Feb 2025 22:39:10 +0000 Mina Almasry wrote:
-> v3: https://patchwork.kernel.org/project/netdevbpf/list/?series=929401&state=*
-> ===
-> 
-> RFC v2: https://patchwork.kernel.org/project/netdevbpf/list/?series=920056&state=*
 
-nit: lore links are better
+在 2025/1/27 21:28, Chuck Lever 写道:
+> On 1/26/25 9:33 PM, Li Lingfeng wrote:
+>>
+>> 在 2025/1/27 1:27, Chuck Lever 写道:
+>>> On 1/26/25 4:50 AM, Li Lingfeng wrote:
+>>>> We got -ELOOP from ext4, resulting in the following WARNING:
+>>>>
+>>>> VFS: Lookup of 'dc' in ext4 sdd would have caused loop
+>>>> ------------[ cut here ]------------
+>>>> nfsd: non-standard errno: -40
+>>>> WARNING: CPU: 1 PID: 297024 at fs/nfsd/vfs.c:113 nfserrno+0xc8/0x128
+>>>> Modules linked in:
+>>>> CPU: 1 PID: 297024 Comm: nfsd Not tainted 6.6.0-gfa4c2159cd0d-dirty 
+>>>> #21
+>>>> Hardware name: linux,dummy-virt (DT)
+>>>> pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>>> pc : nfserrno+0xc8/0x128
+>>>> lr : nfserrno+0xc8/0x128
+>>>> sp : ffff8000846475a0
+>>>> x29: ffff8000846475a0 x28: 0000000000000130 x27: ffff0000d65a24e8
+>>>> x26: ffff0000c7319134 x25: ffff0000d6de4240 x24: 0000000000000002
+>>>> x23: ffffcda9eaac3080 x22: 00000000ffffffd8 x21: 0000000000000026
+>>>> x20: ffffcda9ee055000 x19: 0000000000000000 x18: 0000000000000000
+>>>> x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+>>>> x14: 0000000000000000 x13: 0000000000000001 x12: ffff60001b5ca39b
+>>>> x11: 1fffe0001b5ca39a x10: ffff60001b5ca39a x9 : dfff800000000000
+>>>> x8 : 00009fffe4a35c66 x7 : ffff0000dae51cd3 x6 : 0000000000000001
+>>>> x5 : ffff0000dae51cd0 x4 : ffff60001b5ca39b x3 : dfff800000000000
+>>>> x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000ca5d8040
+>>>> Call trace:
+>>>>   nfserrno+0xc8/0x128
+>>>>   nfsd4_encode_dirent_fattr+0x358/0x380
+>>>>   nfsd4_encode_dirent+0x164/0x3a8
+>>>>   nfsd_buffered_readdir+0x1a8/0x3a0
+>>>>   nfsd_readdir+0x14c/0x188
+>>>>   nfsd4_encode_readdir+0x1d4/0x370
+>>>>   nfsd4_encode_operation+0x130/0x518
+>>>>   nfsd4_proc_compound+0x394/0xec0
+>>>>   nfsd_dispatch+0x264/0x418
+>>>>   svc_process_common+0x584/0xc78
+>>>>   svc_process+0x1e8/0x2c0
+>>>>   svc_recv+0x194/0x2d0
+>>>>   nfsd+0x198/0x378
+>>>>   kthread+0x1d8/0x1f0
+>>>>   ret_from_fork+0x10/0x20
+>>>> Kernel panic - not syncing: kernel: panic_on_warn set ...
+>>>>
+>>>> The ELOOP error in Linux indicates that too many symbolic links were
+>>>> encountered in resolving a path name. Mapping it to nfserr_symlink 
+>>>> may be
+>>>> fine.
+>>>>
+>>>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>>>> ---
+>>>>   fs/nfsd/vfs.c | 1 +
+>>>>   1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+>>>> index 29cb7b812d71..0f727010b8cb 100644
+>>>> --- a/fs/nfsd/vfs.c
+>>>> +++ b/fs/nfsd/vfs.c
+>>>> @@ -100,6 +100,7 @@ nfserrno (int errno)
+>>>>           { nfserr_perm, -ENOKEY },
+>>>>           { nfserr_no_grace, -ENOGRACE},
+>>>>           { nfserr_io, -EBADMSG },
+>>>> +        { nfserr_symlink, -ELOOP },
+>>>>       };
+>>>>       int    i;
+>>>
+>>> Adding ELOOP -> SYMLINK as a generic mapping could be a problem.
+>>>
+>>> RFC 8881 Section 15.2 does not list NFS4ERR_SYMLINK as a permissible
+>>> status code for NFSv4 READDIR. Further, Section 15.4 lists only the
+>>> following operations for NFS4ERR_SYMLINK:
+>>>
+>>> COMMIT, LAYOUTCOMMIT, LINK, LOCK, LOCKT, LOOKUP, LOOKUPP, OPEN, 
+>>> READ, WRITE
+>>>
+>>>
+>>> Which of lookup_positive_unlocked() or nfsd_cross_mnt() returned
+>>> ELOOP, and why? What were the export options? What was in the file
+>>> system that caused this? Can this scenario be reproduced on v6.13?
+>>>
+>> Hi,
+>> I got a more detailed log with line numbers from our test team.
+>>
+>> VFS: Lookup of 'dc' in ext4 sdd would have caused loop
+>> ------------[ cut here ]------------
+>> nfsd: non-standard errno: -40
+>> WARNING: CPU: 1 PID: 297024 at fs/nfsd/vfs.c:113 nfserrno fs/nfsd/ 
+>> vfs.c:113 [inline]
+>> WARNING: CPU: 1 PID: 297024 at fs/nfsd/vfs.c:113 nfserrno+0xc8/0x128 
+>> fs/ nfsd/vfs.c:61
+>> Modules linked in:
+>> CPU: 1 PID: 297024 Comm: nfsd Not tainted 6.6.0-gfa4c2159cd0d-dirty #21
+>> Hardware name: linux,dummy-virt (DT)
+>> pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> pc : nfserrno fs/nfsd/vfs.c:113 [inline]
+>> pc : nfserrno+0xc8/0x128 fs/nfsd/vfs.c:61
+>> lr : nfserrno fs/nfsd/vfs.c:113 [inline]
+>> lr : nfserrno+0xc8/0x128 fs/nfsd/vfs.c:61
+>> sp : ffff8000846475a0
+>> x29: ffff8000846475a0 x28: 0000000000000130 x27: ffff0000d65a24e8
+>> x26: ffff0000c7319134 x25: ffff0000d6de4240 x24: 0000000000000002
+>> x23: ffffcda9eaac3080 x22: 00000000ffffffd8 x21: 0000000000000026
+>> x20: ffffcda9ee055000 x19: 0000000000000000 x18: 0000000000000000
+>> x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+>> x14: 0000000000000000 x13: 0000000000000001 x12: ffff60001b5ca39b
+>> x11: 1fffe0001b5ca39a x10: ffff60001b5ca39a x9 : dfff800000000000
+>> x8 : 00009fffe4a35c66 x7 : ffff0000dae51cd3 x6 : 0000000000000001
+>> x5 : ffff0000dae51cd0 x4 : ffff60001b5ca39b x3 : dfff800000000000
+>> x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000ca5d8040
+>> Call trace:
+>>   nfserrno fs/nfsd/vfs.c:113 [inline]
+>>   nfserrno+0xc8/0x128 fs/nfsd/vfs.c:61
+>>   nfsd4_encode_dirent_fattr+0x358/0x380 fs/nfsd/nfs4xdr.c:3536
+>>   nfsd4_encode_dirent+0x164/0x3a8 fs/nfsd/nfs4xdr.c:3633
+>>   nfsd_buffered_readdir+0x1a8/0x3a0 fs/nfsd/vfs.c:2067
+>>   nfsd_readdir+0x14c/0x188 fs/nfsd/vfs.c:2123
+>>   nfsd4_encode_readdir+0x1d4/0x370 fs/nfsd/nfs4xdr.c:4273
+>>   nfsd4_encode_operation+0x130/0x518 fs/nfsd/nfs4xdr.c:5399
+>>   nfsd4_proc_compound+0x394/0xec0 fs/nfsd/nfs4proc.c:2753
+>>   nfsd_dispatch+0x264/0x418 fs/nfsd/nfssvc.c:1011
+>>   svc_process_common+0x584/0xc78 net/sunrpc/svc.c:1396
+>>   svc_process+0x1e8/0x2c0 net/sunrpc/svc.c:1542
+>>   svc_recv+0x194/0x2d0 net/sunrpc/svc_xprt.c:877
+>>   nfsd+0x198/0x378 fs/nfsd/nfssvc.c:955
+>>   kthread+0x1d8/0x1f0 kernel/kthread.c:388
+>>   ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:861
+>>
+>> Although I don't have a reproducer to reproduce this problem, I think
+>> ELOOP should be returned by the following path:
+>>
+>> v6.6
+>> nfsd4_encode_readdir
+>>   nfsd_readdir
+>>    nfsd_buffered_readdir
+>>     nfsd4_encode_dirent // func
+>>      nfsd4_encode_dirent_fattr
+>>       nfsd4_encode_dirent_fattr
+>>        lookup_positive_unlocked
+>>         lookup_one_positive_unlocked
+>>          lookup_one_unlocked // ELOOP
+>>           lookup_slow
+>>            __lookup_slow
+>>             ext4_lookup // inode->i_op->lookup
+>>              d_splice_alias
+>>               // VFS: Lookup of 'dc' in ext4 sdd would have caused loop
+>>
+>> This scenario may be reproduced on v6.13 like this:
+>> nfsd4_encode_readdir
+>>   nfsd4_encode_dirlist4
+>>    nfsd_readdir
+>>     nfsd_buffered_readdir
+>>      nfsd4_encode_entry4 // func
+>>       nfsd4_encode_entry4_fattr
+>>        lookup_positive_unlocked
+>>         lookup_one_positive_unlocked
+>>          lookup_one_unlocked
+>>           lookup_slow
+>>            __lookup_slow
+>>             ext4_lookup // inode->i_op->lookup
+>>              d_splice_alias
+>
+> So: lookup_positive_unlocked() is the VFS API returning it. Got it.
+>
+>
+>> According to the information provided by the test team, the export 
+>> option
+>> is "rw,no_root_squash", and I'll try to reproduce the problem.
+>>
+>> By the way, could you suggest which NFS error code would be most
+>> appropriate to map ELOOP to?
+>
+> NFS4ERR_SYMLINK is closest. But the spec says, you can't return that
+> status for every operation; in particular, READDIR does not allow it.
+> So I'm quite hesitant to correct the crash you found by adding this
+> mapping to nfserrno.
+>
+> In this case, I wonder if READDIR can simply not return attributes
+> when it hits an error.
 
-please stick to RFC until a driver implementation is ready and
-included
+Hi,
+
+Do you mean to add an ELOOP check like the following and return nfs_ok
+directly?
+
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index e67420729ecd..3a03eba9d4aa 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3814,7 +3814,7 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir 
+*cd, const char *name,
+
+         dentry = lookup_positive_unlocked(name, cd->rd_fhp->fh_dentry, 
+namlen);
+         if (IS_ERR(dentry))
+-               return nfserrno(PTR_ERR(dentry));
++               return (PTR_ERR(dentry) == -ELOOP) ? nfs_ok : 
+nfserrno(PTR_ERR(dentry));
+
+         exp_get(exp);
+         /*
+
+I think it's a little weird to make this change just for ELOOP.
+
+Thanks.
+
+>
+>
