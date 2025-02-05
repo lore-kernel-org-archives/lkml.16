@@ -1,139 +1,159 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A654315CD74
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F2D155747
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738766353; cv=none; b=tJyKJ72aPQgc825dTCHOqYs0CIY1gngjNjOXspgSLP0/K8khJafieb+fw6T8mDW91xjkgXjuMZSSngucmvFVeNvV5n42iJc1tOdu7Ejg5eX4pRPcOhqqzcC4Yn69J609hdZH8DAMjT5YXX+zuqnjCztjY+2vH0VjvDmS2b37S70=
+	t=1738766380; cv=none; b=bSIbcqSctY141Yovc+S9/9dC5ko/FnCj79lZLtHVjI1bIp3OPlpmmOjR3+Edy60TgJQLFeAadqloVYh0yeg8UPHBsPWtDyp+gV0qeN+lav1/tjz3bXBDOgqhBVkiDKbpCT9TqmXQO4I8cuDHpHlQb1QXH6d7u+ZKQ8y8tZCdq0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738766353; c=relaxed/simple;
-	bh=DMgFGguELIIMFeZnfCavfvUIMwUH1BzOdhi0w6qcoao=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d6ZfHsV2OU4jPI3KMrG7+2EVPnAHv1XNyDQKvuu8jjdCWHYcW4il0cWPb774lNvftRLGqnI8F2om50qQLNIfJ3QUu3TuU+W6dQKY2CWf04pbr6/QiXGYBfwb3u6LjeyHfoZPVI7ZBfp5qTyHZ5VygmC9Oclqfb7sBItYqWqwLCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=GhXHX9pE; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738766380; c=relaxed/simple;
+	bh=Qwsq9u/rD2Fqt7Op/6fmGL1FLaKX6Jq6Vt2Wf9t1TBg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qgLlrBtY3BLF1YYKNqG5JY6M86m0+Xd//ofBqpV6UMJnwed6beLBKmJ+7JnMc4x9qtuFnZcWa3d40RttHHw+dufVJ5aQIcIqvuXvRFH9Qvp0eA+YLGsMQ8e8/gBvFA1f12ka6ZP70I2lato591p/In79QgUyaW2Nx6KdY92DclM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=njzDd755; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="GhXHX9pE"
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 787043F2B6
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738766347;
-	bh=Dme+YavE3h7VKwtVCWsFypxmxtFZq863WhJD/6LnYDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=GhXHX9pE+4J37FUAXH9VWjgMB22PXxqP3qviMwYTTcSU9qqI8sV0SHVb/vUlX++SH
-	 NcsKeEryLoCre0X1xwYhfNl5IkrpPm8/k2XCymO5bytC5XrVSUtl3cncuP+zqDmtVo
-	 QEkKFGCwVwW1prlY00Te9LMZx0DwaBFAufX1UCTELKq1h9YrEptXKhsf9Q7iD4E3n/
-	 cS0/mP84mDzkf3x4LqWW90IkgTFjiUggjciVNplp1njbzlRGA9dDjevKgV0w2yJl0C
-	 IAzrPYjhEWe6FpS0mpWmzyBs75TJMBxp1plfMRkocfxip0VgBcUmU4a1YxOk3YEh01
-	 5qaQ7N206gKWQ==
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-aa67f03ca86so520119166b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 06:39:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njzDd755"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dc82e38c10so10830109a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 06:39:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738766377; x=1739371177; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yg6Tg4DF+QuWwfNfh/wFRO7JO+rdVERpEIIZMGAFCL8=;
+        b=njzDd755eB3qJGQTFV9pyuwIR/QWzOS7JJn1VfSQBgGJWtm2r6EfKC5wUbMSLm77x/
+         kxOaS5Z4ab3iASwZMKVT+no6FIxpILyFDhpy/M/Tlm5SpJPVqZj2eiaVTL0Nd6w+b1wn
+         e5ApPlNXOHZuouViB9fITP5uUb7nW8mz1TlkYSPZkQrYMryKrdMBdBVAeRU/oJPuYqmQ
+         7NaJw/tdu2Min1+0baQ7xotTtQVXw8puT/PRxIH/+uJju8WiohGmLyzci8CinLyCjHuf
+         HFDrIRTmJ3ALf/A+C4XRLrDnT1HNxOZgjlQfxUGEFYZop53G2/q2ME4p0hGiWQdvyOLX
+         OrGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738766346; x=1739371146;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Dme+YavE3h7VKwtVCWsFypxmxtFZq863WhJD/6LnYDU=;
-        b=dpwF9VDlEqksApv84MItWAZOOTzoQJBhCfsbor3bPYXGn1lcqiU1Guc1LGpVCc0+sJ
-         ihgPWi2jetpc8N8Tg/huOIAr8yEhZiEyZ5iIMNewCJZsi9WO8aV09yTUxceSZ6xtfdjj
-         aLmjm4aEsE0M1/HOjZMJE0/roNNYwktkFV4gNzNSNovNcLXhU2awRtJ0DbbH/Lmg3z3H
-         6upw4cuCcEBTNssm54CrVAvBeCBhf/LrV1FDDq92KT6MwvksqLMCIJ772dQd3LxfrLuH
-         uIcjEXvCxeoY0aPc/tXT9LVTxQDgZ1TxuMdSnPkmw5ORmcdOROS14jfPruybxaOFrF/d
-         tiug==
-X-Gm-Message-State: AOJu0YxxwpEG2BZIqY7iiFhuPGpF3yo6Uw2UK+E8avF/4HW5ZAodhUMi
-	iY7DwXEEpMeL95T/ecx1eg1prU65taud/yjCaHila3R6yFNeqHuoRKK1gjrQAeD1ZHUd1TcMk0H
-	q1FeQ8MwcTKED5tjzRfwPuZwkZbDq17PLGaMtT4Pu3L9Qz0mTwi801U2OhLqex1Y5eTnY/Nmann
-	k5Jg==
-X-Gm-Gg: ASbGncthZo7YK4NUxQzZu42vR5viXdRdoXivGCAXIKzH5x41LJGEarAlcr56L8Tpoa+
-	qCyIDMtpsSrFQfsft6TABhaJHEbHqMp6usGCoNWhOXxw+yoBYrXK1gBhC86L+cjVObuY4D/hH/I
-	hQBanAIAqfi9IC9u0bMkxQASsIYMxvut4CbAFFk0LJi3fe58Q3QXnWngf5HkJZynNkBM+tJ9Z1E
-	0Dav0pX55oRGN6c4YPBl/ciJVDaIgBZrJhy5AoNC1CpAJKpe/1BUfZs9K+3obdcjkD/IpIt8DVr
-	IHZGsX7nm3nFN49885A=
-X-Received: by 2002:a05:6402:3506:b0:5d0:cfad:f71 with SMTP id 4fb4d7f45d1cf-5dcdb775fbamr7771724a12.32.1738766346349;
-        Wed, 05 Feb 2025 06:39:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF70Az63p7FGVorzWY2EiBTjmxe7ybh3PoNumytu8JuoGgxV7u2ogC9A7h+McO4xrKdNx++6w==
-X-Received: by 2002:a05:6402:3506:b0:5d0:cfad:f71 with SMTP id 4fb4d7f45d1cf-5dcdb775fbamr7771650a12.32.1738766345763;
-        Wed, 05 Feb 2025 06:39:05 -0800 (PST)
-Received: from stitch.. ([2a01:4262:1ab:c:6754:ef46:cf8c:ad7b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab71166a8e0sm748209766b.158.2025.02.05.06.39.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 06:39:05 -0800 (PST)
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-To: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	Steffen Persvold <spersvold@gmail.com>,
-	=?UTF-8?q?Miquel=20Sabat=C3=A9=20Sol=C3=A0?= <mikisabate@gmail.com>
-Subject: [PATCH v1] riscv: Use of_property_present() to test for non-boolean properties
-Date: Wed,  5 Feb 2025 15:39:01 +0100
-Message-ID: <20250205143903.413959-1-emil.renner.berthing@canonical.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1738766377; x=1739371177;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yg6Tg4DF+QuWwfNfh/wFRO7JO+rdVERpEIIZMGAFCL8=;
+        b=KZ4+kv1MOklGTIYimmhFvcsAUuwl7+IkaCActFMLXGU3GnjoO6p9kT1hU70SBgy+41
+         q/FK9D251wZnRj4zhjrODzPvs8OG2AK480BirUqOH0LlESs0dm0RtNPLYjZimGp4IGPB
+         y71M4FVCOmp6gFGqNHtswQbQN4PPPDqKAxJsWQmOgUPfIPfC6vtnKJTzpnV4Am7zOTw2
+         jPPLjKtdulJf4gsM4prfM6uZ/cGCG8+BQg5b4A44h3MLJ1iaCnSN9q0QMDYWhCP1bF7+
+         l6TeAADdmMnLCPMQ4TPhhcHgmQY7Ee4tNMtvjUsFjaq+mQ0AySXzg2lsblJB5vwTDb3E
+         40Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCX4Joe7TIkt0f2eHJdkqR6Y3xCNKi3Gis2NIMz27khBeDLhUzoxjqGzkY/AtrPFm+MXEuxSKrm0DbM9CRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVEZyfzBj4JO05cMbqCPJY3XVphjrc9MpYnwYow3mfqLLbnMaU
+	XzR5db1/YhV1D2XYJRvXD+cyAUFXchmCxWagFBanDMkYqtvKsKO/HDLWTJQQwcW6G/yov0gmQ+8
+	vGo4ELdVkj4d+2KhQrBL88AS/G4Y=
+X-Gm-Gg: ASbGnctCZAjO1WM34HLUtNNThuAdfMocW0XLKnkrDaUAHc/yAJz1ohPNs3uiycx+SQG
+	07hCQlLZTB2INouk1ft78hrHyvlNQo9+mr9PCT2UR+TNfvDEgx5aMh/kxWnqpi9nX/a17Usfa
+X-Google-Smtp-Source: AGHT+IEQJEOMLKLa01xt1xRmixXdCYk2PgZrzjG46Q/rviLbmu9ckrktfQst6PD6k8Qvh8O53LejRbNmJlM31b9I9Cc=
+X-Received: by 2002:a05:6402:13c8:b0:5d0:81af:4a43 with SMTP id
+ 4fb4d7f45d1cf-5dcdb5873damr3534222a12.0.1738766376802; Wed, 05 Feb 2025
+ 06:39:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1738717785.im3r5g2vxc.none.ref@localhost> <1738717785.im3r5g2vxc.none@localhost>
+ <25e2d5e4-8214-40de-99d3-2b657181a9fd@linux.alibaba.com> <5dd39b03-c40e-4f34-bf89-b3e5a12753dc@linux.alibaba.com>
+In-Reply-To: <5dd39b03-c40e-4f34-bf89-b3e5a12753dc@linux.alibaba.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Wed, 5 Feb 2025 22:39:00 +0800
+X-Gm-Features: AWEUYZlm0TareJhuDBCQ5cF_oL3r7WkbrBn6iLTvPxztLLi0FHnOGoQFyEPYfG8
+Message-ID: <CAK1f24ni707gcGpYKXqsb9XHxjx3froLs3DzVqkkNZdca_pw4Q@mail.gmail.com>
+Subject: Re: Hang when swapping huge=within_size tmpfs from zram
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>, linux-mm@kvack.org, 
+	Daniel Gomez <da.gomez@samsung.com>, Barry Song <baohua@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Matthew Wilcox <willy@infradead.org>, 
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The use of of_property_read_bool() for non-boolean properties is
-deprecated and since
+On Wed, Feb 5, 2025 at 2:38=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2025/2/5 09:55, Baolin Wang wrote:
+> > Hi Alex,
+> >
+> > On 2025/2/5 09:23, Alex Xu (Hello71) wrote:
+> >> Hi all,
+> >>
+> >> On 6.14-rc1, I found that creating a lot of files in tmpfs then deleti=
+ng
+> >> them reliably hangs when tmpfs is mounted with huge=3Dwithin_size, and=
+ it
+> >> is swapped out to zram (zstd/zsmalloc/no backing dev). I bisected this
+> >> to acd7ccb284b "mm: shmem: add large folio support for tmpfs".
+> >>
+> >> When the issue occurs, rm uses 100% CPU, cannot be killed, and has no
+> >> output in /proc/pid/stack or wchan. Eventually, an RCU stall is
+> >> detected:
+> >
+> > Thanks for your report. Let me try to reproduce the issue locally and
+> > see what happens.
+> >
+> >> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> >> rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-11): P25160
+> >> rcu:     (detected by 10, t=3D2102 jiffies, g=3D532677, q=3D4997 ncpus=
+=3D12)
+> >> task:rm              state:R  running task     stack:0     pid:25160
+> >> tgid:25160 ppid:24309  task_flags:0x400000 flags:0x00004004
+> >> Call Trace:
+> >>   <TASK>
+> >>   ? __schedule+0x388/0x1000
+> >>   ? kmem_cache_free.part.0+0x23d/0x280
+> >>   ? sysvec_apic_timer_interrupt+0xa/0x80
+> >>   ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+> >>   ? xas_load+0x12/0xc0
+> >>   ? xas_load+0x8/0xc0
+> >>   ? xas_find+0x144/0x190
+> >>   ? find_lock_entries+0x75/0x260
+> >>   ? shmem_undo_range+0xe6/0x5f0
+> >>   ? shmem_evict_inode+0xe4/0x230
+> >>   ? mtree_erase+0x7e/0xe0
+> >>   ? inode_set_ctime_current+0x2e/0x1f0
+> >>   ? evict+0xe9/0x260
+> >>   ? _atomic_dec_and_lock+0x31/0x50
+> >>   ? do_unlinkat+0x270/0x2b0
+> >>   ? __x64_sys_unlinkat+0x30/0x50
+> >>   ? do_syscall_64+0x37/0xe0
+> >>   ? entry_SYSCALL_64_after_hwframe+0x50/0x58
+> >>   </TASK>
+> >>
+> >> Let me know what information is needed to further troubleshoot this
+> >> issue.
+>
+> Sorry, I can't reproduce this issue, and my testing process is as follows=
+:
+> 1. Mount tmpfs with huge=3Dwithin_size
+> 2. Create and write a tmpfs file
+> 3. Swap out the large folios of the tmpfs file to zram
+> 4. Execute 'rm' command to remove the tmpfs file
 
-commit c141ecc3cecd ("of: Warn when of_property_read_bool() is used on non-boolean properties")
+I=E2=80=99m unable to reproduce the issue as well, and am following steps s=
+imilar
+to Baolin's process:
 
-a warning is displayed when used incorrectly. Fix it by switching to
-of_property_present() as recommended in the same commit.
+1) Mount tmpfs with the huge=3Dwithin_size option and enable swap (using
+zstd/zsmalloc without a backing device).
+2) Create and write over 10,000 files in the tmpfs.
+3) Swap out the large folios of these tmpfs files to zram.
+4) Use the rm command to delete all the files from the tmpfs.
 
-Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
----
- arch/riscv/kernel/cacheinfo.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Testing with both 2MiB and 64KiB large folio sizes, and with
+shmem_enabled=3Dwithin_size, but everything works as expected.
 
-diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-index 2d40736fc37c..26b085dbdd07 100644
---- a/arch/riscv/kernel/cacheinfo.c
-+++ b/arch/riscv/kernel/cacheinfo.c
-@@ -108,11 +108,11 @@ int populate_cache_leaves(unsigned int cpu)
- 	if (!np)
- 		return -ENOENT;
- 
--	if (of_property_read_bool(np, "cache-size"))
-+	if (of_property_present(np, "cache-size"))
- 		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
--	if (of_property_read_bool(np, "i-cache-size"))
-+	if (of_property_present(np, "i-cache-size"))
- 		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
--	if (of_property_read_bool(np, "d-cache-size"))
-+	if (of_property_present(np, "d-cache-size"))
- 		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
- 
- 	prev = np;
-@@ -125,11 +125,11 @@ int populate_cache_leaves(unsigned int cpu)
- 			break;
- 		if (level <= levels)
- 			break;
--		if (of_property_read_bool(np, "cache-size"))
-+		if (of_property_present(np, "cache-size"))
- 			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
--		if (of_property_read_bool(np, "i-cache-size"))
-+		if (of_property_present(np, "i-cache-size"))
- 			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
--		if (of_property_read_bool(np, "d-cache-size"))
-+		if (of_property_present(np, "d-cache-size"))
- 			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
- 		levels = level;
- 	}
--- 
-2.43.0
+Thanks,
+Lance
 
+>
+> Do you have any reproduction scripts or reproduction steps guide? Thanks.
