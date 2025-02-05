@@ -1,136 +1,158 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D75F215775
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3E720FAA0
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738729940; cv=none; b=GK0hM3W1AVBsWSKhGuhiDQ01qoMLsoPLj75pJwK33DuXI+to4TN4mggKl7YqqTKGX7Rdm3SVOvhtwNZLTU5IdpKVyG9162TRpyzzex4d8uwRcCh5TWXGi/4vxP+m+xppIl0mI5Uq1Derm5rreG34ZSDoqNbWgVWJiYkY+k1douA=
+	t=1738730146; cv=none; b=Hn/lVmNzd6uG+H7u67sSvZpU7bbz2cqfJ0b7pG/rPwTU+LRA7STonBEaHvNgFWSPxwEqbXUQr5zXcNwZlKyegXlPe/+hq9zJ8YRfUUJ/Au8tNs/E3VvA1NNOomQpq+fV9BBo1f29dzNCpActmbmX6+fD8UnnssINRyDcDh26Q4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738729940; c=relaxed/simple;
-	bh=muj42tyeArJlDap25NrLqG4C3MwLw+2Bs0jim938Rt0=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=HZcCQq/lifhpG5pimN12EPtMyNm8e/L3cpmGkTCRNRzpxGvM/lC7g4wlm3dDKUGUYelbiArMEfIrQcR2RnXtpl5KAK3za6SP7Ki4wsceAmURQ9ImUj1W1aKGUuOY8fgKcTHAhiN0lfJFSe9t+IwQ3Hxwd/V/w5ESXLfaXzvHEyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rVVfJkXk; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738730146; c=relaxed/simple;
+	bh=D2nc3f11JUrmao1Ehpaxl4jeDlOVm96uFA0pBbXk9Go=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rhAy6Y8pHBpsJSj6pWGLSNO5U78oIOhLcH5sCOyPlKPunzLXqDpB+kLPw5nMOrU3r8LkO9GjHHbc3EwhZj3s7SQdzNVc/7h13uzQxsxDV4IGXzW1XSl6TJfDL3JxrtJwbXOwP5x0+9pNNOHR/ckKDunqud23+fhs2s/amFTBskE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net; spf=pass smtp.mailfrom=telus.net; dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b=OZJ2m0RB; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=telus.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rVVfJkXk"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250205043216epoutp018efeae405f513e2c6b169d56e2e683f9~hNapL8gUo1631816318epoutp01b
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:32:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250205043216epoutp018efeae405f513e2c6b169d56e2e683f9~hNapL8gUo1631816318epoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738729936;
-	bh=muj42tyeArJlDap25NrLqG4C3MwLw+2Bs0jim938Rt0=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=rVVfJkXkNM4+ORYrriZW/IURQDIBmT9YxDVzisGWMtE5ceOPYP3GUfFimRGdXikhu
-	 N/kjQjwArlsD+vvFjjrrgIs5jI0PxABOPpb8gREXy+Qz/QJ9WiySn/LMr595GTpWhB
-	 b9Sq61KJGoLbRFxYmgou6IhmIomKwDlZcVTJwGyY=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250205043216epcas5p4c35ec9557541c7a3a0cd3b289ab5671c~hNaou06632827328273epcas5p4m;
-	Wed,  5 Feb 2025 04:32:16 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4YnnQ60cFFz4x9QK; Wed,  5 Feb
-	2025 04:32:14 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D3.30.19956.DC9E2A76; Wed,  5 Feb 2025 13:32:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250205043213epcas5p2fe2c5d145ce2caef582fa2e977a7b576~hNamZm0y00178501785epcas5p2J;
-	Wed,  5 Feb 2025 04:32:13 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250205043213epsmtrp27c0b673b0deea66310db225e85847a08~hNamY0OuK1380613806epsmtrp2t;
-	Wed,  5 Feb 2025 04:32:13 +0000 (GMT)
-X-AuditID: b6c32a4b-fd1f170000004df4-c5-67a2e9cd87d3
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D9.43.23488.DC9E2A76; Wed,  5 Feb 2025 13:32:13 +0900 (KST)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250205043209epsmtip1521c464368bd125cbd4eb08cca2fa0c2~hNaizkCtT2478124781epsmtip1M;
-	Wed,  5 Feb 2025 04:32:09 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: =?UTF-8?B?J+uCmOyGjOybkC9TT1dPTiBOQSc=?= <sowon.na@samsung.com>,
-	<vkoul@kernel.org>
-Cc: <krzk+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-	<robh@kernel.org>, <krzk@kernel.org>, <conor+dt@kernel.org>,
-	<kishon@kernel.org>
-In-Reply-To: <000001db658c$4dce63c0$e96b2b40$@samsung.com>
-Subject: RE: [PATCH v4 0/3] Support ExynosAutov920 ufs phy driver
-Date: Wed, 5 Feb 2025 10:02:05 +0530
-Message-ID: <080d01db7786$ed980e90$c8c82bb0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="OZJ2m0RB"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ee9a780de4so8416861a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 20:35:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=telus.net; s=google; t=1738730143; x=1739334943; darn=vger.kernel.org;
+        h=content-language:thread-index:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o0i7GnKV2tM1XKrg7ybPY0GD/aYFraHmPjzLGFtdcJA=;
+        b=OZJ2m0RBMvZ0DwSte1L8CVMtdfeRTMYIVcxEKfequ5Ew70DSEWzVB1XrCEfFWQVvjw
+         iI+ePU7z4XkYCEyVqqnKIUyGdjH/MKyScVdQQmN2wDKmWuSDBkBClWBipRxywK82e0nx
+         G9N/SZ4hWIl3auoYhKT+7igo/TIKzraiFjGP5qLL5W9+sPtAJMug0QHBVw3HCGFmgj6a
+         dZyFtASvX8Nwq8MxwLHKCs+i+qJ6CrBcPkAAUyhEnqsx4w0g5Au9yZ81Xww0WmU31D7Y
+         K6wATyl4w6eojqsRA2Wg03+aNlk/prBeshiRsiWohjtqJTFqxjJNnnwrYP1ONIg7jT/I
+         m48w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738730143; x=1739334943;
+        h=content-language:thread-index:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o0i7GnKV2tM1XKrg7ybPY0GD/aYFraHmPjzLGFtdcJA=;
+        b=V9f1rz3Y2kIuB/cKCMb72O5FsuNGuDl+zXxzyTjpfAT6qfFaGjKBp0mQrh/WgfzmqL
+         daCMMBVKITVwg4nWleaPAbolCKuBsnOcqcYyf/fkHkiimbGmGPA7viM9FBoYE64ppZmF
+         BulUHuNLSZ2pDeX06nYnACjK5ZBvqzp61gTrY30LsdYhpSsfIIga1pv6si1WoLBm7mtv
+         CAbDBgMhKMFyg3thJLXBvkhRyIZVKhF8d8MZH9UkJLp/S62qv/yqzHJ91pVHWY7m7OSF
+         Aduc6GQ8pwrQIQdkck1kbe40bFA9t9dQEp/RAUcbEcfoXnlki+4CNq49St8Y3axJI0Hu
+         zaGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqFPBncUdqRINSpFSR/sWhClI3bdSm47EbsJJUAo29DRaZ6RqYM7fJNaS96fcSauObbnoA0TslgZYnpYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHZvb0zsmd0+mAEvoBTW59UJzES66DxFu4208PMrgszI65bVSW
+	wa3ICFY1AGgScMKSig6l8r+eIOLRySiNmkLMqVRGfXpgp2h1Wm2sRvYvk7iz/14=
+X-Gm-Gg: ASbGnctD7EkaspE+QdOpPNwLLYq7gH4kuYsReVs9rJi86+tbXFZQPwqoMgA5m+8Jd4l
+	JDWkzV83WvBafOIQqVhKoMN0FuVkJnf2AsiDp4rmjhgUPBj3a5rzYDnAntHB96LiQFyRfloYSVJ
+	lsomzhz2MYWenGaJEeI8ybPkRwyiheRB9kzHqNX17EveGLLIE1D/JJtrWq3EuRIx6Eiec2jo27F
+	nLiDQFxlEoh5yp/WvIweZu42amZhWE50+XZ/IU6ybXwFGp3KLbbePGsvqj6sJQAaswrYWWjZeDA
+	elZ59rDxxqsRQxxyETuge3iK7Ie72uHEDi6qyC5bPxuKN2GA4pUTGknj
+X-Google-Smtp-Source: AGHT+IEx3NL6Eik+ychf6Kbh7ukJviC5f6VHJ0vVfCGb6wfOY6FaToj3HZSjylOnWePqMiVgwLatWg==
+X-Received: by 2002:a05:6a00:3a19:b0:728:b601:86df with SMTP id d2e1a72fcca58-7303511c20fmr1933950b3a.10.1738730140950;
+        Tue, 04 Feb 2025 20:35:40 -0800 (PST)
+Received: from DougS18 (s66-183-142-209.bc.hsia.telus.net. [66.183.142.209])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631be61sm11774723b3a.19.2025.02.04.20.35.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2025 20:35:40 -0800 (PST)
+From: "Doug Smythies" <dsmythies@telus.net>
+To: "'Vlastimil Babka'" <vbabka@suse.cz>,
+	"'Andrew Morton'" <akpm@linux-foundation.org>
+Cc: "'Michael Matz'" <matz@suse.de>,
+	"'Gabriel Krisman Bertazi'" <gabriel@krisman.be>,
+	"'Matthias Bodenbinder'" <matthias@bodenbinder.de>,
+	"'Lorenzo Stoakes'" <lorenzo.stoakes@oracle.com>,
+	"'Yang Shi'" <yang@os.amperecomputing.com>,
+	<linux-kernel@vger.kernel.org>,
+	"Doug Smythies" <dsmythies@telus.net>
+References: <019401db769f$961e7e20$c25b7a60$@telus.net> <8f84691b-4b48-46da-9c47-e1f41bd503e1@suse.cz>
+In-Reply-To: <8f84691b-4b48-46da-9c47-e1f41bd503e1@suse.cz>
+Subject: RE: REGRESSION BISECTED mm, mmap: limit THP alignment of anonymous mappings to PMD-aligned sizes
+Date: Tue, 4 Feb 2025 20:35:44 -0800
+Message-ID: <006801db7787$6ba88c60$42f9a520$@telus.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQH4Gf4Ht2pT+J2pScYPrVRUV1+UogJvt6+kANXfQc+y5KuVAA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmhu65l4vSDSa1MFqs2XuOyWL+kXOs
-	Fkdb/zNbvJx1j83i/PkN7BaXd81hs5hxfh+Txf89O9gtfv88xGSx884JZgcuj02rOtk8+ras
-	YvT4vEkugDkq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
-	LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWh
-	gYGRKVBhQnbGnaZXbAW3OSqWbNFqYNzE0cXIySEhYCKxclMDaxcjF4eQwG5GiRs3TzFBOJ8Y
-	JZZ0/WeBcL4xSjTsamKEabm18QwzRGIvo8SXKQuhWl4ySsz4eQisik1AV2LH4jY2EFtEIFLi
-	z9IfbCBFzAKXGSX+HpjCDJLgFLCSOHL2EFCCg0NYwFFi2hcukDCLgIpEW9c1JhCbV8BSYs2r
-	I8wQtqDEyZlPWEBsZgFtiWULXzNDXKQg8fPpMlaQMSICThKt7d4QJeISL48eYYcomckh8We5
-	JITtIvHz7RI2CFtY4tXxLVA1UhKf3+2FildLrN8wjwXC7mCUaNxeA2HbS+x8dJMFZBWzgKbE
-	+l36EKv4JHp/P2ECCUsI8Ep0tAlBVKtKNL+7CjVFWmJidzcrhO0h8eF/H/sERsVZSP6aheSv
-	WUgemIWwbAEjyypGydSC4tz01GLTAuO81HJ4bCfn525iBKdTLe8djI8efNA7xMjEwXiIUYKD
-	WUmE9/T2BelCvCmJlVWpRfnxRaU5qcWHGE2BgT2RWUo0OR+Y0PNK4g1NLA1MzMzMTCyNzQyV
-	xHmbd7akCwmkJ5akZqemFqQWwfQxcXBKNTA1G/NzT939653EP86sBf660YJ9Xnzu3/JOfG2c
-	mRJbFZbY+ljPNffwxIq9h7I3n+AtnVS8cm3RR8bzxrrXY2qENv5RPRH9L5rzZcGWwuPOqTsC
-	O9WVjOdpLbefs6L2zvblN5r+X1/Y+fNmA0tD3sqly9Ib7I9caurLkvp58pD6u4j9NcI3E6P/
-	szKHVf99erbGKr94d+7vSXmHJ5ntufnOszWs9+TiKebPrVOXHl02PffQtN9XlR6HOYnJsa54
-	u8U+Zt19s+797B/W3Zr86WRg+xPNDLsoT3nu+WWzipfnSeW9+f287+vVpuDMCfNkL3aae21e
-	t2/vu6n2Apf5TrGe910WIdZ0nvuU1aNXN5S1lViKMxINtZiLihMB3UKaSTAEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTvfsy0XpBlevqlms2XuOyWL+kXOs
-	Fkdb/zNbvJx1j83i/PkN7BaXd81hs5hxfh+Txf89O9gtfv88xGSx884JZgcuj02rOtk8+ras
-	YvT4vEkugDmKyyYlNSezLLVI3y6BK+PGsbuMBUvZKuZdkG5gnMfaxcjJISFgInFr4xnmLkYu
-	DiGB3YwSi9/cYINISEtc3ziBHcIWllj57zk7RNFzRok/d24wgSTYBHQldixuA2sQEYiU+LP0
-	BxtIEbPAbUaJiU8usMONXfR+JVgHp4CVxJGzh4CqODiEBRwlpn3hAgmzCKhItHVdAyvhFbCU
-	WPPqCDOELShxcuYTFhCbWUBbovdhKyOMvWzha2aI6xQkfj5dxgoyUkTASaK13RuiRFzi5dEj
-	7BMYhWchmTQLyaRZSCbNQtKygJFlFaNkakFxbnpusmGBYV5quV5xYm5xaV66XnJ+7iZGcFxp
-	aexgfPetSf8QIxMH4yFGCQ5mJRHe09sXpAvxpiRWVqUW5ccXleakFh9ilOZgURLnXWkYkS4k
-	kJ5YkpqdmlqQWgSTZeLglGpgyqpt3GV1trAtQiskRTZ76YvpC6bNVm+ffsPL+gn3z3d6QVId
-	eRLOFZlTjB2OcHPVWC9wF5GvYxI0febyKKCoelPPnPr2l9udU1Vj7GK6n4rzTAkIbbdTKZCx
-	ZEk7NGVF9UL76GvHZ0zeJK4pOPuaorPw/BPiwc+Pm36Y67FRx7c0bl3JHOfSX9cl5u7e+GUO
-	V67/yReVW1qu61mlmf86v9QnpW9lPJNQaLOaHdPmEulv8Xe/TsqoEZJ5/Krg0qyzO46ufmiV
-	5mtcXsJ1ffuFt07ir/f5th4WOHvxcd8+luXr+GqjE39m8miVRzZqbr64/0jOrCYWMemLp10d
-	Cx7FnOS78fQgv/b0AyuKApYqsRRnJBpqMRcVJwIAfFJd0RoDAAA=
-X-CMS-MailID: 20250205043213epcas5p2fe2c5d145ce2caef582fa2e977a7b576
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20241226031145epcas2p4fa41b44749a7f675364437856d01a4c6
-References: <CGME20241226031145epcas2p4fa41b44749a7f675364437856d01a4c6@epcas2p4.samsung.com>
-	<20241226031142.1764652-1-sowon.na@samsung.com>
-	<000001db658c$4dce63c0$e96b2b40$@samsung.com>
+Thread-Index: AQGbbLw3ETZQMoAhshCewrgzRiltpAFpZrO4s6zmikA=
+Content-Language: en-ca
 
-Hello Krzysztof / Vinod
+Hi, and thank you for your reply.
 
-> -----Original Message-----
-> From: =EB=82=98=EC=86=8C=EC=9B=90/SOWON=20NA=20<sowon.na=40samsung.com>=
-=0D=0A>=20Sent:=20Monday,=20January=2013,=202025=2012:55=20PM=0D=0A>=20To:=
-=20vkoul=40kernel.org=0D=0A>=20Cc:=20krzk+dt=40kernel.org;=20linux-kernel=
-=40vger.kernel.org;=0D=0A>=20devicetree=40vger.kernel.org;=20linux-samsung-=
-soc=40vger.kernel.org;=0D=0A>=20robh=40kernel.org;=20krzk=40kernel.org;=20c=
-onor+dt=40kernel.org;=0D=0A>=20alim.akhtar=40samsung.com;=20kishon=40kernel=
-.org=0D=0A>=20Subject:=20RE:=20=5BPATCH=20v4=200/3=5D=20Support=20ExynosAut=
-ov920=20ufs=20phy=20driver=0D=0A>=20=0D=0A>=20Hi=20Vinod,=0D=0A>=20=0D=0A>=
-=20>=20-----Original=20Message-----=0D=0A>=20>=20From:=20Sowon=20Na=20<sowo=
-n.na=40samsung.com>=0D=0A>=20=0D=0A=5BSnip=5D=0D=0A>=20I=20can't=20see=20th=
-ese=20patches=20in=20-next=20yet,=20do=20let=20me=20know=20if=20anything=20=
-is=20missing=20to=0D=0A>=20be=20addressed=20from=20myside.=0D=0A>=20=0D=0AW=
-hich=20tree=20will=20this=20series=20go=20through?=20=0D=0A=0D=0A>=20Best=
-=20regards,=0D=0A>=20Sowon=20Na.=0D=0A=0D=0A=0D=0A
+On 2024.02.04 03:04 Vlastimil Babka wrote:
+On 2/4/25 01:56, Doug Smythies wrote:
+>> Hello,
+>> 
+>> Note: The CC list is a guess, and I am not on the two vger.kernel.org lists.
+>> 
+>> After observing a 30% reduction in the ebizzy benchmark performance, I bisected the kernel and got:
+>> 
+>> doug@s19:~/kernel/linux$ git bisect bad
+>> d4148aeab412432bf928f311eca8a2ba52bb05df is the first bad commit
+>> commit d4148aeab412432bf928f311eca8a2ba52bb05df
+>> Author: Vlastimil Babka <vbabka@suse.cz>
+>> Date:   Thu Oct 24 17:12:29 2024 +0200
+>> 
+>>     mm, mmap: limit THP alignment of anonymous mappings to PMD-aligned sizes
+>
+> Thanks for the report. That commit fixed regressions of other workloads, but
+> since it's tweaking a heuristic related to THPs that can have both positive
+> and negative consequences, it's not surprising to see that another workload
+> can regress.
+
+Yes, I had read the related emails and thought that might be the response.
+
+> Since that commit is implicated, there should have been a matching
+> improvement for this workload in 6.7 thanks to commit efa7df3e3bb5 ?
+
+Yes, I also reverted efa7df3e3bb5, but must have made a mistake
+in my testing yesterday, because re-testing today
+I got the same reduction in performance.
+
+> I guess one option to proceed would be to check what kind of mappings ebizzy
+> creates for its performance sensitive operations, and see if they e.g. were
+> backed by THPs before d4148aeab41 and now they aren't. Maybe some simple
+> adjustment to ebizzy's allocations is possible to achieve the better
+> performance always and not rely on this particular heuristic.
+
+I'm not going to modify ebizzy, because I don't really care.
+I was just reporting what I thought was a regression was all.
+
+>> As a double check I reverted the commit, on top of kernel 6.14-rc1.
+>> I had to manually revert it, due to other changes since then.
+>> The previous performance of the benchmark was restored.
+>> 
+>> I actually use the sleeping-ebizzy benchmark [1].
+>> I use it for idle governor testing because it has yielded interesting results in the past.
+>> And sweep over a range of sleep times. Example graphs attached.
+>> 
+>> Legend (regression average is over interval range from 400 to 3600 uSec):
+>> 
+>> teo611: kernel 6.11, teo idle governor. Reference.
+>> teo614: kernel 6.14-rc1, teo idle governor. Regression 25.7%
+>> teo612: kernel 6.12, teo idle governor. Regression 24.4%
+>> teo613: kernel 6.13, teo idle governor. Regression 25.1%
+>> teo614-revert: kernel 6.14-rc1, with this patch reverted, teo idle governor. No regression, 1.4%
+>> menu: kernel 6.14-rc1, menu idle governor. Regression 26.4% 
+
+Kernel 6.14 with both d4148aeab41 and efa7df3e3bb5 reverted: Throughput reduced by 26.0%
+ 
+>> Example command:
+>> ./ebizzy -m -S 20 -t 128 -a 1 -i 400
+>>  
+>> My processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
+>> Distro: Ubuntu 24.04, server, no desktop GUI.
+>> 
+>> [1] https://github.com/pratiksampat/sleeping-ebizzy
+>> 
+>> Doug Smythies
+
+
