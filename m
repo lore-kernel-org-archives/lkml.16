@@ -1,172 +1,103 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76234214A96
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD91215F4C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738792615; cv=none; b=MCJNOOCLsTQwPd+zqqPfk4V5j5OBbawwWq/O2KfBQPWTiCHlDJP7jjjl7SfXHUR/NLtEYZ8ZIERnlgQUx2Y+Asy7WEZP3jVn4a+ED2hMl8d6Lq8C/B+mxbnJRUwzZ9BEmQCUILW51iBaTQOCZp9THfIesNwGEpoigMHwMtezsAU=
+	t=1738792621; cv=none; b=nviGsASycjBww4f6QXMYVjJbbw1nW2myeRc8UH9770WUYeUwxI9ziuJvaH2sMnkzdelh0bi2EojoUCJPkQgGWvwmy7LanWud6zTNZcqHmYCzvekTeWP2XUkPGDuwdl5nTgrsW22BCdMHZ2GLvd2NDcZPH2HCiFffv9WoLD43Lc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738792615; c=relaxed/simple;
-	bh=4qql90pn4szEvuE1q2VwoHg70ZIx94oUk+Hs3pTwU2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tNyALQZDtkqsqKQVeD7lzb20eBJQCA+SIhUqm3APnfC+Td63r1WinzSHgkWYmpEikhCOJHLi0SVL+H1c2vM2JiRBPBTEr/Ciw4MhJbtDraRoTCSI+YrNEEfwjv5o8wi86NGepXxUAkMyZpqcYhL1QYqUEXDJNQcPT6vySjA0euY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7Zbi6A3; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738792621; c=relaxed/simple;
+	bh=+ozLHxhArw7MVnLnODmfn31z73WbsqHrsJgwqe4g1D8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EoIxzZFjnBqjdYEl5+f5CeqgV4BY0aL1+0u4eBCoLS4hOuzkLyYQITq26xdkpMWOzKr/7R4egyUagVLC4FvgxP7t6QoyZ4eKYvP8Mjl8pVf4/ibszLaE0OUo7dRD49MTAihJU0UAtnXJ1MVC+YNW0KaXkUtYxQ9Kh1aieQU1WLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=Me7r6H5x; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7Zbi6A3"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-437a92d7b96so2298575e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 13:56:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="Me7r6H5x"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-844df397754so9329239f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 13:56:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738792612; x=1739397412; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ExpNnKUIu15RnPJeZ+26Wmgur2xuMxA57BJC1TlkS3k=;
-        b=V7Zbi6A3Wc8DHvS/V+OxDhtOWTHrgjtiwsL3Lhwkf7OhEdDXmH9J5E0h+/FUq6gjb7
-         ppVJRM+KX4SrUDqd2fKnwgkcxlWPQuBxnTf+VTR/2WjBnpyIY5HgkUDDXEc6APsuXsQZ
-         qQUdNAX4EVaobf+Wg/MTRyn6JZWu8aN4TzfCBylq13BMidxj7OcBvsgak64xZ7jcYdEX
-         EWc6dwd517ubwjzHPoExHKJzkXOr8/X7oN257oLy3SLpoP2JqMNe1CkvHUE595rti5ON
-         jz8eObmQ3zcDccDl8DbVUz0ogXiVPlhq+liEWYa7x/Lk2Y9S8WwAyzmU4PyY5lJ2cyq2
-         tvCw==
+        d=linuxtx.org; s=google; t=1738792618; x=1739397418; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p+RqOTSnSPXG1MBUyv0qD+rReSmeSDZ6Q4z10LKFiFE=;
+        b=Me7r6H5xKo6A9lk2prsnDneiin0O04ZKQoU5d1kmhwNVvsCXZ2vCihdrMLtoJJd3A8
+         xwzrYRgxdeWnnwVN78gnD8CTy5+tZCjdHzKCJsQlS7BjQt8KUlDHMXOcCeAHA6+kB2W0
+         V2P9j+z5zeSqAGuECxCFEXpbedT8aGyBr4K38=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738792612; x=1739397412;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738792618; x=1739397418;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ExpNnKUIu15RnPJeZ+26Wmgur2xuMxA57BJC1TlkS3k=;
-        b=D60epFrECE/SYn4J0U9q9ZXNKlLyzRIV/72v1R9hZFG8KnhvBKk4xLZeGv/f3uFJAW
-         k7GMqQPU+kX0smsZkhbmxczPBhK6awXGDRPQBQKBXIYer2iJ9gihN1VCL6XwDMrkfl1v
-         TX2LkZIUh3Rm+3l4OI2EgyxGuNUKiGZw4uPzEFxg0r9AfqIes/FOHKVakLIriZg/h2P3
-         EdB1sBFpFWatZGtZuEWZu9W2HMH71eEMVPXrJ3t+zOBWf2PHtM/Mtj1t+7i+GAKOZO4M
-         QIr0G4BX5Q/FkfZ+wrrrFUiPyKESA5MvbhSBeP6Qc/mpCf0p3EUAfF3A+4A9+VhhdKPA
-         b8Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUOIKYIDfcmXAu/BuqpbpneVQlSRdmclYbiosOw5q/M2ofKgkYi+nsDfzSdPOOuaXH0Tb9ASyj+SkMqEjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzixIQcsMrauRD/u5feuycwyDp3Eu5cQgTiKFJR3XsiW35pdYZy
-	TjrKsweOqAcloypRA1gnT7C0fntyKNg2crFvimEACObaUSHZJISP
-X-Gm-Gg: ASbGncumkuWhi85GB/+UkR/pJ13TwLgSNjkaU1d25yjhXIhdEQXpRuQwBRsvmlBIFYb
-	s7c4kyJ5KomRdozDTzXhQnLqk3R3ijaQ6BQLZEJk8Y9vJIeZm3u3PIy/k2LNUpaw+1kIvI+OxHy
-	v1T3ybRmUCxzhCgxIEZGeIuXB4T8+P2QgkMN782fcx7rAlgB+GSPdxHmaxpjosXF1Z0poqtiPJ5
-	sstRnCPeRnmi3Fmqpy+nTIrBzWJaykOoQbhCEZpg5D96FXwbrYuGoKTu+082bHTGgYXmZ37SpTp
-	SKkPonn7IW0yGsKnbLTnkgWV4ap7IEbJ1Lh5+lzZiB3vY2sbj6DAng==
-X-Google-Smtp-Source: AGHT+IF9Lnac8vLx0Lch1E/U4g3+70BcOuxYX6wPveyHWXIkh22if2ugk0Wjk5x+SbNJB9g+wbpVMg==
-X-Received: by 2002:a05:600c:314a:b0:438:e256:a77d with SMTP id 5b1f17b1804b1-4390d43db08mr38919505e9.15.1738792611470;
-        Wed, 05 Feb 2025 13:56:51 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf896sm20490902f8f.94.2025.02.05.13.56.50
+        bh=p+RqOTSnSPXG1MBUyv0qD+rReSmeSDZ6Q4z10LKFiFE=;
+        b=pCKLUAj1pmPQBQE8WTj91E/FnbM1n8ZGO/fgMilsXLRE8l7503aEs5gbsYd2iK5miE
+         UCup774YQRaCOjviLsmbhj5VKjeyiifxWmyNhD5/6GA1YiTCUjGeKWdT9qIatQUOqPib
+         RnYGMfFrj5PpN9f31ITQqGUlClAZPU9/U7/ScYUfGudL2v7Fg/tmsYi+SVwNssUhfnrj
+         fO0TnZHSOzmvRJmy7agF0OuK1Dq8IgZ+TOeNR/Ici9+50Iv6snNS7Bap9mpuJ8q5vml6
+         TfQA7Z3GnAiS/BqF2pvO7+/WL3bDji9EfaXgnKHEZ6rlporSPWv5GEBD/DbFxV+bvL+D
+         7oZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgmwIGgFF+B7bxReJK1P8+nBaHTiPOz1LzqghtVF9hqxw+p0vGfdoPMNc8pFaBWYj5iJ32mJzCEct+oT8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd6ysz9sPq9XtAsVc5w0lHvSbXr/QelOLrrS1qzlqb0K9jvEw0
+	zuNyvrbRMgAxJFSkAbEG9jjpbmGIZ86gExIvdSgdrXz2ss46uJaa+ifpO0UlSg==
+X-Gm-Gg: ASbGncs8JLcLHxBElyQygsa1TVHy3pXZiyRfeEeDPwVE22zC7+Xtl0ysgKyoeVhekfM
+	a+41Y3RDmemm+kWrzM2xIWPt5wyiPFvUsG8cEm0n27ARJQDszWgKKc1sFfBJ5Aa0xH5PDTUXrJb
+	V8TBdvxcnstUvVMx+t0K+6PIE0h9+rQsFGJNMcydRn5IzwgBLLlP2Iwirm3A3qHdKS9BBFbJNR4
+	2N6TE7UuBjxCPqiO+0Cz4tdRAZCFqjj7k5y2gyC9ZnlVHXXuslouYLNELqXQcy25SPM4c1BPaJD
+	uxepPbarHhLDfad5qjFI8N5yFnM6dL/F
+X-Google-Smtp-Source: AGHT+IEWlXmXQnDihwBVnSYlw2n6wPB+KmNglO3Os1wffGg3OKOkA12y/hS3Nmj7qmF2gTqtJ9Wcjw==
+X-Received: by 2002:a05:6602:388f:b0:84f:54df:dde4 with SMTP id ca18e2360f4ac-854ea43465dmr545587639f.6.1738792618515;
+        Wed, 05 Feb 2025 13:56:58 -0800 (PST)
+Received: from fedora64.linuxtx.org ([72.42.103.70])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec7458ecf8sm3421542173.6.2025.02.05.13.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 13:56:51 -0800 (PST)
-Date: Wed, 5 Feb 2025 21:56:50 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: "Xu, Even" <even.xu@intel.com>
-Cc: lkp <lkp@intel.com>, "oe-kbuild-all@lists.linux.dev"
- <oe-kbuild-all@lists.linux.dev>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, "Sun,
- Xinpeng" <xinpeng.sun@intel.com>, "Srinivas Pandruvada"
- <srinivas.pandruvada@linux.intel.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>
-Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38:
- sparse: sparse: dubious: !x | !y
-Message-ID: <20250205215650.1a93dc58@pumpkin>
-In-Reply-To: <IA1PR11MB6098ECA558A36C0EAA1F21FCF4F72@IA1PR11MB6098.namprd11.prod.outlook.com>
-References: <202501292144.eFDq4ovr-lkp@intel.com>
-	<20250129222141.478c03df@pumpkin>
-	<IA1PR11MB6098ECA558A36C0EAA1F21FCF4F72@IA1PR11MB6098.namprd11.prod.outlook.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Wed, 05 Feb 2025 13:56:57 -0800 (PST)
+Sender: Justin Forbes <jmforbes@linuxtx.org>
+Date: Wed, 5 Feb 2025 14:56:55 -0700
+From: Justin Forbes <jforbes@fedoraproject.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
+Message-ID: <Z6Pep0H4X7Nty9tu@fedora64.linuxtx.org>
+References: <20250205134456.221272033@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
 
-On Wed, 5 Feb 2025 02:56:05 +0000
-"Xu, Even" <even.xu@intel.com> wrote:
-
-> > -----Original Message-----
-> > From: David Laight <david.laight.linux@gmail.com>
-> > Sent: Thursday, January 30, 2025 6:22 AM
-> > To: lkp <lkp@intel.com>
-> > Cc: Xu, Even <even.xu@intel.com>; oe-kbuild-all@lists.linux.dev; linux-
-> > kernel@vger.kernel.org; Jiri Kosina <jikos@kernel.org>; Sun, Xinpeng
-> > <xinpeng.sun@intel.com>; Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>; Mark Pearson <mpearson-  
-> > lenovo@squebb.ca>  
-> > Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: sparse:
-> > sparse: dubious: !x | !y
-> > 
-> > On Wed, 29 Jan 2025 22:02:59 +0800
-> > kernel test robot <lkp@intel.com> wrote:
-> >   
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
-> > > commit: a688404b2e20f00cce6d0a2b888ef4ca9154e144 HID: intel-thc-hid:  
-> > intel-thc: Add THC DMA interfaces  
-> > > date:   3 weeks ago
-> > > config: x86_64-allyesconfig
-> > > (https://download.01.org/0day-ci/archive/20250129/202501292144.eFDq4ov
-> > > r-lkp@intel.com/config)
-> > > compiler: gcc-12 (Debian 12.2.0-14) 12.2.0 reproduce (this is a W=1
-> > > build):
-> > > (https://download.01.org/0day-ci/archive/20250129/202501292144.eFDq4ov
-> > > r-lkp@intel.com/reproduce)
-> > >
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new
-> > > version of the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > | Closes:
-> > > | https://lore.kernel.org/oe-kbuild-all/202501292144.eFDq4ovr-lkp@inte
-> > > | l.com/
-> > >
-> > > sparse warnings: (new ones prefixed by >>)  
-> > > >> drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: sparse:
-> > > >> sparse: dubious: !x | !y  
-> > >    drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c: note: in included file  
-> > (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/mm.h, ...):  
-> > >    include/linux/page-flags.h:237:46: sparse: sparse: self-comparison always  
-> > evaluates to false  
-> > >    include/linux/page-flags.h:237:46: sparse: sparse: self-comparison
-> > > always evaluates to false
-> > >
-> > > vim +298 drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c  
-> > ...  
-> > >    297		for (i = 0; i < config->prd_tbl_num; i++) {  
-> > >  > 298			if (!config->sgls[i] | !config->sgls_nent[i])  
-> > >    299				continue;  
-> > ...
-> > 
-> > If zeros are unlikely the bit-wise 'or' is pretty likely to generate better code than a
-> > logical 'or'.
-> > 
-> > 	David  
+On Wed, Feb 05, 2025 at 02:35:42PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.2 release.
+> There are 623 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Good suggestion!
-> So the code can be optimized to:
-> 	for (i = 0; i < config->prd_tbl_num; i++) {
-> 	         if (config->sgls[i] && config->sgls_nent[i]) {
->                                     ......
->                        }
-
-That just adds a level of indentation to the source.
-It'll generate much the same code as !x || !y.
-Both will generate two conditional branches.
-
-It almost certainly makes in immeasurable difference here, but !x | !y
-can be generated using (on x86) the 'sete' instruction to get a 0/1 from
-the x == 0 compare (that sets the flags), and then doing an 'or' and a
-single jump.
-
-	David
-
-> 	}
+> Responses should be made by Fri, 07 Feb 2025 13:42:57 +0000.
+> Anything received after that time might be too late.
 > 
-> Will create a patch for this.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.2-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
 > 
-> Best Regards,
-> Even Xu
+> thanks,
 > 
-> 
+> greg k-h
 
+Tested rc1 against the Fedora build system (aarch64, ppc64le, s390x,
+x86_64), and boot tested x86_64. No regressions noted.
+
+Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
