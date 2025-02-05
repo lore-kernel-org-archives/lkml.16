@@ -1,245 +1,263 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2075.outbound.protection.outlook.com [40.107.243.75])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D620155300;
-	Wed,  5 Feb 2025 09:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3F12288CA;
+	Wed,  5 Feb 2025 09:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738748836; cv=fail; b=ZNelwcpLu1fuX7CPjgoy1TGfcz/5vcJn3c/gsbdX5tWxM1a74PC5cAmJreUGgAvzdRFoVBkKkpQgQRI6h6K81+UbruHRviI2Kkcz+Rzp1+oLbTZe4aD3tixa+JbpxRvOXdPFzMc0JcI8/7kEgr4B+00U5uTW+N1ZeArLp2fP/z8=
+	t=1738748917; cv=fail; b=H7jpSpoOVoieeEEM04XiVBQwi8WxB3DMakpb1m8PrFhFRhkMaVI0V9/QagDNCkfyg21BIPufsGy3IHSwIlDJuMjsfW61+LHPjYBSOf4Qrgs9abYv/3d4MUyb/9KsIPaJhNQCk2yUrl24xamaBi3mz+WH9EJ6MTNrBrbZivbjE28=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738748836; c=relaxed/simple;
-	bh=5VcVV1ckcS/xciIVOP6W+bMTQ+hCZsrpc+EpuhnW4lM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qzDbbWeakSXkCiJK7Jt6aTWzwXXDdHPoEmRGHZxZ25IN+3kC69sgSQ81VN/OvO2HbRhbX2E2vQusTz1GXofrsy6jrsgEAgkeYcnQqDSqm6iDvImf3xz0al/bv54nQ4/8NEDupYf4O3Eg2bBpuIpy/+vvzp1qc0oC3A39SZyZUJM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TnMPtZJC; arc=fail smtp.client-ip=40.107.243.75
+	s=arc-20240116; t=1738748917; c=relaxed/simple;
+	bh=9+K7gXHWpe0WXEwR90hSxSTHXgx9JDkqtrCw9b3W73A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JDYQKWIMhfGavEk5iG9hd8+Pr3cPc1hyw4YcKp9AlcZgrxEdL/sdfaqI3pH3/WA5Ppxu00FO3XZEf9nDESt4GTvLTrffg3N+NCXVUrDbws8/8O4xvMWFMjJzlroxou41xsDGDjjOoOx7hb1bSrCM4Lz26lBXOTnOWh1pqhudFnE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TGy0IHkM; arc=fail smtp.client-ip=40.107.93.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TnMPtZJC"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TGy0IHkM"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TWvTC0DwAVXchjBDC6VTBYPhoqcxISSl6WkGLymL134Pt9ueBScBgHkZCxekDQEg1V2jAkfrMbtAVsYzJ/8Qzzr+DmmG9358Pt6xOt4jZTqrG+UdL8TKdlrNVIvvVQvX0aA//PZb5pr2xyKxzmUxpauS/EOxV0gZNPXFdLwr2lR8LfuXVFiApknsQso6Z/dHDUDGwRAwUqHNy0Ki0FQWd68BV8M9/yT44G6jMgM/MP+viKJ5i6fiJQW2LFRvgED0AqlKDJjWHG5kxy6Ed4SryPsgGwJHJt3Cje7+p8Ajzte2rKAizuUzKYF9uV7rRKOslBFcpeuIWUCjp27TXpnyUg==
+ b=X3+/B1O8lyHAYqRhiDEt3ETPOLgXSDr6LYbWmOZEkEwdSaj3TaTV+buF/JGVnol5+hEBka7XluRR2eFsnr1TeeeIVJFlAHNE7spQv376F4rwH/TwGVumZkOt03yLbnF1Z+NZEHgCv6b6cUkqCdVUiZ9STNMlcZeNv0jdoTKqHXWoOuu7MXjz2B2dqb1lcMypQOFHuRwecJBem7+RrQ+5KlFqhn/gwwQNK8kSs9+lZHsQHd83t0qkCZPmjaoMesVtlFWJk+DucpBbxjGUOEELD+IXoSJX191T8CEgPP/zo+ViKLMZbBtplFYeJdiQq62yI/gy8Jslc/pYDnN+9ogRXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lSk2USYzZJ0DRFI15D1G+zNRaL/vHkD7jC0483c6q1w=;
- b=bsZpeV37YPIqakCjo/e8lOfB3eh26tqjtAnX6vnTjtDXsO5F33+6/BjSP0wkat7hI0MXYuBgSkbCzgDsjQEwr1Zw5zzkQpBJLsvBTvix+cINMHNUX0PqjglEkjx0IEHx6vL4QUoXUjNeqUKSww7XjQSTjSearylpVd49hPsb81eRxppcz9dr0I8PTOMdpvXVci73jz210UqNobdunddBZCo6Nq+vJpohIMu9lQd/i2yP5krYEBVAdVsl2LAjNCLoc6M77MD50SIW8EvLtrIBdUkUrzRXqggm8D3P1v/g+8zFkz62jJQA0V2mtM1Yclj+D/MQZfMKbfIYZ4Z/UDsU+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=3+uFo5SRl3siEkCEcu7QwMDtg06GPecIJNglgqoo4bA=;
+ b=DR7WCo2DyGnuxpgV6Xk1ar2C2Fi9lRR2I7uaT1vrgJ+vNd96uYf/VpurIalLPyTbaxuVeiITLl0NAJ6LgeBNHuJtK2vBcuIUYV5XJyC9snoot3IWRxTYaSTCsGEWibutTtbUx4zyYNzWq+bSJMQTXj3naJizZ0Xfdm2CZ4EInmgpTahh88Wr8DjaMK6/96nz36IFkH8jxwqKkojGzWY36wb0jvLMAHpKgJLu4HZb21sdaMS+HMv1OYyte9OnTGy/I4kmaazpXZs4ah/OT+3qjE9Xa/gYdXwr3D8vyAE/4qGs0kCNDsu8JWo04PVRRv5daqMAjlfsWVjwW5M6J+lueg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.microsoft.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lSk2USYzZJ0DRFI15D1G+zNRaL/vHkD7jC0483c6q1w=;
- b=TnMPtZJCmwHj/oRrzUmEw1vKAIoYVSc2IQxS6eYi5TMW6W7tQUc/+C9cs06veHGYljYyO8ubNfihtF2SH9hV8ADuQya0z+H2d0lfEiwmyJ40fgQ4OAiyjGb1ap4/ofGvCb2whfS+2I+sIE934AMl/+qJpsq7VM3S+JSpDH9EXV8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- DM4PR12MB7719.namprd12.prod.outlook.com (2603:10b6:8:101::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.26; Wed, 5 Feb 2025 09:47:12 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%6]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 09:47:12 +0000
-Message-ID: <1969aa1a-e092-4a48-b4a0-9a50ec2ef3b6@amd.com>
-Date: Wed, 5 Feb 2025 15:16:58 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iommu/amd: Enable Host SNP support after enabling
- IOMMU SNP support
-To: Sean Christopherson <seanjc@google.com>,
- Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, joro@8bytes.org, suravee.suthikulpanit@amd.com,
- will@kernel.org, robin.murphy@arm.com, michael.roth@amd.com,
- dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org,
- kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-coco@lists.linux.dev, iommu@lists.linux.dev
-References: <cover.1738274758.git.ashish.kalra@amd.com>
- <afc1fb55dfcb1bccd8ee6730282b78a7e2f77a46.1738274758.git.ashish.kalra@amd.com>
- <Z5wr5h03oLEA5WBn@google.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <Z5wr5h03oLEA5WBn@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0211.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:ea::6) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+ bh=3+uFo5SRl3siEkCEcu7QwMDtg06GPecIJNglgqoo4bA=;
+ b=TGy0IHkM0xumuvVHqkkGKOHihSE8VeBbD6D2gHli9jLosEqGEPFKBE8ouHBquPRcumjOUk7Emkff5NO6m941+9nR7FgqNk43584OsIwDKXd32dhyMsuc/8Pmifo4nw0NN0A0LhFi2OtlQ5Qo0X09jGBqqxJ5V1dU0hRSMAAajE0=
+Received: from PH7PR17CA0043.namprd17.prod.outlook.com (2603:10b6:510:323::9)
+ by SJ2PR12MB8061.namprd12.prod.outlook.com (2603:10b6:a03:4cb::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
+ 2025 09:48:31 +0000
+Received: from SN1PEPF000397AE.namprd05.prod.outlook.com
+ (2603:10b6:510:323:cafe::b) by PH7PR17CA0043.outlook.office365.com
+ (2603:10b6:510:323::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.28 via Frontend Transport; Wed,
+ 5 Feb 2025 09:48:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397AE.mail.protection.outlook.com (10.167.248.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Wed, 5 Feb 2025 09:48:31 +0000
+Received: from [10.136.39.79] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
+ 2025 03:48:27 -0600
+Message-ID: <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
+Date: Wed, 5 Feb 2025 15:18:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
+ for debug builds
+To: Naman Jain <namjain@linux.microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider
+	<vschneid@redhat.com>
+CC: <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Steve Wahl
+	<steve.wahl@hpe.com>, Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	<srivatsa@csail.mit.edu>, Michael Kelley <mhklinux@outlook.com>
+References: <20250203114738.3109-1-namjain@linux.microsoft.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250203114738.3109-1-namjain@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|DM4PR12MB7719:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97fdb570-226f-4fbf-26f5-08dd45ca106a
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397AE:EE_|SJ2PR12MB8061:EE_
+X-MS-Office365-Filtering-Correlation-Id: 87b3698b-606f-415d-b01f-08dd45ca401b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+	BCL:0;ARA:13230040|36860700013|32650700017|82310400026|7416014|1800799024|376014|13003099007|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NXpTV2dlenRmQlFNN0RES1Z5K0JWMENXSHB6RXFkaWtHTXd5YUxHTFpZNVVk?=
- =?utf-8?B?SXJZamJMTEhhRHdtWWNvVVlTUVVMS3YyOU9rdDhoUFZSc2NGTDJlTUVEM3ZB?=
- =?utf-8?B?RzVaWlliWUR5Y0NvRUQrRlE1cStMbGc1QzZOZXV1U3ZrVVRDMVdRRXY4LytY?=
- =?utf-8?B?Ly9pMjdBL3dKYlp3UmlMbEg2dDZEQWVUbml3TFQ4dUcydlliL0s0NzVUQ3ZV?=
- =?utf-8?B?VmNIOWRnN0xpQVdnbTVqTmZEQzFrQmUzYkVoTC9rTmczMk5sVmlSaXdLbk9P?=
- =?utf-8?B?TThOTGxMK242WHdzZysvMlhSeHkwTnRZWklCd3JaQkdueXFsMllEbThTSURp?=
- =?utf-8?B?ZzlmSnNGNi9lMHF2Vkt4M2hxTlhNRTBxOGQ4YytLREtvVUVnY3R0SUJZdUZI?=
- =?utf-8?B?aVhCdWhSZjNMYXhqRzJUUCtMZnRaUnE2ZFlRNFJyL0pKVlk0bmRlQWpNS3JD?=
- =?utf-8?B?bGQ3VWpoWVRSK3ZTRWtTTWJEMVc5cnMvc1gzVkRKUU5teGZvTHJRL0xSZENm?=
- =?utf-8?B?RjBpSFJPdDdoZTY3UTJyRzhnV3NYY1MyekpPNDQyRzVVemxhVHNCZkxvYXZS?=
- =?utf-8?B?eEJFNHoxZjk4L0hkS1JtVlVLSkw5Q2NsWm5DeE9wS3h6U2FhbWlPTlREVzJm?=
- =?utf-8?B?OFZqYWpKWEthelVCMlFxZ29jUkwrV04zMWNZSlhxWUsxL2NHdE9MZDFSU3J3?=
- =?utf-8?B?cEx3Zk5ucWRRTUJPbGh1ZmxKdCtnK3R5VmxJZGlKZi85ZmJmSVRGR0duSXpQ?=
- =?utf-8?B?MHdWdHpTT3RxblZCTGFmTDBpam9nWS80RUNPWnlNVHM1TWFFYmZEYVRveUhz?=
- =?utf-8?B?V09ROVptSmtyLzVkQXY4cFJocEFXVjdhZllaNzNsa3pVTVZEZzczRVY3NE5n?=
- =?utf-8?B?ZDJmY3hRcUZMVWpPMkV3OVNsc0FYTWd6eXF0dEpYTkJwTXl0QTlPeTZXT1lm?=
- =?utf-8?B?QmxRbGlONit6SDFaSThCMFc1SEJEYkM3aGRRVEZ4KzBRTFBLVERoQ1MrSWdr?=
- =?utf-8?B?STdxV1l6Ym5PYUZTVGxNUGpTcDFQdm5kOTdScXlLdzRUUFNNbTI1ZmhaemJx?=
- =?utf-8?B?L28rYVZiU3B5eXg2WXg0d0JncXlwU3pPdjBXTENtMXkydHFFOStyZHpnYmRi?=
- =?utf-8?B?RFloNytvREJJSnVhVVBCZ0JzenVua29PdnlVRGloelQzbkhnMHgyMHBZNnI3?=
- =?utf-8?B?QUdjcktDOXNEb21YS3R3QWZZSUl1OURqYUs1S2FNTTI1SFVTekVPdS9ocXlk?=
- =?utf-8?B?VVNPZE1pYWVSbGZRY204bGhmNHp0WWFyWlNOVjRJTmRPc3U3SUhzSUdQZG9i?=
- =?utf-8?B?UHhKb2lDRDJndHIzWlc1UzdGei9pSGJFNVhEd2xwS2JYcmpyN0V6Ym55aWI3?=
- =?utf-8?B?M1FYTnY3dGx6Rm5jZGlQVERNVjY3TXk5dzhkWC94WU4wN3BCUnBORXhRdE1F?=
- =?utf-8?B?K0c1WGU3RnRWbTF0VjZlaW8xa3c0ZnFaRTVVL3h3SnJ4SmJIM0ZVR3dzY2Vz?=
- =?utf-8?B?dmNJeHAxQ3o3Q0ZqYSs4d1EwY2hRd3RhZjN4Si9NNmR2ei9JVGpSOE9zMTY0?=
- =?utf-8?B?ZWl4dDdHZVdqby9rUWwySkZBL1YwR2hHTlBVR21YNGs5U0dwRnRFRWROSFF0?=
- =?utf-8?B?NnhoSXFOaXp2SnRGc2ZSYzBFOThDZlFicXY5aGJpUzJ6V2Y1MzZhdldEbzZE?=
- =?utf-8?B?enBoQWJWR3dhZStIN3ZhM2FjZ0lYZnlYRVduVXpWc1kzOHc3MDJSU3l2QmJn?=
- =?utf-8?B?cmErYjFTck9XREV3K04ybGMrSGJGMUN3aFhoL2prMitzVjdCdkdST2dUektI?=
- =?utf-8?B?dDFGc2w3djBwaGFHaVZrRGN2MGJEZ1N2QjVRVmtvK21PZFNtVXJxVkErRCtV?=
- =?utf-8?Q?Wq3AYlaqSuGyE?=
+	=?utf-8?B?bjROVXJtYXRkSk5kTTUxNjNkQUU4N2hUWWorUTM3RlhVZUhnL1FtNERTQ3Jz?=
+ =?utf-8?B?K2F2ZHZrc2JIY3VHdkpoWm1JTW4xNHBmam40b3BJRVJWQWd4RjY1WDhubjRJ?=
+ =?utf-8?B?Z1QvTUYzUk5yUmx0NGEvZXFzOWFwWGdqazIxNnFheVVmRk84T0RUN3NQUDY2?=
+ =?utf-8?B?OEI5UHNZWG9GaDFlRXU5RXVhVFErNVhtYTU3Zk9sdDRHbitHZE1yaDZ1bDc1?=
+ =?utf-8?B?MjRLMWFwUjNrRHZHLzRjTHE5U1hiajhRS1VqZUIwVjNiZWRlQnRIZEhqK3Ev?=
+ =?utf-8?B?RE9JSzdBSWRTWER2WG95MG54THdmZ0NtdmtucVFvS0xyTE5yZjZBQTF2MVM5?=
+ =?utf-8?B?Y2dZS0l6TnFWZGdCOEJWSUZEczRNdnRjK3BsUnArUVNFeUlGNFlvdG52aWRq?=
+ =?utf-8?B?bmlCVk11SjljdjhYdmJsVVg4bTZTUy9rRWJSTjlISG5UUktyZnhsRWI5TTgy?=
+ =?utf-8?B?dFVJVW9neUEwNU1EdEFIelVMdktJeTlUSzh6RTlBWE1DR25EYWp5Z0gzdXRN?=
+ =?utf-8?B?THBPNjhSQUU1UnptejVVWlQ0Qyt3SjNzdHd2c0Q3L0pKa0hLdkpBVjFsS0c4?=
+ =?utf-8?B?cytmQmo4TmhIQnh0R1I0VVl3L0t4SE1wUUN2ZlJBUVYzckQ5c3hueE1GVTE0?=
+ =?utf-8?B?QXRYVUQvbmwvKzcrM0NFVFlGa3NBY0dxS0xpakJtQ08wY1hmMWI3cTdhOTNS?=
+ =?utf-8?B?RzhpM0tPSkJmREhKdVZXT0J2c1lUaVNwazRhd09JbFdGTUc1YmNMaGZTQVJi?=
+ =?utf-8?B?OWoxeHR0WXFTNVVQWmZWUXZFdTE1bTAyWEE3SEtKd3p5aHJxOGZkMUtJbXRB?=
+ =?utf-8?B?Qi9vWlFIcDRwMGorb2d0MEt0OXBnSEZxVHUrSVBGWlBBd2htMUVMSFhPMjJ5?=
+ =?utf-8?B?b21YSnVtSnN6SnFHZHRKbDJTbWJQTFRzbmJxdVg0T05VSzhseEsyT2pRTHdh?=
+ =?utf-8?B?WElvZjJYZXZzaHJCU0M4WVZkcExoWDFyS2VENkNpa3VMVFBmNmEwSmFIT213?=
+ =?utf-8?B?ZmQwL3hsYXVERUVReUxpbUFpVU9uMFMybmRacVdKV3hqNFc5NEhkd0g5bXpG?=
+ =?utf-8?B?YUxsU3NuUVpBbnlzVEd2OWphSUxkejJBSk8zaVloQmQ1ZUZtNWRqWmxVazNW?=
+ =?utf-8?B?d2t0NWR3ZDhoMXhncHVjQjY1OUQwbGQzbHZuTTROUkZSTUhxSnp0REVkSUxY?=
+ =?utf-8?B?cG16ZTFkZ1hDc0R3WWtEZEJ5RXFLd0FlSlpyQ1NseFhQMWpKd3dGbnZNZmcy?=
+ =?utf-8?B?ZjErUGRDY3VFdmZVS1Y5cFM0cm5WTThXVnlYTWhzVi83S0dtN0paVU1xVThn?=
+ =?utf-8?B?N1lNZ1crZkRTT1dnWVdpK3JhYndSV2psVHhvOHBNWXlBa3ErSnpmQXRBMmZw?=
+ =?utf-8?B?SlhHYTc3RmM3eVd4bk9RWS9Ra1hwbm5ZVCswM2ZWRmFnd3VXSGJJWDJWMmVL?=
+ =?utf-8?B?UE9LZWF0MFRaanJJcDNIQ3ZpMHFXM2JUOGluSXQ0ZEZjeGNRNUNUelcwZVJ3?=
+ =?utf-8?B?ZGZGQnR4aTBsaDZiRnpUMHU0VjhHbXBPYTJPT3BBc3E1Q1dpZWFhYU9yZ2FS?=
+ =?utf-8?B?UEFkbkx3T1FmZzlTazkrejdJd1BPRi9VdU56aVFsSXJFYzBrcEQ3VVM2bW0y?=
+ =?utf-8?B?bUJMVUVQdk0vSlpPSi9iNXEzcERrWGlUbmJjTVNhNy9hR2srQ0kzU3A3MXA5?=
+ =?utf-8?B?OWxMKy9YTk8zU0NPeTVmRFJqSmRSM1pqZ1JnNWdQbWxNaGtZRHJXc1hTWUox?=
+ =?utf-8?B?cVNmTUI0alp2cVlJNzdyQjdlbk9UejlocHhjd1JKalJjQU40eEh6N090R2Ja?=
+ =?utf-8?B?TFltdEdmeDlSRDdDK1ZxaUtxSzg2UHF2c1UrMCtXSnlBcURUUmp5NklNUUhG?=
+ =?utf-8?B?RHovZVV4U05DeHVBeVZ4MFdsRk8vR0lIR2ZyK05KcWM3ZmJPQzRNUUpPQWdF?=
+ =?utf-8?B?djRDWHhCb1dldEJBMFBTNS9HU0hiVFNDeklJWUluYms5enlCbVlKeXIzSjlV?=
+ =?utf-8?B?dFJWa2JlV3o2OUZVTHZvK2JrUnVpZDBmZmNwaDUrakFGVHNHRzkxMWFraldi?=
+ =?utf-8?Q?n9/fJk?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S01IcktxZ3c4b1UzWjFYcnQrMGsyaE01N2NyTjd3V0JBc0NCNkFvenQzakxF?=
- =?utf-8?B?V2ZzNVF6djFRWktjZkVhWXFNV0ZUMXpQMW5GbUVzTWVBRFUyKzBFUzJ2Ymdy?=
- =?utf-8?B?VS9rNFl4NnlodkgxVXVOOGF4WVBSQS9hdGJnSVI5Z0ZxQVl6RUZqT2MvZG1l?=
- =?utf-8?B?RDF3L21yVytncEM1NTBSZmMyTTRMU0lHbWRkRjBKcVYyNWUrcUtYODBuK24v?=
- =?utf-8?B?SUtrR3lmdmowb0hKZDdLcWxIZWZhTFUxcUd0c2FMOFp6ZFZRUTlzWFFBMnhD?=
- =?utf-8?B?SVNnM2RLMmhTZzhsemw2N0Fzd0JlYTJLbGVqMlRVTWV3RGxpeklPWW52eFli?=
- =?utf-8?B?M2dMZjNyaFRLdU5sZGVuZytYUTF4cm9zNE9tQ20wdnI4U0tEL0xmL2M3WnJJ?=
- =?utf-8?B?N1NKcUkvMkVMUmU5OEJReTF2VlRWUlB4Wjdxd051VXU3UlU4WFUwTFFNd3NM?=
- =?utf-8?B?cWdzUmRTWmxNRjI0U1paYXBJODE4bzVUSnpETDhqVjZBK2pKWlZEK0U4NTZL?=
- =?utf-8?B?dmNPeWJtdVhHMi9Na1I4RXFaTDh3QmJVWVF2WFROWHVTMDBKUGtya0hwMTR3?=
- =?utf-8?B?VmcvOEtVWTZSZjZkYnNNQ1R4aEVqTE4vQVltaVJFRXBoK0UwWG9TM1JVU2dO?=
- =?utf-8?B?eDQ1bDQwV2RjL2RFZzNUby9SbmFoMytkMXBpNWZjYXZtRXRDdEZrRzU2bm4z?=
- =?utf-8?B?Mng0QjhJOW5RUEg4Q3N2VDdRcmVscVpMYTJmdHpaREhvNmI2WFNTNC94Qk81?=
- =?utf-8?B?TENLQjdkRlJJMjJBSXh3bEYxajdKRjNzZ1lXMncwT2FLeEt4ZHBYSzJaSnoy?=
- =?utf-8?B?RDZhUDlCTm9lVWllT1Z2MnVOSzJjenlQNGtoMHlpT0ZTb1JVQTJvR3NuSXAr?=
- =?utf-8?B?L00zWlpma3lOTEZXbjYxUW9jWmp6SjRlQkhpYjlxRkhncmtWUmpTNXlZNEEw?=
- =?utf-8?B?RWpVRjdkZGY4WGdmNzRhamVjcjUwcWFKUEI0Rml0YVpRQ1hDczFIdzVvVUFD?=
- =?utf-8?B?cytDdnllWEVpVEdza0xad2JiK0hFeFFQTkdKTUcyTll3WXRBZmpOUEsyRGpj?=
- =?utf-8?B?cGtPWmxuSjJjbUtJdG96ZmV0bmJvTEZQNDdwRjhydGs3V3lsVzNUL09ubFVl?=
- =?utf-8?B?bjUycW5yQW9JSW1ZZ3Y2NTVCdXdNaTZ3VERTZ3VWdkRKTUswQ0NZUHY4aXRo?=
- =?utf-8?B?QWRoSWZxdUNCeUhCVGlxRXh6VG1CUGlqL3NlOXBFTTRjK2JiQjBZQlVOUFlG?=
- =?utf-8?B?VFZtZCtQQm9DampnYklHZTduem1VOFNXcmtoa0JHeCtrK2FHakh6cWptKy9i?=
- =?utf-8?B?T0NDYWZGejJMdHR5VHJwOEJic3N4ZlA2WW5xY1BoeHBGTWt2MGJ5eGcwV1pN?=
- =?utf-8?B?Sy9wNFpOdDJJYUJydVpqU3lPbXFxbUtYRVp0dUcwZ0JHanB5cVJuQmZxZWM4?=
- =?utf-8?B?NHpYTW1OdDhBUS9TU1ZoTm1aaDZlRUk3UFZhTUtKMWs0ZjNpSkFFSnVaWVVr?=
- =?utf-8?B?MkpXVk9ybU5QcFFhcDRPMy9HLzIvekx5bFkrMlBDSEJSZW5hNGRXS3UrWmlo?=
- =?utf-8?B?dWxKQlFubzlnK3oyUjdQZk1sZk5yS1RBMmlrVnp0UTdtT0lyTzFVeUpEckl0?=
- =?utf-8?B?ZFk3bmoxUlhqblJ1M0g2RzEza2lYTnZJaVJ3SGJoaHdWMk9rT0tjRTcvRWlO?=
- =?utf-8?B?ZlBUYTFhajJmeG5SU21wTHpkTHJZYnRwbTBqem5YR2VIUW44dTg5V1ROMHVL?=
- =?utf-8?B?SkNHZjlpRUdBVTBnZHNBTGwrY2JGS0ZsQkZlVWxvZ1JnOUlpaHBzVDIyMzM0?=
- =?utf-8?B?bDRONUJ3Tjk1dklKNVQwWkpsdXE1T05UcHR6cWZWbjVDSFNEdVVtZ0crMllX?=
- =?utf-8?B?QWRBTE1mU3NZa3cvRkVNMGY3RmFJRlY0WWJzdFpPUldPempkMWs4RVhyVVZy?=
- =?utf-8?B?ZE5XN2tSalJEdXFPSlJTYWxOMVpmM295aXcvVFhydXo2RHJ1dlBMcWd2YTNR?=
- =?utf-8?B?bGFuN2RKS3N0NHVnQzdDT2tPS1BjSTF6amdvTWJITGtOcWt5emtkOVdrQmNt?=
- =?utf-8?B?U2pCaFVOK2xVYkM0bzBkUEVTN1BNTVNrNlhPTFRNMUhCaWpiMUowYm55ZDg4?=
- =?utf-8?Q?gJj38Sj1OlmbWYyW1TjBuAIdK?=
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(32650700017)(82310400026)(7416014)(1800799024)(376014)(13003099007)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97fdb570-226f-4fbf-26f5-08dd45ca106a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 09:47:12.1320
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 09:48:31.6963
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87b3698b-606f-415d-b01f-08dd45ca401b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Aw3IZEnyqOK9KPQS/Hcu3MpI6iUVLDbESywxMHU6NnqTY5vCYjv61RHz43Ra+EV8BhZY6IW/5eYAF69ZuyjJWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7719
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397AE.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8061
 
-Hi ,
+Hello all,
 
-On 1/31/2025 7:18 AM, Sean Christopherson wrote:
-> On Fri, Jan 31, 2025, Ashish Kalra wrote:
->> From: Sean Christopherson <seanjc@google.com>
->>
->> This patch fixes the current SNP host enabling code and effectively SNP
->   ^^^^^^^^^^
->> ---
->>  drivers/iommu/amd/init.c | 18 ++++++++++++++----
->>  1 file changed, 14 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
->> index c5cd92edada0..ee887aa4442f 100644
->> --- a/drivers/iommu/amd/init.c
->> +++ b/drivers/iommu/amd/init.c
->> @@ -3194,7 +3194,7 @@ static bool __init detect_ivrs(void)
->>  	return true;
->>  }
->>  
->> -static void iommu_snp_enable(void)
->> +static __init void iommu_snp_enable(void)
+On 2/3/2025 5:17 PM, Naman Jain wrote:
+> [..snip..]
 > 
-> If you're feeling nitpicky, adding "__init" could be done in a separate patch.
+> Adding a link to the other patch which is under review.
+> https://lore.kernel.org/lkml/20241031200431.182443-1-steve.wahl@hpe.com/
+> Above patch tries to optimize the topology sanity check, whereas this
+> patch makes it optional. We believe both patches can coexist, as even
+> with optimization, there will still be some performance overhead for
+> this check.
+
+I would like to discuss this parallelly here. Going back to the original
+problem highlighted in [1], the topology_span_sane() came to be as a
+result of how drivers/base/arch_topology.c computed the
+cpu_coregroup_mask().
+
+[1] https://lore.kernel.org/all/1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com/
+
+Originally described problematic topology is as follows:
+
+     **************************
+     NUMA:      	     0-2,  3-7
+     core_siblings:   0-3,  4-7
+     **************************
+
+with the problematic bit in the handling being:
+
+     const struct cpumask *cpu_coregroup_mask(int cpu)
+     {
+             const cpumask_t *core_mask = cpumask_of_node(cpu_to_node(cpu));
+
+             ...
+
+             if (last_level_cache_is_valid(cpu)) {
+                     /* If the llc_sibling is subset of node return llc_sibling */
+                     if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
+                             core_mask = &cpu_topology[cpu].llc_sibling;
+
+                     /* else the core_mask remains cpumask_of_node() */
+             }
+
+             ...
+
+             return core_mask;
+     }
+
+For CPU3, the llc_sibling 0-3 is not a subset of node mask 3-7, and the
+fallback is to use 3-7. For CPUs 4-7, the llc_sibling 4-7 is a subset of
+the node mask 3-7 and the coremask is returned a 4-7.
+
+In case of x86 (and perhaps other arch too) the arch/x86 bits ensure
+that this inconsistency never happens for !NUMA domains using the
+topology IDs. If a set of IDs match between two CPUs, the CPUs are set
+in each other's per-CPU topology mask (see link_mask() usage and
+match_*() functions in arch/x86/kernel/smpboot.c)
+
+If the set of IDs match with one CPU, it should match with all other
+CPUs set in the cpumask for a given topology level. If it doesn't match
+with one, it will not match with any other CPUs in the cpumask either.
+The cpumasks of two CPUs can either be equal or disjoint at any given
+level. Steve's optimization reverses this to check if the the cpumask
+of set of CPUs match.
+
+Have there been any reports on an x86 system / VM where
+topology_span_sane() was tripped? Looking at the implementation it
+does not seem possible (at least to my eyes) with one exception of
+AMD Fam 0x15 processors which set "cu_id" and match_smt() will look at
+cu_id if the core_id doesn't match between 2 CPUs. It may so happen
+that core IDs may match with one set of CPUs and cu_id may match with
+another set of CPUs if the information from CPUID is faulty.
+
+What I'm getting to is that the arch specific topology parsing code
+can set a "SDTL_ARCH_VERIFIED" flag indicating that the arch specific
+bits have verified that the cpumasks are either equal or disjoint and
+since sched_debug() is "false" by default, topology_span_sane() can
+bail out if:
+
+	if (!sched_debug() && (tl->flags & SDTL_ARCH_VERIFIED))
+		return;
+
+In case arch specific parsing was wrong, "sched_verbose" can always
+be used to double check the topology and for the arch that require
+this sanity check, Steve's optimized version of
+topology_span_sane() can be run to be sure of the sanity.
+
+All this justification is in case folks want to keep
+topology_span_sane() around but if no one cares, Naman and Saurabh's
+approach works as intended.
+
+-- 
+Thanks and Regards,
+Prateek
+
 > 
->>  {
->>  #ifdef CONFIG_KVM_AMD_SEV
->>  	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
->> @@ -3219,6 +3219,11 @@ static void iommu_snp_enable(void)
->>  		goto disable_snp;
->>  	}
->>  
->> +	if (snp_rmptable_init()) {
->> +		pr_warn("SNP: RMP initialization failed, SNP cannot be supported.\n");
->> +		goto disable_snp;
->> +	}
->> +
->>  	pr_info("IOMMU SNP support enabled.\n");
->>  	return;
->>  
->> @@ -3426,18 +3431,23 @@ void __init amd_iommu_detect(void)
->>  	int ret;
->>  
->>  	if (no_iommu || (iommu_detected && !gart_iommu_aperture))
->> -		return;
->> +		goto disable_snp;
->>  
->>  	if (!amd_iommu_sme_check())
->> -		return;
->> +		goto disable_snp;
->>  
->>  	ret = iommu_go_to_state(IOMMU_IVRS_DETECTED);
->>  	if (ret)
->> -		return;
->> +		goto disable_snp;
+> ---
+>   kernel/sched/topology.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
 > 
-> This handles initial failure, but it won't handle the case where amd_iommu_prepare()
-> fails, as the iommu_go_to_state() call from amd_iommu_enable() will get
-> short-circuited.  I don't see any pleasant options.  Maybe this?
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index c49aea8c1025..b030c1a2121f 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -2359,6 +2359,13 @@ static bool topology_span_sane(struct sched_domain_topology_level *tl,
+>   {
+>   	int i = cpu + 1;
+>   
+> +	/* Skip the topology sanity check for non-debug, as it is a time-consuming operatin */
+> +	if (!sched_debug()) {
+> +		pr_info_once("%s: Skipping topology span sanity check. Use `sched_verbose` boot parameter to enable it.\n",
+> +			     __func__);
+> +		return true;
+> +	}
+> +
+>   	/* NUMA levels are allowed to overlap */
+>   	if (tl->flags & SDTL_OVERLAP)
+>   		return true;
 > 
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index c5cd92edada0..436e47f13f8f 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -3318,6 +3318,8 @@ static int __init iommu_go_to_state(enum iommu_init_state state)
->                 ret = state_next();
->         }
->  
-> +       if (ret && !amd_iommu_snp_en && cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-
-I think we should clear when `amd_iommu_snp_en` is true. May be below check is
-enough?
-
-	if (ret && amd_iommu_snp_en)
-
-
--Vasant
+> base-commit: 00f3246adeeacbda0bd0b303604e46eb59c32e6e
 
