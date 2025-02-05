@@ -1,125 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACEB1DF98F;
-	Wed,  5 Feb 2025 16:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0371519B1;
+	Wed,  5 Feb 2025 16:08:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771711; cv=none; b=qGcwAjckXxDJyrrDBKfHPPDnoMc/Kjl7u8u0ZexMbN44vWc+Ysy9yaxOOD465mmFuv34nTUzCDWEwGWCtbzekggE308N+STgEzl/STnjKX/9OO5dhZlOQkXtoWZz5PAFkj0ccWLXdqJPgcFVDKPA0U4x/k8gnWVFcjRoMBPH2bI=
+	t=1738771737; cv=none; b=r8cV9OkDlfOWq3A9ACc5HARcp2l7QmaUzEdL1Wr/IPu9LXnKhvAAT/KUs79vV1jpp1KGvK88So1NZ6oUdGReHrKxxavCKPgZ2gzYv4yUApEjtNdXqVXHB1kHw9cbmLtPvhtY+QgZYjW9AEaAWtazz2x1opKWE+hUbNeAomlKULg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771711; c=relaxed/simple;
-	bh=23nEvqAgqDq/DOPfIpZhT0472bYiLNAR6cd2MSKj14w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mMn0HtKXZnvrJ286ryEPDHKczKZuhaMFerU5gRKWhBH6eurwbIXxrsrvSpUu89FCMxIqpUYUL0aiELAsjCmB1tIUlZEafMkKtYgXEKfIRusCeamLTW7W6Zsheo2gDXqnuXrddb5JhxdhyqPVTjKCbr5aA9InUJRSQgOuPN/s/U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+Av3mmy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738771737; c=relaxed/simple;
+	bh=RhaEejtIzyjMiU/812JSoT1N/SGqGANo8ENt1YOM/Xk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gWHwDhQTC2UdEdY+uHmKWsAlYaWI++C5xP5XlIXsG57Tr/+UbO/Um0NI5qLrzPURheNVjfJ8zfjYDWwnL8VCMCpuIQixgJL3gmqJ4i7jmzUoWJIYtd9LRti/EMA49hGo84zHW8YxLn+WFWVreNEGUX0+Slew44STfHRRQ8GPFx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FygjAEt0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+Av3mmy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8AAEC4CEDD;
-	Wed,  5 Feb 2025 16:08:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FygjAEt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA43BC4CEE3;
+	Wed,  5 Feb 2025 16:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738771711;
-	bh=23nEvqAgqDq/DOPfIpZhT0472bYiLNAR6cd2MSKj14w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l+Av3mmy+6T64+lY9WygDOfeDV7rgXn/2RZVycV6xOeXJPQCAYz++p+PkiTs1xi2Y
-	 UEVWi0Ipa+KgxrZkNsBhMCHUZZvc3boeTGFY2S6pR7owWmOvWgsVhiLuqf03HMmlxu
-	 tyI/cxlfoAfG/wKK4nR/UR26ABUw7VdK1dmMePCU0tCSELqFfdPl4tbv0gpY8fjxcv
-	 yswn2CvRoBD/aM4e2AKIlGNDn41v8IzY8qFChH+Eow0EmLmeLOxB0ReJ1CCxiVQb7m
-	 S8gynj07gbvqrMGZqzk7Q1oqJm92xbfaqJ49XsCuLCQgM5D1CzoiYYF+pQrHMuFIHc
-	 CiBoR+hQyt+Mg==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Andy Chiu <andybnac@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 6/6] dt-bindings: riscv: document vector crypto requirements
-Date: Wed,  5 Feb 2025 16:05:12 +0000
-Message-ID: <20250205-ludicrous-gratify-b2ae27b95ebd@spud>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250205-cobbler-unpadded-5580c1f5d946@spud>
-References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+	s=k20201202; t=1738771736;
+	bh=RhaEejtIzyjMiU/812JSoT1N/SGqGANo8ENt1YOM/Xk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FygjAEt0ry4lE7T+mHKzgy+PS2QyM0UGOgLc3XWotiPUJ6DKPsh1Ar/CjR8aX94WY
+	 HWlzh3c2/P//PLuIQCX5kYsLmHpMA4hCErpB3ZmbSGCVoynRamAoGxPf+bVZEm/hFp
+	 cyajelxdmY0wFIT0/EZhp+RMGzPRxBifrlxMToe2eCIMRwU1ImK8hjjLi9CiG4t3RE
+	 wB0NubMl/06hMuYLMprZxBCg/+rAucdM7w18R7NNOC0B4JrbAuYEdTPe/RMY5bkMgQ
+	 RfcheSuuAjTiqAah4jXEP1ff0M1Qv7IKPJtzIOMnsYNYbvrphpNW/mt/shQX928DSs
+	 Sr2hlfeTPeXTw==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53e3a37ae07so7798313e87.3;
+        Wed, 05 Feb 2025 08:08:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWx0nMhlgg6b4JcT/FzsUx3ODTXbeBHNzieaePmm0GxeB5g/vz7Dl4NyzjYlingkf3OFwEejk7x9RBx@vger.kernel.org, AJvYcCX9VTxy4ni0UN7TMOm30WvSYbzr7o5q6qEAojN0PeucRCERMdYAUKMREOAVBE1BhsKD85Ps+zGwcKuyFN73xw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxR7dwoHo8WMAYDfsTgcs2mJXHaqhBhxzEGkBdqFYUoH5CFBru
+	bBraZQM80ktd2THYTj33pDuPABdcwqduVJlkiwGKg7ZM6hKNZta7wyXTe6QRcsbnrAQVigzJecV
+	DIlAv8Uy3TGCN6+apGy2K8Feoxy8=
+X-Google-Smtp-Source: AGHT+IGA5C7LqMJRIR+zc6GD2Sn7Ir0KtIousGtQnb5kwILD1qf2m4XzchrOh1RNRT1+NdhlZv6y0ohGziqKehNek7U=
+X-Received: by 2002:a05:6512:ac6:b0:53e:395c:688e with SMTP id
+ 2adb3069b0e04-544059fd068mr1177110e87.10.1738771735305; Wed, 05 Feb 2025
+ 08:08:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2259; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=4C+zfCw5yJE5unx/bTKD27SZG4062igzYOF7ISnVt+Q=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOmLe2y7Bfanpene8DU3nMQ7YfGKj5WTr/KeP7ovccbds kWm0W6fO0pZGMQ4GGTFFFkSb/e1SK3/47LDuectzBxWJpAhDFycAjCRzccZ/pn4u7gq2lttnn6/ WTmxM/2eY+T1TyVPjii/j/x85dZf6yxGhoMX+K6HTk29emNWSLPUFCGV7XnGT3UmvvjzxKFv8TP j6UwA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+References: <20250201185143.1745708-1-masahiroy@kernel.org>
+In-Reply-To: <20250201185143.1745708-1-masahiroy@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 6 Feb 2025 01:08:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASFyJL8UOfFXxFcaoSNavkxf1dfShUZGF=pgbRYOARctA@mail.gmail.com>
+X-Gm-Features: AWEUYZl1pzD30d8udCUuys8oj8GOyX6D1JtItfiOeZYh7qXhqeHJY7Wb_RTqrPQ
+Message-ID: <CAK7LNASFyJL8UOfFXxFcaoSNavkxf1dfShUZGF=pgbRYOARctA@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: keep symbols for symbol_get() even with CONFIG_TRIM_UNUSED_KSYMS
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, linux-arch@vger.kernel.org, 
+	linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Sun, Feb 2, 2025 at 3:51=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
+>
+> Linus observed that the symbol_request(utf8_data_table) call fails when
+> CONFIG_UNICODE=3Dy and CONFIG_TRIM_UNUSED_KSYMS=3Dy.
+>
+> symbol_get() relies on the symbol data being present in the ksymtab for
+> symbol lookups. However, EXPORT_SYMBOL_GPL(utf8_data_table) is dropped
+> due to CONFIG_TRIM_UNUSED_KSYMS, as no module references it in this case.
+>
+> Probably, this has been broken since commit dbacb0ef670d ("kconfig option
+> for TRIM_UNUSED_KSYMS").
+>
+> This commit addresses the issue by leveraging modpost. Symbol names
+> passed to symbol_get() are recorded in the special .no_trim_symbol
+> section, which is then parsed by modpost to forcibly keep such symbols.
+> The .no_trim_symbol section is discarded by the linker scripts, so there
+> is no impact on the size of the final vmlinux or modules.
+>
+> This commit cannot resolve the issue for direct calls to __symbol_get()
+> because the symbol name is not known at compile-time.
+>
+> Although symbol_get() may eventually be deprecated, this workaround
+> should be good enough meanwhile.
+>
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+> Changes in v3:
+>  - More precise check in case symbol_get() is called from a module
+>
+> Changes in v2:
+>  - Call keep_no_trim_symbols() for modules as well.
+>    EXPORT_SYMBOL() may disppear if symbol_get() calls a symbol
+>    within this same module.
+>
+>  include/asm-generic/vmlinux.lds.h |  1 +
+>  include/linux/module.h            |  5 ++++-
+>  scripts/mod/modpost.c             | 35 +++++++++++++++++++++++++++++++
+>  scripts/mod/modpost.h             |  6 ++++++
+>  scripts/module.lds.S              |  1 +
+>  5 files changed, 47 insertions(+), 1 deletion(-)
+>
 
-Section 35.2. Extensions Overview of [1] says:
-| The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly the composite extensions Zvkn and
-| Zvks-- (sic) require a Zve64x base, or application ("V") base Vector Extension.
-| All of the other Vector Crypto Extensions can be built on any embedded (Zve*) or application ("V") base
-| Vector Extension
+Applied to linux-kbuild/fixes.
 
-Eric Biggars pointed out that the spec is actually incorrect, and that
-the list of instructions requiring a Zve64x base is actually: Zvkn,
-Zvknc, Zvkng and Zvksc. Implement the rules according to his PR [2].
 
-Link: https://github.com/riscv/riscv-isa-manual/releases/tag/riscv-isa-release-698e64a-2024-09-09 [1]
-Link: https://github.com/riscv/riscv-isa-manual/pull/1697 [2]
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- .../devicetree/bindings/riscv/extensions.yaml | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 02065664f819..9aeb9d4731ca 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -726,6 +726,39 @@ properties:
-             - contains:
-                 const: zve64f
- 
-+      - if:
-+          contains:
-+            anyOf:
-+              - const: zvbc
-+              - const: zvkn
-+              - const: zvknc
-+              - const: zvkng
-+              - const: zvknhb
-+              - const: zvksc
-+        then:
-+          contains:
-+            anyOf:
-+              - const: v
-+              - const: zve64x
-+
-+      - if:
-+          contains:
-+            anyOf:
-+              - const: zvbb
-+              - const: zvkb
-+              - const: zvkg
-+              - const: zvkned
-+              - const: zvknha
-+              - const: zvksed
-+              - const: zvksh
-+              - const: zvks
-+              - const: zvkt
-+        then:
-+          contains:
-+            anyOf:
-+              - const: v
-+              - const: zve32x
-+
- allOf:
-   # Zcf extension does not exist on rv64
-   - if:
--- 
-2.45.2
-
+--=20
+Best Regards
+Masahiro Yamada
