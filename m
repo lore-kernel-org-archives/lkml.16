@@ -1,222 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA7EF510;
-	Wed,  5 Feb 2025 20:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B951F510;
+	Wed,  5 Feb 2025 20:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785842; cv=none; b=ssvgAcCayZ5Vi4ouDwmn0rNa/KT3eEBFkwEsCFK5rWG0GGDhqxj2gDZg1Wh/Z8GVYuz3znuGoh9IHVjFzLkRsSkQGClkAOH+5KkWR/NCbf3IMCfwC+F8IIPsUJbv5CaowcOWQgWMvU1CnpQugQt1bt0yq+VF0cSg7QoyfYbC61Q=
+	t=1738785854; cv=none; b=nM9IJ0HcpZSiVXgFVbAPHhCSecdwMFLcYCxM8spznqVkdJUheu0yKSMr4L2ubx2S3L+vGPjs2FLiPPO327svM58JDIdFMuLlRaXF7G30khDd+//uN1S+9aOXh3A4XTzqUnK2VBL6MfhGfiiKYuLAveaefqpl8umXvX3e5+DBrhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785842; c=relaxed/simple;
-	bh=cqtvkklhEhB0dODG1Vl5z2G6YHW2NJWGENWdGBrHkeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HL3kd3lfeup9Uvb9z0/L+mNe9oClmOfBChf7gLiMauefKz6dWYLL8hvtXNHn+PKQJVf6Ht9yeE+E6WhgQHf2engA8mQffWaNiZmlkIShNfbXFHQuPpKOQDIUs+tIUVcX1NCQXYqZEek7ImBlLO26OhSBRhcKi6D8mNz1J1LlzLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeJTukVY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738785854; c=relaxed/simple;
+	bh=+FFvkoBOl40xUJ/7W0+yCnQgdgIu/pUtsBVhDoZzfKI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VuHFydNHTGKnY54PAhRyLzRzRCNwfMXg7+h+F2yWJmAOTro9xGosucgbhLANb+Be57+WOPClBhPg46xwQ89qDlRN7Ywe6gXUNpX7dJfdtbzRzEl1hkSNm86WvEdDDab440hKq4mD9zpwdfYE5++Scnjn/cYF+5KSk7NKkKcSyTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGVVZv6o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeJTukVY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F00FC4CEE2;
-	Wed,  5 Feb 2025 20:03:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGVVZv6o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C4D1C4AF0B;
+	Wed,  5 Feb 2025 20:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738785842;
-	bh=cqtvkklhEhB0dODG1Vl5z2G6YHW2NJWGENWdGBrHkeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FeJTukVY0r2+phkxY4vD1jGpBVAhNBTpFgl7sCJyqr5cAVb85N2ySX0U5TOnmxGnr
-	 uT+MouOjlbg6gjpSWcawzcDxsZ1F1ty4mcxqkGp+usJM2eX9b9/kle9wneOylRKc86
-	 PsSvRjOczvK79o4dUc1GxFdUSqK/Ix2Vq5+wYP/zit5fwwHg+ZpRLiHAQKv1xCmJJw
-	 9HFwuunW1YNhKOaqfKF7dWFU0DOSdCQgoYRXgztu9RCNem1DS8KI7dli94pFhmsWNZ
-	 zl1be9nY8up9x0rDNGn/NjvJkhqiBCDbGlxvGi3ljzL2lN+oo5xkKJaHZVEhiKCYfm
-	 G//JPB5h0LU+g==
-Date: Wed, 5 Feb 2025 20:03:57 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: ROHM BD79124 ADC/GPO
-Message-ID: <20250205-stalemate-shorthand-5a29fbc4081f@spud>
-References: <cover.1738761899.git.mazziesaccount@gmail.com>
- <4e6cd143d3e896587528a415c8623ecd610fac55.1738761899.git.mazziesaccount@gmail.com>
+	s=k20201202; t=1738785853;
+	bh=+FFvkoBOl40xUJ/7W0+yCnQgdgIu/pUtsBVhDoZzfKI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IGVVZv6o2vZ+t7qUWmblsl3a4hr4hET5tZMp/mMPXja5dzv8XUY2DzVU7fnVuGWVK
+	 8u8YfNiCjvVgwlxpsfaSDSwQcjhPOZw4YMW5L4HgKwUV/wGtuo3R3IBZr877pP9ti1
+	 fP6XpZI15Be9d54fIQUMz8xrl/fenJA7eWREIJxfSOEzxQo84eF0cGcDsZB/PYbW0N
+	 ezfr9lpLXvBP5jJ/e2n/EEabEiCCThkz0V/QKrjBcOeyIb8z9peSCRd8Jnl1+6Mofr
+	 0UDqQ/HhRqx3VB3G3lmD6BoY44gaRZ4mlTP3a6V6W43IRdtHJvp+dS1q+yfOh0p8fM
+	 MJL5d8UUIEVGA==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3eba559611aso56012b6e.0;
+        Wed, 05 Feb 2025 12:04:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWCxYtLjuIDDKZt3IA+VQ7oCdYR3pAvTjzHETpfSkJBFp5XkulofsoMjx2Dz/5Mq4lSBqKUs6QyMrk=@vger.kernel.org, AJvYcCWCznUdch6FSjV+hBaIOZA5QMicH9sjDCQFcOS4etgbltXUOYl0YhUdiieqv2GWYteSV6FHCOTuWIrEV/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq1d8hYGd2J159ILUGZyBdiW4v4lmBNnpSETqBNis5FNZazU1W
+	WO2nmi8vbAYWyIuip4zAeAH6QbXmuQlmahSUwyBgshOIxXw8b0EOdLYQKl7bMAv2ujlOHrmyLbw
+	F8CrTGL8TgyJvDlRuhUiNFlwetzI=
+X-Google-Smtp-Source: AGHT+IHe1Lj7yx+0CYl4Xy6nZWHrRS3pbOj2yBx2ooIdbF9l0/WenggJHevZ/XBhavH2GCvquRPkFjVJniRr8MJsM0Y=
+X-Received: by 2002:a05:6808:164e:b0:3ef:27fe:e984 with SMTP id
+ 5614622812f47-3f37c11cb60mr2644653b6e.12.1738785852890; Wed, 05 Feb 2025
+ 12:04:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vu8978jfQni0yQFt"
-Content-Disposition: inline
-In-Reply-To: <4e6cd143d3e896587528a415c8623ecd610fac55.1738761899.git.mazziesaccount@gmail.com>
-
-
---vu8978jfQni0yQFt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250205181347.2079272-1-aboorvad@linux.ibm.com>
+In-Reply-To: <20250205181347.2079272-1-aboorvad@linux.ibm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 5 Feb 2025 21:04:01 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hx1yagWQYaHY-x=VMvw9cdZm=B88MPK=HyVOBVL7ANqg@mail.gmail.com>
+X-Gm-Features: AWEUYZmbkdFJU00qM1_alhIpg9LCaxnJEtTI2qdu0dzdlv5QNye5Vi10O2JkELE
+Message-ID: <CAJZ5v0hx1yagWQYaHY-x=VMvw9cdZm=B88MPK=HyVOBVL7ANqg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] cpufreq: prevent NULL dereference in cpufreq_online
+To: Aboorva Devarajan <aboorvad@linux.ibm.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, zhenglifeng1@huawei.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, gautam@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 03:34:29PM +0200, Matti Vaittinen wrote:
-> Add binding document for the ROHM BD79124 ADC / GPO.
->=20
-> ROHM BD79124 is a 8-channel, 12-bit ADC. The input pins can also be used
-> as general purpose outputs.
->=20
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+On Wed, Feb 5, 2025 at 7:14=E2=80=AFPM Aboorva Devarajan <aboorvad@linux.ib=
+m.com> wrote:
+>
+> Ensure `cpufreq_driver->set_boost` is non-NULL before using it in
+> `cpufreq_online` to prevent a potential NULL pointer dereference.
+>
+> Reported-by: Gautam Menghani <gautam@linux.ibm.com>
+> Closes: https://lore.kernel.org/all/c9e56c5f54cc33338762c94e9bed7b5a0d5de=
+812.camel@linux.ibm.com/
+> Fixes: dd016f379ebc ("cpufreq: Introduce a more generic way to set defaul=
+t per-policy boost flag")
+> Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
 > ---
-> Revision history:
-> RFC v1 =3D> v2:
->  - drop MFD and represent directly as ADC
->  - drop pinmux and treat all non ADC channel pins as GPOs
-> ---
->  .../bindings/iio/adc/rohm,bd79124.yaml        | 114 ++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/rohm,bd7912=
-4.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rohm,bd79124.yaml =
-b/Documentation/devicetree/bindings/iio/adc/rohm,bd79124.yaml
-> new file mode 100644
-> index 000000000000..50889dc6b9a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/rohm,bd79124.yaml
-> @@ -0,0 +1,114 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/rohm,bd79124.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD79124 ADC/GPO
-> +
-> +maintainers:
-> +  - Matti Vaittinen <mazziesaccount@gmail.com>
-> +
-> +description: |
-> +  The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
-> +  an automatic measurement mode, with an alarm interrupt for out-of-wind=
-ow
-> +  measurements. ADC input pins can be also configured as general purpose
-> +  outputs.
-> +
-> +properties:
-> +  compatible:
-> +    const: rohm,bd79124
-> +
-> +  reg:
-> +    description:
-> +      I2C slave address.
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 1
-> +    description:
-> +      The pin number.
-> +
-> +  vdd-supply: true
-> +
-> +  iovdd-supply: true
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]+$":
+>  drivers/cpufreq/cpufreq.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index e0048856ecee..30ffbddc7ece 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1571,7 +1571,8 @@ static int cpufreq_online(unsigned int cpu)
+>                 policy->cdev =3D of_cpufreq_cooling_register(policy);
+>
+>         /* Let the per-policy boost flag mirror the cpufreq_driver boost =
+during init */
+> -       if (policy->boost_enabled !=3D cpufreq_boost_enabled()) {
+> +       if (cpufreq_driver->set_boost &&
+> +           policy->boost_enabled !=3D cpufreq_boost_enabled()) {
+>                 policy->boost_enabled =3D cpufreq_boost_enabled();
+>                 ret =3D cpufreq_driver->set_boost(policy, policy->boost_e=
+nabled);
+>                 if (ret) {
+> --
 
-You can only have 8 channels, there's no need for this to be so
-permissive, right?
-Otherwise, this looks good enough to me.
-
-> +    type: object
-> +    $ref: /schemas/iio/adc/adc.yaml#
-> +    description: Represents ADC channel.
-> +
-> +    properties:
-> +      reg:
-> +        description: AIN pin number
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +    required:
-> +      - reg
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - iovdd-supply
-> +  - vdd-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/leds/common.h>
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +        adc: adc@10 {
-> +            compatible =3D "rohm,bd79124";
-> +            reg =3D <0x10>;
-> +
-> +            interrupt-parent =3D <&gpio1>;
-> +            interrupts =3D <29 8>;
-> +
-> +            vdd-supply =3D <&dummyreg>;
-> +            iovdd-supply =3D <&dummyreg>;
-> +
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <0>;
-> +
-> +            channel@0 {
-> +                reg =3D <0>;
-> +            };
-> +            channel@1 {
-> +                reg =3D <1>;
-> +            };
-> +            channel@2 {
-> +                reg =3D <2>;
-> +            };
-> +            channel@3 {
-> +                reg =3D <3>;
-> +            };
-> +            channel@4 {
-> +                reg =3D <4>;
-> +            };
-> +            channel@5 {
-> +                reg =3D <5>;
-> +            };
-> +            channel@6 {
-> +                reg =3D <6>;
-> +            };
-> +        };
-> +    };
-> --=20
-> 2.48.1
->=20
-
-
-
---vu8978jfQni0yQFt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6PELQAKCRB4tDGHoIJi
-0nAdAP4jXKqyfRAMMvjzMrlM0XfhisGC3LV05/dS61edgIUhNwEApAM8EcrfeloJ
-x1zImD4zFU0fcyXdWWfFA28lc32iHA0=
-=u2gq
------END PGP SIGNATURE-----
-
---vu8978jfQni0yQFt--
+Applied as 6.14-rc material, thanks!
