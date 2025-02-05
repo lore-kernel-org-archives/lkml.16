@@ -1,104 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB8C131E2D;
-	Wed,  5 Feb 2025 08:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B811228383
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 08:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745962; cv=none; b=ZO7NzQveSDt0ijpCgQUFKd4Df3aMRtNWwj6D79dL9+Gtt4xcD/HVCxth2iXn2fBByHuvQVDfBRByPzj9tJa99wnI3oB4UEFYLyl35t/Njp1Qn7aml/sMyM3lUR84bSjRlz9uMKwsHxSveLYJFiovRtcfy/HUgNJYrIGeFTmlAXU=
+	t=1738745989; cv=none; b=Y5EdfUtXVClhAiuivPKaDvLDyVXUUA32Fz51ya7LkAOaHCXzcpIs9rSXxquR5jPoiNfGtAepndBhtYZrlg4fCwgcytOi6X4Lr2ioclXAn+sVkjbn5Cs8kZHMprEBjbBORKVw8gMI4TMoHUZnciB9u1TPW8zNtHW0LaFMAD6u/Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745962; c=relaxed/simple;
-	bh=TZFRc6FYXHvwnfyDD0qzPkae1qeV3chgsD6Gs3FuGHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkMIOn86/BxoopqKUGVpuHzRx9ba8z+70ijpljRSx7uUV8sD+52p/KBC2RjenB01CCK1kNumM8XaBXd6IUac1ZIZK+7yUFD6BKEBWOrtEaMlqCYIkPnupRg9IJv3ZK4EXy86uNi8VoEL4rFv4IYejTI1+zZt78l0sgXXpbNzOSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cO9tXdYV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738745989; c=relaxed/simple;
+	bh=4rdH6GrIXB8lz8HjYqpZ22C0ajtDCyflT20HUHPnBBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eAjsmQkhAvHlkck0JW4DdCxan8zmnEUTLPEGlVENMbmLIBgLP1dYshStz7vJvFpT0EwusVM+uedy7cKSuhjxKO5p/BKv+PtAwo3pukCdRppMZvI2BIABqmCGixvwHUmtvV792G5qB1XkrCe8jf4zfW4I0OhScYyLhMuty7E2wak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qsTZvYSf; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cO9tXdYV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C97C4CED1;
-	Wed,  5 Feb 2025 08:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738745962;
-	bh=TZFRc6FYXHvwnfyDD0qzPkae1qeV3chgsD6Gs3FuGHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cO9tXdYVFbN3eDp5YAZltzm/MY5C6pCYg/yJ+Nw3DkfYiprk70NPPaNFi6BUYhcIA
-	 JtyeivNMZgTaYaUUO+aRH8OD6y9jJcD1Y4+wHslvMf2KEj9+taQh0ylJ2mTX/GbX0q
-	 Dv70zlCMhV3+qhzlG7xsGp6rteY+v7JzJpC5H+jlzEj65+ANhbPl+sP1HxsW05vcxL
-	 s2MbW2fw7sUjwWzSUB9Gqz/PCN7ODBShwlGPw4lI/dQQsxpOlZOMoJJwoHdqRJVRiD
-	 LFs+f/MB/ob+jG+/N5VReibBMIaAoWZIPCDc2XKEerpfazk16iY8ioWi+gGYdC9t4s
-	 D7bp/AXe0tLwQ==
-Date: Wed, 5 Feb 2025 09:59:17 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Joanne Koong <joannelkoong@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>, Miklos Szeredi <mszeredi@redhat.com>
-Subject: Re: linux-next: manual merge of the fuse tree with Linus' tree
-Message-ID: <jr2ud7od7ryb7j3gz5pz4kwz4gm72fj25t2xrq6m3agobcye6y@fa4vd3sxfbti>
-References: <20250130093252.78a892bd@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qsTZvYSf"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-436341f575fso75683125e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 00:59:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738745986; x=1739350786; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5wmjz18zqFyKr/G/A4DW/iVZd6rNAAhBzVdAwovC+Hs=;
+        b=qsTZvYSfA2iAaSvNAmjNIfOyMh4C4XDBJbJ8lEHGaDffN7K8UItLD8F2opmcBQGBbU
+         4OvshB2mP8fSP5DC/dJouuENaIueeg1zN1v/q/ek8n1EhT9kaJnL+pq0ESMyhS5QXApi
+         u5nUTgUPgVrel3MlJQ8n1kSiwHvoJyVjLe4T6QDnA2cisHp0ty/SoTB6AN7jczb3zCVU
+         GczYmndR+a0IXfCqlvWXB003PQn3wApz5cJ66kr0/dxfrsFZKh1x6TYblP0bggXNbHuy
+         7te44fmlbzVnwfi0zPYVp7vTM2QmmM8Veoy47SGXZr0kCplpWUjfZefVgHl6JRQQ6Eto
+         jEaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738745986; x=1739350786;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5wmjz18zqFyKr/G/A4DW/iVZd6rNAAhBzVdAwovC+Hs=;
+        b=Y1SK3aqj15LkVVjF1KWPLbSBaGalM5fyk7PX5bMkYwmnYiMLTnmUrcmqr7o8pBU8Fe
+         z+zuMp8MChdZOXS5wa20SwWTqu0whpBX+2/IYjBo3wlh9N3+/CqLbjoEleZuIpm6bN3k
+         KnBkCCNIU1MXHNopX1xXioySbH2bF0mQ288UPXt4VFXDun4qJsbcKTQZiQt0HclWu+JS
+         1dWkTw/neGQa7uFsb9WTRulMyYvK6bXWLGbwAHLe27ANSAjTQ8Hmxmz71Qyd2EAqTrYO
+         OaEzvjlKrcwEXN2Wch0l3U3NRu4BRhC+XUKdM8filNhLx/8JsmUXy9IwfLW4iRBRS2i/
+         rv2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWhnVqXr3JCCkmD4fersR0JOtmn3Zm8LcCWl0cRsd59GPyKi73AAj/xADLOuu8MiubCwFXT+Nu7CAAomz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQqb+ZA/pMPudm7Gat/0LB/SGslVlvTV6Uf3clz7tNJ2zD7SJg
+	aZ7TD2tCB4lksE2UlkVAs1jobF0XId8Gc3MJpX1T+g+XeYxWZlEMlR/yTNAJyP4=
+X-Gm-Gg: ASbGncs8KdyZnUIIT9I1hgtgivWMasBEZMyvMLj3/7zL0hBQMKlX/gA/yfdWDiHSIwY
+	7IabejOL3oGFtmQCRNNkJRI1eHX1e9eDOkdR9lQdmS1BpMDIoLuEe0q1m4j3Ne96Cabx9JGQD8V
+	SSYiCZ8jmcIBljHOT1tXCBatp0Daa8k/fsL7WFOcRHyxhiLc8IPkW3K5Z8xImg1MxjjZUp7B56F
+	6xTlcHqiqmncBrfdGQgB2xe93gIHPv/Rt+MCbW37E3EF8kiyw01n3a1uaF+xnIYXySu0h3X+d2Q
+	3zCKTyLPlJpSHyI=
+X-Google-Smtp-Source: AGHT+IHvujR6ocyaWXRib9FJP8dFsztpMFdYT+nb0yAfmtcuRsRIBa6C6+A4Dxp5o66bjEcIRw+i0g==
+X-Received: by 2002:a05:6000:2cd:b0:38c:2745:2df3 with SMTP id ffacd0b85a97d-38db49009a6mr1396467f8f.37.1738745985676;
+        Wed, 05 Feb 2025 00:59:45 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a766:1fb1:99b5:1d5f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43907f1b570sm33940815e9.1.2025.02.05.00.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 00:59:45 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: brgl@bgdev.pl,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	Danila Tikhonov <danila@jiaxyga.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux@mainlining.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: (subset) [PATCH 0/4] sm7325-nothing-spacewar: Preparing for the cameras
+Date: Wed,  5 Feb 2025 09:59:43 +0100
+Message-ID: <173874597816.7784.10623106141376200723.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250203111429.22062-1-danila@jiaxyga.com>
+References: <20250203111429.22062-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130093252.78a892bd@canb.auug.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 30, 2025 at 09:32:52AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the fuse tree got a conflict in:
-> 
->   fs/fuse/sysctl.c
-> 
-> between commit:
-> 
->   1751f872cc97 ("treewide: const qualify ctl_tables where applicable")
-> 
-> from Linus' tree and commit:
-> 
->   9afd7336f3ac ("fuse: add default_request_timeout and max_request_timeout sysctls")
-> 
-> from the fuse tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc fs/fuse/sysctl.c
-> index 63fb1e5bee30,3d542ef9d889..000000000000
-> --- a/fs/fuse/sysctl.c
-> +++ b/fs/fuse/sysctl.c
-> @@@ -13,7 -13,13 +13,13 @@@ static struct ctl_table_header *fuse_ta
->   /* Bound by fuse_init_out max_pages, which is a u16 */
->   static unsigned int sysctl_fuse_max_pages_limit = 65535;
->   
-> + /*
-> +  * fuse_init_out request timeouts are u16.
-> +  * This goes up to ~18 hours, which is plenty for a timeout.
-> +  */
-> + static unsigned int sysctl_fuse_req_timeout_limit = 65535;
-> + 
->  -static struct ctl_table fuse_sysctl_table[] = {
->  +static const struct ctl_table fuse_sysctl_table[] = {
-This LGTM. As long as that array is const, I'm happy :)
-
-Not sure if this makes sense in this context but:
-Reviewed-by: Joel Granados <joel.granados@kernel.org>
->   	{
->   		.procname	= "max_pages_limit",
->   		.data		= &fuse_max_pages_limit,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
+On Mon, 03 Feb 2025 14:14:25 +0300, Danila Tikhonov wrote:
+> Nothing Phone (1) - sm7325-nothing-spacewar has three camera sensors:
+> - Wide sony,imx766
+> - Ultra wide samsung,s5kjn1
+> - Front sony,imx471
+> We tested the UW and Front cameras by hacking the IMX412 in our fork and
+> they work as expected. Wide is a C-PHY sensor, so unfortunately we haven't
+> tested it fully yet.
+> 
+> [...]
 
+Applied, thanks!
+
+[2/4] dt-bindings: eeprom: at24: Add compatible for Puya P24C64F
+      commit: 78d9ee370ed33cd8b662981fe1f47cff7b4f0e43
+[3/4] dt-bindings: eeprom: at24: Add compatible for Giantec GT24P128E
+      commit: 03480898cefe9cb5ba921dba9304703f7574b687
+
+Best regards,
 -- 
-
-Joel Granados
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
