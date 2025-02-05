@@ -1,173 +1,199 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C46172BB9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF2BDF71;
+	Wed,  5 Feb 2025 14:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738767109; cv=none; b=XxSosNEdRE94UnL/WpkVLtoVWfMKkXnSFyc+8A9p4nR+WLqK2tiky6gnuyERHV1ecHSUy/zJ9qXrJxP/7UQvWoMU1lYhTnJB+NZoMvFt/kkEdV7qlZTxAoIl7cFVeDMZEFArIEA9GIQVEcGGgxMXkczBPMmrVjKXBvQMMggcvM8=
+	t=1738767155; cv=none; b=nNbGIOfBuEQnbaUIiW3eRMRkiSEt01bYX0PR+lZ3Z9tyFezXCl4scwhekwGS7RC+CoudqE40Kr5qyldj0h9yV3ex0f2ygBV3S8lL8R6jBt4GgRaIEn6CE1FwIIbQH0DhdVn/i1ZLq6aWFdcSPRXRtXl+4cHQy/2GGbvRKX6oHgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738767109; c=relaxed/simple;
-	bh=QYcp3HmoF0871IrSJxxz1VhiNKOgjRIr98gIlJZrNxQ=;
+	s=arc-20240116; t=1738767155; c=relaxed/simple;
+	bh=fKO+KfI5PoBjPM7OHhzkdtchZan6XyDHTFGvgKnrJtM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qg7Uj7u2OZQWpu+N84OBdG4En/PNwiLbReUEFqRJ5RLdNHzdTfbfxHKuPAwzLcR5ykkzuJZ1RmxG+A/HrEziOF5BrtSWFU8t4xQt5BS6cEpfdofLTS180Z0MATY1yq3+Y1pqSKG1FAjG+p2i4XUZATsoYOi8KR39FuV3dqp73Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SX2B4QGG; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mGWriCEitUuAXF9p3NK8bhSERWeAbwBqGy+KyGgrz/RWJ9B5vzeIHUhyt5MaoMLsyTLaBOHOpmEwra95tCwml1RufizSTT7/6tYsNLq7gPsoJOBRy70VUlKK2S7gv+GZFaAD4l72M4VotJ7HSsFdXUy/I+z35OTG6SPfZV6skCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvScG1w8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SX2B4QGG"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54021daa6cbso7276671e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 06:51:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738767105; x=1739371905; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LeT7aX20SX+o+IXO25YPOzITrejkM0fcygYCYn3nK6U=;
-        b=SX2B4QGGwTvTnbUU6L1c47Rhvb4v5a0uWbB/x7h7jGRkC261bKpT9fXks7jeuUQm+v
-         iaCBnwjqhdA3zXJm3exEn3Zs7S8p5foNi0Bdh/qmtQMSMGkCcRkuIH5OyicPSmGTqeEZ
-         TmvrrIl3JWAkqiUXMA7aecmrFlvit/7bxBPPoCXuSc9nXEQd0QNdwCDWlCQD8YCvngN9
-         qv535+JwrqnT0N8mtAD8Qld85A4cYaMkCE4zucVLkWRY7oWq7aja85lYznDyn/OCzA1T
-         mS/A6lqMn68/sKAccpQCZGjQjTS7MwHU674LG3CIRHOvhsy7N+SS9/hPKzIcxndK3PU9
-         ysaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738767105; x=1739371905;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LeT7aX20SX+o+IXO25YPOzITrejkM0fcygYCYn3nK6U=;
-        b=PcP34pZIq8tY0lArnbY1MmzwH+vpwRjHrYIKLry/81J4gIlu516L6fupS83kEyLFRh
-         VXZ/Rmhdu8f6hPP/zWvKdreOozl0GAvodH025AiQtwhWI287dUxHMiWxgeIeMibqH7/f
-         hy45adQO4m6P7hUyPW/YU7A/oAiaz6OIjsjFu5G6fN53ZZrlCuZ3qoZokKlbB1krPd1H
-         uBa6n6EwJbOfVqKsIFPyd/sEsd7Br9z4BbILLQFq9l+qNZ7Hdo7LyiuTewtsfOOZwNzD
-         gteeZRUbgTb3ru5kMHOooRuoefjGKESiNXIrb0kG1j1Zvn4NeDi73Q12U8jO4yTyLYLi
-         23EA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKAWZzYCMOhPv53SrTVLvIEbOfywrmiXzrERjMZV5llwHEYNJhlcOxjSOjeHxvgxSw28PtX6c7pfYs0Lw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuOquTtbiensoG7eK1NZqNrLE4YgKtR5kAf79KxcaBcHqt9Xc7
-	Z3dKMxiurccsG0aMFWJ5tbANnxCyozj5E/6OLBV3cfg1c2tZea3gU0UovhnuvY50dWJh5aLEkvt
-	C0HE=
-X-Gm-Gg: ASbGnctuAaaMyfV4pTmQwLOxzndgb9cxzebuhVYn9Yd2Yd4ARTXvVZLrMymvPbAzr2y
-	QvD88TGsu+Vpan8LQbIUSoLNm860vuu6zaZy+INDl/4pde1nHAyqLZbLKpx9qetI2b9L7gqm4Z8
-	TyTidvZfnq0NFe3ifmJJeEgHkBhRKIDraEmNoC8ccghpkTYDmWYQVtRQ2Dmi8BwX7BusRwSNuHF
-	uXnwHHGMmxT8LRcJHsMrCocvMQ3QJRifAIOZJBv4GF+BCqcHkATQqeL/E/fp+FAP8tCTs9P9Yn3
-	Yi4o3vTFAle0Dt+r1ZSSPGkY4cdeVPGtKH5s2x9xmoOo5BmQ8vS4bwdhmUfMEsrORuuT5gc=
-X-Google-Smtp-Source: AGHT+IHMwGQWUkbLcKi3Dfig/vQU6Jh5hxSytEhR95OvEgmcrJUUat9hAQK1cv5aJz4+KdddNT2XSw==
-X-Received: by 2002:a05:6512:31c1:b0:540:1fd9:b634 with SMTP id 2adb3069b0e04-54405a4245dmr1174059e87.34.1738767105316;
-        Wed, 05 Feb 2025 06:51:45 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54408acef1fsm50345e87.41.2025.02.05.06.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 06:51:44 -0800 (PST)
-Date: Wed, 5 Feb 2025 16:51:41 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
- clock driver
-Message-ID: <54y7vatcrenfty5n2z2i25w7dnjo7j4fhg2rb36f54e4dogd2b@geea3s4zlrmq>
-References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
- <20250203-drm-msm-phy-pll-cfg-reg-v2-2-862b136c5d22@linaro.org>
- <u4qho7u2nu2x6qxkfxpeakotmbdgoha3e5csmsamaanlxziiif@22kzxupzibj7>
- <12275e11-eadc-48be-b8c3-9463cdf92698@linaro.org>
- <vfqfbpxc3zrerrb2hyis6h4kgk7aqfljwb7sxlduwlkqprmodg@rjjfsgwr5c6j>
- <2e96ae62-3114-4c7b-bea7-27f6e2009634@linaro.org>
- <t4zn2gv3mbn3nqlh5h3l3ej5zxs4wa74ncgymonci7v45w47ai@qmmtxbelichw>
- <6cba59b9-4852-4cad-95eb-dfecb2e44dc4@linaro.org>
- <CAA8EJppUkLYfHUcNcJA5or4ZVJsbTe74a6GGV1CR6zqCWmVjRA@mail.gmail.com>
- <1ac208a7-ec63-42fe-b496-5a2e7fd615f2@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvScG1w8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9B9C4CED6;
+	Wed,  5 Feb 2025 14:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738767154;
+	bh=fKO+KfI5PoBjPM7OHhzkdtchZan6XyDHTFGvgKnrJtM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EvScG1w8c3lzvGdrKEfNltQnZPVFiv8WkOrq6iQNZzqSB8LNBMhAQFovae2gi0eUa
+	 3nbDFeW3BaLJiiAbivLtI77/J/4q2K/ORqjOSIIgcv5dSvxrobYjZKJfIdGajr+gbE
+	 iaI9IllyDMwHFcpEfF16iO0TsRPIBgI8YEGbBE9DfNX26y9p6j0ZbEbe1vvORUwXD/
+	 61J7E9204dbh3xQiUX7HqlpQ7Hlb5l+HUKvvR5PSW/psF3V2eBAbZuCJih3yIqGa6g
+	 wMnwP0LtdWDgDIiSvific4Vi4/nuP1VsUzDa/YyA9yIC5OCcNFrgBGm8x4txUv0A2E
+	 WomZfL1uRWd/g==
+Date: Wed, 5 Feb 2025 15:52:31 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Florent Tomasin <florent.tomasin@arm.com>
+Cc: Nicolas Dufresne <nicolas@ndufresne.ca>, Vinod Koul <vkoul@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T . J . Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, nd@arm.com, 
+	Akash Goel <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
+ GPUs
+Message-ID: <20250205-amorphous-nano-agouti-b5baba@houat>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+ <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+ <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+ <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+ <9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+ <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="n3ihhmqacysffxra"
 Content-Disposition: inline
-In-Reply-To: <1ac208a7-ec63-42fe-b496-5a2e7fd615f2@linaro.org>
+In-Reply-To: <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
 
-On Wed, Feb 05, 2025 at 02:42:03PM +0100, Krzysztof Kozlowski wrote:
-> On 05/02/2025 12:23, Dmitry Baryshkov wrote:
-> >>>>>>>> +
-> >>>>>>>> +static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>>>>> +{
-> >>>>>>>> +        dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
-> >>>>>>>>  }
-> >>>>>>>>
-> >>>>>>>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>>>>>  {
-> >>>>>>>> -        u32 data;
-> >>>>>>>> +        u32 cfg_1 = BIT(5) | BIT(4);
-> >>>>>>>
-> >>>>>>> Please define these two bits too.
-> >>>>>>
-> >>>>>> Why? They were not defined before. This only moving existing code.
+
+--n3ihhmqacysffxra
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
+ GPUs
+MIME-Version: 1.0
+
+On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote:
+> Hi Maxime, Nicolas
+>=20
+> On 30/01/2025 17:47, Nicolas Dufresne wrote:
+> > Le jeudi 30 janvier 2025 =E0 17:38 +0100, Maxime Ripard a =E9crit=A0:
+> >> Hi Nicolas,
+> >>
+> >> On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wrote:
+> >>> Le jeudi 30 janvier 2025 =E0 14:46 +0100, Maxime Ripard a =E9crit=A0:
+> >>>> Hi,
+> >>>>
+> >>>> I started to review it, but it's probably best to discuss it here.
+> >>>>
+> >>>> On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
+> >>>>> Hi,
 > >>>>>
-> >>>>> Previously it was just a bit magic. Currently you are adding them as
+> >>>>> This is a patch series covering the support for protected mode exec=
+ution in
+> >>>>> Mali Panthor CSF kernel driver.
+> >>>>>
+> >>>>> The Mali CSF GPUs come with the support for protected mode executio=
+n at the
+> >>>>> HW level. This feature requires two main changes in the kernel driv=
+er:
+> >>>>>
+> >>>>> 1) Configure the GPU with a protected buffer. The system must provi=
+de a DMA
+> >>>>>    heap from which the driver can allocate a protected buffer.
+> >>>>>    It can be a carved-out memory or dynamically allocated protected=
+ memory region.
+> >>>>>    Some system includes a trusted FW which is in charge of the prot=
+ected memory.
+> >>>>>    Since this problem is integration specific, the Mali Panthor CSF=
+ kernel
+> >>>>>    driver must import the protected memory from a device specific e=
+xporter.
 > >>>>
-> >>>> No, previous code:
+> >>>> Why do you need a heap for it in the first place? My understanding of
+> >>>> your series is that you have a carved out memory region somewhere, a=
+nd
+> >>>> you want to allocate from that carved out memory region your buffers.
 > >>>>
-> >>>> writel(data | BIT(5) | BIT(4), pll->phy->base +
-> >>>> REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-> >>>>
-> >>>> This is a mask and update in the same time, because:
-> >>>>      (data & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
-> >>>> is just redudant.
-> >>>>
-> >>>> I did not do any logical change, I did not add any mask or field.
-> >>>> Everything was already there.
+> >>>> How is that any different from using a reserved-memory region, adding
+> >>>> the reserved-memory property to the GPU device and doing all your
+> >>>> allocation through the usual dma_alloc_* API?
 > >>>
-> >>> Yes... and no. Previously it was just writel(foo | BIT(5) | BIT(4)). Now
+> >>> How do you then multiplex this region so it can be shared between
+> >>> GPU/Camera/Display/Codec drivers and also userspace ?
 > >>
-> >> You did not address my comment. Previous code was:
-> >>
-> >> (foo & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
-> >>
-> >> Just for shorter syntax it was written different way:
-> >>
-> >> foo | BIT(5) | BIT(4)
-> > 
-> > Previously it was a simple writel() with some bit magic. Now you call
-> 
-> 
-> The mask was already there, just implied.
-> 
-> > dsi_pll_cmn_clk_cfg1_update() passing the register bit field through
-> > the 'mask' argument. I'm asking to get those masks defined. Is it
-> > possible?
-> 
-> Just like before, because implied mask is being removed due to code
-> redundancy.
-> 
-> I repeat it for third time already.
-> 
-> > 
-> > Yes, the code is equivalent and results in the same values being
-> > written to the same registers.
-> > At the same time you have added a logical entity, a masked write. I
-> > want to be able to understand if bits 4 and 5 are a part of the same
-> > register field or they belong to two different fields and can be
-> 
-> I know you want to understand it and this is achieved in separate patch,
-> because understanding this is not related to this commit.
-> 
-> > written separately. I really don't understand why are we spending so
-> > much time arguing about a simple #define. Okay, in case of drm/msm it
-> > is not a #define, it is <reg><bitfield/></reg>. The net result is the
-> > same.
-> 
-> I also don't get why simple fix could not be just applied and it has to
-> become some sort of big refactoring.
+> >> You could point all the devices to the same reserved memory region, and
+> >> they would all allocate from there, including for their userspace-faci=
+ng
+> >> allocations.
+> >=20
+> > I get that using memory region is somewhat more of an HW description, a=
+nd
+> > aligned with what a DT is supposed to describe. One of the challenge is=
+ that
+> > Mediatek heap proposal endup calling into their TEE, meaning knowing th=
+e region
+> > is not that useful. You actually need the TEE APP guid and its IPC prot=
+ocol. If
+> > we can dell drivers to use a head instead, we can abstract that SoC spe=
+cific
+> > complexity. I believe each allocated addressed has to be mapped to a zo=
+ne, and
+> > that can only be done in the secure application. I can imagine similar =
+needs
+> > when the protection is done using some sort of a VM / hypervisor.
+> >=20
+> > Nicolas
+> >=20
+>=20
+> The idea in this design is to abstract the heap management from the
+> Panthor kernel driver (which consumes a DMA buffer from it).
+>=20
+> In a system, an integrator would have implemented a secure heap driver,
+> and could be based on TEE or a carved-out memory with restricted access,
+> or else. This heap driver would be responsible of implementing the
+> logic to: allocate, free, refcount, etc.
+>=20
+> The heap would be retrieved by the Panthor kernel driver in order to
+> allocate protected memory to load the FW and allow the GPU to enter/exit
+> protected mode. This memory would not belong to a user space process.
+> The driver allocates it at the time of loading the FW and initialization
+> of the GPU HW. This is a device globally owned protected memory.
 
-Well, you have refactored that in this patch. Anyway. Please post the
-next iteration, let's continue the dicussion there.
+The thing is, it's really not clear why you absolutely need to have the
+Panthor driver involved there. It won't be transparent to userspace,
+since you'd need an extra flag at allocation time, and the buffers
+behave differently. If userspace has to be aware of it, what's the
+advantage to your approach compared to just exposing a heap for those
+secure buffers, and letting userspace allocate its buffers from there?
 
-> 
-> Best regards,
-> Krzysztof
+> When I came across this patch series:
+> -
+> https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/=
+#t
+> I found it could help abstract the interface between the secure heap and
+> the integration of protected memory in Panthor.
+>=20
+> A kernel driver would have to find the heap: `dma_heap_find()`, then
+> request allocation of a DMA buffer from it. The heap driver would deal
+> with the specifities of the protected memory on the system.
 
--- 
-With best wishes
-Dmitry
+Sure, but we still have to address *why* it would be a good idea for the
+driver to do it in the first place. The mediatek series had the same
+feedback.
+
+Maxime
+
+--n3ihhmqacysffxra
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6N7LwAKCRAnX84Zoj2+
+drAsAX4tWhirmSzsRaErM0ohMmzW3Z8MA7ak1TjIT6PBjwjyjlMf3NLPRmiboav/
+v7gqrQQBf2OeL8Jeku8Xf1ostov/rNHGnpfXL0sAeI8i7GUariIGQVnG5QhnHyrX
+lokEkw8UZA==
+=e43F
+-----END PGP SIGNATURE-----
+
+--n3ihhmqacysffxra--
