@@ -1,125 +1,141 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C9622A7F8
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4591D7985;
+	Wed,  5 Feb 2025 09:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749328; cv=none; b=pOCDSAiO95OqpZ+SaQZXq7owoCo+NtWK5vb2GduzbBxhJhPGN5HsLJxJ1ZB++xVgFqsmrhFgVr7WoG6ArSavWP+CycYgE0yZrgpDjAmw29fmUpmfj6HtaBOwb0eAJdSCLvlUH6bufHrZW8l6BUiciPwz2sthtpf/nbQ0eBCFg7o=
+	t=1738749354; cv=none; b=i1UFy0VBbomJ7lBTHdW4JF6tlWndM3pQU4QqGsaRa+Iw/sD7nZSB+Cpv4MMDfDVgCQWQZyFUnJDS8bBnQ6L+Pzvw3eKp7Zp4TgvsV78rBf/mADgwR5C/MmpgkFDjleYLhaBNgYsnbWFqLtQSUmyUOFdXpoNZVXyPZrixq4gwbYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749328; c=relaxed/simple;
-	bh=UyuZ63AebhUpU/in3ALgxcHCnsp1FQfXWKq6EW4qYdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NsSf5Nny1hZua+AmOFzahXrsQ3g0QBKRat0f5OW8TgpjD3jRWIWaQ2i0Fqy+5+rrYJjmJXhcZRhsOOJ0QIWk/FdvLcUBtwDtLwk05phy+zd1tlzL00V7UBaibhaT3UIiqbBKOznl25vfCV/pCqGEyjL/P9eDh/Bp9TkMptCo6PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=MONBK2bc; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1738749354; c=relaxed/simple;
+	bh=YwytP/lkUK7d8CnnjA+s7S91jCBEZ2Fpd6Ws//b0/uY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lVL7lNTCV+YaJf2F4T5W3CBRvWzilAiuzRdhA7OJVVB3UR2dRehxADW27H6RE+iLHAD8txTp0teP+mi70PnUFunk/cSs74nY/Wg+VOCfBIr7tW7k4RNNZGLqN6kvAUpHv+jrVwi/2x7AUTMwlylrgR98lfu7CedKGrJLUBB0eyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dpUJgdAv; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="MONBK2bc"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dce27a72e8so307798a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 01:55:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1738749324; x=1739354124; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LosAM8MKixrze+DKy3KPUaCIuTYER6dudsHxBAM96I4=;
-        b=MONBK2bcr5K5cMLVTlo3gEvZ5wyJa1BdixHUJ5NYQy590ELKINXrXg9e3Lk3Ofk2Wa
-         SzDe8yMuDp4rC7NyVRqhBG7NyP6xSfPVSBmaRC17iwjhWvwTIJZaaW9NXENIEdTimd+b
-         WwsYCsbkEgcqXAEGfv7/BIf4V2VjreD0CzTR7v3zaKLbv7IRrrV293scZVZenYHsN2RM
-         noSVO8bES9Rl5Jc3OiYRRF1mH1YZYZzvgBl4MFFCX1TaHXG5fJhHsql+vc0EX/LF7nr5
-         XaIKFiPeRI1jdtwAfEf0nSzDKIY6rmTv42XnphNs6zZQyfdCAu4U2qSonqpE46h1iD7y
-         9ljw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738749324; x=1739354124;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LosAM8MKixrze+DKy3KPUaCIuTYER6dudsHxBAM96I4=;
-        b=xNU5AD4mOJjF0JtFSl+HGl6eIRfv0ZOrkjIlRs2m60n1U3zzO/4PeDG3ZcuDKHKZBu
-         XCDjvnuvJTAfWcKU/c0ItTAfW+Jh0CnBTUbhYWARLE7Wl5y6GqzDeMDpoEqMEZMQaVam
-         fKFVmTrOkqUxt5mzHcQ1XYvIfC5w0bzK86VCmJdmfsbFNz35li+RjCEnCWPzUZkTrqt2
-         MmKz7IZcgdDKb0DBGDH7grP8tmpww7XfJ2uK6VQZoPaFa+c/OECSQ9nZs8PQv0/ntKs9
-         sFKau9hP6aOhaaX8FAcJaOD6ieQEyn9ca/eo1MlThndwfZ2rx0f450lTp12duDT57W1v
-         kXEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgxMdN23WPrR1rEvCPEmHtZBEz7MwiEP7BVr8LejIdQLPueEZP7S613dYWg70R5Cz8Khs2wV0+TMJqKIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbcku2zzgmwm0CXrEmeNxRk7FpmRMPi6gsLR/2fof+MEoCtB0v
-	2QjHdEDGdWBrxSELETVLwp/ITNL0fHExhpzdbIA7+GR77iYZdlbgkw75lJzXy9E=
-X-Gm-Gg: ASbGncsEk7EVBdGVWWOVr4W86P8sPX+I2hoJdS9JGLHsM8h1yAlkaEGAX2QN0hIQbpk
-	5EcvSGe4n47mSnJc6Unqq4kB/Z1d/mbLp+rcvhWmGlVdeQyrKE1tz9uZBuhOGjqJLQQ8vwhcb4I
-	XG1NcIY6PArojovyar277ekT+0IuWoxyRQLwDlAgLWVqkLB3fxCny4pC15QiIYFKBB2cFGBBi+9
-	sdwna2Hf6P2O9GI5ANLoSSsc3ccq7EQzh5+lK4JRkoUTw1N+o7fTImmf636g2fwIu1RzKeBNDTb
-	R4p6GwBILU0NEDiEsHheciUYFMNnBznieuuWxWQLUEX5Gw==
-X-Google-Smtp-Source: AGHT+IFa23Ek/09ua5oWaqm4xkzUASaUOHIN061he97UBtBQrBAR3KC7IXfPrH98pn40XLsEElBz+w==
-X-Received: by 2002:a17:906:b008:b0:ab7:63fa:e4a8 with SMTP id a640c23a62f3a-ab763fafe8amr111455066b.0.1738749323599;
-        Wed, 05 Feb 2025 01:55:23 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.173])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7de5sm1075030666b.35.2025.02.05.01.55.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 01:55:23 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: alexandre.belloni@bootlin.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-rtc@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dpUJgdAv"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 3FA074340A;
+	Wed,  5 Feb 2025 09:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738749349;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WkkKXNGf6/83mCN+VTO71QRPJh1MmjlW1WXgdCu5wKM=;
+	b=dpUJgdAv8g/4sHTOpUugn00zMR6KglT17NGV4EHA8FgFyLBF08Oxb7sF9MG6jclU7AjqMA
+	dU0GOxYPgT5DLf5SKdUSUXhWPqQAalUB46fDOTx0uKA3XUMC17rwhXMu0cuGmzXN3LyDP4
+	63D9zUQ6+HjxEcQu4pI7A2N6DySPQVa+9CUfPs/+xgVrYVvAbIoCnGA0LXiOVTfbSK1L0C
+	dCpHZu9WDhIQ4M3Ud9LsscxYW48OIxPDC4xL1w4fY/QJRdWj2rAm6CKHa1xRuy6xBmLVcR
+	APQhkEaUrHTCjP/ypVxo6EbPWQ00Ix+lmiB7GmY6Bb92ccwZwJHFtkvli1whCA==
+From: Herve Codina <herve.codina@bootlin.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>
+Cc: linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH] rtc: renesas-rtca3: Disable interrupts only if the RTC is enabled
-Date: Wed,  5 Feb 2025 11:55:19 +0200
-Message-ID: <20250205095519.2031742-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v3 0/2] pwm: Add support for pwm nexus node
+Date: Wed,  5 Feb 2025 10:55:41 +0100
+Message-ID: <20250205095547.536083-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepueekkedtieehhfefvdffheekkedufeetfeeulefgudevvedvledtveefveejudetnecuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: herve.codina@bootlin.com
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Platforms can have a standardized connector/expansion slot that exposes
+PWMs signals to expansion boards.
 
-If the RTC is not enabled and the code attempts to disable the interrupt,
-the readb_poll_timeout_atomic() function in the
-rtca3_alarm_irq_set_helper() may timeout, leading to probe failures.
-This issue is reproducible on some devices because the initial values of
-the PIE and AIE bits in the RCR1 register are undefined.
+A nexus node [1] allows to remap a phandle list in a consumer node
+through a connector node in a generic way. With this remapping, the
+consumer node needs to know only about the nexus node. Resources behind
+the nexus node are decoupled by the nexus node itself.
 
-To prevent probe failures in this scenario, disable RTC interrupts only
-when the RTC is actually enabled.
+This is particularly useful when this consumer is described in a
+device-tree overlay. Indeed, to have the exact same overlay reused with
+several base systems the overlay needs to known only about the connector
+is going to be applied to without any knowledge of the SoC (or the
+component providing the resource) available in the system.
 
-Fixes: d4488377609e ("rtc: renesas-rtca3: Add driver for RTCA-3 available on Renesas RZ/G3S SoC")
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- drivers/rtc/rtc-renesas-rtca3.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+As an example, suppose 3 PWMs connected to a connector. The connector
+PWM 0 and 2 comes from the PWM 1 and 3 of the pwm-controller1. The
+connector PWM 1 comes from the PWM 4 of the pwm-controller2. An
+expansion device is connected to the connector and uses the connector
+PMW 1.
 
-diff --git a/drivers/rtc/rtc-renesas-rtca3.c b/drivers/rtc/rtc-renesas-rtca3.c
-index a056291d3887..dd50bcf79823 100644
---- a/drivers/rtc/rtc-renesas-rtca3.c
-+++ b/drivers/rtc/rtc-renesas-rtca3.c
-@@ -586,17 +586,14 @@ static int rtca3_initial_setup(struct clk *clk, struct rtca3_priv *priv)
- 	 */
- 	usleep_range(sleep_us, sleep_us + 10);
- 
--	/* Disable all interrupts. */
--	mask = RTCA3_RCR1_AIE | RTCA3_RCR1_CIE | RTCA3_RCR1_PIE;
--	ret = rtca3_alarm_irq_set_helper(priv, mask, 0);
--	if (ret)
--		return ret;
--
- 	mask = RTCA3_RCR2_START | RTCA3_RCR2_HR24;
- 	val = readb(priv->base + RTCA3_RCR2);
--	/* Nothing to do if already started in 24 hours and calendar count mode. */
--	if ((val & mask) == mask)
--		return 0;
-+	/* Only disable the interrupts if already started in 24 hours and calendar count mode. */
-+	if ((val & mask) == mask) {
-+		/* Disable all interrupts. */
-+		mask = RTCA3_RCR1_AIE | RTCA3_RCR1_CIE | RTCA3_RCR1_PIE;
-+		return rtca3_alarm_irq_set_helper(priv, mask, 0);
-+	}
- 
- 	/* Reconfigure the RTC in 24 hours and calendar count mode. */
- 	mask = RTCA3_RCR2_START | RTCA3_RCR2_CNTMD;
+Nexus node support in PWM allows the following description:
+        soc {
+                soc_pwm1: pwm-controller1 {
+                        #pwm-cells = <3>;
+                };
+
+                soc_pwm2: pwm-controller2 {
+                        #pwm-cells = <3>;
+                };
+        };
+
+        connector: connector {
+                #pwm-cells = <3>;
+                pwm-map = <0 0 0 &soc_pwm1 1 0 0>,
+                          <1 0 0 &soc_pwm2 4 0 0>,
+                          <2 0 0 &soc_pwm1 3 0 0>;
+                pwm-map-mask = <0xffffffff 0x0 0x0>;
+                pwm-map-pass-thru = <0x0 0xffffffff 0xffffffff>;
+        };
+
+        expansion_device {
+                pwms = <&connector 1 57000 0>;
+        };
+
+From the expansion device point of view, the PWM requested is the PWM 1
+available at the connector regardless of the exact PWM wired to this
+connector PWM 1. Thanks to nexus node remapping described at connector
+node, this PWM is the PWM 4 of the pwm-controller2.
+
+[1] https://github.com/devicetree-org/devicetree-specification/blob/v0.4/source/chapter2-devicetree-basics.rst#nexus-nodes-and-specifier-mapping
+
+Compared to previous iteration, this v3 series mainly adds the PWM nexus node
+devicetree binding.
+
+Best regards,
+Hervé Codina
+
+Changes v2 -> v3
+  - Patch 1 (new patch)
+    devicetree binding
+
+  - Patch 2 (single patch in v2)
+    Fix typos in commit log DT example.
+    Avoid wildcard for PWM nexus node properties in the commit log.
+
+Changes v1 -> v2
+  v1: https://lore.kernel.org/all/20241202164459.157672-1-herve.codina@bootlin.com/
+
+  - Rework commit log
+
+Herve Codina (2):
+  dt-bindings: pwm: Add support for PWM nexus node
+  pwm: Add support for pwm nexus dt bindings
+
+ .../bindings/pwm/pwm-nexus-node.yaml          | 65 +++++++++++++++++++
+ drivers/pwm/core.c                            |  3 +-
+ 2 files changed, 66 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-nexus-node.yaml
+
 -- 
-2.43.0
+2.47.1
 
