@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3915F80B;
-	Wed,  5 Feb 2025 00:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10615DF59;
+	Wed,  5 Feb 2025 00:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738714569; cv=none; b=mK1PfBQNFde3uTMxknomYY1QB7/BFGh00sAqtBvMZYq/+G8XlHF+jebTVIM7rzdmblPgNT8ychtnjofIRweBXCBTAb5mU2JFFAZcEZaMifaWycZ7MERqQGpcBjWe02tqdm3urpEFMEg1YL7AW6D+brefO6RS9uZOuLE/W7LRGo8=
+	t=1738714571; cv=none; b=qNHOfsOQ82uEohUlUcwXL9/hrvejtmXhmZUVCX3BGCMQ8eJN7p3vslenxBBrwfCI1pZBYDOtbpnFj8g5W3eTW+R6+IhTCi+eMDITbD4FcFwkiwu3LzCg1+JgB6YsqE+bhTdH+LxoLb07j/5TzKiRdUjMOMgHalCBI9DqZ5d8578=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738714569; c=relaxed/simple;
-	bh=yNjKm0ryVmsmgF8cOHIgjNV/kYzW222nLIGfjCHjwdM=;
+	s=arc-20240116; t=1738714571; c=relaxed/simple;
+	bh=unlo8h2nlxc0mJ7Rfna53U2JX5Ru3ysrO2+jaPbnyvU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KUcvZLqPv9ja2Jy+0cU8yrxiqigzH2B4lfoOBga7kokAYDXkIsHYWgBfnfWdHqFs8vtGjYDq0g8FNUqvrpHqf7y8H833bCzpnHSRThWLbjlc8LyNwx9OvKWn0J61vRTwuz7xSc24LFgJsGaKemgpmld4TWU71BPgYnwo2RwvBlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dp21a4+C; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=pGHIuI+ugKtTiUkpl8L/IEcQysZpWimirALvgVZ7kBEVSr0kO5BKKEbVRooIVTL9Jie2X6Bh9WQqgDOA2DgGxmSoORSXf6ZpJA0aVk5akR0fr56Wo+F1ItgCb76vBC4W8No6wIZoa5e+NS8ehj11Nr8HRqWlz6lJp1dCCVEkipw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MLfk+/pp; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dp21a4+C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MLfk+/pp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738714569; x=1770250569;
+  t=1738714571; x=1770250571;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=yNjKm0ryVmsmgF8cOHIgjNV/kYzW222nLIGfjCHjwdM=;
-  b=Dp21a4+CUU/15c0KfH1qVEb+fppEYBHZLMsgggzqcaJpaq83PM6/oP1v
-   /4+p9+5LEwzqEzpVGdYehBukdOJE8pfRHSKHt6j2dHl+bYFArvZDD7xOt
-   gdrLO84yVEphL0HaU2lQ3Ze2shkhLL6U9WnXNlDQIFd2RqmFp/1MaaBnG
-   jqYFTomnBtSO86OCRW12Wcy6dQJNGa6JSUGZ+cFPu8P5bkoiefxzptIiQ
-   AxAWpKoHqriJF5N59PbQaa1Nrt+MygYdfMD7TNIlUqsbQoQ5y1D9SUvNK
-   QpZIu3U1kLjw9Zjd9wXxpQas7eGK9ZlvFDs95K5aMzR3IaWJRzjbrQQKO
-   Q==;
-X-CSE-ConnectionGUID: GdhYuItXSgKC3DVkMtCwuw==
-X-CSE-MsgGUID: 5Dbxx1TGT6ah+1nxuai8Qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39372359"
+  bh=unlo8h2nlxc0mJ7Rfna53U2JX5Ru3ysrO2+jaPbnyvU=;
+  b=MLfk+/ppL9u6Ibalyq5XjwTndAfhrf4zZkd1vB3tQDEE0OWxV+1L/G2x
+   3HOszgAAYLjaeeRlkKvW8iKoNb8FeZ0c15QSaf4WgSkbl+LTGJAw71lHU
+   ENeK8A/83cTib4j/PruHyiqFxHtqeDO3VR1TtGZrNPcUOqy0kd4uadcXg
+   pmSZ6Cp9xRJQS9ELXoJdY7dXQAqDXAb46+iI1LiGeLYnA4pMr5Pjil5Ix
+   g7tDSBKVuDCMohQHA9XhFpiv9E+PeJYw/41H4gep4537X4xXehcpHmmxc
+   sSwYAdXavD09XIihhkNJlum8msMnko7jWpTmDuag8X3jHA19ZjeSRXkDL
+   g==;
+X-CSE-ConnectionGUID: JpHPRruETTqA1k19kXuOIg==
+X-CSE-MsgGUID: hE1Rh9KrS1WeN9r63/pfdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39372373"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="39372359"
+   d="scan'208";a="39372373"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:07 -0800
-X-CSE-ConnectionGUID: 3KDu1Ax5SfaLzJVqDKES4w==
-X-CSE-MsgGUID: AbqRtbfMSIOR/99t/hh4xQ==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:08 -0800
+X-CSE-ConnectionGUID: ulk86YJaSKmLNo1OuhVWtg==
+X-CSE-MsgGUID: m+gl23C5SN6MyrZjanhKRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="110635682"
+   d="scan'208";a="110635700"
 Received: from tfalcon-desk.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.223.214])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:05 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:07 -0800
 From: Xi Pardee <xi.pardee@linux.intel.com>
 To: xi.pardee@linux.intel.com,
 	rajvi0912@gmail.com,
@@ -53,9 +53,9 @@ To: xi.pardee@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org
-Subject: [PATCH v5 2/5] platform/x86/intel/pmc: Remove duplicate enum
-Date: Tue,  4 Feb 2025 16:15:54 -0800
-Message-ID: <20250205001601.689782-3-xi.pardee@linux.intel.com>
+Subject: [PATCH v5 5/5] platform/x86/intel/pmc: Add Arrow Lake U/H support to intel_pmc_core driver
+Date: Tue,  4 Feb 2025 16:15:57 -0800
+Message-ID: <20250205001601.689782-6-xi.pardee@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205001601.689782-1-xi.pardee@linux.intel.com>
 References: <20250205001601.689782-1-xi.pardee@linux.intel.com>
@@ -67,68 +67,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove duplicate enum PMC_IDX_SOC. PMC_IDX_SOC has the same value
-as PMC_IDX_MAIN. Replace it with PMC_IDX_MAIN to avoid confusion.
+Add Arrow Lake U and Arrow Lake H support in intel_pmc_core driver.
 
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmc/arl.c  | 2 +-
- drivers/platform/x86/intel/pmc/core.h | 1 -
- drivers/platform/x86/intel/pmc/lnl.c  | 2 +-
- drivers/platform/x86/intel/pmc/mtl.c  | 2 +-
- 4 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel/pmc/arl.c  | 37 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.c |  2 ++
+ drivers/platform/x86/intel/pmc/core.h |  2 ++
+ 3 files changed, 41 insertions(+)
 
 diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index 05dec4f5019f3..ad976cc83ecae 100644
+index 2e604f934f068..f62763865207b 100644
 --- a/drivers/platform/x86/intel/pmc/arl.c
 +++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -693,7 +693,7 @@ static int arl_resume(struct pmc_dev *pmcdev)
+@@ -16,6 +16,7 @@
+ #define IOEP_LPM_REQ_GUID	0x5077612
+ #define SOCS_LPM_REQ_GUID	0x8478657
+ #define PCHS_LPM_REQ_GUID	0x9684572
++#define SOCM_LPM_REQ_GUID	0x2625030
  
- int arl_core_init(struct pmc_dev *pmcdev)
+ static const u8 ARL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
+ 
+@@ -650,6 +651,7 @@ const struct pmc_reg_map arl_pchs_reg_map = {
+ 	.etr3_offset = ETR3_OFFSET,
+ };
+ 
++#define PMC_DEVID_SOCM 0x777f
+ #define PMC_DEVID_SOCS 0xae7f
+ #define PMC_DEVID_IOEP 0x7ecf
+ #define PMC_DEVID_PCHS 0x7f27
+@@ -669,11 +671,17 @@ static struct pmc_info arl_pmc_info_list[] = {
+ 		.devid	= PMC_DEVID_PCHS,
+ 		.map	= &arl_pchs_reg_map,
+ 	},
++	{
++		.guid	= SOCM_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_SOCM,
++		.map	= &mtl_socm_reg_map,
++	},
+ 	{}
+ };
+ 
+ #define ARL_NPU_PCI_DEV			0xad1d
+ #define ARL_GNA_PCI_DEV			0xae4c
++#define ARL_H_GNA_PCI_DEV		0x774c
+ /*
+  * Set power state of select devices that do not have drivers to D3
+  * so that they do not block Package C entry.
+@@ -684,6 +692,12 @@ static void arl_d3_fixup(void)
+ 	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
+ }
+ 
++static void arl_h_d3_fixup(void)
++{
++	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
++	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
++}
++
+ static int arl_resume(struct pmc_dev *pmcdev)
  {
--	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
-+	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	int ret;
- 	int func = 0;
- 	bool ssram_init = true;
+ 	arl_d3_fixup();
+@@ -691,6 +705,13 @@ static int arl_resume(struct pmc_dev *pmcdev)
+ 	return cnl_resume(pmcdev);
+ }
+ 
++static int arl_h_resume(struct pmc_dev *pmcdev)
++{
++	arl_h_d3_fixup();
++
++	return cnl_resume(pmcdev);
++}
++
+ struct pmc_dev_info arl_pmc_dev = {
+ 	.pci_func = 0,
+ 	.dmu_guid = ARL_PMT_DMU_GUID,
+@@ -701,8 +722,24 @@ struct pmc_dev_info arl_pmc_dev = {
+ 	.init = arl_core_init,
+ };
+ 
++struct pmc_dev_info arl_h_pmc_dev = {
++	.pci_func = 2,
++	.dmu_guid = ARL_PMT_DMU_GUID,
++	.regmap_list = arl_pmc_info_list,
++	.map = &mtl_socm_reg_map,
++	.suspend = cnl_suspend,
++	.resume = arl_h_resume,
++	.init = arl_h_core_init,
++};
++
+ int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+ {
+ 	arl_d3_fixup();
+ 	return generic_core_init(pmcdev, pmc_dev_info);
+ }
++
++int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
++{
++	arl_h_d3_fixup();
++	return generic_core_init(pmcdev, pmc_dev_info);
++}
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 628cb22221fbc..d819478fea29a 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1410,6 +1410,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&adl_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&mtl_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE,		&arl_pmc_dev),
++	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&arl_h_pmc_dev),
++	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&arl_h_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_pmc_dev),
+ 	{}
+ };
 diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index a1886d8e1ef3e..a0f6cc427ddca 100644
+index 94039930422b3..0f0ee97ee00a8 100644
 --- a/drivers/platform/x86/intel/pmc/core.h
 +++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -430,7 +430,6 @@ struct pmc_dev {
+@@ -624,9 +624,11 @@ extern struct pmc_dev_info tgl_pmc_dev;
+ extern struct pmc_dev_info adl_pmc_dev;
+ extern struct pmc_dev_info mtl_pmc_dev;
+ extern struct pmc_dev_info arl_pmc_dev;
++extern struct pmc_dev_info arl_h_pmc_dev;
+ extern struct pmc_dev_info lnl_pmc_dev;
  
- enum pmc_index {
- 	PMC_IDX_MAIN,
--	PMC_IDX_SOC = PMC_IDX_MAIN,
- 	PMC_IDX_IOE,
- 	PMC_IDX_PCH,
- 	PMC_IDX_MAX
-diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-index be029f12cdf40..09b13df90d685 100644
---- a/drivers/platform/x86/intel/pmc/lnl.c
-+++ b/drivers/platform/x86/intel/pmc/lnl.c
-@@ -553,7 +553,7 @@ static int lnl_resume(struct pmc_dev *pmcdev)
- int lnl_core_init(struct pmc_dev *pmcdev)
- {
- 	int ret;
--	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
-+	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 
- 	lnl_d3_fixup();
- 
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index 02949fed76e91..07687a3e436d5 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -992,7 +992,7 @@ static int mtl_resume(struct pmc_dev *pmcdev)
- 
- int mtl_core_init(struct pmc_dev *pmcdev)
- {
--	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
-+	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	int ret;
- 	int func = 2;
- 	bool ssram_init = true;
+ int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
++int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+ int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+ int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+ int tgl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
 -- 
 2.43.0
 
