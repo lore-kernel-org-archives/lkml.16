@@ -1,80 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27E6151992;
-	Wed,  5 Feb 2025 23:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C090715198F;
+	Wed,  5 Feb 2025 23:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738798255; cv=none; b=NVoXk/6NCUwMPcsMebVXZjrYxD2YQbTH7EUZWc9Sq53Xscd4AUQRE2connBApDDcWMlu5odUHGEcSgB+lK/S0FZgy1Y8N5f73jziasJOxyAsNsrYzYSFZM9G63bdFwxCEs47zcD+ohoD3AAEWuNN/C/MMnww+Q6c5gf8JV4w1m8=
+	t=1738798700; cv=none; b=LtJIfBYAkTzPzReS5DukAizG1109lRzBZLtgZm0/zSaRLjwficG0IwK0cYMHrY2ZmV/uMyvF1Ml+l3FY6LdSglhLinQZwDPAtRThpN9ZvNxor9V9+7jnnvrLR86FSm6kM4t/Buy5LbIuBuWxhuv/OX6NP4mpl0dfpJ5vAbSP0TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738798255; c=relaxed/simple;
-	bh=8Z+j2ubldSVTilGuSsiMR9yARDIN27DSGshab1cAJfE=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gLWxLw5MQ7EdYUHC9jNBmVzz6XqhXgWAnr7qiHoi7UE8aBbZb1Z53QRbpAj7Pu4qZ71HgHyI8QL8jHF0NJzrZ9xCTmETn+NKWfN5ZXVyCX1fbDi/Ow1NmtXR1YOrtF2lLwA2iasTJuXphZY4n0ABTT85VEm9cPURLtp5uYoTQ8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sysRDw3Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738798700; c=relaxed/simple;
+	bh=Yl7vdVYZ3uVeTXvJQ3z2No+XRSNYHdbj0OTkCw9O71o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=A25zyAbZ4D3yVKZ4HOczJ5BofKrTfLMvqTmq+hSxkHqCJpaoj7pV34My7fiCfgNVFzITjI2CwEUNNAISXWgSUauaLxbyVcT+R+hH6ZCI6zInER7lE+n0mHXd20ylEJ7QV23c/ArOXTN+n16PJpV5hzNXvX3qzhyFEzBpb/wbEHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMFoi0SA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sysRDw3Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70DBBC4CED1;
-	Wed,  5 Feb 2025 23:30:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMFoi0SA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D626C4CED1;
+	Wed,  5 Feb 2025 23:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738798255;
-	bh=8Z+j2ubldSVTilGuSsiMR9yARDIN27DSGshab1cAJfE=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=sysRDw3Zw8fFfeRvjGk85rOiimHRuB39+sSfRXLYJaveTfCeeyLzf4C9/p1JEu6NH
-	 IUNIN9tLcS7zYR8BrqX9oYO7oFScNER46XsznuuOddo1GrimW5b/HZt437fZ+TSHMZ
-	 +o1swfUih0jCAkEsNJmdMXgPU7a0vXRzDBo7ymR781wHQFxXltrcGh8xH5H1xb8rWM
-	 BdRdibZmI75FPQ/71yPwbXdaza9a3WVuegFzzAOUXhhvk+CoHb+8CC46PU/DtE7K7T
-	 IZpzbUnv928LPrgf6O822fJryWAZgFKej4fdtqoDbBDO8yEJ+yAKJEYa3tCjJbrIbD
-	 TBRvKKjuf3Log==
-From: Mark Brown <broonie@kernel.org>
-To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250205130624.716039-1-andriy.shevchenko@linux.intel.com>
-References: <20250205130624.716039-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] spi: Replace custom fsleep() implementation
-Message-Id: <173879825419.806563.5552035883619493895.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 23:30:54 +0000
+	s=k20201202; t=1738798700;
+	bh=Yl7vdVYZ3uVeTXvJQ3z2No+XRSNYHdbj0OTkCw9O71o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aMFoi0SA4J27vdHiguS7Q6MqT2JEgBmPxCY9mMLTDr3ZatvBYMKD3FgzMY4+lTZU6
+	 QyHbffl3O+luWnVo/l9BFLMqw8IwZ/ISZepE7E3ulNTJPQpS4uaz6iclvBsvio2+UW
+	 k2ryhBeFE3Xp7neTIGe9kXLVckLZ9Ianad/pI4W9kG4nY86qfCSNJuJjzZuvxPh9vm
+	 lSHi/NdYJT6z8DfOuyHfGM9Kdmx9xyTBRbWKnOzNtzJ64JBoLkvIlqY2PVV7el7TK6
+	 0bRKY8OAEldZ9OAPwEhBm/6x81Xbg9PBiSvowheCuS8Vz1LqdyiwlFAEfxvV1BC2Dp
+	 x1bfEH4U9Hzng==
+Date: Wed, 5 Feb 2025 17:38:17 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
+ pci_pm_resume returns -110`
+Message-ID: <20250205233817.GA949434@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e30f47ea-396e-45c7-a2aa-d141d27dae4c@molgen.mpg.de>
 
-On Wed, 05 Feb 2025 15:06:24 +0200, Andy Shevchenko wrote:
-> _spi_transfer_delay_ns() partially reimplements what fsleep() does.
-> Replace that code by calling fsleep() instead.
+On Wed, Feb 05, 2025 at 10:48:24PM +0100, Paul Menzel wrote:
+> Thank you for your instant reply.
 > 
+> Am 05.02.25 um 09:44 schrieb Ilpo Järvinen:
+> > On Tue, 4 Feb 2025, Paul Menzel wrote:
+> > 
+> > > #regzbot introduced: b46c89c08f41..aa22f4da2a46
 > 
+> > > On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
+> > > 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
+> 
+> (Just a side note, these are actually logged with level error.)
+> 
+> > >      rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
+> > >      rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
+> > >      rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
+> > > 
+> > > These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
+> ...
 
-Applied to
+> > Please try if this fix helps:
+> > 
+> > https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
+> 
+> Yes, after applying the patch these errors were *not* logged in three ACPI
+> S3 suspend/resume cycles.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/1] spi: Replace custom fsleep() implementation
-      commit: 215705db51eb23052c73126d2efb6acbc2db0424
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Thanks, I added your Reported-by to the patch, which should appear in
+v6.14-rc2.  Happy to also add your Tested-by if you feel confident
+enough.
