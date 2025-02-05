@@ -1,91 +1,141 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88E5197A68
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102F41519BA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738772609; cv=none; b=Xaxeomscgwon/iMeVejIjgHWp8egwUNyqgDpNoyLBbBTdwfXRmKGVRfy8zuZNzRhPfXw5vo7vGTcGATnUD9WA05z6NGEoMs3vbl99LBzTkADs1NV/m8/tgE7cC8TNuKsidxppljOjkkTFvEyarOSNSDpzNHaiYvgcZnYLSsoeAM=
+	t=1738772755; cv=none; b=i1p+nBuQhaZfC77edwt3IuoSa/AMMvPPIgW+VwdE25kDUOG8GHP+ri+qXgJMKNn18Nt31p7ea6jaES/CclBfqBoYw1fzG2sc/IlVkd9TgqvobH3UjT/zxso1y2FNQUuQAeQIVCSt7IBDbrvJ63th0CKbZFnBM8a15qjHXXtvwcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738772609; c=relaxed/simple;
-	bh=gIXdY1mLEJOad0UDgvl1N4/XnFtkdtWs5lWVPm8r1H4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G0rUaL+dehKQvpxkR9sdrWkvKGWvloIuCAtcGqkPxJOO8pOw3Rpj1XnmggD0VD3c2kB/iKkMGSATYMZylYk5vNMbQT2sdbE0LiJM16W2qFQMyIymQHZmnR7kNSms+0JMIoRuciS5FGSEFN8w7iGoq/TMuxYque8WIhANU/P7Sc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=IzYfjndp; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1738772755; c=relaxed/simple;
+	bh=HGoFu8EMn/9p/e3e5Qbx+rQ90CmDadTKZhVcaAuqWVY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oURpP0igHL2wDT6t2dBvScaY54IeZNRHa5BIifmrWJ1rqnpLcrr9968FT1grxvH2wC6sw2Ms4QCdU6mLBOUE5vp/VDVixFe4qVDf44MA9ZOUu75LVgKBxUXhADe9HlHawM0vk81B8m8z84emeRarakgv4hAmg7VG3KIAw5y4FyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4W5uSckU; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="IzYfjndp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=gIXd
-	Y1mLEJOad0UDgvl1N4/XnFtkdtWs5lWVPm8r1H4=; b=IzYfjndprupblbyLdsOG
-	55ti7uOx8bocr8l1yXzZcSe1S/YAEW41K+WQrlXNeDvz6vGhjBccb9Cpw/NmP2+V
-	J+Et+6sbsZq5pHAobkaqiTg5HyuUrisxVhNnTkcaKEPPpEZzlXyFZFanb8w34GfM
-	p6Fc85Lbj3H3Nqi5ICP54NKb2PhEH1KyQ1mGlIblMX7NB0XfcF2Z0sL13aZFdiwD
-	uVsaLvwsU+IciUftrQVqDTNrL0i3vMG+8vcgDCH0MjiDRKVkOXbsgywd2mU74Zxj
-	+CKIfhKEL+4Pu56SZn7yFMZ6PmsSdTCjaggaUFUXSr66AuVi/axmbtbvf4Yx4SqX
-	8A==
-Received: (qmail 3454112 invoked from network); 5 Feb 2025 17:23:22 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 5 Feb 2025 17:23:22 +0100
-X-UD-Smtp-Session: l3s3148p1@ULROi2ct9pi5aIo9
-Date: Wed, 5 Feb 2025 17:23:11 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
-	linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Add Qualcomm i3c master controller driver support
-Message-ID: <Z6OQb29Ca2tmQs2Q@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
-	linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4W5uSckU"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21c2f1b610dso84845ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:25:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738772753; x=1739377553; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=g398mAw+koE/7rvCUsGrdTu6hqyc6MVi7/IgF/fwk5M=;
+        b=4W5uSckUqzKyxEE372cuRiCTqBWrCPnw/66FxUnQivwrl5OI6+CFDZz/9iGkOh3cw3
+         1jAVCo81lGiPioKx3GzViEvKsSErBL8M2RIgaNxDv4bgARwZidgdKS6P2jT2nR+a18dY
+         r6dPY8a6dMAl9EAe2ckGz4nR8rudDCqTbTWDOavJrgNf8fXB/p9Mb5y04Wn7n0l7cZxg
+         JiCY0VL8zZchvHgHID8J1yTfEvONUYJ5the5+TYp/+8YePNVmtIFx1xoSPZjyQnbuJuY
+         5K0Plx1CEjd5tnvCkjy1DaciKsfnorQveb/lz0oxxrIOKS8tayYoWf8jqnHJOaXOQeCN
+         a3FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738772753; x=1739377553;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g398mAw+koE/7rvCUsGrdTu6hqyc6MVi7/IgF/fwk5M=;
+        b=YDwQAsunXcxteQwoJFpOPlQtaMLoW/122NVjRm17zBWhvb2VljtGt2mo5/PyJkpy7Z
+         rw1Vui1JW8raeSiOe28d/HUf+IBDsQmK+fm5RIDTVv72Bo437Wfksocu5wEqoHZBOsDI
+         OkEzDTPpXPCXIZfSgJiWIH4MOSYO3rIs9e+RvMhx4/vcojr1wBGNHON9ye056x1GTbLo
+         sQ7N9Jpjitp+/kHdJTiFoGPY0e9m621TONGGACOu02o4DyI4Yxwgc/ly5zA6HNhbrsXe
+         ZatZI3kFiYEGz/jnF+f6+Y0bSS0QOTetDAJGajBbQ0oR47S9EqDgaoWCs8U02aPp+R03
+         6jhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUCW+yGbCQ19jOl2LOtpPs2CRxZueTMx1LRwM4ImzAKDf0HU61auxELlfceq95l2+QB/LmUsCKxmdEbu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRaR9tPM3q2KT2R1DLtOK7YlvG47e+/0BCdRfuCC5t1Xl5NtHK
+	ddHCbP6BBVcbEOWDQY7WVTFhfLehhhMyYcE5YPM7rPMcom1v573SMufy80PjQVhyD0xAqWTcdIG
+	7Cr9HpuopBqBMxl2DGgP7MlfSBmAqI5bjB0Ff
+X-Gm-Gg: ASbGncuQeJhMqp3ZwW/FONzNXHnJa1yzD/DGRSOpNvijoK4NMUT2/GNw2jTMh6Hk6Ei
+	buHwc3G+gw/wwAtaeJR+W200+bulVYsqvTIZgYws5dNPvHfqvsTBDn//pnNEF/EbgViWQ9rU02C
+	VXx4dH2c8A4gIB+lhWzpxOLdbD0+EX
+X-Google-Smtp-Source: AGHT+IGO+lHifIAmBbiQp609wZPwjqvDK16S2Y6u0ij8ggOirZZDpqz0X3E/XK82rQGtxlAc3yX3pxNNptrvQCQ81iU=
+X-Received: by 2002:a17:902:c941:b0:216:1543:196c with SMTP id
+ d9443c01a7336-21f17e29df5mr55523525ad.27.1738772753013; Wed, 05 Feb 2025
+ 08:25:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yzsO1nsGHdcZDS3F"
-Content-Disposition: inline
-In-Reply-To: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
+References: <67a34e60.050a0220.50516.0040.GAE@google.com> <CAG48ez3KKEYRU+-Mkk+tq1Onv3QWg0jP6fEKYjNjRS+ziP5dAQ@mail.gmail.com>
+ <13bb4bbf-92e7-4c45-a3a8-a52312015f92@lucifer.local> <CANpmjNNeXjtatBD6Lrz2-1jiqLkpcuk0Ra-6uJKzz3=y86qVuA@mail.gmail.com>
+ <097c6249-e86e-42c9-9f43-bb9f8a865ce4@lucifer.local>
+In-Reply-To: <097c6249-e86e-42c9-9f43-bb9f8a865ce4@lucifer.local>
+From: Marco Elver <elver@google.com>
+Date: Wed, 5 Feb 2025 17:25:16 +0100
+X-Gm-Features: AWEUYZmG35h_UiR1ojQSynQoXweyk_XDmkOgHg5WfWz_e1HpijYkRgKLrDkrxBg
+Message-ID: <CANpmjNPzQBvHrGGLwtCrU8iLUz2tppGie=_ZkuYck2fgN9Qr7Q@mail.gmail.com>
+Subject: Re: [syzbot] [mm?] KCSAN: data-race in mprotect_fixup / try_to_migrate_one
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Jann Horn <jannh@google.com>, 
+	syzbot <syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com>, 
+	Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com, vbabka@suse.cz, 
+	"Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 5 Feb 2025 at 16:51, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+[...]
+> > [...]
+> > > I hate that we have these landmines waiting for us. Be good to find a way
+> > > to explicitly annotate this, or at least comment somehow.
+> > >
+> > > But agreed, probably adding a READ_ONCE()/WRITE_ONCE() is appropriate at
+> > > least for the proximate thing.
+> > >
+> > > It's a wonder these things don't trigger more, except you need probably
+> > > very precise timing to do it...
+> >
+> > They do trigger, but we don't send all of them to LKML.
+> > When we first introduced KCSAN, the notion of "data race" was still
+> > poorly understood. At the time we decided to pre-review a number of
+> > them (but our time to do so has been going down :-/), or let willing
+> > maintainers deal with them directly. A number of articles followed,
+>
+> We very much appreciate your efforts :)
+>
+> We are definitely willing to see these in mm, and as you can see from the
+> discussion here, the interaction between the rmap locks and other locks is
+> complicated (see also the docs I wrote on them at [0]).
 
---yzsO1nsGHdcZDS3F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Tangentially, I've been trying to work out how to bring this [1] Clang
+feature to the kernel: it's more or less a simple "capability system"
+[2] to express "acquire this before doing that / don't hold this thing
+here / etc.". Locking rules are an obvious application. It's been on a
+number of people's radar over the years, but nothing materialized.
+Sparse's locking analysis is much weaker, nor easy (i.e. quick) to
+use.
 
+[1] https://clang.llvm.org/docs/ThreadSafetyAnalysis.html
+[2] https://www.cs.cornell.edu/talc/papers/capabilities.pdf
 
-> This patchset was tested on Kailua SM8550 MTP device and data transfer
-> has been tested in I3C SDR mode with i2c and i3c target devices.
+The current work-in-progress is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/melver/linux.git/log/?h=cap-analysis
+It lacks documentation, and proper commit messages, but is otherwise
+usable (see example enablements for kfence, kcov, and stackdepot and
+lib/test_capability-analysis.c).
+An official RFC will follow, but the hard part of writing
+documentation is in the works. ;-)
 
-Can you share with which I3C targets you tested this driver?
+There are also other questions, such as:  can a subset of the analysis
+be applied tree-wide (vs. current selective enablement), as it would
+help find more bugs faster.
+However, the reality of it is that using this system would be opting
+into a "dialect of C with capability analysis" with its own set of
+restrictions, and I don't know if everyone is willing to pay this
+cost.
 
+What I'd be curious about is, if some of the complex rules you mention
+above can be expressed so that Clang's "capability analysis" can point
+out some bugs. I suspect not everything can be expressed, but even if
+we get 50% there, we could catch a huge amount of bugs statically at
+compile-time.
 
---yzsO1nsGHdcZDS3F
-Content-Type: application/pgp-signature; name="signature.asc"
+I let this cat out the bag, because this thread seems like a good way
+to get super-early high-level feedback. :-)
+It'll be a while before the first RFC.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmejkGsACgkQFA3kzBSg
-KbZQ2xAAgEwgaTMhHELob/ZfmcCI38cbMP/TafPOaNf307oz1I1GFRRSCWOuriMH
-brOL5Xtu+1hOCqrgDud1VJE89os5nNYPr1Nv4NFgLgv1H6G4O6jouZSZd80yldef
-SV5BH1b1QQWvO1d6wjUVIJ94/d41G8J5Pty1M7VchX/z24fa59ZNq4bw2iiV3BTJ
-FrNwZEVcaDFK4OIpERN82fB5yaa5wTbuj/OH/eKTnL2aBIq4a26WQD6lFxpvB9g/
-OwANtW+GjMbJNu1QlwuAV6saIJbs8DOmYFLMkIeMe41BVjjjnoirkuG7FfISICZh
-KCcecac9ZUmcYKE6WKMQQP16TotI95q3x5V2IYEPw7DtHIIUWeCrKqpADl0H4nyk
-aOzkR33UTVceA5e7ZTTGuYo1hyGxNRsrlWzy2kdXjTp3IeDDZbNA6uKPLGvkLV2T
-1YUmzZjD44sWSIf6WEVdretg4D9JZniLqtb4LbiSEOPJErEjlgB88wz4vlF1os59
-BtZfc+m04LyioTPbe3qtzpWKbNbOgX7VLjSoiUeIR66zwYRpUz9lMFk01GzfKXr9
-q3y9gj80Cglug1Cz2yDuF7r9lbknE74m8oZwBc4V7UNNRhCm3Bd93XCfyUmMP61m
-MKPsEQSKEbQTc+zv7Je1WMm+2j3we4Md3++FvhZNblryGLfGWmY=
-=dz0m
------END PGP SIGNATURE-----
-
---yzsO1nsGHdcZDS3F--
+Thanks,
+-- Marco
