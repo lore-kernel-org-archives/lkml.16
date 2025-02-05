@@ -1,275 +1,415 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2064.outbound.protection.outlook.com [40.107.102.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EED151985;
-	Wed,  5 Feb 2025 11:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756438; cv=fail; b=r9MdJdWmY6TmpIkyFQ3So+rtwEdwIJZrPd0JSoK0ieNN9hTnKHM/0zyMQ810fkAnVaWdDwKahMV+KNLg0Y16F3uu47N5R5ZFW9jR7xfEBmiojOzWQch0xOLVNlZOUK8KnYL1b7FWq3QFsTzxi2e2FfxGyFrxErDzBLM8NgdWJJI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756438; c=relaxed/simple;
-	bh=OGVYIs1fKH0jsmemCenPZk1XevC7hhx5IN8n9QHx/OU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=g9XlHOx0wpaI44r/BUi/M816Bx0tK9Ab8FC6bzLiqbjTfcqI8F16+CM1AFfRDI8VHOltIcaUKydbpATmRgOkpoVnvrqScM1J40K30nusvWZqRentx1bKaVci9fNFSZqbu7MpS29BZQaXVK8RwOw+aL5ZPcU1KLzZT4ArAynu+DA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vjlf68gO; arc=fail smtp.client-ip=40.107.102.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vjlf68gO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AHzFTut8jWav4zyl5B8kUUYmSboKV+0t7XJGPW5BrlZFgwL/eyk4dFpgKCeYH0k1rw57hF2mwODF3ebCrPklyrN0UTinJSF99shwWbVfqP8B5IB0kqDSWQDlsB1V3C9LGKdX2cds8T+PuOYYaHUEYQ8WT6Wzdx9TxpqYLbKQTdntPBAZ717kSnyi1aPEHnj4P5/qiZdGhQa14fgjiAQYAvUcuOVwn4TWpBvkHoAIcNhDuKVstMgXDnvQmkHPFupt44Hf4Rg1FY/88W7KicSdB/mpzP+nI/mT3KLAVej6jpZ0cDF0Spz1mx2Zm9bFFNysKzYEOuXGz+y38GVGx5zGng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T56C8xtVQWd00gL5s88pw0KNFSX7pNTbNrt12XVNJOU=;
- b=ksPJDVx27K6VPV5YCpRAynnYYYQw0f8zMShxBqM/57Uk3CPt+29XmatkSXe5hyY0aqnqRqTY8xxR6Gr44kp9h66F5AF92G+udTuUHNlP/MGBwhbbsGl86ukjZBkEEQ0ltw3ezy0+CSGgNBggqpOYxZXcytretTolfGNwYwBcp2v1yxdXzdRj8ArXma7cBEcnisBkPFTFhRWlOyLQiQp9petZuf5z7ODQ6lVKHlb+94rY3RTCAA7OD7l059KFwdXKw257GHTT9PHTmHIeRZhwBA4igTcxYmr0Jw/SSxBKAbkN++3eTAzK5RKgy6TOAn+fQxoOEgHloBmyFRx2+Nfqbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T56C8xtVQWd00gL5s88pw0KNFSX7pNTbNrt12XVNJOU=;
- b=vjlf68gOCdlpMyWHXI2egz89Z+rbYMGweyVVs8nYbh4egdsd/+LgmHGm+b6WXu81yuByADQkV5cG1q55WBtnTBp1DalvX/xs+NBDurJrYToheiMcGVvXB4fVyJGLdb2/7Ukr8mnC9ZqOT1K069xOgDfMCWYNpmU5T0/K4j9Jyhc=
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
- by SA1PR12MB6725.namprd12.prod.outlook.com (2603:10b6:806:254::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Wed, 5 Feb
- 2025 11:53:54 +0000
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3%3]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 11:53:54 +0000
-From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Simek, Michal"
-	<michal.simek@amd.com>, "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
-Subject: RE: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Thread-Topic: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Thread-Index: AQHbckFGnEXox34FgUW7RyRWX+Tmz7M17kwAgAD2/bCAANnSgIAA4JSwgAAEO5A=
-Date: Wed, 5 Feb 2025 11:53:53 +0000
-Message-ID:
- <SN7PR12MB720115611148E80D555A1A1E8BF72@SN7PR12MB7201.namprd12.prod.outlook.com>
-References:
- <SN7PR12MB7201EAC37631E10EBA5A299B8BF42@SN7PR12MB7201.namprd12.prod.outlook.com>
- <20250204221159.GA863758@bhelgaas>
- <SN7PR12MB7201964B87531066CCAA22668BF72@SN7PR12MB7201.namprd12.prod.outlook.com>
-In-Reply-To:
- <SN7PR12MB7201964B87531066CCAA22668BF72@SN7PR12MB7201.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|SA1PR12MB6725:EE_
-x-ms-office365-filtering-correlation-id: 552ba0a5-47c8-4c77-e111-08dd45dbc3af
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?RgGuNJzmxrB8NT/kB7QpMsFkm661WsrnxIXIXM/6EXi8XK3pIOKQzmlpkI+T?=
- =?us-ascii?Q?o/V+yKjQwWqPzvhKAY4QMI4EymoWXrqte1x4J0qBm0WdrB5ZcRJl2VApsVVI?=
- =?us-ascii?Q?AXm5GzfrAX5e3LJPw7YwQU+B7udfo4pvv8SLP3xtZP3FBxZ71EH69D+7D1CX?=
- =?us-ascii?Q?+JXJx0GejENE4ixo+LxX/Xm/beZFLPYXRI/33N+kUNszrN3AgedfBomu61tY?=
- =?us-ascii?Q?0+7yEsnpS+eetHMQEyuqAtyLr8MHw50YwaqpPAKMm2/jx2fC0tNKqw6rmGjh?=
- =?us-ascii?Q?aPAJtMAgvXFkCYhBuRI9r2m567LJDwEB9pDkni2s24/E2Ypg0g4v/01qhzB/?=
- =?us-ascii?Q?3x7odNWss5/mym7ZxLXYh12S+wjERBQAdCQxLJLfWsOeT2D87LujoZoAaf/i?=
- =?us-ascii?Q?9iPSram/8ECjL8lvjs3c1Oq2Y5yHwH5riMiHQscuTe6shMUh//FhAhOyx9RC?=
- =?us-ascii?Q?oVOjvtswy3sOqAtWNNpzoJPs8QXWw7F8C3Kxj++fYpAydQ2CI1Z3WpnrHGU0?=
- =?us-ascii?Q?E442FtA+HdCWBpYx2qg/BrBKNCMt7VAaxyqUcptss4LQPIrQ2868mw5ImVg3?=
- =?us-ascii?Q?MNMDxAHX0BBO5yf9+cUCK3UASxfOV7dJg6aMkP+gngb+TKIrs+YIYMkYbaAV?=
- =?us-ascii?Q?pMGZkoRvRn7hzev+9cTgizNoGj5y4XqAdHMV56sNanKoXq7darUGgwXti6gX?=
- =?us-ascii?Q?CWGSz4f8Dkubkln101atJUPSmMgb82zy/G23IuVEXkrCKyIdNxFOLPP/a9M6?=
- =?us-ascii?Q?K6v5rjeHTCmHxEp7/q7Y9xGup0jGMvkUObjMtxK+cvEkiZ2AeqN9HspiqOQl?=
- =?us-ascii?Q?yL6m//YoBlIe5PRCxRuygRHovrTpzDX1r9j8Njo2txtQPLLuevu3zxuxPIsw?=
- =?us-ascii?Q?ELQQhEBJjFSJ3UQhlm0J7/MN9ptJ9/+9MSVVl/yg/DUBuZMVpLE4DYz26zDd?=
- =?us-ascii?Q?eq9dAntCEMhwWZB+yGXaueeO2J8Bx3/jc+l0Cd1gZOCpHeAIVOOqXnNmwvH+?=
- =?us-ascii?Q?HCejdz5e5xiAoyU5RNilEy5FXu755KDU/GF11B4TtipLG7VdTybVkWf2Evv9?=
- =?us-ascii?Q?ThLylxvQoC+3pKXnH9NJqaYqzCTUNXWZnGKgbtdt0Qbql7GlfjH+gLTJNLr4?=
- =?us-ascii?Q?TJU6HYXYnGM7Dz3fsqBaFLFnYSSh1IypmtgcMktYuhVgHhTAtEFRcm9Kc1Yq?=
- =?us-ascii?Q?hgJUXiFWDkT0TGrDinJRapA7NqlQ2Oofwb+m/RSq65M9dTbK8Urt0d3S/gAh?=
- =?us-ascii?Q?H2lYN8uNdswK6mK1yWmThjIRZOz/b1mMwNjPnwl1DyaGTvagYnr6y2UrGkf4?=
- =?us-ascii?Q?NCCeor6tfVo0ucB30ZTO6CC2NVRUT/daghDxzYX5dF2Y4Wk6tBS4wHXk50Yx?=
- =?us-ascii?Q?qe+SNQTV1hhv46nYGGYuUj16srARgmLdOmGGKhQ44B41lj40yIHasVwHxeLT?=
- =?us-ascii?Q?jJb0oi27IiLC/QpJaCOayFTtZEd3uGdV?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?LFS6u7rjv8qRUGYR3XJGR1UCvMGap6KTRmLuZrdlQZeDAAYPaH8kBF0Lg6hY?=
- =?us-ascii?Q?ct+f111p9ncFi8kk8gOC6jeGyXrZp6zP4/x2QRITTw+nmjr+tGEUGUjmFCnJ?=
- =?us-ascii?Q?SCLl00EyZ0YRvkxjW9bkJF4Afb3BgRAsT7cckieGEPQ/vSCKVRYV8hX174HO?=
- =?us-ascii?Q?UxMHh24njq9rQ+ZLwBAwrDcy1mvBph9QH+V7taftwEMP+nr323ame3rKKEK1?=
- =?us-ascii?Q?eNNsr51rHa/xbnCilTiW5sxlT9n18meRa4ZXVPsOupuFu5lK8x8uCtdHQ9y6?=
- =?us-ascii?Q?Kqu0HzbvmFL32eLAnHleo5ItMyAFDeMipYyGDBvub2trCHEw5+b6SpkdJIAB?=
- =?us-ascii?Q?5Y4DZCOFg0WJmXKgfuRbiwcydmA9aI1A+TaIjHsSc4SDpg20YAVHASIDH6nw?=
- =?us-ascii?Q?EuWlj1I7kZVMLxoqy5JJaUrriIDmqxghw6Bp9QSct64v60KKbu3+QmAauh+q?=
- =?us-ascii?Q?EKgNDi7CxZtzSAPp0JIxPkJh4f0OHlDrbLFdkWbvf0eyd22lEhJDC5c/mQvC?=
- =?us-ascii?Q?ksExfAyBVD7XmL35Ktdc2mudbPEHRWANv0m/a0gHfryvGfIEk6CnIsXbQGOB?=
- =?us-ascii?Q?j4plZPCWPTKRORmXXRHwy+jXJLbcNp33SiDMxJkWMQqRdB6oqt1fTZceKvI5?=
- =?us-ascii?Q?xYL4Qme/w/VN3vSTM15+UZFMznHpK/vqeJdnV7wKN4dQ6a2kf7cFR6sn07Yp?=
- =?us-ascii?Q?xlnnaH/Ktn60jtVcO2Vtar2m3fv9ZDzGQby62yKxAQgMHBMMylmZ2A6bO/4B?=
- =?us-ascii?Q?2Htkr3xLCvpJsg6RxYYDVKNJuvyMf3vVrUK8GS7fUbr1tjKiXEnXjoDkAUup?=
- =?us-ascii?Q?gqqzvvwjT4DV7RtdQMv5A7LkOni6EVs9hc5N5uC1nXzLwryLy2BAlY2ppD7M?=
- =?us-ascii?Q?t1r9736vNVbXEkqhchTTMjiirnMU7TAKuZn9XisoQLIJIP9TLZJKlNezLnmj?=
- =?us-ascii?Q?/gMTRJf50xfYSpqMXQzq+3zfljwicCBqV6+ZzeZHQQMEwEd34CruTEoX+hab?=
- =?us-ascii?Q?QHROQtbvzBWbXL3rOIHuPRjAF16jKeWbyGEiW9c+spjC344Dd8o4RrGH8tzn?=
- =?us-ascii?Q?yhSe2byy9AF+o7EhsKU00G03+F1JdZL3+TJpFwURXMMqzODLfnHkz3hcDmnR?=
- =?us-ascii?Q?3IHY9vXYUv7+sryztH/41uStdObnMoaRZaKCaryfYnllcDkiLCYXBqiQYLJe?=
- =?us-ascii?Q?CGLdo4okA/YZT02YJDzo18RDLYuwKF+a0Ng5nRXVVM/uF5GRrkZi7WradPpT?=
- =?us-ascii?Q?YM4kyeAZvIvUFRkzoZUuM7F8QuioJ8kob33ltxnWyosEiULadxb1hYzad1Jj?=
- =?us-ascii?Q?KBJYOTfEXlW38tno5xXOJ6M87qvGzRu0r1dj4U5dd5rppFDcke6rmJGa4GKO?=
- =?us-ascii?Q?H5Xf4ZNVFikiW7nyLnU5PeBDuPpaEDJNyaUT8AeKMZfWx0S7BESJDQhPg0rq?=
- =?us-ascii?Q?9PqpAIpnFSwsuFw4rf6LxUIa8pWobhoXjl6S8dDalRWUDycynbUR64sSsR6j?=
- =?us-ascii?Q?fMoG4o/uv61IMzn/otOGk3Ay7XBrw/H314ozPGPwsM+D5SDCeMxEI0LEsUsW?=
- =?us-ascii?Q?AdZvGS/j3+LLrpAAztQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EABE151985
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738756445; cv=none; b=GSVKwZ59E+V9m4jsv1NQ2YzPdYxx85vqXy6chlVnvAM29Us59MruK449HmG3dbX8Y/OwwfCrD0JAfi2ymBNKSHDA0VQrl3qGZ2dR4istFUfWqkvjKXDc+s+PVN2yrXZOR6BHn3fslIGq1vqoGT3NS0IQybTe/DRn5U0aRh2X4Eo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738756445; c=relaxed/simple;
+	bh=+yRQUJihDV9tvG5LnxmsycoiL/pGNzPjIvZE0nE9VuA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=msSjc7kHzzVadFkespLvNVoaQtxGVQrxknvCJG9yG2PcDOMpj0SPPep87uCfMR2XgazrSuUbfiD4IFt1Rb07TmnWGlfv1hy933qCMJS+jUfweymnIULPRMNzsSKSNqbOM9z4o7CHssuKkiLWhRpCji5O7SKqBfGIlbh9L9tSL98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so37805965ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:54:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738756442; x=1739361242;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=42Lvz+0jZBp+gFYclYnbOkw0qx2nF5nn+F/WopuPd+Y=;
+        b=St26vQfe8CYGFlej4XvLLxa7O7IOE/4KGLz7MTUHHg5I+3j+EHojfJPu3ehoEIAm+p
+         BzfwhDnb2tTEIELQOii7UHQYqc0HySBDXVCeRrHygha+R46eucvKyamrXu5LJt43bUjM
+         ljRgtDQ71WbBsuspvA4qsPFHAeSS+RSbUIVpMlSiV/I6N/JaBldgZeyIuMLEMb9ciIzB
+         /LtTQh4CAsEYYWiUR5xapuUzqUhA2f4qx6qZ22niyEEKkv/9RkkGpqjYj4Q3T83g3eV0
+         LDZ8yqCcQUwN4/DQ5YT1bmiOn/Lgoq4ydCnK5v3aiurAwFzP8rGRobiBQ9OCWkdtUj3K
+         0ZhA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+A+djOLU6hB6aFpPLLpqwBhTDoblP0u2nh3lXbb9dBOIUahvYL6qmLBBLf2TggAJ0EWiklcFtAOUfIcE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzghlNwVuiTISwL6aG76eTtKTeqHvKRzJ54bLhh+7CRL/TvXOZr
+	j+bEBIwBHSberoqKofERKOH7tHjU0vzGQogccA2KN1SpGwrZeh/dpBtc01CBJN9ZaocRtq0rJqq
+	xbcsUhDUAPgbajMP+uiHVcT7YrmnCnL/c4f2Hk3MElaHcVy2K2Geu69M=
+X-Google-Smtp-Source: AGHT+IGM+F/4tiRWGTYMlA3pJ5kP4+/0bcEk4Zny68aSxiVwD3XKmanT33kAs5I4YZ+MBX5iR9pfbiVqjFqSHECNuf+g69K0lQR8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 552ba0a5-47c8-4c77-e111-08dd45dbc3af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2025 11:53:53.9102
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IuLGugCK6Re/sYXNXKvti3bTDhZhq8bb6A57WDGoSyb/y7GpKgRFk3MMzY30vePrXYA5gNOgUQ84ahu6UZaTFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6725
+X-Received: by 2002:a05:6e02:1705:b0:3a7:87f2:b010 with SMTP id
+ e9e14a558f8ab-3d04f4052damr24601615ab.5.1738756442054; Wed, 05 Feb 2025
+ 03:54:02 -0800 (PST)
+Date: Wed, 05 Feb 2025 03:54:02 -0800
+In-Reply-To: <20250205113426.1976-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a3515a.050a0220.50516.0041.GAE@google.com>
+Subject: Re: [syzbot] [net?] general protection fault in ip6_pol_route (3)
+From: syzbot <syzbot+3201be560ebfa39bc6bd@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bjorn,
+Hello,
 
-> -----Original Message-----
-> From: Havalige, Thippeswamy
-> Sent: Wednesday, February 5, 2025 5:08 PM
-> To: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
-> conor+dt@kernel.org; linux-pci@vger.kernel.org; devicetree@vger.kernel.or=
-g;
-> linux-kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
-> <michal.simek@amd.com>; Gogada, Bharat Kumar
-> <bharat.kumar.gogada@amd.com>
-> Subject: RE: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
->=20
-> Hi Bjorn,
-> > > > It's kind of weird that these skip the odd-numbered bits, since
-> > > > dw_pcie_rp_intx_flow(), amd_mdb_mask_intx_irq(),
-> > > > amd_mdb_unmask_intx_irq() only use bits 19:16.  Something seems
-> > > > wrong and needs either a fix or a comment about why this is the way=
- it
-> is.
-> > >
-> > > ... the odd bits are meant for deasserting inta, intb intc & intd I
-> > > ll include this in my next patch
-> >
-> > > > > +#define IMR(x) BIT(AMD_MDB_PCIE_INTR_ ##x)
-> > > > > +#define AMD_MDB_PCIE_IMR_ALL_MASK			\
-> > > > > +	(						\
-> > > > > +		IMR(CMPL_TIMEOUT)	|		\
-> > > > > +		IMR(INTA_ASSERT)	|		\
-> > > > > +		IMR(INTB_ASSERT)	|		\
-> > > > > +		IMR(INTC_ASSERT)	|		\
-> > > > > +		IMR(INTD_ASSERT)	|		\
-> > > > > +		IMR(PM_PME_RCVD)	|		\
-> > > > > +		IMR(PME_TO_ACK_RCVD)	|		\
-> > > > > +		IMR(MISC_CORRECTABLE)	|		\
-> > > > > +		IMR(NONFATAL)		|		\
-> > > > > +		IMR(FATAL)				\
-> > > > > +	)
-> > > > > +
-> > > > > +#define AMD_MDB_TLP_PCIE_INTX_MASK	GENMASK(23, 16)
-> > > >
-> > > > I would drop AMD_MDB_PCIE_INTR_INTA_ASSERT, etc, and just use
-> > > > AMD_MDB_TLP_PCIE_INTX_MASK in the
-> > AMD_MDB_PCIE_IMR_ALL_MASK
-> > > > definition.
-> > > >
-> > > > If there are really eight bits of INTx-related things here for the
-> > > > four INTx interrupts, I think you should make two #defines to
-> > > > separate them out.
-> >
-> > > Yes, there are 8 intx related bits I ll define them in my next patch.
-> > > I was in confusion here regarding "PCI_NUM_INTX " since this macro
-> > > indicates INTA INTB INTC INTD bits so I discarded deassert bits here.
-> >
-> > It seems like what you have is a single 8-bit field that contains both
-> > assert and deassert info, interspersed.  GENMASK()/FIELD_GET() isn't
-> > enough to really separate them.  Maybe you can do something like this:
-> >
-> >   #define AMD_MDB_TLP_PCIE_INTX_MASK          GENMASK(23, 16)
-> >
-> >   #define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)    BIT(1 << x)
-> >
-> > If you don't need the deassert bits, a comment would be useful, but
-> > there's no point in adding a #define for them.  If you do need them, ma=
-ybe
-> this:
-> >
-> >   #define AMD_MDB_PCIE_INTR_INTX_DEASSERT(x)  BIT((1 << x) + 1)
-> >
-> > > > > +static irqreturn_t dw_pcie_rp_intx_flow(int irq, void *args) {
-> > > > > +	struct amd_mdb_pcie *pcie =3D args;
-> > > > > +	unsigned long val;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	val =3D FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
-> > > > > +			pcie_read(pcie,
-> AMD_MDB_TLP_IR_STATUS_MISC));
-> > > > > +
-> > > > > +	for_each_set_bit(i, &val, 4)
-> > > >
-> > > >   for_each_set_bit(..., PCI_NUM_INTX)
-> >
-> > > In next patch I will update value to 8 here.
-> >
-> > And here you could do:
-> >
-> >   val =3D FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
-> >                   pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
-> >
-> >   for (i =3D 0; i < PCI_NUM_INTX; i++) {
-> >     if (val & AMD_MDB_PCIE_INTR_INTX_ASSERT(i))
-> - Thanks for reviewing, This condition never met observing zero here.
-To satisfy this condition need to modify macros as following.
-#define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)    BIT(x)
-#define AMD_MDB_PCIE_INTR_INTX_DEASSERT(x)    BIT(x+1)
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> >       generic_handle_domain_irq(pcie->intx_domain, i);
-> >
-> > > > > +		generic_handle_domain_irq(pcie->intx_domain, i);
-> >
-> > > > > +	d =3D irq_domain_get_irq_data(pcie->mdb_domain, irq);
-> > > > > +	if (intr_cause[d->hwirq].str)
-> > > > > +		dev_warn(dev, "%s\n", intr_cause[d->hwirq].str);
-> > > > > +	else
-> > > > > +		dev_warn_once(dev, "Unknown IRQ %ld\n", d-
-> >hwirq);
-> > > >
-> > > > What's the point of an interrupt handler that only logs it?
-> > >
-> > > At this stage, our objective is to notify the user of the occurrence
-> > > of an event. While we intend to integrate these events with the AER
-> > > subsystem in the future, for the time being, we will limit the
-> > > functionality to notifying the user.
-> >
-> > OK, just add a comment to that effect here.
-> - Thanks for reviewing, will add this in next patch.
-> >
-> > Bjorn
+ 79.765602][ T5343]=20
+[   79.766558][ T5343] The buggy address belongs to the physical page:
+[   79.769019][ T5343] page: refcount:0 mapcount:0 mapping:0000000000000000=
+ index:0x0 pfn:0x4f464
+[   79.772366][ T5343] head: order:1 mapcount:0 entire_mapcount:0 nr_pages_=
+mapped:0 pincount:0
+[   79.775598][ T5343] anon flags: 0x4fff00000000040(head|node=3D1|zone=3D1=
+|lastcpupid=3D0x7ff)
+[   79.778676][ T5343] page_type: f5(slab)
+[   79.780232][ T5343] raw: 04fff00000000040 ffff88801ac41c80 0000000000000=
+000 dead000000000001
+[   79.783372][ T5343] raw: 0000000000000000 0000000000080008 00000000f5000=
+000 0000000000000000
+[   79.786627][ T5343] head: 04fff00000000040 ffff88801ac41c80 000000000000=
+0000 dead000000000001
+[   79.789858][ T5343] head: 0000000000000000 0000000000080008 00000000f500=
+0000 0000000000000000
+[   79.793129][ T5343] head: 04fff00000000001 ffffea00013d1901 ffffffffffff=
+ffff 0000000000000000
+[   79.796507][ T5343] head: 0000000000000002 0000000000000000 00000000ffff=
+ffff 0000000000000000
+[   79.799785][ T5343] page dumped because: kasan: bad access detected
+[   79.802261][ T5343] page_owner tracks the page as allocated
+[   79.804507][ T5343] page last allocated via order 1, migratetype Unmovab=
+le, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COM=
+P|__GFP_NOMEMALLOC), pid 5329, tgid 5329 (syz-executor), ts 78415084094, fr=
+ee_ts 78169759446
+[   79.812368][ T5343]  post_alloc_hook+0x1f4/0x240
+[   79.814298][ T5343]  get_page_from_freelist+0x365c/0x37a0
+[   79.816463][ T5343]  __alloc_frozen_pages_noprof+0x292/0x710
+[   79.818703][ T5343]  alloc_pages_mpol+0x311/0x660
+[   79.820563][ T5343]  allocate_slab+0x8f/0x3a0
+[   79.822338][ T5343]  ___slab_alloc+0xc27/0x14a0
+[   79.824253][ T5343]  __slab_alloc+0x58/0xa0
+[   79.825926][ T5343]  __kmalloc_cache_noprof+0x27b/0x390
+[   79.827981][ T5343]  binderfs_fill_super+0x58e/0xd90
+[   79.829916][ T5343]  get_tree_nodev+0xb7/0x140
+[   79.831720][ T5343]  vfs_get_tree+0x90/0x2b0
+[   79.833832][ T5343]  do_new_mount+0x2be/0xb40
+[   79.835650][ T5343]  __se_sys_mount+0x2d6/0x3c0
+[   79.837488][ T5343]  do_syscall_64+0xf3/0x230
+[   79.839249][ T5343]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   79.841466][ T5343] page last free pid 80 tgid 80 stack trace:
+[   79.843812][ T5343]  free_unref_folios+0xe40/0x18b0
+[   79.845786][ T5343]  shrink_folio_list+0x41a7/0x5ac0
+[   79.847791][ T5343]  evict_folios+0x45fd/0x56a0
+[   79.849591][ T5343]  try_to_shrink_lruvec+0x713/0x9b0
+[   79.851656][ T5343]  shrink_one+0x3b9/0x850
+[   79.853309][ T5343]  shrink_node+0x37c5/0x3e50
+[   79.855093][ T5343]  kswapd+0x20f3/0x3b10
+[   79.856715][ T5343]  kthread+0x7a9/0x920
+[   79.858297][ T5343]  ret_from_fork+0x4b/0x80
+[   79.859943][ T5343]  ret_from_fork_asm+0x1a/0x30
+[   79.861728][ T5343]=20
+[   79.862691][ T5343] Memory state around the buggy address:
+[   79.864899][ T5343]  ffff88804f464700: fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc fc fc
+[   79.868793][ T5343]  ffff88804f464780: fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc fc fc
+[   79.871847][ T5343] >ffff88804f464800: fa fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb fb
+[   79.875096][ T5343]                       ^
+[   79.876814][ T5343]  ffff88804f464880: fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb fb
+[   79.879777][ T5343]  ffff88804f464900: fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb fb
+[   79.882810][ T5343] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   80.174438][ T1033] wlan0: Created IBSS using preconfigured BSSID 50:50:=
+50:50:50:50
+[   80.177606][ T1033] wlan0: Creating new IBSS network, BSSID 50:50:50:50:=
+50:50
+[   80.241533][ T1068] wlan1: Created IBSS using preconfigured BSSID 50:50:=
+50:50:50:50
+[   80.255404][ T1068] wlan1: Creating new IBSS network, BSSID 50:50:50:50:=
+50:50
+[   80.841220][ T5343] Kernel panic - not syncing: KASAN: panic_on_warn set=
+ ...
+[   80.844058][ T5343] CPU: 0 UID: 0 PID: 5343 Comm: syz-executor Not taint=
+ed 6.14.0-rc1-syzkaller-g5c8c229261f1-dirty #0
+[   80.848035][ T5343] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
+BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+[   80.852045][ T5343] Call Trace:
+[   80.853331][ T5343]  <TASK>
+[   80.854460][ T5343]  dump_stack_lvl+0x241/0x360
+[   80.856209][ T5343]  ? __pfx_dump_stack_lvl+0x10/0x10
+[   80.858174][ T5343]  ? __pfx__printk+0x10/0x10
+[   80.859914][ T5343]  ? preempt_schedule+0xe1/0xf0
+[   80.861752][ T5343]  ? vscnprintf+0x5d/0x90
+[   80.863363][ T5343]  panic+0x349/0x880
+[   80.864858][ T5343]  ? check_panic_on_warn+0x21/0xb0
+[   80.866780][ T5343]  ? __pfx_panic+0x10/0x10
+[   80.868454][ T5343]  ? _raw_spin_unlock_irqrestore+0x130/0x140
+[   80.870716][ T5343]  ? __pfx__raw_spin_unlock_irqrestore+0x10/0x10
+[   80.873049][ T5343]  ? print_report+0x502/0x550
+[   80.874886][ T5343]  check_panic_on_warn+0x86/0xb0
+[   80.876762][ T5343]  ? binder_add_device+0x5f/0xa0
+[   80.878699][ T5343]  end_report+0x77/0x160
+[   80.880307][ T5343]  kasan_report+0x154/0x180
+[   80.882054][ T5343]  ? binder_add_device+0x5f/0xa0
+[   80.883951][ T5343]  binder_add_device+0x5f/0xa0
+[   80.885778][ T5343]  binderfs_binder_device_create+0x7bf/0x9c0
+[   80.888011][ T5343]  binderfs_fill_super+0x944/0xd90
+[   80.889968][ T5343]  ? __pfx_binderfs_fill_super+0x10/0x10
+[   80.892086][ T5343]  ? shrinker_register+0x160/0x230
+[   80.893912][ T5343]  ? sget_fc+0x909/0x9c0
+[   80.895358][ T5343]  ? __pfx_set_anon_super_fc+0x10/0x10
+[   80.897187][ T5343]  ? __pfx_binderfs_fill_super+0x10/0x10
+[   80.899300][ T5343]  get_tree_nodev+0xb7/0x140
+[   80.901061][ T5343]  vfs_get_tree+0x90/0x2b0
+[   80.902772][ T5343]  do_new_mount+0x2be/0xb40
+[   80.904510][ T5343]  ? __pfx_do_new_mount+0x10/0x10
+[   80.906387][ T5343]  __se_sys_mount+0x2d6/0x3c0
+[   80.908141][ T5343]  ? lockdep_hardirqs_on_prepare+0x43d/0x780
+[   80.910345][ T5343]  ? __pfx___se_sys_mount+0x10/0x10
+[   80.912308][ T5343]  ? do_syscall_64+0x100/0x230
+[   80.914126][ T5343]  ? __x64_sys_mount+0x20/0xc0
+[   80.915911][ T5343]  do_syscall_64+0xf3/0x230
+[   80.917629][ T5343]  ? clear_bhb_loop+0x35/0x90
+[   80.919384][ T5343]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   80.921583][ T5343] RIP: 0033:0x7fc18af7feba
+[   80.923238][ T5343] Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1=
+a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0=
+f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+[   80.930263][ T5343] RSP: 002b:00007fffe7bd7398 EFLAGS: 00000246 ORIG_RAX=
+: 00000000000000a5
+[   80.933382][ T5343] RAX: ffffffffffffffda RBX: 00007fc18aff1b21 RCX: 000=
+07fc18af7feba
+[   80.936291][ T5343] RDX: 00007fc18affcfa8 RSI: 00007fc18aff1b21 RDI: 000=
+07fc18affcfa8
+[   80.939200][ T5343] RBP: 0000000000000000 R08: 0000000000000000 R09: 000=
+0000000000000
+[   80.942081][ T5343] R10: 0000000000000000 R11: 0000000000000246 R12: 000=
+07fc18b005050
+[   80.944983][ T5343] R13: 00007fffe7bd7418 R14: 0000000000000009 R15: 000=
+0000000000000
+[   80.947863][ T5343]  </TASK>
+[   80.949295][ T5343] Kernel Offset: disabled
+[   80.950938][ T5343] Rebooting in 86400 seconds..
+
+VM DIAGNOSIS:
+11:53:19  Registers:
+info registers vcpu 0
+
+CPU#0
+RAX=3D000000000000007a RBX=3Dffffffff9a718760 RCX=3D0000000000000000 RDX=3D=
+00000000000003f8
+RSI=3D0000000000000000 RDI=3D0000000000000020 RBP=3D0000000000000000 RSP=3D=
+ffffc9000d3171d0
+R8 =3Dffffffff856cbbeb R9 =3D1ffff110067ff046 R10=3Ddffffc0000000000 R11=3D=
+ffffffff856cbba0
+R12=3Ddffffc0000000000 R13=3D000000000000007a R14=3D000000000000007a R15=3D=
+00000000000003f8
+RIP=3Dffffffff856cbc1e RFL=3D00000002 [-------] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D0
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 000055558166b500 ffffffff 00c00000
+GS =3D0000 ffff88801fc00000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe0000003000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe0000001000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00007fc18ae4af90 CR3=3D000000004f316000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D00000000ffffff80 Opmask01=3D000000000000000f Opmask02=3D00000000=
+ffffffef Opmask03=3D0000000000000000
+Opmask04=3D0000000000000000 Opmask05=3D0000000000000000 Opmask06=3D00000000=
+00000000 Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 00007fffe7bd73b0 0000003000000010
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2525252525252525 2525252525252525 2525252525252525 2525252525252525
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 6573726170206f74 2064656c69616600 277325273d727473 0035333535362030
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4056574455054a51 054140494c444300 0256000218575156 0010161010130515
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.22.7'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build102701335=3D/tmp/go-build -gno-record-gcc=
+-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 4dfba277487
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+go fmt ./sys/... >/dev/null
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D4dfba277487a7023ab9f5783302da4a9b5e9bef8 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20241113-111659'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_amd64
+g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -std=3Dc++17 -I. -Iexecutor/_include -fpermissive -w -DGOOS_linu=
+x=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"4dfba277487a7023ab9f5783302da4a9b5=
+e9bef8\"
+/usr/bin/ld: /tmp/ccOQNa87.o: in function `test_cover_filter()':
+executor.cc:(.text+0x1426b): warning: the use of `tempnam' is dangerous, be=
+tter use `mkstemp'
+/usr/bin/ld: /tmp/ccOQNa87.o: in function `Connection::Connect(char const*,=
+ char const*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
+ions requires at runtime the shared libraries from the glibc version used f=
+or linking
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D131f44a4580000
+
+
+Tested on:
+
+commit:         5c8c2292 Merge tag 'kthreads-fixes-2025-02-04' of git:..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd256a021904f1cd=
+7
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D3201be560ebfa39bc=
+6bd
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D109493df9800=
+00
+
