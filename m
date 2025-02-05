@@ -1,73 +1,68 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53209151992;
-	Wed,  5 Feb 2025 11:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5D515199A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738753582; cv=none; b=YFGYYkOQxMLYp6eT0IBXHURf9zgG36Po0CgrkaX8oedh08X+D7v7GzDksGWN+AM3Mg9XtQsS5x8JeuNfrfJoFAlJndwcSJf7ZP3fMX8XyjmrMU3KNsspoGnf3PQSb23I7HYy+6vHyBT0uaIPWwRauJQ+jYYduOPG+qr+sVl5itI=
+	t=1738753618; cv=none; b=pvjB0ASQx3Y9YYoW9NHc6FlpHKMSO4b2H/Meyp+iyRkdrRdnVAmYA3Sek5hZPZ0Ht3qXZx0KIhGGuyQYXvwQaRVzsuOBZyTnOVE24TaoYSV9rDGJj4yD2L5KO9ceQHFgfxbL2dV7YIs9V2wv8+ST7tjuso2nBO+Yo/09lPRViO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738753582; c=relaxed/simple;
-	bh=DcIeZrE0ASd5vx95sqQckwDlwUicHVVIRhJyQHvcw2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TYqqHsSIWtfBGM3o809NRVBS2/XZzX+Br7teH9Rf5suq3k1Xvce5bVQGVQgfsQqwcU7aLszBHGqkqoiPEm0fqP3BoRA9VAQMMlCYdBB44Bxn5QlSAVgYbWz+WhepQxX2gKYAw5hhNUpN/DhxYs89/cYC87MACAzbrsJ4ZYs/LSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PL89qgOo; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738753618; c=relaxed/simple;
+	bh=VJvoxK4eDV4xXM7GhAzLsMnao8/GREu4DoA3ydBFrRw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KkAXfVPq9w4TkpjdPgpSCkDX0YXLmutDNFvGsE2PFdyqrtKd3emp35tIz8xsA/7BT4Z1EyJCSvbP/PZufJKW3EJ5PX1rNEmAxSTFh5fqwsKEMdFXqRyVH2Bwatldtz4h/HVQTku3byISzS3+7fNe/BAFxgDhCtkhcV8PWY6livo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oMZOrWkE; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oMZOrWkE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PL89qgOo"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7515df1faso285515766b.2;
-        Wed, 05 Feb 2025 03:06:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738753578; x=1739358378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=EFvTTGlu7Xiejg+RENXn6LD9Xqubdth3nzEQ18VyCyQ=;
-        b=PL89qgOozlplnHTNapCshJ0zDaRVM1i/9UU8kvCtI6QtEj0M90B90wqgt8NMNNQ/mZ
-         wUWiPmX3os1YbB7pcCwmxLvv0bt3rmXguT7VZ8s6e+QVO9CGJsYyyFn7UBHp9d/Ud9d3
-         OAjgwQUqnf/guc9umk3K89rr3eiK1doP4gVg2++K38PPmwSMfcqIezws7yeuEs607npk
-         MuvebHJqZR0l2W4QbWG7fRdlr0OEaymafzk+/95FcajHd6bfV8+3GvnHwNg7Jh/rZ4Kt
-         pnYauTwkqIF9oEppuVf+lniabZFG7xYgD3aQLNPn40krzSb6c31HpTsEgm2tIA2LDHg3
-         XuRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738753578; x=1739358378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EFvTTGlu7Xiejg+RENXn6LD9Xqubdth3nzEQ18VyCyQ=;
-        b=WDS0eFnw8VDgGuxAc6r1Etz6+XXNL7EH2fP2oaWIJsOxRU84lcOlWRdIG1Y0a86DCN
-         4JANsLDUl0Hx+oBoKwZvmImFAx9aggNqEsqDpZLUzRnmqwCS6O000jjTP5F6Twrztzoi
-         KeCPIrGnvu8H/9V88E9g5cg/xgYg1EO/Wqn0WjP0IJApGt+kQv6gluOW9oFlAK07I56U
-         aGG4tM8HHDUKPExHIeqRyRSVdAogS7XvTW9cluAqhHkBUX8vQVK3HI29GQmJyEsHaHnh
-         BVrT4qNTuZ0uWSAUXl23iKiM4qVih9DigKQsiW+h+KHECfSczibnFY2MtWE71Hfdw9Ce
-         6F+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX1n4kFF5Tt08iXo15I7HNcW1WXx02SvfIitxRHz/NFm3CjRVsbt935yvF4EvrEIvALDRw9owe9yWfnIkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZX/viVaEIIBiQq+TN/9cmMv7Dt9/CzeBa2BR/AO5SnBejay4/
-	V4syb1J+QbqwzxKv09RYWgHhijL60FgFfUpvBzyQVWlWRgXsFFjq
-X-Gm-Gg: ASbGncu1suZeOzc0s0SfOs3+0e+GVb+pDtjVuwC4uc6WT0LkyPBCsWbu7JvLOJG5mhJ
-	0GwhviBc5BiVcFjD+ZDAwrzI0GXoOU/m9kjFfa3GajWWrz16A4Fheoaf/XYIcIsn1DP97CuyDKm
-	t9jPG//NSrJ4ZYIhAXUZidOXAXwaM2FsjIN+mRYoekXAkON4Zm4mZNBLwPc2RZ0/DIZD7wD6l+t
-	mJGbyUPHIerZjwLbe2Gav+wz0wgyMJaC9K3O+0DWclf6TyMa5qe6xMEdO+qbGap6uQICu60gaIA
-	friAVr4BetAMFgNP0ivxPh5ITXEu8xSLxC9I1RX6XAeMHNWY
-X-Google-Smtp-Source: AGHT+IHXrvo8JotKw9JqjHjM8kH2tEuwtzlIKz8RB0EOSkb5LyGMPbWWIfmxqiR/hGf1Ce6qe9p1Bg==
-X-Received: by 2002:a17:906:794c:b0:ab7:5901:c6b1 with SMTP id a640c23a62f3a-ab75e2a4e97mr245670266b.25.1738753578355;
-        Wed, 05 Feb 2025 03:06:18 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ff968sm1084391666b.111.2025.02.05.03.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 03:06:17 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id D74D2BE2EE7; Wed, 05 Feb 2025 12:06:16 +0100 (CET)
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org,
-	b43-dev@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH] drivers: wireless: broadcom: b43: Replace outdated firmware URL
-Date: Wed,  5 Feb 2025 12:06:14 +0100
-Message-ID: <20250205110614.216958-1-carnil@debian.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oMZOrWkE";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oMZOrWkE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C56C6211A3;
+	Wed,  5 Feb 2025 11:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1738753613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nyj59u2iCrTl64Iik+1BDNAjH9IfXKH2V6avJGpyHFY=;
+	b=oMZOrWkEuAapwMQTTUue+x++uMXoroL5KsVTIAuAydTCvKSbKMW4Oo6BrkDg6mNpMWvUwG
+	Tt6FkP8l/DkYKDES91uX3hyls84LQ0k62mFHOJiBh5TsVgXwmpB6hgJsr4jNxHFEpfzqnR
+	zCOaYhUGDa39qo6To3jNwVS3TP/0FRo=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=oMZOrWkE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1738753613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nyj59u2iCrTl64Iik+1BDNAjH9IfXKH2V6avJGpyHFY=;
+	b=oMZOrWkEuAapwMQTTUue+x++uMXoroL5KsVTIAuAydTCvKSbKMW4Oo6BrkDg6mNpMWvUwG
+	Tt6FkP8l/DkYKDES91uX3hyls84LQ0k62mFHOJiBh5TsVgXwmpB6hgJsr4jNxHFEpfzqnR
+	zCOaYhUGDa39qo6To3jNwVS3TP/0FRo=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5F857139D8;
+	Wed,  5 Feb 2025 11:06:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NB6OFU1Go2fcTQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Wed, 05 Feb 2025 11:06:53 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH v2 0/3] x86/xen: some xen_hypercall_hvm() fixes
+Date: Wed,  5 Feb 2025 12:06:48 +0100
+Message-ID: <20250205110651.26280-1-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,31 +70,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: C56C6211A3
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:mid,suse.com:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-https://wireless.wiki.kernel.org site now redirects to
-https://wireless.docs.kernel.org/en/latest/ making the reference
-information for the b43 firmware inaccessible. Update the URL to the
-current location.
+3 fixes of the xen_hypercall_hvm() function, with the last one being
+probably more a cleanup.
 
-Link: https://bugs.debian.org/1095062
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- drivers/net/wireless/broadcom/b43/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Juergen Gross (3):
+  x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+  x86/xen: add FRAME_END to xen_hypercall_hvm()
+  x86/xen: remove unneeded dummy push from xen_hypercall_hvm()
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index 25b4ef9d3c9a..7529afd24aed 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -2166,7 +2166,7 @@ static void b43_print_fw_helptext(struct b43_wl *wl, bool error)
- {
- 	const char text[] =
- 		"You must go to " \
--		"https://wireless.wiki.kernel.org/en/users/Drivers/b43#devicefirmware " \
-+		"https://wireless.docs.kernel.org/en/latest/en/users/drivers/b43/developers.html#list-of-firmware " \
- 		"and download the correct firmware for this driver version. " \
- 		"Please carefully read all instructions on this website.\n";
- 
+ arch/x86/xen/xen-head.S | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
 -- 
-2.47.2
+2.43.0
 
