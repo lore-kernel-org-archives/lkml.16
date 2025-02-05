@@ -1,29 +1,29 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5F7218E81;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BD7C22A80B;
 	Wed,  5 Feb 2025 10:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751723; cv=none; b=Z16NqkW7r9Ag7eFff+m/m94qDDbj2Km4cLMnKvN9bMjQhZeS3NKgvX/Cbpn8CnQb2oofoRrfzM+sOreJ8KtfFZ6XIXfzurUyDnrQRU2v59SHaFbBqLxIUnTuzdTwC+wwsQrt7gaO3SGwKImB+x0L59yPbJgDsLHEgS7W5HbpJCI=
+	t=1738751723; cv=none; b=Cbx5rBUCibsf9U/vSmPa2XyRUPoknM4EndZGNqS0G9xkLrfs+Ir+1Epsly8N0QWaj1q3Qc3Mrd3WMlgrDewl4k+HCP6r4h1ZhQFW2trjiG6vCiEZGxdabhtNBXTxUjkAsfLIxOGxCHYdeVid9BO3emFaplnboF5RSrOnGVNjeeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751723; c=relaxed/simple;
-	bh=OH69oe18aAKA53DNHSHaw+UpY+548RBbmHGQuaz6Hq4=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=OP+fP7sw/w2F3G3Rzq17NTjo0BqNFDu6L+i3D5OK3plZxCv1ly05lEBGQ7TyRDmNgcSu63+PoNlxWzN4scAi1i/B9odcIZ7hjPRRlQEfmyhbufokaxbKnD5FeEvSe4f0IEUTz9r3P3mXD4ICyie53iOlt4qp8GNVrNxhfrTX+0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CJJUOhwA; arc=none smtp.client-ip=13.77.154.182
+	bh=Sho+agxWASg7IpR0l+ubU3+v0WDYiPyNp3M4L6etPeU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=C2yQUneYBahQKgour6Pc5G9+H75Rl8iFvidYXnLgJ9bAXwU1+a5Aufe6QJGvzdxjwjzdZsVaDsx2sJu2p2/5yNsSUqwdL7HcwVzaLJ9hfggYoLj59t3TbWVkVVGjZ//UVPEWdT4ucmAi8bPO92p+rYQst/EodgpqKoDGL9ANxQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kExXA1f1; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CJJUOhwA"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kExXA1f1"
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0611A203F588;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 368BF203F58D;
 	Wed,  5 Feb 2025 02:35:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0611A203F588
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 368BF203F58D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1738751722;
-	bh=84Q0HKW7+aiugNDptGU8An7QGYuvzgzMAHvs+3Tvqls=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CJJUOhwAz6GMsOU0UnXPqR5TfzhiU8bbfRJ068Kqpo3JUHnkSzMRk8znWmkG1hn1i
-	 Q6JR630yy/Q92rDJg2aCV6t1ozuaTZOspq9O56579gNHUcNWFzHFdKKLdWEbi/wF/Z
-	 oyYAOtfd1C38pm3CXTOPNrkkES4FA/QqlU9jSiRQ=
+	bh=77FhRdIDsL5g3ceMt06aQ2NDVZCKk8/I8o+IzUgf4hs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kExXA1f1fxvjYP0RI31D2y5Sk/4FTgjzREWfOb3CoB6gv72EiJFUaRjQe0rjUini6
+	 yPVNUGG3DLRSeH1kZLwsXoIf3TbRgUp2sQiVeaJXNfeD+97eFBe2OKdgUrt0vTrzuO
+	 gnG2pdnGyA4hpIEohTrXAmrs75V0COlEn28g7WjU=
 From: Konstantin Taranov <kotaranov@linux.microsoft.com>
 To: kotaranov@microsoft.com,
 	shirazsaleem@microsoft.com,
@@ -33,10 +33,12 @@ To: kotaranov@microsoft.com,
 	leon@kernel.org
 Cc: linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next 0/2] RDMA/mana_ib: enable error cqes
-Date: Wed,  5 Feb 2025 02:35:11 -0800
-Message-Id: <1738751713-16169-1-git-send-email-kotaranov@linux.microsoft.com>
+Subject: [PATCH rdma-next 2/2] RDMA/mana_ib: request error CQEs when supported
+Date: Wed,  5 Feb 2025 02:35:13 -0800
+Message-Id: <1738751713-16169-3-git-send-email-kotaranov@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1738751713-16169-1-git-send-email-kotaranov@linux.microsoft.com>
+References: <1738751713-16169-1-git-send-email-kotaranov@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,20 +47,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Konstantin Taranov <kotaranov@microsoft.com>
 
-This patchset enables the mana_ib driver to query capabilities and
-enable creation of error cqes.
+Request an adapter with error CQEs when it is supported.
 
-Konstantin Taranov (1):
-  RDMA/mana_ib: request error CQEs when supported
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+---
+ drivers/infiniband/hw/mana/main.c    | 3 +++
+ drivers/infiniband/hw/mana/mana_ib.h | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-Shiraz Saleem (1):
-  RDMA/mana_ib: Query feature_flags bitmask from FW
-
- drivers/infiniband/hw/mana/main.c    |  6 +++++-
- drivers/infiniband/hw/mana/mana_ib.h | 10 ++++++++++
- include/net/mana/gdma.h              |  1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index 3d4b8e2..e3230fe 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -794,6 +794,9 @@ int mana_ib_gd_create_rnic_adapter(struct mana_ib_dev *mdev)
+ 	req.hdr.dev_id = gc->mana_ib.dev_id;
+ 	req.notify_eq_id = mdev->fatal_err_eq->id;
+ 
++	if (mdev->adapter_caps.feature_flags & MANA_IB_FEATURE_CLIENT_ERROR_CQE_SUPPORT)
++		req.feature_flags |= MANA_IB_FEATURE_CLIENT_ERROR_CQE_REQUEST;
++
+ 	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+ 	if (err) {
+ 		ibdev_err(&mdev->ib_dev, "Failed to create RNIC adapter err %d", err);
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index baaeef0..ad716a9 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -211,6 +211,10 @@ struct mana_ib_query_adapter_caps_req {
+ 	struct gdma_req_hdr hdr;
+ }; /*HW Data */
+ 
++enum mana_ib_adapter_features {
++	MANA_IB_FEATURE_CLIENT_ERROR_CQE_SUPPORT = BIT(4),
++};
++
+ struct mana_ib_query_adapter_caps_resp {
+ 	struct gdma_resp_hdr hdr;
+ 	u32 max_sq_id;
+@@ -234,6 +238,10 @@ struct mana_ib_query_adapter_caps_resp {
+ 	u64 feature_flags;
+ }; /* HW Data */
+ 
++enum mana_ib_adapter_features_request {
++	MANA_IB_FEATURE_CLIENT_ERROR_CQE_REQUEST = BIT(1),
++}; /*HW Data */
++
+ struct mana_rnic_create_adapter_req {
+ 	struct gdma_req_hdr hdr;
+ 	u32 notify_eq_id;
 -- 
 2.43.0
 
