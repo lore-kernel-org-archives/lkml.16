@@ -1,83 +1,112 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1CE7BAEC;
-	Wed,  5 Feb 2025 14:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EB2151988;
+	Wed,  5 Feb 2025 14:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765827; cv=none; b=OfOut4HgbRldNQdUMmzWHq1uZDxWjLqhJRJJN/nTEIlznHRAl9f2CarT81LmGBj/pQVfBxgFuBFLsAY4RYrtsF4cddnYK5mINAImSneroO87w5axoGKoHoHKBG77EEk6bE4+kzPXz6lD9gR6pdmtzDrv2OTfW1QgDS26P5L2q+E=
+	t=1738765905; cv=none; b=Hh2G93CRmATohpMKeDO+hrgnDXxVKyiWfov8quaEX1DDg3NrnwTbyJUoK5qKvQis9SShQrfN9g94zETBvyCt3qS/I0m8hisx4am0L7/ZhoGj4y0f05vlJx6TI40U5hNgIrd6pdu298l3nQb8S+1kETsnfFLeFbJS/zscABAIL/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765827; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=WwFCVPucBhSPtNwd2CQjjuCQz09uKnQg7QxtLBFbLWh0zaZceB610EjHNJ96V4IoOKja9cosiGDBxkRXBZd2XaxEhxLB5Q1btaLwEeGt8YCrvEJbfoPOIOhyxI+V2WE5miiPvaY7lUPAIr4i+hu72Vh+thJjmXBeBHakWMeV8UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=cCrFcTDA; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1738765905; c=relaxed/simple;
+	bh=DK5BdsHC9FTcHgrgOYmsyFWrjMwYPINHQIFTi/aJ4F8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MIsfY6iiq/Bcq/fsDhq3A24VWvo9Q7HXNi3lqftG8BPFHmq0f4ri9VIk52ZlrQu6YZrbih4PS4vy4UqV5c+drALMJMorqBZmm6Gra+Vmg8Bzr1FchPM7uXd4P2pNj+FZo7cwFxTyb1EqqM6tC/tw6uRmbJMRQs4cdKFKMzSUhLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jdnwUfo/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="cCrFcTDA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1738765822; x=1739370622; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=cCrFcTDAEGRBJh2TNJrRW5rNT3+t5g3eBMc3xn6lNCh5DQ4QD6CX9Wb0NVAJCdZC
-	 NNSY0BNxeLygDUf3NhZwRq+IKnv1AAWd/X5Z+lcEd87hra4RWlmLyCaFJvwRH1Wrf
-	 9RvVqmbcTSxDgfuFVlySjHcRICTNbPp9fnPEEP8Q0nw+jkpBy9Eja/WdnR2K0iGgZ
-	 GqpppLfdxwdNYRepq+FPSrY6XLSFUX1SKPoeuevrIuNokasf/0TH04ezfehEFleS6
-	 jLTA9fA+ZLtDVaMG/5SFzjsP0/zx9tu9WdBO3AbqtDwtJyQaQErA1vmCGe/H0LBh9
-	 rzUG9FHR7163CAHZrw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.34.104]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M4b1y-1tgENk1xCw-00F3Bk; Wed, 05
- Feb 2025 15:30:22 +0100
-Message-ID: <f9f936a9-1a55-4b4f-a093-7b94ab726a51@gmx.de>
-Date: Wed, 5 Feb 2025 15:30:22 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jdnwUfo/"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515EVYCK025691;
+	Wed, 5 Feb 2025 14:31:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=oByTq9zwLSfVLM6kf11yP1nxs2lm8nXB/3U
+	SzIcPI9M=; b=jdnwUfo/y39CeWgg53YdX1ek9MoXOQCHmkqaZIHDR748/NsIkeF
+	8nnRTx/6EX3xTulz4LayczfVczv7y7nNas28t3H2B7PKOKQyQ1X/TzKu0289T96V
+	6W9iAcPev1cWFbgt3CMDZt/FHO4dWigv4qnGP52BfEnFUBzbFE0Dm+X1j+90opi5
+	xqyvXZGqx4SK0+bHZ3JPukBP8Mo4nXmFRN0XQ/wzcP2vAdAkTCJUupA9Y0Pge0qC
+	TJgoMRmTs/klHGb1ulC5B97r55fXf0N8ySql5qK+/nLzQMbpvczs9ukhqL01FSgf
+	ayBNSKcHloAhz/JRqfEWLEZ/w8aoGqngCFA==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m9txg00c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 14:31:33 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 515EVUTw026460;
+	Wed, 5 Feb 2025 14:31:30 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 44hcpm8b2n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 14:31:30 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 515EVUP9026455;
+	Wed, 5 Feb 2025 14:31:30 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 515EVT89026454
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 14:31:30 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
+	id 575AE2439F; Wed,  5 Feb 2025 20:01:29 +0530 (+0530)
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+To: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Subject: [PATCH v1 0/3] Add Qualcomm i3c master controller driver support
+Date: Wed,  5 Feb 2025 20:01:06 +0530
+Message-Id: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ronald Warsow <rwarsow@gmx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Content-Language: de-DE, en-US
-Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:YO+z50rx9oBFRQTW6llk4tATg29xkVCXlF9fx1B+Ca1prNIJa4+
- 26g7R3TiBVP5dQHvFk9TIaSx9o6Cgvbe2rnzw7i8+KB2drcX/diurNbWtuwj0mg1GmWUjXa
- hnRCjGgQ6mcy082grU2HDR140FYquEem6XMwYy/qQ+7hTXN3fYLBOX3P2XQFXqdishUunCu
- 66kDmUEIKl4FZY2mZzIOw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:b0b1eIE9X+g=;ozl6l71yTyyqppiD2fZ0GLiCZ3f
- dpihhv6YlBZyLTDckELZ68r9SNjWCoyF0aBQjaNEf6X0np+Nwio8Oc3kAcbi70R1EIPvBQpgN
- Mq4mitfCYahhXP7y+gnO0q5zlxKltW8cIUC40gDkWU7qUgif7ddLcVHOR84/nVba6PLfFm/xO
- l1ixAYb6uNJIpROibRjrOCiQA0/QPipYezRQm6IVbFfKGiupg1gvGICxiVRqFxDp2gJna0r/L
- lJePjPzgcZwsznW23azvO6Wyb33vJGfDYPv9GCk92NPkhJUnByJsJJTE0aPFKbA+1ZN/1XXQW
- ZcMvQCcHxRrkuxRRsJ2UK/OLbf0vmWmugGtwFvx1zEhJIG/nLiJISYApkg51QtcKyGZHeSR9V
- t7eNYJomaPmw3HZg7GqzePxdLBZpJNLpCLPt+GfIf0tD0GT1sm7Pp1fQ6fWWSZV+jHQP8f8Lr
- mOQIXnQbS8ueqNkRU78S0Dn8y0/imI77ITQ6anA4GFKybermonGrGkCCAwBKkU6xhXDJ/JgRR
- kv02cQy8CBL/va+7rYGpWhdNqHhxp1kaM5aopSS3Rliek4kYx7ZxoqrfR16ON4FRlYFhwKYqS
- QCzmnXLwDFLzLQCHL4h/wUq/jPNPqrGesGTuUaCWoaTJkhaRBt9xFCqSIIFgyAlRU2oovx09B
- 5aMgCay5tyeA0kuKkhzXt82XdG8U/TdymHGtuf4OEjTLeYvnLGbfmdN9ighBHW8+0ZBePQL2N
- MOHQ+6Lq5VjNCYjbTrDhSWuIhmD/WSrAmWOvAkEU0f1hpE537uNc8aXxaobp9UHxVF+NBDDhL
- 3qg7DL2uXdl6uz3nXbOMB/3EleWpBqofJgpkM3xoCAwwFNk8wY34pIluj2mtWp0JfsS2KAx2L
- /ITtwlcZRRg22dThMjB0uTCloh8MkglE0aPXpX0E44/HNfWDKHWtYGM45vIFq8gSeCvRvPV4a
- 0/3dHP45J6EJ/MDlku8PBIDkJOSYEK/ZC0/dGeqlIctxPeo1JBx3KHtS/Q1ZqBkydumQ13n6A
- NBZH+yCU0y9Zfo9WKHLSYFoMDWusUYCqKMcsamo9kXsZ7/gHr0W0ArHuXt1355EQYN0yyWLtB
- jqFhKQ/7Qj+TutvsoXNRSseDY+65g3rYGC87oRGBujhDxOxXT4qxsJ6OtjFrF19XWv0lCfj1z
- X0nUYpGXI38HhStWDE/RVd153wM8y58tO5MbyIwJjyc1bJ1ADoYzTKcpEkl1cqW20jqnYTwkd
- 0xC6gX/IrFNgBtdf6Ij3nirFpjY5Cg/kHFvk2tcSYPIb44IxTjmgZwDR+wqLe9G74MeNgJbC8
- /Vg0MIktoweLyHEVMdUk90CID7oOQ3QZYyl9Tul5KigLUM=
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 50gHAaifOHbal4BnlRd8gV41hFTtbJBh
+X-Proofpoint-GUID: 50gHAaifOHbal4BnlRd8gV41hFTtbJBh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_06,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 mlxlogscore=849 clxscore=1015
+ mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502050114
 
-Hi Greg
+This patchset adds i3c master support for the qualcomm's QUPV3 based 
+Serial engine (SE) controller. 
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
+The I3C SE(Serial Engine) controller implements I3C master functionality
+as defined in the MIPI Specifications for I3C, Version 1.0. 
 
-Thanks
+This patchset was tested on Kailua SM8550 MTP device and data transfer
+has been tested in I3C SDR mode with i2c and i3c target devices.
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+Features tested and supported :
+  Standard CCC commands.
+  I3C SDR mode private transfers in PIO mode.
+  I2C transfers in PIO mode.
+
+Mukesh Kumar Savaliya (3):
+  dt-bindings: i3c: Add Qualcomm I3C master controller bindings
+  i3c: master: Add Qualcomm I3C master controller driver
+  MAINTAINERS: Add maintainer for Qualcomm's I3C driver
+
+ .../bindings/i3c/qcom,i3c-master.yaml         |   57 +
+ MAINTAINERS                                   |    8 +
+ drivers/i3c/master/Kconfig                    |   12 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/qcom-i3c-master.c          | 1190 +++++++++++++++++
+ 5 files changed, 1268 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
+ create mode 100644 drivers/i3c/master/qcom-i3c-master.c
+
+-- 
+2.25.1
+
