@@ -1,42 +1,48 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30041D7985;
-	Wed,  5 Feb 2025 09:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F901D7985;
+	Wed,  5 Feb 2025 09:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749531; cv=none; b=uJJHwwFdi+3Da+BId1QG+Qs+u3Xynu0qFVl1VgmzlI6mtNfMqRcrCWoSz22K+yL1ChRDN/D5cu0PSNqmsmeJOELy0agj7eyieUKtYVnqOGa33thu4ZHNpAGqU8u71NWFQOAfNniTWxAqFNWHJdDkP8o2BPg2QQRalJJgPuIhy2Q=
+	t=1738749578; cv=none; b=IbmvkmoDvPkyH8yU6/7SThnQkOStB64Z8K2RFxbTAEoYlSyCqVOEpJxE1jN08EoTN/BnvQlwZQFeYxLZhsL47Srcjo+DEva50+MF6LNmtNKZm9GaKwI5lS88jvcCWErdUOK35NKmnXK5MCVFIpWH++64goSQKQZqHH5s8zvzq2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749531; c=relaxed/simple;
-	bh=5d6O2XSHf7Maij7yhtfHG81LuwNDfgfbLLGP85GgPxA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=T20eizwd6fzWpsRhUGFL7N9+e9e0vKH3K9b1bL5AZyigFCLO1MMhycOce/sEFTC3FXTzNyPN3oZi6rp7jXmJ+QuTojo1oUrNnwYJYbp56wSjEa8h9uwtcXLEUn6noz1jqQd1UYTz08inTB7E6hDU3jSiqDX7inWFjVdECUA9VLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=bDsV/kSU; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738749578; c=relaxed/simple;
+	bh=BMMdGh0m1XSUjpnLw1cw4cmZPbOCtVdzE3BdNEFI+QM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nOIBh446nhE31RC9EsRZiiaX7Jw6T+pwIrCs3MOs8otpxTVnBXUbx21vheC2UGzNou0yERmXype+Z80kOoXa/7/bix3EfQ7Iomevnk5+mrhCgEEKFHV5QJNj5H29wvkz9SZqI0GQ+u47DzNICFslrH1V8JOSxom09FNnDPwtgH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W9ZxUfDG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="bDsV/kSU"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id C6C4CA0397;
-	Wed,  5 Feb 2025 10:58:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=oHiAWliwlYMMYJzF/p+i
-	3JygK75ijJmhUfA6PxHfmuw=; b=bDsV/kSUooCJDi7x0+tzEr1+x5Prt7w9wBB7
-	oxqawTSx7ETk4wisyrF6lG8UdUYipBl2l2RiEr1+NoZvkOdGZbMeTNK6ojK2CfeT
-	Fir34+J6ihhekb4aOjZRlVuUPCLi0JKCMm05O8kQXAWXeb712De9AtXjRRBOq/mV
-	mX8nZBlNIdQoqB/zvry7WkIBuXQM81wmz86LlVsVn+Wc7guPeUi3ilF2ThsgwT07
-	zTXd0RU/PiFftsBL2+g6tW9vTgeD69peTpPsEjiqLgdWpJ3I4rYIIFK6b6f3DdkI
-	IDTxpPRq23+/yysFc86/3YXxlLCLevIvZ/qJQWuUKfRWcZSqiRGaDZ1SPcXrtXAe
-	c9eRvRQWRc8SbC5uUoMTpe3eSxPGkrHt5CiCSy5Tq563ioA1jjZxy0BwT9lT+/xr
-	dcGEkSj1RnE+Vg5HNHjX4hUyI329+E4W2mQEybFelNiuOgMlrdxkjVDQEpn48LBw
-	dLz/j20fE0ZbRwLTOKUnm9i1b0MjGu9Vhh1/lFIMpI9pjrHDnyvkfnNKXN2nNqyh
-	Q18gYC+isS6tOdfKwyU3Qy/FTvN9sCd+Ih1kPxZJV79rXwwj/GO0sNHgl84SjOEz
-	sQ6mTYLrxgAEp5+88+KJ66oHPxDdYZrdY9HHwHDrAtqG+Qf1byG9RgVmIyEpFaMc
-	6dFa2oY=
-Message-ID: <c68777f2-b053-4320-aabe-f95a9796b016@prolan.hu>
-Date: Wed, 5 Feb 2025 10:58:45 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W9ZxUfDG"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51561pTb023597;
+	Wed, 5 Feb 2025 09:59:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1DRDwzg7jRP9FoY4EZ2cmdf6ROjlJkCPnZVzZlK67l0=; b=W9ZxUfDGLF9mnh8W
+	8vgth5FT3Gy9QnhHn7rKVCHIPcHAGXQxE0TvB8iv56hOgDD4aR8Q8fkQjLgzPfxp
+	v/Af1AcpRjTgo9QMvgJ0Nxqkrp6PmBS3DLf5kmpqbcHEUMugEnTdmsRZsFagyldQ
+	eVG9nIbHhDr9rOvvos8wiqI0t/vQVDbF6qIvvJ45Z4pY7XyVs5KUzxBN5ulXfGx4
+	zhRnmz9/flsncUtXIt3rSAiVGTigAE9VW2k1pVBjgQKcIkYw7AXgMblL4hZsc2Es
+	lQYaaxYlF5gsajPT8z+H7XBdYR9edJXxsntIzE3soXBKTzbwOhPTvZTIB4Y7TGDX
+	todGNg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m2bxrghf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 09:59:30 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5159xUMO019677
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Feb 2025 09:59:30 GMT
+Received: from [10.151.41.196] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
+ 01:59:26 -0800
+Message-ID: <8fc38912-f1f2-438d-a8ab-bfabb31825fb@quicinc.com>
+Date: Wed, 5 Feb 2025 15:29:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,53 +50,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Q] Frequency & duty cycle measurement?
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-To: William Breathitt Gray <wbg@kernel.org>
-CC: <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<timestamp@lists.linux.dev>, Jonathan Cameron <jic23@kernel.org>, "Lars-Peter
- Clausen" <lars@metafoo.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"Thomas Gleixner" <tglx@linutronix.de>, Dipen Patel <dipenp@nvidia.com>,
-	<dlechner@baylibre.com>
-References: <f2ec8a55-42ad-498a-b793-072444dcb92e@prolan.hu>
- <Z5efcokgHix-k3lW@ishi> <dffc0f18-799a-4fc7-a6b5-2fa270e1fc58@prolan.hu>
- <Z6KkusvLFPcNvEfl@ishi> <0c74dd96-2978-46ab-a399-9c94c9529b2e@prolan.hu>
+Subject: Re: [PATCH v5 07/13] wifi: ath12k: add support for fixed QMI firmware
+ memory
+To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
+CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Jeff Johnson <jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
+ <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
+ <7d5f7b4c-2a55-41c7-b85c-cb4cd76d553f@quicinc.com>
+ <962dc257-f7a6-49c7-b760-a31fd84e7a56@kernel.org>
+ <c7d9842a-96bf-41aa-8046-52c3e45f90d4@quicinc.com>
+ <f8b8a39d-043a-4be0-9024-c080cf864e7b@kernel.org>
 Content-Language: en-US
-In-Reply-To: <0c74dd96-2978-46ab-a399-9c94c9529b2e@prolan.hu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852667264
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <f8b8a39d-043a-4be0-9024-c080cf864e7b@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Jm_ina_HOBmu5klqHlDOJakEN7WiTm66
+X-Proofpoint-GUID: Jm_ina_HOBmu5klqHlDOJakEN7WiTm66
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050079
 
-Hi,
-
-On 2025. 02. 05. 10:30, Csókás Bence wrote:
-> Hi,
+On 2/5/2025 2:37 PM, Krzysztof Kozlowski wrote:
+> On 04/02/2025 10:06, Raj Kumar Bhagat wrote:
+>> On 2/3/2025 3:42 PM, Krzysztof Kozlowski wrote:
+>>> On 03/02/2025 10:44, Raj Kumar Bhagat wrote:
+>>>> On 1/30/2025 1:16 PM, Krzysztof Kozlowski wrote:
+>>>>> On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
+>>>>>> @@ -2646,6 +2663,136 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
+>>>>>>  	return ret;
+>>>>>>  }
+>>>>>>  
+>>>>>> +static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
+>>>>>> +{
+>>>>>> +	struct device_node *mem_node;
+>>>>>> +	struct resource res, m3_res;
+>>>>>> +	u32 bdf_start_addr;
+>>>>>> +	int i, idx, ret;
+>>>>>> +
+>>>>>> +	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
+>>>>>> +		switch (ab->qmi.target_mem[i].type) {
+>>>>>> +		case HOST_DDR_REGION_TYPE:
+>>>>>> +			mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+>>>>>
+>>>>>
+>>>>> Why cannot you use existing API for reserved memory -
+>>>>> of_reserved_mem_lookup()?
+>>>>>
+>>>>
+>>>> The of_reserved_mem_lookup() requires reserved memory node to read the memory and
+>>>> return in the structure "struct reserved_mem".
+>>>>
+>>>> The of_reserved_mem_lookup() would be used after we get the reserved memory node
+>>>> using the API - ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+>>>>
+>>>> In next version we would use of_reserved_mem_lookup(), Something like below:
+>>>>     mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+>>>
+>>> Then why do you need ath12k_core_get_reserved_mem_by_name() in the first
+>>> place? Just use of_reserved_mem_lookup() directly. Why do you need to
+>>> parse phandle before of_reserved_mem_lookup()?
+>>>
+>>
+>> Sorry, I'm having difficulty understanding this.
+>> We have the WiFi node at ab->dev->of_node, but we don't have a node for the reserved-memory
+>> 'q6-region'. The of_reserved_mem_lookup() function requires the device node for 'q6-region'.
+>>
+>> Could you please suggest how we can use of_reserved_mem_lookup() without obtaining the
+>> 'q6-region' node first.
 > 
-> On 2025. 02. 05. 0:37, William Breathitt Gray wrote:
->> The first step is to decide which event we'll monitor and on which
->> channel: we want to monitor Capture events so that's
->> COUNTER_EVENT_CAPTURE, and we want event channel 0 (n.b. 0 because
->> that's the channel parameter value passed to counter_push_event() in the
->> driver).
-
-Ah, I push 0 and 1 for the two interrupts... So that's why `channel` has 
-to be 0 and 1 as well. Does it make sense to do it this way, or should I 
-push on event channel 0 always?
-
-> I had no success using `channel = 0`, only data from `capture0` comes 
-> back. If I set both `channel` AND `component.id` to X, then I start to 
-> see similar values than what I get from reading sysfs. (For now I 
-> hard-coded all values; I agree that the correct way would be to read 
-> component IDs from sysfs, but this is still a PoC...)
 > 
-> Did I do something wrong in implementing the driver maybe? (See the 
-> submitted patches.) And any idea as to why I might be seeing the slowdown?
+> Hm, it seems you are not using it for this device, so indeed you need to
+> parse phandle. You can still code it simpler -
+> of_property_match_string() is not necessary and
+> of_address_to_resource()+of_node_put()  could be in the
+> ath12k_core_get_reserved_mem()
+> 
 
-The slowdown is still a mystery though...
-
-Bence
+Thanks, will make it simpler.
 
