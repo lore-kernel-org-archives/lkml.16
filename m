@@ -1,230 +1,134 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B891FCFDA;
-	Wed,  5 Feb 2025 18:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBAD1FCFEE;
+	Wed,  5 Feb 2025 18:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779679; cv=none; b=RFfeMNE2uUyys9Yeq2Tp7P/Twky0oxLk10C+3EPA7qKKXqGLvgb4qmMa8+sBRCCrwSVIU5WEzf33P/XYlaslpCuEH5J67sCadUO4342iah52Dg5CPF8R2KwoF08mtqUw82d9mGoRuCrzfqRqotTzP61QxixRz74KDHjFZxifXj4=
+	t=1738779765; cv=none; b=f3om4a1I5hnH61Hv6aayjz2s2oN2+zONWFu8tT4+pn0dJxpCHP+RMfgQX65JJ/poZfBsn1CUYcFlvQqLtQRGeq3GXQX5uECuO4q/QqQaYrGQranxu9rDa/kAU2QDX91RhBr3XTpoVngp5QTOPlJ62xxQ3gYgjjnBYbgOpX6wUKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779679; c=relaxed/simple;
-	bh=ZLBcxDR6xyrd7FW9e2RhDQ/iUci0Sz/wb6g01nZtAPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i95tUVXyKwkq+teMkJH3sX3y9hFaMOaAypYe0e/nrT/CFk94hJTWpu+4GU+8MopTnzWf+Np7wqEEKomxF6CUc6Axcf8dHJYhsfxdGKCmK/vFBhztBMclf1j2iIt75ViXGfUtOq143DhsILCj5JZIeQNjN5LsY18uaz3GO5ljEok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kD3EEmwQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z03S6KP+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nA0RWJMm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6VZ2snRf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738779765; c=relaxed/simple;
+	bh=UhKjAEvUlgLqcIBwowVI/5aAQM33TNsjXHHzxCT6W3o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Mime-Version; b=PsUBQC5UgS7YCNkOhrFfuZL/AppWBrpuQegWdNDwIEGr62bftDtSjyOK5dejIdZE5awcmOWZAiV4JTeHHC6IGHvCYtL68v6eN2ek33UdUrkp/Ns55+TI622CpmsLmo+d4RtOJHJEIFeaZbASE1c9YhO4BhK56FxnTuxRXpAJdLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bQixVIb1; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kD3EEmwQ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z03S6KP+";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nA0RWJMm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6VZ2snRf"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C4B21F387;
-	Wed,  5 Feb 2025 18:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738779674; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
-	b=kD3EEmwQwxPuGzQjygMxrJaAajc87zFKNPuVtRkU7fa0ounHZU4SoI8XxlgekJAJPYC8Qd
-	hyP+ShXPSmYRJSQTHe9j6aiMBQ+Se/gN8sOqCpGwesgVT0KEfwXTB/2AP0gyO5dY5yn3t4
-	ecZn8yUnLn1YKsVhYk3L+TjpGVcsVuw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738779674;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
-	b=Z03S6KP++17a2vK3p6y+9tIp0MrNmyKPeCHzsjHGqckoRWZB/rOIpMm8fo3W0oaw5DN07d
-	k66LSUxFpYPWn4BA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=nA0RWJMm;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6VZ2snRf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738779673; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
-	b=nA0RWJMmRaY0oBVNBAFvzndEB3wmsbwawT2KKEBPs94dabIDyffrN5D4py9e6Q6yhuT2rD
-	uRRHCXjgFgCqtoh0BeP2bCqb5B42iPOKdKDw+T6EnwsUcaOYK101c+hC4GxZvNCwjowCmK
-	s6d0a2VG8X4YwQYt7JmEY+4Clu7Fi6Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738779673;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
-	b=6VZ2snRfcvxuq6bWkNzrzkBTTBs+cAxRJ1s39lmGVRp5KDrbBfHMLDJMF7ydOWoqEgM6J/
-	DlBmjbRr03EdEZCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F0BE13694;
-	Wed,  5 Feb 2025 18:21:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jZT/Ehmso2eLVwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 05 Feb 2025 18:21:13 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 9C983A28E9; Wed,  5 Feb 2025 19:21:04 +0100 (CET)
-Date: Wed, 5 Feb 2025 19:21:04 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
-	kees@kernel.org, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, mjguzik@gmail.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-Message-ID: <r7aylhww6ssce4uk4drib5c7awf6kcdgo5rzorbi3mve723hu6@6p7ij7t44ejq>
-References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bQixVIb1"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515Gc5FF000853;
+	Wed, 5 Feb 2025 18:22:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=fGyMzg
+	dDHOTQOZby2pCVFXcYnOqjiULTzjKXP6uGg7s=; b=bQixVIb1ecIyMvGOyE1fYs
+	FDQ3opWEf9zwGC75Lu/GMb/YuKYuGroCGMa0C+GXsT9GIblekFRw7vBptAuhEw1f
+	ke0ABxYpd+8y/wc9naTYC17v8jybYZgUWfFnpmoVJg91CdPfOaUyMhHaPsi5VzYw
+	i/qeZb3yIr7Pgd5PjmFJJkrEsxa9MDo9sRDhe2fG5ls074nKPE7ttI+XXzL0GhuM
+	vDbqdOKb+eTddI1LgX7izveGf2uXbPgAejhuU6Ti1p3HFeIfLLD3wpO9S1acg1It
+	v0zuYmYJw9jEqDKKLCs2dp1wE4nMgkEAIsA8L24sWqNJwnfydiz6iw9mq1nleEoA
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m3pnu5bk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 18:22:22 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515GI2nZ024510;
+	Wed, 5 Feb 2025 18:22:22 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxna6vj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 18:22:22 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515IML5x15598238
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 18:22:21 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BE8C758054;
+	Wed,  5 Feb 2025 18:22:21 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9FAF358045;
+	Wed,  5 Feb 2025 18:22:15 +0000 (GMT)
+Received: from li-34d1fccc-27cd-11b2-a85c-c167793e56f7.ibm.com (unknown [9.171.42.237])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 18:22:15 +0000 (GMT)
+Message-ID: <f724fc01a5013e97c8414a36d754f08bd3093db2.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 2/4] cpufreq: Introduce a more generic way to set
+ default per-policy boost flag
+From: Aboorva Devarajan <aboorvad@linux.ibm.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Lifeng Zheng <zhenglifeng1@huawei.com>, rafael@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, jonathan.cameron@huawei.com,
+        zhanjie9@hisilicon.com, lihuisong@huawei.com, fanghao11@huawei.com,
+        gautam@linux.ibm.com
+Date: Wed, 05 Feb 2025 23:52:12 +0530
+In-Reply-To: <20250205050147.hfctwo6aw75rardc@vireshk-i7>
+References: <20250117101457.1530653-1-zhenglifeng1@huawei.com>
+	 <20250117101457.1530653-3-zhenglifeng1@huawei.com>
+	 <c9e56c5f54cc33338762c94e9bed7b5a0d5de812.camel@linux.ibm.com>
+	 <20250205050147.hfctwo6aw75rardc@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-26.el8_10) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="rbk7j4upftqdugse"
-Content-Disposition: inline
-In-Reply-To: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
-X-Rspamd-Queue-Id: 6C4B21F387
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,vger.kernel.org,kvack.org,gmail.com,googlegroups.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TAGGED_RCPT(0.00)[48a99e426f29859818c0];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_ATTACHMENT(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -1.51
-X-Spam-Flag: NO
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FQvVeqg2XwWm83YKHIXLXaNQ1HYd9V9q
+X-Proofpoint-GUID: FQvVeqg2XwWm83YKHIXLXaNQ1HYd9V9q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050138
 
-
---rbk7j4upftqdugse
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue 04-02-25 01:46:28, syzbot wrote:
-> Hello,
+On Wed, 2025-02-05 at 10:31 +0530, Viresh Kumar wrote:
+> On 04-02-25, 22:11, Aboorva Devarajan wrote:
+> > I noticed that Viresh is working on a similar patch [1] as part of a broader patchset
+> > to simplify boost handling, which should also resolve this issue.
+> > 
+> > Should we merge this patch [1] and related patches since this is causing a crash,
+> > or submit a separate patch to fix this?
 > 
-> syzbot found the following issue on:
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index d434096b7515..7c1f7f5142da 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1590,7 +1590,8 @@ static int cpufreq_online(unsigned int cpu)
+>                 policy->cdev = of_cpufreq_cooling_register(policy);
 > 
-> HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
+>         /* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
+> -       if (policy->boost_enabled != cpufreq_boost_enabled()) {
+> +       if (cpufreq_driver->set_boost &&
+> +           policy->boost_enabled != cpufreq_boost_enabled()) {
+>                 policy->boost_enabled = cpufreq_boost_enabled();
+>                 ret = cpufreq_driver->set_boost(policy, policy->boost_enabled);
+>                 if (ret) {
 > 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
+> I think the right fix for now should be something like this. My series
+> (which will be part of next merge window) can go in separately and
+> revert this change then (as we won't see this problem then).
 > 
-> The issue was bisected to:
+> Please send a fix with something like this if it works fine, so Rafael
+> can apply.
 > 
-> commit bae80473f7b0b25772619e7692019b1549d4a82c
-> Author: Mateusz Guzik <mjguzik@gmail.com>
-> Date:   Wed Nov 20 11:20:35 2024 +0000
-> 
->     ext4: use inode_set_cached_link()
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1248c3df980000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=1148c3df980000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1648c3df980000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-> Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
 
-Please check attached patch:
+Hi Viresh,
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Thanks, I have posted a patch for this:
+https://lore.kernel.org/all/20250205181347.2079272-1-aboorvad@linux.ibm.com/
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+this should get past the boot-time crash for now, until your patchset 
+to simplify boost handling is merged.
 
---rbk7j4upftqdugse
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-ext4-Verify-fast-symlink-length.patch"
+Regards,
+Aboorva
 
-From df00b84402fb67d94a9eb6b86633092983cb388c Mon Sep 17 00:00:00 2001
-From: Jan Kara <jack@suse.cz>
-Date: Wed, 5 Feb 2025 19:02:35 +0100
-Subject: [PATCH] ext4: Verify fast symlink length
-
-Verify fast symlink length stored in inode->i_size matches the string
-stored in the inode to avoid surprises from corrupted filesystems.
-
-Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
-Suggested-by: "Darrick J. Wong" <djwong@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- fs/ext4/inode.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 7c54ae5fcbd4..fbda5a67f7f9 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5007,8 +5007,16 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
- 			inode->i_op = &ext4_encrypted_symlink_inode_operations;
- 		} else if (ext4_inode_is_fast_symlink(inode)) {
- 			inode->i_op = &ext4_fast_symlink_inode_operations;
--			nd_terminate_link(ei->i_data, inode->i_size,
--				sizeof(ei->i_data) - 1);
-+			if (inode->i_size == 0 ||
-+			    inode->i_size >= EXT4_N_BLOCKS * 4 ||
-+			    strnlen((char *)ei->i_data, inode->i_size + 1) !=
-+								inode->i_size) {
-+				ext4_error_inode(inode, function, line, 0,
-+					"invalid fast symlink length %llu",
-+					 (unsigned long long)inode->i_size);
-+				ret = -EFSCORRUPTED;
-+				goto bad_inode;
-+			}
- 			inode_set_cached_link(inode, (char *)ei->i_data,
- 					      inode->i_size);
- 		} else {
--- 
-2.43.0
-
-
---rbk7j4upftqdugse--
