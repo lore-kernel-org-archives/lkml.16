@@ -1,69 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808BB22B8A9;
-	Wed,  5 Feb 2025 11:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E3F22B8A9;
+	Wed,  5 Feb 2025 11:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738755622; cv=none; b=W/YNId16buvxpddkgnzYkt+qDEZFPoQhYyW86ooW32Z+CBIwdKuA4Uj0V74PV5d6Rf0DDpWI5Hy3gpduqwQczs8dy7Y9yidNn6MxHo/eh5Ru9MDQVNykvnhu50M652MSpCdle/2q6v+TXsoR7zq7ZsOJ9FptuqyH3Lp8hTHUbrg=
+	t=1738755639; cv=none; b=rtB80M4c5gamtDFs05D4n0MydUVrTrRo/iiO49j/42qQngdTZgH+jcY6J3C3zl/SAJR/9wpdeOFaO6Hoor/vVB19TOPJon68dgT6UVeQ8IOFPp2tJaQqI3N3Xp9RsOJnBOKOoq5/VWG+G6FTze2hE75zt1OdS+nztvvtndNoP5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738755622; c=relaxed/simple;
-	bh=QDt7G7gOuUNyLCqEejR8qfOIVWZF+V9T6WAWyoEhZIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Me1pRU81EOJXr7GcqQDtjH+7dotbFWuMrQHs+79iFVVyrEoPxR/VZKyeGEDOsFPNQoGNSdiNUCRHANJV8L/ILKhOkOIvr24kBE4o5rLP9mcpm/HYjMMdKKYhUvlYbeqAMll7YLKZivlOseJVd0Ekb58v7OsISN+sAZFi/dD8J0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rg4UJO5y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738755639; c=relaxed/simple;
+	bh=lywC6437MdtDYM2KNdfgpCysF71jZ0EotoRamL3djaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=reu9+Whrm8JEeAAi76LqPO/ZXAu2NKCiq6JcvLgNCEp82QQ3lkIrjFkR4hZHzyjpczc3APWAxq3mt/TbJmZhqKNkwvDX5fZiWxowuuQkUie+CJzF8aEFDM4CwoRKv7V9oHC0/AWP+Ap445pXOdGBQEnq6KIbRiIWZJrS+FiAONY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nIHrV976; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rg4UJO5y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1213BC4CED1;
-	Wed,  5 Feb 2025 11:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738755621;
-	bh=QDt7G7gOuUNyLCqEejR8qfOIVWZF+V9T6WAWyoEhZIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rg4UJO5yReXufNdwnRYqDQ37/CLIMB5yRoJsoZKrJXcnRnQunnnRJHGmJ4RsSmmwp
-	 6cZ/V45OSSVdxZCrRaRdG7T8MPuKv6rZ2k6U7LG0vOOKqTFdtWEkAM4BXWQtBwq8fU
-	 lb97ybVNng/MdPiHYsB6GxwBGz9xpN4Rdk5CdsUEz24ufcuIbexlDrRAqzaeQTkyf5
-	 IyjaX770PqlUYrPwPx+QxmgZLgzg+0vadmP3MusrCpcsMzS4aIS3btWMmgK58XH39E
-	 H/ihbdfBCjFfE9H5Rvftadq3SMAQWx0iVHo+qc8rNFJgUh8KjIgSTGXPW48gr0Hhxk
-	 LIiVPT497+57w==
-Date: Wed, 5 Feb 2025 12:40:17 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Charan Pedumuru <charan.pedumuru@microchip.com>, 
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Tony Han <tony.han@microchip.com>, 
-	Cristian Birsan <cristian.birsan@microchip.com>
-Subject: Re: [PATCH 2/2] dt-bindings: dma: at_xdmac: document dma-channels
- property
-Message-ID: <20250205-dynamic-scorpion-of-climate-9e7b7b@krzk-bin>
-References: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
- <20250205-mchp-dma-v1-2-124b639d5afe@microchip.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIHrV976"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-436341f575fso77863045e9.1;
+        Wed, 05 Feb 2025 03:40:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738755635; x=1739360435; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1QC03WY0ZxDXP++ZhpQVDGRulTf4NzIieyMrSi1EQa0=;
+        b=nIHrV976hYE7lRtVNGdHQ+TaPlGEfIHTs5uP5YpxZqAWJ57oFSa+dry7RotDtax1nQ
+         Q/7qwRgTNk3u76WoBBNxIDhcmUGeKPFycS7jrcif1aGGjf44IytrlN49Oc/w1CKHt6IJ
+         RQO9y5RSfO0joCJthf3sh3OOeSQ7IAeHIj8/4QaA2iF3+Jzo4HbIwC+MuJEhB1GNKjOz
+         Hd5QCYNmkZN1haYKniLnOMuyc5xWZyY04g68sBxhnw+2lggzohQxJnKCCgUfjW1U/HpF
+         sBZ0aeEZWX5mrbq7DYJRsD6cQSC20oyrBxJZBs2tZ/+pcOaE50I5Z4G/zYWw6DCOSmDy
+         aeNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738755635; x=1739360435;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1QC03WY0ZxDXP++ZhpQVDGRulTf4NzIieyMrSi1EQa0=;
+        b=NPFVg9i9DoiFsRXpY9R7gMdCiLKmJb4AzMWkJtXkT0jdlNwBMkArNcebWDwxOq0mZk
+         1wxlBTRs97V1K3sJTxfIpJLTACHI2ln58tgelAczq98O2P99vi2v39yd7lhCqKVjHeVA
+         WKKgrHJNFK3lRtxI7S5jJjqK1obTQyQdXgdLoi7QIsT9sPiu0NzXFAiKtOaMMYF0iiKG
+         xWw+f3vkedsSdpIb4tVIGKKznKB0MreGz/ucCPljd0jQNwxE3ScC2rvE8EYtWTXV3Q6z
+         gv70oX/5D36DWZ+RPTIHGy1B2eg8JfFQTrZ2UYZV7AF006onYM0QOh2HNEwJJGE6fBTz
+         10SA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6IIyeomj1KA+cL+MPnzGphbIeoOhre8OwbD6VKaaWP+uFvwwRY7+Yr7yXZ0NaMkokXUz9Gz7+G3c/29I=@vger.kernel.org, AJvYcCW+hdq6mhOSRhwAgxBbhZBMvAseUqktVGZULaZyxZqdor0NuDSjLBKEc81C6wZBhd1qQoGuhtXW7OyoAGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+rGn//4itB2ve4VWr2cflE4+wnLMge+g0VwtMMpT/B2JVLvUh
+	OhASsWiMzWl3tA4oDpikTboaVR/bATnyBrnYFG3Mdbf/0fLHVTfsDVpq72soVlsoxQ==
+X-Gm-Gg: ASbGncvi7M0hmIr8BlReFU+SiwLRBr3Mg8ysPxhXAhsbGVFfr+HOSxHr08oHJbPOGNZ
+	7fpAxfvqGOGv5+5ePq+28DEydAUq1gUiAvvSFMkuR5fd4KsYUVHMwX3XjTLTOcPlgquCoiJQCfe
+	s4zZlZEMm1DvbH2jbz/Pj5ZiHmsxKbC85MLLi7ALoEkIkSBYWqFjD77FB5zfAB4rmO0ompC7q0O
+	8wxvs6f7c25FkWvZUlpbFM13Q1SZnPWMhZFzm+Lm+26VeDDnQXuj7XRkZsOONLSF/7uJE2y2Qh9
+	fCZyxpG2O2kXYlUs
+X-Google-Smtp-Source: AGHT+IEBSCcV5L7D1VNEOPgA7NsmqJl5ZSNasvTwbnWmUrVUQg8rPs80m/aDPL3T2mGjcw8AAXETIQ==
+X-Received: by 2002:a05:6000:1788:b0:38d:b2f2:668f with SMTP id ffacd0b85a97d-38db48a027cmr2023949f8f.23.1738755635361;
+        Wed, 05 Feb 2025 03:40:35 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c102bccsm18197247f8f.27.2025.02.05.03.40.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 03:40:35 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] media: hi556: remove redundant assignment to variable enable
+Date: Wed,  5 Feb 2025 11:40:08 +0000
+Message-ID: <20250205114008.878390-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250205-mchp-dma-v1-2-124b639d5afe@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 11:17:03AM +0530, Dharma Balasubiramani wrote:
-> Add document for the property "dma-channels" for XDMA controller.
+The variable enable is being assigned a value that is never read
+afterwards. The assignment is redundant and can be removed.
 
-I don't understand why. You are duplicating dma schema.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/media/i2c/hi556.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The same as with other patch - your commit msg is redundant. You say
-what we see the diff but you never explain why you are doing these
-changes. And in both cases this is really non-obvious.
-
-Apply this feedback to all future contributions - say why you are doing
-changes instead of repeating what subject and diff are already saying.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/media/i2c/hi556.c b/drivers/media/i2c/hi556.c
+index 3ac42d1ab8b4..a7bc86eaadbc 100644
+--- a/drivers/media/i2c/hi556.c
++++ b/drivers/media/i2c/hi556.c
+@@ -1053,7 +1053,6 @@ static int hi556_set_stream(struct v4l2_subdev *sd, int enable)
+ 
+ 		ret = hi556_start_streaming(hi556);
+ 		if (ret) {
+-			enable = 0;
+ 			hi556_stop_streaming(hi556);
+ 			pm_runtime_put(&client->dev);
+ 		}
+-- 
+2.47.2
 
