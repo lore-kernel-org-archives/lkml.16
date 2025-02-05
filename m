@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3A2165F3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9E0215F7A
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738737634; cv=none; b=OQHt8zoJSmOVcS1wm/Y/sPtLbTaZ3Nx3RxkTACsINYOqVFps/9r/NfwqycYXn088QaFEKz7gMKulufSI7duYxGn15RdX3dVhaIcT07KbPH2MwUiR5Tnlu+XxKmKTNGdheyziT0PAftdc9x7UVRSyW4wz7AgDpEy1IdQQCv5+lNE=
+	t=1738737634; cv=none; b=ZkHiKSYnKOrHEyhdHn4fsmqw1r726CnXp5gT52t2GbQsWCM5uotBpcQIBIo/fPNa0yvzXgf2F441VqaYQexBDNj5A++4PoJL4pG1hAXD0PozH83XZBOwhzjJ8gyrn/7dKX3HN+ccAeZd6e3LHHlMhbkvv+UNh8TfmsHdKnu2uQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738737634; c=relaxed/simple;
-	bh=gGvYZ6oXvm9dTs3/vqawO1m498fxu7l1N6ATj9ZnzCQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZFDr+Cco4OLOjLH26k8Ri7u7d07CHzIwBYSdaJzZzilAi+FgaFE1qAJHYPSJ85BP7flla5COLF6gwmhmryhcl28CzJfXpDo8kJmFqZH8D4NxIJN41h8NF+oLKBmr2P0Ug9WidUnbFuv4gWwY66lLxUGB9z7u1Murk5AKnBssN/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oidpstfc; arc=none smtp.client-ip=10.30.226.201
+	bh=h4uoZiDaDCnjp4xbn++cw3iPpGRIxoOC4t2uGuV8Lr8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gmFeoGj9xCT1WEaUgkwHBz7RVhTpPpeg3dwH9mo78IzCgelHQkPZTPc2Hq1F2xDgEhqq+7GQj5IeQq5Az/cTKEMXmLTI4TINNLi5d7GsburDmH27P2It0ybXZDABzsI9oP/PMUhdH/TDc1EMfYxwbE4M69l7mEq7scLjoafaJME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIQSSz97; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oidpstfc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5626BC4CED1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIQSSz97"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7467CC4CEE6;
 	Wed,  5 Feb 2025 06:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738737634;
-	bh=gGvYZ6oXvm9dTs3/vqawO1m498fxu7l1N6ATj9ZnzCQ=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=oidpstfcT89mqG/kWnY+3GkxmjjhzlsfDDYFeYKQ/DPMRADlbU55sbAUnawc7fa39
-	 NiMxjEHvhGBZAh19Vbs4WfYig4uFdhfU9vu4vgZqkCYCFeYVadcYB1qvUTmlPVqP0E
-	 kuLwd7zYbAlMQDoDb7B4b07gpSLTX8Oj5ef7yLWPPCLhWy55rZLaoP270Wi3b234Pc
-	 nTR6Gcu4x7kIa8/4S75QAGXNdrSN2hlypGi6e1ngnJW75YXRR3r+CfY7aoiogXjIcf
-	 j/rSKmxTunEERB43mu4WgKJ9D88jMzCRGWDMxN1wgK11W2YdJvtKOQUvi34haVpgQs
-	 xBIQtI1BtAPzA==
+	bh=h4uoZiDaDCnjp4xbn++cw3iPpGRIxoOC4t2uGuV8Lr8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=TIQSSz97U8yWHdkz4Ovgfc11YSHdnxE+u8jlcx/5Bygf3DqvyTsI/dT1k1OP+tvZv
+	 7ybCmiFfkz/xgIEQu+YQY4dsSY8FutA9ExDuJcLtXRbO31gAJr1fZxHqIr+Cdb3x2T
+	 slPZ70SI06vxCP6nCqSAB/b+bWsuy0cmyNzW7pEjKwixws2U7njQ5I3urkmUj56bfS
+	 IvXUXIEYDNvO9e4Hp8IIz4jACe9Eis1m0zEqh4EFJeSKlgPWZ7AEpYz2ZdJi7O8208
+	 W0pE9d8RUIjGTpgN7lQSvcLe+yJ+VpOLxDWSO9TDXE4Vhjmuj7ajcBqrl+R9sz/kHi
+	 6hXMZ4EtmLOng==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8A3C02192;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61866C02199;
 	Wed,  5 Feb 2025 06:40:34 +0000 (UTC)
 From: Hermes Wu via B4 Relay <devnull+Hermes.wu.ite.com.tw@kernel.org>
-Subject: [PATCH v3 0/2] drm/bridge: it6505: add audio support with DRM HDMI
- codec framework
-Date: Wed, 05 Feb 2025 14:41:02 +0800
-Message-Id: <20250205-add-audio-codec-v3-0-26cfadb2d81f@ite.com.tw>
+Date: Wed, 05 Feb 2025 14:41:04 +0800
+Subject: [PATCH v3 2/2] drm/bridge: it6505: add audio support to
+ drm_bridge_funcs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAP4Ho2cC/2XNyw6CMBCF4VchXVvSC1dXvodxUaaDzEJqWqwaw
- rtbiIkxLP+TzDczC+gJAztmM/MYKZAbU+hDxmAw4xU52dRMCVUKKQturOXmYclxcBaBN9Daoha
- VMhWwdHX32NNrE8+X1AOFyfn39iDKdf1aSu6sKLnkqPu+lp2GRrYnmjAHd8unJ1uxqH6AEnoPq
- ASU0ICtFWLZdX/AsiwfPFSDA/AAAAA=
-X-Change-ID: 20250114-add-audio-codec-8c9d47062a6c
+Message-Id: <20250205-add-audio-codec-v3-2-26cfadb2d81f@ite.com.tw>
+References: <20250205-add-audio-codec-v3-0-26cfadb2d81f@ite.com.tw>
+In-Reply-To: <20250205-add-audio-codec-v3-0-26cfadb2d81f@ite.com.tw>
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
  Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
@@ -57,11 +55,11 @@ Cc: treapking@chromium.org, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org, Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, 
  Hermes Wu <Hermes.wu@ite.com.tw>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738737663; l=1167;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738737663; l=2998;
  i=Hermes.wu@ite.com.tw; s=20241230; h=from:subject:message-id;
- bh=gGvYZ6oXvm9dTs3/vqawO1m498fxu7l1N6ATj9ZnzCQ=;
- b=l6pLDMUlMGqGOfQBULdVFZ/N+p9sCF1awqniFveTab/zyIbIrqqrNtBT+vpHS1QWQ7GOHDQFL
- BBTwhV+P3WFCEfi2hx9A2GQABDxd1gn6JPyRfS1a8u1txWOE/WV/OnB
+ bh=ALqN5ab0u4x0omcwFuCJ35/u/+RI1mf1aEJhjK4tFQs=;
+ b=oSN8pAg0gEhe90kCJmKSJhBKKMKU0FbNorw4tsyh+YfjvjrGj/tgUFTW92DavYy8DbTeqw1+8
+ VkjM8QF1HRtBtw4mXS+aLQPsRrC5C4F+7z2KDJw6LVunN7+TDl/C7SW
 X-Developer-Key: i=Hermes.wu@ite.com.tw; a=ed25519;
  pk=qho5Dawp2WWj9CGyjtJ6/Y10xH8odjRdS6SXDaDAerU=
 X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
@@ -69,38 +67,90 @@ X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
 X-Original-From: Hermes Wu <Hermes.wu@ite.com.tw>
 Reply-To: Hermes.wu@ite.com.tw
 
+From: Hermes Wu <Hermes.wu@ite.com.tw>
+
 For supporting audio form I2S to DP audio data sub stream.
-
-Add hdmi_audio callbacks to drm_bridge_funcs for the HDMI codec 
+Add hdmi_audio callbacks to drm_bridge_funcs for the HDMI codec
 framework.
-
-The DRM_BRIDGE_OP_HDMI flag in bridge.ops must be set, 
-and implement necessary callbacks for the drm_bridge_connector 
-to enable the HDMI codec.
 
 Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
 ---
-Changes in v3:
-- Separate DRM_BRIDGE_OP_HDMI supports and audio callbacks into two commits.
-- Link to v2: https://lore.kernel.org/r/20250203-add-audio-codec-v2-1-5c8cd72ee5bb@ite.com.tw
+ drivers/gpu/drm/bridge/ite-it6505.c | 46 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-Changes in v2:
-- Use DRM HDMI codec framewrok for audio stream setup.
-- Link to v1: https://lore.kernel.org/r/20250121-add-audio-codec-v1-1-e3ff71b3c819@ite.com.tw
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index 4c766854de14093b80949bdb410488f504b24db8..832c4e3ff4ada31367788faed9583da676e36cf8 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -3342,6 +3342,46 @@ it6505_bridge_hdmi_tmds_char_rate_valid(const struct drm_bridge *bridge,
+ 	return MODE_OK;
+ }
+ 
++static int it6505_bridge_hdmi_audio_startup(struct drm_connector *connector,
++					    struct drm_bridge *bridge)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++	struct device *dev = it6505->dev;
++
++	if (!it6505->powered || it6505->enable_drv_hold)
++		return -EIO;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "Audio enable");
++	it6505_enable_audio(it6505);
++
++	return 0;
++}
++
++static int it6505_bridge_hdmi_audio_prepare(struct drm_connector *connector,
++					    struct drm_bridge *bridge,
++					    struct hdmi_codec_daifmt *fmt,
++					    struct hdmi_codec_params *hparms)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++	int err;
++
++	err = it6505_audio_setup_hw_params(it6505, hparms);
++	if (err < 0)
++		return err;
++
++	return drm_atomic_helper_connector_hdmi_update_audio_infoframe(connector,
++								       &hparms->cea);
++}
++
++static void it6505_bridge_hdmi_audio_shutdown(struct drm_connector *connector,
++					      struct drm_bridge *bridge)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++
++	if (it6505->powered && !it6505->enable_drv_hold)
++		it6505_disable_audio(it6505);
++}
++
+ static const struct drm_bridge_funcs it6505_bridge_funcs = {
+ 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+@@ -3358,6 +3398,9 @@ static const struct drm_bridge_funcs it6505_bridge_funcs = {
+ 	.hdmi_clear_infoframe = it6505_bridge_hdmi_clear_infoframe,
+ 	.hdmi_write_infoframe = it6505_bridge_hdmi_write_infoframe,
+ 	.hdmi_tmds_char_rate_valid = it6505_bridge_hdmi_tmds_char_rate_valid,
++	.hdmi_audio_startup = it6505_bridge_hdmi_audio_startup,
++	.hdmi_audio_prepare = it6505_bridge_hdmi_audio_prepare,
++	.hdmi_audio_shutdown = it6505_bridge_hdmi_audio_shutdown,
+ };
+ 
+ static __maybe_unused int it6505_bridge_resume(struct device *dev)
+@@ -3746,6 +3789,9 @@ static int it6505_i2c_probe(struct i2c_client *client)
+ 			     DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_HDMI;
+ 	it6505->bridge.vendor = "iTE";
+ 	it6505->bridge.product = "IT6505";
++	it6505->bridge.hdmi_audio_dev = dev;
++	it6505->bridge.hdmi_audio_max_i2s_playback_channels = 2;
++	it6505->bridge.hdmi_audio_dai_port = 1;
+ 	drm_bridge_add(&it6505->bridge);
+ 
+ 	return 0;
 
----
-Hermes Wu (2):
-      drm/bridge: it6505: add support DRM_BRIDGE_OP_HDMI to drm_bridge
-      drm/bridge: it6505: add audio support to drm_bridge_funcs
-
- drivers/gpu/drm/bridge/ite-it6505.c | 231 +++++++++++++++++++++++++-----------
- 1 file changed, 161 insertions(+), 70 deletions(-)
----
-base-commit: fe003bcb69f7bff9ff2b30b659b004dbafe52907
-change-id: 20250114-add-audio-codec-8c9d47062a6c
-
-Best regards,
 -- 
-Hermes Wu <Hermes.wu@ite.com.tw>
+2.34.1
 
 
