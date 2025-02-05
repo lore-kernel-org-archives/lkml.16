@@ -1,232 +1,123 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D830221D5AD;
-	Wed,  5 Feb 2025 11:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6AE151985;
+	Wed,  5 Feb 2025 11:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756274; cv=none; b=PKQDvOnQy/dD+9rOs15KsK57y7Lo7xOMrGGhhuV4fCZdVPsi1A60133Y4a9a4mNMAuU5jMnlF4bpW91kFHEWqMvqBSBC3KZ+O4HSNiRASALWpZ1Ydt8orYlfTvRVQnQ+zTaJ+aZ6kDgn1rqyX4y6G6pW0h7oIVZyWXj67oygkdw=
+	t=1738756383; cv=none; b=k/C0O1pWTuc8QE0YHdL5TNghPBGr/axR/ecCTwlAROW2pJedYutLuIC/EiJLmbXzMidOlnXOBPvhIn7n3bXxLJ+W3RLIgvhQC6GqLyNJKGnIcHNWXZAwMSk5/eYiVUvXKLcKhbvlnbcNyvQMSjPgWipNCzsD1GCOUtgYF//4rEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756274; c=relaxed/simple;
-	bh=dZXz4pMPrpn0TzsozhsZsqOV2je53Ztfm3Br8dQ2X2w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W41iAxRNXuvst84Hy6ICoOZH5vf8ZsxxBwL6grpMFenPXRLVnswG4A8nlQCm30R/uUyR5eQOevcLB3XloSdHTz+rz9wJHaTrBTHPjA6mh4BVzvu1TsJcc+SP4cRi5VCo9Gv/OPZtV3LRExyI6fYmqCRBU7uwQ+KHjp/g+C/XbS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vd2Wr/Of; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738756383; c=relaxed/simple;
+	bh=0Bf4nRQelq81FxUH0UvhlEbDe3HaoAh0kY/ZUvIxS7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=domKjqJuRPCWgPX4eFbZoJz7lIMCLAKc7fZ/1dVMLmv5eaaf85S5B9qaM3CWv04UBgbED4mf3v+L3+TE/lk1CglaXdlp6Y5U79Gwjt+KRZBV1jOr1ezCIpOC4BuwpHqUwL+20jGup8M1OqlMkTafEiWpnZRN81Yj2iKcybD/hT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpS+X/F9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vd2Wr/Of"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515Bol852591319
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 05:50:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738756247;
-	bh=OaM5rfFZ68e3HGHbqVx4CWq+S7n+bCh/84iARh27Z8s=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=vd2Wr/Ofyd/J3tkzUwdPdMLJG86LDY+rTuIjJIRaaZ1MLNxfsccUGF+QvLY49pg2B
-	 zwRX7KtYf8Ozuj/dptFFjsMkZ/FfA4oDzYJ9gk2Oh5keVi2cXuBrua0s5MLMTabMe5
-	 M9Y95caWOOUOhEHT4MoM1KXGNJT1k1tZJRWRQeTg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515BolxH025164
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 05:50:47 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 05:50:47 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 05:50:46 -0600
-Received: from hkshenoy.dhcp.ti.com (hkshenoy.dhcp.ti.com [172.24.227.96])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515BoPCj043245;
-	Wed, 5 Feb 2025 05:50:40 -0600
-From: Harikrishna Shenoy <h-shenoy@ti.com>
-To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@gmail.com>, <simona@ffwll.ch>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <jani.nikula@intel.com>, <j-choudhary@ti.com>,
-        <sui.jingfeng@linux.dev>, <viro@zeniv.linux.org.uk>,
-        <r-ravikumar@ti.com>, <sjakhade@cadence.com>, <yamonkar@cadence.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/2] drm: bridge: cdns-mhdp8546: Add support for no-hpd
-Date: Wed, 5 Feb 2025 17:20:25 +0530
-Message-ID: <20250205115025.3133487-3-h-shenoy@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205115025.3133487-1-h-shenoy@ti.com>
-References: <20250205115025.3133487-1-h-shenoy@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpS+X/F9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5B7C4CED1;
+	Wed,  5 Feb 2025 11:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738756382;
+	bh=0Bf4nRQelq81FxUH0UvhlEbDe3HaoAh0kY/ZUvIxS7c=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=KpS+X/F9r6V17MJdtDeKhzSOJn/uQJAkBSEW0qNwfnVOXfvcftm4nEUHvAkdbCGxM
+	 JMSM5PqmHE7eNTH79rh7cXNkLXb0heXqCBGbgFPrLssV9bLTzg3iglJg7eHtQZH2Up
+	 OLkdGWRn3GFPP+5nIiUsH+IDy9Bopy0u36GKHhQmTwQyIQk65hJ2yLqdpk8L8l4I4D
+	 tE7wijdDqaF1utihy9mSlnVO4hQNO4CP5rsSNK0Pq6qQhmYjxWESx8f2+yCb7Lj7DK
+	 S7PmnFS2jPP2gxBz5NF5RPijVxfgHCXCJ875wVu0LN7GLJDGGLQ6/6R+MZYTqt7qrf
+	 PASBiveRHimGQ==
+Message-ID: <efd89cf8-2f83-44fd-8bdf-aa348d4d9659@kernel.org>
+Date: Wed, 5 Feb 2025 12:52:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: Add no-hpd property
+To: Harikrishna Shenoy <h-shenoy@ti.com>, andrzej.hajda@intel.com,
+ neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, simona@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ jani.nikula@intel.com, j-choudhary@ti.com, sui.jingfeng@linux.dev,
+ viro@zeniv.linux.org.uk, r-ravikumar@ti.com, sjakhade@cadence.com,
+ yamonkar@cadence.com, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250205115025.3133487-1-h-shenoy@ti.com>
+ <20250205115025.3133487-2-h-shenoy@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250205115025.3133487-2-h-shenoy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Rahul T R <r-ravikumar@ti.com>
+On 05/02/2025 12:50, Harikrishna Shenoy wrote:
+> From: Rahul T R <r-ravikumar@ti.com>
+> 
+> The mhdp bridge can work without its HPD pin hooked up to the connector,
+> but the current bridge driver throws an error when hpd line is not
+> connected to the connector. For such cases, we need an indication for
+> no-hpd, using which we can bypass the hpd detection and instead use the
+> auxiliary channels connected to the DP connector to confirm the
+> connection.
+> So add no-hpd property to the bindings, to disable hpd when not
+> connected or unusable due to DP0-HPD not connected to correct HPD 
+> pin on SOC like in case of J721S2.
+> 
+> Signed-off-by: Rahul T R <r-ravikumar@ti.com>
 
-In J721S2 EVMs DP0 hpd is not connected to correct hpd pin on SOC, to 
-handle such cases, Add support for "no-hpd" property in the device 
-tree node to disable hpd.
+Why are you sending over and over the same? You already got feedback.
+Then you send v2. You got the same feedback.
 
-Also change the log level for dpcd read failuers to debug, since 
-framework retries 32 times for each read.
+Now you send v3?
 
-Adding timeout in to wait asynchronously for state to change to 
-MHDP_HW_READY. With HPD the driver acts only on the interrupt, 
-which is enabled only after both have happened.Here the driver waits 
-in the attach until everything is ready, and then probes the DP 
-given the HPD interrupt is broken.
+So the same feedback, but this time: NAK
 
-Add update_link_status in case of no_hpd in cdns_mhdp_bridge_detect() to 
-update status of mhdp->plugged via polling, as cdns_mhdp_bridge_detect() 
-is being polled by drm framework.
-
-Signed-off-by: Rahul T R <r-ravikumar@ti.com>
-[j-choudhary@ti.com: Fix cdns_mhdp_attach hook for no-hpd usecase]
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-[h-shenoy@ti.com: Updated mhdp->plugged status in
-cdns_mhdp_bridge_detect for no-hpd usecase]
-Signed-off-by: Harikrishna Shenoy <h-shenoy@ti.com>
-
----
- .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 54 ++++++++++++++++---
- .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  1 +
- 2 files changed, 49 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-index 6a121a2700d2..223370717ce8 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-@@ -53,6 +53,8 @@
- #include "cdns-mhdp8546-hdcp.h"
- #include "cdns-mhdp8546-j721e.h"
- 
-+static int cdns_mhdp_update_link_status(struct cdns_mhdp_device *mhdp);
-+
- static void cdns_mhdp_bridge_hpd_enable(struct drm_bridge *bridge)
- {
- 	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
-@@ -768,7 +770,8 @@ static int cdns_mhdp_fw_activate(const struct firmware *fw,
- 	 * MHDP_HW_STOPPED happens only due to driver removal when
- 	 * bridge should already be detached.
- 	 */
--	cdns_mhdp_bridge_hpd_enable(&mhdp->bridge);
-+	if (!mhdp->no_hpd)
-+		cdns_mhdp_bridge_hpd_enable(&mhdp->bridge);
- 
- 	spin_unlock(&mhdp->start_lock);
- 
-@@ -862,7 +865,7 @@ static ssize_t cdns_mhdp_transfer(struct drm_dp_aux *aux,
- 		ret = cdns_mhdp_dpcd_read(mhdp, msg->address,
- 					  msg->buffer, msg->size);
- 		if (ret) {
--			dev_err(mhdp->dev,
-+			dev_dbg(mhdp->dev,
- 				"Failed to read DPCD addr %u\n",
- 				msg->address);
- 
-@@ -1752,8 +1755,22 @@ static int cdns_mhdp_attach(struct drm_bridge *bridge,
- 
- 	spin_unlock(&mhdp->start_lock);
- 
-+	if (mhdp->no_hpd) {
-+		ret = wait_event_timeout(mhdp->fw_load_wq,
-+					 mhdp->hw_state == MHDP_HW_READY,
-+					 msecs_to_jiffies(100));
-+		if (ret == 0) {
-+			dev_err(mhdp->dev, "%s: Timeout waiting for fw loading\n",
-+				__func__);
-+			return -ETIMEDOUT;
-+		}
-+
-+		cdns_mhdp_update_link_status(mhdp);
-+		return 0;
-+	}
-+
- 	/* Enable SW event interrupts */
--	if (hw_ready)
-+	if (hw_ready && !mhdp->no_hpd)
- 		cdns_mhdp_bridge_hpd_enable(bridge);
- 
- 	return 0;
-@@ -2217,6 +2234,19 @@ static enum drm_connector_status cdns_mhdp_bridge_detect(struct drm_bridge *brid
- {
- 	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
- 
-+	if (mhdp->no_hpd) {
-+		int ret = cdns_mhdp_update_link_status(mhdp);
-+
-+		if (mhdp->connector.dev) {
-+			if (ret < 0)
-+				schedule_work(&mhdp->modeset_retry_work);
-+			else
-+				drm_kms_helper_hotplug_event(mhdp->bridge.dev);
-+		} else {
-+			drm_bridge_hpd_notify(&mhdp->bridge, cdns_mhdp_detect(mhdp));
-+		}
-+	}
-+
- 	return cdns_mhdp_detect(mhdp);
- }
- 
-@@ -2284,7 +2314,16 @@ static int cdns_mhdp_update_link_status(struct cdns_mhdp_device *mhdp)
- 
- 	mutex_lock(&mhdp->link_mutex);
- 
--	mhdp->plugged = cdns_mhdp_detect_hpd(mhdp, &hpd_pulse);
-+	if (mhdp->no_hpd) {
-+		ret = drm_dp_dpcd_read_link_status(&mhdp->aux, status);
-+		hpd_pulse = false;
-+		if (ret < 0)
-+			mhdp->plugged = false;
-+		else
-+			mhdp->plugged = true;
-+	} else {
-+		mhdp->plugged = cdns_mhdp_detect_hpd(mhdp, &hpd_pulse);
-+	}
- 
- 	if (!mhdp->plugged) {
- 		cdns_mhdp_link_down(mhdp);
-@@ -2481,6 +2520,8 @@ static int cdns_mhdp_probe(struct platform_device *pdev)
- 	mhdp->aux.dev = dev;
- 	mhdp->aux.transfer = cdns_mhdp_transfer;
- 
-+	mhdp->no_hpd = of_property_read_bool(dev->of_node, "cdns,no-hpd");
-+
- 	mhdp->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mhdp->regs)) {
- 		dev_err(dev, "Failed to get memory resource\n");
-@@ -2556,8 +2597,9 @@ static int cdns_mhdp_probe(struct platform_device *pdev)
- 
- 	mhdp->bridge.of_node = pdev->dev.of_node;
- 	mhdp->bridge.funcs = &cdns_mhdp_bridge_funcs;
--	mhdp->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID |
--			   DRM_BRIDGE_OP_HPD;
-+	mhdp->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID;
-+	if (!mhdp->no_hpd)
-+		mhdp->bridge.ops |= DRM_BRIDGE_OP_HPD;
- 	mhdp->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
- 
- 	ret = phy_init(mhdp->phy);
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
-index bad2fc0c7306..48517193cf0b 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
-@@ -388,6 +388,7 @@ struct cdns_mhdp_device {
- 
- 	bool link_up;
- 	bool plugged;
-+	bool no_hpd;
- 
- 	/*
- 	 * "start_lock" protects the access to bridge_attached and
--- 
-2.34.1
-
+Best regards,
+Krzysztof
