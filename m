@@ -1,110 +1,137 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DB621D5A8;
-	Wed,  5 Feb 2025 05:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4AC21D597;
+	Wed,  5 Feb 2025 05:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738734639; cv=none; b=mXaMYHKfHjU3aDe0U3EZuwG8OHKpmhG+/zEnKKfJUyQGKJfhVaFa81O/l4PjCHmewaJn3y/f91Cw3l5kndoltIzm9imPsfC8uENbfJa+ucl5He2H7GqmoZxRRrms9y/9WxSMI/U9+5FqaNG1fhvtCG2Kds6/LvO6cAQ9V4p1a0A=
+	t=1738734652; cv=none; b=QqWtPLMmmR7qVtb6uV45ptGIqyvynW7wxLnAswbjzAzqy6zWMntXmsRhiSO9RCQ2/ho7h9gWp9zkIUTTLzyaNc8CvFibkrvCoFL6VbqfacF5hB0MWWujcnfU11Z0cwshL16XGx5X20hFupUJ+OVfyW/d3Bf70g/NDGN5qyctGNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738734639; c=relaxed/simple;
-	bh=hoKTiFNJga4k6kDkzlWvbfX/wG4hbP8zEshGLRIq03I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hT/SHylDaRSeyTi/1xzNBk5/H3AqOVwQ4Lk8gyxZekoE1jM1uAHxyRG4OqQJpQzTo3Xi6TsshV4Wz0Av34hNQAhayh78lVptpJkpOgwJEHIOCo41hfZDXV0CHoiDUzJgwQvFqG6W5gNEvSgSci/r3o8tCDukvrfjEWpqQ7OefBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cp3x+ax6; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738734652; c=relaxed/simple;
+	bh=cLr4iYqJiMgxPThR0EwaYSmoWZxZS/Cfa4/3x+SuUeE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AugSpIPW8CAM6zVbPPjs1kU7ts3kjlDo/3uoQDQISCDEM+BJiFF4UpmLALhVOxLBA471t8la16+XeNQ4Vr6E8dPFNvuE4fB2SEcmEd597iqyhsaixUZOfy0VDPq8nyvjYy0bHjAGn+XXOWcUl6RWEGSycBFnXHCLu66JZcR0ltQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=G0ZNG59O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FFiB5MXy; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp3x+ax6"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f200014f1so543535ad.2;
-        Tue, 04 Feb 2025 21:50:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738734637; x=1739339437; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5/8WaG5xcausJczSDu1PtwlsotHm7UZnGjCaIMeLMRQ=;
-        b=cp3x+ax6nGeO1LopJTK1YUvvPCb/29UTWj/3oKKyUZt/PIOD3QwMb34QIgpTBBvaSX
-         iVdEhD4zL8UaZ+gTL2CDtea/9v4RKzDaHmTNshkmSou7CQUP5NUfYXsR7zXNizw7c77A
-         3KL0ks/dFe0FV8BcazDERBZibQBzmii4xEsRlQMTKyhNZY1rmesQc77McANhrLCF4gkv
-         ersb7IB8NmMY+bhqvsgaGo2Mkk1PXHPa4IN/0/VGyHP6KWtjPMSrP43esZ4lW8fIB6j0
-         cwv9vO7na+cnP3mfs15kY2pr2LUfkAqYehT/YLwPKOc3lmJqIy7SNmuWJMcwnKyA2XEv
-         3JBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738734637; x=1739339437;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5/8WaG5xcausJczSDu1PtwlsotHm7UZnGjCaIMeLMRQ=;
-        b=HkgGdLE4Dyw/SZQhYslFfgdxb3IIZSFGmM11mmGuZg14zbpuVldQMdcwEAESjypNkS
-         Pc2lDT0KKj1Blg6Pl9mJ4pVr6bbm0au5zoCnZFSfeWt+NSP2BOcHQ/B0QY6d3j1SX91y
-         IXAE0N/5FLTZia3Zj5cKZrG6fGSniLYfRf4FSruzjIqoTXaDNmYtT8qdMeSJd5IOGVDl
-         /AHNVSaFBM/6+749mSnWqNzf6Xt8diqrhp3cg+N69RBskYbVD4QG9h3L1Jnuek8bLXF8
-         BYBHuoX3Aajd7t7y+y1yTt5xMA+ufzYlxq4V0XNPZ8OX5Aem7zhuv6suwjGxSE1gmiEY
-         05Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+pOcfF7XRRA2m/V14chW6CMdXORPKS12TO3trjH44PhXFSnxPxQ7CE/zByeR9Wf62YvRKIDRw1pQkb2A=@vger.kernel.org, AJvYcCWjSij2PPT0m2lY0/aFSbmR+CPZZ5Jgy9vDRedYrUgZqXy14/KVruECwRzjRDpXzfxERGNqpUziy3p2u3gc8VRq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVflKH680ELZUfcVktWFwda+YCnUfZUdf5MHElb4sj7YjtyG30
-	b1aw/uUUsobc+Zi7GqFke2gWftxLCtYk+OrZhWg8sfI2rkq+Goje
-X-Gm-Gg: ASbGncvIyCB1fEDlTNsvWe2jvmkK39ai+N/XQli161IYAqIjsCZBDDrebgupx94QhKz
-	ntbxJJ7PNtwwwzEKAve5Ue+AhWvtQbjRaPSS16MduHZ5UC0w2M3Gmf2TcNze7A8Z62qaM9R4EY1
-	UqJdH/PNbacTl9KFZBLRVlJl9+iIofiudakR0JrtzwsaiAnX+eSqsPxeHCMCA6+IzIjsTo/ma6k
-	tO4Qq6WEKlscgyvc6XyOrbPR8T+VbIR1wLmEHDI7Yika3nImu2MphJ6hKHmtI5OlVimzLlLjhPh
-	oK3oDRxSocak1jp8sMh8Dyt9uLomGoZm/h8=
-X-Google-Smtp-Source: AGHT+IHUdRKgQ964UqJ7mPGegV4qUHNbriO8kSyM/D21jqtW+YJdW+LM/Z0c8Ulzu+ph57ZFYLEkHw==
-X-Received: by 2002:a17:902:f64f:b0:215:4a4e:9262 with SMTP id d9443c01a7336-21f17dd6b37mr24252835ad.8.1738734636869;
-        Tue, 04 Feb 2025 21:50:36 -0800 (PST)
-Received: from vaxr-BM6660-BM6360.. ([2001:288:7001:2703:dc5d:87af:eca4:905a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f06e7d4f6sm23298345ad.112.2025.02.04.21.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 21:50:36 -0800 (PST)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: shuah@kernel.org
-Cc: brauner@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH] selftests: pidfd: Fix compiling warning of pidfs_setns
-Date: Wed,  5 Feb 2025 13:50:31 +0800
-Message-ID: <20250205055031.259710-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="G0ZNG59O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FFiB5MXy"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id B643E25401B0;
+	Wed,  5 Feb 2025 00:50:48 -0500 (EST)
+Received: from phl-imap-06 ([10.202.2.83])
+  by phl-compute-01.internal (MEProxy); Wed, 05 Feb 2025 00:50:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1738734648;
+	 x=1738821048; bh=mgLlWBpsfhLoLswmkshRBzxurIXhuTKDbsJTVWV9ivk=; b=
+	G0ZNG59OQBkaT7tpkK+T353ZFVNDfCmx/dD4ZedIRuEL0XHB+w2ha0n/mP6XnRK8
+	SakNAY9Qi1UpaNTPkFWu/L/9EsGijEjrG8klvsXoNdGudKPP7RtU4SzO5aJ1qMIs
+	Y3JE4GqWTScXuN8zk0gSSrKuuripnL9nK8kN4iN6rWpvvMLXO4RX4qUnimAsrqYn
+	+xwG3i0r7xSPWER0DtRHwYghmUbwuuOSA8izEpc5v75fYoSGPHNdhYmN7o+ZeEYm
+	cVeNGHkHr8JpeFA4U1nR/D/lovUhLgb5lLxo7xwyNl00qDUWsgfQww9oZEFpf+qf
+	4QKH2PEeWzyflfhD5enh0w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738734648; x=
+	1738821048; bh=mgLlWBpsfhLoLswmkshRBzxurIXhuTKDbsJTVWV9ivk=; b=F
+	FiB5MXyeEkFP6dprUEV0yw6z2Y6c0oJqg80U7Mnsh1iClffSGxrnwioWIFYC1VyS
+	sMx93UBWCgRoSEgnQVII9lItA4xD+AIctRiIPwlHJlX27o4oQh6Al08WL9Nrn6og
+	8lszqWIOg6HvG2TL/wBjCZTdFd7sTZO9HBhgPbYr37B0bCBvQSMBpPmsEygKO6IM
+	wbDsIos85KH4RpjlmJFPI5NgSdArfzGU2tTWDt1o+pHx6A4VXYsNdeKrQZt74WOq
+	mrSHlLCpbvetR0LMb3V0ay5fikgkbYx2F+k6lTUD8rLXi9LtaEeJgnRMxUndfI3u
+	sfY9dJyPn5wXzrEix64SA==
+X-ME-Sender: <xms:OPyiZ32v5t3opbQvxvbF4q_E2tnPA4YSQkZ--lCQB-kR7clIwufvhA>
+    <xme:OPyiZ2EiFTJNMmssXu5CuJKj3TLkgjttzne0VTq0ILeQHJ4hOrBMf-4W_7Mo3cNsL
+    huPnnyVPiw2p0thaUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetnhhishhsvgcutehsthhivghrfdcuoegrnhhishhsvgesrghsth
+    hivghrrdgvuheqnecuggftrfgrthhtvghrnhepkeevuddtgefhveefveejhfdvhfdtheet
+    teefvdfgvdfffeevueefudeutefhgeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgt
+    phhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhhohhkrdhrrg
+    hjrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhithhhuhdrjhhoshgv
+    phhhsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhonhihrdhluhgtkhesihhnthgvlh
+    drtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhht
+    vghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:OPyiZ34hrxY8YFU-_-4er241uzm2oj7z0chXKpZQY-967VQz90R_3A>
+    <xmx:OPyiZ83is2momIjGzdHXK9vhA0T7942bfAU8KeLPJC0Gk8iHWfFcBg>
+    <xmx:OPyiZ6GDm7aNWQc6dNy04DyBFUfRZ_v4-nHCzBsIiQ9l3APtWkoJKA>
+    <xmx:OPyiZ99NzO9EUYJI0wwJdBeR2fqajx-yxYrJEvSdQECe2ZSqJco_Kw>
+    <xmx:OPyiZ_7tAjVDsv-gTIkOQqjtD6I7CLNqDp6mwI6gRYqTbSoAUnvkTBWl>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 453F729C006F; Wed,  5 Feb 2025 00:50:48 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Wed, 05 Feb 2025 06:50:28 +0100
+From: "Anisse Astier" <anisse@astier.eu>
+To: "Joseph, Jithu" <jithu.joseph@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ tony.luck@intel.com, ashok.raj.linux@gmail.com
+Message-Id: <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
+In-Reply-To: <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
+References: <20250131205315.1585663-1-jithu.joseph@intel.com>
+ <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
+ <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
+Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image download
+ path
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-In the compilation of pidfs_setns_test.c , a warning as the following
-will pop out.
+Hi Jithu,
 
-pidfd_setns_test.c: In function ‘current_nsset_setup’:
-pidfd_setns_test.c:173:54: warning: implicit declaration of function \
-‘ioctl’ [-Wimplicit-function-declaration]
-  173 |                 self->child_pidfd_derived_nsfds[i] = \
-ioctl(self->pidfd, info->pidfd_ioctl, 0);
+Mar 04 f=C3=A9vr 2025, =C3=A0 22:10, Joseph, Jithu a =C3=A9crit=E2=80=AF:
+> On 2/4/2025 12:07 AM, Ilpo J=C3=A4rvinen wrote:
+>> On Fri, 31 Jan 2025, Jithu Joseph wrote:
+>>=20
+>>> The documentation previously listed the path to download In Field Sc=
+an
+>>> (IFS) test images as "TBD".
+>>>
+>>> Update the documentation to include the correct image download locat=
+ion.
+>>> Also move the download link to the appropriate section within the do=
+c.
+>>>
+>>> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+>>=20
+>> I've applied this patch into the fixes branch with Anisse added as
+>> Reported-by.
+>
+> Thank you, Anisse,  for reporting this, and apologies for missing the=20
+> Reported-by tag.
+>
+> Thanks Ilpo for taking the patch and Tony for your inputs on how to go=20
+> about this.
+>
+>>=20
+>> Thanks Anisse for raising this issue and Jithu for getting the gears=20
+>> moving to provide an useful resolution.
 
-It's caused by wrong import of header file <linux/ioctl.h>, fix it to
-<sys/ioctl.h>.
+Thanks for the update, and the Reported-by tag.
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- tools/testing/selftests/pidfd/pidfd_setns_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Does this patch mean you got confirmation that the scan tests firmware i=
+mages will stay restricted to Intel customers with an NDA?
 
-diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-index 7c2a43491..3ed42f1eb 100644
---- a/tools/testing/selftests/pidfd/pidfd_setns_test.c
-+++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-@@ -16,7 +16,7 @@
- #include <unistd.h>
- #include <sys/socket.h>
- #include <sys/stat.h>
--#include <linux/ioctl.h>
-+#include <sys/ioctl.h>
- 
- #include "pidfd.h"
- #include "../clone3/clone3_selftests.h"
--- 
-2.43.0
+Regards,
 
+Anisse
