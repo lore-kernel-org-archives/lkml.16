@@ -1,87 +1,143 @@
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06928195
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A42195;
+	Wed,  5 Feb 2025 13:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738761060; cv=none; b=ithtr1GgfTD7bIvYWan01ToJrGvT3AOqK16NwtFCqFx1Nvu3bQ17V4Op3iIdw+gJHIYMVZaT9F0tqjZ9iMOLETtDeAyjSmeiHT59Gkp24QEn5gQ/JEuUmsE2x8YYdMeJkcDURX54wvFsQH0sUlyRUPTRpm4R6Xab5I9JooGEDNk=
+	t=1738761066; cv=none; b=Gw/zU0d1/OCNgwD/eh8t/i4zkxlDUV4gpxij/CaO6+jP3CSdpaRB79XrJIg95hs2Xy+9nErNU4o2e/wS1TjKFdGxqdP+issrk4c/0m4nE1KxdkmWxTubVCfur+hZMp6SIJD4Vb+Qsdr9So+IcO3BTDj0WhtSq0rmGIlMtlCb4hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738761060; c=relaxed/simple;
-	bh=UW4vifzm9dK7PfgtyUA+yHCYk90qPhir9yw0Dk0X//Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TmbCXsproeZxVvT9wxm37KV6fO7hT4sDWqZXLNNbUN2Xy9+BUh6cTovrv6CgNaYy3KlohguiWoSdltw59Eu4bLl/I/Hhx6uCHK/wFOdp/lKL4NyE+BQc9HXIYXqQzJiNQIridJ7aYC8XMuil2DpeT919fxMLeLN0sAtbWaC+2rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:fa11:c14e:2df5:5273])
-	by albert.telenet-ops.be with cmsmtp
-	id 9pAn2E0063f221S06pAnbB; Wed, 05 Feb 2025 14:10:47 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tffAp-0000000Fva6-0B9f;
-	Wed, 05 Feb 2025 14:10:47 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tffB1-00000006Q4S-0QzP;
-	Wed, 05 Feb 2025 14:10:47 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Dominik Brodowski <linux@dominikbrodowski.net>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] pcmcia: omap_cf: Mark driver struct with __refdata to prevent section mismatch
-Date: Wed,  5 Feb 2025 14:10:44 +0100
-Message-ID: <06d57da75b583822a541b2eb9f28b172b3487183.1738760740.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1738761066; c=relaxed/simple;
+	bh=corM3VHX1qru4oVXoYeXWyeQz8hXHcVfi5zDWEag+xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J4oloc+SBHBM6WRK7kvjqZ+4ulTn7yTke4r7a0Fr2Hfl2iWWxb5uHeDG+cC/WrSuWU7/5Hy7s57+2yyjtePm2VvZVef8sZRZspGJRInTupxSUlmr5Bbpt+q/9bAV0r2nDxHfNvlHMiMDlssZvDrV7c0bjTXjcvkT6dge+xG/RPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=qfrYA9H9; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="qfrYA9H9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1738761051; x=1739365851; i=ps.report@gmx.net;
+	bh=SZdZ42vpXXffJOGHRoCIKYObvdfvemGW06NA0WlYtJQ=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=qfrYA9H9LjKOQ9t/ud1ZhvOqw2eOTiSUoGGWaFgJXzSBUW5B2sOeNogaMe8DqPDr
+	 U+wyNgPqeYpV4OBgzOnbP5zqQfXR51DzFZPnHFIKWUq+PXYdBWpP19wsbMBY4zoKs
+	 q0jctnkJuv3qbj/l0A2m7Y5yg5+gTNddWKp0I+q3vnLtd2vBTLeXaFRsSatqyixQy
+	 RF1HOshh8b77IsOX9BcSjXjNbEX6PlqxVU+0THttTqLjQZcZopwtU/hhr+K+WrMJH
+	 oI7GhiWbAIy9pU4jZl4H72cfU5jcVv0PkXmj7ms/Pj7qw8mlXlxeNp8fmeYYz6Ute
+	 jNvAirmtkiZCJ9D7vw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([82.135.81.162]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M9FjR-1tkM8b3a6h-004NZU; Wed, 05
+ Feb 2025 14:10:50 +0100
+Date: Wed, 5 Feb 2025 14:10:49 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, Nam Cao
+ <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Frederic
+ Weisbecker <frederic@kernel.org>, Artem Chernyshev
+ <artem.chernyshev@red-soft.ru>
+Subject: Re: [PATCH net-next v3 08/10] net: pktgen: fix access outside of
+ user given buffer in pktgen_if_write()
+Message-ID: <20250205141049.6f10168e@gmx.net>
+In-Reply-To: <20250204105251.GO234677@kernel.org>
+References: <20250203170201.1661703-1-ps.report@gmx.net>
+	<20250203170201.1661703-9-ps.report@gmx.net>
+	<20250204105251.GO234677@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jT0Nv29OurXT9e9e5p/BRMiHbAiM2YW5paPWb4zpNkM+ZhNSi86
+ banbZC2o3jnjFpLJM8R7P796k3DMHDnK+XCTXWmY327jSk2ej+scjvDwe8RqU+hRge2GYE4
+ e50C3czspshxYb4gv6gpAYNvWSGMf8OfbRriIUMaqnBwk1Qo6aRtAlVVf35mejFZQwXNq1+
+ XGJ7w04fWefvb2SAvliuw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HLBicFi5c/Y=;78jaOoJIgmjVzumEMC5zB32lvip
+ qBR4bv9+6sXQHUnepMwxAKxSvJSBML692/RdKivkgKqcNmlwobirVxz/qCFC1QuLVXJ4kWOS4
+ mkm/2Jh2IRjPaadxnr/pUQ1lxFnLrElMRrP/5DQMmuhedd9A7wTFFDjj9xH8WTwew9vPj3yDM
+ ONdE62hkNRkn861Lnq37woYyaULGBXUpHq4A+romXOWVeUSM8TPbj1mlq+5RrbAg4fSbSL3/3
+ xoTCPv0x4HKysvmDusWYnaQl554zMFyyUbFH+sHxM2SzBNOnKpFyFdLty02iHfPhaNlCa2abp
+ /JFmnulfMscBC2nfzNcr0/jFDqpe8HB0FSL73TnGNlA/TMrowpUHn7szpBj6wNig0tiSmDELy
+ qX81P/YIQlgC4mneWQEMkLvH+nNAXJdPDDx0V1noMosEmvkuwQ48CxWr44mXgVON5yhrSAV+E
+ y5ewr5Czgs1Ebhoh53oBGzWcQkWvizwkD5g53/+vBGvZusKUT03/NoaUvV97d96Vsr1HxcIOR
+ EsNNcn5oCkEOue/cI8qD01KLb2HBVHhWfIaVuVd/aDRMgPmKmu+JGD/vy0UzGJ+ULuRK3Z8HL
+ 4hK7rKiSzrr5ozXZZgYf/F98B3bSz2XBzcyYjKhDI0g5LOi7f0wxP1ElI1+wab34/RY/wUTQI
+ 7xhghKwXMG+/a0lQU/hHIwOh5gDpOesPVUxfXRwzfja9mXb1QwbXzbAbNoq2x/CI3Cjol7nU6
+ q/rjGHmzF1D0eharvVS/YijzJRJliCho/E/1NyAsmg/5FjA/8YlDn+0wESAcKZoVTh0njawzI
+ HxXfFV0nMZsyOTQOXCVIdlU5mS1WN5yDlorLNBmGmK9oX2TMhloEZssm18rqBM1ieaS3YrSMp
+ s83vPTaXcvfJK3RH9CPOe4TW8JfhSC7xqImxfB3czGt2cx94kM6th5FdO7mt9qBA5ftGAdh/u
+ YviVyU6ARNR6UGatjWCoTWg5W3FPVOToy+V3PA7/keLjRsSTKmEAJSvzE+1+n7075Gjihmrva
+ wx66grZeJ3GW5mopOgf2TyXSpoosqGaZbak5+fyUGYjY3eev99vViG4wQEXVcqgsUmBw0kX/X
+ YhYLYmPDItFPr6J/uzHw/aj4Nt18wQRvWdDirwIxip43B/wW5/+CTFADqvxJrZpwbNHQy7aSz
+ LUVdoLgt4tC7Rzo29VJsrUF5bRZKJOxJpstvIx8/6QtPbA+3Nqa5BnEvhEu7vd9IQvJA0/wIb
+ xUZtq1/SkxynncFUhJu3A61odSRujV3sBsntr6L8v99DvjLolvNP/N6YiNtZl8QoN4hEinNqb
+ W2B/3yBpZBwPptj96duHUGS1hSf+l0eI7ZUuiUeqpWX9khf1theWBdJaUUbMgsM2ngAvzjdIP
+ 2hxYiou+2FhB7FgXXpxUd03UmXc2QLfUvFU13UyUyCehqtbwxyMd4cihpW
 
-As described in the added code comment, a reference to .exit.text is ok
-for drivers registered via platform_driver_probe().  Make this explicit
-to prevent the following section mismatch warning
+Hello Simon,
 
-    WARNING: modpost: drivers/pcmcia/omap_cf: section mismatch in reference: omap_cf_driver+0x4 (section: .data) -> omap_cf_remove (section: .exit.text)
+On Tue, 4 Feb 2025 10:52:51 +0000, Simon Horman <horms@kernel.org> wrote:
 
-that triggers on an omap1_defconfig + CONFIG_OMAP_CF=m build.
+> On Mon, Feb 03, 2025 at 06:01:59PM +0100, Peter Seiderer wrote:
+> > Honour the user given buffer size for the hex32_arg(), num_arg(),
+> > strn_len(), get_imix_entries() and get_labels() calls (otherwise they =
+will
+> > access memory outside of the user given buffer).
+> >
+> > In hex32_arg(), num_arg(), strn_len() error out in case no characters =
+are
+> > available (maxlen =3D 0), in num_arg() additional error out in case no=
+ valid
+> > character is parsed.
+> >
+> > In get_labels() additional enable parsing labels up to MAX_IMIX_ENTRIE=
+S
+> > instead of (MAX_IMIX_ENTRIES - 1).
+> >
+> > Additional remove some superfluous variable initializing and align som=
+e
+> > variable declarations to the most common pattern.
+> >
+> > Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+>
+> ...
+>
+> > diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+>
+> ...
+>
+> > @@ -872,7 +886,8 @@ static ssize_t get_imix_entries(const char __user =
+*buffer,
+> >  		if (size < 14 + 20 + 8)
+> >  			size =3D 14 + 20 + 8;
+> >
+> > -		len =3D num_arg(&buffer[i], max_digits, &weight);
+> > +		max =3D min(10, maxlen - i);
+>
+> Hi Peter,
+>
+> 10 is used as a magic value here. I think it would be best if
+> it were a #define so it has a name. Likewise for other constants
+> used as arguments to min() in this patch.
+>
+> ...
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Aaro Koskinen <aaro.koskinen@iki.fi>
----
-v2:
-  - Add Acked-by.
----
- drivers/pcmcia/omap_cf.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+O.k, done in the next patch iteration...
 
-diff --git a/drivers/pcmcia/omap_cf.c b/drivers/pcmcia/omap_cf.c
-index f0ccf479f36e5223..9bb80b47f0c453fb 100644
---- a/drivers/pcmcia/omap_cf.c
-+++ b/drivers/pcmcia/omap_cf.c
-@@ -302,7 +302,13 @@ static void __exit omap_cf_remove(struct platform_device *pdev)
- 	kfree(cf);
- }
- 
--static struct platform_driver omap_cf_driver = {
-+/*
-+ * omap_cf_remove() lives in .exit.text. For drivers registered via
-+ * platform_driver_probe() this is ok because they cannot get unbound at
-+ * runtime. So mark the driver struct with __refdata to prevent modpost
-+ * triggering a section mismatch warning.
-+ */
-+static struct platform_driver omap_cf_driver __refdata = {
- 	.driver = {
- 		.name	= driver_name,
- 	},
--- 
-2.43.0
+Thanks for review!
+
+Regards,
+Peter
 
