@@ -1,94 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B951F510;
-	Wed,  5 Feb 2025 20:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D44204092;
+	Wed,  5 Feb 2025 20:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785854; cv=none; b=nM9IJ0HcpZSiVXgFVbAPHhCSecdwMFLcYCxM8spznqVkdJUheu0yKSMr4L2ubx2S3L+vGPjs2FLiPPO327svM58JDIdFMuLlRaXF7G30khDd+//uN1S+9aOXh3A4XTzqUnK2VBL6MfhGfiiKYuLAveaefqpl8umXvX3e5+DBrhI=
+	t=1738785918; cv=none; b=FPUyeA6p757Tf9HNEKfGHFIRvpKVlZBlbTdqihmfajDNFKqaT92eeJ5mrAYmeZUNazQjbdVfR5L/j4ibIYpU3cmcNw7kn8L6tXoGy/LSN6RcO9Hbn302tk/5zWPFfw3ag9KsaoJGHEeaSyhGCD9/amCTTp0zxZginYjZpMHmbKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785854; c=relaxed/simple;
-	bh=+FFvkoBOl40xUJ/7W0+yCnQgdgIu/pUtsBVhDoZzfKI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VuHFydNHTGKnY54PAhRyLzRzRCNwfMXg7+h+F2yWJmAOTro9xGosucgbhLANb+Be57+WOPClBhPg46xwQ89qDlRN7Ywe6gXUNpX7dJfdtbzRzEl1hkSNm86WvEdDDab440hKq4mD9zpwdfYE5++Scnjn/cYF+5KSk7NKkKcSyTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGVVZv6o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738785918; c=relaxed/simple;
+	bh=FFwFNn5iA2ll4w2bavbJH1n0QsSgFHdVLfFyEJw242U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0MAxvK4Fb72p7+IxUMka7ukBge9hvlgl4lap0+RUSyy4pQ0ERtDqEL69lWrbeKCXY1+LhFcxoK8jCsDZbUxsWpFn+c1o0aWXyylD/1rlvcilonGUwzc7txz/Uy8cYrgs3EXj+MriW/604rMoRWBn2r1EG+bk2kGLKoQriRKIF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mf2nO994; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGVVZv6o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C4D1C4AF0B;
-	Wed,  5 Feb 2025 20:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mf2nO994"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3AEC4CED1;
+	Wed,  5 Feb 2025 20:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738785853;
-	bh=+FFvkoBOl40xUJ/7W0+yCnQgdgIu/pUtsBVhDoZzfKI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IGVVZv6o2vZ+t7qUWmblsl3a4hr4hET5tZMp/mMPXja5dzv8XUY2DzVU7fnVuGWVK
-	 8u8YfNiCjvVgwlxpsfaSDSwQcjhPOZw4YMW5L4HgKwUV/wGtuo3R3IBZr877pP9ti1
-	 fP6XpZI15Be9d54fIQUMz8xrl/fenJA7eWREIJxfSOEzxQo84eF0cGcDsZB/PYbW0N
-	 ezfr9lpLXvBP5jJ/e2n/EEabEiCCThkz0V/QKrjBcOeyIb8z9peSCRd8Jnl1+6Mofr
-	 0UDqQ/HhRqx3VB3G3lmD6BoY44gaRZ4mlTP3a6V6W43IRdtHJvp+dS1q+yfOh0p8fM
-	 MJL5d8UUIEVGA==
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3eba559611aso56012b6e.0;
-        Wed, 05 Feb 2025 12:04:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWCxYtLjuIDDKZt3IA+VQ7oCdYR3pAvTjzHETpfSkJBFp5XkulofsoMjx2Dz/5Mq4lSBqKUs6QyMrk=@vger.kernel.org, AJvYcCWCznUdch6FSjV+hBaIOZA5QMicH9sjDCQFcOS4etgbltXUOYl0YhUdiieqv2GWYteSV6FHCOTuWIrEV/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq1d8hYGd2J159ILUGZyBdiW4v4lmBNnpSETqBNis5FNZazU1W
-	WO2nmi8vbAYWyIuip4zAeAH6QbXmuQlmahSUwyBgshOIxXw8b0EOdLYQKl7bMAv2ujlOHrmyLbw
-	F8CrTGL8TgyJvDlRuhUiNFlwetzI=
-X-Google-Smtp-Source: AGHT+IHe1Lj7yx+0CYl4Xy6nZWHrRS3pbOj2yBx2ooIdbF9l0/WenggJHevZ/XBhavH2GCvquRPkFjVJniRr8MJsM0Y=
-X-Received: by 2002:a05:6808:164e:b0:3ef:27fe:e984 with SMTP id
- 5614622812f47-3f37c11cb60mr2644653b6e.12.1738785852890; Wed, 05 Feb 2025
- 12:04:12 -0800 (PST)
+	s=k20201202; t=1738785917;
+	bh=FFwFNn5iA2ll4w2bavbJH1n0QsSgFHdVLfFyEJw242U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mf2nO994EQAuAigF4VlKpWnpG979tIt9dnEoc1KGCrdIoJ2OIBm77J21GDUa2Ofli
+	 quJqfh2rJVimEZMWfzqAJk/rFg4sMIviL3/2W6LelDro51sdkLEZLG4iI5W8SghI05
+	 3SP8EkzDUgp6V8K54Pox2W4DhJEWs/n48L2t97bEmczXJ5eKf8hNhy73LIR33or5DO
+	 5ZqwGJbwV0Hfonqy6oCUJ5MibJ5iYgDC52XJJ8WTmOZjt9PKFAzqAANdpvi73XpDcb
+	 zQy2ZRgYK7nmyUqazLdcxIST7FGdpHurR6Jrn1rCFIQZ42OitpSEa87dp/4iKz7Kcu
+	 hvGzQ7Qy167lQ==
+Date: Wed, 5 Feb 2025 12:05:17 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com
+Subject: Re: [PATCH RFC 06/10] xfs: iomap CoW-based atomic write support
+Message-ID: <20250205200517.GZ21808@frogsfrogsfrogs>
+References: <20250204120127.2396727-1-john.g.garry@oracle.com>
+ <20250204120127.2396727-7-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205181347.2079272-1-aboorvad@linux.ibm.com>
-In-Reply-To: <20250205181347.2079272-1-aboorvad@linux.ibm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 5 Feb 2025 21:04:01 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hx1yagWQYaHY-x=VMvw9cdZm=B88MPK=HyVOBVL7ANqg@mail.gmail.com>
-X-Gm-Features: AWEUYZmbkdFJU00qM1_alhIpg9LCaxnJEtTI2qdu0dzdlv5QNye5Vi10O2JkELE
-Message-ID: <CAJZ5v0hx1yagWQYaHY-x=VMvw9cdZm=B88MPK=HyVOBVL7ANqg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] cpufreq: prevent NULL dereference in cpufreq_online
-To: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: rafael@kernel.org, viresh.kumar@linaro.org, zhenglifeng1@huawei.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, gautam@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204120127.2396727-7-john.g.garry@oracle.com>
 
-On Wed, Feb 5, 2025 at 7:14=E2=80=AFPM Aboorva Devarajan <aboorvad@linux.ib=
-m.com> wrote:
->
-> Ensure `cpufreq_driver->set_boost` is non-NULL before using it in
-> `cpufreq_online` to prevent a potential NULL pointer dereference.
->
-> Reported-by: Gautam Menghani <gautam@linux.ibm.com>
-> Closes: https://lore.kernel.org/all/c9e56c5f54cc33338762c94e9bed7b5a0d5de=
-812.camel@linux.ibm.com/
-> Fixes: dd016f379ebc ("cpufreq: Introduce a more generic way to set defaul=
-t per-policy boost flag")
-> Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+On Tue, Feb 04, 2025 at 12:01:23PM +0000, John Garry wrote:
+> In cases of an atomic write occurs for misaligned or discontiguous disk
+> blocks, we will use a CoW-based method to issue the atomic write.
+> 
+> So, for that case, return -EAGAIN to request that the write be issued in
+> CoW atomic write mode. The dio write path should detect this, similar to
+> how misaligned regalar DIO writes are handled.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 > ---
->  drivers/cpufreq/cpufreq.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index e0048856ecee..30ffbddc7ece 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1571,7 +1571,8 @@ static int cpufreq_online(unsigned int cpu)
->                 policy->cdev =3D of_cpufreq_cooling_register(policy);
->
->         /* Let the per-policy boost flag mirror the cpufreq_driver boost =
-during init */
-> -       if (policy->boost_enabled !=3D cpufreq_boost_enabled()) {
-> +       if (cpufreq_driver->set_boost &&
-> +           policy->boost_enabled !=3D cpufreq_boost_enabled()) {
->                 policy->boost_enabled =3D cpufreq_boost_enabled();
->                 ret =3D cpufreq_driver->set_boost(policy, policy->boost_e=
-nabled);
->                 if (ret) {
-> --
+>  fs/xfs/xfs_iomap.c | 68 ++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 66 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index ae3755ed00e6..2c2867d728e4 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -809,9 +809,12 @@ xfs_direct_write_iomap_begin(
+>  	struct xfs_bmbt_irec	imap, cmap;
+>  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+>  	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, length);
+> +	bool			atomic = flags & IOMAP_ATOMIC;
+>  	int			nimaps = 1, error = 0;
+>  	bool			shared = false;
+> +	bool			found = false;
+>  	u16			iomap_flags = 0;
+> +	bool			need_alloc;
+>  	unsigned int		lockmode;
+>  	u64			seq;
+>  
+> @@ -832,7 +835,7 @@ xfs_direct_write_iomap_begin(
+>  	 * COW writes may allocate delalloc space or convert unwritten COW
+>  	 * extents, so we need to make sure to take the lock exclusively here.
+>  	 */
+> -	if (xfs_is_cow_inode(ip))
+> +	if (xfs_is_cow_inode(ip) || atomic)
+>  		lockmode = XFS_ILOCK_EXCL;
+>  	else
+>  		lockmode = XFS_ILOCK_SHARED;
+> @@ -857,12 +860,73 @@ xfs_direct_write_iomap_begin(
+>  	if (error)
+>  		goto out_unlock;
+>  
+> +
+> +	if (flags & IOMAP_ATOMIC_COW) {
+> +		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
+> +				&lockmode,
+> +				(flags & IOMAP_DIRECT) || IS_DAX(inode), true);
 
-Applied as 6.14-rc material, thanks!
+Weird nit not relate to this patch: Is there ever a case where
+IS_DAX(inode) and (flags & IOMAP_DAX) disagree?  I wonder if this odd
+construction could be simplified to:
+
+	(flags & (IOMAP_DIRECT | IOMAP_DAX))
+
+?
+
+> +		if (error)
+> +			goto out_unlock;
+> +
+> +		end_fsb = imap.br_startoff + imap.br_blockcount;
+> +		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+> +
+> +		if (imap.br_startblock != HOLESTARTBLOCK) {
+> +			seq = xfs_iomap_inode_sequence(ip, 0);
+> +
+> +			error = xfs_bmbt_to_iomap(ip, srcmap, &imap, flags,
+> +				iomap_flags | IOMAP_F_ATOMIC_COW, seq);
+> +			if (error)
+> +				goto out_unlock;
+> +		}
+> +		seq = xfs_iomap_inode_sequence(ip, 0);
+> +		xfs_iunlock(ip, lockmode);
+> +		return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags,
+> +					iomap_flags | IOMAP_F_ATOMIC_COW, seq);
+> +	}
+
+/me wonders if this should be a separate helper so that the main
+xfs_direct_write_iomap_begin doesn't get even longer... but otherwise
+the logic in here looks sane.
+
+> +
+> +	need_alloc = imap_needs_alloc(inode, flags, &imap, nimaps);
+> +
+> +	if (atomic) {
+> +		/* Use CoW-based method if any of the following fail */
+> +		error = -EAGAIN;
+> +
+> +		/*
+> +		 * Lazily use CoW-based method for initial alloc of data.
+> +		 * Check br_blockcount for FSes which do not support atomic
+> +		 * writes > 1x block.
+> +		 */
+> +		if (need_alloc && imap.br_blockcount > 1)
+> +			goto out_unlock;
+> +
+> +		/* Misaligned start block wrt size */
+> +		if (!IS_ALIGNED(imap.br_startblock, imap.br_blockcount))
+> +			goto out_unlock;
+> +
+> +		/* Discontiguous or mixed extents */
+> +		if (!imap_spans_range(&imap, offset_fsb, end_fsb))
+> +			goto out_unlock;
+> +	}
+
+(Same two comments here.)
+
+> +
+>  	if (imap_needs_cow(ip, flags, &imap, nimaps)) {
+>  		error = -EAGAIN;
+>  		if (flags & IOMAP_NOWAIT)
+>  			goto out_unlock;
+>  
+> +		if (atomic) {
+> +			/* Detect whether we're already covered in a cow fork */
+> +			error  = xfs_find_trim_cow_extent(ip, &imap, &cmap, &shared, &found);
+> +			if (error)
+> +				goto out_unlock;
+> +
+> +			if (shared) {
+> +				error = -EAGAIN;
+> +				goto out_unlock;
+
+What is this checking?  That something else already created a mapping in
+the COW fork, so we want to bail out to get rid of it?
+
+--D
+
+> +			}
+> +		}
+> +
+>  		/* may drop and re-acquire the ilock */
+> +		shared = false;
+>  		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
+>  				&lockmode,
+>  				(flags & IOMAP_DIRECT) || IS_DAX(inode), false);
+> @@ -874,7 +938,7 @@ xfs_direct_write_iomap_begin(
+>  		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+>  	}
+>  
+> -	if (imap_needs_alloc(inode, flags, &imap, nimaps))
+> +	if (need_alloc)
+>  		goto allocate_blocks;
+>  
+>  	/*
+> -- 
+> 2.31.1
+> 
+> 
