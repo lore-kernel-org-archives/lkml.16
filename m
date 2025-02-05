@@ -1,54 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E9822F154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8CB22F386
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752248; cv=none; b=iXpGIG+lCHaOKZ9vfWzQdtBEsHKN2jLDo9aPGD4BkJ0DBEAQXdZMx9M4zkgLK5GFgIJepifbkwXxd/EuBqE81C1SkPqvI4QlCYi5w5stSNTXjo/pOu2K46n7inEWF1zUUBqOB9TOzN2OfoUX7BRziAeq0dqqf9ptPZc2r3l4WlI=
+	t=1738752249; cv=none; b=eVM+yNFlmToTjyMNIaLe1eiQTW30snfZcXkxA3ZKVK6oMph9nI2T8NY607lu2zaZnuC6G+m5X2flEz4KXRM2mdUUPofEIwgczXOEhwm7O1dbo8Z9z8LJ/U3u+gHQ+ORSRKdDbwJi6eZvPhVGDZXoAL/kb2d4WqiJvEaxztt9dd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752248; c=relaxed/simple;
-	bh=p2zQdc/98oATUbsAE3vHMDv3QX9Fqow3DVjUVEqVFFA=;
+	s=arc-20240116; t=1738752249; c=relaxed/simple;
+	bh=lwdzT4D9tUSr70iEBlqm1ErOjEZlhxKoCny6yVDtLQ4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HBJ5F/xzFYc8Mdh4lB2IyIARGxuwIWYu/MG5wdNUNKCrgOGfk87DSKqqd8ttLeu3oQm6pEhFr9NG+XbJkAsd4CS3ypF0bqJ+4+KiTGF0zKkZl+iqXzF9+16zFpmqr/VbwiEiSGNo3IjVn6YR0GkaNAasNmWYhxKiJk3+KC9C5VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vrg7V0ab; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bAUBbKwj; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=nPApva5XAT042/5vfQUs6zKFxrTg1DIVT1FHWqnvpR51DJtOE+Ih3pvjmbJeq4a/s+WB+Ne0N4i0DOrhlQ5WCE3+lbHVZvMnirb7ckavZsI0fO1Nz5LrJ9/76KPGhEyjcB50bpr9Owy5Z4WLpplS105rRfCZwKPHM6+N42lAfgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CIxUZkLy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x+ABu66f; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vrg7V0ab";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bAUBbKwj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CIxUZkLy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x+ABu66f"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752244;
+	s=2020; t=1738752245;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1SPTlKvgRUCafq/9FwoW27geyszg+WVRrGfLeG/pANI=;
-	b=Vrg7V0abkEfw3lEA9C8yhx8XVh/ot8MS8wL3mfx74zZKhD/h7SNFyul+yk/dut0rZE8hmg
-	TyKD9RcVWIgAW1KELLIbnTjblzQiy3sLq7rAvZr+4L6CgWteH86NSu9Feyh8Ygf3etd4Vr
-	3iYXbq75npYgMV200QQU6IeSFd+UwuNUv77FxIixUGfo+KNsySB4kAGeGRryLeMWAgZAvq
-	DLb3gGWGkujRTDdTwaeXPZf1dmmboOqrQ+fTIQKu/A8WLoyMTEdy0IMzcQ+U+px51gbqph
-	WyZX2gqXGqLU3lm15rT8hhvAr1qEkRz0uRy3GXiFglcBCemaezwGqxJOcm/mQA==
+	bh=tvuUjZiP7cBPl9y5gYW6v2NngZPMaIEP2c/Ga6hOKA0=;
+	b=CIxUZkLyrlh4EkXbxlaJEicizzKWg00pcJL+mtXyVQ74StHHwpHmREJEdBbutwt8hUd/W4
+	wqNfJTRjPMCo+5judIj47qcdd1ZJROPq8DE+w1cGZXDbD7Y+1p4zCSi4UKCwPBHeH+9uou
+	GMOZ1SLQrk8JSd66Q0qtlOcfvQnCnBwI2ZzYIVyj2nWz6REhx7jhZ5HmUB+xkrb+O5nfxM
+	EHldujlrCnUrHMUsTkTdnRPa+iHlfi6iB7pvPMNjlKEvf20VLM161Xj7gSKPZyAfJ9yyzu
+	EHV4ynSKFS2SQCm+Ca0ATfDdQR9Z2hzWlbDabX4cnSPPEoVXK876MyD9av81JA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752244;
+	s=2020e; t=1738752245;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1SPTlKvgRUCafq/9FwoW27geyszg+WVRrGfLeG/pANI=;
-	b=bAUBbKwjqNtNzSp1+JUNe9e2FCUMtB4GkbGkx8kt/3AUK8FTbiBUh0EzZFTaVKZiWYzw3A
-	xNaFkg0wgGXuXKBw==
+	bh=tvuUjZiP7cBPl9y5gYW6v2NngZPMaIEP2c/Ga6hOKA0=;
+	b=x+ABu66ffyKqT4e3kdsr4L1zwnPPghwlc3KMXvDsiui0tlkzBOpYSmMspK9RwlrCXC90AV
+	MKr3eV9+sijx3QBw==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH v2 18/24] net: wwan: iosm: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:43:38 +0100
-Message-Id: <e42d7d29879017d4b5ca9555f806e782658e3f21.1738746872.git.namcao@linutronix.de>
+	Kalle Valo <kvalo@kernel.org>
+Subject: [PATCH v2 21/24] wifi: rt2x00: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:43:41 +0100
+Message-Id: <f086be77528edf0dfb455af4cb984b863084a455.1738746872.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746872.git.namcao@linutronix.de>
 References: <cover.1738746872.git.namcao@linutronix.de>
 Precedence: bulk
@@ -60,66 +59,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 hrtimer_setup() takes the callback function pointer as argument and
-initializes the timer completely.
+initializes the timer completely. This new function replaces
+hrtimer_init().
 
-Replace hrtimer_init() and the open coded initialization of
-hrtimer::function with the new setup mechanism.
+However, converting this driver is not obvious: the driver calls
+hrtimer_init() in rt2x00dev.c, then set the hrtimer's callback function in
+rt2800mmio.c and rt2800usb.c. Therefore, switching to the new function is
+not a simple one-for-one replacement.
 
-Patch was created by using Coccinelle.
+With the lack of hardware to verify any non-trivial changes, keep it simple
+and calls hrtimer_setup() with hrtimer_dummy_timeout() as callback function
+pointer.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Kalle Valo <kvalo@kernel.org>
 ---
- drivers/net/wwan/iosm/iosm_ipc_imem.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ drivers/net/wireless/ralink/rt2x00/rt2x00dev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_imem.c b/drivers/net/wwan/iosm/=
-iosm_ipc_imem.c
-index 829515a601b3..530a3ea47a1a 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_imem.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_imem.c
-@@ -1381,24 +1381,20 @@ struct iosm_imem *ipc_imem_init(struct iosm_pcie *p=
-cie, unsigned int device_id,
- 	/* The phase is set to power off. */
- 	ipc_imem->phase =3D IPC_P_OFF;
-=20
--	hrtimer_init(&ipc_imem->startup_timer, CLOCK_MONOTONIC,
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/net/w=
+ireless/ralink/rt2x00/rt2x00dev.c
+index 9e7d9dbe954c..432ddfac2c33 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
+@@ -1391,8 +1391,8 @@ int rt2x00lib_probe_dev(struct rt2x00_dev *rt2x00dev)
+ 	mutex_init(&rt2x00dev->conf_mutex);
+ 	INIT_LIST_HEAD(&rt2x00dev->bar_list);
+ 	spin_lock_init(&rt2x00dev->bar_list_lock);
+-	hrtimer_init(&rt2x00dev->txstatus_timer, CLOCK_MONOTONIC,
 -		     HRTIMER_MODE_REL);
--	ipc_imem->startup_timer.function =3D ipc_imem_startup_timer_cb;
-+	hrtimer_setup(&ipc_imem->startup_timer, ipc_imem_startup_timer_cb, CLOCK_=
-MONOTONIC,
++	hrtimer_setup(&rt2x00dev->txstatus_timer, hrtimer_dummy_timeout, CLOCK_MO=
+NOTONIC,
 +		      HRTIMER_MODE_REL);
 =20
--	hrtimer_init(&ipc_imem->tdupdate_timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL);
--	ipc_imem->tdupdate_timer.function =3D ipc_imem_td_update_timer_cb;
-+	hrtimer_setup(&ipc_imem->tdupdate_timer, ipc_imem_td_update_timer_cb, CLO=
-CK_MONOTONIC,
-+		      HRTIMER_MODE_REL);
+ 	set_bit(DEVICE_STATE_PRESENT, &rt2x00dev->flags);
 =20
--	hrtimer_init(&ipc_imem->fast_update_timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL);
--	ipc_imem->fast_update_timer.function =3D ipc_imem_fast_update_timer_cb;
-+	hrtimer_setup(&ipc_imem->fast_update_timer, ipc_imem_fast_update_timer_cb=
-, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL);
-=20
--	hrtimer_init(&ipc_imem->td_alloc_timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL);
--	ipc_imem->td_alloc_timer.function =3D ipc_imem_td_alloc_timer_cb;
-+	hrtimer_setup(&ipc_imem->td_alloc_timer, ipc_imem_td_alloc_timer_cb, CLOC=
-K_MONOTONIC,
-+		      HRTIMER_MODE_REL);
-=20
--	hrtimer_init(&ipc_imem->adb_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	ipc_imem->adb_timer.function =3D ipc_imem_adb_timer_cb;
-+	hrtimer_setup(&ipc_imem->adb_timer, ipc_imem_adb_timer_cb, CLOCK_MONOTONI=
-C,
-+		      HRTIMER_MODE_REL);
-=20
- 	if (ipc_imem_config(ipc_imem)) {
- 		dev_err(ipc_imem->dev, "failed to initialize the imem");
 --=20
 2.39.5
 
