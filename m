@@ -1,245 +1,141 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D221721C9E3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142AC21516B;
+	Wed,  5 Feb 2025 12:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756958; cv=none; b=CZkfgxZk+mS6WtEHEQ4er84ShaxG7B7X1mECc5cJe+y/813Fyvns79U3DnyaciZN6kZ3cT256EVNfhpekN3P8h7mYt6Sj3ADQLXHulkCVaMxxRYWjSlOn+EE4fXno46t/AlhFkoymj6FGbw9Rg7eEb7mNzV1kx8Nd4Db5iWOvOc=
+	t=1738756999; cv=none; b=WxaqYnob1xET7vQYa3u2vvzoxA1fP4PwMjV2QKEElf0WcxeOIl1p6LNGhbVCd0GjTqM6oDE+shAG5e0PTMPKcfF8OeFEaEbnJlzWLZ3c6FWPJythIwKNKKRAwLdv0C/+0BbvpLEwMsfvUGQwXjkMCpQ0ewVsGK9p18pXQWn0lCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756958; c=relaxed/simple;
-	bh=agqfF/moWRFKv9gbK1sBe2qFqcKmhT34Jw/CPToM4sU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWbcQcfF71r4Fj6/ySb+wxOW0xE/jClcjZNLpOYpOKweTFVHygjq+/22BuLNCHBLydvHgpWFvuHHuyFJUPdMMMAjIpJvEWBHH1QeRldaXysvEsTIxDy+BNoiG5Jc3zrOoGg3BCMpGT6Yo28Evhnd6jWQYHvVfWA/LLCpUD5kKLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1tfe6j-0006Bx-19; Wed, 05 Feb 2025 13:02:17 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1tfe6i-003d20-0M;
-	Wed, 05 Feb 2025 13:02:16 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1tfe6h-00FWfW-39;
-	Wed, 05 Feb 2025 13:02:15 +0100
-Date: Wed, 5 Feb 2025 13:02:15 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Abel Vesa <abelvesa@kernel.org>, Rob Herring <robh@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	imx@lists.linux.dev, Fabio Estevam <festevam@gmail.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, arm-scmi@vger.kernel.org,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] clk: Introduce clk_hw_set_spread_spectrum
-Message-ID: <20250205120215.if3egfj6vbnynwl3@pengutronix.de>
-References: <20250205-clk-ssc-v2-0-fa73083caa92@nxp.com>
- <20250205-clk-ssc-v2-1-fa73083caa92@nxp.com>
+	s=arc-20240116; t=1738756999; c=relaxed/simple;
+	bh=QmkDwHrI/c+t2IlAP+8VfGH8V3h5MLbVA8cKyHBDeis=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o5E51Fj2CNWRB1M2w14AAVrBaXOFAR/gCCioj0o/Pb35aHn6GqbLBzJ79Db1HtbFF6n0AI0+vFMBlFCq6Gx4UMZKvwqVI5NiWozKsLEjFLwhs15WOyqOWjDwScJL7wvMowuy12Ui/3JIAkhLhGkkQH0VDKpA8sPiRjENIEyS8Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GqouyR3E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1IX4r1A5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GqouyR3E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1IX4r1A5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GqouyR3E";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1IX4r1A5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GqouyR3E";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1IX4r1A5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2DE4D211F7;
+	Wed,  5 Feb 2025 12:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738756996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w6Xf0428skrBezRsfRPGS9o4iSQH1jKIk1Qxl6JafTg=;
+	b=GqouyR3EyLqgVzAF/UA6+XtRD9lJJgTb9BSE3FQ3yNnYeHqOSA5t0nTV17THpNiOQHCtRX
+	G0I7ANmACUia6nbwRdplJBlIT8bdXLEy0vYog89revV/qzO+dw2Dfc9OFMc4+72wZFIDYD
+	+Td9vBy+AWozqsT0K42CmXp9PtsRfjE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738756996;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w6Xf0428skrBezRsfRPGS9o4iSQH1jKIk1Qxl6JafTg=;
+	b=1IX4r1A5mCrft3DFYSb3lej+M/BLsvrzxm0tp3Hk+higoRrmqSYHYXGuhyIiM9RnGttb6y
+	B1H1rwpseBSq8QDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=GqouyR3E;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=1IX4r1A5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738756996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w6Xf0428skrBezRsfRPGS9o4iSQH1jKIk1Qxl6JafTg=;
+	b=GqouyR3EyLqgVzAF/UA6+XtRD9lJJgTb9BSE3FQ3yNnYeHqOSA5t0nTV17THpNiOQHCtRX
+	G0I7ANmACUia6nbwRdplJBlIT8bdXLEy0vYog89revV/qzO+dw2Dfc9OFMc4+72wZFIDYD
+	+Td9vBy+AWozqsT0K42CmXp9PtsRfjE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738756996;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w6Xf0428skrBezRsfRPGS9o4iSQH1jKIk1Qxl6JafTg=;
+	b=1IX4r1A5mCrft3DFYSb3lej+M/BLsvrzxm0tp3Hk+higoRrmqSYHYXGuhyIiM9RnGttb6y
+	B1H1rwpseBSq8QDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0332713694;
+	Wed,  5 Feb 2025 12:03:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7D0jO4NTo2dZXwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 05 Feb 2025 12:03:15 +0000
+Date: Wed, 05 Feb 2025 13:03:15 +0100
+Message-ID: <87msf0zji4.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: linux@treblig.org
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ALSA: lola: Remove unused lola_(save|restore)_mixer
+In-Reply-To: <20250122022059.456068-1-linux@treblig.org>
+References: <20250122022059.456068-1-linux@treblig.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205-clk-ssc-v2-1-fa73083caa92@nxp.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 2DE4D211F7
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Peng,
-
-On 25-02-05, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Wed, 22 Jan 2025 03:20:59 +0100,
+linux@treblig.org wrote:
 > 
-> Add clk_hw_set_spread_spectrum to configure a clock to enable spread
-> spectrum feature. set_spread_spectrum ops is added for clk drivers to
-> have their own hardware specific implementation.
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/clk/clk.c            | 34 ++++++++++++++++++++++++++++++++++
->  include/linux/clk-provider.h | 32 ++++++++++++++++++++++++++++++++
->  include/linux/clk.h          | 22 ++++++++++++++++++++++
->  3 files changed, 88 insertions(+)
+> lola_restore_mixer() and lola_save_mixer() were added in 2011 by
+> commit d43f3010b8fa ("ALSA: Add the driver for Digigram Lola
+> PCI-e boards")
+> but have remain unused.
 > 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index cf7720b9172ff223d86227aad144e15375ddfd86..e11f9615e683af52c719d4c8419bd30f369f301b 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -2790,6 +2790,40 @@ int clk_set_max_rate(struct clk *clk, unsigned long rate)
->  }
->  EXPORT_SYMBOL_GPL(clk_set_max_rate);
->  
-> +int clk_hw_set_spread_spectrum(struct clk_hw *hw, unsigned int modfreq,
-> +			       unsigned int spreaddepth, enum clk_ssc_method method,
-> +			       bool enable)
-> +{
-> +	struct clk_spread_spectrum clk_ss;
-> +	struct clk_core *core;
-> +	int ret;
-> +
-> +	if (!hw)
-> +		return 0;
-> +
-> +	core = hw->core;
-> +
-> +	clk_ss.modfreq = modfreq;
-> +	clk_ss.spreaddepth = spreaddepth;
-> +	clk_ss.method = method;
-> +	clk_ss.enable = enable;
-> +
-> +	clk_prepare_lock();
-> +
-> +	ret = clk_pm_runtime_get(core);
-> +	if (ret)
-> +		goto fail;
-> +
-> +	if (core->ops->set_spread_spectrum)
-> +		ret = core->ops->set_spread_spectrum(hw, &clk_ss);
-> +
-> +	clk_pm_runtime_put(core);
-> +
-> +fail:
-> +	clk_prepare_unlock();
-> +	return ret;
-> +}
-> +
->  /**
->   * clk_get_parent - return the parent of a clk
->   * @clk: the clk whose parent gets returned
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 2e6e603b749342931c0d0693c3e72b62c000791b..ac0270cc9ec133954b1f8dcffed015723bd1ff5d 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -84,6 +84,28 @@ struct clk_duty {
->  	unsigned int den;
->  };
->  
-> +/* Aligned with dtschema/schemas/clock/clock.yaml */
-> +enum clk_ssc_method {
-> +	CLK_SSC_CENTER_SPREAD,
-> +	CLK_SSC_UP_SPREAD,
-> +	CLK_SSC_DOWN_SPREAD,
-> +};
-> +
-> +/**
-> + * struct clk_spread_spectrum - Structure encoding spread spectrum of a clock
-> + *
-> + * @modfreq:		Modulation frequency
-> + * @spreadpercent:	Modulation percent
-> + * @method:		Modulation method
-> + * @enable:		Modulation enable or disable
-> + */
-> +struct clk_spread_spectrum {
-> +	unsigned int modfreq;
-> +	unsigned int spreaddepth;
+> Remove them.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Please use per mil as unit since I noticed that 0.x% is a common value
-too.
-
-Regards,
-  Marco
+Applied to for-next branch now.  Thanks.
 
 
-> +	enum clk_ssc_method method;
-> +	bool enable;
-> +};
-> +
->  /**
->   * struct clk_ops -  Callback operations for hardware clocks; these are to
->   * be provided by the clock implementation, and will be called by drivers
-> @@ -178,6 +200,11 @@ struct clk_duty {
->   *		separately via calls to .set_parent and .set_rate.
->   *		Returns 0 on success, -EERROR otherwise.
->   *
-> + * @set_spread_spectrum: Configure the modulation frequency, modulation percentage
-> + *		and method. This callback is optional for clocks that does not
-> + *		support spread spectrum feature or no need to enable this feature.
-> + *		Returns 0 on success, -EERROR otherwise.
-> + *
->   * @recalc_accuracy: Recalculate the accuracy of this clock. The clock accuracy
->   *		is expressed in ppb (parts per billion). The parent accuracy is
->   *		an input parameter.
-> @@ -255,6 +282,8 @@ struct clk_ops {
->  	int		(*set_rate_and_parent)(struct clk_hw *hw,
->  				    unsigned long rate,
->  				    unsigned long parent_rate, u8 index);
-> +	int		(*set_spread_spectrum)(struct clk_hw *hw,
-> +					       struct clk_spread_spectrum *clk_ss);
->  	unsigned long	(*recalc_accuracy)(struct clk_hw *hw,
->  					   unsigned long parent_accuracy);
->  	int		(*get_phase)(struct clk_hw *hw);
-> @@ -1404,6 +1433,9 @@ void clk_hw_get_rate_range(struct clk_hw *hw, unsigned long *min_rate,
->  			   unsigned long *max_rate);
->  void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long min_rate,
->  			   unsigned long max_rate);
-> +int clk_hw_set_spread_spectrum(struct clk_hw *hw, unsigned int modfreq,
-> +			       unsigned int spreaddepth, enum clk_ssc_method method,
-> +			       bool enable);
->  
->  static inline void __clk_hw_set_clk(struct clk_hw *dst, struct clk_hw *src)
->  {
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index b607482ca77e987b9344c38f25ebb5c8d35c1d39..49a7f7eb8b03233e11cd3b92768896c4e45c4e7c 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -858,6 +858,21 @@ int clk_set_rate(struct clk *clk, unsigned long rate);
->   */
->  int clk_set_rate_exclusive(struct clk *clk, unsigned long rate);
->  
-> +/**
-> + * clk_set_spread_spectrum - set the spread spectrum for a clock
-> + * @clk: clock source
-> + * @modfreq: modulation freq
-> + * @spreadpercent: modulation percentage
-> + * @method: down spread, up spread, center spread or else
-> + * @enable: enable or disable
-> + *
-> + * Configure the spread spectrum parameters for a clock.
-> + *
-> + * Returns success (0) or negative errno.
-> + */
-> +int clk_set_spread_spectrum(struct clk *clk, unsigned int modfreq,
-> +			    unsigned int spreadpercent, unsigned int method,
-> +			    bool enable);
->  /**
->   * clk_has_parent - check if a clock is a possible parent for another
->   * @clk: clock source
-> @@ -1088,6 +1103,13 @@ static inline int clk_set_rate_exclusive(struct clk *clk, unsigned long rate)
->  	return 0;
->  }
->  
-> +static inline int clk_set_spread_spectrum(struct clk *clk, unsigned int modfreq,
-> +					  unsigned int spreadpercent,
-> +					  unsigned int method, bool enable)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline long clk_round_rate(struct clk *clk, unsigned long rate)
->  {
->  	return 0;
-> 
-> -- 
-> 2.37.1
-> 
-> 
-> 
+Takashi
