@@ -1,50 +1,50 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22721FECD4;
-	Wed,  5 Feb 2025 19:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4085D944F;
+	Wed,  5 Feb 2025 19:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738782456; cv=none; b=K9Jh74lnOnC0Hwm1tX7+AcMDxvCcEWNt1L7MD6WuYMBTJACHvZD4Ydku9a5jFj+1Ef2IDPvJa3C914QCqWGwy9Yfnx9HYiSs4J6OrJvcdxPClLf48mFRkUEwNdTFBLZlfz1Q2qTM3vrW4KvvWrjUQ3Rku/Y+BgS7wjWVXGa+2P0=
+	t=1738782456; cv=none; b=pI+a/Nubp0uTZGlVUiX4/BZjkifW/UezaGUd/xyS7tjdBE8EgW7TBGsvw+mCwJJKp0zkepBlU4Lj3+HGjXDRsfn2/92ko/CPC+rLh4OzN+nhcqDkDJTwM3b/IrYcVrsTCX88gablBHDO6XOMBjuuTsDOdMK57toRJHhCNrvFz/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738782456; c=relaxed/simple;
-	bh=7o4TV8Xkc+3qmt4QUi00B4hcI6yX9rdepRCVR7zSaHw=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=OhRl4ZBqJZ50NG2xajuu8zKXof/P3XCfwPvTMEoPTGfMl4jdsX8sTFxu1mF/YZkz6ltMLvxd/1eh4nHC1fv1MqfGLhx9i3zEV6kVVWLPlyNRsTNgbfVCidQIAWOfDTn+ASWwW7W3+EViNuJtFYswY1/P9/Q2vNDriLnMk4M7Eeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WbRpkfN5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qv+w56Gk; arc=none smtp.client-ip=193.142.43.55
+	bh=zKwhHoa80sT3I1TN7V5LVSiaPfH+Pw9Es/5isgm//DU=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=qIb8lAE+qyhpBxNLA6NF5dzcuVLKK8Oj56Kx8D8VgFa87E/y2wfu0Oj3qC9/ib0yWbmfb3FpwQFnGBxzUMvNQ9s7scGcOiAZkKtbkeAXksMgOLOjO7y9JPet/9p5xEeeoWU9FeDXLaLndOhmtMSPskQ7AvYyZPPa3aTTwD+3Vq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Ev26W7p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FtwKtvTw; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WbRpkfN5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qv+w56Gk"
-Date: Wed, 05 Feb 2025 19:07:32 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Ev26W7p";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FtwKtvTw"
+Date: Wed, 05 Feb 2025 19:07:28 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738782452;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=s8pMFazR6bYtF1EP09YRTG0azGpTVUDiugks/OqiOfM=;
-	b=WbRpkfN5Hz17NbYXZ9fnYAfUU7EhpPQemNmKhQGXPoJMS9wroKdiknx9CbKLxUQgIVEtHh
-	5wyi9v9zrWWn714ofbBP8yvvxlai+MJVP722T43KkaImjQG2qZ3ka1P11JiLehfVD9bu2f
-	zJQ54fZnQl72ojvbHyNY4jOQbObqkNYr+ySBuZEA9PLTuOzPFcZIFthuib22lWictN241L
-	Ea3o99KDPdILDBFkzzC+knuA562oWvEkrUOvGgq4tWyVvqOdn5cF3Iw7tcjtyu0GDyzPmQ
-	YR2n3/P5pyWpQEq0z1wzOpzlD/fFjXZEXMyK/RzIY3x6kup6RPEnx7f7uheHNw==
+	bh=g918dhRbuKVM8SXGK1T/gJkkX25CowjAZDc0xNidboc=;
+	b=2Ev26W7pBzYEiVQwdStQ7gKLXFNT7+kmc5BmiIyAW+p/20o1AbDtAKhdvmKB4bQPu3RrXT
+	fQozeWWIGq7NaMxmpRd4OSrSynatIzxWRE2uMrfNrLrVIkfKKHbDsslF2zC3dsM9HK1sWX
+	4049D58jLG0pq7jJfPPpRZDsNkINflfxhTSOJXylEWHTe2KBj6+QE287lAViHp+Ljp+XJ3
+	j8L1hmZTj5IpozuuXmuIKNI28ba66p3PGtDMSQXCi6V58Al2wxfxHe8AgAx69ooveHF+3Y
+	y9QKeiDnKOSbv+4jmLrd+126m4VgpbzOlHMXEpFNhp2bwkY9xeCmqi8K+wbMjA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738782452;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=s8pMFazR6bYtF1EP09YRTG0azGpTVUDiugks/OqiOfM=;
-	b=qv+w56GkDne09Uq0V5z31Nm2zPJmiui0gV+nxSYBW3EVo0/61Ikfyz7+zR0eZ/G/eDh809
-	gbf0g1VA0Ykgp5BQ==
+	bh=g918dhRbuKVM8SXGK1T/gJkkX25CowjAZDc0xNidboc=;
+	b=FtwKtvTwobZ18cWj7cQzYdIBfQm8u1QLeaL/dkXAYFpgvzDKfs7H1UHC850xF1oYIlM3Wi
+	9VaYeRLYnSFJu2DA==
 From: "tip-bot2 for Patryk Wlazlyn" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] ACPI/processor_idle: Add FFH state handling
-Cc: "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
+Subject: [tip: x86/cpu] x86/smp: Eliminate mwait_play_dead_cpuid_hint()
+Cc: Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
  Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
  Dave Hansen <dave.hansen@linux.intel.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Precedence: bulk
@@ -53,7 +53,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173878245221.10177.9564511094350626139.tip-bot2@tip-bot2>
+Message-ID: <173878244859.10177.11042481523316633025.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,93 +63,145 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     541ddf31e30022b8e6f44b3a943964e8f0989d15
-Gitweb:        https://git.kernel.org/tip/541ddf31e30022b8e6f44b3a943964e8f0989d15
+Commit-ID:     96040f7273e2bc0be1871ad9ed4da7b504da9410
+Gitweb:        https://git.kernel.org/tip/96040f7273e2bc0be1871ad9ed4da7b504da9410
 Author:        Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>
-AuthorDate:    Wed, 05 Feb 2025 17:52:09 +02:00
+AuthorDate:    Wed, 05 Feb 2025 17:52:11 +02:00
 Committer:     Dave Hansen <dave.hansen@linux.intel.com>
 CommitterDate: Wed, 05 Feb 2025 10:44:52 -08:00
 
-ACPI/processor_idle: Add FFH state handling
+x86/smp: Eliminate mwait_play_dead_cpuid_hint()
 
-Recent Intel platforms will depend on the idle driver to pass the
-correct hint for playing dead via mwait_play_dead_with_hint(). Expand
-the existing enter_dead interface with handling for FFH states and pass
-the MWAIT hint to the mwait_play_dead code.
+Currently, mwait_play_dead_cpuid_hint() looks up the MWAIT hint of the
+deepest idle state by inspecting CPUID leaf 0x5 with the assumption
+that, if the number of sub-states for a given major C-state is nonzero,
+those sub-states are always represented by consecutive numbers starting
+from 0. This assumption is not based on the documented platform behavior
+and in fact it is not met on recent Intel platforms.
 
-Suggested-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+For example, Intel's Sierra Forest report two C-states with two
+substates each in cpuid leaf 0x5:
+
+  Name*   target cstate    target subcstate (mwait hint)
+  ===========================================================
+  C1      0x00             0x00
+  C1E     0x00             0x01
+
+  --      0x10             ----
+
+  C6S     0x20             0x22
+  C6P     0x20             0x23
+
+  --      0x30             ----
+
+  /* No more (sub)states all the way down to the end. */
+  ===========================================================
+
+   * Names of the cstates are not included in the CPUID leaf 0x5,
+     they are taken from the product specific documentation.
+
+Notice that hints 0x20 and 0x21 are not defined for C-state 0x20
+(C6), so the existing MWAIT hint lookup in
+mwait_play_dead_cpuid_hint() based on the CPUID leaf 0x5 contents does
+not work in this case.
+
+Instead of using MWAIT hint lookup that is not guaranteed to work,
+make native_play_dead() rely on the idle driver for the given platform
+to put CPUs going offline into appropriate idle state and, if that
+fails, fall back to hlt_play_dead().
+
+Accordingly, drop mwait_play_dead_cpuid_hint() altogether and make
+native_play_dead() call cpuidle_play_dead() instead of it
+unconditionally with the assumption that it will not return if it is
+successful. Still, in case cpuidle_play_dead() fails, call
+hlt_play_dead() at the end.
+
 Signed-off-by: Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>
 Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/all/20250205155211.329780-3-artem.bityutskiy%40linux.intel.com
+Link: https://lore.kernel.org/all/20250205155211.329780-5-artem.bityutskiy%40linux.intel.com
 ---
- arch/x86/kernel/acpi/cstate.c | 10 ++++++++++
- drivers/acpi/processor_idle.c |  2 ++
- include/acpi/processor.h      |  5 +++++
- 3 files changed, 17 insertions(+)
+ arch/x86/kernel/smpboot.c | 54 ++++----------------------------------
+ 1 file changed, 7 insertions(+), 47 deletions(-)
 
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index 5854f0b..5bdb655 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -16,6 +16,7 @@
- #include <asm/cpuid.h>
- #include <asm/mwait.h>
- #include <asm/special_insns.h>
-+#include <asm/smp.h>
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 8aad14e..5746084 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1258,6 +1258,10 @@ void play_dead_common(void)
+ 	local_irq_disable();
+ }
+ 
++/*
++ * We need to flush the caches before going to sleep, lest we have
++ * dirty data in our caches when we come back up.
++ */
+ void __noreturn mwait_play_dead(unsigned int eax_hint)
+ {
+ 	struct mwait_cpu_dead *md = this_cpu_ptr(&mwait_cpu_dead);
+@@ -1304,50 +1308,6 @@ void __noreturn mwait_play_dead(unsigned int eax_hint)
+ }
  
  /*
-  * Initialize bm_flags based on the CPU cache properties
-@@ -205,6 +206,15 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
- }
- EXPORT_SYMBOL_GPL(acpi_processor_ffh_cstate_probe);
+- * We need to flush the caches before going to sleep, lest we have
+- * dirty data in our caches when we come back up.
+- */
+-static inline void mwait_play_dead_cpuid_hint(void)
+-{
+-	unsigned int eax, ebx, ecx, edx;
+-	unsigned int highest_cstate = 0;
+-	unsigned int highest_subcstate = 0;
+-	int i;
+-
+-	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+-	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+-		return;
+-	if (!this_cpu_has(X86_FEATURE_MWAIT))
+-		return;
+-	if (!this_cpu_has(X86_FEATURE_CLFLUSH))
+-		return;
+-
+-	eax = CPUID_LEAF_MWAIT;
+-	ecx = 0;
+-	native_cpuid(&eax, &ebx, &ecx, &edx);
+-
+-	/*
+-	 * eax will be 0 if EDX enumeration is not valid.
+-	 * Initialized below to cstate, sub_cstate value when EDX is valid.
+-	 */
+-	if (!(ecx & CPUID5_ECX_EXTENSIONS_SUPPORTED)) {
+-		eax = 0;
+-	} else {
+-		edx >>= MWAIT_SUBSTATE_SIZE;
+-		for (i = 0; i < 7 && edx; i++, edx >>= MWAIT_SUBSTATE_SIZE) {
+-			if (edx & MWAIT_SUBSTATE_MASK) {
+-				highest_cstate = i;
+-				highest_subcstate = edx & MWAIT_SUBSTATE_MASK;
+-			}
+-		}
+-		eax = (highest_cstate << MWAIT_SUBSTATE_SIZE) |
+-			(highest_subcstate - 1);
+-	}
+-
+-	mwait_play_dead(eax);
+-}
+-
+-/*
+  * Kick all "offline" CPUs out of mwait on kexec(). See comment in
+  * mwait_play_dead().
+  */
+@@ -1397,9 +1357,9 @@ void native_play_dead(void)
+ 	play_dead_common();
+ 	tboot_shutdown(TB_SHUTDOWN_WFS);
  
-+void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
-+{
-+	unsigned int cpu = smp_processor_id();
-+	struct cstate_entry *percpu_entry;
-+
-+	percpu_entry = per_cpu_ptr(cpu_cstate_entry, cpu);
-+	mwait_play_dead(percpu_entry->states[cx->index].eax);
-+}
-+
- void __cpuidle acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cx)
- {
- 	unsigned int cpu = smp_processor_id();
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 698897b..586cc7d 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -590,6 +590,8 @@ static void acpi_idle_play_dead(struct cpuidle_device *dev, int index)
- 			raw_safe_halt();
- 		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
- 			io_idle(cx->address);
-+		} else if (cx->entry_method == ACPI_CSTATE_FFH) {
-+			acpi_processor_ffh_play_dead(cx);
- 		} else
- 			return;
- 	}
-diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-index a17e97e..63a37e7 100644
---- a/include/acpi/processor.h
-+++ b/include/acpi/processor.h
-@@ -280,6 +280,7 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
- 				    struct acpi_processor_cx *cx,
- 				    struct acpi_power_register *reg);
- void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cstate);
-+void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx);
- #else
- static inline void acpi_processor_power_init_bm_check(struct
- 						      acpi_processor_flags
-@@ -300,6 +301,10 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
- {
- 	return;
+-	mwait_play_dead_cpuid_hint();
+-	if (cpuidle_play_dead())
+-		hlt_play_dead();
++	/* Below returns only on error. */
++	cpuidle_play_dead();
++	hlt_play_dead();
  }
-+static inline void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
-+{
-+	return;
-+}
- #endif
  
- static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
+ #else /* ... !CONFIG_HOTPLUG_CPU */
