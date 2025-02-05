@@ -1,113 +1,132 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F38D207A18;
-	Wed,  5 Feb 2025 22:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337FE1FECBC;
+	Wed,  5 Feb 2025 22:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794222; cv=none; b=QYzzFBqQgMBUoOtAXs6eQ4ZMRxuT36qw82Ds/6JfqMU9Rw+1iUQLaExFEmZFRaKmftWlpcCO5mfYeTzidWgvrUFh8kGBNvawMf/FUf1ScBeEi7S2FRLLOhRKekfIytmKgEC7WbC6UI/0ZJ9VHuupYHOnu/o+xnwMfRKb9WaCd5w=
+	t=1738794299; cv=none; b=qz1CQk1LUFzw3yNhtm8EUCRtf+MMz3laF82Alplq6EzlIoKmQ6B/Wu1llmtoEFMyRBmH53DT6pV9myNMaDltza7kyQjgcVVGrbEmBctbum1emJ95cESahhd1pbO7bi//E3AP4JEpo8UJXNubSq/ACcEtuB8oKWiv4QV9C7Itj3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794222; c=relaxed/simple;
-	bh=z6eD1FP///AwBHcopqgetq8mUPl1qy7sZPeZfpBTrHo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KUu7A/W77DMC3EzSqZkCX6yn5Cm2WZktZFGjA1qAx7bsOopW4VRYOUpflMlp3CpKLjUCelWJGoIUqg7UxcCWTbuCHLx1yFGvxDZspDyrX05Yi8Zw078eFoSEtP30xc/h9LuUqL5w0LM30cuvvoEvpLDmOzJBKaFKFlXhVI/Bqws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=gOiTxQ+J; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	s=arc-20240116; t=1738794299; c=relaxed/simple;
+	bh=LfGNaAxrUpL6jhZXkHuHEOGvKUB0xdAvf8mOYpiez6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NHuA/Bwt2H7GAnzt4rNY5dRvbwcmNt+pIOLXfDpl/5NuLMUavyz7w5Rouy2oeAB8WAeQGXJxqMhTs9kxPURKZn0Z26n3lhMgUbD0r+q7rR/0sJf5hN+3k3NbX3aHP7BX30Gt+UHoFTSUa7EJQ64z6ifm00zhm1wP/wSL3U1669E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pp5/ADYs; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="gOiTxQ+J"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4YpFBJ2WGkz9sdr;
-	Wed,  5 Feb 2025 23:23:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1738794216;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3A8gIWsEr9yJWnJxL6/MIgQmtdybjtwSXxHXk23OHxc=;
-	b=gOiTxQ+JTd3yBcrxaeqqNlL8wZPKmTjD0ErC8yTAtJFh0MGwxBdGqyAPeaRV5JsbRdpr4C
-	nrcy8XpEEbaJkbx+stTfxLi0F4JLhX5wtkSn5G6kTFmEu0P3tPu944l29uIg9H74Fo0fRm
-	R1qnA1HDUK2vlu8gd+Ej9o9H4nmsoZ14tetw/3WoiLnqPh/fvddhRTmHW/9t3ZlyS0KR6e
-	POZjzclH7hzkKKPggUhsCT8ItwlnIPxYhjMsDpchvOoeAvN3JdhElJaot8BbP3hnQObOYl
-	6C/h/r5g49hO9f03xyYpjsTAr1yDHg9sos/YthUo2t1LoCEBNWYQMYq8XfT2fQ==
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,  Chris Lew
- <quic_clew@quicinc.com>,  Stephan Gerhold <stephan.gerhold@linaro.org>,
-  Johan Hovold <johan+linaro@kernel.org>,  Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>,  Konrad Dybcio <konradybcio@kernel.org>,
-  Abel Vesa <abel.vesa@linaro.org>,  linux-arm-msm@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,
-  stable@vger.kernel.org, Caleb Connolly <caleb.connolly@linaro.org>, Joel
- Selvaraj <joelselvaraj.oss@gmail.com>, Alexey Minnekhanov
- <alexeymin@postmarketos.org>
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-In-Reply-To: <Z4TXww5rAkMR8OmM@hovoldconsulting.com> (Johan Hovold's message
-	of "Mon, 13 Jan 2025 10:07:15 +0100")
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
-	<Zwj3jDhc9fRoCCn6@linaro.org> <87wmf7ahc3.fsf@oltmanns.dev>
-	<Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
-	<Z36Gag6XhOrsIXqK@hovoldconsulting.com> <87wmf18m8g.fsf@oltmanns.dev>
-	<Z4TXww5rAkMR8OmM@hovoldconsulting.com>
-Date: Wed, 05 Feb 2025 23:23:22 +0100
-Message-ID: <874j182fqd.fsf@oltmanns.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pp5/ADYs"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4afdf300d07so122559137.3;
+        Wed, 05 Feb 2025 14:24:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738794297; x=1739399097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XDI1H+rJa85Vk3CfNIzhP22h3WLuIx8UkR6DrHKijs4=;
+        b=Pp5/ADYsOwrGBgTPQjBMNfVEmFGktGlgY055CQNOw0n6SgpTCDJWR3vhSZjqNDAKSU
+         3d6nkoO8LAvBZMx6kVvA5iQn70He3Co0zaimIwIp3+36y7zEkS7wwmVUYEkiPnJnCLS5
+         UENHD7UTYsrQPmATO++KQNpGi4u7BYMXEimNRe8r8C6W1cSXhJqPxScwaiyRQ3/PT+mH
+         RCFp6dDQDNf1vxzglEH1Mb+JbBw7WyB9jEp3H79qVC88Xncmuw17wYlkC5CmCWzZw3Cu
+         Rr4jHZvrB16bDUBLg0aKoMEnC/pADdeFNDCQ8Ma5ahApPhPAVwJdthje4Xv7yH2p/bPG
+         M07A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738794297; x=1739399097;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XDI1H+rJa85Vk3CfNIzhP22h3WLuIx8UkR6DrHKijs4=;
+        b=cne/dmfhfKFtUslrfT5qIOi9TP/U+zffcan7BmuRjzUNBTE1htPH0uuY+9BChcSqkN
+         GFhZqq0iXkMOyfTUwUojLuM8JIiu+whiJhwPvIsh6pzjoZqmfVT34Le4FNuHiB1D9s4u
+         Iz12H+9nsvb5TMfNNVHtTcFwCagEj5nnjxFJJMoDumYrDWLzHSNL3VJShOuv8XW8VDsc
+         S/Scsj3romMV9/GLy1i/oOfnGwlQxzEtXHm4UyGxk+NTLzJD6JUG6/+Unn9KA3Q5E6FS
+         7iOvW8DgGh97grqsgWDNOfoHdHL12ZPTQe+H07djUpAy/OUUMrpJb9lJEmtU/f+82wrd
+         7UBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVw8HS5dbCYmiCPdOuMAjzM9MbjuSCUCwOW2AtV84OIKklJYFnpQSJXhb/Siy4/5dyOAuohveXWHrj9Jw9eqYj/nw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOsYOPtuqlf4hhKM7j9HG+2KkV8JtjxNdh1CEPGI6cNrmluKv7
+	KQ7XgAsrAriQ5L0RdqhBKSA88lKmPD2FoLIvviVTv7bLkd8hdYFZ
+X-Gm-Gg: ASbGncvxJ/rRYegPN7kUbNvltrC2pSrQITB/ltsYy9KtPJ39qoIYm4I9Y49JgHPvBpy
+	MzMA9pdcG9zQQY0l/SBu/ggFKoIs203OrPkEXco8gJVy4W9yyJG0HPjniAdUO7tNOFPXFJzExqE
+	7Vvp9TDeUmRRDdaMXQmKIZ208qMMPVaaQk9DOVqyrBxJUPGyeYsQPouC6PtsrDhdm/s25LAQB5n
+	obsnS0DD0pDV2MGU5kuqk+2ExU0K5MJuofxw50I1Nvk8awEgylBFYWq3PiaQ3NFpHqgu26TrnzU
+	LmwUNsYPrfeWioW39IQz72/dafJsCE4tY0DY9sRhmLQj/IHOfwMl8XyNNSkETpOGcuVCBS4+TzU
+	/Mw==
+X-Google-Smtp-Source: AGHT+IGVuqnzO9h7xuXld4Fi/N6TlX/gjITeZ3zFxASd8IeSGU1kC9RCh1Ppy/3bLsG7OipCqGb60g==
+X-Received: by 2002:a05:6102:1622:b0:4b9:bd43:97a0 with SMTP id ada2fe7eead31-4ba4b57d58dmr3762624137.24.1738794296858;
+        Wed, 05 Feb 2025 14:24:56 -0800 (PST)
+Received: from localhost.localdomain ([38.44.237.182])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866941edbefsm2475354241.28.2025.02.05.14.24.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 14:24:56 -0800 (PST)
+From: Denzeel Oliva <wachiturroxd150@gmail.com>
+To: krzk@kernel.org,
+	alim.akhtar@samsung.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	Denzeel Oliva <wachiturroxd150@gmail.com>
+Subject: [PATCH v1 0/9] Add PERIC0/1 support for Exynos 990
+Date: Wed,  5 Feb 2025 22:22:14 +0000
+Message-Id: <20250205222223.613-1-wachiturroxd150@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Queue-Id: 4YpFBJ2WGkz9sdr
+Content-Transfer-Encoding: 8bit
 
-On 2025-01-13 at 10:07:15 +0100, Johan Hovold <johan@kernel.org> wrote:
-> On Sat, Jan 11, 2025 at 03:21:35PM +0100, Frank Oltmanns wrote:
->> On 2025-01-08 at 15:06:34 +0100, Johan Hovold <johan@kernel.org> wrote:
->
->> > And today I also hit this on the sc8280xp CRD reference design, so as
->> > expected, there is nothing SoC specific about the audio service
->> > regression either:
->> >
->> > [   11.235564] PDR: avs/audio get domain list txn wait failed: -110
->> > [   11.241976] PDR: service lookup for avs/audio failed: -110
->> >
->> > even if it may be masked by random changes in timing.
->> >
->> > These means it affects also machines like the X13s which already have
->> > audio enabled.
->>
->> I've blocklisted the in-kernel pd-mapper module for now and have
->> switched back to the userspace pd-mapper.
->>
->> I don't know if it's helpful or not, but I don't get these error logs
->> when using to the in-kernel pd-mapper. It's just that the phone's mic
->> only works on approximately every third boot (unless I defer loading the
->> module).
->
-> Ok, then it sounds like you're hitting a separate bug that is also
-> triggered by the changed timings with the in-kernel pd-mapper.
+This patch series introduces support for
+the PERIC0 and PERIC1 blocks in the Exynos 990 SoC.
+It includes devicetree bindings, clock definitions,
+and driver support for the following components:
 
-I worked on finding out what's causing the issue on sdm845 and I've
-submitted a patch here: [1]
+- Universal Serial Interface (USI):
+  - Adds samsung,exynos990-usi compatible
+    for defining USI nodes in PERIC0/1.
+  - Supports UART, SPI, and I2C modes.
+  - Defines all 18 USI nodes in the Exynos 990 device tree.
 
-> Are there any hints in the logs about what goes wrong in your setup?
+- SPI (Serial Peripheral Interface):
+  - Adds `samsung,exynos990-spi` compatible.
+  - Implements SPI port configuration data.
+  - Some controllers (SPI 8, 9, and 10) use a 256 bytes FIFO depth 
+    instead of the usual 64 bytes.
 
-Unfortunately not, see [1].
+- HSI2C (High-Speed I2C):
+  - Adds `samsung,exynos990-hsi2c` compatible for Exynos 990.  
 
-> And
-> the speakers are still working, it's just affecting the mic?
+- Clock Management Unit (CMU) for PERIC0/1:
+  - Adds clock definitions for USI and I2C peripherals.  
+  - CMU_PERIC0/1 clocks are not marked as critical.  
 
-Yes, it's only affecting the mic in my setup on xiaomi-beryllium, but
-there seem to be issues with the speaker on oneplus-enchilada that can
-be fixed with the same approach.
+This has been tested on the Samsung Galaxy S20 FE (r8s),
+where USI and SPI interfaces are confirmed to be functional.
 
-Best regards,
-  Frank
+Denzeel Oliva (9):
+  dt-bindings: clock: samsung,exynos990-clock: add PERIC0 / 1 clock
+    management unit
+  dt-bindings: i2c: exynos5: add samsung,exynos990-hsi2c compatible
+  dt-bindings: serial: samsung: add Exynos990 compatible
+  dt-bindings: samsung: usi: add exynos990-usi compatible
+  spi: dt-bindings: samsung: add samsung,exynos990-spi compatible
+  dt-bindings: soc: samsung: exynos-sysreg: add compatibles peric0/1
+    sysreg for Exynos990
+  clk: samsung: exynos990: add support for CMU_PERIC0/1
+  spi: s3c64xx: add support exynos990-spi to new port config data
+  arm64: dts: exynos990: define all PERIC USI nodes
 
-[1]: https://lore.kernel.org/all/20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev/
+ .../clock/samsung,exynos990-clock.yaml        |   24 +
+ .../devicetree/bindings/i2c/i2c-exynos5.yaml  |    1 +
+ .../bindings/serial/samsung_uart.yaml         |    6 +
+ .../bindings/soc/samsung/exynos-usi.yaml      |    1 +
+ .../soc/samsung/samsung,exynos-sysreg.yaml    |    2 +
+ .../devicetree/bindings/spi/samsung,spi.yaml  |    1 +
+ arch/arm64/boot/dts/exynos/exynos990.dtsi     | 1711 +++++++++++++++++
+ drivers/clk/samsung/clk-exynos990.c           | 1079 +++++++++++
+ drivers/spi/spi-s3c64xx.c                     |   16 +
+ include/dt-bindings/clock/samsung,exynos990.h |  178 +-
+ 10 files changed, 3018 insertions(+), 1 deletion(-)
 
->
-> Johan
+-- 
+2.47.1
+
