@@ -1,113 +1,121 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053BD21A945;
-	Wed,  5 Feb 2025 10:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A79922A4ED
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738750199; cv=none; b=UBzzxPRcCu/jZjLVC7v+ocOG3T1Sygs18sido6YZot9Z3SIBiyOQmpPDx3197d+nqzk6z0BT8TabrJI9LE0YNNj0y90Bml0LO77fquKtjl3ENOrtkRLVejRh/k2cZ4OC6M7TeME7tr1cm89i0UVKHF+mCCVT76fkoVLyZ7ECjD8=
+	t=1738750266; cv=none; b=oeJXF43XoxDhnoTCtNoNkqo51/DF07RBBbkWCKFvGVxi2xjHk8cFXS6mZnhv52x/VV4RrMlbd3UFHy4NR/exgiQUofbBm1LaSvfeIhWVv2KQZXYQlHJ+B2abeMs+25IG1Td8lrgJV8FdAkpKbj8VVslAhIw/59NC7KiBe/ULOkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738750199; c=relaxed/simple;
-	bh=vt9j8TC9pY29iT03X+VxKEpjegg1XM81vTdQ1NBXkMg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=C/m4tTo25q5TNr/ljsT3dSxdIpyJcwJRYvoaklQQ6n7TpnZSCfkSASn441bdca61l+OlrEZfmS0Fid1RXhD36UTGTCKH3cq7FcDDVxhh3zG9c6krh2neHrFEG9sBFD0Q3/7yWvXi7owB2pfYIHVpDBgJmJN1anzKZZ6tXrH8g0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VF+Qz4p4; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738750266; c=relaxed/simple;
+	bh=RWT1F7pmBqVrbQZz5ukpm2RPLuLP/AznOyHLCJGGqU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nJUMugnAlFtH5g0RAUJUhI9pdGeD3FzJblT1ArTbYR5DR1sO1/tLPT1ypfShyWwcMgjqKooG0UlG4KWR5aWPH6VvH236cDV6qrmbwhGxkGJ7Lvt/7Bhn0Lu6ZavjSofptMsd0dSRlVrh6WKwjo77CK/5vlo2j6LwsTmBjYPHLus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TdofNe3E; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF+Qz4p4"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38db8f8786fso5415f8f.1;
-        Wed, 05 Feb 2025 02:09:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TdofNe3E"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab698eae2d9so42163866b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:11:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738750196; x=1739354996; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UgKWsb4wd8O5NQcrXT8xnVQwH9+D70MltxfRewZxbzo=;
-        b=VF+Qz4p46lJSbgrxq8dX7Aso5mKBi56MPS2egDgOz4mZcL2mft2uMhB6RDLutKu+ne
-         S+NpmocZxnBs0juCZ+nA2zraU9+5C3ebggIKbo3OOacqhZ7pe7RypplIrHeCIAEiJx37
-         OT5fODaTJF5UUmYH4O5itra/hw+YUrH7XNLOF+Jw8ZUvpQyQfZg77ytE7ElAIS/8mQ9i
-         PYPnlapilfpIS60KF8tsPtvmZ34yoWQ8vZfCmYt/lErOS13FUhkc47E0G/4U/dtQavNO
-         STi2L4h1R/AbVWnRi84jBsKFMYGY400CgewrZb5HsOqnOEs5UF9NTmjWA/KoK1ym6m8O
-         VCWw==
+        d=tuxon.dev; s=google; t=1738750262; x=1739355062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U9rT/dn1AcrKmdTCXQy3CKUwFE/pnAM3EwGBAXzi1R8=;
+        b=TdofNe3ErOvxQBvRVjx8XmE4kez9pJ6AMobzESkCZmRQToFPCkZ1k016H1RRTCi+i1
+         pauvKlcCytYIgxzH5yqaFTfV2fG9jopmv2P4r7UjVZ7S8n31QysFOjuUalcu3J5bkfb3
+         IekRSzOnse+hx/AqGJu3WOb9kVBoSQntAqudQVcIfmBimtzdYeYymG1/CdSFUxFtHqCg
+         E/N8k1+4ixwzXI6d8OwsNJyeAPFvC6BwhfGAt/QVBujkuEHUvyh3l2nkbyMjhNyYXYR6
+         Qd0FQBc36j8z6WKnvO/Rz6ttNywEGIzotmnaF4T4VGJKpZW8j897+EY9NA1sy0RmDAl7
+         rMOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738750196; x=1739354996;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UgKWsb4wd8O5NQcrXT8xnVQwH9+D70MltxfRewZxbzo=;
-        b=MGQOJ4OfwTONPOlLoZm0gXk/hANVVefe+zkHhivfCLg9NbqOdumg6PnAQObw6fwg6w
-         8WRJeWBVmodAA+kM78maOMmmhnvboNoQax9FVo+ivf1J9GlwiRziC07ZzHJqGLnmRW53
-         p+ohvcgzHiPTIsTXm5LFuWDi0TwImUsdRNISGa/nL7NccUfd06wpjkCTzvc6/w56wZck
-         7pEsEGfsRZ1AztsUrSGIRy+shO43a1k0ayPfTNnB9+B4jmwHr5MRiPF+49C1WN5qYCdS
-         5FqonY7LjtErDEfJaDTambsVDlKCYw9TnfOMGGhDhQxqKVW0Dn64ToQRNOUi1BKIxeBi
-         AwuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxmIk3j+Zrm86IFxku16CnCllOlQ1h1tP21WxVurrIFRofCbI5X/cy3MLYCNDPzq5TtwDwuTSwPkSEVec=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz81Frg+Kzuo/1W1+e+P2O5km9DNyfCq1gFUgVzZJa+mHswoVvq
-	5Jy5RuBcgKtA3CUn1sQ8yrGjuLssy6PT9s4UuTDLqB1jRbxdF4nAtQH6PA==
-X-Gm-Gg: ASbGncuGHwNiAjwcMJt2xhS++J1679E5okCRQ6l0tM1J1HOReD3mBYSmPO5r6jt3bPN
-	B5/JU0dMIQYiKX+c3Fp8P63qzYFVfRGEzKuTPTWkrBbUD8c5St4Nlx9iyAtRZXRdfK5ymE1Q0Rg
-	wzfuPf2WGJKdYL2JzAwFpwOzYNZ/bERYMId2D6zIPhIuQPDsQEvTMxQ0rHPDJywj5RjEapjxOmr
-	Cr0nNsmFFpjG+ATXlrLce1KGVuznhlSMZptTELWUXeBugT5CwDXjyh7V0fqj+5DO/g7DSgab7vi
-	hkgVFpJHcYNTnk2+V7l90+H41IyF3GkBWw==
-X-Google-Smtp-Source: AGHT+IFM8JZsI4fER1QYtXtRH5Vsk9KNxGrlRwfk8xspZYy+cSpsU0f1P8CqycBiWmyK6AMn8PG+5w==
-X-Received: by 2002:a05:6000:402b:b0:385:dea3:6059 with SMTP id ffacd0b85a97d-38db48dfba5mr1426073f8f.49.1738750195987;
-        Wed, 05 Feb 2025 02:09:55 -0800 (PST)
-Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d933a3esm16904435e9.5.2025.02.05.02.09.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 02:09:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738750262; x=1739355062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U9rT/dn1AcrKmdTCXQy3CKUwFE/pnAM3EwGBAXzi1R8=;
+        b=YM6cbF/pEDO7B49eSAhCitP50M0qnJ9iaHcz6fmLaj4YmBTE/MxCkEva50wYP6WMx9
+         2B1DLX19k3+NZQgOwYEgIrAPTroYQzrpoWvSxwSpWYDYcxxcOGDw2cO+qRZulddgYrFX
+         vNZcYgXDERUG5SkG5elrs0CnPgzeOXSls22gWmp7Q9gFY8NuoguqDbVG/Mkicbmg2drQ
+         zOI1wcdu8lBm8Oh7COSmD4+2piVJytk5Sf1IG6HiWiVdaFddoWhqJAgYv3PvRRoraMBK
+         nJwTKijTJEJ++8FO5xUwvBvrfdoZOapOiVksx2gL3JTJ+FRHd9sIAsgbv8WD+cZUSn6n
+         XAmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVlP8/UI8bND1VTT02jAoQJxdUvCMdIpBFsmlYPcemnZmaEQ/cqaQ60syxohGMGpDXNrDiM6A11CLhYQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEA6FyAT16X5Fx/lZ7ytyGiLGnuYRSNLQialJwVf13yOyTvwrj
+	ZddQapNQYFh9aR/ehLnE8kGTqMyJZd8hcjiGjJEttWBXUed74KyscXltObdiXc0=
+X-Gm-Gg: ASbGncvUrSE9+KKrfEYhheVkA48EaoaigXtLjMCjaERcY/cY7a9nqW8b8aL4oc06uVS
+	1tGZhKEvyWdtwEwI7LoGUIqS1rppBPLp7JwBPIOFyXo5ZaWlfNvw0vEfw03sx2pQVAuKb4kFw8I
+	92x+RJezJUj6WBUy2tQNftacTSDB0d2gAx2hGM6upTYtb2tMFeNh/383NTxg+yepvlSIwh7ffyP
+	MRJL7LnlCJt4f/nbZyVYXLBAHvne6UZa0GT7Xlj2S45n5UF7IyMs14jhi0qpEZpB9i354UzxSiK
+	VNzhfd/zzj2mix9tZeTJPdotEhfmeplaCQXfFlGWTF9Btw==
+X-Google-Smtp-Source: AGHT+IEBbUlXHEkffcTPN8qkdd5oPHa4MpZilorcDJPzaIEHBuPDCfeXbQm4lsXhEkWWjFh6qTFGDw==
+X-Received: by 2002:a17:906:c14f:b0:ab6:d4d0:2be9 with SMTP id a640c23a62f3a-ab75e3235f7mr208848866b.56.1738750262261;
+        Wed, 05 Feb 2025 02:11:02 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.173])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ff3e4sm1069059166b.110.2025.02.05.02.11.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 02:11:01 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: linus.walleij@linaro.org,
+	peng.fan@nxp.com
+Cc: claudiu.beznea@tuxon.dev,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH] pinctrl: pinconf-generic: Print unsigned value if a format is registered
+Date: Wed,  5 Feb 2025 12:10:58 +0200
+Message-ID: <20250205101058.2034860-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 05 Feb 2025 11:09:55 +0100
-Message-Id: <D7KFI4INC6NC.3JY96TZGRJCX7@gmail.com>
-Cc: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Vasanthakumar Thiagarajan"
- <vasanthakumar.thiagarajan@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/8] wifi: ath12k: handle change_vif_links() callback
-From: "Nicolas Escande" <nico.escande@gmail.com>
-To: "Aditya Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>, "Kalle Valo"
- <kvalo@kernel.org>, "Jeff Johnson" <jjohnson@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
-In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue Feb 4, 2025 at 6:05 PM CET, Aditya Kumar Singh wrote:
-> Currently, links in an interface are allocated during channel assignment
-> via assign_vif_chanctx(). Conversely, links are deleted during channel
-> unassignment via unassign_vif_chanctx(). However, deleting links during
-> channel unassignment does not comply with mac80211 link handling.
-> Therefore, this process should be managed within change_vif_links().
->
-> This series aims to add support to handle links in change_vif_links()
-> callback.
->
-> Patches 1-2 are making debug infra to work without device info.
->
-> Patches 3-8 are the ones changing the code to handle as mentioned above.
->
-> NOTE:
-> * A new ath12k-check warning comes which probably needs to be added to
-> ignore list
->
-> drivers/net/wireless/ath/ath12k/debug.c:69: Prefer [subsystem eg: netdev]=
-_dbg([subsystem]dev, ... then dev_dbg(dev, ... then pr_debug(...  to printk=
-(KERN_DEBUG ...
->
-> This is because, since device info is not known can not use netdev_ or de=
-v_
-> dbg family. pr_debug() is an option but that will require DYNAMIC_DEBUG
-> and then ath12k needs to be probed with dyndbg=3D+p which we don't want i=
-n
-> ath. Hence, only option left is to use printk() directly.
->
-The issue seems to be resolved. Thanks a lot !
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Tested-by: Nicolas Escande <nico.escande@gmail.com>
-Tested-on: WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1.97421.5
+Commit 3ba11e684d16 ("pinctrl: pinconf-generic: print hex value")
+unconditionally switched to printing hex values in
+pinconf_generic_dump_one(). However, if a dump format is registered for the
+dumped pin, the hex value is printed as well. This hex value does not
+necessarily correspond 1:1 with the hardware register value (as noted by
+commit 3ba11e684d16 ("pinctrl: pinconf-generic: print hex value")). As a
+result, user-facing output may include information like:
+output drive strength (0x100 uA).
+
+To address this, check if a dump format is registered for the dumped
+property, and print the unsigned value instead when applicable.
+
+Fixes: 3ba11e684d16 ("pinctrl: pinconf-generic: print hex value")
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
+ drivers/pinctrl/pinconf-generic.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 0b13d7f17b32..42547f64453e 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -89,12 +89,12 @@ static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
+ 		seq_puts(s, items[i].display);
+ 		/* Print unit if available */
+ 		if (items[i].has_arg) {
+-			seq_printf(s, " (0x%x",
+-				   pinconf_to_config_argument(config));
++			u32 val = pinconf_to_config_argument(config);
++
+ 			if (items[i].format)
+-				seq_printf(s, " %s)", items[i].format);
++				seq_printf(s, " (%u %s)", val, items[i].format);
+ 			else
+-				seq_puts(s, ")");
++				seq_printf(s, " (0x%x)", val);
+ 		}
+ 	}
+ }
+-- 
+2.43.0
+
