@@ -1,103 +1,127 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD38F9443;
-	Wed,  5 Feb 2025 17:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D961519AD;
+	Wed,  5 Feb 2025 17:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738778231; cv=none; b=lk1jlRcVBduVAn9RQTbr88rOcl/Ebr9M2OgTU5y8TlJ+4dDiupebArHKKwlFBi1xIrY99WB6i5Xc5FkArMZg30lN39AqYGuDMD6UY+z9PzOeKsxzVJbYdLWAKOqjL6bEcOmToDJdGl+P3uT5R9z1bxQkhAQEa4RhXHcK1HuivrE=
+	t=1738778311; cv=none; b=cr/Cb4fT6ft6+ngndp6VXxaDkcH43fgMYUTqHn4XGueQTH0MnUFPSHD3o7rVJkuATaaIHp+vHJ9IRL0RjFIpZaacdoj80i6m+4qoGOJqWvvgHqBAO1hiWSWC2EyZc96gP4r/3y3vIwq9IykZ/U5kJVbvKUINTOV1T5Pp3HE4ROU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738778231; c=relaxed/simple;
-	bh=fG9xNuTscd+BK6XnKts4jb/KyoALWXwtTWifrKZj1nA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bKJT6gjbh3B/zQQDb7No98T7D5yP1+XKrrpYVII9a6Sjdqk8yxV7QixkI2nyd0JQ9bYJVZAxVrLlRkT0fsBWrWwvHVVNBY+jIQ4GJRO+zY7xL8aFhraCtxNu72J140qAbJS6kQdmmr5rBRREC2w+qIYwTs++qRplsheEWLROE8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=cdcY84WE; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1738778311; c=relaxed/simple;
+	bh=IQ+YnCnK3ZJZCbQU7E1GWEkM/fXgKckB17qO1F85Mzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ac8V9llyGo+YMtmBrNT6lMZHmZ4Te+LkdXPIhbeaFQvlpBkVdA8GKlfYe6B2omvKqZHWmeiOHOM2kLJqNLpNmWSKImWQsF5plrE2BKm8F1OWAdCNwu/aU3OtVflo+D91S4V/756w/oglX+OwotURShic5d1mxZhLC0squYHxZyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RDbHNPD/; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="cdcY84WE"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 763401048CD13;
-	Wed,  5 Feb 2025 18:57:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1738778226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zfMLIT8o7qIGzWCSQbfJ9DR55hKNeTQ38ODk2Ru4uzM=;
-	b=cdcY84WE6yHU6kFn8W2UtBxp/GOJ6doWrNDPH3/oRwCr8Qliv9CefjmY60IJg2uyF7tH9X
-	mpGfyksGA+99qIpunCr8eJTUeTEAB4SffBSGRFrGQa/sosf8U++e1vQbVS41x8vjWZ7wY5
-	K2uXKv94Vj06FzCreL6v0bVwlP8m4W3bmcNvHlUR3Sxxp5a17yYVYwqRxh0thsOleTWsLd
-	vT0YYNye20cXwMdvAhrlzga2aIHmv5tQWezMuloytk+XUQiXO2p0zTi0LP4pMYXIc54lIK
-	F3u4cAR4Vnof9+2hTqeJ0BAmqICn0pJGUantStjOgHAhceKjqaaXYB+NRlGTfA==
-Date: Wed, 5 Feb 2025 18:56:58 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
-Message-ID: <Z6OmapsIAlCnZ8GW@duo.ucw.cz>
-References: <20250205134456.221272033@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDbHNPD/"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaec61d0f65so20903866b.1;
+        Wed, 05 Feb 2025 09:58:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738778308; x=1739383108; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fMAEufYTCwR87g7HGV6xU9skq8IOQ0ObyPdkgemU744=;
+        b=RDbHNPD/Rjd3VqSAAJFaPexNhgo+SedGRIXBbGjD0FlbR2vA9rcRHqu+2ZpsE1MR1f
+         Bv8BgISyxScONToIK+hqBksyjve2my6rrMpcibu7A+w56I5dG5Gs4fmRjNpDauyq0gQ3
+         aoLMRBs+xrQTAhdUt0tP6MWpfA28CCNZRE+w/sF6VbkDqm4AvD03VifTaw7Kv327R5fO
+         a/2FR/kingPztfC7gEFFdJECCAIAYaEYCoPzId7nfUhCvdd36yNXjbtt7zeytB8COT1I
+         00j3Oq/rNUpGc+xk4JONSCzW2I87ooP1yzFM662VZ7ISGL0pGcXyBaZ91PkVvrU++ugi
+         aRNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738778308; x=1739383108;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fMAEufYTCwR87g7HGV6xU9skq8IOQ0ObyPdkgemU744=;
+        b=T/JcHTFjEwP+1bfAsQDLsz2fcdKFW5XyXJpAreVs2OeOkBX/CipsaDuwlbNCgey4/J
+         ilc7xgWKNd6pTxQm17fYRKcWefXWld1oPaiHmotUXfT9GhJjEv+x8b9OBiLQmtDMLj1Z
+         LSquK6RwuEFEcy430FecBhO3OiLAoRvXP6aH3osTfXOD8GiVdVrwqzPZ9WNYJFteS3Aw
+         4zDTfgNhe9Jz5i52j3wcGuj4TFqX7U4uWYjWq+zkmoKj7C1HnPNT1NoBB5qVodO3Q8kw
+         OmuqnqEoMbF6J5qr4UICsGMJxSfROBpyu/7ZI2YWZ8n2lpfCc7GidLCjLNAEZuFy1tPv
+         Hw1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEAc77ZCYh7N163BqnJcnvYgnqodYYrCQvzsm/3keWBKZp4+6sdQlOOQ8H3qyPSAGkUqwyO6wu8Ty3JTal@vger.kernel.org, AJvYcCWdEeft8LU7V+DmUzYTXNMORXvop8WAv/p7wGT6rSV9XC1DVTsOXI/WS/jMpponSpu7J/5X+NXflq1C@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFIG5UorUgfGkW+Gj5Uxq6piXW3wiVvR9yoCeLpRUMeQAcgw4D
+	fjtV0HMSsJATzM9ioAZnarF1IDuce2CfmxDuC8VAAWk6mC/yTukQ
+X-Gm-Gg: ASbGnctCTQMjelqEGgfubTuQifmReeT6NNN776LiNgi/AC1YKiI5M7Gj1OY23DACtwb
+	iesfmx6lUmaYYfnRup/1RyH4IctchL2j4LqYaBpwutMZbkuypvFEERNQcHUB/dGRqizguIOO7NF
+	vsANvjk4qx9Hw9BCrfy+Xf3I8EyW7Y22aDBsHBjdj4zTNSCtATs7uPv/KPItWn1Uo2sGbTSKhTx
+	6BlowShnplOgzJr1kF+qmMRpZrOmT4Q9B+/i0B2nO+mxfRd9iCUc3CTFDkJengmNagsLxDF3qpn
+	6eAbCeLk5xtXxEMCpIM2AMJpbAKvnuntRJqQ1UFSo8BrFIr3tD01XT1+vyQ6CDQ2+Q==
+X-Google-Smtp-Source: AGHT+IGilRrBoelGh6e28f+nxniHAFHixKNw+Hqvl/uNj+kVv7H6qbFpMqopbuHdNVB1hSsL6gks3Q==
+X-Received: by 2002:a17:906:c144:b0:ab2:b4bc:41ef with SMTP id a640c23a62f3a-ab75e2a7677mr388312766b.29.1738778306863;
+        Wed, 05 Feb 2025 09:58:26 -0800 (PST)
+Received: from [192.168.50.244] (83.11.225.21.ipv4.supernova.orange.pl. [83.11.225.21])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffe44sm1133806466b.113.2025.02.05.09.58.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 09:58:26 -0800 (PST)
+Message-ID: <ab853605-859d-44c6-8cbd-44391cd677e6@gmail.com>
+Date: Wed, 5 Feb 2025 18:58:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HmVdHVe+dEdVqMgk"
-Content-Disposition: inline
-In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/7] dt-bindings: mfd: brcm,bcm59056: Add compatible
+ for BCM59054
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Stanislav Jakubek <stano.jakubek@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250131-bcm59054-v3-0-bbac52a84787@gmail.com>
+ <20250131-bcm59054-v3-2-bbac52a84787@gmail.com>
+ <20250202-noisy-impala-of-triumph-c9aa8b@krzk-bin>
+From: Artur Weber <aweber.kernel@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250202-noisy-impala-of-triumph-c9aa8b@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2.02.2025 14:24, Krzysztof Kozlowski wrote:
+> On Fri, Jan 31, 2025 at 07:13:50PM +0100, Artur Weber wrote:
+>> ...
+>> @@ -22,7 +24,6 @@ properties:
+>>     regulators:
+>>       type: object
+>>       description: Container node for regulators.
+>> -    $ref: ../regulator/brcm,bcm59056.yaml
+> 
+> Refs should rather stay here, so I don't think keeping these devices in
+> one binding makes it simpler.
+> 
+> Simpler - drop ref and add properties compatible with enum for your
+> regulator compatibles.
+> 
 
---HmVdHVe+dEdVqMgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The only problem with that is that the regulator nodes have no
+compatibles. I see two ways out of it: either we add a compatible then
+use the compatible enum (might break existing users who don't have the
+compatible, unless we make the driver ignore it), or if we just want to
+simplify but not add compatibles, list all the refs under an oneOf
+condition (like it's done in
+Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml[1]).
 
-Hi!
+Personally I'm in favor of keeping this as-is, though, for the benefit
+of the DT linter preventing accidental mixing of bindings for different
+device types (e.g. BCM59056 MFD node with BCM59054 regulators). There's
+at least some precedent for this method[2]. But if making it simple is
+what's considered better, I'll go with one of the aforementioned
+options.
 
-> This is the start of the stable review cycle for the 6.13.2 release.
-> There are 623 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Best regards
+Artur
 
-CIP testing did not find any problems here: (obsvx2 target is down)
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.13.y
-
-6.12 passes our testing, too:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.12.y
-
-6.6 had some failures, I'm retrying.
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.6.y
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---HmVdHVe+dEdVqMgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ6OmagAKCRAw5/Bqldv6
-8kv+AKCv2AEnN3toEullPx0fFaIE9VR52wCfRGZs8iUtSf15CMjg+E4AgXY/vSk=
-=Bn4Z
------END PGP SIGNATURE-----
-
---HmVdHVe+dEdVqMgk--
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml#n147
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml#n69
