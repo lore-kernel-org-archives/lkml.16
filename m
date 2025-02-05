@@ -1,117 +1,411 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2900B2147E6;
-	Wed,  5 Feb 2025 08:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FBF229B0A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 08:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738742640; cv=none; b=Wz5/NbV2A8ZxB3CMnWIOcv0v1awL/i7QJnZcduCTygM4qi/pxv+SmcM2ti7ZLmyWGpzYaNeCep1EVLJ2OjpCodRHQvAsugog7BX6wIPUSavyzLcHBXvbhTJm3g0bjy+ajap5zOkMhTQN4G2TuKTCLgimTKdk8w/tVRycnGCo/2o=
+	t=1738742705; cv=none; b=MdbxhIg6jz00Pu+q+EAs0ptFKYcBl/TwE3JaCyfLnkeJBhvvfsNsQsX7zXP9qF7dmax/1VkH0GIQ5eVV2qlLMBWtL6KnRlnID9/C30gzAbT5Xs3ogLM73ek3/asWWzgzMUaVSMH0Bt89O+i9vWYXBoGKowudMQWG+Jbjo/+sgrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738742640; c=relaxed/simple;
-	bh=85wGPTLXhmpDm9za2v7pRqdsP8lKsxIYokXhP3co+ZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YtC6928EOvUHmNEfuyQrw0dZhuqBLwCIA2BozJL7PbKMzrcuO0zrZiFT9ZejbtyA1fc21HleYNQWHs1g10tPCCqIGizz9VOMOFnYnzjwGYI7pAPdvAPZmtUXjXvB7pBX1ZXlZxG295LfbICSkJwTI6a6NBckyxOuSYjzZNIQxgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SN3q8xIP; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SN3q8xIP"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21619108a6bso108573565ad.3;
-        Wed, 05 Feb 2025 00:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738742638; x=1739347438; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0kQ2itxvqbcuaBd7rib1vIkdIoFQupjIr21LbZKH5pI=;
-        b=SN3q8xIPA5aLg4qRYgUcWb/YNEps9Gprr8vBXYJlyRo+JNRhc+1FLPx2TFOxsry6Dq
-         AxzUfmlPCi+cSB7vn+5KW3VF5vDUpV66Hi/3BSrQugNPzwxy3Mv8LfpnmC923P3woLAQ
-         VqBLw4naTrVtg9hrPd06rIdmVNz/z+pFKWgwRi0tyTpvHmVDSdUmqAwjTf7IsieL4FZD
-         uB7yrXnxCA8834BNE7JzGQciIxUPbteMXeNRxOFkj6qAhSaRcso8q1u3cKWGQTBrCK4z
-         z0HjUdmYAJDgbx02HfpRm5eV2T1lNaFzJ/IJwWpgsCoGLEdtIrhpdgMkIRKrwbo83Eh+
-         PsGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738742638; x=1739347438;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0kQ2itxvqbcuaBd7rib1vIkdIoFQupjIr21LbZKH5pI=;
-        b=QVyHtqatuG/zdZ4y3neWxRlbcVqK1CwRC+L803atN3SZXVcHnX6E5jXkBYz3DNuMLk
-         Ic0Pmhs98SFCKKh6Qiaf3rajle8K814/CgKP0OdWV75e8TfB/e79ljok410XXatYNkRI
-         1yQfPTV74sr7bewICQYre9kxylO3WVgOQtwjXxtGi+f07oBa76TD6hjOcgZnoF/kQqmx
-         EIUnzCtPg0fli9jur5MyKLVbkOL927aix/f909I6+JuLiPx0bU2LZLRkAWfQgzXEKywZ
-         4ie14Yk37fHvYrEAfy5UO8gVPqVTe9nrxlwX7lm8HrcKSCpvxgDrANK3BerW+uhtnpp7
-         lzQg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+EfJmUxhajwjfRr24Ivjcvcd5KfUZcBNbUr+hJEx4VDysF0/8ifzx8Xt8Y05dHp6uKDKfpBF2HFxC4wekGIWr@vger.kernel.org, AJvYcCV6fqiMrXvvCf45Lg5Y9T2Ysx7cSrKoSwg0IzrygbmJ83jpWhY948Bo682w+/uk9UM5qq9l5BFYChPWHYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNkDLPrP6Tj3a8Vr5wz+wXX8hNATGkQtbs6ZqKwnhJ7lD3HtoY
-	BIdUyGdpwyOeEmGixv/ZAfJtz5vWjIEAOHSr5gowGWw8ExXkCkX4CVDV35UKaY4=
-X-Gm-Gg: ASbGnct4PX0IdG6AhfFFf8XFlWwaS2leQSE0hgyxe6+YEH4Lu2HNL+uFKVa/UKyh7Jm
-	rsdczcXKfbrF+4AJoSzVWIc0fV/urk2F33KFhADZBiQIf56BzuzEQtdWh1UYTSvRIwPuXQ1Cdo7
-	QijLFz2i2NjNRhYoC/EzgaFALOoSGORSM311olfbHP9y0XeLfyPILjzg3Ef860HAYju1ikHSyIp
-	qEGHhLokQDDZ+yjyMiAUYUbPk/c79j4wShwb5CaFECmTXPuZRE5sbs1QS0mviuHv+zhwiBm/dpx
-	//2DKEEZyI03Q0ELmCx6MPiNxcXa18kjubE=
-X-Google-Smtp-Source: AGHT+IG/JczhORvruVoXyh3kgJuQkm2+CRWIa1eODox8EC0B3/VO/SheYTU2PDY5u2wruk+hJ4AjMg==
-X-Received: by 2002:a05:6a20:43ab:b0:1ed:a80e:932 with SMTP id adf61e73a8af0-1ede88ad49dmr4112847637.34.1738742638053;
-        Wed, 05 Feb 2025 00:03:58 -0800 (PST)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a18ae1sm11807039b3a.163.2025.02.05.00.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 00:03:57 -0800 (PST)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	Boris Pismenny <borisp@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCH net 2/2] selftests: bonding: fix incorrect mac address
-Date: Wed,  5 Feb 2025 08:03:36 +0000
-Message-ID: <20250205080336.2197369-3-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250205080336.2197369-1-liuhangbin@gmail.com>
-References: <20250205080336.2197369-1-liuhangbin@gmail.com>
+	s=arc-20240116; t=1738742705; c=relaxed/simple;
+	bh=hRR/PbHZaWqgJCpF2WDiyXPJYzVhUulwr7JubCB/NTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dFEkBqs3LCPJkqKaT6uaX7rVVOMWdHQbx7Ga8XTkVIJrB1+OWQflFSpfmcYqCoxddgTHgVZj5ucCAd1VLKUiK0i9QwjAaz7ZvX2QMPwrDUwJIVmtCcUewnL/YsHCwto9sXIw301vh/mmYuPQdCEj4Pp1HefjS7QbOjjgUXKNblE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Ynt3M3T1Nz1l0fQ;
+	Wed,  5 Feb 2025 16:01:19 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1C0E11400CF;
+	Wed,  5 Feb 2025 16:04:56 +0800 (CST)
+Received: from [10.159.166.136] (10.159.166.136) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 5 Feb 2025 16:04:54 +0800
+Message-ID: <67b7fa6a-ca27-407d-81a6-81bcea205080@huawei.com>
+Date: Wed, 5 Feb 2025 16:04:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 drm-dp 1/4] drm/hisilicon/hibmc: Add dp phy cfg to
+ adjust serdes rate, voltage and pre-emphasis
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
+	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<shiyongbang@huawei.com>
+References: <20250127032024.1542219-1-shiyongbang@huawei.com>
+ <20250127032024.1542219-2-shiyongbang@huawei.com>
+ <jtv3dfirk6nyj5rzbotx6ps24e6bm2aeylnuex5quq66cnmhka@b6zjaw3cmd6p>
+From: Yongbang Shi <shiyongbang@huawei.com>
+In-Reply-To: <jtv3dfirk6nyj5rzbotx6ps24e6bm2aeylnuex5quq66cnmhka@b6zjaw3cmd6p>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-The correct mac address for NS target 2001:db8::254 is 33:33:ff:00:02:54,
-not 33:33:00:00:02:54. The same with client maddress.
+> On Mon, Jan 27, 2025 at 11:20:21AM +0800, Yongbang Shi wrote:
+>> From: Baihan Li <libaihan@huawei.com>
+>>
+>> This phy is inited and configured for dp, and integrating them into dp init
+>> and dp link training process.
+> My feeling is that this patch has too many changes. They might seem
+> related to you, but not to the reviewers. Please try splittting the
+> patch _and_ explaining the changes in the commit message. E.g. you are
+> adding a PHY. We have a generic PHY framework, but it is unsuitable,
+> because .... The rates are changed because... etc. But first please
+> comsider splitting the patch.
 
-Fixes: 86fb6173d11e ("selftests: bonding: add ns multicast group testing")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
----
- tools/testing/selftests/drivers/net/bonding/bond_options.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Dmitry,
 
-diff --git a/tools/testing/selftests/drivers/net/bonding/bond_options.sh b/tools/testing/selftests/drivers/net/bonding/bond_options.sh
-index edc56e2cc606..7bc148889ca7 100755
---- a/tools/testing/selftests/drivers/net/bonding/bond_options.sh
-+++ b/tools/testing/selftests/drivers/net/bonding/bond_options.sh
-@@ -11,8 +11,8 @@ ALL_TESTS="
- 
- lib_dir=$(dirname "$0")
- source ${lib_dir}/bond_topo_3d1c.sh
--c_maddr="33:33:00:00:00:10"
--g_maddr="33:33:00:00:02:54"
-+c_maddr="33:33:ff:00:00:10"
-+g_maddr="33:33:ff:00:02:54"
- 
- skip_prio()
- {
--- 
-2.39.5 (Apple Git-154)
+Thanks for your advice, I will split this patch to 2 and add more
+detailed comments here.
 
+
+>> Signed-off-by: Baihan Li <libaihan@huawei.com>
+>> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+>> ---
+>>   drivers/gpu/drm/hisilicon/hibmc/Makefile      |  2 +-
+>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  1 +
+>>   .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |  1 +
+>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  9 ++-
+>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 33 +++++++--
+>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.c   | 72 +++++++++++++++++++
+>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.h   | 38 ++++++++++
+>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  1 +
+>>   .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  8 +--
+>>   9 files changed, 153 insertions(+), 12 deletions(-)
+>>   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.c
+>>   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.h
+>>
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Makefile b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>> index 95a4ed599d98..35a74cc10c80 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>> @@ -1,5 +1,5 @@
+>>   # SPDX-License-Identifier: GPL-2.0-only
+>>   hibmc-drm-y := hibmc_drm_drv.o hibmc_drm_de.o hibmc_drm_vdac.o hibmc_drm_i2c.o \
+>> -	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o hibmc_drm_dp.o
+>> +	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_phy.o hibmc_drm_dp.o
+>>   
+>>   obj-$(CONFIG_DRM_HISI_HIBMC) += hibmc-drm.o
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
+>> index 2c52a4476c4d..00b23301d26e 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
+>> @@ -38,6 +38,7 @@ struct hibmc_dp_dev {
+>>   	struct mutex lock; /* protects concurrent RW in hibmc_dp_reg_write_field() */
+>>   	struct hibmc_dp_link link;
+>>   	u8 dpcd[DP_RECEIVER_CAP_SIZE];
+>> +	void __iomem *phy_base;
+>>   };
+>>   
+>>   #define dp_field_modify(reg_value, mask, val)				\
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+>> index 74dd9956144e..c5feef8dc27d 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+>> @@ -15,5 +15,6 @@
+>>   #define HIBMC_DP_CLK_EN			0x7
+>>   #define HIBMC_DP_SYNC_EN_MASK		0x3
+>>   #define HIBMC_DP_LINK_RATE_CAL		27
+>> +#define HIBMC_DP_SYNC_DELAY(lanes)	((lanes) == 0x2 ? 86 : 46)
+>>   
+>>   #endif
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+>> index a8d543881c09..0dac4cfdde7c 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+>> @@ -7,6 +7,7 @@
+>>   #include "dp_comm.h"
+>>   #include "dp_reg.h"
+>>   #include "dp_hw.h"
+>> +#include "dp_phy.h"
+>>   
+>>   static void hibmc_dp_set_tu(struct hibmc_dp_dev *dp, struct drm_display_mode *mode)
+>>   {
+>> @@ -72,6 +73,9 @@ static void hibmc_dp_set_sst(struct hibmc_dp_dev *dp, struct drm_display_mode *m
+>>   				 HIBMC_DP_CFG_STREAM_HTOTAL_SIZE, htotal_size);
+>>   	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_HORIZONTAL_SIZE,
+>>   				 HIBMC_DP_CFG_STREAM_HBLANK_SIZE, hblank_size);
+>> +	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_PACKET,
+>> +				 HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION,
+>> +				 HIBMC_DP_SYNC_DELAY(dp->link.cap.lanes));
+>>   }
+>>   
+>>   static void hibmc_dp_link_cfg(struct hibmc_dp_dev *dp, struct drm_display_mode *mode)
+>> @@ -165,8 +169,11 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
+>>   
+>>   	hibmc_dp_aux_init(dp_dev);
+>>   
+>> +	if (hibmc_dp_phy_init(dp_dev))
+>> +		return -EAGAIN;
+>> +
+>>   	dp_dev->link.cap.lanes = 0x2;
+>> -	dp_dev->link.cap.link_rate = DP_LINK_BW_2_7;
+>> +	dp_dev->link.cap.link_rate = DP_LINK_BW_8_1;
+>>   
+>>   	/* hdcp data */
+>>   	writel(HIBMC_DP_HDCP, dp_dev->base + HIBMC_DP_HDCP_CFG);
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+>> index f6355c16cc0a..1124cd70c320 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+>> @@ -6,6 +6,7 @@
+>>   #include <drm/drm_print.h>
+>>   #include "dp_comm.h"
+>>   #include "dp_reg.h"
+>> +#include "dp_phy.h"
+>>   
+>>   #define HIBMC_EQ_MAX_RETRY 5
+>>   
+>> @@ -108,7 +109,11 @@ static int hibmc_dp_link_training_cr_pre(struct hibmc_dp_dev *dp)
+>>   		return ret;
+>>   
+>>   	for (i = 0; i < dp->link.cap.lanes; i++)
+>> -		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_2;
+>> +		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_0;
+>> +
+>> +	ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
+>> +	if (ret)
+>> +		return ret;
+>>   
+>>   	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set, dp->link.cap.lanes);
+>>   	if (ret != dp->link.cap.lanes) {
+>> @@ -137,21 +142,28 @@ static bool hibmc_dp_link_get_adjust_train(struct hibmc_dp_dev *dp,
+>>   	return false;
+>>   }
+>>   
+>> -static inline int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
+>> +static int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
+>>   {
+>> +	u8 rate = 0;
+>> +
+>>   	switch (dp->link.cap.link_rate) {
+>>   	case DP_LINK_BW_2_7:
+>>   		dp->link.cap.link_rate = DP_LINK_BW_1_62;
+>> -		return 0;
+>> +		rate = DP_PHY_BW_1_62;
+>> +		break;
+>>   	case DP_LINK_BW_5_4:
+>>   		dp->link.cap.link_rate = DP_LINK_BW_2_7;
+>> -		return 0;
+>> +		rate = DP_PHY_BW_2_7;
+>> +		break;
+>>   	case DP_LINK_BW_8_1:
+>>   		dp->link.cap.link_rate = DP_LINK_BW_5_4;
+>> -		return 0;
+>> +		rate = DP_PHY_BW_5_4;
+>> +		break;
+>>   	default:
+>>   		return -EINVAL;
+>>   	}
+>> +
+>> +	return hibmc_dp_serdes_rate_switch(rate, dp);
+>>   }
+>>   
+>>   static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
+>> @@ -159,6 +171,7 @@ static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
+>>   	switch (dp->link.cap.lanes) {
+>>   	case 0x2:
+>>   		dp->link.cap.lanes--;
+>> +		drm_warn(dp->dev, "dp link training reduce to 1 lane\n");
+>>   		break;
+>>   	case 0x1:
+>>   		drm_err(dp->dev, "dp link training reduce lane failed, already reach minimum\n");
+>> @@ -206,6 +219,11 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
+>>   		}
+>>   
+>>   		level_changed = hibmc_dp_link_get_adjust_train(dp, lane_status);
+>> +
+>> +		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>>   		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, dp->link.train_set,
+>>   					dp->link.cap.lanes);
+>>   		if (ret != dp->link.cap.lanes) {
+>> @@ -255,6 +273,11 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
+>>   		}
+>>   
+>>   		hibmc_dp_link_get_adjust_train(dp, lane_status);
+>> +
+>> +		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>>   		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET,
+>>   					dp->link.train_set, dp->link.cap.lanes);
+>>   		if (ret != dp->link.cap.lanes) {
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.c
+>> new file mode 100644
+>> index 000000000000..07940b5baf29
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.c
+>> @@ -0,0 +1,72 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +// Copyright (c) 2024 Hisilicon Limited.
+>> +#include <linux/delay.h>
+>> +#include <drm/drm_device.h>
+>> +#include <drm/drm_print.h>
+>> +#include "dp_comm.h"
+>> +#include "dp_config.h"
+>> +#include "dp_reg.h"
+>> +#include "dp_phy.h"
+>> +
+>> +int hibmc_dp_serdes_set_tx_cfg(struct hibmc_dp_dev *dp, u8 train_set[HIBMC_DP_LANE_NUM_MAX])
+>> +{
+>> +	u32 serdes_tx_cfg[4][4] = { {DP_PHY_VOL0_PRE0, DP_PHY_VOL0_PRE1,
+>> +				     DP_PHY_VOL0_PRE2, DP_PHY_VOL0_PRE3},
+>> +				    {DP_PHY_VOL1_PRE0, DP_PHY_VOL1_PRE1, DP_PHY_VOL1_PRE2},
+>> +				    {DP_PHY_VOL2_PRE0, DP_PHY_VOL2_PRE1}, {DP_PHY_VOL3_PRE0}};
+>> +	int cfg[2];
+>> +	int i;
+>> +
+>> +	for (i = 0; i < HIBMC_DP_LANE_NUM_MAX; i++) {
+>> +		cfg[i] = serdes_tx_cfg[(train_set[i] & 0x3)]
+>> +			 [(train_set[i] << DP_TRAIN_PRE_EMPHASIS_SHIFT & 0x3)];
+>> +		if (!cfg[i]) {
+>> +			cfg[i] = DP_PHY_VOL3_PRE0;
+>> +			drm_warn(dp->dev, "dp serdes cfg beyonds the allowable range\n");
+>> +		}
+>> +
+>> +		/* lane1 offset is 4 */
+>> +		writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, cfg[i]),
+>> +		       dp->phy_base + HIBMC_DP_PMA_LANE0_OFFSET + i * 4);
+>> +	}
+>> +
+>> +	usleep_range(300, 500);
+>> +
+>> +	if (readl(dp->phy_base + HIBMC_DP_LANE_STATUS_OFFSET) != DP_PHY_DONE) {
+>> +		drm_err(dp->dev, "dp serdes cfg failed\n");
+>> +		return -EAGAIN;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int hibmc_dp_serdes_rate_switch(u8 rate, struct hibmc_dp_dev *dp)
+>> +{
+>> +	writel(rate, dp->phy_base + HIBMC_DP_LANE0_RATE_OFFSET);
+>> +	writel(rate, dp->phy_base + HIBMC_DP_LANE1_RATE_OFFSET);
+>> +
+>> +	usleep_range(300, 500);
+>> +
+>> +	if (readl(dp->phy_base + HIBMC_DP_LANE_STATUS_OFFSET) != DP_PHY_DONE) {
+>> +		drm_err(dp->dev, "dp serdes rate switching failed\n");
+>> +		return -EAGAIN;
+>> +	}
+>> +
+>> +	if (rate < DP_PHY_BW_8_1)
+>> +		drm_warn(dp->dev, "reducing serdes rate to :%d\n",
+>> +			 rate ? rate * HIBMC_DP_LINK_RATE_CAL * 10 : 162);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int hibmc_dp_phy_init(struct hibmc_dp_dev *dp)
+>> +{
+>> +	dp->phy_base = dp->base + HIBMC_DP_HOST_OFFSET;
+>> +
+>> +	writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, DP_PHY_VOL0_PRE0),
+>> +	       dp->phy_base + HIBMC_DP_PMA_LANE0_OFFSET);
+>> +	writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, DP_PHY_VOL0_PRE0),
+>> +	       dp->phy_base + HIBMC_DP_PMA_LANE1_OFFSET);
+>> +
+>> +	return hibmc_dp_serdes_rate_switch(DP_PHY_BW_8_1, dp);
+>> +}
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.h
+>> new file mode 100644
+>> index 000000000000..db9fddd24d0e
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_phy.h
+>> @@ -0,0 +1,38 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +/* Copyright (c) 2025 Hisilicon Limited. */
+>> +
+>> +#ifndef DP_PHY_H
+>> +#define DP_PHY_H
+>> +
+>> +/* dp phy reg */
+>> +#define HIBMC_DP_HOST_OFFSET		0x10000
+>> +#define HIBMC_DP_LANE0_RATE_OFFSET	0x4
+>> +#define HIBMC_DP_LANE1_RATE_OFFSET	0xc
+>> +#define HIBMC_DP_LANE_STATUS_OFFSET	0x10
+>> +#define HIBMC_DP_PMA_LANE0_OFFSET	0x18
+>> +#define HIBMC_DP_PMA_LANE1_OFFSET	0x1c
+>> +#define HIBMC_DP_PMA_TXDEEMPH		GENMASK(18, 1)
+>> +
+>> +/* dp phy cfg parameter */
+>> +#define DP_PHY_VOL0_PRE0		0x280
+>> +#define DP_PHY_VOL0_PRE1		0x2300
+>> +#define DP_PHY_VOL0_PRE2		0x53c0
+>> +#define DP_PHY_VOL0_PRE3		0x8400
+>> +#define DP_PHY_VOL1_PRE0		0x380
+>> +#define DP_PHY_VOL1_PRE1		0x3440
+>> +#define DP_PHY_VOL1_PRE2		0x6480
+>> +#define DP_PHY_VOL2_PRE0		0x500
+>> +#define DP_PHY_VOL2_PRE1		0x4500
+>> +#define DP_PHY_VOL3_PRE0		0x600
+>> +#define DP_PHY_BW_8_1			0x3
+>> +#define DP_PHY_BW_5_4			0x2
+>> +#define DP_PHY_BW_2_7			0x1
+>> +#define DP_PHY_BW_1_62			0x0
+>> +
+>> +#define DP_PHY_DONE			0x3
+>> +
+>> +int hibmc_dp_phy_init(struct hibmc_dp_dev *dp);
+>> +int hibmc_dp_serdes_rate_switch(u8 rate, struct hibmc_dp_dev *dp);
+>> +int hibmc_dp_serdes_set_tx_cfg(struct hibmc_dp_dev *dp, u8 train_set[HIBMC_DP_LANE_NUM_MAX]);
+>> +
+>> +#endif
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+>> index 4a515c726d52..99ba9c951c41 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+>> @@ -72,5 +72,6 @@
+>>   #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
+>>   #define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+>>   #define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
+>> +#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION GENMASK(31, 20)
+>>   
+>>   #endif
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>> index e6de6d5edf6b..bade693d9730 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>> @@ -28,9 +28,7 @@
+>>   #include "hibmc_drm_drv.h"
+>>   #include "hibmc_drm_regs.h"
+>>   
+>> -#define HIBMC_DP_HOST_SERDES_CTRL		0x1f001c
+>> -#define HIBMC_DP_HOST_SERDES_CTRL_VAL		0x8a00
+>> -#define HIBMC_DP_HOST_SERDES_CTRL_MASK		0x7ffff
+>> +#define HIBMC_DP_HOST_SERDES_CTRL	0x1f001c
+>>   
+>>   DEFINE_DRM_GEM_FOPS(hibmc_fops);
+>>   
+>> @@ -122,8 +120,8 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
+>>   	}
+>>   
+>>   	/* if DP existed, init DP */
+>> -	if ((readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL) &
+>> -	     HIBMC_DP_HOST_SERDES_CTRL_MASK) == HIBMC_DP_HOST_SERDES_CTRL_VAL) {
+>> +	ret = readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL);
+>> +	if (ret) {
+>>   		ret = hibmc_dp_init(priv);
+>>   		if (ret)
+>>   			drm_err(dev, "failed to init dp: %d\n", ret);
+>> -- 
+>> 2.33.0
+>>
