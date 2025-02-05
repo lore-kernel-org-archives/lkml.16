@@ -1,140 +1,143 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCD2204092;
-	Wed,  5 Feb 2025 20:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D238C207DE0
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785720; cv=none; b=Q5xUkzdrqLvfFzmq9pUCSartk0udqwgkb4G2gl7NFFC1B/8Ecg1lbO2DuRcgzDvQEXJ9ERm7sADBGmg7qn1PpzFg3AezClS/9bsN1oLpIHvrCt45OZydBGuu0DwP8xca62OMFndXt4xFLzAx3KBQhG+z3MP1RCQMLDMPKTxn5WQ=
+	t=1738785722; cv=none; b=GFoszr3NLRvgRZgn3Q1XlwgEobuRxFMSst7wHE+QYF5/cV7XCTN3h0QhBScNAQ1Lcfpcmkmq8grK9gknPkup9m97C04MOWttJqSrc0/3FihAzfCeQxmyCzzLraemB1WqthRUcLjquCWPrSSeIlGnKnp+Ve/VeI6esBm6ZEfBGlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785720; c=relaxed/simple;
-	bh=7wwUorb8rETePDZ0h8NE7lubYmqErDbIH/6gl86gUhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JxbHlQ1F2SgGZwwjGIZ3qUzggxuo2EMBOIE3WAhrcRH8GTNGjX6uBwQpywE8raC6ljzaa/UR0JUCvegFF48/j3xdMRayjohGEVTjA4j3NOQYammFZMxmfxoiEADj56aJ5dtek8GWvOXA5ULrslnyFtnywyLPE8KrmjRthFJoU24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjOnotj2; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738785722; c=relaxed/simple;
+	bh=DTEdzO1IPs/iSbUR9qTXfHT/WQX6NcWLD+GyM4n0aio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvr/u2ZitcK+iv0onwMFOrp1GRUk7lKUectX0CDTavAGPG63bC389Af5Oap8zKh4VfXnXiibxRo+W/pDPBV/gxLMwaMrJq86YBUpRfpjlcfHu4lv3ilEPd/mr4Bp9c65PGFcERkrbwVBSvuYc2oUjgUww+SwXfWEUvTuvz76QzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=iTizeO0r; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjOnotj2"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f0444b478so3100705ad.0;
-        Wed, 05 Feb 2025 12:01:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="iTizeO0r"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6e5c74cb7so8749885a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:02:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738785718; x=1739390518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DGMR8TeLvI6i5DJJvvqSV1H5BnijBdUae/VI+oIoL+Y=;
-        b=cjOnotj2BJEHwCECTz0GCW/g+sdAVSdFI3S0W5IkITpWAm+thMLAFXN91sQxNBgRqC
-         yWCNGbXgr6Z58I4PV4VsY2UVftJQjemIpVR24en5Uqqdz1FTII1r2iKb//oU30ILg4sm
-         dzUrG+/jk33cNEk6RDTo6TxjO/YBCx8PYvZtwHBOM/cD3G1COAe8W0waHI2qQbTdHFW0
-         nr0NMWiswHOOnjdgWANV+NahOj3kf1mO/ipHkHuo/YWwFVg0MDW/TFfTGC/UctOOsuS7
-         t/SERXgStMysjWGIl7954hb/SDVof0HZYfSDHfYyOFuEBEXh+nmSjijWdQz9dhwHP0W6
-         bW8Q==
+        d=gourry.net; s=google; t=1738785720; x=1739390520; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8VSpDNdk25O/o+fZMp288PyURrK/8ijexeUi7ezV/7c=;
+        b=iTizeO0r8Q+SRPcDmjAneRsrBLngOQZuafT9vZ/vSQRDumKLFpdr7DSF2z1JGnAdw3
+         hMnMBxrkLlV3iM7VYjqnqa9zh3xAHpC8GScBf28XzHnognANSaih+MXQzmWmvICOSLUb
+         83JILGv+KliLiSI2Xh1RuTARjLFjrBN2b9NiVam/PJEYOw41GHHiKfPOfSPLt/z/gzWh
+         tlW0WWvqEIuLiGF4KvChHc5wcsIr2w0IaHTup2aoNkNWwAupWpiofjdJay2hzFo4NLNI
+         mhQb05IAdSD4Bc11fMKZEUQyvcqrdhjWCLkRGEKKoYko4cPkl5AiBThijVBDBt/qqpUI
+         65mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738785718; x=1739390518;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DGMR8TeLvI6i5DJJvvqSV1H5BnijBdUae/VI+oIoL+Y=;
-        b=vaRFDcFldGMpCCl55DRX6HCuc6T9L9fOMtN5G9TwXTqZyH89nMPGmfP4y1iXxp9KzX
-         eweIpOeKhetpGL6nsvlBv1PlvRI3Q59XojZ/VW3Kgfy8jB4wSGfkMFSxtWrRKm6PAlYl
-         /q8EViYo8Grhnsc+L9mGjQ06bP0fj6u4CeH4tpDAzdmmoMnfrSK50xRVICCpVhFZ5yL0
-         AqZL1W5TsBlpVvRKrBry4tnIV1LIUgiUYE22MZaCM1jI+qzEmeEd155QL3L2D+H1m9An
-         mL1s+C7b65xTtvDOHyYNNH38DVMkn9RzJ4ZKfl9P291bj2oc8hLWL8EE7KbHdpeaiT3W
-         vHFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSSGoaQxocOHQbXsdCXDsNRLrFzad4pMXE7ZFpZLVqrJbtY5cGTfz7o8mBmB3omdiKDpu9O3eQ3DiGTSPE@vger.kernel.org, AJvYcCWrevn9zCgiSNJK6ScSniWFil9eLFIcOrwI6tfsjYmwU2Y10kb7oa59wwhWG/c83WLrPFImn+sex2I=@vger.kernel.org, AJvYcCXrBO6ESpl/hIFAhJk+/72u0UnPO1nMutzTWYYujKy9EJ9tnSsMi/KrUinaRGcLL1g3KDAxOpXlLJNpzCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLZm1ulbMD9HB79iJHu9BuyJkjIB8NIIP+BcY48CwHekuAuoA1
-	9ydLCKP0/NC1HLRSmmvdWo6bygsQu8lYmh+z7zHg7bneW7IKL3bo8zl0ZjSsA58=
-X-Gm-Gg: ASbGncuBpzUpE4DCrUJx44iOnSSyv456NlLRel9FCh8n3vhOYUwTRsqwf3+by/6mk2x
-	vqBKrJw6Mo3g6rtfVK9qdmq0bOCpyL0QRGW8ztOahOgxUXnWxOYVeRgZTaMViTApbHUKAdaWtfQ
-	hCCmhw2fVqluIVAZ+II+gzkDSsWX3HVfq//CYg7MaD4IQQ/InQJe8AoSlOE/WFpGiU+cebBQu/A
-	MfzwYway78gT++nuZrfeIBUvd9TG+xeeRFO207qPavVQ6T7RYVXQAsjhf0g6Rk9LkCiHmCR4sXy
-	3B6RJeZMMYXYORJudI0ayt1U/ofU52gxcF4KSbGGs3loiRPW
-X-Google-Smtp-Source: AGHT+IHjUQyw9P2JcwATnPhW9s84WlBsUC6Bvb04L/Wpl8liMC+OaCK6unGgKpIOmka4KGUwmpKiSA==
-X-Received: by 2002:a17:903:2301:b0:216:59ed:1ab0 with SMTP id d9443c01a7336-21f17e7421dmr65554945ad.27.1738785718442;
-        Wed, 05 Feb 2025 12:01:58 -0800 (PST)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:101d:c4fc:84d7:253:f453:251e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21efee35dd1sm40048545ad.36.2025.02.05.12.01.54
+        d=1e100.net; s=20230601; t=1738785720; x=1739390520;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8VSpDNdk25O/o+fZMp288PyURrK/8ijexeUi7ezV/7c=;
+        b=QVngWkxE9jCYSDC9FJyOvfSkQJOUkOMJT8kaXQec/sP6EVcGLYolybOn2ocxShf9g3
+         gV5+gQ+YGoQQOjAXh9CV5hev8Gbq9iy0TpPrVleBr1iAgA95oZZQzIUdTpRRxypx2u4E
+         vMa4vD0Z8kSZ+OaSn3aZLYWd5VU3MUhG8w7QASGOQzW8GCsxH6ZmJ1mg2xDfVXhkeWAz
+         HT91i8WVupKeMYdgYslAo/Wd0+V7K7NVJs8v2wAYh2XOFc/VqYPElqFYAVJy20xAK4/z
+         BRRv2f+VshfAF/3QgJ1gs4XRJ/i4n84ktNtl0PX25pD2UC6fC4ejUMahi0ffvUjAp4Ur
+         5gEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN4CmO/01wdscDL9sGMylUpHWYLcztcPxuHhR1pianO+qUoiWiqPWFOcRgwVBfWNtEfyWx0Re5U76tfAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqsqUmLquaHJX3/yGEdk1as3A4iK1C+xMCEhQqXA1NBBlGs9mT
+	O8TTU075/yQPHTpcdkcZycO88c+4yiTksyyjUc1IMl02ZcGU7chdFrV0YGuJLyeshvKh+VSY9PP
+	j
+X-Gm-Gg: ASbGncu80Pb+n7aLs79DElHLYGn5mv7TYFwEIhqM6u77cvZWGsw8RoGwIbJw358Eg+t
+	yzZzB49AyIKKzFC/y/kToTxDTua2DIZG4A6WqneypNZBmSz0BZG51UfmDJoVWIQ9UF3c+sp4zLU
+	q3ZtAT84sAUD2UfYnegxJfnGbYt5n9ndfgpPUUy7jIqxy+1sojxbdbhakh/yAq2FOt1SnFPUhpw
+	6ynvdkFqLsKh36AWvFiKWFg94dhq3Opkojs+0SVpLQFqAzhEm2VrT9PQXqVWJFweqM6VgZ8cuRa
+	Zi9iMhExjvVGr5cgvQ2nh16gVMbASPfroHf/3d6BviHQjgSfDioUc4BXGX/5rRq/k9CYDmajJg=
+	=
+X-Google-Smtp-Source: AGHT+IEYVi/m8wptbaxkhbPZJ+EcqbJYgjUqN7w7U6N9+LnXprFFxitg56LH3NaoPg3BvPn36ADc1A==
+X-Received: by 2002:a05:6214:f6c:b0:6d8:8256:41d4 with SMTP id 6a1803df08f44-6e42fbacae6mr68306776d6.19.1738785719721;
+        Wed, 05 Feb 2025 12:01:59 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e4390abbf9sm2594556d6.94.2025.02.05.12.01.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 12:01:58 -0800 (PST)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net
-Cc: skhan@linuxfoundation.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH v2] docs: hwmon: Fix spelling and grammatical issues
-Date: Thu,  6 Feb 2025 01:31:34 +0530
-Message-Id: <20250205200134.12006-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 05 Feb 2025 12:01:59 -0800 (PST)
+Date: Wed, 5 Feb 2025 15:01:57 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v6 6/6] cxl/pci: Add trace logging for CXL PCIe Port RAS
+ errors
+Message-ID: <Z6PDtW0omzmMjjXN@gourry-fedora-PF4VCD3F>
+References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250123084421.127697-7-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250123084421.127697-7-Smita.KoralahalliChannabasappa@amd.com>
 
-Fix spelling and grammatical errors across hwmon driver
-documentation files.
+On Thu, Jan 23, 2025 at 08:44:21AM +0000, Smita Koralahalli wrote:
+> The CXL drivers use kernel trace functions for logging endpoint and
+> Restricted CXL host (RCH) Downstream Port RAS errors. Similar functionality
+> is required for CXL Root Ports, CXL Downstream Switch Ports, and CXL
+> Upstream Switch Ports.
+> 
+> Introduce trace logging functions for both RAS correctable and
+> uncorrectable errors specific to CXL PCIe Ports. Use them to trace
+> FW-First Protocol errors.
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
-V1 - https://lore.kernel.org/lkml/20250204134806.28218-1-purvayeshi550@gmail.com/
-V2 - Removed unwanted changes and split changes per driver, creating a separate patch for hwmon.
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
- Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
- Documentation/hwmon/abituguru.rst           | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 9d4b5f39b21a..766447c169c8 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -1168,6 +1168,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+>  		pci_get_domain_bus_and_slot(data->prot_err.agent_addr.segment,
+>  					    data->prot_err.agent_addr.bus,
+>  					    devfn);
+> +	int port_type;
+>  
+>  	if (!pdev)
+>  		return;
+> @@ -1176,6 +1177,18 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+>  	if (pdev->driver != &cxl_pci_driver)
+>  		return;
+>  
+> +	port_type = pci_pcie_type(pdev);
+> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    port_type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    port_type == PCI_EXP_TYPE_UPSTREAM) {
 
-diff --git a/Documentation/hwmon/abituguru-datasheet.rst b/Documentation/hwmon/abituguru-datasheet.rst
-index 0cd61471d..19ba4b4cd 100644
---- a/Documentation/hwmon/abituguru-datasheet.rst
-+++ b/Documentation/hwmon/abituguru-datasheet.rst
-@@ -6,9 +6,9 @@ First of all, what I know about uGuru is no fact based on any help, hints or
- datasheet from Abit. The data I have got on uGuru have I assembled through
- my weak knowledge in "backwards engineering".
- And just for the record, you may have noticed uGuru isn't a chip developed by
--Abit, as they claim it to be. It's really just an microprocessor (uC) created by
-+Abit, as they claim it to be. It's really just a microprocessor (uC) created by
- Winbond (W83L950D). And no, reading the manual for this specific uC or
--mailing  Windbond for help won't give any useful data about uGuru, as it is
-+mailing Winbond for help won't give any useful data about uGuru, as it is
- the program inside the uC that is responding to calls.
- 
- Olle Sandberg <ollebull@gmail.com>, 2005-05-25
-@@ -35,7 +35,7 @@ As far as known the uGuru is always placed at and using the (ISA) I/O-ports
- ports are holding for detection. We will refer to 0xE0 as CMD (command-port)
- and 0xE4 as DATA because Abit refers to them with these names.
- 
--If DATA holds 0x00 or 0x08 and CMD holds 0x00 or 0xAC an uGuru could be
-+If DATA holds 0x00 or 0x08 and CMD holds 0x00 or 0xAC a uGuru could be
- present. We have to check for two different values at data-port, because
- after a reboot uGuru will hold 0x00 here, but if the driver is removed and
- later on attached again data-port will hold 0x08, more about this later.
-@@ -46,7 +46,7 @@ have to test CMD for two different values. On these uGuru's DATA will initially
- hold 0x09 and will only hold 0x08 after reading CMD first, so CMD must be read
- first!
- 
--To be really sure an uGuru is present a test read of one or more register
-+To be really sure a uGuru is present a test read of one or more register
- sets should be done.
- 
- 
-diff --git a/Documentation/hwmon/abituguru.rst b/Documentation/hwmon/abituguru.rst
-index cfda60b75..4a5ee16b1 100644
---- a/Documentation/hwmon/abituguru.rst
-+++ b/Documentation/hwmon/abituguru.rst
-@@ -40,7 +40,7 @@ Supported chips:
- 
- .. [2]  There is a separate abituguru3 driver for these motherboards,
- 	the abituguru (without the 3 !) driver will not work on these
--	motherboards (and visa versa)!
-+	motherboards (and vice versa)!
- 
- Authors:
- 	- Hans de Goede <j.w.r.degoede@hhs.nl>,
--- 
-2.34.1
+Almost wish this was a macro for the sake of style, but not worth it.
 
+"corr_prot_err" and "port_prot_err" kind of blend at first glance. Not
+worth holding anything up.
+
+> +		if (data->severity == AER_CORRECTABLE)
+> +			cxl_cper_trace_corr_port_prot_err(pdev, data->ras_cap);
+> +		else
+> +			cxl_cper_trace_uncorr_port_prot_err(pdev, data->ras_cap);
+> +
+> +		return;
+> +	}
+> +
+>  	if (data->severity == AER_CORRECTABLE)
+>  		cxl_cper_trace_corr_prot_err(pdev, data->ras_cap);
+>  	else
+> -- 
+> 2.17.1
+> 
