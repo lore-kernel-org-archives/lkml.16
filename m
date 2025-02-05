@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CF721C16F;
-	Wed,  5 Feb 2025 07:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A02135A8;
+	Wed,  5 Feb 2025 07:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738740490; cv=none; b=sPkuf7hBQ0rLX47/PBON/IX4NEIe70dGy8/fRvkz1svqCc7RNQ6JmwzlRMJauJN+eD1G7PETYSLGZBQX/jrTw5ba4NB9CUQbh/iDWUt1Ka0YH4s/3AMLybeRBC8Ow1hYW0g4TjKVqCMj/FJukzc06clxF/OXiFA1T3Zo8Pp3LU0=
+	t=1738740570; cv=none; b=gW3I1+1BAjJreIrFvl2QIV3hlF1MLgJjcGCQofYBpZQ0HFOMrep5d8qgiRJf7dMsYdHBt+yAlQ9NbS7KpGx+I4F5/MzWRM5HdL5Wpl2iFIi+5GSOZ7ePFs70xcPr4Ow8IGI8oHAcNj0Kci3V3BFyTSZ+M77xLXK5rI3OUWVZ9KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738740490; c=relaxed/simple;
-	bh=Mtk3GPiawz6xM56KH+DJhCTEAZ8bddN3kYMWpzWZj2U=;
+	s=arc-20240116; t=1738740570; c=relaxed/simple;
+	bh=DDGkskuul2dU7AQiYiQ17lUea5688ZO8WYRSfIqpqo4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HJjAq7T/i0CJ88wlmWgpCed8YbpLUWjlDg13yHjppU13ZjwcG3C6o495Y2n+pMFkdh2vlmld38yVEzK+8xrHyGo6v9JtKKNl/MFg6GvjzFhH8OSdPQiVoC6NMrCNKb++3PZmt5QlrvK/wsIJignvBXQu6UOcTMdzLzE5POsKieQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Py9eFSyR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XlCJ/iT9AGbm99CjyAQali5S7GfJkZPc7dgUyYmgl5oaHQb0Gph4QrD2Tfyx/1E5MOFxe7hE9epL21QmNTlyP7zPmSY22NIWIVw3MeT3SVtHtyEoK2pV60YSQ0ucl06tr6WbMdic7uRo3MVlWhwoUvkIPsUzYzpFsuJXKOvEGxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ypy4myUh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Py9eFSyR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE7BC4CED1;
-	Wed,  5 Feb 2025 07:28:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ypy4myUh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 784DBC4CED1;
+	Wed,  5 Feb 2025 07:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738740489;
-	bh=Mtk3GPiawz6xM56KH+DJhCTEAZ8bddN3kYMWpzWZj2U=;
+	s=k20201202; t=1738740569;
+	bh=DDGkskuul2dU7AQiYiQ17lUea5688ZO8WYRSfIqpqo4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Py9eFSyRUEtY/p4T17HMXZ6qxQQsU0ieBz9iWBnZgzu6jp31QwKHISJ+9l44f/CeH
-	 b39DerG2O2Rkvmvz1qx3lEFbxObouTrZR305+htCWS59QlNy2c9mrudQdvF08X1lQr
-	 z+2E3vQhtyUDBSzuR2zpElazSzx5RI74D42jaRtU8sXQbwLoAbXJmpcgCgqlZJEHnM
-	 hZy53PCfGf/c3l+x6pegq3VraO1gsDqY82nqHZtWMHRUOuV9NaKd5y+Ks8EL6Ba8Hq
-	 TozPUOSMo7KpqBDCfLRiZu9D9pacDqwUdmDXJJfjKhxZtQgNdAnBsFTBykPZgj5E7/
-	 4ZPp5jufNmpEA==
-Message-ID: <6be49594-87a1-4e5a-8f68-4c5b5ee1708a@kernel.org>
-Date: Wed, 5 Feb 2025 08:28:03 +0100
+	b=Ypy4myUhKtVTYOs6kv8vWw6HDcMsvgLrpkb+Ez6mIN30YkvPK7cuVNK0toJ50FFY8
+	 oYDr/o7Wkwhtr9ba7+GzREP7n2ZOA88rAoOlNqyDn28o+1lsWwIfxTRcgcghm5JXcQ
+	 khyXezfZimYN8h4ShrMCnM/HK1H6xhcpzB4O9Wzta3b+wnC0WQEH+lfUOhy+XoBNha
+	 XOT03M1nh075GNVTNE9gyphJzvyrBMjM2Y+5xqPv4FyFxpAuBURrBKs+VETwb27IU8
+	 5HRNTrRB7iUomRTk/WzUbqo++I+TmMG+iRRapPB7VqfCEnZv47zQBqClq4gg1lrt9a
+	 ODRBTUoECnNqg==
+Message-ID: <7a29f64f-1c65-4f0d-acdd-494258225a1c@kernel.org>
+Date: Wed, 5 Feb 2025 08:29:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] Support ExynosAutov920 ufs phy driver
-To: Alim Akhtar <alim.akhtar@samsung.com>,
- =?UTF-8?B?J+uCmOyGjOybkC9TT1dPTiBOQSc=?= <sowon.na@samsung.com>,
- vkoul@kernel.org
-Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- robh@kernel.org, conor+dt@kernel.org, kishon@kernel.org
-References: <CGME20241226031145epcas2p4fa41b44749a7f675364437856d01a4c6@epcas2p4.samsung.com>
- <20241226031142.1764652-1-sowon.na@samsung.com>
- <000001db658c$4dce63c0$e96b2b40$@samsung.com>
- <080d01db7786$ed980e90$c8c82bb0$@samsung.com>
+Subject: Re: [PATCH 4/7] dt-bindings: mfd: cirrus,cs40l26: Support for CS40L26
+To: Fredrik Treven <ftreven@opensource.cirrus.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, patches@opensource.cirrus.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
+ <20250131195639.1784933-5-ftreven@opensource.cirrus.com>
+ <20250202-stoic-skunk-of-promise-cc3c4f@krzk-bin>
+ <eb2c68a5-e73d-44c9-9d73-0842f88d09e3@opensource.cirrus.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,37 +90,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <080d01db7786$ed980e90$c8c82bb0$@samsung.com>
+In-Reply-To: <eb2c68a5-e73d-44c9-9d73-0842f88d09e3@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 05/02/2025 05:32, Alim Akhtar wrote:
-> Hello Krzysztof / Vinod
-> 
->> -----Original Message-----
->> From: 나소원/SOWON NA <sowon.na@samsung.com>
->> Sent: Monday, January 13, 2025 12:55 PM
->> To: vkoul@kernel.org
->> Cc: krzk+dt@kernel.org; linux-kernel@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-samsung-soc@vger.kernel.org;
->> robh@kernel.org; krzk@kernel.org; conor+dt@kernel.org;
->> alim.akhtar@samsung.com; kishon@kernel.org
->> Subject: RE: [PATCH v4 0/3] Support ExynosAutov920 ufs phy driver
+On 04/02/2025 23:18, Fredrik Treven wrote:
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index bc8ce7af3303..9c4105bf0a32 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -5546,11 +5546,11 @@ F:	sound/soc/codecs/cs*
+>>>   
+>>>   CIRRUS LOGIC HAPTIC DRIVERS
+>>>   M:	James Ogletree <jogletre@opensource.cirrus.com>
+>>> -M:	Fred Treven <fred.treven@cirrus.com>
+>>> +M:	Fred Treven <ftreven@opensource.cirrus.com>
+>>>   M:	Ben Bright <ben.bright@cirrus.com>
+>>>   L:	patches@opensource.cirrus.com
+>>>   S:	Supported
+>>> -F:	Documentation/devicetree/bindings/input/cirrus,cs40l50.yaml
+>>> +F:	Documentation/devicetree/bindings/input/cirrus,cs40l*
 >>
->> Hi Vinod,
->>
->>> -----Original Message-----
->>> From: Sowon Na <sowon.na@samsung.com>
->>
-> [Snip]
->> I can't see these patches in -next yet, do let me know if anything is missing to
->> be addressed from myside.
->>
-> Which tree will this series go through? 
+>> So input or mfd? I don't understand this.
+> The driver is mfd that utilizes both ASoC and Input FF subsystems.
 
-
-phy goes through phy. I take the DTS once the bindings got accepted. I
-cannot take it earlier for obvious reasons - warnings.
+And path here is different.
 
 Best regards,
 Krzysztof
