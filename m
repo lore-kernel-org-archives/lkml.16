@@ -1,170 +1,129 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8647207A18;
-	Wed,  5 Feb 2025 22:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD141FECB8
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738793779; cv=none; b=fUy/iHFQSM3SzjKmVu+lO+glqasLuwFv380Fe11EbDJJbDARD/2jTHdKwOM0I0/8ZK+Tnokv3JpS6jy4KEPNRFzrmy/VEyyB9WaDQbLRJOglgjTmiLNZ6FZQ8EVDlHBWsEYMvI2EqESYqWS9qLMECtF3a3wmWzvyYtSWeatKSSk=
+	t=1738793937; cv=none; b=LMLMEUnhod8TjvOJYUtTbQSuDzPwLkYvYkG/f1f/mvhnzuyV4X5gu92tHE1cN6LU/EC4Hs0HVbYcPzqt/BCQKaawTl8s4JAdfdCF1HeNfaGR5XN0RCMy6gfeqfBYS1avgajdIUBvuWV3LFLWrQopiiYBKgRb9rM3Xw2/lwc0kWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738793779; c=relaxed/simple;
-	bh=55U68o/HXEWOrqm9K4AOTOcQCPWE93DnNhIT8Ds+a4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ks/VPt07+QaAPFxaN6rDKBnZGSweUMBHySmzCY9cZkdDAKA0tb1L1tFwlB3C8b9JyWiZk1HoR4IWtep7qM5muE8lWOV296bEaA5l5+/uua2hit/yTQvBukj9ajAcTc6nLFnpjJ2MnOfBZDwsUcOW8CUrs1j5G1uoZMqwfPtz1p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XwfN7NTj; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738793937; c=relaxed/simple;
+	bh=/10U5fOTWX0m01T0ElNnXLTtip80+4+Wor1o9ULVx6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqZsA+A4fTNHO3cwPV8dMZ6BvVyYdQv/eCRxUQf8rI1yqH7jG+nwUaPsOfBdCHa6W1yr3elQvMnZ8cPQZNCOuiezv+P/ssH3iBCAjSQ4RRwebWh3iAElaXSUm4OculwyDJmvE2RQDQRnLNboSwqt+r7hlrgJRZbH/JHjtjdjCcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CV7fiaXm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwfN7NTj"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43626213fffso8470465e9.1;
-        Wed, 05 Feb 2025 14:16:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738793774; x=1739398574; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vdDVNZ5dZQ4AB4CLiIP63HC/J89SDxWWeBPv4iIwUpQ=;
-        b=XwfN7NTjgPzWl0Ng6DY8vuT7ybpfzyF7OBBMUQ9ppIhaVw+EN2VjZwaXT5KZ2w4d/O
-         kaRiiThn96VlQO0At8/w1Gm3C9q9JPDctxNGqhQ41q4gtfZbMQVHLNaFJG8s9fMeONLM
-         Wv+C1652BGCR5OwjGCV6B8zximMWjIDZ3yO1wn2UFY1zw7ihQI6TrEBlGTr1v0uniIse
-         kxZmRfz9HYk2H823423cDnB8/8wAcDLmaMmv3TChcpvsGgrooDiJEzbCOuD9hs/+uuuT
-         1RuW/COjFXBpRV8h/hTd30rmfbMk+boPLnBH8WkTS9mBTUY22VmDHWGb7/tRlGKh1SZA
-         RfWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738793774; x=1739398574;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vdDVNZ5dZQ4AB4CLiIP63HC/J89SDxWWeBPv4iIwUpQ=;
-        b=Vd5sIeOjvhWueQA9QMVQ8wwDDZwp5Ot7e85WU/8GTvGIqoxtb/XFC4hy/9k2Ob9V3c
-         NgCVOjCms3ELFYcSRUpWY0LuDmGY9Rgeuujz0rLyaU1tV+a+DVaYm0haPRPwRok78BPA
-         BtgMC47X2LOPQHXIc0fxDT7S4MvqPCJuYe8ieZcDBEFxJEqKKls+jkpBf2nniMYcaIVX
-         oj8mczk++wEEC/TDJpqfB4dt5A4MP1AOsLOPFAZa4d6onRf2B/iaksfafNX2BFlJLtT8
-         T3e9vnL7hjUUM5AHGm7zw9LMtLsxTI97fxKUqfW+Vhsx7q/HjyAoPTUmnHh4jHInZ/DK
-         dP0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUCaA6vWwqM/HSSrJe9GUCFLSzcEoq30i8zO60zCGlnTjLcSIZe5N9j08RV5HQl39ZAZrkH741TNsWMbucJU5eg@vger.kernel.org, AJvYcCUkeYDWRXugom+64T70OIXaZf7klIkWs59NvPCunzrP3qxjN32KgskPGnTm/mX5HiG7Shdd54LN@vger.kernel.org, AJvYcCUrNEoo2VRq2/iydD+AgCi/4inwo5JQfrbmQNmjnh5nS3mrhpY7/rjNUbBmeRHnHJVhJzY=@vger.kernel.org, AJvYcCUuJD48a0YAxpJcIrnaHqpIj/gZ+ERo7U4dR7h2Nd1gLRkINuCON3XXx5mz8k375yBUR20z/ZZk44fb@vger.kernel.org, AJvYcCX7t3J3bnVNDcs5Jbcse53Ny/aW7wlO0g9iFZrUXZW4ff6x9Kl2TEYMDxIkTy67VggpGO6T7AKQhvli81xe@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydd5FvYFSBEdpH8tWS5lUiy9OBOMrk/Q9+FJB82H3ELZe2bIzG
-	eIw4Y31xCupLspSFyq5YiDNw2w4zcRqWQQJgFnmyn60NTBlVjkPZ
-X-Gm-Gg: ASbGncvRrB+AyGNAi7mrs7cFRQfuMyRwOiPMa5i/7h+S+eKkG2aKLAOf6hT70rEjNFx
-	ZG8f81V1bvv6BvOuK17pe0B5wioXaGisQxJ4qq6D6dDAclU4POqIshLObS0Rpq4hlw8Ig4izAb2
-	1o2aMohALWBPCrYeFBNX11gAdMiLeftB2QC71W5M7HizxnLpgLc+jFi17oYnnrAsA94MGBSDUsc
-	4NXh+uSZ+fSX3VALE3EWULsUXWgb6nf9i4aAhF2/PgZxksN/ENPnioKjbPWvq+SGt0pMsVBdcA/
-	6MpBeGy6VRPBYeLJeUnMAeU=
-X-Google-Smtp-Source: AGHT+IEdwD8+gf+P54b0oq9+6IB9SKMe1dPj4BWvNK0K6VPumKorBNlE9GpHAOH2VL8CKukBAjBygw==
-X-Received: by 2002:a05:6000:4009:b0:38c:24f0:fc28 with SMTP id ffacd0b85a97d-38dbb20b3d7mr501077f8f.3.1738793773653;
-        Wed, 05 Feb 2025 14:16:13 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.128.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c122465sm20046771f8f.47.2025.02.05.14.16.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 14:16:11 -0800 (PST)
-Message-ID: <88cb8f03-7976-4846-a74d-e2d234c5cf8d@gmail.com>
-Date: Wed, 5 Feb 2025 22:16:18 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CV7fiaXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1F0C4CED1;
+	Wed,  5 Feb 2025 22:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738793935;
+	bh=/10U5fOTWX0m01T0ElNnXLTtip80+4+Wor1o9ULVx6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CV7fiaXmOk5HYpukAuIdd/+6LiNzd5BFkzx9X8fgdd8/7gZvqrgHFWcJI85Q3SW9L
+	 3TyxsE30GtYGItI/55V1RA2X0UEW6RpOGrIyueZ0x7jMJwR5J3ixc1j2TitlZUJCsK
+	 ctDHUAPlzXG9aUwManeNzSxb+kyNuV11RuPmA6e9lwW8OQy0aHY+KXNBAoH7wm2WhZ
+	 p3bwZ9Pb3M8lyI+SGT0cHMOAfNXlTzJdLKbtt68PIyV+z/GH85LRGXbVPACRYQVjtF
+	 iuBKzxl80IWGhNvBO6km/APo515vcofSKglwCNxDO/QMZfyUXPb5UA7TuV/kSffqPO
+	 sj/0L2BOXApLw==
+Date: Wed, 5 Feb 2025 23:18:52 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] exit: change the release_task() paths to call
+ flush_sigqueue() lockless
+Message-ID: <Z6PjzA61v6s732JF@pavilion.home>
+References: <20250205175136.GA8702@redhat.com>
+ <20250205175159.GA8714@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next v1 5/5] net: devmem: Implement TX path
-To: Mina Almasry <almasrymina@google.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
- David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Willem de Bruijn <willemb@google.com>,
- Samiullah Khawaja <skhawaja@google.com>, Stanislav Fomichev
- <sdf@fomichev.me>, Joe Damato <jdamato@fastly.com>, dw@davidwei.uk
-References: <20241221004236.2629280-1-almasrymina@google.com>
- <20241221004236.2629280-6-almasrymina@google.com>
- <676dd022d1388_1d346b2947@willemb.c.googlers.com.notmuch>
- <CAHS8izNzbEi_Dn+hDohF9Go=et7kts-BnmEpq=Znpot7o7B5wA@mail.gmail.com>
- <6798ee97c73e1_987d9294d6@willemb.c.googlers.com.notmuch>
- <53192c45-df3c-4a65-9047-bbd59d4aee47@gmail.com>
- <CAHS8izMcs=3qo1jhZSM499mxHh10-oBL6Fhb2W0eKWhJGax4Bg@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izMcs=3qo1jhZSM499mxHh10-oBL6Fhb2W0eKWhJGax4Bg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250205175159.GA8714@redhat.com>
 
-On 2/5/25 20:22, Mina Almasry wrote:
-> On Wed, Feb 5, 2025 at 4:41â€¯AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 1/28/25 14:49, Willem de Bruijn wrote:
->>>>>> +struct net_devmem_dmabuf_binding *
->>>>>> +net_devmem_get_sockc_binding(struct sock *sk, struct sockcm_cookie *sockc)
->>>>>> +{
->>>>>> +     struct net_devmem_dmabuf_binding *binding;
->>>>>> +     int err = 0;
->>>>>> +
->>>>>> +     binding = net_devmem_lookup_dmabuf(sockc->dmabuf_id);
->>>>>
->>>>> This lookup is from global xarray net_devmem_dmabuf_bindings.
->>>>>
->>>>> Is there a check that the socket is sending out through the device
->>>>> to which this dmabuf was bound with netlink? Should there be?
->>>>> (e.g., SO_BINDTODEVICE).
->>>>>
->>>>
->>>> Yes, I think it may be an issue if the user triggers a send from a
->>>> different netdevice, because indeed when we bind a dmabuf we bind it
->>>> to a specific netdevice.
->>>>
->>>> One option is as you say to require TX sockets to be bound and to
->>>> check that we're bound to the correct netdev. I also wonder if I can
->>>> make this work without SO_BINDTODEVICE, by querying the netdev the
->>>> sock is currently trying to send out on and doing a check in the
->>>> tcp_sendmsg. I'm not sure if this is possible but I'll give it a look.
->>>
->>> I was a bit quick on mentioning SO_BINDTODEVICE. Agreed that it is
->>> vastly preferable to not require that, but infer the device from
->>> the connected TCP sock.
->>
->> I wonder why so? I'd imagine something like SO_BINDTODEVICE is a
->> better way to go. The user has to do it anyway, otherwise packets
->> might go to a different device and the user would suddenly start
->> getting errors with no good way to alleviate them (apart from
->> likes of SO_BINDTODEVICE). It's even worse if it works for a while
->> but starts to unpredictably fail as time passes. With binding at
->> least it'd fail fast if the setup is not done correctly.
->>
+Le Wed, Feb 05, 2025 at 06:51:59PM +0100, Oleg Nesterov a écrit :
+> A task can block a signal, accumulate up to RLIMIT_SIGPENDING sigqueues,
+> and exit. In this case __exit_signal()->flush_sigqueue() called with irqs
+> disabled can triger a hard lockup, see
+> https://lore.kernel.org/all/20190322114917.GC28876@redhat.com/
 > 
-> I think there may be a misunderstanding. There is nothing preventing
-> the user from SO_BINDTODEVICE to make sure the socket is bound to the
-
-Right, not arguing otherwise
-
-> ifindex, and the test changes in the latest series actually do this
-> binding.
+> Fortunately, after the recent posixtimer changes sys_timer_delete() paths
+> no longer try to clear SIGQUEUE_PREALLOC and/or free tmr->sigq, and after
+> the exiting task passes __exit_signal() lock_task_sighand() can't succeed
+> and pid_task(tmr->it_pid) will return NULL.
 > 
-> It's just that on TX, we check what device we happen to be going out
-> over, and fail if we're going out of a different device.
+> This means that after __exit_signal(tsk) nobody can play with tsk->pending
+> or (if group_dead) with tsk->signal->shared_pending, so release_task() can
+> safely call flush_sigqueue() after write_unlock_irq(&tasklist_lock).
 > 
-> There are setups where the device will always be correct even without
-> SO_BINDTODEVICE. Like if the host has only 1 interface or if the
-> egress IP is only reachable over 1 interface. I don't see much reason
-> to require the user to SO_BINDTODEVICE in these cases.
+> Also, kill clear_tsk_thread_flag(TIF_SIGPENDING), it was never needed.
+> 
+> TODO:
+> 	- we can probably shift posix_cpu_timers_exit() as well
+> 	- do_sigaction() can hit the similar problem
+> 
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  kernel/exit.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index 3485e5fc499e..bc2c24ea4181 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -200,20 +200,12 @@ static void __exit_signal(struct task_struct *tsk)
+>  	__unhash_process(tsk, group_dead);
+>  	write_sequnlock(&sig->stats_lock);
+>  
+> -	/*
+> -	 * Do this under ->siglock, we can race with another thread
+> -	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
+> -	 */
+> -	flush_sigqueue(&tsk->pending);
+>  	tsk->sighand = NULL;
+>  	spin_unlock(&sighand->siglock);
+>  
+>  	__cleanup_sighand(sighand);
+> -	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
 
-That's exactly the problem. People would test their code with one setup
-where it works just fine, but then there will be a rare user of a
-library used by some other framework or a lonely server where it starts
-to fails for no apparent reason while "it worked before and nothing has
-changed". It's more predictable if enforced.
+Looks good to me, except for this TIF_SIGPENDING removal which I'm less
+sure about, I see a lot of places where it is added/removed. Well it's
+probably only checked locally on entry code. Would it make sense to move
+this chunk to a separate preceding patch? Or keep it here but at least
+explain on the changelog why it is safe to remove it?
 
-I don't think we'd care about setup overhead one extra ioctl() here(?),
-but with this option we'd need to be careful about not racing with
-rebinding, if it's allowed.
+Thanks!
 
--- 
-Pavel Begunkov
-
+> -	if (group_dead) {
+> -		flush_sigqueue(&sig->shared_pending);
+> +	if (group_dead)
+>  		tty_kref_put(tty);
+> -	}
+>  }
+>  
+>  static void delayed_put_task_struct(struct rcu_head *rhp)
+> @@ -279,6 +271,11 @@ void release_task(struct task_struct *p)
+>  	proc_flush_pid(thread_pid);
+>  	put_pid(thread_pid);
+>  	release_thread(p);
+> +
+> +	flush_sigqueue(&p->pending);
+> +	if (thread_group_leader(p))
+> +		flush_sigqueue(&p->signal->shared_pending);
+> +
+>  	put_task_struct_rcu_user(p);
+>  
+>  	p = leader;
+> -- 
+> 2.25.1.362.g51ebf55
+> 
+> 
