@@ -1,353 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB97A215179
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6031C81ACA;
+	Wed,  5 Feb 2025 06:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738737634; cv=none; b=Um0pBybvgLfqIh9kAJlHRW5T2z52dSmWnuW3Y1w8jfiIawFUX+h/Mm9Xr5YIpVy5KDbRjjcbm2vOaM87wU1K3dA6tToGBKnmci1MJrA9g5aYvew7rz5zPrELUG+9JhvgcZvTJHi2JQgeqFYoJPMDBBE2I6AX8cosoQOBGRQ/IDc=
+	t=1738737955; cv=none; b=bKk1NzXg+8NayIKaNeq/R5VTuXJbwiKkYBeBcC1oGHTPU0wEM2Evs3V9QNhlexHifntxGvWTISzbyBFvqb0IL6MoBC275wN5uYkhnLBM9/L3jzOz+YpTN00HZ7PGqh2NJ1BvmLcDTF5rFZBPJ+vrIn1Jo6JAqp8vJLOkGSMgSU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738737634; c=relaxed/simple;
-	bh=gJttkzn6BJFiI8fPoTRjXq8kfmPVSjAVBm2+rRUyFm4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ie3w0AZY5SqhDa76N7Y92UUrAMJYZwYSn25xVEV7iq9DDqF29dhexadPieb7Jumoqk7QllEkTTYMEAPSCZOrOLIIJXGb9SW8h6jML0OHaHQwUY6cMhXChvlvOAqGKWyD0doDTjMDjF6fVS0oiadRMDte8YB09+UJHZiB23r3u4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPyHYCx3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738737955; c=relaxed/simple;
+	bh=JZe+qR3eYb9BK90I3WJZEMYK56rpjR/pJ0ynrjG5oAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nrPNusCfUZNgJhDeGWX4v5sHZHX9m8dZzw47p4x31GX7l3oMOpsAdINt/MnF/MmYxLfwB4olGslIJnA8KdP9e96Mlovsvnu4ySHXj8IYKxL4Ld2JelJbw4a6TkzYqA5DUActouPvoLMVEF710E0rYjLHGy4Kkknm+CBL4xuPq/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUxqglHW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPyHYCx3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 63ED9C4CEE5;
-	Wed,  5 Feb 2025 06:40:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUxqglHW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B501FC4CEE5;
+	Wed,  5 Feb 2025 06:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738737634;
-	bh=gJttkzn6BJFiI8fPoTRjXq8kfmPVSjAVBm2+rRUyFm4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BPyHYCx3qkb3x2tF10WH39ZOpMy/A0Lemb6mWDjsJMJBaC7G/cYUQ+DVZztf5Ud6+
-	 9EKbas4LexMr6B4Zt9DQdPoOZNKew9PYDmphmcAZYu9fxNQhcJXOXYOy8xAd3TsWDt
-	 HkGivJxHhdTvhpK9Ym22pixmXCfliz/YJXYFiqy3TFupocBLI9pZStcivzxWIqV7ro
-	 FoqYW6vDGm+0LDf5jesfYIFaEMAyql7G5CiQs6TUjEA/AIabrt87ImSj193eXaMk8C
-	 uvdUIu4MDAZgUmqTucv4KRJIqONqoTrynjmGPi9KPqGclGJZQEopsUxq4KXrjzl0Sb
-	 olrBLwMr6qVNg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FA9C02197;
-	Wed,  5 Feb 2025 06:40:34 +0000 (UTC)
-From: Hermes Wu via B4 Relay <devnull+Hermes.wu.ite.com.tw@kernel.org>
-Date: Wed, 05 Feb 2025 14:41:03 +0800
-Subject: [PATCH v3 1/2] drm/bridge: it6505: add support DRM_BRIDGE_OP_HDMI
- to drm_bridge
+	s=k20201202; t=1738737954;
+	bh=JZe+qR3eYb9BK90I3WJZEMYK56rpjR/pJ0ynrjG5oAc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XUxqglHWNLI9hm7//VUDbOj2yyocxZaWgy9xqVaL0zoqOq0TPGpV8DABAQ89jKZsO
+	 Y418AEPOLyX7PmsgAEdRChb1Yyreu5IRCDludvls13gSKKWSEIXEiofzWMhX/GeftC
+	 k6pkU7xia2bc++PBzFWIq9ECDRe0gRhF+6r62J8IU7hBurXg0vqVxvKunPGjEEFpm8
+	 MW8nFI3oKQqrt1EDhnNBFZiQvmb4/Sd2OXeYyS3TvInkIzqrd+oSBKoKTX0U1zA0bq
+	 dp1LIUH36KOdGg/3xJ3c97TXYOBzGfeyQX6plxVIKjd+gWPkrQ7oVo2Bw4Dgci1rsQ
+	 DFUe+tHV6m67w==
+Message-ID: <d19c129d-ca88-4149-80d3-12aee5c3f709@kernel.org>
+Date: Wed, 5 Feb 2025 07:45:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] tty: tty_buffer: Avoid hundreds of
+ -Wflex-array-member-not-at-end warnings
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z6L1XwE-WEzcGFwv@kspp>
+ <2025020503-unnamable-canopener-ac71@gregkh>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <2025020503-unnamable-canopener-ac71@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-add-audio-codec-v3-1-26cfadb2d81f@ite.com.tw>
-References: <20250205-add-audio-codec-v3-0-26cfadb2d81f@ite.com.tw>
-In-Reply-To: <20250205-add-audio-codec-v3-0-26cfadb2d81f@ite.com.tw>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: treapking@chromium.org, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, 
- Hermes Wu <Hermes.wu@ite.com.tw>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738737663; l=9180;
- i=Hermes.wu@ite.com.tw; s=20241230; h=from:subject:message-id;
- bh=HsvghXCd4JyDknaGsA3NNvvjMzjG9ZuIBRMO9tJETkE=;
- b=igPnzGn4a+UA7iXGKouqKmB8ravxdw3TuH1hogt7Jxy6U28L0PkOsFZYXDvi8f4KMBTm/DoQy
- 354DC/w75vsArtSHk3Xul6y96cU6enH49Vvs1QuCkNdSPl/Q0/oT+dx
-X-Developer-Key: i=Hermes.wu@ite.com.tw; a=ed25519;
- pk=qho5Dawp2WWj9CGyjtJ6/Y10xH8odjRdS6SXDaDAerU=
-X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
- auth_id=310
-X-Original-From: Hermes Wu <Hermes.wu@ite.com.tw>
-Reply-To: Hermes.wu@ite.com.tw
 
-From: Hermes Wu <Hermes.wu@ite.com.tw>
+On 05. 02. 25, 6:36, Greg Kroah-Hartman wrote:
+> On Wed, Feb 05, 2025 at 03:51:35PM +1030, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> So, in order to avoid ending up with a flexible-array member in the
+>> middle of other structs, we use the `struct_group_tagged()` helper
+>> to create a new tagged `struct tty_buffer_hdr`. This structure
+>> groups together all the members of the flexible `struct tty_buffer`
+>> except the flexible array.
+>>
+>> As a result, the array is effectively separated from the rest of the
+>> members without modifying the memory layout of the flexible structure.
+>> We then change the type of the middle struct member currently causing
+>> trouble from `struct tty_buffer` to `struct tty_buffer_hdr`.
+>>
+>> We also want to ensure that when new members need to be added to the
+>> flexible structure, they are always included within the newly created
+>> tagged struct. For this, we use `static_assert()`. This ensures that the
+>> memory layout for both the flexible structure and the new tagged struct
+>> is the same after any changes.
+>>
+>> This approach avoids having to implement `struct tty_buffer_hdr` as a
+>> completely separate structure, thus preventing having to maintain two
+>> independent but basically identical structures, closing the door to
+>> potential bugs in the future.
+> 
+> Why not just have a separate structure and embed that in the places it
+> is used?  No duplication should be needed or am I missing something?
+> 
+> I don't mind that, it would make this all much simpler and more obvious
+> over time, and the tty layer needs all the "simplification" it can get
+> :)
 
-Add DRM_BRIDGE_OP_HDMI to bridge.ops and implement necessary callback
-functions.
++100. You can name the member hdr or even h. Another approach would be 
+to get rid of sentinel completely. But that might be too hard. Have you 
+looked into it? You should describe that above too.
 
-The native AVI and AUDIO infoframe configuration API are removed.
+On the top of that: I remember I already looked into this when gcc14 was 
+introduced and I was retracted by something else. Nevertheless, it took 
+me quite a while to understand what the exact problem is and how you are 
+doing the fix.
 
-In .atomic_enable use
-drm_atomic_helper_connector_hdmi_update_infoframes().
-for infoframe updates.
+Both from the patch (the main change in tty_bufhead is hidden behind 
+whitespace changes) and especially from the description (you do not say 
+the simple: tty_bufhead contains data[] in the middle due to embedded 
+tty_buffer there). Both need to be improved.
 
-Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
----
- drivers/gpu/drm/bridge/ite-it6505.c | 185 ++++++++++++++++++++++--------------
- 1 file changed, 115 insertions(+), 70 deletions(-)
+PS v2 was sent too early :P.
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 88ef76a37fe6accacdd343839ff2569b31b18ceb..4c766854de14093b80949bdb410488f504b24db8 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -25,6 +25,8 @@
- 
- #include <drm/display/drm_dp_helper.h>
- #include <drm/display/drm_hdcp_helper.h>
-+#include <drm/display/drm_hdmi_helper.h>
-+#include <drm/display/drm_hdmi_state_helper.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
- #include <drm/drm_crtc.h>
-@@ -1414,37 +1416,6 @@ static void it6505_variable_config(struct it6505 *it6505)
- 	memset(it6505->bksvs, 0, sizeof(it6505->bksvs));
- }
- 
--static int it6505_send_video_infoframe(struct it6505 *it6505,
--				       struct hdmi_avi_infoframe *frame)
--{
--	u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
--	int err;
--	struct device *dev = it6505->dev;
--
--	err = hdmi_avi_infoframe_pack(frame, buffer, sizeof(buffer));
--	if (err < 0) {
--		dev_err(dev, "Failed to pack AVI infoframe: %d", err);
--		return err;
--	}
--
--	err = it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0x00);
--	if (err)
--		return err;
--
--	err = regmap_bulk_write(it6505->regmap, REG_AVI_INFO_DB1,
--				buffer + HDMI_INFOFRAME_HEADER_SIZE,
--				frame->length);
--	if (err)
--		return err;
--
--	err = it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT,
--			      EN_AVI_PKT);
--	if (err)
--		return err;
--
--	return 0;
--}
--
- static void it6505_get_extcon_property(struct it6505 *it6505)
- {
- 	int err;
-@@ -1604,27 +1575,6 @@ static void it6505_enable_audio_source(struct it6505 *it6505)
- 	it6505_write(it6505, REG_AUDIO_SRC_CTRL, audio_source_count);
- }
- 
--static void it6505_enable_audio_infoframe(struct it6505 *it6505)
--{
--	struct device *dev = it6505->dev;
--	u8 audio_info_ca[] = { 0x00, 0x00, 0x01, 0x03, 0x07, 0x0B, 0x0F, 0x1F };
--
--	DRM_DEV_DEBUG_DRIVER(dev, "infoframe channel_allocation:0x%02x",
--			     audio_info_ca[it6505->audio.channel_count - 1]);
--
--	it6505_write(it6505, REG_AUD_INFOFRAM_DB1, it6505->audio.channel_count
--		     - 1);
--	it6505_write(it6505, REG_AUD_INFOFRAM_DB2, 0x00);
--	it6505_write(it6505, REG_AUD_INFOFRAM_DB3,
--		     audio_info_ca[it6505->audio.channel_count - 1]);
--	it6505_write(it6505, REG_AUD_INFOFRAM_DB4, 0x00);
--	it6505_write(it6505, REG_AUD_INFOFRAM_SUM, 0x00);
--
--	/* Enable Audio InfoFrame */
--	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_CTRL_PKT,
--			EN_AUD_CTRL_PKT);
--}
--
- static void it6505_disable_audio(struct it6505 *it6505)
- {
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_AUD_MUTE, EN_AUD_MUTE);
-@@ -1644,7 +1594,6 @@ static void it6505_enable_audio(struct it6505 *it6505)
- 	it6505_setup_audio_channel_status(it6505);
- 	it6505_setup_audio_format(it6505);
- 	it6505_enable_audio_source(it6505);
--	it6505_enable_audio_infoframe(it6505);
- 
- 	it6505_write(it6505, REG_AUDIO_N_0_7, 0x00);
- 	it6505_write(it6505, REG_AUDIO_N_8_15, 0x80);
-@@ -3168,17 +3117,13 @@ it6505_bridge_mode_valid(struct drm_bridge *bridge,
- 			 const struct drm_display_info *info,
- 			 const struct drm_display_mode *mode)
- {
--	struct it6505 *it6505 = bridge_to_it6505(bridge);
--
--	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
--		return MODE_NO_INTERLACE;
--
--	if (mode->clock > it6505->max_dpi_pixel_clock)
--		return MODE_CLOCK_HIGH;
-+	unsigned long long rate;
- 
--	it6505->video_info.clock = mode->clock;
-+	rate = drm_hdmi_compute_mode_clock(mode, 8, HDMI_COLORSPACE_RGB);
-+	if (rate == 0)
-+		return MODE_NOCLOCK;
- 
--	return MODE_OK;
-+	return bridge->funcs->hdmi_tmds_char_rate_valid(bridge, mode, rate);
- }
- 
- static void it6505_bridge_atomic_enable(struct drm_bridge *bridge,
-@@ -3217,6 +3162,8 @@ static void it6505_bridge_atomic_enable(struct drm_bridge *bridge,
- 	if (WARN_ON(!mode))
- 		return;
- 
-+	drm_atomic_helper_connector_hdmi_update_infoframes(connector, state);
-+
- 	ret = drm_hdmi_avi_infoframe_from_display_mode(&frame,
- 						       connector,
- 						       mode);
-@@ -3224,15 +3171,8 @@ static void it6505_bridge_atomic_enable(struct drm_bridge *bridge,
- 		dev_err(dev, "Failed to setup AVI infoframe: %d", ret);
- 
- 	it6505_update_video_parameter(it6505, mode);
--
--	ret = it6505_send_video_infoframe(it6505, &frame);
--
--	if (ret)
--		dev_err(dev, "Failed to send AVI infoframe: %d", ret);
--
- 	it6505_int_mask_enable(it6505);
- 	it6505_video_reset(it6505);
--
- 	it6505_drm_dp_link_set_power(&it6505->aux, &it6505->link,
- 				     DP_SET_POWER_D0);
- }
-@@ -3302,6 +3242,106 @@ static const struct drm_edid *it6505_bridge_edid_read(struct drm_bridge *bridge,
- 	return drm_edid_dup(it6505->cached_edid);
- }
- 
-+static void it6505_write_audio_infoframe(struct it6505 *it6505,
-+					 const u8 *buffer, size_t len)
-+{
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT, 0);
-+	regmap_bulk_write(it6505->regmap, REG_AUD_INFOFRAM_DB1,
-+			  buffer + HDMI_INFOFRAME_HEADER_SIZE,
-+			  4);
-+	it6505_write(it6505, REG_AUD_INFOFRAM_SUM, buffer[3]);
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT,
-+			EN_AUD_PKT);
-+}
-+
-+static int it6505_write_avi_infoframe(struct it6505 *it6505,
-+				      const u8 *buffer, size_t len)
-+{
-+	struct device *dev = it6505->dev;
-+
-+	if (len - HDMI_INFOFRAME_HEADER_SIZE > 13) {
-+		DRM_DEV_DEBUG_DRIVER(dev, "AVI size fail %d", len);
-+		return -EINVAL;
-+	}
-+
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0);
-+	regmap_bulk_write(it6505->regmap, REG_AVI_INFO_DB1,
-+			  buffer + HDMI_INFOFRAME_HEADER_SIZE,
-+			  len - HDMI_INFOFRAME_HEADER_SIZE);
-+
-+	it6505_write(it6505, REG_AVI_INFO_SUM, buffer[3]);
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT,
-+			EN_AVI_PKT);
-+
-+	return 0;
-+}
-+
-+static int it6505_bridge_hdmi_write_infoframe(struct drm_bridge *bridge,
-+					      enum hdmi_infoframe_type type,
-+					      const u8 *buffer, size_t len)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+	struct device *dev = it6505->dev;
-+
-+	/*HW supports AVI and AUDIO infoframe only*/
-+	switch (type) {
-+	case HDMI_INFOFRAME_TYPE_AUDIO:
-+		it6505_write_audio_infoframe(it6505, buffer, len);
-+		break;
-+
-+	case HDMI_INFOFRAME_TYPE_AVI:
-+		it6505_write_avi_infoframe(it6505, buffer, len);
-+		break;
-+	default:
-+		dev_dbg(dev, "unsupported HDMI infoframe 0x%x\n", type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int it6505_bridge_hdmi_clear_infoframe(struct drm_bridge *bridge,
-+					      enum hdmi_infoframe_type type)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+	struct device *dev = it6505->dev;
-+
-+	/*HW supports AVI and AUDIO infoframe only*/
-+	switch (type) {
-+	case HDMI_INFOFRAME_TYPE_AUDIO:
-+		it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT, 0);
-+		break;
-+
-+	case HDMI_INFOFRAME_TYPE_AVI:
-+		it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0);
-+		break;
-+	default:
-+		dev_dbg(dev, "unsupported HDMI infoframe 0x%x\n", type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static enum drm_mode_status
-+it6505_bridge_hdmi_tmds_char_rate_valid(const struct drm_bridge *bridge,
-+					const struct drm_display_mode *mode,
-+					unsigned long long tmds_rate)
-+{
-+	const struct it6505 *it6505 = container_of(bridge,
-+						   const struct it6505,
-+						   bridge);
-+
-+	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-+		return MODE_NO_INTERLACE;
-+
-+	if (mode->clock > it6505->max_dpi_pixel_clock ||
-+	    tmds_rate > 148500000)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
-+}
-+
- static const struct drm_bridge_funcs it6505_bridge_funcs = {
- 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-@@ -3315,6 +3355,9 @@ static const struct drm_bridge_funcs it6505_bridge_funcs = {
- 	.atomic_post_disable = it6505_bridge_atomic_post_disable,
- 	.detect = it6505_bridge_detect,
- 	.edid_read = it6505_bridge_edid_read,
-+	.hdmi_clear_infoframe = it6505_bridge_hdmi_clear_infoframe,
-+	.hdmi_write_infoframe = it6505_bridge_hdmi_write_infoframe,
-+	.hdmi_tmds_char_rate_valid = it6505_bridge_hdmi_tmds_char_rate_valid,
- };
- 
- static __maybe_unused int it6505_bridge_resume(struct device *dev)
-@@ -3700,7 +3743,9 @@ static int it6505_i2c_probe(struct i2c_client *client)
- 	it6505->bridge.funcs = &it6505_bridge_funcs;
- 	it6505->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
- 	it6505->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID |
--			     DRM_BRIDGE_OP_HPD;
-+			     DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_HDMI;
-+	it6505->bridge.vendor = "iTE";
-+	it6505->bridge.product = "IT6505";
- 	drm_bridge_add(&it6505->bridge);
- 
- 	return 0;
-
+thanks,
 -- 
-2.34.1
-
-
+js
+suse labs
