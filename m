@@ -1,173 +1,104 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85BE156C76
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5022158525
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765765; cv=none; b=o160OOupCYpeltwMhcQtjdaN0gxxF//+UQD7qGLH2jZOQzzeFjkYCviZW8UMzyiUy+x3LM9zEnbbG7G2rHx9U8ajES0+dbLu0yVh8iAHCLy6tCX0khbAlGo0MkHmPCQ3Tmc46IEcrb0wfjDJvjrpv++VKjMXc7nF/QTuUf1LPeg=
+	t=1738765773; cv=none; b=i8UDCtN7NL4c4kzy10omVoIBPAMLr59ziN3vIhPY4np7BVyksXbg2nKlLyw63Q/KGkztXI65z+mJmsm7CmmTm2AMz4eRHWnnAgns88w6ppsDQdF9+E9b668d961V2U+CAYotIDpPsSoXEI7qm+adUeA/XOOJGn9LUPR9ZJyHFrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765765; c=relaxed/simple;
-	bh=e42SIVOUhhbdor72mrNuSIArnji9rVNQMG+KjSfReLQ=;
+	s=arc-20240116; t=1738765773; c=relaxed/simple;
+	bh=eVeaTdpnOirbpMyaydQmbB7gizEyGhZBFyWrLI0D9Wg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nbKLb4HjIyxhxlWF3u8el9wD8USlCw9kvuxSJHtc7cFRUuvsw4915fzxlJMWnlq9O3kMLuViDd0UawSayGk+6altHjgs4TOaaVZi/as8SFAignVzC5udRRAg1F5OOuixzEGrw2+jHrcD0MqmFEiziMqmJrpWPS6e2GVnIbU0ymQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=PACWVV/B; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=fsp9zx8G1aQm9GFueUNfZ6kLknDKPzGHpxHEp8rGe0/AXNV2Gjf1o+TqAkmpILydfaCv6UcvCsLwXnw7+uIT3AMflaGjD0DxpHH8Yyf1JhyKhnVvxGyz6atlQ0//sBMqAIm/xotLVigwQaOmPnmJySEUz88z479C9EXdUeSbFGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qntclzv0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="PACWVV/B"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 31DE0240101
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:29:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738765761; bh=e42SIVOUhhbdor72mrNuSIArnji9rVNQMG+KjSfReLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=PACWVV/B2zEXa/3zM3iFyWGMCvq1ep2tJrc4lnPcQd3vMa6GfKW9yWUGJflhWkzB6
-	 mdwFgQnP74Q/JsCwaMpTD/CjCuigxBwGIzzFxwKWVOeHk4MaYvlikd7rp62zTC36An
-	 Agq7QhuBJJS77HdFXurVKxgAqrp2UMVQuGlfqmMXwEUvTE2X+Q7vjO9yeuFfneWNi4
-	 UzFkZdRD0ItU6gs7hUevNamTNwgpLFYRa/IWNqQMQfGMroi2NGU2e/DlG3TmQlVncm
-	 PLI6VUrrsbH50E1C83K8fRG84DpnJGcwKJONJ/5Rq2M0DazTqmw5sg53lAryZJ//tS
-	 +5vr8gbAqJFJA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Yp2fz0fXhz9rxQ;
-	Wed,  5 Feb 2025 15:29:14 +0100 (CET)
-Date: Wed,  5 Feb 2025 14:29:14 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 8/9] dt-bindings: spi: Convert Freescale SPI bindings to
- YAML
-Message-ID: <Z6N1uqg4Dji4Pt3X@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-8-50649f51c3dd@posteo.net>
- <20250127050901.GB3127337-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qntclzv0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29396C4CEE2;
+	Wed,  5 Feb 2025 14:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738765773;
+	bh=eVeaTdpnOirbpMyaydQmbB7gizEyGhZBFyWrLI0D9Wg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qntclzv0y3WGko+YSgK+ZC/ug+5vv+FnO2rAfqFRrTVSJz6ClfXYfVGlXEvPjj+Wu
+	 ywkPWwWfXHFbGwlAnURWoJFY+5FFm7L9sbYG2TovDCJLuCfdnRffFGPSsXywPNSmYh
+	 tSd08naH68xs3YnePxibSsqawvNGTHl8agiW9SlRVD7vYa01Z7G9kCIpjwZivLwuFx
+	 8i4kfPMBSpwZzRmaeO1Aakyek0Vc8wzBZyMalfrNCwQbhn2LRsTfo5f9fiWSogfqTM
+	 ftTlT2PjASsahCF3eppzefqMx7tH4c3JBNGvNDHhRz4+rMm9Kbksd7Oj2lakc397nS
+	 4EYVemdO6zX2w==
+Date: Wed, 5 Feb 2025 15:29:31 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 09/10] drm/bridge: allow limiting I2S formats
+Message-ID: <20250205-eager-laughing-nightingale-de5cab@houat>
+References: <20250126-drm-hdmi-connector-cec-v3-0-5b5b2d4956da@linaro.org>
+ <20250126-drm-hdmi-connector-cec-v3-9-5b5b2d4956da@linaro.org>
+ <bd2eou4qqxwqn3bypvpvkcrw56m555jwlnlni277phds7vfklh@aacywioenkkq>
+ <7nawswhaddasa4a2sytwspq62s4a2di3ukemfqsc3ueh2lftzl@kjq42eoq3ram>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="zl6wjwxauob5as6t"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250127050901.GB3127337-robh@kernel.org>
-
-On Sun, Jan 26, 2025 at 11:09:01PM -0600, Rob Herring wrote:
-> On Sun, Jan 26, 2025 at 07:59:03PM +0100, J. Neuschäfer wrote:
-> > fsl-spi.txt contains the bindings for the fsl,spi and fsl,espi
-> > contollers. Convert them to YAML.
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> >  .../devicetree/bindings/spi/fsl,espi.yaml          | 56 +++++++++++++++++
-> >  Documentation/devicetree/bindings/spi/fsl,spi.yaml | 71 ++++++++++++++++++++++
-> >  Documentation/devicetree/bindings/spi/fsl-spi.txt  | 62 -------------------
-> >  3 files changed, 127 insertions(+), 62 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/fsl,espi.yaml b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..350275760210c5763af0c7b1e1522ccbfb97eec7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
-> > @@ -0,0 +1,56 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/spi/fsl,espi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Freescale eSPI (Enhanced Serial Peripheral Interface) controller
-> > +
-> > +maintainers:
-> > +  - J. Neuschäfer <j.ne@posteo.net>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: fsl,mpc8536-espi
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts: true
-> 
-> How many?
-> 
-> > +
-> > +  fsl,espi-num-chipselects:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: The number of the chipselect signals.
-> 
-> Constraints?
-> 
-> > +
-> > +  fsl,csbef:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Chip select assertion time in bits before frame starts
-> 
-> Constraints?
-> 
-> > +
-> > +  fsl,csaft:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Chip select negation time in bits after frame ends
-> 
-> Constraints?
-
-I'll add appropriate constraints to all of these.
+In-Reply-To: <7nawswhaddasa4a2sytwspq62s4a2di3ukemfqsc3ueh2lftzl@kjq42eoq3ram>
 
 
-> > diff --git a/Documentation/devicetree/bindings/spi/fsl,spi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi.yaml
-[...]
-> > +  clock-frequency:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Don't need a type.
+--zl6wjwxauob5as6t
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 09/10] drm/bridge: allow limiting I2S formats
+MIME-Version: 1.0
 
-Will remove
+On Wed, Jan 29, 2025 at 01:45:56AM +0200, Dmitry Baryshkov wrote:
+> On Tue, Jan 28, 2025 at 05:11:16PM +0100, Maxime Ripard wrote:
+> > On Sun, Jan 26, 2025 at 03:29:14PM +0200, Dmitry Baryshkov wrote:
+> > > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > > index b55e80a57758e8b652eac0cd01cb245a04e221f5..d16af5fe90cb48f6671e7=
+98d9dee61a359c9233f 100644
+> > > --- a/include/drm/drm_bridge.h
+> > > +++ b/include/drm/drm_bridge.h
+> > > @@ -920,6 +920,11 @@ struct drm_bridge {
+> > >  	 */
+> > >  	int hdmi_audio_max_i2s_playback_channels;
+> > > =20
+> > > +	/**
+> > > +	 * @hdmi_audio_i2s_formats: supported I2S formats, optional
+> > > +	 */
+> > > +	u64 hdmi_audio_i2s_formats;
+> > > +
+> >=20
+> > We should document what the default value is if it's optional.
+>=20
+> "The default is to allow all formats supported by the corresponding
+> I2S bus driver." Does that sound fine from your POV?
 
-> 
-> > +    description: input clock frequency to non FSL_SOC cores
-> > +
-> > +  cs-gpios: true
-> > +
-> > +  fsl,spisel_boot:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
+Yep, sounds good.
 
-I do wonder, what's the difference between
-$ref: /schemas/types.yaml#/definitions/flag and type: boolean?
+Maxime
 
+--zl6wjwxauob5as6t
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks for your review.
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6N1ygAKCRAnX84Zoj2+
+dlrgAX9aDNuZXzFPiM/bM/7BcO7J8XzlRwFVr+i1N/QsnMdSLGZj87Zx/r639FZ2
+9xJiy4sBgJhgpOdA5fnB/hcAxS9dmow52Aqfbt7V+aCWL7aFCDnTWtgBAdQ7/Ook
+Ix+DjFHZKA==
+=pHPw
+-----END PGP SIGNATURE-----
 
-Best regards,
-J. Neuschäfer
+--zl6wjwxauob5as6t--
