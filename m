@@ -1,214 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F37022A800;
-	Wed,  5 Feb 2025 09:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3A11D7985;
+	Wed,  5 Feb 2025 09:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747752; cv=none; b=CK/ivgleUJJM3z4ZChYRStZ27VghI4oqmOmh4UpNoxQEMFJdsvZEBFfIeVeQUySLJVxkKyWIp2jer/wxnLg9ObRNhBTY3NcNMlqNmeFztcX1CRD9zNH0v07VaRm+YZiRSaYvnWsS6fl3Y/czABDdOelIZDBaqD8jI4qDLQNhID4=
+	t=1738747832; cv=none; b=u/SuqrBX7nUJjJvOSX/j2lhWBB75AeC1h1qjkZIoi2opP9ewhjGqFLeyfKas+wlAAobxHuKSwGEdzsGoKgTvTDJb3jFigI2fYLEF/5tYv2zQvkeY/PbxiX4/MZ56WBnXTqsX2jvGJL3+o3BdG3zTaMjl0OdO1uP8AryY6+JUINA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747752; c=relaxed/simple;
-	bh=Ms21WWQxt0hgCHNGn7VoI88OcIK4i02A5VsFEvG24mk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B2qd4Jq2g1ITHYa3B5Ozu6lbiOl/WV3Md34Z9T+47oJnvRcGjvFKMOy5+fTjoeJA1HBzwyUZfPWMsffkeD9IiG3T4BM8nPzEUcC78jo4mBgAbu6NrSO7eWzdIWBJ/+uCE2ysJfu2ThisPeUoCvVONREI/1pPG+88Iu+f0Nbx+ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eg6yHtoI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738747832; c=relaxed/simple;
+	bh=yiaG+bx3BDH8rNjqFqrNt10N9XG3vWEYJp26aaimBPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Pryxo4EwK1W6ixEU0UWKemvdRKiSHFIfRY8Owg0QPoFr6TYA86CYDEczbSS+6XVpYm7y7JaZssccvb2gqINWDWvNEKamhE/l0rcXHNaiTNEbWstIQ6ZNE4P8FqpckQ5NLAzIkQVGWZ+awz3oEUS4YuuvUHr03E031KXI7akPScs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=EhFjjncC; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eg6yHtoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8972C4CEE3;
-	Wed,  5 Feb 2025 09:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738747751;
-	bh=Ms21WWQxt0hgCHNGn7VoI88OcIK4i02A5VsFEvG24mk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eg6yHtoIaP23lOBbUoIZktLdaXSm0/rQFB+Gu8dr+q6+oDohpMbSz2yg63hKd5qcR
-	 JIEQigQOx6zSCL8PfwFDkT74//d+oqTy+g/WnEeE9UP5rDeXqV9BLxGh+S9eSB5FCQ
-	 0EH4OaodiU249ytvGjb03wGCsyxxcB6ysVIfWcaagRWsD3RQE40qXgte1c/SSodkak
-	 STW8sPJ3yqHfZTCbEMSHiStohjiCgW6+p701EXd/PQ3EyNGW8ToP6boCW+4mBJYH6M
-	 9GZOR6yUYN177p9P2oqWDE9hTWfwmjDylNbdW650fOmV8bB+tmA0ieFWuJ9AWuGJmk
-	 SqgS9GzJbdTnQ==
-Date: Wed, 5 Feb 2025 10:29:03 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Shuah Khan <shuah@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Oliver Sang <oliver.sang@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Koutny <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Elliott Hughes <enh@google.com>
-Subject: Re: [PATCH v7 0/6] introduce PIDFD_SELF* sentinels
-Message-ID: <20250205-gewahrsam-einnahmen-9b580054f501@brauner>
-References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
- <20250204-joggen-buddeln-29e5ca75abb7@brauner>
- <7a8a1719-466f-4e10-b1eb-9e9e1ef8ad52@lucifer.local>
- <CAJuCfpEUusRt_ss7RtxRPP9q_LRwi+Lw+SOq32EUA58s3JOx1A@mail.gmail.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="EhFjjncC"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 24CD3A079A;
+	Wed,  5 Feb 2025 10:30:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=oZmcIW5wOrNb8xct7xRf
+	me9B6Vb+WCUzLGVoJLibljY=; b=EhFjjncCvOyxRr8VieGK1+kFktivOwz8u+3q
+	+FlGiNfj+SU8TbQS8e5aRgqwmoR0Nj6iKvYlAXDYnAySvxYK+Q/Y/HTVdpiaE47H
+	ZRT4AGBaLWXqVeAEgVPqHooEbc8feSQJiO1RNDXs3e2JyvdVxw5FNOet4giM7gM+
+	PcxADs4jI3JNGaSdKcQW96oDSOiVcKnnWmdUXKoSUYZAdjsO7zYM96aYBTOeufyA
+	EiGlh5vbvE6+O6TujJne2lqg4uqiBh7rdofFgubgOeIXCgEJzN0oWCDimvpVHAQN
+	/VFBVBNWLrAhUBCPEkDdb0d2jeZoZu6+fZrkPENuwfLSSNCAfQY2eE/TPrFCyZuz
+	djJZflYO0r45jae56N/llfuXU6btwzGMvHBAH3aPi9a6aFK7LpWQzgNESstcV7FX
+	fDZ3gw+wMW3oCi7BF6hMRGFSHW0VQ2O2RDPToUbYdDDC4BhwSlPqCFTv/w0LFUbF
+	K7SSeQwHQRZt+xWBOaMQ9GGiamSH8nqRTB05unapxxjvYwiM2PbZ6jAYWTk1uyZD
+	Zg1bRnM8RafdjIOuuRrfuGWqDWvoqNU4CMt75teS4FLPrUJgJ9c+UVvYcf960jdd
+	eSTzoBgV1JxD+l9EOtChY/oTjUnxw/PuTBBF7gb7wBSUOuEGVeGOLNJVM4Jq0fH+
+	ztqSwOI=
+Message-ID: <0c74dd96-2978-46ab-a399-9c94c9529b2e@prolan.hu>
+Date: Wed, 5 Feb 2025 10:30:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpEUusRt_ss7RtxRPP9q_LRwi+Lw+SOq32EUA58s3JOx1A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Q] Frequency & duty cycle measurement?
+To: William Breathitt Gray <wbg@kernel.org>
+CC: <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<timestamp@lists.linux.dev>, Jonathan Cameron <jic23@kernel.org>, "Lars-Peter
+ Clausen" <lars@metafoo.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+	"Thomas Gleixner" <tglx@linutronix.de>, Dipen Patel <dipenp@nvidia.com>,
+	<dlechner@baylibre.com>
+References: <f2ec8a55-42ad-498a-b793-072444dcb92e@prolan.hu>
+ <Z5efcokgHix-k3lW@ishi> <dffc0f18-799a-4fc7-a6b5-2fa270e1fc58@prolan.hu>
+ <Z6KkusvLFPcNvEfl@ishi>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <Z6KkusvLFPcNvEfl@ishi>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852667264
 
-On Tue, Feb 04, 2025 at 09:43:31AM -0800, Suren Baghdasaryan wrote:
-> On Tue, Feb 4, 2025 at 2:01 AM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> >
-> > On Tue, Feb 04, 2025 at 10:46:35AM +0100, Christian Brauner wrote:
-> > > On Thu, 30 Jan 2025 20:40:25 +0000, Lorenzo Stoakes wrote:
-> > > > If you wish to utilise a pidfd interface to refer to the current process or
-> > > > thread it is rather cumbersome, requiring something like:
-> > > >
-> > > >     int pidfd = pidfd_open(getpid(), 0 or PIDFD_THREAD);
-> > > >
-> > > >     ...
-> > > >
-> > > > [...]
-> > >
-> > > Updated merge message. I've slightly rearranged pidfd_send_signal() so
-> > > we don't have to call CLASS(fd, f)(pidfd) unconditionally anymore.
-> >
-> > Sounds good and thank you! Glad to get this in :)
+Hi,
+
+On 2025. 02. 05. 0:37, William Breathitt Gray wrote:
+> Are you still having trouble with this? Is "X" the
+> capture{0,1}_component_id value?
+
+X is 0/1 from `/sys/bus/counter/devices/counter0/count0/capture{0,1}`, 
+which is also equal to the respective `capture{0,1}_component_id`, since 
+I don't have any other counters. I checked that beforehand.
+
+> I apologize, the Generic Counter character device interface is
+> underdocumented so it can be a bit confusing at first; I'll submit a
+> patch improving the documentation later this cycle when I get a chance.
+> For now, let's walk through how to create an appropriate Counter watch
+> for the capture extension components you have.
+
+After much tinkering and reading of the `counter-chrdev.c` code, I now 
+see *something*, although it's much slower to make a measurement than 
+the sysfs `reopen()` hack.
+
+> The first step is to decide which event we'll monitor and on which
+> channel: we want to monitor Capture events so that's
+> COUNTER_EVENT_CAPTURE, and we want event channel 0 (n.b. 0 because
+> that's the channel parameter value passed to counter_push_event() in the
+> driver).
 > 
-> Sorry, a bit late to the party...
+> The next step is to choose the components you wish to watch: Count 0's
+> capture0 and capture1 extensions. So type is COUNTER_COMPONENT_EXTENSION
+> because we want to watch extensions, scope is COUNTER_SCOPE_COUNT
+> because we want Count extensions, and parent is 0 because we want
+> Count 0's Count extensions.
 > 
-> We were discussing MADV_GUARD_INSTALL use with Android Bionic team and
-> the possibility of caching pidfd_open() result for reuse when
-> installing multiple guards, however doing that in libraries would pose
-> issues as we can't predict the user behavior, which can fork() in
-> between such calls. That would be an additional reason why having
-> these sentinels is beneficial.
-
-Ok, added this to the cover letter as well.
-
-Note that starting with v6.14 pidfs supports file handles.
-This works because pidfs provides each pidfd with a unique 64bit inode
-number that is exposed in statx(). On 64-bit the ->st_ino simply is the
-inode number. On 32-bit the unique identifier can be reconstructed using
-->st_ino and the inode generation number which can be retrieved via the
-FS_IOC_GETVERSION ioctl. So the 64-bit identifier on 32-bit is
-reconstructed by using ->st_ino as the lower 32-bits and the 32-bit
-generation number as the upper 32-bits.
-
-Also note that since the introduction of pidfs each struct pid will
-refer to a different inode but the same struct pid will refer to the
-same inode if it's opened multiple times. In contrast to pre-pidfs
-pidfds where each struct pid refered to the same inode.
-
-IOW, with pidfs statx() is sufficient to compare to pidfds whether they
-refer to the same process. On 64-bit it's sufficient to do the usual
-st1->st_dev == st2->st_dev && st1->st_ino == st2->st_ino and on 32-bit
-you will want to also compare the generation number:
-
-TEST_F(pidfd_bind_mount, reopen)
-{
-        int pidfd;
-        char proc_path[PATH_MAX];
-
-        sprintf(proc_path, "/proc/self/fd/%d", self->pidfd);
-        pidfd = open(proc_path, O_RDONLY | O_NOCTTY | O_CLOEXEC);
-        ASSERT_GE(pidfd, 0);
-
-        ASSERT_GE(fstat(self->pidfd, &self->st2), 0);
-        ASSERT_EQ(ioctl(self->pidfd, FS_IOC_GETVERSION, &self->gen2), 0);
-
-        ASSERT_TRUE(self->st1.st_dev == self->st2.st_dev && self->st1.st_ino == self->st2.st_ino);
-        ASSERT_TRUE(self->gen1 == self->gen2);
-
-        ASSERT_EQ(close(pidfd), 0);
-}
-
-Plus, you can bind-mount them now.
-
-In any case, this allows us to create file handles that are unique for
-the lifetime of the system. Please see
-
-tools/testing/selftests/pidfd/pidfd_file_handle_test.c
-
-for how that works. The gist is that decoding and encoding for pidfs is
-unprivileged and the only requirement we have is that the process the
-file handle resolves to must be valid in the caller's pid namespace
-hierarchy:
-
-TEST_F(file_handle, file_handle_child_pidns)
-{
-        int mnt_id;
-        struct file_handle *fh;
-        int pidfd = -EBADF;
-        struct stat st1, st2;
-
-        fh = malloc(sizeof(struct file_handle) + MAX_HANDLE_SZ);
-        ASSERT_NE(fh, NULL);
-        memset(fh, 0, sizeof(struct file_handle) + MAX_HANDLE_SZ);
-        fh->handle_bytes = MAX_HANDLE_SZ;
-
-        ASSERT_EQ(name_to_handle_at(self->child_pidfd2, "", fh, &mnt_id, AT_EMPTY_PATH), 0);
-
-        ASSERT_EQ(fstat(self->child_pidfd2, &st1), 0);
-
-        pidfd = open_by_handle_at(self->pidfd, fh, 0);
-        ASSERT_GE(pidfd, 0);
-
-        ASSERT_EQ(fstat(pidfd, &st2), 0);
-        ASSERT_TRUE(st1.st_dev == st2.st_dev && st1.st_ino == st2.st_ino);
-
-        ASSERT_EQ(close(pidfd), 0);
-
-        pidfd = open_by_handle_at(self->pidfd, fh, O_CLOEXEC);
-        ASSERT_GE(pidfd, 0);
-
-        ASSERT_EQ(fstat(pidfd, &st2), 0);
-        ASSERT_TRUE(st1.st_dev == st2.st_dev && st1.st_ino == st2.st_ino);
-
-        ASSERT_EQ(close(pidfd), 0);
-
-        pidfd = open_by_handle_at(self->pidfd, fh, O_NONBLOCK);
-        ASSERT_GE(pidfd, 0);
-
-        ASSERT_EQ(fstat(pidfd, &st2), 0);
-        ASSERT_TRUE(st1.st_dev == st2.st_dev && st1.st_ino == st2.st_ino);
-
-        ASSERT_EQ(close(pidfd), 0);
-
-        free(fh);
-}
-
-So you don't need to keep the fd open.
-
+> Finally, we need to set the component id for each extension. You get a
+> particular component's id by reading the respective *_component_id sysfs
+> attribute: so for capture{0,1} you would read capture{0,1}_component_id
+> respectively. These component id values potentially can change with
+> future driver updates, so for robustness your userspace application
+> should read the respective *_component_id sysfs attribute itself rather
+> than hardcoding the component id in the Counter watch.
 > 
+> However, for the sake of simplicity in this example, I'll assume the
+> component ids are 42 and 43 respectively for capture0 and capture1. That
+> gives us the following two watches:
 > 
-> >
-> > >
-> > > ---
-> > >
-> > > Applied to the vfs-6.15.pidfs branch of the vfs/vfs.git tree.
-> > > Patches in the vfs-6.15.pidfs branch should appear in linux-next soon.
-> > >
-> > > Please report any outstanding bugs that were missed during review in a
-> > > new review to the original patch series allowing us to drop it.
-> > >
-> > > It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> > > patch has now been applied. If possible patch trailers will be updated.
-> > >
-> > > Note that commit hashes shown below are subject to change due to rebase,
-> > > trailer updates or similar. If in doubt, please check the listed branch.
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> > > branch: vfs-6.15.pidfs
-> > >
-> > > [1/6] pidfd: add PIDFD_SELF* sentinels to refer to own thread/process
-> > >       https://git.kernel.org/vfs/vfs/c/e6e4ed42f8d8
-> > > [2/6] selftests/pidfd: add missing system header imcludes to pidfd tests
-> > >       https://git.kernel.org/vfs/vfs/c/c9f04f4a251d
-> > > [3/6] tools: testing: separate out wait_for_pid() into helper header
-> > >       https://git.kernel.org/vfs/vfs/c/fb67fe44116e
-> > > [4/6] selftests: pidfd: add pidfd.h UAPI wrapper
-> > >       https://git.kernel.org/vfs/vfs/c/ac331e56724d
-> > > [5/6] selftests: pidfd: add tests for PIDFD_SELF_*
-> > >       https://git.kernel.org/vfs/vfs/c/881a3515c191
-> > > [6/6] selftests/mm: use PIDFD_SELF in guard pages test
-> > >       https://git.kernel.org/vfs/vfs/c/b4703f056f42
+>          {
+>                  .component.type = COUNTER_COMPONENT_EXTENSION,
+>                  .component.scope = COUNTER_SCOPE_COUNT,
+>                  .component.parent = 0,
+>                  .component.id = 42,
+>                  .event = COUNTER_EVENT_CAPTURE,
+>                  .channel = 0,
+>          },
+>          {
+>                  .component.type = COUNTER_COMPONENT_EXTENSION,
+>                  .component.scope = COUNTER_SCOPE_COUNT,
+>                  .component.parent = 0,
+>                  .component.id = 43,
+>                  .event = COUNTER_EVENT_CAPTURE,
+>                  .channel = 0,
+>          },
+> 
+> Does this resolve your chardev read issue? If you're still having
+> troubling, just let me know and we can troubleshoot further to figure
+> out what's going on.
+
+I had no success using `channel = 0`, only data from `capture0` comes 
+back. If I set both `channel` AND `component.id` to X, then I start to 
+see similar values than what I get from reading sysfs. (For now I 
+hard-coded all values; I agree that the correct way would be to read 
+component IDs from sysfs, but this is still a PoC...)
+
+Did I do something wrong in implementing the driver maybe? (See the 
+submitted patches.) And any idea as to why I might be seeing the slowdown?
+
+Bence
+
