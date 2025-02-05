@@ -1,179 +1,185 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481C3EAD0;
-	Wed,  5 Feb 2025 02:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F1942077;
+	Wed,  5 Feb 2025 02:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738722921; cv=none; b=PYCOdoprKMLAlCJq2rsrTXVt2QvGQguLwiL7pcxYurRl9D4FdadoCORNLjI1Ws1ZCT2vRKy1tlisWN14nMw07JRC93GR77E7ZqQieB3Ek3Cibx2HCCnue1Xsxximl1S8dYckKICYkyupw0PbaQO7EvqcvXpPA7KHYuae0Li1RFY=
+	t=1738722935; cv=none; b=E+85sjIXdi4++hENap1hRdex0H2VNyc9ndTfWa/grPIuyWlxkj1/et74fd6W2FykU960AfwmAPu5XVDFsC5w3AQB/IZ/hbQOnChUq9SqQoLXSjvNbWPOLAFi09OUjpeRofeiC5xo2hfeAzyvtPvTme005TP9IIONV22Az9bRs+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738722921; c=relaxed/simple;
-	bh=4ub5YpPW13HFxNVKAPveKTSbnIWC6uR8EuupaMpuOE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ghyhHkW8NwAEXwSA8u5QQBVJAYUXlEDZXOdq0FwFTXRjfFT9Jua44QZNoUIF1J+4IJjO4zSAQkXhQBh/PZLU9j88ckDeUcPZb77D0Xea2eXOCmWxDkl6OQVZEw8mVsSY/vShkVBFyjhtv5uq2ws67+O29pTEHWbOnoBFUfiCrUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TO4kQNyq; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1738722935; c=relaxed/simple;
+	bh=WOtdLbsfrE+PGA+dCq1gfe3hKpLA4ftoZsKiTg1xh78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hN24jua2JY7SvMOYGRpOBJNHcO7dEqaoq+KQBWHHcZANI3hNwkctC8X7P82+U5ZvQF/nMcqmFTwI/IxiekTSKb6J4iV2q/ddWs3QKLgGRVR1onJsThWgo0bHNU0peknXTTyT5afRenYN52XKP1qHeQNLfXOnwTMLF7y+teYyywc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvWnWZXx; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TO4kQNyq"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so8318531a91.2;
-        Tue, 04 Feb 2025 18:35:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvWnWZXx"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4678cd314b6so58874251cf.3;
+        Tue, 04 Feb 2025 18:35:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738722918; x=1739327718; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=bIxnjul27PkcVxSra4MQSzivSSjn2yM2jo9sG3ROLOo=;
-        b=TO4kQNyqUQ/hTnfR0QC4Jb6CRCv3pklXWHhHvWkGqH21WOyyJJVFlX/UuksATIGOAL
-         E9NTcTPjbM9J6xvMLCaert0CDI7/Bwf3DcyAOqDMV4Luzn6Btx3HL41JVbNoXEueK6ha
-         7U+yxWI9d8BU7i6KAbj86ux0VInYpysRIzMusIEb6QdNSSOodCMiUzq0ZBwvt2EZxbFd
-         GcPlIZlpr+5IcYbjp0b3FMtIVfPLjDEManwEmKIgjRs+o0puk6MNzoX8KtoYXNV3qfov
-         1t21cAH5hPk+/1K8Zu9CdfekiN2WoQpkmFHjCvAbr5zAA+QFZaa1gqEdC0vJxb1EW+8S
-         ifNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738722918; x=1739327718;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738722932; x=1739327732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bIxnjul27PkcVxSra4MQSzivSSjn2yM2jo9sG3ROLOo=;
-        b=h6zkK7I1H0W6msbif4Nf8/RycIwCzjkjlqcyKkcfVGZXfcs4UuvSrP5NoMoaegLBia
-         ZocZpr46mDuLy1eF4ZpePQXCRH6TsFABBngwW5co+OrmDJ04SdSCMDQxqQQpCPbMIWoP
-         B6QNnXh9Kb4rZL9lybZdtRZswDnfKOeQw0ozoBWgRvgeTcrAR4nz1UDeY41+k+KHVvIT
-         VV8BC/Cuc5vBxVWKjFrVgisu0nVFNJZ/d///tIRpWxotnQhQS7WjKjACx4bceV3kJWXH
-         PQHD2iKSHSNGQlHNIVUWYYArI+Rpk5F/bxONTSMRRc2juhlzBHledWy+tx0OZ5AM4yX0
-         O2/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU4NR4NbNgGlJOAiPWYA1TZGrJGcoYzVlXAn3/d9zGKpKnlW6qJTNijT7iU5vIsP8+jhBlyNvcRDaD/ig8bTVs=@vger.kernel.org, AJvYcCXSrO/CWVxzqtqOpKghjjsOjwBS49wSm/oYsUTT3DGyo4ggK+IKa/U/OILtcrT1aYGIia5f41k0L6qjWKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX4pbtbFqO43c0FTd3C6OUinARb2tMMWGVdispMfmFGgyOWBJ1
-	gsG6hfbs2plN1AUt54zTmUq2Vo9upBzB3Ko6ZxAzsuv0jyiCg4Qi
-X-Gm-Gg: ASbGncu0Vggb+1z42Xlc0ltosyXaEz7wz473hZ62T6uedcmBHQfzAeUboreKJ/aSNRQ
-	fztVp49HYdQ2mY5XXV1QjoukqXTCaNUpKPDrHcsWDgL+EdUAjXw7xE6elF11Xtu1piWBalAYOml
-	cmIdxH4kQt+E9NUcrA0gcO7mJVv6lB5x4f4W6nAloEWva28uTn52RvqVjFymuxT105+xEwaoVbn
-	N790l9VJyCC3Ms+0DwK6POcCj2+mBpqcipX1WjPrbYwBUoHqX5QH0DTaxB64PF9TkB5ui9QdvLO
-	iiBgBLs6//4VA62JczvxdQ1c5WU3oEZJ/MoDe1gUl/Rju+jk8yJjpkSvZMT2qKsb
-X-Google-Smtp-Source: AGHT+IGHp3oR5ZRb99FKQZ0eO3yLw3bLANDFdlJxRVnUshNHiO3tkoOg0NUIqa8Shy5QM2HSnJn5yQ==
-X-Received: by 2002:a05:6a21:1394:b0:1e1:afa9:d38b with SMTP id adf61e73a8af0-1ede8810c19mr1792136637.8.1738722918392;
-        Tue, 04 Feb 2025 18:35:18 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe64292b2sm11563456b3a.62.2025.02.04.18.35.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 18:35:17 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <d184241d-beca-4246-ba5a-f7a9ffe2f140@roeck-us.net>
-Date: Tue, 4 Feb 2025 18:35:15 -0800
+        bh=1N+4rW3SsekYEUc8nzCVlrVQkaioSvtxJiN6kI5HrK0=;
+        b=kvWnWZXxccvz4GpTZGhv7UJhwtuapBrHQXnHdOnKiaP9+BEGGSZdXtXDE15yecWKM4
+         3yh9LtwYoLs8tuhbkHmyWfvUbLqMjECGLaidFQXynZBoxpWuOdiPhcfWdVYk/Jhfp1dp
+         2XyOIQbFSjiRZDBlHOjOZEvNRXcZFMT30z1rxTWiNwNeGeBIak2rMj+raOPOxPsjtH8s
+         VgVTj8waI8SCa/FyhH0/UWlPIEtXqbIm/UTbYFko8vEgrVX/nyKV97jx6z6liPvNMQOe
+         jk/x1KjnER2GP1CcAuZCWtg1e5qHZf9J2IR+gBzC75MnS8PAu/ZvWKPPrcOSk8Y4NagH
+         ixKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738722932; x=1739327732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1N+4rW3SsekYEUc8nzCVlrVQkaioSvtxJiN6kI5HrK0=;
+        b=JUzBSsB8Xnk5QAMsr2vhBTkxJ6Oxvj56Sf2LFzmzzuU0HXTHu14fIy28fqlWPsqS0t
+         8WMVVCEWyzUExc1P4sJxWCIp6CzCDJkc8Tnb43bUBiC3dOfs2aGfCaZKFIOV9nieISoq
+         0t89P9C9udbf5iZT5gKHlt/iYodzFqQIZmLOeiJgbK6DxNx/AvqKZiW64agxBea6o/3W
+         8kcnOdXooIDWWtL8/JOMTwnToxGPlObQeJuBqv1fMaMJHSzJigMcbrP/U8x2UXtNs77X
+         n+a04kPcalxYvPjzZRDLsu1vhualh+8/XnV9gk/65atBluAvrPQf8cy3SC40lwJ6G3Ov
+         KmRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5fq9uZxLcoNxu4TD/O0uSbeT1Kkp/YjLemDMQp0Go7eYK1TRTZuokRXQSKvlnqKFN/SkPll1cosACzBY=@vger.kernel.org, AJvYcCXhaRwoA7CrZrG63FzQe3OwksJgeybdpjh+RkcBWfo009cuI0hr6ZnxwuWbk//B4HU+F8daBKEm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj7w4z/A6q/fPZ2k4Y07Be7YZhcXqFwgyGGApx4d7WIjmhuIlz
+	S3IIes8SCWV4xRr8J/sOqWMUDOn2T4r9S8ZxMfgcuHJgysmfnu5CEJYNMYGwp5WwMKtt6uyVCHR
+	LPLE6gdX8lCzJ0cX/0DVN1I8nWZx1omAC
+X-Gm-Gg: ASbGncsZC36WO0lZgJcOPb7Jp51fcFOAs9wUgH1655IJmyOvOqAHZXf9qjLlztqyO5a
+	kH8lv9CGp3iVas7eSCmEAMTnUl/BuT267lNDU+0Q+u1Eid+wN2FofZKdfQ1LEY9/AOqQ+MMgr
+X-Google-Smtp-Source: AGHT+IE063EYM4tWEE7WYPrDhbceSvU1oIFvALHqQjqTvkhDse0m/DanubcApO0WLJidamuFwaSloVjnb4AUFeQhGIE=
+X-Received: by 2002:a05:622a:1a9a:b0:462:e827:c11a with SMTP id
+ d75a77b69052e-470281ba564mr19695661cf.19.1738722932180; Tue, 04 Feb 2025
+ 18:35:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: only print critical log when the watchdog fails
- to be stopped
-To: "liuchao (CR)" <liuchao173@huawei.com>
-Cc: caihe <caihe@huawei.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
- lixiaokeng <lixiaokeng@huawei.com>,
- "wim@linux-watchdog.org" <wim@linux-watchdog.org>
-References: <13073a1dfb7946af98565921c609bd6f@huawei.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <13073a1dfb7946af98565921c609bd6f@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
+ <20250204023323.14213-1-jiashengjiangcool@gmail.com> <e41d9378-e5e5-478d-bead-aa50a9f79d4d@wanadoo.fr>
+ <48ad8f05-a90b-499d-9e73-8e5ff032824a@kernel.org> <f9a35a4f-b774-4480-910a-cdcf926df41b@wanadoo.fr>
+In-Reply-To: <f9a35a4f-b774-4480-910a-cdcf926df41b@wanadoo.fr>
+From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Date: Tue, 4 Feb 2025 21:35:21 -0500
+X-Gm-Features: AWEUYZkirK4j39ugQSeyxuqN18Ew0eSAiZ7kK5iwAMUijihh2awqnAb3jDJsyJM
+Message-ID: <CANeGvZUzHVnQdwTkam4HE9EVfEf8xY4L7Y20vj5v_N-vbD9kzQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Jiri Slaby <jirislaby@kernel.org>, gmpy.liaowx@gmail.com, kees@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/4/25 18:02, liuchao (CR) wrote:
-> On 1/27/2025 22:30, Guenter Roeck wrote:
->> On 1/27/25 01:35, liuchao (CR) wrote:
->>> On 1/26/25 21:10, Guenter Roeck wrote:
->>>> On 1/26/25 00:38, Liu Chao wrote:
->>>>> Every time the user echoes 0 > /dev/watchdog0, meaningless critical
->>>>> log is printed.
->>>>>
->>>>
->>>> It is not meaningless, and it will still be displayed after this
->>>> change, making the change pointless.
->>>
->>> The change is not pointless. For example, the softdog driver does not
->>> invoke watchdog_stop or print logs in the watchdog_release.
->>>
->>
->> It seems to me that is a problem in the softdog driver.
->>
->> The change is actually worse than I initially thought.
->> The message is _supposed_ to be displayed if watchdog_stop() is not called while
->> the watchdog is running (i.e., if err == -EBUSY).
->> Otherwise it would not be displayed for real hardware watchdogs which are not
->> stopped because they were running and watchdog_stop() is not called because
->> WDIOF_MAGICCLOSE is set in the driver and the magic release byte was not
->> written.
->>
->> Specifically, the softdog driver has WDIOF_MAGICCLOSE set. It is not supposed
->> to be unloadable (or unloaded) while the watchdog is running.
-> 
-> When echo to /dev/watchdog0, The watchdog_open, watchdog_write, and
-> watchdog_release functions are invoked in sequence. Do you mean the softdog
-> driver should not call watchdog_release?
-> 
-> After the user opens /dev/watchdog0, the user feeds the watchdog through ioctl
-> WDIOC_KEEPALIVE and never closes. Is this the correct usage?
-> 
+Hi Christophe,
 
-I tried softdog. It works as advertised. Yes, "echo 0 > watchdog0" triggers the message.
-"sudo modprobe -r softdog" then fails with
+On Tue, Feb 4, 2025 at 3:50=E2=80=AFPM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> Le 04/02/2025 =C3=A0 07:36, Jiri Slaby a =C3=A9crit :
+> > On 04. 02. 25, 7:17, Christophe JAILLET wrote:
+> >> Le 04/02/2025 =C3=A0 03:33, Jiasheng Jiang a =C3=A9crit :
+> >>> Add a check for kcalloc() to ensure successful allocation.
+> >>> Moreover, add kfree() in the error-handling path to prevent memory
+> >>> leaks.
+> >>>
+> >>> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
+> >>> Cc: <stable@vger.kernel.org> # v5.10+
+> >>> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> >>> ---
+> >>> Changelog:
+> >>>
+> >>> v1 -> v2:
+> >>>
+> >>> 1. Remove redundant logging.
+> >>> 2. Add kfree() in the error-handling path.
+> >>> ---
+> >>>   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
+> >>>   1 file changed, 18 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+> >>> index 7ac8ac901306..2d8e330dd215 100644
+> >>> --- a/drivers/mtd/mtdpstore.c
+> >>> +++ b/drivers/mtd/mtdpstore.c
+> >>> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct
+> >>> mtd_info *mtd)
+> >>>       longcnt =3D BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
+> >>>       cxt->rmmap =3D kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> >>> +    if (!cxt->rmmap)
+> >>> +        goto end;
+> >>
+> >> Nitpick: Could be a direct return.
+> >>
+> >>> +
+> >>>       cxt->usedmap =3D kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> >>> +    if (!cxt->usedmap)
+> >>> +        goto free_rmmap;
+> >>>       longcnt =3D BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+> >>>       cxt->badmap =3D kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> >>> +    if (!cxt->badmap)
+> >>> +        goto free_usedmap;
+> >>>       /* just support dmesg right now */
+> >>>       cxt->dev.flags =3D PSTORE_FLAGS_DMESG;
+> >>> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct
+> >>> mtd_info *mtd)
+> >>>       if (ret) {
+> >>>           dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
+> >>>                   mtd->index);
+> >>> -        return;
+> >>> +        goto free_badmap;
+> >>>       }
+> >>>       cxt->mtd =3D mtd;
+> >>>       dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
+> >>> +    goto end;
+> >>
+> >> Mater of taste, but I think that having an explicit return here would
+> >> be clearer that a goto end;
+> >
+> > Yes, drop the whole end.
+> >
+> >>> +free_badmap:
+> >>> +    kfree(cxt->badmap);
+> >>> +free_usedmap:
+> >>> +    kfree(cxt->usedmap);
+> >>> +free_rmmap:
+> >>> +    kfree(cxt->rmmap);
+> >>
+> >> I think that in all these paths, you should also have
+> >>      cxt->XXXmap =3D NULL;
+> >> after the kfree().
+> >>
+> >> otherwise when mtdpstore_notify_remove() is called, you could have a
+> >> double free.
+> >
+> > Right, and this is already a problem for failing
+> > register_pstore_device() in _add() -- there is unconditional
+> > unregister_pstore_device() in _remove(). Should _remove() check cxt->mt=
+d
+> > first?
+>
+> Not sure it is needed.
+> IIUC, [1] would not match in this case, because [2] would not have been
+> executed. Agreed?
 
-	modprobe: FATAL: Module softdog is in use.
+Thanks for your advice.
+I have submitted a v3 to replace kcalloc() with devm_kcalloc() to
+prevent memory leaks.
+Moreover, I moved the return value check to another patch, so that
+each patch does only one thing.
 
-and, as expected, one minute later (or whatever the timeout is set to) the system reboots.
+-Jiasheng
 
-There is nothing wrong with the message. The softdog _does_ refuse to be unloaded
-while running, and it _does_ reboot the system after the timeout expired. This is all
-perfectly as expected. The log is not meaningless. Instead, it tells the user that
-the system will reboot after the watchdog expired. Which it does.
-
-Guenter
-
+>
+> CJ
+>
+>
+> [1]: https://elixir.bootlin.com/linux/v6.13/source/fs/pstore/blk.c#L169
+> [2]: https://elixir.bootlin.com/linux/v6.13/source/fs/pstore/blk.c#L141
+>
+> >
+> > thanks,
+>
