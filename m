@@ -1,193 +1,136 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E353215181;
-	Wed,  5 Feb 2025 04:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D75F215775
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738729729; cv=none; b=BO2d+CzxdTtFa/hlz2f40rPPqBkbQi4Sro/K28eKp3J287+c6WQK+g8P91Q/+FT5L18m81LQxI3d0n6iL2e4MViCTShpWjh8U6wqsAfKQFXqGdxvPrZMMf5JqdsEQir6uVOJgNO7wPtFo7heqW4DrcKU6m0RXdiAu5XQUSq4h2A=
+	t=1738729940; cv=none; b=GK0hM3W1AVBsWSKhGuhiDQ01qoMLsoPLj75pJwK33DuXI+to4TN4mggKl7YqqTKGX7Rdm3SVOvhtwNZLTU5IdpKVyG9162TRpyzzex4d8uwRcCh5TWXGi/4vxP+m+xppIl0mI5Uq1Derm5rreG34ZSDoqNbWgVWJiYkY+k1douA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738729729; c=relaxed/simple;
-	bh=mswzsv2TzCC5uR2Xuj/vBCzDqGZTy2Zn2xxyfHYH3Y4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKGksJBSZaNSNP3EJ6cttx5LYGJPYf6d1U4Kl1qv2z6kZuQ6N2L6yazNxtwaNc4udYBwPHzbbKm08pTFe/p26VwChQfM4xvBrsdupve936UzUqZ9S7pm7rdOqYL1qxTZDzLIVjrBK2YJciFy8EwjqvKZxuo4xBDXAgNJgooTQok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZazAtBpk; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738729940; c=relaxed/simple;
+	bh=muj42tyeArJlDap25NrLqG4C3MwLw+2Bs0jim938Rt0=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=HZcCQq/lifhpG5pimN12EPtMyNm8e/L3cpmGkTCRNRzpxGvM/lC7g4wlm3dDKUGUYelbiArMEfIrQcR2RnXtpl5KAK3za6SP7Ki4wsceAmURQ9ImUj1W1aKGUuOY8fgKcTHAhiN0lfJFSe9t+IwQ3Hxwd/V/w5ESXLfaXzvHEyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rVVfJkXk; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZazAtBpk"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21619108a6bso106532825ad.3;
-        Tue, 04 Feb 2025 20:28:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738729726; x=1739334526; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=iAA17giIiOWp68Rtp2xvIBloP4S+AWc1tT4t6Tdk3ok=;
-        b=ZazAtBpkohJkTRDddSspNQ5gWwIwNXMWWHZSi0qSGTZUP4ngiPjIujwx7jruWD/Juz
-         M7TIIyhq1OoChekTUK+RK/mfRQlhLAVUobqlVr8Bgg8N8CqU/PMObSEaWv/Ca7OCuznv
-         L7reIloIFzodtdurocxRfrildGUZ+h17TfSbKxY0YPgYs5+u+Hfh+gX6Kj6r31TVz/zO
-         M2TQ/ocF9bF28XSdDtsSfKlBvRosvrwSvOguVdsBcpION7OzMVV2uxB+Pj0u6knCQNOa
-         eBPE9GGbQlaNlrtbS/nHQ5wY2GyINBa2RCOpk+PPMstcoFi5I7j9eSMnB7Qnomsuqcvh
-         c20g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738729726; x=1739334526;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iAA17giIiOWp68Rtp2xvIBloP4S+AWc1tT4t6Tdk3ok=;
-        b=LiLB+pe0cbSC21BIY/z1Z5nQvBqT1OoVcbsNBh4k8VvLJ0rxBKVOlGR0J5HAajMH2C
-         oNHUGU1SHiroWuM+5F0VOCKuyfeKaDjUDFJkATdA/XMnlcgylwwCGEOhcAUHBGLrqfT0
-         1qZ5pLv7Dajf1GdmfVIovMd6iV5q+RUOG6u2Zun7ttOOwTmonrm5lwoH4Xf0vUd78CbE
-         VwIhq/Ys0sKBcAQe4GmZ9hGEoBjXNTf0NXTnCLVC4tMJKM3w0XRjntEsDvdhpfjmtEyF
-         CqfvxVuljXspLv6AYPUZM/a1rZHklvZqCPbvlpOZWKnuYhuYajFt2n+82wKk7HkRF7Uj
-         ZeCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiHmEQrBRTneTLFjH2c5tguiBJbYqzuYj/HuXDogZ9CLsXt45S7Xq3ZQDL11n56G8ugKR/W6FB3+ZM7Gfoo/s=@vger.kernel.org, AJvYcCWGEZg6a25Wgb5G7FKBQ8FrnuNORqg1Z1VxYzseM7m2pu2qepI7ILUsGnLjzq01K3Z/cesKANhYABSVV2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLLfGyYhBy6GtQu4iOAjmOTrEIVqf3QC7kq6q4qWrgOjqwcFcL
-	EB8O60qvR5WKm4VOznn8mLjVxLIewRV+ZAo5c94DnTuhb6dcWYEzedt0Og==
-X-Gm-Gg: ASbGncv4ec1mgV/apycDwC6I5H7MbqRuAFJwZT7begKgv2zNenb3/0UOyoVDvW5dKrx
-	qXIj6KWDVEd+4M4/X+mZ+htmyAcFkKd4bA8lo9WER5HUc2dcAJl+pD8yzTl0hGWILXWbHXaQjfU
-	QlqcHZKG0BJnA+8jPp+lL9XojtYbcd9+QQ130C7d23y33KzOslUvjsRjhY7x22uMJakfP6dOx/x
-	XdqqbXKdkXw2VbaOX0wG3RCNGsdlS72bXu6i00FSZJGByc4dpxP9iPc+KxgZjXJTy3zNb3/Lh8k
-	OfOkXjhZ/bprxmbzdnb/ZzVgD+RbJNiyI7+YL7udF/EuR2XguxlaFOuQjiG6uK1S
-X-Google-Smtp-Source: AGHT+IFdaOVM6nbQK4g0lP2GnCY3wEjp0vO6CGTujIXGePpCJQHVag1F11Ah/J4IgXx/cztrV1Nrzg==
-X-Received: by 2002:a17:903:2301:b0:216:2dc5:233c with SMTP id d9443c01a7336-21f17ecbd2bmr25454185ad.41.1738729726259;
-        Tue, 04 Feb 2025 20:28:46 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33007e6sm105203335ad.173.2025.02.04.20.28.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 20:28:45 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <e9b135a6-f398-4acb-b3ab-01732e94645c@roeck-us.net>
-Date: Tue, 4 Feb 2025 20:28:44 -0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rVVfJkXk"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250205043216epoutp018efeae405f513e2c6b169d56e2e683f9~hNapL8gUo1631816318epoutp01b
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:32:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250205043216epoutp018efeae405f513e2c6b169d56e2e683f9~hNapL8gUo1631816318epoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1738729936;
+	bh=muj42tyeArJlDap25NrLqG4C3MwLw+2Bs0jim938Rt0=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=rVVfJkXkNM4+ORYrriZW/IURQDIBmT9YxDVzisGWMtE5ceOPYP3GUfFimRGdXikhu
+	 N/kjQjwArlsD+vvFjjrrgIs5jI0PxABOPpb8gREXy+Qz/QJ9WiySn/LMr595GTpWhB
+	 b9Sq61KJGoLbRFxYmgou6IhmIomKwDlZcVTJwGyY=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250205043216epcas5p4c35ec9557541c7a3a0cd3b289ab5671c~hNaou06632827328273epcas5p4m;
+	Wed,  5 Feb 2025 04:32:16 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4YnnQ60cFFz4x9QK; Wed,  5 Feb
+	2025 04:32:14 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D3.30.19956.DC9E2A76; Wed,  5 Feb 2025 13:32:14 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250205043213epcas5p2fe2c5d145ce2caef582fa2e977a7b576~hNamZm0y00178501785epcas5p2J;
+	Wed,  5 Feb 2025 04:32:13 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250205043213epsmtrp27c0b673b0deea66310db225e85847a08~hNamY0OuK1380613806epsmtrp2t;
+	Wed,  5 Feb 2025 04:32:13 +0000 (GMT)
+X-AuditID: b6c32a4b-fd1f170000004df4-c5-67a2e9cd87d3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D9.43.23488.DC9E2A76; Wed,  5 Feb 2025 13:32:13 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250205043209epsmtip1521c464368bd125cbd4eb08cca2fa0c2~hNaizkCtT2478124781epsmtip1M;
+	Wed,  5 Feb 2025 04:32:09 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: =?UTF-8?B?J+uCmOyGjOybkC9TT1dPTiBOQSc=?= <sowon.na@samsung.com>,
+	<vkoul@kernel.org>
+Cc: <krzk+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+	<robh@kernel.org>, <krzk@kernel.org>, <conor+dt@kernel.org>,
+	<kishon@kernel.org>
+In-Reply-To: <000001db658c$4dce63c0$e96b2b40$@samsung.com>
+Subject: RE: [PATCH v4 0/3] Support ExynosAutov920 ufs phy driver
+Date: Wed, 5 Feb 2025 10:02:05 +0530
+Message-ID: <080d01db7786$ed980e90$c8c82bb0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: only print critical log when the watchdog fails
- to be stopped
-To: "liuchao (CR)" <liuchao173@huawei.com>
-Cc: caihe <caihe@huawei.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
- lixiaokeng <lixiaokeng@huawei.com>,
- "wim@linux-watchdog.org" <wim@linux-watchdog.org>
-References: <a59651b1a53c4362b0416a3252d9c750@huawei.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <a59651b1a53c4362b0416a3252d9c750@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQH4Gf4Ht2pT+J2pScYPrVRUV1+UogJvt6+kANXfQc+y5KuVAA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmhu65l4vSDSa1MFqs2XuOyWL+kXOs
+	Fkdb/zNbvJx1j83i/PkN7BaXd81hs5hxfh+Txf89O9gtfv88xGSx884JZgcuj02rOtk8+ras
+	YvT4vEkugDkq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
+	LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWh
+	gYGRKVBhQnbGnaZXbAW3OSqWbNFqYNzE0cXIySEhYCKxclMDaxcjF4eQwG5GiRs3TzFBOJ8Y
+	JZZ0/WeBcL4xSjTsamKEabm18QwzRGIvo8SXKQuhWl4ySsz4eQisik1AV2LH4jY2EFtEIFLi
+	z9IfbCBFzAKXGSX+HpjCDJLgFLCSOHL2EFCCg0NYwFFi2hcukDCLgIpEW9c1JhCbV8BSYs2r
+	I8wQtqDEyZlPWEBsZgFtiWULXzNDXKQg8fPpMlaQMSICThKt7d4QJeISL48eYYcomckh8We5
+	JITtIvHz7RI2CFtY4tXxLVA1UhKf3+2FildLrN8wjwXC7mCUaNxeA2HbS+x8dJMFZBWzgKbE
+	+l36EKv4JHp/P2ECCUsI8Ep0tAlBVKtKNL+7CjVFWmJidzcrhO0h8eF/H/sERsVZSP6aheSv
+	WUgemIWwbAEjyypGydSC4tz01GLTAuO81HJ4bCfn525iBKdTLe8djI8efNA7xMjEwXiIUYKD
+	WUmE9/T2BelCvCmJlVWpRfnxRaU5qcWHGE2BgT2RWUo0OR+Y0PNK4g1NLA1MzMzMTCyNzQyV
+	xHmbd7akCwmkJ5akZqemFqQWwfQxcXBKNTA1G/NzT939653EP86sBf660YJ9Xnzu3/JOfG2c
+	mRJbFZbY+ljPNffwxIq9h7I3n+AtnVS8cm3RR8bzxrrXY2qENv5RPRH9L5rzZcGWwuPOqTsC
+	O9WVjOdpLbefs6L2zvblN5r+X1/Y+fNmA0tD3sqly9Ib7I9caurLkvp58pD6u4j9NcI3E6P/
+	szKHVf99erbGKr94d+7vSXmHJ5ntufnOszWs9+TiKebPrVOXHl02PffQtN9XlR6HOYnJsa54
+	u8U+Zt19s+797B/W3Zr86WRg+xPNDLsoT3nu+WWzipfnSeW9+f287+vVpuDMCfNkL3aae21e
+	t2/vu6n2Apf5TrGe910WIdZ0nvuU1aNXN5S1lViKMxINtZiLihMB3UKaSTAEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTvfsy0XpBlevqlms2XuOyWL+kXOs
+	Fkdb/zNbvJx1j83i/PkN7BaXd81hs5hxfh+Txf89O9gtfv88xGSx884JZgcuj02rOtk8+ras
+	YvT4vEkugDmKyyYlNSezLLVI3y6BK+PGsbuMBUvZKuZdkG5gnMfaxcjJISFgInFr4xnmLkYu
+	DiGB3YwSi9/cYINISEtc3ziBHcIWllj57zk7RNFzRok/d24wgSTYBHQldixuA2sQEYiU+LP0
+	BxtIEbPAbUaJiU8usMONXfR+JVgHp4CVxJGzh4CqODiEBRwlpn3hAgmzCKhItHVdAyvhFbCU
+	WPPqCDOELShxcuYTFhCbWUBbovdhKyOMvWzha2aI6xQkfj5dxgoyUkTASaK13RuiRFzi5dEj
+	7BMYhWchmTQLyaRZSCbNQtKygJFlFaNkakFxbnpusmGBYV5quV5xYm5xaV66XnJ+7iZGcFxp
+	aexgfPetSf8QIxMH4yFGCQ5mJRHe09sXpAvxpiRWVqUW5ccXleakFh9ilOZgURLnXWkYkS4k
+	kJ5YkpqdmlqQWgSTZeLglGpgyqpt3GV1trAtQiskRTZ76YvpC6bNVm+ffsPL+gn3z3d6QVId
+	eRLOFZlTjB2OcHPVWC9wF5GvYxI0febyKKCoelPPnPr2l9udU1Vj7GK6n4rzTAkIbbdTKZCx
+	ZEk7NGVF9UL76GvHZ0zeJK4pOPuaorPw/BPiwc+Pm36Y67FRx7c0bl3JHOfSX9cl5u7e+GUO
+	V67/yReVW1qu61mlmf86v9QnpW9lPJNQaLOaHdPmEulv8Xe/TsqoEZJ5/Krg0qyzO46ufmiV
+	5mtcXsJ1ffuFt07ir/f5th4WOHvxcd8+luXr+GqjE39m8miVRzZqbr64/0jOrCYWMemLp10d
+	Cx7FnOS78fQgv/b0AyuKApYqsRRnJBpqMRcVJwIAfFJd0RoDAAA=
+X-CMS-MailID: 20250205043213epcas5p2fe2c5d145ce2caef582fa2e977a7b576
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20241226031145epcas2p4fa41b44749a7f675364437856d01a4c6
+References: <CGME20241226031145epcas2p4fa41b44749a7f675364437856d01a4c6@epcas2p4.samsung.com>
+	<20241226031142.1764652-1-sowon.na@samsung.com>
+	<000001db658c$4dce63c0$e96b2b40$@samsung.com>
 
-On 2/4/25 19:14, liuchao (CR) wrote:
-> On 2/3/2025 18:35, Guenter Roeck wrote:
->> On 2/4/25 18:02, liuchao (CR) wrote:
->>> On 1/27/2025 22:30, Guenter Roeck wrote:
->>>> On 1/27/25 01:35, liuchao (CR) wrote:
->>>>> On 1/26/25 21:10, Guenter Roeck wrote:
->>>>>> On 1/26/25 00:38, Liu Chao wrote:
->>>>>>> Every time the user echoes 0 > /dev/watchdog0, meaningless
->>>>>>> critical log is printed.
->>>>>>>
->>>>>>
->>>>>> It is not meaningless, and it will still be displayed after this
->>>>>> change, making the change pointless.
->>>>>
->>>>> The change is not pointless. For example, the softdog driver does
->>>>> not invoke watchdog_stop or print logs in the watchdog_release.
->>>>>
->>>>
->>>> It seems to me that is a problem in the softdog driver.
->>>>
->>>> The change is actually worse than I initially thought.
->>>> The message is _supposed_ to be displayed if watchdog_stop() is not
->>>> called while the watchdog is running (i.e., if err == -EBUSY).
->>>> Otherwise it would not be displayed for real hardware watchdogs which
->>>> are not stopped because they were running and watchdog_stop() is not
->>>> called because WDIOF_MAGICCLOSE is set in the driver and the magic
->>>> release byte was not written.
->>>>
->>>> Specifically, the softdog driver has WDIOF_MAGICCLOSE set. It is not
->>>> supposed to be unloadable (or unloaded) while the watchdog is running.
->>>
->>> When echo to /dev/watchdog0, The watchdog_open, watchdog_write, and
->>> watchdog_release functions are invoked in sequence. Do you mean the
->>> softdog driver should not call watchdog_release?
->>>
->>> After the user opens /dev/watchdog0, the user feeds the watchdog
->>> through ioctl WDIOC_KEEPALIVE and never closes. Is this the correct usage?
->>>
->>
->> I tried softdog. It works as advertised. Yes, "echo 0 > watchdog0" triggers the
->> message.
->> "sudo modprobe -r softdog" then fails with
->>
->> 	modprobe: FATAL: Module softdog is in use.
->>
->> and, as expected, one minute later (or whatever the timeout is set to) the
->> system reboots.
->>
->> There is nothing wrong with the message. The softdog _does_ refuse to be
->> unloaded while running, and it _does_ reboot the system after the timeout
->> expired. This is all perfectly as expected. The log is not meaningless. Instead, it
->> tells the user that the system will reboot after the watchdog expired. Which it
->> does.
-> 
-> User creates a process and echoes every time to ensure that the system is
-> normal, the process can be executed properly. Otherwise, the system reboots.
-> So the critical message keeps printing.
-> 
-> Is it reasonable to change it to info level?
-> 
+Hello Krzysztof / Vinod
 
-No. The user needs to echo the magic character instead of "0".
-
-Guenter
-
+> -----Original Message-----
+> From: =EB=82=98=EC=86=8C=EC=9B=90/SOWON=20NA=20<sowon.na=40samsung.com>=
+=0D=0A>=20Sent:=20Monday,=20January=2013,=202025=2012:55=20PM=0D=0A>=20To:=
+=20vkoul=40kernel.org=0D=0A>=20Cc:=20krzk+dt=40kernel.org;=20linux-kernel=
+=40vger.kernel.org;=0D=0A>=20devicetree=40vger.kernel.org;=20linux-samsung-=
+soc=40vger.kernel.org;=0D=0A>=20robh=40kernel.org;=20krzk=40kernel.org;=20c=
+onor+dt=40kernel.org;=0D=0A>=20alim.akhtar=40samsung.com;=20kishon=40kernel=
+.org=0D=0A>=20Subject:=20RE:=20=5BPATCH=20v4=200/3=5D=20Support=20ExynosAut=
+ov920=20ufs=20phy=20driver=0D=0A>=20=0D=0A>=20Hi=20Vinod,=0D=0A>=20=0D=0A>=
+=20>=20-----Original=20Message-----=0D=0A>=20>=20From:=20Sowon=20Na=20<sowo=
+n.na=40samsung.com>=0D=0A>=20=0D=0A=5BSnip=5D=0D=0A>=20I=20can't=20see=20th=
+ese=20patches=20in=20-next=20yet,=20do=20let=20me=20know=20if=20anything=20=
+is=20missing=20to=0D=0A>=20be=20addressed=20from=20myside.=0D=0A>=20=0D=0AW=
+hich=20tree=20will=20this=20series=20go=20through?=20=0D=0A=0D=0A>=20Best=
+=20regards,=0D=0A>=20Sowon=20Na.=0D=0A=0D=0A=0D=0A
