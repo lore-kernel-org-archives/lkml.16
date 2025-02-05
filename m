@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0578E23236D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8837122DFAD
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752425; cv=none; b=O3qi/Xk14Yaxhkeso3rrGjRpglLy3/qUJssQg+e8Uf9VKYX06SKkxBSfzZYUfev6RMXITZHkA8oPBnvYZtb/rNCFv3cneknhHFOnCI25nF+hypr1H/hFXQOeytnF6AzEhHSATKc2OAoVpqgBedtrR8a/uJf6KzmOrO4IGPtFzp4=
+	t=1738752425; cv=none; b=S8AsEKOQ8L0KnTcUOjZHUqIC0+SLyebXa65HJSlgLD4SSdLfF8fCmEM0+MO5WgmIZj822DitFkSrCHf8Gij6/G+PHJmWarecMjgrcWZveydLpZy9hAIxk2iOsE75mkMioSGG2j2BHDUixCq1KGIkAMJZdKDGfk04XhZH7t8PgZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752425; c=relaxed/simple;
-	bh=Lybvc7LO/jeeVpjBAU8joTd/29m68j3g5FVa67y2zXg=;
+	bh=e03tCuce8sqgdxMjGoPUhTA7EjXanDQNQRZyXjJkUaY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Nvbdwm33cWHRb5Rf85KNiE3vCdFrvt+48zqSuzoiFooTNQ2QbiniTGat4fRAGIjWZaz32aYcApiuLi1lShm9v4r5SLPluJ+YwpIpBJthPc9FmCe2WGz65Y4CoKBdpeeo0cSMjL+SUkB4FH0S73yLzAyO/eg3X0h/yusyhEO8awE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o/QctFBI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K/kHWhYh; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=GAv2vHZ50bQHrVuumA5V91E9/IawX5yaRj+49TwFjH5ctJAs/n3wyEnGWKVbhV0/gXEs96asuSL3Y8QD3r1Iwgs2eIrp8r2pv8afhY4wKMZz/btjo0kPAoYaz/m9H0LqgyrNZlztzAjovLS4HitXd3Wcdi0tz7p+BRMmcAn2LEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t3FXt1la; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4w/mrT/G; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o/QctFBI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K/kHWhYh"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t3FXt1la";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4w/mrT/G"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738752421;
@@ -24,31 +24,31 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZLkUtUnLETo6ELVPNAVhtdtOwGBRl4rSaF031Rj8MNw=;
-	b=o/QctFBImjZwxPkJeYpHxJ1v9yysweDeXLa0Hc52hKPadqgw9r1iNj8/HZz+CtNpW1ZJT5
-	1RkqAFC2Y6JhI1YeOeD547/Wi8IPmLkXntv/2RkVJDfKYjgD7xp/LqNUAcFUU85l73RELW
-	TY3QpFCE1qV/mYmx5T7aZkWo2FKMYugv/xGrgBic9vtRYEB7HEy4IxO+uNFB+w9qR8nqsz
-	DS54lv1ikpCSMLxf5XEEO89tU4FrpA3HQlVwXewLgvI1hEsLX/ufo+n/7M4U28GH2wFLJy
-	+uzW81AHR9OlWFRWd3Y00fwUwNzWqug913jk9wLy8gh3q0aQO5WFRohwzNgb9w==
+	bh=EON2od1YOzSZTiDMeNdc0/opP1+ZKtlRHo3VBdgx5UM=;
+	b=t3FXt1lajuPwqKvdovU5dXiQU1aWdCYzYh5HFRnfzhXyiO2/GiDdMce02c2HmiwffIpbW5
+	9V4ldyRikgyBeNAeN9rPQoTUTN7PKbemEth3BSYNpJ1EdjVTGQ+c4S8dIoLCs/PQpnjPKD
+	nZkV4RkQzWqXBS04291VDSl0Yf0vpgQ3EnW5l0B5S++tzekYkoWkSTOPbXzO973EO81G7O
+	78OOGw9zmvVvbWdZ7RGqqK/V4XGFA2k4ghGzNIpNcZvqb6lwC1+dfqN5/YXsJbS+vttnYx
+	8AHU559/KPoLG1xUfZzESmhhOLDhsq0S7yiYFgOxxiVCMrYbQ7HfX0oiTbxOHw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738752421;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZLkUtUnLETo6ELVPNAVhtdtOwGBRl4rSaF031Rj8MNw=;
-	b=K/kHWhYhelQtonGHXyhUrrET7pDiT66362k4J+N54QDVGAse7A/skGgkDCVeTjJMGzdEPo
-	pc4tPYxfJz621eAw==
+	bh=EON2od1YOzSZTiDMeNdc0/opP1+ZKtlRHo3VBdgx5UM=;
+	b=4w/mrT/G+t7/H6D01vkVqGMX6W9ACsP+dhURL5ueY2a2sBL7Ex5eFtEYTqJSNzg2Fm8FEs
+	TOy8PbgFQ4CY1XAQ==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Zack Rusin <zack.rusin@broadcom.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v2 26/45] Input: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:14 +0100
-Message-Id: <62db561622799dfc8d58682ca41b54e3f1ff6949.1738746904.git.namcao@linutronix.de>
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zack Rusin <zack.rusin@broadcom.com>
+Subject: [PATCH v2 27/45] iio: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:15 +0100
+Message-Id: <570792e31b28a94a511c19c6789f2171a6745685.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -67,62 +67,48 @@ hrtimer::function with the new setup mechanism.
 
 Patch was created by using Coccinelle.
 
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/joystick/walkera0701.c |  3 +--
- drivers/input/keyboard/gpio_keys.c   | 10 ++++------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ drivers/iio/adc/ti-tsc2046.c           | 4 +---
+ drivers/iio/trigger/iio-trig-hrtimer.c | 4 ++--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/joystick/walkera0701.c b/drivers/input/joystick/=
-walkera0701.c
-index 59eea813f258..15370fb82317 100644
---- a/drivers/input/joystick/walkera0701.c
-+++ b/drivers/input/joystick/walkera0701.c
-@@ -232,8 +232,7 @@ static void walkera0701_attach(struct parport *pp)
- 		goto err_unregister_device;
- 	}
+diff --git a/drivers/iio/adc/ti-tsc2046.c b/drivers/iio/adc/ti-tsc2046.c
+index 7dde5713973f..49560059f4b7 100644
+--- a/drivers/iio/adc/ti-tsc2046.c
++++ b/drivers/iio/adc/ti-tsc2046.c
+@@ -812,9 +812,7 @@ static int tsc2046_adc_probe(struct spi_device *spi)
 =20
--	hrtimer_init(&w->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	w->timer.function =3D timer_handler;
-+	hrtimer_setup(&w->timer, timer_handler, CLOCK_MONOTONIC, HRTIMER_MODE_REL=
-);
+ 	spin_lock_init(&priv->state_lock);
+ 	priv->state =3D TSC2046_STATE_SHUTDOWN;
+-	hrtimer_init(&priv->trig_timer, CLOCK_MONOTONIC,
+-		     HRTIMER_MODE_REL_SOFT);
+-	priv->trig_timer.function =3D tsc2046_adc_timer;
++	hrtimer_setup(&priv->trig_timer, tsc2046_adc_timer, CLOCK_MONOTONIC, HRTI=
+MER_MODE_REL_SOFT);
 =20
- 	w->input_dev =3D input_allocate_device();
- 	if (!w->input_dev) {
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gp=
-io_keys.c
-index 5eef66516e37..166cfc67d98b 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -590,9 +590,8 @@ static int gpio_keys_setup_key(struct platform_device *=
-pdev,
+ 	ret =3D devm_iio_trigger_register(dev, trig);
+ 	if (ret) {
+diff --git a/drivers/iio/trigger/iio-trig-hrtimer.c b/drivers/iio/trigger/i=
+io-trig-hrtimer.c
+index 716c795d08fb..82c72baccb62 100644
+--- a/drivers/iio/trigger/iio-trig-hrtimer.c
++++ b/drivers/iio/trigger/iio-trig-hrtimer.c
+@@ -145,8 +145,8 @@ static struct iio_sw_trigger *iio_trig_hrtimer_probe(co=
+nst char *name)
+ 	trig_info->swt.trigger->ops =3D &iio_hrtimer_trigger_ops;
+ 	trig_info->swt.trigger->dev.groups =3D iio_hrtimer_attr_groups;
 =20
- 		INIT_DELAYED_WORK(&bdata->work, gpio_keys_gpio_work_func);
+-	hrtimer_init(&trig_info->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+-	trig_info->timer.function =3D iio_hrtimer_trig_handler;
++	hrtimer_setup(&trig_info->timer, iio_hrtimer_trig_handler, CLOCK_MONOTONI=
+C,
++		      HRTIMER_MODE_REL_HARD);
 =20
--		hrtimer_init(&bdata->debounce_timer,
--			     CLOCK_REALTIME, HRTIMER_MODE_REL);
--		bdata->debounce_timer.function =3D gpio_keys_debounce_timer;
-+		hrtimer_setup(&bdata->debounce_timer, gpio_keys_debounce_timer, CLOCK_RE=
-ALTIME,
-+			      HRTIMER_MODE_REL);
-=20
- 		isr =3D gpio_keys_gpio_isr;
- 		irqflags =3D IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
-@@ -628,9 +627,8 @@ static int gpio_keys_setup_key(struct platform_device *=
-pdev,
- 		}
-=20
- 		bdata->release_delay =3D button->debounce_interval;
--		hrtimer_init(&bdata->release_timer,
--			     CLOCK_REALTIME, HRTIMER_MODE_REL_HARD);
--		bdata->release_timer.function =3D gpio_keys_irq_timer;
-+		hrtimer_setup(&bdata->release_timer, gpio_keys_irq_timer, CLOCK_REALTIME,
-+			      HRTIMER_MODE_REL_HARD);
-=20
- 		isr =3D gpio_keys_irq_isr;
- 		irqflags =3D 0;
+ 	trig_info->sampling_frequency[0] =3D HRTIMER_DEFAULT_SAMPLING_FREQUENCY;
+ 	trig_info->period =3D NSEC_PER_SEC / trig_info->sampling_frequency[0];
 --=20
 2.39.5
 
