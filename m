@@ -1,132 +1,87 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E12B2770B;
-	Wed,  5 Feb 2025 05:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 099A420F09D;
+	Wed,  5 Feb 2025 05:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738732945; cv=none; b=qnls9MsvsP1sLX6BLmfVJl38DOwy81OvTm3nF0gGAXoG299TyfRqPaiV/3RjdmBSGbP6gy/5Kq1PhuxcNcXvA6Wj4Uj1qRyOj05eg+WgfhX0UN1st7mFqbn8PYoRbeaUY6MUJ3r6Y/5uk9QtqHSgtGHs6gzRyLmlCRtbzbjmHiw=
+	t=1738733055; cv=none; b=JoDDAPhbAeIYkv0DSmDJfxodO9FNsON01S6z02wjTM0BZmRfpnKt/SM4L0aVLTeCL2eMkK+4ZPYQJH4W5dESQOjriigwdVejVryH09sxVI7v14gw2orGX9yQHtIUHhRcSIN/hBhN/5RKjK9lbrvyqRzCUFhzVdLYqoFbQ8BWlUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738732945; c=relaxed/simple;
-	bh=teAmRA/glxpd4DiIqY2xWP0ql5pxdUqg7CzHOFSUFIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPK9oIQNCkcJO5TuVcYIWjqIpRLJzZ0NiDy1MYb9N0U7YxAo5WnaTzn/VTr2xMmrPsJZ4RlYvWnPfpKKWuYjSQOC6zXfeNu+Ovq6kzXhPOoxUQd+9cfJHH8HJrNFjoZlbuOCLOOzWuLekHrUYmviHUrOJMO5v+/B90oi176jLBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLjtJx3c; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLjtJx3c"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so72889315e9.0;
-        Tue, 04 Feb 2025 21:22:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738732941; x=1739337741; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=21hP7bpdvokUxQxofV+KNEVpID3xm7+fvYQNUaPIP6I=;
-        b=eLjtJx3c1JM9P3wPGj7x78Afnegjr4uQm6gJEPoG4pP8NyqkAeyAjbsizpmVfnyElJ
-         kupFLvAM42HGkIb49+P+GEKvM/ktAC+FJ2G8qw0vnTP5r1joq356aPL9Eq1plOGeoKYx
-         3WYEajYJei/cXMSF7xt/qI5gTUk3hoQl0jkbe95lQlq2KTHq47bB43U0m9v7rQ3rnxl6
-         lFbTE8irU7f7P03gJHawbqsoO5xocqciHYjqTE1yvATcLaba/qIS0hHDyEBhHz380/QR
-         UCOMFYbci8zWPRMU90tGL7ft11K+SeNn6M5jrTrSH4WwDpsuTIUI+fHbvGsMuB6JIkVF
-         SK5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738732941; x=1739337741;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=21hP7bpdvokUxQxofV+KNEVpID3xm7+fvYQNUaPIP6I=;
-        b=sX36P8DhivzqxaocU7Wtx6gw//w2tA6BX5rMPK6bHC/8XGKGBHciSxj841KOrHfdTu
-         xUPAthTT7KCj55nfESTSj9nraNzX7ydPm0vqzwmc4cktZ5o20b7jsmH+lOySxz2/RK4d
-         jXv9byes2MGbh3jk3mItmEK8wQhhcvZHn3oDfqKxUSZjXRhYbjH8qJzkprDQUH1FvBWR
-         zpTy9FHDrLG4N8m1r8X/G/o1hSoiZRI/nZR07f66VoFjoM4nKNG0O3dSsS3SY32lA0Wl
-         InG86An7BRO7SnJsXiTTbMwQVKmtwjs1xDvWUCvLi+uZAD6FJc6bVMhf5wTskG/nik4u
-         7gWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWagE/VGv3FNmmn0QikqdmaTNTKQKQT47OAfcOfqZYNeBqpLzWjj7cLw3/go2luLeEzzP0nvqDnp/Hb@vger.kernel.org, AJvYcCXcoMVg/tnkab3logrMExDhyyfh54pumRZcqKoyZNnJnua5s6r8l27Oh6bQeXZDlpEQbk4GHsJE4AMsDGqh@vger.kernel.org, AJvYcCXlAJ8yMa6e6Sk2zWh2g4KEHLHXoiImfIo8ymEMP4AHiT8JgCI3ne1GXxKEhOsS1htZd84O7fIK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPX6n3ohohgp0ZwitDvW2+4EnnlHp5oowFnfXcxo9ZQFnVO9H3
-	DRxmNF7RM5LkhQ8qCL/Ks3QFw9gUCl0LhDLGhHwlOyExWCqKN9Ov
-X-Gm-Gg: ASbGncupk/UXcf8W+9n2nSRFyH2dNGSzoXQ+RO08oW2WJfdXU8+tPH6tO55FCzNvJVi
-	/pHwgIM2eiWrdOHZ/MR6bxB39SVlH69kTa1OQJmYWf/H3n2/h6ZJwMI3oa2/j6HjtDMpPTLUtSg
-	x9bUogYRWHQCJSi0M9ql9Z2PvIQ3Qdj5l7KWzIk0dvVfzUaWsAjL6xrL+EcpWlE8amzc+I9vc2R
-	vhm6LI+Umm3XpupcTFz8fLun2PQjpEVeURfCB5XrhODJIVg5Cm2pC679/UEwOfPGS0y50OdaA4l
-	eNUx1V+rDiUV
-X-Google-Smtp-Source: AGHT+IHj+FMgfhyJJ0oFoOUI5MqNe+dA1CICeYNUtW99AhsoLmOYnMg9M/knYT0ZemyuxGW8Rnlntw==
-X-Received: by 2002:a05:600c:3b98:b0:434:a781:f5d5 with SMTP id 5b1f17b1804b1-4390d574e18mr8415565e9.30.1738732941277;
-        Tue, 04 Feb 2025 21:22:21 -0800 (PST)
-Received: from debian ([2a00:79c0:661:ad00:45fb:7d1a:5e4d:9727])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d965438sm9366515e9.22.2025.02.04.21.22.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 21:22:20 -0800 (PST)
-Date: Wed, 5 Feb 2025 06:22:18 +0100
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: dimitri.fedrau@liebherr.com, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/3] net: phy: Add helper for getting tx
- amplitude gain
-Message-ID: <20250205052218.GC3831@debian>
-References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
- <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
- <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
+	s=arc-20240116; t=1738733055; c=relaxed/simple;
+	bh=+Lk5B53trfdD2kQOnydrTPR6mmkbLrC29ruqyJk4Buc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WYknH0stIK1ShiRLcRS18ZFnGlR1+3Ojh15m25WN05Il8OvKlxch5ZfUWBKrSxGdT2Kmh/u9eZCCQvt1m0wjqhy9erau+tzqzolbrm/iRO3dzTT1pFkMriPrikqYNC+OMOZSE7hA0ghObdyeJ1NnSp85O0Z6JpnyTkC/wbzSIfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E680311FB;
+	Tue,  4 Feb 2025 21:24:36 -0800 (PST)
+Received: from [10.162.41.15] (K4MQJ0H1H2.blr.arm.com [10.162.41.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8E853F63F;
+	Tue,  4 Feb 2025 21:24:10 -0800 (PST)
+Message-ID: <ee3ca3d6-ed8e-4138-a0ec-5a19a23f937e@arm.com>
+Date: Wed, 5 Feb 2025 10:54:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Fix thuge-gen test name uniqueness
+To: Mark Brown <broonie@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250204-kselftest-mm-fix-dups-v1-1-6afe417ef4bb@kernel.org>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250204-kselftest-mm-fix-dups-v1-1-6afe417ef4bb@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Am Tue, Feb 04, 2025 at 05:54:53PM +0000 schrieb Russell King (Oracle):
-> On Tue, Feb 04, 2025 at 02:09:16PM +0100, Dimitri Fedrau via B4 Relay wrote:
-> >  #if IS_ENABLED(CONFIG_OF_MDIO)
-> > -static int phy_get_int_delay_property(struct device *dev, const char *name)
-> > +static int phy_get_u32_property(struct device *dev, const char *name)
-> >  {
-> >  	s32 int_delay;
-> >  	int ret;
-> > @@ -3108,7 +3108,7 @@ static int phy_get_int_delay_property(struct device *dev, const char *name)
-> >  	return int_delay;
+
+
+On 05/02/25 4:23 am, Mark Brown wrote:
+> The thuge-gen test_mmap() and test_shmget() tests are repeatedly run for a
+> variety of sizes but always report the result of their test with the same
+> name, meaning that automated sysetms running the tests are unable to
+> distinguish between the various tests. Add the supplied sizes to the logged
+> test names to distinguish between runs.
 > 
-> Hmm. You're changing the name of this function from "int" to "u32", yet
-> it still returns "int".
->
+> Fixes: b38bd9b2c448 ("selftests/mm: thuge-gen: conform to TAP format output")
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>   tools/testing/selftests/mm/thuge-gen.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+> index e4370b79b62ffb133056eb843cdd1eaeba6503df..cd5174d735be405220d99ae796a3768f53df6ea4 100644
+> --- a/tools/testing/selftests/mm/thuge-gen.c
+> +++ b/tools/testing/selftests/mm/thuge-gen.c
+> @@ -127,7 +127,7 @@ void test_mmap(unsigned long size, unsigned flags)
+>   
+>   	show(size);
+>   	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
+> -			 "%s mmap\n", __func__);
+> +			 "%s mmap %lu\n", __func__, size);
+>   
+>   	if (munmap(map, size * NUM_PAGES))
+>   		ksft_exit_fail_msg("%s: unmap %s\n", __func__, strerror(errno));
+> @@ -165,7 +165,7 @@ void test_shmget(unsigned long size, unsigned flags)
+>   
+>   	show(size);
+>   	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
+> -			 "%s: mmap\n", __func__);
+> +			 "%s: mmap %lu\n", __func__, size);
+>   	if (shmdt(map))
+>   		ksft_exit_fail_msg("%s: shmdt: %s\n", __func__, strerror(errno));
+>   }
 
-I just wanted to reuse code for retrieving the u32, I found
-phy_get_int_delay_property and renamed it. But the renaming from "int"
-to "u32" is wrong as you outlined.
 
-> What range of values are you expecting to be returned by this function?
-> If it's the full range of u32 values, then that overlaps with the error
-> range returned by device_property_read_u32().
->
+Suggest converting size to MB before printing. This will print the size 
+in bytes which is confusing. Otherwise:
 
-Values are in percent, u8 would already be enough, so it wouldn't
-overlap with the error range.
+Reviewed-by: Dev Jain <dev.jain@arm.com>
 
-> I'm wondering whether it would be better to follow the example set by
-> these device_* functions, and pass a pointer for the value to them, and
-> just have the return value indicating success/failure.
->
 
-I would prefer this, but this would mean changes in phy_get_internal_delay
-if we don't want to duplicate code, as phy_get_internal_delay relies on
-phy_get_int_delay_property and we change function parameters of
-phy_get_int_delay_property as you described. I would switch from
-static int phy_get_int_delay_property(struct device *dev, const char *name)
-to
-static int phy_get_u32_property(struct device *dev, const char *name, u32 *val)
-
-Do you agree ?
-
-Best regards,
-Dimitri Fedrau
