@@ -1,124 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EC41DAC81;
-	Wed,  5 Feb 2025 21:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ECD1DAC81;
+	Wed,  5 Feb 2025 21:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738789830; cv=none; b=IHSNU2TkO/KV/601CkL/2YcR48C8cvwhbFZ+5kmx+NNmBXLJG0cgvzO1e6vQxf4nN9ENrIuCA3lMjtAcQb7gw+3IFY6ItshPim62xFrKTq++2Fh7YC32Agg/Zh86Ut5CKa37NUFmkETbjt/NRFJDcrFre8nk8plVShkn2Sc25Nc=
+	t=1738789969; cv=none; b=ZzJH0mBKZx4zrromEw+KoGp9gxP/mnGUJaJtkWFAxWUHZESlTj0uOU/wrBLCzxfCzlzSGt/WsUVyORstS3n9Of1hti3/3sjBlPWEUeMnMvrFCv7UYukY2U/N6WSdyO+oXemVU0HnmjA6NBreimU9T+0FugFYPigRu9+gUkfsWFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738789830; c=relaxed/simple;
-	bh=waEsR76JgTt8wCqm9KYbGxyj3uS9lAiElYbWB5829Ks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ADVKZGP3syb1/dM1Qy7EWVb1Mx/sUmK68N9yCHRtmg97D3IGDqD5vZx2g+wFtoYfl5RIVd+93p7lX+3HwXMFi4AHG0TeUnTaDhD1DmxU/X6whpOySjCqUJC93oWcPFplmw1HjnFfSEdJtCUcVR8ZCHU7mlen72yH4/DnkNvhcPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7rVNN6T; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738789969; c=relaxed/simple;
+	bh=J5XE7MnQtbhTshwOYeuFwneZoCl0STqhgZhQmIg9y3U=;
+	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=LPxIPeftwfHQkARl+M4/XVQauPkWm3jFHolaxxytt2eiacaqkl0uW2pJizu9+mFOPXNuZfuXPphtDSeBRq1NmROM6emnh6H/4qsq098Ew+mOk0y6UCy6A5MtgU3nFjCr8H1gdUMZdaoEH4XAdFciUZPfXn4jyBkdxdS9+CvyuKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FIo1bYdE; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7rVNN6T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738789829; x=1770325829;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=waEsR76JgTt8wCqm9KYbGxyj3uS9lAiElYbWB5829Ks=;
-  b=k7rVNN6TSqg6C56wamlWy52zQaEKS6+3vbDWqGVAsntFITxFogvy8ouD
-   zR8ckJCjuuo7c5nd/iVPhzrZAgI1EPNiZOFPvf9wKKH1yL7IBfl81FgV8
-   lf6rh4Mx1wHQTpiMaVYTSTKPiiLAUrICO0xH23qD6r7YNlvsT5BGc5S4p
-   I0ViWIemepi2Lj9ZDXINMJQjqFpl0S6/GrmEFweDGNJDFqBImrV5b1W3X
-   KGasucXJy5YtfSUM9JI4xPLmFo7ydZTaHniVHlEyj8HGsS4d/ez02wLSJ
-   5E0nnfmtYTL6CUFakvcmX0HGdREAC/4Cy+NO9Nras9TUnqdawOXcWwRlv
-   Q==;
-X-CSE-ConnectionGUID: lyfHZFyoRbi+b2JCxx7DSg==
-X-CSE-MsgGUID: UEBeTuWeQWSUqTKwqNsNAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39402713"
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="39402713"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 13:10:28 -0800
-X-CSE-ConnectionGUID: 6kdtUtOtSfyTqUKOezmubw==
-X-CSE-MsgGUID: ci/i+2ncR7eIhnmVAkdyLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110866738"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 13:10:27 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 998EC20B5713;
-	Wed,  5 Feb 2025 13:10:24 -0800 (PST)
-Message-ID: <9fa56c75-2ee6-4901-9e04-0ec23412fd62@linux.intel.com>
-Date: Wed, 5 Feb 2025 16:10:22 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIo1bYdE"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4b10dd44c8bso53540137.3;
+        Wed, 05 Feb 2025 13:12:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738789966; x=1739394766; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6xi9j7LZlV2SUJAQTXwi7YERrm0ctW3irKCQf/6lFSM=;
+        b=FIo1bYdEb+Todk07dcaynDZdCqcLyQqRTm+P+FZNO2E8hB08nV23bS+x7CSx7fwzQ2
+         roBZ4W4fOdhqzbKHE6tKLKEDLG8W//etdwOKBFCP95brcbsqq7URK0M2KFJwz4cjlyHL
+         G4yzVf7j+FQdw/fH6VSeB2HGdryJZP49gq+AEkCKfdSitP8e/Ml+QW1VwJLsi94eAfFh
+         gBLdW3LbygyvfnnKkzSTkE8Uuf3Y1jfWpwc7xZqigv+iLE6N0+jshI7mlxVYP5dh4JyI
+         7yJrGeQMKhcxclFl33lu+s8GwEyTY+cwTTycIRvvtYeLfuqd1WOq6mpP44on6s4cd/Sv
+         XzIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738789966; x=1739394766;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6xi9j7LZlV2SUJAQTXwi7YERrm0ctW3irKCQf/6lFSM=;
+        b=UtWqtan20lEGsRXeWvxEchMbGuu7KuiSszfORLj58um+zEySwG37cvYzuxy+/APwop
+         YFlZE4OWIMPDlhRdQzkCT/+X2patmOgHnI2BF4scJa+edFtpI0SbIyW98gUVU3cuwyKe
+         Q40rsQH9mn+ybecOEmRqA4sb5PwEefOH5OLG6/etlvP86JyoTCUe/o8OLiN1npQRd/k4
+         9H0T4sg3BKhZqIpUVZONTW7Bwoav6MlrhEL95bz5tIqINEHzFfIGLfZlFM+8Vu6HTTmM
+         KECz9dGHwIqmfkHwfzQLjhjRD7JKFh6W9OnZgCi6p4UGQVUB3fep8hmh7Je/XaUhcxJV
+         C/bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuhAEY2ZdhHn5ryXvY9CDTZIWo7GS8umBmfqbP+h++XXojesmcH4ry8lSbS1zLY5Gaeyw++OhWk+2Vq0ZEdh62@vger.kernel.org, AJvYcCUxMCkxvxjPNxfWWVnZGrGp2dnSZpu657IQX9lRduUNR/flahSo9hsMEu9YGRHlbT6WuL7ezQ7ACBvquO+V@vger.kernel.org, AJvYcCVj7kZ4lKROb9A6+OCcEZgEgAZlZG2sP8Av7RrmoBgV21eLwoaS/BDxpeWoQB1H+Celznk=@vger.kernel.org, AJvYcCWMklOraqU4rWkrnhcTnCsS6Qp5rKYyHWeWEUUmKFzm5UTX0q1HSVVAarMNE+R9t/1t5ejaRceY@vger.kernel.org, AJvYcCXv+LthjjIYf9FL+JPDpRDFN4FR3uNTWML7hg65Mq/U2UxTpOHxNSu3hzCzh2XqqDL1lmtp0i3bScIS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAMcLqC/d6+xGZGeSXd9MxBkH72ibkSQ4fqD4kXYsSOTAPiMGP
+	aBGGMjKCmc6OA9HZn3poHYPSFxpjiAusaMhh1PfJLtqHxilWUNAZ
+X-Gm-Gg: ASbGnctHR/kAiash5cBCQDM+a4Af27E6wjojzNf0r5G9FSqGa0baxP5hmAxlWUzkgLT
+	K3I8NizNn4qGN/gK82d322jzauY/mJqYOVHmPuutTDqmBV2tSHgDeMjGkWyv4QrAQxiZHmIY0es
+	CcZmDWdLWzxCxskKzihT7oQKXaEw+1lZoXhl7RHAZnNOn+FzfSNwfkBe00HzJBSRLemzS180Vjd
+	XDbKPExoKIFQxlFE0QG6miA0ra5pRD1zlcEaU8fKaZ02jDmw5psZhwAIRRV7FxtB4YKmusfgUCx
+	zE1BuqQ/hMvmedcbICjh4lJ6SZ2ChqMPndR7H5tsGFev3pnXl/w+Ep46dwoB75g=
+X-Google-Smtp-Source: AGHT+IHVJriiE4RgD/TB98OD7KhhWkj9HMgkHe3bJLqoRArq4OYT9AU5jj7A1Z5rXze4Tk/0637oNA==
+X-Received: by 2002:a05:6102:1609:b0:4b6:697c:6b89 with SMTP id ada2fe7eead31-4ba46dab167mr2854007137.5.1738789966444;
+        Wed, 05 Feb 2025 13:12:46 -0800 (PST)
+Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866941f13b0sm2547855241.30.2025.02.05.13.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 13:12:45 -0800 (PST)
+Date: Wed, 05 Feb 2025 16:12:45 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ Shuah Khan <shuah@kernel.org>, 
+ linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ kvm@vger.kernel.org, 
+ virtualization@lists.linux-foundation.org, 
+ linux-kselftest@vger.kernel.org, 
+ Yuri Benditovich <yuri.benditovich@daynix.com>, 
+ Andrew Melnychenko <andrew@daynix.com>, 
+ Stephen Hemminger <stephen@networkplumber.org>, 
+ gur.stavi@huawei.com, 
+ devel@daynix.com, 
+ Akihiko Odaki <akihiko.odaki@daynix.com>
+Message-ID: <67a3d44d44f12_170d392947c@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250205-tun-v5-5-15d0b32e87fa@daynix.com>
+References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
+ <20250205-tun-v5-5-15d0b32e87fa@daynix.com>
+Subject: Re: [PATCH net-next v5 5/7] tun: Extract the vnet handling code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids
- events/metrics
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
- Samantha Alt <samantha.alt@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
- Thomas Falcon <thomas.falcon@intel.com>
-References: <20250205173140.238294-1-irogers@google.com>
- <20250205173140.238294-12-irogers@google.com>
- <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com>
- <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 2025-02-05 3:23 p.m., Ian Rogers wrote:
-> On Wed, Feb 5, 2025 at 11:11 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2025-02-05 12:31 p.m., Ian Rogers wrote:
->>> +    {
->>> +        "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
->>> +        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound + topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * slots",
->>> +        "MetricGroup": "BvUW;TmaL1;TopdownL1;tma_L1_group",
->>> +        "MetricName": "tma_retiring",
->>> +        "MetricThreshold": "tma_retiring > 0.7 | tma_heavy_operations > 0.1",
->>> +        "MetricgroupNoGroup": "TopdownL1",
->>> +        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum Pipeline_Width throughput was achieved.  Maximizing Retiring typically increases the Instructions-per-cycle (see IPC metric). Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Heavy-operations or Microcode Assists are categorized under Retiring. They often indicate suboptimal performance and can often be optimized or avoided. Sample with: UOPS_RETIRED.SLOTS",
->>> +        "ScaleUnit": "100%"
->>> +    },
->>
->> The "Default" tag is missed for GNR as well.
->> It seems the new CPUIDs are not added in the script?
+Akihiko Odaki wrote:
+> The vnet handling code will be reused by tap.
 > 
-> Spotted it, we need to manually say which architectures with TopdownL1
-> should be in Default because it was insisted upon that pre-Icelake
-> CPUs with TopdownL1 not have TopdownL1 in Default. As you know, my
-> preference would be to always put TopdownL1 metrics into Default.
-> 
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> ---
+>  MAINTAINERS            |   2 +-
+>  drivers/net/tun.c      | 179 +----------------------------------------------
+>  drivers/net/tun_vnet.h | 184 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 187 insertions(+), 178 deletions(-)
 
-For the future platforms, there should be always at least TopdownL1
-support. Intel even adds extra fixed counters for the TopdownL1 events.
+> -static inline bool tun_legacy_is_little_endian(unsigned int flags)
+> -{
+> -	return !(IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) &&
+> -		 (flags & TUN_VNET_BE)) &&
+> -		virtio_legacy_is_little_endian();
+> -}
 
-Maybe the script should be changed to only mark the old pre-Icelake as
-no TopdownL1 Default. For the other platforms, always add TopdownL1 as
-Default. It would avoid manually adding it for every new platforms.
+> +static inline bool tun_vnet_legacy_is_little_endian(unsigned int flags)
+> +{
+> +	return !(IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) &&
+> +		 (flags & TUN_VNET_BE)) &&
+> +		virtio_legacy_is_little_endian();
+> +}
 
-Thanks,
-Kan
-
+In general LGTM. But why did you rename functions while moving them?
+Please add an explanation in the commit message for any non obvious
+changes like that.
