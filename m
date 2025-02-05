@@ -1,357 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB8D212D6A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332B821504A;
+	Wed,  5 Feb 2025 20:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786242; cv=none; b=JKNfMfbGvQy82QOc2yjBOfdvA6+tEWitkxR11eQ5gyAcVwVyiwQ1pIH2jXAKN8Ps0hUgtIFLiwhWKiYH4vgf90uP8GbhPXcky1JYR0r280TViUYgAXTdqDaTf/LPa5jE3t/dh8FvE664NooAEDlYmSJfMucvxuOpHTInVeYQ1/E=
+	t=1738786254; cv=none; b=f9gh4RNffLmC+Z+L0fVCm1A9QPBcnyNUDzFDLeYUpKJgDSf2re85Xb1AdOWBnjJ0m4PNP7mjgjPIPhyLxM34mV/pbOQyzePh2aYk2Qt3FzPH8RZMC6j9R+E0J9dfFPyFVYe9y4FHa7hdVH1Zasf5iW4sbkTt9QvM4HzHrdAR41s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786242; c=relaxed/simple;
-	bh=yFglEma1B1UrYHHlLaqVTTuVZsUxBAtaYu9Jp8rfq1E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Lf9McpUN0QSLSpEBmH2s70WHuVlsB52ctTm5zy4axOFRE+W0LsMb5sdK2pRKqdokm9k3alRotOLRg5eRh4FLm3hbwxr8FyotJYe3nH27ifRgZCuUWjtyj2rRWIorxfp6bs5jPgUzAYlyRnnQQ5X4g2YJaWRPN/Vko5eHCwbZ05E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P+Re4ZOD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738786254; c=relaxed/simple;
+	bh=AltkV5SpHD5RUI0aKQ9BmOwJVz1uB4LMWX8efj3lETg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i545t0E2y2xaIGMK1HVqYFEcX5UwkbDkQ8oETvIVryFRzeJuM0JeT6yvpFb0tlqiN4NQ2uCty5LGxx7Tau+xSUvLit49IhpLUiqg1hRHc2kqZ3daHsIIxsoAMLAmRTqUPDftd92S3+nXi+sTn3VkI4Md9n9UrcOvRmQLnm4szDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JToYd4hw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+Re4ZOD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738786240;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5rXNc9RF+BTw1D+Lqt4cYonydXBV4cosBEfjWZVPn/Q=;
-	b=P+Re4ZODHmhV933jIg3u3NSngKgWNT78Ww0o2RmmOO8zZVXWXvH6uEuoczB4yJFVaruYiW
-	W48AQLjFZ/tZu9tuweqlKheD6XdaOQ/6jtiE+mdgguNd9l1vTKlrTCi7QTMSG6w27B0R7o
-	mOs5o0bI8wqJP7Y9RIATo/rf5PAWt3Y=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-vmZibAKROxyKgLz1ZatC1A-1; Wed,
- 05 Feb 2025 15:10:36 -0500
-X-MC-Unique: vmZibAKROxyKgLz1ZatC1A-1
-X-Mimecast-MFC-AGG-ID: vmZibAKROxyKgLz1ZatC1A
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A843180087E;
-	Wed,  5 Feb 2025 20:10:35 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C0CB19560A3;
-	Wed,  5 Feb 2025 20:10:25 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Wed, 05 Feb 2025 15:08:03 -0500
-Subject: [PATCH 07/12] drm/sti: move to devm_platform_ioremap_resource()
- usage
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JToYd4hw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4347C4CED1;
+	Wed,  5 Feb 2025 20:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738786253;
+	bh=AltkV5SpHD5RUI0aKQ9BmOwJVz1uB4LMWX8efj3lETg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JToYd4hwk98TqDXKrO3uUvDKMPgU/GVkGLR+O6oyOXu/LL9YG+jWoJnLmU8AkLDMd
+	 b3bGFR+74JBR3dNID0d2mec/UqdjdGhXZcInrnpqRSOL7plUONdduOTiDFkX+nqgQ4
+	 kvlJv3UtcjLRmjipzjYtCyTgQyas/CZZwVL1VqE0fbiaKDBGoWekh8RVHD4Ihv4RWr
+	 OJTUeRg+9HG8DpZNLo64lM3FSLS/jwVoV5MQVSNmyeKHuUNm5ATkfe0i1kwgBvqlz5
+	 Xp/70ksp+sOsOptPh3cCCXXfGQ4SwYoj4ZF1Qh24eLURstUCzUYCfqM23dhWHsuBHN
+	 ceteTYYsD0lBQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 42991CE0749; Wed,  5 Feb 2025 12:10:53 -0800 (PST)
+Date: Wed, 5 Feb 2025 12:10:53 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+Message-ID: <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
+ <20250204102611.OVuHn9rS@linutronix.de>
+ <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
+ <20250204163409.ueObHFje@linutronix.de>
+ <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
+ <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+ <84pljwi2w0.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-mem-cocci-newapi-v1-7-aebf2b0e2300@redhat.com>
-References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
-In-Reply-To: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
-To: Joel Stanley <joel@jms.id.au>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
- Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, 
- Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Alain Volmat <alain.volmat@foss.st.com>, 
- Raphael Gallais-Pou <rgallaispou@gmail.com>, 
- Yannick Fertre <yannick.fertre@foss.st.com>, 
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
- Philippe Cornu <philippe.cornu@foss.st.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Alexey Brodkin <abrodkin@synopsys.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
- linux-rockchip@lists.infradead.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
- linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738786137; l=8138;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=yFglEma1B1UrYHHlLaqVTTuVZsUxBAtaYu9Jp8rfq1E=;
- b=mAr/l77+MAM0Lk/wltquMSsQ+bAoBfxv2/A9dI4DccZHjP/taolYJP+a25CTaReWEHo2kZvFi
- CcKo9WqNUGJBrY3/6HPiO1DG3zjUFVNcaw9QNZGyybGqrtBiz9H9SEI
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84pljwi2w0.fsf@jogness.linutronix.de>
 
-Replace platform_get_resource/_byname + devm_ioremap
-with just devm_platform_ioremap_resource()
+On Wed, Feb 05, 2025 at 09:00:07PM +0106, John Ogness wrote:
+> On 2025-02-05, "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> >> This is caused by RCU falling behind a callback-flooding kthread that
+> >> invokes call_rcu() in a semi-tight loop.  Setting rcutree.kthread_prio=40
+> >> avoids the splat, but still gets the shutdown-time hang.  Retrying with
+> >> the default rcutree.kthread_prio=2 failed to reproduce the splat, but
+> >> it did reproduce the shutdown-time hang.
+> >> 
+> >> OK, maybe printk buffers are not being flushed?  A 100-millisecond sleep
+> >> at the end of of rcu_torture_cleanup() got all of rcutorture's output
+> >> flushed, but lost the subsequent shutdown-time console traffic.  The
+> >> pr_flush(HZ/10,1) seems more sensible, but this is private to printk().
+> >>
+> >> I would like to log the shutdown-time console traffic because RCU can
+> >> sometimes break things on that path.
+> 
+> pr_flush() was changed to private because there were no users. It would
+> not be a problem to make it available. Adding a pr_flush() to
+> rcu_torture_cleanup() would be an appropriate workaround for now (more
+> on this at the end).
 
-Used Coccinelle to do this change. SmPl patch:
+Ah, got it.
 
-@rule@
-identifier res;
-expression ioremap;
-identifier pdev;
-constant mem;
-expression name;
-@@
--struct resource *res;
-...
--res = platform_get_resource_byname(pdev,mem,name);
-<...
--if (!res) {
--...
--}
-...>
--ioremap = devm_ioremap(...);
-+ioremap = devm_platform_ioremap_resource_byname(pdev,name);
+> > There is a call to kmsg_dump(KMSG_DUMP_SHUTDOWN) in kernel_power_off()
+> > that appears to be intended to dump out the printk() buffers,
+> 
+> It only dumps the buffers to the registered kmsg_dumpers. It is not
+> responsible for flushing console backlogs.
 
-and
-@rule_2@
-identifier res;
-expression ioremap;
-identifier pdev;
-@@
--struct resource *res;
-...
--res = platform_get_resource(pdev,...);
-<...
--if (!res) {
--...
--}
-...>
--ioremap = devm_ioremap(...);
-+ioremap = devm_platform_ioremap_resource(pdev,0);
+That would explain its not doing much for me.  ;-)
 
-v2: Fix compilation error.
+> > but it
+> > does not seem to do so in kernels built with CONFIG_PREEMPT_RT=y.
+> > Does there need to be a pr_flush() call prior to the call to
+> > migrate_to_reboot_cpu()?  Or maybe even to do_kernel_power_off_prepare()
+> > or kernel_shutdown_prepare()?
+> 
+> With CONFIG_PREEMPT_RT=y, legacy consoles only print via a dedicated
+> kthread. Without a pr_flush() somewhere, there is basically no chance
+> that they will get backlogs flushed because noone is waitig for them.
+> 
+> The new console API (NBCON) provides support for "atomic consoles",
+> which _do_ flush by transitioning to synchronous printing during
+> shutdown/reboot. Unfortunately we still don't have any NBCON atomic
+> console implemented in the kernel. The 8250 UART will be our first
+> driver, most likely available in 6.15. (With the current PREEMPT_RT
+> patch applied, the 8250 NBCON atomic driver is used.)
+> 
+> Since only CONFIG_PREEMPT_RT=y has this issue, I am not sure if we want
+> to sprinkle pr_flush() calls on all sleepable shutdown/reboot paths,
+> although that is certainly one way to handle it. For your case, adding a
+> pr_flush() to rcu_torture_cleanup() and making pr_flush() non-private
+> would be an easy solution to avoid your problem.
 
-Cc: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Cc: Alain Volmat <alain.volmat@foss.st.com>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/sti/sti_compositor.c | 10 +---------
- drivers/gpu/drm/sti/sti_dvo.c        | 10 +---------
- drivers/gpu/drm/sti/sti_hda.c        |  9 +--------
- drivers/gpu/drm/sti/sti_hdmi.c       | 11 +----------
- drivers/gpu/drm/sti/sti_hqvdp.c      | 10 +---------
- drivers/gpu/drm/sti/sti_tvout.c      | 10 +---------
- drivers/gpu/drm/sti/sti_vtg.c        | 10 +---------
- 7 files changed, 7 insertions(+), 63 deletions(-)
+Would it make sense to put a call to pr_flush() at the beginning of the
+kernel_power_off() function?  I suspect that would take care of much
+more than just rcutorture.
 
-diff --git a/drivers/gpu/drm/sti/sti_compositor.c b/drivers/gpu/drm/sti/sti_compositor.c
-index 063f82d23d80c4ba83624a0066a18416a2b37351..7aefce6706ba2cd7d97a33228c9b9812edecf06f 100644
---- a/drivers/gpu/drm/sti/sti_compositor.c
-+++ b/drivers/gpu/drm/sti/sti_compositor.c
-@@ -177,7 +177,6 @@ static int sti_compositor_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct device_node *vtg_np;
- 	struct sti_compositor *compo;
--	struct resource *res;
- 	unsigned int i;
- 
- 	compo = devm_kzalloc(dev, sizeof(*compo), GFP_KERNEL);
-@@ -194,14 +193,7 @@ static int sti_compositor_probe(struct platform_device *pdev)
- 
- 	memcpy(&compo->data, of_match_node(compositor_of_match, np)->data,
- 	       sizeof(struct sti_compositor_data));
--
--	/* Get Memory ressources */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (res == NULL) {
--		DRM_ERROR("Get memory resource failed\n");
--		return -ENXIO;
--	}
--	compo->regs = devm_ioremap(dev, res->start, resource_size(res));
-+	compo->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (compo->regs == NULL) {
- 		DRM_ERROR("Register mapping failed\n");
- 		return -ENXIO;
-diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.c
-index c6c2abaa1891cd3ea025805b50d275ec314512c3..660588f01f90950a9b2c180ab230188c19901f26 100644
---- a/drivers/gpu/drm/sti/sti_dvo.c
-+++ b/drivers/gpu/drm/sti/sti_dvo.c
-@@ -511,7 +511,6 @@ static int sti_dvo_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct sti_dvo *dvo;
--	struct resource *res;
- 	struct device_node *np = dev->of_node;
- 
- 	DRM_INFO("%s\n", __func__);
-@@ -523,14 +522,7 @@ static int sti_dvo_probe(struct platform_device *pdev)
- 	}
- 
- 	dvo->dev = pdev->dev;
--
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dvo-reg");
--	if (!res) {
--		DRM_ERROR("Invalid dvo resource\n");
--		return -ENOMEM;
--	}
--	dvo->regs = devm_ioremap(dev, res->start,
--			resource_size(res));
-+	dvo->regs = devm_platform_ioremap_resource_byname(pdev, "dvo-reg");
- 	if (!dvo->regs)
- 		return -ENOMEM;
- 
-diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
-index b12863bea95559c4f874eb94cea8938609d435d4..0b5dbaf4d5305989846e25a1cab6f82d191aa9a5 100644
---- a/drivers/gpu/drm/sti/sti_hda.c
-+++ b/drivers/gpu/drm/sti/sti_hda.c
-@@ -750,14 +750,7 @@ static int sti_hda_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	hda->dev = pdev->dev;
--
--	/* Get resources */
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hda-reg");
--	if (!res) {
--		DRM_ERROR("Invalid hda resource\n");
--		return -ENOMEM;
--	}
--	hda->regs = devm_ioremap(dev, res->start, resource_size(res));
-+	hda->regs = devm_platform_ioremap_resource_byname(pdev, "hda-reg");
- 	if (!hda->regs)
- 		return -ENOMEM;
- 
-diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
-index ca2fe17de4a5d1e0199e59a97e6c7601e139ed9e..666143c48b0d0f2c20cd26323ddbc8e69d966622 100644
---- a/drivers/gpu/drm/sti/sti_hdmi.c
-+++ b/drivers/gpu/drm/sti/sti_hdmi.c
-@@ -1380,7 +1380,6 @@ static int sti_hdmi_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct sti_hdmi *hdmi;
- 	struct device_node *np = dev->of_node;
--	struct resource *res;
- 	struct device_node *ddc;
- 	int ret;
- 
-@@ -1399,15 +1398,7 @@ static int sti_hdmi_probe(struct platform_device *pdev)
- 	}
- 
- 	hdmi->dev = pdev->dev;
--
--	/* Get resources */
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hdmi-reg");
--	if (!res) {
--		DRM_ERROR("Invalid hdmi resource\n");
--		ret = -ENOMEM;
--		goto release_adapter;
--	}
--	hdmi->regs = devm_ioremap(dev, res->start, resource_size(res));
-+	hdmi->regs = devm_platform_ioremap_resource_byname(pdev, "hdmi-reg");
- 	if (!hdmi->regs) {
- 		ret = -ENOMEM;
- 		goto release_adapter;
-diff --git a/drivers/gpu/drm/sti/sti_hqvdp.c b/drivers/gpu/drm/sti/sti_hqvdp.c
-index 0f658709c9d0d398c4eed65202443db9d0b41f8c..420395598d119a403d531211022e6005d6a2bd59 100644
---- a/drivers/gpu/drm/sti/sti_hqvdp.c
-+++ b/drivers/gpu/drm/sti/sti_hqvdp.c
-@@ -1356,7 +1356,6 @@ static int sti_hqvdp_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *vtg_np;
- 	struct sti_hqvdp *hqvdp;
--	struct resource *res;
- 
- 	DRM_DEBUG_DRIVER("\n");
- 
-@@ -1367,14 +1366,7 @@ static int sti_hqvdp_probe(struct platform_device *pdev)
- 	}
- 
- 	hqvdp->dev = dev;
--
--	/* Get Memory resources */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		DRM_ERROR("Get memory resource failed\n");
--		return -ENXIO;
--	}
--	hqvdp->regs = devm_ioremap(dev, res->start, resource_size(res));
-+	hqvdp->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (!hqvdp->regs) {
- 		DRM_ERROR("Register mapping failed\n");
- 		return -ENXIO;
-diff --git a/drivers/gpu/drm/sti/sti_tvout.c b/drivers/gpu/drm/sti/sti_tvout.c
-index af6c06f448c4819def8cc0d0836e30f991529690..0bebe815f5e7567f84388af93723a6fa7d2cc7a2 100644
---- a/drivers/gpu/drm/sti/sti_tvout.c
-+++ b/drivers/gpu/drm/sti/sti_tvout.c
-@@ -838,7 +838,6 @@ static int sti_tvout_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
- 	struct sti_tvout *tvout;
--	struct resource *res;
- 
- 	DRM_INFO("%s\n", __func__);
- 
-@@ -850,14 +849,7 @@ static int sti_tvout_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	tvout->dev = dev;
--
--	/* get memory resources */
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tvout-reg");
--	if (!res) {
--		DRM_ERROR("Invalid glue resource\n");
--		return -ENOMEM;
--	}
--	tvout->regs = devm_ioremap(dev, res->start, resource_size(res));
-+	tvout->regs = devm_platform_ioremap_resource_byname(pdev, "tvout-reg");
- 	if (!tvout->regs)
- 		return -ENOMEM;
- 
-diff --git a/drivers/gpu/drm/sti/sti_vtg.c b/drivers/gpu/drm/sti/sti_vtg.c
-index 5ba469b711b5318e9e9e6d8df127fb8933d1fac1..b5353fe774d72fd629ecd3ef75a5d2817ca8617f 100644
---- a/drivers/gpu/drm/sti/sti_vtg.c
-+++ b/drivers/gpu/drm/sti/sti_vtg.c
-@@ -380,20 +380,12 @@ static int vtg_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct sti_vtg *vtg;
--	struct resource *res;
- 	int ret;
- 
- 	vtg = devm_kzalloc(dev, sizeof(*vtg), GFP_KERNEL);
- 	if (!vtg)
- 		return -ENOMEM;
--
--	/* Get Memory ressources */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		DRM_ERROR("Get memory resource failed\n");
--		return -ENOMEM;
--	}
--	vtg->regs = devm_ioremap(dev, res->start, resource_size(res));
-+	vtg->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (!vtg->regs) {
- 		DRM_ERROR("failed to remap I/O memory\n");
- 		return -ENOMEM;
+Or maybe after the pr_emerg("Power down\n"), since that is normally
+the last thing that shows up on rcutorture's console logs.
 
--- 
-2.47.0
+I will give that a shot and see what happens.  ;-)
 
+							Thanx, Paul
