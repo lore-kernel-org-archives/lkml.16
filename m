@@ -1,184 +1,210 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BE21DC99C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A2A1DEFE8;
+	Wed,  5 Feb 2025 16:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738774326; cv=none; b=HI4lcCbXGCcCFK24v4a+wjLzasHZ1uMlY+h3N4WMaMqStAnpn6evXfUbdHicntm2rx66Mm7rloORVb/OWEWGRqRyNPjDmuruPvUAFTJ6Yf/ojUtb1hJMlrP65jwS5+pWOHRUUtvok30TbYuVXP6VH5DIWV+D2SKHPgA0dYwym3s=
+	t=1738774345; cv=none; b=GGDTt11HQVVrTHtmuFDRJF4flYg7tv6rGsl1TXGU3xSkIwqQpB7aSkG3vdnlM01P2VSMcP0CZPtmKBfRQNl9Sz1j71zK/TvH+X8QSw4Xi81i/MW1ZH0hfs2GW9ach+lDgZoN4OxXmMjf8ptJlIdRPWC1CN6dCxOOzWqaN32FLKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738774326; c=relaxed/simple;
-	bh=tZoJwRJ2KjkWu3PdSZeU5lb/3mj+u/Vb38NEkFbGITo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ei3IL/WYtNmo59C1KzsBpaJRxKsYAKZDiEbcru5dV4tXCm0ydwEnEDwKgsgWKK+/3xxblhuDSHeuXIXB/1/jlHUS4Ra0QlOqyR0/532MYJvuRQWxqoFgBrHvst/0UNsInyLKUbWHasEOzWUvgTLiliXs1EWDxlyxtIzWanTQcvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y2/4TmNI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sO/nJPt8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738774345; c=relaxed/simple;
+	bh=nsnrkEAh6apkb1p55WTRzCwnxP+iJHYtwXaFJjwk8wU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SRAp4V650P4akhAHJyx+YV/35rxmEuvlTH4YTYp0zDlM0+IdpiM2WIYcKUDvfyagi726DEzq9+LODozPVeysN/+IGD0x3KvB3zzfUNgVcqnwLzp9qwvyCPUTxY55XHt4f46ZYrFLiUX/RNG3rmNNLe6MmsnKxcP1h7sbMRHRvm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnUL6xct; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y2/4TmNI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sO/nJPt8"
-Date: Wed, 5 Feb 2025 17:52:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738774321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SVg9Z3E6PzM03ev7o49Z9kFIBEPLfIivy8HlxgMrIlM=;
-	b=y2/4TmNIBmZtIja8SFycBcMTVA03SU8W7g5lYnsBSO1eCCdzDd2974qZucEAkNNaqossR6
-	86s+9BUave0ypi/hOMbWjOD+hthffwLbMbUU4Bfab7iMJTtpYhc0+wjnp2XgR0Dbp2Qko8
-	tCFXwNDdicFNv6ZQVoStrkUkLlOSuZbCEGvxxofUPtoGvm3lQ+iYggb3MoSB59l6vRfUm7
-	bfIGEl62wJ9AbnLWwvOFXD2a0TDMZ4YApFlybu9Sm2rH9p/cipflYx1f5+uxp9l7sFS+Mw
-	OQOxgd7hEsk9ynkXlQu0e5f5RZ5twiuNunN3foga8LDauRNR6w72T+2GzB+hPw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738774321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SVg9Z3E6PzM03ev7o49Z9kFIBEPLfIivy8HlxgMrIlM=;
-	b=sO/nJPt8ERgCHi1L4DM0+aTV/namxcM3DmCL4RTeJqtngUh9Vc8+ebs0uvBm+7p211qYBQ
-	E8Xocn98gfjqcSAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 00/15] futex: Add support task local hash maps.
-Message-ID: <20250205165200.v9iduJ1S@linutronix.de>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250204151405.GW7145@noisy.programming.kicks-ass.net>
- <20250205122026.l6AQ2lf7@linutronix.de>
- <20250205125250.GD7145@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnUL6xct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FE8C4CED6;
+	Wed,  5 Feb 2025 16:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738774344;
+	bh=nsnrkEAh6apkb1p55WTRzCwnxP+iJHYtwXaFJjwk8wU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZnUL6xct2U/KJ0Xf3vylUw4r76uvD5uy+SRDD2IXx2e1gdEBdPOjVdok5iw9mffqI
+	 8S0yMCASWKjdbYiaf3DqjyBA+bTBA8mIOkKazC9BO+ivNfFhg+DsHz/owdfnzEdkfA
+	 fo4zgcz6gF6OkJdtiCHPcx5t6FZzWRb6fttAaPDfTUgVbR5L60FOhzKfHKV+NApCi+
+	 Xjv+gqgV0N0xdZMYYvhxCtxSiZc1ar48KopSEy7S8sCoYi9aTgvKZrxwIn8qIGRwgx
+	 q6odsdux2GriwEvMPynEKjVFACJDWeHAQUtxFDEItlm6BYNGzEhgKliys5mf0Li+3e
+	 JdmOQ+bGgft3g==
+Message-ID: <f83ccdb0-4d22-441f-9311-d9a2c8cd3493@kernel.org>
+Date: Wed, 5 Feb 2025 17:52:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250205125250.GD7145@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] firmware: add Exynos ACPM protocol driver
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com,
+ peter.griffin@linaro.org, daniel.lezcano@linaro.org,
+ vincent.guittot@linaro.org, ulf.hansson@linaro.org, arnd@arndb.de
+References: <20250116-gs101-acpm-v6-0-e3a2e1a3007c@linaro.org>
+ <20250116-gs101-acpm-v6-2-e3a2e1a3007c@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250116-gs101-acpm-v6-2-e3a2e1a3007c@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-05 13:52:50 [+0100], Peter Zijlstra wrote:
-> On Wed, Feb 05, 2025 at 01:20:26PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2025-02-04 16:14:05 [+0100], Peter Zijlstra wrote:
-> >=20
-> > This does not compile. Let me fix this up, a few comments=E2=80=A6
->=20
-> Moo, clangd didn't complain :/ But yeah, I didn't actually compile this,
-> only had neovim running clangd.
+On 16/01/2025 15:00, Tudor Ambarus wrote:
+> +
+> +/**
+> + * acpm_put_handle() - release the handle acquired by acpm_get_by_phandle.
+> + * @handle:	Handle acquired by acpm_get_by_phandle.
+> + */
+> +static void acpm_handle_put(const struct acpm_handle *handle)
+> +{
+> +	struct acpm_info *acpm = handle_to_acpm_info(handle);
+> +	struct device *dev = acpm->dev;
+> +
+> +	module_put(dev->driver->owner);
+> +	/* Drop reference taken with of_find_device_by_node(). */
+> +	put_device(dev);
+> +}
+> +
+> +/**
+> + * devm_acpm_release() - devres release method.
+> + * @dev: pointer to device.
+> + * @res: pointer to resource.
+> + */
+> +static void devm_acpm_release(struct device *dev, void *res)
+> +{
+> +	acpm_handle_put(*(struct acpm_handle **)res);
+> +}
+> +
+> +/**
+> + * acpm_get_by_phandle() - get the ACPM handle using DT phandle.
+> + * @dev:	device pointer for the consumer device.
+> + *
+> + * Return: pointer to handle on success, ERR_PTR(-errno) otherwise.
+> + */
+> +static const struct acpm_handle *acpm_get_by_phandle(struct device *dev)
 
-don't worry. I assumed that it is a sketch :) Let me add that one to the
-list of things to try=E2=80=A6
+"by_phandle" takes the name of the property with phandle as an argument,
+because otherwise you do not have here phandle part at all in the
+interface (see syscon API).
 
-> > > diff --git a/io_uring/futex.c b/io_uring/futex.c
-> > > index 3159a2b7eeca..18cd5ccde36d 100644
-> > > --- a/io_uring/futex.c
-> > > +++ b/io_uring/futex.c
-> > > @@ -332,13 +331,13 @@ int io_futex_wait(struct io_kiocb *req, unsigne=
-d int issue_flags)
-> > >  	ifd->q.wake =3D io_futex_wake_fn;
-> > >  	ifd->req =3D req;
-> > > =20
-> > > +	// XXX task->state is messed up
-> > >  	ret =3D futex_wait_setup(iof->uaddr, iof->futex_val, iof->futex_fla=
-gs,
-> > > -			       &ifd->q, &hb);
-> > > +			       &ifd->q, NULL);
-> > >  	if (!ret) {
-> > >  		hlist_add_head(&req->hash_node, &ctx->futex_list);
-> > >  		io_ring_submit_unlock(ctx, issue_flags);
-> > > =20
-> > > -		futex_queue(&ifd->q, hb);
-> > >  		return IOU_ISSUE_SKIP_COMPLETE;
-> >=20
-> > This looks interesting. This is called from
-> > req->io_task_work.func =3D io_req_task_submit
-> > | io_req_task_submit()
-> > | -> io_issue_sqe()
-> > |    -> def->issue() <- io_futex_wait
-> >=20
-> > and
-> > io_fallback_req_func() iterates over a list and invokes
-> > req->io_task_work.func. This seems to be also invoked from
-> > io_sq_thread() (via io_sq_tw() -> io_handle_tw_list()).
-> >=20
-> > If this (wait and wake) is only used within kernel threads then it is
-> > fine. If the waker and/ or waiter are in user context then we are in
-> > trouble because one will use the private hash of the process and the
-> > other won't because it is a kernel thread. So the messer-up task->state
-> > is the least of problems.
->=20
-> Right, so the io-uring stuff is tricky, I think this more or less does
-> what it used to though. I 'simply' moved the futex_queue() into
-> futex_wait_setup().
+Other option would be by actual phandle - see of_find_node_by_phandle().
 
-This is correct. The changed task's state may or may not be relevant.
+I would propose in such case only acpm_get() or maybe better of_acpm_get()?
 
-> IIRC the io-uring threads share the process-mm but will never hit
-> userspace.
 
-One function had a kworker prototype. There are also the PF_IO_WORKER. I
-need clarify with io_uring ppl how this works=E2=80=A6
 
-> > > @@ -451,20 +442,22 @@ int futex_wait_multiple_setup(struct futex_vect=
-or *vs, int count, int *woken)
-> > >  		struct futex_q *q =3D &vs[i].q;
-> > >  		u32 val =3D vs[i].w.val;
-> > > =20
-> > > -		hb =3D futex_q_lock(q);
-> > > -		ret =3D futex_get_value_locked(&uval, uaddr);
-> > > +		if (1) {
-> > > +			CLASS(hb_q_lock, hb)(q);
-> > > +			ret =3D futex_get_value_locked(&uval, uaddr);
-> >=20
-> > This confused me at the beginning because I expected hb_q_lock having
-> > the lock part in the constructor and also the matching unlock in the
-> > deconstructor. But no, this is not the case.
->=20
-> Agreed, that *is* rather ugly. The sane way to fix that might be to
-> untangle futex_q_lock() from futex_hash(). And instead do:
->=20
-> 			CLASS(hb, hb)(&q->key);
-> 			futex_q_lock(q, hb);
->=20
-> Or somesuch. That might be a nice cleanup either way.
 
-If you know, you know.
-We could do the lock manually in the first iteration and then try to
-hide it later on. The error path always drops it early. We could unlock
-manually there and tell the compiler that it is done.
+> +{
+> +	struct device_node *np __free(device_node);
 
-> > So the beauty of it is that you enforce a ref drop on hb once it gets
-> > out of scope. So you can't use it by chance once the ref is dropped.
->=20
-> Right.
->=20
-> > But this does not help in futex_lock_pi() where you have the drop the
-> > reference before __rt_mutex_start_proxy_lock() (or at least before
-> > rt_mutex_wait_proxy_lock()) but still have it you go for the no_block
-> > shortcut. At which point even the lock is still owned.
-> >=20
-> > While it makes the other cases nicer, the futex_lock_pi() function was
-> > the only one where I was thinking about setting hb to NULL to avoid
-> > accidental usage later on.
->=20
-> OK, so yeah, I got completely lost in futex_lock_pi(), and I couldn't
-> figure out what you did there. Let me try and untangle that again.
+That's not the expected syntax. You miss here initializer/constructor or
+this should be placed in place of initialization (just like everywhere)
+... or just drop cleanup because it does not make things much
+smaller/easier.
 
-The hash bucket reference should be dropped if the task is going to
-sleep. The try-lock path there has a fast-forward to the end.
+> +	struct platform_device *pdev;
+> +	struct device_link *link;
+> +	struct acpm_info *acpm;
+> +
+> +	if (!dev || !dev->of_node)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	np = of_parse_phandle(dev->of_node, "exynos,acpm_ipc", 0);
 
-Based on memory the unlock PI (and requeue PI) is also a bit odd because
-I need to grab an extra reference in the corner case. That is, to avoid
-a resize because I need a stable ::lock_ptr and task is no longer
-enqueued. So the ::lock_ptr will point to a stale hash bucket.
+You need bindings for this somewhere and fix the underscore->hyphen...
+and vendor prefix. It really would not be accepted that way so please
+post consumer bindings anywhere.
 
-Sebastian
+
+> +	if (!np)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	pdev = of_find_device_by_node(np);
+> +	if (!pdev) {
+> +		dev_err(dev, "Cannot find device node %s\n", np->name);
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +	}
+> +
+> +	acpm = platform_get_drvdata(pdev);
+> +	if (!acpm) {
+> +		dev_err(dev, "Cannot get drvdata from %s\n",
+> +			dev_name(&pdev->dev));
+> +		platform_device_put(pdev);
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +	}
+> +
+> +	if (!try_module_get(pdev->dev.driver->owner)) {
+> +		dev_err(dev, "Cannot get module reference.\n");
+> +		platform_device_put(pdev);
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +	}
+> +
+> +	link = device_link_add(dev, &pdev->dev, DL_FLAG_AUTOREMOVE_SUPPLIER);
+> +	if (!link) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to create device link to consumer %s.\n",
+> +			dev_name(dev));
+> +		platform_device_put(pdev);
+> +		module_put(pdev->dev.driver->owner);
+
+If you keep usage of __free(), it is fine. If you drop it, then
+implement common exit/error handling path with gotos.
+
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return &acpm->handle;
+> +}
+> +
+
+Rest looked good to me.
+
+Best regards,
+Krzysztof
