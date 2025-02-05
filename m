@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A5722DFAD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC7022B5A1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751999; cv=none; b=rQwcQ/qohkF0OSbQ3c1P6VpI+nOnKoK3M9uyNLnu9wEGodbQonso9hvH9/5WxbPatUzQkA0JG57j9dKbvh1Gs5xo4qpC9SeVLkwdqMx3EJrph1a525Q/uloiJJacK2SNPCqobV8OVbme3DcMWoJJt3MEbRqd4bMN/zBz+srDOuw=
+	t=1738751999; cv=none; b=GtMYIRVlUOpzwttrIItlplU3au7eM3Qa1uGBckYx+1mbZljQZyCay79AZJ8bQ9TYDbb/2BEplZ8MqahLHp6N5aKSnffJlNq6tf2BwzJ4h87YDoLrx1/wnJLDeIwWO+qTUXN2Nby7RdmCI59brO9jXgljKzc/VvgWMB35pUCGYYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751999; c=relaxed/simple;
-	bh=umj4jcpv/MLsNTN8pIO0bwuiPCTcD0wPH4TbqZTwuEc=;
+	bh=WDk3Pj+/QXFG7eK+JJZpo2nBVqSOunm3oDETZwEO9s4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=M9PxG1Y/vy86YN89hnM7UGTuxvwEAXgLJ9fF/pv4DX74emq758YsVfP1qOHyNABL/Kk3NAtLBdgVv58l8cGK/jwn1SSnbJ8Ge0rHTZAj0/APWWPgKczaaiIudut2MT7sjzF2QXIswMmqWis1pyHJO6zfOFXjC1C+aqWwa3iIU3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=efG+0M74; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sFMCbW54; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=sFHd/iEP9HK6ciogWFAetvGhPXvW/BKToE34SXHifqwCIUDwPYpL68dpsH/6Thu1MB74bj8ri2vHuTMCs2ZOh7XeEvYmcUZX9WOTL4FTDKCcQieBCe0iznBV2Fg+5kzpc19ooztw7tqRwU48zx/J4KP32tJ3NB+v36KIj1078CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BnJzlwd2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zDxii+3z; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="efG+0M74";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sFMCbW54"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BnJzlwd2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zDxii+3z"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738751995;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xKM/bZYQdTtqH4O/ElpgLxsoHAAVdtMhyNG3BFK3cuY=;
-	b=efG+0M743tbmHcUi/oFcmIVsvXUibuy2ehBXg+Ea5HoIh3e84pLOa3ex4KofVXkCbrEZx3
-	CM5EXfKfocQ99QyxxcCO71Cxt4S9OamjnfmYuqC0IxvszHlJjk53rKVeP1QplO5uzZ2NEJ
-	PmWS4kn9r4C7qopHCyxE+aJ07DEAkLFasZaRWENYKEvMbJn4sN6zRPvZZpk/+BISADUFWa
-	6mEMmh71fm44/fHZyzunOxHQ0Sbhr1QF8v5Ai5JgAuuItB6kmApu/cxeHk+yIzaG3yx0RZ
-	kcRiAvGNRF/bqM4qKP2baKZdWc6h5MwV3gHoBLWLa6C+ILvpvjzhaRScTvLfEw==
+	bh=aOiqioWOP7P055aeqZ3YUvgPYLoNFmwmd1hHdXSmsdU=;
+	b=BnJzlwd2TB28sdTyxrbWEY595gfcSSZZFp/8SLx4//x5oT503vtOIfeRNCmWNPlZ3GpyV7
+	8VVXzEc2aRRRQGAz/sWdu2AgHNytDo8DWqBgdr4lY4EfgxWKoQAHn/1a8ITxKORafvHOMp
+	dU3ww3NLUO60p173pwzY9snz3JJo8ufuBL0alOXj/cF9SQCBB4+i5xn4ivipUBeOddbtG6
+	cwj98d9AMH0kLDV/Ed32rzn8MsABb0clIAWXAM8Kfl6i66IdOeFjHxXtg6ZDeVu6M647mR
+	JPH7Q0qoJlEpIYlHkwZhrBateu3EPhP7bjXS0wtiA9soZKDwTSvDZ2jh1ZIoJw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738751995;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xKM/bZYQdTtqH4O/ElpgLxsoHAAVdtMhyNG3BFK3cuY=;
-	b=sFMCbW54tZHNGR+Wk6V7lpMyw+wiKiVmp4LvgT24txMIhk+hPbTM8oGNhzrdZ6tduNF35D
-	ZkNofqdtmjX+ElAw==
+	bh=aOiqioWOP7P055aeqZ3YUvgPYLoNFmwmd1hHdXSmsdU=;
+	b=zDxii+3zGTvSzG2f6YZhpsameWO9IcOOoxEBpP/KdUXqR6zITCCbP7JA4BC2KNc4T3dByO
+	B45xEeetD88sXrCw==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v2 27/31] blk_iocost: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:39:11 +0100
-Message-Id: <196d487c925411923a2d59d4bf5e366b9dac2747.1738746821.git.namcao@linutronix.de>
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: [PATCH v2 28/31] PM: runtime: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:39:12 +0100
+Message-Id: <8d1ce108b043896733ce08d3deea6e84941d499b.1738746821.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
 References: <cover.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,27 +66,29 @@ hrtimer::function with the new setup mechanism.
 
 Patch was created by using Coccinelle.
 
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Jens Axboe <axboe@kernel.dk>
 ---
- block/blk-iocost.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/base/power/runtime.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 65a1d4427ccf..ed11438eb4be 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -3004,8 +3004,7 @@ static void ioc_pd_init(struct blkg_policy_data *pd)
- 	iocg->hweight_inuse =3D WEIGHT_ONE;
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index 2ee45841486b..425c43b2d478 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1764,8 +1764,8 @@ void pm_runtime_init(struct device *dev)
+ 	INIT_WORK(&dev->power.work, pm_runtime_work);
 =20
- 	init_waitqueue_head(&iocg->waitq);
--	hrtimer_init(&iocg->waitq_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
--	iocg->waitq_timer.function =3D iocg_waitq_timer_fn;
-+	hrtimer_setup(&iocg->waitq_timer, iocg_waitq_timer_fn, CLOCK_MONOTONIC, H=
-RTIMER_MODE_ABS);
+ 	dev->power.timer_expires =3D 0;
+-	hrtimer_init(&dev->power.suspend_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS=
+);
+-	dev->power.suspend_timer.function =3D pm_suspend_timer_fn;
++	hrtimer_setup(&dev->power.suspend_timer, pm_suspend_timer_fn, CLOCK_MONOT=
+ONIC,
++		      HRTIMER_MODE_ABS);
 =20
- 	iocg->level =3D blkg->blkcg->css.cgroup->level;
-=20
+ 	init_waitqueue_head(&dev->power.wait_queue);
+ }
 --=20
 2.39.5
 
