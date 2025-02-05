@@ -1,168 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4944314A4E9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9603C1527B4;
+	Wed,  5 Feb 2025 13:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738763875; cv=none; b=YCD2l5rH4h7R7olQth6d+iDR1AiT7nBNpRNPUyT50uYUpBvHn55HbP57s4ZsOrisi2TrVX1GBEMFSAzxRkxIlcUEJ11jFYBfgACdLLUH04zO3zFSwgggZipRfcXmJ67qIr0TG8LLo4Fx4y01bR4Nr7Hd5SOnPaUy0h0xIAn5YdI=
+	t=1738763904; cv=none; b=Foc5gLIZ4FQ1o+ur4OFQzwYjraDgn/lG3t76BUU6Y6/xXE99wsgexq/XEy7XumIPXDv1vmgI7Dy/59pO1lZiSvN1X9BfCGb2hL779LYYq3O21djLubqs9JMsCT9+rDgL2pGq56jcw7S9yt9UeCxw/d49/J03euMpFSLTBkEzM74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738763875; c=relaxed/simple;
-	bh=XO6sHeHiVrk5Gbdq9A3Bv2OzdJw+JX9+2VxND3IAoRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pKpe4YY7AEQdUn4ddL0guOva7noXRs6XFff4InIkSjxb6stMdqN2UfRW1S0xaQD8pUKaI9CqCxXZvyU3WgvMvyF1KGXgic8+vTlLt44mn1wPLjw3uXK1j479L+QNfBNR0nsLkfE/Y9SYgodEFOZWb8zElhaf7hEQTnfjUIRQ7/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VgNFopqT; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738763904; c=relaxed/simple;
+	bh=ROO/Xyq7zGw20kDjrzJCf2zSIBVZG52NjTL0INzaWrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqymAchvlR20EMxEdCgZmnRBGLZlcNPHIRiP7PBNe1yKnuIOg3UuBFUHyjY89XzwVD5yQdB+kN/5IXIsL3acS2FBgsbEYSpCkezFOpLE1HtAIsyw31yWXNaqb1liI3/xd4ykT4R1zECeZ7iGhxlcuhdBxKeXPyxcJJZWLArB8vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPq5ypkO; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VgNFopqT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738763873; x=1770299873;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=XO6sHeHiVrk5Gbdq9A3Bv2OzdJw+JX9+2VxND3IAoRw=;
-  b=VgNFopqTN4lgqEB7VbrRvkg4Vuab8utTqR0qqDoMa0Ma8UunKFS5OG9n
-   jdtCg0+p93JDKkkFaKM2w2aSXevBv1TEaC+a+JafyUa9CGeTyFeO/1L4A
-   JaC5hhVxjO8LWTixHgdDmDAk0jI6rvJfPAM63KSa13QhsbrKAryQWkCWy
-   3H5aI6PquaC74V2G5AxaGJBxJyZvs2QtAai4VxSsGsFvs7qiOtSguHZFX
-   rchN4gE+AFD3+xjIdRhIAKeOUWak9I4Iw2PtLu4r8EjjMsZBN+l3biUD7
-   Qun5QS12ONWzT+i+Jkz81N/eZnhJL+yF4Rp70qoCpBKJKEXAqS5PLzlj7
-   Q==;
-X-CSE-ConnectionGUID: 7lhEcEn+TzeU1VQ4ruYnhg==
-X-CSE-MsgGUID: 9dmTT029Q6O6wWhwuAotyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39228743"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="39228743"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 05:57:52 -0800
-X-CSE-ConnectionGUID: 3ALrVzlYRwaFQIhZxqKMUw==
-X-CSE-MsgGUID: +kNG5S86R/az5WaBD4NwTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="115904238"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 05 Feb 2025 05:57:51 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tffuV-000u69-2l;
-	Wed, 05 Feb 2025 13:57:47 +0000
-Date: Wed, 5 Feb 2025 21:57:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Greg Ungerer <gerg@kernel.org>
-Subject: arch/m68k/coldfire/gpio.c:27 __mcfgpio_set_value() warn: unsigned
- 'gpio' is never less than zero.
-Message-ID: <202502052133.bpeqHMoZ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPq5ypkO"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5426fcb3c69so6126526e87.3;
+        Wed, 05 Feb 2025 05:58:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738763900; x=1739368700; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ar1iEi8LuD+VTnNSkZdX82pmybq0djpG13KHykZ13Zk=;
+        b=MPq5ypkOiN4yK2Z63k+EsC9dSv5kCjN90ZFEIK03ukvLt/6wRiBZCyjJVTSlCg9m+g
+         u+znto8LdB+etiAQie+n5BPvt1BrHK9papyxSVCluPvWWo0hMt/tlNao2tx/KDxJqvVg
+         c1crBeKYaN2Lo6wcYavW3VlPAH56xnLjtlJ/A/X+9OiSqSnsfJ8kEbIK8YVMn8bWnBO4
+         xnkyjCdt0lfoiNKiuJ0MYV+YomzvR322QI9Ne0hT/QfyX2uNlt1eNsi6IywMuYPZ+Tqy
+         dxOncvgN1D/USiOGNXtpE8HuWHUoKDcUPZUJ89NhMydAFeXSWYbeick2uGNp0lPPkzQm
+         XxmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738763900; x=1739368700;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ar1iEi8LuD+VTnNSkZdX82pmybq0djpG13KHykZ13Zk=;
+        b=ajvYAHvB0nurQaDfWQvt8VTPdA0uBH5Q8IUXhtoac5odlhYLOGUbd72+9slRY/TthP
+         gKpmZrIwE42dG66+hfUaCsRDF5pT2d43IMUW7jyDR3bl3vai1SYp9XJrdEB6RWV8nWdr
+         ITba11fUmNS+q0AWk+fXHJFw+S3FkxJ1rvA5hUYIAiK+dv/4qLkXPfuVWTR4zSvNpFIs
+         LFW6IfpEwKkCFi5P5tM6xLA24g93GJK8Tgb5NEjmngJTiuku5p1ipvM/lIO7ajQv3KmD
+         RSF9+3iLJAtErFaCpy+/JpvU3chEClbApez72j0ONqTgtAQkQKZKxS6pGNy6jarY+vqK
+         BAOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSJxSB07UcBw9wXloJquPLe2VpVLGeWkpAkX+O2SZPpDhZUIoaAr/2/5c1ucO4R6FDDRMPzqkaoA4Nuwmf@vger.kernel.org, AJvYcCUpJIvaQXyx8lwzTi3v5kl4i8vcDnEXwdf6BwMjcv0Sbxxqa0egj4gZOYU7TJ8aaXfyRvyB5ux6nNabcQ==@vger.kernel.org, AJvYcCVFnTPhy0IH+h2sRTo2DG6NMTDavS+Sa9c2NbxyRgNbqmwPJxQKgUdf8WwLbPVt/kFVBox7/vqh3vLO@vger.kernel.org, AJvYcCXxVtT2bj6sEpdNZ0F+OM5oR6XP76ptn0KTlajm/2c9rx3EabsbfDMRjIc1wLvlwRJTHNo/kRHHxGM1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws5BoH5vCdukFjhgE/cOV8xsUL8cV4gvep1WTQzdoKtdBjxEfv
+	XSvFtYPtBRK3BY2PpSZn9PoaSXZ5ALq4WP1jFOoNMDLN/Yq0tGFh
+X-Gm-Gg: ASbGncvIKJHGJe3N+4sAbhPkaD53Bh0M5rEf2NwlYVdtGCy2h+QSoadl+9zGOr5QzZF
+	V86JbBmLsnb5VpcMHsQE3rlyA/SceUjnmyxOqQ6gxWsQkRoTPl+0EuwCgNcbHWJeEv/vYeEjaXu
+	xJcjX0TL1l2+Yz1G7jURam0U0SRVSnUcqk4nxiQgqVl9yGFmgvS8ujJZfjC4LCOU4lEoGts2wY8
+	UY2TAnI5yq4FDteC9Qp7fQlsdQsJwMEbE/aRlE07gFhPCR5WCa2RenzhZa9ORwtI4i+MLNeLQWJ
+	+LSXVkDepiY12lLCusgZr5PrQ15b
+X-Google-Smtp-Source: AGHT+IHrPWFfESDy3MF+EVv4iQLpEI4ETPkzkJJamYZ4dmEkxgNT17VUpb3qygUijPvGYprd3/Y31A==
+X-Received: by 2002:a05:6512:1598:b0:540:1b2d:8ef3 with SMTP id 2adb3069b0e04-54405a68f77mr925982e87.52.1738763900285;
+        Wed, 05 Feb 2025 05:58:20 -0800 (PST)
+Received: from [172.16.183.207] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe0fe60sm1934030e87.82.2025.02.05.05.58.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 05:58:19 -0800 (PST)
+Message-ID: <8353a96d-fe39-45c2-b6da-e8083a6bdcd8@gmail.com>
+Date: Wed, 5 Feb 2025 15:58:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/5] iio: adc: Support ROHM BD79124 ADC
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Linus Walleij <linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+ <e44851669ce7e91d1295ab7352535c93b89d35bf.1738328714.git.mazziesaccount@gmail.com>
+ <20250131174118.0000209a@huawei.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250131174118.0000209a@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5c8c229261f14159b54b9a32f12e5fa89d88b905
-commit: f212140962c93cd5da43283a18e31681540fc23d m68k: mcfgpio: Fix incorrect register offset for CONFIG_M5441x
-date:   3 months ago
-config: m68k-randconfig-r072-20250205 (https://download.01.org/0day-ci/archive/20250205/202502052133.bpeqHMoZ-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
+On 31/01/2025 19:41, Jonathan Cameron wrote:
+> On Fri, 31 Jan 2025 15:37:48 +0200
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+>> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
+>> an automatic measurement mode, with an alarm interrupt for out-of-window
+>> measurements. The window is configurable for each channel.
+>>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502052133.bpeqHMoZ-lkp@intel.com/
+Hi Jonathan,
 
-New smatch warnings:
-arch/m68k/coldfire/gpio.c:27 __mcfgpio_set_value() warn: unsigned 'gpio' is never less than zero.
-arch/m68k/coldfire/gpio.c:76 __mcfgpio_direction_output() warn: unsigned 'gpio' is never less than zero.
+I just sent the v2, where I (think I) addressed all comments except ones 
+below. Just wanted to point out what was not changed and why :)
 
-Old smatch warnings:
-arch/m68k/include/asm/io_no.h:50 __cf_internalio() warn: always true condition '(addr <= 3758096384 + 536870912 - 1) => (0-u32max <= u32max)'
+...
 
-vim +/gpio +27 arch/m68k/coldfire/gpio.c
+> 
+>> +struct bd79124_raw {
+>> +	u8 bit0_3; /* Is set in high bits of the byte */
+>> +	u8 bit4_11;
+>> +};
+>> +#define BD79124_RAW_TO_INT(r) ((r.bit4_11 << 4) | (r.bit0_3 >> 4))
+> You could do this as an endian conversion and a single shift I think.
+> Might be slightly simpler.
 
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  24  
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  25  void __mcfgpio_set_value(unsigned gpio, int value)
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  26  {
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21 @27  	if (gpio < MCFGPIO_SCR_START) {
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  28  		unsigned long flags;
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  29  		MCFGPIO_PORTTYPE data;
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  30  
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  31  		local_irq_save(flags);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  32  		data = mcfgpio_read(__mcfgpio_podr(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  33  		if (value)
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  34  			data |= mcfgpio_bit(gpio);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  35  		else
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  36  			data &= ~mcfgpio_bit(gpio);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  37  		mcfgpio_write(data, __mcfgpio_podr(gpio));
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  38  		local_irq_restore(flags);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  39  	} else {
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  40  		if (value)
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  41  			mcfgpio_write(mcfgpio_bit(gpio),
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  42  					MCFGPIO_SETR_PORT(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  43  		else
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  44  			mcfgpio_write(~mcfgpio_bit(gpio),
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  45  					MCFGPIO_CLRR_PORT(gpio));
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  46  	}
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  47  }
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  48  EXPORT_SYMBOL(__mcfgpio_set_value);
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  49  
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  50  int __mcfgpio_direction_input(unsigned gpio)
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  51  {
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  52  	unsigned long flags;
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  53  	MCFGPIO_PORTTYPE dir;
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  54  
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  55  	local_irq_save(flags);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  56  	dir = mcfgpio_read(__mcfgpio_pddr(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  57  	dir &= ~mcfgpio_bit(gpio);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  58  	mcfgpio_write(dir, __mcfgpio_pddr(gpio));
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  59  	local_irq_restore(flags);
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  60  
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  61  	return 0;
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  62  }
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  63  EXPORT_SYMBOL(__mcfgpio_direction_input);
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  64  
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  65  int __mcfgpio_direction_output(unsigned gpio, int value)
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  66  {
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  67  	unsigned long flags;
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  68  	MCFGPIO_PORTTYPE data;
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  69  
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  70  	local_irq_save(flags);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  71  	data = mcfgpio_read(__mcfgpio_pddr(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  72  	data |= mcfgpio_bit(gpio);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  73  	mcfgpio_write(data, __mcfgpio_pddr(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  74  
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  75  	/* now set the data to output */
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21 @76  	if (gpio < MCFGPIO_SCR_START) {
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  77  		data = mcfgpio_read(__mcfgpio_podr(gpio));
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  78  		if (value)
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  79  			data |= mcfgpio_bit(gpio);
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  80  		else
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  81  			data &= ~mcfgpio_bit(gpio);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  82  		mcfgpio_write(data, __mcfgpio_podr(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  83  	} else {
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  84  		 if (value)
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  85  			mcfgpio_write(mcfgpio_bit(gpio),
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  86  					MCFGPIO_SETR_PORT(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  87  		 else
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  88  			 mcfgpio_write(~mcfgpio_bit(gpio),
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  89  					 MCFGPIO_CLRR_PORT(gpio));
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  90  	}
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  91  	local_irq_restore(flags);
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  92  	return 0;
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  93  }
-eac57949947fa2 arch/m68k/platform/coldfire/gpio.c      Steven King      2012-05-21  94  EXPORT_SYMBOL(__mcfgpio_direction_output);
-af39bb8b07af83 arch/m68knommu/platform/coldfire/gpio.c sfking@fdwdc.com 2009-06-19  95  
+I kept this struct with bytes matching the register spec. Doing the 
+endian conversion and then shifting would probably have worked, but my 
+head hurts when I try thinking how the bits settle there. Especially if 
+this is done on a big-endian machine. I can rework this for v3 if you 
+feel very strongly about this.
 
-:::::: The code at line 27 was first introduced by commit
-:::::: eac57949947fa24f47a2e993a1dbbfdb573b4301 m68knommu: refactor Coldfire GPIO not to require GPIOLIB, eliminate mcf_gpio_chips.
+...
 
-:::::: TO: Steven King <sfking@fdwdc.com>
-:::::: CC: Greg Ungerer <gerg@uclinux.org>
+> 
+>> +static irqreturn_t bd79124_event_handler(int irq, void *priv)
+>> +{
+>> +	int ret, i_hi, i_lo, i;
+>> +	struct iio_dev *idev = priv;
+>> +	struct bd79124_data *d = iio_priv(idev);
+>> +
+>> +	/*
+>> +	 * Return IRQ_NONE if bailing-out without acking. This allows the IRQ
+>> +	 * subsystem to disable the offending IRQ line if we get a hardware
+>> +	 * problem. This behaviour has saved my poor bottom a few times in the
+>> +	 * past as, instead of getting unusably unresponsive, the system has
+>> +	 * spilled out the magic words "...nobody cared".
+> *laughs*.  Maybe the comment isn't strictly necessary but it cheered
+> up my Friday.
+>> +	 */
+>> +	ret = regmap_read(d->map, BD79124_REG_EVENT_FLAG_HI, &i_hi);
+>> +	if (ret)
+>> +		return IRQ_NONE;
+>> +
+>> +	ret = regmap_read(d->map, BD79124_REG_EVENT_FLAG_LO, &i_lo);
+>> +	if (ret)
+>> +		return IRQ_NONE;
+>> +
+>> +	if (!i_lo && !i_hi)
+>> +		return IRQ_NONE;
+>> +
+>> +	for (i = 0; i < BD79124_MAX_NUM_CHANNELS; i++) {
+>> +		u64 ecode;
+>> +
+>> +		if (BIT(i) & i_hi) {
+> Maybe cleaner as a pair of
+> 
+> for_each_set_bit() loops.
+> 
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I kept the original for 2 reasons.
+
+1. the main reason is that the for_each_set_bit() would want the value 
+read from a register to be in long. Regmap wants to use int. Solving 
+this produced (in my 'humblish' opinion) less readable code.
+
+2. The current implementation has only one loop, which should perhaps be 
+a tiny bit more efficient.
+
+>> +			ecode = IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
+>> +					IIO_EV_TYPE_THRESH, IIO_EV_DIR_RISING);
+>> +
+>> +			iio_push_event(idev, ecode, d->timestamp);
+>> +			/*
+>> +			 * The BD79124 keeps the IRQ asserted for as long as
+>> +			 * the voltage exceeds the threshold. It may not serve
+>> +			 * the purpose to keep the IRQ firing and events
+>> +			 * generated in a loop because it may yield the
+>> +			 * userspace to have some problems when event handling
+>> +			 * there is slow.
+>> +			 *
+>> +			 * Thus, we disable the event for the channel. Userspace
+>> +			 * needs to re-enable the event.
+> 
+> That's not pretty. So I'd prefer a timeout and autoreenable if we can.
+
+And I did this, but with constant 1 sec 'grace time' instead of 
+modifiable time-out. I believe this suffices and keeps it simpler.
+
+
+Yours,
+	-- Matti
