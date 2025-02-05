@@ -1,99 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FF0228383;
-	Wed,  5 Feb 2025 09:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6A2228383
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747101; cv=none; b=fWfckWAb+2xWoSvg4LHR2XBlS5wozD53ISdMX0fGgKWqmArYQcmRDxqS3YXERZvpSry8frUbPgi7RwKTFU+/dqjUOh5MFx4bSXyCDfgyNKq8/vT4/nJWKunaD4dSq49Psfp2islEREOtRO70fsY8uTML8PUtdmc4ctv0VxrzyIg=
+	t=1738747118; cv=none; b=AMdoyVBmICZVmAcXE/4g6A3V7Z+gfrYU2u55pV3ircuUYm2VCdPViqtu+Bhh3M2Xm/Zk1DHEVm1Lgya3qevJdFxR/D5BEKpCg/SW7rIBC7wo5a+ic73ms6fzfxO3PD2gvOh8oU1LNAmI2ZO7YVVBjLEb4w+kKdnKOlkt6mCzcC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747101; c=relaxed/simple;
-	bh=BwEguvJcszdmiWk2vKx2IJNL7jjLlqmazqYLrIneYoI=;
+	s=arc-20240116; t=1738747118; c=relaxed/simple;
+	bh=ZTrw+eqXMb9fY1TmY5jb9dV7xwWdwwVtqwCuKzIeZks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIxoUJgDthCZ3j6lG0t1snD4YsE0WVC5TDCP0s0By8KEHnbRy3VkK6PfE1W7dB88S/ZWklJMCfROpkKYpo6261le0D7TQFMdzS01bR9e2sdjZEVdOf2uo8H2D+bulbWU6hT071o7VtmjZOyg9gny0WPSV/bWzlKCgiLPCc77bps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SJOCW5dU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=riNB3s5sMMFVm9zl/UmIr49T781qR/xTZeLOKD0ivQqD8y8N0zBEZH/BTjS+z0VBeBO4WtExVjV6RFPJb3Nqry6jvtJCMI8XJtoxEwmApjinT7FHxIyCjCGtXTyfq5EzGK0rvq8MGCiIZPrapnEM6PLiME6/y4unOseFRKlyvtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TRUX58dl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SJOCW5dU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D42C4CED1;
-	Wed,  5 Feb 2025 09:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738747101;
-	bh=BwEguvJcszdmiWk2vKx2IJNL7jjLlqmazqYLrIneYoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SJOCW5dUOQT0zpQz3EXD0a8AJoafowCcp5ubL+xZYZ7S/gu2+SXCTpxtPffFrbsFT
-	 kjjmkf+fBRlf2JJrwd/h3eu1IqetzRaYajiHtwv9xwR+cusPqa+5lid+ZHBHIhryqO
-	 KiF4VtchcHZEyUN/IfIQ7xHaAtwv57GrA7YXwR1U=
-Date: Wed, 5 Feb 2025 10:18:17 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Krishanth.Jagaduri@sony.com
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Atsushi Ochiai <Atsushi.Ochiai@sony.com>,
-	Daniel Palmer <Daniel.Palmer@sony.com>,
-	Oleg Nesterov <oleg@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] Documentation/no_hz: Remove description that states boot
- CPU cannot be nohz_full
-Message-ID: <2025020547-judo-precise-0b3c@gregkh>
-References: <20250205-send-oss-20250129-v1-1-d404921e6d7e@sony.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TRUX58dl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738747115;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pvRGVNikjhLpjvxhSukAM7h/M6H6qv36CH/UV/2N8p0=;
+	b=TRUX58dlBYDrd8KK7hQZoUZcyICUeiUs2kezt+DLKa1lYcjCAJsuY/bn4NJQSM+yW2sZ6H
+	fLhh8b6ZWQI0Q0Kwoi8n4hKbLu2ioPnxYc8qM0fE60wZO8Vz64rlOkyWOPovqbBfTXzm6H
+	HP6pUL2jBR7l0998Vby54lWJQtMqIxU=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-317-jdOD0sLWOZ2pwEAnAel9Kg-1; Wed,
+ 05 Feb 2025 04:18:31 -0500
+X-MC-Unique: jdOD0sLWOZ2pwEAnAel9Kg-1
+X-Mimecast-MFC-AGG-ID: jdOD0sLWOZ2pwEAnAel9Kg
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 665E71800873;
+	Wed,  5 Feb 2025 09:18:29 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.190])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F48B1800360;
+	Wed,  5 Feb 2025 09:18:27 +0000 (UTC)
+Date: Wed, 5 Feb 2025 17:18:22 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>, Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Hugh Dickins <hughd@google.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	Kalesh Singh <kaleshsingh@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/13] mm, swap: hold a reference during scan and
+ cleanup flag usage
+Message-ID: <Z6Ms3qRDXat31sKc@fedora>
+References: <20241230174621.61185-1-ryncsn@gmail.com>
+ <20241230174621.61185-8-ryncsn@gmail.com>
+ <Z3jLMwGEDysnUWpd@MiWiFi-R3L-srv>
+ <CAMgjq7CyHyoCjeBf0eNAWAFDLRf9AYbmMGG9=QTK5v5fFNm1pw@mail.gmail.com>
+ <Z423RmT4SkoDuRXl@fedora>
+ <CAMgjq7CiOFPRuxfEShkemJB9+tOJEw4sYFSndBE0pvNTEQH+YQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250205-send-oss-20250129-v1-1-d404921e6d7e@sony.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7CiOFPRuxfEShkemJB9+tOJEw4sYFSndBE0pvNTEQH+YQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, Feb 05, 2025 at 08:32:14AM +0530, Krishanth Jagaduri via B4 Relay wrote:
-> From: Oleg Nesterov <oleg@redhat.com>
+On 01/27/25 at 05:19pm, Kairui Song wrote:
+> On Mon, Jan 20, 2025 at 10:39 AM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > On 01/13/25 at 01:34pm, Kairui Song wrote:
+> > > On Sat, Jan 4, 2025 at 1:46 PM Baoquan He <bhe@redhat.com> wrote:
+> > > >
+> > > > On 12/31/24 at 01:46am, Kairui Song wrote:
+> > > > > From: Kairui Song <kasong@tencent.com>
+> > > > >
+> > > > > The flag SWP_SCANNING was used as an indicator of whether a device
+> > > > > is being scanned for allocation, and prevents swapoff. Combined with
+> > > > > SWP_WRITEOK, they work as a set of barriers for a clean swapoff:
+> > > > >
+> > > > > 1. Swapoff clears SWP_WRITEOK, allocation requests will see
+> > > > >    ~SWP_WRITEOK and abort as it's serialized by si->lock.
+> > > > > 2. Swapoff unuses all allocated entries.
+> > > > > 3. Swapoff waits for SWP_SCANNING flag to be cleared, so ongoing
+> > > > >    allocations will stop, preventing UAF.
+> > > > > 4. Now swapoff can free everything safely.
+> > > > >
+> > > > > This will make the allocation path have a hard dependency on
+> > > > > si->lock. Allocation always have to acquire si->lock first for
+> > > > > setting SWP_SCANNING and checking SWP_WRITEOK.
+> > > > >
+> > > > > This commit removes this flag, and just uses the existing per-CPU
+> > > > > refcount instead to prevent UAF in step 3, which serves well for
+> > > > > such usage without dependency on si->lock, and scales very well too.
+> > > > > Just hold a reference during the whole scan and allocation process.
+> > > > > Swapoff will kill and wait for the counter.
+> > > > >
+> > > > > And for preventing any allocation from happening after step 1 so the
+> > > > > unuse in step 2 can ensure all slots are free, swapoff will acquire
+> > > > > the ci->lock of each cluster one by one to ensure all allocations
+> > > > > see ~SWP_WRITEOK and abort.
+> > > >
+> > > > Changing to use si->users is great, while wondering why we need acquire =
+> > > > each ci->lock now. After setup 1, we have cleared SWP_WRITEOK, and take
+> > > > the si off swap_avail_heads list. No matter what, we just need wait for
+> > > > p->comm's completion and continue, why bothering to loop for the
+> > > > ci->lock acquiring?
+> > > >
+> > >
+> > > Hi Baoquan,
+> > >
+> > > Waiting for p->comm's completion must be done after unuse is called
+> > > (unuse will need to take the si->users refcound, so it can't be dead
+> > > yet), but unuse must be called after no one will allocate any new
+> > > entry. That is guaranteed by the loop ci->lock acquiring.
+> >
+> > Sorry for late response, Kairui. I went trought the code flow of swap
+> > allocation several times, however haven't made clear how loop ci->lock
+> > acquiring is needed here.  Once si->flags &= ~SWP_WRITEOK is executed in
+> > del_from_avail_list() when swaping off, even though the allocation
+> > action is still on going, it will be failed in cluster_alloc_range()
+> > by the 'if (!(si->flags & SWP_WRITEOK))' checking. Then that allocation
 > 
-> [ Upstream commit 5097cbcb38e6e0d2627c9dde1985e91d2c9f880e ]
-
-It's just the documentation part of that commit, not the full one.
-
-> Documentation/timers/no_hz.rst states that the "nohz_full=" mask must not
-> include the boot CPU, which is no longer true after:
+> Hi Baoquan,
 > 
->   commit 08ae95f4fd3b ("nohz_full: Allow the boot CPU to be nohz_full").
+> Thanks for the careful review.
 > 
-> Apply changes only to Documentation/timers/no_hz.rst in stable kernels.
-
-You dropped the rest of the changelog text here :(
-
+> > requirement will be failed and returned, means no new swap entry|slot
+> > allcation will be done. Then unuse won't be impacted at all. In this
+> > case, why do we care about it?
+> >
+> > Please forgive my stupidity, could you elaborate in which case this kind
+> > of still ongoging swap allocation will happen during its swap device's
+> > off? Could you give an example of the concurrent execution flows?
 > 
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> Cc: stable@vger.kernel.org # 5.4+
-> Signed-off-by: Krishanth Jagaduri <Krishanth.Jagaduri@sony.com>
+> There is no barrier or lock between clear the flag and try_to_unuse,
+> so nothing guarantees the "if (!(si->flags & SWP_WRITEOK))" in
+> cluster_alloc_range will see the updated flag. The loop ci->lock acts
+> like a full memory barrier, ensuring any allocation after the loop
+> lock will definitely see the updated flags, and try_to_unuse will only
+> go on after all allocation have either stopped or will see the updated
+> flags. In practice this problem is almost impossible to happen, but in
+> theory possible.
 
-And you dropped all the other signed-off-by lines :(
+Got it now. swap_avail_lock is not taken during allocation, and we don't
+take it when accessing si->flags in cluster_alloc_range() becasue that
+could bring in new lock contention.
 
-> ---
-> Hi,
-> 
-> Before kernel 6.9, Documentation/timers/no_hz.rst states that
-> "nohz_full=" mask must not include the boot CPU, which is no longer
-> true after commit 08ae95f4fd3b ("nohz_full: Allow the boot CPU to be
-> nohz_full").
-> 
-> This was fixed upstream by commit 5097cbcb38e6 ("sched/isolation: Prevent
-> boot crash when the boot CPU is nohz_full").
-> 
-> While it fixes the document description, it also fixes issue introduced
-> by another commit aae17ebb53cd ("workqueue: Avoid using isolated cpus'
-> timers on queue_delayed_work").
-> 
-> It is unlikely that it will be backported to stable kernels which does
-> not contain the commit that introduced the issue.
-> 
-> Could Documentation/timers/no_hz.rst be fixed in stable kernels 5.4+?
+Thanks a lot for patient explanation.
 
-Does the documentation lines really matter here?
-
-At the very least, we can't take this as the signed-off-by lines are all
-gone.  Please resend with them all back, and then make a note that you
-are only including the documentation portion and why.
-
-thanks,
-
-greg k-h
