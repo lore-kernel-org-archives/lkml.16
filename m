@@ -1,78 +1,103 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B46215176
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373B4215176;
+	Wed,  5 Feb 2025 23:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796887; cv=none; b=YFjVw/H5JBB1ZrIj0QyrCoFIhlP18MtERl0yxXucALZ3XHdVXvsIMbs9y+kEy4CPRft5mq6YLhApMOG664c2qW9QRNqmRG88epGTn2ZPXmNPRonhdDkd+/lz6pWX0zzop/1hvT+JX5QEIiJrtWqTXz71YbULZV+NSzSxKeQ0Ebo=
+	t=1738796918; cv=none; b=gXzOCgYeyhFgoMfi9N/E7Ch9flKncr00a8DiW3ra2bLpbBCe+WJkAVKoNX5QfluPBYoKAmmYTZdXO//v7Kejm5kfmmUrVj4zZFziLnihEsQwb4B8abx7X4/+LmZuKkAnK/qE7g1wHPR5uN3e2eiit7KJ3q4KoVDqw99RZ37Q868=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796887; c=relaxed/simple;
-	bh=gjX7MpOXiEdWUVzmp8FAMhN0rxb7kDg5PRP3n16r7ao=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=cplpTGLuM4zb/J5dU77IrGK8QZ4fB2ZLwxpoByrDCoRt4cCkzqwXbcgQmnrG27FmxFtNcGdI+ED1fKOXC6A9neRG/1T7A0+yWfIGB7eTxnFcWz2L1uqwLj9UtjerqLI7vEmUEsK56ixZ/+4viyFUNqMK847T5A6r5WWPDKMLgyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3cf64584097so2194905ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 15:08:05 -0800 (PST)
+	s=arc-20240116; t=1738796918; c=relaxed/simple;
+	bh=fuDkEVMB8kWb5BIlq15+1fTm+CoSPxa8lvWLL5RgHxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PRBPtsNtTuWK1Nr58yjZIcalkqo5oN42IKCbAmbkc5ub6FuDotv6Lmsx/sH5qc0SHXlJGU4+j9FITT/iaPVQmR4VnnnTJoncQ2LXhTpfseflIjtVremc7ReT495iEN1kE385fzNbIe7Zced7/wShhmzr1SGtyy74/ouV24p6Dhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpbhfii0; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpbhfii0"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30616d71bb0so3275971fa.3;
+        Wed, 05 Feb 2025 15:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738796915; x=1739401715; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fuDkEVMB8kWb5BIlq15+1fTm+CoSPxa8lvWLL5RgHxo=;
+        b=gpbhfii0Vggl6Ge4G3PlddedrcgpAnsGzsuzVINBLC09ekEvpJ1uh3n3zO3QcvBA1k
+         mmkc6E5B1qaJzjCd9Nguax+5eBuAmPlIN94/uQnLm1d4NaYfMEa7P/Q1fi+n3cWAcFrv
+         nAcRJepD8Ax+JG1/W18i05Ql08xZwETp932YSoIOPpX0lQZre2ShmRccqN4rwP/6TKqT
+         K50tlOq5TGLarQk1HPd8lwKgEvg/JGUKlpbaEba+cvyZYbI0Ktz+I28PRrp+ux2FnLhn
+         wW/xXHLW1ewoOH2jTBmrvfQv/jzzHvONP1tiLEEjzat9HmtgAhd1/3a/LoA1aB4qyW9I
+         JmTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738796884; x=1739401684;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSZdvRE5PK/E0Oh4UzYD1ELq7dQSHG2PmpvdOlnTPIA=;
-        b=LBq5ECSA368guzjTsAwmjbmVacAhXK85hq5L/rPZ/iRBvhTbN93+Nvt2NzhuIpH/WP
-         +bI3xkutDmdRcB0JFmih/pwIiLn3Rpigz9JWk66n62rUtR+yiY/2cA12G5KFNUAicTtp
-         InsiItyOqW15w6weLvg9Do6ZBnn4KAYMt2rGgRFgtO/0Y0wddj30mPhG/7ABYeqMQuRF
-         5vLiGVO/a7KDHucPAxyTpbx0i2ljv/X91Qt87XVpo5PPRPz7aVuYVkzSZfj7HoAgmi+T
-         HTztTtuzZFgF+QzFiiTqwwmybJVTGvsLNp3YXATWU6LBfasPWdthTSX98ykSNyMvcg4N
-         y/1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUni+C+RnpHchFovvrumYke378/U4hlRCqyiI6Ft3bXNZxz7Wym8HtEkL2Bz0X9DzIjrobcS4Lmi3F80tA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpvwQf7zmWcmx9Ebn0SpMKfnLHDZnEj28b95Mq/zPXpmMhsGKK
-	pCAerCBJ4/Q+e271S799/OeYUH5lbn+Sz+5mV1HE+ePoZsWIxQjBG4RJjXbNDcMMgeAGUtcX9Cx
-	veowUdRbBzowjhFV48hvUSc65YacHwQ2bm4cYFAbKA8UOxcu/fwwyJhk=
-X-Google-Smtp-Source: AGHT+IHRMCsb53bYihT7UWLgEohjNBloMBrHSCbCvfiZOZcFGwdrxwtexKt91m1hpu0359YwFtCoWWSfHtY7xH7QWO+xpXcmA2sO
+        d=1e100.net; s=20230601; t=1738796915; x=1739401715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fuDkEVMB8kWb5BIlq15+1fTm+CoSPxa8lvWLL5RgHxo=;
+        b=p3K/mL3b9inrCFpwhcCwYv+01VceHC2Pq9pRpWKTTrFSDZdflm6fSVbpp6wJkGukCD
+         uAF/FnGvikmOwo3E2ZS6EnO3ASTteDoxKqPqz5u+es8J8zqrncrxrUH9OI2ZUYh2Nw+4
+         4ldD6dM90Yr+W3C3XZi3nAoneJ55BElXfpUEufIxHyqRtRY5UrK0Izbx9WOHSpTXCLO6
+         APDgk5/nRNIguyDUwPbZ2U0krK2GhbO5gjG934/UsHnEVgSsPRj1Vl+aZNix9ew/IjWJ
+         W7uLkkBOGYZsztlvjgPyUEOdbSRqtjj5RtW6GEuhlX3PIYDehJWegchZCQdP9svb45ZW
+         H7PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqNDzmL2O3J5ngQPGxC+YpKi5Ut5DBvpJW5/bDwhzSLgP8nuj2SYlZ/UBz0baNId1AaN/M5C7UqSvQtLc=@vger.kernel.org, AJvYcCXjMxqtZo4fa6dXlUfAdxeacnDgIfZ15+4+43oP6bRKIlemGpEQPLR48t1HopI54aiTbaImMrkhYXv8NegHTdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxCFXlpGZDIJddUSNhdNnkF7fL8oLYjG+aVJVr0jRXkf6WxonD
+	j3q5By4zMaWUss65PM9WUSxptjTo6JGaFiTu2/1bLqgG/aW+/NJFog6RR5/2LG42bQ2o+XMkYtn
+	9LUKWluAtQWfF3cSLSq49tWVydQg=
+X-Gm-Gg: ASbGncu1i8D9zZfm9dKPcN55+gzenyMze4t+YZDuD6IZBnCHozBduOr3mClSnQl/J6u
+	uHhPrU7BXiFkwd8NuJbte2KwHqUZxVBBwrIMxRYxOOCkK71UC6MpVColpAtkglG7hS6rUPml6Cy
+	8KEa7ftGn4+E9q466F8pOKcr+hdEQe
+X-Google-Smtp-Source: AGHT+IGXtWJu1TuEzqD2mC0rHrBhNn8jf2CoT5OcbuaYRRc/MtWYWlzfKTExPmHCLgov+AB6zIYwwAr3GPgvUW4f/5U=
+X-Received: by 2002:a2e:be0d:0:b0:302:4115:acc with SMTP id
+ 38308e7fff4ca-307cf3819ebmr15102291fa.26.1738796914900; Wed, 05 Feb 2025
+ 15:08:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:156f:b0:3ce:9149:a8b1 with SMTP id
- e9e14a558f8ab-3d04f42c60bmr36747655ab.9.1738796884674; Wed, 05 Feb 2025
- 15:08:04 -0800 (PST)
-Date: Wed, 05 Feb 2025 15:08:04 -0800
-In-Reply-To: <6770ec42.050a0220.2f3838.04a5.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a3ef54.050a0220.19061f.05f1.GAE@google.com>
-Subject: Re: [syzbot] [exfat?] INFO: task hung in exfat_lookup (3)
-From: syzbot <syzbot+73c8cd74d6440aef4d6a@syzkaller.appspotmail.com>
-To: Yuezhang.Mo@sony.com, andy.wu@sony.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, linkinjeon@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	sj1557.seo@samsung.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, 
-	wataru.aoyama@sony.com, x86@kernel.org, yuezhang.mo@sony.com
+References: <20250201-fix-mac-build-again-v1-1-ca665f5d7de7@gmail.com> <CANiq72kDzfDhzE4ZiZ2YEtOmFwh5u9pwy-_76xRURd9WabPEdA@mail.gmail.com>
+In-Reply-To: <CANiq72kDzfDhzE4ZiZ2YEtOmFwh5u9pwy-_76xRURd9WabPEdA@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 5 Feb 2025 18:07:58 -0500
+X-Gm-Features: AWEUYZkMk_m_U_88hDFjqAEJY5HLb1KkTzQ-eoIGeyChu1oEsxjZ4sqZJV55FXM
+Message-ID: <CAJ-ks9nh=oM=d4dyJz_Pi3M=46QGRpcqX699muB+qvd01ZuRFA@mail.gmail.com>
+Subject: Re: [PATCH] rust: use host dylib naming in rusttestlib-kernel
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot suspects this issue was fixed by commit:
+On Wed, Feb 5, 2025 at 6:05=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Sat, Feb 1, 2025 at 6:40=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+> >
+> > Fixes: 0730422bced5 ("rust: use host dylib naming convention to support=
+ macOS")
+> > ---
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> Spurious `---`, but I have fixed it on my side.
+>
+> I also noticed another recent message from you with an empty line
+> between tags too. Something strange is going on with the tags you add.
+>
+> Cheers,
+> Miguel
 
-commit a5324b3a488d883aa2d42f72260054e87d0940a0
-Author: Yuezhang Mo <Yuezhang.Mo@sony.com>
-Date:   Mon Dec 16 05:39:42 2024 +0000
+Thanks for fixing it. I think in this case the SoB came from the b4
+cover letter rather than the commit itself, which is why it appeared
+after the `---`.
 
-    exfat: fix the infinite loop in __exfat_free_cluster()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ab01b0580000
-start commit:   9b2ffa6148b1 Merge tag 'mtd/fixes-for-6.13-rc5' of git://g..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4c4096b0d467a682
-dashboard link: https://syzkaller.appspot.com/bug?extid=73c8cd74d6440aef4d6a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101d6adf980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d100b0580000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: exfat: fix the infinite loop in __exfat_free_cluster()
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+I'll audit to make sure all my commits are properly SoB'd and file a
+bug with b4 if necessary.
