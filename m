@@ -1,40 +1,71 @@
-Received: from mail-m1973175.qiye.163.com (mail-m1973175.qiye.163.com [220.197.31.75])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D5F22ACE4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.75
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738754912; cv=none; b=hvs1olcmc1BQ2AO+IoQIuzj8tebRmKLbz2TanBVy8G2m54lgcUu7pjkqCXDrtm4ccvLvdVpJrDkPfk8fJRLkdvP0AoGxr4zKxw59r3UAHul8ssGik8R9vxBtkUCO0UoM7IvtAla3kRmb+u4DvFCA/e6P+BSCu5M0MnpSnQy/mQ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738754912; c=relaxed/simple;
-	bh=KNAv5K1kht2/14jDPUX/IaHi4hI+Dh+LTTdvd038qJI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q9QGsFhPsofbzcuF+7SCtl4BtbGrerQwWgID29fEtAMfAGazHAJJXmpaWaKb7yzjO6ajOKblidGd4HUIaAMGMag4MlQBqWOZApUJZBLmzmPkTQHODZrpWaqFCXdvCuITqi4k5mj17kKhQjVDYyOdxewsFrp9qBA51CivwwFqz1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=NmSqdVmX; arc=none smtp.client-ip=220.197.31.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DECC22CBEC;
+	Wed,  5 Feb 2025 11:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738754923; cv=fail; b=c9/9wOp6w8JXHKd1ari2OywBNQKORWvCX4MeVKt3RpFvzxyZTIBn5xPRjkRJ42gdx4wqEuhiK0tBQe0aStzCPt1hFEyqiQ9UyRoAkWQvTh+MBSAAVRWsQKjtPZGiZnT6uB5y2cHV/N6doLy9FOHdUQl6ED3tEBpBjzbUvLzIl9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738754923; c=relaxed/simple;
+	bh=dG6h0ZhiyW4zZDfibagNWPFupt1FSF6lhdL2bC2/JqU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D5G9IRrMXeYq1xU23hcUtMowXOWA1cCECdpoP0dEB0xaMgb83Tn4964t6gUjAyT/85rFXQh41g2zdf1sgi9JRMLsehN4db/Rn1eOI1a21l/enMvbgBo6IKHo9QGCRXVXO2pb4Hn8ZOgTECykYkEXdfbwZj35h/1A1JbKRIrGX4U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eAbJITiG; arc=fail smtp.client-ip=40.107.94.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="NmSqdVmX"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id a3bebbd2;
-	Wed, 5 Feb 2025 18:52:59 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	heiko@sntech.de
-Cc: dmitry.baryshkov@linaro.org,
-	linux-phy@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v7 4/4] phy: phy-rockchip-samsung-hdptx: Add eDP mode support for RK3588
-Date: Wed,  5 Feb 2025 18:51:57 +0800
-Message-Id: <20250205105157.580060-5-damon.ding@rock-chips.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eAbJITiG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hDPo8vHfA8FUkp+KQoir31WmuSMpE8RIdBMLXprfAWa2S1JLJPkW4HxYzk9TisCFMnzuO1NBcV8NK1a6FJPgGpYaJXjWkxHIwRGXRY/B9Kl1GOQdzKJTtPbYP0TGjsJ79K/wmVgZVr45IpBh8BS/TkwBv9qSyt317OS8G2yHjO2T8eTPjpolaTWLK5JFrmroGZCClRAG9rOziJZSPufpuo+K92WJTABJ1kGowbBTbn75CRHXHNHoycXVx2aONCNgZs0yXzm+pzknXKrQW0JIPpRMhZy6Z4JJquvCHnpIA9CgGHtA/hpHVHmP40tqw9ey+NRQ0uJiZqWQjlEod+r1hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FrKzhYJ2s1I81LO4d2M4m2UJknIyrCxOljqyby/50po=;
+ b=Z7HUz2NQ3ppVsB+yJFim0q0bAZoTZTa/fIM1DIyKGk68LZ/fU9UB9dZP6RU/Uh2uCMxXXNzQeAd8XjCJLUUGOk7P21/RtyMbOLH2VPevhWBatdmNNunogUVg85aeAvsrVNIxPYsFWJgJnAPcAapffbu2A6g38AMdbUvUPX8I6TFL15ENl3yzJ5zSFcUKeoeidXPJoGGjonUsDj03WH3Da+sXckRACYHBoNr1+u5sb8MB3HJRltcT7tA+ceUziUx2R2zbYVziUCslFSncKw2N8evUW+8/j99S03IdiIgGrsE9w0ga5jeReqg/JfSVu76K+t1iWwex3LWLIQqxT1LtTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FrKzhYJ2s1I81LO4d2M4m2UJknIyrCxOljqyby/50po=;
+ b=eAbJITiGB6mD+aA873jMg+si/THsF9BGIPzi7FOPX5DnNRYmOWcauuVtkm38ilXhYFgr28yn3uueGXHMTvZaZuIztKvrxR+5AYkPvla2heLFZLAusQ//M65MdBx824/CcmURHGVRwIH2pQW28TiCuiDmaV1nZ2Y6233gbHMUdh0=
+Received: from MN2PR13CA0023.namprd13.prod.outlook.com (2603:10b6:208:160::36)
+ by DM6PR12MB4339.namprd12.prod.outlook.com (2603:10b6:5:2af::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
+ 2025 11:28:38 +0000
+Received: from BL02EPF0001A103.namprd05.prod.outlook.com
+ (2603:10b6:208:160:cafe::53) by MN2PR13CA0023.outlook.office365.com
+ (2603:10b6:208:160::36) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.25 via Frontend Transport; Wed,
+ 5 Feb 2025 11:28:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A103.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Wed, 5 Feb 2025 11:28:38 +0000
+Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
+ 2025 05:28:34 -0600
+From: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
+To: <gautham.shenoy@amd.com>, <mario.limonciello@amd.com>,
+	<rafael@kernel.org>, <viresh.kumar@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>, "Dhananjay
+ Ugwekar" <dhananjay.ugwekar@amd.com>
+Subject: [PATCH 11/12] cpufreq/amd-pstate: Use scope based cleanup for cpufreq_policy refs
+Date: Wed, 5 Feb 2025 11:25:22 +0000
+Message-ID: <20250205112523.201101-12-dhananjay.ugwekar@amd.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205105157.580060-1-damon.ding@rock-chips.com>
-References: <20250205105157.580060-1-damon.ding@rock-chips.com>
+In-Reply-To: <20250205112523.201101-1-dhananjay.ugwekar@amd.com>
+References: <20250205112523.201101-1-dhananjay.ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,1150 +73,180 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRpJSFZCTU8eSR0aHx9MThhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a94d5bde4ca03a3kunma3bebbd2
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mio6Egw*MjIRKAoNOUwdGDwi
-	Ny8aCR5VSlVKTEhDTE5JTENLTEpNVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPS0NMTjcG
-DKIM-Signature:a=rsa-sha256;
-	b=NmSqdVmXHL6MoKmO4wMUh7lA1QkOc+xpgSndiJnyMr/KJ63Wj6/G5v/igTT7ZJiOK+w2m85FYofQi0SK2+5uNeedPjO2NEgdtEL5xZUJgmVupXYLb2uJMr96RyutxpRrn8qoUhBDPBCfGikuB2HLPDI09TU424PzZJU0KB8I27U=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=1Dy+GqkP+1dDbNnMaiWNvtOxMHp6HgbNJPZpAQHK7iA=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A103:EE_|DM6PR12MB4339:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40531d0f-faef-44b4-3931-08dd45d83c28
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GQksj0Xz5V2XLx10Xjh3EqK/6OwOuOSmTowUKY9SqTEmr4znuEPjCAp8xrdY?=
+ =?us-ascii?Q?63OzEnvlzRRXPTmnKOPSJElF6j7Oo+HH1hzn0vhIdAwPs86LDqipTJkPwJky?=
+ =?us-ascii?Q?GCiFqKqhUrmOOtfkNEZSiPeT5960cGem0pkLxyrAMZZBxEA1ZliiCii3BKiJ?=
+ =?us-ascii?Q?pdp7ItWSSi8BDnnocCXdOwq5nsvVJLJuPkh+HTERXUkok5yY6rrhEmsGNm8z?=
+ =?us-ascii?Q?qxqWynf5qgzmmYdrVobhVPuRkGRoIIyfsecpa45r/YiGtN9G6tEUuHBtBFnB?=
+ =?us-ascii?Q?aDF/AKa6yoiJRfvc0TVYT0zQxGn2H1FwIPU0YA6NuFH7T1UNuZeNcq0Q5sHl?=
+ =?us-ascii?Q?pVI6GxaEpyNjhTEjv09Nr4a9Dauy1Dv7/1MBQzG3Yr1dlJd0c5uHlgYDFhnD?=
+ =?us-ascii?Q?LMrDYdmXhWQYAgOKHtgEyRIAdM/njEsPdnGTqQ/bpTkgCFeqanwXrFScr+vI?=
+ =?us-ascii?Q?9kTV/yg0BawrHcRrEPCIxAoAwVxt9NCzcGOMXWV49p/pLnuVimTri9uz1z7w?=
+ =?us-ascii?Q?OwyKGPfIXkT1+6t+9f3X7lJUR55kleLz8K3o0Epym/J+XhYReFe88kH9b6ya?=
+ =?us-ascii?Q?kNXxt3grEuPu5uceR/JZizu1nVh6yM+OZGL/RQpp9nP16bdpFqSvRbygo308?=
+ =?us-ascii?Q?/iMnIqdgpRHjCSQpjEdm3a0zTBnuKbdozF4HWTm7GMLLhmnsTDjeRRj5YsMi?=
+ =?us-ascii?Q?8kzfgOlIQqlL+WXKUTJzdaN3oQSRFulzyzLctPYdD6I/2vVeXbkSloJ71g6p?=
+ =?us-ascii?Q?wYIy9UKrudzhs1gQOisHEghxWF2ySx4zDvex1BPTw/RFPH03yFu6ODy6eKzg?=
+ =?us-ascii?Q?RE3Hui7kx+yHPQPqMmDRFw/L1GQVzUP6ibpRi1GxH8JONI4XefpRtAakv2J0?=
+ =?us-ascii?Q?O9w9Olu68QVaIOTO2/dPR4b7pqX3acIzseIw8Efr8lLBQ9PWbqLzLxMJ6yFi?=
+ =?us-ascii?Q?bqKNbwrX8X0ueFxcC9NwAKpwY5q9IJxyN8ZejElMQXS3KQpOS3Ji2vm39Z+L?=
+ =?us-ascii?Q?3BoORXwEtPzEjz8jWOysdmGkQq67p32STLjMJSYH8v79nyBr0XZGXAFrgXNz?=
+ =?us-ascii?Q?XbeWuvJ68qp5fl8XfwBIDtwtATfe0DBXxka2qIjvIQlLm5jenLS/4WxErW6U?=
+ =?us-ascii?Q?bE8Oh3+Zw7EVYAH0ie+NDweAQy297XKl+4ZM8DZQcc7w64+oQVGVMVGF9YsO?=
+ =?us-ascii?Q?EZ8UEFOs8PrQmMJWwnb/EDodpg8Rot4LqdsgS3rSumpc6xLAqCDYWIgUYBOI?=
+ =?us-ascii?Q?SZQH9K8khByP4n+IfQz/7UCVPx6He2HwPXDxgmzwpFXWn+bCU3iSkhypyvMl?=
+ =?us-ascii?Q?GdKbWG8b9gL9zIgK5AQVcG8iu7rdDQ2cMBswny8Oh0OmFW/0n/1xuHDHLK+1?=
+ =?us-ascii?Q?cLkAGDJU7uNgWhkB/BoJtHJ4i2Zt9cQpSZqAQM3ixj6zmts1xQhBr9aukIOc?=
+ =?us-ascii?Q?PWgYvISCvqtRBcdBq/gHIp+xBtv8ztj9NkzLJ10NMti8vDoKgNhJ/NHYMZn4?=
+ =?us-ascii?Q?i3It74a+9EvqxDA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 11:28:38.0374
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40531d0f-faef-44b4-3931-08dd45d83c28
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A103.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4339
 
-The PHY is based on a Samsung IP block that supports HDMI 2.1, and eDP
-1.4b. RK3588 integrates the Analogix eDP 1.3 TX controller IP and the
-HDMI/eDP TX Combo PHY to support eDP display.
+There have been instances in past where refcount decrementing is missed
+while exiting a function. Use automatic scope based cleanup to avoid
+such errors.
 
-Add basic support for RBR/HBR/HBR2 link rates, and the voltage swing and
-pre-emphasis configurations of each link rate are set according to the
-eDP 1.3 requirements.
-
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
+Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
 ---
+ drivers/cpufreq/amd-pstate.c | 25 ++++++++-----------------
+ include/linux/cpufreq.h      |  3 +++
+ 2 files changed, 11 insertions(+), 17 deletions(-)
 
-Changes in v2:
-- Add the module author
-
-Changes in v3:
-- Split this patch into two, one for correction and the other for
-  extension
-
-Changes in v4:
-- Add link_rate and lanes parameters in struct rk_hdptx_phy to store the
-  phy_configure() result for &phy_configure_opts.dp.link_rate and
-  &phy_configure_opts.dp.lanes
-
-Changes in v5:
-- Reuse the existing functions rk_hdptx_phy_consumer_get() and
-  rk_hdptx_phy_consumer_put()
-- Return 0 instead of -EINVAL in rk_hdptx_phy_configure()
-- Remove rk_hdptx_phy_lane_disable() and related check of 0 lanes
-- Mention the design details in the commit message
-- Remove unnecessary rk_hdptx_phy_set_mode()
----
- .../phy/rockchip/phy-rockchip-samsung-hdptx.c | 879 +++++++++++++++++-
- 1 file changed, 869 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index 5aec854c74b5..e318a46b8be2 100644
---- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-+++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -25,6 +25,7 @@
- #define HDPTX_I_PLL_EN			BIT(7)
- #define HDPTX_I_BIAS_EN			BIT(6)
- #define HDPTX_I_BGR_EN			BIT(5)
-+#define HDPTX_MODE_SEL			BIT(0)
- #define GRF_HDPTX_STATUS		0x80
- #define HDPTX_O_PLL_LOCK_DONE		BIT(3)
- #define HDPTX_O_PHY_CLK_RDY		BIT(2)
-@@ -44,6 +45,7 @@
- #define LANE_REG(n)			HDTPX_REG(n, 0300, 062d)
- 
- /* CMN_REG(0008) */
-+#define OVRD_LCPLL_EN_MASK		BIT(7)
- #define LCPLL_EN_MASK			BIT(6)
- #define LCPLL_LCVCO_MODE_EN_MASK	BIT(4)
- /* CMN_REG(001e) */
-@@ -61,28 +63,88 @@
- /* CMN_REG(002f) */
- #define LCPLL_SDC_DENOMINATOR_MASK	GENMASK(7, 2)
- #define LCPLL_SDC_NDIV_RSTN_MASK	BIT(0)
-+/* CMN_REG(003c) */
-+#define ANA_LCPLL_RESERVED7_MASK	BIT(7)
- /* CMN_REG(003d) */
-+#define OVRD_ROPLL_EN_MASK		BIT(7)
-+#define ROPLL_EN_MASK			BIT(6)
- #define ROPLL_LCVCO_EN_MASK		BIT(4)
-+/* CMN_REG(0046) */
-+#define ROPLL_ANA_CPP_CTRL_COARSE_MASK	GENMASK(7, 4)
-+#define ROPLL_ANA_CPP_CTRL_FINE_MASK	GENMASK(3, 0)
-+/* CMN_REG(0047) */
-+#define ROPLL_ANA_LPF_C_SEL_COARSE_MASK	GENMASK(5, 3)
-+#define ROPLL_ANA_LPF_C_SEL_FINE_MASK	GENMASK(2, 0)
- /* CMN_REG(004e) */
- #define ROPLL_PI_EN_MASK		BIT(5)
-+/* CMN_REG(0051) */
-+#define ROPLL_PMS_MDIV_MASK		GENMASK(7, 0)
-+/* CMN_REG(0055) */
-+#define ROPLL_PMS_MDIV_AFC_MASK		GENMASK(7, 0)
-+/* CMN_REG(0059) */
-+#define ANA_ROPLL_PMS_PDIV_MASK		GENMASK(7, 4)
-+#define ANA_ROPLL_PMS_REFDIV_MASK	GENMASK(3, 0)
-+/* CMN_REG(005a) */
-+#define ROPLL_PMS_SDIV_RBR_MASK		GENMASK(7, 4)
-+#define ROPLL_PMS_SDIV_HBR_MASK		GENMASK(3, 0)
-+/* CMN_REG(005b) */
-+#define ROPLL_PMS_SDIV_HBR2_MASK	GENMASK(7, 4)
- /* CMN_REG(005c) */
- #define ROPLL_PMS_IQDIV_RSTN_MASK	BIT(5)
- /* CMN_REG(005e) */
- #define ROPLL_SDM_EN_MASK		BIT(6)
-+#define OVRD_ROPLL_SDM_RSTN_MASK	BIT(5)
-+#define ROPLL_SDM_RSTN_MASK		BIT(4)
- #define ROPLL_SDC_FRAC_EN_RBR_MASK	BIT(3)
- #define ROPLL_SDC_FRAC_EN_HBR_MASK	BIT(2)
- #define ROPLL_SDC_FRAC_EN_HBR2_MASK	BIT(1)
- #define ROPLL_SDM_FRAC_EN_HBR3_MASK	BIT(0)
-+/* CMN_REG(005f) */
-+#define OVRD_ROPLL_SDC_RSTN_MASK	BIT(5)
-+#define ROPLL_SDC_RSTN_MASK		BIT(4)
-+/* CMN_REG(0060)  */
-+#define ROPLL_SDM_DENOMINATOR_MASK	GENMASK(7, 0)
- /* CMN_REG(0064) */
- #define ROPLL_SDM_NUM_SIGN_RBR_MASK	BIT(3)
-+#define ROPLL_SDM_NUM_SIGN_HBR_MASK	BIT(2)
-+#define ROPLL_SDM_NUM_SIGN_HBR2_MASK	BIT(1)
-+/* CMN_REG(0065) */
-+#define ROPLL_SDM_NUM_MASK		GENMASK(7, 0)
- /* CMN_REG(0069) */
- #define ROPLL_SDC_N_RBR_MASK		GENMASK(2, 0)
-+/* CMN_REG(006a) */
-+#define ROPLL_SDC_N_HBR_MASK		GENMASK(5, 3)
-+#define ROPLL_SDC_N_HBR2_MASK		GENMASK(2, 0)
-+/* CMN_REG(006b) */
-+#define ROPLL_SDC_N_HBR3_MASK		GENMASK(3, 1)
-+/* CMN_REG(006c) */
-+#define ROPLL_SDC_NUM_MASK		GENMASK(5, 0)
-+/* cmn_reg0070 */
-+#define ROPLL_SDC_DENO_MASK		GENMASK(5, 0)
- /* CMN_REG(0074) */
-+#define OVRD_ROPLL_SDC_NDIV_RSTN_MASK	BIT(3)
- #define ROPLL_SDC_NDIV_RSTN_MASK	BIT(2)
-+#define OVRD_ROPLL_SSC_EN_MASK		BIT(1)
- #define ROPLL_SSC_EN_MASK		BIT(0)
-+/* CMN_REG(0075) */
-+#define ANA_ROPLL_SSC_FM_DEVIATION_MASK	GENMASK(5, 0)
-+/* CMN_REG(0076) */
-+#define ANA_ROPLL_SSC_FM_FREQ_MASK	GENMASK(6, 2)
-+/* CMN_REG(0077) */
-+#define ANA_ROPLL_SSC_CLK_DIV_SEL_MASK	GENMASK(6, 3)
- /* CMN_REG(0081) */
- #define OVRD_PLL_CD_CLK_EN_MASK		BIT(8)
-+#define ANA_PLL_CD_TX_SER_RATE_SEL_MASK	BIT(3)
-+#define ANA_PLL_CD_HSCLK_WEST_EN_MASK	BIT(1)
- #define ANA_PLL_CD_HSCLK_EAST_EN_MASK	BIT(0)
-+/* CMN_REG(0082) */
-+#define ANA_PLL_CD_VREG_GAIN_CTRL_MASK	GENMASK(3, 0)
-+/* CMN_REG(0083) */
-+#define ANA_PLL_CD_VREG_ICTRL_MASK	GENMASK(6, 5)
-+/* CMN_REG(0084) */
-+#define PLL_LCRO_CLK_SEL_MASK		BIT(5)
-+/* CMN_REG(0085) */
-+#define ANA_PLL_SYNC_LOSS_DET_MODE_MASK	GENMASK(1, 0)
- /* CMN_REG(0086) */
- #define PLL_PCG_POSTDIV_SEL_MASK	GENMASK(7, 4)
- #define PLL_PCG_CLK_SEL_MASK		GENMASK(3, 1)
-@@ -92,11 +154,14 @@
- #define ANA_PLL_TX_HS_CLK_EN_MASK	BIT(2)
- /* CMN_REG(0089) */
- #define LCPLL_ALONE_MODE_MASK		BIT(1)
-+/* CMN_REG(0095) */
-+#define DP_TX_LINK_BW_MASK		GENMASK(1, 0)
- /* CMN_REG(0097) */
- #define DIG_CLK_SEL_MASK		BIT(1)
- #define LCPLL_REF			BIT(1)
- #define ROPLL_REF			0
- /* CMN_REG(0099) */
-+#define SSC_EN_MASK			GENMASK(7, 6)
- #define CMN_ROPLL_ALONE_MODE_MASK	BIT(2)
- #define ROPLL_ALONE_MODE		BIT(2)
- /* CMN_REG(009a) */
-@@ -118,6 +183,8 @@
- /* SB_REG(0104) */
- #define OVRD_SB_EN_MASK			BIT(5)
- #define SB_EN_MASK			BIT(4)
-+#define OVRD_SB_AUX_EN_MASK		BIT(1)
-+#define SB_AUX_EN_MASK			BIT(0)
- /* SB_REG(0105) */
- #define OVRD_SB_EARC_CMDC_EN_MASK	BIT(6)
- #define SB_EARC_CMDC_EN_MASK		BIT(5)
-@@ -126,6 +193,8 @@
- #define ANA_SB_TX_LLVL_PROG_MASK	GENMASK(6, 4)
- /* SB_REG(0109) */
- #define ANA_SB_DMRX_AFC_DIV_RATIO_MASK	GENMASK(2, 0)
-+/* SB_REG(010d) */
-+#define ANA_SB_DMRX_LPBK_DATA_MASK	BIT(4)
- /* SB_REG(010f) */
- #define OVRD_SB_VREG_EN_MASK		BIT(7)
- #define SB_VREG_EN_MASK			BIT(6)
-@@ -133,6 +202,7 @@
- #define SB_VREG_LPF_BYPASS_MASK		BIT(4)
- #define ANA_SB_VREG_GAIN_CTRL_MASK	GENMASK(3, 0)
- /* SB_REG(0110) */
-+#define ANA_SB_VREG_OUT_SEL_MASK	BIT(1)
- #define ANA_SB_VREG_REF_SEL_MASK	BIT(0)
- /* SB_REG(0113) */
- #define SB_RX_RCAL_OPT_CODE_MASK	GENMASK(5, 4)
-@@ -147,13 +217,24 @@
- #define AFC_RSTN_DELAY_TIME_MASK	GENMASK(6, 4)
- /* SB_REG(0117) */
- #define FAST_PULSE_TIME_MASK		GENMASK(3, 0)
-+/* SB_REG(0118) */
-+#define SB_TG_EARC_DMRX_RECVRD_CLK_CNT_MASK	GENMASK(7, 0)
-+/* SB_REG(011a) */
-+#define SB_TG_CNT_RUN_NO_7_0_MASK	GENMASK(7, 0)
- /* SB_REG(011b) */
- #define SB_EARC_SIG_DET_BYPASS_MASK	BIT(4)
- #define SB_AFC_TOL_MASK			GENMASK(3, 0)
-+/* SB_REG(011c) */
-+#define SB_AFC_STB_NUM_MASK		GENMASK(3, 0)
-+/* SB_REG(011d) */
-+#define SB_TG_OSC_CNT_MIN_MASK		GENMASK(7, 0)
-+/* SB_REG(011e) */
-+#define SB_TG_OSC_CNT_MAX_MASK		GENMASK(7, 0)
- /* SB_REG(011f) */
- #define SB_PWM_AFC_CTRL_MASK		GENMASK(7, 2)
- #define SB_RCAL_RSTN_MASK		BIT(1)
- /* SB_REG(0120) */
-+#define SB_AUX_EN_IN_MASK		BIT(7)
- #define SB_EARC_EN_MASK			BIT(1)
- #define SB_EARC_AFC_EN_MASK		BIT(2)
- /* SB_REG(0123) */
-@@ -165,27 +246,74 @@
- #define HDMI_MODE			BIT(2)
- #define HDMI_TMDS_FRL_SEL		BIT(1)
- /* LNTOP_REG(0206) */
-+#define DATA_BUS_WIDTH_MASK		GENMASK(2, 1)
- #define DATA_BUS_WIDTH_SEL_MASK		BIT(0)
- #define DATA_BUS_36_40			BIT(0)
- /* LNTOP_REG(0207) */
- #define LANE_EN_MASK			0xf
- #define ALL_LANE_EN			0xf
- 
-+/* LANE_REG(0301) */
-+#define OVRD_LN_TX_DRV_EI_EN_MASK	BIT(7)
-+#define LN_TX_DRV_EI_EN_MASK		BIT(6)
-+/* LANE_REG(0303) */
-+#define OVRD_LN_TX_DRV_LVL_CTRL_MASK	BIT(5)
-+#define LN_TX_DRV_LVL_CTRL_MASK		GENMASK(4, 0)
-+/* LANE_REG(0304)  */
-+#define OVRD_LN_TX_DRV_POST_LVL_CTRL_MASK	BIT(4)
-+#define LN_TX_DRV_POST_LVL_CTRL_MASK	GENMASK(3, 0)
-+/* LANE_REG(0305) */
-+#define OVRD_LN_TX_DRV_PRE_LVL_CTRL_MASK	BIT(6)
-+#define LN_TX_DRV_PRE_LVL_CTRL_MASK	GENMASK(5, 2)
-+/* LANE_REG(0306) */
-+#define LN_ANA_TX_DRV_IDRV_IDN_CTRL_MASK	GENMASK(7, 5)
-+#define LN_ANA_TX_DRV_IDRV_IUP_CTRL_MASK	GENMASK(4, 2)
-+#define LN_ANA_TX_DRV_ACCDRV_EN_MASK	BIT(0)
-+/* LANE_REG(0307) */
-+#define LN_ANA_TX_DRV_ACCDRV_POL_SEL_MASK	BIT(6)
-+#define LN_ANA_TX_DRV_ACCDRV_CTRL_MASK	GENMASK(5, 3)
-+/* LANE_REG(030a) */
-+#define LN_ANA_TX_JEQ_EN_MASK		BIT(4)
-+#define LN_TX_JEQ_EVEN_CTRL_RBR_MASK	GENMASK(3, 0)
-+/* LANE_REG(030b) */
-+#define LN_TX_JEQ_EVEN_CTRL_HBR_MASK	GENMASK(7, 4)
-+#define LN_TX_JEQ_EVEN_CTRL_HBR2_MASK	GENMASK(3, 0)
-+/* LANE_REG(030c) */
-+#define LN_TX_JEQ_ODD_CTRL_RBR_MASK	GENMASK(3, 0)
-+/* LANE_REG(030d) */
-+#define LN_TX_JEQ_ODD_CTRL_HBR_MASK	GENMASK(7, 4)
-+#define LN_TX_JEQ_ODD_CTRL_HBR2_MASK	GENMASK(3, 0)
-+/* LANE_REG(0310) */
-+#define LN_ANA_TX_SYNC_LOSS_DET_MODE_MASK	GENMASK(1, 0)
-+/* LANE_REG(0311) */
-+#define LN_TX_SER_40BIT_EN_RBR_MASK	BIT(3)
-+#define LN_TX_SER_40BIT_EN_HBR_MASK	BIT(2)
-+#define LN_TX_SER_40BIT_EN_HBR2_MASK	BIT(1)
- /* LANE_REG(0312) */
- #define LN0_TX_SER_RATE_SEL_RBR_MASK	BIT(5)
- #define LN0_TX_SER_RATE_SEL_HBR_MASK	BIT(4)
- #define LN0_TX_SER_RATE_SEL_HBR2_MASK	BIT(3)
- #define LN0_TX_SER_RATE_SEL_HBR3_MASK	BIT(2)
-+/* LANE_REG(0316) */
-+#define LN_ANA_TX_SER_VREG_GAIN_CTRL_MASK	GENMASK(3, 0)
-+/* LANE_REG(031B) */
-+#define LN_ANA_TX_RESERVED_MASK		GENMASK(7, 0)
-+/* LANE_REG(031e) */
-+#define LN_POLARITY_INV_MASK		BIT(2)
-+#define LN_LANE_MODE_MASK		BIT(1)
-+
- /* LANE_REG(0412) */
- #define LN1_TX_SER_RATE_SEL_RBR_MASK	BIT(5)
- #define LN1_TX_SER_RATE_SEL_HBR_MASK	BIT(4)
- #define LN1_TX_SER_RATE_SEL_HBR2_MASK	BIT(3)
- #define LN1_TX_SER_RATE_SEL_HBR3_MASK	BIT(2)
-+
- /* LANE_REG(0512) */
- #define LN2_TX_SER_RATE_SEL_RBR_MASK	BIT(5)
- #define LN2_TX_SER_RATE_SEL_HBR_MASK	BIT(4)
- #define LN2_TX_SER_RATE_SEL_HBR2_MASK	BIT(3)
- #define LN2_TX_SER_RATE_SEL_HBR3_MASK	BIT(2)
-+
- /* LANE_REG(0612) */
- #define LN3_TX_SER_RATE_SEL_RBR_MASK	BIT(5)
- #define LN3_TX_SER_RATE_SEL_HBR_MASK	BIT(4)
-@@ -194,6 +322,12 @@
- 
- #define HDMI20_MAX_RATE			600000000
- 
-+enum dp_link_rate {
-+	DP_BW_RBR,
-+	DP_BW_HBR,
-+	DP_BW_HBR2,
-+};
-+
- struct lcpll_config {
- 	u32 bit_rate;
- 	u8 lcvco_mode_en;
-@@ -255,6 +389,19 @@ struct ropll_config {
- 	u8 cd_tx_ser_rate_sel;
- };
- 
-+struct tx_drv_ctrl {
-+	u8 tx_drv_lvl_ctrl;
-+	u8 tx_drv_post_lvl_ctrl;
-+	u8 ana_tx_drv_idrv_idn_ctrl;
-+	u8 ana_tx_drv_idrv_iup_ctrl;
-+	u8 ana_tx_drv_accdrv_en;
-+	u8 ana_tx_drv_accdrv_ctrl;
-+	u8 tx_drv_pre_lvl_ctrl;
-+	u8 ana_tx_jeq_en;
-+	u8 tx_jeq_even_ctrl;
-+	u8 tx_jeq_odd_ctrl;
-+};
-+
- enum rk_hdptx_reset {
- 	RST_APB = 0,
- 	RST_INIT,
-@@ -279,6 +426,10 @@ struct rk_hdptx_phy {
- 	unsigned long rate;
- 
- 	atomic_t usage_count;
-+
-+	/* used for dp mode */
-+	unsigned int link_rate;
-+	unsigned int lanes;
- };
- 
- static const struct ropll_config ropll_tmds_cfg[] = {
-@@ -557,6 +708,90 @@ static const struct reg_sequence rk_hdtpx_tmds_lane_init_seq[] = {
- 	REG_SEQ0(LANE_REG(0606), 0x1c),
- };
- 
-+static struct tx_drv_ctrl tx_drv_ctrl_rbr[4][4] = {
-+	/* voltage swing 0, pre-emphasis 0->3 */
-+	{
-+		{ 0x2, 0x0, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0x4, 0x3, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0x7, 0x6, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0xd, 0xc, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 1, pre-emphasis 0->2 */
-+	{
-+		{ 0x4, 0x0, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0x9, 0x5, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0xc, 0x8, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 2, pre-emphasis 0->1 */
-+	{
-+		{ 0x8, 0x0, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0xc, 0x5, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 3, pre-emphasis 0 */
-+	{
-+		{ 0xb, 0x0, 0x7, 0x7, 0x1, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+	}
-+};
-+
-+static struct tx_drv_ctrl tx_drv_ctrl_hbr[4][4] = {
-+	/* voltage swing 0, pre-emphasis 0->3 */
-+	{
-+		{ 0x2, 0x0, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0x5, 0x4, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0x9, 0x8, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0xd, 0xc, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 1, pre-emphasis 0->2 */
-+	{
-+		{ 0x6, 0x1, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0xa, 0x6, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0xc, 0x8, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 2, pre-emphasis 0->1 */
-+	{
-+		{ 0x9, 0x1, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0xd, 0x6, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 3, pre-emphasis 0 */
-+	{
-+		{ 0xc, 0x1, 0x7, 0x7, 0x1, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+	}
-+};
-+
-+static struct tx_drv_ctrl tx_drv_ctrl_hbr2[4][4] = {
-+	/* voltage swing 0, pre-emphasis 0->3 */
-+	{
-+		{ 0x2, 0x1, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0x5, 0x4, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0x9, 0x8, 0x4, 0x6, 0x1, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0xd, 0xc, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 1, pre-emphasis 0->2 */
-+	{
-+		{ 0x6, 0x1, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0xb, 0x7, 0x4, 0x6, 0x0, 0x4, 0x0, 0x1, 0x7, 0x7 },
-+		{ 0xd, 0x9, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 2, pre-emphasis 0->1 */
-+	{
-+		{ 0x8, 0x1, 0x4, 0x6, 0x0, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+		{ 0xc, 0x6, 0x7, 0x7, 0x1, 0x7, 0x0, 0x1, 0x7, 0x7 },
-+	},
-+
-+	/* voltage swing 3, pre-emphasis 0 */
-+	{
-+		{ 0xb, 0x0, 0x7, 0x7, 0x1, 0x4, 0x1, 0x1, 0x7, 0x7 },
-+	}
-+};
-+
- static bool rk_hdptx_phy_is_rw_reg(struct device *dev, unsigned int reg)
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index 6a604f0797d9..ee7e3f0a4c0a 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -548,7 +548,7 @@ static inline bool amd_pstate_sample(struct amd_cpudata *cpudata)
+ static void amd_pstate_update(struct amd_cpudata *cpudata, u8 min_perf,
+ 			      u8 des_perf, u8 max_perf, bool fast_switch, int gov_flags)
  {
- 	switch (reg) {
-@@ -843,9 +1078,45 @@ static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
- 	return rk_hdptx_post_enable_lane(hdptx);
- }
+-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpudata->cpu);
++	struct cpufreq_policy *policy __free(put_cpufreq_policy) = cpufreq_cpu_get(cpudata->cpu);
+ 	u8 nominal_perf = READ_ONCE(cpudata->nominal_perf);
  
-+static void rk_hdptx_dp_reset(struct rk_hdptx_phy *hdptx)
-+{
-+	reset_control_assert(hdptx->rsts[RST_LANE].rstc);
-+	reset_control_assert(hdptx->rsts[RST_CMN].rstc);
-+	reset_control_assert(hdptx->rsts[RST_INIT].rstc);
-+
-+	reset_control_assert(hdptx->rsts[RST_APB].rstc);
-+	udelay(10);
-+	reset_control_deassert(hdptx->rsts[RST_APB].rstc);
-+
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0301),
-+			   OVRD_LN_TX_DRV_EI_EN_MASK | LN_TX_DRV_EI_EN_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_EI_EN_MASK, 1) |
-+			   FIELD_PREP(LN_TX_DRV_EI_EN_MASK, 0));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0401),
-+			   OVRD_LN_TX_DRV_EI_EN_MASK | LN_TX_DRV_EI_EN_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_EI_EN_MASK, 1) |
-+			   FIELD_PREP(LN_TX_DRV_EI_EN_MASK, 0));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0501),
-+			   OVRD_LN_TX_DRV_EI_EN_MASK | LN_TX_DRV_EI_EN_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_EI_EN_MASK, 1) |
-+			   FIELD_PREP(LN_TX_DRV_EI_EN_MASK, 0));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0601),
-+			   OVRD_LN_TX_DRV_EI_EN_MASK | LN_TX_DRV_EI_EN_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_EI_EN_MASK, 1) |
-+			   FIELD_PREP(LN_TX_DRV_EI_EN_MASK, 0));
-+
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_PLL_EN << 16 | FIELD_PREP(HDPTX_I_PLL_EN, 0x0));
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_BIAS_EN << 16 | FIELD_PREP(HDPTX_I_BIAS_EN, 0x0));
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_BGR_EN << 16 | FIELD_PREP(HDPTX_I_BGR_EN, 0x0));
-+}
-+
- static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
- 				     unsigned int rate)
- {
-+	enum phy_mode mode = phy_get_mode(hdptx->phy);
- 	u32 status;
- 	int ret;
- 
-@@ -859,10 +1130,14 @@ static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
- 	if (status & HDPTX_O_PLL_LOCK_DONE)
- 		dev_warn(hdptx->dev, "PLL locked by unknown consumer!\n");
- 
--	if (rate) {
--		ret = rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
--		if (ret)
--			goto dec_usage;
-+	if (mode == PHY_MODE_DP) {
-+		rk_hdptx_dp_reset(hdptx);
-+	} else {
-+		if (rate) {
-+			ret = rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
-+			if (ret)
-+				goto dec_usage;
-+		}
+ 	if (!policy)
+@@ -574,8 +574,6 @@ static void amd_pstate_update(struct amd_cpudata *cpudata, u8 min_perf,
  	}
  
- 	return 0;
-@@ -874,6 +1149,7 @@ static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
- 
- static int rk_hdptx_phy_consumer_put(struct rk_hdptx_phy *hdptx, bool force)
- {
-+	enum phy_mode mode = phy_get_mode(hdptx->phy);
- 	u32 status;
- 	int ret;
- 
-@@ -887,8 +1163,12 @@ static int rk_hdptx_phy_consumer_put(struct rk_hdptx_phy *hdptx, bool force)
- 	} else {
- 		ret = regmap_read(hdptx->grf, GRF_HDPTX_STATUS, &status);
- 		if (!ret) {
--			if (status & HDPTX_O_PLL_LOCK_DONE)
--				rk_hdptx_phy_disable(hdptx);
-+			if (status & HDPTX_O_PLL_LOCK_DONE) {
-+				if (mode == PHY_MODE_DP)
-+					rk_hdptx_dp_reset(hdptx);
-+				else
-+					rk_hdptx_phy_disable(hdptx);
-+			}
- 			return 0;
- 		} else if (force) {
- 			return 0;
-@@ -899,11 +1179,262 @@ static int rk_hdptx_phy_consumer_put(struct rk_hdptx_phy *hdptx, bool force)
- 	return ret;
+ 	amd_pstate_update_perf(cpudata, min_perf, des_perf, max_perf, 0, fast_switch);
+-
+-	cpufreq_cpu_put(policy);
  }
  
-+static void rk_hdptx_dp_pll_init(struct rk_hdptx_phy *hdptx)
-+{
-+	regmap_update_bits(hdptx->regmap, CMN_REG(003c), ANA_LCPLL_RESERVED7_MASK,
-+			   FIELD_PREP(ANA_LCPLL_RESERVED7_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0046),
-+			   ROPLL_ANA_CPP_CTRL_COARSE_MASK | ROPLL_ANA_CPP_CTRL_FINE_MASK,
-+			   FIELD_PREP(ROPLL_ANA_CPP_CTRL_COARSE_MASK, 0xe) |
-+			   FIELD_PREP(ROPLL_ANA_CPP_CTRL_FINE_MASK, 0xe));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0047),
-+			   ROPLL_ANA_LPF_C_SEL_COARSE_MASK |
-+			   ROPLL_ANA_LPF_C_SEL_FINE_MASK,
-+			   FIELD_PREP(ROPLL_ANA_LPF_C_SEL_COARSE_MASK, 0x4) |
-+			   FIELD_PREP(ROPLL_ANA_LPF_C_SEL_FINE_MASK, 0x4));
-+
-+	regmap_write(hdptx->regmap, CMN_REG(0051), FIELD_PREP(ROPLL_PMS_MDIV_MASK, 0x87));
-+	regmap_write(hdptx->regmap, CMN_REG(0052), FIELD_PREP(ROPLL_PMS_MDIV_MASK, 0x71));
-+	regmap_write(hdptx->regmap, CMN_REG(0053), FIELD_PREP(ROPLL_PMS_MDIV_MASK, 0x71));
-+
-+	regmap_write(hdptx->regmap, CMN_REG(0055),
-+		     FIELD_PREP(ROPLL_PMS_MDIV_AFC_MASK, 0x87));
-+	regmap_write(hdptx->regmap, CMN_REG(0056),
-+		     FIELD_PREP(ROPLL_PMS_MDIV_AFC_MASK, 0x71));
-+	regmap_write(hdptx->regmap, CMN_REG(0057),
-+		     FIELD_PREP(ROPLL_PMS_MDIV_AFC_MASK, 0x71));
-+
-+	regmap_write(hdptx->regmap, CMN_REG(0059),
-+		     FIELD_PREP(ANA_ROPLL_PMS_PDIV_MASK, 0x1) |
-+		     FIELD_PREP(ANA_ROPLL_PMS_REFDIV_MASK, 0x1));
-+	regmap_write(hdptx->regmap, CMN_REG(005a),
-+		     FIELD_PREP(ROPLL_PMS_SDIV_RBR_MASK, 0x3) |
-+		     FIELD_PREP(ROPLL_PMS_SDIV_HBR_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005b), ROPLL_PMS_SDIV_HBR2_MASK,
-+			   FIELD_PREP(ROPLL_PMS_SDIV_HBR2_MASK, 0x0));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005e), ROPLL_SDM_EN_MASK,
-+			   FIELD_PREP(ROPLL_SDM_EN_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005e),
-+			   OVRD_ROPLL_SDM_RSTN_MASK | ROPLL_SDM_RSTN_MASK,
-+			   FIELD_PREP(OVRD_ROPLL_SDM_RSTN_MASK, 0x1) |
-+			   FIELD_PREP(ROPLL_SDM_RSTN_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005e), ROPLL_SDC_FRAC_EN_RBR_MASK,
-+			   FIELD_PREP(ROPLL_SDC_FRAC_EN_RBR_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005e), ROPLL_SDC_FRAC_EN_HBR_MASK,
-+			   FIELD_PREP(ROPLL_SDC_FRAC_EN_HBR_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005e), ROPLL_SDC_FRAC_EN_HBR2_MASK,
-+			   FIELD_PREP(ROPLL_SDC_FRAC_EN_HBR2_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(005f),
-+			   OVRD_ROPLL_SDC_RSTN_MASK | ROPLL_SDC_RSTN_MASK,
-+			   FIELD_PREP(OVRD_ROPLL_SDC_RSTN_MASK, 0x1) |
-+			   FIELD_PREP(ROPLL_SDC_RSTN_MASK, 0x1));
-+	regmap_write(hdptx->regmap, CMN_REG(0060),
-+		     FIELD_PREP(ROPLL_SDM_DENOMINATOR_MASK, 0x21));
-+	regmap_write(hdptx->regmap, CMN_REG(0061),
-+		     FIELD_PREP(ROPLL_SDM_DENOMINATOR_MASK, 0x27));
-+	regmap_write(hdptx->regmap, CMN_REG(0062),
-+		     FIELD_PREP(ROPLL_SDM_DENOMINATOR_MASK, 0x27));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0064),
-+			   ROPLL_SDM_NUM_SIGN_RBR_MASK |
-+			   ROPLL_SDM_NUM_SIGN_HBR_MASK |
-+			   ROPLL_SDM_NUM_SIGN_HBR2_MASK,
-+			   FIELD_PREP(ROPLL_SDM_NUM_SIGN_RBR_MASK, 0x0) |
-+			   FIELD_PREP(ROPLL_SDM_NUM_SIGN_HBR_MASK, 0x1) |
-+			   FIELD_PREP(ROPLL_SDM_NUM_SIGN_HBR2_MASK, 0x1));
-+	regmap_write(hdptx->regmap, CMN_REG(0065),
-+		     FIELD_PREP(ROPLL_SDM_NUM_MASK, 0x0));
-+	regmap_write(hdptx->regmap, CMN_REG(0066),
-+		     FIELD_PREP(ROPLL_SDM_NUM_MASK, 0xd));
-+	regmap_write(hdptx->regmap, CMN_REG(0067),
-+		     FIELD_PREP(ROPLL_SDM_NUM_MASK, 0xd));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0069), ROPLL_SDC_N_RBR_MASK,
-+			   FIELD_PREP(ROPLL_SDC_N_RBR_MASK, 0x2));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(006a),
-+			   ROPLL_SDC_N_HBR_MASK | ROPLL_SDC_N_HBR2_MASK,
-+			   FIELD_PREP(ROPLL_SDC_N_HBR_MASK, 0x1) |
-+			   FIELD_PREP(ROPLL_SDC_N_HBR2_MASK, 0x1));
-+
-+	regmap_write(hdptx->regmap, CMN_REG(006c),
-+		     FIELD_PREP(ROPLL_SDC_NUM_MASK, 0x3));
-+	regmap_write(hdptx->regmap, CMN_REG(006d),
-+		     FIELD_PREP(ROPLL_SDC_NUM_MASK, 0x7));
-+	regmap_write(hdptx->regmap, CMN_REG(006e),
-+		     FIELD_PREP(ROPLL_SDC_NUM_MASK, 0x7));
-+
-+	regmap_write(hdptx->regmap, CMN_REG(0070),
-+		     FIELD_PREP(ROPLL_SDC_DENO_MASK, 0x8));
-+	regmap_write(hdptx->regmap, CMN_REG(0071),
-+		     FIELD_PREP(ROPLL_SDC_DENO_MASK, 0x18));
-+	regmap_write(hdptx->regmap, CMN_REG(0072),
-+		     FIELD_PREP(ROPLL_SDC_DENO_MASK, 0x18));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0074),
-+			   OVRD_ROPLL_SDC_NDIV_RSTN_MASK | ROPLL_SDC_NDIV_RSTN_MASK,
-+			   FIELD_PREP(OVRD_ROPLL_SDC_NDIV_RSTN_MASK, 0x1) |
-+			   FIELD_PREP(ROPLL_SDC_NDIV_RSTN_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0077), ANA_ROPLL_SSC_CLK_DIV_SEL_MASK,
-+			   FIELD_PREP(ANA_ROPLL_SSC_CLK_DIV_SEL_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0081), ANA_PLL_CD_TX_SER_RATE_SEL_MASK,
-+			   FIELD_PREP(ANA_PLL_CD_TX_SER_RATE_SEL_MASK, 0x0));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0081),
-+			   ANA_PLL_CD_HSCLK_EAST_EN_MASK | ANA_PLL_CD_HSCLK_WEST_EN_MASK,
-+			   FIELD_PREP(ANA_PLL_CD_HSCLK_EAST_EN_MASK, 0x1) |
-+			   FIELD_PREP(ANA_PLL_CD_HSCLK_WEST_EN_MASK, 0x0));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0082), ANA_PLL_CD_VREG_GAIN_CTRL_MASK,
-+			   FIELD_PREP(ANA_PLL_CD_VREG_GAIN_CTRL_MASK, 0x4));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0083), ANA_PLL_CD_VREG_ICTRL_MASK,
-+			   FIELD_PREP(ANA_PLL_CD_VREG_ICTRL_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0084), PLL_LCRO_CLK_SEL_MASK,
-+			   FIELD_PREP(PLL_LCRO_CLK_SEL_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0085), ANA_PLL_SYNC_LOSS_DET_MODE_MASK,
-+			   FIELD_PREP(ANA_PLL_SYNC_LOSS_DET_MODE_MASK, 0x3));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0087), ANA_PLL_TX_HS_CLK_EN_MASK,
-+			   FIELD_PREP(ANA_PLL_TX_HS_CLK_EN_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0097), DIG_CLK_SEL_MASK,
-+			   FIELD_PREP(DIG_CLK_SEL_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0099), CMN_ROPLL_ALONE_MODE_MASK,
-+			   FIELD_PREP(CMN_ROPLL_ALONE_MODE_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(009a), HS_SPEED_SEL_MASK,
-+			   FIELD_PREP(HS_SPEED_SEL_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, CMN_REG(009b), LS_SPEED_SEL_MASK,
-+			   FIELD_PREP(LS_SPEED_SEL_MASK, 0x1));
-+}
-+
-+static int rk_hdptx_dp_aux_init(struct rk_hdptx_phy *hdptx)
-+{
-+	u32 status;
-+	int ret;
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(0102), ANA_SB_RXTERM_OFFSP_MASK,
-+			   FIELD_PREP(ANA_SB_RXTERM_OFFSP_MASK, 0x3));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0103), ANA_SB_RXTERM_OFFSN_MASK,
-+			   FIELD_PREP(ANA_SB_RXTERM_OFFSN_MASK, 0x3));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0104), SB_AUX_EN_MASK,
-+			   FIELD_PREP(SB_AUX_EN_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0105), ANA_SB_TX_HLVL_PROG_MASK,
-+			   FIELD_PREP(ANA_SB_TX_HLVL_PROG_MASK, 0x7));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0106), ANA_SB_TX_LLVL_PROG_MASK,
-+			   FIELD_PREP(ANA_SB_TX_LLVL_PROG_MASK, 0x7));
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(010d), ANA_SB_DMRX_LPBK_DATA_MASK,
-+			   FIELD_PREP(ANA_SB_DMRX_LPBK_DATA_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(010f), ANA_SB_VREG_GAIN_CTRL_MASK,
-+			   FIELD_PREP(ANA_SB_VREG_GAIN_CTRL_MASK, 0x0));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0110),
-+			   ANA_SB_VREG_OUT_SEL_MASK | ANA_SB_VREG_REF_SEL_MASK,
-+			   FIELD_PREP(ANA_SB_VREG_OUT_SEL_MASK, 0x1) |
-+			   FIELD_PREP(ANA_SB_VREG_REF_SEL_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(0113),
-+			   SB_RX_RCAL_OPT_CODE_MASK | SB_RX_RTERM_CTRL_MASK,
-+			   FIELD_PREP(SB_RX_RCAL_OPT_CODE_MASK, 0x1) |
-+			   FIELD_PREP(SB_RX_RTERM_CTRL_MASK, 0x3));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0114),
-+			   SB_TG_SB_EN_DELAY_TIME_MASK | SB_TG_RXTERM_EN_DELAY_TIME_MASK,
-+			   FIELD_PREP(SB_TG_SB_EN_DELAY_TIME_MASK, 0x2) |
-+			   FIELD_PREP(SB_TG_RXTERM_EN_DELAY_TIME_MASK, 0x2));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0115),
-+			   SB_READY_DELAY_TIME_MASK | SB_TG_OSC_EN_DELAY_TIME_MASK,
-+			   FIELD_PREP(SB_READY_DELAY_TIME_MASK, 0x2) |
-+			   FIELD_PREP(SB_TG_OSC_EN_DELAY_TIME_MASK, 0x2));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0116),
-+			   AFC_RSTN_DELAY_TIME_MASK,
-+			   FIELD_PREP(AFC_RSTN_DELAY_TIME_MASK, 0x2));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0117),
-+			   FAST_PULSE_TIME_MASK,
-+			   FIELD_PREP(FAST_PULSE_TIME_MASK, 0x4));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0118),
-+			   SB_TG_EARC_DMRX_RECVRD_CLK_CNT_MASK,
-+			   FIELD_PREP(SB_TG_EARC_DMRX_RECVRD_CLK_CNT_MASK, 0xa));
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(011a), SB_TG_CNT_RUN_NO_7_0_MASK,
-+			   FIELD_PREP(SB_TG_CNT_RUN_NO_7_0_MASK, 0x3));
-+	regmap_update_bits(hdptx->regmap, SB_REG(011b),
-+			   SB_EARC_SIG_DET_BYPASS_MASK | SB_AFC_TOL_MASK,
-+			   FIELD_PREP(SB_EARC_SIG_DET_BYPASS_MASK, 0x1) |
-+			   FIELD_PREP(SB_AFC_TOL_MASK, 0x3));
-+	regmap_update_bits(hdptx->regmap, SB_REG(011c), SB_AFC_STB_NUM_MASK,
-+			   FIELD_PREP(SB_AFC_STB_NUM_MASK, 0x4));
-+	regmap_update_bits(hdptx->regmap, SB_REG(011d), SB_TG_OSC_CNT_MIN_MASK,
-+			   FIELD_PREP(SB_TG_OSC_CNT_MIN_MASK, 0x67));
-+	regmap_update_bits(hdptx->regmap, SB_REG(011e), SB_TG_OSC_CNT_MAX_MASK,
-+			   FIELD_PREP(SB_TG_OSC_CNT_MAX_MASK, 0x6a));
-+	regmap_update_bits(hdptx->regmap, SB_REG(011f), SB_PWM_AFC_CTRL_MASK,
-+			   FIELD_PREP(SB_PWM_AFC_CTRL_MASK, 0x5));
-+	regmap_update_bits(hdptx->regmap, SB_REG(011f), SB_RCAL_RSTN_MASK,
-+			   FIELD_PREP(SB_RCAL_RSTN_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0120), SB_AUX_EN_IN_MASK,
-+			   FIELD_PREP(SB_AUX_EN_IN_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(0102), OVRD_SB_RXTERM_EN_MASK,
-+			   FIELD_PREP(OVRD_SB_RXTERM_EN_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0103), OVRD_SB_RX_RESCAL_DONE_MASK,
-+			   FIELD_PREP(OVRD_SB_RX_RESCAL_DONE_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0104), OVRD_SB_EN_MASK,
-+			   FIELD_PREP(OVRD_SB_EN_MASK, 0x1));
-+	regmap_update_bits(hdptx->regmap, SB_REG(0104), OVRD_SB_AUX_EN_MASK,
-+			   FIELD_PREP(OVRD_SB_AUX_EN_MASK, 0x1));
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(010f), OVRD_SB_VREG_EN_MASK,
-+			   FIELD_PREP(OVRD_SB_VREG_EN_MASK, 0x1));
-+
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_BGR_EN << 16 | FIELD_PREP(HDPTX_I_BGR_EN, 0x1));
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_BIAS_EN << 16 | FIELD_PREP(HDPTX_I_BIAS_EN, 0x1));
-+	usleep_range(20, 25);
-+
-+	reset_control_deassert(hdptx->rsts[RST_INIT].rstc);
-+	usleep_range(20, 25);
-+	reset_control_deassert(hdptx->rsts[RST_CMN].rstc);
-+	usleep_range(20, 25);
-+
-+	regmap_update_bits(hdptx->regmap, SB_REG(0103), OVRD_SB_RX_RESCAL_DONE_MASK,
-+			   FIELD_PREP(OVRD_SB_RX_RESCAL_DONE_MASK, 0x1));
-+	usleep_range(100, 110);
-+	regmap_update_bits(hdptx->regmap, SB_REG(0104), SB_EN_MASK,
-+			   FIELD_PREP(SB_EN_MASK, 0x1));
-+	usleep_range(100, 110);
-+	regmap_update_bits(hdptx->regmap, SB_REG(0102), SB_RXTERM_EN_MASK,
-+			   FIELD_PREP(SB_RXTERM_EN_MASK, 0x1));
-+	usleep_range(20, 25);
-+	regmap_update_bits(hdptx->regmap, SB_REG(010f), SB_VREG_EN_MASK,
-+			   FIELD_PREP(SB_VREG_EN_MASK, 0x1));
-+	usleep_range(20, 25);
-+	regmap_update_bits(hdptx->regmap, SB_REG(0104), SB_AUX_EN_MASK,
-+			   FIELD_PREP(SB_AUX_EN_MASK, 0x1));
-+	usleep_range(100, 110);
-+
-+	ret = regmap_read_poll_timeout(hdptx->grf, GRF_HDPTX_STATUS,
-+				       status, FIELD_GET(HDPTX_O_SB_RDY, status),
-+				       50, 1000);
-+	if (ret) {
-+		dev_err(hdptx->dev, "Failed to get phy sb ready: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int rk_hdptx_phy_power_on(struct phy *phy)
+ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
+@@ -587,7 +585,8 @@ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
+ 	 * amd-pstate qos_requests.
+ 	 */
+ 	if (policy_data->min == FREQ_QOS_MIN_DEFAULT_VALUE) {
+-		struct cpufreq_policy *policy = cpufreq_cpu_get(policy_data->cpu);
++		struct cpufreq_policy *policy __free(put_cpufreq_policy) =
++					      cpufreq_cpu_get(policy_data->cpu);
+ 		struct amd_cpudata *cpudata;
+ 
+ 		if (!policy)
+@@ -595,7 +594,6 @@ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
+ 
+ 		cpudata = policy->driver_data;
+ 		policy_data->min = cpudata->lowest_nonlinear_freq;
+-		cpufreq_cpu_put(policy);
+ 	}
+ 
+ 	cpufreq_verify_within_cpu_limits(policy_data);
+@@ -678,7 +676,7 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
+ 				   unsigned long capacity)
  {
- 	struct rk_hdptx_phy *hdptx = phy_get_drvdata(phy);
- 	int bus_width = phy_get_bus_width(hdptx->phy);
+ 	u8 max_perf, min_perf, des_perf, cap_perf, min_limit_perf;
+-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	struct cpufreq_policy *policy __free(put_cpufreq_policy) = cpufreq_cpu_get(cpu);
+ 	struct amd_cpudata *cpudata;
+ 
+ 	if (!policy)
+@@ -710,7 +708,6 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
+ 
+ 	amd_pstate_update(cpudata, min_perf, des_perf, max_perf, true,
+ 			policy->governor->flags);
+-	cpufreq_cpu_put(policy);
+ }
+ 
+ static int amd_pstate_cpu_boost_update(struct cpufreq_policy *policy, bool on)
+@@ -824,28 +821,23 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+ 
+ static void amd_pstate_update_limits(unsigned int cpu)
+ {
+-	struct cpufreq_policy *policy = NULL;
++	struct cpufreq_policy *policy __free(put_cpufreq_policy) = cpufreq_cpu_get(cpu);
+ 	struct amd_cpudata *cpudata;
+ 	u32 prev_high = 0, cur_high = 0;
 -	int ret;
-+	enum phy_mode mode = phy_get_mode(phy);
-+	int ret, lane;
+ 	bool highest_perf_changed = false;
  
- 	/*
- 	 * FIXME: Temporary workaround to pass pixel_clk_rate
-@@ -919,9 +1450,37 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
- 	if (ret)
- 		return ret;
+ 	if (!amd_pstate_prefcore)
+ 		return;
  
--	ret = rk_hdptx_ropll_tmds_mode_config(hdptx, rate);
--	if (ret)
--		rk_hdptx_phy_consumer_put(hdptx, true);
-+	if (mode == PHY_MODE_DP) {
-+		regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+			     HDPTX_MODE_SEL << 16 | FIELD_PREP(HDPTX_MODE_SEL, 0x1));
-+
-+		for (lane = 0; lane < 4; lane++) {
-+			regmap_update_bits(hdptx->regmap, LANE_REG(031e) + 0x400 * lane,
-+					   LN_POLARITY_INV_MASK | LN_LANE_MODE_MASK,
-+					   FIELD_PREP(LN_POLARITY_INV_MASK, 0) |
-+					   FIELD_PREP(LN_LANE_MODE_MASK, 1));
-+		}
-+
-+		regmap_update_bits(hdptx->regmap, LNTOP_REG(0200), PROTOCOL_SEL_MASK,
-+				   FIELD_PREP(PROTOCOL_SEL_MASK, 0x0));
-+		regmap_update_bits(hdptx->regmap, LNTOP_REG(0206), DATA_BUS_WIDTH_MASK,
-+				   FIELD_PREP(DATA_BUS_WIDTH_MASK, 0x1));
-+		regmap_update_bits(hdptx->regmap, LNTOP_REG(0206), DATA_BUS_WIDTH_SEL_MASK,
-+				   FIELD_PREP(DATA_BUS_WIDTH_SEL_MASK, 0x0));
-+
-+		rk_hdptx_dp_pll_init(hdptx);
-+
-+		ret = rk_hdptx_dp_aux_init(hdptx);
-+		if (ret)
-+			rk_hdptx_phy_consumer_put(hdptx, true);
-+	} else {
-+		regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+			     HDPTX_MODE_SEL << 16 | FIELD_PREP(HDPTX_MODE_SEL, 0x0));
-+
-+		ret = rk_hdptx_ropll_tmds_mode_config(hdptx, rate);
-+		if (ret)
-+			rk_hdptx_phy_consumer_put(hdptx, true);
-+	}
+-	policy = cpufreq_cpu_get(cpu);
+ 	if (!policy)
+ 		return;
  
- 	return ret;
- }
-@@ -933,9 +1492,308 @@ static int rk_hdptx_phy_power_off(struct phy *phy)
- 	return rk_hdptx_phy_consumer_put(hdptx, false);
+-	cpudata = policy->driver_data;
+-
+ 	guard(mutex)(&amd_pstate_driver_lock);
+ 
+-	ret = amd_get_highest_perf(cpu, &cur_high);
+-	if (ret) {
+-		cpufreq_cpu_put(policy);
++	if (amd_get_highest_perf(cpu, &cur_high))
+ 		return;
+-	}
++
++	cpudata = policy->driver_data;
+ 
+ 	prev_high = READ_ONCE(cpudata->prefcore_ranking);
+ 	highest_perf_changed = (prev_high != cur_high);
+@@ -855,7 +847,6 @@ static void amd_pstate_update_limits(unsigned int cpu)
+ 		if (cur_high < CPPC_MAX_PERF)
+ 			sched_set_itmt_core_prio((int)cur_high, cpu);
+ 	}
+-	cpufreq_cpu_put(policy);
  }
  
-+static int rk_hdptx_phy_verify_config(struct rk_hdptx_phy *hdptx,
-+				      struct phy_configure_opts_dp *dp)
-+{
-+	int i;
-+
-+	if (dp->set_rate) {
-+		switch (dp->link_rate) {
-+		case 1620:
-+		case 2700:
-+		case 5400:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (dp->set_lanes) {
-+		switch (dp->lanes) {
-+		case 1:
-+		case 2:
-+		case 4:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (dp->set_voltages) {
-+		for (i = 0; i < hdptx->lanes; i++) {
-+			if (dp->voltage[i] > 3 || dp->pre[i] > 3)
-+				return -EINVAL;
-+
-+			if (dp->voltage[i] + dp->pre[i] > 3)
-+				return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int rk_hdptx_phy_set_rate(struct rk_hdptx_phy *hdptx,
-+				 struct phy_configure_opts_dp *dp)
-+{
-+	u32 bw, status;
-+	int ret;
-+
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_PLL_EN << 16 | FIELD_PREP(HDPTX_I_PLL_EN, 0x0));
-+
-+	switch (dp->link_rate) {
-+	case 1620:
-+		bw = DP_BW_RBR;
-+		break;
-+	case 2700:
-+		bw = DP_BW_HBR;
-+		break;
-+	case 5400:
-+		bw = DP_BW_HBR2;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	hdptx->link_rate = dp->link_rate;
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0008), OVRD_LCPLL_EN_MASK | LCPLL_EN_MASK,
-+			   FIELD_PREP(OVRD_LCPLL_EN_MASK, 0x1) |
-+			   FIELD_PREP(LCPLL_EN_MASK, 0x0));
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(003d), OVRD_ROPLL_EN_MASK | ROPLL_EN_MASK,
-+			   FIELD_PREP(OVRD_ROPLL_EN_MASK, 0x1) |
-+			   FIELD_PREP(ROPLL_EN_MASK, 0x1));
-+
-+	if (dp->ssc) {
-+		regmap_update_bits(hdptx->regmap, CMN_REG(0074),
-+				   OVRD_ROPLL_SSC_EN_MASK | ROPLL_SSC_EN_MASK,
-+				   FIELD_PREP(OVRD_ROPLL_SSC_EN_MASK, 0x1) |
-+				   FIELD_PREP(ROPLL_SSC_EN_MASK, 0x1));
-+		regmap_write(hdptx->regmap, CMN_REG(0075),
-+			     FIELD_PREP(ANA_ROPLL_SSC_FM_DEVIATION_MASK, 0xc));
-+		regmap_update_bits(hdptx->regmap, CMN_REG(0076),
-+				   ANA_ROPLL_SSC_FM_FREQ_MASK,
-+				   FIELD_PREP(ANA_ROPLL_SSC_FM_FREQ_MASK, 0x1f));
-+
-+		regmap_update_bits(hdptx->regmap, CMN_REG(0099), SSC_EN_MASK,
-+				   FIELD_PREP(SSC_EN_MASK, 0x2));
-+	} else {
-+		regmap_update_bits(hdptx->regmap, CMN_REG(0074),
-+				   OVRD_ROPLL_SSC_EN_MASK | ROPLL_SSC_EN_MASK,
-+				   FIELD_PREP(OVRD_ROPLL_SSC_EN_MASK, 0x1) |
-+				   FIELD_PREP(ROPLL_SSC_EN_MASK, 0x0));
-+		regmap_write(hdptx->regmap, CMN_REG(0075),
-+			     FIELD_PREP(ANA_ROPLL_SSC_FM_DEVIATION_MASK, 0x20));
-+		regmap_update_bits(hdptx->regmap, CMN_REG(0076),
-+				   ANA_ROPLL_SSC_FM_FREQ_MASK,
-+				   FIELD_PREP(ANA_ROPLL_SSC_FM_FREQ_MASK, 0xc));
-+
-+		regmap_update_bits(hdptx->regmap, CMN_REG(0099), SSC_EN_MASK,
-+				   FIELD_PREP(SSC_EN_MASK, 0x0));
-+	}
-+
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0095), DP_TX_LINK_BW_MASK,
-+			   FIELD_PREP(DP_TX_LINK_BW_MASK, bw));
-+
-+	regmap_write(hdptx->grf, GRF_HDPTX_CON0,
-+		     HDPTX_I_PLL_EN << 16 | FIELD_PREP(HDPTX_I_PLL_EN, 0x1));
-+
-+	ret = regmap_read_poll_timeout(hdptx->grf, GRF_HDPTX_STATUS,
-+				       status, FIELD_GET(HDPTX_O_PLL_LOCK_DONE, status),
-+				       50, 1000);
-+	if (ret) {
-+		dev_err(hdptx->dev, "Failed to get phy pll lock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rk_hdptx_phy_set_lanes(struct rk_hdptx_phy *hdptx,
-+				  struct phy_configure_opts_dp *dp)
-+{
-+	hdptx->lanes = dp->lanes;
-+
-+	regmap_update_bits(hdptx->regmap, LNTOP_REG(0207), LANE_EN_MASK,
-+			   FIELD_PREP(LANE_EN_MASK, GENMASK(hdptx->lanes - 1, 0)));
-+
-+	return 0;
-+}
-+
-+static void rk_hdptx_phy_set_voltage(struct rk_hdptx_phy *hdptx,
-+				     struct phy_configure_opts_dp *dp,
-+				     u8 lane)
-+{
-+	const struct tx_drv_ctrl *ctrl;
-+	u32 offset = lane * 0x400;
-+
-+	switch (hdptx->link_rate) {
-+	case 1620:
-+		ctrl = &tx_drv_ctrl_rbr[dp->voltage[lane]][dp->pre[lane]];
-+		regmap_update_bits(hdptx->regmap, LANE_REG(030a) + offset,
-+				   LN_TX_JEQ_EVEN_CTRL_RBR_MASK,
-+				   FIELD_PREP(LN_TX_JEQ_EVEN_CTRL_RBR_MASK,
-+				   ctrl->tx_jeq_even_ctrl));
-+		regmap_update_bits(hdptx->regmap, LANE_REG(030c) + offset,
-+				   LN_TX_JEQ_ODD_CTRL_RBR_MASK,
-+				   FIELD_PREP(LN_TX_JEQ_ODD_CTRL_RBR_MASK,
-+				   ctrl->tx_jeq_odd_ctrl));
-+		regmap_update_bits(hdptx->regmap, LANE_REG(0311) + offset,
-+				   LN_TX_SER_40BIT_EN_RBR_MASK,
-+				   FIELD_PREP(LN_TX_SER_40BIT_EN_RBR_MASK, 0x1));
-+		break;
-+	case 2700:
-+		ctrl = &tx_drv_ctrl_hbr[dp->voltage[lane]][dp->pre[lane]];
-+		regmap_update_bits(hdptx->regmap, LANE_REG(030b) + offset,
-+				   LN_TX_JEQ_EVEN_CTRL_HBR_MASK,
-+				   FIELD_PREP(LN_TX_JEQ_EVEN_CTRL_HBR_MASK,
-+				   ctrl->tx_jeq_even_ctrl));
-+		regmap_update_bits(hdptx->regmap, LANE_REG(030d) + offset,
-+				   LN_TX_JEQ_ODD_CTRL_HBR_MASK,
-+				   FIELD_PREP(LN_TX_JEQ_ODD_CTRL_HBR_MASK,
-+				   ctrl->tx_jeq_odd_ctrl));
-+		regmap_update_bits(hdptx->regmap, LANE_REG(0311) + offset,
-+				   LN_TX_SER_40BIT_EN_HBR_MASK,
-+				   FIELD_PREP(LN_TX_SER_40BIT_EN_HBR_MASK, 0x1));
-+		break;
-+	case 5400:
-+	default:
-+		ctrl = &tx_drv_ctrl_hbr2[dp->voltage[lane]][dp->pre[lane]];
-+		regmap_update_bits(hdptx->regmap, LANE_REG(030b) + offset,
-+				   LN_TX_JEQ_EVEN_CTRL_HBR2_MASK,
-+				   FIELD_PREP(LN_TX_JEQ_EVEN_CTRL_HBR2_MASK,
-+				   ctrl->tx_jeq_even_ctrl));
-+		regmap_update_bits(hdptx->regmap, LANE_REG(030d) + offset,
-+				   LN_TX_JEQ_ODD_CTRL_HBR2_MASK,
-+				   FIELD_PREP(LN_TX_JEQ_ODD_CTRL_HBR2_MASK,
-+				   ctrl->tx_jeq_odd_ctrl));
-+		regmap_update_bits(hdptx->regmap, LANE_REG(0311) + offset,
-+				   LN_TX_SER_40BIT_EN_HBR2_MASK,
-+				   FIELD_PREP(LN_TX_SER_40BIT_EN_HBR2_MASK, 0x1));
-+		break;
-+	}
-+
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0303) + offset,
-+			   OVRD_LN_TX_DRV_LVL_CTRL_MASK | LN_TX_DRV_LVL_CTRL_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_LVL_CTRL_MASK, 0x1) |
-+			   FIELD_PREP(LN_TX_DRV_LVL_CTRL_MASK,
-+				      ctrl->tx_drv_lvl_ctrl));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0304) + offset,
-+			   OVRD_LN_TX_DRV_POST_LVL_CTRL_MASK |
-+			   LN_TX_DRV_POST_LVL_CTRL_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_POST_LVL_CTRL_MASK, 0x1) |
-+			   FIELD_PREP(LN_TX_DRV_POST_LVL_CTRL_MASK,
-+				      ctrl->tx_drv_post_lvl_ctrl));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0305) + offset,
-+			   OVRD_LN_TX_DRV_PRE_LVL_CTRL_MASK |
-+			   LN_TX_DRV_PRE_LVL_CTRL_MASK,
-+			   FIELD_PREP(OVRD_LN_TX_DRV_PRE_LVL_CTRL_MASK, 0x1) |
-+			   FIELD_PREP(LN_TX_DRV_PRE_LVL_CTRL_MASK,
-+				      ctrl->tx_drv_pre_lvl_ctrl));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0306) + offset,
-+			   LN_ANA_TX_DRV_IDRV_IDN_CTRL_MASK |
-+			   LN_ANA_TX_DRV_IDRV_IUP_CTRL_MASK |
-+			   LN_ANA_TX_DRV_ACCDRV_EN_MASK,
-+			   FIELD_PREP(LN_ANA_TX_DRV_IDRV_IDN_CTRL_MASK,
-+				      ctrl->ana_tx_drv_idrv_idn_ctrl) |
-+			   FIELD_PREP(LN_ANA_TX_DRV_IDRV_IUP_CTRL_MASK,
-+				      ctrl->ana_tx_drv_idrv_iup_ctrl) |
-+			   FIELD_PREP(LN_ANA_TX_DRV_ACCDRV_EN_MASK,
-+				      ctrl->ana_tx_drv_accdrv_en));
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0307) + offset,
-+			   LN_ANA_TX_DRV_ACCDRV_POL_SEL_MASK |
-+			   LN_ANA_TX_DRV_ACCDRV_CTRL_MASK,
-+			   FIELD_PREP(LN_ANA_TX_DRV_ACCDRV_POL_SEL_MASK, 0x1) |
-+			   FIELD_PREP(LN_ANA_TX_DRV_ACCDRV_CTRL_MASK,
-+				      ctrl->ana_tx_drv_accdrv_ctrl));
-+
-+	regmap_update_bits(hdptx->regmap, LANE_REG(030a) + offset,
-+			   LN_ANA_TX_JEQ_EN_MASK,
-+			   FIELD_PREP(LN_ANA_TX_JEQ_EN_MASK, ctrl->ana_tx_jeq_en));
-+
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0310) + offset,
-+			   LN_ANA_TX_SYNC_LOSS_DET_MODE_MASK,
-+			   FIELD_PREP(LN_ANA_TX_SYNC_LOSS_DET_MODE_MASK, 0x3));
-+
-+	regmap_update_bits(hdptx->regmap, LANE_REG(0316) + offset,
-+			   LN_ANA_TX_SER_VREG_GAIN_CTRL_MASK,
-+			   FIELD_PREP(LN_ANA_TX_SER_VREG_GAIN_CTRL_MASK, 0x2));
-+
-+	regmap_update_bits(hdptx->regmap, LANE_REG(031b) + offset,
-+			   LN_ANA_TX_RESERVED_MASK,
-+			   FIELD_PREP(LN_ANA_TX_RESERVED_MASK, 0x1));
-+}
-+
-+static int rk_hdptx_phy_set_voltages(struct rk_hdptx_phy *hdptx,
-+				     struct phy_configure_opts_dp *dp)
-+{
-+	u8 lane;
-+	u32 status;
-+	int ret;
-+
-+	for (lane = 0; lane < hdptx->lanes; lane++)
-+		rk_hdptx_phy_set_voltage(hdptx, dp, lane);
-+
-+	reset_control_deassert(hdptx->rsts[RST_LANE].rstc);
-+
-+	ret = regmap_read_poll_timeout(hdptx->grf, GRF_HDPTX_STATUS,
-+				       status, FIELD_GET(HDPTX_O_PHY_RDY, status),
-+				       50, 5000);
-+	if (ret) {
-+		dev_err(hdptx->dev, "Failed to get phy ready: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rk_hdptx_phy_configure(struct phy *phy, union phy_configure_opts *opts)
-+{
-+	struct rk_hdptx_phy *hdptx = phy_get_drvdata(phy);
-+	enum phy_mode mode = phy_get_mode(phy);
-+	int ret;
-+
-+	if (mode != PHY_MODE_DP)
-+		return 0;
-+
-+	ret = rk_hdptx_phy_verify_config(hdptx, &opts->dp);
-+	if (ret) {
-+		dev_err(hdptx->dev, "invalid params for phy configure\n");
-+		return ret;
-+	}
-+
-+	if (opts->dp.set_rate) {
-+		ret = rk_hdptx_phy_set_rate(hdptx, &opts->dp);
-+		if (ret) {
-+			dev_err(hdptx->dev, "failed to set rate: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (opts->dp.set_lanes) {
-+		ret = rk_hdptx_phy_set_lanes(hdptx, &opts->dp);
-+		if (ret) {
-+			dev_err(hdptx->dev, "failed to set lanes: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (opts->dp.set_voltages) {
-+		ret = rk_hdptx_phy_set_voltages(hdptx, &opts->dp);
-+		if (ret) {
-+			dev_err(hdptx->dev, "failed to set voltages: %d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static const struct phy_ops rk_hdptx_phy_ops = {
- 	.power_on  = rk_hdptx_phy_power_on,
- 	.power_off = rk_hdptx_phy_power_off,
-+	.configure = rk_hdptx_phy_configure,
- 	.owner	   = THIS_MODULE,
- };
+ /*
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index 7fe0981a7e46..dde5212d256c 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -210,6 +210,9 @@ static inline struct cpufreq_policy *cpufreq_cpu_get(unsigned int cpu)
+ static inline void cpufreq_cpu_put(struct cpufreq_policy *policy) { }
+ #endif
  
-@@ -1150,5 +2008,6 @@ module_platform_driver(rk_hdptx_phy_driver);
- 
- MODULE_AUTHOR("Algea Cao <algea.cao@rock-chips.com>");
- MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@collabora.com>");
-+MODULE_AUTHOR("Damon Ding <damon.ding@rock-chips.com>");
- MODULE_DESCRIPTION("Samsung HDMI/eDP Transmitter Combo PHY Driver");
- MODULE_LICENSE("GPL");
++/* Scope based cleanup macro for cpufreq_policy kobject reference counting */
++DEFINE_FREE(put_cpufreq_policy, struct cpufreq_policy *, if (_T) cpufreq_cpu_put(_T))
++
+ static inline bool policy_is_inactive(struct cpufreq_policy *policy)
+ {
+ 	return cpumask_empty(policy->cpus);
 -- 
 2.34.1
 
