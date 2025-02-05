@@ -1,338 +1,179 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB4713C9C4;
-	Wed,  5 Feb 2025 13:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738763960; cv=pass; b=NA3K9l3Ss5aS1/tKtvsyKc96415zH0VPR7PY3QHtAO84MqtL6y+1iKyRFuosQGXApqIQ1Y0rgmp8z6vY+JpYHRvN/yKLeqXMaLNk6YLmnS2rEazaMnPUT/tHFKFqMEaBwAnZ40qlG8lXqGiDxUhvBDTMhcbbzNT97kZ29Oi+L+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738763960; c=relaxed/simple;
-	bh=6Iu92BHDCFXwJN6g5+K7+E57DlodDPTYA2Hj2/Qttnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oGIerBCCppDjNr2ZBtYO/BG0DdyJeg4tJlCjwI7jka5WM0WXndjMQvc7GXM1V8H0bN+U3qE7llziEByqJVRzsmqW4LbqFEv7hUmw1kxwgoTNwwKHyZKfU2vocsmJPEE6og/vg8ka0sC04Qy3bHV0rCMmaE3J2rMwGwVWhj3gb7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Uq8gkxrK; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FEB15198D;
+	Wed,  5 Feb 2025 14:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738764185; cv=none; b=DT+xTyprA+KxDUlgRPhGxVvPggiaFkNYbeSO2dIaCKn7xDYif+GeA0HjQDFngzzJa4/ZCGi8YxX5C4rxqYxiFjDzhFpDLlUGLj8nQy/x35y86pghV2XGjZIZ+g9J/5ErGaeWfXrCmRSYUVm2cJb+1EOo2Xh0R1SoajNKmn4L+Ow=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738764185; c=relaxed/simple;
+	bh=0UgdQM/Flqqa3xjQxdnbKC8Z9itU7PMXP+fof6DD1cU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AIg6p1zUVAAvygEdq1v83M7atO9C7vglyQYNQtZKK7VlnC5kcbivIQA+hRRDVSocIz9c+UOe4SlhLWbm5HGi2x9HOuaxJhBA+Zu4dr6V/0/XGRwiothq4WDP3xvKJYklHY8orAmBcu8gwQgFwr8rmQfBwNZl/O3AIzS3kd17ovI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDQ2SIsq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Uq8gkxrK"
-ARC-Seal: i=1; a=rsa-sha256; t=1738763934; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eklh8eHKDNLf/vqQgqihdn1CvlezfldVegFxkH2s37DSsx+MUti0JgGbn4FAYrBfyD/3mCKHmlIqwVFPYr+UydMWpsQ3cFBPv4TvabJPuBdKx6th4IfLHMnG5mPVfnL8dEkSxVJ6Nm0onf6Q09dsl4vqtRTeuyTZVwtgRpOzK9U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738763934; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=/7RYgJ+3RIpz5fQSELyDgebzd34b0vMAOGvAqmVNtkM=; 
-	b=AUtx+Mvs5dILkvYvW7FBUltBMyGWJllKX/2Qv5zj20h4g9Lre/b6ZBSPo+NfxAFh58w8IDx3Z46QgaQzWKdRvbLO2A7+EJcVdu5Tm+MDsgEWxg1VjrvR498WfHq69cZRBxdWmr75Ih+JfGJdK19n9czjCXpeIOMAqDpAiz5vfc8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738763934;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
-	bh=/7RYgJ+3RIpz5fQSELyDgebzd34b0vMAOGvAqmVNtkM=;
-	b=Uq8gkxrKGDWVn+T/LLsuKYJU8K8AVt3PWe7wIYPNkooO0rpDAYKpy/7fkWsVNcMa
-	4yslpKxqUdLKdaLWXMd3eBzHOx3NMLGWOtggFgTFOobS4FGxEw0PwUlzE4zYgQDvdjj
-	7QQeiTQ0vZbjv6YEujAwR/T/tHFgLpwmVUlInzPI=
-Received: by mx.zohomail.com with SMTPS id 1738763929968554.257648413077;
-	Wed, 5 Feb 2025 05:58:49 -0800 (PST)
-Message-ID: <77f23d53-5bbb-451d-b1c5-272e016b77f4@zohomail.com>
-Date: Wed, 5 Feb 2025 21:58:43 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDQ2SIsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E87C4CEE2;
+	Wed,  5 Feb 2025 14:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738764185;
+	bh=0UgdQM/Flqqa3xjQxdnbKC8Z9itU7PMXP+fof6DD1cU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=WDQ2SIsq23kx+D2wltiiRq+tc3VciUv5doPFOTasN9AJWwUoFgzJ7/LOYisFHRIcq
+	 MF94FGOLf0l9QXKLEKOMblx63uxKjr6L41ZWqqwxavZ1IM4OFYowJEaS33BGcEc/Ve
+	 7We95QJJvY+AhHwPsRb4nRbJqZR4lBFu6ij8gqVKxqzOFexnCqqRonSPaJQrIXZg2I
+	 s4EGfu3W2+Hp232jBEQlWohPtAwkrxv0vzPolw7fTTFmWo/9MjF0ThnrAxbsEUFpEn
+	 YnJptctSfEjpEZm4cSF+G5YD1/Mw/IW8N4MZWoQL+LzNeLe2junEI4IZcl4bS5JHNW
+	 p62+a47OTpm1A==
+Message-ID: <70b3bc567e56572d8c8ba816ce263b92ed4ce2d1.camel@kernel.org>
+Subject: Re: [PATCH RESEND v2] sunrpc: add netns inum and srcaddr to debugfs
+ rpc_xprt info
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Wed, 05 Feb 2025 09:03:03 -0500
+In-Reply-To: <20250205-nfs-6-14-v2-1-402e8072661f@kernel.org>
+References: <20250205-nfs-6-14-v2-1-402e8072661f@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/16] PCI/AER: Add CXL PCIe Port correctable error
- support in AER service driver
-To: "Bowman, Terry" <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-6-terry.bowman@amd.com>
- <cb087065-f2f3-481c-84cf-aca2c5fd5ac4@zohomail.com>
- <708db61f-2a69-40a0-ab9a-0fdb889ff443@amd.com>
- <c7e6298c-ae12-4e86-a74b-8b3aea698772@zohomail.com>
- <5ad954c8-2254-4f45-8018-7fa345597ee2@amd.com>
- <a8950b91-3485-4dd5-9d84-7d3a3031b752@zohomail.com>
- <2b9a8693-2218-4109-b20f-8a57618d9006@amd.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <2b9a8693-2218-4109-b20f-8a57618d9006@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122746601602bddea034351a641b0000405049dd64a72fbbdcc45a9e03e4bb5a012dd1b9b79f1f1983:zu08011227db1a4905a8b39c340baf685900001cbdf679201615d329a596d664ad40a695e9e4c2d8bcbba1bf:rf0801122d311ec566a48d27fa29a2872b0000ec87bb57208d316add66c82aa12eec2d91d9979100f314c77605453581c9db:ZohoMail
-X-ZohoMailClient: External
 
-On 2/5/2025 11:46 AM, Bowman, Terry wrote:
->
-> On 1/15/2025 9:15 PM, Li Ming wrote:
->> On 1/15/2025 10:39 PM, Bowman, Terry wrote:
->>> On 1/14/2025 7:18 PM, Li Ming wrote:
->>>> On 1/15/2025 3:29 AM, Bowman, Terry wrote:
->>>>> On 1/14/2025 12:54 AM, Li Ming wrote:
->>>>>> On 1/7/2025 10:38 PM, Terry Bowman wrote:
->>>>>>> The AER service driver supports handling Downstream Port Protocol Errors in
->>>>>>> Restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
->>>>>>> functionality for CXL PCIe Ports operating in Virtual Hierarchy (VH)
->>>>>>> mode.[1]
->>>>>>>
->>>>>>> CXL and PCIe Protocol Error handling have different requirements that
->>>>>>> necessitate a separate handling path. The AER service driver may try to
->>>>>>> recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
->>>>>>> suitable for CXL PCIe Port devices because of potential for system memory
->>>>>>> corruption. Instead, CXL Protocol Error handling must use a kernel panic
->>>>>>> in the case of a fatal or non-fatal UCE. The AER driver's PCIe Protocol
->>>>>>> Error handling does not panic the kernel in response to a UCE.
->>>>>>>
->>>>>>> Introduce a separate path for CXL Protocol Error handling in the AER
->>>>>>> service driver. This will allow CXL Protocol Errors to use CXL specific
->>>>>>> handling instead of PCIe handling. Add the CXL specific changes without
->>>>>>> affecting or adding functionality in the PCIe handling.
->>>>>>>
->>>>>>> Make this update alongside the existing Downstream Port RCH error handling
->>>>>>> logic, extending support to CXL PCIe Ports in VH mode.
->>>>>>>
->>>>>>> is_internal_error() is currently limited by CONFIG_PCIEAER_CXL kernel
->>>>>>> config. Update is_internal_error()'s function declaration such that it is
->>>>>>> always available regardless if CONFIG_PCIEAER_CXL kernel config is enabled
->>>>>>> or disabled.
->>>>>>>
->>>>>>> The uncorrectable error (UCE) handling will be added in a future patch.
->>>>>>>
->>>>>>> [1] CXL 3.1 Spec, 12.2.2 CXL Root Ports, Downstream Switch Ports, and
->>>>>>> Upstream Switch Ports
->>>>>>>
->>>>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->>>>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>>>>>> ---
->>>>>>>  drivers/pci/pcie/aer.c | 61 +++++++++++++++++++++++++++---------------
->>>>>>>  1 file changed, 40 insertions(+), 21 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>>>>> index f8b3350fcbb4..62be599e3bee 100644
->>>>>>> --- a/drivers/pci/pcie/aer.c
->>>>>>> +++ b/drivers/pci/pcie/aer.c
->>>>>>> @@ -942,8 +942,15 @@ static bool find_source_device(struct pci_dev *parent,
->>>>>>>  	return true;
->>>>>>>  }
->>>>>>>  
->>>>>>> -#ifdef CONFIG_PCIEAER_CXL
->>>>>>> +static bool is_internal_error(struct aer_err_info *info)
->>>>>>> +{
->>>>>>> +	if (info->severity == AER_CORRECTABLE)
->>>>>>> +		return info->status & PCI_ERR_COR_INTERNAL;
->>>>>>>  
->>>>>>> +	return info->status & PCI_ERR_UNC_INTN;
->>>>>>> +}
->>>>>>> +
->>>>>>> +#ifdef CONFIG_PCIEAER_CXL
->>>>>>>  /**
->>>>>>>   * pci_aer_unmask_internal_errors - unmask internal errors
->>>>>>>   * @dev: pointer to the pcie_dev data structure
->>>>>>> @@ -995,14 +1002,6 @@ static bool cxl_error_is_native(struct pci_dev *dev)
->>>>>>>  	return (pcie_ports_native || host->native_aer);
->>>>>>>  }
->>>>>>>  
->>>>>>> -static bool is_internal_error(struct aer_err_info *info)
->>>>>>> -{
->>>>>>> -	if (info->severity == AER_CORRECTABLE)
->>>>>>> -		return info->status & PCI_ERR_COR_INTERNAL;
->>>>>>> -
->>>>>>> -	return info->status & PCI_ERR_UNC_INTN;
->>>>>>> -}
->>>>>>> -
->>>>>>>  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->>>>>>>  {
->>>>>>>  	struct aer_err_info *info = (struct aer_err_info *)data;
->>>>>>> @@ -1034,14 +1033,23 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->>>>>>>  
->>>>>>>  static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->>>>>>>  {
->>>>>>> -	/*
->>>>>>> -	 * Internal errors of an RCEC indicate an AER error in an
->>>>>>> -	 * RCH's downstream port. Check and handle them in the CXL.mem
->>>>>>> -	 * device driver.
->>>>>>> -	 */
->>>>>>> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
->>>>>>> -	    is_internal_error(info))
->>>>>>> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
->>>>>>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
->>>>>>> +		return pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
->>>>>>> +
->>>>>>> +	if (info->severity == AER_CORRECTABLE) {
->>>>>>> +		struct pci_driver *pdrv = dev->driver;
->>>>>>> +		int aer = dev->aer_cap;
->>>>>>> +
->>>>>>> +		if (aer)
->>>>>>> +			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
->>>>>>> +					       info->status);
->>>>>>> +
->>>>>>> +		if (pdrv && pdrv->cxl_err_handler &&
->>>>>>> +		    pdrv->cxl_err_handler->cor_error_detected)
->>>>>>> +			pdrv->cxl_err_handler->cor_error_detected(dev);
->>>>>>>
->>>>>>> +		pcie_clear_device_status(dev);
->>>>>>> +	}
->>>>>>>  }
->>>>>>>  
->>>>>>>  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
->>>>>>> @@ -1059,9 +1067,13 @@ static bool handles_cxl_errors(struct pci_dev *dev)
->>>>>>>  {
->>>>>>>  	bool handles_cxl = false;
->>>>>>>  
->>>>>>> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
->>>>>>> -	    pcie_aer_is_native(dev))
->>>>>>> +	if (!pcie_aer_is_native(dev))
->>>>>>> +		return false;
->>>>>>> +
->>>>>>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
->>>>>>>  		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
->>>>>>> +	else
->>>>>>> +		handles_cxl = pcie_is_cxl_port(dev);
->>>>>> My understanding is if a cxl RP/USP/DSP is working on PCIe mode, they are also possible to expose a DVSEC ID 3(CXL r3.1 section 9.12.3). In such case, the AER handler should be pci_aer_handle_error() rather than cxl_handle_error().
->>>>>>
->>>>>> pcie_is_cxl_port() only checks if there is a DVSEC ID 3, but I think it should also check if the cxl port is working on CXL mode, does it make more sense?
->>>>>>
->>>>>>
->>>>>> Ming
->>>>> Hi Ming and Jonathan,
->>>>>
->>>>> RCH AER & RCH RAS are currently logged by the CXL driver's RCH handlers.
->>>>>
->>>>> If the recommended change is made then RCH RAS will not be logged and the
->>>>> user would miss CXL details about the alternate protocol training failure.
->>>>> Also, AER is not CXL required and as a result in some cases you would only
->>>>> have the RCEC forwarded UIE/CIE message logged by the AER driver without
->>>>> any other logging.
->>>>>
->>>>> Is there value in *not* logging CXL RAS for errors on an untrained RCH
->>>>> link? Isn't it more informative to log PCIe AER and CXL RAS in this case?
->>>>>
->>>>> Regards,
->>>>> Terry
->>>> Hi Terry,
->>>>
->>>>
->>>> I don't understand why the recommended change will influence RCH RAS handling, would you mind giving more details?
->>>>
->>>> My understanding is that above 'pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl)' is used for RCH case.
->>>>
->>>> And the 'else' block is used for VH case, so just check if the cxl port is working on CXL mode in pcie_is_cxl_port() or adding an extra function to check it in the 'else' block. I think it will not change RCH AER & RAS handling, is it right? or do I miss other details?
->>>>
->>>>
->>>> Ming
->>> Hi Ming,
->>>
->>> You're recommending this example case is handled by pci_aer_handle_error() rather than cxl_handle_error(). Correct me if I misunderstood. And, I believe this should continue to be handled by cxl_handle_error(). There are 2 issues with the recommended approach that deserve to be mentioned.
->> I guess that what you thought is the recommended change using pci_aer_handle_error() to handle CXL RAS issues? If yes, it is not what I meant.
->>
->> handles_cxl_errors() is used to distinguish if the errors is a CXL error or a PCIe error. if the returned value of handles_cxl_errors() is 'true', that means the error is a CXL error. Then invoking either cxl_handle_error() or pcie_aer_handle_error() depending on the returned value. I think no problem in this part.
->>
->> handles_cxl_errors() is using pcie_is_cxl_port() to distinguish CXL errors for VH cases. the implementation of pcie_is_cxl_port() is only checking if there is a DVSEC ID 3 exposed on the CXL RP/DSP/USP. I think it is not enough.
->>
->> For example, If a CXL device connected to a CXL RP, there is no problem, because the return value of handles_cxl_errors() will be 'true' then cxl_handle_error() will be invoked to handle the errors.
->>
->> If a PCIe device connected to a CXL RP, the CXL RP is working on PCIe mode, the CXL RP is possible to expose a DVSEC ID 3[1]. If the CXL RP has a DVSEC ID 3 in the case, the return value of handles_cxl_errors() is also 'true' and also invoking cxl_handle_error() to handle the error, I thinks it is not right, the CXL RP is working on PCIe mode, the error should be a PCIe error, and it should be handled by pcie_aer_handle_error(). So my suggestion is about checking if the CXL RP/DSP/USP is working on CXL mode in pcie_is_cxl_port() for VH cases.
->>
->>
->> [1] CXL r3.1 - 9.12.3 Enumerating CXL RPs and DSPs
->>
->>    "CXL root port or DSP connected to a PCIe device/switch may or may not expose theCXL DVSEC ID 3 and the CXL DVSEC ID 7 capability structures."
->>
-> Hi Ming,
->
-> I apologize for the delayed response. Thanks for the patience in explaining.
->
-> In your example using a RP with downstream non-CXL device, the RP AER will log the
-> RP's CE/UCE and RAS status for a protocol error. It's not helpful in this case
-> because it's a non-CXL device but it is failing alternate prootcol training that can
-> also happen with a CXL endpoint. I expect the RAS registers contain details about
-> the failed CXL training in the endpoint case.
->
-> I believe we should give the user as much error details within reason. And for CXL using
-> AER CE/UCE errors, this should include the RAS logging. If we rely on the PCIe handling path,
-> this information will not be logged.
->
-> Also, CE/UCE AER is logged in the CXL handling path. The AER driver logs AER status before
-> calling the CE/UCE CXL handlers.
->
-> Are there any other use cases or reasons why to use PCIe handling if alt. protocol training
-> fails? Is there anything lost by using CXL handling?
+On Wed, 2025-02-05 at 08:43 -0500, Jeff Layton wrote:
+> The output format should provide a value that matches the one in
+> the /proc/<pid>/ns/net symlink. This makes it simpler to match the
+> rpc_xprt and rpc_clnt to a particular container.
+>=20
+> Also, when the xprt defines the get_srcaddr operation, use that to
+> display the source address as well.
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v2:
+> - Don't bother with NUL termination, just use a length specifier
+> - Link to v1: https://lore.kernel.org/r/20250122-nfs-6-14-v1-1-164b0b5aa3=
+30@kernel.org
+> ---
+>  net/sunrpc/debugfs.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+> index a176d5a0b0ee9a2c0ca1d1ed3131b67b782c3296..9498f385716d5eab1c5766a2a=
+4ef5218155432e0 100644
+> --- a/net/sunrpc/debugfs.c
+> +++ b/net/sunrpc/debugfs.c
+> @@ -179,6 +179,18 @@ xprt_info_show(struct seq_file *f, void *v)
+>  	seq_printf(f, "addr:  %s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
+>  	seq_printf(f, "port:  %s\n", xprt->address_strings[RPC_DISPLAY_PORT]);
+>  	seq_printf(f, "state: 0x%lx\n", xprt->state);
+> +	seq_printf(f, "netns: %u\n", xprt->xprt_net->ns.inum);
+> +
+> +	if (xprt->ops->get_srcaddr) {
+> +		int ret, buflen;
+> +		char buf[INET6_ADDRSTRLEN];
+> +
+> +		buflen =3D ARRAY_SIZE(buf);
+> +		ret =3D xprt->ops->get_srcaddr(xprt, buf, buflen);
+> +		if (ret < 0)
+> +			ret =3D sprintf(buf, "<closed>");
+> +		seq_printf(f, "saddr: %.*s\n", ret, buf);
+> +	}
+>  	return 0;
+>  }
+> =20
+>=20
+> ---
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> change-id: 20250122-nfs-6-14-7f737deb6356
+>=20
+> Best regards,
 
-One problem I realized is if using cxl_handle_error() instead of pci_aer_handle_error() for the above case I described(a CXL RP is working on PCIe mode because it connected to a PCIe device), the CXL RP will miss pcie_do_recovery() invoked in pci_aer_handle_error() when the error is an UCE, and it will also miss pcie error handler implemented in pcie port driver. 
+Please disregard this patch. I didn't realize Anna had picked this up
+for v6.14.
 
-It means that AER handling logic is different between CXL RP working on PCIe mode and PCIe RP. I am not sure whether it is OK.
-
-
-Although cxl_handle_error() includes cxl_do_recovery() implemented in patch #7, cxl_do_recovery() seems like only for CXL cases(CXL RP working on CXL mode), is it suitable for pcie port recovery(CXL RP working on PCIe mode)?
-
-Please correct me if I am wrong.
-
-
-Ming
-
->
-> Terry
->>> First, the RCH Downstream Port (DP) is implemented as an RCRB and does not have a
->>> SBDF.[1] The RCH AER error is reported with the RCEC SBDF in the AER SRC_ID register.[2] The
->>> RCEC is used to find the RCH's handlers using a CXL unique procedure (see cxl_handle_error()).
->>>
->>> The logic in pci_aer_handle_error() operates on a 'struct pci_dev' type and pci_aer_handle_error() is not plumbed to support searching for the RCH handlers.
->>>
->>> Using pci_aer_handle_error would require significant changes to support a CXL RCH
->>> in addition to a PCIe device. These changes are already in cxl_handle_error().
->>>  
->>> Another issue to note is the CXL RAS information will (should) not be logged with this
->>> recommended change. pci_aer_handle_error is PCIe specific and is not aware of CXL RAS. As a result,pci_aer_handle_error() is not suited to log the CXL RAS.
->>>
->>> The example scenario was the RCH DP failed training. The user needs to know why training
->>> failed and these details are stored in the CXL RAS registers. Again, CXL RAS needs to be logged
->>> as well but CXL specific awareness shouldn't be added to pci_aer_handle_error().
->> For these two issues, handles_cxl_errors() is always using "pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl)" for RCH cases. I believe no change on this part, the return value of handles_cxl_errors() will be 'true' as expected in the cases you mentioned, cxl_handle_error() will help to handle these errors.
->>
->>
->> Ming
->>
->>> Terry
->>>
->>> [1] CXL r3.1 - 8.2 Memory Mapped Registers
->>> [2] CXL r3.1 - 12.2.1.1 RCH Downstream Port-detected Errors+
->>>>>>>  
->>>>>>>  	return handles_cxl;
->>>>>>>  }
->>>>>>> @@ -1079,6 +1091,10 @@ static void cxl_enable_internal_errors(struct pci_dev *dev)
->>>>>>>  static inline void cxl_enable_internal_errors(struct pci_dev *dev) { }
->>>>>>>  static inline void cxl_handle_error(struct pci_dev *dev,
->>>>>>>  				    struct aer_err_info *info) { }
->>>>>>> +static bool handles_cxl_errors(struct pci_dev *dev)
->>>>>>> +{
->>>>>>> +	return false;
->>>>>>> +}
->>>>>>>  #endif
->>>>>>>  
->>>>>>>  /**
->>>>>>> @@ -1116,8 +1132,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->>>>>>>  
->>>>>>>  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->>>>>>>  {
->>>>>>> -	cxl_handle_error(dev, info);
->>>>>>> -	pci_aer_handle_error(dev, info);
->>>>>>> +	if (is_internal_error(info) && handles_cxl_errors(dev))
->>>>>>> +		cxl_handle_error(dev, info);
->>>>>>> +	else
->>>>>>> +		pci_aer_handle_error(dev, info);
->>>>>>> +
->>>>>>>  	pci_dev_put(dev);
->>>>>>>  }
->>>>>>>  
-
-
+Cheers,
+--=20
+Jeff Layton <jlayton@kernel.org>
