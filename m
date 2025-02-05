@@ -1,111 +1,116 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27CE1E0DE4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA188DF5C;
+	Wed,  5 Feb 2025 19:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785223; cv=none; b=rXoZyPMe8HwihgMUI71xW86BEBHkn2fSbf2QIwjAaVIgkDPnEvxl07ONTnkNV+4ECIVUCJZI/e9kBv7EwtkmD5jyqUlfuyOi/1IIVJNkWbqHQU8vHzjs5VrNW96L0vR2qjKgK6h8DKGAMDE01x1JyZRTE0uKDFUSICapJ0u7epE=
+	t=1738785251; cv=none; b=eabSLnOH7BmfnATbrPXj9VFZVfuQJOuPWSLXbGnjFECHRIK6dewqYXXlNO0UwweINJGbnwP5LuIk1afYNjGdeqtTKhtSBKBr11iqZ6hTyFVQ74qGs+skPZXzVOCVR1AwIAs+M4mU7Gl3yGztRT14OXHi4+wOw7PnLfmjKnqkOlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785223; c=relaxed/simple;
-	bh=6q5v84lcktHrl3Z/XuzQ2h/3k5A/dQfZvkx4mZLUD3I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WTWzTu4ZqKG1WvTpabYfwilrMkY5zliAi12suxCgHuL7P7uSrDdESCnM8LEudxJ5qHJqJqK7SIb6tj5JuerFC+PvW4F9TM1nyGw9+2OG/icoh0h2WUrZrHtHbhG44WAsSTpXup8lbdSC/nJlM+FyLzfV2G7km3KJ22VXsF1gieM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uFqmbNS0; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738785251; c=relaxed/simple;
+	bh=jlksgytH69leNLbI1Cv9xnprBTsFWuDeBH030+M3hV0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uP/Wump/3zjVednKyRgYIgFUa8PIJhD4mofeWbInvnIyXh0XZrddz1pko6P5HHPbCBxWe+9FZZgO/7keo6wnPoZHfWzM0HgkMuqQDsj2GSbJQK199PxXPzGAw30GwcBo5ZQbXTG/TDVao2GVqfydw0grGOLKFEBPOiYc5B6HyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mm4rzdS/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SqT2M3y3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uFqmbNS0"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2163affd184so24295ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:53:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738785221; x=1739390021; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6q5v84lcktHrl3Z/XuzQ2h/3k5A/dQfZvkx4mZLUD3I=;
-        b=uFqmbNS0aBRnuo9pIv0WlRbfYcyfLCZgY3fhAFoYmNRMInar7ONTMyWfrwIkc1o7Tu
-         h/NNa5g8HMGIKel+KVJG+yqOExkoR0MXGAcvEWi5OElTbZVVa6GJ43In2ZXxNYEPdotq
-         etguEabJ4EeAKgyL4y4RQ0WuNhvShkm/Zo7zDY4m1GjCqkwTiQLy0Jv9sObNcQ0uA+DA
-         KdbhALjjkfSubZV5ENAirfaLKmMu5+CCXre1AqVY+e/09ztZMNm970g/tCTnmM9d9tEc
-         QTzh7NbdC0EsuH3LEukcps4R6JpRPT1fNoAOylP+0Vq0tAcx2+AjhY1aXtI1sF/yyNOW
-         kUqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738785221; x=1739390021;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6q5v84lcktHrl3Z/XuzQ2h/3k5A/dQfZvkx4mZLUD3I=;
-        b=xPchh0DggbjUdAZ3fmbjodFJ/mdQmgN+0vghmt7fFGzJD98HkMy1Yrk0CrQ3yg0mhv
-         j7LRAwXKfGOkau42wZp6ulqaLBPGQUBAhiyg4W2O6AawxTqJJgvq3xB1C6spPlDBxZwm
-         5yiPOZyxS0u06xgKWr57EnJOmrIhkqIUkU8HOCQniQ0YN1MMYiEdo35rloH2JdqILuj4
-         seVIY35k8Axrt5n13v4DiXuMQshyxstJS75OQe8wPTF/gOcQHjCVbxyMe7cQD+w8qD7g
-         /EK0er0RyEtTRhCP8YLS+g4A6UzP4WxtmW6JaTesm6thSc0Lx2p57tnxN/X2de8LjZHa
-         i6XA==
-X-Forwarded-Encrypted: i=1; AJvYcCUP5sSnyKooPWaQBU8DmBjI7EptcFLqWo7eVsNl5PH8zz/DpJcfmy42xiiZCwdNxuxn2NZWBEGlvvSqOi8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmdNmfJ+HJBtokL7eRB97MWicQr0a2cAPYfIcObN+tbIAQY4UE
-	QcWWVMTdzwKfSYMq/hdSmDYDSEuwNQxuQk1Fzz+XW0W522Ss9Leyt0JncM7fa3GIx9enPjBlRdZ
-	qCD8aSwNo3NN0T3FGUau3kMG9I1n7lq1ZJhe/
-X-Gm-Gg: ASbGnctT/8Sg9TzL56mhg4FzMB/N9ZQxU1NRFTCmSoXkb3z5GDHeVaI3WgnmethOXi3
-	8HoWvOeub9oTXPZlT26FX9qa+HPBd9eo79JpQu/px7BApe5mHxnXYaomr96sEQ5NyQz8N6+Ab
-X-Google-Smtp-Source: AGHT+IFDcob/TSEuYMXb3hSVO++9mpu4Se8Bnl44BpJBOAaoFodhFrUGSu2xVB4BmBZwjRYxoARZ3TUatoE/oCz5blg=
-X-Received: by 2002:a17:902:a9c3:b0:21a:87e8:3897 with SMTP id
- d9443c01a7336-21f3022831bmr337775ad.4.1738785220998; Wed, 05 Feb 2025
- 11:53:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mm4rzdS/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SqT2M3y3"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738785247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMSAXj7fdF/3cpVVSi5y0V3ynqcVyw0ol5wvMXtAAYE=;
+	b=mm4rzdS/mD5KTi/BfUcrgawqlXAX67aJn3ywCwn6PytYNmsIDMcWsZlj1CSVgsCvD+WxeJ
+	ZmEDCZS8HUGmJudL7dIz5oqC5XAvOh0XLuCCovJYH5DLlbga0L5/eo1TjyVBy2AO9zGqGg
+	oYNJziZASawxI22EstlJuwk8wRzvE89VGaXhxnfYAl4QavwwYJQqHmgoVDnfmmMI/9RviU
+	b3Z9OrmoeQiRnIepJYrTux0DTQM/8bQr50O2HW8ZA1f+xXqZCnFzN55vI2dsmmFaRgz1i4
+	vzc+7C8ZS7/UUteARh5Zds6GYfPoEZ4Nns6tPq8xTzuioEs+uZqbjYB5KiIyZw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738785247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMSAXj7fdF/3cpVVSi5y0V3ynqcVyw0ol5wvMXtAAYE=;
+	b=SqT2M3y3XwzprAbqqZAhd3w5JmpYKw8QJ7j+eMMIABaGjj5/cD+hMrH8gYgljVXix+9UjZ
+	JWYNHkAUtww47HAA==
+To: paulmck@kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Alexei Starovoitov <ast@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+In-Reply-To: <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
+ <20250204102611.OVuHn9rS@linutronix.de>
+ <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
+ <20250204163409.ueObHFje@linutronix.de>
+ <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
+ <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+Date: Wed, 05 Feb 2025 21:00:07 +0106
+Message-ID: <84pljwi2w0.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203223916.1064540-1-almasrymina@google.com>
- <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com> <CAHS8izNZrKVXSXxL3JG3BuZdho2OQZp=nhLuVCrLZjJD1R0EPg@mail.gmail.com>
- <Z6JXFRUobi-w73D0@mini-arch> <60550f27-ea6a-4165-8eaa-a730d02a5ddc@redhat.com>
- <CAHS8izMkfQpUQQLAkyfn8=YkGS1MhPN4DXbxFM6jzCKLAVhM2A@mail.gmail.com>
- <Z6JtVUtsZL6cxsTO@mini-arch> <20250204180605.268609c9@kernel.org>
-In-Reply-To: <20250204180605.268609c9@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 5 Feb 2025 11:53:28 -0800
-X-Gm-Features: AWEUYZmMVG6gb-GClyYhPSsDJYW5WzEYrdAHF0Dz0FhMB9-YcVD_emeIkz00f9E
-Message-ID: <CAHS8izNPxqUHNcE-mtnLSMEpD+xH9yNCxEAkvn01dLekkuvT_Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Stanislav Fomichev <stfomichev@gmail.com>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Neal Cardwell <ncardwell@google.com>, 
-	David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Feb 4, 2025 at 6:06=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
-te:
->
-> On Tue, 4 Feb 2025 11:41:09 -0800 Stanislav Fomichev wrote:
-> > > > Don't we need some way for the device to opt-in (or opt-out) and av=
-oid
-> > > > such issues?
-> > > >
-> > >
-> > > Yeah, I think likely the driver needs to declare support (i.e. it's
-> > > not using dma-mapping API with dma-buf addresses).
-> >
-> > netif_skb_features/ndo_features_check seems like a good fit?
->
-> validate_xmit_skb()
+On 2025-02-05, "Paul E. McKenney" <paulmck@kernel.org> wrote:
+>> This is caused by RCU falling behind a callback-flooding kthread that
+>> invokes call_rcu() in a semi-tight loop.  Setting rcutree.kthread_prio=40
+>> avoids the splat, but still gets the shutdown-time hang.  Retrying with
+>> the default rcutree.kthread_prio=2 failed to reproduce the splat, but
+>> it did reproduce the shutdown-time hang.
+>> 
+>> OK, maybe printk buffers are not being flushed?  A 100-millisecond sleep
+>> at the end of of rcu_torture_cleanup() got all of rcutorture's output
+>> flushed, but lost the subsequent shutdown-time console traffic.  The
+>> pr_flush(HZ/10,1) seems more sensible, but this is private to printk().
+>>
+>> I would like to log the shutdown-time console traffic because RCU can
+>> sometimes break things on that path.
 
-I was thinking I'd check dev->features during the dmabuf tx binding
-and check the binding completely if the feature is not supported. I'm
-guessing another check in validate_xmit_skb() is needed anyway for
-cases such as forwarding at what not?
+pr_flush() was changed to private because there were no users. It would
+not be a problem to make it available. Adding a pr_flush() to
+rcu_torture_cleanup() would be an appropriate workaround for now (more
+on this at the end).
 
---=20
-Thanks,
-Mina
+> There is a call to kmsg_dump(KMSG_DUMP_SHUTDOWN) in kernel_power_off()
+> that appears to be intended to dump out the printk() buffers,
+
+It only dumps the buffers to the registered kmsg_dumpers. It is not
+responsible for flushing console backlogs.
+
+> but it
+> does not seem to do so in kernels built with CONFIG_PREEMPT_RT=y.
+> Does there need to be a pr_flush() call prior to the call to
+> migrate_to_reboot_cpu()?  Or maybe even to do_kernel_power_off_prepare()
+> or kernel_shutdown_prepare()?
+
+With CONFIG_PREEMPT_RT=y, legacy consoles only print via a dedicated
+kthread. Without a pr_flush() somewhere, there is basically no chance
+that they will get backlogs flushed because noone is waitig for them.
+
+The new console API (NBCON) provides support for "atomic consoles",
+which _do_ flush by transitioning to synchronous printing during
+shutdown/reboot. Unfortunately we still don't have any NBCON atomic
+console implemented in the kernel. The 8250 UART will be our first
+driver, most likely available in 6.15. (With the current PREEMPT_RT
+patch applied, the 8250 NBCON atomic driver is used.)
+
+Since only CONFIG_PREEMPT_RT=y has this issue, I am not sure if we want
+to sprinkle pr_flush() calls on all sleepable shutdown/reboot paths,
+although that is certainly one way to handle it. For your case, adding a
+pr_flush() to rcu_torture_cleanup() and making pr_flush() non-private
+would be an easy solution to avoid your problem.
+
+John Ogness
