@@ -1,204 +1,178 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C36718BC26
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3041D8A12;
+	Wed,  5 Feb 2025 15:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738767647; cv=none; b=mf0iCFe3NxRPeA5G93s+T2TQ1OtEGzsthxbRZ1Coirc2skzMc0utTyUMq8/y6JQw0RIa0Ieu5SllyeBbRzzurtdc1fo/sFdoE1PbG60wbHFIuAgOWk/ViLwvXzu5O2RwLMRxOyP8ZH25v3IV2j5EtyQiIR4kdodL3DtftWljTq0=
+	t=1738767679; cv=none; b=UujXmq60OdRd8MrylUKcLm7+A9yIjginzMFMQaRBul+xGVuOroUNIBVxbH7dM+qfGPL7BXOQBGJqkfY2RHmKfRsg9LQGY4n+hiqnquyCtc2afXFAL491SpjvS/U7WPO6DnLI1B0v2CqKnWUEZZujpKYGk7GJ7XcV00t8e0MOT1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738767647; c=relaxed/simple;
-	bh=ZqxIPxkD1UfdMbx6FC7fyU0rmhf4o9frfUHSPNLu7gw=;
+	s=arc-20240116; t=1738767679; c=relaxed/simple;
+	bh=jI6mFqZXpNqzB11L+dcLlQT43GiVzIhoAANt38o1ASM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pu1XnsQQlghLWrbhcZ02NawzlM1vLi2uj8AVrPZR4C678w60IUZUuKfO27iZhKVvosIvXeBzCOZQhy6LhoEsK0AOQe0cwsZkt08gGyCJcADf1xXjZzag4NFt/+mtcZnxPvF/mriNMB/kEGri8iZc/eIbqedcaiqgaFuch9yI0eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HmMeRI/C; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=sLPQZomDXylChbRNOuKsa8cMKRQL1mAM1wDlrPQuYrqjsEQ0ZZ9g1KAN8KDJ4FX8yNWOfcJmFv05oxO24duJgTYLNP8RKLIJHgscU3ooO+H3/V2izk4Sy18SYq9taM17JsWyIUEiXgDnqUN535Ps7AHs11fHlifMJ+sZMYnu62Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVd0UY3+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HmMeRI/C"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5dcd43726ecso13569a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:00:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738767643; x=1739372443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bh4SFstw4Y2Mzl5Q95yQLXnvJ0oL3/7dIeDylh0bX7c=;
-        b=HmMeRI/Cci08+ahT6hSGGw/Ecg3OSlsiqYXaxHXqQBpN2BXa4DNuU+j6MPWGQRSLJ6
-         Kel8/k5HGbtYARTO44VRBw5evhSeUyWBx21j4/6GkbxQaGvyq1a7eP/gGSh2WiuoMiz8
-         ohatAifzQDaiuNB5RqKVsA+qwbpKlryLm+tt144ikJacG1F+B50itsS77srvV4Sj1NbI
-         KDalEGBgNKpzS3JoD0e6SPaYNUBwSfFQ2igYzO2y/olUgs3O1wwkUKmw9xQPLA3mupuy
-         Do5jiszzbxYdp442ltt/DAVcFrXXgCjI1R3XpFFJeYNrne2tmnCWJnH0cBp0sVUxXiyr
-         oSlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738767643; x=1739372443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bh4SFstw4Y2Mzl5Q95yQLXnvJ0oL3/7dIeDylh0bX7c=;
-        b=GoGCP53s8gAANoQmTmXNPCA/fgvEQoW5sr08QB0QqGZObtR7a7wekZHKqAb0oCkudJ
-         rsZ25Q67SEiVCHrPiKIpmEH90buWM6rKNc+5o72Euld42RUnBJArAMsPDtH4afpZINRL
-         6Buv2+Hq7CSUM20gvxXox8vvwhOY6481UkK/Wq73VYfFt/6gLSJro1WyBTtPo/bTMFYc
-         d/jSoBGQiDMXTAM3dKEyy7Go079FsI48C30IdFYciq6kUW5FGAiB8FoXtL9z7EpvZr+3
-         FpIi47Yb7goZi2TUSEF3WohnCRIVvm4ijq3R81Gc96gnxpEv7tjdzGudUnlSv461Flj4
-         U0zA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLVGX2R/L4c2ArNVlzfkZvyozNkwuptWTOQMA6RnCFj1D1Zz4gIDl2JAc1xpVV7tqTjfemS3+sIDEcYhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxyBkkuYvFCSHxyi4R/5oxd7wJ2LJZKFIxc4/mmVqr4OhxZk3h
-	/YPgj9Le5NW1q0ZPlzFbypcmkhFmNxeIXPrZy0WSos3elBoB9yb1gvbHgrpTDQNCEFLO4VdhBM+
-	uvAYCBT/N/9wsrXYsNvd0BCPez37bGakhuvxA
-X-Gm-Gg: ASbGncuWekwECBFeMw1+lyxi8gSetl0wTMSKgjt2MmLYJE/qQ4Mtw0paizuUKeKunaG
-	BrbVvO7jeaSux0DrTm1DYe5ldewlUJKMIPcuLmyc5zyl9X7tgf1or0SDFq3zAQMu4i2n1lV0bIv
-	PJVsTuY84lCLhK46MqCjmwlEI4Qg==
-X-Google-Smtp-Source: AGHT+IHGno0gpGGbYBLkdSrCpQQ3wx/4MXbBdtqd22IKoXvDe8XdvZM0XE8liXtix/aEe3SL3z4+Ye2lu1R6RPBOKXg=
-X-Received: by 2002:aa7:d7d3:0:b0:5dc:d909:3109 with SMTP id
- 4fb4d7f45d1cf-5dcd9093251mr160600a12.7.1738767642585; Wed, 05 Feb 2025
- 07:00:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVd0UY3+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF12C4AF0B;
+	Wed,  5 Feb 2025 15:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738767679;
+	bh=jI6mFqZXpNqzB11L+dcLlQT43GiVzIhoAANt38o1ASM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NVd0UY3+SrUhP8KgM3yRrdrtn1tWhqHD/cFREgSGQlPF/3Ys0S/cLD0aCArpKzhRz
+	 xb6NGh384cqts0ey+Lxdu8p/V5qbNY/eF8qxJvHvym3bAKwMddKcE6ya2BTexqPaHh
+	 tfMG5lXUapCDPpetS4iNgFTdKtGmgwEpcnIzSrVKLAcoTIOEgv+BOWPE4uuUyVDhQY
+	 dTf1rsfRRdObkpx3aeHmoA4rwjMpeoWbup+MV1VDlejZu5sKVJQeFoPsw5HP30Xvth
+	 q/7pyfODXPaJLIWxdQ6j+hk2Turhsj/Gqnw2xYCJ8OMn5mi4mB58+tm3Em2IKQAuJk
+	 Ra2LKVKwiSsaA==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30036310158so51296061fa.0;
+        Wed, 05 Feb 2025 07:01:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVF91waEY/C2vZWsrDa/Psf4374Bk+2Css5WIEtDUF2r5UEpzPthwh8C/Ey7Do/rndPpl3gq1Nf/w1xZ10=@vger.kernel.org, AJvYcCWtGaEKYWbsUUyGd++H3NBCptfeOCQlybuA359aW352yc/OfPFm4QKXxb8lLKYN93ZHmphPeAPr1Q8aWpZ8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7N94j9PCgEYtpQ/LrHG3l3EQFdwL73ayJNHyAHJXZFaScPFnv
+	EKHSGBjkQLp5cXziuMgE09OZwG3HUuczUXQFI848ROdxv5+UyZeEMitUK9CG4Zd6nyxShE7uYLx
+	A7zsZVTNqRDD86aSwo9Gwk3I7Eyc=
+X-Google-Smtp-Source: AGHT+IHBb3ZeLGy1cAwth78pTANNFx2IuQ0g1ShCCMr1SOasPwPJY8/Avdj1h8ZJ4TvLE0Z8RjKtTm/R4F0rwync+j4=
+X-Received: by 2002:a05:651c:154f:b0:300:33b1:f0e7 with SMTP id
+ 38308e7fff4ca-307cf31470cmr12662021fa.10.1738767677437; Wed, 05 Feb 2025
+ 07:01:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a34e60.050a0220.50516.0040.GAE@google.com>
-In-Reply-To: <67a34e60.050a0220.50516.0040.GAE@google.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 5 Feb 2025 16:00:06 +0100
-X-Gm-Features: AWEUYZlZucCQVL5QWy9q08RV8uJzfYam-zAdITGASXdZWg06IzTeZfBp52gAsb0
-Message-ID: <CAG48ez3KKEYRU+-Mkk+tq1Onv3QWg0jP6fEKYjNjRS+ziP5dAQ@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] KCSAN: data-race in mprotect_fixup / try_to_migrate_one
-To: syzbot <syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com>
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+References: <20250122-strip_unneeded-v1-1-ac29a726cb41@rivosinc.com>
+ <20250131035245.GA47826@ax162> <Z5xzkwwZAWRRLCdj@ghost> <CAK7LNAR=1sNs+hOW8gL=7xOs=gHLToTAnAUTF1SizroYoui8sg@mail.gmail.com>
+ <Z51BpVEkmVCg7gTX@ghost> <CAK7LNATs=c4J7mR69ec3scPqw6PK4SKTs-ixrQM_eRiz=EhS8A@mail.gmail.com>
+ <Z6JcgeDmt63MupyW@ghost>
+In-Reply-To: <Z6JcgeDmt63MupyW@ghost>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 6 Feb 2025 00:00:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS5RVtm078rLFJNxQwPf+1VH+zf12dQJ1Xh-Wc4_qFGTw@mail.gmail.com>
+X-Gm-Features: AWEUYZmvR9oI4SL8wPTQkoUvSwnAMEleZny79O5YuUFBaIkgVaSJ3j7KI_kBm2s
+Message-ID: <CAK7LNAS5RVtm078rLFJNxQwPf+1VH+zf12dQJ1Xh-Wc4_qFGTw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Use --strip-unneeded with INSTALL_MOD_STRIP
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 5, 2025 at 12:41=E2=80=AFPM syzbot
-<syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com> wrote:
-> syzbot found the following issue on:
+On Wed, Feb 5, 2025 at 3:29=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.co=
+m> wrote:
 >
-> HEAD commit:    d009de7d5428 Merge tag 'livepatching-for-6.14-rc2' of git=
-:..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D12b678a458000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D9e757e3762bd6=
-30b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dc2e5712cbb14c95=
-d4847
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
+> On Tue, Feb 04, 2025 at 01:04:26PM +0900, Masahiro Yamada wrote:
+> > On Sat, Feb 1, 2025 at 6:33=E2=80=AFAM Charlie Jenkins <charlie@rivosin=
+c.com> wrote:
+> > >
+> > > On Sat, Feb 01, 2025 at 12:10:02AM +0900, Masahiro Yamada wrote:
+> > > > On Fri, Jan 31, 2025 at 3:54=E2=80=AFPM Charlie Jenkins <charlie@ri=
+vosinc.com> wrote:
+> > > > >
+> > > > > On Thu, Jan 30, 2025 at 08:52:45PM -0700, Nathan Chancellor wrote=
+:
+> > > > > > On Wed, Jan 22, 2025 at 07:17:26PM -0800, Charlie Jenkins wrote=
+:
+> > > > > > > On riscv, kernel modules end up with a significant number of =
+local
+> > > > > > > symbols. This becomes apparent when compiling modules with de=
+bug symbols
+> > > > > > > enabled. Using amdgpu.ko as an example of a large module, on =
+riscv the
+> > > > > > > size is 754MB (no stripping), 53MB (--strip-debug), and 21MB
+> > > > > > > (--strip-unneeded). ON x86, amdgpu.ko is 482MB (no stripping)=
+, 21MB
+> > > > > > > (--strip-debug), and 20MB (--strip-unneeded).
+> > > > > > >
+> > > > > > > Use --strip-unneeded instead of --strip-debug to strip module=
+s so
+> > > > > > > decrease the size of the resulting modules. This is particula=
+rly
+> > > > > > > relevant for riscv, but also marginally aids other architectu=
+res.
+> > > > > > >
+> > > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > > >
+> > > > > > Is there any sort of regression risk with this patch? If so, an=
+other
+> > > > > > option may be to give another level to INSTALL_MOD_STRIP like 2=
+ so that
+> > > > > > INSTALL_MOD_STRIP=3D1 continues to behave as before but people =
+can easily
+> > > > > > opt into this option. No strong opinion because I am not sure b=
+ut was
+> > > > > > not sure if it was considered.
+> > > > >
+> > > > > I do not believe this would cause regressions. The description on=
+ gnu
+> > > > > strip is:
+> > > > >
+> > > > > "Remove all symbols that are not needed for relocation processing=
+ in
+> > > > > addition to debugging symbols and sections stripped by --strip-de=
+bug."
+> > > > >
+> > > > > The description on llvm-strip is:
+> > > > >
+> > > > > "Remove from the output all local or undefined symbols that are n=
+ot
+> > > > > required by relocations. Also remove all debug sections."
+> > > > >
+> > > > > gnu strip --strip-unneeded strips slightly more aggressively but =
+it does
+> > > > > not appear this causes any issues.
+> > > > >
+> > > > > >
+> > > > > > Regardless:
+> > > > > >
+> > > > > > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> > > > >
+> > > > > Thanks!
+> > > > >
+> > > >
+> > > >
+> > > > It is true --strip-unneeded drops a lot of compiler-generated symbo=
+ls, but
+> > > > it also drops real symbols that originate in the source code.
+> > > >
+> > > > So, this would give user-visible changes for kallsyms at least.
+> > >
+> > > Adding INSTALL_MOD_STRIP=3D"--strip-unneeded" would be sufficient for
+> > > riscv. However, this has the downside that riscv will require differe=
+nt
+> > > flags than other architectures to get reasonably sized modules.
+> >
+> > You can use INSTALL_MOD_STRIP=3D--strip-unneeded for all architecture i=
+f you like.
+> >
+> > I assume this is a riscv issue. Specifically, riscv gcc.
+> > With LLVM=3D1, I see much smaller riscv modules using INSTALL_MOD_STRIP=
+=3D1.
+> >
+> > --strip-unneeded is needlessly aggressive for other architectures,
+> > and I do not see a good reason to change the default.
 >
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/9235000a1b88/dis=
-k-d009de7d.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/098ef82f8ab3/vmlinu=
-x-d009de7d.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/4f51f5eb5782/b=
-zImage-d009de7d.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+c2e5712cbb14c95d4847@syzkaller.appspotmail.com
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KCSAN: data-race in mprotect_fixup / try_to_migrate_one
->
-> write to 0xffff888114b41700 of 8 bytes by task 6432 on cpu 1:
->  vm_flags_init include/linux/mm.h:875 [inline]
->  vm_flags_reset include/linux/mm.h:887 [inline]
->  mprotect_fixup+0x419/0x5e0 mm/mprotect.c:679
->  do_mprotect_pkey+0x6cc/0x9a0 mm/mprotect.c:840
+> Yes it is primarily an issue with riscv GCC. I was hoping for something
+> more standardized so that other people using riscv GCC wouldn't
+> encounter this. Would it be reasonable to add this flag by default only
+> for the riscv architecture, or do you think it's just better to leave it
+> up to the user's choice?
 
-This is one side changing the VMA flags under the mmap lock in write mode..=
-.
+The latter.
 
->  __do_sys_mprotect mm/mprotect.c:861 [inline]
->  __se_sys_mprotect mm/mprotect.c:858 [inline]
->  __x64_sys_mprotect+0x48/0x60 mm/mprotect.c:858
->  x64_sys_call+0x2770/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:=
-11
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> read to 0xffff888114b41700 of 8 bytes by task 6418 on cpu 0:
->  try_to_migrate_one+0xb5a/0x12e0 mm/rmap.c:2321
->  rmap_walk_anon+0x28f/0x440 mm/rmap.c:2646
+INSTALL_MOD_STRIP=3D1 passes --strip-debug.
+This is clearly documented in Documentation/kbuild/makefiles.rst
+and it has worked like that for many years, with no exception.
 
-... while the other side comes through the rmap, which does not
-involve the mmap lock. Yes, that does not have any mutual locking by
-design, I think.
+If users want it to work differently, the flexibility is already there.
 
-The comments in the VMA flags code incorrectly assume that no
-concurrency is possible here; and I think the comment in
-mprotect_fixup() about protection by the mmap_lock has also been kinda
-wrong since the beginning of git history.
-
-The VM_LOCKED check in the migration code was added by Hugh in commit
-b74355078b655, but that's just one example syzbot stumbled over; we
-have similar racy vm_flags reads through the rmap on other paths like:
-
-unmap_mapping_range_tree -> unmap_mapping_range_vma ->
-zap_page_range_single -> unmap_single_vma -> unmap_page_range -> ...
--> zap_pte_range -> zap_present_ptes -> vm_normal_page
-
-I think the right fix might just be to make sure that we use
-WRITE_ONCE() for these vm_flags updates, and READ_ONCE() around
-->vm_flags reads that can happen in rmap walk paths, though we should
-think about the consequences of concurrently changing flags in every
-place that gets a READ_ONCE()...
+If INSTALL_MOD_STRIP=3D1 worked differently, silently only for riscv,
+I would regard it as insane behavior.
 
 
->  try_to_migrate+0x11f/0x150
->  migrate_folio_unmap mm/migrate.c:1320 [inline]
->  migrate_pages_batch+0x786/0x1930 mm/migrate.c:1866
->  migrate_pages_sync mm/migrate.c:1989 [inline]
->  migrate_pages+0xf02/0x1840 mm/migrate.c:2098
->  do_mbind mm/mempolicy.c:1394 [inline]
->  kernel_mbind mm/mempolicy.c:1537 [inline]
->  __do_sys_mbind mm/mempolicy.c:1611 [inline]
->  __se_sys_mbind+0xfd1/0x11c0 mm/mempolicy.c:1607
->  __x64_sys_mbind+0x78/0x90 mm/mempolicy.c:1607
->  x64_sys_call+0x2662/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:=
-238
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> value changed: 0x0000000000102077 -> 0x0000000000102071
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 0 UID: 0 PID: 6418 Comm: syz.0.1339 Not tainted 6.14.0-rc1-syzkaller=
--00026-gd009de7d5428 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 12/27/2024
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
+--=20
+Best Regards
+Masahiro Yamada
