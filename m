@@ -1,116 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963FD126C16;
-	Wed,  5 Feb 2025 13:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2698A126C16;
+	Wed,  5 Feb 2025 13:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738763040; cv=none; b=Ry7Y+AW3Pxf0lDamEgNyZ+wq8cT9shR4Kku0p6gffUQg8e2R8hQrpUJpPPNOaU/YB6xoerQS/ZjKH5JRrxQDnpZij8l5k4vez2v2kWFpMc/wMFAGjTP5FNXxyeXvUIcpDEnq9Wb9JcHrPAsjFHzqJVTkFwRRRYvWMu9HraX8s4c=
+	t=1738763054; cv=none; b=pHpUReWQOc7acUvoVhpPyoALrfBaUAxH/bgw7Zm+XROE3KqGdfn67lwTAEj7HSF/KiYGZ7nHXkmao8AcWVYkqYz9r1wFEMuq5dzo/9nml660rA22rHnpLYYI7vUCE55GwBxA4eKX11tWM+TobCHGLqGRppWfs4dEYs7bee2Qz3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738763040; c=relaxed/simple;
-	bh=8QWgHWjdj9HTgfaEoItcX74VRFkbt8qSiH7IrFQ3zVE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=h98jlG5djFs46KHP/9+aRfzJncym3PO8Dj6b4PL2FV8VevBTEkyTJsGn4qisPyiJZUo/7duiT4O3Kbc6St3x0FXVMVmWAKofa0JYbfoU14FsX6L8+hyqS8QYT2u198e5nt6WxkwiQPj0p2qD34i+2ZAqozY5Hqi3RwCrQ17FRvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6ncJ5B1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6ncJ5B1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E71C4CED1;
-	Wed,  5 Feb 2025 13:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738763040;
-	bh=8QWgHWjdj9HTgfaEoItcX74VRFkbt8qSiH7IrFQ3zVE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=u6ncJ5B1gvzEZOpW0OikBPaSEFkvM8ai65cnWSAazzOKl6rBK1Y6kM9yAsgg+7Gh0
-	 3pH8rp3kqqP8w21lN/fs+mN4/VguOwStHsm46WZ7/mUoPIPjjXNHdA5HCOMTrho/3G
-	 gnvCCKe6rbwJdsWYLWbsYf0H/XuWlQrux4mlbqt/ZMp91U6P/qTLVYRhwFqnZHyXDP
-	 qffgyVrCnIIZZ5JQegqiL9ASpLv5xgtJeuWkroXWMZr5xLHc1lofM89zN1fVknGPZ7
-	 IWdiLc4fhUzq5s2M9veLG5Eg68OfS+lRbFgH+Qm/0VdYwgCel7oe1P+1lM8044uU3v
-	 ECSDBABtr8/kA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 05 Feb 2025 08:43:48 -0500
-Subject: [PATCH RESEND v2] sunrpc: add netns inum and srcaddr to debugfs
- rpc_xprt info
+	s=arc-20240116; t=1738763054; c=relaxed/simple;
+	bh=DyoO0bDkkGwqDojQ2Ceg0QQyvmnaHFwenu6GP62/ut4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oAJ/ZN7TjVMPoAOAkmV8PZwBa8CsjgnAjxcOtKn9++i5xLyYwHlW0bQdBYUXts0t0+R8eU7I4ZR5NlYjaP5YJilBEDGPZIkBFxDv73BLwvm6lim7eQtTxoP3AWTQgOLyejXnPZeOIxHyOL0XKbHh4CKpO8VypZ9tXYZ9mL/9EC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2165AC4CED1;
+	Wed,  5 Feb 2025 13:44:10 +0000 (UTC)
+Date: Wed, 5 Feb 2025 08:44:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
+ jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
+ boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
+ andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
+ Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
+ Molnar <mingo@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Clark Williams
+ <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
+ joseph.salisbury@oracle.com, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250205084449.1bca619d@gandalf.local.home>
+In-Reply-To: <20250205081019.6f81f05a@gandalf.local.home>
+References: <20250201115906.GB8256@noisy.programming.kicks-ass.net>
+	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
+	<20250201180617.491ce087@batman.local.home>
+	<20250203084306.GC505@noisy.programming.kicks-ass.net>
+	<20250203114537.6a30c7c0@gandalf.local.home>
+	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
+	<20250204075100.3fcbfda8@gandalf.local.home>
+	<20250204153053.GX7145@noisy.programming.kicks-ass.net>
+	<20250204111119.10ee37c8@gandalf.local.home>
+	<20250205090736.GY7145@noisy.programming.kicks-ass.net>
+	<20250205081019.6f81f05a@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-nfs-6-14-v2-1-402e8072661f@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABNro2cC/3WNPQvCMBCG/0rJbCS5fKGTg10ddBSHxl7aoKSSS
- FBK/7shm4jc9N57z3MzSRg9JrJtZhIx++SnUAKsGnIduzAg9X3JBBgoxgFocIlqyiU1zgjTo9V
- CaVLOHxGdf1XVmRzbU3vYk0vZjz49p/iuHzKv7a8sc1pGS8us6joh2O6GMeB9PcWhWjL8I6GQF
- iUXIB0qs/kil2X5ANUhv1rjAAAA
-X-Change-ID: 20250122-nfs-6-14-7f737deb6356
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1593; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=8QWgHWjdj9HTgfaEoItcX74VRFkbt8qSiH7IrFQ3zVE=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBno2sejwdzHOEp4tQHehOb8zoWBTni3qZNjKieY
- bO3vTS++caJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6NrHgAKCRAADmhBGVaC
- FQXVEACCkPLx0opKSxVbwXTJuMcdwuhXQTVBmg4Od/XJB7G8kJ7XiR1MNOzBoszZMYWP0yLVBRx
- 7lDZL2Xvw4qooF71p2FVnXFfuRWh9z26b3HCMkt2hG9kYfEiWbfqusOKWB2zLX0cbIAZMcciMWu
- LMJtwngHadw7iJzoqvfuEZTZIGrExqAehx4EIA/Jp9SdbUpasRTTjrEROUaw7vQXRw2UiuYksLW
- a1DQFy29zAwmzaHKyR1ahhtyCMJvEn01oAzNJUiPfk3eMhwIFnQD3DvnVrfHy72dHS3S9p0eIvz
- rWCdJSpSt0sBpwUBzF7f3xV8VcTULTG2A9QjH94elnt2UbdzPzTPYZmYtjm7cU6pXeVo8lMjzlF
- gRDgct05AXl8FUj0hkKOrsbU0cqawH/bQTLd2kNU7sjw9AhFFeI5Sw1ep25bFfOqKHGhOvAcg7V
- x6nZEbpjqg+DUnLgHgdqsvrMQVV6Sz3Dn5sS3DkmSanHayhoWY+5HVHqQVPwtu4A/dhdfzeO622
- l7mXPvarcyln0cAiMu8QqaSQ4j0SPc8CmnbJX5qByWY8NgfXy8ikfSBxIPYE8m630IiHksATCDA
- sjBr74caIKMIDZKd5ZmQSnEP7SK3h9gvZ9brG9z6tbDwe55fAnfPhfcSc5hyPVimWTymB/RN/zo
- QZXEvY0DESFtdSg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-The output format should provide a value that matches the one in
-the /proc/<pid>/ns/net symlink. This makes it simpler to match the
-rpc_xprt and rpc_clnt to a particular container.
+On Wed, 5 Feb 2025 08:10:19 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Also, when the xprt defines the get_srcaddr operation, use that to
-display the source address as well.
+> The preemption method will influence that decision, but user space doesn't
+> need to be know.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Changes in v2:
-- Don't bother with NUL termination, just use a length specifier
-- Link to v1: https://lore.kernel.org/r/20250122-nfs-6-14-v1-1-164b0b5aa330@kernel.org
----
- net/sunrpc/debugfs.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+If your issue is that this depends on the preemption method, I have a
+slight change to make it work for all preemption methods. I just replied to
+Joel about this:
 
-diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-index a176d5a0b0ee9a2c0ca1d1ed3131b67b782c3296..9498f385716d5eab1c5766a2a4ef5218155432e0 100644
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@ -179,6 +179,18 @@ xprt_info_show(struct seq_file *f, void *v)
- 	seq_printf(f, "addr:  %s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
- 	seq_printf(f, "port:  %s\n", xprt->address_strings[RPC_DISPLAY_PORT]);
- 	seq_printf(f, "state: 0x%lx\n", xprt->state);
-+	seq_printf(f, "netns: %u\n", xprt->xprt_net->ns.inum);
-+
-+	if (xprt->ops->get_srcaddr) {
-+		int ret, buflen;
-+		char buf[INET6_ADDRSTRLEN];
-+
-+		buflen = ARRAY_SIZE(buf);
-+		ret = xprt->ops->get_srcaddr(xprt, buf, buflen);
-+		if (ret < 0)
-+			ret = sprintf(buf, "<closed>");
-+		seq_printf(f, "saddr: %.*s\n", ret, buf);
-+	}
- 	return 0;
- }
- 
+  https://lore.kernel.org/all/20250205083857.3cc06aa7@gandalf.local.home/
 
----
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-change-id: 20250122-nfs-6-14-7f737deb6356
+I'll repeat some of it here.
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+Currently we have:
 
+TYPE       |       Sched Tick      |      RT Wakeup       |
+===========+=======================+======================+
+None       |    NEED_RESCHED_LAZY  |   NEED_RESCHED_LAZY  |
+-----------+-----------------------+----------------------+
+Voluntary  |    NEED_RESCHED_LAZY  |     NEED_RESCHED     |
+-----------+-----------------------+----------------------+
+Full       |      NEED_RESCHED     |     NEED_RESCHED     |
+-----------+-----------------------+----------------------+
+
+Now, if we set NEED_RESCHED_LAZY in PREEMPT_FULL (and PREEMPT_RT) on a
+scheduler tick if it interrupted user space (not the kernel) then we have
+this:
+
+TYPE       |           Sched Tick              |      RT Wakeup       |
+===========+===================================+======================+
+None       |        NEED_RESCHED_LAZY          |  NEED_RESCHED_LAZY   |
+-----------+-----------------------------------+----------------------+
+Voluntary  |        NEED_RESCHED_LAZY          |    NEED_RESCHED      |
+-----------+-----------------------------------+----------------------+
+Full       | NEED_RESCHED or NEED_RESCHED_LAZY |    NEED_RESCHED      |
+-----------+-----------------------------------+----------------------+
+
+Then going back to user space from the interrupt, we can use rseq and the
+LAZY bit to know if we should extend the tick or not! Even without rseq,
+this would behave the same as NEED_RESCHED_LAZY will schedule just like
+NEED_RESCHED when going back to user space.
+
+This will allow this schedule tick extension to work in all the preemption
+methods.
+
+Would this be something you are more OK with? I can go and test this out.
+
+-- Steve
