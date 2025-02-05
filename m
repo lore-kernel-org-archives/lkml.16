@@ -1,155 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5FA21170D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E883521170D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786173; cv=none; b=SCW7BH7S6bsfjNWDIXjVa4AvGDHA9/SqfZSHcaGiX8Fi+pw04PhEycOOOXGuB+rb41mpB8RIP8xxny/FIZ3EsL0opBHQP/QhALQ3geHjgVo584dDXJDB62zo0LTCbBNVkcq3rfrRbAroYmcC7JjqM+RD1X5ufSIl/3cRgdAXd5o=
+	t=1738786180; cv=none; b=XAchalTJge6P+mCBiqmDKuhvkr1I8VKET2LP2I6jwzhDVQ8uJtAHNIJypWmVAWfoGDF6SnYAjEJn93XwMY7dgEZKS2pBfPT8O9ChFI9FmPhSbZGirv8iUsIekgh0rxg4RRJqWOKu412s+5U43q1lh8Gk//BTVnBzoGJ0YgkzLHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786173; c=relaxed/simple;
-	bh=EiZLkZhOyAW9xsLWltUT3PNY16MrDfjY5hC7dVEFLOM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aIxpHMC7MupzEHTsTxrOhvgJhkcoIhKniFdAEflSU8tulVAIKTGtF/WQ+peQkiXdOt8CSYWem37rW4FXN+MZerqz5WMm9tyFHJGoCIo2U5SKP498GMoTinh7fo7kNDdp4fb7TDB5XjOE75JBl/v9qOd+qv39hzCKjlOQPw8uU8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RPwgzL6q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738786180; c=relaxed/simple;
+	bh=T2C5fl2qTi1aip/9GB0XomQeeZ/DprhCWCNmJVrJu+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=byfF3uV+1CG+La3oJNUq+ubeZffBhJoa7E9G5hQgO1nunoqXRlnS2QP46lKdqHCqh8Czpp4hsceHgBXw6x/5j7DW/kgjfoEVkP9VX8OSFL+IAC9JUV3UkAeHXaKl5ISGSrOgsV0bmNV/JmRP5ahgdoX8VMgCSZQ0jnzSfs6jQko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MmGf9n3K; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RPwgzL6q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738786171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xMGlgFMnw8m0fqnHlMzqGgmx7iSobyGCc1e2rGwWxUo=;
-	b=RPwgzL6qOTFD9Le6aArzpmdoVg9fWOgxnnKu4ON1GjZwPXHiHtmzQZ5xvtuOpdznDJFaN6
-	t/ZOnRLqHj7TIYCgvRueAIFbXhsT2IVcPwj6pGIc+gb63tHVugOEAJsjLC8+bJWQAMwy8/
-	3oA8pdYY3GOYI2zqoKByWUnhJemzgw8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-2N0mikFYPXGUj58mq9VqUA-1; Wed,
- 05 Feb 2025 15:09:27 -0500
-X-MC-Unique: 2N0mikFYPXGUj58mq9VqUA-1
-X-Mimecast-MFC-AGG-ID: 2N0mikFYPXGUj58mq9VqUA
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F9B119560B6;
-	Wed,  5 Feb 2025 20:09:26 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6AED119560AB;
-	Wed,  5 Feb 2025 20:09:13 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Wed, 05 Feb 2025 15:07:57 -0500
-Subject: [PATCH 01/12] drm/aspeed: move to devm_platform_ioremap_resource()
- usage
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmGf9n3K"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab698eae2d9so40128666b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:09:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738786177; x=1739390977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eipoFyIFTAIeszlRPF8fuqzH8w+pWazjKHx9ngvb21Q=;
+        b=MmGf9n3Kw1zWVSYpRHH7w7up3vzwa2QPGqyRHmmLsqaIoWsXn3VaChmne1k+zGM80r
+         AXBdeHhLn5Dx5JF0JtaWLBChJ67Wro+zerQy7A65BFR5pGDGAwPAmbreBga0O64by8bF
+         qxoP9yFqC9/7ia1AiBxtbL+gunVDfPu2qoaDSB61/iiOxyu4TfQnUOSKIRBViIAWmFtf
+         wQQq442MgMETn6LkUibYL/WZwiqGV35YUxskvsM/Us5JydbJBSzITM/YwPtifSLT3q2p
+         7iSJdzsip9VPLExyd9Pu26XwAaCerc24JxSPJNWlt3hOlzdyim5GUaRLQqwrVIFervY3
+         qDuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738786177; x=1739390977;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eipoFyIFTAIeszlRPF8fuqzH8w+pWazjKHx9ngvb21Q=;
+        b=ujxkFpclmVwLaCGv5H1a6rqnHcE+pfDKWAi01mrf0irBFiNASzSstDt2d+ClMuAd0d
+         efgeRUTDAmX7pwJhmIWybfKsv4TRYMtwY25iH/CD4LrATpMyXKqsZhf74V5wSbDBZX7l
+         Hn21d/nshqf7S+ifWxjp1rI9kCauP6b5Z6WtI6T8j7mkEyKjohd3A/E63rlYcOgZgDVs
+         yzYbqRlq2Q4Xgy5oKs0479Lhv00F19jxUFq10CChSi3YXCQZnZDAJlOPL87rmRGt5wMu
+         sNFHvCYpJ/fqpLFDCWKdhBCCdURn7c+LaKOHkGOppl/jQJiaTS4o7dPJAnmC7MLA6/3N
+         8Zzw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ywST9HxnvNwi8hFd00iAd3Jij1HEIal/32osgg4yNNFpgliaFtvR8u5+oFnd8ixsnIPetXvIBV3i9UI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAACDaykvTydOJY1Q93H3CtLW0Ck9Viz2JQZyxnOoVBAJUREAm
+	+c3/JXHLGOdTtBoNH1VNfMUcsjNZK3v6DU7qSwgXjzGgtvpFaKfc
+X-Gm-Gg: ASbGncuCTCsc2echGQlEgFcRIVKNI4xTD/O53374bISNn29VVAJOqkYqiHVNPDghjdO
+	NGBpvXvuKELa+b+SpXa1nJBBQbpINJgDpOtilwHJsmnsLP6Axv+a+StF4dwuP6qUh4zWzwCwiC4
+	wLDjwb+vA55dzsJrf3TXvCqx2YHeNXNjik+WZ1x2gqUq9qFjRdzDFMVQmAJ6R5I26uAARo3fQ2p
+	8/p3AEouN+HexLWIYnWz/Bw5Dj+wJ710Lg5f5UjMur4CskozKZsLUvcv4dqP+OHVrdqj5gE9RPZ
+	NG59ubCrYmS36Gdp59sjLxov5hJR+88=
+X-Google-Smtp-Source: AGHT+IHE9E3tfxqSAQXXGhKPz1TdY1MhtI6PrtP7EHceKSopcNy+lovRbZ3qN0e1DQX0QBCN4u9gPw==
+X-Received: by 2002:a17:907:72cd:b0:aae:bd36:b198 with SMTP id a640c23a62f3a-ab75e321e23mr401654466b.47.1738786176987;
+        Wed, 05 Feb 2025 12:09:36 -0800 (PST)
+Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab703fbcc0csm932221866b.53.2025.02.05.12.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 12:09:36 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: ebiederm@xmission.com,
+	oleg@redhat.com
+Cc: brauner@kernel.org,
+	akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v5 0/5] reduce tasklist_lock hold time on exit and do some pid cleanup
+Date: Wed,  5 Feb 2025 21:09:24 +0100
+Message-ID: <20250205200929.406568-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-mem-cocci-newapi-v1-1-aebf2b0e2300@redhat.com>
-References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
-In-Reply-To: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
-To: Joel Stanley <joel@jms.id.au>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
- Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, 
- Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Alain Volmat <alain.volmat@foss.st.com>, 
- Raphael Gallais-Pou <rgallaispou@gmail.com>, 
- Yannick Fertre <yannick.fertre@foss.st.com>, 
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
- Philippe Cornu <philippe.cornu@foss.st.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Alexey Brodkin <abrodkin@synopsys.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
- linux-rockchip@lists.infradead.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
- linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738786137; l=1480;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=EiZLkZhOyAW9xsLWltUT3PNY16MrDfjY5hC7dVEFLOM=;
- b=XsxAeoZCVozTJnK/kqDAMY/ckZluYOAy4E4MbTsDIaSx08ZZijKGTvdfXCM4/qCOdCyfsoNqm
- r258ZdLMkhbABTbRgisKxCgmikN0I/EpdAk+57cA0jPzqzp7njZRhyL
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
 
-Replace platform_get_resource + devm_ioremap_resource
-with just devm_platform_ioremap_resource()
+The clone side contends against exit side in a way which avoidably
+exacerbates the problem by the latter waiting on locks held by the
+former while holding the tasklist_lock.
 
-Used Coccinelle to do this change. SmPl patch:
-@rule_1@
-identifier res;
-expression ioremap_res;
-identifier pdev;
-@@
--struct resource *res;
-...
--res = platform_get_resource(pdev,...);
--ioremap_res = devm_ioremap_resource(...);
-+ioremap_res = devm_platform_ioremap_resource(pdev,0);
+Whacking this for both add_device_randomness and pids allocation gives
+me a 15% speed up for thread creation/destruction in a 24-core vm.
 
-Cc: Joel Stanley <joel@jms.id.au>
-Acked-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/aspeed/aspeed_gfx_drv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+The random patch is worth about 4%.
 
-diff --git a/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c b/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
-index 397e677a691c2c6d199063f44358196a4569b389..46094cca297479d1cf19f6db99538c5e7a0fec92 100644
---- a/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
-+++ b/drivers/gpu/drm/aspeed/aspeed_gfx_drv.c
-@@ -144,11 +144,9 @@ static int aspeed_gfx_load(struct drm_device *drm)
- 	struct aspeed_gfx *priv = to_aspeed_gfx(drm);
- 	struct device_node *np = pdev->dev.of_node;
- 	const struct aspeed_gfx_config *config;
--	struct resource *res;
- 	int ret;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(drm->dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
+nothing blew up with lockdep, lightly tested so far
+
+Bench (plop into will-it-scale):
+$ cat tests/threadspawn1.c
+
+char *testcase_description = "Thread creation and teardown";
+
+static void *worker(void *arg)
+{
+	return (NULL);
+}
+
+void testcase(unsigned long long *iterations, unsigned long nr)
+{
+	pthread_t thread;
+	int error;
+
+	while (1) {
+		error = pthread_create(&thread, NULL, worker, NULL);
+		assert(error == 0);
+		error = pthread_join(thread, NULL);
+		assert(error == 0);
+		(*iterations)++;
+	}
+}
+
+v5:
+- whack scripts/selinux/genheaders/genheaders which accidentally got in
+- rebased on next-20250205
+
+v4:
+- justify moving get_pid in the commit message with a one-liner
+- drop the tty unref patch -- it is completely optional and Oleg has his
+  own variant
+- add the ACK by Oleg
+
+v3:
+- keep procfs flush where it was, instead hoist get_pid outside of the
+  lock
+- make detach_pid et al accept an array argument of pids to populate
+- sprinkle asserts
+- drop irq trips around pidmap_lock
+- move tty unref outside of tasklist_lock
+
+Mateusz Guzik (5):
+  exit: perform add_device_randomness() without tasklist_lock
+  exit: hoist get_pid() in release_task() outside of tasklist_lock
+  pid: sprinkle tasklist_lock asserts
+  pid: perform free_pid() calls outside of tasklist_lock
+  pid: drop irq disablement around pidmap_lock
+
+ include/linux/pid.h |  7 ++--
+ kernel/exit.c       | 36 +++++++++++++-------
+ kernel/pid.c        | 82 +++++++++++++++++++++++++--------------------
+ kernel/sys.c        | 14 +++++---
+ 4 files changed, 82 insertions(+), 57 deletions(-)
 
 -- 
-2.47.0
+2.43.0
 
