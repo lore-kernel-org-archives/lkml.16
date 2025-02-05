@@ -1,54 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DB2231A49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF70122DFA8
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752423; cv=none; b=IupAiAo9Yn5HgsFg/m2PY7ekwcU3GVUspzt7wtJI494x4sO+y9pb9l06Sre8L0dBGBfeo+ouJ3pDFc908JrXbMvrY1R2UhwBUiVYd09wNG8N5L848+c4MQyC5QYBKQ00jILfDzetNZCGFRiGZ8ROTEji6FLxPuKIQrZ/+K3cmY0=
+	t=1738752423; cv=none; b=PO9Y0n6iBoA0XYoJcDGNamq6lJKblRjCHXADu8odfIv4yOBnCQHWsoJFSFAFUk79oUS9I9tenXgAK3XFKYX+yTYvTar/aic1G6iqwyCB3SROq80MAldz3XEnmDYbZ9+egN8ZyRrBVnyO31pal07x4bcIvFbkqnRYUgHK0PMguzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752423; c=relaxed/simple;
-	bh=q/TtEJ+PMeZ70CVvP9TcLl2k7gIf0tam2BKdnctLRu0=;
+	bh=NTzCf7qh2LlxsQNyaVS0ITS/LvjhAOY4FgMdFq3DsbI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KosK5/t1baFgP/LkITkDklHk1HM0RRXv1FdqzMKrg0sib9Rn5r8KdHi2GUDkCF0GTYQ728erpy0yEDC1EnVmSUMAdl/xYwqtDjTzKvHFqR1NE6Y4HtPIoUasQHWcLhgJI4S2LKlytb/MLsks2TvAzJtJQaDvltoKqc4HhOEcIsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gUTp/5b3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5a9a9FAi; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=P3Cwt1dzjNyca8wnIMcCz5hAEpSRpR4+TA/upOa9Cyc59ujO6LORuKH1NASHRap2mAh39PXnuaGAPWYMT/2EOXJU1efe+kBf3MtJgd/7BSaYGBQ5q8y+lNltb9m+EBWnQo9g44rlxvLE+xT7eHZNrZvrRyRFIjwfUpwAWmTFXnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HwSU6OT9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PthrRuWx; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gUTp/5b3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5a9a9FAi"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HwSU6OT9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PthrRuWx"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752418;
+	s=2020; t=1738752420;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XlAAacMbsh7R0RfJXl9zPs5EKSPtwFTBcKTNc8Fryos=;
-	b=gUTp/5b3e0TvlsQ7Tk5SxquZ7bs9v1US/QUbFYLXr/zMwoDcZ9RUy8I3E49RP6XoNEpdn5
-	Ic7dmuwsEFdPDA8dvlpOPsjMgDAsi3aVF3l5/2RcuaMqfQndKNtmihlNQlqw2bYhOjYT5n
-	SmBFOQCkBgRnde4ZJTpZ6L5m1qo9v8q2898h1eK1Eu5V/q4PtwB3Rxd/hVqZ/7jRxsjqkD
-	Ahnj987s2Rtz4aHugDeYAklDGqYQeMwLL75isQByhn4vd8/9XnBZkYIdm0lTxUz78frixv
-	ofgj0MG36WB1AFUon3FyyGDoiZDaAGOHtAG9rdiFKI+t9HqWFWawMLXX+RVcew==
+	bh=W0/5h8SnECt6G+uZTSG0mM4WQSpxVtA+ab0q9wDtDK4=;
+	b=HwSU6OT9oWXviLvrGO1A64Mb7YOAKO71OoybQj3uinopksLOCDJ+B6Uich/m3fVvR6W2Ko
+	YK3KRUWM3/tCy9+n7C2s0yuDYYQ/6DPWbVE/BWt+tl/K8oDncm4CAUok4szrwshQ1eJuWJ
+	ll7+AdJ3Qkt/bOpdIprhEBAkhHV7lufM3dJhSag+DpAFbe7+jhesW4vbDrENcqYzf1gueT
+	Now4I6Mf56JZD7nv++S6+u6hvDq41m559ulWDXN7DfXrFzAVp33C/QQog0JDFjQpm/Q1cM
+	coMuOfD7+tEL3KUvrwamL2xQZiIZbuHnONrAJDiE0xFE03HzOMEkY5hErX6dOQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752418;
+	s=2020e; t=1738752420;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XlAAacMbsh7R0RfJXl9zPs5EKSPtwFTBcKTNc8Fryos=;
-	b=5a9a9FAiFQDuaH5bpcG8l7lcxJhoT1F2K0J4iXkhkJdgkun5XgEp+iUzy4SCRP1c2CT6UW
-	8BssEyIZw3n579CQ==
+	bh=W0/5h8SnECt6G+uZTSG0mM4WQSpxVtA+ab0q9wDtDK4=;
+	b=PthrRuWxaGvkPXfWm3Ot7UqPfohO1xhprCiDAhsWHbisI6MXtl/APmvfjfgF0tSp1yry0C
+	xaKNE4wfUPtBYgBA==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Zack Rusin <zack.rusin@broadcom.com>,
-	Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH v2 18/45] power: reset: ltc2952-poweroff: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:06 +0100
-Message-Id: <75ef5206f52f194b9c51653628cd2d0b083a482f.1738746904.git.namcao@linutronix.de>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 22/45] misc: vcpu_stall_detector: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:10 +0100
+Message-Id: <a1c984288c6e47d956c07339ced486a8ec95f8d5.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -69,35 +69,27 @@ Patch was created by using Coccinelle.
 
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/power/reset/ltc2952-poweroff.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/misc/vcpu_stall_detector.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/l=
-tc2952-poweroff.c
-index 1a6fc8d38e20..90c664d344d0 100644
---- a/drivers/power/reset/ltc2952-poweroff.c
-+++ b/drivers/power/reset/ltc2952-poweroff.c
-@@ -162,11 +162,11 @@ static void ltc2952_poweroff_default(struct ltc2952_p=
-oweroff *data)
- 	data->wde_interval =3D 300L * NSEC_PER_MSEC;
- 	data->trigger_delay =3D ktime_set(2, 500L * NSEC_PER_MSEC);
+diff --git a/drivers/misc/vcpu_stall_detector.c b/drivers/misc/vcpu_stall_d=
+etector.c
+index f0b1fc87490e..26166357b255 100644
+--- a/drivers/misc/vcpu_stall_detector.c
++++ b/drivers/misc/vcpu_stall_detector.c
+@@ -111,8 +111,7 @@ static int start_stall_detector_cpu(unsigned int cpu)
+ 	ping_timeout_ms =3D vcpu_stall_config.stall_timeout_sec *
+ 			  MSEC_PER_SEC / 2;
 =20
--	hrtimer_init(&data->timer_trigger, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	data->timer_trigger.function =3D ltc2952_poweroff_timer_trigger;
-+	hrtimer_setup(&data->timer_trigger, ltc2952_poweroff_timer_trigger, CLOCK=
-_MONOTONIC,
-+		      HRTIMER_MODE_REL);
+-	hrtimer_init(vcpu_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	vcpu_hrtimer->function =3D vcpu_stall_detect_timer_fn;
++	hrtimer_setup(vcpu_hrtimer, vcpu_stall_detect_timer_fn, CLOCK_MONOTONIC, =
+HRTIMER_MODE_REL);
+ 	vcpu_stall_detector->is_initialized =3D true;
 =20
--	hrtimer_init(&data->timer_wde, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	data->timer_wde.function =3D ltc2952_poweroff_timer_wde;
-+	hrtimer_setup(&data->timer_wde, ltc2952_poweroff_timer_wde, CLOCK_MONOTON=
-IC,
-+		      HRTIMER_MODE_REL);
- }
-=20
- static int ltc2952_poweroff_init(struct platform_device *pdev)
+ 	hrtimer_start(vcpu_hrtimer, ms_to_ktime(ping_timeout_ms),
 --=20
 2.39.5
 
