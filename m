@@ -1,40 +1,37 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0609E1DD526;
-	Wed,  5 Feb 2025 22:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7228B215F42;
+	Wed,  5 Feb 2025 22:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738793100; cv=none; b=ou1bnV8beGstrmbgu9WDeJ0GSWzQpaXazKZXv4ymTlUqc58fneOqtKNFOgu0ZTxtTyYPgi4A835AmnHsJcRQdiHCRy7Zpj5E28UH4h/G5ZGVtSFN665E9vEbIIWw1sTyhjqljwmcza0DDFeuJy0SAZku2DUvYpCnB+JrC4yB5Tc=
+	t=1738793456; cv=none; b=pv2qLEaBqcu+/z/zRhZn9bzWqpceyTou0HI58PuimaP5helyvKSlTA21A+MzYrSmmLo9GdE0vqnoPDkNcz2NitGTkcBLY7CFFxYlH6Niw5ebJoGMsLVwXWltZFTsDNFsqMSCVuMgyAHuMGmteAe8OZQ666X3FLWZD3BT2nxYQXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738793100; c=relaxed/simple;
-	bh=yJMg2ZBvwkT3zCgdqcKmlAIgezVEOkoh2lo+NtL4bC0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ChfanbknwtAsqDXVHoGBuGYyz/GSzOlLOUAHR/NnxnKz8uTHdqjJKv2/77ezdc864jBBtAV4qkDJd8KS4OKa3NAGUvH5f0J6fBD8qEOFopI4F3OlX+DTxhSV9ogmQYvgfnCC/XGgKuoQQTkjr+h7YGRQGYBlg4/lFe/uL/rXALI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=iVqlA+1F; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	s=arc-20240116; t=1738793456; c=relaxed/simple;
+	bh=qammxtTCdNkajaOoaTby8FignidfrfHCpLjOqS0LcOg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Yw29zLn4akJoF3pwkQOstehmtQ2pjJOInA6J2cBLTT+5T2k72BfTHszwG56vF+M8VMSd6/HLm6zzvBH05bSB0bPTzdCeDCX7bJYC85MvkKaPw+C1sn+25jsxFZIra+jpQmrhoQoFnL4hYoQ9svl9PHMqKwt7vstu0XzCz2ZCuV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O43byfws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="iVqlA+1F"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4YpDcS2VFtz9tHd;
-	Wed,  5 Feb 2025 22:57:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1738792664;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UqYbUTh8thO1AlbZZU210FEG8uNuLp5a4wrA84GCEUU=;
-	b=iVqlA+1FcQ0qOauiP54x9hx2FgR/4JDjt4pR4+p+zXtb8+1UP/0I9QuCMRG4GnkJ6+i/zU
-	s0swWuQaSUkAx1huBElbhzvFjDQEM8vTVj4kDxgxUACqi4J8C29xrdv8+2aefIr8C2bXlk
-	xjzUhhJgbFXdb5nDxkK81sNscg13x/t8vik/QCaD4ihEOLOLF2m3U8F0hVJKD+E3r0V7Mm
-	yKrndRbj1ghuXDiwYMUA0o2tZeD8xPoGajsTVJZ+O3MS63BJKccyg7H6vnSFWIIbPPJWIV
-	H66EAfIVj4amcxRAiSulEq+0vWBVxYsWl94zZpqb8piJVcZisECJdoN2sZBQFg==
-From: Frank Oltmanns <frank@oltmanns.dev>
-Date: Wed, 05 Feb 2025 22:57:11 +0100
-Subject: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O43byfws"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A9785C4CEDD;
+	Wed,  5 Feb 2025 22:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738793455;
+	bh=qammxtTCdNkajaOoaTby8FignidfrfHCpLjOqS0LcOg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=O43byfws78Dz/JD8jvij0jUtM1OVNYit25pgFI5DsA6HUbYGMqlfM4AT/OWl2m9he
+	 Mm48CrijlgN6DQGtAEY0kWeHes6iT6ZbM5cOCF1FT6SBlmx8nb6BSYDOyyRv3OSoQU
+	 q7YyQ3usB+quCaKmu5KaLrpFfSmPqe5QIzRLu2dk759jzxjMeP65Kac62k24IMbcHl
+	 dYwPKQ5oTFhAuiFtQbluIhvu56DzJ9eSyeK0WwvB3AKwYA27xRRvWcwyLrO6YWFcFy
+	 1ARFjgst/rJQQ+y7dtGuzjLQvbEH28KLB8NbjN9pw6YKSdIqf8v3ouy+hpJDgRDc/Q
+	 tiAja83XO58tg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D29DC02192;
+	Wed,  5 Feb 2025 22:10:55 +0000 (UTC)
+From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
+Subject: [PATCH v5 0/5] Driver for pre-DCP apple display controller.
+Date: Wed, 05 Feb 2025 23:10:49 +0100
+Message-Id: <20250205-adpdrm-v5-0-4e4ec979bbf2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,177 +39,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
-X-B4-Tracking: v=1; b=H4sIALfeo2cC/x3MQQqAIBBA0avErBPUEqmrREg4U81CK4UIpLsnL
- d/i/wKZElOGsSmQ6ObMR6xQbQN+X+JGgrEatNRGamnE5Y/gTgwOaaUkOvRKW4W2xwFqdCZa+fm
- H0/y+HwJiKqBgAAAA
-X-Change-ID: 20250205-qcom_pdm_defer-3dc1271d74d9
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Chris Lew <quic_clew@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Stephan Gerhold <stephan.gerhold@linaro.org>, 
- Johan Hovold <johan+linaro@kernel.org>, 
- Caleb Connolly <caleb.connolly@linaro.org>, 
- Joel Selvaraj <joelselvaraj.oss@gmail.com>, 
- Alexey Minnekhanov <alexeymin@postmarketos.org>, stable@vger.kernel.org, 
- Frank Oltmanns <frank@oltmanns.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4891; i=frank@oltmanns.dev;
- h=from:subject:message-id; bh=yJMg2ZBvwkT3zCgdqcKmlAIgezVEOkoh2lo+NtL4bC0=;
- b=owEB7QES/pANAwAIAZppogiUStPHAcsmYgBno97UhiqS0YfoUn/Md4OCAQxlqZQUxMpJJwzI9
- BYJchr+87eJAbMEAAEIAB0WIQQC/SV7f5DmuaVET5aaaaIIlErTxwUCZ6Pe1AAKCRCaaaIIlErT
- x6suC/9QFZ2bDJNbCGtWKcq7JLqZaTGViklx9ojelt08o9MrZopv/oEWBbVddXIprhZkAWsCqKJ
- tl28fk+o0+jEMsFR7eTV83MKpec0Njs/W/e9NA0QTbD5wk/NVdbr5QE+notw+cO5B9zFZyhubW2
- U9zuMp4yc+6mraMXoiTUkOJBaOcvfNjUOfOGHSZFTTd0l9UJ44ZF1qefx/8HwE7m1fHB+yhOIqr
- BT0fxz7sxyOx26myEGjFh2dttFsnsCC8Z1jqc0YeVtlTfVOQeObQ2igWV5Yyf81F033YD2DyyEL
- eWvxyrpTu4KPk/045rW7zhAQfMPgsFFDZ5sQprAbnEGbA5+Fnna1TWzelpNpbkHM/HLEsiG5d9+
- x3DIetzaAhMFFv3GNGHCzUmMYbEVXvf7euVomBKnuHV0gfikWbAgoxuoFostaXoQH085I47oFRI
- nxTZfWYi50AjoSaY5IqF5X1Jna12G57pKCdnzajGUz9mzZf8lJjOWeIP0DtV/iQO8BW6k=
-X-Developer-Key: i=frank@oltmanns.dev; a=openpgp;
- fpr=02FD257B7F90E6B9A5444F969A69A208944AD3C7
-X-Rspamd-Queue-Id: 4YpDcS2VFtz9tHd
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOrho2cC/2XO3wrCIBTH8VcJrzM8/tvsqveILkyPJbQ2NEYx9
+ u65QWvU5e/g54sDyZgiZrLfDCRhH3Ns72Wo7Ya4q71fkEZfNuGMSwAuqfWdTw3lKjgU3te2AlI
+ edwlDfM6h46nsa8yPNr3mbg/T9S/RA2VUgAFfo0Zp7OHS2HjbubYhU6Lna6YXxgtzhslaCaEdM
+ 79MfJhixS1MTExX0jswwVbhl8k1+35SFobmrLhmVpgAazaO4xu0nLKgQQEAAA==
+X-Change-ID: 20241124-adpdrm-25fce3dd8a71
+To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, asahi@lists.linux.dev
+Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Alyssa Ross <hi@alyssa.is>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Janne Grunau <j@jannau.net>, Nick Chan <towinchenmi@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738793453; l=2490;
+ i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
+ bh=qammxtTCdNkajaOoaTby8FignidfrfHCpLjOqS0LcOg=;
+ b=QlzP/gahoMXJ+srUfiICxcFqw9YyEMXDvWytbHSBvludlItq7sYvQp5jF/nGBCsOW9XcelQnX
+ OPtkiwMdv9qCe0pr0FlTLJffBj7aN6L54N+KOa3VsQok0SK3QO93p/j
+X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
+ pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
+X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
+ auth_id=283
+X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Reply-To: fnkl.kernel@gmail.com
 
-On xiaomi-beryllium and oneplus-enchilada audio does not work reliably
-with the in-kernel pd-mapper. Deferring the probe solves these issues.
-Specifically, audio only works reliably with the in-kernel pd-mapper, if
-the probe succeeds when remoteproc3 triggers the first successful probe.
-I.e., probes from remoteproc0, 1, and 2 need to be deferred until
-remoteproc3 has been probed.
+Hi.
 
-Introduce a device specific quirk that lists the first auxdev for which
-the probe must be executed. Until then, defer probes from other auxdevs.
+This patch series adds support for a secondary display controller
+present on Apple M1/M2 chips and used to drive the display of the
+"touchbar" touch panel present on those. 
 
-Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 ---
-The in-kernel pd-mapper has been causing audio issues on sdm845
-devices (specifically, xiaomi-beryllium and oneplus-enchilada). I
-observed that Stephan’s approach [1] - which defers module probing by
-blocklisting the module and triggering a later probe - works reliably.
+Changes in v5:
+- Moved to using the component framework.
+- Other lifetime fixes
+- Link to v4: https://lore.kernel.org/r/20250114-adpdrm-v4-0-e9b5260a39f1@gmail.com
 
-Inspired by this, I experimented with delaying the probe within the
-module itself by returning -EPROBE_DEFER in qcom_pdm_probe() until a
-certain time (13.9 seconds after boot, based on ktime_get()) had
-elapsed. This method also restored audio functionality.
+Changes in v4:
+- Fixed dt bindings.
+- Link to v3: https://lore.kernel.org/r/20250112-adpdrm-v3-0-c674dc19fa7f@gmail.com
 
-Further logging of auxdev->id in qcom_pdm_probe() led to an interesting
-discovery: audio only works reliably with the in-kernel pd-mapper when
-the first successful probe is triggered by remoteproc3. In other words,
-probes from remoteproc0, 1, and 2 must be deferred until remoteproc3 has
-been probed.
+Changes in v3:
+- Fixed building as module after splitting out mipi block
+- Addressing the review feedback.
+- Link to v2: https://lore.kernel.org/r/20241126-adpdrm-v2-0-c90485336c09@gmail.com
 
-To address this, I propose introducing a quirk table (which currently
-only contains sdm845) to defer probing until the correct auxiliary
-device (remoteproc3) initiates the probe.
-
-I look forward to your feedback.
-
-Thanks,
-  Frank
-
-[1]: https://lore.kernel.org/linux-arm-msm/Zwj3jDhc9fRoCCn6@linaro.org/
----
- drivers/soc/qcom/qcom_pd_mapper.c | 43 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_pd_mapper.c
-index 154ca5beb47160cc404a46a27840818fe3187420..34b26df665a888ac4872f56e948e73b561ae3b6b 100644
---- a/drivers/soc/qcom/qcom_pd_mapper.c
-+++ b/drivers/soc/qcom/qcom_pd_mapper.c
-@@ -46,6 +46,11 @@ struct qcom_pdm_data {
- 	struct list_head services;
- };
- 
-+struct qcom_pdm_probe_first_dev_quirk {
-+	const char *name;
-+	u32 id;
-+};
-+
- static DEFINE_MUTEX(qcom_pdm_mutex); /* protects __qcom_pdm_data */
- static struct qcom_pdm_data *__qcom_pdm_data;
- 
-@@ -526,6 +531,11 @@ static const struct qcom_pdm_domain_data *x1e80100_domains[] = {
- 	NULL,
- };
- 
-+static const struct qcom_pdm_probe_first_dev_quirk first_dev_remoteproc3 = {
-+	.id = 3,
-+	.name = "pd-mapper"
-+};
-+
- static const struct of_device_id qcom_pdm_domains[] __maybe_unused = {
- 	{ .compatible = "qcom,apq8016", .data = NULL, },
- 	{ .compatible = "qcom,apq8064", .data = NULL, },
-@@ -566,6 +576,10 @@ static const struct of_device_id qcom_pdm_domains[] __maybe_unused = {
- 	{},
- };
- 
-+static const struct of_device_id qcom_pdm_defer[] __maybe_unused = {
-+	{ .compatible = "qcom,sdm845", .data = &first_dev_remoteproc3, },
-+	{},
-+};
- static void qcom_pdm_stop(struct qcom_pdm_data *data)
- {
- 	qcom_pdm_free_domains(data);
-@@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
- 	return ERR_PTR(ret);
- }
- 
-+static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
-+{
-+	const struct of_device_id *match;
-+	struct device_node *root;
-+	struct qcom_pdm_probe_first_dev_quirk *first_dev;
-+
-+	root = of_find_node_by_path("/");
-+	if (!root)
-+		return true;
-+
-+	match = of_match_node(qcom_pdm_defer, root);
-+	of_node_put(root);
-+	if (!match)
-+		return true;
-+
-+	first_dev = (struct qcom_pdm_probe_first_dev_quirk *) match->data;
-+	return (auxdev->id == first_dev->id) && !strcmp(auxdev->name, first_dev->name);
-+}
-+
- static int qcom_pdm_probe(struct auxiliary_device *auxdev,
- 			  const struct auxiliary_device_id *id)
- 
-@@ -647,6 +680,15 @@ static int qcom_pdm_probe(struct auxiliary_device *auxdev,
- 	mutex_lock(&qcom_pdm_mutex);
- 
- 	if (!__qcom_pdm_data) {
-+		if (!qcom_pdm_ready(auxdev)) {
-+			pr_debug("%s: Deferring probe for device %s (id: %u)\n",
-+				__func__, auxdev->name, auxdev->id);
-+			ret = -EPROBE_DEFER;
-+			goto probe_stop;
-+		}
-+		pr_debug("%s: Probing for device %s (id: %u), starting pdm\n",
-+			__func__, auxdev->name, auxdev->id);
-+
- 		data = qcom_pdm_start();
- 
- 		if (IS_ERR(data))
-@@ -659,6 +701,7 @@ static int qcom_pdm_probe(struct auxiliary_device *auxdev,
- 
- 	auxiliary_set_drvdata(auxdev, __qcom_pdm_data);
- 
-+probe_stop:
- 	mutex_unlock(&qcom_pdm_mutex);
- 
- 	return ret;
+Changes in v2:
+- Addressing the review feedback.
+- Split out the mipi part of the display controller into a separate device
+- Link to v1: https://lore.kernel.org/r/20241124-adpdrm-v1-0-3191d8e6e49a@gmail.com
 
 ---
-base-commit: 7f048b202333b967782a98aa21bb3354dc379bbf
-change-id: 20250205-qcom_pdm_defer-3dc1271d74d9
+Sasha Finkelstein (5):
+      dt-bindings: display: Add Apple pre-DCP display controller
+      drm: adp: Add Apple Display Pipe driver
+      drm: panel: Add a panel driver for the Summit display
+      arm64: dts: apple: Add touchbar screen nodes
+      MAINTAINERS: Add entries for touchbar display driver
 
-Best regards,
--- 
-Frank Oltmanns <frank@oltmanns.dev>
+ .../display/apple,h7-display-pipe-mipi.yaml        |  83 +++
+ .../bindings/display/apple,h7-display-pipe.yaml    |  88 +++
+ .../bindings/display/panel/apple,summit.yaml       |  58 ++
+ MAINTAINERS                                        |   5 +
+ arch/arm64/boot/dts/apple/t8103-j293.dts           |  31 ++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |  61 ++
+ arch/arm64/boot/dts/apple/t8112-j493.dts           |  31 ++
+ arch/arm64/boot/dts/apple/t8112.dtsi               |  61 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/adp/Kconfig                        |  17 +
+ drivers/gpu/drm/adp/Makefile                       |   5 +
+ drivers/gpu/drm/adp/adp-mipi.c                     | 276 +++++++++
+ drivers/gpu/drm/adp/adp_drv.c                      | 617 +++++++++++++++++++++
+ drivers/gpu/drm/panel/Kconfig                      |   9 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-summit.c               | 132 +++++
+ 17 files changed, 1478 insertions(+)
+---
+base-commit: b62cef9a5c673f1b8083159f5dc03c1c5daced2f
+change-id: 20241124-adpdrm-25fce3dd8a71
+
 
