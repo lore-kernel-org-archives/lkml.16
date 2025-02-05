@@ -1,148 +1,136 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out199-16.us.a.mail.aliyun.com (out199-16.us.a.mail.aliyun.com [47.90.199.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B3D211A0C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C8025A65E;
+	Wed,  5 Feb 2025 02:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738723405; cv=none; b=KgtJKirbsB/UNNDw4v++bCg8puVcBearYX2YKeswHKZ9PTvnFTijll3KsZengTXLkuG0+/bhebhvax9vBZtZWr5puYAP8Oz+4COadUW1yX8euYCKhOXLa1wdFi/RtXsP9kAswBuNCtUmaDDcgFCXtBj88G6wa0sKNUY5TD42aDM=
+	t=1738723605; cv=none; b=Q/1a/LZxok1/2qvFCSVl+MkfWgCmp3l6q25SnCiN7vI4rLsfoLdQqPhXPRceQvAhLXFjkt0mj+Du2terErTzGuYPYWczPhB2BrauH3EpScd1OrHI/e/LD8Qv0V/mYPMXjbqSYXHFIDB/3D6xW6ozTpw5kxhhdM34AL4CIovulp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738723405; c=relaxed/simple;
-	bh=NASyQf4OjOsLdXT6p0CJxsTqPKWQGG2LzhnWr0K/lik=;
+	s=arc-20240116; t=1738723605; c=relaxed/simple;
+	bh=e/5SkRQh2vsArYffaJoNcIXisgLxwqYXRtoMPz5/8Nk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvl5TM00PO9a8ZWZ5UoD+0MwfFQjJVRi2gKJuYVj0btfsjMcZASqIj30ahZBzq3gZfNoB11mtzV2gHrQ6+KYgsbDV3IA3LewF5uLIN4H3RD83T0xuJLqtetYBaaEeBa7qA5mhQYFQfuHMdupCW9djxYYh6/TP2MF2Y8uLKIV1IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hh5cIfSW; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=aif9NCRv1G44TLuJIhu1jcz1/Etbq2bWNnRIcOSjC41RNd1xhHUi2DerK6GYr+LnavltC+A7KB9hcQrjc/kHVntZSWqXnMJ1th6qL/aqu7JncASoS1Hh7d67gZSS3PMNC3E7NbHJxkdkikIF/EeKSZ/+Ft18gDDoz4TnIou6feQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rMMSqvtW; arc=none smtp.client-ip=47.90.199.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hh5cIfSW"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f0444b478so19801375ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 18:43:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738723403; x=1739328203; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PBrHPuVmyWNdWdsZVCF6A9XAzFkJOG30Q3Gn/3kEVpY=;
-        b=hh5cIfSWB8HDWFHpJktLUFHKUWqkryfVkgYPSu9KzX6pl+eodLhVo9B6u66tHW0KaP
-         Mxip0bQrvrkKECCYq0f5DN/SQfhhT/UI4lO06mnyYTgSwlcNXadTn5gNkew1gg+nleny
-         zH8w8hG02rfbrECgHOz5sDv923PMnR/oGMnmI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738723403; x=1739328203;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PBrHPuVmyWNdWdsZVCF6A9XAzFkJOG30Q3Gn/3kEVpY=;
-        b=YZNrpoKFmttwOLiQzQB8e4g+q8LK0nkkvAeDZH8mxY2RCLy4uC4sLMy8FCBcb2Oy9R
-         FI97cvYyJk8KG0CELRqB5X9qsuh7wULNcX/9T72MS9+RTT9Mn8Q35h8eUV5ntPAcB/g+
-         S3BbrqkQ6x7BsN+goUBdG4pHjrR8m9yogjDiwGlgeZN7cdliFYLjShB+GP7vgNcrDEGH
-         PE1hnlwMZQqceDXwWP4kwaaGdGP116kNmgIq0Dg456FSyQZj4vkbLrfbsFVQL67oAus1
-         +4QsOkXQCDh1T6HXLEhVFfls6fTseuv6iirw1OuEJQYoc8mQXOSBaJCKsytJAaLLbgAC
-         S5Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXM5eRWGWTkFljRtRDs4RofKEZBfpqnOHRAbwu5dlTVORBk0a+6MBIm24ByRtjDlrX7wHCF/+3cWv1L0CA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt8neYw+j/mVmWSyNj/Fao0sUvJ+sXf6RN0CFthPx4p9GiBSt2
-	EV+WKvgn4ye3cyluM/JlIddrvt+IKOmqvXY7acIj/qsONzlZiTb4RIPqbTkaxA==
-X-Gm-Gg: ASbGnctkeRNSqNmT9z10Ajvcxya7HAKUMBulbvPlf16iZijVT/RWN3/H+TagRlo473J
-	DkgqPnTIGNcp9Ma1iyb9gqQfSrD9Xl0ub6UNUyMY1JVas5UZN/QupUFIpd7O/dUOh0PcUfxs7ga
-	qlKVWNIon3QXO4mt//LNOntffwfGtH0URUrX9wW/zkWR4bpoRmkknDNqeHUWl+zMTfxBWjvLFpl
-	xxv8nwhMlYAHEvJQ78EK5XOweqfdrCyKyulmzufZU1AmgX45DvzQV8RUz965TubeHA/f8PszeX1
-	MnK457RdgmnbJQihvSE=
-X-Google-Smtp-Source: AGHT+IFWDIBI3L1G1wcU9fpNE+tjjiOnhkKSnDmkzKhD2iNyGiziKwAaNefN3LiNkKYbdp1TpT00YQ==
-X-Received: by 2002:a17:902:cec5:b0:21f:456:3afc with SMTP id d9443c01a7336-21f17e74b85mr18678125ad.29.1738723402571;
-        Tue, 04 Feb 2025 18:43:22 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:5d42:47ec:e16e:5797])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f836csm103708655ad.93.2025.02.04.18.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 18:43:21 -0800 (PST)
-Date: Wed, 5 Feb 2025 11:43:16 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rMMSqvtW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738723587; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=hwDI5UmdjvGToD+3YreRxREJVDtUf+JVz9D01mHq17Q=;
+	b=rMMSqvtWCzoZBACOzH5aNrG4Y2K1dq+387sI2ms7ybqbaKgEh7snF+cuM7SVwGUyIxxaOFeQKP2KDjTQBy1YYW2NZraPT4yD4yGiMiemTLIiXBfq42h1RpGho8NGcsB/fEu0GRlReYI2xndgbdsrogcYWCfaqRv+23jKsyb6wy8=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOlcrU6_1738723586 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Feb 2025 10:46:27 +0800
+Date: Wed, 5 Feb 2025 10:46:26 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
-Message-ID: <6vtpamir4bvn3snlj36tfmnmpcbd6ks6m3sdn7ewmoles7jhau@nbezqbnoukzv>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-15-senozhatsky@chromium.org>
- <Z5zxlRkdseEJntFk@google.com>
- <ecuos7w7m35fvzz7xvmvdvfxn7adzdahuulwn2j42mvjoqmlwi@ucel4kqetxg6>
- <Z6Ew9AWNHacRIfhA@google.com>
- <lxottj72e7jcqw634qwudpsyqckfrvpmlhra43en4zlrlz4cip@erufv6w4n5j6>
- <Z6JMIKlO9U5P-5gE@google.com>
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+Message-ID: <Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <Z6HYuBDP6uvE1Sf4@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6JMIKlO9U5P-5gE@google.com>
+In-Reply-To: <Z6HYuBDP6uvE1Sf4@wunner.de>
 
-On (25/02/04 17:19), Yosry Ahmed wrote:
-> > sizeof(struct zs_page) change is one thing.  Another thing is that
-> > zspage->lock is taken from atomic sections, pretty much everywhere.
-> > compaction/migration write-lock it under pool rwlock and class spinlock,
-> > but both compaction and migration now EAGAIN if the lock is locked
-> > already, so that is sorted out.
+Hi Lukas,
+
+Thanks for your review and suggestions!
+
+On Tue, Feb 04, 2025 at 10:07:04AM +0100, Lukas Wunner wrote:
+> On Tue, Feb 04, 2025 at 01:37:57PM +0800, Feng Tang wrote:
+> > According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
+> > least 1 second for the command-complete event, before resending the cmd
+> > or sending a new cmd.
 > > 
-> > The remaining problem is map(), which takes zspage read-lock under pool
-> > rwlock.  RFC series (which you hated with passion :P) converted all zsmalloc
-> > into preemptible ones because of this - zspage->lock is a nested leaf-lock,
-> > so it cannot schedule unless locks it's nested under permit it (needless to
-> > say neither rwlock nor spinlock permit it).
+> > Currently get_port_device_capability() sends slot control cmd to disable
+> > PCIe hotplug interrupts without waiting for its completion and there was
+> > real problem reported for the lack of waiting.
+> > 
+> > Add the necessary wait to comply with PCIe spec. The waiting logic refers
+> > existing pcie_poll_cmd().
+> [...]
+> > --- a/drivers/pci/pcie/portdrv.c
+> > +++ b/drivers/pci/pcie/portdrv.c
+> > @@ -230,8 +260,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+> >  		 * Disable hot-plug interrupts in case they have been enabled
+> >  		 * by the BIOS and the hot-plug service driver is not loaded.
+> >  		 */
+> > -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> > -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> > +		pcie_disable_hp_interrupts_early(dev);
+> >  	}
 > 
-> Hmm, so we want the lock to be preemtible, but we don't want to use an
-> existing preemtible lock because it may be held it from atomic context.
+> The language of the code comment is a bit confusing in that it
+> says the hot-plug driver may not be "loaded".  This sounds like
+> it could be modular.  But it can't.  It's always built-in.
+
+I'm not sure what problem this piece of code try to avoid, maybe
+something simliar to the irq storm isseu as mentioned in the 2/2 patch?
+The code comments could be about the small time window between this
+point and the loading of pciehp driver, which will request_irq and
+enable hotplug interrupt again.
+
+> So I think what is really meant here is that the driver may be
+> *disabled* in the config, i.e. CONFIG_HOTPLUG_PCI_PCIE=n.
 > 
-> I think one problem here is that the lock you are introducing is a
-> spinning lock but the lock holder can be preempted. This is why spinning
-> locks do not allow preemption. Others waiting for the lock can spin
-> waiting for a process that is scheduled out.
+> Now if CONFIG_HOTPLUG_PCI_PCIE=n, you don't need to observe the
+> Command Completed delay because the hotplug driver won't touch
+> the Slot Control register afterwards.  It's not compiled in.
 > 
-> For example, the compaction/migration code could be sleeping holding the
-> write lock, and a map() call would spin waiting for that sleeping task.
-
-write-lock holders cannot sleep, that's the key part.
-
-So the rules are:
-
-1) writer cannot sleep
-   - migration/compaction runs in atomic context and grabs
-	 write-lock only from atomic context
-   - write-locking function disables preemption before lock(), just to be
-	 safe, and enables it after unlock()
-
-2) writer does not spin waiting
-   - that's why there is only write_try_lock function
-	  - compaction and migration bail out when they cannot lock the
-		zspage
-
-3) readers can sleep and can spin waiting for a lock
-   - other (even preempted) readers don't block new readers
-   - writers don't sleep, they always unlock
-
-> I wonder if there's a way to rework the locking instead to avoid the
-> nesting. It seems like sometimes we lock the zspage with the pool lock
-> held, sometimes with the class lock held, and sometimes with no lock
-> held.
+> On the other hand if CONFIG_HOTPLUG_PCI_PCIE=y, you don't need
+> to disable the CCIE and HPIE interrupt because the hotplug driver
+> will handle them.
 > 
-> What are the rules here for acquiring the zspage lock?
+> So I think the proper solution here is to make the write to the
+> Slot Control register conditional on CONFIG_HOTPLUG_PCI_PCIE,
+> like this:
+> 
+> 	if (dev->is_hotplug_bridge &&
+> 	    (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM) &&
+> -	    (pcie_ports_native || host->native_pcie_hotplug)) {
+> -		services |= PCIE_PORT_SERVICE_HP;
+> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
+> +		if (pcie_ports_native || host->native_pcie_hotplug)
+> +			services |= PCIE_PORT_SERVICE_HP;
+> 
+> 		/*
+> 		 * Disable hot-plug interrupts in case they have been enabled
+> 		 * by the BIOS and the hot-plug service driver is not loaded.
+> 		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> +			pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> +				  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
 
-Most of that code is not written by me, but I think the rule is to disable
-"migration" be it via pool lock or class lock.
+Yes, this could sovlve the original issue. 
 
-> Do we need to hold another lock just to make sure the zspage does not go
-> away from under us?
+The problem I heard from BIOS developer is, they didn't expect to
+receive 2 link control commands at almost the same time, which doesn't
+comply to pcie spec, and normaly the handling of one command will take
+some time, though not as long as 1 second.
 
-Yes, the page cannot go away via "normal" path:
-   zs_free(last object) -> zspage becomes empty -> free zspage
+Thanks,
+Feng
 
-so when we have active mapping() it's only migration and compaction
-that can free zspage (its content is migrated and so it becomes empty).
-
-> Can we use RCU or something similar to do that instead?
-
-Hmm, I don't know... zsmalloc is not "read-mostly", it's whatever data
-patterns the clients have.   I suspect we'd need to synchronize RCU every
-time a zspage is freed: zs_free() [this one is complicated], or migration,
-or compaction?  Sounds like anti-pattern for RCU?
+> The above patch also makes sure the interrupts are quiesced if the
+> platform didn't grant hotplug control to OSPM.
+> 
+> Thanks,
+> 
+> Lukas
