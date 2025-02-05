@@ -1,156 +1,145 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAA622ACF3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A3622C328;
 	Wed,  5 Feb 2025 12:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757900; cv=none; b=RdUoWPAxufkT+394k7Ap+Gz90s5Hjq8XBxCMJUk9w5CbcTC/PRfhIn+wn1fIkeEXyvUHOLdn27MihObWRqMb5SMsUqHJq2arLOyxskYMSMRDdzHEIXEfNpyc66qA4GkYOTbRFy7pNkPaXj1aCyZ5UrEH1siooqk1kmSm01T2Tlk=
+	t=1738757900; cv=none; b=ZH8KtqKNuLEnxIOruqJiUfYecr0A4wmhBawaypk7kxr01ErleY9VaODk3jEiwDgHl/d/piXna5jQE0gJQFouJRbqGR0mOW35OCV03QqGJSFeOCU+XUiZiI+ZHmAoIz4EguJ/ixUoInbvGl/YMyarI7wJCBgCg2SOz/HExb3/yD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738757900; c=relaxed/simple;
-	bh=twv/zklPczSbnNe+2Biv8DEX5i3eV+yTDJPYWyQBI2w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=evnCOHbPIkJRGFlvriIvWtJ8HWJ+iA5pfBL2srSwZOBLjrx4ndikRoCqrIElhMUA31o+l2xEo7bf507O/eKcxDZcRaALMu6jrisWd3nUVr4pRU0NJkfpoDk9ICWd09Xy+UJF1Eq7n52QS4I/Jjm18zEtb+IVywyOzFmtuT20SLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BigginXc; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=fR+cFt4BZQLkpdvtnfLohX+19rk0r0+rK9SVAbMmxYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=carLjLVhKqdhkCcc1mmOOoQEd8Rx67TISOc9I5VoGK/V7pnb+UXl+zZFwIiIhRidrYaCjpRSvLR2YLFW231FWzivQ0FqMQgfy2tkYKP1MgRsxorCje1pf03ii8i1jl/vgf8ZP4kRF53ZUxVDR8uNqFiT88NaF5MT79NIt8PndHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SLdiLpIs; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BigginXc"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515CI9MH2529619
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 06:18:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738757889;
-	bh=urwHlgDO2lKuC9/wGjafEmW2fGbENgohK10qmloExbc=;
-	h=From:To:CC:Subject:Date;
-	b=BigginXcRnAdyEUjb12W009uOLlGrmFC2wMxOltdTIfpz/IolOl41kRFQmIrXP9rE
-	 hZ3HAsFj/mO0/ytFiJVRp5GWb6FIgQ9icVpZLzHkzpQTIXbLkyPEhLqoO2SeeCdVdn
-	 HVhFX7fAD4v1QMQMVY+FqF4bJ2RfZjVFzjTRrGc8=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515CI9GN009081
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 06:18:09 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 06:18:09 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 06:18:09 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.104])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515CI6lk071061;
-	Wed, 5 Feb 2025 06:18:06 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH] dmaengine: ti: k3-udma: Enable second resource range for BCDMA and PKTDMA
-Date: Wed, 5 Feb 2025 17:48:01 +0530
-Message-ID: <20250205121805.316792-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLdiLpIs"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dc75f98188so10841322a12.2;
+        Wed, 05 Feb 2025 04:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738757897; x=1739362697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p06UyUghuYW91CsxE3GRq30kKC6rXBlgYtHonuFNOdI=;
+        b=SLdiLpIsKWmpMUq5UFDvvyYGpyUuPnzfVfg+lXp758KhYlzhbwuxIolitpXOtdlBcA
+         b8f5URJ642ErRlhJgETsvrg4LMYUnW1Q82G5YokL8RWDRyNyRWYifnxGiLuZ2Rd0Blcn
+         CmYW9qDHEdx6QcMZg9+YFWun1YJSfgba/4kcC8eU147P4svxGy5SUx4g+cN3obLoQZuJ
+         pyQjefyBHsgROsRwJaE66U8K/mIj49BybtNDlfySD68BKBHLNPsGOFfXJQRidkvRMdfq
+         YBQ9DrvV4CwcE2TZw3YmjN42Q2S7GMo+q2vJ5c20h2yLqPhhpWHx6dL9SoiAsmGIAzRs
+         72zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738757897; x=1739362697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p06UyUghuYW91CsxE3GRq30kKC6rXBlgYtHonuFNOdI=;
+        b=STigjg2zcc8ZBeGInZhcJUyfNYw26xd+0iO5/FOm9PiO08Xi1/6M918uEFgrCPoVFe
+         /NtBPHFx7XDevDdI4nsWNH8Nhq2h6RVq8PQ45y9Og2V9ZX7jXFQSdYCve/XTEz652L5N
+         gWEPN2TH5KuWhQQJ7677iaXHXjAtvRDFDfF8m1HPPxQCnjF9I6+yl85X/YvdysILLnYk
+         YNdEDmuOfU1W6H/QpDmtBnmD1WZtFv5SCDQrgFIICvEzrPgbsAxbL8WV/+OG/KsuoBfX
+         H85fs/S3Aqch0YAzuKy21T5lFZScb6fRHbY8NigTLTLrJow26DPt5GES+D1mpTbLsywM
+         BUSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm8PgS4tKR7sRjiK45QpJBw2ikRpPX2V3SdmdDKUUt8mBqE34yQjlMuRhnrJ5//J9yKlGSw5xINqM3U4GyRhM=@vger.kernel.org, AJvYcCWE1Jm1bbnt4nEiIif8uVEbbhPey/Bj518SmVz9u9rAFElgdM2PPBxian3p8DIIU1WLkLL8MU2ZpgbvhwOJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSCMj7qkTpkEMq38aMQrhzAsaBmwtWUfJkLJbJaCEtXx8E3toQ
+	oOwc97klKUfK3ITpMPxitRtWtnrPnIugJCQl10U70CGiD3mElPs4O5eAzB5/YHkTr1ehuFk6kF5
+	dXCuV3F50pLEk5C2fOb7ItGctCIY=
+X-Gm-Gg: ASbGncu+eBC9QOazS7MdniPoxrR8djmBOfqvaegpKl79xzG+kTxHFtYe3K/aTt9Uwtd
+	qrTUYoPQaV/jmAN8jSde/d6E4ww8xePQI3RqTxhMHrGo09wONbJEYGjctzqJInibnnPwoc1s=
+X-Google-Smtp-Source: AGHT+IFeX+/obu7ox8PSNyj4uND9bjMg4Y3XV6IaQYWfLu9eUVM1KsKrD3Fv1nq/hLAssLVakajUofJswFM1RoTahQo=
+X-Received: by 2002:a05:6402:5d0:b0:5d3:cf08:d64d with SMTP id
+ 4fb4d7f45d1cf-5dcdb779fb9mr3123510a12.32.1738757896835; Wed, 05 Feb 2025
+ 04:18:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com> <CAGudoHHCXHA=7e8M=6jMVqbh8=keRBBF8yHvDm9PnyeN6Bb7Xw@mail.gmail.com>
+ <202502040717.FCEFDB7E0@keescook> <CAGudoHFszbdKkPibU_ynbj_PSyHewxTxWT_-hR3=8GHa46ebaQ@mail.gmail.com>
+ <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
+ <20250204203059.GA909029@mit.edu> <CAGudoHFvLiCnCkAQN82qhdqmy0P2=Ywtnwqkc3KOc3s3hUQX8g@mail.gmail.com>
+ <CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com> <20250205052651.GD909029@mit.edu>
+In-Reply-To: <20250205052651.GD909029@mit.edu>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Feb 2025 13:18:04 +0100
+X-Gm-Features: AWEUYZkBF2cxzU94WR2mFC2eLUAkx0XtWDm1ZPapWQsMexh_fxOzU14uHyYbuR8
+Message-ID: <CAGudoHEkekF447FRTZL0GQsDwGi=VNr1vkwiDuOuME3YEpP0Lw@mail.gmail.com>
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Kees Cook <kees@kernel.org>, 
+	syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>, 
+	akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The SoC DMA resources for UDMA, BCDMA and PKTDMA can be described via a
-combination of up to two resource ranges. The first resource range handles
-the default partitioning wherein all resources belonging to that range are
-allocated to a single entity and form a continuous range. For use-cases
-where the resources are shared across multiple entities and require to be
-described via discontinuous ranges, a second resource range is required.
+On Wed, Feb 5, 2025 at 6:26=E2=80=AFAM Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> On Tue, Feb 04, 2025 at 10:25:29PM +0100, Mateusz Guzik wrote:
+> > >
+> > > My question is if that's legitimate, I'm guessing not. If not, then
+> > > ext4 should complain about it.
+> > >
+> > > On stock kernel this happens to work because strlen finds the "right"=
+ size.
+> > >
+> >
+> > So it occurred to me to check what fsck thinks about it.
+> >
+> > I ran it twice in a row, it *removed* the problematic symlink.
+>
+> Can you show me what's in the problematic symlink?  And does the
+> syzbot reproducer trigger a problem before adding your symlink
+> caching?
+>
+> What would be really great if you couldcreate small focused test case
+> that shows what's going on --- ideally something like a 100k file
+> system, ala the file systems in the tests directory of the e2fsprogs
+> sources....
+>
 
-Currently, udma_setup_resources() supports handling resources that belong
-to the second range. Extend bcdma_setup_resources() and
-pktdma_setup_resources() to support the same.
+Everything is in the first e-mail I sent you, albeit a little spread out.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
- drivers/dma/ti/k3-udma.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Corrupted image:
+https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 7ed1956b4642..b223a7aacb0c 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -4886,6 +4886,12 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 				irq_res.desc[i].start = rm_res->desc[i].start +
- 							oes->bcdma_bchan_ring;
- 				irq_res.desc[i].num = rm_res->desc[i].num;
-+
-+				if (rm_res->desc[i].num_sec) {
-+					irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
-+									oes->bcdma_bchan_ring;
-+					irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
-+				}
- 			}
- 		}
- 	} else {
-@@ -4909,6 +4915,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 				irq_res.desc[i + 1].start = rm_res->desc[j].start +
- 							oes->bcdma_tchan_ring;
- 				irq_res.desc[i + 1].num = rm_res->desc[j].num;
-+
-+				if (rm_res->desc[j].num_sec) {
-+					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+									oes->bcdma_tchan_data;
-+					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
-+					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
-+									oes->bcdma_tchan_ring;
-+					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
-+				}
- 			}
- 		}
- 	}
-@@ -4929,6 +4944,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 				irq_res.desc[i + 1].start = rm_res->desc[j].start +
- 							oes->bcdma_rchan_ring;
- 				irq_res.desc[i + 1].num = rm_res->desc[j].num;
-+
-+				if (rm_res->desc[j].num_sec) {
-+					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+									oes->bcdma_rchan_data;
-+					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
-+					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
-+									oes->bcdma_rchan_ring;
-+					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
-+				}
- 			}
- 		}
- 	}
-@@ -5063,6 +5087,12 @@ static int pktdma_setup_resources(struct udma_dev *ud)
- 			irq_res.desc[i].start = rm_res->desc[i].start +
- 						oes->pktdma_tchan_flow;
- 			irq_res.desc[i].num = rm_res->desc[i].num;
-+
-+			if (rm_res->desc[i].num_sec) {
-+				irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
-+								oes->pktdma_tchan_flow;
-+				irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
-+			}
- 		}
- 	}
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
-@@ -5074,6 +5104,12 @@ static int pktdma_setup_resources(struct udma_dev *ud)
- 			irq_res.desc[i].start = rm_res->desc[j].start +
- 						oes->pktdma_rchan_flow;
- 			irq_res.desc[i].num = rm_res->desc[j].num;
-+
-+			if (rm_res->desc[j].num_sec) {
-+				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+								oes->pktdma_rchan_flow;
-+				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
-+			}
- 		}
- 	}
- 	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
--- 
-2.43.0
+The bogus link is under file0/file1 and readlinks to
+/tmp/syz-imagegen43743633/file0/file0.
 
+ext4 sets  i_size to 131109, while strlen on the thing is 37
+
+The problem happens to not reproduce with this testcase because of the
+nul terminator in the corrupted symlink. Because of it the kernel
+prior to my change only attempts to copy the 37 bytes.
+
+Suppose the corrupted image got massaged to *NOT* have a nul
+terminator in that symlink. Then the kernel-side ext4 code without my
+change would still only nul terminate
+
+So this:
+                        nd_terminate_link(ei->i_data, inode->i_size,
+                                sizeof(ei->i_data) - 1);
+
+Clamps it to whichever is lower -- inode->i_size or sizeof(ei->i_data) - 1.
+
+The call added by my patch uses inode->i_size unconditionally and
+trips over, so one could argue this is a bug on my end:
+
+                        inode_set_cached_link(inode, (char *)ei->i_data,
+                                              inode->i_size);
+
+It definitely fixes itself if one strlen()s and that would respect the
+termination, I'm going to send a patch to that extent later.
+
+However, that aside, there is definitely something going wrong with
+the symlink to begin with (size vs actual size disparity) and the fs
+should most likely reject it in the first place. So for this
+particular case I argue my bug only manifested itself because of the
+prior bug of ext4 accepting this link.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
