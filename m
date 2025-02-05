@@ -1,419 +1,515 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C851553AB
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AC28634E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765628; cv=none; b=FZw0LFwxpgbAxWtrAc135GrykwqLfKpQuvVN/GVdqQ1opgFaWXQn6ht3LASFrPf9LWqmffnJiFynzGXUb+EMZI5+z5CPfrrzyXuRYvEq/XIcpGQSXvp0Hib0nir6tBSrRUtwSfhQVCGZiF9q3bHKeeUHwM5lpIobD/ubTBbWyJ0=
+	t=1738765708; cv=none; b=kQaD6//0PPxDslRy1ulBnn2EdZ3sYiQzHFt9/A2O5WHm5tDL0yeY6olCzGXBahZNyCiw7i4LlvCHgUhuQ0jpChVtW4ymXHC+FY7n3zcoqL5mCd3ZVT1mIOarr9i3ANsYFBWNl8YqRwk9tI+pj52bGK7BuZ7jrc7+lnaO6+u37QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765628; c=relaxed/simple;
-	bh=aytenqfQ7FrZzqliUpSopvCLahO5JZnMNTOaFIfwkLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJqAHiCdRDxdrAvpgi1h0yeSj8xTHU0AcBQDtM137FHSmL11TsoM696j0RJvcY2QaIRUlH1Zp6NPuObyjM9cBBuOkktzKay50LeQXtvVfn+b7e03Z3AMFYwwNh/n7C9PP+qvtsWKN7gF/shM5sw4ztNpExcMzYQ1lNTIGKui/0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rM4oqc4X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738765708; c=relaxed/simple;
+	bh=Pj2ARB5IEhM6ZKcnaj1grIDX3nSvfPjwFQ8DWbEC28g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OVCgV8IjvbNVqh7kCsZBb61Xfe6Xz0Or4x+AQ4+p1ZUMIgZGNDizcQmkGANzuBNgudaPjBJu1Q6YGhgrdq71rBnGYRzVbKhB34rSsIMl8+UFQI+JytOkQrGs9xEnPJ5h2lJxMVg/HsTOM+UwayxFFbN7n/AsbceY+cgl5QILRjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S4At3ZnI; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rM4oqc4X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A335C4CED6;
-	Wed,  5 Feb 2025 14:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738765627;
-	bh=aytenqfQ7FrZzqliUpSopvCLahO5JZnMNTOaFIfwkLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rM4oqc4X6MT10SPXABYlvedqtCtN3gkwuQQDMITg8nq7YPQwdZVD+9OGb9L72vaVW
-	 EnmLy4GODYSRxqRYmIPNjl/haDvBDFUMP0naxD+4EA2FNdaPvFy7MQJW7dUxSk5OS5
-	 TzfYjKTrIq0yXi4Z3k2r5rbLjSTQ4kUfv9y4Cdf/Vxd9RfKKLCVRfwu1rGaEKN96dZ
-	 cHy0sJStN8s3fKQT2Uk6MVY6XJCbaVe/tci7cvnZY8mJIHDh+eF3YLsHD+H+4AMWx8
-	 XVAQBs0d2nSUMNBb4w11nF/cOJED7FWi+KpMOC7h7VjrtLe8ENIEyzHcylmgagy96K
-	 C5KDfxTh1pQGg==
-Date: Wed, 5 Feb 2025 15:27:05 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/10] drm/display: add CEC helpers code
-Message-ID: <20250205-smoky-fearless-hornet-cbf422@houat>
-References: <20250126-drm-hdmi-connector-cec-v3-0-5b5b2d4956da@linaro.org>
- <20250126-drm-hdmi-connector-cec-v3-2-5b5b2d4956da@linaro.org>
- <ylahtg54vvrpg5rzp3z5oyi37mtblj3hn4pzwylcimfakrzy3m@idqczwb3hvxl>
- <lme4jqksg7djyrxwpo3x363vlsyhld22co3tfsthniistnrm5h@kbygscfa7afr>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S4At3ZnI"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f006748fd1so53246657b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 06:28:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738765704; x=1739370504; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RxjPZioicVlmOp6G07at5GPXCO7hO5KTGz1etg8yNsM=;
+        b=S4At3ZnIZR+dEc3s5ijOO0BfldraAPhRmJFBt2LTPJpxFaUHQEGL00pAdR/iqT3Ak8
+         Df6kEK2/1ZLCGeFhOJdpBWUc4XnQQSvhpWZtO7hzbDCeyW8YcW9TlNumtPVvE1v9Z5a4
+         oj3jYPcacnDS4UKHAv6pWAtd6bLCE9aiVVka5rypy2IHz9ks4CPUOXjvWDGGetqRIyCB
+         jDe2Ic+L8/M53i4a5YbbJx9ARBSprjU4s8Bt3ogm0Y1kjK/rRkoEKdPcwabBcTykao9Z
+         1Jt39FPTAO1gxC8cIOJNujbvTp6H0HECpj+eZYihPwKetXXig7uBk+gwRj9KNUsIgWgx
+         5Euw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738765704; x=1739370504;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RxjPZioicVlmOp6G07at5GPXCO7hO5KTGz1etg8yNsM=;
+        b=r+nYTbkKqkFjoaIQJ/cGERrhU4F3ElvtnWsieYiQIuZOTw9IM0LjLCiNzzOhHo8R17
+         eCryMVrbLLK37dIw1mzO3hG92yXaodqs+CsbSDT3lNOZu/Elb5Xi5mVR+lcjwACo6EJn
+         3ziYOWdiXmPR5Hapu1YGgWi7eOwPgFBk18M02L6vdTnEoAi/uYERvM3ViH9NDOGRuG32
+         iTknh6twFFMTntNTHt7xjRXwxXWTs+6iok8DdIlv/NiAEPEo3AnhjqnN27mMM+Jur86a
+         7ZTGPD88PSwwNglFlCkmUby6VccWmBxuljWXR4TsaK2eg3Ko5nrc9aCKJkZ8L0Vuds45
+         Zxsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXF7/6fOXGLoaQNjjr/bYZJn2Phg5Pfw0vRLp+mEAubga2zxaY3ioDlAamBaZWz3CZP1AGPbdHCqCGLwvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5PJh0RAu1ixWTQHhHxmX/ENH8FncRm9S5Lvwn+vCmQ4JoNDa7
+	rnYupKYRh+U8EJ0mG1CF+1rC04AjvRWkvwQP/vftzFWhxq0EDtTsaIQAs4RHrqACgJNN/WY+sdK
+	BnCz7FhV3nuHH7kJSQl16Mj8bkAtcEvts8oOmEw==
+X-Gm-Gg: ASbGncsEiKJXchdBt4XUESxvuS2bPR/AOqDhmHBNINEGaZWROa3wtToYbKercRimJop
+	fGIRkdM3MRNpjPMkZ4WK14pC/OsH6WoAdRdYXPZ/yuTJITpdbGeZ0/K/7+9rzLVl10a2GjyY=
+X-Google-Smtp-Source: AGHT+IGvT6fRYRimcPuK0ghQ6l2fJhpuTegAxts5NZNBuejmaYfUhD9DQAS2Jt8OFDlInZpH8BiB7Vh4LYu4UkMfUBU=
+X-Received: by 2002:a05:690c:6104:b0:6f6:b646:4f34 with SMTP id
+ 00721157ae682-6f989f62f57mr25937957b3.30.1738765704529; Wed, 05 Feb 2025
+ 06:28:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="vxchb22gw2pajmkk"
-Content-Disposition: inline
-In-Reply-To: <lme4jqksg7djyrxwpo3x363vlsyhld22co3tfsthniistnrm5h@kbygscfa7afr>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+ <20250113-sm8750_ufs_master-v1-2-b3774120eb8c@quicinc.com>
+ <vry7yib4jtvyc5baruetqb2msy4j4ityv2s6z5smrz6rqjfb5l@xoharscfhz5n>
+ <a4162070-f5cd-464a-b814-42c923e63784@quicinc.com> <CAA8EJpq45o6M24ZXWYrx4WCakW3EiD6hunjhQ1NK+Lduwu7CXg@mail.gmail.com>
+ <28687463-b2ba-4f6b-8d7e-7ffd006dec0c@quicinc.com>
+In-Reply-To: <28687463-b2ba-4f6b-8d7e-7ffd006dec0c@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 5 Feb 2025 16:28:13 +0200
+X-Gm-Features: AWEUYZmSCuup3kmhgdPqrRz6rFJy3-Xi4fY5gUF7dMnMWz6ztP1YLRGejqe2GqI
+Message-ID: <CAA8EJppC3aQ7BGj0ccuVNfNCbrimHs1v6=-aueL4b-Y3RAYb3g@mail.gmail.com>
+Subject: Re: [PATCH 2/5] phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, 
+	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, Trilok Soni <quic_tsoni@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, Manish Pandey <quic_mapa@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+
+On Wed, 5 Feb 2025 at 15:57, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+>
+>
+>
+> On 2/5/2025 5:14 PM, Dmitry Baryshkov wrote:
+> > On Wed, 5 Feb 2025 at 13:34, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+> >>
+> >>
+> >>
+> >> On 1/14/2025 4:19 PM, Dmitry Baryshkov wrote:
+> >>> On Mon, Jan 13, 2025 at 01:46:25PM -0800, Melody Olvera wrote:
+> >>>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
+> >>>>
+> >>>> Add SM8750 specific register layout and table configs. The serdes
+> >>>> TX RX register offset has changed for SM8750 and hence keep UFS
+> >>>> specific serdes offsets in a dedicated header file.
+> >>>>
+> >>>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
+> >>>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+> >>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> >>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> >>>> ---
+> >>>>    drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |  12 ++
+> >>>>    .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  68 ++++++++
+> >>>>    drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 174 ++++++++++++++++++++-
+> >>>>    3 files changed, 253 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h
+> >>>> index 328c6c0b0b09ae4ff5bf14e846772e6d0f31ce5a..aa2278f9377408b3c602f6fa0de5021804f21f52 100644
+> >>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h
+> >>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h
+> >>>> @@ -86,4 +86,16 @@
+> >>>>    #define QSERDES_V6_COM_CMN_STATUS                          0x1d0
+> >>>>    #define QSERDES_V6_COM_C_READY_STATUS                              0x1f8
+> >>>>
+> >>>> +#define QSERDES_V6_COM_ADAPTIVE_ANALOG_CONFIG                       0x268
+> >>>> +#define QSERDES_V6_COM_CP_CTRL_ADAPTIVE_MODE0                       0x26c
+> >>>> +#define QSERDES_V6_COM_PLL_RCCTRL_ADAPTIVE_MODE0            0x270
+> >>>> +#define QSERDES_V6_COM_PLL_CCTRL_ADAPTIVE_MODE0                     0x274
+> >>>> +#define QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE1_MODE0           0x58
+> >>>> +
+> >>>> +#define QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE2_MODE0           0x5c
+> >>>> +#define QSERDES_V6_COM_CP_CTRL_ADAPTIVE_MODE1                       0x278
+> >>>> +#define QSERDES_V6_COM_PLL_RCCTRL_ADAPTIVE_MODE1            0x27c
+> >>>> +#define QSERDES_V6_COM_PLL_CCTRL_ADAPTIVE_MODE1                     0x280
+> >>>> +#define QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE1_MODE1           0x50
+> >>>> +#define QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE2_MODE1           0x54
+> >>>>    #endif
+> >>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h
+> >>>> new file mode 100644
+> >>>> index 0000000000000000000000000000000000000000..73b3857e0277ce6cdbe658066772172a94f25d6e
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h
+> >>>> @@ -0,0 +1,68 @@
+> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>>> +/*
+> >>>> + * Copyright (c) 2024, Linaro Limited
+> >>>> + */
+> >>>> +
+> >>>> +#ifndef QCOM_PHY_QMP_QSERDES_TXRX_UFS_V7_H_
+> >>>> +#define QCOM_PHY_QMP_QSERDES_TXRX_UFS_V7_H_
+> >>>> +
+> >>>> +#define QSERDES_UFS_V7_TX_RES_CODE_LANE_TX                          0x28
+> >>>> +#define QSERDES_UFS_V7_TX_RES_CODE_LANE_RX                          0x2c
+> >>>> +#define QSERDES_UFS_V7_TX_RES_CODE_LANE_OFFSET_TX                   0x30
+> >>>> +#define QSERDES_UFS_V7_TX_RES_CODE_LANE_OFFSET_RX                   0x34
+> >>>> +#define QSERDES_UFS_V7_TX_LANE_MODE_1                                       0x7c
+> >>>> +#define QSERDES_UFS_V7_TX_FR_DCC_CTRL                                       0x108
+> >>>> +
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_SO_SATURATION                                0x28
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_PI_CTRL1                                     0x58
+> >>>> +#define QSERDES_UFS_V7_RX_TERM_BW_CTRL0                                     0xC4
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B0                          0x218
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B1                          0x21C
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B2                          0x220
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B3                          0x224
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B4                          0x228
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B6                          0x230
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE_0_1_B7                          0x234
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE2_B3                                     0x248
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE2_B6                                     0x254
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE2_B7                                     0x258
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B0                                     0x260
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B1                                     0x264
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B2                                     0x268
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B3                                     0x26C
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B4                                     0x270
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B5                                     0x274
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B7                                     0x27C
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE3_B8                                     0x280
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B0                          0x284
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B1                          0x288
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B2                          0x28C
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B3                          0x290
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B4                          0x294
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B5                          0x298
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B6                          0x29C
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SA_B7                          0x2A0
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B0                          0x2A8
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B1                          0x2AC
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B2                          0x2B0
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B3                          0x2B4
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B4                          0x2B8
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B5                          0x2BC
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B6                          0x2C0
+> >>>> +#define QSERDES_UFS_V7_RX_MODE_RATE4_SB_B7                          0x2C4
+> >>>> +#define QSERDES_UFS_V7_RX_DLL0_FTUNE_CTRL                           0x348
+> >>>> +#define QSERDES_UFS_V7_RX_SIGDET_CAL_TRIM                           0x380
+> >>>> +#define QSERDES_UFS_V7_RX_INTERFACE_MODE                            0x1F0
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_FO_GAIN_RATE2                                0xD4
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_FO_GAIN_RATE4                                0xDC
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_SO_GAIN_RATE4                                0xF0
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_PI_CONTROLS                          0xF4
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_FASTLOCK_COUNT_HIGH_RATE4            0x54
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_FASTLOCK_FO_GAIN_RATE4                       0x10
+> >>>> +#define QSERDES_UFS_V7_RX_UCDR_FASTLOCK_SO_GAIN_RATE4                       0x24
+> >>>> +#define QSERDES_UFS_V7_RX_EQ_OFFSET_ADAPTOR_CNTRL1                  0x1CC
+> >>>> +#define QSERDES_UFS_V7_RX_OFFSET_ADAPTOR_CNTRL3                             0x1D4
+> >>>> +#define QSERDES_UFS_V7_RX_EQU_ADAPTOR_CNTRL4                                0x1B4
+> >>>> +#define QSERDES_UFS_V7_RX_VGA_CAL_MAN_VAL                           0x178
+> >>>
+> >>> - Lowercase hex
+> >>> - Sort RX by the register offset
+> >>
+> >> Sure Will take care in next patchset.
+> >
+> > Just to note, please sort QSERDES_V6_COM regs too.
+> >
+> >>
+> >>>
+> >>>
+> >>>> +
+> >>>> +#endif
+> >>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> >>>> index d964bdfe870029226482f264c78a27d0ec43bf2b..a1695b368fe7622bf8663343d0241b4d0d40ab59 100644
+> >>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> >>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> >>>> @@ -31,6 +31,7 @@
+> >>>>    #include "phy-qcom-qmp-pcs-ufs-v6.h"
+> >>>>
+> >>>>    #include "phy-qcom-qmp-qserdes-txrx-ufs-v6.h"
+> >>>> +#include "phy-qcom-qmp-qserdes-txrx-ufs-v7.h"
+> >>>>
+> >>>>    /* QPHY_PCS_READY_STATUS bit */
+> >>>>    #define PCS_READY                          BIT(0)
+> >>>> @@ -949,6 +950,132 @@ static const struct qmp_phy_init_tbl sm8650_ufsphy_g5_pcs[] = {
+> >>>>       QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_RX_HSG5_SYNC_WAIT_TIME, 0x9e),
+> >>>>    };
+> >>>>
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_serdes[] = {
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_SYSCLK_EN_SEL, 0xD9),
+> >>>
+> >>> Lowercase hex
+> >>
+> >> Sure Will take care in next patchset.
+> >>>
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CMN_CONFIG_1, 0x16),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_HSCLK_SEL_1, 0x11),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_HSCLK_HS_SWITCH_SEL_1, 0x00),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP_EN, 0x01),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP_CFG, 0x60),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_IVCO, 0x1F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_IVCO_MODE1, 0x1F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CMN_IETRIM, 0x07),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CMN_IPTRIM, 0x20),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE_MAP, 0x04),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE_CTRL, 0x40),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_ADAPTIVE_ANALOG_CONFIG, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_DEC_START_MODE0, 0x41),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CP_CTRL_MODE0, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_RCTRL_MODE0, 0x18),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_CCTRL_MODE0, 0x14),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CP_CTRL_ADAPTIVE_MODE0, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_RCCTRL_ADAPTIVE_MODE0, 0x18),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_CCTRL_ADAPTIVE_MODE0, 0x14),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP1_MODE0, 0x7F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP2_MODE0, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0x92),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1E),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_DEC_START_MODE1, 0x4C),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CP_CTRL_MODE1, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_RCTRL_MODE1, 0x18),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_CCTRL_MODE1, 0x14),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_CP_CTRL_ADAPTIVE_MODE1, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_RCCTRL_ADAPTIVE_MODE1, 0x18),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_CCTRL_ADAPTIVE_MODE1, 0x14),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP1_MODE1, 0x99),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP2_MODE1, 0x07),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xBE),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x23),
+> >>>> +};
+> >>>> +
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_tx[] = {
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_TX_LANE_MODE_1, 0x00),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_TX_RES_CODE_LANE_OFFSET_TX, 0x07),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_TX_RES_CODE_LANE_OFFSET_RX, 0x17),
+> >>>> +};
+> >>>> +
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_rx[] = {
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_FO_GAIN_RATE2, 0x0C),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_FO_GAIN_RATE4, 0x0C),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_SO_GAIN_RATE4, 0x04),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x14),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_PI_CONTROLS, 0x07),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_OFFSET_ADAPTOR_CNTRL3, 0x0E),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_FASTLOCK_COUNT_HIGH_RATE4, 0x02),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_FASTLOCK_FO_GAIN_RATE4, 0x1C),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_FASTLOCK_SO_GAIN_RATE4, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_VGA_CAL_MAN_VAL, 0x8E),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_EQU_ADAPTOR_CNTRL4, 0x0F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B0, 0xCE),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B1, 0xCE),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B2, 0x18),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B3, 0x1A),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B4, 0x0F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B6, 0x60),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE_0_1_B7, 0x62),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE2_B3, 0x9A),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE2_B6, 0xE2),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE2_B7, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B0, 0x1B),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B1, 0x1B),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B2, 0x98),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B3, 0x9B),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B4, 0x2A),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B5, 0x12),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B7, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE3_B8, 0x01),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B0, 0x93),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B1, 0x93),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B2, 0x60),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B3, 0x99),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B4, 0x5F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B5, 0x92),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B6, 0xE3),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SA_B7, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B0, 0x9B),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B1, 0x9B),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B2, 0x60),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B3, 0x99),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B4, 0x5F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B5, 0x92),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B6, 0xFB),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_MODE_RATE4_SB_B7, 0x06),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_SO_SATURATION, 0x1F),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_UCDR_PI_CTRL1, 0x94),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_TERM_BW_CTRL0, 0xFA),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_DLL0_FTUNE_CTRL, 0x30),
+> >>>> +    QMP_PHY_INIT_CFG(QSERDES_UFS_V7_RX_SIGDET_CAL_TRIM, 0x77),
+> >>>> +};
+> >>>> +
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_pcs[] = {
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_MULTI_LANE_CTRL1, 0x02),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_MID_TERM_CTRL1, 0x43),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_PCS_CTRL1, 0x40),
+> >>>
+> >>> Why does SM8650 have 0xc1 here?
+> >>
+> >> SM8750 phy is different from SM8650 and hence it is using different phy
+> >> calibration setting. This value is as per Hardware programming guide.'
+> >
+> > Ack.
+> >
+> >>
+> >>>
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_LARGE_AMP_DRV_LVL, 0x0F),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_RX_SIGDET_CTRL2, 0x68),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_POST_EMP_LVL_S4, 0x0E),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_POST_EMP_LVL_S5, 0x12),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_POST_EMP_LVL_S6, 0x15),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_POST_EMP_LVL_S7, 0x19),
+> >>>> +};
+> >>>> +
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_g4_pcs[] = {
+> >>>
+> >>> Missing QPHY_V6_PCS_UFS_PLL_CNTL, then it becomes sm8650_ufsphy_g4_pcs
+> >>
+> >> The value of QPHY_V6_PCS_UFS_PLL_CNTL is 0x33 for SM8750 as it is
+> >> operating on 80bit mode. Similiar change needs to be done for SM8650.
+> >
+> > Ack, please check if that allows the driver to use the same set of
+> > tables for SM8650 and SM8750.
+> >
+> >>>
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_HSGEAR_CAPABILITY, 0x04),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_RX_HSGEAR_CAPABILITY, 0x04),
+> >>>> +};
+> >>>> +
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_g5_pcs[] = {
+> >>>
+> >>> sm8650_ufsphy_g5_pcs?
+> >> Agree with you. Good Finding. I will replace sm8750_ufsphy_g5_pcs with
+> >> sm8650_ufsphy_g5_pcs.
+> >>
+> >>
+> >>>
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_PLL_CNTL, 0x33),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_TX_HSGEAR_CAPABILITY, 0x05),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_RX_HSGEAR_CAPABILITY, 0x05),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_RX_HS_G5_SYNC_LENGTH_CAPABILITY, 0x4d),
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_RX_HSG5_SYNC_WAIT_TIME, 0x9e),
+> >>>> +};
+> >>>> +
+> >>>> +static const struct qmp_phy_init_tbl sm8750_ufsphy_hs_b_pcs[] = {
+> >>>> +    QMP_PHY_INIT_CFG(QPHY_V6_PCS_UFS_PCS_CTRL1, 0x41),
+> >>>> +};
+> >>>> +
+> >>>>    struct qmp_ufs_offsets {
+> >>>>       u16 serdes;
+> >>>>       u16 pcs;
+> >>>> @@ -1523,6 +1650,45 @@ static const struct qmp_phy_cfg sm8650_ufsphy_cfg = {
+> >>>>       .regs                   = ufsphy_v6_regs_layout,
+> >>>>    };
+> >>>>
+> >>>> +static const struct qmp_phy_cfg sm8750_ufsphy_cfg = {
+> >>>> +    .lanes                  = 2,
+> >>>> +
+> >>>> +    .offsets                = &qmp_ufs_offsets_v6,
+> >>>> +    .max_supported_gear     = UFS_HS_G5,
+> >>>> +
+> >>>> +    .tbls = {
+> >>>> +            .serdes         = sm8750_ufsphy_serdes,
+> >>>> +            .serdes_num     = ARRAY_SIZE(sm8750_ufsphy_serdes),
+> >>>> +            .tx             = sm8750_ufsphy_tx,
+> >>>> +            .tx_num         = ARRAY_SIZE(sm8750_ufsphy_tx),
+> >>>> +            .rx             = sm8750_ufsphy_rx,
+> >>>> +            .rx_num         = ARRAY_SIZE(sm8750_ufsphy_rx),
+> >>>> +            .pcs            = sm8750_ufsphy_pcs,
+> >>>> +            .pcs_num        = ARRAY_SIZE(sm8750_ufsphy_pcs),
+> >>>> +    },
+> >>>> +
+> >>>> +    .tbls_hs_b = {
+> >>>> +            .pcs            = sm8750_ufsphy_hs_b_pcs,
+> >>>> +            .pcs_num        = ARRAY_SIZE(sm8750_ufsphy_hs_b_pcs),
+> >>>> +    },
+> >>>> +
+> >>>> +    .tbls_hs_overlay[0] = {
+> >>>> +            .pcs            = sm8750_ufsphy_g4_pcs,
+> >>>> +            .pcs_num        = ARRAY_SIZE(sm8750_ufsphy_g4_pcs),
+> >>>> +            .max_gear       = UFS_HS_G4,
+> >>>> +    },
+> >>>> +    .tbls_hs_overlay[1] = {
+> >>>> +            .pcs            = sm8750_ufsphy_g5_pcs,
+> >>>> +            .pcs_num        = ARRAY_SIZE(sm8750_ufsphy_g5_pcs),
+> >>>> +            .max_gear       = UFS_HS_G5,
+> >>>> +    },
+> >>>> +
+> >>>> +    .vreg_list              = qmp_phy_vreg_l,
+> >>>> +    .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
+> >>>> +    .regs                   = ufsphy_v6_regs_layout,
+> >>>> +
+> >>>> +};
+> >>>> +
+> >>>>    static void qmp_ufs_serdes_init(struct qmp_ufs *qmp, const struct qmp_phy_cfg_tbls *tbls)
+> >>>>    {
+> >>>>       void __iomem *serdes = qmp->serdes;
+> >>>> @@ -1593,8 +1759,10 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
+> >>>>               qmp_ufs_pcs_init(qmp, &cfg->tbls_hs_overlay[i]);
+> >>>>       }
+> >>>>
+> >>>> -    if (qmp->mode == PHY_MODE_UFS_HS_B)
+> >>>> +    if (qmp->mode == PHY_MODE_UFS_HS_B) {
+> >>>>               qmp_ufs_serdes_init(qmp, &cfg->tbls_hs_b);
+> >>>> +            qmp_ufs_pcs_init(qmp, &cfg->tbls_hs_b);
+> >>>
+> >>> Extract the serdes+lanes+pcs helper, use it in this function.
+> >>
+> >> Lane init is already a different helper and is already being called from
+> >> function (qmp_ufs_init_register). Here we just adding few extra PCS
+> >> registers needed to support Rate B.
+> >
+> > Please extract the helper that calls qmp_ufs_serdes_init() +
+> > qmp_ufs_lanes_init() + qmp_ufs_pcs_init() over a particular table.
+>
+> Hi Dmitry,
+>
+> Do you mean to move qmp_ufs_serdes_init , qmp_ufs_lanes_init and
+> qmp_ufs_pcs_init into a different wrapper function and call this wrapper
+> from qmp_ufs_init_registers for each table.
+
+Yes.
+
+>
+> But for tbls_hs_b, we just need qmp_ufs_serdes_init and
+> qmp_ufs_pcs_init. qmp_ufs_lanes_init is not required for tbls_hs_b.
+> So wrapper API won't be of much help.
+
+It still is, it removes a need to care about the particular table.
+Historically tbls_hs_b had only qserdes. Now you've added pcs. I don't
+think we should wait for somebody to add tx/rx on top of that.
+
+>
+> Regards,
+> Nitin
+>
+>
+> >
+> >>
+> >>>
+> >>>> +    }
+> >>>>    }
+> >>>>
+> >>>>    static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+> >>>> @@ -2061,7 +2229,11 @@ static const struct of_device_id qmp_ufs_of_match_table[] = {
+> >>>>       }, {
+> >>>>               .compatible = "qcom,sm8650-qmp-ufs-phy",
+> >>>>               .data = &sm8650_ufsphy_cfg,
+> >>>> +    }, {
+> >>>> +            .compatible = "qcom,sm8750-qmp-ufs-phy",
+> >>>> +            .data = &sm8750_ufsphy_cfg,
+> >>>>       },
+> >>>> +
+> >>>>       { },
+> >>>>    };
+> >>>>    MODULE_DEVICE_TABLE(of, qmp_ufs_of_match_table);
+> >>>>
+> >>>> --
+> >>>> 2.46.1
+> >>>>
+> >>>
+> >> Thanks,
+> >> Nitin
+> >>
+> >
+> >
+>
 
 
---vxchb22gw2pajmkk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 02/10] drm/display: add CEC helpers code
-MIME-Version: 1.0
-
-On Tue, Jan 28, 2025 at 02:17:19PM +0200, Dmitry Baryshkov wrote:
-> On Tue, Jan 28, 2025 at 11:36:06AM +0100, Maxime Ripard wrote:
-> > On Sun, Jan 26, 2025 at 03:29:07PM +0200, Dmitry Baryshkov wrote:
-> > > Add generic CEC helpers to be used by HDMI drivers. Both notifier and
-> > > and adapter are supported for registration. Once registered, the driv=
-er
-> > > can call common set of functions to update physical address, to
-> > > invalidate it or to unregister CEC data.
-> > >=20
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > ---
-> > >  drivers/gpu/drm/display/Kconfig               |   5 +
-> > >  drivers/gpu/drm/display/Makefile              |   2 +
-> > >  drivers/gpu/drm/display/drm_hdmi_cec_helper.c | 209 ++++++++++++++++=
-++++++++++
-> > >  include/drm/display/drm_hdmi_cec_helper.h     |  61 ++++++++
-> > >  4 files changed, 277 insertions(+)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/displa=
-y/Kconfig
-> > > index 8d22b7627d41f7bc015decf24ae02a05bc00f055..49da9b768acf3e5f84f2c=
-efae4bb042cfd57a50c 100644
-> > > --- a/drivers/gpu/drm/display/Kconfig
-> > > +++ b/drivers/gpu/drm/display/Kconfig
-> > > @@ -82,6 +82,11 @@ config DRM_DISPLAY_HDMI_AUDIO_HELPER
-> > >  	  DRM display helpers for HDMI Audio functionality (generic HDMI Co=
-dec
-> > >  	  implementation).
-> > > =20
-> > > +config DRM_DISPLAY_HDMI_CEC_HELPER
-> > > +	bool
-> > > +	help
-> > > +	  DRM display helpers for HDMI CEC implementation.
-> > > +
-> > >  config DRM_DISPLAY_HDMI_HELPER
-> > >  	bool
-> > >  	help
-> > > diff --git a/drivers/gpu/drm/display/Makefile b/drivers/gpu/drm/displ=
-ay/Makefile
-> > > index b17879b957d5401721396e247fa346387cf6c48a..2cd078e2b81c1a9e6b336=
-c4187b444bcb8a50e51 100644
-> > > --- a/drivers/gpu/drm/display/Makefile
-> > > +++ b/drivers/gpu/drm/display/Makefile
-> > > @@ -16,6 +16,8 @@ drm_display_helper-$(CONFIG_DRM_DISPLAY_DSC_HELPER)=
- +=3D \
-> > >  drm_display_helper-$(CONFIG_DRM_DISPLAY_HDCP_HELPER) +=3D drm_hdcp_h=
-elper.o
-> > >  drm_display_helper-$(CONFIG_DRM_DISPLAY_HDMI_AUDIO_HELPER) +=3D \
-> > >  	drm_hdmi_audio_helper.o
-> > > +drm_display_helper-$(CONFIG_DRM_DISPLAY_HDMI_CEC_HELPER) +=3D \
-> > > +	drm_hdmi_cec_helper.o
-> > >  drm_display_helper-$(CONFIG_DRM_DISPLAY_HDMI_HELPER) +=3D \
-> > >  	drm_hdmi_helper.o \
-> > >  	drm_scdc_helper.o
-> > > diff --git a/drivers/gpu/drm/display/drm_hdmi_cec_helper.c b/drivers/=
-gpu/drm/display/drm_hdmi_cec_helper.c
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..a6ed5f0fc3835b013a833=
-08f5285ea0819c5702c
-> > > --- /dev/null
-> > > +++ b/drivers/gpu/drm/display/drm_hdmi_cec_helper.c
-> > > @@ -0,0 +1,209 @@
-> > > +// SPDX-License-Identifier: MIT
-> > > +/*
-> > > + * Copyright (c) 2024 Linaro Ltd
-> > > + */
-> > > +
-> > > +#include <drm/drm_bridge.h>
-> > > +#include <drm/drm_connector.h>
-> > > +#include <drm/display/drm_hdmi_cec_helper.h>
-> > > +
-> > > +#include <linux/mutex.h>
-> > > +
-> > > +#include <media/cec.h>
-> > > +#include <media/cec-notifier.h>
-> > > +
-> > > +void drm_connector_hdmi_cec_unregister(struct drm_connector *connect=
-or)
-> > > +{
-> > > +	cec_unregister_adapter(connector->cec.adapter);
-> > > +	connector->cec.adapter =3D NULL;
-> > > +
-> > > +	cec_notifier_conn_unregister(connector->cec.notifier);
-> > > +	connector->cec.notifier =3D NULL;
-> > > +
-> > > +	connector->cec.funcs =3D NULL;
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_unregister);
-> > > +
-> > > +static const struct drm_connector_cec_funcs drm_connector_hdmi_cec_f=
-uncs =3D {
-> > > +	.unregister =3D drm_connector_hdmi_cec_unregister,
-> > > +};
-> > > +
-> > > +int drm_connector_hdmi_cec_notifier_register(struct drm_connector *c=
-onnector,
-> > > +					     const char *port_name,
-> > > +					     struct device *dev)
-> > > +{
-> > > +	struct cec_connector_info conn_info;
-> > > +	struct cec_notifier *notifier;
-> > > +	int ret;
-> > > +
-> > > +	mutex_lock(&connector->cec.mutex);
-> > > +
-> > > +	if (connector->cec.funcs) {
-> > > +		ret =3D -EBUSY;
-> > > +		goto err_unlock;
-> > > +	}
-> > > +
-> > > +	cec_fill_conn_info_from_drm(&conn_info, connector);
-> > > +
-> > > +	notifier =3D cec_notifier_conn_register(dev, port_name, &conn_info);
-> > > +	if (!notifier) {
-> > > +		ret =3D -ENOMEM;
-> > > +		goto err_unlock;
-> > > +	}
-> > > +
-> > > +	connector->cec.notifier =3D notifier;
-> > > +	connector->cec.funcs =3D &drm_connector_hdmi_cec_funcs;
-> > > +
-> > > +	mutex_unlock(&connector->cec.mutex);
-> > > +
-> > > +	return 0;
-> > > +
-> > > +err_unlock:
-> > > +	mutex_unlock(&connector->cec.mutex);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_notifier_register);
-> > > +
-> > > +#define to_hdmi_cec_adapter_ops(ops) \
-> > > +	container_of(ops, struct drm_connector_hdmi_cec_adapter_ops, base)
-> > > +
-> > > +static int drm_connector_hdmi_cec_adap_enable(struct cec_adapter *ad=
-ap, bool enable)
-> > > +{
-> > > +	struct drm_connector *connector =3D cec_get_drvdata(adap);
-> > > +	struct drm_connector_hdmi_cec_adapter_ops *ops =3D
-> > > +		to_hdmi_cec_adapter_ops(connector->cec.funcs);
-> > > +
-> > > +	return ops->enable(connector, enable);
-> > > +}
-> > > +
-> > > +static int drm_connector_hdmi_cec_adap_log_addr(struct cec_adapter *=
-adap, u8 logical_addr)
-> > > +{
-> > > +	struct drm_connector *connector =3D cec_get_drvdata(adap);
-> > > +	struct drm_connector_hdmi_cec_adapter_ops *ops =3D
-> > > +		to_hdmi_cec_adapter_ops(connector->cec.funcs);
-> > > +
-> > > +	return ops->log_addr(connector, logical_addr);
-> > > +}
-> > > +
-> > > +static int drm_connector_hdmi_cec_adap_transmit(struct cec_adapter *=
-adap, u8 attempts,
-> > > +						u32 signal_free_time, struct cec_msg *msg)
-> > > +{
-> > > +	struct drm_connector *connector =3D cec_get_drvdata(adap);
-> > > +	struct drm_connector_hdmi_cec_adapter_ops *ops =3D
-> > > +		to_hdmi_cec_adapter_ops(connector->cec.funcs);
-> > > +
-> > > +	return ops->transmit(connector, attempts, signal_free_time, msg);
-> > > +}
-> > > +
-> > > +static const struct cec_adap_ops drm_connector_hdmi_cec_adap_ops =3D=
- {
-> > > +	.adap_enable =3D drm_connector_hdmi_cec_adap_enable,
-> > > +	.adap_log_addr =3D drm_connector_hdmi_cec_adap_log_addr,
-> > > +	.adap_transmit =3D drm_connector_hdmi_cec_adap_transmit,
-> > > +};
-> > > +
-> > > +int drm_connector_hdmi_cec_register(struct drm_connector *connector,
-> > > +				    const struct drm_connector_hdmi_cec_adapter_ops *ops,
-> > > +				    const char *name,
-> > > +				    u8 available_las,
-> > > +				    struct device *dev)
-> > > +{
-> > > +	struct cec_connector_info conn_info;
-> > > +	struct cec_adapter *cec_adap;
-> > > +	int ret;
-> > > +
-> > > +	if (!ops->base.unregister ||
-> > > +	    !ops->init || !ops->enable || !ops->log_addr || !ops->transmit)
-> > > +		return -EINVAL;
-> > > +
-> > > +	mutex_lock(&connector->cec.mutex);
-> > > +
-> > > +	if (connector->cec.funcs) {
-> > > +		ret =3D -EBUSY;
-> > > +		goto err_unlock;
-> > > +	}
-> > > +
-> > > +	cec_adap =3D cec_allocate_adapter(&drm_connector_hdmi_cec_adap_ops,=
- connector, name,
-> > > +					CEC_CAP_DEFAULTS | CEC_CAP_CONNECTOR_INFO,
-> > > +					available_las ? : CEC_MAX_LOG_ADDRS);
-> > > +	ret =3D PTR_ERR_OR_ZERO(cec_adap);
-> > > +	if (ret < 0)
-> > > +		goto err_unlock;
-> > > +
-> > > +	cec_fill_conn_info_from_drm(&conn_info, connector);
-> > > +	cec_s_conn_info(cec_adap, &conn_info);
-> > > +
-> > > +	connector->cec.adapter =3D cec_adap;
-> > > +	connector->cec.funcs =3D &ops->base;
-> > > +
-> > > +	ret =3D ops->init(connector);
-> > > +	if (ret < 0)
-> > > +		goto err_delete_adapter;
-> > > +
-> > > +	ret =3D cec_register_adapter(cec_adap, dev);
-> > > +	if (ret < 0)
-> > > +		goto err_delete_adapter;
-> > > +
-> > > +	mutex_unlock(&connector->cec.mutex);
-> > > +
-> > > +	return 0;
-> > > +
-> > > +err_delete_adapter:
-> > > +	cec_delete_adapter(cec_adap);
-> > > +
-> > > +	connector->cec.adapter =3D NULL;
-> > > +
-> > > +err_unlock:
-> > > +	mutex_unlock(&connector->cec.mutex);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_register);
-> > > +
-> > > +void drm_connector_hdmi_cec_received_msg(struct drm_connector *conne=
-ctor,
-> > > +					 struct cec_msg *msg)
-> > > +{
-> > > +	cec_received_msg(connector->cec.adapter, msg);
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_received_msg);
-> > > +
-> > > +void drm_connector_hdmi_cec_transmit_attempt_done(struct drm_connect=
-or *connector,
-> > > +						  u8 status)
-> > > +{
-> > > +	cec_transmit_attempt_done(connector->cec.adapter, status);
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_transmit_attempt_done);
-> > > +
-> > > +void drm_connector_hdmi_cec_transmit_done(struct drm_connector *conn=
-ector,
-> > > +					  u8 status,
-> > > +					  u8 arb_lost_cnt, u8 nack_cnt,
-> > > +					  u8 low_drive_cnt, u8 error_cnt)
-> > > +{
-> > > +	cec_transmit_done(connector->cec.adapter, status,
-> > > +			  arb_lost_cnt, nack_cnt, low_drive_cnt, error_cnt);
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_transmit_done);
-> > > +
-> > > +void drm_connector_hdmi_cec_phys_addr_invalidate(struct drm_connecto=
-r *connector)
-> > > +{
-> > > +	mutex_lock(&connector->cec.mutex);
-> > > +
-> > > +	cec_phys_addr_invalidate(connector->cec.adapter);
-> > > +	cec_notifier_phys_addr_invalidate(connector->cec.notifier);
-> > > +
-> > > +	mutex_unlock(&connector->cec.mutex);
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_phys_addr_invalidate);
-> > > +
-> > > +void drm_connector_hdmi_cec_phys_addr_set(struct drm_connector *conn=
-ector)
-> > > +{
-> > > +	mutex_lock(&connector->cec.mutex);
-> > > +
-> > > +	cec_s_phys_addr(connector->cec.adapter,
-> > > +			connector->display_info.source_physical_address, false);
-> > > +	cec_notifier_set_phys_addr(connector->cec.notifier,
-> > > +				   connector->display_info.source_physical_address);
-> > > +
-> > > +	mutex_unlock(&connector->cec.mutex);
-> > > +}
-> > > +EXPORT_SYMBOL(drm_connector_hdmi_cec_phys_addr_set);
-> > > diff --git a/include/drm/display/drm_hdmi_cec_helper.h b/include/drm/=
-display/drm_hdmi_cec_helper.h
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..cd6274e4ee9b3e41a2d85=
-289c4a420b854340e19
-> > > --- /dev/null
-> > > +++ b/include/drm/display/drm_hdmi_cec_helper.h
-> > > @@ -0,0 +1,61 @@
-> > > +/* SPDX-License-Identifier: MIT */
-> > > +
-> > > +#ifndef DRM_DISPLAY_HDMI_CEC_HELPER
-> > > +#define DRM_DISPLAY_HDMI_CEC_HELPER
-> > > +
-> > > +#include <drm/drm_connector.h>
-> > > +
-> > > +#include <linux/types.h>
-> > > +
-> > > +struct drm_connector;
-> > > +
-> > > +struct cec_msg;
-> > > +struct device;
-> > > +
-> > > +struct drm_connector_hdmi_cec_adapter_ops {
-> > > +	struct drm_connector_cec_funcs base;
-> > > +
-> > > +	int (*init)(struct drm_connector *connector);
-> > > +	void (*uninit)(struct drm_connector *connector);
-> > > +
-> > > +	int (*enable)(struct drm_connector *connector, bool enable);
-> > > +	int (*log_addr)(struct drm_connector *connector, u8 logical_addr);
-> > > +	int (*transmit)(struct drm_connector *connector, u8 attempts,
-> > > +			u32 signal_free_time, struct cec_msg *msg);
-> > > +};
-> >=20
-> > Why can't we merge drm_connector_cec_funcs and
-> > drm_connector_cec_adapter_ops? They look equivalent to me?
->=20
-> Well, not exactly. The funcs is a generic interface. Notifiers do not
-> need the adapter_ops. And cec_pin (sun4i) would also require a different
-> set of callbacks. Thus I decided that it's easier to subclass funcs
-> instead of adding all possible callbacks there.
-
-There's two things here: cec_pin and cec_adapter are equivalent. They
-provide the same feature, but one relies on an hardware controller, the
-other bitbangs a GPIO. They are also mutually exclusive.
-
-So I'd very much expect a different set of hooks there.
-
-Then we have the notifiers.
-
-AFAIK, it's useful when you don't have a CEC hardware and need to
-coordinate with an external block providing the feature. Again, I'm not
-sure why we should share anything there.
-
-Can't we just duplicate the function names?
-
-Maxime
-
---vxchb22gw2pajmkk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6N1MwAKCRAnX84Zoj2+
-dk19AX9tPrOa1Dpfio2Pr+YWL6PLrv0su9aeZh11ZbnSbNMngJR7fDCjL9MjPiTN
-sc0IqFMBf3F5PT1kyohYxcraQIp/Ez1uHa9cgTXGDSOhlDe8Z83e9EqO1dR0QUM6
-N1Q35cPR4g==
-=NT1k
------END PGP SIGNATURE-----
-
---vxchb22gw2pajmkk--
+-- 
+With best wishes
+Dmitry
