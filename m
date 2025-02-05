@@ -1,104 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E423822E3FF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321CB22AE45
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752000; cv=none; b=rgC2vVkMKhDxbAZYjPftkEnqGfoG9FvThxextP/Ny5ctfsBdI7RXeSYxK6lqu/FdRqnc1l8nfqg0hvxD5DNl4ZNXLcfasawIHJXxktO4euaSjAq2ulfTj5w9PESXmGGOxbTKabhYUXlM86RPRCi35NcPwVZJoHpbX/colHycb5Y=
+	t=1738752013; cv=none; b=rRxmPOwn2HjD5xePgq0PRJ+0O3kgThW17pzTmyOmxjBgq3mGhs4RNwqtpb9RUl1KtxCjyUGM88AIdf/ne5iIVaoz41B18wULUBvqSOMKBkLpbIXmyk14tHUcYHaFIeFkvOOQPNd4MayQc1pELAFQD64jCedvsiM9Wj9j7p2rJgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752000; c=relaxed/simple;
-	bh=CD7JvKo/feB52a2k7onyk2ZXeiDetB/mc/twv3Gful4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SkBj5lK/WPSdEa3z0lrpzkGdkyxvwYwPmpV5sRqlQOl8Ysz6XytmYKZ/6Wk5FQlYsR4xNjtYpIlT+KzH2Cme6efD/egjhngHtr273vYJa6YkOb/B+sOPIZUnIXpfkiVfopISywc0pjxFvWDXUliGjMMZYOFt0TvBMq7bYzHf9/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cpd85kTn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vNo89CPa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738752013; c=relaxed/simple;
+	bh=ok3L9NOrgiTrJ2G13cQv6YeWLMGqGxKCuRCJEVtHz3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MqjE/9xVIcNrstHGEOGTzc85EMGm0dGGW3YFIpEAHLvcgbXJ32J2l2QVRl2t2lk8pD9f1liOWys5odPAvXA0mlZ7CvpqGWLsN/WUwXoXWmVOVf4tvCuq8LskFJUAO1Xe+BQ6oMjP53x2+qoS6649dubzSHNQAgnKGNhwt2YFTE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a8Ueok+s; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cpd85kTn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vNo89CPa"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738751996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RNi7JDw+w/JQ3w0yvP3N7fB6jIxc2MjvZRk3TGcbngQ=;
-	b=Cpd85kTnp1kCHBi27nxXAiMoXt5qnwclR4ccrDA73hLMS1BTLfTkd0RxuMzgZDKMMYdoBM
-	0FgABll7/Nhc/TYygXgTKymSghoBbWHe7eQOpmsxx0l2dFMpMy6/g8qUTcRXr9MR4s765Q
-	X/Qzpc1hMgz83XRzRaqCpR6Wumx1YIJaMBLb7Rn9BgdZOFhhuBxJxyLywvOaFzKBawr6Zx
-	haMzm3+0noJeQyLVjW+oM/Se3lAkH1oXa92b7dxjsbJrmftE54KhZAh3nxhbqhV+druViA
-	jr6O051RSJL3tqse82aTZ948aSxwL+n/cst+8itCvAOX3Nit4hFI5Qa9+/sxQg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738751996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RNi7JDw+w/JQ3w0yvP3N7fB6jIxc2MjvZRk3TGcbngQ=;
-	b=vNo89CPagS07Sf3WO7/kYI4AwXEarpbCOmx34Rf1isREE5I1L+bXeMPqCI9BjFJ6qsHzwz
-	kjt5iJvmFhaE67Cw==
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v2 30/31] null_blk: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:39:14 +0100
-Message-Id: <076cd30acb4b2d6b699f3c80463a8983530d4f06.1738746821.git.namcao@linutronix.de>
-In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
-References: <cover.1738746821.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a8Ueok+s"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dabb11eaaso887431f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:40:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738752010; x=1739356810; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ok3L9NOrgiTrJ2G13cQv6YeWLMGqGxKCuRCJEVtHz3s=;
+        b=a8Ueok+slO50osBNGGMXOQ1YbSzUZpzHSE5bTKGy0bDE662nE3VdigffVE3g9EHgJm
+         UTFLh5mzmI1ChJoYs2BmSEHv/3IURZH6aIgOV8lp3QkUbAn8tl1nU2B8t9udSIfvsuvC
+         jWbxQQlFF1wTV1LEqeBRdqP9VXIzCurvtpoCPL8GAeJRR8y1XW+LaWu9OK+5du95LSb9
+         i1NO2ItZ+THayqFJDfRWm3aN4TGrFc+LtikyGltHJDhW8UnnQiVHuSX9gmPn6cIIVry1
+         kjH3FxAVm4wxu46qhLhCR+xC8Y3FHHoV/LfDN4nghoPIuST5Rht3fBIP1I/AO+HjO5dk
+         E0dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738752010; x=1739356810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ok3L9NOrgiTrJ2G13cQv6YeWLMGqGxKCuRCJEVtHz3s=;
+        b=sFErOPfHPvxwQUQ51YL1M87sEEmuNAZY+KBrtsiGzCzOuW+bWlDi/hHVwEcNOpNJ/5
+         PRiO2cEmmKUCSKQ/oZHoJIscsHUNAyvNV0rwaKTFmJK/8LbY0yOEmmEMSqOC+N06l+s3
+         +4lpECtu24XJrIw/UCkZz+7MdiG/UW9MsjB0yFKEsyx7BKApZbMV3pCou8cJWbpx0++v
+         IFLR9gpkMlFMfjXhlkMt1hM6JhgadhP6uKqWshETvFz5QwPSPlrrRNH+iptbAkGQ/jWC
+         B71eEIaedkNlcZ81A+IHJf1uXrqzpLRrdxqOymSrBYIhpHYHvmcgt0182fdDSiVcxCsv
+         au3w==
+X-Forwarded-Encrypted: i=1; AJvYcCX4563NV9+R5JCtM3Y4d8CnmdvYy6fgBJOnnK2ne7p7UkDIpwY3bVCGe+YOQP7ORnfZuTNcw32iG6n56aE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD5hteiFu7QnK5uiZ5rPn7gvEzHMz42r9V9C9vWxTnqF8XUwmU
+	txjBaSVgQe8vfD5dzDdX8r+bXULqLutCOFehma54nZMNVbQ3op3BqKx9XWEvADj/quYeA4VIe/8
+	1s1Xeqqz40VGl9vY3Utx1xRqFbx0k1cv13Sin
+X-Gm-Gg: ASbGnct7u14SUmQfkEkIH3n1YNtkp0T4+0DpK85oIBcn3+kN7mEAstnRRIfa22kyng7
+	YXzpBno5tD/Tp1ynpmCO8E9w/K1NTk071g39J8sVceQHsX3oRBflSwT0c7A0CRxjgyoHZuOO60f
+	GSv7LS4GtjYf3oyfyiL1+bQZLM7wg=
+X-Google-Smtp-Source: AGHT+IFgCfsYB5W3VJfmXRjdXwgsawgadfjC0P2QF+7DhKkGytDdoyEZ1kYgYvSLSTerc4B9u7Zm9jyi++oT3By96fY=
+X-Received: by 2002:a5d:64c3:0:b0:38d:b3c5:4a88 with SMTP id
+ ffacd0b85a97d-38db492050amr1485678f8f.54.1738752010235; Wed, 05 Feb 2025
+ 02:40:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250204232824.3819437-1-robh@kernel.org>
+In-Reply-To: <20250204232824.3819437-1-robh@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 5 Feb 2025 11:39:57 +0100
+X-Gm-Features: AWEUYZnFbKuaN4rtly1lDrAUSflqt7pqmStwcS774dgD-QUDEKs-d5zWsQLWkUc
+Message-ID: <CAH5fLgjrYNek77De6SgCGiLRhWWXNe+PKc1_ecPp9MbYDSj43w@mail.gmail.com>
+Subject: Re: [PATCH] drm/panthor: Convert IOCTL defines to an enum
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Beata Michalska <beata.michalska@arm.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-hrtimer_setup() takes the callback function pointer as argument and
-initializes the timer completely.
+On Wed, Feb 5, 2025 at 12:30=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
+>
+> Use an enum instead of #defines for panthor IOCTLs. This allows the
+> header to be used with Rust code as bindgen can't handle complex
+> defines.
+>
+> Cc: Beata Michalska <beata.michalska@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Replace hrtimer_init() and the open coded initialization of
-hrtimer::function with the new setup mechanism.
-
-Patch was created by using Coccinelle.
-
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Jens Axboe <axboe@kernel.dk>
----
- drivers/block/null_blk/main.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index d94ef37480bd..16457330c1bc 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1426,8 +1426,7 @@ static void nullb_setup_bwtimer(struct nullb *nullb)
- {
- 	ktime_t timer_interval =3D ktime_set(0, TIMER_INTERVAL);
-=20
--	hrtimer_init(&nullb->bw_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	nullb->bw_timer.function =3D nullb_bwtimer_fn;
-+	hrtimer_setup(&nullb->bw_timer, nullb_bwtimer_fn, CLOCK_MONOTONIC, HRTIME=
-R_MODE_REL);
- 	atomic_long_set(&nullb->cur_bytes, mb_per_tick(nullb->dev->mbps));
- 	hrtimer_start(&nullb->bw_timer, timer_interval, HRTIMER_MODE_REL);
- }
-@@ -1604,8 +1603,8 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ct=
-x *hctx,
- 	might_sleep_if(hctx->flags & BLK_MQ_F_BLOCKING);
-=20
- 	if (!is_poll && nq->dev->irqmode =3D=3D NULL_IRQ_TIMER) {
--		hrtimer_init(&cmd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--		cmd->timer.function =3D null_cmd_timer_expired;
-+		hrtimer_setup(&cmd->timer, null_cmd_timer_expired, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL);
- 	}
- 	cmd->error =3D BLK_STS_OK;
- 	cmd->nq =3D nq;
---=20
-2.39.5
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
