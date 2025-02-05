@@ -1,57 +1,59 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CE621CFEC
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812A12206A3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738797499; cv=none; b=WMdIzHOjHZ/u8M43GvJN/XFAu/WXrOi7g1kkQZBTtclBPNPZhQNZI5J9HoZ1PRjp7OzXtVmMQRNTFQVxK3wQUlvgQ92JTQeLtcpotYwT8GUTiprFcgR6tSdJaUAeIedAoepn1T6mpYtJoN1aqp+d6Lzoa4A15WWCIqTVzlqbzSk=
+	t=1738797502; cv=none; b=Lo0zvaoLmttaIWYRVaz5EBeyrGp81ujvQFQ+18VGPrBzcmAkoKDijwEl0RFpDfmXEpXQiJ4UwlD9+y8Vv3vCx5VYQVCP9eHZvyOYOwnspayGctLB4xSt2cCgOyXADgJ3lrPA6WPSJQJu8uc0C6XJBVBCmygs6CJFFywOCXTVzr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738797499; c=relaxed/simple;
-	bh=4QmfjawvTW7/JuBzJw2fN4Til1n8dAtbherJt5RYjtQ=;
+	s=arc-20240116; t=1738797502; c=relaxed/simple;
+	bh=mkgLg5sls7QullkSGR+WNjErlAYFR3INSBiq+3o4Oks=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rsJ4H04XmpeJwPvSZWfHDv5KA7eFSjdDCiMtYbtcplXvWtC5iZ0RkWjPYtUj7wQM/F6jaChW7CcjmVsyJ9lZ1EdGeUsSPQJ4hzNkgXpknnVVVPl3Ipi8ROtKXckdkqgzJw30g/Dgl3juTonR2JUSsgk+Z5vYcKy3Fi2nnyHLpUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dlaj/zjx; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=Ye3fGwN+EPir8r9a/LiJAsyDhoWetYioM5d4lGog/dD9KsGTJSCBdB6+gUVJSjrAJNP3W/sfCYzLFBw4xbg+KUUZ20XF4tTvUPaDomKWngzK8lnigCHDRpXFRfKtT1hO6TuCDPVAOhDzE0d+IzSlvxzb7vpaZFcxaH2cx6x0cro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X5staEXE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dlaj/zjx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X5staEXE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738797494;
+	s=mimecast20190719; t=1738797499;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JL6vZNRbPmBlHb8nArQ9k01zTpT4aI26y7m8102a0EY=;
-	b=Dlaj/zjxmfpdpnjhC0StMWqEtfDFDqJ+deqDB7EinvnvqyNrbFDPxBQTH54s6YRGV87ZmD
-	b/P6e+XXyU3NVhSfIFH919BOvnX9EHkm8Xklxn9OfRSD3g4ObhQ077QqPdQsJhQlWHm2iQ
-	+5IyK2bzVp+8HinRiMoHXBmdlupJ2MI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=8W4JP+Fju0ACXLthBx+3G3GONe8TLTlsBTTA1Q3RDZE=;
+	b=X5staEXEqrX61B15Tr1jf2Alpb26PaqsVJhx8LblmABWoNrZnircOSCERJfMUxCkAF6KqQ
+	eGjWCsHjOsCSC0sFCZFHZpGGWQbzjjL8mrSHabBdmQsXXUmtqyeeMdPiogrCsEP8i014x/
+	ovHxwrke5njPtpkzMoHdBHPnTGghPw8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-MHVeKkGdMVO6MwCp5BIpSA-1; Wed,
- 05 Feb 2025 18:18:13 -0500
-X-MC-Unique: MHVeKkGdMVO6MwCp5BIpSA-1
-X-Mimecast-MFC-AGG-ID: MHVeKkGdMVO6MwCp5BIpSA
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-FkNDRqmMM9yE_UzeBVYLPQ-1; Wed,
+ 05 Feb 2025 18:18:17 -0500
+X-MC-Unique: FkNDRqmMM9yE_UzeBVYLPQ-1
+X-Mimecast-MFC-AGG-ID: FkNDRqmMM9yE_UzeBVYLPQ
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7D6201956094;
-	Wed,  5 Feb 2025 23:18:12 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 871FF1800985;
+	Wed,  5 Feb 2025 23:18:16 +0000 (UTC)
 Received: from omen.home.shazbot.org (unknown [10.22.81.141])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 16BB61800570;
-	Wed,  5 Feb 2025 23:18:10 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9D68A1800570;
+	Wed,  5 Feb 2025 23:18:14 +0000 (UTC)
 From: Alex Williamson <alex.williamson@redhat.com>
 To: alex.williamson@redhat.com
 Cc: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	peterx@redhat.com,
 	mitchell.augustin@canonical.com,
-	clg@redhat.com
-Subject: [PATCH 2/5] vfio/type1: Convert all vaddr_get_pfns() callers to use vfio_batch
-Date: Wed,  5 Feb 2025 16:17:18 -0700
-Message-ID: <20250205231728.2527186-3-alex.williamson@redhat.com>
+	clg@redhat.com,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Subject: [PATCH 4/5] mm: Provide page mask in struct follow_pfnmap_args
+Date: Wed,  5 Feb 2025 16:17:20 -0700
+Message-ID: <20250205231728.2527186-5-alex.williamson@redhat.com>
 In-Reply-To: <20250205231728.2527186-1-alex.williamson@redhat.com>
 References: <20250205231728.2527186-1-alex.williamson@redhat.com>
 Precedence: bulk
@@ -63,79 +65,59 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This is a step towards passing the structure to vaddr_get_pfns()
-directly in order to provide greater distinction between page backed
-pfns and pfnmaps.
+follow_pfnmap_start() walks the page table for a given address and
+fills out the struct follow_pfnmap_args in pfnmap_args_setup().
+The page mask of the page table level is already provided to this
+latter function for calculating the pfn.  This page mask can also be
+useful for the caller to determine the extent of the contiguous
+mapping.
 
+For example, vfio-pci now supports huge_fault for pfnmaps and is able
+to insert pud and pmd mappings.  When we DMA map these pfnmaps, ex.
+PCI MMIO BARs, we iterate follow_pfnmap_start() to get each pfn to test
+for a contiguous pfn range.  Providing the mapping page mask allows us
+to skip the extent of the mapping level.  Assuming a 1GB pud level and
+4KB page size, iterations are reduced by a factor of 256K.  In wall
+clock time, mapping a 32GB PCI BAR is reduced from ~1s to <1ms.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/vfio/vfio_iommu_type1.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ include/linux/mm.h | 2 ++
+ mm/memory.c        | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 119cf886d8c0..2e95f5f4d881 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -471,12 +471,12 @@ static int put_pfn(unsigned long pfn, int prot)
- 
- #define VFIO_BATCH_MAX_CAPACITY (PAGE_SIZE / sizeof(struct page *))
- 
--static void vfio_batch_init(struct vfio_batch *batch)
-+static void __vfio_batch_init(struct vfio_batch *batch, bool single)
- {
- 	batch->size = 0;
- 	batch->offset = 0;
- 
--	if (unlikely(disable_hugepages))
-+	if (single || unlikely(disable_hugepages))
- 		goto fallback;
- 
- 	batch->pages = (struct page **) __get_free_page(GFP_KERNEL);
-@@ -491,6 +491,16 @@ static void vfio_batch_init(struct vfio_batch *batch)
- 	batch->capacity = 1;
- }
- 
-+static void vfio_batch_init(struct vfio_batch *batch)
-+{
-+	__vfio_batch_init(batch, false);
-+}
-+
-+static void vfio_batch_init_single(struct vfio_batch *batch)
-+{
-+	__vfio_batch_init(batch, true);
-+}
-+
- static void vfio_batch_unpin(struct vfio_batch *batch, struct vfio_dma *dma)
- {
- 	while (batch->size) {
-@@ -730,7 +740,7 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
- static int vfio_pin_page_external(struct vfio_dma *dma, unsigned long vaddr,
- 				  unsigned long *pfn_base, bool do_accounting)
- {
--	struct page *pages[1];
-+	struct vfio_batch batch;
- 	struct mm_struct *mm;
- 	int ret;
- 
-@@ -738,7 +748,9 @@ static int vfio_pin_page_external(struct vfio_dma *dma, unsigned long vaddr,
- 	if (!mmget_not_zero(mm))
- 		return -ENODEV;
- 
--	ret = vaddr_get_pfns(mm, vaddr, 1, dma->prot, pfn_base, pages);
-+	vfio_batch_init_single(&batch);
-+
-+	ret = vaddr_get_pfns(mm, vaddr, 1, dma->prot, pfn_base, batch.pages);
- 	if (ret != 1)
- 		goto out;
- 
-@@ -757,6 +769,7 @@ static int vfio_pin_page_external(struct vfio_dma *dma, unsigned long vaddr,
- 	}
- 
- out:
-+	vfio_batch_fini(&batch);
- 	mmput(mm);
- 	return ret;
- }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b1c3db9cf355..0ef7e7a0b4eb 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2416,11 +2416,13 @@ struct follow_pfnmap_args {
+ 	 * Outputs:
+ 	 *
+ 	 * @pfn: the PFN of the address
++	 * @pgmask: page mask covering pfn
+ 	 * @pgprot: the pgprot_t of the mapping
+ 	 * @writable: whether the mapping is writable
+ 	 * @special: whether the mapping is a special mapping (real PFN maps)
+ 	 */
+ 	unsigned long pfn;
++	unsigned long pgmask;
+ 	pgprot_t pgprot;
+ 	bool writable;
+ 	bool special;
+diff --git a/mm/memory.c b/mm/memory.c
+index 398c031be9ba..97ccd43761b2 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -6388,6 +6388,7 @@ static inline void pfnmap_args_setup(struct follow_pfnmap_args *args,
+ 	args->lock = lock;
+ 	args->ptep = ptep;
+ 	args->pfn = pfn_base + ((args->address & ~addr_mask) >> PAGE_SHIFT);
++	args->pgmask = addr_mask;
+ 	args->pgprot = pgprot;
+ 	args->writable = writable;
+ 	args->special = special;
 -- 
 2.47.1
 
