@@ -1,139 +1,90 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC25915199F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87D415199F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738753634; cv=none; b=hWDphwvuuCmvCCcEl2UA8GWSpuCsKfmfJuBLyTdZ4kSGuEMSL6Hdbg9TnArxROG2z5g6RBBpPE9dvXThI+1lgX1z8tZtkPnelcyeo0Ajsv+99cUNpaM4znGKZ8jOsC/tRba/eVuOlCCbR5tlVfDodC2WKSWhNjpXOK03TyM8rHQ=
+	t=1738753747; cv=none; b=HL9OGDE0BBy+O1Y6qSuyQIH+/E4YucsRdd12lVMrwN8DwVIICo8cfzLw3gaUF0wlgVJ3VmhxipsCfsab5GEJxt0ZOlhuuEJaHpAcwpNF8jLqvnmJlbFOHHlxJ9qtULk/mHLW2t3bmWJSgwu7SlG73QcwNQ7/BAvvObtSdaPn1SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738753634; c=relaxed/simple;
-	bh=l+flV/X28XGq8m3UkzJEMMMdxYH9JWG886Sv5gWuKFE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nZ3JLMtQwfS+xDRxvJwEBCtolr6/7L48HNSxXzTDKpxqLM/16z8S8gEGE4up1ipDnTxvFqBaLkZBgiljxZZQ+4DBi4pr/8DCXpBf1iknNjlN31Stj3l59bk3mywzeGbqyJaEUQe5bJhiOUQ4SBxScIxSOXRWofDjIkNCSO6SyMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=pNiVUjSt; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=pNiVUjSt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738753747; c=relaxed/simple;
+	bh=GMBaJXdE1jJUoUSNll5geZvTIUBKWCqewj/yQVuKtyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CM3pTSq+KdIYvQD+B2cpk/E9Sx2fFXU2nIY6zbn6KfcGsHL0xut0zywON3clTdUIfUcQEKnCRHyb4eSBa4ntfj6pmQ9Y9v94y1KZzxWYIE7BEwaccl3ywT+u3OdmTxmmM1SVu3+WqlsE1UmXOJXK9dJUUA4KyWZ+zUO8qqrzDi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvLJmEzs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="pNiVUjSt";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="pNiVUjSt"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 220461F461;
-	Wed,  5 Feb 2025 11:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1738753631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+IDx8vE0Cv/MWgdce49lISNw1mI+dFGY3GPexpYFgA=;
-	b=pNiVUjStSqhsdarFmkOWe4HfZYvWERBGJIuU/7qZtFoIVX598QwXVe3gbDVB7mRzG8d57Q
-	Bscsxz33egKRPU12CNO0PVAdGeXd+g0wkMXXMBlOBlw0SnFck6dLt5Slt7JvpRWOY7cC/l
-	X7utxEo8XbjfwOllN6K/Ox+DjLdGHQM=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1738753631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+IDx8vE0Cv/MWgdce49lISNw1mI+dFGY3GPexpYFgA=;
-	b=pNiVUjStSqhsdarFmkOWe4HfZYvWERBGJIuU/7qZtFoIVX598QwXVe3gbDVB7mRzG8d57Q
-	Bscsxz33egKRPU12CNO0PVAdGeXd+g0wkMXXMBlOBlw0SnFck6dLt5Slt7JvpRWOY7cC/l
-	X7utxEo8XbjfwOllN6K/Ox+DjLdGHQM=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C1977139D8;
-	Wed,  5 Feb 2025 11:07:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id OrXKLV5Go2f3TQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Wed, 05 Feb 2025 11:07:10 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH v2 3/3] x86/xen: remove unneeded dummy push from xen_hypercall_hvm()
-Date: Wed,  5 Feb 2025 12:06:51 +0100
-Message-ID: <20250205110651.26280-4-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205110651.26280-1-jgross@suse.com>
-References: <20250205110651.26280-1-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvLJmEzs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1F50C4CEE3;
+	Wed,  5 Feb 2025 11:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738753747;
+	bh=GMBaJXdE1jJUoUSNll5geZvTIUBKWCqewj/yQVuKtyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YvLJmEzs1hKA7ZIXvcoje43OqLXefr/wHiqSZu4ZGGEgeGAQTP05VJdGznv2T/u9Z
+	 BgpZlzCxTRqRyeKDKyP04UFgGKMQ5sHUiP0LAz3WZyZLAksz3upkKTTuq8BXSZEwqE
+	 1mMTp8g+BoG/WPMVx2u+qz3E/CMmAyeWq9dtB9x1MVmCdzwqwicdvx8Lq/ttsMJaWK
+	 M9cvhGQRWlTuGFWYZOCcoe+dN8PjrxJkkKiN+C9CLptkA3FpgJgqx//NSbvQRN8SIv
+	 NvZ5Z22jhOUaZDZ5xT3JvADyv98L1FdpuKf289qIFpsMQ7oNrsPBIgExc7YUMNa6v+
+	 WnuR8Szn6oTfw==
+Date: Wed, 5 Feb 2025 12:09:04 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Dhruva Gole <d-gole@ti.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Chen Yu <yu.c.chen@intel.com>,
+	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH V2] kthread: Fix build warning variable 'ret' set but not
+ used
+Message-ID: <Z6NG0HXhjAvDSWO_@localhost.localdomain>
+References: <20250204090838.214647-1-d-gole@ti.com>
+ <20250204160921.377178-1-d-gole@ti.com>
+ <Z6JkO4ssN7Bwcgd6@pavilion.home>
+ <20250205061740.v7njfbfdx5ym4m7h@lcpd911>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:mid,suse.com:email];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250205061740.v7njfbfdx5ym4m7h@lcpd911>
 
-Stack alignment of the kernel in 64-bit mode is 8, not 16, so the
-dummy push in xen_hypercall_hvm() for aligning the stack to 16 bytes
-can be removed.
+Le Wed, Feb 05, 2025 at 11:47:40AM +0530, Dhruva Gole a écrit :
+> On Feb 04, 2025 at 20:02:19 +0100, Frederic Weisbecker wrote:
+> > Hi Dhruva,
+> > 
+> > Le Tue, Feb 04, 2025 at 09:39:21PM +0530, Dhruva Gole a écrit :
+> > > Fix the following build time warning in kthread:
+> > > 
+> > >    kernel/kthread.c: In function 'kthread_affine_preferred':
+> > > >> kernel/kthread.c:861:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+> > >      861 |         int ret;
+> > >          |             ^~~
+> > > 
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202501301528.t0cZVbnq-lkp@intel.com/
+> > > Signed-off-by: Dhruva Gole <d-gole@ti.com>
+> > 
+> > Thanks for your patch but another similar fix was already pending. I have sent
+> > the pull request there:
+> > 
+> > https://lore.kernel.org/lkml/Z6JjZMdbDoAX_AVW@pavilion.home/T/#u
+> 
+> OK, btw another qn I had was does this file not need a MAINTAINERS file
+> update?
+> I don't see a real MAINTAINER against it, everyone just shows as
+> contributors / committers...
+> Or is it to be sent to Linus directly?
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/xen/xen-head.S | 6 ------
- 1 file changed, 6 deletions(-)
+There is no official maintainer for kthreads. But I volunteer to handle the patches
+targeted to it at least for a while given my recent invasive changes there.
 
-diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-index 4e481b0eefc9..894edf8d6d62 100644
---- a/arch/x86/xen/xen-head.S
-+++ b/arch/x86/xen/xen-head.S
-@@ -100,9 +100,6 @@ SYM_FUNC_START(xen_hypercall_hvm)
- 	push %r10
- 	push %r9
- 	push %r8
--#ifdef CONFIG_FRAME_POINTER
--	pushq $0	/* Dummy push for stack alignment. */
--#endif
- #endif
- 	/* Set the vendor specific function. */
- 	call __xen_hypercall_setfunc
-@@ -119,9 +116,6 @@ SYM_FUNC_START(xen_hypercall_hvm)
- #else
- 	lea xen_hypercall_amd(%rip), %rcx
- 	cmp %rax, %rcx
--#ifdef CONFIG_FRAME_POINTER
--	pop %rax	/* Dummy pop. */
--#endif
- 	pop %r8
- 	pop %r9
- 	pop %r10
--- 
-2.43.0
+Thanks.
 
+> 
+> -- 
+> Best regards,
+> Dhruva Gole
+> Texas Instruments Incorporated
