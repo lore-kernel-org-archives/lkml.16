@@ -1,312 +1,266 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2083.outbound.protection.outlook.com [40.107.96.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACB522B5B2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738736607; cv=none; b=WWZzD9DGFa26MC56GTG24oL5pp6a6bdtLXjVkIezb7ijSFdl1aCL77RbFzJVq6mgLBjZZGRBsWfuxFr8knz317N5qBn1NgPrarh3J70svnM7cKp2uJHJcGJlSDgzbrGg9HNcEGIcEONZXGNceSd7tRD98yEeZQPioO8k9XGXFpY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738736607; c=relaxed/simple;
-	bh=j0g58kzxP4/vEuyCfLiH4Cm8UrUU1sRmr41Z0gm9CHs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=EYDOSVZNmrZ/cmPzWJv1KI0MwlV2Dfb3ZhqvtnHs7PdlyyOYVFjnLnt+suUJIK57UF5BnMMWUHDHRbIfCG3va4sm9Jc5SX0zqnPsPTelJMD0ZhcPTtPwvWhDDcX5tOcpyGQWKeTnC70ReQJTe2BfGvdYOPf8TGQvI0Xh8EBBVv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=bixQjHby; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AD7227B98
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738736666; cv=fail; b=DYFDenFE3puw3cX3pRj+RczlkH2zXJ3Pjy9pi2XHotdYjC9mI/FECZcx85zNvSnuDnOCKhR9kg6HaQz9OWtzHhRYF2CgyZl7PhmgoWMwfiZjufYqzJQZQFoPWzfZeGnL79lcvlQvsoCMe+QkOwAFP/ox6rx/spHvapLhsNq9I1o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738736666; c=relaxed/simple;
+	bh=eCZ6xyxYxPundi7zrobw5X4bCKqDdbpojnyb7WsT53I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LhfILLatlPf2UVL7UChVGIql1ZPMhrh4UDrpUeSbJvpv13w/uB/AvYvWAOrOOm8b9vs1P7qIv2fP/GEemoe4Pax0NkS4K77qXvokKpqFFRbLdwsW22HtjcTeNRNu/paOvAyvj2KYiKeKozn8PwGiHCyrW2CBdx9wHaLUIoepGc8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Jb0jJuap; arc=fail smtp.client-ip=40.107.96.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="bixQjHby"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9d627b5fbso1766073a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 22:23:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1738736604; x=1739341404; darn=vger.kernel.org;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lKHFkihW1aXGiNptzm3Sa+/HPN1Hv4LNNLF+gqhLrP8=;
-        b=bixQjHbymQM+QC0x/bX3pnR0UTTs8dByyu0UsPKEdxUisLs9b3BfqTFDqxYnUfHAZi
-         AznDjO5yFfB0fPSqOF4JYAASt71bj4WVw0HLcAD8Mqi7Z4OZ0UBBCzexh5kyqPw+XCXe
-         hIyyTMWMHrdJNK+BcI0biu0D9dpV61Iry+rubRwI9LOGSY7BaOOYXTpqciDSk6cMNGaT
-         mgVSoGb9YcBMz5M8AuqYvZ6aSTpbkGAMpjrMcRBV+DGLszBLdkC9CwcBRjuly5rJE1bL
-         HTifde/ZBTwyj7eDbguWPeXysZLPxZuRupx9XcFP6gce23iCU299w+bjME6Gm5tH024j
-         vB7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738736604; x=1739341404;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lKHFkihW1aXGiNptzm3Sa+/HPN1Hv4LNNLF+gqhLrP8=;
-        b=UOCHBq3EjOqY6z6CRatc0jdBkrUILvmQ27hdEzkpW90Ag8bwr7Czr+E/zrV47pB3KR
-         TZvZtGzMKGWzVscyw7x+6XXCd1ZdUj0NUbYTvXF+9c8sau6Shr/vvxT5o8Vh3cU0hPDf
-         IN8VduGu6WqfLw0XRFoio7wg121cVfhcENUOxRiWokPwHv5K7HDIGy/A4d2txtsP2e1g
-         2DJjyiNX+8/1ftdeDjWlPsjuQa3U4qPw/cP8Z8YBb3ZsqIn7GWDvI+DzCa9/KXa0bbVU
-         xdVb9ykKO/lA/ZDBj4PVhz/HI+qTUwaJAj4pSEE8zYzdm0StqWIrOvlbDJ9RVERFdvw7
-         NKkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpxmc1jgxquY7IXjEDE/F8pSk9BAcmx2P4MEnOC675BtYX+k032WXC5jZ1l6KOaxmU6f7qYOgboI03Zv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbNfxfV22tj7lh6SXLJjSGqtdlkwRXEbsy/RUr5P/T+3Jt2YrV
-	YrfnchnTB1+3ZMq+M4vw+PcMGhX7L7eNc/GvtHuGpKZAJ9h0GbxflXxLpTQDRVs=
-X-Gm-Gg: ASbGnctlRcbMVx2J2+kr/09pbr30kd2nPsAavfW8B7rjCFNpLc9wpqxHlt9JMgBShYR
-	I/7ZU3XNNz1nWRQSknOlwSC2wayxWrDxd2XsEALdGH86dzieJ3d/80AA1oQ0MYYyt7vtsgB1wGC
-	CFzN0s0pLn0HTRX5XuPF/qe/xJMfQjbHAOI501riPCmnWYnCp9KoeIf5ujajZcmvhlDgzs6YhTF
-	PAdAnzBfMcsxpUZe+R7RtIyA8V5ZLkZSm74DV5QMcGOUpFeIM947qt9KYS8Oy2H4P49lNlNHsa4
-	jaX4ot9LLGrtjy6xLJc=
-X-Google-Smtp-Source: AGHT+IFZKvlrRVLjtwvw+VdsovlMCszHkLbdku1z+OZ4qORt0cXqSHDLFnqL7kzfZxkVlY66TbVvjw==
-X-Received: by 2002:a05:6a00:400b:b0:72a:8461:d172 with SMTP id d2e1a72fcca58-7303510391fmr3462095b3a.3.1738736604537;
-        Tue, 04 Feb 2025 22:23:24 -0800 (PST)
-Received: from localhost ([157.82.207.107])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-72fe64275c4sm12127023b3a.61.2025.02.04.22.23.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 22:23:24 -0800 (PST)
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Wed, 05 Feb 2025 15:22:29 +0900
-Subject: [PATCH net-next v5 7/7] tap: Use tun's vnet-related code
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Jb0jJuap"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MrVSriJOHH2ZkeUaA/vYy5zSnnqq+JYh3RJu1oLEGs5IW2ogKAVl70GgXpCkVnFIJpgklGcaJ/TUYVWjYvi6PU02TPlpNm87qxt2FLIqFGMUZJZbZiorH3I6e7mtRuYFqyBKcV4W+qHxzQ2VaXho87hkhCrj2GMjg9xDfW0kN5gA2nheeu+iXf5e0/HGT+hWWMuLa/R0iAcqCMx1mW0KbCRVuO2erfbKzy5B+tywSjRGfQOPUryfj3P5I7Z+tzo8PySOVdXsj/pbBTFbgP4ZPIrKWuUlQDqbEB1PV+Sd1fR7IJa5SELv0+DFZ3M3AZbwzJjPClh5Q1bum5semKipLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P3E2HEYPGTxZlN0XoIWltePQt/XHuTqrjM9TyenT6q0=;
+ b=Du2DTPvLM6lT9qE6r9LEPwXfrFXHDfEWs6DY2TzI4z612+Ujbtogu+lm7AOq4qIzrW4o/JAyT7Q85ox2TEunOB9g389g+unYEw1V6AzMab7tRuE8leVGUWgfqjsH2/NUy4IRB43CqiC5VPobRGkLJEXizDdi9odiHphCVsdkQV4YnglcharelTtRKgKedG0n7R6KyEV4Sdm/OXQVrIWvRKS1Njl4evXxypSQMYrIZPhmV02ft5GpmjYgli/YlwwlBrhYjXAeMA4t6UImd3nmL1hwklGjbJe5h8+HO7t8cVuxaqxxoYzlqQo/7HZGskEtsTPP9tWR28jTkvNyxI99IA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P3E2HEYPGTxZlN0XoIWltePQt/XHuTqrjM9TyenT6q0=;
+ b=Jb0jJuapI5E/0ciMxeri8a72fIelox3Zpophh98K7DSBVnbsLwUoyEyxsQWkePMBjn/Fl/XRUHpc5A/BM/o5dmekq1FxcljmeRgtiGjS9YVq0FnbS3P13tfG86BfyNH8hSLJiDNDJym8TPKIJIfu7nY84PY7kf6nt//lVM2sUO8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6434.namprd12.prod.outlook.com (2603:10b6:208:3ae::10)
+ by BL3PR12MB6594.namprd12.prod.outlook.com (2603:10b6:208:38d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Wed, 5 Feb
+ 2025 06:24:21 +0000
+Received: from IA1PR12MB6434.namprd12.prod.outlook.com
+ ([fe80::dbf7:e40c:4ae9:8134]) by IA1PR12MB6434.namprd12.prod.outlook.com
+ ([fe80::dbf7:e40c:4ae9:8134%7]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
+ 06:24:21 +0000
+Message-ID: <de31971e-98fc-4baf-8f4f-09d153902e2e@amd.com>
+Date: Wed, 5 Feb 2025 11:54:05 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC] Unifying sources of page temperature
+ information - what info is actually wanted?
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Raghavendra K T <raghavendra.kt@amd.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+ lsf-pc@lists.linux-foundation.org, gourry@gourry.net, nehagholkar@meta.com,
+ abhishekd@meta.com, ying.huang@linux.alibaba.com, nphamcs@gmail.com,
+ hannes@cmpxchg.org, feng.tang@intel.com, kbusch@meta.com,
+ Hasan.Maruf@amd.com, sj@kernel.org, david@redhat.com, willy@infradead.org,
+ k.shutemov@gmail.com, mgorman@techsingularity.net, vbabka@suse.cz,
+ hughd@google.com, rientjes@google.com, shy828301@gmail.com,
+ liam.howlett@oracle.com, peterz@infradead.org, mingo@redhat.com,
+ nadav.amit@gmail.com, shivankg@amd.com, ziy@nvidia.com, jhubbard@nvidia.com,
+ AneeshKumar.KizhakeVeetil@arm.com, linux-kernel@vger.kernel.org,
+ jon.grimm@amd.com, santosh.shukla@amd.com, Michael.Day@amd.com,
+ riel@surriel.com, weixugc@google.com, leesuyeon0506@gmail.com,
+ honggyu.kim@sk.com, leillc@google.com, kmanaouil.dev@gmail.com,
+ rppt@kernel.org, dave.hansen@intel.com
+References: <20250123105721.424117-1-raghavendra.kt@amd.com>
+ <20250131122803.000031aa@huawei.com> <20250131130901.00000dd1@huawei.com>
+Content-Language: en-US
+From: Bharata B Rao <bharata@amd.com>
+In-Reply-To: <20250131130901.00000dd1@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0031.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::20) To IA1PR12MB6434.namprd12.prod.outlook.com
+ (2603:10b6:208:3ae::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-tun-v5-7-15d0b32e87fa@daynix.com>
-References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
-In-Reply-To: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, kvm@vger.kernel.org, 
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
- Yuri Benditovich <yuri.benditovich@daynix.com>, 
- Andrew Melnychenko <andrew@daynix.com>, 
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
- devel@daynix.com, Akihiko Odaki <akihiko.odaki@daynix.com>
-X-Mailer: b4 0.14.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6434:EE_|BL3PR12MB6594:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a8a1822-eda7-4f30-43b5-08dd45adb9e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VGNKVWZ2V0JsTUgvWFk0SjZlVVdsYVZyY2NmSEgvUDU1MVVENzdsTmpEK3k0?=
+ =?utf-8?B?amdxb25LekJ2c1Q2M2NIc1VLN3FLUUxKa3l2UzlWdmJCZ1Z3RVc0VDE0STVC?=
+ =?utf-8?B?cUhZcTQ3S3Z2SHRMTGJLRXdGM20zMUVUNU92SCtQTlVnSVRER1Z0cjNuWklK?=
+ =?utf-8?B?WG5OcGpGdHpTYTFGU3ZlZXdXU00vUytKdExHZTdKVi8vVE1XMTJsQ0M2dmdE?=
+ =?utf-8?B?NWc5ZG1uQXVuNnFYVnowVS8vWFpiWGxscHEydWhIVWpSNW84Wnl0UStneTlo?=
+ =?utf-8?B?OXh3VmZUVFNJMklITitzVEhLeUFrL1BXbHdURmpaWjdBamVxSCtxcHpkdlls?=
+ =?utf-8?B?MEVRWUFOMVhlUncyOVhxMWNmR0NxSTdEaFZFb3pHUzVqb2h4RXltSHIya1I2?=
+ =?utf-8?B?Q2ZPZTdPOUdWSkVWRnczOGNWa3ZLYWVUNlNSdEpZNDVUQU5vdDBNY3V0WmtS?=
+ =?utf-8?B?NVBSNzJSVmg5b1NSbW5QdlNlSDhycVU2RlZBdkJmZ1N3d0o3dDF4SCtGNm9z?=
+ =?utf-8?B?enpsN1pWTk8rOWg5YW9HaHlkOUl3TVBQcldGWDNGMlRuU0xBbzFiajJBQW5Y?=
+ =?utf-8?B?R2REdGd6MVMzYkJkZFhPRnRpckk0UEpTOGIyQnp6OGlBd0xtc2F6endtY3B0?=
+ =?utf-8?B?Z0RqRzd1UHdJQWFBYjFTTER4ejhsd3lwWXNhbGF4czRjTjN1SXArL2kya092?=
+ =?utf-8?B?anM4c1ZWZmlObk5BVXl5eHBTcGE1bGQ0b2lUditQOW1CdXdtclZhZ2I2L1RR?=
+ =?utf-8?B?VndDUlR6Z3dIL1FsTlBkcW0yQXVKTUxXN0JxWTQzWWVBZ2Fib1F3bzV2cmpL?=
+ =?utf-8?B?SkRDZkZScUhrcTJTQnNrTjdCNVlNQ05yNk5zZ2IzWEQvT0Q2UVVuL2VmMGs0?=
+ =?utf-8?B?UC9DSEI0TDlBMkhGU3FCYW4zUDc5RGpmUU1KV0FFZlozd1hxT1E0OER0SS9S?=
+ =?utf-8?B?YThvMkJPemZQbXE0YTFQcERPM3pzNnhFSnRDckVUWTdvMDRySUlsNitOc2p5?=
+ =?utf-8?B?REdsRHBiczU0NmlRWjU0OWhVQ1VEK0tmV25sbllnRWtFRFZVYWtGOWd3cFJO?=
+ =?utf-8?B?azRrRkhUMDdUUitIaGtjOHFzb1kyd1UxZ1lYQjNIMmNaMTdybSthNmJocjhE?=
+ =?utf-8?B?U2M2VkZqSFJEays5OGp4TlZ0RE9XdUZkdTExc1RGaFJqbW1oaXg3NkZza0dy?=
+ =?utf-8?B?TTgvMmFtbWJrTjQ4NG9JTDFJZG1KYWpYdjBScG1EMzljOXpvY2wzbDlkaWJr?=
+ =?utf-8?B?Nkt4WG1JUFdXb2RmSGZSNUlWVElEdVN3QWFFZjRqZjhrZnRUaS9GZmgyR3hS?=
+ =?utf-8?B?WVhDanl4U2RFTGRrNHJ0NWdzaFFPOHpaazlHK25HNFpUKzh3ZmdramtQdm1x?=
+ =?utf-8?B?UW1MWjdGa2JuaVhRSEhSQzRFSG9SYzNWZUVEd1FVajZEa2NzV3NmaGlpNDli?=
+ =?utf-8?B?c1F1ZG5zU005d2wwRXNiY1BGYXRSOHByYVF1Sk9VYm11ZS9CdVZDamd5dGc2?=
+ =?utf-8?B?ZWpPelZOZEtoY2ZjaU91ZU8wdldhSy92M3U4UklSVVQ1eWlneFJNQkRzZ1JQ?=
+ =?utf-8?B?RXFMdmZtQUxtSmxjeWhJTldQZkdsOEpzSERCWGw2Z1FSaGRsZDhrajhrcU0v?=
+ =?utf-8?B?dlJHeEtRUHBtajZZcW9mSTlXM0JNQzJvZ01RaVIwd1lBQmhlWWdOVzRsY210?=
+ =?utf-8?B?RkMwd1N0Z2VsVDNVaXdVVTZyZUt2N21ySGIxWCswRkxEdUNxTmFNNTExKytz?=
+ =?utf-8?B?ZXM2Sk1ZRE5JZld4QkFhZmFCaGFNamIrY29JaGIycFlLRjJPa3dBby8wSklj?=
+ =?utf-8?B?WE9SZis2SXdhOGxxTUFDbHpPTEZiUDdBZlZOS1lwLzFvbkhOeVkyTFR5a1Q5?=
+ =?utf-8?Q?FuNWgahff4fl/?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6434.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aktHVFNnSTdzbDJaMGpRU2FFWnZPMVpnSG8xQUt1OFFiT3dUalZ1MHZUSzdo?=
+ =?utf-8?B?aTZlT0p3MDB4QzFINURkQkRIalpwc25OOCtUaUhYd3p2aTYyRm1vMWo3ekNV?=
+ =?utf-8?B?cEVNeFN0MW9vbHdyTDlwYWV0SUxvbXg3aUkyOVlEZ2UzaTBYVWF3S0N3L0Y4?=
+ =?utf-8?B?ZWJCVUF2NERxNlNBdjBKNjAyWitiR29aRW1YUzVxRXhWQ0w1M0w2N3BldnZG?=
+ =?utf-8?B?d1hVYktCV0E4MEVZZ242eFZ0cnd3b25aZkhCUVFnOExKTlFCaW1hTUpxeVIr?=
+ =?utf-8?B?UlRKUHkrMEZKY1pVMzRxVE5mUW5lalhrcHpLSkk2UER3ZE9QTU1vL0JicVc5?=
+ =?utf-8?B?Nm5BL1ZBMXdQU28ySzBkbkxDWnFtRm9YT2tWY0sxUEpsM3JGdWN5RTFUZjFC?=
+ =?utf-8?B?eGM1dGl2a0g2L2ZzdGxCOGJaZ3B2RHdoQzlIQUVYZVAreUIyTTV0WGNaQTIr?=
+ =?utf-8?B?Zm1QVTZDWkhOakg3ZUtIUXo4dXdNNEp5ZEF5K09vdTRJV2FNWm5SR2tXL2Vh?=
+ =?utf-8?B?bkpFVWlldWlzTW93enVTSWtIKzlNdGNQZExiQWpFN2JoK2c5Tk9PZE5Nd1R6?=
+ =?utf-8?B?am42N0xIbjd4OTNnbFJueHllaDk1YnFIeEZ5aHNORHdWQlhLZmFENnkwNFli?=
+ =?utf-8?B?TkQ0aGlsZkNaclBmTDVtSHNTUU53MEVUMmdjZzh2aWNnRHJyeUpCWWdScUo4?=
+ =?utf-8?B?ZDQvanVON0h3ZU5sOEhJVDYzZW5kK2xuK21DM2wraDQvTEo2dUJ2ck4vanpa?=
+ =?utf-8?B?VVExeVJQZlpKRnNyTnpGd2FYdjJCc0RYVVJsVWF0UzV2SUY5QkRWMFFqZnB2?=
+ =?utf-8?B?RjF1cjNFZ2NuVmQ4R2J2czNIa1dycEo4UE5HcUM1ZlZMdk1zZEh5eTYyTlYx?=
+ =?utf-8?B?UnM2T0YrMnpxQ0p5eTRtZGR2dzloOTg0MmZVUnFtN01hWHEzQTFmZCswdkNm?=
+ =?utf-8?B?ZnFvdmF5cDhiTlg4M3pPSmZTYjltMVo1dmZCQkR3T1RRdE1Vb3JjTHdCTTVS?=
+ =?utf-8?B?RmdIYUtWSkZnL2hGeHNHdUxkTml4TEh3NHE3NUhtbGhRUkxnWkFBSzR0WVVE?=
+ =?utf-8?B?YkplK1JHa21WdExqNTgwVDhEdTJZdFVSMW45Zzd5QXdoNll5WHd5Q2tqT1V6?=
+ =?utf-8?B?M0RCRzE3UHRPUncxelZOckYwVkFPYXFJNGt5Ui9QcUJTWmJBYzJnK3ptMG02?=
+ =?utf-8?B?Szg5b2ovUHdoRWM5Mlc1MXBnRno3L0NtUFlyeXpIcjdJMU5uOVMwcCtEYXdG?=
+ =?utf-8?B?NVplU0RtL0dRa0wwaGQ3Skxud3hQWmlsVnRvb0JwUmo0a1l6bXdoMGpsRERE?=
+ =?utf-8?B?MHBab1ZjY3lJRVN5NEYreXM1SG1jRW54OTg4dXBWZlZzZkpGNUdDWUFWRk5J?=
+ =?utf-8?B?U2hMYUVRRm9uMEVsY1lpWjh4c3pKZWtyMVNES2lYdFpPTjM4U2h1SW10ZXZR?=
+ =?utf-8?B?UCtaQUpmbDNrMmtDUTF6MEM4akpza2E4UDU0d1lTRGd6RU12VURNVTQ3aWd1?=
+ =?utf-8?B?a1ZQUTVOTDZNVWVDSlRGTHpsU3BLSGdVSVRZTWNuQkJyMXdlMzBqcWt2QVBW?=
+ =?utf-8?B?SURKL2ZIdFk5d1VaRGdSZEtHM1VLZktaUkxrWjdDN21Ed2o3VUxPdU5zVTQy?=
+ =?utf-8?B?VEJiZERZMFRJNnZTcUNDdFRRRENmSTJXYUdDSUFYaUF3WWoweGI0T1QvM1Jx?=
+ =?utf-8?B?TGNndEw0d0NTMTlNMW4vc2d0ME9LNUMvL0ZYWDVwbWJGU2pQYkl6ZmlwZ2sz?=
+ =?utf-8?B?QWZrWmJyaC9tZVVoOUUzS21VNFVuRW9XaXFhQjFwdXBBV3VGWXFyL2diUUpT?=
+ =?utf-8?B?WGF6REEzYSt6V2piLzBFcDIxY1J4T0RZWFdiaDN6VStpWkJuZ0ZoRDc4SWFY?=
+ =?utf-8?B?aWloWTNpK2h1WjNWQzNtUHh5Mk9LZEhjbmdlaktzNEQxVFJSc1pDWU9yelZv?=
+ =?utf-8?B?MmgxVm1RWTdiem5zdi9PZjdUZkZ0NEhyQXBIMkJERmI4WFRjS3NpUVVYNm5o?=
+ =?utf-8?B?V0p4ckErNlV3dkJsUXowbStoZlFSOElyaks2Y2tlelFLMUxnNmZmOVh5UXox?=
+ =?utf-8?B?VXp6VGpYWThLRk1EdTdtZzhGNFZ4dUwvZTFMbjRzWlowd1dzOW9jWG15T1hk?=
+ =?utf-8?Q?g9m2VCc40KuQLSSmViZwyUz5+?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a8a1822-eda7-4f30-43b5-08dd45adb9e1
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6434.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 06:24:20.9848
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AJ1f+Lkg/vY6iVxG+dSMKqHz5l+ek89tdMEsIZlCpPsgwUBkK6m6uW619M8OgoN9LyhNC/9qJQDm/7wpJTnGDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6594
 
-tun and tap implements the same vnet-related features so reuse the code.
+On 31-Jan-25 6:39 PM, Jonathan Cameron wrote:
+> On Fri, 31 Jan 2025 12:28:03 +0000
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> 
+>>> Here is the list of potential discussion points:
+>> ...
+>>
+>>> 2. Possibility of maintaining single source of truth for page hotness that would
+>>> maintain hot page information from multiple sources and let other sub-systems
+>>> use that info.
+>> Hi,
+>>
+>> I was thinking of proposing a separate topic on a single source of hotness,
+>> but this question covers it so I'll add some thoughts here instead.
+>> I think we are very early, but sharing some experience and thoughts in a
+>> session may be useful.
+> 
+> Thinking more on this over lunch, I think it is worth calling this out as a
+> potential session topic in it's own right rather than trying to find
+> time within other sessions.  Hence the title change.
+> 
+> I think a session would start with a brief listing of the temperature sources
+> we have and those on the horizon to motivate what we are unifying, then
+> discussion to focus on need for such a unification + requirements
+> (maybe with a straw man).
 
-Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
----
- drivers/net/tap.c | 152 ++++++------------------------------------------------
- 1 file changed, 16 insertions(+), 136 deletions(-)
+Here is a compilation of available temperature sources and how the 
+hot/access data is consumed by different subsystems:
 
-diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-index c55c432bac48d395aebc9ceeaa74f7d07e25af4c..40b077aa639be03cf5a6e9a85734833b289f6b86 100644
---- a/drivers/net/tap.c
-+++ b/drivers/net/tap.c
-@@ -26,74 +26,9 @@
- #include <linux/virtio_net.h>
- #include <linux/skb_array.h>
- 
--#define TAP_IFFEATURES (IFF_VNET_HDR | IFF_MULTI_QUEUE)
--
--#define TAP_VNET_LE 0x80000000
--#define TAP_VNET_BE 0x40000000
--
--#ifdef CONFIG_TUN_VNET_CROSS_LE
--static inline bool tap_legacy_is_little_endian(struct tap_queue *q)
--{
--	return q->flags & TAP_VNET_BE ? false :
--		virtio_legacy_is_little_endian();
--}
--
--static long tap_get_vnet_be(struct tap_queue *q, int __user *sp)
--{
--	int s = !!(q->flags & TAP_VNET_BE);
--
--	if (put_user(s, sp))
--		return -EFAULT;
--
--	return 0;
--}
--
--static long tap_set_vnet_be(struct tap_queue *q, int __user *sp)
--{
--	int s;
--
--	if (get_user(s, sp))
--		return -EFAULT;
--
--	if (s)
--		q->flags |= TAP_VNET_BE;
--	else
--		q->flags &= ~TAP_VNET_BE;
--
--	return 0;
--}
--#else
--static inline bool tap_legacy_is_little_endian(struct tap_queue *q)
--{
--	return virtio_legacy_is_little_endian();
--}
--
--static long tap_get_vnet_be(struct tap_queue *q, int __user *argp)
--{
--	return -EINVAL;
--}
--
--static long tap_set_vnet_be(struct tap_queue *q, int __user *argp)
--{
--	return -EINVAL;
--}
--#endif /* CONFIG_TUN_VNET_CROSS_LE */
--
--static inline bool tap_is_little_endian(struct tap_queue *q)
--{
--	return q->flags & TAP_VNET_LE ||
--		tap_legacy_is_little_endian(q);
--}
--
--static inline u16 tap16_to_cpu(struct tap_queue *q, __virtio16 val)
--{
--	return __virtio16_to_cpu(tap_is_little_endian(q), val);
--}
-+#include "tun_vnet.h"
- 
--static inline __virtio16 cpu_to_tap16(struct tap_queue *q, u16 val)
--{
--	return __cpu_to_virtio16(tap_is_little_endian(q), val);
--}
-+#define TAP_IFFEATURES (IFF_VNET_HDR | IFF_MULTI_QUEUE)
- 
- static struct proto tap_proto = {
- 	.name = "tap",
-@@ -655,25 +590,13 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
- 	if (q->flags & IFF_VNET_HDR) {
- 		vnet_hdr_len = READ_ONCE(q->vnet_hdr_sz);
- 
--		err = -EINVAL;
--		if (len < vnet_hdr_len)
-+		hdr_len = tun_vnet_hdr_get(vnet_hdr_len, q->flags, from, &vnet_hdr);
-+		if (hdr_len < 0) {
-+			err = hdr_len;
- 			goto err;
--		len -= vnet_hdr_len;
--
--		err = -EFAULT;
--		if (!copy_from_iter_full(&vnet_hdr, sizeof(vnet_hdr), from))
--			goto err;
--		iov_iter_advance(from, vnet_hdr_len - sizeof(vnet_hdr));
--		hdr_len = tap16_to_cpu(q, vnet_hdr.hdr_len);
--		if (vnet_hdr.flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) {
--			hdr_len = max(tap16_to_cpu(q, vnet_hdr.csum_start) +
--				      tap16_to_cpu(q, vnet_hdr.csum_offset) + 2,
--				      hdr_len);
--			vnet_hdr.hdr_len = cpu_to_tap16(q, hdr_len);
- 		}
--		err = -EINVAL;
--		if (tap16_to_cpu(q, vnet_hdr.hdr_len) > len)
--			goto err;
-+
-+		len -= vnet_hdr_len;
- 	}
- 
- 	err = -EINVAL;
-@@ -729,8 +652,7 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
- 	skb->dev = tap->dev;
- 
- 	if (vnet_hdr_len) {
--		err = virtio_net_hdr_to_skb(skb, &vnet_hdr,
--					    tap_is_little_endian(q));
-+		err = tun_vnet_hdr_to_skb(q->flags, skb, &vnet_hdr);
- 		if (err) {
- 			rcu_read_unlock();
- 			drop_reason = SKB_DROP_REASON_DEV_HDR;
-@@ -793,23 +715,17 @@ static ssize_t tap_put_user(struct tap_queue *q,
- 	int total;
- 
- 	if (q->flags & IFF_VNET_HDR) {
--		int vlan_hlen = skb_vlan_tag_present(skb) ? VLAN_HLEN : 0;
- 		struct virtio_net_hdr vnet_hdr;
- 
- 		vnet_hdr_len = READ_ONCE(q->vnet_hdr_sz);
--		if (iov_iter_count(iter) < vnet_hdr_len)
--			return -EINVAL;
--
--		if (virtio_net_hdr_from_skb(skb, &vnet_hdr,
--					    tap_is_little_endian(q), true,
--					    vlan_hlen))
--			BUG();
- 
--		if (copy_to_iter(&vnet_hdr, sizeof(vnet_hdr), iter) !=
--		    sizeof(vnet_hdr))
--			return -EFAULT;
-+		ret = tun_vnet_hdr_from_skb(q->flags, NULL, skb, &vnet_hdr);
-+		if (ret)
-+			return ret;
- 
--		iov_iter_advance(iter, vnet_hdr_len - sizeof(vnet_hdr));
-+		ret = tun_vnet_hdr_put(vnet_hdr_len, iter, &vnet_hdr);
-+		if (ret)
-+			return ret;
- 	}
- 	total = vnet_hdr_len;
- 	total += skb->len;
-@@ -1068,42 +984,6 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
- 		q->sk.sk_sndbuf = s;
- 		return 0;
- 
--	case TUNGETVNETHDRSZ:
--		s = q->vnet_hdr_sz;
--		if (put_user(s, sp))
--			return -EFAULT;
--		return 0;
--
--	case TUNSETVNETHDRSZ:
--		if (get_user(s, sp))
--			return -EFAULT;
--		if (s < (int)sizeof(struct virtio_net_hdr))
--			return -EINVAL;
--
--		q->vnet_hdr_sz = s;
--		return 0;
--
--	case TUNGETVNETLE:
--		s = !!(q->flags & TAP_VNET_LE);
--		if (put_user(s, sp))
--			return -EFAULT;
--		return 0;
--
--	case TUNSETVNETLE:
--		if (get_user(s, sp))
--			return -EFAULT;
--		if (s)
--			q->flags |= TAP_VNET_LE;
--		else
--			q->flags &= ~TAP_VNET_LE;
--		return 0;
--
--	case TUNGETVNETBE:
--		return tap_get_vnet_be(q, sp);
--
--	case TUNSETVNETBE:
--		return tap_set_vnet_be(q, sp);
--
- 	case TUNSETOFFLOAD:
- 		/* let the user check for future flags */
- 		if (arg & ~(TUN_F_CSUM | TUN_F_TSO4 | TUN_F_TSO6 |
-@@ -1147,7 +1027,7 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
- 		return ret;
- 
- 	default:
--		return -EINVAL;
-+		return tun_vnet_ioctl(&q->vnet_hdr_sz, &q->flags, cmd, sp);
- 	}
- }
- 
-@@ -1194,7 +1074,7 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
- 	skb->protocol = eth_hdr(skb)->h_proto;
- 
- 	if (vnet_hdr_len) {
--		err = virtio_net_hdr_to_skb(skb, gso, tap_is_little_endian(q));
-+		err = tun_vnet_hdr_to_skb(q->flags, skb, gso);
- 		if (err)
- 			goto err_kfree;
- 	}
+PA-Physical address available
+VA-Virtual address available
+AA-Access time available
+NA-accessing Node info available
 
--- 
-2.48.1
+I have left the slot blank for those which I am not sure about.
+==================================================
+Temperature		PA	VA	AA	NA
+source
+==================================================
+PROT_NONE faults	Y	Y	Y	Y
+--------------------------------------------------
+folio_mark_accessed()	Y		Y	Y
+--------------------------------------------------
+PTE A bit		Y	Y	N	N
+--------------------------------------------------
+Platform hints		Y	Y	Y	Y
+(AMD IBS)
+--------------------------------------------------
+Device hints		Y
+(CXL HMU)
+==================================================
+
+And here is an attempt to compile how different subsystems
+use the above data:
+==============================================================
+Source			Subsystem		Consumption
+==============================================================
+PROT_NONE faults	NUMAB		NUMAB=1 locality based
+via process pgtable			balancing
+walk					NUMAB=2 hot page
+					promotion
+==============================================================
+folio_mark_accessed()	FS/filemap/GUP	LRU list activation
+==============================================================
+PTE A bit via		Reclaim:LRU	LRU list activation,	
+rmap walk				deactivation/demotion
+==============================================================
+PTE A bit via		Reclaim:MGLRU	LRU list activation,	
+rmap walk and process			deactivation/demotion
+pgtable walk
+==============================================================
+PTE A bit via		DAMON		LRU activation,
+rmap walk				hot page promotion,
+					demotion etc
+==============================================================
+Platform hints		NUMAB		NUMAB=1 Locality based
+(AMD IBS)				balancing and
+					NUMAB=2 hot page
+					promotion
+==============================================================
+Device hints		NUMAB		NUMAB=2 hot page
+					promotion
+==============================================================
+The last two are listed as possibilities.
+
+Feel free to correct/clarify and add more.
+
+Regards,
+Bharata.
+
+
+
+
 
