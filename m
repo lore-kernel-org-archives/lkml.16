@@ -1,157 +1,101 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACCDF510;
-	Wed,  5 Feb 2025 21:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041C1FFC4B;
+	Wed,  5 Feb 2025 21:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738792218; cv=none; b=R3CqMAclvm2TJw3BlitlPCE47w3+t56vjfOVR4eeiF05gUp7cziYY6lcsrnoaVojI6lPBpvxHLK/W/crwSlF8y7mA/hGeaQL2CAJptH6X0nsjZ2Rc5SRt/7nOWOscApkN8WZxpuQ4m7XEgLPsSNIwDje2U8T9+CBI7Tiow4MUfk=
+	t=1738792404; cv=none; b=S4alCHiUJT9mL9pi2CfPPhSAOTS5MPloMQEHNODxeyonkdNrm37ohgcIK5ABgt+JRfjRIcVIxpMzG9zzhAbqz4qO3MRtjQ/nM4F4LzfxN/XAa4DYbYiBdsoTasGBOSd9ixt9JdRiPbXFKYMN5tvC6wqRrgBs9Ds+ANomW58QKkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738792218; c=relaxed/simple;
-	bh=VZeDDWElS97HftJUqI0ZV7tLfTYxf1l0eS3m7HaFToY=;
+	s=arc-20240116; t=1738792404; c=relaxed/simple;
+	bh=x9d9cNYBFtlNcU52LjDGoQ5l6Zp8mlPVT0eIwPFJNkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0RhmKEMdJ5epfXB1iQm6iBTavVOJweFeXnU4ZHiAnFCHdC30qZda/bp8chY7iHOh0kfPkFb5Jgm9lLM2qtuJ1UygkjFjY6A2y5e/YPYE8TMqanGEJI3s+Nq7IrNgiUzLeFdHv9KHr277lpHktVT7Iz7XNA5QP+ei1rT6fEyp1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=T1Us9Yk7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=D/j+JXMQ; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqnAXAlfKmpoRtQEU2NP33xdwtMZQnd4XeKSqKkH19NUO0tyAxst1K+LHz2/Gs/nBakGLHYgDFzthaRrc2GnHnEnd09MWEzy943TnFtWzDjG2C7zc0otc4o/i+oBLlUG6vTUupIrqn90+Io4Os8DZvinZ3H2ZD/hafIsBRDB7zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ddpq3QPo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="T1Us9Yk7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D/j+JXMQ"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 32B1213801B0;
-	Wed,  5 Feb 2025 16:50:13 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Wed, 05 Feb 2025 16:50:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1738792213; x=
-	1738878613; bh=dPn7JSPXiqgSq7Z0EgBkucMtw2n7J3jmDFtkNsgBHQY=; b=T
-	1Us9Yk7qBaMNBNqtEWnDx1fAoiVbkQg0Sr3/VAifh5QW4ruSq2o2NFM6y+NJ9p/h
-	WVXWALuhd4z72hfCQT0OEEKUidWPsLyRDRILL//EFvmraF9l4V3KJKiRM2drHESs
-	mGKeAfMGNr11F35lNkpFYVnTY3mT5sj3uP/ucN/lNMzD4ksT8Rwp98haePqHzrDm
-	BQoLOZpGucLzzDWWRMCmEDlXMnECrubDSL3P+ahmYp7+Vx1BYJ4uz74qx7TTkPDT
-	/S3hHFiL0LISAR1+iDB/PW4/hMmah8rT5LgPisRyOIZbXTu/fQzEXqFDCACs1D+t
-	9aS8ZOx9liM95ZVKzp3+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738792213; x=1738878613; bh=dPn7JSPXiqgSq7Z0EgBkucMtw2n7J3jmDFt
-	kNsgBHQY=; b=D/j+JXMQftftoZ647xleulPgDaCzNOStyuEUxGUk36Klyb/vqd0
-	Ut6Jxr0L20+DYS5h4Z+KQIAvMKcNrdxDoaz2IYF6ebjVTqx/BoQyctGxmTp5p23j
-	7uibMqbvblQ8ZYPALwHbMex4VP11xm8vpUKKMnw6cx8WtFsBDcDSzRP5j0TusHEO
-	EjYS/e1W/k7/mlk22VFBWjg/vM0l3/wFOIGc6xGu3B8OrK0/fIAxvZHpYNt9G22t
-	+KFoMZtuCdcYmkBpSGwRhgzolVTHMqPINazhT+K1YJIt17iHCrf61ffNdudbLXBY
-	Yij779PND+Z7cYzkCu+yAK78JKot1eg2jxg==
-X-ME-Sender: <xms:FN2jZ88iTlPQWcddEpMZn1rgmJXRCHWbFBO6Gvm0AP513rKEQY8qtQ>
-    <xme:FN2jZ0voVIy4HCglPJ5QUGy2hm9y7dCnmZ3F3ywcjbGhPiCJ6hLB3I5luFLxzfpdu
-    BMxDGYY8N36rtcOL6w>
-X-ME-Received: <xmr:FN2jZyCiXi-4MC2o4zcmomeJRMFOCQxVKwkZcagomOPiNHtEo6NyFsveQ1tn>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeehlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpefurggsrhhinhgrucffuhgsrhhotggruceoshgusehquhgvrghshihsnh
-    grihhlrdhnvghtqeenucggtffrrghtthgvrhhnpeeuhffhfffgfffhfeeuiedugedtfefh
-    keegteehgeehieffgfeuvdeuffefgfduffenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgs
-    pghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhtoh
-    hnihhosehophgvnhhvphhnrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgr
-    sggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvg
-    hrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheprhihrgiirghnohhvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpth
-    htoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
-X-ME-Proxy: <xmx:FN2jZ8czV6t1zJaziXPuoZHv03Xl_YSAZXlv78R5sy8lRO_JqEz9BA>
-    <xmx:FN2jZxOaXdbi32br8lRCivxfq0s5A2S6sRh-_98BWwQAShDc6Gd0eQ>
-    <xmx:FN2jZ2lIsmKSDGCfRoHOSiWebZ3Cm9-z70evuF9pnOshIpaf_h-iNQ>
-    <xmx:FN2jZzu8YHRg-PWvkQtPEXPRoljEC4mcZHMO5vUAWpOuCKfAPJw6Pw>
-    <xmx:Fd2jZ3tE71NpQiJheY5hLBK3BHWbpQ1jt_eqbmO6h39bxrDEfA0cFHuF>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Feb 2025 16:50:12 -0500 (EST)
-Date: Wed, 5 Feb 2025 22:50:10 +0100
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v18 09/25] ovpn: implement packet processing
-Message-ID: <Z6PdEurGNirlnkoM@hog>
-References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
- <20250113-b4-ovpn-v18-9-1f00db9c2bd6@openvpn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ddpq3QPo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D637C4CED1;
+	Wed,  5 Feb 2025 21:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738792403;
+	bh=x9d9cNYBFtlNcU52LjDGoQ5l6Zp8mlPVT0eIwPFJNkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ddpq3QPoxqKqJXu4nbOoGVAshaVJZnbKEirnXkeMKhNKHOhpp9xowG3WQ3X3yey/R
+	 55llMKdNRN6CX1Fl2+1wXM+P93kTa1ekSaskdQ7/KJTDPIjxQzg/0GNloe0K00SMK2
+	 wiaAnv2+nRHSSrguab5790uJ5TQ7ggsKIH0UcFk5egkbQIN0FtANdXTc0jqyGVIUQ3
+	 9z/g42e7anHkT/nB6bjILT/tUH/CticoDTSO9SPfaW5qfdZAqOph4RJmlcpmng+0ax
+	 KORxvwKv6SMCPBYV8rSA1N+JW65mbAnJQwOJGRCt+9o6OOSyVIdLBcB2rO9RuKrS/r
+	 JO1BaxUGXUoBw==
+Date: Wed, 5 Feb 2025 16:53:22 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Namhyung Kim <namhyung@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Paran Lee <p4ranlee@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Steinar H . Gunderson" <sesse@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Yang Li <yang.lee@linux.alibaba.com>, Ze Gao <zegao2021@gmail.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+Subject: Re: [PATCH AUTOSEL 6.13 06/16] tool api fs: Correctly encode errno
+ for read/write open failures
+Message-ID: <Z6Pd0oU4sa0OBxp3@lappy>
+References: <20250126150720.961959-1-sashal@kernel.org>
+ <20250126150720.961959-6-sashal@kernel.org>
+ <CAP-5=fVMYQPe5qajj34P75oT17Wi_dymJy_DvhoLd7nR4yyX9w@mail.gmail.com>
+ <CAM9d7chcUeg0C+MHGrqPuMMy7b8c-8RoUiXseoBnW+GY89O8jQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250113-b4-ovpn-v18-9-1f00db9c2bd6@openvpn.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chcUeg0C+MHGrqPuMMy7b8c-8RoUiXseoBnW+GY89O8jQ@mail.gmail.com>
 
-Hi Antonio,
+On Sun, Jan 26, 2025 at 12:41:31PM -0800, Namhyung Kim wrote:
+>Hello,
+>
+>On Sun, Jan 26, 2025 at 10:27 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Sun, Jan 26, 2025 at 7:07 AM Sasha Levin <sashal@kernel.org> wrote:
+>> >
+>> > From: Ian Rogers <irogers@google.com>
+>> >
+>> > [ Upstream commit 05be17eed774aaf56f6b1e12714325ca3a266c04 ]
+>> >
+>> > Switch from returning -1 to -errno so that callers can determine types
+>> > of failure.
+>>
+>> Hi Sasha,
+>>
+>> This change requires changes in the perf tool. The issue is the -1
+>> gets written to perf.data files in the topology, the -errno value is
+>> "corrupt." Because of this, I'd suggest not backporting this change.
+>
+>Agreed.  Please remove this patch from the all stable series.
 
-Another one I should have spotted a long time ago :(
-
-2025-01-13, 10:31:28 +0100, Antonio Quartulli wrote:
-> +int ovpn_aead_encrypt(struct ovpn_peer *peer, struct ovpn_crypto_key_slot *ks,
-> +		      struct sk_buff *skb)
-> +{
-> +	const unsigned int tag_size = crypto_aead_authsize(ks->encrypt);
-> +	struct aead_request *req;
-> +	struct sk_buff *trailer;
-> +	struct scatterlist *sg;
-> +	u8 iv[OVPN_NONCE_SIZE];
-
-You'll have to kmalloc this as well, it gets passed to the crypto API
-and with async crypto, it'll be used after ovpn_aead_encrypt has
-returned.
-
-[...]
-> +	/* setup async crypto operation */
-> +	aead_request_set_tfm(req, ks->encrypt);
-> +	aead_request_set_callback(req, 0, ovpn_encrypt_post, skb);
-> +	aead_request_set_crypt(req, sg, sg,
-> +			       skb->len - ovpn_aead_encap_overhead(ks), iv);
-                                                                        ^^
-passed here
-
-
-> +	aead_request_set_ad(req, OVPN_AAD_SIZE);
-> +
-> +	/* encrypt it */
-> +	return crypto_aead_encrypt(req);
-> +free_sg:
-> +	kfree(ovpn_skb_cb(skb)->sg);
-> +	ovpn_skb_cb(skb)->sg = NULL;
-> +	return ret;
-> +}
-> +
-> +int ovpn_aead_decrypt(struct ovpn_peer *peer, struct ovpn_crypto_key_slot *ks,
-> +		      struct sk_buff *skb)
-> +{
-> +	const unsigned int tag_size = crypto_aead_authsize(ks->decrypt);
-> +	int ret, payload_len, nfrags;
-> +	unsigned int payload_offset;
-> +	struct aead_request *req;
-> +	struct sk_buff *trailer;
-> +	struct scatterlist *sg;
-> +	u8 iv[OVPN_NONCE_SIZE];
-
-And same here.
-
-(maybe something for the todolist: ovpn could copy the alloc trick
-from esp_alloc_tmp, like I did for macsec_alloc_req -- not required,
-but could be nice to avoid many small allocs and all their failure
-checks)
+I'll drop it, thanks!
 
 -- 
-Sabrina
+Thanks,
+Sasha
