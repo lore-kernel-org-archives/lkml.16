@@ -1,119 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11061DE89E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8958D211472;
+	Wed,  5 Feb 2025 20:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785671; cv=none; b=Zp72sS4oBNLE4pJPjV1lbyU5pxQLFkM7GjF3fZxW5fU2SsFQnUZCr8eEOd/9K2SbeRMi+tHcehxkFPaQQQ0yN/bjZi4h3ynorgnbNT/e3UpX3stX/3+rZsf+R1tTEaUDtVTrLnM/hPuA72RQ4HqfTjEzzqYC0OEtrB9nkT1vmx4=
+	t=1738785697; cv=none; b=diNvxAYD1O+82So4U5N3AgGhqdmmQRKKLRPTs8Q/0AWfwue0gW8TGDksnkvA2Wz0qQm2Q2xRCY4z8UoMu4hYb+k0BKfxN04Zw++Y4KiDYTm2Sge4IIPmWAHedUF8s1o8IhMGDhdYhSFwiwXlP1mvzdzT6sgBrqqCP/rJl6AQs+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785671; c=relaxed/simple;
-	bh=sv3dPfsK2lDWUx7YB4khHcs4oRJfXUqlMtha4zql9Rs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NDOLTYfG3qZzTzYaRI0f6OpCAPlf35ot6SQFjpkFOdN65oZCtfnc/3MICfRifprKadLsPUl4HzERoF3oSbCM2smx+dLTRyDSRE1pb+RKztkRA5ipSl0tUYMKkGlJkRwmqhA4BKZAPW5KJP4biczXfWVF5e1m62RO0iB7tToWq6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YXqz21hD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738785697; c=relaxed/simple;
+	bh=5iMo7L4/hiUTbWP4kJwoHzYawUN7CAx8gnO17nTMfpg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LIk7LB5MKb6U92HhXpC7kJbdowGf9UE1IKmzdtzle2CwLRifl/qmxp2WOhzNpZPa3gTATejggSMnnWIk8+CnkqNNLn/Bmp4Ao3OF0UZLISBdDa0pni3S4ruMMNbTiWroo8F2GPc3zjjMNmGtZ74IF3/qP6Z9tBkINMvie20q8b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imwkpbI0; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YXqz21hD"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515EVYhe025691
-	for <linux-kernel@vger.kernel.org>; Wed, 5 Feb 2025 20:01:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=sv3dPfsK2lDWUx7YB4khHc
-	s4oRJfXUqlMtha4zql9Rs=; b=YXqz21hDoSq77vSRUr6vpKNzZ5vNQT7prGDH1m
-	kMH7ODMPXjswHxN/GsV+erF1IsB5KryENLqkase4ISOp/NoNlKdAjnzxj34tVkCd
-	C42GVEiS8Z3jhqkB/qKpjLuFoZf1l954eexdKf9Rc/opos/ro1x7fZtt2Xf8GRvg
-	8amMuCzF1LHrP+L96R8v+OzdVgHT2Cuiz0AxbHl7giypOypX986gnigIoKjpLmVc
-	68BEejEFsJxjKqYzDT8RYL2cNlWqw686yQi7J7JFAwOYggivEKvNBPlzE7RWRzQc
-	PtLR4ZaayuCaYu2UPOGAkuHKSWqO+6vInowGsVKWSqMLZkkA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m9txgu6b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 20:01:06 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2164861e1feso3787795ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:01:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imwkpbI0"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38da72cc47bso96376f8f.2;
+        Wed, 05 Feb 2025 12:01:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738785694; x=1739390494; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UbkTgbUXqLczyGQYofRcX3t8JYWpKFqOH51mhvVnnU0=;
+        b=imwkpbI05qCjMA4zOf7poiXPnt0q9s9TMoknoSanPqhv2BshEG1BBKFGgYf3ItNgHJ
+         eSiWDUYyHDNlDjfaewm03FW+1mEB9l8sLLOmdQexeqlw4GyUumJzR7AqtrQQ+SFreLAn
+         RzM4Bp1Y0JxtMjHXINcnP0Eq87sSw5cSAh+OWURQ9m6BdoNkB80JWKl1Fb+MJ0wfqXSp
+         CJo/49V4qkZEUOr+YW1ZzgvKUb/WaSU/XFIGlmBXmrRa/URB12Uonc/ZuxEJNOR976mu
+         JVUPjDF9+b0se/Js4HU+WpfQQJVVTxilWuuUTTkyEaGkl+YcGtsDK+MiaZRVVxNyVGQ6
+         Gu8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738785666; x=1739390466;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sv3dPfsK2lDWUx7YB4khHcs4oRJfXUqlMtha4zql9Rs=;
-        b=HGfNfKBFAzT7IobMgcfmz02hkpQdwbg0JWOsfXP22eX6H1i+08Hobca4/nwoJIwTdr
-         EXgXkj+TRdmeHpU3ovGdYtG3QbZBY1R59Cok+ODfJdD0egPRj+t2P1lzBtpOXXC6HbMM
-         hSI9Ac+d96/mknyVYNb/MAtmT0bMO6Pp4MwOLwDEz8R+9EMXUPLuKgr3Ne5ZCD+ndAd8
-         YyLlXWnhCCZxdneZARwCfAudGA+bzhv9FUUE2d/L9YbQHlBBiYwIVEz6M0Sd3B+5EpeL
-         Wzd16brYEBmBx5F+B2rqZd34NnCGJV29Ztt/l7/kTu/os+5doqjL88ZC30LHx1EfNCIj
-         wRXA==
-X-Gm-Message-State: AOJu0Yxl1GPbUJKjG7x4jcHik6Saaj8LBkIcD1MMWyqYIP3s9HPybmHw
-	A5Gyuc/BP0WXUKc8XBGrRma+3P0G2K5LzihYOYcDOtjoIzuuo0wZsEwT0gvcbnTjE9D78Sh6yeF
-	RW/vsG6pAHLQ/qofmuZzEPjGeA8ayg6Ccwq3yl1zYGiWuVW1gVCOEGVj70OCVG1BkF+BGzwQ=
-X-Gm-Gg: ASbGncsTy0UjRCWGk09fboIXywZOCv/IHmB18Pqn3fUt4L6BtofuwTT1VbnvYj07nTU
-	KiXR6IXsgx4fXSrB8TN6VbM4L+e0ywzJGe3hbmrNfQ0PlelLb3A1RD/bPKXq5QL2aURPFzurnig
-	Vzt4W+cCYR25bmLWSKBQrg+7v84/gFU/omqwoDGKpOe8z+Qfwr3nbYgjWtAxC+9B1AKWWxl6aG/
-	3HNYMx4S+dkihW1sUpXGeMwbJOGGvSCGi3MbKEoYMTlwFTzbHbhtvC6sH2Dm/thHVVlyWTZUcc3
-	2Ba0Q4ioXnI4MJgEul+2OozZk2BSeBY+YjGlO/eUng==
-X-Received: by 2002:a05:6a20:9e4c:b0:1d9:2b51:3ccd with SMTP id adf61e73a8af0-1ede88105c0mr8149928637.7.1738785665183;
-        Wed, 05 Feb 2025 12:01:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEb0qC/EtAAEEdu0uSVz4i3oxZWIFN8vzHdgJCEhclARF7Y1gptWZfwZDp+u0Fqxxuv75R/tA==
-X-Received: by 2002:a05:6a20:9e4c:b0:1d9:2b51:3ccd with SMTP id adf61e73a8af0-1ede88105c0mr8149651637.7.1738785663232;
-        Wed, 05 Feb 2025 12:01:03 -0800 (PST)
-Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ce076sm13333716b3a.138.2025.02.05.12.01.02
+        d=1e100.net; s=20230601; t=1738785694; x=1739390494;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UbkTgbUXqLczyGQYofRcX3t8JYWpKFqOH51mhvVnnU0=;
+        b=V0Q616Wlca362UZIQzauX2n5/VYm99+JOUcoMQsJIzmi79W87cqTvx+DbdAgdI/rEM
+         43qZcI7clnEPo5uMlhCwsi2WnFFC2ybwgCxbe4zPhRTvqdby0bmfkwakl1UpdYTTqKRb
+         NACMI7P33erVgqT4TeeaQEOHwoppBor7SRSViA+2tEwV5ZMxxPjnC/TIQF2qSj6sllTJ
+         1EiL3goCDMXuP1CgW9meO2+vTQpjeUWzxMJwp5gzQhLIcW9DPOrPoybW4sOBYfUZ0DNb
+         i/3djcErsqAbj+d7AtmdLzEUscpdkEv4/2qt45o6g5BtfEBS11XVub12jfXa3ZWhuBMq
+         wIAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/zTs9NcYmaoZj+iCc22FMf5uLQlR12RbGsF38MbPK4I481NKbs78AkxmssyhyT3G61n27FUMykTn9Ag==@vger.kernel.org, AJvYcCWg6/i9lkKaMk8E0jFQ29Co907SpOSIH3CFEA7eaQboJ70sUo6SV/GcG1ElJWT85tPW1mHybq47r/yI9eY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe3khslRAffK4soZw9ysSWAvPpjsYVy/WLVvSO470PVHz+17Ye
+	eUbooDXqTi8HenvM38Ymr9Uv84NujBLYyCEFoFYY1I4LRvrzkSjL
+X-Gm-Gg: ASbGncuLuMeJ6XZSq5ZnZL+ogCnyBNirHR3lB4fe88dXkz2nNgU4ofSMvm770mCX3IK
+	RJ+3w2+9RTQCC0eC7h7n0KvyDFaKcR5EACUddWHwiO0H0pOQi4j577neRAYi39E++lLXKy/EkDN
+	IK1bBQ6jDs0MeREHDDXJ2w/B6w3wa6M/a50X8qHlqkh+KlAO6waeMlb6Nj/c/Q5rKDd96d9r1Z4
+	C5DMPTFp2w9ENpYGApVcJCqE9LxaRBS9/IbaQDp+Wpm8v5kHJg2pUWNQ1jvsSRD8VDL/7HQBrI1
+	252z0d6D7/dMBs2C+A==
+X-Google-Smtp-Source: AGHT+IET3MTf5g5qTtse/jPMo+vTVksupGoy1x6ir0U5AG6jovnegYODWdkdIzCBE4yaiNHRcDMITg==
+X-Received: by 2002:a5d:5f4d:0:b0:38c:4a5f:bf70 with SMTP id ffacd0b85a97d-38db49775ddmr3257049f8f.55.1738785693462;
+        Wed, 05 Feb 2025 12:01:33 -0800 (PST)
+Received: from [10.176.235.56] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38da1ca14bcsm8548895f8f.95.2025.02.05.12.01.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 12:01:02 -0800 (PST)
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Date: Wed, 05 Feb 2025 12:01:00 -0800
-Subject: [PATCH] .mailmap: add entries for Jeff Johnson
+        Wed, 05 Feb 2025 12:01:32 -0800 (PST)
+Message-ID: <062a1d50bacc21708fa1738022d9127214049a5a.camel@gmail.com>
+Subject: Re: [PATCH v3 5/8] scsi: ufs: core: Enable multi-level gear scaling
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Alim Akhtar
+ <alim.akhtar@samsung.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Peter Wang
+ <peter.wang@mediatek.com>,  Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Andrew Halaney <ahalaney@redhat.com>,
+ open list <linux-kernel@vger.kernel.org>
+Date: Wed, 05 Feb 2025 21:01:31 +0100
+In-Reply-To: <20250203081109.1614395-6-quic_ziqichen@quicinc.com>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	 <20250203081109.1614395-6-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-jjohnson-mailmap-v1-1-269cb7b1710d@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAHvDo2cC/4WOQQ6CMBBFr0K6toQBW8SV9zAuBihSAi12gGAId
- 7dlbXQzyU/+e382RsppRewabcypRZO2xgc4Raxq0TwV17XPLE1SkQAI3nW2NWQNH1D3A45cZjK
- /QFEIcW6Yx0anGr0eyvvD5xJJ8dKhqdog6rWZVw/TpFyot5om697HAwsE6MfWAhx4JhPM60sty
- 0zeLFH8mrGv7DDE/rAwuaT/PKn3FJVQgBkI/OrZ9/0DEZA2Cx4BAAA=
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-X-Mailer: b4 0.14.0
-X-Proofpoint-ORIG-GUID: Xfw3BdGCGay2F_b7iz1_oT2Lshd0Ytqk
-X-Proofpoint-GUID: Xfw3BdGCGay2F_b7iz1_oT2Lshd0Ytqk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- bulkscore=0 impostorscore=0 adultscore=0 mlxlogscore=458 clxscore=1015
- mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502050152
 
-Map past iterations of my e-mail addresses to the current one.
+On Mon, 2025-02-03 at 16:11 +0800, Ziqi Chen wrote:
+> From: Can Guo <quic_cang@quicinc.com>
+>=20
+> With OPP V2 enabled, devfreq can scale clocks amongst multiple
+> frequency
+> plans. However, the gear speed is only toggled between min and max
+> during
+> clock scaling. Enable multi-level gear scaling by mapping clock
+> frequencies
+> to gear speeds, so that when devfreq scales clock frequencies we can
+> put
+> the UFS link at the appropraite gear speeds accordingly.
+		       appropraite->appropriate
 
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
----
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/.mailmap b/.mailmap
-index 48de71154296..1cd63879fcf2 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -303,6 +303,8 @@ Jayachandran C <c.jayachandran@gmail.com> <jnair@caviumnetworks.com>
- Jean Tourrilhes <jt@hpl.hp.com>
- Jeevan Shriram <quic_jshriram@quicinc.com> <jshriram@codeaurora.org>
- Jeff Garzik <jgarzik@pretzel.yyz.us>
-+Jeff Johnson <jeff.johnson@oss.qualcomm.com> <jjohnson@codeaurora.org>
-+Jeff Johnson <jeff.johnson@oss.qualcomm.com> <quic_jjohnson@quicinc.com>
- Jeff Layton <jlayton@kernel.org> <jlayton@poochiereds.net>
- Jeff Layton <jlayton@kernel.org> <jlayton@primarydata.com>
- Jeff Layton <jlayton@kernel.org> <jlayton@redhat.com>
-
----
-base-commit: 619f0b6fad524f08d493a98d55bac9ab8895e3a6
-change-id: 20250115-jjohnson-mailmap-63678199554f
-
+Reviewed-by: Bean Huo <beanhuo@micron.com>
