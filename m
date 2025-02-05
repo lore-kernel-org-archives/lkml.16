@@ -1,164 +1,147 @@
-Received: from slateblue.cherry.relay.mailchannels.net (slateblue.cherry.relay.mailchannels.net [23.83.223.168])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E792288C3;
-	Wed,  5 Feb 2025 12:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757154; cv=pass; b=LrMGCRPZas8x86Bp4SadPpdLawota5OLZ9X4spW2hPmrdVuQUyJ4y5gF3zmuDbWQYwVBYnqZJ0OorT5MRCAYS0sIt9nDlCiHXzGyrPvrala1UuoGZG/jvELoUkIwa4HSZsO3YbxQ+sZPir+otpHS006Tkd4sKL+vX/0NgfO/0dc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757154; c=relaxed/simple;
-	bh=n+kV9+UwBTCR/vArvaVKIkc5Gk2J6L2bfQFRy+ydri4=;
-	h=From:To:Cc:Subject:Message-ID:MIME-Version:Date; b=bOuxUtlZVWwg5qaFsaiQmy1JP497RlI0UmpIh0C3va25724rns7Ea3GiVg7MmTAp0zVhtOHn/Pw1OWxgUuySKddd9av+npgNXaA85o4VbVaOfaF4UDhCW5/7FkWJg0oGQ4qGqRKVBj2rUz+llQxWkG5kcT7zwTAvRVc+xG1oFCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=PM3LVCfo reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.223.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8162288C3;
+	Wed,  5 Feb 2025 12:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738757219; cv=none; b=P6GgjTuatdoMPcxGpwiIzirt4WE8O8OiDxbN2DsqdhbIW3GhdRSrSBkP9in4T9zA8Brmjk1OJezI+FqPEFagZfIIsqSz6hd/S8zXa30PxCmIgtELOTNyg+M5USH69pyYKSVPp4Vox+fYXDHrXG8+oJ9hF5uc2ABXkqtziWw75HE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738757219; c=relaxed/simple;
+	bh=5qBs+P9AcN2m3Xi249ox5NyNN05CkU/eenHuRZqTRX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d15SahHK6dBCeUfkluEgywceWq8r4t8jYElB9hq0Oj3DfE2VyjIRtYwbhtWXGQmKPWjkNUlUKvcn9nBJZjrfxwtHh/QQAAhS80XRBbeQrxXoNt5bupvfUzAv/7zSe9FEIialR0mQgohjYXGd6BMsHqN+4+5Iqt7EHmBAq0af8/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=mHkbXXkz; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="PM3LVCfo"
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 84D13323999;
-	Wed,  5 Feb 2025 12:05:45 +0000 (UTC)
-Received: from uk-fast-smtpout10.hostinger.io (100-125-6-118.trex-nlb.outbound.svc.cluster.local [100.125.6.118])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id DC9D8323510;
-	Wed,  5 Feb 2025 12:05:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738757145; a=rsa-sha256;
-	cv=none;
-	b=X7Pa9SsGpLkYum3OwWmUsIKX0BrSMTi4QKFYiJRM8qKIE2O/lmhqvBPHjN4pQUsSllLO45
-	GmGR2AQFlFrJyrYxUc5qVFyiuuSt/SOrjPoW5wKm3YYNYW1VByhdsgkwOF3yyksA3NcHBL
-	kRsuZwkgSyWSUY45CKhkQixWLL+sqtjm9pfqHtr7/3xjYOVV+jK6oHup90XIVYd2zt/M+K
-	1ACmZqD5UymvhSnA3sXLtaNXR3XAeONXIs1Yx0oTMPTBnwvqixJAFJaNizgxjOyZumXFvZ
-	c8d2C8rLyNhDMUqhOJfedLFT+KpYm8pWw4Zy2syBKVVd6ZkxT1NMJHhXTjqdLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738757145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=Z1U0Xh8r2sAEGksth46gKm60Xdy2Owbvni8DC6du3+E=;
-	b=QKqNxd+QxscV9M/e+8alCKAoTrBY0G5zNqUvjjSKxhBpErbEetgPyLcUt1eixvMiBR0lfm
-	j6sH6w0Ga5jSxwf0Wqmi6NxDCcf8neECYFz8uIrnAuc0CkqWD9ehro0QnuHGW9YGx4QtNG
-	tVbO81ngCOObkLDilfcmQJBJ8Qbs8gTyB+SceUw6CyIWLXsHggj1pz/bptzraR0XNxlucx
-	3wRlpKVC6j8cwg+ZY/7+QZHLCyKHr5T/TerzXEo1u1csxNQ5v/CFzEJ9mho8uev11q1fsH
-	ugNjR2VepRM4ZcQmQgsAtoCoNv+Jdb3D0v0Ay9Hjl0zJApv+M2sYzx3pbu9BNw==
-ARC-Authentication-Results: i=1;
-	rspamd-854f7f575d-4l9h2;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
-X-MailChannels-Auth-Id: hostingeremail
-X-Bitter-Trail: 61e7d66d49c260da_1738757145282_248120685
-X-MC-Loop-Signature: 1738757145282:3145241845
-X-MC-Ingress-Time: 1738757145281
-Received: from uk-fast-smtpout10.hostinger.io (uk-fast-smtpout10.hostinger.io
- [145.14.155.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.125.6.118 (trex/7.0.2);
-	Wed, 05 Feb 2025 12:05:45 +0000
-From: albankurti <kurti@invicto.ai>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
-	s=hostingermail-a; t=1738757141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Z1U0Xh8r2sAEGksth46gKm60Xdy2Owbvni8DC6du3+E=;
-	b=PM3LVCfo0FMaVKlqYetnMfN1sZi0IrLSACx8/zsgYF0fBMQrRAwQ23mnqtgCETeW+Z1hD4
-	AwHFhAFhFpK4vhnIqKICTD6pq4lfsBwQT1zIKNLBX+0t8phWLxFrKUNwbde03WqudLuRwq
-	/Sc7DOgojR8E9fvmrT5eT+QTsnBDmnvDajpnAPmYfCnAa54HGdVn+YIj9qShNiiItGDI1e
-	9+BeOMujBmeaVv5m1E2li8BKCxD5HfoIKW/CtDPM8NMEeBVtV7MILykjNmnju4x7G2Gg6e
-	IjD6X5EJq9NQ+rgdTrfVGR7MsiOZlML8B0M/xP1xdhsNALxYJdXabDIppHvmBQ==
-To: Joe Perches <joe@perches.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Charalampos Mitrodimas <charmitro@posteo.net>,
-	Alban Kurti <kurti@invicto.ai>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: [PATCH v2 1/1] checkpatch: strip comments fix
-Message-ID: <20250205120540.387447-1-kurti@invicto.ai>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="mHkbXXkz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1738757193; x=1739361993; i=ps.report@gmx.net;
+	bh=dnTeU+z2cXOaBIAYpMXZCpU4QPCN35HyNl14tHHflaY=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=mHkbXXkzg+e2vfh+vudSJJbn1FW0aFHHIZT45Shmuf8/mKnScem8ptAwNNHFG+8+
+	 g2kx6qXWkIDcW+HK+5nPbAYvrZVkZ9P16QklVUCGVt3CxnHunLyl2yoIOwG0FFt5k
+	 ibdKM+ZFj570TEUo963BoRNOS2UWv+kBmECmI7hmr8KYkBeUJlaPlA7JzQRjIc91q
+	 Fma/hTe9SYv0O0eqzFGcXFSajsgas58spBExqeFuDdM0LTKqZ19wc+GqbDz2VXbWb
+	 QEelVwTybcCw+ejyv7uSMUlrEfO8Ba+tLhURzVBcSVZCuQy+4ihXfcvND3W5Lcm9u
+	 NI1+PERFzjJ5dPZjeA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([82.135.81.162]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MLR1f-1twM4x4A0x-00S3Dp; Wed, 05
+ Feb 2025 13:06:33 +0100
+Date: Wed, 5 Feb 2025 13:06:29 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Brauner <christian@brauner.io>, Shuah Khan <shuah@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan
+ <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Sang
+ <oliver.sang@intel.com>, John Hubbard <jhubbard@nvidia.com>, Tejun Heo
+ <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny
+ <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt
+ <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v7 2/6] selftests/pidfd: add missing system header
+ imcludes to pidfd tests
+Message-ID: <20250205130629.27f142ac@gmx.net>
+In-Reply-To: <fab8843ea8664b5089f95ccfdcfd5bd7a5a6bb0b.1738268370.git.lorenzo.stoakes@oracle.com>
+References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+	<fab8843ea8664b5089f95ccfdcfd5bd7a5a6bb0b.1738268370.git.lorenzo.stoakes@oracle.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Date: Wed, 05 Feb 2025 12:05:41 +0000 (UTC)
-X-CM-Analysis: v=2.4 cv=TtS0hyXh c=1 sm=1 tr=0 ts=67a35415 a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=n_Y5cSvsXr9sHqn1BKgA:9
-X-CM-Envelope: MS4xfLfvwmOMryI8TtL4XBuQfxCZgpj+zHvTAhNtmEbTj86H76nnbA2kPDfCxuKxnIJi7E1elsxAOp5yG42vW3+OU5H0AZbkzL0QDDRGnp5Cre7wcjhALBON 6SIFFj0FzkUohXrSvYf3/kBX9xMNPYRd1w2e3ItziCL+scfJ/UeLL0Cu1V+5rARMNaMJ1JkJoiH6Igmoqv0GEEbRNBi4zMr7hO5LKeI65LgzM5CWU6HUevx4 npSF8sb/29Q8t0iv6XoROrJZVE1gJwmj9fIwR57voyrIuHSKA0mJv22y6R/4XwaDEPBGjA9gtMc3qu1vXnvRzFguDJUZH6Lja4ZSMcgaibbjgeiMrV2ThpJW 1Au0jgoIdr2yaiyvJbJEm4LkEw5eG5UFlvU5yiUG5iyOfnqS78s=
-X-AuthUser: kurti@invicto.ai
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Sst7RsRHsV3XSXWva+R9sBzRXOf+cKr29GPeVlyWflCIPr1Mv0B
+ YJD3+SUEraUULxJTSSxm9qSskCuirm6fhHXIJX01Cm11EhpiiFYwf0BUG5twLqVQwv4SpdY
+ 8B2JK6CN3Shty4XssSU87yCqYYVg9IcBYU54km+g8wUVNl1Af+PBVzU7FN0H7TuZ6hcCqM4
+ d11y3iUu9yP2ZbiM6WOrQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:OPRrfe9o8rE=;iGeCkuX/XV1RdWC6+VU8bfcYZSG
+ iR9SgWnevZlOrD09jXkWNTCNhjNBsngOr6OyQpnXJiuLgGyq6Wh5kHsqg3CtXrCUp/Xhq4Cq1
+ RWeJ7wFeuqyaKGdP8lqNuNzGjMjJTQRHBWXKZ3VixpoY7WMw2whKfSVKQkmTknQPVylmvZSqb
+ pa7ObWcWa1fZiU/A7O3wxwQrfTF5QpYV+KP6fy8YJkUMj65N/kR9TTvi9o31BUWhoQCCAptlL
+ 2xS9GCsE+PA8F1+9c3oRpa/Co6fbB3fiI7KjoDtanRJfhjQxpk04drzv1meRyzXjgJUfRKoR6
+ rovaE2CBlcvl8kq4dMhLSe2xTzeYx3YcjCQ0zoeNNTehkZY58LFc2iPWlsthz2x4hFoj600yq
+ wy0t+JFBfe2la7kj2WolWFL2l00C0S7NU/1fh20F0l40+6irJO1ioCApFJ8ESEGw40RkMqkek
+ +KqRO2ALeMT6ij6xO4l5Zk8PA5qc4ljcbe7XpxY8H98QAM4SroN4rn9tqiD4DiBkEOUEo7fDj
+ mInOnpov6LgPLX6GcTywc/Xf7A56cu72fgWKNcIT6ABo+Xnwy6prbx5vUHjuSK1PJ+tYNVbDT
+ 6G2v8EzF1d2d/z76CszvSvo57EdQJ2ifQAluax3dsvJ7PfKrR+kgYFpdI4/2Wk/h4UUemevBm
+ WXeeNyAzTNlj/mo+644kcLx+TvoqoqFrgrjK/xD6Swt7hG58ZmpTYy6ZuDTuO40UCtAkO8Un5
+ pGzpb1r1dm5Uv2CC+7lf9K9yFUOK2Z4XYDGV9ev7FPKLpqN6CaFdfAMma38cbNutamiYLWnDo
+ G146ENfAz9Ji3u/u9De0J4cbWT/PQeu9P72RnfjYekYZ5yZHeYgH4pHgOpRNyjlHxS7TlK9ej
+ J72aJRfI/QRXvakm2qqaWqoRFvp15TW85heR2mxD/ROuL0fN8VoC2gVE6rFFcXBJlZ0xNy8u1
+ WSAp/I7+URqGIblYZ7B3L+1cYS6JllKVOUBsvNdQMTdWYIDkm5/3D3QV+JTnBJc54cbyb8oxK
+ ziGEKJ8mYaKSVqrtlZcQC+ywS/g6ffoM8zZsBb+k/OeEuFe1G0wgHu0tH+pq6tKRXAFsTYCUh
+ dq9vuDHyx8uL95Wxes87OMQWtR74TYRY1DO8S7IFwyI6Fv8ihz2b32AHY21ERkOQstKZ8xIQV
+ tkl5p1ywtrczf0iKItkkzCru0Toy2+CLBO2nTD3h6H4oEnKCdk7GhVkoc5HI/PRHB60ZSj+qF
+ cLyWcuyAigTMOU78ikjgXYxNQL6rFJUVNNADbcdaKTtYh1Z8X3Z4ldyvpX9ShpGiY+tMl+0ep
+ XhhLNV1wsz5CAu1pg6Dd8r+MbD2dd+A5q14/jGyBJEfWXvPwe8xQztmP7zdWnF6WYkTNn4SzO
+ bxvpdr3suUsPTMuJSjc6QIHTLF+GcggC+vTwBMpgKzav+kHV0K5BA+zOzt
 
-Fixes the false positive warning when there is a comment on a pr_ or
-dev_ log that ends with \n correctly.
-Also contains some improvements on the macro_pattern to make it more
-concise.
+Hello *,
 
-Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1140
-Signed-off-by: albankurti <kurti@invicto.ai>
----
- scripts/checkpatch.pl | 46 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+On Thu, 30 Jan 2025 20:40:27 +0000, Lorenzo Stoakes <lorenzo.stoakes@oracl=
+e.com> wrote:
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9eed3683ad76..3256b5f31835 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3888,6 +3888,52 @@ sub process {
- 			}
- 		}
- 
-+# check for pr_* and dev_* logs without a newline for C and Rust files to avoid missing log messages
-+    my $log_macro_pattern = qr{
-+        \b
-+        (
-+            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
-+          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
-+        )
-+        (!?)
-+        \s*
-+        \(
-+        \s*
-+        "([^"]*)"
-+    }x;
-+
-+    if ($realfile =~ /\.(?:c|h|rs)$/) {
-+        if ($rawline =~ /^\+/) {
-+            my $cleanline = $rawline;
-+
-+            $cleanline =~ s/^[+\s]+//;
-+            $cleanline =~ s/\r?$//;
-+
-+            $cleanline =~ s{/\*.*?\*/}{}g;
-+            $cleanline =~ s{//.*}{}g;
-+
-+            if ($cleanline =~ /$log_macro_pattern/) {
-+                my $macro_call = $1;
-+                my $maybe_excl  = $2;
-+                my $string_arg  = $3;
-+
-+                $string_arg =~ s/\s+$//;
-+                if ($realfile =~ /\.rs$/ && $maybe_excl ne '!') {
-+                    return;
-+                }
-+
-+                if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
-+                    my $lang = ($realfile =~ /\.rs$/) ? "Rust" : "C";
-+                    WARN("${lang}_LOG_NO_NEWLINE",
-+                         "Usage of $macro_call without a trailing newline. Consider adding '\\n'.\n" .
-+                         $herecurr);
-+                }
-+            }
-+        }
-+    }
-+
-+
- # check for .L prefix local symbols in .S files
- 		if ($realfile =~ /\.S$/ &&
- 		    $line =~ /^\+\s*(?:[A-Z]+_)?SYM_[A-Z]+_(?:START|END)(?:_[A-Z_]+)?\s*\(\s*\.L/) {
--- 
-2.48.1
+> The pidfd_fdinfo_test.c and pidfd_setns_test.c tests appear to be missin=
+g
+> fundamental system header imports required to execute correctly. Add the=
+se.
+>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>  tools/testing/selftests/pidfd/pidfd_fdinfo_test.c | 1 +
+>  tools/testing/selftests/pidfd/pidfd_setns_test.c  | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/t=
+esting/selftests/pidfd/pidfd_fdinfo_test.c
+> index f062a986e382..f718aac75068 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+> @@ -13,6 +13,7 @@
+>  #include <syscall.h>
+>  #include <sys/wait.h>
+>  #include <sys/mman.h>
+> +#include <sys/mount.h>
+>
+>  #include "pidfd.h"
+>  #include "../kselftest.h"
+
+Predated patch already available, see
+
+	https://lore.kernel.org/linux-kselftest/20250115105211.390370-1-ps.report=
+@gmx.net/
+
+> diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/te=
+sting/selftests/pidfd/pidfd_setns_test.c
+> index 222f8131283b..a55f6641e0b6 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_setns_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
+> @@ -14,6 +14,7 @@
+>  #include <sys/prctl.h>
+>  #include <sys/wait.h>
+>  #include <unistd.h>
+> +#include <sys/ioctl.h>
+>  #include <sys/socket.h>
+>  #include <sys/stat.h>
+>  #include <linux/ioctl.h>
+
+and predated patch available, see
+
+	https://lore.kernel.org/linux-kselftest/20250115105211.390370-2-ps.report=
+@gmx.net/
+
+Regards,
+Peter
 
