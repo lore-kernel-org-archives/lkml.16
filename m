@@ -1,158 +1,224 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazolkn19010002.outbound.protection.outlook.com [52.103.43.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD712E64A;
-	Wed,  5 Feb 2025 17:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738775804; cv=fail; b=kn5KSw0PN5sO8ubP8csC83psiX+X+e9j1RLMB/g47gj7Cz9rzBDFXy0op2sZzsli3OyeqGhNX30ju2w1X70T7wFcfx+c496OE++Yuyx/UQxuKwgFEYjJ9DBUkXGeUFf99Tb1HTG+UeTebh6xvFfYFPjjEPp39XKY5lJ2hIN6ycM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738775804; c=relaxed/simple;
-	bh=c4quHxGEzPfxGtjtj2300hLgFTOAeHTYEy97krhNFLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=r5GVuXMmAOL0cNyxABjVRIvdrnPbEyKFUO0D7JWrOJw3n0ktWUjOziTmNlYtihQ5/scDHHiYvpo3JY2eTwyu/6LJGArNfeOBBI3pls6irkm9ePaownHb/k4jxmvj+CvRv2iK6gu0EDG+yaM47Vjh85MH72s1O1b6ttr3OtNCFow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=vQ5wotxM; arc=fail smtp.client-ip=52.103.43.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBB14A28;
+	Wed,  5 Feb 2025 17:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738775898; cv=none; b=HEmwJJyQKpsC6ImPucOsJRfbDPW81hN64GPKquTUbsMUg84Y9An0bt4mL+2/LBxjZbZ7nDz2D/VGqTdaTA7R6spUbP+lN4ruYUXFkTNolNWWj8YmSGEvhDop5zP7jRb9m50yQ1AxpD56BJGIJWs4f2zDS3ua38LHWzcEYCNhitg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738775898; c=relaxed/simple;
+	bh=ONGqUG+q+iAhcaE+kEQU8rVHmKl/sHumSQKbml29d3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejBDon4PNcIxjuac8FKAK1sNIAdM6NKYZ2jxTQviuMB5SOH/SnviI8a9cdi9v0XQU18DT7Mb0yi3Q8D6FHIdzl69ZDe51Chyh+vr6C/9Q0T9RFzYft3Ru4LH8dF9qI97OOEstqVhB1QG1Ve8f4/eionZxkQs9q3gO9zVLJnGc/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dm1wONyR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qe0u9+mz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dm1wONyR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qe0u9+mz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="vQ5wotxM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MYJONuO1oZMIQ9nnwrWztQIyYpqL79swIJvxCpTSs/bI14NhMGsVhRkgoq5mbczuK6DdhwURJXZ4+PKAvm3A3kHD9xZl7zVxMJM6dzaW3Hro5y3d/vjh5OR1/4s3hoffPIuYEH89rIACUWpEyLaZOEJoiV437PuGJ+Aj9xpVKY+QPopLAUJcMkyOEcCe6RH9B/Ux68JgL0YFrY1SjFnERDVyCtGlH3dvk0axXqCRw0oEx1SupqGYLKCpz76dg10LWAoGonGnZiZkYX5JtHpWfTWHIn+UuBFjQl7P8oyhDPKcvBixfNfw81zz+CDv0Xh+zM2L8Rs9nFnM9qnTKIzJHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0BUDGG3NtL88Q0s06VhZy4U75tPLmP8bryblliudr0E=;
- b=HnFGJJpp88aVfYM4sqmWCXenaT0FHmlS9S6pkSmE/5tHhf20rzhwJFs5iYJYhIfPZpOrwF4szsqdqGVo60iK6xlCKhRbELIro00khCbupvFgmD5PU/Y8j1nNCvNcT6G42F1P8Eyxif3YMOXNjY770ws8sRfXOfzF43pmzwwfZwUxjWjuHhV0JMUMtTeHFHzANZ82Ujy2o3Yop6pI8pQ633G3+EMubI4Aztbx+aHlEHaEjQqWOAPUDEaYHck/CoUNUQqeufYQiAd/4IhrbwrwqgUVa6s1GjDYyMQAwVM5lKt9Uy3h9gcjD2STbGhJA47URc0lhSuPNOLlVmKhdcOI1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0BUDGG3NtL88Q0s06VhZy4U75tPLmP8bryblliudr0E=;
- b=vQ5wotxM1dZj946IWFDNrksEN6D206CPIy5sxiGgd8y7bW7z8FZZFWLeTZLi75mvDTkUHLAagtcWqjXbLOLhqfWeqFtotDdpw0Z/Uk2ZorpbBgBrdkgqtXyMNaJ24BbaSUYVoAjf0VKk1b7DMBKLo1xH1BJJ3E18cF6XPpUxgGnsLwY6oHGIJrnag8+p6jVaxGnCTcj63Z+dPiO30EoyR0ilZlb/5iH9i+ROxbsxQcfF4G40UYLVpsVoE8NVKQ7MSPpZcaaHc9CHcbsLWPRkI/oCKGbmtVLrud0p9HGa+tII11Ihg/kluUmIaUXp8lFnxEsRD4++tAVxK3A/Yy27cg==
-Received: from TYCPR01MB8437.jpnprd01.prod.outlook.com (2603:1096:400:156::5)
- by TYRPR01MB12364.jpnprd01.prod.outlook.com (2603:1096:405:103::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Wed, 5 Feb
- 2025 17:16:38 +0000
-Received: from TYCPR01MB8437.jpnprd01.prod.outlook.com
- ([fe80::83e7:751f:f3af:768f]) by TYCPR01MB8437.jpnprd01.prod.outlook.com
- ([fe80::83e7:751f:f3af:768f%5]) with mapi id 15.20.8422.010; Wed, 5 Feb 2025
- 17:16:38 +0000
-From: Shengyu Qu <wiagn233@outlook.com>
-To: conor@kernel.org,
-	kernel@esmil.dk,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dm1wONyR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qe0u9+mz";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dm1wONyR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qe0u9+mz"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A7CC210FE;
+	Wed,  5 Feb 2025 17:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738775892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo14i3mbFWnpu54jM3LqG6e6R4TGD7KmRtaY3I7jXs8=;
+	b=dm1wONyR+iP1q77v/HJHFPAwm+Dqp/ihbCCT6pIwMjyPkPiVVyCqR3L7i5ys+HaCknKHt+
+	5YFmJueFz9jpLSCryzYmeBwM68M5e+25VvC1s7qADfWbJkRzdBF333Sah9Hmr+t47pmh8q
+	VzgikRke2dm97d84SFviS5Szb90bGi8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738775892;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo14i3mbFWnpu54jM3LqG6e6R4TGD7KmRtaY3I7jXs8=;
+	b=qe0u9+mzjr/y/H66dK63o9T34yHmCE0eSbAAHakUFPh5PLsSGqSWpd61dXLIddZkvMz/Lv
+	i9yFvQXZG68lNoDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738775892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo14i3mbFWnpu54jM3LqG6e6R4TGD7KmRtaY3I7jXs8=;
+	b=dm1wONyR+iP1q77v/HJHFPAwm+Dqp/ihbCCT6pIwMjyPkPiVVyCqR3L7i5ys+HaCknKHt+
+	5YFmJueFz9jpLSCryzYmeBwM68M5e+25VvC1s7qADfWbJkRzdBF333Sah9Hmr+t47pmh8q
+	VzgikRke2dm97d84SFviS5Szb90bGi8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738775892;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo14i3mbFWnpu54jM3LqG6e6R4TGD7KmRtaY3I7jXs8=;
+	b=qe0u9+mzjr/y/H66dK63o9T34yHmCE0eSbAAHakUFPh5PLsSGqSWpd61dXLIddZkvMz/Lv
+	i9yFvQXZG68lNoDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3242D139D8;
+	Wed,  5 Feb 2025 17:18:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RY1ADFSdo2cyRgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 05 Feb 2025 17:18:12 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 9C4D0A28E9; Wed,  5 Feb 2025 18:18:11 +0100 (CET)
+Date: Wed, 5 Feb 2025 18:18:11 +0100
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Cc: Shengyu Qu <wiagn233@outlook.com>
-Subject: [PATCH v1] riscv: dts: starfive: Unify regulator naming scheme
-Date: Thu,  6 Feb 2025 01:16:35 +0800
-Message-ID:
- <TYCPR01MB8437F6FCD14E116B6CBBA09098F72@TYCPR01MB8437.jpnprd01.prod.outlook.com>
-X-Mailer: git-send-email 2.48.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0215.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3c5::6) To TYCPR01MB8437.jpnprd01.prod.outlook.com
- (2603:1096:400:156::5)
-X-Microsoft-Original-Message-ID: <20250205171635.7310-1-wiagn233@outlook.com>
+Subject: Re: [PATCH] statmount: add a new supported_mask field
+Message-ID: <zktqtjenvyte5mr24pr2bt56jekqpwzmmz2qpdwplvxumolsad@mze4l37nqorr>
+References: <20250203-statmount-v1-1-871fa7e61f69@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB8437:EE_|TYRPR01MB12364:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8b2740b-ce4d-4cf8-0ea2-08dd4608d9ad
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|19110799003|7092599003|15080799006|5062599005|461199028|8060799006|5072599009|440099028|3412199025|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4y5ouRzWp1+tPIAjERG6xRHGZENe8BNM0Nvnq8R1vf1+wwPd7R+DGHgksm/s?=
- =?us-ascii?Q?Etq5g5AjEFU6dSqCu16nODCZyjsd4ITtI8i8+ZoNNlJvZMUA7FDXkjLtdkPD?=
- =?us-ascii?Q?TC4N1t/Rf5QbaCOwhOTdfVQDtuA934v1gPcrXe7hk8jrPv8A/t80wqQtQkOv?=
- =?us-ascii?Q?ax9dJIz3u1w1xEHJvFogrC/KxyxonSLJrhLdFPP30ZuEG3VwPhpGsF/No6os?=
- =?us-ascii?Q?qPR79EtyY30LzrHO0GOOTItphSG780DzrmxQhPwjf3zCVs7Rq9nZ3qUDrlGa?=
- =?us-ascii?Q?sZAFu/0NJky0yvW4tSCF7cvRm0GbAdd41dvtCpTaaTz2KNNBPn+UeGKOoIFf?=
- =?us-ascii?Q?Kxh5rkEPZqWw0jmDOPwqeRpKNPm7uC5z3MIF0N81uNrJ2cwIjBwMxXqXigkW?=
- =?us-ascii?Q?ct0EqLbx+eyXPPbuFWF9NSmyjAYRLVI9AxLFu5RjMlmi18al6tkYHINAWhbL?=
- =?us-ascii?Q?nyuGRRxKhVN2Wc/E91YzXD9aXCBo3iPvqudctrsXBkt50SScT80ixVEIbYMr?=
- =?us-ascii?Q?E69XqxvDPmEiWAVIvDUlD+T3CWo9OkJ9G7D2jIhp+PyA4AZo1jcBpgNFGX/t?=
- =?us-ascii?Q?B/snUb6A70TSc+hNEylCfnrip+Y2LokF2nzwjNi8ZfXhQmjH/SBcvLPUxg2t?=
- =?us-ascii?Q?5sD1CC86n0sZGsh7BoTQijpDIQTcl1Y3n/arScOYNuzg9Mctj1Nwwxsi5bvy?=
- =?us-ascii?Q?C6LoW729ufJp7OKEAiei9y1jgQs18wcDjSw68YVbiLnG2N/pTt1qVAn8Px8R?=
- =?us-ascii?Q?nQaR+Z1pLZd73yIFphqL10kE99jf9i/ywupEnOc9/uk0TuIGVFNw+XN6lQoT?=
- =?us-ascii?Q?y97k3DNwk9upn193Uk/0cNI+uYulF66Yeo1tH/hyrLg5YQk9MGZzRQTy8iR4?=
- =?us-ascii?Q?hUNtzeDSUuUImGK8FDmyx4sY7SWo5lMzM0Y8NCoZIZexMs24iCyQEMwIJ5aq?=
- =?us-ascii?Q?KIw/8XbOKa7dahNNQ0dHpnaR+qU+/yxtYWPCWi+UGUWIjMw07uwhfcOCJei6?=
- =?us-ascii?Q?qNNhP8HT5YlhbKelvN7v3DFSzMxOrk75/cjg+ULgeMMoLrRmefSSaAUbOdQU?=
- =?us-ascii?Q?BKfizVqnwFUL56O2o+0WF4wUds5uyPfKsZ1BMRl7jtazn4lbFfezdUUq6Rws?=
- =?us-ascii?Q?yns4s7uGI9n2?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?c6sCG8YTP1kGuZBYl6/jmfjQC5hp+efeKb64bB1xoRIbsIsQ46dDYchuntMO?=
- =?us-ascii?Q?+DOt6lYuhRpCOLUyR79TVSlMsBVys00D/IP1372mWSHoPQI3xmAdTbkbglAv?=
- =?us-ascii?Q?qnG+s7ADcsGqhJ+kiY0/WKZ663zSYgHJqSsK+remtu3sFfJcCX9fOa0loH0z?=
- =?us-ascii?Q?wlIUHVlmS/2Vvy1RtCiWwgd6MMud6kibIqHguGMMtATkizC8fcyrCKCN/aUq?=
- =?us-ascii?Q?u1JDh/ZstQqSRtvbqw426l7Lb5FZ6UK8j6qaTsnGiUpbe/jhYFTlgLOkOiQ4?=
- =?us-ascii?Q?zsqGln+Pn4Zk2WJYNCidirXlyKa1Ce3bgKCRqP2US/jJhzL6C1dS8v2iLQmR?=
- =?us-ascii?Q?vUjT46aJ0KfsDPco/oGixoDhcaR/MjVAHBBJo/vEHnQ6aMmbUuSB95TCCZED?=
- =?us-ascii?Q?N1QBROsznQ/ARiMyZPCaJnY2RNij1dn2PyR7aY72eTvC0vpjVJqKcYYDUNKe?=
- =?us-ascii?Q?9nOrt6u5r7vr7HEVssHp5fk+KgycmJTiLl6jSLaSCrygsQSZzxff7Ah8ovir?=
- =?us-ascii?Q?BAjqJxCWWKAJjP+MMGjEVK7qAZ3WLVA7pFlNOi7cBA1Fcb8AR3TfwZYGXHez?=
- =?us-ascii?Q?jBs3FbGcizsxCXyeBgqU+Qw8C8HLqqtzPz2vRyOp6uo91Bl3bdbEgLv5wTG+?=
- =?us-ascii?Q?UrqbO3v68VtTyX3oD1B7mMTrCiTLL1P7mCjWtGrPJhvXfN7TlfZ2MWCTFbEr?=
- =?us-ascii?Q?+WWxRWpOI1Dc9a4gRDATZuoDj1RFc+fK2qgIjUNja9eBCn5S4YFjXSA115UJ?=
- =?us-ascii?Q?wFAZRsmJq3d1Ws4kn63rkBJPq/l/JLUymZz1WF3uLjWfLkpksjMFPKdzi+JA?=
- =?us-ascii?Q?DIv0aO/4TpXpI4xOQ6MrcH+O2ByvKLRGZ587VChoYYIRGRjSqHVuwoo/QqBn?=
- =?us-ascii?Q?hDsQQbZkPGnKVfA9zVqWQmXKU65WVdFe5o24W/uSTCSfYJ7gfxY8VCZwRgQR?=
- =?us-ascii?Q?YriaYITDJVes2FE+bgliVQm8jk307trCOguunLdp7//id5mQWYpHRhHcqFF2?=
- =?us-ascii?Q?91q1GgdGx4pPrWsq2gonsMNrrMpFkdSR4QNiD1LiLwkORWtCBTFbE40qkD1I?=
- =?us-ascii?Q?Agx3NpFV1WuTycVt1NVA95UgPs08yPGj4pqto6+1fpSuY3mSa8zDiAV+QkJx?=
- =?us-ascii?Q?hF7WlhrcvKDn126FmVEI9hkhUaekQmP9HW+VbaN8RNe75lcadrk6wWJCSwwI?=
- =?us-ascii?Q?tQPw+mIbKlxJG2XDhvIXBlPUDMJU6Y7M3z3CAKKj2F4QxPK8JqlPkj3wosU4?=
- =?us-ascii?Q?UCp1DYE5pzjFH+KsdgEHPGxL5Y4oQzx3sdgBuaq6g5DxUjv/tCdWf7DBVjc3?=
- =?us-ascii?Q?zwo=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8b2740b-ce4d-4cf8-0ea2-08dd4608d9ad
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB8437.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 17:16:38.3836
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB12364
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203-statmount-v1-1-871fa7e61f69@kernel.org>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Currently, there are 3 regulators defined in JH7110's common device tree,
-but regulator names are mixed with "-" and "_". So unify them to "_",
-which is more often to be seen in other dts files.
+On Mon 03-02-25 12:09:48, Jeff Layton wrote:
+> Some of the fields in the statmount() reply can be optional. If the
+> kernel has nothing to emit in that field, then it doesn't set the flag
+> in the reply. This presents a problem: There is currently no way to
+> know what mask flags the kernel supports since you can't always count on
+> them being in the reply.
+> 
+> Add a new STATMOUNT_SUPPORTED_MASK flag and field that the kernel can
+> set in the reply. Userland can use this to determine if the fields it
+> requires from the kernel are supported. This also gives us a way to
+> deprecate fields in the future, if that should become necessary.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> I ran into this problem recently. We have a variety of kernels running
+> that have varying levels of support of statmount(), and I need to be
+> able to fall back to /proc scraping if support for everything isn't
+> present. This is difficult currently since statmount() doesn't set the
+> flag in the return mask if the field is empty.
+> ---
+>  fs/namespace.c             | 18 ++++++++++++++++++
+>  include/uapi/linux/mount.h |  4 +++-
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index a3ed3f2980cbae6238cda09874e2dac146080eb6..7ec5fc436c4ff300507c4ed71a757f5d75a4d520 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -5317,6 +5317,21 @@ static int grab_requested_root(struct mnt_namespace *ns, struct path *root)
+>  	return 0;
+>  }
+>  
+> +/* This must be updated whenever a new flag is added */
+> +#define STATMOUNT_SUPPORTED (STATMOUNT_SB_BASIC | \
+> +			     STATMOUNT_MNT_BASIC | \
+> +			     STATMOUNT_PROPAGATE_FROM | \
+> +			     STATMOUNT_MNT_ROOT | \
+> +			     STATMOUNT_MNT_POINT | \
+> +			     STATMOUNT_FS_TYPE | \
+> +			     STATMOUNT_MNT_NS_ID | \
+> +			     STATMOUNT_MNT_OPTS | \
+> +			     STATMOUNT_FS_SUBTYPE | \
+> +			     STATMOUNT_SB_SOURCE | \
+> +			     STATMOUNT_OPT_ARRAY | \
+> +			     STATMOUNT_OPT_SEC_ARRAY | \
+> +			     STATMOUNT_SUPPORTED_MASK)
+> +
+>  static int do_statmount(struct kstatmount *s, u64 mnt_id, u64 mnt_ns_id,
+>  			struct mnt_namespace *ns)
+>  {
+> @@ -5386,6 +5401,9 @@ static int do_statmount(struct kstatmount *s, u64 mnt_id, u64 mnt_ns_id,
+>  	if (!err && s->mask & STATMOUNT_MNT_NS_ID)
+>  		statmount_mnt_ns_id(s, ns);
+>  
+> +	if (!err && s->mask & STATMOUNT_SUPPORTED_MASK)
+> +		s->sm.supported_mask = STATMOUNT_SUPPORTED_MASK;
+					^^^^ STATMOUNT_SUPPORTED here?
 
-Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
----
- arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Otherwise the patch looks good to me so with this fixed feel free to add:
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-index 48fb5091b8176..dd2eefc295e5c 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-@@ -233,7 +233,7 @@ vdd_cpu: dcdc2 {
- 				regulator-always-on;
- 				regulator-min-microvolt = <500000>;
- 				regulator-max-microvolt = <1540000>;
--				regulator-name = "vdd-cpu";
-+				regulator-name = "vdd_cpu";
- 			};
- 
- 			emmc_vdd: aldo4 {
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+We could possibly also add:
+	WARN_ON_ONCE(~s->sm.supported_mask & s->sm.mask);
+
+to catch when we return feature that's not in supported mask. But maybe
+that's a paranoia :).
+
+
+								Honza
+
+
+> +
+>  	if (err)
+>  		return err;
+>  
+> diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+> index c07008816acae89cbea3087caf50d537d4e78298..c553dc4ba68407ee38c27238e9bdec2ebf5e2457 100644
+> --- a/include/uapi/linux/mount.h
+> +++ b/include/uapi/linux/mount.h
+> @@ -179,7 +179,8 @@ struct statmount {
+>  	__u32 opt_array;	/* [str] Array of nul terminated fs options */
+>  	__u32 opt_sec_num;	/* Number of security options */
+>  	__u32 opt_sec_array;	/* [str] Array of nul terminated security options */
+> -	__u64 __spare2[46];
+> +	__u64 supported_mask;	/* Mask flags that this kernel supports */
+> +	__u64 __spare2[45];
+>  	char str[];		/* Variable size part containing strings */
+>  };
+>  
+> @@ -217,6 +218,7 @@ struct mnt_id_req {
+>  #define STATMOUNT_SB_SOURCE		0x00000200U	/* Want/got sb_source */
+>  #define STATMOUNT_OPT_ARRAY		0x00000400U	/* Want/got opt_... */
+>  #define STATMOUNT_OPT_SEC_ARRAY		0x00000800U	/* Want/got opt_sec... */
+> +#define STATMOUNT_SUPPORTED_MASK	0x00001000U	/* Want/got supported mask flags */
+>  
+>  /*
+>   * Special @mnt_id values that can be passed to listmount
+> 
+> ---
+> base-commit: 57c64cb6ddfb6c79a6c3fc2e434303c40f700964
+> change-id: 20250203-statmount-f7da9bec0f23
+> 
+> Best regards,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
 -- 
-2.48.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
