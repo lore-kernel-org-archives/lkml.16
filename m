@@ -1,85 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795B5151987;
-	Wed,  5 Feb 2025 12:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032A7151987;
+	Wed,  5 Feb 2025 12:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759017; cv=none; b=FNN0rZA+lUPvrR5Gv082Kmw9h0qTlceVbCOBHOcTks/eLdaY4UVCIyBt6LAce+VQnwbynKLpMqTGID3FPD1VT/V5BinV4r253BacfmRruS91whm9EDLZsoCGSjVLD6zCD4EK5jUAmZLOpy1FllkpT3sXmKtWai4ZSV979ExsTfc=
+	t=1738759095; cv=none; b=ewib7a0Z8Ijd69nmBrVUS0Y/2fBZo1w4bGPdKHkuMjwA81z3GMkOulCdak6fIieQVKj7bpSRiMW4S8qMNH2hkzlmN3I8N5/ZkJByAvNH/Qa7/3B8n78WTVIKVhW2w0MTFOk3I8T1q4iow30Zn2oqWqZpOJZgfrBqlImuyvVOl8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759017; c=relaxed/simple;
-	bh=bT13ceI3nBdf366hlvkA+wI359VrXnZYEbnwGN3H3B4=;
+	s=arc-20240116; t=1738759095; c=relaxed/simple;
+	bh=yVkYzT9iu21XdX/Wk9cBe9rcgtxJMysjII2zPq3PAAI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pkd5fbPEihO/a9omfey7OO9iYTUiuEjr5i5DHU89I/Iyd613lIkdbZy1+QwyP3Iaj7Jvcgx0Ey9MzMjE3Idm2sR4B02+glwRRDCzPjOLIbgXEmXXVIil2pLC+aLHsYrBzocxh3ZFaocV870L4/7rlnKlvYjIK3SLK217qb6gruA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHd0rkUa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=txjTRQTLSOBo94KatmpupfqXafDxT/xAE7MWqMLQ8YCIsEX/yZqLL/wn+u6jjhz2NxraFcp219UcmvO1qkCwM0EH5dkfkb1KdXjQXPaTby6MfGszxOArbXTjgsRI48Et12jsU4AS+uiNje946wJSw/MGqqKwsh8yAp100TxzcmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=JvH8WnzC; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHd0rkUa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53C0AC4CED1;
-	Wed,  5 Feb 2025 12:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738759016;
-	bh=bT13ceI3nBdf366hlvkA+wI359VrXnZYEbnwGN3H3B4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jHd0rkUat8o2yGWTupAAiw2MNyZpiVSZPY4+wqupePCJWnkfoad6RsQR3UFw6OmiF
-	 O/x3S4agJTObZGY99Ivghcy0mLjLm0uZX33AlGivEmLntnVWjI11HSLrCTpuIcmgto
-	 XhSZpVJByGXfvaPvHeGcfDETpAEe/rZ25VD6Fu+98nOc1a5wqMwD5XH/AlQ2iZv3Kq
-	 PHltZ92u2KyvLefpawaYUt3npBaKYKCiqyho5c53uj05YEqRB+/F7HKZJjSKYFb9dC
-	 rDKbFgUoX4t9CvXelPGDq4AErLwseeFUMJ5fv+JJnIr+w1iCZEZwuwHOwG65+Qs7ti
-	 ntXCjoGVOAZEQ==
-Date: Wed, 5 Feb 2025 12:36:52 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/mm: Fix thuge-gen test name uniqueness
-Message-ID: <a4798a92-098d-4c95-86dc-760171365d49@sirena.org.uk>
-References: <20250204-kselftest-mm-fix-dups-v1-1-6afe417ef4bb@kernel.org>
- <2e160343-8420-4f55-86b1-128676cf75d3@arm.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="JvH8WnzC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=7uMFfYO1WmbS/ZVgPPg4SEdKN86zPP893kBz9q+8nj8=; b=JvH8WnzCw23uvFeu
+	OkNSYapNfjAeas0JWasfktf7aBtOBLDlbgM4TVxUWg5eBrAaDPSxcJ96rmFCmpeo45TSnbiH5l31x
+	EofGCQjUa1PbOjRRyyQseEWQuhA5uxuPG5C8Kw9vwQTia+bzo+R5wTcYfgv9yiZHp9cHvdumH0bds
+	fkQWjesOBnclGdxqME/wshVOtHr50dpHTr8RX601myp/knpKrru/qFpuSLMWGnx6kLQVoK2lbZQaK
+	A/z0UK6HM0y86mB4HDG00j46Gqf5KDdPcW9cANsdedAnatnGoNhMFLSLofskWpNUUpQF1dqGO0k7g
+	UuIJd2oMpnAl6OfClg==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tfefP-00DjlZ-2Z;
+	Wed, 05 Feb 2025 12:38:07 +0000
+Date: Wed, 5 Feb 2025 12:38:07 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: max98095: Remove unused max98095_jack_detect
+Message-ID: <Z6Nbr4XIN421orTF@gallifrey>
+References: <20250205014458.486207-1-linux@treblig.org>
+ <dc0bc826-6105-49f1-8a59-bb4881e9143e@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1mL/Scwyn0KiF9/v"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <2e160343-8420-4f55-86b1-128676cf75d3@arm.com>
-X-Cookie: Earth is a beta site.
+In-Reply-To: <dc0bc826-6105-49f1-8a59-bb4881e9143e@sirena.org.uk>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 12:37:36 up 272 days, 23:51,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
+* Mark Brown (broonie@kernel.org) wrote:
+> On Wed, Feb 05, 2025 at 01:44:58AM +0000, linux@treblig.org wrote:
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > max98095_jack_detect() was added in 2012 as part of
+> > commit 9dd90c5db040 ("ASoC: max98095: add jack detection")
+> > but hasn't been used.
+> > 
+> > Remove it.
+> 
+> > -	max98095_report_jack(client->irq, component);
+> > -	return 0;
+> > -}
+> > -EXPORT_SYMBOL_GPL(max98095_jack_detect);
+> 
+> No, this is exported for machine drivers which might not be in tree.
 
---1mL/Scwyn0KiF9/v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah OK; of course it would be nice if they were in the tree.
 
-On Wed, Feb 05, 2025 at 08:22:04AM +0530, Anshuman Khandual wrote:
-> On 2/5/25 04:23, Mark Brown wrote:
+Thanks,
 
-> > Fixes: b38bd9b2c448 ("selftests/mm: thuge-gen: conform to TAP format output")
-
-> Just wondering how this fixes anything ? This seems like an improvement to
-> the current behaviour.
-
-My test automation was getting pretty confused about what was going on
-so I'd say so - the test names are a pretty important external
-interface.
-
---1mL/Scwyn0KiF9/v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmejW2MACgkQJNaLcl1U
-h9Dozwf/XUDm+mbCcPeu3uNyCi/BytEd7NKmO1kyTYc/v6fF65OJB7jD9HfPQlzB
-mD06VAQ110zk+dnkvdpkEw2qB9jgOldkuoSySBVfaDTzt7YSk6HRnR3GzXsX4ExQ
-Y5ej9j0TcSFPFjw9zw39iC+t7E7mAm8gTYTpLjnZdGHbWM1REzIrdR3rNqrPVmVv
-NIAxtDY8f4+tUyBG22wKI70spNBz5nG1H+IwZQrpltxT9XNI4uf45o3gvryIOr06
-psSzIRnOrY56eKyAU8xZc9H1/aU70zHODKIgHyn3nGmoZ9wWkb9A5da7+lSlxlYK
-ii+dFyrxJDo7gCSvB+pTji28aOMKDA==
-=gvhZ
------END PGP SIGNATURE-----
-
---1mL/Scwyn0KiF9/v--
+Dave
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
