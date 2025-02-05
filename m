@@ -1,260 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF84D20CCD8;
-	Wed,  5 Feb 2025 20:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2028211A1E;
+	Wed,  5 Feb 2025 20:14:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786425; cv=none; b=MW2iWvf5wZHPALmpYTdxCtLMEwj1xYoOvXe143o5dRJs5ffIJH/wKH1NRx8UdL4eswj0C7GKh5WYVtpsNXqR158rba+HcsE8I/vwODVt/dKvEr7FSsi6JwjtwdpbqkShAxc6CtN3/ml2ZD6yIwYBWdaaNUOCeO7VInckWtv48DE=
+	t=1738786445; cv=none; b=B92v3fNl63sXqG3gN8/b9M+7UAjJZQ+jo+lITBZHEaHdjJFTc0h5d7sy3qb0xpniQGA+Ws6S7+4yC4pCUbg5nnbe89TI21XJ1abtn/cqjsIivENgjLcGQmWrgaiPf0tk70f3B7iU/OX4EBpep9rO2qgGEJHJbLVmgrF5dp+BxW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786425; c=relaxed/simple;
-	bh=1CURjxvGpOcq0l0S3rQd84eQvou3qxXxl/wRhILguLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=njiwVu7b8JSL8s9TJ82QUX0hiQ+gIpKghs48vBWTKBSmLBSA7cu1EbznUoOTepYz546HcMCfEUjm7MNVODOkD8ncV+kUh2eTGh831VDX2HTXN/WAmEgnW/mTEClsqT6awjOvhG4E6bOJSgwH573h46/46+n4C8bQwbz+YVFB0uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqAh8nOr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738786445; c=relaxed/simple;
+	bh=/Wub+YrcYQhT3DJInKawKPxJJIQyMqOWirwYBaVx8ao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MPsbi0XMKvnjkgNroGwj06JjDhlzh2YasgysSkU17xHPjGeKw3ylmdd7xekYvv8N9PNX+eF0PFIOH7ImPzGb2fV7InbmrgCJrjnvyAlruj1UgHHTxKy1IcqtXW1h497Bv+NLdVcsXXUltvt01SdfzI4hvf9retTHkjQiOg6ft3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKPsZqO5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqAh8nOr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B12C4CED1;
-	Wed,  5 Feb 2025 20:13:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKPsZqO5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A985C4CED1;
+	Wed,  5 Feb 2025 20:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738786423;
-	bh=1CURjxvGpOcq0l0S3rQd84eQvou3qxXxl/wRhILguLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NqAh8nOr1g8nY8YG8pspbysjsO68k/ycYNvavj4L4GvshSPHpv0p7jV3jEXAjn1Gu
-	 DhYsU/NRjA7zhSG++fru/98hlQFb0po7dRaD3+lRiO/Cf4q/Vt7QFg89jV8kBi4sdS
-	 S2gZa+ChhZ70TVUERQDV7NJLjgFZef7mtI0LnkpIOd0JXTZOHiu4/5YvO3ytVa8yWq
-	 lelre2xbbKgQom3dfvtxxbnGUpo2h5QGpmwRFz9OFJjaOmR4rY6Ao4+ytcJfQa8uhC
-	 GNhsSkUXmNSIH1EwNZTKN6KNup1KttUlqGQJUbdzdFRnytOmo/oi668qSUZrv1jia5
-	 ms446XWhwtMBw==
-Date: Wed, 5 Feb 2025 20:13:39 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Naresh Solanki <naresh.solanki@9elements.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, broonie@kernel.org,
-	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ir38060: Move & update dt binding
-Message-ID: <20250205-purge-debating-21273d3b0f40@spud>
-References: <20250204180306.2755444-1-naresh.solanki@9elements.com>
- <20250204-mulled-evaluate-8a690cdfbd4d@spud>
- <CABqG17jHKfwJEfZxto_YA4opS8=QwqTqfNdkku8kcEv2_iW+XA@mail.gmail.com>
+	s=k20201202; t=1738786444;
+	bh=/Wub+YrcYQhT3DJInKawKPxJJIQyMqOWirwYBaVx8ao=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dKPsZqO5cq0khZ9H9F2rwcbWZV/OYzUgXTeIo7VuNplnN0FfodX4g/RpST8NnJdCB
+	 AOFHPaTUgn2KWqGP7ErYwLcisZd/n8zdrG8PY+UAG5/C0Y1YMA5XccWqzp4n/IRp5M
+	 eG6Pzj44acxPf41cXJLWmPLCTjlcfGJ97KXMfqFQz3e8XNmG9fSbrScKld5t9HdG+O
+	 RkU3S7cvzd4i9/iWDay8fj+qd8CrMdw9ro7pF7od1CzYOwgST2ZLhPm/Qr7ymTlXcu
+	 ZwBgaz22VlMvvG4elENSzwbDdlGuPxzl2866GDx+DXXW1kmx8x/uV34ZD+ifP1wSX5
+	 7GcI9K1zG9mHA==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3eba50d6da7so66893b6e.2;
+        Wed, 05 Feb 2025 12:14:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUj3YWN/QruBzGwv7ROd9n99P7Wskrsz+uvypnCKU67dO8MCOGr8uDEwHSI/mlPAqlXUlHC+kZLOSML@vger.kernel.org, AJvYcCVjC9trqjwH0B6lMcpyo7HosLH2u4Cx1gujeIgkGeCtt9CjKJHy+sqFHJ2YjnoHslu+BaKQKU4iG3pLBxKi@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTpULX6AY0/MNpKmmkCXhoXgeSXC20N8ur7C9tYlUXELlnyRp6
+	PuZYoaLqcXbsDveht9n7gAuZJSbHvgrxbZMjrh4uZHVJ4L86moyRZ2KIYX0B0Vii7UaVMwUO+h5
+	KLsTVawLTI/tsPQ8ryyBXb73Ws2s=
+X-Google-Smtp-Source: AGHT+IGJEq/npDc6Y6YsYNNv8WHDDkC7T8jyksL8z/E/YUvQJ4sgVEyOUiC+BZcR2/jeZ0MPcjzvUqZNT/HMGqir9Cs=
+X-Received: by 2002:a05:6808:bc8:b0:3f3:3331:96f2 with SMTP id
+ 5614622812f47-3f37c1531aamr2843197b6e.22.1738786443690; Wed, 05 Feb 2025
+ 12:14:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UTue3Icjn2CmfZ6o"
-Content-Disposition: inline
-In-Reply-To: <CABqG17jHKfwJEfZxto_YA4opS8=QwqTqfNdkku8kcEv2_iW+XA@mail.gmail.com>
-
-
---UTue3Icjn2CmfZ6o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250127093902.328361-1-gannon.kolding@gmail.com>
+In-Reply-To: <20250127093902.328361-1-gannon.kolding@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 5 Feb 2025 21:13:52 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gvSY+4Hdoedo0Hm6Rap_1kig1z0G0NuYcEKBsLPsMo8Q@mail.gmail.com>
+X-Gm-Features: AWEUYZkovbgRPGTxE5riochLatWY89A6pEh4qL3RakCvjeNFKH0W5Y-ssDE9C2I
+Message-ID: <CAJZ5v0gvSY+4Hdoedo0Hm6Rap_1kig1z0G0NuYcEKBsLPsMo8Q@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: resource: IRQ override for Eluktronics MECH-17
+To: Gannon Kolding <gannon.kolding@gmail.com>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 03:51:25PM +0530, Naresh Solanki wrote:
-> On Wed, 5 Feb 2025 at 00:52, Conor Dooley <conor@kernel.org> wrote:
-> > On Tue, Feb 04, 2025 at 11:33:03PM +0530, Naresh Solanki wrote:
-> > > Move dt binding under hwmon/pmbus & align accordingly.
-> > >
-> > > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> > > ---
-> > >  .../hwmon/pmbus/infineon,ir38060.yaml         | 61 +++++++++++++++++=
-++
-> > >  .../bindings/regulator/infineon,ir38060.yaml  | 45 --------------
-> > >  2 files changed, 61 insertions(+), 45 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/inf=
-ineon,ir38060.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/regulator/infin=
-eon,ir38060.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/infineon,i=
-r38060.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir3806=
-0.yaml
-> > > new file mode 100644
-> > > index 000000000000..e1f683846a54
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.=
-yaml
-> > > @@ -0,0 +1,61 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/hwmon/pmbus/infineon,ir38060.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Infineon Buck Regulators with PMBUS interfaces
-> > > +
-> > > +maintainers:
-> > > +  - Not Me.
-> >
-> > How the hell did this get merged!
-> >
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - infineon,ir38060
-> > > +      - infineon,ir38064
-> > > +      - infineon,ir38164
-> > > +      - infineon,ir38263
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  regulators:
-> > > +    type: object
-> > > +    description:
-> > > +      list of regulators provided by this controller.
-> >
-> > Can you explain why this change is justified? Your commit message is
-> > explaining what you're doing but not why it's okay to do.
+On Mon, Jan 27, 2025 at 10:39=E2=80=AFAM Gannon Kolding
+<gannon.kolding@gmail.com> wrote:
+>
+> The Eluktronics MECH-17 (GM7RG7N) needs IRQ overriding for the
+> keyboard to work. Adding a DMI_MATCH entry for this laptop model
+> makes the internal keyboard function normally.
+>
+> Signed-off-by: Gannon Kolding <gannon.kolding@gmail.com>
+> ---
+>  drivers/acpi/resource.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 90aaec923889..b4cd14e7fa76 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -563,6 +563,12 @@ static const struct dmi_system_id irq1_edge_low_forc=
+e_override[] =3D {
+>                         DMI_MATCH(DMI_BOARD_NAME, "RP-15"),
+>                 },
+>         },
+> +       {
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Eluktronics Inc."),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "MECH-17"),
+> +               },
+> +       },
+>         {
+>                 /* TongFang GM6XGxX/TUXEDO Stellaris 16 Gen5 AMD */
+>                 .matches =3D {
+> --
 
-> This is based on other similar dt-bindings under hwmon/pmbus.
-
-Okay, but what I am looking for is an explanation of why it is okay to
-change the node from
-
-| regulator@34 {
-|   compatible =3D "infineon,ir38060";
-|   reg =3D <0x34>;
-|=20
-|   regulator-min-microvolt =3D <437500>;
-|   regulator-max-microvolt =3D <1387500>;
-| };
-
-to
-
-| regulator@34 {
-|     compatible =3D "infineon,ir38060";
-|     reg =3D <0x34>;
-|=20
-|     regulators {
-|         vout {
-|             regulator-name =3D "p5v_aux";
-|             regulator-min-microvolt =3D <437500>;
-|             regulator-max-microvolt =3D <1387500>;
-|         };
-|     };
-
-?
-
-Will the driver handle both of these identically? Is backwards
-compatibility with the old format maintained? Was the original format
-wrong and does not work? Why is a list of regulators needed when the
-device only provides one?
-
-Cheers,
-Conor.
-
-> > > +    properties:
-> > > +      vout:
-> > > +        $ref: /schemas/regulator/regulator.yaml#
-> > > +        type: object
-> > > +
-> > > +        unevaluatedProperties: false
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +
-> > > +unevaluatedProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    i2c {
-> > > +        #address-cells =3D <1>;
-> > > +        #size-cells =3D <0>;
-> > > +
-> > > +        regulator@34 {
-> > > +            compatible =3D "infineon,ir38060";
-> > > +            reg =3D <0x34>;
-> > > +
-> > > +            regulators {
-> > > +                vout {
-> > > +                    regulator-name =3D "p5v_aux";
-> > > +                    regulator-min-microvolt =3D <437500>;
-> > > +                    regulator-max-microvolt =3D <1387500>;
-> > > +                };
-> > > +            };
-> > > +        };
-> > > +    };
-> > > diff --git a/Documentation/devicetree/bindings/regulator/infineon,ir3=
-8060.yaml b/Documentation/devicetree/bindings/regulator/infineon,ir38060.ya=
-ml
-> > > deleted file mode 100644
-> > > index e6ffbc2a2298..000000000000
-> > > --- a/Documentation/devicetree/bindings/regulator/infineon,ir38060.ya=
-ml
-> > > +++ /dev/null
-> > > @@ -1,45 +0,0 @@
-> > > -# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > -%YAML 1.2
-> > > ----
-> > > -$id: http://devicetree.org/schemas/regulator/infineon,ir38060.yaml#
-> > > -$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > -
-> > > -title: Infineon Buck Regulators with PMBUS interfaces
-> > > -
-> > > -maintainers:
-> > > -  - Not Me.
-> > > -
-> > > -allOf:
-> > > -  - $ref: regulator.yaml#
-> > > -
-> > > -properties:
-> > > -  compatible:
-> > > -    enum:
-> > > -      - infineon,ir38060
-> > > -      - infineon,ir38064
-> > > -      - infineon,ir38164
-> > > -      - infineon,ir38263
-> > > -
-> > > -  reg:
-> > > -    maxItems: 1
-> > > -
-> > > -required:
-> > > -  - compatible
-> > > -  - reg
-> > > -
-> > > -unevaluatedProperties: false
-> > > -
-> > > -examples:
-> > > -  - |
-> > > -    i2c {
-> > > -      #address-cells =3D <1>;
-> > > -      #size-cells =3D <0>;
-> > > -
-> > > -      regulator@34 {
-> > > -        compatible =3D "infineon,ir38060";
-> > > -        reg =3D <0x34>;
-> > > -
-> > > -        regulator-min-microvolt =3D <437500>;
-> > > -        regulator-max-microvolt =3D <1387500>;
-> > > -      };
-> > > -    };
-> > >
-> > > base-commit: bfbb730c4255e1965d202f48e7aa71baa9a7c65b
-> > > --
-> > > 2.42.0
-> > >
-
---UTue3Icjn2CmfZ6o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6PGcgAKCRB4tDGHoIJi
-0hGkAQChLib7ZDWL+Gejwi/X2nLsQgm141ce305xUf+c7UozvAEA1rrwV/dOOJRn
-pFlf7QuoXQV4s4yVRUdLvITtTaJTJAw=
-=HyjM
------END PGP SIGNATURE-----
-
---UTue3Icjn2CmfZ6o--
+Applied as 6.14-rc material, thanks!
