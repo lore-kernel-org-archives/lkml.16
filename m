@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0003E25A65D;
-	Wed,  5 Feb 2025 02:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3341425A65D;
+	Wed,  5 Feb 2025 02:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738722011; cv=none; b=jM6DE572jYkMZMN6fZiAVbrQyh7kEbHRfhLPqlY8tjn4ZaaQmzdrfIfumKzkNDam8LBBMHXLwDNGRZ5+52zxzgPqdhXh9ZR7qoXvWgzbqQEwHzJd6TyFbI3UZNeqX9+EbOGhxinY6Qpg/k3t9yj6E9zhafcoWBoOcZ0eMBFoa3k=
+	t=1738722014; cv=none; b=CgkeQWGEOgEaZPEm+xFT7pM8Iszixfhuik0eMrByVIc9/as/iE20ia/GKn31JwLtRkse8ijpyLqJCIZXDVOXrMpU8v7JHwypc14kM36l1OfsrXYNR6Xd+aY+sYi0ymnMD5Ht5unXDzdS4VXjZRN9gp2dvZUyyxa8UUFmKbRAi1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738722011; c=relaxed/simple;
-	bh=NUZSa1vxr5EDFxVFDX5aCdrF7cT0eA6QoO3DDZvH3Tw=;
+	s=arc-20240116; t=1738722014; c=relaxed/simple;
+	bh=zhOY3YomWCvmtaCgrNkjWnKNT5JYyt5HT88X3JfjTGI=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jCAaEjDaP7KEEgS+w4wnWlzfm6AXtZWGZhrt2VpqSYvYeIhZYuAxoTrpgPsZS8WfyqTrD3K76a+J2NyMzNMQOKjuN7nn2rXnHwOr5CKBxSO8pu1wT/9gC24wsXWIqbOqPzsEnB1uX2jqi+QcJ+St4ejz5Eo7HSQxeZUxe5IogaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTqwmjDV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=N4J3wK2ua3ZvdddlnxZgN4NM16M+z+iRgTiCjTyK2+aX53QvyoycNpsRHq+AzeY9XuawsQK9UXUCAAJ8vS1gcU35DXud8w9VOA4mIE2gSPcWsj+x+jXkIYVRoTYWriO/G9BHhLZ/eOOoMuQ5RGB7A/5Md9/npnIRjJBdcOJ0vT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIXhF2bO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTqwmjDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE01C4CEDF;
-	Wed,  5 Feb 2025 02:20:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIXhF2bO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3DBC4CEE5;
+	Wed,  5 Feb 2025 02:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738722009;
-	bh=NUZSa1vxr5EDFxVFDX5aCdrF7cT0eA6QoO3DDZvH3Tw=;
+	s=k20201202; t=1738722013;
+	bh=zhOY3YomWCvmtaCgrNkjWnKNT5JYyt5HT88X3JfjTGI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jTqwmjDVIePtGhk3qGU2dSU4xDyIKnIcSke+R74P7qYGkzDvEoJq/k0upcPl/ZfMg
-	 mXr/RleTOUD99UmwPEy3PTmxGnI2LpkQRs3GzTdsLQNtBrxU2TDhO3I+eA+J1nvWn8
-	 ubXjeichkiGYFbf/uyUxYdjc0Gm9oFv2r2dHyL/BCgFN1fdxJXzfEjimA50G6yE2uu
-	 U9ifkvwjiDZ+9GuZG2/HdpiSUYGmnGnjHY2pf2POB4Qmwnuzjea4Glcf7YabaXTB1a
-	 pXI2jfCR7hOSthNpDaHYr+m3XqBIGO4P2uVUXv4i92ciwsFqg306L6f41SoKr73ycv
-	 wIcnsEaBnpn2Q==
+	b=sIXhF2bO5sBgw3d3Bfs0bcQzAbh9rsSsMplZDebJjekVHXXaRMj2NqeM+eDk/BgfU
+	 OC3c5isc3u/dwZLvZkdO8JNaAgWAwtNQO32hXpl185kIucHeMASiqeuntc0yuHnZTr
+	 ZXXgqWMLdMppWGfbkfCwV7JJd/D7nVGAS5m64ysbNK7K+P+budDLJcqxEn7zVvea0i
+	 Uiy1XtVX4ptRARxkXZ1YKgZCGEKXIeEXR3nRTcq9X9gEGHh+7MYWmDtnT0tWjcZWSV
+	 35V6gVxqZhAN0mVm926RJb+t5PbT0s1mH05EldhtDRtDlGMnRVNTAG11oqZIBLHqU7
+	 BNPRp16Ljcspw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0F2380AA7E;
-	Wed,  5 Feb 2025 02:20:37 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34310380AA7E;
+	Wed,  5 Feb 2025 02:20:42 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,39 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2][next] net: atlantic: Avoid -Wflex-array-member-not-at-end
- warnings
+Subject: Re: [PATCH net-next] netconsole: selftest: Add test for fragmented
+ messages
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <173872203681.246239.10910954158742758610.git-patchwork-notify@kernel.org>
-Date: Wed, 05 Feb 2025 02:20:36 +0000
-References: <Z6F3KZVfnAZ2FoJm@kspp>
-In-Reply-To: <Z6F3KZVfnAZ2FoJm@kspp>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: irusskikh@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+ <173872204075.246239.3683457761866734624.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Feb 2025 02:20:40 +0000
+References: <20250203-netcons_frag_msgs-v1-1-5bc6bedf2ac0@debian.org>
+In-Reply-To: <20250203-netcons_frag_msgs-v1-1-5bc6bedf2ac0@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kernel-team@meta.com, horms@kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 4 Feb 2025 12:40:49 +1030 you wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On Mon, 03 Feb 2025 11:04:15 -0800 you wrote:
+> Add a new selftest to verify netconsole's handling of messages that
+> exceed the packet size limit and require fragmentation. The test sends
+> messages with varying sizes and userdata, validating that:
 > 
-> Remove unused flexible-array member `buf` and, with this, fix the following
-> warnings:
-> drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1. Large messages are correctly fragmented and reassembled
+> 2. Userdata fields are properly preserved across fragments
+> 3. Messages work correctly with and without kernel release version
+>    appending
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,next] net: atlantic: Avoid -Wflex-array-member-not-at-end warnings
-    https://git.kernel.org/netdev/net-next/c/33b565fa2bc0
+  - [net-next] netconsole: selftest: Add test for fragmented messages
+    https://git.kernel.org/netdev/net-next/c/d5fdfe480c79
 
 You are awesome, thank you!
 -- 
