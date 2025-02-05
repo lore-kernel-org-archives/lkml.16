@@ -1,165 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D36E1FE479;
-	Wed,  5 Feb 2025 00:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E5C227B96;
+	Wed,  5 Feb 2025 00:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738716221; cv=none; b=LRWpdQiO2SFmWxz1JoYwzgrQSqUOJgYR/kPxM3YVoNP97qtJslDA+dZvpI9em89QEpSy7VwkwkO/qvzdW20I3oKiDMrWMnJTIHMnnRh6aoW6zjY9cg7HwqChW3Mt+pFEQWi6KZwNAMrcLjtoNj6uQCTLamBPbzfjM/lmpQOSehw=
+	t=1738716228; cv=none; b=YHgZtVZEbgpMMQKRObS2pnsutSMSMISbJsvrsgCApYDAK/VDfEZFCVXR+AR2WdiZ7gmQrobwXSn51bG62Cko3Vn7zPxmNQX4hWNnaEtPmM/IzZ0MnDxjM5DHGRsSQfu4ceVsV4UneaMNbJv/W2JeK3YXPtPzdqDWYT/SDnhorVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738716221; c=relaxed/simple;
-	bh=DYdszt71y6WeymCQBtk4lvyx4TCPHkHSFV4UdgUples=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oQzVb3GvwJ+C38oWKfwE/BzvHmvdU8PptL+tIzZZ0TCW+0o/ltPC0q4sW9SMkQkqICdV+I3YIYAMl7lhYodj9TE6jNiY5cvekTmW8ESUSOb1fb8wZcKMhjx7aDRWfoGz88isa6PexMPqxe8d9aTf8anBJS3cjcWg0lFZ0BQpCco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IT5tbY65; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738716228; c=relaxed/simple;
+	bh=wFF0buE+n4Z/W/TPm3SY/2G4F0JfmZg9zxSGIJD935Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=S/swapQijlAsY1QneMUyPIFvuSG7Q7TFMYMoXfjvM//9TGf000i5Nn6AFjcl+rEQMZ+QtHEkYpcRl1WOWSIML56mWhtHV9yLnETS+Iw9slikfmXYfri3PBTWOrHw+SQ2t6ps6wwB8V7W69AoGqKIBxYvLV+4j/3LpMOYS3mEgVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IYALZiu5; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IT5tbY65"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1025CC4CEDF;
-	Wed,  5 Feb 2025 00:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738716220;
-	bh=DYdszt71y6WeymCQBtk4lvyx4TCPHkHSFV4UdgUples=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IT5tbY65Vi0gQSafotjimOwjig4H7Ai4+mYmNAFtqjbEBESJt3efkTek1cfsWv1YU
-	 641LJHpDZn2RReo00FcSbzE4KFsgFdK8u2HbR97dtZKVobmqj+98O3e4Q/Z9EKUta1
-	 EJE72CrlNVSd9n0O2dXuBP2tUvdsshlu18twd5NZn+A/axSGuVn7yD6t8JdjgrgxYp
-	 83htpfOjr5+OY+7ieJsDVmZYvr+DlXcp778+1d7zdkgY/Uo2xAgal4/Knx/KBXVdU1
-	 maheqOeN4YryPwNYPx0UAm5AVrNfA6zEteXxdZV2RJ8vcbXjVRo5gOcEwVkq32qGQz
-	 TiceXpYqVzlYw==
-Date: Wed, 5 Feb 2025 11:13:33 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] qtnfmac: Avoid multiple -Wflex-array-member-not-at-end
- warnings
-Message-ID: <Z6K0Nd_IprrhS6pn@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYALZiu5"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b6eeff1fdfso559149485a.2;
+        Tue, 04 Feb 2025 16:43:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738716226; x=1739321026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dzb4zP7i5IlmoBFgUs4VvFMiHfPg3IAAZoeV+R5bjfU=;
+        b=IYALZiu5Xfsad8/EgYEC2QSjlCk6Ydw0JVZj95V7RFsc9nGdwgyTc1nwxIWvnqEJbP
+         OsHi85TZWPAE9TSS/rWGmYaGiWwcVrVZIYm8anoMmEyMmF6lJRfCZOB6tqy/2oKLMPzL
+         8fuqFHKF/fNPrerlEebBHOso8A60Z8lgisS29fuWwT3KBEFS4zmJTk/yCaVt/gmh1a4J
+         r2/iwd0mjdGSzgAMYO8sMV5Q7QUcADfc5J0JOWOOiRyKjvj06Af8XdFiuQavvCAZBr3B
+         0h7JCpxKNl9kYH81ztxi/bDFtYWK/m7Mhys06tp0H/DNeGzGB2Wu5yXegTpG42tumnu8
+         dDMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738716226; x=1739321026;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dzb4zP7i5IlmoBFgUs4VvFMiHfPg3IAAZoeV+R5bjfU=;
+        b=lhVluUxgBLzk/0DRkwyoN7XfP/QC7zoa7LqwY2x33zX07vhM1wExsqPs8nAYlo4Hlw
+         sRB075Ei0fFgdThWOSD3utj3brDXJI3X6Eps+/HJp2ZVe5r7/3yPaGlW4rqiGJLSddhD
+         ZCAESUq8nxHMJy0q/k3+5xZflYYWFtapoE7MNXyoDVWchBAtDbWdR9VovWFkX0jdl+nn
+         NH5dF87Bku0GDO0BmQKmviR55Tdqw3O+TAxyfzJmonOY0iw9XQ/uzMyzAnJ2krMGSYfT
+         2U61kAyM7ZlLF2Lc4bJ+Dz1VZIlkrROnFcYgzt9HBnA2mm/4UdvabxTI6eHBUwWk0fKB
+         Y5Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7b1kMoRmfVVw3lEePgVSk43RJ7xXqSyRCkfKPNXDV7Y8pB9NpDKTzqHvYj3ScNR88PhcF/t5KzwScCK0=@vger.kernel.org, AJvYcCWseUauT09d4f6jH0kb20Xwe84dgtzAuvIuXDKEbWPYG1pp8ODdK0w1uoDbkgwOWJdTJIZAyGZv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1YG7M0RLB3OGbO33YrPjuq3kZMyJLCLP9O2BACJfJkAUu7HbK
+	U4eLjtvhRuqK4iVGOfSZPm/QqhTYvr1pm+Z05L6d8PUgWLlmWilRMAftkw==
+X-Gm-Gg: ASbGncsZfF0oIHfJ0UNvlfkFq7E7FquWIkU7cj6gO+n2lpghW6EmEPy5xxZtWmj2pTq
+	ogI76ugaHJq8P5uuPWzC1k4BN6gnWTzseaKzPduQy22/3uj7yPP7biG8zujMCUurroA2LKbr9i9
+	Wyd5ugusdA+tIDATPKvSq2ZexJ/J92u9rGhrA+9jHFFM7z129g7oXT4aeNq9GZDfeH6bTdVRwYL
+	IitZ65ulihbD75TlJfDulr9NQfY4q+Ge5byX3BeENPs1LKsJei9FN+tL9GBV02gWip5wf3Skjba
+	LpPtPEK2ZVfnzCF29fEG0KQYIJGaWLiAIbUZbg==
+X-Google-Smtp-Source: AGHT+IHQkCCCoOux0E0BbQEUJQrZgCHT7xAEg04wqTGE8APKZbAnrbAeal3eznjICMcqTm3namTOxw==
+X-Received: by 2002:a05:620a:6011:b0:7be:8304:f24b with SMTP id af79cd13be357-7c03a02f29fmr178738685a.56.1738716225783;
+        Tue, 04 Feb 2025 16:43:45 -0800 (PST)
+Received: from newman.cs.purdue.edu ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a904810sm691868885a.66.2025.02.04.16.43.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 16:43:45 -0800 (PST)
+From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+To: mazziesaccount@gmail.com
+Cc: broonie@kernel.org,
+	dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	jiashengjiangcool@gmail.com,
+	linux-kernel@vger.kernel.org,
+	rafael@kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3] regmap-irq: Add missing kfree()
+Date: Wed,  5 Feb 2025 00:43:43 +0000
+Message-Id: <20250205004343.14413-1-jiashengjiangcool@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <27dd749e-712f-46eb-9630-660a8f8f490d@gmail.com>
+References: <27dd749e-712f-46eb-9630-660a8f8f490d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Add kfree() for "d->main_status_buf" to the error-handling path to prevent
+a memory leak.
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of other structs, we use the `__struct_group()` helper to
-create a new tagged `struct qlink_tlv_hdr_fixed`. This structure
-groups together all the members of the flexible `struct qlink_tlv_hdr`
-except the flexible array.
-
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct qlink_tlv_hdr` to `struct qlink_tlv_hdr_fixed`.
-
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that
-the memory layout for both the flexible structure and the new tagged
-struct is the same after any changes.
-
-This approach avoids having to implement `struct qlink_tlv_hdr_fixed`
-as a completely separate structure, thus preventing having to maintain
-two independent but basically identical structures, closing the door
-to potential bugs in the future.
-
-So, with this changes, fix 66 of the following warnings:
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:1681:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:1660:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:1646:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:1621:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:1609:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:1570:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Fixes: a2d21848d921 ("regmap: regmap-irq: Add main status register support")
+Cc: <stable@vger.kernel.org>  # v5.1+
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
 ---
- .../net/wireless/quantenna/qtnfmac/qlink.h    | 21 ++++++++++++-------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+Changelog:
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/qlink.h b/drivers/net/wireless/quantenna/qtnfmac/qlink.h
-index 674461fa7fb3..eae35b678952 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/qlink.h
-+++ b/drivers/net/wireless/quantenna/qtnfmac/qlink.h
-@@ -1510,10 +1510,15 @@ enum qlink_tlv_id {
- };
- 
- struct qlink_tlv_hdr {
--	__le16 type;
--	__le16 len;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	__struct_group(qlink_tlv_hdr_fixed, __hdr, __packed,
-+		__le16 type;
-+		__le16 len;
-+	);
- 	u8 val[];
- } __packed;
-+static_assert(offsetof(struct qlink_tlv_hdr, val) == sizeof(struct qlink_tlv_hdr_fixed),
-+	      "struct member likely outside of __struct_group()");
- 
- struct qlink_iface_limit {
- 	__le16 max_num;
-@@ -1567,7 +1572,7 @@ enum qlink_reg_rule_flags {
-  * @dfs_cac_ms: DFS CAC period.
-  */
- struct qlink_tlv_reg_rule {
--	struct qlink_tlv_hdr hdr;
-+	struct qlink_tlv_hdr_fixed hdr;
- 	__le32 start_freq_khz;
- 	__le32 end_freq_khz;
- 	__le32 max_bandwidth_khz;
-@@ -1606,7 +1611,7 @@ enum qlink_dfs_state {
-  * @channel: ieee80211 channel settings.
-  */
- struct qlink_tlv_channel {
--	struct qlink_tlv_hdr hdr;
-+	struct qlink_tlv_hdr_fixed hdr;
- 	struct qlink_channel chan;
- } __packed;
- 
-@@ -1618,7 +1623,7 @@ struct qlink_tlv_channel {
-  * @chan: channel definition data.
-  */
- struct qlink_tlv_chandef {
--	struct qlink_tlv_hdr hdr;
-+	struct qlink_tlv_hdr_fixed hdr;
- 	struct qlink_chandef chdef;
- } __packed;
- 
-@@ -1643,7 +1648,7 @@ enum qlink_ie_set_type {
-  * @ie_data: IEs data.
-  */
- struct qlink_tlv_ie_set {
--	struct qlink_tlv_hdr hdr;
-+	struct qlink_tlv_hdr_fixed hdr;
- 	u8 type;
- 	u8 flags;
- 	u8 rsvd[2];
-@@ -1657,7 +1662,7 @@ struct qlink_tlv_ie_set {
-  * @ie_data: IEs data.
-  */
- struct qlink_tlv_ext_ie {
--	struct qlink_tlv_hdr hdr;
-+	struct qlink_tlv_hdr_fixed hdr;
- 	u8 eid_ext;
- 	u8 rsvd[3];
- 	u8 ie_data[];
-@@ -1678,7 +1683,7 @@ struct qlink_sband_iftype_data {
-  * @iftype_data: interface type data entries.
-  */
- struct qlink_tlv_iftype_data {
--	struct qlink_tlv_hdr hdr;
-+	struct qlink_tlv_hdr_fixed hdr;
- 	u8 n_iftype_data;
- 	u8 rsvd[3];
- 	struct qlink_sband_iftype_data iftype_data[];
+v2 -> v3:
+
+1. Add kfree() to regmap_del_irq_chip().
+
+v1 -> v2:
+
+1. Add a cc: stable line.
+---
+ drivers/base/regmap/regmap-irq.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index 0bcd81389a29..978613407ea3 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -906,6 +906,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 	kfree(d->wake_buf);
+ 	kfree(d->mask_buf_def);
+ 	kfree(d->mask_buf);
++	kfree(d->main_status_buf);
+ 	kfree(d->status_buf);
+ 	kfree(d->status_reg_buf);
+ 	if (d->config_buf) {
+@@ -981,6 +982,7 @@ void regmap_del_irq_chip(int irq, struct regmap_irq_chip_data *d)
+ 	kfree(d->wake_buf);
+ 	kfree(d->mask_buf_def);
+ 	kfree(d->mask_buf);
++	kfree(d->main_status_buf);
+ 	kfree(d->status_reg_buf);
+ 	kfree(d->status_buf);
+ 	if (d->config_buf) {
 -- 
-2.43.0
+2.25.1
 
