@@ -1,88 +1,63 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1381FCCF2;
-	Wed,  5 Feb 2025 18:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5161DE2C1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779430; cv=none; b=G78LBdhZYV6etWUDK9uCY5F/ncT9CSIDdKg5MOvEL0IRDupBx45fyoQ5eUjjhkEjZNHMgc58owVli3H6R52IAtFsO4nVW1ojgCTfUsMDfuw1aqC0r5l8LurYMa3fJ5zCuARtPwaHcYGenOkyJ5kYRMaPjGnz47f7Cm45k3Ss1Jc=
+	t=1738779479; cv=none; b=B/H1rGtnIANiewjtdvZ1fHRVmF/1mtmEC7VE3l4evpPr3GkRPLXG8kBeezLd1rC+hC4QdmcFcpZ3zPDlV8h4BAHC5exlpszoYmAYvARluxH4oDfgQSdNE1Njuwo8zuM7W2ZK7mwE7/j4kC15970LRWpwd9nMno1d4aMJkhjv6+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779430; c=relaxed/simple;
-	bh=BkQR2waoTAZKgITUbNMtnjCqTXW/9yjFpf4WkmVnNU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g82T5j1EgnAGNSCBDX9rXhcRxNChs5DDFWfpts7jh5OcCEY9H55Yck2TC+bz551+TVkpFG9MCISdfdGHsT5cH1pLhzEB3Sw0CQvoZm0iE/c4uTywQl7x2yqawpZETi6aKH2k/lT5t1bLDfTVgNzy7nHx/RaTC9ka1hl3TA4luUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iPXbQZhH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tT2MiVE9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=H4rs0IHi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eNmkrXZL; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738779479; c=relaxed/simple;
+	bh=c34wdRip4r0O+qy4GPeBJdDXK/Sus/O9TeLRCocFf+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=YVVXNHiHqlZDeckxlZRX3mV0qywpgv6BJlHnYjctsSdm4CQ6uSOrF9XUX30IhfRiEB6JeLS6uhAzyNFydD71L3vzQQkx8l4LpoPZXir6I2rgM9FLf97xXGzr18YIX8T7iBfPrGizZxJ/bixm9F7si3UUvPE0D/LeLz8pZr35cXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iR1UgUFG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iPXbQZhH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tT2MiVE9";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="H4rs0IHi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eNmkrXZL"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iR1UgUFG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738779475;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=c34wdRip4r0O+qy4GPeBJdDXK/Sus/O9TeLRCocFf+Y=;
+	b=iR1UgUFGgQexMMnCZSh/91leGvzGK92vCy1624UXldAVOMpdUSxBBjvLpcjsp2GczRTDhW
+	TKYlbaIh720bZlI7wtwAdPc3tvXDcVyHH3PDZz/E9A7dLv1X/aqzjqulSksQc3oGzklCEr
+	grJGW36LeHdXdtV7XbLuAKOzZmNrthQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-473-pAR24RR_NIu8wE2YVPOxYg-1; Wed,
+ 05 Feb 2025 13:17:51 -0500
+X-MC-Unique: pAR24RR_NIu8wE2YVPOxYg-1
+X-Mimecast-MFC-AGG-ID: pAR24RR_NIu8wE2YVPOxYg
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ED37621133;
-	Wed,  5 Feb 2025 18:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738779427;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
-	b=iPXbQZhH70vEQ4YmosOZqQlmm3Sf1qtPNhkOyPDdFl4u/jWVl5a9tJ9qYUMT99euBq0Wix
-	qCJYIHIs1WvCBBUCG444iajEhph78C72rnivmYxAm+BreI5Qz7IiyDfbO/WJUMF36kLYGn
-	ar0PFj+ceveqdS/3XDK5ruNIsi8VW2Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738779427;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
-	b=tT2MiVE9qMkiMHHBHVH0g9B4xGW6knqVz0g9zoBGYV/iCK56k14VUrGy6PNaGhM8SQjXXm
-	Nb4FBOK2UxY7JLDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=H4rs0IHi;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=eNmkrXZL
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738779426;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
-	b=H4rs0IHi97g8kH3sV7labgHBU6IXb0/UBgN000ZqmkvfRE2iI/rjpXO3firHqdmRi//f9b
-	rT1fRP4Tff9m18+tPoST/yGltQsjRECnW+NUaZyYu1MvcNXx+xz6orMi7sddL5khvFsn+G
-	jFKTHVX2ggWkmDX/EWW4vvbBEwX4uoQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738779426;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8siezr1ai4ZQ0ls9ObxiOIGBjp5BylhpOfmEyMRYuSY=;
-	b=eNmkrXZL6ViAF95eHA2ssnMk9/rXF2fY1VO1Hg1Xs9BSflXkkEEzP/fqA3cLcZ5V7PXz2K
-	I/P7g0XrvHcZBaBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BDBD913694;
-	Wed,  5 Feb 2025 18:17:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wK8dLSKro2d0VgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 05 Feb 2025 18:17:06 +0000
-Date: Wed, 5 Feb 2025 19:17:05 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] btrfs: zstd: enable negative compression levels mount
- option
-Message-ID: <20250205181705.GL5777@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250130175821.1792279-1-neelx@suse.com>
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7A39219560A3;
+	Wed,  5 Feb 2025 18:17:49 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.10])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A9F981800879;
+	Wed,  5 Feb 2025 18:17:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  5 Feb 2025 19:17:22 +0100 (CET)
+Date: Wed, 5 Feb 2025 19:17:16 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Howells <dhowells@redhat.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+	Oliver Sang <oliver.sang@intel.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] pipe: don't update {a,c,m}time for anonymous pipes
+Message-ID: <20250205181716.GA13817@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,84 +66,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250130175821.1792279-1-neelx@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: ED37621133
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,suse.cz:replyto]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
-X-Spam-Flag: NO
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, Jan 30, 2025 at 06:58:19PM +0100, Daniel Vacek wrote:
-> This patch allows using the fast modes (negative compression levels) of zstd
-> as a mount option.
-> 
-> As per the results, the compression ratio is lower:
-> 
-> for level in {-15..-1} 1 2 3; \
-> do printf "level %3d\n" $level; \
->   mount -o compress=zstd:$level /dev/sdb /mnt/test/; \
->   grep sdb /proc/mounts; \
->   cp -r /usr/bin       /mnt/test/; sync; compsize /mnt/test/bin; \
->   cp -r /usr/share/doc /mnt/test/; sync; compsize /mnt/test/doc; \
->   cp    enwik9         /mnt/test/; sync; compsize /mnt/test/enwik9; \
->   cp    linux-6.13.tar /mnt/test/; sync; compsize /mnt/test/linux-6.13.tar; \
->   rm -r /mnt/test/{bin,doc,enwik9,linux-6.13.tar}; \
->   umount /mnt/test/; \
-> done |& tee results | \
-> awk '/^level/{print}/^TOTAL/{print$3"\t"$2"  |"}' | paste - - - - -
-> 
-> 		266M	bin  |	45M	doc  |	953M	wiki |	1.4G	source
-> =============================+===============+===============+===============+
-> level -15	180M	67%  |	30M	68%  |	694M	72%  |	598M	40%  |
-> level -14	180M	67%  |	30M	67%  |	683M	71%  |	581M	39%  |
-> level -13	177M	66%  |	29M	66%  |	671M	70%  |	566M	38%  |
-> level -12	174M	65%  |	29M	65%  |	658M	69%  |	548M	37%  |
-> level -11	174M	65%  |	28M	64%  |	645M	67%  |	530M	35%  |
-> level -10	171M	64%  |	28M	62%  |	631M	66%  |	512M	34%  |
-> level  -9	165M	62%  |	27M	61%  |	615M	64%  |	493M	33%  |
-> level  -8	161M	60%  |	27M	59%  |	598M	62%  |	475M	32%  |
-> level  -7	155M	58%  |	26M	58%  |	582M	61%  |	457M	30%  |
-> level  -6	151M	56%  |	25M	56%  |	565M	59%  |	437M	29%  |
-> level  -5	145M	54%  |	24M	55%  |	545M	57%  |	417M	28%  |
-> level  -4	139M	52%  |	23M	52%  |	520M	54%  |	391M	26%  |
-> level  -3	135M	50%  |	22M	50%  |	495M	51%  |	369M	24%  |
-> level  -2	127M	47%  |	22M	48%  |	470M	49%  |	349M	23%  |
-> level  -1	120M	45%  |	21M	47%  |	452M	47%  |	332M	22%  |
-> level   1	110M	41%  |	17M	39%  |	362M	38%  |	290M	19%  |
-> level   2	106M	40%  |	17M	38%  |	349M	36%  |	288M	19%  |
-> level   3	104M	39%  |	16M	37%  |	340M	35%  |	276M	18%  |
-> 
-> Signed-off-by: Daniel Vacek <neelx@suse.com>
-> ---
-> Changes in v4:
->  * Fix a bug with workspace lru_list.
->  * Keep the levels down to -15 as agreed.
+OK, let me send v3 right now...
 
-Thanks, I'll add the patch to for-next soon. The information about times
-is only a changelog update so this can be done later once we have it.
+Changes: make pipeanon_fops static.
+
+Link to v1: https://lore.kernel.org/all/20250204132153.GA20921@redhat.com/
+Link to v2: https://lore.kernel.org/all/20250205161636.GA1001@redhat.com/
+
+Oleg.
+---
+
+ fs/pipe.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 47 insertions(+), 15 deletions(-)
+
