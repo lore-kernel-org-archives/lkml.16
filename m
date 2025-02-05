@@ -1,84 +1,124 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from mail-4022.proton.ch (mail-4022.proton.ch [185.70.40.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D08214807;
-	Wed,  5 Feb 2025 20:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC18204092;
+	Wed,  5 Feb 2025 20:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738788387; cv=none; b=SwPflNqt3epv05Q9ASx2lR1I4Np3IK0MVoRnHPovqiYa4HQTdUG2KWKTc5U5YGd5L5dR9sUr2sxtUwkTmpjCibXY0oipPhrxljiI/Jr9nk7losB2uWNeQDH2U2M3Av8O8LouQl+q9O172Nu5oJuzRX+E3iIexWOkYK3HWzFPFbc=
+	t=1738788464; cv=none; b=cwSDE1yDQbeMtNXO7b4TZZhvg2Qc9BVM15cO8oiDI3CkAL1F7agSxERfUd/2qiDSl/yp9O50KBt5WUU41jGLzhPC2oyZGlSNSPhbdeV0on16OorVLlXGV8wH4GDerrFuz8/kjlGXiTlH7UQmRQhaAoeFGMYq/2I/BMZaYz4eBBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738788387; c=relaxed/simple;
-	bh=33IQOomqEyLTQbaYoSoQ2PJ57XbkscwA0pHsfJIANsE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ezjJrrye52ahzJRlpeQzfqBp57zei4ufUPWZGUUvCk9ltXkeV3vpM1hTv+WEl4fS3l2QGHC/DtPlWV1B4QOISVUpG+o1ev4spRMkKfacq9mMgKglpoxjZY6tNe+zomjyoFDoK5XAt+ccC9PBfDrTSXYpEbirUEIHkB63ByHVGPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=hAl/xLVS; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1738788464; c=relaxed/simple;
+	bh=OMfQHNHB/80r6eS3wpbY3NXufO3OZxJRL26txj/dVVM=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CeA9Hopjg4zLR3jqSBZ+j+9NwRJk91NS/2qL/BbdvevQ0Axc4HKotoQqp8pgZsZS6GwTDfYxPh5A7ULRx+XgaA5LiR98xliClnp44FKEU1IBg+SwSCwCqCOxWvrHBQEV6NH/MVL4Lpmv10UbTARlN3f7f8dZCEn9raDkAD6Ofi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com; spf=pass smtp.mailfrom=yhndnzj.com; dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b=acSko5Pc; arc=none smtp.client-ip=185.70.40.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yhndnzj.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="hAl/xLVS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1738781507;
-	bh=33IQOomqEyLTQbaYoSoQ2PJ57XbkscwA0pHsfJIANsE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=hAl/xLVS2r7Z4b6dKCNGQj1YxU7mBAFZLxa0QFxRcOfg9/MMOpCcpPaUILVgfMiCD
-	 2Xzh/SDNcO2OkjjW/9VtrMp95w0TNdf6eYPrtPnCGFvHDmq2AGyBc7FSCpF2aiSDIy
-	 PXbvCiMuZZA0WsQlqrDQ4EI9w2tceEb6ut8EvkwE=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 6887F401F1; Wed,  5 Feb 2025 10:51:47 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id 6476D401E1;
-	Wed,  5 Feb 2025 10:51:47 -0800 (PST)
-Date: Wed, 5 Feb 2025 10:51:47 -0800 (PST)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Jessica Clarke <jrtc27@jrtc27.com>
-cc: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, luto@kernel.org, 
-    xin@zytor.com, kirill.shutemov@linux.intel.com, palmer@dabbelt.com, 
-    tj@kernel.org, andreyknvl@gmail.com, brgerst@gmail.com, ardb@kernel.org, 
-    dave.hansen@linux.intel.com, jgross@suse.com, will@kernel.org, 
-    akpm@linux-foundation.org, arnd@arndb.de, corbet@lwn.net, 
-    dvyukov@google.com, richard.weiyang@gmail.com, ytcoode@gmail.com, 
-    tglx@linutronix.de, hpa@zytor.com, seanjc@google.com, 
-    paul.walmsley@sifive.com, aou@eecs.berkeley.edu, justinstitt@google.com, 
-    jason.andryuk@amd.com, glider@google.com, ubizjak@gmail.com, 
-    jannh@google.com, bhe@redhat.com, vincenzo.frascino@arm.com, 
-    rafael.j.wysocki@intel.com, ndesaulniers@google.com, mingo@redhat.com, 
-    catalin.marinas@arm.com, junichi.nomura@nec.com, nathan@kernel.org, 
-    ryabinin.a.a@gmail.com, dennis@kernel.org, bp@alien8.de, 
-    kevinloughlin@google.com, morbo@google.com, dan.j.williams@intel.com, 
-    julian.stecklina@cyberus-technology.de, peterz@infradead.org, 
-    kees@kernel.org, kasan-dev@googlegroups.com, x86@kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-    linux-kernel@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev, 
-    linux-doc@vger.kernel.org
-Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode
- for x86
-In-Reply-To: <F974BA79-80D8-4414-9DFD-1EEF9395143C@jrtc27.com>
-Message-ID: <72837fcd-97a8-c213-0098-c8f308c3415d@gentwo.org>
-References: <cover.1738686764.git.maciej.wieczor-retman@intel.com> <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org> <F974BA79-80D8-4414-9DFD-1EEF9395143C@jrtc27.com>
+	dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b="acSko5Pc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yhndnzj.com;
+	s=protonmail2; t=1738788452; x=1739047652;
+	bh=OMfQHNHB/80r6eS3wpbY3NXufO3OZxJRL26txj/dVVM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=acSko5PcgTpSp9e6wVuJo77+pZf62hXpDafNmRelFvwVYDjPFM5jbx5BGqHKmvuYg
+	 E/1W3zzMFVAbwYOO9lmuIHrzW09/26VHR0ZgEIG/KppdhYNmS7Fd1wDveOSOtOXznl
+	 opu4RuBKSCp+TxEnRZ52YcKXubKDkQNvhb1M3pbsJo0y3/lGmCMfKRQBqCiI4hBP5V
+	 xeALwxGJD7AzDGf9XYsEG39SRCqVJG8RVnSewfNINa1dGkYU9b0/+225fBammnzAlq
+	 RRm+aCR7vkcrfxDiH3ZLilz6Y0Q19WLCKEm/lROTohaCkXzyHuFH40CeY3brhRs4Ab
+	 xmYX02J0zAylw==
+Date: Wed, 05 Feb 2025 20:47:23 +0000
+To: linux-fsdevel@vger.kernel.org
+From: Mike Yuan <me@yhndnzj.com>
+Cc: Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, =?utf-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>, Christian Brauner <brauner@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] fs/xattr: actually support O_PATH fds in *xattrat() syscalls
+Message-ID: <20250205204628.49607-1-me@yhndnzj.com>
+Feedback-ID: 102487535:user:proton
+X-Pm-Message-ID: fb475632d93aef10901c3530d8491305e77698c7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1508829946-1738781507=:2407083"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1508829946-1738781507=:2407083
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 4 Feb 2025, Jessica Clarke wrote:
+Cited from commit message of original patch [1]:
 
-> It’s not “no performance penalty”, there is a cost to tracking the MTE
-> tags for checking. In asynchronous (or asymmetric) mode that’s not too
+> One use case will be setfiles(8) setting SELinux file contexts
+> ("security.selinux") without race conditions and without a file
+> descriptor opened with read access requiring SELinux read permission.
+
+Also, generally all *at() syscalls operate on O_PATH fds, unlike
+f*() ones. Yet the O_PATH fds are rejected by *xattrat() syscalls
+in the final version merged into tree. Instead, let's switch things
+to CLASS(fd_raw).
+
+Note that there's one side effect: f*xattr() starts to work with
+O_PATH fds too. It's not clear to me whether this is desirable
+(e.g. fstat() accepts O_PATH fds as an outlier).
+
+[1] https://lore.kernel.org/all/20240426162042.191916-1-cgoettsche@seltendo=
+of.de/
+
+Fixes: 6140be90ec70 ("fs/xattr: add *at family syscalls")
+Signed-off-by: Mike Yuan <me@yhndnzj.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: <stable@vger.kernel.org>
+---
+ fs/xattr.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 02bee149ad96..15df71e56187 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -704,7 +704,7 @@ static int path_setxattrat(int dfd, const char __user *=
+pathname,
+=20
+ =09filename =3D getname_maybe_null(pathname, at_flags);
+ =09if (!filename) {
+-=09=09CLASS(fd, f)(dfd);
++=09=09CLASS(fd_raw, f)(dfd);
+ =09=09if (fd_empty(f))
+ =09=09=09error =3D -EBADF;
+ =09=09else
+@@ -848,7 +848,7 @@ static ssize_t path_getxattrat(int dfd, const char __us=
+er *pathname,
+=20
+ =09filename =3D getname_maybe_null(pathname, at_flags);
+ =09if (!filename) {
+-=09=09CLASS(fd, f)(dfd);
++=09=09CLASS(fd_raw, f)(dfd);
+ =09=09if (fd_empty(f))
+ =09=09=09return -EBADF;
+ =09=09return file_getxattr(fd_file(f), &ctx);
+@@ -978,7 +978,7 @@ static ssize_t path_listxattrat(int dfd, const char __u=
+ser *pathname,
+=20
+ =09filename =3D getname_maybe_null(pathname, at_flags);
+ =09if (!filename) {
+-=09=09CLASS(fd, f)(dfd);
++=09=09CLASS(fd_raw, f)(dfd);
+ =09=09if (fd_empty(f))
+ =09=09=09return -EBADF;
+ =09=09return file_listxattr(fd_file(f), list, size);
+@@ -1079,7 +1079,7 @@ static int path_removexattrat(int dfd, const char __u=
+ser *pathname,
+=20
+ =09filename =3D getname_maybe_null(pathname, at_flags);
+ =09if (!filename) {
+-=09=09CLASS(fd, f)(dfd);
++=09=09CLASS(fd_raw, f)(dfd);
+ =09=09if (fd_empty(f))
+ =09=09=09return -EBADF;
+ =09=09return file_removexattr(fd_file(f), &kname);
+
+base-commit: a86bf2283d2c9769205407e2b54777c03d012939
+--=20
+2.48.1
 
 
-On Ampere Processor hardware there is no penalty since the logic is build
-into the usual read/write paths. This is by design. There may be on other
-platforms that cannot do this.
-
-
---8323329-1508829946-1738781507=:2407083--
