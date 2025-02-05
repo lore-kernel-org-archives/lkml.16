@@ -1,258 +1,145 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2108.outbound.protection.outlook.com [40.107.255.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF31944F;
-	Wed,  5 Feb 2025 01:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.108
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738718018; cv=fail; b=XnZ7qu8l2Q+2kt1jpGm/016Lrl0G3bqf3h4PzcQv4ZcbRTmbzGyRj5DNul6nhNBhqcL/5luMRVgGxNEUFd2ffgAACas7INioBEElOZofrzv/Dk8vst/OVmUh4VJbpaei3t+SA70UsjZpZ6tLkDL+3YMO8hvnp4zS0A9DUrnKr5I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738718018; c=relaxed/simple;
-	bh=TCEfW7BbrEaDgTBBqTIz9MudBCyMif8UOrDNpd0oNrI=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uX+x7xUiG2IUPPmcQmhexW9YazcWr9KWLLsG0GCUoFjk0iWvfL2WSaRzS/9g3DxeyjrzaVanGrzUI2MZf8OBp/w6GGpY/2GMvirHcXU9tMh8DJyb+O0JYxrpK2hZKx4oTSLccwp36pQjfKJ7vAKJfecmNaeazsP6KRKaeAvbww4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=Y+8OuRjm; arc=fail smtp.client-ip=40.107.255.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83245249E5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738718483; cv=none; b=ds+oydy3orF0tkYM16L75tfNmOMxly2r1M2MPP/a4F+99TzASuXZ96WN2kKpdrBRK0EIy/HX0A5Hinqr+EbYzAEOT0EKrOdbM71gXdcg34U3eHT0PPL/sR1TxAXztu890xXBpPJi55sxQG9d2f2LxH0Iq6l3WTuLmMF8NnIU2EA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738718483; c=relaxed/simple;
+	bh=elxw/Cb3AinIJCEDdm2pNEMVJo2/KaPU9rV5QdCllag=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XsDhTEigNkseZfpg7psAjTIx2S7mzqPx7ncdWqYWSKfBBd7uCaOIx9a6LIZPx/txSt4eU5yMG17aKganPtr4DvpG1KdaEVc9f/6kWAa0ApyOddbABbei9rf7TVeaiWcUa9aDrAXg58N5FGreLEbh8w3K4gnVDBLebfuqelX/9Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=AWro0b6u; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="Y+8OuRjm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fOCs+kDgsWrSR6EjV9OI9d8X/KhsNwptdCZyUe8XKYzt/yT/K5y4w3jgZ65xjk4gWME4wVSHDZKNuunp4R7jsuR/NylE8Q3tIrqGrDqdhgYQr+OvZMh/QufOP8JZF1WfCRsRJ2KFTHFn2WfSUtpM8zmpgzYrYs6Hki6CMqA7hyWAomnW2zG58LfocaMMf0UMAU/bzEbFy0LMKgIrBJ/IhWxKA7aGuDI1Kjfj2ZgQCPT2mbgQ5i+dQ9QC7jDmkKuvVerT+jozi45hT4KLBbfwv/Oc8OTwltf9joxmEOuDecoSiocFug/rtOi7owPkNDhqvtLCH4CdQvpDwObhn1oJKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=531eewIykQUfivLb0yL8U+VbUKxOsCGpM3ZFt08bGco=;
- b=v+LhRUmehhuqORiaSLOIAApeqVajk1O2GnJ8IkX/bUHPQ3qNNPnOSsUwsJrPUy3lijFmaX+yOS1AkZQSpxZjJdK66tqqZDtutXU5Fi6ZB44VFqpNAqr347xK4MDpI20bjCQ3YECc3LcEDpiwfSb6OVqERpvVdJOZz6qANcCvhvp9tAFpZKEN/1yMO8BVBn22fSr8zNA8OEnu3wel76AuxwPjbH9g8Rmb9lZYzyLwfG+M1p1NdEDyxiczCHljAb7mHN4qN8a3n1OaML9FN+9+ow2wxzoMp1TGkfAn0Ki8MVK5t8COfnROxIXSvl5nbROKvyi4Yz9M4w82XWFh+SixUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=531eewIykQUfivLb0yL8U+VbUKxOsCGpM3ZFt08bGco=;
- b=Y+8OuRjmdrAv+m7ERkHmof7H1lRJy7/i2JICcy93FswWZ88WFNlBz86zA0JCQXkr06jfRj7pKtD7/8uJbEHhANqt+8hJ2FlvrNBeQa84AtSwD7l0qJLulKtlLBEdVXkkh3RQBdTOKWuzl/SCgfna0iMD3FQaZGSFrzBaZP3Okm4Mi4fZROkDIkkKLCXmzeuibe8ZohNzjyZeRLxLsdUWMKfF3D48KyQ++dNAVzIR5YhX7ApRWXygAH5dA8anwZQ2nRzhixuNlSRXPwc+JdKyITF6AIBvrTUKXRsLMjICCW5pJ4d1H17Lell98mDyLjOpPRzVQzvNpomyhH/38H5W7w==
-Received: from TYZPR06MB6568.apcprd06.prod.outlook.com (2603:1096:400:45f::6)
- by TYZPR06MB5483.apcprd06.prod.outlook.com (2603:1096:400:288::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Wed, 5 Feb
- 2025 01:13:31 +0000
-Received: from TYZPR06MB6568.apcprd06.prod.outlook.com
- ([fe80::72b8:dce5:355b:e84b]) by TYZPR06MB6568.apcprd06.prod.outlook.com
- ([fe80::72b8:dce5:355b:e84b%7]) with mapi id 15.20.8422.008; Wed, 5 Feb 2025
- 01:13:31 +0000
-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, "eajames@linux.ibm.com"
-	<eajames@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>, "andrew@aj.id.au" <andrew@aj.id.au>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] media: dt-bindings: aspeed,video-engine: Convert to
- json schema
-Thread-Topic: [PATCH v2] media: dt-bindings: aspeed,video-engine: Convert to
- json schema
-Thread-Index: AQHbdvIcpN89Y9FlH0+W/fgiURP0s7M3452g
-Date: Wed, 5 Feb 2025 01:13:31 +0000
-Message-ID:
- <TYZPR06MB656885B87A6300425F5C4D2CF1F72@TYZPR06MB6568.apcprd06.prod.outlook.com>
-References: <20250204085041.3724290-1-jammy_huang@aspeedtech.com>
- <d705e66d-8a5c-490b-b277-f29429c207dd@kernel.org>
-In-Reply-To: <d705e66d-8a5c-490b-b277-f29429c207dd@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR06MB6568:EE_|TYZPR06MB5483:EE_
-x-ms-office365-filtering-correlation-id: 8a219154-2946-4cf5-ef6d-08dd45824e18
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?N7ACKJqOJw7QzAzlPbe4bqtfEv6i3PieprRNPeIx20bYgWM4HUNdzZpuq9Qn?=
- =?us-ascii?Q?z5dS6jneA+/+GGMTOgXhgMnF+nGMEGwr+MyBs1cljE1oZ1wIrnM8dDW/ipim?=
- =?us-ascii?Q?O0LaiLr7CBKEGdhtf/WToKdaAeSZYqtSw56xt2VxJjE8q8Y/L8JilB02kxcj?=
- =?us-ascii?Q?ay79++jmIM1J2ka4saFC//z5LJIPz7KvDi8lxN+yxbfBgZeUhflJ/h3BlK47?=
- =?us-ascii?Q?oPX3O2KbLA4BXGgntsOIQQ7fa96+0Yzf6uoSm+2mwausRC4hjn0iJJ0flgCL?=
- =?us-ascii?Q?76IRaK0KKzcYuKjMLiWtf5/TirpbR1VVJf2UZ0lr8hJ6SEg8Ex/Whi2wtbch?=
- =?us-ascii?Q?fZs+9EKFSojETlpACYoCTLzeENU/IH1ANdn6Y8zzjj1a69dnPr5nrJY1RxbK?=
- =?us-ascii?Q?VM8AbETpY2L3YUvtv5VQE4dJN0jT4DrOvBqprbBoYo0WltFr/n2zYZy4S/ks?=
- =?us-ascii?Q?ZvSLjjgvnLe7k1ApsE9btMPX/15HUSKurGuSiCltW8NTrpCd2JyzSPFGCN0f?=
- =?us-ascii?Q?PZVLuNZczIo0yjVpA2zzwcGh/PriaU96C+Xzo7CG2A+OKQ8Z+2oiLp2XPVBI?=
- =?us-ascii?Q?0+v7/B/mUCAPq+Ye1eGLQzetFurjtvownX8hB1ro4f/MueJ7yR1+/rTHNN/c?=
- =?us-ascii?Q?s62/QVXRRoRzsczSrl47HEBO7xDBx2YpIwOdzmcUqA5t68PCnhlv6L4WGkp4?=
- =?us-ascii?Q?T5FAnMuzhYkJNktj/CdBn/O949eh5sXpgfI/0sKebhaUIq0tjuhh1ZNRHvqi?=
- =?us-ascii?Q?vyBDqB0gcTldziifRGB5kQmskU2Em5+xWOdkSnm4Ts/6gDXZmD6QlQc+6BFb?=
- =?us-ascii?Q?BlcH5RPnlpCwFkB9VFmJdG3dX8x3CBJfL548O9hFd7MPGbNdn1Uttd3JRYw0?=
- =?us-ascii?Q?Pk8Huo2ZILI2HivA+2sY5FY6CACRp1Tw1Wdkeh8YGPjux1TBD2p+s4RG077w?=
- =?us-ascii?Q?uakoWTVukudeaE/ZRjcEpBK6G2hV0NdAcb3FkTGARgWQvJktF9lnYHiFD2Qh?=
- =?us-ascii?Q?cWqQModWoTlthoduOLctjmGGEzam/2T6/tQ0m4ry8iAMfl/1C8l2lhVkdWVU?=
- =?us-ascii?Q?WQLmzWTBmuwAPFPWaUt0eBiRE3YEJxK6fTTtgFgl11uy2Gc8Oi+qHR8REcGu?=
- =?us-ascii?Q?eHnnSk12QrdQV9tl2wE9w36lZQ37Hkm1AjD8WPYOp9/jniZjYjY/yNrMcayA?=
- =?us-ascii?Q?cvNRG8Iacnd4ssP6APutY4idbyScAMX6uxnufT9/9/Q0LW8puLzsFTlszefT?=
- =?us-ascii?Q?cFNe8l+E5GOLNNmR2whuGpqA5tVp9mqwXieZSxmfYf6d1XkzgIY44oV19As+?=
- =?us-ascii?Q?kfNCp19xKvDkCK9JDgN2DVottO0G+cEZtVXYucHj0oYqtBipq3CiBT5fxTXX?=
- =?us-ascii?Q?kU0OpSKFhp8DZuk+00e2QJGlE5PJRBKaffsX75b5iy6IvepLFfonvTKQR8L1?=
- =?us-ascii?Q?g8BJTl79mOxKVVyv18vmd0HOWDI+3VXNz5xQ7cBXHtY9DGwDwTRXiQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6568.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?p6t+Ijm506RmTDda15RyGryXwVEDftWICDtDn4k1eihbTI3hCGlP1fIGI3QM?=
- =?us-ascii?Q?xAOvnZGvzGGShnCh6cugDA8lhndivQHsruFoonbluVhUxhcvfc9UK8hCO14Y?=
- =?us-ascii?Q?hSPF/kZLj+uEQGOAqNery+wcCN1aG0YHi+iOAe4q82Ikq7NAqph0XYzfDmCf?=
- =?us-ascii?Q?tXOfCMHu1L8+jPBXQbxISNC8aOayq21/Bs6aDQKbWOkhAK8DQ7Pabg1x9bMh?=
- =?us-ascii?Q?MHpxhaL6uf2JQZ+eU8UwsjdBieERzXz4tGC3Si4423wrH9Rwdoztw6DNVZzG?=
- =?us-ascii?Q?zavSGvoH/oM8fo7jN0FE/AbVOiNmZ+HbetX5vUTIAGFOjVyiix73mT5GxlFq?=
- =?us-ascii?Q?2FLBGG/WZ3i90ADmV66YLWYpwXsRG/jJRn54SmiA4a7cLglLWUXg8mjAMXaU?=
- =?us-ascii?Q?7wWRtt3FYaiXcem61vwxZwzX2v/0XgSYMi9whfjNQJQSvC2JYWGVbT38rVnh?=
- =?us-ascii?Q?6is+8hxV5bsG8ZaZaUsvaKFxKEaRgEAgDiAjUZp0IyEFGtOxFxvnIScBfl2G?=
- =?us-ascii?Q?dNXpr+F92qDrjH/mR8U7qVcocxrTCQ20J/Fi5NxOv77b6kl+6VaM6OsmOutc?=
- =?us-ascii?Q?beAtxv7HNfFZsq6quJc10oLVeVbHeUfCm5eeSHoJnCy+OHtoWU0KqizpxSNp?=
- =?us-ascii?Q?FQWqL3ghLE28oZn7wJjJdXDzMwVEY/EXmmDmqSlNf3GcR5lk+5XG35iueulG?=
- =?us-ascii?Q?HwgPLVxRFNjiM53lGiWLI2hifXYHnGMXaS4i3la65DqTlNskhPYHuVSj7isT?=
- =?us-ascii?Q?bO/KV0YvVqkQwYsYmLqMgNzeWvpJK6eOSpbzRZax77modd/p2ea98Zf58ku9?=
- =?us-ascii?Q?PfeJaDLrkRHj1nkXaa+6wJ1kA/JCa8mFipu7U2td9QNak0SX52OdndvO8J56?=
- =?us-ascii?Q?YDBti1fa0rCmu7xNYHEf8jloCKnNXQImMX/6k1c0mwx+UqThHCxV/xPMlbcF?=
- =?us-ascii?Q?3EQpbt9IO3NJy0N2GVx8FJPqnFLUB8pc0BHObh6XQHd9SWZXUkKLNnJubB5X?=
- =?us-ascii?Q?KJ9lvhMKcXaodlEBSoEOw01R/0Y/au6IKT/R88vyocQ6tYS6oHAtLtUY2Y/+?=
- =?us-ascii?Q?C03s8YTb4vGpDOondfI2GIOhTgeg8sJeVMj285uAGcp6Mka9s8OS6rGXBQM9?=
- =?us-ascii?Q?oDIpTM8pi6UmBIX5Pi+bm5SCSgjzKuK1+sV2kOyYIjkNwnwBbqT3ox1KxCOz?=
- =?us-ascii?Q?2XwdujrvquR0DOw851+gXG80fqKYmJZOhtQlc35SpFNLB3IO05siilScD071?=
- =?us-ascii?Q?GrSyGlZRvUFz254meQBkhQEXue9jHfaXmQZPplpsRXn1VuEwIju1eKQpWbzA?=
- =?us-ascii?Q?idsAVvAyFuWpEB9hHRZvmbhyMNDBx7SuQlZlan+8lNys7o0cBsBmgqG6K6Kx?=
- =?us-ascii?Q?AFXjwZLsW4i8hFcyEWZGSPoLUXHp7NAgfya5ok99/V7XeP6IfYKq5g9GeBS7?=
- =?us-ascii?Q?7S+zrzrKHFuxQCxoPgI8Yvn22U1h/WK58kkij5D+2EijObZh2EgiHY+/+qnQ?=
- =?us-ascii?Q?cEHRk2CHk8IqGnbGQoauu/VX/o0bGx9XJj4idGYCeqmuKNouh036XLfcRGKP?=
- =?us-ascii?Q?SGxOl4d/ZV0fN9MQQxPPhUDJUGhg+Tvt710rx+5MasFqjazKmGa4FqtP5T6A?=
- =?us-ascii?Q?Lg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="AWro0b6u"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e42d9c092bso5999646d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 17:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1738718480; x=1739323280; darn=vger.kernel.org;
+        h=content-id:mime-version:references:message-id:in-reply-to:subject
+         :cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGJSA2M5r04qmcaGq4dBhsJp0m/yyyGoLMkkQDwhyIQ=;
+        b=AWro0b6u21uc7TKEX+kDl42B4r3YepJ7O3dJdUW4/PRhiQvUlcIq/x/rPhItdzmg4r
+         E5cHov1IIyVgl2khW7WduiYigQ8NGj5BwSicrAXKeZZTVIbPTyEPaFoe8uKcpFXsm04K
+         WzJiYc2m/UJlR+1+0pzpepozPSn8jV9Pm0uCw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738718480; x=1739323280;
+        h=content-id:mime-version:references:message-id:in-reply-to:subject
+         :cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KGJSA2M5r04qmcaGq4dBhsJp0m/yyyGoLMkkQDwhyIQ=;
+        b=K3YCIIUpT2rrDZE8YgnNxRh9tL/WyTAPxdGZohrHRL9hH74wvcu7BItnP94Zn3mx5d
+         /iBodeiR7bpAmKqHvb8ivwbs1sUb6WAXMwHPcahggIvYjriOvkwzToWstCvmiEV/LbO4
+         KSE0ymsyRCkPepLKSmhxe9mhQ7/oi1PWphadz3U/6DiId2yeUxqe1AYQXCTISWAYVoV8
+         z4SPUiYnPzp7H5bzUwsqdnxdYVKqZYU/Ybod1jnxG7eofEDogQMRnpY90FMJlg5TQhKw
+         MYKg3rTeoCwVOv+VCUpjmSVAi4z7Hj5qH5dUheAdS3rpvAXjotSpzgvIX05EG29BfLkb
+         eo/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXfEbkM7kzqfsRrCLXTsFRuJW0ECH2W5bcsqDmvdNvqf+YqivsgaQz2DhgsWrtFnqrdC1gr3tGYnQRJ5gA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztgaF8enyFfTRLmPg24XI9wkYVeyALytzHUanalHEp13Ut/It5
+	VkUahWqfA1KtncoFwz2anz7UFOs9BdefHedJ9g81Oo+rjq11FiQvv9Tm0UmGJg==
+X-Gm-Gg: ASbGncv7rLd/rRwcY1b3KhAiG8b5ayI1bivQzwi/LaTZrPOC53U81tf2HCjSiXSfI9d
+	p2XVxlFOlv40X5RcM4urSwA3BUVGLrrQPRN4WgVBORVR38zPBHiR93SBzWcOKXvSmRzTFJK4kCd
+	FQv0OtqAyCv5+OViTcjfKFNRbytJ0pG/zp13yfAYcN5yo2hxbZs7hbh3TGfbfDTD/c9SErXwaP0
+	xYj7DQQ5kM+xplHyTg10EHltzzwZWjpLRdwn2D7CQw38SxaUhnJFKXWjrczkK9sMNIRhW/AEVsi
+	GqSMaQBzQfhKFtnuXXspNFhUp4DhsQ9WM2R4hQ==
+X-Google-Smtp-Source: AGHT+IFoe/TwfVNIRmGcd79B7JiWTpmqXMz7rGfR/u4epwE1xo9o8V9cAvnDP5nb9bLhDFTGF7TdUg==
+X-Received: by 2002:a05:6214:252f:b0:6d8:876e:ef41 with SMTP id 6a1803df08f44-6e42fbbe225mr19067016d6.21.1738718480240;
+        Tue, 04 Feb 2025 17:21:20 -0800 (PST)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e4279e0ae0sm11939866d6.107.2025.02.04.17.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 17:21:19 -0800 (PST)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Tue, 4 Feb 2025 20:21:17 -0500 (EST)
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Ian Rogers <irogers@google.com>, Stephane Eranian <eranian@google.com>, 
+    Vince Weaver <vincent.weaver@maine.edu>, 
+    "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
+ location
+In-Reply-To: <2025020444-savage-latrine-0c31@gregkh>
+Message-ID: <97541134-7c32-94a8-7642-a82f3292dc38@maine.edu>
+References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com> <2025020408-apron-fled-d29e@gregkh> <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
+ <2025020447-gyration-wireless-f7da@gregkh> <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com> <2025020444-savage-latrine-0c31@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6568.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a219154-2946-4cf5-ef6d-08dd45824e18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2025 01:13:31.4273
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8RUzrXjvZ7/8vBTBkPE4VliAsEAxN4qFAIo4C63BhOMUh+5KHWj65B9p4RJuft24gVw9dpt8/ogKPsitg9tBfDGyxrDubsy9uKONEgn/XpE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5483
+Content-Type: multipart/mixed; BOUNDARY="-1463802360-824231151-1738718361=:1323835"
+Content-ID: <d47ac0b9-659d-2821-602b-44ae00b9f0ea@maine.edu>
 
-Hi Krzysztof,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for your feedback.=20
+---1463802360-824231151-1738718361=:1323835
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-ID: <ad06df10-0d54-9425-4385-e5dfc731d79b@maine.edu>
 
-> On 04/02/2025 09:50, Jammy Huang wrote:
-> > Convert aspeed-video.txt to yaml format.
-> > Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
-> >
-> > NOTE: The following checkpatch warning is generated since we do
-> > include the header in the example, but this is a false positive warning=
-.
-> > WARNING: DT binding docs and includes should be a separate patch. See:
-> > Documentation/devicetree/bindings/submitting-patches.rst
->=20
-> This does not belong to commit message, it's irrelevant. You can mention =
-in
-> the changelog, though, but IMO, that's really not important for this patc=
-h.
->=20
-> >
-> > Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
-> > ---
-> >  v2:
-> >   - Update commit subject
-> >   - Add NOTE for false positive warning
-> > ---
->=20
-> ...
->=20
-> > +
-> > +  memory-region:
-> > +    maxItems: 1
-> > +    description: |
-> > +      Phandle to the reserved memory nodes to be associated with the
-> > +      VE. VE will acquires memory space for 3 purposes:
-> > +        1. JPEG header
-> > +        2. Compressed result
-> > +        3. Temporary transformed image data
-> > +
-> > +  aspeed,scu:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: |
->=20
-> Do not need '|' unless you need to preserve formatting.
-OK.
+On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
 
->=20
-> > +      Specifies the scu node that is needed if video wants to capture
-> > +      from sources other than Host VGA.
-> > +
-> > +  aspeed,gfx:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
->=20
-> None of these two properties were in original binding with *justification=
-*. You
-> must describe any changes done during conversion, otherwise you could add
-> here whatever property you wish, right?
-Sure, I will add information for these properties in later patch.
+> On Tue, Feb 04, 2025 at 09:49:55AM -0800, Ian Rogers wrote:
+> > On Tue, Feb 4, 2025 at 9:12 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Feb 04, 2025 at 11:41:38AM -0500, Vince Weaver wrote:
+> > > > On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
+> > > >
+> > > > >
+> > > > > It seems that the majority of the perf code IS looking in the correct
+> > > > > place, just mem-events.c seemed wrong.
+> > > >
+> > > > I hate to tell you, but other places in userspace are depending on the
+> > > > current setup.  libpfm4, used by PAPI, is looking directly in /sys/devices
+> > > > for pmus and will break with the changes you are planning.
+> > >
+> > > Then that too needs to be fixed, sorry.  Again, devices can, and will,
+> > > move around in /sys/devices/ you can never hard-code any paths there.
+> > > Any userspace code must ALWAYS be able to handle that, that's a sysfs
+> > > requirement.
+> > >
+> > > And do you have a link to the source for that code?  Good news is that
+> > > if the code is fixed in userspace, it will work for any kernel (old or
+> > > new).
+> > 
+> > +Stephane Eranian
+> > 
+> > I see use of /sys/devices in at least:
+> > https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/lib/pfmlib_perf_event_pmu.c
+> > I imagine it isn't a big job to clean it up.
+> 
+> Nope, all that has to happen is this line:
+> 	snprintf(buf, PATH_MAX, "/sys/devices/%s/events/%s", e->pmu ? e->pmu : "cpu", e->name);
+> be changed to:
+> 	snprintf(buf, PATH_MAX, "/sys/bus/event_source/devices/%s/events/%s", e->pmu ? e->pmu : "cpu", e->name);
 
->=20
-> > +    description: |
-> > +      Specifies the Soc Display(gfx) node that needs to be queried to =
-get
-> > +      related information if video wants to use gfx as capture source.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/clock/ast2600-clock.h>
-> > +
-> > +    video@1e700000 {
->=20
-> Looks rather like: isp@
-Do you prefer other node-name??
+it doesn't matter if it's a one line change, your proposed change breaks 
+userspace.
 
->=20
-> > +      compatible =3D "aspeed,ast2600-video-engine";
-> > +      reg =3D <0x1e700000 0x1000>;
-> > +      clocks =3D <&syscon ASPEED_CLK_GATE_VCLK>,
-> > +               <&syscon ASPEED_CLK_GATE_ECLK>;
-> > +      clock-names =3D "vclk", "eclk";
-> > +      interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> > +      aspeed,scu =3D <&syscon>;
-> > +      aspeed,gfx =3D <&gfx>;
->=20
->=20
->=20
-> Best regards,
-> Krzysztof
+I thought the rule was Linux didn't break userspace.
+Has that changed recently?
 
-Best regards,
-Jammy
+libpfm4/PAPI are widely used and deployed and in some cases possibly 
+statically linked into other projects.  It will take years for the change 
+to filter out to all users.
+
+Is there a technical reason for this proposed change of yours, or are you 
+just arbitrarily breaking userspace programs because you think /sys looks 
+cluttered to your personal taste?
+
+Vince Weaver
+vincent.weaver@maine.edu
+---1463802360-824231151-1738718361=:1323835--
