@@ -1,144 +1,136 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CAF322A4DA;
-	Wed,  5 Feb 2025 09:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA9422A4DC
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747544; cv=none; b=nosjc7Rp49To51Ud53FSf3pQmh2GYPBoNpuAKKMUnQcrBOkL+roV/6t7ya5GHUvXFtKw/sMcQMhL386n9SNQsWS5svGKQzjSbJVmacHLR8ra4Z/OpH2JGw0sqrzxEtI0/eHa3G0cmCxaBZtDUehGVLxGacPOjVLdigqldAKkxcs=
+	t=1738747589; cv=none; b=kMCPKDfV5RjdtmhIuSMYs+4NnkHq6VuVxzqb4ocFfhkwiBTkhImwKE1NoYw493LUQNXTCWfFU7o5X86qJedMqIzvmvYyNxTn3OeDQ769DwhGuj3FWAg7+NA2DaWV3EGn9EX5zmmelo1iBWpk47N8EPbypqAebfbrbW7C8zSYhLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747544; c=relaxed/simple;
-	bh=LJcFnN9gJwfUfOG3O6tba5PYyMbo02O+qICApByuuMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QsXxta2I64ilVei4vILjE7GbAoK1wfxaa3aaUNtTcUq4FeHwz/96MJ4hHLMMddye1U0YUIf0n4fx9goT0sbbekvcZhBdMzWLX9+YxRZadM5J0kksDZfAm5PFWzvTrtJR1o9WkjrovvA5o2/BWQgDpjGu8n9dj2YQ7Yq7e4hA3TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxaeGLLqNnQR1sAA--.14187S3;
-	Wed, 05 Feb 2025 17:25:31 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMBxXsWKLqNnvh0AAA--.262S2;
-	Wed, 05 Feb 2025 17:25:31 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Remove PGD table saving during VM context switch
-Date: Wed,  5 Feb 2025 17:25:30 +0800
-Message-Id: <20250205092530.1625606-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1738747589; c=relaxed/simple;
+	bh=dAPiQIZ2xCa9X08YhkrhyU/u2ehpmpzUSyJvh04fRt8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rgb5BMvHeEsRFkk//r8d2/r/AiRXWR4oai7Bo4pKBW41DZD//RVSYaSxxCAqEhhUEMw3Nn7G3Awanry+9RVqh1aQqGBmtNCtPLoVDR5CCFZRAsIT7ypdcDzCGbblSqR+NqUbdJ4zLB6wVpwjH09OMbMZ3E01JqjMCI2sc1tfpD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=bgKxIGnP; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bgKxIGnP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1738747574;
+	bh=T7ANeA1RtEc2Om2Lc6mZEGl9Xs5Q7MlTf2hb8EB8Koo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=bgKxIGnPtgbpsOGI102n9yvLZzWZQVoAte9QeLDKMFzMwgm4cpHdmDuLLl6Ek6qtv
+	 kVwkxlRlHUbxTykq1fvTt4OR7MFdThWjgrbJlQ9gIkMbskorYhnTvnpw4CXNaiOJGM
+	 mail7825sE+fc5fRSYSZaub5hpmcm/iNv3z4EYCUmsdpR/czhxG62qM0KmYwZKTTFp
+	 PEP7ClJWHDLtQQ6wkUcVUNN1LA1+/zUlK/dlmyzsFG1PgbAhDJSRee2+1wzU9DE5Dq
+	 bAcKoN3kXgStdR4pbpjQIjUE8WEBNZKt0lB7CQv96FEf5rAyznV4aCpxE6KmmNUVjS
+	 XU662X5uvcZwg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YnvxK5QLHz4wcD;
+	Wed,  5 Feb 2025 20:26:13 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>, Nicholas Piggin
+ <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Erhard
+ Furtner <erhard_f@mailbox.org>
+Subject: Re: [PATCH] powerpc/code-patching: Disable KASAN report during
+ patching via temporary mm
+In-Reply-To: <1c05b2a1b02ad75b981cfc45927e0b4a90441046.1738577687.git.christophe.leroy@csgroup.eu>
+References: <1c05b2a1b02ad75b981cfc45927e0b4a90441046.1738577687.git.christophe.leroy@csgroup.eu>
+Date: Wed, 05 Feb 2025 20:26:20 +1100
+Message-ID: <87pljwspxf.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxXsWKLqNnvh0AAA--.262S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain
 
-PGD table for primary mmu keeps unchanged once VM is created, it
-is not necessary to save PGD table pointer during VM context switch.
-And it can be acquired when VCPU is created.
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> Erhard reports the following KASAN hit on Talos II (power9) with kernel 6.13:
+>
+> [   12.028126] ==================================================================
+> [   12.028198] BUG: KASAN: user-memory-access in copy_to_kernel_nofault+0x8c/0x1a0
+> [   12.028260] Write of size 8 at addr 0000187e458f2000 by task systemd/1
+>
+> [   12.028346] CPU: 87 UID: 0 PID: 1 Comm: systemd Tainted: G                T  6.13.0-P9-dirty #3
+> [   12.028408] Tainted: [T]=RANDSTRUCT
+> [   12.028446] Hardware name: T2P9D01 REV 1.01 POWER9 0x4e1202 opal:skiboot-bc106a0 PowerNV
+> [   12.028500] Call Trace:
+> [   12.028536] [c000000008dbf3b0] [c000000001656a48] dump_stack_lvl+0xbc/0x110 (unreliable)
+> [   12.028609] [c000000008dbf3f0] [c0000000006e2fc8] print_report+0x6b0/0x708
+> [   12.028666] [c000000008dbf4e0] [c0000000006e2454] kasan_report+0x164/0x300
+> [   12.028725] [c000000008dbf600] [c0000000006e54d4] kasan_check_range+0x314/0x370
+> [   12.028784] [c000000008dbf640] [c0000000006e6310] __kasan_check_write+0x20/0x40
+> [   12.028842] [c000000008dbf660] [c000000000578e8c] copy_to_kernel_nofault+0x8c/0x1a0
+> [   12.028902] [c000000008dbf6a0] [c0000000000acfe4] __patch_instructions+0x194/0x210
+> [   12.028965] [c000000008dbf6e0] [c0000000000ade80] patch_instructions+0x150/0x590
+> [   12.029026] [c000000008dbf7c0] [c0000000001159bc] bpf_arch_text_copy+0x6c/0xe0
+> [   12.029085] [c000000008dbf800] [c000000000424250] bpf_jit_binary_pack_finalize+0x40/0xc0
+> [   12.029147] [c000000008dbf830] [c000000000115dec] bpf_int_jit_compile+0x3bc/0x930
+> [   12.029206] [c000000008dbf990] [c000000000423720] bpf_prog_select_runtime+0x1f0/0x280
+> [   12.029266] [c000000008dbfa00] [c000000000434b18] bpf_prog_load+0xbb8/0x1370
+> [   12.029324] [c000000008dbfb70] [c000000000436ebc] __sys_bpf+0x5ac/0x2e00
+> [   12.029379] [c000000008dbfd00] [c00000000043a228] sys_bpf+0x28/0x40
+> [   12.029435] [c000000008dbfd20] [c000000000038eb4] system_call_exception+0x334/0x610
+> [   12.029497] [c000000008dbfe50] [c00000000000c270] system_call_vectored_common+0xf0/0x280
+> [   12.029561] --- interrupt: 3000 at 0x3fff82f5cfa8
+> [   12.029608] NIP:  00003fff82f5cfa8 LR: 00003fff82f5cfa8 CTR: 0000000000000000
+> [   12.029660] REGS: c000000008dbfe80 TRAP: 3000   Tainted: G                T   (6.13.0-P9-dirty)
+> [   12.029735] MSR:  900000000280f032 <SF,HV,VEC,VSX,EE,PR,FP,ME,IR,DR,RI>  CR: 42004848  XER: 00000000
+> [   12.029855] IRQMASK: 0
+>                GPR00: 0000000000000169 00003fffdcf789a0 00003fff83067100 0000000000000005
+>                GPR04: 00003fffdcf78a98 0000000000000090 0000000000000000 0000000000000008
+>                GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+>                GPR12: 0000000000000000 00003fff836ff7e0 c000000000010678 0000000000000000
+>                GPR16: 0000000000000000 0000000000000000 00003fffdcf78f28 00003fffdcf78f90
+>                GPR20: 0000000000000000 0000000000000000 0000000000000000 00003fffdcf78f80
+>                GPR24: 00003fffdcf78f70 00003fffdcf78d10 00003fff835c7239 00003fffdcf78bd8
+>                GPR28: 00003fffdcf78a98 0000000000000000 0000000000000000 000000011f547580
+> [   12.030316] NIP [00003fff82f5cfa8] 0x3fff82f5cfa8
+> [   12.030361] LR [00003fff82f5cfa8] 0x3fff82f5cfa8
+> [   12.030405] --- interrupt: 3000
+> [   12.030444] ==================================================================
+>
+> Commit c28c15b6d28a ("powerpc/code-patching: Use temporary mm for
+> Radix MMU") is inspired from x86 but unlike x86 is doesn't disable
+> KASAN reports during patching. This wasn't a problem at the begining
+> because __patch_mem() is not instrumented.
+>
+> Commit 465cabc97b42 ("powerpc/code-patching: introduce
+> patch_instructions()") use copy_to_kernel_nofault() to copy several
+> instructions at once. But when using temporary mm the destination is
+> not regular kernel memory but a kind of kernel-like memory located
+> in user address space. Because it is not in kernel address space it is
+> not covered by KASAN shadow memory. Since commit e4137f08816b ("mm,
+> kasan, kmsan: instrument copy_from/to_kernel_nofault") KASAN reports
+> bad accesses from copy_to_kernel_nofault(). Here a bad access to user
+> memory is reported because KASAN detects the lack of shadow memory and
+> the address is below TASK_SIZE.
+>
+> Do like x86 in commit b3fd8e83ada0 ("x86/alternatives: Use temporary
+> mm for text poking") and disable KASAN reports during patching when
+> using temporary mm.
+>
+> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+> Close: https://lore.kernel.org/all/20250201151435.48400261@yea/
+> Fixes: 465cabc97b42 ("powerpc/code-patching: introduce patch_instructions()")
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  arch/powerpc/lib/code-patching.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  2 ++
- arch/loongarch/kernel/asm-offsets.c   |  4 +---
- arch/loongarch/kvm/switch.S           | 10 +---------
- arch/loongarch/kvm/vcpu.c             | 10 ++++++++++
- 4 files changed, 14 insertions(+), 12 deletions(-)
+Thanks for debugging that Christophe.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 590982cd986e..0d7a83407d84 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -180,6 +180,8 @@ struct kvm_vcpu_arch {
- 	unsigned long host_sp;
- 	unsigned long host_tp;
- 	unsigned long host_pgd;
-+	/* pgd table pointer for secondary mmu */
-+	unsigned long host_second_pgd;
- 
- 	/* Host CSRs are used when handling exits from guest */
- 	unsigned long badi;
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 8be1c38ad8eb..8c33b9b2ee40 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -289,13 +289,13 @@ static void __used output_kvm_defines(void)
- 	BLANK();
- 
- 	OFFSET(KVM_VCPU_ARCH, kvm_vcpu, arch);
--	OFFSET(KVM_VCPU_KVM, kvm_vcpu, kvm);
- 	OFFSET(KVM_VCPU_RUN, kvm_vcpu, run);
- 	BLANK();
- 
- 	OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
- 	OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
- 	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
-+	OFFSET(KVM_ARCH_HSECPGD, kvm_vcpu_arch, host_second_pgd);
- 	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
- 	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
- 	OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
-@@ -306,8 +306,6 @@ static void __used output_kvm_defines(void)
- 	OFFSET(KVM_ARCH_HECFG, kvm_vcpu_arch, host_ecfg);
- 	OFFSET(KVM_ARCH_HESTAT, kvm_vcpu_arch, host_estat);
- 	OFFSET(KVM_ARCH_HPERCPU, kvm_vcpu_arch, host_percpu);
--
--	OFFSET(KVM_GPGD, kvm, arch.pgd);
- 	BLANK();
- }
- 
-diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-index 0c292f818492..1598d1f53334 100644
---- a/arch/loongarch/kvm/switch.S
-+++ b/arch/loongarch/kvm/switch.S
-@@ -60,16 +60,8 @@
- 	ld.d	t0, a2, KVM_ARCH_GPC
- 	csrwr	t0, LOONGARCH_CSR_ERA
- 
--	/* Save host PGDL */
--	csrrd	t0, LOONGARCH_CSR_PGDL
--	st.d	t0, a2, KVM_ARCH_HPGD
--
--	/* Switch to kvm */
--	ld.d	t1, a2, KVM_VCPU_KVM - KVM_VCPU_ARCH
--
- 	/* Load guest PGDL */
--	li.w    t0, KVM_GPGD
--	ldx.d   t0, t1, t0
-+	ld.d	t0, a2, KVM_ARCH_HSECPGD
- 	csrwr	t0, LOONGARCH_CSR_PGDL
- 
- 	/* Mix GID and RID */
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index fb72095c8077..8e822b1233ff 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1462,6 +1462,16 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
- 
-+	/* Get pgd for secondary mmu */
-+	vcpu->arch.host_second_pgd = (unsigned long)vcpu->kvm->arch.pgd;
-+
-+	/*
-+	 * Get pgd for primary mmu
-+	 *
-+	 * Supposing current->mm == vcpu->kvm->mm and pgd table keeps unchanged
-+	 * since vmm threads are created
-+	 */
-+	vcpu->arch.host_pgd = (unsigned long)vcpu->kvm->mm->pgd;
- 	vcpu->arch.handle_exit = kvm_handle_exit;
- 	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->exc_entry;
- 	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
+Fix looks good to me.
 
-base-commit: 5c8c229261f14159b54b9a32f12e5fa89d88b905
--- 
-2.39.3
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
+cheers
