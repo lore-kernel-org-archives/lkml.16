@@ -1,101 +1,85 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923D7215F42
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C91921506A;
+	Wed,  5 Feb 2025 23:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796617; cv=none; b=E74J94OIo8Pp908s0MFW1gSgg+FBv02ApF+1J/Wr/+8vhd0Le3dkv6V+VjBfgU7N1vguQMXfYkJ1RAN9dqtnyXB7Qq6iHmHpJLACf1iDEcf6ZUfqfet5246lYYysllcnKqC6E/pL/dkzB1JQdxU1Q0te8KPdSjbVmqDZaVvslBg=
+	t=1738796671; cv=none; b=PmdnX/FoUKJwDxdWZ4Elljtov8WFVBVSAMyFwMliK+WISvrNwtfpjDfbb8eXawprosuVQSondFRMnOC0Lu6Od16MnJfyi9DxTDmjCstg58ClSANktef+TCcrDe5Sfd9fJv7NySOlRZ2ArbKOtTFQ0HmgSSkUfIBKfmIg5Goa3Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796617; c=relaxed/simple;
-	bh=bVdA9WZp0q+MKl+SOWUgiQ4AdO1aA5nIliGeK76LzFY=;
+	s=arc-20240116; t=1738796671; c=relaxed/simple;
+	bh=S72eIFvgqEoxbQM8qfvjvrlejM+2TfjiaT1i5lkDoBg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4DEj0BfLJsFrBpfPg7zJgrkN8rX+wD8FBqA/eakUg99+ueti9BeRiujhWFZsZs9MsvHoeEYVpACBLUJmMcu+U2QrY0NLiP94RrTmi6ditq6GasuPh8E8Ot2CJAr855U/TpFP4n1Ju63RxZh4zAvYqms3Bwa40kozpzrWMpxTWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=by4jatiq; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Ng0Uw0cHCP0xk/GLnRjZeUU+c1ON+HHrw8e5SMNjAueYsl6VlpH4CHkFOFZ1K7FAaBzJfbzilt3lFGQUXpnqfROoDX/dzupeUHKOrPB2C1QFEsO5BpuIUkQOW7NnNHfP2xczprouqaVg7Kvp3gb09x+8521HCqQkO5XTvtswoIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxyO/DkI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="by4jatiq"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so3978a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 15:03:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738796613; x=1739401413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bVdA9WZp0q+MKl+SOWUgiQ4AdO1aA5nIliGeK76LzFY=;
-        b=by4jatiqbKNB/JH+b8vm1nEk4VNz1R+OAuNmXNsQjWSl4ieDP6ESwnPy8TlNC4CbwV
-         SCb1n/UvcPyFtQ4XD3B/54i01Xlf80V8PtlGOyD5pAmafmxNd1kOkWApFaWpo7s4dQgU
-         gbXmcex12uV7OMST3EqCLDLMroGCKuaJ0zdbJb0jYOBenA11Cl0N4KU5sx0l6BOPLsUJ
-         kZlqXw3vmaKa+XwhwdjeyoHosTlwaGNe+iYNnPalnLHr7egfwekUPg+qXS64MPTK8wA0
-         3cDZEHWh50MyYwZ+QFGCq93Mqg2WXPajDabajlYxg4GBptPooUx6RtK1fWsB9YHN+ptZ
-         CpjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738796613; x=1739401413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bVdA9WZp0q+MKl+SOWUgiQ4AdO1aA5nIliGeK76LzFY=;
-        b=GfwCz/bZRW7NeWdIa+oWOQbabySyucMpbgyHePgMXd9TCJ4nk2VSc3Xb4wlZisTcuO
-         4IvMcCzdkW5scoENf//X4HvzOWYhwEAl10Wf+fHOevqB6GUgnOGrcu9AECPOToec2ecU
-         LeO15kZu54Vod7sbf9FJPIhVxe6HObwQ7O1MVFmlDqjFjUAq+XQfpHxfWpv/+DDUIsBQ
-         UBe7WnCHYpATrz33FzjSfl/EUks9Qw3/ZNnlskr2y4kHf/D49UVOJxSOTaISnGfCGBBj
-         mdHP2sdMCOmUzOsC1ODs+Cmi5cvxHIDwNzAuzJKMWHHUp0lNmQvK6z4831Yvgyl8LMKA
-         oM+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUbqoyVFj7OLZsFw4QJKHsP3U5Ukj7ab3Vdc1i7ueeUoWjLpRVcQ5y2hy+cpz74PHasLyf3zsr/kSCtJRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs2CRPOQjfrT6j6vt4h1NWILcILKwEUWClGw/PJ9NG7AhN2Tbu
-	FlRlZXp7SPbb/150X4L5/dloNqAwx6fVCDP4B3f93DykTri9hg7/fO625O0GS26S+jtOMndE9io
-	ubzpijppcF0hfTiyh7tlLzZ/7F1R4Wpvs+KaI
-X-Gm-Gg: ASbGncszTCguUk0g26uSYtIB4QkdSFIbrYKV2Tnv1R3TLaQ6OMnovpHaBm2/SKeG/HN
-	E9yA/7ajwYRgib9U9KxtXr3yH/we2Nlnd4bsuN7Zgn0Vvd7tmb5qygUgGb5X7oevczo3QZE9VAh
-	Bm72otgE5iAwscCKmoXHLBoT40AEw=
-X-Google-Smtp-Source: AGHT+IG1ZgFZy7b7SkOidLH13XEGqi/SKDP8xNcHapN2lRUfWDV6twsz/UIOXywnQSm/yOloQKTIPZBlN1GDirL9Nk8=
-X-Received: by 2002:a05:6402:1a57:b0:5dc:d909:3109 with SMTP id
- 4fb4d7f45d1cf-5dcefebb161mr1518a12.7.1738796612741; Wed, 05 Feb 2025 15:03:32
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxyO/DkI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721B0C4CEF9;
+	Wed,  5 Feb 2025 23:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738796670;
+	bh=S72eIFvgqEoxbQM8qfvjvrlejM+2TfjiaT1i5lkDoBg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gxyO/DkIBHu33ghmCtkfFrFlUN3JY7dEJtRA4pQwuM07reGkxzbEhCZcgr4IMasDY
+	 pWDkdJQ+6UOIgP2OEhJun7Fwn7KpWXACgdOtQGO1CZwId+4GYindFn+9vuM2cQ2Mu3
+	 gfL/UtkDZsecXf6mijPtEpfQlDUu2e948Vzba6P7yWbyWXLOsd/ZDfN6AhNhWoHkhl
+	 MiDI4bMd97k6Am9qe0I1naMjos9I0Qs8bqqABHo06hyAUdnS4yX9U7EVX45tMXgGks
+	 cbdHqt7kn+WXlGr1y89W631siCs+AtscTCkMTFkhU5jbUVc8vOMSbaioAoWksoeGKU
+	 WbSixxOzuVMaw==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30225b2586cso13535921fa.0;
+        Wed, 05 Feb 2025 15:04:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVXAmFXyIClSdkBd6sZYxUGdG/+sI6uYbSFZAQdTDIyXd+TLZR44xnAw0tqI6E+9t+ej2GarndTrMchC79u@vger.kernel.org, AJvYcCXGfhGhGm9T8s7KQgbcHYV4ap2qACyEb1tuOuBJ+gyddHhEVunaxZI/jLY6QLakxUU5h20IdhF6KJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRLzsxUoACQd3KlVK8ALJv3hs0NZNBzQHyDGRtN4h7iJIHiwOx
+	xj08XmfxZMbWDOI0bCQ5lk1d06lSpPsT3yJlBnruYxYfkpkWhxtm8bceZO0Qa537xPhVXfpnnMs
+	BUxVH5X+NYS2KbHJKLV/AQ1XmMNM=
+X-Google-Smtp-Source: AGHT+IF89pjNvxORXTiz/KZ99MrP0x5RvRSNjKSsJcaqJGPWoeuT1g3SMmILZLP5X4y5h0x0Un2+f4WGgAowvASu1X4=
+X-Received: by 2002:a2e:2c12:0:b0:302:41f6:2352 with SMTP id
+ 38308e7fff4ca-307da5ae80amr3376651fa.16.1738796668357; Wed, 05 Feb 2025
+ 15:04:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122-gendwarfksyms-kasan-rust-v1-1-5ee5658f4fb6@google.com>
- <CANiq72nr9vTgUF9u0uyypzprQrEpGv4qbOUJS_QgYbMZhTTrRQ@mail.gmail.com>
- <CAGSQo02HFMn0b=d6LVFr35Bc06F0AY8XmPFtqWi4b17cQSF0+g@mail.gmail.com> <CANiq72mo66FCLQTsBMU+Sc-VeS617uYgQdtCXJF9PacpUhSbLA@mail.gmail.com>
-In-Reply-To: <CANiq72mo66FCLQTsBMU+Sc-VeS617uYgQdtCXJF9PacpUhSbLA@mail.gmail.com>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Wed, 5 Feb 2025 15:03:21 -0800
-X-Gm-Features: AWEUYZm3juV6teIxJKq31Rcu7NBwseJ4mbD86_1YRjuo_aJ8xNMUm4r1fbMLV9g
-Message-ID: <CAGSQo00uUYdjeiRHEz465WyN_kDyiV2L0Ojaomr8ckMYipmp6w@mail.gmail.com>
-Subject: Re: [PATCH] rust: Do not export generated KASAN ODR symbols
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+ <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org> <fb30574a-d238-424c-a464-0f7a5707c46a@intel.com>
+ <3dcf7631-d839-7235-10c7-30f80d7f796a@gentwo.org>
+In-Reply-To: <3dcf7631-d839-7235-10c7-30f80d7f796a@gentwo.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 6 Feb 2025 00:04:17 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHktLC2F=suQoNF80-ZQ93-3pxWz20_L76_6morUGPaNQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnX90yX3IKaA52q5S_M7G8eGfUWUp3XkEiKOjpcZPLHNrjrrMHxTq0wSUs
+Message-ID: <CAMj1kXHktLC2F=suQoNF80-ZQ93-3pxWz20_L76_6morUGPaNQ@mail.gmail.com>
+Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode for x86
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, 
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, luto@kernel.org, xin@zytor.com, 
+	kirill.shutemov@linux.intel.com, palmer@dabbelt.com, tj@kernel.org, 
+	andreyknvl@gmail.com, brgerst@gmail.com, dave.hansen@linux.intel.com, 
+	jgross@suse.com, will@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, 
+	corbet@lwn.net, dvyukov@google.com, richard.weiyang@gmail.com, 
+	ytcoode@gmail.com, tglx@linutronix.de, hpa@zytor.com, seanjc@google.com, 
+	paul.walmsley@sifive.com, aou@eecs.berkeley.edu, justinstitt@google.com, 
+	jason.andryuk@amd.com, glider@google.com, ubizjak@gmail.com, jannh@google.com, 
+	bhe@redhat.com, vincenzo.frascino@arm.com, rafael.j.wysocki@intel.com, 
+	ndesaulniers@google.com, mingo@redhat.com, catalin.marinas@arm.com, 
+	junichi.nomura@nec.com, nathan@kernel.org, ryabinin.a.a@gmail.com, 
+	dennis@kernel.org, bp@alien8.de, kevinloughlin@google.com, morbo@google.com, 
+	dan.j.williams@intel.com, julian.stecklina@cyberus-technology.de, 
+	peterz@infradead.org, kees@kernel.org, kasan-dev@googlegroups.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, llvm@lists.linux.dev, linux-doc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Fixes: e3117404b41124c88a4d834fc3222669a880addc
-would probably be most appropriate
+On Wed, 5 Feb 2025 at 20:31, Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
+>
+> MTE tagging is part of the processor standard for ARM64 and Linux will
+> need to support the 16 byte tagging feature one way or another even if
+> Intel does not like it. And AFAICT hardware tagging support is a critical
+> security feature for the future.
+>
 
-On Wed, Feb 5, 2025 at 3:01=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Wed, Feb 5, 2025 at 9:08=E2=80=AFPM Matthew Maurer <mmaurer@google.com=
-> wrote:
-> >
-> > In case you were waiting for an answer on that, it's because I was
-> > trying to be as loose as possible, since `__odr_asan` isn't going to
-> > end up on random symbols we *intended* to export from the kernel.
-> > We could technically restrict it to `__odr_asan_gen_` to be more
-> > precise and it should still work.
->
-> Sounds good, thanks!
->
-> Should we add a Fixes tag to any particular commit?
->
-> Cheers,
-> Miguel
+Can you explain what you feel is lacking in the existing MTE support
+in KAsan (enabled when selecting CONFIG_KASAN_HW_TAGS)?
