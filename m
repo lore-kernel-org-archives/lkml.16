@@ -1,56 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2705522CBF1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B9422CBEB
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752240; cv=none; b=NbKVbjxmk8bBxDsQ9++y7Kkes/D/SJVtbVkwhSdv6tycylbEBbrbD81NaYqrg5qcLsMMeGPNT/a5jNvNY4Ko3mSN5kiknr8df63ZP1AFIW7qUp/AmKefw51CEd1mn5uZ4x7JLzKNOu5hsGx7GKlykaC/eprnRU/HPIKxO89UZW8=
+	t=1738752240; cv=none; b=N0VlpmZa0s5qb/Hiex5j5BWoGv49l8HWMqJILpTXe7O2+wW71m23H2zYQcR9PO4AEBHwZMa7pVMwV28SVdZ3HvnPLI0A1amDgej0+RaeJMtfdtA7/fKvzJPuOCa4YxFheTTSequoeqLbRt8hxNtmndX37zknQbxCYKmP585Yc3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752240; c=relaxed/simple;
-	bh=+JdS25xk+TqOfQJHkLDT0aZEdhXfu19wKe+qt+LGE3o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K4je/3Kb6ZFEl5n0u9vPcVLP75sqdG7xuiJIA0J5gEZ6wOFCyI8jNkZkTFw0R5SVMFgNULO8uj/dyUh3iC0s5BFyJLsdSFNnfUx9K/rDhLKJDRy7+1p8x0IvjdJb4XX/5rW9kYm5HVdJvkagEv7srd+PBLQpT1uxfpuV8S3tRbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tHKQBygT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MFO20ue/; arc=none smtp.client-ip=193.142.43.55
+	bh=1VKERE/3NmbrcRJIxE0CJ9VhWtSsoK7JDqT1V7qm/gg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IE8XdBvoECx85dBXxmUTJm1zx7Uh3SQsqwHZ9IvdZSeSNVYt1+rZisMWsuszpVMJp0WmrkgwGTQ7h49oI2hwGusC1cmQHWZ+QRC+cIPAslKweAZqHuVlHCRCefeLpH3gi/J0N9i0AlzGKTQns5EnB2iKiqvJWfzUT2G9jyEhBZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t9KfqIxo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OkSckskN; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tHKQBygT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MFO20ue/"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t9KfqIxo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OkSckskN"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738752237;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UujHhq6YPDPotMt/DdpLHs0nbxctZ3RHVGws7AIL4Tw=;
-	b=tHKQBygTwdLu0Lq5EUJloPF9BuuoHBXM044qPqQyBdlAkxfwt89Udu8O89YxTyu8620PWi
-	gr6xaWrkncfv8fpn9TaclLLTMFiEVTABXHsdJ1fGuOJWHm053Pth17l9f/Yu9LaFIxlmzF
-	lAdBjtg3DuUml4kU+rHfdpdGoDD0z33Y7BcdHFLh5W8KSjGDC5yL8iTuZ3+zzZYyxEoiiW
-	VogoTim++oMUsI8uOrkzhHj9gDN5oZxwW1hWvRI59APmie22lmVeVUXwr7SfIU2sO3z0Ry
-	XoVZf+xIz2EypLAhC+DzHV2RHD8pqSZK+0nHH8yNrSAgg4KStUYf8QIdkW93oA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6f8tajSQxlWZwKFys7jINlkCMDSb595FfBICmDbiTIE=;
+	b=t9KfqIxoHgTY56FMfcRb0LROOy8S2f0tB087DF/mYytsdY8SwbA9zQu47HooY3UEhH9B4R
+	TsDwC2qMl1StsNALpW0+1hdqNmEJgLWhne3L0qPsn3PyHwQgsfs6F8vDg3apvVdhHQepKt
+	FCpn00JvJ1ceJcUoeCUN7T/y1rqxsWHrYhT0hMCztzd5I45BwTDEM4GYuMN9FNhDzkGvWY
+	zjmdCIptKbzKWDndfZB0vLHlB1zzgwKh1cD4oqlX0iR1mc4IflBFH6qq7ZnLYZedJ3nHcU
+	Qy/Z97+N43TuLBMvRHXDaKRFANHP/G8Bx95X1zgJQIwMc2ZBQHKD/PKmBeGp+Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738752237;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UujHhq6YPDPotMt/DdpLHs0nbxctZ3RHVGws7AIL4Tw=;
-	b=MFO20ue/r9//pAnZM9IC5qcgdW+XArcRAepk4U96EJLir0xS1e5BM1akE6XgrRfFEyTZta
-	BRyDsk2jx7RM9SBA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6f8tajSQxlWZwKFys7jINlkCMDSb595FfBICmDbiTIE=;
+	b=OkSckskN8hz3xbyNAOf2ed4eNBDqYvaR7RZh1YOjH83zZ/WJ0FFNTaf4JqWZcFMWHcpwj+
+	JAD65jxXO0fHj0DQ==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH v2 01/24] netdev: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:43:21 +0100
-Message-Id: <861d9b287f2b5206b853dbcc0f302127f2a7f8ac.1738746872.git.namcao@linutronix.de>
-In-Reply-To: <cover.1738746872.git.namcao@linutronix.de>
-References: <cover.1738746872.git.namcao@linutronix.de>
+	Paolo Abeni <pabeni@redhat.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Oliver Neukum <oliver@neukum.org>,
+	Kalle Valo <kvalo@kernel.org>
+Subject: [PATCH v2 00/24] hrtimers: Consolidate hrtimer initialization - Part 3
+Date: Wed,  5 Feb 2025 11:43:20 +0100
+Message-Id: <cover.1738746872.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,37 +57,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-hrtimer_setup() takes the callback function pointer as argument and
-initializes the timer completely.
+hrtimers is initialized with hrtimer_init(), and after that the timer's
+callback function is setup separately. This separate initialization is
+error prone and awkward to use.
 
-Replace hrtimer_init() and the open coded initialization of
-hrtimer::function with the new setup mechanism.
+hrtimer_setup() combines the initialization and is simpler to use.
 
-Patch was created by using Coccinelle.
+Switch to use the new setup function. Most conversions were done with
+Coccinelle, see the sematic patch below.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
+This series is intended to be applied to the tip tree.
+
+v1 -> v2 https://lore.kernel.org/lkml/cover.1729865232.git.namcao@linutroni=
+x.de
+  - rebase to v6.14-rc1
+  - use the existing hrtimer_dummy_timeout() for rt2x00 driver and bcm driv=
+er
+---
+virtual patch
+@@ expression timer, clock, mode, func; @@
+- hrtimer_init(timer, clock, mode);
+  ...
+- timer->function =3D func;
++ hrtimer_setup(timer, func, clock, mode);
+
+@@ expression timer, clock, mode, func; @@
+- hrtimer_init(&timer, clock, mode);
+  ...
+- timer.function =3D func;
++ hrtimer_setup(&timer, func, clock, mode);
+
+@@ expression timer, clock, mode, func; @@
+- hrtimer_init_on_stack(&timer, clock, mode);
+  ...
+- timer.function =3D func;
++ hrtimer_setup_on_stack(&timer, func, clock, mode);
+
+@@ expression timer, clock, mode; @@
+- hrtimer_init_sleeper_on_stack(timer, clock, mode);
++ hrtimer_setup_sleeper_on_stack(timer, clock, mode);
+
+---
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Oliver Neukum <oliver@neukum.org>
+Cc: Kalle Valo <kvalo@kernel.org>
 ---
- net/core/dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/can/m_can/m_can.c                 |  9 ++++---
+ .../net/can/spi/mcp251xfd/mcp251xfd-ring.c    |  8 +++----
+ drivers/net/ethernet/cortina/gemini.c         |  5 ++--
+ drivers/net/ethernet/ec_bhf.c                 |  3 +--
+ drivers/net/ethernet/freescale/fec_ptp.c      |  4 ++--
+ drivers/net/ethernet/hisilicon/hip04_eth.c    |  4 +---
+ drivers/net/ethernet/intel/igc/igc_main.c     |  4 ++--
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   |  5 ++--
+ .../net/ethernet/marvell/octeontx2/af/ptp.c   |  3 +--
+ .../ethernet/microchip/sparx5/sparx5_packet.c |  4 ++--
+ .../ethernet/qualcomm/rmnet/rmnet_map_data.c  |  4 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  6 ++---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      |  9 ++++---
+ drivers/net/ethernet/ti/icssg/icssg_common.c  |  5 ++--
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c  |  5 ++--
+ drivers/net/ieee802154/at86rf230.c            |  4 ++--
+ drivers/net/usb/cdc_ncm.c                     |  3 +--
+ .../wireless/mediatek/mt76/mt76x02_usb_core.c |  4 ++--
+ .../net/wireless/ralink/rt2x00/rt2x00dev.c    |  4 ++--
+ drivers/net/wireless/virtual/mac80211_hwsim.c |  6 ++---
+ drivers/net/wwan/iosm/iosm_ipc_imem.c         | 24 ++++++++-----------
+ include/linux/hrtimer.h                       |  5 ++++
+ kernel/time/hrtimer.c                         |  5 ----
+ net/can/bcm.c                                 | 20 +++++++---------
+ net/can/isotp.c                               | 10 ++++----
+ net/can/j1939/bus.c                           |  4 ++--
+ net/can/j1939/transport.c                     |  8 ++-----
+ net/core/dev.c                                |  3 +--
+ net/ipv4/tcp_timer.c                          | 10 ++++----
+ net/mac802154/main.c                          |  4 ++--
+ net/sched/act_gate.c                          |  3 +--
+ net/sched/sch_api.c                           |  3 +--
+ net/sched/sch_taprio.c                        |  6 ++---
+ net/xfrm/xfrm_iptfs.c                         |  6 ++---
+ net/xfrm/xfrm_state.c                         |  4 ++--
+ 35 files changed, 88 insertions(+), 126 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index c0021cbd28fc..cae7fd3e5089 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6931,8 +6931,7 @@ void netif_napi_add_weight_locked(struct net_device *=
-dev,
-=20
- 	INIT_LIST_HEAD(&napi->poll_list);
- 	INIT_HLIST_NODE(&napi->napi_hash_node);
--	hrtimer_init(&napi->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED);
--	napi->timer.function =3D napi_watchdog;
-+	hrtimer_setup(&napi->timer, napi_watchdog, CLOCK_MONOTONIC, HRTIMER_MODE_=
-REL_PINNED);
- 	init_gro_hash(napi);
- 	napi->skb =3D NULL;
- 	INIT_LIST_HEAD(&napi->rx_list);
 --=20
 2.39.5
 
