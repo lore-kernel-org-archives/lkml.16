@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD6223237B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30506236A8A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752428; cv=none; b=u7qVGee9pqphCNtshwQBa6GGpQrZzq4P5f3WxIhkY29GMeYXtuJJ1gwFPUnqBaDQDYnwoq2G3aoGnqaK09DHa1V2MC9PuKcn2ghZdX7zt49+qlKvWwqnF9EDV8Tk7QzmC48enQr58+OlGq6x2BhXb/deL15jht3f3z/AhPClXfs=
+	t=1738752428; cv=none; b=g7naS8UX0ZeXAzsIP9TD5cvkSpenIghc5f7Yjb7tU8RPBEdvy2npEi7tjpwgRZ4sD/sMBPFKjXVH0r6bkeet8LJQIAeeqnTzU6wPTq+sWaleDCTc7/YFtSkgWW9I93JetS6NHoaG6zqkm6TalkcEe1YOfmfn83iA0AaDtjy1MPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752428; c=relaxed/simple;
-	bh=wB4KZZhxcAGUFl8hG1aAQBp00DCCTwAtv3/hip2nNdo=;
+	bh=mgqcCX6BM96yb3Bl8K0m4m+eUi5M61u//7rwqmwiyxg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q4/D/AdT1F5ii2pL7r9k//QbpOS/76paYEWpN2NrEBho+KHs2sV2HLaiV1/l1xyUa8FW6Dw+v2oI6qF9LPyFL6/tnIr/L3am1d9bgeM7TDZGS32LdJDWPk1huU85zGilJVV2Ie8gyQ5/+uwuMqrZ4Q6ky65q8zIrtDEYcopCu3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Fj6/aebK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4my0yOh9; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Owgs3OdDaSCRcjugkRXfg33ZphSvknI9PBA576nmsZpv3OExiqTsnm8JEkC/cYDCm6AKKqAfoomkUwWivNejoJbJv3yEFvSZsM4kFBPQkxSlPGdD9yNQEhkPDkJtSBfAQLYD8gWzrvqswvkYMm6pyrdaJqZNPJ6Nj9HRKA+cn5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=slzoVW+6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SqewLaHX; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fj6/aebK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4my0yOh9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="slzoVW+6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SqewLaHX"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738752424;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ajmbXs69PsDZhtlzwk7dXfl62K8OxjcLUr12Ed9DLtg=;
-	b=Fj6/aebKFCAEHWBW4D9VSqC15xAK5Bcaj1eHbAnelUJilh4c8aBrSlFhchuGs53Ucx87tx
-	oQjn8hdO/N0pjYw+fqr2u0YncxCUVUA6ZFZfWJZR36a8A+pLEcYe6Yz2LpoqGjujb43e/4
-	5F3Z/52ouO+SHsYQd7OPLGRFWj+QgaE87XlYyz6c1R6D++2MJTRiN0p0AecOQ2058VGEkq
-	uziwZk5I4bAusr3HB2/XFLu7zaG/FTtCTT9YdNKY0D8/auEj1Tx0lnV+Y7KWUPscASCQyQ
-	tagJgIADI7LL2ubOT9v086UTUFjdW6ULhCXkwqqF/G8Fu7M8PXA81u78Z+fcbA==
+	bh=Gdb8JDczRno+JM4eSptWKwnjmZDpWhwZ/3dSo4UPyXU=;
+	b=slzoVW+60ryVYQXErtqvsmRm/jMawb9A6N+kbs1+qleVKfj1qIZB8faHirP3OD18vt3oAp
+	f7bTb80I3zvx+jaXDPCYoLpFbGBZjt70vqV+I1NAB6BcEy/L5V73OYYns9kH2Lwu4ewmbg
+	vy8gC9INp29QM05unoY2ke3fWQkPh/D7p1PaJmFSQapnTz00gVZ1PY0aYgMm1YsD6lsSyO
+	dQeiUxo0Dy5Esc5WcKJC0ipUTAOIj3cGwObuN/v+vGnMqVb+CmbBZKf0vrM47njdteUsr9
+	vCSbwc+bEj9XO24z/TwyJLBldwIu2xU/EIOf1Y5R6pQHQQrqIbsFnXYojsKgMQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738752424;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ajmbXs69PsDZhtlzwk7dXfl62K8OxjcLUr12Ed9DLtg=;
-	b=4my0yOh9Yn4l9AJW7618/hPvuf8juNPMWtYY/wL2e9QgFubgjNBx6egKUMUlWu/OwPp0q8
-	xiydbKqY8s9IdnBA==
+	bh=Gdb8JDczRno+JM4eSptWKwnjmZDpWhwZ/3dSo4UPyXU=;
+	b=SqewLaHXU08fKchbmi+nd6S4j0lUSPnF4WCXpqIgPvQ41DIn63MAqBTlv0vWnbsAscwD1y
+	xWalUql2PkVdskAg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -46,9 +46,9 @@ To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 Cc: Nam Cao <namcao@linutronix.de>,
 	Zack Rusin <zack.rusin@broadcom.com>,
 	Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH v2 35/45] drm/i915/uncore: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:23 +0100
-Message-Id: <1d0ad9ab31040d9c3478b77626cdb0a04c0a7bad.1738746904.git.namcao@linutronix.de>
+Subject: [PATCH v2 36/45] drm/i915/request: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:24 +0100
+Message-Id: <4fe658e6d8483e44d4fff579bc426e627487f6ca.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -71,26 +71,25 @@ Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Acked-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/gpu/drm/i915/intel_uncore.c | 3 +--
+ drivers/gpu/drm/i915/i915_request.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_uncore.c b/drivers/gpu/drm/i915/int=
-el_uncore.c
-index eed4937c3ff3..bdcfcae83b52 100644
---- a/drivers/gpu/drm/i915/intel_uncore.c
-+++ b/drivers/gpu/drm/i915/intel_uncore.c
-@@ -2103,8 +2103,7 @@ static int __fw_domain_init(struct intel_uncore *unco=
-re,
+diff --git a/drivers/gpu/drm/i915/i915_request.c b/drivers/gpu/drm/i915/i91=
+5_request.c
+index 8f62cfa23fb7..ea0b8e7e4828 100644
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -293,8 +293,7 @@ static void __rq_init_watchdog(struct i915_request *rq)
+ {
+ 	struct i915_request_watchdog *wdg =3D &rq->watchdog;
 =20
- 	d->mask =3D BIT(domain_id);
+-	hrtimer_init(&wdg->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	wdg->timer.function =3D __rq_watchdog_expired;
++	hrtimer_setup(&wdg->timer, __rq_watchdog_expired, CLOCK_MONOTONIC, HRTIME=
+R_MODE_REL);
+ }
 =20
--	hrtimer_init(&d->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	d->timer.function =3D intel_uncore_fw_release_timer;
-+	hrtimer_setup(&d->timer, intel_uncore_fw_release_timer, CLOCK_MONOTONIC, =
-HRTIMER_MODE_REL);
-=20
- 	uncore->fw_domains |=3D BIT(domain_id);
-=20
+ static void __rq_arm_watchdog(struct i915_request *rq)
 --=20
 2.39.5
 
