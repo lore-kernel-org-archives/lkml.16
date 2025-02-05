@@ -1,321 +1,138 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EB31FDE39
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8AE1DDC28;
+	Wed,  5 Feb 2025 16:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738772928; cv=none; b=Tv2CJmwgknqXdR0VL6c76YExn6tNcMpFZUVlAyxeQ+e8H43t71AjW4GASXeC17ZfLFkwn1qSMvrHlmiduVvRqMCE8BQEYGpEkj6J9aOn1glKVp61Ulxfj8baows/UuPcRbq95tW7LBT/yXZCivXsZfJlMj8kiUKIPYaPUUzdFa8=
+	t=1738772973; cv=none; b=j2Okc4JO470QWieaYPu6bFFZvj8bfmCvWTPejM2Ka/VR/mQlrnWwTJMj7WjRjExO/Viu2VD+JXvmbFoaq/SQIs8zhOXvF2f415YW3Q/frSs2rZS7vDFDHowbyErAJV/0Bl/KjmPTp0zAsN3YML67KKTJ6EL8ib/ffX4DzNutu8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738772928; c=relaxed/simple;
-	bh=Flm72J3X3TDvLIeQHIIlYLGaUwFP9lEWoVmqSXmZ1ZQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G3QDQyJ9r2P1sKZ+i9Ezqf5myf2NkNR+UF68sA2uKTTJ0mNBl93Z3iRbFWDhyMR2yagbW1VKswYnMD7Y96LqbbVjmSWuhcd+jjY+7+U0z92YHzJF04kd09OfA8IOzQPwthPKXXAMyjMLZxJ7WRrDFylXhnS9xBGKPhUOqD5avJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eXV4Sr15; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1738772973; c=relaxed/simple;
+	bh=d0uZKmyfPtM1dxbl4GJ+Vu5RdmQBS52EMFV3irgcQYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AzRJ14e5QlQN1L1I3tABzGUuAGQUnYTmcoQ7F3lb+MCkWgfaDE5IqQWzftiqaqayIlT7Go4F+WLaNm1niTudMce9ho/UpNYQ5tQLmmQ9KlnYeR7jUEvSLONjrD7aCEnkxaRDqqPQHYPeFdQZt+kXr8ttEp7cvCO+X94lIty60Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCi0elgY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eXV4Sr15"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5dc6714f3e8so6829027a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738772924; x=1739377724; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
-        b=eXV4Sr15c+apJtHWDWhJ5OWoqs1y8579w48cXMrV4qQcJ9/4jLN9y2ChMSN4AWZQtW
-         kO6O6T0yXX8evZ4uU10bQPlofDWWn7vRpm9YOfFiArgBK9322hw6LBy5lgzHbFaq1j/P
-         9K6Ac6BGm5lsZqjBDRFml9tDWPgAFIv1njDQLgk83QT0uPE6RNuD46lteWnDwztuS3PD
-         PKgA7qwlFyw0we30DIL4NRi65yBLyflGdT9N749tUBRLWRTuH00rNvn/OKNiyzGer1by
-         wkL1NS+geh1BIAnKQWun0PbKFPr/el429+Xr62TAu5B0PzLnSP6cWm2KXX495HMlvgv4
-         bz+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738772924; x=1739377724;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
-        b=RNS18fWusXlwivW82yQF/bQH1uxrP7nhz4WqvelsSmo5CPl1PSshZw7jIYU4tacHpo
-         8Xu3pxgJlkbDisEUY8vcaCPOBw5XLCz/NiRxvSjHXcMurOVQ8aH9omtA+bzdNiA5OyfP
-         Kj3Y6a7jpdpccRxMV9ID9rhETRFjcl8WsQ/QhzbIQgOIoV0UoNg7jCW9KO5IdO1HfFz6
-         koYKcJh6D7uAlWfte1d+rZ1jaUIAXY3ZoWKZyoG2msyTfJk5PweiBaiqKI+IHrCqqrhJ
-         D/HUY+MdVhEVOC65iXYaR4zavknwCWueVFo8SyLL9PP+wtJByddznLqQFol+zaRt6C/3
-         2QBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDgxleunl8eA/sh57Z1o2jw4+QR2IkYewRktSN0ic6jFdsPaFYtoxYTxWGJeOjx3kr2+A+jgrhlMaTMnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh4yPiDcDszXpf1WeCwdBM+HHdOiZ5iW04w6FDWGwaZaDM2RhZ
-	Yqb4U9PWBVaPFDOXVpyUL/PC/gtVXZrQg1t0KCwReSPjAlmzbeLfK2H+uat3qA/SRiCx8Gx9Q+5
-	3TizFhQ==
-X-Google-Smtp-Source: AGHT+IEWO5sJTSfqHdmMX8GbBn26uPrUyFmrXzY3rYMz3tkbrHB3NIxMZxhjCRe2TdCG65Yo+MIiPi2RQ9Sb
-X-Received: from edbeo6.prod.google.com ([2002:a05:6402:5306:b0:5dc:e158:572c])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:13c8:b0:5dc:7fbe:730a
- with SMTP id 4fb4d7f45d1cf-5dcdb58fb0cmr3841951a12.0.1738772924696; Wed, 05
- Feb 2025 08:28:44 -0800 (PST)
-Date: Wed,  5 Feb 2025 17:27:47 +0100
-In-Reply-To: <cover.1738772628.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCi0elgY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E759C4CED1;
+	Wed,  5 Feb 2025 16:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738772972;
+	bh=d0uZKmyfPtM1dxbl4GJ+Vu5RdmQBS52EMFV3irgcQYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lCi0elgYle0tH9injXPplB/uayOG/myK3mKLZ2q1Zj8BoH+JmAGLhxk5VSsSHLIdf
+	 bN1YUcrt0RLW34e6z/qPB/Imj13wNSwO5ZxgZeJhSGhpaqZ9n12+zUAKrVR9QP4qfr
+	 edMBapiqqKDCIl0JuOnZHRzzOXAk2tj2eKD87swe8PhEa4zHrrNk2Q9s6m4jAVM34C
+	 qAqpKQedbvp+AtCO4cjbwcQ/voa9E9ibwRTV088SxPSAKe3UKaDnFXq35VMEitABnz
+	 IKxzggXdF5TzCEjF0ZQL0cnlXdl1su3dUoLyvtkxWbdv0cHLteQjAKh6GPHzZ+8pmw
+	 gpoDtZpZi7Nvw==
+Date: Wed, 5 Feb 2025 17:29:30 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
+Message-ID: <6js6k6xz3vuqshq2pfwqifby4t5q54ftztxxw2rau4j23xx2y5@u5xubi6v3uil>
+References: <20250205095547.536083-1-herve.codina@bootlin.com>
+ <20250205095547.536083-3-herve.codina@bootlin.com>
+ <ejdh76c4r44gxsdi7gwed65ste3wuunki2jgavc3wsfri5yaex@jccsywdfadgp>
+ <20250205143737.1315baba@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <7aa4afff6a1aeaef671393d414f142bec0ead68b.1738772628.git.dvyukov@google.com>
-Subject: [PATCH v5 8/8] perf hist: Shrink struct hist_entry size
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="56vutjr4wmd3jj6f"
+Content-Disposition: inline
+In-Reply-To: <20250205143737.1315baba@bootlin.com>
 
-Reorder the struct fields by size to reduce paddings and reduce
-struct simd_flags size from 8 to 1 byte.
 
-This reduces struct hist_entry size by 8 bytes (592->584),
-and leaves a single more usable 6 byte padding hole.
+--56vutjr4wmd3jj6f
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
+MIME-Version: 1.0
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Hello Herv=E9,
 
----
-Pahole output before:
+On Wed, Feb 05, 2025 at 02:37:37PM +0100, Herve Codina wrote:
+> On Wed, 5 Feb 2025 12:38:32 +0100
+> Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
+> > Does this also work if &soc_pwm2 has #pwm-cells =3D <2>? Would I need j=
+ust
+> >=20
+> > 	pwm-map =3D <0 0 0 &soc_pwm1 1 0 0>,
+> > 		  <1 0 0 &soc_pwm2 4 0>,
+> > 		  <2 0 0 &soc_pwm1 3 0 0>;
+>=20
+> Yes, exactly.
+>=20
+> >=20
+> > then and
+> >=20
+> > 	pwms =3D <&connector 1 57000 0>;
+> >=20
+> > would then have the same effect as
+> >=20
+> > 	pwms =3D <&soc_pwm2 4 57000>
+>=20
+> Yes, the last 0 (or any other values) in pwms =3D <&connector 1 57000 0> =
+is
+> simply dropped in the translation (#pwm-cells =3D 3 in connector nexus to
+> #pwm-cells =3D 2 in soc_pwm1 node).
+>=20
+> In more generic terms, it works in translation from #pwm-cells =3D N to
+> #pwm-cells =3D M by simply dropping the last N-M values.
+>=20
+> Also note that even if values are dropped, you need to have them set when
+> you point the nexus node because #pwm-cells =3D 3 is set in the connector
+> node and need to be fixed and usable for all the entries in the
+> pwm-map table.
 
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
+Makes sense.
 
-	/* XXX last struct has 4 bytes of padding */
+> > and the 0 is dropped then? Could I adapt the mapping that the effect is
+> >=20
+> > 	pwms =3D <&soc_pwm2 57000 0>
+>=20
+> In this one, I think you miss the PWM number
+>=20
+> If I read correctly this line you ask for the PWM 57000 from the soc_pwm2
+> controller. This doesn't make sense :)
 
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	s32                        socket;               /*   232     4 */
-	s32                        cpu;                  /*   236     4 */
-	int                        parallelism;          /*   240     4 */
+Some pwm chip devices with only a single output line use this. The first
+paramter is the default period (which is passed in the 2nd parameter
+normally) and the 2nd paramter are flags (normally the 3rd parameter).
+Back then the rationale was that for such hardware, the line index is
+zero always anyhow, and so could better be skipped.
 
-	/* XXX 4 bytes hole, try to pack */
+Compare of_pwm_xlate_with_flags() to of_pwm_single_xlate(). pwm-pxa is
+the single offender using the latter. Thinking about that, it's easy
+enough to fix without breaking compatibility. I'll tackle that.
 
-	u64                        code_page_size;       /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        weight;               /*   256     8 */
-	u64                        ins_lat;              /*   264     8 */
-	u64                        p_stage_cyc;          /*   272     8 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
+So for a PWM on pxa `<&soc_pwm2 57000 0>` works fine.
 
-	/* XXX 2 bytes hole, try to pack */
+Best regards
+Uwe
 
-	int                        mem_type_off;         /*   284     4 */
-	struct simd_flags          simd_flags;           /*   288     8 */
-	_Bool                      dummy;                /*   296     1 */
-	_Bool                      leaf;                 /*   297     1 */
-	char                       level;                /*   298     1 */
+--56vutjr4wmd3jj6f
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	/* XXX 1 byte hole, try to pack */
+-----BEGIN PGP SIGNATURE-----
 
-	filter_mask_t              filtered;             /*   300     2 */
-	u16                        callchain_size;       /*   302     2 */
-	union {
-		struct hist_entry_diff diff;             /*   304   120 */
-		struct {
-			u16        row_offset;           /*   304     2 */
-			u16        nr_rows;              /*   306     2 */
-			_Bool      init_have_children;   /*   308     1 */
-			_Bool      unfolded;             /*   309     1 */
-			_Bool      has_children;         /*   310     1 */
-			_Bool      has_no_entry;         /*   311     1 */
-		};                                       /*   304     8 */
-	};                                               /*   304   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
-	char *                     srcline;              /*   424     8 */
-	char *                     srcfile;              /*   432     8 */
-	struct symbol *            parent;               /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	struct branch_info *       branch_info;          /*   448     8 */
-	long int                   time;                 /*   456     8 */
-	struct hists *             hists;                /*   464     8 */
-	struct mem_info *          mem_info;             /*   472     8 */
-	struct block_info *        block_info;           /*   480     8 */
-	struct kvm_info *          kvm_info;             /*   488     8 */
-	void *                     raw_data;             /*   496     8 */
-	u32                        raw_size;             /*   504     4 */
-	int                        num_res;              /*   508     4 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	struct res_sample *        res_samples;          /*   512     8 */
-	void *                     trace_output;         /*   520     8 */
-	struct perf_hpp_list *     hpp_list;             /*   528     8 */
-	struct hist_entry *        parent_he;            /*   536     8 */
-	struct hist_entry_ops *    ops;                  /*   544     8 */
-	struct annotated_data_type * mem_type;           /*   552     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   560    16 */
-			/* --- cacheline 9 boundary (576 bytes) --- */
-			struct rb_root_cached hroot_out; /*   576    16 */
-		};                                       /*   560    32 */
-		struct rb_root     sorted_chain;         /*   560     8 */
-	};                                               /*   560    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejkecACgkQj4D7WH0S
+/k4fTwgAsEzABfbbBa/jWtTTBq123MvJs2pfyldUvykMIIugEjnMYwtBMtdIw8kS
+0PS9lDalHKCedoLAFZb6F0jlP/NXskM1g1QtFDd4Jj5UKsAoGZE9McUIDnKQ2d3x
+OP+EMwS8xxgiEaDxh5JAwyohByfLBVIsmlv8XSO1E6deyTQkdNFdt7j835eF6KmO
+hPVP6ifgcjbSTINdz+KP53TbLc4sfIRpjZoG7jJ6ITv8HmRfpaZ2czQUvuVJtpcV
+1Uq4E5xlVIwqtIcxSPEayIjABm6hJjOdixKdoPi1/FjWh+/bAiZaqjAMo5oIpzxC
+TroXi9PjpYswyRcM0pJrBbDqn3f9ZA==
+=kiW0
+-----END PGP SIGNATURE-----
 
-	/* size: 592, cachelines: 10, members: 49 */
-	/* sum members: 585, holes: 3, sum holes: 7 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
-
-After:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	u64                        code_page_size;       /*   232     8 */
-	u64                        weight;               /*   240     8 */
-	u64                        ins_lat;              /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        p_stage_cyc;          /*   256     8 */
-	s32                        socket;               /*   264     4 */
-	s32                        cpu;                  /*   268     4 */
-	int                        parallelism;          /*   272     4 */
-	int                        mem_type_off;         /*   276     4 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-	struct simd_flags          simd_flags;           /*   282     1 */
-	_Bool                      dummy;                /*   283     1 */
-	_Bool                      leaf;                 /*   284     1 */
-	char                       level;                /*   285     1 */
-	filter_mask_t              filtered;             /*   286     2 */
-	u16                        callchain_size;       /*   288     2 */
-
-	/* XXX 6 bytes hole, try to pack */
-
-	union {
-		struct hist_entry_diff diff;             /*   296   120 */
-		struct {
-			u16        row_offset;           /*   296     2 */
-			u16        nr_rows;              /*   298     2 */
-			_Bool      init_have_children;   /*   300     1 */
-			_Bool      unfolded;             /*   301     1 */
-			_Bool      has_children;         /*   302     1 */
-			_Bool      has_no_entry;         /*   303     1 */
-		};                                       /*   296     8 */
-	};                                               /*   296   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	char *                     srcline;              /*   416     8 */
-	char *                     srcfile;              /*   424     8 */
-	struct symbol *            parent;               /*   432     8 */
-	struct branch_info *       branch_info;          /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	long int                   time;                 /*   448     8 */
-	struct hists *             hists;                /*   456     8 */
-	struct mem_info *          mem_info;             /*   464     8 */
-	struct block_info *        block_info;           /*   472     8 */
-	struct kvm_info *          kvm_info;             /*   480     8 */
-	void *                     raw_data;             /*   488     8 */
-	u32                        raw_size;             /*   496     4 */
-	int                        num_res;              /*   500     4 */
-	struct res_sample *        res_samples;          /*   504     8 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	void *                     trace_output;         /*   512     8 */
-	struct perf_hpp_list *     hpp_list;             /*   520     8 */
-	struct hist_entry *        parent_he;            /*   528     8 */
-	struct hist_entry_ops *    ops;                  /*   536     8 */
-	struct annotated_data_type * mem_type;           /*   544     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   552    16 */
-			struct rb_root_cached hroot_out; /*   568    16 */
-		};                                       /*   552    32 */
-		struct rb_root     sorted_chain;         /*   552     8 */
-	};                                               /*   552    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
-
-	/* size: 584, cachelines: 10, members: 49 */
-	/* sum members: 578, holes: 1, sum holes: 6 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
----
- tools/perf/util/hist.h   | 8 ++++----
- tools/perf/util/sample.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 29d4c7a3d1747..317d06cca8b88 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -239,16 +239,16 @@ struct hist_entry {
- 	u64			cgroup;
- 	u64			ip;
- 	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
- 	u64			p_stage_cyc;
-+	s32			socket;
-+	s32			cpu;
-+	int			parallelism;
-+	int			mem_type_off;
- 	u8			cpumode;
- 	u8			depth;
--	int			mem_type_off;
- 	struct simd_flags	simd_flags;
- 
- 	/* We are added by hists__add_dummy_entry. */
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555e..ab756d61cbcd6 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -67,7 +67,7 @@ struct aux_sample {
- };
- 
- struct simd_flags {
--	u64	arch:1,	/* architecture (isa) */
-+	u8	arch:1,	/* architecture (isa) */
- 		pred:2;	/* predication */
- };
- 
--- 
-2.48.1.362.g079036d154-goog
-
+--56vutjr4wmd3jj6f--
