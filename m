@@ -1,122 +1,144 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2084.outbound.protection.outlook.com [40.107.102.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F86213257;
-	Wed,  5 Feb 2025 03:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738726292; cv=none; b=Vh0oIynsaj7WPdm45ggSRP/h6RJ2m7GBy0+Rnq6+GAvyzFE6tC9HSKAbehunev0qcfjO5QCH7xYhBPyk6Izuu4/dWjBa48Qy/23JTTQTN4XScwwwtjWu8ld7zpXjNzpZy4eDsFHk3JjLLZQwqHjvt65vQqb3w6/a1VFPmc2DGNc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738726292; c=relaxed/simple;
-	bh=urAiWcI+unnf4eqWdfgetoTmXP/X1whvl5UXZGvQbhA=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OKn21AzERAfc6gj4pEPDiXI6LSSrLIyQF0qbgoqgIJkjEXLy+cZNrbUHO7MttvYPBllJFxSStAoTD6gf8rvbyMYNsr4oKlF1RcnTzfUWNYUi22ooVaJe5k59PvSSfZWe2sDZyv1UWSz7YVv8RywrxHih2wT2ADnqMEyjS4sOG9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Ynlhh5HGSz20nLm;
-	Wed,  5 Feb 2025 11:14:44 +0800 (CST)
-Received: from kwepemk100010.china.huawei.com (unknown [7.202.194.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id B70AA1401F2;
-	Wed,  5 Feb 2025 11:14:16 +0800 (CST)
-Received: from kwepemk100005.china.huawei.com (7.202.194.53) by
- kwepemk100010.china.huawei.com (7.202.194.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 5 Feb 2025 11:14:16 +0800
-Received: from kwepemk100005.china.huawei.com ([7.202.194.53]) by
- kwepemk100005.china.huawei.com ([7.202.194.53]) with mapi id 15.02.1544.011;
- Wed, 5 Feb 2025 11:14:13 +0800
-From: "liuchao (CR)" <liuchao173@huawei.com>
-To: "linux@roeck-us.net" <linux@roeck-us.net>
-CC: caihe <caihe@huawei.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org"
-	<linux-watchdog@vger.kernel.org>, lixiaokeng <lixiaokeng@huawei.com>,
-	"wim@linux-watchdog.org" <wim@linux-watchdog.org>
-Subject: Re: [PATCH] watchdog: only print critical log when the watchdog fails
- to be stopped
-Thread-Topic: Re: [PATCH] watchdog: only print critical log when the watchdog
- fails to be stopped
-Thread-Index: Adt3eoD6Tk0WevgDTROHhRBW5boicg==
-Date: Wed, 5 Feb 2025 03:14:13 +0000
-Message-ID: <a59651b1a53c4362b0416a3252d9c750@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D9953BE;
+	Wed,  5 Feb 2025 03:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738726317; cv=fail; b=ZDrKeen/8RuLUPg8s+2lUABWsKaVugPnlg+kv4T+neglptv0wNb7xX8QNeOvHF2R4hQY+LJC2xzMAwo4WtyGSSUsfDsyVcq9pv6m2MZDH0vBJH2RLpTfQzSZPNFVMj5kSunuvu1lMSgVA8zf00EV+tBWeK/UtY+g40qww5VRKcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738726317; c=relaxed/simple;
+	bh=YzY5KHnoPJLthgq/aXmSGFLaZuNMzbUkw4nte2CiTr4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OB2XKWOsbMsFVwzEEOtYT4a8qALoz5Ad9XBj3s7RJFvN+T8A47sGo/6o0SEkljrNzKcZ5zOogAUCoCEGl27JdFukR0rMHdBZd/TrDE1F8OLKPKjThvAJvSESSAtKPjgSr3UVCcsX//6Pf51B7whwXoK7JoxMxPKGICIZwhP+O1M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A7HluWw0; arc=fail smtp.client-ip=40.107.102.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A7HluWw0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dgoQPyHd5NIghJJc+KgZ1tKQPk7T7X2wYm0mrDCgRB7P+5YF4+ZNVgWN+df8+B3Ralg6ipIzZSORepe/RCR9nn2nXeL0WBNxmQxc8Rq7cLSFNc+XFJ1kGjZ7HJaQ01JxISkGJKBZpoF6aq+27140QzhAU7cuS2qjV+O0I2giCfBnjj2vgkRGFjWotQ384TCz7+HOa3e6Zr7Ok5HH2Lp8O7j8t9mxN8o3ap/48FHJ9ndAANOQO8ZnleU87Rj5Tiupz+Vi6fYYKbM0yCin0BdLUsM62FZBnCmDZQQcW7BzXK8T1SVbjvNzfUaOVdj10Jt/13kqR6glflElZmWFuMZmGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zDWkP5nVZzEfddPknpMfThIrKO18OKZ5K3qpJDfDWvU=;
+ b=tBDQHVsVuJRWbkEZnA1WBHJ8+lMoT4rKUiCpqBrVYpu7mFUxKyI+1H8RGeZ7h8e/VEtG435eDyyjRkGQz2Ow0SzJCB/ypBG4ztf5Q0AkblUOx3fgA7rSbjgBw34pzrr09utJVagTcipBkGf7MmX0AwNtN+FFvpoQMqm18zVx2jTaOSBI05QQ+LMHRwOw24/A/x2mCYoP2G+7DZYT/+7CTCNKACGX07yDaopcvNL0BLPS28KDxpYkKwPts2T7gF0I5W/l4ffzyjZ2JlNHmTftQNgsLblwMO5aGb+hqcBkZecwQpp5BbXlW/cZU7whg2SCsxsMpagCDpm3OiU440tMsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zDWkP5nVZzEfddPknpMfThIrKO18OKZ5K3qpJDfDWvU=;
+ b=A7HluWw0H8efOfyodxXAo1FauESYacHn/lHdz9SLQh1pGAheSnv82cC0petIPSexYxZWnMYUNsFEnRNcexrt65c8LJPt2MXd9kOAsSULcOg6ORZPWHcu/CGBjB3Z3ijrBTh3C6mvsn4UbgyNlGrJQfXoCRZtVdwqK2EhoJFd2GVKmeV4PqJP2iA3S/y/rCElDtEB90l70xKoOBktLqjPwkzLicg5dBR02ZQVUh8CjkhZMZd6E+lQBnbEyFKWYefp7zg1xPYkaIpjwWgoa0H6wUxqBwIWLlfjhZxQ7sir8RZfeQ8U9TSI+XtwTFTT49Lz/x4AXQ+G9DjIlzY9Lm2E1g==
+Received: from BY3PR04CA0017.namprd04.prod.outlook.com (2603:10b6:a03:217::22)
+ by SN7PR12MB7299.namprd12.prod.outlook.com (2603:10b6:806:2af::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Wed, 5 Feb
+ 2025 03:31:53 +0000
+Received: from CY4PEPF0000EE3B.namprd03.prod.outlook.com
+ (2603:10b6:a03:217:cafe::29) by BY3PR04CA0017.outlook.office365.com
+ (2603:10b6:a03:217::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.27 via Frontend Transport; Wed,
+ 5 Feb 2025 03:31:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CY4PEPF0000EE3B.mail.protection.outlook.com (10.167.242.14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.14 via Frontend Transport; Wed, 5 Feb 2025 03:31:52 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 4 Feb 2025
+ 19:31:36 -0800
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Feb
+ 2025 19:31:36 -0800
+Received: from 13db4e1-lcedt.nvidia.com (10.127.8.11) by mail.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Tue, 4 Feb 2025 19:31:33 -0800
+From: Mohan Kumar D <mkumard@nvidia.com>
+To: <vkoul@kernel.org>, <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC: <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Mohan Kumar D
+	<mkumard@nvidia.com>
+Subject: [PATCH v4 0/2] Tegra ADMA fixes
+Date: Wed, 5 Feb 2025 09:01:29 +0530
+Message-ID: <20250205033131.3920801-1-mkumard@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3B:EE_|SN7PR12MB7299:EE_
+X-MS-Office365-Filtering-Correlation-Id: 16fb249f-3da4-4b6c-25ba-08dd4595a22d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QtmblLxszBwhvDFDHkD6In+lsXTkepF8rHevtQowwWDESEKKTdonyGbUNGIr?=
+ =?us-ascii?Q?wMsRrrLjmPl1hEWWiMbBHnqJ/BPS/i4kwzB0pZ14AR+6yyoHZRbg+fF41G+A?=
+ =?us-ascii?Q?xmTcq6w9IqSdrWJBPDNXMXSFiI4ol1XUj4vLViczz/MAqeU71oBBjFp0T5ze?=
+ =?us-ascii?Q?6fij7ovw9aqwSKh9d1mydpSbqWCuv3Y+5cMoNjBUq0UbltGp0+ZbopSiIVnR?=
+ =?us-ascii?Q?EA0tkD7EmarXJqAP0lSNvuZdPPUMeC+vuscMo807Ny1KhNpNu4wteFz+r1se?=
+ =?us-ascii?Q?hHaWH2D664lcqjsi4ywghW+4H5LNO/8kfX7Xb6XNUOBQek4iqWrm72HcAvHe?=
+ =?us-ascii?Q?TiIFwrBOkeazWcze/tgakoSjsMpo1NoR1FPjweb6fBIB7UeDA2OigbBkhjUj?=
+ =?us-ascii?Q?d9w4jGkQozgrOZzgZUVEy95fcICFLYgzNAp3ivODKz95gtK7OckZFsUMallx?=
+ =?us-ascii?Q?pFwdd3wnDY3iU8VNXnv9IvvJ1uzYjBlzWQzVC6GF6UbCNs+edvs32OA66yHZ?=
+ =?us-ascii?Q?iYKPrQKcykao483FwESLj4EpDMFmiNeBk+u3utVnMddwUdfttDYn9ye3uC1H?=
+ =?us-ascii?Q?TJx+Fy/eojxvW8XfjZH5sCxHJIFyZhxEEDbBk7ZVzH5yIiVmJGigR0XFet+q?=
+ =?us-ascii?Q?czep6TZiTGCoIDchUS3628c/cmPTFNyumfVukOK9jxOiuR0uZNoeRv4nPUz+?=
+ =?us-ascii?Q?Z36WCyiiOSEadVx7f6CyFDiUjyOmWP4ZcgazhUxRYEjbVbcRGU44N6SudZbc?=
+ =?us-ascii?Q?ZRSz199JYAdEFEU7ifJ38iocMtjTh7JHehEPTECmHbqY76kgOfkT0fc1zuhk?=
+ =?us-ascii?Q?mYhuzylE3p0ACQYG9YdFtdtFXR7g/ZExoXPIFgVeYcsux56N5yupwj7DXmJj?=
+ =?us-ascii?Q?hIoxi17PJTn1ExQ+AbClcja6z1IYmlps5xs/afoSimZd1w2X4HOKc2X2Go6N?=
+ =?us-ascii?Q?SLj9rAMyVQCboqpfAc5qqfrj9fqGEABuxyAzD+pWKWioGVT5r0uinFSQlaTb?=
+ =?us-ascii?Q?HMP5JwWFzyf+5JHf74x0FTxZqFxa6FKyC+oiJarxBCUFQHu+QlfWjRM/3869?=
+ =?us-ascii?Q?gVPgk5s2ksjN/JCvcC8vGbcVOxgzSZ7BEOkyeNZAwm92tbGClasyYxwSdJ7e?=
+ =?us-ascii?Q?fBbOH3B5jqHh/77FzjgiyvhrkQ3071t0rszKY3YAVGvk2IAWyIRJ6/usvhCx?=
+ =?us-ascii?Q?n1qsVks5BiBqlEjoZK+kjsRKZnUdvTV5+AjwM8jMjhnqCG+1iPyENoMhkKyr?=
+ =?us-ascii?Q?1PIoM91bmYnDxg8NvWu1Aa99VTRqUUDtk5gPde1UvoyrccP66cdLnsLsNaDI?=
+ =?us-ascii?Q?ed9V3YDz9bJJ2BR4eL/ie31dTGlVbTcgHPcIU4Dvxtl9UiVfz+pxTmzrQEON?=
+ =?us-ascii?Q?d2OwPBagspxd/nUXZ/gg89sI/3QhUb8HQsbrzwrbiwETl3zXnnfwxSqCp02+?=
+ =?us-ascii?Q?Hbx2tSIdOP3DxTsdyNrhtn+1CH6A9L89y76svhiOfEslWKgScDLs01PbVatw?=
+ =?us-ascii?Q?tLnMp2qHjUAlm5Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 03:31:52.8383
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16fb249f-3da4-4b6c-25ba-08dd4595a22d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE3B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7299
 
-On 2/3/2025 18:35, Guenter Roeck wrote:
-> On 2/4/25 18:02, liuchao (CR) wrote:
-> > On 1/27/2025 22:30, Guenter Roeck wrote:
-> >> On 1/27/25 01:35, liuchao (CR) wrote:
-> >>> On 1/26/25 21:10, Guenter Roeck wrote:
-> >>>> On 1/26/25 00:38, Liu Chao wrote:
-> >>>>> Every time the user echoes 0 > /dev/watchdog0, meaningless
-> >>>>> critical log is printed.
-> >>>>>
-> >>>>
-> >>>> It is not meaningless, and it will still be displayed after this
-> >>>> change, making the change pointless.
-> >>>
-> >>> The change is not pointless. For example, the softdog driver does
-> >>> not invoke watchdog_stop or print logs in the watchdog_release.
-> >>>
-> >>
-> >> It seems to me that is a problem in the softdog driver.
-> >>
-> >> The change is actually worse than I initially thought.
-> >> The message is _supposed_ to be displayed if watchdog_stop() is not
-> >> called while the watchdog is running (i.e., if err =3D=3D -EBUSY).
-> >> Otherwise it would not be displayed for real hardware watchdogs which
-> >> are not stopped because they were running and watchdog_stop() is not
-> >> called because WDIOF_MAGICCLOSE is set in the driver and the magic
-> >> release byte was not written.
-> >>
-> >> Specifically, the softdog driver has WDIOF_MAGICCLOSE set. It is not
-> >> supposed to be unloadable (or unloaded) while the watchdog is running.
-> >
-> > When echo to /dev/watchdog0, The watchdog_open, watchdog_write, and
-> > watchdog_release functions are invoked in sequence. Do you mean the
-> > softdog driver should not call watchdog_release?
-> >
-> > After the user opens /dev/watchdog0, the user feeds the watchdog
-> > through ioctl WDIOC_KEEPALIVE and never closes. Is this the correct usa=
-ge?
-> >
->=20
-> I tried softdog. It works as advertised. Yes, "echo 0 > watchdog0" trigge=
-rs the
-> message.
-> "sudo modprobe -r softdog" then fails with
->=20
-> 	modprobe: FATAL: Module softdog is in use.
->=20
-> and, as expected, one minute later (or whatever the timeout is set to) th=
-e
-> system reboots.
->=20
-> There is nothing wrong with the message. The softdog _does_ refuse to be
-> unloaded while running, and it _does_ reboot the system after the timeout
-> expired. This is all perfectly as expected. The log is not meaningless. I=
-nstead, it
-> tells the user that the system will reboot after the watchdog expired. Wh=
-ich it
-> does.
+- Fix build error due to 64-by-32 division
+- Additional check for adma max page
 
-User creates a process and echoes every time to ensure that the system is
-normal, the process can be executed properly. Otherwise, the system reboots=
-.
-So the critical message keeps printing.
+Mohan Kumar D (2):
+  dmaengine: tegra210-adma: Fix build error due to 64-by-32 division
+  dmaengine: tegra210-adma: check for adma max page
 
-Is it reasonable to change it to info level?
+ drivers/dma/tegra210-adma.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
->=20
-> Guenter
+-- 
+2.25.1
 
