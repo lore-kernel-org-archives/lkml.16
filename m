@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2120C034
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A7117C21B
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738719660; cv=none; b=uK+kKosKGL8xD91pNS5ECObbhGj2fhS33HcMalJ9aEu8/Wuhgi4FY4s59G8HZMN9TP1uUm+HxZ7pwixteslemjnLmqQUOnGF/vS/KeC6bu0EOcuAgju/qnJoyZjBs9nxSLgIkl2IyM76RcLL9n6LnZUEbcYjBR9htQfajd61laI=
+	t=1738719660; cv=none; b=C8ZybOh+xGav2omeg1lPOdsjoJzTcvKZUUP8MFN9EYhnSshu6o6UkmtlRMeiZ/q+e4YDXpg7cD+U2vAqQGmgeZJ3VRChuIZ5dHhrZMWLgQ1pKw/lUgcqJJ7o1INjYLLYuOEALEFtfzsp5gZNYNK8w3Y2whXWSc2BRCR6uuX3lk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738719660; c=relaxed/simple;
-	bh=Ft/O0RncNKY751ZakPXjNDyAkt0whslOXDCWNGndtvs=;
+	bh=RoHX08f5WUpOFwLuvdVuIL0HLXGMm3PPDQ5II45y/Ik=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J0eMcdrv6mer9qXDFIre6RBIksVk+DmXtARocOC+9sArrLKKA4oz0eeS3PNmeUV+VRKOedbYyQRpRE7kxOawwK0LDGGNVCZMX1U5xIsHDsSuX0GvFfcN04Qs2lfmcMza+PDb/UzSMUQ71U9Ot/4jjRwXs/nnwKvZYMbptSK/cQ0=
+	 MIME-Version; b=oOGu9/DUfPsfkdA7L3N8XBb/OZ3jmx5B3lVjIdXKTTQXh2LfnpgMyRjxFV3iZVoujECwzy0brlBQnMKFV+AiJVM5iO1kYL2GkSkYfrqDMxjtIcnqRud1Qyz2CihzP6cGJUgYkGRxk5PYwueQ0GThtoyJtSL8CdQ9VfgZ7RBwYbM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tfUP4-000000004Cs-2ubK;
+	id 1tfUP4-000000004Cs-3P3F;
 	Tue, 04 Feb 2025 20:40:34 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -37,9 +37,9 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Rik van Riel <riel@surriel.com>,
 	Manali Shukla <Manali.Shukla@amd.com>
-Subject: [PATCH v8 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-Date: Tue,  4 Feb 2025 20:39:55 -0500
-Message-ID: <20250205014033.3626204-7-riel@surriel.com>
+Subject: [PATCH v8 11/12] x86/mm: enable AMD translation cache extensions
+Date: Tue,  4 Feb 2025 20:40:00 -0500
+Message-ID: <20250205014033.3626204-12-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250205014033.3626204-1-riel@surriel.com>
 References: <20250205014033.3626204-1-riel@surriel.com>
@@ -52,62 +52,87 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Use broadcast TLB invalidation for kernel addresses when available.
+With AMD TCE (translation cache extensions) only the intermediate mappings
+that cover the address range zapped by INVLPG / INVLPGB get invalidated,
+rather than all intermediate mappings getting zapped at every TLB invalidation.
 
-Remove the need to send IPIs for kernel TLB flushes.
+This can help reduce the TLB miss rate, by keeping more intermediate
+mappings in the cache.
+
+From the AMD manual:
+
+Translation Cache Extension (TCE) Bit. Bit 15, read/write. Setting this bit
+to 1 changes how the INVLPG, INVLPGB, and INVPCID instructions operate on
+TLB entries. When this bit is 0, these instructions remove the target PTE
+from the TLB as well as all upper-level table entries that are cached
+in the TLB, whether or not they are associated with the target PTE.
+When this bit is set, these instructions will remove the target PTE and
+only those upper-level entries that lead to the target PTE in
+the page table hierarchy, leaving unrelated upper-level entries intact.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 ---
- arch/x86/mm/tlb.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/msr-index.h       | 2 ++
+ arch/x86/kernel/cpu/amd.c              | 4 ++++
+ tools/arch/x86/include/asm/msr-index.h | 2 ++
+ 3 files changed, 8 insertions(+)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 02e1f5c5bca3..7945624afc98 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1082,6 +1082,30 @@ void flush_tlb_all(void)
- 	on_each_cpu(do_flush_tlb_all, NULL, 1);
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 3ae84c3b8e6d..dc1c1057f26e 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -25,6 +25,7 @@
+ #define _EFER_SVME		12 /* Enable virtualization */
+ #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
+ #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
++#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
+ #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+ 
+ #define EFER_SCE		(1<<_EFER_SCE)
+@@ -34,6 +35,7 @@
+ #define EFER_SVME		(1<<_EFER_SVME)
+ #define EFER_LMSLE		(1<<_EFER_LMSLE)
+ #define EFER_FFXSR		(1<<_EFER_FFXSR)
++#define EFER_TCE		(1<<_EFER_TCE)
+ #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+ 
+ /*
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index bcf73775b4f8..21076252a491 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1071,6 +1071,10 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 
+ 	/* AMD CPUs don't need fencing after x2APIC/TSC_DEADLINE MSR writes. */
+ 	clear_cpu_cap(c, X86_FEATURE_APIC_MSRS_FENCE);
++
++	/* Enable Translation Cache Extension */
++	if (cpu_feature_enabled(X86_FEATURE_TCE))
++		msr_set_bit(MSR_EFER, _EFER_TCE);
  }
  
-+static bool broadcast_kernel_range_flush(struct flush_tlb_info *info)
-+{
-+	unsigned long addr;
-+	unsigned long nr;
-+
-+	if (!IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH))
-+		return false;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		return false;
-+
-+	if (info->end == TLB_FLUSH_ALL) {
-+		invlpgb_flush_all();
-+		return true;
-+	}
-+
-+	for (addr = info->start; addr < info->end; addr += nr << PAGE_SHIFT) {
-+		nr = min((info->end - addr) >> PAGE_SHIFT, invlpgb_count_max);
-+		invlpgb_flush_addr_nosync(addr, nr);
-+	}
-+	tlbsync();
-+	return true;
-+}
-+
- static void do_kernel_range_flush(void *info)
- {
- 	struct flush_tlb_info *f = info;
-@@ -1101,7 +1125,9 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 	info = get_flush_tlb_info(NULL, start, end, PAGE_SHIFT, false,
- 				  TLB_GENERATION_INVALID);
+ #ifdef CONFIG_X86_32
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 3ae84c3b8e6d..dc1c1057f26e 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -25,6 +25,7 @@
+ #define _EFER_SVME		12 /* Enable virtualization */
+ #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
+ #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
++#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
+ #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
  
--	if (info->end == TLB_FLUSH_ALL)
-+	if (broadcast_kernel_range_flush(info))
-+		; /* Fall through. */
-+	else if (info->end == TLB_FLUSH_ALL)
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- 	else
- 		on_each_cpu(do_kernel_range_flush, info, 1);
+ #define EFER_SCE		(1<<_EFER_SCE)
+@@ -34,6 +35,7 @@
+ #define EFER_SVME		(1<<_EFER_SVME)
+ #define EFER_LMSLE		(1<<_EFER_LMSLE)
+ #define EFER_FFXSR		(1<<_EFER_FFXSR)
++#define EFER_TCE		(1<<_EFER_TCE)
+ #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+ 
+ /*
 -- 
 2.47.1
 
