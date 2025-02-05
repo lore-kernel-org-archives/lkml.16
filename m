@@ -1,167 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF5322A80B;
-	Wed,  5 Feb 2025 10:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFB22B5A1;
+	Wed,  5 Feb 2025 10:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749967; cv=none; b=K506oGHObLTrBuWm+9W+RDI+cNmpmgoS6ewWm4d0hO0JmoAjAYGk8wdqIKFFh3UXqyosXX4Lx+PahQprjKIhKxMjZyfiwND6wLSV0Zokw4uKXfLegteD1xXjkQ4sctaGx2hr08SY7T+tYZamiBKa350HALGpClRg3C/FkIY8zqg=
+	t=1738749977; cv=none; b=Lp3fH3v007p01gmhzu+Xf1x10mbxSpIE37Ild665Kz83u6EtvS9U7pxJQRgwqQxx8YZcRdWkAZcH05SNjsXIa9Z77U3/VMlEPl6BtFd+V7rVxwhYdLDB70xXtvfv50pTJ7pJQRVwouGl5OogtkaxRUrROdHqA/4T60cr+QpV3UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749967; c=relaxed/simple;
-	bh=2Msp7YoBmanu425m0MXmljH1/c1Or8M2lkzZSA8x+50=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZR6NYkbpniAVQmtguWDGA/4SFLv5wTHyc3fHW0U75PO6EmW7oU5OPbElcsbja1hdw2zY2X4nxBB0v87rcwwF4pozvAY6eDF+02YeTqMrfWXc4Cust9jhQZmAcWa7hSc3qrbLX5OmOssITgGXh2DWxPgfXU10M94GULGJ8/FVsx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCJWg+GE; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738749977; c=relaxed/simple;
+	bh=9blT37ja1It8cIhR7kixRLVaycXv9QA1EF5U7E97CRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ho6AUJVfSrFQD9klBC/N6IjVB26A3U+O9hMpVTSpCdcoAJQw4XZq6CSqF7vglov8BgN0VOGFnbmL9ADFcpapXH7rKlVPjtriyjII+LJALoZvhvbQ/Gez/ddt/nkkVBJ1MHxoJrS0zfjGhwc2EEI1cqcJUQrh6nC9iDdivbpiGk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Irtg16Tb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCJWg+GE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738749967; x=1770285967;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=2Msp7YoBmanu425m0MXmljH1/c1Or8M2lkzZSA8x+50=;
-  b=hCJWg+GE3VMGnqIUjgDPTnU3GDUGv18RnJ7VcAHsXsp/AYMw1hUUznU2
-   7x1k2fT3l4Mz4p7mo2cXfqU5LhxxXdlX7wU+crlovAhkdgSCwJjeyN/Y5
-   ABdCftxkuqU0OGykC3QLJopNZR2rNKYdYZmrHAJAHkj58YJmG00r0Nrv/
-   UGM4pjpshMxjlB4A9RmtTaKebV4STP3hx+8bXXfzqzyNOdG02EH/N09is
-   CfTRbJwibYFRfV6oWAIfxkR606PPpBh/80uU3Ct7pKFFwKNxzzhDzdrmC
-   Nw3fyt56DfT2q2s4ZqQKO8qyJoo/4y2ftayIi6E2u2aEvj0cpl96rnSV/
-   Q==;
-X-CSE-ConnectionGUID: oJxQ3075TF6oxRlhndELKg==
-X-CSE-MsgGUID: 0GsONfoXQV+LqG9IS+nBrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39204723"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="39204723"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 02:06:06 -0800
-X-CSE-ConnectionGUID: ipFMdiUnSy6ZejIxoO5hIw==
-X-CSE-MsgGUID: P1iqydQRS06MkgkS0ArlLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111297729"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa007.jf.intel.com with ESMTP; 05 Feb 2025 02:05:58 -0800
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Furong Xu <0x1207@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Petr Tesarik <petr@tesarici.cz>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v2 4/9] igc: Set the RX packet buffer size for TSN mode
-Date: Wed,  5 Feb 2025 05:05:19 -0500
-Message-Id: <20250205100524.1138523-5-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Irtg16Tb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FB5C4CEE6;
+	Wed,  5 Feb 2025 10:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738749977;
+	bh=9blT37ja1It8cIhR7kixRLVaycXv9QA1EF5U7E97CRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Irtg16TbS6QQCIbILy3pcNRCMUzDzpvr3vV+8DhTru2TPzZf/se2KD0QWwzUuSwks
+	 vUnsJATiQuhIMSPXM67wQqGJ8vzvvFZcnOs9J+jRUXlrTpUhMPBlleXmZhVghGMJZ7
+	 +6+/KchLtz+CAiMaZlbWj8WAHFF3/u3Kl2cPbamT++o/A0gSsq3a2fJ5D+uuoOIidd
+	 GstmXsz7816VPsbghfD3jkuKgnyF428dhiEOzheitLJtMV/KKvl0biAhMgWyRvKahh
+	 645jzng7TUffgormBNR0owQGm6uJY15dqHcvmUL6XtIesGA224LxFZrUr+iPtZYj2U
+	 eeZzw8J5aAHOA==
+Date: Wed, 5 Feb 2025 11:06:14 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Chen Wang <unicornxw@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	unicorn_wang@outlook.com, inochiama@outlook.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, 
+	chunzhi.lin@sophgo.com, Sean Young <sean@mess.org>
+Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+Message-ID: <ivgsidvdx2ypntnlopww6fiwyuzj2sadt3znyofr54dsz3c5d4@3mr25vhwlwy3>
+References: <cover.1738737617.git.unicorn_wang@outlook.com>
+ <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="arbxzkuj76u4tbwm"
+Content-Disposition: inline
+In-Reply-To: <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
 
-In preparation for supporting frame preemption, when entering TSN mode
-set the receive packet buffer to 16KB for the Express MAC, 16KB for
-the Preemptible MAC and 2KB for the BMC, according to the datasheet
-section 7.1.3.2.
 
-Co-developed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_defines.h |  3 +++
- drivers/net/ethernet/intel/igc/igc_tsn.c     | 13 +++++++++++--
- 2 files changed, 14 insertions(+), 2 deletions(-)
+--arbxzkuj76u4tbwm
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+MIME-Version: 1.0
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-index 516ef70c98e9..b19ac6f30dac 100644
---- a/drivers/net/ethernet/intel/igc/igc_defines.h
-+++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -402,6 +402,9 @@
- 
-  /* 7KB bytes buffer for each tx queue (total 4 queues) + 4KB for BMC*/
- #define IGC_TXPBSIZE_TSN	0x041c71c7
-+/* 15KB for EXP + 15KB for BE + 2KB for BMC */
-+#define IGC_RXPBSIZE_TSN	0x0000f08f
-+#define IGC_RXPBSIZE_SIZE_MASK	0x0001FFFF
- 
- #define IGC_DTXMXPKTSZ_TSN	0x19 /* 1600 bytes of max TX DMA packet size */
- #define IGC_DTXMXPKTSZ_DEFAULT	0x98 /* 9728-byte Jumbo frames */
-diff --git a/drivers/net/ethernet/intel/igc/igc_tsn.c b/drivers/net/ethernet/intel/igc/igc_tsn.c
-index 1e44374ca1ff..f0213cfce07d 100644
---- a/drivers/net/ethernet/intel/igc/igc_tsn.c
-+++ b/drivers/net/ethernet/intel/igc/igc_tsn.c
-@@ -132,13 +132,17 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
- {
- 	u16 queue_per_tc[4] = { 3, 2, 1, 0 };
- 	struct igc_hw *hw = &adapter->hw;
--	u32 tqavctrl;
-+	u32 tqavctrl, rxpbs;
- 	int i;
- 
- 	wr32(IGC_GTXOFFSET, 0);
- 	wr32(IGC_TXPBS, I225_TXPBSIZE_DEFAULT);
- 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_DEFAULT);
- 
-+	rxpbs = rd32(IGC_RXPBS) & ~IGC_RXPBSIZE_SIZE_MASK;
-+	rxpbs |= I225_RXPBSIZE_DEFAULT;
-+	wr32(IGC_RXPBS, rxpbs);
-+
- 	if (igc_is_device_id_i226(hw))
- 		igc_tsn_restore_retx_default(adapter);
- 
-@@ -194,7 +198,7 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
- {
- 	struct igc_hw *hw = &adapter->hw;
- 	u32 tqavctrl, baset_l, baset_h;
--	u32 sec, nsec, cycle;
-+	u32 sec, nsec, cycle, rxpbs;
- 	ktime_t base_time, systim;
- 	int i;
- 
-@@ -202,6 +206,11 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
- 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_TSN);
- 	wr32(IGC_TXPBS, IGC_TXPBSIZE_TSN);
- 
-+	rxpbs = rd32(IGC_RXPBS) & ~IGC_RXPBSIZE_SIZE_MASK;
-+	rxpbs |= IGC_RXPBSIZE_TSN;
-+
-+	wr32(IGC_RXPBS, rxpbs);
-+
- 	if (igc_is_device_id_i226(hw))
- 		igc_tsn_set_retx_qbvfullthreshold(adapter);
- 
--- 
-2.34.1
+Hello Chen,
 
+I was tempted to apply this patch while reading throug it until nearly
+the end ...
+
+On Wed, Feb 05, 2025 at 03:01:13PM +0800, Chen Wang wrote:
+> [...]
+> +static int pwm_sg2042_probe(struct platform_device *pdev)
+> +{
+> [...]
+> +	rst =3D devm_reset_control_get_optional_shared_deasserted(dev, NULL);
+> +	if (IS_ERR(rst))
+> +		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset\n");
+> +
+> +	chip->ops =3D &pwm_sg2042_ops;
+> +	chip->atomic =3D true;
+> +
+> +	ret =3D devm_pwmchip_add(dev, chip);
+> +	if (ret < 0) {
+> +		reset_control_assert(rst);
+
+This is wrong (well, or unneeded). With
+devm_reset_control_get_optional_shared_deasserted() the devm cleanup
+cares for reasserting the reset.
+
+> +		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
+> +	}
+> +
+> +	return 0;
+> +}
+
+If you want I can apply and squash the following in:
+
+diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg204=
+2.c
+index ce8cf8af3402..ff4639d849ce 100644
+--- a/drivers/pwm/pwm-sophgo-sg2042.c
++++ b/drivers/pwm/pwm-sophgo-sg2042.c
+@@ -174,10 +174,8 @@ static int pwm_sg2042_probe(struct platform_device *pd=
+ev)
+ 	chip->atomic =3D true;
+=20
+ 	ret =3D devm_pwmchip_add(dev, chip);
+-	if (ret < 0) {
+-		reset_control_assert(rst);
++	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
+-	}
+=20
+ 	return 0;
+ }
+
+ack?
+
+Best regards
+Uwe
+
+--arbxzkuj76u4tbwm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejOBQACgkQj4D7WH0S
+/k7xhAf+NrI5L589ZuQPvEDwS8Qwb4XlzoNnmEFCbOWCj0645JBLD/7WjiTYpfMg
+Kgq30Y3aooAF7lznjQC3Dhgr8AmTEVevm2Cq+zvW0kVXG0AfzN8EZTd72OYJz6xB
+Zibrt+MCzUt45EOrPwYjdndRLjo/M7N35/M24oWLhXKr7bw8DPqGFQwR0Baz/SoX
+jVW41leLuAm8skH4my6WfNcsjCkhF25vo0LQDkUBqJ8jLCxdQ0QmnfzIaDu9nMUe
+GUStrmWJIDzQDCtn6RNIQNPEYv72rjF2BtOVTRxCfD3VBKiOk9TwWA1wLtTVN6Ig
+hFHjxG2+crhEqJZBaoVZd6malV3W4A==
+=0gIf
+-----END PGP SIGNATURE-----
+
+--arbxzkuj76u4tbwm--
