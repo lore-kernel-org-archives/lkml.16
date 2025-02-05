@@ -1,84 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE1A82D98;
-	Wed,  5 Feb 2025 13:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231937FBA2;
+	Wed,  5 Feb 2025 13:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738762092; cv=none; b=LoOrF170kVPO70BOdGlwVmVZVFpd7pMIK3Y82XEJDztgpvzfaaVssyUwCD9DE0zj7Twht+QGQiPw4dAMA2T5bYkt4MkFBZJrYWumnBNGnVQeSdPKp+Op+RAL7qyBvGo9MkI4mMeldowLfS+4lFsCasEdbtmF3CFmh097Y++cdw0=
+	t=1738762118; cv=none; b=HxDobiNlyFOeFj685F7BLg2CCCQ5g+/marakfhuCeM7d/qWYyKEPxsawSfUmxmtnuQJTsm1zGPTVm2nY5gO9zH3VJFqkN8OKwJyvDyM+8bIexC9RICtah3ZVpmcN2U4dnL6gE2k0ShP/NjmG4F/SEEe534Pi62ZysqjAhoGVmPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738762092; c=relaxed/simple;
-	bh=//kvva3iZqW8obzgAlWViejdA8i1gDjetT5FaEKlR74=;
+	s=arc-20240116; t=1738762118; c=relaxed/simple;
+	bh=EJfYr9VPPROrpKyvvsXKomKL0zPZ75XOGiybaCRJ5J0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDsE98I7KX06bl6xnn7s4YAjreR5LI7Zhu4RcAfn0pml0pSViFiNdFgexd4+1LrF5P1tDdre/Ms/a22DQK6PDkRsdW/euvFiXriPtn6KvcA+YFzzYN9tuzXfRudhBdv4fi8gR6V/e3E2e7LmQumpsRix6y0G1vlbUyXux1bNOZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=a9GILhbQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QS+INZi5dtsIKtemdPcBO6FQa9a83MdbiCgXgkFrLSApwxph6w4CfEB3VDYkjYpPCJrGAout6nx+5rZX54GYK9qXlm/ivKs+Q9lcqdbamp212E26xgKHmSV8/boLu8qqaaINT4dci3QmhEieDLQLDNc140N1EYxluE5mnoneB8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqZqVUj1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="a9GILhbQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62B3C4CEE2;
-	Wed,  5 Feb 2025 13:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738762092;
-	bh=//kvva3iZqW8obzgAlWViejdA8i1gDjetT5FaEKlR74=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqZqVUj1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CB4C4CED1;
+	Wed,  5 Feb 2025 13:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738762118;
+	bh=EJfYr9VPPROrpKyvvsXKomKL0zPZ75XOGiybaCRJ5J0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a9GILhbQ5I2l1a1J2F6mOoyTpCRmFFujMYGOKaYtpTZIZqQwm5hBE0LiZmourKzwt
-	 DH4kseSDUOERqf7QqrplxBjNRADy98ZLEuYX+q5QQUsgb48eKFsH30wkCsxXldfhG0
-	 htl68LJEAKTicO8Cl29JEc82BpVSlqk6uu3T6fww=
-Date: Wed, 5 Feb 2025 14:28:08 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Arnd Bergmann <arnd@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Nihar Chaithanya <niharchaithanya@gmail.com>,
-	Rohit Chavan <roheetchavan@gmail.com>,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpib: mark pnp_device_id tables as __maybe_unused
-Message-ID: <2025020548-tropical-thickness-52a0@gregkh>
-References: <20250205121244.322054-1-arnd@kernel.org>
- <2025020532-roast-shortage-4086@gregkh>
- <19cc695e-47e6-451a-a443-384e2b423953@app.fastmail.com>
+	b=HqZqVUj1urhFmxfS7BZaGcVlHiD+B3a8phvTlc3h6SuZUgQ9q6lCSZCVRhzmm0fIN
+	 IG3BXFEDM4SFyqfvIMNZjaScWgkMDWyjY3ao51GKPnNtOtYOUqEPwLSItUyvQB258H
+	 Ni8jznOsiG6eSi14La95ih4q1Dh0Ndc2BNfedS+BnJc+4idYaR4g9iVTvAPO0IqJ1u
+	 2jLPxfqez+qNon6F81IgxWQRQKMTameMFSHqbV38ma3b4lJB0AjVixKqb9xACw2phL
+	 5E9h539vI0Mhwq+BZgmkHpJyxuMAI/LMlrYWIz+XxeuqZ8PW8stQhTHeONAYCJI2Zm
+	 rxOSjOG7HVA6Q==
+Date: Wed, 5 Feb 2025 13:28:32 +0000
+From: Simon Horman <horms@kernel.org>
+To: =?utf-8?B?Q3PDs2vDoXMs?= Bence <csokas.bence@prolan.hu>
+Cc: Laurent Badel <laurentbadel@eaton.com>,
+	Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	imx@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH] net: fec: Refactor MAC reset to function
+Message-ID: <20250205132832.GC554665@kernel.org>
+References: <20250204093604.253436-2-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <19cc695e-47e6-451a-a443-384e2b423953@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250204093604.253436-2-csokas.bence@prolan.hu>
 
-On Wed, Feb 05, 2025 at 02:04:37PM +0100, Arnd Bergmann wrote:
-> On Wed, Feb 5, 2025, at 13:25, Greg Kroah-Hartman wrote:
-> > On Wed, Feb 05, 2025 at 01:12:26PM +0100, Arnd Bergmann wrote:
-> >>
-> >> @@ -1390,7 +1390,7 @@ static struct pci_driver tnt4882_pci_driver = {
-> >>  	.probe = &tnt4882_pci_probe
-> >>  };
-> >>  
-> >> -static const struct pnp_device_id tnt4882_pnp_table[] = {
-> >> +static __maybe_unused const struct pnp_device_id tnt4882_pnp_table[] = {
-> >
-> > I see this happening in many different drivers right now, what is so
-> > unique about pnp that causes this?  Shouldn't we fix up the
-> > MODULE_DEVICE_TABLE() macro to not require stuff like this instead?
+On Tue, Feb 04, 2025 at 10:36:03AM +0100, Csókás, Bence wrote:
+> The core is reset both in `fec_restart()` (called on link-up) and
+> `fec_stop()` (going to sleep, driver remove etc.). These two functions
+> had their separate implementations, which was at first only a register
+> write and a `udelay()` (and the accompanying block comment). However,
+> since then we got soft-reset (MAC disable) and Wake-on-LAN support, which
+> meant that these implementations diverged, often causing bugs.
 > 
-> I think the other drivers that produce a similar warning usually
-> have a different bug, they have an incorrect of_match_ptr() or
-> ACPI_PTR() around the reference to that table, and the correct
-> fix is usually to just remove those macros. I have previously
-> sent patches for all of these, and could resend those.
+> For instance, as of now, `fec_stop()` does not check for
+> `FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
+> a PM power-down event; and `fec_restart()` missed the refactor renaming
+> the "magic" constant `1` to `FEC_ECR_RESET`.
 > 
-> These two pnp drivers are special because they predate the
-> linux-2.6 driver model and there is no reference to the table
-> at all in the drivers.
+> To harmonize current implementations, and eliminate this source of
+> potential future bugs, refactor implementation to a common function.
+> 
+> Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+> Fixes: c730ab423bfa ("net: fec: Fix temporary RMII clock reset on link up")
+> Fixes: ff049886671c ("net: fec: Refactor: #define magic constants")
+> Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
 
-Ah.  Then the variable should just be removed as it's obviously not
-doing anything :)
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-(I know it's doing module loading, but that's not ok to just fake it
-this way, it should use that table when it is searching the pnp area.)
-
-So a nice "#if 0" carve out for now perhaps?
-
-thanks,
-
-greg k-h
