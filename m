@@ -1,154 +1,140 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E891FC0ED;
-	Wed,  5 Feb 2025 17:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C791519AD;
+	Wed,  5 Feb 2025 17:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777640; cv=none; b=AR4HQ8+YoQiI9IG6sFblfJQWRs6D/VH0nKaDpKpVq6yW/aMDGneeDX4HUPRcq0gZN9cO21pC+FKzPrdfHlsXoi37y48+sop3xXh4eMreLCVdhYmPFsQ6hsQ+4CzoN6w24aSawxRmLtlTf/BUC3Qc7A6aoPTCUFgySY3tK7a8nik=
+	t=1738777683; cv=none; b=iY3SRomYppIr2Bgv426ptMh6KCBugU64cuaTkyG/N4N8OJ1mlSPifp9fuKF5+QVEBSwOlpbdZ6bDyPm+4UCERgH+jf/a2zfjBtM6+ycWkgloSde7tEGh3pnCr5xNYYdo9torvTDi5OSRIdbOT6Nzblbh1Ftyr8yk39bry9IidIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777640; c=relaxed/simple;
-	bh=uCA3hDHeWqKH5Jb81QxdvEZEftcWKVVuqDUDv2vvtLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q/51sGBVa04EVNfbLuefiaokSXVlMltTMtz4fTLw20wbciunhdbBIbbbsrR9L3BzQhKG3M2Y8rFQP5KpR8x8Yc40qijJ646md0RpJ5ki6eivjLjZ3Ioe9YIjh9lYpq63nRv7QyzbhOhtEsZVRfT8a7DxvgVTXaD2PTfb/a4dmDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=alexander.hoelzl@gmx.net header.b=Boaq6NYI; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1738777683; c=relaxed/simple;
+	bh=gRDZ8QX1t+MAuID6HIGuq2knMJylgXgnKzKelQUZhXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gSnnKl80NSDNceFD/dA22fc/g3JfCWXogywJs9bMZVu/yJUrk0/XSJH0y4js9gtEdxf56lAWRAu8xS658hM/ydQsts8ZFV9np6okD/cN1NUlewNBbUpIzb3FXI6pmeHFUMryccXYtLF5OeDLezkJjXRVQnTacIxzlJNYFrHmf5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EOHY/ok9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=alexander.hoelzl@gmx.net header.b="Boaq6NYI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1738777625; x=1739382425;
-	i=alexander.hoelzl@gmx.net;
-	bh=JI1FYztUjeOKORF/DHbHzq8NYe5mUE3ErLZ9RQzbumk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Boaq6NYIyI29VI6eeBR2FyMpi36oE+pBscz47gXd3vL5XrQZG/ryfmoiORa5pkJ8
-	 Hb4WaU1hR7138cKAlcPlLZRpgZC5mjNr8S6S8bSC+ie3aFUafqdDV9WeZuJSQlluA
-	 Jkt1i0j3b5mYrD83GarldJWYKZH1ZJ0q4zR6oOFukFqo4tC0lvm+OKXcG3TXUn7gN
-	 K82C56nr2uf4Kga4N5Pdx6IWv481IWlzz7ZMcUBMOd3Wo2/5i+96Zs6i3sViFqhjR
-	 TmwWJYndPWi+GXKLAU/0FJhWP+49Mqwp5qxQL2xSQlfcCfbsfvkgJuBf4TWvJty36
-	 IdkdoV7hbwVgXW41Jg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from DE1D1414HLA0.ae-dev.softing.com ([213.30.210.169]) by
- mail.gmx.net (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MV63g-1tp7B12P0I-00VoLG; Wed, 05 Feb 2025 18:47:05 +0100
-From: =?UTF-8?q?Alexander=20H=C3=B6lzl?= <alexander.hoelzl@gmx.net>
-To: robin@protonic.nl,
-	socketcan@hartkopp.net,
-	mkl@pengutronix.de,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	corbet@lwn.net
-Cc: kernel@pengutronix.de,
-	linux-can@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Alexander=20H=C3=B6lzl?= <alexander.hoelzl@gmx.net>
-Subject: [PATCH] j1939: fix unable to send messages with data length zero
-Date: Wed,  5 Feb 2025 18:46:51 +0100
-Message-ID: <20250205174651.103238-1-alexander.hoelzl@gmx.net>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EOHY/ok9"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515F1bxO001663;
+	Wed, 5 Feb 2025 17:47:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=B1ja24
+	MtE/dfzDMGymMgwVB+uiPkGyxyQVny/o4LP5Y=; b=EOHY/ok92JzaIG9OEPxJUW
+	Dmr90Ndks6D4IREgjql+2e+5MosaZr4ZjvVIPeFn/IA++B75HtR7thzuMjkWYHTG
+	89TkWoLQHYBV21CTPgO6U5RKLwxn1oBxdCii3I8S+ZbaMey46wkxzort1WZPUq9K
+	vGK/rwbwbkugnQjETfUs2dTglG4pxzVQ5+5WKeEPtxq//2W1xx7W+0iRCpNWZHxN
+	WH3fFWZwg2spWk5P9/qoCGCnDrcUXp/mnjp+ZixuoCrj+zOhGLnHr0IxG0j7vDXI
+	fcqSHK4g/12ML9ai/oHqDtbPPkVMMz3gMcEgy/sEhX5O9D6+WotYQDFCgmYxTKLg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ma8yry4x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 17:47:58 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515FtNqd007130;
+	Wed, 5 Feb 2025 17:47:57 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxayt4h0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 17:47:57 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515HltBM21758638
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 17:47:56 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5E73558056;
+	Wed,  5 Feb 2025 17:47:56 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7FA4258052;
+	Wed,  5 Feb 2025 17:47:55 +0000 (GMT)
+Received: from [9.61.82.181] (unknown [9.61.82.181])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 17:47:55 +0000 (GMT)
+Message-ID: <f1af50b3-f966-445d-ab89-3d213f55b93a@linux.ibm.com>
+Date: Wed, 5 Feb 2025 12:47:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PuB3104qPD+JAxAbov6wA6KYDthL+/hNXO5b4Hj1BjrK6WUnpSV
- 7khvZPs10KiwvRmUfG9wKKVwos8yTg5tuefEdSJCcQzooxe2xTmhbZ6KY366rvSqcR+5FyS
- RkCT5eVgOm6t0L9XPWFq17gqSjIRItuR25YImcWkoeSFKkL9e8eR9pGSGttUO9WQCN/Bnp5
- NtIhN9PB1YEiuOe6pPNng==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:t97O3RMI1AA=;2/Fmsit5OCXAQVZIwVOqEFk7EAq
- wPSj6HjMyyQtmeMwu2DHx5qrLmstoUIyV+PuuXCrkLv5Nsq6ZHmQhyrsx9VvkUY8NAGgi7aNv
- P1mVY6TLqip6j9T9nn9c3tkBvZcd3E7UzB67eIX7I+jEwMUJ6lcxuBSQQf27I56X1lS53Eh8D
- lKDn7i71YvUe0kPoHaL6LMlMYluCA8Mlsb4eNRN2LFobN1/FXW3QheLcZmDIsvM+4PdNRzKPs
- TZCkDvBDTjEBS4MDi2qriE8B+TB5aYjwEQkxoWs/dxU8B2gE/wA92/Fm+4IxqkZsOZizz7IJa
- o1x9rfHoOAO3N7FLJ1xwWU8ZA0Nu9mFSiJHJF7S9WTwAiHemNvtvxDYDzRckwmf8vq3pVokzR
- UyYsy8w4UbWbZSdFd4gcC8wcXbtEkPkdvgG//bisNojhBdWUieQKAsYHF4bTJ81FVMirKuKzq
- gGhWtJl6zYgt8doAiO/iDs2pWPmXIrnCZ4boSmUQwMInryqHVqYekUyMvdwXUlvbTnDgomvur
- J9OV+ln4lMe4K/0JwdwnH8uE4FT64BvxpwAnzu0KqVOju0nvij2xLCdW5tVj1LrbFGT19VgQ3
- fQos2uCw1NIE4FmE3IeUvnwWayi1iQfdhPgASx7ThxP24xuAej8Wd/tykRyVgaMapUP0Ui4Bf
- Fq/qumN/p8Gfylo6tbwMtaidotpt++rw9QUEyne2atwzbh62VAjSg9QHpzdGuL4tS56sEZgzR
- Jyc8ctD6pCvO7ZMAsf8kO9hPiH5KRw7PP6AaWZ5vxbKY6Af9p8COFSPxG4OLE8CYIdZTYD5vx
- 3xQqN8cX5Gp2fHZbETx+4LO09UC3ll+QzxEuWSC2Lcfd0imD+Nbx9qmnaPfK/niA1Z8J6uKzT
- jKOz/UqNUUaRwO0DkrP8NG7YkGnuH8DsDpO17sMcA8O6nXHmX96G0h5ZWpl/E1qvb6f5pIKsD
- CagamZHR8Y5bW6o7d+0UdXJIOahtx5brHSIvkY8SY8LeBltJPyG8xIFa24Nj/ClWiIpGtZ836
- TNT01FU/sllgDDAGEpU5+R83DAkaEoYq2eYeH9QEO1vMZQ92BIzAhy549dpsJ2RFcYujA4Eny
- 6XaCRO/YRVBk/2koV6T3Mf3L7SMvEyDwykW+/0GTQL+0Vn3ZC5q642G7QeJ4FKJG4SWa4TkUm
- b1uhoAHiBMNv5UGCAephJZNJRsEKw83pK9VnOm/NOvDaYv/3ZyoDAnm+jHYqn24Z1Y+iu2WTW
- IIfaWMzI6wFQaHyniWlMZ1046Zfk74BvzBDncGlrT87d9JtHBbbPgrcPv7fI2ofzzulyYYj09
- DVHwtKDJwZ6VWoHMKYmgEoZ+bf0j+inQfW11ddXtDCdS00ai7yEi/GHhJ9F7VHgbLQq
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] s390/vfio-ap: Signal eventfd when guest AP
+ configuration is changed
+To: Rorie Reyes <rreyes@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, hca@linux.ibm.com, borntraeger@de.ibm.com,
+        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
+        alex.williamson@redhat.com
+References: <20250107183645.90082-1-rreyes@linux.ibm.com>
+ <Z4U6iu5JidJUxDgX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
+Content-Language: en-US
+From: Anthony Krowiak <akrowiak@linux.ibm.com>
+In-Reply-To: <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: HJtPEgZxq8gYTsTa6QDXLnK6U8sHN_-Y
+X-Proofpoint-GUID: HJtPEgZxq8gYTsTa6QDXLnK6U8sHN_-Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050134
 
-The J1939 standard requires the transmission of messages of length 0.
-For example the proprietary messages are specified with a data length
-of 0 to 1785. The transmission of such messages was not possible.
-Sending such a message resulted in no error being returned but no
-corresponding can frame being generated.
-This patch enables the transmission of zero length J1939 messages.
-In order to facilitate this two changes were necessary.
 
-First when the transmission of a new message is requested from userspace
-the message is segmented in j1939_sk_send_loop. The segmentation did
-account for zero length messages and terminated immediately without
-queuing the corresponding skb.
 
-Second in j1939_session_skb_get_by_offset, when selecting the next skb to
-transmit for a session, it was not checked that there now might be a
-zero length skb in the queue.
 
-Signed-off-by: Alexander H=C3=B6lzl <alexander.hoelzl@gmx.net>
-=2D--
- net/can/j1939/socket.c    | 4 ++--
- net/can/j1939/transport.c | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+On 2/5/25 12:33 PM, Rorie Reyes wrote:
+>
+> On 1/13/25 11:08 AM, Alexander Gordeev wrote:
+>> On Tue, Jan 07, 2025 at 01:36:45PM -0500, Rorie Reyes wrote:
+>>
+>> Hi Rorie, Antony,
+>>
+>>> Note that there are corresponding QEMU patches that will be shipped 
+>>> along
+>>> with this patch (see vfio-ap: Report vfio-ap configuration changes) 
+>>> that
+>>> will pick up the eventfd signal.
+>> How this patch is synchronized with the mentioned QEMU series?
+>> What is the series status, especially with the comment from Cédric Le 
+>> Goater [1]?
+>>
+>> 1. 
+>> https://lore.kernel.org/all/20250107184354.91079-1-rreyes@linux.ibm.com/T/#mb0d37909c5f69bdff96289094ac0bad0922a7cce
+>>
+>> Thanks!
+>
+> Hey Alex, sorry for the long delay. This patch is synchronized with 
+> the QEMU series by registering an event notifier handler to process AP 
+> configuration
+>
+> change events. This is done by queuing the event and generating a CRW. 
+> The series status is currently going through a v2 RFC after 
+> implementing changes
+>
+> requested by Cedric and Tony.
+>
+> Let me know if there's anything else you're concerned with
+>
+> Thanks!
 
-diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
-index 305dd72c844c..17226b2341d0 100644
-=2D-- a/net/can/j1939/socket.c
-+++ b/net/can/j1939/socket.c
-@@ -1132,7 +1132,7 @@ static int j1939_sk_send_loop(struct j1939_priv *pri=
-v,  struct sock *sk,
+I don't think that is what Alex was asking. I believe he is asking how 
+the QEMU and kernel patch series are going to be synchronized.
+Given the kernel series changes a value in vfio.h which is used by QEMU, 
+the two series need to be coordinated since the vfio.h file
+used by QEMU can not be updated until the kernel code is available. So 
+these two sets of code have
+to be merged upstream during a merge window. which is different for the 
+kernel and QEMU. At least I think that is what Alex is asking.
 
- 	todo_size =3D size;
-
--	while (todo_size) {
-+	do {
- 		struct j1939_sk_buff_cb *skcb;
-
- 		segment_size =3D min_t(size_t, J1939_MAX_TP_PACKET_SIZE,
-@@ -1177,7 +1177,7 @@ static int j1939_sk_send_loop(struct j1939_priv *pri=
-v,  struct sock *sk,
-
- 		todo_size -=3D segment_size;
- 		session->total_queued_size +=3D segment_size;
--	}
-+	} while (todo_size);
-
- 	switch (ret) {
- 	case 0: /* OK */
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 319f47df3330..99832e60c08d 100644
-=2D-- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -382,8 +382,9 @@ sk_buff *j1939_session_skb_get_by_offset(struct j1939_=
-session *session,
- 	skb_queue_walk(&session->skb_queue, do_skb) {
- 		do_skcb =3D j1939_skb_to_cb(do_skb);
-
--		if (offset_start >=3D do_skcb->offset &&
--		    offset_start < (do_skcb->offset + do_skb->len)) {
-+		if ((offset_start >=3D do_skcb->offset &&
-+		     offset_start < (do_skcb->offset + do_skb->len)) ||
-+		     (offset_start =3D=3D 0 && do_skcb->offset =3D=3D 0 && do_skb->len =
-=3D=3D 0)) {
- 			skb =3D do_skb;
- 		}
- 	}
-=2D-
-2.43.0
 
