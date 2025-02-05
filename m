@@ -1,79 +1,42 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F221D6DD4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8BE1E0DE4;
+	Wed,  5 Feb 2025 19:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785029; cv=none; b=iZ3BLOhrbOAU0+XFEF5YWZloVaoa1WhzWAiSmTcOjegrbU+w+Eh6IcHuE+7aUQqdTdwagXkAvwsbJpMqc96EFlBn/rNbbrDlJfhdDmIW1WqpzNpykhUdZss6HWwJQrVC5pNhI+KjoSptyiIXY2KHKkvTBQ2jlqxk3pKNNQ1dV00=
+	t=1738785052; cv=none; b=VNVXTNXbVy3QUBIp8humFfYSPeSK8T+1VLcp1QWAg6vgBT8x2EkIcc9eYSMsjAYV7k+6D9qipINjaOl3PvDLX2MTvMAEvza5Gg4i173lrGJ5qiPG83WNQ/Qe8nJdVBEakwl6ULps2dI+Fin/Tnrm2gSJIjGrASFgd1XqthJyWhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785029; c=relaxed/simple;
-	bh=n8j3DGOLUHU7uRmc+FhLpi4ngVKHsDZJ/NqvWTWKGcY=;
+	s=arc-20240116; t=1738785052; c=relaxed/simple;
+	bh=0gCQWd5HDA6ixYd63Pm375DgjnfCP4qbBgNyhOShAco=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hvGUZu1am8ShlBZbOU407qz9VPIPGwZRhPNzIaO0cnXJQ98gy+wULm5MqwYK7pzxCPVnAztXlZ7Rv8kjhvVEb+SOe1cnojltH37iy/YNdpfbjISdzSr9z+ZvnNVutX5GYOAA0U8izta2MidbmdZF2mDyFZ0hIGJQ6N879sxN5C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=q9k7rDL9; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=mn2KtdmlNQ9jZujVXXVF+LcXuKmnvQMseWYWwvYSUMpPuyi9MjaYCB2+Hv9Ibg4AIY0l38kgd87LKmMUOYBPogf6JqxeKeHi9py9v6+LRVyRWpXBanztIAIS3ZMqmuB/3OnMGT/xYtxkTRaZ2sfDkXpM/L3lf9kJCsrDoHft8y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPBWkqv9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="q9k7rDL9"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-46b1d40abbdso1848391cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:50:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738785025; x=1739389825; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JB1QhklLlkYCU54lqW0Pm1NXVvCDDXyC2idxgwvRo9A=;
-        b=q9k7rDL9USHXqJYagynqTeWaqNWXooVFaKv4xC8LkdZmIJ/DQHRzFAwuNo6xNgepDb
-         Uj3oef18e/jHX/CQfS9WStux1RPBpIxiXz6FeDDIp/5zDrLIqk+BCRUuH89lXkfsyja7
-         4fk1twEZBpwHepIzwizC89qadIImAsx1ddtPY9AolaDtPy4EPp2w5W/ZpeTc5RkarUH4
-         mwGf5XGH4QAswMR4uLHfo4ffc70w4UXSN1JFgUfmjbwlLeRxXPnI14DaryOXKwpdZ19B
-         04oo++rpYP11iN/6HnJ4exH0FThIKopmy6SomPBMtPuFmel1x94fho3NOrYXShmXnVRJ
-         6HFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738785025; x=1739389825;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JB1QhklLlkYCU54lqW0Pm1NXVvCDDXyC2idxgwvRo9A=;
-        b=FhI0Ybe2YrQalXZDuQrjfW+IvDK0t16YG83Z9rYrn9p6ABq8sgC1K3X7NU0NoxyUAs
-         m/CAz9H04C7zCJg+8/qNDdoe+kRjk/YuYprwQyoeyu3XgPQbNZJFt2chp00c+BnVZ6F9
-         WUlf8vbI4dnlhtvpT2QuvILLur/venWZ/JHevfBsvASyDRJ349i0LGGDbjtWvRXBwasu
-         oxKPYTyulXrs35Zj/0Wn9UrOSR+jGkgjLO5VTowyG+CFnGgDy06vIrpMTlzrLRGheAEm
-         9XdLuq6l3tn+oHcdT8hPhTWba9r+vMQOZ+ZUBMtT9TBgSQTTkxJrNuYDekDC/Q18TGVX
-         hRZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0rJeYeW6R6x49SURS7R/YacHdBwpWVDOmuyX7UlBFgnBpBtvhf6KDndJ5/1WENnZlL6xJzzUwTJf6NVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4eQT8ceLpmZVTzxThuwUh0cByDKjqmugu35cNMZVRly+s1Flz
-	9w67CsoFSpacHotJPfE7nWDUy+U8GE+DFF61+ZxeFpikOffpp7U161JdewbZWAc=
-X-Gm-Gg: ASbGncuNhULFVauekT9CY/I5U2iddWyGyRnMCuz5hNrlBCntzNsvRARH+mlQE2asHN+
-	eD2aFztirsE6eEmOTPryyOXStm1QLNaQSrL9QjnXO8B7G4Fhk16iQ0UM8ixj8WhnTyPcVZROeTB
-	2hKpbOFSltL+wAyGDSv0RxFwYONXjq0Y8zNPsb/GsbqESuJbobpdLOy0WuFWNU7JyMBftqghOWM
-	SoQ3zXbpQ0SCjc/cPUC1rJIGEPaQii1lkLrB/WmtChmSnJkIihGqSyUCRnmiDI2Ocp1L94+SULQ
-	ryNhh5DRLHXj4Xn6okZwloCVhs63Yrz9ZqnX9wfngNViYEwuyKqC1KhCmlsmLN/lfWxUijU6bg=
-	=
-X-Google-Smtp-Source: AGHT+IGcFSjOMu8RpqfHkHlk/VsaPfJwj2d6oLcZx7tPWUMVQrzAwbXbG3wdktaK5qXTF1GIr6IVqA==
-X-Received: by 2002:a05:6214:21ed:b0:6d8:af37:ae5b with SMTP id 6a1803df08f44-6e42fc83442mr59146136d6.43.1738785025216;
-        Wed, 05 Feb 2025 11:50:25 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e42169524csm23923566d6.125.2025.02.05.11.50.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 11:50:24 -0800 (PST)
-Date: Wed, 5 Feb 2025 14:50:22 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 5/6] acpi/ghes, cxl/pci: Process CXL CPER Protocol
- Errors
-Message-ID: <Z6PA_hN-3ZtWbhUh@gourry-fedora-PF4VCD3F>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPBWkqv9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618D6C4CED1;
+	Wed,  5 Feb 2025 19:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738785051;
+	bh=0gCQWd5HDA6ixYd63Pm375DgjnfCP4qbBgNyhOShAco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UPBWkqv9vHKG7UmNXdGAW/aYlH00jM760yqLBZMHrnXyuD5LVE6pPQfnbL5PX/Muu
+	 3mQgjd+4Apls3bHHsymu/gXD84X2jpTnk7Kq97dDtS9FfBhbJUSe8aTHcuPXRJAIsr
+	 soDK4IwCpEadi4TmOBBg94ms2D716j+2zY5S9Z1wr9HIJXbLlqybHs2XzXrAsdFaAH
+	 i1/ZLAK9eLVGC8Wu84dCqCywLkztjTYoBtiqmbTH5ASinLrDl9nu5bR2R3v3eHqtsi
+	 NnvRmIVMt8UN5RHqfrQ1H1wucnSZ1QkqLiCwZ5IhVP2rsrQpafHIgJPuOFZwzU30CT
+	 8QQo3RODnq/KQ==
+Date: Wed, 5 Feb 2025 11:50:50 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com
+Subject: Re: [PATCH RFC 02/10] xfs: Refactor xfs_reflink_end_cow_extent()
+Message-ID: <20250205195050.GX21808@frogsfrogsfrogs>
+References: <20250204120127.2396727-1-john.g.garry@oracle.com>
+ <20250204120127.2396727-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,29 +45,177 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20250204120127.2396727-3-john.g.garry@oracle.com>
 
-On Thu, Jan 23, 2025 at 08:44:20AM +0000, Smita Koralahalli wrote:
-> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
-> CPER records. Introduce support for handling and logging CXL Protocol
-> errors.
+On Tue, Feb 04, 2025 at 12:01:19PM +0000, John Garry wrote:
+> Refactor xfs_reflink_end_cow_extent() into separate parts which process
+> the CoW range and commit the transaction.
 > 
-> The defined trace events cxl_aer_uncorrectable_error and
-> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
-> to trace FW-First Protocol errors.
+> This refactoring will be used in future for when it is required to commit
+> a range of extents as a single transaction, similar to how it was done
+> pre-commit d6f215f359637.
 > 
-> Since the CXL code is required to be called from process context and
-> GHES is in interrupt context, use workqueues for processing.
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/xfs/xfs_reflink.c | 79 +++++++++++++++++++++++++++-----------------
+>  1 file changed, 48 insertions(+), 31 deletions(-)
 > 
-> Similar to CXL CPER event handling, use kfifo to handle errors as it
-> simplifies queue processing by providing lock free fifo operations.
-> 
-> Add the ability for the CXL sub-system to register a workqueue to
-> process CXL CPER protocol errors.
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+> index 59f7fc16eb80..580469668334 100644
+> --- a/fs/xfs/xfs_reflink.c
+> +++ b/fs/xfs/xfs_reflink.c
+> @@ -786,35 +786,20 @@ xfs_reflink_update_quota(
+>   * requirements as low as possible.
+>   */
+>  STATIC int
+> -xfs_reflink_end_cow_extent(
+> +xfs_reflink_end_cow_extent_locked(
+>  	struct xfs_inode	*ip,
+>  	xfs_fileoff_t		*offset_fsb,
+> -	xfs_fileoff_t		end_fsb)
+> +	xfs_fileoff_t		end_fsb,
+> +	struct xfs_trans	*tp,
+> +	bool			*commit)
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Transactions usually come before the inode in the parameter list.
+
+You don't need to pass out a @commit flag -- if the function returns
+nonzero then the caller has to cancel the transaction; otherwise it will
+return zero and the caller should commit it.  There's no penalty for
+committing a non-dirty transaction.
+
+--D
+
+>  {
+>  	struct xfs_iext_cursor	icur;
+>  	struct xfs_bmbt_irec	got, del, data;
+> -	struct xfs_mount	*mp = ip->i_mount;
+> -	struct xfs_trans	*tp;
+>  	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, XFS_COW_FORK);
+> -	unsigned int		resblks;
+>  	int			nmaps;
+>  	bool			isrt = XFS_IS_REALTIME_INODE(ip);
+>  	int			error;
+>  
+> -	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
+> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
+> -			XFS_TRANS_RESERVE, &tp);
+> -	if (error)
+> -		return error;
+> -
+> -	/*
+> -	 * Lock the inode.  We have to ijoin without automatic unlock because
+> -	 * the lead transaction is the refcountbt record deletion; the data
+> -	 * fork update follows as a deferred log item.
+> -	 */
+> -	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> -	xfs_trans_ijoin(tp, ip, 0);
+> -
+>  	/*
+>  	 * In case of racing, overlapping AIO writes no COW extents might be
+>  	 * left by the time I/O completes for the loser of the race.  In that
+> @@ -823,7 +808,7 @@ xfs_reflink_end_cow_extent(
+>  	if (!xfs_iext_lookup_extent(ip, ifp, *offset_fsb, &icur, &got) ||
+>  	    got.br_startoff >= end_fsb) {
+>  		*offset_fsb = end_fsb;
+> -		goto out_cancel;
+> +		return 0;
+>  	}
+>  
+>  	/*
+> @@ -837,7 +822,7 @@ xfs_reflink_end_cow_extent(
+>  		if (!xfs_iext_next_extent(ifp, &icur, &got) ||
+>  		    got.br_startoff >= end_fsb) {
+>  			*offset_fsb = end_fsb;
+> -			goto out_cancel;
+> +			return 0;
+>  		}
+>  	}
+>  	del = got;
+> @@ -846,14 +831,14 @@ xfs_reflink_end_cow_extent(
+>  	error = xfs_iext_count_extend(tp, ip, XFS_DATA_FORK,
+>  			XFS_IEXT_REFLINK_END_COW_CNT);
+>  	if (error)
+> -		goto out_cancel;
+> +		return error;
+>  
+>  	/* Grab the corresponding mapping in the data fork. */
+>  	nmaps = 1;
+>  	error = xfs_bmapi_read(ip, del.br_startoff, del.br_blockcount, &data,
+>  			&nmaps, 0);
+>  	if (error)
+> -		goto out_cancel;
+> +		return error;
+>  
+>  	/* We can only remap the smaller of the two extent sizes. */
+>  	data.br_blockcount = min(data.br_blockcount, del.br_blockcount);
+> @@ -882,7 +867,7 @@ xfs_reflink_end_cow_extent(
+>  		error = xfs_bunmapi(NULL, ip, data.br_startoff,
+>  				data.br_blockcount, 0, 1, &done);
+>  		if (error)
+> -			goto out_cancel;
+> +			return error;
+>  		ASSERT(done);
+>  	}
+>  
+> @@ -899,17 +884,49 @@ xfs_reflink_end_cow_extent(
+>  	/* Remove the mapping from the CoW fork. */
+>  	xfs_bmap_del_extent_cow(ip, &icur, &got, &del);
+>  
+> -	error = xfs_trans_commit(tp);
+> -	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> -	if (error)
+> -		return error;
+> -
+>  	/* Update the caller about how much progress we made. */
+>  	*offset_fsb = del.br_startoff + del.br_blockcount;
+> +	*commit = true;
+>  	return 0;
+> +}
+>  
+> -out_cancel:
+> -	xfs_trans_cancel(tp);
+> +
+> +/*
+> + * Remap part of the CoW fork into the data fork.
+> + *
+> + * We aim to remap the range starting at @offset_fsb and ending at @end_fsb
+> + * into the data fork; this function will remap what it can (at the end of the
+> + * range) and update @end_fsb appropriately.  Each remap gets its own
+> + * transaction because we can end up merging and splitting bmbt blocks for
+> + * every remap operation and we'd like to keep the block reservation
+> + * requirements as low as possible.
+> + */
+> +STATIC int
+> +xfs_reflink_end_cow_extent(
+> +	struct xfs_inode	*ip,
+> +	xfs_fileoff_t		*offset_fsb,
+> +	xfs_fileoff_t		end_fsb)
+> +{
+> +	struct xfs_mount	*mp = ip->i_mount;
+> +	struct xfs_trans	*tp;
+> +	unsigned int		resblks;
+> +	int			error;
+> +	bool			commit = false;
+> +
+> +	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
+> +	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
+> +			XFS_TRANS_RESERVE, &tp);
+> +	if (error)
+> +		return error;
+> +	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> +	xfs_trans_ijoin(tp, ip, 0);
+> +
+> +	error = xfs_reflink_end_cow_extent_locked(ip, offset_fsb,
+> +					end_fsb, tp, &commit);
+> +	if (commit)
+> +		error = xfs_trans_commit(tp);
+> +	else
+> +		xfs_trans_cancel(tp);
+>  	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+>  	return error;
+>  }
+> -- 
+> 2.31.1
+> 
+> 
