@@ -1,107 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8C922A4C6;
-	Wed,  5 Feb 2025 08:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BA425765;
+	Wed,  5 Feb 2025 08:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745080; cv=none; b=C7WNQ46VvX4jXODeNfsFDEIMI4D2QSTUwd7VjP/Wdpqu8Y1YbyzcV9z8VH6V7K2T39z+odmX0hdFhOmkUV0fb2Lk/bsrh0nqhuvf3dcFV/o3NgQ3TtN1PY0vBlsKBjXqS6EduST1Tj4A4r8T6Rbat1kAGmqPe+wptD/5ZnO9uG8=
+	t=1738745142; cv=none; b=S1pLlin7V7FFGfQv9DJKL84bIhSxlqhRzf4GVPT6mLhHSFo/wntJCIk8sAVNyu5EkjGr+sejKZes9q8IfNRFvmWEv+/VyLpUClcGcFuR3xKv7EvfdxvlE92LhunuBHT/Po3Q7vJ5JmB2PXJcJqyfy6bSE6Lqwef3KYJhwqMEWgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745080; c=relaxed/simple;
-	bh=TDI1x3pPPXADltJ6RYlbixxnTojq86IDBEnZD6rWzk4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kOCqMvy7HrlOkKmwR7bOk0kDFz1Ak5pgpocaIsMzfwCHzvwifjpWasN7X0VkwiPL3KgHOq5jE24lHbD+DacqBcw8u5av25gkU14wLj3K9JPGBLlW9TNothfO4r1NB3/Y88FrMR1jzDDhIwULx/yRwxXhFTQb+cJhAFiSMry/ZVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GBM0I/rl; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1738745142; c=relaxed/simple;
+	bh=7kS3HeRnfWu3PX2k+3nbSPf5NiXeM8VxpQJjxNUx//s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jy22HoYqbR3n0UshxTUSh3JWMzpNW8T3qgI4O1ofL0fqGylWUi8FCNzW7cNy4fj8ZLw60+5OlRHibjNcCMnuSg/8gRBS0KXY53A3393FUw0gKLGaTqdYiA/EWgMEKdo2T5PzcenMwxAJ5N8JDSTPlbZo+Pua/Cf0nHbE+2XgkYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MSHSJixd; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GBM0I/rl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MSHSJixd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738745080; x=1770281080;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TDI1x3pPPXADltJ6RYlbixxnTojq86IDBEnZD6rWzk4=;
-  b=GBM0I/rlqvdFSYAuS1WCBxgVlKJZsTfR1wLW3/E59myapsr01p+oyt+h
-   3+t4dw8RNLJBH5glvHbnHK8R43jU7Zsw2ZKZ/a52KPWcdiE2NR9UewpoX
-   vofA5LS6pNxs2WjIPmF0kTyAkJVrQ3BaVdzwjDZZ3ZtrscpJKhrvaVIcG
-   b7+9Au2vbrsSB/AHKQMu4uIEJBm3WMtu9SaxOkKVWxl2IvxQ2dQc3LkLL
-   IO0/eJ+UmkJ7vgR7jYxpIR250YnF6Lr3cJDJnK4fylMepoeUOXpWqx5OG
-   MBILb1vwxocRxuIvHzxPU2FcwmSKRBKbNRvWo9Q+pa55jQqKTmtSDws2C
-   Q==;
-X-CSE-ConnectionGUID: YAgS2tQUS8aciXjmMUxcmw==
-X-CSE-MsgGUID: pXVqIrbNQCuF2GsFDMmwlg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50291164"
+  t=1738745141; x=1770281141;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7kS3HeRnfWu3PX2k+3nbSPf5NiXeM8VxpQJjxNUx//s=;
+  b=MSHSJixdl5sGXkHYr00vTZOZgZK36/L/qz4+VgT1GwzZZjTjBi+N9Scq
+   MdZojrSgsdHeBUOBiZAXlculJlJicrvuSqI/OgHcwK3urGHoATknXwjQx
+   33VGOBj/qBHL9Vme2b2TA7THib3Tfy4XEPfO7LfTd+4YLyR8py7CF14UJ
+   lS2VdJuk10gUSNUBTh0gunz6zasajszA4KUsJcPwigf8yiu4cLLzTwk2V
+   Qcfr/Z0fOIFzvLd4HYnxNxuLqP6NHTPoT/yr1ws//0hT2aPZG3Jij3iNq
+   eezAoiyEn3ZBNC0OXG/95k1vDzhfkBlSmM+P7RPKTNwFxgnZrD33KfTCW
+   w==;
+X-CSE-ConnectionGUID: bcoMDQyZQtCXYrpkKmVthg==
+X-CSE-MsgGUID: pT9JZwv8TQG8v4fu8ZbGDQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532476"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="50291164"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:44:39 -0800
-X-CSE-ConnectionGUID: p2+Imi2eRdyiwjOQsJsGLQ==
-X-CSE-MsgGUID: XrWhEZReRxuR6iSdF5Wd6A==
+   d="scan'208";a="38532476"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:39 -0800
+X-CSE-ConnectionGUID: oTmLRYNTTYiW01akvOxV3g==
+X-CSE-MsgGUID: EOZlADGZQvakTSZoqkpRig==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="115809554"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.255])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:44:35 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 5 Feb 2025 10:44:31 +0200 (EET)
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    linux-pm@vger.kernel.org, regressions@lists.linux.dev, 
-    Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
- pci_pm_resume returns -110`
-In-Reply-To: <d7246feb-4f3f-4d0c-bb64-89566b170671@molgen.mpg.de>
-Message-ID: <027efc9e-bc70-49af-7d48-fb474533993d@linux.intel.com>
-References: <d7246feb-4f3f-4d0c-bb64-89566b170671@molgen.mpg.de>
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="115887783"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.223.241])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:39 -0800
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: linux-sound@vger.kernel.org,
+	vkoul@kernel.org
+Cc: vinod.koul@linaro.org,
+	linux-kernel@vger.kernel.org,
+	pierre-louis.bossart@linux.dev,
+	bard.liao@intel.com
+Subject: [PATCH 00/16] SoundWire/ASoC: add SDW BPT/BRA support
+Date: Wed,  5 Feb 2025 16:45:14 +0800
+Message-ID: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Feb 2025, Paul Menzel wrote:
+This series adds support for SoundWire BPT/BRA. The change is mainly on
+the SoundWire tree. It is better to go through the SoundWire tree with
+Mark's Acked-by tag.
 
-> #regzbot introduced: b46c89c08f41..aa22f4da2a46
-> 
-> Dear Linux folks,
-> 
-> 
-> On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
-> 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
-> 
->     rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot,
-> device inaccessible
->     rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
->     rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
-> 
-> These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
-> 
-> It looks like the first warning is not always logged:
-> 
->     $ sudo dmesg | grep rtsx
->     [    8.612537] rtsx_pci 0000:3b:00.0: enabling device (0000 -> 0002)
->     [ 2010.081170] rtsx_pci 0000:3b:00.0: Unable to change power state from D0
-> to D3hot, device inaccessible
->     [ 2010.236503] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
-> pci_pm_resume returns -110
->     [ 2010.236525] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error
-> -110
->     [ 4115.541202] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
-> pci_pm_resume returns -110
->     [ 4115.541216] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error
-> -110
-> 
-> Logs from Linux 6.14-rc1 are attached. Bisection is only possible after next
-> Sunday.
+Pierre-Louis Bossart (16):
+  Documentation: driver: add SoundWire BRA description
+  soundwire: cadence: add BTP support for DP0
+  soundwire: extend sdw_stream_type to BPT
+  soundwire: stream: extend sdw_alloc_stream() to take 'type' parameter
+  soundwire: stream: special-case the bus compute_params() routine
+  soundwire: stream: reuse existing code for BPT stream
+  soundwire: bus: add send_async/wait APIs for BPT protocol
+  soundwire: bus: add bpt_stream pointer
+  soundwire: cadence: add BTP/BRA helpers to format data
+  soundwire: intel_auxdevice: add indirection for BPT send_async/wait
+  ASoC: SOF: Intel: hda-sdw-bpt: add helpers for SoundWire BPT DMA
+  soundwire: intel: add BPT context definition
+  soundwire: intel_ace2x: add BPT send_async/wait callbacks
+  ASoC: SOF: Intel: hda-sdw-bpt: add CHAIN_DMA support
+  soundwire: debugfs: add interface for BPT/BRA transfers
+  ASoC: rt711-sdca: add DP0 support
 
-Please try if this fix helps:
-
-https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
+ Documentation/driver-api/soundwire/bra.rst    | 336 +++++++++
+ .../driver-api/soundwire/bra_cadence.rst      |  67 ++
+ Documentation/driver-api/soundwire/index.rst  |   2 +
+ Documentation/driver-api/soundwire/stream.rst |   2 +-
+ .../driver-api/soundwire/summary.rst          |   8 -
+ drivers/soundwire/Kconfig                     |   1 +
+ drivers/soundwire/bus.c                       |  43 ++
+ drivers/soundwire/bus.h                       |  18 +
+ drivers/soundwire/cadence_master.c            | 658 +++++++++++++++++-
+ drivers/soundwire/cadence_master.h            |  20 +
+ drivers/soundwire/debugfs.c                   |  84 ++-
+ .../soundwire/generic_bandwidth_allocation.c  |  48 ++
+ drivers/soundwire/intel.h                     |  23 +
+ drivers/soundwire/intel_ace2x.c               | 312 +++++++++
+ drivers/soundwire/intel_auxdevice.c           |  24 +
+ drivers/soundwire/stream.c                    | 140 +++-
+ include/linux/soundwire/sdw.h                 |  33 +-
+ include/linux/soundwire/sdw_intel.h           |   4 +
+ include/sound/hda-sdw-bpt.h                   |  69 ++
+ sound/soc/codecs/rt711-sdca-sdw.c             |   8 +
+ sound/soc/qcom/sdw.c                          |   2 +-
+ sound/soc/sof/intel/Kconfig                   |   7 +
+ sound/soc/sof/intel/Makefile                  |   4 +
+ sound/soc/sof/intel/hda-sdw-bpt.c             | 444 ++++++++++++
+ 24 files changed, 2293 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/driver-api/soundwire/bra.rst
+ create mode 100644 Documentation/driver-api/soundwire/bra_cadence.rst
+ create mode 100644 include/sound/hda-sdw-bpt.h
+ create mode 100644 sound/soc/sof/intel/hda-sdw-bpt.c
 
 -- 
- i.
+2.43.0
 
