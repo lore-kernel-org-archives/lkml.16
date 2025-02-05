@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C5222D4D5;
-	Wed,  5 Feb 2025 12:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FCC22DF94;
+	Wed,  5 Feb 2025 12:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759463; cv=none; b=JANX49vaB3U2vZpfxNVYi3QTvQJRMxXpfPHFm8Z9VVFvTPggF9jIWINO92EZLe4poUcOu0knBnl6c5D26rUTsrCoW11iwT9jjKrJLrQovoLT694XYkFE+Lj2TVW8kx6kOxR9Hrt+ntO3D0K+ekvRuvb2alUuu+lIEdc7BzoDf60=
+	t=1738759466; cv=none; b=F/ERfK//JPYRpbKXdWaK6e2FX/L+uzfOZUVjScHtqD05CWCuq5ZbnBR9sIyD/NY6ylFllh3L6wnxqk5zFMXc/4E/hZy8eU3+Lvqc8zzedHTHrv3Y8nVYp/XEepovheq4TXj2JDmlt+igLlS+UnunwNKmGkxrun/onfneNC4PyrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759463; c=relaxed/simple;
-	bh=ykF7Gf+vTxj6q7kByCS0b9VG8rwjXiLsDJrPiDjtRbU=;
+	s=arc-20240116; t=1738759466; c=relaxed/simple;
+	bh=8iLfXxhY+M8Fm+e3Wt34iJHyPl/Cf4DZ4AeRbBEWBC0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AE+fjMUDh+xFr/w3AkO2fQx2PlY0+uylEGwkB10Nfn2gLSJbUuccCebBPfzlcTLnmv+JIi3KyKbHL4F4jCFcSsmnYTJekSJKgS2G1fhVeeiPoX/qahud/RFm8ShGPXv46PwgpWq9IoBPYbKn5bUF1XH3ZRSCz5ecGq4PtixYz1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMplDV/k; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=F1mk5PQqS/6MP5X8iOudQxvlxuXF0L9bO5pltF1sp/RLk4A88kAF0h0AFbt8TalhpP6XNYfhMwLLbuDgRqwVF3rc81iynUR0FFuD5gqCMqhowQYUQHR38kSgRGrgXHsn798Nb27l4Po7Dgzd8kxsCFNZG9XDSRNfPCllwNEEL1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTe1WtGJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMplDV/k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41EBC4CEE4;
-	Wed,  5 Feb 2025 12:44:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTe1WtGJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0915C4CED1;
+	Wed,  5 Feb 2025 12:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738759463;
-	bh=ykF7Gf+vTxj6q7kByCS0b9VG8rwjXiLsDJrPiDjtRbU=;
+	s=k20201202; t=1738759465;
+	bh=8iLfXxhY+M8Fm+e3Wt34iJHyPl/Cf4DZ4AeRbBEWBC0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=VMplDV/kZKPDWEz3wRzzrBz2FmLo4Mkwnk1x9n14GZhifDcsduZfyb4B6e2WqwiSP
-	 bfnvXnTnMLIvqKm6ZSNnnH2INQoAQSxjd9iADS6Yxj6GbclPxjkAwvhptk9oqhCImo
-	 OpyHw9FuRJoRKFZ8W0HXxmJBhn1TMbVXGn53dPN+mXAhUFu2/4/ptu7oOExL5Ppcyb
-	 /dG/53SnpUdlRFiNZ27WFtYzaSerB3ox6Pspv+BmM8RZTkDlVP0bRbFYporOAybsKQ
-	 Ytdlr3UJxYC3LcqdYl72SZ9IZTYs6wSRJexgB3i8rLvs4Atj90jcT1dIgChqmCcbaA
-	 +pJVPXwoAegiw==
+	b=MTe1WtGJDjMorHOW5FQDX7stZjlSIR5BKBb1nxgTOddR23mvtzJEQp2EjZVzmA3ZV
+	 ei0+GAEzHchEnUdtZuCOwUR70IAIDljD3wq+OGubiRws4c3KBEcXPM9JwFjqMDX6Gk
+	 lky7XZSV1SQQh52/glHKiLqJ/TdCv3IEsCErZxgT7Uxv/iL7+fAUtiW3MpcUjZFOBV
+	 SyoHRBf83M+wojx/QWZqkjyOvhGBY5WXJPrts5deDGTOo78yBsvNIeO/31PsWiXsYY
+	 RpRrzKbzFOfiJP7hgh6RT8xYP6wLyWG3c/UqBnSWoLrjM6cUKpQCbJ1T+HjrGNs4Ke
+	 ZapRkjw0hNyDQ==
 From: Mark Brown <broonie@kernel.org>
-To: linux-sound@vger.kernel.org, "Sheetal ." <sheetal@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
- lgirdwood@gmail.com, jonathanh@nvidia.com, thierry.reding@gmail.com, 
- mkumard@nvidia.com, spujar@nvidia.com
-In-Reply-To: <20250121110928.1799377-1-sheetal@nvidia.com>
-References: <20250121110928.1799377-1-sheetal@nvidia.com>
-Subject: Re: [PATCH] ASoC: tegra: Add interconnect support
-Message-Id: <173875946142.32457.3346189191163709126.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 12:44:21 +0000
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+ Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-sound@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <db10e96fbda121e7456d70e97a013cbfc9755f4d.1737533954.git.geert+renesas@glider.be>
+References: <db10e96fbda121e7456d70e97a013cbfc9755f4d.1737533954.git.geert+renesas@glider.be>
+Subject: Re: [PATCH] ASoC: soc-core: Stop using of_property_read_bool() for
+ non-boolean properties
+Message-Id: <173875946347.32457.4558405909681470251.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 12:44:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,13 +49,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Tue, 21 Jan 2025 11:09:28 +0000, Sheetal . wrote:
-> Add interconnect framework support to set required audio bandwidth
-> based on PCM device usage. The maximum bandwidth is determined by
-> the number of APE PCM devices and maximum audio format supported.
+On Wed, 22 Jan 2025 09:21:27 +0100, Geert Uytterhoeven wrote:
+> On R-Car:
 > 
-> If interconnect property is not defined or INTERCONNECT config
-> is not enabled then the audio usecase will still function.
+>     OF: /sound: Read of boolean property 'simple-audio-card,bitclock-master' with a value.
+>     OF: /sound: Read of boolean property 'simple-audio-card,frame-master' with a value.
+> 
+> or:
 > 
 > [...]
 
@@ -62,8 +65,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: tegra: Add interconnect support
-      commit: 4a91fe4c0d683c56044579fb263c660f5d18efac
+[1/1] ASoC: soc-core: Stop using of_property_read_bool() for non-boolean properties
+      commit: 6eab7034579917f207ca6d8e3f4e11e85e0ab7d5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
