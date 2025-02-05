@@ -1,147 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61813D897;
-	Wed,  5 Feb 2025 18:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7172A14F9E7;
+	Wed,  5 Feb 2025 18:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779113; cv=none; b=gHk4xva3A20utspRiZ3WexmfCidxZPXNLGV3MNBA0rxrA73Vhqq3bQcQvjdzudpOMInfCwyyCzqU70wCGAhnvwCeCpfzTQYfdUp1m56NdRCApJwnBZSMMUnWA1++BoIwQId7jDZnt+1rIf9dqyq6LaP//xasqZIcZk2GMi/3bxA=
+	t=1738779186; cv=none; b=QDoOxLd5EOfEssN6Dhl0hpnGNmwmc4gtu6/o6z/Wz4NLHGl69MEfl/mQXcGbOs8CazNhUblhFPkDxbJBPIKxw27J0AskRNMApVS1hZSc0UzaftIkJBSOCNyZiXIlqrFaM7YF4P5wwT/9cnfkYI79aXL7+tG9WCFwPBB2c3PEzug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779113; c=relaxed/simple;
-	bh=ctqEMXf7JvqZMX/tEU7QDm9t9klBXz3B7LC+25UaxNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XMm3yNNCf1+cFc8aArn+pR265B/6WQVApBQmHHzzg54TlABpP0cxMeqjFq2W8+UHN+nunC2h10uiJ1dVZXC0/SlS4yyyk80l+bDr45YDXgSxJHxtM4fFsRGS1QVG7iqhyMo/754kXaxLBP2u+JOgEuVk+hQBylGAdjnOnSgTfK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggPGncWE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738779186; c=relaxed/simple;
+	bh=Up/qq84r5S/UYhXFTh8In9C34CQSWCRxH4/J+jHx9Ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CTc9bWQPkqI8CxO2tLsiN1n4BXz/D/8SGAxoPWDAUCtXyUEb1C918sJ3NCDIY47OvObCK05HbkfQF0v19HS3HgwQNYlTucg2XN8alB0XkUaL2JQ8br3ft6nGvmcXb9+RDo5mMRckOd8NViHQphr4/8V6dl7Bjo6Qy8Q1ijYXykM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=G0BKd4vC; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggPGncWE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C1CC4CED1;
-	Wed,  5 Feb 2025 18:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738779112;
-	bh=ctqEMXf7JvqZMX/tEU7QDm9t9klBXz3B7LC+25UaxNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ggPGncWEqtD8CeKvsy4OqjKLqNQBbD/osuya2BRsmZPDGdHxdUYb6ylcF5VpnrDMP
-	 7gLS5sUFmbVxO3ZYfGmVgLU+i4O5xIuujvpjV7RdR38Lqz8XUyZmrqDgJcrMc/OCZm
-	 vfQM06NYQGgV/9kUMHzKO1fB06E3zzS0pkRKwYXMxuqzhRlM5iARmxydIUljX5icrC
-	 NGbTAbqxuM4f7kq0uD4t6NKjcYtQIQ6+PWphl7vH7eLDj+DZQPZxx/V0gvAOP2E4id
-	 6Hq5JI0q68JPRGMXv9VIm7X899NTeHih5Pcb4+vCSwl5QN3KIiaLTmBl5V3YYyA7XE
-	 xpLMsP1+tWCxQ==
-Date: Wed, 5 Feb 2025 18:11:48 +0000
-From: Simon Horman <horms@kernel.org>
-To: Liang Jie <buaajxlj@163.com>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Michal Luczaj <mhal@rbox.co>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Liang Jie <liangjie@lixiang.com>
-Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind
- identifier length
-Message-ID: <20250205181148.GK554665@kernel.org>
-References: <20250205060653.2221165-1-buaajxlj@163.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="G0BKd4vC"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Yp7dC5dByz6CmLxY;
+	Wed,  5 Feb 2025 18:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738779175; x=1741371176; bh=HEmpdHhzE2vU2QVoWRp2+Ebu
+	PduQnjFGmo2WB4b4xlk=; b=G0BKd4vCbygEYnk4FihlhKIYkoAwpDCDXlFiY5SR
+	dLTZF7iBDGbHfLNtd82jMjhOsNF/lt5te9akmECpZAAiRE3DtFRPSQWUuusvkv+W
+	G+5wYrDQqpaIkNJwMG0DSD1F8Gt/6JL5a+L7T8F4ulxKe4OIi70P9raftJF+SrK5
+	zS5XK0PoLVBWfsmX2CfvptE84mKPxduf+9YmAe8cxgo1zSRk7UarbOlEe9TKZJpA
+	9iuAOrgG3pLDVw+ckqRRqHH12XHZz+ln3jOm4o5jWMt9pN1f61YD2EOaQiBq3m8l
+	VJSRmJ1DX78qMA5R4c+gzWYWrfvQbbHVBL+RKcTgxzShJg==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id k9WYAbFLhfcS; Wed,  5 Feb 2025 18:12:55 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Yp7cy6KcTz6CmM6c;
+	Wed,  5 Feb 2025 18:12:50 +0000 (UTC)
+Message-ID: <07c3d640-d2d7-4edb-b62e-0926e5e7c7c8@acm.org>
+Date: Wed, 5 Feb 2025 10:12:49 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205060653.2221165-1-buaajxlj@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 8/8] ABI: sysfs-driver-ufs: Add missing UFS sysfs
+ attributes
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
+ mani@kernel.org, beanhuo@micron.com, avri.altman@wdc.com,
+ junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Keoseong Park <keosung.park@samsung.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+ <20250203081109.1614395-9-quic_ziqichen@quicinc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250203081109.1614395-9-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 02:06:53PM +0800, Liang Jie wrote:
-> From: Liang Jie <liangjie@lixiang.com>
-> 
-> Refines autobind identifier length for UNIX domain sockets, addressing
-> issues of memory waste and code readability.
-> 
-> The previous implementation in the unix_autobind function of UNIX domain
-> sockets used hardcoded values such as 16, 6, and 5 for memory allocation
-> and setting the length of the autobind identifier, which was not only
-> inflexible but also led to reduced code clarity. Additionally, allocating
-> 16 bytes of memory for the autobind path was excessive, given that only 6
-> bytes were ultimately used.
-> 
-> To mitigate these issues, introduces the following changes:
->  - A new macro AUTOBIND_LEN is defined to clearly represent the total
->    length of the autobind identifier, which improves code readability and
->    maintainability. It is set to 6 bytes to accommodate the unique autobind
->    process identifier.
->  - Memory allocation for the autobind path is now precisely based on
->    AUTOBIND_LEN, thereby preventing memory waste.
->  - The sprintf() function call is updated to dynamically format the
->    autobind identifier according to the defined length, further enhancing
->    code consistency and readability.
-> 
-> The modifications result in a leaner memory footprint and elevated code
-> quality, ensuring that the functional aspect of autobind behavior in UNIX
-> domain sockets remains intact.
-> 
-> Signed-off-by: Liang Jie <liangjie@lixiang.com>
-> ---
->  net/unix/af_unix.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index 34945de1fb1f..5dcc55f2e3a1 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -1186,6 +1186,13 @@ static struct sock *unix_find_other(struct net *net,
->  	return sk;
->  }
->  
-> +/*
-> + * Define the total length of the autobind identifier for UNIX domain sockets.
-> + * - The first byte distinguishes abstract sockets from filesystem-based sockets.
-> + * - The subsequent five bytes store a unique identifier for the autobinding process.
-> + */
-> +#define AUTOBIND_LEN 6
+On 2/3/25 12:11 AM, Ziqi Chen wrote:
+
+Please change the patch title from "Add missing UFS sysfs attributes" 
+into "Add missing UFS sysfs attribute documentation". This patch does 
+not add any sysfs attributes - it adds missing documentation.
+
+> +What:		/sys/bus/platform/drivers/ufshcd/*/clkscale_enable
+> +What:		/sys/bus/platform/devices/*.ufs/clkscale_enable
+> +Date:		January 2025
+> +Contact:	Ziqi Chen <quic_ziqichen@quicinc.com>
+> +Description:
+> +		This file shows whether the UFS clock scaling is enabled or not.
+> +		And it can be used to enable/disable the clock scaling by writing
+> +		1 or 0 to this file.
 > +
->  static int unix_autobind(struct sock *sk)
->  {
->  	struct unix_sock *u = unix_sk(sk);
-> @@ -1204,11 +1211,11 @@ static int unix_autobind(struct sock *sk)
->  
->  	err = -ENOMEM;
->  	addr = kzalloc(sizeof(*addr) +
-> -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
-> +		       offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN, GFP_KERNEL);
+> +		The file is read/write.
+> +
+> +What:		/sys/bus/platform/drivers/ufshcd/*/clkgate_enable
+> +What:		/sys/bus/platform/devices/*.ufs/clkgate_enable
+> +Date:		January 2025
+> +Contact:	Ziqi Chen <quic_ziqichen@quicinc.com>
+> +Description:
+> +		This file shows whether the UFS clock gating is enabled or not.
+> +		And it can be used to enable/disable the clock gating by writing
+> +		1 or 0 to this file.
+> +
+> +		The file is read/write.
+> +
+> +What:		/sys/bus/platform/drivers/ufshcd/*/clkgate_delay_ms
+> +What:		/sys/bus/platform/devices/*.ufs/clkgate_delay_ms
+> +Date:		January 2025
+> +Contact:	Ziqi Chen <quic_ziqichen@quicinc.com>
+> +Description:
+> +		This file shows and sets the number of milliseconds of idle time
+> +		before the UFS driver start to perform clock gating. This can
+                                       ^^^^^
+                                       starts
+> +		prevent the UFS from frequently performing clock gate/ungate.
+                                                                  ^^^^^^^
+                                                          gating/ungating
+> +
+> +		The file is read/write.
 
-Hi Liang Jie,
 
-1. While we are here, can we try to move this code to respect
-   the preference for lines 80 columns wide or less in Networking code?
+Please change the word "file" into "attribute" to make the sysfs 
+attribute documentation consistent with the sysfs documentation for
+other kernel drivers.
 
-   e.g.
+Thanks,
 
-	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
-		       AUTOBIND_LEN, GFP_KERNEL);
-
-2. More importantly, this allocates AUTOBIND_LEN bytes for sun_path.
-
-   However, because the sprintf() will append a trailing '\0' it will
-   write up to AUTOBIND_LEN (that is, AUTOBIND_LEN - 1 + 1) bytes
-   at an offset of 1 to sun_path. IOW, the write may be one byte larger
-   than the buffer with the '\0' overflowing.
-
-   Flagged by W=1 build with gcc-14
-
->  	if (!addr)
->  		goto out;
->  
-> -	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
-> +	addr->len = offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN;
->  	addr->name->sun_family = AF_UNIX;
->  	refcount_set(&addr->refcnt, 1);
->  
-> @@ -1217,7 +1224,7 @@ static int unix_autobind(struct sock *sk)
->  	lastnum = ordernum & 0xFFFFF;
->  retry:
->  	ordernum = (ordernum + 1) & 0xFFFFF;
-> -	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
-> +	sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
->  
->  	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
->  	unix_table_double_lock(net, old_hash, new_hash);
-
--- 
-pw-bot: changes-requested
+Bart.
