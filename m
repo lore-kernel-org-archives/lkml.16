@@ -1,93 +1,143 @@
-Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828351FC7E7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EE513D897
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738781358; cv=none; b=C3gODMptYPSLJ4w6iNpYdo6QrYcoNyxKGwpVbSReUGO108galMBcBEwn3oJ5Y3EZQdOq58XfIzgp/K0QhXAW13XZXvonL5ZO/kAOZ3LWoruciaC8qd0PkQpi6MfitaY7xSudr+6jV00XwyaXx3heEE540vSk8/UJd+IcNWkBMcM=
+	t=1738781518; cv=none; b=NYxf07N6jOoiihozrh0iVvEu49sQgDabfnknEpqypl5fqpVRLaz+TcvvuZxZwRbbZLxcrPj8a1aZCpxHl0yY1DuGNib2nTvx9xlxdyeKlGqfFpPpGFro4WXmmvV8sppm1mnowAbPBI+SpchSki83o83iccTBlbqTfGwU+LeKxxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738781358; c=relaxed/simple;
-	bh=RFLD5Y419LMLKxBPptSqSiuNprPZyJrTzacReh60S5o=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=nxf5JXxH0OXvb2ZdnAowRDjNGnzb0YXAeCAFKMzFP4hVFBzm7ByXfFAskyONYHG7T5jkWcA2yzqaYAVIMoSX1charj8VQa9kF7jZe+GW3mBs1hK0FX866yOlX4S1cGcjBYa5nzOu7q0XQ3BjQcTW5671Rn03RGhCXaILt+PF3fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bc9D8d4q; arc=none smtp.client-ip=209.85.210.73
+	s=arc-20240116; t=1738781518; c=relaxed/simple;
+	bh=w/JK2a5CMvt50/ztN3kp5qqW6WjHBNOsrATdA/E09OY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SEu9OuGyEWMm9D4ACWa0NUDGVOVcBl03tty5eZ2oK+uRvDs6SMb7lym/1oQiCtwDz2mbuUdfmyhYwlZ5eJ2Ag5miUNQUJfwBQQR/Tm5/Qs8H6bGBjEgLJXLEI1I8/bUv+p24ZTSaY6zoWEFskhfNrKfpq3Raac8GrscVpZ3uQoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dhf3UZ28; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bc9D8d4q"
-Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-71e197d0cdfso112130a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:49:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhf3UZ28"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d442f9d285so1022a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:51:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738781355; x=1739386155; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RFLD5Y419LMLKxBPptSqSiuNprPZyJrTzacReh60S5o=;
-        b=Bc9D8d4qjFNaT5FkZfMhsFHqzSswEmFapvHOzX0kieKcw7oX2WMIVzeNUoaQk64J1Y
-         8wbMMbPxqnqFextlgTsqN7OEM1DlS6SRmHEO3D/JzTvtwI2yunWKojSY1YXbHMshNg8U
-         wny07IX8eiQASToK82mgYuPiOBksDzf/rFpH0gwMHeMvhtIANY+8wtnoiz9sf/3pC/Qh
-         0EFqRHJbvRQ1AjuEt421TG+VUVnZAng/d4lx4bp4FPy9xBfrdRg9GN7KxwbbI4TpAuqB
-         iKT3eV4Hwn3mveJBIhKM1ten3V8pIB4EaAq/yJCUVWeiV0Kc3FFDYDpxExwIY0uUoJ1u
-         vhbw==
+        d=google.com; s=20230601; t=1738781515; x=1739386315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=19v3BofUqD63vuDcsPUGDTH8QbxB2ijJg+MULEk8I8c=;
+        b=dhf3UZ28Rj0naQEKIjGquOHbF4AZiDir+I6ymXKkq7bbuz7RtXeILYaKRlH8RjYivE
+         d446Dmuznc0LR5LGI5b1WSRNxcwbHFqCJ/Al4/1ZDSeX/bLFXuzeBhmfrYiUd8nuyYmE
+         wgzmDf9iJSH3MYL4tcdk8+ienPeVl+9umSDFAUO/3nxUPpUm7fiWu6ZZ87XJYxOP/WWT
+         eDWDK6Z7cFwXUSzmQKyl8+WW2yne/iHe4HRKvcqgF/OF0PWTPqr07Q524jt4XLwcBHtb
+         fI38HlgRzPd97YqMnDgNyKgrESoh7AOkSiq/JVpweBPg8CHv2Zf4KjLsdh+ddJ6UFUPH
+         gxvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738781355; x=1739386155;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RFLD5Y419LMLKxBPptSqSiuNprPZyJrTzacReh60S5o=;
-        b=UHxorleIqSFIZZVGcSH95TQwgkunTJhEWbsobCUNnLUUCAeoz+Jjct/QFdjlChjF87
-         DPQ0XjsbuHEQKPg8w+f43cgRYsrCudHPPc5026G6+dbiuohoZy4+jpT7XcW7ZrRPFBxt
-         +wHIpJRyeDz4pALSlicXpsrDx4Iqi/3RRgh98BoxRlZuk12RbRutZIMn+nC/lv7XCOlP
-         LWJaINY2ryJ8dpQpOur0J7g4kzU67X2q3lZz/yuBYAQ5Oa0dMR2cks0V81NjFWxy3vg6
-         Dxe7STTMMl+dDM/Wjubcwiy0zx7cpYeZ53oC6oxmo40et43NmzZGNfyTJeCOTX9HuPjm
-         snHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbR370qFXHfU9F2Co4NyE8Hs0t15pr0K9nRy3H+yMuWK1IpX0Wa5qHUxFISvacI8ALD4sYnKkOomLeCAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFyvukOklfbAHkyjGW70VRRrSjc3hUnqmOiJudJpEO2Wpl3uwB
-	/xs3WFOP/sflCQumKwiJCUAu8QnMqeb8EDen1OKPGBYJsmzhFokVm46nDLkZamLVRoioozHlSvA
-	1AweZ4BBNH586QmfsH1HWRQ==
-X-Google-Smtp-Source: AGHT+IG1848Nyq0Ep5YZHUoXqdxSYPedyBRtjzatXIPDIYwQRd5LUrtw/B5zE5Ng8GmU9F7dXNmOSuoU4vizvGXdRQ==
-X-Received: from otbcs10.prod.google.com ([2002:a05:6830:678a:b0:721:b316:918])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6830:71aa:b0:71d:f6d3:9fd2 with SMTP id 46e09a7af769-726a428cc52mr2331443a34.24.1738781355567;
- Wed, 05 Feb 2025 10:49:15 -0800 (PST)
-Date: Wed, 05 Feb 2025 18:49:14 +0000
-In-Reply-To: <Z6KoUBdmjVRuqPnU@linux.dev> (message from Oliver Upton on Tue, 4
- Feb 2025 23:52:48 +0000)
+        d=1e100.net; s=20230601; t=1738781515; x=1739386315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=19v3BofUqD63vuDcsPUGDTH8QbxB2ijJg+MULEk8I8c=;
+        b=N69/0AMlqGs/QnaziuMPqtpzFZt4lsx/+juV75mrtpt94nJJnNd83I6LZ1kYEOLoO0
+         SC23doVsjyKefYfxgNR/XTgYIvcORE2xKCuvZs6RZbSLEyIQniggqj+a1oQ7sqRLWl6N
+         zgsbcedtY0XhvS/VREFA0euZPYbzunTc2F1yclFDXuJ8+aEBntBcEVSCMdzBV3hjBOVq
+         GadLS2w4A++m3C7pZcLlC7u1JI2HeLAa0igSZezYTAVPw4TgXD1Wv4GPsE8sC0JZfAmh
+         2n4OwgArNR2TCW0j7QFvr8fP0x1u9cTalvm9GXjPNxvgdSPh7G/1wXkLWZ2V7BEvdGgN
+         q17w==
+X-Forwarded-Encrypted: i=1; AJvYcCUQBvOzTyHM2XHeF+Ahso+ru61Z33fEnzabisQJr5XPJ4al5WIJ5CNbJAyHD+4tKPU3MNL2sTGTVmIt/KI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6bwc8vlAue9idVC08Jc9QHTdVsOPjyOhOWLaJ2XE2jhJGsE6u
+	NhZiBUwfGBF+/Km4DkZLC7Xzsaq7q/sfKhaAsaF3FqBs/OHN9cWZlvMUDuLSEyQBmQ2jv08zTZv
+	e3GpLuhZ1NCFH6SiRCWLpeYufaw/YezPtnBkl
+X-Gm-Gg: ASbGncuHZq8XsP2cmapQkZS346a15cULegBAky1lUCjJuRWt8xFGEAgEMaKzN8QMPHy
+	WFstCyhFuQUl0DFah6fT1XGe3NCGhY/BJTs+eCIma4JASXp3WbrIfBcRIfLn1Y2vAqDD0LA==
+X-Google-Smtp-Source: AGHT+IGdFRxuVZNHbCQrpEx/USZkGtjvxS42wJTFWBOHQk/LEI3AJWYwhK/6SELhDokMAeQUPabPJFSwFrBrFl28vLU=
+X-Received: by 2002:aa7:d38f:0:b0:5dc:d9b1:ebdf with SMTP id
+ 4fb4d7f45d1cf-5dced6b1033mr7629a12.2.1738781514515; Wed, 05 Feb 2025 10:51:54
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntseos1b2t.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH 1/2] perf: arm_pmuv3: Remove cyclical dependency with kvm_host.h
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvm@vger.kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, mark.rutland@arm.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+References: <20250205180116.88644-1-haiyuewa@163.com>
+In-Reply-To: <20250205180116.88644-1-haiyuewa@163.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Wed, 5 Feb 2025 10:51:17 -0800
+X-Gm-Features: AWEUYZk6X2Wgv4lR-1hURALTgbltZRUha-EXRIt0htDWFLYOKzBHkHqWn1Jfbs8
+Message-ID: <CABCJKucW0HU_TVwe6sdn8B-Cu7Jn-M61i1VoBjJYqQkoxQtTxg@mail.gmail.com>
+Subject: Re: [PATCH v1] ftrace: Fix compile error when CONFIG_GENDWARFKSYMS is enabled
+To: Haiyue Wang <haiyuewa@163.com>
+Cc: x86@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"open list:FUNCTION HOOKS (FTRACE)" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+Hi,
 
-> Hi Colton,
+On Wed, Feb 5, 2025 at 10:02=E2=80=AFAM Haiyue Wang <haiyuewa@163.com> wrot=
+e:
+>
+> When switching from CONFIG_GENKSYMS to CONFIG_GENDWARFKSYMS enabled, the
+> build is failed:
+>
+>   AS      arch/x86/entry/entry.o
+> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+>                  from <stdin>:3:
+> ./arch/x86/include/asm/ftrace.h: In function =E2=80=98arch_ftrace_get_sym=
+addr=E2=80=99:
+> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of fun=
+ction =E2=80=98get_kernel_nofault=E2=80=99 [-Werror=3Dimplicit-function-dec=
+laration]
+>    46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip -=
+ ENDBR_INSN_SIZE)))
+>       |                     ^~~~~~~~~~~~~~~~~~
+> cc1: some warnings being treated as errors
+>
+> File "asm-prototypes.h" is added to entry.S by 'scripts/Makefile.build',
+> adding the missed declaration header file can also fix the error:
+>
+>  getasmexports =3D                                                       =
+ \
+>     { echo "\#include <linux/kernel.h>" ;                               \
+>       echo "\#include <linux/string.h>" ;                               \
+> +     echo "\#include <linux/uaccess.h>";                               \
+>       echo "\#include <asm/asm-prototypes.h>" ;                         \
+>       $(call getexportsymbols,EXPORT_SYMBOL(\1);) ; }
+>
+> Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip=
+ to symaddr")
+>
+> Signed-off-by: Haiyue Wang <haiyuewa@163.com>
+> ---
+>  arch/x86/include/asm/ftrace.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
+h
+> index f9cb4d07df58..063ce70837bb 100644
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
+> @@ -34,6 +34,10 @@ static inline unsigned long ftrace_call_adjust(unsigne=
+d long addr)
+>         return addr;
+>  }
+>
+> +#ifdef CONFIG_X86_KERNEL_IBT
+> +#include <linux/uaccess.h>
+> +#endif
+> +
+>  static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry=
+_ip)
+>  {
+>  #ifdef CONFIG_X86_KERNEL_IBT
 
-> On Tue, Feb 04, 2025 at 07:57:07PM +0000, Colton Lewis wrote:
->> asm/kvm_host.h includes asm/arm_pmu.h which includes perf/arm_pmuv3.h
->> which includes asm/arm_pmuv3.h which includes asm/kvm_host.h This
->> causes confusing compilation problems when trying to use anything in
->> the chain.
+Thanks for the patch! This looks correct to me, and I confirmed that
+it fixes the build issue. Feel free to add:
 
->> Break the cycle by taking asm/kvm_host.h out of asm/arm_pmuv3.h
->> because asm/kvm_host.h is huge and we only need a few functions from
->> it. Move the required declarations to asm/arm_pmuv3.h.
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Tested-by: Sami Tolvanen <samitolvanen@google.com>
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-
-> Please do not move KVM namespaced functions into non-KVM headers. Having
-> a separate header for KVM<->PMUv3 driver interfaces is probably the
-> right thing to do, especially since you're going to be adding more with
-> partitioned PMU support.
-
-That seems like a good idea to me.
+Sami
