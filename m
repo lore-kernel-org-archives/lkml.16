@@ -1,176 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471E11FCCE1;
-	Wed,  5 Feb 2025 18:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4381FDA89;
+	Wed,  5 Feb 2025 18:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780039; cv=none; b=Jujpi7DXCaa6+co9OIsxWBBvy62aHMfCuQWJ3t4cIZ1miJ5SYN0bUhe1WEG5KIdOgy9/X69E+XGXxFBVms6RAagz7o+QRs0uGQ6s5elqVKCNh4VjEUmLqwj3oX8KXz5lKS5RZBLRtE1uXBqDUjyM9PKH4+lfrh1GXxTr45nAEuw=
+	t=1738780096; cv=none; b=c88ntnwsqv37A9jj15D0rJHtHg6doO4mhhtIRtW5ySSM+X098UMUxoX4TQOxtS8Ue1nv3/joB8b6oTPCDgceOb/xjBZT/1jcG3ZPew59oFoNowsp9dKK5d/xFzNzANZ3zi1v8MUeyTT3WICwqqaeJW41dINXoXH6fuqgBfFQjIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780039; c=relaxed/simple;
-	bh=XTlhPmk51GDVC6DlWA9yXxy+ISHtOrb+IWkiux/fELw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M+QHBiIpNhl6a74bB6QDxDmQw7dbI+WeNV8D938vW8wh0+cNcuDVyg2OGy4dhwuveQhHntzF72vM50qg9l9llS9KBYbdrSC9b9gck7r3bKgL8FX/GnSDRDaoa1ML0f+rQ/vd8hy3Ax7MS39deWvX/Q+c8YKGXfFDxX1UYU68qiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m7edtQC/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738780096; c=relaxed/simple;
+	bh=WIK77QSHrwjdjXP5YguhdLZZtWO37MnzcX3h68pNHDs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hsFNsKxlMWsClsTpLKag01mtEV/mN7trBWhD9W6NHRgDM4r8D2/q56ZjU4UldAek1AuZOFLP7m6SdgYTiNAYCtUIjKjFg4eOoWl+wVgNv9gpMu1djg6i3kkdvHSSLyY/+gxXFRbj1ys2qm/lIeDF4CXBUswFJAe5Ltt4krcc2FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IYEXCGmN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m7edtQC/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738780037; x=1770316037;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XTlhPmk51GDVC6DlWA9yXxy+ISHtOrb+IWkiux/fELw=;
-  b=m7edtQC/oyshDa6xiUVPV2aEEudl0BIUPlqq4XQkfC9Ik/oWHHm5NGcg
-   1G1r3ltMWtKQ3NcH4Yj/RuL1LTqTWtT1ZG7D+VDt1YKNl7ZAge2kFvatf
-   34lTEmNEK21ttBVDA0xTOAmLzNOQooB9qK+XefdHlfmmwcmWg/6yob17z
-   74nbO4TbH2Y0rUzICRh9t0NRloky3WGgQKtcchzuz3z2nYPB8h2RTkaE7
-   p9hzZ7x0ODofCjx/5KmeVBTOrJyfg2JV83q45PVNCfgJ+0R8EGah0Wtt0
-   X8hP2tlR1Idq5P53kqGKtHFqdYeb1zjRaXR1wPrnAbc+lh0Fum1hlvYFj
-   w==;
-X-CSE-ConnectionGUID: 7h97O7OnRZed1KX7+tew/w==
-X-CSE-MsgGUID: MS8nEX73TkWf8+MZ0NbjNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39388164"
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="39388164"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 10:27:16 -0800
-X-CSE-ConnectionGUID: HyM0g3kIQx2POYoCUoS8FA==
-X-CSE-MsgGUID: 0tZY022HQkipK2/4msdY7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="110870664"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.220.14]) ([10.124.220.14])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 10:27:16 -0800
-Message-ID: <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
-Date: Wed, 5 Feb 2025 10:26:59 -0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IYEXCGmN"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515ErZnn011015;
+	Wed, 5 Feb 2025 18:28:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=wox7ET7OjT930xo72QvX45
+	kqjJCIhhqSOwlX3tfnH80=; b=IYEXCGmNG6hONudpz33g2FBHXMJICjkmPr6Fnz
+	8NN6ygTIr+we3IH5Alq8masAF/TpcUqLDE2LXSStauL+RuceqssK/mzCQQJJej0L
+	we8T5IOZugRoKR0WO7OjISkWX/y9Nh0P4bygEcqcHe1hmcrrVQV9v9+C8nFyYS+7
+	ROE+rLT+1cQjWhukKptfTB538MAtXSOTuvYFmNY+2vEQWwikksg+ZDq/8CLpRCq5
+	VVXZ+DUaI77X1JXL8tRIPYyt4lKbel3d7U8TElMwUGURehecEHAerxusYczW+qS0
+	dLb4hyWtwUnaroXaRchgFv2rdfw9mdGhpPwOwg+1vhV6M/AQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ma598jkv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 18:28:08 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 515IS74S016733
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Feb 2025 18:28:07 GMT
+Received: from c194c8e2f407.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 5 Feb 2025 10:28:02 -0800
+From: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+To: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: Odelu Kukatla <quic_okukatla@quicinc.com>,
+        Mike Tipton
+	<quic_mdtipton@quicinc.com>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>,
+        "Andrew Halaney" <ahalaney@redhat.com>,
+        Sibi Sankar <quic_sibis@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH V8 0/7] Add EPSS L3 provider support on SA8775P SoC
+Date: Wed, 5 Feb 2025 18:27:36 +0000
+Message-ID: <20250205182743.915-1-quic_rlaggysh@quicinc.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
- hotplug events
-To: Feng Tang <feng.tang@linux.alibaba.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jonathan Cameron <Jonthan.Cameron@huawei.com>,
- ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IgTQUmUuDmjRCzOMCz8lzRAYCDFPBQkY
+X-Proofpoint-ORIG-GUID: IgTQUmUuDmjRCzOMCz8lzRAYCDFPBQkY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 malwarescore=0 adultscore=0 clxscore=1011 phishscore=0
+ bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050141
 
+Add Epoch Subsystem (EPSS) L3 provider support on SA8775P SoCs.
 
-On 2/3/25 9:37 PM, Feng Tang wrote:
-> According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
-> least 1 second for the command-complete event, before resending the cmd
-> or sending a new cmd.
->
-> Currently get_port_device_capability() sends slot control cmd to disable
-> PCIe hotplug interrupts without waiting for its completion and there was
-> real problem reported for the lack of waiting.
+Current interconnect framework is based on static IDs for creating node
+and registering with framework. This becomes a limitation for topologies
+where there are multiple instances of same interconnect provider.
+Modified interconnect framework APIs to create and link icc node with
+dynamic IDs, this will help to overcome the dependency on static IDs.
 
-Can you include the error log associated with this issue? What is the
-actual issue you are seeing and in which hardware?
+Change since v7:
+ - Updated interconnect framework APIs icc_node_create() and
+   icc_link_create() to dynamically allocate IDs for interconnect nodes
+   during creation.
+ - Moved naming conventions to the framework and replaced snprintf() with
+   devm_kasprintf() as suggested.
+ - Updated the icc-rpmh driver and SA8775P SoC provider driver to support
+   dynamic ID allocation.
+ - Revised commit text to explain the use of the existing generic 
+   compatible "qcom,epss-l3".
+ - Addressed other comments regarding the alphabetical ordering of 
+   compatible properties.
 
->
-> Add the necessary wait to comply with PCIe spec. The waiting logic refers
-> existing pcie_poll_cmd().
->
-> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
-> ---
->   drivers/pci/pci.h          |  2 ++
->   drivers/pci/pcie/portdrv.c | 33 +++++++++++++++++++++++++++++++--
->   2 files changed, 33 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..c1e234d1b81d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
->   #ifdef CONFIG_PCIEPORTBUS
->   void pcie_reset_lbms_count(struct pci_dev *port);
->   int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
-> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
->   #else
->   static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
->   static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
->   {
->   	return -EOPNOTSUPP;
->   }
-> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
->   #endif
->   
->   struct pci_dev_reset_methods {
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 02e73099bad0..16010973bfe2 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -18,6 +18,7 @@
->   #include <linux/string.h>
->   #include <linux/slab.h>
->   #include <linux/aer.h>
-> +#include <linux/delay.h>
->   
->   #include "../pci.h"
->   #include "portdrv.h"
-> @@ -205,6 +206,35 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->   	return 0;
->   }
->   
-> +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *pdev)
-> +{
-> +	u16 slot_status;
-> +	/* 1000 ms, according toPCIe spec 6.1, section 6.7.3.2 */
-> +	int timeout = 1000;
-> +
-> +	do {
-> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> +		if (slot_status & PCI_EXP_SLTSTA_CC) {
-> +			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
-> +						   PCI_EXP_SLTSTA_CC);
-> +			return 0;
-> +		}
-> +		msleep(10);
-> +		timeout -= 10;
-> +	} while (timeout);
-> +
-> +	/* Timeout */
-> +	return  -1;
-> +}
+Change since v6:
+ - Added icc_node_create_alloc_id() API to dynamically allocate ID while
+   creating the node. Replaced the IDA (ID allocator) with
+   icc_node_create_alloc_id() API to allocate node IDs dynamically.
+ - Removed qcom,epss-l3-perf generic compatible as per the comment.
+ - Added L3 ICC handles for CPU0 and CPU4 in DT, as per Bjorn comment.
+   Link to comment:
+   https://lore.kernel.org/lkml/ww3t3tu7p36qzlhcetaxif2xzrpgslydmuqo3fqvisbuar4bjh@qc2u43dck3qi/
 
-May be this logic can be simplified using readl_poll_timeout()?
+Change since v5:
+ - Reused qcom,sm8250-epss-l3 compatible for sa8775p SoC.
+ - Rearranged the patches, moved dt changes to end of series.
+ - Updated the commit text.
 
-> +
-> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
-> +{
-> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +	if (pcie_wait_sltctl_cmd_raw(dev))
-> +		pci_info(dev, "Timeout on disabling hot-plug interrupts\n");
-> +}
-> +
->   /**
->    * get_port_device_capability - discover capabilities of a PCI Express port
->    * @dev: PCI Express port to examine
-> @@ -230,8 +260,7 @@ static int get_port_device_capability(struct pci_dev *dev)
->   		 * Disable hot-plug interrupts in case they have been enabled
->   		 * by the BIOS and the hot-plug service driver is not loaded.
->   		 */
-> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +		pcie_disable_hp_interrupts_early(dev);
->   	}
->   
->   #ifdef CONFIG_PCIEAER
+Changes since v4:
+ - Added generic compatible "qcom,epss-l3-perf" and split the driver
+   changes accordingly.
+
+Changes since v3:
+ - Removed epss-l3-perf generic compatible changes. These will be posted
+   as separate patch until then SoC specific compatible will be used for
+   probing.
+
+Changes since v2:
+ - Updated the commit text to reflect the reason for code change.
+ - Added SoC-specific and generic compatible to driver match table.
+
+Changes since v1:
+ - Removed the usage of static IDs and implemented dynamic ID assignment
+   for icc nodes using IDA.
+ - Removed separate compatibles for cl0 and cl1. Both cl0 and cl1
+   devices use the same compatible.
+ - Added new generic compatible for epss-l3-perf.
+
+Jagadeesh Kona (1):
+  arm64: dts: qcom: sa8775p: Add CPU OPP tables to scale DDR/L3
+
+Raviteja Laggyshetty (6):
+  dt-bindings: interconnect: Add EPSS L3 compatible for SA8775P
+  interconnect: core: Add dynamic id allocation support
+  interconnect: qcom: Add multidev EPSS L3 support
+  interconnect: qcom: icc-rpmh: Add dynamic icc node id support
+  interconnect: qcom: sa8775p: Add dynamic icc node id support
+  arm64: dts: qcom: sa8775p: add EPSS l3 interconnect provider
+
+ .../bindings/interconnect/qcom,osm-l3.yaml    |    1 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         |  229 ++
+ drivers/interconnect/core.c                   |   13 +-
+ drivers/interconnect/qcom/icc-rpmh.c          |   16 +-
+ drivers/interconnect/qcom/icc-rpmh.h          |    3 +-
+ drivers/interconnect/qcom/osm-l3.c            |   46 +-
+ drivers/interconnect/qcom/sa8775p.c           | 2194 ++++++++---------
+ 7 files changed, 1246 insertions(+), 1256 deletions(-)
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.39.2
 
