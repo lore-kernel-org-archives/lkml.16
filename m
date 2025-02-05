@@ -1,90 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87D415199F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB47151995;
+	Wed,  5 Feb 2025 11:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738753747; cv=none; b=HL9OGDE0BBy+O1Y6qSuyQIH+/E4YucsRdd12lVMrwN8DwVIICo8cfzLw3gaUF0wlgVJ3VmhxipsCfsab5GEJxt0ZOlhuuEJaHpAcwpNF8jLqvnmJlbFOHHlxJ9qtULk/mHLW2t3bmWJSgwu7SlG73QcwNQ7/BAvvObtSdaPn1SI=
+	t=1738753826; cv=none; b=OQrSW0LgSZeONOyeTzSgdZ8nVo0Ri/4W/z92pH9Nt12ZAdMV54Rork9kD0MwlAKSAZJpqUMtuAljYFtsTw+Lpz/I8sF6otLlWBRLRQEno5QThFLn8wScAvjBvLahw1/5SHxHVrIKZ0IGeZZL2tb1Uxq2u614u9q7ku6wfxx8NLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738753747; c=relaxed/simple;
-	bh=GMBaJXdE1jJUoUSNll5geZvTIUBKWCqewj/yQVuKtyU=;
+	s=arc-20240116; t=1738753826; c=relaxed/simple;
+	bh=WHS1z4S2pW9TUixaKFqSRj95qxK9MEieGBVP9HebYHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CM3pTSq+KdIYvQD+B2cpk/E9Sx2fFXU2nIY6zbn6KfcGsHL0xut0zywON3clTdUIfUcQEKnCRHyb4eSBa4ntfj6pmQ9Y9v94y1KZzxWYIE7BEwaccl3ywT+u3OdmTxmmM1SVu3+WqlsE1UmXOJXK9dJUUA4KyWZ+zUO8qqrzDi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvLJmEzs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tkn+lBnQT2a7zPZEIL8tG20pMEm120pL0yn0LnqrEDJ73AxGeUlBRzIfqZdLoRrcXKJjVSJ9xjPsCc4dzp1Lj/90gB8haAXc5aogL7l+ZKJlTyb7oCEmKMAuGNGuhOPWc2dI8qLPTBkXvRH3xqexdK2/1rQ5fh1VYsRDJ/iIJYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=bYLsH0Pe; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvLJmEzs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1F50C4CEE3;
-	Wed,  5 Feb 2025 11:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738753747;
-	bh=GMBaJXdE1jJUoUSNll5geZvTIUBKWCqewj/yQVuKtyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YvLJmEzs1hKA7ZIXvcoje43OqLXefr/wHiqSZu4ZGGEgeGAQTP05VJdGznv2T/u9Z
-	 BgpZlzCxTRqRyeKDKyP04UFgGKMQ5sHUiP0LAz3WZyZLAksz3upkKTTuq8BXSZEwqE
-	 1mMTp8g+BoG/WPMVx2u+qz3E/CMmAyeWq9dtB9x1MVmCdzwqwicdvx8Lq/ttsMJaWK
-	 M9cvhGQRWlTuGFWYZOCcoe+dN8PjrxJkkKiN+C9CLptkA3FpgJgqx//NSbvQRN8SIv
-	 NvZ5Z22jhOUaZDZ5xT3JvADyv98L1FdpuKf289qIFpsMQ7oNrsPBIgExc7YUMNa6v+
-	 WnuR8Szn6oTfw==
-Date: Wed, 5 Feb 2025 12:09:04 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Chen Yu <yu.c.chen@intel.com>,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH V2] kthread: Fix build warning variable 'ret' set but not
- used
-Message-ID: <Z6NG0HXhjAvDSWO_@localhost.localdomain>
-References: <20250204090838.214647-1-d-gole@ti.com>
- <20250204160921.377178-1-d-gole@ti.com>
- <Z6JkO4ssN7Bwcgd6@pavilion.home>
- <20250205061740.v7njfbfdx5ym4m7h@lcpd911>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="bYLsH0Pe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lSa38rUrscbTFzyMkucxLavPbKPbT/c+ByJbj4TeKKo=; b=bYLsH0PeEzYqIve54qUrIJKU9A
+	v5ns7mkJkI/kUpfqU6oc3A5REOG8Rnrg80JMzEmKa6uXjE6uRUoaOUhHhI9vAfdJThd2RB9Z3y5Ag
+	3TE7dxfnY7BqGnKK6/2752HlvwgmMu6gg00ao0d/+fq3U437AgQZ7QX2vmKn5gaFtrJ8g1I1joCQC
+	WM/EIJDx9VcPSzudbv9Rjn0mDG2F9yV2H2UqXeCP4U8Tg5iTO7wcJYF+K9qHQ3QoCT84m8HO6uDjO
+	WA0SunR1W5LHL06dp82ciLqEjMN5zgqaHNEuxpmsgaoAvv+9ghGWDxf5uiNq1L3IXZbcJ7gHVjIDY
+	sVlLrGRg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1tfdIJ-001rDS-PV; Wed, 05 Feb 2025 11:10:12 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 21C64BE2EE7; Wed, 05 Feb 2025 12:10:11 +0100 (CET)
+Date: Wed, 5 Feb 2025 12:10:11 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: wireless: broadcom: b43: Replace outdated
+ firmware URL
+Message-ID: <Z6NHE0cL2SaIiJbi@eldamar.lan>
+References: <20250205110614.216958-1-carnil@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250205061740.v7njfbfdx5ym4m7h@lcpd911>
+In-Reply-To: <20250205110614.216958-1-carnil@debian.org>
+X-Debian-User: carnil
 
-Le Wed, Feb 05, 2025 at 11:47:40AM +0530, Dhruva Gole a écrit :
-> On Feb 04, 2025 at 20:02:19 +0100, Frederic Weisbecker wrote:
-> > Hi Dhruva,
-> > 
-> > Le Tue, Feb 04, 2025 at 09:39:21PM +0530, Dhruva Gole a écrit :
-> > > Fix the following build time warning in kthread:
-> > > 
-> > >    kernel/kthread.c: In function 'kthread_affine_preferred':
-> > > >> kernel/kthread.c:861:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-> > >      861 |         int ret;
-> > >          |             ^~~
-> > > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202501301528.t0cZVbnq-lkp@intel.com/
-> > > Signed-off-by: Dhruva Gole <d-gole@ti.com>
-> > 
-> > Thanks for your patch but another similar fix was already pending. I have sent
-> > the pull request there:
-> > 
-> > https://lore.kernel.org/lkml/Z6JjZMdbDoAX_AVW@pavilion.home/T/#u
+On Wed, Feb 05, 2025 at 12:06:14PM +0100, Salvatore Bonaccorso wrote:
+> https://wireless.wiki.kernel.org site now redirects to
+> https://wireless.docs.kernel.org/en/latest/ making the reference
+> information for the b43 firmware inaccessible. Update the URL to the
+> current location.
 > 
-> OK, btw another qn I had was does this file not need a MAINTAINERS file
-> update?
-> I don't see a real MAINTAINER against it, everyone just shows as
-> contributors / committers...
-> Or is it to be sent to Linus directly?
-
-There is no official maintainer for kthreads. But I volunteer to handle the patches
-targeted to it at least for a while given my recent invasive changes there.
-
-Thanks.
-
+> Link: https://bugs.debian.org/1095062
+> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+> ---
+>  drivers/net/wireless/broadcom/b43/main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+> index 25b4ef9d3c9a..7529afd24aed 100644
+> --- a/drivers/net/wireless/broadcom/b43/main.c
+> +++ b/drivers/net/wireless/broadcom/b43/main.c
+> @@ -2166,7 +2166,7 @@ static void b43_print_fw_helptext(struct b43_wl *wl, bool error)
+>  {
+>  	const char text[] =
+>  		"You must go to " \
+> -		"https://wireless.wiki.kernel.org/en/users/Drivers/b43#devicefirmware " \
+> +		"https://wireless.docs.kernel.org/en/latest/en/users/drivers/b43/developers.html#list-of-firmware " \
+>  		"and download the correct firmware for this driver version. " \
+>  		"Please carefully read all instructions on this website.\n";
+>  
 > -- 
-> Best regards,
-> Dhruva Gole
-> Texas Instruments Incorporated
+> 2.47.2
+
+FWIW, I think there are more such outdated references and should be
+updated to the current docs location.  So feel free to reject this one
+in favour of a better ovehaul.
+
+Or maybe the old locations could be redirected to the new place?
+
+Regards,
+Salvatore
