@@ -1,60 +1,62 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E686155335
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3BE207E0E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738783975; cv=none; b=OETsxUi0crSN2lkYTW2rrc1K2vO8pVXPFL7SnPlyARaWhvz/5lAetDs4AlRuFYvVRLyrPr1B5m/WrUW/dyn8xnIdFIFPYnNLbYcyj4rvpQA+9ZTOBPUZ5xUNb14r3Le0T01mt+GQXuOJOArgguP95Ym9yOR1TPXA2KPDE93OZD8=
+	t=1738783982; cv=none; b=GGQhyc16cS9xodtoP2tvHSF4iOqT3W0mfrPQkaOY1U5n3AWmVBeNsw4RHY/tBUIrI4C72ks1yHBPSslNvy4OFEnNPsEO1fS2aS8bZEGcVEgqGjgl/AeM/V9eRIQvXJx2GLdmna0Jp0xGCdohgMisKgW7S1XNajhKC9RNsUbCfWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738783975; c=relaxed/simple;
-	bh=t9o9ArnPhAP7J/KylToG3P4j2eRfO/R1M87sgWslgzU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tuaDB0B5V8HNnJ4+G6aSlzIU5dgV3Ed3sge2JoVqeaACZ1uVOSB0MSv29zn5OsePn9pnkb4CsEynzpAW/X9CX6jN0yayF3eHOR+aWboBBgcMVPgzvpFpsE+Dw9YJNNG61+Z3FYDGueb6WksC8LGAOt9Vs2dONaq1DI5mVt9g1hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N7mSoah2; arc=none smtp.client-ip=209.85.208.51
+	s=arc-20240116; t=1738783982; c=relaxed/simple;
+	bh=p9IfmBkML/+h4zidU1zNnqGBFIPCMEc1S9CanTk6ZQQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=to1UGrNpoCRdeDE8q431fjbcUTBqW04W4G40PdFdCClL//tCYua7Q6Pu83NGEyKfOsZvDJRl72T8SZkjMAWTmriyNALOXgaNX3Ee2HtQWE7vMpeUTJeW1zZQFywkEUOsBrXXIdnLQ2bRJwW5qxa1/RiALgpkokgMidu1e1ojVuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bJCReSFD; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7mSoah2"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dce3adbc31so262363a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:32:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJCReSFD"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab70043cd05so39312066b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:33:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738783972; x=1739388772; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ECvbsukTPy6mXnZVkUCz007RKdHndCjxf5UTyDg+hdo=;
-        b=N7mSoah2f6Z8CsXKldl1vJq7MEAint3m4eEINenUMZkDB8ltWdTyUl2yFRLeiMbsAM
-         Ect8lQs7YH5AzzoEWSHN6DLftYtC/SpxeFLQiHDFqY5RzqHXR5OysBjd4Lq3R1qVpteN
-         MYlN1OLOxvx6/EoLvvpB6dnaeJ9n+/1mdFH6ucP5RCEBfky2p5tsKOZtOtaWpaUbafw5
-         DsXhm7WVYcyZrUMwtt1BZYBMgNLmjjvi4LBxlAO1wDKYhj2MMyc53v8mHbARG8+55/bo
-         pNzhMN3AfaZ7K4qfjtF1qA1Gi67k000H6on7qX3teUUOBnwuINcSmHcDAS5skPEtRsna
-         xn5Q==
+        d=gmail.com; s=20230601; t=1738783979; x=1739388779; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/diWf3Ne11QncyO86if84fhx289XRB6QA3E34QVttl8=;
+        b=bJCReSFD/38Kzhcd6GjwX5rx2FgJkUT/N/9/VWawEmhdtqIKi6Q6HvPGd+wsmaKIUB
+         F+Df8DuqKFwupRkfi9n1qVG7Ky6JlzulGwsZnXKLiRefxiVmyOtXnVxjGokE5Q5NVCBn
+         Thi6uvL5/VHsL+VKU8SJBg1BFH8sJ+ffrD0siIYyp9g+4XGYLlO05aauO0/W9A/p6InT
+         f8EqEY8PMcOzjX6sLMmsFDQ/H7uvkbNn/kLcYy6I9cAgoE5mApgiJKLo7fdW2lHlIsPx
+         zPkgY8ZXgXM4I+ftY55ItvQqFvbhcZPB+FAw3gaVWwBXWEyZ5EWaU5fqZhiag/Sie9fo
+         8ggw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738783972; x=1739388772;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ECvbsukTPy6mXnZVkUCz007RKdHndCjxf5UTyDg+hdo=;
-        b=Vi7AF0PKU9VgOfNGSakucjpoHaeknZZqZzAgkr+P7zCQue+fpNyYO/7aIeKLG+JhCW
-         MmDRyqlbNJvFY6Rjw/W6m9yDTWRq/BK8b/MY6ZYM9T6ofSyZ+GNt9X9ShJngrsUfIckD
-         DgEE+YEYG37qJ4mnhSxZ288g4tI2amKYi93pemJ+jbdZxcjvDuA1eV7M4wHvbS1FOjVJ
-         0TugNvLEcKPI0BH8Byu3emHSV+0mhvCvKHABQpPnawQlTBFbMS4WrrxzAX6Hqxw7tZNy
-         H7vCpJSbqtwork9XI8AHhWAQ4ZlWIBrVm37heRLGr1WP9CBFMNzmobOePmcyb1C5Olbs
-         r3MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuaQwPP+834+zemuqS2rnJxB0U+NCoKshowzN3OqIgZdDYuBumN6AVZlj5vOUYYmoegY7JwBLERZPGL1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9KOIrD2ODPrSSFRE38UyRRTyAGfghEzB0xkrt3A2w5lZvYLmx
-	DKoAwgFeue0kH955JPv1kcMGq+8boQZQMtRGhKOCBtvwIVSlbQ1E
-X-Gm-Gg: ASbGnctPxaYFNXQP3SDTH99ilpyneCCGpkwfVNZMnjU4u3kTd5liLRSecPvdYYRGvn0
-	hFHBtiRTR54m+cNS2J6g97CsW0mXU2jvkaSQ4V+lmPWvxvVkA2+2zy9Qpo7V80gf0NWYa/pwrq3
-	e1hKAyCtPqCjeVNpnoQF7dV/kzldLiu+7fP2sYN4nlKph8q1VMxt2Nd/biCbI6Y6j0f4q9CexiZ
-	FS568hmO7Srvd6ow+oPLPG0xPl7cPca3h/dajyDXufVfTuozN56kUDrBt2tw2E8G42yqfWbut6C
-	wERyZ/RgtPMtgRusGURbqoV+b6KRvfE=
-X-Google-Smtp-Source: AGHT+IGdmLQcXfcx8LNBJHIVw9nqF/takdAflNJokWQ3cPCRTXViKsJ9BCHFfHbFYfdWk/qLfutTSg==
-X-Received: by 2002:a05:6402:51ce:b0:5dc:d11d:702a with SMTP id 4fb4d7f45d1cf-5dcdb70e046mr9693102a12.8.1738783972010;
-        Wed, 05 Feb 2025 11:32:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738783979; x=1739388779;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/diWf3Ne11QncyO86if84fhx289XRB6QA3E34QVttl8=;
+        b=TahuraJmQkkweR7PHEQ2TYUFFCfEhZ0BJqpfsP6UN8/4BGIQRU9O/rlefbt1EyiPYl
+         MarC4wXy1G+ABCcEH5nDwlFkn0O6NymFiA3YxT2lfvolZEXoK+wtP1gMppOPrebJJ4Zs
+         +iFrULSQ7qajwnlBvTqok9xQBc7GZds+w0aY6TS76vrm+9Ao0sz9bVbtR5pO7WWFPQ/I
+         apfvi+WRG1MHuZuwnO/CVEVgvNcFDMS1/7yNhKU6T7Aepyyo3T//75NgCGmsXgo16ree
+         Ozlt62uwcleKVaBIsgU1uHTg487yj6nFM9GnsIX8q7Bpprzg1uNxNLMAvH2l4qdoO5Ul
+         nf0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUytPvPDW/Vnz3v03/nTKP553IXGwasAo6ZBpLX+PCtL4pTF/4luHBzFzRwfzBy22PNpf6luReLSiYFtyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyBHV1KMsZgFgW+q9ZTTtZVqd/ClvMQo2s9lp7nvknu8vt0iBf
+	0fIsC+ARFcSS6k0CQW/yDfvj9oe46RSPnlEHcoxnLhmQbjl5s5yF
+X-Gm-Gg: ASbGncst8PDr5V+77zeSRQh73TA1e320RGPiwSlMNPhAxhccJIyoJBpO35NqVIWz0fJ
+	2iJt11ruJRhUIftnSRqRoonZNVPfVt7VmfSCACCgNTUjJNsab9k2wsGc0Yu5k8yPR2saYaj4JGp
+	pa8F9not+8lJlkyk0/cIbDN78h8AWpmIooovgnT6f9y23ohxSLCJ/7uB+xXVQawIIDRnbaTAbZI
+	GxJ2tesV0abD5jSgf+hKTi3p34TtQWiHSY/jONLg8VdtTdXGOodn3ZpWJtcRWBgI6mjXuQlhXhz
+	NjZJUxc8x99/ffIz5S0XSO2BJuTr8l8=
+X-Google-Smtp-Source: AGHT+IGm1LrNQ1WxECz8EmcH8PaJJZS4GvDFkkEhiET/QnLWNJ27G8bMpK15OATOj4JQaKrV/yFOVw==
+X-Received: by 2002:a17:907:3da6:b0:ab3:8b1:12aa with SMTP id a640c23a62f3a-ab75e24a877mr469553566b.8.1738783978658;
+        Wed, 05 Feb 2025 11:32:58 -0800 (PST)
 Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47d06e5sm1167625566b.63.2025.02.05.11.32.48
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47d06e5sm1167625566b.63.2025.02.05.11.32.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 11:32:51 -0800 (PST)
+        Wed, 05 Feb 2025 11:32:58 -0800 (PST)
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: ebiederm@xmission.com,
 	oleg@redhat.com
@@ -64,10 +66,12 @@ Cc: brauner@kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v4 0/5] reduce tasklist_lock hold time on exit and do some pid cleanup
-Date: Wed,  5 Feb 2025 20:32:16 +0100
-Message-ID: <20250205193221.402150-1-mjguzik@gmail.com>
+Subject: [PATCH v4 2/5] exit: hoist get_pid() in release_task() outside of tasklist_lock
+Date: Wed,  5 Feb 2025 20:32:18 +0100
+Message-ID: <20250205193221.402150-3-mjguzik@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250205193221.402150-1-mjguzik@gmail.com>
+References: <20250205193221.402150-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,71 +80,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The clone side contends against exit side in a way which avoidably
-exacerbates the problem by the latter waiting on locks held by the
-former while holding the tasklist_lock.
+reduces hold time as get_pid() contains an atomic
 
-Whacking this for both add_device_randomness and pids allocation gives
-me a 15% speed up for thread creation/destruction in a 24-core vm.
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
+ kernel/exit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The random patch is worth about 4%.
-
-nothing blew up with lockdep, lightly tested so far
-
-Bench (plop into will-it-scale):
-$ cat tests/threadspawn1.c
-
-char *testcase_description = "Thread creation and teardown";
-
-static void *worker(void *arg)
-{
-	return (NULL);
-}
-
-void testcase(unsigned long long *iterations, unsigned long nr)
-{
-	pthread_t thread;
-	int error;
-
-	while (1) {
-		error = pthread_create(&thread, NULL, worker, NULL);
-		assert(error == 0);
-		error = pthread_join(thread, NULL);
-		assert(error == 0);
-		(*iterations)++;
-	}
-}
-
-v4:
-- justify moving get_pid in the commit message with a one-liner
-- drop the tty unref patch -- it is completely optional and Oleg has his
-  own variant
-- add the ACK by Oleg
-
-v3:
-- keep procfs flush where it was, instead hoist get_pid outside of the
-  lock
-- make detach_pid et al accept an array argument of pids to populate
-- sprinkle asserts
-- drop irq trips around pidmap_lock
-- move tty unref outside of tasklist_lock
-
-
-Mateusz Guzik (5):
-  exit: perform add_device_randomness() without tasklist_lock
-  exit: hoist get_pid() in release_task() outside of tasklist_lock
-  pid: sprinkle tasklist_lock asserts
-  pid: perform free_pid() calls outside of tasklist_lock
-  pid: drop irq disablement around pidmap_lock
-
- include/linux/pid.h                   |   7 ++-
- kernel/exit.c                         |  36 +++++++----
- kernel/pid.c                          |  82 ++++++++++++++------------
- kernel/sys.c                          |  14 +++--
- scripts/selinux/genheaders/genheaders | Bin 90112 -> 0 bytes
- 5 files changed, 82 insertions(+), 57 deletions(-)
- delete mode 100755 scripts/selinux/genheaders/genheaders
-
+diff --git a/kernel/exit.c b/kernel/exit.c
+index c79b41509cd3..b5c0cbc6bdfb 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -248,9 +248,10 @@ void release_task(struct task_struct *p)
+ 
+ 	cgroup_release(p);
+ 
++	thread_pid = get_pid(p->thread_pid);
++
+ 	write_lock_irq(&tasklist_lock);
+ 	ptrace_release_task(p);
+-	thread_pid = get_pid(p->thread_pid);
+ 	__exit_signal(p);
+ 
+ 	/*
 -- 
 2.43.0
 
