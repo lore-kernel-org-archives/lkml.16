@@ -1,115 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946A1F510;
-	Wed,  5 Feb 2025 20:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083B220C026
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785636; cv=none; b=iGpnrMHidiWpAgeWWhOJtyp3i3gT3ppfNKOPeq4/VrMRWf1h42aUDeIq1Y6g2VzV/RXJVeYLdvkyeOtxmhQYa25mqOIkJED1NMeZlUIo3oUh9Z1iH/m0J1P1KYQmbAiNyodGI/bWZFHo8yum3+eN9qhjFNzWIpsP3nB6f+K6eIo=
+	t=1738785638; cv=none; b=YVEmKNQH7WbmKgau0B5I1ira4dWnRZze3CBrdWejXL3uY/fNK0fdXYaJJ8rhTqGeUOsLhKK31YiWH9Mgo9pIAqjnZE0ED7ZKfmOVJ3SeDTjLwpNfDDsAbT7S3Qa8kKTglAJrjaFWNmesjt8nMndzzvF7SpCPOvE6ufgJ4VO/p/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785636; c=relaxed/simple;
-	bh=Uj39/i/LXxfV7kpZRDkzRbNTl7FP4NQW0dBpO0nGT4Y=;
+	s=arc-20240116; t=1738785638; c=relaxed/simple;
+	bh=dO63lO/FYn3hFlv/uZw05d7NpedFIALqWZ207EiRRwE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EXW/8grabgks184+c99pMbwdNAdaRHznF3wtljI6WaRB3tYR07Ko1BnAPuOYrILI++USDXu2jf0UpTTCV07TpKBANZki3LQCyDB09J2qAUDiNlpJjhQF1mU0XTjf1KqafDQ5qbifUEKjmOd9ETV/5GbFZiwUKxc0hZsj67KeQ0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdDQboQn; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=smCwndWVxfxm3ZkKBoG7fj4jIhIadXBid6qd6eQVLcmn78f7vL2BtMVpWFqzESsTnHusffmeAu9kR+e9hnAmBTBOoArZ/sWRWX4lK+v5BqqpsndK6+/vrfLcbEYaK+uOpBNrPjjkTSXDD3a8o5d/isutWulGsaRQbqgVgoZq+6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eYsXdwUn; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdDQboQn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02142C4AF09;
-	Wed,  5 Feb 2025 20:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738785636;
-	bh=Uj39/i/LXxfV7kpZRDkzRbNTl7FP4NQW0dBpO0nGT4Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FdDQboQn4PeFzfCgaykVmqRLZqR3/NeMFUxZNscSLXVB/rImuaiMZKhna0Z5IkgW1
-	 vPrL/T5+vr9g8ealH0tWtc+wb+mBy8rHJtx6/DUBAK4yDHlXCPcWSxmzJ3PIzeA4jJ
-	 66szce+dzOOdX/712UlSJCKz30Eh/HT8o8+qN5PPbcrDRMrP8P2zxJZf90qIL0dH9p
-	 3d37cOQLPz1720u5cyh6wv/QsAnDG/8CJpItw8qP10Xxih+Prl3eWnKtAJDDJYNtPC
-	 V088T/5HIWa8HDIIkctFPI0bF4S+5Ghxp1Kkt6TQuPTsAG+prGgrDembxcEpWK8Vss
-	 1iQ02N0bkM39g==
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-724a5d042c0so125497a34.3;
-        Wed, 05 Feb 2025 12:00:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUFHPscimP2WiSg+MWGr4YJ2RRu+PNZEu5MrBv6Bw5mB00P2pNYgPfHBTOsSf/gyYkY+gmfl9j9Ymk2bhE=@vger.kernel.org, AJvYcCUvAjGaIjNg+AZiQcpY+Bj3GbQeYCT7y4U0eAK4OFQcB5jh+9MhT3WawvcTUQcf+F/f2LA/HNoVSek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqCd5kHHcxAD8atQ2pFNHoG/NeiI7XGqDH5eDqZEix9zzsLZtb
-	fOYk3dByd7sWe6/X4xH6+QvXEDBTlNE+ERKfCNJ0MxVvEXIAqjNOd/eQ0tvUN1LPA389VNtZtch
-	9G7T9N0x0/IvR7LbWdp1iU2CEBq8=
-X-Google-Smtp-Source: AGHT+IH0ZH8/l+XiD2CbboEhK8b8qhy7FklQiRm5lBPJ3h2Y7TY5Gn/o3RDZUfzDZ64Ys/urVGcAaRO/kSZnWnfx5gA=
-X-Received: by 2002:a05:6830:4186:b0:71e:4ce2:432d with SMTP id
- 46e09a7af769-726a4253f0amr2651220a34.19.1738785635285; Wed, 05 Feb 2025
- 12:00:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYsXdwUn"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5dc82e38c10so400495a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:00:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738785635; x=1739390435; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dO63lO/FYn3hFlv/uZw05d7NpedFIALqWZ207EiRRwE=;
+        b=eYsXdwUn1Pq/KlU8fomaAareuxVI9eWVgEw6HrgjuxQhF0djhkGFYWjFXWRuBopPk7
+         UETUbT6mWFIfgDb5HR1yXBzoNeK0yOr039Wo+IFEbvtkHXFd2JOd1PtEfG4j/EOpZM20
+         4TpeaFNAIQkFUmDAnkh3hXBuGnCm/7bnvZl2l2yKgC/EZ6n/eMo3yluxno3rXgIgvLa8
+         lp12SNtEZahG/gfU2xnkVGZjRB3noYzYM/0vIbcIs5ivygTKboj9iiLc4wUO3VncWf7c
+         YbboC1H06hI0qxrOr0gnUwKbyR+2gjFui2hP4jZjY0TDd+cvNx5hMzdouQymgVTJPYRV
+         BNCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738785635; x=1739390435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dO63lO/FYn3hFlv/uZw05d7NpedFIALqWZ207EiRRwE=;
+        b=HXKMi+HVaWRFkwGV5JoAG7YeAgFWve3PxX35Kxug55UtlmNAiB976gCWKr+A6cfYyy
+         HvfUPFbh+9cWrXfLUhYsV9m4msBY46XUxiTtH0YrHfH8/A2n3cJdXKLWFWTJ9B7s4hmU
+         i4TBwcmpHkPGNdm2os8iOKjdjmj6GeIU9bGb4Q6D9bgoE+SStQiD4GEk+zEBwAizzeOz
+         ogWhPQbeSZBy98L5MLadpS2YyrvT4nK63AZLijzJPHty9nCpSW30GvfxZRsotYYSOv78
+         VxAILj/1zFfpXYsod0J8RAp8PW6wTQmbJpqYIn57iYd0FI9IJOM4j27uBQLX0xA+MI4e
+         srWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeiwaKTSem/cjn70RqftADeSCWdk6JxcjBB28jvt1fkLKpFxS8p/38yC8fvwna/RrcMHjHyMgQaRZs3RM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7JoHJVNRx+9XHEjufWDEeYRLnFFlzwpJ7ycAxPtf4N43ixmP0
+	SMxKCGm02XZXqkEP0MDZmH7aHv0MLqP6ox7YxCK6Lw8UxTCl2lnL1WUwpS8eSpnXEmQqvrK7xmx
+	4RYg8FFDUaFTbC+MTjwiYR36em8w=
+X-Gm-Gg: ASbGncvtTcnK4ceOyscuc+0S+obE+wEIblWdB8+T1CJcJKzvDKLcPTPFH2XN5wQTRon
+	ZrfU8W685HPvI+NSFD+LHc3OPnUrV+O6OvzQonrkSPq3lBSxCEX/FJQtmecl8/XS5/0o9wTo=
+X-Google-Smtp-Source: AGHT+IHtXA6Lf7Vkk8kyo+q83hau+OXhPd6v3x7YPBsGMFKLUFLqVHqYou/kGdhawIMJyuKZkjh+5ew9JD8i8T/vPdI=
+X-Received: by 2002:a05:6402:380b:b0:5db:7316:6309 with SMTP id
+ 4fb4d7f45d1cf-5dcdb700231mr4669199a12.7.1738785634972; Wed, 05 Feb 2025
+ 12:00:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <9d51d2710061dfa7f2568287c6ed125b858b7318.1738580005.git.viresh.kumar@linaro.org>
-In-Reply-To: <9d51d2710061dfa7f2568287c6ed125b858b7318.1738580005.git.viresh.kumar@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 5 Feb 2025 21:00:24 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gX9pfhanX3ZQkaQ6-rYN7AwHXtGh7kznZskQbWvf7XqQ@mail.gmail.com>
-X-Gm-Features: AWEUYZmql8rr2RDUji3MBFCFbrRskc4Dk78cKgfZjy5rynmaOOah9vqA8cDEJ4E
-Message-ID: <CAJZ5v0gX9pfhanX3ZQkaQ6-rYN7AwHXtGh7kznZskQbWvf7XqQ@mail.gmail.com>
-Subject: Re: [PATCH V2] cpufreq: airoha: modify CONFIG_OF dependency
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Christian Marangi <ansuelsmth@gmail.com>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
+References: <20250205193221.402150-1-mjguzik@gmail.com> <20250205193221.402150-2-mjguzik@gmail.com>
+ <20250205195555.GB8754@redhat.com>
+In-Reply-To: <20250205195555.GB8754@redhat.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Feb 2025 21:00:14 +0100
+X-Gm-Features: AWEUYZlJFA0k-iZw8OqCbydbvEIUo6s7RSJdDUCKP29JjIBORpTQaeaJnpTeYl0
+Message-ID: <CAGudoHFgXotUX_cmkSpdqd4xLxvKrz6x2gLUONKEKsCWd3LUHw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] exit: perform add_device_randomness() without tasklist_lock
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org, 
+	Liam.Howlett@oracle.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 3, 2025 at 11:54=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
+On Wed, Feb 5, 2025 at 8:56=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
 >
-> From: Arnd Bergmann <arnd@arndb.de>
+> On 02/05, Mateusz Guzik wrote:
+> >
+> > diff --git a/scripts/selinux/genheaders/genheaders b/scripts/selinux/ge=
+nheaders/genheaders
+> > deleted file mode 100755
+> > index 3fc32a664a7930b12a38d02449aec78d49690dfe..00000000000000000000000=
+00000000000000000
+> > GIT binary patch
+> > literal 0
+> > HcmV?d00001
+> >
+> > literal 90112
+> > zcmeI54VYWidFQXqM}!HsAV3BA;1X~VGz`MnRD8IRv5n=3D#7zLYDVcSUZjK)$tBMC`k
+> ...
 >
-> Compile-testing without CONFIG_OF leads to a harmless build warning:
+> Hmm? ;)
 >
-> drivers/cpufreq/airoha-cpufreq.c:109:34: error: 'airoha_cpufreq_match_lis=
-t' defined but not used [-Werror=3Dunused-const-variable=3D]
->   109 | static const struct of_device_id airoha_cpufreq_match_list[] __in=
-itconst =3D {
->       |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~
->
-> It would be possible to mark the variable as __maybe_unused to shut up
-> that warning, but a Kconfig dependency seems more appropriate as this sti=
-ll
-> allows build testing in allmodconfig and randconfig builds on all
-> architectures.
->
-> An earlier commit, b865a8404642 ("cpufreq: airoha: Depends on OF"),
-> tried to fix it incorrectly. ARCH_AIROHA already requires CONFIG_OF, so
-> this change does nothing, and the dependency is still missing for the
-> COMPILE_TEST case.
->
-> Fix it properly.
->
-> Fixes: 84cf9e541ccc ("cpufreq: airoha: Add EN7581 CPUFreq SMCCC driver")
-> Fixes: b865a8404642 ("cpufreq: airoha: Depends on OF")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> [ Viresh: updated commit log and fixed rebase conflict ]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> V2:
-> - Fixed rebase conflicts.
-> - Updated commit log.
->
->  drivers/cpufreq/Kconfig.arm | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 0ee5c691fb36..9e46960f6a86 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -17,7 +17,8 @@ config ARM_ALLWINNER_SUN50I_CPUFREQ_NVMEM
->
->  config ARM_AIROHA_SOC_CPUFREQ
->         tristate "Airoha EN7581 SoC CPUFreq support"
-> -       depends on (ARCH_AIROHA && OF) || COMPILE_TEST
-> +       depends on ARCH_AIROHA || COMPILE_TEST
-> +       depends on OF
->         select PM_OPP
->         default ARCH_AIROHA
->         help
-> --
 
-Applied as 6.14-rc material, thanks!
+argh.
+
+there was a temporary window where this file was creeping in, i forgot
+about it. i'll resend. :/
+
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
