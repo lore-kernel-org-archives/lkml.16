@@ -1,86 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1A822F162;
-	Wed,  5 Feb 2025 12:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3430422E3EA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759473; cv=none; b=rBe0q3wQ75vZ5JDjEHD+ju7ZV20ABUbEjTaR9q3T2af+OWgpvXDM1XGY2uTBGcAwBHItqSdq0aRzru+YT1Kzhu9hHeyNmTk8MVYTWJv9WTzgsfHCL0+Zt9/6f9JKxdpyF+wWFIfWqdGlVpO6nvZ952sU7phnPOZKSbBsv90E1yQ=
+	t=1738759475; cv=none; b=O6Tk6y6EFe9ZYELmWsrNaz3rMBq1LJ5lfbbQn7yZ7g5pj5p6jKx+9cEUdibDRCZ8eOp2fdLRBPKApZOjR4GnF2i27f9ewka3xXHSZXrYHi3/EAOQJ3dKkDXhAPROaZfsX38T4Ka3/reWM/LtSBdswev9KHXU1wM+0g48zimC794=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759473; c=relaxed/simple;
-	bh=e4x9ZDUe/siPo6t7idtJPPnEwGukGRQRmtPbHmtoEE8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oV1Q92fhZZXAk4cS6ZbbRNx8knMneohOu3x2KCm1icjSMdmGKP7kQTEM0yWP4jcbmWHj7ENHYVqnHCRfcDgCW7PSo8gWcRe23CWy3VUEpa7yidUn9xdUNHBvDEc63hpXRnuPY70MCkZnY7Ncnw9BUGueCX47CdQhozOp0AaO+3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QStcy2mE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QStcy2mE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7D95C4CEE8;
-	Wed,  5 Feb 2025 12:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738759473;
-	bh=e4x9ZDUe/siPo6t7idtJPPnEwGukGRQRmtPbHmtoEE8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=QStcy2mEtP1MyZuYt25CFdgRIaJWB62QkyfPEQZlm5lI+lOgUoKHL9RGWLGDL/0ew
-	 smN7jRZyYpGCgd6EEUTKarHwejCCPHuhiCOQzUFLV/3SIwL1GaHydopG8k3ewzo6e0
-	 Og3oOX78DlgfONat75b0j+eGng6Ngr68ZX8rW9CT3d9RtIcJeoWx5+dDynzxETZiR3
-	 SabhaBfxaIVx88dei0eqfmDVx5NVplPj+q862K+ZXdMj80PsdsD2KSf/QljEfZnc1V
-	 JkeDO8gB8w8trlg0NCnGZLkmhz61Bsxi0WstSv/JyAXdS/6qj5LQ96TjIkbfmXLQZR
-	 UtWwShj4Yn0uw==
-From: Mark Brown <broonie@kernel.org>
-To: linux-sound@vger.kernel.org, "Sheetal ." <sheetal@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
- jonathanh@nvidia.com, thierry.reding@gmail.com, mkumard@nvidia.com, 
- spujar@nvidia.com
-In-Reply-To: <20250203105304.4155542-1-sheetal@nvidia.com>
-References: <20250203105304.4155542-1-sheetal@nvidia.com>
-Subject: Re: [PATCH V2] ASoC: tegra: Add interconnect support
-Message-Id: <173875947150.32457.3575258063637479820.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 12:44:31 +0000
+	s=arc-20240116; t=1738759475; c=relaxed/simple;
+	bh=ht/zvSQM9/vRfZtYjpXWm6tjMHQusBfdmimWrKZiQ7U=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=F00H5MXEYbCQbx14pV6Q3A0e0vAPosi9+LcIj4/0itCR5pcEZpbCAajS4XLa6ty8kvE40wFBueq/u74MIIwt4fzGnQgcjGI+aizHFX2XZVjJ8eAQUaAaHghuHVeiUpsaL2+jl3jBn+RudzVJGbOaNoAuYXfsnZ9HTSE9z35AfQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d04f20f2baso15133135ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 04:44:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738759469; x=1739364269;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DInoo6sTiqlWzioJC80HumUykAkTe3rtHyl6dMYxnBU=;
+        b=Ai4CZAgB39F5q1JvFQS3lE/z3DsQ2uZYFWYACebydKURn8hRzWhSbOPoCFblHDAHza
+         dvMRhN+YlTCRdNlqKYz5BdMpMmJo3a0or6/SmxTUVXonZKdDCbNGFPVRxEIcA0zw4y9Y
+         Ls4kqtMrpUC2/Aq9CVYUQ3XF1+LwF5BlNiILGCtfUz4WBC2TAetp6hZYfGO+UShVmZuG
+         JAneCll2jQELvtDlMa/9Y8nx8oP+vr5tbOhVaQB/hbs4E27/2HpbHM26fqaCl3UhSSRx
+         A4HQYBKtywiNikWtZxQ862DBvxbCRRybSryEm8M5PuWV0n8Wtv8bh76P8iVHM2dmm61Y
+         Bn2Q==
+X-Gm-Message-State: AOJu0YyKKAxOs8dZ9DYLDp+4DdvgvrVkVe8FAmrbWPhsRluaFZ92RiON
+	jYbVSaggAD0FH3NqyF1YGIw8j6NY4Ytub8HOSSr46RC/d4ZkhsHEoA2Mur1Ao1tcx+c7j0In0Ra
+	gYkVPY3tH1poK33tyT0k6tufX7Bw0JbBxb+SPVT8jbQ5V4RPx33Z2Lmk=
+X-Google-Smtp-Source: AGHT+IEzJBdqHIJ3FehnNAGdH6vsBlPEOwvXpIIC1WTFRN+bkTIJAHYDV18YoAylQiGlbjKOQbIYPFGa67yPHlVsA9fHOEFty4PG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+X-Received: by 2002:a05:6e02:18cc:b0:3ce:78ab:dcd1 with SMTP id
+ e9e14a558f8ab-3d04f936d66mr24665975ab.19.1738759469411; Wed, 05 Feb 2025
+ 04:44:29 -0800 (PST)
+Date: Wed, 05 Feb 2025 04:44:29 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a35d2d.050a0220.50516.0053.GAE@google.com>
+Subject: [syzbot] Monthly mm report (Feb 2025)
+From: syzbot <syzbot+listf3ab4bba2c1ad0a87272@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 03 Feb 2025 10:53:04 +0000, Sheetal . wrote:
-> Add interconnect framework support to set required audio bandwidth
-> based on PCM device usage. The maximum bandwidth is determined by
-> the number of APE PCM devices and maximum audio format supported.
-> 
-> If interconnect property is not defined or INTERCONNECT config
-> is not enabled then the audio usecase will still function.
-> 
-> [...]
+Hello mm maintainers/developers,
 
-Applied to
+This is a 31-day syzbot report for the mm subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/mm
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+During the period, 10 new issues were detected and 3 were fixed.
+In total, 130 issues are still open and 281 have already been fixed.
 
-Thanks!
+Some of the still happening issues:
 
-[1/1] ASoC: tegra: Add interconnect support
-      commit: 4a91fe4c0d683c56044579fb263c660f5d18efac
+Ref  Crashes Repro Title
+<1>  179425  Yes   WARNING: locking bug in __set_page_owner
+                   https://syzkaller.appspot.com/bug?extid=56dc65adbd1d2ae1f844
+<2>  10430   Yes   KASAN: slab-out-of-bounds Read in generic_perform_write
+                   https://syzkaller.appspot.com/bug?extid=4a2376bc62e59406c414
+<3>  7389    Yes   WARNING in ext4_dirty_folio
+                   https://syzkaller.appspot.com/bug?extid=ecab51a4a5b9f26eeaa1
+<4>  3624    Yes   INFO: task hung in page_cache_ra_unbounded (2)
+                   https://syzkaller.appspot.com/bug?extid=265e1cae90f8fa08f14d
+<5>  3191    Yes   INFO: rcu detected stall in worker_thread (9)
+                   https://syzkaller.appspot.com/bug?extid=225bfad78b079744fd5e
+<6>  2529    Yes   possible deadlock in filemap_fault
+                   https://syzkaller.appspot.com/bug?extid=7736960b837908f3a81d
+<7>  1518    No    WARNING: locking bug in __schedule
+                   https://syzkaller.appspot.com/bug?extid=46b40e354b532433eeef
+<8>  1496    Yes   BUG: Bad rss-counter state (5)
+                   https://syzkaller.appspot.com/bug?extid=f2bbbb592debc978d46d
+<9>  1465    Yes   possible deadlock in gup_fast_fallback
+                   https://syzkaller.appspot.com/bug?extid=63ba90b81c16b86379bd
+<10> 971     Yes   WARNING in vms_complete_munmap_vmas
+                   https://syzkaller.appspot.com/bug?extid=38c3a8b50658644abaca
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+You may send multiple commands in a single email message.
