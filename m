@@ -1,113 +1,175 @@
-Received: from mail.bues.ch (bues.ch [116.203.120.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA69A1519AD;
-	Wed,  5 Feb 2025 17:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.120.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B67C8C7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738776636; cv=none; b=Bd+egcDGUYXpjmRiPdZzZ0w/nQhyAA4FOR8v3kJgu6G3AzXYXarlqP7eiEqWnLKBQ9VvY/T2IFcF2B9tqspvSrir0PAjDO7R51SlAgp+BeJTwCPVr9BxxmXI5e5siss8po0pvEYacWEdX8IkLe6c55Hhsz0SLB47jsbRFOrAj8s=
+	t=1738776698; cv=none; b=oZvDeexId1kIJgMYthmxmbl5vBXuKronsOoNlm8X6NjvwT7ds79Ov7fIFLSyfl9ZobjanaGENaciZdnWrsfOtFW55v3+WFO/tIsocC/mc7eRaCWdscv1PsUejBwL2Fm9aK5BbunBPHJkmf2zMaCrYy0szP0xfMEeoFN7ZZeK/sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738776636; c=relaxed/simple;
-	bh=gzt3Y6bMwaAwDTrMqO5l1QM/P5g3nv4A3cPONKMK3Vc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ehewibiVNJ7s6kIjD8iYExr/7suhjd5Z548G/A2Cywgal3Kky9P3TNuHKddgynwn7fWVK5JpRoctfn/LGpDD8UOWmEXjxw0I5qaGd9IHmjBtgzgnnX9KblGSjWQy2oigQuqdEXNUWHLnfYQCgYuTKXiZoz5Ile68irljxG5eW0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; dkim=pass (2048-bit key) header.d=bues.ch header.i=@bues.ch header.b=QSaC9KZd; arc=none smtp.client-ip=116.203.120.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bues.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
+	s=arc-20240116; t=1738776698; c=relaxed/simple;
+	bh=NqTUAAEFp6LCGLFoYYDg4Jk0+E7HrDFOEIiuZobX9zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvAYv7Hst5Piu2c74zsITkiEXC9FdjV/dWgfwaywbOPHYYKqOQNpreigVoHlcmRx5Ot6e0rxcbSGBOGPUco3+JzEtxRSiPqKdOsjEWw3OKJ6iW3M3LVZeRqd8ou0RPJ0dDCE3KdvKVh/99Do+QGuYKKgOKV9GkJ4W48l3z3Z+mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uJbRczqj; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bues.ch header.i=@bues.ch header.b="QSaC9KZd"
-Date: Wed, 5 Feb 2025 18:23:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bues.ch; s=main;
-	t=1738776242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jXHa2sqBdx5kl+URkaqFGorX131D990W5SanQ/p4o1k=;
-	b=QSaC9KZdyLhpEGGWBCi1SxDSKvk/gQWhHj/GwqSvLTNQQdndAigeCDl7A4AhRU8V72rDtW
-	UbsB+Fa5gg6TwIUdYgshdhRO+X4rx5F81BrP10VbdrSZbNDFczw509rqi9tjZVDmrC/svr
-	69eRX2mdbPCNWK58J2yfwVoonixzmkX2R/RsLDbhqlMqOMJKOkvLB1EgPh7SnHV+xeb0I+
-	0vmlmZUWIUK3gWJNG2fN8MN9CWqNpuW+wmOmZwQZJy2jOacLdIq4DBH9S6H3VipsR9tgUq
-	u5JtttZ5xICxjiI9p6deypa2QqdXNfbhNCq+XXxy2AFvAWKE1QK99t2sy90U3w==
-From: Michael =?UTF-8?B?QsO8c2No?= <mb@bues.ch>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org,
- b43-dev@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: wireless: broadcom: b43: Replace outdated
- firmware URL
-Message-ID: <20250205182325.5a38c736@barney>
-In-Reply-To: <20250205110614.216958-1-carnil@debian.org>
-References: <20250205110614.216958-1-carnil@debian.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJbRczqj"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54287a3ba3cso984467e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 09:31:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738776694; x=1739381494; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sSvDNu1MCew5DfKQuJ6rL3D/rzZSEMNFaxV9DoXqmfY=;
+        b=uJbRczqjb64cRXChWq44Eqwg9MES4attp1ToxfcvnTI+yFlwMRz52mXK598jMFsPTo
+         17zWis5hOuFQsvvOf6lRpYhZF0Fue15HusXKIItwjDcL9pRP8WbPoboU639Xi1/xljDK
+         WyHLwB3bQjANh403QTpZthn3qiIKZrSdYZmulvGA8L9MfDGIsUbPyaHj4pmmT5VL/vMT
+         C8ZtVjXpOTTKfwA/NHxx0MRNPUZ40AQncpzpZjnh5EITqSS+lWsu1/lAF8KKU45K3pl1
+         ZDoPNgYuQinAmwbxvXAKLpxQVr1SgUqL7oShsBCb8RKaZPr/aJ2JVaJ1ttJmG32kxg4m
+         7Vhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738776694; x=1739381494;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sSvDNu1MCew5DfKQuJ6rL3D/rzZSEMNFaxV9DoXqmfY=;
+        b=r1DMF6RxtgC3MKl7IVZSRObP5kvtad+sRvk3g3rkCP3EQd9/UywaJB+W+FEB58UuYS
+         epQ+RBDrPF2tuNjjzY9MgM8pZEfUaCl4skClXYbLRlt54UnQ6SPPy9eYPjwpBBhaaMiz
+         5UMO97YLVUCZC5mitMU447BEAcLNqKZYTaDJFHBn6kkreFE48scAvGdh8QRx5AND6aL0
+         opfZx8tuzQbnv3ghXDk93yQwlXxelkXECWcqvGTbHiKKrIGOb26MGRqcdSjoLZ1vKuw2
+         XCO4GRqEe7F9y1kW+MqxLh8MFPLTbeWzj6/6pWMNoWNJt8xLbnZ+M8dHhJrDQDikbZx5
+         AyPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgf2xnyIa278LryskgWudoelGoHfkyJUTaARH+z7G2Y3AZcmDVf+F9nbrUWtU3ETUesyFmtcvJNhhSrPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZxhjiEU6RjJtXXZAV/JtajCXJz/JeZmYzYVvJZfWgHsJSiK3E
+	KX1Nj2jK0gal7E1z09aZxaJHBatDZ0wt5tnIbs1c1Hhcp1TKqnxiSLdxhVIse+A=
+X-Gm-Gg: ASbGncu/jgvlwPczRDHwos7v1md9kRlws4mkU8a/yU72kIAchTmjmNbK1/ZTphuDTH+
+	OZGvayxZTe9hU56BHNc3z6YAGw6hSKkcABIo9wEEllOqAURe6+nojFDnWrgiPiZqVFkM8C4Zjgm
+	x1aZZasaNaxSWXNP43SlmS/mPJkvVouuety/BUQoUrpqL+hyLUzSJBtLEyk1qx7u8+llZNKx31T
+	K7GvDRQu1CktspQ+nBA4G0sWP3fLlU+OEazdmDCWUnBqRKkzVKNPGeL+JceJb3auYIOYFiXceIK
+	lDgj2M0jgJSga4ea5l8778Dj1jmYV+12G64PAM6PjhH0wumTMdBalWSQW8KrDmeLcw9Mdh8=
+X-Google-Smtp-Source: AGHT+IGwZzXG8P5ItvYBjpw42srLjgats+UzbQEDy9fXS82L2MWijTKxDeeg+/LLcNpf7puXXABxKg==
+X-Received: by 2002:ac2:5f66:0:b0:540:2fbb:22fe with SMTP id 2adb3069b0e04-5440e6b96aemr45907e87.26.1738776694065;
+        Wed, 05 Feb 2025 09:31:34 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebebe98esm1919998e87.216.2025.02.05.09.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 09:31:32 -0800 (PST)
+Date: Wed, 5 Feb 2025 19:31:31 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Johan Hovold <johan@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] usb: typec: ucsi: Schedule connector worker on
+ freezable workqueue
+Message-ID: <dp5ohy5piss7osycibuke7kwnfl5elnmc6gfvqgfh6mzzrldla@sru3ylzrtuea>
+References: <20250205-ucsi-schedule-conn-worker-on-freezable-wq-v1-1-107d1356b77b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uuMKLn01GWEcG6Sbf8AZzW/";
- protocol="application/pgp-signature"; micalg=pgp-sha512
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205-ucsi-schedule-conn-worker-on-freezable-wq-v1-1-107d1356b77b@linaro.org>
 
---Sig_/uuMKLn01GWEcG6Sbf8AZzW/
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On Wed,  5 Feb 2025 12:06:14 +0100
-Salvatore Bonaccorso <carnil@debian.org> wrote:
-
-> https://wireless.wiki.kernel.org site now redirects to
-> https://wireless.docs.kernel.org/en/latest/ making the reference
-> information for the b43 firmware inaccessible. Update the URL to the
-> current location.
->=20
-> Link: https://bugs.debian.org/1095062
-> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+On Wed, Feb 05, 2025 at 01:45:05PM +0200, Abel Vesa wrote:
+> Currently, the UCSI connector worker is scheduled on the non-freezable
+> system workqueue. During system suspend, on a plug/unplug event, the
+> worker can run before the devices have actually resumed. The UCSI
+> instances can implement operations that might need to do some HW accesses
+> while the devices are still suspended.
+> 
+> Scheduling the USCI connector worker on the freezable system workqueue
+> instead will ensure the devices are resumed by the time the worker is
+> scheduled to run.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 > ---
->  drivers/net/wireless/broadcom/b43/main.c | 2 +-
+> Sending this as an RFC since I'm not really sure if this should be done
+> in the ucsi generic implementation or in the pmic glink UCSI instance.
+
+Can we really fix PMIC GLINK instead, please? Previously you were saying
+that it for some reason has to be woken up earlier.
+
+> 
+> For context, on some Qualcomm Snapdragon X Elite laptops, there are some
+> i2c interfaced USB Type-C retimers (ParadeTech PS8830) that need to be
+> configured on each plug/unplug event. Since the i2c controller is
+> suspended when the UCSI connector worker gets scheduled, it results in
+> the following:
+> 
+> [   70.036669] i2c i2c-4: Transfer while suspended
+> [   70.036802] WARNING: CPU: 0 PID: 819 at drivers/i2c/i2c-core.h:56 __i2c_transfer+0xb4/0x57c [i2c_core]
+> [   70.036945] CPU: 0 UID: 0 PID: 819 Comm: kworker/0:4 Tainted: G        W          6.13.0+ #84
+> [   70.036949] Tainted: [W]=WARN
+> [   70.036950] Hardware name: LENOVO 21N10007UK/21N10007UK, BIOS N42ET85W (2.15 ) 11/22/2024
+> [   70.036952] Workqueue: events ucsi_handle_connector_change [typec_ucsi]
+> [   70.036959] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+> [   70.036961] pc : __i2c_transfer+0xb4/0x57c [i2c_core]
+> [   70.036963] lr : __i2c_transfer+0xb0/0x57c [i2c_core]
+> [   70.036964] sp : ffff800082ffba90
+> [   70.036966] x29: ffff800082ffba90 x28: 0000000000000000 x27: ffff1cc400dba0a0
+> [   70.036969] x26: 0000000000000000 x25: ffff1cc4034bd500 x24: ffff1cc400010005
+> [   70.036970] x23: 0000000000000000 x22: ffff1cc400dba0a1 x21: 0000000000000001
+> [   70.036972] x20: ffff1cc4011ab0f0 x19: ffff1cc4011ab160 x18: 000000000009eb8a
+> [   70.036974] x17: 00000005bf44b304 x16: 00000000000000cc x15: 0000000000000004
+> [   70.036976] x14: ffffde65ecd46798 x13: 0000000000000fff x12: 0000000000000003
+> [   70.036978] x11: ffff3e658f1f7000 x10: 00000000ffffffff x9 : 340eced73efb4000
+> [   70.036980] x8 : 340eced73efb4000 x7 : 656c696877207265 x6 : 66736e617254203a
+> [   70.036982] x5 : ffffde65ece89084 x4 : ffffde65c9120093 x3 : 0000000000000000
+> [   70.036984] x2 : ffff800082ffb854 x1 : 00000000000000c0 x0 : 00000000ffffff94
+> [   70.036987] Call trace:
+> [   70.036989]  __i2c_transfer+0xb4/0x57c [i2c_core] (P)
+> [   70.036994]  i2c_transfer+0x98/0xf0 [i2c_core]
+> [   70.036995]  i2c_transfer_buffer_flags+0x54/0x88 [i2c_core]
+> [   70.036997]  regmap_i2c_write+0x20/0x48 [regmap_i2c]
+> [   70.037001]  _regmap_raw_write_impl+0x780/0x944
+> [   70.037012]  _regmap_bus_raw_write+0x60/0x7c
+> [   70.037014]  _regmap_write+0x134/0x184
+> [   70.037016]  regmap_write+0x54/0x78
+> [   70.037018]  ps883x_set+0x58/0xec [ps883x]
+> [   70.037021]  ps883x_sw_set+0x60/0x84 [ps883x]
+> [   70.037022]  typec_switch_set+0x48/0x74 [typec]
+> [   70.037026]  typec_set_orientation+0x24/0x6c [typec]
+> [   70.037027]  pmic_glink_ucsi_connector_status+0x30/0x7c [ucsi_glink]
+> [   70.037032]  ucsi_handle_connector_change+0x98/0x614 [typec_ucsi]
+> [   70.037034]  process_scheduled_works+0x1a0/0x2d0
+> [   70.037045]  worker_thread+0x2a8/0x3c8
+> [   70.037046]  kthread+0xfc/0x184
+> [   70.037048]  ret_from_fork+0x10/0x20
+> ---
+>  drivers/usb/typec/ucsi/ucsi.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wirel=
-ess/broadcom/b43/main.c
-> index 25b4ef9d3c9a..7529afd24aed 100644
-> --- a/drivers/net/wireless/broadcom/b43/main.c
-> +++ b/drivers/net/wireless/broadcom/b43/main.c
-> @@ -2166,7 +2166,7 @@ static void b43_print_fw_helptext(struct b43_wl *wl=
-, bool error)
->  {
->  	const char text[] =3D
->  		"You must go to " \
-> -		"https://wireless.wiki.kernel.org/en/users/Drivers/b43#devicefirmware =
-" \
-> +		"https://wireless.docs.kernel.org/en/latest/en/users/drivers/b43/devel=
-opers.html#list-of-firmware " \
->  		"and download the correct firmware for this driver version. " \
->  		"Please carefully read all instructions on this website.\n";
-> =20
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+> index fcf499cc9458c0d12015a7e36e5f1ac448c3a431..8c6081e0cd6155a59ca733070cd93e6b79398b3e 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> @@ -1307,7 +1307,7 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num)
+>  	}
+>  
+>  	if (!test_and_set_bit(EVENT_PENDING, &ucsi->flags))
+> -		schedule_work(&con->work);
+> +		queue_work(system_freezable_wq, &con->work);
+>  }
+>  EXPORT_SYMBOL_GPL(ucsi_connector_change);
+>  
+> 
+> ---
+> base-commit: 00f3246adeeacbda0bd0b303604e46eb59c32e6e
+> change-id: 20250205-ucsi-schedule-conn-worker-on-freezable-wq-cff0a880b08b
+> 
+> Best regards,
+> -- 
+> Abel Vesa <abel.vesa@linaro.org>
+> 
 
-Acked-by: Michael B=C3=BCsch <m@bues.ch>
-
---=20
-Michael B=C3=BCsch
-https://bues.ch/
-
---Sig_/uuMKLn01GWEcG6Sbf8AZzW/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmejno0ACgkQ9TK+HZCN
-iw5FtBAAsu35avxN0BF/zlRtr8E4sVnqfLRz1sfAFmVTYr6zrEMmv/wZ/7SAfH5o
-pBq/n4jLFRSZAh+DvYOcH+W0y1lAKOAgAeTrNVWblVXcqOCzwrFsi2KbKlrzyc+b
-MQ2MpKKW9T62YS/mYtgIaNHKXjdWKkVqCIQM6VuBs6OokwWs70IyESDhY4QHTK7M
-oZONxaWnR2O5lAvenvILGMZdK+nEu3MMwAVSC/ckyLVv326RMOKhTTMcpcVlAb8l
-8TJFq70upEQIFEULAcyuHBqy3mwUNHJIKW5k2HzJ6UCN8OqZnBCQE8HVdyzZzjNm
-W1S2ZXZCtC9Z8Td6gveEv+ZjEg8W5Jsxbc0d4vG0oDrE1LtCNbN8ofMjmg/UmvW2
-7YfEuKuQ+RiSahYAGKdarAOe2dMlxQaCcx/iC73pZM5I9eaPU62tJ9DsVAzU7hu1
-neZeVJUzXCo/dpyw98yU+xnM6fsmYRaXgvNTFPk8BNabRMv9nxt6Ne731pFxwN97
-0sirlPmEhBT6aGkm47gOIY79xD3Swoo7xFpelCPFLBAOEEkuwii+RnL8hWyVfbb9
-oxVcFUWpTZOY+TCQ1rqqTc6b2xj/mN7Na25f2C7HIwB8ByRRu3jPPcLznK5XB1cS
-1tQLN7vaL9OWFg26pDuhcb6hdeaUkKolwclyyOgb39sX9o92kNg=
-=8mHz
------END PGP SIGNATURE-----
-
---Sig_/uuMKLn01GWEcG6Sbf8AZzW/--
+-- 
+With best wishes
+Dmitry
