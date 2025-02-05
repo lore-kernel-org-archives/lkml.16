@@ -1,82 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E8821A945;
-	Wed,  5 Feb 2025 10:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053BD21A945;
+	Wed,  5 Feb 2025 10:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738750166; cv=none; b=lLqvvzXYYewMwcAxmMxBwrq6kRTAXD4BT9DzVJs1iGqZh6OnkbkkPRyRqwmY/az5fM35gqoNAsgmD2zZAtxG3Z5UcsAEzZUpbabx0i/5g+H/V1RBFC4h+UFEYTuOdjWBf/M2i0U3UltuzLcw8k4kBtSD33gzpWpefDTm6xs2KR8=
+	t=1738750199; cv=none; b=UBzzxPRcCu/jZjLVC7v+ocOG3T1Sygs18sido6YZot9Z3SIBiyOQmpPDx3197d+nqzk6z0BT8TabrJI9LE0YNNj0y90Bml0LO77fquKtjl3ENOrtkRLVejRh/k2cZ4OC6M7TeME7tr1cm89i0UVKHF+mCCVT76fkoVLyZ7ECjD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738750166; c=relaxed/simple;
-	bh=wcO0snABHQ/EQlJRhm7GcrcM4rAy14UC6Dnnsk8wbVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KdhJ8xoJts4ykCOnc/goFIXu4Z7uKw5XE/7tZrx/TYeS1VQUMMM5ZdEoprdORM2xljXE4sa3OEMAsG+vlDFebk4OZ4qocFJTTo4gXA4rt60DGfpHNloTB7c44bkHOKzA7UKyO7VMIWPFRmdczwnfyX/rHoxwAc3a08Ie0OeweSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIXaXcP7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738750199; c=relaxed/simple;
+	bh=vt9j8TC9pY29iT03X+VxKEpjegg1XM81vTdQ1NBXkMg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=C/m4tTo25q5TNr/ljsT3dSxdIpyJcwJRYvoaklQQ6n7TpnZSCfkSASn441bdca61l+OlrEZfmS0Fid1RXhD36UTGTCKH3cq7FcDDVxhh3zG9c6krh2neHrFEG9sBFD0Q3/7yWvXi7owB2pfYIHVpDBgJmJN1anzKZZ6tXrH8g0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VF+Qz4p4; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIXaXcP7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C25C4CEE6;
-	Wed,  5 Feb 2025 10:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738750166;
-	bh=wcO0snABHQ/EQlJRhm7GcrcM4rAy14UC6Dnnsk8wbVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UIXaXcP7VjYb2tahYBouaQIsm+B0Pj3pEpFHpBM5QBAsZBEe14pnRaexLj++442Pf
-	 C+wbRjwLmL+m5FMZ6DdkbPL0lPKCac6q1v56Sf7Nm0lmyhQFqyvFTocKDcpTEYFnII
-	 07398xW6at2BojjUi9thVCWhZQ06wiZXuRhR6KkhWYJS9eonnLNKseKwZg+yfYmcmF
-	 BcrRsLrH4d4NxkMZchWCfmXpv5gDVHsCvFUrmMUKBIti3lHZc4qN2OwS916MoKvT7w
-	 othU07/kideZpBID3TIi2Ilh+VWB/tOdvG32QQ2a9D7EHieD4jnjbqGShYqHghS2h5
-	 SOXglgoRjlKGw==
-Date: Wed, 5 Feb 2025 11:09:23 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Fred Treven <ftreven@opensource.cirrus.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Simon Trimmer <simont@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	James Ogletree <jogletre@opensource.cirrus.com>, Ben Bright <ben.bright@cirrus.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	David Rhodes <david.rhodes@cirrus.com>, Jeff LaBundy <jeff@labundy.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Karel Balej <balejk@matfyz.cz>, 
-	Igor Prusov <ivprusov@salutedevices.com>, Jack Yu <jack.yu@realtek.com>, 
-	Weidong Wang <wangweidong.a@awinic.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Prasad Kumpatla <quic_pkumpatl@quicinc.com>, Paul Handrigan <paulha@opensource.cirrus.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nuno Sa <nuno.sa@analog.com>, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH RESEND 4/7] dt-bindings: mfd: cirrus,cs40l26: Support for
- CS40L26
-Message-ID: <20250205-large-brass-stoat-9c0fe5@krzk-bin>
-References: <20250204231835.2000457-1-ftreven@opensource.cirrus.com>
- <20250204231835.2000457-5-ftreven@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF+Qz4p4"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38db8f8786fso5415f8f.1;
+        Wed, 05 Feb 2025 02:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738750196; x=1739354996; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UgKWsb4wd8O5NQcrXT8xnVQwH9+D70MltxfRewZxbzo=;
+        b=VF+Qz4p46lJSbgrxq8dX7Aso5mKBi56MPS2egDgOz4mZcL2mft2uMhB6RDLutKu+ne
+         S+NpmocZxnBs0juCZ+nA2zraU9+5C3ebggIKbo3OOacqhZ7pe7RypplIrHeCIAEiJx37
+         OT5fODaTJF5UUmYH4O5itra/hw+YUrH7XNLOF+Jw8ZUvpQyQfZg77ytE7ElAIS/8mQ9i
+         PYPnlapilfpIS60KF8tsPtvmZ34yoWQ8vZfCmYt/lErOS13FUhkc47E0G/4U/dtQavNO
+         STi2L4h1R/AbVWnRi84jBsKFMYGY400CgewrZb5HsOqnOEs5UF9NTmjWA/KoK1ym6m8O
+         VCWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738750196; x=1739354996;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UgKWsb4wd8O5NQcrXT8xnVQwH9+D70MltxfRewZxbzo=;
+        b=MGQOJ4OfwTONPOlLoZm0gXk/hANVVefe+zkHhivfCLg9NbqOdumg6PnAQObw6fwg6w
+         8WRJeWBVmodAA+kM78maOMmmhnvboNoQax9FVo+ivf1J9GlwiRziC07ZzHJqGLnmRW53
+         p+ohvcgzHiPTIsTXm5LFuWDi0TwImUsdRNISGa/nL7NccUfd06wpjkCTzvc6/w56wZck
+         7pEsEGfsRZ1AztsUrSGIRy+shO43a1k0ayPfTNnB9+B4jmwHr5MRiPF+49C1WN5qYCdS
+         5FqonY7LjtErDEfJaDTambsVDlKCYw9TnfOMGGhDhQxqKVW0Dn64ToQRNOUi1BKIxeBi
+         AwuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxmIk3j+Zrm86IFxku16CnCllOlQ1h1tP21WxVurrIFRofCbI5X/cy3MLYCNDPzq5TtwDwuTSwPkSEVec=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz81Frg+Kzuo/1W1+e+P2O5km9DNyfCq1gFUgVzZJa+mHswoVvq
+	5Jy5RuBcgKtA3CUn1sQ8yrGjuLssy6PT9s4UuTDLqB1jRbxdF4nAtQH6PA==
+X-Gm-Gg: ASbGncuGHwNiAjwcMJt2xhS++J1679E5okCRQ6l0tM1J1HOReD3mBYSmPO5r6jt3bPN
+	B5/JU0dMIQYiKX+c3Fp8P63qzYFVfRGEzKuTPTWkrBbUD8c5St4Nlx9iyAtRZXRdfK5ymE1Q0Rg
+	wzfuPf2WGJKdYL2JzAwFpwOzYNZ/bERYMId2D6zIPhIuQPDsQEvTMxQ0rHPDJywj5RjEapjxOmr
+	Cr0nNsmFFpjG+ATXlrLce1KGVuznhlSMZptTELWUXeBugT5CwDXjyh7V0fqj+5DO/g7DSgab7vi
+	hkgVFpJHcYNTnk2+V7l90+H41IyF3GkBWw==
+X-Google-Smtp-Source: AGHT+IFM8JZsI4fER1QYtXtRH5Vsk9KNxGrlRwfk8xspZYy+cSpsU0f1P8CqycBiWmyK6AMn8PG+5w==
+X-Received: by 2002:a05:6000:402b:b0:385:dea3:6059 with SMTP id ffacd0b85a97d-38db48dfba5mr1426073f8f.49.1738750195987;
+        Wed, 05 Feb 2025 02:09:55 -0800 (PST)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d933a3esm16904435e9.5.2025.02.05.02.09.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 02:09:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250204231835.2000457-5-ftreven@opensource.cirrus.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 05 Feb 2025 11:09:55 +0100
+Message-Id: <D7KFI4INC6NC.3JY96TZGRJCX7@gmail.com>
+Cc: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, "Vasanthakumar Thiagarajan"
+ <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/8] wifi: ath12k: handle change_vif_links() callback
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Aditya Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>, "Kalle Valo"
+ <kvalo@kernel.org>, "Jeff Johnson" <jjohnson@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
+In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
 
-On Tue, Feb 04, 2025 at 05:18:33PM -0600, Fred Treven wrote:
-> Introduce required basic devicetree parameters for the
-> initial commit of CS40L26.
-> 
-> Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
-> ---
->  .../bindings/mfd/cirrus,cs40l26.yaml          | 81 +++++++++++++++++++
->  MAINTAINERS                                   |  4 +-
+On Tue Feb 4, 2025 at 6:05 PM CET, Aditya Kumar Singh wrote:
+> Currently, links in an interface are allocated during channel assignment
+> via assign_vif_chanctx(). Conversely, links are deleted during channel
+> unassignment via unassign_vif_chanctx(). However, deleting links during
+> channel unassignment does not comply with mac80211 link handling.
+> Therefore, this process should be managed within change_vif_links().
+>
+> This series aims to add support to handle links in change_vif_links()
+> callback.
+>
+> Patches 1-2 are making debug infra to work without device info.
+>
+> Patches 3-8 are the ones changing the code to handle as mentioned above.
+>
+> NOTE:
+> * A new ath12k-check warning comes which probably needs to be added to
+> ignore list
+>
+> drivers/net/wireless/ath/ath12k/debug.c:69: Prefer [subsystem eg: netdev]=
+_dbg([subsystem]dev, ... then dev_dbg(dev, ... then pr_debug(...  to printk=
+(KERN_DEBUG ...
+>
+> This is because, since device info is not known can not use netdev_ or de=
+v_
+> dbg family. pr_debug() is an option but that will require DYNAMIC_DEBUG
+> and then ath12k needs to be probed with dyndbg=3D+p which we don't want i=
+n
+> ath. Hence, only option left is to use printk() directly.
+>
+The issue seems to be resolved. Thanks a lot !
 
-I don't understand why you decided to resend the same two days *AFTER*
-you received review.
-
-No, implement the review you already got. Resending the same in such
-case is not only unnecessary noise but actually ignores/skips the
-review.
-
-NAK
-
-Best regards,
-Krzysztof
-
+Tested-by: Nicolas Escande <nico.escande@gmail.com>
+Tested-on: WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1.97421.5
