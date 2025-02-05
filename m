@@ -1,180 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D83523CE;
-	Wed,  5 Feb 2025 21:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01546214A8E;
+	Wed,  5 Feb 2025 21:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738790531; cv=none; b=VubE8QTu5PzihMUBkYcDKdl3jxUr1OEqcuOwTHtyzHEOcmTB9jbvZWDGQjLHn3Ufh0sFnUK6wyShlx8TslVhupzdao7XLU+rNFh+Zq/thtYXnmLQMO+UtLazv369Jujr+3fpkg43kBw1mJx4oK6FQW7ew4qx7zzQEJf1ID9Eb7s=
+	t=1738790849; cv=none; b=YrLr2KvGaxEWWQqiPLiy6cU9E3eG9fIWRkzjHzLWhn0KBckI4ds4s2H1OCmJ671Ry0AkL45oghL99q8zV+na5elL2DsbDzVj8ua8EKm5bzfHgS5/osUtpZkw7+PfzhI1c6pYMY69M++OwgqVy3fOJ5DaEFI9w/hGbDPv2OtJKqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738790531; c=relaxed/simple;
-	bh=6UaFJ5dfXDsR86TEFbbJhO5+Tyug7OFwGGuIi56ZwVI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dVCIvgKEyODXT88Ja2gG5Tj0JjpsSjf7YrG19/ITW7vUAa+1o6ZqPaBC8TTIQK3jdpjGeBfr2sE18BI7Zka9bdHpOhH0ji7dKC6lwr1Jnhrr7ioUAoaapGakbd/Rha3fmB+fBgjpZkXQZhiRVEoua7TL6/a8LrKivGON601vv9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UMv2d5oc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pIJPJ0nA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738790849; c=relaxed/simple;
+	bh=QD9y9LQemVKTii90PFWUVbywYCREixrRCd8nLKIawr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fk9A6pco0nBFPhRrM0DTqM5shu2XUMK5FvfxEzv/xCpZXMErZSgyhof5VTlNwTTYh/NbDVEw3nRyxpjTIkIv4oztMRSMALrza3iG3oIEwBPfwH7bZwDI4wZYO2oFE0eJQJ/XRIFNaaZ7PGnJh6T7R04VkOL8yMVWzqWX2jj7A7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=PU5XojhC; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UMv2d5oc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pIJPJ0nA"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738790527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z/HAxvUTiJawdWe3C8a9yYvj7IQz7aWvPm5qvpIh5KI=;
-	b=UMv2d5ocRKG7Avi5xa5iV+eOVdYG6RUjbyXBhYe/tQuWBn29m0QVnCVVzzYVw+uoiA3SVT
-	NMQ+9dEwTz64G3qM9J4WKRHcJ7hOJyJ8hPoccPHGOlDq9uNY4eeDvJv0IfbX47B704pwhI
-	ckat09iDdRbwovwC5Lo4GZSn3TIRp5LL7ZAf5mi/KTqtVwrQCjKwBh5/RDxwdMG86F95Ge
-	fS3PLUSoJ3r/EJ/6IKGhfJ369BahGQ1k13oRLLHqDujVrPWqiQbS4YY3FDSLc+7UsKdAjL
-	bhISojgoqdZyhF9cb6n7Nomk9NRs9oWoNJX38ToRBK+J7VxtIBR/TMJeEid8cQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738790527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z/HAxvUTiJawdWe3C8a9yYvj7IQz7aWvPm5qvpIh5KI=;
-	b=pIJPJ0nADSN3rHUQSS9DVGmXy4gxYetpvYjDxXgLXZGT1fIEeHpHq9uVbbM68xKIUuwgTt
-	sso/tX7hvAfIiICg==
-To: paulmck@kernel.org, Petr Mladek <pmladek@suse.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, rcu@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
- Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko
- <andrii@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-In-Reply-To: <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
-References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
- <20250130185320.1651910-4-paulmck@kernel.org>
- <20250204102611.OVuHn9rS@linutronix.de>
- <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
- <20250204163409.ueObHFje@linutronix.de>
- <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
- <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
- <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
-Date: Wed, 05 Feb 2025 22:28:06 +0106
-Message-ID: <84ed0c1401.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PU5XojhC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361c705434so1381525e9.3;
+        Wed, 05 Feb 2025 13:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1738790846; x=1739395646; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7Rf2mZryoWttHMkV+6oJudmL5GwtECSwKDELUfw8XxI=;
+        b=PU5XojhCk6/O2taM2+zB0RqJZBw07Tq/dxvnDk9mruscn+eSeRgwqKJF7C+nYtgqtU
+         yQXfMTOyksZu/qbdn3xGnD1m5KWb6jBRpsVa+TJahq37j89tTr9ITKvDnrogM3Rq34Na
+         agslRSZVzlys8SPSC3M0966040rftYoqn3N2+Hj4bcLGP9WW9SangoKkGB6VJPkNx2mp
+         nXlkDX0kWxlm7nM8jwjwhYffGgRV9wpszAhXatlvRfX8rTfBr2aIdbt+sv8kTb30omSg
+         42W+Jh0XODQqpRxwORCqpJqpANduvD09GrhO3vneXl1dpKuZZtpJp7r8X+AA/MfXn2/U
+         rrdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738790846; x=1739395646;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Rf2mZryoWttHMkV+6oJudmL5GwtECSwKDELUfw8XxI=;
+        b=s2k/fEI2c6keXLOXOMr3HPD6i5xfYS/ePR5AzFlUup4oWvkHUyHBj4+ZJ6dnJspdg3
+         6j4yMuKBXbUExnB2k07l1MwD/+hBGrg2pTmz+kz3ebxB08b7WWS/+nqZ7VYTre2ZlMsR
+         qyd2+pfU02h7xzVwxvU57t1HbsJt5V371wzMmG2dpdIXk4HIakk3pv4GV5hhLLCQS/Ed
+         ygs43djDWtB+aal33+8vbC7q/ZsxUjOzvt1cS/OKbeFylDmvUZkSgx9SXJj1LakRR9KC
+         imvIfyAgoWKzy1xgbzB+lDXS5JPyCbrDBiYBADn20P/aw4OA0ITjOyQzelaDqPsDJm+7
+         M7Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4btGouwZFiVnUVzC+xJ3FIeXF9IB8T1+vIRy+soUpEMLT+dwkHd/SA+ZhUZVZnJD7qjp8pGC2@vger.kernel.org, AJvYcCXbD8xsZCluwuPm+KNVMbLRxBEX1r9EH1p4Dz+ptMbJPYLA6xF8YB3UxfPKt6BN324g2pXX4v4WfVUzO5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPIAw0XFNTYcwCN3aVuTRtEofS6k2/O6ln67yroCFEzd9X5VpU
+	BPJqswZ/qjjEEfqeg4d2QbsyromojKqNIWKIfj/+Ob5AgildVM4=
+X-Gm-Gg: ASbGncslov3O7aXA7CzNLMJC4nLxo/fysjWRfQTdXjvmgjdc7tJs7I4wjTVJSEQ3DGb
+	XrCTLyK3u4B4siZSgWRmrLMF0d9yu0OoBFyOMKWiW7XP5UrA40ewfz90Yqg2Fqj5dIEAYsiD2aH
+	yGyb3dWCZFVwPIb6Il83Ignij3GgL5Z4Ol8BJD8xOri2wVaG7le8av8ziNXi9V4BrjxNMliL3pV
+	Z6Ob9+j7tEKIzhkTOhq4+ZJL2XLngOK24QmmJTkDKjU0CRwocPAH63z56xbKPET2B2ey28HIu6P
+	9JKMzJkZgX5ndZHrvAnsbOnsLKzAnCOBdC/3+kszkRUzrqlEHKqV3WPuAMEzTcHNX+HT
+X-Google-Smtp-Source: AGHT+IFFQpAZLv7hW8UOdcGZ3nVzkW+8Tj96nnnPtvS+Rrjykn9y47soqVCJLvivO+CRYt2RCFFHRg==
+X-Received: by 2002:a05:6000:1449:b0:38d:b107:d541 with SMTP id ffacd0b85a97d-38db491f553mr3458351f8f.37.1738790845944;
+        Wed, 05 Feb 2025 13:27:25 -0800 (PST)
+Received: from [192.168.1.3] (p5b2b4bac.dip0.t-ipconnect.de. [91.43.75.172])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbb34ca6esm523806f8f.62.2025.02.05.13.27.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 13:27:25 -0800 (PST)
+Message-ID: <163e78ec-5c5e-4b9c-8c93-44179f93268f@googlemail.com>
+Date: Wed, 5 Feb 2025 22:27:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250205134456.221272033@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-05, "Paul E. McKenney" <paulmck@kernel.org> wrote:
->> Would it make sense to put a call to pr_flush() at the beginning of the
->> kernel_power_off() function?  I suspect that would take care of much
->> more than just rcutorture.
->> 
->> Or maybe after the pr_emerg("Power down\n"), since that is normally
->> the last thing that shows up on rcutorture's console logs.
+Am 05.02.2025 um 14:35 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.13.2 release.
+> There are 623 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Yes, after the pr_emerg("Power down\n"), as in your patch below.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-> And that does the trick!  I specified 500ms, but maybe -1 would be
-> better?  You tell me!  ;-)
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-I probably would have chosen 1000ms, but if the kthread has made no
-forward progress after a few max timeslices, it probably is dead or will
-not be scheduled anyway.
 
-If there is no backlog, pr_flush() returns immediately.
+Beste Grüße,
+Peter Schneider
 
-I recommend _not_ using timeout_ms=-1 here, in case the kthread cannot
-be scheduled (for whatever reason).
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-> ------------------------------------------------------------------------
->
-> commit 172b692a79ec5801eab57cb55d2f9c398f244c62
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Wed Feb 5 12:27:23 2025 -0800
->
->     printk: Flush console log from kernel_power_off()
->     
->     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
->     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
->     Therefore, make pr_flush() public and invoke it after then last print
->     in kernel_power_off().
->     
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->     Cc: Petr Mladek <pmladek@suse.com>
->     Cc: Steven Rostedt <rostedt@goodmis.org>
->     Cc: John Ogness <john.ogness@linutronix.de>
->     Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
->
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index 4217a9f412b2..b3e88ff1ecc3 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -806,4 +806,6 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
->  #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
->  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
->  
-> +
-> +bool pr_flush(int timeout_ms, bool reset_on_progress);
-
-This will fail to link for !CONFIG_PRINTK.
-
-In kernel/printk/printk.c currently there is:
-
-#ifdef CONFIG_PRINTK
-static bool pr_flush(int timeout_ms, bool reset_on_progress);
-#else
-static bool pr_flush(int timeout_ms, bool reset_on_progress) { return true; }
-#endif
-
-This would need to move to include/linux/printk.h
-
-There you will find an existing CONFIG_PRINTK if/else block to move
-those to.
-
->  #endif
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 80910bc3470c..e0c6e5a99897 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2461,7 +2461,7 @@ asmlinkage __visible int _printk(const char *fmt, ...)
->  }
->  EXPORT_SYMBOL(_printk);
->  
-> -static bool pr_flush(int timeout_ms, bool reset_on_progress);
-> +bool pr_flush(int timeout_ms, bool reset_on_progress);
->  static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress);
->  
->  #else /* CONFIG_PRINTK */
-> @@ -4466,7 +4466,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
->   * Context: Process context. May sleep while acquiring console lock.
->   * Return: true if all usable printers are caught up.
->   */
-> -static bool pr_flush(int timeout_ms, bool reset_on_progress)
-> +bool pr_flush(int timeout_ms, bool reset_on_progress)
->  {
->  	return __pr_flush(NULL, timeout_ms, reset_on_progress);
->  }
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index a701000bab34..3448e6ae3556 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -704,6 +704,7 @@ void kernel_power_off(void)
->  	migrate_to_reboot_cpu();
->  	syscore_shutdown();
->  	pr_emerg("Power down\n");
-> +	pr_flush(500, 1);
-
-I would have chosen:
-
-	pr_flush(1000, true);
-
-but I really don't have an argument either way.
-
->  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
->  	machine_power_off();
->  }
-
-John Ogness
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
