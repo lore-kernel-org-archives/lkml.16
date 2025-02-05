@@ -1,107 +1,117 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417C4FC0B;
-	Wed,  5 Feb 2025 13:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CCFB640
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738763638; cv=none; b=il40EihCLrnRitvovRS6+7o7IwBo2zkTVA1FukSzAwgfgeR/p9rkV39nz2ZlnaeQs4vAKVL7ad79a9p9NM6SYlHH42SJd1tmboZvh6q6oY7fTJ4/7Qk06uNJ7WkFS/GIBAVNViyJ0ywKcu9NYknTYth4feTubqlKEgDQ7SMLdnY=
+	t=1738763750; cv=none; b=X1PzQqcF5viZCCzHtCqKVY2S2wIq5unaWKxwXO5uUR4n3QvVE5AYTtir/LJtRabD+QPyihn3cJ5CEEydBxikyC6eaSsiJzPRipwq0rolwdFlw4m2spivoJF5fxvEPn+acHq9qXoDVPKwfpdzT0/q9vZggnj2WRRzMLs3hEUlFf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738763638; c=relaxed/simple;
-	bh=y3CiBkw5TX3BsdV/FD36Lb1NBMtemKSZtBYTWCzcAgU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bEUxXh6MN2IfYYzrXOes3xEY0o059YLvW3xaETX9NJMzqUdrekGhK1zoURqgiVnGqHwl/sRy0l8Ci9xTV/23OCv+QDGdaIORHAF8lkCX/W+dFU2B/pQkgkDONT0uWZ/TN/Z4D0VmZAIEORWb3IlwMKSBNL28UcgJCATDV2Vd6qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=N3qbXKjD; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="N3qbXKjD"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 91186A0397;
-	Wed,  5 Feb 2025 14:53:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=0IKFTDRpezqJ0hTkQTF4
-	PSBLn0guyPuTMu30l2R43VU=; b=N3qbXKjD27mtNdAYnL3dXw3b/rOVUSBua3th
-	MJbGegBlh94DeX2g5hnYVCGNeWT9ngiL1ZXpjYSoOQAIQvY8wCgnbl5SscLO+NNu
-	7VGMrIazgL7pYZMgtG3KIraw09Z5Zo0vCrPL72v6PEyIYm2muI78gqLoMiT84bBu
-	KQC31eVNghQwFi1z4nUug6OvQPTtYuBlxoYDu9jyAaPTMlTzfM6qxM7rq87FThg7
-	V+G/KLkSbskqUJeEsYZHB+hGIXFh2E968xlL4ldEepKvzA8q7wZIFBL4794v9ocn
-	RLDE7qagS0NoWfV6NPjXm7qjEgHSd6oiyZdVkP7nS96xCjBLEKQ/ZpXa3Q9Qgntu
-	2TLMqDFdyzyKXw6+8G2T5v8v5GFWw8LjW6pwau2AdblR7cjWU8Rqu2ClEzaTIAfG
-	LeHUabapaxLyjJTz3yg5P0IhY6lWCtk+V/4DF3Bu6BJ6psuYcWnATZVkZHJBeAg0
-	eGXDVy2RextY2QJyfdMaZrDWjI4HVm2+pgX2bf472tVDE/tzik8fRwjknNqncCsF
-	E4fdN/TiRgCQ1VMXM2EL6Z0AKvDeZBC1ynPhu9+SF9tVXpa0JYqHN8PJWZ6JIwlN
-	j6TaBsSR9LyILS1R9YWct9zyuwOuEUuPuwUyP9ScUeJSq/21IQwkmlDkwTs+rWA9
-	AjEQsJU=
-Message-ID: <7501c8ee-9272-4c13-91a9-5c614c585fcf@prolan.hu>
-Date: Wed, 5 Feb 2025 14:53:50 +0100
+	s=arc-20240116; t=1738763750; c=relaxed/simple;
+	bh=+x5VY334RCDtpvnDk3vEdWlK+bpOTjcAaGFVjINDmmQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ssd315LjDxQRCKSmzU3hZCIFlYaWAcx7MzDvj4586lMXx6GzrvZHg1n00TeqjuTq0CDUK/0wTHhsdIdS9QHmsetpr/Gtjgp28SEjzrELiJPkW3CbGYnRefCgFAbtS29O1hMWMKii9wPlZAysfD5qH+tYyg5NurtpuRkLDsWHdYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tffpn-000000001m1-0KaS;
+	Wed, 05 Feb 2025 08:52:55 -0500
+Message-ID: <e238facf89e853445c11a43809ed5976046ce8f9.camel@surriel.com>
+Subject: Re: [PATCH v8 03/12] x86/mm: consolidate full flush threshold
+ decision
+From: Rik van Riel <riel@surriel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, 	thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, 	akpm@linux-foundation.org, jannh@google.com,
+ mhklinux@outlook.com, 	andrew.cooper3@citrix.com, Dave Hansen
+ <dave.hansen@intel.com>
+Date: Wed, 05 Feb 2025 08:52:55 -0500
+In-Reply-To: <20250205122007.GH14028@noisy.programming.kicks-ass.net>
+References: <20250205014033.3626204-1-riel@surriel.com>
+	 <20250205014033.3626204-4-riel@surriel.com>
+	 <20250205122007.GH14028@noisy.programming.kicks-ass.net>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3] net: fec: Refactor MAC reset to function
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Laurent Badel <laurentbadel@eaton.com>, Andrew Lunn <andrew@lunn.ch>,
-	<imx@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	"Simon Horman" <horms@kernel.org>, Michal Swiatkowski
-	<michal.swiatkowski@linux.intel.com>, Jacob Keller
-	<jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
-	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-References: <20250122163935.213313-2-csokas.bence@prolan.hu>
- <20250204093756.253642-2-csokas.bence@prolan.hu>
- <20250204074504.523c794c@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <20250204074504.523c794c@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D9485266726A
+Sender: riel@surriel.com
 
-Hi,
+On Wed, 2025-02-05 at 13:20 +0100, Peter Zijlstra wrote:
+> On Tue, Feb 04, 2025 at 08:39:52PM -0500, Rik van Riel wrote:
+>=20
+> > diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+> > index 6cf881a942bb..02e1f5c5bca3 100644
+> > --- a/arch/x86/mm/tlb.c
+> > +++ b/arch/x86/mm/tlb.c
+> > @@ -1000,8 +1000,13 @@ static struct flush_tlb_info
+> > *get_flush_tlb_info(struct mm_struct *mm,
+> > =C2=A0	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) !=3D 1);
+> > =C2=A0#endif
+> > =C2=A0
+> > -	info->start		=3D start;
+> > -	info->end		=3D end;
+> > +	/*
+> > +	 * Round the start and end addresses to the page size
+> > specified
+> > +	 * by the stride shift. This ensures partial pages at the
+> > end of
+> > +	 * a range get fully invalidated.
+> > +	 */
+> > +	info->start		=3D round_down(start, 1 <<
+> > stride_shift);
+> > +	info->end		=3D round_up(end, 1 <<
+> > stride_shift);
+> > =C2=A0	info->mm		=3D mm;
+> > =C2=A0	info->stride_shift	=3D stride_shift;
+> > =C2=A0	info->freed_tables	=3D freed_tables;
+>=20
+> Rather than doing this; should we not fix whatever dodgy users are
+> feeding us non-page-aligned addresses for invalidation?
+>=20
 
-On 2025. 02. 04. 16:45, Jakub Kicinski wrote:
- > Please don't post new versions in-reply-to, and add lore links to
- > the previous version in the changelog.
+The best way to do that would probably be by adding
+a WARN_ON_ONCE here if the value of either start or
+end changed, not by merging code that will trigger
+kernel crashes - even if the bug is elsewhere.
 
-Will do. Is it okay to only include the last version, or should I 
-collect them going back to v1?
+I would be happy to add a WARN_ON_ONCE either in a
+next version, or in a follow-up patch, whichever is
+more convenient for you.
 
-> On Tue, 4 Feb 2025 10:37:54 +0100 Csókás, Bence wrote:
->> For instance, as of now, `fec_stop()` does not check for
->> `FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
->> a PM power-down event; and `fec_restart()` missed the refactor renaming
->> the "magic" constant `1` to `FEC_ECR_RESET`.
-> 
-> Laurent responded to v1 saying this was intentional. Please give more
-> details on how problem you're seeing and on what platforms. Otherwise
-> this is not a fix but refactoring.
-
-True, but he also said:
-On 2025. 01. 21. 17:09, Badel, Laurent wrote:
- > If others disagree and there's a consensus that this change is ok, 
-I'm happy
- > for the patch to get through, but I tend to err on the side of 
-caution in such
- > cases.
-
-I understand he is cautious, but I'd argue that the fact that two people 
-already posted Reviewed-by: (not counting Simon, who since withdrew it), 
-means that others also agree that we should err on the OTHER side of 
-caution, and do the check in both cases. He also mentions that the 
-reason he didn't do the check in `fec_stop()` was that he believed that 
-the only time that gets called is on driver/interface remove, but that 
-is not the case, as I outlined in the message already.
-
-Bence
-
+--=20
+All Rights Reversed.
