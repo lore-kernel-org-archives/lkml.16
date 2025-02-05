@@ -1,116 +1,165 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 867A322A805;
-	Wed,  5 Feb 2025 10:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD0922ACD6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751723; cv=none; b=Qy5g2NtFeghS+Q+eDIg6vgzB305md7ozeeCf/elB1DH6le8Yfrc2QxgO4x/wvwlMmiZsa5MqkhQsh2d9MApzbVuiGnuhyp54t3PdAGWtP0LfjFrqxYL29GHYdeDlXi784ygFe4mkeuK65VSLd1/NWynzwAQIBGWswmkYKvOdc3A=
+	t=1738751753; cv=none; b=nCMVAiatNI5qpxFYIauseWaSi65m0PXiku3zEfrcL0p3N4P+q5w8piqnjzFMIRTbNooDV4F/kMcY0wgxRzbOEKUqOp4eoPPVy0LMQ5uIY/xWuuQSC/2kyk/6rPYa8C8puSRoUBqvQPj4J/U4DIPvLm1E8arM7fg+v7bU+MkS/dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751723; c=relaxed/simple;
-	bh=lSw4UWDH8iSi65xYKCTk15tuoPTtKNBGDKT4Pmf5p24=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GyGQgp/tc2aKMhpqXgANL8EZ73PfzsUyR0iqLPPNfF3+KcxtIiM97oN2zD0Inidi/yrUpkEU0/H2ZE6Ve5UzqC2IyHYIKDCfTNtDQN/YFX8mzFHaCspIpn3NSQ9oAztWfLdMdNlZK2vhMXsyuehY2OiIimj5yttbW71LKNe5uvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HKvBCvOE; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738751753; c=relaxed/simple;
+	bh=If5NYv49CJleYu6U1SFTC0glm8Qe56wbokRLBDQt7Dk=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mVEueqbI/IGLbbtV3/QPdXa+vnNdW5XmRiu6jfMgg2Z6KanSr1SPPYf/CjIGyvZM+/JvrEEJPrSgaij+Zvkd6oOFnqZFu41g0ikpHndZdr8vgGu77AK12Td8hzF5RA2wKn1It6ZKm1FAH0/65Y0R5Ky7hUBu1BehhxVn5zFgTko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=o8r6l/gh; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HKvBCvOE"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1EF34203F58C;
-	Wed,  5 Feb 2025 02:35:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1EF34203F58C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738751722;
-	bh=C7/UEa9VKEJtG/t/pEwk9Ij8oxWe+D6imt/kWE7BFxI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HKvBCvOEojZ6o1St9XqEBvtw5BO6dsYKd2sF7jUzuzpULovJTVGU5gPTUclCseoh6
-	 xp4PaLvVa6oLn6B+XXIKniyGhg5Q/JFp8bjOx/aS+YucxwMXm9Doyewp1euAL1b6L7
-	 qoi5bklDrCr9igLkZ0dGV69xUasODoraZ6qzd23w=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	shirazsaleem@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next 1/2] RDMA/mana_ib: Query feature_flags bitmask from FW
-Date: Wed,  5 Feb 2025 02:35:12 -0800
-Message-Id: <1738751713-16169-2-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1738751713-16169-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1738751713-16169-1-git-send-email-kotaranov@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="o8r6l/gh"
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 971A53F592
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738751744;
+	bh=YsKw1TEBNMtqD2nTeVDQmEu2xielTkirvVyE9cb9euk=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=o8r6l/ghcgz9+NI3TRgYcf14BLF2B/8gXXTKn68tarU0+8bT351hieK4LY2LlWb4I
+	 PHjBvghISp+o5WqYGOMeMWKlb6qASow/rxcvAIbt/L3b339WFO2e9zoM3w2vXCk9WX
+	 Hhnl2Mmr4J+Q++v+EbTOISXrQasmbGWeRJUV8JgaYp5XxagSuXnTpM58G9FtoZ0+e/
+	 5GrGBdAUEn96eSLV3jjzDkxoGtr97JVEKPGVCgTy12NeOVfFlX09vwoBVOokRg+GrD
+	 XRgxGr1ox9pEkdkXHV0D6RZhq6xOr7uPAfACI7qzcRmiMy4n1/a5ZKNLIiUO6ckStv
+	 5srgSmR1fqo9Q==
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2b7f0f5af21so496938fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:35:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738751743; x=1739356543;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YsKw1TEBNMtqD2nTeVDQmEu2xielTkirvVyE9cb9euk=;
+        b=ojjuoGRX7YRtwxLfoD6ZOjwvC7r4B8v/QvIrCb5ln05fE2f+NGEWq96xmkrzR/mH94
+         XJsbsr2vMe/GYWl/uS07xHTPdistZg0muki7QpPatuwcXuLoE/jRA8KgQuu8zf/xJMhr
+         Y9GjoWKHX6AmtrywdB5eDdZleK5y1NidJFQf0OyiDess4m2I60580U/krBM8Ujk7DG94
+         PPSE5QgaXhiNDtZ1ypLDAcXWuIxtjcYBKCspk9oWhC6TsDbBwU+9L+788Awg3Zx5oS2U
+         11FEvKF92il0hO++Ykmof0jvbvUfgHbEFWeVUUKaVPy3z7FqPFnhTNUmqigAK5HewcmA
+         KD5g==
+X-Gm-Message-State: AOJu0YyfYYrrFHLZdndPuFiDMIMzs2x04yTvU7fbrGte1TC8CoHPRcze
+	39kdFCRmN+IZeU2ILC6wONxUKApDs8gWZ11kbRbmeqv8oxyhaOZ3uea5BUEwHS5UxhLu5TPdGFw
+	lt7Y+3mMcMrJKRTFhtPNraQszY0MnIAsVLxFWf7/K0p+vzxMD8jW+vLXM5eRNneta2G2KP53jLt
+	ffhtT5zFhMU9BSkWmpzw+cQgUcxykd49+WnDt8H6QDYOLHjR+S6ZAx
+X-Gm-Gg: ASbGnctVIm5SzYFg4UgzVjO6EStrvfXMyDrwje5gmPS6aD+oTYimTi0oaZdgUFTF4G+
+	ObAa/RQd9UqmgxNiwnD0SmtjkkWaLDgcZPSwfyyJsY3+DNmgG5rF1D9d5P/BB7nBeJurkOim/1B
+	9LXJ6zFCyhz7mAyD8=
+X-Received: by 2002:a05:6871:4607:b0:2b7:f2dc:a4c2 with SMTP id 586e51a60fabf-2b804fa3926mr1450881fac.18.1738751743197;
+        Wed, 05 Feb 2025 02:35:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFgHRkYQfxZijOHZSWLsYQXFYonztRK0/8FyzsAHEDsc0C9B0GJ+PU4ngVF93zt76VSrCDa1Lbmf3cJU/GplFU=
+X-Received: by 2002:a05:6871:4607:b0:2b7:f2dc:a4c2 with SMTP id
+ 586e51a60fabf-2b804fa3926mr1450870fac.18.1738751742931; Wed, 05 Feb 2025
+ 02:35:42 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 5 Feb 2025 02:35:42 -0800
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 5 Feb 2025 02:35:42 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20250203013730.269558-6-e@freeshell.de>
+References: <20250203013730.269558-1-e@freeshell.de> <20250203013730.269558-6-e@freeshell.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Date: Wed, 5 Feb 2025 02:35:42 -0800
+X-Gm-Features: AWEUYZlC49Ns_mcDAKYs7EnS5g_lujF3CtHenhbVzwWucgE36pERYwwD4QIAsgw
+Message-ID: <CAJM55Z8oWonQBbUHPbMrVmN2HG9Dwjyr6o7L7spJQFhQfj+7Pw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common:
+ bootph-pre-ram hinting needed by boot loader
+To: E Shattow <e@freeshell.de>, Emil Renner Berthing <kernel@esmil.dk>, Conor Dooley <conor@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Shiraz Saleem <shirazsaleem@microsoft.com>
+E Shattow wrote:
+> Add bootph-pre-ram hinting to jh7110-common.dtsi:
+>   - i2c5_pins and i2c-pins subnode for connection to eeprom
+>   - eeprom node
+>   - qspi flash configuration subnode
+>   - memory node
+>   - uart0 for serial console
+>
+>   With this the U-Boot SPL secondary program loader may drop such
+>   overrides when using dt-rebasing with JH7110 OF_UPSTREAM board targets.
+>
+> Signed-off-by: E Shattow <e@freeshell.de>
 
-Extend the mana_ib_gd_query_adapter_caps function to retrieve and store
-the feature_flags from the firmware response.
+I can't find the booph-pre-ram property in any of the schemas in
+Documentation/devicetree/bindings. Does make ARCH=riscv <..> dtbs_check not
+complain about this?
 
-Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/main.c    | 3 ++-
- drivers/infiniband/hw/mana/mana_ib.h | 2 ++
- include/net/mana/gdma.h              | 1 +
- 3 files changed, 5 insertions(+), 1 deletion(-)
+/Emil
 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index ae1fb69..3d4b8e2 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -665,7 +665,7 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 
- 	mana_gd_init_req_hdr(&req.hdr, MANA_IB_GET_ADAPTER_CAP, sizeof(req),
- 			     sizeof(resp));
--	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
-+	req.hdr.resp.msg_version = GDMA_MESSAGE_V4;
- 	req.hdr.dev_id = dev->gdma_dev->dev_id;
- 
- 	err = mana_gd_send_request(mdev_to_gc(dev), sizeof(req),
-@@ -694,6 +694,7 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 	caps->max_inline_data_size = resp.max_inline_data_size;
- 	caps->max_send_sge_count = resp.max_send_sge_count;
- 	caps->max_recv_sge_count = resp.max_recv_sge_count;
-+	caps->feature_flags = resp.feature_flags;
- 
- 	return 0;
- }
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index cd771af..baaeef0 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -58,6 +58,7 @@ struct mana_ib_adapter_caps {
- 	u32 max_send_sge_count;
- 	u32 max_recv_sge_count;
- 	u32 max_inline_data_size;
-+	u64 feature_flags;
- };
- 
- struct mana_ib_queue {
-@@ -230,6 +231,7 @@ struct mana_ib_query_adapter_caps_resp {
- 	u32 max_send_sge_count;
- 	u32 max_recv_sge_count;
- 	u32 max_inline_data_size;
-+	u64 feature_flags;
- }; /* HW Data */
- 
- struct mana_rnic_create_adapter_req {
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index a94b04e..50ffbc4 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -152,6 +152,7 @@ struct gdma_general_req {
- #define GDMA_MESSAGE_V1 1
- #define GDMA_MESSAGE_V2 2
- #define GDMA_MESSAGE_V3 3
-+#define GDMA_MESSAGE_V4 4
- 
- struct gdma_general_resp {
- 	struct gdma_resp_hdr hdr;
--- 
-2.43.0
-
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> index 30c5f3487c8b..c9e7ae59ee7c 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> @@ -28,6 +28,7 @@ chosen {
+>  	memory@40000000 {
+>  		device_type = "memory";
+>  		reg = <0x0 0x40000000 0x1 0x0>;
+> +		bootph-pre-ram;
+>  	};
+>
+>  	gpio-restart {
+> @@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
+>  	};
+>
+>  	eeprom@50 {
+> +		bootph-pre-ram;
+>  		compatible = "atmel,24c04";
+>  		reg = <0x50>;
+>  		pagesize = <16>;
+> @@ -323,6 +325,7 @@ &qspi {
+>  	nor_flash: flash@0 {
+>  		compatible = "jedec,spi-nor";
+>  		reg = <0>;
+> +		bootph-pre-ram;
+>  		cdns,read-delay = <2>;
+>  		spi-max-frequency = <100000000>;
+>  		cdns,tshsl-ns = <1>;
+> @@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
+>  	};
+>
+>  	i2c5_pins: i2c5-0 {
+> +		bootph-pre-ram;
+>  		i2c-pins {
+>  			pinmux = <GPIOMUX(19, GPOUT_LOW,
+>  					      GPOEN_SYS_I2C5_CLK,
+> @@ -413,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
+>  					      GPOEN_SYS_I2C5_DATA,
+>  					      GPI_SYS_I2C5_DATA)>;
+>  			bias-disable; /* external pull-up */
+> +			bootph-pre-ram;
+>  			input-enable;
+>  			input-schmitt-enable;
+>  		};
+> @@ -641,6 +646,7 @@ GPOEN_DISABLE,
+>  };
+>
+>  &uart0 {
+> +	bootph-pre-ram;
+>  	clock-frequency = <24000000>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart0_pins>;
+> --
+> 2.47.2
+>
