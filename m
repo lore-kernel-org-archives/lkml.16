@@ -1,119 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out199-13.us.a.mail.aliyun.com (out199-13.us.a.mail.aliyun.com [47.90.199.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD12A20DD45;
-	Wed,  5 Feb 2025 01:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E6A157A48
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738720682; cv=none; b=lcvRuLYAjQHnjw/gkMB5uqAsh26rEdjt+sqp9ZJINNy+wNR+4ZTsjgiGuO2tlcYd/aDGw2wdTUDhgZuCWR3LzVSedIJQ4/eKEt2PFKykZi/Xd8iv+HefefOsDGMiuiCKTdrMl6nJQxW85x8kbeIsm71BGyfYj1CqMF0wFZyf6SA=
+	t=1738720847; cv=none; b=KJFAYHs0xR3auQnCKQ4Jfb8fxVI/aokh7IKHlH9emHFihP3S6vdNPfMmW3Fhynp8u3PwGgvToiQnRBq4ri0T+rWO8oNVHgLTwesSfrFsla9rwEO24sp4c0ShzZZP73VAdiYrcx2yLO/K4K/XnagaoYITgiOf8B3+kSnk9EgFkK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738720682; c=relaxed/simple;
-	bh=36nNQFv27a8nUdP2WQTGRbi/MyOjHJoWvAR+wzGCPz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swo3tMBwEJmBDH9rXMPe4lnTxllpiqcNhsunYKS3scFGbjmcz5ZXHW5AnF92Wi/csBu6rTZ03aKZ+7XfNmwdSvwzq2YLjfCIAQtvtxOhu25P3Ta7NW8h0CFRyDZeWpcLJMD5IS74gINZMkeE7FF2DqOqqBA2Ae6fBX6JckXklUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWOQOSJB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738720847; c=relaxed/simple;
+	bh=3e61BSxHCAlewA0Ir3a7UQLE/i6LxIE/r9muI1RC28Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hLMAleEyjlCiI88tTSvyLzsrvJxoXkYt2FNGkqwmM46Sc8ee5q/qeQ+Bbz3tfGhFwiu60HWzcMxflatnN+hfDeBTRqVQjyZBEDI8BU0mvFm3dl+f1eGkZlOHmNvqsxNpRreJOPAspzTGZ7jkpzx3tTyrntsHM+USGpi4K1cyZ7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jgl18FR4; arc=none smtp.client-ip=47.90.199.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWOQOSJB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6A4C4CEDF;
-	Wed,  5 Feb 2025 01:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738720682;
-	bh=36nNQFv27a8nUdP2WQTGRbi/MyOjHJoWvAR+wzGCPz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EWOQOSJB0M0hqQZs7cXNtXC5Yj0PmTJDDgi9eIRIFoFXAE42i9OFzN7F13AKHVi9c
-	 XaT0Yp+UTjtB0shRuE/YUqY5k3SYeu62KpcsnJcNmBycKGZuCiRA0NBn0BCPe3ASvw
-	 UTSAdI2R2Y4EjygxLo4lDlzaA46p3JRUlEdL3oKgMBKw6tEROyCvM1cM8lsMVnGt9l
-	 bGR0t/b0uxHEVk9JAZUM3jRRWErWxzHcc3XWmO3ck5C0ugsosBHzAcSSslpybhVuHZ
-	 rHeWq2+Ljy8cicoA5KLyIdpb0d4c/WkqK67SifjibVwQitAc3YlD1rhjPPlpjxvOQs
-	 1HxEt5Sj2aTag==
-Date: Tue, 4 Feb 2025 17:57:59 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Atish Kumar Patra <atishp@rivosinc.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
-	Beeman Strong <beeman@rivosinc.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-Message-ID: <Z6LFp5jiED7_-weN@google.com>
-References: <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
- <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
- <Z4f3fDXemAMpBNMS@google.com>
- <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com>
- <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
- <Z51RxQslsfSrW2ub@google.com>
- <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
- <Z6FcHJFYGc7HzSna@google.com>
- <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jgl18FR4"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738720831; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=2P3GjIsF5ErhdPUSQesJ/7SRWnTDGOq+lmiCZt52vzs=;
+	b=jgl18FR4DQd620zrfofpnGJmZgk6Ls/BpwvjLWIcelraLN8jni0SxvIX0GTUJgdx9nX9BRaKwZ/5Tg0JGZU0gWxzWbb9G14wAf2F+AUVGeXo97gn3Xy47xOnPqc9+5GEhym5trM2gu0Ot8WWjKcUr4G2oDBHuOXyJErgoJ+i83g=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WOlcY0f_1738720511 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Feb 2025 09:55:11 +0800
+Message-ID: <25e2d5e4-8214-40de-99d3-2b657181a9fd@linux.alibaba.com>
+Date: Wed, 5 Feb 2025 09:55:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hang when swapping huge=within_size tmpfs from zram
+To: "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>, linux-mm@kvack.org,
+ Daniel Gomez <da.gomez@samsung.com>
+Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Hugh Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Lance Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <1738717785.im3r5g2vxc.none.ref@localhost>
+ <1738717785.im3r5g2vxc.none@localhost>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <1738717785.im3r5g2vxc.none@localhost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 04:41:11PM -0800, Ian Rogers wrote:
-> On Mon, Feb 3, 2025 at 4:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> [snip]
-> > Yep, I agree it's confusing.  So my opinion is to use legacy encoding
-> > and no default wildcard. :)
+Hi Alex,
+
+On 2025/2/5 09:23, Alex Xu (Hello71) wrote:
+> Hi all,
 > 
-> Making it so that all non-legacy, non-core PMU events require a PMU is
-> a breaking change and a regression for all users, command line event
-> name suggesting, any tool built off of perf, and so on. Breaking all
-> perf users and requiring all perf metrics be rewritten is well..
-> something..
+> On 6.14-rc1, I found that creating a lot of files in tmpfs then deleting
+> them reliably hangs when tmpfs is mounted with huge=within_size, and it
+> is swapped out to zram (zstd/zsmalloc/no backing dev). I bisected this
+> to acd7ccb284b "mm: shmem: add large folio support for tmpfs".
+> 
+> When the issue occurs, rm uses 100% CPU, cannot be killed, and has no
+> output in /proc/pid/stack or wchan. Eventually, an RCU stall is
+> detected:
 
-Well, I guess the majority of users don't use non-core PMU events.  And
-we used to have PMU prefix on those events for years so old users should
-not be affected.  Actually perf list shows them with PMU prefix so I
-think new users are also expected to use the PMU name.
+Thanks for your report. Let me try to reproduce the issue locally and 
+see what happens.
 
-  $ perf list pmu
-  ...
-  cstate_pkg/c2-residency/                           [Kernel PMU event]
-  ...
-  i915/actual-frequency/                             [Kernel PMU event]
-  i915/bcs0-busy/                                    [Kernel PMU event]
-  ...
-  msr/tsc/                                           [Kernel PMU event]
-  ...
-  power/energy-cores/                                [Kernel PMU event]
-  ...
-  uncore_clock/clockticks/                           [Kernel PMU event]
-  uncore_imc_free_running/data_read/                 [Kernel PMU event]  
-  ...
-
-The exception is the JSON events like below.
-
-  uncore interconnect:
-    unc_arb_coh_trk_requests.all
-         [UNC_ARB_COH_TRK_REQUESTS.ALL. Unit: uncore_arb]
- 
-which I hoped to be 'uncore_arb/unc_arb_coh_trk_requests.all/' or even
-'uncore_arb/coh_trk_requests.all/'.  But it would be hard to change the
-all metric expressions now.  Also users can directly use them as they
-are listed by `perf list`.  So we need to support that without PMUs.
-
-Thanks,
-Namhyung
-
+> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-11): P25160
+> rcu: 	(detected by 10, t=2102 jiffies, g=532677, q=4997 ncpus=12)
+> task:rm              state:R  running task     stack:0     pid:25160 tgid:25160 ppid:24309  task_flags:0x400000 flags:0x00004004
+> Call Trace:
+>   <TASK>
+>   ? __schedule+0x388/0x1000
+>   ? kmem_cache_free.part.0+0x23d/0x280
+>   ? sysvec_apic_timer_interrupt+0xa/0x80
+>   ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>   ? xas_load+0x12/0xc0
+>   ? xas_load+0x8/0xc0
+>   ? xas_find+0x144/0x190
+>   ? find_lock_entries+0x75/0x260
+>   ? shmem_undo_range+0xe6/0x5f0
+>   ? shmem_evict_inode+0xe4/0x230
+>   ? mtree_erase+0x7e/0xe0
+>   ? inode_set_ctime_current+0x2e/0x1f0
+>   ? evict+0xe9/0x260
+>   ? _atomic_dec_and_lock+0x31/0x50
+>   ? do_unlinkat+0x270/0x2b0
+>   ? __x64_sys_unlinkat+0x30/0x50
+>   ? do_syscall_64+0x37/0xe0
+>   ? entry_SYSCALL_64_after_hwframe+0x50/0x58
+>   </TASK>
+> 
+> Let me know what information is needed to further troubleshoot this
+> issue.
+> 
+> Thanks,
+> Alex.
