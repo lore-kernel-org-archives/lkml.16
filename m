@@ -1,163 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF3223CE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923171DE4D3;
+	Wed,  5 Feb 2025 21:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738791620; cv=none; b=bKXPU9BOv63A5gFZWUNUAhDcPxvIKjP1DSH7oTqtj/NI0TJnfeaJ1VBMxkMvN16i9CmH3zgN2fT9xmfLZFpxgPeZVQm2Y0WHBTMd37F850wTFjQuCvCHa+SZOBws2vf7Q1UiIwULaYIw5UK7EGYNSTl8R8nXW/HpwLYoSfkM8gQ=
+	t=1738791922; cv=none; b=N6G+yb4UpJ44ulz1m5VBUTcxHI+/zb7QVXGHyvU9JcgELfGYTRqvwrw6sYh+d/Tcy68Zc4xjAXqWEIukMES0pGrFyC2ER0ZjoWIA4rsLvir8Krqdvc7l/EmeVOiUHlo/VGHduQDU7vOHecrVmZuQMbtYmVzBX6snxo9BGIKgOXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738791620; c=relaxed/simple;
-	bh=hCmtyZG5wKHm5C3H2TnU//Dp8nTojDg4JmoDtBSEWWE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P+y6IO1a+tIvYN3wduirrgZ6XIggEBtRrmM4dSle833HaGNPVfDiZlLBnJqLGyzssYzwjdTmnBKzLt8rTh9WrNCWOoOs/Cz6t+B1H6UVsjqWmT3om+zEz4oO8KIUHFEIbmOjfQ31MeyV6IsHy8hv7WriEm5Kk0W+oa1TEI/O6No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5U5xFly; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738791922; c=relaxed/simple;
+	bh=HrrpasWyuwG+NC15Cx/xnTL7cEj/zBNpmMcgmzhxV0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type; b=Y8+sNwW4d17Y4FC9w6EcFrRgqh4WmrNsY5+yd9PG107ohFHO5iQ6junV/aSoHO9MC1YDyWq0HDJ137IMZcBV9Chfj5aLBJMQPYGB/0NV9lhRrfLLhYM7JsWSjlWX1bBRVMeaRV5IfVJWGzIyMzw2J9Zm2httJqaYpZ0N3AOwym0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUOMPBFy; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5U5xFly"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0497C4CED1;
-	Wed,  5 Feb 2025 21:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738791620;
-	bh=hCmtyZG5wKHm5C3H2TnU//Dp8nTojDg4JmoDtBSEWWE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=a5U5xFlykrMhzv6xknoC+kWmdsa8Olj2Z3cPDjI1yXSjrA1zwtBy4VjILKTfQPwz7
-	 7Na2qCWADG7CyVdx8wZPxF8W9St3Yqg9Jw35Fp0vVnR5iicg5+sGjXUKFtI83CpCpm
-	 YIUU4TWGDfYdGFdcKzteChi9aVFJ9/BkmjAH741ZoMDz230GVWwqoaQUEfhkJnC9R9
-	 NfV/luLVONB3yUjvNaTMCwaX5QlN9fQWt6njevjxB034klzaY0k8eBVFwxCM3sontM
-	 VJoujdV6E76luIWcW9QEpfmwzx91o+zDngcm2NlzsvmqpU2IzOUAAc2fJTITzrbUx1
-	 8hHJonrp0vnvA==
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: add ioctl to get IO priority hint
-Date: Wed,  5 Feb 2025 21:40:14 +0000
-Message-ID: <20250205214014.3270585-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUOMPBFy"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab69bba49e2so40217666b.2;
+        Wed, 05 Feb 2025 13:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738791919; x=1739396719; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=83ozoj5c/jHHLPQR0gxR8lx/Hi0ZcnYkDPH3CyJmhHM=;
+        b=MUOMPBFyH9XUe86TTuYdo9/9mgomOSa3/lDK903fYb81QOncYbibZiQ9DmLLgVsAXJ
+         kXu2+YJRJI6vdyzfP43wXqWh4qq0HfVjp1UIUehycO0YWURCECHVXEIaY7Q2wmINyRu1
+         rNb5dW0XWZ442nRyiixVU86K6lAJrNYrqDgLsucQNuBHXkjRpnIlybr7kqHKsrAfdafm
+         Q5AoIob21WUMbw6S6JRoM64r6lr6FKWwRRHNEIdWtztMAJG5YELO4DqYbVLyi2h7AcE5
+         KU60M5hFb8PNUYy3FSbJg6ye308Beg/rBaOqhYUfpgxLfFDJDoDKIxGBhLRcchrYxkxQ
+         Brzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738791919; x=1739396719;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=83ozoj5c/jHHLPQR0gxR8lx/Hi0ZcnYkDPH3CyJmhHM=;
+        b=VMiP5DCy22DRZ3VqXGT4wcVJcc0YCOfQMMXQ13XPD8xcXRyHuFns46i4vExTEp/fBH
+         ZLzbdsLdEBDeWKQYUsHzjT7kOU0caMkjPTlKvbo+rlzt8v7ezLaFOI7CeHs3h93REJEH
+         RhJqSkxweQ60ADVyq1i9L3xwnLJFwkIt5x+OWwCBgF+9VJ76LZbU5+U3yQwI79TuuXvP
+         AE3ptnetuMsvgsNLN2a8iIUt2yXZ6+WAGL3/i6tK1AZXVRjw/TDQHUaclxOQbeY+N6dn
+         PP7nCfL+X6ITEw0at2IshY3ia3WWe8q/tAR3qBlCM+yP3YU6Pdi0gEuw/bOyhpSNYB6j
+         DDlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBjq4EgDdyHPVHQXgwy9/QrR4Yx1w7lQpnogXCDr4wkcZ6u9VPnQjh1j6PvleNZkkSuackWfzr@vger.kernel.org, AJvYcCWpo+H/RbdrxoiTdjl8XywHqHDc0CYhoc3+kvYm6Tfnapmv+q7MYjHUGoTVweTFAkL+fhr3ijHOTj1v@vger.kernel.org, AJvYcCX/bQiHQCn3sEERsJWhHgs1/bpiPDWm4fbonmOKIFrnQnFfzHQGwnegj8OcTpEzL2bL9W8EtwNAwELMAqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6+P0bD9s0i+9H+uAP3I9YS98hcv1NMXMD2HM9j4i61d5zpmP/
+	atj6bgO6BNSLsSWfREf4p0ypO6N1esqnsvogh3rhh7M2Ly7ul8Dw
+X-Gm-Gg: ASbGncutqk1bkTxL4SA/nCCeNM/u8bP1d0m4ajVIwH7zsRUcfob/wJqUxtOdgd83xlK
+	qFRzP5e+cKykMxH1DcKRcg7ZwvoI7RiAW0wylRtPpyFhjiB6I6MSVK7NCcxvuYWlhU0KAzIfTUe
+	+kU6WjYNct1iU6o9CtQ42+x+Iw/H20iXfjCfZf6yE2QY+CE5nnhSl6XLrhZndpdOHO5e6ed4GJ4
+	RVagEaK7MKlFG9onsc1fR1YOS/jFj5dpfJnGOpZj53eXJSV9GFd3ur5z7kL9ZxQruXPkAssvL4R
+	4tjynyeJIKCbT/Fb3/qT6YftB2gYQH0b
+X-Google-Smtp-Source: AGHT+IEPoIk30WWfA4BXz8wbNZOuVKWR++S/AotVQ2B18Pc/DY7ndJq6yoG435vz61ChOqXemub6rQ==
+X-Received: by 2002:a05:6402:13c8:b0:5dc:80ba:dda1 with SMTP id 4fb4d7f45d1cf-5dcdb711b67mr9092208a12.9.1738791918514;
+        Wed, 05 Feb 2025 13:45:18 -0800 (PST)
+Received: from foxbook (adtt137.neoplus.adsl.tpnet.pl. [79.185.231.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dce49b0661sm875416a12.25.2025.02.05.13.45.15
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 05 Feb 2025 13:45:17 -0800 (PST)
+Date: Wed, 5 Feb 2025 22:45:11 +0100
+From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
+To: ki.chiang65@gmail.com
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, mathias.nyman@intel.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
+ Etron xHCI host
+Message-ID: <20250205224511.00e52a44@foxbook>
+In-Reply-To: <20250205053750.28251-2-ki.chiang65@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This patch adds an ioctl to give a per-file priority hint to attach
-REQ_PRIO.
+>  	case COMP_STOPPED:
+> +		/* Think of it as the final event if TD had an error */
+> +		if (td->error_mid_td)
+> +			td->error_mid_td = false;
+>  		sum_trbs_for_length = true;
+>  		break;
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/data.c            |  6 ++++++
- fs/f2fs/f2fs.h            |  7 +++++++
- fs/f2fs/file.c            | 20 ++++++++++++++++++++
- include/uapi/linux/f2fs.h |  1 +
- 4 files changed, 34 insertions(+)
+What was the reason for this part?
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 07b46b444d31..24c5cb1f5ada 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -413,6 +413,7 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
- static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
- {
- 	unsigned int temp_mask = GENMASK(NR_TEMP_TYPE - 1, 0);
-+	struct folio *fio_folio = page_folio(fio->page);
- 	unsigned int fua_flag, meta_flag, io_flag;
- 	blk_opf_t op_flags = 0;
- 
-@@ -438,6 +439,11 @@ static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
- 		op_flags |= REQ_META;
- 	if (BIT(fio->temp) & fua_flag)
- 		op_flags |= REQ_FUA;
-+
-+	if (fio->type == DATA &&
-+	    F2FS_I(fio_folio->mapping->host)->ioprio_hint == F2FS_IOPRIO_WRITE)
-+		op_flags |= REQ_PRIO;
-+
- 	return op_flags;
- }
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index bd0d8138b71d..c0a5f0df8781 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -816,6 +816,12 @@ enum {
- 	FI_MAX,			/* max flag, never be used */
- };
- 
-+/* used for f2fs_inode_info->ioprio_hint. */
-+enum {
-+	F2FS_IOPRIO_WRITE = 1,	/* high write priority */
-+	F2FS_IOPRIO_MAX,
-+};
-+
- struct f2fs_inode_info {
- 	struct inode vfs_inode;		/* serve a vfs inode */
- 	unsigned long i_flags;		/* keep an inode flags for ioctl */
-@@ -830,6 +836,7 @@ struct f2fs_inode_info {
- 
- 	/* Use below internally in f2fs*/
- 	unsigned long flags[BITS_TO_LONGS(FI_MAX)];	/* use to pass per-file flags */
-+	unsigned int ioprio_hint;	/* hint for IO priority */
- 	struct f2fs_rwsem i_sem;	/* protect fi info */
- 	atomic_t dirty_pages;		/* # of dirty pages */
- 	f2fs_hash_t chash;		/* hash value of given file name */
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 642b8d85a035..2f93a27d2f45 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3503,6 +3503,23 @@ static int f2fs_ioc_get_dev_alias_file(struct file *filp, unsigned long arg)
- 			(u32 __user *)arg);
- }
- 
-+static int f2fs_ioc_io_prio(struct file *filp, unsigned long arg)
-+{
-+	struct inode *inode = file_inode(filp);
-+	__u32 level;
-+
-+	if (get_user(level, (__u32 __user *)arg))
-+		return -EFAULT;
-+
-+	if (!S_ISREG(inode->i_mode) || level >= F2FS_IOPRIO_MAX)
-+		return -EINVAL;
-+
-+	inode_lock(inode);
-+	F2FS_I(inode)->ioprio_hint = level;
-+	inode_unlock(inode);
-+	return 0;
-+}
-+
- int f2fs_precache_extents(struct inode *inode)
- {
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-@@ -4606,6 +4623,8 @@ static long __f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		return f2fs_ioc_compress_file(filp);
- 	case F2FS_IOC_GET_DEV_ALIAS_FILE:
- 		return f2fs_ioc_get_dev_alias_file(filp, arg);
-+	case F2FS_IOC_IO_PRIO:
-+		return f2fs_ioc_io_prio(filp, arg);
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -5321,6 +5340,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case F2FS_IOC_DECOMPRESS_FILE:
- 	case F2FS_IOC_COMPRESS_FILE:
- 	case F2FS_IOC_GET_DEV_ALIAS_FILE:
-+	case F2FS_IOC_IO_PRIO:
- 		break;
- 	default:
- 		return -ENOIOCTLCMD;
-diff --git a/include/uapi/linux/f2fs.h b/include/uapi/linux/f2fs.h
-index cd38a7c166e6..fb2f85b3c540 100644
---- a/include/uapi/linux/f2fs.h
-+++ b/include/uapi/linux/f2fs.h
-@@ -46,6 +46,7 @@
- #define F2FS_IOC_GET_DEV_ALIAS_FILE	_IOR(F2FS_IOCTL_MAGIC, 26, __u32)
- #define F2FS_IOC_DONATE_RANGE		_IOW(F2FS_IOCTL_MAGIC, 27,	\
- 						struct f2fs_donate_range)
-+#define F2FS_IOC_IO_PRIO		_IOW(F2FS_IOCTL_MAGIC, 28, __u32)
- 
- /*
-  * should be same as XFS_IOC_GOINGDOWN.
--- 
-2.48.1.362.g079036d154-goog
+As written it is going to cause problems, the driver will forget about
+earlier errors if the endpoint is stopped and resumed on the same TD.
 
+
+I think that the whole patch could be much simpler, like:
+
+case X_ERROR:
+	frame->status = X;
+	td->error_mid_td = true;
+	break;
+case Y_ERROR:
+	frame->status = Y;
+	td->error_mid_td = true;
+	break;
+
+and then
+
+if (error_mid_td && (ep_trb != td->end_trb || ETRON && SUPERSPEED)) {
+	// error mid TD, wait for final event
+}
+
+finish_td()
+
+
+Regards,
+Michal
