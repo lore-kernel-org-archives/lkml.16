@@ -1,273 +1,133 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from esa.hc1631-21.eu.iphmx.com (esa.hc1631-21.eu.iphmx.com [23.90.122.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E92613A244
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9F412EBEA;
+	Wed,  5 Feb 2025 13:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.122.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738762754; cv=none; b=o6n2QQkzxeHQ7Zi4rni030IITH6zcZ/RMqpCDaL/ECJ+ej9Kcp6p7n3OYB9CBfROzADFSI/gaHugvwY22QhdMKOUpv8WOSkkdHSDz6wC5RYoNXg1lyQngGW4VhlJ09i8uy/bgalFibnSUUmxubuPKHsLcu2NOxaFUWDfJ8Uwilk=
+	t=1738762786; cv=none; b=KNMJ9BOSAGW1m+qUiMHOB215RtZ3VgsCXDTqbtK4WcH1AKSwVYTR9n3BHgwLZmAdjHIQOfMQOdO7zRytGcT2l2rqCkXvd0FZ+icdPvJ6SH+SkRj54A0WIbp9qEbFtjaRA9CTJeZOo462I0W3j9uqrvNaRtnA5/C0E4LIbUa6ks8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738762754; c=relaxed/simple;
-	bh=XIlBawrt1HrnAL1fJF/NMVQKvvuIhgEKoVwat7RndvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddBiIGkMaqnLg7rafyoR/mw2seZBoXXS+0kXNRARCQ8ZHaVg2DXWciptHRXS+EfjlkcXJrH34nKkhORDcvkbu65QVO+fqgVwOUuhzrYlz5Q8P7PVq71DmqFK0C+7PL8qXutt5SunHs4vKe8gJ3o++LZKwcqJjI1AFm1O9Ky5Qkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=fail smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=LC3paigR; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738762786; c=relaxed/simple;
+	bh=xx1KM5z16al4ID4kukkEVWnUudNZ1JhFx2Qas0+7Tog=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WLG6LmxWeIDgLQJGrIZLUTZ62rVo6ejjlisBKVWXoi8OJBD0lt8Ki3qH8S7e1LMQfeIC0u57E4cbbSh70nz/SiFp8wFDFRxFOz6O/RoYeSIxM/20uXtt9HMneBESz2vMsoJ26PkG66sQMPej8s63I0HMPkp2Z0ha9PU5pb0RKRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thalesgroup.com; spf=pass smtp.mailfrom=thalesgroup.com; dkim=pass (2048-bit key) header.d=thalesgroup.com header.i=@thalesgroup.com header.b=x4wfEhLH; arc=none smtp.client-ip=23.90.122.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thalesgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thalesgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LC3paigR"
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 049173F477
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 13:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738762749;
-	bh=tSugA90/VHb7IX3bkFcnQ+nO3Qe0hz7LEEDJxb8uKmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=LC3paigRbBKWv0SGZknM5iGXFXwSyi1FNDvaeypabsaXrZYbADvOfXLvAkgBx7RWC
-	 kUPEr8sSGWMShLMRcnMtduAVBPyGdB7jyfqm/JmqJ/mK5TVPCVJX6FisPVhzafl0U7
-	 bPX6FLlpmLuYaXa6u1KK/gLW1YFVG1M95Ma0EMGToP08tYftzWQyJlQsKCCneDXpTY
-	 KJwOGNglEZZ2LxIxT+6SUZXpp2j34gt5gYU7nd4nElsyhWxeXQznnMR18VySnxKs89
-	 VksAhcgEvZmVa3KoAUmJWdw8XxzaHjcUm5emzD0z/ZB20SrqL0TxXFmfCav7HEBp4y
-	 H6uf9N0MAE36A==
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-216387ddda8so150510075ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 05:39:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738762747; x=1739367547;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tSugA90/VHb7IX3bkFcnQ+nO3Qe0hz7LEEDJxb8uKmo=;
-        b=FR+H76lGhT7WtXiA2hNy5KpKI9+MOTwIUfCasO1GgyrvGqwIDJkMNhN8If6ECDSnpA
-         HNkpMLIQCgngrue7zNq9XAUgWrBmVmTePlkylwRwIkhKV+6sC8uRHmE11CLSroFFKxhA
-         7eXXCV4KGXQsqLYUzpnAFTvj9fnKWMz4FID4OnPZf9j0Nxfvz3RTIMWay1DT7mtaiJ4G
-         YisMhOuWtwCuhmfjzhYjiH/nyfgjgbV9oIR+6k0shQE5VGBMRjz+LeLX6zKv36e0pcGR
-         CqRK/jO9fcCS036+Fq6sjYa+mQt1B5VPyyEi6kaBgrGoSEmlBia+Q/rXyvGU+dz4ro13
-         tW9g==
-X-Forwarded-Encrypted: i=1; AJvYcCV+XZUumoLdckrfZwohhSgN8MKUpGdFDAeohVjd/j5xVUr0sZXqx1I3ZmRs1mVJD3BepDNMmPqTLgo5i3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuySOfQkcpAFF3k2GkAfmVg7qMWM9u0z7JX/IMpuvz+/w5jpwh
-	gtN+3aRCfFXaoO+B/5eYZhQZtydeIl2MgjKQe9gEdQO0H6dNwUGG8Ai4//jAVg2SI9tDs2T5xRC
-	7YV5HYsBSz7K5Th5B20hXlXjr4nVtmoF5v9aE2enJAr4psFc48VR5ouqhjiUXnczgG3iHQnv567
-	nzlSKEoQuz4w==
-X-Gm-Gg: ASbGncsRMzJRZlT5wRhmZi4s9YcnSl+bt2R+u/6bXTGAjjQHeX9Labzmlw4epskLink
-	0MBP9nIbAxJBCQWSNCiX01kr8AYnhbnNzgO+8+ca3+dHqJvHms2AdJ57lv9DfYIer+GfjoHpK0L
-	I7aY1IU+5B3Kq+kAEDlD5iVCbM1CQip08FxMk7HRh/rvroDr9zCB4UdfaGX1hBeo7ruUIzlMrgQ
-	E9VxHNN9JD6Qheg4OY0KLw884DtrKtnUFTYzjIa32SlaIvPAuEWWTb+BO7GeKpe9F3FopT+rj0P
-	sEPJlNg=
-X-Received: by 2002:a17:902:e803:b0:215:e98c:c5c1 with SMTP id d9443c01a7336-21f17e74e67mr41446655ad.30.1738762746896;
-        Wed, 05 Feb 2025 05:39:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGIVRvCnElpUm14sHLZB2kuMes82lQ8It/4MSzK0Nn/xkxQ5iPNJpL3qRVBbRM57Ddm4/GQOg==
-X-Received: by 2002:a17:902:e803:b0:215:e98c:c5c1 with SMTP id d9443c01a7336-21f17e74e67mr41446365ad.30.1738762746433;
-        Wed, 05 Feb 2025 05:39:06 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:32aa:793b:6be9:7226])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f15431cb5sm16344195ad.98.2025.02.05.05.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 05:39:06 -0800 (PST)
-Date: Wed, 5 Feb 2025 22:39:04 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] gpio: aggregator: introduce basic configfs
- interface
-Message-ID: <dmy4mvxut3l5kqds2b2fnnes5ukr73spddwgrbkeoqrb5p5wir@hkq6ltr7d6dt>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-3-koichiro.den@canonical.com>
- <CAMRc=MfcooZXBqVpbQ0ak+8LGsPDzwKSN3Zfb0eZDx1Bx4duzQ@mail.gmail.com>
- <lkqxpfu3uzh4p4as3msv322qwlm6frv3iujifs6f3t2fjl4sep@3hsp6gzdieik>
+	dkim=pass (2048-bit key) header.d=thalesgroup.com header.i=@thalesgroup.com header.b="x4wfEhLH"
+X-CSE-ConnectionGUID: 1q7d95LtS1q7Mc6NC2Q4mg==
+X-CSE-MsgGUID: GZZoiLI/RRSL35n8i8jpaw==
+Authentication-Results: ob1.hc1631-21.eu.iphmx.com; dkim=pass (signature verified) header.i=@thalesgroup.com
+X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="25679662"
+X-IronPort-AV: E=Sophos;i="6.13,221,1732575600"; 
+   d="scan'208";a="25679662"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=thalesgroup.com; i=@thalesgroup.com; s=bbmfo20230504;
+  t=1738762714;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=hXK05cqlZ9cZyN/m6/nx739KmMO7Ld02nRkYNkBU9lI=;
+  b=x4wfEhLHG41h81z88Ca4M8m62sTUHY3EbdCkT9R3XJCIvZtBzVMS0sYV
+   X5pDntB0xKKHghSpmn1tWDOLMJwmHimABGF6dJZeF/zAl85PV8c9eqVqO
+   tuW0FdxjuREerPYeG+mGiAMfqaVd2xSSI62z1zrvcbLhRv/Aa645en0LW
+   /tlHWQ31djRGULlORIy7TdVjaIm6kW0Z1mlGn3nlXHwnTRujC9dEqkvlD
+   etuE4aRaDNEHOQ7qfY0TdpvHA4v392fnSZvlcgjPZSD5widm90AxL2Pgo
+   6NNWRURMPg5hPHc3gxo3zBaBXxHnI+yXYlQL74Vzxk3yCbeeRPXqy5X0m
+   Q==;
+X-CSE-ConnectionGUID: kw5DrnbaR8yn4ohGetljXg==
+X-CSE-MsgGUID: TnlGGTSYSDmj+ZdKcrVJcQ==
+X-CSE-ConnectionGUID: DIdceQhtReSMJDZ67/xDGg==
+X-CSE-MsgGUID: HzWhxkqNQpKfvAi7Bx5W5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="40762103"
+X-IronPort-AV: E=Sophos;i="6.13,261,1732575600"; 
+   d="scan'208";a="40762103"
+From: LECOINTRE Philippe <philippe.lecointre@thalesgroup.com>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "LENAIN
+ Simon" <simon.lenain@thalesgroup.com>, LEJEUNE Sebastien
+	<sebastien.lejeune@thalesgroup.com>, BARBEAU Etienne
+	<etienne.barbeau@thalesgroup.com>, RENAULT Xavier
+	<xavier.renault@thalesgroup.com>
+Subject: [PATCH] dmaengine: dw-axi-dmac: optional reset support
+Thread-Topic: [PATCH] dmaengine: dw-axi-dmac: optional reset support
+Thread-Index: Adt3z3Y2yWnkRdAqTHGNYv7obAEStw==
+Date: Wed, 5 Feb 2025 13:38:32 +0000
+Message-ID: <bf8f02ced6604f80acb84e82ea3a9268@thalesgroup.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-endpointsecurity-0xde81-ev: v:7.9.19.477, d:out, a:y, w:t, t:21,
+ sv:1738730589, ts:1738762712
+x-ms-exchange-nodisclaimer: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <lkqxpfu3uzh4p4as3msv322qwlm6frv3iujifs6f3t2fjl4sep@3hsp6gzdieik>
 
-On Tue, Feb 04, 2025 at 11:41:16PM GMT, Koichiro Den wrote:
-> On Tue, Feb 04, 2025 at 01:48:49PM GMT, Bartosz Golaszewski wrote:
-> > On Mon, Feb 3, 2025 at 4:12 AM Koichiro Den <koichiro.den@canonical.com> wrote:
-> > >
-> > > The existing sysfs 'new_device' interface has several limitations:
-> > > * No way to determine when GPIO aggregator creation is complete.
-> > > * No way to retrieve errors when creating a GPIO aggregator.
-> > > * No way to trace a GPIO line of an aggregator back to its
-> > >   corresponding physical device.
-> > > * The 'new_device' echo does not indicate which virtual gpiochip<N>
-> > >   was created.
-> > > * No way to assign names to GPIO lines exported through an aggregator.
-> > >
-> > > Introduce the new configfs interface for gpio-aggregator to address
-> > > these limitations. It provides a more streamlined, modern, and
-> > > extensible configuration method. For backward compatibility, the
-> > > 'new_device' interface and its behaviour is retained for now.
-> > >
-> > > This commit implements minimal functionalities:
-> > >
-> > >   /config/gpio-aggregator/<name-of-your-choice>/
-> > >   /config/gpio-aggregator/<name-of-your-choice>/live
-> > >   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/
-> > >   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/key
-> > >   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/offset
-> > >
-> > > Basic setup flow is:
-> > > 1. Create a directory for a GPIO aggregator.
-> > > 2. Create subdirectories for each line you want to instantiate.
-> > > 3. In each line directory, configure the key and offset.
-> > >    The key/offset semantics are as follows:
-> > >    * If offset is >= 0:
-> > >      - key specifies the name of the chip this GPIO belongs to
-> > >      - offset specifies the line offset within that chip.
-> > >    * If offset is <0:
-> > >      - key needs to specify the GPIO line name.
-> > > 4. Return to the aggregator's root directory and write '1' to the live
-> > >    attribute.
-> > >
-> > > For example, the command in the existing kernel doc:
-> > >
-> > >   echo 'e6052000.gpio 19 e6050000.gpio 20-21' > new_device
-> > >
-> > > is equivalent to:
-> > >
-> > >   mkdir /sys/kernel/config/gpio-aggregator/<custom-name>
-> > >   # Change <custom-name> to name of your choice (e.g. "aggr0")
-> > >   cd /sys/kernel/config/gpio-aggregator/<custom-name>
-> > >   mkdir line0 line1 line2  # Only "line<Y>" naming allowed.
-> > >   echo e6052000.gpio > line0/key
-> > >   echo 19            > line0/offset
-> > >   echo e6050000.gpio > line1/key
-> > >   echo 20            > line1/offset
-> > >   echo e6050000.gpio > line2/key
-> > >   echo 21            > line2/offset
-> > >   echo 1             > live
-> > >
-> > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > > ---
-> > >  drivers/gpio/gpio-aggregator.c | 549 ++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 548 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-> > > index 570cd1ff8cc2..c63cf3067ce7 100644
-> > > --- a/drivers/gpio/gpio-aggregator.c
-> > > +++ b/drivers/gpio/gpio-aggregator.c
-> > > @@ -9,10 +9,14 @@
-> > >
-> > >  #include <linux/bitmap.h>
-> > >  #include <linux/bitops.h>
-> > > +#include <linux/completion.h>
-> > > +#include <linux/configfs.h>
-> > >  #include <linux/ctype.h>
-> > >  #include <linux/delay.h>
-> > >  #include <linux/idr.h>
-> > >  #include <linux/kernel.h>
-> > > +#include <linux/list.h>
-> > > +#include <linux/lockdep.h>
-> > >  #include <linux/mod_devicetable.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/mutex.h>
-> > > @@ -34,11 +38,39 @@
-> > >   */
-> > >
-> > >  struct gpio_aggregator {
-> > > +       struct config_group group;
-> > >         struct gpiod_lookup_table *lookups;
-> > >         struct platform_device *pdev;
-> > > +       struct mutex lock;
-> > > +       int id;
-> > > +
-> > > +       /* Synchronize with probe */
-> > > +       struct notifier_block bus_notifier;
-> > > +       struct completion probe_completion;
-> > > +       bool driver_bound;
-> > > +
-> > > +       /* List of gpio_aggregator_line. Always added in order */
-> > > +       struct list_head list_head;
-> > > +
-> > >         char args[];
-> > >  };
-> > >
-> > > +struct gpio_aggregator_line {
-> > > +       struct config_group group;
-> > > +       struct gpio_aggregator *parent;
-> > > +       struct list_head entry;
-> > > +
-> > > +       /* Line index within the aggregator device */
-> > > +       int idx;
-> > > +
-> > > +       /* GPIO chip label or line name */
-> > > +       char *key;
-> > > +       /* Can be negative to indicate lookup by line name */
-> > > +       int offset;
-> > > +
-> > > +       enum gpio_lookup_flags flags;
-> > > +};
-> > > +
-> > >  static DEFINE_MUTEX(gpio_aggregator_lock);     /* protects idr */
-> > >  static DEFINE_IDR(gpio_aggregator_idr);
-> > >
-> > > @@ -61,6 +93,97 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
-> > >         return 0;
-> > >  }
-> > >
-> > > +static int aggr_notifier_call(struct notifier_block *nb, unsigned long action,
-> > > +                             void *data)
-> > > +{
-> > > +       struct gpio_aggregator *aggr;
-> > > +       struct device *dev = data;
-> > > +
-> > > +       aggr = container_of(nb, struct gpio_aggregator, bus_notifier);
-> > > +       if (!device_match_name(dev, aggr->lookups->dev_id))
-> > > +               return NOTIFY_DONE;
-> > > +
-> > > +       switch (action) {
-> > > +       case BUS_NOTIFY_BOUND_DRIVER:
-> > > +               aggr->driver_bound = true;
-> > > +               break;
-> > > +       case BUS_NOTIFY_DRIVER_NOT_BOUND:
-> > > +               aggr->driver_bound = false;
-> > > +               break;
-> > > +       default:
-> > > +               return NOTIFY_DONE;
-> > > +       }
-> > > +
-> > > +       complete(&aggr->probe_completion);
-> > > +       return NOTIFY_OK;
-> > > +}
-> > 
-> > Suggestion: this is the third time we're seeing this mechanism being
-> > used (after gpio-sim and gpio-virtuser). Maybe it's time to try and
-> > abstract it as much of the code is shared?
-> 
-> That makes sense. I would add gpiolib-vgpio.[ch] and add an opaque
-> * struct vgpio_common
-> and two api functions as our first step:
-> * vgpio_init(get_devname_cb) # bus notifier calls the cb to get devname
-> * vgpio_register_pdev_sync(pdevinfo) # return -ENXIO when probe fails
-> What do you think?
+Use optional reset support to avoid having to add a new entry to dw_dma_of_=
+id_table for each target requiring reset support
 
-The previous comment was a bit too rough, sorry. I feel it's not a good
-idea to write down detailed design plan here, so I'm thinking of having it
-reviewed in v3. Please disregard the above comment.
-I also noticed that this v2 patch series lacks 'select CONFIGFS_FS' for
-CONFIG_GPIO_AGGREGATOR. I'll add it in v3.
+Signed-off-by: Philippe Lecointre <philippe.lecointre@thalesgroup.com>
+Acked-by: Simon Lenain <simon.lenain@thalesgroup.com>
+---
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 20 ++++++++-----------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-In any case, I'll wait for further progress in the discussion at:
-https://lore.kernel.org/all/CAMRc=Meb633zVgemPSeNtnm8oJmk=njcr2CQQbD5UJd=tBC5Zg@mail.gmail.com/
-
-Thanks for the review.
-
-Koichiro
-
-> 
-> Thanks,
-> Koichiro
-> 
-> > 
-> > The rest looks good to me.
-> > 
-> > Bart
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/d=
+w-axi-dmac/dw-axi-dmac-platform.c
+index b23536645ff7..186bfb35b9eb 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -48,8 +48,7 @@
+ 	DMA_SLAVE_BUSWIDTH_64_BYTES)
+=20
+ #define AXI_DMA_FLAG_HAS_APB_REGS	BIT(0)
+-#define AXI_DMA_FLAG_HAS_RESETS		BIT(1)
+-#define AXI_DMA_FLAG_USE_CFG2		BIT(2)
++#define AXI_DMA_FLAG_USE_CFG2		BIT(1)
+=20
+ static inline void
+ axi_dma_iowrite32(struct axi_dma_chip *chip, u32 reg, u32 val)
+@@ -1498,15 +1497,13 @@ static int dw_probe(struct platform_device *pdev)
+ 			return PTR_ERR(chip->apb_regs);
+ 	}
+=20
+-	if (flags & AXI_DMA_FLAG_HAS_RESETS) {
+-		resets =3D devm_reset_control_array_get_exclusive(&pdev->dev);
+-		if (IS_ERR(resets))
+-			return PTR_ERR(resets);
++	resets =3D devm_reset_control_array_get_optional_exclusive(&pdev->dev);
++	if (IS_ERR(resets))
++		return PTR_ERR(resets);
+=20
+-		ret =3D reset_control_deassert(resets);
+-		if (ret)
+-			return ret;
+-	}
++	ret =3D reset_control_deassert(resets);
++	if (ret)
++		return ret;
+=20
+ 	chip->dw->hdata->use_cfg2 =3D !!(flags & AXI_DMA_FLAG_USE_CFG2);
+=20
+@@ -1665,10 +1662,9 @@ static const struct of_device_id dw_dma_of_id_table[=
+] =3D {
+ 		.data =3D (void *)AXI_DMA_FLAG_HAS_APB_REGS,
+ 	}, {
+ 		.compatible =3D "starfive,jh7110-axi-dma",
+-		.data =3D (void *)(AXI_DMA_FLAG_HAS_RESETS | AXI_DMA_FLAG_USE_CFG2),
++		.data =3D (void *)AXI_DMA_FLAG_USE_CFG2,
+ 	}, {
+ 		.compatible =3D "starfive,jh8100-axi-dma",
+-		.data =3D (void *)AXI_DMA_FLAG_HAS_RESETS,
+ 	},
+ 	{}
+ };
+--=20
+2.44.1
