@@ -1,195 +1,184 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2074.outbound.protection.outlook.com [40.107.104.74])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D4E1FC0ED
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738774311; cv=fail; b=Aob5lAjh46/TwC2RXTPOnHVXqKP0eQyQGzmW/RE8jVFhQNfKGmHSsbTPRDPNSNVFFUocGWkG5qfM/UxIGd+Xgqp404WOhhq4IZs3m/uqP4jxYWr6eZZ1aN6L7L6wxNK5HwggpxkxekqMhdrkk1LijMYUzYaZPSUFcBG8YJeQgGg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738774311; c=relaxed/simple;
-	bh=ronm9c5k6iA32+kV2kaAF1hjJYMqghSYV31sD/yRrjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dXtXNdBEIEKm5+GRf4Wy1gfX6kphOCSqQMlrbe1kWFL97qWV0VQWUvQY1GWuzo9fhOyr4tnt62GPKWTKtJOyNT1igCDlb9221Ay0Mb/huUryz35SZ5J+DXBTIavZiQvlkKx+sVAZDMWnstEWRc4Gz7FV12Qdbm6NTo6kXQhKGOc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bG7x9tMJ; arc=fail smtp.client-ip=40.107.104.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BE21DC99C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738774326; cv=none; b=HI4lcCbXGCcCFK24v4a+wjLzasHZ1uMlY+h3N4WMaMqStAnpn6evXfUbdHicntm2rx66Mm7rloORVb/OWEWGRqRyNPjDmuruPvUAFTJ6Yf/ojUtb1hJMlrP65jwS5+pWOHRUUtvok30TbYuVXP6VH5DIWV+D2SKHPgA0dYwym3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738774326; c=relaxed/simple;
+	bh=tZoJwRJ2KjkWu3PdSZeU5lb/3mj+u/Vb38NEkFbGITo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ei3IL/WYtNmo59C1KzsBpaJRxKsYAKZDiEbcru5dV4tXCm0ydwEnEDwKgsgWKK+/3xxblhuDSHeuXIXB/1/jlHUS4Ra0QlOqyR0/532MYJvuRQWxqoFgBrHvst/0UNsInyLKUbWHasEOzWUvgTLiliXs1EWDxlyxtIzWanTQcvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y2/4TmNI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sO/nJPt8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bG7x9tMJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=le7j0wXt4odF2R9oDUPTMKY9MTJN1cPegrfpbwHxcEkShNqGWL8lesDrqYvCRlVlHOmg1yi5mVYK/eDwmEj9TX9ozps/FhKznih6ee05aqV6fJk+DAoH6JHuW3OF9V8KML3qvN/noXY4k3/z7dQYvmKPMYgFF+SSRp0RgGfTxHcwhU4SsUmb6ahK8octO6ys76jLH9fRY8drYckECLn48I+iH/YKxlbeT92THQ+BSb5udvyabNLBnsJIL9SGABfVMiOxVRv8GG5cTpm5OyWT6LW2oDuQYy3GYLzBuhsd4hStCrzbCNhXBnnh7ozHua+ESTaw7MYlKuct/FJdW1yFuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d8NpnaLPPrfHkomUYynIG2mKoM1QqXoMy8eyWwEOjEY=;
- b=Qc8mMgKTDS17yRX4UYMN588EoRiItHlM00RU7RrJFFRJfj843GkzZRlctfHiHYu1nOxj8j0ZVPydyp1znZKNdhu9dC2GJ6Ic9ai5w0VUvlpD4pI16QAP+Wp8F+kpA4JMQJ16dmLTe8+aIuLNMsTCQEjHu8xGTw+ziKfi7rjNo+tnXh7Ied/m8eMNPLCTi9GH406r0RE332pYAR8IOJoDKZxSducMLQ5xkY4y9CbxYb/aNzO9u/I/F6v4EvWD0kr1imU8FQ5OH8mEvaImDekTV9UZpvCrJIaulHsf1PEe+xY3+9YiAWRI/Qw+XeNKKLtxpkxyKXJKBsv4zYQU4m2iYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d8NpnaLPPrfHkomUYynIG2mKoM1QqXoMy8eyWwEOjEY=;
- b=bG7x9tMJwgU6f6Hw4lhZ9NiIri8JPZl+tY4ul0u1PdyncidPM3EjTT7RWshJrdIaog3HPy79KhRzLI0htB16pPdc29ZDbn+LJhE3m9dtiqrLYj0nmkXud/i7dmkGdlGbfV2mOBMAQChGLndrpVer4DIfYRy3/jeuHf1qxjMY/tsCqDALxmF25P+YZztrqAYdZF+KDqu3WO8dC+WYQPn2T6tSpCGGGfbK12grY1+A0YOP19TRwkKKDQgun17mOg/PFTsZd8G9mfZ6TJwuT3ZMoKD6rw4SJjTWUDfJcDmWWZwnM2UNQslPgg7qiB083xN1BMAIWHS3+BRDCr2aVwkm7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8509.eurprd04.prod.outlook.com (2603:10a6:102:210::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Wed, 5 Feb
- 2025 16:51:45 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
- 16:51:45 +0000
-Date: Wed, 5 Feb 2025 11:51:37 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-Cc: alexandre.belloni@bootlin.com, pgaj@cadence.com,
-	miquel.raynal@bootlin.com, conor.culhane@silvaco.com,
-	aniketmaurya@google.com, Shyam-sundar.S-k@amd.com,
-	jarkko.nikula@linux.intel.com, wsa+renesas@sang-engineering.com,
-	xiaopei01@kylinos.cn, Guruvendra.Punugupati@amd.com,
-	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-	BMC-SW@aspeedtech.com
-Subject: Re: [PATCH v2 2/2] i3c: mipi-i3c-hci: Use I2C DMA-safe api
-Message-ID: <Z6OXGS7xrUdbrXZG@lizhi-Precision-Tower-5810>
-References: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
- <20250204091702.4014466-2-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204091702.4014466-2-billy_tsai@aspeedtech.com>
-X-ClientProxiedBy: BYAPR08CA0059.namprd08.prod.outlook.com
- (2603:10b6:a03:117::36) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y2/4TmNI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sO/nJPt8"
+Date: Wed, 5 Feb 2025 17:52:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738774321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SVg9Z3E6PzM03ev7o49Z9kFIBEPLfIivy8HlxgMrIlM=;
+	b=y2/4TmNIBmZtIja8SFycBcMTVA03SU8W7g5lYnsBSO1eCCdzDd2974qZucEAkNNaqossR6
+	86s+9BUave0ypi/hOMbWjOD+hthffwLbMbUU4Bfab7iMJTtpYhc0+wjnp2XgR0Dbp2Qko8
+	tCFXwNDdicFNv6ZQVoStrkUkLlOSuZbCEGvxxofUPtoGvm3lQ+iYggb3MoSB59l6vRfUm7
+	bfIGEl62wJ9AbnLWwvOFXD2a0TDMZ4YApFlybu9Sm2rH9p/cipflYx1f5+uxp9l7sFS+Mw
+	OQOxgd7hEsk9ynkXlQu0e5f5RZ5twiuNunN3foga8LDauRNR6w72T+2GzB+hPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738774321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SVg9Z3E6PzM03ev7o49Z9kFIBEPLfIivy8HlxgMrIlM=;
+	b=sO/nJPt8ERgCHi1L4DM0+aTV/namxcM3DmCL4RTeJqtngUh9Vc8+ebs0uvBm+7p211qYBQ
+	E8Xocn98gfjqcSAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 00/15] futex: Add support task local hash maps.
+Message-ID: <20250205165200.v9iduJ1S@linutronix.de>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250204151405.GW7145@noisy.programming.kicks-ass.net>
+ <20250205122026.l6AQ2lf7@linutronix.de>
+ <20250205125250.GD7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8509:EE_
-X-MS-Office365-Filtering-Correlation-Id: be9adc21-28d0-4cb8-bb25-08dd46055fdd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|376014|366016|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZUCAq64h4HeX3i5rLm37xNB1R+dLuoTMcqVRcIiFxRKSkzND51fmQ6sVJnbV?=
- =?us-ascii?Q?+gyWTlyyKBZDEzXnSYqChNDziGZz21LyRprmmpy0Ra+Dd0qNhS87VHttPpMw?=
- =?us-ascii?Q?mEzzOLniDWDr2aAJlBO5Jac4mlHr9h6wD1BE2iXld6lQ/xr14vagXbSgRJCI?=
- =?us-ascii?Q?CDVwucVv+KS1XXpGjMnps+cPKkxAY3HhluMe+8pBKJmMUmo/b+sHyyLq9plz?=
- =?us-ascii?Q?shGt4V8SpmJM0ZtPE1O8Zu55VkaXPya6mkhlOfl7CHAEO3IrxEj/2e2Rh+Hx?=
- =?us-ascii?Q?PRyxBPHmmYtbRMsGFppievHoKe3f80XW7HLSuYkpfcQSSPhNfwH+BNCAt5H+?=
- =?us-ascii?Q?by4S1nooVy9xFoPdYUwCXAIASa1KUghdTiom4d40WDcQ1qdyrc9aECW5Unwc?=
- =?us-ascii?Q?8sNtFOKqTFcYnI12tBIivJOfpFklrWcTsMA+SX2Uw75fw2mu+CpH1zJT1H2G?=
- =?us-ascii?Q?/8Rat9bXtBD5sysWb4/tabR15iSIalaLH1nLLgKFIRz9iKEZBgrDottYtOE1?=
- =?us-ascii?Q?OmQLVVnaa0h/Vs7jiL2YHRmYFJ038+IG96Oz02IRv8490rCVTq6aM1FbSAl3?=
- =?us-ascii?Q?Vl8wirkx0mc8PCPg5y4wkD3bQN5FhKDJSQNh9LPM/jZBqkIXOv47xxSSa/Uc?=
- =?us-ascii?Q?igiUt0RlnORvaoNGpu8AxyLCp1N2+XnxDg8jrrIoW1jOCJUZ8SSJzemefXIV?=
- =?us-ascii?Q?vIT/P9HdI0lF6AJzG6I9PFNzwrUl89EBPlaP7PYnzbvf7XSULhLD5CblyEbf?=
- =?us-ascii?Q?6K6Aco1CXTHCcARZxNoRnV/s6wMsZNZiZbXiepcFiUZqo/RbhDxRUCZE8mkL?=
- =?us-ascii?Q?IjYwuFZDrlqdUS3u9rH/PfPzcOGcGfpW8Udg2oRAIR2Vh5H2CAyfF4iKA2lV?=
- =?us-ascii?Q?xfJd1H7GfCliXzoOFbBzDEHiOmnSEDW3nqRFlZ/yW+ppYscG0Z2egnw6/p3k?=
- =?us-ascii?Q?F1rrYD/pkZRRr2Rp2lefhb27rJcUlS+r3BFr7xiiexIt5v25E64rwWpBfFc0?=
- =?us-ascii?Q?hCIf6HGS601TBdth90L1MqnkCkaPom4c4I41xTGCyGGIR3o0WTiU8SsE7qSI?=
- =?us-ascii?Q?7p2vEwYxMVNW2ht+IMgIrtOazx3esNL1Mtfl7S4nS34gteMVi0d7TgxqLFAl?=
- =?us-ascii?Q?lI8PyX9ixlkkZifplbVCTNby08rgpt2623J7mE/+APnyqnBfKsJQ0VdIyqOt?=
- =?us-ascii?Q?Z6Xbz2FhMh30ozah0FEU/cEIfXMxjnw7IAUrr/+vU7qgmP9cRtyS8BTZ9YmD?=
- =?us-ascii?Q?b5FKJst6cRe4h6fqCtfOSXy00zctH0vEjPQ78fm6OR/IhpCpu78W+LmyZumM?=
- =?us-ascii?Q?MQxovtgOZx+geHlj1JChIOSDsRjt20IO3MOERZfwjUP3EIsfo4G/w6UhASzF?=
- =?us-ascii?Q?3LIj9UmLDPa2NByzW6035/GF2+aoWYOqkgx5YAqmmBZNqv1oSQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0ucdhmBDzauub7OZ/3ldz2+bVaY4MtULKOeWVDG9Kl7M+W4eBn5L7oK+TBD3?=
- =?us-ascii?Q?5fRCs2jy2b//wdcCs54Lxs2RiSieX/HyobSifWFSQ4r2yy0BsdfA1tMa7aEp?=
- =?us-ascii?Q?o+lltUlyKYLq+SEyCWnSDLlg4A6++54/ExXSJUYLSlOXzyDUWAWoFog+iBtj?=
- =?us-ascii?Q?l64Hi7qENPEroFKfS/NaJAy1wVruYVDt7jHnlVbOniYsyGzcFNnX9wcDXrUG?=
- =?us-ascii?Q?WGeI4SLzxtctUdt2KdQjW7GQLi6+OXJldeBiRCdHryoJdw/bai+La4IQ+P5X?=
- =?us-ascii?Q?PvsCUscJ3KX8i9tpTU6/C0KBKQxQGI7dlxsFplITCjFN4fQLO/M9loDl0qtd?=
- =?us-ascii?Q?TLoJ+E1SIXGe7vrjeMp16hhO3wCNMZ6KAAtrny+pJwB29iCAie5Da1jaFN+n?=
- =?us-ascii?Q?DZ/Wa+GWhLBd2IYpN/XvJ5BzewINLNfcYT6EP9WUwR+q01UYE/diijBxQfWw?=
- =?us-ascii?Q?OjmSANZAPqz40VY95BI0iKzXYMbsuq0hSJKt2LYZl9K9Wocx4cqyWItXLss3?=
- =?us-ascii?Q?d8JlalJiDThwSfc+lxVfv8aL8wc/Mr+zJ6wMetfTvzxUB4MvTRfwJeAXcKwe?=
- =?us-ascii?Q?qq1b1XWyKQ/tbu0lOMRgdlGyFQRo6oQLhn2V3VP4NIn1JsyR/+/NReE1x/5f?=
- =?us-ascii?Q?z+eVipz+S8I8kklEribgpZ1yTJdxaz14MSqpKSxHsQiEDjuftaO4qesKOnLb?=
- =?us-ascii?Q?O2exOqUQKoK+Ly5I++0GIpp8T1uh9RbMaST22Sb5tW2lZqQdkUa4Prjc1e8h?=
- =?us-ascii?Q?OA+tkLail2kCrz2Cje0LXKjDzB5tDB0NCrE4L5Km3qyRwQeQ8bTBSUYp6GW8?=
- =?us-ascii?Q?84LgFsdmnFYZAq6fVNRf1fsT8lTXCjlXqcc+mi1AM3kdOnH/g7zzPS0GF68x?=
- =?us-ascii?Q?5ADMK6joE1mTGScEh8gBu6+XyezSsc8JOlpBDPwKDICvbzLC34WG6MVx3cC9?=
- =?us-ascii?Q?BJgfdK6P+j4eDwlHbzJhlT+sP9eizp1ou7KTr+2ROPiy+cOVKBjArFZ+xyP8?=
- =?us-ascii?Q?gxzBCKmmrxfIJ2KXmzsHQ/1pDp78e70zZHjOxGHcVv7F4unxuL8lC03eQWqs?=
- =?us-ascii?Q?oPu1/csx3UTlBJsF324Rp0076+wVVqOPmEw8ZHL+XY2afSgl5FP33rUUsSQG?=
- =?us-ascii?Q?9mfKKXiZNuU9ittYkOQFumzVM6VedeolUJ7AcfX+YwmHvYpd5ZCsMQ6XipN+?=
- =?us-ascii?Q?/gd56X4Z/IDuE7A624dhislZ46fZPIpQtETUDTGkYzW2Sv6aeDbauuGIrCeW?=
- =?us-ascii?Q?ubSIoZLZ0ofqiHoDt/XpQGj/zVM9j/3VVUMMT9Tk4f1wxbdzq6/NQ8SbywNb?=
- =?us-ascii?Q?NalGpWl7E+2brpmX7Jh073gZD9S/z7jdfvdnDN931pIYksowJa5KMj9T5bPS?=
- =?us-ascii?Q?+gZ4wlrYxRBwQAgIcaKmqlyDPnOOPfnCoy8m7qITtynTX3wCWoInd7liLJtm?=
- =?us-ascii?Q?o/qkq7zCnpjovvcgtDhI04hdN6+rtlgvfuFL6E4JI375bzm2G1OPltIDY+CL?=
- =?us-ascii?Q?TWMB3Pxe0zjDuFu84DNq0wOvYIwxxVCFIkK7Qz841NKF3FgCQeZvBgocfPvO?=
- =?us-ascii?Q?Scw+dM4FxiAtB5j69Sc2dWCiRgBSDTLQRxu+YqNB?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be9adc21-28d0-4cb8-bb25-08dd46055fdd
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 16:51:45.5300
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XGdd2w7KidBhExYIF+eu14fp4CE0+yf0hfj4xs29yAG26TqFcrlQ0Lg50v9fRRWzOIyiWQhqWXB2wbi3OXFIqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8509
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250205125250.GD7145@noisy.programming.kicks-ass.net>
 
-On Tue, Feb 04, 2025 at 05:17:02PM +0800, Billy Tsai wrote:
-> Use the i2c_get/put_dma_safe_msg_buf for I2C transfers instead of using
-> the I3C-specific API.
->
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->  drivers/i3c/master/mipi-i3c-hci/core.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/i3c/master/mipi-i3c-hci/core.c b/drivers/i3c/master/mipi-i3c-hci/core.c
-> index a408feac3e9e..4f3738beb0f2 100644
-> --- a/drivers/i3c/master/mipi-i3c-hci/core.c
-> +++ b/drivers/i3c/master/mipi-i3c-hci/core.c
-> @@ -382,14 +382,11 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
->  		return -ENOMEM;
->
->  	for (i = 0; i < nxfers; i++) {
-> -		xfer[i].data = i2c_xfers[i].buf;
-> +		xfer[i].data = i2c_get_dma_safe_msg_buf(&i2c_xfers[i], 1);
+On 2025-02-05 13:52:50 [+0100], Peter Zijlstra wrote:
+> On Wed, Feb 05, 2025 at 01:20:26PM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-02-04 16:14:05 [+0100], Peter Zijlstra wrote:
+> >=20
+> > This does not compile. Let me fix this up, a few comments=E2=80=A6
+>=20
+> Moo, clangd didn't complain :/ But yeah, I didn't actually compile this,
+> only had neovim running clangd.
 
-1 should true?
+don't worry. I assumed that it is a sketch :) Let me add that one to the
+list of things to try=E2=80=A6
 
-Frank
->  		xfer[i].data_len = i2c_xfers[i].len;
->  		xfer[i].rnw = i2c_xfers[i].flags & I2C_M_RD;
->  		hci->cmd->prep_i2c_xfer(hci, dev, &xfer[i]);
->  		xfer[i].cmd_desc[0] |= CMD_0_ROC;
-> -		ret = i3c_hci_alloc_safe_xfer_buf(hci, &xfer[i]);
-> -		if (ret)
-> -			goto out;
->  	}
->  	last = i - 1;
->  	xfer[last].cmd_desc[0] |= CMD_0_TOC;
-> @@ -412,7 +409,8 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
->
->  out:
->  	for (i = 0; i < nxfers; i++)
-> -		i3c_hci_free_safe_xfer_buf(hci, &xfer[i]);
-> +		i2c_put_dma_safe_msg_buf(xfer[i].data, &i2c_xfers[i],
-> +					 ret ? false : true);
->
->  	hci_free_xfer(xfer, nxfers);
->  	return ret;
-> --
-> 2.25.1
->
->
-> --
-> linux-i3c mailing list
-> linux-i3c@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-i3c
+> > > diff --git a/io_uring/futex.c b/io_uring/futex.c
+> > > index 3159a2b7eeca..18cd5ccde36d 100644
+> > > --- a/io_uring/futex.c
+> > > +++ b/io_uring/futex.c
+> > > @@ -332,13 +331,13 @@ int io_futex_wait(struct io_kiocb *req, unsigne=
+d int issue_flags)
+> > >  	ifd->q.wake =3D io_futex_wake_fn;
+> > >  	ifd->req =3D req;
+> > > =20
+> > > +	// XXX task->state is messed up
+> > >  	ret =3D futex_wait_setup(iof->uaddr, iof->futex_val, iof->futex_fla=
+gs,
+> > > -			       &ifd->q, &hb);
+> > > +			       &ifd->q, NULL);
+> > >  	if (!ret) {
+> > >  		hlist_add_head(&req->hash_node, &ctx->futex_list);
+> > >  		io_ring_submit_unlock(ctx, issue_flags);
+> > > =20
+> > > -		futex_queue(&ifd->q, hb);
+> > >  		return IOU_ISSUE_SKIP_COMPLETE;
+> >=20
+> > This looks interesting. This is called from
+> > req->io_task_work.func =3D io_req_task_submit
+> > | io_req_task_submit()
+> > | -> io_issue_sqe()
+> > |    -> def->issue() <- io_futex_wait
+> >=20
+> > and
+> > io_fallback_req_func() iterates over a list and invokes
+> > req->io_task_work.func. This seems to be also invoked from
+> > io_sq_thread() (via io_sq_tw() -> io_handle_tw_list()).
+> >=20
+> > If this (wait and wake) is only used within kernel threads then it is
+> > fine. If the waker and/ or waiter are in user context then we are in
+> > trouble because one will use the private hash of the process and the
+> > other won't because it is a kernel thread. So the messer-up task->state
+> > is the least of problems.
+>=20
+> Right, so the io-uring stuff is tricky, I think this more or less does
+> what it used to though. I 'simply' moved the futex_queue() into
+> futex_wait_setup().
+
+This is correct. The changed task's state may or may not be relevant.
+
+> IIRC the io-uring threads share the process-mm but will never hit
+> userspace.
+
+One function had a kworker prototype. There are also the PF_IO_WORKER. I
+need clarify with io_uring ppl how this works=E2=80=A6
+
+> > > @@ -451,20 +442,22 @@ int futex_wait_multiple_setup(struct futex_vect=
+or *vs, int count, int *woken)
+> > >  		struct futex_q *q =3D &vs[i].q;
+> > >  		u32 val =3D vs[i].w.val;
+> > > =20
+> > > -		hb =3D futex_q_lock(q);
+> > > -		ret =3D futex_get_value_locked(&uval, uaddr);
+> > > +		if (1) {
+> > > +			CLASS(hb_q_lock, hb)(q);
+> > > +			ret =3D futex_get_value_locked(&uval, uaddr);
+> >=20
+> > This confused me at the beginning because I expected hb_q_lock having
+> > the lock part in the constructor and also the matching unlock in the
+> > deconstructor. But no, this is not the case.
+>=20
+> Agreed, that *is* rather ugly. The sane way to fix that might be to
+> untangle futex_q_lock() from futex_hash(). And instead do:
+>=20
+> 			CLASS(hb, hb)(&q->key);
+> 			futex_q_lock(q, hb);
+>=20
+> Or somesuch. That might be a nice cleanup either way.
+
+If you know, you know.
+We could do the lock manually in the first iteration and then try to
+hide it later on. The error path always drops it early. We could unlock
+manually there and tell the compiler that it is done.
+
+> > So the beauty of it is that you enforce a ref drop on hb once it gets
+> > out of scope. So you can't use it by chance once the ref is dropped.
+>=20
+> Right.
+>=20
+> > But this does not help in futex_lock_pi() where you have the drop the
+> > reference before __rt_mutex_start_proxy_lock() (or at least before
+> > rt_mutex_wait_proxy_lock()) but still have it you go for the no_block
+> > shortcut. At which point even the lock is still owned.
+> >=20
+> > While it makes the other cases nicer, the futex_lock_pi() function was
+> > the only one where I was thinking about setting hb to NULL to avoid
+> > accidental usage later on.
+>=20
+> OK, so yeah, I got completely lost in futex_lock_pi(), and I couldn't
+> figure out what you did there. Let me try and untangle that again.
+
+The hash bucket reference should be dropped if the task is going to
+sleep. The try-lock path there has a fast-forward to the end.
+
+Based on memory the unlock PI (and requeue PI) is also a bit odd because
+I need to grab an extra reference in the corner case. That is, to avoid
+a resize because I need a stable ::lock_ptr and task is no longer
+enqueued. So the ::lock_ptr will point to a stale hash bucket.
+
+Sebastian
