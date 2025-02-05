@@ -1,80 +1,179 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AF421C180
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FF821C180;
+	Wed,  5 Feb 2025 05:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738735086; cv=none; b=Ocr7eeRBmIXg9SIG+yibNFLFLCvdACBetH4tAottyjSU42p0CatoU44eI9PjP43EpyUYco5PxzOQ92Y1Ada3q6uO+4D/BNjS+6aC1EM30GvYMX2dLm+vTMjRhtlnNVgLofdlUuf1NwWb3r1JI5ZOjfE8LSF6zt8/BcZlwvTEqdU=
+	t=1738735192; cv=none; b=jE393QtzvyG+35qjH2nZdxFE5kWcPfYiAoSKAN2wYsmyIRmz3TwkZXRsO6rM8M49RL0yzPIGymv2HVAgd6BqqN2t+C/iknI9ZH91acIUEaNVV3K9WlLmlLzZprmaqg5txAn++eZfur5j+m9DBNQZSecqKW2pt0AMKZO2ALBKgEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738735086; c=relaxed/simple;
-	bh=eCnvaDRC7nQVJQXr7yFA3eXDOv1kw8Jo9IyBztnYNLA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=DKr6eaRO4i+ZOMHSh06Tou61abUvv31mbRmd353jQvRG7G1bFsTfL+E0YJC5dHb9X+DRZSlbbzW36IbzYKJbCEbqfX6aDn2CjFe2TcY7eA4NH41hovuGszzaQabcu9+ZForbnFeMxDefDGUsFaClJ0sKmXGJWW8fsPesCJJ3XsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d04dde4aa8so13421585ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:58:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738735084; x=1739339884;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YgoGYXPL3jaqGsvD6yqUXKZyHZuAvF3NbJLN1Y2+mos=;
-        b=R+SOI+5eRZIyE5VCSYjczO7sZb/sHnc6qAYLgG6egKCVuJm/8nHT+yTJpFQoatZkZX
-         OQ27HsAwgp3X54ZI7o/Jxt7DBe9U/n3festtLOAV74RcCDPzdXptfz/N22SCyvcfsd7J
-         XLmNZa3UR9t84w+CMMNlzc7tyVn6BBQvJYdddImeSZHAw2ATLvSOLqq28/EXyXRzt1Wv
-         YOBpY3QCbWIb6TLZQC26yN4oMH419I3lcGEORgYFGRV2Plk0HEzZ819B80dmcMbJXhiU
-         fbcrr11ZcD6vAhHKSORrviba4w3gps7cGz5ogfObJzze/FVGe2HRVzkQ8lFMRneCZGfO
-         XlLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPh/Eq+HvF7ppuh2Tdrzw6y+Ds8TXGSW6hzgK20dbyeIH7FvNmVPhSao9eXAOd8gxHVQJoTheOnL4zm3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTGcu0kUagiUlP/po5TCtrzaanMVrJ9Shcl+pZLiBEkNix7UeE
-	1qQKfW8gxAgtLEQNieH0haBMarJU2/M8ad5vsOQT64PHawwkKYnsZy4FkTJ6aFbOtM2u+d2Umjb
-	WhaytsKmWw3bq9HdK4C/ff+bw6opyOKST6o/ry7ouQ5gRQtkC0RPNeEE=
-X-Google-Smtp-Source: AGHT+IH2nDOcRyAbsP/ZFFbGw/cJPsTUsTveiVlP2eXWQqknQYXSK25WNlXoJeeQrPdOOXsXY/uUaSs949Dx2cxKLiUZKAR2dHni
+	s=arc-20240116; t=1738735192; c=relaxed/simple;
+	bh=lMlSGn6f5axZQbtd0v8R34NIoyp+US5nWf53BEGR6e8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WwT0NgVjiYiMpK9XGvlt6Dl5jM7nkchgKBnNAgj8QVBbJWuvkjmHLCvsHJxMTO+gLRCn1Sw3/0edpj7nfxxBs1VeVfY439MQpEKbr1EWVGd8Vrk60qs3PJycrGUz+hTtskMpdedAtSCV24CGYePIdzo+zXaG2xTv6RvtKLozEMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=B+dL7N63; arc=none smtp.client-ip=159.100.241.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="B+dL7N63"
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.157])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 30EEA20063;
+	Wed,  5 Feb 2025 05:59:42 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay3.mymailcheap.com (Postfix) with ESMTPS id 40F623E94E;
+	Wed,  5 Feb 2025 05:59:34 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id D7628400CC;
+	Wed,  5 Feb 2025 05:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1738735173; bh=lMlSGn6f5axZQbtd0v8R34NIoyp+US5nWf53BEGR6e8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B+dL7N63Xde0M11M9aBrJl4MlW0q+IwgQDyKJ68PezxqVg8DthaIhOrYgjpzPbFQf
+	 lhJfPI7V+J1O6cBHRWOEHAKMA7S8/AHoGLkdItj9TGlckSvXQ9NCZ8ak8Epto/cJ+a
+	 bjXLOO/MyykjiQg+TL+NuaPvb3j97L79KErpuoMY=
+Received: from [172.23.33.41] (unknown [103.152.35.21])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 616654050D;
+	Wed,  5 Feb 2025 05:59:29 +0000 (UTC)
+Message-ID: <6838de5f-2984-4722-9ee5-c4c62d13911b@aosc.io>
+Date: Wed, 5 Feb 2025 13:59:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d1d:b0:3d0:28d3:e4ba with SMTP id
- e9e14a558f8ab-3d04f917ccamr14330045ab.18.1738735083923; Tue, 04 Feb 2025
- 21:58:03 -0800 (PST)
-Date: Tue, 04 Feb 2025 21:58:03 -0800
-In-Reply-To: <67a23341.050a0220.163cdc.0069.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a2fdeb.050a0220.50516.000e.GAE@google.com>
-Subject: Re: [syzbot] [block?] BUG: sleeping function called from invalid
- context in unmap_mapping_folio
-From: syzbot <syzbot+95f1db35defd8524f1dd@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, ansuelsmth@gmail.com, axboe@kernel.dk, 
-	david@redhat.com, dianders@google.com, kirill.shutemov@linux.intel.com, 
-	lilingfeng3@huawei.com, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, riyandhiman14@gmail.com, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup
+ sources
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen
+ <chenhuacai@loongson.cn>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250131100630.342995-1-chenhuacai@loongson.cn>
+ <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
+ <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com>
+ <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
+ <61fecc0b-d5ac-4fcb-aca7-aa84d8219493@rowland.harvard.edu>
+ <2a8d65f4-6832-49c5-9d61-f8c0d0552ed4@aosc.io>
+ <06c81c97-7e5f-412b-b6af-04368dd644c9@rowland.harvard.edu>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <06c81c97-7e5f-412b-b6af-04368dd644c9@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: D7628400CC
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TO_DN_SOME(0.00)[]
 
-syzbot has bisected this issue to:
+Hi Alan,
 
-commit 1760a1b5aacbe00dec464b1bf2b10443c10377ad
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Thu Jan 30 10:00:45 2025 +0000
+在 2025/2/4 00:15, Alan Stern 写道:
+> On Tue, Feb 04, 2025 at 12:01:37AM +0800, Mingcong Bai wrote:
+>> Hi Alan, Huacai,
+>>
+>> <snip>
+>>
+>>> I just tried running the experiment on my system.  I enabled wakeup for
+>>> the mouse device, made sure it was disabled for the intermediate hub and
+>>> the root hub, and made sure it was enabled for the host controller.
+>>> (Those last three are the default settings.)  Then I put the system in
+>>> S3 suspend by writing "mem" to /sys/power/state, and when the system was
+>>> asleep I pressed one of the mouse buttons -- and the system woke up.
+>>> This was done under a 6.12.10 kernel, with an EHCI host controller, not
+>>> xHCI.
+>>>
+>>> So it seems like something is wrong with your system in particular, not
+>>> the core USB code in general.  What type of host controller is your
+>>> mouse attached to?  Have you tested whether the mouse is able to wake up
+>>> from runtime suspend, as opposed to S3 suspend?
+>>>
+>>
+>> Just to chime in with my own test results. I was looking at this with Huacai
+>> a few days back and we suspected that this had something to do with
+>> particular systems, as you have found; we also suspected that if a keyboard
+>> was connected to a non-xHCI controller, it would fail to wake up the system.
+>>
+>> I conducted a simple experiment on my Lenovo ThinkPad X200s, which does not
+>> come with any USB 3.0 port. Here are my findings:
+> 
+> What sort of USB controller does the X200s have?  Is the controller
+> enabled for wakeup?
+> 
+> What happens with runtime suspend rather than S3 suspend?
 
-    mm/vmscan: use PG_dropbehind instead of PG_reclaim in shrink_folio_list()
+It has the Intel Corporation 82801I (ICH9 Family) USB UCHI/USB2 EHCI 
+controller with PCI IDs 17aa:20f0/17aa:20f1. The hub is a Genesys Logic, 
+Inc. Hub with an ID of 05e3:0610 - this is an xHCI hub.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14c2ef64580000
-start commit:   40b8e93e17bf Add linux-next specific files for 20250204
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16c2ef64580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12c2ef64580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ec880188a87c6aad
-dashboard link: https://syzkaller.appspot.com/bug?extid=95f1db35defd8524f1dd
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16010df8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f078a4580000
+Sorry but the record here is going to get a bit messy... But let's start 
+with a kernel with Huacai's patch.
 
-Reported-by: syzbot+95f1db35defd8524f1dd@syzkaller.appspotmail.com
-Fixes: 1760a1b5aacb ("mm/vmscan: use PG_dropbehind instead of PG_reclaim in shrink_folio_list()")
+=== Kernel + Huacai's Patch ===
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+1. If I plug in the external keyboard via the hub, 
+/sys/bus/usb/devices/usb1, power/state is set to enabled. For the hub, 
+corresponding to usb1/1-1, power/wakeup is set to disabled.
+
+2. If I plug the keyboard directly into the chassis, usb1/power/wakeup 
+is set to disabled, but usb1/1-1/power/wakeup is set to enabled.
+
+The system wakes up via external keyboard plugged directly into the 
+chassis **or** the hub either way, regardless if I used S3 or runtime 
+suspend (which I assume to be echo freeze > /sys/power/state).
+
+=== Kernel w/o Huacai's Patch ===
+
+The controller where I plugged in the USB hub, /sys/bus/usb/devices/usb1 
+and the hub, corresponding to usb1/1-1, their power/wakeup entries are 
+both set to disabled. Same for when I have the patch applied.
+
+However, if I plug the external keyboard into the chassis, it would fail 
+to wakeup regardless of S3/runtime suspend (freeze). If I plug the 
+external keyboard via that USB Hub though, it would wake up the machine. 
+The findings are consistent between S3/freeze.
+
+> 
+>> 1. With upstream code, the system would not wake up with neither the
+>> internal nor the external keyboards. One exception being the Fn key on the
+>> internal keyboard, which would wake up the system (but I suspect that this
+>> is EC behaviour). This behaviour is consistent across any USB port on the
+>> laptop and, regardless if the external keyboard was connected to the laptop
+>> itself or via a hub.
+>>
+>> 2. With Huacai's code, I was able to wake up the laptop with an external
+>> keyboard in all the scenarios listed in (1). The internal keyboard still
+>> failed to wake up the system unless I strike the Fn key.
+>>
+>> I should note, however, that the internal keyboard is not connected via USB
+>> so it's probably irrelevant information anyway.
+>>
+>> As for mice, it seems that the kernel disables wake-up via USB mice and
+>> enables wake-up via USB keyboards. This is also consistent with your
+>> findings.
+> 
+> Yes, and of course you can manually change the default wakeup settings
+> whenever you want.
+> 
+> Alan Stern
+
+Best Regards,
+Mingcong Bai
