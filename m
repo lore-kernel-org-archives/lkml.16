@@ -1,54 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A4E22D4E1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEA122D4DA
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752245; cv=none; b=sPZD7AgwzHFTV/lqNyV1bR5UggsrAT/iy1Ixk+FarFbDW8HJ3S+TQ/TEA9ofb0xRUkgarnO4lIh0PHGtV+6GScKnf4e2JPLPdPUCP2gFrzRRid28njNPXkRltohbPrBYKLihNU1qeFtnN96uco2fXQCkJQvogV4RkXHZO+zJoos=
+	t=1738752244; cv=none; b=UNcqZQYhAQOceJOO8Er0PG7yU7SENF+mtwSnn8r3wZpGIM0vQsQUPRZMP1/VPBxMMHYqDVPB4sghdR9nXInDEnSDBW5+0l4mHle+3OBrh+GV8oD5v4qhaEr/o4UI26fpTrI4GbvC3J051BXJb3eNlvLlG3hREScB+qbcbcs3oJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752245; c=relaxed/simple;
-	bh=3MCkUp4GcywPXVI0Z7DvgOiljVL7mfG2UeO4+a77KjM=;
+	s=arc-20240116; t=1738752244; c=relaxed/simple;
+	bh=XE70HxG67IlkX48CTskscYfrE2bRx5bl3ZYJplRPy9g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bkgq2amuCVqgJNm0J2F3AFhuNqKD/COXcb5DXv7cENM92q45pVlrjL4mCGZ1DA2VvGnfoa1HMuwGj8VOhpRlijkoDrlRMEGBL7QNiRg4pr5jbpV6mIn9sS0ye3PZAdA62SiKlQxtzULStJaMI205zVaPUzpvZrKB/SB9WWfeJWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I5pJH0oF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UcjwB8M0; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=oURe7kFLo4G1Y4jmAquz2lzenl+ntEwXifmj18cnacnOO0/b6M1Xkk5zsYu99KryQR2LsTfHbDqZ+Sb5Jep+aA+oICK+QTRsDYDXLVCSrjBGcTIJoOZLpdTO6FToolaDyM7pzjO5NsRQGfQxy+DRAccKeozEOQwW4Kx0U1636eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q54vI15a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yS7B4AY+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I5pJH0oF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UcjwB8M0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q54vI15a";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yS7B4AY+"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752240;
+	s=2020; t=1738752239;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rw2+KOHKcdJjOsWW3hOAYLU7gY9ICDPP1Zj0SZUVHk8=;
-	b=I5pJH0oFHLHFzJPSsScNGQHxzYfnH6kZdsntF7QQ3+q+TO+BxKdE1EOCZZluMIaa6HMf1C
-	hea0YBA3MssGO100g4yBpvM22uV745iOdtU4pmb/uz7IG34J+n5+KApk04qKwVqxePijBm
-	JvZWZ/pw+dGkHFphufW/5Q2Kngfb4rnvfWxD0PHoFf5s8oh29P5xY5bDjKeSfHUmOWxUhf
-	c5mroUb6VbgyjnErdNGtaYWe5LtA4lkwBJpYdkAnyUm7XaI5oJ4hET7g80OMUkiCB6KemT
-	JRmTh1gv3iaPlTEMyaFFLZGxDIg63ks01y7vUvA2jZeZ3E4y+Vku0kXZCbnNGQ==
+	bh=O39YmRKm9gdAC27GK5e9vDarkb96t0m+oW8rCAxeFfU=;
+	b=Q54vI15aReIYxfTi+KjpqeDqc5x03prprYjTvVbSdPwMjMF32hSlzDmBB6QIMvnEIyNUmx
+	fEmQ05N/V2Xb0gOKgc/A0EeXF26AlfoOBFBVQ41taWMLGU/pIm1h/RBsGR5uxINkgEtZCu
+	F4p1ef9N64I0X1+kDIhle2pvRdPt3QiOT8a+MO4ADfSo3m63HKBUsSGfXRePYNPiy9YR0B
+	vCjA9CMf4bzJDJqA8xmcabkCwOmZ0UZTAZnseoYYLDPkaW79/h/zqw6Lw9tu0tAv6m0Mug
+	s4b/BT89I/cbuOYA91ShnbMf/3veefJs5wvSUN+71C8WEmeQX2qFJoAQoZIeuw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752240;
+	s=2020e; t=1738752239;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rw2+KOHKcdJjOsWW3hOAYLU7gY9ICDPP1Zj0SZUVHk8=;
-	b=UcjwB8M0FVzQghAsoZSJ3LMl7YP/xRPBoCIIhOoCc3eHAzUdLj86/gM78niUPdL3bJBd4+
-	ukiR7VGSQRB2wmBg==
+	bh=O39YmRKm9gdAC27GK5e9vDarkb96t0m+oW8rCAxeFfU=;
+	b=yS7B4AY+NjwI3zPbWYA32j4gt6huj4SO79T40mVZI2mWBdUGKHJ2jQSAtrK3t++zN3FXvl
+	dGWFu1fUAtmJ6BDw==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH v2 08/24] net: ethernet: ti: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:43:28 +0100
-Message-Id: <bd34d3d0dba9a47b6ec5d14776941e9aa118c7d2.1738746872.git.namcao@linutronix.de>
+Subject: [PATCH v2 07/24] can: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:43:27 +0100
+Message-Id: <a3a6be42c818722ad41758457408a32163bfd9a0.1738746872.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746872.git.namcao@linutronix.de>
 References: <cover.1738746872.git.namcao@linutronix.de>
 Precedence: bulk
@@ -65,84 +66,165 @@ initializes the timer completely.
 Replace hrtimer_init() and the open coded initialization of
 hrtimer::function with the new setup mechanism.
 
-Patch was created by using Coccinelle.
+Most of this patch is generated by Coccinelle. Except for the TX thrtimer
+in bcm_tx_setup() because this timer is not used and the callback function
+is never set. For this particular case, set the callback to
+hrtimer_dummy_timeout()
 
+Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>
 ---
- drivers/net/ethernet/ti/am65-cpsw-nuss.c     | 9 ++++-----
- drivers/net/ethernet/ti/icssg/icssg_common.c | 5 ++---
- drivers/net/ethernet/ti/icssg/icssg_prueth.c | 5 ++---
- 3 files changed, 8 insertions(+), 11 deletions(-)
+v2:
+  - Use hrtimer_dummy_timeout() for bcm TX thrtimer
+---
+ include/linux/hrtimer.h   |  5 +++++
+ kernel/time/hrtimer.c     |  5 -----
+ net/can/bcm.c             | 20 ++++++++------------
+ net/can/isotp.c           | 10 ++++------
+ net/can/j1939/bus.c       |  4 ++--
+ net/can/j1939/transport.c |  8 ++------
+ 6 files changed, 21 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/etherne=
-t/ti/am65-cpsw-nuss.c
-index b663271e79f7..bf2d51ecd50e 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2299,8 +2299,8 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am6=
-5_cpsw_common *common)
- 	for (i =3D 0; i < common->tx_ch_num; i++) {
- 		struct am65_cpsw_tx_chn *tx_chn =3D &common->tx_chns[i];
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index f7bfdcf0dda3..acae379541c5 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -223,6 +223,11 @@ static inline void hrtimer_cancel_wait_running(struct =
+hrtimer *timer)
+ }
+ #endif
 =20
--		hrtimer_init(&tx_chn->tx_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINN=
-ED);
--		tx_chn->tx_hrtimer.function =3D &am65_cpsw_nuss_tx_timer_callback;
-+		hrtimer_setup(&tx_chn->tx_hrtimer, &am65_cpsw_nuss_tx_timer_callback,
-+			      CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED);
++static inline enum hrtimer_restart hrtimer_dummy_timeout(struct hrtimer *u=
+nused)
++{
++	return HRTIMER_NORESTART;
++}
++
+ /* Exported timer functions: */
 =20
- 		ret =3D devm_request_irq(dev, tx_chn->irq,
- 				       am65_cpsw_nuss_tx_irq,
-@@ -2553,9 +2553,8 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cp=
-sw_common *common)
- 		snprintf(flow->name,
- 			 sizeof(flow->name), "%s-rx%d",
- 			 dev_name(dev), i);
--		hrtimer_init(&flow->rx_hrtimer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL_PINNED);
--		flow->rx_hrtimer.function =3D &am65_cpsw_nuss_rx_timer_callback;
-+		hrtimer_setup(&flow->rx_hrtimer, &am65_cpsw_nuss_rx_timer_callback, CLOC=
-K_MONOTONIC,
-+			      HRTIMER_MODE_REL_PINNED);
+ /* Initialize timers: */
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index deb1aa32814e..47df6f50e12c 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1597,11 +1597,6 @@ static inline int hrtimer_clockid_to_base(clockid_t =
+clock_id)
+ 	return HRTIMER_BASE_MONOTONIC;
+ }
 =20
- 		ret =3D devm_request_irq(dev, flow->irq,
- 				       am65_cpsw_nuss_rx_irq,
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/eth=
-ernet/ti/icssg/icssg_common.c
-index 74f0f200a89d..6c1b8ff563e0 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -249,9 +249,8 @@ int prueth_ndev_add_tx_napi(struct prueth_emac *emac)
- 		struct prueth_tx_chn *tx_chn =3D &emac->tx_chns[i];
+-static enum hrtimer_restart hrtimer_dummy_timeout(struct hrtimer *unused)
+-{
+-	return HRTIMER_NORESTART;
+-}
+-
+ static void __hrtimer_init(struct hrtimer *timer, clockid_t clock_id,
+ 			   enum hrtimer_mode mode)
+ {
+diff --git a/net/can/bcm.c b/net/can/bcm.c
+index 217049fa496e..526cb6cd901f 100644
+--- a/net/can/bcm.c
++++ b/net/can/bcm.c
+@@ -1011,13 +1011,12 @@ static int bcm_tx_setup(struct bcm_msg_head *msg_he=
+ad, struct msghdr *msg,
+ 		op->ifindex =3D ifindex;
 =20
- 		netif_napi_add_tx(emac->ndev, &tx_chn->napi_tx, emac_napi_tx_poll);
--		hrtimer_init(&tx_chn->tx_hrtimer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL_PINNED);
--		tx_chn->tx_hrtimer.function =3D &emac_tx_timer_callback;
-+		hrtimer_setup(&tx_chn->tx_hrtimer, &emac_tx_timer_callback, CLOCK_MONOTO=
-NIC,
-+			      HRTIMER_MODE_REL_PINNED);
- 		ret =3D request_irq(tx_chn->irq, prueth_tx_irq,
- 				  IRQF_TRIGGER_HIGH, tx_chn->name,
- 				  tx_chn);
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/eth=
-ernet/ti/icssg/icssg_prueth.c
-index 00ed97860547..d3bdde6bd3aa 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -1169,9 +1169,8 @@ static int prueth_netdev_init(struct prueth *prueth,
- 	ndev->hw_features |=3D NETIF_PRUETH_HSR_OFFLOAD_FEATURES;
+ 		/* initialize uninitialized (kzalloc) structure */
+-		hrtimer_init(&op->timer, CLOCK_MONOTONIC,
+-			     HRTIMER_MODE_REL_SOFT);
+-		op->timer.function =3D bcm_tx_timeout_handler;
++		hrtimer_setup(&op->timer, bcm_tx_timeout_handler, CLOCK_MONOTONIC,
++			      HRTIMER_MODE_REL_SOFT);
 =20
- 	netif_napi_add(ndev, &emac->napi_rx, icssg_napi_rx_poll);
--	hrtimer_init(&emac->rx_hrtimer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL_PINNED);
--	emac->rx_hrtimer.function =3D &emac_rx_timer_callback;
-+	hrtimer_setup(&emac->rx_hrtimer, &emac_rx_timer_callback, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_PINNED);
- 	prueth->emac[mac] =3D emac;
+ 		/* currently unused in tx_ops */
+-		hrtimer_init(&op->thrtimer, CLOCK_MONOTONIC,
+-			     HRTIMER_MODE_REL_SOFT);
++		hrtimer_setup(&op->thrtimer, hrtimer_dummy_timeout, CLOCK_MONOTONIC,
++			      HRTIMER_MODE_REL_SOFT);
 =20
- 	return 0;
+ 		/* add this bcm_op to the list of the tx_ops */
+ 		list_add(&op->list, &bo->tx_ops);
+@@ -1192,13 +1191,10 @@ static int bcm_rx_setup(struct bcm_msg_head *msg_he=
+ad, struct msghdr *msg,
+ 		op->rx_ifindex =3D ifindex;
+=20
+ 		/* initialize uninitialized (kzalloc) structure */
+-		hrtimer_init(&op->timer, CLOCK_MONOTONIC,
+-			     HRTIMER_MODE_REL_SOFT);
+-		op->timer.function =3D bcm_rx_timeout_handler;
+-
+-		hrtimer_init(&op->thrtimer, CLOCK_MONOTONIC,
+-			     HRTIMER_MODE_REL_SOFT);
+-		op->thrtimer.function =3D bcm_rx_thr_handler;
++		hrtimer_setup(&op->timer, bcm_rx_timeout_handler, CLOCK_MONOTONIC,
++			      HRTIMER_MODE_REL_SOFT);
++		hrtimer_setup(&op->thrtimer, bcm_rx_thr_handler, CLOCK_MONOTONIC,
++			      HRTIMER_MODE_REL_SOFT);
+=20
+ 		/* add this bcm_op to the list of the rx_ops */
+ 		list_add(&op->list, &bo->rx_ops);
+diff --git a/net/can/isotp.c b/net/can/isotp.c
+index 16046931542a..442c343afe1f 100644
+--- a/net/can/isotp.c
++++ b/net/can/isotp.c
+@@ -1634,12 +1634,10 @@ static int isotp_init(struct sock *sk)
+ 	so->rx.buflen =3D ARRAY_SIZE(so->rx.sbuf);
+ 	so->tx.buflen =3D ARRAY_SIZE(so->tx.sbuf);
+=20
+-	hrtimer_init(&so->rxtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
+-	so->rxtimer.function =3D isotp_rx_timer_handler;
+-	hrtimer_init(&so->txtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
+-	so->txtimer.function =3D isotp_tx_timer_handler;
+-	hrtimer_init(&so->txfrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
+-	so->txfrtimer.function =3D isotp_txfr_timer_handler;
++	hrtimer_setup(&so->rxtimer, isotp_rx_timer_handler, CLOCK_MONOTONIC, HRTI=
+MER_MODE_REL_SOFT);
++	hrtimer_setup(&so->txtimer, isotp_tx_timer_handler, CLOCK_MONOTONIC, HRTI=
+MER_MODE_REL_SOFT);
++	hrtimer_setup(&so->txfrtimer, isotp_txfr_timer_handler, CLOCK_MONOTONIC,
++		      HRTIMER_MODE_REL_SOFT);
+=20
+ 	init_waitqueue_head(&so->wait);
+ 	spin_lock_init(&so->rx_lock);
+diff --git a/net/can/j1939/bus.c b/net/can/j1939/bus.c
+index 486687901602..39844f14eed8 100644
+--- a/net/can/j1939/bus.c
++++ b/net/can/j1939/bus.c
+@@ -158,8 +158,8 @@ struct j1939_ecu *j1939_ecu_create_locked(struct j1939_=
+priv *priv, name_t name)
+ 	ecu->addr =3D J1939_IDLE_ADDR;
+ 	ecu->name =3D name;
+=20
+-	hrtimer_init(&ecu->ac_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
+-	ecu->ac_timer.function =3D j1939_ecu_timer_handler;
++	hrtimer_setup(&ecu->ac_timer, j1939_ecu_timer_handler, CLOCK_MONOTONIC,
++		      HRTIMER_MODE_REL_SOFT);
+ 	INIT_LIST_HEAD(&ecu->list);
+=20
+ 	j1939_priv_get(priv);
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 95f7a7e65a73..a0d350871745 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1510,12 +1510,8 @@ static struct j1939_session *j1939_session_new(struc=
+t j1939_priv *priv,
+ 	skcb =3D j1939_skb_to_cb(skb);
+ 	memcpy(&session->skcb, skcb, sizeof(session->skcb));
+=20
+-	hrtimer_init(&session->txtimer, CLOCK_MONOTONIC,
+-		     HRTIMER_MODE_REL_SOFT);
+-	session->txtimer.function =3D j1939_tp_txtimer;
+-	hrtimer_init(&session->rxtimer, CLOCK_MONOTONIC,
+-		     HRTIMER_MODE_REL_SOFT);
+-	session->rxtimer.function =3D j1939_tp_rxtimer;
++	hrtimer_setup(&session->txtimer, j1939_tp_txtimer, CLOCK_MONOTONIC, HRTIM=
+ER_MODE_REL_SOFT);
++	hrtimer_setup(&session->rxtimer, j1939_tp_rxtimer, CLOCK_MONOTONIC, HRTIM=
+ER_MODE_REL_SOFT);
+=20
+ 	netdev_dbg(priv->ndev, "%s: 0x%p: sa: %02x, da: %02x\n",
+ 		   __func__, session, skcb->addr.sa, skcb->addr.da);
 --=20
 2.39.5
 
