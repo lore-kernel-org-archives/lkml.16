@@ -1,220 +1,185 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013050.outbound.protection.outlook.com [40.107.162.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C83228385;
-	Wed,  5 Feb 2025 00:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738717182; cv=fail; b=O0myGGLfvVM+SBjZ82Bi9MbDzNqL8eYnBdsa2lel9FTK9cFlOoRzfbfFkaHKucYW9MfPNDusl6c/yaLgl5iGjXvSnVI+bVEKGDC8CiwRMGg7Lths+5eWUL6mrB2z4f5sdTqQ9HHhI2Sa763N+w2Pmn7vHS6Zn9QpLFIwj3RF2V4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738717182; c=relaxed/simple;
-	bh=AcWk+DTl4vJlEoX1Fz1L2UUCItL1uFcWaPK5Bz+U1lU=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=kv2FOJjOlXEqJT4KNPxkZtIx/D9PXL+lan8H/riTgSV2SCA/zeEoBO7YilMY3VV9UWMJFAa/7wB/OlKXWjJoQNPbzEQjJ/GG6wnsUb8P31c4AEY6vk4e/x/k5ci1JFKGUPATNLnCKuX/vdlcrQMs3FDzjAxZm0/yb+Za6Q56yFc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=xehDLvqm; arc=fail smtp.client-ip=40.107.162.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0422F43;
+	Wed,  5 Feb 2025 01:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738717522; cv=none; b=btSGOUJItd4tR/0TIOCAcUffrGFY74mSewrlxFRfUDFz6prNQLbauVUMKD4VyvHLGnU4mJPdHQCoBarJbmM+NOJjnA+kr1urPvlpFMDk1IW/Xuf68DV2i/9IQN6VnswdV4NI/kIrTSCNOskOcL7dShzWg6+RyXfqxiieEPZDzkU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738717522; c=relaxed/simple;
+	bh=7vL1iclfVpKxu925UkU7LhOSPGQwgfUzy/hKHdblj8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KvWgMIIJMVj+DZzpQMM1idMOUUN8uubhhWRWxIR1gJIlReF/SQVGvHXdqNZiAJJzK2R/ihk/P1sPIlItDrC3fPAMt1UxvVJxQ+qSUl39jd3S82ConDsOwX1hFwiAORGf5lhDJGB/AHku7WX8L6Rxg9shukGUk1XyHOXcc0JB9lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EvEaUhdp; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="xehDLvqm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NKAoflszZ7mlKl9PYHCgJY6OEDFp91cFt7//ipvC6nMo0K5WrAhVVg1db7OAjcqkHXHOjKSUGvxasdBoVi222Ff2tCoFnGZHR5LMeX+l1krQsXEfcwulh4v4sLlE2lA9wmchZdwZHHz/XkYADOILAdx5REpdtj5Nd9J5/oegjpChv8hZ7aXep8mileT31UmoovwSEGyqlCM3OA7++OQRpZ9YfplaaS7ioZp7WHImZAa+qS4nQ4rUpYLhRLikVivSkuuygs6dTEteacL8DTD2h2/0vSa3NZzWPyFQIP3TB9lUf3V54EcjikTIdknrKuvCJDZKPmR0I8S1IfVZgZROAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EwjZqLy9UAzAbl6jmLkoboiwEpYZWe0ARcy3BM/gy6g=;
- b=Iu7LzleXyPFTpA9pxajroIpa81mSuuKH6SWK35k61tWXeuB06gTi7EMZnmwTmMwRf3JNIN958e9nkmKE6125GmRPoCIscg+Utttte2KR1qpNTQqK1u/Bmn4nFFG8pmmkrFlO8By2BTQS9PJwqGYD6NC2zm7ut5XRACSX4zFx0dA1wqNZDNHF2ZP5BYWlW9GsqQB0/c10rQmzmfh2SE+EYTRaTVY8T9VSbpy0WhxYn7StF32LvREuai7yuPaCAaQWFm8mwzoGVxLBIrKEOnYignuk+kUB9JJ7CYMcT9JbHw3J6/JAK1gFyf6p/KX5UH7uQw7wHP5fKAyCsqqulRLKEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EwjZqLy9UAzAbl6jmLkoboiwEpYZWe0ARcy3BM/gy6g=;
- b=xehDLvqmOSYIWp59xODlz9s8xncr3v2CW4nz7PWrlcpSP0DgWSRC+d3PlXFADPlpLy7/v95oK4HJyVJcWE6gVcnAtICeYHhi6085fnpzX8E8g6gBDes9eV8F5wXDArdKR9TZsXkdIj4oyHu++ij20MbzOLRg4Dgp7aIgoUPBpJn4L4o9MVwrpTzxvwU9DYA+89DGSz+8YkhPeiLyZ2HSBb42ZNWFUYu38pdPN5sSdQHGV4lrbxG5pSYPUF83tEPWEuiHyU+K/qyn2g/4ayHojdEVXf3q2AZYaxBwRs3frS1WAvzr7UaoADYFisDxXrAcyzFhxsvYRDnMcIsPPyoe/g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by VI2PR04MB10713.eurprd04.prod.outlook.com (2603:10a6:800:275::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Wed, 5 Feb
- 2025 00:59:37 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 00:59:37 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Wed, 05 Feb 2025 08:58:25 +0800
-Subject: [PATCH 7/7] rtc: pl031: Use resource managed API to simplify code
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-rtc-cleanup-v1-7-66165678e089@nxp.com>
-References: <20250205-rtc-cleanup-v1-0-66165678e089@nxp.com>
-In-Reply-To: <20250205-rtc-cleanup-v1-0-66165678e089@nxp.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Conor Dooley <conor.dooley@microchip.com>, 
- Daire McNamara <daire.mcnamara@microchip.com>
-Cc: linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Peng Fan <peng.fan@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738717111; l=1457;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=836X+TA/l2wfm7yon8oTf/+NEC4So+0tkKKh8ZKoqD0=;
- b=8b+RiW38bzcj7vW9C3nT/sXnco85VHDgcMhjl+0oTU3U8lRGFu1FS0OqHTfe7FEm8pMc6TD6S
- CcnR0JtCPB9Bg8e17MVnczKMvC1sDBxLvXZuA57wbWLOBQLeV5v1DtW
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: SI2P153CA0034.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::17) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvEaUhdp"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21634338cfdso54513145ad.2;
+        Tue, 04 Feb 2025 17:05:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738717519; x=1739322319; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BU7gpRZNtZd4YkMjoYUK8uFnG/DJrk9+8BiLG4sDqag=;
+        b=EvEaUhdpJsSlZytiOkC/StxNmQ7Hm5y3Lp9bGqv/J3Qa9X1jJd5D9mH8spnIeNoOe0
+         nJfp2soXGK6O7O9g5JxSYU3HdjMAZ6sRUc8HQaewXJaw/CdAyAxhR9m9EoMOorutHnbv
+         FnQDxvwSWN8N4sGNcC4FAR6A07twImsRj9eBpPOesumsdNSkbaY/I/2ZnRtK6qJJJosU
+         F0alt9qu+hJLN5HyXrdO/n9rg6+VHNgUBNyo+s6Ojyc8CfoWTYNvbEDZmp9lDlxY5Rre
+         EA5a+hFxVOMhROukbnUgS1Hpz437desKPobpIL1ysS1ZJbmZ+1o3fNLikSdgMdlXWPqL
+         ImCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738717519; x=1739322319;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BU7gpRZNtZd4YkMjoYUK8uFnG/DJrk9+8BiLG4sDqag=;
+        b=ehlU1gH2V8ip/7mgh63b1tm57jq9DkCrUodG6QmYVhq8/MusHZfSwmP9cPkB8EdVov
+         a8hCVX+ipVcrOZ5aifELP+2t5f6ma16T7/oHP+VOkKmYRZFZ5k1ZH2R48RKTLzJDFZsB
+         /YPKEmCme8zfiJxX53CvzpbK1Vhh4MSJMa9cZQWZP/hAJagOIuRmSiErbslaphAwLOYO
+         3l6WwMCokrVq312Bu6AS4HZl39HdMkjmIcPF+nLIILeQvS4Wm4RErY2y/0UTewJIB6au
+         FXrP/iDVtvAyZOsdQZ7W/vJaPETCKyWpeH7nZqaqEMBGugmk94uqRmMX89ElD8N+NHsO
+         RWnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6AZumBfU+CULngbgHbFD6IRTH1O7/MpoKwCd1FbWzvxYv2w1TMMsO1G9MBWZYzbrnmiuVeX+fbKCZ@vger.kernel.org, AJvYcCU9Ie8RRTxwoL6Tq0PNaW/7bbzIdFmKoaElu42ScY838X2tJFolD8PsNzBDSwq9x8vYMqrLCm2Q2GwYSOU2@vger.kernel.org, AJvYcCUQ2srerYEjv7VVZ4i0pJ4kvKZOnaSstnIG6bpgsY2+uYJg2I6SLkP0Re78yDwfuMEPtzo=@vger.kernel.org, AJvYcCVTtuJzGFBUP2RiGqfvbvl9tpY0lAnJto3i/18I+wav4Pb5t1dvXPziRdzhIAdkzhJRTAJmQIq0@vger.kernel.org, AJvYcCWqZbYSufXj6gNe2c8Ampr2SMa6QGEX+mylX4MbKs4ltdjVNje5teiNF2E4EYmwx1u8CEWAEQYBkclFqzPo8ohk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr4o+VFk0lpaWnPjnOIn1E2l3q8AqgrnYsVu5QDq1aZ4Of9lKc
+	Nf5Io2pygSvb40PkzJR8q27hZPxXWlcRdD9DSxCc9TxRF/CsfzgdO3QhOE8=
+X-Gm-Gg: ASbGnctQhEOqLWO3egAMc1DXw+KgK93gvCw557AzohDual+wy6nH2SUTiKvSin2typE
+	TPbapPWtJ5XKUTNMK/3/qVldvgqemv43BHq5qW+mXluv2hVpR+psQhuIPran03dDSosKb2aoR+W
+	Ndv8y1u65bAu7/Xny4nMFlneykaw8WKy9pGUy4NlmbLae8Ql4rj7YXUKioTiUoQ0Bg3EEcUNaAP
+	6fcH50aX61eovP1XWhiFKiPH9ow0eWHLkJ5Z+pLD614tgIBDc1kcRqLOcIIE3Ph1/32U8+GcQxS
+	dUIZ126fFWZJBhM=
+X-Google-Smtp-Source: AGHT+IH5+nXrvXYLMjkRMHIozAriajOdWhJhRISn3SXna+dvXhvXjPqnYbRhXJ+0gfCOfvWlHmS6XQ==
+X-Received: by 2002:a17:902:d508:b0:21d:dfae:300b with SMTP id d9443c01a7336-21f17e2ca29mr17032435ad.10.1738717519468;
+        Tue, 04 Feb 2025 17:05:19 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-21f16408194sm4367715ad.10.2025.02.04.17.05.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 17:05:18 -0800 (PST)
+Date: Tue, 4 Feb 2025 17:05:18 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Samiullah Khawaja <skhawaja@google.com>
+Cc: Mina Almasry <almasrymina@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Neal Cardwell <ncardwell@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
+	asml.silence@gmail.com, dw@davidwei.uk,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Victor Nogueira <victor@mojatatu.com>,
+	Pedro Tammela <pctammela@mojatatu.com>
+Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
+Message-ID: <Z6K5TmSKMcqmgjUK@mini-arch>
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com>
+ <CAHS8izNZrKVXSXxL3JG3BuZdho2OQZp=nhLuVCrLZjJD1R0EPg@mail.gmail.com>
+ <Z6JXFRUobi-w73D0@mini-arch>
+ <CAHS8izNXo1cQmA5GijE-UW2X1OU6irMV9FRevL5tZW3B5NQ8rA@mail.gmail.com>
+ <Z6Jt62bZEeHnN1JP@mini-arch>
+ <CAAywjhTZnyLkCSQTMO1SpJrL-epJMDrWRDAb_UEnR5WuAEvtpg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|VI2PR04MB10713:EE_
-X-MS-Office365-Filtering-Correlation-Id: 793ddd20-9a38-46cc-7474-08dd45805c9e
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dzkrWVRicW40SXlVOVZsM0Ixb1BMRkdNQnl1NEF1eWNteXJYWk9IeU15bkFG?=
- =?utf-8?B?WjNkMUlGbThMUVZXeEZGdEhzVzdlZ3JhaldvUXhjUWM1NHpzU0tETlk4M1dr?=
- =?utf-8?B?RWZ3K1cwNlF1eXlYV0RIamZCbnRDUFZ2K25reGtXQ095Rkw5RTEwTmxaRGYz?=
- =?utf-8?B?bGFUSmJ0Vlhzb2Z4U2JBcHZ2ajdRVkE0K0FSQzYzaWRlUHdiTkNuL3loakJU?=
- =?utf-8?B?V0pnUjdzV2VkdmdTZjJhN2hJK3ZjZ0ZIR1dtaWN5eFNWYmRGSGl1QnhVa2th?=
- =?utf-8?B?WXZ4NE1aakVNUFIvY2lremRsSHpHclFGMGNIU3ZORnpUekZBa2tiZ2ZzSDhD?=
- =?utf-8?B?bytLZVRqcUNCcXhpTzMyNUJMOURjL1NwdmdiMENUUE1qdWJwbUhJdGlZVEFr?=
- =?utf-8?B?dCsyRUN6cmljN2V3LzE3amVqZWhZYWpFTU9zb05GaTBNbGN3azk0SDlVbXRB?=
- =?utf-8?B?YU5LOXJyeEFkNzJxZkpJQXByNk1hbFVlaE9XSHpyRlZlOVRBOS9rR1JWcTNs?=
- =?utf-8?B?b3prc2Vxa0gzVFNreExOa0tFeENsZ005T1lPQ3NYcjZ6a0hyVjkwVDI4VkxC?=
- =?utf-8?B?R1I1YjBjTGxBR2pnL05kUitxcGNLNU1JRFh6QmoxT2x5cnVuczByWjk1Ui9U?=
- =?utf-8?B?V1hhUWR2TVppSFpQTHZCN0xxL0ZLN2lDTzV4NnZwUHlzRHFIN0VOOHhocjFK?=
- =?utf-8?B?cjNGcGJiR2ZmY2l5Q0ZHL0N1eHJ0bURsNDNwQk9iN2RSVW9oYUx4SHNhbkpE?=
- =?utf-8?B?MW5BSlRSMC8vN0daWnJPbHNmQVJuWml6ODAxTUxFTXBuQ3VjL1ZoUkxGNTVJ?=
- =?utf-8?B?a1JRYWNabFFSb2NGVnV5enFkKzdHZ2JVdnN6TUpMSWJmTnY3UEdGemNqRytn?=
- =?utf-8?B?M0k1KzNtSUQ2cmJRbTNWNVFDTEU4anhVaTRjdmMxQnRtTlZteHhuaW1wazJm?=
- =?utf-8?B?WEZMN2RZeUlRY2NXcitnVmo2c3VlendNVFJxNVpwM1Z5eG9NMDMvU0p4S1JR?=
- =?utf-8?B?aFIzNjFrMXlma1VsckhidndjclRnV0ZNWnJzdno5VkE5azczQysvcFlRZ2wv?=
- =?utf-8?B?b0QvZnF5dDZuU0dvemtha3d1Y3NPNE83b1l6NUpXVVNsTXcycTRJV21HYkhs?=
- =?utf-8?B?VGZZY0lDWHdsdGt6cTFDenAvNEZoaThUZWtGeTJxRGRHOGxqUndJL0JreEFG?=
- =?utf-8?B?ZEJRbDdCRlNJY0U0d1lCeTM2eXd0WTA2R29yTVRqYmJzMitEVWVXVklDeUNR?=
- =?utf-8?B?ZS9tZW11bi9zNGtDdWZPUmtZZ2FIeE5TRUVkbGJzcG5naFdBUmdzb2oycUsr?=
- =?utf-8?B?MVIvYmNLS1dWb3JNWCtkRmtHUW43ZFM2ZkVkcHZVa3oyQXliNGpLSUNNSC93?=
- =?utf-8?B?Q0FDSUNYbWNSbGhUWmZNSVFCY1VmSkRHLzRpYlluRzBKMFlqazNFVHNETGpa?=
- =?utf-8?B?WWpRT2g4YlEySkE1T2FDdC91aGs3VDUwRWcxbWcxQWtENWk5YmcyaWVvMVZL?=
- =?utf-8?B?eXAyU0tlM0Z3YjFPZ2xqdThzdS9FUzRnbGlsbDI4eUdBRkltdHE2c1N3Vko3?=
- =?utf-8?B?WkcrdDBlUkVRbkxZTXp3U2hnVm5CM2VNSGlDUnhhY2ZUZm80K1ZuM0RMVXlp?=
- =?utf-8?B?dTBkcDBFalh1YUlIS3RaYkc0VW9RWUUySUMwRFJsQVExMXpTU0M4RFFSQkFn?=
- =?utf-8?B?Y0MrR0hUdHA5SVc4YXd5dmJWbjI5SXdsamhvUlh6TTI0NEJsZ21hWlJKa2kv?=
- =?utf-8?B?YmUwUWRzb1gzSHVtYlpkYVZRcDRTaFRsVDhZV0RzYll3QnMwWHZjMmJjeC8x?=
- =?utf-8?B?KzQ3dTRXdnNZVzFVMTRqRWFsRVJjbXdidlREcThQa2hPTUxKTit5akZtc0Y5?=
- =?utf-8?B?dG53bFljUVByZGhFL0NYcFBQbHlDd0FEbmhJSlJHNW95SlE4RUlRUHhTOXU0?=
- =?utf-8?Q?AcjFsetIYdDDRfFzMgMVx2n6Y3cIW5bC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YXJIODE3cjYvM0NRV1lGTWRac0NpS0dOUG9idGh1N3l3U3RKYmF6cEFBWU1Q?=
- =?utf-8?B?cTVSOTFwdUJ3L0pYcU1QSjBBYmFnVVZqMmdhd0tCeVhrZWNVVkYrTmtmRGlm?=
- =?utf-8?B?YmlUQTU2amJKRGNSeG81YlpWNDlXTmk3MlV1TGU0eEVaOUVEVmgzUzY1V0lh?=
- =?utf-8?B?bUpXWC92c1g1UUsvQ3NGT2hJT3MrZWR3MlpmT1djKzM5RGVMa2JOYlphWVgy?=
- =?utf-8?B?dEJpdjZ0VUVzdjZVSUtRaUVWTytjbVM5dUx1Ymc1NmR5a0JVMnNUOTRtQ2Iw?=
- =?utf-8?B?QUFobTdRdVZnMnhYeEVRbk1wdVZqaTRTdUZOVXhPZy92QjFaZVJrSzQ2aEZo?=
- =?utf-8?B?SEJ3VWw1MTUyMDYrTCtQTURURjhjdGREUlljSzQrSTFXRmdva3RDSHl4NG9v?=
- =?utf-8?B?VkxhdTZaOXB1Unl0VnpiVm51OGpmckkyKzkwNWZZS3Z4dHlGRDkzcllqa1Mv?=
- =?utf-8?B?ZEhhU3hRTmhJTTZodlRkMFRIRVRyUTdHQ21BN1IwQVZkbFVXc2NKM0NTMm5i?=
- =?utf-8?B?Q0FqRm9ja0FVaWFkcURkWDlrMUFPbWQxMEhleUphdVdxVCt6ajVDMVFFbmdC?=
- =?utf-8?B?UFZLV0paSTl6UnhFLzRDcENtQUk1NHJMN3krN1BubU1la01tSGJFTmVyU0Z5?=
- =?utf-8?B?UjJiZEFPbzVmQndvL1pXUWZRY3NzK2VDTFQ1cnZ2a1R4M25pK3grOFJqaXRr?=
- =?utf-8?B?WEZvdUw3RFFmdTVCSWFoOGoweVZERFdWRUJKRG1BRlh1VjZ4VkVERjB4OVl5?=
- =?utf-8?B?Y3BkRkNHMnl6WmJRU0JKZFpJM0gweTdHajlnY2w1d2RheFhLR2VJYzErNHda?=
- =?utf-8?B?NUo4Yk1TMnlpQ3hNQU81Vy9TOFdGQnhvTEpHcWZ6YUlkMW1NRFdLMkhDMjYr?=
- =?utf-8?B?bkFhdXp0SGtVRWl6QkFZZjFEQmUwRVN2Rm4vYjBhNWdhVFhkSHRRWXcwUzhE?=
- =?utf-8?B?cWZRNFRBMmNXYk5kODVjcDE1U29Mb3lWTlhpbW9ub3lhKzlabHBsWVRSb056?=
- =?utf-8?B?aStOZWd4ek90SEhjWEExQlAxNTVqdmhjRFhLRm5Nc21aL21VaVdZdjBIc2Jx?=
- =?utf-8?B?NVVjWWpFdHY1aERBRXNoL0NNWWhXMDhKY3NFMUZYaVJqc2VaODRmN3JPNE5V?=
- =?utf-8?B?NkM3S0R1Um5za2xmc3VRcmlEcjl5YzNWRVI3NFNtRGEvMk9wYzZQZHF5NUNw?=
- =?utf-8?B?Q09NNTM5UENYNFJ1Mjd5ektBQ2xacmpZNFk1MGlYTmRPSEo3VHVzOGpXMitu?=
- =?utf-8?B?dWtvSVEvYVlnTHFMeDVIZ2NMdnpNNjdmeXV5cjlDeml3SDZWS3hzSGtGWXB4?=
- =?utf-8?B?YnFhTDJpWTcrZnZQS2NFdm1KZ2gyMm1MeCszTElSdTYybW1VME9hQmtmeW1F?=
- =?utf-8?B?V2RialJTQWoyQVk1dCthbFJ6Wk1kMFp3S0I2RnZQeERkcTgySFVDSnE1ZGt0?=
- =?utf-8?B?M2hqNmlyRGZucUJIY1RrYnlwY3RQNXorcVp0SUtNSXRvV3l2QWtodm5tU2hz?=
- =?utf-8?B?bm9QaDJQK25ibElQUWNuQ1h2YU5Bd2Z2aGJrb0RJanZwRncwOUR5emoyVVd4?=
- =?utf-8?B?a0M0aDE2UlRYVUNYUy9JeHZYSHJaaEEwSHpnM1FTYUZDa2ZEYlptYjlMZnRC?=
- =?utf-8?B?YTVQTXh0UXJlSGFmRzRUMW1BZXFoeFkveEh3bjhVZUcwTmMyOWF5VlRCRFdH?=
- =?utf-8?B?cVRxemM0NW0vRGRIdXhHdDlJWUtvbitIVUtDNVoyOUNsSUg0UDVpMTlaUHZj?=
- =?utf-8?B?SWswT0pQVGZ6emVtcWhHV3FNb1ExVEN6YjVlaTRvRkVxK1R5ci9HRGZudUh2?=
- =?utf-8?B?UnNkVVZwY0tHVElSYm5mMDVJM2U4UENidzJIeitaRFQ5d0NEMGttdzUwdTF0?=
- =?utf-8?B?Q081bUJNbmpuSUVOOWlucUFzUnNsRGNXSGp0bTlNOUt6MU9FWHdUTnRWMHhF?=
- =?utf-8?B?Z2I3VlVNVkFOUmlNZVZDNHpxWFlXai9uZWJLMjhpUXUxV0F2Z1h6R2tKWDVx?=
- =?utf-8?B?TU9NTm9VZno0RXhXb0lsbjBEblMxZGpjNlkrMjRLQUJ3dXI3a3BzRmo5Ui9I?=
- =?utf-8?B?VjZUU0FKcUNsakUvUDJYbFliSGRHcFRnRjlVa1phaDdTbE5tVmd4UU0wN21m?=
- =?utf-8?Q?3e1JLy8xLZ/s2j1BI55eJsv7l?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 793ddd20-9a38-46cc-7474-08dd45805c9e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 00:59:36.9576
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2oPoxj+HRZgTo9C3XvebIy33LXIv+qsbQEPWs3oi2EnamYs+w73SWn3eqvWRDfveyM3wqXzBRRv4+6LlAn/9EA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10713
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAywjhTZnyLkCSQTMO1SpJrL-epJMDrWRDAb_UEnR5WuAEvtpg@mail.gmail.com>
 
-From: Peng Fan <peng.fan@nxp.com>
+On 02/04, Samiullah Khawaja wrote:
+> On Tue, Feb 4, 2025 at 11:43 AM Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> >
+> > On 02/04, Mina Almasry wrote:
+> > > On Tue, Feb 4, 2025 at 10:06 AM Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> > > >
+> > > > On 02/04, Mina Almasry wrote:
+> > > > > On Tue, Feb 4, 2025 at 4:32 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> > > > > >
+> > > > > > On 2/3/25 11:39 PM, Mina Almasry wrote:
+> > > > > > > The TX path had been dropped from the Device Memory TCP patch series
+> > > > > > > post RFCv1 [1], to make that series slightly easier to review. This
+> > > > > > > series rebases the implementation of the TX path on top of the
+> > > > > > > net_iov/netmem framework agreed upon and merged. The motivation for
+> > > > > > > the feature is thoroughly described in the docs & cover letter of the
+> > > > > > > original proposal, so I don't repeat the lengthy descriptions here, but
+> > > > > > > they are available in [1].
+> > > > > > >
+> > > > > > > Sending this series as RFC as the winder closure is immenient. I plan on
+> > > > > > > reposting as non-RFC once the tree re-opens, addressing any feedback
+> > > > > > > I receive in the meantime.
+> > > > > >
+> > > > > > I guess you should drop this paragraph.
+> > > > > >
+> > > > > > > Full outline on usage of the TX path is detailed in the documentation
+> > > > > > > added in the first patch.
+> > > > > > >
+> > > > > > > Test example is available via the kselftest included in the series as well.
+> > > > > > >
+> > > > > > > The series is relatively small, as the TX path for this feature largely
+> > > > > > > piggybacks on the existing MSG_ZEROCOPY implementation.
+> > > > > >
+> > > > > > It looks like no additional device level support is required. That is
+> > > > > > IMHO so good up to suspicious level :)
+> > > > > >
+> > > > >
+> > > > > It is correct no additional device level support is required. I don't
+> > > > > have any local changes to my driver to make this work. I think Stan
+> > > > > on-list was able to run the TX path (he commented on fixes to the test
+> > > > > but didn't say it doesn't work :D) and one other person was able to
+> > > > > run it offlist.
+> > > >
+> > > > For BRCM I had shared this: https://lore.kernel.org/netdev/ZxAfWHk3aRWl-F31@mini-arch/
+> > > > I have similar internal patch for mlx5 (will share after RX part gets
+> > > > in). I agree that it seems like gve_unmap_packet needs some work to be more
+> > > > careful to not unmap NIOVs (if you were testing against gve).
+> > >
+> > > Hmm. I think you're right. We ran into a similar issue with the RX
+> > > path. The RX path worked 'fine' on initial merge, but it was passing
+> > > dmabuf dma-addrs to the dma-mapping API which Jason later called out
+> > > to be unsafe. The dma-mapping API calls with dmabuf dma-addrs will
+> > > boil down into no-ops for a lot of setups I think which is why I'm not
+> > > running into any issues in testing, but upon closer look, I think yes,
+> > > we need to make sure the driver doesn't end up passing these niov
+> > > dma-addrs to functions like dma_unmap_*() and dma_sync_*().
+> > >
+> > > Stan, do you run into issues (crashes/warnings/bugs) in your setup
+> > > when the driver tries to unmap niovs? Or did you implement these
+> > > changes purely for safety?
+> >
+> > I don't run into any issues with those unmaps in place, but I'm running x86
+> > with iommu bypass (and as you mention in the other thread, those
+> > calls are no-ops in this case).
+> The dma_addr from dma-buf should never enter dma_* APIs. dma-bufs
+> exporters have their own implementation of these ops and they could be
+> no-op for identity mappings or when iommu is disabled (in a VM? with
+> no IOMMU enabled GPA=IOVA). so if we really want to map/unmap/sync
+> these addresses the dma-buf APIs should be used to do that. Maybe some
+> glue with a memory provider is required for these net_iovs? I think
+> the safest option with these is that mappings are never unmapped
+> manually by driver until the dma_buf_unmap_attachment is called during
+> unbinding? But maybe that complicates things for io_uring?
 
-Use devm_pm_set_wake_irq and devm_device_init_wakeup to cleanup the
-error handling code and 'driver.remove()' hook.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/rtc/rtc-pl031.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/rtc/rtc-pl031.c b/drivers/rtc/rtc-pl031.c
-index bad6a5d9c6839ca70905e3d46286b9729c1fd435..47bfc5395e5908b7722b98276399120f1ba65af0 100644
---- a/drivers/rtc/rtc-pl031.c
-+++ b/drivers/rtc/rtc-pl031.c
-@@ -284,8 +284,6 @@ static void pl031_remove(struct amba_device *adev)
- {
- 	struct pl031_local *ldata = dev_get_drvdata(&adev->dev);
+Correct, we don't want to call dma_* APIs on NIOVs, but currently we
+do (unmap on tx completion). I mentioned [0] in another thread, we need
+something similar for gve (and eventually mlx). skb_frag_dma_map hides
+the mapping, but the unmapping unconditionally explicitly calls dma_ APIs
+(in most drivers I've looked at).
  
--	dev_pm_clear_wake_irq(&adev->dev);
--	device_init_wakeup(&adev->dev, false);
- 	if (adev->irq[0])
- 		free_irq(adev->irq[0], ldata);
- 	amba_release_regions(adev);
-@@ -350,7 +348,7 @@ static int pl031_probe(struct amba_device *adev, const struct amba_id *id)
- 		}
- 	}
- 
--	device_init_wakeup(&adev->dev, true);
-+	devm_device_init_wakeup(&adev->dev);
- 	ldata->rtc = devm_rtc_allocate_device(&adev->dev);
- 	if (IS_ERR(ldata->rtc)) {
- 		ret = PTR_ERR(ldata->rtc);
-@@ -373,7 +371,7 @@ static int pl031_probe(struct amba_device *adev, const struct amba_id *id)
- 				  vendor->irqflags, "rtc-pl031", ldata);
- 		if (ret)
- 			goto out;
--		dev_pm_set_wake_irq(&adev->dev, adev->irq[0]);
-+		devm_pm_set_wake_irq(&adev->dev, adev->irq[0]);
- 	}
- 	return 0;
- 
-
--- 
-2.37.1
-
+0: https://lore.kernel.org/netdev/ZxAfWHk3aRWl-F31@mini-arch/
