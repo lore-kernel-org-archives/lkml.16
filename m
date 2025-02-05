@@ -1,451 +1,210 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2069.outbound.protection.outlook.com [40.107.20.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3483595C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771151; cv=fail; b=ue02D8eQ3w9jmgTuQQaT/WvKBfIVrZxuORjP9NCQ75lJ5wvx6aeaeTN9SGLqsT6JcgHrxcUZloES128MMWbR1lOMfQVPlHSIZ8IzMC5NQvOygDxCQ3iIU6PMjn0av0Pp8X41e1U1iMLmMiWr35MAVDWH0VZPl5E95DGo8M+glWw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771151; c=relaxed/simple;
-	bh=07ctGiF0FOyeDBr/OnHgE/Lcb43OgKPtNMjb+z1NJMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Vo52MUR2B2nn3ZEgjyLDW3AL6ve44yVVBg41F05c/Qnsqv4qxt71jI5quiUOwfnVoaE/wJFLnUgnfPqwkzL6qDWLcPjqIyeCzTT2RzJnJX5IgC4q4/CdOiuqQzs8xKjcZreraIglJM8ORJ8XHIg5gzDkLYRIoB+9nnrIkdAt+y0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=B8vqEV54 reason="signature verification failed"; arc=fail smtp.client-ip=40.107.20.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A277E1922DE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738771162; cv=none; b=fVVTx0ZrMT0GUpnOTjfxmMNnm0gGNWOJ+odt+pxUXTfWZ5X+nrUkA0LDPsF7fuaxV1mii2HHPkeXDA/jjQVZuulllmY21YnjPb40KHA8DSmqKLLGmpT4OMKtzORaLOEkv9+YxSRzmC4bFQb7FJFO7uoMeEV717Z5LYWg3bsDm+4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738771162; c=relaxed/simple;
+	bh=G4+CwfqKJpQd9P9lp9Jfs6xV3LIll9TZkWAKt6yxVKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pB/DW3pRTKFo/BsD59GLCKp2WE25nR1+tNUcDyK2DKoPdvKaj/axfnQeel4K9EoR/dJablt+I5h3EymYj8Lpg0WP7Jf80zITuDhtLVghoR/PL0lGzqptPCFtV9uNtvypvYEP71AB+Er7/N7KiNzMSLVPRmgPDdFDbnK9UKhtOy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=jY1KZByh; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="B8vqEV54"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ooNKlem5uEYDcUOk3bPzBuJ3KrnOYhPNZhmPGfw6s3yoUX0atyw2KscG9pdizWv3JN9tNqNQivVqqXQlRfqVubYRJ5HbwP68GCMjL0w7vPSkBbU61onvK6qjkA52uu8NtQSqh7RI2GBms7dd1so0vUKyFbSADvDhKhKuKnJCV3b6hiccqhgV46fMQ9KWfyYPMC3sjSpjmsg1tU6wyc0fFw1ZltS+mnhNkYgbae2nElezgyknMKJbE5Rf2krbMIgKB4Cay0qCqG9G7pgFzjZfpF4Aqdo9nMwxSu+s6u7otKfDZtwciN6VHizY07Cv2jL/QE4uEABaHGLIlSpqTkMMJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QeI5evS69AmhVyvQlh3NfodpC6zdOl3PMWKgzlbRnHk=;
- b=kM/Ti8BOtfkYszUFSHeVy+l7du/DA5DyBsbfTX46//NHTMBtr1hpUZVcRaj4aYtAhFqVlLpaLPlTBg4T7TtOBjxkaEG8/z0Of3VbHdzP04eNu08etTdcLiMTtHl9hGI+OCwkh8sCRZ1u675Cffg4kR0fURZUOO0aY6iyrgBJY8fonUXmGaQze/kc5cU4EuSDVPgDtrKwBJzmwcEcoe1qQ0YEXEO0dmUYzLdLoNIaJMGufZWpxUxXXHgJpE90O9vjDqewQadkBHbvJ1bFUiDQBWmRDDcsNKNWs6+4bnvASFvCghfJmx4kRO5TcwobkTIZZuVEKfCVOhNwhLtxEEQnNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeI5evS69AmhVyvQlh3NfodpC6zdOl3PMWKgzlbRnHk=;
- b=B8vqEV54VhMmoj/kJYlfqqrS4EzKhZiDs3sMwDAMPZ1XL9WWmlfRIUCo4YrU1eLZB1tXR7526TvonqiZ/WI99w9vihXNhhZDXfgm7FLk8u/sx2opPFKsgVtAn8sYFn1CTxDpt9pBgHM5M9+XmuLUlxZufNp5Q7T4k6WYME/De/tMxirHpYN9VbKoAbQZ+E4OIf+nAOzp0pAHt9i2lJ9qiWxYSnqXlEh4gZuPUgNdw2BT4+aGghATH3T/aHv0WnJIOLxhD38gC8femmJpUL72vOd/A5hPkerkD6dw6s7Ps7xo0kHS/22uxZ+syGlhTM8dPnKYm6sc6IR48XFVQIOYXQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB8PR04MB6938.eurprd04.prod.outlook.com (2603:10a6:10:117::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Wed, 5 Feb
- 2025 15:59:02 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
- 15:59:02 +0000
-Date: Wed, 5 Feb 2025 10:58:54 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Joshua Yeong <joshua.yeong@starfivetech.com>
-Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Conor Culhane <conor.culhane@silvaco.com>,
-	"linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 1/2] i3c: Add basic HDR support
-Message-ID: <Z6OKvl7DOFrXcB1A@lizhi-Precision-Tower-5810>
-References: <20250129-i3c_ddr-v1-0-028a7a5d4324@nxp.com>
- <20250129-i3c_ddr-v1-1-028a7a5d4324@nxp.com>
- <e09b50b8-dd65-4636-aa35-42efc86bba16@quicinc.com>
- <e28bda63-bd6f-41db-8c24-43f21cccb386@starfivetech.com>
- <Z6DmUIKn5usytjl3@lizhi-Precision-Tower-5810>
- <928b69ef-e5fa-46ea-9075-2b12d7fd9372@starfivetech.com>
- <Z6I0kSaNIHvRh60Y@lizhi-Precision-Tower-5810>
- <19ea209c-cf55-4ec4-adae-16033fc7d819@starfivetech.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <19ea209c-cf55-4ec4-adae-16033fc7d819@starfivetech.com>
-X-ClientProxiedBy: SJ0PR13CA0015.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jY1KZByh"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so79608835e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1738771159; x=1739375959; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3fNpoCq/DLdbV6EIEdUlFLaBZ3ROWUT1K+DDgwVCgqU=;
+        b=jY1KZByhtoXpx/X0R72lvJnXB5kSXzlv3dFOlBGNkKUQgIGrgNM6z6rTX+7w1MoWYt
+         eE/1HLvzsW86qHgCqm2VmALtlQWvRg0nOk8KHW0dgYRd/QnGXIeaps4ijagBx2E957Ww
+         HtlHXJ1MCd8msmzI9WCaPynd/w6FGDlsPxt2o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738771159; x=1739375959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3fNpoCq/DLdbV6EIEdUlFLaBZ3ROWUT1K+DDgwVCgqU=;
+        b=exgTbAsmkYhPNIS5k4RbnypjDZstRvZ0ydc/4ju7gBRPJEPjWBNmQ9ji4h6iexVKDr
+         uOTD8d3Z2FE7gUp4rxwlHDNPITA9mGZvnwISRxvXhNHQDj0a0ZSW/8fJKrzaDfI3aE0x
+         eh0jbHQOk9mb+MZDi1/xrEARy9dgUB8Vc+AJwRZNh4E61dTnkZbmQ3iKgx+1atQcWCQA
+         TXG8Kob1jEZan7z/vzLjcAXtBKmD+2h1NWYpFquGPBB0HmRJ5B/lCpcddJslLL2C40wz
+         ygETBIKaVbAJUJnVGs0qE4vwdbNhTOWjeKI+C4kK2pWGBeJcR0Xe9Cu0ppOixs3PH4P6
+         nZbA==
+X-Gm-Message-State: AOJu0YzlYHZJaZJYzaiLSTrjRiMcjuoSeYY3TBMcHBw9cpx++S5V835p
+	O9vhmsB9qxhvdCUg0B1yhRd2gMum3Ed2Pc+Zeao4w5dCnHT8DTiicNF+bUVA/65OggGnNl3cQzn
+	ectgsSCbwCsnoiGHb/WmT4dfhgOUH3oj50dgL2g==
+X-Gm-Gg: ASbGncuqTC7FmWaieRot875kJTLDQ3M/JeT585h4nkEeVlZa8NJ8Wi7pWzY0lWGXqgF
+	nwaRz/SxUgevzilz3Xn2MrBawqyJmwHkoM+KY465vtztSrUV611YMpBmSZzlumh8MObAI1MpP0H
+	Q=
+X-Google-Smtp-Source: AGHT+IGHwraDJHYchdoFd+ZVOv3JlE8UmT6AZ6J415QO/yALdrm6zNrvEP8t9Zmmh9sH4vbmwS3QicXyspztB4i2Ne4=
+X-Received: by 2002:a05:6000:156c:b0:385:fc70:7f6 with SMTP id
+ ffacd0b85a97d-38db4858768mr2477305f8f.7.1738771158711; Wed, 05 Feb 2025
+ 07:59:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB8PR04MB6938:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad6fb52c-751e-4e33-d3fc-08dd45fe02a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?NfnJBV3YhjmT05yD9v1+BvgXGjh4C3KV3jd3rXGMY7c+VA3XpO6EFZQCVc?=
- =?iso-8859-1?Q?SiZS3C3fIrClfisMd8lrJujzX0y5m+VuY7uSsBmpF41kUx69lVhiO63Zq6?=
- =?iso-8859-1?Q?WdXwE+xAYlO6BpoUMMNMxRz5DXxLEhPT0+BRZui401squlun5ibmoMlRud?=
- =?iso-8859-1?Q?rqPTeKVG0TexKchRnTl2FjFbTiTExSmqxo9Z0Kj1xS34xgg+Xes+aBtu+l?=
- =?iso-8859-1?Q?IZ+b/OOOy7iz2zWmaIhbwzX8PNgERXwamI8Xg1jJfpWif0083K+WmDwrl2?=
- =?iso-8859-1?Q?skPfZULvyQXBgoz5NI0sLiSKAB2GB8EhEVyOtIWXEmMvQ/Q10s74ZD9MgT?=
- =?iso-8859-1?Q?yGR76yb/EDdnb/KzcG8wl2K8zoMQre2657M93oDIehKbDh/DU4tJmoiUh4?=
- =?iso-8859-1?Q?XR6OYi0ndD0NMd9tZFbVls3tr59Pw74Y7aMHQWwEPYtsKRjxXOqWbSjOjL?=
- =?iso-8859-1?Q?yG4F149Nr+4tcXMxMyr0WXK+Aed1knB87ieZgf75A0BZoy+ASJkrfKA4+v?=
- =?iso-8859-1?Q?SiHPfZh/TlOD8JN4iFAW11vswsj0wGpEVlmU8geHE+0REFV+pR5zKOWtXF?=
- =?iso-8859-1?Q?0FSFj9ELQ3ld6Da41AaNBolv1YMqUdhalAlIYkZeJGKacXkk//NQDMC+1D?=
- =?iso-8859-1?Q?mHRUFlLqLnn8wkD8kMYF0b3BzuD+fVtTst3waWUiJGS+553gP0Z1Xk/NRY?=
- =?iso-8859-1?Q?35no2i67UDNzZln5Lhb7ELG3gC4YkyXO4f/nh1Gr6lvlSHSP4Bvj5NOoFY?=
- =?iso-8859-1?Q?QZBlvSlsLbZmjBek9CpGSFDREo8LdINrPQfh/12tfURImSkNJGGH/ALxXF?=
- =?iso-8859-1?Q?GyuHPkAFyyh0JZQXquVbTdYoXu55rtfl3daCqQNT/NXHIUgsNqjcKaZLn1?=
- =?iso-8859-1?Q?EmW4wuQm+qhPkpXIevnovpP9ccS8If5sMpxyoK4syE2AUhzhDIGGgO78Zv?=
- =?iso-8859-1?Q?UFQyvfbAsj+vc7sTRRuG8ezrIBjyLTGFjK1aHnhUsqr/ljU6JC0sVOpBIF?=
- =?iso-8859-1?Q?Bp8LyW0vJoHcEg5wyEMMwTKor6qdRCsrj6m05PNMpIv/XPLYdN2M4Cwxtm?=
- =?iso-8859-1?Q?MGLMvR5IizvJEUv/nfPVnWkhS3riKDAy06xP6R8moocnWKFnXPJwgXSBhC?=
- =?iso-8859-1?Q?UJA+SD+cZrKjJqmVZ+Na+NMnPZTIBpRpiU6qhqi7bmtv8C/e2RXFFNPjJD?=
- =?iso-8859-1?Q?snRoATzZRJdmkfIKv1DEjAzv5I51AV+6+c+LqH27e5lOMo7C+LPxlE0m/Y?=
- =?iso-8859-1?Q?GyzrCcnq2GzHFZjAioPWCniFFzHH+LfXhFxmsrCMjsThtar37yjsJXc4Zy?=
- =?iso-8859-1?Q?JuhDvVEcRyKT6P1fklQyoXvrmTIzPca9nYYaZ5OiDD0+DeLAER0YyzymRK?=
- =?iso-8859-1?Q?HbFky0SxzOiz6Ji55yMfP97S/A9mPQTFtBELlKfJ/ztI0gAXD1hgFn8324?=
- =?iso-8859-1?Q?q/6Ikn4pCIVnsSPJ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?e6wRsRhS7BpUC9gDokuvw4Wm+qDZ7NQ+YCWir8Rc8++fv//+8U5JoXhVwr?=
- =?iso-8859-1?Q?5175MWZJtDrdg6BuodfHYhJKiM7lRm3edLCPdKtH84okVqfaknxLPYqook?=
- =?iso-8859-1?Q?22bXZkhwS5IvM9w4fP8vF5cHpj8zvswU5Aam68LX6+yl52JPFYnmwF+ubQ?=
- =?iso-8859-1?Q?K3dP8dV01arp520m4clg2HqAmithY+ky022OT3rGp3PNn/qEh66X2Xpmej?=
- =?iso-8859-1?Q?lurPvXNFZ1NuaNfWDciIwpXSJmx8P6xEdiN7ITwfYEU0ibT8JhdiPbMv9B?=
- =?iso-8859-1?Q?4VT0fWZYf4TIa0veLcSnNNmCb0/9LMFdJ7dt3kWNZFVdWcFV7V7GTACfn8?=
- =?iso-8859-1?Q?B17AYIW6FygQLRvEi03ncP5FUfGBcOwfsv7Y193qFydxOjIGvQiZLbV37Z?=
- =?iso-8859-1?Q?lSemiftKsVxLLpvmvsfUq2nwvUmb1mpO4Xv3WQx4UTYaaHtdnEdGNsbAPB?=
- =?iso-8859-1?Q?f0ku8/zEBwHifbEKQIwrwF61+gTGm0tNktdlPKA992TYwgNkyPqyMFHzrt?=
- =?iso-8859-1?Q?ZFdbUKWHs46frtDJd1HWQ30WXQk9S+fltJ5UXbrgFZBkq73/hikwTp31QE?=
- =?iso-8859-1?Q?5xX/yGSJGnRnpecSaKYHVa73iVOr101/ZrA3LlopTx9vSUyKtEds8uQucz?=
- =?iso-8859-1?Q?VrO1gh68QzG950Pp0lj90lTIUxzSs78NgbhiAMKOspBEc0mUDJY9NOqvbL?=
- =?iso-8859-1?Q?2RcBAe8pH/+7dfumMqBjWfrnmTNeSgBW1C6kP7rlnaHb5OD4dEQKtkDl1o?=
- =?iso-8859-1?Q?LMjf7wqDAiixc8jOACkxsF2kMWeCDWZPypdHXpwQURqNZa0j/PPaJTnLFw?=
- =?iso-8859-1?Q?Me38R4unDoXnIVDfAdFXoCIwb70E4N5EMB+TkoRyLib1sWdjXTP7TdhY1X?=
- =?iso-8859-1?Q?PsYo/3mbqJAo/ZSlNJNF6+yyaMXlN6aHufu/WnOT0UujEcS6Ws22NshXz5?=
- =?iso-8859-1?Q?f+W+5fKJ8/tn1kpRsQ8VnfQYRZUE0W70skY8f+0d/UuBO/vjYaYCFwppyG?=
- =?iso-8859-1?Q?AUFjnvjrzUsUVCN80PHYvV27JRr/lMAqRm/+ymm4ZcxgWjlWCpjL97thPa?=
- =?iso-8859-1?Q?hYiGAOapCShtvliDTviNIV3b4Ge67il/BCJy0mbsbMG3cdMfjxKz5WLVe4?=
- =?iso-8859-1?Q?4bqZJHKESCaO+L+HEID6iMZOsjxoiTe84os5odpRgQuQH49gvVk84U+QGg?=
- =?iso-8859-1?Q?x8aPxWfmYJmoa5IwNeJkt6UBZQt4rp2lRTYBb0gYuVgOov3gcKoHFCm0AH?=
- =?iso-8859-1?Q?t/Qy5r4ZeO9tl4EmENX/QKag6iEDNHlijtp/gkvsfeMmXq1B5SUh/FyawT?=
- =?iso-8859-1?Q?lux0jSkd7DuLUhm3AlLfWPCWvS3Rc4ygBspZOEDt57iiIWVCZ73DqYMqM9?=
- =?iso-8859-1?Q?NSckk87H7oJhxP4c+/wbTJvJW+aDfDNeNLE9VeLbV+ImuCxRQr/QtIbo7J?=
- =?iso-8859-1?Q?LCX9lwZkNHz0e+0oMrG8zppANXpzz/XAt/sJgm0pY4gNMewl1SfJP+hRqW?=
- =?iso-8859-1?Q?isKeBE2tKfK+BlNVWNv3xehvBjhejYCIA4dRpxoPvud615TwxSEcozWNS4?=
- =?iso-8859-1?Q?+jnh5RvriMrDTxwHtLQrYrFLEKCFyEzWWUDFzgkkkVcQqzqMV5zXRvuT02?=
- =?iso-8859-1?Q?YUGKOlPNZ6iD4=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad6fb52c-751e-4e33-d3fc-08dd45fe02a0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 15:59:02.7479
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s46uKaXmvpJ73zjYhtBXMzE3OH2RNGCvn4RHkX/BrxVVRLdgPFNdNxxMazlAN5/OTDiZ7hrEaPNco73Xr8Vjbw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6938
+References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
+ <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org> <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
+ <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
+ <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop> <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
+ <999751de-b891-424d-a7b5-80bfa98793ff@paulmck-laptop> <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
+ <e23ab8d2-1a64-458b-a83d-eabcf92a2382@paulmck-laptop> <CAEXW_YSFtF=Vx2P73m0tdfAYgSui-KSzGnyqiTY1rwOfWfFycA@mail.gmail.com>
+ <87f074af-a39c-48db-972f-5f46e57aa3db@paulmck-laptop>
+In-Reply-To: <87f074af-a39c-48db-972f-5f46e57aa3db@paulmck-laptop>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Wed, 5 Feb 2025 10:59:07 -0500
+X-Gm-Features: AWEUYZlU6SdSFTsqKWqPoMuqnVZat79mVVDbDxIvAz6VGoI4LllI0lOmkx7SFIs
+Message-ID: <CAEXW_YTeDRQ=mAUKYpgxYjsHooX=C3cJwTkMi6XqcE_7Ne+zDw@mail.gmail.com>
+Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
+To: paulmck@kernel.org
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 06:30:49AM +0000, Joshua Yeong wrote:
-> On 04-Feb-2025 11:38 PM, Frank Li wrote:
-> > On Tue, Feb 04, 2025 at 03:17:36AM +0000, Joshua Yeong wrote:
-> >> Hi Frank,
-> >>
-> >> On 03-Feb-2025 11:52 PM, Frank Li wrote:
-> >>> On Mon, Feb 03, 2025 at 02:32:51AM +0000, Joshua Yeong wrote:
-> >>>> Hi Mukesh and Frank,
-> >>>>
-> >>>> On 02-Feb-2025 1:54 AM, Mukesh Kumar Savaliya wrote:
-> >>>>> Hi Frank,
-> >>>>>
-> >>>>> On 1/30/2025 1:35 AM, Frank Li wrote:
-> >>>>>> I3C HDR requires enter/exit patterns during each I3C transfer. Add a new
-> >>>>>> API i3c_device_do_priv_xfers_mode(). The existing
-> >>>>>> i3c_device_do_priv_xfers() now calls i3c_device_do_priv_xfers_mode(I3C_SDR)
-> >>>>>> to maintain backward compatibility.
-> >>>>>>
-> >>>>>> Introduce a 'cmd' field in 'struct i3c_priv_xfer', using an anonymous union
-> >>>>>> with 'rnw' since HDR mode relies on read/write commands instead of the
-> >>>>>> 'rnw' bit in the address as in SDR mode.
-> >>>>>>
-> >>>>>> Add a priv_xfers_mode callback for I3C master drivers. If priv_xfers_mode
-> >>>>>> is not implemented, fallback to SDR mode using the existing priv_xfers
-> >>>>>> callback.
-> >>>>>>
-> >>>>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> >>>>>> ---
-> >>>>>> Why not add hdr mode in struct i3c_priv_xfer because mode can't be mixed in
-> >>>>>> one i3c transfer. for example, can't send a HDR follow one SDR between
-> >>>>>> START and STOP.
-> >>>>>>
-> >>>>> Is it wise to add two function inside main funcion and separate SDR vs HDR ? so we don't need to change current function arguments.
-> >>>
-> >>> I am not sure if understand your means. HDR have difference mode, anyway
-> >>> need add new argument.
-> >>>
-> >>>>
-> >>>> I think the 'private transfers' are limited to SDR communications,
-> >>>> would it be better if we have a different interface/naming for hdr transfers?
-> >>>
-> >>> The key is what's difference between hdr and private transfers. So far only
-> >>> command vs rnw, any other differences I missed?
-> >>
-> >> I guess mainly the terminology. The specification differentiate HDR from private transfer.
-> >> We can have the hdr interface to have length indicating for u16 rather than u8 in private trasnfer.
-> >
-> > It should be equivalence with check length is even.
-> >
-> > The key is how client driver will easy to use HDR if they already have SDR
-> > support.
-> >
-> > suppose client:
-> >
-> > struct i3c_priv_xfer xfer[2] = {{ .rnw = 0, buf=p1, size = 4, addr=0xb },
-> > 				{ .rnw = 1, buf=p2, size = 4, addr=0xb }}
-> >
-> > priv_xfer(..., xfer, 2};
-> >
-> > if support HDR
-> >
-> > if (hdr) {
-> > 	xfer[0].cmd = 0x80;
-> > 	xfer[1].cmd = 0x;
-> > 	priv_xfer(..., xfer, 2, HDR);
-> > } else {
-> > 	priv_xfer(..., xfer, 2, SDR);
-> > }
-> >
-> > client driver needn't distingiush if buff is u8* or u16*.
-> >
+On Wed, Feb 5, 2025 at 10:56=E2=80=AFAM Paul E. McKenney <paulmck@kernel.or=
+g> wrote:
 >
-> I fine with the overall structure `.rnw`, `buf`, `size` and `addr`.
->
-> I prefer if we could use `hdr_xfer` rather than `priv_xfer` for HDR transfer and we can have
-> distinguish mode for DDR/TSP/TSL/BT. In case we are supporting for ML in the future
-
-what's means of "ML"?
-
-> we dont have to lump the function into `priv_xfer`, and we can go `ml_xfer` instead.
-
-Actually, you suggest, rename 'i3c_device_do_priv_xfers_mode' to
-'i3c_device_ml_xfer'?
-
->
-> The issue with length indicating both u8 and u16 here is that we would get confuse how the
-> buffer length is interpreted, when length is 1 does it mean 2 bytes or 1 byte? Splitting HDR
-> interface will ensure that length always indicate u16.
-
-All data transfers should be defined in terms of bytes or block units. Note
-that QSPI DDR mode faces a similar constraint, supporting only even-length
-transfers. In most systems, alignment requirements are used to indicate
-size constraints:
-
-SDR mode: Alignment is 1 byte.
-HDR mode: Alignment is 2 bytes.
-
-When using DMA without a bounce buffer, the alignment must match the cache
-line size. Changing to a u16 type does not provide enough flexibility.
-Instead, I propose using a void* (or u8*) for the buffer and a byte count
-for the size. This approach allows for more extensible alignment
-requirements and better compatibility with other transfer systems, such as
-SPI and PCIe.
-
-Frank
->
-> Joshua
->
->
-> >> I think the framework should check if device whether it supports HDR command before sending it.
-> >> I have code here that do some handling on that.
+> On Wed, Feb 05, 2025 at 10:45:08AM -0500, Joel Fernandes wrote:
+> > On Wed, Feb 5, 2025 at 5:28=E2=80=AFAM Paul E. McKenney <paulmck@kernel=
+.org> wrote:
+> > >
+> > > On Tue, Feb 04, 2025 at 08:28:29PM -0500, Joel Fernandes wrote:
+> > > > On Tue, Feb 4, 2025 at 3:22=E2=80=AFPM Paul E. McKenney <paulmck@ke=
+rnel.org> wrote:
+> > > > >
+> > > > > On Tue, Feb 04, 2025 at 10:44:45AM -0500, Joel Fernandes wrote:
+> > > > > > On Thu, Jan 30, 2025 at 12:56=E2=80=AFAM Paul E. McKenney <paul=
+mck@kernel.org> wrote:
+> > > > > > > By "where we were initially", one might reasonably guess that=
+ you meant
+> > > > > > > that the initial value and the target are one and the same.  =
+But I suspect
+> > > > > > > that you are thinking of a third value, the value of the unde=
+rlying
+> > > > > > > grace-period sequence number at the time of the call to rcu_s=
+eq_snap().
+> > > > > > > But you might be thinking of something else entirely.
+> > > > > > >
+> > > > > > > > Now we move rcu_seq_done_exact. It has the exact same behav=
+ior except
+> > > > > > > > that instead of ULONG_MAX/2, the above situations are shrun=
+k to about
+> > > > > > > > 10 counts from the target. So if target is 28, then the ini=
+tial
+> > > > > > > > sequence should have been at least 18 to avoid false-positi=
+ve, but
+> > > > > > > > again it is possible and I certain see in the code that it =
+cannot be
+> > > > > > > > used this way.. (at least so far).. So all we are left with=
+ is the
+> > > > > > > > false-negative band of ~2.5 GPs..
+> > > > > > >
+> > > > > > > Here, I have the same questions.  As you no doubt guessed.
+> > > > > > >
+> > > > > > > > About "what are the consequences of failing to get this rig=
+ht".  I
+> > > > > > > > believe false-positive is unacceptable unless it is maybe d=
+ebug code -
+> > > > > > > > that can break functionality in code, too short GPs and all=
+ that.
+> > > > > > > > However false-negative is OK as long as the usecase can ret=
+ry later
+> > > > > > > > and can afford to wait. Did I get that much correct?
+> > > > > > >
+> > > > > > > Maybe?
+> > > > > > >
+> > > > > > > Please look at this on a per-use-case basis.
+> > > > > >
+> > > > > > Sure. FWIW, I started a world-editable document here. I am plan=
+ning to
+> > > > > > work on this a bit more before our meeting this week. If others
+> > > > > > knowledgeable like Frederic and others could make edits/comment=
+s,
+> > > > > > that'd be welcomed. But I basically summarized this whole threa=
+d here:
+> > > > > > https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb=
+1aG4goOJAnS6c6gQ/edit?usp=3Dsharing
+> > > > > >
+> > > > > > My thought is (AFAICS), this patch is still valid and
+> > > > > > rcu_seq_done_exact is a potentially better replacement to
+> > > > > > rcu_seq_done. But famous last words...
+> > > > >
+> > > > > Let's start with the use case where the sequence number is being =
+used
+> > > > > by rcu_barrier().  What happens?
+> > > >
+> > > > The rcu_state.barrier_sequence is used to keep track of barrier in
+> > > > progress, as there can be concurrent rcu_barrier() calls happening =
+so
+> > > > we optimize by batching multiples of these calls.
+> > > >
+> > > > It also handles the case where the entrain IPI came through but no
+> > > > rcu_barrier() is currently in-flight (which would be weird but mayb=
+e
+> > > > it happens somehow).
+> > > >
+> > > > It is also used to make sure we don't need to entrain on a CPU agai=
+n
+> > > > if we already did an entraining for a certain rcu_barrier() invocat=
+ion
+> > > > already. This is tracked by rdp->barrier_seq_snap which copies the
+> > > > value of rcu_state.barrier_sequence after the entraining. Al though=
+ I
+> > > > am currently unable to envision why the IPI handler would be called
+> > > > unnecessarily (hardware bug?) since we hold the rcu_barrier mutex
+> > > > throughout the rcu_barrier() function, including while waiting on
+> > > > CPUs.
+> > > >
+> > > > Going back to my first point, for the rcu_seq_done() in rcu_barrier=
+(),
+> > > > we are checking if someone else did our work:
+> > > >     mutex_lock(&rcu_state.barrier_mutex);
+> > > >     /* Did someone else do our work for us? */
+> > > >     if (rcu_seq_done(&rcu_state.barrier_sequence, s))
+> > > >
+> > > > Here I think rcu_seq_done_exact() is better, because if too many
+> > > > rcu_barrier() calls concurrently made at the same time, the mutex m=
+ay
+> > > > be contended. If enough time passes and we have a wrap around, we
+> > > > might end up in false-negative land which is much larger with
+> > > > rcu_seq_done() than ..done_exact(). However, that does seem to be a
+> > > > bug to begin with if the mutex contended for that long. OTOH, doing=
+ an
+> > > > rcu_barrier() again when we didn't need to doesn't seem like the en=
+d
+> > > > of the world especially if we contended on the mutex for that long.
+> > > > But at least it shows that rcu_seq_done_exact() cannot seem to hurt
+> > > > here.
+> > > >
+> > > > Hmmm,
+> > >
+> > > So...  Do we really care about the difference between rcu_seq_done()
+> > > and rcu_seq_done_exact() in the rcu_barrier() case?
 > >
-> > Yes, I can add such check. The key point is API design.
-> >
-> > Frank
-> >>
-> >>>
-> >>>>
-> >>>>>> i3c_priv_xfer should be treat as whole i3c transactions. If user want send
-> >>>>>> HDR follow SDR, should be call i3c_device_do_priv_xfers_mode() twice,
-> >>>>>> instead put into a big i3c_priv_xfer[n].
-> >>>>>> ---
-> >>>>>>   drivers/i3c/device.c       | 19 +++++++++++++------
-> >>>>>>   drivers/i3c/internals.h    |  2 +-
-> >>>>>>   drivers/i3c/master.c       |  8 +++++++-
-> >>>>>>   include/linux/i3c/device.h | 12 +++++++++++-
-> >>>>>>   include/linux/i3c/master.h |  3 +++
-> >>>>>>   5 files changed, 35 insertions(+), 9 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
-> >>>>>> index e80e487569146..e3db3a6a9e4f6 100644
-> >>>>>> --- a/drivers/i3c/device.c
-> >>>>>> +++ b/drivers/i3c/device.c
-> >>>>>> @@ -15,12 +15,13 @@
-> >>>>>>   #include "internals.h"
-> >>>>>>     /**
-> >>>>>> - * i3c_device_do_priv_xfers() - do I3C SDR private transfers directed to a
-> >>>>>> - *                specific device
-> >>>>>> + * i3c_device_do_priv_xfers_mode() - do I3C SDR private transfers directed to a
-> >>>>>> + *                     specific device
-> >>>>>>    *
-> >>>>>>    * @dev: device with which the transfers should be done
-> >>>>>>    * @xfers: array of transfers
-> >>>>>>    * @nxfers: number of transfers
-> >>>>>> + * @mode: transfer mode
-> >>>>>>    *
-> >>>>>>    * Initiate one or several private SDR transfers with @dev.
-> >>>>>>    *
-> >>>>>> @@ -32,9 +33,9 @@
-> >>>>>>    *            driver needs to resend the 'xfers' some time later.
-> >>>>>>    *            See I3C spec ver 1.1.1 09-Jun-2021. Section: 5.1.2.2.3.
-> >>>>>>    */
-> >>>>>> -int i3c_device_do_priv_xfers(struct i3c_device *dev,
-> >>>>>> -                 struct i3c_priv_xfer *xfers,
-> >>>>>> -                 int nxfers)
-> >>>>>> +int i3c_device_do_priv_xfers_mode(struct i3c_device *dev,
-> >>>>>> +                  struct i3c_priv_xfer *xfers,
-> >>>>>> +                  int nxfers, enum i3c_hdr_mode mode)
-> >>>>> why can't we pass mode as another structure member inside struct i3c_priv_xfer ? Adding function agrument parameter impacts existing drivers.
-> >>>
-> >>> If that, it will be possible, xfers[0] is sdr, xfers[1] is hdr. Actually,
-> >>> I3C can't do that.  we assume finish whole xfers between one whole traction
-> >>> (between START and STOP).
-> >>>
-> >>> Frank
-> >>
-> >> Yes, I think it is better if we split xfer transfer interface for SDR and HDR.
-> >> The interface should assume respective driver to decide how to handle ENTHDR CCC + Exit Pattern.
-> >> Else we will need additional 2 interface for start and stop for HDR.
-> >>
-> >> Joshua
-> >>
-> >>
-> >>>>>>   {
-> >>>>>>       int ret, i;
-> >>>>>>   @@ -47,11 +48,17 @@ int i3c_device_do_priv_xfers(struct i3c_device *dev,
-> >>>>>>       }
-> >>>>>>         i3c_bus_normaluse_lock(dev->bus);
-> >>>>>> -    ret = i3c_dev_do_priv_xfers_locked(dev->desc, xfers, nxfers);
-> >>>>>> +    ret = i3c_dev_do_priv_xfers_locked(dev->desc, xfers, nxfers, mode);
-> >>>>>>       i3c_bus_normaluse_unlock(dev->bus);
-> >>>>>>         return ret;
-> >>>>>>   }
-> >>>>>> +EXPORT_SYMBOL_GPL(i3c_device_do_priv_xfers_mode);
-> >>>>>> +
-> >>>>>> +int i3c_device_do_priv_xfers(struct i3c_device *dev, struct i3c_priv_xfer *xfers, int nxfers)
-> >>>>>> +{
-> >>>>>> +    return i3c_device_do_priv_xfers_mode(dev, xfers, nxfers, I3C_SDR);
-> >>>>>> +}
-> >>>>>>   EXPORT_SYMBOL_GPL(i3c_device_do_priv_xfers);
-> >>>>>>     /**
-> >>>>>> diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
-> >>>>>> index 433f6088b7cec..553edc9846ac0 100644
-> >>>>>> --- a/drivers/i3c/internals.h
-> >>>>>> +++ b/drivers/i3c/internals.h
-> >>>>>> @@ -16,7 +16,7 @@ void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
-> >>>>>>   int i3c_dev_setdasa_locked(struct i3c_dev_desc *dev);
-> >>>>>>   int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
-> >>>>>>                    struct i3c_priv_xfer *xfers,
-> >>>>>> -                 int nxfers);
-> >>>>>> +                 int nxfers, enum i3c_hdr_mode mode);
-> >>>>>>   int i3c_dev_disable_ibi_locked(struct i3c_dev_desc *dev);
-> >>>>>>   int i3c_dev_enable_ibi_locked(struct i3c_dev_desc *dev);
-> >>>>>>   int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
-> >>>>>> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> >>>>>> index d5dc4180afbcf..67aaba0a38db2 100644
-> >>>>>> --- a/drivers/i3c/master.c
-> >>>>>> +++ b/drivers/i3c/master.c
-> >>>>>> @@ -2945,7 +2945,7 @@ int i3c_dev_setdasa_locked(struct i3c_dev_desc *dev)
-> >>>>>>     int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
-> >>>>>>                    struct i3c_priv_xfer *xfers,
-> >>>>>> -                 int nxfers)
-> >>>>>> +                 int nxfers, enum i3c_hdr_mode mode)
-> >>>>>>   {
-> >>>>>>       struct i3c_master_controller *master;
-> >>>>>>   @@ -2956,9 +2956,15 @@ int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
-> >>>>>>       if (!master || !xfers)
-> >>>>>>           return -EINVAL;
-> >>>>>>   +    if (master->ops->priv_xfers_mode)
-> >>>>>> +        return master->ops->priv_xfers_mode(dev, xfers, nxfers, mode);
-> >>>>>> +
-> >>>>>>       if (!master->ops->priv_xfers)
-> >>>>>>           return -ENOTSUPP;
-> >>>>>>   +    if (mode != I3C_SDR)
-> >>>>>> +        return -EINVAL;
-> >>>>>> +
-> >>>>>>       return master->ops->priv_xfers(dev, xfers, nxfers);
-> >>>>>>   }
-> >>>>>>   diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
-> >>>>>> index b674f64d0822e..7ce70d0967e27 100644
-> >>>>>> --- a/include/linux/i3c/device.h
-> >>>>>> +++ b/include/linux/i3c/device.h
-> >>>>>> @@ -40,11 +40,13 @@ enum i3c_error_code {
-> >>>>>>     /**
-> >>>>>>    * enum i3c_hdr_mode - HDR mode ids
-> >>>>>> + * @I3C_SDR: SDR mode (NOT HDR mode)
-> >>>>>>    * @I3C_HDR_DDR: DDR mode
-> >>>>>>    * @I3C_HDR_TSP: TSP mode
-> >>>>>>    * @I3C_HDR_TSL: TSL mode
-> >>>>>>    */
-> >>>>>>   enum i3c_hdr_mode {
-> >>>>>> +    I3C_SDR,
-> >>>>>>       I3C_HDR_DDR,
-> >>>>>>       I3C_HDR_TSP,
-> >>>>>>       I3C_HDR_TSL,
-> >>>>>> @@ -53,6 +55,7 @@ enum i3c_hdr_mode {
-> >>>>>>   /**
-> >>>>>>    * struct i3c_priv_xfer - I3C SDR private transfer
-> >>>>>>    * @rnw: encodes the transfer direction. true for a read, false for a write
-> >>>>>> + * @cmd: Read/Write command in HDR mode, read: 0x80 - 0xff, write: 0x00 - 0x7f
-> >>>>>>    * @len: transfer length in bytes of the transfer
-> >>>>>>    * @actual_len: actual length in bytes are transferred by the controller
-> >>>>>>    * @data: input/output buffer
-> >>>>>> @@ -61,7 +64,10 @@ enum i3c_hdr_mode {
-> >>>>>>    * @err: I3C error code
-> >>>>>>    */
-> >>>>>>   struct i3c_priv_xfer {
-> >>>>>> -    u8 rnw;
-> >>>>>> +    union {
-> >>>>>> +        u8 rnw;
-> >>>>>> +        u8 cmd;
-> >>>>>> +    };
-> >>>>>>       u16 len;
-> >>>>>>       u16 actual_len;
-> >>>>>>       union {
-> >>>>>> @@ -301,6 +307,10 @@ int i3c_device_do_priv_xfers(struct i3c_device *dev,
-> >>>>>>                    struct i3c_priv_xfer *xfers,
-> >>>>>>                    int nxfers);
-> >>>>>>   +int i3c_device_do_priv_xfers_mode(struct i3c_device *dev,
-> >>>>>> +                  struct i3c_priv_xfer *xfers,
-> >>>>>> +                  int nxfers, enum i3c_hdr_mode mode);
-> >>>>>> +
-> >>>>>>   int i3c_device_do_setdasa(struct i3c_device *dev);
-> >>>>>>     void i3c_device_get_info(const struct i3c_device *dev, struct i3c_device_info *info);
-> >>>>>> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-> >>>>>> index 12d532b012c5a..352bd41139569 100644
-> >>>>>> --- a/include/linux/i3c/master.h
-> >>>>>> +++ b/include/linux/i3c/master.h
-> >>>>>> @@ -472,6 +472,9 @@ struct i3c_master_controller_ops {
-> >>>>>>       int (*priv_xfers)(struct i3c_dev_desc *dev,
-> >>>>>>                 struct i3c_priv_xfer *xfers,
-> >>>>>>                 int nxfers);
-> >>>>>> +    int (*priv_xfers_mode)(struct i3c_dev_desc *dev,
-> >>>>>> +                   struct i3c_priv_xfer *xfers,
-> >>>>>> +                   int nxfers, enum i3c_hdr_mode mode);
-> >>>>>>       int (*attach_i2c_dev)(struct i2c_dev_desc *dev);
-> >>>>>>       void (*detach_i2c_dev)(struct i2c_dev_desc *dev);
-> >>>>>>       int (*i2c_xfers)(struct i2c_dev_desc *dev,
-> >>>>>>
-> >>>>>
-> >>>>>
-> >>>>
-> >>
+> > In so far as to get rid of rcu_seq_done() API in favor of using
+> > rcu_seq_done_exact() but should not cause any functional or robustness
+> > changes to rcu_barrier() at least, AFAICS.
 >
-> --
-> linux-i3c mailing list
-> linux-i3c@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-i3c
+> OK, *that* I might be able to get behind.  ;-)
+
+Great! So I guess I will continue down the rabbit hole then with the
+other users and cross my T's / dot my I's for this patch. Very least,
+I am (re-)learning about all these use cases so thank you! ;-)
+
+ - Joel
