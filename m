@@ -1,103 +1,108 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A5622A4E1;
-	Wed,  5 Feb 2025 09:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F87205E3C;
+	Wed,  5 Feb 2025 09:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746877; cv=none; b=HJNy9BX+gwyCL5gQBmz32qZAnm79KgbVlV127Ex9CaSBmrGoGZmkJMu6CYP2z/LR122/yaYXOOKqCpLLbR2CUNv4rIesUMDCQtiA19R90+MK8CLnW+RT6JtaWh3YF2z6Sial3UKwSzyv8se4wKxJ3f1sMZPKvip1/stYZZe3mjg=
+	t=1738746956; cv=none; b=Y/zH8I2QvVUGBZEx9qMYZPhm0tQRMUMikIvS5OZv00/DGvsG2yvagnEgzHPc64kBg0BJYRT4FWc6eEiZ2SKBqkpUr6Whpkstm/Ijko94u0sbTVhg/3OBPZaHH0hJapa4kxHJ5oJZ9Le/kgC8s7Hx9dse/k7zkVKgylrECG3NcWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746877; c=relaxed/simple;
-	bh=7Fd/ktYgs+VN6W6ON+omAnkDBbnkRTbJd0bDOrSqCE0=;
+	s=arc-20240116; t=1738746956; c=relaxed/simple;
+	bh=nmmWn6SkEF2ZFe23C4JsgDiF62pSRLhfA9VmwDQRdpM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PrXDpvq4c9eFZuz8LizlmDcbxbW34/y0FgxS9o86F8nkhJDoVjo0z0BMFWt7oKJd+WiZXGyBFXvK5S13vcHajUCiWyOtrjTQ9P2bPi8yHvZE17ZAhS3EhcgPDcU/7k1YAhmoEPji1Fj9tL+Wewzh4ouE5PVBw9bKnqUGZli43ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZeVRaGs4; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=jtFcgdyIvuo9keJU7k/klbKMWadJMQpG2g/e0X2Znz2dGBAeTeQlp68W8tbAk1rhU14kNk3wJv3ByxHo9IK+hRUxl1IMXUrNFnEzn1gWmw0fKsIaSZcAAw2SoZIhNC4fsmlC9B0JnhWQqwFKxBzou5LKDAUExR4g/csi4AySO1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OKcEAhgN; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZeVRaGs4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gSYBRslTCVnWBoHK/aqOtRXDAUtCUdvwNR/hxpXAIc4=; b=ZeVRaGs4ZgH/nGGESIexy1plJa
-	h65QYfLJYhs2jwl6TI0qkwAehx41dtiQJcMUU2OMWCgEGOZptonwVRcrhqIX2LM4ZwURqM427SwqF
-	n/Xe3/sbnCOCRqg0DfabeUha55tUnWWeeN5UUWl+UT5VNjMbIFlLRHlxwLJQ+vITygzeUDnbNrI1s
-	7eO5maMDRH/NqLNIj15U9ZCFxPjDrmfnbFYtCEJxb95Lpf/fen1+pHaTJn5ThuNANG4+ft3V531Wn
-	vTbwl3MWlqxwAN7o9kXW9fqsKrc8QGOdj7QHSFsCapGhdxhUpYx0xHxvow9GFf0s1QPW08WAEyreY
-	kvOgF/fA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfbUK-00000004Atj-1Euq;
-	Wed, 05 Feb 2025 09:14:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2BC573006C0; Wed,  5 Feb 2025 10:14:27 +0100 (CET)
-Date: Wed, 5 Feb 2025 10:14:27 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Liao Chang <liaochang1@huawei.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20250205091427.GZ7145@noisy.programming.kicks-ass.net>
-References: <20250205080053.30dbe654@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OKcEAhgN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738746955; x=1770282955;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nmmWn6SkEF2ZFe23C4JsgDiF62pSRLhfA9VmwDQRdpM=;
+  b=OKcEAhgNvdR2Go7hhT9n1zNAwE4mCqqChzO6X5d5fiZTEJSgn7S2zICy
+   wxvYugNUtGgfKcfJCxKkFMsLdDyDvU5z+CqH9sG83/zdM68UMjdYSIkPY
+   UpnoZrkP/XFIjVnke6hvM7QqY+O/zKZ1KNntllShEix2oTRcMYcW6Sl1J
+   ovEM82hESd5WhIcl+mQrmY8YvzmlOD8ZWtCDB+zfOTe72ZzvYwiA3A4um
+   bi8N2zauWUlfPh5CjLu7dd1XGd7pkg6hSfuvbmHhM4F2f5pD89NdUvUHc
+   kgn+JUlOFkh7pOQCDfry1Cb+YdWkeu9wgrXTqxZVFuQv+dUQJ5smz3q++
+   Q==;
+X-CSE-ConnectionGUID: ksVVlm4eSsaXgYLD2BrzZQ==
+X-CSE-MsgGUID: 8wpBDyvDRwC34EOnDK1caw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39003373"
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="39003373"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:15:54 -0800
+X-CSE-ConnectionGUID: jSRyaZFTSdmsqQNm2+4tKw==
+X-CSE-MsgGUID: OjiP+TL9TbGjpAku0FyU5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="115817941"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:15:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tfbVc-00000008R5k-1Dxs;
+	Wed, 05 Feb 2025 11:15:48 +0200
+Date: Wed, 5 Feb 2025 11:15:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 2/2] gpio: xilinx: Replace custom variants of
+ bitmap_read()/bitmap_write()
+Message-ID: <Z6MsQ7iFnhcugguR@smile.fi.intel.com>
+References: <20250204190218.243537-1-andriy.shevchenko@linux.intel.com>
+ <20250204190218.243537-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lKpNcEHplkQbB6JV"
-Content-Disposition: inline
-In-Reply-To: <20250205080053.30dbe654@canb.auug.org.au>
-
-
---lKpNcEHplkQbB6JV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250204190218.243537-3-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 05, 2025 at 08:00:53AM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Commit
->=20
->   a66396c911bd ("uprobes: Remove the spinlock within handle_singlestep()")
->=20
-> is missing a Signed-off-by from its author.
+On Tue, Feb 04, 2025 at 09:00:48PM +0200, Andy Shevchenko wrote:
+> Relatively recently bitmap APIs were expanded by introduction of
+> bitmap_read() and bitmap_write(). These APIs are generic ones
+> that may replace custom functions in this driver, i.e. xgpio_get_value32()
+> and xgpio_set_value32(). Do replace them.
 
-Bah.
+...
 
-> Looking at the original patch, it seems that some process has cut the
-> commit message off at the '----------' line ...  the divider is
-> traditionally '---' or '-- '.
+> @@ -386,13 +371,14 @@ static void xgpio_irq_mask(struct irq_data *irq_data)
+>  	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
+>  	int irq_offset = irqd_to_hwirq(irq_data);
+>  	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset);
+> +	unsigned long old_enable = bitmap_read(chip->enable, round_down(bit, 32), 32);
+>  	u32 mask = BIT(bit / 32), temp;
+>  
+>  	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
+>  
+>  	__clear_bit(bit, chip->enable);
+>  
+> -	if (xgpio_get_value32(chip->enable, bit) == 0) {
+> +	if (old_enable == 0) {
 
-Yeah, except akpm uses/used a much longer one IIRC.
+Oh, this one is incorrect.
 
-I'll go fix up and rebase I suppose. Thanks!
+>  		/* Disable per channel interrupt */
+>  		temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
+>  		temp &= ~mask;
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---lKpNcEHplkQbB6JV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEv3OU3/byMaA0LqWJdkfhpEvA5LoFAmejK+0ACgkQdkfhpEvA
-5Lpt+RAAjNvTt9Pm1JLPfqDG1iuWwpFMoV1qUqRSIypNeIvCoNN1u/1FciNIKVxT
-+wuUJWefrLQyavobQ6RkPdL47xB6GVL0GTHOtXz3jz7881cs2fkibx6TYaQ64ILE
-l0P/qAZ8gezqSnTpSMUPFcV43MhZ4d9f33K3GMWlI/KpPxZv1NEN4vHOlnvacCeo
-UAsLRZcWIMcU7vgXvSV7zp8iVikSsJ/oGU+XfmIL+ZV5w5braeyJ1dzoNNVGRzAa
-L2M5EiuDlncx8Bc2vYxlEEe4ShdJR8GPUP6mBJHTkyvCTbTJOWqWzP6p2OESht5r
-8iX9SKsemnQnpJgVddogIAyKzmszj/fjG2P1n9HqQk+eVAZNFQ8W8mnXFZM2A4JJ
-yPvwgTcg7RVwCNapeXugS1a7FBApxTLc9H5em431UYEdukq4LjULhKsx5wdTxiXR
-XjI7d//wHo4kUdQo7X+r7jHTJlriqJ4AL2VJzWOVZhPznrP3Tg3wHmI4/KfyjVGb
-FIoxFDkBtwWN8uQu08Wa5Lb5J9MQb2AQ2/gPUyi7mn1vWZaJPAHzfjb88ymiuZyh
-5mjdBGOHaYq8LquhqxyQvuvNUjCcp3WAigTxK3qqOQrnMfpfuke7w+6W0Mu+jos4
-xNqCDNHYU95BY6XXB8VL6LzUNVTJ7hOEEWibmjJenosPo1loiFM=
-=WD1d
------END PGP SIGNATURE-----
-
---lKpNcEHplkQbB6JV--
