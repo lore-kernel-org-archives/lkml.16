@@ -1,123 +1,87 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01121200A3;
-	Wed,  5 Feb 2025 02:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E29212B3D;
+	Wed,  5 Feb 2025 02:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738723267; cv=none; b=aD1ITnvNQghtO8+zJzD+zh159UYWLSKWa8XpQBgAsUT9k2b/KNSg8U2ifA/uwjkrENFIiPuilpUft53Cwy2AZfmE/8btdDk6QJus9EqzagThnABzKoSt3A7ObFoB8DqzE2K89OArogiorNFQcvj0vUbQnR18rKxm08v/u6j9bn8=
+	t=1738723290; cv=none; b=fqY43a+4ClEFPlXisi/4BcpELrokOK1sqTSaMJMLbDFuOmd4l9zpm1cXtXx/Iw8Bg3Vhkh/22FsbgAxGtI8UCHBUGJmAHTcvCbX9qp5uPHfg9Iii17m1cCSraHgUVwZnPJOtOGYXmXH/mSaCHNSUnCG6WoDrOeMAyTUcsA7ChF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738723267; c=relaxed/simple;
-	bh=8KHGfVIy6PZ/kQOwVu8+li4ZGBn5wHtCLBclG5gxpZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RD/GuflF25sRIdlzJRfB6WZsTqWk8YbH5Y0yI7P8mitjaniyMgxi/JLoIEELGtzzQ4N70MIZxBeU8NhJsC78OEEtYhhoOIrzTRUyZdbvtIoDvOv9ugVm2LJnOQfdjlJvRc7vti/SOLMugEZEMQp5uk9t8YxqQ6atzBRoeCYC1Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=apNNpCr8; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1738723290; c=relaxed/simple;
+	bh=QwQn3prrCd9nf+gWzBIeH8P3iezKUf5V2n1S7gTfQSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=elpvCU9BQ8/ka0FMFlG4NR2l9oyv197EPhWLWIULVUcsrCVK6FaIQb7WfLiSO9YwIwyPeG3NUvAuU91ZSSsjPcq36VmlGH7rOICfUFyCe9DA4tnEjloERmiRWo1kY/OcH05LZnOA0ZyUGp5QqwVhZQmrJpwAgSjqJg5yQzQfwms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NIBdsi58; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apNNpCr8"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f16af1f71so5530465ad.3;
-        Tue, 04 Feb 2025 18:41:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIBdsi58"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-721d213e2aeso1713374a34.3;
+        Tue, 04 Feb 2025 18:41:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738723265; x=1739328065; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4twR9JSRKP16NJKHDkljf0dEGI6XOF41Z0J3Jxda0WY=;
-        b=apNNpCr8eMUsUzlN2a68o7vmCtA5w9AyLLMJDASFsr+rw3qLruoM2jYMqIYn7TCVPW
-         8CtrcI1wQowXsN7BQPZ+O5EWbEm2iuMLSwpvdmHCkf3g6m+G1IEcWixixQlcEFJR3Va8
-         zDaMQMu38YDmd5Sn277Rc96e/zdVsWv5PWj2ipLCsm4UKAozjuWwVtqDI/OdVAiKWdZ3
-         P91cqKvbRByDr8nDnfjBj9XH9NKbKofDnmF+4tW7kjI4mXprVFkH1iQu4+PQkx7tY//8
-         /BSAoUpPbHqHrT8qlRxAdTG//D4bp93ltTTsfFSsECQluAt2oNeEWRC3PADVnBwwtIhM
-         1vdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738723265; x=1739328065;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738723287; x=1739328087; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4twR9JSRKP16NJKHDkljf0dEGI6XOF41Z0J3Jxda0WY=;
-        b=Uky7dyqwJ0pMficr4mbkahKeCjvl4swmt8hJ2XqFGA9bQ3B/mmBCrJ5W0cuG4xrXpP
-         pkx959Wkv4QGWSz2h7czI/ExUZ2UOW6uitT3axyYZR6z+wkf8EY8+XZnmD8XuN7UL9Oe
-         CWZWJH9cm5w79l+64kAvmLu2Enq2NmNrFh8mDz+tRqwfqtRxlWcSjazS7giN9QHNVtWx
-         UNWBhmiFdahm2IjmP//uGW/NaqhjReC8EBnaWLhz5O85mv9gPUdK1nE6DUbXrhbwv7gt
-         tHGl9ed5i7yYmGwZ/yepL3ESkZxlU5B43AAbvPLbhiBfKcFRp7xSh2lJJQtSVfRa6oL3
-         mRSA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/udsbmvQAQK9JmT5IBWmiMmJsr3IdHeieyIK4Hos0x1KES7Fl77E7PI32IpEhbRRn8QSo7RZQ51Hf@vger.kernel.org, AJvYcCWPqwiZnkgFh+s4yztpvXK3sNV8ahuJyUQm5YjmV/DWII7A4ozuklsNEpOUAgoWLSbydMgWiEe0EMCTDKRI@vger.kernel.org, AJvYcCWTvfxFOx8jy50DzlMkvvXoC32YEBL2xG7mPKU+gU3hD2k6skhHTT/6TK3vACsPR5pR2qFtSTIMiuOc@vger.kernel.org
-X-Gm-Message-State: AOJu0YybIgiLajFrX254ORYwsSSuRtetpGDgRwVq2AG0FzmuYgAICE4O
-	gxFItVvi/04CobXz9iPojRVO/RvK23tw3EkgRf47bCAxtwcrWLQL
-X-Gm-Gg: ASbGncsng0UPOwYzQAhZHV8muxyCVuJPgAzxXh9CVaNXMm8DC/VRfCP3EmVFIcc9SUE
-	xnRvN7fnnVapMC5lR7SU1DD8oUXl3as+1ybsVRzkkyaQGQYnxEQ1bFl5E6Xzd1JU8oYYOpyn3R1
-	ozTPPh/zSrNCs0cGGXPJcwyy54hh/i46mqCun42zj8CZjEki8hsqS2DxV5l5mUkAXoTmKy03bRd
-	+aGRTK6jJsX+gziacdqDfmqaACgJ4/pu4/01q+3HSnYbGi7t+BG46ngfgfzWve7bdD7s0X2Cr1u
-	3dkojJDtD7bxEiU=
-X-Google-Smtp-Source: AGHT+IHys4xsUz/S+Yv5CD+DsNOj6mj0m+DTH45vx3YlE4Esvw4TgUgeL097Mh2SDR1ToXoDDpMpkQ==
-X-Received: by 2002:a05:6a20:cf83:b0:1e0:f495:1bd9 with SMTP id adf61e73a8af0-1ede881ba1emr1949980637.8.1738723264886;
-        Tue, 04 Feb 2025 18:41:04 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebe856951sm10664577a12.34.2025.02.04.18.41.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 18:41:03 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 2B46C4208FB6; Wed, 05 Feb 2025 09:41:00 +0700 (WIB)
-Date: Wed, 5 Feb 2025 09:40:59 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Amirreza Zarrabi <quic_azarrabi@quicinc.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] Documentation: tee: Add Qualcomm TEE driver
-Message-ID: <Z6LPu7WcRFnSCyAq@archie.me>
-References: <20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com>
- <20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-8-297eacd0d34f@quicinc.com>
+        bh=QwQn3prrCd9nf+gWzBIeH8P3iezKUf5V2n1S7gTfQSo=;
+        b=NIBdsi58IV4FlappQPZk+g6zaq+GdCm2+Gzq7SSZOYhPioNTcbIRtP1oif6F3qCmgV
+         eueY5xv8DnTTZP1bTcBdlX8KwO9XrkIFPnT6+vt5387LGBpJljxzOk8jNxq8YnFz/1hB
+         4Du+LATndSz5+Zhy1wwwuhjWTE5jzJHaeeAMpaQruPWo21lagCt8Bg9VCtYqbFsqDiSf
+         fYEuGQRLU8/icrbJ2Sl775limcZG2w/sj3pnym1+HJCmr/Hboes9JZv0a9Gb9K3XozoQ
+         hUIBEq3u8pRQIa9weP8zguQFMsn4JkX+s5enN1YPO2okzO5BznQQNV1ATv6WxdQVJ5gO
+         c4ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738723287; x=1739328087;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QwQn3prrCd9nf+gWzBIeH8P3iezKUf5V2n1S7gTfQSo=;
+        b=bMzRhDvDHT8V7hGCortQ7L55zSU5IaOO51P750YQx3WfGXc2x9VSjKDHL8RFL8BT2A
+         pfZ7nrdgq3hscO1dCoSkhUwdzel+OWHrwwMHK+fEg4yRoB/JqxUTUdfnqghMlweeNtKN
+         wz3VYXFNGCVC7G1t6LwJLxD9V8HhtJ22Tx+tRIW4vRe0mkrOVq90Z+wajGIY0MOActdW
+         kerrpd8E8wenHqDFTMXUVXucE2ntKnDBi/NTEP8uEHo+BKQCC2EAAK+E4F6fMf2fGJQV
+         Gu2bOsqpQayWt2uev6uzraQdw8YxF+U552U1dYyqjLQiM80RHqTpFdk24i/+2JiN/dSY
+         FBsA==
+X-Forwarded-Encrypted: i=1; AJvYcCULKxXNZT/dXryADPir4rbZbbu35X+O3S2YuOZUHDU1U3DvpZrt4H8SYc/9Q4O83yk5frWvCXxrSgBZ8dDMDdM=@vger.kernel.org, AJvYcCVVFfqYv1K7rjWLEDVmV03qzAWtd8vjQz9ncBhOFziBp0bVGrA3HsS9i8Tc21qGJ0H6+w5SlHSrniCx9lo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPPEBdk800JtRZN9VHj6nOL/lU+/uNZp5dcx3gW84RE7z5dqCc
+	pK8eReY77hKQeC7OHReSqy0rjM6gChye9zLEVWgkrUp2QWTr4SW3zzW1ir25oKP9+PWG67ZZUCq
+	sJ27u4PjYmNh+//GlALGx+mbxz6I=
+X-Gm-Gg: ASbGncvZXjKqZhCjXRum9WuPs0vXRXueAu4hYkdmFuP9mXsi+tcfOTv2Um7OAhvoU50
+	nodmubxjOCNeMRnSQwaNyRjhFoOWY/CQdXWwzi7m3yjki1Pq8y3J9bcq+GHAW0BEVQziLWxNPIQ
+	==
+X-Google-Smtp-Source: AGHT+IETE5RM6ytR4I0MAoaOcUYN/nT4zaRWwsSaMUFzY7MuCNXhcUa43uNFxmzefRwg1gzObIY0smWMYi3lZSbjz34=
+X-Received: by 2002:a05:6830:390f:b0:71f:c1df:187e with SMTP id
+ 46e09a7af769-726a428f697mr1007784a34.27.1738723287529; Tue, 04 Feb 2025
+ 18:41:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YU5J0YlSYBp99PA5"
-Content-Disposition: inline
-In-Reply-To: <20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-8-297eacd0d34f@quicinc.com>
-
-
---YU5J0YlSYBp99PA5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250108122825.136021-1-abdiel.janulgue@gmail.com>
+ <20250108122825.136021-3-abdiel.janulgue@gmail.com> <CAEmX-ZUbPqNUBj2-xAf=5uGE_GWAQQ79akADZCDxNsmx7Lf9VQ@mail.gmail.com>
+In-Reply-To: <CAEmX-ZUbPqNUBj2-xAf=5uGE_GWAQQ79akADZCDxNsmx7Lf9VQ@mail.gmail.com>
+From: Thomas Hampton <thomas.j.hampton@gmail.com>
+Date: Tue, 4 Feb 2025 20:41:16 -0600
+X-Gm-Features: AWEUYZnrN-ey9XldwNfEx9_sBu9MokwgLKnIwcLv6TBhp-pMZofzcBpx-zH6lCs
+Message-ID: <CAEmX-ZXg0w3RHN7hYe4bFOcg9srNapQU18JjTAWbBjwWurNC4g@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com, 
+	aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Valentin Obst <kernel@valentinobst.de>, open list <linux-kernel@vger.kernel.org>, 
+	Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 02, 2025 at 06:43:36PM -0800, Amirreza Zarrabi wrote:
-> +The QTEE driver offers the qcomtee_object, which represents an object wi=
-thin
-              "... provides ..."
-> +both QTEE and the kernel. To access any service in QTEE, a client needs =
-to
-> +invoke an instance of this object. Any structure intended to represent a=
- service
-> +for export to QTEE should include an instance of qcomtee_object::
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---YU5J0YlSYBp99PA5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6LPswAKCRD2uYlJVVFO
-o0KbAP9BjWgtTT9EraVe8ZUmzZ8MQd4wzzlo4o5ckCFleZ3mSgEAxIECwku5zqqh
-UyRE4JypMVgh+6eEDCjJJEOM7BPFvgY=
-=Ma8E
------END PGP SIGNATURE-----
-
---YU5J0YlSYBp99PA5--
+On Tue, Feb 4, 2025 at 10:54=E2=80=AFAM Thomas Hampton
+<thomas.j.hampton@gmail.com> wrote:
+>
+On second thought, this wouldn't prevent the construction of a closure
+that simply extracts the pointer itself, nevermind.
