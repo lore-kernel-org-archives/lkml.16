@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C4F22DF83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B0622AE45
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751998; cv=none; b=AwHsTLvjJmBMq0DNYVaGB95pRgThN27+jo4ZNJIWqcLYsMxLppqVnVzJOAtfvuvee51jK+6dAWPemG3k771AvXE8wQjaLAuKTtkA2ptdxyWlDzWSyawmcJGUb8EeQ5BawnNZRTLfMvhkjx/J+Ov5jJFar+SMMBMsCjD5LLezi8U=
+	t=1738751998; cv=none; b=JdjQjw80pZOlXDlEXLvRJHwz1k2ujWp5g+Jk1ceVkcW6zPvihvTGgtvJ9htPYYK5oZuwvPYKhiFZAHn/S8P/ard3FRZTyhjN6MxD0mCMVh/yVAFCoBgOt6uC3cnKiHWonzfxJtbM3kj5bEpr/NqaMMlMLlv+q7suLAXG6p5XNdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751998; c=relaxed/simple;
-	bh=1Oox9z0TTVmYTOeh66aL66CentavOCAi4D2hz4WTO9Y=;
+	bh=AZj+0U/8giZiNOi+t0HlLCsIw8GiuU1KWCwf+5dHwjw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RsnGyMrUVVyiuHA+Sgcp3r6K9zBZ5+uTsQN9Z1m98Pw/X174z9T5C/GjJ/axwo/VHGjm9C6riOoP5mCnWvIfgCuadeMJmBp8Esy8hHqOJR9+7ZTCwBYqPN3jst7k89S+P3S5vb0nM7sgHZXgbhTY2sX1Md8nacpt6pME/0+BdmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ial1xsFo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0q046KmQ; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=X4s3oeD/JN+1IFhRuo9J/EERD9OfACMRjsLJ7yyzBxoU4g5oN3rkBZ/mzVO+hUUU7nK5uyNBTAL47jOYd93O2ddjzGgB0sh1q/MeZZy+/AnSMT2rUva5/N1gdvdTtY9tZD7Xf2ig6gksm00cRmk93NeWVHqxxOuS1Zdi4UMoRTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J/BIyhYE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C7EGpP6v; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ial1xsFo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0q046KmQ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J/BIyhYE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C7EGpP6v"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738751992;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KqR2/15ASJrEswysloe51ZKYrXuZFVUiqVH8Khg71NI=;
-	b=ial1xsFoYkaUA2iJ1sM+7zXUJq3zzLr4t/Xnp1uCTBxfkTm5oNjntoxICgNjmMDmF4WVMv
-	7IZy5HV85lm9JkkFyCwKa7t/3eYDlFr8dWJIuckfTcSLXzufN9hrhyq14nW+IBu9zlMAEW
-	aYZr52pmWLs6r7DUIV2S8mq75gLdth4FlAh+lZ3C8PjTENYkPdu4FuBODZ9VoXdmfepw56
-	UwaTrQrQNPGyI8h0FFw4ED/mutAXGs1M27dIHFC6QlyRX20z/Lc5iugfje/kG1v5QNh/PS
-	MsyHhUCW0sqT1SzzwoYiB8p/SjvqtNPajjRKfpTJCC2vIjM4PpkZfxz2dW5jNw==
+	bh=hL50mMiiXMGWqicdM5KTVmwvFoZm7X6S13ahHy3wZrI=;
+	b=J/BIyhYE+Z+O+GGDjTcqy1W2FDNHDJtdbg4d3DqJjNLgskTeu9FikCKbYRzoruMgVp5sfL
+	7+6hC0fciEDAvsny8KnB9hMlQo5YSk3tCTYtj2afSc/bi5SCGsnhZcZevaKaA7euNraW1S
+	RbIzhSkdhVRm5b+jSQdorTV6VpHyhWlvkap6b5Ok1XKmyXkx1qXFt72JYxv4/U+TwXOpFm
+	DffCRMmCdEyPoiosNl/fAEC1Cp3684EtJ8xn0fSJg5CngLYLSzs+j3ELD43JG5SRUAFtlb
+	jgJ6/vgRYK2yNorJYi2kqKElBOUUgEOmpgR9SX57hhSknDOtapbax8Z3PcJeDg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738751992;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KqR2/15ASJrEswysloe51ZKYrXuZFVUiqVH8Khg71NI=;
-	b=0q046KmQgIMoq114uOkZ4op9jIWPOsSH1SsctT8q+E/Yft8kCDpuyBazq49EXfI7+deBIw
-	0FAvpsZayl2YYXDQ==
+	bh=hL50mMiiXMGWqicdM5KTVmwvFoZm7X6S13ahHy3wZrI=;
+	b=C7EGpP6v69HNgvHfbn5LRnEho/2zZSj+a7KjmDyVseLU1eMr91Ddgun0j6bDaYYtNdpqtX
+	l0gSyXn6dPo6DDDw==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 18/31] perf: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:39:02 +0100
-Message-Id: <f611e6d3fc6996bbcf0e19fe234f75edebe4332f.1738746821.git.namcao@linutronix.de>
+	Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v2 16/31] io_uring/timeout: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:39:00 +0100
+Message-Id: <80ca8d959f2cc67c75f6d61008e3bebfe7fbc30a.1738746821.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
 References: <cover.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
@@ -64,42 +64,78 @@ initializes the timer completely.
 Replace hrtimer_init() and the open coded initialization of
 hrtimer::function with the new setup mechanism.
 
-Patch was created by using Coccinelle.
-
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jens Axboe <axboe@kernel.dk>
 ---
- kernel/events/core.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ io_uring/timeout.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 0f8c55990783..59059e348844 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1147,8 +1147,8 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_p=
-mu_context *cpc, int cpu)
- 	cpc->hrtimer_interval =3D ns_to_ktime(NSEC_PER_MSEC * interval);
-=20
- 	raw_spin_lock_init(&cpc->hrtimer_lock);
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
--	timer->function =3D perf_mux_hrtimer_handler;
-+	hrtimer_setup(timer, perf_mux_hrtimer_handler, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_ABS_PINNED_HARD);
+diff --git a/io_uring/timeout.c b/io_uring/timeout.c
+index 48fc8cf70784..c5fb817b1e28 100644
+--- a/io_uring/timeout.c
++++ b/io_uring/timeout.c
+@@ -407,8 +407,7 @@ static int io_linked_timeout_update(struct io_ring_ctx =
+*ctx, __u64 user_data,
+ 	io =3D req->async_data;
+ 	if (hrtimer_try_to_cancel(&io->timer) =3D=3D -1)
+ 		return -EALREADY;
+-	hrtimer_init(&io->timer, io_timeout_get_clock(io), mode);
+-	io->timer.function =3D io_link_timeout_fn;
++	hrtimer_setup(&io->timer, io_link_timeout_fn, io_timeout_get_clock(io), m=
+ode);
+ 	hrtimer_start(&io->timer, timespec64_to_ktime(*ts), mode);
+ 	return 0;
  }
+@@ -430,8 +429,7 @@ static int io_timeout_update(struct io_ring_ctx *ctx, _=
+_u64 user_data,
+ 	data->ts =3D *ts;
 =20
- static int perf_mux_hrtimer_restart(struct perf_cpu_pmu_context *cpc)
-@@ -11366,8 +11366,7 @@ static void perf_swevent_init_hrtimer(struct perf_e=
-vent *event)
- 	if (!is_sampling_event(event))
- 		return;
+ 	list_add_tail(&timeout->list, &ctx->timeout_list);
+-	hrtimer_init(&data->timer, io_timeout_get_clock(data), mode);
+-	data->timer.function =3D io_timeout_fn;
++	hrtimer_setup(&data->timer, io_timeout_fn, io_timeout_get_clock(data), mo=
+de);
+ 	hrtimer_start(&data->timer, timespec64_to_ktime(data->ts), mode);
+ 	return 0;
+ }
+@@ -557,7 +555,6 @@ static int __io_timeout_prep(struct io_kiocb *req,
+ 		return -EINVAL;
 =20
--	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
--	hwc->hrtimer.function =3D perf_swevent_hrtimer;
-+	hrtimer_setup(&hwc->hrtimer, perf_swevent_hrtimer, CLOCK_MONOTONIC, HRTIM=
-ER_MODE_REL_HARD);
+ 	data->mode =3D io_translate_timeout_mode(flags);
+-	hrtimer_init(&data->timer, io_timeout_get_clock(data), data->mode);
 =20
- 	/*
- 	 * Since hrtimers have a fixed rate, we can do a static freq->period
+ 	if (is_timeout_link) {
+ 		struct io_submit_link *link =3D &req->ctx->submit_state.link;
+@@ -568,6 +565,10 @@ static int __io_timeout_prep(struct io_kiocb *req,
+ 			return -EINVAL;
+ 		timeout->head =3D link->last;
+ 		link->last->flags |=3D REQ_F_ARM_LTIMEOUT;
++		hrtimer_setup(&data->timer, io_link_timeout_fn, io_timeout_get_clock(dat=
+a),
++			      data->mode);
++	} else {
++		hrtimer_setup(&data->timer, io_timeout_fn, io_timeout_get_clock(data), d=
+ata->mode);
+ 	}
+ 	return 0;
+ }
+@@ -627,7 +628,6 @@ int io_timeout(struct io_kiocb *req, unsigned int issue=
+_flags)
+ 	}
+ add:
+ 	list_add(&timeout->list, entry);
+-	data->timer.function =3D io_timeout_fn;
+ 	hrtimer_start(&data->timer, timespec64_to_ktime(data->ts), data->mode);
+ 	raw_spin_unlock_irq(&ctx->timeout_lock);
+ 	return IOU_ISSUE_SKIP_COMPLETE;
+@@ -646,7 +646,6 @@ void io_queue_linked_timeout(struct io_kiocb *req)
+ 	if (timeout->head) {
+ 		struct io_timeout_data *data =3D req->async_data;
+=20
+-		data->timer.function =3D io_link_timeout_fn;
+ 		hrtimer_start(&data->timer, timespec64_to_ktime(data->ts),
+ 				data->mode);
+ 		list_add_tail(&timeout->list, &ctx->ltimeout_list);
 --=20
 2.39.5
 
