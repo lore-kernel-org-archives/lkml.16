@@ -1,662 +1,282 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C1E213243
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35B8227BBA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738719664; cv=none; b=WWv25fJjRGZGlKkqPEt2lWkBDdeRyxWLoamBEwYR1nmLaiHjNp0dCzxEsnoBYzhfeqPf/HnY92Tww+c0UXPj7HHbHPKxvL6AEuY0ScKuWRUx/RWZxK5+bIefuVrxtaAkUzqJ2Msyc+EDBt4dFJiq0WhHNa6cClqfq7623YZ2tRE=
+	t=1738719699; cv=none; b=fLpmMXZjYA2+B0gYY989HdqpZNQhD3g+A3+Cwjdn1VxSAh+RRg6WtkBdhFiItdY6mGB/L/+f0x3J2iPz+Ej7UJ9Waz4Ex+cfrRUYlVlyuw3i8V7FMcCGJp5Q+X4J4W5tG/g2KQ6Q70QeiJmiLdFyGYQEDcA9+m47PDMjN4xFD4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738719664; c=relaxed/simple;
-	bh=6w8GP02iYth5/ZDqiQlULWCq04bw4z654R6CzvwzELc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Eq4e+njfgjiAWmL9JBPTKpYA9+bMJoVc65ny6qaPxcS2gN1mXQirY+zSctxzkEiECV4xCefa3mE/KCEoe+VcgfG4JXepFU8VNsVSpxcu/qKAMzHNYVl7/+noduwtmrzAOpJfOWJ8kz2R3E/e1OUOIH77kmCaiFcUZNF23O922+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tfUP4-000000004Cs-3Bjg;
-	Tue, 04 Feb 2025 20:40:34 -0500
-From: Rik van Riel <riel@surriel.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	bp@alien8.de,
-	peterz@infradead.org,
-	dave.hansen@linux.intel.com,
-	zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com,
-	thomas.lendacky@amd.com,
-	kernel-team@meta.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	jannh@google.com,
-	mhklinux@outlook.com,
-	andrew.cooper3@citrix.com,
-	Rik van Riel <riel@surriel.com>,
-	Manali Shukla <Manali.Shukla@amd.com>
-Subject: [PATCH v8 09/12] x86/mm: enable broadcast TLB invalidation for multi-threaded processes
-Date: Tue,  4 Feb 2025 20:39:58 -0500
-Message-ID: <20250205014033.3626204-10-riel@surriel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250205014033.3626204-1-riel@surriel.com>
-References: <20250205014033.3626204-1-riel@surriel.com>
+	s=arc-20240116; t=1738719699; c=relaxed/simple;
+	bh=Tb2WaHEHFwzAs4T1sx5XIMYGRmP6vmWFLXZFt6q5Swk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=vAu02kM5aoThT8OZ1kIJd6pJNb19gRGkuqTAdJeTUsIVGqKRQ/3jJ2goR0EmOPsaZ7bzGUDHVdCqS2lkO2OHXgMURETaacVW+7QbCbYrY6cHvEPBUTGQCuq6Eh9VhIr/nR9rY/gU5PE+U0GFWhgILPc/jOSKzwwPpvWn2vK2tbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X4fn+Se+; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X4fn+Se+"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f078fc592so30836905ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 17:41:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738719697; x=1739324497; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aMcwH0dfJdlpEM9pbdRVBP81ygSQBPCgeU60/Kv7+9A=;
+        b=X4fn+Se+BKkh3ywXSko76Gn5GNPwi1tXrjJCn4dlX81f6rGZcZvAjmyfb1tGbrSWwb
+         56VtEDu/l7R0F+Rt+oOy31Q6UWvH7hRDgspUcT53S/ZaNEdFT0wubsYw0kezBry8692c
+         MN745JAgbWp5TU2oxgqz6wxkvbanjaRaZsaCiCEtPi+fmL1VowOuAUAVEGg3JLKmiL0j
+         S2zQVu3U2LMYcivbD2gKDAmI6uvy1XauoIng+Jll4TZQz3nIX85HiizCxwEElDYnMLcO
+         qdDIuA5U8wA6wEgcigxqksTtg8JnZmpOvZF8m0LgqjRZVSpJ/PHlexYnnrKkeYAUS3LO
+         1Bjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738719697; x=1739324497;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aMcwH0dfJdlpEM9pbdRVBP81ygSQBPCgeU60/Kv7+9A=;
+        b=mbs1CPwLat2NkxonJberdicObo5F3uEpzPttx3GJaptXstZV0aU3rc6Z1X6NS9kNHO
+         9O16nSdeeqwE3+ZeXCY1Heh1DmM9yBWI/0zUg6+2T09bVcTXUv08x86P/6salgHj0Wx6
+         uPhIxOc08kr1vvguvwmudZH2FXQeUqHRP/TS5t2vI+JK/oi9iWnMSgleRRjgITAgWQmJ
+         ItHyL6h2+OqZwy+t98WaCwlrGE+OQzcKrvYDgknl/etJg13UYL1LHhmdVfrD6wf75bWk
+         b3kRFp6WobEJgRMk71Q4DHXzzWI24TTgGUKbfF14y5e8eHwH+D3pF79ijivtZCx7fMqD
+         WGSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdO85xgxMNQXckmx0WTF+HrVM/5oYFLhaEvT+IaEl7i4O6yRiLzPNRvIcYM8TGFLsuHdhhEKi2Ln24hxo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNHnN7AP/T5HMs6GcYA8bTXsbMZ1mWuNnW0N4poI2mYRlluED4
+	YNcEEJkIAgZzBDEvamfEbHgRh/IcctQIQNUMKsxf42s2cM1rXrmdund6A3DhwDtON6kDxBc7Ymx
+	nnA==
+X-Google-Smtp-Source: AGHT+IGWTQgbxegWAxVPtwHAdbzjMrSnpovALW55MZwtzCV4YyX0l80BYBIxbu8boYEJ6RSMxrj2MH0Ki/E=
+X-Received: from pfbhm14.prod.google.com ([2002:a05:6a00:670e:b0:725:ceac:b484])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9e46:b0:1ed:a565:f80e
+ with SMTP id adf61e73a8af0-1ede88367e0mr1652080637.14.1738719696957; Tue, 04
+ Feb 2025 17:41:36 -0800 (PST)
+Date: Tue, 4 Feb 2025 17:41:35 -0800
+In-Reply-To: <2c9ffa51b82b4ae75e803d5b30bf74eda9350686.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: riel@surriel.com
+Mime-Version: 1.0
+References: <cover.1738595289.git.naveen@kernel.org> <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
+ <Z6EOxxZA9XLdXvrA@google.com> <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
+ <Z6FVaLOsPqmAPNWu@google.com> <0e4bd3004d97b145037c36c785c19e97b6995d42.camel@redhat.com>
+ <Z6JoInXNntIoHLQ8@google.com> <2c9ffa51b82b4ae75e803d5b30bf74eda9350686.camel@redhat.com>
+Message-ID: <Z6LBz69oVI5qUGFW@google.com>
+Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from apicv_inhibit_reasons
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, "Naveen N Rao (AMD)" <naveen@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Use broadcast TLB invalidation, using the INVPLGB instruction, on AMD EPYC 3
-and newer CPUs.
+On Tue, Feb 04, 2025, Maxim Levitsky wrote:
+> On Tue, 2025-02-04 at 11:18 -0800, Sean Christopherson wrote:
+> > On Mon, Feb 03, 2025, Maxim Levitsky wrote:
+> > @@ -3219,20 +3228,6 @@ static int interrupt_window_interception(struct kvm_vcpu *vcpu)
+> >  	kvm_make_request(KVM_REQ_EVENT, vcpu);
+> >  	svm_clear_vintr(to_svm(vcpu));
+> >  
+> > -	/*
+> > -	 * If not running nested, for AVIC, the only reason to end up here is ExtINTs.
+> > -	 * In this case AVIC was temporarily disabled for
+> > -	 * requesting the IRQ window and we have to re-enable it.
+> > -	 *
+> > -	 * If running nested, still remove the VM wide AVIC inhibit to
+> > -	 * support case in which the interrupt window was requested when the
+> > -	 * vCPU was not running nested.
+> > -
+> > -	 * All vCPUs which run still run nested, will remain to have their
+> > -	 * AVIC still inhibited due to per-cpu AVIC inhibition.
+> > -	 */
+> 
+> Please keep these comment that explain why inhibit has to be cleared here,
 
-In order to not exhaust PCID space, and keep TLB flushes local for single
-threaded processes, we only hand out broadcast ASIDs to processes active on
-4 or more CPUs.
+Ya, I'll make sure there are good comments that capture everything before posting
+anything.
 
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Tested-by: Manali Shukla <Manali.Shukla@amd.com>
----
- arch/x86/include/asm/mmu.h         |   6 +
- arch/x86/include/asm/mmu_context.h |  14 ++
- arch/x86/include/asm/tlbflush.h    |  73 ++++++
- arch/x86/mm/tlb.c                  | 344 ++++++++++++++++++++++++++++-
- 4 files changed, 425 insertions(+), 12 deletions(-)
+> and the code as well.
+> 
+> The reason is that IRQ window can be requested before nested entry, which
+> will lead to VM wide inhibit, and the interrupt window can happen while
+> nested because nested hypervisor can opt to not intercept interrupts. If that
+> happens, the AVIC will remain inhibited forever.
 
-diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
-index 3b496cdcb74b..d71cd599fec4 100644
---- a/arch/x86/include/asm/mmu.h
-+++ b/arch/x86/include/asm/mmu.h
-@@ -69,6 +69,12 @@ typedef struct {
- 	u16 pkey_allocation_map;
- 	s16 execute_only_pkey;
- #endif
-+
-+#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-+	u16 global_asid;
-+	bool asid_transition;
-+#endif
-+
- } mm_context_t;
+Ah, because the svm_clear_vintr() triggered by enter_svm_guest_mode()'s
+
+	svm_set_gif(svm, true);
+
+will occur in_guest_mode() == true.  But doesn't that bug exist today?  Clearing
+the inhibit relies on interrupt_window_interception() being reached, and so if
+the ExtInt is injected into L2, KVM will never reach interrupt_window_interception().
+
+KVM will evaluate pending events in that case:
+
+		    svm->vcpu.arch.nmi_pending ||
+		    kvm_cpu_has_injectable_intr(&svm->vcpu) ||
+		    kvm_apic_has_pending_init_or_sipi(&svm->vcpu))
+			kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
+
+but the nested pending VMRUN will block events and not get to the point where
+KVM enables an IRQ window:
+
+		r = can_inject ? kvm_x86_call(interrupt_allowed)(vcpu, true) :
+				 -EBUSY;
+		if (r < 0)
+			goto out; <======= Taken for nested VMRUN pending
+		if (r) {
+			int irq = kvm_cpu_get_interrupt(vcpu);
+
+			if (!WARN_ON_ONCE(irq == -1)) {
+				kvm_queue_interrupt(vcpu, irq, false);
+				kvm_x86_call(inject_irq)(vcpu, false);
+				WARN_ON(kvm_x86_call(interrupt_allowed)(vcpu, true) < 0);
+			}
+		}
+		if (kvm_cpu_has_injectable_intr(vcpu))
+			kvm_x86_call(enable_irq_window)(vcpu);
+
+and if L2 has IRQs enabled, the subsequent KVM_REQ_EVENT processing after the
+immediate exit will inject into L2, without re-opening a window and thus without
+triggering interrupt_window_interception().
+
+Ha!  I was going to suggest hooking svm_leave_nested(), and lo and behold KVM
+already does that for KVM_REQ_APICV_UPDATE to ensure it has an up-to-date view
+of the inhibits.
+
+After much staring, I suspect the reason KVM hooks interrupt_window_interception()
+and not svm_clear_vintr() is to avoid thrashing the inhibit and thus the VM-wide
+lock/state on nested entry/exit, e.g. on a typical:
+
+	gif=0 => VMRUN => gif=1 => #VMEXIT => gif=0
+
+sequence, KVM would clear the inhibit while running L2, and then re-enable the
+inhibit when control transers back to L1.  But that doesn't gel with this comment
+in interrupt_window_interception():
+
+	* If running nested, still remove the VM wide AVIC inhibit to
+	* support case in which the interrupt window was requested when the
+	* vCPU was not running nested.
+
+That code/comment exists specifically for the case where L1 is not intercepting
+IRQs, and so KVM is effectively using V_IRQ in vmcb02 to detect interrupt windows
+for L1 IRQs.
+
+If L1 _is_ intercepting IRQs, then interrupt_window_interception() will never be
+reached while L2 is active, because the only reason KVM would set the V_IRQ intercept
+in vmcb02 would be on behalf of L1, i.e. because of vmcs12.  svm_clear_vintr()
+always operates on (at least) vmcb01, and VMRUN unconditionally sets GIF=1, which
+means that enter_svm_guest_mode() will always do svm_clear_vintr() via
+svm_set_gif(svm, true).  I.e. KVM will keep the VM-wide inhibit set until control
+transfers back to L1 *and* an interrupt window is triggered.
+
+Even the "L1 doesn't intercept IRQs" case is incongruous, because if IRQs are
+enabled in L2 at the time of VMRUN, KVM will immediately inject L1's ExtINT into
+L2 without taking an interrupt window #VMEXIT.
+
+I don't see a perfect solution.  Barring a rather absurd number of checks, KVM
+will inevitably leave the VM-wide inhibit in place while running L2, or KVM will
+risk thrashing the VM-wide inhibit across VMRUN.
+
+/facepalm
+
+It's still not perfect, but the obvious-in-hindsight answer is to clear the
+IRQ window inhibit when KVM actually injects an interrupt and there's no longer
+a injectable interrupt.
+
+That optimizes all the paths: if L1 isn't intercept IRQs, KVM will drop the
+inhibit as soon as an interrupt is injected into L2.  If L1 is intercepting IRQs,
+KVM will keep the inhibit until the IRQ is injected into L2.  Unless I'm missing
+something, the inhibit itself should prevent an injectable IRQ from disappearing,
+i.e. AVIC won't be left inhibited.
+
+So this for the SVM changes?
+
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 7640a84e554a..2a5cf7029b26 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3219,20 +3219,6 @@ static int interrupt_window_interception(struct kvm_vcpu *vcpu)
+ 	kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 	svm_clear_vintr(to_svm(vcpu));
  
- #define INIT_MM_CONTEXT(mm)						\
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 795fdd53bd0a..d670699d32c2 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -139,6 +139,8 @@ static inline void mm_reset_untag_mask(struct mm_struct *mm)
- #define enter_lazy_tlb enter_lazy_tlb
- extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
- 
-+extern void destroy_context_free_global_asid(struct mm_struct *mm);
-+
- /*
-  * Init a new mm.  Used on mm copies, like at fork()
-  * and on mm's that are brand-new, like at execve().
-@@ -161,6 +163,14 @@ static inline int init_new_context(struct task_struct *tsk,
- 		mm->context.execute_only_pkey = -1;
- 	}
- #endif
-+
-+#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+		mm->context.global_asid = 0;
-+		mm->context.asid_transition = false;
-+	}
-+#endif
-+
- 	mm_reset_untag_mask(mm);
- 	init_new_context_ldt(mm);
- 	return 0;
-@@ -170,6 +180,10 @@ static inline int init_new_context(struct task_struct *tsk,
- static inline void destroy_context(struct mm_struct *mm)
- {
- 	destroy_context_ldt(mm);
-+#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		destroy_context_free_global_asid(mm);
-+#endif
- }
- 
- extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index dba5caa4a9f4..7e2f3f7f6455 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -6,6 +6,7 @@
- #include <linux/mmu_notifier.h>
- #include <linux/sched.h>
- 
-+#include <asm/barrier.h>
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
- #include <asm/special_insns.h>
-@@ -239,6 +240,78 @@ void flush_tlb_one_kernel(unsigned long addr);
- void flush_tlb_multi(const struct cpumask *cpumask,
- 		      const struct flush_tlb_info *info);
- 
-+#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-+static inline bool is_dyn_asid(u16 asid)
-+{
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		return true;
-+
-+	return asid < TLB_NR_DYN_ASIDS;
-+}
-+
-+static inline bool is_global_asid(u16 asid)
-+{
-+	return !is_dyn_asid(asid);
-+}
-+
-+static inline bool in_asid_transition(const struct flush_tlb_info *info)
-+{
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		return false;
-+
-+	return info->mm && READ_ONCE(info->mm->context.asid_transition);
-+}
-+
-+static inline u16 mm_global_asid(struct mm_struct *mm)
-+{
-+	u16 asid;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		return 0;
-+
-+	asid = smp_load_acquire(&mm->context.global_asid);
-+
-+	/* mm->context.global_asid is either 0, or a global ASID */
-+	VM_WARN_ON_ONCE(asid && is_dyn_asid(asid));
-+
-+	return asid;
-+}
-+#else
-+static inline bool is_dyn_asid(u16 asid)
-+{
-+	return true;
-+}
-+
-+static inline bool is_global_asid(u16 asid)
-+{
-+	return false;
-+}
-+
-+static inline bool in_asid_transition(const struct flush_tlb_info *info)
-+{
-+	return false;
-+}
-+
-+static inline u16 mm_global_asid(struct mm_struct *mm)
-+{
-+	return 0;
-+}
-+
-+static inline bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
-+{
-+	return false;
-+}
-+
-+static inline void broadcast_tlb_flush(struct flush_tlb_info *info)
-+{
-+	VM_WARN_ON_ONCE(1);
-+}
-+
-+static inline void consider_global_asid(struct mm_struct *mm)
-+{
-+}
-+#endif
-+
- #ifdef CONFIG_PARAVIRT
- #include <asm/paravirt.h>
- #endif
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 25c13416a0e8..7b363ae1569b 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -74,13 +74,15 @@
-  * use different names for each of them:
-  *
-  * ASID  - [0, TLB_NR_DYN_ASIDS-1]
-- *         the canonical identifier for an mm
-+ *         the canonical identifier for an mm, dynamically allocated on each CPU
-+ *         [TLB_NR_DYN_ASIDS, MAX_ASID_AVAILABLE-1]
-+ *         the canonical, global identifier for an mm, identical across all CPUs
-  *
-- * kPCID - [1, TLB_NR_DYN_ASIDS]
-+ * kPCID - [1, MAX_ASID_AVAILABLE]
-  *         the value we write into the PCID part of CR3; corresponds to the
-  *         ASID+1, because PCID 0 is special.
-  *
-- * uPCID - [2048 + 1, 2048 + TLB_NR_DYN_ASIDS]
-+ * uPCID - [2048 + 1, 2048 + MAX_ASID_AVAILABLE]
-  *         for KPTI each mm has two address spaces and thus needs two
-  *         PCID values, but we can still do with a single ASID denomination
-  *         for each mm. Corresponds to kPCID + 2048.
-@@ -225,6 +227,20 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
- 		return;
- 	}
- 
-+	/*
-+	 * TLB consistency for global ASIDs is maintained with broadcast TLB
-+	 * flushing. The TLB is never outdated, and does not need flushing.
-+	 */
-+	if (IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH) && static_cpu_has(X86_FEATURE_INVLPGB)) {
-+		u16 global_asid = mm_global_asid(next);
-+
-+		if (global_asid) {
-+			*new_asid = global_asid;
-+			*need_flush = false;
-+			return;
-+		}
-+	}
-+
- 	if (this_cpu_read(cpu_tlbstate.invalidate_other))
- 		clear_asid_other();
- 
-@@ -251,6 +267,272 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
- 	*need_flush = true;
- }
- 
-+#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-+/*
-+ * Logic for broadcast TLB invalidation.
-+ */
-+static DEFINE_RAW_SPINLOCK(global_asid_lock);
-+static u16 last_global_asid = MAX_ASID_AVAILABLE;
-+static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE) = { 0 };
-+static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE) = { 0 };
-+static int global_asid_available = MAX_ASID_AVAILABLE - TLB_NR_DYN_ASIDS - 1;
-+
-+static void reset_global_asid_space(void)
-+{
-+	lockdep_assert_held(&global_asid_lock);
-+
-+	/*
-+	 * A global TLB flush guarantees that any stale entries from
-+	 * previously freed global ASIDs get flushed from the TLB
-+	 * everywhere, making these global ASIDs safe to reuse.
-+	 */
-+	invlpgb_flush_all_nonglobals();
-+
-+	/*
-+	 * Clear all the previously freed global ASIDs from the
-+	 * broadcast_asid_used bitmap, now that the global TLB flush
-+	 * has made them actually available for re-use.
-+	 */
-+	bitmap_andnot(global_asid_used, global_asid_used,
-+			global_asid_freed, MAX_ASID_AVAILABLE);
-+	bitmap_clear(global_asid_freed, 0, MAX_ASID_AVAILABLE);
-+
-+	/*
-+	 * ASIDs 0-TLB_NR_DYN_ASIDS are used for CPU-local ASID
-+	 * assignments, for tasks doing IPI based TLB shootdowns.
-+	 * Restart the search from the start of the global ASID space.
-+	 */
-+	last_global_asid = TLB_NR_DYN_ASIDS;
-+}
-+
-+static u16 get_global_asid(void)
-+{
-+
-+	u16 asid;
-+
-+	lockdep_assert_held(&global_asid_lock);
-+
-+	/* The previous allocated ASID is at the top of the address space. */
-+	if (last_global_asid >= MAX_ASID_AVAILABLE - 1)
-+		reset_global_asid_space();
-+
-+	asid = find_next_zero_bit(global_asid_used, MAX_ASID_AVAILABLE, last_global_asid);
-+
-+	if (asid >= MAX_ASID_AVAILABLE) {
-+		/* This should never happen. */
-+		VM_WARN_ONCE(1, "Unable to allocate global ASID despite %d available\n", global_asid_available);
-+		return 0;
-+	}
-+
-+	/* Claim this global ASID. */
-+	__set_bit(asid, global_asid_used);
-+	last_global_asid = asid;
-+	global_asid_available--;
-+	return asid;
-+}
-+
-+/*
-+ * Returns true if the mm is transitioning from a CPU-local ASID to a global
-+ * (INVLPGB) ASID, or the other way around.
-+ */
-+static bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
-+{
-+	u16 global_asid = mm_global_asid(next);
-+
-+	if (global_asid && prev_asid != global_asid)
-+		return true;
-+
-+	if (!global_asid && is_global_asid(prev_asid))
-+		return true;
-+
-+	return false;
-+}
-+
-+void destroy_context_free_global_asid(struct mm_struct *mm)
-+{
-+	if (!mm->context.global_asid)
-+		return;
-+
-+	guard(raw_spinlock_irqsave)(&global_asid_lock);
-+
-+	/* The global ASID can be re-used only after flush at wrap-around. */
-+	__set_bit(mm->context.global_asid, global_asid_freed);
-+
-+	mm->context.global_asid = 0;
-+	global_asid_available++;
-+}
-+
-+/*
-+ * Check whether a process is currently active on more than "threshold" CPUs.
-+ * This is a cheap estimation on whether or not it may make sense to assign
-+ * a global ASID to this process, and use broadcast TLB invalidation.
-+ */
-+static bool mm_active_cpus_exceeds(struct mm_struct *mm, int threshold)
-+{
-+	int count = 0;
-+	int cpu;
-+
-+	/* This quick check should eliminate most single threaded programs. */
-+	if (cpumask_weight(mm_cpumask(mm)) <= threshold)
-+		return false;
-+
-+	/* Slower check to make sure. */
-+	for_each_cpu(cpu, mm_cpumask(mm)) {
-+		/* Skip the CPUs that aren't really running this process. */
-+		if (per_cpu(cpu_tlbstate.loaded_mm, cpu) != mm)
-+			continue;
-+
-+		if (per_cpu(cpu_tlbstate_shared.is_lazy, cpu))
-+			continue;
-+
-+		if (++count > threshold)
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * Assign a global ASID to the current process, protecting against
-+ * races between multiple threads in the process.
-+ */
-+static void use_global_asid(struct mm_struct *mm)
-+{
-+	u16 asid;
-+
-+	guard(raw_spinlock_irqsave)(&global_asid_lock);
-+
-+	/* This process is already using broadcast TLB invalidation. */
-+	if (mm->context.global_asid)
-+		return;
-+
-+	/* The last global ASID was consumed while waiting for the lock. */
-+	if (!global_asid_available) {
-+		VM_WARN_ONCE(1, "Ran out of global ASIDs\n");
-+		return;
-+	}
-+
-+	asid = get_global_asid();
-+	if (!asid)
-+		return;
-+
-+	/*
-+	 * Notably flush_tlb_mm_range() -> broadcast_tlb_flush() ->
-+	 * finish_asid_transition() needs to observe asid_transition = true
-+	 * once it observes global_asid.
-+	 */
-+	mm->context.asid_transition = true;
-+	smp_store_release(&mm->context.global_asid, asid);
-+}
-+
-+static bool meets_global_asid_threshold(struct mm_struct *mm)
-+{
-+	if (!global_asid_available)
-+		return false;
-+
-+	/*
-+	 * Assign a global ASID if the process is active on
-+	 * 4 or more CPUs simultaneously.
-+	 */
-+	return mm_active_cpus_exceeds(mm, 3);
-+}
-+
-+static void consider_global_asid(struct mm_struct *mm)
-+{
-+	if (!static_cpu_has(X86_FEATURE_INVLPGB))
-+		return;
-+
-+	/* Check every once in a while. */
-+	if ((current->pid & 0x1f) != (jiffies & 0x1f))
-+		return;
-+
-+	if (meets_global_asid_threshold(mm))
-+		use_global_asid(mm);
-+}
-+
-+static void finish_asid_transition(struct flush_tlb_info *info)
-+{
-+	struct mm_struct *mm = info->mm;
-+	int bc_asid = mm_global_asid(mm);
-+	int cpu;
-+
-+	if (!READ_ONCE(mm->context.asid_transition))
-+		return;
-+
-+	for_each_cpu(cpu, mm_cpumask(mm)) {
-+		/*
-+		 * The remote CPU is context switching. Wait for that to
-+		 * finish, to catch the unlikely case of it switching to
-+		 * the target mm with an out of date ASID.
-+		 */
-+		while (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) == LOADED_MM_SWITCHING)
-+			cpu_relax();
-+
-+		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) != mm)
-+			continue;
-+
-+		/*
-+		 * If at least one CPU is not using the global ASID yet,
-+		 * send a TLB flush IPI. The IPI should cause stragglers
-+		 * to transition soon.
-+		 *
-+		 * This can race with the CPU switching to another task;
-+		 * that results in a (harmless) extra IPI.
-+		 */
-+		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm_asid, cpu)) != bc_asid) {
-+			flush_tlb_multi(mm_cpumask(info->mm), info);
-+			return;
-+		}
-+	}
-+
-+	/* All the CPUs running this process are using the global ASID. */
-+	WRITE_ONCE(mm->context.asid_transition, false);
-+}
-+
-+static void broadcast_tlb_flush(struct flush_tlb_info *info)
-+{
-+	bool pmd = info->stride_shift == PMD_SHIFT;
-+	unsigned long maxnr = invlpgb_count_max;
-+	unsigned long asid = info->mm->context.global_asid;
-+	unsigned long addr = info->start;
-+	unsigned long nr;
-+
-+	/* Flushing multiple pages at once is not supported with 1GB pages. */
-+	if (info->stride_shift > PMD_SHIFT)
-+		maxnr = 1;
-+
-+	/*
-+	 * TLB flushes with INVLPGB are kicked off asynchronously.
-+	 * The inc_mm_tlb_gen() guarantees page table updates are done
-+	 * before these TLB flushes happen.
-+	 */
-+	if (info->end == TLB_FLUSH_ALL) {
-+		invlpgb_flush_single_pcid_nosync(kern_pcid(asid));
-+		/* Do any CPUs supporting INVLPGB need PTI? */
-+		if (static_cpu_has(X86_FEATURE_PTI))
-+			invlpgb_flush_single_pcid_nosync(user_pcid(asid));
-+	} else do {
-+		/*
-+		 * Calculate how many pages can be flushed at once; if the
-+		 * remainder of the range is less than one page, flush one.
-+		 */
-+		nr = min(maxnr, (info->end - addr) >> info->stride_shift);
-+		nr = max(nr, 1);
-+
-+		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd);
-+		/* Do any CPUs supporting INVLPGB need PTI? */
-+		if (static_cpu_has(X86_FEATURE_PTI))
-+			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd);
-+
-+		addr += nr << info->stride_shift;
-+	} while (addr < info->end);
-+
-+	finish_asid_transition(info);
-+
-+	/* Wait for the INVLPGBs kicked off above to finish. */
-+	tlbsync();
-+}
-+#endif /* CONFIG_X86_BROADCAST_TLB_FLUSH */
-+
- /*
-  * Given an ASID, flush the corresponding user ASID.  We can delay this
-  * until the next time we switch to it.
-@@ -556,8 +838,9 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 	 */
- 	if (prev == next) {
- 		/* Not actually switching mm's */
--		VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[prev_asid].ctx_id) !=
--			   next->context.ctx_id);
-+		VM_WARN_ON(is_dyn_asid(prev_asid) &&
-+				this_cpu_read(cpu_tlbstate.ctxs[prev_asid].ctx_id) !=
-+				next->context.ctx_id);
- 
- 		/*
- 		 * If this races with another thread that enables lam, 'new_lam'
-@@ -573,6 +856,23 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 				 !cpumask_test_cpu(cpu, mm_cpumask(next))))
- 			cpumask_set_cpu(cpu, mm_cpumask(next));
- 
-+		/*
-+		 * Check if the current mm is transitioning to a new ASID.
-+		 */
-+		if (needs_global_asid_reload(next, prev_asid)) {
-+			next_tlb_gen = atomic64_read(&next->context.tlb_gen);
-+
-+			choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
-+			goto reload_tlb;
-+		}
-+
-+		/*
-+		 * Broadcast TLB invalidation keeps this PCID up to date
-+		 * all the time.
-+		 */
-+		if (is_global_asid(prev_asid))
-+			return;
-+
- 		/*
- 		 * If the CPU is not in lazy TLB mode, we are just switching
- 		 * from one thread in a process to another thread in the same
-@@ -606,6 +906,13 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		 */
- 		cond_mitigation(tsk);
- 
-+		/*
-+		 * Let nmi_uaccess_okay() and finish_asid_transition()
-+		 * know that we're changing CR3.
-+		 */
-+		this_cpu_write(cpu_tlbstate.loaded_mm, LOADED_MM_SWITCHING);
-+		barrier();
-+
- 		/*
- 		 * Leave this CPU in prev's mm_cpumask. Atomic writes to
- 		 * mm_cpumask can be expensive under contention. The CPU
-@@ -620,14 +927,12 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		next_tlb_gen = atomic64_read(&next->context.tlb_gen);
- 
- 		choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
+-	/*
+-	 * If not running nested, for AVIC, the only reason to end up here is ExtINTs.
+-	 * In this case AVIC was temporarily disabled for
+-	 * requesting the IRQ window and we have to re-enable it.
+-	 *
+-	 * If running nested, still remove the VM wide AVIC inhibit to
+-	 * support case in which the interrupt window was requested when the
+-	 * vCPU was not running nested.
 -
--		/* Let nmi_uaccess_okay() know that we're changing CR3. */
--		this_cpu_write(cpu_tlbstate.loaded_mm, LOADED_MM_SWITCHING);
--		barrier();
- 	}
+-	 * All vCPUs which run still run nested, will remain to have their
+-	 * AVIC still inhibited due to per-cpu AVIC inhibition.
+-	 */
+-	kvm_clear_apicv_inhibit(vcpu->kvm, APICV_INHIBIT_REASON_IRQWIN);
+-
+ 	++vcpu->stat.irq_window_exits;
+ 	return 1;
+ }
+@@ -3670,6 +3656,23 @@ static void svm_inject_irq(struct kvm_vcpu *vcpu, bool reinjected)
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	u32 type;
  
-+reload_tlb:
- 	new_lam = mm_lam_cr3_mask(next);
- 	if (need_flush) {
-+		VM_WARN_ON_ONCE(is_global_asid(new_asid));
- 		this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
- 		this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
- 		load_new_mm_cr3(next->pgd, new_asid, new_lam, true);
-@@ -746,7 +1051,7 @@ static void flush_tlb_func(void *info)
- 	const struct flush_tlb_info *f = info;
- 	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
- 	u32 loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
--	u64 local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
-+	u64 local_tlb_gen;
- 	bool local = smp_processor_id() == f->initiating_cpu;
- 	unsigned long nr_invalidate = 0;
- 	u64 mm_tlb_gen;
-@@ -769,6 +1074,16 @@ static void flush_tlb_func(void *info)
- 	if (unlikely(loaded_mm == &init_mm))
- 		return;
- 
-+	/* Reload the ASID if transitioning into or out of a global ASID */
-+	if (needs_global_asid_reload(loaded_mm, loaded_mm_asid)) {
-+		switch_mm_irqs_off(NULL, loaded_mm, NULL);
-+		loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
++	/*
++	 * If AVIC was inhibited in order to detect an IRQ window, and there's
++	 * no other injectable interrupts pending or L2 is active (see below),
++	 * then drop the inhibit as the window has served its purpose.
++	 *
++	 * If L2 is active, this path is reachable if L1 is not intercepting
++	 * IRQs, i.e. if KVM is injecting L1 IRQs into L2.  AVIC is locally
++	 * inhibited while L2 is active; drop the VM-wide inhibit to optimize
++	 * the case in which the interrupt window was requested while L1 was
++	 * active (the vCPU was not running nested).
++	 */
++	if (svm->avic_irq_window &&
++	    (!kvm_cpu_has_injectable_intr(vcpu) || is_guest_mode(vcpu))) {
++		svm->avic_irq_window = false;
++		kvm_dec_apicv_irq_window(svm->vcpu.kvm);
 +	}
 +
-+	/* Broadcast ASIDs are always kept up to date with INVLPGB. */
-+	if (is_global_asid(loaded_mm_asid))
-+		return;
-+
- 	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id) !=
- 		   loaded_mm->context.ctx_id);
- 
-@@ -786,6 +1101,8 @@ static void flush_tlb_func(void *info)
- 		return;
- 	}
- 
-+	local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
-+
- 	if (unlikely(f->new_tlb_gen != TLB_GENERATION_INVALID &&
- 		     f->new_tlb_gen <= local_tlb_gen)) {
+ 	if (vcpu->arch.interrupt.soft) {
+ 		if (svm_update_soft_interrupt_rip(vcpu))
+ 			return;
+@@ -3881,17 +3884,28 @@ static void svm_enable_irq_window(struct kvm_vcpu *vcpu)
+ 	 */
+ 	if (vgif || gif_set(svm)) {
  		/*
-@@ -953,7 +1270,7 @@ STATIC_NOPV void native_flush_tlb_multi(const struct cpumask *cpumask,
- 	 * up on the new contents of what used to be page tables, while
- 	 * doing a speculative memory access.
- 	 */
--	if (info->freed_tables)
-+	if (info->freed_tables || in_asid_transition(info))
- 		on_each_cpu_mask(cpumask, flush_tlb_func, (void *)info, true);
- 	else
- 		on_each_cpu_cond_mask(should_flush_tlb, flush_tlb_func,
-@@ -1054,9 +1371,12 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
-+	if (mm_global_asid(mm)) {
-+		broadcast_tlb_flush(info);
-+	} else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
- 		info->trim_cpumask = should_trim_cpumask(mm);
- 		flush_tlb_multi(mm_cpumask(mm), info);
-+		consider_global_asid(mm);
- 	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
- 		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
--- 
-2.47.1
-
+-		 * IRQ window is not needed when AVIC is enabled,
+-		 * unless we have pending ExtINT since it cannot be injected
+-		 * via AVIC. In such case, KVM needs to temporarily disable AVIC,
+-		 * and fallback to injecting IRQ via V_IRQ.
++		 * KVM only enables IRQ windows when AVIC is enabled if there's
++		 * pending ExtINT since it cannot be injected via AVIC (ExtINT
++		 * bypasses the local APIC).  V_IRQ is ignored by hardware when
++		 * AVIC is enabled, and so KVM needs to temporarily disable
++		 * AVIC in order to detect when it's ok to inject the ExtINT.
+ 		 *
+-		 * If running nested, AVIC is already locally inhibited
+-		 * on this vCPU, therefore there is no need to request
+-		 * the VM wide AVIC inhibition.
++		 * If running nested, AVIC is already locally inhibited on this
++		 * vCPU (L2 vCPUs use a different MMU that never maps the AVIC
++		 * backing page), therefore there is no need to increment the
++		 * VM-wide AVIC inhibit.  KVM will re-evaluate events when the
++		 * vCPU exits to L1 and enable an IRQ window if the ExtINT is
++		 * still pending.
++		 *
++		 * Note, the IRQ window inhibit needs to be updated even if
++		 * AVIC is inhibited for a different reason, as KVM needs to
++		 * keep AVIC inhibited if the other reason is cleared and there
++		 * is still an injectable interrupt pending.
+ 		 */
+-		if (!is_guest_mode(vcpu))
+-			kvm_set_apicv_inhibit(vcpu->kvm, APICV_INHIBIT_REASON_IRQWIN);
++		if (enable_apicv && !svm->avic_irq_window && !is_guest_mode(vcpu)) {
++			svm->avic_irq_window = true;
++			kvm_inc_apicv_irq_window(vcpu->kvm);
++		}
+ 
+ 		svm_set_vintr(svm);
+ 	}
