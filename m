@@ -1,162 +1,124 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D49125A650
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2540825A650;
+	Wed,  5 Feb 2025 06:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738737459; cv=none; b=Hd0sRh5iZ6ARKShetMZUPdd313UWq9vXlkMS2nnH6MbFoyeMsMNmWek4Wbcc26OXAV03/iC/7I7s0TY5RqNGooS9C7aSE81Qyf0t+SMz1/Q1Kwhrc86hhEeWz8NOqZLJnkiy9MQa5D+cZuIHfSVwAlsfih9PAUeG0YEoudQZuM8=
+	t=1738737519; cv=none; b=P8Q4beBvgSbeQr3E+pKsRhk+hFvtfmiWqvZ3/j9v9eK39OWxuBIMzzS06msMasJJDWbMqnn6ysDyalhvjEUVu6sVDV9y6NCje5utydi7UIv8y69VGIThay8Tq5JexB2yMuBfP1g6NxdF4BBU7V0qepbw/KVkz9mOwBRnopFGdeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738737459; c=relaxed/simple;
-	bh=/yU/Iok0AKAEYzZl8kvoN544r4p3j38bo3setf1ltHs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QOPnbqGS1MMaiK6fu2eWPWpaAITx7VkS2VatwEhg4ocpCd/PgwjZ+MyID8J8ycrlffEqhfpewfHWrnyLOj3uSFa/9No+9lmqeYtdW48jvLllO54NDIZTl0D2W7UWzd8E7xRw+iLCBbXqwYE9yaelC/LA+yZptY0e51f2i+I2rMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HWdU2tAh; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738737519; c=relaxed/simple;
+	bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=hiAFAL0geqJb5vB9BhFC6j7L266IDCgG/RrtrzyJRtlsH8jVGNMxTgIKPHQIethuf7/G4JZIuJabxtxG3uKprM+rcEBVY8Lo7FrJJzXRnCurvxNtQuCrlsqaiu2wA3OEzgwOcWB+FiEPIbo1LEkZ7LW9dembrlvxwddBODY4tYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=4mneROW1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bV/Gz4v/; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HWdU2tAh"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5156b6ZM3370991
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 00:37:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738737426;
-	bh=FDj3NqJSxEquaMNtZ7M6hmrY5ZBQE5yWhjVK5LOi0Tk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=HWdU2tAhy/eIeKiWybEdEbIdddG4YZopyKsnndlfQAMAnob/wynAFt+YVLs5uETIu
-	 HA3qxpmyfSQhqEq+jTkOGzMcaXdi9kIYKNrkEClHgtsGnFxbxOPuJEcFVZ8DrvrYFw
-	 pvBjkHmJFNunhZIXqwk5rY8szPWaeiDtJp00Emgg=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5156b6uT039156
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 00:37:06 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 00:37:06 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 00:37:06 -0600
-Received: from [10.24.69.142] ([10.24.69.142])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5156avhs100252;
-	Wed, 5 Feb 2025 00:36:58 -0600
-Message-ID: <3fac45a1-07fb-4332-9f49-6a08bd953855@ti.com>
-Date: Wed, 5 Feb 2025 12:06:57 +0530
+	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="4mneROW1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bV/Gz4v/"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id E4B9811401B2;
+	Wed,  5 Feb 2025 01:38:35 -0500 (EST)
+Received: from phl-imap-06 ([10.202.2.83])
+  by phl-compute-01.internal (MEProxy); Wed, 05 Feb 2025 01:38:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1738737515;
+	 x=1738823915; bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=; b=
+	4mneROW1H/IX5MKJLxWnp/hOy3Z8/tSjkE+2l0Nrc2gt3h7UqM5QFVXvaAOyS3OL
+	dVfIJfjfWkO7ns4VAZGAU90nTRQBvRDXq0duN+smwXlp6cXQq8BQ0NNBcXfy5BEU
+	Q5afYbY33y3EgijMaKtraPzIb0c+vKrutrXNkttUWcrByHOqKgCcsYonHde1vvsz
+	R392rm42YVSh7hL9eujwDymu+9NWaAPinDbRktAEwN3Eq4YT1R88ehIGtCNLpUkd
+	/2U7dk97u9Cd2EXoBG4dJeEVp9e12z6oP4z2afgEHtpicX1WHZ055waCtjDPnFJl
+	vJL/tmTx7ol2H5zq4dQd5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738737515; x=
+	1738823915; bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=; b=b
+	V/Gz4v/TUbcnXxc+EJU4ym2v8A5YD1D+9/qCRCGmXBIjg47KLqLOPqMtabl+KHz3
+	jHAlKQhMVCQl5O6lHX22SwkprRqSLYROU8FM2oSGZwl9i9tcbjtG5D5zfFiOl9+g
+	rj0d6R2a4VN8cWXZg63/Fr7FLuxvm46PGuFlC8NSUO2aO+mbx2fdC27qhsCeSX+x
+	xUdxrMNPHeBRkv+X39xt0TSXDNBnlWTEzidBsjnlU9RAzAUSAKlLa49rKvdIM2TG
+	R+wpiJWzyO3sN6qXOauwoJIdePrvKBjLAkpQwKyzTLqzQOrklmBucKS6/4EubXw8
+	1nJgFq3Ea8NLd7fxVnjsA==
+X-ME-Sender: <xms:awejZ4WKsKdO1P9-RTrDUwWk8eoGAYNvR4Tdp3ZKTwdwizs1Jw5dEA>
+    <xme:awejZ8mUMFOfYv1y6YLHKx8rY-56Ivu-wVyDkIYGULv7OelM21jOQyZ4ot8tChYtW
+    TJ4C0RjhbU8Hdmssng>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdejfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetnhhishhsvgcutehsthhivghrfdcuoegrnhhishhsvgesrghsth
+    hivghrrdgvuheqnecuggftrfgrthhtvghrnhepkeevuddtgefhveefveejhfdvhfdtheet
+    teefvdfgvdfffeevueefudeutefhgeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgt
+    phhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhhohhkrdhrrg
+    hjrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhithhhuhdrjhhoshgv
+    phhhsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhonhihrdhluhgtkhesihhnthgvlh
+    drtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhht
+    vghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:awejZ8ZHCID8xwg6zXZfxIyGHbVD1LNgzUc49RtIdgRRlcQ0kW5Quw>
+    <xmx:awejZ3XfbRdWeDMnsDFCCctbs9DEIewjG8QztEu3yC_M3TDF2UAKCw>
+    <xmx:awejZykHq2Lmth-IPFCPXcQRlXQjKfUV60ORGfGPvCDiq-Io75W6hA>
+    <xmx:awejZ8d-81P0ledixWQ38kemKHSrEhhygNcmx-C6lmnC_Fj9gA-kUQ>
+    <xmx:awejZwabmURMLsdbghyPCMuY_iYDGTq0EpnFeuKxLpL_GD-u2aOxRfuP>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5D48129C006F; Wed,  5 Feb 2025 01:38:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: defconfig: Enable TISCI Interrupt Router and
- Aggregator
-To: Nishanth Menon <nm@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
-        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.baryshkov@linaro.org>, <arnd@arndb.de>,
-        <nfraprado@collabora.com>, <ebiggers@google.com>, <ardb@kernel.org>,
-        <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <nfrayer@baylibre.com>,
-        <glaroque@baylibre.com>, <tglx@linutronix.de>, <u-kumar1@ti.com>
-References: <20250203150801.2399555-1-vaishnav.a@ti.com>
- <CAMuHMdUOMCxfsOrUF3-6PX0ZZ_E2g1SK4bwDqZE=mWiibPFt1A@mail.gmail.com>
- <20250205035148.krqvlysv73d4wcgs@uncooked>
-Content-Language: en-US
-From: Vaishnav Achath <vaishnav.a@ti.com>
-In-Reply-To: <20250205035148.krqvlysv73d4wcgs@uncooked>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Date: Wed, 05 Feb 2025 07:37:49 +0100
+From: "Anisse Astier" <anisse@astier.eu>
+To: "Joseph, Jithu" <jithu.joseph@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ tony.luck@intel.com, ashok.raj.linux@gmail.com
+Message-Id: <6b2479c7-e82a-4239-a329-10082c4e7e80@app.fastmail.com>
+In-Reply-To: <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
+References: <20250131205315.1585663-1-jithu.joseph@intel.com>
+ <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
+ <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
+ <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
+ <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
+Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image download
+ path
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geert, Nishanth,
 
-On 05/02/25 09:21, Nishanth Menon wrote:
-> On 08:42-20250204, Geert Uytterhoeven wrote:
->> Hi Vaishnav,
->>
->> Thanks for your patch!
->>
->> On Mon, 3 Feb 2025 at 16:08, Vaishnav Achath <vaishnav.a@ti.com> wrote:
->>> Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
->>> These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
->>> for core functionality like DMA, GPIO Interrupts which is necessary
->>> during boot, thus make them built-in.
->>>
->>> bloat-o-meter summary on vmlinux:
->>>          add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
->>>          ...
->>>          Total: Before=31615984, After=31778459, chg +0.51%
->>
->> My first thought was: that's a hefty size increase for two rather
->> small drivers!  So I enabled these two options in one of my own kernel
->> configs, and saw a size increase of only 7872 bytes...
->>
->>> Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
->>> Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
->>>
->>> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
->>> ---
->>>
->>> V1 : https://lore.kernel.org/all/20250119182121.3956546-1-vaishnav.a@ti.com/
->>>
->>> V1->V2:
->>>          * Add Fixes tag.
->>>          * Add bloat-o-meter summary to commit message.
->>>
->>> Previously both of these configs were selected for ARCH_K3 in respective
->>> Kconfigs, but commit b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
->>> and commit 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
->>> in dropped this recently without adding those back in arm64
->>> defconfig, this causes boot failure in all TI K3 platforms.
->>>
->>> Passing bootlog with configs enabled:
->>> https://gist.github.com/vaishnavachath/03d8d3ce0f22219643c2f4d1dd243fd1
->>>
->>>   arch/arm64/configs/defconfig | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->>> index cb7da4415599..1f25423de383 100644
->>> --- a/arch/arm64/configs/defconfig
->>> +++ b/arch/arm64/configs/defconfig
->>> @@ -1551,6 +1551,8 @@ CONFIG_PWM_VISCONTI=m
->>>   CONFIG_SL28CPLD_INTC=y
->>>   CONFIG_QCOM_PDC=y
->>>   CONFIG_QCOM_MPM=y
->>> +CONFIG_TI_SCI_INTR_IRQCHIP=y
->>> +CONFIG_TI_SCI_INTA_IRQCHIP=y
->>>   CONFIG_RESET_GPIO=m
->>>   CONFIG_RESET_IMX7=y
->>>   CONFIG_RESET_QCOM_AOSS=y
->>
->> However, on arm64 defconfig, this has indeed a much bigger impact,
->> as it also (re)enables several other drivers that depend on the
->> irqchip symbols.
->>
->> You probably want to mention that in the commit message...
-> 
-> Thanks Geert and I agree. This however just restores the status quo as
-> it was in 6.13 tag kernel (and ofcourse the default boot status).
-> 
-> Will be good to mention that as well - in effect, we are just restoring
-> the behavior, not introducing new features.
-> 
 
-Thank you for the feedback, I have sent a v3 with updated commit message 
-mentioning the reason for size increase and that we are reinstating 
-previous behavior, all the dependencies getting re-enabled were already 
-part of the arm64 defconfig.
+Mer 05 f=C3=A9vr 2025, =C3=A0 07:31, Joseph, Jithu a =C3=A9crit=E2=80=AF:
+> On 2/4/2025 9:50 PM, Anisse Astier wrote:
+>>=20
+>> Thanks for the update, and the Reported-by tag.
+>>=20
+>> Does this patch mean you got confirmation that the scan tests firmwar=
+e images will stay restricted to Intel customers with an NDA?
+>
+> On the contrary, Intel is making the images publicly available.=20
+> A new section has been added towards the end of the page[1], allowing=20
+> anyone to download the images without requiring an NDA.
 
-V3 - https://lore.kernel.org/all/20250205062229.3869081-1-vaishnav.a@ti.com/
+Wow, that's great news!
+(I had read the page a bit too quickly, sorry!)
 
-Thanks and Regards,
-Vaishnav
+I see the download link for EMR, does it mean SRF and GNR are upcoming? =
+What about SPR?
 
-> Side note: We are still working towards fixing up other driver modules
-> and some time in near future, hope to transition to initramfs boot as
-> default in a single patch.. but till then let us maintain the status
-> quo.
-> 
+Kind regards,
+
+Anisse=20
