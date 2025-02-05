@@ -1,117 +1,111 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB79211A11
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D964521423A;
+	Wed,  5 Feb 2025 20:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738788865; cv=none; b=hv2TUJrVCnMcyC5PdD8bRMLGStkDagdqo6Ltzy4dq6Ax4eOmEa98Ip5xSbQm0RFrYOSM1eHIsBtJc5tl/sAJzPAJmtvGKaDK8IhveMTM+WYk/yN0FK7land9CInyxmUDSaJeX2OB0hFr4VMeqVk7Ce9VLowN/c96d5x7ZVbDhdU=
+	t=1738788885; cv=none; b=nzWObOPPC49d5uBxjMcqxFbk+js2PxQJjtlkmg1bzvAVkd2R+doUVASizF28LQvVbN+b6e+aeMN1hevO5YBbSnKFV7ODAUHGlV50dlsGHhcqC8AOH1rv+YCxhU8ljR6dBQ0TPWtHZ8fNlJc12vWIKFlwkwPtucIbd8d6xlZiBuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738788865; c=relaxed/simple;
-	bh=srTRpRYGr682EWc7LV8sEjg3JykzZ2tWV8h6N3VFFQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kusZrJrfN70+iGWUAfcvUpzQ8AeW+3aC4qKchzLxMEawrsI9bk6amD/EyX8I+b/OZ96XDk+DAWxeVNX8V0HU4CUxEmG+cGL538fKLOVvKJAjqlBG5K+WRpb/NrAALv8B8nbLKzhNzTFS6VZWSghsonh1J3nZmyegHxRbWm8s9rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FMVqcxh4; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738788885; c=relaxed/simple;
+	bh=qW1/tokewwrr7dHGg+c3qpiuiMGzPpt3a8q4viUCY1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WAgYcZFCsWhHO9fXNV6EKRziF7999ZXv70LCFFMjEg47S/Owe0Q0FJg+8CC8cpi9lElJlWc/whrzN53gryKSTurz9dyFlsWiR/e9DjlF2mFI6nCEX4dh4qpfXvChAkphFc65iKBrgLel2ZIB838ietwdilpSb5ycL4B2xotw6rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baS9uUjO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FMVqcxh4"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30737db1ab1so2041551fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:54:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738788860; x=1739393660; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gnfNJ31w8XMj5OUdUcMgE4H0lYz13gL6Ny9TiCxl+MI=;
-        b=FMVqcxh4AQ76lIMBct5OcARizRHRLGojOoflDmNOD5Rm/7jW2jPyMa5w17TpOF8rsx
-         07cCdb21ELVcNCCG0ACHknWMLo7lcK8tLMr3v9RXo8OUspFuKApjA2vxn1IbysanwqmH
-         r0cszb2cshiAO9HxKhzd302HuX/6u9YABOdto=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738788860; x=1739393660;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gnfNJ31w8XMj5OUdUcMgE4H0lYz13gL6Ny9TiCxl+MI=;
-        b=psAK2LpKVPQsmwOh6Vyit9QAX47Ln9htZRBH7H2J6s/czFtmFSVX7L5YHHBfP/lX7Q
-         2bnIkoSDOA8rnnAQSaDqY1cLbDiwCqrN8F8YqkXjbbvqW7Lvtm9zHida+3oUq+z/3mi3
-         Dv+g0uDQG23WbK+hqtRnDruDyA+buqTmg+ML2YcUfyJlO+gCQ9FkEb72Ews025+pFVCe
-         3do08YtTUd0jLVVru5/y+38gPEoLxcmIufBJD/lwNA9QrIXMzlhnOU5mp5tWVc4EXAuf
-         ibfUCtJwZdpNFSJRNHRAFBdiHoMIccBppDoe9AKx3+EpHZJnnVZdX/pdmuQBXAHVvAvr
-         rZlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7y/VYZGbhdzfIdCBz4yGM9lu7J/zKOStqba/Ka5e6pieLrDus8iQEjtIsRBY7OnJ0ApJz77IyWcU7UIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0H0q+k7KBoGxMRTTv/o3/8Gj1cqGPIr5fTCFwLIzkaVpG8eVA
-	idcDuSbT506Lmzyhs+wRZGqFie2aQhotEicxJVfK/jhKG26xD93O3OgAr/dYkbRHV91EysBoDOB
-	9KQ==
-X-Gm-Gg: ASbGncu1ievYELgOq6mY16N7PyYBOtUPrc5a/eVYwX0XNuXF7aA5KqYFvPoior8yvHr
-	myp6TJ75ALI4/j7O6ns+C3aUBYoLMcFFKHxsRU3bsu5Lu3oaZmac7MWjp3n4Eo/beme+/J7rAn+
-	JEvcY/E1L6jW2pL7wnm8NWKEKtoEmjcUwKcldDuGhNF9kkweaQvb9pWzo6+cluqry6AA3vL2Hqn
-	yPjSmceosqdgx/0lXKTw+UNtVFuqf+2mMmLssGKnCCwr5Oz+uc9k+koFl4bKVt6VQFhiG6VfZ9O
-	rcGVC6yTVMLEE3j30Kogq9JR9cmRTc6i31HFeY7/7rqaj0DAQuVybHA=
-X-Google-Smtp-Source: AGHT+IG2E4D6es6RPiNWkWeriFOOALch1RrgHaI0M6Sb5Pvt6J5FtnP3A5WxN7lBLR2pha4RTUtT0w==
-X-Received: by 2002:a05:651c:1614:b0:302:264e:29dd with SMTP id 38308e7fff4ca-307cf370987mr16549511fa.24.1738788859706;
-        Wed, 05 Feb 2025 12:54:19 -0800 (PST)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a30699dcsm22299081fa.19.2025.02.05.12.54.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 12:54:18 -0800 (PST)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5440efe97baso71790e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:54:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX0g9C8Rb+2RsXOA/l5p5mYSPSkNnIqb5P3zx632dWHuUiTIHxYVxF2YqQOqzngyifYTY4qaM7SA8L3E3o=@vger.kernel.org
-X-Received: by 2002:a05:6512:3c8d:b0:540:1f7d:8bce with SMTP id
- 2adb3069b0e04-54405a6c098mr1369123e87.38.1738788858213; Wed, 05 Feb 2025
- 12:54:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baS9uUjO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500F4C4CEEA;
+	Wed,  5 Feb 2025 20:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738788884;
+	bh=qW1/tokewwrr7dHGg+c3qpiuiMGzPpt3a8q4viUCY1k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=baS9uUjOEkJVYIpggR4O/q8UntSeqAyq5Lb3xdusnX8oubUbGya8n2sidLjsh2jI2
+	 kz9TcTmjEzv7dK1Z8i5JKH9MBXPOp0/XcvzRPo47vFe7cR11A4O168fMYLbB/+LoM6
+	 j++cGdgbg9QN5bkGFU/TgQkW6w+h7RECErsy37ThdHsOSq0JshxOycNvq3LtvHQTh2
+	 lNBTFsuM7MdYEzcAWefwLQdsevBN2/LA/XBCnonNi8kpf0zWnbd7BlR5ztema5d1/g
+	 PkWjp3BppepbMAernmoiChXCf6Lo0fZGulqjZwSvxvNd4QkGp6afdZWsOmrJxakn/F
+	 KnzXrhW4M3sAA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v3 0/4] perf trace: Add --summary-mode option
+Date: Wed,  5 Feb 2025 12:54:39 -0800
+Message-ID: <20250205205443.1986408-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201185439.157613-1-tejasvipin76@gmail.com> <CAD=FV=U+eg5P7qC9pMCQTc-eaPK2DgpC6xkqswFRc7FnQBYeJA@mail.gmail.com>
-In-Reply-To: <CAD=FV=U+eg5P7qC9pMCQTc-eaPK2DgpC6xkqswFRc7FnQBYeJA@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 5 Feb 2025 12:54:06 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=V8xJtqYjdUmDZfdd9XP6r75-7-nDp1OL7pvE+wo0ZFDg@mail.gmail.com>
-X-Gm-Features: AWEUYZk4A2PtUDWgKQwwAC8_vv9GiJYpZFEbo6pTOKrZFhPqND757eFC71ksSKU
-Message-ID: <CAD=FV=V8xJtqYjdUmDZfdd9XP6r75-7-nDp1OL7pvE+wo0ZFDg@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: sharp-ls060t1sx01: transition to mipi_dsi
- wrapped functions
-To: Tejas Vipin <tejasvipin76@gmail.com>
-Cc: neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hello,
 
-On Mon, Feb 3, 2025 at 9:59=E2=80=AFAM Doug Anderson <dianders@chromium.org=
-> wrote:
->
-> Hi,
->
-> On Sat, Feb 1, 2025 at 10:55=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail.c=
-om> wrote:
-> >
-> > Changes the sharp-ls060t1sx01 panel to use multi style functions for
->
-> Not worth spinning for this, but s/Changes/Change/
->
-> > improved error handling.
-> >
-> > Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
-> > ---
-> >  .../gpu/drm/panel/panel-sharp-ls060t1sx01.c   | 59 +++++--------------
-> >  1 file changed, 16 insertions(+), 43 deletions(-)
->
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->
-> I'll wait a few days and apply if there are no objections.
+I've realized that perf trace shows system call summary at the end for
+each thread.  But sometimes users want to see the global whole system
+summary or statistics instead.
 
-Pushed to drm-misc-next:
+So I've added --summary-mode option like below:
 
-[1/1] drm/panel: sharp-ls060t1sx01: transition to mipi_dsi wrapped function=
-s
-      commit: 7e3bf00047cdfe2b09e9a0d77b99bedc15406bfa
+    $ sudo ./perf trace -as --summary-mode=total sleep 1
+
+     Summary of events:
+
+     total, 21580 events
+
+       syscall            calls  errors  total       min       avg       max       stddev
+                                         (msec)    (msec)    (msec)    (msec)        (%)
+       --------------- --------  ------ -------- --------- --------- ---------     ------
+       epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+       futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+       poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+       ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+       clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+       epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+       nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+       ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+       recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+       write               1393      0     2.854     0.001     0.002     0.017      1.79%
+       read                1063    100     2.236     0.000     0.002     0.083      5.11%
+       ...
+
+Also it changes internal data structure to hash table to track
+statistics of syscalls.  And removes the rb_resort code.
+
+v3 changes)
+* Add Acked-by from Howard
+* Update commit messages  (Ian)
+
+v2 changes)
+* Rebase to current perf-tools-next
+* Fix some style issues  (Howard)
+* Rename to --summary-mode  (Howard)
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (4):
+  perf trace: Allocate syscall stats only if summary is on
+  perf trace: Convert syscall_stats to hashmap
+  perf tools: Get rid of now-unused rb_resort.h
+  perf trace: Add --summary-mode option
+
+ tools/perf/Documentation/perf-trace.txt |   4 +
+ tools/perf/builtin-trace.c              | 247 +++++++++++++++++++-----
+ tools/perf/util/rb_resort.h             | 146 --------------
+ 3 files changed, 203 insertions(+), 194 deletions(-)
+ delete mode 100644 tools/perf/util/rb_resort.h
+
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+
