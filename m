@@ -1,182 +1,89 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F84211A11;
-	Wed,  5 Feb 2025 17:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE19E1FC108;
+	Wed,  5 Feb 2025 17:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777180; cv=none; b=fEQyAuYIJ4fb1Lt7Op/xD5pYipQBYbo4zQ7YtLo6d1OQUUsGk3xAiVAOeJro7x43KGf0tSoK/N2A/o8990nLVLWr/9sOWnxZz8pbKr41gXGIS3P1NokJPOZtBaupvQTFTY152DeC6bHjXkaZBNFO9+cR2YIcOnUO2MerIsD6AR4=
+	t=1738777233; cv=none; b=Gbq0CEob8MLDCWQfnGRmoIi7N003Y8YRECnFY3nV+mTLEooaoSLtSW55eSd4tdjZOZUzIuHl31YDJkfwEnRdmIYYg9Q4z7A5qI35oNudEFRuS+FDEk+xDhPVprG34Tb5mAuf7hDMJpGXS2GOYSFlmEZ9a/nhK3Yq9skEYVeVzy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777180; c=relaxed/simple;
-	bh=S8T1PWTHvPJdjLF0VsVaxwM6hjAvUiPqNUnMf9LRpxM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oy8ghjMldp8Utx5bOnxsQiCZYnevsSU5MWVYm2FsdBkFwHuXeNj9aS77fE67hb4KOQwty/T1sRhtjsAcTNekrMGJroGlVAtIivizqBUwntNPwLEFMRnZWnoktU2l3XhLp0SW+sHBqo+oc8E24XIzwL3tEgwburnnRa9OKCdfngE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nF14YuQU; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738777233; c=relaxed/simple;
+	bh=I4jW9o/4B+Z8UC6sywEnjRYy1f2QJpfv+cAZ+qa4pnw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I6jO4fF0NW92lL06wZMIaGaxLuFrbzYc6Ic9WPHgUZtJ7P9IxKUet9vx1DXCo+ZxrWLRcOypFGh7rZGa1xGtJsoD1E4gP2kWXPEEa2+kjE88txkbgcXoXr8VesO8xjCLVdJmAW09kWObI/0XDfXEWEs78xrIMMk3KUSPdewgE1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+DXVKsq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nF14YuQU"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 90906441E9;
-	Wed,  5 Feb 2025 17:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738777171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f2S4G8o+owx9cCOvZeDqRa7r3ZpY37yJGMWqoecfhdQ=;
-	b=nF14YuQUTJ7PColQyF8etP43/noERmZh66PSkf6itlZMZzGmsoeKwhgPLwy3QWg0MFuHdO
-	LlUx1S+kyQbmMgBGGSPn+QVqR/zlN/eyG/0WpgRsx/b96gQwYBTFVRQ25j9IZ7yWLSBcna
-	PduVpIdqjE66RNGqXfKT0PsGtc5/DhjcjJshYy4HAQIhjL7Rum9MaY8oAHkYoTxIWW+jak
-	F6iH3PYJAe3RYOdDOSyxiWp1scQqLlOmtWXV5nD/q0N0ejfS0AefEogkj187lbZJzK99di
-	6uAC8QOjXwXpZe1TQxMsBM+a7R8uOa5TJhQk9/BxNdGNYx/3TDOLYDRsXrk51A==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [RFC PATCH 3/3] i2c: i2c-core-of: Handle i2c bus extensions
-Date: Wed,  5 Feb 2025 18:39:16 +0100
-Message-ID: <20250205173918.600037-4-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250205173918.600037-1-herve.codina@bootlin.com>
-References: <20250205173918.600037-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+DXVKsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53C9CC4CEE2;
+	Wed,  5 Feb 2025 17:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738777232;
+	bh=I4jW9o/4B+Z8UC6sywEnjRYy1f2QJpfv+cAZ+qa4pnw=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=M+DXVKsqzuEqwi8PgguM2uouwIcSnsgTqEJs/U/Ab4o/wHhEsrjT3DkDeTfRsLxKF
+	 UKf+bY9qowD5PyJTJakWcXUQNxDljxBAF0iSYLe21Y+d+0ZAqcPJix4TT/6hWvloMm
+	 KQeZ4MpJai34ciLaaMamAn1Y8Kgg02hgH3DIlZdyxaP1EmXnisBBOGNpDHQJcRW3W5
+	 uGXV0xZTbILmebKO+XcZXeW7G5hRbHDsNsdgMpu+M8N3qiTeztV9hI4I/GqsL+HBjH
+	 tpKbyYHTdMD5GqZwtf3bp/bUy2fcmaTs4T5x90Pp4HsxkLRIFe4qLACrQghtHCDAHK
+	 xOTA1hogj174Q==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-543e49a10f5so11551e87.1;
+        Wed, 05 Feb 2025 09:40:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUOjjMLcE1nMuhpArRFnZP5GgyhTwnFrgW96wx3NvPQvs3wsT2M4Iqm5RVAOFxK0wxQE+/jdyE/@vger.kernel.org, AJvYcCVzHSV7lgLPV5UwssHKzaqlRzu5M32SzIE5hTx8mvL3SzmyDifgX+xk6YQ4Gem5Ml9NovHzRzCnSym0v74=@vger.kernel.org, AJvYcCXyS2J/J8Wayadjcf0snmt4UKb49vNuwkANC/dcAGvRLs4BVkwOUG5jv8yphFSfCLpcN0LFHwQB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaG8mygbF5L0nm4lXnlb2FE065pe5a4ZDN81yH+g800jVLTof3
+	Kt5+pULgbp54J2Oua5zHVIrRrSwgwrpytI8f5IBJPA7wfLJkinWtKAQUAwoFTxaCn3ToH346r3X
+	KxnrDJQnLIAqS0WTeebFsN3SXlAI=
+X-Google-Smtp-Source: AGHT+IG8lhakou025la5Jappucv8WLtdehhFKE96djLZ79QU2Y1TtjR/MkLvLzNVVS5NW5nvfFdoY99dvlkSP3I4BEQ=
+X-Received: by 2002:a05:6512:3e03:b0:543:e3e2:879e with SMTP id
+ 2adb3069b0e04-54405a7b6c1mr1242587e87.51.1738777230659; Wed, 05 Feb 2025
+ 09:40:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegto
- hhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20250204161359.3335241-1-wens@kernel.org> <20250204134331.270d5c4e@kernel.org>
+ <CAGb2v641vvtVKv8QbiEfHnMWngcKYTJZAgfH5k+G_nOvZcbC9g@mail.gmail.com> <20250205173824.GJ554665@kernel.org>
+In-Reply-To: <20250205173824.GJ554665@kernel.org>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Thu, 6 Feb 2025 01:40:17 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64CZWZwC7T9NNN7Re8pkCLQZEh3bcraYjcQRyVxtJgS5w@mail.gmail.com>
+X-Gm-Features: AWEUYZksuSbRuZZAzWd77ituAitD1pgvI4pAn_LVLBqoUUFzO5mWdzzigczPLts
+Message-ID: <CAGb2v64CZWZwC7T9NNN7Re8pkCLQZEh3bcraYjcQRyVxtJgS5w@mail.gmail.com>
+Subject: Re: [PATCH netdev] net: stmmac: dwmac-rk: Provide FIFO sizes for
+ DWMAC 1000
+To: Simon Horman <horms@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Heiko Stuebner <heiko@sntech.de>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Steven Price <steven.price@arm.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-i2c bus extensions were introduced to decouple i2c busses when they are
-wired to connectors. Combined with devicetree overlays, they introduce
-an additional level of indirection, which is needed to decouple the
-overlay (describing the hardware available on addon baord) and the base
-tree (describing resources provided to the addon board).
+On Thu, Feb 6, 2025 at 1:38=E2=80=AFAM Simon Horman <horms@kernel.org> wrot=
+e:
+>
+> On Wed, Feb 05, 2025 at 11:45:17AM +0800, Chen-Yu Tsai wrote:
+> > On Wed, Feb 5, 2025 at 5:43=E2=80=AFAM Jakub Kicinski <kuba@kernel.org>=
+ wrote:
+> > >
+> > > On Wed,  5 Feb 2025 00:13:59 +0800 Chen-Yu Tsai wrote:
+> > > > Since a fix for stmmac in general has already been sent [1] and a r=
+evert
+> > > > was also proposed [2], I'll refrain from sending mine.
+> > >
+> > > No, no, please do. You need to _submit_ the revert like a normal patc=
+h.
+> > > With all the usual details in the commit message.
+> >
+> > Mine isn't a revert, but simply downgrading the error to a warning.
+> > So... yet another workaround approach.
+>
+> I think the point is that someone needs to formally
+> submit the revert. And I assume it should target the net tree.
 
-For instance, the following devicetree fragment, available once
-overlays are applied, is legit:
-
-    i2c1: i2c@abcd0000 {
-        compatible = "xyz,i2c-ctrl";
-        i2c-bus-extension@0 {
-            reg = <0>;
-            i2c-bus = <&i2c-ctrl>;
-        };
-        ...
-    };
-
-    connector {
-        i2c-ctrl {
-            i2c-parent = <&i2c1>;
-            #address-cells = <1>;
-            #size-cells = <0>;
-
-            i2c-bus-extension@0 {
-                reg = <0>;
-                i2c-bus = <&i2c-other-connector>;
-            };
-
-            device@10 {
-                compatible = "xyz,foo";
-                reg = <0x10>;
-            };
-        };
-
-        devices {
-            other-connector {
-                i2c-at-other-connector {
-                    i2c-parent = <&i2c-ctrl>;
-                    #address-cells = <1>;
-                    #size-cells = <0>;
-
-                    device@20 {
-                       compatible = "xyz,bar";
-                       reg = <0x20>;
-                    };
-                };
-            };
-        };
-    };
-
-Current processing done when a i2c adapter is registered registers
-i2c clients described at the adapter node level.
-
-With i2c bus extensions, the process needs to look also at
-extensions to register devices described in those extensions and so
-connected to the adapter.
-
-Extend of_i2c_register_children() to look recursively at those
-i2c bus extensions.
-
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/i2c/i2c-core-of.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index b4c9db137f5a..406565beabbe 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -85,13 +85,20 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
- static void of_i2c_register_children(struct i2c_adapter *adap,
- 				     struct device_node *bus)
- {
-+	struct device_node *node, *extension;
- 	struct i2c_client *client;
--	struct device_node *node;
- 
- 	dev_dbg(&adap->dev, "of_i2c: walking child nodes from %pOF\n", bus);
- 
--	/* Register device directly attached to this bus */
-+	/*
-+	 * Register device directly described in this bus node before looking
-+	 * at extensions.
-+	 */
- 	for_each_available_child_of_node(bus, node) {
-+		/* Filter out extension node */
-+		if (of_node_name_eq(node, "i2c-bus-extension"))
-+			continue;
-+
- 		if (of_node_test_and_set_flag(node, OF_POPULATED))
- 			continue;
- 
-@@ -103,6 +110,23 @@ static void of_i2c_register_children(struct i2c_adapter *adap,
- 			of_node_clear_flag(node, OF_POPULATED);
- 		}
- 	}
-+
-+	/* Look at extensions */
-+	for_each_available_child_of_node(bus, node) {
-+		if (!of_node_name_eq(node, "i2c-bus-extension"))
-+			continue;
-+
-+		extension = of_parse_phandle(node, "i2c-bus", 0);
-+		if (!extension)
-+			continue;
-+
-+		/*
-+		 * Register children available at this extension possibly
-+		 * walking other chained extensions.
-+		 */
-+		of_i2c_register_children(adap, extension);
-+		of_node_put(extension);
-+	}
- }
- 
- void of_i2c_register_devices(struct i2c_adapter *adap)
--- 
-2.47.1
-
+Russell sent one a couple hours ago, so I think we're covered.
