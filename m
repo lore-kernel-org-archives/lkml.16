@@ -1,304 +1,373 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637A81FDE38;
-	Wed,  5 Feb 2025 00:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738714979; cv=fail; b=eLrXIMUGINyEplk2FYUzBrvR8zXGpSSiYXk2FigkuDxM3HNf0MpLg0ItAKafWWJBQ6If5RkQvODGoSy6Hj5ZQnvotAkPZJwbjtZLg8sgh8U8CISxVauMA+JAIW0zXnroav6R+gUkJsXscWbfoxScmQL2DMe5thWUjwJVBW3C9DE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738714979; c=relaxed/simple;
-	bh=xFE6pLrwVWOAyVdjpDeOeoXubv7H29LB4Vc/RGWetLU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=EEmU7VtsUBsYB03Khv6LUHuiKozsN2auaLUX84cGwXAgNEuJvmbKRRe6rXux9xkwh4YPEDLmCMl+5LtY0PAELE9i2zdHo7MhOja8f4jVFmN9tWFEDaNlv3FzCIGOqQcvKErsDo1z4nqOwCK/ce4WePSTJ5/i6j3xfjcPUZ/ukpY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WzbCP0QO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FDUrYjcK; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3FC1FDE38;
+	Wed,  5 Feb 2025 00:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738715092; cv=none; b=ARzPLgm4Eug5YOeEkrgSNUN8nojmOmkyQEFRt8i9wrR9xLJy8oAqb2eeW+jcUOEEhtd73VLcIQKed8M3GYhgOmXcDHOfQ4Qp9nzUEJS4ON7Oo7Q6QblUcVuyIY/C8r69Ot6kli1Hs6FHiXUGROjPMIBh9J1DWRQokhIC0mBhwaY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738715092; c=relaxed/simple;
+	bh=bNP0C/mvlwdXsFn2VUm9f134dzLyjeX0pTFQ8C0k5pc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FQZZJKo9yo8idZWFeWdZv6vq8BihwjzCJ7xSb8hqw94um+LT5hUXMmyp1/7HKXuniCWEWI6xmdS0qFFnczV7w9Wg71HnTe4qyx04KNYIg1qb6NM2IPmPhCW2YIqYrYZmJrK1QZ0u9jdCjxgs3DCPIyAXixNkXbSpdy7eyioU1Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k8KHi7Gi; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WzbCP0QO";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FDUrYjcK"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514NBr2g003394;
-	Wed, 5 Feb 2025 00:22:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=4FN+qRgY0n6uXppwZ7MN3VwyT+z7PW1HF0jP2pMgmn0=; b=
-	WzbCP0QOxIvJz5r24N8eZl1HBeCUwt7lJOf2hTMGNFdB8sWVO01ZpSMHOf6oGy+X
-	ETa5M4vb6eu4FzX2vQWjmiVF9vF8rK/0mMipYT52LCdNPtZyokFgRxB54+DWy3j0
-	oWMUAoa4vucYvhW5hSNWIgke+uOfHgB4TUHuUOjjlsqe8LXprhMH7B9XdXiuU6EP
-	USEf07agL72GbZzLi/vsf3Cqq5LD0XJuB9QiLvEh79swWFN9U6Y+lX+xdrBNqVNF
-	muVPsDQ5gbucoih1E3eHQL/NGNUJUwXqpX9yb7MwN3mGzIVzaprhz44/OGMkK6xT
-	C3AkXR3iL3tZEdnRGQHSlw==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44kku4s8em-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 05 Feb 2025 00:22:36 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 514Nm4JQ039045;
-	Wed, 5 Feb 2025 00:22:35 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2041.outbound.protection.outlook.com [104.47.51.41])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8e8e87j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 05 Feb 2025 00:22:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j5jO92N4PSjJF0p8YcJt2wyo9HRwhl/3qNJ47GWvf6/qbhWerBrY0g+x+/sp5chQijEabNU4ziT6MSTcY2qEQ4RssoNUObsB/yK+V3N0QmH6N+MjOM+3FCxj8sjCwfHb71ClgJ995tU6qLdkG7nvDxn4Sw+NrV/siKR+8F1h0OFfV6jT/axSzj0NAGAQtZXU2/nJ4s60ori7doOlI041zHMFtjIc6Idvi7Jrkg0BsaaEJAKRPZyX+S5uPKfD3M8vMp5k9vmUnULCti+ZsrJoBLSX5Ukixs2O9HxTCaNisPoRX9HxDzWwEUzE2TNwelYIG3kj6GtVzEX7SrEOQT12FQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4FN+qRgY0n6uXppwZ7MN3VwyT+z7PW1HF0jP2pMgmn0=;
- b=p0y73z+e2k0GrjP4Vc14BbDBjfzocodGLknnzNxS6F+XZZ0TNfrWUAO/Wq7AeGtU7pqJMCzCVE0hvCfjfy9+sDKFm6bq8Uned9XrIGUqlUhYYjCrd77wq1IS5cLOFBDT6uxiWR/d6agj8uZ24QoHnXHFU7QRBjOynxcUa9iM85iQpr3tuqxyOaWlDDuFM4mrEBfhmFCq73IRN1cfV6L6lrnvh3UrF4cW2zTdh+FkiP/PRr4rec7tjF3yXneIUVlUvR7to83xUCRoGf+RVVCN5rNn6+a609kB+OmQvhUtPrI4g8GHp5AKwUGiRkAIuK0jbofSBe1hyczGQ22xmBYpRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8KHi7Gi"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e3c8ae3a3b2so5561941276.0;
+        Tue, 04 Feb 2025 16:24:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4FN+qRgY0n6uXppwZ7MN3VwyT+z7PW1HF0jP2pMgmn0=;
- b=FDUrYjcK1gj+EWyZBOtXYAa6dZSWDThzi4YTq4VQ0h8kuGJQQybSaPlOGDgaatuFcyI8fTM5OvUEfWRIb0dj1cBEPsAjbeMDneZX37NChJGhbvuhI6neEQROlG7t8FIuW7IfXG/bkS0vgd0g0k9JmrVKWHVN5b7PT7dD61l2PXY=
-Received: from SA1PR10MB6365.namprd10.prod.outlook.com (2603:10b6:806:255::12)
- by BN0PR10MB4838.namprd10.prod.outlook.com (2603:10b6:408:127::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Wed, 5 Feb
- 2025 00:22:33 +0000
-Received: from SA1PR10MB6365.namprd10.prod.outlook.com
- ([fe80::81bb:1fc4:37c7:a515]) by SA1PR10MB6365.namprd10.prod.outlook.com
- ([fe80::81bb:1fc4:37c7:a515%4]) with mapi id 15.20.8422.010; Wed, 5 Feb 2025
- 00:22:32 +0000
-Message-ID: <303e0c91-2351-4ccd-8948-b400ac5d2b7f@oracle.com>
-Date: Tue, 4 Feb 2025 16:22:27 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] unwind: build kernel with sframe info
-To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
-        Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
-        linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, joe.lawrence@redhat.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20250127213310.2496133-1-wnliu@google.com>
- <20250127213310.2496133-2-wnliu@google.com>
-Content-Language: en-US
-From: Indu Bhagat <indu.bhagat@oracle.com>
-In-Reply-To: <20250127213310.2496133-2-wnliu@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0212.namprd03.prod.outlook.com
- (2603:10b6:303:b9::7) To SA1PR10MB6365.namprd10.prod.outlook.com
- (2603:10b6:806:255::12)
+        d=gmail.com; s=20230601; t=1738715089; x=1739319889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pV+yVg74O6M+JjWsYidBH2vKWaB+LVbg5Losiv7J8Tk=;
+        b=k8KHi7GigfAnZrt+VbuBTJJyXaJnvWV9yF2kWlaCAs1qKV2n//Ymsyqq5BxIXeVyrA
+         OGozsDXGxnAQ0WIEHiQGLIhh1/AiEWxDQ0APcVIliXmWphqqdJEsyHfVwo/9UDbLhExk
+         +Ws0W7pzofXaYImmyefvv0H9j20AZ3Qmzr4SQ4sMAi/yverH6nLY5HlDnyKvMXoQe9S0
+         Ej8DpdQtIWiDgqH07o5k69OZYxShPIOPa7kD7WxSk2PwsrNC4G3xTkPy7DVkl/tmCcY5
+         PjrDN1uMAZoCjdTTwVGKZvA/I0mzuFBZl1BkmzGheiHrsMsZRT9PisRN2UzN98E+K0iJ
+         tYmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738715089; x=1739319889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pV+yVg74O6M+JjWsYidBH2vKWaB+LVbg5Losiv7J8Tk=;
+        b=smsaFCZ2tVo9D4pNSiCL9NjzpEcSEcbNgMf4pL0NoGxfoNkTZGzmAKFqaUsSURgeGd
+         Uwfm15eFVZYP4xXxcIAdFE8JvVfyPZ7vxdLSaHgJFUJI5fkoKioIYNfk3pXBDuX7+WyW
+         QXOdoLtv2EfW8J8dfPsvJpHBghUwLghrQs4/1MByjhFAqCTXnxcgIkty0q3A/jo4xy4R
+         xh0OvQ1GubJ1n83g4jsrn2MEtlMSD/iPwlNo09l9pdER0afhPD9avjLeeC26/FS3GQRG
+         aJiRwCTBY9PcgLl07PH+HSMGkHS1OlDDjY+5EPxUJMrt4qpejushvc7pLrf1OU9/jOrP
+         +Hkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXodo9c9xoobLN8VCVpbNkfi7273LVHS43OVg7E3HaQ+Vv+Pp2X12hnqC0v97oMz6p6IinoQKrrcgsy634FbTROA==@vger.kernel.org, AJvYcCW6iK/XgUZdkEVz3dOyI4WI3NrG+ZyGabK2ZqKUVth18GlzCL1yp3OSrJ+9sa/rF4nNv6FfVbeNrau7@vger.kernel.org, AJvYcCW9GCDFB4dZGa/JFU8PtJqBOBdqhQH/2chDgzPHyGG18wOxdBcYZwx+Mf/8we+ONIboZxr/IXfDlG4gokoI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yztc3etZtvfyGNihG9rQEMv96kAbi0dCkJOHwJmhhS9VgpQtsTY
+	VhlZxvpldMJOnoM/7V0AiepPdsHjw0fULGHfrP+o4bHbW9lQ6DCR/Tqh4e+fDnyjYbn0lHGU1qh
+	3lLC1mAe3aYtb9AspUyKAYqw/geQ=
+X-Gm-Gg: ASbGnct175F25eSchlsL7EqAAqyPM0O+HlLXak8alACjOH+PVtx+Cb85qVJftPWfzLr
+	XpPsv6qqJveuNucDh51psVYAni3v1lRO4sHR83CTsZ0Ihx/v6GdXT4nd+clYRC4BjUUGhi08=
+X-Google-Smtp-Source: AGHT+IFlsq7s2GXQcMJV9ME/Neo9VjBp8UIKcRBwptanpGVug8P8PrIq9QJK6U7+DKwL96DfTVdCKiUymMLMc3Gqjc4=
+X-Received: by 2002:a05:690c:4c09:b0:6f9:7e35:67a3 with SMTP id
+ 00721157ae682-6f989f58ad8mr9941447b3.28.1738715089289; Tue, 04 Feb 2025
+ 16:24:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR10MB6365:EE_|BN0PR10MB4838:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75e9d1e6-64a4-4c94-c64f-08dd457b2ee5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|10070799003|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MFhwV0t1ZDI3RVlaMzE5U1hNVmxlVk4yNkZ0c2dFUC9PQmFMV3BsU0ZDeDZS?=
- =?utf-8?B?Tm1UM3RSdnI0ZEVsTGM3ZndYSVlOemIxRkFDYnM5UzVQZFJGYy81dmxyS0tJ?=
- =?utf-8?B?aUdZMGpBRDNZTmhqNGc0TFNNbEJ4OEVPSjUrSFQzNUlYMmN2ZnpVeWVpUWta?=
- =?utf-8?B?QjRuRVVNN0JHa0x1MzdTTXV5MHVrdjNwZkc5OExpaktDTlZUeUdOZWxOSlEw?=
- =?utf-8?B?cHIzcHQ1cDZNbTRmbDAzVGM4UkhQUmtkNFV3a1g0M3NiS3FhL3RVTXA4aGND?=
- =?utf-8?B?c1UzNnFUdmo4dExBTHJNb1Z2ZjZNR3krS0RSNk9jVGxHdWIrSlBuaVhzd2sw?=
- =?utf-8?B?TzZsT1o1d0JLN2U0L05SSHZEZFVJNWo2WHlwelQyRzdGWTBrRWd0R242N3pw?=
- =?utf-8?B?dFBxaTFibkdQNzlJV3pCRklnSFhZRXJIYnlRZXM2b1BMNG9uRzY3VXJDZ2R1?=
- =?utf-8?B?bDBKNUJ4UlkvenJzc2tZZG9kUk16NWFleTUxS1VKSnF2UGFMeEFScS9DYktV?=
- =?utf-8?B?M0VjMFA1emNZLzc5a2ZFSE0rMkIwZmVieGpZVkswMGdZMXBVaXpqcksrMHNm?=
- =?utf-8?B?USs1ZEEwWG9ULytTSXNydEx5dnpSSzdYMjM5N3VXek9aSEFaOFBqcGx0V3hZ?=
- =?utf-8?B?d1U4emVDYVYvd1BwUko2cjdabUdOWnNXN3lUemxKbjVVbXF4UWxRY01UYytH?=
- =?utf-8?B?UzB1aUFZRXJ6NUcySW1jcHQ2T0EyVytJbXdJRUtOSXJwMkNYYXFOQmZDTFRC?=
- =?utf-8?B?ZG9NcWxwQUlEclZpaWdmRGIyelU4Uy9raFZzYmFqWjlXMjNlcUx6UjBTWWpN?=
- =?utf-8?B?aEQ2cHRZLzBsbzViUDE5TzJqa2d4MlNQQmhlU01Cb0N0UHVtVlFUeVdQWHc1?=
- =?utf-8?B?eHFWY1pTSGtMOVp0U3hDWVhwSkNZRzF1bnoxQnBlS0g1d2JoZkNhSE9ZS1k0?=
- =?utf-8?B?RUxFVTRiQnZvelFoK3FwSnRJTUs4UGNoT0ZTVHFBZk5BMFdML1o3aDMwK245?=
- =?utf-8?B?SmJUZzUvRTYyZlNKL1ltVXU0R2tuNWhmYmZhRUxyMXFkNm5Hd3lxSjFUR3JQ?=
- =?utf-8?B?RWtRUWdCNnRpaHBnUllQbGU3Ri90dkwvZlcxTzljSlIrdDR0cFZPV0JNK3hC?=
- =?utf-8?B?TndEZVM2YlllUGxORUVjTVJrY25GZmZWU2JicGlrYzJzYzhFdk5BOEI5NGs4?=
- =?utf-8?B?RlRneXhFWE1ic2JDcHc0OUpCWDJQak82c090UHZlUmliV0RSV0o5S2w2dVNC?=
- =?utf-8?B?RFFobFBXTVdjZ1BIQlJuTXJ6ekM1OUtwZG9uQk4zZG9WWXllNEdPTDRCTHJQ?=
- =?utf-8?B?YkNWTlo2cTAxd2NUTVlUYVZ1czRDdnhPd01zbWtpWVlGcFhoQ0ZUWTEzQ3N4?=
- =?utf-8?B?NnlYZW02TGEyN2dsMzJWbHpvdzdVclFjOXNoQ2NpakxEbVBqS0pTYTdWOHRM?=
- =?utf-8?B?ZVMxVjZpMU5QQVlwZDRLaytOWHR2cHhuR2oyenF0L25ob2hzMk1uWTQyWkZq?=
- =?utf-8?B?WlJ3NG16SXZ4V3J5QjBwV29MRmxONCtCRytLME52Z0s2dDlSRWljQ1UrbjNa?=
- =?utf-8?B?dTdzRFJ3dXBmUjJWTmZvVlI3WWhFbkp3MHJST1VQZHZpMC9CYVFuNHY1clhJ?=
- =?utf-8?B?amp2SStvVXFCZ29KdnI2WXZsMTJaVHFveldCbFJvZWdJY0NnT1B1eUxvTnpq?=
- =?utf-8?B?UHlCcG4yWXg5c2IxdGtEMEpmSElJYzBDay9QSE5RQURUSnhablBVWGQxN1Ja?=
- =?utf-8?B?d0NsSURSY1kvTmd1Z3BxR2VZUmpYRnVLcXE2MmNaRUF4dmxTRUY1Mll4RWt6?=
- =?utf-8?B?N0V4T2Rud2xtVTZoNTA1eVNPVFVrTVJ6SDdHditqelZMQ1BYaThGd0NCVG9p?=
- =?utf-8?Q?jkejAFlTwK2AA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB6365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(10070799003)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q1JScU5zY2U1TFJJclJESkZ4SERsM3JLZ0dPaS9IWFVOdWdnczJKQnFvYmNl?=
- =?utf-8?B?R3pOMC82bHVUSnh1bC9wWTdTQXBJQmdpcDU5bnMvd1EzVHlMTnlXbm5yNWpm?=
- =?utf-8?B?VEVvZTFNV3FMZ3FPWUJSdkhTeFJrRFRWelhRdXhDSEtwMnVUbFFmcDZ1S1Z5?=
- =?utf-8?B?b3J0Q05rSVRRZktGRmo2TEdaMk40Tnd4a3Z5SlJWT3I4TFYxZ0owalptSDJW?=
- =?utf-8?B?RitUZG1SRXJTR1NTWURNZ3paenROdVRCbSs1T1FuTElhOXlZR2w1ZWsrWm5Y?=
- =?utf-8?B?MlNPT1BZc3UwWHV1Uk80R0J0RGZVNDVMaCszaTR1cHhKYnJtdlB1QmpvbWhM?=
- =?utf-8?B?ejQyaXZBNFV6OEY3RUlaQ0pkOXUyWXJoUDYreWYybk1zYm9scTlCSmgzVTdq?=
- =?utf-8?B?TWZ5MFZaMTJ3RnFoTnc0MGJ4dkxrQ3d3SURyMVlkaDdpazFPUkRick0yampV?=
- =?utf-8?B?U1g4bCthWExEN3JTTnpDd1JCc2hpMGdRcWhVaTZNS0VEdnhVRXNIaGlLQVpY?=
- =?utf-8?B?UU56SXdxbkNGL09MQXRSdnJYVGpZaFJnTWZqNXNZNGwxNmFzZVBqYkFGcnN6?=
- =?utf-8?B?YkhKUHFGcUMrMUs3aWFvMDRiYTNFLzIydnVmakh0b01VWXA5UldneEYvNDZy?=
- =?utf-8?B?YnM0UmVhWHd1cEg0QVFPY20zb2xnbUlieUk5QTJzS0ZCajlTQm45WExHcDVx?=
- =?utf-8?B?MnRoN1R3SzEyUm1HOGNLUkd2VFRrTnM2aDVobWx2STFpd1ZVbjRuL1YwMFpo?=
- =?utf-8?B?a3BMblRBMitLaXBRTSt1bVNtWE82US83aVpuY29yT2NVcGJnSmRTcDdQQTdp?=
- =?utf-8?B?LzliM2pGMkZTVHdITGJYMWp6YVIwU2UrWEFmMlBFbEt1ZitZS1E4MTNTVktv?=
- =?utf-8?B?SFdqQ2FSd2JHNlk0TmxMSEtTWUhZb1I0T2F6RStxNmhQQ0xYSFA0L053VmJp?=
- =?utf-8?B?TEFScHJlUGVvdWlVWkRJOWpsamJlK3R1M2xTakJCdjdXbmFVc05SdkI3YXRp?=
- =?utf-8?B?dXVMSzVveGc4R0dPeTE3NldBNnlxODAzL3hiVHRRTi9SOW1rVVNlN1RwUXhu?=
- =?utf-8?B?REdmNHRNNWQyVGEwc2FJRnZKbytHNzFrU2F6R2xUUVo1WlQ1TGtLL2VlTGlk?=
- =?utf-8?B?cGZjOTJWSjEwejZBZ3ZNeERzNDRuMGY3VjZTSE45UHZ5eXR2RDhFM21lV3Y5?=
- =?utf-8?B?d1lEU29CbWFNNEhlQm56NStzMEpkUmlCb241Mmh5RFdBVlVMektPVzl2K1RO?=
- =?utf-8?B?eVpnZlpxQkZkSWJKK1FEL1dsVU1zU3BVR3RjRjhQSHh4bWJmRk15N2Q5T0RK?=
- =?utf-8?B?c2s4Q2V3eUJuUVBjam8zb29NeW5ZTjhiWno5QjZDaEdPeUZVMHNRMnBmVnl5?=
- =?utf-8?B?Rmw2OW9wWjg3U09xalpTLzBMRVdYNmlyYmZRZ0Q1Tml6dmxzSEppUU9TQXIy?=
- =?utf-8?B?dTR1UVRNc0t0NGtaWktobDU3NUJ0UFJMZ0EyQUZFNjFUbTJpTXpBYVgzaW02?=
- =?utf-8?B?ZjBDcjBGRncvY1ZnTTl6WDFzdXRyNlNNMm0zaHpSRi94Q1BSSWxlZERjMDVp?=
- =?utf-8?B?MTNuSldLMWhmbU1FNDFSeTV6Y2tVTDg5WHV6Uklvcm5hYXNjVzlaYjllSFls?=
- =?utf-8?B?TUpLSVFPVENNK3BNQ0dRZm9RUDRKdENWRTNweUYvZnhiQThuNGhRQTlHbTEy?=
- =?utf-8?B?SGdPM05kLzRFSFBSWGkxYllxbGNqL0xiSmVxRy9sM0ZjNzNNalFYYXB4QU1s?=
- =?utf-8?B?Y2FWalVESkE3dmR3N2xDN0hYMEl6ZUQ1VytPclZXZktCMVNPOFZYN2s4RG94?=
- =?utf-8?B?RE5tNytYblhPQlVEbUtXeVlVc3ZYT0JjVWUrZzJXbGVleTd3MTI4WU1tdW04?=
- =?utf-8?B?NzkvdnluQXR1Rnd1WHdEeHgzRmR2TjNDZm9yVXlnT1RUbERrYjVwOG9RNzEr?=
- =?utf-8?B?eW54alJqcE1KQXpxdXRYWGFrZ2FiTlZPTStHdkk4VFNkOE5oM0l2MnJwK2Jh?=
- =?utf-8?B?Vk83b1ZWN3ZIUzdEOExRVVRoNHpaenJGaE9PdUh4alhXQU4zZGV4ZExCb2R2?=
- =?utf-8?B?RFhwRkdiRUZNT1BxYVdLMnBBNWs2d2VwaWtkTGxnU2FVZm1SYiszdG1mRlNy?=
- =?utf-8?B?b29mZ0I3WU96bEJjTUZ3b0hlRGt0blZybWtVaHBqUkdvRGU1c2NmRHg5NzFK?=
- =?utf-8?Q?xNrO9xUj0N4VYjDwV0CkA4o=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ImNtNp6q5ixJ+BIjFuzNZl77Eew14u6+iOgxSfr/peZk2Kar78RQ8DUM0RiQFns+vAmNvrmR2DsGcQOxpQq9xF7CXiVWBPlMkhgdYgVTU+B7q5qm2xrCEnC05FGjPH13GXI5t6y9G+HwSA9W1SMb0Quznnkdugcqugya2YGvppOc5YvpTuTpvqXMW2dFMTqfucJh5eb+V9VpvSwLTPp2WnTuBVYh53TtwK5MXhuiWxy4w8obPpF216k3mO7hysQkthh+g5hDXv2x/HTWixa4Y67Gmqn8TEFAgWz/5G7ODlyjBYpXmW0HOQ7c52Y6YWNI8+OVNlSrU2QGoOIEyrsexwxv+W+d/MjoyZ3qQFxqs8hBGDKzdA44P9urkXL+vx9IWbPGnDhvISpiHy3n2VrLjcOHGRgqqhIonjZRvpLWPa84AG8vPV6ufdtu6bVEwphGyZLTA0DXkkmwHepHBEy6mt+W2PyGkTJ7sBkCXgs7f8Tak5fUJaL5GQ8bjc73rqL5SkrLNhIKRMJl3ET3BcMI7zrIMA+d4Hti+dNkqvPnwpxq3ARxssV0JkVs6ENkzOnig9LIX8xB0xfaSFWZ78UpV+Paz5PqJcC9wl+/lFtqSic=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75e9d1e6-64a4-4c94-c64f-08dd457b2ee5
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB6365.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 00:22:32.8714
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xMN0UxjIqfZEjl+A7IQ0i/pLSbevq9Hl82uDVAGZ++Bh0NYsy1WDdyGvOQyPYwDf+URvO6Wh6/Pr/qf5ZeXnDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4838
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_10,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=903
- phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2502050000
-X-Proofpoint-GUID: BuT0aPXo1O-Ur8Ekh77TGDEqpOwz1GWY
-X-Proofpoint-ORIG-GUID: BuT0aPXo1O-Ur8Ekh77TGDEqpOwz1GWY
+References: <20250201071455.718247-1-irogers@google.com> <20250201071455.718247-7-irogers@google.com>
+In-Reply-To: <20250201071455.718247-7-irogers@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Tue, 4 Feb 2025 16:24:38 -0800
+X-Gm-Features: AWEUYZnskUbLhOOdO0dxqAGDHNNLRcx4pR85s1wteJQdCeOlkqATDMc8AaJSwc0
+Message-ID: <CAH0uvoiAAYcKOUVMd9saq7FabroD-VcWdD2JTxQ5ZRf2OHkh=w@mail.gmail.com>
+Subject: Re: [PATCH v1 6/7] perf syscalltbl: Use lookup table containing
+ multiple architectures
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/27/25 1:33 PM, Weinan Liu wrote:
-> Use the -Wa,--gsframe flags to build the code, so GAS will generate
-> a new .sframe section for the stack trace information.
-> Currently, the sframe format only supports arm64 and x86_64
-> architectures. Add this configuration on arm64 to enable sframe
-> unwinder in the future.
-> 
-> Signed-off-by: Weinan Liu <wnliu@google.com>
+Hello,
+
+On Fri, Jan 31, 2025 at 11:15=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Switch to use the lookup table containing all architectures rather
+> than tables matching the perf binary.
+>
+> This fixes perf trace when executed on a 32-bit i386 binary on an
+> x86-64 machine. Note in the following the system call names of the
+> 32-bit i386 binary as seen by an x86-64 perf.
+>
+> Before:
+> ```
+>          ? (         ): a.out/447296  ... [continued]: munmap())         =
+                                  =3D 0
+>      0.024 ( 0.001 ms): a.out/447296 recvfrom(ubuf: 0x2, size: 4160585708=
+, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|ER=
+RQUEUE|NOSIGNAL|WAITFORONE|BATCH|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEXEC=
+|0x91f80000, addr: 0xe30, addr_len: 0xffce438c) =3D 1475198976
+>      0.042 ( 0.003 ms): a.out/447296 lgetxattr(name: "", value: 0x3, size=
+: 34)                             =3D 4160344064
+>      0.054 ( 0.003 ms): a.out/447296 dup2(oldfd: -134422744, newfd: 4)   =
+                                  =3D -1 ENOENT (No such file or directory)
+>      0.060 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct =
+iovec){.iov_base =3D (void *)0x2e646c2f6374652f,.iov_len =3D (__kernel_size=
+_t)7307199665335594867,}, vlen: 557056, pos_h: 4160585708) =3D 3
+>      0.074 ( 0.004 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size=
+: 2)                              =3D 4160237568
+>      0.080 ( 0.001 ms): a.out/447296 lstat(filename: "", statbuf: 0x193f6=
+)                                 =3D 0
+>      0.089 ( 0.007 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct =
+iovec){.iov_base =3D (void *)0x3833692f62696c2f,.iov_len =3D (__kernel_size=
+_t)3276497845987585334,}, vlen: 557056, pos_h: 4160585708) =3D 3
+>      0.097 ( 0.002 ms): a.out/447296 close(fd: 3</proc/447296/status>)   =
+                                  =3D 512
+>      0.103 ( 0.002 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size=
+: 2050)                           =3D 4157935616
+>      0.107 ( 0.007 ms): a.out/447296 lgetxattr(pathname: "", name: "", va=
+lue: 0x5, size: 2066)             =3D 4158078976
+>      0.116 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", va=
+lue: 0x1, size: 2066)             =3D 4159639552
+>      0.121 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", va=
+lue: 0x3, size: 2066)             =3D 4160184320
+>      0.129 ( 0.002 ms): a.out/447296 lgetxattr(pathname: "", name: "", va=
+lue: 0x3, size: 50)               =3D 4160196608
+>      0.138 ( 0.001 ms): a.out/447296 lstat(filename: "")                 =
+                                  =3D 0
+>      0.145 ( 0.002 ms): a.out/447296 mq_timedreceive(mqdes: 4291706800, u=
+_msg_ptr: 0xf7f9ea48, msg_len: 134616640, u_msg_prio: 0xf7fd7fec, u_abs_tim=
+eout: (struct __kernel_timespec){.tv_sec =3D (__kernel_time64_t)-5781740277=
+77317696,.tv_nsec =3D (long long int)4160349376,}) =3D 0
+>      0.148 ( 0.001 ms): a.out/447296 mkdirat(dfd: -134617816, pathname: "=
+ =EF=BF=BD=EF=BF=BD=EF=BF=BD =EF=BF=BD=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=BD=
+=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=BD=EF=BF=BD=EF=BF=BD", mode: IFREG|ISUID|=
+IRUSR|IWGRP|0xf7fd0000) =3D 447296
+>      0.150 ( 0.001 ms): a.out/447296 process_vm_writev(pid: -134617812, l=
+vec: (struct iovec){.iov_base =3D (void *)0xf7f9e9c8f7f9e4c0,.iov_len =3D (=
+__kernel_size_t)4160349376,}, liovcnt: 4160588048, rvec: (struct iovec){}, =
+riovcnt: 4160585708, flags: 4291707352) =3D 0
+>      0.197 ( 0.004 ms): a.out/447296 capget(header: 4160184320, dataptr: =
+8192)                             =3D 0
+>      0.202 ( 0.002 ms): a.out/447296 capget(header: 1448669184, dataptr: =
+4096)                             =3D 0
+>      0.208 ( 0.002 ms): a.out/447296 capget(header: 4160577536, dataptr: =
+8192)                             =3D 0
+>      0.220 ( 0.001 ms): a.out/447296 getxattr(pathname: "", name: "c=EF=
+=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD", value: 0xf7f77e34, si=
+ze: 1)  =3D 0
+>      0.228 ( 0.005 ms): a.out/447296 fchmod(fd: -134729728, mode: IRUGO|I=
+WUGO|IFREG|IFIFO|ISVTX|IXUSR|0x10000) =3D 0
+>      0.240 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: 0x5658e0=
+08, pos_h: 4160192052)            =3D 3
+>      0.250 ( 0.008 ms): a.out/447296 close(fd: 3</proc/447296/status>)   =
+                                  =3D 1436
+>      0.260 ( 0.018 ms): a.out/447296 stat(filename: "", statbuf: 0xffce32=
+ac)                               =3D 1436
+>      0.288 (1000.213 ms): a.out/447296 readlinkat(buf: 0xffce31d4, bufsiz=
+: 4291703244)                       =3D 0
+> ```
+>
+> After:
+> ```
+>          ? (         ): a.out/442930  ... [continued]: execve())         =
+                                  =3D 0
+>      0.023 ( 0.002 ms): a.out/442930 brk()                               =
+                                  =3D 0x57760000
+>      0.052 ( 0.003 ms): a.out/442930 access(filename: 0xf7f5af28, mode: R=
+)                                 =3D -1 ENOENT (No such file or directory)
+>      0.059 ( 0.009 ms): a.out/442930 openat(dfd: CWD, filename: "/etc/ld.=
+so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
+>      0.078 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)   =
+                                  =3D 0
+>      0.087 ( 0.007 ms): a.out/442930 openat(dfd: CWD, filename: "/lib/i38=
+6-linux-", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
+>      0.095 ( 0.002 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf=
+: 0xffbdbb70, count: 512)         =3D 512
+>      0.135 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)   =
+                                  =3D 0
+>      0.148 ( 0.001 ms): a.out/442930 set_tid_address(tidptr: 0xf7f2b528) =
+                                  =3D 442930 (a.out)
+>      0.150 ( 0.001 ms): a.out/442930 set_robust_list(head: 0xf7f2b52c, le=
+n: 12)                            =3D
+>      0.196 ( 0.004 ms): a.out/442930 mprotect(start: 0xf7f03000, len: 819=
+2, prot: READ)                    =3D 0
+>      0.202 ( 0.002 ms): a.out/442930 mprotect(start: 0x5658e000, len: 409=
+6, prot: READ)                    =3D 0
+>      0.207 ( 0.002 ms): a.out/442930 mprotect(start: 0xf7f63000, len: 819=
+2, prot: READ)                    =3D 0
+>      0.230 ( 0.005 ms): a.out/442930 munmap(addr: 0xf7f10000, len: 103414=
+)                                 =3D 0
+>      0.244 ( 0.010 ms): a.out/442930 openat(dfd: CWD, filename: 0x5658d00=
+8)                                =3D 3
+>      0.255 ( 0.007 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf=
+: 0xffbdb67c, count: 4096)        =3D 1436
+>      0.264 ( 0.018 ms): a.out/442930 write(fd: 1</dev/pts/4>, buf: , coun=
+t: 1436)                          =3D 1436
+>      0.292 (1000.173 ms): a.out/442930 clock_nanosleep(rqtp: { .tv_sec: 1=
+7866546940376776704, .tv_nsec: 4159878336 }, rmtp: 0xffbdb59c) =3D 0
+>   1000.478 (         ): a.out/442930 exit_group()                        =
+                                  =3D ?
+> ```
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->   Makefile                          |  6 ++++++
->   arch/Kconfig                      |  8 ++++++++
->   arch/arm64/Kconfig.debug          | 10 ++++++++++
->   include/asm-generic/vmlinux.lds.h | 12 ++++++++++++
->   4 files changed, 36 insertions(+)
-> 
-> diff --git a/Makefile b/Makefile
-> index b9464c88ac72..35200c39b98d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1064,6 +1064,12 @@ ifdef CONFIG_CC_IS_GCC
->   KBUILD_CFLAGS   += -fconserve-stack
->   endif
->   
-> +# build with sframe table
-> +ifdef CONFIG_SFRAME_UNWIND_TABLE
-> +KBUILD_CFLAGS	+= -Wa,--gsframe
-> +KBUILD_AFLAGS	+= -Wa,--gsframe
-> +endif
+>  tools/perf/util/syscalltbl.c | 89 ++++++++++++++++++++++++++----------
+>  1 file changed, 64 insertions(+), 25 deletions(-)
+>
+> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+> index 760ac4d0869f..572083ba1efe 100644
+> --- a/tools/perf/util/syscalltbl.c
+> +++ b/tools/perf/util/syscalltbl.c
+> @@ -15,16 +15,39 @@
+>  #include <string.h>
+>  #include "string2.h"
+>
+> -#if __BITS_PER_LONG =3D=3D 64
+> -  #include <asm/syscalls_64.h>
+> -#else
+> -  #include <asm/syscalls_32.h>
+> -#endif
+> +#include "trace/beauty/generated/syscalltbl.c"
+>
+> -const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> +static const struct syscalltbl *find_table(int e_machine)
+>  {
+> -       if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
+> -               return syscall_num_to_name[id];
+> +       static const struct syscalltbl *last_table;
+> +       static int last_table_machine =3D EM_NONE;
 > +
->   # change __FILE__ to the relative path to the source directory
->   ifdef building_out_of_srctree
->   KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 6682b2a53e34..ae70f7dbe326 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -1736,4 +1736,12 @@ config ARCH_WANTS_PRE_LINK_VMLINUX
->   	  An architecture can select this if it provides arch/<arch>/tools/Makefile
->   	  with .arch.vmlinux.o target to be linked into vmlinux.
->   
-> +config AS_HAS_SFRAME_SUPPORT
-> +	# Detect availability of the AS option -Wa,--gsframe for generating
-> +	# sframe unwind table.
-> +	def_bool $(cc-option,-Wa$(comma)--gsframe)
+> +       /* Tables only exist for EM_SPARC. */
+> +       if (e_machine =3D=3D EM_SPARCV9)
+> +               e_machine =3D EM_SPARC;
 > +
+> +       if (last_table_machine =3D=3D e_machine && e_machine !=3D EM_NONE=
+)
 
-Since the version of an admissible SFrame section needs to be atleast 
-SFRAME_VERSION_2, it will make sense to include SFrame version check 
-when detecting compatible toolchain.
+I don't think it should be && e_machine !=3D EM_NONE. last_table_machine
+=3D=3D e_machine =3D=3D EM_NONE could mean last_table being uninitialized, =
+but
+what if the called *is* trying to search for e_machine =3D=3D EM_NONE? Now
+perf will need to traverse the whole syscalltbls array just to find
+the last EM_NONE table.
 
-> +config SFRAME_UNWIND_TABLE
-> +	bool
-> +
->   endmenu
-> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
-> index 265c4461031f..ed619fcb18b3 100644
-> --- a/arch/arm64/Kconfig.debug
-> +++ b/arch/arm64/Kconfig.debug
-> @@ -20,4 +20,14 @@ config ARM64_RELOC_TEST
->   	depends on m
->   	tristate "Relocation testing module"
->   
-> +config SFRAME_UNWINDER
-> +	bool "Sframe unwinder"
-> +	depends on AS_HAS_SFRAME_SUPPORT
-> +	depends on 64BIT
-> +	select SFRAME_UNWIND_TABLE
-> +	help
-> +	  This option enables the sframe (Simple Frame) unwinder for unwinding
-> +	  kernel stack traces. It uses unwind table that is direclty generated
-> +	  by toolchain based on DWARF CFI information
-> +
->   source "drivers/hwtracing/coresight/Kconfig"
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 54504013c749..6a437bd084c7 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -469,6 +469,8 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
->   		*(.rodata1)						\
->   	}								\
->   									\
-> +	SFRAME								\
-> +									\
->   	/* PCI quirks */						\
->   	.pci_fixup        : AT(ADDR(.pci_fixup) - LOAD_OFFSET) {	\
->   		BOUNDED_SECTION_PRE_LABEL(.pci_fixup_early,  _pci_fixups_early,  __start, __end) \
-> @@ -886,6 +888,16 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
->   #define TRACEDATA
->   #endif
->   
-> +#ifdef CONFIG_SFRAME_UNWIND_TABLE
-> +#define SFRAME							\
-> +	/* sframe */						\
-> +	.sframe        : AT(ADDR(.sframe) - LOAD_OFFSET) {	\
-> +		BOUNDED_SECTION_BY(.sframe, _sframe_header)	\
-> +	}
-> +#else
-> +#define SFRAME
-> +#endif
-> +
->   #ifdef CONFIG_PRINTK_INDEX
->   #define PRINTK_INDEX							\
->   	.printk_index : AT(ADDR(.printk_index) - LOAD_OFFSET) {		\
+My suggestion is:
 
+static const struct syscalltbl *last_table =3D NULL;
+
+and then:
+
+if (last_table_machine =3D=3D e_machine && last_table)
+    return last_table;
+
+Thanks,
+Howard
+
+> +               return last_table;
+> +
+> +       for (size_t i =3D 0; i < ARRAY_SIZE(syscalltbls); i++) {
+> +               const struct syscalltbl *entry =3D &syscalltbls[i];
+> +
+> +               if (entry->e_machine !=3D e_machine && entry->e_machine !=
+=3D EM_NONE)
+> +                       continue;
+> +
+> +               last_table =3D entry;
+> +               last_table_machine =3D e_machine;
+> +               return entry;
+> +       }
+> +       return NULL;
+> +}
+> +
+> +const char *syscalltbl__name(int e_machine, int id)
+> +{
+> +       const struct syscalltbl *table =3D find_table(e_machine);
+> +
+> +       if (table && id >=3D 0 && id < table->num_to_name_len)
+> +               return table->num_to_name[id];
+>         return NULL;
+>  }
+>
+> @@ -41,38 +64,54 @@ static int syscallcmpname(const void *vkey, const voi=
+d *ventry)
+>         return strcmp(key->name, key->tbl[*entry]);
+>  }
+>
+> -int syscalltbl__id(int e_machine __maybe_unused, const char *name)
+> +int syscalltbl__id(int e_machine, const char *name)
+>  {
+> -       struct syscall_cmp_key key =3D {
+> -               .name =3D name,
+> -               .tbl =3D syscall_num_to_name,
+> -       };
+> -       const int *id =3D bsearch(&key, syscall_sorted_names,
+> -                               ARRAY_SIZE(syscall_sorted_names),
+> -                               sizeof(syscall_sorted_names[0]),
+> -                               syscallcmpname);
+> +       const struct syscalltbl *table =3D find_table(e_machine);
+> +       struct syscall_cmp_key key;
+> +       const int *id;
+> +
+> +       if (!table)
+> +               return -1;
+> +
+> +       key.name =3D name;
+> +       key.tbl =3D table->num_to_name;
+> +       id =3D bsearch(&key, table->sorted_names, table->sorted_names_len=
+,
+> +                    sizeof(table->sorted_names[0]), syscallcmpname);
+>
+>         return id ? *id : -1;
+>  }
+>
+> -int syscalltbl__num_idx(int e_machine __maybe_unused)
+> +int syscalltbl__num_idx(int e_machine)
+>  {
+> -       return ARRAY_SIZE(syscall_sorted_names);
+> +       const struct syscalltbl *table =3D find_table(e_machine);
+> +
+> +       if (!table)
+> +               return 0;
+> +
+> +       return table->sorted_names_len;
+>  }
+>
+> -int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
+> +int syscalltbl__id_at_idx(int e_machine, int idx)
+>  {
+> -       return syscall_sorted_names[idx];
+> +       const struct syscalltbl *table =3D find_table(e_machine);
+> +
+> +       if (!table)
+> +               return -1;
+> +
+> +       assert(idx >=3D 0 && idx < table->sorted_names_len);
+> +       return table->sorted_names[idx];
+>  }
+>
+> -int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const ch=
+ar *syscall_glob, int *idx)
+> +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_glo=
+b, int *idx)
+>  {
+> -       for (int i =3D *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names=
+); ++i) {
+> -               const char *name =3D syscall_num_to_name[syscall_sorted_n=
+ames[i]];
+> +       const struct syscalltbl *table =3D find_table(e_machine);
+> +
+> +       for (int i =3D *idx + 1; table && i < table->sorted_names_len; ++=
+i) {
+> +               const char *name =3D table->num_to_name[table->sorted_nam=
+es[i]];
+>
+>                 if (strglobmatch(name, syscall_glob)) {
+>                         *idx =3D i;
+> -                       return syscall_sorted_names[i];
+> +                       return table->sorted_names[i];
+>                 }
+>         }
+>
+> --
+> 2.48.1.362.g079036d154-goog
+>
