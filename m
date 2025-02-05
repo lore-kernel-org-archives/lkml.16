@@ -1,183 +1,147 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCFC13D897;
-	Wed,  5 Feb 2025 18:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61813D897;
+	Wed,  5 Feb 2025 18:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779058; cv=none; b=TUm76BYIBBTT48oPq5gM/LgQ9WkYj2AV2ZH1Lyq+IhEBD8T5D+R8bXyYXqkBLOAbh3fbVn4NpKj34TefjfOMMJ39JBhibz9M9Z9LADg44r1UzUKzKL9MUhalRBk0fz0l4YM7s/JwE9vhkY1WkWEGY6Zk/oNQoqaWJbsKoeEZ1io=
+	t=1738779113; cv=none; b=gHk4xva3A20utspRiZ3WexmfCidxZPXNLGV3MNBA0rxrA73Vhqq3bQcQvjdzudpOMInfCwyyCzqU70wCGAhnvwCeCpfzTQYfdUp1m56NdRCApJwnBZSMMUnWA1++BoIwQId7jDZnt+1rIf9dqyq6LaP//xasqZIcZk2GMi/3bxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779058; c=relaxed/simple;
-	bh=Gdy9Vhztq09MzRQ6HHq+YvEXVWw5ao/tdIpFHqJaSDs=;
+	s=arc-20240116; t=1738779113; c=relaxed/simple;
+	bh=ctqEMXf7JvqZMX/tEU7QDm9t9klBXz3B7LC+25UaxNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OCHrfSobo+EYAGARrEyE/vR2U6f7xWPClLS7f4kdnKfrpeUc1/xNdQOLOKVicDeqnveD+Yqq2i0PasD1qcksrw84AFYmO902yb9U9NnyudtPc5blfiZa7rukj1SqvuUcEh9t7/HVIaY8V5xTRMN1d1luBMjjQ3Ut5SmfK16XTPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OYUUOYCg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=d1Qnv4EQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OYUUOYCg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=d1Qnv4EQ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=XMm3yNNCf1+cFc8aArn+pR265B/6WQVApBQmHHzzg54TlABpP0cxMeqjFq2W8+UHN+nunC2h10uiJ1dVZXC0/SlS4yyyk80l+bDr45YDXgSxJHxtM4fFsRGS1QVG7iqhyMo/754kXaxLBP2u+JOgEuVk+hQBylGAdjnOnSgTfK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggPGncWE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OYUUOYCg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="d1Qnv4EQ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OYUUOYCg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="d1Qnv4EQ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 06E9421134;
-	Wed,  5 Feb 2025 18:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738779054; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
-	b=OYUUOYCgYMIQ6aanDg3K22uOFKvOVKVhSGmsVr8Andq2KaQ2nPWM043enS4tE3jaeQzULh
-	Ww9cCLZuKbFv5AqB7GE+9ziVS+yKxWendfV4mwJHaNAW0yKTkdJ3nKgYOs8T7qSi5dhlN8
-	If4xtmDvrnvEaktDqNn4/fY956ONjF4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738779054;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
-	b=d1Qnv4EQpm9bG3SOuRp6ao+v9N3jEpg6JqrVHe/6e1ulBRHVN5Svl9v/f3/efZG4MdmctY
-	4Y1bqQE1ImLqr/Dw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=OYUUOYCg;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=d1Qnv4EQ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738779054; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
-	b=OYUUOYCgYMIQ6aanDg3K22uOFKvOVKVhSGmsVr8Andq2KaQ2nPWM043enS4tE3jaeQzULh
-	Ww9cCLZuKbFv5AqB7GE+9ziVS+yKxWendfV4mwJHaNAW0yKTkdJ3nKgYOs8T7qSi5dhlN8
-	If4xtmDvrnvEaktDqNn4/fY956ONjF4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738779054;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XzkHlqIqgmLmzb3lgQAO6vMoEyt/Q9ueP+aWRwjkF4c=;
-	b=d1Qnv4EQpm9bG3SOuRp6ao+v9N3jEpg6JqrVHe/6e1ulBRHVN5Svl9v/f3/efZG4MdmctY
-	4Y1bqQE1ImLqr/Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE16F13694;
-	Wed,  5 Feb 2025 18:10:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6SwbOq2po2eZVAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 05 Feb 2025 18:10:53 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 67543A28E9; Wed,  5 Feb 2025 19:10:49 +0100 (CET)
-Date: Wed, 5 Feb 2025 19:10:49 +0100
-From: Jan Kara <jack@suse.cz>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org, 
-	tytso@mit.edu, kees@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com, linux-ext4 <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH] ext4: pass strlen() of the symlink instead of i_size to
- inode_set_cached_link()
-Message-ID: <vci2ejpu7eirvku6eg5ajrbsdlpztu2wgvm2n75lkiaenuxw7p@7ag5gflkjhus>
-References: <20250205162819.380864-1-mjguzik@gmail.com>
- <20250205172946.GD21791@frogsfrogsfrogs>
- <CAGudoHENg_G7KaJT15bE0wVOT_yXw0yiPPqTf40zm9YzuaUPkw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggPGncWE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C1CC4CED1;
+	Wed,  5 Feb 2025 18:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738779112;
+	bh=ctqEMXf7JvqZMX/tEU7QDm9t9klBXz3B7LC+25UaxNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ggPGncWEqtD8CeKvsy4OqjKLqNQBbD/osuya2BRsmZPDGdHxdUYb6ylcF5VpnrDMP
+	 7gLS5sUFmbVxO3ZYfGmVgLU+i4O5xIuujvpjV7RdR38Lqz8XUyZmrqDgJcrMc/OCZm
+	 vfQM06NYQGgV/9kUMHzKO1fB06E3zzS0pkRKwYXMxuqzhRlM5iARmxydIUljX5icrC
+	 NGbTAbqxuM4f7kq0uD4t6NKjcYtQIQ6+PWphl7vH7eLDj+DZQPZxx/V0gvAOP2E4id
+	 6Hq5JI0q68JPRGMXv9VIm7X899NTeHih5Pcb4+vCSwl5QN3KIiaLTmBl5V3YYyA7XE
+	 xpLMsP1+tWCxQ==
+Date: Wed, 5 Feb 2025 18:11:48 +0000
+From: Simon Horman <horms@kernel.org>
+To: Liang Jie <buaajxlj@163.com>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Michal Luczaj <mhal@rbox.co>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Liang Jie <liangjie@lixiang.com>
+Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind
+ identifier length
+Message-ID: <20250205181148.GK554665@kernel.org>
+References: <20250205060653.2221165-1-buaajxlj@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHENg_G7KaJT15bE0wVOT_yXw0yiPPqTf40zm9YzuaUPkw@mail.gmail.com>
-X-Rspamd-Queue-Id: 06E9421134
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[48a99e426f29859818c0];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[appspotmail.com:email,suse.com:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -2.51
-X-Spam-Flag: NO
+In-Reply-To: <20250205060653.2221165-1-buaajxlj@163.com>
 
-On Wed 05-02-25 18:33:23, Mateusz Guzik wrote:
-> On Wed, Feb 5, 2025 at 6:29 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> >
-> > On Wed, Feb 05, 2025 at 05:28:19PM +0100, Mateusz Guzik wrote:
-> > > The call to nd_terminate_link() clamps the size to min(i_size,
-> > > sizeof(ei->i_data) - 1), while the subsequent call to
-> > > inode_set_cached_link() fails the possible update.
-> > >
-> > > The kernel used to always strlen(), so do it now as well.
-> > >
-> > > Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-> > > Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
-> > > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> > > ---
-> > >
-> > > Per my comments in:
-> > > https://lore.kernel.org/all/CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com/#t
-> > >
-> > > There is definitely a pre-existing bug in ext4 which the above happens
-> > > to run into. I suspect the nd_terminate_link thing will disappear once
-> > > that gets sorted out.
-> > >
-> > > In the meantime the appropriate fix for 6.14 is to restore the original
-> > > behavior of issuing strlen.
-> > >
-> > > syzbot verified the issue is fixed:
-> > > https://lore.kernel.org/linux-hardening/67a381a3.050a0220.50516.0077.GAE@google.com/T/#m340e6b52b9547ac85471a1da5980fe0a67c790ac
-> >
-> > Again, this is evidence of inconsistent inode metadata, which should be
-> > dealt with by returning EFSCORRUPTED, not arbitrarily truncating the
-> > contents of a bad inode.
-> >
+On Wed, Feb 05, 2025 at 02:06:53PM +0800, Liang Jie wrote:
+> From: Liang Jie <liangjie@lixiang.com>
 > 
-> I agree, rejecting the inode was something I was advocating for from the get go.
+> Refines autobind identifier length for UNIX domain sockets, addressing
+> issues of memory waste and code readability.
 > 
-> I don't know if a real patch(tm) will materialize for 6.14, so in the
-> meantime I can at least damage-control this back to the original
-> state.
+> The previous implementation in the unix_autobind function of UNIX domain
+> sockets used hardcoded values such as 16, 6, and 5 for memory allocation
+> and setting the length of the autobind identifier, which was not only
+> inflexible but also led to reduced code clarity. Additionally, allocating
+> 16 bytes of memory for the autobind path was excessive, given that only 6
+> bytes were ultimately used.
 > 
-> If the ext4 folk do the right fix, I will be delighted to have this
-> patch dropped. :)
+> To mitigate these issues, introduces the following changes:
+>  - A new macro AUTOBIND_LEN is defined to clearly represent the total
+>    length of the autobind identifier, which improves code readability and
+>    maintainability. It is set to 6 bytes to accommodate the unique autobind
+>    process identifier.
+>  - Memory allocation for the autobind path is now precisely based on
+>    AUTOBIND_LEN, thereby preventing memory waste.
+>  - The sprintf() function call is updated to dynamically format the
+>    autobind identifier according to the defined length, further enhancing
+>    code consistency and readability.
+> 
+> The modifications result in a leaner memory footprint and elevated code
+> quality, ensuring that the functional aspect of autobind behavior in UNIX
+> domain sockets remains intact.
+> 
+> Signed-off-by: Liang Jie <liangjie@lixiang.com>
+> ---
+>  net/unix/af_unix.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 34945de1fb1f..5dcc55f2e3a1 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1186,6 +1186,13 @@ static struct sock *unix_find_other(struct net *net,
+>  	return sk;
+>  }
+>  
+> +/*
+> + * Define the total length of the autobind identifier for UNIX domain sockets.
+> + * - The first byte distinguishes abstract sockets from filesystem-based sockets.
+> + * - The subsequent five bytes store a unique identifier for the autobinding process.
+> + */
+> +#define AUTOBIND_LEN 6
+> +
+>  static int unix_autobind(struct sock *sk)
+>  {
+>  	struct unix_sock *u = unix_sk(sk);
+> @@ -1204,11 +1211,11 @@ static int unix_autobind(struct sock *sk)
+>  
+>  	err = -ENOMEM;
+>  	addr = kzalloc(sizeof(*addr) +
+> -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
+> +		       offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN, GFP_KERNEL);
 
-Yeah, let me cook up proper ext4 fix for this (currently under testing).
+Hi Liang Jie,
 
-								Honza
+1. While we are here, can we try to move this code to respect
+   the preference for lines 80 columns wide or less in Networking code?
+
+   e.g.
+
+	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
+		       AUTOBIND_LEN, GFP_KERNEL);
+
+2. More importantly, this allocates AUTOBIND_LEN bytes for sun_path.
+
+   However, because the sprintf() will append a trailing '\0' it will
+   write up to AUTOBIND_LEN (that is, AUTOBIND_LEN - 1 + 1) bytes
+   at an offset of 1 to sun_path. IOW, the write may be one byte larger
+   than the buffer with the '\0' overflowing.
+
+   Flagged by W=1 build with gcc-14
+
+>  	if (!addr)
+>  		goto out;
+>  
+> -	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
+> +	addr->len = offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN;
+>  	addr->name->sun_family = AF_UNIX;
+>  	refcount_set(&addr->refcnt, 1);
+>  
+> @@ -1217,7 +1224,7 @@ static int unix_autobind(struct sock *sk)
+>  	lastnum = ordernum & 0xFFFFF;
+>  retry:
+>  	ordernum = (ordernum + 1) & 0xFFFFF;
+> -	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
+> +	sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+>  
+>  	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
+>  	unix_table_double_lock(net, old_hash, new_hash);
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+pw-bot: changes-requested
