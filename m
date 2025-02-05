@@ -1,57 +1,46 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA012309B3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B67122B8B0;
+	Wed,  5 Feb 2025 10:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751152; cv=none; b=B5dVxgkTPK5Uf1wn1k9eWvwUSZgSFLWsBY5QUfS7citewkqI/w45lm1/gk86GPOZcp1eNObijTY/396/Y5X46/Ag9uIlgzlLmx/pfEPZorlhS8zG7surfFze3L0yO6ocoqFW0U4tubUQR21XOVLTMXoK3NDhhXv/zn+oJv5UKyo=
+	t=1738751155; cv=none; b=tjyzFWZ04Caoa62WM1b8//vL/ZUPn1LamkKRACPTE9tfNHnVq5h+dhAvpEjblAlcB7dk80svmXqXhkSgS+69k1zvdVqz3tqxbZhgH1M9FteqJFuM21/hWDwXSn3CzSoHzXRZr3llDaH38R07NjXp9wSMarYS34nN6hLJDje09/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751152; c=relaxed/simple;
-	bh=AeZhM/tJiHVa4QhSBs3iTgAN3KRu0glOTLTyr6soPK8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=H2iexXxyKy/ZW8/H/2XGjvmOMMQ96hRdfayZ7glUVZLtFej/1/mcvPCAgfQq8SNlvDQqCnh+05XOqu7jhvUAWnFq2dKcc53AzccMYwEa3MhfSoIpsKRPFMazEwuDvSVKK6dUEhrYtTx/elixFC9LIZkURZUXtolb3fGiB8CqkXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vBRiqrBp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738751155; c=relaxed/simple;
+	bh=uTikdtqcwI70CYjt1eBAl6OBhR7bcW+BJKotwkv0YMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DsED5G3SmMFJ/X31gbIjfxGfuJ1jbmqUY2SZ8dL53D6aJj8wT/x4SGvo5Rbwb7rhBgBMb9DsD2rihLZgQDqMsKXkRSYABXqK+bMiXxKG+hR4QJa1E4xnA/pyQl8WeNczlPlPHkdBtbIwlK9ef7um9dQS6egVp5evzVA9+dCmf/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=CcmkXnBI; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vBRiqrBp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=rqt7ldGfsvkJgM5c0RTcP/CKPPdkVrAGzemxz4WCgPU=; b=vBRiqrBp1uzhzfBZdCI+dV/C8F
-	iBlVwCOWgmuC0cKOVHJ7buPKxzUW9NNhmivEM39KkcFktD1IUIBhlmq1ELXx1hYmaKOlQa22nCunj
-	c6VuXjGey6RV8qhaBICOdQp4q2dF/V0P4F56Iy1rJ9yDOe9bKKeBwlRlnHyKzme+HGDBZZy3wyXm3
-	kEWmucFniSQw1lNlwNCgvIhhAI8wMcNICH0cDXa6Y+/SUefaTzdrcObVKy6u53uz6yN0kG6iofwMg
-	3ReYJAjGmq6f7y1371yZRZm8lqALSHLt7SOYfvEVSGojiwZ8cEWREkX7pL0e/KITKbzpB3Y2ltShL
-	mc7deYdQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfcb3-00000004GPY-1wdb;
-	Wed, 05 Feb 2025 10:25:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id C8B113031DE; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
-Message-ID: <20250205102449.006102855@infradead.org>
-User-Agent: quilt/0.66
-Date: Wed, 05 Feb 2025 11:21:27 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: mingo@kernel.org,
- ravi.bangoria@amd.com,
- lucas.demarchi@intel.com
-Cc: linux-kernel@vger.kernel.org,
- peterz@infradead.org,
- willy@infradead.org,
- acme@kernel.org,
- namhyung@kernel.org,
- mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com,
- jolsa@kernel.org,
- irogers@google.com,
- adrian.hunter@intel.com,
- kan.liang@linux.intel.com
-Subject: [PATCH v2 07/24] perf: Fix perf_pmu_register() vs perf_init_event()
-References: <20250205102120.531585416@infradead.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CcmkXnBI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=CeLAvSZweSdrpa/u3kDJ87mrxAvNI6bzP9fmmM0QN+c=;
+	b=CcmkXnBIzXBWq2qG4vmjOV4VHbVi11/CUvr2RxMrE07MBQO9niwbAPhSO6m0hK
+	Ywx7SNPkQktVKBok01PGxGwJcEdDO3ke9aDzRTb6Xf41kng/gWTF6HA5QxBdiEbo
+	rM/LW26hHFRDWFYE7H+ZiapntEMYpOAdPXEmzvJJ0WVWo=
+Received: from hello.company.local (unknown [111.205.82.7])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgAXxtnAOKNnOb6iMw--.46599S2;
+	Wed, 05 Feb 2025 18:09:05 +0800 (CST)
+From: Liang Jie <buaajxlj@163.com>
+To: kuniyu@amazon.com
+Cc: buaajxlj@163.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	liangjie@lixiang.com,
+	linux-kernel@vger.kernel.org,
+	mhal@rbox.co,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com
+Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind identifier length
+Date: Wed,  5 Feb 2025 18:09:04 +0800
+Message-Id: <20250205100904.2534565-1-buaajxlj@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250205082841.94701-1-kuniyu@amazon.com>
+References: <20250205082841.94701-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,89 +48,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgAXxtnAOKNnOb6iMw--.46599S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKr47CrWUKFW5Kr13uF4kZwb_yoW7AF4kpF
+	WFk3Z0vrWkJrsrWr1Iqa18Arsayw4rt3W7CryDGF1IkFsIgryI9F1DKF10934Dur48tw1S
+	qr4jgFy29FyDArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUIksDUUUUU=
+X-CM-SenderInfo: pexdtyx0omqiywtou0bp/1tbiNhbqIGejLVKpngAAsm
 
-There is a fairly obvious race between perf_init_event() doing
-idr_find() and perf_pmu_register() doing idr_alloc() with an
-incompletely initialized pmu pointer.
+On Wed, 5 Feb 2025 17:28:41 +0900, Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
+> From: Liang Jie <buaajxlj@163.com>
+> Date: Wed,  5 Feb 2025 14:06:53 +0800
+> > From: Liang Jie <liangjie@lixiang.com>
+> > 
+> > Refines autobind identifier length for UNIX domain sockets, addressing
+> > issues of memory waste and code readability.
+> > 
+> > The previous implementation in the unix_autobind function of UNIX domain
+> > sockets used hardcoded values such as 16, 6, and 5 for memory allocation
+> > and setting the length of the autobind identifier, which was not only
+> > inflexible but also led to reduced code clarity. Additionally, allocating
+> > 16 bytes of memory for the autobind path was excessive, given that only 6
+> > bytes were ultimately used.
+> > 
+> > To mitigate these issues, introduces the following changes:
+> >  - A new macro AUTOBIND_LEN is defined to clearly represent the total
+> >    length of the autobind identifier, which improves code readability and
+> >    maintainability. It is set to 6 bytes to accommodate the unique autobind
+> >    process identifier.
+> >  - Memory allocation for the autobind path is now precisely based on
+> >    AUTOBIND_LEN, thereby preventing memory waste.
+> >  - The sprintf() function call is updated to dynamically format the
+> >    autobind identifier according to the defined length, further enhancing
+> >    code consistency and readability.
+> > 
+> > The modifications result in a leaner memory footprint and elevated code
+> > quality, ensuring that the functional aspect of autobind behavior in UNIX
+> > domain sockets remains intact.
+> > 
+> > Signed-off-by: Liang Jie <liangjie@lixiang.com>
+> > ---
+> >  net/unix/af_unix.c | 13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> > index 34945de1fb1f..5dcc55f2e3a1 100644
+> > --- a/net/unix/af_unix.c
+> > +++ b/net/unix/af_unix.c
+> > @@ -1186,6 +1186,13 @@ static struct sock *unix_find_other(struct net *net,
+> >  	return sk;
+> >  }
+> >  
+> > +/*
+> > + * Define the total length of the autobind identifier for UNIX domain sockets.
+> > + * - The first byte distinguishes abstract sockets from filesystem-based sockets.
+> 
+> Now it's called pathname socket, but I think we don't need a comment here.
+> We already have enough comment/doc in other places and the man page.
+> 
+> $ man 7 unix
+> ...
+> The address consists of a null byte followed by 5 bytes in the character set [0-9a-f].
+> 
+> 
+> > + * - The subsequent five bytes store a unique identifier for the autobinding process.
+> > + */
+> > +#define AUTOBIND_LEN 6
+> 
+> UNIX_AUTOBIND_LEN
+> 
+> 
+> > +
+> >  static int unix_autobind(struct sock *sk)
+> >  {
+> >  	struct unix_sock *u = unix_sk(sk);
+> > @@ -1204,11 +1211,11 @@ static int unix_autobind(struct sock *sk)
+> >  
+> >  	err = -ENOMEM;
+> >  	addr = kzalloc(sizeof(*addr) +
+> > -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
+> > +		       offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN, GFP_KERNEL);
+> >  	if (!addr)
+> >  		goto out;
+> >  
+> > -	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
+> > +	addr->len = offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN;
+> >  	addr->name->sun_family = AF_UNIX;
+> >  	refcount_set(&addr->refcnt, 1);
+> >  
+> > @@ -1217,7 +1224,7 @@ static int unix_autobind(struct sock *sk)
+> >  	lastnum = ordernum & 0xFFFFF;
+> >  retry:
+> >  	ordernum = (ordernum + 1) & 0xFFFFF;
+> > -	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
+> > +	sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+> 
+> I feel %05 is easier to read.  Note that man page mentions 5 bytes.
+> 
+> 1 is also hard-coded here, but I don't think we should write
+> 
+> sprintf(addr->name->sun_path + UNIX_ABSTRACT_NAME_OFFSET,
+>         "%0*x", UNIX_AUTOBIND_LEN - 1, ordernum)
+> 
 
-Avoid by doing idr_alloc() on a NULL pointer to register the id, and
-swizzling the real pmu pointer at the end using idr_replace().
+Hi Kuniyuki,
 
-Also making sure to not set pmu members after publishing the pmu, duh.
+Thank you very much for your suggestions. I will incorporate them and
+submit [PATCH v2] accordingly.
 
-[ introduce idr_cmpxchg() in order to better handle the idr_replace()
-  error case -- if it were to return an unexpected pointer, it will
-  already have replaced the value and there is no going back. ]
+The logs from 'netdev/build_allmodconfig_warn' indicate that the patch has
+given rise to the following warning:
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ - ../net/unix/af_unix.c: In function ‘unix_autobind’:
+ - ../net/unix/af_unix.c:1227:48: warning: ‘sprintf’ writing a terminating nul past the end of the destination [-Wformat-overflow=]
+ -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+ -       |                                                ^
+ - ../net/unix/af_unix.c:1227:9: note: ‘sprintf’ output 6 bytes into a destination of size 5
+ -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+ -       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11739,6 +11739,21 @@ static int pmu_dev_alloc(struct pmu *pmu
- static struct lock_class_key cpuctx_mutex;
- static struct lock_class_key cpuctx_lock;
- 
-+static bool idr_cmpxchg(struct idr *idr, unsigned long id, void *old, void *new)
-+{
-+	void *tmp, *val = idr_find(idr, id);
-+
-+	if (val != old)
-+		return false;
-+
-+	tmp = idr_replace(idr, new, id);
-+	if (IS_ERR(tmp))
-+		return false;
-+
-+	WARN_ON_ONCE(tmp != val);
-+	return true;
-+}
-+
- int perf_pmu_register(struct pmu *pmu, const char *name, int type)
- {
- 	int cpu, ret, max = PERF_TYPE_MAX;
-@@ -11765,7 +11780,7 @@ int perf_pmu_register(struct pmu *pmu, c
- 	if (type >= 0)
- 		max = type;
- 
--	ret = idr_alloc(&pmu_idr, pmu, max, 0, GFP_KERNEL);
-+	ret = idr_alloc(&pmu_idr, NULL, max, 0, GFP_KERNEL);
- 	if (ret < 0)
- 		goto free_pdc;
- 
-@@ -11773,6 +11788,7 @@ int perf_pmu_register(struct pmu *pmu, c
- 
- 	type = ret;
- 	pmu->type = type;
-+	atomic_set(&pmu->exclusive_cnt, 0);
- 
- 	if (pmu_bus_running && !pmu->dev) {
- 		ret = pmu_dev_alloc(pmu);
-@@ -11821,14 +11837,22 @@ int perf_pmu_register(struct pmu *pmu, c
- 	if (!pmu->event_idx)
- 		pmu->event_idx = perf_event_idx_default;
- 
-+	/*
-+	 * Now that the PMU is complete, make it visible to perf_try_init_event().
-+	 */
-+	if (!idr_cmpxchg(&pmu_idr, pmu->type, NULL, pmu))
-+		goto free_context;
- 	list_add_rcu(&pmu->entry, &pmus);
--	atomic_set(&pmu->exclusive_cnt, 0);
-+
- 	ret = 0;
- unlock:
- 	mutex_unlock(&pmus_lock);
- 
- 	return ret;
- 
-+free_context:
-+	free_percpu(pmu->cpu_pmu_context);
-+
- free_dev:
- 	if (pmu->dev && pmu->dev != PMU_NULL_DEV) {
- 		device_del(pmu->dev);
+It appears that the 'sprintf' call attempts to write a terminating null
+byte past the end of the 'sun_path' array, potentially causing an overflow.
 
+To address this issue, I am considering the following approach:
+
+	char orderstring[6];
+
+	sprintf(orderstring, "%05x", ordernum);
+	memcpy(addr->name->sun_path + 1, orderstring, 5);
+
+This would prevent the buffer overflow by using 'memcpy' to safely copy the
+formatted string into 'sun_path'.
+
+Before proceeding with a patch submission, I wanted to consult with you to
+see if you have any suggestions for a better or more elegant solution to
+this problem.
+
+Thank you for your time and assistance. I look forward to your guidance on
+this matter.
+
+Best regards,
+Liang Jie
+
+> 
+> >  
+> >  	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
+> >  	unix_table_double_lock(net, old_hash, new_hash);
+> > -- 
+> > 2.25.1
 
