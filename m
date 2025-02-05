@@ -1,210 +1,90 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A277E1922DE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E773192D6B;
+	Wed,  5 Feb 2025 15:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771162; cv=none; b=fVVTx0ZrMT0GUpnOTjfxmMNnm0gGNWOJ+odt+pxUXTfWZ5X+nrUkA0LDPsF7fuaxV1mii2HHPkeXDA/jjQVZuulllmY21YnjPb40KHA8DSmqKLLGmpT4OMKtzORaLOEkv9+YxSRzmC4bFQb7FJFO7uoMeEV717Z5LYWg3bsDm+4=
+	t=1738771177; cv=none; b=sTwgIpVAMGjfchU2DU0mcDoDi5jouME8xKTBSu0lf6KStz+VRlBB0adqfa8bH4Dca6iOUpV9Tp7u9FwN+BcRE/jbAF4bf2/wjp76JciEkbIbmzdBVpJ+GT1LakdKTsx4AZHz9kh0FRJd7Kj7KGj/ZSNbgEBChYVj7YdHe/+K8ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771162; c=relaxed/simple;
-	bh=G4+CwfqKJpQd9P9lp9Jfs6xV3LIll9TZkWAKt6yxVKg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pB/DW3pRTKFo/BsD59GLCKp2WE25nR1+tNUcDyK2DKoPdvKaj/axfnQeel4K9EoR/dJablt+I5h3EymYj8Lpg0WP7Jf80zITuDhtLVghoR/PL0lGzqptPCFtV9uNtvypvYEP71AB+Er7/N7KiNzMSLVPRmgPDdFDbnK9UKhtOy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=jY1KZByh; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1738771177; c=relaxed/simple;
+	bh=C+ypM6NN3GL5xf4/fC8/MdSGCXqBHvyUDySzw8C9sIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WVHHJ8iFF8fclOv5k9VaYG36cfFfbJejpSrKgeMxYLy7Y9mPlt5oN5NzNmVaF4KQUKRAKxvvPMrmZaCBY4CTwStA+br1lX+8Uzd9XI4SJ+wpJ6AV4kELOwEX5p7RdsiuNmE0FemkpEByv1d105vPhI0PLZNROiCLd4mFX1unsgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Q6pivajQ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jY1KZByh"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so79608835e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1738771159; x=1739375959; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3fNpoCq/DLdbV6EIEdUlFLaBZ3ROWUT1K+DDgwVCgqU=;
-        b=jY1KZByhtoXpx/X0R72lvJnXB5kSXzlv3dFOlBGNkKUQgIGrgNM6z6rTX+7w1MoWYt
-         eE/1HLvzsW86qHgCqm2VmALtlQWvRg0nOk8KHW0dgYRd/QnGXIeaps4ijagBx2E957Ww
-         HtlHXJ1MCd8msmzI9WCaPynd/w6FGDlsPxt2o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738771159; x=1739375959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3fNpoCq/DLdbV6EIEdUlFLaBZ3ROWUT1K+DDgwVCgqU=;
-        b=exgTbAsmkYhPNIS5k4RbnypjDZstRvZ0ydc/4ju7gBRPJEPjWBNmQ9ji4h6iexVKDr
-         uOTD8d3Z2FE7gUp4rxwlHDNPITA9mGZvnwISRxvXhNHQDj0a0ZSW/8fJKrzaDfI3aE0x
-         eh0jbHQOk9mb+MZDi1/xrEARy9dgUB8Vc+AJwRZNh4E61dTnkZbmQ3iKgx+1atQcWCQA
-         TXG8Kob1jEZan7z/vzLjcAXtBKmD+2h1NWYpFquGPBB0HmRJ5B/lCpcddJslLL2C40wz
-         ygETBIKaVbAJUJnVGs0qE4vwdbNhTOWjeKI+C4kK2pWGBeJcR0Xe9Cu0ppOixs3PH4P6
-         nZbA==
-X-Gm-Message-State: AOJu0YzlYHZJaZJYzaiLSTrjRiMcjuoSeYY3TBMcHBw9cpx++S5V835p
-	O9vhmsB9qxhvdCUg0B1yhRd2gMum3Ed2Pc+Zeao4w5dCnHT8DTiicNF+bUVA/65OggGnNl3cQzn
-	ectgsSCbwCsnoiGHb/WmT4dfhgOUH3oj50dgL2g==
-X-Gm-Gg: ASbGncuqTC7FmWaieRot875kJTLDQ3M/JeT585h4nkEeVlZa8NJ8Wi7pWzY0lWGXqgF
-	nwaRz/SxUgevzilz3Xn2MrBawqyJmwHkoM+KY465vtztSrUV611YMpBmSZzlumh8MObAI1MpP0H
-	Q=
-X-Google-Smtp-Source: AGHT+IGHwraDJHYchdoFd+ZVOv3JlE8UmT6AZ6J415QO/yALdrm6zNrvEP8t9Zmmh9sH4vbmwS3QicXyspztB4i2Ne4=
-X-Received: by 2002:a05:6000:156c:b0:385:fc70:7f6 with SMTP id
- ffacd0b85a97d-38db4858768mr2477305f8f.7.1738771158711; Wed, 05 Feb 2025
- 07:59:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Q6pivajQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=YQmaHYcX4kSHNC5WcNtxux8lMrgIRKUaKugL4PZ1nTI=; b=Q6pivajQwCs/0BR8aHjA2zgzhx
+	XSLlH5hTv7B02RtMAVVWhc0AMRRbF5jEkLar2wEGpnOq8YhV4OVBXGbULrkZR6cBqDcmVC+blfQ66
+	/aLTDjcz2vsW0vb9+WEiNn4TG79qsLgy5Y3R/CzqozJgG1J+kRnQnC1Quny8KFEuIjJfVNFGPjX9V
+	ShIwVYQbFccDc37snxuf6t1fN5pz6+9yLNDh1tQNV4j2kXFff1uKbPyzLq+jvE65jl32nVqBAtYFV
+	D0/k7YzDcFyJ8dkEFVnHdLfH2xUniqdmjMhSpHk1/VPB/qCGXPy5JdH6JPfcgOp9S7+T8sa4/UmFA
+	+ZtZPljA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36620)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tfhoJ-0007bW-14;
+	Wed, 05 Feb 2025 15:59:31 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tfhoG-0002X9-1F;
+	Wed, 05 Feb 2025 15:59:28 +0000
+Date: Wed, 5 Feb 2025 15:59:28 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Domenico Andreoli <domenico.andreoli@linux.com>
+Cc: Jason Montleon <jason@montleon.com>, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+	"si.yanteng@linux.dev" <si.yanteng@linux.dev>,
+	"pabeni@redhat.com" <pabeni@redhat.com>
+Subject: Re: [REGRESSION,6.14.0-rc1]: rk_gmac-dwmac: no ethernet device shows
+ up (NanoPi M4)
+Message-ID: <Z6OK4PXGa_ixzQQc@shell.armlinux.org.uk>
+References: <Z6CfoZtq7CBgc393@localhost>
+ <INKEBRCGF47MsjO5WHpLcf1OTcQHw2KG6_Ez-K9QiTwAnb4MRVErnxoUT1euX_o9oRrxUILDRDvlOZ7ezguCU4maUyvkk-UqU52l6xLsF8U=@montleon.com>
+ <Z6NEyCRHTVfnM1vf@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
- <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org> <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
- <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
- <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop> <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
- <999751de-b891-424d-a7b5-80bfa98793ff@paulmck-laptop> <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
- <e23ab8d2-1a64-458b-a83d-eabcf92a2382@paulmck-laptop> <CAEXW_YSFtF=Vx2P73m0tdfAYgSui-KSzGnyqiTY1rwOfWfFycA@mail.gmail.com>
- <87f074af-a39c-48db-972f-5f46e57aa3db@paulmck-laptop>
-In-Reply-To: <87f074af-a39c-48db-972f-5f46e57aa3db@paulmck-laptop>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Wed, 5 Feb 2025 10:59:07 -0500
-X-Gm-Features: AWEUYZlU6SdSFTsqKWqPoMuqnVZat79mVVDbDxIvAz6VGoI4LllI0lOmkx7SFIs
-Message-ID: <CAEXW_YTeDRQ=mAUKYpgxYjsHooX=C3cJwTkMi6XqcE_7Ne+zDw@mail.gmail.com>
-Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6NEyCRHTVfnM1vf@localhost>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Feb 5, 2025 at 10:56=E2=80=AFAM Paul E. McKenney <paulmck@kernel.or=
-g> wrote:
->
-> On Wed, Feb 05, 2025 at 10:45:08AM -0500, Joel Fernandes wrote:
-> > On Wed, Feb 5, 2025 at 5:28=E2=80=AFAM Paul E. McKenney <paulmck@kernel=
-.org> wrote:
+On Wed, Feb 05, 2025 at 12:00:24PM +0100, Domenico Andreoli wrote:
+> On Wed, Feb 05, 2025 at 04:19:58AM +0000, Jason Montleon wrote:
+> > On Monday, February 3rd, 2025 at 5:51 AM, Domenico Andreoli <domenico.andreoli@linux.com> wrote:
+> > > Hi,
 > > >
-> > > On Tue, Feb 04, 2025 at 08:28:29PM -0500, Joel Fernandes wrote:
-> > > > On Tue, Feb 4, 2025 at 3:22=E2=80=AFPM Paul E. McKenney <paulmck@ke=
-rnel.org> wrote:
-> > > > >
-> > > > > On Tue, Feb 04, 2025 at 10:44:45AM -0500, Joel Fernandes wrote:
-> > > > > > On Thu, Jan 30, 2025 at 12:56=E2=80=AFAM Paul E. McKenney <paul=
-mck@kernel.org> wrote:
-> > > > > > > By "where we were initially", one might reasonably guess that=
- you meant
-> > > > > > > that the initial value and the target are one and the same.  =
-But I suspect
-> > > > > > > that you are thinking of a third value, the value of the unde=
-rlying
-> > > > > > > grace-period sequence number at the time of the call to rcu_s=
-eq_snap().
-> > > > > > > But you might be thinking of something else entirely.
-> > > > > > >
-> > > > > > > > Now we move rcu_seq_done_exact. It has the exact same behav=
-ior except
-> > > > > > > > that instead of ULONG_MAX/2, the above situations are shrun=
-k to about
-> > > > > > > > 10 counts from the target. So if target is 28, then the ini=
-tial
-> > > > > > > > sequence should have been at least 18 to avoid false-positi=
-ve, but
-> > > > > > > > again it is possible and I certain see in the code that it =
-cannot be
-> > > > > > > > used this way.. (at least so far).. So all we are left with=
- is the
-> > > > > > > > false-negative band of ~2.5 GPs..
-> > > > > > >
-> > > > > > > Here, I have the same questions.  As you no doubt guessed.
-> > > > > > >
-> > > > > > > > About "what are the consequences of failing to get this rig=
-ht".  I
-> > > > > > > > believe false-positive is unacceptable unless it is maybe d=
-ebug code -
-> > > > > > > > that can break functionality in code, too short GPs and all=
- that.
-> > > > > > > > However false-negative is OK as long as the usecase can ret=
-ry later
-> > > > > > > > and can afford to wait. Did I get that much correct?
-> > > > > > >
-> > > > > > > Maybe?
-> > > > > > >
-> > > > > > > Please look at this on a per-use-case basis.
-> > > > > >
-> > > > > > Sure. FWIW, I started a world-editable document here. I am plan=
-ning to
-> > > > > > work on this a bit more before our meeting this week. If others
-> > > > > > knowledgeable like Frederic and others could make edits/comment=
-s,
-> > > > > > that'd be welcomed. But I basically summarized this whole threa=
-d here:
-> > > > > > https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb=
-1aG4goOJAnS6c6gQ/edit?usp=3Dsharing
-> > > > > >
-> > > > > > My thought is (AFAICS), this patch is still valid and
-> > > > > > rcu_seq_done_exact is a potentially better replacement to
-> > > > > > rcu_seq_done. But famous last words...
-> > > > >
-> > > > > Let's start with the use case where the sequence number is being =
-used
-> > > > > by rcu_barrier().  What happens?
-> > > >
-> > > > The rcu_state.barrier_sequence is used to keep track of barrier in
-> > > > progress, as there can be concurrent rcu_barrier() calls happening =
-so
-> > > > we optimize by batching multiples of these calls.
-> > > >
-> > > > It also handles the case where the entrain IPI came through but no
-> > > > rcu_barrier() is currently in-flight (which would be weird but mayb=
-e
-> > > > it happens somehow).
-> > > >
-> > > > It is also used to make sure we don't need to entrain on a CPU agai=
-n
-> > > > if we already did an entraining for a certain rcu_barrier() invocat=
-ion
-> > > > already. This is tracked by rdp->barrier_seq_snap which copies the
-> > > > value of rcu_state.barrier_sequence after the entraining. Al though=
- I
-> > > > am currently unable to envision why the IPI handler would be called
-> > > > unnecessarily (hardware bug?) since we hold the rcu_barrier mutex
-> > > > throughout the rcu_barrier() function, including while waiting on
-> > > > CPUs.
-> > > >
-> > > > Going back to my first point, for the rcu_seq_done() in rcu_barrier=
-(),
-> > > > we are checking if someone else did our work:
-> > > >     mutex_lock(&rcu_state.barrier_mutex);
-> > > >     /* Did someone else do our work for us? */
-> > > >     if (rcu_seq_done(&rcu_state.barrier_sequence, s))
-> > > >
-> > > > Here I think rcu_seq_done_exact() is better, because if too many
-> > > > rcu_barrier() calls concurrently made at the same time, the mutex m=
-ay
-> > > > be contended. If enough time passes and we have a wrap around, we
-> > > > might end up in false-negative land which is much larger with
-> > > > rcu_seq_done() than ..done_exact(). However, that does seem to be a
-> > > > bug to begin with if the mutex contended for that long. OTOH, doing=
- an
-> > > > rcu_barrier() again when we didn't need to doesn't seem like the en=
-d
-> > > > of the world especially if we contended on the mutex for that long.
-> > > > But at least it shows that rcu_seq_done_exact() cannot seem to hurt
-> > > > here.
-> > > >
-> > > > Hmmm,
-> > >
-> > > So...  Do we really care about the difference between rcu_seq_done()
-> > > and rcu_seq_done_exact() in the rcu_barrier() case?
-> >
-> > In so far as to get rid of rcu_seq_done() API in favor of using
-> > rcu_seq_done_exact() but should not cause any functional or robustness
-> > changes to rcu_barrier() at least, AFAICS.
->
-> OK, *that* I might be able to get behind.  ;-)
+> > > This morning I tried 6.14.0-rc1 on my NanoPi M4, the ethernet does not
+> > > show up.
+> > 
+> > I am experiencing similar behavior on the Lichee Pi 4A with thead-dwmac. It works fine on 6.12.12 and 6.13.1, but with 6.14-rc1 I don't see these last several lines of output as in your case. I did also see the same new error:
+> > +stmmaceth ffe7070000.ethernet: Can't specify Rx FIFO size
+> > 
+> > It looks like this message was introduced in the following commit and if I build with it reverted my ethernet interfaces work again.
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/ethernet/stmicro?h=v6.14-rc1&id=8865d22656b442b8d0fb019e6acb2292b99a9c3c
+> 
+> Confirmed, reverting it resurrects the ethernet also for me.
 
-Great! So I guess I will continue down the rabbit hole then with the
-other users and cross my T's / dot my I's for this patch. Very least,
-I am (re-)learning about all these use cases so thank you! ;-)
+This is a known issue. A revert has been submitted:
 
- - Joel
+https://lore.kernel.org/r/E1tfeyR-003YGJ-Gb@rmk-PC.armlinux.org.uk
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
