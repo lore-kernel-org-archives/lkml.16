@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E20B22F173
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD6722F399
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751144; cv=none; b=cB4X8nPhCqjEgJRtYKEkosrGLvkODfTY5hoW9N7GyDp4umzjeiBdGSxlqr50URIjrKrdZDODkUBLCxk2v5EhDK3LDPzJZH+aKd15WIPm2bDqfQ7CLDdi4O5e+qo+i1H7BmZhiQ/6RT8BtOoHZ/6bYaQXwrJyXLxf3d1z68+uj3Y=
+	t=1738751145; cv=none; b=J6Q1yt9HsFk3/tKZ2sF99xMaLeXmObdb4dabqJqQT/mD8VcGUQlto6w412mL8/wN3X3ADoEa/naD5Ostp6gk62vZAYimeMuyp+VIBe2tLGIyX7o51DHpDV2S9QLS4fWLXi9K9BS4NqH8sIQF4+Boanl2ugOqtKjG5fZeGslDv6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751144; c=relaxed/simple;
-	bh=jkluaH4XEYEQte8xGB2hv1h2ykK+4gRIqt1RXfpWLbg=;
+	s=arc-20240116; t=1738751145; c=relaxed/simple;
+	bh=V5gRc9xaSn1o1EJddIrGLWliyFJt9NbqAOiRFB5WSpI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=dN+syEgdwPXpaOwNOFPxRGvoopIeamTVhQA4ZO9vOlUJmHpRArVtUIDcY9Ac1sGluLuYcaqrXQ+4AQyw4yFAUR6RiUwLN4sMzYIkm303Sis0GBFSU1J4slSUFtv9g1fzJ02F1gexZoeeoXHMQFG6aURdYqjAhJ/bpG6IE+g2jg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RBVWViR0; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=MNPfjnOtvN1kUr7yMyJ2/UiSEN6+uomCgYChTGoI7hFYzT62izdn2+bZ69fjIB6lVat33qgddkrUpTbxPZdkSCuYGiK8MIl5QOe2E3oRprHA0+opNjkamWigEfvFj/IlhMd6soNqU4cUAgabMTJQ1+E4BkB6UtvD+YRaJyudxvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rvVT9Y6Q; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RBVWViR0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rvVT9Y6Q"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=ae6cNYVBi7drCixIq97d0s/5QVUjP8FLagtyIO73Xkc=; b=RBVWViR07Kf9g8zQn/4BaWuRoR
-	setm5JM/ZlhmOaZq79WO5hFJljs2/4PxLqmm9v8kQt+UmKgZ9WOY55MtR2zRhLbjuxiIooms6/P75
-	BsZXD+YrMqu8jAQ8KNOp3qgyGX6ydVFY11P8Z8EDbf4Pl4uArzIthqZTmI5CGMKr0no1nyk5U0y9O
-	NkD1SOE27z632qiAyrX76er/2CEtjz4Ctl77P8F5afTOWNKCbl9aI39xsNRxPnRsS5+ADIkxd+yU+
-	0scqmYrQ/ox210VRUnNRcY3hnlcEOpIwv+ECnGzn3MIMTGYQEEWrWkGPq4RrdBeIkzwCBlKdsVnv5
-	0SnLL1Ow==;
+	bh=caaHUBwU3FjXVkr/jMxyi0Xl6jcwm1jZ/HPyaNVGz1c=; b=rvVT9Y6QWlCkTCvxMkqE1VeA9T
+	i1JZFZO+NBH72LciNsxNNhiERji24+Emb7gdfGg8CeZHjfaTFxqHNnfJytzdyJJElcUwBko74iv2d
+	j4IlVXCuyeMfnTTJ+CjN6sULirxzXwQMJO7bGYiXp78dS1uzpOyRl7i6I63RqZ9dBYTioLcCQYevK
+	bKttlyLVu9A2TdJu8rvPMOh3Ak0lYYADhOsJo5ugy7BqfEIfRi22C88Cjr7VpBknoKM2euWlOZtJ6
+	bsD0QlbWgLLDphQP0FLWYdu0Xitl0fclSDWPsXKPiq4djky3WPUjtU5mVJppWaR9WuOmrQeN1iuZ8
+	pI4UYmGw==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfcb2-00000004GPR-2bak;
-	Wed, 05 Feb 2025 10:25:28 +0000
+	id 1tfcb3-00000004GPZ-24yU;
+	Wed, 05 Feb 2025 10:25:29 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id B0F703003E1; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
-Message-ID: <20250205102448.348146549@infradead.org>
+	id CC50530619B; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
+Message-ID: <20250205102449.110145835@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 05 Feb 2025 11:21:21 +0100
+Date: Wed, 05 Feb 2025 11:21:28 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  ravi.bangoria@amd.com,
@@ -49,9 +49,8 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  irogers@google.com,
  adrian.hunter@intel.com,
- kan.liang@linux.intel.com,
- David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 01/24] lockdep: Fix might_fault()
+ kan.liang@linux.intel.com
+Subject: [PATCH v2 08/24] perf: Cleanup perf_try_init_event()
 References: <20250205102120.531585416@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,30 +60,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Turns out that commit 9ec23531fd48 ("sched/preempt, mm/fault: Trigger
-might_sleep() in might_fault() with disabled pagefaults") accidentally
-(and unnessecarily) put the lockdep part of __might_fault() under
-CONFIG_DEBUG_ATOMIC_SLEEP.
+Make sure that perf_try_init_event() doesn't leave event->pmu nor
+event->destroy set on failure.
 
-Cc: David Hildenbrand <david@redhat.com>
-Fixes: 9ec23531fd48 ("sched/preempt, mm/fault: Trigger might_sleep() in might_fault() with disabled pagefaults")
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- mm/memory.c |    2 --
- 1 file changed, 2 deletions(-)
+ kernel/events/core.c |   69 ++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 41 insertions(+), 28 deletions(-)
 
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -6695,10 +6695,8 @@ void __might_fault(const char *file, int
- 	if (pagefault_disabled())
- 		return;
- 	__might_sleep(file, line);
--#if defined(CONFIG_DEBUG_ATOMIC_SLEEP)
- 	if (current->mm)
- 		might_lock_read(&current->mm->mmap_lock);
--#endif
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12019,38 +12019,51 @@ static int perf_try_init_event(struct pm
+ 	if (ctx)
+ 		perf_event_ctx_unlock(event->group_leader, ctx);
+ 
+-	if (!ret) {
+-		if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
+-		    has_extended_regs(event))
+-			ret = -EOPNOTSUPP;
+-
+-		if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
+-		    event_has_any_exclude_flag(event))
+-			ret = -EINVAL;
+-
+-		if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
+-			const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
+-			struct cpumask *pmu_cpumask = perf_scope_cpumask(pmu->scope);
+-			int cpu;
+-
+-			if (pmu_cpumask && cpumask) {
+-				cpu = cpumask_any_and(pmu_cpumask, cpumask);
+-				if (cpu >= nr_cpu_ids)
+-					ret = -ENODEV;
+-				else
+-					event->event_caps |= PERF_EV_CAP_READ_SCOPE;
+-			} else {
+-				ret = -ENODEV;
+-			}
+-		}
++	if (ret)
++		goto err_pmu;
+ 
+-		if (ret && event->destroy)
+-			event->destroy(event);
++	if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
++	    has_extended_regs(event)) {
++		ret = -EOPNOTSUPP;
++		goto err_destroy;
+ 	}
+ 
+-	if (ret)
+-		module_put(pmu->module);
++	if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
++	    event_has_any_exclude_flag(event)) {
++		ret = -EINVAL;
++		goto err_destroy;
++	}
++
++	if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
++		const struct cpumask *cpumask;
++		struct cpumask *pmu_cpumask;
++		int cpu;
++
++		cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
++		pmu_cpumask = perf_scope_cpumask(pmu->scope);
++
++		ret = -ENODEV;
++		if (!pmu_cpumask || !cpumask)
++			goto err_destroy;
++
++		cpu = cpumask_any_and(pmu_cpumask, cpumask);
++		if (cpu >= nr_cpu_ids)
++			goto err_destroy;
++
++		event->event_caps |= PERF_EV_CAP_READ_SCOPE;
++	}
++
++	return 0;
++
++err_destroy:
++	if (event->destroy) {
++		event->destroy(event);
++		event->destroy = NULL;
++	}
+ 
++err_pmu:
++	event->pmu = NULL;
++	module_put(pmu->module);
+ 	return ret;
  }
- EXPORT_SYMBOL(__might_fault);
- #endif
+ 
 
 
