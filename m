@@ -1,93 +1,86 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEB022A4D1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF41822A7FA;
+	Wed,  5 Feb 2025 12:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759407; cv=none; b=icpWPO0srBaIxIm7QZ8e+aE/NZvjdeUCXu/wnaQDzsctcw/qHKsR6racoZBW1cFqu4d62DCVq11auc3hynY5Z/nbEVofXtc9VI+S9Hr+Ve33pz21+Cg3yKl9JSU81sd1GGirWqhGSd/5G3CKyeB/SNA/usyIVEu5cqfF0y0KGrY=
+	t=1738759461; cv=none; b=WOjsxT0BUBTmQXmGrDuU3AdD9pqACUaS54xIc9df2eLxHg/sbP1xmVT5dvZulPvffGYdpUWJuLrrx80F223ru0mQwybb6Jzwx0t58sAN7QMsfw6lxvIyuzNqG8GzNoq1dScD6MMqk8KhJDECqD0QDwvel4zQXdQdMft81XMW+AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759407; c=relaxed/simple;
-	bh=MFwWo9skWE6TgrrIuG9Dg1rbyddXG8DLp+DwyUcHO/w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tnvbtS6J+jemJMUuiUufylKA497e+HiVCQfpJcZkSEnl6P+nlcmqTah/8amzuxLBe933zBM/ShLoUjrMsBsUgIq6lXKo0tDkHPtbl5udDzxj68LceyEX5N1irTSs9e+OiS4pz8B9ZB/bAvzkofcWQDjX2/Zq5agECK/O+FA2g5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3cfb20d74b5so47895935ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 04:43:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738759404; x=1739364204;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qE+fXc1pHOhxeyOdSmAnMaDoJYrhg+xmOJDX5G4+jRw=;
-        b=i3Zg3JJgiYvshPNj+0fiI7flfU3ha8NAfQf3qwZE7lZaAXYd3OD14bLZHnyUwaK7k9
-         pPuQt+EK2AE9TaaS0XabXNnDLxUQhpt/LGNzA4MJT6jGrEJqXMS5PoKJdR72wkzwucbb
-         WqfNeQEmR8mVvJY2nXXHfpYPXF6PKsAXUUQEvacrhRpmh0crniY1E0AlDEpd99+F+cAS
-         pHzvN+tQaIuVsTeEl3J1LP7Po7boMxRv2OsPpkbJbqg67maqbGixO1t1LmTFVquw5dkG
-         2Uyz7SsdeX4N5DnyCatyGfq//9fhzDELqQiH475/AD183JCkaNygAohWFBHcgtFVSYNv
-         Xdrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUj891p3xsmOi2Lz0TEPEoQNK2uzNospFfWbWm6JedFb8KVWiK/ySz5D6NHMs8sEJOlo7DeRuWTikVBdjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHMoBI6YBMfDvceVhKvYHjPxn6VTlSgkO4EtNNLmtVcJnjKFie
-	pgGUF1iXZRIaKgZcfBhUH4N0uMMPxoXYzvv3F0QeCd0xAqsYR7FCdwB8nNabzlR0YWrLTcR16vB
-	8hF8xwvYaafCxh2BLNmb9VKnGe6iEJmaSlV9rqdo5n1pNYgenIIKliF4=
-X-Google-Smtp-Source: AGHT+IHXWRgilzd3XNVpmJ5vIWEJ3GQ8019fDmXhYFTPWkCFU4PsLj9OkZ3YQ86PBm04LC/9AK62WTRpSIP3t6lhhRuG/88ASsAD
+	s=arc-20240116; t=1738759461; c=relaxed/simple;
+	bh=pndALRAxj8SSHI3s2SLD4uhfGrnoFhTi0WG4bEaxkMg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=bNNMaYDpuwv8+qFzNawcOPpgYsh5o1DrmwxAxn2Ed16vYHgtwBN8zrgnNpQNG9zYq++rpn93pP9H+KLdRfO9UdHyJW9cFmEPaf9a+2DZ9K2g52L7wyS3Nfe9kk++/AKHzV76yGzLxd86ljavWoC78wST0G/eSzn3N186Edvc17Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWeKgK2E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWeKgK2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4F5C4CED1;
+	Wed,  5 Feb 2025 12:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738759461;
+	bh=pndALRAxj8SSHI3s2SLD4uhfGrnoFhTi0WG4bEaxkMg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=mWeKgK2EQ5glYceYFsOH1vLHo+nb4viPrD+h4lItnE378XR0Il704KhP5n2hSVTGt
+	 AquexTF2hjCJ7enRHRC/dbs1NzOczS4kJFkIAxa305HMYciv+RtnRuv5U5Hw/FRLT7
+	 VQjtmyBukmx4UGscoQueSOqckaQEvLiWH2NLe/+e0O2nf70hVix2Bu+naXwmHKMNnb
+	 Tlr7obWZxHauYJiy/8InUtEh122RaYNzQjc8xYh+xrC9qDRM7wOzr2aYIc6Psg9lCS
+	 Jak1FId4zKTWZiqeZ6Q+5Ao5tNZScJqByCFAeniTEAC1Nq87vztNRAy++iaDXRV4jo
+	 RJMRpiDdjx3YQ==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, peter.ujfalusi@linux.intel.com, 
+ yung-chuan.liao@linux.intel.com, ranjani.sridharan@linux.intel.com, 
+ daniel.baluta@nxp.com, kai.vehmanen@linux.intel.com, 
+ pierre-louis.bossart@linux.dev, perex@perex.cz, tiwai@suse.com, 
+ Zhang Heng <zhangheng@kylinos.cn>
+Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250117014343.451503-1-zhangheng@kylinos.cn>
+References: <20250117014343.451503-1-zhangheng@kylinos.cn>
+Subject: Re: [PATCH v2] ASoC: SOF: topology: Use krealloc_array() to
+ replace krealloc()
+Message-Id: <173875945870.32457.1216204039279705244.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 12:44:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a45:b0:3cf:c8ec:d375 with SMTP id
- e9e14a558f8ab-3d04f2c7559mr25490575ab.0.1738759404554; Wed, 05 Feb 2025
- 04:43:24 -0800 (PST)
-Date: Wed, 05 Feb 2025 04:43:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a35cec.050a0220.50516.0052.GAE@google.com>
-Subject: [syzbot] Monthly s390 report (Feb 2025)
-From: syzbot <syzbot+listc2bca56bae687bb9de83@syzkaller.appspotmail.com>
-To: agordeev@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-Hello s390 maintainers/developers,
+On Fri, 17 Jan 2025 09:43:43 +0800, Zhang Heng wrote:
+> Use krealloc_array() to replace krealloc() with multiplication.
+> krealloc_array() has multiply overflow check, which will be safer.
+> 
+> 
 
-This is a 31-day syzbot report for the s390 subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/s390
+Applied to
 
-During the period, 4 new issues were detected and 0 were fixed.
-In total, 11 issues are still open and 43 have already been fixed.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Some of the still happening issues:
+Thanks!
 
-Ref Crashes Repro Title
-<1> 20019   Yes   possible deadlock in smc_switch_to_fallback (2)
-                  https://syzkaller.appspot.com/bug?extid=bef85a6996d1737c1a2f
-<2> 2669    Yes   possible deadlock in smc_vlan_by_tcpsk
-                  https://syzkaller.appspot.com/bug?extid=c75d1de73d3b8b76272f
-<3> 204     Yes   general protection fault in smc_diag_dump_proto
-                  https://syzkaller.appspot.com/bug?extid=f69bfae0a4eb29976e44
-<4> 51      Yes   possible deadlock in smc_release
-                  https://syzkaller.appspot.com/bug?extid=621fd56ba002faba6392
-<5> 41      Yes   general protection fault in __smc_diag_dump (3)
-                  https://syzkaller.appspot.com/bug?extid=271fed3ed6f24600c364
-<6> 8       Yes   Unable to handle kernel execute from non-executable memory at virtual address ADDR
-                  https://syzkaller.appspot.com/bug?extid=8798e95c2e5511646dac
-<7> 8       No    possible deadlock in smc_shutdown (2)
-                  https://syzkaller.appspot.com/bug?extid=3667d719a932ebc28119
-<8> 5       Yes   possible deadlock in smc_pnet_find_ism_resource
-                  https://syzkaller.appspot.com/bug?extid=f160105b2817964a0886
+[1/1] ASoC: SOF: topology: Use krealloc_array() to replace krealloc()
+      commit: a05143a8f713d9ae6abc41141dac52c66fca8b06
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-You may send multiple commands in a single email message.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
