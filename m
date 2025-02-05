@@ -1,39 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E87F22AE59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E90F22AE65
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751137; cv=none; b=Nrh6geXglg2hgoXH/iqEYBRpHkG1mN3rpzkESs5zMDuJndLQUsWOa9DOypcjQbv+VmZ6ne3A53jNwWCHeEcAn5+hQ1xEB9Nrz+u1v1JC8AztT48PW+S/D8GggUfhtrYjS31UAOtObxihS0jtGf3Ekl/aWxOMVGOJhKiHyt3Y46I=
+	t=1738751137; cv=none; b=e9NBS1RRYBYD3L7y++3rJACJMH/0Y8i75bii0qDgckxG7IkzWzbRLZz+88PmfLS8coKcs2rm17VhHACXfBe4WB9Dt3RqxuZEMEnDbkGx62N5EBhOfN/Muv/H2LSJCtLUTbiIOcdf8tRI8fUJjCkRO5mAqglBvD7XaeFSdzA/xQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751137; c=relaxed/simple;
-	bh=EPKQBg8QBfgGr70sM9uNyjThGsDeBrpvrn7X029CQw4=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=e+XTiJ5TLDF3+YlmfCl3Az/7PKADbmE4ATlpU8kyaSA6cyV2mCJ47dNpjkQ41WASIRDqWIP3ocp4j4DPQVaPsCFSLpJjJ9FHLD4t+p4+SicrveZyplkyrfDjWZo+FiEk00wtGsb6bs7RsCOXHD5X/b+NYCTYjVxsqsByYYW4NAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tvf6ccpp; arc=none smtp.client-ip=90.155.50.34
+	bh=nl/E7IbifIHY4saIGLrcUyqLZKw5Y4dVMLE4DYop58Y=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=lVugHw5EslAkKuPeszwceVGWSlLDP7LvNGh1EuDUDBVp/5Fc2yKInZQHbFD6SUrqA3bPFAE4sFb/oGR6tTphfEabhTzPTNU5AYANYzVeMOBQySK2adK/5KqlEbzqsD4zCjbJsg5gXZtXP2MCb77tYTbVKEHy278K3Bh1PktbnL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pza+EoGK; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tvf6ccpp"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pza+EoGK"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
-	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=YcyiPUnr0DLfGjtMPHuu0x83N4axgRPt4qEYkYKlHBk=; b=tvf6ccppTIzSHnZr6rinoUjtuc
-	e5B716wkx9Qa+fpckV2rzT9SEYe4etsNP8EpQPVr+WTiFSl4DjYyovrzaokWNWLivJR8MSm95Lob+
-	KUewXHTmyCHQdFwmWnM0iwLw7gvyW/wXdP0/mRpjbB7UbH/lXxmuRHeIgEx7Mq6lKs9lYW2SRUptq
-	FFAx1+eeQdnH2vZFyE8CgxKPZIogVtirxojY8wOKKMzMh//84GGBBhdScVhSKdIDnk+HI0rvL824N
-	kiHsDXBC+Nb/NRc4Hzj/7B2FOcfO3hO1O7wKpBW2WHj6AFCcvoAZlUqCxQqGD1ugwKtK869yYkIJZ
-	OdGH/+IQ==;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=zvAjMRogCzZXBg0SQLthP0VbH9NxSHSRwZYyo2uheI4=; b=pza+EoGKR8cpT/KN8sT5/+L4pD
+	6Zp2YqczUFeL6npG5/mfBsDhyGZGdPholkSKZpc0NV6diavYr8G6KgkT6KrVrLZifPQBKqSCngLGk
+	8MLiT3hqDty7zA5MmwPT3w/3UBdZNY5vgkJ1bPF9PR3YtGHUTBrxvlVCI4aVlnOjF4zlpjxcSnjV0
+	7rGwqkg0kx1CqBQKqBX9bgQPWYvMa6lYlLabQZ/h5tnOfM3Tmoth9COyPByTSGfM3W5JBOSm4CBRD
+	FR4cO6D7x7MubuzV+4MWbVlLDFc4/P5bxXuHNQsEQww3sXUDnVEpwdwl67/G84FAUiiNMFaJ7nNvj
+	RNfWi5hQ==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfcb2-00000004GPQ-2ZnB;
-	Wed, 05 Feb 2025 10:25:28 +0000
+	id 1tfcb4-00000004GQ9-2U9P;
+	Wed, 05 Feb 2025 10:25:30 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id AD69B3002F0; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
-Message-ID: <20250205102120.531585416@infradead.org>
+	id 0A3863085E6; Wed,  5 Feb 2025 11:25:28 +0100 (CET)
+Message-ID: <20250205102450.672685519@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 05 Feb 2025 11:21:20 +0100
+Date: Wed, 05 Feb 2025 11:21:42 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  ravi.bangoria@amd.com,
@@ -49,17 +50,72 @@ Cc: linux-kernel@vger.kernel.org,
  irogers@google.com,
  adrian.hunter@intel.com,
  kan.liang@linux.intel.com
-Subject: [PATCH v2 00/24] perf: Make perf_pmu_unregister() usable
+Subject: [PATCH v2 22/24] perf: Remove retry loop from perf_mmap()
+References: <20250205102120.531585416@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Hi
+AFAICT there is no actual benefit from the mutex drop on re-try. The
+'worst' case scenario is that we instantly re-gain the mutex without
+perf_mmap_close() getting it. So might as well make that the normal
+case.
 
-New version of the perf_pmu_unregister() rework. A fair number of bugs
-squashed.  Much thanks to Ravi for writing a stress tester. The robots also
-managed to find a few problems.
+Reflow the code to make the ring buffer detach case naturally flow
+into the no ring buffer case.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6667,27 +6667,32 @@ static int perf_mmap(struct file *file,
+ 			return -EINVAL;
+ 
+ 		WARN_ON_ONCE(event->ctx->parent_ctx);
+-again:
+ 		mutex_lock(&event->mmap_mutex);
++
+ 		if (event->rb) {
+ 			if (data_page_nr(event->rb) != nr_pages) {
+ 				ret = -EINVAL;
+ 				goto unlock;
+ 			}
+ 
+-			if (!atomic_inc_not_zero(&event->rb->mmap_count)) {
++			if (atomic_inc_not_zero(&event->rb->mmap_count)) {
+ 				/*
+-				 * Raced against perf_mmap_close(); remove the
+-				 * event and try again.
++				 * Success -- managed to mmap() the same buffer
++				 * multiple times.
+ 				 */
+-				ring_buffer_attach(event, NULL);
+-				mutex_unlock(&event->mmap_mutex);
+-				goto again;
++				rb = event->rb;
++				ret = 0;
++				goto unlock;
+ 			}
+ 
+-			rb = event->rb;
+-			goto unlock;
++			/*
++			 * Raced against perf_mmap_close()'s
++			 * atomic_dec_and_mutex_lock() remove the
++			 * event and continue as if !event->rb
++			 */
++			ring_buffer_attach(event, NULL);
+ 		}
++
+ 	} else {
+ 		/*
+ 		 * AUX area mapping: if rb->aux_nr_pages != 0, it's already
 
 
