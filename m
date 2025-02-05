@@ -1,177 +1,174 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F43215176
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DFD1F473C;
+	Wed,  5 Feb 2025 23:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796977; cv=none; b=B3PjWHhDhMSrjxxOxPZd+XtSNrkxuPKLln7fEeZtCtdb7po/niTeZ7+elcMEkFIs6Ce3zA7BImlbXtOBnjyOKoxuIFbSjh+x+Vpgud5v/koZ/2aGwYA5acfLjmC8aD35vYvwal47pOk78XbkTqaGWGqNvRxWlODSf2+28oWi/QA=
+	t=1738797046; cv=none; b=OwgMfZMooWj5zWZ9PdCfCF4Bx05v3ukwc5pO+cqGOji2oxlA0OjNbEPSv2QV64UBHw6p5EjtwLYZU1m8cGItSjdYvQFkuEunAWvKFaJz54qdOinFpd+4lBnkjCdHwTG2G1auRK7pZKaebsF7yqzdNp58sO0NanwK2dGxhb1AJKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796977; c=relaxed/simple;
-	bh=0tONOp1b5SRsZAROp+esw8aYqCFtQ0EOoMDmhHZVrpo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=EpDvqz8Q+xjzfoubFetdA1n5fozSLS2YRWmrL4gKYi0NaHKEI13q5o4Hi1KYoXlKgE6LQuqvrZULksJCVg6pL7OKDGNw/ZXRZ0xHAG2NLvpzEbHe3n0MYJX9LVeeQDirHEoThBfrJnqYY+hEXwQjtHTeVUWfgTQdabiXzHuXtJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=khYF0LSF; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738797046; c=relaxed/simple;
+	bh=YMj9qB7NEC7PNrJfxOw2lcGFPvJemO3tb29mJD8IcQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F7PvSieXKTppBQQPeyrOD9NEcAoJOfFyZ3Qqk9OB0s0alTgdQN1DXEAUHFnVDM3Lfsk0rAzEetsYudu42Bi5HXVTEn2uvRzRQ1bcS/C7RXLh8a5miU1sctaHXBs0b4CT8wbD3oXtrnxQJfFC5VQv7IUvX/IkGcmvs+jsclGTFMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CNwxz8qR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="khYF0LSF"
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 5B1DC3FA60
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738796966;
-	bh=IHCQzji28xdd+EhWALB92Wl84qSvADw6a0Gh6qa1QcU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type;
-	b=khYF0LSFpGa8+4Xz/v0o5mXfss4tkRzzBZEqNJhuihQbXO/pTewfIngwnQ13KlZYx
-	 4smtsU8QddmiwfFcOhlxqR62K8iS3i3c6gDz0oJhjbvFwRLHZW8t40hB79nXC/G7XU
-	 tHty2hjbs0+TMcEWgC3t9IswBmowNqAtfuZnxK4490c6hB6VFUi+bA2VvKKGjeo2OW
-	 ujpK+mAppu+ALiyKukfTPt7hgPSkMJfFXhnwuFVZ6Ymx3OM7WhobdXIErnk+FOYK/U
-	 hDmX/+VJId0oQNerofvNYA/DtgxnhPwCH6CRqiItqJ+s/m3x6QhhZmf0us1IWkXyET
-	 j3FDmydaeYXPA==
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5d89a53fc46so338009a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 15:09:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738796965; x=1739401765;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IHCQzji28xdd+EhWALB92Wl84qSvADw6a0Gh6qa1QcU=;
-        b=EoZP41XOMD52Vm1IbKmBO06ayO/QWRQdeKfFxPXeO+X1eWPCRFbA3SZlgICq43AHYl
-         Ef/Ikenw7xGHXF8qXboJUBt3r/+bIOgLU/lPpnuZBIlGCPOFhYtFEASkkO78rrxGYnQv
-         ceUMdu8sLvOQB2bvCwlPw2KTtZ9fLzmkArCzWazwjTLDG/eISa1GctTXQXPHsGONQ02t
-         aA38chXqF5IXmXQM2I/C97Gjr7bJknef5LTF7g8fn9Dt0oDoNY4mm5rb53zazHKo3xIh
-         P8u5SzOZKCDiU8Tge77DuRgBfWhu4J3vBe3SE6kb5spvjiw29xElGOSXzLmaWBCpuvnU
-         uY+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUB+8prgvYmgz8amoIqAi88TXfikV96eyrhz9Eh4E3ta09gBog6DuTaqHmgZCOQdFePKWZ9uQU/fs0RQo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSAgyIh6KvAOBrfKzKRkWlt0Xc20jwH9wRF36uAfBqAh9Ew4Hj
-	nblWm4+O5I7wFI+bXazCSQhgKlOEO4D+pxcufWaI0q68dYOpAuvNz3816gVtp/7E8X5iio83c1W
-	VDLEFvP0yRENe+1UT/wPCs4WVPWLKVZ8JbiuFR75ksZRjWAG14JSJGjoAeBBsxnrpkuzwWXbUgh
-	hsgQjm0u0OCjlZfTQJhUbidFfvXtq0UTdrSvdb+Jq6haDkDDVd9PvQ
-X-Gm-Gg: ASbGncvkieWJenfPQ5ohwak7k77wDsV8a7keUiOfgMqc8uGlmLGZ+4/X1P9iqvJDxaX
-	EBq8JhbN8O4u8xUxNEyxY3ofPFKRD9KU2sxb3aK0eC3fKlHutOrKjMjMnqfDs
-X-Received: by 2002:a05:6402:1ece:b0:5dc:8ff2:8b67 with SMTP id 4fb4d7f45d1cf-5dcdb776ea5mr4739838a12.27.1738796964869;
-        Wed, 05 Feb 2025 15:09:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF1fESLv5gzNaM5MizNpi9j0ovNWs8X15bEZqC1NhnGeYx/WSsczY28A2jsvF5N18HMtSIAoHtF1Twd9VUhmHE=
-X-Received: by 2002:a05:6402:1ece:b0:5dc:8ff2:8b67 with SMTP id
- 4fb4d7f45d1cf-5dcdb776ea5mr4739819a12.27.1738796964455; Wed, 05 Feb 2025
- 15:09:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CNwxz8qR"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515LtvWF012355;
+	Wed, 5 Feb 2025 23:10:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=PGCd8ZwjBCrKo/Gcc9RNre0nXerVDb
+	ALy9VUPGSTsi0=; b=CNwxz8qRtvz9+1HjK1cDL6UYWEYmP/gPma+uobQbomq8ax
+	BPtg3ZposFnzwAt7ErThvDrEhCTPLIhhNKfMu9z03GXEVtK22Z3c6urs7Jd7Ruje
+	ZWHZ0aF1NppPlXw+klE2zEJp08YSn7P/8Jjg/HlG0Hox7/pxVY+iTLShSBknjwAZ
+	DqAQhda1RmvuEMz9kn+NirLFMPNGFu/z0QS3jvKv8TTr7lMWPYmTfvdgwtx9dzl+
+	sTTNjT9551y6bzA3QCUCB0SUtGbHoYicSqtjtlOXXVM/ATt3XtOrBBiomV1WUrV2
+	QM9IK2cw0QQyWRbpI01A025i6TUPlVjuDDuY1PLQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kx29p47k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 23:10:24 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515N9TCA019736;
+	Wed, 5 Feb 2025 23:10:23 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kx29p47e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 23:10:23 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515MZIsv016271;
+	Wed, 5 Feb 2025 23:10:22 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxskgy3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 23:10:22 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515NALjo27329068
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 23:10:21 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8EACB58055;
+	Wed,  5 Feb 2025 23:10:21 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 76B7A58043;
+	Wed,  5 Feb 2025 23:10:21 +0000 (GMT)
+Received: from localhost (unknown [9.61.82.89])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 23:10:21 +0000 (GMT)
+Date: Wed, 5 Feb 2025 17:10:21 -0600
+From: Nick Child <nnac123@linux.ibm.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Haren Myneni <haren@linux.ibm.com>,
+        Rick Lindsley <ricklind@linux.ibm.com>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v2 03/13] ibmvnic: simplify ibmvnic_set_queue_affinity()
+Message-ID: <Z6Pv3TpYa0E6VG8Q@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+References: <20250128164646.4009-1-yury.norov@gmail.com>
+ <20250128164646.4009-4-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Mitchell Augustin <mitchell.augustin@canonical.com>
-Date: Wed, 5 Feb 2025 17:09:13 -0600
-X-Gm-Features: AWEUYZnzdf7jVs6wvqeBgViHpu3kv7yl_bB8qHrwzZfoQ814nnZ-IMm4yhtr57E
-Message-ID: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
-Subject: modprobe mlx5_core on OCI bare-metal instance causes unrecoverable
- hang and I/O error
-To: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
-	andrew+netdev@lunn.ch, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Talat Batheesh <talatb@nvidia.com>, Feras Daoud <ferasda@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128164646.4009-4-yury.norov@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FKFXu_VHEgRaKdgkfaaOLyXb1G-5BqUs
+X-Proofpoint-ORIG-GUID: lBn3bs6SLZidv6fgDqxsEIlIJvED9bjp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_08,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050176
 
-Hello,
+On Tue, Jan 28, 2025 at 11:46:32AM -0500, Yury Norov wrote:
+> A loop based on cpumask_next_wrap() opencodes the dedicated macro
+> for_each_online_cpu_wrap(). Using the macro allows to avoid setting
+> bits affinity mask more than once when stride >= num_online_cpus.
+>
 
-I have identified a bug in the mlx5_core module, or some related component.
+nit: Same comment as left in patch 2. Don't think re-iterating over
+cpu's was ever possible. But I do think the patch improves readability
+and simplifies things.
 
-Doing the following on a freshly provisioned Oracle Cloud bare metal
-node with this configuration [0] will reliably cause the entire
-instance to become unresponsive:
+> This also helps to drop cpumask handling code in the caller function.
+> 
+> CC: Nick Child <nnac123@linux.ibm.com>
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
 
-rmmod mlx5_ib; rmmod mlx5_core; modprobe mlx5_core
+Built/booted kernel (patch 10 is ill-formated), messed around with n
+online cpu and n queues. All ibmvnic affinity values look correct.
+Thanks!
 
-This also produces the following output:
+Tested-by: Nick Child <nnac123@linux.ibm.com>
 
-[  331.267175] I/O error, dev sda, sector 35602992 op 0x0:(READ) flags
-0x80700 phys_seg 33 prio class 0
-[  331.376575] I/O error, dev sda, sector 35600432 op 0x0:(READ) flags
-0x84700 phys_seg 320 prio class 0
-[  331.487509] I/O error, dev sda, sector 35595064 op 0x0:(READ) flags
-0x80700 phys_seg 159 prio class 0
-[  528.386085] INFO: task kworker/u290:0:453 blocked for more than 122 seconds.
-[  528.470497]       Not tainted 6.14.0-rc1 #1
-[  528.520546] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  528.615268] INFO: task kworker/u290:3:820 blocked for more than 123 seconds.
-[  528.699641]       Not tainted 6.14.0-rc1 #1
-[  528.749690] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  528.843577] INFO: task jbd2/sda1-8:1128 blocked for more than 123 seconds.
-[  528.925922]       Not tainted 6.14.0-rc1 #1
-[  528.975971] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  529.069854] INFO: task systemd-journal:1218 blocked for more than
-123 seconds.
-[  529.156382]       Not tainted 6.14.0-rc1 #1
-[  529.206441] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  529.300407] INFO: task kworker/u290:4:1828 blocked for more than 123 seconds.
-[  529.385892]       Not tainted 6.14.0-rc1 #1
-[  529.435942] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  529.529973] INFO: task rs:main Q:Reg:2184 blocked for more than 124 seconds.
-[  529.614607]       Not tainted 6.14.0-rc1 #1
-[  529.664656] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  529.758690] INFO: task gomon:2258 blocked for more than 124 seconds.
-[  529.834832]       Not tainted 6.14.0-rc1 #1
-[  529.884887] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  529.978867] INFO: task kworker/u290:5:3255 blocked for more than 124 seconds.
-[  530.064351]       Not tainted 6.14.0-rc1 #1
-[  530.114398] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  651.265588] INFO: task kworker/u290:0:453 blocked for more than 245 seconds.
-[  651.349980]       Not tainted 6.14.0-rc1 #1
-[  651.400028] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  651.494126] INFO: task kworker/u290:3:820 blocked for more than 245 seconds.
-[  651.578543]       Not tainted 6.14.0-rc1 #1
-[  651.628600] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-
-I tried using the function_graph tracer to identify if there were any
-functions within mlx5_core that were executing for an excessive amount
-of time, but did not find anything conclusive.
-
-Attached[1] is the stack trace that I see when I force the kernel to
-panic once a hang has been detected. I did this 3 times, and each
-trace was similar in that they all referred to ext4_* functions, which
-seems to line up with the I/O errors that I see each time.
-
-I should also note that I was able to trigger a similar I/O error on a
-DGX A100 one time (running Ubuntu-6.8.0-52-generic kernel and modules
-installed via a repackaged version of DOCA-OFED) - but I have not been
-able to reliably reproduce this issue on that machine with the pure
-upstream inbox drivers, like I can with the OCI instance. (I was also
-still able to interact with the A100 - but attempting to run any
-command resulted in a "command not found" error, which again lines up
-with the idea that this might have been interfering with ext4 somehow)
-
-Has anything like this been observed by other users?
-
-Please let me know if there is anything else I should do or provide to
-help debug this issue, or if there is already a known root cause.
-
-[0]
-System specs:
-OCI bare-metal Node, BM.Optimized3.36 shape with RoCE connectivity to
-another identical node
-Kernel: mainline @ 6.14.0-rc1 with this config:
-https://pastebin.ubuntu.com/p/5Jm2WFZY62/
-ibstat output: https://pastebin.ubuntu.com/p/S5dfFSdDxd/
-lscpu output: https://pastebin.ubuntu.com/p/dfPyYQWnhX/
-
-[1]
-https://pastebin.ubuntu.com/p/kxw2dsmwFV/
-
--- 
-Mitchell Augustin
-Software Engineer - Ubuntu Partner Engineering
+> ---
+>  drivers/net/ethernet/ibm/ibmvnic.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+> index e95ae0d39948..bef18ff69065 100644
+> --- a/drivers/net/ethernet/ibm/ibmvnic.c
+> +++ b/drivers/net/ethernet/ibm/ibmvnic.c
+> @@ -234,11 +234,17 @@ static int ibmvnic_set_queue_affinity(struct ibmvnic_sub_crq_queue *queue,
+>  		(*stragglers)--;
+>  	}
+>  	/* atomic write is safer than writing bit by bit directly */
+> -	for (i = 0; i < stride; i++) {
+> -		cpumask_set_cpu(*cpu, mask);
+> -		*cpu = cpumask_next_wrap(*cpu, cpu_online_mask,
+> -					 nr_cpu_ids, false);
+> +	for_each_online_cpu_wrap(i, *cpu) {
+> +		if (!stride--) {
+> +			/* For the next queue we start from the first
+> +			 * unused CPU in this queue
+> +			 */
+> +			*cpu = i;
+> +			break;
+> +		}
+> +		cpumask_set_cpu(i, mask);
+>  	}
+> +
+>  	/* set queue affinity mask */
+>  	cpumask_copy(queue->affinity_mask, mask);
+>  	rc = irq_set_affinity_and_hint(queue->irq, queue->affinity_mask);
+> @@ -256,7 +262,7 @@ static void ibmvnic_set_affinity(struct ibmvnic_adapter *adapter)
+>  	int num_rxqs = adapter->num_active_rx_scrqs, i_rxqs = 0;
+>  	int num_txqs = adapter->num_active_tx_scrqs, i_txqs = 0;
+>  	int total_queues, stride, stragglers, i;
+> -	unsigned int num_cpu, cpu;
+> +	unsigned int num_cpu, cpu = 0;
+>  	bool is_rx_queue;
+>  	int rc = 0;
+>  
+> @@ -274,8 +280,6 @@ static void ibmvnic_set_affinity(struct ibmvnic_adapter *adapter)
+>  	stride = max_t(int, num_cpu / total_queues, 1);
+>  	/* number of leftover cpu's */
+>  	stragglers = num_cpu >= total_queues ? num_cpu % total_queues : 0;
+> -	/* next available cpu to assign irq to */
+> -	cpu = cpumask_next(-1, cpu_online_mask);
+>  
+>  	for (i = 0; i < total_queues; i++) {
+>  		is_rx_queue = false;
+> -- 
+> 2.43.0
+> 
