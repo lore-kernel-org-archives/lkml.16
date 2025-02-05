@@ -1,116 +1,152 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A5F1FECCE;
-	Wed,  5 Feb 2025 18:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB3F13D897;
+	Wed,  5 Feb 2025 18:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738781843; cv=none; b=agk0KiPLMgV4V1RYdd6Xd8dBGcTTOwzW5mGSNXuWL1c9h0RrwHrgWB4G1i26Klf/poNO+QVnxxWIFRP9X3/eTUXg4Yw7ZF7oLmqSzCRCTuoQUuH2qhmH2zVkxupHNeOeGDULBxIgpNxFg+NQDkONwR3FT6y8vzyv6ClmMwg+BEc=
+	t=1738781898; cv=none; b=KoUc3fkz/ihmaPs4xgYhRDD4/yLQo+BpwHBUeRSKp/+UesS6cY+hEk97JPycIZwAzomIfBdnbDVOe7oeoCK7bHgim9wcbvq4F0zvm7aLvfJKbRHIpEGBu2iYPhn44wi5gW+A7U/C85qyfo9KKwIYrDGZKr1BtGZMhPcVF/gpa8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738781843; c=relaxed/simple;
-	bh=fdTwdio0b4ebS6keHPjdhFBc8ktdqJWjCMLL5s+h3pc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PEGUrz6hJO3LMi5jk1gjN007mrfXYZ9KsBzbTDGLkwPYc6shXm2C22WyH5uTWUZfKOOL2l1JswNFvCw9bRnodkn1XXJ6IzfvsrYEeYCeEZjl71c9RHpdRe02RD8MxU7B1kHzSlq3FMDSX5ZfQRv7rHNpbygylSKLOOqsdd4unbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+vSd+lx; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1738781898; c=relaxed/simple;
+	bh=gdy5cd3h4bVtyCWAkwap7NHW9h+FdHvkFYNDHTmIIPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TtGRIqY9RW1y/858x0GxEbe2DzYNDTjXRzRWpcB7zZICr4UVpxn9ZLeqAuncXWHtX7B51p8w52Jwhdtw97ysoEAc0NFQadHdDTqvSvKWjs2lDyhJltCnWyLMJ9/gX1pzzMM+k3VnkNEGNL9x4M2qWIZZo6gHQl8BKWVARS4P6xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fulJmFL+; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+vSd+lx"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dcea56d6e2so244408a12.1;
-        Wed, 05 Feb 2025 10:57:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fulJmFL+"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab7157cf352so250390766b.0;
+        Wed, 05 Feb 2025 10:58:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738781840; x=1739386640; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WhZbqJ2wPylfTmY4i5OgMuInRC9FcJ6ShJMGMKgKo+w=;
-        b=P+vSd+lxE2Q/2CtP+jNuO70QH3/Xy57WqGNXZ8ADBlSrIc/Nokk23yAF+NrYYaRbT1
-         5VsrDwGNfNAAGv3bgZ+nH9c/cZYMgxGWBvd81O5BQ5ujqzUrLxCkQHOxa6uUluVJGnNp
-         LXGZQOOOHoIKtkNuwHpL5x6td9SGKfbYvAUJ85Rap6Mw1v392b/0nMldF3TZlDRtAkL/
-         itOJTORDGXRAHSTZpYAu+K4Fns4Az+ZrwL98hrEtLTMNMkXuZ3DDHWOMW5qZK12mFxr7
-         pwjXvTk20ZeMt4mDwfV2gw8qRMbm99ZE2rGX2znBnaR/UDCD/qhrvMuuya7M0VQ/gYSY
-         KLvQ==
+        d=gmail.com; s=20230601; t=1738781895; x=1739386695; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a71A1t5rNrXw7gtQyGfuALjF7vqK5gL26+h1A6qZoco=;
+        b=fulJmFL+MML7vJmbCZKXqEMbAugYfvy2zyZnaSczc+q1pB1hd/2BTVsJF3tUsKSFH8
+         SRB6VLYLg0vpYtywNW+UCdABkgcqLefMloqyUOAvKHOP9OjuQQ1M7HNHeRoHqLPY4+1X
+         iSx/oDVX8aYoQaVXhJtJWu6lppOcy6yDH37HpGWda2fnyVee+TvSEcSbovz2SloPQh6J
+         zzbvv7r5pYeOLQlvln7aWi/Kor0l3VY8yPoyW6IGHBna97n7MIOyPHlEVbMxdAb7crL1
+         4MbkjqG8cZ+jayX64jAHTGMjbTTvT3VTsqE8QuLBJAHX8x91yfFvnvtX7+sXIlMJfxFO
+         sYrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738781840; x=1739386640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WhZbqJ2wPylfTmY4i5OgMuInRC9FcJ6ShJMGMKgKo+w=;
-        b=hNARNoV5k+ZK0fyo8HUMGngETkh/6WHEFlCH80FW0ZHYldHaw46WOtt4ph5BALeSIu
-         YIY3pqaO11CD5xOz1X5GO8Jt2sJCtH/nqBQG+Jw1V8AsN7t3evAldGYlUkD8frhUI1DS
-         w96O7leXIDeziflj9sVshI8/lU4PXYLvcBHhKXBDIsZdP4SfK5N4iPPTEXZ6sxAGeSge
-         5b45/LbaogrQ+bUTemPe/ifUN6uXsYWSUx7xWpssID0SvLavcFjLa+b8e0eRrB3Gv19c
-         BlK8dy4Sk9JuKfysfBN4OyiJYa8IxS0Ht2hI03o7393LBQxMA5uf+ATaLD84Jts8KWJg
-         JPxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfJSQEvfsvLzWDxIycjl5SGYLN8ojRC+ua5PgW/8RcAMwUb2B4t93OUYGLkFsoceQHHyUTsuFi3VbZuKIU@vger.kernel.org, AJvYcCVCvWXwB/vo1o+7kBtsfret5tzhWmD573Et0m6AwBQLIunSvq+j/LlOeMKXokOCo7r6oydCFyopUAGTLLqe@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiNs0eyp3LONLG99LaW20szMDsfRbEoJ1wwJqXYUUu/QyGonmg
-	qtoGLsFX7U+dCBIjaiCIjwiDE7MCjI2gre25IT1EI5Toa1z28KIbrEA1Lcrf4bivLfte6QYjgaG
-	ji40RFqMkTAZMp1wKP3ZRuIOSVfQ=
-X-Gm-Gg: ASbGncsSdxRVcB98A0SzNUy+nV5o/WHoPLbuO/7YPtFDUr49361NPOcCz/axjhH/uN/
-	lpXcJrFnlC1l2n5ESrKlRVnpDfQnGPjG9/1IEAY9Kj+lewNCbv5GmiYL7zEExTuJc9OUjhkg=
-X-Google-Smtp-Source: AGHT+IH36PYYvBhB8JMK/k6Q7QFaMq09avD/syrEYDCHPZXnJ4dC/e0kuVU+ExpK5/vLjC6HMIYQljpnuO8btGRr9Vw=
-X-Received: by 2002:a05:6402:27cb:b0:5dc:d43c:3a2c with SMTP id
- 4fb4d7f45d1cf-5dcdb72d224mr4957712a12.19.1738781839944; Wed, 05 Feb 2025
- 10:57:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738781895; x=1739386695;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a71A1t5rNrXw7gtQyGfuALjF7vqK5gL26+h1A6qZoco=;
+        b=HDT7aIlnpJzalPrf+/CTmr8pNm49vCBBs7/BjlYM07eGQcuiEKMyzaIwJXgUWI8tYE
+         cU6KQp6vTIJshM6DPRRSAxyUmLWZ0nJp9SIJs1NQ9ohhrej6lRwOMOL4KztdM+W80W4l
+         mCZrRCVXsnG1ijuXXb5ceQ3zJUJwwoHBB83eycTKbS9pMzSlYL8VBfzz8wsPA6pD6496
+         es26BpXy6I7p0qHx1uJaTKV3emLQC4vVqjChr/MFbwc0U6SIDFKxaemFbqrcaQwNG7fj
+         wOc6pI6tC0AHHyYl5OVCab7nFFxeRCcqBoBohh4XzMiLe3+504ztMwCC88JSVoNk98vg
+         HJlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3r0poOO3yrbTNM5hZgAZBkkLryZLgOIOpeKxvTnhjwawEfioVUDPYnwHX40qmZgMKGNSvMcZNan7UY8M=@vger.kernel.org, AJvYcCXZV9mXAVOngB8ZDCwuS/+qAIz5+nkTxeYzgVAFmUs+kAuTYcuT/O9vy84SSuXWSEv88OJvkbdflXjgV0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxenWcuB0xZkk3T8nh4iKmP9xjmFpmR4aiIK2E13tZdJeJbI6t
+	SvSPrKqKm0447lS1PxHw2Smx45/Ucns1AbU7V+5ZyJFzRw1KEjR5heoZNW71
+X-Gm-Gg: ASbGncvYd9NPVj0GBjTXMwXMcgSSJTBkyeznXC61LFDpVV2nrScEk8elpH6LxPh+t+3
+	pmG/O17Kh+lJh4B23/QmoN6TQXQ5yuKXZHtuu3BK6Q/qanNFmdXnd2W2JVOr3J0ApmjWcmvPo/S
+	ld0BcwmcZGh5vvTDAJzo/o0bVwQ5on5VL2le7nXIJffPWltAGokrcr1mjy0ZRJbfhAWmy4UB6Uq
+	UTX65+KGwAhVa+1VwVjGOeb/zgx+igsd9d5HJjRYrkjacM5/3TNdzEt/Xy4DbyXRV2qL/f3S9RH
+	7+UlgVVsoP3nbns0hlI9gWWjcJXsgySb1XaSSyM1BECJ
+X-Google-Smtp-Source: AGHT+IGHOcq2bEGp2OnqU9INvLV5JVgfAV06LBKYqVqWEMm9zU6Sr+3w2aBLE7MIY2wLnbC3eeLt0g==
+X-Received: by 2002:a17:906:6a29:b0:ab6:d4ce:5674 with SMTP id a640c23a62f3a-ab76e9dc14amr34325066b.26.1738781894675;
+        Wed, 05 Feb 2025 10:58:14 -0800 (PST)
+Received: from [192.168.1.130] ([82.79.237.175])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47ceadfsm1152656466b.51.2025.02.05.10.58.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 10:58:14 -0800 (PST)
+Message-ID: <2226a3d0-37b1-4018-83d1-8f5e9853169b@gmail.com>
+Date: Wed, 5 Feb 2025 20:58:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205183839.395081-1-mjguzik@gmail.com>
-In-Reply-To: <20250205183839.395081-1-mjguzik@gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 5 Feb 2025 19:57:07 +0100
-X-Gm-Features: AWEUYZkQ0NJYVuPb65M82YGzU13zRJ3KVhNjvVcwniDR1oPbgnuL4zHSZUfeu2g
-Message-ID: <CAGudoHFq2AbuvvKhhY7pOouE_jhJk5ZdkU_Dd1wYnyYHosndpA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] CONFIG_VFS_DEBUG at last
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/9] ASoC: SOF: imx: introduce more common structures and
+ functions
+Content-Language: en-US
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Iuliana Prodan <iuliana.prodan@nxp.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+ imx@lists.linux.dev
+References: <20250203171808.4108-1-laurentiumihalcea111@gmail.com>
+ <20250203171808.4108-2-laurentiumihalcea111@gmail.com>
+ <Z6EeZ4lgKVHCee3e@lizhi-Precision-Tower-5810>
+ <db81aa4e-dc1f-4c6d-b58f-82883622b0dc@gmail.com>
+ <Z6ONWfIycA0oHEB6@lizhi-Precision-Tower-5810>
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+In-Reply-To: <Z6ONWfIycA0oHEB6@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 5, 2025 at 7:38=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
-ote:
->
-> This adds a super basic version just to get the mechanism going and
-> adds sample usage.
->
-> The macro set is incomplete (e.g., lack of locking macros) and
-> dump_inode routine fails to dump any state yet, to be implemented(tm).
->
-> I think despite the primitive state this is complete enough to start
-> sprinkling warns as necessary.
->
-> Mateusz Guzik (3):
->   vfs: add initial support for CONFIG_VFS_DEBUG
->   vfs: catch invalid modes in may_open
->   vfs: use the new debug macros in inode_set_cached_link()
->
->  fs/namei.c               |  2 ++
->  include/linux/fs.h       | 16 +++----------
->  include/linux/vfsdebug.h | 50 ++++++++++++++++++++++++++++++++++++++++
->  lib/Kconfig.debug        |  9 ++++++++
->  4 files changed, 64 insertions(+), 13 deletions(-)
->  create mode 100644 include/linux/vfsdebug.h
->
-> --
-> 2.43.0
->
 
-The produced warn is ugly as sin:\, for example for that bad size:
-[   51.433206] VFS_WARN_ON_INODE(__builtin_choose_expr((sizeof(int) =3D=3D
-sizeof(*(8 ? ((void *)((long)(__builtin_strlen(link)) * 0l)) : (int
-*)8))), __builtin_strlen(link), __fortify_strlen(link)) !=3D linklen)
-failed for inode ff32f7c350c8aec8
+(snip)
 
-maybe there is a way to work it around, the code is literally lifted
-out of mmdebug.h so they presumably have the same problem
+>>>> +#include <linux/pm_domain.h>
+>>>>  #include <sound/sof/xtensa.h>
+>>>> +
+>>>>  #include "../ops.h"
+>>>>
+>>>>  #include "imx-common.h"
+>>>> @@ -74,5 +79,417 @@ void imx8_dump(struct snd_sof_dev *sdev, u32 flags)
+>>>>  }
+>>>>  EXPORT_SYMBOL(imx8_dump);
+>>>>
+>>>> +static void imx_handle_reply(struct imx_dsp_ipc *ipc)
+>>>> +{
+>>>> +	unsigned long flags;
+>>>> +	struct snd_sof_dev *sdev = imx_dsp_get_data(ipc);
+>>>> +
+>>>> +	spin_lock_irqsave(&sdev->ipc_lock, flags);
+>>>> +	snd_sof_ipc_process_reply(sdev, 0);
+>>>> +	spin_unlock_irqrestore(&sdev->ipc_lock, flags);
+>>> Are you sure have to use spin_lock?
+>> not sure, this definition was taken from previous drivers. I'd say keep it for now
+>> as removing it would require some more testing which will take some time.
+>>
+> Change lock type need seperate patch. analyze is more important then test.
+> It is really hard to hit race condition at normal user case.
+>
+> You can check if any irq handle use ipc_lock? If irq handle already defer
+> to thread irq, mutex most likely is enough.
+>
+> Frank
 
-apart from that the assert in may_open is backwards, the code normally
-is not reached.
+ACK
 
-anyhow I expect to send a v2, but will wait for feedback before I do
---=20
-Mateusz Guzik <mjguzik gmail.com>
+>
+>> (snip)
+>>
+>>>> +static int imx_suspend(struct snd_sof_dev *sdev, unsigned int target_state)
+>>>> +{
+>>>> +	int ret;
+>>>> +	const struct sof_dsp_power_state target_power_state = {
+>>>> +		.state = target_state,
+>>>> +	};
+>>>> +
+>>>> +	if (!pm_runtime_suspended(sdev->dev)) {
+>>>> +		ret = imx_common_suspend(sdev);
+>>>> +		if (ret < 0) {
+>>>> +			dev_err(sdev->dev, "failed to common suspend: %d\n", ret);
+>>>> +			return ret;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	return snd_sof_dsp_set_power_state(sdev, &target_power_state);
+>>> does pm_runtime_force_suspend()/pm_runtime_force_resume() work?
+>> no, these functions are not called directly by the PM core, but rather by the SOF core.
+>> Using the proposed functions would result in the SOF core PM functions (i.e: sof_resume/sof_suspend)
+>> being called twice in the case of system suspend/resume, which is wrong.
+> Does SOC core should check it? I don't reject this change, but check
+> run time pm status in suspend often cause some bugs.
+>
+> Frank
+
+No, IMO this sequence is chip-specific so it shouldn't be handled by the core.
