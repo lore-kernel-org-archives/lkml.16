@@ -1,62 +1,48 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D918822B584
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F382422CBF4;
+	Wed,  5 Feb 2025 11:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738755688; cv=none; b=FkhZrxHZwochFFHl0eye820CCg1fiNL+7k2PDUEdzgXcv6ncvEGHg99gYnAoLdTLx6qPD/Jnh8fpJf4vhIohhmE/UNw6ZlfZWJ/asMyw258HFWgkhLEOdZGntNq2M7JZ6kYIyewC+4e88UxZ32FCUiInFmBD+f1iQJ5rJld2wFo=
+	t=1738755699; cv=none; b=PLmGw+CTcpZ5Es3ZHDp0sv1GhvJ09bXgyOCSILqkiz8vUB2uJ0vq28Qj8okZLTIjlrKxwKu2O5aa7nxi4ytfGkUgfuG5u1mupzpdsWunt3xM/5KoPnCQRGB1kODnxrkOYpjkRBYcnd+IvmgfxebHmgwZcy6W0QA3yxHFYLzYzGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738755688; c=relaxed/simple;
-	bh=tmMPXpx5vHEpl+JTTWtoevnJNE9U2FeQkDpgKur//8A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ehDH53ylOaHkIkK1OnuVoTi3BOwnItzz32GSga1jyXifMOX1MFjfMeejHQAlODLF9wF837XGuJYtbq6z3SYwIum4kSLwMGzmR+dutXZ8ap6f785DufsYUQISdySU749a8nC57wbj3+hrz51TTeEY+dLdHBhoR9D8cm6fxyyaOGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=Em79hqij; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1738755699; c=relaxed/simple;
+	bh=Ghnz9Lrv2cS6vsNZoTNWbx17eDzcBL/Iujr112P/8Vw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TI70HnpLeWxlEBjo6rANkVOfDmPtZPr8IrN7BPPtBm9B+UYzySX7ldnH6/22wUIF4dLRxhjMw+sB9k1Likt4MXRAjRbTFvwp+OIRkJwpy+pRPoLQbrey8dpJfW2+X04w30t4BICGyUtXc5xokatUA5h12BwAGO2pYH++0GUP12M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bKKdUXbE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Em79hqij"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aafc9d75f8bso1332021966b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:41:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1738755685; x=1739360485; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=xlF4W3XoYrWSf/kRCkmDrRhe1mWxG7hqTuWID8pFR4o=;
-        b=Em79hqijvQfoh8w9XUtwEGdQzZbW+usqKtfCKlWHDmW79GBgVGLmN794x/lkQnU3f9
-         KZuPkES2h7gU4tIA7S7UfjUJnk2K7CcFOeFH49ljx6b+7rCwgJcfxCnjLqGGH/zLFydx
-         jD/RKvkALe0rYel7YBqqxt0a0LVEHAi3aBE6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738755685; x=1739360485;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xlF4W3XoYrWSf/kRCkmDrRhe1mWxG7hqTuWID8pFR4o=;
-        b=jiYngp5YFTCjoRaq03vwv5loHmWXG1c9NKvmTcSDya0mi8UqD8l46zvDs60CpQW0NO
-         ozAyj5J2CIemjqJo+VIS8EmFoKNLAELHIrsnG3dn3i5w1wDGjzvdAMxIWbX0bsBXOUG0
-         LPbhEhg1CW/6kaFYztHqEiGBSnb4r88126Hk0MdQ6nw8M2LIJCmQC5rVyL5tWavl3g9/
-         SS37HiulS3Bfj1tU/djS0hmKHFDsDLZStdvdu2cGnj3U5opd9toB6Rw20PoEbJrhyYpS
-         TDxmeI17bE5cz3O/XlhSxCtXzNMrW+PCt7pdXbAwgrEvFSiP2YcP0SMitlZ714sCaKWf
-         IhYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPMFZtewZ13wMrs9ZjbpD2UV9niDcIN0kCOKLfQGW+E6TzF54D21GP4lQGwd7R6iE+9ur66u2d89cU32E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa8EKkwYjwVv3E3KptHimD8Y7pUvwcfcoqC3sWOFGm4vpH3SkA
-	Ejdd7LA2S+7oiErnG8T13Ij7gI/2k75Jma51AuPlFRLXP18H9GU7cTw7hNHY+Kw=
-X-Gm-Gg: ASbGncsTzuNeJO60GXkiRZEJMDjn6gTPkV3HWAbgJCUYURU2AjFymv5ME43OKl4Bw8j
-	840yfHolwk7c3hPk3U86yI8WHlOF5TeKk7h8+3+cmKwHHEXzHnhX29SXbUL7cSMGdvRH4OmDvo0
-	JOYS5Ooq0xgYaam2C0Lh5hf4RpbhkxLsVi1ftw977sui3ly+Nhqr/NjOKPVGZSKcAenqj6DMR3w
-	hM5kvi+H8AK0pzcC44WjI2yb1Nc2c1DB89X/NIdWS0wIKeF4Y4BiUqEYxrDrwbsoA9IGLAWNOJh
-	sYKw6+YvXhhXvS5Dbu6x4bP7
-X-Google-Smtp-Source: AGHT+IGyyeAqC49T09GxEsM+42n43RJ5s2fwXDPrHCHuZikSNgPzcQw+33wDdB5u+t1Yz+id5DU2lA==
-X-Received: by 2002:a17:907:94d5:b0:ab6:dd6c:e30c with SMTP id a640c23a62f3a-ab75e310520mr257819966b.45.1738755684920;
-        Wed, 05 Feb 2025 03:41:24 -0800 (PST)
-Received: from [10.81.35.177] ([46.149.103.9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7de5sm1089335066b.35.2025.02.05.03.41.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 03:41:24 -0800 (PST)
-Message-ID: <5c6d80bf-f090-4812-9620-5051e8ebb671@citrix.com>
-Date: Wed, 5 Feb 2025 11:41:22 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bKKdUXbE"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515670bq028606;
+	Wed, 5 Feb 2025 11:41:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gJW2wTzYmsHqx4B86jwIraVpK/tuRPJ5kg7vAlsnOoU=; b=bKKdUXbETXEKCqgK
+	lTl/LBDNTpKICKfP/ZYuHIK/godyWTdYrbCaufm23UwgZDsEsMhv7ffZg+7UDc0O
+	6AZPTpuMgF2MrkL3ikOQzPNj7N+s7ByBwIBF3Su/N14LLrd7PqkvQqUybx1x5KLh
+	oEnwlmki4Rr86vD1L0S1JJozNv6YbxNrdjykVD3yJUhniiHFRiU1iQ4epc8Z2qHZ
+	cvB0kF6gP6BPHLVgLZOUpgGPNsd8jD8AxQHeLxj4oTSqJeVewMeyGkh/JpdvL1FT
+	F+NJXHdaS+9R4GH91RU09tGubuMJlZAsOxF5cFeNt7aECIchLNYTiyYRIAVFrql8
+	rfhA1g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m2ea0r1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 11:41:26 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 515BfOUN007965
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Feb 2025 11:41:25 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
+ 03:41:18 -0800
+Message-ID: <fdc8f80c-ea7c-4bb3-a0f5-06353f2d32f5@quicinc.com>
+Date: Wed, 5 Feb 2025 17:11:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,74 +50,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] x86/xen: some xen_hypercall_hvm() fixes
-To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org
-References: <20250205110651.26280-1-jgross@suse.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20250205110651.26280-1-jgross@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 2/5] phy: qcom-qmp-ufs: Add PHY Configuration support for
+ SM8750
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar
+	<alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche
+	<bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross
+	<agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Satya Durga
+ Srinivasu Prabhala" <quic_satyap@quicinc.com>,
+        Trilok Soni
+	<quic_tsoni@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        Manish Pandey
+	<quic_mapa@quicinc.com>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+ <20250113-sm8750_ufs_master-v1-2-b3774120eb8c@quicinc.com>
+ <vry7yib4jtvyc5baruetqb2msy4j4ityv2s6z5smrz6rqjfb5l@xoharscfhz5n>
+ <6873e397-dbc0-4c30-8c08-a65ee7cd6e01@quicinc.com>
+ <CAA8EJprjxMtkefY+90cLGVgz-bDf=VXnaa0eH4ESAC6nf5vrLA@mail.gmail.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <CAA8EJprjxMtkefY+90cLGVgz-bDf=VXnaa0eH4ESAC6nf5vrLA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: E6W9CvTyEzzFTvMhI20owqA81mW0pP4z
+X-Proofpoint-GUID: E6W9CvTyEzzFTvMhI20owqA81mW0pP4z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_05,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ bulkscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 impostorscore=0 clxscore=1015
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050094
 
-On 05/02/2025 11:06 am, Juergen Gross wrote:
-> 3 fixes of the xen_hypercall_hvm() function, with the last one being
-> probably more a cleanup.
->
-> Juergen Gross (3):
->   x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
->   x86/xen: add FRAME_END to xen_hypercall_hvm()
->   x86/xen: remove unneeded dummy push from xen_hypercall_hvm()
->
->  arch/x86/xen/xen-head.S | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
->
 
-Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
+
+On 2/4/2025 7:06 AM, Dmitry Baryshkov wrote:
+> Hello,
+> 
+> On Mon, 3 Feb 2025 at 10:03, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+> 
+> Your email client has corrupted all quotation levels. Please fix its
+> configuration so that you can not compose HTML email. Or switch to a
+> normal text-based email client like Mutt or Gnus.
+> 
+> No additional comments can be provided to this email.
+> 
+>>
+
+Hi Dmitry,
+
+Sorry for the inconvenience. After software update seems there was some
+issue with email client configuration . I have updated the configuration 
+and resent my reply.
+
+Regards,
+Nitin
+
+>>
+>> On 1/14/2025 4:19 PM, Dmitry Baryshkov wrote:
+>>
+>> On Mon, Jan 13, 2025 at 01:46:25PM -0800, Melody Olvera wrote:
+>>
+>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
+>>
+>> Add SM8750 specific register layout and table configs. The serdes
+>> TX RX register offset has changed for SM8750 and hence keep UFS
+>> specific serdes offsets in a dedicated header file.
+> 
+
