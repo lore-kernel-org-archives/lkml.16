@@ -1,62 +1,62 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC93020F068
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529B214221
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786184; cv=none; b=rraBch0QhHHWq69WX8NWjQciL9AAwLNNTEZA+4J8kl1sZ70hV1pHqZGd4815HdrdlG8dNERiRADQgHkvWFqqanShNeSr/5XjQFiQ4DKcPwI1i21Gr0hhBAaBhIvoHJqWEcZmnF/5CRSRaiQumZ1aL6rTrD4fm4dMuZD5s+EG1Mo=
+	t=1738786186; cv=none; b=cvUH/EctwALW8nYvbUu5hkwC0sU8ebJFKP+LRiXbN8Ye7yEjmNmHCnBxlrFqFkAqD+82VjEpIO+8vDnOxPn2M8Q/SsRTGqG9pp/JV3/KcHHnS7pkdcuQnaH8GxiVopmdPI0NDFqORCis23nT96yOmG97CS5dltUayfAcTD9VRY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786184; c=relaxed/simple;
-	bh=p9IfmBkML/+h4zidU1zNnqGBFIPCMEc1S9CanTk6ZQQ=;
+	s=arc-20240116; t=1738786186; c=relaxed/simple;
+	bh=8ylPtGjmg8BqUJh8ssxlycLuhNCMbKhKYTzosnppwMg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SICuMzvq5afzuMT9oHIn4DXNLCs1/SYL6epXhywtc4tca9qkc/F2uGVsAuS2Ao0l9DxH53wSSlSBX7NAiyVW9B+WbZ28crbRrHVQqeJQ+jIO82EziJk+nQjFRDCAwCJkRkoyLHdxE9xO1WptMNG83McEsIyn2ZX+UYwSwaiBWog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgzr48WF; arc=none smtp.client-ip=209.85.218.46
+	 MIME-Version; b=t1RKtytilsK4Cpm2gKDeMMcFDI4mqL7afQh3SBFh5rYv1ur5EOpQZYJAFQEGF3L4eCxKvwS5GSGtRA+86aEXsyDcfSCOloXAGtnJjP4VW/Z6BEGT3Z7G29cViyk3eZZ1BvgKV5hsXAeRwY8hhOR7XfeCFEK7+JVBIEHxQa9QQAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kia9j16z; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgzr48WF"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab2c9b8aecaso40084666b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:09:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kia9j16z"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aab925654d9so37885766b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:09:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738786181; x=1739390981; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738786182; x=1739390982; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/diWf3Ne11QncyO86if84fhx289XRB6QA3E34QVttl8=;
-        b=jgzr48WFy1Ig5uI40OCDmoBHvCELXRQF55dt018aCCMEco7cq6MDrIlRMgLVpzwmFX
-         0zeToafHll2GIgleE9RGVmu4gzLOoSWipe639GyfYFcgkltOAuYOcQ/HbdvI8VvTbVdn
-         2SJXxTWHjFQpZePSVaZ9TsnUDKzBZJty/YsISGZR5FcXB4sQw9DjB/h/WHCoEvGME4IY
-         10g7n8+D/LQYzivQ/eobk8MFcSnqXvIB5hVFBJnWbpMlLHGgtwiu2eSj4mVAPA0tooui
-         JSYz5b27gblYrw07jUvmE9ME+FhlBpPcJGgFICCdYtytLHBxDAqMalFM3vYZlPxurLfj
-         UUyA==
+        bh=pj3pWrosGkUlfXcIPyDNQK+jIHHC44medwj1pRwHHC4=;
+        b=Kia9j16z+dKBciWAtq/A2Mwefy8++jcKaPAvNB5PdDgTJb/Zw8eHCy6ubuwOR1Dj/i
+         iOh0fgnaEHM7cZZTi2QuWoEhvT2CH7eRnQs3e6ZzHdjlxsertH204VRio5uy4g0lGeN7
+         E8N31D+fGLUTyxbTe0nGM8cB/lre/2KQrYrLvqqJpWrKUovcoGts2bXt+ZQI5ABwtiC8
+         35+h3cBHEzsPNPhSpW9y9EGPAgtEzbIZ17XH/AVv3JiccGe69o9K64AgnHCoinhP/oLH
+         z3qjZQHkuDHMLjYtzWOyuWh5+3ucN/k70ikbbivtuCboHgyLJyXEDq02y+VJVVmUBLZX
+         dDlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738786181; x=1739390981;
+        d=1e100.net; s=20230601; t=1738786182; x=1739390982;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/diWf3Ne11QncyO86if84fhx289XRB6QA3E34QVttl8=;
-        b=o8EW/4PL6xVmxuCckLWM3qPnVrc4hvyvd+4ZXobHJ8gGf3qmGHS1Wlqoiz1CT5d/No
-         udlOJxmfq2NOkraitVfPKleq9aR03x4kxIRu4CQs79LyvBO/NhBY2yrckAygGLaisqav
-         LRbFgLQD0RkMb4k2KPtBZvXrr97KVbmj0VLYpvwWKtuerXycAg8wO9dscG8R7wrCjxef
-         VmtdsjAVLnsxN/ZzW199XRs9ocP8MSRfuEylkK/2xqGezx31iks9hQri1Dv4U4+CDW7d
-         PTv2agmVk8NYps+xrMkeD8iXVPV/JZA/H9WgVXD8s3FCU6DUUE5CWItt26eYvFYuFTT+
-         5Eeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUxnZsemiQYs4LULZb30itzb394GNBmBfOOg0wmbfDZs+tFTfHOlhG/ViNH5gQS66cNuY9wTMnVtJo0R0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgO6FhakwQkBSoBo6/UBKU8i4wog556bnZ4xY7QQo7avTaGQM8
-	Gbqn03GnNkzK4pVHbrNkvqtbvQ1Gut3z2UZthxlO2LtrS/S+1VCD
-X-Gm-Gg: ASbGncv6AzGe9J+n5uWP8jjX4l69NUz2dV3RItFIUZsyMHA5AsNtP1IT4IxjSnY/iCC
-	McxjTM0FR3vpBRW2xccoBEwosj23g8GVrgbsyM4yQLR42Oaxy6l7G5ul1lJdTJtD1BuFJKcnooS
-	2QD7LQlUOCEnjc/FclZFhuv6YNz80t05nJFYypd3ivr4ZQkltt1fvE1Hx0XHoz9qJBoA/Y+g9VO
-	xvTWVvt7mc0vyM9wTlPv79uwsicRiY4/4eXUy/Fn4+ySWH1EAwECTXMJbkxb3xqLYT3YICn4xYN
-	ZdLhmJPA/1PzHg7sKtRMqfk7t1BydgM=
-X-Google-Smtp-Source: AGHT+IHhm2J6TejI3Q6Hmp1UNNqGIH6Qdf4lJY6zmYuaoxwWi9cVhTvNKwZHZvNjq8bgfHO1UeNWVQ==
-X-Received: by 2002:a17:907:8692:b0:ab6:d547:da9b with SMTP id a640c23a62f3a-ab75e23c77amr411221966b.23.1738786180759;
-        Wed, 05 Feb 2025 12:09:40 -0800 (PST)
+        bh=pj3pWrosGkUlfXcIPyDNQK+jIHHC44medwj1pRwHHC4=;
+        b=R+fj5SFywcMrwNQhU6wnrgAOoa2j9MAYi0s6cXtHY9HMKON0jyhOK2TarOIHmTmGps
+         Ibq0LcK0GsGVzDEEBbuGXrFQP/B1aLd7CocpbfKZbZK6psFU/wyaoAMmfLFlrfNDMoq5
+         ZHf+vEbY5BoYzo3NQJY22Xr4McXCy71xyTd511KK5QVcAEOmuxT1inxKCnWztXt2fxu1
+         fqfvBcjG2qKAWC0lyU+gQ4qAckDYYDtYlGrvc2LpnG3wewazrq0tczbhZOncOF8YAm6t
+         xvGVtLqwapko4+H+QORApu8I8i252YrThNh5Hu51TDW29fjg4jkJULumPm0B25ay0QE5
+         ZBaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIDIapKC79FX0LALmOCGar1ZE2NsN2pbJlpDlekwXbTDEGSWIQzlmJHEjX+a3H508G3Q90CQl+lOqtyyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6W794oqHAfYSA4mHvlOyC7FG9SIF2G3bWlXHZd2eHKMSSNK+Q
+	ZVKj2xemj/kUswCNzTO7YWAwPh1KVukKSGpC3d1ed48y9BiQLmSz
+X-Gm-Gg: ASbGncvlomJm5R4Ax2/xY4HXCLGFJhmc2pGaNW6hjozCVJHEXp5V0hR2XYPPvnyzTGr
+	jThowTMA8dOII/WCGt4KvUZGsOgegOAMlxV70cE8JDkWUyEboF3jWmgy5qUHR5xhv9pygNm/lsB
+	Z2JtQCo2/CLONcxMrPET8FBPv796ae3goYZARBhbm49ijniwwMZAQjYRi0zG5E+WeSsB8KURIPE
+	l4yu1kCBZFriRlAhwEmXxhsB5OOJSu+N9jtfAO0+kFPpl6w1a6IuNmFDWWBHk4cbuO/uKg/jlDU
+	u+rISRl7KyvLs6C2l/cMScParoI/k0U=
+X-Google-Smtp-Source: AGHT+IFgTBn5lP4dqU0ydTXpkrpjieHD7lv/hSESjvAyOOi9Zo+cwux8FPWnWR43OTCyLUkzOvro/Q==
+X-Received: by 2002:a17:906:6a04:b0:ab2:b936:f110 with SMTP id a640c23a62f3a-ab75e241f9cmr455031666b.20.1738786182011;
+        Wed, 05 Feb 2025 12:09:42 -0800 (PST)
 Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab703fbcc0csm932221866b.53.2025.02.05.12.09.39
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab703fbcc0csm932221866b.53.2025.02.05.12.09.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 12:09:39 -0800 (PST)
+        Wed, 05 Feb 2025 12:09:41 -0800 (PST)
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: ebiederm@xmission.com,
 	oleg@redhat.com
@@ -66,9 +66,9 @@ Cc: brauner@kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v5 2/5] exit: hoist get_pid() in release_task() outside of tasklist_lock
-Date: Wed,  5 Feb 2025 21:09:26 +0100
-Message-ID: <20250205200929.406568-3-mjguzik@gmail.com>
+Subject: [PATCH v5 3/5] pid: sprinkle tasklist_lock asserts
+Date: Wed,  5 Feb 2025 21:09:27 +0100
+Message-ID: <20250205200929.406568-4-mjguzik@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205200929.406568-1-mjguzik@gmail.com>
 References: <20250205200929.406568-1-mjguzik@gmail.com>
@@ -80,30 +80,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-reduces hold time as get_pid() contains an atomic
-
 Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 ---
- kernel/exit.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/pid.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index c79b41509cd3..b5c0cbc6bdfb 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -248,9 +248,10 @@ void release_task(struct task_struct *p)
- 
- 	cgroup_release(p);
- 
-+	thread_pid = get_pid(p->thread_pid);
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 924084713be8..2ae872f689a7 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -339,17 +339,23 @@ static struct pid **task_pid_ptr(struct task_struct *task, enum pid_type type)
+  */
+ void attach_pid(struct task_struct *task, enum pid_type type)
+ {
+-	struct pid *pid = *task_pid_ptr(task, type);
++	struct pid *pid;
 +
- 	write_lock_irq(&tasklist_lock);
- 	ptrace_release_task(p);
--	thread_pid = get_pid(p->thread_pid);
- 	__exit_signal(p);
++	lockdep_assert_held_write(&tasklist_lock);
++
++	pid = *task_pid_ptr(task, type);
+ 	hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
+ }
  
- 	/*
+ static void __change_pid(struct task_struct *task, enum pid_type type,
+ 			struct pid *new)
+ {
+-	struct pid **pid_ptr = task_pid_ptr(task, type);
+-	struct pid *pid;
++	struct pid **pid_ptr, *pid;
+ 	int tmp;
+ 
++	lockdep_assert_held_write(&tasklist_lock);
++
++	pid_ptr = task_pid_ptr(task, type);
+ 	pid = *pid_ptr;
+ 
+ 	hlist_del_rcu(&task->pid_links[type]);
+@@ -386,6 +392,8 @@ void exchange_tids(struct task_struct *left, struct task_struct *right)
+ 	struct hlist_head *head1 = &pid1->tasks[PIDTYPE_PID];
+ 	struct hlist_head *head2 = &pid2->tasks[PIDTYPE_PID];
+ 
++	lockdep_assert_held_write(&tasklist_lock);
++
+ 	/* Swap the single entry tid lists */
+ 	hlists_swap_heads_rcu(head1, head2);
+ 
+@@ -403,6 +411,7 @@ void transfer_pid(struct task_struct *old, struct task_struct *new,
+ 			   enum pid_type type)
+ {
+ 	WARN_ON_ONCE(type == PIDTYPE_PID);
++	lockdep_assert_held_write(&tasklist_lock);
+ 	hlist_replace_rcu(&old->pid_links[type], &new->pid_links[type]);
+ }
+ 
 -- 
 2.43.0
 
