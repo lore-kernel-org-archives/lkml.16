@@ -1,87 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0F11DAC81;
-	Wed,  5 Feb 2025 21:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E301DAC81
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738789498; cv=none; b=OvyCdIY5H19OJ03enFEye41jfiyuvCdQSCVdxlglIpqOdonthCr+C6sgF+CNrYWQRSprXf2oZ/9s6NhPg8MKkddtB/n2xAeeyukYU302IKwInXpOYiicG+rTKJVDoaGVrcfK4yFBmM0z1e6mH9gGhf482XMYbsf9fg+f+AUmyVw=
+	t=1738789561; cv=none; b=uOe5Xbds4Mxy+cxqLPvq5M4lZRLezj0cNYFzMcl8iyuL/L5ugpcFPFgBGLYJt7134zP4QqMpjUO09EW0tEKnMvrmm1auYN2ir/4iJD7+7T1Qt9/MFliB57ivX6Tw5h1wW3qyPJvkoJ/Ba4GhUozS4Q8CjZiFKpJokPzejcs/Arc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738789498; c=relaxed/simple;
-	bh=p0zJe7LMu/qtJOYGBzsao5uJz9ilaOR1ZrZhwJzhnwM=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=lAi5zPP+a4q1Mkxj3OVyWkH0IHM8PJK6AZbEgvBBOri+GJoCvAK7bM+GC66ezomLCIy4aGCgu3UU+Gn8WZlDznfLZ/kGCWZ1HML0PZbVRSD/fJDtZkiiaFUuEoU7Yr8wNLRnvfYoI7VCPwUh8jnbseSYLY5Vs4fUJB/CYiZFI9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLz0aK1h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738789561; c=relaxed/simple;
+	bh=R+J5+tB55YPKvnlpGRU//KK+e/Ej0H9uNXx6KS+09JM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cZfk2AEjgGsIWF5bhiZvZ8ibi80VsiDT/g3z4fwVnhnwcSWvG8pMDDH17eIY+Y+Ll+EUwPaTCwOEP1UeEtxeulFD0aJ2QJcWphQN0cftC5gs5qeZry2UtuiUHJTWIianPTRAUOVbI4/mPutTZJqjlc2x+lttmwLhcflmJTZc0Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AAE2hTQl; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLz0aK1h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8362C4CED1;
-	Wed,  5 Feb 2025 21:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738789498;
-	bh=p0zJe7LMu/qtJOYGBzsao5uJz9ilaOR1ZrZhwJzhnwM=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=qLz0aK1hXjVCIgNHKZ91otbbll8DqMH91DRBFKgywFJ7dIMz2C/xds2UQgg9l1tks
-	 euuMAhDCoowmVMAG2p4/ovM5f4WMiIlmizqseMcvbklVrDg5ldPDfJeV0bvdQg9/J7
-	 W/EZzfdwSVjKfjsKDKrLL0CtJtdkWJOC1poyORHFDurK8FEgf/HxPggKveXRK9FjZ/
-	 oeng+d58Ziljqf1uxftG3O8OgXReZi6jv+4qk6FuTNqQDVx23AMe5WzKva+3OiGhIP
-	 fNSkMIsu9lAngT9nJ44E09IK1zhwROvqkc2ACoB2K5Ge6B2pdBksJ0kp70bydRbD72
-	 3ar4WsrVPRTFA==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
- conor+dt@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
- agross@kernel.org, dmitry.baryshkov@linaro.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Varadarajan Narayanan <quic_varada@quicinc.com>
-In-Reply-To: <20250205074657.4142365-1-quic_varada@quicinc.com>
-References: <20250205074657.4142365-1-quic_varada@quicinc.com>
-Subject: Re: (subset) [PATCH v1 0/2] Fix USB vdd info for IPQ9574
-Message-Id: <173878949554.299478.16607544866188543376.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 21:04:55 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AAE2hTQl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738789560; x=1770325560;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R+J5+tB55YPKvnlpGRU//KK+e/Ej0H9uNXx6KS+09JM=;
+  b=AAE2hTQlZYcANT2tbLzT59zWh5wW+PysmL3zeDkbWNKje57wsA8w88KE
+   nliYWbMXuI0y4jPn7ncgS1jSc051fWpTvizKBV6/tFNwIaMpLY9ulwzJD
+   8ARhmtRn10D7ThrClEkmUEOQsQINpB5A2uEcZFL9k1DrJI4FTw0Cl+URI
+   oJGtRWJMFFgpq+PpArpDtyoLwGscG9h6waMI+yTH2p+JhrAncv4stV9II
+   xx9IqNhagakrFUBBB1S+m4AAbZi9u0RFjrjueBrx+misVs5LY9PhMM4z6
+   XI1arcGdaOaaOOlNKK4jtTG+ZDLhBjv3Oq45BzZsyJjvPetynJNWdJNfx
+   g==;
+X-CSE-ConnectionGUID: Mr+oL5viSZGi4qJ6HtwArA==
+X-CSE-MsgGUID: IxWJI6WRSYSlRSupSzaIEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39402539"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="39402539"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 13:05:59 -0800
+X-CSE-ConnectionGUID: kwWNlG1TRni50liK1M87mg==
+X-CSE-MsgGUID: 9NzHte6HSBiY5LJAQDifmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110864786"
+Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 13:05:58 -0800
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH] drivers: base: component: Allow more space for device name
+Date: Wed,  5 Feb 2025 12:58:52 -0800
+Message-ID: <20250205205851.2355820-2-lucas.demarchi@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Transfer-Encoding: 8bit
 
-On Wed, 05 Feb 2025 13:16:55 +0530, Varadarajan Narayanan wrote:
-> Use correct regulator for USB phy.
-> 
-> For some reason, the dt-bindings [1] patch posted and Acked long
-> time back seems to have slipped through the cracks and hasn't
-> been merged. Including it along with this patch as both are
-> related. dt_binding_check & dtbs_check passed.
-> 
-> [...]
+Some drivers use <BDF>-<UUID> as the aggregate device name which uses
+more than 20 chars, causing the status not to be aligned correctly.
+Example for mei_gsc_proxy on LNL:
 
-Applied to
+Before:
+	aggregate_device name                                  status
+	-------------------------------------------------------------
+	0000:00:16.0-0f73db04-97ab-4125-b893-e904ad0d5464                bound
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+After:
+	aggregate_device name                                            status
+	-----------------------------------------------------------------------
+	0000:00:16.0-0f73db04-97ab-4125-b893-e904ad0d5464                 bound
 
-Thanks!
+Give it 10 more chars for proper alignment.
 
-[1/2] regulator: qcom_smd: Add l2, l5 sub-node to mp5496 regulator
-      commit: b0eddc21900fb44f8c5db95710479865e3700fbd
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+---
+ drivers/base/component.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/base/component.c b/drivers/base/component.c
+index 741497324d78a..747c5542c70fa 100644
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -87,17 +87,17 @@ static int component_devices_show(struct seq_file *s, void *data)
+ 	size_t i;
+ 
+ 	mutex_lock(&component_mutex);
+-	seq_printf(s, "%-40s %20s\n", "aggregate_device name", "status");
+-	seq_puts(s, "-------------------------------------------------------------\n");
+-	seq_printf(s, "%-40s %20s\n\n",
++	seq_printf(s, "%-50s %20s\n", "aggregate_device name", "status");
++	seq_puts(s, "-----------------------------------------------------------------------\n");
++	seq_printf(s, "%-50s %20s\n\n",
+ 		   dev_name(m->parent), m->bound ? "bound" : "not bound");
+ 
+-	seq_printf(s, "%-40s %20s\n", "device name", "status");
+-	seq_puts(s, "-------------------------------------------------------------\n");
++	seq_printf(s, "%-50s %20s\n", "device name", "status");
++	seq_puts(s, "-----------------------------------------------------------------------\n");
+ 	for (i = 0; i < match->num; i++) {
+ 		struct component *component = match->compare[i].component;
+ 
+-		seq_printf(s, "%-40s %20s\n",
++		seq_printf(s, "%-50s %20s\n",
+ 			   component ? dev_name(component->dev) : "(unknown)",
+ 			   component ? (component->bound ? "bound" : "not bound") : "not registered");
+ 	}
+-- 
+2.48.1
 
