@@ -1,155 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9356D2288DA;
-	Wed,  5 Feb 2025 09:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBE6229B35;
+	Wed,  5 Feb 2025 09:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746464; cv=none; b=H1whDXDVcm56utccdjSDbnpEc2+4SZbRwji7YnBH1EOI2B+pVdq4CqJ9niBwh+x1uxSokVmKsyfUHIRPt/LucGrcl9C87X7Bt4NMuCKKemig0oJA0pZ6qSjRaOWqAjGXAnAStl+OmC6bT6eUZ6rQ6ynFzg+Ai9Z82SZTp3ejQZw=
+	t=1738746493; cv=none; b=ftYxRE1y0dtuQZFjVFYqjCeTqAaVFsduQRKW9RnrbmMsShYKq6ya69lbkC9Us3BsuCVMsgW07VOhKwqe0ksC1VN+VA7yl+QekuS6D8lBgekkgDikpjQVxg1kWbV4oMyA2mVLyrYkPh8s9e5ZCDldXcHJxYWS4tSWsyLapj7q7tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746464; c=relaxed/simple;
-	bh=dT+brue9bZJjCvucpVy58D22kI3f5XOtfMhs1uM9yK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4UVkDdnXfZWkhyKA67M8ZOfC1WKjVMN64cuBIEqtfrJ3NvBg6ramp2j02RpA8A4XYKYX8oT6h9r2MApl2nsfQJEAQvIQ3RRqoJyL65YxhYEV4e2gcZsb0Ew/H/pZXdm4qafkya1RKHwUMd+VFyceLOn3io42KZphKWMYprsej8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MasVflAY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738746493; c=relaxed/simple;
+	bh=zK4BcCviFYKOci9GCdxPo1LHA6sklsGtzEQGEFH0p50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cJj1SpOSrmcJ048ezVvaAuq1f7ZARIoHp/fgsSF0eUJ9sr8r/BPFIcWRc3PC9WrAE+NP0ZQ+IOimDP/3tSrILBdjEAW+MG/sWbznEwIi3bLIGj3hH+42+kB7psxJ63eCZbapwZaV6Ion8OFZvxmh5eiM+XFK7rDiMESqOf5EYgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CM3G/q47; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MasVflAY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A9BC4CED1;
-	Wed,  5 Feb 2025 09:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738746464;
-	bh=dT+brue9bZJjCvucpVy58D22kI3f5XOtfMhs1uM9yK4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MasVflAYp/mJcGP/oEgutBOTMVZYjWqhrZVQzSUYpte7GSgnZ77EO3c3VJetMUHMM
-	 e4Xifam28m02X3uq0qXEu22NGDZXt4OPqYmYMEwiTz4QPWlRuMExdKxQth5MROCJcE
-	 fSS5VxN5umHl95u1iepZp0T1J87sv7VOcdT3WsOqbRR523XDDyU8WZpVF1MRExeupF
-	 7JHAIqt/NczBDkAkgyUl3araUGwtyfEOX2n9MKf358Clfke0KECpzm3qzsUuVUfhkM
-	 G1MpEERMZOcq0RMob9+1g+sjWCnT5J8UnyCUwMcF1MGGHzOBfEI56nWKg7i6T4jKg9
-	 S8kM27RERuKnQ==
-Message-ID: <f8b8a39d-043a-4be0-9024-c080cf864e7b@kernel.org>
-Date: Wed, 5 Feb 2025 10:07:38 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CM3G/q47"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qkne+ZvkqwZNIJvySjfCkna8nyuLIRV8ik1o0AG9MyE=; b=CM3G/q47aJbqtCQ0AUoQetpyzV
+	cuJAP/abGed2N9qu1ydLrMdp8uUQzF5Rao21C7odP4h0tpTJBtorMkzXYcxsfQvWchUNAJaRM3uRF
+	wNCEqwJzS7+BCwd2nf3WoCWP+LWuKGLGz7eKIoht32jc4QPPV2TMFtCEkGWJ/zqRzyRJKs96XwGIV
+	mt9JlknaYHh/qdivsptOSn1/DLRHO+HfqYEnFIou5JHVgtf5LSXVN1pScmN1D6Fu4+ab8DjNkZnlz
+	eQsxwNDfFGNwsEA3NUnDNjzT+i+JoDq8mdygVC9dagfg8nViwk9W38tND56xGft3+H4+PQy51otQS
+	GDDnr4uA==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfbNh-0000000GbAt-28dP;
+	Wed, 05 Feb 2025 09:07:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6C1A93002CE; Wed,  5 Feb 2025 10:07:36 +0100 (CET)
+Date: Wed, 5 Feb 2025 10:07:36 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
+	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
+	broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250205090736.GY7145@noisy.programming.kicks-ass.net>
+References: <20250201115906.GB8256@noisy.programming.kicks-ass.net>
+ <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+ <20250201181129.GA34937@noisy.programming.kicks-ass.net>
+ <20250201180617.491ce087@batman.local.home>
+ <20250203084306.GC505@noisy.programming.kicks-ass.net>
+ <20250203114537.6a30c7c0@gandalf.local.home>
+ <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
+ <20250204075100.3fcbfda8@gandalf.local.home>
+ <20250204153053.GX7145@noisy.programming.kicks-ass.net>
+ <20250204111119.10ee37c8@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/13] wifi: ath12k: add support for fixed QMI firmware
- memory
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
- <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
- <7d5f7b4c-2a55-41c7-b85c-cb4cd76d553f@quicinc.com>
- <962dc257-f7a6-49c7-b760-a31fd84e7a56@kernel.org>
- <c7d9842a-96bf-41aa-8046-52c3e45f90d4@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <c7d9842a-96bf-41aa-8046-52c3e45f90d4@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204111119.10ee37c8@gandalf.local.home>
 
-On 04/02/2025 10:06, Raj Kumar Bhagat wrote:
-> On 2/3/2025 3:42 PM, Krzysztof Kozlowski wrote:
->> On 03/02/2025 10:44, Raj Kumar Bhagat wrote:
->>> On 1/30/2025 1:16 PM, Krzysztof Kozlowski wrote:
->>>> On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
->>>>> @@ -2646,6 +2663,136 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>> +static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
->>>>> +{
->>>>> +	struct device_node *mem_node;
->>>>> +	struct resource res, m3_res;
->>>>> +	u32 bdf_start_addr;
->>>>> +	int i, idx, ret;
->>>>> +
->>>>> +	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
->>>>> +		switch (ab->qmi.target_mem[i].type) {
->>>>> +		case HOST_DDR_REGION_TYPE:
->>>>> +			mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
->>>>
->>>>
->>>> Why cannot you use existing API for reserved memory -
->>>> of_reserved_mem_lookup()?
->>>>
->>>
->>> The of_reserved_mem_lookup() requires reserved memory node to read the memory and
->>> return in the structure "struct reserved_mem".
->>>
->>> The of_reserved_mem_lookup() would be used after we get the reserved memory node
->>> using the API - ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
->>>
->>> In next version we would use of_reserved_mem_lookup(), Something like below:
->>>     mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
->>
->> Then why do you need ath12k_core_get_reserved_mem_by_name() in the first
->> place? Just use of_reserved_mem_lookup() directly. Why do you need to
->> parse phandle before of_reserved_mem_lookup()?
->>
+On Tue, Feb 04, 2025 at 11:11:19AM -0500, Steven Rostedt wrote:
+> On Tue, 4 Feb 2025 16:30:53 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Sorry, I'm having difficulty understanding this.
-> We have the WiFi node at ab->dev->of_node, but we don't have a node for the reserved-memory
-> 'q6-region'. The of_reserved_mem_lookup() function requires the device node for 'q6-region'.
+> > If you go back and reread that initial thread, you'll find the 50us is
+> > below the scheduling latency that random test box already had.
+> > 
+> > I'm sure more modern systems will have a lower number, and slower
+> > systems will have a larger number, but we got to pick a number :/
+> > 
+> > I'm fine with making it 20us. Or whatever. Its just a stupid number.
+> > 
+> > But yes. If we're going to be doing this, there is absolutely no reason
+> > not to allow DEADLINE/FIFO threads the same. Misbehaving FIFO is already
+> > a problem, and we can make DL-CBS enforcement punch through it if we
+> > have to.
+> > 
+> > And less retries on the RSEQ for FIFO can equally improve performance.
+> > 
+> > There is no difference between a 'malicious/broken' userspace consuming
+> > the entire window in userspace (50us, 20us whatever it will be) and
+> > doing a system call which we know will cause similar delays because it
+> > does in-kernel locking.
 > 
-> Could you please suggest how we can use of_reserved_mem_lookup() without obtaining the
-> 'q6-region' node first.
+> This is where we will disagree for the reasons I explained in my second
+> email. This feature affects other tasks. And no, making it 20us doesn't
+> make it better. Because from what I get from you, if we implement this, it
+> will be available for all preemption methods (including PREEMPT_RT), where
+> we do have less than 50us latency, and and even a 20us will break those
+> applications.
+
+Then pick another number; RT too has a max scheduling latency number (on
+some random hardware). If you stay below that, all is fine. 
+
+> This was supposed to be only a hint to the kernel, not a complete feature
+
+That's a contradiction in terms -- even a hint is a feature.
+
+> that is hard coded and will override how other tasks behave. 
+
+Everything has some effect. My point is that if you limit this effect to
+be less than what it can already effect, you're not making things worse.
+
+> As system
+> calls themselves can make how things are scheduled depending on the
+> preemption method,
+
+What?
+
+> I didn't want to add something that will change how
+> things are scheduled that ignores the preemption method that was chosen.
+
+Userspace is totally oblivious to the preemption method chosen, and it
+damn well should be.
 
 
-Hm, it seems you are not using it for this device, so indeed you need to
-parse phandle. You can still code it simpler -
-of_property_match_string() is not necessary and
-of_address_to_resource()+of_node_put()  could be in the
-ath12k_core_get_reserved_mem()
 
-Best regards,
-Krzysztof
