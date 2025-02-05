@@ -1,282 +1,124 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00222147F9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EC41DAC81;
+	Wed,  5 Feb 2025 21:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738789820; cv=none; b=kDAX8pP0z0pLqZnqVh59cixaGVXA3ehOWMGYBvSJBtQslk7bdHltPkevTOR3BfpVV65y2Ex80Mtu3dcZ6lmf4eX6MXDNbjCvYcj0q+N0NFzCc557XzjibVJIy2I0XIelG07TFl1YVNI47m9cbSumekjaHzMyRR0KPiiobJWNicU=
+	t=1738789830; cv=none; b=IHSNU2TkO/KV/601CkL/2YcR48C8cvwhbFZ+5kmx+NNmBXLJG0cgvzO1e6vQxf4nN9ENrIuCA3lMjtAcQb7gw+3IFY6ItshPim62xFrKTq++2Fh7YC32Agg/Zh86Ut5CKa37NUFmkETbjt/NRFJDcrFre8nk8plVShkn2Sc25Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738789820; c=relaxed/simple;
-	bh=vYOcD7rhpGmtm3XUW63CkQNsHfKm0kQtTFTg59GN+30=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GmZR4YypmBnBDYyaGjro9PmnQPyycJxCSlxIlE+skAfwpU/ZEjfIFyt7bj5uqDuBQLS82dDPGjkKgL30h7XGceee67wZpb36ETKpopk9V7ZTo1TrVuIxaIK9pAdfdNonEHmSG9nfwcHm8mzWnltPiyUnx6WNZIVbrGRz5rHk6Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d057805941so3937125ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 13:10:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738789818; x=1739394618;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gC+NsQB9BaWxUyUOlNn9ow4nyoc/KNneTLYl8npJro8=;
-        b=t8CIY7mMAbATsRvm8q3sm42zfrAEtrZX4dmteRGZ7ZIw3cK5BJKnUT6LFrVUcTcLg8
-         w8VoaBssMgj6q3tblJN2Ce6ee7B0w4xjCni2j+zxMDeuIQT2w3u5sisC6JeEvNlzU0m9
-         qRHhHRE7NP+UIqXVw3mx+oVYULkBmchJgTt3Y56ugRHFYcRJHsCPAB+ZZowLDzqbWrcY
-         DpK6Y8fJfayxEZ2QXJXQNoHs8cs6QasCtXPdJuCEGL1CPmUcQLQxiyoiyrAbXPf5wH3R
-         nI/1swPZqjgV6SyPCOYrezjsXYFfwfSd3KDN+LvAbWuLKrHTjxe49odT3xFCsS7db1aR
-         R+gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGvc0/+82XeVrQiLdwj6SnpHWmIoDdQ3a5L6Cn1QiEMmzxpIhx7eaYKVUVLh4gD7SQuh3BsKc/6016Kkc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOzQVI3pskx3O56s/0vq1U9hounDZyW5SJt6ro4F6ZDtrEE/xR
-	Qw0YtiSZkXmAnVcWCZuUGfNV88/h/l6auQD/MMeaGvezdXzIc9HcVAIrmTanIwPCnZ4BqkmQOj3
-	z6W9UgtOrfGKypZFYNats5WvxeCf5LyCTH60jtVOuktPMuZPAU05nL3A=
-X-Google-Smtp-Source: AGHT+IGF7Wd6MDWq3r64xNG75X64vtyJ/WtRsKCc6wHW9S1owhcHXBKnT+O9esJRNyB5HoPlgPYG8PdWSNyzcO3aWaj43kZ33unc
+	s=arc-20240116; t=1738789830; c=relaxed/simple;
+	bh=waEsR76JgTt8wCqm9KYbGxyj3uS9lAiElYbWB5829Ks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ADVKZGP3syb1/dM1Qy7EWVb1Mx/sUmK68N9yCHRtmg97D3IGDqD5vZx2g+wFtoYfl5RIVd+93p7lX+3HwXMFi4AHG0TeUnTaDhD1DmxU/X6whpOySjCqUJC93oWcPFplmw1HjnFfSEdJtCUcVR8ZCHU7mlen72yH4/DnkNvhcPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7rVNN6T; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7rVNN6T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738789829; x=1770325829;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=waEsR76JgTt8wCqm9KYbGxyj3uS9lAiElYbWB5829Ks=;
+  b=k7rVNN6TSqg6C56wamlWy52zQaEKS6+3vbDWqGVAsntFITxFogvy8ouD
+   zR8ckJCjuuo7c5nd/iVPhzrZAgI1EPNiZOFPvf9wKKH1yL7IBfl81FgV8
+   lf6rh4Mx1wHQTpiMaVYTSTKPiiLAUrICO0xH23qD6r7YNlvsT5BGc5S4p
+   I0ViWIemepi2Lj9ZDXINMJQjqFpl0S6/GrmEFweDGNJDFqBImrV5b1W3X
+   KGasucXJy5YtfSUM9JI4xPLmFo7ydZTaHniVHlEyj8HGsS4d/ez02wLSJ
+   5E0nnfmtYTL6CUFakvcmX0HGdREAC/4Cy+NO9Nras9TUnqdawOXcWwRlv
+   Q==;
+X-CSE-ConnectionGUID: lyfHZFyoRbi+b2JCxx7DSg==
+X-CSE-MsgGUID: UEBeTuWeQWSUqTKwqNsNAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39402713"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="39402713"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 13:10:28 -0800
+X-CSE-ConnectionGUID: 6kdtUtOtSfyTqUKOezmubw==
+X-CSE-MsgGUID: ci/i+2ncR7eIhnmVAkdyLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110866738"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 13:10:27 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 998EC20B5713;
+	Wed,  5 Feb 2025 13:10:24 -0800 (PST)
+Message-ID: <9fa56c75-2ee6-4901-9e04-0ec23412fd62@linux.intel.com>
+Date: Wed, 5 Feb 2025 16:10:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:138c:b0:3cf:c7bc:4523 with SMTP id
- e9e14a558f8ab-3d05a5b493cmr7175125ab.6.1738789817871; Wed, 05 Feb 2025
- 13:10:17 -0800 (PST)
-Date: Wed, 05 Feb 2025 13:10:17 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a3d3b9.050a0220.19061f.05ed.GAE@google.com>
-Subject: [syzbot] [ext4?] INFO: task hung in ext4_evict_ea_inode (3)
-From: syzbot <syzbot+dcbb6d5fad7fa4c81139@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14284eb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=dcbb6d5fad7fa4c81139
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13502d18580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0c358838d66a/disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/29a6852a21ee/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fb214c6e7c43/bzImage-69e858e0.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/b7a4167b060b/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+dcbb6d5fad7fa4c81139@syzkaller.appspotmail.com
-
-INFO: task syz.1.2697:16598 blocked for more than 143 seconds.
-      Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.1.2697      state:D stack:22944 pid:16598 tgid:16595 ppid:5964   task_flags:0x400140 flags:0x00004004
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5377 [inline]
- __schedule+0x190e/0x4c90 kernel/sched/core.c:6764
- __schedule_loop kernel/sched/core.c:6841 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6856
- mb_cache_entry_wait_unused+0x166/0x250 fs/mbcache.c:148
- ext4_evict_ea_inode+0x14a/0x2f0 fs/ext4/xattr.c:480
- ext4_evict_inode+0x194/0xf50 fs/ext4/inode.c:185
- evict+0x4ea/0x9a0 fs/inode.c:796
- ext4_xattr_ibody_set+0x590/0x730 fs/ext4/xattr.c:2287
- ext4_xattr_set_handle+0xba6/0x1580 fs/ext4/xattr.c:2446
- ext4_xattr_set+0x280/0x3e0 fs/ext4/xattr.c:2560
- __vfs_setxattr+0x46a/0x4a0 fs/xattr.c:200
- __vfs_setxattr_noperm+0x12e/0x660 fs/xattr.c:234
- vfs_setxattr+0x221/0x430 fs/xattr.c:321
- do_setxattr fs/xattr.c:636 [inline]
- filename_setxattr+0x2af/0x430 fs/xattr.c:665
- path_setxattrat+0x440/0x510 fs/xattr.c:713
- __do_sys_setxattr fs/xattr.c:747 [inline]
- __se_sys_setxattr fs/xattr.c:743 [inline]
- __x64_sys_setxattr+0xbc/0xe0 fs/xattr.c:743
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f35bf18cda9
-RSP: 002b:00007f35bffc8038 EFLAGS: 00000246 ORIG_RAX: 00000000000000bc
-RAX: ffffffffffffffda RBX: 00007f35bf3a5fa0 RCX: 00007f35bf18cda9
-RDX: 0000000020001400 RSI: 00000000200001c0 RDI: 00000000200003c0
-RBP: 00007f35bf20e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000835 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f35bf3a5fa0 R15: 00007ffea2505538
- </TASK>
-INFO: task syz.1.2697:16609 blocked for more than 143 seconds.
-      Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.1.2697      state:D stack:26384 pid:16609 tgid:16595 ppid:5964   task_flags:0x400140 flags:0x00004004
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5377 [inline]
- __schedule+0x190e/0x4c90 kernel/sched/core.c:6764
- __schedule_loop kernel/sched/core.c:6841 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6856
- __wait_on_freeing_inode+0x1c7/0x2f0 fs/inode.c:2502
- find_inode_fast+0x2ab/0x480 fs/inode.c:1103
- iget_locked+0x96/0x5a0 fs/inode.c:1475
- __ext4_iget+0x25e/0x3fe0 fs/ext4/inode.c:4760
- ext4_xattr_inode_cache_find fs/ext4/xattr.c:1548 [inline]
- ext4_xattr_inode_lookup_create+0x3b1/0x1c90 fs/ext4/xattr.c:1587
- ext4_xattr_ibody_set+0x214/0x730 fs/ext4/xattr.c:2269
- ext4_xattr_set_handle+0xba6/0x1580 fs/ext4/xattr.c:2446
- ext4_xattr_set+0x280/0x3e0 fs/ext4/xattr.c:2560
- __vfs_setxattr+0x46a/0x4a0 fs/xattr.c:200
- __vfs_setxattr_noperm+0x12e/0x660 fs/xattr.c:234
- vfs_setxattr+0x221/0x430 fs/xattr.c:321
- do_setxattr fs/xattr.c:636 [inline]
- filename_setxattr+0x2af/0x430 fs/xattr.c:665
- path_setxattrat+0x440/0x510 fs/xattr.c:713
- __do_sys_setxattr fs/xattr.c:747 [inline]
- __se_sys_setxattr fs/xattr.c:743 [inline]
- __x64_sys_setxattr+0xbc/0xe0 fs/xattr.c:743
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f35bf18cda9
-RSP: 002b:00007f35bffa7038 EFLAGS: 00000246 ORIG_RAX: 00000000000000bc
-RAX: ffffffffffffffda RBX: 00007f35bf3a6080 RCX: 00007f35bf18cda9
-RDX: 0000000020001400 RSI: 00000000200001c0 RDI: 0000000020000380
-RBP: 00007f35bf20e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000835 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f35bf3a6080 R15: 00007ffea2505538
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by pool_workqueue_/3:
- #0: ffffffff8e93dc78 (rcu_state.exp_mutex){+.+.}-{4:4}, at: exp_funnel_lock kernel/rcu/tree_exp.h:334 [inline]
- #0: ffffffff8e93dc78 (rcu_state.exp_mutex){+.+.}-{4:4}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:996
-3 locks held by kworker/u8:0/11:
- #0: ffff88801ac81148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
- #0: ffff88801ac81148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x93b/0x1840 kernel/workqueue.c:3317
- #1: ffffc90000107c60 ((linkwatch_work).work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
- #1: ffffc90000107c60 ((linkwatch_work).work){+.+.}-{0:0}, at: process_scheduled_works+0x976/0x1840 kernel/workqueue.c:3317
- #2: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: linkwatch_event+0xe/0x60 net/core/link_watch.c:285
-2 locks held by kworker/u8:1/12:
-1 lock held by khungtaskd/30:
- #0: ffffffff8e9387a0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #0: ffffffff8e9387a0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #0: ffffffff8e9387a0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6746
-3 locks held by kworker/u8:3/36:
-5 locks held by kworker/u8:4/64:
-2 locks held by kworker/u8:6/1328:
-1 lock held by udevd/5202:
-2 locks held by dhcpcd/5496:
- #0: ffff8880121426c8 (nlk_cb_mutex-ROUTE){+.+.}-{4:4}, at: __netlink_dump_start+0x119/0x790 net/netlink/af_netlink.c:2397
- #1: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
- #1: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dumpit+0x99/0x200 net/core/rtnetlink.c:6779
-2 locks held by getty/5590:
- #0: ffff88814dcc60a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc90002fde2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x6a6/0x1e00 drivers/tty/n_tty.c:2211
-1 lock held by udevd/6016:
- #0: ffff888148d3e540 (mapping.invalidate_lock#2){.+.+}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:920 [inline]
- #0: ffff888148d3e540 (mapping.invalidate_lock#2){.+.+}-{4:4}, at: filemap_update_page mm/filemap.c:2440 [inline]
- #0: ffff888148d3e540 (mapping.invalidate_lock#2){.+.+}-{4:4}, at: filemap_get_pages+0xb24/0x1fb0 mm/filemap.c:2602
-5 locks held by kworker/u8:9/7617:
- #0: ffff88801baed948 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
- #0: ffff88801baed948 ((wq_completion)netns){+.+.}-{0:0}, at: process_scheduled_works+0x93b/0x1840 kernel/workqueue.c:3317
- #1: ffffc9000bb07c60 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
- #1: ffffc9000bb07c60 (net_cleanup_work){+.+.}-{0:0}, at: process_scheduled_works+0x976/0x1840 kernel/workqueue.c:3317
- #2: ffffffff8fcb2bd0 (pernet_ops_rwsem){++++}-{4:4}, at: cleanup_net+0x17a/0xd60 net/core/net_namespace.c:606
- #3: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: default_device_exit_batch+0xe9/0xaa0 net/core/dev.c:12323
- #4: ffffffff8e93dc78 (rcu_state.exp_mutex){+.+.}-{4:4}, at: exp_funnel_lock kernel/rcu/tree_exp.h:334 [inline]
- #4: ffffffff8e93dc78 (rcu_state.exp_mutex){+.+.}-{4:4}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:996
-3 locks held by syz.1.2697/16598:
- #0: ffff88805cf4c420 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:547
- #1: ffff88806dead338 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock include/linux/fs.h:865 [inline]
- #1: ffff88806dead338 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: vfs_setxattr+0x1e1/0x430 fs/xattr.c:320
- #2: ffff88806dead008 (&ei->xattr_sem){++++}-{4:4}, at: ext4_write_lock_xattr fs/ext4/xattr.h:154 [inline]
- #2: ffff88806dead008 (&ei->xattr_sem){++++}-{4:4}, at: ext4_xattr_set_handle+0x277/0x1580 fs/ext4/xattr.c:2373
-3 locks held by syz.1.2697/16609:
- #0: ffff88805cf4c420 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:547
- #1: ffff88805874c950 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock include/linux/fs.h:865 [inline]
- #1: ffff88805874c950 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: vfs_setxattr+0x1e1/0x430 fs/xattr.c:320
- #2: ffff88805874c620 (&ei->xattr_sem){++++}-{4:4}, at: ext4_write_lock_xattr fs/ext4/xattr.h:154 [inline]
- #2: ffff88805874c620 (&ei->xattr_sem){++++}-{4:4}, at: ext4_xattr_set_handle+0x277/0x1580 fs/ext4/xattr.c:2373
-1 lock held by syz-executor/23600:
- #0: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
- #0: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:335 [inline]
- #0: ffffffff8fcbf148 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0xce2/0x2210 net/core/rtnetlink.c:4020
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:236 [inline]
- watchdog+0x1058/0x10a0 kernel/hung_task.c:399
- kthread+0x7ab/0x920 kernel/kthread.c:464
- ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 12 Comm: kworker/u8:1 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Workqueue: bat_events batadv_tt_purge
-RIP: 0010:trace_irq_enable+0x3d/0x120 include/trace/events/preemptirq.h:40
-Code: 48 89 d8 48 c1 e8 06 48 8d 3c c5 70 40 1b 90 be 08 00 00 00 e8 e4 d3 5e 00 48 0f a3 1d 1c 10 54 0e 73 12 e8 25 06 de ff 84 c0 <75> 09 80 3d c5 25 3e 0e 00 74 0e 5b 41 5e e9 9b 10 49 ff 90 0f 0b
-RSP: 0018:ffffc90000117920 EFLAGS: 00000002
-RAX: 0000000000000001 RBX: 0000000000000001 RCX: ffffffff81c7304c
-RDX: 0000000000000000 RSI: ffffffff8c608040 RDI: ffffffff8c608000
-RBP: ffffc900001179f8 R08: ffffffff901b4077 R09: 1ffffffff203680e
-R10: dffffc0000000000 R11: fffffbfff203680f R12: dffffc0000000000
-R13: 1ffff92000022f30 R14: ffffc90000117980 R15: 0000000000000201
-FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055556c57d588 CR3: 000000007fcae000 CR4: 0000000000350ef0
-Call Trace:
- <NMI>
- </NMI>
- <TASK>
- trace_hardirqs_on+0x18/0x40 kernel/trace/trace_preemptirq.c:73
- __local_bh_enable_ip+0x168/0x200 kernel/softirq.c:394
- spin_unlock_bh include/linux/spinlock.h:396 [inline]
- batadv_tt_local_purge+0x2a0/0x340 net/batman-adv/translation-table.c:1315
- batadv_tt_purge+0x35/0xa40 net/batman-adv/translation-table.c:3509
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xa68/0x1840 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7ab/0x920 kernel/kthread.c:464
- ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids
+ events/metrics
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
+ Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>,
+ Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
+ Thomas Falcon <thomas.falcon@intel.com>
+References: <20250205173140.238294-1-irogers@google.com>
+ <20250205173140.238294-12-irogers@google.com>
+ <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com>
+ <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 2025-02-05 3:23 p.m., Ian Rogers wrote:
+> On Wed, Feb 5, 2025 at 11:11 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2025-02-05 12:31 p.m., Ian Rogers wrote:
+>>> +    {
+>>> +        "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
+>>> +        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound + topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * slots",
+>>> +        "MetricGroup": "BvUW;TmaL1;TopdownL1;tma_L1_group",
+>>> +        "MetricName": "tma_retiring",
+>>> +        "MetricThreshold": "tma_retiring > 0.7 | tma_heavy_operations > 0.1",
+>>> +        "MetricgroupNoGroup": "TopdownL1",
+>>> +        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum Pipeline_Width throughput was achieved.  Maximizing Retiring typically increases the Instructions-per-cycle (see IPC metric). Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Heavy-operations or Microcode Assists are categorized under Retiring. They often indicate suboptimal performance and can often be optimized or avoided. Sample with: UOPS_RETIRED.SLOTS",
+>>> +        "ScaleUnit": "100%"
+>>> +    },
+>>
+>> The "Default" tag is missed for GNR as well.
+>> It seems the new CPUIDs are not added in the script?
+> 
+> Spotted it, we need to manually say which architectures with TopdownL1
+> should be in Default because it was insisted upon that pre-Icelake
+> CPUs with TopdownL1 not have TopdownL1 in Default. As you know, my
+> preference would be to always put TopdownL1 metrics into Default.
+> 
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+For the future platforms, there should be always at least TopdownL1
+support. Intel even adds extra fixed counters for the TopdownL1 events.
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Maybe the script should be changed to only mark the old pre-Icelake as
+no TopdownL1 Default. For the other platforms, always add TopdownL1 as
+Default. It would avoid manually adding it for every new platforms.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Thanks,
+Kan
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
