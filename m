@@ -1,186 +1,145 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02olkn2040.outbound.protection.outlook.com [40.92.49.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715811547F2;
-	Wed,  5 Feb 2025 19:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.49.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738784101; cv=fail; b=o3R4lPRRvVoTx9ilHTqSZQCZpaIMEJC3/rIyq2qtN7N+H8APhAcig1TFnxFL30Jdo2tmpHkt7h4YedeY/TuCyPVGKcUbOaAyt6qbZXvpMwn3uQ/af4eX+kKpIlZ0u+fdpLz1UaWtSZlPUtxmwL7vxvnz8Ivuo80u/3tSwEYZvOY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738784101; c=relaxed/simple;
-	bh=MDeRd+98KN+G5GVPHW+R+9odPAvjEiRvkK+NERuReGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mDPFG6zgJZ8KgU2uZ+u9NLd/NdOYYzAL3z3S4RQNbRIBB0ZLjW0CsuvlhVwFPGnNb9ZWGaEhebED5aExwu8NLQBs69vZVyL9O/z/vJrRje79bxcl2SzzhR3V6Dy0urPBlvQj68Z8cHczNP5Z8V4MF8rSMHk57sv+wi9Zsh79LuI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ArXau5H7; arc=fail smtp.client-ip=40.92.49.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780491FF5F4;
+	Wed,  5 Feb 2025 19:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738784115; cv=none; b=sru7cxYGiu1mKI13untadRXGtUGWv0iQQGEG9QxbHOJqFWavS73tQrdPXCNpKgav1FUmuErKAybffGL6gcN+LX4MZcbNgH9SwJCEQd/tdgFhADvtknYfdBxBF9+kCCo0BszQCHWfBYOZZOpiL5ORl2S9wLyVV4EJ1U67WR1MaIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738784115; c=relaxed/simple;
+	bh=ShcZHGBdifSRfT1a3wdja/S42QVCg8pR07DE0bj9C2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E7BK/HNBnPQ1Ww7GelOP/gd5srXdCPUMu6k39l+S95WN4fUrBICeO1eFcAQKcTM8pm1+sG/lvr1y5mrnhLxrCaXqvn1EdC22nbVm6RFY4WPjUYeKmujWtYiQY2DR6tpShmu05XtUyWJKYIJ/i82Fw3pk4v6MF8NpcsKQuQH3iVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkAVgl1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ArXau5H7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=we6he5CJs1ivigEfo3unrw3MV4X2Eqe/8iuBDF3DQvURxXRAGHKfvsUmhU4PUZgyDTfLSMv2TnZMwP4eV05bewL7rkcWb+sr5SDsvShzYy0axANaaIZr3Lj6J7AVmdUJp3Wx6pSY/FfIiTH2cd/1s1970y1TQKMiB82XXs/MwWjI8An/ZUJ9fwizecfXPtsi1YQh1I1JAlE9W0+G0iBcHRRsgORGHPX8FWHb5KiXe1Ygoxbw8pMmdk5qqWHp5VpDv9rF9TdsHALfq59Gvw58/Z4/HfZB2NKjTsGRu1V+mZsSAv9wGBaZB5jImwIGAF1gqzLQGpD4kEIRV0bvwOPJjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wr0P8GKWNGhL9I3nk339jus5q847ivE5hjA+9RK9uAY=;
- b=ZnAyVs01SnFvlCvXHSwvDPpr2NJytTpvJU30ucYB2wAgNH03d8yjtwgg+e90OvsfZiFFUpGZRE37mVGwSlpdL0SzEJqFZhIwHOlwpAU03rXepUnDWkh0UdVQ2kbMoVHZDJA/PFpm/TafLRFq2jxslbPfXCes1hIrYF7aGcNUJirCzvymVeZQjo9ZYvs/xp0egrszmZUEiFhq+LqJ2oaZOQrne6yX9tr10soRxPaISXSUCIHYeZMVNOpj0Vbc+RKqtx9e8kLqITUL24UL6Xzq/HLbAVNEZVQ5MxJ5LSbXHybqeGKEcoVnBx32iD5/McJuuM4oB2jzyPXNJhNBEVENJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wr0P8GKWNGhL9I3nk339jus5q847ivE5hjA+9RK9uAY=;
- b=ArXau5H7WHUglyRYm42aR05enqIjGTQlSLNP+qj58ncsZQgO534M9ejnE1VY0nnUSkM50DxyqruU6jc4CiDbJB3Y0yvMJY85b/31RM7Gw6Muabl2q3UpmPe49Kjb/gl6AW5hFlRxddBO63vWz712wn1B/pHTN3vB9QHkaKsdwGxjmqjB/XAKD6pBtCdCu1iHdyBd2wkEL100Av1htMZ+JqPKhGqeiwqN++3Y/GZjnhv6ghc8z379wdyu5Xw3REj/ejs8lGGeLvs78Yb6Ip2mY0qTF/uIgJAqbGZ2ipcBHZL0TgK/4j4Lj1WLBGTRL2Madr8mutG2otvOKUM2IRBgiA==
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
- by DU0PR03MB9077.eurprd03.prod.outlook.com (2603:10a6:10:464::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Wed, 5 Feb
- 2025 19:34:56 +0000
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8%4]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
- 19:34:55 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	memxor@gmail.com,
-	tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH bpf-next 5/8] sched_ext: Add filter for scx_kfunc_ids_cpu_release
-Date: Wed,  5 Feb 2025 19:30:17 +0000
-Message-ID:
- <AM6PR03MB508024584949BB503B9BC44399F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0570.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:276::14) To AM6PR03MB5080.eurprd03.prod.outlook.com
- (2603:10a6:20b:90::20)
-X-Microsoft-Original-Message-ID:
- <20250205193020.184792-5-juntong.deng@outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkAVgl1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B83FC4CED1;
+	Wed,  5 Feb 2025 19:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738784114;
+	bh=ShcZHGBdifSRfT1a3wdja/S42QVCg8pR07DE0bj9C2A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kkAVgl1Xjzt1q8t/CAipXH+qrumDPqWOhCqysT2XJzi3Q4mjx7rhEr5vXrre6CZwu
+	 UYBobVOwJGrYY9J0ZnXTjbgFC8CEzK141Cb6yitgYkWG61mAwSPZ5M39xC0ZcAm3Du
+	 n97+odZ/wJpzq+jCACoBPJM2OueummlRWdb5KPKLNW3hQ0rmqbCPzoht2HTFKlCpza
+	 AoxJOn1lPHCf5xHScmmz2J1Vo5x8WknrjEUVj/BPpDvyd9j9E2f//UPP1VYzPUyAjS
+	 S6KkzuwSOPqt30Q5H7BVKna7OkfGcqMo2l5qGMQq7Xp1IDt0GBdM9OGjo/0nV0PryN
+	 mlMk1g1q1BHKg==
+Message-ID: <73d4153e-cc03-45ba-ae2e-3b9f4baf7346@kernel.org>
+Date: Wed, 5 Feb 2025 20:35:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|DU0PR03MB9077:EE_
-X-MS-Office365-Filtering-Correlation-Id: db30c9a3-8980-4cb9-0421-08dd461c2b07
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|15080799006|8060799006|19110799003|5072599009|440099028|3412199025|41001999003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gFw0hZLOxe/dR9jTqVajtXIs7+jGDgBcsTr69S7u3qxz0bC2KbujmCNbZjd2?=
- =?us-ascii?Q?WzeXbcDtouuTmD70Z5ORO/HZzie/Z1rqcNwb+ySZ6jGCq8Kv/wKibSORoBjG?=
- =?us-ascii?Q?LILEjt788Gzz9ocflNLPpASfheXT0VJrmthp8rFtfEChsVEDcD00yA4UTWZs?=
- =?us-ascii?Q?suIZyydN51uKauHbAGAMAUPczHBbjfgMbCr87f8a4AEyQikcUhoHeTAuXDG8?=
- =?us-ascii?Q?/5gotmgFysLJrVIOGlTVg3dDcTNVlaC2VETn8mL0s8xRrfg1brxaAP78A24h?=
- =?us-ascii?Q?6fCVkYFD7SS1Q9pAvtas5EA2Tv6J1R9EyQrhtOtPB1tTMj9+/rZIIAWqv7dK?=
- =?us-ascii?Q?6KywfsiJhpDCywvSrJHFdIyd4AabbCwO8N2oxe8qAwD08v8xMG113gj04k6G?=
- =?us-ascii?Q?U9Kq3tfcXKqBthDcwLifgDyc9jHHkAMwxlUquF2bO4v1m9Y3vftYuGNRG2tI?=
- =?us-ascii?Q?KaTf9ULQzQHeYWYooP1Gty+be4d6PMZZuTlu+bbgHoydMyzMxsJEmjRIfqmq?=
- =?us-ascii?Q?yVxHGJcUDD8hA1ON8c9f3n93T+aSpmnPqbbadPP0yZF8idRuo9nW2ugCQSwg?=
- =?us-ascii?Q?jGtUCTqu/9aTWC20o1LdtW/sbs6KVozJ12JzyvmV6a7kSR0trIGnIoe6YLqX?=
- =?us-ascii?Q?PUBYLbLzeIOa+ZBap9wbzDB3D2WRjg24dAscKrMD/Un7T62zHCaShVPURDeU?=
- =?us-ascii?Q?32aFwZUb8ci2uNbK8s8/WOt+ht+IRsUxaqOwN+NBJrQ9iYsCr4CJVQdYUxtJ?=
- =?us-ascii?Q?5Zu/hh1CPH2IE5kh52ipKGsAWXSHiBy3q7UFjbhYbvgTpIpsRZrUSUC01jUW?=
- =?us-ascii?Q?iuFnGLaC3FwMjToxUeedybQNPcMeTItjmRct+wW9vSqpPDwhBoPNLNSza4g2?=
- =?us-ascii?Q?p+fUBPGhbJgQNMTXqrfdNCFxKoQ1iDsRjgV3J4e4uhTMgZLtLybYQT9YIgD7?=
- =?us-ascii?Q?woGRHejsm4nTmeH8kbbyW2pgZifn9khZ94/9/CgmSVBigQBUuEyWZQmTDkMs?=
- =?us-ascii?Q?HQZ5v4p0LacNpIcPVGDghM6hJy7VIfWxcQbfXzaavsq26Z1is+X6JAtbQ02e?=
- =?us-ascii?Q?CI8YnDUyqkXki2px0PxxprqNtZA0VQ=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?08Hcw/awxWpnOshZGVjbGck5JwJYET9aPJBAR+g4MwQkzHB49qjmW3RLm5bI?=
- =?us-ascii?Q?uNW9wTgNauLOYKgZDBydBd9fVCX5nkJo13glUfIif+xYXOtkgKHmq0soNVxY?=
- =?us-ascii?Q?EraTdUviZUehHWJAtiWczLlwed3Dd2SSQIa0sYbwtSw41MxRjdQuiDdbaKLW?=
- =?us-ascii?Q?/JKrmEnhhQ1mF87utUKFZ8S65RL3JymDU7IFu8obEh6uH4+OyeM0+O9gmC6K?=
- =?us-ascii?Q?2LhkKi4vtwPz+TLH6X3t27/tOefIuGzkLRrXAnANpKsPMC24JZxEsxmx+eQv?=
- =?us-ascii?Q?ZX6KTIcCl6rDE9TKBYzBVHW8TIppkhoguNklGA/7RILDdzk3GwQMyCDX0Zx1?=
- =?us-ascii?Q?uShisReAJOCaSb5WoaJv/B++c9h+1F2+8S1b0v2vnS7XzPsZv5MhxZDPiK6P?=
- =?us-ascii?Q?k0WnJZFk57S9rj8FpzxmDNkyrtCMzXLEB4oN5cfv2ayv6I4MIuHcHmej6xln?=
- =?us-ascii?Q?xuRvb/2vb+5AHDHIXCXDLLGerVeT3MWF2LaHCSwKJcNrvjxcEvoehPFHkE7f?=
- =?us-ascii?Q?kXSUKI7hSVa1pufjvLbpECl+5lLBJC2jB1MhYo/8hCX0SxSNrOZmBGZpLMDe?=
- =?us-ascii?Q?iJIE7wQzFm+JUsEdYuB2V5Gc2Xw0LNK2lvuPnJxMjCHbad9nhyLkiPOfC73p?=
- =?us-ascii?Q?5xXD4yGzop3JHXJAMBJ3IzOtkLHHEcG7F65E3fqVACK31fiZm0Jdz2vt0dqV?=
- =?us-ascii?Q?BpNgbw+8bo2JWLsfAqynUmhto5Nk0oCMFtzuuhU+77exVlE4w/9PlLFh6F27?=
- =?us-ascii?Q?SDpxO4RovVVcnQ2Xs65ng1yizkGScc07yG0WNxDSgtj28taKlkynNXniqR5Y?=
- =?us-ascii?Q?8UjpPoVaeJZWfBHDIdxuqbsQH7m+8XBqE3SdmxYlhKVy9kfH2SgjD+evSBRr?=
- =?us-ascii?Q?kRUnjPgj0TNzZLaDKFR55W4T7EyKXdxZi3jsP9g740qNANFreEOHAaJtACv/?=
- =?us-ascii?Q?Qi6lUXfoYu7wzusNzvTBT07TheJE1CQOiaj7bfCbGdmvkcPyecXkVCuztT4a?=
- =?us-ascii?Q?Z/rPD9XGqUjcKB+/c/dnMlQc+SFMw0lOXbj6130tNzYGbjm0m9ccQgQYtW6Y?=
- =?us-ascii?Q?JTzvQWLF2txKzJlwyKz76gy4mFEgbYVZ5KmrSwUkbLSi8TXb2g/AW6oSUL7g?=
- =?us-ascii?Q?kBICQ9JWf/lssr2lHSwfXeyXZMSMrZjRLAX499AJI1g3kU+LXdEcMH3ncVZE?=
- =?us-ascii?Q?2ii0hPhgTiXvX9oEU7xzlLU4ZKygOT7tY+8cs31CTzA+q5H6e5iA+YOmsvD+?=
- =?us-ascii?Q?iOzTi2549l7K2K9x1rwS?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db30c9a3-8980-4cb9-0421-08dd461c2b07
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 19:34:55.3420
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB9077
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: usb: snps,dwc3: Add property for imod
+To: Badhri Jagan Sridharan <badhri@google.com>
+Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org,
+ felipe.balbi@linux.intel.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, johnyoun@synopsys.com, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ jameswei@google.com, stable@kernel.org
+References: <20250202035100.31235-1-badhri@google.com>
+ <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
+ <CAPTae5+j9N=RBpfHVE-As+dz7HzrxXAH1enWrmSdFzu6DuaTBA@mail.gmail.com>
+ <80172550-a3d7-4d56-927c-ff63debc79f8@kernel.org>
+ <CAPTae5+xF0B64AhT5fjMU9tcW8cT9smO5eUD=Wpsiw2CKAhDAQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAPTae5+xF0B64AhT5fjMU9tcW8cT9smO5eUD=Wpsiw2CKAhDAQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch adds filter for scx_kfunc_ids_cpu_release.
+On 05/02/2025 19:19, Badhri Jagan Sridharan wrote:
+>>>>
+>>>>> +      during device mode operation. A value of 0 disables the interrupt
+>>>>> +      throttling logic and interrupts are generated immediately if event
+>>>>> +      count becomes non-zero. Otherwise, the interrupt is signaled when
+>>>>> +      all of the following conditons are met which are, EVNT_HANDLER_BUSY
+>>>>> +      is 0, event count is non-zero and at least 250ns increments of this
+>>>>> +      value has elapsed since the last time interrupt was de-asserted.
+>>>>
+>>>> Why is this property of a board? Why different boards would wait
+>>>> different amount of time?
+>>>
+>>> Interrupt moderation allows batch processing of events reported by the
+>>> controller.
+>>> A very low value of snps,device-mode-intrpt-mod-interval-ns implies
+>>> that the controller will interrupt more often to make the host
+>>> processor process a smaller set of events Vs a larger value will wake
+>>> up the host processor at longer intervals to process events (likely
+>>> more). So depending what the board is designed for this can be tuned
+>>> to achieve the needed outcome.
+>>
+>> I do not see dependency on the board. Host has the same CPU always, so
+>> it processes with the same speed.
+> 
+>  By "host processor", I am referring to the CPU which is scheduling
+> the TRBs and responding to the events reported by the Synopsys DWC3
+> controller. In a nutshell, the CPU which is driving the  Synopsys DWC3
+> controller. The Synopsys DWC3 controller could be paired with any CPU
+> configuration and therefore is "Host has the same CPU always" a fair
+> assumption to be made ?
 
-The kfuncs in the scx_kfunc_ids_cpu_release set can be used in
-cpu_release and other rq-locked operations.
+Not really, this is part of a SoC, so DWC3 controller is always here
+fixed per given setup with given CPU. You claim that this is independent
+of SoC, but so far arguments do not support that statement. This is
+related to given SoC, so no need for this property and you can deduce
+everything from SoC.
 
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
----
- kernel/sched/ext.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+You push this as a property because you (or vendor) do not want to
+upstream your SoC. That's common pattern, seen here many times. BTW,
+good counter argument would be to show me patches for upstream DTS users
+of this. Actually that would be very easy way to finish discussion...
+but there are no patches, right? Why? Because it is not upstream and it
+is done for downstream solution. Sorry, no. Develop code how upstream
+develops, not downstream.
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index caddcf41e5f1..7f039a32f137 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -7026,9 +7026,25 @@ BTF_KFUNCS_START(scx_kfunc_ids_cpu_release)
- BTF_ID_FLAGS(func, scx_bpf_reenqueue_local)
- BTF_KFUNCS_END(scx_kfunc_ids_cpu_release)
- 
-+static int scx_kfunc_ids_cpu_release_filter(const struct bpf_prog *prog, u32 kfunc_id)
-+{
-+	u32 moff;
-+
-+	if (!btf_id_set8_contains(&scx_kfunc_ids_cpu_release, kfunc_id) ||
-+	    prog->aux->st_ops != &bpf_sched_ext_ops)
-+		return 0;
-+
-+	moff = prog->aux->attach_st_ops_member_off;
-+	if (moff == offsetof(struct sched_ext_ops, cpu_release))
-+		return 0;
-+
-+	return scx_kfunc_ids_other_rqlocked_filter(prog, kfunc_id);
-+}
-+
- static const struct btf_kfunc_id_set scx_kfunc_set_cpu_release = {
- 	.owner			= THIS_MODULE,
- 	.set			= &scx_kfunc_ids_cpu_release,
-+	.filter			= scx_kfunc_ids_cpu_release_filter,
- };
- 
- __bpf_kfunc_start_defs();
--- 
-2.39.5
-
+Best regards,
+Krzysztof
