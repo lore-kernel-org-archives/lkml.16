@@ -1,62 +1,62 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51321991CF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEF01DC198
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771272; cv=none; b=pmh9ouO6oCPrg49eR7Mi1j0rDWZ0JeUfGuObMut0psvoF0DbnrHgCpE6a1Vso4nP7S1wc4PLZc1cLQJTLc1ECFz37Kp+AseL7XgIwMhJ68Lrm275uvXCC1TYnL0HV13JIu2mY1yu+5th60AHkrpATyQNh49x2CpEogfgTSwkM7o=
+	t=1738771279; cv=none; b=P+1I/49G6/jVwFyhm3RImKcq3n5XH7y+pVFM6RjIYZHqP3WNb35pLhLzMyXhwbxplPSmqQV2nsUlUgyaLV3fCiwtNJygkkYEWnGlD8g8cOLd/+v+nyG9t4ehZm5AdmF5S4MWCpETQ3KYkOcL5O6bmbMq9IFKBzGKW3PysYyiXxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771272; c=relaxed/simple;
-	bh=lcMa5p2pZjzeghLKvVY9ny71KeZ3wMkdol/DU/InCzE=;
+	s=arc-20240116; t=1738771279; c=relaxed/simple;
+	bh=tNahCfxLRgNIbiBla43nJrTI1GFGdO1edGYaRhyK8s8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qXoDTwF2O1c1oxOq9Qag5y1nS/q5m2AhY3rrAgYjYcvFvasVCVn6vtGIWrEiRvLlm08Xt+/DWEVmbPr/OFZQXiOc+ygSwwb5NdvibuYjjNw3W8YtEn3ocvk5orwILcYN+J6kAn+9wlcD2qNlOKNm7LLhG4nQGaNgCQ5k6kbE8Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=CQ0AfwQW; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=F7IjrQvA29N6MlBEksapeOK4aT/cyTqEmtmnquw9hyfB30ScEmOZFsh4KVKe03dF+3OsxpJE5zG29v1lvI++948z+uSVOt1RmVveuJCMt2QOa92ctHfR1VFUsc03lcd/QSbu+p63JRAAXdhrFQyWNXYksL74AbWVKSJyqHGxtpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BdXhlMYZ; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="CQ0AfwQW"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9da2a7004so2062156a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:01:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BdXhlMYZ"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21670dce0a7so9323825ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:01:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738771269; x=1739376069; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1738771277; x=1739376077; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2uqH0LlhZdZ1/ZJgerOy14gnMEDsVqG8t0Fz3f/FUy8=;
-        b=CQ0AfwQWi0KNP9OlLNt8pAooVeyyN7NUr0W8A8vtHvbkG5BxCzobqINgdlUx/lbIeb
-         LfrvlkZgbnMwKgETjHXP4hyaZT/DpDWR2uhIiNvLq06Yk0BRFCpgGiXypLrEwSYINpdf
-         8OBRNKsjoJLl7vbZW31aJ1EHjsSpPPW2ZRc1FQcnGhgxfLueDxKGrA46k6drMRFURWP1
-         BygPqdoAiuBmA8GPGqlKDzt6nW3+mL2dXFqsmaDbgSPH0RizqQos7BoYgfCA0m9O3w58
-         nPZa9tiulF9uoKQQOoINIdgzL8eCikiGJqJcBEGo3tgtOp+/N3+5DO5WBqLLbecOtkdv
-         faqA==
+        bh=KEjndyBD35lV6nr6NSLWRRyly4db2axy7koFOHZTKsQ=;
+        b=BdXhlMYZoneg4XjFolZY4NOxBbTXtBUuRlqe9sGih0KPAOjEy0ItrsDIL6ft7Fyacu
+         ylQa9zvIJLziUbZBk5JPc2KaxX3W75AFoFg1Hr3uJpTLlDvtV+Y/ArCA6gCw2sjCCbNq
+         Ce+skkP9c7XVk1DHs1+BNZrNtfvQcHQ95VXBzEt2f2qZxxeWiic0RQogeIGAmS17CPJz
+         ohch+eo0BqkPETjqyrPaonE3LA/YeyaMsxT17LS8pYZq+GwT2xC/aB8H0xPUPfIjRODN
+         X/mZDtIkyVjXkML+3YJcP3JhDaTfBjrbDbixeHcvTSmuvDmjEA+7vblHb/scJhEiyuXV
+         Xxzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738771269; x=1739376069;
+        d=1e100.net; s=20230601; t=1738771277; x=1739376077;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2uqH0LlhZdZ1/ZJgerOy14gnMEDsVqG8t0Fz3f/FUy8=;
-        b=iaTWH/cuWzeHK+8VxWhPFA+dfnbrfkCUN8DEnaBMsC/IqhpFY2al9FeRgno+rCQEoc
-         n00Yfza4EfBMZJcuKQYSBC5HgwUfuHb29gGqCjUyBHDzWShD8AZMZrwxEoIiL1QZuPC9
-         KNzyqsU3yXL59wpXnZecNRkaN/mBuruFw88iIoTKEu9onFhVwcIxX/OkD9a4pLyfheOJ
-         8ntM1x30BHUyoDF61KzUKIOell2L+N+0zGL9szNFI3cnVLyLzPDiXdHiqUFrUvsESmom
-         9kKwZWJc6kNsMfq/yOK3P4DlFH+Uv5FpQJXqtQnZWcbc2+H15QRZjYpmyOV4xay19UDS
-         D/Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7iUKBdyN6/D5lYDitT22+S6v14gQQvEYH3afW/DbUO6AVKYqUqMQqRtsBQLZV3vXneKyItK1OHzzBOUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXKbOxQWG9SUBvAgzms5QMZVOvf9GB7E8nc4R1fRMmZnwJfPoa
-	ErDptv6SK9ETBqsrp+BRlCNJuokJidAaOoHlA2kWDPE2ktXp95Eu3kk8w/cMw7k=
-X-Gm-Gg: ASbGncvrpoFzogtHx0gUIQhlHXUBdkJm0XmucjR9zrMkrI6B1aNGheeKHAWeYe8litR
-	YUXGfgPUbqSG4pHW48jAttY967GMWbP7kEKO+4Y+lhGJPcUUHkJxzmfCFu6foWWuXzvE0n0cxUt
-	XuFAxt1JvikP8coEBVb44elq75WLaPPDjKwFWCi267IIdFROVfHX+xK3z+T+OdZB9hhLjQ0C5ah
-	VBgWMUTk/zHxG7sJB6ZPWYvkGFdkm0PAo8bAgECFFaGRLCOTereHoCbp24mRFIa9bUuSDeelc8q
-	+Y1H68f63omELYh5YqNwzQYLNDd5ZMdCe4s/J9WNylFpjzgGdmqNxXA=
-X-Google-Smtp-Source: AGHT+IFnLvRLZKvgJpx8dmK1OqS269EnZ/fW86sG/bu7Q2nxZbfcOX7ctDxWBsYaZVjqDvgkXox9sw==
-X-Received: by 2002:a17:90b:4a8a:b0:2ef:67c2:4030 with SMTP id 98e67ed59e1d1-2f9e08003demr5011059a91.27.1738771268829;
-        Wed, 05 Feb 2025 08:01:08 -0800 (PST)
+        bh=KEjndyBD35lV6nr6NSLWRRyly4db2axy7koFOHZTKsQ=;
+        b=Crwf2R+2AK/rRSGUkZAhB9qE4wLbgXd0cMGXBnd9vmirrtpKBDPkZcryrkxC5ALp9o
+         s59owuHQ3xEAOEFoKe02Dehbi1k7IDyonour6fzGSEtJZedMFq72RPKG/PaRhwT09bRB
+         gBOBRSxImKE4FQqGPmkqnSMQYYsVHylO8buOg+73vFtqS9/qNBtY6gSahXi1X3uEkf0Q
+         S4uOUWwZ0s0qWesatZB33oAxzL0ffPqh1+/cM3ToRQoyS/jOkIdkMz6+DtFrHr/kcWX0
+         9/VRoe1jcecuOgQJOp6ga4w9xLMdsGXnZH8mL+/BVC6rGMLE67KQnPFcquA4G9qQsGRR
+         Zl0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWl1DveZhuGcp9DW5rnSbNtnO7XUnueFTOeloMJlVUoTlaQ7hjFW8M+ipccdgMl89HmzkCX8mjVhcHW/tg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH3xY+9crGbPhJGOsPa1H1nz4jDrr/QpE3INiMPBYO2vvKgPLi
+	TTvZFX7KsjhCFQA/EYi1RKOrfdYhDO5Wo9o5HXrJ97MxfQr4Yu3BziqGDM1WifM=
+X-Gm-Gg: ASbGncsr4UILB9MLXks6RxZPZEeRQLCimpGzvR1Yty/rgBmroKkaNGwL+/TimHv0NhB
+	UBXSlSms6Qo55uF7+kmuMJGcY4Rx/7/ySPibmXi82M9COA8eo46rTSGbXGLDX60o3wZ2jr2SxXq
+	j+hUody4Hm3p/l3bZavcN9VH3npsZaY74Z5v/i5wsZlH7Suvod8Clt/Gqwuj5gW/PQsML2dlovT
+	TGh4xSgkRJ6a6xVYpYoh14aXTsBWtnPJv06QqOdAIIFtce0y4k62mSpypDqIl8IAkhmk9rEptnM
+	ai8bzKL0nytnEV5gdqPZ/NKX9AUwP4u+xXcrldQvGnw7ndKFHpVyzsU=
+X-Google-Smtp-Source: AGHT+IFTclDON/r36LodehwMg78zlP6BqfcqB9QXn3ksA4PSt60KgNQ9lMw/GuAJ5JZoMSZ1KuB8Cw==
+X-Received: by 2002:a17:903:18f:b0:21f:75c:f7d3 with SMTP id d9443c01a7336-21f17ec7bd9mr56546085ad.38.1738771275532;
+        Wed, 05 Feb 2025 08:01:15 -0800 (PST)
 Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21edddf883fsm99369015ad.4.2025.02.05.08.01.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21edddf883fsm99369015ad.4.2025.02.05.08.01.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 08:01:08 -0800 (PST)
+        Wed, 05 Feb 2025 08:01:14 -0800 (PST)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: Marc Zyngier <maz@kernel.org>,
@@ -77,9 +77,9 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	imx@lists.linux.dev,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v4 10/11] irqchip/riscv-imsic: Replace hwirq with irq in the IMSIC vector
-Date: Wed,  5 Feb 2025 21:29:46 +0530
-Message-ID: <20250205155948.81385-11-apatel@ventanamicro.com>
+Subject: [PATCH v4 11/11] irqchip/riscv-imsic: Special handling for non-atomic device MSI update
+Date: Wed,  5 Feb 2025 21:29:47 +0530
+Message-ID: <20250205155948.81385-12-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205155948.81385-1-apatel@ventanamicro.com>
 References: <20250205155948.81385-1-apatel@ventanamicro.com>
@@ -91,118 +91,208 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the imsic_handle_irq() uses generic_handle_domain_irq() to
-handle the irq which internally has an extra step of resolving hwirq
-using domain. This extra step can be avoided by replacing hwirq with
-irq in the IMSIC vector and directly calling generic_handle_irq().
+Device having non-atomic MSI update might see an intermediate
+state when changing target IMSIC vector from one CPU to another.
+
+To avoid losing interrupt to such intermediate state, do the
+following (just like x86 APIC):
+ 1) First write a temporary IMSIC vector to the device which
+    has MSI address same as the old IMSIC vector but with MSI
+    data matches the new IMSIC vector.
+ 2) Next write the new IMSIC vector to the device.
+
+Based on the above, the __imsic_local_sync() must check pending
+status of both old MSI data and new MSI data on the old CPU. In
+addition, the movement of IMSIC vector for non-atomic device MSI
+update must be done in interrupt context using IRQCHIP_MOVE_DEFERRED.
 
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/irqchip/irq-riscv-imsic-early.c    | 6 ++----
- drivers/irqchip/irq-riscv-imsic-platform.c | 2 +-
- drivers/irqchip/irq-riscv-imsic-state.c    | 8 ++++----
- drivers/irqchip/irq-riscv-imsic-state.h    | 4 ++--
- 4 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/irqchip/irq-riscv-imsic-platform.c | 73 +++++++++++++++++++++-
+ drivers/irqchip/irq-riscv-imsic-state.c    | 31 +++++++--
+ 2 files changed, 98 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
-index b5def6268936..d2e8ed70d396 100644
---- a/drivers/irqchip/irq-riscv-imsic-early.c
-+++ b/drivers/irqchip/irq-riscv-imsic-early.c
-@@ -73,7 +73,7 @@ static int __init imsic_ipi_domain_init(void) { return 0; }
- static void imsic_handle_irq(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
--	int err, cpu = smp_processor_id();
-+	int cpu = smp_processor_id();
- 	struct imsic_vector *vec;
- 	unsigned long local_id;
- 
-@@ -103,9 +103,7 @@ static void imsic_handle_irq(struct irq_desc *desc)
- 			continue;
- 		}
- 
--		err = generic_handle_domain_irq(imsic->base_domain, vec->hwirq);
--		if (unlikely(err))
--			pr_warn_ratelimited("hwirq 0x%x mapping not found\n", vec->hwirq);
-+		generic_handle_irq(vec->irq);
- 	}
- 
- 	chained_irq_exit(chip, desc);
 diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
-index b9e3f9030bdf..6bf5d63f614e 100644
+index 6bf5d63f614e..828102c46f51 100644
 --- a/drivers/irqchip/irq-riscv-imsic-platform.c
 +++ b/drivers/irqchip/irq-riscv-imsic-platform.c
-@@ -111,7 +111,7 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 		return -EBUSY;
+@@ -64,6 +64,11 @@ static int imsic_irq_retrigger(struct irq_data *d)
+ 	return 0;
+ }
  
- 	/* Get a new vector on the desired set of CPUs */
--	new_vec = imsic_vector_alloc(old_vec->hwirq, mask_val);
-+	new_vec = imsic_vector_alloc(old_vec->irq, mask_val);
++static void imsic_irq_ack(struct irq_data *d)
++{
++	irq_move_irq(d);
++}
++
+ static void imsic_irq_compose_vector_msg(struct imsic_vector *vec, struct msi_msg *msg)
+ {
+ 	phys_addr_t msi_addr;
+@@ -97,6 +102,21 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
+ 				  bool force)
+ {
+ 	struct imsic_vector *old_vec, *new_vec;
++	struct imsic_vector tmp_vec;
++
++	/*
++	 * Requirements for the downstream irqdomains (or devices):
++	 *
++	 * 1) Downstream irqdomains (or devices) with atomic MSI update can
++	 *    happily do imsic_irq_set_affinity() in the process-context on
++	 *    any CPU so the irqchip of such irqdomains must not set the
++	 *    IRQCHIP_MOVE_DEFERRED flag.
++	 *
++	 * 2) Downstream irqdomains (or devices) with non-atomic MSI update
++	 *    must do imsic_irq_set_affinity() in the interrupt-context upon
++	 *    next interrupt so the irqchip of such irqdomains must set the
++	 *    IRQCHIP_MOVE_DEFERRED flag.
++	 */
+ 
+ 	old_vec = irq_data_get_irq_chip_data(d);
+ 	if (WARN_ON(!old_vec))
+@@ -115,6 +135,33 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
  	if (!new_vec)
  		return -ENOSPC;
  
++	/*
++	 * Device having non-atomic MSI update might see an intermediate
++	 * state when changing target IMSIC vector from one CPU to another.
++	 *
++	 * To avoid losing interrupt to such intermediate state, do the
++	 * following (just like x86 APIC):
++	 *
++	 * 1) First write a temporary IMSIC vector to the device which
++	 * has MSI address same as the old IMSIC vector but MSI data
++	 * matches the new IMSIC vector.
++	 *
++	 * 2) Next write the new IMSIC vector to the device.
++	 *
++	 * Based on the above, the __imsic_local_sync() must check pending
++	 * status of both old MSI data and new MSI data on the old CPU.
++	 */
++
++	if (!irq_can_move_in_process_context(d) &&
++	    new_vec->local_id != old_vec->local_id) {
++		/* Setup temporary vector */
++		tmp_vec.cpu = old_vec->cpu;
++		tmp_vec.local_id = new_vec->local_id;
++
++		/* Point device to the temporary vector */
++		imsic_msi_update_msg(irq_get_irq_data(d->irq), &tmp_vec);
++	}
++
+ 	/* Point device to the new vector */
+ 	imsic_msi_update_msg(irq_get_irq_data(d->irq), new_vec);
+ 
+@@ -171,6 +218,7 @@ static struct irq_chip imsic_irq_base_chip = {
+ 	.irq_force_complete_move = imsic_irq_force_complete_move,
+ #endif
+ 	.irq_retrigger		= imsic_irq_retrigger,
++	.irq_ack		= imsic_irq_ack,
+ 	.irq_compose_msi_msg	= imsic_irq_compose_msg,
+ 	.flags			= IRQCHIP_SKIP_SET_WAKE |
+ 				  IRQCHIP_MASK_ON_SUSPEND,
+@@ -190,7 +238,7 @@ static int imsic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 		return -ENOSPC;
+ 
+ 	irq_domain_set_info(domain, virq, virq, &imsic_irq_base_chip, vec,
+-			    handle_simple_irq, NULL, NULL);
++			    handle_edge_irq, NULL, NULL);
+ 	irq_set_noprobe(virq);
+ 	irq_set_affinity(virq, cpu_online_mask);
+ 	irq_data_update_effective_affinity(irq_get_irq_data(virq), cpumask_of(vec->cpu));
+@@ -229,15 +277,36 @@ static const struct irq_domain_ops imsic_base_domain_ops = {
+ #endif
+ };
+ 
++static bool imsic_init_dev_msi_info(struct device *dev,
++				    struct irq_domain *domain,
++				    struct irq_domain *real_parent,
++				    struct msi_domain_info *info)
++{
++	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
++		return false;
++
++	switch (info->bus_token) {
++	case DOMAIN_BUS_PCI_DEVICE_MSI:
++	case DOMAIN_BUS_PCI_DEVICE_MSIX:
++		info->chip->flags |= IRQCHIP_MOVE_DEFERRED;
++		break;
++	default:
++		break;
++	}
++
++	return true;
++}
++
+ static const struct msi_parent_ops imsic_msi_parent_ops = {
+ 	.supported_flags	= MSI_GENERIC_FLAGS_MASK |
+ 				  MSI_FLAG_PCI_MSIX,
+ 	.required_flags		= MSI_FLAG_USE_DEF_DOM_OPS |
+ 				  MSI_FLAG_USE_DEF_CHIP_OPS |
+ 				  MSI_FLAG_PCI_MSI_MASK_PARENT,
++	.chip_flags		= MSI_CHIP_FLAG_SET_ACK,
+ 	.bus_select_token	= DOMAIN_BUS_NEXUS,
+ 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
+-	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
++	.init_dev_msi_info	= imsic_init_dev_msi_info,
+ };
+ 
+ int imsic_irqdomain_init(void)
 diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
-index 5ec2b6bdffb2..d0148e48ab05 100644
+index d0148e48ab05..3a2a381e4fa1 100644
 --- a/drivers/irqchip/irq-riscv-imsic-state.c
 +++ b/drivers/irqchip/irq-riscv-imsic-state.c
-@@ -422,7 +422,7 @@ struct imsic_vector *imsic_vector_from_local_id(unsigned int cpu, unsigned int l
- 	return &lpriv->vectors[local_id];
- }
+@@ -126,8 +126,8 @@ void __imsic_eix_update(unsigned long base_id, unsigned long num_id, bool pend,
  
--struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpumask *mask)
-+struct imsic_vector *imsic_vector_alloc(unsigned int irq, const struct cpumask *mask)
+ static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
  {
- 	struct imsic_vector *vec = NULL;
- 	struct imsic_local_priv *lpriv;
-@@ -438,7 +438,7 @@ struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpumask
+-	struct imsic_local_config *mlocal;
+-	struct imsic_vector *vec, *mvec;
++	struct imsic_local_config *tlocal, *mlocal;
++	struct imsic_vector *vec, *tvec, *mvec;
+ 	bool ret = true;
+ 	int i;
  
- 	lpriv = per_cpu_ptr(imsic->lpriv, cpu);
- 	vec = &lpriv->vectors[local_id];
--	vec->hwirq = hwirq;
-+	vec->irq = irq;
- 	vec->enable = false;
- 	vec->move_next = NULL;
- 	vec->move_prev = NULL;
-@@ -451,7 +451,7 @@ void imsic_vector_free(struct imsic_vector *vec)
- 	unsigned long flags;
+@@ -169,13 +169,36 @@ static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
+ 		 */
+ 		mvec = READ_ONCE(vec->move_next);
+ 		if (mvec) {
+-			if (__imsic_id_read_clear_pending(i)) {
++			/*
++			 * Device having non-atomic MSI update might see an
++			 * intermediate state so check both old ID and new ID
++			 * for pending interrupts.
++			 *
++			 * For details, refer imsic_irq_set_affinity().
++			 */
++
++			tvec = vec->local_id == mvec->local_id ?
++			       NULL : &lpriv->vectors[mvec->local_id];
++			if (tvec &&
++			    !irq_can_move_in_process_context(irq_get_irq_data(vec->irq)) &&
++			    __imsic_id_read_clear_pending(tvec->local_id)) {
++				/* Retrigger temporary vector if it was already in-use */
++				if (READ_ONCE(tvec->enable)) {
++					tlocal = per_cpu_ptr(imsic->global.local, tvec->cpu);
++					writel_relaxed(tvec->local_id, tlocal->msi_va);
++				}
++
++				mlocal = per_cpu_ptr(imsic->global.local, mvec->cpu);
++				writel_relaxed(mvec->local_id, mlocal->msi_va);
++			}
++
++			if (__imsic_id_read_clear_pending(vec->local_id)) {
+ 				mlocal = per_cpu_ptr(imsic->global.local, mvec->cpu);
+ 				writel_relaxed(mvec->local_id, mlocal->msi_va);
+ 			}
  
- 	raw_spin_lock_irqsave(&imsic->matrix_lock, flags);
--	vec->hwirq = UINT_MAX;
-+	vec->irq = 0;
- 	irq_matrix_free(imsic->matrix, vec->cpu, vec->local_id, false);
- 	raw_spin_unlock_irqrestore(&imsic->matrix_lock, flags);
- }
-@@ -510,7 +510,7 @@ static int __init imsic_local_init(void)
- 			vec = &lpriv->vectors[i];
- 			vec->cpu = cpu;
- 			vec->local_id = i;
--			vec->hwirq = UINT_MAX;
-+			vec->irq = 0;
+ 			WRITE_ONCE(vec->move_next, NULL);
+-			imsic_vector_free(&lpriv->vectors[i]);
++			imsic_vector_free(vec);
  		}
- 	}
  
-diff --git a/drivers/irqchip/irq-riscv-imsic-state.h b/drivers/irqchip/irq-riscv-imsic-state.h
-index 19dea0c77738..3202ffa4e849 100644
---- a/drivers/irqchip/irq-riscv-imsic-state.h
-+++ b/drivers/irqchip/irq-riscv-imsic-state.h
-@@ -20,7 +20,7 @@ struct imsic_vector {
- 	unsigned int				cpu;
- 	unsigned int				local_id;
- 	/* Details saved by driver in the vector */
--	unsigned int				hwirq;
-+	unsigned int				irq;
- 	/* Details accessed using local lock held */
- 	bool					enable;
- 	struct imsic_vector			*move_next;
-@@ -96,7 +96,7 @@ void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *new_ve
- 
- struct imsic_vector *imsic_vector_from_local_id(unsigned int cpu, unsigned int local_id);
- 
--struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpumask *mask);
-+struct imsic_vector *imsic_vector_alloc(unsigned int irq, const struct cpumask *mask);
- void imsic_vector_free(struct imsic_vector *vector);
- 
- void imsic_vector_debug_show(struct seq_file *m, struct imsic_vector *vec, int ind);
+ skip:
 -- 
 2.43.0
 
