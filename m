@@ -1,145 +1,311 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132E725A65E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C324425A65E;
+	Wed,  5 Feb 2025 02:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738724062; cv=none; b=NGouP9ToSUlYbT3Ui7LZhkiSnR3kW2qCkQ2lPG6J9NRyQGvYR3fZx9Zwvwlr1vOgyKKoKYJQqrnmPthGxqFF6/9eUrbWxRAP5rj8r+/txvAi1gtNsuAF/SU9l0TpFpPSef19cNDLzP7fka2WcXDRbrMtolUzba5YvMP/ugjjFg4=
+	t=1738724126; cv=none; b=ofW1ajTsQ9RFBA7bg5ht+7kN08zwvUbjyeAYjMwt3kUFSOi9LxlHquKmXASvF/kW7T2vT/o0oShj4QaYxQMBGNzqV3vOrd6//LMnDJR+KQtOccsg1mGS6i8D4lG0fltD2pUljjvvQ0bqcfMaWqN5EMTc5PTfCcTzyGavqdEqExo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738724062; c=relaxed/simple;
-	bh=TBihKvKUDqNG+XzUjVY2C25WQdGwbq0zbkOWC5sSNXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c3QdzEAtmPOPedUG1W7A59p5pAoEYtjWKt0BfbO7bQ2eh8XBnLEcqCMJb72INKtec4Ltp3gBKnwsy4lGMX0PSEziVvhjTK+JacMyOg98RSCJ2bHhRsBlfL/eaKpk7EkNxIzeVi3V8PwjMx39s5JsBjvhlq9qKHPdLkSMFzgWuw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ohpo0Kgx; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738724126; c=relaxed/simple;
+	bh=/V/Zjz8kIHTNtZepNSRxcBEK1+xm8jlcLRBoKPJwAJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ap8Upq+1XKH62RvLYp0RbIzLVj39yTtvpydhwJBgZQH3+N0YqdeiHITdmDfmphdkXn2bir3+TsgQbPPRUk7+21zbqce5XxDvLCWPyjsICX4mnmp4Kay5+zf4iKDvkVM4CEbKxBz0dQha+JmR3ELdEDZlWivf0MADjlxg9Ulm1CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BiubrqWP; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ohpo0Kgx"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-305d843d925so49783431fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 18:54:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiubrqWP"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6e9586b82so544900085a.1;
+        Tue, 04 Feb 2025 18:55:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738724058; x=1739328858; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OYZuDPFMLQ+OLhTc7ZzIuiQKs2wek7VNQb4qjvs/Nn8=;
-        b=Ohpo0Kgxcj2Cu8+Sp542DIAB0cem1InJ5/bMD71HUKyvmSNswiNmLFg032Yl1W0BVG
-         FzHR6vWRQu4KQ3ndM4zjBZyh3xswN5uPu8nbtEJKQJYkze4sYCQ2UNwJBHArIrP+oZwT
-         4dL6j7wJ1Rdh4EEvIGx/2AEUOWjUd+06DPlP/8UfCdmc3yUYILYggFlqIBc9fw7YhBC5
-         EHc6lBHQISA8U5ds8zJuVb/bsp4HOtfY8vnVVlmov1Htk7fl8zynZ9l9pe2QtS033wC9
-         V1415dmcA1/OI26fnKhSUeP1vGEgNz3nT4lwadc4sGgs49PO7nsTp6kcueZ83nfgNB8m
-         c+gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738724058; x=1739328858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738724123; x=1739328923; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OYZuDPFMLQ+OLhTc7ZzIuiQKs2wek7VNQb4qjvs/Nn8=;
-        b=DnNXex2YNcgj+T7iwTY+G1rYwasxCzTMwcK5GeOIhYKvXUpWqbYa/OQKt5IxTuTEhg
-         Q61WSyGWUOxs2+R3tqdbT04kYuTzEBtZpZvMTeYaicE93E8OVP41E2gcq1znx9+TUk0l
-         QTiqrWjv+e7q8UD6dZ16fHGTqkqW/1L9iYey5Dh44iJRKwtQtptK2vM7PUcXLK4ApDUH
-         OefI2siRbgB28qLaTYmiAfq9d82YJL6FGo9LRT3bRcOcHKu0FgjnqCBkCHgQJUAFS77l
-         e0Qg7HeV8SH09fpEgkKFyr7beCaNXhgcH24P9yyo4Pdwfcmzh4oo0nNMWlpAFhL7OO2e
-         mLpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9upyOcBMF/5vYFqEQxeilFJbpc5OamgUuNnrAYy0HLL51vLX/qxIG3wMHsO6x4R6P8dvrlQcQbxTbK9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzndWN/d+gtjjh7ft2CiVExsdHNcbYgAx61uJKgsoXKVF9JR4n1
-	FXikV5oxt/6Z/6ruYEDA7P/AX9qEYQiwdFJCn87eM6U8fE2rgO1CRKSBkqA8Xx0=
-X-Gm-Gg: ASbGncsxO9E5+ar3vh5WZKGNRbeUj5rPVbzg4PjRTfEo/Z/YsR8GdisjW+4RfepcCPM
-	w0xpvUSUP86cCLxqX0mMWHh39ebmDayCs04dtIf4jAegeznCKh/1LdZnvvx94k31yUITvZN4uqk
-	yMjXbu0U/ItOsnbogK8upD42hC9ew1hvwnJe1WLl26PsTYPptezmt9l4nAQgNS2WLCVI2T+Sz9M
-	V/DQGVR3hCnRprrSbssPFXKd+X02M4HYabEEOTtUYFYGN2G9N2IKzLP1+RopGXIU1LXRbqgGcFb
-	+b9AP2HWOdjn/6vP0qM7OiMomo8ChfIUGainpycf/gwhY0Hb1PX0nXnpWG3F9RBa6yngpd8=
-X-Google-Smtp-Source: AGHT+IHPVoXXLHIxl6ddc44Iw6mnopmfN70pRmNow34QqWOLsoeN3BSDLVO0cC1hibW9A/XhOv4Nzw==
-X-Received: by 2002:a05:651c:220e:b0:2ff:d7cf:a6cb with SMTP id 38308e7fff4ca-307cf2fdd34mr3899241fa.11.1738724058047;
-        Tue, 04 Feb 2025 18:54:18 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a34288b4sm19027531fa.105.2025.02.04.18.54.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 18:54:16 -0800 (PST)
-Date: Wed, 5 Feb 2025 04:54:14 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/35] drm/bridge: Pass full state to atomic_enable
-Message-ID: <iai7btbq23r3vkimz6c4ukfb2fjwijkdgswxiq6kvfm3pgsjhq@firhtmoa2l2z>
-References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
- <20250204-bridge-connector-v2-3-35dd6c834e08@kernel.org>
+        bh=PtLKwDOyG5ssKF/2Ji6TsEWHluRVJXZzIL3UD18keGw=;
+        b=BiubrqWPbbOGJtGTga40E8q7ZE7Az24uFQF0RBuqOh4pZUFjKhBSHUvumDgUrTcwkb
+         LP9fIDQ6Vx+TyhiF/0NBweoo3au5u1c2ihVBPn6nHp3iNrRTcibrTU4aekt1M36Mhzj4
+         aT+jexvlDCpybbRUeRPob41mJVLf7RMAWxsFtjzjQdma+QuESQqw9HP6PsnQFVuON9Fk
+         ih+T4MxMFhuv+XaD7Pcj0yZ9jTrNBzYd8EvXh1Aq0tcpNVVFfDchSlLDI5k3n64GVmv/
+         1rr7cqZuVWLtKFrWuCbZ5AbF803z8VKb73d87SPpAmyr1tFuGqubBxIbFhsfzFjaCIOn
+         /q7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738724123; x=1739328923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PtLKwDOyG5ssKF/2Ji6TsEWHluRVJXZzIL3UD18keGw=;
+        b=eUSCfez/JNqpe0FNCFM9ImZZrcIf1AdTTHm8BNOqZg3FK+0XdIKjQHoDdca0WPdAQu
+         K9xbITuFQrMAe7m3Oj16uTcPs5TnXSY9/NdpDM6ef0Y5EpCKqYtXU/RP65gQFGqGyJ/R
+         QMa1P5ujnEU7T+BQ/wwbV4vqMqRfpYr7FKDLg7YXuLXrISEh/74eTzVWTQbh432Frp9y
+         ybGN48+GDzEXID8pRH2rZPt9DwwrvSNpTiMbfnVGflyK9hxJH12rRQivXWnuB0fJkR+Z
+         8VSfdhcW6kaIQuinwpJ8zA31awfaKHIlGU0lFK2VnCTY2LmVNvUNlteHJMnGopBhEIFx
+         TJtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWptWv+Xkk7DqErhW9qkCE7bMVmpY4Yn2/dRztZPiRaxoMWnf1PMiQXBndmZFBGhAimdQpKw5Hm2+/B7brKFA==@vger.kernel.org, AJvYcCXOUS5PQixQAe6RR2fCtPrba5TRF/Q2U5NaA5v+sHGm3fJ5HfQ5HY90Ef2P90YidywnI3W9XiRBYqfIGU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWhPm7/yQcC67NelCwprZyoEXcU68R8tAEwImcd/KWglImgSgh
+	7Mso0PedrlonuAdRCSgpcVWYTcvyxTtWu2YIU2SagvRDzBIWzZZtZ8/ZBPJKBSvapC1nlUrTsDm
+	az7oUBZEZ3H1E2T+K8tmMXjCnf8E=
+X-Gm-Gg: ASbGncsTgc1QrFubxWy0wkCEMZ3H3z1Ut5gj9dfwTY6JJ8yVY4nHzwqq3oTOWzNbyGM
+	qn4v6FVVsF+tNULozvCur4dnhrbcMLm8T2A8O5YKZssfS97+oQnkMTiAbHj2z8w7iy3SXHhAcps
+	8=
+X-Google-Smtp-Source: AGHT+IHGCL4ookUzuGz8uWVm/jjfExcvqWstIF16/t1IbqN06yPmRlvLLgmV/lkGx91z+Pey2btDKbYBashYhwVdKg8=
+X-Received: by 2002:a05:620a:410e:b0:7b6:f34b:cdd2 with SMTP id
+ af79cd13be357-7c03a04b810mr197896485a.53.1738724123511; Tue, 04 Feb 2025
+ 18:55:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204-bridge-connector-v2-3-35dd6c834e08@kernel.org>
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <20250127063526.76687-3-laoar.shao@gmail.com>
+ <Z5eYzcF5JLR4o5Yl@pathway.suse.cz> <CALOAHbANtpY+ee9Wd+HV6-uPOw+Kq1JcU5UdOXjz8m_UJ_-XRA@mail.gmail.com>
+ <Z6IUcbeCSAzlZEGP@pathway.suse.cz>
+In-Reply-To: <Z6IUcbeCSAzlZEGP@pathway.suse.cz>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Wed, 5 Feb 2025 10:54:47 +0800
+X-Gm-Features: AWEUYZnC4hhtTeL3gZNIEwfBI1_Hl4vmuI4VMUT9NQO--gGLqdOyyHp3CE42e_U
+Message-ID: <CALOAHbBWKL5MJz3DB+y02oqOrxy5xa3WZwTg0JPpqeQsMSVXmA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] livepatch: Implement livepatch hybrid mode
+To: Petr Mladek <pmladek@suse.com>
+Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, 
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 03:57:31PM +0100, Maxime Ripard wrote:
-> It's pretty inconvenient to access the full atomic state from
-> drm_bridges, so let's change the atomic_enable hook prototype to pass it
-> directly.
-> 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c  |  6 ++----
->  drivers/gpu/drm/bridge/analogix/anx7625.c           |  6 +++---
->  drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c |  3 +--
->  drivers/gpu/drm/bridge/chipone-icn6211.c            |  3 +--
->  drivers/gpu/drm/bridge/fsl-ldb.c                    |  3 +--
->  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c        |  5 +++--
->  drivers/gpu/drm/bridge/imx/imx8qm-ldb.c             |  5 ++---
->  drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c            |  7 +++----
->  drivers/gpu/drm/bridge/imx/imx8qxp-pixel-link.c     |  5 ++---
->  drivers/gpu/drm/bridge/ite-it6263.c                 |  6 ++----
->  drivers/gpu/drm/bridge/ite-it6505.c                 |  3 +--
->  drivers/gpu/drm/bridge/ite-it66121.c                |  3 +--
->  drivers/gpu/drm/bridge/lontium-lt9211.c             |  3 +--
->  drivers/gpu/drm/bridge/lontium-lt9611.c             |  6 ++----
->  drivers/gpu/drm/bridge/nwl-dsi.c                    |  5 ++---
->  drivers/gpu/drm/bridge/panel.c                      |  3 +--
->  drivers/gpu/drm/bridge/samsung-dsim.c               |  2 +-
->  drivers/gpu/drm/bridge/sii902x.c                    |  2 +-
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c        |  3 +--
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c           |  3 +--
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c       |  2 +-
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c      |  2 +-
->  drivers/gpu/drm/bridge/tc358762.c                   |  3 ++-
->  drivers/gpu/drm/bridge/tc358767.c                   | 10 ++++------
->  drivers/gpu/drm/bridge/ti-dlpc3433.c                |  2 +-
->  drivers/gpu/drm/bridge/ti-sn65dsi83.c               |  2 +-
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c               |  4 ++--
->  drivers/gpu/drm/bridge/ti-tdp158.c                  |  3 ++-
->  drivers/gpu/drm/drm_bridge.c                        | 10 +---------
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c           |  2 +-
->  drivers/gpu/drm/mediatek/mtk_dp.c                   |  4 ++--
->  drivers/gpu/drm/mediatek/mtk_dsi.c                  |  2 +-
->  drivers/gpu/drm/mediatek/mtk_hdmi.c                 |  3 +--
->  drivers/gpu/drm/meson/meson_encoder_cvbs.c          |  3 +--
->  drivers/gpu/drm/meson/meson_encoder_dsi.c           |  3 +--
->  drivers/gpu/drm/meson/meson_encoder_hdmi.c          |  3 +--
->  drivers/gpu/drm/msm/dp/dp_display.c                 | 12 ++++++------
->  drivers/gpu/drm/msm/dp/dp_drm.c                     |  9 ++++-----
->  drivers/gpu/drm/msm/dp/dp_drm.h                     |  2 +-
->  drivers/gpu/drm/omapdrm/dss/hdmi4.c                 |  3 +--
->  drivers/gpu/drm/omapdrm/dss/hdmi5.c                 |  3 +--
->  drivers/gpu/drm/renesas/rcar-du/rcar_lvds.c         |  3 +--
->  drivers/gpu/drm/renesas/rcar-du/rcar_mipi_dsi.c     |  2 +-
->  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c      |  3 +--
->  drivers/gpu/drm/stm/lvds.c                          |  3 +--
->  drivers/gpu/drm/vc4/vc4_dsi.c                       |  2 +-
->  drivers/gpu/drm/xlnx/zynqmp_dp.c                    | 10 ++++------
->  include/drm/drm_bridge.h                            |  2 +-
->  48 files changed, 78 insertions(+), 116 deletions(-)
-> 
+On Tue, Feb 4, 2025 at 9:21=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
+:
+>
+> On Mon 2025-01-27 23:34:50, Yafang Shao wrote:
+> > On Mon, Jan 27, 2025 at 10:31=E2=80=AFPM Petr Mladek <pmladek@suse.com>=
+ wrote:
+> > >
+> > > On Mon 2025-01-27 14:35:26, Yafang Shao wrote:
+> > > > The atomic replace livepatch mechanism was introduced to handle sce=
+narios
+> > > > where we want to unload a specific livepatch without unloading othe=
+rs.
+> > > > However, its current implementation has significant shortcomings, m=
+aking
+> > > > it less than ideal in practice. Below are the key downsides:
+> > >
+> > > [...]
+> > >
+> > > > In the hybrid mode:
+> > > >
+> > > > - Specific livepatches can be marked as "non-replaceable" to ensure=
+ they
+> > > >   remain active and unaffected during replacements.
+> > > >
+> > > > - Other livepatches can be marked as "replaceable," allowing target=
+ed
+> > > >   replacements of only those patches.
+> > > >
+> > > > This selective approach would reduce unnecessary transitions, lower=
+ the
+> > > > risk of temporary patch loss, and mitigate performance issues durin=
+g
+> > > > livepatch replacement.
+> > > >
+> > > > --- a/kernel/livepatch/core.c
+> > > > +++ b/kernel/livepatch/core.c
+> > > > @@ -658,6 +658,8 @@ static int klp_add_nops(struct klp_patch *patch=
+)
+> > > >               klp_for_each_object(old_patch, old_obj) {
+> > > >                       int err;
+> > > >
+> > > > +                     if (!old_patch->replaceable)
+> > > > +                             continue;
+> > >
+> > > This is one example where things might get very complicated.
+> >
+> > Why does this example even exist in the first place?
+> > If hybrid mode is enabled, this scenario could have been avoided entire=
+ly.
+>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+You have many questions, but it seems you haven=E2=80=99t taken the time to=
+ read even
+a single line of this patchset. I=E2=80=99ll try to address them to save yo=
+u some time.
 
--- 
-With best wishes
-Dmitry
+> How exactly this scenario could be avoided, please?
+>
+> In the real life, livepatches are used to fix many bugs.
+> And every bug is fixed by livepatching several functions.
+>
+> Fix1 livepatches: funcA
+> Fix2 livepatches: funcA, funcB
+> Fix3 livepatches: funcB
+>
+> How would you handle this with the hybrid model?
+
+In your scenario, each Fix will replace the applied livepatches, so
+they must be set to replaceable.
+To clarify the hybrid model, I'll illustrate it with the following Fixes:
+
+Fix1 livepatches: funcA
+Fix2  livepatches: funcC
+Fix3 livepatches: funcA, funcB
+Fix4  livepatches: funcD
+Fix5 livepatches: funcB
+
+Each FixN represents a single /sys/kernel/livepatch/FixN.
+By default, all Fixes are set to non-replaceable.
+
+Step-by-step process:
+1. Loading Fix1
+   Loaded Fixes: Fix1
+2. Loading Fix2
+   Loaded Fixes: Fix1 Fix2
+3. Loading Fix3
+    Before loading, set Fix1 to replaceable and replace it with Fix3,
+which is a cumulative patch of Fix1 and Fix3.
+    Loaded Fixes:  Fix2 Fix3
+4. Loading Fix4
+    Loaded Fixes:  Fix2 Fix3 Fix4
+5. Loading Fix5
+    Similar to Step 3, set Fix3 to replaceable and replace it with Fix5.
+    Loaded Fixes:  Fix2 Fix4 Fix5
+
+This hybrid model ensures that irrelevant Fixes remain unaffected
+during replacements.
+
+>
+> Which fix will be handled by livepatches installed in parallel?
+> Which fix will be handled by atomic replace?
+> How would you keep it consistent?
+>
+> How would it work when there are hundreds of fixes and thousands
+> of livepatched functions?
+
+The key point is that if a new Fix modifies a function already changed
+by previous Fixes, all the affected old Fixes should be set to
+replaceable, merged into the new Fix, and then the old Fixes should be
+replaced with the new one.
+
+>
+> Where exactly is the advantage of the hybrid model?
+
+That can be seen as a form of "deferred replacement"=E2=80=94in other words=
+,
+only replacing the old Fixes when absolutely necessary. This approach
+can significantly reduce unnecessary work.
+
+>
+> > >
+> > > The same function might be livepatched by more livepatches, see
+> > > ops->func_stack. For example, let's have funcA and three livepatches:
+> > > a
+> > >   + lp1:
+> > >         .replace =3D false,
+> > >         .non-replace =3D true,
+> > >         .func =3D {
+> > >                         .old_name =3D "funcA",
+> > >                         .new_func =3D lp1_funcA,
+> > >                 }, { }
+> > >
+> > >   + lp2:
+> > >         .replace =3D false,
+> > >         .non-replace =3D false,
+> > >         .func =3D {
+> > >                         .old_name =3D "funcA",
+> > >                         .new_func =3D lp2_funcA,
+> > >                 },{
+> > >                         .old_name =3D "funcB",
+> > >                         .new_func =3D lp2_funcB,
+> > >                 }, { }
+> > >
+> > >
+> > >   + lp3:
+> > >         .replace =3D true,
+> > >         .non-replace =3D false,
+> > >         .func =3D {
+> > >                         .old_name =3D "funcB",
+> > >                         .new_func =3D lp3_funcB,
+> > >                 }, { }
+> > >
+> > >
+> > > Now, apply lp1:
+> > >
+> > >       + funcA() gets redirected to lp1_funcA()
+> > >
+> > > Then, apply lp2
+> > >
+> > >       + funcA() gets redirected to lp2_funcA()
+> > >
+> > > Finally, apply lp3:
+> > >
+> > >       + The proposed code would add "nop()" for
+> > >         funcA() because it exists in lp2 and does not exist in lp3.
+> > >
+> > >       + funcA() will get redirected to the original code
+> > >         because of the nop() during transition
+> > >
+> > >       + nop() will get removed in klp_complete_transition() and
+> > >         funcA() will get suddenly redirected to lp1_funcA()
+> > >         because it will still be on ops->func_stack even
+> > >         after the "nop" and lp2_funcA() gets removed.
+> > >
+> > >            =3D> The entire system will start using another funcA
+> > >               implementation at some random time
+> > >
+> > >            =3D> this would violate the consistency model
+> > >
+> > >
+> > > The proper solution might be tricky:
+> > >
+> > > 1. We would need to detect this situation and do _not_ add
+> > >    the "nop" for lp3 and funcA().
+> > >
+> > > 2. We would need a more complicate code for handling the task states.
+> > >
+> > >    klp_update_patch_state() sets task->patch_state using
+> > >    the global "klp_target_state". But in the above example,
+> > >    when enabling lp3:
+> > >
+> > >     + funcA would need to get transitioned _backward_:
+> > >          KLP_TRANSITION_PATCHED -> KLP_TRANSITION_UNPATCHED
+> > >       , so that it goes on ops->func_stack:
+> > >          lp2_funcA -> lp1->funcA
+> > >
+> > >    while:
+> > >
+> > >     + funcA would need to get transitioned forward:
+> > >          KLP_TRANSITION_UNPATCHED -> KLP_TRANSITION_PATCHED
+> > >       , so that it goes on ops->func_stack:
+> > >          lp2_funcB -> lp3->funcB
+> > >
+> > >
+> > > =3D> the hybrid mode would complicate the life for both livepatch
+> > >    creators/maintainers and kernel code developers/maintainers.
+> > >
+> >
+> > I don=E2=80=99t believe they should be held responsible for poor
+> > configurations. These settings could have been avoided from the start.
+> > There are countless tunable knobs in the system=E2=80=94should we try t=
+o
+> > accommodate every possible combination? No, that=E2=80=99s not how syst=
+ems are
+> > designed to operate. Instead, we should identify and follow best
+> > practices to ensure optimal functionality.
+>
+> I am sorry but I do not understand the above paragraph at all.
+>
+> Livepatches modify functions.
+> How is it related to system configuration or tunable knobs?
+
+/sys/kernel/livepatch/FixN/replaceable is a tunable knob.
+
++static struct kobj_attribute replaceable_kobj_attr =3D __ATTR_RW(replaceab=
+le);
+
+> What best practices are you talking, please?
+
+As mentioned earlier.
+
+--
+Regards
+Yafang
