@@ -1,98 +1,126 @@
-Received: from out199-13.us.a.mail.aliyun.com (out199-13.us.a.mail.aliyun.com [47.90.199.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E6A157A48
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CDE157A48;
+	Wed,  5 Feb 2025 02:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738720847; cv=none; b=KJFAYHs0xR3auQnCKQ4Jfb8fxVI/aokh7IKHlH9emHFihP3S6vdNPfMmW3Fhynp8u3PwGgvToiQnRBq4ri0T+rWO8oNVHgLTwesSfrFsla9rwEO24sp4c0ShzZZP73VAdiYrcx2yLO/K4K/XnagaoYITgiOf8B3+kSnk9EgFkK8=
+	t=1738720885; cv=none; b=L8fcb6Ms5FMkZJSG5/jy4GSfuZEjLTC5F10+vhPD3GWypRFi1/7Vais5NlR33bQl+qhZy3joTK+3G2paowpoxHfWA87oMDagEpHOcnSN+KCh+3VbmoB/RuSNpJJT+XVGke0jshxxwbpsyke5si8AcGGnwnhxPcUeC4bJxoSLPN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738720847; c=relaxed/simple;
-	bh=3e61BSxHCAlewA0Ir3a7UQLE/i6LxIE/r9muI1RC28Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLMAleEyjlCiI88tTSvyLzsrvJxoXkYt2FNGkqwmM46Sc8ee5q/qeQ+Bbz3tfGhFwiu60HWzcMxflatnN+hfDeBTRqVQjyZBEDI8BU0mvFm3dl+f1eGkZlOHmNvqsxNpRreJOPAspzTGZ7jkpzx3tTyrntsHM+USGpi4K1cyZ7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jgl18FR4; arc=none smtp.client-ip=47.90.199.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738720885; c=relaxed/simple;
+	bh=Es6yk1PUJUxPA8OTmzLtbtyn21alu/ay7LY25tfAGAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RV310hs4MqgIAi6nea5hPiB7uIAq6ptOG34mA9GPY/smkTCfO0pO0o+pzoeXjybe+yrvF0rdV4AfoZKsfMcYhwo/tdTk3ue9UcYOhtUBhTW13rtrd3nc8DIGfINVHHrKHi7O7H7Phr0JtfivsjdBO7XLvS2g8kAU84w2QYHJ64I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TXQLGNkH; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jgl18FR4"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738720831; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=2P3GjIsF5ErhdPUSQesJ/7SRWnTDGOq+lmiCZt52vzs=;
-	b=jgl18FR4DQd620zrfofpnGJmZgk6Ls/BpwvjLWIcelraLN8jni0SxvIX0GTUJgdx9nX9BRaKwZ/5Tg0JGZU0gWxzWbb9G14wAf2F+AUVGeXo97gn3Xy47xOnPqc9+5GEhym5trM2gu0Ot8WWjKcUr4G2oDBHuOXyJErgoJ+i83g=
-Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WOlcY0f_1738720511 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 05 Feb 2025 09:55:11 +0800
-Message-ID: <25e2d5e4-8214-40de-99d3-2b657181a9fd@linux.alibaba.com>
-Date: Wed, 5 Feb 2025 09:55:09 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXQLGNkH"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7be8f28172dso326573485a.3;
+        Tue, 04 Feb 2025 18:01:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738720882; x=1739325682; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wmqu8Vw96LdkQbtKmW3VNNRd+LI4ohMPpAuQdsSuoh4=;
+        b=TXQLGNkHb3kjfQQdsZDyfXZNAW4ElI4d2YJ9vvWEpnZCA0ltsMIt+asjJcyhTTbKXk
+         JCozhMM7PXhJEceqvUCM8P36MollRW62mn20024xiUkzeGBbR4xYv0iRAo+GpopccWL+
+         bfDBcjDf4zkEJb8bgGz+v+3i4c89SuFKsKyviNyse5Xo/ie3xZaG7qrx94ChjBUy9i4h
+         hgjvsPrNfdVmGqqLev1Lwv2XVRpIUe1I8FhAlQ7+jFK3VqY8qMxMlq+1HuLa/VH5JuAy
+         OSH3xh7quKx9bDTryxZEGRrWSZmt/aKaDu7InqYj4ZFGV/2EenwBJaxaF6QDEMYoAHDN
+         6J6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738720882; x=1739325682;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wmqu8Vw96LdkQbtKmW3VNNRd+LI4ohMPpAuQdsSuoh4=;
+        b=l6nm4fQdnv/X09c+8P9mZqO9WrAEZOJMhix5F8l0Vz2CJXNKzAPiMR96iuZgi6rZFh
+         czBc7lgFwjRujAvLzeIawYURkNvJ5mhu6yEGxPL95Wk/JebblD+TsR/8glGS8aR9JIYU
+         GSnr4s1MIN64YPGE1S0VOzOArRhn+FQ1xMF7R0CNglTMv2IHyQzM36SqdN+/jlswQT/s
+         z1TlgLFYEXZU/2EahdC0iBkmpCBZZVznRqWeWbp1f6ER2K5lL8dFgHgG4A3XL4r0F1rB
+         ZX9vVydLtQBWIfPq/EgMDUUL+xUgoAPwA/Xg6WF4eMIkOrZT+EOJCXoFuYo6NlPMUZRS
+         6RZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyNdx8QyEI4DfyEj0Nz9lOA5ju8ETxqPUVpJJRXGyMWo7v/TWaP8BCZYAemIJIWm10UkL/Mw0bf1GLblU=@vger.kernel.org, AJvYcCWA8h0dLzclIwM547yDrn3OJYdO8XyqAQXnv7vc3kYGY02IzYQPv2VSSpKMY68Ec7xQFUnnJmZO@vger.kernel.org, AJvYcCWEz5fi/+jI8GW7pQfzBXuWBrKygRj0VyZhzDyX20L3hwtFgtNEL636RWi6xlSdhoYxPWaXFzO4QfXPew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqHwpdXkuwXY4JI8t8QFkbQPH0al1PoaV52zqIPqmauVK4yvXa
+	PIysbqmKD5tNjMVPLjUuajOaLgITre3yYzIl7afJ5osTGvuCy4JP
+X-Gm-Gg: ASbGncuDlO1STRIMAWjONfCvexzXyqWafPf7dlRuNXUzKwGBzdmyeZmuKqlJ69gH+hN
+	MeojJbCljE5BLavGTxbkLIYi+YnTlw9N4r4jWOVv3Bl/moNsWA6Xi1cZGalN+oPxPn3GJd8flbH
+	oJP4C9BYHh9ZWugD8wGyauhk9hQVNrk0pmBnbp3Zk8XINuaPi5ndUiMalt82rD7qfz/J3Pw5I3G
+	vrIlMmKAJr5sw2bG1wVs4KGmRp8SAytN9jgCTrO0KMWQ7kcOjU0T3bi/Xl9EgFVBxzECNw43FIf
+	/EDczRJfmwKemPjuZhs8GvU8we0EavXXSRDFnw==
+X-Google-Smtp-Source: AGHT+IGnUTZeS4eZWKN2g/ocOzz8X2orsJDvN+Raxy+ImAnJx0e8bxu1WAhIylZPFVNIqSYgYc4MNQ==
+X-Received: by 2002:a05:620a:4894:b0:7b6:dd82:ac9c with SMTP id af79cd13be357-7c039f980ddmr174659085a.12.1738720882196;
+        Tue, 04 Feb 2025 18:01:22 -0800 (PST)
+Received: from newman.cs.purdue.edu ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bc32bsm705520485a.1.2025.02.04.18.01.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 18:01:21 -0800 (PST)
+From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+To: markus.elfring@web.de
+Cc: GR-QLogic-Storage-Upstream@marvell.com,
+	James.Bottomley@hansenpartnership.com,
+	arun.easi@cavium.com,
+	bvanassche@acm.org,
+	jhasan@marvell.com,
+	jiashengjiangcool@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	manish.rangankar@cavium.com,
+	martin.petersen@oracle.com,
+	nilesh.javali@cavium.com,
+	skashyap@marvell.com,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND v3 1/2] scsi: qedf: Replace kmalloc_array() with kcalloc()
+Date: Wed,  5 Feb 2025 02:01:18 +0000
+Message-Id: <20250205020119.24007-1-jiashengjiangcool@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <444d6d33-d916-467b-aea8-25c61977713a@web.de>
+References: <444d6d33-d916-467b-aea8-25c61977713a@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Hang when swapping huge=within_size tmpfs from zram
-To: "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>, linux-mm@kvack.org,
- Daniel Gomez <da.gomez@samsung.com>
-Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>,
- Hugh Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
- Lance Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>
-References: <1738717785.im3r5g2vxc.none.ref@localhost>
- <1738717785.im3r5g2vxc.none@localhost>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <1738717785.im3r5g2vxc.none@localhost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Alex,
+Replace kmalloc_array() with kcalloc() to avoid old (dirty) data being
+used/freed.
 
-On 2025/2/5 09:23, Alex Xu (Hello71) wrote:
-> Hi all,
-> 
-> On 6.14-rc1, I found that creating a lot of files in tmpfs then deleting
-> them reliably hangs when tmpfs is mounted with huge=within_size, and it
-> is swapped out to zram (zstd/zsmalloc/no backing dev). I bisected this
-> to acd7ccb284b "mm: shmem: add large folio support for tmpfs".
-> 
-> When the issue occurs, rm uses 100% CPU, cannot be killed, and has no
-> output in /proc/pid/stack or wchan. Eventually, an RCU stall is
-> detected:
+Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
+Cc: <stable@vger.kernel.org> # v5.10+
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+Changelog:
 
-Thanks for your report. Let me try to reproduce the issue locally and 
-see what happens.
+v2 -> v3:
 
-> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-11): P25160
-> rcu: 	(detected by 10, t=2102 jiffies, g=532677, q=4997 ncpus=12)
-> task:rm              state:R  running task     stack:0     pid:25160 tgid:25160 ppid:24309  task_flags:0x400000 flags:0x00004004
-> Call Trace:
->   <TASK>
->   ? __schedule+0x388/0x1000
->   ? kmem_cache_free.part.0+0x23d/0x280
->   ? sysvec_apic_timer_interrupt+0xa/0x80
->   ? asm_sysvec_apic_timer_interrupt+0x16/0x20
->   ? xas_load+0x12/0xc0
->   ? xas_load+0x8/0xc0
->   ? xas_find+0x144/0x190
->   ? find_lock_entries+0x75/0x260
->   ? shmem_undo_range+0xe6/0x5f0
->   ? shmem_evict_inode+0xe4/0x230
->   ? mtree_erase+0x7e/0xe0
->   ? inode_set_ctime_current+0x2e/0x1f0
->   ? evict+0xe9/0x260
->   ? _atomic_dec_and_lock+0x31/0x50
->   ? do_unlinkat+0x270/0x2b0
->   ? __x64_sys_unlinkat+0x30/0x50
->   ? do_syscall_64+0x37/0xe0
->   ? entry_SYSCALL_64_after_hwframe+0x50/0x58
->   </TASK>
-> 
-> Let me know what information is needed to further troubleshoot this
-> issue.
-> 
-> Thanks,
-> Alex.
+1. Remove the check for bdt_info.
+
+v1 -> v2:
+
+1. Replace kzalloc() with kcalloc().
+---
+ drivers/scsi/qedf/qedf_io.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+index fcfc3bed02c6..d52057b97a4f 100644
+--- a/drivers/scsi/qedf/qedf_io.c
++++ b/drivers/scsi/qedf/qedf_io.c
+@@ -254,9 +254,7 @@ struct qedf_cmd_mgr *qedf_cmd_mgr_alloc(struct qedf_ctx *qedf)
+ 	}
+ 
+ 	/* Allocate pool of io_bdts - one for each qedf_ioreq */
+-	cmgr->io_bdt_pool = kmalloc_array(num_ios, sizeof(struct io_bdt *),
+-	    GFP_KERNEL);
+-
++	cmgr->io_bdt_pool = kcalloc(num_ios, sizeof(*cmgr->io_bdt_pool), GFP_KERNEL);
+ 	if (!cmgr->io_bdt_pool) {
+ 		QEDF_WARN(&(qedf->dbg_ctx), "Failed to alloc io_bdt_pool.\n");
+ 		goto mem_err;
+-- 
+2.25.1
+
