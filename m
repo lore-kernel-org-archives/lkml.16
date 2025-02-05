@@ -1,59 +1,62 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF082288CA;
-	Wed,  5 Feb 2025 09:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8A622A7FC;
+	Wed,  5 Feb 2025 09:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749171; cv=none; b=dSYhEcByW6Z0Ht5RKwqshlnR3B74sQx8CzFbk97DhEkixiuVKfSJNa6XDAahO5QB8Ir3mHBRh4VZHPfUhNvaO8D4jaXRpVJQpMclwFGNrtKsZwJTed4vUZoT3lUFvyvAGjWhDo3tt3r7zuSONpxAvFQ0PbuHSRhUMpfQO7SEukk=
+	t=1738749172; cv=none; b=F+/mSMyR/cynDqBZmRX1WAh40ZrpVgXcl3eqaZr0aRaDDbzhe//UPpBy4Siz0N5QmkEvDBhvsWr61fZYOktPVRYkWyWc/prjVL9ypulZTuAUEKEGY34TqhpppjfiUjE7vnpFT/h+C2KcX2mISJ99C+b2jewwB6YYqh9e7TB42WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749171; c=relaxed/simple;
-	bh=hhzKzOgFFnHiHjGi4wrMR9k3ED3JIoBxTB0KuuapJNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B5NVOhpg2kIzrlSEYw1yxyD1VdD8cWPeMj2ZPEYrhKkQes97cNz/BMBbsqIUPr/AeXS+qS1bPQwrJifr/5iUeq9gG4shNSTWbfyghNhanaTeCqFwXPK7fhMR+qymVU+FFL2y1UclkPWfjvQgwpD9ICI+OEQY7c4H7u0Uwtg4p+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bikAaGDF; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1738749172; c=relaxed/simple;
+	bh=L0Mwe6DQAGdn7OC7tFDCP8gYeLBNzoodU0fyoPrg+WM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ic1qkmsGen4it1IO//CzZJ0O2Qk7/92Z3cE9idFbn5KARRxbDg8e/z6i7kTx0NjwuCTvRpkDMGLHoX4hslGCZeiVZYNAcXu1+k78E9RdrniqprQdk8CApSJZ7ta8ugU5rrq5M0Al2kN2V+mjYVanEJsesBx/0QrufOxC6c9gemo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=epLmuozv; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bikAaGDF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="epLmuozv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738749169; x=1770285169;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hhzKzOgFFnHiHjGi4wrMR9k3ED3JIoBxTB0KuuapJNE=;
-  b=bikAaGDFM1AMXWqXta5nYFLZ3kZcRvD443iipL45er0+z8QImw6Iypo0
-   MFSkLDaYlU/++QcRGPgqC1eTd1TF6iuMjMWDOfgArN9MuroGIDD6BHo4P
-   V3yNxnTrY6D7bUiUan+cweJY/+jIcSdbEROaPWXgI5V7R9AWtIVtGL6CB
-   mSLj+IxkhGLvS+Sqi9pg89MWqv1G1k1LWl4EarB+k6evsfLTCtLo1E0J0
-   1HRu5ut23m3C3fEGbzdwC+H6Oh8NEiWpBqo3ChAQM7cGEjFUkRTHJAAgS
-   nPFm93ogHf+Fi51yXhe3CXBZIiwtkw7Eim75N0JvNuGzTbNA6ltsPfFzn
+  t=1738749171; x=1770285171;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=L0Mwe6DQAGdn7OC7tFDCP8gYeLBNzoodU0fyoPrg+WM=;
+  b=epLmuozvLQ1SwZPQhMz+9+7zRig5bxm7CHcYMQWspAlq1bBiFSA4CXbU
+   EaKWcd7WGbimlCshUxeAGAYU+ovEUHwkIKSmTla0KsiBj9SRV8VKgj/l1
+   IOi0qNvvjiNsPsgrXIWmzJO7aKeti3dRzQ0aY2ILofNUgnf1h1oggUBfM
+   K/IY627oUCesKKyUBmDKiq5ftDOo+rS29Ya9TaWpLG8ADnMnsz/V/Grhx
+   jNa0vL0wuzXyvWei0a9IGGszQonhhVUgvDDFT3OBrX486gfEu2n+sVYHq
+   yWE6ritklVwxGxBooyzVX2vGob7G2lOeFJcPOQdv7i0Muxj+XaLDqnNGn
    w==;
-X-CSE-ConnectionGUID: pcwbnZfFTkyZ3wKU6dDBfA==
-X-CSE-MsgGUID: aX8VfO63RC+BO/fUygYLkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38512583"
+X-CSE-ConnectionGUID: JXdaVpm8RSO00jWBU/MY4A==
+X-CSE-MsgGUID: YmlNl2uUS1yuddVviMqeqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38512589"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="38512583"
+   d="scan'208";a="38512589"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:52:48 -0800
-X-CSE-ConnectionGUID: lJEAHZT3SxOULu47fFvYLg==
-X-CSE-MsgGUID: jx33O25dT1a5mCYOAHnioA==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:52:50 -0800
+X-CSE-ConnectionGUID: Ohft9cOdRd+H1eJCcv4XCg==
+X-CSE-MsgGUID: /xXOjKF6QLOCQrWMFhczVQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="141744546"
+   d="scan'208";a="141744566"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 05 Feb 2025 01:52:46 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 05 Feb 2025 01:52:49 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 905AE353; Wed, 05 Feb 2025 11:52:45 +0200 (EET)
+	id D8D143B1; Wed, 05 Feb 2025 11:52:45 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v3 00/10] pinctrl: cy8c95x0: Clean up series
-Date: Wed,  5 Feb 2025 11:51:10 +0200
-Message-ID: <20250205095243.512292-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 05/10] pinctrl: cy8c95x0: Replace 'return ret' by 'return 0' in some cases
+Date: Wed,  5 Feb 2025 11:51:15 +0200
+Message-ID: <20250205095243.512292-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20250205095243.512292-1-andriy.shevchenko@linux.intel.com>
+References: <20250205095243.512292-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,35 +65,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This a set of the cleanups I have collected so far while testing
-the driver on Intel Galileo Gen 1 last year.
+When it's known that the returned value can't be non-zero,
+use 'return 0' explicitly.
 
-Changelog v3:
-- fixed a typo in patch 1
-- dropped applied patches
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Changelog v2:
-- dropped wrong patch (Patrick)
-- reshuffled fixes from most important to less important (Linus)
-- rebased on top of v6.14-rc1
-
-Andy Shevchenko (10):
-  pinctrl: cy8c95x0: Use better bitmap APIs where appropriate
-  pinctrl: cy8c95x0; Switch to use for_each_set_clump8()
-  pinctrl: cy8c95x0: Transform to cy8c95x0_regmap_read_bits()
-  pinctrl: cy8c95x0: Remove redundant check in
-    cy8c95x0_regmap_update_bits_base()
-  pinctrl: cy8c95x0: Replace 'return ret' by 'return 0' in some cases
-  pinctrl: cy8c95x0: Initialise boolean variable with boolean values
-  pinctrl: cy8c95x0: Get rid of cy8c95x0_pinmux_direction() forward
-    declaration
-  pinctrl: cy8c95x0: Drop unneeded casting
-  pinctrl: cy8c95x0: Separate EEPROM related register definitios
-  pinctrl: cy8c95x0: Fix comment style
-
- drivers/pinctrl/pinctrl-cy8c95x0.c | 191 +++++++++++++----------------
- 1 file changed, 88 insertions(+), 103 deletions(-)
-
+diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
+index 04b534b950d0..19f92ec83871 100644
+--- a/drivers/pinctrl/pinctrl-cy8c95x0.c
++++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
+@@ -517,7 +517,7 @@ static int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
+ 		regcache_cache_only(chip->regmap, false);
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ /**
+@@ -1286,7 +1286,7 @@ static int cy8c95x0_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 				unsigned long *configs, unsigned int num_configs)
+ {
+ 	struct cy8c95x0_pinctrl *chip = pinctrl_dev_get_drvdata(pctldev);
+-	int ret = 0;
++	int ret;
+ 	int i;
+ 
+ 	for (i = 0; i < num_configs; i++) {
+@@ -1295,7 +1295,7 @@ static int cy8c95x0_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			return ret;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static const struct pinconf_ops cy8c95x0_pinconf_ops = {
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
