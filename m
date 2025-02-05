@@ -1,60 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF24B2153C4;
-	Wed,  5 Feb 2025 10:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A492288E6;
+	Wed,  5 Feb 2025 10:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738750610; cv=none; b=HI41AJy7mL95a3DFNoj6jCwoNC5xRV6e7Fs51AqmJaKe2NlW9roxZV5SEYp8WCDp5jFbuhjgonmio26Dwoakaoj8GmAF6IaDmSbuWz/qYNJ5vz/wGl2WwkL8kwGgeTq5m3Tk2xPiB34oii6bYW1A+x1uS4hAEFp3f5MBed3Szko=
+	t=1738750722; cv=none; b=azkmG1eF6hgJANRgPQw76fC56Aa5/XfCBPeu7EDjx40YRNgf11U3TwcvvT31t6PfxyDVh71zgjWf+li7tgLbKm+9l2EtZB5JLMO8ctZxsrNEs+PQutbZmO/r13NcNVo1L966gMWIjSTc1lau3WOqWxQujLovkhjFUaTCR8G8MJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738750610; c=relaxed/simple;
-	bh=vydupOYgQLn7D9Zdk646A6gMMATJBHEgyfilXMA8goQ=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=r3BtWtRqRt0iRVnLuknkQ86C+aG2cu87Fba9bbX8D7NznOK9AzsNMPu8Kh693fsGhY+3SoGCSSMQMiEkAd8gl0XkGSAL935DLTGiRwHTC1+4ejG10CM4WAvNQkOfcX68IxRUkhg+YyG0JmiUQJmykQ2EIKmgShjCxiwvc455ZuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jYBEWLjz; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738750722; c=relaxed/simple;
+	bh=k8Na3h4hLlnpst5EP/4mrdz5kkWyZB/QFtQWoRkzrg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rACC/P0whKSS9jwbDNJZZ7u7Gcma1XgHoicrPjxXoOi8AiemILIrZfzUga4VzRKAd1UH1yDIvTcbGwIvVI39NHS0vluPLD5bbR/mo0ItigsfaDULakirr7DanfrDHkWFIq5UEkfWQIA14aSG6CwqYUnjlwOWcgVO4JuLpqdTEUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DzUwVkmY; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jYBEWLjz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738750608; x=1770286608;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vydupOYgQLn7D9Zdk646A6gMMATJBHEgyfilXMA8goQ=;
-  b=jYBEWLjzBTat4Pq4TwfLy882u+HP0rEq//96Ei5OArvzeJor8udAkN71
-   snSKINtocJvgwWWU1ZyweJhah/nEPlHdhYCga4UzDSRQrbNdSB0e9dAEK
-   v5VP8DNwq6ekvw1ZxPMwoP4uiyLkPxJOTXM1wAfh/ENdlYSDklHw9qEoj
-   e5iFSgo19n3MRWjgmtMhl80dbo80EiZpGirPp9BAO8/S3qCNcJTjDvrS2
-   2ltKEU/5gY8wmNv3+8YCpYX1wk6Lo+YbIyEa60jaqrj5gZSnufCWMb81f
-   8UskQbgg43x/MIqhA6y9saQYlAWcJsrCaLHsXDxSFrAo0txFG0fV2gV5l
-   g==;
-X-CSE-ConnectionGUID: 3kDPkAjfQyq35QzDIYyhxQ==
-X-CSE-MsgGUID: fLoV/QwWSsaD/9kQ3M/oFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42145715"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="42145715"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 02:16:47 -0800
-X-CSE-ConnectionGUID: JWpp0RjiR7mRtkyq7IgHog==
-X-CSE-MsgGUID: 76h4i22cQXaXGY2STTMW9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115474286"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Feb 2025 02:16:45 -0800
-From: niravkumar.l.rabara@intel.com
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	niravkumar.l.rabara@intel.com,
-	nirav.rabara@altera.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: socfpga: agilex5: add NAND board file
-Date: Wed,  5 Feb 2025 18:13:18 +0800
-Message-Id: <20250205101318.1778757-1-niravkumar.l.rabara@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DzUwVkmY"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5157Wr1a000888;
+	Wed, 5 Feb 2025 10:18:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=XxjPXjrd6nfWBEoAPONChfjAIGljPbm7P8j7q3XJg
+	RQ=; b=DzUwVkmYwP99KUrAwFi53yZvPAnPJ5JK5Q3cj1iepUwBGGOx5dyFR0QCa
+	uQkVOCixru8RwlhhkO5avXhEfYXoCJt8SC91lb/gdZwCrWv+SOP8D6SLl4doNV0S
+	X6Y01IQ2bSC5VlELwuZNHzpgOlh53lyooznK8Uugj/72V4h3IMxpo+Uv+ljv4Q1F
+	MUpV2fCFi4QeqPaoC81Ui9qioV4h0z1s85nhsItSZP7Ve5fxpyQHz7Q0JQ1o4UNP
+	eFbNQodnCoqZ285dCGNGnfNzse75rcfIUExyDnn9Jgqnc6JV48Bf9qQ0C3TXSh0p
+	Wn2SQH/TlNswm/meup09nrkz0fKYA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m3pnrr9j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 10:18:30 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515AEaKJ025440;
+	Wed, 5 Feb 2025 10:18:29 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m3pnrr9e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 10:18:29 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515947ge006543;
+	Wed, 5 Feb 2025 10:18:28 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyekg5bx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 10:18:28 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515AIO7k48300450
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 10:18:24 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C0B0A20073;
+	Wed,  5 Feb 2025 10:18:24 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 84FB420072;
+	Wed,  5 Feb 2025 10:18:24 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 10:18:24 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: [PATCH 0/2 v2] perf test: Fix endianess issue in hwmon test on
+Date: Wed,  5 Feb 2025 11:18:12 +0100
+Message-ID: <20250205101814.2801701-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,133 +75,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: aFxsIYj2YwVm5QoDLRokzZ1d_A4aSiQL
+X-Proofpoint-GUID: AMtOQSh2ImI5-3TJPcR19Eh-0Dp5J3hd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxlogscore=627 spamscore=0
+ mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050080
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+Fix endianess issue on s390 with union containing a
+structure with bit fields. Bit field representation differs
+between big endian and little endian architectures.
 
-The Agilex5 devkit supports a separate NAND daughter card.
-The NAND daughter card replaces the SDMMC slot that is on the default
-daughter card thus requires a separate board dts file.
+Thomas Richter (2):
+  perf test: Fix perf test 11 hwmon endianess issue
+  perf test: Hwmon align structure on boundary in union
 
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
----
+ tools/perf/tests/hwmon_pmu.c | 16 +++++++++++-----
+ tools/perf/util/hwmon_pmu.c  | 14 --------------
+ tools/perf/util/hwmon_pmu.h  | 20 ++++++++++++++++++++
+ 3 files changed, 31 insertions(+), 19 deletions(-)
 
-changes in v2:
- * Use nand flash node name according to dt bindings to fix dt build warnings.
- * Arrange node in sequence.
-
-Link to v1:https://lore.kernel.org/all/20250107084831.2750035-2-niravkumar.l.rabara@intel.com/
-
- arch/arm64/boot/dts/intel/Makefile            |  1 +
- .../dts/intel/socfpga_agilex5_socdk_nand.dts  | 89 +++++++++++++++++++
- 2 files changed, 90 insertions(+)
- create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
-
-diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
-index d39cfb723f5b..33f6d01266b1 100644
---- a/arch/arm64/boot/dts/intel/Makefile
-+++ b/arch/arm64/boot/dts/intel/Makefile
-@@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
- 				socfpga_agilex_socdk.dtb \
- 				socfpga_agilex_socdk_nand.dtb \
- 				socfpga_agilex5_socdk.dtb \
-+				socfpga_agilex5_socdk_nand.dtb \
- 				socfpga_n5x_socdk.dtb
- dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
-new file mode 100644
-index 000000000000..ccc9be2cd7c6
---- /dev/null
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier:     GPL-2.0
-+/*
-+ * Copyright (C) 2025, Altera Corporation
-+ */
-+#include "socfpga_agilex5.dtsi"
-+
-+/ {
-+	model = "SoCFPGA Agilex5 SoCDK";
-+	compatible = "intel,socfpga-agilex5-socdk", "intel,socfpga-agilex5";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		led0 {
-+			label = "hps_led0";
-+			gpios = <&porta 6 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led1 {
-+			label = "hps_led1";
-+			gpios = <&porta 7 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* We expect the bootloader to fill in the reg */
-+		reg = <0x0 0x80000000 0x0 0x0>;
-+	};
-+};
-+
-+&gpio0 {
-+	status = "okay";
-+};
-+
-+&gpio1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i3c0 {
-+	status = "okay";
-+};
-+
-+&i3c1 {
-+	status = "okay";
-+};
-+
-+&nand {
-+	status = "okay";
-+
-+	nand@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0>;
-+		nand-bus-width = <8>;
-+
-+		partition@0 {
-+			label = "u-boot";
-+			reg = <0 0x200000>;
-+		};
-+		partition@200000 {
-+			label = "root";
-+			reg = <0x200000 0xffe00000>;
-+		};
-+	};
-+};
-+
-+&osc1 {
-+	clock-frequency = <25000000>;
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&watchdog0 {
-+	status = "okay";
-+};
 -- 
-2.25.1
+2.48.1
 
