@@ -1,81 +1,124 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032A7151987;
-	Wed,  5 Feb 2025 12:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F73C151987;
+	Wed,  5 Feb 2025 12:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759095; cv=none; b=ewib7a0Z8Ijd69nmBrVUS0Y/2fBZo1w4bGPdKHkuMjwA81z3GMkOulCdak6fIieQVKj7bpSRiMW4S8qMNH2hkzlmN3I8N5/ZkJByAvNH/Qa7/3B8n78WTVIKVhW2w0MTFOk3I8T1q4iow30Zn2oqWqZpOJZgfrBqlImuyvVOl8w=
+	t=1738759162; cv=none; b=Rn0QqgSjcBuv4uiWjEGRXBPHzGjd2AvddbpvWAgSQ5+kNDyCyHWVKaMV5d2PQZgOFmNwC68iwXKyNhJvKjcDrQSIYDhDem46U4VwuUf3iqvep7PspHTNH/sMi8F+icKhC3i/6BnKpxOVirheDwt/DJoczGhMYUkvZbeN86PJx/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759095; c=relaxed/simple;
-	bh=yVkYzT9iu21XdX/Wk9cBe9rcgtxJMysjII2zPq3PAAI=;
+	s=arc-20240116; t=1738759162; c=relaxed/simple;
+	bh=gjnkul5ze2O0TEqEsn7OrVw4FMjwajJjo6S7dUZaW4o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=txjTRQTLSOBo94KatmpupfqXafDxT/xAE7MWqMLQ8YCIsEX/yZqLL/wn+u6jjhz2NxraFcp219UcmvO1qkCwM0EH5dkfkb1KdXjQXPaTby6MfGszxOArbXTjgsRI48Et12jsU4AS+uiNje946wJSw/MGqqKwsh8yAp100TxzcmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=JvH8WnzC; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3fW8TFv3BV+7rSqZowxaFELEDHoio5gpWYb7aq13sFMkKiH0HMWq4+MF4l7cACfXcFGfty0dYlzsqjxF3BxMWnZg3NqgYCN5IFWGRUwTr5MnqeR0CfmGq/7nbfeq4mDJyesS3VqXLNFzAE+HzQHOXRI6p1gkD1iMSdHBDk5Xkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FirndxN8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="JvH8WnzC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=7uMFfYO1WmbS/ZVgPPg4SEdKN86zPP893kBz9q+8nj8=; b=JvH8WnzCw23uvFeu
-	OkNSYapNfjAeas0JWasfktf7aBtOBLDlbgM4TVxUWg5eBrAaDPSxcJ96rmFCmpeo45TSnbiH5l31x
-	EofGCQjUa1PbOjRRyyQseEWQuhA5uxuPG5C8Kw9vwQTia+bzo+R5wTcYfgv9yiZHp9cHvdumH0bds
-	fkQWjesOBnclGdxqME/wshVOtHr50dpHTr8RX601myp/knpKrru/qFpuSLMWGnx6kLQVoK2lbZQaK
-	A/z0UK6HM0y86mB4HDG00j46Gqf5KDdPcW9cANsdedAnatnGoNhMFLSLofskWpNUUpQF1dqGO0k7g
-	UuIJd2oMpnAl6OfClg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tfefP-00DjlZ-2Z;
-	Wed, 05 Feb 2025 12:38:07 +0000
-Date: Wed, 5 Feb 2025 12:38:07 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: max98095: Remove unused max98095_jack_detect
-Message-ID: <Z6Nbr4XIN421orTF@gallifrey>
-References: <20250205014458.486207-1-linux@treblig.org>
- <dc0bc826-6105-49f1-8a59-bb4881e9143e@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FirndxN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44319C4CED1;
+	Wed,  5 Feb 2025 12:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738759161;
+	bh=gjnkul5ze2O0TEqEsn7OrVw4FMjwajJjo6S7dUZaW4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FirndxN80c8BwhrQKHqUA3H3IyK6Z35QESZV0Q/tHAAfdtmgm96CtwtBwTpXyqLOq
+	 jXvQdKIydOOavEq6cyQBtqcRsZUt2WpPgU1W1k5TE1oGi9lz0ip7i60lA86Lo90/JL
+	 Hw77WHEsSxMVS/PKd0SV1ruEi+NsVMZBZUqXCYuQyq+ntHobO8bzuspDxpsocD2vxu
+	 R2xBOJXR7zex9YourhtUnlriMOg90vsjLVQtojJop1XXxs7dNvmKx/VSKrVgkx+aYq
+	 SJfUou2wMAcowi7UPUTr+odb0fM9fyNIET6DHzD3wl2cAYBuBp3ytpoaAkwtKQUA/8
+	 ORK2DMl1+xAGg==
+Date: Wed, 5 Feb 2025 13:39:16 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Kaixiong Yu <yukaixiong@huawei.com>
+Cc: akpm@linux-foundation.org, mcgrof@kernel.org, 
+	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	hpa@zytor.com, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	kees@kernel.org, j.granados@samsung.com, willy@infradead.org, 
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org, 
+	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, paul@paul-moore.com, 
+	jmorris@namei.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, dhowells@redhat.com, 
+	haifeng.xu@shopee.com, baolin.wang@linux.alibaba.com, shikemeng@huaweicloud.com, 
+	dchinner@redhat.com, bfoster@redhat.com, souravpanda@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, pasha.tatashin@soleen.com, david@redhat.com, 
+	ryan.roberts@arm.com, ying.huang@intel.com, yang@os.amperecomputing.com, 
+	zev@bewilderbeest.net, serge@hallyn.com, vegard.nossum@oracle.com, 
+	wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v5 -next 00/16] sysctl: move sysctls from vm_table into
+ its own files
+Message-ID: <lmfy2wd6ke6pa7pfxwohmb4r5krvwcau4ybu6snkunpgod452b@24edzgbtf4ru>
+References: <20250111070751.2588654-1-yukaixiong@huawei.com>
+ <2asuqwd4rpml6ylxce7mpz2vpvlm2gpdtwpp4lwuf4mdlylig2@dxdj4a73x2sb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dc0bc826-6105-49f1-8a59-bb4881e9143e@sirena.org.uk>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 12:37:36 up 272 days, 23:51,  1 user,  load average: 0.00, 0.00,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <2asuqwd4rpml6ylxce7mpz2vpvlm2gpdtwpp4lwuf4mdlylig2@dxdj4a73x2sb>
 
-* Mark Brown (broonie@kernel.org) wrote:
-> On Wed, Feb 05, 2025 at 01:44:58AM +0000, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue, Jan 14, 2025 at 02:50:12PM +0100, Joel Granados wrote:
+> On Sat, Jan 11, 2025 at 03:07:35PM +0800, Kaixiong Yu wrote:
+> > This patch series moves sysctls of vm_table in kernel/sysctl.c to
+> > places where they actually belong, and do some related code clean-ups.
+> > After this patch series, all sysctls in vm_table have been moved into its
+> > own files, meanwhile, delete vm_table.
 > > 
-> > max98095_jack_detect() was added in 2012 as part of
-> > commit 9dd90c5db040 ("ASoC: max98095: add jack detection")
-> > but hasn't been used.
+> > All the modifications of this patch series base on
+> > linux-next(tags/next-20250110). To test this patch series, the code was
+> > compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
+> > x86_64 architectures. After this patch series is applied, all files
+> > under /proc/sys/vm can be read or written normally.
+> 
+> It is looking good! Here is how I think we should move it upstream:
+> 
+> 1. These should queued in for 6.15 instead of the next merge window.
+>    It is too late in the current cycle and if we put it in now, it will
+>    not properly tested in linux-next.
+> 
+> 2. I am putting this in sysctl-testing with the expectation of pushing this
+>    up for the 6.15 merge window. Please tell me if you want this to go
+>    through some other tree.
+I have rebased on top of 6.14-rc1 and sent it out for sysctl-testing
+once more. I'll add it to sysctl-next by the end of the week (unless we
+see something pop-up in the testing).
+
+Best
+
+> 
+> Thx for the contribution
+> 
+> Best
 > > 
-> > Remove it.
+> > my test steps as below listed:
+> > 
+> > Step 1: Set CONFIG_SYSCTL to 'n' and compile the Linux kernel on the
+> > arm64 architecture. The kernel compiles successfully without any errors
+> > or warnings.
+> > 
+> ...
+> >  mm/swap.c                          |  16 ++-
+> >  mm/swap.h                          |   1 +
+> >  mm/util.c                          |  67 +++++++--
+> >  mm/vmscan.c                        |  23 +++
+> >  mm/vmstat.c                        |  44 +++++-
+> >  net/sunrpc/auth.c                  |   2 +-
+> >  security/min_addr.c                |  11 ++
+> >  23 files changed, 336 insertions(+), 312 deletions(-)
+> > 
+> > -- 
+> > 2.34.1
+> > 
 > 
-> > -	max98095_report_jack(client->irq, component);
-> > -	return 0;
-> > -}
-> > -EXPORT_SYMBOL_GPL(max98095_jack_detect);
+> -- 
 > 
-> No, this is exported for machine drivers which might not be in tree.
+> Joel Granados
 
-Ah OK; of course it would be nice if they were in the tree.
-
-Thanks,
-
-Dave
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+
+Joel Granados
