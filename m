@@ -1,105 +1,114 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F8D1519AA;
-	Wed,  5 Feb 2025 14:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD2A15198D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738764808; cv=none; b=Yc2I+RxPiGJf6x5Df4Y3pCfzmzuDJoue7mOwlIO9HdupTH6WV18GAq9mPYGG2eFC5Ql5Oo4eS+LqBE4wbpquYlPSFG2XoYroCHhmFGUnnkWA6uqa7qKZYQkWWPOtvg8L39jpDlW6x9OftxV3PUSeEd+MDL98P3cqUPIgmXVmB9M=
+	t=1738764874; cv=none; b=B2gU/4+0+VV7V3KtVVqz77MWeZVVrKQsHnOUTSA0b++3YdzDe/DZUa29qVA6EIE5eO87XHoBM080q9wzslfscDgoI6zMr6bbQ11h0iMej9dOpgmP3lUeosT05EMqQ8vjLrj3+d4p3Se9y7z8q0tRrZ01vXGJqvf+KmHB+1PhreU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738764808; c=relaxed/simple;
-	bh=y9bBxD6OlYG3QN3t6eEdPcfSBfOJrPnlO3VouFKzOcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gkFNmsMAEMO1M83tJiu2QPaIaV1CdfvyUwzwTRgRD8ckheSxGXdd6yIGotnfdBNx0f91KwjBafE4kI5QmizYo7mu/fJg5BcB7HaMqndrBnTdGWzXSIDpvmJ1kLEZ7fVU1+Q0HC7P4talsBPY6RLYCrSbI12cV0pc6U6Zrfm6lq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRaHtTnm; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738764874; c=relaxed/simple;
+	bh=FidpCX5GxjvcT+vVJZsxzD/fUKwHxS5XyiCZNAkvy+A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SmkwyZ/EukLnX4eAEIpG9rRbZL7nBzLMB+w5hrKtlVQ2k/ex23eKaz968BYcASCuNHNtuD1D9iMciiQmHYJ1H0y8In4Vfa12h8c1GXDG6X0XBkp7C51rpCXb0byHhQ4Aii9BcOGa61iCqYaTtbidQuRnNnBdyyFhwRC9uwI4XZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kg/kLRsV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRaHtTnm"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9cf019884so338891a91.0;
-        Wed, 05 Feb 2025 06:13:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738764806; x=1739369606; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y9bBxD6OlYG3QN3t6eEdPcfSBfOJrPnlO3VouFKzOcs=;
-        b=YRaHtTnmrhfIF8HGMEGwVSCGY8hS8mIemYSEdFtd2360MdpXl3Z4dz/+ZhS3VD4F0u
-         2LsuS6JdMLWiA5THE61/yhYjvW/ZV1eeFjzM28wOGHB0M5ANWD1kCs0MVtQJY1IjOpS6
-         pSXI0/j9HHT4CdJa982JSxFJx2r/HnpU3TLcLMmw0ZArYE6ohhCLgE9gYEh3x2ydaL4y
-         sLs2nQiS33AarTS2eutot2O676TFnS2Nbo+k2XxdB6BJqtAwYUJ6trwr60XxeY8eSfyB
-         +3x5+EmEuGw/uqVKxTWHjaRhUdYFifVeWofNJhJOTzUw6o20l8pkSKt1gX2eIHFlF1bO
-         b1RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738764806; x=1739369606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y9bBxD6OlYG3QN3t6eEdPcfSBfOJrPnlO3VouFKzOcs=;
-        b=OGCpejnQQrRFqeC+dP1qw7lOpGg8dF0APdnbkY8q/xU44IbQMLDwGpYKd9ZwRJmSM3
-         W7c5RQ5W9KgXaZFrdYvUhU6k0wWoo43UTiFfpcSTkXy/Id3a+tcLG+Uju8iQYcECEhlK
-         XNsd50/MyyNlICLfBcA7TV3Z1NeRO/XqoiC0ZnZmCj9xVXGWbqrec80JkJ5vzKZmaI8J
-         ks/e0526Hz8laxGTWArDvjDjEm4Qf1DKEm4XiEjCKDUmn9AMmqeY8a+lyDBuTzy5fB1A
-         g3Z3b9/0lN1TLAG+ujlltaCiv9Bkhbo3Ynz7/ZfYY7A7Xfb3NrpatfLumWEj5rCZq7YZ
-         x8oA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0DhFvwdzBHYH6CmAKju2KdnuzEtg5ozPPDRoG9flSlVj142ZcRp+z0NQHoABKuzBZv97QQTd6eeU=@vger.kernel.org, AJvYcCWgV79E69VTo9F61wwUw6Fvwafjc3A9o6sC9QVzZCvbZ5UYYR/ilZ1UlWWPJsPd0J7gHS06Q8LuO3U+9dxt@vger.kernel.org, AJvYcCX+4CiR15hmal1/0fza4v7+YbgDkwE3HZGSdfH5JEqNpKHqZBqSD0ZyTxRwo2mQuzZPSqv9kZZ+iGAKrgQL7nY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEG9hYBxaCTm2ieqmsnfeIgFR7c91YagvLIoOK9hZQUtrTQgDL
-	oKqB8ffCo7q+sxwrzBdZziupi8/lbtIRkc1xrm90DMHMQ30uandi9MDkoxtXainR4FRoxitTbYy
-	eWI768el1qFDbKu4fvYXYZe54JIs=
-X-Gm-Gg: ASbGncv4/Bu7EV/DRvwpIIYJSev8IwoXfW2YMS5YM6ot+YZy0XXHQ2JCUZdqnmzbbt3
-	6XaKqR8a8EJYfNMA/mH7taEU1QgZQlSx1r3efeHncp27f0OjCLu4ks+RnBNcO6g+0dR4NQLMp
-X-Google-Smtp-Source: AGHT+IF4hKXRVLLC6unmAjENx+zZEHsy43XxaM92zW4ScuMwkiqk1/7Tpba6AbMwT3b4dDa6OhFd6Tj7HQNu4hPCPUs=
-X-Received: by 2002:a17:90b:4f4b:b0:2ee:f59a:94d3 with SMTP id
- 98e67ed59e1d1-2f9e06b216cmr1912666a91.0.1738764805841; Wed, 05 Feb 2025
- 06:13:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kg/kLRsV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86652C4CED1;
+	Wed,  5 Feb 2025 14:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738764874;
+	bh=FidpCX5GxjvcT+vVJZsxzD/fUKwHxS5XyiCZNAkvy+A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Kg/kLRsVnpJXWn/B2nZ8RB+eYvAbTXWmf73EIc7Z8lqmI7IBnmS7FZODsMY7nf/vR
+	 AAd8sV74hLxr2lZxXuSk0f+60BqUdl7YCZw3Nl4p4y0kFF/125Fx7CKvOODPGNuzB6
+	 9LLpMCR7+aAn9Vm5SRX6ejTH/3+gz0+2zRNqsMhB+9+CjnJ8niQHJDjOxt6R+m2Kaj
+	 8xsJwOFmqjtqFn9oJIhIEypQMscWQNIijygSO+nR1xrD9vIg7TfqOCOZgLGRDUN44A
+	 iIZcj+CJpVD2yk45wGuXa0aVUyJA+kQeHZhI8r6iyy9FMgb/n6RnoTZvGx13pD1Htv
+	 M1q1ItW7R+AFw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tfgAi-000nOu-17;
+	Wed, 05 Feb 2025 14:14:32 +0000
+Date: Wed, 05 Feb 2025 14:14:30 +0000
+Message-ID: <86wme4tr5l.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	puranjay@kernel.org,
+	broonie@kernel.org,
+	mbenes@suse.cz,
+	mark.rutland@arm.com,
+	ruanjinjie@huawei.com,
+	oliver.upton@linux.dev,
+	robh@kernel.org,
+	anshuman.khandual@arm.com,
+	james.morse@arm.com,
+	shiqiliu@hust.edu.cn,
+	eahariha@linux.microsoft.com,
+	scott@os.amperecomputing.com,
+	joey.gouly@arm.com,
+	ardb@kernel.org,
+	yangyicong@hisilicon.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: errata: Add Ampere erratum AC04_CPU_50 workaround alternative
+In-Reply-To: <Z6KKnpB2IwO9GAYA@zaid-VirtualBox>
+References: <20250127201829.209258-1-zaidal@os.amperecomputing.com>
+	<87msfbtjyw.wl-maz@kernel.org>
+	<Z6KKnpB2IwO9GAYA@zaid-VirtualBox>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250204190400.2550-1-dakr@kernel.org> <20250204190400.2550-2-dakr@kernel.org>
- <20250205155646.00003c2f@nvidia.com>
-In-Reply-To: <20250205155646.00003c2f@nvidia.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 5 Feb 2025 15:13:12 +0100
-X-Gm-Features: AWEUYZkGVXHP4hrFG-5_ihud3NGINPm5TNS2CNAPtoXmocfUh6RQ24GiptUl5w0
-Message-ID: <CANiq72mxKhCudmRaS=gwnC=gjkCLMhZcC2ZpfzKKaGX1Hivz9g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpu: nova-core: add initial documentation
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	ajanulgu@redhat.com, lyude@redhat.com, pstanner@redhat.com, cjia@nvidia.com, 
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: zaidal@os.amperecomputing.com, catalin.marinas@arm.com, will@kernel.org, puranjay@kernel.org, broonie@kernel.org, mbenes@suse.cz, mark.rutland@arm.com, ruanjinjie@huawei.com, oliver.upton@linux.dev, robh@kernel.org, anshuman.khandual@arm.com, james.morse@arm.com, shiqiliu@hust.edu.cn, eahariha@linux.microsoft.com, scott@os.amperecomputing.com, joey.gouly@arm.com, ardb@kernel.org, yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Feb 5, 2025 at 2:57=E2=80=AFPM Zhi Wang <zhiw@nvidia.com> wrote:
->
-> It would be also helpful to make the process explicit. E.g. sharing your
-> command lines used to checking the patches. So folks can align with the
-> expected outcome, e.g. command line parameters.
+On Tue, 04 Feb 2025 21:46:06 +0000,
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
+> 
+> On Tue, Jan 28, 2025 at 08:34:47AM +0000, Marc Zyngier wrote:
+> > On Mon, 27 Jan 2025 20:18:29 +0000,
+> > Zaid Alali <zaidal@os.amperecomputing.com> wrote:
+> > > 
+> > > Add an alternative code sequence to work around Ampere erratum
+> > > AC03_CPU_50 on AmpereOne and Ampere1A.
+> > > 
+> > > Due to AC03_CPU_50, when ICC_PMR_EL1 should have a value of 0xf0 a
+> > > direct read of the register will return a value of 0xf8. An incorrect
+> > > value from a direct read can only happen with the value 0xf0.
+> > 
+> > Under which precise conditions? Does it equally apply to virtual
+> > interrupts or SCR_EL3.FIQ==0, for which there is no non-secure shift
+> > (which I can only assume is the source of the erratum)? Does it
+> > equally affect G0 and G1 interrupts?
+> >
+> 
+> Hi Marc,
+> 
+> This only occurs when:
+> When SCR_EL3.FIQ==1 and PE is NOT in EL3/Secure State,
+> and ICC_PMR_EL1.Priority==LowestPriorityImplemented==0xf8 (highest priority is 0x00).
+>  
+> Does it equally apply to virtual interrupts or SCR_EL3.FIQ==0?
+>  
+> Based on this Defect (AArch-21735) and our implementation, it only 
+> affected ICC_PMR_EL1, therefore does not apply to virtual interrupts.
 
-These two guidelines (and generally the few others above) are intended
-to apply to all Rust code in the kernel (i.e. not just `rust/`) --
-their command lines are mentioned in `Documentation/rust/`. We could
-add a note to make that clearer if that helps. So I would suggest
-avoiding repetition here by referencing those.
+Are you saying that this is erratum is *strictly* AARCH-21735?
 
-We also mention it in our "Subsystem Profile document" at
-https://rust-for-linux.com/contributing#submit-checklist-addendum.
+	M.
 
-> > +The availability of proper documentation is essential in terms of scal=
-ability,
-> > +accessability for new contributors and maintainability of a project in=
- general,
-
-Typo: accessibility?
-
-Cheers,
-Miguel
+-- 
+Without deviation from the norm, progress is not possible.
