@@ -1,107 +1,63 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3638128399
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380D128399
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738735249; cv=none; b=INdQgID+Lg35TcZYjeyiAUJILKg9XjA10HEUNbpcria/A0yGSTMJjHNwqhSl1DFQVyp8+LG4mEnrUn9XQwG3JYmkjkWiKXvUiz5FvB864fnH2AmzJU/aydKf3lYqy6leDrHQwV07kW9xKlKj/b8m6zJBGkntihDz8PdsAI2WkGI=
+	t=1738735504; cv=none; b=IiXymNeERf/HwhW+tJpjD3X1yh+FuTQ51PBvc9VNYQOIaRstE7kAyo2SuOJou1JkrXdaeQAPGzEpNylnJH77RheRyQHtrDSK15SP1S8uy1HM/WfgWgAhSEdXLdkg44jJ8VA/eup5yqJhqFNY3eawWmhksJC9zxKPDfGA60SakI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738735249; c=relaxed/simple;
-	bh=NBRaSD7EqLnT+cNWbYhjzag1hsHn4NX+OyaSkwAKLlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AwVqs4/si3+ryp/NAGTALeTzbptItcSaWXof/s05mDAm9/lgyEXjx7N/UEcrNwigvYgajctBxJ07mYPDAXZU5vf+/doBVuPLc4SIznxx7DeDOs1sH91aQUX021ocQp3eoZ2jLIMZxi+E1Wl9r2VSmY23oJx40PLcV9QSJaungIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aMrk39qf; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738735504; c=relaxed/simple;
+	bh=K8t/Bi/xdRTnV7j0xo4vvXO4yl8MGlCarSMvWlJNsms=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ktXTKbvkqNqzJK/7N63x/Sd5JTwDzda2C0JzX03tohNpHNRbeRBDmytyvQXW29TheOT1FQs6CLsQZg759Oleb39WfZUY5sRUmfnAXRWQWnYLCSjHXk9Hlueo53ckNvV4XFPSquj5VrQbCf2lcbINdZtKvWPY57CzgtWswqicUeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=f3PX/jfU; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aMrk39qf"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso47001155e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 22:00:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738735245; x=1739340045; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hNlXudGlTk+y6I7fRQAl7i28jnOA/Bs2ncG+/V/GbQU=;
-        b=aMrk39qfW7bkq9QIN/a+4kSG7v2lp9kfoPHfLOmv+G9/GKP836X6Z++ImY7ZqyGREg
-         zCSuRnE/Rz6YedtvDQudzdZ16V5/PBfa/sY7GBCpd8azudFQSaZpxQYNAHs9Syjf+mrY
-         NFD32XE14QHthHyB9MxWP6rx4S2Hf8hdlU9iWM6gTjzDERZW6M1V2CUI+Yg0M3fyz8Oi
-         6YcX7m5s8icJhPktX1d5Mpo6A/gZx9hbB33fxX5c1GCzho4bixWXJAH8zKk3XiG3oKYE
-         DjYyEhv64KLumkAz92siaYkYfWvwCiuAA59IPzzrGuqQUKGO5SwMYAV6/6O50Kc4aaa3
-         4vHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738735245; x=1739340045;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hNlXudGlTk+y6I7fRQAl7i28jnOA/Bs2ncG+/V/GbQU=;
-        b=EaQRyxTZhQZVsaY301k6FEz0WnmSWBV5s8iQe2FwUnEyL6CI8SyUqZUqANIbxJ2+nw
-         6OpcvVWkMOcWhuzKCPzx5MjAbtsHA76IY+H6pQIydaOFER0MK7ldl0ydbj1B+zVh7Yl9
-         1tE7/Vds/pILxgdTnHObQUUjC8xP5fbytufNXJXsdRqbOa02TTwZWPN9dWRijFlCsVbQ
-         TncNndh4A3f+ihS1KKMzWZ4FbRCIMpBg8yP/IA+U6obi7cZdumAE0+CfPwiJLryeOoZm
-         YdhAUg5a/HSluH1sN7rQ+d13R+yVwttUBNoAypQAfwBWCn4JyZ7UunDXMG3N7kUB9a1t
-         b5dg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmbStXrtwQ7NZKOsGuZu0VkdSaONqegwxb9/tdlAAAkWKrUl5wZucXsjkLNdivZxsvH/IFFMKutBxviok=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz0YIHZPEmYG5dc8vt8NT4KUKvFez3tnASguXNV61gDBWYbhAp
-	u08KP+Foue3zFuLDF5hbxIcYbbcafr60HaJwx5vA8HM04LkvaEkYDYgIamHEYSY=
-X-Gm-Gg: ASbGncs/NoCeTxgwHaJEMVDaGgLtd8bgRBQFVw/mqMLVOIsiBPBOdIXZLvTldnOwua2
-	RWiDDMfEm9GAuY+1yKMOEmbZfV/LrFWYmVO5VkVeQoH2HcEyIXeOg5VucxUa/9B4Ugf5PEAsjD+
-	hFXucsADZw+8qQ/8uqqTxqwcjAvhFzG3UPVHHkXQXl7BdaKj5slrOC/hLG9KA70E6y2yy9oxGjs
-	DqlSbmcQZS9G8cV6wHmhkceU6Zu/GoA3FxI0aq7OCanmAq/2n6KRT/B5TEnCxVdX5btPuFiIlFy
-	WgqCDzCgu/OZunPMKNh4
-X-Google-Smtp-Source: AGHT+IHnXn/0+sVZN5phuuTMWLExRHIl5mlDiKCt9L49AJLiWu+ymeOzo7LpZameVlX8MAniU5iOkQ==
-X-Received: by 2002:a5d:64cb:0:b0:38a:8d4c:aad3 with SMTP id ffacd0b85a97d-38db48bdac0mr791322f8f.18.1738735245493;
-        Tue, 04 Feb 2025 22:00:45 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38db5b3ce3bsm656007f8f.44.2025.02.04.22.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 22:00:44 -0800 (PST)
-Date: Wed, 5 Feb 2025 09:00:41 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ian To <onlyian4981@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="f3PX/jfU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738735498; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=vaQ+BH4un1QP1DmBRbq9oWCw/Iuzop4bfkkD+TXlsi4=;
+	b=f3PX/jfUd8OVQeNtZLvZWM/7HpBeg123O3SJMItzHw2n8JtYVP0HSCHbPkuEKCZhVsJMlETQ7zfnqNrwmJx+w3pUSBB7LcStxelT/HI+UFtm+id67dBGdIGRARrk9nzAjAHu7rmhyc57OuLa+ylKpx4ppJo6Sj2NNYzuE3D+3Ow=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOnW5fd_1738735497 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Feb 2025 14:04:58 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] staging: rtl8723bs: remove unnecessary parentheses
-Message-ID: <e831420d-77cb-4ff1-9c13-1779981988f2@stanley.mountain>
-References: <cover.1738720049.git.onlyian4981@gmail.com>
- <d0b70310eb6b2dfdf062ba865362cd2640cb93e0.1738720049.git.onlyian4981@gmail.com>
+Cc: Feng Tang <feng.tang@linux.alibaba.com>
+Subject: [PATCH] mailmap: add entry for Feng Tang
+Date: Wed,  5 Feb 2025 14:04:57 +0800
+Message-Id: <20250205060457.53667-1-feng.tang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0b70310eb6b2dfdf062ba865362cd2640cb93e0.1738720049.git.onlyian4981@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04, 2025 at 05:50:16PM -0800, Ian To wrote:
->  /*
-> -Caller must hold pmlmepriv->lock first.
-> -*/
-> + *Caller must hold pmlmepriv->lock first.
-> + */
+Map my old business email to personal email.
 
-This is unrelated.
+Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+---
+ .mailmap | 1 +
+ 1 file changed, 1 insertion(+)
 
-> @@ -1745,24 +1746,24 @@ static int rtw_check_join_candidate(struct mlme_priv *mlme
->  }
->  
->  /*
-> -Calling context:
-> -The caller of the sub-routine will be in critical section...
-> -The caller must hold the following spinlock
-> -pmlmepriv->lock
-> -*/
-> + *Calling context:
-> + *The caller of the sub-routine will be in critical section...
-> + *The caller must hold the following spinlock
-> + *pmlmepriv->lock
-> + */
->  
-
-This is unrelated too.
-
-regards,
-dan carpenter
+diff --git a/.mailmap b/.mailmap
+index 48de71154296..7dec55c34795 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -213,6 +213,7 @@ Fangrui Song <i@maskray.me> <maskray@google.com>
+ Felipe W Damasio <felipewd@terra.com.br>
+ Felix Kuhling <fxkuehl@gmx.de>
+ Felix Moeller <felix@derklecks.de>
++Feng Tang <feng.79.tang@gmail.com> <feng.tang@intel.com>
+ Fenglin Wu <quic_fenglinw@quicinc.com> <fenglinw@codeaurora.org>
+ Filipe Lautert <filipe@icewall.org>
+ Finn Thain <fthain@linux-m68k.org> <fthain@telegraphics.com.au>
+-- 
+2.39.5 (Apple Git-154)
 
