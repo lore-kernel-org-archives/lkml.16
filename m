@@ -1,122 +1,95 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F03157465
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73D514B959
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765387; cv=none; b=O5NKNB4nd2p2I0LCVJpQhy7TlkinIM2FRhYzQJvvGzuN3agxCQHq/pb5e3+yVwSp6G5QIHqSsS8vNMDnPNih9E0zDvu7r0VEDOnkFx4u78b/gBWrPTqYCly2G2Usn6JOwNn5dPjZT3mbVLGcy/+W6UXb87SPSOD1m2CduhoUO1o=
+	t=1738765393; cv=none; b=nRqWx03CHupCDNA0LLyCJkCOiuhi/raA8AY7Wy5aKh/RABf88dV/+1EXyfKflNL0pSHxu1sNOC6nH/wzXulyMBcDu+7vLwQoZETXkQLKKstHkWPar0lUlt00MZqqPRqjNKVGe31Z+5k0yPgiKh/qyTXmrCzQsUtEFxN8c1Gyzno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765387; c=relaxed/simple;
-	bh=pYXgZHe/oKWOjdZSRZOrEvpK9jXW8SUBiB8CdVACYGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FEl5UVGG6coiGn4DimnG/Y9W6wS90puGMYcqmx9afN9EzTO79TKe+osA5J3hi5mEBZcfRvd3VPXMu/8gwZMagHK897J8gqm+1hvGMoucU52z3jp1A5Kw0EPOqvvSWJIaXQ8uUBZ4fu81lHE5UHYsG8aycdaFTCgu50ddOIiziZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:fa11:c14e:2df5:5273])
-	by andre.telenet-ops.be with cmsmtp
-	id 9qNz2E0013f221S01qNzia; Wed, 05 Feb 2025 15:23:03 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tfgIg-0000000FvzO-3MeQ;
-	Wed, 05 Feb 2025 15:22:58 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tfgIs-00000006bFa-3Ylm;
-	Wed, 05 Feb 2025 15:22:58 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	David Wang <00107082@163.com>
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH resend] genirq: Remove leading space from .irq_print_chip() callbacks
-Date: Wed,  5 Feb 2025 15:22:56 +0100
-Message-ID: <893f7e9646d8933cd6786d5a1ef3eb076d263768.1738764803.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1738765393; c=relaxed/simple;
+	bh=zn1OZ0/xC5hWSYyFfGAzueY2AGtYBGt8AuLFCHG10t8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jfYto8GcgzxZwCjwM20VQ28YNBoe/dVCD9sVSGO51z+7cHjBeP8lUfCQumWF6u1LdIjt34ztoVGJq94F3YzoLk1AumDt9+UkQNxRO5isC2GR1IqCgHY7FXbtB2QTXMSrT5aDDpzIKxsaBuENcg0cNPdR9RndgjKrKUSbcf5dwCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eg4nZJbO; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eg4nZJbO"
+Message-ID: <f728a006-e588-4eab-b667-b1ff7dfd66c5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738765376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zn1OZ0/xC5hWSYyFfGAzueY2AGtYBGt8AuLFCHG10t8=;
+	b=eg4nZJbO0xpeG0pLWlbhMOe6AYAiwdcu4kYoQMdLWO+eZdJ3lFgi+Jpg3kpYb/i14hvLjJ
+	/+NqrmVuZeacszL66SFSgoFSCyY+PoN4hFtdoc0HT7vGRqjXutkQ+JV8tyyG3jBtPypA32
+	7MoUOedOYpMYKM+fZ/PdUpF9Kz9lHl0=
+Date: Wed, 5 Feb 2025 22:22:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
+To: Jakub Kicinski <kuba@kernel.org>,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Steven Price <steven.price@arm.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Jose Abreu <joabreu@synopsys.com>, Paolo Abeni <pabeni@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
+ Furong Xu <0x1207@gmail.com>, Petr Tesarik <petr@tesarici.cz>,
+ Serge Semin <fancer.lancer@gmail.com>, Xi Ruoyao <xry111@xry111.site>
+References: <20250203093419.25804-1-steven.price@arm.com>
+ <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
+ <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
+ <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk> <20250203142342.145af901@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250203142342.145af901@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The space separator was factored out from the multiple chip name prints,
-but several irq_chip.irq_print_chip() callbacks still print a leading
-space.  Remove the superfluous double spaces.
 
-Fixes: 9d9f204bdf7243bf ("genirq/proc: Add missing space separator back")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/powerpc/sysdev/fsl_msi.c          | 2 +-
- drivers/bus/moxtet.c                   | 2 +-
- drivers/irqchip/irq-partition-percpu.c | 2 +-
- drivers/soc/qcom/smp2p.c               | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+在 2/4/25 06:23, Jakub Kicinski 写道:
+> On Mon, 3 Feb 2025 11:16:34 +0000 Russell King (Oracle) wrote:
+>>> I've no opinion whether the original series "had value" - I'm just
+>>> trying to fix the breakage that entailed. My first attempt at a patch
+>>> was indeed a (partial) revert, but Andrew was keen to find a better
+>>> solution[1].
+>> There are two ways to fix the breakage - either revert the original
+>> patches (which if they have little value now would be the sensible
+>> approach IMHO)
+> +1, I also vote revert FWIW
 
-diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
-index 1aa0cb097c9c9d7c..7b9a5ea9cad9d3c7 100644
---- a/arch/powerpc/sysdev/fsl_msi.c
-+++ b/arch/powerpc/sysdev/fsl_msi.c
-@@ -75,7 +75,7 @@ static void fsl_msi_print_chip(struct irq_data *irqd, struct seq_file *p)
- 	srs = (hwirq >> msi_data->srs_shift) & MSI_SRS_MASK;
- 	cascade_virq = msi_data->cascade_array[srs]->virq;
- 
--	seq_printf(p, " fsl-msi-%d", cascade_virq);
-+	seq_printf(p, "fsl-msi-%d", cascade_virq);
- }
- 
- 
-diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
-index 6276551d79680e85..1e57ebfb76229aa0 100644
---- a/drivers/bus/moxtet.c
-+++ b/drivers/bus/moxtet.c
-@@ -657,7 +657,7 @@ static void moxtet_irq_print_chip(struct irq_data *d, struct seq_file *p)
- 
- 	id = moxtet->modules[pos->idx];
- 
--	seq_printf(p, " moxtet-%s.%i#%i", mox_module_name(id), pos->idx,
-+	seq_printf(p, "moxtet-%s.%i#%i", mox_module_name(id), pos->idx,
- 		   pos->bit);
- }
- 
-diff --git a/drivers/irqchip/irq-partition-percpu.c b/drivers/irqchip/irq-partition-percpu.c
-index 8e76d2913e6bebbf..4441ffe149ea0d96 100644
---- a/drivers/irqchip/irq-partition-percpu.c
-+++ b/drivers/irqchip/irq-partition-percpu.c
-@@ -98,7 +98,7 @@ static void partition_irq_print_chip(struct irq_data *d, struct seq_file *p)
- 	struct irq_chip *chip = irq_desc_get_chip(part->chained_desc);
- 	struct irq_data *data = irq_desc_get_irq_data(part->chained_desc);
- 
--	seq_printf(p, " %5s-%lu", chip->name, data->hwirq);
-+	seq_printf(p, "%5s-%lu", chip->name, data->hwirq);
- }
- 
- static struct irq_chip partition_irq_chip = {
-diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-index 4783ab1adb8d953b..a3e88ced328a91f1 100644
---- a/drivers/soc/qcom/smp2p.c
-+++ b/drivers/soc/qcom/smp2p.c
-@@ -365,7 +365,7 @@ static void smp2p_irq_print_chip(struct irq_data *irqd, struct seq_file *p)
- {
- 	struct smp2p_entry *entry = irq_data_get_irq_chip_data(irqd);
- 
--	seq_printf(p, " %8s", dev_name(entry->smp2p->dev));
-+	seq_printf(p, "%8s", dev_name(entry->smp2p->dev));
- }
- 
- static struct irq_chip smp2p_irq_chip = {
--- 
-2.43.0
++1, same here.
+
+
+For a driver that runs on so much hardware, we need to act
+
+cautiously. A crucial prerequisite is that code changes must
+
+never cause some hardware to malfunction. I was too simplistic
+
+in my thinking when reviewing this before, and I sincerely
+
+apologize for that.
+
+
+Steven, thank you for your tests, Let's revert it.
+
+
+Thanks,
+
+Yanteng
 
