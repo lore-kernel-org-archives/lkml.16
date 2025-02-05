@@ -1,45 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C2F217F23
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0689617C21B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:24:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738718670; cv=none; b=GDOLlWnvVUwBit4GbiM8J4XWkRzLOsUAvwcIxTYxrjwz2roYk6cX0cN/pTwFUVbWuPBrO493ivejhrgrAUBPKYuu0b6m2Fcxdsam3gTPMz5D1whonKZ2Az45SfIcHaSLvYhkCn06bLMmXmKhmtO+FhWq0CfKmiVgPL4nVuylUo4=
+	t=1738718673; cv=none; b=G62fqKSyOayA0bNXXIob3myJROBLObMDwzRSpPbbYyFT5eRCC3PXAlRq94KlxHZCEOVtL0tPXGQ+ahhRL6KiVEjpS8+f2XSY1rBaHCW2RarEi//4p/MplPh2z/xcmGSU8gOop0VRL5h8FIm0lZrnPfiYmJgdhj7dxVRcKh2BM1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738718670; c=relaxed/simple;
-	bh=D76DdDu/KIcNppdMJuY+6T/bglSa/kXluVHjGUlVGZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fja+m8DJIgCGOWFGY7Cgthez0ZoUT0Q+aRGFzbe7oqif+R3ZsXYB8HpzroRpu7TVMBR7ISnEQGmkutDsj9Wm8Icivl27G8dcLYCMhnn7g6yC7C5sv7+XSynOwIKh2uKSVEK6DVFls2CboqPh3HGI52+vnjBMdft0PnMYOdlG/+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gGbo0p3V; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1738718673; c=relaxed/simple;
+	bh=xQnYCBQJlOCqN0QxyY/yXcLZ+NgzI2pqR3+zsf/WQWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eRaJRBKJ8J4z0Di5Q3AUsLCcxwacHFHOocVFr7cMUc61Fpq1RZPnIFvlu6Eu++15y7eBGm2Xb68saWqlrOWdKfFGCu9UE0zoBg0WWJZTV2oJRg2lETQwVHGtarIJwOEjb1dA0530oIU+ulOqiYVRJ94KwpPxxvKPHSuQKspoGrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RSCTDdnf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGbo0p3V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RSCTDdnf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738718667;
+	s=mimecast20190719; t=1738718669;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=P07bISyLWOjrUwvOzYRUy1eCpbEvkKaKKbfklK3/JZ8=;
-	b=gGbo0p3V/dU9xo74X0+cn/JRmiw1sfLLcMqGbfyoYN6hnOqdscx5UOPP9Qv/P2YiVRd5zQ
-	/1rO6U+Oo+uFmO/40Vtlu/dEIjh3m10en1qjG27reSqyGARAAtyRjBdC0TaSUEshI0LXKP
-	+GxNl7nixuGRZqlzeQibB+acpgmMuqs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2qiXC/cNFFNJmD/Jr1WU9cXX6QUwEFoWyQGXl5gh0Q=;
+	b=RSCTDdnfe581fQketCtw2xStbQ6oAgQxb4ivoGNS2PqunUEq2/TfVm39l8gypElb9Irege
+	FTQoJzHWP6pjxrWMIuL+5rg+wobWBGxnrWSY4QJ6rMLLBjnRDEz7YKb5/+Wm/YmARymOKg
+	1wBaInzNSDhjwwFJbDyTsnbNVkh6DCM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-611-RdsdDe6UPYGKDQdqSq1KPg-1; Tue,
- 04 Feb 2025 20:24:23 -0500
-X-MC-Unique: RdsdDe6UPYGKDQdqSq1KPg-1
-X-Mimecast-MFC-AGG-ID: RdsdDe6UPYGKDQdqSq1KPg
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-645-VTOGUOs_M_-y3ZxivJYLaw-1; Tue,
+ 04 Feb 2025 20:24:24 -0500
+X-MC-Unique: VTOGUOs_M_-y3ZxivJYLaw-1
+X-Mimecast-MFC-AGG-ID: VTOGUOs_M_-y3ZxivJYLaw
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B482195609E;
-	Wed,  5 Feb 2025 01:24:21 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8273F180034D;
+	Wed,  5 Feb 2025 01:24:23 +0000 (UTC)
 Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.81.83])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 23CDC19560A7;
-	Wed,  5 Feb 2025 01:24:19 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 15EBE19560A7;
+	Wed,  5 Feb 2025 01:24:21 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -47,9 +49,11 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Boqun Feng <boqun.feng@gmail.com>
 Cc: linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH v2 0/2] locking/lockdep: Disable KASAN instrumentation of lockdep.c
-Date: Tue,  4 Feb 2025 20:24:09 -0500
-Message-ID: <20250205012411.1010817-1-longman@redhat.com>
+Subject: [PATCH v2 1/2] locking/lock_events: Add locking events for rtmutex slow paths
+Date: Tue,  4 Feb 2025 20:24:10 -0500
+Message-ID: <20250205012411.1010817-2-longman@redhat.com>
+In-Reply-To: <20250205012411.1010817-1-longman@redhat.com>
+References: <20250205012411.1010817-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,24 +63,166 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-It is found that disabling KASAN instrumentation when compiling
-lockdep.c can significantly improve the performance of RT debug kernel
-while the performance benefit of non-RT debug kernel is relatively
-modest.
+Add locking events for rtlock_slowlock() and rt_mutex_slowlock() for
+profiling the slow path behavior of rt_spin_lock() and rt_mutex_lock().
 
-This series also include a patch to add locking events to the rtmutex
-slow paths for better analysis of the different performance behavior
-between RT and non-RT debug kernels.
-
-Waiman Long (2):
-  locking/lock_events: Add locking events for rtmutex slow paths
-  locking/lockdep: Disable KASAN instrumentation of lockdep.c
-
- kernel/locking/Makefile           |  3 ++-
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
  kernel/locking/lock_events_list.h | 21 +++++++++++++++++++++
  kernel/locking/rtmutex.c          | 29 ++++++++++++++++++++++++-----
- 3 files changed, 47 insertions(+), 6 deletions(-)
+ 2 files changed, 45 insertions(+), 5 deletions(-)
 
+diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
+index 97fb6f3f840a..80b11f194c9f 100644
+--- a/kernel/locking/lock_events_list.h
++++ b/kernel/locking/lock_events_list.h
+@@ -67,3 +67,24 @@ LOCK_EVENT(rwsem_rlock_handoff)	/* # of read lock handoffs		*/
+ LOCK_EVENT(rwsem_wlock)		/* # of write locks acquired		*/
+ LOCK_EVENT(rwsem_wlock_fail)	/* # of failed write lock acquisitions	*/
+ LOCK_EVENT(rwsem_wlock_handoff)	/* # of write lock handoffs		*/
++
++/*
++ * Locking events for rtlock_slowlock()
++ */
++LOCK_EVENT(rtlock_slowlock)	/* # of rtlock_slowlock() calls		*/
++LOCK_EVENT(rtlock_slow_acq1)	/* # of locks acquired after wait_lock	*/
++LOCK_EVENT(rtlock_slow_acq2)	/* # of locks acquired in for loop	*/
++LOCK_EVENT(rtlock_slow_sleep)	/* # of sleeps				*/
++LOCK_EVENT(rtlock_slow_wake)	/* # of wakeup's			*/
++
++/*
++ * Locking events for rt_mutex_slowlock()
++ */
++LOCK_EVENT(rtmutex_slowlock)	/* # of rt_mutex_slowlock() calls	*/
++LOCK_EVENT(rtmutex_slow_block)	/* # of rt_mutex_slowlock_block() calls	*/
++LOCK_EVENT(rtmutex_slow_acq1)	/* # of locks acquired after wait_lock	*/
++LOCK_EVENT(rtmutex_slow_acq2)	/* # of locks acquired at the end	*/
++LOCK_EVENT(rtmutex_slow_acq3)	/* # of locks acquired in *block()	*/
++LOCK_EVENT(rtmutex_slow_sleep)	/* # of sleeps				*/
++LOCK_EVENT(rtmutex_slow_wake)	/* # of wakeup's			*/
++LOCK_EVENT(rtmutex_deadlock)	/* # of rt_mutex_handle_deadlock()'s	*/
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 4a8df1800cbb..c80902eacd79 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -27,6 +27,7 @@
+ #include <trace/events/lock.h>
+ 
+ #include "rtmutex_common.h"
++#include "lock_events.h"
+ 
+ #ifndef WW_RT
+ # define build_ww_mutex()	(false)
+@@ -1612,10 +1613,13 @@ static int __sched rt_mutex_slowlock_block(struct rt_mutex_base *lock,
+ 	struct task_struct *owner;
+ 	int ret = 0;
+ 
++	lockevent_inc(rtmutex_slow_block);
+ 	for (;;) {
+ 		/* Try to acquire the lock: */
+-		if (try_to_take_rt_mutex(lock, current, waiter))
++		if (try_to_take_rt_mutex(lock, current, waiter)) {
++			lockevent_inc(rtmutex_slow_acq3);
+ 			break;
++		}
+ 
+ 		if (timeout && !timeout->task) {
+ 			ret = -ETIMEDOUT;
+@@ -1638,8 +1642,10 @@ static int __sched rt_mutex_slowlock_block(struct rt_mutex_base *lock,
+ 			owner = NULL;
+ 		raw_spin_unlock_irq_wake(&lock->wait_lock, wake_q);
+ 
+-		if (!owner || !rtmutex_spin_on_owner(lock, waiter, owner))
++		if (!owner || !rtmutex_spin_on_owner(lock, waiter, owner)) {
++			lockevent_inc(rtmutex_slow_sleep);
+ 			rt_mutex_schedule();
++		}
+ 
+ 		raw_spin_lock_irq(&lock->wait_lock);
+ 		set_current_state(state);
+@@ -1694,6 +1700,7 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
+ 	int ret;
+ 
+ 	lockdep_assert_held(&lock->wait_lock);
++	lockevent_inc(rtmutex_slowlock);
+ 
+ 	/* Try to acquire the lock again: */
+ 	if (try_to_take_rt_mutex(lock, current, NULL)) {
+@@ -1701,6 +1708,7 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
+ 			__ww_mutex_check_waiters(rtm, ww_ctx, wake_q);
+ 			ww_mutex_lock_acquired(ww, ww_ctx);
+ 		}
++		lockevent_inc(rtmutex_slow_acq1);
+ 		return 0;
+ 	}
+ 
+@@ -1719,10 +1727,12 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
+ 				__ww_mutex_check_waiters(rtm, ww_ctx, wake_q);
+ 			ww_mutex_lock_acquired(ww, ww_ctx);
+ 		}
++		lockevent_inc(rtmutex_slow_acq2);
+ 	} else {
+ 		__set_current_state(TASK_RUNNING);
+ 		remove_waiter(lock, waiter);
+ 		rt_mutex_handle_deadlock(ret, chwalk, lock, waiter);
++		lockevent_inc(rtmutex_deadlock);
+ 	}
+ 
+ 	/*
+@@ -1751,6 +1761,7 @@ static inline int __rt_mutex_slowlock_locked(struct rt_mutex_base *lock,
+ 				  &waiter, wake_q);
+ 
+ 	debug_rt_mutex_free_waiter(&waiter);
++	lockevent_cond_inc(rtmutex_slow_wake, !wake_q_empty(wake_q));
+ 	return ret;
+ }
+ 
+@@ -1823,9 +1834,12 @@ static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock,
+ 	struct task_struct *owner;
+ 
+ 	lockdep_assert_held(&lock->wait_lock);
++	lockevent_inc(rtlock_slowlock);
+ 
+-	if (try_to_take_rt_mutex(lock, current, NULL))
++	if (try_to_take_rt_mutex(lock, current, NULL)) {
++		lockevent_inc(rtlock_slow_acq1);
+ 		return;
++	}
+ 
+ 	rt_mutex_init_rtlock_waiter(&waiter);
+ 
+@@ -1838,8 +1852,10 @@ static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock,
+ 
+ 	for (;;) {
+ 		/* Try to acquire the lock again */
+-		if (try_to_take_rt_mutex(lock, current, &waiter))
++		if (try_to_take_rt_mutex(lock, current, &waiter)) {
++			lockevent_inc(rtlock_slow_acq2);
+ 			break;
++		}
+ 
+ 		if (&waiter == rt_mutex_top_waiter(lock))
+ 			owner = rt_mutex_owner(lock);
+@@ -1847,8 +1863,10 @@ static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock,
+ 			owner = NULL;
+ 		raw_spin_unlock_irq_wake(&lock->wait_lock, wake_q);
+ 
+-		if (!owner || !rtmutex_spin_on_owner(lock, &waiter, owner))
++		if (!owner || !rtmutex_spin_on_owner(lock, &waiter, owner)) {
++			lockevent_inc(rtlock_slow_sleep);
+ 			schedule_rtlock();
++		}
+ 
+ 		raw_spin_lock_irq(&lock->wait_lock);
+ 		set_current_state(TASK_RTLOCK_WAIT);
+@@ -1865,6 +1883,7 @@ static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock,
+ 	debug_rt_mutex_free_waiter(&waiter);
+ 
+ 	trace_contention_end(lock, 0);
++	lockevent_cond_inc(rtlock_slow_wake, !wake_q_empty(wake_q));
+ }
+ 
+ static __always_inline void __sched rtlock_slowlock(struct rt_mutex_base *lock)
 -- 
 2.48.1
 
