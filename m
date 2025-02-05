@@ -1,244 +1,172 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5BB1FFC4B;
-	Wed,  5 Feb 2025 21:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76234214A96
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738792585; cv=none; b=rXb9b/BRrusTPPK1fmfc7+aAA7a5TjZ6zXFqg3Fi9riQygd5eIMSecjtK4vYLB7908w+YLK8Ah8YnFpP3SZKxLHoG8NajK6esnxHYHnq24V2EbUqB9PPCRGwqrCK4v5LkZwwaMaIumqglPqBhNZCOw4J7e76JH6Eei+bfODCvOo=
+	t=1738792615; cv=none; b=MCJNOOCLsTQwPd+zqqPfk4V5j5OBbawwWq/O2KfBQPWTiCHlDJP7jjjl7SfXHUR/NLtEYZ8ZIERnlgQUx2Y+Asy7WEZP3jVn4a+ED2hMl8d6Lq8C/B+mxbnJRUwzZ9BEmQCUILW51iBaTQOCZp9THfIesNwGEpoigMHwMtezsAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738792585; c=relaxed/simple;
-	bh=aK4znbSBlzCXvDjjmG56/kAUnE1HtKriM2kwXRXVdL0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=iY2PcAUKDnqKiGcBb5zBd5J9dUE7Sku9A7zGJkqV66WJ103jaouyqEHAIykRo+py8Vgu38f8+BEsMdmTZGnAYxvjBr0CJaLxtUgV6jN0RE6XhgWkioJ06FzU1BTfpDOjS42z9hEleUKZsiFGvSLm8EelH3iwtI370xf/B2fOk1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7IhoDSW; arc=none smtp.client-ip=209.85.160.181
+	s=arc-20240116; t=1738792615; c=relaxed/simple;
+	bh=4qql90pn4szEvuE1q2VwoHg70ZIx94oUk+Hs3pTwU2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tNyALQZDtkqsqKQVeD7lzb20eBJQCA+SIhUqm3APnfC+Td63r1WinzSHgkWYmpEikhCOJHLi0SVL+H1c2vM2JiRBPBTEr/Ciw4MhJbtDraRoTCSI+YrNEEfwjv5o8wi86NGepXxUAkMyZpqcYhL1QYqUEXDJNQcPT6vySjA0euY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7Zbi6A3; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7IhoDSW"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467838e75ffso3947641cf.3;
-        Wed, 05 Feb 2025 13:56:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7Zbi6A3"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-437a92d7b96so2298575e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 13:56:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738792582; x=1739397382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738792612; x=1739397412; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/oernhFzJvDHR/AMo6PZewM8ZACtPVAaEoHou4hT+kg=;
-        b=G7IhoDSWwWkSbx9xTVJtB4F9fsqxovwCg+C0AZH6/ty9c53Mn2BDhBbjWk1gPCAgFc
-         r+NJ6yzBGt2b17+SWD7sJSaWkgpS5/cAD8qIH8oJjwHKrf7dmc/UEMno81ImRnVNVnN5
-         yGAWRGawW17zqwkIrkW6tPDS77BsvA/qwPNklaSdvMrgsqjRbrrftZZ/7+cDDKW0A30N
-         TadGitxpARisG6jyVaQGkeD15SLxo5BfCXC99G7EIcIzEL40mWhVQf06ISveI0Lh+rdT
-         nJ67c+7CH9kBjcAVlRq9wLvCV+GyrY0dvl1XQQ50ZKEc41xTfY2fhbKhFNlDcIRik3ri
-         Xz4w==
+        bh=ExpNnKUIu15RnPJeZ+26Wmgur2xuMxA57BJC1TlkS3k=;
+        b=V7Zbi6A3Wc8DHvS/V+OxDhtOWTHrgjtiwsL3Lhwkf7OhEdDXmH9J5E0h+/FUq6gjb7
+         ppVJRM+KX4SrUDqd2fKnwgkcxlWPQuBxnTf+VTR/2WjBnpyIY5HgkUDDXEc6APsuXsQZ
+         qQUdNAX4EVaobf+Wg/MTRyn6JZWu8aN4TzfCBylq13BMidxj7OcBvsgak64xZ7jcYdEX
+         EWc6dwd517ubwjzHPoExHKJzkXOr8/X7oN257oLy3SLpoP2JqMNe1CkvHUE595rti5ON
+         jz8eObmQ3zcDccDl8DbVUz0ogXiVPlhq+liEWYa7x/Lk2Y9S8WwAyzmU4PyY5lJ2cyq2
+         tvCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738792582; x=1739397382;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/oernhFzJvDHR/AMo6PZewM8ZACtPVAaEoHou4hT+kg=;
-        b=Ny1+Ey57wG95ShHd7Djq+QMW+P+XKYR4QMGEykjpTGn5nr77/eWYZBKNSrygWMybol
-         1zFTZ2snn91oQw/eM65bt/wJ9bTexqghAOBRtBruyKmJHXoUuDxrqjjYVfrPyERmMg6n
-         TVyZp+Fc4lszNa6dW/Rbehm4GiBAtYDu/mivQa05CbS+TbKHLmqvxoIP92bgn1QobAlM
-         qWbAR5QLQFIdtJuDgW9AJo0Ot/YPGH8J1pijioN6mWQLoL634/8NZ/5unMMZIV06qkMk
-         wbO9lMoQnjEy2k5aHH2QlR5Gb5C7chkbsJz8hO3zpgIhNAsfROfKcGBP4i+4a8kWaldI
-         ZO0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUD2VwjJPZKy4IPJlBdCSRyquLvKZ3b5KuX+JuFpUNz2Hi0vJA6gS9YGIaMFSeauKQJiK0M+kaAMvYwwx5N@vger.kernel.org, AJvYcCUY7yo2Lqm7N/ln85gs1Ox1UEHUEc9Fk37ocryMmVxgQkCKUmQy1ITIass6I4aEZchXh516KaHC5gFFw9JDi0gl@vger.kernel.org, AJvYcCUZR3DRp6fRAjgqqvqehSzDxNksb/0/J/DVkqCX45UdzQ5KZk7LpfSzBnd41GZQ0O0GI7IYYBmLplZc@vger.kernel.org, AJvYcCUoGZZWYSHQ1efy8RWDU6G11K5uLiDpO76goPZJ2Rf1Ie6ubmR8d4LkFoW0xXAsOO+5YYr5ssnP@vger.kernel.org, AJvYcCWUGYK8MiIpTW7KLXH+iA8Ies+ZewmhhLVkTwY18ZKTy1b0CgsPUONWulc8i78ybmdCAHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDMYFaTLsx286IPUbHAGgAw89F9gI+H57iAji5IhCai/b9S5WK
-	lbkdn022YzEuoBj0oP4e0VZjLSIW7C4xijtpn2PXLADvB41yx12h
-X-Gm-Gg: ASbGnctvkrN5W2+BHgE8Ota1iSb41tSw5PSIEOFuZBRio/IRVQw2Z4XsDJK7N7N4ejK
-	ougQ/iASMvsM2fTvUDRZe8wzHcg/pNrBFtUBJIGuIPROPQm9xIAexL10gj9IO35fzCL1esVmeVv
-	sY6RYzd9nbmxGaYpdsFBxxedUaMAlhk2St+EaO3y2C4DKebHkowF7fxseNbRVfNiKFCd+OXgddV
-	HGAmME6grMqssQhbZdhrXTP0npqYctxvNcAzDwBppIPMOhg3ioE6Z5r2RKOwckOBddyzyNttnzx
-	EXWIrzxSiqncaQawpIfChVgZPDGV7/OnoKI/GbkGYn6kvrjyb6irtO6KUwI/wXI=
-X-Google-Smtp-Source: AGHT+IHbOY388ZmdWR7rHmoL/oJ6pGDlUDUjpam1RRzlDYT8ShKi0Qn4oZw9X5+02UC859r3BHlW4g==
-X-Received: by 2002:ac8:7fc4:0:b0:46d:faa2:b6e0 with SMTP id d75a77b69052e-47028168976mr62005331cf.18.1738792582288;
-        Wed, 05 Feb 2025 13:56:22 -0800 (PST)
-Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf189497sm74858601cf.73.2025.02.05.13.56.21
+        d=1e100.net; s=20230601; t=1738792612; x=1739397412;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ExpNnKUIu15RnPJeZ+26Wmgur2xuMxA57BJC1TlkS3k=;
+        b=D60epFrECE/SYn4J0U9q9ZXNKlLyzRIV/72v1R9hZFG8KnhvBKk4xLZeGv/f3uFJAW
+         k7GMqQPU+kX0smsZkhbmxczPBhK6awXGDRPQBQKBXIYer2iJ9gihN1VCL6XwDMrkfl1v
+         TX2LkZIUh3Rm+3l4OI2EgyxGuNUKiGZw4uPzEFxg0r9AfqIes/FOHKVakLIriZg/h2P3
+         EdB1sBFpFWatZGtZuEWZu9W2HMH71eEMVPXrJ3t+zOBWf2PHtM/Mtj1t+7i+GAKOZO4M
+         QIr0G4BX5Q/FkfZ+wrrrFUiPyKESA5MvbhSBeP6Qc/mpCf0p3EUAfF3A+4A9+VhhdKPA
+         b8Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUOIKYIDfcmXAu/BuqpbpneVQlSRdmclYbiosOw5q/M2ofKgkYi+nsDfzSdPOOuaXH0Tb9ASyj+SkMqEjE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzixIQcsMrauRD/u5feuycwyDp3Eu5cQgTiKFJR3XsiW35pdYZy
+	TjrKsweOqAcloypRA1gnT7C0fntyKNg2crFvimEACObaUSHZJISP
+X-Gm-Gg: ASbGncumkuWhi85GB/+UkR/pJ13TwLgSNjkaU1d25yjhXIhdEQXpRuQwBRsvmlBIFYb
+	s7c4kyJ5KomRdozDTzXhQnLqk3R3ijaQ6BQLZEJk8Y9vJIeZm3u3PIy/k2LNUpaw+1kIvI+OxHy
+	v1T3ybRmUCxzhCgxIEZGeIuXB4T8+P2QgkMN782fcx7rAlgB+GSPdxHmaxpjosXF1Z0poqtiPJ5
+	sstRnCPeRnmi3Fmqpy+nTIrBzWJaykOoQbhCEZpg5D96FXwbrYuGoKTu+082bHTGgYXmZ37SpTp
+	SKkPonn7IW0yGsKnbLTnkgWV4ap7IEbJ1Lh5+lzZiB3vY2sbj6DAng==
+X-Google-Smtp-Source: AGHT+IF9Lnac8vLx0Lch1E/U4g3+70BcOuxYX6wPveyHWXIkh22if2ugk0Wjk5x+SbNJB9g+wbpVMg==
+X-Received: by 2002:a05:600c:314a:b0:438:e256:a77d with SMTP id 5b1f17b1804b1-4390d43db08mr38919505e9.15.1738792611470;
+        Wed, 05 Feb 2025 13:56:51 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf896sm20490902f8f.94.2025.02.05.13.56.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 13:56:21 -0800 (PST)
-Date: Wed, 05 Feb 2025 16:56:21 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Mina Almasry <almasrymina@google.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, 
- kvm@vger.kernel.org, 
- virtualization@lists.linux.dev, 
- linux-kselftest@vger.kernel.org
-Cc: Mina Almasry <almasrymina@google.com>, 
- Donald Hunter <donald.hunter@gmail.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- Neal Cardwell <ncardwell@google.com>, 
- David Ahern <dsahern@kernel.org>, 
- "Michael S. Tsirkin" <mst@redhat.com>, 
- Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?UTF-8?B?RXVnZW5pbyBQw6lyZXo=?= <eperezma@redhat.com>, 
- Stefan Hajnoczi <stefanha@redhat.com>, 
- Stefano Garzarella <sgarzare@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, 
- sdf@fomichev.me, 
- asml.silence@gmail.com, 
- dw@davidwei.uk, 
- Jamal Hadi Salim <jhs@mojatatu.com>, 
- Victor Nogueira <victor@mojatatu.com>, 
- Pedro Tammela <pctammela@mojatatu.com>, 
- Samiullah Khawaja <skhawaja@google.com>, 
- Kaiyuan Zhang <kaiyuanz@google.com>
-Message-ID: <67a3de8559316_17745c29479@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250203223916.1064540-6-almasrymina@google.com>
-References: <20250203223916.1064540-1-almasrymina@google.com>
- <20250203223916.1064540-6-almasrymina@google.com>
-Subject: Re: [PATCH net-next v3 5/6] net: devmem: Implement TX path
+        Wed, 05 Feb 2025 13:56:51 -0800 (PST)
+Date: Wed, 5 Feb 2025 21:56:50 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: "Xu, Even" <even.xu@intel.com>
+Cc: lkp <lkp@intel.com>, "oe-kbuild-all@lists.linux.dev"
+ <oe-kbuild-all@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, "Sun,
+ Xinpeng" <xinpeng.sun@intel.com>, "Srinivas Pandruvada"
+ <srinivas.pandruvada@linux.intel.com>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>
+Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38:
+ sparse: sparse: dubious: !x | !y
+Message-ID: <20250205215650.1a93dc58@pumpkin>
+In-Reply-To: <IA1PR11MB6098ECA558A36C0EAA1F21FCF4F72@IA1PR11MB6098.namprd11.prod.outlook.com>
+References: <202501292144.eFDq4ovr-lkp@intel.com>
+	<20250129222141.478c03df@pumpkin>
+	<IA1PR11MB6098ECA558A36C0EAA1F21FCF4F72@IA1PR11MB6098.namprd11.prod.outlook.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Mina Almasry wrote:
-> Augment dmabuf binding to be able to handle TX. Additional to all the RX
-> binding, we also create tx_vec needed for the TX path.
-> 
-> Provide API for sendmsg to be able to send dmabufs bound to this device:
-> 
-> - Provide a new dmabuf_tx_cmsg which includes the dmabuf to send from.
-> - MSG_ZEROCOPY with SCM_DEVMEM_DMABUF cmsg indicates send from dma-buf.
-> 
-> Devmem is uncopyable, so piggyback off the existing MSG_ZEROCOPY
-> implementation, while disabling instances where MSG_ZEROCOPY falls back
-> to copying.
-> 
-> We additionally pipe the binding down to the new
-> zerocopy_fill_skb_from_devmem which fills a TX skb with net_iov netmems
-> instead of the traditional page netmems.
-> 
-> We also special case skb_frag_dma_map to return the dma-address of these
-> dmabuf net_iovs instead of attempting to map pages.
-> 
-> Based on work by Stanislav Fomichev <sdf@fomichev.me>. A lot of the meat
-> of the implementation came from devmem TCP RFC v1[1], which included the
-> TX path, but Stan did all the rebasing on top of netmem/net_iov.
-> 
-> Cc: Stanislav Fomichev <sdf@fomichev.me>
-> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> 
-> ---
-> 
-> v3:
-> - Use kvmalloc_array instead of kcalloc (Stan).
-> - Fix unreachable code warning (Simon).
-> 
-> v2:
-> - Remove dmabuf_offset from the dmabuf cmsg.
-> - Update zerocopy_fill_skb_from_devmem to interpret the
->   iov_base/iter_iov_addr as the offset into the dmabuf to send from
->   (Stan).
-> - Remove the confusing binding->tx_iter which is not needed if we
->   interpret the iov_base/iter_iov_addr as offset into the dmabuf (Stan).
-> - Remove check for binding->sgt and binding->sgt->nents in dmabuf
->   binding.
-> - Simplify the calculation of binding->tx_vec.
-> - Check in net_devmem_get_binding that the binding we're returning
->   has ifindex matching the sending socket (Willem).
-> ---
->  include/linux/skbuff.h                  | 15 +++-
->  include/net/sock.h                      |  1 +
->  include/uapi/linux/uio.h                |  6 +-
->  net/core/datagram.c                     | 41 ++++++++++-
->  net/core/devmem.c                       | 97 +++++++++++++++++++++++--
->  net/core/devmem.h                       | 42 ++++++++++-
->  net/core/netdev-genl.c                  | 64 +++++++++++++++-
->  net/core/skbuff.c                       |  6 +-
->  net/core/sock.c                         |  8 ++
->  net/ipv4/tcp.c                          | 36 ++++++---
->  net/vmw_vsock/virtio_transport_common.c |  3 +-
->  11 files changed, 285 insertions(+), 34 deletions(-)
-> 
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index bb2b751d274a..3ff8f568c382 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -1711,9 +1711,12 @@ struct ubuf_info *msg_zerocopy_realloc(struct sock *sk, size_t size,
->  
->  void msg_zerocopy_put_abort(struct ubuf_info *uarg, bool have_uref);
->  
-> +struct net_devmem_dmabuf_binding;
-> +
->  int __zerocopy_sg_from_iter(struct msghdr *msg, struct sock *sk,
->  			    struct sk_buff *skb, struct iov_iter *from,
-> -			    size_t length);
-> +			    size_t length,
-> +			    struct net_devmem_dmabuf_binding *binding);
->  
->  int zerocopy_fill_skb_from_iter(struct sk_buff *skb,
->  				struct iov_iter *from, size_t length);
-> @@ -1721,12 +1724,14 @@ int zerocopy_fill_skb_from_iter(struct sk_buff *skb,
->  static inline int skb_zerocopy_iter_dgram(struct sk_buff *skb,
->  					  struct msghdr *msg, int len)
->  {
-> -	return __zerocopy_sg_from_iter(msg, skb->sk, skb, &msg->msg_iter, len);
-> +	return __zerocopy_sg_from_iter(msg, skb->sk, skb, &msg->msg_iter, len,
-> +				       NULL);
->  }
->  
->  int skb_zerocopy_iter_stream(struct sock *sk, struct sk_buff *skb,
->  			     struct msghdr *msg, int len,
-> -			     struct ubuf_info *uarg);
-> +			     struct ubuf_info *uarg,
-> +			     struct net_devmem_dmabuf_binding *binding);
->  
->  /* Internal */
->  #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB)))
-> @@ -3697,6 +3702,10 @@ static inline dma_addr_t __skb_frag_dma_map(struct device *dev,
->  					    size_t offset, size_t size,
->  					    enum dma_data_direction dir)
->  {
-> +	if (skb_frag_is_net_iov(frag)) {
-> +		return netmem_to_net_iov(frag->netmem)->dma_addr + offset +
-> +		       frag->offset;
-> +	}
->  	return dma_map_page(dev, skb_frag_page(frag),
->  			    skb_frag_off(frag) + offset, size, dir);
->  }
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 8036b3b79cd8..09eb918525b6 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -1822,6 +1822,7 @@ struct sockcm_cookie {
->  	u32 tsflags;
->  	u32 ts_opt_id;
->  	u32 priority;
-> +	u32 dmabuf_id;
->  };
->  
->  static inline void sockcm_init(struct sockcm_cookie *sockc,
-> diff --git a/include/uapi/linux/uio.h b/include/uapi/linux/uio.h
-> index 649739e0c404..866bd5dfe39f 100644
-> --- a/include/uapi/linux/uio.h
-> +++ b/include/uapi/linux/uio.h
-> @@ -38,10 +38,14 @@ struct dmabuf_token {
->  	__u32 token_count;
->  };
->  
-> +struct dmabuf_tx_cmsg {
-> +	__u32 dmabuf_id;
-> +};
-> +
+On Wed, 5 Feb 2025 02:56:05 +0000
+"Xu, Even" <even.xu@intel.com> wrote:
 
-Why a wrapper struct instead of just __u32?
+> > -----Original Message-----
+> > From: David Laight <david.laight.linux@gmail.com>
+> > Sent: Thursday, January 30, 2025 6:22 AM
+> > To: lkp <lkp@intel.com>
+> > Cc: Xu, Even <even.xu@intel.com>; oe-kbuild-all@lists.linux.dev; linux-
+> > kernel@vger.kernel.org; Jiri Kosina <jikos@kernel.org>; Sun, Xinpeng
+> > <xinpeng.sun@intel.com>; Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>; Mark Pearson <mpearson-  
+> > lenovo@squebb.ca>  
+> > Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: sparse:
+> > sparse: dubious: !x | !y
+> > 
+> > On Wed, 29 Jan 2025 22:02:59 +0800
+> > kernel test robot <lkp@intel.com> wrote:
+> >   
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > > head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+> > > commit: a688404b2e20f00cce6d0a2b888ef4ca9154e144 HID: intel-thc-hid:  
+> > intel-thc: Add THC DMA interfaces  
+> > > date:   3 weeks ago
+> > > config: x86_64-allyesconfig
+> > > (https://download.01.org/0day-ci/archive/20250129/202501292144.eFDq4ov
+> > > r-lkp@intel.com/config)
+> > > compiler: gcc-12 (Debian 12.2.0-14) 12.2.0 reproduce (this is a W=1
+> > > build):
+> > > (https://download.01.org/0day-ci/archive/20250129/202501292144.eFDq4ov
+> > > r-lkp@intel.com/reproduce)
+> > >
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new
+> > > version of the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > | Closes:
+> > > | https://lore.kernel.org/oe-kbuild-all/202501292144.eFDq4ovr-lkp@inte
+> > > | l.com/
+> > >
+> > > sparse warnings: (new ones prefixed by >>)  
+> > > >> drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: sparse:
+> > > >> sparse: dubious: !x | !y  
+> > >    drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c: note: in included file  
+> > (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/mm.h, ...):  
+> > >    include/linux/page-flags.h:237:46: sparse: sparse: self-comparison always  
+> > evaluates to false  
+> > >    include/linux/page-flags.h:237:46: sparse: sparse: self-comparison
+> > > always evaluates to false
+> > >
+> > > vim +298 drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c  
+> > ...  
+> > >    297		for (i = 0; i < config->prd_tbl_num; i++) {  
+> > >  > 298			if (!config->sgls[i] | !config->sgls_nent[i])  
+> > >    299				continue;  
+> > ...
+> > 
+> > If zeros are unlikely the bit-wise 'or' is pretty likely to generate better code than a
+> > logical 'or'.
+> > 
+> > 	David  
+> 
+> Good suggestion!
+> So the code can be optimized to:
+> 	for (i = 0; i < config->prd_tbl_num; i++) {
+> 	         if (config->sgls[i] && config->sgls_nent[i]) {
+>                                     ......
+>                        }
 
+That just adds a level of indentation to the source.
+It'll generate much the same code as !x || !y.
+Both will generate two conditional branches.
+
+It almost certainly makes in immeasurable difference here, but !x | !y
+can be generated using (on x86) the 'sete' instruction to get a 0/1 from
+the x == 0 compare (that sets the flags), and then doing an 'or' and a
+single jump.
+
+	David
+
+> 	}
+> 
+> Will create a patch for this.
+> 
+> Best Regards,
+> Even Xu
+> 
+> 
 
