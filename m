@@ -1,107 +1,109 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAFB229B36;
-	Wed,  5 Feb 2025 09:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB5A21A452;
+	Wed,  5 Feb 2025 09:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747977; cv=none; b=SNv8RMQH1P890wy4FtxYskYgLEyDNUZnGHlBXi1OCdYeR/wLkH7l/DwHQx+jRH3261pZFJRfYFJoy5af9T3+pv4H3qrISJMEf64dxeUaKyZEv02UuJK5D1vJIChSqEpd6+hKjz+Be7bLcpIxM+oYOlPUuOLiWqunRvfXj9q8Nvw=
+	t=1738748040; cv=none; b=kVIM1CEfwvmXaRy3F0r6lWoNzF9EUijm018H31qIntQkAC9Y6gskIzY8ZgbrOjvmG+PDU7Phz17pTKaoj5zgIaw5crKiKa8pB2oxQxpG25SCUC3oYHsgZ45W4OROgCfB2tYFnx+09oDPymVI6ggFxugpreGLWV19xg8ALwA8gqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747977; c=relaxed/simple;
-	bh=Agdro3bOdf17QBDFrbIxaxuU8tpqb48A39LtZ8J0lz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b++lsuo2n2vflGxTzAjTaROX5ODLKQA5F7lfbHGMuoQvFwxdRGuAAHOojwKW6q3YrW/lB7FQQZdWRragvG/H417er4kXpdq6ZmkyVRNkmn8ejiey1prw7MN7MwxmJbB9Xb9oWl+MNajaVB3VQkbz29M/STBMBGvY5asVkJdRiWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8622c3be2f4so1841219241.1;
-        Wed, 05 Feb 2025 01:32:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738747972; x=1739352772;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ul7RXmOlLWXbmp66NuHARFMZryclEeLS4nT2u1OB7IY=;
-        b=WH6A2bLIfKrd1934W1wbpDSG+G/Dx2cDacwm7/a54mkc0YsYWOE3cLK/5zq4/rurGk
-         hWbUXN7SDomAvcIX0Exkd2HB8GvT0npAgp7gQd0WqgtW05GnEnG0Us1DgeQI3DBPpinH
-         jZpUDJj+IB4i8VSFwdiQ4k4O2hYgkPnk0y5oBxKUqIX5KOvAyXFC5xceiwSloY92VIUQ
-         cztaG6ygY+9NuNM8wkN3zfL8dgQPPCNd+Si9tnhuYK1MVGiPZdZwjzLVzmaxSK5ZY0AW
-         w31ED8QGI4sHU6a+MX9YUz4JMy/wsLhIg8JRkB2Vwx8A8NZ7Glq28LIw4dxmK1w57b5x
-         uF4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVHiE11p0EUBDfsaU/AG1Uih3iBkyiKg14bdLX+aJhierdumSwuxxpzYp8wYQYQ7XpRcJ7N8Y+UIN+Uf5Q6DUX2@vger.kernel.org, AJvYcCXfOdpCv1+B7mqldPvZYxUwAdkxbyyRdMWBdavT7jsCg+TyCCgDyA/kJa0VHYRvqwWe1van14wfeic+s9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA6Lq+whmjlqwOby0FovrsAgOS4gSWhkMMYXPgopEroyx2XGEd
-	F67JnCQ/WdmbVDYN7L7lVNGJX0NiQEoX4rEkHMwYnZq8PZyKsISqmKquGuHX
-X-Gm-Gg: ASbGncvfeJ/L5t/lcqCqpzbUdhWF2s2YvWQJ9k1dtpn/sDf1VBKZhohqPuTq+4fTUNg
-	WhS7f2HVNTmTQg+6kOfn0g7u98eLQgXvVDe1wfXcWku00SM8S5t71sLSTFi+S7sliE1PpPlNJLP
-	9Mwor5OFpmZ/ajO48wOPMmrCpPG1NztoTO3tt82Vdv2oU5U2V7yzGxxOW1BVnw1MEs+zyM4iQp2
-	TDYU2xx/g7IdqEdNNY/hbGF/oTsgsUc+oN1RVVAaIKkOIokWjWtSdOn5jQ7RCJ6f/ThJP1AE4te
-	F7oM93qVp0NhPCZWKi+Yx6LvchG/iAKF+RbrnkLsn+49GmNG8NxfRA==
-X-Google-Smtp-Source: AGHT+IGTJwqmBadrTSYVc//qFq05/hI4SqXYs6NsgpZqKlk4YMypfU3Waw6UDiKtHsUDFDYeIql50w==
-X-Received: by 2002:a05:6122:4f90:b0:518:8bfe:d5f0 with SMTP id 71dfb90a1353d-51f0c0bd78bmr1339989e0c.0.1738747972378;
-        Wed, 05 Feb 2025 01:32:52 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1c1495bsm1768738e0c.20.2025.02.05.01.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 01:32:51 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4afe4f1ce18so1847523137.3;
-        Wed, 05 Feb 2025 01:32:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUItAjZZGPEHV4gQo342JmST2/456Ie2qrxcFIdAs3ez0w5Lt8/imXAMNY/WZDZxMxsio98n+64E2KqCtY=@vger.kernel.org, AJvYcCXFr9PQspbqR1EV5e+90WQ8qvUQqDQTkD7rCH+riyV6LdrR9XfnPFOHlLB4MYlmtyYY2Ucb55BJAuHWOmS7dd9t@vger.kernel.org
-X-Received: by 2002:a05:6102:1610:b0:4b9:bb3a:f5fc with SMTP id
- ada2fe7eead31-4ba478bb5b3mr1358546137.8.1738747971234; Wed, 05 Feb 2025
- 01:32:51 -0800 (PST)
+	s=arc-20240116; t=1738748040; c=relaxed/simple;
+	bh=tzRMXKZzO95mcP5eMffinRwb2km28q9DUzNSVJ2qTaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/VSiVczHT2V95dxSnCnR8kG4iCz3DeNRvpM4QVZEagGoMSEGU3KJuLWhHofu4xS0l+da6XAh6Hzs/oY7bv51wuw4I2W8MzY9C+f7QbsWTCKc4liiFibJf7ghcUG8kf+xpiJbjS6R2PlocB34qIO4oD0mz+W9mPzhFlJ9yGPCeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DkccVivH; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DkccVivH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2Se4JrlRqU3OaPcp6MZTvfuA0o3oMi92fGri0Ng0pDw=; b=DkccVivHxLzYZXPHKSxa/C2WA6
+	GsumaSfDED2XiJXsoMgN75kcGLHhFeWLDVmHfmdph2eDIEeOm+icaBlx29oBmq5ISwLEJ1ofmiei5
+	mbIe22+K5SC05kr7QKgjqsdD1lbXDh6eRYUgXUGxAPB4k2OoJ4Hsr9TGzRW4Z6rDo1l9PUD1MdBnl
+	sA0U+1IwMlPNQeu0dz9rkDnjQh1EUM8/1HhJmo3XZ30QOFWJoUp/hmFeQ14pbK6/wDNr9t1TGoew5
+	16ZD6qCO6F1ncMzyUhSE6q++ccH9qgmndtY7+d89lJTWA3eTh31Olac0+ljYO7r/0nE+zeuybTzSB
+	2x7WgeAw==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfbn6-0000000GbLy-238v;
+	Wed, 05 Feb 2025 09:33:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 120063002F0; Wed,  5 Feb 2025 10:33:52 +0100 (CET)
+Date: Wed, 5 Feb 2025 10:33:52 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Liao Chang <liaochang1@huawei.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the tip tree
+Message-ID: <20250205093352.GN8385@noisy.programming.kicks-ass.net>
+References: <20250205080053.30dbe654@canb.auug.org.au>
+ <20250205091427.GZ7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com> <20250204-printf-kunit-convert-v1-1-ecf1b846a4de@gmail.com>
-In-Reply-To: <20250204-printf-kunit-convert-v1-1-ecf1b846a4de@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Feb 2025 10:32:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVjv6TeaFmJMzPNG=dScTbR=i7CktkftR=ovgn2YWUN9Q@mail.gmail.com>
-X-Gm-Features: AWEUYZmlNybqMOBIyOk1oXnDuzzkfZ-3MWvNFlAbQZAgj-9ELYuznLp7GCiQaxQ
-Message-ID: <CAMuHMdVjv6TeaFmJMzPNG=dScTbR=i7CktkftR=ovgn2YWUN9Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] printf: convert self-test to KUnit
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MRA9r8Hcg4vXgeJS"
+Content-Disposition: inline
+In-Reply-To: <20250205091427.GZ7145@noisy.programming.kicks-ass.net>
 
-On Tue, 4 Feb 2025 at 20:38, Tamir Duberstein <tamird@gmail.com> wrote:
-> Convert the printf() self-test to a KUnit test.
->
-> In the interest of keeping the patch reasonably-sized this doesn't
-> refactor the tests into proper parameterized tests - it's all one big
-> test case.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
->  arch/m68k/configs/amiga_defconfig         |   1 -
->  arch/m68k/configs/apollo_defconfig        |   1 -
->  arch/m68k/configs/atari_defconfig         |   1 -
->  arch/m68k/configs/bvme6000_defconfig      |   1 -
->  arch/m68k/configs/hp300_defconfig         |   1 -
->  arch/m68k/configs/mac_defconfig           |   1 -
->  arch/m68k/configs/multi_defconfig         |   1 -
->  arch/m68k/configs/mvme147_defconfig       |   1 -
->  arch/m68k/configs/mvme16x_defconfig       |   1 -
->  arch/m68k/configs/q40_defconfig           |   1 -
->  arch/m68k/configs/sun3_defconfig          |   1 -
->  arch/m68k/configs/sun3x_defconfig         |   1 -
+--MRA9r8Hcg4vXgeJS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+On Wed, Feb 05, 2025 at 10:14:27AM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 05, 2025 at 08:00:53AM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > Commit
+> >=20
+> >   a66396c911bd ("uprobes: Remove the spinlock within handle_singlestep(=
+)")
+> >=20
+> > is missing a Signed-off-by from its author.
+>=20
+> Bah.
+>=20
+> > Looking at the original patch, it seems that some process has cut the
+> > commit message off at the '----------' line ...  the divider is
+> > traditionally '---' or '-- '.
+>=20
+> Yeah, except akpm uses/used a much longer one IIRC.
+>=20
+> I'll go fix up and rebase I suppose. Thanks!
 
-Gr{oetje,eeting}s,
+OK, I think I managed. I've tried using lazygit for the first time
+today, but I'm not sure, this might be worse than normal git :/
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--MRA9r8Hcg4vXgeJS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEv3OU3/byMaA0LqWJdkfhpEvA5LoFAmejMHoACgkQdkfhpEvA
+5LpG9w//VcRnDOKaA9i7WwEkzqAWvKDMKTHeIv2gaZICnWT7qxegEo44yd8XYgGE
+3KKpRwUhetfWPYhnOfNUvS3gcDkE/EFNqLd/tYHIAtbtZ9EjlFrVAs6LhCZaDfdU
+nQzaAChjO+nkHuSB6Eka8grAJgdhFVPzMg7V1FPi0nLUYvtbn24jnC7oNAoqoRyJ
+yVoMbmuMgGGQnOPtCUi3nY/YGKCXTW29tLkhPnjG+YQ7BNkuJGn6c+NIXCBuC4T1
+Ns/TGQ/g5sFQQjmYmNdnPzHZutXIYGrbBTOVg89hdxgeFvksGM3i2bj5jkFnPTKG
+4o2eBIZHxMO48PvCAnP1VYzshCpi+9VGuivF7uO0t/ZJDzsK7SMcQT9AWM2+2Ue8
+WbKsmfUlSrsYnEFPaf/ae6sLCAXv2X7gJ/gtwXXuLxIV9u1KZYA4OorK0ODbDVNy
+EmJ/+i1+FHIw9Jzc9czAseMVrDVBTZlRUrhonDF58BPRgSNwcrCukhGyQFvRNZpd
+SKKUXnUXrRQhBCpwo89hTSJuLvayW5+omW8w4nwhrRDNi0GSJF1FY9lUzlLVUEKQ
+ZjAiXyZ0PygvLql+DsC9M4uJO1NPOfzK0kaDoVhyTkni8ItycDk/EmWDOSY1qaTB
+SI4jRZfKpSqmPSlnU/cFn8VWY4lNvMDWvl/XCtjyR2QWnOdbsjM=
+=vUFg
+-----END PGP SIGNATURE-----
+
+--MRA9r8Hcg4vXgeJS--
