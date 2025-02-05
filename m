@@ -1,107 +1,91 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5B321C180
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EB421E087
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738735008; cv=none; b=ZzaE5wB4XqWK2ZKMls/9pXMCR7a67gylI3xtnx7vVqmFebQPaQqGKb3SCyUcvmWnlCdXW4tmDZNwM4l28iM9IH1yvoFIlxAWNVyBXGtnpej3A0z59wY5n+1982Z4cSp/KjsyUDrS0aq7Mt9YvUvIAB6qNjwBM9nUyR7KW3SDzcw=
+	t=1738735032; cv=none; b=fpMzWoTVMl8Trtb/MjOFNS42LyYnVUIOj3ZJ6KgMAy8alivbVqMWyglyvRXRsDiITwVeQ0+g2i3QQT1BMetTh0CcEPbqbSG/NIC7WVHVHZdU+9gfHFhuY+V3L6FpY1iaYiDJ5ltqXA68zPN/1MutO+b6beHG/r5BOpPxxKIBTek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738735008; c=relaxed/simple;
-	bh=MrX4MfuXKWj5ytSNxwkhkKn37o5v+Re4uJYrYKu/+kc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lihltYmTrEwQi4LAV+nkhP5o5fcLT13JCkpt2lO147rBMQiDWs6CeO46b49YmPqT2frRv+NX463jFN18pTznO491ZfQHHIarNRc2R9zmFxmHVDx4bf2zH5T5edylrLGJ5hUQOupH1tv3Iu8Sor1pGNMzE7IaeafS5YzNttWWUPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=PvgD56ON; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1738735032; c=relaxed/simple;
+	bh=JmHHk6b4grLsldkwDlWYnMxUVEDLxRUNdHIBTOJGm1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HEBazOr7abDgmOMShNe/iyK1irEjDNfI49lbkWz39m/Qc4g0bFrgyQlufdJtZbeiltY2D8LXlZdRMx4G9tyAmLAfqfWdBgYFGmRmFVPOsEjmjw5fd4ysMRVlb4Gw0JRzPwZmCAIhjuDXySYtbNlsQJy12grJhsOyYUOUl9KGg5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pC5M+suT; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="PvgD56ON"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f9d5e0e365so1550189a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:56:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pC5M+suT"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436281c8a38so44790765e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:57:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1738735006; x=1739339806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ns0GvBmqZ/ALUPGbyiEvtLecO6r/ScOTIN440LsR8U0=;
-        b=PvgD56ON9ydeM2frr0Pss/6EhwfrpkPotumZZBi9t9hWG23SK+BTxTll+89eVAGSWd
-         3kmqGfQQG0d0BGoqKYHmLzz9iqIEa6sGy4dvpTjTVP3xJzK8zMtOv/rsUbL76G/lX9eO
-         K4I4KiRMbd22Pg1ak/CvdWT7PFzyXidj9qDpOFNzrnwap0X6vHzzfgnP59LB4o73WZ/W
-         F9JpdZZLDEfN/hifDXy7onJtBq7PLxkJvbE38gScAFOXSRrJND2D9PrRjJQHdZNo9ZXR
-         7/fmohklHSn72E9v+U91y1cJK86brk1XM/gCJh7YKcAyWfBxVNXzbbUqYurCyj9i68wW
-         JZJg==
+        d=linaro.org; s=google; t=1738735029; x=1739339829; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Wf//K+zDvjEZ0lCO7qefASJpOtz5W/b6I3djUeQy/I=;
+        b=pC5M+suTcIA4wArAYKc63FiqYlRbXFs55ACie2XOftBTqhwGDl1A0MlQC1fB5Ikk81
+         KbLuPfBNeCg7qwVxo4ckBt1yzgpsft/VJaLgbUQot5UzEiAe/ee2bK55EuhfYR1xruiE
+         DuVtrtPQnZnLS99Qi4u/Y443t/T2RrEs2803g+Pjgrne+Fl1LF9o7jZr6N3CpgZlLeC3
+         nEBKuKoCIdHGz3B8FmDnxuOBdqi6+UvOPFVPhxT01pi+JoAP+srNQZMSJWn0m1Fa3dyV
+         3xbA90Hq5mQQbdZgOLtLKuoyAmXtnX8jl8/0XtfnZ9bwqAhQt9vaxfTNUH0OFYcmsfZT
+         pBKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738735006; x=1739339806;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ns0GvBmqZ/ALUPGbyiEvtLecO6r/ScOTIN440LsR8U0=;
-        b=TrfSFFizTEmYW1zZgQl3rK60cTFtrUskeubpOFFZJrubzzYq/Rn9WRGoaDQlLCuzR4
-         meGtQDyaPN/9wvvGUgUlCO0oVLrzoGO0O9tuwMAtohdTUmHNB7EP2bopxRkXrUhTT6Bg
-         Rvv2PQ0lncKQD9s6jp3U8NhP8NBfLc+oX6z5ErUPh7Buwz60h0CEGotU7fSGRFlJ/j+b
-         DfJJH3p5SLT4NsM6h2h7OxxCbzk0a/FtlWs03SQaHS765hiHXRnmPR1AGjhNrLzuhBk3
-         5HKIG6ExOXLWB/GFBaHYN7opYxvpd2NrGqdWFW4coLSIQGWLlLtPvljSBVY5pYjJpl2J
-         6U0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUsOIzr2X+Mka5cKzy33Bji9NicWm92o97s24FXMixXNILxltD0CPHgz1AkJ16lxqulrEFSjFKJoupQEVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwkonloDadZH1nX9DB6ZUouCqM87dASV9QKYF4xWtdQLoXBIk/
-	5ynpyZX3GjvVZQ2PP1lyVa915V9wEdvyWt9rmVmubexDVkANqV6fw3x3M/vAHlU=
-X-Gm-Gg: ASbGncuXvMIdX4nCnPSpXehviTqudPPeewDqi8BN4PacufWcx/U5QWKIGENj83D99wA
-	TeqZUGxsdiEXpkZmYoSomh0lzVPhp3CVoGmXMqKsquNuGk7+vBdGSE9Sz3H8EHK/pdueXveT/vS
-	b7icY+X2N2JBMnJ2cJrHF3KXfIJtnBmk/qMQ+s5CaYhcQ62xTow27Q4zFvQD/Ok29rq5X0ajIgz
-	NHhOTcPH8f6l3A0LQoiFyCKM9NOxga/GKasQbBnCbAj5LitE9jI5P2DftkxELyqPiwBlOiEku8p
-	pYyJhtl/MGXR2viHZtAN1TGkKfsRyTJlOqUF3jJKS6xzbbHBzTfSHZGLbizodxOZLm/9
-X-Google-Smtp-Source: AGHT+IG04CF5Qx7s6xBWVy3NG/NTiwTMF528huN8sMDzFrqgklOtDQvD8VpkkKg5ZaYCNCuNQm5zHg==
-X-Received: by 2002:a05:6a00:4642:b0:72d:8fa2:99ac with SMTP id d2e1a72fcca58-730351255c8mr2340033b3a.13.1738735006329;
-        Tue, 04 Feb 2025 21:56:46 -0800 (PST)
-Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a18cb1sm11561432b3a.169.2025.02.04.21.56.45
+        d=1e100.net; s=20230601; t=1738735029; x=1739339829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Wf//K+zDvjEZ0lCO7qefASJpOtz5W/b6I3djUeQy/I=;
+        b=RSW1JJYkEVwp2Q2h2TtYl2SajxgoB5RKhWNMWAQHIq7kk5dqM0dpmKa+HXxF84uucG
+         sTcisVYqmEyB67bOvxlI8kYSAHEvKk0jSS57V0QmhdBS5q3MeyT9Mr4/drt82QHrR8WC
+         nKbL6BPW1Ayqahudxdyt3TAadEVkfOCkXcHOl86XfOhFQe5G3sJj6Xt6vx+qT7+FgHzt
+         eKlVENdORDdqSm1cpO6QE8nttY/RSwoxNgt+TsH6QalUy1+S3YUM7aBnERcrwxnbukgQ
+         qFWjRa0w/gITcWdAbnjat572xsdAuKmuppLWNFKDcppBfCQDRgilbuv4UDvJRIHvI+Q0
+         4ncA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDnDbFDT1ycMcYT/iIEKbX0+APvjRlgj7EmYGo43CdM0iwNLHr3WBwwUJ+CDQj9KkDvb0YvohN6QboNtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ1ZLlE23MlWxzrN5MtlVUEChLJpNe74KCQhxVAdepihIX7xvl
+	ZHs17BYUALVdYCGOp3AbN+v3MYRFt3XUrhJzCqhvvyxveqaMpvGqZnLX1qcrmzU=
+X-Gm-Gg: ASbGncsAE7u885Xs9ErW751dWtqNx5D5aV7bFdtpvE5mmQ4P4N79JBWV0z329NHC5Uu
+	yT6a3zsdJDWu+et1dketThzudyWLzpfAo4HJ3nDjpkLh42DiFIJUd0oCg3LfHaHMyNjsy2+e7wC
+	Zj4mZTgoOoCCLlxIya4vckNosJMP4Jg92q9t9TFADUg2iJV2WzyQUe6pSdOtDbd1NgC8HxZWkC4
+	bZ/d1c/DSdIIGjVa84hsmH0cepnPltpqKDvwPjPZyEFLMLjyTorwjnMor2IegNHQOBBs1NlIZZI
+	viBQd82ClysU+ziMr3Gb
+X-Google-Smtp-Source: AGHT+IEzl0+icrJdfMURnyk6DnvesW8whXjv5guwsjmV0E/xmX8GtuyZJ6P1LmUsWNrvnv90m7c5jg==
+X-Received: by 2002:adf:f810:0:b0:38d:b1ea:506a with SMTP id ffacd0b85a97d-38db488dea7mr777074f8f.28.1738735029283;
+        Tue, 04 Feb 2025 21:57:09 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c102bdbsm17526023f8f.28.2025.02.04.21.57.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 21:56:45 -0800 (PST)
-Date: Tue, 4 Feb 2025 21:56:43 -0800
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Long Li <longli@microsoft.com>, Konstantin Taranov
- <kotaranov@microsoft.com>, Souradeep Chakrabarti
- <schakrabarti@linux.microsoft.com>, Erick Archer
- <erick.archer@outlook.com>, Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH 2/2] hv_netvsc: Use VF's tso_max_size value when data
- path is VF
-Message-ID: <20250204215643.41d3f00f@hermes.local>
-In-Reply-To: <1738729316-25922-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1738729257-25510-1-git-send-email-shradhagupta@linux.microsoft.com>
-	<1738729316-25922-1-git-send-email-shradhagupta@linux.microsoft.com>
+        Tue, 04 Feb 2025 21:57:08 -0800 (PST)
+Date: Wed, 5 Feb 2025 08:57:05 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ian To <onlyian4981@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] staging: rtl8723bs: remove unnecessary parentheses
+Message-ID: <3f548286-a32c-43d7-8e8b-6812a3fb9214@stanley.mountain>
+References: <cover.1738720049.git.onlyian4981@gmail.com>
+ <d0b70310eb6b2dfdf062ba865362cd2640cb93e0.1738720049.git.onlyian4981@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0b70310eb6b2dfdf062ba865362cd2640cb93e0.1738720049.git.onlyian4981@gmail.com>
 
-On Tue,  4 Feb 2025 20:21:55 -0800
-Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
+On Tue, Feb 04, 2025 at 05:50:16PM -0800, Ian To wrote:
+> @@ -492,14 +494,14 @@ void rtw_update_scanned_network(struct adapter *adapter, struct wlan_bssid_ex *t
+>  	/* If we didn't find a match, then get a new network slot to initialize
+>  	 * with this beacon's information */
+>  	if (!target_find) {
+> -		if (list_empty(&pmlmepriv->free_bss_pool.queue)) {
+> +		if (list_empty & pmlmepriv->free_bss_pool.queue) {
 
-> On Azure, increasing VF's TCP segment size to up-to GSO_MAX_SIZE
-> is not possible without allowing the same for netvsc NIC
-> (as the NICs are bonded together). For bonded NICs, the min of the max
-> segment size of the members is propagated in the stack.
-> 
-> Therefore, we use netif_set_tso_max_size() to set max segment size
-> to VF's segment size for netvsc too, when the data path is switched over
-> to the VF
-> Tested on azure env with Accelerated Networking enabled and disabled.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Nope.
 
-Since datapath can change at anytime (ie hot remove of VF).
-How does TCP stack react to GSO max size changing underneath it.
-Is it like a path MTU change where some packets are lost until
-TCP retries and has to rediscover?
+regards,
+dan carpetner
+
+
