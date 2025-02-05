@@ -1,204 +1,114 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8765021505E;
-	Wed,  5 Feb 2025 22:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC60121505E;
+	Wed,  5 Feb 2025 22:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794843; cv=none; b=GZ3x/T5G/hxSOoNCHBox06JkZTgqtGCLInOL2j8BxJKweE2aB8VfLJuJaWc0atg42MErA73mc7slwO1+v8oBGv5szjrJZA/ZeqGxVX/nMIXfle6u89WoTUGpVy6BsIVZ+y/QfUSF158pbeVFlf+7iOp7uCxMdmo7DIVXyTu6WR8=
+	t=1738795332; cv=none; b=OfPTCJAOF6T07ep+IbIKowaGIMqAxkHjjHxKkNOAhxhTxvZOKdGmAy2W07Vl5igJyaMcGvCTvA9z4tXnbffrVUoH3Gp8nexD0Smi9S3UTxJRFg06hUh/rxfBmpe0Lk+ztQl0uxJ0/WRzzEiK/fylo78JodWo7NMypG7DqmLMth4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794843; c=relaxed/simple;
-	bh=adQTj1m3gmGYNXK4mStiHNB3LW4uOX5cg557NJXyWLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mo2ubjuW0x1cQWwQagfzfTZytmk0taIDPP+FMUwki9qQiIHJJDWANpCFSgEd0+zrj9CuDJB56j6b8Ao6p+ZTzDE6ssXXdFJi2TlHyYkDVPr6anrY3J1CD0TQhD7qZM+bu+rdTG19IQfV7mdh5PTNA4D0d7EAd/P7o9jx08U3kUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UnQI3naM; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1738795332; c=relaxed/simple;
+	bh=Fxuc+WuGK9LFrEppLkxQ+HGxGt0oSE9m6Bp6Oln8C2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type; b=cHvQ8/K9mn/NpRKQaUSOrevPeCQmEpIyasvyiAvXET1cQkHOG1gD1FmxvF6dbxsXmDSwNhWbS1Sm83UHNjcwJdWMyGenvFt3nxrQBrwrR+mMGUxAMxKjB2PO/9lXWHx5sQqeUfrA8V25asmaGDFHaWrb2kjMYFQCFtsOMRNMRcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXh4gkeB; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnQI3naM"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso308433a91.1;
-        Wed, 05 Feb 2025 14:34:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXh4gkeB"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dcd09af4f9so696701a12.0;
+        Wed, 05 Feb 2025 14:42:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738794841; x=1739399641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aH0PP844QcNcNPk9KJKcMheXTiPkxbPOA82ZgA1T/p4=;
-        b=UnQI3naMTvjl10Ht1JAwpbY89sVJF+46jwAiEiQNojjrCZa0YPVP68vBI2DclVwZsj
-         DwqPjOCBEUZ1DKEaLzsiND+8rytrXpT+q+PI3T76gxT2QzFYxjG/PrHxzST7k9+G9ogx
-         5OGHPjNlHSDyEKy27nXqVB2Nqju1AV47yJvNl/UWLyeSr0+VpqYfqNzAsch6KbSAklwQ
-         2lDoGP372BjO5qAkmvmqkMUx0CoHApgSmzvn3vkREqEek0Ewi63GstUzofO5B08KnRDl
-         qLTxOwSHiaM/c/UPDNqHdYwvAPhzyQnHSkgl8ffp8gANl928G8IpAHFmX/T7SiA06D7u
-         xQzQ==
+        d=gmail.com; s=20230601; t=1738795329; x=1739400129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fxuc+WuGK9LFrEppLkxQ+HGxGt0oSE9m6Bp6Oln8C2A=;
+        b=EXh4gkeBSRWHeGwcXf+RxLbx+FJ8LXfxhAK2VxUbIvCZRhRuNzbpiGPdNEG1BNIvQt
+         ttRSt2H5i49pa+7nBFPnmGrpEL8bT4xNf4oycSdaBYVLYjSf2NiePsL1ylQO6HByYXvq
+         oqrRtgn2lb+xDGFIXwDEUBVf2GsLOc9PZBftQ6AAHay81B8dI6OxzndkrHejo5r2w9K1
+         aG8E30lLsXLHzrJygh3eutLNwM9msmdqcBXCDbo3mcxZaC4+VZMw3fqbQxXMC4mntPN5
+         kJEudK6OBBBV7dcbcJx4cg3byZZJ3yX9cZ+cFxOis0/WEmNJL7a6o5UIYCgyJh0a8TAz
+         3dKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738794841; x=1739399641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aH0PP844QcNcNPk9KJKcMheXTiPkxbPOA82ZgA1T/p4=;
-        b=WdqdRkZaC6TN0ydHf8CcziUm/EwSYrYcASDu2Pqpcvp0ZNVyfxlb6YzJne9pOuj81o
-         RMW3A9bZh1OgW3JAwLbN/CsT0OqCSxhFkNqdStdGPPa02r120mBqH5xgY8Biolv0+quy
-         kHRYCtWtbwhFflcWnbSEWxPV9ulfjkeVOGpXmZIIyqlPBrRuBKiirvT37m6sfUZjVkcO
-         3y8LXXlS0VhpsZVfHBpTDDgl9KiXa4QEplhOdFMe1u3NJPcoQitpyEqbfnKvRTULBVaS
-         lxUVPZwgqw6MX/ISntQbeNk2fUNOmBrZ6QJFcichGs2PFnYW77LwBnGnbKX6NnFWCfum
-         dvXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpKVvuy1P4QkLo8PRAkYEj4N0L4cOxCzXx+J/PnUjCUYINB/0U6HqAk41nkSczscOss4Q=@vger.kernel.org, AJvYcCVBbF3BP59MCcPkMlz4Zz+4w79+TOOq5zeZjTeNm7JbeVrtMWWHbqku6Y1CB8ZWWWhs9Gf8y61k0NVHs2qCZYGY@vger.kernel.org, AJvYcCXzAyF2Y5Tk8k1nxr1LWUZg9EvTeMFVf4G+cA+8r23lz9SR9SgFLGzqSl4V2k4NmpDFoqkRrtiwylbty6b6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze13gyABpoXoaMk/jr2tViXDxGCfzGjJ2IKHZxi3oDjWCvf16i
-	eUJW/vJqFxr5rWH9DH+lzUHxYi7xZMTJppb77mt70RJSXYfUE9tnAbTR4tycP4MWgMS/w3YtRas
-	DQw3crhHLnbfIKBz1AqPsZ0RhTK8=
-X-Gm-Gg: ASbGncv4H/JpBzP/ZoYuPJKM/lh29aHuRbFxx/x34aEJD+hJMxM9IW4bi/LwMlCCqft
-	pNVWy0jln40ESB08rLl3JlLYatzb6qGODM8tMUyV8bak8lnlMs49cNBA96DPbT3bw8gqv92tM39
-	ub2sBnVLerrw7W
-X-Google-Smtp-Source: AGHT+IH6yHRsB9eq9KiZric8SOM0t9kXIeXj+JN4o1GstUwwyKafghnVHjlRCz9+B53uZayNYUHtcYUXxEAC5jbqe60=
-X-Received: by 2002:a17:90b:4c4b:b0:2ee:741c:e9f4 with SMTP id
- 98e67ed59e1d1-2f9e0761162mr7556140a91.11.1738794840681; Wed, 05 Feb 2025
- 14:34:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738795329; x=1739400129;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fxuc+WuGK9LFrEppLkxQ+HGxGt0oSE9m6Bp6Oln8C2A=;
+        b=WEmdgTG/JoiMvumiZHEQ9ojO1qm0FReWWe55zlZx3/+a4ujYShaWL6vzljSWjBp+aF
+         n9YqEg+R0AOICIf0dU9K7wz7jnqDzMP7XyKQX1NiAfTqG2jlzEVfFLXPK03CtgTlQ2+m
+         YzLz1qHXQQzOTC+Ba8S0kGrEd0jKds01AQuLkDGcXF7gKuBMLWcJCD8rQ3ikDt9und4p
+         hP5thIYxQgtRH0fggDgVOWaYOxTk+6mecOGLxrTBzqO0NLxiGPrupxFjfLwd9uFsAAPj
+         TfEMxX8QaV97cTwZVSJAhz+dyZOcQdmL7TUV+4dFJoB+U6A/mv4TE8cLqJVrSmX8eHIj
+         wCIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhZu8sRYyXgCpCGBb9Gmw7t1jQ+MAQlT/+yEJvFDz3ino45d9cT28FbOuFLmP7DhX4KGhN4Fm/BBnq+40=@vger.kernel.org, AJvYcCVw6Y3DE9c2muKuE8Za2ZiYgRlvAD9ubG4VVSujd8y29RGQyQHDUxAKZG+Po7hFNHgAbOEOGQVlUciJ@vger.kernel.org, AJvYcCXjOB9KAgZsV8gchCI98f4HcWh2mvAjf8/+nmmGvbz/g8ppodB/xa5VTaZ4ZIYTdTD/SO0QsN8p@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR3yvscEYafn1CPEXFJ7or4sNI/HFlIuiv2tJuGoAFoWMFAcJF
+	eLkhrbI/QgNhIgYoM7LumrSv7S56UmhtmfDXYtieyR5xBMF6fkeZ
+X-Gm-Gg: ASbGncvUaIWNWp4qWiSib7tE4qUo3rbVZtC0+3V+l/35Deiw1xD1QA1r3fa2wuHY8jh
+	CaNLTc6GV7DkSTpzd79aD5hIhjmUPugsNFSnhUwVQOeUaGeZMS4Xi8zbfSflbcnebzBn46tQJeC
+	L1flO4iV6yQLfGX6OsQrPdVOVCDV9QxImsoRU+UJO1wl5q2481SSD7ian4atjVr5N6GNbwxKzeS
+	LqZQv+ATi5RxCZibpco4ImWsOMjL6BvWHRs2BAbmMX0CJ8t8zirf2KUkUTjwtfsR3o95ZGMC3q+
+	XirN7v8uG+guwiAw5wE3jH0BhdDr4gMC
+X-Google-Smtp-Source: AGHT+IETAJTW4b+efXQKaHPsDKb/nAvZaQXF/q7r/2Ski+H4KNiXwj9HdoGdiKWVsMRvPAc0HuJvzQ==
+X-Received: by 2002:a05:6402:4587:b0:5d0:e615:39fe with SMTP id 4fb4d7f45d1cf-5dcdb757597mr5075568a12.18.1738795328838;
+        Wed, 05 Feb 2025 14:42:08 -0800 (PST)
+Received: from foxbook (adtt137.neoplus.adsl.tpnet.pl. [79.185.231.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc72407bd6sm12429808a12.48.2025.02.05.14.42.07
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 05 Feb 2025 14:42:08 -0800 (PST)
+Date: Wed, 5 Feb 2025 23:42:05 +0100
+From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
+To: mathias.nyman@linux.intel.com
+Cc: gregkh@linuxfoundation.org, ki.chiang65@gmail.com,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ mathias.nyman@intel.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
+ Etron xHCI host
+Message-ID: <20250205234205.73ca4ff8@foxbook>
+In-Reply-To: <c746c10a-d504-48bc-bc8d-ba65230d13f6@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122215206.59859-1-slava.imameev@crowdstrike.com>
- <20250122215206.59859-2-slava.imameev@crowdstrike.com> <CAEf4Bzajxh4xvg-aCaBhLQdNOZdhwceYUD2UsCcWku4ZBca_Hw@mail.gmail.com>
- <8831ed8fa183f76fefd71244360fa0ca35b11910.camel@crowdstrike.com>
-In-Reply-To: <8831ed8fa183f76fefd71244360fa0ca35b11910.camel@crowdstrike.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 5 Feb 2025 14:33:46 -0800
-X-Gm-Features: AWEUYZko0wvNCjmlnOayQjsFSvvwvnSSwF6aSmRgeSYD_fPO9Zvi5IoEhUcXP2E
-Message-ID: <CAEf4BzYWe0KCzA4-qwAGp5n_ydJ0_zyLSO=Crr_vewFHzZ0t6Q@mail.gmail.com>
-Subject: Re: Re: [PATCH 2/2] libbpf: BPF programs dynamic loading and attaching
-To: Martin Kelly <martin.kelly@crowdstrike.com>
-Cc: Slava Imameev <slava.imameev@crowdstrike.com>, "mykolal@fb.com" <mykolal@fb.com>, 
-	"shuah@kernel.org" <shuah@kernel.org>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "song@kernel.org" <song@kernel.org>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, Mark Fontana <mark.fontana@crowdstrike.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"ast@kernel.org" <ast@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "sdf@fomichev.me" <sdf@fomichev.me>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"haoluo@google.com" <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 28, 2025 at 3:08=E2=80=AFPM Martin Kelly
-<martin.kelly@crowdstrike.com> wrote:
->
-> On Fri, 2025-01-24 at 10:31 -0800, Andrii Nakryiko wrote:
-> > > On Wed, Jan 22, 2025 at 1:53=E2=80=AFPM Slava Imameev
-> > > <slava.imameev@crowdstrike.com> wrote:
-> > > > >
-> > > > > BPF programs designated as dynamically loaded can be loaded and
-> > > > > attached independently after the initial bpf_object loading and
-> > > > > attaching.
-> > > > >
-> > > > > These programs can also be reloaded and reattached multiple
-> > > > > times,
-> > > > > enabling more flexible management of a resident BPF program
-> > > > > set.
-> > > > >
-> > > > > A key motivation for this feature is to reduce load times for
-> > > > > utilities that include hundreds of BPF programs. When the
-> > > > > selection
-> > > > > of a resident BPF program set cannot be determined at the time
-> > > > > of
-> > > > > bpf_object loading and attaching, all BPF programs would
-> > > > > otherwise
-> > > > > need to be marked as autoload, leading to unnecessary overhead.
-> > > > > This patch addresses that inefficiency.
-> > >
-> > > Can you elaborate on why it's impossible to determine which BPF
-> > > programs should be loaded before BPF object load step?
-> > >
->
-> The main use case for this patch is large applications that need to
-> dynamically load/unload BPF programs. Our specific use case is a
-> continuously-running security application with a dynamically-
-> reconfigurable feature set. As part of that reconfiguration, BPF
-> programs may get loaded/unloaded on-the-fly. Restarting the entire
-> application during reconfiguration is undesirable, as critical state
-> data can be lost and loading hundreds of BPF programs is time-
-> consuming.
+> Not giving back the TD when we get an event for the last TRB in the
+> TD sounds risky. With this change we assume all old and future ETRON
+> hosts will trigger this additional spurious success event.
 
-Thanks for the details (and sorry for late reply, been traveling lately)!
+error_mid_td can cope with hosts which don't produce the extra success
+event, it was done this way to deal with buggy NECs. The cost is one
+more ESIT of latency on TDs with error.
 
-I don't want to complicate bpf_object internals with this third
-autoload state, as this creates tons of non-obvious gotchas that have
-to constantly be checked whenever any new feature is added to
-bpf_object (or even during refactorings). It does seem like you have a
-pretty complicated use case, and so maybe some of the alternatives
-would be just fine for you.
+I don't know how many Etron chips Kuangyi Chiang tested, but I have
+one here and it definitely has this double event bug.
 
-I see two ways forward for you. Either you can break apart your BPF
-object of ~100 BPF programs into more independent BPF objects (seeing
-that programs can be independently loaded/unloaded depending on
-configuration, seems like you do have a bunch of logic independence,
-right?). I assume shared BPF maps are the biggest reason to keep all
-those programs together in one BPF object. To share BPF maps between
-multiple BPF objects libbpf provides two complementary interfaces:
+These are old chips, not sure if Etron is still making them or if
+anyone would want to buy (large chip, USB 3.0 only, barely functional
+streams, no UAS on Linux and on Windows with stock MS drivers).
 
-  - bpf_map__reuse_fd() for manual control
-  - BPF map pinning (could be declarative or manual)
+> I think we could handle this more like the XHCI_SPURIOUS_SUCCESS case
+> seen with short transfers, and just silence the error message.
 
-This way you can ensure that all BPF objects would use the same BPF
-map, where necessary.
+That's a little dodgy because it frees the TD before the HC is
+completely done with it. *Probably* no problem with data buffers
+(no sensible reason to DMA into them after an earlier error), but
+we could overwrite the transfer ring in rare cases and IDK if it
+would or wouldn't cause problems in this particular case.
 
-Alternatively, we can look at this problem as needing libbpf to only
-prepare BPF program code (doing all the relocations and stuff like
-that), but then application actually taking care of loading/unloading
-BPF program with bpf_prog_load() outside of bpf_object abstraction.
-I've had an almost ready patches splitting bpf_object__load() into two
-steps: bpf_object__prepare() and bpf_object__load() after that.
-"prepare" step would create BPF maps, load BTF information, perform
-necessary relocations and arrive at final state of BPF program code
-(which you can get with bpf_program__insns() API), but stopping just
-short of actually doing bpf_prog_load() step.
+Same applies to the "short packet" case existing today. I thought
+about fixing it, but IIRC I ran into some differences between HCs
+or out of spec behavior and it got tricky.
 
-This seems like it would solve your problem as well. You'd use libbpf
-to do all the low-level ELF processing and relocation, but then take
-over managing BPF program lifetime. Loading/unloading as you see fit,
-including in parallel.
+Maybe it would make sense to separate giveback (and freeing of the
+data buffer by class drivers) from transfer ring inc_deq(). Do the
+former when we reasonably believe the HC won't touch the buffers
+anymore, do the latter when we are sure that it's in the next TD.
 
-Is this something that would work for you?
+Not ideal, but easier and better than the status quo.
 
->
-> The above points apply more generically to *any* application that
-> requires dynamic loading/unloading. Reconfiguration can be done via a
-> restart, but that has drawbacks:
-> (a) Losing any non-persistent application state on restart. In our
-> case, this creates a lapse in security that could be exploited by
-> adversaries.
-> (b) In applications with many programs, load+attach can take a long
-> time. We measured load+attach of ~100 BPF programs taking ~10 seconds
-> when done with current libbpf serially. Dynamically loading only the
-> programs needed avoids wasting memory and CPU cycles.
-> (c) The application itself might take a long time to restart, separate
-> from the BPF load/attach time. By loading dynamically, the BPF programs
-> can take effect much sooner and avoid wasted restart cycles.
->
-> This patch set also permits loading BPF programs in parallel if the
-> application wishes. We tested parallel loading with 200+ BPF programs
-> and found the load time dropped from 18 seconds to 5 seconds when done
-> in parallel on a 6.8 kernel.
-
-bpf_object is intentionally single-threaded, so I don't think we'll be
-supporting parallel BPF program loading in the paradigm of bpf_object
-(but see the bpf_object__prepare() proposal). Even from API standpoint
-this is problematic with logging and log buffers basically assuming
-single-threaded execution of BPF program loading.
-
-All that could be changed or worked around, but your use case is not
-really a typical case, so I'm a bit hesitant at this point.
-
->
-> In the future, this approach could also allow maps to not be
-> autoloaded, further saving on memory if no program needs the underlying
-> map.
->
-> In summary, we believe dynamic loading of BPF programs is an important
-> capability that will improve the performance of CrowdStrike's security
-> applications as well as being useful to other applications that want to
-> avoid restarts.
-> >
+Regards,
+Michal
