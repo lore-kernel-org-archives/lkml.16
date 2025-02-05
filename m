@@ -1,240 +1,225 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4B822B8B7;
-	Wed,  5 Feb 2025 12:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211AC22B8C9
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738758031; cv=none; b=ToxYXqeExQp2Xa02gPkI03TCR6lM41Y1/PG7cYRCFAARtQHnAlQ9dqquBWzbAairpoC3YRvfaPdWg4UCVNv8hL9tjPXwSU1J65uf1zB5Dcc2WRttJOLNXOm+RsR2Lbh4ZoP/G0GjOnJmcHYMV5Es8tajyQxcOGUTWuOjbddvfuw=
+	t=1738758033; cv=none; b=RLkJYa+0E4xiKHoq30+rHENI9fKsXxCN3BEnF57DDUxycdeFK0G6JNVeei4AWh/OoUataOBirQzqHCeDKNopPgbs4kx2SE1LrudTWpQlTpx/quJHblRdnUlB4S990tKRb3YrYAmpPbpZGwlG/E54Y3SJRd502g6jQHttevGF7sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738758031; c=relaxed/simple;
-	bh=mliisTJtC4/x2He8n/YtxnJipD2aoHXMhReWhBlgrO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ob8meXJ60l2i5EGERqoajiPWFoS1huaMzAF3SNi532zbgOVN376gwyR0lKPHHEnPIN317itr/D/WKxiXLkqnF20jMuBVnOTJ3cnDQ7uGEJLVj/0aWfTkLGitaj//vm1tnaKjE97XMdpLqflgXEc6vWyfHd1IsT3gyc9zbd4oa4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKUH+syv; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738758033; c=relaxed/simple;
+	bh=lucO8l802FwKrqdcj8aHHVDgdvbJGr3a0cB0qHpnqo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBrOAhBmyZzs0hDk56OtpmhlvlNa75DvxrpBJurZU3TeMc80k+CDj/yAdls4ARz/nLBAZi1pT9Bn+zD5z9RNVqMq8Ker3XcaherZqULMvX7/Bv0jMFgR27sR/fxES1Xgm2GBs34uf2u3dEd/w7LEpDMi8xzfvSS4+ZjhU2Hs4H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VDN3eaal; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q6fFA0OT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKUH+syv"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4361c705434so49676545e9.3;
-        Wed, 05 Feb 2025 04:20:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738758028; x=1739362828; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e6UxSbzx0mqyS4ecv7b06nR9TIVmkjaPNaX7UQ2Szu4=;
-        b=NKUH+syvZhUlzi4N5/ERuDGB32FsyHNPare1iNi8spbuzSreFVwl7ekvj9S+9WYOMk
-         2Z2eXdWF/FsHgn9I4/N0OQoylu8JAORQZMnfmuTIxXJ1MLmgQ4v5ly+XRbFgyziD+HhA
-         ELRrLUHGqWGxF4vv/JIiECVhcgho/p+nyABKp+zIcY8VhgPP+f98Q9OEzV0ufkD63pr9
-         rrIhuSCe/7tq3Ks7R/shKBPOejqWokNjjlb4F+hCeto/7kjiHPDhLzYITbifl21X3+75
-         UXq/OBQzFMP8/qEcq2huL82b/FIPKUdpnvyxIaRpY4NJr0VmX+tl4/PY6s/M328XclbP
-         8OqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738758028; x=1739362828;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e6UxSbzx0mqyS4ecv7b06nR9TIVmkjaPNaX7UQ2Szu4=;
-        b=Z3Wvf5rPvEGKB8wFzCGCty3kyFHFr1ugpt+r6mxE7Go3QH5WYmDlCVNSauz0bRp6xE
-         FrQfeWGLChSY3gQKQ0L+Ajiy7OoW2e2YR1hWY8nNVHyaicsihLHRh736Y6lPkoL+SYVc
-         1iKK5ozeq8zcQwEJUsnntmixRy2CFlYNXG3dMRl6xqL2d98pnAGVJC0Xg8QCzgbtMmYp
-         rT5EDfFsmsnj1kiH7Z055XQJIQSnm4d8eX+2VtXLiRnxWMUJueg8RbUdEJkyOAyJQfKi
-         A0RXBkOyR6l5UphkbZP4XtwV4tBUp1FmprQlNNtzL/AE7Yb+wNmTd8kE/ZxueUQBjIJ8
-         ucJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnN+J1AHYTgUqs3LoRlpsK9wHQ9haqn7Ip1CbN7slnbwV1rV/UmEWs3u3IJd7E6MU9jZg=@vger.kernel.org, AJvYcCVYGVHMZoTRxzl7wm/TpduhejuyEPaXA07A0o0gGqSyCMmEXPfjRal9uvG+RxpGx+vHLP8+BAjuV/aighVibncL@vger.kernel.org, AJvYcCW+mTAjbjJJTPuV24gBdT2dOj98p2H9vrBQvleW5xDT3aIGSKN0NDeqsEi+DRY38+8/dlJoe0I8mG4k@vger.kernel.org, AJvYcCWj7PvU52Iywjc7Vj/niFskzZE0m/iWE5Nb+rvDOOLCm49U/izV9tHn2MiaLacWh9I78wofCDslAvzDJxiI@vger.kernel.org, AJvYcCXb7yqn4yj5TxyAcbVUwKVLj9rc3rH6ZXTlPjUAVjxM3h2lSsKEfR6SmLx83/VUux6zHosScDoe@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqPkXP3S9qyeW3T2vW/K4iM2oxiE9k83wxENOGnFepVKsy/Rqa
-	RNKUOe9GZgzu05d/sTFPFaomEw/P4zaTr+Ge/R2JygaFoocpkcxh
-X-Gm-Gg: ASbGncs//8KbsHyuE0+rcNQ9OeJYph5YZQWcsYtRrDe6ixe88r2zSvhwXbRwpz4BBqf
-	3wz5dkQjciFUPfo9jhAFRgrCrp96pObdEixhguqphL56CnkJOTmnT1ft6oUzQQPRhIcCFHIIfCs
-	JM+ognUNf6sSh5Hg2dbvatve1g1cbM2YeadBJp5gVGkx/C0Cyk6OZ6PbErPxuQOBHP2cjq/j2JT
-	br6eKl/tcRLU71QZDvTL8V/jDj2cNxDrZ7ZCwf5m4pE1X9QSc5DhUh9E8Cnc/rk8zjSUq4YztWu
-	jVBAT1/Cm3nTGRi7QfLlVhw=
-X-Google-Smtp-Source: AGHT+IGJDXvIG/7Qnnn/pmmyUc/PCQsFzD0zmP7oGwtUvw9dR3YQPaYZ7+KNbPMVMRYa9yN06wEAdQ==
-X-Received: by 2002:a5d:6c6a:0:b0:38c:5bfa:a93b with SMTP id ffacd0b85a97d-38db48a987emr1829547f8f.2.1738758028045;
-        Wed, 05 Feb 2025 04:20:28 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.128.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1016easm18630336f8f.24.2025.02.05.04.20.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 04:20:27 -0800 (PST)
-Message-ID: <abc22620-d509-4b12-80ac-0c36b08b36d9@gmail.com>
-Date: Wed, 5 Feb 2025 12:20:34 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VDN3eaal";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q6fFA0OT"
+Date: Wed, 5 Feb 2025 13:20:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738758027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u3HIOGONIlBvzyl6VhJQxHs3vuHCM7of1/pvLspZ4bI=;
+	b=VDN3eaalaKw2A6PmdW4sFEudeZ7pKXcfco0iDTbXnz4k8YJwB2d4iHyjdVmrpmbLKUSx+3
+	ll3OwHEOtjIQcncyvbENhm2vDz9FiyibImIQY+zMoBEKUSYnMPU1sg9s+nrzk4q4hOYGeQ
+	USCicxXlRz87vzC+zkrSesxoOPmqiOl5JmHDt1H74BRHoIJt3LdU/EZ7FELlSZloBbIdX9
+	lPurkeoxh1Ad5L78rG6Vrpv4ZGSdYIs9E8SWAkdOSeCdKJdNYxRh8FZ0C+HElag0uO8ndl
+	Rx3Qc70t/+B4Vfk+l7Y0DC/MvSILzIOqWG/ab4WVwJW4qXTwRCHUGoyscw30hA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738758027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u3HIOGONIlBvzyl6VhJQxHs3vuHCM7of1/pvLspZ4bI=;
+	b=Q6fFA0OT+FXD4Tf6/jrvkiHHwzIJ/oBLY8lVH6heg/ShudrQOCHAJWYWTkGwLcZVxc5csN
+	34y5ljPor8gELKCw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 00/15] futex: Add support task local hash maps.
+Message-ID: <20250205122026.l6AQ2lf7@linutronix.de>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250204151405.GW7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 5/6] net: devmem: Implement TX path
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, virtualization@lists.linux.dev,
- linux-kselftest@vger.kernel.org
-Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Neal Cardwell <ncardwell@google.com>,
- David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
- Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20250203223916.1064540-1-almasrymina@google.com>
- <20250203223916.1064540-6-almasrymina@google.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250203223916.1064540-6-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250204151405.GW7145@noisy.programming.kicks-ass.net>
 
-On 2/3/25 22:39, Mina Almasry wrote:
-...
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index bb2b751d274a..3ff8f568c382 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -1711,9 +1711,12 @@ struct ubuf_info *msg_zerocopy_realloc(struct sock *sk, size_t size,
-...
->   int zerocopy_fill_skb_from_iter(struct sk_buff *skb,
->   				struct iov_iter *from, size_t length);
-> @@ -1721,12 +1724,14 @@ int zerocopy_fill_skb_from_iter(struct sk_buff *skb,
->   static inline int skb_zerocopy_iter_dgram(struct sk_buff *skb,
->   					  struct msghdr *msg, int len)
->   {
-> -	return __zerocopy_sg_from_iter(msg, skb->sk, skb, &msg->msg_iter, len);
-> +	return __zerocopy_sg_from_iter(msg, skb->sk, skb, &msg->msg_iter, len,
-> +				       NULL);
+On 2025-02-04 16:14:05 [+0100], Peter Zijlstra wrote:
 
-Instead of propagating it all the way down and carving a new path, why
-not reuse the existing infra? You already hook into where ubuf is
-allocated, you can stash the binding in there. And
-zerocopy_fill_skb_from_devmem can implement ->sg_from_iter,
-see __zerocopy_sg_from_iter().
+This does not compile. Let me fix this up, a few comments=E2=80=A6
 
-...
-> diff --git a/net/core/datagram.c b/net/core/datagram.c
-> index f0693707aece..c989606ff58d 100644
-> --- a/net/core/datagram.c
-> +++ b/net/core/datagram.c
-> @@ -63,6 +63,8 @@
-> +static int
-> +zerocopy_fill_skb_from_devmem(struct sk_buff *skb, struct iov_iter *from,
-> +			      int length,
-> +			      struct net_devmem_dmabuf_binding *binding)
-> +{
-> +	int i = skb_shinfo(skb)->nr_frags;
-> +	size_t virt_addr, size, off;
-> +	struct net_iov *niov;
+> diff --git a/io_uring/futex.c b/io_uring/futex.c
+> index 3159a2b7eeca..18cd5ccde36d 100644
+> --- a/io_uring/futex.c
+> +++ b/io_uring/futex.c
+> @@ -332,13 +331,13 @@ int io_futex_wait(struct io_kiocb *req, unsigned in=
+t issue_flags)
+>  	ifd->q.wake =3D io_futex_wake_fn;
+>  	ifd->req =3D req;
+> =20
+> +	// XXX task->state is messed up
+>  	ret =3D futex_wait_setup(iof->uaddr, iof->futex_val, iof->futex_flags,
+> -			       &ifd->q, &hb);
+> +			       &ifd->q, NULL);
+>  	if (!ret) {
+>  		hlist_add_head(&req->hash_node, &ctx->futex_list);
+>  		io_ring_submit_unlock(ctx, issue_flags);
+> =20
+> -		futex_queue(&ifd->q, hb);
+>  		return IOU_ISSUE_SKIP_COMPLETE;
+
+This looks interesting. This is called from
+req->io_task_work.func =3D io_req_task_submit
+| io_req_task_submit()
+| -> io_issue_sqe()
+|    -> def->issue() <- io_futex_wait
+
+and
+io_fallback_req_func() iterates over a list and invokes
+req->io_task_work.func. This seems to be also invoked from
+io_sq_thread() (via io_sq_tw() -> io_handle_tw_list()).
+
+If this (wait and wake) is only used within kernel threads then it is
+fine. If the waker and/ or waiter are in user context then we are in
+trouble because one will use the private hash of the process and the
+other won't because it is a kernel thread. So the messer-up task->state
+is the least of problems.
+
+>  	}
+=E2=80=A6
+> --- a/kernel/futex/waitwake.c
+> +++ b/kernel/futex/waitwake.c
+> @@ -266,67 +264,69 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int =
+flags, u32 __user *uaddr2,
+>  	if (unlikely(ret !=3D 0))
+>  		return ret;
+> =20
+> -	hb1 =3D futex_hash(&key1);
+> -	hb2 =3D futex_hash(&key2);
+> -
+>  retry_private:
+> -	double_lock_hb(hb1, hb2);
+> -	op_ret =3D futex_atomic_op_inuser(op, uaddr2);
+> -	if (unlikely(op_ret < 0)) {
+> -		double_unlock_hb(hb1, hb2);
+> -
+> -		if (!IS_ENABLED(CONFIG_MMU) ||
+> -		    unlikely(op_ret !=3D -EFAULT && op_ret !=3D -EAGAIN)) {
+> -			/*
+> -			 * we don't get EFAULT from MMU faults if we don't have
+> -			 * an MMU, but we might get them from range checking
+> -			 */
+> -			ret =3D op_ret;
+> -			return ret;
+> -		}
+> -
+> -		if (op_ret =3D=3D -EFAULT) {
+> -			ret =3D fault_in_user_writeable(uaddr2);
+> -			if (ret)
+> +	if (1) {
+> +		CLASS(hb, hb1)(&key1);
+> +		CLASS(hb, hb2)(&key2);
+
+I don't know if hiding these things makes it better because this will do
+futex_hash_put() if it gets out of scope. This means we still hold the
+reference while in fault_in_user_writeable() and cond_resched(). Is this
+on purpose?
+I guess it does not matter much. The resize will be delayed until the
+task gets back and releases the reference. This will make progress. So
+it is okay.
+
+> +		double_lock_hb(hb1, hb2);
+> +		op_ret =3D futex_atomic_op_inuser(op, uaddr2);
+> +		if (unlikely(op_ret < 0)) {
+> +			double_unlock_hb(hb1, hb2);
 > +
-> +	while (length && iov_iter_count(from)) {
-> +		if (i == MAX_SKB_FRAGS)
-> +			return -EMSGSIZE;
+> +			if (!IS_ENABLED(CONFIG_MMU) ||
+> +			    unlikely(op_ret !=3D -EFAULT && op_ret !=3D -EAGAIN)) {
+> +				/*
+> +				 * we don't get EFAULT from MMU faults if we don't have
+> +				 * an MMU, but we might get them from range checking
+> +				 */
+> +				ret =3D op_ret;
+>  				return ret;
+=E2=80=A6
+> @@ -451,20 +442,22 @@ int futex_wait_multiple_setup(struct futex_vector *=
+vs, int count, int *woken)
+>  		struct futex_q *q =3D &vs[i].q;
+>  		u32 val =3D vs[i].w.val;
+> =20
+> -		hb =3D futex_q_lock(q);
+> -		ret =3D futex_get_value_locked(&uval, uaddr);
+> +		if (1) {
+> +			CLASS(hb_q_lock, hb)(q);
+> +			ret =3D futex_get_value_locked(&uval, uaddr);
+
+This confused me at the beginning because I expected hb_q_lock having
+the lock part in the constructor and also the matching unlock in the
+deconstructor. But no, this is not the case.
+
 > +
-> +		virt_addr = (size_t)iter_iov_addr(from);
-
-Unless I missed it somewhere it needs to check that the iter
-is iovec based.
-
-> +		niov = net_devmem_get_niov_at(binding, virt_addr, &off, &size);
-> +		if (!niov)
-> +			return -EFAULT;
-> +
-> +		size = min_t(size_t, size, length);
-> +		size = min_t(size_t, size, iter_iov_len(from));
-> +
-> +		get_netmem(net_iov_to_netmem(niov));
-> +		skb_add_rx_frag_netmem(skb, i, net_iov_to_netmem(niov), off,
-> +				       size, PAGE_SIZE);
-> +		iov_iter_advance(from, size);
-> +		length -= size;
-> +		i++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   int __zerocopy_sg_from_iter(struct msghdr *msg, struct sock *sk,
->   			    struct sk_buff *skb, struct iov_iter *from,
-> -			    size_t length)
-> +			    size_t length,
-> +			    struct net_devmem_dmabuf_binding *binding)
->   {
->   	unsigned long orig_size = skb->truesize;
->   	unsigned long truesize;
-> @@ -702,6 +737,8 @@ int __zerocopy_sg_from_iter(struct msghdr *msg, struct sock *sk,
->   
->   	if (msg && msg->msg_ubuf && msg->sg_from_iter)
->   		ret = msg->sg_from_iter(skb, from, length);
-
-As mentioned above, you can implement this callback. The callback can
-also be moved into ubuf_info ops if that's more convenient, I had
-patches stashed for that.
-
-> +	else if (unlikely(binding))
-> +		ret = zerocopy_fill_skb_from_devmem(skb, from, length, binding);
->   	else
->   		ret = zerocopy_fill_skb_from_iter(skb, from, length);
->   
-> @@ -735,7 +772,7 @@ int zerocopy_sg_from_iter(struct sk_buff *skb, struct iov_iter *from)
->   	if (skb_copy_datagram_from_iter(skb, 0, from, copy))
->   		return -EFAULT;
-
-...
-
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index 0d704bda6c41..44198ae7e44c 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -1051,6 +1051,7 @@ int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
->   
->   int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->   {
-> +	struct net_devmem_dmabuf_binding *binding = NULL;
->   	struct tcp_sock *tp = tcp_sk(sk);
->   	struct ubuf_info *uarg = NULL;
->   	struct sk_buff *skb;
-> @@ -1063,6 +1064,15 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->   
->   	flags = msg->msg_flags;
->   
-> +	sockcm_init(&sockc, sk);
-> +	if (msg->msg_controllen) {
-> +		err = sock_cmsg_send(sk, msg, &sockc);
-> +		if (unlikely(err)) {
-> +			err = -EINVAL;
-> +			goto out_err;
+> @@ -618,26 +611,42 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, un=
+signed int flags,
+=E2=80=A6
+> =20
+> +		if (uval !=3D val) {
+> +			futex_q_unlock(hb);
+> +			return -EWOULDBLOCK;
 > +		}
-> +	}
 > +
->   	if ((flags & MSG_ZEROCOPY) && size) {
->   		if (msg->msg_ubuf) {
->   			uarg = msg->msg_ubuf;
-> @@ -1080,6 +1090,15 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->   			else
->   				uarg_to_msgzc(uarg)->zerocopy = 0;
->   		}
-> +
-> +		if (sockc.dmabuf_id != 0) {
+> +		if (key2 && !futex_match(&q->key, key2)) {
 
-It's better to be mutually exclusive with msg->msg_ubuf, the callers
-have expectations about the buffers used. And you likely don't want
-to mix it with normal MSG_ZEROCOPY in a single skb and/or ubuf_info,
-you can force reallocation of ubuf_info here.
+There should be no !
 
-> +			binding = net_devmem_get_binding(sk, sockc.dmabuf_id);
-> +			if (IS_ERR(binding)) {
-> +				err = PTR_ERR(binding);
-> +				binding = NULL;
-> +				goto out_err;
-> +			}
+> +			futex_q_unlock(hb);
+> +			return -EINVAL;
 > +		}
+> =20
+> -	if (uval !=3D val) {
+> -		futex_q_unlock(*hb);
+> -		ret =3D -EWOULDBLOCK;
+> +		/*
+> +		 * The task state is guaranteed to be set before another task can
+> +		 * wake it. set_current_state() is implemented using smp_store_mb() and
+> +		 * futex_queue() calls spin_unlock() upon completion, both serializing
+> +		 * access to the hash list and forcing another memory barrier.
+> +		 */
+> +		set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
+> +		futex_queue(q, hb);
+>  	}
+> =20
+>  	return ret;
 
--- 
-Pavel Begunkov
+So the beauty of it is that you enforce a ref drop on hb once it gets
+out of scope. So you can't use it by chance once the ref is dropped.
 
+But this does not help in futex_lock_pi() where you have the drop the
+reference before __rt_mutex_start_proxy_lock() (or at least before
+rt_mutex_wait_proxy_lock()) but still have it you go for the no_block
+shortcut. At which point even the lock is still owned.
+
+While it makes the other cases nicer, the futex_lock_pi() function was
+the only one where I was thinking about setting hb to NULL to avoid
+accidental usage later on.
+
+Sebastian
