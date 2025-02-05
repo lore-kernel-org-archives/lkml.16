@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6447822DFA9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB8E231A3A
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752424; cv=none; b=mNopP/yTFgjGOeeBm+VRrT3fQ99hF+tYiKB2qLOh/yBN/3+jtdLYurklDNKdvpGd+dXCIdVGPID8jr/0/POqHWZZcGch5ZKvASy0DYwBlEl5hZWwnBUq6E2PPxSQbFtCyhBkdcIjITYeIHOmDx9sAFbV38H6IDiPVBYcpq9eziU=
+	t=1738752424; cv=none; b=bq5uQ2vnOe2oTLupgvLHO8ve3pCplKLqPDefucWFg2KyfcWAbdWMw4hKj3mJbIN2wcDe2i/llcD4Q074wJSHvbelWhwVGmxmfsS6XoKrlQmhrfZEpjAK5j7NIUm93XH0ZdQX7KqfPmjFdV9ML53+jMHDlTePtH/UOa20kHKwibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752424; c=relaxed/simple;
-	bh=6g/QPUlIJV8swSm7eBhrCXyD5X9cUmz6Kj0wDivSvC8=;
+	bh=/QRUIEJcdu2fzCNJ6B++8ueh+6pepgnfzZAqUrn7yFU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cyuXRqIDoX7sqm90cSHh+or5QYxBBk2bX7fyREcWGAVATRXPe14N72XCOjK6JlwO28fiqHEXDvOEaWnKnssWOCLKRZR/kyJI5U0ms2fpCPT0MCRAOoDscfj1t5XHcuHHBuj7ZdJskGkONehkpDBKWLRvbxgKOcGxHScUERd5vYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d71f1Ln2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fm9oQDJ3; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=gglEMn1IuoU4bYv7CBRt7Q6TD6DrAzT7b13xgCFRwrLZZeg3FJizVy/XN4/uIC8yfJ4M7jvo/P7dan5Aj1FdkD4YogIbX4m8PzHip3R1GaGNbiylTUtuUMVTZE7kl9NNowBU932CRfvu84ZGxjAWPLc4XKYySmCc6XwCGNe0AsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xZkZEglb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G7lUBUkG; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d71f1Ln2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fm9oQDJ3"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xZkZEglb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G7lUBUkG"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738752418;
@@ -24,31 +24,31 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dv1Yu4iIeEMxKsUFYju9BcSqLadTHkwIowgqitCIxik=;
-	b=d71f1Ln2mOnDn6Tgye60yVi0ljWznJqJ1cveAjbow+e0mfelBK/t4uWZPlZGCfSjV38VeK
-	5C47Qg3wbDmb6wNFScGmC7wvb+LZJqt8AfHQtcL8ExFdB12lb26GS4TcZf98rbjks8qAze
-	EbKLrWrjy/ewxDcFpPuOnpQSMRLKhnl+/zP5ZkcGpa1dA05gyXT8o9gVd2JQV4FH4ZPVhK
-	rJFj+UJTLy7epY5iRMKhgcBT4zffVVMYEiXB7vM8HiLmSsG9ypJAaXWYYJ69oYjfJbgrUj
-	OuzTOunC/Kh76Nek4JUC5VqA62SKqnGEHKZ0wnj+pU0hH2k75sUWWriu4iebCQ==
+	bh=bbmDVlDtVzVzFQHYRxUSMUZd8c/cGrJwTV2M3nZVY6Q=;
+	b=xZkZEglbrYL9mw22BU/uM9Vu3wNMUjb8aHwjL6p2fxSOiROh+DsUhm8+1MMzxBhyA1QHbn
+	NnB5QTwEGc2AWKt43nwrD4xEWg3XU6kFlFNyg4TyB4sCJYT+F5C0QCSRI5R8vgzYzfuojn
+	HoJkt3eCSG0A8Mh5kGoGudol7F72i4FOI4gYPJw+TUZ/z1jQyhQgUwI2JiGH48yJzOA1q2
+	l8dVzfqXldQadMh9nY7EBhUq48MEWSWhEEMRzhitIVFwdqDtk0IzSteUvc31SwQQva6eiF
+	HeN3mXVeUCZqVW58bLbN+iFIedqQWBX44rx78c7zEpaUdHQigvyLKlgXdoZSHQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738752418;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dv1Yu4iIeEMxKsUFYju9BcSqLadTHkwIowgqitCIxik=;
-	b=fm9oQDJ3w4R7Ho1KWAMKePPgCgqK/5Xjtecsfl9uD0oBFlU7f1ttjYtdz3qRYk+4yv5QCF
-	CddpQFJjDxYiMmAg==
+	bh=bbmDVlDtVzVzFQHYRxUSMUZd8c/cGrJwTV2M3nZVY6Q=;
+	b=G7lUBUkGYxpz+mhE+LwQvws2OAfzjl0mpI0NRJDRN9wZCVDs4O1y2HxOxykpAZEpWsB9QD
+	JqRAfuc4hQVXexCg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Zack Rusin <zack.rusin@broadcom.com>
-Subject: [PATCH v2 16/45] powercap: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:04 +0100
-Message-Id: <fffc5ecc232069d91817b519dcafd8985120e51c.1738746904.git.namcao@linutronix.de>
+Subject: [PATCH v2 17/45] power: supply: ab8500_chargalg: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:05 +0100
+Message-Id: <fa0bf7376ce8f124c8285a52d9f55d0ab4c42988.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -67,46 +67,39 @@ hrtimer::function with the new setup mechanism.
 
 Patch was created by using Coccinelle.
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/powercap/idle_inject.c       | 3 +--
- drivers/powercap/intel_rapl_common.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/power/supply/ab8500_chargalg.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-index 04c212953ded..5ad7cc438068 100644
---- a/drivers/powercap/idle_inject.c
-+++ b/drivers/powercap/idle_inject.c
-@@ -339,8 +339,7 @@ struct idle_inject_device *idle_inject_register_full(st=
-ruct cpumask *cpumask,
- 		return NULL;
+diff --git a/drivers/power/supply/ab8500_chargalg.c b/drivers/power/supply/=
+ab8500_chargalg.c
+index 7a8d1feb8e90..dc6c8b0dd1cf 100644
+--- a/drivers/power/supply/ab8500_chargalg.c
++++ b/drivers/power/supply/ab8500_chargalg.c
+@@ -1787,13 +1787,12 @@ static int ab8500_chargalg_probe(struct platform_de=
+vice *pdev)
+ 	psy_cfg.drv_data =3D di;
 =20
- 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
--	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	ii_dev->timer.function =3D idle_inject_timer_fn;
-+	hrtimer_setup(&ii_dev->timer, idle_inject_timer_fn, CLOCK_MONOTONIC, HRTI=
-MER_MODE_REL);
- 	ii_dev->latency_us =3D UINT_MAX;
- 	ii_dev->update =3D update;
+ 	/* Initilialize safety timer */
+-	hrtimer_init(&di->safety_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	di->safety_timer.function =3D ab8500_chargalg_safety_timer_expired;
++	hrtimer_setup(&di->safety_timer, ab8500_chargalg_safety_timer_expired, CL=
+OCK_MONOTONIC,
++		      HRTIMER_MODE_REL);
 =20
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_=
-rapl_common.c
-index 77d75e1f14a9..cf3d806284c4 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -2064,8 +2064,7 @@ int rapl_package_add_pmu(struct rapl_package *rp)
- 	raw_spin_lock_init(&data->lock);
- 	INIT_LIST_HEAD(&data->active_list);
- 	data->timer_interval =3D ms_to_ktime(rapl_pmu.timer_ms);
--	hrtimer_init(&data->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	data->hrtimer.function =3D rapl_hrtimer_handle;
-+	hrtimer_setup(&data->hrtimer, rapl_hrtimer_handle, CLOCK_MONOTONIC, HRTIM=
-ER_MODE_REL);
+ 	/* Initilialize maintenance timer */
+-	hrtimer_init(&di->maintenance_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	di->maintenance_timer.function =3D
+-		ab8500_chargalg_maintenance_timer_expired;
++	hrtimer_setup(&di->maintenance_timer, ab8500_chargalg_maintenance_timer_e=
+xpired,
++		      CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 =20
- 	return rapl_pmu_update(rp);
- }
+ 	/* Init work for chargalg */
+ 	INIT_DEFERRABLE_WORK(&di->chargalg_periodic_work,
 --=20
 2.39.5
 
