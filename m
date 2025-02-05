@@ -1,96 +1,101 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B835A37160
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5679115FA7B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738769458; cv=none; b=nuc5Gxyo3eHbxPnsp47HRX4dZHEjtuuTFm4brNkqgpicfNsiLa4S48ucaZAD79Bu2hu73JruwK+iZhIKKnakoR+tEsWepYDhYpisgmUHlGg87Tezk5UDRs8fKtKbW58xJaodMGOfNMN7WaSsPVKpgiCTtTIDuA8bJZLlCIyEoWo=
+	t=1738769502; cv=none; b=E2GY21d7VJhQ+yugmqGfOydTzql+jGvNAH2LQO87wnIo3Foc0sQm/BJJm9MDlgCcWzQL67RsZm5aMPeaH7Qs8L/sqLvtZLjGOQVGCE95YN3P+R6M1gIY4Y7BrASsEvPZUFNbmMNo0sACcGArXJHvgFNLbUBaHOQpC2C9IE5YWLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738769458; c=relaxed/simple;
-	bh=6Adut7x6V6xQvTZtaeGcGI6AN8WxglbwfcIn/y0VqWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ILEg4FmvZBhh+BDICUjyTAPC/0sF6uiXEA4D4jYsbaE7acOGNLhKzl2a8YwMGBxo4xnitMUW7KevHg8ygH9kkmf8hJuG4E/7Fd3iW9Le1pZ2JNHcZDBoqq9+FzME5788p31iuM8uEsblr0x5/xUxZyqYkVKWr/zYjlRLRtdP6po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xx/Z87BR; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738769502; c=relaxed/simple;
+	bh=W5uGk1r6vFZmCjIotT9heokHOld87wIreyUWeeOuqeQ=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=G/jSS6Uk/+R9GzLiq+1Fu1dRgWL6QLcu6RK+UxCs9ySIogDdCl8Txj5LA0WlRNGnH752QdsrwBzzjlOQy0ALR8AjXLRa0+pxJ1CKr8UXsRLCPviVXZv5fqV+YSgC+2nzFhE5wnxDSlF6rvnkcRna8cH4NEFccPtd4skFl7jLs9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=yzi4Uhem; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xx/Z87BR"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21661be2c2dso118236475ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:30:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="yzi4Uhem"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9c3ef6849so3656513a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:31:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738769456; x=1739374256; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FqP3iK2lT7xQ0HRnqx334ocupkN/6HOvXfde+HjeQTU=;
-        b=Xx/Z87BR/MHcGcT+Mg7fj28xx7qzab9ZPEsd68+LuTbqi0NPZXlmgMICSVrm5EQUtE
-         6SzrgkD2IV2T3SawWs3fVPiCSFAZoYajMe06MpyRanuxW1rUxz0b5406RdffKa56zRxk
-         54BaVMtnMWvrb9VxWVzek4k8Ypq488JLgvrNzMLGhYhtD2vBQsqOy9DTxLC+ONUOZ8v0
-         f7hB4OgjSLMpo4kFojkOAEHtp+oN0TPwXdKnhH2C/HKqY7zTNQxaGjKltEm6/VXkQbPK
-         /po6YS1SCcuhz/wr4eU0l9hGQsBh9xTuRpEXvrxuybGiSzJ1ZX8pa9YuzcUz3iG8WcU6
-         ocvQ==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1738769499; x=1739374299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UatWkuu9Qgwg8ANhzy8M4m7Rk1sE6deB/rTA3GCn9Gs=;
+        b=yzi4UhemFC76J7KgHDoGzqEp7z7lHdfGi2IoZpOHahIEy8MG2GlfxvR5B8EtWmnA56
+         YvRZqO9ugLZQsi0SiodmQFKej+iV/Deo5BA0rytW0SnFUCEGq3TD1JTQgyfrPqcPD3bq
+         6x8CEEvhtzm9DUEh8Q8QskTDJa5onq8r3rwLUSGKjfQCa4PdbX7kp+OpGTLBMQL9aogI
+         FmR46eEE5BPOMhH8OD3nAYs659rh30LHrFgABxEqpyaTZcpDZFl452X6RwmcKpR7c3dh
+         6jWFzSNzeaySJEXV4AcopSJgJfz8fv2DAo7TjLTLj83MInnXRMIHoNbImsj0vXdSElXs
+         AwWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738769456; x=1739374256;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1738769499; x=1739374299;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FqP3iK2lT7xQ0HRnqx334ocupkN/6HOvXfde+HjeQTU=;
-        b=TEvpzOQtsm6jdto5Gn7AMdnaUQd2ku9iR6+7qLZA2dNSexVBha6xEkCeaphFtjepzE
-         evd98DJj2yXde/VlWPboX0ywgSt2i1z9KxuyyLF9hfO4olrZNsPeVnZNLPHJNG0acJeQ
-         vqAHJ24nYaG8vWPrRc39+HNv+XJyxCuL4sNDOGhVfkoJiKRD1Ydzn5QUMHbTzxyY4Ruy
-         3VdpxhSUnNDe6P88IuJlX8W+YVxFwNQGcZ/FH/fW0ajDa7Ywkzs4SbMNkEzyGjF8W6F+
-         sigfX1mJ/u5GbfiKFKZSKIYVf/7+O3Y3hjIgBEfe/ERlLs8xya08Vwdj9+hdf29IL7M1
-         A/rw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+eD/7a52T+tv+4AY+NnEkasG3oLuD6gtl3CasX53d/7+fYTBOOwEhuq+fiq8X/Xgix5LnsDT462YWeB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsOq6mHCewcXBw+1mw51Ol5dVLUbBlg0iI74KAsbDxo2UsohDl
-	1MGDRSnQIJkuo3hcO+x8A2n9a5QyA3Ql8Jm+pU1Jojymu+iVqHBJ
-X-Gm-Gg: ASbGncsX/RQSgNh+Cud1OKN1/djZf3CTjth1cKSf/YosJ8eXgTAZPTLz51ZqxGtWVjB
-	/Xng4FfWmqSBTpqud9YcOoA44rq4+hBWjnrvcRjDBwJ6v0LTj9utI9CopUVm4I7VNZ/nMxPqPKa
-	+V7nBQnZtKpQv0BhZiEU38eYRq47v1FwQRfZBnr+02m6nd+vW2p0Zzl4dYZIoqNONa9I/UuUiTd
-	y8vOivUiIyhSew+hZSqXKpPw4ROrm1Zpsu1oP+n6Cf89ndw2wVj8A806pK1rticbl2DJzgSBr7N
-	dz/4MOeQ+0T/CX9y
-X-Google-Smtp-Source: AGHT+IGiauQLaccp7xXJv3nsoyF82ye16u6U356Jl2t+EHAnlHeWDjmfMyQiES8VZARAFDHzEadvow==
-X-Received: by 2002:a17:903:46d0:b0:21e:ffaf:8908 with SMTP id d9443c01a7336-21f17ecbd38mr57191675ad.34.1738769455588;
-        Wed, 05 Feb 2025 07:30:55 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:5c49:8415:dbd3:5f54])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f191ee04csm15371165ad.250.2025.02.05.07.30.54
+        bh=UatWkuu9Qgwg8ANhzy8M4m7Rk1sE6deB/rTA3GCn9Gs=;
+        b=r2GsbbqXileJj7lGWmlYzEllPHLn5JYFgWoMjSE4HH0PSiHLd0/OmSk8wtWvlz6u9r
+         33MmJ4q3w9V0vuBwwhL49fQiffHXmyM2K9CpKSJlU9esj64/dQ7XTIA7zBCZ96nD38Bu
+         QTBFwI8+TMx2wgqEkspqUbUX3GR/yFlwCQ9hctx1W1MKGxotdPcLQpqUbuDBnCsWuXn2
+         VHb4xo35g0rZMhlTImFaLXWmXgHD0Hg6ANWDlCyA1QrhMGnPi/EJNtqlYS/uIS6A+3t9
+         /kJTK0WCKbOdrcE9KlznJPXAEHcfEoM26b3V//O63q74LYm7yasvhwbVvj+cuWz7aT6u
+         Tf2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUGS8t0WRoPCfa56gIitwjMuO1zaDc/D0vndW4iU/4jBCUUES1tIPGYd1oklGWM/0/LX5Uk/QNvzSrkGaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySq4s3dthQ6NdmxyS2H1II9AsEHEVYexzi6fMM3O9tpbtgVrtT
+	RNYHRf+CSh2l2PsR4fsOfwCliepWPmkPm9ZVLiI7v5o5QGTO0RCyl0bI66n8U8s=
+X-Gm-Gg: ASbGncsDlUZuD1jDioG/t1qyvk9fOvDUHGuoxFcLVp21k/1sLmpOodKo/U8WjpVMRlV
+	qevwCqUrjxmMm+y8TumpEQS6fAa/iSIV185TC7BXyYJHw8jmOw5oPLwFeBQ826EZzrI/tpVWXbv
+	aJEpkR4BpprHmLputD/xgn+Av79JUILxHlv2EhS9aWYnTONDJ/uBHsnBrTgbZKhnZrgj0gc8gA1
+	/n7OdY6urTlBL3dES1AaBCQCt61oYJ+Kr7YrJiB2qnlR2xiKsFzz8J/3e24/uBgFNc8cj1PFKol
+	eIccuSpoo9sl
+X-Google-Smtp-Source: AGHT+IFlrEqpwEqQKJm6jVKLRHs/j3zsT8RciURX3ceRV8XojffKvUsKNIOJn3B1ftJERTOXTnJITg==
+X-Received: by 2002:a17:90b:5288:b0:2f9:bfda:49b0 with SMTP id 98e67ed59e1d1-2f9e079b72cmr5022165a91.20.1738769498039;
+        Wed, 05 Feb 2025 07:31:38 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1d60aadsm1723134a91.9.2025.02.05.07.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 07:30:55 -0800 (PST)
-Date: Wed, 5 Feb 2025 07:30:52 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Zack Rusin <zack.rusin@broadcom.com>
-Subject: Re: [PATCH v2 26/45] Input: Switch to use hrtimer_setup()
-Message-ID: <Z6OELFCP6lepaZbD@google.com>
-References: <cover.1738746904.git.namcao@linutronix.de>
- <62db561622799dfc8d58682ca41b54e3f1ff6949.1738746904.git.namcao@linutronix.de>
+        Wed, 05 Feb 2025 07:31:37 -0800 (PST)
+Date: Wed, 05 Feb 2025 07:31:37 -0800 (PST)
+X-Google-Original-Date: Wed, 05 Feb 2025 07:31:33 PST (-0800)
+Subject:     Re: [PATCH] riscv: Access time mmio instead of rdtime.
+In-Reply-To: <20241229-cogwheel-kebab-3cc2b21096c8@spud>
+CC: arikalo@gmail.com, linux-riscv@lists.infradead.org,
+  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, tglx@linutronix.de,
+  djordje.todorovic@htecgroup.com, Dragan.Mladjenovic@syrmia.com, linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Conor Dooley <conor@kernel.org>
+Message-ID: <mhng-2dc5552b-3c35-4469-b511-3c6dc257b610@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62db561622799dfc8d58682ca41b54e3f1ff6949.1738746904.git.namcao@linutronix.de>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 11:46:14AM +0100, Nam Cao wrote:
-> hrtimer_setup() takes the callback function pointer as argument and
-> initializes the timer completely.
-> 
-> Replace hrtimer_init() and the open coded initialization of
-> hrtimer::function with the new setup mechanism.
-> 
-> Patch was created by using Coccinelle.
-> 
-> Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On Sun, 29 Dec 2024 07:09:13 PST (-0800), Conor Dooley wrote:
+> On Fri, Dec 27, 2024 at 04:00:56PM +0100, Aleksandar Rikalo wrote:
+>> +#if defined(CONFIG_RISCV_TIME_MMIO)
+>> +	if (!of_property_read_u64(n, "clock-reg", &mmio_addr)) {
+>
+> This is a non-standard, undocumented property. reg & reg-names are what
+> you should be using here.
 
-Applied, thank you.
+We were talking some in the patchwork meeting.  If this system has a 
+CLINT then it's probably best to refactor the timers such that MMIO 
+CLINT access is independent from M-mode (as there's some patches 
+floating around to make M-mode use rdtime on systems that implement 
+rdtime).
 
--- 
-Dmitry
+>> +		riscv_time_val = ioremap((long)mmio_addr, 8);
+>> +		if (riscv_time_val) {
+>> +			pr_info("Using mmio time register at 0x%llx\n", mmio_addr);
+>> +			static_branch_enable(&riscv_time_mmio_available);
+>> +		} else {
+>> +			pr_warn("Unable to use mmio time at 0x%llx\n", mmio_addr);
+>> +		}
+>> +	}
+>> +#endif
