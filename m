@@ -1,143 +1,69 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EE513D897
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB89B13D897;
+	Wed,  5 Feb 2025 18:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738781518; cv=none; b=NYxf07N6jOoiihozrh0iVvEu49sQgDabfnknEpqypl5fqpVRLaz+TcvvuZxZwRbbZLxcrPj8a1aZCpxHl0yY1DuGNib2nTvx9xlxdyeKlGqfFpPpGFro4WXmmvV8sppm1mnowAbPBI+SpchSki83o83iccTBlbqTfGwU+LeKxxg=
+	t=1738781561; cv=none; b=WFCmmvuYQ+Ju9EV6xO2QZUrQM0ej5ipfr5SsYVznr2xaW5mmpfiTlMcWWOOMG3QqUryaXp1aK+qNWmFlQDBrPg7Y/P8YZcauBCBnnUPe/Ut1F328lT70pxJPMn+Z4NrbOUIYLLK3vJTtyd5h07t1b/r+VahRxdOsqffs8ou7y+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738781518; c=relaxed/simple;
-	bh=w/JK2a5CMvt50/ztN3kp5qqW6WjHBNOsrATdA/E09OY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SEu9OuGyEWMm9D4ACWa0NUDGVOVcBl03tty5eZ2oK+uRvDs6SMb7lym/1oQiCtwDz2mbuUdfmyhYwlZ5eJ2Ag5miUNQUJfwBQQR/Tm5/Qs8H6bGBjEgLJXLEI1I8/bUv+p24ZTSaY6zoWEFskhfNrKfpq3Raac8GrscVpZ3uQoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dhf3UZ28; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738781561; c=relaxed/simple;
+	bh=LJIuDNTxMKaFIbMEED/OzQUZxotbbZSUR47KFTSrgtI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=A1X9iH+jm+kxeBdD/PgO+V9zryIQ29DMsaNQFFKviPebDVLIsNFpj+ct5LGVxgiMZT6xLm3EqeY1REn44vpHFh/zz0Ksw258T+pW0E5juARJ6BlQxPAlrYZIkipsEZjX8joyrJkyrpLCMUqDb9/37CblYqz2uX+GCGl35ZjTD3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=lMOJCWjw; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhf3UZ28"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d442f9d285so1022a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738781515; x=1739386315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=19v3BofUqD63vuDcsPUGDTH8QbxB2ijJg+MULEk8I8c=;
-        b=dhf3UZ28Rj0naQEKIjGquOHbF4AZiDir+I6ymXKkq7bbuz7RtXeILYaKRlH8RjYivE
-         d446Dmuznc0LR5LGI5b1WSRNxcwbHFqCJ/Al4/1ZDSeX/bLFXuzeBhmfrYiUd8nuyYmE
-         wgzmDf9iJSH3MYL4tcdk8+ienPeVl+9umSDFAUO/3nxUPpUm7fiWu6ZZ87XJYxOP/WWT
-         eDWDK6Z7cFwXUSzmQKyl8+WW2yne/iHe4HRKvcqgF/OF0PWTPqr07Q524jt4XLwcBHtb
-         fI38HlgRzPd97YqMnDgNyKgrESoh7AOkSiq/JVpweBPg8CHv2Zf4KjLsdh+ddJ6UFUPH
-         gxvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738781515; x=1739386315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=19v3BofUqD63vuDcsPUGDTH8QbxB2ijJg+MULEk8I8c=;
-        b=N69/0AMlqGs/QnaziuMPqtpzFZt4lsx/+juV75mrtpt94nJJnNd83I6LZ1kYEOLoO0
-         SC23doVsjyKefYfxgNR/XTgYIvcORE2xKCuvZs6RZbSLEyIQniggqj+a1oQ7sqRLWl6N
-         zgsbcedtY0XhvS/VREFA0euZPYbzunTc2F1yclFDXuJ8+aEBntBcEVSCMdzBV3hjBOVq
-         GadLS2w4A++m3C7pZcLlC7u1JI2HeLAa0igSZezYTAVPw4TgXD1Wv4GPsE8sC0JZfAmh
-         2n4OwgArNR2TCW0j7QFvr8fP0x1u9cTalvm9GXjPNxvgdSPh7G/1wXkLWZ2V7BEvdGgN
-         q17w==
-X-Forwarded-Encrypted: i=1; AJvYcCUQBvOzTyHM2XHeF+Ahso+ru61Z33fEnzabisQJr5XPJ4al5WIJ5CNbJAyHD+4tKPU3MNL2sTGTVmIt/KI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6bwc8vlAue9idVC08Jc9QHTdVsOPjyOhOWLaJ2XE2jhJGsE6u
-	NhZiBUwfGBF+/Km4DkZLC7Xzsaq7q/sfKhaAsaF3FqBs/OHN9cWZlvMUDuLSEyQBmQ2jv08zTZv
-	e3GpLuhZ1NCFH6SiRCWLpeYufaw/YezPtnBkl
-X-Gm-Gg: ASbGncuHZq8XsP2cmapQkZS346a15cULegBAky1lUCjJuRWt8xFGEAgEMaKzN8QMPHy
-	WFstCyhFuQUl0DFah6fT1XGe3NCGhY/BJTs+eCIma4JASXp3WbrIfBcRIfLn1Y2vAqDD0LA==
-X-Google-Smtp-Source: AGHT+IGdFRxuVZNHbCQrpEx/USZkGtjvxS42wJTFWBOHQk/LEI3AJWYwhK/6SELhDokMAeQUPabPJFSwFrBrFl28vLU=
-X-Received: by 2002:aa7:d38f:0:b0:5dc:d9b1:ebdf with SMTP id
- 4fb4d7f45d1cf-5dced6b1033mr7629a12.2.1738781514515; Wed, 05 Feb 2025 10:51:54
- -0800 (PST)
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="lMOJCWjw"
+From: Fiona Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1738781549; bh=LJIuDNTxMKaFIbMEED/OzQUZxotbbZSUR47KFTSrgtI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=lMOJCWjwd9tjp0oWB1sySUeXZQ2KjVmAOSS9tWmUGAmxzmEfQ3qi3zds4F3xbsA7Y
+	 brmwgXL9Bg4Duqzn2vkuI7i+X/a0fqXTO7OBfTO2G5eiBg+xakJErGy0yqlW+SAXvb
+	 7/dfxcEq8tZnJyh34pVN35NczHmG18yi855H3AVk=
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,  Boqun Feng <boqun.feng@gmail.com>,
+  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>,  Benno Lossin <benno.lossin@proton.me>,
+  Andreas Hindborg <a.hindborg@kernel.org>,  Trevor Gross
+ <tmgross@umich.edu>,  Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar
+ <mingo@redhat.com>,  Will Deacon <will@kernel.org>,  Waiman Long
+ <longman@redhat.com>,  rust-for-linux@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rust: sync: add accessor for the lock behind a given
+ guard
+In-Reply-To: <20250205-guard-get-lock-v2-1-ba32a8c1d5b7@google.com> (Alice
+	Ryhl's message of "Wed, 05 Feb 2025 10:54:50 +0000")
+References: <20250205-guard-get-lock-v2-1-ba32a8c1d5b7@google.com>
+Date: Wed, 05 Feb 2025 19:52:28 +0100
+Message-ID: <87h658p6kz.fsf@kloenk.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205180116.88644-1-haiyuewa@163.com>
-In-Reply-To: <20250205180116.88644-1-haiyuewa@163.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 5 Feb 2025 10:51:17 -0800
-X-Gm-Features: AWEUYZk6X2Wgv4lR-1hURALTgbltZRUha-EXRIt0htDWFLYOKzBHkHqWn1Jfbs8
-Message-ID: <CABCJKucW0HU_TVwe6sdn8B-Cu7Jn-M61i1VoBjJYqQkoxQtTxg@mail.gmail.com>
-Subject: Re: [PATCH v1] ftrace: Fix compile error when CONFIG_GENDWARFKSYMS is enabled
-To: Haiyue Wang <haiyuewa@163.com>
-Cc: x86@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"open list:FUNCTION HOOKS (FTRACE)" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi,
+Alice Ryhl <aliceryhl@google.com> writes:
 
-On Wed, Feb 5, 2025 at 10:02=E2=80=AFAM Haiyue Wang <haiyuewa@163.com> wrot=
-e:
+> Binder has some methods where the caller provides a lock guard, and
+> Binder needs to be able to assert that the guard is associated with the
+> right lock. To enable this, add an accessor to obtain a reference to the
+> underlying lock that you can pass to `ptr::eq`.
 >
-> When switching from CONFIG_GENKSYMS to CONFIG_GENDWARFKSYMS enabled, the
-> build is failed:
->
->   AS      arch/x86/entry/entry.o
-> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
->                  from <stdin>:3:
-> ./arch/x86/include/asm/ftrace.h: In function =E2=80=98arch_ftrace_get_sym=
-addr=E2=80=99:
-> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of fun=
-ction =E2=80=98get_kernel_nofault=E2=80=99 [-Werror=3Dimplicit-function-dec=
-laration]
->    46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip -=
- ENDBR_INSN_SIZE)))
->       |                     ^~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
->
-> File "asm-prototypes.h" is added to entry.S by 'scripts/Makefile.build',
-> adding the missed declaration header file can also fix the error:
->
->  getasmexports =3D                                                       =
- \
->     { echo "\#include <linux/kernel.h>" ;                               \
->       echo "\#include <linux/string.h>" ;                               \
-> +     echo "\#include <linux/uaccess.h>";                               \
->       echo "\#include <asm/asm-prototypes.h>" ;                         \
->       $(call getexportsymbols,EXPORT_SYMBOL(\1);) ; }
->
-> Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip=
- to symaddr")
->
-> Signed-off-by: Haiyue Wang <haiyuewa@163.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
+
+Thanks,
+Fiona
+
 > ---
->  arch/x86/include/asm/ftrace.h | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
-h
-> index f9cb4d07df58..063ce70837bb 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -34,6 +34,10 @@ static inline unsigned long ftrace_call_adjust(unsigne=
-d long addr)
->         return addr;
->  }
->
-> +#ifdef CONFIG_X86_KERNEL_IBT
-> +#include <linux/uaccess.h>
-> +#endif
-> +
->  static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry=
-_ip)
->  {
->  #ifdef CONFIG_X86_KERNEL_IBT
-
-Thanks for the patch! This looks correct to me, and I confirmed that
-it fixes the build issue. Feel free to add:
-
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Sami Tolvanen <samitolvanen@google.com>
-
-Sami
+> Changes in v2:
+> - Rename to lock_ref() to avoid confusion with lock().
+> - Rebase on v6.14-rc1.
+> - Link to v1: https://lore.kernel.org/r/20250130-guard-get-lock-v1-1-8ed87899920a@google.com
+> ---
