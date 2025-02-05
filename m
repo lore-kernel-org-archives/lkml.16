@@ -1,138 +1,142 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251181922C4;
-	Wed,  5 Feb 2025 17:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404191DDC0D;
+	Wed,  5 Feb 2025 17:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777267; cv=none; b=eTC9r2f2GTXeMVPSjiWK+Lk/T3lgPFz4s+EBCu/w58BVvTIt0t3Wv1uKFIn3WWPyHFI/gU5LScjDZQGD8QPYjccSKncF3p8kvMH/NK+MFI5II0kNZAJh4aPNWuyAIZRUglvOl76YD5XGwVSxBh+KIfEw/xPiIjmU4Ge9AElGjTA=
+	t=1738777284; cv=none; b=PMMuIpBCVxFtc/1kJTmnt+s2r7HeujwDemrhsso/yl2iT9g+ySVlVRKK5o24Y4CEWiQAACTyvGtxLkccxGzWkIIsnU1VEiYK6IO5ch/KMVC2aUPM9odyhA+vTkGGCIzrs1kykh/mxxYE4QIo231ZGwjjOtMKpnUqRcZFXVivf24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777267; c=relaxed/simple;
-	bh=JviheAOfcGY+fam4/mBliU2Kfgw+lI2qsF7LU6cAtEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+pu9zfQDpn4K3Vt5AMxZrnBbCtmCpJGhasP7iJ3PxOQZzrQC62JIU3P69NTE2II1Q0GfhHh1MTty49P3ceU1n25mF6i71utP1mWxlZQ03UMzQjP2N+J2Ld5j79AaSnwPHz5N90U9+nY5LWo1I9PmSO/lB9O0c3sijVcDeYTRbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org; spf=none smtp.mailfrom=idosch.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZEKOlpeI; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=idosch.org
+	s=arc-20240116; t=1738777284; c=relaxed/simple;
+	bh=qK8LCX7OG+Lpp+lf+znYUBF65w45hd7V1sPfz9dedeU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vpi5ttOZ58AN87PGOwUQcB02SyC3umeouEZ+S2SJ2XBeRMhbulbpAC+sBQG/NcLc1bYN8T32IKW/tuDiNS+TcL7DwD5Hz/yQNsQEUAFN08buTurBIrQqilp8+oyf6rWByt4Idv1lkOE5wfYGgplvRAPjVov9a+zQcaBcH3h0qwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmtDKr5i; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZEKOlpeI"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 822C0254016F;
-	Wed,  5 Feb 2025 12:41:04 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Wed, 05 Feb 2025 12:41:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738777264; x=1738863664; bh=JviheAOfcGY+fam4/mBliU2Kfgw+lI2qsF7
-	LU6cAtEk=; b=ZEKOlpeIY1hKtAp2dj02SWmILkEsLYGoHFBIhdaBULcWMVoyQpu
-	KzfAjF8pvjtTF4lN4dnc+yfrdQ3gu5VmdclWrtk+RRblOTrTs+RV/ySBTzhYrIhs
-	We0em8144KiF7E+I59c4mxMgbxGf905v7Sj55jV6FVhrGpOQ3gjipVswyXq/jPQJ
-	U5aUj0w2Vc9yCU+OcHLM3WVcEppDYlKD7L5S9IqaEo2pLfRrVcYtAZWqrThiZFx+
-	tAGxot3+aNI0zc1jcVV0hAMD+p1ttK0t6u3P/C/MsUJJOKio/tQ8rD+1e6MA/1IP
-	4hF07xGbvjG1PH3qhB/QuswNLbOzdldpHkQ==
-X-ME-Sender: <xms:r6KjZ7s7MsnLlVFwDXTvWOa1kjYpINM-exd9-U2Mn05ci8nQd6r87w>
-    <xme:r6KjZ8eMZ05c9ssWZuaZ48i2jNVhIGMTzfwk88dv3Hq_gRidwDIAHTnzR7ouXzEcX
-    ddkZG1IksiVExY>
-X-ME-Received: <xmr:r6KjZ-wSZrt9SGKDgAQk8cUrFe9ZeODH2xbU9scCMJso-3E-rggZonmspkZq>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefkughoucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrd
-    horhhgqeenucggtffrrghtthgvrhhnpeetudfghfelieetjedvhfevfeduvdetgffgudel
-    uefgkeffueeltdejvdettedufeenucffohhmrghinhepihhurdgvughupdhkvghrnhgvlh
-    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehiughoshgthhesihguohhstghhrdhorhhgpdhnsggprhgtphhtthhopedvhedpmhhoug
-    gvpehsmhhtphhouhhtpdhrtghpthhtohepmhdqmhgrlhhlrgguihesthhirdgtohhmpdhr
-    tghpthhtoheprhhoghgvrhhqsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnih
-    hshhgrnhifrghrsehtihdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrght
-    rdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggr
-    vhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluh
-    hnnhdrtghhpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:r6KjZ6OC6d3nrGjKvfHfIHaG7SURZuoKgzNUQ3ICfgDIzAEcRrQ67w>
-    <xmx:r6KjZ7_VUkzrSRTTwpmM_8MYcyk4CA4pzZxMHqSJs75nyLleEP2aLg>
-    <xmx:r6KjZ6U4SRoztKmYfzJCF1g0Osm-g593CwyW0FLZ9MPOZ_Khp2xNOw>
-    <xmx:r6KjZ8ftyrqq_5yaaFlEazqMapXDZAQ71v9J3gxNSe2pyx39exlAmA>
-    <xmx:sKKjZxPbTGyNchIvuM930pj-PPoTOhF2PZ47K3Ks0DY0owW0elyqGulr>
-Feedback-ID: i494840e7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Feb 2025 12:41:02 -0500 (EST)
-Date: Wed, 5 Feb 2025 19:41:00 +0200
-From: Ido Schimmel <idosch@idosch.org>
-To: "Malladi, Meghana" <m-malladi@ti.com>
-Cc: rogerq@kernel.org, danishanwar@ti.com, pabeni@redhat.com,
-	kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
-	andrew+netdev@lunn.ch, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, robh@kernel.org,
-	matthias.schiffer@ew.tq-group.com, dan.carpenter@linaro.org,
-	rdunlap@infradead.org, diogo.ivo@siemens.com,
-	schnelle@linux.ibm.com, glaroque@baylibre.com,
-	john.fastabend@gmail.com, hawk@kernel.org, daniel@iogearbox.net,
-	ast@kernel.org, srk@ti.com, Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [EXTERNAL] Re: [PATCH net 1/3] net: ti: icssg-prueth: Use
- page_pool API for RX buffer allocation
-Message-ID: <Z6OirBmdSLuY5YkI@shredder>
-References: <20250122124951.3072410-1-m-malladi@ti.com>
- <20250122124951.3072410-2-m-malladi@ti.com>
- <Z5J4jjJ4_arvfF9E@shredder>
- <9287a623-5663-4705-b61a-3ab5f5cb2424@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmtDKr5i"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-724f4d99bc7so24769a34.1;
+        Wed, 05 Feb 2025 09:41:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738777282; x=1739382082; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=P2I+AE75ayJRLzPPhA6yQrL20xtvTEfMhQVZu3c/aYk=;
+        b=CmtDKr5iQ/6N6KJx8rckQ7wNgbQoafT+1evmVs+ZcoLXg40G4FOyGGUX9GuXXY5kQy
+         VbyQhSeFi/h0VWcFWdHbC9U5tmSYY0bb2tdu5NkgwKVKgn7KezokHHpndKvO/rI29Rcx
+         zY0l4nVmFSqiLPORhGXiLl91tpZb0jzfnVWLFSe/lJa2UlD6Y01ywjTx6aWRs4iZ6GvE
+         yKnboBZ0A2z3VhvHLAMAGwNh9Revwl1DYdowl/XvNDPOsMPET0Qe4kWX8WXzwFll/maz
+         koLyWeQZOArehl2qkBu0V3swlbcuLd4SS5TfmrT+2GmSbob4BoOAfI9OrR2SDUTdsICB
+         CVqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738777282; x=1739382082;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P2I+AE75ayJRLzPPhA6yQrL20xtvTEfMhQVZu3c/aYk=;
+        b=cWQo6PtZvD6DcE5C+qUPVe/H8VJMiES0FS7pDSASt+1oYLYjTsLTv5bqvSgT5E1zdW
+         wNWCRmm5k1E1OpdYAL2TlbAJio1+Jo6VBXyJMvCGaS04kPfScMFUQprDLOv47GRa6wbx
+         MON/yenrrGCDsBQrQmwmk+7NeJ1kYnu/zHpjnABTQjpSWpPgmuhAvGXQSfJAtCmb59yn
+         QbIELsV0Gtg9RbMWAnMpnhtTRTz7/Jg6WtE9QMNK831Jq/9cZ0dhUfvw4SwhE2TYCBUg
+         X0HCCajOWRKlwLna8FHs/ftj39ikH5MDE/XaZig8GO1Lzrm2awNH8MpFRC0fkzqG3KjU
+         MipA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIjr49OChaMthdQBlSqJ8kw+pj8PjSwprEUPoPF02s4x0tz7XeV1Akt5TaxTbDNI2rLk2FVty/kacUy9k=@vger.kernel.org, AJvYcCXnuiM4wrINJRmwFg0LZijbecQQF7B7mPp+xlZTEh5ekjZFHvb8k9uN4ljJs7oJXROE4lkp1tyo@vger.kernel.org
+X-Gm-Message-State: AOJu0YySiHbWIDDoZiGFFiJ+xQWNoQ6tp87uA5GJHUOcy4ISdm1NZVmP
+	oxqnOBbCrHDuf9/SFA2ohwUWotEdqOlSL4sYU9aR7awzILzfoq4T
+X-Gm-Gg: ASbGncvZQvV5gKIWMk/rMZdMwKXYwSs9AEgDta/+s/AH1RnRpxfcMGl0So1hiR0Y2LH
+	4RoJKRQ2T5YzEqKyBd4cqQbb804ijwBtcHFIRvCzPwPL5i8Q3hmC1twLj85jCCImMxVdqTHLwuy
+	655GlxOPhLLEFTTH+ZWnnoL3xDoT+zWe6c4Xg51PiJAHLT1136stmeNCDemhcKF5/ASJgQGSka/
+	mmxSfG83pFe3f2RBZRsUMSQXN0nz6XKKRyiQbRX/10bjzp2m/SyPDSI+SvQ+3kcpnmGgUnSGGwN
+	mYHnVocyhzqjuinNvtctsTmi01SxnQfJ/3bwa0Bdjwk=
+X-Google-Smtp-Source: AGHT+IGCCV/djrPhG7I/tsvKJyINrTjM5vCqp5TLh0vkRWyb8yypfVuYrOzfffZkTjhGbkE+Rnh/iA==
+X-Received: by 2002:a05:6830:6787:b0:71d:4624:3f45 with SMTP id 46e09a7af769-726a4251be0mr2737150a34.18.1738777282035;
+        Wed, 05 Feb 2025 09:41:22 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618ba0acsm4019345a34.48.2025.02.05.09.41.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 09:41:21 -0800 (PST)
+Message-ID: <a3756bd8-8595-462b-8cdd-a39a7bce3f18@gmail.com>
+Date: Wed, 5 Feb 2025 09:41:19 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9287a623-5663-4705-b61a-3ab5f5cb2424@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/590] 6.12.13-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250205134455.220373560@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250205134455.220373560@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025 at 11:25:02PM +0530, Malladi, Meghana wrote:
-> Seems like none of the pages which have been allocated aren't getting
-> recycled in the rx path after being used unless its some error case. Will
-> try to fix this.
+On 2/5/25 05:35, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.13 release.
+> There are 590 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 07 Feb 2025 13:43:01 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.13-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-skb_mark_for_recycle() should help with page recycling when an skb that
-uses them is freed.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Anyway, I believe that I don't see put call when tearing down the Rx
-ring because prueth_rx_cleanup() is using page_pool_recycle_direct()
-when it shouldn't. AFAICT, prueth_rx_cleanup() is only called from the
-control path (upon ndo_stop()) and not in NAPI context.
-
-> Also I have noticed, in prueth_prepare_rx_chan() pages are allocated per
-> number of descriptors for a channel, but they are not being used when a
-> packet is being recieved (in emac_rx_packet()) and rather new page is
-> allocated for the next upcoming packet. Is this a valid design, what are
-> your thoughts on this ?
-
-The new page is possibly a page that was recycled into the pool when a
-previous packet was freed / dropped.
-
-[...]
-
-> Yes I will add PP_FLAG_DMA_SYNC_DEV as well.
-> I believe page_pool_dma_sync_for_cpu() needs to be called sync Rx page for
-> CPU, am I right ? If so can you tell me, in what all cases should I call
-> this function.
-
-Before accessing the packet data.
-
-> https://lkml.iu.edu/hypermail/linux/kernel/2312.1/06353.html
-> In the above link it is quoted - "Note that this version performs DMA sync
-> unconditionally, even if the associated PP doesn't perform sync-for-device"
-> for the page_pool_dma_sync_for_cpu() function. So does that mean if I am
-> using this function I don't need explicily sync for device call?
-
-It's explained in the page pool documentation:
-
-"Driver is always responsible for syncing the pages for the CPU. Drivers
-may choose to take care of syncing for the device as well or set the
-PP_FLAG_DMA_SYNC_DEV flag to request that pages allocated from the page
-pool are already synced for the device."
-
-https://docs.kernel.org/networking/page_pool.html#dma-sync
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
