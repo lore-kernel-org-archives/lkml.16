@@ -1,208 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2064.outbound.protection.outlook.com [40.107.100.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A502288E6
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738750342; cv=none; b=qXEiZTbS1+BBA53QCEU73Hh4IP/Y2NbWgkmFjJmC3mnO4LVmjbfRMtDK0eCgzdt9pzBrWBuYlN6eItBNzql1paXLcxKjfZmf96HYaM9dpQGi1WHbaH+gctcvWuvUUk6sXyzNXXGF2N7d0JJhHFWNHxjOsGURF6iGUiRkqk/3Iss=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738750342; c=relaxed/simple;
-	bh=a2P+2eH17up+Ofa94del8h0XUqFDuWoe68Y1Hf85Cm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PeMZpBc+KU9Rj+e3NfH4O9X2ICKQiAcTYHCvglySiX6ST9E0VR3sX/270+/aiOTvXkgRAZOyo8XjUaJjrp0OI4s2kOH229czYMh4gdXg8wkuyDW+OcsGtcBWAm4i+tqttcN9jHAqAoPF4jrKg84LqtyAYoPb3whS9/uF/bNba/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oj+SFF8k; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFDB21A44A;
+	Wed,  5 Feb 2025 10:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738750452; cv=fail; b=UCtswiH0klea5CFHXkhn1NBhzSpd//2vLRR3th5kBIlSd2rR2R8iF73hIUdfv9nZ3deDxS/3acG6P9U4Y99ZZ+XoLv+4U/ko66eFKE80gIIiTBLnYZXQUEXOhGRLactPprHP9UVC7pbFY4+vOCHf35MvVQgieCACaHybzKHBE4Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738750452; c=relaxed/simple;
+	bh=R9jsyqh0tur7JNXgNh2vjND39FkLhkM76ww1izojzWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YwmQel7mU4FjR5Qe0CaJIGdbip0DtN3tLiWT5Fjs/seJpQfCgbcL85lGDz7f7313x2lsXENmNYGGDBvdkEPnvb2hRZRkEGZ4iGLgyJ7FD7IU+kpZWbivESr6dFIeDnZTVP4Fw6yWjRfvc/mriIKqFCtRBe9EROkKuLELaXEBvRY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1/YpoNfy; arc=fail smtp.client-ip=40.107.100.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oj+SFF8k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738750339;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=08znvKD929SmLMJj92WNC0Au1O4yxtiLADSy4vJ5xMg=;
-	b=Oj+SFF8kXXURp6wOlV7bDrpt/gK8AeUFXuLj9M0r1IGyr6+IJ9NYR7PuYQX6b2cCBfTAgc
-	uK7DL5xuskvSr4x0drWBTHVHYzZ9kWABNe7SD/G7NcwIO8bpdGZYj4SbX1vXMk1+emhskP
-	bPu4n1Zc4YwTq5EBQ7zoprdLDvxqb+g=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-tWpP1GswNeOnEy5pSpH0Yw-1; Wed, 05 Feb 2025 05:12:18 -0500
-X-MC-Unique: tWpP1GswNeOnEy5pSpH0Yw-1
-X-Mimecast-MFC-AGG-ID: tWpP1GswNeOnEy5pSpH0Yw
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38634103b0dso4084074f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:12:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738750337; x=1739355137;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=08znvKD929SmLMJj92WNC0Au1O4yxtiLADSy4vJ5xMg=;
-        b=hq5tOiN+EPfWHlHYPxb9LWRczv37+FrewkdAF+jwYeQ9YxN7fffM8AyqYrethagt0s
-         I5dKrbSmGF4478vpiMu8EBdu4ceui476baxqnMKdwAG/Nz5eefmnLmEIiZzz7LV+oQor
-         wYzeE9Ct1psebY4G3jvGZWrZk5bAELBrSn0lXl9bntRkM/NTpUazT8AnBolH17gXVmRp
-         IbxdkdHU2GWXngie1iPOpSMQbx09mTTrJRKwM+ngAATH7T08ByGUOZfay8M/e9GlX2dx
-         94nXh05JE8kpt+c2yjYpB7CgtBbtMqmEVVul69uV9KMps1AjThy3qwjR8ly9c5lnjVPx
-         AVFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWs3aF00qdT+8zkF7IPafsudWize0EH+mEKqo0X+x/hqLub86lQngXJ/pwCyInFWdAxmOSuFHI7/76+rUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytMihrxGnkyXiiPJ9LDqgNuyt9EsifwsM2bhf3hHMoD1O8hCZy
-	OvT1KVCbShbEHcJowVSGCPTLQc7JgBlCPMAA0G0YOoOTacHMzlNvrA9HHP+FBnKjhcR4k2vvx1W
-	E2HdN55I8R2IWM8oxJWaDXEEd6DxzHYE4uKvOdlE8mzrgdgvcbhMI2WaLMZF+Ww==
-X-Gm-Gg: ASbGncsSOrBrpJ1NJ9f+5DX9VXkxzj3K1OBgdYeIBCZRmf1IJ12CG0QPthl4VJaHQyT
-	uq5ZDOFt+i9FgxoH1Vga7jlJLL9zSsSv702fl3Wa1IxEq3l8q63EA5Rq/saBolo3JbDuTN1wkSi
-	GsFbZz4W5BI7Q9tcYox1jwWvEixZ1aSwACnAyZJu/Lh9k9/p+AwiN3YnJu98KtV8tkbx0J1oRHw
-	zMqgjOIduD1/YQVyRrxQABUXZXBKIuPgrHts4zEcfX7sHXoAKPcH455pcTClKxUSwb4hHHNKEp8
-	n07UV1pgMQKDTnSEHgWkNxTd72+6X5ZCohdG
-X-Received: by 2002:a5d:4d8f:0:b0:38b:ed18:2f3b with SMTP id ffacd0b85a97d-38db48fde1cmr1533513f8f.48.1738750336888;
-        Wed, 05 Feb 2025 02:12:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGBp5ds39K1Z0cI93vntWmYRE9t9+g0+e2YclFwvxaztwPXTJF7S8AlnkTaxvuqyjPtyZlBXQ==
-X-Received: by 2002:a5d:4d8f:0:b0:38b:ed18:2f3b with SMTP id ffacd0b85a97d-38db48fde1cmr1533479f8f.48.1738750336470;
-        Wed, 05 Feb 2025 02:12:16 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38da8f6691bsm4315071f8f.42.2025.02.05.02.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 02:12:15 -0800 (PST)
-Date: Wed, 5 Feb 2025 11:12:13 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Aashish Sharma <shraash@google.com>,
-	Shin Kawamura <kawasin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-Message-ID: <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
-References: <Z4FAhF5Nvx2N_Zu6@jlelli-thinkpadt14gen4.remote.csb>
- <5d7e5c02-00ee-4891-a8cf-09abe3e089e1@nvidia.com>
- <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
- <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
- <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
- <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
- <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
- <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
- <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
- <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1/YpoNfy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z9VQbvLfL/5OlkFF0/PHUD9kjwTOKAtTHRvkfH081iLwCBeRv99gaLoiPTpDv7KxnfYSW/bvF14xqAc1niiahFoxCcZZDj0QxCPxsvkrA1brxufSgSDeG8HKIyI/F2WaaD//CMWQllsnxc+Q5irPKbCmhS20c1Quibip75Jn7zELHKnWw1sQJWVTmcl7Noek6Hrd5LvU2a4BC8yGrH9mMAJRgywfsfOMXO/CxSBGDW6QNd5L2Xho3ywxHfhTPc6HsgQq5MYgUhO0VNbLXtFA6j/gYXpKZf4lZroH2W9et1SRMnPGaFawM/v6+fyxMmI43cuaYalkhzoBQKrTfecvGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K7NcB/tp2Dte0+tRSsPxQDqZjC7Qd+YUDAa32BbumQI=;
+ b=mXYNx9glEDQIxchmh8rF4ZLWhJPJtOqba7awU/NPzXdSDwPaHlDdwCtK/mENPHoR/bQwPP7xBIYkSvsEOwMHByMvK7ny5dhuqk5HzD624BoUvrwgGLknlerB/RWl0HzckD06WMcKt6qVnpRIyAcWxiUDZN6ENin9H0gLcYChJpJJSLJkdpOKLNQo/wOn7qJo+DIRute6/U+FhxDi8/qCpXBTYMBF2yi/4Fun09WzCFGZSVL8xUIm6qU8sOh+Q9EqSzraIicGz3R3W4CvXUFaeImwH3kGfbnNqwujX70LGS5aJ/eYg/SaBedHUI/XNm9/PKWANcyFIIRtSf/JCB/9yA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K7NcB/tp2Dte0+tRSsPxQDqZjC7Qd+YUDAa32BbumQI=;
+ b=1/YpoNfyqbxZrTsl+Mf8ta9geUhENy0lUIhd55PcIjGrNetdE0HTLUy5wEMIxiHMpSgA/K9kv+n1mCDpbzDQfWKVHQPMW8oUT8Wcy4g4H5Y7p9wDjhzvZikMPFhyczlaJo+/SAQbUesEoq1BaoCeE1zxM8abMDW4vuq0dD+KzXY=
+Received: from DM6PR12CA0014.namprd12.prod.outlook.com (2603:10b6:5:1c0::27)
+ by PH7PR12MB5594.namprd12.prod.outlook.com (2603:10b6:510:134::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Wed, 5 Feb
+ 2025 10:14:07 +0000
+Received: from CY4PEPF0000EE36.namprd05.prod.outlook.com
+ (2603:10b6:5:1c0:cafe::f1) by DM6PR12CA0014.outlook.office365.com
+ (2603:10b6:5:1c0::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.22 via Frontend Transport; Wed,
+ 5 Feb 2025 10:14:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE36.mail.protection.outlook.com (10.167.242.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Wed, 5 Feb 2025 10:14:07 +0000
+Received: from [10.136.39.79] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
+ 2025 04:14:02 -0600
+Message-ID: <0835864f-6dc5-430d-91c0-b5605007d9d2@amd.com>
+Date: Wed, 5 Feb 2025 15:43:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
+ for debug builds
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Naman Jain <namjain@linux.microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+	<stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Steve Wahl
+	<steve.wahl@hpe.com>, Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	<srivatsa@csail.mit.edu>, Michael Kelley <mhklinux@outlook.com>
+References: <20250203114738.3109-1-namjain@linux.microsoft.com>
+ <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
+ <20250205095506.GB7145@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250205095506.GB7145@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE36:EE_|PH7PR12MB5594:EE_
+X-MS-Office365-Filtering-Correlation-Id: d954e301-97db-44a1-b6bf-08dd45cdd388
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|32650700017|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WEZlZXcrY3haMzhlV0ZUejgxd0NFR2lPZW5hNmpIbE5Od2dhd2ttdlhnMVFx?=
+ =?utf-8?B?OC9QcUdUbW53bkRNQjJwMGw0dlpkMEU5OWhNMDUwNVpoWVpQK3RnNHNET04z?=
+ =?utf-8?B?UzlZbFZ6UEpmYW14Mjk1SitmeVJ3b1FMYUpWUi92dEh0SlFubDJBWHRUVlVL?=
+ =?utf-8?B?eU5nMzFiQ1VOZGJ4Q2owMDdLUWUvNTFGVlg0MXVtck5BTlhJQmZiVTBlMGZL?=
+ =?utf-8?B?cnhBNGlxUGVRWS9vVmNlWmorU05sOHJiRXE4Z3I0ZExaUW9teFNsbm5vQjBM?=
+ =?utf-8?B?Rnh3cGZvYUw0VkVIaFZpdHNDNGdjRTRNZnY5c01mb3pnU3FaU1B2dVV3OThl?=
+ =?utf-8?B?WEliTmZWVnB5c00rTzRZZ25WZlkwZUZ4dWtJV1ZZSmtMWVU4MGZWdmlYZ3hL?=
+ =?utf-8?B?Qk9aaDFYaWduUTlIVEdzK2RKdWh4Y2JFeFpTaXMvMXpCUE5iamZuV0FKVTFY?=
+ =?utf-8?B?Q2xBQlk1RVhJNUs1clFUbjRnV2FBY0hseitpZ2dZNkFIWXRIZldKWjVMcXlr?=
+ =?utf-8?B?SDF3MGFyTDN4SE0rR0NOVDNMWG5zNXRTaVJvNWNGbWt1YVpVaXpwM3VtYk1K?=
+ =?utf-8?B?cTBXWFVucUt0MVBLeXYvNnRLczVNb0ZvRGs3VTFvTmlEcGg1YXFyLzVENmNH?=
+ =?utf-8?B?NTJSZnNtSXArN3U4NHdlM0dZeGxPbGJKNkFZRXNURnBGRjYzNEd5dG1wWFJQ?=
+ =?utf-8?B?YVlXLzhHbmdhYStHZjdHRm9pd1Fxa2R2c1VDUmRSa2kvZXlobGVxRUFPMUpj?=
+ =?utf-8?B?T2N2eXVVRlJqdDV3V3RGTnNGYUxhMnFRdERtRzczempwL3N2RUhzRUs2azBI?=
+ =?utf-8?B?MGtSejdpNzh5djdMb29XakJTa0JsdHJnZ0JvV3Nqd2MrT2tOMTFyaURuZFRy?=
+ =?utf-8?B?NVQvTHZubm42eldCcHBSNzQ5YTlkVUpHdHo1WG1LU1JoVmkrUGxDWjJ3UHlh?=
+ =?utf-8?B?NE5uNWI0SWRvbWJpN0N6aXhQek5UV1lMSnhDL1N3NVNPUlNERnRLdlh3V3FV?=
+ =?utf-8?B?TlVhNXBPWE9WVVlhZDdnbWR2c0s5ZGNpZnQ3TU5BVDVKK2UwdnFJTytBRE5W?=
+ =?utf-8?B?WE0xNmJUVllSUm9qajhmU29UU21aOTVka0Q2enNqeGRYNlp5anBRMjdSRnhE?=
+ =?utf-8?B?OUxTa085NnJHWjVGOXNEY28zc1NFZEtSTzI5Q3hVa1dmVE8wZ3pHNWI4amxB?=
+ =?utf-8?B?VkVnSGx4S2lIZWUyZ05oVmQzQmxBazkrbzhFdDVxK3Rycmd4RVdBMVVySC8z?=
+ =?utf-8?B?U1RlRzNnMkV6OVBDaFpsbE9mOEtkYTAvNzd6VlkyeTM1Q2xUV2R2bmZ5emFy?=
+ =?utf-8?B?bHZNYzBtWkVreXZoaWV0V2ZTa01oSlpZTkQ1ZTZaVTlXMk13STdlME1rV3pu?=
+ =?utf-8?B?bDI5dERCVC85S3lMLzJpaHVZTUJNNk00QlZQRnhpOG9MUTdRblFrVTRBaHEr?=
+ =?utf-8?B?ZU9NQXpKVFVkMjJ1QnBWN1pvTjMveFkweVJ2Y002UmkyQ3E5NmU3b2tZSjJX?=
+ =?utf-8?B?Q0U4cjhJSzFxU1VGVmlFK2IvellUVXRmZjNCcGxHelQwYUZpZGxRRGxoV01w?=
+ =?utf-8?B?WHNCR3lFbUhjY2plU0s3NWEwdE83VHdEUG1GQ2VOb3FoeUZXUW5FYUpkMW5j?=
+ =?utf-8?B?enhmTzd1QnNvNmVpMm5PSFgzaVlyWWE3SmIrQXQyRU8yamRqSFd2QUZqK1RI?=
+ =?utf-8?B?ZU1BaWt1dEN5QzdkRVJqR296R2xxMzQrS1YvZVJtTVQ1UVIzSTg3eFd3ZS9l?=
+ =?utf-8?B?QUtQVERzeHdyMStNcXlhUEdGcEFUS3IzbnlMVDYrakNHL0hPeFF3L295OEkr?=
+ =?utf-8?B?TStDTng3VXpTTldJYlRuME01U1Uva0EzZnZBTjVINmJaSm1hUWVOSGhuWTM1?=
+ =?utf-8?B?aGozLzBiODQ1RC92aGxZSzc0L1FYdUNyT1NjSDhLK2Y1bUg5c3U0ckhzSDY0?=
+ =?utf-8?B?Q0VFRWFJUTFOM0VNUFpWRnlOZ1ppWFcyNXYzYU8xUzZtOE1lR0dnSDI5cWRr?=
+ =?utf-8?B?YnpmK1JTaXBnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(32650700017)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 10:14:07.4324
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d954e301-97db-44a1-b6bf-08dd45cdd388
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE36.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5594
 
-On 05/02/25 07:53, Juri Lelli wrote:
-> On 03/02/25 11:01, Jon Hunter wrote:
-> > Hi Juri,
-> > 
-> > On 16/01/2025 15:55, Juri Lelli wrote:
-> > > On 16/01/25 13:14, Jon Hunter wrote:
+Hello Peter,
+
+Thank you for the background!
+
+On 2/5/2025 3:25 PM, Peter Zijlstra wrote:
+> On Wed, Feb 05, 2025 at 03:18:24PM +0530, K Prateek Nayak wrote:
 > 
-> ...
+>> Have there been any reports on an x86 system / VM where
+>> topology_span_sane() was tripped?
 > 
-> > > > [  210.595431] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
-> > > > [  210.606269] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
-> > > > [  210.617281] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
-> > > > [  210.627205] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=2
-> > > > [  210.637752] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=1
-> > >                                                                            ^
-> > > Different than before but still not what I expected. Looks like there
-> > > are conditions/path I currently cannot replicate on my setup, so more
-> > > thinking. Unfortunately I will be out traveling next week, so this
-> > > might required a bit of time.
-> > 
-> > 
-> > I see that this is now in the mainline and our board is still failing to
-> > suspend. Let me know if there is anything else you need me to test.
+> At the very least Intel SNC 'feature' tripped it at some point. They
+> figured it made sense to have the LLC span two nodes.
 > 
-> Ah, can you actually add 'sched_verbose' and to your kernel cmdline? It
-> should print our additional debug info on the console when domains get
-> reconfigured by hotplug/suspends, e.g.
+> But I think there were some really dodgy VMs too.
 > 
->  dl_bw_manage: cpu=3 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
->  CPU0 attaching NULL sched-domain.
->  CPU3 attaching NULL sched-domain.
->  CPU4 attaching NULL sched-domain.
->  CPU5 attaching NULL sched-domain.
->  CPU0 attaching sched-domain(s):
->   domain-0: span=0,4-5 level=MC
->    groups: 0:{ span=0 cap=766 }, 4:{ span=4 cap=908 }, 5:{ span=5 cap=989 }
->  CPU4 attaching sched-domain(s):
->   domain-0: span=0,4-5 level=MC
->    groups: 4:{ span=4 cap=908 }, 5:{ span=5 cap=989 }, 0:{ span=0 cap=766 }
->  CPU5 attaching sched-domain(s):
->   domain-0: span=0,4-5 level=MC
->    groups: 5:{ span=5 cap=989 }, 0:{ span=0 cap=766 }, 4:{ span=4 cap=908 }
->  root domain span: 0,4-5
->  rd 0,4-5: Checking EAS, CPUs do not have asymmetric capacities
->  psci: CPU3 killed (polled 0 ms)
-> 
-> Can you please share this information as well if you are able to collect
-> it (while still running with my last proposed fix)?
+> But yeah, its not been often. But basically dodgy BIOS/VM data can mess
+> up things badly enough for it to trip.
 
-Also, if you don't mind, add the following on top of the existing
-changes.
+Has it ever happened without tripping the topology_sane() check first
+on the x86 side?
 
-Just to be sure we don't get out of sync, I pushed current set to
-
-https://github.com/jlelli/linux.git experimental/dl-debug
-
----
- kernel/sched/deadline.c | 2 +-
- kernel/sched/topology.c | 5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 9a47decd099a..504ff302299a 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -3545,7 +3545,7 @@ static int dl_bw_manage(enum dl_bw_request req, int cpu, u64 dl_bw)
- 		 * dl_servers we can discount, as tasks will be moved out the
- 		 * offlined CPUs anyway.
- 		 */
--		printk_deferred("%s: cpu=%d cap=%lu fair_server_bw=%llu total_bw=%llu dl_bw_cpus=%d\n", __func__, cpu, cap, fair_server_bw, dl_b->total_bw, dl_bw_cpus(cpu));
-+		printk_deferred("%s: cpu=%d cap=%lu fair_server_bw=%llu total_bw=%llu dl_bw_cpus=%d type=%s span=%*pbl\n", __func__, cpu, cap, fair_server_bw, dl_b->total_bw, dl_bw_cpus(cpu), (cpu_rq(cpu)->rd == &def_root_domain) ? "DEF" : "DYN", cpumask_pr_args(cpu_rq(cpu)->rd->span));
- 		if (dl_b->total_bw - fair_server_bw > 0) {
- 			/*
- 			 * Leaving at least one CPU for DEADLINE tasks seems a
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 93b08e76a52a..996270cd5bd2 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -137,6 +137,7 @@ static void sched_domain_debug(struct sched_domain *sd, int cpu)
- 
- 	if (!sd) {
- 		printk(KERN_DEBUG "CPU%d attaching NULL sched-domain.\n", cpu);
-+		printk(KERN_CONT "span=%*pbl\n", cpumask_pr_args(def_root_domain.span));
- 		return;
- 	}
- 
-@@ -2534,8 +2535,10 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	if (has_cluster)
- 		static_branch_inc_cpuslocked(&sched_cluster_active);
- 
--	if (rq && sched_debug_verbose)
-+	if (rq && sched_debug_verbose) {
- 		pr_info("root domain span: %*pbl\n", cpumask_pr_args(cpu_map));
-+		pr_info("default domain span: %*pbl\n", cpumask_pr_args(def_root_domain.span));
-+	}
- 
- 	ret = 0;
- error:
+-- 
+Thanks and Regards,
+Prateek
 
