@@ -1,105 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787FB23CE;
-	Wed,  5 Feb 2025 21:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF3223CE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738791541; cv=none; b=nt1g2kg6MElVuvft6/ZZfOw4FBNLicp+SsmqlVuorp2Mp01jAmUu63+BRMkgpER4ip4aZVMs9I6+xasdQWF69fk+RVwa1ygMK3UfxNJ7I4Cb5jz/3odqTnXc8Dfwq3INPzZYpZ0rTbkMwPAEmYtVjpFInQsU6iqnIwjP25jP/8k=
+	t=1738791620; cv=none; b=bKXPU9BOv63A5gFZWUNUAhDcPxvIKjP1DSH7oTqtj/NI0TJnfeaJ1VBMxkMvN16i9CmH3zgN2fT9xmfLZFpxgPeZVQm2Y0WHBTMd37F850wTFjQuCvCHa+SZOBws2vf7Q1UiIwULaYIw5UK7EGYNSTl8R8nXW/HpwLYoSfkM8gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738791541; c=relaxed/simple;
-	bh=dR82hJtbJfCXp5nwhB6jtnqhDxna7Wd36kGbO5OP4uY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VDguhLRiVUZiiD7C8uVNl5HeH4gkiJMb8CH3Gr3VXvljE80SpTFjesnm4dZyJeLq4gIEQSZPKjgYtbIOP5OPNfeIjoU128njX+EUvtmLgL28LDahySZNGU/Co4QKFWZSUI1heUzMxK3kk04AQOys2dNKjteMEQfz1rYDzqsLPss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/ylt7ak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738791620; c=relaxed/simple;
+	bh=hCmtyZG5wKHm5C3H2TnU//Dp8nTojDg4JmoDtBSEWWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P+y6IO1a+tIvYN3wduirrgZ6XIggEBtRrmM4dSle833HaGNPVfDiZlLBnJqLGyzssYzwjdTmnBKzLt8rTh9WrNCWOoOs/Cz6t+B1H6UVsjqWmT3om+zEz4oO8KIUHFEIbmOjfQ31MeyV6IsHy8hv7WriEm5Kk0W+oa1TEI/O6No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5U5xFly; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/ylt7ak"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAE6C4CED1;
-	Wed,  5 Feb 2025 21:38:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5U5xFly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0497C4CED1;
+	Wed,  5 Feb 2025 21:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738791540;
-	bh=dR82hJtbJfCXp5nwhB6jtnqhDxna7Wd36kGbO5OP4uY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=B/ylt7akZqCD+m74ndLxFCSWwBin3XneIvYed/B/FJ1TPEJpyDogNJ0UVPt9y1oCE
-	 ++MyKmwzfkMAV+ELve5X1UQyVEQbW1YlSwLT8TEAmF0rtZelowDBsR2bfXpGGXw8/u
-	 6kNJwptwg1WMMWEPd2ZxQ1QHsyT2gUtNqjBwkpF0+kx+C/BQBY1phvqkS/PVebbUkF
-	 cHMCtQKu/EENrEiH8z/qV/ATmDSaMsLX4scWYCv9VaD/+Vz9hRefkwKQyiiKaZmJcx
-	 +QeluVczTRfOOSP/ofKKx58kCRYppVbnijwlj76rVkZfqPPh3DVHuF2DkybWuqh4a3
-	 yGVkhve4Vy3ZA==
-Message-ID: <7cdc27ca-5380-456f-8b92-85f872302a57@kernel.org>
-Date: Wed, 5 Feb 2025 22:38:56 +0100
+	s=k20201202; t=1738791620;
+	bh=hCmtyZG5wKHm5C3H2TnU//Dp8nTojDg4JmoDtBSEWWE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=a5U5xFlykrMhzv6xknoC+kWmdsa8Olj2Z3cPDjI1yXSjrA1zwtBy4VjILKTfQPwz7
+	 7Na2qCWADG7CyVdx8wZPxF8W9St3Yqg9Jw35Fp0vVnR5iicg5+sGjXUKFtI83CpCpm
+	 YIUU4TWGDfYdGFdcKzteChi9aVFJ9/BkmjAH741ZoMDz230GVWwqoaQUEfhkJnC9R9
+	 NfV/luLVONB3yUjvNaTMCwaX5QlN9fQWt6njevjxB034klzaY0k8eBVFwxCM3sontM
+	 VJoujdV6E76luIWcW9QEpfmwzx91o+zDngcm2NlzsvmqpU2IzOUAAc2fJTITzrbUx1
+	 8hHJonrp0vnvA==
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH] f2fs: add ioctl to get IO priority hint
+Date: Wed,  5 Feb 2025 21:40:14 +0000
+Message-ID: <20250205214014.3270585-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: socfpga: agilex5: add qspi flash node
-To: niravkumar.l.rabara@intel.com, Dinh Nguyen <dinguyen@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, nirav.rabara@altera.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250205101153.1778622-1-niravkumar.l.rabara@intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250205101153.1778622-1-niravkumar.l.rabara@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05/02/2025 11:11, niravkumar.l.rabara@intel.com wrote:
-> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
-> 
-> Add Micron qspi nor flash node for Intel SoCFPGA Agilex5.
-> 
-> Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
-> ---
-> 
+This patch adds an ioctl to give a per-file priority hint to attach
+REQ_PRIO.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/data.c            |  6 ++++++
+ fs/f2fs/f2fs.h            |  7 +++++++
+ fs/f2fs/file.c            | 20 ++++++++++++++++++++
+ include/uapi/linux/f2fs.h |  1 +
+ 4 files changed, 34 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 07b46b444d31..24c5cb1f5ada 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -413,6 +413,7 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
+ static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+ {
+ 	unsigned int temp_mask = GENMASK(NR_TEMP_TYPE - 1, 0);
++	struct folio *fio_folio = page_folio(fio->page);
+ 	unsigned int fua_flag, meta_flag, io_flag;
+ 	blk_opf_t op_flags = 0;
+ 
+@@ -438,6 +439,11 @@ static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+ 		op_flags |= REQ_META;
+ 	if (BIT(fio->temp) & fua_flag)
+ 		op_flags |= REQ_FUA;
++
++	if (fio->type == DATA &&
++	    F2FS_I(fio_folio->mapping->host)->ioprio_hint == F2FS_IOPRIO_WRITE)
++		op_flags |= REQ_PRIO;
++
+ 	return op_flags;
+ }
+ 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index bd0d8138b71d..c0a5f0df8781 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -816,6 +816,12 @@ enum {
+ 	FI_MAX,			/* max flag, never be used */
+ };
+ 
++/* used for f2fs_inode_info->ioprio_hint. */
++enum {
++	F2FS_IOPRIO_WRITE = 1,	/* high write priority */
++	F2FS_IOPRIO_MAX,
++};
++
+ struct f2fs_inode_info {
+ 	struct inode vfs_inode;		/* serve a vfs inode */
+ 	unsigned long i_flags;		/* keep an inode flags for ioctl */
+@@ -830,6 +836,7 @@ struct f2fs_inode_info {
+ 
+ 	/* Use below internally in f2fs*/
+ 	unsigned long flags[BITS_TO_LONGS(FI_MAX)];	/* use to pass per-file flags */
++	unsigned int ioprio_hint;	/* hint for IO priority */
+ 	struct f2fs_rwsem i_sem;	/* protect fi info */
+ 	atomic_t dirty_pages;		/* # of dirty pages */
+ 	f2fs_hash_t chash;		/* hash value of given file name */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 642b8d85a035..2f93a27d2f45 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3503,6 +3503,23 @@ static int f2fs_ioc_get_dev_alias_file(struct file *filp, unsigned long arg)
+ 			(u32 __user *)arg);
+ }
+ 
++static int f2fs_ioc_io_prio(struct file *filp, unsigned long arg)
++{
++	struct inode *inode = file_inode(filp);
++	__u32 level;
++
++	if (get_user(level, (__u32 __user *)arg))
++		return -EFAULT;
++
++	if (!S_ISREG(inode->i_mode) || level >= F2FS_IOPRIO_MAX)
++		return -EINVAL;
++
++	inode_lock(inode);
++	F2FS_I(inode)->ioprio_hint = level;
++	inode_unlock(inode);
++	return 0;
++}
++
+ int f2fs_precache_extents(struct inode *inode)
+ {
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+@@ -4606,6 +4623,8 @@ static long __f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		return f2fs_ioc_compress_file(filp);
+ 	case F2FS_IOC_GET_DEV_ALIAS_FILE:
+ 		return f2fs_ioc_get_dev_alias_file(filp, arg);
++	case F2FS_IOC_IO_PRIO:
++		return f2fs_ioc_io_prio(filp, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+@@ -5321,6 +5340,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	case F2FS_IOC_DECOMPRESS_FILE:
+ 	case F2FS_IOC_COMPRESS_FILE:
+ 	case F2FS_IOC_GET_DEV_ALIAS_FILE:
++	case F2FS_IOC_IO_PRIO:
+ 		break;
+ 	default:
+ 		return -ENOIOCTLCMD;
+diff --git a/include/uapi/linux/f2fs.h b/include/uapi/linux/f2fs.h
+index cd38a7c166e6..fb2f85b3c540 100644
+--- a/include/uapi/linux/f2fs.h
++++ b/include/uapi/linux/f2fs.h
+@@ -46,6 +46,7 @@
+ #define F2FS_IOC_GET_DEV_ALIAS_FILE	_IOR(F2FS_IOCTL_MAGIC, 26, __u32)
+ #define F2FS_IOC_DONATE_RANGE		_IOW(F2FS_IOCTL_MAGIC, 27,	\
+ 						struct f2fs_donate_range)
++#define F2FS_IOC_IO_PRIO		_IOW(F2FS_IOCTL_MAGIC, 28, __u32)
+ 
+ /*
+  * should be same as XFS_IOC_GOINGDOWN.
+-- 
+2.48.1.362.g079036d154-goog
+
