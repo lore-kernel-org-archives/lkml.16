@@ -1,101 +1,176 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5679115FA7B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10DD37160;
+	Wed,  5 Feb 2025 15:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738769502; cv=none; b=E2GY21d7VJhQ+yugmqGfOydTzql+jGvNAH2LQO87wnIo3Foc0sQm/BJJm9MDlgCcWzQL67RsZm5aMPeaH7Qs8L/sqLvtZLjGOQVGCE95YN3P+R6M1gIY4Y7BrASsEvPZUFNbmMNo0sACcGArXJHvgFNLbUBaHOQpC2C9IE5YWLM=
+	t=1738769535; cv=none; b=USatfVD43JyMt6azwELzfPbGhIAk3Ezch9QPd7PykTq37wKss2w57N81SvKjKviFa5wVU2u7EeG7BF/5EN2a1lG2DtO+WkkhuHC5yGIN7nAaWp+FCAeHcelj55H3YCFlKvjQzv91vaVJc/r9KcbxoZnx6x9dKZFpx5uRotQ69OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738769502; c=relaxed/simple;
-	bh=W5uGk1r6vFZmCjIotT9heokHOld87wIreyUWeeOuqeQ=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=G/jSS6Uk/+R9GzLiq+1Fu1dRgWL6QLcu6RK+UxCs9ySIogDdCl8Txj5LA0WlRNGnH752QdsrwBzzjlOQy0ALR8AjXLRa0+pxJ1CKr8UXsRLCPviVXZv5fqV+YSgC+2nzFhE5wnxDSlF6rvnkcRna8cH4NEFccPtd4skFl7jLs9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=yzi4Uhem; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1738769535; c=relaxed/simple;
+	bh=f8KDWWkQyZcBETq3eqo3BOEsTOy0lrDXy728Qu8ALfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VhXRTr//iO4qxCuxIxW29tY0mvqrtU+Q6L14B72zHDTPF+gGdI080/e2cDsSu2xITF06gtWR20CQrz9te/hrGFs59a1ICseon+EuaGT4nYkHbJuY8xFnn2YUdlEWSKoV6PtMOhq1mAMA6UaGHR06aqV9rcRqwjIfWohCJx//qyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YFxgY+og; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="yzi4Uhem"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9c3ef6849so3656513a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:31:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1738769499; x=1739374299; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UatWkuu9Qgwg8ANhzy8M4m7Rk1sE6deB/rTA3GCn9Gs=;
-        b=yzi4UhemFC76J7KgHDoGzqEp7z7lHdfGi2IoZpOHahIEy8MG2GlfxvR5B8EtWmnA56
-         YvRZqO9ugLZQsi0SiodmQFKej+iV/Deo5BA0rytW0SnFUCEGq3TD1JTQgyfrPqcPD3bq
-         6x8CEEvhtzm9DUEh8Q8QskTDJa5onq8r3rwLUSGKjfQCa4PdbX7kp+OpGTLBMQL9aogI
-         FmR46eEE5BPOMhH8OD3nAYs659rh30LHrFgABxEqpyaTZcpDZFl452X6RwmcKpR7c3dh
-         6jWFzSNzeaySJEXV4AcopSJgJfz8fv2DAo7TjLTLj83MInnXRMIHoNbImsj0vXdSElXs
-         AwWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738769499; x=1739374299;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UatWkuu9Qgwg8ANhzy8M4m7Rk1sE6deB/rTA3GCn9Gs=;
-        b=r2GsbbqXileJj7lGWmlYzEllPHLn5JYFgWoMjSE4HH0PSiHLd0/OmSk8wtWvlz6u9r
-         33MmJ4q3w9V0vuBwwhL49fQiffHXmyM2K9CpKSJlU9esj64/dQ7XTIA7zBCZ96nD38Bu
-         QTBFwI8+TMx2wgqEkspqUbUX3GR/yFlwCQ9hctx1W1MKGxotdPcLQpqUbuDBnCsWuXn2
-         VHb4xo35g0rZMhlTImFaLXWmXgHD0Hg6ANWDlCyA1QrhMGnPi/EJNtqlYS/uIS6A+3t9
-         /kJTK0WCKbOdrcE9KlznJPXAEHcfEoM26b3V//O63q74LYm7yasvhwbVvj+cuWz7aT6u
-         Tf2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUGS8t0WRoPCfa56gIitwjMuO1zaDc/D0vndW4iU/4jBCUUES1tIPGYd1oklGWM/0/LX5Uk/QNvzSrkGaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySq4s3dthQ6NdmxyS2H1II9AsEHEVYexzi6fMM3O9tpbtgVrtT
-	RNYHRf+CSh2l2PsR4fsOfwCliepWPmkPm9ZVLiI7v5o5QGTO0RCyl0bI66n8U8s=
-X-Gm-Gg: ASbGncsDlUZuD1jDioG/t1qyvk9fOvDUHGuoxFcLVp21k/1sLmpOodKo/U8WjpVMRlV
-	qevwCqUrjxmMm+y8TumpEQS6fAa/iSIV185TC7BXyYJHw8jmOw5oPLwFeBQ826EZzrI/tpVWXbv
-	aJEpkR4BpprHmLputD/xgn+Av79JUILxHlv2EhS9aWYnTONDJ/uBHsnBrTgbZKhnZrgj0gc8gA1
-	/n7OdY6urTlBL3dES1AaBCQCt61oYJ+Kr7YrJiB2qnlR2xiKsFzz8J/3e24/uBgFNc8cj1PFKol
-	eIccuSpoo9sl
-X-Google-Smtp-Source: AGHT+IFlrEqpwEqQKJm6jVKLRHs/j3zsT8RciURX3ceRV8XojffKvUsKNIOJn3B1ftJERTOXTnJITg==
-X-Received: by 2002:a17:90b:5288:b0:2f9:bfda:49b0 with SMTP id 98e67ed59e1d1-2f9e079b72cmr5022165a91.20.1738769498039;
-        Wed, 05 Feb 2025 07:31:38 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1d60aadsm1723134a91.9.2025.02.05.07.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 07:31:37 -0800 (PST)
-Date: Wed, 05 Feb 2025 07:31:37 -0800 (PST)
-X-Google-Original-Date: Wed, 05 Feb 2025 07:31:33 PST (-0800)
-Subject:     Re: [PATCH] riscv: Access time mmio instead of rdtime.
-In-Reply-To: <20241229-cogwheel-kebab-3cc2b21096c8@spud>
-CC: arikalo@gmail.com, linux-riscv@lists.infradead.org,
-  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, tglx@linutronix.de,
-  djordje.todorovic@htecgroup.com, Dragan.Mladjenovic@syrmia.com, linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Conor Dooley <conor@kernel.org>
-Message-ID: <mhng-2dc5552b-3c35-4469-b511-3c6dc257b610@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YFxgY+og"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 67F001F764;
+	Wed,  5 Feb 2025 15:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738769530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bXBU1vPryPoRK7OtPk6233LZHDNAPJC+VTW6t5S7CHw=;
+	b=YFxgY+ogzEwFf7iikNxyOCh/esYr2SxiBm2SuBCdURdGh+VfGNSwES4+l0fLapZblRi6DC
+	I+t4vJw6lJA4TCjipDWLTsQZL+hql+5wIgJ/SnYN8PONBWtXQeo+EDlPJX/O4Lr2e5UPew
+	hAQh/4Oe0OGKSrzQNwsHmhJ8zvaYbS2ZQE0YRuo++uQZvQqWEHh9Pv5JiymDUuZTt0Qigm
+	RBo2sza659Y2x98e4lcX3aZF/FgPZfPt+JhxHLoYIusOJuh/E6GEm4rzIvIYlCjhpgPyMl
+	raB21FYZ9bk6yElNcbSk01/Tkfv1O0Cql/dI1PuYwGEvGGL7Z5QNKu8/Qt2oKg==
+Date: Wed, 5 Feb 2025 16:32:07 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
+	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+	pekka.paalanen@haloniitty.fi, Simona Vetter <simona@ffwll.ch>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+	thomas.petazzoni@bootlin.com, seanpaul@google.com,
+	marcheu@google.com, nicolejadeyee@google.com,
+	linux-doc@vger.kernel.org,
+	Pekka Paalanen <pekka.paalanen@collabora.com>
+Subject: Re: [PATCH v16 5/7] drm/vkms: Create KUnit tests for YUV conversions
+Message-ID: <Z6OEd329pDNRrL5v@louis-chauvet-laptop>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
+	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+	pekka.paalanen@haloniitty.fi, Simona Vetter <simona@ffwll.ch>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+	thomas.petazzoni@bootlin.com, seanpaul@google.com,
+	marcheu@google.com, nicolejadeyee@google.com,
+	linux-doc@vger.kernel.org,
+	Pekka Paalanen <pekka.paalanen@collabora.com>
+References: <20250121-yuv-v16-0-a61f95a99432@bootlin.com>
+ <20250121-yuv-v16-5-a61f95a99432@bootlin.com>
+ <qwym5wty72f6o4dfz2iduamkpuom6jt5txskknovqxzagruusx@zuytk7awe2uw>
+ <Z5dkd3npNtzPWCrP@louis-chauvet-laptop>
+ <20250205-pristine-perch-of-abundance-7abac1@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205-pristine-perch-of-abundance-7abac1@houat>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeekfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhfefhgffgfeelveekvdejfedufeegffdvkeeileeuhedthfegjeeikeehheeukeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhouhhishdqtghhrghuvhgvthdqlhgrphhtohhppdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhoughrihhgohhsihhquhgvihhrrghmvghlohesghhmrghilhdrtghomhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrihhrrggtrghnrghlsehrihhsvghuphdrnhgvthdprhgtphhtthhopehhrghmohhhrghmmhgvugdrs
+ hgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Sun, 29 Dec 2024 07:09:13 PST (-0800), Conor Dooley wrote:
-> On Fri, Dec 27, 2024 at 04:00:56PM +0100, Aleksandar Rikalo wrote:
->> +#if defined(CONFIG_RISCV_TIME_MMIO)
->> +	if (!of_property_read_u64(n, "clock-reg", &mmio_addr)) {
+On 05/02/25 - 09:55, Maxime Ripard wrote:
+> On Mon, Jan 27, 2025 at 11:48:23AM +0100, Louis Chauvet wrote:
+> > On 26/01/25 - 18:06, Maxime Ripard wrote:
+> > > On Tue, Jan 21, 2025 at 11:48:06AM +0100, Louis Chauvet wrote:
+> > > > +static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+> > > > +	/*
+> > > > +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
+> > > > +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.601"],
+> > > > +	 *                     in_bits = 16,
+> > > > +	 *                     in_legal = False,
+> > > > +	 *                     in_int = True,
+> > > > +	 *                     out_bits = 8,
+> > > > +	 *                     out_legal = False,
+> > > > +	 *                     out_int = True)
+> > > > +	 *
+> > > > +	 * Test cases for conversion between YUV BT601 full range and RGB
+> > > > +	 * using the ITU-R BT.601 weights.
+> > > > +	 */
+> > > 
+> > > What are the input and output formats?
+> > > 
+> > > Ditto for all the other tests.
+> > 
+> > There is no really "input" and "output" format, they are reference values 
+> > for conversion, you should be able to use it in both direction. They are 
+> > generated by RGB_to_YCbCr (RGB input, YUV output) just because it was 
+> > easier to create the colors from RGB values.
+> 
+> RGB and YUV aren't formats, they are color models. XRGB8888 is a format.
+> NV12 is a format.
 >
-> This is a non-standard, undocumented property. reg & reg-names are what
-> you should be using here.
+> > If you think we should specify what is was used as input and output to 
+> > generate those values, I can modify the comment to:
+> > 
+> > 	Tests cases for color conversion generated by converting RGB 
+> > 	values to YUV BT601 full range using the ITU-R BT.601 weights.
+> 
+> My point is that those comments should provide a way to reimplement the
+> test from scratch, and compare to the actual implementation. It's useful
+> when you have a test failure and start to wonder if the implementation
+> or the test is at fault.
+> 
+> By saying only RGB and YUV, you can't possibly do that.
 
-We were talking some in the patchwork meeting.  If this system has a 
-CLINT then it's probably best to refactor the timers such that MMIO 
-CLINT access is independent from M-mode (as there's some patches 
-floating around to make M-mode use rdtime on systems that implement 
-rdtime).
+I understand your concern, but I believe there might be a slight 
+misunderstanding. The table in question stores reference values for 
+specific color models, not formats. Therefore, it doesn't specify any 
+particular format like XRGB8888 or NV12.
 
->> +		riscv_time_val = ioremap((long)mmio_addr, 8);
->> +		if (riscv_time_val) {
->> +			pr_info("Using mmio time register at 0x%llx\n", mmio_addr);
->> +			static_branch_enable(&riscv_time_mmio_available);
->> +		} else {
->> +			pr_warn("Unable to use mmio time at 0x%llx\n", mmio_addr);
->> +		}
->> +	}
->> +#endif
+To clarify this, I can rename the format_pair struct to value_pair. This 
+should make it clearer that we are dealing with color model values rather 
+than formats.
+
+If you want to test a specific format conversion, such as 
+YUV420_to_argbu16, you would need to follow a process like this:
+
+	// Recreate a YUV420 data
+	plane_1[0] = test_case.yuv.y
+	plane_2[0] = test_case.yuv.u
+	plane_2[1] = test_case.yuv.v
+
+	// convertion to test from YUV420 format to argb_u16
+	rgb_u16 = convert_YUV420_to_argbu16(plane_1, plane_2)
+
+	// ensure the conversion is valid
+	assert_eq(rgb_u16, test_case.rgb)
+
+The current test is not performing this kind of format conversion. 
+Instead, it verifies that for given (y, u, v) values, the correct (r, g, 
+b, a) values are obtained. In other words, it tests color model 
+conversion, not format conversion.
+
+Do you think I need to change something in this test? If so, can you 
+explain what kind of unit test you are expecting.
+
+Thanks,
+Louis Chauvet
+
+> > Beside that modification, did you notice anything else on the series that 
+> > require more work before adding your Ack-by/Reviewed-by on the other 
+> > patches?
+> 
+> The rest looked good to me the last time I looked.
+>
+> Maxime
+
+
