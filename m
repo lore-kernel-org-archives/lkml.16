@@ -1,223 +1,347 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA17F376;
-	Wed,  5 Feb 2025 14:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D5618A6C5;
+	Wed,  5 Feb 2025 14:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738766457; cv=none; b=mddVELhGtMGuKrbcAZOt+Ku0lh1NzvfxRwDan5sBSV1bzwjm4xLQuGJ8sKNHQe7OO+XNV6/6jGk8l6t10lsonsQjKPzjtx/SvTbtpNP3cpXpqwC1n9gfH8IGZRNtMfFNYM6XJ6kU9Wz/vT/0wyjoUlp2lv0keENtQytDRaE1J0c=
+	t=1738766460; cv=none; b=UrAKCHWopFKPoBtTmtMGlLdxEm6x1EcSscJHzG/CohaUinPE9JxN/gs2weOig84QB9L6/GqQpvhLTPKJGHf3E7kQT7MziI5Cod43r6t5cQ4f43RbJFHaBYB9FaRr4XQ2ehdQijC2S3PXJKmxOew9beEcsECZJ9GQkfDYEsETRm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738766457; c=relaxed/simple;
-	bh=PKEwQJtMppnnCrd/A7LT0nMscPJpOdf1mwdXkQb97J8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CHFo7kTa4b89nfW4nhvrFBrADYj4iRPGWF+QycOOmPlOt5cR9fp6Edj3MWh+vVaHyzZ7R3ArJ7UBwG/zMPRtB8g/9vYKYznsf7O9i2f+nZUcZG75kHgETBl478IDPTlCtO1qAXrfSdIKQOc6+HM7FOqhaUbNK7HcbonBmWbPRcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=cLgXJWLA; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1738766460; c=relaxed/simple;
+	bh=igiSat1dX5JpZ8Rk07V+4SozwrjyZTKwu3DZB8pCubA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rUjHnPaGfVT/2AoXfbcfDcF8y5wXlfSAm1RbS0nf9bjk8O6fE2PiKgOtKudrLv7CoxZDIzez21qHMfDlhXDloBwpQXYRjuof0UZC2cpAm0oiDLcXDjbsG58zykv5+MLzb3Pziqg69mfLZOEfYd31yWw1xjF0TA4T5m8DGNIVVI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsRVB81D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="cLgXJWLA"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2FF991038193F;
-	Wed,  5 Feb 2025 15:40:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1738766451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cEiBKmEICWctotPHCUAWGTwbH/Iy+hrCjjP5QKi/9Lo=;
-	b=cLgXJWLAdAMZvNv+TCbu3Fl/9FxjBS8zH7YHTKts/CjAxxH5YGIV4eGxb6BU2yIjt7+yb+
-	8r/EGuxZtRCFA3dYOFw6yk1NU56YSKX6LfoV5/780QCG0fKpirmzFbkP8DbsZe6jBsySVU
-	AJFeXmosGVZHKGIpRNa9CVZp0b4ibN8O6DoL7nV7+BCCs9gBRwXyoi5WLcYQ5JA84kmyJc
-	A+3cCN08MaudaM2OTRcqq2aN1oP4Bqfr2dusv+piah0EYAPetkqzo2L8arhp0CL0a68szQ
-	8DIlW9B5/EY+xjYxFvBYC5IQPGrV6Ap58bCHAgvnnZgt0zXWui0SYxrKdhu1sQ==
-Date: Wed, 5 Feb 2025 15:40:44 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
- <festevam@gmail.com>, devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan
- Wahren <wahrenst@gmx.net>
-Subject: Re: [RESEND PATCH v11 1/3] dt-bindings: display: Add
- powertip,{st7272|hx8238a} as DT Schema description
-Message-ID: <20250205154044.7b1fd2c5@wsk>
-In-Reply-To: <20250203132108.77f2123c@wsk>
-References: <20250109154149.1212631-1-lukma@denx.de>
-	<20250203132108.77f2123c@wsk>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsRVB81D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA3CC4CEE2;
+	Wed,  5 Feb 2025 14:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738766460;
+	bh=igiSat1dX5JpZ8Rk07V+4SozwrjyZTKwu3DZB8pCubA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lsRVB81DG/IRLq7pr5O0mHOSgO71WvvN987DhEny1Mr86py5YJFjuCPdxtMmQ1Byp
+	 LnfElstV/vT6MG/HV5nhWWK9iCICb3nC1H8xpRSjnp7EHNGKrSlI/Bi1et3YMLZVCM
+	 vneeeWvBsKi9yzYQtRa2Tw37IMKnoc4Vk0oRpsOYmj5PTCaNYdGIyHPKfwAMQkQxPE
+	 hdJVJLUG1FZQSEMIKVS749LysjkJ9Nut+dFRZCJVNlzwtPULiIRAqcSUy24PbQtgQn
+	 SlwpN72RLz06MuemWdVhHGPMnve9HM49yhNRXDG9M2XMsL4vxPyEW6zDMNy3Z7c8Lv
+	 zEANkD7Y4LSLg==
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v7 01/17] PCI/P2PDMA: Refactor the p2pdma mapping helpers
+Date: Wed,  5 Feb 2025 16:40:21 +0200
+Message-ID: <9a0176593a8777fb0b3e5b1e97c4ae4c8fa22626.1738765879.git.leonro@nvidia.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1738765879.git.leonro@nvidia.com>
+References: <cover.1738765879.git.leonro@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NX.kk_nUKqVaGcqUC8c2=oO";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
---Sig_/NX.kk_nUKqVaGcqUC8c2=oO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Christoph Hellwig <hch@lst.de>
 
-Dear Community,
+The current scheme with a single helper to determine the P2P status
+and map a scatterlist segment force users to always use the map_sg
+helper to DMA map, which we're trying to get away from because they
+are very cache inefficient.
 
-> Dear Community,
->=20
-> > This patch provides the DT Schema description of:
-> > - powertip,st7272  320 x 240 LCD display
-> > - powertip,hx8238a 320 x 240 LCD display
-> >=20
-> > Used with the different HW revisions of btt3 devices.
-> >  =20
->=20
-> Gentle ping on this window... I hope that it will make it into
+Refactor the code so that there is a single helper that checks the P2P
+state for a page, including the result that it is not a P2P page to
+simplify the callers, and a second one to perform the address translation
+for a bus mapped P2P transfer that does not depend on the scatterlist
+structure.
 
-Not "ping on this window" :-) but on this patch :-)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+---
+ drivers/iommu/dma-iommu.c   | 47 +++++++++++++++++-----------------
+ drivers/pci/p2pdma.c        | 38 ++++-----------------------
+ include/linux/dma-map-ops.h | 51 +++++++++++++++++++++++++++++--------
+ kernel/dma/direct.c         | 43 +++++++++++++++----------------
+ 4 files changed, 91 insertions(+), 88 deletions(-)
 
-> upstream during this merge window.
->=20
-> Thanks in advance.
->=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >=20
-> > Changes for v9:
-> > - New patch
-> >=20
-> > Changes for v10:
-> > - None
-> >=20
-> > Changes for v11:
-> > - Combine both separate dt-bindings patches for powertip,st7272 and
-> >   powertip,hx8238a into one
-> > - Drop the quotes for in "title" entry of powertip*.yaml files
-> > ---
-> >  .../display/panel/powertip,hx8238a.yaml       | 29
-> > +++++++++++++++++++ .../display/panel/powertip,st7272.yaml        |
-> > 29 +++++++++++++++++++ 2 files changed, 58 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/panel/powertip,hx8238a.yaml
-> > create mode 100644
-> > Documentation/devicetree/bindings/display/panel/powertip,st7272.yaml
-> >=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/panel/powertip,hx8238a.yaml
-> > b/Documentation/devicetree/bindings/display/panel/powertip,hx8238a.yaml
-> > new file mode 100644 index 000000000000..b7d74faeb5d5 --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/display/panel/powertip,hx8238a.yaml
-> > @@ -0,0 +1,29 @@ +# SPDX-License-Identifier: GPL-2.0-only OR
-> > BSD-2-Clause +%YAML 1.2
-> > +---
-> > +$id:
-> > http://devicetree.org/schemas/display/panel/powertip,hx8238a.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml# +
-> > +title: Powertip Electronic Technology Co. 320 x 240 LCD panel
-> > +
-> > +maintainers:
-> > +  - Lukasz Majewski <lukma@denx.de>
-> > +
-> > +allOf:
-> > +  - $ref: panel-dpi.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: powertip,hx8238a
-> > +      - {} # panel-dpi, but not listed here to avoid false select
-> > +
-> > +  height-mm: true
-> > +  panel-timing: true
-> > +  port: true
-> > +  power-supply: true
-> > +  width-mm: true
-> > +
-> > +additionalProperties: false
-> > +
-> > +...
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/panel/powertip,st7272.yaml
-> > b/Documentation/devicetree/bindings/display/panel/powertip,st7272.yaml
-> > new file mode 100644 index 000000000000..f3622800f13f --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/display/panel/powertip,st7272.yaml
-> > @@ -0,0 +1,29 @@ +# SPDX-License-Identifier: GPL-2.0-only OR
-> > BSD-2-Clause +%YAML 1.2
-> > +---
-> > +$id:
-> > http://devicetree.org/schemas/display/panel/powertip,st7272.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml# +
-> > +title: Powertip Electronic Technology Co. 320 x 240 LCD panel
-> > +
-> > +maintainers:
-> > +  - Lukasz Majewski <lukma@denx.de>
-> > +
-> > +allOf:
-> > +  - $ref: panel-dpi.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: powertip,st7272
-> > +      - {} # panel-dpi, but not listed here to avoid false select
-> > +
-> > +  height-mm: true
-> > +  panel-timing: true
-> > +  port: true
-> > +  power-supply: true
-> > +  width-mm: true
-> > +
-> > +additionalProperties: false
-> > +
-> > +... =20
->=20
->=20
->=20
->=20
-> Best regards,
->=20
-> Lukasz Majewski
->=20
-> --
->=20
-> DENX Software Engineering GmbH,      Managing Director: Erika Unter
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
-> lukma@denx.de
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 2a9fa0c8cc00..5746ffaf0061 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -1382,7 +1382,6 @@ int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
+ 	struct scatterlist *s, *prev = NULL;
+ 	int prot = dma_info_to_prot(dir, dev_is_dma_coherent(dev), attrs);
+ 	struct pci_p2pdma_map_state p2pdma_state = {};
+-	enum pci_p2pdma_map_type map;
+ 	dma_addr_t iova;
+ 	size_t iova_len = 0;
+ 	unsigned long mask = dma_get_seg_boundary(dev);
+@@ -1412,28 +1411,30 @@ int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
+ 		size_t s_length = s->length;
+ 		size_t pad_len = (mask - iova_len + 1) & mask;
+ 
+-		if (is_pci_p2pdma_page(sg_page(s))) {
+-			map = pci_p2pdma_map_segment(&p2pdma_state, dev, s);
+-			switch (map) {
+-			case PCI_P2PDMA_MAP_BUS_ADDR:
+-				/*
+-				 * iommu_map_sg() will skip this segment as
+-				 * it is marked as a bus address,
+-				 * __finalise_sg() will copy the dma address
+-				 * into the output segment.
+-				 */
+-				continue;
+-			case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+-				/*
+-				 * Mapping through host bridge should be
+-				 * mapped with regular IOVAs, thus we
+-				 * do nothing here and continue below.
+-				 */
+-				break;
+-			default:
+-				ret = -EREMOTEIO;
+-				goto out_restore_sg;
+-			}
++		switch (pci_p2pdma_state(&p2pdma_state, dev, sg_page(s))) {
++		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
++			/*
++			 * Mapping through host bridge should be mapped with
++			 * regular IOVAs, thus we do nothing here and continue
++			 * below.
++			 */
++			break;
++		case PCI_P2PDMA_MAP_NONE:
++			break;
++		case PCI_P2PDMA_MAP_BUS_ADDR:
++			/*
++			 * iommu_map_sg() will skip this segment as it is marked
++			 * as a bus address, __finalise_sg() will copy the dma
++			 * address into the output segment.
++			 */
++			s->dma_address = pci_p2pdma_bus_addr_map(&p2pdma_state,
++						sg_phys(s));
++			sg_dma_len(s) = sg->length;
++			sg_dma_mark_bus_address(s);
++			continue;
++		default:
++			ret = -EREMOTEIO;
++			goto out_restore_sg;
+ 		}
+ 
+ 		sg_dma_address(s) = s_iova_off;
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 0cb7e0aaba0e..31c6e6e4a950 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -995,40 +995,12 @@ static enum pci_p2pdma_map_type pci_p2pdma_map_type(struct dev_pagemap *pgmap,
+ 	return type;
+ }
+ 
+-/**
+- * pci_p2pdma_map_segment - map an sg segment determining the mapping type
+- * @state: State structure that should be declared outside of the for_each_sg()
+- *	loop and initialized to zero.
+- * @dev: DMA device that's doing the mapping operation
+- * @sg: scatterlist segment to map
+- *
+- * This is a helper to be used by non-IOMMU dma_map_sg() implementations where
+- * the sg segment is the same for the page_link and the dma_address.
+- *
+- * Attempt to map a single segment in an SGL with the PCI bus address.
+- * The segment must point to a PCI P2PDMA page and thus must be
+- * wrapped in a is_pci_p2pdma_page(sg_page(sg)) check.
+- *
+- * Returns the type of mapping used and maps the page if the type is
+- * PCI_P2PDMA_MAP_BUS_ADDR.
+- */
+-enum pci_p2pdma_map_type
+-pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state, struct device *dev,
+-		       struct scatterlist *sg)
++void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
++		struct device *dev, struct page *page)
+ {
+-	if (state->pgmap != sg_page(sg)->pgmap) {
+-		state->pgmap = sg_page(sg)->pgmap;
+-		state->map = pci_p2pdma_map_type(state->pgmap, dev);
+-		state->bus_off = to_p2p_pgmap(state->pgmap)->bus_offset;
+-	}
+-
+-	if (state->map == PCI_P2PDMA_MAP_BUS_ADDR) {
+-		sg->dma_address = sg_phys(sg) + state->bus_off;
+-		sg_dma_len(sg) = sg->length;
+-		sg_dma_mark_bus_address(sg);
+-	}
+-
+-	return state->map;
++	state->pgmap = page->pgmap;
++	state->map = pci_p2pdma_map_type(state->pgmap, dev);
++	state->bus_off = to_p2p_pgmap(state->pgmap)->bus_offset;
+ }
+ 
+ /**
+diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
+index e172522cd936..63dd480e209b 100644
+--- a/include/linux/dma-map-ops.h
++++ b/include/linux/dma-map-ops.h
+@@ -443,6 +443,11 @@ enum pci_p2pdma_map_type {
+ 	 */
+ 	PCI_P2PDMA_MAP_UNKNOWN = 0,
+ 
++	/*
++	 * Not a PCI P2PDMA transfer.
++	 */
++	PCI_P2PDMA_MAP_NONE,
++
+ 	/*
+ 	 * PCI_P2PDMA_MAP_NOT_SUPPORTED: Indicates the transaction will
+ 	 * traverse the host bridge and the host bridge is not in the
+@@ -471,21 +476,47 @@ enum pci_p2pdma_map_type {
+ 
+ struct pci_p2pdma_map_state {
+ 	struct dev_pagemap *pgmap;
+-	int map;
++	enum pci_p2pdma_map_type map;
+ 	u64 bus_off;
+ };
+ 
+-#ifdef CONFIG_PCI_P2PDMA
+-enum pci_p2pdma_map_type
+-pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state, struct device *dev,
+-		       struct scatterlist *sg);
+-#else /* CONFIG_PCI_P2PDMA */
++/* helper for pci_p2pdma_state(), do not use directly */
++void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
++		struct device *dev, struct page *page);
++
++/**
++ * pci_p2pdma_state - check the P2P transfer state of a page
++ * @state:	P2P state structure
++ * @dev:	device to transfer to/from
++ * @page:	page to map
++ *
++ * Check if @page is a PCI P2PDMA page, and if yes of what kind.  Returns the
++ * map type, and updates @state with all information needed for a P2P transfer.
++ */
+ static inline enum pci_p2pdma_map_type
+-pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state, struct device *dev,
+-		       struct scatterlist *sg)
++pci_p2pdma_state(struct pci_p2pdma_map_state *state, struct device *dev,
++		struct page *page)
++{
++	if (IS_ENABLED(CONFIG_PCI_P2PDMA) && is_pci_p2pdma_page(page)) {
++		if (state->pgmap != page->pgmap)
++			__pci_p2pdma_update_state(state, dev, page);
++		return state->map;
++	}
++	return PCI_P2PDMA_MAP_NONE;
++}
++
++/**
++ * pci_p2pdma_bus_addr_map - map a PCI_P2PDMA_MAP_BUS_ADDR P2P transfer
++ * @state:	P2P state structure
++ * @paddr:	physical address to map
++ *
++ * Map a physically contigous PCI_P2PDMA_MAP_BUS_ADDR transfer.
++ */
++static inline dma_addr_t
++pci_p2pdma_bus_addr_map(struct pci_p2pdma_map_state *state, phys_addr_t paddr)
+ {
+-	return PCI_P2PDMA_MAP_NOT_SUPPORTED;
++	WARN_ON_ONCE(state->map != PCI_P2PDMA_MAP_BUS_ADDR);
++	return paddr + state->bus_off;
+ }
+-#endif /* CONFIG_PCI_P2PDMA */
+ 
+ #endif /* _LINUX_DMA_MAP_OPS_H */
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 5b4e6d3bf7bc..e289ad27d1b5 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -462,34 +462,33 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 		enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	struct pci_p2pdma_map_state p2pdma_state = {};
+-	enum pci_p2pdma_map_type map;
+ 	struct scatterlist *sg;
+ 	int i, ret;
+ 
+ 	for_each_sg(sgl, sg, nents, i) {
+-		if (is_pci_p2pdma_page(sg_page(sg))) {
+-			map = pci_p2pdma_map_segment(&p2pdma_state, dev, sg);
+-			switch (map) {
+-			case PCI_P2PDMA_MAP_BUS_ADDR:
+-				continue;
+-			case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+-				/*
+-				 * Any P2P mapping that traverses the PCI
+-				 * host bridge must be mapped with CPU physical
+-				 * address and not PCI bus addresses. This is
+-				 * done with dma_direct_map_page() below.
+-				 */
+-				break;
+-			default:
+-				ret = -EREMOTEIO;
++		switch (pci_p2pdma_state(&p2pdma_state, dev, sg_page(sg))) {
++		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
++			/*
++			 * Any P2P mapping that traverses the PCI host bridge
++			 * must be mapped with CPU physical address and not PCI
++			 * bus addresses.
++			 */
++			break;
++		case PCI_P2PDMA_MAP_NONE:
++			sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
++					sg->offset, sg->length, dir, attrs);
++			if (sg->dma_address == DMA_MAPPING_ERROR) {
++				ret = -EIO;
+ 				goto out_unmap;
+ 			}
+-		}
+-
+-		sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+-				sg->offset, sg->length, dir, attrs);
+-		if (sg->dma_address == DMA_MAPPING_ERROR) {
+-			ret = -EIO;
++			break;
++		case PCI_P2PDMA_MAP_BUS_ADDR:
++			sg->dma_address = pci_p2pdma_bus_addr_map(&p2pdma_state,
++					sg_phys(sg));
++			sg_dma_mark_bus_address(sg);
++			continue;
++		default:
++			ret = -EREMOTEIO;
+ 			goto out_unmap;
+ 		}
+ 		sg_dma_len(sg) = sg->length;
+-- 
+2.48.1
 
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/NX.kk_nUKqVaGcqUC8c2=oO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmejeGwACgkQAR8vZIA0
-zr26xggAneqSbPpy5mv8Ai9RLDSjNCc66Zdwn6xEQ1QHl2zwo2neclEt7RRCRXC1
-k8e5eu/5fagPSCCrZLJbMSYLENWkdYfx/RG5WMjaAeypsLKTpbHHfp3R1RWihe+f
-TppC0mjbvF+a3Yu1y80L2myhIaWFPZtgjW0cx50h5CRtSFeopgrpUB7aXNGanyGR
-JrL4/OiQ65yKiyewwjRVPSHsqfvq7RnhKFR9znVSiUgnhgv81QgGRybI8GtrwLST
-NvSbxfelBlFeBQ1G8cqhXbfX3efIo/wy/P1C/ILRU0fVgBiUIz1Y68s3CuySnA52
-3/EsVzfwOo3PpqQQpY0xecKeZtHlhg==
-=Z4og
------END PGP SIGNATURE-----
-
---Sig_/NX.kk_nUKqVaGcqUC8c2=oO--
