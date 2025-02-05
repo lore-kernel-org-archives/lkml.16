@@ -1,95 +1,82 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73D514B959
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1823155747
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765393; cv=none; b=nRqWx03CHupCDNA0LLyCJkCOiuhi/raA8AY7Wy5aKh/RABf88dV/+1EXyfKflNL0pSHxu1sNOC6nH/wzXulyMBcDu+7vLwQoZETXkQLKKstHkWPar0lUlt00MZqqPRqjNKVGe31Z+5k0yPgiKh/qyTXmrCzQsUtEFxN8c1Gyzno=
+	t=1738765472; cv=none; b=kAl+LHw4axBQbtTOE41qgpaVy8zhX5l0I1haAwVmYDr30RF8lI8O/XhiDFe6sdtA1lO8bi/NF0Kb/CBoOJoCnjNA6YkHjAJdihCvi2VFD2+mFdbEVm4g3Tqb/pAHIaVjwnM/phNilcA5Y0lpAb4dFqiw4xQluY3/RrMWGk9XMrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765393; c=relaxed/simple;
-	bh=zn1OZ0/xC5hWSYyFfGAzueY2AGtYBGt8AuLFCHG10t8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jfYto8GcgzxZwCjwM20VQ28YNBoe/dVCD9sVSGO51z+7cHjBeP8lUfCQumWF6u1LdIjt34ztoVGJq94F3YzoLk1AumDt9+UkQNxRO5isC2GR1IqCgHY7FXbtB2QTXMSrT5aDDpzIKxsaBuENcg0cNPdR9RndgjKrKUSbcf5dwCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eg4nZJbO; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738765472; c=relaxed/simple;
+	bh=Ld1oYj72iOoIU8GaSocADZfs7sr+ubrQTaVt3aghNVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MCioeuZIzaXxJlXEnyT520xFwrAVCeLrDgrIsyTLzdleXj2Vpcd0UFZzw+B5OXe6siM5k94lqxvwf4/S9C/2K8LySpJQSh9LrjTeBnKAiNjDthVyeoa5cQjbgxCJ6A3U2ti3jQO0cUJXoBizEhb/2zBHCVtDY6QdlK+fWYmwbPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=SvHeIoRz; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eg4nZJbO"
-Message-ID: <f728a006-e588-4eab-b667-b1ff7dfd66c5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738765376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zn1OZ0/xC5hWSYyFfGAzueY2AGtYBGt8AuLFCHG10t8=;
-	b=eg4nZJbO0xpeG0pLWlbhMOe6AYAiwdcu4kYoQMdLWO+eZdJ3lFgi+Jpg3kpYb/i14hvLjJ
-	/+NqrmVuZeacszL66SFSgoFSCyY+PoN4hFtdoc0HT7vGRqjXutkQ+JV8tyyG3jBtPypA32
-	7MoUOedOYpMYKM+fZ/PdUpF9Kz9lHl0=
-Date: Wed, 5 Feb 2025 22:22:00 +0800
+	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="SvHeIoRz"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7be3f230436so588268985a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 06:24:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar.org; s=google; t=1738765469; x=1739370269; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ld1oYj72iOoIU8GaSocADZfs7sr+ubrQTaVt3aghNVU=;
+        b=SvHeIoRznCdAJsdztbOcXuXYZBiavHoBhYAnB0sDzizEK6Bas7G511je6c3IGV8F4j
+         JKoS8DspsJ5lP2YHF1PySr5s6y9VdmTR9VccG0yLRD0xe9quA1lcCpaUyJDGCm913nuA
+         BywSVzLU8uO2FJYF8FtUz4xXQozI8vTqRaIfN4HaO4sIidRAmfmkUgNVv1hORDjaXqsZ
+         X/qqAXhRH9ZC4a5qNpLkHDmf+00SatlWh4a4u3AVCTya2IbNnfkdWEB7lE+1DHfIQaak
+         kwbFdFFL1cdx4IOT2O6e57lBFYcLF74ZUNlkfhG7KNO9ZFGPXLkeQ3L4HdGy0T7Ekw8D
+         02kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738765469; x=1739370269;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ld1oYj72iOoIU8GaSocADZfs7sr+ubrQTaVt3aghNVU=;
+        b=AWukTSDlXiBQwfTgQ7vXMR0P08utGvvZnuKeoeNJ2laRPSzKiIVWymBFdEUZmtyJLy
+         JVdIm4eTS1PCGfBxmJN1bsuC/pYFW66frHGDR6aJ66WKS2KJePZ86rxWocZ1vqhWy1MO
+         87ilwwgWyPWULOMKLRgdEmAsOffOMWIZnOQfHAQxW1J31l0lATqFF5FD47LlVllQobJL
+         p2dLugkY9Jvrwo0fyTU+ivO68Wz8/sdg9Ytw0/ou7SBBHPDKCdNZf4O9+96/ufFV7YeN
+         oIFksCHCBRJkPgaCtcFIRQB5BsQl2+s0lNu81FPQpCziJhhySlOZIT4QtPBigJBbRJOG
+         v6pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIlpdr2Nm/jOUmQUcqQ9A7ksYWuEz4rJ8KA5Qt/35/KHqUOG7j9cXqPACXy+2NF0+spgf/qJyad1XaVRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeM3s4JDF0+wpykN9owvuwO4xhZL7tAX9HTF/LYS0/g1IumYiY
+	x9NUaHVNri/e0ugDR7I/pEHxotFtHPjBdgxBk7LxyFw+UIctcp6JCkomxOSHAaF08+l0lsYPhlS
+	4KYeTuFc4F57qCFZSjfz2+YUbKis0zxOr+nHD3g==
+X-Gm-Gg: ASbGncvXga32PPelEaLnwMDn+o7CTQbOhaJK9L3hCh6Z5DOejyLIJupogg5BvnZf5/N
+	Flf/7s/F/JDX/jX0PTnMH4q2nwguHWxvY1gQtKjfrwl4Ejz1CROQmmXD0nfjRcwa7MZmdSg==
+X-Google-Smtp-Source: AGHT+IFPR0OeA9uoeQPLRJ/PVeOESSKUd48c4NvqLCM7ceOkwPl/SNrIh5YGHdKirT6M9x5TaHEttfB2XqRT50R5zH0=
+X-Received: by 2002:a05:620a:2726:b0:7b1:527f:cf4f with SMTP id
+ af79cd13be357-7c03a035203mr396153785a.42.1738765469402; Wed, 05 Feb 2025
+ 06:24:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
-To: Jakub Kicinski <kuba@kernel.org>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Steven Price <steven.price@arm.com>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- "David S. Miller" <davem@davemloft.net>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Jose Abreu <joabreu@synopsys.com>, Paolo Abeni <pabeni@redhat.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
- Furong Xu <0x1207@gmail.com>, Petr Tesarik <petr@tesarici.cz>,
- Serge Semin <fancer.lancer@gmail.com>, Xi Ruoyao <xry111@xry111.site>
-References: <20250203093419.25804-1-steven.price@arm.com>
- <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
- <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
- <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk> <20250203142342.145af901@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250203142342.145af901@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250205134811.2002718-1-vignesh.raman@collabora.com>
+In-Reply-To: <20250205134811.2002718-1-vignesh.raman@collabora.com>
+From: Daniel Stone <daniel@fooishbar.org>
+Date: Wed, 5 Feb 2025 14:24:18 +0000
+X-Gm-Features: AWEUYZktRsUSSGoFW48lG4Mw2z0zY_bip7FAmQz944mGwxXuWjZNSfIAfUeHsAk
+Message-ID: <CAPj87rPREj3hJmjuhQRd1Tzxt8fk6rsa8Qv5xoHx97LuzwgYrw@mail.gmail.com>
+Subject: Re: [PATCH v1] MAINTAINERS: Update drm/ci maintainers
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
+	helen.koike@collabora.com, airlied@gmail.com, simona.vetter@ffwll.ch, 
+	robdclark@gmail.com, guilherme.gallo@collabora.com, 
+	sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
+	jani.nikula@linux.intel.com, dmitry.baryshkov@linaro.org, mripard@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 5 Feb 2025 at 13:48, Vignesh Raman <vignesh.raman@collabora.com> wrote:
+> Update drm/ci maintainer entries:
+>
+> * Add myself as drm/ci maintainer.
+> * Update Helen's email address.
 
-在 2/4/25 06:23, Jakub Kicinski 写道:
-> On Mon, 3 Feb 2025 11:16:34 +0000 Russell King (Oracle) wrote:
->>> I've no opinion whether the original series "had value" - I'm just
->>> trying to fix the breakage that entailed. My first attempt at a patch
->>> was indeed a (partial) revert, but Andrew was keen to find a better
->>> solution[1].
->> There are two ways to fix the breakage - either revert the original
->> patches (which if they have little value now would be the sensible
->> approach IMHO)
-> +1, I also vote revert FWIW
-
-+1, same here.
-
-
-For a driver that runs on so much hardware, we need to act
-
-cautiously. A crucial prerequisite is that code changes must
-
-never cause some hardware to malfunction. I was too simplistic
-
-in my thinking when reviewing this before, and I sincerely
-
-apologize for that.
-
-
-Steven, thank you for your tests, Let's revert it.
-
-
-Thanks,
-
-Yanteng
-
+Acked-by: Daniel Stone <daniels@collabora.com>
