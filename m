@@ -1,54 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E42623A58D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D9723ED64
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752430; cv=none; b=CerD9OCLQEpq7oKrS/zkX9pK8mb/cPbZdPO6bTYI2UNAbzlz4jC6M5htHK7kKyJhCxVknJ6vBIEBDdhe4mY4n1B1v4NM2da1IPO8So84PG2XmvjuAbBHnhpdUzAeZo35AAohb2fv7dcUipHKIHixjNatMth0itkTsoUjBzdASM8=
+	t=1738752431; cv=none; b=t0tpvHW/JvtHX5qbQ+iJFOyFTJHjM6UN+NVxjMwkapynYRddndnLgqXrqfhh73hRkXPteFhBSOlpw8KngGW7zm7oURNMQuQj3hapAKBb3qq3WJR4s5A+K9LEegdJszf58dlqepnQqaM+6FyhyWg4DVTfeTfo527/diHTx0rjh/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752430; c=relaxed/simple;
-	bh=6gyVfc9YT9K9XE5HuqAO+Ehf/vRd5tfwbetFB1Bie4M=;
+	s=arc-20240116; t=1738752431; c=relaxed/simple;
+	bh=lL5KZean/dpll0/HHzw7iWhdI/MgRg+AoCG2kGt4Juo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNDBeWsaZuTnAUJxtenWtkx7yVpplXc8PeJ3eu6XHC5sIBCY6gyzLbEtumhn7Vb7O6tSDBoaGiMbMMSyNBho/DXX06Fya3PWFyD5qQRs1HO01NBOMxwtgT2UT20buIs+TqIMn+qfppmpCPVmm9BHSNJ67eY+gvA9z8rmfHRn+cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ve9gsEkN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G3n2zMVt; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=WedPhUCyvBDkejCcJgttjQ7EBJymhYP6qUZb4SQDymO7La7VUWJEYF0nGzg6ZsX4j4RimeEV3fvJv5WYv6UfC7I+kFRWHh960aUj0lRq6/O9Mo3lTPyGkdyeU47b+HglYOW4y9reeH5eXLdJQ50jEJhy9ABxXCub6G11Guyvco4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wtTv7cgb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H34c8tTe; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ve9gsEkN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G3n2zMVt"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wtTv7cgb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H34c8tTe"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752426;
+	s=2020; t=1738752427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RexfgyQiaO2DZFgKT52XT9v0CgK6EZGqRaKJOG68cgQ=;
-	b=Ve9gsEkNIgbvKBaE3EUwuZ4Svjd895uCVqUzC5LWb/sEH+lzJOmHI5XrESnl+MumzrolF8
-	5HDR20l2ximG6Gxf5N8PPFxGLvGc/BNgIvN9xVjrG7xK2uzy+TG1fDyggK8zrFG7t15dXA
-	P/oY3vNmniJ/b1aRkEH6xyVPdQ9IjOvflHZSW67VDtkBF3nS0nWLej5YogkEqb5MHmigLW
-	tjyzHoHMN6NlgTci2UqZ7WuuIaijvGB9yyHINwEvezSzg+J7ybL4lX4FPaJXcAQ4c6bYLE
-	StromYYnr5pjIi11KEy4mp4vdK4+DapjNiibYVszVjrAdPXUjIcXPGy28nYsPA==
+	bh=pA5+OW+1SruDGsfpn+v3hvksjrN5sOKFVSHHy12lIls=;
+	b=wtTv7cgbtLL9hf2zI2aftDk1TkTkMCNhndV/3Bp064zx3MHhMzvFUyQb9DIhpX/52dRJYh
+	88vTf0rcz3IyHSRPnCxrRj3jQH1P2Yh5485BA/mAVBUdQN6tP7xMilfI3jO7LQsRbSK+p4
+	y9HHsa43lqwitoxzIj6NJ+6MEPXdGndPU1f0Q4YdMJu2uOZVN4QZKvgEMlwX/zY9SjntBb
+	572e+1MnKYy6HIRgo/17EfWEiDuXXxjgjc32MRhPvCLokaeIzaY22zOvHswQGlrfeiNzsa
+	o6PkPOar8P9c7H8reCY0t34T5Oaui8iDaoqKfrcA1ySdYFj/vuYb0YpEvYJj/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752426;
+	s=2020e; t=1738752427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RexfgyQiaO2DZFgKT52XT9v0CgK6EZGqRaKJOG68cgQ=;
-	b=G3n2zMVtQ3W7H2g6s/g9EBePXw+AfF/ha1bvvTByRP2eKqByM2So0jWiC8CrJqZZOFCE+P
-	MetdrYWMKmeLFLBg==
+	bh=pA5+OW+1SruDGsfpn+v3hvksjrN5sOKFVSHHy12lIls=;
+	b=H34c8tTejeGr5aR59Lwk60ZEU8DhNXAr523HGvDnYu0dn6TjqdNI9CZADBThjONSjbzxrv
+	ccs2F2fdmTgDMECA==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Zack Rusin <zack.rusin@broadcom.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: [PATCH v2 43/45] pwm: gpio: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:31 +0100
-Message-Id: <7b7115da84372a49e36a0ac1a5ce553129c3ce0b.1738746904.git.namcao@linutronix.de>
+	Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH v2 45/45] ALSA: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:33 +0100
+Message-Id: <598031332ce738c82286a158cb66eb7e735b2e79.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -57,7 +57,6 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 hrtimer_setup() takes the callback function pointer as argument and
@@ -66,35 +65,81 @@ initializes the timer completely.
 Replace hrtimer_init() and the open coded initialization of
 hrtimer::function with the new setup mechanism.
 
+Patch was created by using Coccinelle.
+
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: "Uwe Kleine-K=C3=B6nig" <ukleinek@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.com>
 ---
- drivers/pwm/pwm-gpio.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ sound/core/hrtimer.c      | 3 +--
+ sound/drivers/dummy.c     | 3 +--
+ sound/drivers/pcsp/pcsp.c | 3 +--
+ sound/sh/sh_dac_audio.c   | 3 +--
+ 4 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pwm/pwm-gpio.c b/drivers/pwm/pwm-gpio.c
-index 9f8884ac7504..5f4edeb394a9 100644
---- a/drivers/pwm/pwm-gpio.c
-+++ b/drivers/pwm/pwm-gpio.c
-@@ -207,13 +207,12 @@ static int pwm_gpio_probe(struct platform_device *pde=
-v)
- 	chip->ops =3D &pwm_gpio_ops;
- 	chip->atomic =3D true;
-=20
--	hrtimer_init(&gpwm->gpio_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_setup(&gpwm->gpio_timer, pwm_gpio_timer, CLOCK_MONOTONIC, HRTIMER=
+diff --git a/sound/core/hrtimer.c b/sound/core/hrtimer.c
+index 147c1fea4708..e9c60dce59fb 100644
+--- a/sound/core/hrtimer.c
++++ b/sound/core/hrtimer.c
+@@ -66,9 +66,8 @@ static int snd_hrtimer_open(struct snd_timer *t)
+ 	stime =3D kzalloc(sizeof(*stime), GFP_KERNEL);
+ 	if (!stime)
+ 		return -ENOMEM;
+-	hrtimer_init(&stime->hrt, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	stime->timer =3D t;
+-	stime->hrt.function =3D snd_hrtimer_callback;
++	hrtimer_setup(&stime->hrt, snd_hrtimer_callback, CLOCK_MONOTONIC, HRTIMER=
 _MODE_REL);
-+
- 	ret =3D devm_add_action_or_reset(dev, pwm_gpio_disable_hrtimer, gpwm);
- 	if (ret)
- 		return ret;
+ 	t->private_data =3D stime;
+ 	return 0;
+ }
+diff --git a/sound/drivers/dummy.c b/sound/drivers/dummy.c
+index 8f5df9b3aaaa..c1a3efb633c5 100644
+--- a/sound/drivers/dummy.c
++++ b/sound/drivers/dummy.c
+@@ -457,8 +457,7 @@ static int dummy_hrtimer_create(struct snd_pcm_substrea=
+m *substream)
+ 	if (!dpcm)
+ 		return -ENOMEM;
+ 	substream->runtime->private_data =3D dpcm;
+-	hrtimer_init(&dpcm->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
+-	dpcm->timer.function =3D dummy_hrtimer_callback;
++	hrtimer_setup(&dpcm->timer, dummy_hrtimer_callback, CLOCK_MONOTONIC, HRTI=
+MER_MODE_REL_SOFT);
+ 	dpcm->substream =3D substream;
+ 	atomic_set(&dpcm->running, 0);
+ 	return 0;
+diff --git a/sound/drivers/pcsp/pcsp.c b/sound/drivers/pcsp/pcsp.c
+index 78c9b1c7590f..e8482c2290c3 100644
+--- a/sound/drivers/pcsp/pcsp.c
++++ b/sound/drivers/pcsp/pcsp.c
+@@ -103,8 +103,7 @@ static int snd_card_pcsp_probe(int devnum, struct devic=
+e *dev)
+ 	if (devnum !=3D 0)
+ 		return -EINVAL;
 =20
--	gpwm->gpio_timer.function =3D pwm_gpio_timer;
--
- 	ret =3D pwmchip_add(chip);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "could not add pwmchip\n");
+-	hrtimer_init(&pcsp_chip.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	pcsp_chip.timer.function =3D pcsp_do_timer;
++	hrtimer_setup(&pcsp_chip.timer, pcsp_do_timer, CLOCK_MONOTONIC, HRTIMER_M=
+ODE_REL);
+=20
+ 	err =3D snd_devm_card_new(dev, index, id, THIS_MODULE, 0, &card);
+ 	if (err < 0)
+diff --git a/sound/sh/sh_dac_audio.c b/sound/sh/sh_dac_audio.c
+index 3f5422145c5e..84a4b17a0cc2 100644
+--- a/sound/sh/sh_dac_audio.c
++++ b/sound/sh/sh_dac_audio.c
+@@ -312,8 +312,7 @@ static int snd_sh_dac_create(struct snd_card *card,
+=20
+ 	chip->card =3D card;
+=20
+-	hrtimer_init(&chip->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	chip->hrtimer.function =3D sh_dac_audio_timer;
++	hrtimer_setup(&chip->hrtimer, sh_dac_audio_timer, CLOCK_MONOTONIC, HRTIME=
+R_MODE_REL);
+=20
+ 	dac_audio_reset(chip);
+ 	chip->rate =3D 8000;
 --=20
 2.39.5
 
