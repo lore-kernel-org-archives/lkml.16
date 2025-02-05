@@ -1,190 +1,188 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE059214A94
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43015215075
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786191; cv=none; b=Wem2NGPGWOUycQfQFO7zrCRDUXWXnnFJQxsG5z3pt7amsDhksct48svX0CuN+a3hhbphFmSdzXv/9ea1kv2qapuAcrDmSMe+prvuDWsTJN3i0cN18DszWHZsYjRJZdiaUOvI/FoRjTDdPAGBTUA4eMBDN7Rss2LmbAEegV8XUNg=
+	t=1738786197; cv=none; b=eb28GryvvR1YrNyhyZAw8lnwNETlro66i5lvFtp/lbWQFFkAdbLSk6o9qkiPmnTPPtjtzwLJo0yhtQ8h8uS9aJdZt9iAXF5ciuCddfZUwtsqo0BjrlZ48z0fRATqF5uofwc+KeYwsq+qidElIR2M+mX/6uPKTG6tXnh9uwD5/ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786191; c=relaxed/simple;
-	bh=GJ2y/FCanDqhcGlPwrjJkUUipKVr30iT6x4rWzEDa78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gks8G2DU1jD6fstkgCKgdgFoeZwwp+QeEsaftxQlmDlxrA9vWjMeBq1kohu0H6CAbi4B993Z3GTdT5nuCHOMnh0j7LUzkI1U3NvfgJlr1IAk2S4OdcMOLE1z0wzi5WHnpIA+qdt82sjZEvSLPPir4vPEU0YDR8XZD16bdannYGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R29pBxQ3; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738786197; c=relaxed/simple;
+	bh=DSpX8fD4B4V0ccw0v0OQXmxnb/T74xXl9np96mYbmE0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Q1da5h3nRYb/aL3ErOPtg/OYrVpPwmwbO73zONN8T0s8lIeSR5ICdFtKpl0bgXufnKrRtnnNZmTa1ga+CJMxr7blVeMsYnryqPDlHFlNI9ZMZVKTXQgkzgptViJ2lA6UrwsVnL1OFV57Nd1I2w82Uv07+J8P5xotIT/ju33yYiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NKrsVFVT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R29pBxQ3"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dce3adbc31so315007a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:09:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738786188; x=1739390988; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6DMFX6YMCCpHUnKPYix3pzepx5ItpSalkZSrvWGNgEw=;
-        b=R29pBxQ3EMJhM/0gqbRvkfwuaMbBSlzNHDcuLWwrkIEURxY5E13tg19t5S+bV8EPDW
-         QkyNusZx1r+Z0omdMNVOw0t2CGljIdn0JZn4pOvrtqPRwh1y1YiiOfJidY3Jgku/7ScI
-         QNxPJA/SwZA5SzsJRy29xrQcAPYdmFLJrcPy6f0pj+nb/Egce9P+fgkKCCGNUYDzsIfc
-         1IxYAtjxMfX+eLNVHMlKrf2PkUoZsGXFAWZ9bu3oExu9WU+7LABvW1ucYbrSCHQiuIak
-         3qsKt6pBCwqUJ8srU8WmeVGMaby9zP9zVJx+VfP3/Wu2DWwcuH+MKQXxgsJAase3+JKB
-         PW5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738786188; x=1739390988;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6DMFX6YMCCpHUnKPYix3pzepx5ItpSalkZSrvWGNgEw=;
-        b=JihgXqBwe8jWb7xTSOnX0EdopE7pe/xQzKbZcXHEXafU6Rgh9gOXr3KCcIjIQylVNe
-         QhWybJF0JMoHQReBnjuWMmBayLsWkD0zE0GpgB3hvkGOvuuZSIS9vvAaxIz3f2pMJZpn
-         UAsm7Z4zou047BDj7RLnZg1d9O14mMPaQxPIiNNHGcFFA+kVWLlkcU8dlo2BZmpTTCnh
-         ik3xbTg7Q+QD+KvKBSRdRw9lu4VoO7q8UiSq78AuDTD2KB1FXMRoryJ7IVIu5cAg7dIh
-         ba5k0nglE1gpRTIHRZSK5+Wx5Ic5xlv5StMoZWbtnCr1yYR1abPDrL0o6UbufX6duduj
-         WiJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmWbnR5c+al5S32Br1NCKN7GjlJliQrXvY53c/ADh9fPkd0tg4KPYGcMaF9zL4RALbKhISB4zlar1laRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3GdYo3meQRKthUOgQtyFDqSVgxBL+4TbCwAc6np2RPRD0G5h6
-	phT51y4wV7BJw83FJxwJ6Ahjk/1vohsBXVFp6RMbmW7pbZzDsOzm
-X-Gm-Gg: ASbGncvWyX6nhQYxaYBi/l7YflLDHS14a4ICIVuSlXixz0Tbl9Y7IkMfJGrjdEQpuy+
-	uBHw8zY90kOU0f6EwZJ9VbzYDcUpn4fxJQ+wSPGxaE1kVITCTUu/ZuokvfC4aG4i7tkvPQGwMGQ
-	yWOjxri51i2nlxjFcThkYV+i+W0/vZj1+4T/Xi05ahXLq+LXQbDisS/elAzUkDDItE17+biPhnG
-	Ftu/iuxJ4X03IiN6NxKjKjbALISoiBEUzREwho+efHndruy8r7QlYWzb0KzmiWXgjomlV2Suq82
-	s3to4m707pCccp/eZHRH/sRS1WFCOhY=
-X-Google-Smtp-Source: AGHT+IHHavuHMxmpQwSvBcREM9wxFJNCAg1KvI/6JkedpqD328qTUBETfMZe6QbsgoB5QiI7qJgVCw==
-X-Received: by 2002:a05:6402:3603:b0:5dc:5a51:cbfa with SMTP id 4fb4d7f45d1cf-5dcdb6f9f5fmr12270745a12.6.1738786188060;
-        Wed, 05 Feb 2025 12:09:48 -0800 (PST)
-Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab703fbcc0csm932221866b.53.2025.02.05.12.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 12:09:47 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: ebiederm@xmission.com,
-	oleg@redhat.com
-Cc: brauner@kernel.org,
-	akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v5 5/5] pid: drop irq disablement around pidmap_lock
-Date: Wed,  5 Feb 2025 21:09:29 +0100
-Message-ID: <20250205200929.406568-6-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205200929.406568-1-mjguzik@gmail.com>
-References: <20250205200929.406568-1-mjguzik@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NKrsVFVT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738786194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HY3d/YBxMJY4CA4cB8Zgueq4cZjGXa+WIDOvgIQwRlg=;
+	b=NKrsVFVTuOuoY3E5E7mq4yrGkEYgFvtdcLQfFt9F/hEAfONhWTtTC5MO7kr6fFoywXA0bg
+	MmvdnRkKBMjwON4USpnrOjTDpNXyc8vI7/2sjqHA6GDJxrVBeHQhhmLWyU9Zv3RWVUptaj
+	+wY9oaInqkLJe7M7AAH6sldaQ+jh4Jk=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-aslIA35aOYyYhXuOGeSfNQ-1; Wed,
+ 05 Feb 2025 15:09:52 -0500
+X-MC-Unique: aslIA35aOYyYhXuOGeSfNQ-1
+X-Mimecast-MFC-AGG-ID: aslIA35aOYyYhXuOGeSfNQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EAEE195608E;
+	Wed,  5 Feb 2025 20:09:51 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2866F19560A3;
+	Wed,  5 Feb 2025 20:09:39 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Wed, 05 Feb 2025 15:07:59 -0500
+Subject: [PATCH 03/12] drm/hisilicon: move to
+ devm_platform_ioremap_resource() usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250205-mem-cocci-newapi-v1-3-aebf2b0e2300@redhat.com>
+References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
+In-Reply-To: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
+To: Joel Stanley <joel@jms.id.au>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
+ Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
+ Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, 
+ Alain Volmat <alain.volmat@foss.st.com>, 
+ Raphael Gallais-Pou <rgallaispou@gmail.com>, 
+ Yannick Fertre <yannick.fertre@foss.st.com>, 
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
+ Philippe Cornu <philippe.cornu@foss.st.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Mikko Perttunen <mperttunen@nvidia.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Alexey Brodkin <abrodkin@synopsys.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
+ linux-rockchip@lists.infradead.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738786137; l=2968;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=DSpX8fD4B4V0ccw0v0OQXmxnb/T74xXl9np96mYbmE0=;
+ b=fSQOdJcSn2RKbZ+5QQXhv4fvSKOo32FtWRGGBP80/lHVkgtVh1f2TOQLA1+0BiBBSCNejmWuS
+ YTHdNRmUxJHA7e/hOY8KpsMAN6VgCDKMM+JFb4kXGScOVSJatEHDA6u
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-It no longer serves any purpose now that the tasklist_lock ->
-pidmap_lock ordering got eliminated.
+Replace platform_get_resource + devm_ioremap_resource
+with just devm_platform_ioremap_resource()
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+Used Coccinelle to do this change. SmPl patch:
+@rule_1@
+identifier res;
+expression ioremap_res;
+identifier pdev;
+@@
+-struct resource *res;
+...
+-res = platform_get_resource(pdev,...);
+-ioremap_res = devm_ioremap_resource(...);
++ioremap_res = devm_platform_ioremap_resource(pdev,0);
+
+Cc: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: Tian Tao <tiantao6@hisilicon.com>
+Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Yongqin Liu <yongqin.liu@linaro.org>
+Cc: John Stultz <jstultz@google.com>
+
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
- kernel/pid.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c    | 4 +---
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 4 +---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 73625f28c166..900193de4232 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -115,11 +115,10 @@ static void delayed_put_pid(struct rcu_head *rhp)
- void free_pid(struct pid *pid)
+diff --git a/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c b/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
+index 2eea9fb0e76bf3ead8f5914e6ebb65b5b3603b9a..e80debdc41763357cb2cf321205c0dfac80a911e 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
++++ b/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
+@@ -825,7 +825,6 @@ static const struct component_ops dsi_ops = {
+ static int dsi_parse_dt(struct platform_device *pdev, struct dw_dsi *dsi)
  {
- 	int i;
--	unsigned long flags;
+ 	struct dsi_hw_ctx *ctx = dsi->ctx;
+-	struct resource *res;
  
- 	lockdep_assert_not_held(&tasklist_lock);
- 
--	spin_lock_irqsave(&pidmap_lock, flags);
-+	spin_lock(&pidmap_lock);
- 	for (i = 0; i <= pid->level; i++) {
- 		struct upid *upid = pid->numbers + i;
- 		struct pid_namespace *ns = upid->ns;
-@@ -142,7 +141,7 @@ void free_pid(struct pid *pid)
- 		idr_remove(&ns->idr, upid->nr);
+ 	ctx->pclk = devm_clk_get(&pdev->dev, "pclk");
+ 	if (IS_ERR(ctx->pclk)) {
+@@ -833,8 +832,7 @@ static int dsi_parse_dt(struct platform_device *pdev, struct dw_dsi *dsi)
+ 		return PTR_ERR(ctx->pclk);
  	}
- 	pidfs_remove_pid(pid);
--	spin_unlock_irqrestore(&pidmap_lock, flags);
-+	spin_unlock(&pidmap_lock);
  
- 	call_rcu(&pid->rcu, delayed_put_pid);
- }
-@@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		}
- 
- 		idr_preload(GFP_KERNEL);
--		spin_lock_irq(&pidmap_lock);
-+		spin_lock(&pidmap_lock);
- 
- 		if (tid) {
- 			nr = idr_alloc(&tmp->idr, NULL, tid,
-@@ -237,7 +236,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
- 					      pid_max, GFP_ATOMIC);
- 		}
--		spin_unlock_irq(&pidmap_lock);
-+		spin_unlock(&pidmap_lock);
- 		idr_preload_end();
- 
- 		if (nr < 0) {
-@@ -271,7 +270,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- 	upid = pid->numbers + ns->level;
- 	idr_preload(GFP_KERNEL);
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	if (!(ns->pid_allocated & PIDNS_ADDING))
- 		goto out_unlock;
- 	pidfs_add_pid(pid);
-@@ -280,18 +279,18 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		idr_replace(&upid->ns->idr, pid, upid->nr);
- 		upid->ns->pid_allocated++;
- 	}
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 	idr_preload_end();
- 
- 	return pid;
- 
- out_unlock:
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 	idr_preload_end();
- 	put_pid_ns(ns);
- 
- out_free:
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	while (++i <= ns->level) {
- 		upid = pid->numbers + i;
- 		idr_remove(&upid->ns->idr, upid->nr);
-@@ -301,7 +300,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	if (ns->pid_allocated == PIDNS_ADDING)
- 		idr_set_cursor(&ns->idr, 0);
- 
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 
- 	kmem_cache_free(ns->pid_cachep, pid);
- 	return ERR_PTR(retval);
-@@ -309,9 +308,9 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- void disable_pid_allocation(struct pid_namespace *ns)
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	ctx->base = devm_ioremap_resource(&pdev->dev, res);
++	ctx->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ctx->base)) {
+ 		DRM_ERROR("failed to remap dsi io region\n");
+ 		return PTR_ERR(ctx->base);
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+index 2eb49177ac42bc6dba692328cca5c99d5925041c..45c4eb008ad5d639340f769ad022d186ec454722 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+@@ -844,7 +844,6 @@ static struct drm_plane_funcs ade_plane_funcs = {
+ static void *ade_hw_ctx_alloc(struct platform_device *pdev,
+ 			      struct drm_crtc *crtc)
  {
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	ns->pid_allocated &= ~PIDNS_ADDING;
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- }
+-	struct resource *res;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct ade_hw_ctx *ctx = NULL;
+@@ -856,8 +855,7 @@ static void *ade_hw_ctx_alloc(struct platform_device *pdev,
+ 		return ERR_PTR(-ENOMEM);
+ 	}
  
- struct pid *find_pid_ns(int nr, struct pid_namespace *ns)
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	ctx->base = devm_ioremap_resource(dev, res);
++	ctx->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ctx->base)) {
+ 		DRM_ERROR("failed to remap ade io base\n");
+ 		return ERR_PTR(-EIO);
+
 -- 
-2.43.0
+2.47.0
 
