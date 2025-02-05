@@ -1,218 +1,168 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02olkn2061.outbound.protection.outlook.com [40.92.48.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD461FE476;
-	Wed,  5 Feb 2025 19:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.48.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738784233; cv=fail; b=kI6Y1qXDlX5dDkboTFeDp4KPxfQLXFMaObMuGlMDfClRJ9wkf/xHpouzXjifnw6/ChRGMN0riDo9lpDiUaZEWmWkPx8tkRiXSsmtFW1GnsV6bD0kDLDm2sVaNsiVn8q4nCILw4TToW3E4J1FKgQu1EhL4zHRH5yzsVdy/TX6w8g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738784233; c=relaxed/simple;
-	bh=ypXZfEqdh4D8qNVzzgsXTGxGo9Tzi11wS6e4bO+4Kk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZD4hVT8AcmnRNRT3VdHCTBsfite2LzUYc3R9G2Z+JeH2dmogw7iqJNnVtciFCRiiL82Q9ylXqI0H3Lj3Vis0GhM0gqrjCN+yfBo/TTCCuAom8rOt5wUhUcJqdy59751DjXaK5kvjk1KMdG08AcccltKwuLm3rrUBPHYsM/HpfBg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ULMf2BGc; arc=fail smtp.client-ip=40.92.48.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB331FF5F4
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738784292; cv=none; b=YbVyJbzLqYxLmJHtCZlO+v3CyZUdQ7Q7C0JGAbBiuzxIfYFBJtsP/gumKD2UDnHiQF6MkTQvLwXB7yip/m5eS0icLSh9YNezGux6WUmUIkD4PejiQjFX5w+dVBCU0ZaADY3l4ySqKHJZrgk4culSyE/dYrgP0PqJZNV1s17RsCw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738784292; c=relaxed/simple;
+	bh=6uXbUzdREBssIW/56lp9+osP8wskTzhD5dGm6h63ZAk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S8OkaDUiXelVaZCyav7gD4vxOW8DDctNeskgHmL1MSkyERqErUFm+qkcGFiPIHzjHWybksrs6H7imRI34F87MAvoEkazNzdXpmKef7GPfLG5KMM/1wT7vM6y9ugvV7/+09Y09HMqWPx9XIwpg9FBijfwPvNb3Ke3u1sijHu48uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=NJKcO/77; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ULMf2BGc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gRycGq+htUygGqaIwNcGd9CpsPjWaoRIbeENbapteYPZG2Tc02bmwJcOCaOb8bKT3gi2b1HYI2lZm1RIr6VdTxppP8e6CIt+2eETvilJb/QbNTpS/iyiE/z5p3HieOHXyfXviioneyqCzsNrXacdhzPX3YxWnE6Ldi7JaE6yhWqCYa2eX5YGQOghiVyXcO4tKCFFKyEPwaU/VPal1OLlPEEo7yUSvJg6X4apxB9E9HImsUpeC7qp8PossFPPXjZvHe0os6+SwF+0gvNJ7VhyrlSbIxA83pr/yMJhK3AklhGCUVIExHRxdEd1C1fxJ5vy9sR6uqp7OvZdSqLAeeAb0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GRnGQA+nOZThu23j/JO28tYgMaZH4gtrbP64dQJvHRI=;
- b=b+2PUAm20yHGxJfTnwWSlvLAEsYkJTkCZUlAgCNT15+HDHCeWRaMcoHsSlKhQuQlBMv5lAkuuL/sSVT+ItvWAQvHua4Fn0P0NoWfI4REi+GbnkvImw9wrpjQIvf+8EeMkU6f3dGQqdsWo08uZwGtGYsuEJ+PxEinJRvK/CheYn6rmZdI6EswRS+TT+f+8DGqsy7UQ8lVRneSR8hlRTkSaldnnshP+CdFp98nZywgX58K5Qk+B3dVX+YIlUDZo+pujoHy8b6Thg0BE021QeBF1uKtdiLkesE8ABAdW/i3BaxY6bkekn6ciALTv0QM0rD77L1qCbvE0eKWtvnD05f+ZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GRnGQA+nOZThu23j/JO28tYgMaZH4gtrbP64dQJvHRI=;
- b=ULMf2BGc6RxFRuq0JiIKxKJVx9IfGCJkZ4Ui3EZ0vNEoang4xcgsWdnOV611fYYDdGrQJxTbfO+d9SHF4nsHhUWOU1MY6Tx7oltWuC15x6NACo/6oIzldJJuVSjqdb8tH06LjnguLHNGbvG9GdL8w7DFqHGGMG98AJ9FqBJWvYSJpCOXF0chDLvI/WU5DNDTvdh1XbFbDM32pbVdGJTa5m74nVvKEgu4ZrX3kHGKOtaRTL82kWtK0fJdZg+8+1hdVG9CGqmzkkkvbi7Bl5q64g9b/gwH9U8GomT0L/yHPZNCSuS5CcLUaDkKQYGA35LXr6UTHyCWiwWtqY4YhJEr1Q==
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
- by DU0PR03MB9077.eurprd03.prod.outlook.com (2603:10a6:10:464::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Wed, 5 Feb
- 2025 19:37:09 +0000
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8%4]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
- 19:37:09 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	memxor@gmail.com,
-	tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH bpf-next 8/8] selftests/sched_ext: Update enq_select_cpu_fails to adapt to struct_ops context filter
-Date: Wed,  5 Feb 2025 19:30:20 +0000
-Message-ID:
- <AM6PR03MB508098F557943507B040272399F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0570.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:276::14) To AM6PR03MB5080.eurprd03.prod.outlook.com
- (2603:10a6:20b:90::20)
-X-Microsoft-Original-Message-ID:
- <20250205193020.184792-8-juntong.deng@outlook.com>
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="NJKcO/77"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f9c97af32eso85038a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:38:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1738784289; x=1739389089; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xhr7/jrRE/HjJFixjFrzU1vwqSk/fF+4+8h2TqxlTAo=;
+        b=NJKcO/77ZZceteFrkL9p3HILEpEfmxri2VVZ4qj75RvyP5WvEvPrVpplY+lJJaf7id
+         Qw5JnuOyD5mehEo1xbbQjWok39tYhARJaHQmXARuwEALZb2derRwcI8yNr69vE019bOE
+         sy728w29rA9oVByPwdkMXZFs/XvtgAWaItxsI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738784289; x=1739389089;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xhr7/jrRE/HjJFixjFrzU1vwqSk/fF+4+8h2TqxlTAo=;
+        b=PrPPqlL1eJ8l9NJHPLSvWOyieAUyX6ptbLgfHTyY8tKkkR5XoOUVJFHT0KGr2uzsmg
+         b5TUbXUdxttIdWWfQAN82ybx/rte8Uccq0KDeuYQ+qpslqnAlu3hT5DZX/hV37rfgsNN
+         gVJUyQYBOmRHDnpXGcSVHUloFPjrJe79M1DDSRSEHFdlGQrvb/U/3rzbw/ifTeN/UaGF
+         wh+YexF4BmBJOkbmYuh3KHurRLa0kAAvoD7ZVIgycqWlxOS5BDU5zWiqLC9pYozqFar0
+         yjOsWj7jMvXrgxRl6NkQaWx+QE4e++soBiY36mjzJpeHjULvV4PX4/O469tGYU9t+qV3
+         Wfmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJRw3BcU0q+71rgvuDFKjrM0VnhPR9R+uBLAvaleiIkJXGBXSn27XSFsR2bfa98Ys32TNbM216Hb685A0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUqu1ZzhcpJpLGmPypq7RWV45NhGsDtcoVZ4pNUEfVoDST7VyT
+	qujsAHYTAkzaJm996lrJt7h7djmInKUTRyKULyg+EaWorIFGLUgWugfzUM0n1CLhNJWL/0BVj0x
+	T
+X-Gm-Gg: ASbGncsZCX5fPdS/BQEsvPoa1f+YGm0OyKPyWpmFjzSUJ3ZCgDzjmb8/Cn2KsDgUisF
+	dOL2cZod1N5sHPiuveK7qzt8wkjHRr5nhovJJIZEuw5/vMzdvM8ffE/gNc7wRMXdytJh1jET5jT
+	qY9XzpYX1vWuXGgLdMwblGHflHVQFa/3KGmcB93T8hJVEBvidMKVDAM2pMOsVUibzyu96BRiDLp
+	jUHTwMBH2F8jc6WTuDFb1eCR8EK7vLkWafTUxvXDLyHYqmkkZWm73Hp808WN04ikXtvmfpr8fv+
+	I7+besxlUFwLKiqGoO1RT5U=
+X-Google-Smtp-Source: AGHT+IEG30GcyrdDcVUeAd52bYnK7kh1XNEPgfaw3ovyxDPoEE7UUtYd3b0uGutzocFSSVDCEArnAQ==
+X-Received: by 2002:a05:6a00:9095:b0:72a:8f07:2bf2 with SMTP id d2e1a72fcca58-73035117eabmr6796991b3a.9.1738784287337;
+        Wed, 05 Feb 2025 11:38:07 -0800 (PST)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cdc3fsm12898784b3a.124.2025.02.05.11.38.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 11:38:06 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: pabeni@redhat.com,
+	edumazet@google.com,
+	sridhar.samudrala@intel.com,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Amritha Nambiar <amritha.nambiar@intel.com>,
+	Mina Almasry <almasrymina@google.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v4] netdev-genl: Elide napi_id when not present
+Date: Wed,  5 Feb 2025 19:37:47 +0000
+Message-ID: <20250205193751.297211-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|DU0PR03MB9077:EE_
-X-MS-Office365-Filtering-Correlation-Id: 655a7da3-6a71-4853-e08b-08dd461c7a9c
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|15080799006|8060799006|19110799003|5072599009|440099028|3412199025|41001999003|12071999003|21061999003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pSri9Q2pMbL0iP+2du9hFE6Z6Fx/FxIw6mdGIT1WFMRzYX9dWUcQ8MBuozmb?=
- =?us-ascii?Q?tQ0n26crTGI2N3D/t0ChZyj9VEGZslFz99zMilsCxQQu7jz21e7lZPb27sEr?=
- =?us-ascii?Q?38NHffbP54V0sz5fc4w4PhHdEQVuqvZei9l54DkcwPv/oX3jGJisRYUGgMud?=
- =?us-ascii?Q?E+d1UIHz8BNrsL2l1qkk+/FB4BATQCe4o2EdI2AKT0ycxhzNzKGVPoY6rdqN?=
- =?us-ascii?Q?CVDUZjN5INKjJldUviiGKF4sa8CHZy0IhtvA6lhrH1c7XssgVksjF89g7ntR?=
- =?us-ascii?Q?PWrN3aJDM0g7fgqb5OqFUudis8LZry3kS+r463COfgJsjm/g6a7BU+DEfJNm?=
- =?us-ascii?Q?XiiTX2vwIB+vTLQAzuTGwg3wrPRxvn0si5jylOdhR2BhGB0t3wuMrxGPeve5?=
- =?us-ascii?Q?6EFB+7gqJaQ/w7gO+9PbTnX4nPo71NVewtCX2aPfYFewERp6rqYB2C8wOP93?=
- =?us-ascii?Q?5rhBTsKTpjrfeW9UPNgZrgtBylPrAsvPTnOjOR57mgm6RV7mL9Wke+srSPWh?=
- =?us-ascii?Q?Hybc0PSo9bmia7jNn86GHu/QhI8YrCI+XlHviZZBifpWac2940bobZg38z0k?=
- =?us-ascii?Q?Mz5iBe52Ysrh6ahwwtmhFCVMk4ZiJ6OFHGKhpMjzkSbxxG2BteYUDUYoQJ00?=
- =?us-ascii?Q?8rqyruPgLa8qMtVb1Tw6XKEeLNw8OEBkcl5cp9/7dtgrMnFD/MtWfWLE0l8F?=
- =?us-ascii?Q?MyxqR9g2tGGqlpREiM13izrIvivfRNuOJWcHyBw/3csZQqIpVmPMFbcS8ztf?=
- =?us-ascii?Q?72NFi19qdDrOgJY5d9WZve3CKr6PgkL+mLyGYWBuNMTpyNmefDl4po85d8CR?=
- =?us-ascii?Q?7XFxQCFgwBp1K7dZMnwBVJxHtcicV1GkhUYK/T6rTTOQCwpMk8pkg2lJ3phy?=
- =?us-ascii?Q?S/FIhyY5z4UbaEfM0v5vEQa+KMN/NZidajJ7jV/3IuLPx0wW1Qg2DyB0E4mV?=
- =?us-ascii?Q?Z0u248Pw6Ejj5/so6Uvokx6j+DB+fL0alSCA6Qg7HlFqmc/tUX/CAl30+DrF?=
- =?us-ascii?Q?rMiKy/sFiY+ETBYzsvFHV9A0NkrEhW21KeVxaPvdmiQdaW2Y4eYb4XZkHL1s?=
- =?us-ascii?Q?0cr+MwAclCPC174GkuoyWNYms2KDoGeu+1KDwUbLirOlAEN1UW2o26/9UO0S?=
- =?us-ascii?Q?T7QpJmyDErCroXaddC+rYyg0vfqq7sEviw=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?D6x1lJCbbt2wNOx1wvo4d1CLkrMvV1CbBBeBSZ7YntHpvYBahSfXa0LlgZr+?=
- =?us-ascii?Q?SV6sJYMbcIqDxY5WP3vTt9k+Uu7bHVHVWE9jDB2137qhQiwZ7oQ543b6VsUa?=
- =?us-ascii?Q?RjX8ZQwPptxHyXIDFi7LMwFpeqqcFxAiH/SvviGHuTqGKCSxkHygy7wGEJXE?=
- =?us-ascii?Q?Lgpr9Bhv/hAfwlScJ0cjWywfWiG0Q/NBxFv3uPkz3jBFdViJNXw5iKbz3JYW?=
- =?us-ascii?Q?ZAFgokE0XI29zE8KWBP1NC+WV8Tu5fa13QtGwuUs4lF1zvBA0Nw/HstM9xrE?=
- =?us-ascii?Q?LbrFLrGEG14vH6r6bBthHKQNY05hU8t+UncGrb6K91A7aSFf9u7ZvaEalOK3?=
- =?us-ascii?Q?FdSTdV62MZo4gcTTDNctzGKV62y337Up3UoFoAye0lXGrFpXliYJHux/SAjN?=
- =?us-ascii?Q?lJpzMh1kWDHY9aGy3rOVJtxSt4NWzZhz4FXOc7meqkrZ2tc3NIrjRCu2lqo9?=
- =?us-ascii?Q?epq1uykXmDvBkuADHQxHaG2M/z7FSFzceGwy2EJ6zp795MGUqKqA66iy9446?=
- =?us-ascii?Q?DDpfMNwTn/PvNXeJeox/AI5AU7kWFdUUFFrUJvT++XwrjlsXBS0gP8MjImC7?=
- =?us-ascii?Q?iwq++VIvX/aCZ7nOrBn9h2XgGDKWZWQ17IYvCEm/tip+LKvoU0Vv01oHEHjk?=
- =?us-ascii?Q?fm0hfN9wSoXDGml0V2Re3kBqvsA1/h4Esc/sIvCQcgkyiQLMUnr1RbUmc7B/?=
- =?us-ascii?Q?ef72V5+aScriho6FYG4C9wSbmXcU5j1E9DexWmN0X0qaog397NP0OyLn8C5B?=
- =?us-ascii?Q?tR2MpK6zApaxYnBXFuClcXFrqROtwafjMaLkHx1PGRQpTBMPkuO+tUT+AUeF?=
- =?us-ascii?Q?SFlHqa07SHioDMXyn/O2TI1lvWpI8mqAvyxn/rD4K2Y/row7abHvng8xINE+?=
- =?us-ascii?Q?qMjFM1VcmSj2UUlfUcpYGrgmPB0pqhR6HuXgywAzE9ywu/AvC4PR5/0M9IbK?=
- =?us-ascii?Q?JrHV2kpDewf4KGKJVLdUES7HQ8NAglZucwSVc4ZehtCV6zEoqcnJ6LeMQ9L9?=
- =?us-ascii?Q?MuezN+wBiDp7Rsr5mojC7+arL7Ih6ujdQNIuO2JZeEB99tF0MUbb/YNsJgv+?=
- =?us-ascii?Q?aurE5KyLmyCWaXLC6ZvRVn8xwIMrL4msFW4WW+Mq4ok/Y4abAcnh3Oa5OnZJ?=
- =?us-ascii?Q?2zbavTza6cVCTLx84dKAf9ugSvNVAv4wyZ8lz6HxAe/SYv8R1578fR7zxqXS?=
- =?us-ascii?Q?Ly3UrbiRCtoOoSK0chZpGPn2UTyDbtBwsMLaegQ9NvyWZ42ZpM1uJzSY2CHe?=
- =?us-ascii?Q?44dm7ygMdShGpwDgcHOw?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 655a7da3-6a71-4853-e08b-08dd461c7a9c
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 19:37:08.9487
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB9077
+Content-Transfer-Encoding: 8bit
 
-After kfunc filters support struct_ops context information, SCX programs
-that call incorrect context-sensitive kfuncs will fail to load.
+There are at least two cases where napi_id may not present and the
+napi_id should be elided:
 
-This patch updates the enq_select_cpu_fails test case to adapt to the
-failed load situation.
+1. Queues could be created, but napi_enable may not have been called
+   yet. In this case, there may be a NAPI but it may not have an ID and
+   output of a napi_id should be elided.
 
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+2. TX-only NAPIs currently do not have NAPI IDs. If a TX queue happens
+   to be linked with a TX-only NAPI, elide the NAPI ID from the netlink
+   output as a NAPI ID of 0 is not useful for users.
+
+Signed-off-by: Joe Damato <jdamato@fastly.com>
 ---
- .../sched_ext/enq_select_cpu_fails.c          | 35 +++----------------
- 1 file changed, 4 insertions(+), 31 deletions(-)
+ v4:
+  - Fixed a typo in the NETDEV_QUEUE_TYPE_TX case (rxq should've been
+    txq).
 
-diff --git a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-index dd1350e5f002..a04ad9a48a8f 100644
---- a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-+++ b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-@@ -11,51 +11,24 @@
- #include "enq_select_cpu_fails.bpf.skel.h"
- #include "scx_test.h"
+ v3: https://lore.kernel.org/netdev/20250204192724.199209-1-jdamato@fastly.com/
+  - Took Eric's suggested patch to refactor the code to use helpers,
+    which improves the code quality significantly.
+
+ v2: https://lore.kernel.org/netdev/20250203191714.155526-1-jdamato@fastly.com/
+   - Updated to elide NAPI IDs for RX queues which may have not called
+     napi_enable yet.
+
+ rfc: https://lore.kernel.org/lkml/20250128163038.429864-1-jdamato@fastly.com/
+ include/net/busy_poll.h |  5 +++++
+ net/core/netdev-genl.c  | 13 +++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
+index c39a426ebf52..741fa7754700 100644
+--- a/include/net/busy_poll.h
++++ b/include/net/busy_poll.h
+@@ -24,6 +24,11 @@
+  */
+ #define MIN_NAPI_ID ((unsigned int)(NR_CPUS + 1))
  
--static enum scx_test_status setup(void **ctx)
-+static enum scx_test_status run(void *ctx)
- {
- 	struct enq_select_cpu_fails *skel;
++static inline bool napi_id_valid(unsigned int napi_id)
++{
++	return napi_id >= MIN_NAPI_ID;
++}
++
+ #define BUSY_POLL_BUDGET 8
  
- 	skel = enq_select_cpu_fails__open_and_load();
--	if (!skel) {
--		SCX_ERR("Failed to open and load skel");
--		return SCX_TEST_FAIL;
--	}
--	*ctx = skel;
--
--	return SCX_TEST_PASS;
--}
--
--static enum scx_test_status run(void *ctx)
--{
--	struct enq_select_cpu_fails *skel = ctx;
--	struct bpf_link *link;
--
--	link = bpf_map__attach_struct_ops(skel->maps.enq_select_cpu_fails_ops);
--	if (!link) {
--		SCX_ERR("Failed to attach scheduler");
-+	if (skel) {
-+		enq_select_cpu_fails__destroy(skel);
-+		SCX_ERR("This program should fail to load");
- 		return SCX_TEST_FAIL;
- 	}
- 
--	sleep(1);
--
--	bpf_link__destroy(link);
--
- 	return SCX_TEST_PASS;
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+index 715f85c6b62e..b5c4e42351e6 100644
+--- a/net/core/netdev-genl.c
++++ b/net/core/netdev-genl.c
+@@ -364,6 +364,13 @@ int netdev_nl_napi_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
  }
  
--static void cleanup(void *ctx)
--{
--	struct enq_select_cpu_fails *skel = ctx;
--
--	enq_select_cpu_fails__destroy(skel);
--}
--
- struct scx_test enq_select_cpu_fails = {
- 	.name = "enq_select_cpu_fails",
- 	.description = "Verify we fail to call scx_bpf_select_cpu_dfl() "
- 		       "from ops.enqueue()",
--	.setup = setup,
- 	.run = run,
--	.cleanup = cleanup,
- };
- REGISTER_SCX_TEST(&enq_select_cpu_fails)
++static int nla_put_napi_id(struct sk_buff *skb, const struct napi_struct *napi)
++{
++	if (napi && napi_id_valid(napi->napi_id))
++		return nla_put_u32(skb, NETDEV_A_QUEUE_NAPI_ID, napi->napi_id);
++	return 0;
++}
++
+ static int
+ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 			 u32 q_idx, u32 q_type, const struct genl_info *info)
+@@ -385,8 +392,7 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 	switch (q_type) {
+ 	case NETDEV_QUEUE_TYPE_RX:
+ 		rxq = __netif_get_rx_queue(netdev, q_idx);
+-		if (rxq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
+-					     rxq->napi->napi_id))
++		if (nla_put_napi_id(rsp, rxq->napi))
+ 			goto nla_put_failure;
+ 
+ 		binding = rxq->mp_params.mp_priv;
+@@ -397,8 +403,7 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 		break;
+ 	case NETDEV_QUEUE_TYPE_TX:
+ 		txq = netdev_get_tx_queue(netdev, q_idx);
+-		if (txq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
+-					     txq->napi->napi_id))
++		if (nla_put_napi_id(rsp, txq->napi))
+ 			goto nla_put_failure;
+ 	}
+ 
+
+base-commit: 0bea93fdbaf8675b7e8124bdcaf51497dcc8bcfa
 -- 
-2.39.5
+2.43.0
 
