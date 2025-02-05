@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7066322C322
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705EE22C321
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751994; cv=none; b=BA/qHenzjw6rmkIf3eiugzXGB9j5ybvmHTjGnV5nih9Q0sC3uOv2lIZJ8K3RVoL+Qr7MC6dhp5drcI34+zGImctoCTKIRwGZf9JHJ/EeT+qVidwVzLZJHLkOdbaG0gZj+CbqO2RlDyYl4i/4cMopfy66+JVxzxjUSTw6ajL7nm4=
+	t=1738751994; cv=none; b=L5fq9zQV/u0QfFJAiqO0OvabPaOagEN3kGtiFNS57GZzADQ/9tdNcTNdX9zGu042IOhS3oxwuF9ZlER26Lkqd83FxZSruA2qDOpzi9WpBF1A7bd1npSLoxMqgg87DJPVM9s5JYczbyFMG60IX2E1AsplsTbla8Y2Z8j6Mx1ZZ4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738751994; c=relaxed/simple;
-	bh=QIjdMhcXk3AaGSA9sCIuVEGRfUQxMwVR2twfx4ZqNE4=;
+	bh=+5MF1gZblDfbJX6Ub6UjJL8Dsye2HajJO7xW7GGMnZ0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=terKTVp6TR4DqtC/2HkKFsPvb5q5uQ7Z5WMkXiMrNbiRO30WnJeVf+5npaAQ6JBsHhpRnh8YzbRfpQGsvAPFPyha2ayFTHFEfrqtv+0gP/wQ/HODJH3ARYuTgitbhe2+LwDw0x1DUtpkK8+bq60zDYEdhhrJR5nxLZeJb/JVjFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j28ENCQ+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3Vcu4tnp; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=BhsUbshrxm0cPmSmzttlo6J14XKp266jxAZA6G6G+W3otJgEX8vECevlYO9SCmOEIJ60aCsh4KpT8e7e16jTxT4RChSmwu8TmmLLUQvDd7qGIRWWX9NkGnUKPpNiwmjRBPvaYgHTLT7YfJxPl0tWWfbc5TihU+fTLgGGqOfW0gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BRmmv4Ze; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3L9C+qi2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j28ENCQ+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3Vcu4tnp"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BRmmv4Ze";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3L9C+qi2"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738751988;
+	s=2020; t=1738751989;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hloyeZK4o5RiVLme0GnbUDPJugjcXUmSipRi2u6gpRQ=;
-	b=j28ENCQ+lx8d07J/jh7+2sxgs3iFFWlLrPXpuXPFcgj4FXF6rb1SMdVeKmcV2TqakhQQTG
-	s3Z7xDF9Fet4rJzMEgxPjPd/P2w7o2taDJCcX0dchNyZ39eS7xCPIFLw1IcAqPvrowi6is
-	pT4XhbE6o5YtFDI2hu4TyMqyYZP5d6exOdLg+Mf1kne5aA0tpaA3BDFnSUO++v7gsm5/ZM
-	wHMFgteWlRSL1OOv+nQQlNogrXDt5WyfntLUea8MuTGcejls3E4Q/kQkeHtQqJrAtdRDTA
-	8202uvliWLzEo4yXtwDi97e4Kr2iwN3hyzuv6bpmtIOg9Mdn9p4TZUUPexR2dw==
+	bh=W6iU7/Sp5boVxyMgMrHuBvSPIlUirr0pttNKb2ZMRC0=;
+	b=BRmmv4ZeWeipc46SLvuYZsdxWS98+esD2moSexyECgOEpDWc174ABw/qU5hINWWTVPP4N3
+	wT99jlmlGvy3QsokxFifF+nc2ZwoCbODYg55K3QoPQXESaqEOalo0+WDYQUHClROnkSmZF
+	DODcN5xr5D2CpQFoyAq5blztflE9u2e7QLKd5cY5HwcA6aZBzy9I0sCDF85HGOC70yU8pV
+	aT4hsDxaI9Btju4WBbNhwJKWesAach4M193vF1D4kP15A7fwuFq4b4miGrVIx2i6aYQU4I
+	D0ucjvJBcOsh8eWSgCnv0ZOxdz/sd/sxq9E9wCK6uwFqu1GgUh+O8xJUK9wruQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738751988;
+	s=2020e; t=1738751989;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hloyeZK4o5RiVLme0GnbUDPJugjcXUmSipRi2u6gpRQ=;
-	b=3Vcu4tnp8UL3xCb2LVl2mMqVFNyB0UuuFl3il+23M51Yn7Ns3AJSE0odr/JoPVJWAqJgBG
-	lb75o7bWfguO7VDw==
+	bh=W6iU7/Sp5boVxyMgMrHuBvSPIlUirr0pttNKb2ZMRC0=;
+	b=3L9C+qi2fKE8c6b3+SYIjCzyO3+egzjS+IwG6eHFo9mF1txI2NdGIYbzCllqv5aLZNTrnd
+	xumx8kv+eJiNaDBg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Subject: [PATCH v2 06/31] LoongArch: KVM: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:38:50 +0100
-Message-Id: <a5b1b53813a15a73afdfff6fbb4c9064fa582be1.1738746821.git.namcao@linutronix.de>
+	Anup Patel <anup@brainfault.org>
+Subject: [PATCH v2 07/31] riscv: kvm: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:38:51 +0100
+Message-Id: <d5ededf778f59f2fc38ff4276fb7f4c893e4142c.1738746821.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746821.git.namcao@linutronix.de>
 References: <cover.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
@@ -67,27 +67,38 @@ hrtimer::function with the new setup mechanism.
 Patch was created by using Coccinelle.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Anup Patel <anup@brainfault.org>
 ---
- arch/loongarch/kvm/vcpu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/kvm/vcpu_timer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index fb72095c8077..e721127c614e 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1459,8 +1459,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	vcpu->arch.vpid =3D 0;
- 	vcpu->arch.flush_gpa =3D INVALID_GPA;
+diff --git a/arch/riscv/kvm/vcpu_timer.c b/arch/riscv/kvm/vcpu_timer.c
+index 96e7a4e463f7..ff672fa71fcc 100644
+--- a/arch/riscv/kvm/vcpu_timer.c
++++ b/arch/riscv/kvm/vcpu_timer.c
+@@ -248,18 +248,19 @@ int kvm_riscv_vcpu_timer_init(struct kvm_vcpu *vcpu)
+ 	if (t->init_done)
+ 		return -EINVAL;
 =20
--	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNE=
-D_HARD);
--	vcpu->arch.swtimer.function =3D kvm_swtimer_wakeup;
-+	hrtimer_setup(&vcpu->arch.swtimer, kvm_swtimer_wakeup, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_ABS_PINNED_HARD);
+-	hrtimer_init(&t->hrt, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	t->init_done =3D true;
+ 	t->next_set =3D false;
 =20
- 	vcpu->arch.handle_exit =3D kvm_handle_exit;
- 	vcpu->arch.guest_eentry =3D (unsigned long)kvm_loongarch_ops->exc_entry;
+ 	/* Enable sstc for every vcpu if available in hardware */
+ 	if (riscv_isa_extension_available(NULL, SSTC)) {
+ 		t->sstc_enabled =3D true;
+-		t->hrt.function =3D kvm_riscv_vcpu_vstimer_expired;
++		hrtimer_setup(&t->hrt, kvm_riscv_vcpu_vstimer_expired, CLOCK_MONOTONIC,
++			      HRTIMER_MODE_REL);
+ 		t->timer_next_event =3D kvm_riscv_vcpu_update_vstimecmp;
+ 	} else {
+ 		t->sstc_enabled =3D false;
+-		t->hrt.function =3D kvm_riscv_vcpu_hrtimer_expired;
++		hrtimer_setup(&t->hrt, kvm_riscv_vcpu_hrtimer_expired, CLOCK_MONOTONIC,
++			      HRTIMER_MODE_REL);
+ 		t->timer_next_event =3D kvm_riscv_vcpu_update_hrtimer;
+ 	}
+=20
 --=20
 2.39.5
 
