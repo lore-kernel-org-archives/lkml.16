@@ -1,139 +1,180 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878291519B4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E6ADF59
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738768020; cv=none; b=UyYLA3iYZjWK7pcz9LFeyYGqVH+S9I2/IGX15N7CNFBOjcsioNJJGlaIB8vyUlZjlLdtN418JAJfRhuaAKVibrbi49Xr9DTnB4sCsqyyUn8oobW7WmMCXJMA97s/oBW4W/mBOnWJozgkv1PGIUBF5T/E+mIWpNJdYILkVcP5/xU=
+	t=1738768027; cv=none; b=L9nyp2qXSUb8B2fX4nb8EHn1P6xBYKE2EQRaiDXOJhzGIlkOa6aqQs7PK2NQQQDov4T87UmaAsgW+atrvAf2AWEvTRe72zvCxbewB1p4rH4P8Lanf3aptkO1mYwq3i2IjRjVc7W1tum84x1S2AVQZ/hwzguFNX7XOa4M9yF5Hog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738768020; c=relaxed/simple;
-	bh=cDpSf7K63szEn5MofpSKLWQVoazZzcXhynJclxx9fgg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I7vpOIjkFh+n3HfV0quVOCPD+RGG47gp380EbQke/Ucd/GyIi2WyPt3sWme5NrpR/wk3MbzfD5uEcpsG7lHjvZ31gegOqORC0imYWhu2RsTcn1vwPwYOuHfcZhLnuoitf4OllntXOgvASWeFDnDs1E6Sy3Nngx8Wg8QChr9YYNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=Y339i1pP; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1738768027; c=relaxed/simple;
+	bh=H9Hy4gOxKEd66YhBYkMkYPFJBkFFoDc4atCnWsCOGpI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gqr2Mz9mlyapY7GbkS5cIrSXJ3xTysewB9vNaAeU0GdXXmkqeVZ3iQvIUvP/GWnmvEndalg8oypoaF1uvoGoyEtIrJpJbnYOTMKIAxfVJC9iy9Uth+5boTpB7VIaedWXdkkr2NSJgBOghU2C5bXVUElFnFsdMeyhxSghqGp4YSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gsO61bSW; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="Y339i1pP"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b9bc648736so657973985a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:06:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gsO61bSW"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ee86953aeaso12947718a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 07:07:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1738768017; x=1739372817; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=41bSJri6zeqVSF2ytQuaV17DWUgqUBZ8rU11L7eRH7w=;
-        b=Y339i1pPotHeO/RPrOUZaCh+zrlT9uLnDJFUdJnpE1vwZVY+vDDecnOnZqxryAkEGC
-         ae1Fihsd4953zTPtDc0KI3bexafJdnxosP6Ia4wle+0Pg6ZINCglmfOJP/Ff4ftCptmd
-         WG7aaNyUcX7vS5vxqG6by5zUukS/d6drdb8iE=
+        d=google.com; s=20230601; t=1738768025; x=1739372825; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x4oW/dAfjtIYVmLRtu5aqY7ul2Z1RIM2CtrfkUILPao=;
+        b=gsO61bSW110ErjobseKoFM5n2BZAL5TM9uJxpvx5TWiU1kEFSQF0IZ3VzD3Fhj7tYz
+         33c4rg/635u2atWKKB36HCeTvHiAQmDGqmSf4UDV93ZfB1mAD4Jc3lFJzihSTHLg7M7D
+         7vc8uysACLMiFAPEGfP8umBWEnKCgQs0uDyEyQ4afkCuSR4ZbKAdCBOp8TpcVnmEfxHo
+         qLgBZYVLzaxA5tE64Bk19tuD9nCXeTXumOjQYmChWxSaFmJZKzCInfSb4beEMu1DLOnk
+         LIV2Bx3YMtH2pevYbgKcs8RDCuVRRTyg11NJnPHRcggkoind/+HM25ELaFF/EEtD87p7
+         gGvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738768017; x=1739372817;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41bSJri6zeqVSF2ytQuaV17DWUgqUBZ8rU11L7eRH7w=;
-        b=PgsEQ2987xRZSewWaft91wLlv8QgKMLMOkrerUyErkKCsNAg8h5Z1dqd9IO3+fzHP8
-         Y2Ps/g1KCXAUS8GuXLlJ3sAK443PJfML7dXJ/sjA1SrAeixHNDy/Wg3pXUFHpM7J/UEu
-         re1wp5Qt58XgZNjslh5DdwQLiiIwvynj43k2o0eADOFry9mv56FoNaiS2Uh4z0tD4r5I
-         59mgaNAfT1bxvvwcKRn1Ff8OoE1az7uZVmJ5210gUqk+98f6oRKsp988vHTTYuQVEdbV
-         tvpzD7cDbw0bHOqUaRX5omID3bNVJXH7FuJCsKLXc+KKBl9KiELGK6GmYniMvwDut5So
-         V2Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCW64DMKMxb0gxAizSZc7y1vFSa8vkAzwfM29IatBKHWWclirINBW6yvw1z4sZU+VHHsyj+5LLfTQP8uBkM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0H4sZdO1PJATI03gczqQtOZDhnvIJ6lvMoILp81fJZuOPWnlW
-	3nM7xTDKcAb1SihIBnfTnG4aXNowaX53OyQ6eQA9DWnNytzwbESKL37qCWlW2wCHZ8bycGy6sbw
-	=
-X-Gm-Gg: ASbGnctwQL0nICDKGNhajUDBWoicNrwQGs95Q2Kmwx++kLBsXNBIryL3LCzEqmGjlhj
-	NZmPMpFEcIbrU7DnXbXfKwWUaKzSe3w385/RZ0nmHrXScsawRUeAvPSzQgxe6mXYSwsKXZMBQ9V
-	gZ/pOJRmvK9ssLSocM6RUPsQkSfu1d1lBhMu3bIk1GVzk4Y/0SFjS6hEr/XIoIKNc7eATAWtmQz
-	cofoYgvvoVBoPo6hKdZkoAgpLQslWW/wCtgfG2zpDwTF4lO6JuBCIhaR+axkMzy8r11KVVwKW0l
-	kqIEs9salW1U4ZaZmBpuJGbVfTe2kVLsHzz2mg==
-X-Google-Smtp-Source: AGHT+IGsA3qsLqyaOvqUI19MkoAMi9oWQ9uofuW1yU0R0BT1yXEQ4f1B2pdSCwg5Py+LpxQoAmAyPA==
-X-Received: by 2002:a05:620a:4246:b0:7be:3cec:ec4d with SMTP id af79cd13be357-7c039f9950dmr322585685a.24.1738768017372;
-        Wed, 05 Feb 2025 07:06:57 -0800 (PST)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a9047a4sm752748785a.80.2025.02.05.07.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 07:06:56 -0800 (PST)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Wed, 5 Feb 2025 10:06:55 -0500 (EST)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Vince Weaver <vincent.weaver@maine.edu>, Ian Rogers <irogers@google.com>, 
-    Stephane Eranian <eranian@google.com>, 
-    "Liang, Kan" <kan.liang@linux.intel.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-In-Reply-To: <2025020535-curvature-citable-ab6a@gregkh>
-Message-ID: <6cdaf5a4-0043-5cde-9b48-06fb7c1fd9e2@maine.edu>
-References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com> <2025020408-apron-fled-d29e@gregkh> <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
- <2025020447-gyration-wireless-f7da@gregkh> <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com> <2025020444-savage-latrine-0c31@gregkh> <97541134-7c32-94a8-7642-a82f3292dc38@maine.edu> <2025020535-curvature-citable-ab6a@gregkh>
+        d=1e100.net; s=20230601; t=1738768025; x=1739372825;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=x4oW/dAfjtIYVmLRtu5aqY7ul2Z1RIM2CtrfkUILPao=;
+        b=qw0vX4M8eB5vaHMSun+SHGQ4WEgRsyM3fLjllswVmxxEgjhy/RdRX0jxFrgbARiHIg
+         HbdWbk9RKGd8NI/UcvWU1mCHtuv/Ng6wEpYg6FmZpPVtA6RCfIDR6NjZMRONYGTR4+uM
+         eQKdIjrS4cJDgrHmU6ihss3jXhrKJnUnU+v5IgqxPF2fKk6hDi9GXxSYQ6EW29p3iIys
+         2E2ARjaYJ2ikrJvkVH0qAJlS5KUxukwZq18gMcvr6wPOGnA6+vjWxYOYdcsIlc6tfqXX
+         1/zSsR3nT9ij+8TiESHL/45KU6+0Mme9dU6RHLGD7gLMpCct5K4U+1kmu7O6ccX0c1gB
+         oyUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrUpBJzvqWNmSmqbLkgt/j3D69FrKmAHylvdzGvrVl89nUs1H9pmQQzcSLR6j3r2qCXvXihiq2YDXml7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVLNG/Y7TJZkwmCUuP7bXkailXcbPuwCyLik37nEyOawfOWR1T
+	Nbhqlj0/vch8TfuwwTbXezVZgeNBqty0aVzDFJZNrV/jRYWQ6n1gS2zmgzRxDUqL0wRrYkvMPjs
+	X4w==
+X-Google-Smtp-Source: AGHT+IHXf9TWBtdxouWYPQZ0tUW8cJ9QFjrqHbhdh6cqzplE7+BtUhY/bbSQzbcNUl1oWImGd1KSiadmTfM=
+X-Received: from pfbfb15.prod.google.com ([2002:a05:6a00:2d8f:b0:725:eccc:e998])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:450a:b0:729:a31:892d
+ with SMTP id d2e1a72fcca58-73035117eb6mr5841339b3a.8.1738768025226; Wed, 05
+ Feb 2025 07:07:05 -0800 (PST)
+Date: Wed, 5 Feb 2025 07:06:58 -0800
+In-Reply-To: <43f702b383fb99d435f2cdb8ef35cc1449fe6c23.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+References: <20250201011400.669483-1-seanjc@google.com> <20250201011400.669483-2-seanjc@google.com>
+ <43f702b383fb99d435f2cdb8ef35cc1449fe6c23.camel@infradead.org>
+Message-ID: <Z6N-kn1-p6nIWHeP@google.com>
+Subject: Re: [PATCH 1/5] KVM: x86/xen: Restrict hypercall MSR to unofficial
+ synthetic range
+From: Sean Christopherson <seanjc@google.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Paul Durrant <paul@xen.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com, 
+	Joao Martins <joao.m.martins@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 5 Feb 2025, Greg Kroah-Hartman wrote:
+On Wed, Feb 05, 2025, David Woodhouse wrote:
+> On Fri, 2025-01-31 at 17:13 -0800, Sean Christopherson wrote:
+> > --- a/arch/x86/kvm/xen.c
+> > +++ b/arch/x86/kvm/xen.c
+> > @@ -1324,6 +1324,14 @@ int kvm_xen_hvm_config(struct kvm *kvm, struct k=
+vm_xen_hvm_config *xhc)
+> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 xhc->blob_size_32 || xhc->blob_size_64)=
+)
+> > =C2=A0		return -EINVAL;
+> > =C2=A0
+> > +	/*
+> > +	 * Restrict the MSR to the range that is unofficially reserved for
+> > +	 * synthetic, virtualization-defined MSRs, e.g. to prevent confusing
+> > +	 * KVM by colliding with a real MSR that requires special handling.
+> > +	 */
+> > +	if (xhc->msr && (xhc->msr < 0x40000000 || xhc->msr > 0x4fffffff))
+> > +		return -EINVAL;
+> > +
+> > =C2=A0	mutex_lock(&kvm->arch.xen.xen_lock);
+> > =C2=A0
+> > =C2=A0	if (xhc->msr && !kvm->arch.xen_hvm_config.msr)
+>=20
+> I'd prefer to see #defines for those magic values.
 
-> On Tue, Feb 04, 2025 at 08:21:17PM -0500, Vince Weaver wrote:
-> > 
-> > it doesn't matter if it's a one line change, your proposed change breaks 
-> > userspace.
-> 
-> It breaks broken userspace :)
+Can do.  Hmm, and since this would be visible to userspace, arguably the #d=
+efines
+should go in arch/x86/include/uapi/asm/kvm.h
 
-no, it breaks working code that's been working for 15 years, apparently on 
-some whim by you.
+> Especially as there is a corresponding requirement that they never be set
+> from host context (which is where the potential locking issues come in).
+> Which train of thought leads me to ponder this as an alternative (or
+> additional) solution:
+>=20
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3733,7 +3733,13 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, stru=
+ct msr_data *msr_info)
+>         u32 msr =3D msr_info->index;
+>         u64 data =3D msr_info->data;
+> =20
+> -       if (msr && msr =3D=3D vcpu->kvm->arch.xen_hvm_config.msr)
+> +       /*
+> +        * Do not allow host-initiated writes to trigger the Xen hypercal=
+l
+> +        * page setup; it could incur locking paths which are not expecte=
+d
+> +        * if userspace sets the MSR in an unusual location.
 
-I thought we didn't break userspace.
+That's just as likely to break userspace.  Doing a save/restore on the MSR =
+doesn't
+make a whole lot of sense since it's effectively a "command" MSR, but IMO i=
+t's not
+any less likely than userspace putting the MSR index outside of the synthet=
+ic range.
 
-> > I thought the rule was Linux didn't break userspace.
-> > Has that changed recently?
-> 
-> No, which is why I am working to fix these tools so that it will not be
-> broken.
+Side topic, upstream QEMU doesn't even appear to put the MSR at the Hyper-V
+address.  It tells the guest that's where the MSR is located, but the confi=
+g
+passed to KVM still uses the default.
 
-that... is some impressive doublethink.
+        /* Hypercall MSR base address */
+        if (hyperv_enabled(cpu)) {
+            c->ebx =3D XEN_HYPERCALL_MSR_HYPERV;
+            kvm_xen_init(cs->kvm_state, c->ebx);
+        } else {
+            c->ebx =3D XEN_HYPERCALL_MSR;
+        }
 
-> > libpfm4/PAPI are widely used and deployed and in some cases possibly 
-> > statically linked into other projects.  It will take years for the change 
-> > to filter out to all users.
-> 
-> Great, as it is easy to get this type of fix into the stable kernels,
-> and then fix these tools, by the time those old systems eventually
-> update to a newer kernel version, it should "just work".
+...
 
-no, that is the worst case scenario.  PAPI is installed on older systems, 
-often custom non-vendor packages.  So if you get this into stable then 
-these older RHEL systems the kernel will be updated suddenly breaking the 
-users with no warning.
+        /* hyperv_enabled() doesn't work yet. */
+        uint32_t msr =3D XEN_HYPERCALL_MSR;
+        ret =3D kvm_xen_init(s, msr);
+        if (ret < 0) {
+            return ret;
+        }
 
-Even if we manage to get a change into libpfm4 and PAPI it will probably 
-be months before the next stable release, and again people tend not to 
-upgrade PAPI releases that often.
+Userspace breakage aside, disallowng host writes would fix the immediate is=
+sue,
+and I think would mitigate all concerns with putting the host at risk.  But=
+ it's
+not enough to actually make an overlapping MSR index work.  E.g. if the MSR=
+ is
+passed through to the guest, the write will go through to the hardware MSR,=
+ unless
+the WRMSR happens to be emulated.
 
+I really don't want to broadly support redirecting any MSR, because to trul=
+y go
+down that path we'd need to deal with x2APIC, EFER, and other MSRs that hav=
+e
+special treatment and meaning.
 
-> I'm fixing up the bug where all of these devices accidentally got dumped
-> into the root of the device tree in the system.
-
-is this a "bug" or just you shuffling around files for no reason?
-
-> Again, /sys/devices/ is NEVER guaranteed to have specific placement,
-> that's the whole point of sysfs in the first place.  We can, and do,
-> move devices around in there all the time (even every other boot), it's
-> just that some tools accidentally didn't realize this and now need to be
-> fixed.
-
-great.  Slap a note about this happening in the appropriate "deprecated" 
-file with a timeline of 5 years out or whatever, and then when that comes 
-around then send your patch.
-
-Vince Weaver
-vincent.weaver@maine.edu
+While KVM's stance is usually that a misconfigured vCPU model is userspace'=
+s
+problem, in this case I don't see any value in letting userspace be stupid.=
+  It
+can't work generally, it creates unique ABI for KVM_SET_MSRS, and unless th=
+ere's
+a crazy use case I'm overlooking, there's no sane reason for userspace to p=
+ut the
+index in outside of the synthetic range (whereas defining seemingly nonsens=
+ical
+CPUID feature bits is useful for testing purposes, implementing support in
+userspace, etc).
