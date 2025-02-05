@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF41822A7FA;
-	Wed,  5 Feb 2025 12:44:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C5222D4D5;
+	Wed,  5 Feb 2025 12:44:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759461; cv=none; b=WOjsxT0BUBTmQXmGrDuU3AdD9pqACUaS54xIc9df2eLxHg/sbP1xmVT5dvZulPvffGYdpUWJuLrrx80F223ru0mQwybb6Jzwx0t58sAN7QMsfw6lxvIyuzNqG8GzNoq1dScD6MMqk8KhJDECqD0QDwvel4zQXdQdMft81XMW+AY=
+	t=1738759463; cv=none; b=JANX49vaB3U2vZpfxNVYi3QTvQJRMxXpfPHFm8Z9VVFvTPggF9jIWINO92EZLe4poUcOu0knBnl6c5D26rUTsrCoW11iwT9jjKrJLrQovoLT694XYkFE+Lj2TVW8kx6kOxR9Hrt+ntO3D0K+ekvRuvb2alUuu+lIEdc7BzoDf60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759461; c=relaxed/simple;
-	bh=pndALRAxj8SSHI3s2SLD4uhfGrnoFhTi0WG4bEaxkMg=;
+	s=arc-20240116; t=1738759463; c=relaxed/simple;
+	bh=ykF7Gf+vTxj6q7kByCS0b9VG8rwjXiLsDJrPiDjtRbU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bNNMaYDpuwv8+qFzNawcOPpgYsh5o1DrmwxAxn2Ed16vYHgtwBN8zrgnNpQNG9zYq++rpn93pP9H+KLdRfO9UdHyJW9cFmEPaf9a+2DZ9K2g52L7wyS3Nfe9kk++/AKHzV76yGzLxd86ljavWoC78wST0G/eSzn3N186Edvc17Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWeKgK2E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AE+fjMUDh+xFr/w3AkO2fQx2PlY0+uylEGwkB10Nfn2gLSJbUuccCebBPfzlcTLnmv+JIi3KyKbHL4F4jCFcSsmnYTJekSJKgS2G1fhVeeiPoX/qahud/RFm8ShGPXv46PwgpWq9IoBPYbKn5bUF1XH3ZRSCz5ecGq4PtixYz1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMplDV/k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWeKgK2E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4F5C4CED1;
-	Wed,  5 Feb 2025 12:44:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMplDV/k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41EBC4CEE4;
+	Wed,  5 Feb 2025 12:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738759461;
-	bh=pndALRAxj8SSHI3s2SLD4uhfGrnoFhTi0WG4bEaxkMg=;
+	s=k20201202; t=1738759463;
+	bh=ykF7Gf+vTxj6q7kByCS0b9VG8rwjXiLsDJrPiDjtRbU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mWeKgK2EQ5glYceYFsOH1vLHo+nb4viPrD+h4lItnE378XR0Il704KhP5n2hSVTGt
-	 AquexTF2hjCJ7enRHRC/dbs1NzOczS4kJFkIAxa305HMYciv+RtnRuv5U5Hw/FRLT7
-	 VQjtmyBukmx4UGscoQueSOqckaQEvLiWH2NLe/+e0O2nf70hVix2Bu+naXwmHKMNnb
-	 Tlr7obWZxHauYJiy/8InUtEh122RaYNzQjc8xYh+xrC9qDRM7wOzr2aYIc6Psg9lCS
-	 Jak1FId4zKTWZiqeZ6Q+5Ao5tNZScJqByCFAeniTEAC1Nq87vztNRAy++iaDXRV4jo
-	 RJMRpiDdjx3YQ==
+	b=VMplDV/kZKPDWEz3wRzzrBz2FmLo4Mkwnk1x9n14GZhifDcsduZfyb4B6e2WqwiSP
+	 bfnvXnTnMLIvqKm6ZSNnnH2INQoAQSxjd9iADS6Yxj6GbclPxjkAwvhptk9oqhCImo
+	 OpyHw9FuRJoRKFZ8W0HXxmJBhn1TMbVXGn53dPN+mXAhUFu2/4/ptu7oOExL5Ppcyb
+	 /dG/53SnpUdlRFiNZ27WFtYzaSerB3ox6Pspv+BmM8RZTkDlVP0bRbFYporOAybsKQ
+	 Ytdlr3UJxYC3LcqdYl72SZ9IZTYs6wSRJexgB3i8rLvs4Atj90jcT1dIgChqmCcbaA
+	 +pJVPXwoAegiw==
 From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, peter.ujfalusi@linux.intel.com, 
- yung-chuan.liao@linux.intel.com, ranjani.sridharan@linux.intel.com, 
- daniel.baluta@nxp.com, kai.vehmanen@linux.intel.com, 
- pierre-louis.bossart@linux.dev, perex@perex.cz, tiwai@suse.com, 
- Zhang Heng <zhangheng@kylinos.cn>
-Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250117014343.451503-1-zhangheng@kylinos.cn>
-References: <20250117014343.451503-1-zhangheng@kylinos.cn>
-Subject: Re: [PATCH v2] ASoC: SOF: topology: Use krealloc_array() to
- replace krealloc()
-Message-Id: <173875945870.32457.1216204039279705244.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 12:44:18 +0000
+To: linux-sound@vger.kernel.org, "Sheetal ." <sheetal@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ lgirdwood@gmail.com, jonathanh@nvidia.com, thierry.reding@gmail.com, 
+ mkumard@nvidia.com, spujar@nvidia.com
+In-Reply-To: <20250121110928.1799377-1-sheetal@nvidia.com>
+References: <20250121110928.1799377-1-sheetal@nvidia.com>
+Subject: Re: [PATCH] ASoC: tegra: Add interconnect support
+Message-Id: <173875946142.32457.3346189191163709126.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 12:44:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,11 +46,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Fri, 17 Jan 2025 09:43:43 +0800, Zhang Heng wrote:
-> Use krealloc_array() to replace krealloc() with multiplication.
-> krealloc_array() has multiply overflow check, which will be safer.
+On Tue, 21 Jan 2025 11:09:28 +0000, Sheetal . wrote:
+> Add interconnect framework support to set required audio bandwidth
+> based on PCM device usage. The maximum bandwidth is determined by
+> the number of APE PCM devices and maximum audio format supported.
 > 
+> If interconnect property is not defined or INTERCONNECT config
+> is not enabled then the audio usecase will still function.
 > 
+> [...]
 
 Applied to
 
@@ -62,8 +62,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: SOF: topology: Use krealloc_array() to replace krealloc()
-      commit: a05143a8f713d9ae6abc41141dac52c66fca8b06
+[1/1] ASoC: tegra: Add interconnect support
+      commit: 4a91fe4c0d683c56044579fb263c660f5d18efac
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
