@@ -1,38 +1,38 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F4822A80B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA71822B584;
 	Wed,  5 Feb 2025 11:38:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738755505; cv=none; b=NZwr0pZoQQybu3if+3a0PSr/+/zRVvlrYBKSjR+qWLKqd3bCMTnYRIMoTii05BxRJr4jDXpBsNUZHZCbxV4Hsb6mkhguiSCaSkIYvcSffMs4/KRLL7jnTatBTfnC02BWudqHSysgGHk4w/wBhQciWryMzHhpT56CVNhB4QCMlOU=
+	t=1738755505; cv=none; b=F4FumOMrZamOE35d/Ma+8lIiVZrunoSSddCblr/hOhP9NGIdLmLoj+XvGX8i84QRDLpRndgQwyyQgpHeSnaXzO/CwQ07PkXilF/HEj0fG6+Gh+kOpFTnAD3gXrjzEtebuoPQJJIqFFdyr171MR/4fLbZ9wRY1yVtDUfCeFOczwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738755505; c=relaxed/simple;
-	bh=nkgmvpPwfvuURX3sQNXfvzz0eRGz6dpDMomguJKoewM=;
+	bh=Y6u3Ch+xzOYTWps+Sm+CBraf+SlaLa8RlXsSV1/aTms=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qP3kVefsUInjieFwPDCIPZD9D/ocpJ4O136JvT4WKfhlQWp+8OZN1N3dT3wLIOmlQXlLoPfaWxMuiB0hLQzxHKdq/YcNAyd3C7k+Acg8zhjWHUAuNT+iKbGNc7KHUW4cxtR+cjgyXExfpeGjRoueiOayKVppokDXp5Dbip1Xv+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=aZV81olI; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=MVomUgZLzuYDW4bC92Bnmuy0SM/UKPj2FbegYkAPxnTWzqJK9Dp/CRmUmUQKqWAr18olLamUA7blYmFF2qWwvVGsWIwO8IM0h30Hf5F9qQ44saCqgxDtIfIL1lm1m2/cYtLKKsebGMeeUPnHGwn5NHvuV+FvcNCh7/aUNVggG1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=g/CXsFLr; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="aZV81olI"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="g/CXsFLr"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5154qIXb016309;
-	Wed, 5 Feb 2025 05:38:05 -0600
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5154qIXZ016309;
+	Wed, 5 Feb 2025 05:38:04 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=j8RCNsHA886XW9YyZuFjO+svQxPy6O5woK8vAdOxnyM=; b=
-	aZV81olIGXJZyUystYsfHI0rfKTW7SUcT/SE4qHFXFpiQ5XsbcbyvLtFfocc2yyi
-	DwwECQzbQqHIWdOtekpLHAmngVlnuKhJ7lE6pe5He4qN0bADSr97aeFqItRFiORG
-	8wPsTO5iS6PXJJ3S8sDbdonbc+PdTImezLmo2qQPqw+vTDCro/YEqpheBBmUgpeg
-	QuBNehBeCRpO7udQ5hSSqUfPrB2x1KFm6bvmLgP9Pt9A42cNIcVznQ5Kpd24fZ7h
-	+o88CfUek70JMc48KsSOsR8NKlG8ZaS7MI5bO5kmctmz8ycT6pXYl4s63jjjundC
-	sHvV+GrP3QVw5dTpgOyk4w==
+	PODMain02222019; bh=PzrPi/7fJfyD0VDpvWaCjdcqlKupG1ws/zVcBAU9oHQ=; b=
+	g/CXsFLrvn9y2sSo5nAVA2gJ0MBngYtoFeWWiH0jzvHsouW1JN732e4UnX2NaLIz
+	/lpPcy6hOhND5iwlX+rI6LYmLBiiVPsJ5iVqohJUVEQ2/esctfrX/HMmoOiKBA/0
+	hvm05eEsRYwVDkyvwoYPLwYYfmJb7/A8ulQj7qnad50m76HpuhlGBl5BQF2w6dAh
+	OGOIKIXD0nQZubsUb8l6Lh6CWHTntHTzqXz0aAaXtoYHisuaA0AuVA414pNXiOca
+	dpJMxWpJHlthcGqzLUibcQIXZahlsg6aZRIKWGG4GryBiaH3ulI3mQ5lXS4kVtPo
+	i2jJwHQuiB2ipVyav2lP+Q==
 Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44hgwm4en2-5
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44hgwm4en2-3
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 05:38:05 -0600 (CST)
+	Wed, 05 Feb 2025 05:38:04 -0600 (CST)
 Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Feb
@@ -41,7 +41,7 @@ Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
  anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
  15.2.1544.14 via Frontend Transport; Wed, 5 Feb 2025 11:38:01 +0000
 Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3C2A882255E;
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 5D255822560;
 	Wed,  5 Feb 2025 11:38:01 +0000 (UTC)
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
 To: <broonie@kernel.org>
@@ -49,9 +49,9 @@ CC: <lgirdwood@gmail.com>, <yung-chuan.liao@linux.intel.com>,
         <pierre-louis.bossart@linux.dev>, <peter.ujfalusi@linux.intel.com>,
         <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH 04/10] ASoC: SDCA: Add support for Entity 0
-Date: Wed, 5 Feb 2025 11:37:55 +0000
-Message-ID: <20250205113801.3699902-5-ckeepax@opensource.cirrus.com>
+Subject: [PATCH 06/10] ASoC: SDCA: Add parsing for Control range structures
+Date: Wed, 5 Feb 2025 11:37:57 +0000
+Message-ID: <20250205113801.3699902-7-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250205113801.3699902-1-ckeepax@opensource.cirrus.com>
 References: <20250205113801.3699902-1-ckeepax@opensource.cirrus.com>
@@ -63,84 +63,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=EPv800ZC c=1 sm=1 tr=0 ts=67a34d9d cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=fzJl0nIRBdt-6464aXsA:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-ORIG-GUID: 5CyriFDUqXPLs-qW4NZBTlWA0IiktBOx
-X-Proofpoint-GUID: 5CyriFDUqXPLs-qW4NZBTlWA0IiktBOx
+X-Authority-Analysis: v=2.4 cv=EPv800ZC c=1 sm=1 tr=0 ts=67a34d9c cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=tT6NBLIojCNG3WT5mV0A:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-ORIG-GUID: bf2Tj6yiTYSq35oZZox43EH8ROgjqt2f
+X-Proofpoint-GUID: bf2Tj6yiTYSq35oZZox43EH8ROgjqt2f
 X-Proofpoint-Spam-Reason: safe
 
-Within SDCA there is a special Entity called Entity 0 which is used
-to hold Function level controls. Whilst Entity 0 isn't a full SDCA
-Entity, it is helpful to add an sdca_entity structure for it. This
-will allow it to be treated identically in the code that handles
-SDCA Controls.
+DisCo/SDCA contains small buffers of data that hold ranges of valid
+values for the various SDCA Controls. Add support for parsing these
+from ACPI.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- include/sound/sdca_function.h   |  4 ++++
- sound/soc/sdca/sdca_functions.c | 14 +++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ include/sound/sdca_function.h   | 14 ++++++++++
+ sound/soc/sdca/sdca_functions.c | 45 +++++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
 diff --git a/include/sound/sdca_function.h b/include/sound/sdca_function.h
-index 47fc1da8e4f33..a51e3a459e361 100644
+index 64043090fe76e..769ae68410647 100644
 --- a/include/sound/sdca_function.h
 +++ b/include/sound/sdca_function.h
-@@ -117,6 +117,9 @@ enum sdca_entity0_controls {
+@@ -612,6 +612,18 @@ enum sdca_access_layer {
+ 	SDCA_ACCESS_LAYER_EXTENSION			= 1 << 5,
+ };
  
++/**
++ * struct sdca_control_range - SDCA Control range table
++ * @cols: Number of columns in the range table.
++ * @rows: Number of rows in the range table.
++ * @data: Array of values contained in the range table.
++ */
++struct sdca_control_range {
++	unsigned int cols;
++	unsigned int rows;
++	u32 *data;
++};
++
  /**
-  * enum sdca_entity_type - SDCA Entity Type codes
-+ * @SDCA_ENTITY_TYPE_ENTITY_0: Entity 0, not actually from the
-+ * specification but useful internally as an Entity structure
-+ * is allocated for Entity 0, to hold Entity 0 controls.
-  * @SDCA_ENTITY_TYPE_IT: Input Terminal.
-  * @SDCA_ENTITY_TYPE_OT: Output Terminal.
-  * @SDCA_ENTITY_TYPE_MU: Mixer Unit.
-@@ -141,6 +144,7 @@ enum sdca_entity0_controls {
-  * all Entity Types not described are reserved.
-  */
- enum sdca_entity_type {
-+	SDCA_ENTITY_TYPE_ENTITY_0			= 0x00,
- 	SDCA_ENTITY_TYPE_IT				= 0x02,
- 	SDCA_ENTITY_TYPE_OT				= 0x03,
- 	SDCA_ENTITY_TYPE_MU				= 0x05,
+  * struct sdca_control - information for one SDCA Control
+  * @label: Name for the Control, from SDCA Specification v1.0, section 7.1.7.
+@@ -622,6 +634,7 @@ enum sdca_access_layer {
+  * Control.
+  * @cn_list: A bitmask showing the valid Control Numbers within this Control,
+  * Control Numbers typically represent channels.
++ * @range: Buffer describing valid range of values for the Control.
+  * @mode: Access mode of the Control.
+  * @layers: Bitmask of access layers of the Control.
+  * @deferrable: Indicates if the access to the Control can be deferred.
+@@ -637,6 +650,7 @@ struct sdca_control {
+ 	int interrupt_position;
+ 	u64 cn_list;
+ 
++	struct sdca_control_range range;
+ 	enum sdca_access_mode mode;
+ 	u8 layers;
+ 
 diff --git a/sound/soc/sdca/sdca_functions.c b/sound/soc/sdca/sdca_functions.c
-index f914ec3f86c9a..b0ca92f1bc57f 100644
+index e495ccc5b4b6f..d65b413f6d2f4 100644
 --- a/sound/soc/sdca/sdca_functions.c
 +++ b/sound/soc/sdca/sdca_functions.c
-@@ -293,7 +293,8 @@ static int find_sdca_entities(struct device *dev,
- 		return -EINVAL;
+@@ -603,6 +603,44 @@ static unsigned int find_sdca_control_bits(const struct sdca_entity *entity,
  	}
+ }
  
--	entities = devm_kcalloc(dev, num_entities, sizeof(*entities), GFP_KERNEL);
-+	/* Add 1 to make space for Entity 0 */
-+	entities = devm_kcalloc(dev, num_entities + 1, sizeof(*entities), GFP_KERNEL);
- 	if (!entities)
- 		return -ENOMEM;
- 
-@@ -331,7 +332,13 @@ static int find_sdca_entities(struct device *dev,
- 			return ret;
- 	}
- 
--	function->num_entities = num_entities;
-+	/*
-+	 * Add Entity 0 at end of the array, makes it easy to skip during
-+	 * all the Entity searches involved in creating connections.
-+	 */
-+	entities[num_entities].label = "entity0";
++static int find_sdca_control_range(struct device *dev,
++				   struct fwnode_handle *control_node,
++				   struct sdca_control_range *range)
++{
++	u8 *range_list;
++	int num_range;
++	u16 *limits;
++	int i;
 +
-+	function->num_entities = num_entities + 1;
- 	function->entities = entities;
++	num_range = fwnode_property_count_u8(control_node, "mipi-sdca-control-range");
++	if (!num_range || num_range == -EINVAL)
++		return 0;
++	else if (num_range < 0)
++		return num_range;
++
++	range_list = devm_kcalloc(dev, num_range, sizeof(*range_list), GFP_KERNEL);
++	if (!range_list)
++		return -ENOMEM;
++
++	fwnode_property_read_u8_array(control_node, "mipi-sdca-control-range",
++				      range_list, num_range);
++
++	limits = (u16 *)range_list;
++
++	range->cols = le16_to_cpu(limits[0]);
++	range->rows = le16_to_cpu(limits[1]);
++	range->data = (u32 *)&limits[2];
++
++	num_range = (num_range - (2 * sizeof(*limits))) / sizeof(*range->data);
++	if (num_range != range->cols * range->rows)
++		return -EINVAL;
++
++	for (i = 0; i < num_range; i++)
++		range->data[i] = le32_to_cpu(range->data[i]);
++
++	return 0;
++}
++
+ /*
+  * TODO: Add support for -cn- properties, allowing different channels to have
+  * different defaults etc.
+@@ -678,6 +716,13 @@ static int find_sdca_entity_control(struct device *dev, struct sdca_entity *enti
+ 		break;
+ 	}
  
- 	return 0;
-@@ -440,7 +447,8 @@ static int find_sdca_connections(struct device *dev,
- {
- 	int i;
- 
--	for (i = 0; i < function->num_entities; i++) {
-+	/* Entity 0 cannot have connections */
-+	for (i = 0; i < function->num_entities - 1; i++) {
- 		struct sdca_entity *entity = &function->entities[i];
- 		char entity_property[SDCA_PROPERTY_LENGTH];
- 		struct fwnode_handle *entity_node;
++	ret = find_sdca_control_range(dev, control_node, &control->range);
++	if (ret) {
++		dev_err(dev, "%s: control %#x: range missing: %d\n",
++			entity->label, control->sel, ret);
++		return ret;
++	}
++
+ 	ret = fwnode_property_read_u64(control_node, "mipi-sdca-control-cn-list",
+ 				       &control->cn_list);
+ 	if (ret == -EINVAL) {
 -- 
 2.39.5
 
