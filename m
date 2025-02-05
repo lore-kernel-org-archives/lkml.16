@@ -1,143 +1,98 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF50B18A6BA;
-	Wed,  5 Feb 2025 18:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CE2189BB3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780933; cv=none; b=M9vhwtrVr41Mmll+wGvv4IGc4mwXRCk296KikuNzJgJYjZpQb8clYqOOqHk/zC5mfyGV1ELsehhhZl7y/Lof96tKvu3+iHY5X3w4hNOgdONRPdCEpgQ55FBhZgWSxaV/s412FdTAhRwkaHMoSzkECM0A/+Wgs9C0r7QMY3fVNNk=
+	t=1738781122; cv=none; b=hAqoinfbqoQhHRPxmo8v/YVg8KtvqIwcxNG9HIP7INJ4m3inNDWSlv0Ba3308mDwJzYS1nFKX3beg4XRuo+rhMwb3EYUbdas3/zM53OF5G93Fo7yHWlC0/ZQTmbrQDzSQOxluW8u4z00vz2+EMTZLCcpffwKl+uO2lraxIpNWO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780933; c=relaxed/simple;
-	bh=dqGUavhijqGEyr/tlFVlIYXWChNpY0JSiLMSWCF+Hkk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=igRnJH5i/nGZzJxg0PT66vNkXPMH7VBtALkKHcAmahJ53C8TGT7ZIv41Swxk8a7jbHUPtFa82AnKojI4oxDewHw4j+LLwe5YLn55ECkIvBehNChJ2MNOrc2oYjYkFqwCxawCxkrD/HJ489fgesTQcP4oaNBXOMLCTA62uzE3Ues=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=sCjnhs6c; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1738781122; c=relaxed/simple;
+	bh=vH6VASVfSCJNTEKUEXfzEvUv2LHvkwSnu2Rht1IUPNE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=NhdWCKzSwnL1zsrTGCDR1SEupB73FzKqrtuVJF5+LLzZNJO7xet2AEVXDpcdxUBdvtZled406UCnCFhV1V169QfIYr7NbgNjhd1gBkCP/y2WjvPFbKCb/m5Ez6mDHi2IZbcIV0Vbo4eYPDzRct/Ny4Vbgzmj4ocF+dMX33z8VpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KKKc3wuo; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="sCjnhs6c"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 301611C01AF; Wed,  5 Feb 2025 19:42:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1738780922;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=W88bnLJlbAiShrhCX0Fpc30+x5SimAUGug5fBCsEMrA=;
-	b=sCjnhs6cMyIUEd4d1MKEuoyvN2usjRZlX86kJJWESWJbQ7Ke7qX6TsY+EXpdSQQe2mkYzy
-	asG14mmxCorRzuzw6FEqis+HJLWCKb50nl+gdxMjghtaIsHtoseKxxDfRvj4xbiFqxrOkk
-	gjqf8RSTFQiypOjA692sgK4jqXtldU8=
-Date: Wed, 5 Feb 2025 19:42:01 +0100
-From: Pavel Machek <pavel@ucw.cz>
-To: kernel list <linux-kernel@vger.kernel.org>, rafael@kernel.org,
-	lee@kernel.org, linux-leds@vger.kernel.org,
-	torvalds@linux-foundation.org
-Subject: MAINTAINERS: Move Pavel to kernel.org address
-Message-ID: <Z6Ow+T/uSv128wdR@duo.ucw.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KKKc3wuo"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d04b70fe79so9235ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738781120; x=1739385920; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ob6s9tYF5ZtJYStyioBs6l9IVGqgO/LxopNKg4U7Oo0=;
+        b=KKKc3wuoNk724z+5Ma/y64Cr550nFgZ04I6dn8bif8NxdBZRzYQSYGSlfCegfhXi9k
+         reCjJn++fhAS5YXXS/u4VninmC01n6CumowMNR0qGocGUt7qbbw/ahXSGXKQTRlRYrin
+         z4jmS3wIYYxljk8tjpXp+glUoG2SySKP7SjVFZtzQdIINWIykblmHkO4Ww31C9Xf8Z7m
+         fISsmNQvWJrY4yVlvctKth8gkx0RzWyv1i/TjtEdJiqO8W+0lCYE89ZdmeZaHWuKVMmm
+         4HTtFzIp7Jq6Jtyonp4j6rx8Y8KJ+3iDZXtJJ+5FEPKi2YF+ZAD2EClql22big8h5/XB
+         ZP8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738781120; x=1739385920;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ob6s9tYF5ZtJYStyioBs6l9IVGqgO/LxopNKg4U7Oo0=;
+        b=SiDyFZstek9F3P0QuRKdcZ30jEPkFfLg5jiu7EHH9uDVyL/uCil4VXcp4XGVZi4mvU
+         7yp/eb3ELOyS3PifgO0e8tuZZXDO7nmDX0H63sAMZG6OqVeTNqCSYgh7FurDnCsYqrEo
+         YN4/poP0kXVl3siXIC4e9uQWC0wzJRvOaXjfGGkFF5bpL2yABAumkcNN/xRVvztUlH0g
+         kEseaTPCeHLpP0/szcGZjsY28hMxeocNA9SP0ih433KBaCrrnge6W6tQvecvtNXNv0UY
+         vIc2rK/SScm0ZCgNvirq5muz1DH+ok32R88umoyf0eSI01upTOPNoK9RX6SvP3HQTvOQ
+         pkyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnaQQmMV0Nn4h8b2XZAuOyZNXkBvS/kiQZzb3A+mxefgRKL2Hw8oIJP/aYYt+yoa35Q7ng+sn0g3basg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK1dXwsvTCvY+mB6oHUTpp5RYaRBIHIvFRrOcC8WFgl5CLr3KK
+	YebSrPTGgiLePLwCgT3Z3/xH5dIUFlQmWUl6gNQlodhmCXt4y54iAEQrQIFlOsXAcqivWJwTUjj
+	mqW3JnbRMIhTKeaC6+RcQy++SvbPbVhZuCizv
+X-Gm-Gg: ASbGncvnuJgh6aHV7OY2SCJEo05bo3J6AvE3Nu9b5Et3btUB0foYlucnrZtJM94PjBO
+	Gv+hWv97Nh7U7/+6VNeFe0R+e3scLwCOLZbJAzAoKCnXSAawjscKZuQm47m0WkmoER4Z+5Jas
+X-Google-Smtp-Source: AGHT+IFGpBOvrq1mRFdL0+0b01B1BX5tMj/B4aJQMRqMHgjy9jiSXOeNNy8t6oCuvWF+uUYONn9I+T1DWRHyFyYMxPM=
+X-Received: by 2002:a05:6e02:1a46:b0:3a7:dea7:87a6 with SMTP id
+ e9e14a558f8ab-3d040f616a3mr8075435ab.29.1738781119660; Wed, 05 Feb 2025
+ 10:45:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IUT7SeHH6a4C2OZg"
-Content-Disposition: inline
-
-
---IUT7SeHH6a4C2OZg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250113200150.487409-1-jmattson@google.com> <20250113200150.487409-3-jmattson@google.com>
+In-Reply-To: <20250113200150.487409-3-jmattson@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Wed, 5 Feb 2025 10:45:08 -0800
+X-Gm-Features: AWEUYZmFwc9ferdftM2xHra8Onm6SJC_VwfB7SPT8T1VswTmC5UG5t4j9AxCNWw
+Message-ID: <CALMp9eRB025OAi2fpdweKr+fOAovmOKfF7XPwvf8HJKbJSvmhg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: x86: Clear pv_unhalted on all transitions to KVM_MP_STATE_RUNNABLE
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>, 
+	Gleb Natapov <gleb@redhat.com>, Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>, 
+	Suzuki Poulose <suzuki@in.ibm.com>, Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I need to filter my emails better, switch to pavel@kernel.org address
-to help with that.
-   =20
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
----
-I guess this should go through the LED tree?
+On Mon, Jan 13, 2025 at 12:02=E2=80=AFPM Jim Mattson <jmattson@google.com> =
+wrote:
+>
+> In kvm_set_mp_state(), ensure that vcpu->arch.pv.pv_unhalted is always
+> cleared on a transition to KVM_MP_STATE_RUNNABLE, so that the next HLT
+> instruction will be respected.
+>
+> The "fixes" list may be incomplete.
 
+The only commit I'm not sure of is commit 1a65105a5aba ("KVM: x86/xen:
+handle PV spinlocks slowpath"). That commit introduces an mp_state
+transition to KVM_MP_STATE_RUNNABLE  without clearing pv_unhalted, so
+perhaps it should be in the "fixes" list. OTOH, this seems to be an
+independent implementation of PV spinlocks, so maybe it's not a
+problem.
 
-diff --git a/CREDITS b/CREDITS
-index 1f9f0f078b4ae..53d11a46fd698 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -2515,11 +2515,9 @@ D: SLS distribution
- D: Initial implementation of VC's, pty's and select()
-=20
- N: Pavel Machek
--E: pavel@ucw.cz
-+E: pavel@kernel.org
- P: 4096R/92DFCE96 4FA7 9EEF FCD4 C44F C585  B8C7 C060 2241 92DF CE96
--D: Softcursor for vga, hypertech cdrom support, vcsa bugfix, nbd,
--D: sun4/330 port, capabilities for elf, speedup for rm on ext2, USB,
--D: work on suspend-to-ram/disk, killing duplicates from ioctl32,
-+D: NBD, Sun4/330 port, USB, work on suspend-to-ram/disk,
- D: Altera SoCFPGA and Nokia N900 support.
- S: Czech Republic
-=20
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e7ebcecf2b7d0..67825dbee7348 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9424,7 +9424,7 @@ F:	fs/freevxfs/
-=20
- FREEZER
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
--M:	Pavel Machek <pavel@ucw.cz>
-+M:	Pavel Machek <pavel@kernel.org>
- L:	linux-pm@vger.kernel.org
- S:	Supported
- F:	Documentation/power/freezing-of-tasks.rst
-@@ -10259,7 +10259,7 @@ F:	drivers/video/fbdev/hgafb.c
-=20
- HIBERNATION (aka Software Suspend, aka swsusp)
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
--M:	Pavel Machek <pavel@ucw.cz>
-+M:	Pavel Machek <pavel@kernel.org>
- L:	linux-pm@vger.kernel.org
- S:	Supported
- B:	https://bugzilla.kernel.org
-@@ -13130,8 +13130,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/gi=
-t/kees/linux.git for-next/har
- F:	scripts/leaking_addresses.pl
-=20
- LED SUBSYSTEM
--M:	Pavel Machek <pavel@ucw.cz>
- M:	Lee Jones <lee@kernel.org>
-+M:	Pavel Machek <pavel@kernel.org>
- L:	linux-leds@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git
-@@ -16787,7 +16787,7 @@ F:	include/linux/tick.h
- F:	kernel/time/tick*.*
-=20
- NOKIA N900 CAMERA SUPPORT (ET8EK8 SENSOR, AD5820 FOCUS)
--M:	Pavel Machek <pavel@ucw.cz>
-+M:	Pavel Machek <pavel@kernel.org>
- M:	Sakari Ailus <sakari.ailus@iki.fi>
- L:	linux-media@vger.kernel.org
- S:	Maintained
-@@ -22812,7 +22812,7 @@ F:	drivers/sh/
- SUSPEND TO RAM
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
- M:	Len Brown <len.brown@intel.com>
--M:	Pavel Machek <pavel@ucw.cz>
-+M:	Pavel Machek <pavel@kernel.org>
- L:	linux-pm@vger.kernel.org
- S:	Supported
- B:	https://bugzilla.kernel.org
-
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---IUT7SeHH6a4C2OZg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ6Ow+QAKCRAw5/Bqldv6
-8gA9AKCyf8IRcKiOrVC+p5ecK6J4UH4T1QCfcbheh91JTmeHXzeg/s49tSxySGk=
-=neio
------END PGP SIGNATURE-----
-
---IUT7SeHH6a4C2OZg--
+> Fixes: 6aef266c6e17 ("kvm hypervisor : Add a hypercall to KVM hypervisor =
+to support pv-ticketlocks")
+> Fixes: b6b8a1451fc4 ("KVM: nVMX: Rework interception of IRQs and NMIs")
+> Fixes: 38c0b192bd6d ("KVM: SVM: leave halted state on vmexit")
+> Signed-off-by: Jim Mattson <jmattson@google.com>
