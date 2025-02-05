@@ -1,115 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0371519B1;
-	Wed,  5 Feb 2025 16:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EF11519B1;
+	Wed,  5 Feb 2025 16:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771737; cv=none; b=r8cV9OkDlfOWq3A9ACc5HARcp2l7QmaUzEdL1Wr/IPu9LXnKhvAAT/KUs79vV1jpp1KGvK88So1NZ6oUdGReHrKxxavCKPgZ2gzYv4yUApEjtNdXqVXHB1kHw9cbmLtPvhtY+QgZYjW9AEaAWtazz2x1opKWE+hUbNeAomlKULg=
+	t=1738771749; cv=none; b=QCa/bbRhuyjplwIDNYWs6lAnR+3Nit7g1V4Xwu1E91R5fFW5a3z7tcBJOADubvQ4Llvcu6mjsrfiT+49400w/M5pOplmZG93i3TZBctKGnvcexA/el3aTQsb1IStTKM/2sRb8W9ervfy2XDays+a/HvDslO8v1zgcEM9Yj2eT80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771737; c=relaxed/simple;
-	bh=RhaEejtIzyjMiU/812JSoT1N/SGqGANo8ENt1YOM/Xk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gWHwDhQTC2UdEdY+uHmKWsAlYaWI++C5xP5XlIXsG57Tr/+UbO/Um0NI5qLrzPURheNVjfJ8zfjYDWwnL8VCMCpuIQixgJL3gmqJ4i7jmzUoWJIYtd9LRti/EMA49hGo84zHW8YxLn+WFWVreNEGUX0+Slew44STfHRRQ8GPFx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FygjAEt0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738771749; c=relaxed/simple;
+	bh=F8668StW9/w4a2vLVJfdRxxvvZY/qa0fTwKXNsntRnw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PihnYUzZcCKxDd3gsVXBQ98LtG70tCEZrZpFPXy1tkc6j+nAKtacfrI7eOSq8TVffgDmRhopibVdr5gr1IhBt0Ulb6421ACXnyuVfyivcxVFLP6PqYekX8PVpa/YWh8tOv+5phQJnwmhhbBbWYK9LnnKhvVoaHwTfdDn0+JUnD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=hJP9OMaE; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FygjAEt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA43BC4CEE3;
-	Wed,  5 Feb 2025 16:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738771736;
-	bh=RhaEejtIzyjMiU/812JSoT1N/SGqGANo8ENt1YOM/Xk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FygjAEt0ry4lE7T+mHKzgy+PS2QyM0UGOgLc3XWotiPUJ6DKPsh1Ar/CjR8aX94WY
-	 HWlzh3c2/P//PLuIQCX5kYsLmHpMA4hCErpB3ZmbSGCVoynRamAoGxPf+bVZEm/hFp
-	 cyajelxdmY0wFIT0/EZhp+RMGzPRxBifrlxMToe2eCIMRwU1ImK8hjjLi9CiG4t3RE
-	 wB0NubMl/06hMuYLMprZxBCg/+rAucdM7w18R7NNOC0B4JrbAuYEdTPe/RMY5bkMgQ
-	 RfcheSuuAjTiqAah4jXEP1ff0M1Qv7IKPJtzIOMnsYNYbvrphpNW/mt/shQX928DSs
-	 Sr2hlfeTPeXTw==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53e3a37ae07so7798313e87.3;
-        Wed, 05 Feb 2025 08:08:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWx0nMhlgg6b4JcT/FzsUx3ODTXbeBHNzieaePmm0GxeB5g/vz7Dl4NyzjYlingkf3OFwEejk7x9RBx@vger.kernel.org, AJvYcCX9VTxy4ni0UN7TMOm30WvSYbzr7o5q6qEAojN0PeucRCERMdYAUKMREOAVBE1BhsKD85Ps+zGwcKuyFN73xw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxR7dwoHo8WMAYDfsTgcs2mJXHaqhBhxzEGkBdqFYUoH5CFBru
-	bBraZQM80ktd2THYTj33pDuPABdcwqduVJlkiwGKg7ZM6hKNZta7wyXTe6QRcsbnrAQVigzJecV
-	DIlAv8Uy3TGCN6+apGy2K8Feoxy8=
-X-Google-Smtp-Source: AGHT+IGA5C7LqMJRIR+zc6GD2Sn7Ir0KtIousGtQnb5kwILD1qf2m4XzchrOh1RNRT1+NdhlZv6y0ohGziqKehNek7U=
-X-Received: by 2002:a05:6512:ac6:b0:53e:395c:688e with SMTP id
- 2adb3069b0e04-544059fd068mr1177110e87.10.1738771735305; Wed, 05 Feb 2025
- 08:08:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="hJP9OMaE"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5156Lall024527;
+	Wed, 5 Feb 2025 10:08:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=UUzPVgCpajggfKVM
+	dv9jNuQ4lruaM+EuO+bTxw7gNlI=; b=hJP9OMaEjQBaOuU5P6jdWOamzy/d1rHH
+	Qul6t6bbB+PS/HySHXaluk/0fr0uYjb4WRmAIDFO+5JRwKpWbFkYckSsebUqmoo6
+	GtOIBBzREwL/gtc9/iEPzYlRU1gR82lUoGbN9ol+CCXC6F8HbDVVEQ9Wb2qHios8
+	UXK/ryUkEFBHI+Qrp/201gC9i2vKUy/gxYSLXZsoIM8DpTRvT2Nk17Hdk10lAfY2
+	xmFqdg9i6p0drBpDGsEfPIMAgpxzS4WK3Fl96XSmOYYiuii9vfbWM8j4qT9eHvSm
+	PVmzb8R/tMlwTBCs5DPBQ0zwwllJtmmaX2WPVqt/ugQInuuWHF23lg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44hhw54pqr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 10:08:54 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Feb
+ 2025 16:08:52 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Wed, 5 Feb 2025 16:08:52 +0000
+Received: from lonswws03.ad.cirrus.com (lonswws03.ad.cirrus.com [198.90.188.34])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 1DD84820248;
+	Wed,  5 Feb 2025 16:08:52 +0000 (UTC)
+From: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+To: Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>
+CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        Vitaly Rodionov
+	<vitalyr@opensource.cirrus.com>
+Subject: [PATCH] ASoC: arizona/madera: use fsleep() in up/down DAPM event delays.
+Date: Wed, 5 Feb 2025 16:08:46 +0000
+Message-ID: <20250205160849.500306-1-vitalyr@opensource.cirrus.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201185143.1745708-1-masahiroy@kernel.org>
-In-Reply-To: <20250201185143.1745708-1-masahiroy@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 6 Feb 2025 01:08:18 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASFyJL8UOfFXxFcaoSNavkxf1dfShUZGF=pgbRYOARctA@mail.gmail.com>
-X-Gm-Features: AWEUYZl1pzD30d8udCUuys8oj8GOyX6D1JtItfiOeZYh7qXhqeHJY7Wb_RTqrPQ
-Message-ID: <CAK7LNASFyJL8UOfFXxFcaoSNavkxf1dfShUZGF=pgbRYOARctA@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: keep symbols for symbol_get() even with CONFIG_TRIM_UNUSED_KSYMS
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, linux-arch@vger.kernel.org, 
-	linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: C0djC6pTA-orCrzm0sCvAivmT_sJvqXP
+X-Authority-Analysis: v=2.4 cv=W/3CVQWk c=1 sm=1 tr=0 ts=67a38d16 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=Rk8IO1C96jJ1JY0G4JwA:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: C0djC6pTA-orCrzm0sCvAivmT_sJvqXP
+X-Proofpoint-Spam-Reason: safe
 
-On Sun, Feb 2, 2025 at 3:51=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.or=
-g> wrote:
->
-> Linus observed that the symbol_request(utf8_data_table) call fails when
-> CONFIG_UNICODE=3Dy and CONFIG_TRIM_UNUSED_KSYMS=3Dy.
->
-> symbol_get() relies on the symbol data being present in the ksymtab for
-> symbol lookups. However, EXPORT_SYMBOL_GPL(utf8_data_table) is dropped
-> due to CONFIG_TRIM_UNUSED_KSYMS, as no module references it in this case.
->
-> Probably, this has been broken since commit dbacb0ef670d ("kconfig option
-> for TRIM_UNUSED_KSYMS").
->
-> This commit addresses the issue by leveraging modpost. Symbol names
-> passed to symbol_get() are recorded in the special .no_trim_symbol
-> section, which is then parsed by modpost to forcibly keep such symbols.
-> The .no_trim_symbol section is discarded by the linker scripts, so there
-> is no impact on the size of the final vmlinux or modules.
->
-> This commit cannot resolve the issue for direct calls to __symbol_get()
-> because the symbol name is not known at compile-time.
->
-> Although symbol_get() may eventually be deprecated, this workaround
-> should be good enough meanwhile.
->
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> Changes in v3:
->  - More precise check in case symbol_get() is called from a module
->
-> Changes in v2:
->  - Call keep_no_trim_symbols() for modules as well.
->    EXPORT_SYMBOL() may disppear if symbol_get() calls a symbol
->    within this same module.
->
->  include/asm-generic/vmlinux.lds.h |  1 +
->  include/linux/module.h            |  5 ++++-
->  scripts/mod/modpost.c             | 35 +++++++++++++++++++++++++++++++
->  scripts/mod/modpost.h             |  6 ++++++
->  scripts/module.lds.S              |  1 +
->  5 files changed, 47 insertions(+), 1 deletion(-)
->
+Using `fsleep` instead of `msleep` resolves some customer complaints
+regarding the precision of up/down DAPM event timing. `fsleep()`
+automatically selects the appropriate sleep function, making the delay
+time more predictable.
 
-Applied to linux-kbuild/fixes.
+Signed-off-by: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+---
+ sound/soc/codecs/arizona.c | 14 +++++++-------
+ sound/soc/codecs/madera.c  | 10 +++++-----
+ sound/soc/codecs/wm5110.c  |  8 ++++----
+ 3 files changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
+index 402b9a2ff024..68cdb1027d0c 100644
+--- a/sound/soc/codecs/arizona.c
++++ b/sound/soc/codecs/arizona.c
+@@ -967,7 +967,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 		case ARIZONA_OUT3L_ENA_SHIFT:
+ 		case ARIZONA_OUT3R_ENA_SHIFT:
+ 			priv->out_up_pending++;
+-			priv->out_up_delay += 17;
++			priv->out_up_delay += 17000;
+ 			break;
+ 		case ARIZONA_OUT4L_ENA_SHIFT:
+ 		case ARIZONA_OUT4R_ENA_SHIFT:
+@@ -977,7 +977,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 			case WM8997:
+ 				break;
+ 			default:
+-				priv->out_up_delay += 10;
++				priv->out_up_delay += 10000;
+ 				break;
+ 			}
+ 			break;
+@@ -999,7 +999,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 			if (!priv->out_up_pending && priv->out_up_delay) {
+ 				dev_dbg(component->dev, "Power up delay: %d\n",
+ 					priv->out_up_delay);
+-				msleep(priv->out_up_delay);
++				fsleep(priv->out_up_delay);
+ 				priv->out_up_delay = 0;
+ 			}
+ 			break;
+@@ -1017,7 +1017,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 		case ARIZONA_OUT3L_ENA_SHIFT:
+ 		case ARIZONA_OUT3R_ENA_SHIFT:
+ 			priv->out_down_pending++;
+-			priv->out_down_delay++;
++			priv->out_down_delay += 1000;
+ 			break;
+ 		case ARIZONA_OUT4L_ENA_SHIFT:
+ 		case ARIZONA_OUT4R_ENA_SHIFT:
+@@ -1028,10 +1028,10 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 				break;
+ 			case WM8998:
+ 			case WM1814:
+-				priv->out_down_delay += 5;
++				priv->out_down_delay += 5000;
+ 				break;
+ 			default:
+-				priv->out_down_delay++;
++				priv->out_down_delay += 1000;
+ 				break;
+ 			}
+ 			break;
+@@ -1053,7 +1053,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 			if (!priv->out_down_pending && priv->out_down_delay) {
+ 				dev_dbg(component->dev, "Power down delay: %d\n",
+ 					priv->out_down_delay);
+-				msleep(priv->out_down_delay);
++				fsleep(priv->out_down_delay);
+ 				priv->out_down_delay = 0;
+ 			}
+ 			break;
+diff --git a/sound/soc/codecs/madera.c b/sound/soc/codecs/madera.c
+index a840a2eb92b9..af109761f359 100644
+--- a/sound/soc/codecs/madera.c
++++ b/sound/soc/codecs/madera.c
+@@ -2323,10 +2323,10 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 	case CS42L92:
+ 	case CS47L92:
+ 	case CS47L93:
+-		out_up_delay = 6;
++		out_up_delay = 6000;
+ 		break;
+ 	default:
+-		out_up_delay = 17;
++		out_up_delay = 17000;
+ 		break;
+ 	}
+ 
+@@ -2357,7 +2357,7 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 		case MADERA_OUT3R_ENA_SHIFT:
+ 			priv->out_up_pending--;
+ 			if (!priv->out_up_pending) {
+-				msleep(priv->out_up_delay);
++				fsleep(priv->out_up_delay);
+ 				priv->out_up_delay = 0;
+ 			}
+ 			break;
+@@ -2376,7 +2376,7 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 		case MADERA_OUT3L_ENA_SHIFT:
+ 		case MADERA_OUT3R_ENA_SHIFT:
+ 			priv->out_down_pending++;
+-			priv->out_down_delay++;
++			priv->out_down_delay += 1000;
+ 			break;
+ 		default:
+ 			break;
+@@ -2393,7 +2393,7 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 		case MADERA_OUT3R_ENA_SHIFT:
+ 			priv->out_down_pending--;
+ 			if (!priv->out_down_pending) {
+-				msleep(priv->out_down_delay);
++				fsleep(priv->out_down_delay);
+ 				priv->out_down_delay = 0;
+ 			}
+ 			break;
+diff --git a/sound/soc/codecs/wm5110.c b/sound/soc/codecs/wm5110.c
+index 502196253d42..64eee0d2347d 100644
+--- a/sound/soc/codecs/wm5110.c
++++ b/sound/soc/codecs/wm5110.c
+@@ -302,7 +302,7 @@ static int wm5110_hp_pre_enable(struct snd_soc_dapm_widget *w)
+ 		} else {
+ 			wseq = wm5110_no_dre_left_enable;
+ 			nregs = ARRAY_SIZE(wm5110_no_dre_left_enable);
+-			priv->out_up_delay += 10;
++			priv->out_up_delay += 10000;
+ 		}
+ 		break;
+ 	case ARIZONA_OUT1R_ENA_SHIFT:
+@@ -312,7 +312,7 @@ static int wm5110_hp_pre_enable(struct snd_soc_dapm_widget *w)
+ 		} else {
+ 			wseq = wm5110_no_dre_right_enable;
+ 			nregs = ARRAY_SIZE(wm5110_no_dre_right_enable);
+-			priv->out_up_delay += 10;
++			priv->out_up_delay += 10000;
+ 		}
+ 		break;
+ 	default:
+@@ -338,7 +338,7 @@ static int wm5110_hp_pre_disable(struct snd_soc_dapm_widget *w)
+ 			snd_soc_component_update_bits(component,
+ 						      ARIZONA_SPARE_TRIGGERS,
+ 						      ARIZONA_WS_TRG1, 0);
+-			priv->out_down_delay += 27;
++			priv->out_down_delay += 27000;
+ 		}
+ 		break;
+ 	case ARIZONA_OUT1R_ENA_SHIFT:
+@@ -350,7 +350,7 @@ static int wm5110_hp_pre_disable(struct snd_soc_dapm_widget *w)
+ 			snd_soc_component_update_bits(component,
+ 						      ARIZONA_SPARE_TRIGGERS,
+ 						      ARIZONA_WS_TRG2, 0);
+-			priv->out_down_delay += 27;
++			priv->out_down_delay += 27000;
+ 		}
+ 		break;
+ 	default:
+-- 
+2.43.0
 
-
---=20
-Best Regards
-Masahiro Yamada
