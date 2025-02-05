@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D685222F17F;
-	Wed,  5 Feb 2025 12:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2488222D4D5;
+	Wed,  5 Feb 2025 12:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759475; cv=none; b=nzj0QtMq1K7AGmzkHGt13hlceORD1o9rqw9p/qRyTP07ljswFwPBzrj06rWZ+poV3Eyoh1d9Y/O6cIhlF3G+d/CXF815PU2p5n2nIMXzfHgewGJbM+dFJxZSnZgvgH+XYYZoKNQdXzk/3/uyJBZ8Ub+4e9JZ22jD4qk2TIH353Y=
+	t=1738759488; cv=none; b=BEup/b6nKpQk1BxBAdf8Llhy4eyTbzBkGTgycNZtPmLTzwGBdZh/mPFjo+IYU4j65WPMkrVuMKP+uLC50M8uSVcbyn5Qd9vfMPrwwZ5/4Gh8YxlXjSIubI9eAWdU+7m3ukp9sFt+UUX0NG1kHBZjfPpuHKuWlysg6US7Dc4RvNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759475; c=relaxed/simple;
-	bh=BKicQvUmuXjDNbRZxUNlJ8r+EcHKaqqCQZUX4SaRzuA=;
+	s=arc-20240116; t=1738759488; c=relaxed/simple;
+	bh=WjOWuwc31YAtptEAw9A+7e2wI1Rg1m7tf432kIXNr2M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=XPrzi2J92PhwEJ8s5UJMJI/6aa7zuYgQcd6rRDsB6s5b3Y7fIbgwdAexAJGQJphCA0uLxZO12bMULNXL/m++hKONuMTfEX3dDdvibDCh84dzGaaw+61IUz/6CYA7mKIkpJqK4hSfE4wCzSDVxIN5dmXjFWsCLdeZcaJBK7qrUo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjYjSZvw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=JnsCRHASRz//H32u3kyuGc/TQRPTHafbk5wLOJ7Ocw+m6wiY3y3RkKEGnGoZaWlpTAsc50EfklEuQDiD0QHOkkKuuNyEJV7m7r6dUNBMhWuAEMM01IjINmH8RwaKgeEg/TyrPWl+6jSXaNkarKTE1EANerE9hVSv8MHR/6TZTyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/2y+5Pb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjYjSZvw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93B4BC4CEE2;
-	Wed,  5 Feb 2025 12:44:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/2y+5Pb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 217F1C4CEE3;
+	Wed,  5 Feb 2025 12:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738759475;
-	bh=BKicQvUmuXjDNbRZxUNlJ8r+EcHKaqqCQZUX4SaRzuA=;
+	s=k20201202; t=1738759487;
+	bh=WjOWuwc31YAtptEAw9A+7e2wI1Rg1m7tf432kIXNr2M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=IjYjSZvwELSQpD5fB7WkqjYVoxJq4rM1/k43Ug4L7RVYc8tveaU3L2TBDc/fdHgaI
-	 qnUoeGvd/JwyW+FcHFNFKluby6U/yZP2HSsp/sTT96hMRvdEVcnPdQBBGVAWpE7RWl
-	 VH3L02IuUR+P6PXu9O60xRnhSBwuurZ1MJKOEeXbHXk1vB0FQ23e498CuVggoISxWc
-	 jUhCuNFw4F1zwCEql9Up5sji8o8iG9WdiwnPItFGlMBr3si2cT+1614uklRtIzzfPL
-	 jhbLmnMUaiK5lMnKe8Z8wjnaPOjB9cXYXpsCDWrEcLBQQvDrNjyBGFsikae59SB1BS
-	 oSdWN6fJ8roBw==
+	b=L/2y+5Pb3U2QLXrnI6glT2NEJ3qTFmWNgyGPbk5I8w8Z6TPjkZQAssidNpDtTlhVA
+	 DSxHZbnAyukWeIx+QJbBAEHaPrTjtwP6pnO2WdLKOzJXa2++nmNcAwKqGZjgmY8Rrm
+	 jf0hgtDcjgbiC9h9DV/UrIgeH+dR4qXMnUdxSOCgrPC4oVIDR7+OvrIJpYp68YNXeD
+	 TyzP/dO0xBERzxvw5bbQ0QYQzBEiRxqDUwYnsTSTtc5PWQsLmh4nsdlbiJNjPQW4/E
+	 WFPYtb9XLM4H7jyCaq9Yob6ewPLGmdivdovAU9WnsXm8y10yOVrbJXl/rj5POPLsVJ
+	 TFL74Q2GfS6Lw==
 From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
- linux@treblig.org
-Cc: linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250201005021.447726-1-linux@treblig.org>
-References: <20250201005021.447726-1-linux@treblig.org>
-Subject: Re: [PATCH] ASoC: mediatek: Remove unused mtk_memif_set_rate
-Message-Id: <173875947335.32457.7286096499117133517.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 12:44:33 +0000
+To: linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Daniel Mack <daniel@zonque.org>, 
+ Haojian Zhuang <haojian.zhuang@gmail.com>, 
+ Robert Jarzmik <robert.jarzmik@free.fr>, Mark Lord <mlord@pobox.com>
+In-Reply-To: <20250204174506.149978-1-andriy.shevchenko@linux.intel.com>
+References: <20250204174506.149978-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] spi: pxa2xx: Fix regression when toggling chip
+ select on LPSS devices
+Message-Id: <173875948587.32625.7550036600044619684.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 12:44:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,25 +49,24 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Sat, 01 Feb 2025 00:50:21 +0000, linux@treblig.org wrote:
-> mtk_memif_set_rate() has been unused since it was added in the 2019
-> commit 9cdf85a19b3a ("ASoC: mediatek: common: add some helpers to control
-> mtk_memif")
+On Tue, 04 Feb 2025 19:45:06 +0200, Andy Shevchenko wrote:
+> The commit 78b435c9044a ("spi: pxa2xx: Introduce __lpss_ssp_update_priv()
+> helper") broke speaker output on my ASUS UX5304MA laptop. The problem is
+> in inverted value that got written in the private register.
 > 
-> Remove it.
+> Simple bug, simple fix.
 > 
-> (The _substream version is used, and is left in)
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] ASoC: mediatek: Remove unused mtk_memif_set_rate
-      commit: c9e9aa80022c6db71bc097a621a6145f39aa0ade
+[1/1] spi: pxa2xx: Fix regression when toggling chip select on LPSS devices
+      commit: aff2355d260e47e780cd96af127beaab18a664b1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
