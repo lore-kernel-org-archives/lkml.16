@@ -1,217 +1,112 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9F220D51F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F53120D51F;
+	Wed,  5 Feb 2025 02:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738721836; cv=none; b=sMyto1syljogQ2C7Lg/B3+jp3YQICmMpHK4yUwcdoBB6SAN6FmbzVWlo4iJDrz9X/KpEUmKvQnxHG4W/7xmTCYkeqFxb45nJAV9v7UjHROkRBUvHa7dxa6m2U8z0N5gjREwDzKZ0xFlP7OSJ555M5uUlWf1Te7JkNoscwQa8MAM=
+	t=1738721926; cv=none; b=Uuei1kU5NAykcJPjJT5Gqfdae+LMrXe5vUFUS8tsQKN1XaxRNa3i++63HWtyyGm/S3NxJPwL1PbBVe+I2mEoYM1WvXnOzxkwdxvEOGCHxHzJrkfmJY7oECiuWp49XtdxXvdmwgMv4365r8fhAcWFKOJsnYOKxdNhmRqNDo8e9rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738721836; c=relaxed/simple;
-	bh=CPlLUYXLI0IgQ1H+q1v8VNFC/v8ZG5uQkGMq9h6f9tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oaVVKMcZwDLq0vm1AULkis7Hog6xilg8s1wi/wGlk/rcNkrZBcUdY1pxFwjWnvT79P6YVp/KPK82GnrAQmqCy689xflJYRIUeMiRGIcJp9asa0AnhXj3v9Ae73TDdt8AXAez/eUCxLNQF4sbBA1IZEH2r4Ccd3IDWY8M1N6fhO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Wog+RfI2; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738721926; c=relaxed/simple;
+	bh=qUuT77iTdaXvCS87a5KrQ3Pbb0JYPN+p43d3YwVVnZM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mwl316RuT3SOLk6U5JsfZSWWWtahNxQGvDn4u0TDOotzSmB4sAmrpcQJDrrekbaNyvJ58XrNPflGrSeKOJ+VSyudcgSE3B2dpRTPLElaZQgBHFgQyIGTHRz3qgg4Lm0Q2NmeYp9pps8G4pK1npEKpupJ63mo4k05lTz9dF8mojA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=hxBgZqX2; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Wog+RfI2"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e4295b72b5so14011806d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 18:17:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738721833; x=1739326633; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gQ4wMumQZupZLc/dhljQZvdj84cqZT9CeaohEOD51F8=;
-        b=Wog+RfI2ROXqxVW4hl/py6mW+e/CIBrOu23kIytFdw9QbX7xFmxLEDGuWkuCMdOMLX
-         wHvc2P8kHqGCMfVnHfEHOqna0RKceYQLMN9el3qDaY6Pq2soPzZf0O3aUlUfbO0mhxND
-         40tnLWpDxl9bU500e8d+T2uC275RpP2qsAbNrA3SyKKXp7Uwk/8RKge6GYDopWKRQ1xd
-         dBefFlYbUGEuhw3E73/jRu/dPfsAXzzUyedmCm2j6XMVtKTOexfTOynjzoLV1C4Hh9v0
-         JD8eL36XtOQR3ruUXU4ATgddjeEy3l/+ATMVxlLQqCuOYuHsrscd/zcm4lgaZLs/ZvnH
-         ZDIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738721833; x=1739326633;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gQ4wMumQZupZLc/dhljQZvdj84cqZT9CeaohEOD51F8=;
-        b=FK23kD+Ple8vdmdSBT2vBzZocL5ENwFW+8nHKZCkp6QMyPm++VPzUmdmGd9/qoc429
-         2Qb8wCdrkNboqps+9r9/7buFHr7T+b9mI+DrBkMH0qXS4Tpr5dKTLZv+0DtNLfquwkNZ
-         UPh/Lwy4Ljs9mh+eoltcsDGFRw2Tu9sBq5caZ7uqJa9hUedoaSop5LfZ2mQpp2KOfsZR
-         KCJ4B/0LwW8Vmdp4tMJq/MhzSi+A5llXsTiv/Mp+9iX72FILiSRFJeX+69X/lHHV4Wkr
-         aB2UyUUzt1/R4LUQH2MoNVudpBUIYnrGFwUVl4NWsTQOz4Q0T2qIcLvUyJeJ/9GTRE2O
-         Su3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXLHwLcXifbnO5KyaZhPgbQw9FPnrzM4TBgPRFTYzH6F/2ed+bRlLC7iL3VCptncuVDmm5Fh1Dc3kwUZKs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP5Ht43QeQMhQ2PFrNksn3QAZPsjLxpZ4gvZEOKLJbaFAzChFx
-	+OR0fnXVJ6Qpn7pu9/zygTzmpSZmmVRQidWFxC5zBv5DOmmT3T6ONG/i08Bq3PU=
-X-Gm-Gg: ASbGncurkLdtX+YGqeUiwDgJebmUPamkcg9lTWoRNRM5dcQtrv/oZjG7ZD24x2/40OL
-	NwrVyZ6cGfsrZoZz5EoEfuun5R/df0livkR9bvT3btttzk5DB1XYaXSAuYnnsJMCeuApspUEmY3
-	J3bRAyT9HOk8/3/jcK/tbfr26INyMahWRR92VagvLzyfU2ppomzjf2bd9oVE3eAwOSXoVD5mKeG
-	DxNpBelwY3JBaV+QpXfEbvMQl7Q592Bqxur9gfXYyxrBLQnYL6fy0M9+kSVyQg7GAtul6KWN4R3
-	cRPL3/niyGzn03l/mSW+2rSIG58YN7Fi9FmLVSuxfrFN6EAchRWra6u2A+0qfDvk77yqInPMNw=
-	=
-X-Google-Smtp-Source: AGHT+IGcCYeEGXr7ma2IdlwziuxtLLKn8PauDO/TRhblgjJ2/h/K5GKeyVVeyaZAXnakq4YCgficbw==
-X-Received: by 2002:ad4:5f45:0:b0:6e4:227b:c2b0 with SMTP id 6a1803df08f44-6e42fbef82cmr19007526d6.22.1738721832796;
-        Tue, 04 Feb 2025 18:17:12 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814007sm68655186d6.34.2025.02.04.18.17.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 18:17:11 -0800 (PST)
-Date: Tue, 4 Feb 2025 21:17:09 -0500
-From: Gregory Price <gourry@gourry.net>
-To: lsf-pc@lists.linux-foundation.org
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early Boot
-Message-ID: <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="hxBgZqX2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=+Yfw3YYmQ42RTILNlusHnxgsov7m4pIrTmZuZQJm8vg=; b=hxBgZqX2iUarOki1
+	7a8QWu65p+dX7+GDq0vp/w+ZILVpp2qBdA4nku4KqP6VOUBSh25RpghyzVjLwthCB6wnX0IfLOaZZ
+	Tb7v46rnlaxD3Zkj06Tl36F9Z4m7cGRWkHlYLPMH9wCcc5H46+A30QxA9MGrb4ACZcL3/2b5hPKT1
+	CQ5Lbt12GaQAnS8zifoKCZabue0jwxQ1CGhT882CaG7MMhlJuur1tYXiaCNl0VrOW828L4F1BpRr1
+	1nW4O+bfn4qJiZZpSNkUA1jv2YvvqGR+mldSsH7DlFWMKkIeJNqVu9i+ixJdbsIqVeWhT0EMEQ/Qp
+	MP9g3vWWbjQYHSaeRw==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tfUzr-00De3m-20;
+	Wed, 05 Feb 2025 02:18:35 +0000
+From: linux@treblig.org
+To: mchehab@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com
+Cc: linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] media: platform: mtk-mdp3: Remove unused mdp_get_plat_device
+Date: Wed,  5 Feb 2025 02:18:34 +0000
+Message-ID: <20250205021834.497105-1-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+Content-Transfer-Encoding: 8bit
 
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Tossing this out as larger documentation of these steps for comment,
-not as a representation of what will show up in the talk.
+mdp_get_plat_device() was added in 2022 as part of
+commit 61890ccaefaf ("media: platform: mtk-mdp3: add MediaTek MDP3
+driver")
+but has remained unused.
 
-This is trying to cover the minimum needed information to start
-reasoning about the growing complexity of configurations.
+Remove it.
 
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ .../platform/mediatek/mdp3/mtk-mdp3-cmdq.h    |  2 --
+ .../platform/mediatek/mdp3/mtk-mdp3-core.c    | 19 -------------------
+ 2 files changed, 21 deletions(-)
 
-Platform / BIOS / EFI Configuraiton
-===================================
----------------------------------------
-Step 1: BIOS-time hardware programming.
----------------------------------------
+diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h
+index 935ae9825728..222611e03a06 100644
+--- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h
++++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.h
+@@ -12,8 +12,6 @@
+ #include <linux/soc/mediatek/mtk-cmdq.h>
+ #include "mtk-img-ipi.h"
+ 
+-struct platform_device *mdp_get_plat_device(struct platform_device *pdev);
+-
+ struct mdp_cmdq_param {
+ 	struct img_config *config;
+ 	struct img_ipi_frameparam *param;
+diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+index f571f561f070..8de2c8e4d333 100644
+--- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
++++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+@@ -79,25 +79,6 @@ static struct platform_device *__get_pdev_by_id(struct platform_device *pdev,
+ 	return mdp_pdev;
+ }
+ 
+-struct platform_device *mdp_get_plat_device(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct device_node *mdp_node;
+-	struct platform_device *mdp_pdev;
+-
+-	mdp_node = of_parse_phandle(dev->of_node, MDP_PHANDLE_NAME, 0);
+-	if (!mdp_node) {
+-		dev_err(dev, "can't get node %s\n", MDP_PHANDLE_NAME);
+-		return NULL;
+-	}
+-
+-	mdp_pdev = of_find_device_by_node(mdp_node);
+-	of_node_put(mdp_node);
+-
+-	return mdp_pdev;
+-}
+-EXPORT_SYMBOL_GPL(mdp_get_plat_device);
+-
+ int mdp_vpu_get_locked(struct mdp_dev *mdp)
+ {
+ 	int ret = 0;
+-- 
+2.48.1
 
-I don't want to focus on platform specifics, so really all you need
-to know about this phase for the purpose of MM is that platforms may
-program the CXL device heirarchy and lock the configuration.
-
-In practice it means you probably can't reconfigure things after boot
-without doing major teardowns of the devices and resetting them -
-assuming the platform doesn't have major quirks that prevent this.
-
-This has implications for Hotplug, Interleave, and RAS, but we'll
-cover those explicitly elsewhere. Otherwise, if something gets mucked
-up at this stage - complain to your platform / hardware vendor.
-
-
-------------------------------------------------------------------
-Step 2: BIOS / EFI generates the CEDT (CXL Early Detection Table).
-------------------------------------------------------------------
-
-This table is responsible for reporting each "CXL Host Bridge" and
-"CXL Fixed Memory Window" present at boot - which enables early boot
-software to manage those devices and the memory capacity presented
-by those devices.
-
-Example CEDT Entries (truncated) 
-         Subtable Type : 00 [CXL Host Bridge Structure]
-              Reserved : 00
-                Length : 0020
-Associated host bridge : 00000005
-
-         Subtable Type : 01 [CXL Fixed Memory Window Structure]
-              Reserved : 00
-                Length : 002C
-              Reserved : 00000000
-   Window base address : 000000C050000000
-           Window size : 0000003CA0000000
-
-If this memory is NOT marked "Special Purpose" by BIOS (next section),
-you should find a matching entry EFI Memory Map and /proc/iomem
-
-BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] usable
-/proc/iomem: c050000000-fcefffffff : System RAM
-
-
-Observation: This memory is treated as 100% normal System RAM
-
-   1) This memory may be placed in any zone (ZONE_NORMAL, typically)
-   2) The kernel may use this memory for arbitrary allocations
-   4) The driver still enumerates CXL devices and memory regions, but
-   3) The CXL driver CANNOT manage this memory (as of today)
-      (Caveat: *some* RAS features may still work, possibly)
-
-This creates an nuanced management state.
-
-The memory is online by default and completely usable, AND the driver
-appears to be managing the devices - BUT the memory resources and the
-management structure are fundamentally separate.
-   1) CXL Driver manages CXL features
-   2) Non-CXL SystemRAM mechanisms surface the memory to allocators.
-
-
----------------------------------------------------------------
-Step 3: EFI_MEMORY_SP - Deferring Management to the CXL Driver.
----------------------------------------------------------------
-
-Assuming you DON'T want CXL memory to default to SystemRAM and prefer
-NOT to have your kernel allocate arbitrary resources on CXL, you
-probably want to defer managing these memory regions to the CXL driver.
-
-The mechanism for is setting EFI_MEMORY_SP bit on CXL memory in BIOS.
-This will mark the memory "Special Purpose".
-
-Doing this will result in your memory being marked "Soft Reserved" on
-x86 and ARM (presently unknown on other architectures).
-
-You will see Memory Map and iomem entries like so:
-
-BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] soft reserved
-/proc/iomem: c050000000-fcefffffff : Soft Reserved
-
-Unless of course:
-  1) CONFIG_EFI_SOFT_RESERVE=n in your build config, or
-  2) You set the nosoftreserve boot parameter
-  3) You kexec'd from a kernel where conditions #1 or #2 are met
-
-In which case you'll get SystemRAM as if EFI_MEMORY_SP was never set.
-(#3 was fun to debug, for some definition of fun. Ask me over coffee)
-
-------------------------------------------------------------
-First bit of nuanced complexity: Early-Boot Resource Re-use.
-------------------------------------------------------------
-How are MemoryMap resources managed by a driver after being reserved
-during early boot? Example: Hot-(un)plugging a device.
-
-What if we replace said Hot-unplugged device with a device with a new
-capacity?  What if the arch/platform code combines two adjacent
-regions with similar attributes before creating resources?
-
-Recent work by Nathan Fontenot [1] has been looking to try to address
-some of the issues with these Soft Reserved resources and either re-using them
-or handing them off entirely to the relative driver for management.
-
-[1] https://lore.kernel.org/linux-cxl/cover.1737046620.git.nathan.fontenot@amd.com/
-
-
---------------------------------------------------------------------
-The Complexity story up til now (what's likely to show up in slides)
---------------------------------------------------------------------
-
-Platform and BIOS:
-   May configure all the devices prior to kernel hand-off.
-   May or may not support reconfiguring / hotplug.
-BIOS and EFI:
-   EFI_MEMORY_SP              - used to defer management to drivers
-Kernel Build and Boot:
-   CONFIG_EFI_SOFT_RESERVE=n  - Will always result in CXL as SystemRAM
-   nosoftreserve              - Will always result in CXL as SystemRAM
-   kexec                      - SystemRAM configs carry over to target
-
-
---------------------------------------------------------------------
-Next Up:
-   Driver Management - Decoders, HPA/SPA, DAX, and RAS.
-   Memory (Block) Hotplug - Zones, Auto-Online, and User Policy.
-   RAS - Poison, MCE, and why you probably want CXL=ZONE_MOVABLE.
-   Interleave - RAS and Region Management (Hotplug-ability) 
-
-~Gregory
