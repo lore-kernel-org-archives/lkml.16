@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8466322A7EB;
-	Wed,  5 Feb 2025 08:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDF722A808;
+	Wed,  5 Feb 2025 08:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738745149; cv=none; b=qi/S7d395sH1IiRtqWnQbN7zrzcZokC5PDUw1cPBNXJIh6rmIxlSF60zkwTwA9UU4+lNHq2WdJrUg+y0sXaFnbX45S5VfyW9S7g/cPX4amQZeiyYvBSkdWQ7+nVPCggGfxbKl0egg1lCs+EA2FeX+TYXx82V+Y0jGbk0q1ikCE4=
+	t=1738745150; cv=none; b=P5lkgZ3tqjPcL8YTyDSxZMWJdciZ5CDgP9btZjFUMONv3ucpPCLQCvmPLw3muRyzXu7PqTSM12a1xYxtYtPRvTfcacTjr+MdyyVYY3R25PRZr7LmjLOUfRtfi6c/BXbTT0vj2sV8CBaMdNsX4T9xnp6UHKgLPRfrPc43sHtoIz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738745149; c=relaxed/simple;
-	bh=rgmme76n2CzNqkUCcP3NAi7yfETqH2iSYt1NYJV6DOg=;
+	s=arc-20240116; t=1738745150; c=relaxed/simple;
+	bh=XaDojdOvoqQ7CAcueK4U7yvXajn4LVmB3q1XG0Qjneg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nb77nuszpFsbOkcyYl8aXY7OyuzpGStgEJGXSR9MXwMd1cm6e1NneGmUcTGWkuj1aRmbwNeAcCWMYOGUI+/k/hoX8RLZhPIdTHmsj9DOy/uMewK3V778c/TZYWnicghGlCKYGLGgOWgwHUFW2E9GLV/GluWDeQDocDoAWoMu5l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AVh06Rmw; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=iVbtff2F9nXIxPCKQmrUQZq4qwT6MqbTji4u/rx63VxSG4wYbL9JXlq3y9ejIg9qAv80FGoahRL15bzNHq152DUpgUQYJWVFgUikxdCNsFT+ZdK51nkRWYlzyqUHw9gBvy0i1948QsvhNvYCwT8V6evLeGDqlimTixHdAn36Vws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DJqF8QGK; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AVh06Rmw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DJqF8QGK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738745147; x=1770281147;
+  t=1738745149; x=1770281149;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rgmme76n2CzNqkUCcP3NAi7yfETqH2iSYt1NYJV6DOg=;
-  b=AVh06RmwKXwfBpvGaUtAaiVXi5vxCUKPrn+9xpjW7n4HQIOwsMxSrX28
-   pKBHfYfKRjlPU/sd1fGzLc3Zg2qn2qMS5HPdis9sJOD+qvprCDwp4qkFx
-   qqNVGcz5ZXumVMrDBQGVBN13Q0V0iFDikUxncB/5pmGAPKFXU/WQ8wlmQ
-   nafDzn3dMQ9/V4A6YzWH1Go/erSYIaOYXCd+jvsTJbYF1Xjubz2hWKjjK
-   +/DKZzqEySH711s8G7H/k3MTOHehhy62ee6zNAnoeNe/xjGwjea+GEpya
-   D3YBGTa5XWj7+My1iRlfRDA7diL/wlpsCCe6ac3FqgfN5ZPqA1dbiua56
-   w==;
-X-CSE-ConnectionGUID: m+ygSSesQg+b7WkTT0x+3g==
-X-CSE-MsgGUID: Ijl2kJAiQRO0s38l7kEVBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532508"
+  bh=XaDojdOvoqQ7CAcueK4U7yvXajn4LVmB3q1XG0Qjneg=;
+  b=DJqF8QGKGcF5JvLGelVA44GuQAyEDut6pki2NZLw1mnznHi2+4NYS3Re
+   11ejM4IfhKiyzg4iQ5JU/kNKbnsAkmXj4HosvtSd2Twj+4OwJX7+yIr00
+   bKAQ8gk1MIBKv4JCf0BUHxVwNJawnVuB4S1n+/drtNfR4QMzo1o3ivI4e
+   dzT98qsegf84cxAD0dyyCTdAiL6EeXpEMAQvs4A3C6gAkiKy+ZdKVnqio
+   GHLj+cztTfCPFT5CLxXyLvMUZcDIlbHOt/WYPKO+oYsXVgviozbhaFG1J
+   aj2FWJWSuxyLQCl+vb4uhisrp1Ub2lTg3WOQtet0249YNIo+TDZ/DWDth
+   g==;
+X-CSE-ConnectionGUID: Dah0f/JFRAuNsYKkRz9ZTQ==
+X-CSE-MsgGUID: uI4zmeuTTxii+bEOBEWTjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38532514"
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="38532508"
+   d="scan'208";a="38532514"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:47 -0800
-X-CSE-ConnectionGUID: Bep3KNIFRGKlQDkXyzQBIg==
-X-CSE-MsgGUID: ojzDs/qLS1qhJ5gfFYL6Sg==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:48 -0800
+X-CSE-ConnectionGUID: ha1dcAXhS8SUp//pK9v56g==
+X-CSE-MsgGUID: uJEjQ6o0Tha638L5wuGqLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="115887831"
+   d="scan'208";a="115887843"
 Received: from mdroper-mobl2.amr.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.223.241])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:47 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:45:48 -0800
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: linux-sound@vger.kernel.org,
 	vkoul@kernel.org
@@ -50,9 +50,9 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH 05/16] soundwire: stream: special-case the bus compute_params() routine
-Date: Wed,  5 Feb 2025 16:45:19 +0800
-Message-ID: <20250205084531.158763-6-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH 06/16] soundwire: stream: reuse existing code for BPT stream
+Date: Wed,  5 Feb 2025 16:45:20 +0800
+Message-ID: <20250205084531.158763-7-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
 References: <20250205084531.158763-1-yung-chuan.liao@linux.intel.com>
@@ -67,8 +67,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
-For BPT support, we want to allocate the entire audio payload and
-bypass the allocation based on PCM/PDM parameters.
+DP0 (Data Port 0) is very similar to regular data ports, with minor
+tweaks we can reuse the same code.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
@@ -76,75 +76,228 @@ Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 ---
- .../soundwire/generic_bandwidth_allocation.c  | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/soundwire/stream.c | 104 ++++++++++++++++++++++++++-----------
+ 1 file changed, 73 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/soundwire/generic_bandwidth_allocation.c b/drivers/soundwire/generic_bandwidth_allocation.c
-index 59965f43c2fb..b646c2ffe84a 100644
---- a/drivers/soundwire/generic_bandwidth_allocation.c
-+++ b/drivers/soundwire/generic_bandwidth_allocation.c
-@@ -86,6 +86,49 @@ void sdw_compute_slave_ports(struct sdw_master_runtime *m_rt,
- }
- EXPORT_SYMBOL(sdw_compute_slave_ports);
- 
-+static void sdw_compute_dp0_slave_ports(struct sdw_master_runtime *m_rt)
-+{
-+	struct sdw_bus *bus = m_rt->bus;
-+	struct sdw_slave_runtime *s_rt;
-+	struct sdw_port_runtime *p_rt;
-+
-+	list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
-+		list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
-+			sdw_fill_xport_params(&p_rt->transport_params, p_rt->num, false,
-+					      SDW_BLK_GRP_CNT_1, bus->params.col, 0, 0, 1,
-+					      bus->params.col - 1, SDW_BLK_PKG_PER_PORT, 0x0);
-+
-+			sdw_fill_port_params(&p_rt->port_params, p_rt->num, bus->params.col - 1,
-+					     SDW_PORT_FLOW_MODE_ISOCH, SDW_PORT_DATA_MODE_NORMAL);
-+		}
-+	}
-+}
-+
-+static void sdw_compute_dp0_master_ports(struct sdw_master_runtime *m_rt)
-+{
-+	struct sdw_port_runtime *p_rt;
-+	struct sdw_bus *bus = m_rt->bus;
-+
-+	list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
-+		sdw_fill_xport_params(&p_rt->transport_params, p_rt->num, false,
-+				      SDW_BLK_GRP_CNT_1, bus->params.col, 0, 0, 1,
-+				      bus->params.col - 1, SDW_BLK_PKG_PER_PORT, 0x0);
-+
-+		sdw_fill_port_params(&p_rt->port_params, p_rt->num, bus->params.col - 1,
-+				     SDW_PORT_FLOW_MODE_ISOCH, SDW_PORT_DATA_MODE_NORMAL);
-+	}
-+}
-+
-+static void sdw_compute_dp0_port_params(struct sdw_bus *bus)
-+{
-+	struct sdw_master_runtime *m_rt;
-+
-+	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
-+		sdw_compute_dp0_master_ports(m_rt);
-+		sdw_compute_dp0_slave_ports(m_rt);
-+	}
-+}
-+
- static void sdw_compute_master_ports(struct sdw_master_runtime *m_rt,
- 				     struct sdw_group_params *params,
- 				     int *port_bo, int hstop)
-@@ -618,6 +661,11 @@ int sdw_compute_params(struct sdw_bus *bus, struct sdw_stream_runtime *stream)
- 	if (ret < 0)
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index b88d5332c7ba..45e69ed3168d 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -87,11 +87,14 @@ static int _sdw_program_slave_port_params(struct sdw_bus *bus,
  		return ret;
+ 	}
  
-+	if (stream->type == SDW_STREAM_BPT) {
-+		sdw_compute_dp0_port_params(bus);
-+		return 0;
+-	/* Program DPN_BlockCtrl3 register */
+-	ret = sdw_write_no_pm(slave, addr2, t_params->blk_pkg_mode);
+-	if (ret < 0) {
+-		dev_err(bus->dev, "DPN_BlockCtrl3 register write failed\n");
+-		return ret;
++	/* DP0 does not implement BlockCtrl3 */
++	if (t_params->port_num) {
++		/* Program DPN_BlockCtrl3 register */
++		ret = sdw_write_no_pm(slave, addr2, t_params->blk_pkg_mode);
++		if (ret < 0) {
++			dev_err(bus->dev, "DPN_BlockCtrl3 register write failed\n");
++			return ret;
++		}
+ 	}
+ 
+ 	/*
+@@ -130,18 +133,28 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
+ 	struct sdw_port_params *p_params = &p_rt->port_params;
+ 	struct sdw_slave_prop *slave_prop = &s_rt->slave->prop;
+ 	u32 addr1, addr2, addr3, addr4, addr5, addr6;
+-	struct sdw_dpn_prop *dpn_prop;
++	enum sdw_dpn_type port_type;
++	bool read_only_wordlength;
+ 	int ret;
+ 	u8 wbuf;
+ 
+ 	if (s_rt->slave->is_mockup_device)
+ 		return 0;
+ 
+-	dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave,
+-					  s_rt->direction,
+-					  t_params->port_num);
+-	if (!dpn_prop)
+-		return -EINVAL;
++	if (t_params->port_num) {
++		struct sdw_dpn_prop *dpn_prop;
++
++		dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave, s_rt->direction,
++						  t_params->port_num);
++		if (!dpn_prop)
++			return -EINVAL;
++
++		read_only_wordlength = dpn_prop->read_only_wordlength;
++		port_type = dpn_prop->type;
++	} else {
++		read_only_wordlength = false;
++		port_type = SDW_DPN_FULL;
++	}
+ 
+ 	addr1 = SDW_DPN_PORTCTRL(t_params->port_num);
+ 	addr2 = SDW_DPN_BLOCKCTRL1(t_params->port_num);
+@@ -171,7 +184,7 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
+ 		return ret;
+ 	}
+ 
+-	if (!dpn_prop->read_only_wordlength) {
++	if (!read_only_wordlength) {
+ 		/* Program DPN_BlockCtrl1 register */
+ 		ret = sdw_write_no_pm(s_rt->slave, addr2, (p_params->bps - 1));
+ 		if (ret < 0) {
+@@ -223,9 +236,9 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
+ 		}
+ 	}
+ 
+-	if (dpn_prop->type != SDW_DPN_SIMPLE) {
++	if (port_type != SDW_DPN_SIMPLE) {
+ 		ret = _sdw_program_slave_port_params(bus, s_rt->slave,
+-						     t_params, dpn_prop->type);
++						     t_params, port_type);
+ 		if (ret < 0)
+ 			dev_err(&s_rt->slave->dev,
+ 				"Transport reg write failed for port: %d\n",
+@@ -432,6 +445,9 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+ 	struct completion *port_ready;
+ 	struct sdw_dpn_prop *dpn_prop;
+ 	struct sdw_prepare_ch prep_ch;
++	u32 imp_def_interrupts;
++	bool simple_ch_prep_sm;
++	u32 ch_prep_timeout;
+ 	bool intr = false;
+ 	int ret = 0, val;
+ 	u32 addr;
+@@ -439,20 +455,35 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+ 	prep_ch.num = p_rt->num;
+ 	prep_ch.ch_mask = p_rt->ch_mask;
+ 
+-	dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave,
+-					  s_rt->direction,
+-					  prep_ch.num);
+-	if (!dpn_prop) {
+-		dev_err(bus->dev,
+-			"Slave Port:%d properties not found\n", prep_ch.num);
+-		return -EINVAL;
++	if (p_rt->num) {
++		dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave, s_rt->direction, prep_ch.num);
++		if (!dpn_prop) {
++			dev_err(bus->dev,
++				"Slave Port:%d properties not found\n", prep_ch.num);
++			return -EINVAL;
++		}
++
++		imp_def_interrupts = dpn_prop->imp_def_interrupts;
++		simple_ch_prep_sm = dpn_prop->simple_ch_prep_sm;
++		ch_prep_timeout = dpn_prop->ch_prep_timeout;
++	} else {
++		struct sdw_dp0_prop *dp0_prop = s_rt->slave->prop.dp0_prop;
++
++		if (!dp0_prop) {
++			dev_err(bus->dev,
++				"Slave DP0 properties not found\n");
++			return -EINVAL;
++		}
++		imp_def_interrupts = dp0_prop->imp_def_interrupts;
++		simple_ch_prep_sm =  dp0_prop->simple_ch_prep_sm;
++		ch_prep_timeout = dp0_prop->ch_prep_timeout;
+ 	}
+ 
+ 	prep_ch.prepare = prep;
+ 
+ 	prep_ch.bank = bus->params.next_bank;
+ 
+-	if (dpn_prop->imp_def_interrupts || !dpn_prop->simple_ch_prep_sm ||
++	if (imp_def_interrupts || !simple_ch_prep_sm ||
+ 	    bus->params.s_data_mode != SDW_PORT_DATA_MODE_NORMAL)
+ 		intr = true;
+ 
+@@ -463,7 +494,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+ 	 */
+ 	if (prep && intr) {
+ 		ret = sdw_configure_dpn_intr(s_rt->slave, p_rt->num, prep,
+-					     dpn_prop->imp_def_interrupts);
++					     imp_def_interrupts);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -472,7 +503,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+ 	sdw_do_port_prep(s_rt, prep_ch, prep ? SDW_OPS_PORT_PRE_PREP : SDW_OPS_PORT_PRE_DEPREP);
+ 
+ 	/* Prepare Slave port implementing CP_SM */
+-	if (!dpn_prop->simple_ch_prep_sm) {
++	if (!simple_ch_prep_sm) {
+ 		addr = SDW_DPN_PREPARECTRL(p_rt->num);
+ 
+ 		if (prep)
+@@ -489,7 +520,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+ 		/* Wait for completion on port ready */
+ 		port_ready = &s_rt->slave->port_ready[prep_ch.num];
+ 		wait_for_completion_timeout(port_ready,
+-			msecs_to_jiffies(dpn_prop->ch_prep_timeout));
++			msecs_to_jiffies(ch_prep_timeout));
+ 
+ 		val = sdw_read_no_pm(s_rt->slave, SDW_DPN_PREPARESTATUS(p_rt->num));
+ 		if ((val < 0) || (val & p_rt->ch_mask)) {
+@@ -506,7 +537,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+ 	/* Disable interrupt after Port de-prepare */
+ 	if (!prep && intr)
+ 		ret = sdw_configure_dpn_intr(s_rt->slave, p_rt->num, prep,
+-					     dpn_prop->imp_def_interrupts);
++					     imp_def_interrupts);
+ 
+ 	return ret;
+ }
+@@ -1007,7 +1038,8 @@ static int sdw_slave_port_is_valid_range(struct device *dev, int num)
+ 
+ static int sdw_slave_port_config(struct sdw_slave *slave,
+ 				 struct sdw_slave_runtime *s_rt,
+-				 const struct sdw_port_config *port_config)
++				 const struct sdw_port_config *port_config,
++				 bool is_bpt_stream)
+ {
+ 	struct sdw_port_runtime *p_rt;
+ 	int ret;
+@@ -1019,9 +1051,13 @@ static int sdw_slave_port_config(struct sdw_slave *slave,
+ 		 * TODO: Check valid port range as defined by DisCo/
+ 		 * slave
+ 		 */
+-		ret = sdw_slave_port_is_valid_range(&slave->dev, port_config[i].num);
+-		if (ret < 0)
+-			return ret;
++		if (!is_bpt_stream) {
++			ret = sdw_slave_port_is_valid_range(&slave->dev, port_config[i].num);
++			if (ret < 0)
++				return ret;
++		} else if (port_config[i].num) {
++			return -EINVAL;
++		}
+ 
+ 		ret = sdw_port_config(p_rt, port_config, i);
+ 		if (ret < 0)
+@@ -1330,6 +1366,11 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
+ 	u8 num_ports;
+ 	int i;
+ 
++	if (!port_num) {
++		dev_err(&slave->dev, "%s: port_num is zero\n", __func__);
++		return NULL;
 +	}
 +
- 	/* Compute transport and port params */
- 	ret = sdw_compute_port_params(bus, stream);
- 	if (ret < 0) {
+ 	if (direction == SDW_DATA_DIR_TX) {
+ 		num_ports = hweight32(slave->prop.source_ports);
+ 		dpn_prop = slave->prop.src_dpn_prop;
+@@ -2115,7 +2156,8 @@ int sdw_stream_add_slave(struct sdw_slave *slave,
+ 	if (ret)
+ 		goto unlock;
+ 
+-	ret = sdw_slave_port_config(slave, s_rt, port_config);
++	ret = sdw_slave_port_config(slave, s_rt, port_config,
++				    stream->type == SDW_STREAM_BPT);
+ 	if (ret)
+ 		goto unlock;
+ 
 -- 
 2.43.0
 
