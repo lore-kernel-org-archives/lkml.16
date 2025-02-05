@@ -1,140 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F98149C7D;
-	Wed,  5 Feb 2025 17:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE15C8C7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738776587; cv=none; b=gqlHIv0YThVfZtYmw+WQsW8kPXkfNbnQzrEZeoAjaDoXqJQlH75m5opbD192Nw+9frI6WfunkxeAmB0qbkFlPumzAji8eCP/zOZbXeDVjVB9KkhY8dxPb296t3qgZC61kHkIH61fvJupjilkw5lBgSP8DplHVQpHZPnSwdLOQn0=
+	t=1738776628; cv=none; b=l0pYzcQr4vNfJPcWcgPX7e3Q70Z25A+38ly7E0lQ/oJcNlrwbszlzQ8u97c/Ie7e1oMAS4bSaKHPoFaAIFrMz3169nC4LxiaktsagIN6XdFN7W94suA8tX/jyOd8DXuZqJNq26llOj4xlJg6mT4vELEmYxUap99qa1WZsvys1Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738776587; c=relaxed/simple;
-	bh=dUvfndw7L5/UBHSSZYlyHuGQADUrKhytEvm18Ewp1nI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ASp2+56QLpzHAa/qCULcb6alKU+SccpX0a+ngZs5Jmut7WV89RHeBPsDGEvQNxZNrJHm+XBkZkgYdCtji3AX7c9tN+H55Ax2t+6ImTfSnqXkfi8yq8i4gyqwfEdf9L2562wuLdmHtGY+m3g0Aeq8vfZ7kyRcJRmJt81I/Pl90Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VY7TFiXV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738776628; c=relaxed/simple;
+	bh=f2yEvU4TM3aZYdPhq5G+l+SmpWWP3YrRm11kspLYSHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MyLazmFfJ8rbH6zVUDJywJK4ErKjH4FM0vYp0+RtIgbFvZgHrG51PWvNL50kBczFmk0Mnvtt1/g3LP97nsZQ7Nr5MGPc18snMA1pCWpaoPqwM/ZjZgfmKqg25mSLlKOItpSI/I9x7I83DPcJQfTi0VdU53quA+Zfpf4sKFxGEXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=PL1hactd; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VY7TFiXV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F685C4CED1;
-	Wed,  5 Feb 2025 17:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738776586;
-	bh=dUvfndw7L5/UBHSSZYlyHuGQADUrKhytEvm18Ewp1nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VY7TFiXVojgpLBSrbx8y4Iy/mvJY9mLJ9IcxU4EUEdzR1vorpXPEPPSYSOTZGd74Z
-	 xKakBhSJZIMOwaRoG99LBystvot71Gi885pkOu/5YU4vJlfkAJ/IHfHhlLPrS8XA/B
-	 wwtqxGhsJ/WGLxgk3A6HspSqrEsh4L9YhDoQcnwKABPMrXjalFRMkC3mUXFAFvTdpx
-	 wQ8SHvZe0RyZ56Et/jxNTtaZa6bp0G+0PEWfLN9WgzSrwz48hSebznaqu/11U2cJsU
-	 P7KdyMZst7OAU+bfnyCBTADi9BQlpZ/FesU4wvVJY4zF4qEoUL3uNSyaG6nWVwDKz1
-	 xQvCsJlhy6i7g==
-Date: Wed, 5 Feb 2025 09:29:46 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, tytso@mit.edu, kees@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com,
-	linux-ext4 <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH] ext4: pass strlen() of the symlink instead of i_size to
- inode_set_cached_link()
-Message-ID: <20250205172946.GD21791@frogsfrogsfrogs>
-References: <20250205162819.380864-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="PL1hactd"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 69215240104
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:30:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1738776622; bh=f2yEvU4TM3aZYdPhq5G+l+SmpWWP3YrRm11kspLYSHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=PL1hactd8RdLkszMUmEdepRdB2nlcyk9mAUuzhmQDw87OY0Wy6vu09upgrTLphbd1
+	 HQwrtbjeGyVijzLY1XSUIT7ybkpqK1tOeUFfgt9m6LvXqiyyTwugJHUVhxkzSj+WaJ
+	 1aF5YpEbpw+E9NOC09TRUTFgVL+FHNk/u3IHwDGZYqnvTFN6orpvybyLfPDAJeLDGY
+	 Z31ALiMFc9Hx21frrtnfjRFp5SJ9IpR3PhkFNTIgAvxmEVof7+/3tVtU26RSdGekr/
+	 C8SqW2TzhnJk5F4oYnh69j5tuebBTEelGWnF1K1zmCTK2volCF56HaVepfjXvtuumd
+	 2fZzdoQxB3snw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Yp6gv6fyqz9rxK;
+	Wed,  5 Feb 2025 18:30:19 +0100 (CET)
+From: =?UTF-8?q?Martin=20Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
+To: laurent.pinchart@ideasonboard.com,
+	mchehab@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-media@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Martin=20Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
+Subject: [PATCH] media: nxp: imx8-isi: check return value of media_pad_remote_pad_first()
+Date: Wed,  5 Feb 2025 17:29:57 +0000
+Message-Id: <20250205172957.182362-1-martink@posteo.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205162819.380864-1-mjguzik@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 05:28:19PM +0100, Mateusz Guzik wrote:
-> The call to nd_terminate_link() clamps the size to min(i_size,
-> sizeof(ei->i_data) - 1), while the subsequent call to
-> inode_set_cached_link() fails the possible update.
-> 
-> The kernel used to always strlen(), so do it now as well.
-> 
-> Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-> Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> ---
-> 
-> Per my comments in:
-> https://lore.kernel.org/all/CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com/#t
-> 
-> There is definitely a pre-existing bug in ext4 which the above happens
-> to run into. I suspect the nd_terminate_link thing will disappear once
-> that gets sorted out.
-> 
-> In the meantime the appropriate fix for 6.14 is to restore the original
-> behavior of issuing strlen.
-> 
-> syzbot verified the issue is fixed:
-> https://lore.kernel.org/linux-hardening/67a381a3.050a0220.50516.0077.GAE@google.com/T/#m340e6b52b9547ac85471a1da5980fe0a67c790ac
+media_pad_remote_pad_first() return NULL if "no enabled link has been found".
+Check for that.
 
-Again, this is evidence of inconsistent inode metadata, which should be
-dealt with by returning EFSCORRUPTED, not arbitrarily truncating the
-contents of a bad inode.
+backstory
+=========
+While trying to get a (Y10 grey) sensor working on imx8mp (v6.12.12 now and
+I know the hardware works on an ancient nxp-kernel),
+I tried to enable the sensor link, set formats and stream:
 
-https://lore.kernel.org/linux-fsdevel/CAGudoHHeHKo6+R86pZTFSzAFRf2v=bc5LOGvbHmC0mCfkjRvgw@mail.gmail.com/T/#mf05b770926225812f8c78c58c6f3b707c7d151d8
+media-ctl -d 1 --links "'vc-mipi-cam 3-001a':0->'csis-32e50000.csi':0[1]"
+media-ctl -d "platform:32e00000.isi" --set-v4l2 '"vc-mipi-cam 3-001a":0[fmt:Y10_1X10/2592x1944 field:none]'
+media-ctl -d "platform:32e00000.isi" --set-v4l2 '"csis-32e50000.csi":0[fmt:Y10_1X10/2592x1944 field:none colorspace:srgb]'
+media-ctl -d "platform:32e00000.isi" --set-v4l2 '"crossbar":0[fmt:Y10_1X10/2592x1944 field:none colorspace:srgb]'
+media-ctl -d "platform:32e00000.isi" --set-v4l2 '"mxc_isi.0":0[fmt:Y10_1X10/2592x1944 field:none colorspace:srgb]'
+v4l2-ctl -d /dev/video1 --set-fmt-video=width=2592,height=1944,pixelformat="Y10 "
+v4l2-ctl --verbose --device /dev/video1 --stream-mmap
 
-To spell this out -- this is ext4_inode_is_fast_symlink:
+and what I got was the NULL pointer deref, I append below. With this patch I
+at least get a nice "VIDIOC_STREAMON returned -1 (Broken pipe)".
 
-int ext4_inode_is_fast_symlink(struct inode *inode)
-{
-	if (!(EXT4_I(inode)->i_flags & EXT4_EA_INODE_FL)) {
-		int ea_blocks = EXT4_I(inode)->i_file_acl ?
-				EXT4_CLUSTER_SIZE(inode->i_sb) >> 9 : 0;
+[   29.936640] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000020
+[   29.947993] Mem abort info:
+[   29.950791]   ESR = 0x0000000096000006
+[   29.954544]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   29.959861]   SET = 0, FnV = 0
+[   29.962935]   EA = 0, S1PTW = 0
+[   29.966084]   FSC = 0x06: level 2 translation fault
+[   29.970977] Data abort info:
+[   29.973860]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+[   29.979358]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[   29.984414]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[   29.989740] user pgtable: 4k pages, 48-bit VAs, pgdp=000000004536d000
+[   29.996186] [0000000000000020] pgd=08000000452ec003, p4d=08000000452ec003, pud=080000004361a003, pmd=0000000000000000
+[   30.006820] Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
+[   30.013087] Modules linked in:
+[   30.016143] CPU: 3 UID: 0 PID: 433 Comm: v4l2-ctl Not tainted 6.12.12-ge-24.09+-gd7393141dd76 #104
+[   30.025102] Hardware name: MMI4.0 i.MX8MPlus (DT)
+[   30.029804] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   30.036766] pc : mxc_isi_crossbar_xlate_streams+0xb0/0x10c
+[   30.042258] lr : mxc_isi_crossbar_xlate_streams+0xac/0x10c
+[   30.047745] sp : ffff800083db3930
+[   30.051058] x29: ffff800083db3930 x28: ffff800083db39e8 x27: ffff800083db39f0
+[   30.058200] x26: ffff800083db39ec x25: ffff000002eff0a8 x24: 0000000000000000
+[   30.065339] x23: 0000000000000001 x22: 0000000000000001 x21: 0000000000000001
+[   30.072478] x20: 0000000000000003 x19: ffff000003e3c4b8 x18: 0000000000000000
+[   30.079616] x17: 0000000000000000 x16: ffff800080000000 x15: 000000000099e000
+[   30.086756] x14: 0000000000000002 x13: 0000000000036754 x12: 0000000000000010
+[   30.093894] x11: 0000000000000001 x10: 0000000000000064 x9 : 0000000000000004
+[   30.101032] x8 : ffff00000348332c x7 : ffff000003483200 x6 : ffff800083db39ec
+[   30.108172] x5 : ffff000003483000 x4 : 000000000fffffff x3 : ffff000002eff110
+[   30.115312] x2 : ffff0000048a5270 x1 : 0000000000000000 x0 : 0000000000000000
+[   30.122453] Call trace:
+[   30.124898]  mxc_isi_crossbar_xlate_streams+0xb0/0x10c
+[   30.130038]  mxc_isi_crossbar_enable_streams+0x44/0x16c
+[   30.135263]  v4l2_subdev_enable_streams.part.0+0x130/0x2ac
+[   30.140750]  v4l2_subdev_enable_streams+0x48/0x68
+[   30.145454]  mxc_isi_pipe_enable+0x1d4/0x24c
+ed 0 (Success)
+		[V  I D3I0O.C149725]  mxc_isi_vb2_start_streaming+0xa0/0xe4
+[   30.156596]  vb2_start_streaming+0x6c/0x180
+[   30.160782]  vb2_core_streamon+0x100/0x1c4
+[   30.164880]  vb2_streamon+0x18/0x64
+[   30.168369]  mxc_isi_video_streamon+0x284/0x2f4
+[   30.172901]  v4l_streamon+0x24/0x30
+[   30.176391]  __video_do_ioctl+0x15c/0x3c0
+[   30.180402]  video_usercopy+0x1a4/0x67c
+[   30.184240]  video_ioctl2+0x18/0x24
+[   30.187732]  v4l2_ioctl+0x40/0x60
+[   30.191047]  __arm64_sys_ioctl+0xac/0xf0
+[   30.194972]  invoke_syscall+0x48/0x110
+[   30.198726]  el0_svc_common.constprop.0+0x40/0xe0
+[   30.203431]  do_el0_svc+0x1c/0x28
+[   30.206747]  el0_svc+0x30/0xd0
+[   30.209806]  el0t_64_sync_handler+0x100/0x12c
+[   30.214164]  el0t_64_sync+0x190/0x194
+[   30.217830] Code: 937a7f00 8b000020 97fec7a3 aa0003e1 (f9401000)
+[   30.223923] ---[ end trace 0000000000000000 ]---
+_QBUF returned 0 (Success)
+		VIDIOC_QBUF returned 0 (Success)
+		VIDIOC_QBUF returned 0 (Success)
+		VIDIOC_QBUF returned 0 (Success)
 
-		if (ext4_has_inline_data(inode))
-			return 0;
+Signed-off-by: Martin Kepplinger-Novaković <martink@posteo.de>
+---
 
-		return (S_ISLNK(inode->i_mode) && inode->i_blocks - ea_blocks == 0);
-	}
-	return S_ISLNK(inode->i_mode) && inode->i_size &&
-	       (inode->i_size < EXT4_N_BLOCKS * 4);
-}
+the real problem
+================
+Obviously "broken pipe" for "stream on" is still not what I want :)
 
-Note in the !EA_INODE and !inlinedata case, the decision is made based
-on the block count of the file, without checking i_size.  The callsite
-should look more like this:
+The "no enabled link has been found" seems to happen during "VIDIOC_QBUF".
 
-		} else if (ext4_inode_is_fast_symlink(inode)) {
-			if (inode->i_size == 0 ||
-			    inode->i_size > sizeof(ei->i_data) - 1) {
-				ret = -EFSCORRUPTED;
-				ext4_error_inode(..."fast symlink doesn't fit in body??");
-				goto bad_inode;
-			}
-			inode->i_op = &ext4_fast_symlink_inode_operations;
-			nd_terminate_link(ei->i_data, inode->i_size,
-				sizeof(ei->i_data) - 1);
-			inode_set_cached_link(inode, (char *)ei->i_data,
-					      inode->i_size);
-		} else {
+Does anything come to mind what goes wrong here for me?
 
-And, seriously, cc the ext4 list on ext4 patches please.
+thanks a lot for having a look,
 
---D
+                                      martin
 
->  fs/ext4/inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 7c54ae5fcbd4..30cff983e601 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -5010,7 +5010,7 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
->  			nd_terminate_link(ei->i_data, inode->i_size,
->  				sizeof(ei->i_data) - 1);
->  			inode_set_cached_link(inode, (char *)ei->i_data,
-> -					      inode->i_size);
-> +					      strlen((char *)ei->i_data));
->  		} else {
->  			inode->i_op = &ext4_symlink_inode_operations;
->  		}
-> -- 
-> 2.43.0
-> 
-> 
+
+
+
+ drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+index 93a55c97cd173..e53a8e01c8be1 100644
+--- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
++++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+@@ -160,6 +160,11 @@ mxc_isi_crossbar_xlate_streams(struct mxc_isi_crossbar *xbar,
+ 	}
+ 
+ 	pad = media_pad_remote_pad_first(&xbar->pads[sink_pad]);
++	if (!pad) {
++		dev_warn(xbar->isi->dev, "no enabled link has been found.\n");
++		return ERR_PTR(-EPIPE);
++	}
++
+ 	sd = media_entity_to_v4l2_subdev(pad->entity);
+ 	if (!sd) {
+ 		dev_dbg(xbar->isi->dev,
+-- 
+2.39.5
+
