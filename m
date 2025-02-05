@@ -1,74 +1,125 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599AD22A7F7;
-	Wed,  5 Feb 2025 09:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C9622A7F8
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749319; cv=none; b=EMVcvQycenCGoi5UNMJJZYRyGiJXld1tbWBCp40q/m2yMyO1l6LHGGOpfc4O42ipN6JNH5zQKC+6Wt3O17sS+XP6vWvvtAUfQ1tAnVXbZPo1szDpIDvhmgWRBFPdOT+YPNObL/doVg5ROLUvgJnP+ZKFEpy6bGe4zojz8+RwzrU=
+	t=1738749328; cv=none; b=pOCDSAiO95OqpZ+SaQZXq7owoCo+NtWK5vb2GduzbBxhJhPGN5HsLJxJ1ZB++xVgFqsmrhFgVr7WoG6ArSavWP+CycYgE0yZrgpDjAmw29fmUpmfj6HtaBOwb0eAJdSCLvlUH6bufHrZW8l6BUiciPwz2sthtpf/nbQ0eBCFg7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749319; c=relaxed/simple;
-	bh=dKlRgSGRbfw6+c39prvzrTOluy47PorwLsxuzZbjYpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=og1NS9EBI3QVrTFVd1w6OvYndz/6+fndny/wZeyVE42MejSpw07iLfUdagDP4a6KVxM6RWlGnIbfW2ly/f4ACMX3tVIMuMq+hhcx6H5sUOY30AO6kX2c7SyRZfGynKZccFQWUCifGzS0Ne+4/c8RkqJdYuJ6BjBdXoVt+kNG4MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iBixuYjG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738749328; c=relaxed/simple;
+	bh=UyuZ63AebhUpU/in3ALgxcHCnsp1FQfXWKq6EW4qYdo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NsSf5Nny1hZua+AmOFzahXrsQ3g0QBKRat0f5OW8TgpjD3jRWIWaQ2i0Fqy+5+rrYJjmJXhcZRhsOOJ0QIWk/FdvLcUBtwDtLwk05phy+zd1tlzL00V7UBaibhaT3UIiqbBKOznl25vfCV/pCqGEyjL/P9eDh/Bp9TkMptCo6PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=MONBK2bc; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iBixuYjG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lC9d8s8ZotVqoLxPT4Hp7XGqQ+UR9JIuOgr+9Vb/G9M=; b=iBixuYjGdgIxyzsfsQ7hOrnlcx
-	HvKEGlCNtQQEQ7IwKY9MzmpeFXf8XT9uaTtQn3z60Wa+oZqVAOz5Uft69JZg9FicmtnteCB69Qn7q
-	ut6J49AVDPezcsNc570A19zhT306iUQPI54mB3sKxaexrVtkseBith810YnMEMZIUpsHHPMJUp1ce
-	EGIE6sVoe/pK4QDBhwzEIf4lomECj1Tu4WGVwuZHhSrnG9iAgW5vZTgQ4VcszRFWpL+alc45AIrTM
-	lw5nSkfXdWzzxdel9jqsaDL6KwPi+uATDkLXjzfAb6O7wMnUXFHEu9Uybl/278vYQbcTLR0N3so+k
-	46DDf29g==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfc7f-00000004Dgc-2eFc;
-	Wed, 05 Feb 2025 09:55:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C021A3002F0; Wed,  5 Feb 2025 10:55:06 +0100 (CET)
-Date: Wed, 5 Feb 2025 10:55:06 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Naman Jain <namjain@linux.microsoft.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-	srivatsa@csail.mit.edu, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
- for debug builds
-Message-ID: <20250205095506.GB7145@noisy.programming.kicks-ass.net>
-References: <20250203114738.3109-1-namjain@linux.microsoft.com>
- <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="MONBK2bc"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dce27a72e8so307798a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 01:55:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1738749324; x=1739354124; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LosAM8MKixrze+DKy3KPUaCIuTYER6dudsHxBAM96I4=;
+        b=MONBK2bcr5K5cMLVTlo3gEvZ5wyJa1BdixHUJ5NYQy590ELKINXrXg9e3Lk3Ofk2Wa
+         SzDe8yMuDp4rC7NyVRqhBG7NyP6xSfPVSBmaRC17iwjhWvwTIJZaaW9NXENIEdTimd+b
+         WwsYCsbkEgcqXAEGfv7/BIf4V2VjreD0CzTR7v3zaKLbv7IRrrV293scZVZenYHsN2RM
+         noSVO8bES9Rl5Jc3OiYRRF1mH1YZYZzvgBl4MFFCX1TaHXG5fJhHsql+vc0EX/LF7nr5
+         XaIKFiPeRI1jdtwAfEf0nSzDKIY6rmTv42XnphNs6zZQyfdCAu4U2qSonqpE46h1iD7y
+         9ljw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738749324; x=1739354124;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LosAM8MKixrze+DKy3KPUaCIuTYER6dudsHxBAM96I4=;
+        b=xNU5AD4mOJjF0JtFSl+HGl6eIRfv0ZOrkjIlRs2m60n1U3zzO/4PeDG3ZcuDKHKZBu
+         XCDjvnuvJTAfWcKU/c0ItTAfW+Jh0CnBTUbhYWARLE7Wl5y6GqzDeMDpoEqMEZMQaVam
+         fKFVmTrOkqUxt5mzHcQ1XYvIfC5w0bzK86VCmJdmfsbFNz35li+RjCEnCWPzUZkTrqt2
+         MmKz7IZcgdDKb0DBGDH7grP8tmpww7XfJ2uK6VQZoPaFa+c/OECSQ9nZs8PQv0/ntKs9
+         sFKau9hP6aOhaaX8FAcJaOD6ieQEyn9ca/eo1MlThndwfZ2rx0f450lTp12duDT57W1v
+         kXEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgxMdN23WPrR1rEvCPEmHtZBEz7MwiEP7BVr8LejIdQLPueEZP7S613dYWg70R5Cz8Khs2wV0+TMJqKIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbcku2zzgmwm0CXrEmeNxRk7FpmRMPi6gsLR/2fof+MEoCtB0v
+	2QjHdEDGdWBrxSELETVLwp/ITNL0fHExhpzdbIA7+GR77iYZdlbgkw75lJzXy9E=
+X-Gm-Gg: ASbGncsEk7EVBdGVWWOVr4W86P8sPX+I2hoJdS9JGLHsM8h1yAlkaEGAX2QN0hIQbpk
+	5EcvSGe4n47mSnJc6Unqq4kB/Z1d/mbLp+rcvhWmGlVdeQyrKE1tz9uZBuhOGjqJLQQ8vwhcb4I
+	XG1NcIY6PArojovyar277ekT+0IuWoxyRQLwDlAgLWVqkLB3fxCny4pC15QiIYFKBB2cFGBBi+9
+	sdwna2Hf6P2O9GI5ANLoSSsc3ccq7EQzh5+lK4JRkoUTw1N+o7fTImmf636g2fwIu1RzKeBNDTb
+	R4p6GwBILU0NEDiEsHheciUYFMNnBznieuuWxWQLUEX5Gw==
+X-Google-Smtp-Source: AGHT+IFa23Ek/09ua5oWaqm4xkzUASaUOHIN061he97UBtBQrBAR3KC7IXfPrH98pn40XLsEElBz+w==
+X-Received: by 2002:a17:906:b008:b0:ab7:63fa:e4a8 with SMTP id a640c23a62f3a-ab763fafe8amr111455066b.0.1738749323599;
+        Wed, 05 Feb 2025 01:55:23 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.173])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7de5sm1075030666b.35.2025.02.05.01.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 01:55:23 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: alexandre.belloni@bootlin.com
+Cc: claudiu.beznea@tuxon.dev,
+	linux-rtc@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH] rtc: renesas-rtca3: Disable interrupts only if the RTC is enabled
+Date: Wed,  5 Feb 2025 11:55:19 +0200
+Message-ID: <20250205095519.2031742-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 03:18:24PM +0530, K Prateek Nayak wrote:
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-> Have there been any reports on an x86 system / VM where
-> topology_span_sane() was tripped? 
+If the RTC is not enabled and the code attempts to disable the interrupt,
+the readb_poll_timeout_atomic() function in the
+rtca3_alarm_irq_set_helper() may timeout, leading to probe failures.
+This issue is reproducible on some devices because the initial values of
+the PIE and AIE bits in the RCR1 register are undefined.
 
-At the very least Intel SNC 'feature' tripped it at some point. They
-figured it made sense to have the LLC span two nodes.
+To prevent probe failures in this scenario, disable RTC interrupts only
+when the RTC is actually enabled.
 
-But I think there were some really dodgy VMs too.
+Fixes: d4488377609e ("rtc: renesas-rtca3: Add driver for RTCA-3 available on Renesas RZ/G3S SoC")
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
+ drivers/rtc/rtc-renesas-rtca3.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-But yeah, its not been often. But basically dodgy BIOS/VM data can mess
-up things badly enough for it to trip.
+diff --git a/drivers/rtc/rtc-renesas-rtca3.c b/drivers/rtc/rtc-renesas-rtca3.c
+index a056291d3887..dd50bcf79823 100644
+--- a/drivers/rtc/rtc-renesas-rtca3.c
++++ b/drivers/rtc/rtc-renesas-rtca3.c
+@@ -586,17 +586,14 @@ static int rtca3_initial_setup(struct clk *clk, struct rtca3_priv *priv)
+ 	 */
+ 	usleep_range(sleep_us, sleep_us + 10);
+ 
+-	/* Disable all interrupts. */
+-	mask = RTCA3_RCR1_AIE | RTCA3_RCR1_CIE | RTCA3_RCR1_PIE;
+-	ret = rtca3_alarm_irq_set_helper(priv, mask, 0);
+-	if (ret)
+-		return ret;
+-
+ 	mask = RTCA3_RCR2_START | RTCA3_RCR2_HR24;
+ 	val = readb(priv->base + RTCA3_RCR2);
+-	/* Nothing to do if already started in 24 hours and calendar count mode. */
+-	if ((val & mask) == mask)
+-		return 0;
++	/* Only disable the interrupts if already started in 24 hours and calendar count mode. */
++	if ((val & mask) == mask) {
++		/* Disable all interrupts. */
++		mask = RTCA3_RCR1_AIE | RTCA3_RCR1_CIE | RTCA3_RCR1_PIE;
++		return rtca3_alarm_irq_set_helper(priv, mask, 0);
++	}
+ 
+ 	/* Reconfigure the RTC in 24 hours and calendar count mode. */
+ 	mask = RTCA3_RCR2_START | RTCA3_RCR2_CNTMD;
+-- 
+2.43.0
+
