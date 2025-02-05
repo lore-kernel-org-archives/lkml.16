@@ -1,127 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824EE2139C9;
-	Wed,  5 Feb 2025 07:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282402139C9
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738739707; cv=none; b=HhWWIs/POAhm1yejXuDZjUB7vzMyfw41eNX33OeCFONcf4kNVfM6rteb1w/EEUgJQ1KGY9IKgJ1feTvyCw2b9ecVhiubjaSL8uEoZjCrV45m8V9L62qS7hKkYkbZAzPnAMQB7s1bsW/p+ZzzoHIcHqlHNN+a83Zgjmuq6R1lzZo=
+	t=1738739915; cv=none; b=W4lGghI4ghSrFV55cMSnwo/Mx9ENBbVbf6REhJAmtts1ma3JD9fBw+yAK7625YGNse+LFaGLSmOZzeBT9o2UKRJcn92PVGHqL797XVzEyvQ/yUAGkKStVbzVIbgJAPl/ShLWdk+IIW8nCbBlGAZi4PUJNbQ5mTGtv6xf64T/ctI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738739707; c=relaxed/simple;
-	bh=bxhbtPurnP1W5hy7q1eg97G9bf1DZSWlhNNHDGknTpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X9EZ4RKt720fzJl/lqn8PBBW9sGHtf/K5LdSCm7hSHSJPiERLjrVcTk039Nv+DWzniq6JwobC4odXqOGjAJXnPhQEKkYqmFlBt/74a92/FvGPN4RhE/DB4bTI1MRTE+XEabcnCEWeLxKXysJ0+YpoFZQ7HJ75tEfbyUUeC+dhaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKSMRqa1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKSMRqa1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D427EC4CED1;
-	Wed,  5 Feb 2025 07:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738739706;
-	bh=bxhbtPurnP1W5hy7q1eg97G9bf1DZSWlhNNHDGknTpc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DKSMRqa1fjaWAlwZui6Qa+2HlLFqk1v5XkS4cm3zK7BrmANbeT2y+oRhSMdqVZvAW
-	 UGTg9UJQw3ypY/r7pqcwEMsojwOGb/QjW63twSMB+Ou8eh6uxMhOCRcDlovbZRO1Y6
-	 IX5zwUrCsFU569V2aBNBO9kPT0sMFXUXL4dXd72ZRAhGBRfFnb0ey+Z1ksQi95v37A
-	 HWQQkFNI7BMEN3bHDN0qbRLbPTTflngqwYgVRmIrMFNNM3jE9FCNjhBOCnj2ru7CBi
-	 Bwa+N2DCC37nKc2wnLRQoYPIGlV8sZxG7PJdqieGIOTclMgtZDCf11QLCZj2mRJ/9U
-	 35JVT17rIxBSw==
-Date: Wed, 5 Feb 2025 08:15:01 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, Linux
- Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: Re: [RFC 1/6] scripts/get_abi.py: make it backward-compatible with
- Python 3.6
-Message-ID: <20250205081501.160180bc@foz.lan>
-In-Reply-To: <4274a2f8-5ba5-45f3-80c5-2de54c44c06f@gmail.com>
-References: <cover.1738166451.git.mchehab+huawei@kernel.org>
-	<6d74360f8cdabeb0bf628a6e870d10e134f396f0.1738166451.git.mchehab+huawei@kernel.org>
-	<87r04dei1j.fsf@trenco.lwn.net>
-	<4274a2f8-5ba5-45f3-80c5-2de54c44c06f@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1738739915; c=relaxed/simple;
+	bh=c31GOFHmUOs+019a78t78hIBV/TSKrtiyoQf0m5l2B0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oDSYHT0FTKbiRhlMLry4Bsnsv9skuDH6kZnjwA1oZQcdYi75Rc0JwqgQF/ngknG3spCfqy0QI+WX8TsghY1bKkdQS6HcdjNRCdIhWVKuqAJVoYJ7m7ijaSxsU0xfx7jdR/GlpOd8dACNFJEytzDcOI4YbG+g1KLZF+w/YHV/zvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-84730592e44so442758739f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 23:18:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738739909; x=1739344709;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SRVdUExgpTeP2D/23IgvlLTBI1qzhVp7H8YiBe2djyw=;
+        b=iPicpC4U4KOjyx3khDD00r5mnuJu0ZYJfsmzX2ixedM77v4DABOmcipYg6C4FjZ1uo
+         yKkKfNBhljC/n4+0FqAB9cXkgkVgIwQ+zo+F+3XuKnFqgjxhir00W4DUk4f1FHnxpq6v
+         X4j+3NlUp5Ay41SvtKvPvRhxvw/BXKqm/TRNZv5MBmpyxpaCjGGbC7NQoFsmEOKLWkrh
+         Z7WHbOP2t/ORLfWOTeOjGccdn4s5HVZQRRfYDnWs8voG6B8XE74VAELxs76ikbA15R+o
+         D3cM82ULMZWhD53IUABVLQ8kcbkNxM0OfiCcHmbqPpOlBjwcx6KDWoJjru3tItvKcTRG
+         PEPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEfOUi0O/0KEMt+OLuCkFzjxRXyKpjgFU8HPuBmdcYhii1lccDi13QYoJOd4qKpklN8yC/VSUIuztpMvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRXJ+1Lh8zNUQlpKu4pLTHebWqF1d2YMNy2w3TRD13sv4kkSet
+	9she7TWh2O0ob0LDE8zvRKxdGmnydL1qMqju7l2+zTRxhqTLefPHrjVsXJnoyKg7fYqfVra2vgg
+	qcNn/q/EqRI2b31ovX8PXXVQOKB5EQX2AXRTlYj7aVIJgmkaOH/twBrI=
+X-Google-Smtp-Source: AGHT+IFTJhegFm9qBv+JshkaQ3AZLd/L7Cun/mAeyLkUkbORCFqEdyre+eeDBAaZLnsFJ3HWbsBV6uluYT2n079mZcpVbmO1lnVf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1547:b0:3d0:2314:26e5 with SMTP id
+ e9e14a558f8ab-3d04f8f6f3bmr15673695ab.18.1738739909291; Tue, 04 Feb 2025
+ 23:18:29 -0800 (PST)
+Date: Tue, 04 Feb 2025 23:18:29 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a310c5.050a0220.50516.0011.GAE@google.com>
+Subject: [syzbot] [bcachefs?] general protection fault in inode_permission (3)
+From: syzbot <syzbot+1facc65919790d188467@syzkaller.appspotmail.com>
+To: brauner@kernel.org, jack@suse.cz, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-Em Wed, 5 Feb 2025 11:37:52 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
+Hello,
 
-> Hi,
-> 
-> Jonathan Corbet wrote:
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> >   
-> >> Despite being introduced on Python 3.6, the original implementation
-> >> was too limited: it doesn't accept anything but the argument.  
-> > 
-> > The original implementation *of f-strings* ?
+syzbot found the following issue on:
 
-Yes. IMO, even the original version of f-strings is better than the legacy
-way of using '"string" % (tuple)' or "str.format".
+HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=117c3ddf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
+dashboard link: https://syzkaller.appspot.com/bug?extid=1facc65919790d188467
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149d95f8580000
 
-Besides that, there aren't many places where it uses expressions inside
-f-strings.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/16b90949171c/mount_0.gz
 
-> >   
-> >> Even on python 3.10.12, support was still limited, as more complex
-> >> operations cause SyntaxError:
-> >>
-> >> 	Exception occurred:
-> >> 	  File ".../linux/Documentation/sphinx/kernel_abi.py", line 48, in <module>
-> >> 	    from get_abi import AbiParser
-> >> 	  File ".../linux/scripts/get_abi.py", line 525
-> >> 	    msg += f"{part}\n{"-" * len(part)}\n\n"
-> >>                        ^
-> >> 	SyntaxError: f-string: expecting '}'
-> >>
-> >> Replace f-strings by normal string concatenation when it doesn't
-> >> work on Python 3.6.
-> >>
-> >> Reported-by: Akira Yokosawa <akiyks@gmail.com>  
-> 
-> You might want to add
-> 
-> Closes: https://lore.kernel.org/2d4d3fd1-5fe2-4d18-9085-73f9ff930c2d@gmail.com/
-> 
-> >> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> > 
-> > So I'm curious ... later in the series, you make 3.9 the minimal version
-> > for the kernel.  Given that, is there value in adding compatibility for
-> > older versions here?  
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1facc65919790d188467@syzkaller.appspotmail.com
 
-No because 3.9 is still not enough to accept a valid Python expression on f-strings.
-This arrived only on Python 3.12[1]:
-	"Expression components inside f-strings can now be any valid Python expression"
+loop0: detected capacity change from 0 to 32768
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 6297 Comm: syz.0.44 Not tainted 6.13.0-syzkaller-09793-g69b8923f5003 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:do_inode_permission fs/namei.c:523 [inline]
+RIP: 0010:inode_permission+0x62/0x460 fs/namei.c:592
+Code: e3 02 48 89 5c 24 10 89 6c 24 0c 0f 85 cf 00 00 00 4d 89 e5 e8 ef c7 87 ff 4c 89 f5 4d 8d 66 02 4c 89 e3 48 c1 eb 03 4d 89 fe <42> 0f b6 04 3b 84 c0 0f 85 16 03 00 00 45 0f b7 3c 24 44 89 fe 83
+RSP: 0018:ffffc900034379c0 EFLAGS: 00010246
+RAX: ffffffff82379481 RBX: 0000000000000000 RCX: ffff88804d699e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff8237945b R09: ffffffff8238fda6
+R10: 0000000000000002 R11: ffff88804d699e00 R12: 0000000000000002
+R13: ffffffff8ea8dbc0 R14: dffffc0000000000 R15: dffffc0000000000
+FS:  00007f4ad8e416c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4acfbff000 CR3: 000000004c82c000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ may_lookup fs/namei.c:1821 [inline]
+ link_path_walk+0x204/0xea0 fs/namei.c:2427
+ path_parentat fs/namei.c:2683 [inline]
+ __filename_parentat+0x2a7/0x740 fs/namei.c:2707
+ filename_parentat fs/namei.c:2725 [inline]
+ filename_create+0xf6/0x540 fs/namei.c:4063
+ do_mkdirat+0xbd/0x3a0 fs/namei.c:4328
+ __do_sys_mkdirat fs/namei.c:4351 [inline]
+ __se_sys_mkdirat fs/namei.c:4349 [inline]
+ __x64_sys_mkdirat+0x87/0xa0 fs/namei.c:4349
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4ad7f8b617
+Code: 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 02 01 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4ad8e40e68 EFLAGS: 00000202 ORIG_RAX: 0000000000000102
+RAX: ffffffffffffffda RBX: 00007f4ad8e40ef0 RCX: 00007f4ad7f8b617
+RDX: 00000000000001ff RSI: 0000000020000040 RDI: 00000000ffffff9c
+RBP: 0000000020000000 R08: 0000000000000000 R09: 0000000000005939
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000020000040
+R13: 00007f4ad8e40eb0 R14: 000000000000593f R15: 0000000020000380
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:do_inode_permission fs/namei.c:523 [inline]
+RIP: 0010:inode_permission+0x62/0x460 fs/namei.c:592
+Code: e3 02 48 89 5c 24 10 89 6c 24 0c 0f 85 cf 00 00 00 4d 89 e5 e8 ef c7 87 ff 4c 89 f5 4d 8d 66 02 4c 89 e3 48 c1 eb 03 4d 89 fe <42> 0f b6 04 3b 84 c0 0f 85 16 03 00 00 45 0f b7 3c 24 44 89 fe 83
+RSP: 0018:ffffc900034379c0 EFLAGS: 00010246
+RAX: ffffffff82379481 RBX: 0000000000000000 RCX: ffff88804d699e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff8237945b R09: ffffffff8238fda6
+R10: 0000000000000002 R11: ffff88804d699e00 R12: 0000000000000002
+R13: ffffffff8ea8dbc0 R14: dffffc0000000000 R15: dffffc0000000000
+FS:  00007f4ad8e416c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+----------------
+Code disassembly (best guess):
+   0:	e3 02                	jrcxz  0x4
+   2:	48 89 5c 24 10       	mov    %rbx,0x10(%rsp)
+   7:	89 6c 24 0c          	mov    %ebp,0xc(%rsp)
+   b:	0f 85 cf 00 00 00    	jne    0xe0
+  11:	4d 89 e5             	mov    %r12,%r13
+  14:	e8 ef c7 87 ff       	call   0xff87c808
+  19:	4c 89 f5             	mov    %r14,%rbp
+  1c:	4d 8d 66 02          	lea    0x2(%r14),%r12
+  20:	4c 89 e3             	mov    %r12,%rbx
+  23:	48 c1 eb 03          	shr    $0x3,%rbx
+  27:	4d 89 fe             	mov    %r15,%r14
+* 2a:	42 0f b6 04 3b       	movzbl (%rbx,%r15,1),%eax <-- trapping instruction
+  2f:	84 c0                	test   %al,%al
+  31:	0f 85 16 03 00 00    	jne    0x34d
+  37:	45 0f b7 3c 24       	movzwl (%r12),%r15d
+  3c:	44 89 fe             	mov    %r15d,%esi
+  3f:	83                   	.byte 0x83
 
-So, with this patch, doc build can be using Python 3.6. Still, it makes
-sense to move minimal version to 3.9 due to the current status of other
-Python scripts. 
 
-[1] https://docs.python.org/3/whatsnew/3.12.html#pep-701-syntactic-formalization-of-f-strings
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> I think rewording the summary to
-> 
->   "scripts/get_abi.py: make it backward-compatible with Python <3.11"
-> 
-> would resolve Jon's confusion.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Sure, but IMO it is still valuable to say somewhere that the script
-was tested and it is known to work since Python 3.6.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-> 
-> I haven't looked into python3'changelog, but it might be
-> "... backward-compatible with Python <3.12".
-> Mauro, which python3 release extended the f-string implementation?
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-See above. I only did a quick check, but it sounds that 3.12 is the
-one that finally implemented f-strings properly in a similar way to
-what Perl 5 does with $'expression' inside strings.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Thanks,
-Mauro
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
