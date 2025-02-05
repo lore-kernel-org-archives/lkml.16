@@ -1,40 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 143A6195FEC;
-	Wed,  5 Feb 2025 18:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAC41FDE08
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780224; cv=none; b=ewqZ4HrQAyrRRjCrcc6rUz2XdtyN8XYxTyka2xNRbmVYLq1lymMTEVvYYbXeWGkLdgajtdnfK+Z8xOOc/kpgt2+shVajcOUqalob+H061eWrFBwyke4KDNOkgvxipeB4rURneLzyO965HwTmhbJTlqkcJmdHtRx4hLxvYpXwLTg=
+	t=1738780264; cv=none; b=VEgsU3vNziat2snoMnsxpL4MYDbuHzylDrh0pXWnwTNFT8B9+cOQbAZsXI5ynw4j+TDhWMmR7dP90Eyt3aVnLL4rj+Gk/GItK4nMssMlAY+gD1KftydTRn29dXVxKYQU1ay9VmF1n6CeTfGLmx3Wf4zfqMwFA0fE4VZLA3yGeVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780224; c=relaxed/simple;
-	bh=6NpsNs4VlUdk7cX/aYSR3zR2uoRLZASGWWUnYKpsF+M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CZligK6IhHgQAGl1KJ3PiWCm8TvVC//D48wdRRycwgzfxV81z4AfB1T1K+pnwmP85rr5vOTo+aX5biq3ST5Ap6Sij/FPFMMiG2R6vNWnCEpbePRIvVnlNXhztiP+TXwDvAHlVZX990GxvRb0cZTQgc6wyr/oq3JkX3DglwDju08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B62981063;
-	Wed,  5 Feb 2025 10:30:44 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48C4E3F58B;
-	Wed,  5 Feb 2025 10:30:19 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] perf arm-spe: Report error if set frequency
-Date: Wed,  5 Feb 2025 18:30:09 +0000
-Message-Id: <20250205183009.224182-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738780264; c=relaxed/simple;
+	bh=AgAXFdLVVEihfeM8ysZZmEU+gEAxaTs8AYeDW7rK1OQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cb2FEPncnTQgCfvqTUKTI5CCKvWk15u+NZBPNjoWhE0Jpz/jRYaYd25Ww1v9LZFTYjiXfHqRH+O3i9mzH8/hjbZK0LEWfPLKoydjRz0iJ32qXxsxIV46pEknw1ajw5IdBuD2RFIar2AZ7M12Utx6jXDSs7yhRaGrn+DvWzjs/Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SoO3CRs7; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoO3CRs7"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-467a37a2a53so1494461cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:31:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738780262; x=1739385062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YRu8lJ2S+gftV8NR6vzgjYQmf6hY04ZpBFo14C7wy6U=;
+        b=SoO3CRs7z/hVxgTZ6PkaOMevjRIdq7vE3Cu0LUnFVFEtfZLy6hb0Zam7LwROO1TeMj
+         6aOMnxTimOX3msJ0Rc2loHLXvfPn7XCt+2MYuUEu/cAxUbGvui2puIOmCKzFWPcOR+el
+         194N1Y4J/lRCtU8LOYtN1MO99a1ETvssuMSYcY8v5zOx3cL62pUrpRTLfdY5YaQW78wE
+         3BNM3OfPXnOvV9T7sVouEPTGdzUvsSkFm6O4wfZHFy/11Pv13ce4XWbMJH93O0Pm6Y/U
+         mAgbEq9X6WRIcf8cfdiAzlEqY5CojWx0XGRGRvXkwsAmjetSwv6k/4EiQte0c2St13wB
+         oTXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738780262; x=1739385062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YRu8lJ2S+gftV8NR6vzgjYQmf6hY04ZpBFo14C7wy6U=;
+        b=tcN+nrXTEXxAQuWqwWMviLdpA8LwRpYaouWsVRZ62l9mQb37e2ZWju2j93tTY1AvkB
+         dH50q9Qzezo3FRwttsmzjB5nSyeDtNYUm4sAIWSo2uJlOTVLYY0h4lPyHNJeWRMK3JkB
+         GWZOr7fOxGH6ZQ0PwwTI/72gfi/dn5VXdp58qeyKZMUf+NEwxuc69ErGwwoNDMjyj5uQ
+         eiZru8M3Qdgm1OEInQokb+/Vl1joLb0EcpSxi14cRoqLAJPitu39bXV3Bl5S3gBXduVM
+         SaD7TVjNEDCRQ3z+hmE+037R7Nl90R4yNlNms8d2S2PKRzuWEAJnQ+6ME0ZbX7F5JIzs
+         dO9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXJwaeLP8+ivry08H95JtEIVL5Lsl+4xBceNh0nrCTgUjVxYMgo+ufaKi0/r/DPWHwC/eIFNWZ+Nu+dLSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7eryfuRBStoaZhEuDa4hl1mfneQczx9MoYWCCxCfJBj8uHLd2
+	m/D8teu41pC4kZpceR07TjdmBsN1D3lzc3ABReqwUdn36p4eA2d+D61mQ8az
+X-Gm-Gg: ASbGnctwQD9WKWvW6uqgXY+AIq4hsesvpVrnpQG8YsElyEDObE6EDy+v/Dc25Arjnp+
+	CjcBwfeWCp6nIgQOsGQHcZLCjTsJhzpFnNS/1+8sUT+nAnY7F8Nmz91d1I5HRXnqeBc0uFIx6ih
+	zRL+Dsl2KKK3hSHd2nO3YZ5oIIsTmWMldLu9CMRzDvMStCSAD2APHP+yrgmKaaErc+YI+VvPWK0
+	rWQ/YP58j7n4+JnXwchOFHHQyHv4e1oWp/+BFgVZCd/ziY+HtvL9wkfgDMUgdLRAGnT0EZvMJgU
+	7j/LcgowZ4G4gzM536Nn6Q==
+X-Google-Smtp-Source: AGHT+IHn5QFciUJNlaHMn2u9bwUYf1eujyg9AiM+KsaTgTPiGuqF2MJbbwWul1/abgvi7UoF9jQH7w==
+X-Received: by 2002:a05:622a:5186:b0:467:63fb:68d7 with SMTP id d75a77b69052e-47028303855mr70329291cf.50.1738780261741;
+        Wed, 05 Feb 2025 10:31:01 -0800 (PST)
+Received: from DESKTOP-GL3U3CJ ([149.88.18.213])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46ff3bbe998sm57498451cf.24.2025.02.05.10.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 10:31:01 -0800 (PST)
+From: Ian To <onlyian4981@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ian To <onlyian4981@gmail.com>
+Subject: [PATCH 0/2] staging: rtl8723bs: Fix coding style
+Date: Wed,  5 Feb 2025 10:30:52 -0800
+Message-ID: <cover.1738780135.git.onlyian4981@gmail.com>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,69 +72,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When users set the parameter '-F' to specify frequency for Arm SPE, the
-tool reports error:
+Fix the coding style issues. Reported by checkpatch
 
-  perf record -F 1000 -e arm_spe_0// -- sleep 1
-  Error:
-  Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
+Ian To (2):
+  staging: rtl8723bs: fix spacing complaints
+  staging: rtl8723bs: break up lines
 
-The output logs are confused and it does not give the correct reminding.
-Arm SPE does not support frequency setting given it adopts a statistical
-based approach.
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 182 ++++++++++++----------
+ 1 file changed, 103 insertions(+), 79 deletions(-)
 
-Alternatively, Arm SPE supports setting period.  This commit adds a
-for frequency setting.  It reports error and reminds users to set period
-instead.
-
-After:
-
-  perf record -F 100 -e arm_spe_0// -- sleep 1
-  Arm SPE: Frequency is not supported. Check manual 'man perf-record' on how to set period.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/arch/arm64/util/arm-spe.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 4301181b8e45..baef0812dc19 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -40,6 +40,19 @@ struct arm_spe_recording {
- 	bool			*wrapped;
- };
- 
-+/* Iterate config list to detect if the "freq" parameter is set */
-+static bool arm_spe_is_set_freq(struct evsel *evsel)
-+{
-+	struct evsel_config_term *term;
-+
-+	list_for_each_entry(term, &evsel->config_terms, list) {
-+		if (term->type == EVSEL__CONFIG_TERM_FREQ)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /*
-  * arm_spe_find_cpus() returns a new cpu map, and the caller should invoke
-  * perf_cpu_map__put() to release the map after use.
-@@ -389,6 +402,13 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 				return -EINVAL;
- 			}
- 			opts->full_auxtrace = true;
-+
-+			if (opts->user_freq != UINT_MAX ||
-+			    arm_spe_is_set_freq(evsel)) {
-+				pr_err("Arm SPE: Frequency is not supported. "
-+				       "Check manual 'man perf-record' on how to set period.\n");
-+				return -EINVAL;
-+			}
- 		}
- 	}
- 
 -- 
-2.34.1
+2.45.3
 
