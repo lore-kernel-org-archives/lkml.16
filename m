@@ -1,91 +1,110 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EB421E087
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A21221C180;
+	Wed,  5 Feb 2025 05:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738735032; cv=none; b=fpMzWoTVMl8Trtb/MjOFNS42LyYnVUIOj3ZJ6KgMAy8alivbVqMWyglyvRXRsDiITwVeQ0+g2i3QQT1BMetTh0CcEPbqbSG/NIC7WVHVHZdU+9gfHFhuY+V3L6FpY1iaYiDJ5ltqXA68zPN/1MutO+b6beHG/r5BOpPxxKIBTek=
+	t=1738735044; cv=none; b=nj2qTW6hoRKHKpLSo2+s0qLjKHyn6GAS0uUvcJhyFLx7Z7e4g+4FCpvvUvSyilyCr39ZKQ+Sr5MLJRrErtKOQexHAbECI3Or8G7VyY1NmXpSk2ho6Bb+ZxKXPb/VGO/FAM5qidG+MpNFW+xc8KOcq/WF8EM+444BsvdwNxar0Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738735032; c=relaxed/simple;
-	bh=JmHHk6b4grLsldkwDlWYnMxUVEDLxRUNdHIBTOJGm1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HEBazOr7abDgmOMShNe/iyK1irEjDNfI49lbkWz39m/Qc4g0bFrgyQlufdJtZbeiltY2D8LXlZdRMx4G9tyAmLAfqfWdBgYFGmRmFVPOsEjmjw5fd4ysMRVlb4Gw0JRzPwZmCAIhjuDXySYtbNlsQJy12grJhsOyYUOUl9KGg5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pC5M+suT; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738735044; c=relaxed/simple;
+	bh=KcKw+JaeazFnH7dr3v318+0gumLS8Njvvr9mpbh65sA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ugQnYaeP0kmb1LBh9sFZ1fAI3rtG4jkzb+ASd4X7vRmmWck9eiEFPpUwYC5ZMBS4/GxV5b+966aRL2JNXu+78kGe8DHRzlClK58KnX9x2YHKqxJNdVyciVqnuguuyPL6jJoEGU9c1mari5sXdeRjIHd8sX0EdzsC8aaHAzgaBS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BlErTA6/; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pC5M+suT"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436281c8a38so44790765e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:57:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738735029; x=1739339829; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Wf//K+zDvjEZ0lCO7qefASJpOtz5W/b6I3djUeQy/I=;
-        b=pC5M+suTcIA4wArAYKc63FiqYlRbXFs55ACie2XOftBTqhwGDl1A0MlQC1fB5Ikk81
-         KbLuPfBNeCg7qwVxo4ckBt1yzgpsft/VJaLgbUQot5UzEiAe/ee2bK55EuhfYR1xruiE
-         DuVtrtPQnZnLS99Qi4u/Y443t/T2RrEs2803g+Pjgrne+Fl1LF9o7jZr6N3CpgZlLeC3
-         nEBKuKoCIdHGz3B8FmDnxuOBdqi6+UvOPFVPhxT01pi+JoAP+srNQZMSJWn0m1Fa3dyV
-         3xbA90Hq5mQQbdZgOLtLKuoyAmXtnX8jl8/0XtfnZ9bwqAhQt9vaxfTNUH0OFYcmsfZT
-         pBKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738735029; x=1739339829;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Wf//K+zDvjEZ0lCO7qefASJpOtz5W/b6I3djUeQy/I=;
-        b=RSW1JJYkEVwp2Q2h2TtYl2SajxgoB5RKhWNMWAQHIq7kk5dqM0dpmKa+HXxF84uucG
-         sTcisVYqmEyB67bOvxlI8kYSAHEvKk0jSS57V0QmhdBS5q3MeyT9Mr4/drt82QHrR8WC
-         nKbL6BPW1Ayqahudxdyt3TAadEVkfOCkXcHOl86XfOhFQe5G3sJj6Xt6vx+qT7+FgHzt
-         eKlVENdORDdqSm1cpO6QE8nttY/RSwoxNgt+TsH6QalUy1+S3YUM7aBnERcrwxnbukgQ
-         qFWjRa0w/gITcWdAbnjat572xsdAuKmuppLWNFKDcppBfCQDRgilbuv4UDvJRIHvI+Q0
-         4ncA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDnDbFDT1ycMcYT/iIEKbX0+APvjRlgj7EmYGo43CdM0iwNLHr3WBwwUJ+CDQj9KkDvb0YvohN6QboNtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ1ZLlE23MlWxzrN5MtlVUEChLJpNe74KCQhxVAdepihIX7xvl
-	ZHs17BYUALVdYCGOp3AbN+v3MYRFt3XUrhJzCqhvvyxveqaMpvGqZnLX1qcrmzU=
-X-Gm-Gg: ASbGncsAE7u885Xs9ErW751dWtqNx5D5aV7bFdtpvE5mmQ4P4N79JBWV0z329NHC5Uu
-	yT6a3zsdJDWu+et1dketThzudyWLzpfAo4HJ3nDjpkLh42DiFIJUd0oCg3LfHaHMyNjsy2+e7wC
-	Zj4mZTgoOoCCLlxIya4vckNosJMP4Jg92q9t9TFADUg2iJV2WzyQUe6pSdOtDbd1NgC8HxZWkC4
-	bZ/d1c/DSdIIGjVa84hsmH0cepnPltpqKDvwPjPZyEFLMLjyTorwjnMor2IegNHQOBBs1NlIZZI
-	viBQd82ClysU+ziMr3Gb
-X-Google-Smtp-Source: AGHT+IEzl0+icrJdfMURnyk6DnvesW8whXjv5guwsjmV0E/xmX8GtuyZJ6P1LmUsWNrvnv90m7c5jg==
-X-Received: by 2002:adf:f810:0:b0:38d:b1ea:506a with SMTP id ffacd0b85a97d-38db488dea7mr777074f8f.28.1738735029283;
-        Tue, 04 Feb 2025 21:57:09 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38c5c102bdbsm17526023f8f.28.2025.02.04.21.57.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 21:57:08 -0800 (PST)
-Date: Wed, 5 Feb 2025 08:57:05 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ian To <onlyian4981@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] staging: rtl8723bs: remove unnecessary parentheses
-Message-ID: <3f548286-a32c-43d7-8e8b-6812a3fb9214@stanley.mountain>
-References: <cover.1738720049.git.onlyian4981@gmail.com>
- <d0b70310eb6b2dfdf062ba865362cd2640cb93e0.1738720049.git.onlyian4981@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BlErTA6/"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5155v0dw3364505
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 23:57:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738735020;
+	bh=t/2WmXH+7MwLwzsZBO1JWJrL8bvDXWsF3RF4uzEE/Gw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=BlErTA6/vqn2L9sZI2Daha/0Cn+PN/IzAhwEZCWHrT9BJVYRWCJLR1Kz/hfrl+Kdj
+	 3/o0vUKk57r85erZmiMMdRIEgxdv/VcHDWShs6OE75S6Jak4KoS197V040EEQUjLgT
+	 nkJcOrXIHNAhgNmN/86LBiXTkfIDBuoP3Duue57A=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5155v0xU070283
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Feb 2025 23:57:00 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Feb 2025 23:56:59 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Feb 2025 23:56:59 -0600
+Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5155usfF051863;
+	Tue, 4 Feb 2025 23:56:54 -0600
+Message-ID: <fc7fcd26-601a-5c23-7310-2a18b8cf377c@ti.com>
+Date: Wed, 5 Feb 2025 11:26:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0b70310eb6b2dfdf062ba865362cd2640cb93e0.1738720049.git.onlyian4981@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: ti,am65x-dss: Add support
+ for AM62L DSS
+Content-Language: en-US
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
+        <h-shenoy@ti.com>, <jyri.sarha@iki.fi>, <airlied@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
+        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+References: <20250204061552.3720261-1-devarsht@ti.com>
+ <20250204061552.3720261-2-devarsht@ti.com>
+ <eb8883f2-fc34-44f5-90a9-f4b14f0c45f2@ideasonboard.com>
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <eb8883f2-fc34-44f5-90a9-f4b14f0c45f2@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Feb 04, 2025 at 05:50:16PM -0800, Ian To wrote:
-> @@ -492,14 +494,14 @@ void rtw_update_scanned_network(struct adapter *adapter, struct wlan_bssid_ex *t
->  	/* If we didn't find a match, then get a new network slot to initialize
->  	 * with this beacon's information */
->  	if (!target_find) {
-> -		if (list_empty(&pmlmepriv->free_bss_pool.queue)) {
-> +		if (list_empty & pmlmepriv->free_bss_pool.queue) {
+Hi Tomi,
 
-Nope.
+Thanks for the review.
+On 04/02/25 19:25, Tomi Valkeinen wrote:
+<snip>
+>>     description: |
+>> -  The AM625 and AM65x TI Keystone Display SubSystem with two output
+>> +  The AM625 and AM65x TI Keystone Display SubSystem has two output
+>>     ports and two video planes. In AM65x DSS, the first video port
+>>     supports 1 OLDI TX and in AM625 DSS, the first video port output is
+>>     internally routed to 2 OLDI TXes. The second video port supports DPI
+>>     format. The first plane is full video plane with all features and the
+>>     second is a "lite plane" without scaling support.
+>> +  The AM62A7 display subsystem has a single output port supporting DPI format
+>> +  although similar to AM625 and AM65x Socs, it has two video planes where
+>> first
+>> +  is full video plane with all features and second is a video "lite" plane
+>> which
+>> +  does not support scaling.
+> 
+> The part above doesn't belong into "add AM62L" patch. It's also quite
+> confusing. "although similar to..."? Maybe drop the text "although similar to
+> AM625 and AM65x Socs, ", and start a new sentence from "it"?
+> 
 
-regards,
-dan carpetner
+Sure, I will split the patch for AM62A and correct above too.
 
+> For the AM62L parts:
+> 
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> 
+>  Tomi
 
+Regards
+Devarsh
