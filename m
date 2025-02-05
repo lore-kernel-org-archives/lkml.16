@@ -1,105 +1,144 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318C818A6B8
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BDD190052;
+	Wed,  5 Feb 2025 16:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771613; cv=none; b=EmoEDVeVjJql434rDiMuBs+wOwABBoDMBPy99LNIs8hMHzAVZhGLnhxvlhyLCKtm/Bo6ZrV3AuJx2rHp8MR6SH9XrhZ1116aGr1/06thu9sCNc4uHhfebH3mJitmqRW7570A6DPyViyeFfj2brklteX7v+sE8cc6XMVviGrVJ2U=
+	t=1738771620; cv=none; b=nDhNy7n63RYs/Q4uVh9EF+CteK4hA1PhdxbUT2NSzsT/o8i+QxQtYcH70Bj4YufjV1nqe2frD0tPYFMBvgjKs9wkK6saysgaXu6iKJgbJT7yGPJrOwRN0G5vRvx3zDsUZrE2jdWc+dxPJWsqWDyjyhD7NuBu7DVey2VGylSA8/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771613; c=relaxed/simple;
-	bh=RqbmmJCSs+vqeDfuEh3LyaagpG45I9aLSsrx8U8tdKI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X4qne6si0XcHM8/wgbhe55mxw4UbI5idHCMSP8thEYCIrqG1wRBXGLzC397BKdhZ5vFpMFNW8tN/aPEkCMoqMArChqjFhNX525Q1s5BUCLAsWU/EXZ6y6tcyyXb+Uj2z7uZkeZM3u6wUpHk+n71mej6yG1+zhvSKuepXPh7KWqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=euaXf8nh; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738771620; c=relaxed/simple;
+	bh=fdaBYMhNywx3SBQczSGppmG5pefI/VXyodeBWOMusZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fDRMhw9rlLiGCnheUqtFBfk7qSYjCtTorkEufjOjbMZUuuTsaEjyk+3c75gZgIQqWbyW7TI4lwBlLN1agUoiwVzJtjXRqEOdS1q+BdzCmXVgqUicJbCTA2pzeGoH30Hr/Mn56uVLpldRVDS+7wn5GcyK6K37UpVzCMXCSDWWyeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmJCzdWS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="euaXf8nh"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab744d5e567so218317666b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:06:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738771609; x=1739376409; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuUa4gQEbOKQJW4ZYh4orIOUTVK6GAF0b47tSOHp+ks=;
-        b=euaXf8nhhjEYiOx98Eod1y0FcjzpauQ+1C/8uinx2dYl+2N6+/QqNOfOsSibE8LTnM
-         CJWzkFxRHMmkWf9vglWnwJu7c2NqDgjjeBHB76Sx8OgTuD3GbKQOJ257uzOmJGgYYa8h
-         j/vRcVDXlO7SCO14zky4VX5vBfxYIrgVkfo78=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738771609; x=1739376409;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yuUa4gQEbOKQJW4ZYh4orIOUTVK6GAF0b47tSOHp+ks=;
-        b=jiUk2aYbtPAfjNPnoeH+lxUvbYjC8EGKz75jKdMR+NR1tv3L3uo0nP+IcSTEN0/zCf
-         /XRCkbBlhAspzw6CeWpyg4BZyeCjgt6fLwRwEwAazuje/IdTBtWmZm2kgyc/5Yi9QR4U
-         k2jhpQyCII/2sTQe4Adc69G1nwr8QYJhB7pj15cOgYNa2Slwilmh1aKWd8vQbfVsad25
-         VxiFGwrzDpJXzmbXVrk3i8w+Y1V5oytX/N5XExnoTFzkotQ+1ob2AP1504nd0eZEnvss
-         fn3W4F2aNg4qKhoMU53YS7amTnD5/Q3vOl/WRtYxajN/uppSYciYA54IuP1/kbL0y7q/
-         Dj6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6pJWmBWry7OCu0Y3tYfBPaiAeNAJ/wa67Yedv/wn8eJ7MQ6AWH0/uH6KqtvEkl5IpF0FJb/t4MfKuULU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1/aTgCNMlmsGKVBOhYfduE3i+HFyWGq60naxjUU141EU0xyOY
-	QbtX0tp4O1c/q5oRlZP+r6Bg4ka1Y8O7Ww/9xU1oR2iT2xnU+q8oZfwCWjfePGARE7xGn6B0OaG
-	cct0=
-X-Gm-Gg: ASbGncvksN84DQANTd4qCbBSM21x7NpmmZhNpF/ZDubVNqgbn4a3LRXMqXx/uXIoPLr
-	daXXJx56Tk7TLpxJNy73KI5k3nS5+sxPNK8feAZj4lZ2xmhbtB4evCbMv4nXElUZKLKCZpNPYHb
-	HWP79c4DG0lkwBTsCd6QKFshXhW0vnxGThFb7VRP2HrnIDWTr7sca0LcMCcrr7bU8cxmBHgbL0y
-	yJ3Gm43w3DBwMoq+P+dtJCFv0tYIKe9ydF/eUMbQQL1Oq+fL3SNry14krvy9qD8SgPB5Z0RSW7R
-	32zaq4FLBk4toitHt2rFzQEevY0YAdndjNzQSQ7LTiLyYcExO4FTUR6Ik5fk6XNMkw==
-X-Google-Smtp-Source: AGHT+IFqB1f5nbcarrbqUW+7o2g7NdPCHjdoA6CcNkxthnMCzQrRSoGTUbYH//d3xhLyra4ejR4AFA==
-X-Received: by 2002:a17:907:971b:b0:ab6:f88f:bf1f with SMTP id a640c23a62f3a-ab74854b369mr761744266b.27.1738771609180;
-        Wed, 05 Feb 2025 08:06:49 -0800 (PST)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcd9c89775sm1931281a12.69.2025.02.05.08.06.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 08:06:48 -0800 (PST)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso2079209a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:06:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX7pLQeI6rZkrwZh9OBosVz3wcQ3lLhnBg3ijCHdc7oBNq7bOfW0v9FF+38oW5TYTLNKzPu2LbiAO27lwk=@vger.kernel.org
-X-Received: by 2002:a05:6402:27d3:b0:5dc:dd24:a7a8 with SMTP id
- 4fb4d7f45d1cf-5dcebf087f4mr17433a12.7.1738771606125; Wed, 05 Feb 2025
- 08:06:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmJCzdWS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025E6C4CEDD;
+	Wed,  5 Feb 2025 16:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738771620;
+	bh=fdaBYMhNywx3SBQczSGppmG5pefI/VXyodeBWOMusZI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rmJCzdWSdeO/MZyuaGwpd3jRF4Q7jUka+PZeP49a22TpzZIKQBxOWeNTrxRVzF71r
+	 V8cJdZ9EWOL1BmPdt2MwvMKLkjtM7JwRiP5Gf9yKXTCLQi/XGNgf/u2TrHWnCZekMs
+	 KcnR/4aFUNtySkDVs/QdAPjDdL4eOJD+qPlLcdju2mvIxQZvlapbjwGmQsPKFtP/DT
+	 j2CkRdt+yuULeZ7J0auOX45nDI4eIN4QBns9+uFaj5ZTCnVUJ1pc4TPoJEUQqvAxJD
+	 mrB4B9L1UmziRtJnfUOKo+FV7ymUCTH4T7WcVd9qGBuOvdhKT6IBEsdMgfbN3AIA3S
+	 CTy3ep8u3Pyeg==
+Date: Wed, 5 Feb 2025 17:06:56 +0100
+From: Helge Deller <deller@kernel.org>
+To: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Sven Schnelle <svens@stackframe.org>, linux-parisc@vger.kernel.org
+Subject: [PATCH] kexec_elf: Fix some trivial kerneldoc warnings
+Message-ID: <Z6OMoCQridWMs0at@p100>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205153302.GA2216@redhat.com> <20250205153329.GA2255@redhat.com>
-In-Reply-To: <20250205153329.GA2255@redhat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 5 Feb 2025 08:06:29 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiqUibNm0W-KcCb3H+aiSVr4Uz3COZq=LjqGd__6guFEg@mail.gmail.com>
-X-Gm-Features: AWEUYZl4pQ3MfEjALYySg2NdNqfiE2xSNb-ZlC7tv2BTOe4-AKTgE2QsLD76NI0
-Message-ID: <CAHk-=wiqUibNm0W-KcCb3H+aiSVr4Uz3COZq=LjqGd__6guFEg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pipe: introduce struct file_operations pipeanon_fops
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
-	David Howells <dhowells@redhat.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, Oliver Sang <oliver.sang@intel.com>, 
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, WangYuli <wangyuli@uniontech.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 5 Feb 2025 at 07:34, Oleg Nesterov <oleg@redhat.com> wrote:
->
-> So that fifos and anonymous pipes could have different f_op methods.
-> Preparation to simplify the next patch.
+Document missing parameters of various functions to avoid warnings
+when compiling with W=1.
 
-Looks good, except:
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202502051744.Bjxxm10L-lkp@intel.com/
+Cc: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-> +++ b/fs/internal.h
->  extern const struct file_operations pipefifo_fops;
-> +extern const struct file_operations pipeanon_fops;
-
-I think this should just be 'static' to inside fs/pipe.c, no?
-
-The only reason pipefifo_fops is in that header is because it's used
-for named pipes outside the pipe code, in init_special_inode().
-
-So I don't think pipeanon_fops should be exposed anywhere outside fs/pipe.c.
-
-            Linus
+diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+index d3689632e8b9..f71448ac27c6 100644
+--- a/kernel/kexec_elf.c
++++ b/kernel/kexec_elf.c
+@@ -58,6 +58,7 @@ static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
+ 
+ /**
+  * elf_is_ehdr_sane - check that it is safe to use the ELF header
++ * @ehdr:	pointer to ELF header to be checked.
+  * @buf_len:	size of the buffer in which the ELF file is loaded.
+  */
+ static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
+@@ -180,7 +181,8 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
+ 
+ /**
+  * elf_is_phdr_sane - check that it is safe to use the program header
+- * @buf_len:	size of the buffer in which the ELF file is loaded.
++ * @phdr:	pointer to elf_phdr struct to be checked
++ * @buf_len:	size of the buffer in which the ELF file was loaded
+  */
+ static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
+ {
+@@ -244,6 +246,9 @@ static int elf_read_phdr(const char *buf, size_t len,
+ 
+ /**
+  * elf_read_phdrs - read the program headers from the buffer
++ * @buf:	buffer to read ELF file from
++ * @len:	size of @buf
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be populated
+  *
+  * This function assumes that the program header table was checked for sanity.
+  * Use elf_is_ehdr_sane() if it wasn't.
+@@ -280,10 +285,10 @@ static int elf_read_phdrs(const char *buf, size_t len,
+ 
+ /**
+  * elf_read_from_buffer - read ELF file and sets up ELF header and ELF info
+- * @buf:	Buffer to read ELF file from.
+- * @len:	Size of @buf.
+- * @ehdr:	Pointer to existing struct which will be populated.
+- * @elf_info:	Pointer to existing struct which will be populated.
++ * @buf:	buffer to read ELF file from
++ * @len:	size of @buf
++ * @ehdr:	pointer to existing elfhdr struct which will be populated
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be populated
+  *
+  * This function allows reading ELF files with different byte order than
+  * the kernel, byte-swapping the fields as needed.
+@@ -315,6 +320,8 @@ static int elf_read_from_buffer(const char *buf, size_t len,
+ 
+ /**
+  * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be freed
++ *		and zeroed.
+  */
+ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+ {
+@@ -322,7 +329,15 @@ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+ 	memset(elf_info, 0, sizeof(*elf_info));
+ }
+ /**
+- * kexec_build_elf_info - read ELF executable and check that we can use it
++ * kexec_build_elf_info - read ELF executable headers from buffer and
++ *		check that we can use them
++ * @buf:	buffer to read ELF file from
++ * @len:	size of @buf
++ * @ehdr:	pointer to existing elfhdr struct which will be populated
++ * @elf_info:	pointer to existing kexec_elf_info struct which will be populated
++ *
++ * Return:
++ * 0 on success, negative value on failure.
+  */
+ int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+ 			       struct kexec_elf_info *elf_info)
+@@ -378,9 +393,15 @@ int kexec_elf_probe(const char *buf, unsigned long len)
+ }
+ 
+ /**
+- * kexec_elf_load - load ELF executable image
+- * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
+- *			section will be loaded in memory.
++ * kexec_elf_load - load an ELF executable image
++ * @image:		pointer to kimage struct of file to be loaded
++ * @ehdr:		pointer to the ELF header of file to be loaded
++ * @elf_info:		pointer to kexec_elf_info struct of file to be loaded
++ * @kbuf:		pointer to kexec_buf struct which will be used to
++ *			load the ELF file
++ * @lowest_load_addr:	when the kernel was successfully loaded, the address
++ *			where the first PT_LOAD section was loaded is stored
++ *			in the variable pointed to by this pointer
+  *
+  * Return:
+  * 0 on success, negative value on failure.
