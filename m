@@ -1,103 +1,91 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4CE24B26;
-	Wed,  5 Feb 2025 12:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F510F507;
+	Wed,  5 Feb 2025 12:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738760177; cv=none; b=oTYed4nFQX/veueeOU9HMg9GkFCIbTiwp87emK67Ng/evnxLhVFjpcJrhdWbcCmMvT6S35y4m3jNHL0RZET1r9w9/msFZFlyo2Jq0zQIaLw4H4c/4f7Sm69syXOJCc2kQCmPrmIQlBWsByvxC3TMrvAxIFvEnrO5L9tVKmG+Hzw=
+	t=1738760250; cv=none; b=tIhXt9ur00hY/luXx1Gyx8Iddj4bzxgJe+Cq2FuVCBJFk+cU8OeeqZLpwpQoOV/Fu8ixKJiRwts/jrUqz8ueQTun16xTW7lbgngxmfEt0KWOw+kXUdGFoPVZgaDNpQ6tnTNzFNgOkPTq/D2YkeZiBEFLf8UTFH4XOTp7/JImKss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738760177; c=relaxed/simple;
-	bh=GoJpb92TT253qilEM7jNKyGy76VaerW9l3MGYbuh2SE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XOdrBs6ldBDq+G5uxBsOA1gfovBQ/2dV3KUwQUhjNDioKSYLTu7HEMG+Dma1frlagmoiKIpQpzeDw8y3agqJIYwhcczvt4G6QfWogov0lgzNOgZGee0qy9oB/DUO4vYA5XFYJNU0PiqZ/osQkfxKs3Ikix5dTv7ybvHcviABbqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=fyYF+3vR; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="fyYF+3vR"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 03DA310382D08;
-	Wed,  5 Feb 2025 13:56:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1738760167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CDjgkHIZ2FH9yH84cxjcC4Ip4QoMP9BgMpfAV1YInSM=;
-	b=fyYF+3vRRbvpyMWQ/Qz9FEeTdhUpAefKtWKCh3i3WmKoqvT8Ci3iTmo+83b/KAk6WksX7r
-	oGMej8XgNiHXPfs1aASNR/0QQh87ITcX4AGnlGWH8+etphYlm8qU19LMnR58JJisT17tCl
-	5GOs2rSSd6pUUOJ4+3bAu0L6L6GA1c+eq9zlAKhufVdc+1dZ65xJ8Ua9K6hUwaPXA4hPLp
-	b8DQRQo3L8a4hMYtjhQequ6hwXsm7agamqwioICnDlPymvdmHYC+/CZ7DlDKqkJU9eLgfP
-	2xeIKpRPqkGGnUOeRapda7qcWBE9O+P7oWIlqZFbcORzaSJCaWR6YkRR8alIjQ==
-Date: Wed, 5 Feb 2025 13:55:59 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	cip-dev@lists.cip-project.org, tglx@linutronix.de,
-	rostedt@goodmis.org, linux-rt-users@vger.kernel.org, pavel@denx.de
-Subject: Re: [PATCH 4.4 4.9 v1 2/2] mm: slub: allocate_slab() enables IRQ
- right after scheduler starts
-Message-ID: <Z6Nf32YB/J0LMSPw@duo.ucw.cz>
-References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
- <1738629964-11977-3-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
- <20250204081813.7qsvLFsU@linutronix.de>
+	s=arc-20240116; t=1738760250; c=relaxed/simple;
+	bh=gx24NkCwpwV9AcPPbFrtwlbx9niJwvD4f0qfvasEhoU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lWGFsPj09tkbIbsvMNIZ0ZF+3bbpMKJOeamTng0xMBq5vi2OU/2n1FbHhLmBsElrwqgINwc+V0f0RmUKUs/St1v0qq6X9h/s1T3Pl5ZwX9UyhDX0BZi6mfZvWEGABgsCMcJRbI4+r+enCMCthmsIa4Hhg5nVV1Uf9tesIRjy05o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D01471007;
+	Wed,  5 Feb 2025 04:57:50 -0800 (PST)
+Received: from [10.57.35.21] (unknown [10.57.35.21])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01ABF3F63F;
+	Wed,  5 Feb 2025 04:57:22 -0800 (PST)
+Message-ID: <4294edaf-8621-41b2-9009-7f5f3bb6c7f8@arm.com>
+Date: Wed, 5 Feb 2025 12:57:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Omqnf7SUTSKRSslH"
-Content-Disposition: inline
-In-Reply-To: <20250204081813.7qsvLFsU@linutronix.de>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V7 2/5] PCI/TPH: Add Steering Tag support
+To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: Jonathan.Cameron@Huawei.com, helgaas@kernel.org, corbet@lwn.net,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
+ michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+ somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+ manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
+ horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
+ lukas@wunner.de, paul.e.luse@intel.com, jing2.liu@intel.com
+References: <20241002165954.128085-1-wei.huang2@amd.com>
+ <20241002165954.128085-3-wei.huang2@amd.com>
+ <a373416b-bf00-4cf7-9b46-bd95599d114c@arm.com>
+ <f6b34f2e-31c9-4997-abfe-38d7e774b4fa@amd.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <f6b34f2e-31c9-4997-abfe-38d7e774b4fa@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 2025-02-04 8:18 pm, Wei Huang wrote:
+> 
+> 
+> On 2/4/25 12:33 PM, Robin Murphy wrote:
+>> On 2024-10-02 5:59 pm, Wei Huang wrote:
+>> [...]
+>>> +
+>>> +    if (err) {
+>>> +        pcie_disable_tph(pdev);
+>>> +        return err;
+>>> +    }
+>>> +
+>>> +    set_ctrl_reg_req_en(pdev, pdev->tph_mode);
+>>
+>> Just looking at this code in mainline, and I don't trust my
+>> understanding quite enough to send a patch myself, but doesn't this want
+>> to be pdev->tph_req_type, rather than tph_mode?
+> 
+> Yeah, you are right - this is supposed to be pdev->tph_req_type instead 
+> of tph_mode. We disable TPH first by clearing (zero) the "TPH Requester 
+> Enable" field and needs to set it back using tph_req_type.
+> 
+> Do you want to send in a fix? I can ACK it. Thanks for spotting it.
+
+Done[1] - cheers for confirming!
+
+Robin.
 
 
---Omqnf7SUTSKRSslH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[1] 
+https://lore.kernel.org/linux-pci/13118098116d7bce07aa20b8c52e28c7d1847246.1738759933.git.robin.murphy@arm.com/
 
-Hi!
+> 
+> -Wei
+> 
+>>
+>> Thanks,
+>> Robin.
+>>
 
-> > An simple option would be to backport the series[3], which is possible
-> > and has been verified[4]. However, that series pulls functional
-> > changes like SYSTEM_SCHEDULING and adjustments for it,
-> > early might_sleep() and smp_processor_id() supports, etc.
-> > Therefore, this patch uses an extra (but not mainline) flag
-> > "system_scheduling" provided by the prior patch instead of
-> > introducing SYSTEM_SCHEDULING, then uses the same condition as
-> > newer RT kernels in allocate_slab().
->=20
-> The proposal looks okay. However the verified upstream version not only
-> addresses your issue but also makes smp_processor_id() and might_sleep()
-> work in the early phase. I would prefer the upstream solution for those
-> two reasons.
-
-So... first, thanks for review. This is mostly my fault, Kazuhiro
-Hayashi did full backport, but I asked for minimal version.
-
-AFAICT there's no place for stable-rt to apply this, so we'll just be
-taking this to our trees in CIP project. (And I prefer smaller
-version. Additional checking is nice for development but not so nice
-this late in development cycle).
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---Omqnf7SUTSKRSslH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ6Nf3wAKCRAw5/Bqldv6
-8qdHAJ4+/Dac3znHYOzsb3TSumEh2FbZEACfVqCBVseYjulmOKfgT7QMAIp7SJE=
-=d8jC
------END PGP SIGNATURE-----
-
---Omqnf7SUTSKRSslH--
