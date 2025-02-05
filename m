@@ -1,235 +1,129 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013011.outbound.protection.outlook.com [52.101.67.11])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08331DE2C1;
-	Wed,  5 Feb 2025 17:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738775966; cv=fail; b=Ke5YmleRDZ+RUIusJyytpNJ4+kupRDOcD48aa8gKsKaep0FjEg/QOOlQ02yVs8ofizyr9UTUS/FV09Duglw2AwJUdJH71oxRGiHu7NittQ0y+ZuGck8TEG9uH69kLWwBMXK6t6/D29s6LWpAj9OCD6UQ0BmTsHTRI2wB4C/k5aw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738775966; c=relaxed/simple;
-	bh=p2mFK3rrixbWLfK3RyvAeDvNWCApDYWNWpzWTZaQMws=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=bGrFrAWr8/N8+QyHTVhwXKPpKZRHY4vdSRpJNGjiHSpSoZ7ixbvXaSJIGwqgetJ+dsozHrH6krUGl51EZQ8RAeXwYjNA9KHku3mWBoWqHSnnSXg7PtRxRZdyrGgXopnnBpRooehsq14c1Ckj6cKmAJvz+GwdkCm+oU7IxH6+EK0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ex4hgvlT; arc=fail smtp.client-ip=52.101.67.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FAF1FDE1A;
+	Wed,  5 Feb 2025 17:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738775969; cv=none; b=UugemeMQ8odS2eU7NkTpPw+LyiLgzSGhgQGZKKFEtK97zXgdBvsDdF8QXNpgP2lBXY+fcNG+69NqsQzpX8VwoW7R0nNGhcy2xAqH1PONIGZQDMkKk+XrqWZdc/87L1aWNx/IMMFCUQAG3q7++geRkQBLWHaqywMa0CD77ZPF9MM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738775969; c=relaxed/simple;
+	bh=X6ZZtEEzGbsZyJHzn8XWujTaW2SL9LiXtco1lmTFlps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdFNwNJjNIFthVXBFAYZB7rIhCKyInGYxoLLmzLB1z1hJKK2qOzrXr0tB8BS5zpAJzIrQZa0rA5dALPD/uhXhUxf/d0Gz4cst6g/p1M4LQvv3hh9EQUT9l5ZcRnbavLxh0BCvQR81cMmCFrbXU8qw502V6Cp0v+JojOb2P/dZ6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pgmqVB/Z; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ex4hgvlT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vsD0WsDXgrs8vKZDpJa/muaJIxUGl90yZW+ZSRFrwD01JpSONLvaSOQVdkvG7AkE7rW1X1sRzM+m6hNzcfSvY105yCEFBD/w/baopicUV8YD30tOED0gRzfM1m5qTtzTtHTvMfSh6747yOQljDpQaM1n7hnm+6LMymBXcMBEDKpSSTVMtP3e1T0G/caO4pbysXsC67GPq7d0yZ36eBlqIl2ZHAA/MQ2tyrcoQR/MEckPoLvUXOqLQnXrnNvzZ69EyHKatFR3CDb6VNW0/BFgKRY/hNwUUxsXBhOYNfm6N4WmsPUI7GxWwt07GSlJGHfIZrctv5KuuBM1sdb6KHYtpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9ErRgKANYyiRlaJIFLLX1u/qyCJ8Vujgs/MgTgB19Uo=;
- b=Y3nRfA5uTRN9oKFiG6xpFu1qbUZAXxMBvuHUy3zUebelw7YHw6mBTtpR0xq6AyrkNde87itWWI0LmqAgVB4za+ZN+PM+tmlqPP3bHSXZuxPI9tN9lcFy0SoF6HGsa5v9EYswrRhnWmFP4NFRHDLstbE3w04StkHYiqmc2g7BU9yFQq1xNcs9nIW8hGerbWKsvfvQ6bOvhRl5NFSm0+FXbxfmsnQl0iZ7oEJ2vq7JU3YSPL2g0VG8ofVcqMFpcoyzqmdxjd+ef2vf+E8Oe7X7vnpd05dNtJW3Sn8gjnpIfYX3zEtimfSofDgifNF01ZeaV/5+Ad+VxyRZ9lDPvM+uLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9ErRgKANYyiRlaJIFLLX1u/qyCJ8Vujgs/MgTgB19Uo=;
- b=ex4hgvlTex3CYUIplAdlym58z/D9Pi1JNxbUoTGRoKrqGyIJbKPSffaDsMEghrTnF1Tj5dn7Y5r18m+5B1FKWk4g+gaFPz0jDvQNrBoArnRA0uvk5FFBSdSN2oWdzycJqS0FHmPFBMSQLyUCr6ToCK4M84b6ZSXAdLajO7fZ80RkhPlE84xBUuMon5siPmHPJFK6FtHtjYvS3CJGME1aGjmkdaAtuXIdiVqy1mfqM/e5cETS5Xe6TvkY/lxEC3QYODSk64+ZW5Sbd8p883JjcTy3p4LYccjMvTBKZOw3g9CdIH1Wfp1InCh3dR/wBzint7HxdVosARU28qOv7b/bhg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI2PR04MB10546.eurprd04.prod.outlook.com (2603:10a6:800:274::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
- 2025 17:19:22 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8398.021; Wed, 5 Feb 2025
- 17:19:21 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Wed, 05 Feb 2025 12:18:15 -0500
-Subject: [PATCH v2 06/14] media: nxp: imx8-isi: Allow num_sources to be
- greater than num_sink
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-8qxp_camera-v2-6-731a3edf2744@nxp.com>
-References: <20250205-8qxp_camera-v2-0-731a3edf2744@nxp.com>
-In-Reply-To: <20250205-8qxp_camera-v2-0-731a3edf2744@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Rui Miguel Silva <rmfrfs@gmail.com>, Martin Kepplinger <martink@posteo.de>, 
- Purism Kernel Team <kernel@puri.sm>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- "Guoniu.zhou" <guoniu.zhou@nxp.com>, Robby Cai <robby.cai@nxp.com>, 
- Robert Chiras <robert.chiras@nxp.com>, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738775920; l=2071;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=p2mFK3rrixbWLfK3RyvAeDvNWCApDYWNWpzWTZaQMws=;
- b=a0UrJZvq+LO/6Qo++NcBeQwHkIqG9xprulQLKxkTTYfEn5lEjWMVEezRh+wNfrMWqvpnLt1js
- Z1r4RTWQFByCq6aW9VoBH4t2TScOo4QuG9baxU4RDTVmYk4tyqexRNo
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR13CA0001.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::6) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pgmqVB/Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Xzxj+9Kifo30L/NU1Tdw9PE4UUuu1WfcX58E05d3vJk=; b=pgmqVB/ZuHIMgwVi0jNCFJ/Bc1
+	0K3UQ07i4Men1G2g713jF15OrcimNF+d1E3LgJgIF6wNFFhVquZURz1ihjMxHDdkieeHpn3WilX7D
+	+JwQGkMMy707USbo4CVYnvzv22d+VUmg/JoBApJwOYVV3VIuguP7TXyj/fXof3OzOi6Y+aiRbQQoq
+	dHxEdS1s/nM2j2kxssPLACMR3a+6NLyGX8NwqKD3OvEu/k5dXvvpodRdFueOLmU2vnIyuFwSDDVko
+	pKXTSwGVBMJUHvpoR2Uy3T7a8AzYHDlTqBO8dDbk9j1IkD64wdDJiKj1oC5qiUeX+0Tm6gZaQ7O/A
+	9D3UFDjQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57364)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tfj3U-0007oq-1H;
+	Wed, 05 Feb 2025 17:19:16 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tfj3R-0002ak-1Y;
+	Wed, 05 Feb 2025 17:19:13 +0000
+Date: Wed, 5 Feb 2025 17:19:13 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, oe-lkp@lists.linux.dev, lkp@intel.com,
+	linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+	Jacob Keller <jacob.e.keller@intel.com>, netdev@vger.kernel.org,
+	Kory Maincent <kory.maincent@bootlin.com>
+Subject: Re: [linus:master] [net]  03abf2a7c6: WARNING:suspicious_RCU_usage
+Message-ID: <Z6OdkdI2ss19FyVT@shell.armlinux.org.uk>
+References: <202502051331.7587ac82-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI2PR04MB10546:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e44bc53-2644-4644-6fe8-08dd46093b04
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|1800799024|52116014|7416014|376014|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?cVpVSzZEQlBNMXpxaXA0dDZPMGxEdUxnc3FmKzVWYnRrTVhDdzF6L1EySzJB?=
- =?utf-8?B?WFhOcFFDc0xsd0U4Y1pBSzlDbTQxbHdqUCtDZ1lTSk1DQkt2ZDM2Y1BmR3NF?=
- =?utf-8?B?ekdTYU40c2g3VXo1eVZUdlk3OVR2TnVoOGdKbjlYQVB4TTNmaGt4aW1weU5l?=
- =?utf-8?B?YzlseFlUaVhOR3hFT2NuN1pIQ1BrbnphbTVWeUJpbGpZRjJRMFVUUlZkZ251?=
- =?utf-8?B?dlpOV2tzZFgzUDhNMWFYbUtLTVh2MXlwTWVSaExlQW52ODA5b094bXNzMC9J?=
- =?utf-8?B?MUYrNlAzNjl3dVNwa0ZEL2NmV1JrWkU2Q0tkUEE0SGRKaHk5b2FOdnExZTNR?=
- =?utf-8?B?ZlJLOTN1VXdYS0I4eGRTUnNkOE9GWEtaak81VHhyOTZLT2h5UVRBeU5JdThl?=
- =?utf-8?B?Nm9pVm1IdmpqMHljM29JOUYyWS9xd2lqamJ3VmphWlk3Z0t6VUxyS3I1Rkxq?=
- =?utf-8?B?T1lJbHNMcVlYcmcrVC8wRnlNd0sxQXhWQ0Ztd0UrMi82bXZVcElrWDhQUjky?=
- =?utf-8?B?aTFaeGs0NkZ5QzFQTUpUM1p1L3RCTFRoQldsZUM5b21xUXJWZWlzd3NHNzJk?=
- =?utf-8?B?S1lYcEw2Rmtvb2drRjlnNzBxMTlLenhFZlQ4TzQ3NlVZa3o2NmhNVytjVGVo?=
- =?utf-8?B?NW9vSk1hS1hjdkkveVJaVzNsaENRWS9ZRmpRVTN2QW9BSml4OCsvbzM0YzJi?=
- =?utf-8?B?YUI5ODFFWldOMUJxa2lQWDRFRWxmRGFXL0d2Sy9PT1lsZnRQOEh4R2ptZUI5?=
- =?utf-8?B?bG9obURqYjM0Z0UzVC9GbHFjSEZZaStPc1BuSDVoREpsS0M3ZXNDZHNMbmxs?=
- =?utf-8?B?NlBtenpzeGVUOVFndjczakMweXI2NVRQT2R4aG1KY3U1cnRGL2JZRWxiV0Zi?=
- =?utf-8?B?N0czWmhkZ0U3dXJsekZOYW1tRDhXMVpsSGJubE5LaVBpUVMyR0ZIKzY0b1F6?=
- =?utf-8?B?WG9jNlZFNDB5N2dORTlhVkYydnFGWWtTOFhjQ2JBbit2Ri9NR3QwL1FFQ2dO?=
- =?utf-8?B?NXFMWUdhUnRqMVlBWUh1MG1iOUtSQmpaMEdhak1SZ0xoM1B5Q3dsVDZxR3JW?=
- =?utf-8?B?YmZmNmlLdTkrVGxlUDFLTlhpK1RpNHQ2TGNKSy80c296SStDTGlmdDFCeTdU?=
- =?utf-8?B?RTl6RjZQdXNDdXdnNEZra2hQODNoNWdmbWdFQi9pWGVKS3ZjYlRVcUhOb0FE?=
- =?utf-8?B?Z2E0ZW1JNVAxK3VjOUVvZVdQaDhqM0NhODhZRFJrVEc0NGx1VllrblNteklz?=
- =?utf-8?B?Tlc1NmxGZk52N1JpZmNqRXU1T1I3Q2k5Qkg4dHIwczZFZHgvcmJpTWxDcE0w?=
- =?utf-8?B?NjkrRlJZdVQzTHY0RUJubUNIZ3FFUkV1SlFrWk5tdCs0UDNCVFd2RTlBNkhi?=
- =?utf-8?B?YUwyWG9BQUhWTk04VFFMZTFmVFRDVnd3TzFqaVAyMVQwVUJlYXM2cVBwUE84?=
- =?utf-8?B?S01ySTFYSkRVeTVKMDN0NEhGNXR5Ui9LUDlLUlRjUEYxNm5kVVdZS1BNMWtX?=
- =?utf-8?B?cjFPVk5EYkVId3ZNaGxWTjNPM1RPOGVxN0JRNzFYTUU2M2k5TS8wY2lqSVVz?=
- =?utf-8?B?MU5UbmUwR3FlaWlSdDNvajJkMWRWa2RCWDFHeG12NFNjUU94MTdaYWV2N3o3?=
- =?utf-8?B?eitXcGpNS0FqMDRhVWlHQjJYRHBsS1c3SjdXa0grUEgralJ4RHBsMS9kYnkx?=
- =?utf-8?B?Z091WWt4bVRjZW1tbU1zRGwzeGFwY0FZQkI2VmVGMDN3UHZlSVRiUkIzblR4?=
- =?utf-8?B?NEhkdkV1TFk3emw3dnNHQUxNbEVjZnF2Z0FZa1h0TXNiYUlxZlZ3QnlXUmZk?=
- =?utf-8?B?MWUwNUxjOWJpYVRQUHdYZEpLckFhcVoyd1pmWVlrNW8vYVdLWTNkWkRrUWV5?=
- =?utf-8?B?akNEY1FpQW4ydW14N2wyUnJ5M0pVOVRMdUxKV2hqVEppWklMWTByM1hJbkV2?=
- =?utf-8?B?VUJBVGlGckVMYWRLNndrSVZxMzRyWE9yNXZOUVVDWkcyekJEaE5SWDBtM29M?=
- =?utf-8?B?SUkxUUp1TmdnPT0=?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(7416014)(376014)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?cklSVDNwbnJJNXk4UWZ0eHRvZU9ncWFIbU95RlBjM0lsNWQyVE1SbGw2bks3?=
- =?utf-8?B?RHRCTW1TVzZFVVZ0Q0lhTkQ3c0NKR3NtZjUzcjl4MFhHd01aM1I1UFF3YmRI?=
- =?utf-8?B?dmNkTmJ5Tkg3bVhzMnl0UWtveVBEQTZFRUFoczhxQ1Y2Ry82TUdlUmt3aGYw?=
- =?utf-8?B?NHVTNU1Id1MvTnFVZUtILzJnc3l3bVlXNXpKTG84MGRvRytva0UwbDByR3pV?=
- =?utf-8?B?UEZycFo4OXZtRldjSFRBMWJEUFh3a3E5WTg3ZU5JeW5oYUlSRkp2UURnRGxu?=
- =?utf-8?B?SVBFWEdkTEVvdzJ4NVhXSjZkdWpNbHF3TzAwc0tFRXQveDI4YS9RYzByNmEy?=
- =?utf-8?B?cGJnQnY4Z01PcURCcUhSRG5IQW1jNlZ1WkhlYkxHeWU3K051Z0xCRnQ2b25H?=
- =?utf-8?B?VURTYVhCYk9PVUVucU1maWxoci9hMlhNQ2hZSnJuYnhSVmJuMDZKVjZoS3Rj?=
- =?utf-8?B?U1lmdnBSYjNPVE1nbUx1anNrSnZPa0w0WkRteFlHamhpU0o3V09nTzBaUmJv?=
- =?utf-8?B?VkF5NVY2MmlUS3lHVzQzbFR6dnVuZU0wY3E3OUFRek4rRkNXK3JpQWNpdXZT?=
- =?utf-8?B?b1lRZDc1YnpTNVhyRlFGd25hT0k3bGkzSFl4R29lVzAzV1J6Tm5LWHlSUkZV?=
- =?utf-8?B?dlp5eUxLTDdmSkEySUNNc3A5dm5zV01RVEttWlQzVGFsLy9uV1ZiT1l0ZElu?=
- =?utf-8?B?c2s2UTJ4R0RBN0liUytReEVhQ1phK2p4NHVzd1hNeTZabmNmTldBWkltWDBn?=
- =?utf-8?B?MlRUL2R6WkF0TDlaTU5yYkdETHlBd2dXc2tFcnRqbCtFQWc2VkppY2ZlMU5U?=
- =?utf-8?B?bXBEWWUrN0tmekMzd0JNMG1DS1FNb1pnR0RtRHZBWjc4VllYRWFFcDM1TzZH?=
- =?utf-8?B?RTVjWFgzNzRoQnFQWDA3NjNvWXIyN2o0U2I2RXQrTzU4TzFNOG40c3BUblEx?=
- =?utf-8?B?aUpBenYzN2NPTG5CZGhzeGJSdVM0akE1d0YvcDhjcnRMejZBR0p4b0lVNSs3?=
- =?utf-8?B?YVc1c25HSlpkeVVJekVKK0NDZUVtREJUa1R5dnpQeXIzc0Vkd09MWGF4b21t?=
- =?utf-8?B?aEtGekIrTExzZUsxc3Q1RWVGMEFnQTM3TEJtM1BsM3RWc1R2T1ZCOHpZalhk?=
- =?utf-8?B?K1JHWjJzcmFjVUxnWk9TN2hDcDhLYWl5UUdoS09udzBJNTQ3N3pNM1V1cnlN?=
- =?utf-8?B?V01NVVdwRDBNL0w1a3hvQ3MxNDRYa0ZBbXVSQ0NuQTY4QUEwemZaeW90YXdt?=
- =?utf-8?B?RzBIY1AzRmhmZFBhNWhmUVJzaFpJY3NRdVBHU2VoTHk2b1JRQ2M5amdPTjRN?=
- =?utf-8?B?TW9ZQUhIS1VuTnV5dExFZFVFTXd5OEJSZTZNd2l1eFpBQkdxNWxKWGNSOFo2?=
- =?utf-8?B?ZjBEQ1U2NkZ1c2UveFRiNHRZUXF6ZFkxTXJDME1ySVZpWWE1dVhjeis5ZGxC?=
- =?utf-8?B?TnVQYXZVc2RqTHB6RGRQMURFaHk3WEVabmRGb0dBeXNTVEZ2ZWVzZG9kQnlV?=
- =?utf-8?B?UWFrNW5nSHRDWkJUbWY5Z0tiazVETHFNT3JRZlgrUVFRSjF4bXhGZmFTQzlJ?=
- =?utf-8?B?QXNkWGJwcVNrb0RBSm5abi80U0xJQ1doOEtJREd5TitnemtKM3hUajhOZEpU?=
- =?utf-8?B?VWZyUTdyY080bTUrQ1ZsaW1yQWMxSUdBZGE5M21NMXBJUUVuZlp6ZUZ2Yzgz?=
- =?utf-8?B?V0sxaFV1Ly9SMVI1MGdkN2Q2azAzRTBBZnZacVVPK1R0eEl0WitWbDlESFFH?=
- =?utf-8?B?VDJwK0c1QVZuSzNwOGxjazRidm1lSkFYT2E3V1hid2NJdmtvZktLc284THk2?=
- =?utf-8?B?SUk0NDBabFVPRWc3NklXMGxaMDBzRFUyOVNDSCtkNTVhY3BHLzEzZFBwWHFm?=
- =?utf-8?B?QitQd29FWkdyby9BMUE5TnpycFQvZTJHN1NqTjBWL3I4a285ekUvS3VORDRm?=
- =?utf-8?B?SUdJcFBTaWJnOUkrTkVHbHFvdGhIblhUa1ZSbnNYakpkT3JuRHVlZ2ZvM1hp?=
- =?utf-8?B?RTU5K0pEa0FnZTNwd0NjMVZtQ0NZZzFEOU80UzdNZE9GVndXYWdic1AzMzMy?=
- =?utf-8?B?WmFWdjgrK1ZpcjlOMWJ6V2NhTWJ1SWNQdGQwVldwMTRBejB1cC9rQlF4TTU0?=
- =?utf-8?Q?ELRtZfvRT7hXDm+vicW7ITF4Z?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e44bc53-2644-4644-6fe8-08dd46093b04
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 17:19:21.6427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bdPwowYwxIrai2JwbrFbtE7Pck2b+/eAIloonwKtK+hOkdkBvHXwb0myUEPYNV678YT1Qw4pWMWPjwg9YvUm8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10546
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202502051331.7587ac82-lkp@intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Allow num_sources (drvdata: num_channels) to be greater than num_sink
-(drvdata: num_ports + 1).
+On Wed, Feb 05, 2025 at 02:08:04PM +0800, kernel test robot wrote:
+> kernel test robot noticed "WARNING:suspicious_RCU_usage" on:
+> 
+> commit: 03abf2a7c65451e663b078b0ed1bfa648cd9380f ("net: phylink: add EEE management")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
-ISI support stream multiplexing, such as differentiates multiple cameras
-from a single 2-lane MIPI input, or duplicates input stream into multiple
-outputs. So num_channels may be greater than num_ports at some platform.
+I think there's multiple issues here that need addressing:
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change from v1 to v2
-- none
----
- drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+1) calling phy_detach() in a context that phy_attach() is allowed
+   causes this warning, which seems absurd (being able to attach but
+   not detach on error is a problem.)
 
-diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-index 93a55c97cd173..ba5b2d3617a23 100644
---- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-+++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-@@ -188,11 +188,11 @@ static int mxc_isi_crossbar_init_state(struct v4l2_subdev *sd,
- 	 * Create a 1:1 mapping between pixel link inputs and outputs to
- 	 * pipelines by default.
- 	 */
--	routes = kcalloc(xbar->num_sources, sizeof(*routes), GFP_KERNEL);
-+	routes = kcalloc(xbar->num_sinks - 1, sizeof(*routes), GFP_KERNEL);
- 	if (!routes)
- 		return -ENOMEM;
- 
--	for (i = 0; i < xbar->num_sources; ++i) {
-+	for (i = 0; i < xbar->num_sinks - 1; ++i) {
- 		struct v4l2_subdev_route *route = &routes[i];
- 
- 		route->sink_pad = i;
-@@ -200,7 +200,7 @@ static int mxc_isi_crossbar_init_state(struct v4l2_subdev *sd,
- 		route->flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE;
- 	}
- 
--	routing.num_routes = xbar->num_sources;
-+	routing.num_routes = xbar->num_sinks - 1;
- 	routing.routes = routes;
- 
- 	ret = __mxc_isi_crossbar_set_routing(sd, state, &routing);
-@@ -453,7 +453,7 @@ int mxc_isi_crossbar_init(struct mxc_isi_dev *isi)
- 	 * the memory input.
- 	 */
- 	xbar->num_sinks = isi->pdata->num_ports + 1;
--	xbar->num_sources = isi->pdata->num_ports;
-+	xbar->num_sources = isi->pdata->num_channels;
- 	num_pads = xbar->num_sinks + xbar->num_sources;
- 
- 	xbar->pads = kcalloc(num_pads, sizeof(*xbar->pads), GFP_KERNEL);
+This is the root cause of the issue, and others have run into this same
+problem. There's already been an effort to address this:
+   https://lore.kernel.org/r/20250117141446.1076951-1-kory.maincent@bootlin.com
+   https://lore.kernel.org/r/20250117173645.1107460-1-kory.maincent@bootlin.com
+   https://lore.kernel.org/r/20250120141926.1290763-1-kory.maincent@bootlin.com
+and I think the conclusion is that the RTNL had to be held while calling
+phy_detach().
+
+2) phy_modify_mmd() returning -EPERM. Having traced through the code,
+   this comes from my swphy.c which returns -1 (eww). However, as this
+   code was extracted from fixed_phy.c, and the emulation is provided
+   for userspace, this is part of the uAPI of the kernel and can't be
+   changed.
+
+3) the blamed commit introduces a call to phy_modify_mmd() to set the
+   clock-stop bit, which ought not be done unless phylink managed EEE
+   is being used.
+
+(2) and (3) together is what ends up causing:
+
+> [   19.646149][   T22] dsa-loop fixed-0:1f lan1 (uninitialized): failed to connect to PHY: -EPERM
+> [   19.647542][   T22] dsa-loop fixed-0:1f lan1 (uninitialized): error -1 setting up PHY for tree 0, switch 0, port 0
+> [   19.649283][   T22] dsa-loop fixed-0:1f lan2 (uninitialized): PHY [dsa-0.0:01] driver [Generic PHY] (irq=POLL)
+> [   19.650853][   T22] dsa-loop fixed-0:1f lan2 (uninitialized): failed to connect to PHY: -EPERM
+> [   19.652238][   T22] dsa-loop fixed-0:1f lan2 (uninitialized): error -1 setting up PHY for tree 0, switch 0, port 1
+> [   19.653856][   T22] dsa-loop fixed-0:1f lan3 (uninitialized): PHY [dsa-0.0:02] driver [Generic PHY] (irq=POLL)
+> [   19.655392][   T22] dsa-loop fixed-0:1f lan3 (uninitialized): failed to connect to PHY: -EPERM
+> [   19.656689][   T22] dsa-loop fixed-0:1f lan3 (uninitialized): error -1 setting up PHY for tree 0, switch 0, port 2
+> [   19.658308][   T22] dsa-loop fixed-0:1f lan4 (uninitialized): PHY [dsa-0.0:03] driver [Generic PHY] (irq=POLL)
+> [   19.659841][   T22] dsa-loop fixed-0:1f lan4 (uninitialized): failed to connect to PHY: -EPERM
+> [   19.661168][   T22] dsa-loop fixed-0:1f lan4 (uninitialized): error -1 setting up PHY for tree 0, switch 0, port 3
+> [   19.663018][   T22] DSA: tree 0 setup
+> [   19.663591][   T22] dsa-loop fixed-0:1f: DSA mockup driver: 0x1f
+
+which then causes phy_detach() to be called, which then triggers the
+"suspicious RCU" warning.
+
+This has merely revealed a problem in the error handling since Kory's
+commit on the 12th December, and actually has nothing to do with the
+blamed commit, other than it revealing the latent problem.
+
+The "hold RTNL" solution isn't trivial to implement here - phylink's
+PHY connection functions can be called with RTNL already held, so it
+isn't a simple case of throwing locking at phylink (which will cause
+a deadlock) - it needs every phylink user to be audited and individual
+patches to take the RTNL in the driver generated as necessary. I'm not
+sure when I'll be able to do that. It's also a locking change for this
+API - going from not needing the RTNL to requiring it.
+
+This is probably going to result in more kernel warnings being
+generated when I throw in ASSERT_RTNL() into phylink paths that could
+call phy_detach(). Sounds joyful.
 
 -- 
-2.34.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
