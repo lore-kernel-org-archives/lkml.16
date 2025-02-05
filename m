@@ -1,124 +1,160 @@
-Received: from mail-4022.proton.ch (mail-4022.proton.ch [185.70.40.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC18204092;
-	Wed,  5 Feb 2025 20:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA209214A61
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738788464; cv=none; b=cwSDE1yDQbeMtNXO7b4TZZhvg2Qc9BVM15cO8oiDI3CkAL1F7agSxERfUd/2qiDSl/yp9O50KBt5WUU41jGLzhPC2oyZGlSNSPhbdeV0on16OorVLlXGV8wH4GDerrFuz8/kjlGXiTlH7UQmRQhaAoeFGMYq/2I/BMZaYz4eBBI=
+	t=1738788472; cv=none; b=szwYesDCpI4CrGekSBrTl0Z09wb8tBtnnICc8gtoZawwkiOO2XfsSIb7hPXnA+9MgQA7AJoTkBxuTlYFQeDcUWcmmowRZoXzXblOua+McESX5+i6zUPCp6g0Seh4JEvOW8CgdLeoR9GwKKQbAcY7or3EizPzrogZzVP/3qGJhjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738788464; c=relaxed/simple;
-	bh=OMfQHNHB/80r6eS3wpbY3NXufO3OZxJRL26txj/dVVM=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CeA9Hopjg4zLR3jqSBZ+j+9NwRJk91NS/2qL/BbdvevQ0Axc4HKotoQqp8pgZsZS6GwTDfYxPh5A7ULRx+XgaA5LiR98xliClnp44FKEU1IBg+SwSCwCqCOxWvrHBQEV6NH/MVL4Lpmv10UbTARlN3f7f8dZCEn9raDkAD6Ofi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com; spf=pass smtp.mailfrom=yhndnzj.com; dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b=acSko5Pc; arc=none smtp.client-ip=185.70.40.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yhndnzj.com
+	s=arc-20240116; t=1738788472; c=relaxed/simple;
+	bh=rU0ctC7rOtBbtvVcAjSEvVnzlmDJ2Rez5/8BZgHt+xk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qn2TETkYW2ELFX8MWWjd23vLvui85vyEw2A8VBS7rYizRcaX7OelzHS7YGrcs3fpVISvhMbbpyO7W5cQ2vibZNePDyyg30+6GwpAJIn59LSDgmjFwg/lVCFqRgWTWz74Reqt4OX3Ew11tT5RoN9cNUF+k7XYaRWSL9qK0Nv4ChU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BKi6i9Ad; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b="acSko5Pc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yhndnzj.com;
-	s=protonmail2; t=1738788452; x=1739047652;
-	bh=OMfQHNHB/80r6eS3wpbY3NXufO3OZxJRL26txj/dVVM=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=acSko5PcgTpSp9e6wVuJo77+pZf62hXpDafNmRelFvwVYDjPFM5jbx5BGqHKmvuYg
-	 E/1W3zzMFVAbwYOO9lmuIHrzW09/26VHR0ZgEIG/KppdhYNmS7Fd1wDveOSOtOXznl
-	 opu4RuBKSCp+TxEnRZ52YcKXubKDkQNvhb1M3pbsJo0y3/lGmCMfKRQBqCiI4hBP5V
-	 xeALwxGJD7AzDGf9XYsEG39SRCqVJG8RVnSewfNINa1dGkYU9b0/+225fBammnzAlq
-	 RRm+aCR7vkcrfxDiH3ZLilz6Y0Q19WLCKEm/lROTohaCkXzyHuFH40CeY3brhRs4Ab
-	 xmYX02J0zAylw==
-Date: Wed, 05 Feb 2025 20:47:23 +0000
-To: linux-fsdevel@vger.kernel.org
-From: Mike Yuan <me@yhndnzj.com>
-Cc: Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, =?utf-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>, Christian Brauner <brauner@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH] fs/xattr: actually support O_PATH fds in *xattrat() syscalls
-Message-ID: <20250205204628.49607-1-me@yhndnzj.com>
-Feedback-ID: 102487535:user:proton
-X-Pm-Message-ID: fb475632d93aef10901c3530d8491305e77698c7
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BKi6i9Ad"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d04b70fe79so25135ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:47:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738788470; x=1739393270; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qO3VLGfpIyW7n/mpkrRU9S3W3XvjrnoMDTo4eY/G6UA=;
+        b=BKi6i9Ad/3CLLMV1AOC6F03JbxYWiiQnpt9jInEYQprYUY37RTrkdGk+LYcSIjcCbk
+         U8Rdgtp3ykGT0tnFi5gWFPF301CpVQdlt48UQ/w26PjzD8MMBYy5Eb+2SCCKEHOVAcJC
+         tCJYLMmYcyUGgY4/H6WOEz0lqgR8xiEqrP/YqVYo3EM4A+Xnh3rGaCmMhcXYTwBvTzE3
+         MiIAk6MlqVsxEmTaPd9iMcAaHAsx0gFww8tO3faJlTKY8AC/Wk8rO2vYn6E7J4JPu+xp
+         zYzSWhIUmitv70ny6kmXh6Sotlxijgf0tk92+xPZe6i3yJ8O4Dln2Qq53lR1UZQeL3Bv
+         ws9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738788470; x=1739393270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qO3VLGfpIyW7n/mpkrRU9S3W3XvjrnoMDTo4eY/G6UA=;
+        b=J7Ey8MlFAXE4lQENv+x25cVYwUAUGKyWbTr9H3mJ4s0emZo0nQ7zKSsoTiU9gKcID+
+         1Zfyc6KDQ8RfkUckXgfg9ktw9bdhwOqglPcDVXIsb2LOylkdKhCSVwZ17ITaDybrd3he
+         iPPJvmaHhI6xOLX82hkRHNXtdnGvK6OzrZzuBODx1kAXFv7Ji7ZEYtAqmlSdTn1ga57R
+         alk0qFlKW9BScWZxxwPKSh7StOxwyuGPUSPXKrO7xZk1dgiImJ3FEpLy4cn/Abb8WcGd
+         w8XxhyDb8pLzrlMZMDc1klBG1Cu5YcQLN3ppRHJDiufa8QLqIB6GxT0H7P2RTG41mXvK
+         M9WA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1nHx6PsTLp+oACvhLiM0ahZMiaEw8uxBTMCqPI2wQzunKbYFZN3mXWDK7bdIeEmoXeulT/nOD6gihOXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyns6g0j7euTLIAyZqgjP82UCH7Gn5V23SlHMHlvCH81IPaLame
+	pgiZyFlXY4fF3rgJiaznKI+JHLo6TcF9l/ICouAZ6FeojrJNLJ58yaofDIcwoCG7n5C3hNFS0GI
+	F+Zag7/sc+5dXXXQnZSrRqfvFKnBHR3vjIVpl
+X-Gm-Gg: ASbGncsvSpNfEwuTgUiqig+JAnEjbpp8+XOSlBdzr9zUhNam9sX3cVGi/SzrDSkwEsL
+	fqkZnY79/viz73PLhyalxkEj0/RnnEta1y4UlyOTy37KKTtKlu0ZhkrvfBt0rScO02nRlLMKVsy
+	n/dN8+K0WvEIGsCjQOXPXEXh0k
+X-Google-Smtp-Source: AGHT+IHJnefBKwcS3pswiENouUkaAd3Hiy1kZfPbDXW7Wl7NrpVnF9fY6D5TADaLx1tGX8uwqg0KXDS/aO+qCYmly/k=
+X-Received: by 2002:a92:d1cf:0:b0:3d0:507f:38dd with SMTP id
+ e9e14a558f8ab-3d05b4befcfmr423545ab.5.1738788469762; Wed, 05 Feb 2025
+ 12:47:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250205173140.238294-1-irogers@google.com> <4f42946ffdf474fbf8aeaa142c25a25ebe739b78.camel@intel.com>
+In-Reply-To: <4f42946ffdf474fbf8aeaa142c25a25ebe739b78.camel@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Feb 2025 12:47:38 -0800
+X-Gm-Features: AWEUYZkjLLl2RiWIh_PBTKbSre4apLrTUqpKx5SDeXneyEXwT4EWNR30bpCGuKs
+Message-ID: <CAP-5=fUjx3PTHfjgkam9Q0xE+TrYx+FSzF8wUscbD9X36gJ1Tg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/24] Intel vendor events and TMA 5.01 metrics
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "Baker, Edward" <edward.baker@intel.com>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"Biggers, Caleb" <caleb.biggers@intel.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
+	"Taylor, Perry" <perry.taylor@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Cited from commit message of original patch [1]:
+On Wed, Feb 5, 2025 at 11:44=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel=
+.com> wrote:
+>
+> On Wed, 2025-02-05 at 09:31 -0800, Ian Rogers wrote:
+> > Update the Intel vendor events to the latest.
+> > Update the metrics to TMA 5.01.
+> > Add Arrowlake and Clearwaterforest support.
+> > Add metrics for LNL and GNR.
+> > Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
+> >
+> > The perf json was generated using the script:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> > with the generated json being in:
+> > https://github.com/intel/perfmon/tree/main/scripts/perf
+> >
+> > Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+> > <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>,
+> > Weilin Wang <weilin.wang@intel.com>, Kan Liang
+> > <kan.liang@linux.intel.com> and Thomas Falcon
+> > <thomas.falcon@intel.com> for helping get this patch series together.
+> >
+> > v5: Remove Valkyrie metrics mistakenly added on atom. Ensure "perf
+> > all
+> >     metrics test" doesn't skip for missing events.
+> > v4: Fix TSC events on hybrid mistakenly specifying the core PMU
+> >     inhibiting the use of the msr PMU.
+> > v3: Fixes for hybrid metrics that were missing PMU. Update to the
+> >     latest events.
+> > v2: Fix hybrid and Co-authored-by tag issues reported by
+> >     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
+> >     Clearwaterforest.
+> >
+>
+> Thanks, I'm seeing some errors during the perf all metrics test:
+>
+> Metric 'tma_info_system_cpus_utilized' not printed in:
+> event syntax error: '{cpu_core/TSC,metric-
+> id=3Dcpu_core!3TSC!3/,cpu_core/CPU_CL..'
+>                       \___ Bad event or PMU
+>
+> Unable to find PMU or event on a PMU of 'cpu_core'
+>
+> event syntax error: '{cpu_core/TSC,metric-
+> id=3Dcpu_core!3TSC!3/,cpu_core/CPU_CL..'
+>                                \___ unknown term 'TSC' for pmu
+> 'cpu_core'
+>
+> valid terms:
+> event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask,config,config1
+> ,config2,config3,name,period,percore,metric-id
+>
+> event syntax error: '{cpu_core/TSC,metric-
+> id=3Dcpu_core!3TSC!3/,cpu_core/CPU_CL..'
+>                                \___ unknown term 'TSC' for pmu
+> 'cpu_core'
+>
+> valid terms:
+> event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask,config,config1
+> ,config2,config3,name,period,percore,metric-id
+>
+> There are all some errors like this,
+>
+> Testing tma_cisc
+> Metric contains missing events
+> Cannot resolve IDs for tma_cisc: cpu_atom@TOPDOWN_FE_BOUND.CISC@ / (5 *
+> cpu_atom@CPU_CLK_UNHALTED.CORE@)
+>
 
-> One use case will be setfiles(8) setting SELinux file contexts
-> ("security.selinux") without race conditions and without a file
-> descriptor opened with read access requiring SELinux read permission.
+Thanks, I forgot to reapply the TSC fix. You can do it with
+$ find tools/perf/pmu-events/arch/x86 -type f -exec sed -i
+'s/cpu_core@TSC@/TSC/g' {} \;
+I can't eyeball this later missing events problem. What model type
+does it happen on?
 
-Also, generally all *at() syscalls operate on O_PATH fds, unlike
-f*() ones. Yet the O_PATH fds are rejected by *xattrat() syscalls
-in the final version merged into tree. Instead, let's switch things
-to CLASS(fd_raw).
-
-Note that there's one side effect: f*xattr() starts to work with
-O_PATH fds too. It's not clear to me whether this is desirable
-(e.g. fstat() accepts O_PATH fds as an outlier).
-
-[1] https://lore.kernel.org/all/20240426162042.191916-1-cgoettsche@seltendo=
-of.de/
-
-Fixes: 6140be90ec70 ("fs/xattr: add *at family syscalls")
-Signed-off-by: Mike Yuan <me@yhndnzj.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian G=C3=B6ttsche <cgzones@googlemail.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: <stable@vger.kernel.org>
----
- fs/xattr.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 02bee149ad96..15df71e56187 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -704,7 +704,7 @@ static int path_setxattrat(int dfd, const char __user *=
-pathname,
-=20
- =09filename =3D getname_maybe_null(pathname, at_flags);
- =09if (!filename) {
--=09=09CLASS(fd, f)(dfd);
-+=09=09CLASS(fd_raw, f)(dfd);
- =09=09if (fd_empty(f))
- =09=09=09error =3D -EBADF;
- =09=09else
-@@ -848,7 +848,7 @@ static ssize_t path_getxattrat(int dfd, const char __us=
-er *pathname,
-=20
- =09filename =3D getname_maybe_null(pathname, at_flags);
- =09if (!filename) {
--=09=09CLASS(fd, f)(dfd);
-+=09=09CLASS(fd_raw, f)(dfd);
- =09=09if (fd_empty(f))
- =09=09=09return -EBADF;
- =09=09return file_getxattr(fd_file(f), &ctx);
-@@ -978,7 +978,7 @@ static ssize_t path_listxattrat(int dfd, const char __u=
-ser *pathname,
-=20
- =09filename =3D getname_maybe_null(pathname, at_flags);
- =09if (!filename) {
--=09=09CLASS(fd, f)(dfd);
-+=09=09CLASS(fd_raw, f)(dfd);
- =09=09if (fd_empty(f))
- =09=09=09return -EBADF;
- =09=09return file_listxattr(fd_file(f), list, size);
-@@ -1079,7 +1079,7 @@ static int path_removexattrat(int dfd, const char __u=
-ser *pathname,
-=20
- =09filename =3D getname_maybe_null(pathname, at_flags);
- =09if (!filename) {
--=09=09CLASS(fd, f)(dfd);
-+=09=09CLASS(fd_raw, f)(dfd);
- =09=09if (fd_empty(f))
- =09=09=09return -EBADF;
- =09=09return file_removexattr(fd_file(f), &kname);
-
-base-commit: a86bf2283d2c9769205407e2b54777c03d012939
---=20
-2.48.1
-
-
+Thanks,
+Ian
