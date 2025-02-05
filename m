@@ -1,176 +1,176 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348951FDE02
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471E11FCCE1;
+	Wed,  5 Feb 2025 18:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779933; cv=none; b=CxZ7By6ioJS3Qogvba8ZtnoAuUOG5ucSfEfUKqnqOcX8xTaEN7PFcb2JsxCjaBh4qnUymEmr6kK985dL671pBcDJas85m5DbzgKvafBJOcgXhcWyDysrD1z6JJxXfq7efBGt1OKM6wxOICejfoZrAftSX0SoLsM6ZCqr5NvTrzY=
+	t=1738780039; cv=none; b=Jujpi7DXCaa6+co9OIsxWBBvy62aHMfCuQWJ3t4cIZ1miJ5SYN0bUhe1WEG5KIdOgy9/X69E+XGXxFBVms6RAagz7o+QRs0uGQ6s5elqVKCNh4VjEUmLqwj3oX8KXz5lKS5RZBLRtE1uXBqDUjyM9PKH4+lfrh1GXxTr45nAEuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779933; c=relaxed/simple;
-	bh=tH6lLMrQ/gj5po0e0sG6QtkzB5Kxsj+lFXBtzxF6SIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+W7p0XnOFfn2J7+oGqU2dn9uEcW8NbZnpJDOa5NbD8WOtDXhCN4WfDZCPd4tEAbThWGkfxK//fQVkh0PLhprke3Lr81eXxG/2EvoygVBXy0xoG3p+OlrqQN/VsdRwoKWF0wKY7pVRtDukEBLUYVe9ou3Eu+BliJABSfABpTJxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=ApoHtq05; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1738780039; c=relaxed/simple;
+	bh=XTlhPmk51GDVC6DlWA9yXxy+ISHtOrb+IWkiux/fELw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M+QHBiIpNhl6a74bB6QDxDmQw7dbI+WeNV8D938vW8wh0+cNcuDVyg2OGy4dhwuveQhHntzF72vM50qg9l9llS9KBYbdrSC9b9gck7r3bKgL8FX/GnSDRDaoa1ML0f+rQ/vd8hy3Ax7MS39deWvX/Q+c8YKGXfFDxX1UYU68qiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m7edtQC/; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="ApoHtq05"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46fa7678ef3so1164041cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:25:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1738779931; x=1739384731; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mCzyuBHVhuQj4Umta0/LqBnv3QQgsYQwEwtnRHH8YVM=;
-        b=ApoHtq05eDSi3/wXc75BudIKOhgeXgT1Xwxx8EmX68Z5uBqUh6n0Y9gWB1QCVhW6wq
-         A8VBkj/2FprcxeVdJeGhCCnvScm3cxnb54oBxswBBV3pldZMNUOG5HlNmhbhnzDcQkVV
-         cXtDk+f2jbYrtzQCSwDZnE8A5gU4QCAjwCdmPJ23DE9ZEx0rGXr1EDdApJ8pLtg43le+
-         prPEqM3x5t+NJwYSL8OiavFy5GraKuVwYtzR0KUMhCAylKfDG2c//13dRTFJxNN4JtXY
-         tQYysHfbOz3ZHZTp9dkNEKGusz80rxP4X3X1ymePPG5r0uKql6aXqyNj77M3cQQ4ZhGH
-         bbiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738779931; x=1739384731;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mCzyuBHVhuQj4Umta0/LqBnv3QQgsYQwEwtnRHH8YVM=;
-        b=LVpjHyfEY7Zx64KMo/M1gSKvgfphWx2PhjUMEr/dyUM+q5sow1h3hgakt/93kWbqQK
-         HCNGsEYohf+NhXh3gGqvxCg6zMieoN28ZX0k86KD5xHzg0r5kdeKKaDROSWIzBiTTrWL
-         ZYuJq1bUrMQuJ8Zo5Zop92SPp9u7VFZALG6tKXhwfkNL+SP5xcLOyw6TOPKuBzUDiK6C
-         RjYO8x//yXNLZbAtI2WxEoJiKc4E/vCyCVSEarYlnXxgx3j245eHwXoaEL5WUf5fPyQh
-         7ReKrv0v3eRyY1Yf3gNbXF2lwJxu32+Og60Y06SaL/OOWvokAFzYglzySilcKL5hzIAa
-         tCTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwFTgTlhwkSnZWscoNmRw8bA0KDCV2abch4svjN/NaGN/lRViDrv2sY9OwVswWgFAkSBJZaF0bjQOIG0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyU7hFpLoTSfX+r03p+UAMSgQ5R0CVeGEIeDjK0TL4Ldmkixny
-	hscvvihOBlpZ5VhLgWgWMVI460+ddiRB365Q7TB8EG9jwpVqjj+weHfYsC2j1Q==
-X-Gm-Gg: ASbGncuLb/D9SHeUAbEcKZT09oF+zeSwxX21IgVBpVbo0SoL1B5ev2M5a0Rvv11M7ZZ
-	vRQqOnKAt9+0bSY/whdDw854xBjsgsVzhwWBL4wO7+/hLlo2OeV73/C9Ju6ITF3JY8VVOcLDAwP
-	OwVbx9dN69pO0xgteD4CcsWE8SVXmO9G6B9oR6zWUP6kREv8JP26oX+1uT6pOmQINbEuPzM07Xt
-	7RKY9cj+CaQad8ioMfI86TWmCWAYh1hRsw/3PpTMWuFiWVqDDXQchBc64q8HZYq6Ec77Wp74A/z
-	NTV76M2KApOWAjR7uVtBXTJ/VE72wwuEoOVHAbw4A8HwUYjB7FkomjEjuZAugLjj3xDXLXTBFuX
-	6CmwR5mNW
-X-Google-Smtp-Source: AGHT+IHbLHNE3cQEhE10HA2TKNk7wuNggVxGPfO7kUIpeSaRqAIv7hAuT4QUnco0X4ZYtMz7WP94AA==
-X-Received: by 2002:a05:622a:50:b0:46f:cc2e:3b54 with SMTP id d75a77b69052e-4702818e2e4mr39924271cf.12.1738779931018;
-        Wed, 05 Feb 2025 10:25:31 -0800 (PST)
-Received: from rowland.harvard.edu (nat-65-112-8-21.harvard-secure.wrls.harvard.edu. [65.112.8.21])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0ce770sm72153931cf.19.2025.02.05.10.25.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 10:25:30 -0800 (PST)
-Date: Wed, 5 Feb 2025 13:25:27 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Mingcong Bai <jeffbai@aosc.io>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup
- sources
-Message-ID: <6363c5ba-c576-42a8-8a09-31d55768618c@rowland.harvard.edu>
-References: <20250131100630.342995-1-chenhuacai@loongson.cn>
- <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
- <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com>
- <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
- <61fecc0b-d5ac-4fcb-aca7-aa84d8219493@rowland.harvard.edu>
- <2a8d65f4-6832-49c5-9d61-f8c0d0552ed4@aosc.io>
- <06c81c97-7e5f-412b-b6af-04368dd644c9@rowland.harvard.edu>
- <6838de5f-2984-4722-9ee5-c4c62d13911b@aosc.io>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m7edtQC/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738780037; x=1770316037;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XTlhPmk51GDVC6DlWA9yXxy+ISHtOrb+IWkiux/fELw=;
+  b=m7edtQC/oyshDa6xiUVPV2aEEudl0BIUPlqq4XQkfC9Ik/oWHHm5NGcg
+   1G1r3ltMWtKQ3NcH4Yj/RuL1LTqTWtT1ZG7D+VDt1YKNl7ZAge2kFvatf
+   34lTEmNEK21ttBVDA0xTOAmLzNOQooB9qK+XefdHlfmmwcmWg/6yob17z
+   74nbO4TbH2Y0rUzICRh9t0NRloky3WGgQKtcchzuz3z2nYPB8h2RTkaE7
+   p9hzZ7x0ODofCjx/5KmeVBTOrJyfg2JV83q45PVNCfgJ+0R8EGah0Wtt0
+   X8hP2tlR1Idq5P53kqGKtHFqdYeb1zjRaXR1wPrnAbc+lh0Fum1hlvYFj
+   w==;
+X-CSE-ConnectionGUID: 7h97O7OnRZed1KX7+tew/w==
+X-CSE-MsgGUID: MS8nEX73TkWf8+MZ0NbjNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39388164"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="39388164"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 10:27:16 -0800
+X-CSE-ConnectionGUID: HyM0g3kIQx2POYoCUoS8FA==
+X-CSE-MsgGUID: 0tZY022HQkipK2/4msdY7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="110870664"
+Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.220.14]) ([10.124.220.14])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 10:27:16 -0800
+Message-ID: <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
+Date: Wed, 5 Feb 2025 10:26:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6838de5f-2984-4722-9ee5-c4c62d13911b@aosc.io>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+To: Feng Tang <feng.tang@linux.alibaba.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+ ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 01:59:24PM +0800, Mingcong Bai wrote:
-> 在 2025/2/4 00:15, Alan Stern 写道:
-> > What sort of USB controller does the X200s have?  Is the controller
-> > enabled for wakeup?
-> > 
-> > What happens with runtime suspend rather than S3 suspend?
-> 
-> It has the Intel Corporation 82801I (ICH9 Family) USB UCHI/USB2 EHCI
 
-UHCI, not UCHI.
+On 2/3/25 9:37 PM, Feng Tang wrote:
+> According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
+> least 1 second for the command-complete event, before resending the cmd
+> or sending a new cmd.
+>
+> Currently get_port_device_capability() sends slot control cmd to disable
+> PCIe hotplug interrupts without waiting for its completion and there was
+> real problem reported for the lack of waiting.
 
-> controller with PCI IDs 17aa:20f0/17aa:20f1. The hub is a Genesys Logic,
-> Inc. Hub with an ID of 05e3:0610 - this is an xHCI hub.
+Can you include the error log associated with this issue? What is the
+actual issue you are seeing and in which hardware?
 
-There is no such thing as an xHCI hub -- xHCI is a host controller 
-technology, not a hub technology.  Perhaps you mean that it is a USB-3 
-hub.
+>
+> Add the necessary wait to comply with PCIe spec. The waiting logic refers
+> existing pcie_poll_cmd().
+>
+> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> ---
+>   drivers/pci/pci.h          |  2 ++
+>   drivers/pci/pcie/portdrv.c | 33 +++++++++++++++++++++++++++++++--
+>   2 files changed, 33 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..c1e234d1b81d 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+>   #ifdef CONFIG_PCIEPORTBUS
+>   void pcie_reset_lbms_count(struct pci_dev *port);
+>   int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+>   #else
+>   static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+>   static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+>   {
+>   	return -EOPNOTSUPP;
+>   }
+> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+>   #endif
+>   
+>   struct pci_dev_reset_methods {
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index 02e73099bad0..16010973bfe2 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/string.h>
+>   #include <linux/slab.h>
+>   #include <linux/aer.h>
+> +#include <linux/delay.h>
+>   
+>   #include "../pci.h"
+>   #include "portdrv.h"
+> @@ -205,6 +206,35 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>   	return 0;
+>   }
+>   
+> +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *pdev)
+> +{
+> +	u16 slot_status;
+> +	/* 1000 ms, according toPCIe spec 6.1, section 6.7.3.2 */
+> +	int timeout = 1000;
+> +
+> +	do {
+> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> +		if (slot_status & PCI_EXP_SLTSTA_CC) {
+> +			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+> +						   PCI_EXP_SLTSTA_CC);
+> +			return 0;
+> +		}
+> +		msleep(10);
+> +		timeout -= 10;
+> +	} while (timeout);
+> +
+> +	/* Timeout */
+> +	return  -1;
+> +}
 
-> Sorry but the record here is going to get a bit messy... But let's start
-> with a kernel with Huacai's patch.
-> 
-> === Kernel + Huacai's Patch ===
-> 
-> 1. If I plug in the external keyboard via the hub,
-> /sys/bus/usb/devices/usb1,
+May be this logic can be simplified using readl_poll_timeout()?
 
-/sys/bus/usb/devices/usb1 is the root hub, which is an emulated device 
-that is closely tied to the host controller.  The external Genesys Logic 
-hub is /sys/bus/usb/devices/1-1.
+> +
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
+> +{
+> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +	if (pcie_wait_sltctl_cmd_raw(dev))
+> +		pci_info(dev, "Timeout on disabling hot-plug interrupts\n");
+> +}
+> +
+>   /**
+>    * get_port_device_capability - discover capabilities of a PCI Express port
+>    * @dev: PCI Express port to examine
+> @@ -230,8 +260,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>   		 * Disable hot-plug interrupts in case they have been enabled
+>   		 * by the BIOS and the hot-plug service driver is not loaded.
+>   		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		pcie_disable_hp_interrupts_early(dev);
+>   	}
+>   
+>   #ifdef CONFIG_PCIEAER
 
->  power/state is set to enabled. For the hub,
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-You mean power/wakeup, not power/state.  In fact, there is no 
-power/state file for USB devices in sysfs.
-
-> corresponding to usb1/1-1, power/wakeup is set to disabled.
-> 
-> 2. If I plug the keyboard directly into the chassis, usb1/power/wakeup is
-> set to disabled, but usb1/1-1/power/wakeup is set to enabled.
-
-Why is usb1/power/wakeup set to disabled?  Doesn't Huacai's patch set it 
-to enabled?
-
-Is 1-1 the keyboard device?  That is, did you plug the keyboard into the 
-port that the Genesys Logic hub was using previously?
-
-> The system wakes up via external keyboard plugged directly into the chassis
-> **or** the hub either way, regardless if I used S3 or runtime suspend (which
-> I assume to be echo freeze > /sys/power/state).
-
-No.  Runtime suspend has no relation to /sys/power.  It is controlled by 
-/sys/bus/usb/devices/.../power/control.  If you write "auto" to this 
-file for the device and for all the hubs above it (including the root 
-hub) then they will be put into runtime suspend a few seconds after you 
-stop using them, assuming no other USB devices are plugged into the same 
-hubs.
-
-> === Kernel w/o Huacai's Patch ===
-> 
-> The controller where I plugged in the USB hub, /sys/bus/usb/devices/usb1 and
-
-/sys/bus/usb/devices/usb1 is the root hub, not the controller.  The two 
-are related but they are not the same thing.  The controller is the 
-parent device of the root hub; it lies under /sys/bus/pci/devices/.
-
-> the hub, corresponding to usb1/1-1, their power/wakeup entries are both set
-> to disabled. Same for when I have the patch applied.
-> 
-> However, if I plug the external keyboard into the chassis, it would fail to
-> wakeup regardless of S3/runtime suspend (freeze). If I plug the external
-> keyboard via that USB Hub though, it would wake up the machine. The findings
-> are consistent between S3/freeze.
-
-This means there's something different between the way the keyboard 
-sends its wakeup signal and the way the Genesys Logic hub sends its 
-wakeup signal.
-
-Can you post the output from "lsusb -t" for this system?
-
-Also, can you enable dynamic debugging for usbcore by doing:
-
-	echo module usbcore =p >/sys/kernel/debug/dynamic_debug/control
-
-and then post the dmesg log for a suspend/resume cycle?
-
-Alan Stern
