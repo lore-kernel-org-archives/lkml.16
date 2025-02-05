@@ -1,54 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3D4231CA2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6447822DFA9
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752424; cv=none; b=nINDU6PeNUzqla5vRiKDUNDgN3DEb86+ju3pWUqvWl74OcNp9kqxcpGRtfnnHzTJnr8PUuCYefU2Hfc6wenNtAUNH+eirDCxWaaj9W6M/ZfAcr+0bI7IMHKppRTaYjggaV9S6clxzH+tZXlOadPbQAVYS35KAm7ck+REBXGvX/I=
+	t=1738752424; cv=none; b=mNopP/yTFgjGOeeBm+VRrT3fQ99hF+tYiKB2qLOh/yBN/3+jtdLYurklDNKdvpGd+dXCIdVGPID8jr/0/POqHWZZcGch5ZKvASy0DYwBlEl5hZWwnBUq6E2PPxSQbFtCyhBkdcIjITYeIHOmDx9sAFbV38H6IDiPVBYcpq9eziU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752424; c=relaxed/simple;
-	bh=xRkFOWHuZ+4aavyCFjkbkfd+GJEMFsXNmhrm/e95+8I=;
+	bh=6g/QPUlIJV8swSm7eBhrCXyD5X9cUmz6Kj0wDivSvC8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IgY03aVnZVpxXRvLJkSskPuq2EPrZMgecJMEdlmruytiwx8RYI9cNq7k5hHIK7KQUexRhJiiRpP1WjRSkkj6kKULfLBop2nlZVsafbuaD5AUKxAfiVwxYJrNIfAmYWWhk57qIHGb180Nmfh4LOYvyIe2cbrrN5pCWRUf4239FwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ziQSI3e5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sd8EGdt7; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=cyuXRqIDoX7sqm90cSHh+or5QYxBBk2bX7fyREcWGAVATRXPe14N72XCOjK6JlwO28fiqHEXDvOEaWnKnssWOCLKRZR/kyJI5U0ms2fpCPT0MCRAOoDscfj1t5XHcuHHBuj7ZdJskGkONehkpDBKWLRvbxgKOcGxHScUERd5vYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d71f1Ln2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fm9oQDJ3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ziQSI3e5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sd8EGdt7"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d71f1Ln2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fm9oQDJ3"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738752420;
+	s=2020; t=1738752418;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ypoh5bPsfxOM77Dymarue9WtxfUD42b9bpRlgO7jFRQ=;
-	b=ziQSI3e57QrJCb6Go3UMd6AGPlrdJG2fJjIOJsSZgsy3aAvBqcaNoGy1rmSlzC2n5eSPY2
-	poEfVElDycTubu+LAZaIlX21OJO+iCX7FtWlLvGB7zShs3u2hGKocnV+FdL9TwBcNXmLuf
-	QhgnEjmjJBJCcVahvH9J9cnMVvFEwI+P4bdyvnAElWZrFhCvTLksDOiyWpOOR8fj3N0Kxf
-	bSoYQPVZgmBERGdSeB5VWPnASY3Xosbb+LptKBu9kay6EyEccjl4O3gpswK/stLtkl2/9j
-	yuPQ9dxx6nW7pNAuoq4bnErm7FT30ZxRlQ/4KkUnGzi/o8AXvyNnqFWQqP4nrg==
+	bh=dv1Yu4iIeEMxKsUFYju9BcSqLadTHkwIowgqitCIxik=;
+	b=d71f1Ln2mOnDn6Tgye60yVi0ljWznJqJ1cveAjbow+e0mfelBK/t4uWZPlZGCfSjV38VeK
+	5C47Qg3wbDmb6wNFScGmC7wvb+LZJqt8AfHQtcL8ExFdB12lb26GS4TcZf98rbjks8qAze
+	EbKLrWrjy/ewxDcFpPuOnpQSMRLKhnl+/zP5ZkcGpa1dA05gyXT8o9gVd2JQV4FH4ZPVhK
+	rJFj+UJTLy7epY5iRMKhgcBT4zffVVMYEiXB7vM8HiLmSsG9ypJAaXWYYJ69oYjfJbgrUj
+	OuzTOunC/Kh76Nek4JUC5VqA62SKqnGEHKZ0wnj+pU0hH2k75sUWWriu4iebCQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738752420;
+	s=2020e; t=1738752418;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ypoh5bPsfxOM77Dymarue9WtxfUD42b9bpRlgO7jFRQ=;
-	b=sd8EGdt7DB+4jVCmgKh8tXZkIWY6VTBdXu+vH4nkCQO5EonW63pnBpOzDlwW4u0muILHtI
-	pb4wJNo56bhqK6CA==
+	bh=dv1Yu4iIeEMxKsUFYju9BcSqLadTHkwIowgqitCIxik=;
+	b=fm9oQDJ3w4R7Ho1KWAMKePPgCgqK/5Xjtecsfl9uD0oBFlU7f1ttjYtdz3qRYk+4yv5QCF
+	CddpQFJjDxYiMmAg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
-	Zack Rusin <zack.rusin@broadcom.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>
-Subject: [PATCH v2 24/45] mailbox: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:12 +0100
-Message-Id: <b742f81b6acdaa604511834a06a8aac3e6e63ca3.1738746904.git.namcao@linutronix.de>
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Zack Rusin <zack.rusin@broadcom.com>
+Subject: [PATCH v2 16/45] powercap: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:04 +0100
+Message-Id: <fffc5ecc232069d91817b519dcafd8985120e51c.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -67,30 +67,46 @@ hrtimer::function with the new setup mechanism.
 
 Patch was created by using Coccinelle.
 
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>
 ---
- drivers/mailbox/mailbox.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/powercap/idle_inject.c       | 3 +--
+ drivers/powercap/intel_rapl_common.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index d3d26a2c9895..118beaf447aa 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -534,9 +534,7 @@ int mbox_controller_register(struct mbox_controller *mb=
-ox)
- 			return -EINVAL;
- 		}
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index 04c212953ded..5ad7cc438068 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -339,8 +339,7 @@ struct idle_inject_device *idle_inject_register_full(st=
+ruct cpumask *cpumask,
+ 		return NULL;
 =20
--		hrtimer_init(&mbox->poll_hrt, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL);
--		mbox->poll_hrt.function =3D txdone_hrtimer;
-+		hrtimer_setup(&mbox->poll_hrt, txdone_hrtimer, CLOCK_MONOTONIC, HRTIMER_=
-MODE_REL);
- 		spin_lock_init(&mbox->poll_hrt_lock);
- 	}
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+-	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	ii_dev->timer.function =3D idle_inject_timer_fn;
++	hrtimer_setup(&ii_dev->timer, idle_inject_timer_fn, CLOCK_MONOTONIC, HRTI=
+MER_MODE_REL);
+ 	ii_dev->latency_us =3D UINT_MAX;
+ 	ii_dev->update =3D update;
 =20
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_=
+rapl_common.c
+index 77d75e1f14a9..cf3d806284c4 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -2064,8 +2064,7 @@ int rapl_package_add_pmu(struct rapl_package *rp)
+ 	raw_spin_lock_init(&data->lock);
+ 	INIT_LIST_HEAD(&data->active_list);
+ 	data->timer_interval =3D ms_to_ktime(rapl_pmu.timer_ms);
+-	hrtimer_init(&data->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	data->hrtimer.function =3D rapl_hrtimer_handle;
++	hrtimer_setup(&data->hrtimer, rapl_hrtimer_handle, CLOCK_MONOTONIC, HRTIM=
+ER_MODE_REL);
+=20
+ 	return rapl_pmu_update(rp);
+ }
 --=20
 2.39.5
 
