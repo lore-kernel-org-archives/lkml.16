@@ -1,42 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F81E38F82;
-	Wed,  5 Feb 2025 19:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65C2040B5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738783116; cv=none; b=gZ13KbkBebCClzb91dzupW8ZlqIxkgSsaHOObxua546sk/kuurwlbmjz/S80ZnTA3CbcK5kotOyaIBWK/KxLj5d135FzO2DZVmqq0F60qD0OX3oB9Jn9GxDaA8yfMlRVjh1PAoedSUohDEjVWNgJGiz8//JbBxDnnQcOTHj/h84=
+	t=1738783120; cv=none; b=UOGD9HD6Th2ZNRAczN6z9H28AywR2iuemDwiZ37DgRfxP+GKGYR2TA2AswxQ4Z/Mqn/riENHQMKBAT35a5HVF70OMpDVbqtz7hdMXZDhfFatRb1djsZHmJ/JEmanaFrwHi3zJX2qU5yZ+vvIkdYGGB55jYdlB/Qha5inVJdUjcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738783116; c=relaxed/simple;
-	bh=DVJod6AgATp1O+TTYUh9eYVwho2eGupKZZkC+Z7iPgQ=;
+	s=arc-20240116; t=1738783120; c=relaxed/simple;
+	bh=oPEtVOpN+aKW2p42nBcWfhpXpIMCi7MvBIh1JiLFbt4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uvFd1PUOdfcwBGzwIhI6O/M5ivO6Da5XpyFkpvqv0Xo6ixUpe/xKKGAUWdqW0VtWOkDZgPcC0/6kXmUWdi527E0okp8GQ2SvhgycitzeBBx5NMcEEMxV9IebLqyCLo2ZIgb93/K/+6Lb5KvdKVBJSFLKV1OhtimzymEN+0meo2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1y0PXmI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BoM/otNMdVU/hi36qJknNdVQGuDzXUOlbVVrEQoIvSl56ElgXTnr0hCcnN1TUVWzvJMeQuMREW1kNLR9rSxNwa/Gxgg/wdUCjjLWnVajw0sG/0DKI2ElEfc914uBzsyHbOqydb+PyLVsz0dhukPerluy3jn4e67AcxINh5D5YIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SBE/+U6p; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1y0PXmI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836D3C4CED1;
-	Wed,  5 Feb 2025 19:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738783115;
-	bh=DVJod6AgATp1O+TTYUh9eYVwho2eGupKZZkC+Z7iPgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b1y0PXmIuWyOxpHrsAsMqBmea4NZ4kA9J/I51jW+4xaiNM+390lk/iXvzK2GCTshM
-	 HntQFKRRc97sl5xo31dz+/sCfM5BpuYKIQhlJ1WBRAWTUFpKzgm3wwhmJYesFgwxPb
-	 qNVRGwWbiaDEn6aD9lp+SI2j6ssHDaFxozfEXW8yKr8B3qL+Dh3f6GGdCiGqIHh1j+
-	 GoxoVe54eXD2jVrHCdF/DLe4pWjFEtBvnYN5W/IjrSU0/78oW7RygOet0u/OlOHOrE
-	 sfN4YAlEbNcWWUAF3nIvS1pQZI/sMo6nI4VtsopErN+wjdrn6tPCyJ08lh7mdTnUmh
-	 XCO7Y0w9EPWDw==
-Date: Wed, 5 Feb 2025 11:18:35 -0800
-From: Kees Cook <kees@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, nathan@kernel.org,
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] alloc_tag: work around clang-14 issue with
- __builtin_object_size()
-Message-ID: <202502051056.B910C691C@keescook>
-References: <20250201200503.2532357-1-surenb@google.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SBE/+U6p"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e429a885f6so2428186d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:18:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738783117; x=1739387917; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E8qwzDwdGFn2CeBU5qdUptdR+RuNYBJ5DWAN8nwQPu8=;
+        b=SBE/+U6pNqiac9f2AE+Mi+L/wB0n9/czpmR4d2yToZX5dDz6kVykMDfofxgKwFg1BH
+         L3R61OCJo3JCECKarg02v85VhM3jsj5aQysaK3vkQl/An2GOyZMsnJKnXyG3bdC/x1Mr
+         xI7VL7EbZy4ECa4sw1alBxw1vOnCMBkaoNOPZTzmYXRRDuGcT0vgVPrm1gnobXF9My/1
+         qL4gf/GX8MsJmtVPb8YeVJzgA1sa/qaSnZ2bnUl20qN7BYErG0vPkhw9adhlldd+RJOm
+         c/Gr/lmJ4UixOsDbeZBTJRXIlUD//xUlbq6alXtE8ZxuuDkHvAb0XKjY/jlGxeS8Ixss
+         Iq0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738783117; x=1739387917;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E8qwzDwdGFn2CeBU5qdUptdR+RuNYBJ5DWAN8nwQPu8=;
+        b=MB4FGqGNfS5zfrAAdDC1bFHrvHtsIJC9uE0mtt6RJ5Fm7Qa1M1/wJSyRdfPuKOUIps
+         MFTMshB70wOiEc9jxKO0Qfx3QS94MHO0qW29naz03dVEM+EJyNj+DeCJTiEWcGNlp5Kn
+         9+n6NlXlfftgtsSjEx4mkQoRMqlX7FCKVQtNjqmH5qcxELwX/vQ7pOphgFueoCae17Hu
+         hLIhzbprOf255p5kWGOCOpqf8s1E/6WifIdGrxX1iFfazLGC4o7BYqam8KGW8OLfjk03
+         kFAEnIADbBxjRvvEd+YLk28ZXriFLGYe2dIcEzRoqyd6ro70/9yniwVKByY9awkU2FUF
+         EyWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIIFFmBWXNp0MVJlugx8ZqB/PBML3dTYUZ0f2CocjdWJXPyPLqtQmhXlxhGefo60sgGnpY1MkChBr8OnY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9GyF3uHQNpucXeruryQlAqhjd8C7f1MHsjxalyxoe35PP4hr7
+	/qFLSQAv7ivHG0AMrhPDyk9oQown5zi91VpUqwVoApY50RKpdAxUzdWTqmc7GYY=
+X-Gm-Gg: ASbGncuOUU8pA9ZRaobH6PncExAkBsEvEx65HrWIP3ApafrvCrsH60k4gUSOu8XDLoK
+	rvl/efAwsV+Jikc68ZKP/dqgt0yDivF7ZhBq5qyhyTXmlZvQJmQ5kr0+/aCV1eKDAneq+3vXXXD
+	HFsEKmdGtHfDkwQ7UOGtnAa5kj8nTfWEAZZ2HogtAbx3dfePcKvJ/dCsi2NBx8+nwujbKlkwOJH
+	SHnifG45mIDXl2TNQOrt2b+KQ72TBzowRLLqCfqPVRvGaNg2LRb1IG7MajqPnSnL8vVbHIOe/Ea
+	RGxHbzYE7SwQy/V/tYM9ZW7ofpdOBDtOqNLHW0Bt+C4i6AYWftOwJmEbK6XBzrQeCluJSgP8HA=
+	=
+X-Google-Smtp-Source: AGHT+IFBZGVDEyC791dt6sAmkuAb3iqn/vqzDlTFUXbWrByVqgD+IDHPq9lEi6GiDD3ACBsbSTEaKw==
+X-Received: by 2002:a05:6214:e4e:b0:6d8:821d:736e with SMTP id 6a1803df08f44-6e42fc4fc9cmr64862866d6.36.1738783117509;
+        Wed, 05 Feb 2025 11:18:37 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2548141aasm77300476d6.28.2025.02.05.11.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 11:18:37 -0800 (PST)
+Date: Wed, 5 Feb 2025 14:18:35 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v6 3/6] efi/cper, cxl: Remove cper_cxl.h
+Message-ID: <Z6O5i1ic8lCgKN9z@gourry-fedora-PF4VCD3F>
+References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250123084421.127697-4-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,98 +81,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250201200503.2532357-1-surenb@google.com>
+In-Reply-To: <20250123084421.127697-4-Smita.KoralahalliChannabasappa@amd.com>
 
-On Sat, Feb 01, 2025 at 12:05:03PM -0800, Suren Baghdasaryan wrote:
-> Additional condition in the allocation hooks causes Clang version 14
-> (tested on 14.0.6) to treat the allocated object size as unknown at
-> compile-time (__builtin_object_size(obj, 1) returns -1) even though
-> both branches of that condition yield the same result. Other versions
-> of Clang (tested with 13.0.1, 15.0.7, 16.0.6 and 17.0.6) compile the
-> same code without issues. Add build-time Clang version check which
-> removes this condition and effectively restores the unconditional tag
-> store/restore flow when compiled with clang-14.
+On Thu, Jan 23, 2025 at 08:44:18AM +0000, Smita Koralahalli wrote:
+> Move the declaration of cxl_cper_print_prot_err() to include/linux/cper.h
+> to avoid maintaining a separate header file just for this function
+> declaration. Remove drivers/firmware/efi/cper_cxl.h as its contents have
+> been reorganized.
 > 
-> Fixes: 07438779313c ("alloc_tag: avoid current->alloc_tag manipulations when profiling is disabled")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@intel.com/
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> ---
->  include/linux/alloc_tag.h | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
+> No functional changes.
 > 
-> diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
-> index a946e0203e6d..df432c2c3483 100644
-> --- a/include/linux/alloc_tag.h
-> +++ b/include/linux/alloc_tag.h
-> @@ -222,10 +222,23 @@ static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes) {}
->  
->  #endif /* CONFIG_MEM_ALLOC_PROFILING */
->  
-> +/* See https://lore.kernel.org/all/202501310832.kiAeOt2z-lkp@intel.com/ */
-> +#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION >= 140000 && CONFIG_CLANG_VERSION < 150000
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-FWIW, this could just be "< 150000" -- < 14 doesn't warn because (as
-Nathan mentioned to me today) it didn't support the build-time error
-attribute, so it wouldn't have warned even if it did trip over it.
-
-> +static inline bool store_current_tag(void)
-> +{
-> +	return true;
-> +}
-> +#else
-> +static inline bool store_current_tag(void)
-> +{
-> +	return mem_alloc_profiling_enabled();
-> +}
-> +#endif
-> +
->  #define alloc_hooks_tag(_tag, _do_alloc)				\
->  ({									\
->  	typeof(_do_alloc) _res;						\
-> -	if (mem_alloc_profiling_enabled()) {				\
-> +	if (store_current_tag()) {					\
->  		struct alloc_tag * __maybe_unused _old;			\
->  		_old = alloc_tag_save(_tag);				\
->  		_res = _do_alloc;					\
-
-I think the work-around is fine, but I'm trying to dig into the root
-cause here.
-
-As you found, it fails on the final strtomem_pad:
-
-	strtomem_pad(key->u.kbd.press_str, press, '\0');
-	strtomem_pad(key->u.kbd.repeat_str, repeat, '\0');
-	strtomem_pad(key->u.kbd.release_str, release, '\0');
-
-(but not the earlier calls??) The destinations are:
-
-		char press_str[sizeof(void *) + sizeof(int)] __nonstring;
-		char repeat_str[sizeof(void *) + sizeof(int)] __nonstring;
-		char release_str[sizeof(void *) + sizeof(int)] __nonstring;
-
-Random thoughts include "this is the last array in the struct" which might
-imply bad compiler behavior about its sizing via __builtin_object_size()
-(i.e. trailing array must always be unknown size to deal with
-fake flex arrays), but that wasn't fixed until Clang 16 (with
--fstrict-flex-arrays=3), so that it doesn't trip in Clang 15 is odd.
-
-To Kent's comment[1], I believe I was using __builtin_object_size() here
-because I have a knee-jerk aversion to sizeof() due to it blowing up on
-flexible arrays, but that's not relevant here. ARRAY_SIZE() would work,
-but only if type checking to "char *" succeeds, as Kent suggests.
-
-Let me see if making those changes survives testing...
-
--Kees
-
-[1] https://lore.kernel.org/all/qbmazoiryyqygjk2x6bc7puqvmik7gyitzo3xnryzsodnrrjek@tahia33lvpli/
-
-> 
-> base-commit: 60c828cf80c07394762a1edfaff63bea55cc8e45
-> -- 
-> 2.48.1.362.g079036d154-goog
-> 
-
--- 
-Kees Cook
+Reviewed-by: Gregory Price <gourry@gourry.net>
