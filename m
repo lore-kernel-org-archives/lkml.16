@@ -1,119 +1,183 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5A31DAC95;
-	Wed,  5 Feb 2025 16:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD1617F7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773388; cv=none; b=Vv9lO7D7hmk+yrk5qnJQnKNH0zwi3ZZSrQqX0Ce8XNagW1Sx9UzWD7stdNQgB4vDrpO/rqOyg4Xv0wDLjzPcY13H+DiVFPhwbknt3NTFdYIWwrXYPNEQmHOdtS+Q7XAJSb6PQ+mXzS2QHP8yl4r//KblKT9yoVW2XFGDRD7tm44=
+	t=1738773461; cv=none; b=EYv/TJgVB9U+7eGMMykg8Dn//V3+Hi0i8JnTJsVOYQ0stgPLzH/sG/vfp92Q5+5XXuTRph3JCgU3fwEUOqdkcjRFgdHBGH6XMkZ0KsYVdci9h8JNm/gt1iT1pMaWf3kzD6/FAu15GN6DaTT8wrmjA8fFPnjZZCVjchvVErBAW1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773388; c=relaxed/simple;
-	bh=KQAjdNXPn0DfadHsCm5XjQMXRiXHNgA7KxiZn4px+3o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XRN1k6SwbqPu8djkomJyb0EyCRP6d5ISSuhqfMktTtYuxgrUOgUcbiReyXFvhHMY19WiEIyb9dd4UMMEk97If2qQeQa0N8jIZhBkPQR9SGffDwqODFW5E0/kqyQPgYXfT3+arvCVUuehY/t3xPRc/h9zqieLThb3fkB+akjL4tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=YHeV919j; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1738773461; c=relaxed/simple;
+	bh=bNOKKT3WRUFpo997Z7H68M12mHyAmILfILAUEsy9ij0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YJpOuo+Z54dytRnFPJlW5GejYwvQ6ZIQcsJ6MlLaK3EeAGTZMmGcJfteI0knt25JDpPxR57KwsIREsgD6kADwbirW2N0IYTX1kj29LcYKf4lqrKbUJX6KmEsCWBI3t+bfp2jGvYIy+J8r41fZpEp2hzt14f9fkqlLAE40Mzerro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=POE/gZ16; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="YHeV919j"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515FQCIx024083;
-	Wed, 5 Feb 2025 16:00:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-id:content-transfer-encoding:content-type:date
-	:from:in-reply-to:message-id:mime-version:references:subject:to;
-	 s=default; bh=KQAjdNXPn0DfadHsCm5XjQMXRiXHNgA7KxiZn4px+3o=; b=Y
-	HeV919jwJAKBcZ9DZYoJZ746xXdNm2KJ++Nw6WaGqiiyhKDtNfUghTJeY3x/Qdm1
-	lPWXA1t9+oHuXjf8cHgfQFjGwqxzeOhJpV7fzoOSniIPt31uwiTe9145bBzlynWl
-	B1pDyp8D9OLUl38VgOHHHQ6QiUTE1GZrTm2iPvXQWn2qZgzIj2tDY+wM8LyHho4a
-	R945pTtGxTRlhDd7gTWdJiB7wjhwB1X8KYVltOhU6bPZ38VBLAVH1J2HUE5ZgN2x
-	8zqbBuD1EX58SrGkQJNzczp6kffEQ1lN8YnFH2Yzu5PuqFNAnOAaorTzcWLBaXnE
-	q545s4quSSUrqQNnRl2VA==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 44mammg3t0-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 16:00:04 +0000 (GMT)
-Received: from 04WPEXCH006.crowdstrike.sys (10.100.11.70) by
- 04WPEXCH005.crowdstrike.sys (10.100.11.69) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 5 Feb 2025 16:00:00 +0000
-Received: from 04WPEXCH006.crowdstrike.sys ([fe80::a97d:6ad:c239:d138]) by
- 04WPEXCH006.crowdstrike.sys ([fe80::a97d:6ad:c239:d138%11]) with mapi id
- 15.02.1544.009; Wed, 5 Feb 2025 16:00:00 +0000
-From: Martin Kelly <martin.kelly@crowdstrike.com>
-To: "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC: "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "masahiroy@kernel.org"
-	<masahiroy@kernel.org>,
-        "zhengyejian1@huawei.com" <zhengyejian1@huawei.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "mathieu.desnoyers@efficios.com"
-	<mathieu.desnoyers@efficios.com>,
-        "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "nathan@kernel.org" <nathan@kernel.org>,
-        "nicolas@fjasle.eu" <nicolas@fjasle.eu>,
-        "christophe.leroy@csgroup.eu"
-	<christophe.leroy@csgroup.eu>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>
-Subject: Re: Re: [PATCH v2 16/16] scripts/sorttable: ftrace: Do not add weak
- functions to available_filter_functions
-Thread-Topic: Re: [PATCH v2 16/16] scripts/sorttable: ftrace: Do not add weak
- functions to available_filter_functions
-Thread-Index: AQHbd+cCrpRl49KJ0EiNa9urqmBbFA==
-Date: Wed, 5 Feb 2025 16:00:00 +0000
-Message-ID: <c4c7f0931742c8636a82f2ae3b3c492c93266c93.camel@crowdstrike.com>
-References: <20250102232609.529842248@goodmis.org>
-	 <20250102232651.347490863@goodmis.org>
-	 <aba52935dc06a1fe69f05309f5d9828a297ad787.camel@crowdstrike.com>
-	 <20250204193559.1f87b4ea@gandalf.local.home>
-In-Reply-To: <20250204193559.1f87b4ea@gandalf.local.home>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-disclaimer: USA
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E0BB0A2C680BEB4980905CE6486592F2@crowdstrike.sys>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="POE/gZ16"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30795988ebeso66596591fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:37:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738773457; x=1739378257; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EbY010afVshRghMlHcUYQ8NTia1RObj5hv00paiAnnQ=;
+        b=POE/gZ16Dl7nULE+3keNUFIK4gqGLrcUsCndy30Q7R1u0UYD9YMY22Wn47LHamillI
+         u81g4zCCh3QfVF5KjYtK9sWn3NlZlzUINAsFknkNFmRvvyyC8ARFWGI/DgQgbKmDLKIm
+         YV1q+/VT5ivgalmQRRuln+HySfGxEb1k+byXJTzXtGnZN9Tc/9wKc4zplw1Xmd4xUOvA
+         I9hbcalurvENK+KCWwXClyUfp5ERdX+30Ga8sk/I0Em6Ezm17FJjsQhS1V9x09/xb/nY
+         No/i2a2ub4ue0W3Mcva9pvSC7UJ8OcCuq2zA2yZqjNwJu19sBU1bBcd9BW8HiIC/b4uE
+         RX1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738773457; x=1739378257;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EbY010afVshRghMlHcUYQ8NTia1RObj5hv00paiAnnQ=;
+        b=lv7v/3ya9AJ5jF4GiG6nqvOQbQ3yhDQaoi9IfvL5i1UnKKBbZoqbGDMndJYLvRkRj2
+         8h18WYaz2Htl52cIxQbHAybF95TiNppCDGa7t+SHH6JaG9dhXVCgws+ENsJAt2crmfEK
+         oaZH4+ZTOdFXLeUHrjiF3MhT2U2ovvir+qH54h8TNtrC8SMsN88j8i50Ldi8ujTU91na
+         A97KzYYAUqTsSMeY/UqqvaBxJ0mVUachH6NOe3aaQxOdOYgYi3Q+akBRVFHsTIELxDMw
+         r1TnKH9cQq6TgrCPinbYi1VQFR7hxpGilMb2TnHgypl1W+XrfWk2nLNLwfil0TLgfbT+
+         CRMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo98oDG2LdwmW6fJu0KZFnK48WcwuqdaFh9kW9LzSaGfwivES+rFYzfv8R18KzTO1z7XdTL4oij/S3IKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHSdqQoKlvBJmwfWVBMPWR2KFxGsaYdjBUE8g7UprqaY45Cqrc
+	slL2NcWcTEggTSPmv/T0GUunxw7u6N1WBfVMlWkZji3KsRqnD3gOn6SPExX14PwnFgLTULhf60s
+	TG8DM4vqfvhIk0VG18TmImylWz65Cu97rnZ9g
+X-Gm-Gg: ASbGncsnGAEJOMDlSBFFyM3rAt+McCxsQS0iH4bVgnitysaQSIqrs9ia19yQq4R4Ip9
+	VelC1zrUTDG94uPynAQtfRxdW3yrbbN6FfKQMvo8KxXQX2ep74DJrF2Vd/uitxwb04af7gf+L/Z
+	lzg1q501/DdkxVFbzOvDlfG/gwgwJftw==
+X-Google-Smtp-Source: AGHT+IEwhssSLHhx+8xA0LWdJKTUGZXB7UQVaXIcA/NB1uo9ZKR8cqCyoVOEZrxsyEMXURqGJvb3Nr64tVloU1V03Ck=
+X-Received: by 2002:a05:651c:1509:b0:300:de99:fcc7 with SMTP id
+ 38308e7fff4ca-307cf38f82bmr11465811fa.36.1738773457268; Wed, 05 Feb 2025
+ 08:37:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-ORIG-GUID: 6e_pcGkFVcXTbb8vvYC3lg2INop8zK62
-X-Authority-Analysis: v=2.4 cv=NvQrc9dJ c=1 sm=1 tr=0 ts=67a38b04 cx=c_pps a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=pl6vuDidAAAA:8 a=lqAKrMhzrGgqgS63txUA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 6e_pcGkFVcXTbb8vvYC3lg2INop8zK62
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- bulkscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 lowpriorityscore=0 adultscore=0 spamscore=0 mlxlogscore=949
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502050124
+References: <cover.1738592865.git.dvyukov@google.com> <Z6GVqh6detN8rbKV@google.com>
+In-Reply-To: <Z6GVqh6detN8rbKV@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 5 Feb 2025 17:37:25 +0100
+X-Gm-Features: AWEUYZnYgNhKxAA5Zc3OF0HwBu6xcsaCXjrS52JZa-WiWVLFliw9F5rJQ5RIjA4
+Message-ID: <CACT4Y+b9B6=ijtGfrtwQFq44ceiRTmv53pC9iqgNsbeg=cFr4Q@mail.gmail.com>
+Subject: Re: [PATCH v4 0/8] perf report: Add latency and parallelism profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, acme@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVHVlLCAyMDI1LTAyLTA0IGF0IDE5OjM1IC0wNTAwLCBTdGV2ZW4gUm9zdGVkdCB3cm90ZToN
-Cj4gT24gV2VkLCA1IEZlYiAyMDI1IDAwOjEzOjI2ICswMDAwDQo+IE1hcnRpbiBLZWxseSA8bWFy
-dGluLmtlbGx5QGNyb3dkc3RyaWtlLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEknbSBub3QgbmVjZXNz
-YXJpbHkgYSBxdWFsaWZpZWQgcmV2aWV3ZXIgZm9yIHRoaXMgcGF0Y2gsIGJ1dCBJJ20NCj4gPiB2
-ZXJ5DQo+ID4gaW50ZXJlc3RlZCBpbiBzZWVpbmcgaXQgb3IgYSBzaW1pbGFyIHNvbHV0aW9uIGdl
-dCBtZXJnZWQsIGFzIHRoZQ0KPiA+IGltcGFjdA0KPiA+IHdoZW4gaXQgaGl0cyBpcyBzaWduaWZp
-Y2FudCAoc2lsZW50IGZhaWx1cmUpIGFuZCBub3QgZWFzeSB0byBkZXRlY3QNCj4gPiBvcg0KPiA+
-IHdvcmsgYXJvdW5kLiBJcyB0aGVyZSBhbnkgb2JzdGFjbGUgbGVmdCBpbiBnZXR0aW5nIHRoaXMg
-b25lIG1lcmdlZA0KPiA+IG90aGVyIHRoYW4gZnVydGhlciByZXZpZXdzPw0KPiANCj4gQSB2ZXJz
-aW9uIG9mIHRoZSBwYXRjaGVzIDEtMTQgd2FzIG1lcmdlZCB0aGlzIG1lcmdlIHdpbmRvdywgd2l0
-aCBzb21lDQo+IHR3ZWFrcy4gSSBwbGFuIG9uIHJlYmFzaW5nIHBhdGNoZXMgMTUgYW5kIDE2IG9u
-IHRvcCBvZiB0aGF0IGFuZA0KPiByZXN1Ym1pdHRpbmcuIEkganVzdCBoYXZlIHNvbWUgb3RoZXIg
-dGhpbmdzIEknbSBmaW5pc2hpbmcgdXAuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLSBTdGV2ZQ0K
-DQpBd2Vzb21lLCB0aGFua3MhDQo=
+On Tue, 4 Feb 2025 at 05:21, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> On Mon, Feb 03, 2025 at 03:30:35PM +0100, Dmitry Vyukov wrote:
+> > There are two notions of time: wall-clock time and CPU time.
+> > For a single-threaded program, or a program running on a single-core
+> > machine, these notions are the same. However, for a multi-threaded/
+> > multi-process program running on a multi-core machine, these notions are
+> > significantly different. Each second of wall-clock time we have
+> > number-of-cores seconds of CPU time.
+> >
+> > Currently perf only allows to profile CPU time. Perf (and all other
+> > existing profilers to the be best of my knowledge) does not allow to
+> > profile wall-clock time.
+> >
+> > Optimizing CPU overhead is useful to improve 'throughput', while
+> > optimizing wall-clock overhead is useful to improve 'latency'.
+> > These profiles are complementary and are not interchangeable.
+> > Examples of where latency profile is needed:
+> >  - optimzing build latency
+> >  - optimizing server request latency
+> >  - optimizing ML training/inference latency
+> >  - optimizing running time of any command line program
+> >
+> > CPU profile is useless for these use cases at best (if a user understands
+> > the difference), or misleading at worst (if a user tries to use a wrong
+> > profile for a job).
+> >
+> > This series add latency and parallelization profiling.
+> > See the added documentation and flags descriptions for details.
+> >
+> > Brief outline of the implementation:
+> >  - add context switch collection during record
+> >  - calculate number of threads running on CPUs (parallelism level)
+> >    during report
+> >  - divide each sample weight by the parallelism level
+> > This effectively models that we were taking 1 sample per unit of
+> > wall-clock time.
+> >
+> > We still default to the CPU profile, so it's up to users to learn
+> > about the second profiling mode and use it when appropriate.
+> >
+> > Changes in v4:
+> >  - added "Shrink struct hist_entry size" commit
+> >  - rebased to perf-tools-next HEAD
+> >
+> > Changes in v3:
+> >  - rebase and split into patches
+> >  - rename 'wallclock' to 'latency' everywhere
+> >  - don't enable latency profiling by default,
+> >    instead add record/report --latency flag
+> >
+> > Dmitry Vyukov (8):
+> >   perf report: Add machine parallelism
+> >   perf report: Add parallelism sort key
+> >   perf report: Switch filtered from u8 to u16
+> >   perf report: Add parallelism filter
+> >   perf report: Add latency output field
+> >   perf report: Add --latency flag
+> >   perf report: Add latency and parallelism profiling documentation
+> >   perf hist: Shrink struct hist_entry size
+>
+> I found that stdio output is broken that latency is too high.  TUI is fine.
+>
+>   $ ./perf report --latency -s dso --stdio
+>   ...
+>   #
+>   #  Latency  Overhead  Shared Object
+>   # ........  ........  ....................
+>   #
+>      57669.15%    57.67%  [kernel.kallsyms]
+>      42330.85%    42.33%  ld-linux-x86-64.so.2
+
+Fixed in v5.
+
+> Thanks,
+> Namhyung
+>
+> >
+> >  .../callchain-overhead-calculation.txt        |  5 +-
+> >  .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
+> >  tools/perf/Documentation/perf-report.txt      | 49 ++++++----
+> >  tools/perf/Documentation/tips.txt             |  3 +
+> >  tools/perf/builtin-record.c                   | 20 +++++
+> >  tools/perf/builtin-report.c                   | 39 ++++++++
+> >  tools/perf/ui/browsers/hists.c                | 27 +++---
+> >  tools/perf/ui/hist.c                          | 64 +++++++++----
+> >  tools/perf/util/addr_location.c               |  1 +
+> >  tools/perf/util/addr_location.h               |  7 +-
+> >  tools/perf/util/event.c                       | 11 +++
+> >  tools/perf/util/events_stats.h                |  2 +
+> >  tools/perf/util/hist.c                        | 90 +++++++++++++++----
+> >  tools/perf/util/hist.h                        | 32 +++++--
+> >  tools/perf/util/machine.c                     |  7 ++
+> >  tools/perf/util/machine.h                     |  6 ++
+> >  tools/perf/util/sample.h                      |  2 +-
+> >  tools/perf/util/session.c                     | 12 +++
+> >  tools/perf/util/session.h                     |  1 +
+> >  tools/perf/util/sort.c                        | 69 ++++++++++++--
+> >  tools/perf/util/sort.h                        |  3 +-
+> >  tools/perf/util/symbol.c                      | 34 +++++++
+> >  tools/perf/util/symbol_conf.h                 |  8 +-
+> >  23 files changed, 502 insertions(+), 75 deletions(-)
+> >  create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
+> >
+> >
+> > base-commit: 8ce0d2da14d3fb62844dd0e95982c194326b1a5f
+> > --
+> > 2.48.1.362.g079036d154-goog
+> >
