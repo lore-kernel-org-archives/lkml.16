@@ -1,69 +1,111 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE64F1FDA62;
-	Wed,  5 Feb 2025 17:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AE21FE47B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 17:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738776754; cv=none; b=vDxf+YB/AMGtt/qOjIMRhV9psLQZB+QhzNVkoWxUR7i6AQ8TsVzn8fIt48iFfW5xySVD00G5yTaWCAkuT9EUX5Dq6TVkFqUZiW58KD8gxg0pQ17/b3zYKVndaJQSHlSOQICpElmpbfoOjCGJXb2b0lnoxzA63dVyFPXd+n2UAuc=
+	t=1738776775; cv=none; b=EVSBUqkfprs3cSZiTLQyPsjmMuZ2fW/ikOjtrMHI54xRAwrNXQkGdJ3MXChhBmhRd7bWANuPZMjsL3yON9TcxjGQftC4041S8QoFnXQwxmXLh3wYDLIOpYDZHE4Ok2w4IRfj6e9onwYdaeUdhVn+qNzfcDbsIYf2w6wvZoOyBC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738776754; c=relaxed/simple;
-	bh=SWhcYf8lgrOAo4XzFq2cTizxHoWC/z6TiQotRdwM504=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/gJfIlcin7OQ8V4m73c7ebT2FRntOkk7ia8TaSEwMjfpn/44K+9vZbTqNDKi/fAholw0cLlQ0iTDPR2oUFx827xbNjDJRL6WXHV0668MEVEag3Imll/VP/0ChDc9JRPqcYRPnAq1QuXQoroMBYnEqKXy+URqRXUbRLRetQTels=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=d+unV8Q5; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738776775; c=relaxed/simple;
+	bh=p0n+qzChREa2o0RG2z7oDzGMLoQcgCqnAs5+ptKAhVQ=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=B+A2CuJ5tf/ybYGB/LwEo6QuWJAQ3WmoJV8hUabbSyE1vSeP8KqLKmhbWLfSXNjDcF7Uq7GWV7x6BXSi8VFZkbs5PoqG5nbn1XHOCTznnQ8PK/swygLHJw3aQDbaGh+686gB020UBIMUHS6OgKRFrbxhfc+X5EBkumMpbHZ0Eqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IACvL2h7; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="d+unV8Q5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/UZE8IKL84cYB96Jh6KUCBsqTE4d/7Tqqel9vwHv95I=; b=d+unV8Q5ei9GB4rlWkljBYOmaX
-	6xLalGpEusIB0J3mnjT+xNdC2bGDHgUc+jB5w2hncI5i/yW3P9tlU9thaDepbzUb52SP4KQsYlxAL
-	ormrHFZ4L2OJL2C0P+xY2VN7b8MBpP5C1gpKC41MnHzpHfc8gclGCTlHS9sUQRPLPfzs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tfjG9-00BFm3-DR; Wed, 05 Feb 2025 18:32:21 +0100
-Date: Wed, 5 Feb 2025 18:32:21 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/2] net: phy: Add support for
- driver-specific next update time
-Message-ID: <dd07079e-f719-4bcd-b8ad-571a4cbf2b8b@lunn.ch>
-References: <20250205091151.2165678-1-o.rempel@pengutronix.de>
- <20250205091151.2165678-2-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IACvL2h7"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e57b1e837fbso8908366276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 09:32:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738776766; x=1739381566; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WUZmNolBEaviVSKZZK1ViIFwwPFKcpO/wt4qxQVM8RM=;
+        b=IACvL2h7G2NcyhUU5Cv45n04rp1S1XQtrMXAya2f/+oOT97MyCIDIwcCnpr8Wuah+7
+         j8YiMv4XLpcmBQhcYEikhIRvYy5FBrHNX8BqRvY1x9dKIf1wh+VvXYL7DftOlXW0yPsD
+         k9ZdMao5BbcVpBU0xRHDt8gE17rU4GLyhuG20tevLOJzwfq26E2uN6VUB1uunq8C44pv
+         Wpo0lnpkt9MZap7Nr0GghlGZaVbrVFFoNGwmnOl8hxWzKg1HVBnX0oFE606ncnw4jJdz
+         +bmjop/2bCje+nZyl9M+SZbXitNoPcowQmjXaWfHaIBT1Zjvi+xVJlZXMjG719RGBejG
+         XO/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738776766; x=1739381566;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUZmNolBEaviVSKZZK1ViIFwwPFKcpO/wt4qxQVM8RM=;
+        b=n/cCl/HkQVuuBdgQoogGwXzj99uap1v6YHMSJimu7s2rhClYjFWdEKPlAXU7srG/53
+         u147IbEPugdwsGV1+Qxmyhwt+l9izRn3qoz3TNXdVyqF53Zdj8N6ZDYtzEE/NeS/nCFa
+         FRBdstfXKDRdBxwULDSdxhe00bEqVerzWziUiGtV/0acH4ExHVUjJ3deT1MDplgaFOu8
+         blkIsGHYt1YoLCUhBDHg+qpY/dcJbZI/nFRvhJDdUXvChsK6x+W/UoryPlN4xPQTiwMO
+         sBFo6YBqH0Sd3VxCId2ZNOGtzpVmoxNWRTlQguinzcIGZnJv9QH8ZFlfNKILmpV3+Mss
+         sjeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5DRTytfPFNIes/cEqEIC0yrc6LbyJUjyF/GW24JPhfWl+0LnygHimvcmBA85r1rK0cz7O9jwPJDNZYaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEGk+38N159Sy52684+sp4/vWtWixxJbTSuPn16uVGcubMgoVd
+	JPXH1P/oSnFFFzWnrI9FW83TBIo4eTikoQ1EIULuGyUwvYMKnOgW2pR8RMwBck6p8lLglumslPy
+	yHdzP0Q==
+X-Google-Smtp-Source: AGHT+IETmVS3OKCIRc/tAeLiLcI6opvzjYhB/+oHytBbQ+3j3+DW98rdaTb3cfkKnxKrxDT4iVvXJDrhOyR5
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:34a2:aced:a7fd:972a])
+ (user=irogers job=sendgmr) by 2002:a25:810e:0:b0:e5a:f4dc:c2cb with SMTP id
+ 3f1490d57ef6-e5b25be83fbmr22769276.4.1738776766228; Wed, 05 Feb 2025 09:32:46
+ -0800 (PST)
+Date: Wed,  5 Feb 2025 09:31:40 -0800
+In-Reply-To: <20250205173140.238294-1-irogers@google.com>
+Message-Id: <20250205173140.238294-25-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205091151.2165678-2-o.rempel@pengutronix.de>
+Mime-Version: 1.0
+References: <20250205173140.238294-1-irogers@google.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Subject: [PATCH v5 24/24] perf test stat_all_metrics: Ensure missing events
+ fail test
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> +/**
-> + * phy_get_next_update_time - Determine the next PHY update time
-> + * @phydev: Pointer to the phy_device structure
-> + *
-> + * This function queries the PHY driver to get the time for the next polling
-> + * event. If the driver does not implement the callback, a default value is used.
-> + *
-> + * Return: The time for the next polling event in milliseconds
+Issue reported by Thomas Falcon and diagnosed by Kan Liang here:
+https://lore.kernel.org/lkml/d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com/
+Metrics with missing events can be erroneously skipped if they contain
+FP, AMX or PMM events.
 
-Jiffies, not milliseconds.
-
-    Andrew
-
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-pw-bot: cr
+ tools/perf/tests/shell/stat_all_metrics.sh | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+index 73e9347e88a9..ee817c66da06 100755
+--- a/tools/perf/tests/shell/stat_all_metrics.sh
++++ b/tools/perf/tests/shell/stat_all_metrics.sh
+@@ -20,7 +20,13 @@ for m in $(perf list --raw-dump metrics); do
+   result_err=$?
+   if [[ $result_err -gt 0 ]]
+   then
+-    if [[ "$result" =~ \
++    if [[ "$result" =~ "Cannot resolve IDs for" ]]
++    then
++      echo "Metric contains missing events"
++      echo $result
++      err=1 # Fail
++      continue
++    elif [[ "$result" =~ \
+           "Access to performance monitoring and observability operations is limited" ]]
+     then
+       echo "Permission failure"
+-- 
+2.48.1.362.g079036d154-goog
+
