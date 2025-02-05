@@ -1,139 +1,160 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529B214221
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9AC212FBC
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786186; cv=none; b=cvUH/EctwALW8nYvbUu5hkwC0sU8ebJFKP+LRiXbN8Ye7yEjmNmHCnBxlrFqFkAqD+82VjEpIO+8vDnOxPn2M8Q/SsRTGqG9pp/JV3/KcHHnS7pkdcuQnaH8GxiVopmdPI0NDFqORCis23nT96yOmG97CS5dltUayfAcTD9VRY0=
+	t=1738786187; cv=none; b=um4WqpcQp0hT0vOzGe9gyY1wDHxNG99cqVAv7kucZ90nhZDK1KoutnGTnfgOKSAacfa+yFfKzrMLN6LN9ERSPuyR4KOqVsBRNT5M9/MR4taejneIfjdJ1g7de8HZEGAQNZlKf7kSHDS+OJtpe7YyOHIcMpmwjYKuyRJHR1ebYwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786186; c=relaxed/simple;
-	bh=8ylPtGjmg8BqUJh8ssxlycLuhNCMbKhKYTzosnppwMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t1RKtytilsK4Cpm2gKDeMMcFDI4mqL7afQh3SBFh5rYv1ur5EOpQZYJAFQEGF3L4eCxKvwS5GSGtRA+86aEXsyDcfSCOloXAGtnJjP4VW/Z6BEGT3Z7G29cViyk3eZZ1BvgKV5hsXAeRwY8hhOR7XfeCFEK7+JVBIEHxQa9QQAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kia9j16z; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738786187; c=relaxed/simple;
+	bh=8Mr23W/+G1uZ617GLarMPiY6eX2ezkHI6A58kZ43cp4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Da5eoqeLyg/bnBCuTJzcv20clzRwHDpS1isxaqJsR7CCDoeMkn6u0LVpoidbfEoIvz2/H8chKxfuG+THMxm+Ds2Ap1kNotsi6ldmkTDzujC4tT6goL4OrMWCg5qyWQ2/XLS9KgMmMpSfwErDthTLTfIt+T4HbWj9BYGjfWT3AD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XdECJk0o; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kia9j16z"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aab925654d9so37885766b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:09:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738786182; x=1739390982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pj3pWrosGkUlfXcIPyDNQK+jIHHC44medwj1pRwHHC4=;
-        b=Kia9j16z+dKBciWAtq/A2Mwefy8++jcKaPAvNB5PdDgTJb/Zw8eHCy6ubuwOR1Dj/i
-         iOh0fgnaEHM7cZZTi2QuWoEhvT2CH7eRnQs3e6ZzHdjlxsertH204VRio5uy4g0lGeN7
-         E8N31D+fGLUTyxbTe0nGM8cB/lre/2KQrYrLvqqJpWrKUovcoGts2bXt+ZQI5ABwtiC8
-         35+h3cBHEzsPNPhSpW9y9EGPAgtEzbIZ17XH/AVv3JiccGe69o9K64AgnHCoinhP/oLH
-         z3qjZQHkuDHMLjYtzWOyuWh5+3ucN/k70ikbbivtuCboHgyLJyXEDq02y+VJVVmUBLZX
-         dDlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738786182; x=1739390982;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pj3pWrosGkUlfXcIPyDNQK+jIHHC44medwj1pRwHHC4=;
-        b=R+fj5SFywcMrwNQhU6wnrgAOoa2j9MAYi0s6cXtHY9HMKON0jyhOK2TarOIHmTmGps
-         Ibq0LcK0GsGVzDEEBbuGXrFQP/B1aLd7CocpbfKZbZK6psFU/wyaoAMmfLFlrfNDMoq5
-         ZHf+vEbY5BoYzo3NQJY22Xr4McXCy71xyTd511KK5QVcAEOmuxT1inxKCnWztXt2fxu1
-         fqfvBcjG2qKAWC0lyU+gQ4qAckDYYDtYlGrvc2LpnG3wewazrq0tczbhZOncOF8YAm6t
-         xvGVtLqwapko4+H+QORApu8I8i252YrThNh5Hu51TDW29fjg4jkJULumPm0B25ay0QE5
-         ZBaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIDIapKC79FX0LALmOCGar1ZE2NsN2pbJlpDlekwXbTDEGSWIQzlmJHEjX+a3H508G3Q90CQl+lOqtyyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6W794oqHAfYSA4mHvlOyC7FG9SIF2G3bWlXHZd2eHKMSSNK+Q
-	ZVKj2xemj/kUswCNzTO7YWAwPh1KVukKSGpC3d1ed48y9BiQLmSz
-X-Gm-Gg: ASbGncvlomJm5R4Ax2/xY4HXCLGFJhmc2pGaNW6hjozCVJHEXp5V0hR2XYPPvnyzTGr
-	jThowTMA8dOII/WCGt4KvUZGsOgegOAMlxV70cE8JDkWUyEboF3jWmgy5qUHR5xhv9pygNm/lsB
-	Z2JtQCo2/CLONcxMrPET8FBPv796ae3goYZARBhbm49ijniwwMZAQjYRi0zG5E+WeSsB8KURIPE
-	l4yu1kCBZFriRlAhwEmXxhsB5OOJSu+N9jtfAO0+kFPpl6w1a6IuNmFDWWBHk4cbuO/uKg/jlDU
-	u+rISRl7KyvLs6C2l/cMScParoI/k0U=
-X-Google-Smtp-Source: AGHT+IFgTBn5lP4dqU0ydTXpkrpjieHD7lv/hSESjvAyOOi9Zo+cwux8FPWnWR43OTCyLUkzOvro/Q==
-X-Received: by 2002:a17:906:6a04:b0:ab2:b936:f110 with SMTP id a640c23a62f3a-ab75e241f9cmr455031666b.20.1738786182011;
-        Wed, 05 Feb 2025 12:09:42 -0800 (PST)
-Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab703fbcc0csm932221866b.53.2025.02.05.12.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 12:09:41 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: ebiederm@xmission.com,
-	oleg@redhat.com
-Cc: brauner@kernel.org,
-	akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v5 3/5] pid: sprinkle tasklist_lock asserts
-Date: Wed,  5 Feb 2025 21:09:27 +0100
-Message-ID: <20250205200929.406568-4-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205200929.406568-1-mjguzik@gmail.com>
-References: <20250205200929.406568-1-mjguzik@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XdECJk0o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738786184;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qItC1tMYOWKCL7xMXToSIOhC8XUwskbCivBq7IFZWAE=;
+	b=XdECJk0oQ+XvT7iDABPmJP/MaM+Ukx3WVbY64pb3aZoAMd8kY2cZ+KGi6EMOsPdZh9S50c
+	BWvdq85ED4cIM8AuaCCyXXsvPAQ/SsMjzIZ6TgdIdIzaIy5N7Z7V4bpWZEsi2+El+pFWAG
+	dOkTDSjoT3XzpQEZVl0lEpaZgqESJvg=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-652-RVfS5KDiM0264POXb-woZw-1; Wed,
+ 05 Feb 2025 15:09:41 -0500
+X-MC-Unique: RVfS5KDiM0264POXb-woZw-1
+X-Mimecast-MFC-AGG-ID: RVfS5KDiM0264POXb-woZw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD15E195608E;
+	Wed,  5 Feb 2025 20:09:39 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F082319560AF;
+	Wed,  5 Feb 2025 20:09:26 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Wed, 05 Feb 2025 15:07:58 -0500
+Subject: [PATCH 02/12] drm/fsl-dcu: move to
+ devm_platform_ioremap_resource() usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250205-mem-cocci-newapi-v1-2-aebf2b0e2300@redhat.com>
+References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
+In-Reply-To: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
+To: Joel Stanley <joel@jms.id.au>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
+ Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
+ Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, 
+ Alain Volmat <alain.volmat@foss.st.com>, 
+ Raphael Gallais-Pou <rgallaispou@gmail.com>, 
+ Yannick Fertre <yannick.fertre@foss.st.com>, 
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
+ Philippe Cornu <philippe.cornu@foss.st.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Mikko Perttunen <mperttunen@nvidia.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Alexey Brodkin <abrodkin@synopsys.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
+ linux-rockchip@lists.infradead.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738786137; l=1621;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=8Mr23W/+G1uZ617GLarMPiY6eX2ezkHI6A58kZ43cp4=;
+ b=w08+1to0zmPLfPwhWnJMT8LxzW4bcZA6anv7/SWrFNcdFBQ5F4zNDLZbsDRD/1JkaHM+xTeB7
+ v+CbIKQMYBkDh/lXileZfuakl3WJsLEI+Ds2v6laXWkMyZaAifjm2YR
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+Replace platform_get_resource + devm_ioremap_resource
+with just devm_platform_ioremap_resource()
+
+Used Coccinelle to do this change. SmPl patch:
+@rule_1@
+identifier res;
+expression ioremap_res;
+identifier pdev;
+@@
+-struct resource *res;
+...
+-res = platform_get_resource(pdev,...);
+-ioremap_res = devm_ioremap_resource(...);
++ioremap_res = devm_platform_ioremap_resource(pdev,0);
+
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Alison Wang <alison.wang@nxp.com>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
- kernel/pid.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 924084713be8..2ae872f689a7 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -339,17 +339,23 @@ static struct pid **task_pid_ptr(struct task_struct *task, enum pid_type type)
-  */
- void attach_pid(struct task_struct *task, enum pid_type type)
- {
--	struct pid *pid = *task_pid_ptr(task, type);
-+	struct pid *pid;
-+
-+	lockdep_assert_held_write(&tasklist_lock);
-+
-+	pid = *task_pid_ptr(task, type);
- 	hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
- }
+diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+index 03b076db9381a5db0bff6576cda2772495a61fed..3bbfc1b56a6557e2f54d2b7ed099531053871341 100644
+--- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
++++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+@@ -260,7 +260,6 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 	struct fsl_dcu_drm_device *fsl_dev;
+ 	struct drm_device *drm;
+ 	struct device *dev = &pdev->dev;
+-	struct resource *res;
+ 	void __iomem *base;
+ 	struct clk *pix_clk_in;
+ 	char pix_clk_name[32];
+@@ -278,8 +277,7 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	fsl_dev->soc = id->data;
  
- static void __change_pid(struct task_struct *task, enum pid_type type,
- 			struct pid *new)
- {
--	struct pid **pid_ptr = task_pid_ptr(task, type);
--	struct pid *pid;
-+	struct pid **pid_ptr, *pid;
- 	int tmp;
- 
-+	lockdep_assert_held_write(&tasklist_lock);
-+
-+	pid_ptr = task_pid_ptr(task, type);
- 	pid = *pid_ptr;
- 
- 	hlist_del_rcu(&task->pid_links[type]);
-@@ -386,6 +392,8 @@ void exchange_tids(struct task_struct *left, struct task_struct *right)
- 	struct hlist_head *head1 = &pid1->tasks[PIDTYPE_PID];
- 	struct hlist_head *head2 = &pid2->tasks[PIDTYPE_PID];
- 
-+	lockdep_assert_held_write(&tasklist_lock);
-+
- 	/* Swap the single entry tid lists */
- 	hlists_swap_heads_rcu(head1, head2);
- 
-@@ -403,6 +411,7 @@ void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			   enum pid_type type)
- {
- 	WARN_ON_ONCE(type == PIDTYPE_PID);
-+	lockdep_assert_held_write(&tasklist_lock);
- 	hlist_replace_rcu(&old->pid_links[type], &new->pid_links[type]);
- }
- 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base)) {
+ 		ret = PTR_ERR(base);
+ 		return ret;
+
 -- 
-2.43.0
+2.47.0
 
