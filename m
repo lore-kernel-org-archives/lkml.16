@@ -1,47 +1,48 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408C71FECB5;
-	Wed,  5 Feb 2025 19:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22721FECD4;
+	Wed,  5 Feb 2025 19:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738782455; cv=none; b=shtczr3MNG9kQFangziXxJQCfC0Xl7nCiqkmwDlDA2qVmbpK0ys/9HBR29/lzvkl4AJhz4tXyUsBxvvZb3Ht10mi/+TMVJdB/RFlZO04RHaL52eIZ423DnfWOOdd3dt3zLWiR1H3SJhUC+61loUn3C5K6IwLI2mXuJa6Fkj1bj0=
+	t=1738782456; cv=none; b=K9Jh74lnOnC0Hwm1tX7+AcMDxvCcEWNt1L7MD6WuYMBTJACHvZD4Ydku9a5jFj+1Ef2IDPvJa3C914QCqWGwy9Yfnx9HYiSs4J6OrJvcdxPClLf48mFRkUEwNdTFBLZlfz1Q2qTM3vrW4KvvWrjUQ3Rku/Y+BgS7wjWVXGa+2P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738782455; c=relaxed/simple;
-	bh=2KTk+SomB+UKnp9dki04xZOGUOi+8hXxABZ9dn5trIo=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=a84mrBUieb+OdDeBl2d6qdSuAn353mjObpZVK0jrTYxTyRLEf4cBiyCKo06Ug+J7XdnUWS8ZO5vPvm3iT40/J2OXZcFPDXphY3MYZot6Do2UBn7KWivtnckVTF+dQU4sNIfvCJtEEps6hPvjXIvAUtyImmyBYjwFgulfMUKR6LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=db+Oljvv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ugIDKPGR; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1738782456; c=relaxed/simple;
+	bh=7o4TV8Xkc+3qmt4QUi00B4hcI6yX9rdepRCVR7zSaHw=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=OhRl4ZBqJZ50NG2xajuu8zKXof/P3XCfwPvTMEoPTGfMl4jdsX8sTFxu1mF/YZkz6ltMLvxd/1eh4nHC1fv1MqfGLhx9i3zEV6kVVWLPlyNRsTNgbfVCidQIAWOfDTn+ASWwW7W3+EViNuJtFYswY1/P9/Q2vNDriLnMk4M7Eeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WbRpkfN5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qv+w56Gk; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="db+Oljvv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ugIDKPGR"
-Date: Wed, 05 Feb 2025 19:07:31 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WbRpkfN5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qv+w56Gk"
+Date: Wed, 05 Feb 2025 19:07:32 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738782452;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=1ej9NTfHsy8NTBFABSXCMYATIbXQa2pgKtDvB07INXU=;
-	b=db+OljvvgTSmNbN1obwmPMSgIyZrHACMSQXMylbNDM07ONfh5m3gNjwP8q5zvUDbkcv9DJ
-	bhJ/WMVs2vd1rpXRmoU35B6BhcsQejV5ZuAedigOuCwkSmDXqC4ADcpVoDXGGwP7kazZMK
-	rFI2uofxnFh7ssIfbOCVtf/P1Y+O/Ol/J8P3qiAKnXLZQdA8o6M73/4Rm4ZHBiXSSZ1vj0
-	OKa+9UKR+8p01etjMmCV2JYby3Cn5oUDBfP3LCZkBzw7lQ+3UaOvq8JrmSCA96PwEHBVr0
-	JjC97HuhnLvnU6GKF/f01Giv4izME1dCy/2mpo1UP5D4gnzTeXjJSVEjuvC6IA==
+	bh=s8pMFazR6bYtF1EP09YRTG0azGpTVUDiugks/OqiOfM=;
+	b=WbRpkfN5Hz17NbYXZ9fnYAfUU7EhpPQemNmKhQGXPoJMS9wroKdiknx9CbKLxUQgIVEtHh
+	5wyi9v9zrWWn714ofbBP8yvvxlai+MJVP722T43KkaImjQG2qZ3ka1P11JiLehfVD9bu2f
+	zJQ54fZnQl72ojvbHyNY4jOQbObqkNYr+ySBuZEA9PLTuOzPFcZIFthuib22lWictN241L
+	Ea3o99KDPdILDBFkzzC+knuA562oWvEkrUOvGgq4tWyVvqOdn5cF3Iw7tcjtyu0GDyzPmQ
+	YR2n3/P5pyWpQEq0z1wzOpzlD/fFjXZEXMyK/RzIY3x6kup6RPEnx7f7uheHNw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738782452;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=1ej9NTfHsy8NTBFABSXCMYATIbXQa2pgKtDvB07INXU=;
-	b=ugIDKPGRetUIepxvyL9zOfcWIgaG1HbRH14TqlFwD2Y43IzwAZWTZd/MhHt6Hr78fD9El6
-	0dH8RvbS6UhSieBg==
+	bh=s8pMFazR6bYtF1EP09YRTG0azGpTVUDiugks/OqiOfM=;
+	b=qv+w56GkDne09Uq0V5z31Nm2zPJmiui0gV+nxSYBW3EVo0/61Ikfyz7+zR0eZ/G/eDh809
+	gbf0g1VA0Ykgp5BQ==
 From: "tip-bot2 for Patryk Wlazlyn" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] intel_idle: Provide the default enter_dead() handler
-Cc: Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
+Subject: [tip: x86/cpu] ACPI/processor_idle: Add FFH state handling
+Cc: "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
  Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
  Dave Hansen <dave.hansen@linux.intel.com>,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
@@ -52,7 +53,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173878245161.10177.2550267558248519658.tip-bot2@tip-bot2>
+Message-ID: <173878245221.10177.9564511094350626139.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,74 +63,93 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     fc4ca9537bc4e3141ba7e058700369ea242703df
-Gitweb:        https://git.kernel.org/tip/fc4ca9537bc4e3141ba7e058700369ea242703df
+Commit-ID:     541ddf31e30022b8e6f44b3a943964e8f0989d15
+Gitweb:        https://git.kernel.org/tip/541ddf31e30022b8e6f44b3a943964e8f0989d15
 Author:        Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>
-AuthorDate:    Wed, 05 Feb 2025 17:52:10 +02:00
+AuthorDate:    Wed, 05 Feb 2025 17:52:09 +02:00
 Committer:     Dave Hansen <dave.hansen@linux.intel.com>
 CommitterDate: Wed, 05 Feb 2025 10:44:52 -08:00
 
-intel_idle: Provide the default enter_dead() handler
+ACPI/processor_idle: Add FFH state handling
 
-Recent Intel platforms require idle driver to provide information about
-the MWAIT hint used to enter the deepest idle state in the play_dead
-code.
+Recent Intel platforms will depend on the idle driver to pass the
+correct hint for playing dead via mwait_play_dead_with_hint(). Expand
+the existing enter_dead interface with handling for FFH states and pass
+the MWAIT hint to the mwait_play_dead code.
 
-Provide the default enter_dead() handler for all of the platforms and
-allow overwriting with a custom handler for each platform if needed.
-
+Suggested-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 Signed-off-by: Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>
 Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/all/20250205155211.329780-4-artem.bityutskiy%40linux.intel.com
+Link: https://lore.kernel.org/all/20250205155211.329780-3-artem.bityutskiy%40linux.intel.com
 ---
- drivers/idle/intel_idle.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/kernel/acpi/cstate.c | 10 ++++++++++
+ drivers/acpi/processor_idle.c |  2 ++
+ include/acpi/processor.h      |  5 +++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 118fe1d..e59073e 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -57,6 +57,7 @@
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index 5854f0b..5bdb655 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -16,6 +16,7 @@
+ #include <asm/cpuid.h>
  #include <asm/mwait.h>
- #include <asm/spec-ctrl.h>
- #include <asm/fpu/api.h>
+ #include <asm/special_insns.h>
 +#include <asm/smp.h>
  
- #define INTEL_IDLE_VERSION "0.5.1"
- 
-@@ -228,6 +229,15 @@ static __cpuidle int intel_idle_s2idle(struct cpuidle_device *dev,
- 	return 0;
+ /*
+  * Initialize bm_flags based on the CPU cache properties
+@@ -205,6 +206,15 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
  }
+ EXPORT_SYMBOL_GPL(acpi_processor_ffh_cstate_probe);
  
-+static void intel_idle_enter_dead(struct cpuidle_device *dev, int index)
++void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
 +{
-+	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
-+	struct cpuidle_state *state = &drv->states[index];
-+	unsigned long eax = flg2MWAIT(state->flags);
++	unsigned int cpu = smp_processor_id();
++	struct cstate_entry *percpu_entry;
 +
-+	mwait_play_dead(eax);
++	percpu_entry = per_cpu_ptr(cpu_cstate_entry, cpu);
++	mwait_play_dead(percpu_entry->states[cx->index].eax);
 +}
 +
- /*
-  * States are indexed by the cstate number,
-  * which is also the index into the MWAIT hint array.
-@@ -1800,6 +1810,7 @@ static void __init intel_idle_init_cstates_acpi(struct cpuidle_driver *drv)
- 			state->flags |= CPUIDLE_FLAG_TIMER_STOP;
- 
- 		state->enter = intel_idle;
-+		state->enter_dead = intel_idle_enter_dead;
- 		state->enter_s2idle = intel_idle_s2idle;
+ void __cpuidle acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cx)
+ {
+ 	unsigned int cpu = smp_processor_id();
+diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+index 698897b..586cc7d 100644
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -590,6 +590,8 @@ static void acpi_idle_play_dead(struct cpuidle_device *dev, int index)
+ 			raw_safe_halt();
+ 		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
+ 			io_idle(cx->address);
++		} else if (cx->entry_method == ACPI_CSTATE_FFH) {
++			acpi_processor_ffh_play_dead(cx);
+ 		} else
+ 			return;
  	}
+diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+index a17e97e..63a37e7 100644
+--- a/include/acpi/processor.h
++++ b/include/acpi/processor.h
+@@ -280,6 +280,7 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
+ 				    struct acpi_processor_cx *cx,
+ 				    struct acpi_power_register *reg);
+ void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cstate);
++void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx);
+ #else
+ static inline void acpi_processor_power_init_bm_check(struct
+ 						      acpi_processor_flags
+@@ -300,6 +301,10 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
+ {
+ 	return;
  }
-@@ -2149,6 +2160,9 @@ static void __init intel_idle_init_cstates_icpu(struct cpuidle_driver *drv)
- 		    !cpuidle_state_table[cstate].enter_s2idle)
- 			break;
++static inline void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
++{
++	return;
++}
+ #endif
  
-+		if (!cpuidle_state_table[cstate].enter_dead)
-+			cpuidle_state_table[cstate].enter_dead = intel_idle_enter_dead;
-+
- 		/* If marked as unusable, skip this state. */
- 		if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_UNUSABLE) {
- 			pr_debug("state %s is disabled\n",
+ static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
