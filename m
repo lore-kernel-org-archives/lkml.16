@@ -1,209 +1,132 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A669521E0AE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A48F21D591;
+	Wed,  5 Feb 2025 05:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738733943; cv=none; b=s+NZzk4M/hKJRs8To0OtM04ipVXzbZ1GSF/vdZc0vxh8jJmUpR7YHe3W17s060oU19KPE2Z4Eb7agUAa1yi6ZavWVI0cCSyRvzQPkpcdFOweatk1lM2TxxH4c644uQ4rBmqruJ64KHCLtINb2l5n8vEXoQirDOTC50jO4EAFlx8=
+	t=1738733974; cv=none; b=hfxAg8aF2bbQvkRkwcXZAiTghpFYo6nY19DQhKz5+6eL378YgMYdcX3q0bK1pFYJc3keWgK/YdxMlNPIaVgc1vlofb/iLyrR+iyFUvZsjwjc8sF5Egm7D2vyoJLSFb5cmAQTeft5jFx2mWqLduJOLfLo+o4b35QhV2mZBqxJHhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738733943; c=relaxed/simple;
-	bh=oYZIE1WKgBIkinbX1yVJwFqw1Yy25EB1bt9R4zIMPsE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oN/ULKHNG3KNrzG5P6xOb/KicBb0YI/C2yLPTee5+enFeg3KgJc2+zrLbfHIk8/R95nUwcLL3xRmFC1edzlOg2yAvAQw4vgnNaNGe2cJuO1j6BJxStbMDKir8KAV/nhg2kJyq7MES7L0FVrTmhD0xGbJglguv2PG1L7x/wjRce8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mVl+RPbW; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738733974; c=relaxed/simple;
+	bh=wRMSTlIHoaEU/DmkPcVfRBAGfm3mkOsFJgbtEQ6blDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lObdFkYkwATmLAAw5wUonXwdQpR0LLabZ5Pn8ifTx3TX30qh56ctN1VUVXFNNYs48JOWKd8WzYaIUTNYr9F3rOFhnv4hrEL+tA0kzX5QutBzAql6361IliCRaqHETxOK7pF2hyomcPaOFtoiTmcQNG1qBh1P0Ls5uVyKw2oOJ6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MclkfxxS; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mVl+RPbW"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-85c4e74e2baso1389762241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:38:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MclkfxxS"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f9d17ac130so1641597a91.3;
+        Tue, 04 Feb 2025 21:39:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738733938; x=1739338738; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iZcHmE5LfGpzo6oy13bAZTRZiNz/yFAVgtXYT5lK3YI=;
-        b=mVl+RPbW6wNN+LNnSkbX934oKSA9UtfYh1HzscpzHEVAMVcCh+5RDlFVM7tJsOTdvx
-         XuRNo7LyVsNz4+eq8EeBhtn8U/iKe1P1XoVXdP7sRfdC3AbJjA4KmG8LFPs4pDja7GE6
-         h5PUiEL1vUDvmD3fjf+Cj1bqxOBSUWME2PptT93C8OIAe3aJsozRqtUY4oHnLbZ56hSs
-         y1qwpu9L2W2gxi57VGJK2FZHsAcBKBpkdOFRj7JSDrX7a7By6sZJoWekJwEQj4qcPTCM
-         scm526iZNqyMFsNmA1bJCLidIvOLGmdiWsQAzKuiBvZBnRk+g2+XSIP9UzP25AoGWtX1
-         guZA==
+        d=gmail.com; s=20230601; t=1738733972; x=1739338772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dsul7VtDFl3am4+HHPYwB3KbX5Pdkh87uLvEk51HcKE=;
+        b=MclkfxxS7y4SRoSJ35kiLq6ScjRWVd0T/LHPVeor73BW6DvrH6Vtdb5yJ5bb720GKq
+         Ox4MDhMiyjsaYNTm7oHTDsPwq77e7Ngj8BwOE4zj2fEJudj8mVuBRxHmv1lA8nhWg7JA
+         /Q1r3BGxxpa4Wg3EbjGYVzJ53YMH/Hgy+n27ch1BMLTDH36JSwjbENBmzafB7nAJxZk2
+         FxtouCBF5mIckjREoXHZwvFcscrwKleitZfwh28ukdHeMwBad738V3BSgElemD7q2XeH
+         GhatCjs5jISKdBSce1uxcCtIFFQfHr/WnXdp5M7cVsQcTEj3EfpD5uy4h3/WH3/ESo7r
+         ifqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738733938; x=1739338738;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1738733972; x=1739338772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iZcHmE5LfGpzo6oy13bAZTRZiNz/yFAVgtXYT5lK3YI=;
-        b=WS4s64CXvtpqN/6rgDlqe7E541gxzVpfzDKmYgWPcIMD4miIKNAOmzod4boxlOeYf5
-         iaWUE+AOqfKws1zhHfVytkS2sqcOTeMlHt3AWvqPVhSnzdfBpSw36/htRMegdsFT5Ebc
-         Tl+rA2QYUjNCQ+S8OCzHTndTv+YcoNTxa8NjF81CQuGe+Gl2ZXbcopwRtZqLqB9V+FCI
-         9YPqSh1jwZN18Vx4nhI5j53GJI6qW0pAlcqZIIPCT5KhEf+lecYxwy/2ecftkUCo6fqB
-         0FnM6+lGjG8pAycFrhwmJmLj+DZ4ak9QXMS89HltOokjx/cNmuKpBgDALLgEzc0gJsu+
-         j4wg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4hRrqL9975mo5OYJ6oggIHdtcFIjBmmRma/QFcSa4JX9MAMVD0Wmcl2ataogve1HGL5yihZ6nYr/GZpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcFZrdqD1hZ7/ukz/xEgEcthS2rujIV1hycN1rkoXz4HnWYbhX
-	tD5NFuyg0gz7675Lhxk/h6fkDN8D7LF/QH+jH2Iw6PWiwPRUwUqV+s+OUeOwuo2RGrHvxq4RH/L
-	N3yiVjUgpxLSF2D1EKdWFSz3A0xmWF7OlBf8Xww==
-X-Gm-Gg: ASbGnctpZAKVz8JyXr7V5p7Ek8wc2+3Z+8iVG556e8tAtJ864NRgFjMqzlvhIu0A4+B
-	Wr9i+gNsq4jsr+besuJ4YOD1EWm+kl+kPihwKyu4pTS1Zj+cicQTCa5l/fA256GPR5SascKEqVD
-	c=
-X-Google-Smtp-Source: AGHT+IGP8iaV1lSJK3k61hP2EUn7b4J7C0feOjedPDBXitriSHUsXfoWs2rikX22K7TDZvBiWOLJscwElk2khGF9pWQ=
-X-Received: by 2002:a05:6102:3c8d:b0:4b1:1565:f4f1 with SMTP id
- ada2fe7eead31-4ba46dab143mr1416296137.3.1738733938448; Tue, 04 Feb 2025
- 21:38:58 -0800 (PST)
+        bh=dsul7VtDFl3am4+HHPYwB3KbX5Pdkh87uLvEk51HcKE=;
+        b=Ss6vg21bpjyzV//zHElxpRhWuRMsFlMtzeiB+L6iJCqGsvSTdLBRPyXno+TiOMKwaz
+         LwlJTpn2PF6mPAU5IxAi4tLap6PihXaYNy64t3qfE6irzk9ZGzXT7VABgbOwZKvB9kfn
+         K3q9dLQm9jW3GQqZISos6wrIJi+ODoqZWLRQuQVOfb4G8tOpr8LlxTzXlEqE+jEHSrOZ
+         aBGR98rzYh2NhR5WMLupYpJax+0Tzr+uj+YYCQ5iDbuloj+TMZq8gUGpxR4xGfsrQA/J
+         7SbLtt4vQ+PIwDgdSm7RyyZGYCEXIys9PcVWdAyVgj4xAqbfIay0XAVMQIZ3mDnuK0NJ
+         hnFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGnBFYRymDXWej5rhK7P43Ua50k56psBuxsGbebRzD7B14hKQDI2X3QGHB+v732U5F2TggAgH0gKS86pM=@vger.kernel.org, AJvYcCX/PAUVc3JdY00AwdvftygpcorkPFh5/m2x0KGyZUbMrGS74qJ+U8gNzX899cTXFaHslvhfSMs28BoWHa+OQQtk@vger.kernel.org
+X-Gm-Message-State: AOJu0YynGPljDFYIptnR6x41jnipAhQu+BH/zIs5YsQnyo/VWRErJ4Ua
+	aHp6qi23eWD6FJo/fHqzb5neK7JZRYo1vy3JIxKqpPxBteMMT6Ai6/Mcyljr
+X-Gm-Gg: ASbGncvqKN2gwtjr38rX6Lua2PnI9qkQhQh+/95WE6P6UCtlbogLre+ux9HdILDLeA+
+	jnlfe2bXA6rthnHW9sRreCNvIlJGtWCZMdfTCa8mZNfRWeRLS/F2bm0+B0eGSPnGdy4VybCeno8
+	Mp0qYIEK8UkVXg6qWX9Tv9U8tIo06cDgBa0apIIt8zoviA8gvNbjQSfjMmxJtcLUrG38h8jYyE9
+	foE4Qgtd7NujBhyqc10HFRh6XSSBbRaFS4e8i2t98bnadf9LQiCEKUJrNHeMzIcp7UjztWCIJ5W
+	xHb2emHRG/OHiPOrYpOML+J0xcZTbdf6Sg0=
+X-Google-Smtp-Source: AGHT+IGxX/h10NXM0LIDTbYPxDYqVH+ZwKPX8fNuchz7fcwwLZmtRcoNtGkMiYJe6nYLWjdbFSvaxg==
+X-Received: by 2002:a17:90b:4c4b:b0:2ef:33a4:ae6e with SMTP id 98e67ed59e1d1-2f9e076772cmr2939422a91.12.1738733972290;
+        Tue, 04 Feb 2025 21:39:32 -0800 (PST)
+Received: from vaxr-BM6660-BM6360.. ([2001:288:7001:2703:dc5d:87af:eca4:905a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1c06393sm581025a91.0.2025.02.04.21.39.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 21:39:31 -0800 (PST)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: shuah@kernel.org
+Cc: brauner@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [PATCH] selftests: pidfd: Fix compiling errors and warning
+Date: Wed,  5 Feb 2025 13:39:26 +0800
+Message-ID: <20250205053926.257732-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com>
-In-Reply-To: <20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Wed, 5 Feb 2025 11:08:47 +0530
-X-Gm-Features: AWEUYZk-9uPQuZCvuldLLo0gp1nCZvfng0cr_ZdFUSsUs5f9vvtvhtZ_fCOgRaA
-Message-ID: <CAFA6WYNGH_LP-R4hQx-+XMY3zFN74ij-JngwnuKOsz8=r_-bsQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] Trusted Execution Environment (TEE) driver for
- Qualcomm TEE (QTEE)
-To: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Amirreza,
+When compiling selftests files under tools/testing/selftests/pidfd/ ,
+some compiling errors and warnings will pop out as the following.
 
-On Mon, 3 Feb 2025 at 08:14, Amirreza Zarrabi <quic_azarrabi@quicinc.com> wrote:
->
-> This patch series introduces a Trusted Execution Environment (TEE)
-> driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
-> and services to run securely. It uses an object-based interface, where
-> each service is an object with sets of operations. Clients can invoke
-> these operations on objects, which can generate results, including other
-> objects. For example, an object can load a TA and return another object
-> that represents the loaded TA, allowing access to its services.
->
-> Kernel and userspace services are also available to QTEE through a
-> similar approach. QTEE makes callback requests that are converted into
-> object invocations. These objects can represent services within the
-> kernel or userspace process.
->
-> Note: This patch series focuses on QTEE objects and userspace services.
->
-> Linux already provides a TEE subsystem, which is described in [1]. The
-> tee subsystem provides a generic ioctl interface, TEE_IOC_INVOKE, which
-> can be used by userspace to talk to a TEE backend driver. We extend the
-> Linux TEE subsystem to understand object parameters and an ioctl call so
-> client can invoke objects in QTEE:
->
->   - TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_*
->   - TEE_IOC_OBJECT_INVOKE
->
-> The existing ioctl calls TEE_IOC_SUPPL_RECV and TEE_IOC_SUPPL_SEND are
-> used for invoking services in the userspace process by QTEE.
->
-> The TEE backend driver uses the QTEE Transport Message to communicate
-> with QTEE. Interactions through the object INVOKE interface are
-> translated into QTEE messages. Likewise, object invocations from QTEE
-> for userspace objects are converted into SEND/RECV ioctl calls to
-> supplicants.
->
-> The details of QTEE Transport Message to communicate with QTEE is
-> available in [PATCH 10/10] Documentation: tee: Add Qualcomm TEE driver.
->
-> You can run basic tests with following steps:
-> git clone https://github.com/quic/quic-teec.git
-> cd quic-teec
-> mkdir build
-> cmake .. -DCMAKE_TOOLCHAIN_FILE=CMakeToolchain.txt -DBUILD_UNITTEST=ON
->
-> https://github.com/quic/quic-teec/blob/main/README.md lists dependancies
-> needed to build the above.
->
-> This series has been tested for basic QTEE object invocations and
-> callback requests, including loading a TA and requesting services form
-> the TA.
+  CC       pidfd_fdinfo_test
+pidfd_fdinfo_test.c: In function ‘child_fdinfo_nspid_test’:
+pidfd_fdinfo_test.c:231:13: warning: implicit declaration of function \
+‘mount’ [-Wimplicit-function-declaration]
+  231 |         r = mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
+      |             ^~~~~
+pidfd_fdinfo_test.c:231:36: error: ‘MS_REC’ undeclared \
+(first use in this function)
+  231 |         r = mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
+      |                                    ^~~~~~
+pidfd_fdinfo_test.c:231:36: note: each undeclared identifier is \
+reported only once for each function it appears in
+pidfd_fdinfo_test.c:231:45: error: ‘MS_PRIVATE’ undeclared \
+(first use in this function); did you mean ‘MAP_PRIVATE’?
+  231 |         r = mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
+      |                                             ^~~~~~~~~~
+      |                                             MAP_PRIVATE
+pidfd_fdinfo_test.c:237:15: warning: implicit declaration of function \
+‘umount2’; did you mean ‘SYS_umount2’? \
+[-Wimplicit-function-declaration]
+  237 |         (void)umount2("/proc", MNT_DETACH);
+      |               ^~~~~~~
+      |               SYS_umount2
+pidfd_fdinfo_test.c:237:32: error: ‘MNT_DETACH’ undeclared \
+(first use in this function)
+  237 |         (void)umount2("/proc", MNT_DETACH);
+      |                                ^~~~~~~~~~
+make: *** [../lib.mk:222: \
+~/linux/tools/testing/selftests/pidfd/pidfd_fdinfo_test] Error 1
 
-Thanks for sharing these test user-space applications/libraries. Can I
-know which platforms are currently supported by this QTEE driver? I
-would like to run and understand the overall stack on a real device. I
-do have rb3, rb5 and db410c on my desk to test with.
+Solve these errors and warnings by including header file <sys/mount.h>.
 
-Also, platform support is important information you should put in the
-cover letter as well as the QTEE documentation.
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ tools/testing/selftests/pidfd/pidfd_fdinfo_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--Sumit
+diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+index f062a986e..f718aac75 100644
+--- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+@@ -13,6 +13,7 @@
+ #include <syscall.h>
+ #include <sys/wait.h>
+ #include <sys/mman.h>
++#include <sys/mount.h>
+ 
+ #include "pidfd.h"
+ #include "../kselftest.h"
+-- 
+2.43.0
 
->
-> [1] https://www.kernel.org/doc/Documentation/tee.txt
->
-> Signed-off-by: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
-> ---
-> Changes in v2:
-> - Clean up commit messages and comments.
-> - Use better names such as ubuf instead of membuf or QCOMTEE prefix
->   instead of QCOM_TEE, or names that are more consistent with other
->   TEE-backend drivers such as qcomtee_context_data instead of
->   qcom_tee_context.
-> - Drop the DTS patch and instantiate the device from the scm driver.
-> - Use a single structure for all driver's internal states.
-> - Drop srcu primitives and use the existing mutex for synchronization
->   between the supplicant and QTEE.
-> - Directly use tee_context to track the lifetime of qcomtee_context_data.
-> - Add close_context() to be called when the user closes the tee_context.
-> - Link to v1: https://lore.kernel.org/r/20241202-qcom-tee-using-tee-ss-without-mem-obj-v1-0-f502ef01e016@quicinc.com
->
-> Changes in v1:
-> - It is a complete rewrite to utilize the TEE subsystem.
-> - Link to RFC: https://lore.kernel.org/all/20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com
->
-> ---
-> Amirreza Zarrabi (8):
->       tee: allow a driver to allocate a tee_device without a pool
->       tee: add close_context to TEE driver operation
->       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
->       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF
->       firmware: qcom: scm: add support for object invocation
->       tee: add Qualcomm TEE driver
->       qcomtee: add primordial object
->       Documentation: tee: Add Qualcomm TEE driver
->
->  Documentation/tee/index.rst            |   1 +
->  Documentation/tee/qtee.rst             | 150 ++++++
->  drivers/firmware/qcom/qcom_scm.c       | 128 ++++++
->  drivers/firmware/qcom/qcom_scm.h       |   7 +
->  drivers/tee/Kconfig                    |   1 +
->  drivers/tee/Makefile                   |   1 +
->  drivers/tee/qcomtee/Kconfig            |  10 +
->  drivers/tee/qcomtee/Makefile           |  10 +
->  drivers/tee/qcomtee/async.c            | 160 +++++++
->  drivers/tee/qcomtee/call.c             | 741 ++++++++++++++++++++++++++++++
->  drivers/tee/qcomtee/core.c             | 810 +++++++++++++++++++++++++++++++++
->  drivers/tee/qcomtee/primordial_obj.c   |  65 +++
->  drivers/tee/qcomtee/qcom_scm.c         |  36 ++
->  drivers/tee/qcomtee/qcomtee_msg.h      | 234 ++++++++++
->  drivers/tee/qcomtee/qcomtee_private.h  | 226 +++++++++
->  drivers/tee/qcomtee/release.c          |  59 +++
->  drivers/tee/qcomtee/shm.c              | 102 +++++
->  drivers/tee/qcomtee/user_obj.c         | 712 +++++++++++++++++++++++++++++
->  drivers/tee/tee_core.c                 | 121 ++++-
->  drivers/tee/tee_private.h              |   6 -
->  include/linux/firmware/qcom/qcom_scm.h |  27 ++
->  include/linux/firmware/qcom/qcom_tee.h | 286 ++++++++++++
->  include/linux/tee_core.h               |  15 +-
->  include/linux/tee_drv.h                |  18 +
->  include/uapi/linux/tee.h               |  54 ++-
->  25 files changed, 3964 insertions(+), 16 deletions(-)
-> ---
-> base-commit: dab2734f8e9ecba609d66d1dd087a392a7774c04
-> change-id: 20241202-qcom-tee-using-tee-ss-without-mem-obj-362c66340527
->
-> Best regards,
-> --
-> Amirreza Zarrabi <quic_azarrabi@quicinc.com>
->
