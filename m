@@ -1,114 +1,167 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D161FF1DC;
-	Wed,  5 Feb 2025 18:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7F71FFC4D;
+	Wed,  5 Feb 2025 18:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780777; cv=none; b=V9xh6sJlMHoCJL8ugpg5UJM3OdpZLhHMXcozdkj5pDWjnWZ+xxiltxa+s1z6Y1UJu/EiD9BQb0swlC0BBY9A4LH7ppoJMVXSZX5atF7LcZ2B/YQTsm2rGO4udZjraL9LhvRaewlf6u31HtMxWv9y8ujvWRKYqYPnTBhisVzI3kw=
+	t=1738780778; cv=none; b=dgwmsIjuuapEURbkycH4s/wLCuTHCpj6Z2K1puu9rpSUkkybAtdwM5FmNE2oWwHJnCTob7VDin4PX6me1TEVoOd2BDDW3rH8S6tG9bb6J1tFJS4F4JVeimh9l0BXmBgi4JgnTnqImjW4MA7mR4DzU0rer9ly3JCkzeFaDwitRDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780777; c=relaxed/simple;
-	bh=61udqkcEg9wcSq/halgc8JMmMFwwfrBUY4mtNHZNt8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BfEpjyrqLUunJCPmqsNHoAexrBWFV3oc9u6oMN8nyEXIi0tAzjlVjRe51V8JIG6XKW8buoo3z7+7IzKLB4d3tHC508MkMmdVvDpEwjqrNcZ5QAodPNkG0Zral/V4JW2tXwHm1TNm26fTb2zycYKbYdVGpXgPV+c1iawvt8Z65wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSCpjYdb; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738780778; c=relaxed/simple;
+	bh=K2Dm4iFRSM/Ob4Zyy6ItdDl5CKpoNAwUnRnTz4l28l8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kD1HFL8letRuYmB0HW63LSTpExuV7HtG5IArPk4GIpo/JUqya4fvVp1ygDKeaSN8LTmPyGUDCZTUaYYRvfiFVduzsR1t5+PWQPpfNSIWYewmM4F+WlT8+y/BEh7QWt53ltmFzp8yvF7lbSa7nbfamjixPB11TekRUr74N3gWAls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5vsaVc2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSCpjYdb"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab70043cd05so30517066b.0;
-        Wed, 05 Feb 2025 10:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738780774; x=1739385574; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+8Wgr0+Th/eZItEiexHX2VH44yFxgC7CrIHewPAPMnk=;
-        b=aSCpjYdbtM8LqP5L/JdgqIWlEKOvlcFZC7EgrLpkCUCRWiQig2BaBadOWiw31GfcsJ
-         shnJCetRpDGcPGYBWTyzDjYUSUxoRefqG4iUqnZu448qy0WjhMUjArK2F7TSNT1nCXkh
-         /Lu8OVrEK7V0As8ouya0Gbe1yiZe9sdrDAfn5b39/b4j+QmkgSlrOJ4u4oKvqJUjcOR+
-         pmNu7lz8WYOCzGYgLjpAXszlE7E/Gh1CdxibnvMNdqW2mpnhz+K09Mo8ULSztutAfBC4
-         qD8WF6F0vZhBctdc4BT0ZgSjixDDB4NqdrmvcTmM+fYKIEdRMm2GCPeZf1OBxGMjdigK
-         APfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738780774; x=1739385574;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+8Wgr0+Th/eZItEiexHX2VH44yFxgC7CrIHewPAPMnk=;
-        b=IXmEwJ8uaPX+tu+Cg+Sq6iOmqNp1YDnbASeN3WAML+dczEqcqjWZZRpI9mYMd4LvoK
-         s4hAeg51OgGK6Cd62RaqWGMjL6pyBGK4RrULWYlZNEzePuXdWtMnFPBFMXsQWeevpIU1
-         BWYRZdukAgcleQzkT1pojtOmxoG1Tnbva0+V2fx+evcskCMZhjXpKOU1BUQoSmmZgYlW
-         bJ4sjOj4kMCH6LzLo/MB11Iowj5QLCsuNlnXxVZDwVeQKr7PMz5Y4lMzL5cI3nqj5HRi
-         fV/wgYDoY5MoXPLZ+1tw8FHU43q7KgswEPcOw1QptgzeGGSnNb/0RX7UR4oBRu77HP+G
-         4Vcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcAQVgq01Aq9PJChE0zoKD6M6hLi9a/VokL4F70UdAtn2cwf6X9EnTUV2SFa+EZHBtNKF8BkuAiOsTXwdP@vger.kernel.org, AJvYcCWOZBEFK4iHxEqvl2inPcvtTvJ9LZdOnMlxax1PxGvQSA1B3OUQDc8QsslqDG6PVYLKSu6fBLbu+SA96KjY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW3Yo7DTQiE/nz2wcKq+ZMRinhfshZTkATkaorBE9vUPYm+w4E
-	tYL/EGYuAMNwFjTvU9dE9hyQ6XPPQFkj4arHD/6URYiXq4OsU6hg
-X-Gm-Gg: ASbGnctyYEKx/z2iSuHr7iUc6f2Lg+fEetvmibDvVPLZ2dtoZWHHvqfENEn+pA/DKmJ
-	qh3pVJkFs3+BKpUstdMLb1fXJkckSt3rX3DJtAA+Xn5e6rMDaHpayQNAt4a9oi7eXsbsSTx1gUJ
-	ln5RXVqUaBXcED2myGO/Mj5rFFSNFIdwvMWkbHeEAXTdvrbgouF4WKP9WiQCB/0mQoxMHwTj3RM
-	zdzzy2ShZDavdIhpfD2k52PbRW44DtadrZvSP7o0gX6+svzI2X02F3QcTCo3L/wuJUtFF1rTEuC
-	vAYGV3DqBlQ5MC2Dpu+XDAMCHPMOXg4=
-X-Google-Smtp-Source: AGHT+IE/ISlKiMGHnxVuW7IPBeeTUQHXZ8skwvGo50qqTintpOxx73+NGmUI9PGeCWkvW0zyYNFfaQ==
-X-Received: by 2002:a17:906:f5a1:b0:ab2:f5e9:9a39 with SMTP id a640c23a62f3a-ab75e2820ffmr466077866b.23.1738780773822;
-        Wed, 05 Feb 2025 10:39:33 -0800 (PST)
-Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47d0fa3sm1134082266b.47.2025.02.05.10.39.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 10:39:33 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH 3/3] vfs: use the new debug macros in inode_set_cached_link()
-Date: Wed,  5 Feb 2025 19:38:39 +0100
-Message-ID: <20250205183839.395081-4-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205183839.395081-1-mjguzik@gmail.com>
-References: <20250205183839.395081-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5vsaVc2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08129C4CEDD;
+	Wed,  5 Feb 2025 18:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738780778;
+	bh=K2Dm4iFRSM/Ob4Zyy6ItdDl5CKpoNAwUnRnTz4l28l8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d5vsaVc2+MQLeEBLEtrCNvUC26aT53lFfJAGYd5uiPWIpUlkru1JOcOqRDZ+HbkdN
+	 yjmlFavIzD06qZDtRMicoI05/5a3ucDsIgDyc2303EsqmhFIc4J61UINqigTmq87a3
+	 70hkGNuhcmXg6QRvPzM9WqwsfyB/7k+XfW13zr53Uf8wOJKu+d0ePgY+8TlLHDSyRs
+	 aetzP19bINzGdfCAHDS3db6bx4Y42/c7WS1y9EL8j7vpZZ+gfqH18htEGb2EadKMy/
+	 Rgsq+ejnIoOM2Ln3CP63tbrlwttDctTT+Im6xmJUdqHRWJLYTaoIdp8v+GnLBpAYnR
+	 eiC5ySU9OwXBQ==
+Date: Wed, 5 Feb 2025 10:39:37 -0800
+From: Kees Cook <kees@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, brauner@kernel.org,
+	gustavoars@kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mjguzik@gmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
+Message-ID: <202502051031.2CF8D96392@keescook>
+References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+ <r7aylhww6ssce4uk4drib5c7awf6kcdgo5rzorbi3mve723hu6@6p7ij7t44ejq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <r7aylhww6ssce4uk4drib5c7awf6kcdgo5rzorbi3mve723hu6@6p7ij7t44ejq>
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
- include/linux/fs.h | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+On Wed, Feb 05, 2025 at 07:21:04PM +0100, Jan Kara wrote:
+> On Tue 04-02-25 01:46:28, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
+> > git tree:       upstream
+> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
+> > 
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
+> > mounted in repro: https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
+> > 
+> > The issue was bisected to:
+> > 
+> > commit bae80473f7b0b25772619e7692019b1549d4a82c
+> > Author: Mateusz Guzik <mjguzik@gmail.com>
+> > Date:   Wed Nov 20 11:20:35 2024 +0000
+> > 
+> >     ext4: use inode_set_cached_link()
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1248c3df980000
+> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=1148c3df980000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1648c3df980000
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+> > Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
+> 
+> Please check attached patch:
+> 
+> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> 
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 034745af9702..e71d58c7f59c 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -792,19 +792,8 @@ struct inode {
- 
- static inline void inode_set_cached_link(struct inode *inode, char *link, int linklen)
- {
--	int testlen;
--
--	/*
--	 * TODO: patch it into a debug-only check if relevant macros show up.
--	 * In the meantime, since we are suffering strlen even on production kernels
--	 * to find the right length, do a fixup if the wrong value got passed.
--	 */
--	testlen = strlen(link);
--	if (testlen != linklen) {
--		WARN_ONCE(1, "bad length passed for symlink [%s] (got %d, expected %d)",
--			  link, linklen, testlen);
--		linklen = testlen;
--	}
-+	VFS_WARN_ON_INODE(strlen(link) != linklen, inode);
-+	VFS_WARN_ON_INODE(inode->i_opflags & IOP_CACHED_LINK, inode);
- 	inode->i_link = link;
- 	inode->i_linklen = linklen;
- 	inode->i_opflags |= IOP_CACHED_LINK;
+> From df00b84402fb67d94a9eb6b86633092983cb388c Mon Sep 17 00:00:00 2001
+> From: Jan Kara <jack@suse.cz>
+> Date: Wed, 5 Feb 2025 19:02:35 +0100
+> Subject: [PATCH] ext4: Verify fast symlink length
+> 
+> Verify fast symlink length stored in inode->i_size matches the string
+> stored in the inode to avoid surprises from corrupted filesystems.
+> 
+> Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+> Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
+> Suggested-by: "Darrick J. Wong" <djwong@kernel.org>
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/ext4/inode.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 7c54ae5fcbd4..fbda5a67f7f9 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5007,8 +5007,16 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
+>  			inode->i_op = &ext4_encrypted_symlink_inode_operations;
+>  		} else if (ext4_inode_is_fast_symlink(inode)) {
+>  			inode->i_op = &ext4_fast_symlink_inode_operations;
+> -			nd_terminate_link(ei->i_data, inode->i_size,
+> -				sizeof(ei->i_data) - 1);
+> +			if (inode->i_size == 0 ||
+> +			    inode->i_size >= EXT4_N_BLOCKS * 4 ||
+
+This took me a while to understand. ei->i_data is u32[15]. It looks like
+EXT4_N_BLOCKS is also 15. I feel like it would be much more readable to
+have the above check be:
+
+			    inode->i_size >= sizeof(ei->i_data) ||
+
+instead of using a literal "4" for sizeof(u32) as "4", and having a
+EXT4_N_BLOCKS standing in for the literal "15" in i_data.
+sizeof(ei->i_data) is precisely what is being checked, so why not use
+it?
+
+And while at it, the definition of i_data could be adjusted to to use
+EXT4_N_BLOCKS, e.g.:
+
+struct ext4_inode_info {
+        __le32  i_data[EXT4_N_BLOCKS];     /* unconverted */
+
+?
+
+> +			    strnlen((char *)ei->i_data, inode->i_size + 1) !=
+> +								inode->i_size) {
+> +				ext4_error_inode(inode, function, line, 0,
+> +					"invalid fast symlink length %llu",
+> +					 (unsigned long long)inode->i_size);
+> +				ret = -EFSCORRUPTED;
+> +				goto bad_inode;
+> +			}
+
+But regardless, yes, the math checks out, and looks correct to me.
+
+>  			inode_set_cached_link(inode, (char *)ei->i_data,
+>  					      inode->i_size);
+>  		} else {
+> -- 
+> 2.43.0
+> 
+
+
+-Kees
+
 -- 
-2.43.0
-
+Kees Cook
