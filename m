@@ -1,96 +1,86 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9511022E3F4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B6122E3FA;
+	Wed,  5 Feb 2025 12:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738759472; cv=none; b=R78exnuzEc0tJE0DL/57/iXm+TN1QN+RBDft3kw+KiCuVImdeRibCsROZpgu9xWikAVBnBUUPHmfMpQXprrdLl7M1Z8hnedJWvzmi52+H6HZ9Hf7TnE5i/PXR/tkwWEwiXzekvKy9GDZ5RvqjqbNyYe+Nmb12s65zcpUZoB4RgM=
+	t=1738759471; cv=none; b=HahHw0L3/2JpkZhUHAADU7PadIi3Gf8KA4rcIWo1/VEPYBrRr/2V1G/2q8tXs7w8K6UCciSDAmpJgV3sAJRqGDwGagxGMy4EsWS+3tAxf0L6j2sxB09Q6Zru1kscT+/rHVLJfiHX7l4fKEVirEdPQETSUCNcE5e4xbBvKmbzOfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738759472; c=relaxed/simple;
-	bh=E+Chp3s8bUKJbJTwjy0HsljKNa1akEZPbSJwFVSx0U4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OUQ1rusLGqpj/EMMFGC8pKIxcxOWUSaEPm+g+n3iW2Zyy2xlojYBAOff0xCSn53Cc2DpFe9TH7qV+AWhyy1ryFoLowwXsDWhMDbqjcKTlIGTdBsfnFCDiTcYd1u3Azb4E1tAoNMgKW0Ct6aMflY6BELeUzSm3Us6IFWj5Nf8m+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d04f20f2baso15133195ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 04:44:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738759469; x=1739364269;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ge22AivEZoY/4Tv/E+lBQ1CqAf41hkW39t6YWMYZZRk=;
-        b=RNV8BIW0ACyDdvzQYHz9R2gFfWUqxsrp73RIcY5YBpTL4ifEbPanHovdat3YuKQNQk
-         1op2/80ibaAWeIqfZt55htpURq6MXwUMaNFmOQDM6mWjNdF2cnN0LGtXRxQte8dDocYA
-         a09easpBEe3W543M9rL4rr5FJqMeSkE0546unS/TS7CmnlbPvemhu6/iOEDfCJ0ibRRn
-         bS1u+qEZAtvK/ec0hU7D/VHGpaAtcgkGxatDCixwfcDQNFJ90HRZ6e8k3nJ1FgdNrsTp
-         MUp5eX9plXGBDyzLCuleiXrbawGZIwsPb9ZgrvZepOxsyOIFXOd/bT2R7q5OWlicLWXT
-         v+nw==
-X-Gm-Message-State: AOJu0YxrK2jPlg1NMcRFfQIceTR7wIy+i+LJxsojKTAj/nY1Vn3WLZPI
-	ki8cvJ9ZSOJ2MGmKscxeJGwc4TgcBOcVBiGkOwY/jX2M1XYBE+HGuLtH9k9/ZneaEU4CzVAAlNk
-	ZbdsDxi7XwMI4pcII5NW+dOZaCdWJUO8syfCmuuJSjo53ixPr4YUuouY=
-X-Google-Smtp-Source: AGHT+IEpRMR4/QWV3lJbVI70WEuPYeZmtAsmp7udihbvd3N1hnfw2jaJ5AE9gCojOSkyOYWw4yvLtYr1nPYogFm6xoFJIHtIvvJ+
+	s=arc-20240116; t=1738759471; c=relaxed/simple;
+	bh=W+a+Yoja6r+NjMKoIeKEbzYjPLUdxxkyp8N0b43Me78=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=qZsovO+Xe7ziEop2pOCgLynLOIJgR3tkGKjTOkGHRO23zg7+MEpINwZZ8uhVz+5H7+IiYrUcq8p9x6RwbBi9t/aNEYF/2LRAIO/x+UHFkrUYCk1ZCnxV/QG98PNNHR5pry9Re1KlLHLuD7l10dxJeIVceox1XPJzu2F3SIM+D8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHiPW2GR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHiPW2GR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA77C4CEE3;
+	Wed,  5 Feb 2025 12:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738759470;
+	bh=W+a+Yoja6r+NjMKoIeKEbzYjPLUdxxkyp8N0b43Me78=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=cHiPW2GRXOB2XptJXk5LSz96Ia4+t1cp8W3f+DjXmFm1jc1a5SGi1e9G3Xs5XRr7k
+	 Bp2O945I1s12eAmTAH39vCkV7ebN1Tj8vpfe5dRLipRUvnb4/neXwswzHoTL9XgRuB
+	 Df8CF8KXW9e/JWSTFb7E81Cji+UqA6LZvJnv+M5TM0lCmudj5RcTvGtLEuc6E0Ie5p
+	 XouIMYERSqzENyEgy0tEapD6RL1i6SK+yWXiZuRczgZvp/Ra7iTibRL8W7qQcHiJm6
+	 DEJLlIPZ6M78Lj5s+6B7vkd1lVnqNI/H9Ykx7iL0O1erAMdpY4zJS9I4fc57vUMiZm
+	 YHhyFOOlchP1A==
+From: Mark Brown <broonie@kernel.org>
+To: matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
+ lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, linux@treblig.org
+Cc: linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250128005243.295977-1-linux@treblig.org>
+References: <20250128005243.295977-1-linux@treblig.org>
+Subject: Re: [PATCH] ASoC: mediatek: mt6358: Remove unused functions
+Message-Id: <173875946845.32457.11968319889637039495.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 12:44:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b0c:b0:3cf:c8bf:3b8a with SMTP id
- e9e14a558f8ab-3d04f419163mr27575035ab.7.1738759469649; Wed, 05 Feb 2025
- 04:44:29 -0800 (PST)
-Date: Wed, 05 Feb 2025 04:44:29 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a35d2d.050a0220.50516.0054.GAE@google.com>
-Subject: [syzbot] Monthly net report (Feb 2025)
-From: syzbot <syzbot+list0b88770b4dd3d4e4c89e@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-Hello net maintainers/developers,
+On Tue, 28 Jan 2025 00:52:43 +0000, linux@treblig.org wrote:
+> The functions:
+>   mt6358_mtkaif_calibration_disable()
+>   mt6358_mtkaif_calibration_enable()
+>   mt6358_set_mtkaif_calibration_phase()
+> were added in the 2019
+> commit 6a8d4198ca80 ("ASoC: mediatek: mt6358: add codec driver")
+> 
+> [...]
 
-This is a 31-day syzbot report for the net subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/net
+Applied to
 
-During the period, 10 new issues were detected and 7 were fixed.
-In total, 138 issues are still open and 1579 have already been fixed.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Some of the still happening issues:
+Thanks!
 
-Ref  Crashes Repro Title
-<1>  257940  Yes   possible deadlock in team_del_slave (3)
-                   https://syzkaller.appspot.com/bug?extid=705c61d60b091ef42c04
-<2>  46041   Yes   unregister_netdevice: waiting for DEV to become free (8)
-                   https://syzkaller.appspot.com/bug?extid=881d65229ca4f9ae8c84
-<3>  20019   Yes   possible deadlock in smc_switch_to_fallback (2)
-                   https://syzkaller.appspot.com/bug?extid=bef85a6996d1737c1a2f
-<4>  10645   Yes   possible deadlock in do_ip_setsockopt (4)
-                   https://syzkaller.appspot.com/bug?extid=e4c27043b9315839452d
-<5>  7383    Yes   WARNING: suspicious RCU usage in dev_deactivate_queue
-                   https://syzkaller.appspot.com/bug?extid=ca9ad1d31885c81155b6
-<6>  6432    Yes   KMSAN: uninit-value in eth_type_trans (2)
-                   https://syzkaller.appspot.com/bug?extid=0901d0cc75c3d716a3a3
-<7>  6150    Yes   WARNING in inet_sock_destruct (4)
-                   https://syzkaller.appspot.com/bug?extid=de6565462ab540f50e47
-<8>  4524    Yes   KASAN: slab-use-after-free Read in __ethtool_get_link_ksettings
-                   https://syzkaller.appspot.com/bug?extid=5fe14f2ff4ccbace9a26
-<9>  3096    Yes   INFO: task hung in linkwatch_event (4)
-                   https://syzkaller.appspot.com/bug?extid=2ba2d70f288cf61174e4
-<10> 2826    Yes   possible deadlock in sockopt_lock_sock
-                   https://syzkaller.appspot.com/bug?extid=819a360379cf16b5f0d3
+[1/1] ASoC: mediatek: mt6358: Remove unused functions
+      commit: fb6ec1d27608c008bfe1ab0dfec3720990eb2451
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-You may send multiple commands in a single email message.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
