@@ -1,65 +1,103 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978B01FC111;
-	Wed,  5 Feb 2025 17:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD38F9443;
+	Wed,  5 Feb 2025 17:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738778186; cv=none; b=aWMVncaZDykcw94abvM24fwLzrmqQHsiLGn45OJiPEAoLKKsXgDAg0m16tfVEq0JSqa1pv5hLVZbf6+1jv9TBr8Gf10HT68uxhp3LYoPOr2DwuelcSHy2P6g7jqzbsjT+iB/F5L6sj2UtjLQeF1Z8bq+GxiySRX0bwDNPPrpjCM=
+	t=1738778231; cv=none; b=lk1jlRcVBduVAn9RQTbr88rOcl/Ebr9M2OgTU5y8TlJ+4dDiupebArHKKwlFBi1xIrY99WB6i5Xc5FkArMZg30lN39AqYGuDMD6UY+z9PzOeKsxzVJbYdLWAKOqjL6bEcOmToDJdGl+P3uT5R9z1bxQkhAQEa4RhXHcK1HuivrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738778186; c=relaxed/simple;
-	bh=VJMpmOXHqXJkGyy8pbyVg5hd2QEIfnpnPgIkpF+ZB3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pzzY9EqkXWqwOEtGPMtrzUjsdyQEBdTcYIAUfOtA6KJKZH+FEFapbqPaTz1uDOoDJbT5JzbLZjTWNVTJwVUqHk7eXC74K9I3Us/CjHMgIlYn22YJj+Lg7njHBkAjHxu91DHzqJkmI6tuz+dDYS4tOsrMY2u2GWa4QleMOxTuJsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Zeq2P3QQ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738778231; c=relaxed/simple;
+	bh=fG9xNuTscd+BK6XnKts4jb/KyoALWXwtTWifrKZj1nA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bKJT6gjbh3B/zQQDb7No98T7D5yP1+XKrrpYVII9a6Sjdqk8yxV7QixkI2nyd0JQ9bYJVZAxVrLlRkT0fsBWrWwvHVVNBY+jIQ4GJRO+zY7xL8aFhraCtxNu72J140qAbJS6kQdmmr5rBRREC2w+qIYwTs++qRplsheEWLROE8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=cdcY84WE; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Zeq2P3QQ"
-Received: from hm-sls2 (bras-base-toroon4332w-grc-32-142-114-216-132.dsl.bell.ca [142.114.216.132])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7C4E520ACD7D;
-	Wed,  5 Feb 2025 09:48:19 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7C4E520ACD7D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738777700;
-	bh=VJMpmOXHqXJkGyy8pbyVg5hd2QEIfnpnPgIkpF+ZB3I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Zeq2P3QQfB6fqXABp/Y7dlqfdhdbKAvD3pOrv4OpcsCkmLcDDWqDn1Jl4vzOAB78L
-	 4VIzIHtd0bFEOE6cwHiLtPyo1OFKbSDgt/hMB+QVPwcLbTERNLry+S5HoZAp8oTUQR
-	 wErejlPZDwYFHiuTgsc099ArxGqM0Ze3JgwwLi5I=
-Date: Wed, 5 Feb 2025 12:48:13 -0500
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-To: linux-mm@kvack.org
-Cc: Roman Gushchin <roman.gushchin@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Shakeel Butt <shakeelb@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Allen Pais <apais@linux.microsoft.com>,
-	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
-	Yosry Ahmed <yosryahmed@google.com>
-Subject: A path forward to cleaning up dying cgroups?
-Message-ID: <Z6OkXXYDorPrBvEQ@hm-sls2>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="cdcY84WE"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 763401048CD13;
+	Wed,  5 Feb 2025 18:57:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1738778226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zfMLIT8o7qIGzWCSQbfJ9DR55hKNeTQ38ODk2Ru4uzM=;
+	b=cdcY84WE6yHU6kFn8W2UtBxp/GOJ6doWrNDPH3/oRwCr8Qliv9CefjmY60IJg2uyF7tH9X
+	mpGfyksGA+99qIpunCr8eJTUeTEAB4SffBSGRFrGQa/sosf8U++e1vQbVS41x8vjWZ7wY5
+	K2uXKv94Vj06FzCreL6v0bVwlP8m4W3bmcNvHlUR3Sxxp5a17yYVYwqRxh0thsOleTWsLd
+	vT0YYNye20cXwMdvAhrlzga2aIHmv5tQWezMuloytk+XUQiXO2p0zTi0LP4pMYXIc54lIK
+	F3u4cAR4Vnof9+2hTqeJ0BAmqICn0pJGUantStjOgHAhceKjqaaXYB+NRlGTfA==
+Date: Wed, 5 Feb 2025 18:56:58 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
+Message-ID: <Z6OmapsIAlCnZ8GW@duo.ucw.cz>
+References: <20250205134456.221272033@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HmVdHVe+dEdVqMgk"
+Content-Disposition: inline
+In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
+X-Last-TLS-Session-Version: TLSv1.3
+
+
+--HmVdHVe+dEdVqMgk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I was just curious as to what the status of the issue described in [1]
-is. It appears that the last time someone took a stab at it was in [2].
+Hi!
 
-Though it seems like there has been relative silence regarding it since
-then. So, has there been any discussion regarding the issue since then
-and does anyone know if there is consensus on how we should go about
-resolving this issue within the kernel?
+> This is the start of the stable review cycle for the 6.13.2 release.
+> There are 623 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-BR,
-Hamza
+CIP testing did not find any problems here: (obsvx2 target is down)
 
-[1] https://lwn.net/Articles/895431/
-[2] https://lore.kernel.org/r/20220621125658.64935-1-songmuchun@bytedance.com/
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.13.y
+
+6.12 passes our testing, too:
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.12.y
+
+6.6 had some failures, I'm retrying.
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.6.y
+
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--HmVdHVe+dEdVqMgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ6OmagAKCRAw5/Bqldv6
+8kv+AKCv2AEnN3toEullPx0fFaIE9VR52wCfRGZs8iUtSf15CMjg+E4AgXY/vSk=
+=Bn4Z
+-----END PGP SIGNATURE-----
+
+--HmVdHVe+dEdVqMgk--
