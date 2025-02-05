@@ -1,181 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3406D22A1CD;
-	Wed,  5 Feb 2025 09:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAFB229B36;
+	Wed,  5 Feb 2025 09:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747929; cv=none; b=pDlI1MGIc59iGHgcIQy+I/uQTGzES8zWG9XPmVsE5o5hJ8rB13TPaRa8e5ytlKwP0x/cGbCKjvM+9WRPZavFJY5xANvr0lUMseXHKntSGMnwFeXE2d3Z+OkI29xLgyX/QLKrOMw3DHPNYzFiESRhhdN8caFvvreZd00ETgBCShY=
+	t=1738747977; cv=none; b=SNv8RMQH1P890wy4FtxYskYgLEyDNUZnGHlBXi1OCdYeR/wLkH7l/DwHQx+jRH3261pZFJRfYFJoy5af9T3+pv4H3qrISJMEf64dxeUaKyZEv02UuJK5D1vJIChSqEpd6+hKjz+Be7bLcpIxM+oYOlPUuOLiWqunRvfXj9q8Nvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747929; c=relaxed/simple;
-	bh=eHxpZj/qg2ID/KeN2wK/bM2xcQGbbf7k3wokyWvv4rw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KOD1meo+npoAos2g+C6cSqwVv2xADLKLh2JlLnhy90RubBYRxc8B2zEfr4L6Hqnh8n8PqP7kxckcBTnk5BwTAL/o7O3NR4LgEA4C62pxU5hLJcRRTe9ukCJmCtRiPIp+HPH9iRF4RnMLj8FVmN6+vJPJN3bn94VTDIXaiPwPTjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jtZ7cEpg; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jtZ7cEpg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738747928; x=1770283928;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eHxpZj/qg2ID/KeN2wK/bM2xcQGbbf7k3wokyWvv4rw=;
-  b=jtZ7cEpgvkAjc8ea+7gWfZDghFv4kIkYtmTNuet+rqPgPk78rOoHx9Vq
-   cBtSvXqbNUEtyY4Wr2c0eTrWLmB/AtCgtqELFWo5BQqIDLnPkbI96pBtm
-   PbWKjMxXFSlGoLsxKnVJiFFm93Fhkyt4mUibgB5Kxo3FAZGtYVai3J676
-   q6Ga4jqqxSZxMqTYjy6qgka4dZSY9P1AQjVdeU0Nf4nETUiWJG29ZRwdh
-   YJs8/kNjVQ2+35qsCwnLD3Nu3Z8DMojreNJ03+LTuDmFibj4VV4QOyclm
-   TyIU8p1cV51XMZ+SuELU+exOlQxBcoouNy4fW3R7vMXGnYRSZHbmhiQay
-   w==;
-X-CSE-ConnectionGUID: JBJ3zWUNT72ryUp9vaz5dQ==
-X-CSE-MsgGUID: oonX8s3kRnegumoDL7831Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39189574"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="39189574"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:32:05 -0800
-X-CSE-ConnectionGUID: WQidQxV/SLGzESNWYIEYsQ==
-X-CSE-MsgGUID: ViPIXb7zQ2uBe47wjStDyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115466167"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Feb 2025 01:32:02 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 2F4A73A7; Wed, 05 Feb 2025 11:32:01 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 2/2] gpio: xilinx: Replace custom variants of bitmap_read()/bitmap_write()
-Date: Wed,  5 Feb 2025 11:31:11 +0200
-Message-ID: <20250205093200.373709-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250205093200.373709-1-andriy.shevchenko@linux.intel.com>
-References: <20250205093200.373709-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1738747977; c=relaxed/simple;
+	bh=Agdro3bOdf17QBDFrbIxaxuU8tpqb48A39LtZ8J0lz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b++lsuo2n2vflGxTzAjTaROX5ODLKQA5F7lfbHGMuoQvFwxdRGuAAHOojwKW6q3YrW/lB7FQQZdWRragvG/H417er4kXpdq6ZmkyVRNkmn8ejiey1prw7MN7MwxmJbB9Xb9oWl+MNajaVB3VQkbz29M/STBMBGvY5asVkJdRiWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8622c3be2f4so1841219241.1;
+        Wed, 05 Feb 2025 01:32:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738747972; x=1739352772;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ul7RXmOlLWXbmp66NuHARFMZryclEeLS4nT2u1OB7IY=;
+        b=WH6A2bLIfKrd1934W1wbpDSG+G/Dx2cDacwm7/a54mkc0YsYWOE3cLK/5zq4/rurGk
+         hWbUXN7SDomAvcIX0Exkd2HB8GvT0npAgp7gQd0WqgtW05GnEnG0Us1DgeQI3DBPpinH
+         jZpUDJj+IB4i8VSFwdiQ4k4O2hYgkPnk0y5oBxKUqIX5KOvAyXFC5xceiwSloY92VIUQ
+         cztaG6ygY+9NuNM8wkN3zfL8dgQPPCNd+Si9tnhuYK1MVGiPZdZwjzLVzmaxSK5ZY0AW
+         w31ED8QGI4sHU6a+MX9YUz4JMy/wsLhIg8JRkB2Vwx8A8NZ7Glq28LIw4dxmK1w57b5x
+         uF4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVHiE11p0EUBDfsaU/AG1Uih3iBkyiKg14bdLX+aJhierdumSwuxxpzYp8wYQYQ7XpRcJ7N8Y+UIN+Uf5Q6DUX2@vger.kernel.org, AJvYcCXfOdpCv1+B7mqldPvZYxUwAdkxbyyRdMWBdavT7jsCg+TyCCgDyA/kJa0VHYRvqwWe1van14wfeic+s9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA6Lq+whmjlqwOby0FovrsAgOS4gSWhkMMYXPgopEroyx2XGEd
+	F67JnCQ/WdmbVDYN7L7lVNGJX0NiQEoX4rEkHMwYnZq8PZyKsISqmKquGuHX
+X-Gm-Gg: ASbGncvfeJ/L5t/lcqCqpzbUdhWF2s2YvWQJ9k1dtpn/sDf1VBKZhohqPuTq+4fTUNg
+	WhS7f2HVNTmTQg+6kOfn0g7u98eLQgXvVDe1wfXcWku00SM8S5t71sLSTFi+S7sliE1PpPlNJLP
+	9Mwor5OFpmZ/ajO48wOPMmrCpPG1NztoTO3tt82Vdv2oU5U2V7yzGxxOW1BVnw1MEs+zyM4iQp2
+	TDYU2xx/g7IdqEdNNY/hbGF/oTsgsUc+oN1RVVAaIKkOIokWjWtSdOn5jQ7RCJ6f/ThJP1AE4te
+	F7oM93qVp0NhPCZWKi+Yx6LvchG/iAKF+RbrnkLsn+49GmNG8NxfRA==
+X-Google-Smtp-Source: AGHT+IGTJwqmBadrTSYVc//qFq05/hI4SqXYs6NsgpZqKlk4YMypfU3Waw6UDiKtHsUDFDYeIql50w==
+X-Received: by 2002:a05:6122:4f90:b0:518:8bfe:d5f0 with SMTP id 71dfb90a1353d-51f0c0bd78bmr1339989e0c.0.1738747972378;
+        Wed, 05 Feb 2025 01:32:52 -0800 (PST)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1c1495bsm1768738e0c.20.2025.02.05.01.32.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 01:32:51 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4afe4f1ce18so1847523137.3;
+        Wed, 05 Feb 2025 01:32:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUItAjZZGPEHV4gQo342JmST2/456Ie2qrxcFIdAs3ez0w5Lt8/imXAMNY/WZDZxMxsio98n+64E2KqCtY=@vger.kernel.org, AJvYcCXFr9PQspbqR1EV5e+90WQ8qvUQqDQTkD7rCH+riyV6LdrR9XfnPFOHlLB4MYlmtyYY2Ucb55BJAuHWOmS7dd9t@vger.kernel.org
+X-Received: by 2002:a05:6102:1610:b0:4b9:bb3a:f5fc with SMTP id
+ ada2fe7eead31-4ba478bb5b3mr1358546137.8.1738747971234; Wed, 05 Feb 2025
+ 01:32:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com> <20250204-printf-kunit-convert-v1-1-ecf1b846a4de@gmail.com>
+In-Reply-To: <20250204-printf-kunit-convert-v1-1-ecf1b846a4de@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Feb 2025 10:32:39 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVjv6TeaFmJMzPNG=dScTbR=i7CktkftR=ovgn2YWUN9Q@mail.gmail.com>
+X-Gm-Features: AWEUYZmlNybqMOBIyOk1oXnDuzzkfZ-3MWvNFlAbQZAgj-9ELYuznLp7GCiQaxQ
+Message-ID: <CAMuHMdVjv6TeaFmJMzPNG=dScTbR=i7CktkftR=ovgn2YWUN9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] printf: convert self-test to KUnit
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Relatively recently bitmap APIs were expanded by introduction of
-bitmap_read() and bitmap_write(). These APIs are generic ones
-that may replace custom functions in this driver, i.e. xgpio_get_value32()
-and xgpio_set_value32(). Do replace them.
+On Tue, 4 Feb 2025 at 20:38, Tamir Duberstein <tamird@gmail.com> wrote:
+> Convert the printf() self-test to a KUnit test.
+>
+> In the interest of keeping the patch reasonably-sized this doesn't
+> refactor the tests into proper parameterized tests - it's all one big
+> test case.
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-xilinx.c | 38 ++++++++++++--------------------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+>  arch/m68k/configs/amiga_defconfig         |   1 -
+>  arch/m68k/configs/apollo_defconfig        |   1 -
+>  arch/m68k/configs/atari_defconfig         |   1 -
+>  arch/m68k/configs/bvme6000_defconfig      |   1 -
+>  arch/m68k/configs/hp300_defconfig         |   1 -
+>  arch/m68k/configs/mac_defconfig           |   1 -
+>  arch/m68k/configs/multi_defconfig         |   1 -
+>  arch/m68k/configs/mvme147_defconfig       |   1 -
+>  arch/m68k/configs/mvme16x_defconfig       |   1 -
+>  arch/m68k/configs/q40_defconfig           |   1 -
+>  arch/m68k/configs/sun3_defconfig          |   1 -
+>  arch/m68k/configs/sun3x_defconfig         |   1 -
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 1ff527ccf6c7..c58a7e1349b4 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -71,23 +71,6 @@ struct xgpio_instance {
- 	struct clk *clk;
- };
- 
--static inline u32 xgpio_get_value32(const unsigned long *map, int bit)
--{
--	const size_t index = BIT_WORD(bit);
--	const unsigned long offset = (bit % BITS_PER_LONG) & BIT(5);
--
--	return (map[index] >> offset) & 0xFFFFFFFFul;
--}
--
--static inline void xgpio_set_value32(unsigned long *map, int bit, u32 v)
--{
--	const size_t index = BIT_WORD(bit);
--	const unsigned long offset = (bit % BITS_PER_LONG) & BIT(5);
--
--	map[index] &= ~(0xFFFFFFFFul << offset);
--	map[index] |= (unsigned long)v << offset;
--}
--
- static inline int xgpio_regoffset(struct xgpio_instance *chip, int ch)
- {
- 	switch (ch) {
-@@ -103,15 +86,17 @@ static inline int xgpio_regoffset(struct xgpio_instance *chip, int ch)
- static void xgpio_read_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
- {
- 	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-+	unsigned long value = xgpio_readreg(addr);
- 
--	xgpio_set_value32(a, bit, xgpio_readreg(addr));
-+	bitmap_write(a, value, round_down(bit, 32), 32);
- }
- 
- static void xgpio_write_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
- {
- 	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-+	unsigned long value = bitmap_read(a, round_down(bit, 32), 32);
- 
--	xgpio_writereg(addr, xgpio_get_value32(a, bit));
-+	xgpio_writereg(addr, value);
- }
- 
- static void xgpio_read_ch_all(struct xgpio_instance *chip, int reg, unsigned long *a)
-@@ -385,14 +370,15 @@ static void xgpio_irq_mask(struct irq_data *irq_data)
- 	unsigned long flags;
- 	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
- 	int irq_offset = irqd_to_hwirq(irq_data);
--	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset);
-+	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset), enable;
- 	u32 mask = BIT(bit / 32), temp;
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
- 
- 	__clear_bit(bit, chip->enable);
- 
--	if (xgpio_get_value32(chip->enable, bit) == 0) {
-+	enable = bitmap_read(chip->enable, round_down(bit, 32), 32);
-+	if (enable == 0) {
- 		/* Disable per channel interrupt */
- 		temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
- 		temp &= ~mask;
-@@ -412,17 +398,15 @@ static void xgpio_irq_unmask(struct irq_data *irq_data)
- 	unsigned long flags;
- 	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
- 	int irq_offset = irqd_to_hwirq(irq_data);
--	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset);
--	u32 old_enable = xgpio_get_value32(chip->enable, bit);
-+	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset), enable;
- 	u32 mask = BIT(bit / 32), val;
- 
- 	gpiochip_enable_irq(&chip->gc, irq_offset);
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
- 
--	__set_bit(bit, chip->enable);
--
--	if (old_enable == 0) {
-+	enable = bitmap_read(chip->enable, round_down(bit, 32), 32);
-+	if (enable == 0) {
- 		/* Clear any existing per-channel interrupts */
- 		val = xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET);
- 		val &= mask;
-@@ -437,6 +421,8 @@ static void xgpio_irq_unmask(struct irq_data *irq_data)
- 		xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, val);
- 	}
- 
-+	__set_bit(bit, chip->enable);
-+
- 	raw_spin_unlock_irqrestore(&chip->gpio_lock, flags);
- }
- 
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
