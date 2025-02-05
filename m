@@ -1,267 +1,188 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E64A18A6D7;
-	Wed,  5 Feb 2025 16:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A62C19B586;
+	Wed,  5 Feb 2025 16:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771915; cv=none; b=WXBNlIbENss1U0FZ4pq8X1IG7f3iSNU23mNeUU09Hy5XRS9z9h8/5I3SNvYV8HonQs8/tBhk01P9GxzSBjd/Xm+3fI2pWBnA3mzB2a8JAICHbYlwPV61D2YFsTp5qmFGMm/jbQBl3C5UmV9beab7gLkN1umT5YJdV+IjSXbj4WY=
+	t=1738771940; cv=none; b=MDxI9U5YYlvnkGsD/57BwvLgZo+ojcoUwG/wELKu+rq0RHNK1usT3NZB24n9QdG6WSuu66kBVSuMOBIQcrQG78JDzefWbqC8DJbdJDaYRb06kb9OdPwOEoXBJ6g8oYt8VGg+SmYCH0Gwb0O/VsG3ShldLkDgftqBb89512MQzn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771915; c=relaxed/simple;
-	bh=dQVOc4y27NeoOXda5Onh9gGqo7dvfYuDBZK0/YM66fg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jOoD730cybkemaaF2fYISF4ABXSxVjbQas17mMpdxCL6nulE+Pe2F5bx6Jd8DQWarbeMb+Tmda/jksBPtGSm+V90XCa4wa6wK8bG/TKQAKy9RtBr+saSDdMkQm/njFNyjy+YkobKo2cLaVnyZnG28Nc3fgCpmaM7KRb45TtBEH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RPmChAt7; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738771940; c=relaxed/simple;
+	bh=UPvva8UySUv3LbJvI8jOukkXOQRpra4CCHNVWdkZbgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hf/PVYbdoyMjeyhcGRe6D6SnVTKbEfE58ESCp3mwToo/mA/1iCC8x/Ler2I8Gfc+SuzrYpRILG1xxeLlBf1+qsN2RlvnICfSePJfA8clLR0j3RThJWQzYNCl/tBrArhcngA3/RmA5FCdMcIjWhEpLEV7gJd8+32X8/qWwZNMjR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DkBKpdR2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aGpKqCS5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DkBKpdR2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aGpKqCS5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPmChAt7"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-438a39e659cso48157755e9.2;
-        Wed, 05 Feb 2025 08:11:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738771911; x=1739376711; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PNqzKNqaayCVyP+RPKnmDOKjjukQ1Sp0Ecx73fchd38=;
-        b=RPmChAt7PyAGMuSrXFVMStpsDzQvThBzozWN8k4lrPSZKHwdmjs4cDMxGueu38d6lI
-         r3oKmKlpcEvD2GJ1yKnKD1fZHQMR6abs9jqlROyNselTa0it8ex4ZdyV7sGYYdc+70Ua
-         qXxH5qxGA6y8BZqBgTrfajQfWQyYXREuy+RgGj7vUJ+Toe4+hp+hzRikBURLqpObA01M
-         AJ8oFNSNv+3v/SXvaXRTVhbNAXje571DBL3YJ3RGzHag2ZaEjaMDf6Z7ONwZ7dRyXYRD
-         pQhKrvsTa86Se95lntYmjpW+UPtioY9DK3pSaJrpGhkrRFu7ROrwzQVBOqFY3//1ZDyr
-         ekYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738771911; x=1739376711;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PNqzKNqaayCVyP+RPKnmDOKjjukQ1Sp0Ecx73fchd38=;
-        b=pmoY7yagavZNW1AomGzcZur1ARVPhR2wy381nKr+mF2lU7F4ryxW/H8Vu/T2spL/vm
-         BNbOX0T32vTG7FkOD2C+5D1pmRMhrhcZnCVORR1dTe+mW3jvE90gH4HD7upZb8LCqHNy
-         DHqLoXbVmWiFh36TUv5l3ocZIJb6La6GKWNC0ZTEJe0Lklvlld/Nbi8s37cuugifsh1C
-         fLVbhL8GpMi2Ycdu97h37algpH0Ru9dxt37bKETdvbogED6JC6HVPbVPaeCCcYa1YkHw
-         tU34LLax6t988cccofvIU8U2MGPq7qFiSWJdj+sGN8/UR6D0UhmjoWtMLSINWeBEBsPs
-         LzXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUd9g2vvxAVDkYR8QHw/0y1/9WdtHZlJOGXSTCBG599lZqxXz5rVKufKFIqeXDxBv9+DNVyvmjlQk/A@vger.kernel.org, AJvYcCVmPOqB1UWuCtQ0VrMWyvoIt6jCkR137hGNdPgRhOeTFEuz/CFi75oVejk13lpcZ+2Ezm9EO2I5dPRw@vger.kernel.org, AJvYcCVqsfp48c0LZNDmi7XmuYUJGPy7HXwMQepu65rMQ1KQ3vIQpwuUlmgcjHiJVrb54UVl2wehOKIsCdUL64dp@vger.kernel.org, AJvYcCXxUVDdWhCZ/O2qblUxE9FL0+0Gch5/9BS8rkj6uDorndg7AfAxSqW9L//jIOBeF0zzseCuTQ+GbDI6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtA/IRZSbDprJENkkAZh0NjvvawJM5RhsFtW147+4CvyUqIGiJ
-	5rN9gokGx1igwcU9h2BBeDgx2oP9K/ORRkmNXjPks7QDzrM/0PO7/JFYDJlVONU=
-X-Gm-Gg: ASbGncsZNhaT/Uc+vFR6La+1SftGamdTvw8BKFvgOwvlE02QJy6K5PD4xPHIHP1KWDj
-	j7dSggJTyGMnZCR0Hm522nwS1jaSLBibNUFgZPmgRFqa4swIX6Fiu7FzOeXdO3JBoPdNSywWbvR
-	Kd+7HB7OhpPy3MitBj1IIYp2plubURVqkJIE1zjnQI3dOWhsdbkocq7Mqpyp6rkHrtXKP+/ZVV0
-	SeyyypNO2kUiifz7qqZRJa2XzMEhKebHVqG6aAWgj/cWC/jMRE9ujOx+0+f7qDh2Jkv57QwDAgJ
-	G1nxM9OM11J5lk4W4c1qYriG7PMbUbjzlzbiSy2THOYkef7iucFB8wGkgZOTXag=
-X-Google-Smtp-Source: AGHT+IH1q00BaWWc+Vq4wOn2GL8LTHw3yMqoCXLMuqGZ6alYQ079jnzjHR3x9XX0HmanLW4nyUAE5w==
-X-Received: by 2002:a05:600c:19d4:b0:434:a1d3:a326 with SMTP id 5b1f17b1804b1-4390d4303d6mr25668005e9.6.1738771910427;
-        Wed, 05 Feb 2025 08:11:50 -0800 (PST)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daa0cbcsm25643305e9.40.2025.02.05.08.11.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 08:11:49 -0800 (PST)
-Message-ID: <15065d0cd19f39d92ce860cd03802c368df74b34.camel@gmail.com>
-Subject: Re: [PATCH v6 4/6] dt-bindings: iio: Add adis16550 bindings
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Conor Dooley <conor@kernel.org>, Robert Budai <robert.budai@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich	
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
- Alexandru Ardelean <alexandru.ardelean@analog.com>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski	
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Jonathan Corbet	 <corbet@lwn.net>, Nuno Sa <nuno.sa@analog.com>, Ramona
- Gradinariu	 <ramona.gradinariu@analog.com>, Trevor Gamblin
- <tgamblin@baylibre.com>,  Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Paul Cercueil <paul@crapouillou.net>, David Lechner	
- <dlechner@baylibre.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Date: Wed, 05 Feb 2025 16:11:51 +0000
-In-Reply-To: <20250204-helium-marbled-a0863a0a18a8@spud>
-References: <20250204143612.85939-1-robert.budai@analog.com>
-	 <20250204143612.85939-5-robert.budai@analog.com>
-	 <20250204-helium-marbled-a0863a0a18a8@spud>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DkBKpdR2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aGpKqCS5";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DkBKpdR2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aGpKqCS5"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3B637211C4;
+	Wed,  5 Feb 2025 16:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738771936; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/xa3z4SbY0t10iOkUN4r39gpvPVCZNo5zEIDaAsO3+E=;
+	b=DkBKpdR2RYVfycypNkVqWkSOglhlmHgTIh+yO4pbzQQp4mqX0MFAHtCuOq4l1hMyjlx9/i
+	+QuT0HuPObabJkeSVfi6zkKzvRpyL9Oa6p4wZSb/rgDYbyUWcjAeOE/2MV49LKTNlrBrq1
+	aa0+nOif378ygStV/hatgFwCwfsAUig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738771936;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/xa3z4SbY0t10iOkUN4r39gpvPVCZNo5zEIDaAsO3+E=;
+	b=aGpKqCS5ESnOkTkGq5WmLmL/qaUbh8+bVi7sA872UO+x3FHhLjUBVSvplqMaNmxn2CFhNZ
+	DziaJkKuG/+Zx1DA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738771936; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/xa3z4SbY0t10iOkUN4r39gpvPVCZNo5zEIDaAsO3+E=;
+	b=DkBKpdR2RYVfycypNkVqWkSOglhlmHgTIh+yO4pbzQQp4mqX0MFAHtCuOq4l1hMyjlx9/i
+	+QuT0HuPObabJkeSVfi6zkKzvRpyL9Oa6p4wZSb/rgDYbyUWcjAeOE/2MV49LKTNlrBrq1
+	aa0+nOif378ygStV/hatgFwCwfsAUig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738771936;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/xa3z4SbY0t10iOkUN4r39gpvPVCZNo5zEIDaAsO3+E=;
+	b=aGpKqCS5ESnOkTkGq5WmLmL/qaUbh8+bVi7sA872UO+x3FHhLjUBVSvplqMaNmxn2CFhNZ
+	DziaJkKuG/+Zx1DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2EB9313694;
+	Wed,  5 Feb 2025 16:12:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id M3VfC+CNo2d1MQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 05 Feb 2025 16:12:16 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B39C9A28E9; Wed,  5 Feb 2025 17:12:15 +0100 (CET)
+Date: Wed, 5 Feb 2025 17:12:15 +0100
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] vfs: sanity check the length passed to
+ inode_set_cached_link()
+Message-ID: <zatx4ddmdvymae4454vrpci642gecbq4l6iuv4u64tssixeplc@h6rimv2lhicg>
+References: <20250204213207.337980-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204213207.337980-1-mjguzik@gmail.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-0.999];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, 2025-02-04 at 19:25 +0000, Conor Dooley wrote:
-> On Tue, Feb 04, 2025 at 04:36:08PM +0200, Robert Budai wrote:
-> > Document the ADIS16550 device devicetree bindings.
-> >=20
-> > Co-developed-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> > Signed-off-by: Robert Budai <robert.budai@analog.com>
-> > ---
-> >=20
-> > v6:
-> > - applied blank line suggestions
-> > - added clock-frequency dependency change suggestions
-> > - yamllint corrections
-> >=20
-> > =C2=A0.../bindings/iio/imu/adi,adis16550.yaml=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 83 +++++++++++++++++++
-> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 9 ++
-> > =C2=A02 files changed, 92 insertions(+)
-> > =C2=A0create mode 100644
-> > Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16550.ya=
-ml
-> > b/Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> > new file mode 100644
-> > index 000000000000..8750bb937979
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> > @@ -0,0 +1,83 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/imu/adi,adis16550.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices ADIS16550 and similar IMUs
-> > +
-> > +maintainers:
-> > +=C2=A0 - Nuno Sa <nuno.sa@analog.com>
-> > +=C2=A0 - Ramona Gradinariu <ramona.gradinariu@analog.com>
-> > +=C2=A0 - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > +
-> > +properties:
-> > +=C2=A0 compatible:
-> > +=C2=A0=C2=A0=C2=A0 enum:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,adis16550
-> > +
-> > +=C2=A0 reg:
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 spi-cpha: true
-> > +=C2=A0 spi-cpol: true
-> > +
-> > +=C2=A0 spi-max-frequency:
-> > +=C2=A0=C2=A0=C2=A0 maximum: 15000000
-> > +
-> > +=C2=A0 vdd-supply: true
-> > +
-> > +=C2=A0 interrupts:
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 reset-gpios:
-> > +=C2=A0=C2=A0=C2=A0 description:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Must be the device tree identifier of t=
-he RESET pin. If specified,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 it will be asserted during driver probe=
-. As the line is active low,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 it should be marked GPIO_ACTIVE_LOW.
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 clocks:
-> > +=C2=A0=C2=A0=C2=A0 description: If not provided, then the internal clo=
-ck is used.
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 clock-frequency:
-> > +=C2=A0=C2=A0=C2=A0 description: Clock frequency in Hz when an external=
- clock is used.
-> > +=C2=A0=C2=A0=C2=A0 oneOf:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - minimum: 1
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 128
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - minimum: 3000
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 4500
->=20
-> I don't get why this is a property, to be honest. When you've got an
-> external clock, why isn't the frequency obtained from the clock provider
-> node?
->=20
+On Tue 04-02-25 22:32:07, Mateusz Guzik wrote:
+> This costs a strlen() call when instatianating a symlink.
+> 
+> Preferably it would be hidden behind VFS_WARN_ON (or compatible), but
+> there is no such facility at the moment. With the facility in place the
+> call can be patched out in production kernels.
+> 
+> In the meantime, since the cost is being paid unconditionally, use the
+> result to a fixup the bad caller.
+> 
+> This is not expected to persist in the long run (tm).
+> 
+> Sample splat:
+> bad length passed for symlink [/tmp/syz-imagegen43743633/file0/file0] (got 131109, expected 37)
+> [rest of WARN blurp goes here]
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-The main purpose of this property is actually to show/document the constrai=
-ns of
-the external clock. We can very well just error out in the driver (and we d=
-o
-that) and not have this property. I mentioned this property to Robert some
-revisions ago and I also pointed out that I wasn't really sure if it should=
- be
-used or not=C2=A0(I guess this is more for fixed clock providers...). IIRC,=
- I did
-asked for some advice/comments but we got none so I assume Robert just deci=
-ded
-to use it and see what you guys had to say about it.
+Yeah, it looks a bit pointless to pass the length in only to compare it
+against strlen(). But as a quick fix until we figure out something more
+clever it's fine I guess.
 
-- Nuno S=C3=A1
+Feel free to add:
 
-> > +
-> > +required:
-> > +=C2=A0 - compatible
-> > +=C2=A0 - reg
-> > +=C2=A0 - interrupts
-> > +=C2=A0 - spi-cpha
-> > +=C2=A0 - spi-cpol
-> > +=C2=A0 - spi-max-frequency
-> > +=C2=A0 - vdd-supply
-> > +
-> > +dependentRequired:
-> > +=C2=A0 clock: [clock-frequency]
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> typo, missing s.
->=20
-> > +
-> > +allOf:
-> > +=C2=A0 - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> > +additionalProperties: false
-> > +examples:
-> > +=C2=A0 - |
-> > +=C2=A0=C2=A0=C2=A0 #include <dt-bindings/interrupt-controller/irq.h>
-> > +=C2=A0=C2=A0=C2=A0 spi {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 imu@0 {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 com=
-patible =3D "adi,adis16550";
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg=
- =3D <0>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi=
--max-frequency =3D <15000000>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi=
--cpol;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi=
--cpha;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vdd=
--supply =3D <&vdd>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int=
-errupts =3D <4 IRQ_TYPE_EDGE_FALLING>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int=
-errupt-parent =3D <&gpio>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-> > +=C2=A0=C2=A0=C2=A0 };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 6247500cf427..8913e13dcaef 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1452,6 +1452,15 @@
-> > W:	https://ez.analog.com/linux-software-drivers
-> > =C2=A0F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> > =C2=A0F:	drivers/iio/imu/adis16475.c
-> > =C2=A0
-> > +ANALOG DEVICES INC ADIS16550 DRIVER
-> > +M:	Nuno Sa <nuno.sa@analog.com>
-> > +M:	Ramona Gradinariu <ramona.gradinariu@analog.com>
-> > +M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > +L:	linux-iio@vger.kernel.org
-> > +S:	Supported
-> > +W:	https://ez.analog.com/linux-software-drivers
-> > +F:	Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
-> > +
-> > =C2=A0ANALOG DEVICES INC ADM1177 DRIVER
-> > =C2=A0M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> > =C2=A0L:	linux-hwmon@vger.kernel.org
-> > --=20
-> > 2.39.5
-> >=20
+Reviewed-by: Jan Kara <jack@suse.cz>
 
+								Honza
+
+> ---
+> 
+> This has a side effect of working around the panic reported in:
+> https://lore.kernel.org/all/67a1e1f4.050a0220.163cdc.0063.GAE@google.com/
+> 
+> I'm confident this merely exposed a bug in ext4, see:
+> https://lore.kernel.org/all/CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com/#t
+> 
+> Nonethelss, should help catch future problems.
+> 
+>  include/linux/fs.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index be3ad155ec9f..1437a3323731 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -791,6 +791,19 @@ struct inode {
+>  
+>  static inline void inode_set_cached_link(struct inode *inode, char *link, int linklen)
+>  {
+> +	int testlen;
+> +
+> +	/*
+> +	 * TODO: patch it into a debug-only check if relevant macros show up.
+> +	 * In the meantime, since we are suffering strlen even on production kernels
+> +	 * to find the right length, do a fixup if the wrong value got passed.
+> +	 */
+> +	testlen = strlen(link);
+> +	if (testlen != linklen) {
+> +		WARN_ONCE(1, "bad length passed for symlink [%s] (got %d, expected %d)",
+> +			  link, linklen, testlen);
+> +		linklen = testlen;
+> +	}
+>  	inode->i_link = link;
+>  	inode->i_linklen = linklen;
+>  	inode->i_opflags |= IOP_CACHED_LINK;
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
