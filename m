@@ -1,136 +1,204 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA9422A4DC
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EEF22A4DC;
+	Wed,  5 Feb 2025 09:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738747589; cv=none; b=kMCPKDfV5RjdtmhIuSMYs+4NnkHq6VuVxzqb4ocFfhkwiBTkhImwKE1NoYw493LUQNXTCWfFU7o5X86qJedMqIzvmvYyNxTn3OeDQ769DwhGuj3FWAg7+NA2DaWV3EGn9EX5zmmelo1iBWpk47N8EPbypqAebfbrbW7C8zSYhLc=
+	t=1738747657; cv=none; b=pjwW6dQWgA4IwUcMdR7KQWCkuzGLeNxd2t6pBwiAzel3+52WsuBbE6qWY/WgsMHGBOsBImQa+XPegNAM7LUc1Hpe2CQrYl75D4pjB/yLG1ACW6wTPH2MXLO8/yyUbnVpNePBRPJBDurAS6K5bvDTksuzEw3Z2trbVjvpLJlwThg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738747589; c=relaxed/simple;
-	bh=dAPiQIZ2xCa9X08YhkrhyU/u2ehpmpzUSyJvh04fRt8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rgb5BMvHeEsRFkk//r8d2/r/AiRXWR4oai7Bo4pKBW41DZD//RVSYaSxxCAqEhhUEMw3Nn7G3Awanry+9RVqh1aQqGBmtNCtPLoVDR5CCFZRAsIT7ypdcDzCGbblSqR+NqUbdJ4zLB6wVpwjH09OMbMZ3E01JqjMCI2sc1tfpD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=bgKxIGnP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1738747657; c=relaxed/simple;
+	bh=jGSudtPRmYj0rGMFaOHEh0otjyD5xOLMkUJoYZjTyww=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iy/atPatHqcEGOZPfCVME2sX1NNr9O/WAijCj+zThm4CQENiP3IShlQFuzP6uB0TNjICfG7UWK2IFiGnEIz+WCNMcngEP1WcOJi03/VbaqOb99CisnNsug2Q+Om0+O83M7b/1+qRGPp9xcAdkJvEWzTyLG94Q5Coq3n6zPZpPHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=u60GTWlH; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bgKxIGnP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1738747574;
-	bh=T7ANeA1RtEc2Om2Lc6mZEGl9Xs5Q7MlTf2hb8EB8Koo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=bgKxIGnPtgbpsOGI102n9yvLZzWZQVoAte9QeLDKMFzMwgm4cpHdmDuLLl6Ek6qtv
-	 kVwkxlRlHUbxTykq1fvTt4OR7MFdThWjgrbJlQ9gIkMbskorYhnTvnpw4CXNaiOJGM
-	 mail7825sE+fc5fRSYSZaub5hpmcm/iNv3z4EYCUmsdpR/czhxG62qM0KmYwZKTTFp
-	 PEP7ClJWHDLtQQ6wkUcVUNN1LA1+/zUlK/dlmyzsFG1PgbAhDJSRee2+1wzU9DE5Dq
-	 bAcKoN3kXgStdR4pbpjQIjUE8WEBNZKt0lB7CQv96FEf5rAyznV4aCpxE6KmmNUVjS
-	 XU662X5uvcZwg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YnvxK5QLHz4wcD;
-	Wed,  5 Feb 2025 20:26:13 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Erhard
- Furtner <erhard_f@mailbox.org>
-Subject: Re: [PATCH] powerpc/code-patching: Disable KASAN report during
- patching via temporary mm
-In-Reply-To: <1c05b2a1b02ad75b981cfc45927e0b4a90441046.1738577687.git.christophe.leroy@csgroup.eu>
-References: <1c05b2a1b02ad75b981cfc45927e0b4a90441046.1738577687.git.christophe.leroy@csgroup.eu>
-Date: Wed, 05 Feb 2025 20:26:20 +1100
-Message-ID: <87pljwspxf.fsf@mpe.ellerman.id.au>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u60GTWlH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xI1RzPU7Q4CtCk+w0Gp7rTbdrnLraQ47hZLx0OsV5D4=; b=u60GTWlHibf7DzJprKKeh1l0ww
+	vQoGpb6juktJODCSH6CH8bd3qH2OIcNCrRRpVWKMPd5UtXf/zBdNER5E1mjRGFloPBLJeHf8bFbyk
+	jSQNb1pPdNboQaWunL92f6P9amipBctFBDxfyyTr77/eatcTV0Prfqgo+sB83i6pUtQDzbzdTG79S
+	EiHKyFQGxukXsk+EYMsdfMJXlucgXK2+fhUXKSXsOQzjPnIrw9nIc891yPcwSUbpW3xiE3s4FwUf/
+	yGAAlScSPR4dURoiu0Z3VaAIPo+hl7lqhC86nmiC9bSncNhncaCrH77WhHr+iu9zLvdK+OQvxoLwx
+	RpJ2Z76g==;
+Received: from 54-240-197-233.amazon.com ([54.240.197.233] helo=edge-bw-108.e-fra50.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfbgs-00000004BnU-44uU;
+	Wed, 05 Feb 2025 09:27:27 +0000
+Message-ID: <43f702b383fb99d435f2cdb8ef35cc1449fe6c23.camel@infradead.org>
+Subject: Re: [PATCH 1/5] KVM: x86/xen: Restrict hypercall MSR to unofficial
+ synthetic range
+From: David Woodhouse <dwmw2@infradead.org>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,  Paul Durrant <paul@xen.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com, Joao Martins
+	 <joao.m.martins@oracle.com>
+Date: Wed, 05 Feb 2025 09:27:26 +0000
+In-Reply-To: <20250201011400.669483-2-seanjc@google.com>
+References: <20250201011400.669483-1-seanjc@google.com>
+	 <20250201011400.669483-2-seanjc@google.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-V+KQYNJ/LArCSpulJbrs"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> Erhard reports the following KASAN hit on Talos II (power9) with kernel 6.13:
->
-> [   12.028126] ==================================================================
-> [   12.028198] BUG: KASAN: user-memory-access in copy_to_kernel_nofault+0x8c/0x1a0
-> [   12.028260] Write of size 8 at addr 0000187e458f2000 by task systemd/1
->
-> [   12.028346] CPU: 87 UID: 0 PID: 1 Comm: systemd Tainted: G                T  6.13.0-P9-dirty #3
-> [   12.028408] Tainted: [T]=RANDSTRUCT
-> [   12.028446] Hardware name: T2P9D01 REV 1.01 POWER9 0x4e1202 opal:skiboot-bc106a0 PowerNV
-> [   12.028500] Call Trace:
-> [   12.028536] [c000000008dbf3b0] [c000000001656a48] dump_stack_lvl+0xbc/0x110 (unreliable)
-> [   12.028609] [c000000008dbf3f0] [c0000000006e2fc8] print_report+0x6b0/0x708
-> [   12.028666] [c000000008dbf4e0] [c0000000006e2454] kasan_report+0x164/0x300
-> [   12.028725] [c000000008dbf600] [c0000000006e54d4] kasan_check_range+0x314/0x370
-> [   12.028784] [c000000008dbf640] [c0000000006e6310] __kasan_check_write+0x20/0x40
-> [   12.028842] [c000000008dbf660] [c000000000578e8c] copy_to_kernel_nofault+0x8c/0x1a0
-> [   12.028902] [c000000008dbf6a0] [c0000000000acfe4] __patch_instructions+0x194/0x210
-> [   12.028965] [c000000008dbf6e0] [c0000000000ade80] patch_instructions+0x150/0x590
-> [   12.029026] [c000000008dbf7c0] [c0000000001159bc] bpf_arch_text_copy+0x6c/0xe0
-> [   12.029085] [c000000008dbf800] [c000000000424250] bpf_jit_binary_pack_finalize+0x40/0xc0
-> [   12.029147] [c000000008dbf830] [c000000000115dec] bpf_int_jit_compile+0x3bc/0x930
-> [   12.029206] [c000000008dbf990] [c000000000423720] bpf_prog_select_runtime+0x1f0/0x280
-> [   12.029266] [c000000008dbfa00] [c000000000434b18] bpf_prog_load+0xbb8/0x1370
-> [   12.029324] [c000000008dbfb70] [c000000000436ebc] __sys_bpf+0x5ac/0x2e00
-> [   12.029379] [c000000008dbfd00] [c00000000043a228] sys_bpf+0x28/0x40
-> [   12.029435] [c000000008dbfd20] [c000000000038eb4] system_call_exception+0x334/0x610
-> [   12.029497] [c000000008dbfe50] [c00000000000c270] system_call_vectored_common+0xf0/0x280
-> [   12.029561] --- interrupt: 3000 at 0x3fff82f5cfa8
-> [   12.029608] NIP:  00003fff82f5cfa8 LR: 00003fff82f5cfa8 CTR: 0000000000000000
-> [   12.029660] REGS: c000000008dbfe80 TRAP: 3000   Tainted: G                T   (6.13.0-P9-dirty)
-> [   12.029735] MSR:  900000000280f032 <SF,HV,VEC,VSX,EE,PR,FP,ME,IR,DR,RI>  CR: 42004848  XER: 00000000
-> [   12.029855] IRQMASK: 0
->                GPR00: 0000000000000169 00003fffdcf789a0 00003fff83067100 0000000000000005
->                GPR04: 00003fffdcf78a98 0000000000000090 0000000000000000 0000000000000008
->                GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->                GPR12: 0000000000000000 00003fff836ff7e0 c000000000010678 0000000000000000
->                GPR16: 0000000000000000 0000000000000000 00003fffdcf78f28 00003fffdcf78f90
->                GPR20: 0000000000000000 0000000000000000 0000000000000000 00003fffdcf78f80
->                GPR24: 00003fffdcf78f70 00003fffdcf78d10 00003fff835c7239 00003fffdcf78bd8
->                GPR28: 00003fffdcf78a98 0000000000000000 0000000000000000 000000011f547580
-> [   12.030316] NIP [00003fff82f5cfa8] 0x3fff82f5cfa8
-> [   12.030361] LR [00003fff82f5cfa8] 0x3fff82f5cfa8
-> [   12.030405] --- interrupt: 3000
-> [   12.030444] ==================================================================
->
-> Commit c28c15b6d28a ("powerpc/code-patching: Use temporary mm for
-> Radix MMU") is inspired from x86 but unlike x86 is doesn't disable
-> KASAN reports during patching. This wasn't a problem at the begining
-> because __patch_mem() is not instrumented.
->
-> Commit 465cabc97b42 ("powerpc/code-patching: introduce
-> patch_instructions()") use copy_to_kernel_nofault() to copy several
-> instructions at once. But when using temporary mm the destination is
-> not regular kernel memory but a kind of kernel-like memory located
-> in user address space. Because it is not in kernel address space it is
-> not covered by KASAN shadow memory. Since commit e4137f08816b ("mm,
-> kasan, kmsan: instrument copy_from/to_kernel_nofault") KASAN reports
-> bad accesses from copy_to_kernel_nofault(). Here a bad access to user
-> memory is reported because KASAN detects the lack of shadow memory and
-> the address is below TASK_SIZE.
->
-> Do like x86 in commit b3fd8e83ada0 ("x86/alternatives: Use temporary
-> mm for text poking") and disable KASAN reports during patching when
-> using temporary mm.
->
-> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-> Close: https://lore.kernel.org/all/20250201151435.48400261@yea/
-> Fixes: 465cabc97b42 ("powerpc/code-patching: introduce patch_instructions()")
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/powerpc/lib/code-patching.c | 2 ++
->  1 file changed, 2 insertions(+)
 
-Thanks for debugging that Christophe.
+--=-V+KQYNJ/LArCSpulJbrs
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix looks good to me.
+On Fri, 2025-01-31 at 17:13 -0800, Sean Christopherson wrote:
+> --- a/arch/x86/kvm/xen.c
+> +++ b/arch/x86/kvm/xen.c
+> @@ -1324,6 +1324,14 @@ int kvm_xen_hvm_config(struct kvm *kvm, struct kvm=
+_xen_hvm_config *xhc)
+> =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 xhc->blob_size_32 || xhc->blob_size_64))
+> =C2=A0		return -EINVAL;
+> =C2=A0
+> +	/*
+> +	 * Restrict the MSR to the range that is unofficially reserved for
+> +	 * synthetic, virtualization-defined MSRs, e.g. to prevent confusing
+> +	 * KVM by colliding with a real MSR that requires special handling.
+> +	 */
+> +	if (xhc->msr && (xhc->msr < 0x40000000 || xhc->msr > 0x4fffffff))
+> +		return -EINVAL;
+> +
+> =C2=A0	mutex_lock(&kvm->arch.xen.xen_lock);
+> =C2=A0
+> =C2=A0	if (xhc->msr && !kvm->arch.xen_hvm_config.msr)
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+I'd prefer to see #defines for those magic values. Especially as there
+is a corresponding requirement that they never be set from host context
+(which is where the potential locking issues come in). Which train of
+thought leads me to ponder this as an alternative (or additional)
+solution:
 
-cheers
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3733,7 +3733,13 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct=
+ msr_data *msr_info)
+        u32 msr =3D msr_info->index;
+        u64 data =3D msr_info->data;
+=20
+-       if (msr && msr =3D=3D vcpu->kvm->arch.xen_hvm_config.msr)
++       /*
++        * Do not allow host-initiated writes to trigger the Xen hypercall
++        * page setup; it could incur locking paths which are not expected
++        * if userspace sets the MSR in an unusual location.
++        */
++       if (msr && msr =3D=3D vcpu->kvm->arch.xen_hvm_config.msr &&
++           !msr_info->host_initiated)
+                return kvm_xen_write_hypercall_page(vcpu, data);
+=20
+        switch (msr) {
+
+
+--=-V+KQYNJ/LArCSpulJbrs
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIwNTA5Mjcy
+NlowLwYJKoZIhvcNAQkEMSIEIH06eDX8gP3NHDm+m+2z5hJ+F2TZhn5WexogGiPEWt/hMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAo/BbLuCh/vSb
+klvxMNk+MRc2Rbpf0/06fPHR63erzF1Upz6GMBSatrL0XvrF8ruTvLSDQy48eOg+iCzDH8Kx28d3
+xjDEAgPZfneGiHXLvHwHTLzvyQIRrjjE90B+NHXYWX3YFou6y9WjpNvx48TEHBlhuuK9ZYZFb8Ch
+F+9TVutzisKbERkcP46p9jaDNKZ0Zx8C0eqeUOyHPmZxrzuKJtcw9IaZCzc8RpQx+xba/dsIyiKO
+sjii6FlEBnZ9Jm0hDj3fHwtawCb8UC6CSiNgDAUcQ5vwmtF7DMVgL8vFqXXZ/f/7bQhIYpaEs9tF
+zq11WoEFzxd1Fs+lKlMtkzuMhS5TuAnT5V0v8prN1816xxYgUU7Qd1IL8buOeW1bnCjVig2bXUV6
+DqFJfpOIub9XxYLfCj2ENXRnZx93FOqEFBvHRII2zE/SiJdEYIFMJCzdh7Pir3EzpXFK6y7qqYia
+vzVsSmoxxRjYmIElbhp71JhT29YStusGVb8qunOnYad6AcO4JtRJ7FRz04U9jLQlw/s7OsCEkdDb
+3G6VQErzGHCtxpTlD9Hqcf/344KCUjZ+qlW93NHkK1Fuj/oXAyxN5ZxHotz3rZrr7566jBUN7XzM
+rrBGQrxkjV3eje6Yr4o+7/d+V92sA8IOpw5hYPLnHGNQSgK3YbUYbW5hXYQ8N9kAAAAAAAA=
+
+
+--=-V+KQYNJ/LArCSpulJbrs--
