@@ -1,93 +1,157 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C1514F9FD;
-	Wed,  5 Feb 2025 21:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACCDF510;
+	Wed,  5 Feb 2025 21:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738792139; cv=none; b=PHTByazRCM4je6a5DzMQC5/QDs9aoavlplGbe2ZCoIIIiGxlT1u9pehYyMLDlR63TTZGU9d7+cCjf0IjJq57z/hJZ3MY/EbFnaJHQjmHojgaqWMVM/EFYOFxuxGw7eEaXbRZd+/lqSjeYNZ2YTzUqi4vKgZO1v1jmcoD0uoVDYc=
+	t=1738792218; cv=none; b=R3CqMAclvm2TJw3BlitlPCE47w3+t56vjfOVR4eeiF05gUp7cziYY6lcsrnoaVojI6lPBpvxHLK/W/crwSlF8y7mA/hGeaQL2CAJptH6X0nsjZ2Rc5SRt/7nOWOscApkN8WZxpuQ4m7XEgLPsSNIwDje2U8T9+CBI7Tiow4MUfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738792139; c=relaxed/simple;
-	bh=HGlN6Lerm3dgGJK7wrSbhUF1CVnE4TgF1Bj6J2HcwDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jshRCLEpafAOhLJTu8T/nemG9B+bHJxsd6pukuRGyzCAYcId/pDnwZyQZoL8wX1lJbjoCBflWEW5DXFrGqLdR918ApTAWEGWsPoBhFY8Sb1+/zKCxY0Rsi18Xb45GtjXIk1HyPd50nVQazTK8Lt/xBELJxVTLDW0X2vYKrzZckg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [10.59.18.202] (p57a7ad4d.dip0.t-ipconnect.de [87.167.173.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6C6F761E64795;
-	Wed, 05 Feb 2025 22:48:25 +0100 (CET)
-Message-ID: <e30f47ea-396e-45c7-a2aa-d141d27dae4c@molgen.mpg.de>
-Date: Wed, 5 Feb 2025 22:48:24 +0100
+	s=arc-20240116; t=1738792218; c=relaxed/simple;
+	bh=VZeDDWElS97HftJUqI0ZV7tLfTYxf1l0eS3m7HaFToY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y0RhmKEMdJ5epfXB1iQm6iBTavVOJweFeXnU4ZHiAnFCHdC30qZda/bp8chY7iHOh0kfPkFb5Jgm9lLM2qtuJ1UygkjFjY6A2y5e/YPYE8TMqanGEJI3s+Nq7IrNgiUzLeFdHv9KHr277lpHktVT7Iz7XNA5QP+ei1rT6fEyp1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=T1Us9Yk7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=D/j+JXMQ; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="T1Us9Yk7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D/j+JXMQ"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 32B1213801B0;
+	Wed,  5 Feb 2025 16:50:13 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Wed, 05 Feb 2025 16:50:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1738792213; x=
+	1738878613; bh=dPn7JSPXiqgSq7Z0EgBkucMtw2n7J3jmDFtkNsgBHQY=; b=T
+	1Us9Yk7qBaMNBNqtEWnDx1fAoiVbkQg0Sr3/VAifh5QW4ruSq2o2NFM6y+NJ9p/h
+	WVXWALuhd4z72hfCQT0OEEKUidWPsLyRDRILL//EFvmraF9l4V3KJKiRM2drHESs
+	mGKeAfMGNr11F35lNkpFYVnTY3mT5sj3uP/ucN/lNMzD4ksT8Rwp98haePqHzrDm
+	BQoLOZpGucLzzDWWRMCmEDlXMnECrubDSL3P+ahmYp7+Vx1BYJ4uz74qx7TTkPDT
+	/S3hHFiL0LISAR1+iDB/PW4/hMmah8rT5LgPisRyOIZbXTu/fQzEXqFDCACs1D+t
+	9aS8ZOx9liM95ZVKzp3+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738792213; x=1738878613; bh=dPn7JSPXiqgSq7Z0EgBkucMtw2n7J3jmDFt
+	kNsgBHQY=; b=D/j+JXMQftftoZ647xleulPgDaCzNOStyuEUxGUk36Klyb/vqd0
+	Ut6Jxr0L20+DYS5h4Z+KQIAvMKcNrdxDoaz2IYF6ebjVTqx/BoQyctGxmTp5p23j
+	7uibMqbvblQ8ZYPALwHbMex4VP11xm8vpUKKMnw6cx8WtFsBDcDSzRP5j0TusHEO
+	EjYS/e1W/k7/mlk22VFBWjg/vM0l3/wFOIGc6xGu3B8OrK0/fIAxvZHpYNt9G22t
+	+KFoMZtuCdcYmkBpSGwRhgzolVTHMqPINazhT+K1YJIt17iHCrf61ffNdudbLXBY
+	Yij779PND+Z7cYzkCu+yAK78JKot1eg2jxg==
+X-ME-Sender: <xms:FN2jZ88iTlPQWcddEpMZn1rgmJXRCHWbFBO6Gvm0AP513rKEQY8qtQ>
+    <xme:FN2jZ0voVIy4HCglPJ5QUGy2hm9y7dCnmZ3F3ywcjbGhPiCJ6hLB3I5luFLxzfpdu
+    BMxDGYY8N36rtcOL6w>
+X-ME-Received: <xmr:FN2jZyCiXi-4MC2o4zcmomeJRMFOCQxVKwkZcagomOPiNHtEo6NyFsveQ1tn>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpefurggsrhhinhgrucffuhgsrhhotggruceoshgusehquhgvrghshihsnh
+    grihhlrdhnvghtqeenucggtffrrghtthgvrhhnpeeuhffhfffgfffhfeeuiedugedtfefh
+    keegteehgeehieffgfeuvdeuffefgfduffenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgs
+    pghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhtoh
+    hnihhosehophgvnhhvphhnrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdr
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgr
+    sggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvg
+    hrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheprhihrgiirghnohhvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpth
+    htoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
+X-ME-Proxy: <xmx:FN2jZ8czV6t1zJaziXPuoZHv03Xl_YSAZXlv78R5sy8lRO_JqEz9BA>
+    <xmx:FN2jZxOaXdbi32br8lRCivxfq0s5A2S6sRh-_98BWwQAShDc6Gd0eQ>
+    <xmx:FN2jZ2lIsmKSDGCfRoHOSiWebZ3Cm9-z70evuF9pnOshIpaf_h-iNQ>
+    <xmx:FN2jZzu8YHRg-PWvkQtPEXPRoljEC4mcZHMO5vUAWpOuCKfAPJw6Pw>
+    <xmx:Fd2jZ3tE71NpQiJheY5hLBK3BHWbpQ1jt_eqbmO6h39bxrDEfA0cFHuF>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 5 Feb 2025 16:50:12 -0500 (EST)
+Date: Wed, 5 Feb 2025 22:50:10 +0100
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+Subject: Re: [PATCH net-next v18 09/25] ovpn: implement packet processing
+Message-ID: <Z6PdEurGNirlnkoM@hog>
+References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
+ <20250113-b4-ovpn-v18-9-1f00db9c2bd6@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
- pci_pm_resume returns -110`
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, regressions@lists.linux.dev,
- Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
-References: <d7246feb-4f3f-4d0c-bb64-89566b170671@molgen.mpg.de>
- <027efc9e-bc70-49af-7d48-fb474533993d@linux.intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <027efc9e-bc70-49af-7d48-fb474533993d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250113-b4-ovpn-v18-9-1f00db9c2bd6@openvpn.net>
 
-Dear Ilpo,
+Hi Antonio,
 
+Another one I should have spotted a long time ago :(
 
-Thank you for your instant reply.
+2025-01-13, 10:31:28 +0100, Antonio Quartulli wrote:
+> +int ovpn_aead_encrypt(struct ovpn_peer *peer, struct ovpn_crypto_key_slot *ks,
+> +		      struct sk_buff *skb)
+> +{
+> +	const unsigned int tag_size = crypto_aead_authsize(ks->encrypt);
+> +	struct aead_request *req;
+> +	struct sk_buff *trailer;
+> +	struct scatterlist *sg;
+> +	u8 iv[OVPN_NONCE_SIZE];
 
+You'll have to kmalloc this as well, it gets passed to the crypto API
+and with async crypto, it'll be used after ovpn_aead_encrypt has
+returned.
 
-Am 05.02.25 um 09:44 schrieb Ilpo Järvinen:
-> On Tue, 4 Feb 2025, Paul Menzel wrote:
-> 
->> #regzbot introduced: b46c89c08f41..aa22f4da2a46
-
->> On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
->> 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
-
-(Just a side note, these are actually logged with level error.)
-
->>      rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
->>      rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
->>      rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
->>
->> These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
->>
->> It looks like the first warning is not always logged:
->>
->>      $ sudo dmesg | grep rtsx
->>      [    8.612537] rtsx_pci 0000:3b:00.0: enabling device (0000 -> 0002)
->>      [ 2010.081170] rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
->>      [ 2010.236503] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
->>      [ 2010.236525] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
->>      [ 4115.541202] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
->>      [ 4115.541216] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
->>
->> Logs from Linux 6.14-rc1 are attached. Bisection is only possible after next
->> Sunday.
-> 
-> Please try if this fix helps:
-> 
-> https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
-
-Yes, after applying the patch these errors were *not* logged in three 
-ACPI S3 suspend/resume cycles.
+[...]
+> +	/* setup async crypto operation */
+> +	aead_request_set_tfm(req, ks->encrypt);
+> +	aead_request_set_callback(req, 0, ovpn_encrypt_post, skb);
+> +	aead_request_set_crypt(req, sg, sg,
+> +			       skb->len - ovpn_aead_encap_overhead(ks), iv);
+                                                                        ^^
+passed here
 
 
-Kind regards,
+> +	aead_request_set_ad(req, OVPN_AAD_SIZE);
+> +
+> +	/* encrypt it */
+> +	return crypto_aead_encrypt(req);
+> +free_sg:
+> +	kfree(ovpn_skb_cb(skb)->sg);
+> +	ovpn_skb_cb(skb)->sg = NULL;
+> +	return ret;
+> +}
+> +
+> +int ovpn_aead_decrypt(struct ovpn_peer *peer, struct ovpn_crypto_key_slot *ks,
+> +		      struct sk_buff *skb)
+> +{
+> +	const unsigned int tag_size = crypto_aead_authsize(ks->decrypt);
+> +	int ret, payload_len, nfrags;
+> +	unsigned int payload_offset;
+> +	struct aead_request *req;
+> +	struct sk_buff *trailer;
+> +	struct scatterlist *sg;
+> +	u8 iv[OVPN_NONCE_SIZE];
 
-Paul
+And same here.
+
+(maybe something for the todolist: ovpn could copy the alloc trick
+from esp_alloc_tmp, like I did for macsec_alloc_req -- not required,
+but could be nice to avoid many small allocs and all their failure
+checks)
+
+-- 
+Sabrina
