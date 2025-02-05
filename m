@@ -1,70 +1,70 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1F721885A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BBD21B1A3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794707; cv=none; b=N7T3OP4rSQHiCkoQkMzNDfbYHfYHJt1E66Jvi3jIqdQ7ujR4X8yf0PLYUvKdHHp2XHdTOFY/TMFYwKrlxakCx25Yd7eHuf8S0ZVb5hawFkfXZs+5+kzJnlLrtzUgldH0PenlQRyVk7vUM57vZuLSU8RO7tMsb0zSHuEJDmFbeLs=
+	t=1738794709; cv=none; b=In+cQlp76SOSTttqAsV+Ov1Uh3YoZ9LRChaONvev6e3t5K3lgdyB47jd8c0wLjmfTtdlomJsx+yL3h/qoNmNFTO3pm1UX1vYadcnHsydw6f4VSCYQgVyXU6x/UUHN1crQUYU1XAPjCBWP/Q5SshezntUqMehwX9Pe/n2xh/NxuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794707; c=relaxed/simple;
-	bh=itnRDaU4mqcH+w2uISCwh8hSEwNV+pzT9Z9PUs4O9oc=;
+	s=arc-20240116; t=1738794709; c=relaxed/simple;
+	bh=BvL0PMNM+64aO6eWpOFHEfCG3Iup0dFwRGf6fl0NDRo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G5kndOo8mEE/iKIxdHfVbhrcv2gN3yAZnAB6YBA6koFjI1alJvgl0WNBdd3Ptd53+F09KgMjCDQqV4WOSAloHJk3m96AQ6QZdTxhKy+ldPQ49Owi0IfzR8n4nu0h5/O4tJuoVruOHsm6mt1HYu0U5PHOTQ4KN7WtMSyk3ri9vmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMDYRMml; arc=none smtp.client-ip=209.85.128.173
+	 MIME-Version; b=Qe1XA7daKqzaKFbQPftntmHSE4MVo6opswpW8eWuKsVgUYhnQlfb0MBEguctomuv+IN463y3pu8i2wOdI903vPjxxrdW+i6UXDb466+tm+bIltJHH6nlUJktep3sBBhuGV9359jf+oqtl5fkhXS5BWGLE/EXGeF+mYnRcyZniJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDGDdV03; arc=none smtp.client-ip=209.85.128.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMDYRMml"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f97a3a0b25so2821437b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 14:31:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDGDdV03"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6f973c0808dso3216827b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 14:31:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738794704; x=1739399504; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738794706; x=1739399506; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yM6oM3tDD+iEas8g9LCHRstgRJi9eANW9LQ7In12n2Q=;
-        b=gMDYRMmle1JsFYiRxx1LL1mTI9Ix5jakGV15lhvkVISYwfYBlLQRz8ceRzcWHHUhWS
-         LFGHHAs/oZbPRIZLA87rTrHFd/XWr+KJUAxOjRzlFXfFbAjs6cU9BR8SzOsBaEkRkiSH
-         jiI3CUkkaozx6N/1HTbtBmg/5ZKwNFnX3zMeSR/GK5gt1aW8CYiiIQWjzEMT1GoXF8fw
-         YE7wioW5bVyOevPR6SqbDUexjIwjvy14rDgjp/T/eCBFKPhA73TqRu6vtnPRfpTTLk09
-         WBqBPLjOl3ORenekj6CMS0anJTl6RgpHyuwnBe/Zga/Nsf+aJUSnVFjdFrVVxPr+tyVz
-         WUHg==
+        bh=+B9cE+XlZ6IAhrXTdMxWRlGCV2rcnPNikmawS1AsuFw=;
+        b=NDGDdV03bBZqAlx9oSkwvqUwIKefN6fdw+YKSmmFABifXTNDDFvPtipO1i1YZr7zhm
+         MSk1iILd2Hqg+T6KG9yn3syTqYFiul4gWW12tVqKPfFuK/xsq+csRq0OOapT7bD+B6qB
+         /+G2L9Hdw4YhN5ekTVEdPZZ7yMoNLR7x/zOL8z1qZSH8OcCpeoQgX5DQuzgydDf2ZVvS
+         BW8evRc9hMWEeSpAsM0nRAMyXy8pDQIkcM4sCjrImTCm9BWyZnPsdk8+DnubQqGcqw7W
+         VgHNv4j4MGBqQe0oElLtn/mepEroNczNJHyE3UQRl7HbHrKkCifBbtX0lzrASf8WWKtd
+         hoxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738794704; x=1739399504;
+        d=1e100.net; s=20230601; t=1738794706; x=1739399506;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yM6oM3tDD+iEas8g9LCHRstgRJi9eANW9LQ7In12n2Q=;
-        b=fA+v8I0FX7Qs5Zw56oqb75D+DSqJYtnCVSIBH/Noqn7GU0RgZcsCEYP3SMJJAxmWZ4
-         KUuFiMpKsWf9ND0wCjRq69GhPWZQ7smJLSe720uWo8YJ6ByZgcbNDiUp2oS8WKGJYXhc
-         VgZeYAvP7inmw1fj0P/FWrYDZbxrGO/66TCJfZoh+bANsBYO5NhJguYMB0ciHkQBe38h
-         5DsJ/NQFtlIGJKWcf2hiC2GPJMjg+BDBP6j8/rZxX3v1j1m73keqDWsSV4TxaKqfxVFi
-         cFrOc1ETz0kp91fQfenNLPa1hcm4i7yqXvyGVu0Kq9PFPZ8ZgiSPxdV8QfXCRUaSVro4
-         7hHg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9UJOfuSMEOqQOOSdFTCAWmJfxX8c3kpcRQnUJD+szyfv+KIVqxMl5cp/ndxsGtYQWUMIxgM0S7DtV9CM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKYHE2t7yKPHxT5NJd32n4uyrmo27ZSwlFI5n7HwykGm0rdLZ3
-	AjbZKJ4djBXWF/AC+u7/uaLmJgYx4I/HXfoEIz/M1Hgy2uRYG1i9
-X-Gm-Gg: ASbGnctvOheoW+ziVhFuIDjUO2vcdVJE+lV9qvWYSCrsMTCMqqDel23SdePBQVQSPlG
-	oSRz2/0s4nD/LVNAsh0mXc4/yj8GKZ5mbw8VKRa0YBSe+wUX8De0I5rSl7JfedRoWvn86CB96G7
-	tbF7u4iDkIrHJuX9VJBqzz9eBrqKzH/x4KgqjKpAp10XYcOI2klcP2WxcXjOUvay2AKZ/QYmXpI
-	ko535ThRkH2vyo3r86Zj76GWpRItMQO8wM1NPaxNc/YQqu6XVBG3UzMhtuR0bSSyEZANCtQZf/G
-	4SPmgaEe762wM9GZSBmT
-X-Google-Smtp-Source: AGHT+IGVhie7bjQpScJjSNCgDW5Yauhh/ntjQEy+HVGytlPK+EskCbghrziYokRcTcEph6WbANdYlg==
-X-Received: by 2002:a05:690c:9c0a:b0:6ef:7fc0:a378 with SMTP id 00721157ae682-6f989eb2bf2mr39956127b3.9.1738794704287;
-        Wed, 05 Feb 2025 14:31:44 -0800 (PST)
+        bh=+B9cE+XlZ6IAhrXTdMxWRlGCV2rcnPNikmawS1AsuFw=;
+        b=Q4aY8gueDV31f5dK7Z/P3WNoQNmzlOb8213Jr692Ve/mO+pwNTMfFAKpKtaPhbAvxW
+         uKk1GWEkudtkAJE1ClSpXPVZe2NdRna1z8cqF2NnJ8Ban1o5P+Gu07rrle6RZDFTn3df
+         cn20OWHuUQmBTJlJA+VBatqkefTpl1tM3/7AC7w+x0ZKka4afvZDjTYWRuMlTITMjQkZ
+         myIYiGXJmvD1hGnv/6gRLjLHYXJZrprTOA4+Y3MNGHDO5YP4d02r4Kl5mCU6+lC/8RSX
+         +2veUWkezfn/d+OANvcN8oiTU2aYmV4/920CicDZCw1FookZ/3obKvfdMpw5BaS4A15R
+         fzQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwvwPgE4qNqU1r02FDFZm710Mm5WzPZmIKqlT9qCCB0g9hIE1b62mo1xJVnfu2h5WFoxylFh6A3zJUApI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGNrQagNM2ME7TuCbqbqrO2cKkOy6sH5e08JvCYpBw/sER6bD8
+	ONHOPV6xKZkrDhTqdrOhy0rVre2O7xSs+HdEkWoUiB8Pu1w5O0PL
+X-Gm-Gg: ASbGncuMUkdVEtUBkhTGhtJNuELP7M9v7+kqUGWju+bBa3SzAvflM3oofdnOL2wB2BN
+	asOhbfm0Jc8kqAZcaUoTY5tW9yJVVrxMlIZakibYB5mEpSOUqrD9q4u43uzw38ui1ZPIjZGvpaR
+	mwrYLOF7dz8K0nWuue5f9te1sBWdmbdy0LpVlA8+dVrNmWRo+MxdtAC5AemnK5Sv5tZ3IBvy/TK
+	eLqqG1lLyiS1EnZ6F9rMfgs99yzf81chrTFZuUQG346KU1115mYpTmAVykO+1xoXEO3CJ4hc5DL
+	Kd3FBDIa6JxZVTleNPYQ
+X-Google-Smtp-Source: AGHT+IG27HSq2Tr+8GZa1o+uZXkw4ehi5jHjqXnKHZ0EH/8Pkxjgby/mMGdRpCBbh+ddEQSiN9Kjsg==
+X-Received: by 2002:a05:690c:6910:b0:6f9:4bb6:eb4e with SMTP id 00721157ae682-6f989f4a07emr44422307b3.31.1738794706360;
+        Wed, 05 Feb 2025 14:31:46 -0800 (PST)
 Received: from DESKTOP-GL3U3CJ ([149.22.94.73])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f8c486e652sm31746577b3.76.2025.02.05.14.31.43
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f97ad9afadsm8734877b3.99.2025.02.05.14.31.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 14:31:44 -0800 (PST)
+        Wed, 05 Feb 2025 14:31:46 -0800 (PST)
 From: Ian To <onlyian4981@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Ian To <onlyian4981@gmail.com>
-Subject: [PATCH 2/3] staging: rtl8723bs: remove unnecessary parentheses
-Date: Wed,  5 Feb 2025 14:31:36 -0800
-Message-ID: <a5294f7fa8c83163471dea62ff5f1adb7e8a4c9c.1738794631.git.onlyian4981@gmail.com>
+Subject: [PATCH 3/3] staging: rtl8723bs: don't end lines with (
+Date: Wed,  5 Feb 2025 14:31:37 -0800
+Message-ID: <1cc81795a4fcaaa52e19000ebca7575cfeb11395.1738794631.git.onlyian4981@gmail.com>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <cover.1738794631.git.onlyian4981@gmail.com>
 References: <cover.1738794631.git.onlyian4981@gmail.com>
@@ -76,344 +76,445 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reove unnecessary parentheses that are present.
+Prevented lines from ending with ( to adhere to coding style.
 
 Signed-off-by: Ian To <onlyian4981@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_ap.c | 110 +++++++++++-------------
- 1 file changed, 51 insertions(+), 59 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_ap.c | 229 +++++++-----------------
+ 1 file changed, 66 insertions(+), 163 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index b6459efd4c6f..5907ec128d30 100644
+index 5907ec128d30..9912c6e18359 100644
 --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
 +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -323,7 +323,7 @@ void add_RATid(struct adapter *padapter, struct sta_info *psta, u8 rssi_level)
- {
- 	unsigned char sta_band = 0, shortGIrate = false;
- 	unsigned int tx_ra_bitmap = 0;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct wlan_bssid_ex
- 		*pcur_network = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
+@@ -480,14 +480,12 @@ void update_sta_info_apmode(struct adapter *padapter, struct sta_info *psta)
+ 		/* check if sta supports rx ampdu */
+ 		phtpriv_sta->ampdu_enable = phtpriv_ap->ampdu_enable;
  
-@@ -371,9 +371,9 @@ void update_bmc_sta(struct adapter *padapter)
- 	unsigned char network_type;
- 	int supportRateNum = 0;
- 	unsigned int tx_ra_bitmap = 0;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	struct wlan_bssid_ex
- 		*pcur_network = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
- 	struct sta_info *psta = rtw_get_bcmc_stainfo(padapter);
-@@ -449,9 +449,9 @@ void update_bmc_sta(struct adapter *padapter)
+-		phtpriv_sta->rx_ampdu_min_spacing = (
+-			phtpriv_sta->ht_cap.ampdu_params_info & IEEE80211_HT_CAP_AMPDU_DENSITY
+-		) >> 2;
++		phtpriv_sta->rx_ampdu_min_spacing = (phtpriv_sta->ht_cap.ampdu_params_info &
++						     IEEE80211_HT_CAP_AMPDU_DENSITY) >> 2;
  
- void update_sta_info_apmode(struct adapter *padapter, struct sta_info *psta)
- {
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct security_priv *psecuritypriv = &padapter->securitypriv;
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct ht_priv *phtpriv_ap = &pmlmepriv->htpriv;
- 	struct ht_priv *phtpriv_sta = &psta->htpriv;
- 	u8 cur_ldpc_cap = 0, cur_stbc_cap = 0, cur_beamform_cap = 0;
-@@ -561,10 +561,9 @@ void update_sta_info_apmode(struct adapter *padapter, struct sta_info *psta)
+ 		/*  bwmode */
+-		if ((
+-			phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info
+-		) & cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH))
++		if ((phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info) &
++		    cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH))
+ 			psta->bw_mode = CHANNEL_WIDTH_40;
+ 		else
+ 			psta->bw_mode = CHANNEL_WIDTH_20;
+@@ -498,15 +496,13 @@ void update_sta_info_apmode(struct adapter *padapter, struct sta_info *psta)
+ 		phtpriv_sta->ch_offset = pmlmeext->cur_ch_offset;
  
- static void update_ap_info(struct adapter *padapter, struct sta_info *psta)
- {
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct wlan_bssid_ex
--		*pnetwork = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct wlan_bssid_ex *pnetwork = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct ht_priv *phtpriv_ap = &pmlmepriv->htpriv;
+ 		/* check if sta support s Short GI 20M */
+-		if ((
+-			phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info
+-		) & cpu_to_le16(IEEE80211_HT_CAP_SGI_20))
++		if ((phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info) &
++		    cpu_to_le16(IEEE80211_HT_CAP_SGI_20))
+ 			phtpriv_sta->sgi_20m = true;
  
- 	psta->wireless_mode = pmlmeext->cur_wireless_mode;
-@@ -607,7 +606,7 @@ static void update_hw_ht_param(struct adapter *padapter)
- 	unsigned char max_AMPDU_len;
- 	unsigned char min_MPDU_spacing;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
+ 		/* check if sta support s Short GI 40M */
+-		if ((
+-			phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info
+-		) & cpu_to_le16(IEEE80211_HT_CAP_SGI_40)) {
++		if ((phtpriv_sta->ht_cap.cap_info & phtpriv_ap->ht_cap.cap_info) &
++		    cpu_to_le16(IEEE80211_HT_CAP_SGI_40)) {
+ 			if (psta->bw_mode == CHANNEL_WIDTH_40) /* according to psta->bw_mode */
+ 				phtpriv_sta->sgi_40m = true;
+ 			else
+@@ -624,9 +620,8 @@ static void update_hw_ht_param(struct adapter *padapter)
+ 	/*  */
+ 	/*  Config SM Power Save setting */
+ 	/*  */
+-	pmlmeinfo->SM_PS = (le16_to_cpu(
+-		pmlmeinfo->HT_caps.u.HT_cap_element.HT_caps_info
+-	) & 0x0C) >> 2;
++	pmlmeinfo->SM_PS = (le16_to_cpu(pmlmeinfo->HT_caps.u.HT_cap_element.HT_caps_info) &
++			    0x0C) >> 2;
  
- 	/* handle A-MPDU parameter field
- 	 *
-@@ -643,13 +642,12 @@ void start_bss_network(struct adapter *padapter)
- 	u32 acparm;
- 	int	ie_len;
- 	struct registry_priv  *pregpriv = &padapter->registrypriv;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct security_priv *psecuritypriv = &(padapter->securitypriv);
--	struct wlan_bssid_ex
--		*pnetwork = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
--	struct wlan_bssid_ex *pnetwork_mlmeext = &(pmlmeinfo->network);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct security_priv *psecuritypriv = &padapter->securitypriv;
-+	struct wlan_bssid_ex *pnetwork = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-+	struct wlan_bssid_ex *pnetwork_mlmeext = &pmlmeinfo->network;
- 	struct HT_info_element *pht_info = NULL;
- 	u8 cbw40_enable = 0;
+ 	/*  */
+ 	/*  Config current HT Protection mode. */
+@@ -703,9 +698,7 @@ void start_bss_network(struct adapter *padapter)
+ 	rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acparm));
  
-@@ -821,7 +819,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 	u8 WMM_PARA_IE[] = {0x00, 0x50, 0xf2, 0x02, 0x01, 0x01};
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
- 	struct security_priv *psecuritypriv = &padapter->securitypriv;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct wlan_bssid_ex
- 		*pbss_network = (struct wlan_bssid_ex *)&pmlmepriv->cur_network.network;
- 	u8 *ie = pbss_network->ies;
-@@ -843,7 +841,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	/* Set Security */
+-	val8 = (
+-		psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X
+-	) ? 0xcc : 0xcf;
++	val8 = (psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) ? 0xcc : 0xcf;
+ 	rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
  
- 	pbss_network->rssi = 0;
+ 	/* Beacon Control related register */
+@@ -785,10 +778,8 @@ void start_bss_network(struct adapter *padapter)
+ 	rtw_hal_set_hwreg(padapter, HW_VAR_BASIC_RATE, pnetwork->supported_rates);
  
--	memcpy(pbss_network->mac_address, myid(&(padapter->eeprompriv)), ETH_ALEN);
-+	memcpy(pbss_network->mac_address, myid(&padapter->eeprompriv), ETH_ALEN);
+ 	/* update capability after cur_wireless_mode updated */
+-	update_capinfo(
+-		padapter,
+-		rtw_get_capability((struct wlan_bssid_ex *)pnetwork)
+-	);
++	update_capinfo(padapter,
++		       rtw_get_capability((struct wlan_bssid_ex *)pnetwork));
  
- 	/* beacon interval */
- 	p = rtw_get_beacon_interval_from_ie(ie);/* ie + 8;	8: TimeStamp, 2: Beacon Interval 2:Capability */
-@@ -1184,7 +1182,7 @@ int rtw_acl_add_sta(struct adapter *padapter, u8 *addr)
- 	if ((NUM_ACL - 1) < pacl_list->num)
- 		return (-1);
+ 	if (pmlmeext->bstart_bss) {
+ 		update_beacon(padapter, WLAN_EID_TIM, NULL, true);
+@@ -854,12 +845,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	cap = get_unaligned_le16(ie);
  
--	spin_lock_bh(&(pacl_node_q->lock));
-+	spin_lock_bh(&pacl_node_q->lock);
+ 	/* SSID */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_SSID,
+-		&ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_SSID, &ie_len,
++		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && ie_len > 0) {
+ 		memset(&pbss_network->ssid, 0, sizeof(struct ndis_802_11_ssid));
+ 		memcpy(pbss_network->ssid.ssid, (p + 2), ie_len);
+@@ -869,11 +856,9 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	/* channel */
+ 	channel = 0;
+ 	pbss_network->configuration.length = 0;
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_DS_PARAMS, &ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
++		       WLAN_EID_DS_PARAMS, &ie_len,
++		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && ie_len > 0)
+ 		channel = *(p + 2);
  
- 	phead = get_list_head(pacl_node_q);
- 	list_for_each(plist, phead) {
-@@ -1198,12 +1196,12 @@ int rtw_acl_add_sta(struct adapter *padapter, u8 *addr)
- 		}
+@@ -881,24 +866,18 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 
+ 	memset(supportRate, 0, NDIS_802_11_LENGTH_RATES_EX);
+ 	/*  get supported rates */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_SUPP_RATES,
+-		&ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
++		       WLAN_EID_SUPP_RATES, &ie_len,
++		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p) {
+ 		memcpy(supportRate, p + 2, ie_len);
+ 		supportRateNum = ie_len;
  	}
  
--	spin_unlock_bh(&(pacl_node_q->lock));
-+	spin_unlock_bh(&pacl_node_q->lock);
+ 	/* get ext_supported rates */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_EXT_SUPP_RATES,
+-		&ie_len,
+-		pbss_network->ie_length - _BEACON_IE_OFFSET_
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
++		       WLAN_EID_EXT_SUPP_RATES, &ie_len,
++		       pbss_network->ie_length - _BEACON_IE_OFFSET_);
+ 	if (p) {
+ 		memcpy(supportRate + supportRateNum, p + 2, ie_len);
+ 		supportRateNum += ie_len;
+@@ -909,12 +888,9 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	rtw_set_supported_rate(pbss_network->supported_rates, network_type);
  
- 	if (added)
- 		return ret;
+ 	/* parsing ERP_IE */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_ERP_INFO,
+-		&ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
++		       WLAN_EID_ERP_INFO, &ie_len,
++		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && ie_len > 0)
+ 		ERP_IE_handler(padapter, (struct ndis_80211_var_ie *)p);
  
--	spin_lock_bh(&(pacl_node_q->lock));
-+	spin_lock_bh(&pacl_node_q->lock);
+@@ -930,20 +906,12 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	group_cipher = 0; pairwise_cipher = 0;
+ 	psecuritypriv->wpa2_group_cipher = _NO_PRIVACY_;
+ 	psecuritypriv->wpa2_pairwise_cipher = _NO_PRIVACY_;
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_RSN,
+-		&ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_,
++		       WLAN_EID_RSN, &ie_len,
++		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && ie_len > 0) {
+-		if (rtw_parse_wpa2_ie(
+-			p,
+-			ie_len + 2,
+-			&group_cipher,
+-			&pairwise_cipher,
+-			NULL
+-		) == _SUCCESS) {
++		if (rtw_parse_wpa2_ie(p, ie_len + 2, &group_cipher, &pairwise_cipher,
++				      NULL) == _SUCCESS) {
+ 			psecuritypriv->dot11AuthAlgrthm = dot11AuthAlgrthm_8021X;
  
- 	for (i = 0; i < NUM_ACL; i++) {
- 		paclnode = &pacl_list->aclnode[i];
-@@ -1223,7 +1221,7 @@ int rtw_acl_add_sta(struct adapter *padapter, u8 *addr)
- 		}
+ 			psecuritypriv->dot8021xalg = 1;/* psk,  todo:802.1x */
+@@ -960,20 +928,11 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	psecuritypriv->wpa_group_cipher = _NO_PRIVACY_;
+ 	psecuritypriv->wpa_pairwise_cipher = _NO_PRIVACY_;
+ 	for (p = ie + _BEACON_IE_OFFSET_; ; p += (ie_len + 2)) {
+-		p = rtw_get_ie(
+-			p,
+-			WLAN_EID_VENDOR_SPECIFIC,
+-			&ie_len,
+-			(pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2))
+-		);
++		p = rtw_get_ie(p, WLAN_EID_VENDOR_SPECIFIC, &ie_len,
++			       (pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2)));
+ 		if ((p) && (!memcmp(p + 2, OUI1, 4))) {
+-			if (rtw_parse_wpa_ie(
+-				p,
+-				ie_len + 2,
+-				&group_cipher,
+-				&pairwise_cipher,
+-				NULL
+-			) == _SUCCESS) {
++			if (rtw_parse_wpa_ie(p, ie_len + 2, &group_cipher, &pairwise_cipher,
++					     NULL) == _SUCCESS) {
+ 				psecuritypriv->dot11AuthAlgrthm = dot11AuthAlgrthm_8021X;
+ 
+ 				psecuritypriv->dot8021xalg = 1;/* psk,  todo:802.1x */
+@@ -996,12 +955,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	pmlmepriv->qospriv.qos_option = 0;
+ 	if (pregistrypriv->wmm_enable) {
+ 		for (p = ie + _BEACON_IE_OFFSET_; ; p += (ie_len + 2)) {
+-			p = rtw_get_ie(
+-				p,
+-				WLAN_EID_VENDOR_SPECIFIC,
+-				&ie_len,
+-				(pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2))
+-			);
++			p = rtw_get_ie(p, WLAN_EID_VENDOR_SPECIFIC, &ie_len,
++				       (pbss_network->ie_length - _BEACON_IE_OFFSET_ - (ie_len + 2)));
+ 			if ((p) && !memcmp(p + 2, WMM_PARA_IE, 6)) {
+ 				pmlmepriv->qospriv.qos_option = 1;
+ 
+@@ -1023,12 +978,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
  	}
  
--	spin_unlock_bh(&(pacl_node_q->lock));
-+	spin_unlock_bh(&pacl_node_q->lock);
+ 	/* parsing HT_CAP_IE */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_HT_CAPABILITY,
+-		&ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_HT_CAPABILITY,
++		       &ie_len, (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && ie_len > 0) {
+ 		u8 max_rx_ampdu_factor = 0;
+ 		struct ieee80211_ht_cap *pht_cap = (struct ieee80211_ht_cap *)(p + 2);
+@@ -1055,9 +1006,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 		if (!TEST_FLAG(pmlmepriv->htpriv.stbc_cap, STBC_HT_ENABLE_RX))
+ 			pht_cap->cap_info &= cpu_to_le16(~(IEEE80211_HT_CAP_RX_STBC_3R));
  
- 	return ret;
- }
-@@ -1236,7 +1234,7 @@ void rtw_acl_remove_sta(struct adapter *padapter, u8 *addr)
- 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
- 	struct __queue	*pacl_node_q = &pacl_list->acl_node_q;
+-		pht_cap->ampdu_params_info &= ~(
+-			IEEE80211_HT_CAP_AMPDU_FACTOR | IEEE80211_HT_CAP_AMPDU_DENSITY
+-		);
++		pht_cap->ampdu_params_info &= ~(IEEE80211_HT_CAP_AMPDU_FACTOR |
++						IEEE80211_HT_CAP_AMPDU_DENSITY);
  
--	spin_lock_bh(&(pacl_node_q->lock));
-+	spin_lock_bh(&pacl_node_q->lock);
+ 		if ((psecuritypriv->wpa_pairwise_cipher & WPA_CIPHER_CCMP) ||
+ 		    (psecuritypriv->wpa2_pairwise_cipher & WPA_CIPHER_CCMP)) {
+@@ -1068,14 +1018,9 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 						       0x00);
+ 		}
  
- 	phead = get_list_head(pacl_node_q);
+-		rtw_hal_get_def_var(
+-			padapter,
+-			HW_VAR_MAX_RX_AMPDU_FACTOR,
+-			&max_rx_ampdu_factor
+-		);
+-		pht_cap->ampdu_params_info |= (
+-			IEEE80211_HT_CAP_AMPDU_FACTOR & max_rx_ampdu_factor
+-		); /* set  Max Rx AMPDU size  to 64K */
++		rtw_hal_get_def_var(padapter, HW_VAR_MAX_RX_AMPDU_FACTOR, &max_rx_ampdu_factor);
++		pht_cap->ampdu_params_info |= (IEEE80211_HT_CAP_AMPDU_FACTOR &
++					       max_rx_ampdu_factor); /* set  Max Rx AMPDU size  to 64K */
+ 
+ 		pht_cap->mcs.rx_mask[0] = 0xff;
+ 		pht_cap->mcs.rx_mask[1] = 0x0;
+@@ -1084,12 +1029,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	}
+ 
+ 	/* parsing HT_INFO_IE */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_HT_OPERATION,
+-		&ie_len,
+-		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_HT_OPERATION, &ie_len,
++		       (pbss_network->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && ie_len > 0)
+ 		pHT_info_ie = p;
+ 
+@@ -1131,9 +1072,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 		HT_info_handler(padapter, (struct ndis_80211_var_ie *)pHT_info_ie);
+ 	}
+ 
+-	pbss_network->length = get_wlan_bssid_ex_sz(
+-		(struct wlan_bssid_ex  *)pbss_network
+-	);
++	pbss_network->length = get_wlan_bssid_ex_sz((struct wlan_bssid_ex  *)pbss_network);
+ 
+ 	/* issue beacon to start bss network */
+ 	/* start_bss_network(padapter, (u8 *)pbss_network); */
+@@ -1240,10 +1179,8 @@ void rtw_acl_remove_sta(struct adapter *padapter, u8 *addr)
  	list_for_each_safe(plist, tmp, phead) {
-@@ -1256,8 +1254,7 @@ void rtw_acl_remove_sta(struct adapter *padapter, u8 *addr)
- 		}
- 	}
+ 		paclnode = list_entry(plist, struct rtw_wlan_acl_node, list);
  
--	spin_unlock_bh(&(pacl_node_q->lock));
--
-+	spin_unlock_bh(&pacl_node_q->lock);
+-		if (
+-			!memcmp(paclnode->addr, addr, ETH_ALEN) ||
+-			is_broadcast_ether_addr(addr)
+-		) {
++		if (!memcmp(paclnode->addr, addr, ETH_ALEN) ||
++		    is_broadcast_ether_addr(addr)) {
+ 			if (paclnode->valid) {
+ 				paclnode->valid = false;
+ 
+@@ -1356,13 +1293,7 @@ int rtw_ap_set_group_key(struct adapter *padapter, u8 *key, u8 alg, int keyid)
+ 	return rtw_ap_set_key(padapter, key, alg, keyid, 1);
  }
  
- u8 rtw_ap_set_pairwise_key(struct adapter *padapter, struct sta_info *psta)
-@@ -1295,18 +1292,12 @@ u8 rtw_ap_set_pairwise_key(struct adapter *padapter, struct sta_info *psta)
- 	return res;
- }
- 
--static int rtw_ap_set_key(
+-int rtw_ap_set_wep_key(
 -	struct adapter *padapter,
 -	u8 *key,
--	u8 alg,
+-	u8 keylen,
 -	int keyid,
 -	u8 set_tx
 -)
-+static int rtw_ap_set_key(struct adapter *padapter, u8 *key, u8 alg, int keyid, u8 set_tx)
++int rtw_ap_set_wep_key(struct adapter *padapter, u8 *key, u8 keylen, int keyid, u8 set_tx)
  {
- 	u8 keylen;
- 	struct cmd_obj *pcmd;
- 	struct setkey_parm *psetkeyparm;
--	struct cmd_priv *pcmdpriv = &(padapter->cmdpriv);
-+	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
- 	int res = _SUCCESS;
+ 	u8 alg;
  
- 	pcmd = rtw_zmalloc(sizeof(struct cmd_obj));
-@@ -1343,7 +1334,7 @@ static int rtw_ap_set_key(
- 		keylen = 16;
- 	}
+@@ -1397,21 +1328,16 @@ static void update_bcn_erpinfo_ie(struct adapter *padapter)
+ 		return;
  
--	memcpy(&(psetkeyparm->key[0]), key, keylen);
-+	memcpy(&psetkeyparm->key[0], key, keylen);
+ 	/* parsing ERP_IE */
+-	p = rtw_get_ie(
+-		ie + _BEACON_IE_OFFSET_,
+-		WLAN_EID_ERP_INFO,
+-		&len,
+-		(pnetwork->ie_length - _BEACON_IE_OFFSET_)
+-	);
++	p = rtw_get_ie(ie + _BEACON_IE_OFFSET_, WLAN_EID_ERP_INFO, &len,
++		       (pnetwork->ie_length - _BEACON_IE_OFFSET_));
+ 	if (p && len > 0) {
+ 		struct ndis_80211_var_ie *pIE = (struct ndis_80211_var_ie *)p;
  
- 	pcmd->cmdcode = _SetKey_CMD_;
- 	pcmd->parmbuf = (u8 *)psetkeyparm;
-@@ -1395,10 +1386,10 @@ static void update_bcn_fixed_ie(struct adapter *padapter)
+ 		if (pmlmepriv->num_sta_non_erp == 1)
+ 			pIE->data[0] |= RTW_ERP_INFO_NON_ERP_PRESENT | RTW_ERP_INFO_USE_PROTECTION;
+ 		else
+-			pIE->data[0] &= ~(
+-				RTW_ERP_INFO_NON_ERP_PRESENT | RTW_ERP_INFO_USE_PROTECTION
+-			);
++			pIE->data[0] &= ~(RTW_ERP_INFO_NON_ERP_PRESENT |
++					  RTW_ERP_INFO_USE_PROTECTION);
  
- static void update_bcn_erpinfo_ie(struct adapter *padapter)
- {
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
--	struct wlan_bssid_ex *pnetwork = &(pmlmeinfo->network);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-+	struct wlan_bssid_ex *pnetwork = &pmlmeinfo->network;
- 	unsigned char *p, *ie = pnetwork->ies;
- 	u32 len = 0;
- 
-@@ -1459,10 +1450,10 @@ static void update_bcn_wps_ie(struct adapter *padapter)
- 	u8 *pbackup_remainder_ie = NULL;
- 
- 	uint wps_ielen = 0, wps_offset, remainder_ielen;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
--	struct wlan_bssid_ex *pnetwork = &(pmlmeinfo->network);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-+	struct wlan_bssid_ex *pnetwork = &pmlmeinfo->network;
+ 		if (pmlmepriv->num_sta_no_short_preamble > 0)
+ 			pIE->data[0] |= RTW_ERP_INFO_BARKER_PREAMBLE_MODE;
+@@ -1457,12 +1383,8 @@ static void update_bcn_wps_ie(struct adapter *padapter)
  	unsigned char *ie = pnetwork->ies;
  	u32 ielen = pnetwork->ie_length;
  
-@@ -1535,8 +1526,8 @@ void update_beacon(struct adapter *padapter, u8 ie_id, u8 *oui, u8 tx)
- 	if (!padapter)
+-	pwps_ie = rtw_get_wps_ie(
+-		ie + _FIXED_IE_LENGTH_,
+-		ielen - _FIXED_IE_LENGTH_,
+-		NULL,
+-		&wps_ielen
+-	);
++	pwps_ie = rtw_get_wps_ie(ie + _FIXED_IE_LENGTH_, ielen - _FIXED_IE_LENGTH_, NULL,
++				 &wps_ielen);
+ 
+ 	if (!pwps_ie || wps_ielen == 0)
  		return;
- 
--	pmlmepriv = &(padapter->mlmepriv);
--	pmlmeext = &(padapter->mlmeextpriv);
-+	pmlmepriv = &padapter->mlmepriv;
-+	pmlmeext = &padapter->mlmeextpriv;
- 	/* pmlmeinfo = &(pmlmeext->mlmext_info); */
- 
- 	if (!pmlmeext->bstart_bss)
-@@ -1701,8 +1692,8 @@ void associated_clients_update(struct adapter *padapter, u8 updated)
- void bss_cap_update_on_sta_join(struct adapter *padapter, struct sta_info *psta)
- {
- 	u8 beacon_updated = false;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 
- 	if (!(psta->flags & WLAN_STA_SHORT_PREAMBLE)) {
- 		if (!psta->no_short_preamble_set) {
-@@ -1821,8 +1812,8 @@ void bss_cap_update_on_sta_join(struct adapter *padapter, struct sta_info *psta)
- u8 bss_cap_update_on_sta_leave(struct adapter *padapter, struct sta_info *psta)
- {
- 	u8 beacon_updated = false;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 
- 	if (!psta)
- 		return beacon_updated;
-@@ -1930,7 +1921,7 @@ void rtw_sta_flush(struct adapter *padapter)
- 	struct sta_info *psta = NULL;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
- 
- 	if ((pmlmeinfo->state & 0x03) != WIFI_FW_AP_STATE)
-@@ -1960,7 +1951,7 @@ void rtw_sta_flush(struct adapter *padapter)
- void sta_info_update(struct adapter *padapter, struct sta_info *psta)
- {
- 	int flags = psta->flags;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 
- 	/* update wmm cap. */
- 	if (WLAN_STA_WME & flags)
-@@ -1989,7 +1980,7 @@ void sta_info_update(struct adapter *padapter, struct sta_info *psta)
- void ap_sta_info_defer_update(struct adapter *padapter, struct sta_info *psta)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if (psta->state & _FW_LINKED) {
- 		pmlmeinfo->FW_sta_info[psta->mac_id].psta = psta;
-@@ -1998,13 +1989,14 @@ void ap_sta_info_defer_update(struct adapter *padapter, struct sta_info *psta)
- 		add_RATid(padapter, psta, 0);/* DM_RATR_STA_INIT */
- 	}
+@@ -1647,10 +1569,9 @@ static int rtw_ht_operation_update(struct adapter *padapter)
+ 	if (pmlmepriv->num_sta_no_ht ||
+ 	    (pmlmepriv->ht_op_mode & IEEE80211_HT_OP_MODE_NON_GF_STA_PRSNT))
+ 		new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_NONHT_MIXED;
+-	else if (
+-		(le16_to_cpu(phtpriv_ap->ht_cap.cap_info) & IEEE80211_HT_CAP_SUP_WIDTH)
+-		&& pmlmepriv->num_sta_ht_20mhz)
+-		new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_20MHZ;
++	else if ((le16_to_cpu(phtpriv_ap->ht_cap.cap_info) & IEEE80211_HT_CAP_SUP_WIDTH) &&
++		 pmlmepriv->num_sta_ht_20mhz)
++		 new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_20MHZ;
+ 	else if (pmlmepriv->olbc_ht)
+ 		new_op_mode = IEEE80211_HT_OP_MODE_PROTECTION_NONMEMBER;
+ 	else
+@@ -1870,12 +1791,7 @@ u8 bss_cap_update_on_sta_leave(struct adapter *padapter, struct sta_info *psta)
+ 	return beacon_updated;
  }
-+
- /* restore hw setting from sw data structures */
- void rtw_ap_restore_network(struct adapter *padapter)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct sta_info *psta;
--	struct security_priv *psecuritypriv = &(padapter->securitypriv);
-+	struct security_priv *psecuritypriv = &padapter->securitypriv;
- 	struct list_head	*phead, *plist;
- 	u8 chk_alive_num = 0;
- 	char chk_alive_list[NUM_STA];
-@@ -2070,7 +2062,7 @@ void rtw_ap_restore_network(struct adapter *padapter)
- void start_ap_mode(struct adapter *padapter)
- {
- 	int i;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
-@@ -2107,7 +2099,7 @@ void start_ap_mode(struct adapter *padapter)
- 	pmlmepriv->p2p_probe_resp_ie = NULL;
  
- 	/* for ACL */
--	INIT_LIST_HEAD(&(pacl_list->acl_node_q.queue));
-+	INIT_LIST_HEAD(&pacl_list->acl_node_q.queue);
- 	pacl_list->num = 0;
- 	pacl_list->mode = 0;
- 	for (i = 0; i < NUM_ACL; i++) {
-@@ -2122,7 +2114,7 @@ void stop_ap_mode(struct adapter *padapter)
- 	struct rtw_wlan_acl_node *paclnode;
- 	struct sta_info *psta = NULL;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
- 	struct __queue	*pacl_node_q = &pacl_list->acl_node_q;
-@@ -2140,7 +2132,7 @@ void stop_ap_mode(struct adapter *padapter)
- 	padapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
+-u8 ap_free_sta(
+-	struct adapter *padapter,
+-	struct sta_info *psta,
+-	bool active,
+-	u16 reason
+-)
++u8 ap_free_sta(struct adapter *padapter, struct sta_info *psta, bool active, u16 reason)
+ {
+ 	u8 beacon_updated = false;
  
- 	/* for ACL */
--	spin_lock_bh(&(pacl_node_q->lock));
-+	spin_lock_bh(&pacl_node_q->lock);
- 	phead = get_list_head(pacl_node_q);
- 	list_for_each_safe(plist, tmp, phead) {
- 		paclnode = list_entry(plist, struct rtw_wlan_acl_node, list);
-@@ -2153,7 +2145,7 @@ void stop_ap_mode(struct adapter *padapter)
- 			pacl_list->num--;
- 		}
+@@ -2004,25 +1920,16 @@ void rtw_ap_restore_network(struct adapter *padapter)
+ 
+ 	rtw_setopmode_cmd(padapter, Ndis802_11APMode, false);
+ 
+-	set_channel_bwmode(
+-		padapter,
+-		pmlmeext->cur_channel,
+-		pmlmeext->cur_ch_offset,
+-		pmlmeext->cur_bwmode
+-	);
++	set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset,
++			   pmlmeext->cur_bwmode);
+ 
+ 	start_bss_network(padapter);
+ 
+ 	if ((padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
+ 	    (padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
+ 		/* restore group key, WEP keys is restored in ips_leave() */
+-		rtw_set_key(
+-			padapter,
+-			psecuritypriv,
+-			psecuritypriv->dot118021XGrpKeyid,
+-			0,
+-			false
+-		);
++		rtw_set_key(padapter, psecuritypriv, psecuritypriv->dot118021XGrpKeyid,
++			    0, false);
  	}
--	spin_unlock_bh(&(pacl_node_q->lock));
-+	spin_unlock_bh(&pacl_node_q->lock);
  
- 	rtw_sta_flush(padapter);
+ 	spin_lock_bh(&pstapriv->asoc_list_lock);
+@@ -2123,11 +2030,7 @@ void stop_ap_mode(struct adapter *padapter)
+ 	pmlmeext->bstart_bss = false;
+ 
+ 	/* reset and init security priv , this can refine with rtw_reset_securitypriv */
+-	memset(
+-		(unsigned char *)&padapter->securitypriv,
+-		0,
+-		sizeof(struct security_priv)
+-	);
++	memset((unsigned char *)&padapter->securitypriv, 0, sizeof(struct security_priv));
+ 	padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeOpen;
+ 	padapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
  
 -- 
 2.45.3
