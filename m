@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039E334545
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F48F213220
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 01:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738719662; cv=none; b=eTA/ozgNf3V40s0YNUxaazEE9xP4RTUhcnuAT+ZaN3CO2e/ftsnueWAefXGZijz6abIKuIYyMm8ovqwAIRiMtgxn2YT5xuXQ3YJZyB9cIfTjManSZlh3PWr7FEn5OfAvjbiydd0ETGPFlEtuIsGg3OALG2iOJd1LAsCVeAwM9wk=
+	t=1738719662; cv=none; b=sxSQK1vNI9BN/YAw/7+V3LjMYZVwl72CMmilC2RHEsqtNVaLTbdnolbUzk4XlvUVC6jkWW8FZ6Skm8JPW2P/PJ/5Q9bTEmgBvYnpzkxgbbRvXMV+hqCQ0nSZHqpGon4Gl4pX2aRcNxzy4nFYN6xFReCrgg+uN5x6MngsAvvwDC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738719662; c=relaxed/simple;
-	bh=i+++SASEOGD19IVsqN/2m3gYyijmpi9IV5d573c+/GY=;
+	bh=AY3XDvm39GFsGN4Au2lRefxGo/K41JWz9nL19FtfpPQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d3LJ9Ncz/aDw2VaBKauAw3uCmp86kYlKQZzGFKFergQj/u/QP/iX+gr3/ZJr8Tbdbv34P4ubQTb9Lzf2sn9eRLHUwW/gGL7VzGANUDz0VaaHMBcSBwhGAAfRerV5Ytb9etanrVn4lQUbt2sFffnNBYTOzoAzKsEf6edmNkI8eNM=
+	 MIME-Version; b=q+7slTvx2L3jqPUy29oXAF/jOj3VdE9GZ7lfnQSR2YqMlvwbcEVjJwJjMs3OQFHJ6cE/lKUYYQdEujt09rlRuaTdrNz4R0WD7Oxmoav7lXOwmr7LUlr67/AMHxUzS/ARP2oro/Lnf8TbKvuTQnVKdEr8nTHsDbk40WeOuPd7Dvk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tfUP4-000000004Cs-35hO;
+	id 1tfUP4-000000004Cs-2eJa;
 	Tue, 04 Feb 2025 20:40:34 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -36,10 +36,10 @@ Cc: linux-kernel@vger.kernel.org,
 	mhklinux@outlook.com,
 	andrew.cooper3@citrix.com,
 	Rik van Riel <riel@surriel.com>,
-	Manali Shukla <Manali.Shukla@amd.com>
-Subject: [PATCH v8 08/12] x86/mm: use broadcast TLB flushing for page reclaim TLB flushing
-Date: Tue,  4 Feb 2025 20:39:57 -0500
-Message-ID: <20250205014033.3626204-9-riel@surriel.com>
+	Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH v8 03/12] x86/mm: consolidate full flush threshold decision
+Date: Tue,  4 Feb 2025 20:39:52 -0500
+Message-ID: <20250205014033.3626204-4-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250205014033.3626204-1-riel@surriel.com>
 References: <20250205014033.3626204-1-riel@surriel.com>
@@ -52,33 +52,112 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-In the page reclaim code, we only track the CPU(s) where the TLB needs
-to be flushed, rather than all the individual mappings that may be getting
-invalidated.
-
-Use broadcast TLB flushing when that is available.
+Reduce code duplication by consolidating the decision point
+for whether to do individual invalidations or a full flush
+inside get_flush_tlb_info.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Tested-by: Manali Shukla <Manali.Shukla@amd.com>
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
 ---
- arch/x86/mm/tlb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 52 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 43e1abd4bcb0..25c13416a0e8 100644
+index 6cf881a942bb..02e1f5c5bca3 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -1326,7 +1326,9 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+		invlpgb_flush_all_nonglobals();
-+	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
- 		flush_tlb_multi(&batch->cpumask, info);
- 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
- 		lockdep_assert_irqs_enabled();
+@@ -1000,8 +1000,13 @@ static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
+ 	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
+ #endif
+ 
+-	info->start		= start;
+-	info->end		= end;
++	/*
++	 * Round the start and end addresses to the page size specified
++	 * by the stride shift. This ensures partial pages at the end of
++	 * a range get fully invalidated.
++	 */
++	info->start		= round_down(start, 1 << stride_shift);
++	info->end		= round_up(end, 1 << stride_shift);
+ 	info->mm		= mm;
+ 	info->stride_shift	= stride_shift;
+ 	info->freed_tables	= freed_tables;
+@@ -1009,6 +1014,15 @@ static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
+ 	info->initiating_cpu	= smp_processor_id();
+ 	info->trim_cpumask	= 0;
+ 
++	/*
++	 * If the number of flushes is so large that a full flush
++	 * would be faster, do a full flush.
++	 */
++	if ((end - start) >> stride_shift > tlb_single_page_flush_ceiling) {
++		info->start = 0;
++		info->end = TLB_FLUSH_ALL;
++	}
++
+ 	return info;
+ }
+ 
+@@ -1026,17 +1040,8 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 				bool freed_tables)
+ {
+ 	struct flush_tlb_info *info;
++	int cpu = get_cpu();
+ 	u64 new_tlb_gen;
+-	int cpu;
+-
+-	cpu = get_cpu();
+-
+-	/* Should we flush just the requested range? */
+-	if ((end == TLB_FLUSH_ALL) ||
+-	    ((end - start) >> stride_shift) > tlb_single_page_flush_ceiling) {
+-		start = 0;
+-		end = TLB_FLUSH_ALL;
+-	}
+ 
+ 	/* This is also a barrier that synchronizes with switch_mm(). */
+ 	new_tlb_gen = inc_mm_tlb_gen(mm);
+@@ -1089,22 +1094,19 @@ static void do_kernel_range_flush(void *info)
+ 
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+-	/* Balance as user space task's flush, a bit conservative */
+-	if (end == TLB_FLUSH_ALL ||
+-	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
+-		on_each_cpu(do_flush_tlb_all, NULL, 1);
+-	} else {
+-		struct flush_tlb_info *info;
++	struct flush_tlb_info *info;
+ 
+-		preempt_disable();
+-		info = get_flush_tlb_info(NULL, start, end, 0, false,
+-					  TLB_GENERATION_INVALID);
++	guard(preempt)();
++
++	info = get_flush_tlb_info(NULL, start, end, PAGE_SHIFT, false,
++				  TLB_GENERATION_INVALID);
+ 
++	if (info->end == TLB_FLUSH_ALL)
++		on_each_cpu(do_flush_tlb_all, NULL, 1);
++	else
+ 		on_each_cpu(do_kernel_range_flush, info, 1);
+ 
+-		put_flush_tlb_info();
+-		preempt_enable();
+-	}
++	put_flush_tlb_info();
+ }
+ 
+ /*
+@@ -1276,7 +1278,7 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ 
+ 	int cpu = get_cpu();
+ 
+-	info = get_flush_tlb_info(NULL, 0, TLB_FLUSH_ALL, 0, false,
++	info = get_flush_tlb_info(NULL, 0, TLB_FLUSH_ALL, PAGE_SHIFT, false,
+ 				  TLB_GENERATION_INVALID);
+ 	/*
+ 	 * flush_tlb_multi() is not optimized for the common case in which only
 -- 
 2.47.1
 
