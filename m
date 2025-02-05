@@ -1,58 +1,57 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAFA20E007
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 23:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BA51F473C;
+	Wed,  5 Feb 2025 23:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738797144; cv=none; b=SXLUQQxwqUd+mUbH69jf/NA7PqFnX/SDEMrkcgOYZ/UspFMQFaukRiXF5lFC/Oy33Asqy4PwnYHdjvfiF+gFUvkw2AAo7lnrQN5AWeKwOUhCcKqg8juMsJANIgAc4Xc/iiq/pjf6bffxdT/ycInG1ja1SjJ8skTVxOZX1MXlH7k=
+	t=1738797253; cv=none; b=RYoAPtSN3cUylXAqXSawYfLIzCkE9W+iVI9+l4B2yZm/DH0SQHT9c98ml1MOmXL5WLbHdXQxmMmH8hT7dvj7Z+E5QRHFJT8KMqsS2zAiVbmybSZjMJqITf8BzpvvmP7IKgYXKuSp3lrCbENs97XrkzC1XMg1LTfFHPa4DPkjkLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738797144; c=relaxed/simple;
-	bh=4zHAng6HdFa9VjdxzgdDnt1PL3lyWq1Aclh+Z83mzYg=;
+	s=arc-20240116; t=1738797253; c=relaxed/simple;
+	bh=XBak1xKg27C24pRGkiTIhk8Ym8BsGSEKHgG87Z70UmY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SD39T+RZUCvg2uunyx1Yi3npHfsreiFdcM10XbF2znLIyz6rCUhonBX7W2Ufn/nsruJGZgC8yRmfBQ879nJuEte6HHT3pYRRxUE3TD0S+1NIGOzk7WGxymZs5a4E6crReLC/EPUXautUxNyC+XapnR36uq2UbFQXNZ49pyL0R2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U8GJhbdq; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=sEaJzQVL5UmUDgadetiGvyAEOPdm/7yaE7mTcZhUFXuJGUpoqlP/BzOMmZc5xD1EoixN5h287Ci+uRqLp2uAYmWPgPb6QonLieX3wzNKtRJINBOBnjKpYgW9s1L+8hu4PhSRlu4THZqUmEfIp5LUR+dPX8BGwaMZvhFrXWyvSC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cpla6oZg; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U8GJhbdq"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dcd43726ecso395a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 15:12:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cpla6oZg"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f09fe247dso662635ad.3;
+        Wed, 05 Feb 2025 15:14:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738797141; x=1739401941; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738797251; x=1739402051; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4zHAng6HdFa9VjdxzgdDnt1PL3lyWq1Aclh+Z83mzYg=;
-        b=U8GJhbdqgWf2McHiJB1SLne+54/dLfTE9r+PV2cR+nus19BO5gGvT2dcnpgauTzmW/
-         eT3OLXc2zs+LkvFqTCVswXCjXgP6fh8FxnWRw3SXGBw7vyK9zGg3CoH2DDQP+kGjg0ei
-         CW5pLcDf2oO9/9OuY4eQ51n+h/dxyokPtJB18OR5qa5dspPTFeM1jGNbpu3VuxOSSUnD
-         tHNIcjUcHsBRLFtrF38RimOgmCy9E1yBZ21igdW0qDYYIpWfK+0i0AsducGGQpIKhuG2
-         GDR1E3+Cn8rNfNSNjAkBMLubzgG+V5GGJWzaq15SpSo6SIdOhWi7F/+s9WEyyFPcdAoZ
-         3gZQ==
+        bh=XBak1xKg27C24pRGkiTIhk8Ym8BsGSEKHgG87Z70UmY=;
+        b=Cpla6oZgHvpz0grSVJJHLjXILV696AKoVEazOzF6Vv1JLZOZrzG41th4el2pS5Wgkj
+         jOr7GMWSQg2jio2vsamdIXk3DkJ1ZJdAsPC6W8n1oBL46KjNZ0l0VysexhfFLYuv9KtG
+         WBVuznJvOMqbdfX8RPz3GK4S6I7JkoGvOTIn6TYh/kxYqAZt4wPlv8KZtTSTz0D8opTv
+         MTyRjxLaqWnkp7sjSJNtY7T9Hmfsr0Ro9Qt3EwAlL/nAJGKl01boePukP6do0btnC/a+
+         2NMvYQghxGRZvt7hIpFtCFq+mKyAjmeZXxmUbdtPkHxxxL5s8GknLjnSyXeEeJYUY5mV
+         yAcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738797141; x=1739401941;
+        d=1e100.net; s=20230601; t=1738797251; x=1739402051;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4zHAng6HdFa9VjdxzgdDnt1PL3lyWq1Aclh+Z83mzYg=;
-        b=hTa5wMNdU+V/aSO8WrQMT7dNqrIf1CZnFXJzRfTzzHZE3kJOVC4Ns1UdQ7j1Nn/dvu
-         2SfUKdzLquvWZNS/oDpZWEY+aVahapgmSafsaszF6cjenwA3kuSaH/oGlz7Ztfx+Sc+t
-         txlMkRJs8tG3oK1pJuMXQdwKikFAjnHdiZP0NMAbzP3OT3IUolSsX3T41i3LrppgoJp2
-         Jp0+f1YLNHdl3F/o/j2n3YPGXQjAQqdjLsIZDwVwvvFg8ObT+XJpUGT8i//LItEB5VlQ
-         2qD9bfPugSD0xJ6awhZ5748aa6FsiF51JJvxzrBsaHqo2ezx9fmfV27JkHM86FSR/kE2
-         x2JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWR1TR30vcSmSPtRxEEZPFawGBcWgYcPmxBmRg6MbPbrswuoNQPV8eCejmOZGLK1zOOvGV6uxPKvgxOPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEFTclJF5GOp2scWfJW8qUf7wgiz06MQ2koEDQXOnyJ6dTlIWa
-	5JNTMCZBn8AjcjRLSpuFsozEL1xAnI3D2J5cZMqXK6vZvqa5p1/6bMTSM0lY+yf5Mi07BhGR9Cv
-	54PM170m+iBIbT9zzKWKh++wWlp4H7LE07W/E
-X-Gm-Gg: ASbGncsnfDC+zdgwEPZoRpGpi7dsnSc6U4Z/qkPNpNc1Kf8jIuFMjdVtXX2fLkKQuwk
-	wazrO1J5D3XUNVAhj+OUwmePIS+n5jfctqXM5ofG/+0M2FEelR0rimMVu16b7hezdTFwk5DH6Xj
-	TL3OXsILsLXbKVVG4RR+nDllQYW1o=
-X-Google-Smtp-Source: AGHT+IEy8D06ym9OFvBFxNDWOLA3mpnur8aFPFxDU+aIsQd7Z5dcQwZCDB3Rc9uXU2+Il5yHW8OsIbsEDjD7/GVrGOU=
-X-Received: by 2002:a05:6402:644:b0:5d0:eb21:264d with SMTP id
- 4fb4d7f45d1cf-5dcefeb0e4dmr3424a12.1.1738797141035; Wed, 05 Feb 2025 15:12:21
- -0800 (PST)
+        bh=XBak1xKg27C24pRGkiTIhk8Ym8BsGSEKHgG87Z70UmY=;
+        b=f3auK78ZrNkSjj/NyG5N8Gnxw3ZepRlesjamvmP6ZM/JurLuNY+VfdW1oMGTCWIIwL
+         HVAfvRUM3rKW9H4ag+FpORi2X4aozm+S6eVgIlioxhJK5r6XSYxlpGNHxEu47KVC9Zhb
+         1MSR/WRGcbZOnggZbGC9mT7rh6t6lSTMnTJnKqoFXknYqhxkbXGsimow0Essh83jJ6A+
+         U99nn5BM7uz+mzQPFNZ3Ji/oLMvOeotQq7AUHKvyNaM3BGZ9Qcg5K4f1rnHhpA0vJVe+
+         9YQPb1wLBd6mK0U/yFMbtnUrRA/niSl/g80fomfZMyTJi/zrsXW7SVIZNCS4t7xtYTIS
+         HCgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUE/jllReXVWmsEGXGUmClNslpnli7cMkEkWXccV6LXG3kJdqj0udQY7KKTZ++xAG5ZQ682zhkd5oV17sY=@vger.kernel.org, AJvYcCVXWiVqK7Tv9RHpYI86Nbxh9rDsEGuLana0Jb6n1izMK/abrQJ6Cdh42aUEDmCkQ0t7LI68zPydLyqmu/W9c7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdyK6jLJvQoSe4WuVne0BfuRRurtOY0RD4pnk7kCJgWLUvxjHs
+	XAsy3JDUFOnJq3MnFddrM+q0Z8P9al6iCq6cxgCwIiNSErgTv6mxwl1LOGEc+JV6Uri6Rm4lY2I
+	Q94zMrDwqnCJBK6SRuVRjzV3d7Sw=
+X-Gm-Gg: ASbGncsdGNqv6TqgsY2DaSCLSguN3Ptcir7/bfc5E+NVCiGbHwuQ1rSGK2QDCvsY+BX
+	JNwKQxdftzuI8uRja7EJJ2aERpmFGBOzjWRzt/plx2oXut/WkHAQBJrrOrF56xuwuvlrjBDjT
+X-Google-Smtp-Source: AGHT+IE47H5+v8jfJ8Y2IwYB6H+MRbx/jP5G13Au1qZmx8XKD1VopKmgdUZ9IcWArGG1wLri2VIuSv7NnkLe+wfRs2U=
+X-Received: by 2002:a17:902:f550:b0:215:8721:30b7 with SMTP id
+ d9443c01a7336-21f17eb4230mr28109845ad.11.1738797251096; Wed, 05 Feb 2025
+ 15:14:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,14 +62,15 @@ References: <20250122-gendwarfksyms-kasan-rust-v1-1-5ee5658f4fb6@google.com>
  <CANiq72nr9vTgUF9u0uyypzprQrEpGv4qbOUJS_QgYbMZhTTrRQ@mail.gmail.com>
  <CAGSQo02HFMn0b=d6LVFr35Bc06F0AY8XmPFtqWi4b17cQSF0+g@mail.gmail.com>
  <CANiq72mo66FCLQTsBMU+Sc-VeS617uYgQdtCXJF9PacpUhSbLA@mail.gmail.com>
- <CAGSQo00uUYdjeiRHEz465WyN_kDyiV2L0Ojaomr8ckMYipmp6w@mail.gmail.com> <CANiq72ksOc_ncUXycySPS+JUur8GZZSHSSEQYOg9aKtpBRvnPg@mail.gmail.com>
-In-Reply-To: <CANiq72ksOc_ncUXycySPS+JUur8GZZSHSSEQYOg9aKtpBRvnPg@mail.gmail.com>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Wed, 5 Feb 2025 15:12:09 -0800
-X-Gm-Features: AWEUYZk63DXwzsdzpkKGzbhmaLKhtF4EH60XsK48xOQrl7YUbPdqDb59fHj8Esk
-Message-ID: <CAGSQo02wJrawHfCJ7HTo+_o0wgk2zv+SefMmORoNcM5NNS7LqA@mail.gmail.com>
+ <CAGSQo00uUYdjeiRHEz465WyN_kDyiV2L0Ojaomr8ckMYipmp6w@mail.gmail.com>
+ <CANiq72ksOc_ncUXycySPS+JUur8GZZSHSSEQYOg9aKtpBRvnPg@mail.gmail.com> <CAGSQo02wJrawHfCJ7HTo+_o0wgk2zv+SefMmORoNcM5NNS7LqA@mail.gmail.com>
+In-Reply-To: <CAGSQo02wJrawHfCJ7HTo+_o0wgk2zv+SefMmORoNcM5NNS7LqA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 6 Feb 2025 00:13:58 +0100
+X-Gm-Features: AWEUYZn8h5_SZM9ngK5OYZr7WrtyI84ZWB3G2pCKGR91Y2JF6muvemEXoFZZ1lk
+Message-ID: <CANiq72m63F41Ee4cNx5w3SVhvYauzNRBo9ojZtSvGYcNhcs5ig@mail.gmail.com>
 Subject: Re: [PATCH] rust: Do not export generated KASAN ODR symbols
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To: Matthew Maurer <mmaurer@google.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
 	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
@@ -80,26 +80,22 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Correct, I don't believe it needs to be backported. `gendwarfksyms` is
-the only in-tree tool I am aware of breaking on this. It is possible
-someone else is dumping DWARF for all exported symbols, but I don't
-know of anyone specific other than Android for kernel ABI monitoring,
-who already has this patch in-tree, and does that monitoring on
-non-ASAN builds.
+On Thu, Feb 6, 2025 at 12:12=E2=80=AFAM Matthew Maurer <mmaurer@google.com>=
+ wrote:
+>
+> Correct, I don't believe it needs to be backported. `gendwarfksyms` is
+> the only in-tree tool I am aware of breaking on this. It is possible
+> someone else is dumping DWARF for all exported symbols, but I don't
+> know of anyone specific other than Android for kernel ABI monitoring,
+> who already has this patch in-tree, and does that monitoring on
+> non-ASAN builds.
 
-On Wed, Feb 5, 2025 at 3:08=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Thu, Feb 6, 2025 at 12:03=E2=80=AFAM Matthew Maurer <mmaurer@google.co=
-m> wrote:
-> >
-> > Fixes: e3117404b41124c88a4d834fc3222669a880addc
-> > would probably be most appropriate
->
-> Thanks for the quick reply!
->
-> In principle, the backport to 6.12.y nor 6.13.y is not needed since
-> gendwarfksyms does not exist there, right?
->
-> Cheers,
-> Miguel
+Then I guess we could add a Fixes tag to one of those recent commits
+(i.e. where `gendwarfksyms` is added), so that it doesn't trigger the
+stable team into a backport.
+
+But it is not a big deal -- if no recent commit really fits, I can
+still apply it into `rust-fixes` without a tag.
+
+Cheers,
+Miguel
