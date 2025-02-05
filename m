@@ -1,172 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43A122A1EA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 08:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC23229B0D;
+	Wed,  5 Feb 2025 08:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738744092; cv=none; b=fBoTqQPv4gm/DeZojQpxvCP9nVTMxJOq5G8xRBIDRe1pWmxs9Xu34rlUVrqsLg78+A954lXOuApcLRscA90U5Pb+AKq914X7Bea7kNB78yJZWGt1dV0mOyI6EpqHpcWczE4dJlC0uZi2tu0/+0ysTJeByQALTMiCpdPiSuoU51o=
+	t=1738744142; cv=none; b=XeG+xXVStx/akGdHU2kZzovhJeW0FlygFkKNUZ8aqcy+CM0HRu2ERX0F4mDBghqWFn8GR0C5dmUr0Co6bVnJspdwLKfsTL6R2faSl/VzBP3lDpo8TXSkm4ArtEHejxm50SJ2GxUhmSoRF1rEcMLOF+qja6mpQSEQxuKmSreuFQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738744092; c=relaxed/simple;
-	bh=wPPiE4WssOXXu5e2omQ8GbA5fpSg9jfmgtde5W1Vzn0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=dxYSe/RmKmHfI7cWyxsZknfqJyi3wUByWp3SNwRSbEFpIxafAL36HtXYU+gvghI/0iq0mW24p3zo3jXfpxEszYSxUDUW/T1jWu5EywtY+c0SoIPvp2cPr0GuU/Z2wtZDNA4DyYl/puumiOxTn1HfppNVvpQGZpriS0tC1m9v1tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4fIXZ8q; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738744142; c=relaxed/simple;
+	bh=Q6F62UJ38W/MS6lPjPgw5ELFS8m0SJSyN+NibGranhA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BwBk4m6qSeszuXpOJLp3h8WI49Mbf+FqU1RoGXwQ2eRSb7Jm5ejUNsKDEqer96VxJtbHIUgrU5T7sjIVdfLZgEiZW460qqINOPT9RhQry45cknm7kYhNejzC+sEtFvu2BI3z3AS12vk8wPZcxW4zYXyiwGfqSQkCJ7pY48cLSH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=hXuAhGH4; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4fIXZ8q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738744090; x=1770280090;
-  h=date:from:to:cc:subject:message-id;
-  bh=wPPiE4WssOXXu5e2omQ8GbA5fpSg9jfmgtde5W1Vzn0=;
-  b=P4fIXZ8qiii9IKuyr6w7RgjdFswn/ojnwWHVNG17THhNUX4vCr6ThPER
-   Zv+U9YvxFFw7CKhMwXaPNSblwgxan4zRcPZ0vXhktxojiIWFQ58Bt1oti
-   gh2iBYNrmh4gk5whYw5CnZx5F6aKJnj4sT10EDVdxnWQXqe+2bRrajJ4V
-   x0EOx2XC9STiIS8umrwiSNmoS/rGlW9u+HuDdFgPYShOaAokF80JaERnA
-   f+4PTPLylYIaXhaS5EAiCKwposYzrj+AQQpLFuxWzjL3RsL82Fl70Mciy
-   ZevWnvnoj472ZusvsGTzh5zf+/T7auaJ2E9kN8kFQe8+H8SXeYYRyxKHF
-   Q==;
-X-CSE-ConnectionGUID: qwFuP+ZCQNqtYwHTHAgCkQ==
-X-CSE-MsgGUID: ker7TwbgRzyClhoOzVVGMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43218196"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="43218196"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:28:09 -0800
-X-CSE-ConnectionGUID: yCEGMGPTQNmXIA+qP8GYNQ==
-X-CSE-MsgGUID: hM+0etufQVqoMCYAIThscg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="111012300"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 05 Feb 2025 00:28:08 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tfalR-000tel-39;
-	Wed, 05 Feb 2025 08:28:05 +0000
-Date: Wed, 05 Feb 2025 16:27:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- a869ffcd79a0ce8713bfb2169db88e885c0a120d
-Message-ID: <202502051629.EE24M0SP-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hXuAhGH4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1738744142; x=1770280142;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Irrk44yL9PVNITVe2ru2h9A7Eg4l2yRsDWys0WJFTMY=;
+  b=hXuAhGH4D3Y0Rs/4wObmQhJSwoCPiLhPmVcz2XsfqYlLG4rkezNwgkJK
+   lH7Wx2QPCYW1wRPlC8/pD9KW04Q2oO3JUCoPvpJ9fUCD8tDm6gfsTrqQ8
+   SbIQu4rbDXcy+Q/ry/BceJfDBtATU3p8V144YzGo4HDFcsFVtcvw704HR
+   Y=;
+X-IronPort-AV: E=Sophos;i="6.13,260,1732579200"; 
+   d="scan'208";a="796218126"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 08:28:55 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:52174]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.19.117:2525] with esmtp (Farcaster)
+ id ff01f214-874c-424c-8e61-00fbef4a2201; Wed, 5 Feb 2025 08:28:54 +0000 (UTC)
+X-Farcaster-Flow-ID: ff01f214-874c-424c-8e61-00fbef4a2201
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Wed, 5 Feb 2025 08:28:54 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.118.255.254) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Wed, 5 Feb 2025 08:28:50 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <buaajxlj@163.com>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <liangjie@lixiang.com>,
+	<linux-kernel@vger.kernel.org>, <mhal@rbox.co>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>
+Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind identifier length
+Date: Wed, 5 Feb 2025 17:28:41 +0900
+Message-ID: <20250205082841.94701-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250205060653.2221165-1-buaajxlj@163.com>
+References: <20250205060653.2221165-1-buaajxlj@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D040UWB002.ant.amazon.com (10.13.138.89) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: a869ffcd79a0ce8713bfb2169db88e885c0a120d  Merge branch into tip/master: 'x86/urgent'
+From: Liang Jie <buaajxlj@163.com>
+Date: Wed,  5 Feb 2025 14:06:53 +0800
+> From: Liang Jie <liangjie@lixiang.com>
+> 
+> Refines autobind identifier length for UNIX domain sockets, addressing
+> issues of memory waste and code readability.
+> 
+> The previous implementation in the unix_autobind function of UNIX domain
+> sockets used hardcoded values such as 16, 6, and 5 for memory allocation
+> and setting the length of the autobind identifier, which was not only
+> inflexible but also led to reduced code clarity. Additionally, allocating
+> 16 bytes of memory for the autobind path was excessive, given that only 6
+> bytes were ultimately used.
+> 
+> To mitigate these issues, introduces the following changes:
+>  - A new macro AUTOBIND_LEN is defined to clearly represent the total
+>    length of the autobind identifier, which improves code readability and
+>    maintainability. It is set to 6 bytes to accommodate the unique autobind
+>    process identifier.
+>  - Memory allocation for the autobind path is now precisely based on
+>    AUTOBIND_LEN, thereby preventing memory waste.
+>  - The sprintf() function call is updated to dynamically format the
+>    autobind identifier according to the defined length, further enhancing
+>    code consistency and readability.
+> 
+> The modifications result in a leaner memory footprint and elevated code
+> quality, ensuring that the functional aspect of autobind behavior in UNIX
+> domain sockets remains intact.
+> 
+> Signed-off-by: Liang Jie <liangjie@lixiang.com>
+> ---
+>  net/unix/af_unix.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 34945de1fb1f..5dcc55f2e3a1 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1186,6 +1186,13 @@ static struct sock *unix_find_other(struct net *net,
+>  	return sk;
+>  }
+>  
+> +/*
+> + * Define the total length of the autobind identifier for UNIX domain sockets.
+> + * - The first byte distinguishes abstract sockets from filesystem-based sockets.
 
-elapsed time: 1446m
+Now it's called pathname socket, but I think we don't need a comment here.
+We already have enough comment/doc in other places and the man page.
 
-configs tested: 95
-configs skipped: 2
+$ man 7 unix
+...
+The address consists of a null byte followed by 5 bytes in the character set [0-9a-f].
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250204    gcc-13.2.0
-arc                   randconfig-002-20250204    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                           h3600_defconfig    gcc-14.2.0
-arm                       multi_v4t_defconfig    clang-21
-arm                   randconfig-001-20250204    clang-21
-arm                   randconfig-002-20250204    clang-17
-arm                   randconfig-003-20250204    clang-19
-arm                   randconfig-004-20250204    clang-21
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250204    clang-21
-arm64                 randconfig-002-20250204    clang-21
-arm64                 randconfig-003-20250204    clang-17
-arm64                 randconfig-004-20250204    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250204    gcc-14.2.0
-csky                  randconfig-002-20250204    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250204    clang-21
-hexagon               randconfig-002-20250204    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250204    gcc-12
-i386        buildonly-randconfig-002-20250204    clang-19
-i386        buildonly-randconfig-003-20250204    clang-19
-i386        buildonly-randconfig-004-20250204    gcc-12
-i386        buildonly-randconfig-005-20250204    clang-19
-i386        buildonly-randconfig-006-20250204    gcc-12
-i386                                defconfig    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250204    gcc-14.2.0
-loongarch             randconfig-002-20250204    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250204    gcc-14.2.0
-nios2                 randconfig-002-20250204    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                randconfig-001-20250204    gcc-14.2.0
-parisc                randconfig-002-20250204    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250204    gcc-14.2.0
-powerpc               randconfig-002-20250204    gcc-14.2.0
-powerpc               randconfig-003-20250204    clang-21
-powerpc64             randconfig-002-20250204    clang-19
-powerpc64             randconfig-003-20250204    gcc-14.2.0
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250205    gcc-14.2.0
-riscv                 randconfig-002-20250205    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250205    clang-17
-s390                  randconfig-002-20250205    clang-19
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250205    gcc-14.2.0
-sh                    randconfig-002-20250205    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250205    gcc-14.2.0
-sparc                 randconfig-002-20250205    gcc-14.2.0
-sparc64               randconfig-001-20250205    gcc-14.2.0
-sparc64               randconfig-002-20250205    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250205    gcc-11
-um                    randconfig-002-20250205    clang-21
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250204    clang-19
-x86_64      buildonly-randconfig-002-20250204    clang-19
-x86_64      buildonly-randconfig-003-20250204    clang-19
-x86_64      buildonly-randconfig-004-20250204    gcc-11
-x86_64      buildonly-randconfig-005-20250204    clang-19
-x86_64      buildonly-randconfig-006-20250204    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250205    gcc-14.2.0
-xtensa                randconfig-002-20250205    gcc-14.2.0
+> + * - The subsequent five bytes store a unique identifier for the autobinding process.
+> + */
+> +#define AUTOBIND_LEN 6
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+UNIX_AUTOBIND_LEN
+
+
+> +
+>  static int unix_autobind(struct sock *sk)
+>  {
+>  	struct unix_sock *u = unix_sk(sk);
+> @@ -1204,11 +1211,11 @@ static int unix_autobind(struct sock *sk)
+>  
+>  	err = -ENOMEM;
+>  	addr = kzalloc(sizeof(*addr) +
+> -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
+> +		       offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN, GFP_KERNEL);
+>  	if (!addr)
+>  		goto out;
+>  
+> -	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
+> +	addr->len = offsetof(struct sockaddr_un, sun_path) + AUTOBIND_LEN;
+>  	addr->name->sun_family = AF_UNIX;
+>  	refcount_set(&addr->refcnt, 1);
+>  
+> @@ -1217,7 +1224,7 @@ static int unix_autobind(struct sock *sk)
+>  	lastnum = ordernum & 0xFFFFF;
+>  retry:
+>  	ordernum = (ordernum + 1) & 0xFFFFF;
+> -	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
+> +	sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+
+I feel %05 is easier to read.  Note that man page mentions 5 bytes.
+
+1 is also hard-coded here, but I don't think we should write
+
+sprintf(addr->name->sun_path + UNIX_ABSTRACT_NAME_OFFSET,
+        "%0*x", UNIX_AUTOBIND_LEN - 1, ordernum)
+
+
+>  
+>  	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
+>  	unix_table_double_lock(net, old_hash, new_hash);
+> -- 
+> 2.25.1
