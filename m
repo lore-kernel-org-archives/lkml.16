@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64677231A47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D19231A41
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752423; cv=none; b=jBeDn0uRART4Zjb1GpLRESWYqo/7mXiax+temchgO5gkwS8NU7L80DX1HtW3WIGChZAqVkGH3ksveBTiaX1er8iVw6+9VMDtM9ctHpdrfWptu4NSt9ncGz+vduL9enkeW7ccAYryY+BAoFWp44bM2KH701aiRMwmmX71EUI+VoI=
+	t=1738752423; cv=none; b=fFblnXRDR0nC4tFz7h6ZFgxsgMOKvX8SnwzXHy5OFaf76wfT/Uigu+D2xJBkUGuVmVbcBH413uyONfqiawdAXCqYdFdUQ9WZ6/bLek8pVOL2CymN747PsSWhWiR9GCXtrxYEDBeYXEGKAJrwe3cGXXN6EdIpSGoU0SCZ/iS7GWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752423; c=relaxed/simple;
-	bh=KcS9816fJheDiWtFqqkQ+ZORgTSYWJtxFsnHscgU5/U=;
+	bh=jZqpz2l9g6hmV5ODIy3KvrappbuokMR0nWeWwI6Jk9M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R0YA3XS9wt7pNjvV1wGwKwM/wBUmuKcbCQBs/A+wOe4Z8KQYyqVzMiC5+05oSyt7lomD3S9HyLIKclgV/GCo280LSuHN3TKPLqbr8aQilgzL+eT92yF49tO6LmMYe8S3wjAm42B/vefXySroepae26qLKwQQm5Yyxgs8lfEXeoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QAVwSgI9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E9wd33dL; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=FcNu57eTCF4UwxGbt37tiQk9W+6lVE/GuNx140fLw/QFpP7UmLISO7f0UMOIdKUbGnzOZ7Qy1eEoDwUaUOkTVMwgJRKgkmP6SYK7RF6+8ouhFCLIUGE3wVfkgh7z8F8Pmylf9A3ZagQQuATKQBb8f/iPoo9SgX9+C9mO3bc4SLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LAzD2AW8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XkIL1LAy; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QAVwSgI9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E9wd33dL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LAzD2AW8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XkIL1LAy"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738752419;
@@ -24,31 +24,31 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Em2KYYUu8s44zqSIbzIXarV+zjk25kc0U4I2CCdKN9M=;
-	b=QAVwSgI9nNrzCQ/IFnBw74uyg+CGO91MJwH2l6lQw2Ci6Cpxi38MxG0t2uq+izFpmHrCdu
-	JpnpCzEO77kxX/WDzugpa/KKhSAAZHBMBtJtcXpNA0TF1mBOhujnH2ABvQfCGExuVciWte
-	cYnJHZr9+3uPhhuR00zt+OMyYzTkZVcxl6e4nFYoB1KsDtIQ7e8kVrJJlHG+7Vh4i9qeSJ
-	aU/zRKtcrmFthwe06OBzJDntVPtkgcFOv9Jwl0estAMgDXEbBVnEd64N1LUXarOkoHK8l1
-	SaB57vlFedyiVtQz46LHcZS6V7GMsC1wbqGf0mfAuPHjoYyu3utL8kwyswOS0g==
+	bh=T7LqWuuUfDm3xRsvF6tMM6TaXD7gQmWW7bF6UzLZQBc=;
+	b=LAzD2AW8IUJGotNhJE08i4pLx+36lMPq4euqFhd5fOtEHhnmuCiaxb74/vgmC0l8QwPSEd
+	UR1WCXCb2nLDH1OieR8bNAopFwV4FpUN0eyzEaG73SOFBVU5hRwCmBSssd1VNNs6qcEMuY
+	fhIXp9sLQCjEl/OZIuR5KB3nJs1kdmgACcBqmqsAK6cOZAXdaqrramIQAggFIw7gzNejJ/
+	+MVf/w94oVeA+BL5bnwXL10qkKsApLe6zRSrk6TdBdVDioxDhIyZgRCgbkwAbkupuQi75y
+	svvtArY1pENz2lcr7TRufozepnNLsbrG3zn7aLWfXBsXxZzDIYC/7aam9qIXlw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738752419;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Em2KYYUu8s44zqSIbzIXarV+zjk25kc0U4I2CCdKN9M=;
-	b=E9wd33dLqCwOeuNfX40tuD+ZYrUFro9AKLqDROZi/28qtYMvwtwhPC9yI377uw0oUmMn53
-	U+VtboQZCqG75qCQ==
+	bh=T7LqWuuUfDm3xRsvF6tMM6TaXD7gQmWW7bF6UzLZQBc=;
+	b=XkIL1LAy1u4ZAYpoe8mAgx/xWrJt3PAYJGEmLkGp4FUv8MyjflV2Dfo6lfuGd9YiP45UYm
+	Ku7e4d6Q0XKOv3Cg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Zack Rusin <zack.rusin@broadcom.com>,
-	Jon Mason <jdmason@kudzu.us>
-Subject: [PATCH v2 20/45] ntb: ntb_pingpong: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:46:08 +0100
-Message-Id: <2b179e16ab830611fdcb09a33a5a531c9800679b.1738746904.git.namcao@linutronix.de>
+	Will Deacon <will@kernel.org>
+Subject: [PATCH v2 19/45] drivers: perf: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:46:07 +0100
+Message-Id: <471ea3b829d14a4b4c3c7814dbe1ed13b15d47b8.1738746904.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746904.git.namcao@linutronix.de>
 References: <cover.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
@@ -69,28 +69,66 @@ Patch was created by using Coccinelle.
 
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: Jon Mason <jdmason@kudzu.us>
+Cc: Will Deacon <will@kernel.org>
 ---
- drivers/ntb/test/ntb_pingpong.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/perf/arm-ccn.c               | 5 ++---
+ drivers/perf/marvell_cn10k_ddr_pmu.c | 4 ++--
+ drivers/perf/thunderx2_pmu.c         | 5 ++---
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpon=
-g.c
-index 8aeca7914050..1c1c74f4ff2d 100644
---- a/drivers/ntb/test/ntb_pingpong.c
-+++ b/drivers/ntb/test/ntb_pingpong.c
-@@ -284,8 +284,7 @@ static struct pp_ctx *pp_create_data(struct ntb_dev *nt=
-b)
- 	pp->ntb =3D ntb;
- 	atomic_set(&pp->count, 0);
- 	spin_lock_init(&pp->lock);
--	hrtimer_init(&pp->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	pp->timer.function =3D pp_timer_func;
-+	hrtimer_setup(&pp->timer, pp_timer_func, CLOCK_MONOTONIC, HRTIMER_MODE_RE=
-L);
+diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
+index d5fcea3d4328..1a0d0e1a2263 100644
+--- a/drivers/perf/arm-ccn.c
++++ b/drivers/perf/arm-ccn.c
+@@ -1273,9 +1273,8 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
+ 	/* No overflow interrupt? Have to use a timer instead. */
+ 	if (!ccn->irq) {
+ 		dev_info(ccn->dev, "No access to interrupts, using timer.\n");
+-		hrtimer_init(&ccn->dt.hrtimer, CLOCK_MONOTONIC,
+-				HRTIMER_MODE_REL);
+-		ccn->dt.hrtimer.function =3D arm_ccn_pmu_timer_handler;
++		hrtimer_setup(&ccn->dt.hrtimer, arm_ccn_pmu_timer_handler, CLOCK_MONOTON=
+IC,
++			      HRTIMER_MODE_REL);
+ 	}
 =20
- 	return pp;
- }
+ 	/* Pick one CPU which we will use to collect data from CCN... */
+diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn=
+10k_ddr_pmu.c
+index 039feded9152..72ac17efd846 100644
+--- a/drivers/perf/marvell_cn10k_ddr_pmu.c
++++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
+@@ -1064,8 +1064,8 @@ static int cn10k_ddr_perf_probe(struct platform_devic=
+e *pdev)
+ 	if (!name)
+ 		return -ENOMEM;
+=20
+-	hrtimer_init(&ddr_pmu->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	ddr_pmu->hrtimer.function =3D cn10k_ddr_pmu_timer_handler;
++	hrtimer_setup(&ddr_pmu->hrtimer, cn10k_ddr_pmu_timer_handler, CLOCK_MONOT=
+ONIC,
++		      HRTIMER_MODE_REL);
+=20
+ 	cpuhp_state_add_instance_nocalls(
+ 				CPUHP_AP_PERF_ARM_MARVELL_CN10K_DDR_ONLINE,
+diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+index cadd60221b8f..6ed4707bd6bb 100644
+--- a/drivers/perf/thunderx2_pmu.c
++++ b/drivers/perf/thunderx2_pmu.c
+@@ -752,9 +752,8 @@ static int tx2_uncore_pmu_add_dev(struct tx2_uncore_pmu=
+ *tx2_pmu)
+ 	tx2_pmu->cpu =3D cpu;
+=20
+ 	if (tx2_pmu->hrtimer_callback) {
+-		hrtimer_init(&tx2_pmu->hrtimer,
+-				CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-		tx2_pmu->hrtimer.function =3D tx2_pmu->hrtimer_callback;
++		hrtimer_setup(&tx2_pmu->hrtimer, tx2_pmu->hrtimer_callback, CLOCK_MONOTO=
+NIC,
++			      HRTIMER_MODE_REL);
+ 	}
+=20
+ 	ret =3D tx2_uncore_pmu_register(tx2_pmu);
 --=20
 2.39.5
 
