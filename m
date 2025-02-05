@@ -1,203 +1,317 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D299D151985;
-	Wed,  5 Feb 2025 11:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756558; cv=fail; b=iA13qXM+nA1Ljc0CVM/TyoTZKVZLupBWhf53bx1GlS43HCnQHufDY9//rtNdGeek9YnxiFS3PlRzYAyJUwejJhZSsXkMv40LoE5d/2OVKOezjclJ3MbwtYdCR5uXpVGER8yFlq0hJJA7+8khnueKNiluznJos7g/VuZvj/moun4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756558; c=relaxed/simple;
-	bh=nPKP7fWYWIJoRvdO+WcGodJfWbJ/wc5upHQCu4UFD50=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mqILZByBmpkqBsaPuLwxwe6ix8471c0oaUshBQwc9TA7lMJvMMKJrfj7oGP3hwfFaqVjQfVUQeuj1LBz8kFItIpcPhFZIVM1VvHh2ch1EbGgx41HpxD2Dy1pmR70REfiQ2g+pVq19SavmMxUyhtbhQ9FKBqagN6CL8GmNlcRgAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i4XSFW7F; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8D621CFF0;
+	Wed,  5 Feb 2025 11:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738756576; cv=none; b=haoBzpbMTDBTMRLln0wcsuFIIU6CdPVDdonPPhgdm0PiOQSizf2yuGQi/tNXouRhoLgQFISRlSw1Vvu2Pb/bRupEkF448h1j9PNpTgitUZLLvNTV/XYLVuzoRn6lNpurmeaQzgqAsQ7w07S1MjlbN5pMkEpZ30B3Q3mZA9kmeEk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738756576; c=relaxed/simple;
+	bh=ZeNqWnGBUHdjbh6jxGItIR1Qfr8YwI/0OgUmeErnptw=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:CC:
+	 In-Reply-To:Content-Type; b=dfMrG9EfjXJQxgV0RYEC/HxA9DGS2MKFf7X1lw7b69qdbSxrmicYA9XEOR3yO9kBYrxkHNpSb+nRTrb38hoMPuZDqvmLkkCzWBqp4/9seBClRSqUNrjCzZChuISGJlvyQlq0q/nVoOxJkfs1x+3VMDnkHD28iFjM7Tpnb6yFi9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WiL6YqpV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4XSFW7F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738756557; x=1770292557;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=nPKP7fWYWIJoRvdO+WcGodJfWbJ/wc5upHQCu4UFD50=;
-  b=i4XSFW7FevKb6Fc9YEFr6Np4q9/wwKYAfYBSpybhjuGPUxpuL5VfmkZR
-   NdfTU5iOyyu2AwYB0omchaHQdIVlRNTR7yp7btE9sdiS9luJBM/3WFM+4
-   hFNJK7kMJJGgMmeJhrJj4vZZmpP30eLYAaiTLEA/I9cXvxZnNgFz6UJnG
-   gOJNouXs+WC6H4nTFR83YDleWclOgiv3ik0fugB7fM49cVVXTRoaZ6ZCC
-   nzyCcL6mvY4TaARaa+Icf0TdHpXGwEFqh+h/qiFQ1/jaymuVBfygvUT8Y
-   GRSep0If77u7EPDUoKs7uDSvCCZkyorMg6UsuBpLqAHfaWdEixwAunhCD
-   g==;
-X-CSE-ConnectionGUID: UqIbR5AaRIilXdS07EDrew==
-X-CSE-MsgGUID: vfmAZ+EwTXO8aiVbktyWaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42153573"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="42153573"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 03:55:56 -0800
-X-CSE-ConnectionGUID: vRat2FlTT/iHt4LILQQ4vA==
-X-CSE-MsgGUID: ps8iXxbNSeSSGxt083amWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="110733681"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 03:55:55 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 5 Feb 2025 03:55:55 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 03:55:54 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Feb 2025 03:55:54 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VRoHc00w9kdjDNF8l07R0IHJvfYT5tRdIrbjSsCWl7imxNu5ldBUSN6sv3KpcOyazVjmrVlOCsmwWwfeCfnaJQ9kzUulVzSxgbVy31KtE9tN334+SQmqzWf3z3W764nSwSxPOMqyHfdFjDqG/+NzP4RlETl4aOMkn6ZZ7QhM9d0l07Jq/TOQpoCYaGdHDKc2H4Fmagyi+QlbgwWOg3Oz2ISYs7WWUXDkqJUb5TGuOf7shRisGS+ODZe9FLSY1PpKO2gp53BtaNRGel3hb87MRtFr1277DslaBRD6e2ngJ9Vg841VgtGP/QsbtWWiMHb0tV8Ph6EwC+eMOfaLG1pC8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u5Yqjc8LBGsjRvET/iLQnxX4K6wdqq/tAB6Olvd8YDg=;
- b=uwMO4X2/58f345N+pEES0GSkzNYkogoX48IOl+H867cYl8Lx7a+6CzWnLxL5nECnOrj7nPdy7MtFsZglrYxWk9nDBLHfkLd1G7uxnI4f8X1odRkpoKT9cnIrtzOzDA4APX6sUXje5d7SBLNJbd6qLkytBFvBvDAI5qE0NUw3pVNlVCHPNA7wvXqC7wGqXldUkuHx/CAQqtxs7Jb+HE5srehM567TejnkM1izoC3Vyim/bmai78TAFXDR5wdpsmTQHoioAlFUu8Nr8Nm95SCwV+x1q4LXzox788Y+X84cs/o/Od2fSInqO2MsayJbZWOF1hgfhgKb5rLHVuTiku/goA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
- by DS7PR11MB6176.namprd11.prod.outlook.com (2603:10b6:8:98::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.24; Wed, 5 Feb 2025 11:55:52 +0000
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 11:55:51 +0000
-From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, "Luck, Tony"
-	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, James Morse
-	<james.morse@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "Robert
- Richter" <rric@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Subject: RE: [PATCH] EDAC/igen6: Constify struct res_config
-Thread-Topic: [PATCH] EDAC/igen6: Constify struct res_config
-Thread-Index: AQHbdB6ilDDJWOn5rUGhZylfJ1P7JLM4oVDw
-Date: Wed, 5 Feb 2025 11:55:51 +0000
-Message-ID: <CY8PR11MB71341D7635A2609F90BDD92B89F72@CY8PR11MB7134.namprd11.prod.outlook.com>
-References: <a06153870951a64b438e76adf97d440e02c1a1fc.1738355198.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <a06153870951a64b438e76adf97d440e02c1a1fc.1738355198.git.christophe.jaillet@wanadoo.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|DS7PR11MB6176:EE_
-x-ms-office365-filtering-correlation-id: e70dfca1-6e98-4ee0-bb0a-08dd45dc0a02
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?GGc6ad6WeOOlMG0VBSkygyUUjCSTWnS322vSqilUgLv/h3Eq+2sYQWkkhk9e?=
- =?us-ascii?Q?85ixML8w0+RkWWBciyjty8QhqukZFlVTsBmSufNYDz5GCHQycg/KasbMkz3e?=
- =?us-ascii?Q?khk6ofqArol0TlhUjmUdOaLSiCr9iLZsPjQnDMBKWh1Qe1tlEk89gQ5j02hO?=
- =?us-ascii?Q?o8QeIZ+K8tdGTL+2QOtYmhZQnZq8hUf/SFZxcsavIr+NOs5IbRkoNtNWBqfx?=
- =?us-ascii?Q?NiypF+q3q03gAT0DVY3j6KMumFAroi2FcSCOJ8m6vTWCMhGMAF+RB6clq62P?=
- =?us-ascii?Q?tw9x0a9H3WVbm5NOTiEHL+2xi+QRHLhK0I18y+m0a1byDCWWLD4U8p/vUsuP?=
- =?us-ascii?Q?escod3/DYLdrJ5yFnmq9Z0mJKlIuvZKcfDJ+v6HHHNsPeamnzcmxkwlQ5RC+?=
- =?us-ascii?Q?or+BmYW3xDi5UmIfnS3+gk2Hmd3XuTQxJQDZ4tpwSE7Cb6WnwV1+N0BuB50l?=
- =?us-ascii?Q?BPIpZa7kEH+92HlUJDaTU75LPGNNkf36ESpqJ3wqC64BvPKwL+cW9Mk8XZwH?=
- =?us-ascii?Q?rawZsbyDH4lgn0kiW9UBETsFR6V3fV8Mmj8pemp0vpKl8KLDX+dk80bN8dDy?=
- =?us-ascii?Q?8HMOavolx0JSbP57buwQz5hyPnpIBvVgo9HYAAycbjYBgZfK4XB1ngbGPqph?=
- =?us-ascii?Q?445w92D/NQOBrRQkIrhTt6tp4YdgRNgW4h8U079UEsH5pBovrBI21BpQ21qM?=
- =?us-ascii?Q?kXdX92OEFTu69euYOkLAzJ19weqLUWs4A06sPDcJ2Zau3J4c8YdIJx2ZHyAu?=
- =?us-ascii?Q?D0B9x1RvcrxXMYwMI1HM9Tb8p6G7kmwkMlkj/iZug1fk9ue9N6BS8mOX+D1r?=
- =?us-ascii?Q?cOq5UxD/J/mgf3dJ1otIDcjAJeAx9fXHUF0gqjPpXEFoKUg39N7NdfRRNDMb?=
- =?us-ascii?Q?DzmA9PwnyywgA+vpUjaqdlVDDWbVNkROmh7tb1nPDx1DOiWBwgdWwA5Hif8O?=
- =?us-ascii?Q?KXdyA7pZB3ZrpC92be/ZSjuMqNS3jbjX6X76Dal6VVD5Q8X9Hfp2ldX3ZgLz?=
- =?us-ascii?Q?2vvCAOG17fl4mU6qebX2NocN++c92AqTDJiTj7Zynzk6GXMyBhImC1Ypgjr9?=
- =?us-ascii?Q?W7lpDIWMkKc4ImJVD9P92xeeFJciwZ1daYVz/Lx7RAM//D0+Trj8R+Hc9FBF?=
- =?us-ascii?Q?GskzrR3Dcwo4GyGazinbD8iJMsCyalz3gwEobOuAu3PyANboeQFVQND/152Y?=
- =?us-ascii?Q?+JMvpUlsV9x6pyUBRgUe+9ya6Wx5am1FV2PDPfkHvYHA1iAYp9/y8UK1O4z8?=
- =?us-ascii?Q?qGL015BlCrCjwv3C9KBQ3diN+eNLY9g/hPRwE46bPPDV1KyLmTo/LF2rlM/9?=
- =?us-ascii?Q?DLSpW8rgrm1Bv+eeWCiU4aIeheA5fIZ5F5q0V7tEoJtyxj7cRBrmFEBU+B3U?=
- =?us-ascii?Q?Jrj5pV+Y2WWfePdngdm1zNgqubE0bfMjH27V+YLx/B2pyVHbJWlZ25oigHZk?=
- =?us-ascii?Q?EI0oZ3EkAmZsAn8R3NKMaa4LSrxGlCua?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?L6PKUzVB8M1NrHPfMx1N/PNQJoP2uSZc/3E169AvkdNiXUztzw8OTPwt/WEP?=
- =?us-ascii?Q?HlXlPIJeewkIT6xrqw6szJstuzg/dmUqv1Zp4rnq1NAkoHHTnqysZhyAX9UK?=
- =?us-ascii?Q?O+IJods6cYQAgVLj0QLSm+5n/IgoHX3A+IQoCsYG1S/Ja8tsF+354AWXuwK8?=
- =?us-ascii?Q?liXCl4ACoyKAaGxZyk2OAYB41NZLawgETxA4WNwZAs45AjKj2F2GI4o/FSdZ?=
- =?us-ascii?Q?G4u3sUXGNG7imH1etFdWBqeYa9sry8aCzyNsgJby+nw+Rtz/2wLEqsjL/hd9?=
- =?us-ascii?Q?FWPQQNw0o+cJohABQeBnYKHULPdnp+VJF/vXqBc7J7V9Kk9uwhuVWoqFcz4e?=
- =?us-ascii?Q?CVFgUT8NraKtwK0pIvZs4XJhj2lngIA8OBjOQ1TWjrdzzSH9cfUYcb4OQkyD?=
- =?us-ascii?Q?GcvAUmxUmif6nOMEwt1EjaQLqLLzhPHRVprY2pknd04Sw8ML5SNTCSbEwJ0Y?=
- =?us-ascii?Q?AzHzHOcsssdETvG8Nf1FOIlMgS5XMwqT0qa/RU+8Lx8Jue53SnU3fiL+Ftr0?=
- =?us-ascii?Q?3jZtirTzYjj38sV8GVWxw5rRf+KracfRmK2DloYTyj0dYD5ZRSWF0XGsmlH3?=
- =?us-ascii?Q?Kghwus2fYsTUxlc4mTUjVDjg/Q3bvdgYN9veaOqVaVLLdmIYoonlX4jYtxYw?=
- =?us-ascii?Q?UOonp6e1pERcgUuGslL1oDVPzgdClPMCzEg06DlCfu+4VfxnjAI92crcwu96?=
- =?us-ascii?Q?iMvMaXxgqOmWCJSEyDuO3VVZHmS33Q3+4T4+KTRxs6KFC2zBwHqAl5k+kiBg?=
- =?us-ascii?Q?ZlMLfjKYMgtKh5bqujRGAGSVWPoGXVKxVuD7Wgx8/DgFCoMOi/sjCyWM+99G?=
- =?us-ascii?Q?EtnxgFqYlWycGAqZGxTinWMpofQZEh5kkhEvVr4AFl+/W8z5vEaIVfUD/M0E?=
- =?us-ascii?Q?mZypvzogicFBRBkJRTVm7nzk12v3Fo3rgdJPWgLCKpbwoIUimDP2l7JS3DjP?=
- =?us-ascii?Q?Ynm/pRuMbWQNCCpAUpaHj7chR2tgDivfYlqPk+gquVFq/lTOXhu3xgfklqDo?=
- =?us-ascii?Q?lQN9oyeFcYjYAaFHzpKPFN2QCuMMJH8RrBYsESo+gu6CHIXbKN1Rri+Fuw/X?=
- =?us-ascii?Q?Rp8SLqZ5s57g3xtQYPiGwXly52e63+V4+UD89hBq7uO98Ql/587Lt9X08Zuo?=
- =?us-ascii?Q?x35ObEeobHqtLyaP6juCaZM/gfJujLcC4Q+OoIIBwXPqxdngcVfg+Zi3rLvg?=
- =?us-ascii?Q?K2li/lQKLUBS2ayKNLLiOr+64BngEofAp6CnCCiCY3BgJPrEdu69wA7nP+p6?=
- =?us-ascii?Q?u0TSPoRyuyZ+LA/5feZxwerHP94N4vzfYreYfUKl4WDCybVDqfcupvhtI970?=
- =?us-ascii?Q?zNOnZHXa3MgRp4e+MN6pAQ4LNYoTi1uEgd4lHOIsmb6rELSfO2/FvovMmrg4?=
- =?us-ascii?Q?KzXN/dibHnGo2NIY5Cpmj3uBSA4kJY2G+bz7J39MswoPlIQylib9hYgRIHgg?=
- =?us-ascii?Q?r6Ihfcssov96iH7cwa5Q0zoPFDwuoJuDlif2u4yxVsAMlhfk0Kp3fX38BU/i?=
- =?us-ascii?Q?UNHbXnOpjgmf5Qj2LacqxWTH0q2g3Z/B63tlEXZCSzSJeQeAPHc4pR1GZk4P?=
- =?us-ascii?Q?omBmV96f21gyzOVXI4jyKYU8os7mOdLWBSqNm5EH?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WiL6YqpV"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515Ah8BT025274;
+	Wed, 5 Feb 2025 11:56:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	H97mfn5h6EgoPMU2fFHXHGRuHucEZel5RK4+JcfSGKA=; b=WiL6YqpVeIPIzXqN
+	TkmLeTHDba1mPx6qsqgICceKurWrFEb263VOReRLrK6AP3TFcOXiG8b1HgRShy9F
+	/6404nHlcanC75b+jXMKPau086cRHaxvYYaZ/z7/I2Kq5zP3fMfhlLkLNy+ZIsPN
+	VD0pc0g5DCZX9RoBhbye6ZQ3VWZBDftFiKwQkfQzKBOe+4yvfKYzINixE/Vn+zmn
+	1FLBbMWEHzQI9axKMV83Q4IK00FnYqvzp7BjMWa+3o87DI0ApedB25nK0XfE8JJt
+	SU3KXBiXf7Nu1BGMLvZIoa4aYkHqABbKruxDhkJDsw5c4z7hSG/6NbItDZrzNjcW
+	wyru6g==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m6fqr5mn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 11:56:09 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 515Bu7XR017852
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Feb 2025 11:56:07 GMT
+Received: from [10.219.0.139] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
+ 03:56:02 -0800
+Message-ID: <3c0746c2-ec51-4ce9-82e4-80191c4894bc@quicinc.com>
+Date: Wed, 5 Feb 2025 17:25:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e70dfca1-6e98-4ee0-bb0a-08dd45dc0a02
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2025 11:55:51.9399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VkoZ8/5kVS/eKjaoSB9hxTB3Nxix5clo2DK4FCPxLFZ6MDIH8GqlawfEsviQSJO8Jz8GCKpbxUfW/IGpNePC9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6176
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 1/2] arm64: dts: qcom: qcs6490-rb3gen: add and enable
+ BT node
+References: <20250130183434.2394058-2-quic_janathot@quicinc.com>
+ <4de200f8-5924-449d-a5a7-cf08306cb916@quicinc.com>
+Content-Language: en-US
+From: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Marcel Holtmann
+	<marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+CC: <quic_mohamull@quicinc.com>, <quic_hbandi@quicinc.com>,
+        <quic_anubhavg@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-bluetooth@vger.kernel.org>
+In-Reply-To: <4de200f8-5924-449d-a5a7-cf08306cb916@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: sIlujtZCgxI0vyA7y-nSviLlrz2Fzo04
+X-Proofpoint-ORIG-GUID: sIlujtZCgxI0vyA7y-nSviLlrz2Fzo04
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_05,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 suspectscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050096
 
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> [...]
-> Subject: [PATCH] EDAC/igen6: Constify struct res_config
->=20
-> 'struct res_config' are not modified in this driver.
->=20
-> Constifying these structures moves some data to a read-only section, so
-> increase overall security, especially when the structure holds some funct=
-ion
-> pointers.
->=20
-> On a x86_64, with allmodconfig, as an example:
-> Before:
-> =3D=3D=3D=3D=3D=3D
->    text	   data	    bss	    dec	    hex	filename
->   36777	   2479	   4304	  43560	   aa28	drivers/edac/igen6_edac.o
->=20
-> After:
-> =3D=3D=3D=3D=3D
->    text	   data	    bss	    dec	    hex	filename
->   37297	   1959	   4304	  43560	   aa28	drivers/edac/igen6_edac.o
->=20
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-LGTM, thanks!
+Hi All,
 
-    Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On 1/31/2025 4:33 PM, Janaki Ramaiah Thota wrote:
+> Add the PMU node for WCN6750 present on the qcs6490-rb3gen
+> board and assign its power outputs to the Bluetooth module.
+> 
+> In WCN6750 module sw_ctrl and wifi-enable pins are handled
+> in the wifi controller firmware. Therefore, it is not required
+> to have those pins' entries in the PMU node.
+> 
+> Signed-off-by: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 167 ++++++++++++++++++-
+>   1 file changed, 166 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/ 
+> boot/dts/qcom/qcs6490-rb3gen2.dts
+> index 7a36c90ad4ec..0a3243499dfb 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -1,6 +1,6 @@
+>   // SPDX-License-Identifier: BSD-3-Clause
+>   /*
+> - * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights 
+> reserved.
+> + * Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights 
+> reserved.
+>    */
+>    /dts-v1/;
+> @@ -34,6 +34,7 @@ / {
+>        aliases {
+>           serial0 = &uart5;
+> +        serial1 = &uart7;
+>       };
+>        chosen {
+> @@ -218,6 +219,63 @@ vph_pwr: vph-pwr-regulator {
+>           regulator-min-microvolt = <3700000>;
+>           regulator-max-microvolt = <3700000>;
+>       };
+> +
+> +    wcn6750-pmu {
+> +        compatible = "qcom,wcn6750-pmu";
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&bt_en>;
+> +        vddaon-supply = <&vreg_s7b_0p972>;
+> +        vddasd-supply = <&vreg_l11c_2p8>;
+> +        vddpmu-supply = <&vreg_s7b_0p972>;
+> +        vddrfa0p8-supply = <&vreg_s7b_0p972>;
+> +        vddrfa1p2-supply = <&vreg_s8b_1p272>;
+> +        vddrfa1p7-supply = <&vreg_s1b_1p872>;
+> +        vddrfa2p2-supply = <&vreg_s1c_2p19>;
+> +
+> +        bt-enable-gpios = <&tlmm 85 GPIO_ACTIVE_HIGH>;
+> +
+> +        regulators {
+> +            vreg_pmu_rfa_cmn: ldo0 {
+> +                regulator-name = "vreg_pmu_rfa_cmn";
+> +            };
+> +
+> +            vreg_pmu_aon_0p59: ldo1 {
+> +                regulator-name = "vreg_pmu_aon_0p59";
+> +            };
+> +
+> +            vreg_pmu_wlcx_0p8: ldo2 {
+> +                regulator-name = "vreg_pmu_wlcx_0p8";
+> +            };
+> +
+> +            vreg_pmu_wlmx_0p85: ldo3 {
+> +                regulator-name = "vreg_pmu_wlmx_0p85";
+> +            };
+> +
+> +            vreg_pmu_btcmx_0p85: ldo4 {
+> +                regulator-name = "vreg_pmu_btcmx_0p85";
+> +            };
+> +
+> +            vreg_pmu_rfa_0p8: ldo5 {
+> +                regulator-name = "vreg_pmu_rfa_0p8";
+> +            };
+> +
+> +            vreg_pmu_rfa_1p2: ldo6 {
+> +                regulator-name = "vreg_pmu_rfa_1p2";
+> +            };
+> +
+> +            vreg_pmu_rfa_1p7: ldo7 {
+> +                regulator-name = "vreg_pmu_rfa_1p7";
+> +            };
+> +
+> +            vreg_pmu_pcie_0p9: ldo8 {
+> +                regulator-name = "vreg_pmu_pcie_0p9";
+> +            };
+> +
+> +            vreg_pmu_pcie_1p8: ldo9 {
+> +                regulator-name = "vreg_pmu_pcie_1p8";
+> +            };
+> +        };
+> +    };
+>   };
+>    &apps_rsc {
+> @@ -799,6 +857,39 @@ &pon_resin {
+>       status = "okay";
+>   };
+>   +&qup_uart7_cts {
+> +    /*
+> +     * Configure a bias-bus-hold on CTS to lower power
+> +     * usage when Bluetooth is turned off. Bus hold will
+> +     * maintain a low power state regardless of whether
+> +     * the Bluetooth module drives the pin in either
+> +     * direction or leaves the pin fully unpowered.
+> +     */
+> +    bias-bus-hold;
+> +};
+> +
+> +&qup_uart7_rts {
+> +    /* We'll drive RTS, so no pull */
+> +    drive-strength = <2>;
+> +    bias-disable;
+> +};
+> +
+> +&qup_uart7_rx {
+> +    /*
+> +     * Configure a pull-up on RX. This is needed to avoid
+> +     * garbage data when the TX pin of the Bluetooth module is
+> +     * in tri-state (module powered off or not driving the
+> +     * signal yet).
+> +     */
+> +    bias-pull-up;
+> +};
+> +
+> +&qup_uart7_tx {
+> +    /* We'll drive TX, so no pull */
+> +    drive-strength = <2>;
+> +    bias-disable;
+> +};
+> +
+>   &qupv3_id_0 {
+>       status = "okay";
+>   };
+> @@ -842,12 +933,86 @@ &sdhc_2 {
+>   &tlmm {
+>       gpio-reserved-ranges = <32 2>, /* ADSP */
+>                      <48 4>; /* NFC */
+> +
+> +    bt_en: bt-en-state {
+> +        pins = "gpio85";
+> +        function = "gpio";
+> +        output-low;
+> +        bias-disable;
+> +    };
+> +
+> +    qup_uart7_sleep_cts: qup-uart7-sleep-cts-state {
+> +        pins = "gpio28";
+> +        function = "gpio";
+> +        /*
+> +         * Configure a bias-bus-hold on CTS to lower power
+> +         * usage when Bluetooth is turned off. Bus hold will
+> +         * maintain a low power state regardless of whether
+> +         * the Bluetooth module drives the pin in either
+> +         * direction or leaves the pin fully unpowered.
+> +         */
+> +        bias-bus-hold;
+> +    };
+> +
+> +    qup_uart7_sleep_rts: qup-uart7-sleep-rts-state {
+> +        pins = "gpio29";
+> +        function = "gpio";
+> +        /*
+> +         * Configure pull-down on RTS. As RTS is active low
+> +         * signal, pull it low to indicate the BT SoC that it
+> +         * can wakeup the system anytime from suspend state by
+> +         * pulling RX low (by sending wakeup bytes).
+> +         */
+> +        bias-pull-down;
+> +    };
+> +
+> +    qup_uart7_sleep_rx: qup-uart7-sleep-rx-state {
+> +        pins = "gpio31";
+> +        function = "gpio";
+> +        /*
+> +         * Configure a pull-up on RX. This is needed to avoid
+> +         * garbage data when the TX pin of the Bluetooth module
+> +         * is floating which may cause spurious wakeups.
+> +         */
+> +        bias-pull-up;
+> +    };
+> +
+> +    qup_uart7_sleep_tx: qup-uart7-sleep-tx-state {
+> +        pins = "gpio30";
+> +        function = "gpio";
+> +        /*
+> +         * Configure pull-up on TX when it isn't actively driven
+> +         * to prevent BT SoC from receiving garbage during sleep.
+> +         */
+> +        bias-pull-up;
+> +    };
+>   };
+>    &uart5 {
+>       status = "okay";
+>   };
+>   +&uart7 {
+> +    /delete-property/interrupts;
+> +    interrupts-extended = <&intc GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>,
+> +                <&tlmm 31 IRQ_TYPE_EDGE_FALLING>;
+> +    pinctrl-1 =  <&qup_uart7_sleep_cts>, <&qup_uart7_sleep_rts>,
+> +        <&qup_uart7_sleep_tx>, <&qup_uart7_sleep_rx>;
+> +    pinctrl-names = "default", "sleep";
+> +    status = "okay";
+> +
+> +    bluetooth: bluetooth {
+> +        compatible = "qcom,wcn6750-bt";
+> +        vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
+> +        vddaon-supply = <&vreg_pmu_aon_0p59>;
+> +        vddbtcmx-supply = <&vreg_pmu_btcmx_0p85>;
+> +        vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
+> +        vddrfa1p7-supply = <&vreg_pmu_rfa_1p7>;
+> +        vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
+> +        max-speed = <3200000>;
+> +    };
+> +};
+> +
+>   &usb_1 {
+>       status = "okay";
+>   };
+
+Could you please help to review this change? Thanks!
+
+Regards,
+Janakiram
