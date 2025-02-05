@@ -1,40 +1,40 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53BC2063D8
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB5E22ACDF
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751135; cv=none; b=B/5Km54MWvZhNmfcCkMgcy431CqA2mzcBcPMNBCll+Uu3o3iHe78yYbOyaf4xuAPzC62WCqlqRfP/6Q0JS+xRdVmPr1umq2ussUER9YkbsuGoKq6RlogwY1B9FxtbtQIh64af6kQOIaQeeaG+LH/aoFpT+mJMY2eNwN+kVi9VkA=
+	t=1738751136; cv=none; b=ia+KVBd6iQX5lYIydoxnEWgJnrCYlOEjj3EKREUUGTTjqfBLxGjmmL0oJBwaopBfstigroF3fqjUpKPTZJonh72nezy70hXJkg2k310oc6iraI9C885+ugYMzR+mxUGzZbcZHrdAiYn3dOsh3hBSo5WHjQ3d1O9r9SZsP2skWrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751135; c=relaxed/simple;
-	bh=2W3RwCqdWrSbI3AnIU7O9V1/QqhgCRodoKt377zeFEM=;
+	s=arc-20240116; t=1738751136; c=relaxed/simple;
+	bh=iU1mfq4vL+87Qe1N+xJ3oAYSLpoDgo2jjmOnpa8z3AY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=RgpffQmO6tN/Wg2Z06qnRWY/wTuMZnqMc3FaZDASOPi/KcK4Lne+ppaOjjcr8ffk+FmKZxbyS8J7Rbp7X52TGoJZcuYaX9PDPWPSwJcybMRw5aqPaOyOXKLyBE5K4mRKYRQV3YFunCXcMpKvRrtRfy1kVvr4WgIv3DdTBFnrB0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nUpUfYO+; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=Q5/IyD00EE/tarordfn2r5LvY8Xlq1L5I900lVJ2ZqDDWk+qhIUcC0HVK7D6PjOL67jfHv7dNU9ujKnmvJ7lqvMWC3zyHkGMzsC32ZzrAWm7BemPIHJAwUdqHz0DFixJ4IJTjYoDdnQH2GrW5J8zZ8wZ+33q2cqajce9VFaxmBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=V6hg/fMP; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nUpUfYO+"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V6hg/fMP"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=Hz7UCE6SpGqMPyTo25jsb7HnrcJHQ4a5YG8n6VtwtD0=; b=nUpUfYO+2FDb4M3TjV8sLJdP4C
-	5c0QznLIJ9Gh3vPhJV8pLp6ZhIlXK7RClAwo5YqCs8oiTJ1c1LpWkLAgjEnlOkzkyjD5efi39503h
-	6Sk0Y91oHLycdwRtaHxdJy8eHuntLQME/f6ByGeMlUHz2KfuHdNwvYydTmHLxOmfvy3nqd9hcXTLU
-	BFjFeaI6VyK8T6pqFqBEbT43cjZuFfx7lJOyloeNOnzayH84jO1pRMyED9quROIcqYjAfUWb5r/WW
-	eBF7+4NJ2I1qlK/C0qhMkqd4H050VUfpEcrl2SIv7hwv89jWzYrVgRFcNvnKAE1rO/nye7WH7UK83
-	Hh+EOTpQ==;
+	bh=Jt1bq5imd9I+0bQfTxJMRZoYW9GAQBZvZ0BHkv1KS+o=; b=V6hg/fMPGZl8AToiVn8RDyOEHv
+	1XojFLZynbTq5BLYoy99bqJZb0xZYeDtpSFgah/A+s4psx8Cu08YUuZJ5VbJ31iBs/bYJnwEaTiCT
+	emfVEpODspmNyNH3Ao798Yj+YIKAx0t6YhZxKkRRgtdGwTzE6By5HEx9JZQK2GAVjEVju917pUW8G
+	TuoMMdnxDUg8ATAZ6gpVdYap8R+05NQsg16hX/CvKCUmnmJHr8X40kEXbMI0hbJ7Lj1/Iqbd6X1FG
+	KkgGr3DoyESajRaF/l65omcAgxTiBuvdKV18HnVcFDyBGlvpMLZrrUpsLA5CI8DIrGDsNKBOE6h7x
+	Yrq+Xzww==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfcb2-0000000Gbm6-132m;
-	Wed, 05 Feb 2025 10:25:28 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfcb4-00000004GQ7-24ak;
+	Wed, 05 Feb 2025 10:25:30 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id B928930078C; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
-Message-ID: <20250205102448.563246589@infradead.org>
+	id F08D9308136; Wed,  5 Feb 2025 11:25:27 +0100 (CET)
+Message-ID: <20250205102450.240970193@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 05 Feb 2025 11:21:23 +0100
+Date: Wed, 05 Feb 2025 11:21:38 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  ravi.bangoria@amd.com,
@@ -50,7 +50,7 @@ Cc: linux-kernel@vger.kernel.org,
  irogers@google.com,
  adrian.hunter@intel.com,
  kan.liang@linux.intel.com
-Subject: [PATCH v2 03/24] perf: Simplify child event tear-down
+Subject: [PATCH v2 18/24] perf: Robustify perf_event_free_bpf_prog()
 References: <20250205102120.531585416@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,32 +60,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Currently perf_event_release_kernel() will iterate the child events and attempt
-tear-down. However, it removes them from the child_list using list_move(),
-notably skipping the state management done by perf_child_detach().
-
-Crucially, it fails to clear PERF_ATTACH_CHILD, which opens the door for a
-concurrent perf_remove_from_context() to race.
-
-This way child_list management stays fully serialized using child_mutex.
+Ensure perf_event_free_bpf_prog() is safe to call a second time;
+notably without making any references to event->pmu when there is no
+prog left.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/events/core.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5526,8 +5526,8 @@ int perf_event_release_kernel(struct per
- 		tmp = list_first_entry_or_null(&event->child_list,
- 					       struct perf_event, child_list);
- 		if (tmp == child) {
--			perf_remove_from_context(child, DETACH_GROUP);
--			list_move(&child->child_list, &free_list);
-+			perf_remove_from_context(child, DETACH_GROUP | DETACH_CHILD);
-+			list_add(&child->child_list, &free_list);
- 			/*
- 			 * This matches the refcount bump in inherit_event();
- 			 * this can't be the last reference.
+@@ -10782,6 +10781,9 @@ int perf_event_set_bpf_prog(struct perf_
+ 
+ void perf_event_free_bpf_prog(struct perf_event *event)
+ {
++	if (!event->prog)
++		return;
++
+ 	if (!perf_event_is_tracing(event)) {
+ 		perf_event_free_bpf_handler(event);
+ 		return;
 
 
