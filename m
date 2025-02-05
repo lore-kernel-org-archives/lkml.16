@@ -1,122 +1,179 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89957200A3;
-	Wed,  5 Feb 2025 02:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481C3EAD0;
+	Wed,  5 Feb 2025 02:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738722709; cv=none; b=NRdZekCctJvRbcGph+QQx4Jx/cZw+B+THJiSdVfrRWJTp2crW+YBmrGCri99Awm7OHkE2m0hjt6Ef8L/27cinvi0OEdJoEico46TbK7n39svy7MCUTyrUeK4YaNaDroHcZkSyhDBJQdECeCDSKks/TrXqDR2RJtB8q4G0syM4wk=
+	t=1738722921; cv=none; b=PYCOdoprKMLAlCJq2rsrTXVt2QvGQguLwiL7pcxYurRl9D4FdadoCORNLjI1Ws1ZCT2vRKy1tlisWN14nMw07JRC93GR77E7ZqQieB3Ek3Cibx2HCCnue1Xsxximl1S8dYckKICYkyupw0PbaQO7EvqcvXpPA7KHYuae0Li1RFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738722709; c=relaxed/simple;
-	bh=6FhjmrY29YgOj5ORMTKfXimWuMq2SCPv6geZKtdHuB4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Up2lfxpIWtYfHd/XIgITPL4Z4seLbj/vp/NW/VDYyBnsSvoA+wFNxeLb7UuFfYafL7/RQj0MoZeCvtegO7w1W32Jfg3QPGph0etUAnbCHdGc8QtuCGC5F6Z5u2+iEng3h6k4HpCs+aAaPCEY6lU8BBzEzNBGOXvTj7U/5sd/aNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PzHApj+L; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1738722921; c=relaxed/simple;
+	bh=4ub5YpPW13HFxNVKAPveKTSbnIWC6uR8EuupaMpuOE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ghyhHkW8NwAEXwSA8u5QQBVJAYUXlEDZXOdq0FwFTXRjfFT9Jua44QZNoUIF1J+4IJjO4zSAQkXhQBh/PZLU9j88ckDeUcPZb77D0Xea2eXOCmWxDkl6OQVZEw8mVsSY/vShkVBFyjhtv5uq2ws67+O29pTEHWbOnoBFUfiCrUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TO4kQNyq; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzHApj+L"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6d8f75b31bfso51399826d6.3;
-        Tue, 04 Feb 2025 18:31:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TO4kQNyq"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so8318531a91.2;
+        Tue, 04 Feb 2025 18:35:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738722706; x=1739327506; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q0nndVOelB0GZZn73pGujC/UiwJRPbAJWARFJMrXRho=;
-        b=PzHApj+Likha2yaGhOS5ZJMCTCLZKPG68I9opq2Sc4YU2Jc7ejA+RUnoGmsNhDkx3m
-         7e4qpEyxQCt5BNeu/Kc2WFW5qQUtEdx1ZcFhPg0hkRniaKyYTYEyvxQrhHPvzCZT1lSW
-         rqj80UUbq0MmGidPVDWxIrZKmCnSQrOB8xWYfTJZ12uVwDoe/yLXj/b5nLsqPoCCLHK0
-         mXUzTgZ+5b34omNpzqNyx67n9+YjtAcZLQqw2LvgVFTilA6jt42kPiaApGZUUvd/eiAc
-         uR+XBOZrLHoNjTW+CS9lUVNF+30/+Li6r5xRCML0CiVJo3RgxbuSUybAdDSnpJFg8fLd
-         1VrQ==
+        d=gmail.com; s=20230601; t=1738722918; x=1739327718; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=bIxnjul27PkcVxSra4MQSzivSSjn2yM2jo9sG3ROLOo=;
+        b=TO4kQNyqUQ/hTnfR0QC4Jb6CRCv3pklXWHhHvWkGqH21WOyyJJVFlX/UuksATIGOAL
+         E9NTcTPjbM9J6xvMLCaert0CDI7/Bwf3DcyAOqDMV4Luzn6Btx3HL41JVbNoXEueK6ha
+         7U+yxWI9d8BU7i6KAbj86ux0VInYpysRIzMusIEb6QdNSSOodCMiUzq0ZBwvt2EZxbFd
+         GcPlIZlpr+5IcYbjp0b3FMtIVfPLjDEManwEmKIgjRs+o0puk6MNzoX8KtoYXNV3qfov
+         1t21cAH5hPk+/1K8Zu9CdfekiN2WoQpkmFHjCvAbr5zAA+QFZaa1gqEdC0vJxb1EW+8S
+         ifNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738722706; x=1739327506;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q0nndVOelB0GZZn73pGujC/UiwJRPbAJWARFJMrXRho=;
-        b=ikQgs+84R0FJF5kk8SapupKsvh8YhRwEd2uXYvJiC5yf5nqsGfyY0iwsp3uqpP2Jl4
-         grXEb2gAvD16aFFm/W55d5VVsFrHtOMnDO1zjR2W0xxRiF78Qlr/iYEWQ96v6b/fTyMF
-         hAQ11iYpUbQxl0A4Y45x1Q808mKMxFkVvuAb2gcKohk3AQNjMHt4AxeqUGUV03NhFd82
-         qncyOgO51a2FIcJtUxFQP/uZOhOTcaqYvJezKa/Wrv8isy5dL+l6SWa4cnZOLphvBYMC
-         cVXH/DfYMFuZoq2ik5+XMotdGLwyFG0js9+LslyXRMHolbCBckJajNAsjdL7E/fl2sjO
-         DT5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVhitf9AooKoBOTCue9lBK8dYft9Lg186kkqt1/ZD1H9bR8GQkh9kwOkE42MMDmYRBGKjbPu+3t@vger.kernel.org, AJvYcCX5IlDTmRgDBdomtjs/FonY2T3q9I/FliZ0xsYf03/nEdqPgH+oEFOANSVILLogNL7lhVCBo5N7hkdupJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPOM1YCbR13qN/Q0gc5IX85PYxJbg+g+WDDdQ37QKjDTWt/vpo
-	bVwOWND5Clmuw484Vz+D0uTbNbA47fagm13IFkqGm6mud5ksPLOX
-X-Gm-Gg: ASbGncsGNLHhyEQjx65MiV22UkWwKNwLAAk3n3CcygiQn0QCPrt7O33cQctaWnjrNVn
-	+RCIkM9VJGAe8R0uCWhoaPHNNLO0c9ERzi6ukRtIRu6VyAqcmiBMVC4xBUF3KGQj63FagK2kMhq
-	KmtgAPlrvJOO6PAP+ERH09brI2AEIg3fxb4QKYUCDU4sTGYpoMG3pzdD4SpEF0lK01gOclmhOQi
-	dwewQbJApGjvOh5iOiAfq4cR2U8zy5xrQZbFXAaUDrb/RumMhBK0ffE5h1cYoXGeib/xyCrItnr
-	8FeRb7bIRTSB+wkVDP6VvKo20VJGqfd57+Mq5w==
-X-Google-Smtp-Source: AGHT+IFS+kn2ZGB2pFJiLdc5JmZU8Ll8iIHRaRz39Sw1icfJkjZHfXf8rJhLmct3iVykW6xS2xt6kA==
-X-Received: by 2002:ad4:5f45:0:b0:6e2:4911:cd8a with SMTP id 6a1803df08f44-6e42fbef337mr17367796d6.26.1738722706299;
-        Tue, 04 Feb 2025 18:31:46 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25492254esm68579306d6.90.2025.02.04.18.31.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 18:31:46 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: christophe.jaillet@wanadoo.fr
-Cc: gmpy.liaowx@gmail.com,
-	jiashengjiangcool@gmail.com,
-	jirislaby@kernel.org,
-	kees@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	stable@vger.kernel.org,
-	vigneshr@ti.com
-Subject: [PATCH v3 2/2] mtd: Add check for devm_kcalloc()
-Date: Wed,  5 Feb 2025 02:31:41 +0000
-Message-Id: <20250205023141.26195-2-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250205023141.26195-1-jiashengjiangcool@gmail.com>
-References: <f9a35a4f-b774-4480-910a-cdcf926df41b@wanadoo.fr>
- <20250205023141.26195-1-jiashengjiangcool@gmail.com>
+        d=1e100.net; s=20230601; t=1738722918; x=1739327718;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bIxnjul27PkcVxSra4MQSzivSSjn2yM2jo9sG3ROLOo=;
+        b=h6zkK7I1H0W6msbif4Nf8/RycIwCzjkjlqcyKkcfVGZXfcs4UuvSrP5NoMoaegLBia
+         ZocZpr46mDuLy1eF4ZpePQXCRH6TsFABBngwW5co+OrmDJ04SdSCMDQxqQQpCPbMIWoP
+         B6QNnXh9Kb4rZL9lybZdtRZswDnfKOeQw0ozoBWgRvgeTcrAR4nz1UDeY41+k+KHVvIT
+         VV8BC/Cuc5vBxVWKjFrVgisu0nVFNJZ/d///tIRpWxotnQhQS7WjKjACx4bceV3kJWXH
+         PQHD2iKSHSNGQlHNIVUWYYArI+Rpk5F/bxONTSMRRc2juhlzBHledWy+tx0OZ5AM4yX0
+         O2/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU4NR4NbNgGlJOAiPWYA1TZGrJGcoYzVlXAn3/d9zGKpKnlW6qJTNijT7iU5vIsP8+jhBlyNvcRDaD/ig8bTVs=@vger.kernel.org, AJvYcCXSrO/CWVxzqtqOpKghjjsOjwBS49wSm/oYsUTT3DGyo4ggK+IKa/U/OILtcrT1aYGIia5f41k0L6qjWKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX4pbtbFqO43c0FTd3C6OUinARb2tMMWGVdispMfmFGgyOWBJ1
+	gsG6hfbs2plN1AUt54zTmUq2Vo9upBzB3Ko6ZxAzsuv0jyiCg4Qi
+X-Gm-Gg: ASbGncu0Vggb+1z42Xlc0ltosyXaEz7wz473hZ62T6uedcmBHQfzAeUboreKJ/aSNRQ
+	fztVp49HYdQ2mY5XXV1QjoukqXTCaNUpKPDrHcsWDgL+EdUAjXw7xE6elF11Xtu1piWBalAYOml
+	cmIdxH4kQt+E9NUcrA0gcO7mJVv6lB5x4f4W6nAloEWva28uTn52RvqVjFymuxT105+xEwaoVbn
+	N790l9VJyCC3Ms+0DwK6POcCj2+mBpqcipX1WjPrbYwBUoHqX5QH0DTaxB64PF9TkB5ui9QdvLO
+	iiBgBLs6//4VA62JczvxdQ1c5WU3oEZJ/MoDe1gUl/Rju+jk8yJjpkSvZMT2qKsb
+X-Google-Smtp-Source: AGHT+IGHp3oR5ZRb99FKQZ0eO3yLw3bLANDFdlJxRVnUshNHiO3tkoOg0NUIqa8Shy5QM2HSnJn5yQ==
+X-Received: by 2002:a05:6a21:1394:b0:1e1:afa9:d38b with SMTP id adf61e73a8af0-1ede8810c19mr1792136637.8.1738722918392;
+        Tue, 04 Feb 2025 18:35:18 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe64292b2sm11563456b3a.62.2025.02.04.18.35.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 18:35:17 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <d184241d-beca-4246-ba5a-f7a9ffe2f140@roeck-us.net>
+Date: Tue, 4 Feb 2025 18:35:15 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] watchdog: only print critical log when the watchdog fails
+ to be stopped
+To: "liuchao (CR)" <liuchao173@huawei.com>
+Cc: caihe <caihe@huawei.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+ lixiaokeng <lixiaokeng@huawei.com>,
+ "wim@linux-watchdog.org" <wim@linux-watchdog.org>
+References: <13073a1dfb7946af98565921c609bd6f@huawei.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <13073a1dfb7946af98565921c609bd6f@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add a check for devm_kcalloc() to ensure successful allocation.
+On 2/4/25 18:02, liuchao (CR) wrote:
+> On 1/27/2025 22:30, Guenter Roeck wrote:
+>> On 1/27/25 01:35, liuchao (CR) wrote:
+>>> On 1/26/25 21:10, Guenter Roeck wrote:
+>>>> On 1/26/25 00:38, Liu Chao wrote:
+>>>>> Every time the user echoes 0 > /dev/watchdog0, meaningless critical
+>>>>> log is printed.
+>>>>>
+>>>>
+>>>> It is not meaningless, and it will still be displayed after this
+>>>> change, making the change pointless.
+>>>
+>>> The change is not pointless. For example, the softdog driver does not
+>>> invoke watchdog_stop or print logs in the watchdog_release.
+>>>
+>>
+>> It seems to me that is a problem in the softdog driver.
+>>
+>> The change is actually worse than I initially thought.
+>> The message is _supposed_ to be displayed if watchdog_stop() is not called while
+>> the watchdog is running (i.e., if err == -EBUSY).
+>> Otherwise it would not be displayed for real hardware watchdogs which are not
+>> stopped because they were running and watchdog_stop() is not called because
+>> WDIOF_MAGICCLOSE is set in the driver and the magic release byte was not
+>> written.
+>>
+>> Specifically, the softdog driver has WDIOF_MAGICCLOSE set. It is not supposed
+>> to be unloadable (or unloaded) while the watchdog is running.
+> 
+> When echo to /dev/watchdog0, The watchdog_open, watchdog_write, and
+> watchdog_release functions are invoked in sequence. Do you mean the softdog
+> driver should not call watchdog_release?
+> 
+> After the user opens /dev/watchdog0, the user feeds the watchdog through ioctl
+> WDIOC_KEEPALIVE and never closes. Is this the correct usage?
+> 
 
-Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
-Cc: <stable@vger.kernel.org> # v5.10+
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
-Changelog:
+I tried softdog. It works as advertised. Yes, "echo 0 > watchdog0" triggers the message.
+"sudo modprobe -r softdog" then fails with
 
-v2 -> v3:
+	modprobe: FATAL: Module softdog is in use.
 
-1. No change.
+and, as expected, one minute later (or whatever the timeout is set to) the system reboots.
 
-v1 -> v2:
+There is nothing wrong with the message. The softdog _does_ refuse to be unloaded
+while running, and it _does_ reboot the system after the timeout expired. This is all
+perfectly as expected. The log is not meaningless. Instead, it tells the user that
+the system will reboot after the watchdog expired. Which it does.
 
-1. No change.
----
- drivers/mtd/mtdpstore.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-index 2d004d41cf75..9cf3872e37ae 100644
---- a/drivers/mtd/mtdpstore.c
-+++ b/drivers/mtd/mtdpstore.c
-@@ -423,6 +423,9 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
- 	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
- 	cxt->badmap = devm_kcalloc(&mtd->dev, longcnt, sizeof(long), GFP_KERNEL);
- 
-+	if (!cxt->rmmap || !cxt->usedmap || !cxt->badmap)
-+		return;
-+
- 	/* just support dmesg right now */
- 	cxt->dev.flags = PSTORE_FLAGS_DMESG;
- 	cxt->dev.zone.read = mtdpstore_read;
--- 
-2.25.1
+Guenter
 
