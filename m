@@ -1,245 +1,105 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE04014F9E7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F8D1519AA;
+	Wed,  5 Feb 2025 14:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738764729; cv=none; b=KakT1O8lG7XC9ScprRLDCoJL4MaY8XXQ3xrku/suSVfVmEBUJ1XZ/FrD7EUKf+VJQLyxOh6zHE+i0XsIYPbd6lP0ztTAeBhC0MqC3UqBCqhaBC597wDkbo5szzxyOGvLeYV6/PsthULQuW6DNJ+TmXC7DvMrjkcNNBbk/XJEBhI=
+	t=1738764808; cv=none; b=Yc2I+RxPiGJf6x5Df4Y3pCfzmzuDJoue7mOwlIO9HdupTH6WV18GAq9mPYGG2eFC5Ql5Oo4eS+LqBE4wbpquYlPSFG2XoYroCHhmFGUnnkWA6uqa7qKZYQkWWPOtvg8L39jpDlW6x9OftxV3PUSeEd+MDL98P3cqUPIgmXVmB9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738764729; c=relaxed/simple;
-	bh=krF338LwfsEwcZH0RzURpzj2hh9NFexKRATwd1YZc8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e56uTf9q8iHT2+kQot0G53nlM/N8kGyUxB+YG+9XEzzLE33cDYtGqIyjtt6aLtV7yLaDwLz3ouOS0iskX1ed7W2WGEUaowUNCG69U+iWMO/jNHJcZLk1lkaL/AFp1fnjda5vsJPt7LrVW9+viOcNa9YTj+liY9zEqgmaRYbe9pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KfnLf82u; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738764808; c=relaxed/simple;
+	bh=y9bBxD6OlYG3QN3t6eEdPcfSBfOJrPnlO3VouFKzOcs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gkFNmsMAEMO1M83tJiu2QPaIaV1CdfvyUwzwTRgRD8ckheSxGXdd6yIGotnfdBNx0f91KwjBafE4kI5QmizYo7mu/fJg5BcB7HaMqndrBnTdGWzXSIDpvmJ1kLEZ7fVU1+Q0HC7P4talsBPY6RLYCrSbI12cV0pc6U6Zrfm6lq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRaHtTnm; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KfnLf82u"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=TYghS0qIqno1jfI3WER84xrcZmBX0ltrUu5f5oD5k8k=; b=KfnLf82uKaM3nYLYRSJqCHOee9
-	wEQIfK4j/qa68fIx9lRdA8kHypbvMYlPpxQlMzDWbMgMK0kqNaL6hYzTc3w8JG/4/wHsJiVro06k0
-	rydWzbKfbza1fJbJsrsqCDmTUMSTbqUNUzUB3fE8BbIcUpAZNc9taX8xpl+6HxP+aD5ofeMZ9KvXJ
-	upSG3ZzWdtd7j7GWS21BD9O7WnQbmRM0QaUBFcFockb+D5isf6X8znHeE/bnUkrKIClJTu7jJhJ3w
-	K577C4jdIUKur2HUNMledLJJAUdwaF5kq735zMYdgG7uizMKxCTpaYnZ6oVUhcTmwqzMf+lMEr10B
-	71cFLj+A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfg8I-0000000Gevd-1a9Q;
-	Wed, 05 Feb 2025 14:12:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A48BC3002F0; Wed,  5 Feb 2025 13:52:50 +0100 (CET)
-Date: Wed, 5 Feb 2025 13:52:50 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 00/15] futex: Add support task local hash maps.
-Message-ID: <20250205125250.GD7145@noisy.programming.kicks-ass.net>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250204151405.GW7145@noisy.programming.kicks-ass.net>
- <20250205122026.l6AQ2lf7@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRaHtTnm"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9cf019884so338891a91.0;
+        Wed, 05 Feb 2025 06:13:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738764806; x=1739369606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y9bBxD6OlYG3QN3t6eEdPcfSBfOJrPnlO3VouFKzOcs=;
+        b=YRaHtTnmrhfIF8HGMEGwVSCGY8hS8mIemYSEdFtd2360MdpXl3Z4dz/+ZhS3VD4F0u
+         2LsuS6JdMLWiA5THE61/yhYjvW/ZV1eeFjzM28wOGHB0M5ANWD1kCs0MVtQJY1IjOpS6
+         pSXI0/j9HHT4CdJa982JSxFJx2r/HnpU3TLcLMmw0ZArYE6ohhCLgE9gYEh3x2ydaL4y
+         sLs2nQiS33AarTS2eutot2O676TFnS2Nbo+k2XxdB6BJqtAwYUJ6trwr60XxeY8eSfyB
+         +3x5+EmEuGw/uqVKxTWHjaRhUdYFifVeWofNJhJOTzUw6o20l8pkSKt1gX2eIHFlF1bO
+         b1RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738764806; x=1739369606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y9bBxD6OlYG3QN3t6eEdPcfSBfOJrPnlO3VouFKzOcs=;
+        b=OGCpejnQQrRFqeC+dP1qw7lOpGg8dF0APdnbkY8q/xU44IbQMLDwGpYKd9ZwRJmSM3
+         W7c5RQ5W9KgXaZFrdYvUhU6k0wWoo43UTiFfpcSTkXy/Id3a+tcLG+Uju8iQYcECEhlK
+         XNsd50/MyyNlICLfBcA7TV3Z1NeRO/XqoiC0ZnZmCj9xVXGWbqrec80JkJ5vzKZmaI8J
+         ks/e0526Hz8laxGTWArDvjDjEm4Qf1DKEm4XiEjCKDUmn9AMmqeY8a+lyDBuTzy5fB1A
+         g3Z3b9/0lN1TLAG+ujlltaCiv9Bkhbo3Ynz7/ZfYY7A7Xfb3NrpatfLumWEj5rCZq7YZ
+         x8oA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0DhFvwdzBHYH6CmAKju2KdnuzEtg5ozPPDRoG9flSlVj142ZcRp+z0NQHoABKuzBZv97QQTd6eeU=@vger.kernel.org, AJvYcCWgV79E69VTo9F61wwUw6Fvwafjc3A9o6sC9QVzZCvbZ5UYYR/ilZ1UlWWPJsPd0J7gHS06Q8LuO3U+9dxt@vger.kernel.org, AJvYcCX+4CiR15hmal1/0fza4v7+YbgDkwE3HZGSdfH5JEqNpKHqZBqSD0ZyTxRwo2mQuzZPSqv9kZZ+iGAKrgQL7nY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEG9hYBxaCTm2ieqmsnfeIgFR7c91YagvLIoOK9hZQUtrTQgDL
+	oKqB8ffCo7q+sxwrzBdZziupi8/lbtIRkc1xrm90DMHMQ30uandi9MDkoxtXainR4FRoxitTbYy
+	eWI768el1qFDbKu4fvYXYZe54JIs=
+X-Gm-Gg: ASbGncv4/Bu7EV/DRvwpIIYJSev8IwoXfW2YMS5YM6ot+YZy0XXHQ2JCUZdqnmzbbt3
+	6XaKqR8a8EJYfNMA/mH7taEU1QgZQlSx1r3efeHncp27f0OjCLu4ks+RnBNcO6g+0dR4NQLMp
+X-Google-Smtp-Source: AGHT+IF4hKXRVLLC6unmAjENx+zZEHsy43XxaM92zW4ScuMwkiqk1/7Tpba6AbMwT3b4dDa6OhFd6Tj7HQNu4hPCPUs=
+X-Received: by 2002:a17:90b:4f4b:b0:2ee:f59a:94d3 with SMTP id
+ 98e67ed59e1d1-2f9e06b216cmr1912666a91.0.1738764805841; Wed, 05 Feb 2025
+ 06:13:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250205122026.l6AQ2lf7@linutronix.de>
+References: <20250204190400.2550-1-dakr@kernel.org> <20250204190400.2550-2-dakr@kernel.org>
+ <20250205155646.00003c2f@nvidia.com>
+In-Reply-To: <20250205155646.00003c2f@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 5 Feb 2025 15:13:12 +0100
+X-Gm-Features: AWEUYZkGVXHP4hrFG-5_ihud3NGINPm5TNS2CNAPtoXmocfUh6RQ24GiptUl5w0
+Message-ID: <CANiq72mxKhCudmRaS=gwnC=gjkCLMhZcC2ZpfzKKaGX1Hivz9g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpu: nova-core: add initial documentation
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	ajanulgu@redhat.com, lyude@redhat.com, pstanner@redhat.com, cjia@nvidia.com, 
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 01:20:26PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-02-04 16:14:05 [+0100], Peter Zijlstra wrote:
-> 
-> This does not compile. Let me fix this up, a few comments…
+On Wed, Feb 5, 2025 at 2:57=E2=80=AFPM Zhi Wang <zhiw@nvidia.com> wrote:
+>
+> It would be also helpful to make the process explicit. E.g. sharing your
+> command lines used to checking the patches. So folks can align with the
+> expected outcome, e.g. command line parameters.
 
-Moo, clangd didn't complain :/ But yeah, I didn't actually compile this,
-only had neovim running clangd.
+These two guidelines (and generally the few others above) are intended
+to apply to all Rust code in the kernel (i.e. not just `rust/`) --
+their command lines are mentioned in `Documentation/rust/`. We could
+add a note to make that clearer if that helps. So I would suggest
+avoiding repetition here by referencing those.
 
-> > diff --git a/io_uring/futex.c b/io_uring/futex.c
-> > index 3159a2b7eeca..18cd5ccde36d 100644
-> > --- a/io_uring/futex.c
-> > +++ b/io_uring/futex.c
-> > @@ -332,13 +331,13 @@ int io_futex_wait(struct io_kiocb *req, unsigned int issue_flags)
-> >  	ifd->q.wake = io_futex_wake_fn;
-> >  	ifd->req = req;
-> >  
-> > +	// XXX task->state is messed up
-> >  	ret = futex_wait_setup(iof->uaddr, iof->futex_val, iof->futex_flags,
-> > -			       &ifd->q, &hb);
-> > +			       &ifd->q, NULL);
-> >  	if (!ret) {
-> >  		hlist_add_head(&req->hash_node, &ctx->futex_list);
-> >  		io_ring_submit_unlock(ctx, issue_flags);
-> >  
-> > -		futex_queue(&ifd->q, hb);
-> >  		return IOU_ISSUE_SKIP_COMPLETE;
-> 
-> This looks interesting. This is called from
-> req->io_task_work.func = io_req_task_submit
-> | io_req_task_submit()
-> | -> io_issue_sqe()
-> |    -> def->issue() <- io_futex_wait
-> 
-> and
-> io_fallback_req_func() iterates over a list and invokes
-> req->io_task_work.func. This seems to be also invoked from
-> io_sq_thread() (via io_sq_tw() -> io_handle_tw_list()).
-> 
-> If this (wait and wake) is only used within kernel threads then it is
-> fine. If the waker and/ or waiter are in user context then we are in
-> trouble because one will use the private hash of the process and the
-> other won't because it is a kernel thread. So the messer-up task->state
-> is the least of problems.
+We also mention it in our "Subsystem Profile document" at
+https://rust-for-linux.com/contributing#submit-checklist-addendum.
 
-Right, so the io-uring stuff is tricky, I think this more or less does
-what it used to though. I 'simply' moved the futex_queue() into
-futex_wait_setup().
+> > +The availability of proper documentation is essential in terms of scal=
+ability,
+> > +accessability for new contributors and maintainability of a project in=
+ general,
 
-IIRC the io-uring threads share the process-mm but will never hit
-userspace.
+Typo: accessibility?
 
-> >  	}
-> …
-> > --- a/kernel/futex/waitwake.c
-> > +++ b/kernel/futex/waitwake.c
-> > @@ -266,67 +264,69 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int flags, u32 __user *uaddr2,
-> >  	if (unlikely(ret != 0))
-> >  		return ret;
-> >  
-> > -	hb1 = futex_hash(&key1);
-> > -	hb2 = futex_hash(&key2);
-> > -
-> >  retry_private:
-> > -	double_lock_hb(hb1, hb2);
-> > -	op_ret = futex_atomic_op_inuser(op, uaddr2);
-> > -	if (unlikely(op_ret < 0)) {
-> > -		double_unlock_hb(hb1, hb2);
-> > -
-> > -		if (!IS_ENABLED(CONFIG_MMU) ||
-> > -		    unlikely(op_ret != -EFAULT && op_ret != -EAGAIN)) {
-> > -			/*
-> > -			 * we don't get EFAULT from MMU faults if we don't have
-> > -			 * an MMU, but we might get them from range checking
-> > -			 */
-> > -			ret = op_ret;
-> > -			return ret;
-> > -		}
-> > -
-> > -		if (op_ret == -EFAULT) {
-> > -			ret = fault_in_user_writeable(uaddr2);
-> > -			if (ret)
-> > +	if (1) {
-> > +		CLASS(hb, hb1)(&key1);
-> > +		CLASS(hb, hb2)(&key2);
-> 
-> I don't know if hiding these things makes it better because this will do
-> futex_hash_put() if it gets out of scope. This means we still hold the
-> reference while in fault_in_user_writeable() and cond_resched(). Is this
-> on purpose?
-
-Sorta, I found it very hard to figure out what your patches did exactly,
-and..
-
-> I guess it does not matter much. The resize will be delayed until the
-> task gets back and releases the reference. This will make progress. So
-> it is okay.
-
-this.
-
-> > +		double_lock_hb(hb1, hb2);
-> > +		op_ret = futex_atomic_op_inuser(op, uaddr2);
-> > +		if (unlikely(op_ret < 0)) {
-> > +			double_unlock_hb(hb1, hb2);
-> > +
-> > +			if (!IS_ENABLED(CONFIG_MMU) ||
-> > +			    unlikely(op_ret != -EFAULT && op_ret != -EAGAIN)) {
-> > +				/*
-> > +				 * we don't get EFAULT from MMU faults if we don't have
-> > +				 * an MMU, but we might get them from range checking
-> > +				 */
-> > +				ret = op_ret;
-> >  				return ret;
-> …
-> > @@ -451,20 +442,22 @@ int futex_wait_multiple_setup(struct futex_vector *vs, int count, int *woken)
-> >  		struct futex_q *q = &vs[i].q;
-> >  		u32 val = vs[i].w.val;
-> >  
-> > -		hb = futex_q_lock(q);
-> > -		ret = futex_get_value_locked(&uval, uaddr);
-> > +		if (1) {
-> > +			CLASS(hb_q_lock, hb)(q);
-> > +			ret = futex_get_value_locked(&uval, uaddr);
-> 
-> This confused me at the beginning because I expected hb_q_lock having
-> the lock part in the constructor and also the matching unlock in the
-> deconstructor. But no, this is not the case.
-
-Agreed, that *is* rather ugly. The sane way to fix that might be to
-untangle futex_q_lock() from futex_hash(). And instead do:
-
-			CLASS(hb, hb)(&q->key);
-			futex_q_lock(q, hb);
-
-Or somesuch. That might be a nice cleanup either way.
-
-> > @@ -618,26 +611,42 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
-> …
-> >  
-> > +		if (uval != val) {
-> > +			futex_q_unlock(hb);
-> > +			return -EWOULDBLOCK;
-> > +		}
-> > +
-> > +		if (key2 && !futex_match(&q->key, key2)) {
-> 
-> There should be no !
-
-Duh..
-
-> > +			futex_q_unlock(hb);
-> > +			return -EINVAL;
-> > +		}
-> >  
-> > -	if (uval != val) {
-> > -		futex_q_unlock(*hb);
-> > -		ret = -EWOULDBLOCK;
-> > +		/*
-> > +		 * The task state is guaranteed to be set before another task can
-> > +		 * wake it. set_current_state() is implemented using smp_store_mb() and
-> > +		 * futex_queue() calls spin_unlock() upon completion, both serializing
-> > +		 * access to the hash list and forcing another memory barrier.
-> > +		 */
-> > +		set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
-> > +		futex_queue(q, hb);
-> >  	}
-> >  
-> >  	return ret;
-> 
-> So the beauty of it is that you enforce a ref drop on hb once it gets
-> out of scope. So you can't use it by chance once the ref is dropped.
-
-Right.
-
-> But this does not help in futex_lock_pi() where you have the drop the
-> reference before __rt_mutex_start_proxy_lock() (or at least before
-> rt_mutex_wait_proxy_lock()) but still have it you go for the no_block
-> shortcut. At which point even the lock is still owned.
-> 
-> While it makes the other cases nicer, the futex_lock_pi() function was
-> the only one where I was thinking about setting hb to NULL to avoid
-> accidental usage later on.
-
-OK, so yeah, I got completely lost in futex_lock_pi(), and I couldn't
-figure out what you did there. Let me try and untangle that again.
+Cheers,
+Miguel
