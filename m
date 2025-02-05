@@ -1,109 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF0204C2D;
-	Wed,  5 Feb 2025 07:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE65F228CAD
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738742263; cv=none; b=C5f9vL4s2byjCGTbfVosCm3HyFUpmBZk+T/HMOwwD0/bD1pRGZOj51ibFo0P7sTD8z74fbgbqdcYHIO7bGi4KPCK9H9FYIsbSeEgLdIzTc33Edb6Phri5uw8upp+8+DB/LCQm5ggmTOvMk6EYsHSnIqTe+X2TP+F1a/IRYOj2OI=
+	t=1738742268; cv=none; b=VDNi+mNY93gpxwXWXM3Wkr1cGrc4ORnWWEnCcyjfCwS8jgas0k27wIYk9myUl9JAK3eTvZeck5O/6fEKzMRXgGqVbj9panc+LSJktyHZ9WFJPICVQlJl7vAADT7RCfsvKgMCLWmuubLkQf/uLemsUIHf90tnDsL0bG9nwMAAcns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738742263; c=relaxed/simple;
-	bh=6WDlN7opUnQ1mFJ09g5mK8d5/27wYrKppIZj9++lpV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z/mUhqDeQPpHzyfmpbN0mk+kjpDYZ199bUhRlj0avGb3gXOevksi8jVVM4HT8GsDiEa/3HgMBIOJtereF9MkuinTb4D9JaD8LqRgiVaUaY3U3zSI0+QUSTX3jrZmXkDkAR/pwTqeXkdsq2QrVcqdSK40qa5h2Du1gQTOjG9z+Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDfA3hwK; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDfA3hwK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738742262; x=1770278262;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6WDlN7opUnQ1mFJ09g5mK8d5/27wYrKppIZj9++lpV0=;
-  b=PDfA3hwKb6Ky0l9aYCmNO17C3NPJg/kyiKJN+25QVdUQwk0hx3BZzQfU
-   SMoNyW4x4iwbFMZr48nlb4F7MaDwNbRc41XB0MThbpKDYofroo+SfYkEo
-   16Fgavrwznw6slF2zsIH7zkNgio2hXbmmc9thoQ2W1CWN6LuUQHgvwT1A
-   1a2QhZc0D9K5Yb/fs/ucKAoAbeWnbg/2HgEBB1Ae71YcZ4dhaxmfElueu
-   d1TvxehxJ1cjgrMVRNL/AFcKGkgCnwH7VkezRV3qEPmk/wL/4tNefe7U/
-   dADFgCYwjhRyYyxk/e1PL6YRkwp9/oC1Klie1NCHCAjszfliZYah3f09R
-   A==;
-X-CSE-ConnectionGUID: nMOCGHwaTOmysONXO/leUg==
-X-CSE-MsgGUID: 1yPm6lBASxe5cNpel9ZhHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38528297"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="38528297"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 23:57:41 -0800
-X-CSE-ConnectionGUID: DkNphc1mQeGvUda7MJCC0Q==
-X-CSE-MsgGUID: OyOxDkkEQoOu8moIij6Zig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="134078252"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 23:57:37 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tfaHt-00000008Q0c-0rWo;
-	Wed, 05 Feb 2025 09:57:33 +0200
-Date: Wed, 5 Feb 2025 09:57:32 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <Z6MZ7JdP6tynvYRr@smile.fi.intel.com>
-References: <2025020421-poster-moisture-534b@gregkh>
- <2025020424-retrain-recharger-407c@gregkh>
- <fd6250102ea9d869448e7a40a60a02f8b167d4ac.camel@redhat.com>
- <2025020518-outcome-harbor-6281@gregkh>
+	s=arc-20240116; t=1738742268; c=relaxed/simple;
+	bh=kCYpgBMK7Rzj+V3RRv0t4HfrublkMmMqXKbRjCktDYA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eqy6nXHJOFrN7374dG5LMr2VlQ0dWDOuZ17f+vwirGxAImWuF8ToUHprqHDSr0Soapragx4ly8SCYUGpuK3duTCmS/ChQscU1xDkprmf0PEjcEVbBhVoy6MYyXcPzZD8qPFoRb1k23xVWffHvW81MgTSIahNK64fbe+8AkK13Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.starfivetech.com; spf=none smtp.mailfrom=linux.starfivetech.com; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.starfivetech.com
+X-QQ-mid: bizesmtpsz8t1738742253t7hgm8u
+X-QQ-Originating-IP: LhoYFQ+iWEQs6p+Ju1KUL8CfXjPMNyGFDkrdyseJg5Y=
+Received: from [192.168.125.117] ( [113.72.145.41])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 05 Feb 2025 15:57:31 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 4618514360899873354
+Message-ID: <25B3D8909DBCC21B+43663a76-4afa-44ae-95e2-3a8792de614c@linux.starfivetech.com>
+Date: Wed, 5 Feb 2025 15:57:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020518-outcome-harbor-6281@gregkh>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common:
+ bootph-pre-ram hinting needed by boot loader
+Content-Language: en-US
+To: E Shattow <e@freeshell.de>, Emil Renner Berthing <kernel@esmil.dk>,
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20250203013730.269558-1-e@freeshell.de>
+ <20250203013730.269558-6-e@freeshell.de>
+From: Hal Feng <hal.feng@linux.starfivetech.com>
+In-Reply-To: <20250203013730.269558-6-e@freeshell.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:linux.starfivetech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: N7M/927DZCmZgl3HV73i7XckDbUeZgeeSvf4+hE0xL6MCxxoe0n3+7Xx
+	04ggSSKrjWv0sQAoYO07nUH4OfyepHbEBFiOHD9qEYQ0QIVn70lnTki9Q6Qv9WxZ9xxGdRj
+	oKHusWBRUtXsmXWtdCj8yEyDZUo1uPkH+GdO1KFWUTBI2zw/wCnyCF+HNT9b/ApLO8LwFkj
+	YQiD+5OjnqQh5NxaOmgGryBo+0GNvFElTWwsB0dujHLRzd8BcMEB9nYaYMSnJPeNQrDSoVL
+	vAl7BXVSPMaK9K7XlVdx+syCNlS20xqSg8wlShw0zrjM1rfKLWCBqfqtSUxMWWuH97Xkuap
+	b9wdsj3LH15t78tTwOc76nhd1vdq2jzLsmOM31CVJ1/Iigy8ROnfJn4rVGt8wHq9n6cz2Kt
+	bI5+MxmY1ll9moWZkONOhnaLw4tK8qqUVHwY2Q2oNF7Pb+l2Ra0AeuIo4iXIk6vs/6176hq
+	l7bgooVl5xl/tX7m33HWWO6F27VsHB41OZ514w5GeexESH+ZHuYBqJS49tSFpIEG9bqm1hG
+	ck5ZcQBBcMNFI6goANGY5SagZvr8+NbiQJnQraxA64tSZM03lC0Dy73fIy5DoC2j/y5ma0g
+	yu0siJ+3BOy0cfH2i8j1c4w5TW5gyhDVCoOiO1ryVyOzBUQHZY4FxyBsjCnmaiGu4WoYyyD
+	duy/9mA57CtF1lXS4XFmo24utrpzG3tRdMsCkmdYlNEzALV4mP6eBhMNHtFcrG3SP1HK2LK
+	yWl/WPFm2MIMwwGHhhRvX8qLFujZhIBptJL2rONtOrteiPrgqGn7s26uB/YlTKeJljDqiVB
+	5IBjXBrbkA12D5eXJNLkWkuenN8KlJtTwyvEXXiwzAGoHdB30p9GsYye+p+M6XVFUzYEMvl
+	QjGDIvo5XkYgrLperely+0o/QwRk29uw37naBXPBQyzTij6yJ6E853f5P4o/XneZXRBGbv8
+	MpIob/rrB8cDkILVp7uvLYZpr6D39kKQhQPMMrOYwz1tib0hXc+XeTiX3+czcB2sF7Ik=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-On Wed, Feb 05, 2025 at 06:53:09AM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Feb 04, 2025 at 06:10:36PM -0500, Lyude Paul wrote:
-> > On Tue, 2025-02-04 at 12:09 +0100, Greg Kroah-Hartman wrote:
-
-...
-
-> > Should we add faux_get_drvdata()/faux_set_drvdata() since we've got a
-> > probe/remove function? Doesn't really look like the platform driver equivalent
-> > does mcuh, but I assume just having an inline function for this would make
-> > things a little less confusing for users.
+On 2/3/2025 9:37 AM, E Shattow wrote:
+> Add bootph-pre-ram hinting to jh7110-common.dtsi:
+>   - i2c5_pins and i2c-pins subnode for connection to eeprom
+>   - eeprom node
+>   - qspi flash configuration subnode
+>   - memory node
+>   - uart0 for serial console
 > 
-> You already have a reference counted object returned to you, why do you
-> need to increment/decrement it again?  All of the users I've found in
-> the kernel so far didn't need that, do you have a specific example where
-> it would be useful?
+>   With this the U-Boot SPL secondary program loader may drop such
+>   overrides when using dt-rebasing with JH7110 OF_UPSTREAM board targets.
+> 
+> Signed-off-by: E Shattow <e@freeshell.de>
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> index 30c5f3487c8b..c9e7ae59ee7c 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> @@ -28,6 +28,7 @@ chosen {
+>  	memory@40000000 {
+>  		device_type = "memory";
+>  		reg = <0x0 0x40000000 0x1 0x0>;
+> +		bootph-pre-ram;
+>  	};
+>  
+>  	gpio-restart {
+> @@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
+>  	};
+>  
+>  	eeprom@50 {
+> +		bootph-pre-ram;
+>  		compatible = "atmel,24c04";
+>  		reg = <0x50>;
+>  		pagesize = <16>;
+> @@ -323,6 +325,7 @@ &qspi {
+>  	nor_flash: flash@0 {
+>  		compatible = "jedec,spi-nor";
+>  		reg = <0>;
+> +		bootph-pre-ram;
+>  		cdns,read-delay = <2>;
+>  		spi-max-frequency = <100000000>;
+>  		cdns,tshsl-ns = <1>;
+> @@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
+>  	};
+>  
+>  	i2c5_pins: i2c5-0 {
+> +		bootph-pre-ram;
+>  		i2c-pins {
+>  			pinmux = <GPIOMUX(19, GPOUT_LOW,
+>  					      GPOEN_SYS_I2C5_CLK,
+> @@ -413,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
+>  					      GPOEN_SYS_I2C5_DATA,
+>  					      GPI_SYS_I2C5_DATA)>;
+>  			bias-disable; /* external pull-up */
+> +			bootph-pre-ram;
+>  			input-enable;
+>  			input-schmitt-enable;
+>  		};
+> @@ -641,6 +646,7 @@ GPOEN_DISABLE,
+>  };
+>  
+>  &uart0 {
+> +	bootph-pre-ram;
+>  	clock-frequency = <24000000>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart0_pins>;
 
-It's about getter and setter for the .driver_data field, I don't see how
-reference counting can help with this.
+What about &mmc0, &mmc1, &qspi, &sysgpio, &mmc0_pins, &mmc1_pins, &i2c5?
+Why not add "bootph-pre-ram;" for them?
 
-> I'll be glad to add it, I just didn't think anyone would ever call it.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Hal
 
