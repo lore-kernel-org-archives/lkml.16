@@ -1,88 +1,66 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEF01DC198
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FD8154C1D;
+	Wed,  5 Feb 2025 16:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771279; cv=none; b=P+1I/49G6/jVwFyhm3RImKcq3n5XH7y+pVFM6RjIYZHqP3WNb35pLhLzMyXhwbxplPSmqQV2nsUlUgyaLV3fCiwtNJygkkYEWnGlD8g8cOLd/+v+nyG9t4ehZm5AdmF5S4MWCpETQ3KYkOcL5O6bmbMq9IFKBzGKW3PysYyiXxY=
+	t=1738771309; cv=none; b=iquq2yIhYuzLlsxbO2cVlgz64+l0QXAHDoCJeK4f+06dVNKlV7LT8Ps246Q4PqHx7gvLuQ14un5/SLV4Rd6LRtR0qmbbyjnHykOdMUSJsc6MAps1Rr9Jn6UtWNe4cmFpV/CZ7zeYNhyEtd/EwN/nvgz28ZdaIpi78TA4G+giZ5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771279; c=relaxed/simple;
-	bh=tNahCfxLRgNIbiBla43nJrTI1GFGdO1edGYaRhyK8s8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F7IjrQvA29N6MlBEksapeOK4aT/cyTqEmtmnquw9hyfB30ScEmOZFsh4KVKe03dF+3OsxpJE5zG29v1lvI++948z+uSVOt1RmVveuJCMt2QOa92ctHfR1VFUsc03lcd/QSbu+p63JRAAXdhrFQyWNXYksL74AbWVKSJyqHGxtpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BdXhlMYZ; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1738771309; c=relaxed/simple;
+	bh=Enx8fjI8mpv5hd03bzqWaf6lquHttoAxyQTNA8BDmeQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fFSSswLiIKHUC915OraWzAVBAtklrGiceryIqXGcxT7awTkgzK0iciVmNcjEo+f6iJhmVQvSwTVd8cAWdSUGlOUDu1y68tCQhpvVDE61Mi8x2W/84q+HfTyDb0UFZNu9nD41A+MaemEG0SHAwMpOWEOCfpy7N4f9S/ypkfDcfPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I9Zbqyel; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BdXhlMYZ"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21670dce0a7so9323825ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:01:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738771277; x=1739376077; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KEjndyBD35lV6nr6NSLWRRyly4db2axy7koFOHZTKsQ=;
-        b=BdXhlMYZoneg4XjFolZY4NOxBbTXtBUuRlqe9sGih0KPAOjEy0ItrsDIL6ft7Fyacu
-         ylQa9zvIJLziUbZBk5JPc2KaxX3W75AFoFg1Hr3uJpTLlDvtV+Y/ArCA6gCw2sjCCbNq
-         Ce+skkP9c7XVk1DHs1+BNZrNtfvQcHQ95VXBzEt2f2qZxxeWiic0RQogeIGAmS17CPJz
-         ohch+eo0BqkPETjqyrPaonE3LA/YeyaMsxT17LS8pYZq+GwT2xC/aB8H0xPUPfIjRODN
-         X/mZDtIkyVjXkML+3YJcP3JhDaTfBjrbDbixeHcvTSmuvDmjEA+7vblHb/scJhEiyuXV
-         Xxzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738771277; x=1739376077;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KEjndyBD35lV6nr6NSLWRRyly4db2axy7koFOHZTKsQ=;
-        b=Crwf2R+2AK/rRSGUkZAhB9qE4wLbgXd0cMGXBnd9vmirrtpKBDPkZcryrkxC5ALp9o
-         s59owuHQ3xEAOEFoKe02Dehbi1k7IDyonour6fzGSEtJZedMFq72RPKG/PaRhwT09bRB
-         gBOBRSxImKE4FQqGPmkqnSMQYYsVHylO8buOg+73vFtqS9/qNBtY6gSahXi1X3uEkf0Q
-         S4uOUWwZ0s0qWesatZB33oAxzL0ffPqh1+/cM3ToRQoyS/jOkIdkMz6+DtFrHr/kcWX0
-         9/VRoe1jcecuOgQJOp6ga4w9xLMdsGXnZH8mL+/BVC6rGMLE67KQnPFcquA4G9qQsGRR
-         Zl0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWl1DveZhuGcp9DW5rnSbNtnO7XUnueFTOeloMJlVUoTlaQ7hjFW8M+ipccdgMl89HmzkCX8mjVhcHW/tg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH3xY+9crGbPhJGOsPa1H1nz4jDrr/QpE3INiMPBYO2vvKgPLi
-	TTvZFX7KsjhCFQA/EYi1RKOrfdYhDO5Wo9o5HXrJ97MxfQr4Yu3BziqGDM1WifM=
-X-Gm-Gg: ASbGncsr4UILB9MLXks6RxZPZEeRQLCimpGzvR1Yty/rgBmroKkaNGwL+/TimHv0NhB
-	UBXSlSms6Qo55uF7+kmuMJGcY4Rx/7/ySPibmXi82M9COA8eo46rTSGbXGLDX60o3wZ2jr2SxXq
-	j+hUody4Hm3p/l3bZavcN9VH3npsZaY74Z5v/i5wsZlH7Suvod8Clt/Gqwuj5gW/PQsML2dlovT
-	TGh4xSgkRJ6a6xVYpYoh14aXTsBWtnPJv06QqOdAIIFtce0y4k62mSpypDqIl8IAkhmk9rEptnM
-	ai8bzKL0nytnEV5gdqPZ/NKX9AUwP4u+xXcrldQvGnw7ndKFHpVyzsU=
-X-Google-Smtp-Source: AGHT+IFTclDON/r36LodehwMg78zlP6BqfcqB9QXn3ksA4PSt60KgNQ9lMw/GuAJ5JZoMSZ1KuB8Cw==
-X-Received: by 2002:a17:903:18f:b0:21f:75c:f7d3 with SMTP id d9443c01a7336-21f17ec7bd9mr56546085ad.38.1738771275532;
-        Wed, 05 Feb 2025 08:01:15 -0800 (PST)
-Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21edddf883fsm99369015ad.4.2025.02.05.08.01.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 08:01:14 -0800 (PST)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v4 11/11] irqchip/riscv-imsic: Special handling for non-atomic device MSI update
-Date: Wed,  5 Feb 2025 21:29:47 +0530
-Message-ID: <20250205155948.81385-12-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205155948.81385-1-apatel@ventanamicro.com>
-References: <20250205155948.81385-1-apatel@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I9Zbqyel"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515G1S2X2628652
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 10:01:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738771289;
+	bh=fGZxVK+AIixjKxkzre/ttdxbnP7tzokMQgPYrUhhzhI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=I9ZbqyeljCB6jstxCKnaKVgLii0ApWW4u4RtFl445FexTNF/EtJxGsD/xV/smEW8x
+	 q0wxlrhhUrvlVjH1nrZ3/3NbyOL9ttEoAnO7gKRVgCenA0xkBsdtJNkPOSNDNXTIJt
+	 3EhQtnv09geqo3i4XyRXYzkMrPDfEg8ccfLsLH64=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515G1SXS028582
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 5 Feb 2025 10:01:28 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
+ Feb 2025 10:01:28 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 5 Feb 2025 10:01:28 -0600
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515G1R3e055330;
+	Wed, 5 Feb 2025 10:01:28 -0600
+From: Chintan Vankar <c-vankar@ti.com>
+To: Jason Reeder <jreeder@ti.com>, <vigneshr@ti.com>, <nm@ti.com>,
+        "Chintan
+ Vankar" <c-vankar@ti.com>, Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski
+	<kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        Thomas Gleixner
+	<tglx@linutronix.de>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <m-malladi@ti.com>
+Subject: [RFC PATCH 2/2] net: ethernet: ti: am65-cpts: Add support to configure GenF signal for CPTS
+Date: Wed, 5 Feb 2025 21:31:19 +0530
+Message-ID: <20250205160119.136639-3-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250205160119.136639-1-c-vankar@ti.com>
+References: <20250205160119.136639-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,209 +68,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Device having non-atomic MSI update might see an intermediate
-state when changing target IMSIC vector from one CPU to another.
+Add support to configure GenFx (periodic signal generator) function which
+can be used by Timesync Interrupt Router to map it with CPTS_HWy_TS_PUSH,
+in order to generate timestamps at 1 second intervals. This configuration
+is optional for CPTS module.
 
-To avoid losing interrupt to such intermediate state, do the
-following (just like x86 APIC):
- 1) First write a temporary IMSIC vector to the device which
-    has MSI address same as the old IMSIC vector but with MSI
-    data matches the new IMSIC vector.
- 2) Next write the new IMSIC vector to the device.
-
-Based on the above, the __imsic_local_sync() must check pending
-status of both old MSI data and new MSI data on the old CPU. In
-addition, the movement of IMSIC vector for non-atomic device MSI
-update must be done in interrupt context using IRQCHIP_MOVE_DEFERRED.
-
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
 ---
- drivers/irqchip/irq-riscv-imsic-platform.c | 73 +++++++++++++++++++++-
- drivers/irqchip/irq-riscv-imsic-state.c    | 31 +++++++--
- 2 files changed, 98 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/ti/am65-cpts.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
-index 6bf5d63f614e..828102c46f51 100644
---- a/drivers/irqchip/irq-riscv-imsic-platform.c
-+++ b/drivers/irqchip/irq-riscv-imsic-platform.c
-@@ -64,6 +64,11 @@ static int imsic_irq_retrigger(struct irq_data *d)
- 	return 0;
+diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
+index 59d6ab989c55..c32e6c60561d 100644
+--- a/drivers/net/ethernet/ti/am65-cpts.c
++++ b/drivers/net/ethernet/ti/am65-cpts.c
+@@ -171,6 +171,7 @@ struct am65_cpts {
+ 	u32 genf_num;
+ 	u32 ts_add_val;
+ 	int irq;
++	int genf_irq;
+ 	struct mutex ptp_clk_lock; /* PHC access sync */
+ 	u64 timestamp;
+ 	u32 genf_enable;
+@@ -409,6 +410,11 @@ static irqreturn_t am65_cpts_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
  }
  
-+static void imsic_irq_ack(struct irq_data *d)
++static irqreturn_t am65_cpts_genf_interrupt(int irq, void *dev_id)
 +{
-+	irq_move_irq(d);
++	return IRQ_HANDLED;
 +}
 +
- static void imsic_irq_compose_vector_msg(struct imsic_vector *vec, struct msi_msg *msg)
+ /* PTP clock operations */
+ static int am65_cpts_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
  {
- 	phys_addr_t msi_addr;
-@@ -97,6 +102,21 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 				  bool force)
- {
- 	struct imsic_vector *old_vec, *new_vec;
-+	struct imsic_vector tmp_vec;
-+
-+	/*
-+	 * Requirements for the downstream irqdomains (or devices):
-+	 *
-+	 * 1) Downstream irqdomains (or devices) with atomic MSI update can
-+	 *    happily do imsic_irq_set_affinity() in the process-context on
-+	 *    any CPU so the irqchip of such irqdomains must not set the
-+	 *    IRQCHIP_MOVE_DEFERRED flag.
-+	 *
-+	 * 2) Downstream irqdomains (or devices) with non-atomic MSI update
-+	 *    must do imsic_irq_set_affinity() in the interrupt-context upon
-+	 *    next interrupt so the irqchip of such irqdomains must set the
-+	 *    IRQCHIP_MOVE_DEFERRED flag.
-+	 */
- 
- 	old_vec = irq_data_get_irq_chip_data(d);
- 	if (WARN_ON(!old_vec))
-@@ -115,6 +135,33 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 	if (!new_vec)
- 		return -ENOSPC;
+@@ -1216,6 +1222,21 @@ struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
+ 		goto reset_ptpclk;
+ 	}
  
 +	/*
-+	 * Device having non-atomic MSI update might see an intermediate
-+	 * state when changing target IMSIC vector from one CPU to another.
-+	 *
-+	 * To avoid losing interrupt to such intermediate state, do the
-+	 * following (just like x86 APIC):
-+	 *
-+	 * 1) First write a temporary IMSIC vector to the device which
-+	 * has MSI address same as the old IMSIC vector but MSI data
-+	 * matches the new IMSIC vector.
-+	 *
-+	 * 2) Next write the new IMSIC vector to the device.
-+	 *
-+	 * Based on the above, the __imsic_local_sync() must check pending
-+	 * status of both old MSI data and new MSI data on the old CPU.
++	 * This API is used by Timesync Router's driver code to map
++	 * GenFx output of CPTS module with HWx_TS_PUSH input to generate PPS
++	 * signal.
 +	 */
-+
-+	if (!irq_can_move_in_process_context(d) &&
-+	    new_vec->local_id != old_vec->local_id) {
-+		/* Setup temporary vector */
-+		tmp_vec.cpu = old_vec->cpu;
-+		tmp_vec.local_id = new_vec->local_id;
-+
-+		/* Point device to the temporary vector */
-+		imsic_msi_update_msg(irq_get_irq_data(d->irq), &tmp_vec);
++	cpts->genf_irq = of_irq_get_byname(node, "genf");
++	if (cpts->genf_irq > 0) {
++		ret = devm_request_threaded_irq(dev, cpts->genf_irq, NULL,
++						am65_cpts_genf_interrupt,
++						0, dev_name(dev), cpts);
++		if (ret < 0)
++			dev_dbg(cpts->dev, "GENF output will not be routed via Time Sync Interrupt Router
++				%d\n", ret);
 +	}
 +
- 	/* Point device to the new vector */
- 	imsic_msi_update_msg(irq_get_irq_data(d->irq), new_vec);
- 
-@@ -171,6 +218,7 @@ static struct irq_chip imsic_irq_base_chip = {
- 	.irq_force_complete_move = imsic_irq_force_complete_move,
- #endif
- 	.irq_retrigger		= imsic_irq_retrigger,
-+	.irq_ack		= imsic_irq_ack,
- 	.irq_compose_msi_msg	= imsic_irq_compose_msg,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE |
- 				  IRQCHIP_MASK_ON_SUSPEND,
-@@ -190,7 +238,7 @@ static int imsic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 		return -ENOSPC;
- 
- 	irq_domain_set_info(domain, virq, virq, &imsic_irq_base_chip, vec,
--			    handle_simple_irq, NULL, NULL);
-+			    handle_edge_irq, NULL, NULL);
- 	irq_set_noprobe(virq);
- 	irq_set_affinity(virq, cpu_online_mask);
- 	irq_data_update_effective_affinity(irq_get_irq_data(virq), cpumask_of(vec->cpu));
-@@ -229,15 +277,36 @@ static const struct irq_domain_ops imsic_base_domain_ops = {
- #endif
- };
- 
-+static bool imsic_init_dev_msi_info(struct device *dev,
-+				    struct irq_domain *domain,
-+				    struct irq_domain *real_parent,
-+				    struct msi_domain_info *info)
-+{
-+	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
-+		return false;
-+
-+	switch (info->bus_token) {
-+	case DOMAIN_BUS_PCI_DEVICE_MSI:
-+	case DOMAIN_BUS_PCI_DEVICE_MSIX:
-+		info->chip->flags |= IRQCHIP_MOVE_DEFERRED;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return true;
-+}
-+
- static const struct msi_parent_ops imsic_msi_parent_ops = {
- 	.supported_flags	= MSI_GENERIC_FLAGS_MASK |
- 				  MSI_FLAG_PCI_MSIX,
- 	.required_flags		= MSI_FLAG_USE_DEF_DOM_OPS |
- 				  MSI_FLAG_USE_DEF_CHIP_OPS |
- 				  MSI_FLAG_PCI_MSI_MASK_PARENT,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_ACK,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
--	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
-+	.init_dev_msi_info	= imsic_init_dev_msi_info,
- };
- 
- int imsic_irqdomain_init(void)
-diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
-index d0148e48ab05..3a2a381e4fa1 100644
---- a/drivers/irqchip/irq-riscv-imsic-state.c
-+++ b/drivers/irqchip/irq-riscv-imsic-state.c
-@@ -126,8 +126,8 @@ void __imsic_eix_update(unsigned long base_id, unsigned long num_id, bool pend,
- 
- static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
- {
--	struct imsic_local_config *mlocal;
--	struct imsic_vector *vec, *mvec;
-+	struct imsic_local_config *tlocal, *mlocal;
-+	struct imsic_vector *vec, *tvec, *mvec;
- 	bool ret = true;
- 	int i;
- 
-@@ -169,13 +169,36 @@ static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
- 		 */
- 		mvec = READ_ONCE(vec->move_next);
- 		if (mvec) {
--			if (__imsic_id_read_clear_pending(i)) {
-+			/*
-+			 * Device having non-atomic MSI update might see an
-+			 * intermediate state so check both old ID and new ID
-+			 * for pending interrupts.
-+			 *
-+			 * For details, refer imsic_irq_set_affinity().
-+			 */
-+
-+			tvec = vec->local_id == mvec->local_id ?
-+			       NULL : &lpriv->vectors[mvec->local_id];
-+			if (tvec &&
-+			    !irq_can_move_in_process_context(irq_get_irq_data(vec->irq)) &&
-+			    __imsic_id_read_clear_pending(tvec->local_id)) {
-+				/* Retrigger temporary vector if it was already in-use */
-+				if (READ_ONCE(tvec->enable)) {
-+					tlocal = per_cpu_ptr(imsic->global.local, tvec->cpu);
-+					writel_relaxed(tvec->local_id, tlocal->msi_va);
-+				}
-+
-+				mlocal = per_cpu_ptr(imsic->global.local, mvec->cpu);
-+				writel_relaxed(mvec->local_id, mlocal->msi_va);
-+			}
-+
-+			if (__imsic_id_read_clear_pending(vec->local_id)) {
- 				mlocal = per_cpu_ptr(imsic->global.local, mvec->cpu);
- 				writel_relaxed(mvec->local_id, mlocal->msi_va);
- 			}
- 
- 			WRITE_ONCE(vec->move_next, NULL);
--			imsic_vector_free(&lpriv->vectors[i]);
-+			imsic_vector_free(vec);
- 		}
- 
- skip:
+ 	dev_info(dev, "CPTS ver 0x%08x, freq:%u, add_val:%u pps:%d\n",
+ 		 am65_cpts_read32(cpts, idver),
+ 		 cpts->refclk_freq, cpts->ts_add_val, cpts->pps_present);
 -- 
-2.43.0
+2.34.1
 
