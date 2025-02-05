@@ -1,380 +1,189 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C18217F32
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFDF25A647
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738730661; cv=none; b=NBEDskr6Nfz4a4SpXC6LhqO65O4m78oXIM5JUh1c4eQHA6/X/Q5IoYai/uHXkn0bkRR+3zJ/JWlRdlNylIW7n7VK11mNq8MElvshz8cCznfA6XCOd6idx0C2gNqMnpnn1xS7ypOONuGbn4S4TXJnP2msVccLPex5JGt/KSCpRYU=
+	t=1738730915; cv=none; b=S5dojacxx88LwpkJec9HpoQBNI6jAiwBHVJPaoRVE3eLMymmoo3klh/74KMtkDDfP6zd7M83FF3StOjGr7fyta/MeljFfkkoiEAxotmX6Cy4cZPZ3TDT1PfCFqcZe1Ppkbs5Gs9F+xDiFCGXJdAXOx7xFMss1nF8dJhSsGRmoGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738730661; c=relaxed/simple;
-	bh=Cg2HJkW1sbdNE4V4wL0IA4U0MsnkB9eB3MdOcj6t6xQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Hymsyc6RZQ/49jZ4b0zDaD5NMxLsY7Z0H9NMyTNyop+H9p6AveNerLII5b8thwEvLhLhn/56M5UjP1nCCKZPnSxbXGvMPBPFxOF9vxKj4OTkevdVtgrt2C96OCJge3mJp3itDRFMPC/XEqs8I9tJvpSLodR82P/V1XiNtJ0LPWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-854dd2795b4so141156039f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 20:44:19 -0800 (PST)
+	s=arc-20240116; t=1738730915; c=relaxed/simple;
+	bh=eiU7uDePcWnOLNcxWdT2qg+j5h1OAuZA2Uk+PVY+hYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lX2G2oqfctj3xqBIso7HjTEupKY2z0tGALsx1s9yOTOf9eNWDBaPDQ/QTzTEivGkNttnGWKI4Z5sqm3mHI7xOzkqhRXg0fciz48lZ4ugF+IVHubnAVmvoRL1yJyEu9jDBIqIHVCHpEWaVYEvdJEhx+QV2dWrhfJFKD4BDxmhgMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NiyAltxK; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NiyAltxK"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a814c54742so269325ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 20:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738730912; x=1739335712; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rdUHWjnri+g2A9ir83ZJXkiX3qchGiLgbVc6h7UdLQQ=;
+        b=NiyAltxK3Q5Cc/hdIDUenz7gDZvYnybQ0wxy3+LevpJqp9RGKumE008G+JNjJYUH9N
+         PZ9C7oPIlAGXPgKn5XHka7GcvhLHSD7+mPyJou0kYvPac3dOyGHpjq/2qrqi3xZj6DBI
+         jVVYQsf0jggxPe0/gXFBUnA+6hydjoJTAeDi0d4MwKLtZJTkzTtZiuu0Lc6TcJffgkX5
+         BDZyVb4gSzXteE/I97h9ucWFRrCthh+3wIoitTvEtZ586/x2uWim4Vt8j1NzsIk4xaoZ
+         QO0PTB4I6B7iTdbEZlURaJtDk5jvSNEOMj6Ojp5RMUT7mFqUqq6Psm+AemcPhQilSgQ3
+         iCKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738730659; x=1739335459;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WyTkqxJ0hYin2KvGLn5CxFCjefqNei6FhBUKAWLZm94=;
-        b=A8zJ+lmQu2Ya1xnDd0c9AwxLCQ/vo0HCB+zmzkaLvWjbM+qaGFRmmlrfmqRUvnuPch
-         gP1Pa7eUqj0DLN26ymME1b3EV8pNawOzyjpYZkyDrbQXmmGKkNSLSQRtBjbnCOmNqw3i
-         kb30GM+XfGISv2b9URsLjgvc8WfdwT3+AXlf+FNBklTYtMNmUUeq1bufoUUUTB1NZ9Ij
-         Mekl1kl7pSZc1ndcswA01PqdH4FYULilHWcCaS9qXGXhAJqiSC+N519g+f/OV4InYaNJ
-         3ch1woD+D5qsd5WKYb3dlmLFGhYFGUKGxgVV9eMp1SNHsbxgoeRdC/bZSOZHPQ087+0H
-         2veQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1B+xMJjQ+KEvc79oUSqi67NvgW6zDKPD9OymEq4+0sQSVxhF0g15airdrCKEPrPXF5tFWaZcSPmJmwvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycmPhYxhDjI180bq+lyB5i1gMOrMi48pX3+qlSdzy1UTqcvGHs
-	9Y4lsggFRmNI+5woxhqdZrYEHgZee1g/4AINXs5UYkyir11xqLE8/iuaQvk7Tyazq7UQ5HHzr25
-	z+gdUaRioSRnWPy5zJG1XpiJ0Bv0aOSKxA9nXZ8lvGRmm7M1pTjM3Dt0=
-X-Google-Smtp-Source: AGHT+IHpVTjHoHFSbnYYmPZa5aKzqUHV21hikpKjD1QENEqP4qLMXjSsmQpp4tb5yFZx7IDKjBxE5T5eW/PULDsnq0LylSGPxAfN
+        d=1e100.net; s=20230601; t=1738730912; x=1739335712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rdUHWjnri+g2A9ir83ZJXkiX3qchGiLgbVc6h7UdLQQ=;
+        b=vnx9MArMyMdaenC2TGLpLGTa2dYOIGAb4q0CFXgAqUyo7eGLNZmnzStzf7nMSVJlvf
+         s4AIeW/VH1HksGgoRs8YkA6PCpTKIen4qjjvPBhIjK6c56TcQuP1fRFTfBGF2gIj8Vie
+         sQ39W6oVMkmp5aAOqBZm0NQrNCAJdejeiYF+YR9vdUgFo4XqeIu9Wx+bcKlgiKpgI/k+
+         MwMn/QD3wqolrDQ0iUKiN3PdFRAYGeA/d/2yw2WcvY+Kqs1nA1NJoTMc0i7zoWgecATX
+         khEDoMiMafGYuDS0pkd5phWC8Y7+q05WKal4RyjAnijDUMonIXapTw9lqfgF+Wk3UYq/
+         1edQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBvS7HQImBnRkIzESzzR2POu9lg3v5+KoD5q2RixgHcYNlU2zL7QpLZago7vhp+gM+pvC9/TuWHdnPxNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrgrEkZKpTRjOeJnP/JAMPyW9uk8QgB68kSi+WQolGO0mV0KeY
+	h8SB2OdATHe0RuEAW4C5OeJyjrOws+Qnl95k/Rn2uzWMbPOg7TUeaN/t5iSmOCPHMENj9P4khMT
+	hwG61bCSa3XbPUgM0RWzSpQ/BUYByE+m5PKPv
+X-Gm-Gg: ASbGncvreDCmA3NeIq7HYnjIQW1jo3ND68EjUVcZAuHaPzNmGYNnT1lMfj+xgfGXCxK
+	g5d6yaZ6hHzNplkLpuQypAgA3UN1OQKkmH3W70tzg94oWtdbgSevVOiDXE03LmGPbCeEL8BaHbQ
+	==
+X-Google-Smtp-Source: AGHT+IExCH3kYciLrs8VTeCS1q0/fpKXMt3mVQ/MBzl9HvILLwYiPvM02gN2sXmcSaAnL4t/wfGrKez4ICUMXO/LOBA=
+X-Received: by 2002:a05:6e02:1fc3:b0:3d0:52e9:2154 with SMTP id
+ e9e14a558f8ab-3d052e92393mr367155ab.21.1738730912166; Tue, 04 Feb 2025
+ 20:48:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:240b:b0:3d0:4e57:bbe2 with SMTP id
- e9e14a558f8ab-3d04f93aea7mr15638025ab.20.1738730658829; Tue, 04 Feb 2025
- 20:44:18 -0800 (PST)
-Date: Tue, 04 Feb 2025 20:44:18 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a2eca2.050a0220.50516.000a.GAE@google.com>
-Subject: [syzbot] [wireless?] WARNING in on (2)
-From: syzbot <syzbot+1940948c36d6e4d83406@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com> <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+ <Z6FcHJFYGc7HzSna@google.com> <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+ <Z6LFp5jiED7_-weN@google.com>
+In-Reply-To: <Z6LFp5jiED7_-weN@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 20:48:20 -0800
+X-Gm-Features: AWEUYZnEXt5oa58VVHL92sDVTZqpUBQ5pNK1_z8JNXYTnpv9jKbdMz_GMnU9w-c
+Message-ID: <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Atish Kumar Patra <atishp@rivosinc.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Feb 4, 2025 at 5:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Mon, Feb 03, 2025 at 04:41:11PM -0800, Ian Rogers wrote:
+> > On Mon, Feb 3, 2025 at 4:15=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > [snip]
+> > > Yep, I agree it's confusing.  So my opinion is to use legacy encoding
+> > > and no default wildcard. :)
+> >
+> > Making it so that all non-legacy, non-core PMU events require a PMU is
+> > a breaking change and a regression for all users, command line event
+> > name suggesting, any tool built off of perf, and so on. Breaking all
+> > perf users and requiring all perf metrics be rewritten is well..
+> > something..
+>
+> Well, I guess the majority of users don't use non-core PMU events.  And
+> we used to have PMU prefix on those events for years so old users should
+> not be affected.  Actually perf list shows them with PMU prefix so I
+> think new users are also expected to use the PMU name.
+>
+>   $ perf list pmu
+>   ...
+>   cstate_pkg/c2-residency/                           [Kernel PMU event]
+>   ...
+>   i915/actual-frequency/                             [Kernel PMU event]
+>   i915/bcs0-busy/                                    [Kernel PMU event]
+>   ...
+>   msr/tsc/                                           [Kernel PMU event]
+>   ...
+>   power/energy-cores/                                [Kernel PMU event]
+>   ...
+>   uncore_clock/clockticks/                           [Kernel PMU event]
+>   uncore_imc_free_running/data_read/                 [Kernel PMU event]
+>   ...
+>
+> The exception is the JSON events like below.
+>
+>   uncore interconnect:
+>     unc_arb_coh_trk_requests.all
+>          [UNC_ARB_COH_TRK_REQUESTS.ALL. Unit: uncore_arb]
+>
+> which I hoped to be 'uncore_arb/unc_arb_coh_trk_requests.all/' or even
+> 'uncore_arb/coh_trk_requests.all/'.  But it would be hard to change the
+> all metric expressions now.  Also users can directly use them as they
+> are listed by `perf list`.  So we need to support that without PMUs.
 
-syzbot found the following issue on:
+So there's nothing wrong with your proposal except it breaks non-core
+events. We can't agree to flip the default on a flag for perf top:
+https://lore.kernel.org/lkml/20240516222159.3710131-1-irogers@google.com/
+to make perf top behave as, you know, top does as it could be an
+option people depend on. A behavior that matters if you do user
+filtering as exited processes stay in perf top (both confusing and
+un-top like). Fwiw, that reminds me of another patch series being
+unreviewed:
+https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
+Anyway, the perf top flag is one that no-one knows exists on a command
+most people don't know exists - Julia Evans' zine of course loves it
+and we love Julia's work and the zine. So, it would seem to me that
+changing something as fundamental as how all non-core events behave
+would be seen as a regression. Imagine the person going to
+perfmon-events.intel.com, finding an event name and expecting to be
+able to use it with perf. Now they need to grub around in perf list to
+locate the PMU. What is appropriate for them to know about how
+suffixes work and show in perf list..? Well that's assuming suffixes
+work in the future as ARM will probably launch an a1000 CPU and the
+PMU will look like a hex suffix and the whole naming convention
+implodes.
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g.=
-.
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D14abc518580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D36c931489897af8=
-4
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D1940948c36d6e4d83=
-406
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
-ian) 2.40
+Even with this what would be the behavior of core events? You want
+legacy events to have priority over sysfs/json when there is no PMU.
+You know, and have stated not caring, RISC-V wants different and that
+it breaks Apple-M's PMUs for a fairly large range of kernel releases
+including 1 LTS kernel - the only reason I'm writing patches in this
+area in the 1st place. Software is soft and you can go fix software
+anywhere in the stack. Listening to vendors and not breaking everyone
+is the point-of-view these patches have been coming from. I find it
+very hard to have a conversation where this is just forgotten about
+and we're working on hypotheticals which seem to be both unwanted and
+implausible.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I don't know why people (yourself, Linus) keep wanting to show me the
+perf list output. It is arbitrary. I rewrote it and changed the
+behavior of all uncore PMUs within it (we didn't used to deduplicate
+based on the PMU suffix). It is nice that people think it reads like
+some religious text. Why is the formatting different in perf list for
+json specified events? Well it is because json events have
+descriptions and the events you are showing with a PMU don't have a
+description. I think because there is no description, an effort was
+made to keep the output compact and put the PMU and event name
+together. It wasn't trying to enter some kind of long lasting marriage
+that the event name should only ever be used with the PMU. What
+happens if an event is both in sysfs and json? Well the sysfs event
+will get the description from the json and then I believe it won't
+behave as you show. Did the event get broken, as perf list no longer
+shows it with a PMU, by having a json description written? I think not
+and I think having descriptions with events is a good thing.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7fe=
-b34a89c2a/non_bootable_disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5c6679b95774/vmlinux-=
-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c1e328257cca/bzI=
-mage-69e858e0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+1940948c36d6e4d83406@syzkaller.appspotmail.com
-
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: reFeb  1 04:41:=
-22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: re[   80.565140=
-][    C3] ------------[ cut here ]------------
-ceived NULL devi[   80.566857][    C3] WARNING: CPU: 3 PID: 215 at net/mac8=
-0211/tx.c:5040 __ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5040 [inl=
-ine]
-ceived NULL devi[   80.566857][    C3] WARNING: CPU: 3 PID: 215 at net/mac8=
-0211/tx.c:5040 __ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5035 [inl=
-ine]
-ceived NULL devi[   80.566857][    C3] WARNING: CPU: 3 PID: 215 at net/mac8=
-0211/tx.c:5040 __ieee80211_beacon_get+0x14ac/0x16b0 net/mac80211/tx.c:5469
-Feb  1 04:41:22 [   80.570111][    C3] Modules linked in:
-syzkaller daemon[   80.575975][    C3] Hardware name: QEMU Standard PC (Q35=
- + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-.err dhcpcd[5656[   80.579416][    C3] Workqueue: events_unbound toggle_all=
-ocation_gate
-Feb  1 04:41:22 [   80.583612][    C3] Code: 00 89 df 44 89 e6 e8 73 27 e2 =
-f6 44 38 e3 72 a1 e8 89 2d e2 f6 48 89 ef e8 11 94 3a f7 31 ed e9 9c fe ff =
-ff e8 75 2d e2 f6 90 <0f> 0b 90 e9 86 f6 ff ff 48 89 c6 48 c7 c7 e0 9c 2f 9=
-0 48 89 04 24
-syzkaller daemon[   80.589526][    C3] RSP: 0018:ffffc90000708b70 EFLAGS: 0=
-0010246
-.err dhcpcd[5656[   80.594053][    C3] RDX: ffff888023d5a440 RSI: ffffffff8=
-ad7812b RDI: 0000000000000001
-]: libudev: rece[   80.598999][    C3] R10: 0000000000000000 R11: 000000000=
-0000006 R12: ffff88802522b800
-Feb  1 04:41:22 syzkaller daemon[   80.604776][    C3] FS:  000000000000000=
-0(0000) GS:ffff88806a900000(0000) knlGS:0000000000000000
-Feb  1 04:41:22 [   80.607457][    C3] CS:  0010 DS: 0000 ES: 0000 CR0: 000=
-0000080050033
-syzkaller daemon[   80.609759][    C3] CR2: 000055555dc9d5c8 CR3: 000000000=
-df80000 CR4: 0000000000352ef0
-.err dhcpcd[5656[   80.612525][    C3] DR0: 0000000000000000 DR1: 000000000=
-0000000 DR2: 0000000000000000
-Feb  1 04:41:22 [   80.617384][    C3] Call Trace:
-syzkaller daemon[   80.619665][    C3]  ? __warn+0xea/0x3c0 kernel/panic.c:=
-746
-Feb  1 04:41:22 [   80.621268][    C3]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5040 [inline]
-Feb  1 04:41:22 [   80.621268][    C3]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5035 [inline]
-Feb  1 04:41:22 [   80.621268][    C3]  ? __ieee80211_beacon_get+0x14ac/0x1=
-6b0 net/mac80211/tx.c:5469
-syzkaller daemon[   80.623422][    C3]  ? __report_bug lib/bug.c:199 [inlin=
-e]
-syzkaller daemon[   80.623422][    C3]  ? report_bug+0x3c0/0x580 lib/bug.c:=
-219
-.err dhcpcd[5656[   80.623443][    C3]  ? handle_bug+0x54/0xa0 arch/x86/ker=
-nel/traps.c:285
-]: libudev: rece[   80.623454][    C3]  ? exc_invalid_op+0x17/0x50 arch/x86=
-/kernel/traps.c:309
-ived NULL device[   80.623465][    C3]  ? asm_exc_invalid_op+0x1a/0x20 arch=
-/x86/include/asm/idtentry.h:621
-
-Feb  1 04:41:2[   80.623491][    C3]  ? __ieee80211_beacon_update_cntdwn ne=
-t/mac80211/tx.c:5040 [inline]
-Feb  1 04:41:2[   80.623491][    C3]  ? __ieee80211_beacon_update_cntdwn ne=
-t/mac80211/tx.c:5035 [inline]
-Feb  1 04:41:2[   80.623491][    C3]  ? __ieee80211_beacon_get+0x14ab/0x16b=
-0 net/mac80211/tx.c:5469
-2 syzkaller daem[   80.623502][    C3]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5040 [inline]
-2 syzkaller daem[   80.623502][    C3]  ? __ieee80211_beacon_update_cntdwn =
-net/mac80211/tx.c:5035 [inline]
-2 syzkaller daem[   80.623502][    C3]  ? __ieee80211_beacon_get+0x14ac/0x1=
-6b0 net/mac80211/tx.c:5469
-on.err dhcpcd[56[   80.639836][    C3]  ? trace_raw_output_contention_begin=
-+0x90/0x100 include/trace/events/lock.h:95
-56]: libudev: re[   80.642110][    C3]  ieee80211_beacon_get include/net/ma=
-c80211.h:5641 [inline]
-56]: libudev: re[   80.642110][    C3]  mac80211_hwsim_beacon_tx+0x4ea/0xa1=
-0 drivers/net/wireless/virtual/mac80211_hwsim.c:2311
-ceived NULL devi[   80.644117][    C3]  ? __pfx_lock_acquire.part.0+0x10/0x=
-10 kernel/locking/lockdep.c:122
-ce
-Feb  1 04:41[   80.646194][    C3]  ? rcu_is_watching_curr_cpu include/linu=
-x/context_tracking.h:128 [inline]
-Feb  1 04:41[   80.646194][    C3]  ? rcu_is_watching+0x12/0xc0 kernel/rcu/=
-tree.c:716
-:22 syzkaller da[   80.646224][    C3]  ? __pfx_mac80211_hwsim_beacon_tx+0x=
-10/0x10 drivers/net/wireless/virtual/mac80211_hwsim.c:2254
-emon.err dhcpcd[[   80.651709][    C3]  ? __pfx_mac80211_hwsim_beacon_tx+0x=
-10/0x10 drivers/net/wireless/virtual/mac80211_hwsim.c:2254
-5656]: libudev: [   80.653917][    C3]  ? __pfx_mac80211_hwsim_beacon+0x10/=
-0x10 drivers/net/wireless/virtual/mac80211_hwsim.c:3161
-received NULL de[   80.655986][    C3]  ieee80211_iterate_active_interfaces=
-_atomic+0x71/0x1b0 net/mac80211/util.c:796
-vice
-Feb  1 04:[   80.660032][    C3]  __run_hrtimer kernel/time/hrtimer.c:1738 =
-[inline]
-Feb  1 04:[   80.660032][    C3]  __hrtimer_run_queues+0x20a/0xae0 kernel/t=
-ime/hrtimer.c:1802
-41:22 syzkaller [   80.661949][    C3]  ? __pfx___hrtimer_run_queues+0x10/0=
-x10 include/trace/events/timer.h:222
-daemon.err dhcpc[   80.664061][    C3]  ? rdtsc_ordered arch/x86/include/as=
-m/msr.h:217 [inline]
-daemon.err dhcpc[   80.664061][    C3]  ? read_tsc+0x9/0x20 arch/x86/kernel=
-/tsc.c:1133
-Feb  1 04:41:22 [   80.665708][    C3]  hrtimer_run_softirq+0x17d/0x350 ker=
-nel/time/hrtimer.c:1819
-syzkaller daemon[   80.667629][    C3]  handle_softirqs+0x213/0x8f0 kernel/=
-softirq.c:561
-.err dhcpcd[5656[   80.667648][    C3]  ? __pfx_handle_softirqs+0x10/0x10 i=
-nclude/trace/events/irq.h:156
-Feb  1 04:41:22 [   80.672792][    C3]  irq_exit_rcu+0x9/0x30 kernel/softir=
-q.c:678
-syzkaller daemon[   80.674405][    C3]  instr_sysvec_apic_timer_interrupt a=
-rch/x86/kernel/apic/apic.c:1049 [inline]
-syzkaller daemon[   80.674405][    C3]  sysvec_apic_timer_interrupt+0xa4/0x=
-c0 arch/x86/kernel/apic/apic.c:1049
-.err dhcpcd[5656[   80.677355][    C3]  <TASK>
-]: libudev: rece[   80.678641][    C3]  asm_sysvec_apic_timer_interrupt+0x1=
-a/0x20 arch/x86/include/asm/idtentry.h:702
-ived NULL device[   80.682818][    C3] Code: 0c 00 85 ed 74 4d 48 b8 00 00 =
-00 00 00 fc ff df 4d 89 fc 4c 89 fd 49 c1 ec 03 83 e5 07 49 01 c4 83 c5 03 =
-e8 fc 04 0c 00 f3 90 <41> 0f b6 04 24 40 38 c5 7c 08 84 c0 0f 85 e8 0b 00 0=
-0 8b 43 08 31
-Feb  1 04:41:22 [   80.688696][    C3] RSP: 0018:ffffc900032c7928 EFLAGS: 0=
-0000293
-syzkaller daemon[   80.690906][    C3] RAX: 0000000000000000 RBX: ffff88806=
-a646880 RCX: ffffffff81ada9ca
-.err dhcpcd[5656[   80.690915][    C3] RDX: ffff888023d5a440 RSI: ffffffff8=
-1ada9a4 RDI: 0000000000000005
-]: libudev: rece[   80.690934][    C3] R13: 0000000000000001 R14: ffff88806=
-a93fe40 R15: ffff88806a646888
-ived NULL device[   80.690945][    C3]  ? csd_lock_wait kernel/smp.c:340 [i=
-nline]
-ived NULL device[   80.690945][    C3]  ? smp_call_function_many_cond+0x4ea=
-/0x12c0 kernel/smp.c:885
-
-Feb  1 04:41:2[   80.705792][    C3]  ? rep_nop arch/x86/include/asm/vdso/p=
-rocessor.h:13 [inline]
-Feb  1 04:41:2[   80.705792][    C3]  ? cpu_relax arch/x86/include/asm/vdso=
-/processor.h:18 [inline]
-Feb  1 04:41:2[   80.705792][    C3]  ? csd_lock_wait kernel/smp.c:340 [inl=
-ine]
-Feb  1 04:41:2[   80.705792][    C3]  ? smp_call_function_many_cond+0x4c4/0=
-x12c0 kernel/smp.c:885
-2 syzkaller daem[   80.707978][    C3]  ? rep_nop arch/x86/include/asm/vdso=
-/processor.h:13 [inline]
-2 syzkaller daem[   80.707978][    C3]  ? cpu_relax arch/x86/include/asm/vd=
-so/processor.h:18 [inline]
-2 syzkaller daem[   80.707978][    C3]  ? csd_lock_wait kernel/smp.c:340 [i=
-nline]
-2 syzkaller daem[   80.707978][    C3]  ? smp_call_function_many_cond+0x4c4=
-/0x12c0 kernel/smp.c:885
-on.err dhcpcd[56[   80.708005][    C3]  on_each_cpu_cond_mask+0x40/0x90 ker=
-nel/smp.c:1052
-56]: libudev: re[   80.708016][    C3]  on_each_cpu include/linux/smp.h:71 =
-[inline]
-56]: libudev: re[   80.708016][    C3]  text_poke_sync arch/x86/kernel/alte=
-rnative.c:2114 [inline]
-56]: libudev: re[   80.708016][    C3]  text_poke_bp_batch+0x561/0x760 arch=
-/x86/kernel/alternative.c:2407
-Feb  1 04:41:22 [   80.718892][    C3]  ? text_poke_queue+0xef/0x180 arch/x=
-86/kernel/alternative.c:2531
-syzkaller daemon[   80.720733][    C3]  ? arch_jump_label_transform_queue+0=
-xc0/0x120 arch/x86/kernel/jump_label.c:140
-.err dhcpcd[5656[   80.723037][    C3]  text_poke_flush arch/x86/kernel/alt=
-ernative.c:2515 [inline]
-.err dhcpcd[5656[   80.723037][    C3]  text_poke_flush arch/x86/kernel/alt=
-ernative.c:2512 [inline]
-.err dhcpcd[5656[   80.723037][    C3]  text_poke_finish+0x30/0x40 arch/x86=
-/kernel/alternative.c:2522
-]: libudev: rece[   80.724834][    C3]  arch_jump_label_transform_apply+0x1=
-c/0x30 arch/x86/kernel/jump_label.c:146
-ived NULL device[   80.727004][    C3]  jump_label_update+0x1d7/0x400 kerne=
-l/jump_label.c:920
-Feb  1 04:41:22 [   80.727033][    C3]  static_key_enable+0x1a/0x20 kernel/=
-jump_label.c:223
-syzkaller daemon[   80.732398][    C3]  toggle_allocation_gate mm/kfence/co=
-re.c:849 [inline]
-syzkaller daemon[   80.732398][    C3]  toggle_allocation_gate+0xfc/0x260 m=
-m/kfence/core.c:841
-.err dhcpcd[5656[   80.734265][    C3]  ? __pfx_toggle_allocation_gate+0x10=
-/0x10 mm/kfence/core.c:825
-]: libudev: rece[   80.736346][    C3]  ? trace_lock_acquire+0x14e/0x1f0 in=
-clude/trace/events/lock.h:24
-ived NULL device[   80.736374][    C3]  ? lock_acquire+0x2f/0xb0 kernel/loc=
-king/lockdep.c:5822
-
-Feb  1 04:41:2[   80.741332][    C3]  ? process_one_work+0x921/0x1ba0 kerne=
-l/workqueue.c:3212
-2 syzkaller daem[   80.743209][    C3]  process_one_work+0x9c5/0x1ba0 kerne=
-l/workqueue.c:3236
-on.err dhcpcd[56[   80.745000][    C3]  ? __pfx_lock_acquire.part.0+0x10/0x=
-10 kernel/locking/lockdep.c:122
-56]: libudev: re[   80.747053][    C3]  ? __pfx_process_one_work+0x10/0x10 =
-include/linux/list.h:153
-ceived NULL devi[   80.747072][    C3]  ? assign_work+0x1a0/0x250 kernel/wo=
-rkqueue.c:1200
-Feb  1 04:41:22 [   80.752240][    C3]  ? __kthread_parkme+0x148/0x220 kern=
-el/kthread.c:304
-syzkaller daemon[   80.754055][    C3]  ? __pfx_worker_thread+0x10/0x10 inc=
-lude/linux/list.h:183
-.err dhcpcd[5656[   80.757148][    C3]  ? __pfx_kthread+0x10/0x10 arch/x86/=
-include/asm/bitops.h:206
-]: libudev: rece[   80.758861][    C3]  ? lock_acquire+0x2f/0xb0 kernel/loc=
-king/lockdep.c:5822
-Feb  1 04:41:22 [   80.761903][    C3]  ret_from_fork+0x45/0x80 arch/x86/ke=
-rnel/process.c:148
-syzkaller daemon[   80.763643][    C3]  ? __pfx_kthread+0x10/0x10 arch/x86/=
-include/asm/bitops.h:206
-.err dhcpcd[5656[   80.765412][    C3]  ret_from_fork_asm+0x1a/0x30 arch/x8=
-6/entry/entry_64.S:244
-]: l[i bu d e8v0:. 7r6e7c2e52][    C3]  </TASK>
-ived NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-eviFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656Feb  1 04:41:22 syzkalle=
-r daemon.err dhcpcd[5656Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: =
-libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: Feb  1 04:41:22=
- syzkaller daemonFeb  1 04:41:22 syzkaller daemonFeb  1 04:41:22 syzkaller =
-daemon.err dhcpcd[5656]: libudev: received NULL deviceFeb  1 04:41:22 syzka=
-ller daemonFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: rece=
-ived NULL deviceFeb  1 04:41:22 syzkaller daemonFeb  1 04:41:22 syzkaller d=
-aemon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: Feb  1 04:41:22=
- syzkaller daemon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[56Feb  1 04:41:22 syzkaller dae=
-mon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[56Feb  1 04:41:22 syzkaller dae=
-monFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NUL=
-L deviceFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: receive=
-d NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[56Feb  1 04:41:22 syzkaller dae=
-mon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[56Feb  1 04:41:22 syzkaller dae=
-monFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NUL=
-L device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[Feb  1 04:41:22 syzkaller daemo=
-n.err dhcpcd[5656Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev=
-: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: reFeb  1 04:41:=
-22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL deviceFeb  1 0=
-4:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[56Feb  1 04:41:22 syzkaller dae=
-mon.err dhcpcd[5656Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libud=
-ev: receFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656Feb  1 04:41:22 syz=
-kaller daemon.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: reFeb  1 04:41:=
-22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL deviceFeb  1 0=
-4:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: receFeb  1 04:41:22 syz=
-kaller daemonFeb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: re=
-ceived NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[Feb  1 04:41:22 syzkaller daemo=
-n.err dhcpcd[5656]: libudev: received NULL device
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-Feb  1 04:41:22 syzkaller daemon.err dhcpcd[5656]: libudev: received NULL d=
-evice
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Ian
