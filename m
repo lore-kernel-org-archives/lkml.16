@@ -1,102 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9770944F;
-	Wed,  5 Feb 2025 19:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C81B944F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 19:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738782709; cv=none; b=Ju8qN7JBXDVVKOXlErTvsgRtSZqdXtEVrUNZmWqVbb2ni0TyjT3g+ywHnr0dzNd/cd2ndlhEEA73XIHjlAUV/GrE98810BvHV/Of3bMFfC6BxjudBEV1EgAXiP+5w9lijsITZ7mMSC2+Ki7FfdRFT57syKpXigKPVYdQ3Tcw0k4=
+	t=1738782721; cv=none; b=BWd9bQhCZ8Y5mL3ft7447qoYZtJObUEAQ3d8lg7zD9h7lvYX08sBsbnNRFhKl9g115UaEqg2ThNXuqpPXOBsdu9pGhbNKjDtEc+LQQVgZsTFQWDj+MFiT46EL9ONrRme0At7jA2MubT95nP6X2B4H8gx4RUehDK8VYDKc4GehWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738782709; c=relaxed/simple;
-	bh=Cfh1njfmFVp1IfDiv7sGSmv8/HD6Y5Neq0KxmXPyi7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DxrwwV1+eMCqmRSTTSwwcMC0FSj9fAmTI+7262fksfH+NIAU34pFvQoYtBprs2gyhhz9Pg50B0MqUexUZfc7qCkA8nbTKskcwTTILrl+4ennL5Siw/1Yv88/TrXZylg2l/hVYK9DqSQx690Y+uR6mwzZ4VNPuZFCI2StKMem1mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+gNtQ3c; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738782721; c=relaxed/simple;
+	bh=ahVt8nDfUz+XpTW0caq/I/kRRTZior/H7Zt9IrUB05I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8MvcGHNJKz0+SxXcPY791s/jnfodl1wZf1hPoGyyMQHQO37FGiS7nPteX6P4rrgzOKtMctj0Kqy6E92yoG1ZW9H0V/rvPFrdN03fN4GhLxAsspJsG6k6xrJ6CD643w662J6aeJY7A6cJklPkna9bthAkz/biMv0DJYMKKscFtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=B+9inK9e; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+gNtQ3c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738782708; x=1770318708;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=Cfh1njfmFVp1IfDiv7sGSmv8/HD6Y5Neq0KxmXPyi7o=;
-  b=B+gNtQ3cqPAfH++PIB3GDFraX6NKJ6NkgSVnrwvVa0IqbFxJRW+AwwKD
-   OtgDJ6cOFO8vMVsMgi1eaq3+z0pMVVaRnrphAQbnEIFd3qY3Qj346UYZ5
-   8YyWa4mT9l4gojc5amUWFqRiy51GdGM0sxNuQGR7shNeSHJ8lobCzB3YJ
-   kIAIcFLPyt4t0zVQfp+ZBYI9t0/RttgmTxAreoywDfrLCKDa3VQLPSTHk
-   Vy5T4EQEtFheNJEq2tPWfQmDwjoyHrhb5Psx9DUfIrZMQ/jzwE/UG9nGe
-   imZpZ+jAwRmeMHi2JyeyDRaaOQ0ysrPySp3ExRWiVV2y5Jc43ERX0gh9G
-   A==;
-X-CSE-ConnectionGUID: 3y0LVnseQmKvF8y46LZclw==
-X-CSE-MsgGUID: N2NZk3QKSeml2cZs2lvkmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38570582"
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="38570582"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 11:11:44 -0800
-X-CSE-ConnectionGUID: zfkCCFFxQvSwsiWlDGAVBw==
-X-CSE-MsgGUID: L22l8mFYS/22WdUvcbWGrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="110780356"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 11:11:43 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 3468920B5713;
-	Wed,  5 Feb 2025 11:11:41 -0800 (PST)
-Message-ID: <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com>
-Date: Wed, 5 Feb 2025 14:11:40 -0500
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="B+9inK9e"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f2f1181f2so3954905ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 11:11:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1738782718; x=1739387518; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kNceWuHxVHP10FvK7+0u+5/nQJsP7cLB5a60cYUAF7M=;
+        b=B+9inK9ekxEzhz5nRkiuf8ggturEENT0mJAlmKyBWnYFzsz82lZDQDCsjDmpdWBY+i
+         VIviAzKtlFKjxnGcHLeRVzhP7L717k9rZRdVfN/KRYC08tr4hTT9pvs46WCQtjGqokxN
+         erVmjuWVqoDwXRgq2DrHFvZS4hsEwxUqaqe8s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738782718; x=1739387518;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kNceWuHxVHP10FvK7+0u+5/nQJsP7cLB5a60cYUAF7M=;
+        b=EJVhBWDTUdduu/RGGMR3YwU4trh6cnJcLRoAxMaoL6iUHQ60YolfY7O3IZ7/2tpxtE
+         ustW/v4JGzN4BIqtB1PRYV2DoQ6oeBcFF3JvNRrNRpqYPkYoghEDuPPNPvKiHLQBdyRo
+         ExArdrbgu9UMOA0oXzlrfEr0MuRq/bAYAAMZzu7ZuiXVIzpYYrzabMRa8OD5Z7EovTW0
+         6Pxn0jNHxPJRLivNxjnNZAQ1u/QQztvjSnGIbGf8u2g3vJ8hGZez6xD/sbDRdc5wDRSU
+         /Q9xCfGan1mG/pvhmNc6N7B2qJGa2sTKIlEzWwmzt6q/NS2z1L4Jaw21vI99mFXYJV5N
+         q76A==
+X-Forwarded-Encrypted: i=1; AJvYcCVJEYlY6IJYI8Lj4uCdbrbtcsmvqorAqpmbhIpcgySm8tg6x4PDh8IvlIbM31lls9kF/yf0p5MSurynVxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXwmFUba2fPrIDd4i2lQrVXnFmFJVVAYJWR7BoZ1KoAfBfn7H1
+	0g/T7YIqBmcFPyuMDv2/ch49quXZn6eG+uGnht3YEKcHGp2wVKER7b6koiCCLaE=
+X-Gm-Gg: ASbGncshKNMgzPMReB/mPJl6eZMhCJNzLd6ZwHUTxp7fGS0++85D83uqCibOvAN0P4W
+	6t9ehaDBR8EfhJGheziX0LgcpORf/zit0mWcCJSFWhEXz2c+lMt/d0OcFEE3MDOBQt1ByBeHo2W
+	eY0MEwx+0r7zvTPun4Ewv0tV3oOHuDQWXU0xpVeVsqnS3vWtihe/gf8KcHAM2ZFqpQzc579/pDY
+	UIdOOvOIEyX2cn9SIQP2put1FlsqBA30yXu9SKR3i9SviMzT/dqj8za/JNwgex5mFF0f2NcWMwQ
+	C/WF6sHFwB0UKqonxl6mXkfNOF2lYOO4DG7nLPskcqDCK2eyZ1Mn2ePafA==
+X-Google-Smtp-Source: AGHT+IFYOundQisslmRmdQ5tay+inwk4vtVKmQvFOxokjjtp7IdQ8m0WxGdwfmWxDxVWILErH5utPA==
+X-Received: by 2002:a17:902:d4cd:b0:212:55c0:7e80 with SMTP id d9443c01a7336-21f17dfa16cmr68725365ad.20.1738782718643;
+        Wed, 05 Feb 2025 11:11:58 -0800 (PST)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1dbfda0sm1958799a91.48.2025.02.05.11.11.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 11:11:58 -0800 (PST)
+Date: Wed, 5 Feb 2025 11:11:55 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: pabeni@redhat.com, edumazet@google.com, sridhar.samudrala@intel.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Mina Almasry <almasrymina@google.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3] netdev-genl: Elide napi_id when not present
+Message-ID: <Z6O3-1rZm8wBazxG@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org,
+	pabeni@redhat.com, edumazet@google.com, sridhar.samudrala@intel.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Mina Almasry <almasrymina@google.com>,
+	open list <linux-kernel@vger.kernel.org>
+References: <20250204192724.199209-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids
- events/metrics
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
- Samantha Alt <samantha.alt@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
- Thomas Falcon <thomas.falcon@intel.com>
-References: <20250205173140.238294-1-irogers@google.com>
- <20250205173140.238294-12-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250205173140.238294-12-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204192724.199209-1-jdamato@fastly.com>
 
+On Tue, Feb 04, 2025 at 07:27:21PM +0000, Joe Damato wrote:
+> There are at least two cases where napi_id may not present and the
+> napi_id should be elided:
+> 
+> 1. Queues could be created, but napi_enable may not have been called
+>    yet. In this case, there may be a NAPI but it may not have an ID and
+>    output of a napi_id should be elided.
+> 
+> 2. TX-only NAPIs currently do not have NAPI IDs. If a TX queue happens
+>    to be linked with a TX-only NAPI, elide the NAPI ID from the netlink
+>    output as a NAPI ID of 0 is not useful for users.
 
+[...]
 
-On 2025-02-05 12:31 p.m., Ian Rogers wrote:
-> +    {
-> +        "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
-> +        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound + topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * slots",
-> +        "MetricGroup": "BvUW;TmaL1;TopdownL1;tma_L1_group",
-> +        "MetricName": "tma_retiring",
-> +        "MetricThreshold": "tma_retiring > 0.7 | tma_heavy_operations > 0.1",
-> +        "MetricgroupNoGroup": "TopdownL1",
-> +        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum Pipeline_Width throughput was achieved.  Maximizing Retiring typically increases the Instructions-per-cycle (see IPC metric). Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Heavy-operations or Microcode Assists are categorized under Retiring. They often indicate suboptimal performance and can often be optimized or avoided. Sample with: UOPS_RETIRED.SLOTS",
-> +        "ScaleUnit": "100%"
-> +    },
+>  		binding = rxq->mp_params.mp_priv;
+> @@ -397,8 +403,7 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+>  		break;
+>  	case NETDEV_QUEUE_TYPE_TX:
+>  		txq = netdev_get_tx_queue(netdev, q_idx);
+> -		if (txq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
+> -					     txq->napi->napi_id))
+> +		if (nla_put_napi_id(rsp, rxq->napi))
 
-The "Default" tag is missed for GNR as well.
-It seems the new CPUIDs are not added in the script?
+Err, looks like a typo. Sorry about that, will fix in v4.
 
-Thanks,
-Kan
+--
+pw-bot: cr
