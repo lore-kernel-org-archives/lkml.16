@@ -1,107 +1,72 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01546214A8E;
-	Wed,  5 Feb 2025 21:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54AA208989;
+	Wed,  5 Feb 2025 21:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738790849; cv=none; b=YrLr2KvGaxEWWQqiPLiy6cU9E3eG9fIWRkzjHzLWhn0KBckI4ds4s2H1OCmJ671Ry0AkL45oghL99q8zV+na5elL2DsbDzVj8ua8EKm5bzfHgS5/osUtpZkw7+PfzhI1c6pYMY69M++OwgqVy3fOJ5DaEFI9w/hGbDPv2OtJKqE=
+	t=1738790908; cv=none; b=Qbgqa2TAVSVkgICkwyhz9As+cOtrU71CTWnppfLuApR5CLwrp/7R9rIjwkNMRtrvfbmT/xOLHp/7VA3YXudGGTCipqS13M9mjSCPDon7YuRAS7Y9TFDLwTyZnZxKEajA46fN/nBBtTDHZz9GKt9ylRxsn9iIz4lBA3Oojs/M8gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738790849; c=relaxed/simple;
-	bh=QD9y9LQemVKTii90PFWUVbywYCREixrRCd8nLKIawr4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fk9A6pco0nBFPhRrM0DTqM5shu2XUMK5FvfxEzv/xCpZXMErZSgyhof5VTlNwTTYh/NbDVEw3nRyxpjTIkIv4oztMRSMALrza3iG3oIEwBPfwH7bZwDI4wZYO2oFE0eJQJ/XRIFNaaZ7PGnJh6T7R04VkOL8yMVWzqWX2jj7A7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=PU5XojhC; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1738790908; c=relaxed/simple;
+	bh=gOkfrYqL7w8l55M5OlrVyygWCxWRJtwdTuF7Ge7wl2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oteaXV8/1ZeZUt95SW2Q8GR8AK2ORgxG2nH8gFcc1wvP3wVBp4AA/cJoLWRk8YMB4NfumUaBhAAldLYuYavPqFvqaD2PRgOss5vjwKwVeXwEgTtV3NEZ7Qxv0cXNlCfjp681Vi84JKoyd4XeADrdM4cVbFCwnv1lkcfvodzoKeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=pHccHxv+; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PU5XojhC"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361c705434so1381525e9.3;
-        Wed, 05 Feb 2025 13:27:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1738790846; x=1739395646; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Rf2mZryoWttHMkV+6oJudmL5GwtECSwKDELUfw8XxI=;
-        b=PU5XojhCk6/O2taM2+zB0RqJZBw07Tq/dxvnDk9mruscn+eSeRgwqKJF7C+nYtgqtU
-         yQXfMTOyksZu/qbdn3xGnD1m5KWb6jBRpsVa+TJahq37j89tTr9ITKvDnrogM3Rq34Na
-         agslRSZVzlys8SPSC3M0966040rftYoqn3N2+Hj4bcLGP9WW9SangoKkGB6VJPkNx2mp
-         nXlkDX0kWxlm7nM8jwjwhYffGgRV9wpszAhXatlvRfX8rTfBr2aIdbt+sv8kTb30omSg
-         42W+Jh0XODQqpRxwORCqpJqpANduvD09GrhO3vneXl1dpKuZZtpJp7r8X+AA/MfXn2/U
-         rrdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738790846; x=1739395646;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Rf2mZryoWttHMkV+6oJudmL5GwtECSwKDELUfw8XxI=;
-        b=s2k/fEI2c6keXLOXOMr3HPD6i5xfYS/ePR5AzFlUup4oWvkHUyHBj4+ZJ6dnJspdg3
-         6j4yMuKBXbUExnB2k07l1MwD/+hBGrg2pTmz+kz3ebxB08b7WWS/+nqZ7VYTre2ZlMsR
-         qyd2+pfU02h7xzVwxvU57t1HbsJt5V371wzMmG2dpdIXk4HIakk3pv4GV5hhLLCQS/Ed
-         ygs43djDWtB+aal33+8vbC7q/ZsxUjOzvt1cS/OKbeFylDmvUZkSgx9SXJj1LakRR9KC
-         imvIfyAgoWKzy1xgbzB+lDXS5JPyCbrDBiYBADn20P/aw4OA0ITjOyQzelaDqPsDJm+7
-         M7Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4btGouwZFiVnUVzC+xJ3FIeXF9IB8T1+vIRy+soUpEMLT+dwkHd/SA+ZhUZVZnJD7qjp8pGC2@vger.kernel.org, AJvYcCXbD8xsZCluwuPm+KNVMbLRxBEX1r9EH1p4Dz+ptMbJPYLA6xF8YB3UxfPKt6BN324g2pXX4v4WfVUzO5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPIAw0XFNTYcwCN3aVuTRtEofS6k2/O6ln67yroCFEzd9X5VpU
-	BPJqswZ/qjjEEfqeg4d2QbsyromojKqNIWKIfj/+Ob5AgildVM4=
-X-Gm-Gg: ASbGncslov3O7aXA7CzNLMJC4nLxo/fysjWRfQTdXjvmgjdc7tJs7I4wjTVJSEQ3DGb
-	XrCTLyK3u4B4siZSgWRmrLMF0d9yu0OoBFyOMKWiW7XP5UrA40ewfz90Yqg2Fqj5dIEAYsiD2aH
-	yGyb3dWCZFVwPIb6Il83Ignij3GgL5Z4Ol8BJD8xOri2wVaG7le8av8ziNXi9V4BrjxNMliL3pV
-	Z6Ob9+j7tEKIzhkTOhq4+ZJL2XLngOK24QmmJTkDKjU0CRwocPAH63z56xbKPET2B2ey28HIu6P
-	9JKMzJkZgX5ndZHrvAnsbOnsLKzAnCOBdC/3+kszkRUzrqlEHKqV3WPuAMEzTcHNX+HT
-X-Google-Smtp-Source: AGHT+IFFQpAZLv7hW8UOdcGZ3nVzkW+8Tj96nnnPtvS+Rrjykn9y47soqVCJLvivO+CRYt2RCFFHRg==
-X-Received: by 2002:a05:6000:1449:b0:38d:b107:d541 with SMTP id ffacd0b85a97d-38db491f553mr3458351f8f.37.1738790845944;
-        Wed, 05 Feb 2025 13:27:25 -0800 (PST)
-Received: from [192.168.1.3] (p5b2b4bac.dip0.t-ipconnect.de. [91.43.75.172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbb34ca6esm523806f8f.62.2025.02.05.13.27.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 13:27:25 -0800 (PST)
-Message-ID: <163e78ec-5c5e-4b9c-8c93-44179f93268f@googlemail.com>
-Date: Wed, 5 Feb 2025 22:27:24 +0100
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pHccHxv+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=py0hkrfL9mowZAkyiO6n2iutyc+zdodl2pydFVt894I=; b=pHccHxv+o0N1JXp+atykEsyqak
+	7vB4EXU9NU7BuDQ7RsYwRFZli2uwjDariB58UL9RlOySGtAxR8sptAxyp4Kk+hGlkLCRcrfHQLgF7
+	03Ipn4btSTKc0XVJYaVp1cpxFQnfmEBd6ME4lQ1lkD3/gwPtOdOdKQmrMatJOb20cJDA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tfmwM-00BJES-LG; Wed, 05 Feb 2025 22:28:10 +0100
+Date: Wed, 5 Feb 2025 22:28:10 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael Dege <michael.dege@renesas.com>,
+	Christian Mardmoeller <christian.mardmoeller@renesas.com>,
+	Dennis Ostermann <dennis.ostermann@renesas.com>
+Subject: Re: [PATCH net-next] net: renesas: rswitch: cleanup max_speed setting
+Message-ID: <04f35c2f-f6ab-4fec-b282-e04c9008e47b@lunn.ch>
+References: <20250203170941.2491964-1-nikita.yoush@cogentembedded.com>
+ <18a72981-9896-4725-8f5b-5783224de300@lunn.ch>
+ <93856925-b451-408c-8dee-bfd8dc2d56b3@cogentembedded.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250205134456.221272033@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93856925-b451-408c-8dee-bfd8dc2d56b3@cogentembedded.com>
 
-Am 05.02.2025 um 14:35 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.13.2 release.
-> There are 623 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Feb 05, 2025 at 09:26:10PM +0100, Nikita Yushchenko wrote:
+> > If the interface mode is 5GBASER why set the speed to SPEED_2500?
+> > Also, USXGMII allows up to 10G. So this all looks a bit odd.
+> 
+> 2500 is hardware limit (or at least the datasheet states so).
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Then it should return -EINVAL if the device tree has a phy-mode the
+hardware does not support.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+USXGMII is maybe a bit harder, since i don't know if the higher speeds
+are optional, but my understanding is that USXGMII allows up to
+10G. Is it really using USXGMII, or 2500BaseX?
 
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+	Andrew
