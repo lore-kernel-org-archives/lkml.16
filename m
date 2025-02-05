@@ -1,189 +1,123 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFDF25A647
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2BA25A647;
+	Wed,  5 Feb 2025 04:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738730915; cv=none; b=S5dojacxx88LwpkJec9HpoQBNI6jAiwBHVJPaoRVE3eLMymmoo3klh/74KMtkDDfP6zd7M83FF3StOjGr7fyta/MeljFfkkoiEAxotmX6Cy4cZPZ3TDT1PfCFqcZe1Ppkbs5Gs9F+xDiFCGXJdAXOx7xFMss1nF8dJhSsGRmoGY=
+	t=1738731119; cv=none; b=S7FqhjnvikP/iJjaY0ubxR4LHSxps/PQDOJDGcufytnalfH88enpkRcCPZfxtXXiKE2/IUPI1T8/yLmw2/x+Aj22eSWQ9/ZCf1j0ZQxmdXPH+slnQQjuEzNFUl4Gd+FmX/m7L1KPbcSz51ziu+ZU/lT5T1xScDQ6yswuOHg6l7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738730915; c=relaxed/simple;
-	bh=eiU7uDePcWnOLNcxWdT2qg+j5h1OAuZA2Uk+PVY+hYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lX2G2oqfctj3xqBIso7HjTEupKY2z0tGALsx1s9yOTOf9eNWDBaPDQ/QTzTEivGkNttnGWKI4Z5sqm3mHI7xOzkqhRXg0fciz48lZ4ugF+IVHubnAVmvoRL1yJyEu9jDBIqIHVCHpEWaVYEvdJEhx+QV2dWrhfJFKD4BDxmhgMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NiyAltxK; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738731119; c=relaxed/simple;
+	bh=ybGdNS7Y8l7pGUYL2bJBbTcs7iGTw/euiMwMI47xFtY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzatuPTg9JwlstFLgftvdiLWUPC6YHCQmJtJmB3Sd3HJ/IzBM1aI6X+e/pUnqvj+O+r1/TjriJ1WZn228ejgKLxSvPda4my6VVM1DaT1X+yJzIfSfNht/L/Ne0VY8jWnJZ6tBYJ1HE0hvzXdUydmP/tDwtLCOvjGfwcBISk6JRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b285+VjE; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NiyAltxK"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a814c54742so269325ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 20:48:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b285+VjE"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso43846855e9.3;
+        Tue, 04 Feb 2025 20:51:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738730912; x=1739335712; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rdUHWjnri+g2A9ir83ZJXkiX3qchGiLgbVc6h7UdLQQ=;
-        b=NiyAltxK3Q5Cc/hdIDUenz7gDZvYnybQ0wxy3+LevpJqp9RGKumE008G+JNjJYUH9N
-         PZ9C7oPIlAGXPgKn5XHka7GcvhLHSD7+mPyJou0kYvPac3dOyGHpjq/2qrqi3xZj6DBI
-         jVVYQsf0jggxPe0/gXFBUnA+6hydjoJTAeDi0d4MwKLtZJTkzTtZiuu0Lc6TcJffgkX5
-         BDZyVb4gSzXteE/I97h9ucWFRrCthh+3wIoitTvEtZ586/x2uWim4Vt8j1NzsIk4xaoZ
-         QO0PTB4I6B7iTdbEZlURaJtDk5jvSNEOMj6Ojp5RMUT7mFqUqq6Psm+AemcPhQilSgQ3
-         iCKg==
+        d=gmail.com; s=20230601; t=1738731116; x=1739335916; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfOfy7nuYPrPw4/oQ9CZSZg1uMT6cOxvBtvO/o96Zv4=;
+        b=b285+VjExzzq4Acph6D2uyhQqEHF4SFVw80IjGTUL/h/5Szpw4HSwVKGW/rAZ6UBle
+         KXs2VqjH4VpLGdizYW09aUlA4G89QfrIL53lky93elJMbMKDwJ04ra/fh+eYJeVnx6m1
+         uCoQBwGjIV9BU1z1oWWxS4H7TklnymQeLBoSg1tlQrWYduCJEHwe8C02wiuRDGMLGrel
+         Rp7HoiEVWtt/IzZAN+Qc7gH8wx61L5VyjO0xideD+0tkDNLAcq/y65nrfl3rSL339Tg6
+         +DwcNNWtkIsoOUuvUL5SF4ddxSXnj2+68PMrG8m6BHA96OnWZVdX8kOaJqzscC+XsMqN
+         V0NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738730912; x=1739335712;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rdUHWjnri+g2A9ir83ZJXkiX3qchGiLgbVc6h7UdLQQ=;
-        b=vnx9MArMyMdaenC2TGLpLGTa2dYOIGAb4q0CFXgAqUyo7eGLNZmnzStzf7nMSVJlvf
-         s4AIeW/VH1HksGgoRs8YkA6PCpTKIen4qjjvPBhIjK6c56TcQuP1fRFTfBGF2gIj8Vie
-         sQ39W6oVMkmp5aAOqBZm0NQrNCAJdejeiYF+YR9vdUgFo4XqeIu9Wx+bcKlgiKpgI/k+
-         MwMn/QD3wqolrDQ0iUKiN3PdFRAYGeA/d/2yw2WcvY+Kqs1nA1NJoTMc0i7zoWgecATX
-         khEDoMiMafGYuDS0pkd5phWC8Y7+q05WKal4RyjAnijDUMonIXapTw9lqfgF+Wk3UYq/
-         1edQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBvS7HQImBnRkIzESzzR2POu9lg3v5+KoD5q2RixgHcYNlU2zL7QpLZago7vhp+gM+pvC9/TuWHdnPxNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrgrEkZKpTRjOeJnP/JAMPyW9uk8QgB68kSi+WQolGO0mV0KeY
-	h8SB2OdATHe0RuEAW4C5OeJyjrOws+Qnl95k/Rn2uzWMbPOg7TUeaN/t5iSmOCPHMENj9P4khMT
-	hwG61bCSa3XbPUgM0RWzSpQ/BUYByE+m5PKPv
-X-Gm-Gg: ASbGncvreDCmA3NeIq7HYnjIQW1jo3ND68EjUVcZAuHaPzNmGYNnT1lMfj+xgfGXCxK
-	g5d6yaZ6hHzNplkLpuQypAgA3UN1OQKkmH3W70tzg94oWtdbgSevVOiDXE03LmGPbCeEL8BaHbQ
-	==
-X-Google-Smtp-Source: AGHT+IExCH3kYciLrs8VTeCS1q0/fpKXMt3mVQ/MBzl9HvILLwYiPvM02gN2sXmcSaAnL4t/wfGrKez4ICUMXO/LOBA=
-X-Received: by 2002:a05:6e02:1fc3:b0:3d0:52e9:2154 with SMTP id
- e9e14a558f8ab-3d052e92393mr367155ab.21.1738730912166; Tue, 04 Feb 2025
- 20:48:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738731116; x=1739335916;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BfOfy7nuYPrPw4/oQ9CZSZg1uMT6cOxvBtvO/o96Zv4=;
+        b=CRmlwhJ4jsDX5yu18Om6Qn+XknwboQR8a5xMZQCQcvQbrmbPq+v4nsWJbE6Hslu5v7
+         JbC6uLzJ+Uvsg10Em2Tjxhc5LuVBmHVugbfIAaoN4wAJDOHFzpSegyEn5cUj+5Tf5WNZ
+         xEcWt7sJVDFL8cY9P15w/YOUbSHraPuWvXFd6S6xZIEtQzkcsiQ0P+Ms/iBZobxiqfZE
+         8/RCAvUsgSBsxPO6HzXzJkAZ2nYxJyPwMzLz9cGsVSHOvpUPt9X7OFDXltcS2JrlMxFy
+         wnXTqp5daTdbrm4CCShn1X1Ex59PXSdSwERZRsc/sA4bIKR8xZeAZGw3hLwWOUsTNsvJ
+         ZqqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1JHmcYQHHAdKu1GNNV4adIQhWrqkLv/RMv1QK9rp5X3nSAF21NEAkbCpM30alAb2gOtH4tLwCzbGJ@vger.kernel.org, AJvYcCUBJVGUN+FEwlJ0xMNMb8QCs8kDZAZshcur/N+fo/uEfatA12oCsTCajCnv2VnWJNC5mYVcdEyvfBFaQ5be@vger.kernel.org, AJvYcCUHYVXCWgcw+nFuBNpWFPbEmrYROgxUjsFh9YFQWq98dyTx0E7NwVtXOYEVAHNqgzKCksUPq46L@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmJcQSzgDXwGv8zveR8KagmCQSo/FpJw7mAThSmYii38KHqJQE
+	8lEt2mFgc9GQYxeg+0dy+S8LigAiHMS7BaJBjVrCQurlAQbJJh/643sk6Q==
+X-Gm-Gg: ASbGncvJgm1azRk0dLA0jTqhvINhU7z7B7LXPldqcwFpZaCz3oyVaVYQT5w+3YXdlom
+	pYEoEKWtPmBzgbfFlaVEp+0NF1Row2DDktb1qfrM+VkWiVD04bHGHmDi10ACo/BdiqSrs23McQP
+	OBug3x5Li+a3Njz6CJfiK+9uTs78ZJr3GgUkzmO+Z3MlrPsVQtyfC19gnnjPbLSIPvbOiZWpRA8
+	D5tiC7ubvS8/WBzpJ3vCwS2c2SI3GbgD1OaVXE/eTj8nt5Ce8vsP0R54jXPYVTcOhsQCxTMlQNK
+	b/rlzPAqHTaQ
+X-Google-Smtp-Source: AGHT+IH7OjSXcBztKA3M+F9dW2Yvv6x77njhpIJzy1ygqnkDtdJ/IOfQs+r6CPrs07u1hzSKjJTc7A==
+X-Received: by 2002:a05:600c:5127:b0:438:da66:fdf9 with SMTP id 5b1f17b1804b1-4390d43f779mr7311655e9.18.1738731115808;
+        Tue, 04 Feb 2025 20:51:55 -0800 (PST)
+Received: from debian ([2a00:79c0:661:ad00:45fb:7d1a:5e4d:9727])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43907f16ffasm26910505e9.1.2025.02.04.20.51.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 20:51:55 -0800 (PST)
+Date: Wed, 5 Feb 2025 05:51:52 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/3] dt-bindings: net: ethernet-phy: add
+ property tx-amplitude-100base-tx-percent
+Message-ID: <20250205045152.GB3831@debian>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com>
+ <20250204153409.GA2771999-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
- <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
- <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
- <Z51RxQslsfSrW2ub@google.com> <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
- <Z6FcHJFYGc7HzSna@google.com> <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
- <Z6LFp5jiED7_-weN@google.com>
-In-Reply-To: <Z6LFp5jiED7_-weN@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 20:48:20 -0800
-X-Gm-Features: AWEUYZnEXt5oa58VVHL92sDVTZqpUBQ5pNK1_z8JNXYTnpv9jKbdMz_GMnU9w-c
-Message-ID: <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Atish Kumar Patra <atishp@rivosinc.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204153409.GA2771999-robh@kernel.org>
 
-On Tue, Feb 4, 2025 at 5:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+Am Tue, Feb 04, 2025 at 09:34:09AM -0600 schrieb Rob Herring:
+> On Tue, Feb 04, 2025 at 02:09:15PM +0100, Dimitri Fedrau wrote:
+> > Add property tx-amplitude-100base-tx-percent in the device tree bindings
+> > for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
+> > necessary to compensate losses on the PCB and connector, so the voltages
+> > measured on the RJ45 pins are conforming.
+> > 
+> > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> > index 2c71454ae8e362e7032e44712949e12da6826070..04f42961035f273990fdf4368ad1352397fc3774 100644
+> > --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> > +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> > @@ -232,6 +232,13 @@ properties:
+> >        PHY's that have configurable TX internal delays. If this property is
+> >        present then the PHY applies the TX delay.
+> >  
+> > +  tx-amplitude-100base-tx-percent:
+> > +    description: |
+> 
+> Don't need '|' if no formatting to preserve.
 >
-> On Mon, Feb 03, 2025 at 04:41:11PM -0800, Ian Rogers wrote:
-> > On Mon, Feb 3, 2025 at 4:15=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > [snip]
-> > > Yep, I agree it's confusing.  So my opinion is to use legacy encoding
-> > > and no default wildcard. :)
-> >
-> > Making it so that all non-legacy, non-core PMU events require a PMU is
-> > a breaking change and a regression for all users, command line event
-> > name suggesting, any tool built off of perf, and so on. Breaking all
-> > perf users and requiring all perf metrics be rewritten is well..
-> > something..
->
-> Well, I guess the majority of users don't use non-core PMU events.  And
-> we used to have PMU prefix on those events for years so old users should
-> not be affected.  Actually perf list shows them with PMU prefix so I
-> think new users are also expected to use the PMU name.
->
->   $ perf list pmu
->   ...
->   cstate_pkg/c2-residency/                           [Kernel PMU event]
->   ...
->   i915/actual-frequency/                             [Kernel PMU event]
->   i915/bcs0-busy/                                    [Kernel PMU event]
->   ...
->   msr/tsc/                                           [Kernel PMU event]
->   ...
->   power/energy-cores/                                [Kernel PMU event]
->   ...
->   uncore_clock/clockticks/                           [Kernel PMU event]
->   uncore_imc_free_running/data_read/                 [Kernel PMU event]
->   ...
->
-> The exception is the JSON events like below.
->
->   uncore interconnect:
->     unc_arb_coh_trk_requests.all
->          [UNC_ARB_COH_TRK_REQUESTS.ALL. Unit: uncore_arb]
->
-> which I hoped to be 'uncore_arb/unc_arb_coh_trk_requests.all/' or even
-> 'uncore_arb/coh_trk_requests.all/'.  But it would be hard to change the
-> all metric expressions now.  Also users can directly use them as they
-> are listed by `perf list`.  So we need to support that without PMUs.
+Wasn't sure about the '|', because some properties use
+it(rx-internal-delay-ps or tx-internal-delay-ps) others not. Is it wrong
+there ? I don't see any reason to preserve formatting there. Anyway will remove
+the '|' as you proposed. Thanks for explaining, didn't know.
 
-So there's nothing wrong with your proposal except it breaks non-core
-events. We can't agree to flip the default on a flag for perf top:
-https://lore.kernel.org/lkml/20240516222159.3710131-1-irogers@google.com/
-to make perf top behave as, you know, top does as it could be an
-option people depend on. A behavior that matters if you do user
-filtering as exited processes stay in perf top (both confusing and
-un-top like). Fwiw, that reminds me of another patch series being
-unreviewed:
-https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
-Anyway, the perf top flag is one that no-one knows exists on a command
-most people don't know exists - Julia Evans' zine of course loves it
-and we love Julia's work and the zine. So, it would seem to me that
-changing something as fundamental as how all non-core events behave
-would be seen as a regression. Imagine the person going to
-perfmon-events.intel.com, finding an event name and expecting to be
-able to use it with perf. Now they need to grub around in perf list to
-locate the PMU. What is appropriate for them to know about how
-suffixes work and show in perf list..? Well that's assuming suffixes
-work in the future as ARM will probably launch an a1000 CPU and the
-PMU will look like a hex suffix and the whole naming convention
-implodes.
+Best regards,
+Dimitri Fedrau
 
-Even with this what would be the behavior of core events? You want
-legacy events to have priority over sysfs/json when there is no PMU.
-You know, and have stated not caring, RISC-V wants different and that
-it breaks Apple-M's PMUs for a fairly large range of kernel releases
-including 1 LTS kernel - the only reason I'm writing patches in this
-area in the 1st place. Software is soft and you can go fix software
-anywhere in the stack. Listening to vendors and not breaking everyone
-is the point-of-view these patches have been coming from. I find it
-very hard to have a conversation where this is just forgotten about
-and we're working on hypotheticals which seem to be both unwanted and
-implausible.
-
-I don't know why people (yourself, Linus) keep wanting to show me the
-perf list output. It is arbitrary. I rewrote it and changed the
-behavior of all uncore PMUs within it (we didn't used to deduplicate
-based on the PMU suffix). It is nice that people think it reads like
-some religious text. Why is the formatting different in perf list for
-json specified events? Well it is because json events have
-descriptions and the events you are showing with a PMU don't have a
-description. I think because there is no description, an effort was
-made to keep the output compact and put the PMU and event name
-together. It wasn't trying to enter some kind of long lasting marriage
-that the event name should only ever be used with the PMU. What
-happens if an event is both in sysfs and json? Well the sysfs event
-will get the description from the json and then I believe it won't
-behave as you show. Did the event get broken, as perf list no longer
-shows it with a PMU, by having a json description written? I think not
-and I think having descriptions with events is a good thing.
-
-Thanks,
-Ian
+[...]
