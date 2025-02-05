@@ -1,105 +1,109 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mail-10625.protonmail.ch (mail-10625.protonmail.ch [79.135.106.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF4D17F7;
-	Wed,  5 Feb 2025 04:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ACE1FE456
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 04:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738729167; cv=none; b=foTDhNkqzgrHMEQRwfZpbsbnz5ggG9lKo1RIBA6flZy8t/qbekgNgYQgU8/puIsqbGSsXGK6by41YhMvZv5H0QKgfv8eSE0WWkuDDgF9Ir/t2cFVnt3zwMIWfiJw1cHwUBo6IjGRr7c6rM+yk3aJFz2qIryQNIXY8vgofyJjYRw=
+	t=1738729213; cv=none; b=oFEGtCEDpyQo/6iU1gwbCQ6zXcslCYTjwnRnBhu79eY+UVaH+1e/FpvIUSCtEG4ZUj8ueN2OYzY8+qvnUq+wem0CLAvWKPW5L0qGCSx0DIXis8NjEztG/Coxo2FLn9k7E5NsAnwr4f+PBBgaYguW9rKgmv7IxRKhXBAJsFKJOmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738729167; c=relaxed/simple;
-	bh=kEp82TZcTFzdsH3ySV9d4fygaV26WlGKIZz5L3vog10=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=rUK3/7RRhI1CeaXqtQ/PSHl+GsNinyB+1uZo/n6W8sdHqWDRY9H1AMrtlkDv4BAdLUpb6T4SsvOiHhINkzEQw200MIemDmo4V1hRJxgJlDUXgsDmZAhZw535ZrAhn+8rms51x5vD85eri/eAWF6yNWK1chlgq7DzuB+19XirXPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=cL60qL2u; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1738729213; c=relaxed/simple;
+	bh=diuf4Q6Qz1Ac77ejlgBsdm102NX+oVHubnbGNjCevZc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=omS6OyFIUZj5oCzbWNQlGkP7zxqKUQBGgVIHccUjx10v4xCYNl91vM4OuFPbB3Ef2Coe5yvTm281mXsVj13apupUEnnelPahUEuQwqc8gS2dVi3Ia4chjIwN0QsgGjBhQsYKO8/fwKx+gt0PCgDmm+7enOQ/JabVBvrceszHEHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=montleon.com; spf=pass smtp.mailfrom=montleon.com; dkim=pass (2048-bit key) header.d=montleon.com header.i=@montleon.com header.b=GzfIYBeD; arc=none smtp.client-ip=79.135.106.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=montleon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=montleon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="cL60qL2u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1738729166; x=1770265166;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=kEp82TZcTFzdsH3ySV9d4fygaV26WlGKIZz5L3vog10=;
-  b=cL60qL2u4nQj3lk2gzIs0pcUZjB6Qqjxz6SjzZoC7WpIUflI2BChY4Fs
-   ImkAJpg7z5q12G2YSbrzFiqBLpN++Jwqt3ci/8DstAFNG7lXxveHeU+4k
-   OeSp/AUbWywSIokfGY6jIWd+19JjPMcCLwy+/1PzwSCUsr/xczg5yh5k4
-   Rthtfig6jHAfbf2IPpHZPvsYQjmBDjtGW3yjeCR1VNY8VJk+IzNVeJhbj
-   nm7HJ6w/xbLD1n1bkGgB6jicax+SX86tUsnl7yNeWBvmIvwhqIkND1Dud
-   UxMitBbc7KrHkOz8HtXapWvBY1MC2pPhAenME1QS4w7IqHtSNmpoz1iyA
-   w==;
-X-CSE-ConnectionGUID: 2PqXhkWGQbSMV5Mi2wf2oQ==
-X-CSE-MsgGUID: HinrJpVLRrauwdmn8wS93g==
-X-IronPort-AV: E=Sophos;i="6.13,260,1732604400"; 
-   d="scan'208";a="37284659"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Feb 2025 21:19:25 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 4 Feb 2025 21:18:50 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 4 Feb 2025 21:18:46 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 5 Feb 2025 09:48:45 +0530
-Subject: [PATCH] dt-bindings: iio: light: fix missing type definition
+	dkim=pass (2048-bit key) header.d=montleon.com header.i=@montleon.com header.b="GzfIYBeD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=montleon.com;
+	s=protonmail2; t=1738729202; x=1738988402;
+	bh=diuf4Q6Qz1Ac77ejlgBsdm102NX+oVHubnbGNjCevZc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=GzfIYBeDbxiwtT9P9AhqKrOEQWPqebRn1RC+8DgxW3bNL98oBUItDP2SMI8zPmJOs
+	 lttBADT9wC8D/updemPL6obJ2ZwiEDb5UVRFowGoNMJ/Bkg43kTnr/aGj9pM/JX6iH
+	 jYR50NQOUrNTPPPIYwhj0DpIjVsxG1DAhnQdqMAW33L1s+YTobyctWGSlR5fKljGcC
+	 Q11EfD/woNXYOu0WR/QFg5bcKxUsoPvgxi5Bp38RU00jgAvsrJoHNKIN2hp46yJ3kt
+	 HSOHosxW+99aePWoiS9c2GKXvueQwivAkfsvL4SWM54G4xIbPuf0R65Wu2pmHIXY4E
+	 BBQ/hCRveLeNg==
+Date: Wed, 05 Feb 2025 04:19:58 +0000
+To: Domenico Andreoli <domenico.andreoli@linux.com>
+From: Jason Montleon <jason@montleon.com>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>, "si.yanteng@linux.dev" <si.yanteng@linux.dev>, "pabeni@redhat.com" <pabeni@redhat.com>
+Subject: Re: [REGRESSION,6.14.0-rc1]: rk_gmac-dwmac: no ethernet device shows up (NanoPi M4)
+Message-ID: <INKEBRCGF47MsjO5WHpLcf1OTcQHw2KG6_Ez-K9QiTwAnb4MRVErnxoUT1euX_o9oRrxUILDRDvlOZ7ezguCU4maUyvkk-UqU52l6xLsF8U=@montleon.com>
+In-Reply-To: <Z6CfoZtq7CBgc393@localhost>
+References: <Z6CfoZtq7CBgc393@localhost>
+Feedback-ID: 31263673:user:proton
+X-Pm-Message-ID: 91cf9ed08671796c68fcff7b4943b9d063c50cc0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250205-brcm-binding-v1-1-a996a840d2d6@microchip.com>
-X-B4-Tracking: v=1; b=H4sIAKTmomcC/x3MQQqAIBBA0avIrBNUULGrRIvUyWaRhUIE4t2Tl
- m/xf4OKhbDCzBoUfKjSlQfkxCAcW07IKQ6DEkoLJTT3JZzcU46UE7fSm+iciMYijOQuuNP775a
- 19w+cauLjXgAAAA==
-To: Mikael Gonella-Bolduc <m.gonella.bolduc@gmail.com>, Jonathan Cameron
-	<jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738729126; l=1139;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=kEp82TZcTFzdsH3ySV9d4fygaV26WlGKIZz5L3vog10=;
- b=KTRjWvKAPsdG4LpG06pf7j96uYK8YoKgCTYboPncyNHAEmtbaXAhAE8a83QuYcMV8smWAJnhp
- HMdf/2T8UcmDRBaQEZ8Xiub3QhYV+hqCLle1PRLkajs8b9Ia9mniNm6
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add the missing type definition for ps-cancellation-current-picoamp property.
+On Monday, February 3rd, 2025 at 5:51 AM, Domenico Andreoli <domenico.andre=
+oli@linux.com> wrote:
 
-Fixes: 47736b32d1b8 ("dt-bindings: iio: light: Add APDS9160 binding")
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml | 1 +
- 1 file changed, 1 insertion(+)
+>
+>
+> Hi,
+>
+> This morning I tried 6.14.0-rc1 on my NanoPi M4, the ethernet does not
+> show up.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml b/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml
-index bb1cc4404a55..f9c35c29fe04 100644
---- a/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml
-+++ b/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml
-@@ -37,6 +37,7 @@ properties:
-     maximum: 63
- 
-   ps-cancellation-current-picoamp:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-     description:
-       Proximity sensor crosstalk cancellation current in picoampere.
-       This parameter adjusts the current in steps of 2400 pA up to 276000 pA.
+I am experiencing similar behavior on the Lichee Pi 4A with thead-dwmac. It=
+ works fine on 6.12.12 and 6.13.1, but with 6.14-rc1 I don't see these last=
+ several lines of output as in your case. I did also see the same new error=
+:
++stmmaceth ffe7070000.ethernet: Can't specify Rx FIFO size
 
----
-base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
-change-id: 20250205-brcm-binding-71b6d990d67e
+It looks like this message was introduced in the following commit and if I =
+build with it reverted my ethernet interfaces work again.
 
-Best regards,
--- 
-Dharma Balasubiramani <dharma.b@microchip.com>
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d=
+rivers/net/ethernet/stmicro?h=3Dv6.14-rc1&id=3D8865d22656b442b8d0fb019e6acb=
+2292b99a9c3c
+
+Thanks,
+Jason
+
+> This is the diff of the output of `dmesg | grep rk_gmac-dwmac` on 6.13.0
+> and 6.14.0-rc1:
+>
+> --- m4.ok.log 2025-02-03 11:37:03.991757775 +0100
+> +++ m4.nok.log 2025-02-03 11:37:17.249455484 +0100
+> @@ -15,4 +15,13 @@
+> rk_gmac-dwmac fe300000.ethernet: COE Type 2
+> rk_gmac-dwmac fe300000.ethernet: TX Checksum insertion supported
+> rk_gmac-dwmac fe300000.ethernet: Wake-Up On Lan supported
+> -rk_gmac-dwmac fe300000.ethernet: Normal descriptors
+> -rk_gmac-dwmac fe300000.ethernet: Ring mode enabled
+> -rk_gmac-dwmac fe300000.ethernet: Enable RX Mitigation via HW Watchdog Ti=
+mer
+> -rk_gmac-dwmac fe300000.ethernet end0: renamed from eth0
+> -rk_gmac-dwmac fe300000.ethernet end0: Register MEM_TYPE_PAGE_POOL RxQ-0
+> -rk_gmac-dwmac fe300000.ethernet end0: PHY [stmmac-0:01] driver [Generic =
+PHY] (irq=3DPOLL)
+> -rk_gmac-dwmac fe300000.ethernet end0: No Safety Features support found
+> -rk_gmac-dwmac fe300000.ethernet end0: PTP not supported by HW
+> -rk_gmac-dwmac fe300000.ethernet end0: configuring for phy/rgmii link mod=
+e
+> -rk_gmac-dwmac fe300000.ethernet end0: Link is Up - 1Gbps/Full - flow con=
+trol rx/tx
+> +rk_gmac-dwmac fe300000.ethernet: Can't specify Rx FIFO size
+>
+> The configration was updated with `make olddefconfig`, as usual. I
+> could not find any new option that I might need to enable, if that is
+> what went wrong.
+>
+> Is there anything I can do to help diagnose this?
+>
+> Thanks,
+> Dom
 
