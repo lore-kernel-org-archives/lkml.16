@@ -1,133 +1,102 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D461D6DD4;
-	Wed,  5 Feb 2025 20:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28669F510;
+	Wed,  5 Feb 2025 20:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738785752; cv=none; b=u+P63traHTmetaKDlbqnrdY/HGpgd6TBtee7tg6ZrfWfkNShMBwlmmx/fPmdDLrbMdwxnti7vpjQpQbhwRwL/Dd7h5LoQbvCAMx0eKRHmIsV4JlfiQ09/49ZRMgyUty9OmVHt6mT5qxEvZ7488WA/KIGbYiIm2ZLobogXkDyZrE=
+	t=1738785791; cv=none; b=tV5SvFfZ6t5J6EzwADDe4LNrQcx3HMOm6kvhwbRTTtenul1Z4JDdqoGK26upPfiosCBIPYuAORb8YlVfBrqulAqcMkx4CDqsxKrW1z1PKh3Vdn3nlqnILBcXOz+UeFRMruOASu6A5NP5dBQuHdzOKjMafHPmovKib4Ec+UKpIvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738785752; c=relaxed/simple;
-	bh=MVPoBLK5Lta8JO2yl1wG/kVgdC3BN+3WXypXj8ueEmM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LGg+fMPyD5+W0U+bfewNLcq4880z1hfBgrV9axo7Y0YwxynrtMuqhVPCAB/ashbNKZYw1P7A/OussXPNqgBl82H0RlLj7LTPf/bGyVPIc41St7JD08CLYNBeMeeMNwfgFKPeSkRRkhEo9PMvmYPN2IEaS/owJu0NqVd5HDwBdD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=URcnDuHR; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+	s=arc-20240116; t=1738785791; c=relaxed/simple;
+	bh=wVsbPjzV6rdMCOh+/jqwKAwstIunHKGQ095pUiYGHjk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Lb36ENG7YWmb6Crv6SN3lDvhAlruNWm81jV/7JJ+wSoo+aNizSyYJGWc7OLEg1gyf5akTRO3iPIfjICx85qwulfRjxxHLA85HlHOLoeHF/j/4o5nqQGFyzCA3rO3APy5Ez4hp14FW4BYxQJtF+iCJFRukDR8krVhErQgdiE+dGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Db4qn0Ya; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="URcnDuHR"
-From: Fiona Behrens <me@kloenk.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1738785748; bh=Ol1X+RM/G7pFZ4iQsIUtvNm2GPmVCr2iNjwUsaYgXz0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=URcnDuHRu4GxRmr5lARpYIFTcEyAHyYbtXUqPJdZDcwqP98vJUyVXRGFtCuj+kyAr
-	 LQHp2Ng6+fR+6NSx3aHcnKoNjZIKqJOGXEep1uY7AUdoor/2uHkKKYpJsUlBXBqW6d
-	 Umoagtn3lntDvWuktf80wIAcWnhWi0imc+d/YlyU=
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>,  Miguel Ojeda <ojeda@kernel.org>,
-  Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,
-  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  Benno Lossin <benno.lossin@proton.me>,  Alice Ryhl
- <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,  Joel Becker
- <jlbec@evilplan.org>,  Christoph Hellwig <hch@lst.de>,
-  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] rust: sync: change `<Arc<T> as
- ForeignOwnable>::PointedTo` to `T`
-In-Reply-To: <20250131-configfs-v1-2-87947611401c@kernel.org> (Andreas
-	Hindborg's message of "Fri, 31 Jan 2025 14:30:09 +0100")
-References: <20250131-configfs-v1-0-87947611401c@kernel.org>
-	<20250131-configfs-v1-2-87947611401c@kernel.org>
-Date: Wed, 05 Feb 2025 21:02:27 +0100
-Message-ID: <875xlop3cc.fsf@kloenk.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db4qn0Ya"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dae9a0566so53167f8f.3;
+        Wed, 05 Feb 2025 12:03:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738785788; x=1739390588; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wVsbPjzV6rdMCOh+/jqwKAwstIunHKGQ095pUiYGHjk=;
+        b=Db4qn0YavtSVGIvfmsZ5tN7WZchm2+iWYjnFQQKZBbxNqVD3LI9zNtlbsZ25w4ABVy
+         gygMHj02f5hnC4c2N5e8a3Q2uKeRUL+wgyyQamOr5iOuXcv+qKj51Z4uw/1n6q35kHMv
+         A5wvQGyHEfPvHXibQpaYU2TzMESUiZEW6d4O6zb8iG22NfpgL8j0zgk4/e14ZmoWq/xM
+         oRzz5ThCJ58hT49UcMJcPlMXV2N3RiZCVKwEI6J0eWqFGSXM31z20lfro3ABfy3iYJ3l
+         SbgY0h1L/eyvVSBFWrAZ8qRnNcPV8evaaIG6tM7/NM8WqS1cagiVHuHSUG5nXpqaqXla
+         qTLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738785788; x=1739390588;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wVsbPjzV6rdMCOh+/jqwKAwstIunHKGQ095pUiYGHjk=;
+        b=MEiL2Su5vrf0yZ4XUOWKaogLl59iiCBrMOBuUsgM3dZajiHiGvmHJwJkJYfW5Lw3LW
+         2iOapM1k5K1RfUiq1uZxAWFmyWPVMnrQeXP8bYsGejz22Z9IvsiSQaJzPz3cZ2XOSmyS
+         8SWTBd4DX3TiTOUPF7vOyDVuzm2qnwEqvrT+0QHgjSHIPGTqDrzsRZElyKK58V9lp3DG
+         b/Ni/OftAKA4dBaEPnw4RP7E6EvQtcgUqfz24pxv8ouXW8zgQthxYCYV8h5ubrdRrQqV
+         BQ2bWkCk/FIVpyrsiZ03JaL0Bc7+/4ZBX2VywGwPxolnKfpeGOIGPy0Adq6Cyxav/q1q
+         2PCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBkGniDlRwATziD5o3cvM3MKNzfHjdQgO4k3JYuf6XldNghvCGdK86yM9rFSoC/OzBplrlLCbHd53hu6g=@vger.kernel.org, AJvYcCW1yJEWr2Z8oGqedWJ+a4kA0nIfDABFrYQnZxQZAlVSJyveXcBQtTlqrcGxto6siCJI8gGD0eiQbr//UQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyCOThBQ2Ljfw26UOtTdmiaJo16TFKVap7aLVbQE1VXNhmJlNk
+	br9BZZ1DZa2mSuyZB2WodbKSCZlnRAKxjVDLqgdSQ7TgjTfoKpKr
+X-Gm-Gg: ASbGncsYaVUu6bJ5pZZ+KBe/PpTdXjMFc6y9CvOvf6GXulwe5WF8FPK6Ngf8XakT6V/
+	wNF51pkSH8NGclZreQCWr70pxlgNQWTrzKxsxjUidG9F1vaQoBSJjTHdo7S3JSToA3lREEN+Iwd
+	fQXiII3wzt4echho/tUe/6LphIQysIdVw91OJUe5GzbENlS/bFYDMdl2pX8LYaQ2DTRL9yzSzZ7
+	K6ngkfumubFoHrLE1AW0cK3eH83IpT4v4ZgVkOiqk8l4GSG7sKCNL+o9VE2olZ7dv4hlbB7H2XV
+	OKwm4aBnnXXFKsmeiw==
+X-Google-Smtp-Source: AGHT+IHxPzC3OWRfQeyfRl+BFKwKx2W9NJBPhGCMgXrYywkQduJXE3rv389ml5v5uL9pAQDVgOrSZQ==
+X-Received: by 2002:a5d:6912:0:b0:38d:ae82:e5ed with SMTP id ffacd0b85a97d-38db4938882mr2717304f8f.51.1738785788239;
+        Wed, 05 Feb 2025 12:03:08 -0800 (PST)
+Received: from [10.176.235.56] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38db0e2f479sm4558397f8f.57.2025.02.05.12.03.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 12:03:07 -0800 (PST)
+Message-ID: <20655da3044d03777d85d97d1ca82b68a4c54056.camel@gmail.com>
+Subject: Re: [PATCH v3 7/8] scsi: ufs: core: Toggle Write Booster during
+ clock scaling base on gear speed
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Alim Akhtar
+ <alim.akhtar@samsung.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Peter Wang
+ <peter.wang@mediatek.com>,  Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Andrew Halaney <ahalaney@redhat.com>,
+ Eric Biggers <ebiggers@google.com>, Minwoo Im <minwoo.im@samsung.com>, open
+ list <linux-kernel@vger.kernel.org>
+Date: Wed, 05 Feb 2025 21:03:06 +0100
+In-Reply-To: <20250203081109.1614395-8-quic_ziqichen@quicinc.com>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	 <20250203081109.1614395-8-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-Andreas Hindborg <a.hindborg@kernel.org> writes:
+On Mon, 2025-02-03 at 16:11 +0800, Ziqi Chen wrote:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!hba->clk_scaling.wb_gea=
+r)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0hba->clk_scaling.wb_gear =3D UFS_HS_G3;
+> > +
 
-> Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation for
-> `Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove any
-> functionality, but allows `ArcInner` to be private. Further, it allows
-> downstream users to write code that is generic over `Box` and `Arc`, when
-> downstream users need access to `T` after calling `into_foreign`.
->
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+Hi Ziqi,=20
 
-Bit unfortunate that we first in the patch before made it public and now
-private again, but it makes sense to split patches.
-Think I also found this weird when I wrote my LED patch, so this makes
-a lot of sense as this is what I would expect.
+Initializes wb_gear to UFS_HS_G3, mabye add comments in the commit why.
 
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
 
->
-> ---
->
-> This patch is a dependency for Rust `configfs` abstractions. It allows both
-> `Box` and `Arc` to be used as pointer types in the `configfs` hierarchy.
-> ---
->  rust/kernel/sync/arc.rs | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-> index dfe4abf82c25cf18398628d9cd5345a292419351..503e318b4c4effa2f1499b6fee0944079fde99aa 100644
-> --- a/rust/kernel/sync/arc.rs
-> +++ b/rust/kernel/sync/arc.rs
-> @@ -143,7 +143,7 @@ pub struct Arc<T: ?Sized> {
->  #[doc(hidden)]
->  #[pin_data]
->  #[repr(C)]
-> -pub struct ArcInner<T: ?Sized> {
-> +struct ArcInner<T: ?Sized> {
->      refcount: Opaque<bindings::refcount_t>,
->      data: T,
->  }
-> @@ -345,18 +345,25 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
->  
->  // SAFETY: The `into_foreign` function returns a pointer that is well-aligned.
->  unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
-> -    type PointedTo = ArcInner<T>;
-> +    type PointedTo = T;
->      type Borrowed<'a> = ArcBorrow<'a, T>;
->      type BorrowedMut<'a> = Self::Borrowed<'a>;
->  
->      fn into_foreign(self) -> *mut Self::PointedTo {
-> -        ManuallyDrop::new(self).ptr.as_ptr()
-> +        let x = ManuallyDrop::new(self).ptr.as_ptr();
-> +        // SAFETY: `x` is a valid pointer to `Self` so the projection below is
-> +        // in bounds of the allocation.
-> +        unsafe { core::ptr::addr_of_mut!((*x).data) }
->      }
->  
->      unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
-> +        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
-> +        // the offset calculation below is in bounds of the allocation.
-> +        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
-> +
->          // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
->          // call to `Self::into_foreign`.
-> -        let inner = unsafe { NonNull::new_unchecked(ptr) };
-> +        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
->  
->          // SAFETY: By the safety requirement of this function, we know that `ptr` came from
->          // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
-> @@ -365,9 +372,13 @@ unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
->      }
->  
->      unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> ArcBorrow<'a, T> {
-> +        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
-> +        // the offset calculation below is in bounds of the allocation.
-> +        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
-> +
->          // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
->          // call to `Self::into_foreign`.
-> -        let inner = unsafe { NonNull::new_unchecked(ptr) };
-> +        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
->  
->          // SAFETY: The safety requirements of `from_foreign` ensure that the object remains alive
->          // for the lifetime of the returned value.
+Reviewed-by: Bean Huo <beanhuo@micron.com>
