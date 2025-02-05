@@ -1,233 +1,152 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F171DB15F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1D417F7;
+	Wed,  5 Feb 2025 16:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773314; cv=none; b=qJPbperzXHa7iG2Kyru8cLLPtUwpO7ABzwnQEtfVDU3tiSb9yBNeFvyYN5hpsIrJcWs78QqQ54do+zTgzLdMlBQCxcGoGpbTZZqwHUwTWbWZO97YHSW+nxrDFp2ivRUiPVoh5b3V8Ivsf5xVh1GTvGTpiJApoat96QGHl3zz1Sg=
+	t=1738773378; cv=none; b=Ofdfm+wdmhm9JLD5zY2HX07T0atB/5xiVtfOUiudw8whw3mPy0NprnghnjhL3JaMYwNJnLHHnJ2AdT5rv39yzue8t07Z55cKqRoHMy+yT3TVk+zkJAYZxRMxvCNR2ZB0BQpCPbTIODW0q+kChWHJGYHbWHv338uYnDP9b6I/c+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773314; c=relaxed/simple;
-	bh=dvp1QCVxxQcqxWUgrzP1J6jShJ84IWNo4DvyPXhOUnQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qb74475WRKXn1QRiKboieRfq1rbyciP6AEQBhrpJWRRngKZ+A/W0IhB+lrUJuCRQwArjh/fzkt8t1aL85rmuN9iP5OTqBfY50+gU9ra9+8LYPlEqXhky4s6WPD98+60EuruJwWcY9POTq0eZiHoUX9b/gEeWLB4Aq/OQUUg2hms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RyGzLloF; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738773378; c=relaxed/simple;
+	bh=m+KkLZ0WFhRYUT9MhV67pCyH7ljAwfFdntl25wh0e0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=buSbIMyogufz6CnO68sSfdWkmbNN3rOHETog4bOrqqu3VySymuGRDAAnyEI88W9MdxTa7gaZnMB2XbaqGP0WG/ThY8YvoAmipcPOQmdAbz/xgJLLaplEg61H1KeV+PlPhR8Soqchb7rwf1t8q10+97b7RsnIxI81pFheAm3R41A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3Gs96YS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RyGzLloF"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so178905ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:35:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738773312; x=1739378112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CeDW3SOPT0I7+guyMByE6uP86Z41s6fPZV6qcWyTgnI=;
-        b=RyGzLloF9kIVcBWhCsnkVQBGQ41bihbdA8eLhEzHXenjAJAWsxgJhvVUbGMyRpW2ld
-         xXo9b8UR9PQ+W/CbAgefTz/n6kRrbOsFN6b+Ln+4L3EUZEzBmfzjwnninQZ+FJ3uIijz
-         c3161FMCXB4saBGecUv0gpXIzZSUvB/1uZV4vS+C3CzpqCvKypU0/VaBjhbSTWumwl+R
-         avWgq2kcgDASsPg96FLa78tFoL+5Hd0nD73D7/1WGPwkDhiBMilIR3gCSTFIsPn2+CzF
-         aBpfe0odas+IM8Iw9mM7VDjFrwru95ReTUJiUirDnTKusTeCIQ6kyCiGGkrBkDcVumDF
-         jSPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738773312; x=1739378112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CeDW3SOPT0I7+guyMByE6uP86Z41s6fPZV6qcWyTgnI=;
-        b=M9wh48YxtA12WiVe+I0LuHQrQmh03dCnVxQXfImQW3mrXD+3VkCHGl2+dvjwX9Mtb7
-         033MujPxaK/fNfr2Vi0yGmUAIhDQ+Qce9OyPHPcEg941ADkOD9hYbzqIZWtz+gzuF2SN
-         c3uLtgNDnfubbIvEABC/A12CN6gusOCGeeXfAUUIP4LTUw/D4e1GLyv39ovDjPG51dUv
-         tY5sRuFNMRmePe7W1u+Wu0+tVQAoCWex098Rt2C/Wq9SmyGBoCMgBYkPcK1/c6YtLh4c
-         17gqwHK0uYcwKgQMjiEtQEO1hrRi+Zg8PEW5ebV+LwqtEGBzr+fJTQ5mlsnolwFrqUXB
-         bvfg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBjdM5FwYO/aHpz2WhpUDyI4PhHoLarHDdqNMz1W/n+hXK+BnzS5eUJWXgjFHOhata/oCIrA5UbX671Q4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfCQwBNxdq5GhUVCpkAPIQPzE6JN8mZ0YAWcCUlt9WZFYqQHF3
-	AB/x02jJ9fA15Utm89X40830oF3F5BNqgr0fof87BhGMs3VW9Zvn7Eym+FHZ6s2oPHEtf4BJGpq
-	JDhkY8wIOy/A7MIWvYMTq0oXSzdIib31EE9y7
-X-Gm-Gg: ASbGnctnr6S2dwqesTtyFE/EpRGWn9g7BXCRH2dOFU5eeNie4MQ5ZxDODyFp+s/Cw4v
-	OMpOpAENbOG8rx4XEFGRBVKCsxu49EKqaga/vAmfEDH0ENMXb4hYO+hA0Y5DUperIgm3kpAl2lC
-	jJgJIFjgPU7vAifJIZQI9jdQtI
-X-Google-Smtp-Source: AGHT+IF/1cvo8Gb+iy3C21tsS3O07s4tko4EtPhMOkFSCFs9t9K/CXygGAtFKu1l5fy6ofdFJnQ7W/55GFIwVZIjuhw=
-X-Received: by 2002:a05:6e02:3c06:b0:3d0:507f:38dd with SMTP id
- e9e14a558f8ab-3d0507f3b50mr3538025ab.5.1738773311918; Wed, 05 Feb 2025
- 08:35:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3Gs96YS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65FCC4CED1;
+	Wed,  5 Feb 2025 16:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738773377;
+	bh=m+KkLZ0WFhRYUT9MhV67pCyH7ljAwfFdntl25wh0e0M=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=D3Gs96YSibgb+/uNEyvDoWQzX9FcoQD3b1wzc4Pby8dk1Xug3hwF4p19kpR3Nf9Xl
+	 Ua8qe73aTPsm3LBbbQKrcM0YrIlE7gu0t02APoQ2nxvb1yMqdh12j3ahuWgG1UcCZd
+	 54JJzQVTDGxs831DLGZwFfEaZMG+BWdf8FluzKglxCnqHoBRw5bAdHCGUeZtHgezio
+	 n4SqmBP21Kc21P1NMdIZh/563K5tGyUJvvoCDeoVivlb3k+cu0KGMLBvuS8PFz/oiz
+	 LrVfNYOPw1BH4tN4Ur+UmeFRIHX1yPPfpYrPZiGy5rGQpmhUM2j22PBdn+PkxWoBMe
+	 VlG7hsSI77ERA==
+Message-ID: <bd1ad035-685e-4684-98e8-e32b98d870f7@kernel.org>
+Date: Wed, 5 Feb 2025 17:36:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204213259.127939-1-irogers@google.com> <CAP-5=fXpuND+kNe16CJMETkMOW+__eQpB8No0ra5gyEcfqCCKQ@mail.gmail.com>
- <d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com>
- <CAP-5=fV8EcxVZR0Be6wb57_VvssE9FYFBTmbd415CqmidGWT7g@mail.gmail.com> <ca45ff5e-3d1a-4149-8efe-7615dd3581ff@linux.intel.com>
-In-Reply-To: <ca45ff5e-3d1a-4149-8efe-7615dd3581ff@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Feb 2025 08:35:00 -0800
-X-Gm-Features: AWEUYZmYPCX1ExEW0FD8i7hkzrOSM3YXwFUPDROL1WGpdGtGQFKZ-hVUs5o_THc
-Message-ID: <CAP-5=fW7gaskkJKnJcsfe0UO0V0wDsQaa-2NSNr3ho9urUeKBw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/23] Intel vendor events and TMA 5.01 metrics
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: "Falcon, Thomas" <thomas.falcon@intel.com>, "Baker, Edward" <edward.baker@intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"Biggers, Caleb" <caleb.biggers@intel.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
-	"Taylor, Perry" <perry.taylor@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
-	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
-	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: socfpga: agilex5: add NAND board file
+To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>,
+ Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "nirav.rabara@altera.com" <nirav.rabara@altera.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250205101318.1778757-1-niravkumar.l.rabara@intel.com>
+ <0f77480d-e93c-44e2-ae9b-615b2368a011@kernel.org>
+ <BL3PR11MB6532426A08A1C84AA971E6C3A2F72@BL3PR11MB6532.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <BL3PR11MB6532426A08A1C84AA971E6C3A2F72@BL3PR11MB6532.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 5, 2025 at 7:47=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
->
-> On 2025-02-04 11:58 p.m., Ian Rogers wrote:
-> > On Tue, Feb 4, 2025 at 8:28=E2=80=AFPM Falcon, Thomas <thomas.falcon@in=
-tel.com> wrote:
-> >>
-> >> On Tue, 2025-02-04 at 13:35 -0800, Ian Rogers wrote:
-> >>> On Tue, Feb 4, 2025 at 1:33=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> >>>>
-> >>>> Update the Intel vendor events to the latest.
-> >>>> Update the metrics to TMA 5.01.
-> >>>> Add Arrowlake and Clearwaterforest support.
-> >>>> Add metrics for LNL and GNR.
-> >>>> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
-> >>>>
-> >>>> The perf json was generated using the script:
-> >>>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.=
-py
-> >>>> with the generated json being in:
-> >>>> https://github.com/intel/perfmon/tree/main/scripts/perf
-> >>>>
-> >>>> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
-> >>>> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>
-> >>>> and
-> >>>> Weilin Wang <weilin.wang@intel.com> for helping get this patch
-> >>>> series
-> >>>> together.
-> >>>>
-> >>>> v4: Fix TSC events on hybrid mistakenly specifying the core PMU
-> >>>>     inhibiting the use of the msr PMU.
-> >>>> v3: Fixes for hybrid metrics that were missing PMU. Update to the
-> >>>>     latest events.
-> >>>> v2: Fix hybrid and Co-authored-by tag issues reported by
-> >>>>     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition
-> >>>> of
-> >>>>     Clearwaterforest.
-> >>>
-> >>> Sorry, forgot to add Thomas again.
-> >>> https://lore.kernel.org/lkml/20250204213259.127939-1-irogers@google.c=
-om/
-> >>
-> >> Hi, I'm seeing some warnings like this and the all metrics test is
-> >> skipped:
-> >>
-> >> Testing tma_info_inst_mix_iparith
-> >> FP issues
-> >> Cannot resolve IDs for tma_info_inst_mix_iparith:
-> >> cpu_core@INST_RETIRED.ANY@ / (cpu_core@FP_ARITH_INST_RETIRED.SCALAR@ +
-> >> cpu_core@FP_ARITH_INST_RETIRED.VECTOR@)
-> >> Testing tma_info_inst_mix_iparith_avx128
-> >> FP issues
-> >> Cannot resolve IDs for tma_info_inst_mix_iparith_avx128:
-> >> cpu_core@INST_RETIRED.ANY@ /
-> >> (cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE@ +
-> >> cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE@)
-> >> Testing tma_info_inst_mix_iparith_avx256
-> >> FP issues
-> >> Cannot resolve IDs for tma_info_inst_mix_iparith_avx256:
-> >> cpu_core@INST_RETIRED.ANY@ /
-> >> (cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE@ +
-> >> cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE@)
-> >> Testing tma_info_inst_mix_iparith_scalar_dp
-> >> FP issues
-> >> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_dp:
-> >> cpu_core@INST_RETIRED.ANY@ /
-> >> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_DOUBLE@
-> >> Testing tma_info_inst_mix_iparith_scalar_sp
-> >> FP issues
-> >> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_sp:
-> >> cpu_core@INST_RETIRED.ANY@ /
-> >> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_SINGLE@
-> >
-> > Thanks Tom, we've gone from a fail to skip - so progress! I think it
-> > actually isn't something to worry about. These metrics are measuring
-> > vector and floating point things. We run a workload, when testing the
-> > metrics, that doesn't have floating point and vector operations. This
-> > causes issues with metrics for these instructions as the counters
-> > don't count anything. Because of this I added some logic to just skip
-> > when we see these failures:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/stat_all_metrics.sh?h=3Dperf-tools-next#n51
-> > but a better fix would be to have a workload with FP and AMX operations=
-.
-> >
-> > You could test these metrics work manually, by running something like:
-> > $ perf stat -M tma_info_inst_mix_iparith <benchmark>
-> > where <benchmark> would need to contain FP or AMX instructions.
-> >
->
-> It should be OK to skip the "FP issues", but the "Cannot resolve IDs"
-> seems a different issue.
->
-> I found the similar error when I run perf stat on my Arrow Lake machine.
->
-> $ sudo ./perf stat
-> Cannot resolve IDs for tma_memory_bound: topdown\-mem\-bound /
-> (topdown\-fe\-bound + topdown\-bad\-spec + topdown\-retiring +
-> topdown\-be\-bound) + 0 * slots
->
-> I think the warning is because perf doesn't find all the matched events.
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/util/metricgroup.c?h=3Dtmp.perf-tools-next#n326
->
->
-> Then I go to check the event list of tma_memory_bound.
-> For cpu_atom, it requires slots and topdown-mem-bound, which should be
-> only available on p-core.
->
-> +    {
-> +        "BriefDescription": "This metric represents fraction of slots
-> the Memory subsystem within the Backend was a bottleneck",
-> +        "DefaultMetricgroupName": "TopdownL2",
-> +        "MetricExpr": "topdown\\-mem\\-bound / (topdown\\-fe\\-bound +
-> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 *
-> slots",
-> +        "MetricGroup":
-> "Backend;Default;Slots;TmaL2;TopdownL2;tma_L2_group;tma_backend_bound_gro=
-up",
-> +        "MetricName": "tma_memory_bound",
-> +        "MetricThreshold": "tma_memory_bound > 0.2 & tma_backend_bound
-> > 0.2",
-> +        "MetricgroupNoGroup": "TopdownL2;Default",
-> +        "PublicDescription": "This metric represents fraction of slots
-> the Memory subsystem within the Backend was a bottleneck.  Memory Bound
-> estimates fraction of slots where pipeline is likely stalled due to
-> demand load or store instructions. This accounts mainly for (1)
-> non-completed in-flight memory demand loads which coincides with
-> execution units starvation; in addition to (2) cases where stores could
-> impose backpressure on the pipeline when many of them get buffered at
-> the same time (less common out of the two)",
-> +        "ScaleUnit": "100%",
-> +        "Unit": "cpu_atom"
-> +    },
->
-> I didn't check the tma_info_inst_mix_iparith which Thomas mentioned
-> above yet. But I suspect it should be the same issue.
->
-> The perf test may have to error out when the "Cannot resolve IDs"
-> message is detected.
+On 05/02/2025 14:43, Rabara, Niravkumar L wrote:
+> Hi Krysztof,
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Wednesday, 5 February, 2025 7:31 PM
+>> To: Rabara, Niravkumar L <niravkumar.l.rabara@intel.com>; Dinh Nguyen
+>> <dinguyen@kernel.org>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
+>> <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+>> nirav.rabara@altera.com; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org
+>> Subject: Re: [PATCH v2] arm64: dts: socfpga: agilex5: add NAND board file
+>>
+>> On 05/02/2025 11:13, niravkumar.l.rabara@intel.com wrote:
+>>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
+>>> b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
+>>> new file mode 100644
+>>> index 000000000000..ccc9be2cd7c6
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
+>>> @@ -0,0 +1,89 @@
+>>> +// SPDX-License-Identifier:     GPL-2.0
+>>> +/*
+>>> + * Copyright (C) 2025, Altera Corporation  */ #include
+>>> +"socfpga_agilex5.dtsi"
+>>> +
+>>> +/ {
+>>> +	model = "SoCFPGA Agilex5 SoCDK";
+>>> +	compatible = "intel,socfpga-agilex5-socdk", "intel,socfpga-agilex5";
+>>
+>>
+>> You cannot use other boards compatibles. Different device, different
+>> compatible.
+>>
+> 
+> Same Agilex5 development kit board supports a separate NAND
+> daughter card.
+> Default daughter card with SDMMC on Agilex5 devkit required to
+> replaced with this NAND daughter card to use NAND flash with
+> Agilex5 devkit. 
 
-Agreed. I think I see the issue. We're adding the extra/Valkyrie
-metrics to both core types during conversion, a quick fix is to just
-skip doing this for atom. I'll cut a v4 with this.
 
-Thanks,
-Ian
+So different boards?
+
+> 
+> Maybe I should replace the "NAND board" to "NAND daughter board" 
+> for the patch title. 
+> 
+> Is this reasonable?
+
+
+Yeah, would be better, but I was not commenting about that. Define what
+is the hardware here and use proper compatibles.
+
+Best regards,
+Krzysztof
