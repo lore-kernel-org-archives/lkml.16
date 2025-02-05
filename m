@@ -1,176 +1,89 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29419193436;
-	Wed,  5 Feb 2025 16:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622251DB153;
+	Wed,  5 Feb 2025 16:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738774375; cv=none; b=mb5CgYplEJh+Vf3hozlnCYZ0o2BkqyeL+B78w/wtYeue2ZWUYNqYMcDOCpTAVK+JVjd2yQgdDIWJsfVfUKCEl2ZKbJHW+mZFxqFpyhrn6fxVeH2C48xLachDI7VM33P0LZP26gmYIM8NBHIDq6C0lpwDQRXuxPrZbRw16sQLNWs=
+	t=1738774410; cv=none; b=VgZy65NHG21oO43j9yEYFSbEXniknXqPrhKgGJU+/yVjrpR51rx8+hm0JHPpNFQXov/qTn8y/pcYxzr9mGGRxA3fbTYf8R1EXxY0k8zGXbBJleOV2RPMbsvEHKl3QqnGXg4Gbd2hRVwyiMjpGwlu2ajHGxhN10g0c1RwNCo/Oq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738774375; c=relaxed/simple;
-	bh=MZX1aiElAf/wBBYEzwG0LmNRp3/R5sTvrYMDQ486w4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W7dmDayRDL3VcAcH0O1JQi7fFw8eHd/TRLy3OMgdBM5tbGwZbfPadLWlhVpLMunn2tuE+oc8yU9XJ8LVqy4hvzcziijKwz7PAyT7Or3Hzaewd6/81cB0d27Cj+klUToi/JS8IwCi6QYKJbLrErUIaKajqtV2DXpVUlo6fw+R8rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=IEQDOg7t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=04gnE32p; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1738774410; c=relaxed/simple;
+	bh=fpPbk87ghxqhxwd+nofpzT2xI5YUy8Iw61bPc5zLeyA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jgVbhMAdanBcDwx1IGWLl57M5cBQFX+J+tk/NvuppVGiz58AzkEi/PgcjwS8OF0LM5oIltmv4DdiKBqXOw4pSWa1fQECxgRqh/dIfhUtF2cKh8wq1ZnWkabbnwkJXcRzp101xcXEWXn1uLHaJHf/JIxIlRA2jVcp3ZqErnIvIVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAVj7KAz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="IEQDOg7t";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="04gnE32p"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 30F1F138017B;
-	Wed,  5 Feb 2025 11:52:52 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Wed, 05 Feb 2025 11:52:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738774372;
-	 x=1738860772; bh=4Ff8uNZFWrL12Ts+CTuP9c/TuX47E65KwL5a+LkGyJo=; b=
-	IEQDOg7tAB/7oZOJzwMeHDyFcJx6MvkaM2fvdzm33tj2RvJeETvmE9lE6pqePQip
-	q4caQS1d86MNYY/UHuf6DFrsv9rvP6SZuPJe2+Fs6UEVPPreh+S9Gn5P5flGFyN+
-	INz9Txbm/3+99P2q1Hcb8l2KTI7jd0Ghmi0hsYPJylbVQaaywDXKZ/gYSSdPh0+N
-	PBkki8PCZhYH63WOjtJ2B735XwJdR+lOHfnDWDLb2+BpmvErvFC7qhNKJrzQVo5f
-	55SErNtFSpUY6R/FiU2meXSomsIxJPAmgamRi9K1VjubKUOEGYj6qMLEsemoYXGz
-	rVSgWF30t8uNW0BsXcgmJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738774372; x=
-	1738860772; bh=4Ff8uNZFWrL12Ts+CTuP9c/TuX47E65KwL5a+LkGyJo=; b=0
-	4gnE32pga9ATr+XaUD7yWKJ3BpoEOFptRMy7pcsx5v/7au/7mr3hKv2T0u5T0v56
-	pgd52tz6REIgJ3qGfVy2TY4MI3Mfbg0oMvoxzpzGwh711hpNR7IXD56+v7x13HR9
-	1NIYfscMlHXbs9xPhge7p8H00RoHdnM7GTRrHIY4Fqe7zHX5xp6FgUarHVzJYhBI
-	YtzbAQtu8AcE8ClsYPumLX8qakXjrEPye2HmlrxuGzlBFMSu3H8m11hTtAQA4q4k
-	gAeAa5H/g9G7x014ooQGWp4VzEgueVSdAbCcnRJQkICy7mxaYPCtewqzXwkZhzOA
-	GtQI09BZyLQDyg5tz3atg==
-X-ME-Sender: <xms:YpejZ9yRpRJLr48UvUdYuFpxqhSLnnu98pEwzbYna4zVlWm92HNqQg>
-    <xme:YpejZ9TeUDidyCqkKT3zPXvdDoz7346qZDntowKBtbIrU_dVoQAKaB1Nrh5Sv8-dl
-    6BUyQVGHwy7qbgjSA>
-X-ME-Received: <xmr:YpejZ3Wwcd3khW0befiVSXcw0rpAcTfRF18FUetqY3VJB5vtrnZdbZXsW6ZAnatds-Qw52zUZBfDdP9vfAJ-H-eson_UzUGLac3RXHX2rkvvXA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeellecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenfghrlhcuvffnffculddvfedmnecujfgurhepfffhvfevuffk
-    fhggtggugfgjsehtkefstddttdejnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguh
-    esugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepffduhffgudehueeiiedvhefg
-    jedugeeuveehveegheefkeeiudfhhfehledvgfdunecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihiidpnhgspghrtghpthhtoh
-    epvdeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehirhhoghgvrhhssehgohho
-    ghhlvgdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
-    dprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegrtghm
-    vgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrmhhhhihunhhgsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomhdprhgt
-    phhtthhopegrlhgvgigrnhguvghrrdhshhhishhhkhhinheslhhinhhugidrihhnthgvlh
-    drtghomhdprhgtphhtthhopehjohhlshgrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegrughrihgrnhdrhhhunhhtvghrsehinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:YpejZ_irsNQF8wt3lKn_DARv-ff4rgeZgWPYPmSIH180Nr5EOY-6kw>
-    <xmx:YpejZ_DMnR4PowZUIh8K6IfY17TRvPeV60zY2c4je1R86JqgIYZQOA>
-    <xmx:YpejZ4J-dl18h0anSM_6IXcLYCnhcjmqj9TqC4iLHgUCAOulqURm1Q>
-    <xmx:YpejZ-A6kg_t06OmiI7ssBMvQ4rBz-oA135Nb-U-XbImgkuxmQANYQ>
-    <xmx:ZJejZ6VoJm1Emn4tDnPex1BbxpsIkoL1X5SnFb50sao0J_oE-s_xQ_WW>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Feb 2025 11:52:48 -0500 (EST)
-Date: Wed, 5 Feb 2025 09:52:46 -0700
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
-Message-ID: <bnf37cpripiwvsadi7pmtgdqech2e6zqktk3u4dr72toug6i27@mftn3hsa3yz7>
-References: <20250129193037.573431-1-irogers@google.com>
- <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
- <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAVj7KAz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659E7C4CED1;
+	Wed,  5 Feb 2025 16:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738774409;
+	bh=fpPbk87ghxqhxwd+nofpzT2xI5YUy8Iw61bPc5zLeyA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BAVj7KAz7gvln1n5gN+k6DzYcz8vqWM/ssEp3J7cyAF0y2/AsxDSeG34jeOWAyhqE
+	 717p/kWhXd8OBMY54oO0tusa5v7m1gOtgyZyNsdxX7TmD3Ti1kJ5ENV8Bqf813SSBH
+	 plRJsQjQ5ybLmbfqU+8JbNY3dp8lTWgjZies49xRi9CaFV+qdtxPa6E2lJNlBgm6KL
+	 ZfDZhm54DUnPCCAajenpu+Fe/TvG5Ac2K5L7XBH/2YyP5M7V2zq7o6IxjdlBveBZaC
+	 eh3bcxQ168fV2i8oZrv7ZbgWfczPR/p1WL9JyCzOo5P6xiLWwwYTqM8wwpzt2wjMFO
+	 2BicflgZYMtVA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-sound@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH] ASoC: dapm: unexport dapm_mark_endpoints_dirty()
+Date: Thu,  6 Feb 2025 01:53:08 +0900
+Message-ID: <20250205165310.3466254-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
 
-On Mon, Feb 03, 2025 at 09:20:30AM -0800, Ian Rogers wrote:
-> On Thu, Jan 30, 2025 at 11:35 AM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> >
-> > Hi Ian,
-> >
-> > Thanks so much for working on this!
-> >
-> > Only did a quick skim. Seems like it'd be nice to reuse the official
-> > demangler now that we know about it. Will be interesting to
-> > see how that gets packaged for distros.
-> 
-> I think the best solution is to use the official demangler but in
-> general we'd like fewer rather than more library dependencies. For
-> example your initial comments were to work to make the coupling with
-> capstone and LLVM disassemblers more loose via dlopen:
-> https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
-> 
-> Thinking through the options (note I'm not doing Rust things and so my
-> level of skin in the game is minimal):
-> 1) stay as we are - well this is a mess as there is no v0 support and
-> the legacy support comes from libbfd/libiberty.
-> 2) option (1) plus this change cleaned up - there's still the mess
-> with the legacy support, which is probably more important given v0
-> isn't widely adopted.
-> 3) wait for the official demangler to be packaged as a library and
-> depend upon it, add testing from here - solves legacy and v0 issues,
-> but brings in an extra library dependency to the build. Timeline not
-> clear.
-> 4) "contribute"/copy-paste the official demangler into perf tree and
-> do like (3). Perhaps remove the forked file when a dependable library
-> exists (there's some precedent for this with how libtraceevent was in
-> and then removed from the linux tree) - solves the timeline, not great
-> to fork the official demangler, so far not heard from the author Ariel
-> Ben-Yehuda and I would strongly prefer they contribute rather than I
-> copy-paste it.
-> 
-> For (3) and (4) it is probably a good idea to engage the Rust folks in:
-> https://github.com/rust-lang/rust/issues/60705
-> 
-> Having broken Rust demangling seems like a high priority issue for the
-> perf tool.
-> 
+The symbol provider (sound/soc/soc-dapm.c) and the symbol consumer
+(sound/soc/soc-core.c) belong to the same module, snd-soc-core.ko.
 
-FWIW, while I quite enjoy rust, I don't write much of it day to day
-anymore. I was only investigating on behalf of someone else. So whatever
-other folks prefer is fine with me.
+There is no need to export it.
 
-[...]
+I deleted the comment, as other modules cannot use it any more.
 
-> >
-> >      * INPUT:
-> >      *     sym: symbol that has been through BFD-demangling
-> >
-> > Perhaps double check that cxxabi is sufficient and update the comment?
-> 
-> I've not tested this change beyond making it pass the tests the change
-> contains, that are based on the v0 specification's examples. I believe
-> this/legacy may be working as most C++ implies libstdc++ which I
-> believe uses libiberty in cxxabi, so BFD demangling. Given the
-> popularity of libstdc++ I imagine things like LLVM's libcxx will try
-> to be compatible. Perhaps if there are examples of legacy Rust symbols
-> we can add a test?
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Like you said above, let's see which direction the community prefers
-first.
+ include/sound/soc-dapm.h | 2 --
+ sound/soc/soc-dapm.c     | 1 -
+ 2 files changed, 3 deletions(-)
 
-Thanks again,
-Daniel
+diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
+index 12cd7b5a2202..7cf52c8c9cf3 100644
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -514,8 +514,6 @@ int snd_soc_dapm_force_enable_pin(struct snd_soc_dapm_context *dapm, const char
+ int snd_soc_dapm_force_enable_pin_unlocked(struct snd_soc_dapm_context *dapm, const char *pin);
+ int snd_soc_dapm_ignore_suspend(struct snd_soc_dapm_context *dapm, const char *pin);
+ unsigned int dapm_kcontrol_get_value(const struct snd_kcontrol *kcontrol);
+-
+-/* Mostly internal - should not normally be used */
+ void dapm_mark_endpoints_dirty(struct snd_soc_card *card);
+ 
+ /* dapm path query */
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 3fa53ce80189..eb629edfbe42 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -317,7 +317,6 @@ void dapm_mark_endpoints_dirty(struct snd_soc_card *card)
+ 
+ 	snd_soc_dapm_mutex_unlock(card);
+ }
+-EXPORT_SYMBOL_GPL(dapm_mark_endpoints_dirty);
+ 
+ /* create a new dapm widget */
+ static inline struct snd_soc_dapm_widget *dapm_cnew_widget(
+-- 
+2.43.0
+
