@@ -1,126 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6052B211A11;
-	Wed,  5 Feb 2025 20:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDCB213E6F;
+	Wed,  5 Feb 2025 20:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738787848; cv=none; b=NFND+iL/GH+G7EXEodJjZp9nbT6r68JnqGPFwz0sPXqh3xHTL+Yj8pz6oEaBdzIL5Tb42B8YZP22zb8ECJrzPQohG2ZryphmEF9tgScHJ4BW3OTvaRujPeM79R6F30iqm4yf6YzLzt9wcPYwjP9d1Bhk2yeLpaTDhiOrrbZFZRk=
+	t=1738787902; cv=none; b=PTPK3HSMRTxHtRHIwTEbKDwogP/aPBm1L+hQ1IbHQVpxuklTUKXVBqvMw0ZYJUApvRN/RFe5VDkXUfEoEVihzM/on54UWtgYYNl5LldebTYlcGHIkVUliJj6kl4JDm+xnZ3H5jzO7YoI0X3rygQO18aLFN/k89Hj9QffRXNfcYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738787848; c=relaxed/simple;
-	bh=72QkPdGgb2K/SF9cTlCTLOmJQnJ8jZBKcum5GAY/sDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JzKb+pSckyGJ2F7UR3yTHmt9kBEoyxTYyBBQ0h7eIW35qgzMmGdm1P9u/6EHy/zHD0ahfoKvtBkytVzVkKwI6iwKl53aeTsmbObmZ+QGaMhZwmFQl+UaHLWBpk7aQUQ/hakRHRGra/bfBrLaxwkTxW0nXIOtUlwm+jT3TU2XkGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mip/vPjF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738787902; c=relaxed/simple;
+	bh=I+hvuOT1LZ55z7wg6CRnRGy+xUBTyudcDbUtYBv3vfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNOXR9qfijIAq+L5O00J03/b3gpVSz5cS5zeOKjrlzsvBwT7xoifhO8vip7koaOwHu1e6xsI4A8fwLKHQ3CdGt9/SGjhy/DhRy3iBb+D6DE3jCdMXxAOekeMsDLcz64eN9ofvd/ZPqloLscJXWdpWOtiayiXxFc/c/UswQj+CxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mULBPJQn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mip/vPjF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86AA4C4CED1;
-	Wed,  5 Feb 2025 20:37:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mULBPJQn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 227A9C4CED1;
+	Wed,  5 Feb 2025 20:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738787847;
-	bh=72QkPdGgb2K/SF9cTlCTLOmJQnJ8jZBKcum5GAY/sDc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Mip/vPjFQhdTrSgTJqzQhXZKV7etkPNSK7lP09i8l4f2zWratVf7uM2y+/c05xiKK
-	 LA/zWV6/68yxODj+78wLm4O7gMV5EuFhHY/pLP3Fn4l9eRIFzXV1RxdwLnJSGUQ3jX
-	 klhfilWwrqbdsjkhKMBp7dbMfILtEeRnrgJfrtmot95UFC+/74ehznMPwIiV85IwpY
-	 Uj3/HT7tqvn0wTRxeCAV35nzWk6oqfojQ677jpMwpnqu+AaCUC7qWKWVYrtxdJ0Z6R
-	 K6aDnK/DMTAZV58X34aNmw1nyrcdhWhdDDH/MAAa64TZ8kbAv1ETtA8VGDSz7nlDnO
-	 Q5TSBjHlJnGZQ==
-Message-ID: <0836dfe1-f497-4d46-b93f-a7362b8c61aa@kernel.org>
-Date: Wed, 5 Feb 2025 21:37:21 +0100
+	s=k20201202; t=1738787902;
+	bh=I+hvuOT1LZ55z7wg6CRnRGy+xUBTyudcDbUtYBv3vfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mULBPJQnMFDsN8xP/BYu3F59UMx7a3bKbjh2zr5ApOMvarYy1Io/lFA91/sHfmUEL
+	 P670ipLHA8ftZFvPzk3KHG/iP7Z2Aw8/Ewe52fxJlEdkSZwA3CYaznJqz/bawoTv9A
+	 OHidbVuUNAJ/BbUbOpH2tc7LIs0Y7uyUe4xyVtwahf75yvwNFlQvqOAEMA5dz1GmB1
+	 bJ4d/BL9zEOr7mdYMDZcwfKwwBZK8vKJrhn2KZZZiZ0v5/MkNcfsMTVwWwUojzQPMg
+	 k6gdvkA07VmaWLGqv4nxM8lKAhZl6lkZw2FKr/UHPdeAq//UJSHNMmF8z3rlCUV51f
+	 e9eQY+qg7/DDg==
+Date: Wed, 5 Feb 2025 13:38:17 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-doc@vger.kernel.org,
+	workflows@vger.kernel.org
+Subject: Re: [PATCH] kbuild: remove EXTRA_*FLAGS support
+Message-ID: <20250205203817.GA2060120@ax162>
+References: <20250205163939.3464137-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] regulator: dt-bindings: add documentation for
- s2mpu05-pmic regulators
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
- Lee Jones <lee@kernel.org>, Sergey Lisov <sleirsgoevy@gmail.com>,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250204-exynos7870-pmic-regulators-v1-0-05adad38102c@disroot.org>
- <20250204-exynos7870-pmic-regulators-v1-1-05adad38102c@disroot.org>
- <20250205-keen-taupe-loon-35e0de@krzk-bin>
- <a5e8ebc0dfb35f700e29b75a6fc543cc@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <a5e8ebc0dfb35f700e29b75a6fc543cc@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205163939.3464137-1-masahiroy@kernel.org>
 
-On 05/02/2025 21:06, Kaustabh Chakraborty wrote:
-> On 2025-02-05 08:32, Krzysztof Kozlowski wrote:
->>> +
->>> +description: |
->>> +  This is a part of device tree bindings for S2M and S5M family of Power
->>> +  Management IC (PMIC).
->>> +
->>> +  The S2MPU05 provides buck and LDO regulators.
->>> +
->>> +  See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml for
->>> +  additional information and example.
->>> +
->>> +patternProperties:
->>> +  # 21 LDOs
->>> +  "^LDO([1-9]|10|2[0-9]|3[0-5])$":
->>
->> Why is there a gap in LDOs?
+On Thu, Feb 06, 2025 at 01:39:38AM +0900, Masahiro Yamada wrote:
+> Commit f77bf01425b1 ("kbuild: introduce ccflags-y, asflags-y and
+> ldflags-y") deprecated these in 2007. The migration should have been
+> completed by now.
 > 
-> LDOs 11-24 are not implemented in the downstream kernel driver. On further
-> inspection I was able to find the register addresses, but minimum voltage
-> and step values are unknown. :(
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-I see, there are marked for CP. Add a comment that gap in LDOs is due to
-lack of datasheet and lack of control by OS.
-
-Best regards,
-Krzysztof
+> ---
+> 
+>  Documentation/dev-tools/checkpatch.rst | 18 ------------------
+>  Documentation/kbuild/makefiles.rst     |  3 ---
+>  scripts/Makefile.build                 |  4 ----
+>  scripts/Makefile.lib                   |  5 -----
+>  scripts/checkpatch.pl                  | 14 --------------
+>  5 files changed, 44 deletions(-)
+> 
+> diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev-tools/checkpatch.rst
+> index abb3ff682076..76bd0ddb0041 100644
+> --- a/Documentation/dev-tools/checkpatch.rst
+> +++ b/Documentation/dev-tools/checkpatch.rst
+> @@ -342,24 +342,6 @@ API usage
+>  
+>      See: https://www.kernel.org/doc/html/latest/RCU/whatisRCU.html#full-list-of-rcu-apis
+>  
+> -  **DEPRECATED_VARIABLE**
+> -    EXTRA_{A,C,CPP,LD}FLAGS are deprecated and should be replaced by the new
+> -    flags added via commit f77bf01425b1 ("kbuild: introduce ccflags-y,
+> -    asflags-y and ldflags-y").
+> -
+> -    The following conversion scheme maybe used::
+> -
+> -      EXTRA_AFLAGS    ->  asflags-y
+> -      EXTRA_CFLAGS    ->  ccflags-y
+> -      EXTRA_CPPFLAGS  ->  cppflags-y
+> -      EXTRA_LDFLAGS   ->  ldflags-y
+> -
+> -    See:
+> -
+> -      1. https://lore.kernel.org/lkml/20070930191054.GA15876@uranus.ravnborg.org/
+> -      2. https://lore.kernel.org/lkml/1313384834-24433-12-git-send-email-lacombar@gmail.com/
+> -      3. https://www.kernel.org/doc/html/latest/kbuild/makefiles.html#compilation-flags
+> -
+>    **DEVICE_ATTR_FUNCTIONS**
+>      The function names used in DEVICE_ATTR is unusual.
+>      Typically, the store and show functions are used with <attr>_store and
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> index d36519f194dc..25e04e47faff 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -318,9 +318,6 @@ ccflags-y, asflags-y and ldflags-y
+>    These three flags apply only to the kbuild makefile in which they
+>    are assigned. They are used for all the normal cc, as and ld
+>    invocations happening during a recursive build.
+> -  Note: Flags with the same behaviour were previously named:
+> -  EXTRA_CFLAGS, EXTRA_AFLAGS and EXTRA_LDFLAGS.
+> -  They are still supported but their usage is deprecated.
+>  
+>    ccflags-y specifies options for compiling with $(CC).
+>  
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 993708d11874..a59650ba140b 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -20,10 +20,6 @@ always-m :=
+>  targets :=
+>  subdir-y :=
+>  subdir-m :=
+> -EXTRA_AFLAGS   :=
+> -EXTRA_CFLAGS   :=
+> -EXTRA_CPPFLAGS :=
+> -EXTRA_LDFLAGS  :=
+>  asflags-y  :=
+>  ccflags-y  :=
+>  rustflags-y :=
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index ad55ef201aac..20d77bfd0d72 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -1,9 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -# Backward compatibility
+> -asflags-y  += $(EXTRA_AFLAGS)
+> -ccflags-y  += $(EXTRA_CFLAGS)
+> -cppflags-y += $(EXTRA_CPPFLAGS)
+> -ldflags-y  += $(EXTRA_LDFLAGS)
+>  
+>  # flags that take effect in current and sub directories
+>  KBUILD_AFLAGS += $(subdir-asflags-y)
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 7b28ad331742..8f70bedc18be 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3689,20 +3689,6 @@ sub process {
+>  			}
+>  		}
+>  
+> -		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
+> -		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
+> -			my $flag = $1;
+> -			my $replacement = {
+> -				'EXTRA_AFLAGS' =>   'asflags-y',
+> -				'EXTRA_CFLAGS' =>   'ccflags-y',
+> -				'EXTRA_CPPFLAGS' => 'cppflags-y',
+> -				'EXTRA_LDFLAGS' =>  'ldflags-y',
+> -			};
+> -
+> -			WARN("DEPRECATED_VARIABLE",
+> -			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+> -		}
+> -
+>  # check for DT compatible documentation
+>  		if (defined $root &&
+>  			(($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*compatible\s*=\s*\"/) ||
+> -- 
+> 2.43.0
+> 
