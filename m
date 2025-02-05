@@ -1,111 +1,103 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320F61D540;
-	Wed,  5 Feb 2025 12:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4CE24B26;
+	Wed,  5 Feb 2025 12:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738760130; cv=none; b=G916hoYmDzSQaawAIMG0hTJqVjRErJCjIrBa675jruMujLgLd+PsYvSpZb9P15fanaMScwv/pMxZVHlb8oVlsZFo3a5B3pm+cJddBsZDVATbTSCEbAl1TjRusktd14f7ky9j79aUWLJwN20Ujph7+MjPcamtzirET2xsHg7yMOg=
+	t=1738760177; cv=none; b=oTYed4nFQX/veueeOU9HMg9GkFCIbTiwp87emK67Ng/evnxLhVFjpcJrhdWbcCmMvT6S35y4m3jNHL0RZET1r9w9/msFZFlyo2Jq0zQIaLw4H4c/4f7Sm69syXOJCc2kQCmPrmIQlBWsByvxC3TMrvAxIFvEnrO5L9tVKmG+Hzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738760130; c=relaxed/simple;
-	bh=pdO6+jAkpYOeS/DDflPmApHSf/rDiLzOQJfZe1ZN7mw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r9MAepN1J7kZ80wlRhw3mgP5i3Hfx9L0qkjsbIrHiswKeYjj5DTSHXStoQMHtZxN4KgUOrurrCKzNXC2ugatK3YWDvNE4cD3oY9T4PMr4I2rOD31D2njd0n2TtGFgIcWJWvMI+GQ7WpAHPHLbyw7kRm01T1ZldB6cFgJTnzPx7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VXEgYAQA; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738760177; c=relaxed/simple;
+	bh=GoJpb92TT253qilEM7jNKyGy76VaerW9l3MGYbuh2SE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOdrBs6ldBDq+G5uxBsOA1gfovBQ/2dV3KUwQUhjNDioKSYLTu7HEMG+Dma1frlagmoiKIpQpzeDw8y3agqJIYwhcczvt4G6QfWogov0lgzNOgZGee0qy9oB/DUO4vYA5XFYJNU0PiqZ/osQkfxKs3Ikix5dTv7ybvHcviABbqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=fyYF+3vR; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXEgYAQA"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f9f90103bbso9384a91.3;
-        Wed, 05 Feb 2025 04:55:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738760128; x=1739364928; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tcnHztUUdnVPJ+/5e1SOyz1DfV3d17PwRKV3Z/iivJQ=;
-        b=VXEgYAQACLD3bpBF5XFaUZcUIYXQ5w0iZzry0uW5PxApGprVQqvtjP00CpWNceH0K+
-         pq+kZ/6DkzPsPtgCGC0SMP8vpqbIDRXqH6ZTFqniqNYnFZrZE83diO4CRZrt2rt9zI1g
-         ndRJrJREGTXbfz9W4D57iie0t2OH/98sjh2s2i58m8jzNdHlb1ah1lxngqZx5dPobPuZ
-         mlauXjvQpE5EbYl6sR5n23fe0Qb4CaJd+9yPKsS890vhOA+9wr5P8Dn1bNmOR09C/WmN
-         g1aQ64WSAAUq1fehw178BAN/EtAUrkz6VVGxX8Us2lvdzEGXEDBY5MhOSLWSMSaeS83F
-         LUWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738760128; x=1739364928;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tcnHztUUdnVPJ+/5e1SOyz1DfV3d17PwRKV3Z/iivJQ=;
-        b=Eogy2XyEU87SnN8MMdwa+UVviaH7ra8gEDnoeqMZJHEc18xsKzQ8UcOT8Uwwiv7vpN
-         Is9O4chVD8/op32poH1A1HkCxdxP0l3GoG8kXW8WDV3iqxHFqBo4Bll/JFOvbJIDX+9/
-         ZXCAZ5ANjxWoEGlXVDVrUejqHEPwi1mDu0GCyC+nAnFDKptZ2re8gaxKDFdDSRE3aDre
-         6+GTvfy/dmnll0inb4btn4pXg7GZyCibl5pQv9GNDBP5Gfaz7EBFhUu3yegFIMG7esmf
-         VK+QBpL0QzJEwj+YiIzcw39Omjc60wKPBrN+/FI2lS8woM/t5blA+z7Y5F52hX/iob3P
-         rVRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtpQRFgXLRC5K5wL0piIh4Unh6VGtmcaph7XoFHGIFIFO3oHpSFlDiK0qlat4Uv3Zxe0mCTn+TP5vjloA=@vger.kernel.org, AJvYcCVi71IHji1iyP4ur6nixS6yrq+9O5RP+7m1bMQr2KTSR0hF//elA8MjTHtzF8HMafBORMlsZApa4PEIysaBLts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5ZTK/Hs0wupg4xic1MYfTVovx/i20RL9ARctjiLFQvucZWClp
-	gi7uthVc+9Fb5XGRpUAGS4NQP5eDRqf3+aawrdwxlSkUSqnOYBi/D9F6JwQuWxwHA/sU2IiQe9j
-	MjiP0MICLVZejL6LK1CLf0iO3wG4=
-X-Gm-Gg: ASbGnctqVePw7XqwCRclp1qO6X+8X9R9FWkaUCq/ErIYfZAUzfzhU9jTz9yrVuQbxO4
-	5kBF1wJ21tpRnYdmxNPDfDhRcGg/ZeZQ8sG1VQAMyDf3xfwxJo5CFyeozbg8gBQkneWS31Qtw
-X-Google-Smtp-Source: AGHT+IEIMfbxShlzWMZcpH2fXxb6ERAAGzN6huAPFG49+BXJdhaAwaJJSRCZ9jGX/NvNM9jk3hqQzfxa7DJVmf7UC5s=
-X-Received: by 2002:a17:90b:44:b0:2ee:6db1:21dc with SMTP id
- 98e67ed59e1d1-2f9e074fa35mr1857013a91.1.1738760128284; Wed, 05 Feb 2025
- 04:55:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="fyYF+3vR"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 03DA310382D08;
+	Wed,  5 Feb 2025 13:56:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1738760167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CDjgkHIZ2FH9yH84cxjcC4Ip4QoMP9BgMpfAV1YInSM=;
+	b=fyYF+3vRRbvpyMWQ/Qz9FEeTdhUpAefKtWKCh3i3WmKoqvT8Ci3iTmo+83b/KAk6WksX7r
+	oGMej8XgNiHXPfs1aASNR/0QQh87ITcX4AGnlGWH8+etphYlm8qU19LMnR58JJisT17tCl
+	5GOs2rSSd6pUUOJ4+3bAu0L6L6GA1c+eq9zlAKhufVdc+1dZ65xJ8Ua9K6hUwaPXA4hPLp
+	b8DQRQo3L8a4hMYtjhQequ6hwXsm7agamqwioICnDlPymvdmHYC+/CZ7DlDKqkJU9eLgfP
+	2xeIKpRPqkGGnUOeRapda7qcWBE9O+P7oWIlqZFbcORzaSJCaWR6YkRR8alIjQ==
+Date: Wed, 5 Feb 2025 13:55:59 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	cip-dev@lists.cip-project.org, tglx@linutronix.de,
+	rostedt@goodmis.org, linux-rt-users@vger.kernel.org, pavel@denx.de
+Subject: Re: [PATCH 4.4 4.9 v1 2/2] mm: slub: allocate_slab() enables IRQ
+ right after scheduler starts
+Message-ID: <Z6Nf32YB/J0LMSPw@duo.ucw.cz>
+References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+ <1738629964-11977-3-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+ <20250204081813.7qsvLFsU@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205120540.387447-1-kurti@invicto.ai>
-In-Reply-To: <20250205120540.387447-1-kurti@invicto.ai>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 5 Feb 2025 13:55:16 +0100
-X-Gm-Features: AWEUYZkNknJCFOT8YjssXYTp28ufsyiShHXFJQ4K8n6_FoUuQB29W8RwTRHBk8E
-Message-ID: <CANiq72kN-FaciYLuv-mXHNGdN13UpvqoaRX=-0mKE4M9BdtY6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] checkpatch: strip comments fix
-To: albankurti <kurti@invicto.ai>
-Cc: Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Charalampos Mitrodimas <charmitro@posteo.net>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Omqnf7SUTSKRSslH"
+Content-Disposition: inline
+In-Reply-To: <20250204081813.7qsvLFsU@linutronix.de>
+X-Last-TLS-Session-Version: TLSv1.3
+
+
+--Omqnf7SUTSKRSslH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi albankurti,
+Hi!
 
-On Wed, Feb 5, 2025 at 1:05=E2=80=AFPM albankurti <kurti@invicto.ai> wrote:
->
-> Fixes the false positive warning when there is a comment on a pr_ or
-> dev_ log that ends with \n correctly.
-> Also contains some improvements on the macro_pattern to make it more
-> concise.
->
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1140
-> Signed-off-by: albankurti <kurti@invicto.ai>
+> > An simple option would be to backport the series[3], which is possible
+> > and has been verified[4]. However, that series pulls functional
+> > changes like SYSTEM_SCHEDULING and adjustments for it,
+> > early might_sleep() and smp_processor_id() supports, etc.
+> > Therefore, this patch uses an extra (but not mainline) flag
+> > "system_scheduling" provided by the prior patch instead of
+> > introducing SYSTEM_SCHEDULING, then uses the same condition as
+> > newer RT kernels in allocate_slab().
+>=20
+> The proposal looks okay. However the verified upstream version not only
+> addresses your issue but also makes smp_processor_id() and might_sleep()
+> work in the early phase. I would prefer the upstream solution for those
+> two reasons.
 
-Thanks for the patch!
+So... first, thanks for review. This is mostly my fault, Kazuhiro
+Hayashi did full backport, but I asked for minimal version.
 
-It seems this is v2 of:
+AFAICT there's no place for stable-rt to apply this, so we'll just be
+taking this to our trees in CIP project. (And I prefer smaller
+version. Additional checking is nice for development but not so nice
+this late in development cycle).
 
-    https://lore.kernel.org/rust-for-linux/20250203201149.330117-1-kurti@in=
-victo.ai/
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-Is that correct?
+--Omqnf7SUTSKRSslH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If so, the commit title and description looks wrong, i.e. it seems
-that you are explaining what it changed w.r.t. v2, but instead you
-should put that in a changelog after the `---` line after the
-Signed-off-by tag. The commit message and title should describe what
-the commit does, just like v1 does.
+-----BEGIN PGP SIGNATURE-----
 
-Also, the kernel requires a "known identity" for signatures. For
-instance, the name you use to sign documents in real life. Please let
-us know if that is a problem -- see:
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ6Nf3wAKCRAw5/Bqldv6
+8qdHAJ4+/Dac3znHYOzsb3TSumEh2FbZEACfVqCBVseYjulmOKfgT7QMAIp7SJE=
+=d8jC
+-----END PGP SIGNATURE-----
 
-    https://docs.kernel.org/process/submitting-patches.html#developer-s-cer=
-tificate-of-origin-1-1
-
-Cheers,
-Miguel
+--Omqnf7SUTSKRSslH--
