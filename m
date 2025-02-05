@@ -1,53 +1,43 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0D821A458
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 12:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795B5151987;
+	Wed,  5 Feb 2025 12:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738758913; cv=none; b=VxIDLMe5vLkn7+EYKE4Rue5OyrnCtxkTFTs5OMIKZgsbRU8OKG0r6OaY932Xg1J71ASrM6ohq2dNcFwPHACyBlxvu//sJVUXc4qdWwgA3moRSZGHvCJhcqyiwHjt/ZtupyK4pXMJYpUmDuj3rGkvq0FeRaqhUzLyqoZ3ytxDtXo=
+	t=1738759017; cv=none; b=FNN0rZA+lUPvrR5Gv082Kmw9h0qTlceVbCOBHOcTks/eLdaY4UVCIyBt6LAce+VQnwbynKLpMqTGID3FPD1VT/V5BinV4r253BacfmRruS91whm9EDLZsoCGSjVLD6zCD4EK5jUAmZLOpy1FllkpT3sXmKtWai4ZSV979ExsTfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738758913; c=relaxed/simple;
-	bh=HKtk7nun/CDX+ZLZBXi9GMOYS8u7yI+Qth8N4E7VTYk=;
+	s=arc-20240116; t=1738759017; c=relaxed/simple;
+	bh=bT13ceI3nBdf366hlvkA+wI359VrXnZYEbnwGN3H3B4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mERiZIaT5ZE1BTs/oOeDs9yyoYStBLIHa/vWGG1Qf62qKaBsSmaSHWQp4HWltcgw3QJyF3V80sZnNcA3G58D14jnDgmnBrYC1l84b92Q6ZwlRDDBTLko4FyUyB0EcaGp+XRLRrBsyx7f2qskL6sJ8KjYvwnau9mmTEl3UJEGQVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QlxGwEcp; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pkd5fbPEihO/a9omfey7OO9iYTUiuEjr5i5DHU89I/Iyd613lIkdbZy1+QwyP3Iaj7Jvcgx0Ey9MzMjE3Idm2sR4B02+glwRRDCzPjOLIbgXEmXXVIil2pLC+aLHsYrBzocxh3ZFaocV870L4/7rlnKlvYjIK3SLK217qb6gruA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHd0rkUa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QlxGwEcp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=HKtk
-	7nun/CDX+ZLZBXi9GMOYS8u7yI+Qth8N4E7VTYk=; b=QlxGwEcp81SuzZ7Jow2e
-	Qk15EmxRFsmgukMmIlJGoOC3UCbZ1ZYuR7JsxtcOo/GhUOl/n7ZltdEjr/8DC0ak
-	aG59PtOwQKsbZQUHQUgxPKmS13Exck/dOf5V8azscso6DhJURcV8j1jVZwV43JR4
-	yyKsjQpIoHrvQot+3AdWBmgaR1efOMP9KTJg9OMzs6GOjOthM1QwVzt3bnPdwJoT
-	m8YjKbWfASW8adade/xA6gYDGE/1EQl1FPGPXAt+b/xdIWxvmYDc+OFwo6Onf9/s
-	jSBf0tzZpGko2qVpZj9eVQham/WjiRYFNiMXvRvn7wCdoJ7Vp+G2YNKgmFc05r22
-	wQ==
-Received: (qmail 3387770 invoked from network); 5 Feb 2025 13:34:58 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 5 Feb 2025 13:34:58 +0100
-X-UD-Smtp-Session: l3s3148p1@PcV1WmQthtJtK3Ha
-Date: Wed, 5 Feb 2025 13:34:57 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Inochi Amaoto <inochiama@outlook.com>, linux-hwmon@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHd0rkUa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53C0AC4CED1;
+	Wed,  5 Feb 2025 12:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738759016;
+	bh=bT13ceI3nBdf366hlvkA+wI359VrXnZYEbnwGN3H3B4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jHd0rkUat8o2yGWTupAAiw2MNyZpiVSZPY4+wqupePCJWnkfoad6RsQR3UFw6OmiF
+	 O/x3S4agJTObZGY99Ivghcy0mLjLm0uZX33AlGivEmLntnVWjI11HSLrCTpuIcmgto
+	 XhSZpVJByGXfvaPvHeGcfDETpAEe/rZ25VD6Fu+98nOc1a5wqMwD5XH/AlQ2iZv3Kq
+	 PHltZ92u2KyvLefpawaYUt3npBaKYKCiqyho5c53uj05YEqRB+/F7HKZJjSKYFb9dC
+	 rDKbFgUoX4t9CvXelPGDq4AErLwseeFUMJ5fv+JJnIr+w1iCZEZwuwHOwG65+Qs7ti
+	 ntXCjoGVOAZEQ==
+Date: Wed, 5 Feb 2025 12:36:52 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: sg2042: add back module description/author tags
-Message-ID: <Z6Na8fcitFSFGOVT@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Arnd Bergmann <arnd@kernel.org>, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Inochi Amaoto <inochiama@outlook.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-References: <20250205121419.373464-1-arnd@kernel.org>
- <kdvu3xjreyycftkbsomqzc3e3y6mkom5u25co5rqwqem4n7p47@xnmhg7mkxsmw>
+Subject: Re: [PATCH] selftests/mm: Fix thuge-gen test name uniqueness
+Message-ID: <a4798a92-098d-4c95-86dc-760171365d49@sirena.org.uk>
+References: <20250204-kselftest-mm-fix-dups-v1-1-6afe417ef4bb@kernel.org>
+ <2e160343-8420-4f55-86b1-128676cf75d3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,59 +45,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IwZMQdqnEyYDIvBA"
+	protocol="application/pgp-signature"; boundary="1mL/Scwyn0KiF9/v"
 Content-Disposition: inline
-In-Reply-To: <kdvu3xjreyycftkbsomqzc3e3y6mkom5u25co5rqwqem4n7p47@xnmhg7mkxsmw>
+In-Reply-To: <2e160343-8420-4f55-86b1-128676cf75d3@arm.com>
+X-Cookie: Earth is a beta site.
 
 
---IwZMQdqnEyYDIvBA
+--1mL/Scwyn0KiF9/v
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 08:28:56PM +0800, Inochi Amaoto wrote:
-> On Wed, Feb 05, 2025 at 01:14:08PM +0100, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >=20
-> > A previous code reorganization inadvertently dropped the two tags,
-> > which leads to a "make W=3D1" warning:
+On Wed, Feb 05, 2025 at 08:22:04AM +0530, Anshuman Khandual wrote:
+> On 2/5/25 04:23, Mark Brown wrote:
 
-:( Very sloppy, I am sorry!
+> > Fixes: b38bd9b2c448 ("selftests/mm: thuge-gen: conform to TAP format output")
 
-> > WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/sg2042-=
-mcu.o
-> >=20
-> > Add these back.
-> >=20
-> > Fixes: cd4db38c4368 ("hwmon: (sg2042) Use per-client debugfs entry")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->=20
-> Reviewed-by: Inochi Amaoto <inochiama@gmail.com>
+> Just wondering how this fixes anything ? This seems like an improvement to
+> the current behaviour.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+My test automation was getting pretty confused about what was going on
+so I'd say so - the test names are a pretty important external
+interface.
 
-Just wondering: Inochi Amaoto's email above is using gmail, below is
-using outlook. Is the old one still valid?
-
-
---IwZMQdqnEyYDIvBA
+--1mL/Scwyn0KiF9/v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmejWu0ACgkQFA3kzBSg
-KbZulQ//VYN3RP286eEFUM9k2clOLNJ5NvYOYU32K1kB6CZCyycmXRmLewEh6ojP
-QMHFMB3g8seYpZa8KeSGnMMR7DUwbPZbIbhk6wL2uiiz1+GD9R/AWAEmcYHPrb66
-l8vxRehf/vVBRM+5lL1jjGTX4S+3B9iMff+Vs1AJo+2cIcwYJYQZDLWEICbMwYup
-P9mHUy+KZRYrG0OTximtovL/WKFU7p/whPfKRXND+oz1TscdHcctJhCXyEQFND/U
-3MmkcgNp9Si6AN+TOy/aWUGtOf0JKubB+D2cOFEUVfwVE91WjSwkSRJvBz4H+y+D
-g+wiQq3Il9NdnXQeGwLJkJkk5YP66op/jYeDAiecD1VuhQX3CfeSW6hYnxCifomB
-7n+Wd0uF2HHqeMgeOdYfVY3VjAYmhMGog4kZ7vn226WjIN6uuBeYbIJj8SyIn/Zn
-R5uxvDrUNHAVND0izjiepz8BOKgNVasCak/qBxA8I50X4bTIGKhHO2v8aeacG0vm
-ajBwkN6lnH13j3rw6IrtSTXIsUKauRxDpbVjG6gFo+gint8N7PRbKvvnDZ9MaZHc
-ra7IP5FxfWKO6I03OPsHThnF2toQlzfXQi8mzfXipu+rAkUYInNFHtu/NQL4Zled
-kNsU+YzGk9G72iGYPhv/+0meACZ3mzi4btYpHrC/ABk6KuC79OQ=
-=p5Fk
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmejW2MACgkQJNaLcl1U
+h9Dozwf/XUDm+mbCcPeu3uNyCi/BytEd7NKmO1kyTYc/v6fF65OJB7jD9HfPQlzB
+mD06VAQ110zk+dnkvdpkEw2qB9jgOldkuoSySBVfaDTzt7YSk6HRnR3GzXsX4ExQ
+Y5ej9j0TcSFPFjw9zw39iC+t7E7mAm8gTYTpLjnZdGHbWM1REzIrdR3rNqrPVmVv
+NIAxtDY8f4+tUyBG22wKI70spNBz5nG1H+IwZQrpltxT9XNI4uf45o3gvryIOr06
+psSzIRnOrY56eKyAU8xZc9H1/aU70zHODKIgHyn3nGmoZ9wWkb9A5da7+lSlxlYK
+ii+dFyrxJDo7gCSvB+pTji28aOMKDA==
+=gvhZ
 -----END PGP SIGNATURE-----
 
---IwZMQdqnEyYDIvBA--
+--1mL/Scwyn0KiF9/v--
