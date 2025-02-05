@@ -1,113 +1,133 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9E7207DEA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF82E21D59B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738731713; cv=none; b=qgMzv50wwrvmWDchfNX0GphP7+a1g7BzpPK7hZU23vR5eCyVcjwFhPxyzV42zxYUQnGZBSYQl05WgEoUZSHoXcXcGyJRMrvsuSzz4eEzDBoGorG0TwhbD0NriTjd4wMAD+as3NfUvF/fizGBvUh2C+LqYt4zUGe1ooDaFdbndJc=
+	t=1738732206; cv=none; b=rftIzi13lpQppTf7HOSqTbCfmI7mBtJ9C9pLKVf7RF52segLY/wIdle43wh3nzxc+bJL/Az3PCKLTXOejUER16J5UvfhzOp7QRPQImKHWC2XsT45+18gq9UmcMJyexMEFkpq0rUYNQoMTey/a/O5FtYo5LWgzIo4ng7l3Bwn0Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738731713; c=relaxed/simple;
-	bh=fwCHjFRk35mzj5sI7+uT1IUow+zrDz9kGdE/IzX1SzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rAycq38EgzQ/yX/n1EI6zp+WJp7dmoAJcPR/AV+SBuLhEy0rSY0Ht2ZrFW3L/vAIcputzkKR3umElkHztMpQhZ5amMrBKXhelP7/HxiEtkEghCyKIVTj1GEalCL16xhR42wqdwMw/uUSiK3lPHjlH4lqa4LR1zlIAyeSl5ZQv/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rbbg5Boo; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738732206; c=relaxed/simple;
+	bh=I43GEoUdUiGceZ2YgYU3wXjGsWcqAiAEbQmD/Sf+KVY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dnYW7+Lk8rfpT8DOhnkL5K4VJwelrD4KkDZGDUwvdil8jVDLp/dF1qsivsFgnHchQznSfVCwhne6/vv5JPBp9U+8TYkZDpjnxqLt9+25OcXJL0RGdSRJCjX/1npO8ElqHj+W+rNQS71KeAojBElTvZdW7O3CiEotUuZQXmYLojc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=x7BCV0wR; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rbbg5Boo"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f1b2480a2so2865045ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:01:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="x7BCV0wR"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38da66ce63bso893094f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 21:10:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738731711; x=1739336511; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p0swfSSPD+og1Pzr3e9g725D1t2rKfUqhh/5xRm6XfU=;
-        b=rbbg5Boo/jAoCrZcDMGrBTmTWachS5HOHzpWMVaW9OREBxBnWDScGhFhSbUHTLs06g
-         8Qf2B/hbOw6e+GP29aT0NniVBnxozpqPXNyeZkW+y37dU29B4vdgCC8bRGIISfKy6Kg3
-         rbk3tzV/0OdudVEhnZO5E00IaMup+zWd4+eY6U4GDyGKLO/jUEsdyknkIKNyWVegIns6
-         ye2KxuLww6QTeBywpuYgEOu9GqyyhmygWiHUNwfzYfZbGj6PgR+8DNm6uLWiTz9k1CXc
-         JOeQ8bi7yvl8tz6urYNJkQveSW7ZAGJhaRb9gNZwRKbKExT5ZoEWUHykdMB1cvxJ+4T7
-         MlnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738731711; x=1739336511;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=joelfernandes.org; s=google; t=1738732203; x=1739337003; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p0swfSSPD+og1Pzr3e9g725D1t2rKfUqhh/5xRm6XfU=;
-        b=kX/iFW7JcTrv8JsALdsjjiKse6jTavNkRLi12eI31WCP884WfWk1UXoLtPOtA6PWTK
-         vlgGbCcDcYpAYRaFbwgCKr2oOU4AE9dTVHxhmyeWU4lNmMuVScZDuInglOplvmnCXlGY
-         uv9PCxXD9lSS60kJqVPj/EwWXT+h1oiAjwHZzuq+y/2/3smVHkYPxGQGQWCMKDLKooBm
-         4wx+Oo4Lt6ZStyAmNxDkQbRXMZn8dysmmkO8fJ+r6RxxuuLoVRVYqNqWJ2c51PC5rIqV
-         C9P28z7AHfnV0Nr2YZoGn9fUOSDsYOQaZ4kwuxOy5KrPOqRJ4H1qeTFAKgg639oqZLNK
-         jHFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXd2hHQbKy1SSWb2QwHwuqK20gZEaZCa55TNGE9sbD2SE0tWFs4uvUoAlQYYrnHL9QjbGWoMmIucU+/u8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwZgqoMRkKRyhx6mbTshwvDacm+CAk74BLsdwnvixWp6hv0WYt
-	bkmgMzjxMwe/17eo3pEzG+ygfYqAfYjgNXEgHZcJh9OQ1sne0zG4iH592M0iQJ4=
-X-Gm-Gg: ASbGncvNHUIM/GJ+upBl0A54/o7xtw/Zs7M3LqzMVWLZPKfMpTqtxcgHx6uAR3La+az
-	6yCTH8Xd+Nnog+JZXxCpE6O2HrvYe+wqQG9yzJaxGClqjDzfsQ9d7yxlNtlDiVAOXu99X20AoTP
-	/Zl4Fh55PBBJXN3GBU3ME726hTBu/QRAx67kKjVcU79uUS+Tl4x1y4IqD+p6YCrAAxX3qhDBUtR
-	FHRdgUNBGJyuChrbZObyzzHRcn5MEM3M41DX3AkLJxh/BXfIUMB4VJCea1TfZNiWFRAasPymBxC
-	z+PnmVNco///2n3zrw==
-X-Google-Smtp-Source: AGHT+IEK1SsVPM3FY80ZXjnzpYTsubF/iE9BdMFRWlXVghXMGUaasnmObK/mq0H2BixXG4K9ZJcJIw==
-X-Received: by 2002:a17:903:2291:b0:21f:1391:171b with SMTP id d9443c01a7336-21f17f115dfmr31036995ad.44.1738731710796;
-        Tue, 04 Feb 2025 21:01:50 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ea495sm105426275ad.126.2025.02.04.21.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 21:01:50 -0800 (PST)
-Date: Wed, 5 Feb 2025 10:31:47 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: Lifeng Zheng <zhenglifeng1@huawei.com>, rafael@kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com, jonathan.cameron@huawei.com,
-	zhanjie9@hisilicon.com, lihuisong@huawei.com, fanghao11@huawei.com,
-	gautam@linux.ibm.com
-Subject: Re: [PATCH v2 2/4] cpufreq: Introduce a more generic way to set
- default per-policy boost flag
-Message-ID: <20250205050147.hfctwo6aw75rardc@vireshk-i7>
-References: <20250117101457.1530653-1-zhenglifeng1@huawei.com>
- <20250117101457.1530653-3-zhenglifeng1@huawei.com>
- <c9e56c5f54cc33338762c94e9bed7b5a0d5de812.camel@linux.ibm.com>
+        bh=9RVlUXV2F+9kkfTiH5pod7Tr3MJ/WjVL+lpETWYFhSc=;
+        b=x7BCV0wRGMuPWK7srBOI5LX+UtRbLKqISQgTyKlZwFF9ZGABCbvhOd9EIPqbAxfuKb
+         zxjX05cv9fWUsVLC/OIn+GQ1d7xEs8NXFh7eXa/TrGiNdpMm9vwnp0utese2F8weWSfC
+         5s2E7C5NuI1caqSYGajWhe0pP13CCjXPWg5Ow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738732203; x=1739337003;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9RVlUXV2F+9kkfTiH5pod7Tr3MJ/WjVL+lpETWYFhSc=;
+        b=ig+oRTAWC46AKIlwtaMnstq37Dj4KoBH/Iirw2eGpWsTcBLmlBb5Trq2EJElEcAI+h
+         d4Em4G6GhlKVmUqbdMtC8nZppmxA2yOYFthAdWEg9M2JDv/fUR9KF0zBV9Exv4GX4Ed/
+         1D4giGvgYHU6EDsTciliQDLMb+eVwhhsk9utfsxHgW20AMoEO/16kQHuHV8ds/puf+Rh
+         FqlYKoLlgahYz24yduCQKQ6apqknkxRnJxX4krTFro50RL3XeXwMNK6zQx/PE1Kt25fD
+         /P/TBfRBOGPs6D1zm1CK57Fzmnf5pcU87ZtQ3PignRSv93DeX8ny3j1mq0ri5/Q37PeN
+         /3Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVNTh7ZPqBsrCreCtr+jAuUI48YLij5TTP8M3s99B/iHF1af3uHDXWzHWzj2d/ChNxGnXb2792MjDkUS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHJ3sf2y3qIysE90HOdhpqVona7CwjmxU5NgEbarawLcs9ghKD
+	PwzILJMoOI6pAisMbYZigQVM9tFAftMtzG/UKStqqQ86V9WWThGcpiyRx1jSV2FtI3apn8V0PAY
+	p0fIbRS2BoFKUE7yIcbc3FK8yU+0HIYusC6q3dA==
+X-Gm-Gg: ASbGncs7sgdCmvz402/2e+RJMNqM6waDwgY1tuR5KBZI2QZigg+Sv4SUvkacJ4WT7cD
+	G3W4vCpYZ4dqD9Rloz85UUEnH6L7ugaqjMl1SIIwWd70f6LEOWnkbo1d2MEsqnly71Zj7L5gWVV
+	8=
+X-Google-Smtp-Source: AGHT+IHebXDnJj7nrVEowqtLpxuhsBRv87DxqjXGuMdO/PKznev/kvyagbD64f5kjLtxcpTukLwYXZ2sJHYB04z1738=
+X-Received: by 2002:a5d:47af:0:b0:38c:1270:f964 with SMTP id
+ ffacd0b85a97d-38db48dea2dmr654734f8f.47.1738732202866; Tue, 04 Feb 2025
+ 21:10:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9e56c5f54cc33338762c94e9bed7b5a0d5de812.camel@linux.ibm.com>
+References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
+ <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org> <20250204220418.35949317@gandalf.local.home>
+In-Reply-To: <20250204220418.35949317@gandalf.local.home>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Wed, 5 Feb 2025 00:09:51 -0500
+X-Gm-Features: AWEUYZnm9OUMJi2qAun9rb8YUVPwuY0xD-pJcn3QN-FWYx3I5wXuquWtGR4fSJs
+Message-ID: <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de, 
+	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com, 
+	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, 
+	Suleiman Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams <clark.williams@gmail.com>, 
+	bigeasy@linutronix.de, daniel.wagner@suse.com, 
+	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04-02-25, 22:11, Aboorva Devarajan wrote:
-> I noticed that Viresh is working on a similar patch [1] as part of a broader patchset
-> to simplify boost handling, which should also resolve this issue.
-> 
-> Should we merge this patch [1] and related patches since this is causing a crash,
-> or submit a separate patch to fix this?
+On Tue, Feb 4, 2025 at 10:03=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Tue, 4 Feb 2025 19:56:09 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> > > Here is the RFC I had sent that Peter is referring
+> >
+> > FWIW, I second the idea of a new syscall for this than (ab)using rseq
+> > and also independence from preemption method. I agree that something
+> > generic is better than relying on preemption method.
+>
+> So you are for adding another user/kernel memory mapped section?
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index d434096b7515..7c1f7f5142da 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1590,7 +1590,8 @@ static int cpufreq_online(unsigned int cpu)
-                policy->cdev = of_cpufreq_cooling_register(policy);
+I don't personally mind that.
 
-        /* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
--       if (policy->boost_enabled != cpufreq_boost_enabled()) {
-+       if (cpufreq_driver->set_boost &&
-+           policy->boost_enabled != cpufreq_boost_enabled()) {
-                policy->boost_enabled = cpufreq_boost_enabled();
-                ret = cpufreq_driver->set_boost(policy, policy->boost_enabled);
-                if (ret) {
+> And you are also OK with allowing any task to make an RT task wait longer=
+?
+>
+> Putting my RT hat back on, I would definitely disable that on any system
+> that requires RT.
 
-I think the right fix for now should be something like this. My series
-(which will be part of next merge window) can go in separately and
-revert this change then (as we won't see this problem then).
+Just so I understand, you are basically saying that you want this
+feature only for FAIR tasks, and allowing RT tasks to extend time
+slice might actually hurt the latency of (other) RT tasks on the
+system right? This assumes PREEMPT_RT because the latency is 50us
+right?
 
-Please send a fix with something like this if it works fine, so Rafael
-can apply.
+But in a poorly designed system, if you have RT tasks at higher
+priority that preempt things lower in RT, that would already cause
+latency anyway. Similarly, I would also consider any PREEMPT_RT system
+that (mis)uses this API in an RT task as also a poorly designed
+system. I think PREEMPT_RT systems generally require careful design
+anyway.  So the fact that a system is poorly designed and thus causes
+latency is not the kernel's problem IMO.
 
--- 
-viresh
+In any case, if you want this to only work on FAIR tasks and not RT
+tasks, why is that only possible to do with rseq() + LAZY preemption
+and not Prakash's new API + all preemption modes?
+
+Also you can just ignore RT tasks (not that I'm saying that's a good
+idea but..) in taskshrd_delay_resched() in that patch if you ever
+wanted to do that.
+
+I just feel the RT latency thing is a non-issue AFAICS.
+
+thanks,
+
+ - Joel
