@@ -1,149 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AC1190052;
-	Wed,  5 Feb 2025 15:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E16191F60;
+	Wed,  5 Feb 2025 15:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738770888; cv=none; b=ANuCq1HwP5wW3q9PR5iVFiNYaSzqwPbVOoGxzCk6UH1+4UvwHNj20YD8dLUm7UBChP3WCmQaDUy3khZZ0vGDEcNab6kUNInBGAxYISD5XqpBdYQqWivYhoBGY1CxefM7cEUH96hKYUlPAJA1gbcRGd312OEyl//hGJ3LhexsBdo=
+	t=1738770967; cv=none; b=h2n+0LGVweu+vzQm+Il/10E0cAj/Q4eMDzp4HUc6I5C/d9JI4mjulZ03UQqSjXw+7ZnZTCbt/Daks57I9jf53WgyHu8QYR9DwDmmcX3KSJj2ZXLqdf2w7Jllp5goMVHSlfowJPk5qskl0jWGMomP8e9IJZbi9P4VhceYJill8bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738770888; c=relaxed/simple;
-	bh=8W4ak49xUb/GQviHBhiJAJMPp0Cs8omvmCa7Vs3nF4U=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NXmOFU76HYejh9eymorbQtDGB7mTMqU3ZD32Is0QAr1PEQxJv5lQ8BTf2lRdaSAa0pb9eDltMegBwWcpBYhBpaL7KjzyJe9v79xP2ew6bep63VeDqpSaXP5OWfePLucMziCYFWOoDZwvFpFuV4J0QCfdh0yamNRmHej1vGslfqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ptA/fc12; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738770967; c=relaxed/simple;
+	bh=ZS3IMLzrZT4ujFwlAknS0GB7bPyVQkzuUAMqbkw+4Wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fyfBCYEuI2UbJjXEdyKNih+7x0hWpUZ466V9zsdVQOYeRkpnT6AbjabcW7M9z4ZRmoXRSs0b07cRc3UZyhawVV9VGgsniLnKnjep+T9Qy9v75gd8AF64Nn221hqbXwfYxnn/UZtjp5pFyVYn4GYfm1o/fEDy2yoslzf6aWg7Uso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxXk0Auc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ptA/fc12"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A17C4CED1;
-	Wed,  5 Feb 2025 15:54:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxXk0Auc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C880C4CED1;
+	Wed,  5 Feb 2025 15:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738770888;
-	bh=8W4ak49xUb/GQviHBhiJAJMPp0Cs8omvmCa7Vs3nF4U=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ptA/fc12UzPl4+TwbJ4N3b3lqvsSbvjkdJKnbc0dBlRO24jqPixiTAx9OEdazUfKx
-	 BA0MxUqQ4TTQUSSSZv0RgRNVsMsUGOoEzPJ9urpLtIQL81q6bMSxsenMyffvV+8Ba/
-	 cOV6AQtA9r3wPUa9sqiNNdYd0xkp9WUUfQkazmYr+M0Nj7f4cWBRYgw+3jKXcFTSwE
-	 Irn3f4C1jwSJyIOB280gYVTJpZE13o5iTORA4HoB4SCnLI3J/1CjugAf8bDt+g+w3d
-	 E4fztbj9+7Vk6zKn3KENkQaawJB1F24JfThFNbrZfi2Ibr0eopxRdNr1J8iZ8pd2Vm
-	 6WcVJ3eQ9XQPw==
-Message-ID: <1d78b30c-f71a-4769-b665-7425f00eb5ec@kernel.org>
-Date: Wed, 5 Feb 2025 16:54:38 +0100
+	s=k20201202; t=1738770967;
+	bh=ZS3IMLzrZT4ujFwlAknS0GB7bPyVQkzuUAMqbkw+4Wk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=DxXk0Auc2t1sh7zwE+qm6ReFr66wxEj2FJ6hLayzWRYg+V5kPtWKpGMJBLwOyyBQ7
+	 p3z3XffotEhQ4Pnf9gI0lRk2baM4kCBPQd/L10N2XrsPRNpaycVvZ87J/ABN0HSsmW
+	 cUy2FbnFEEi5NfU5G85pGS/YAmE7W3I4ueLq4ftoh4uEVfWpbHCaOlt/uaQby6neIi
+	 JpoxcYeE8hURFHLnHApIRPgKYocgEzmg/+vCc8nay2a44QViGGi2hzrVAUIHt4HjrZ
+	 wl2qOIffJjYIKGW7PZ51t0TJSLv5usuSCZsMn/MevIYXbbfz6wH0AjTK0C/K79dQD4
+	 sZlt34PtoFmPg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id BDE65CE0749; Wed,  5 Feb 2025 07:56:06 -0800 (PST)
+Date: Wed, 5 Feb 2025 07:56:06 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
+Message-ID: <87f074af-a39c-48db-972f-5f46e57aa3db@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
+ <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org>
+ <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
+ <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
+ <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
+ <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
+ <999751de-b891-424d-a7b5-80bfa98793ff@paulmck-laptop>
+ <CAEXW_YT6bD=sAD77yg+BXC+Q0NW0RHCg6fEYZ_jsBeXkAd_1tg@mail.gmail.com>
+ <e23ab8d2-1a64-458b-a83d-eabcf92a2382@paulmck-laptop>
+ <CAEXW_YSFtF=Vx2P73m0tdfAYgSui-KSzGnyqiTY1rwOfWfFycA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/7] arm64: dts: qcom: ipq5332: Add PCIe related nodes
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, p.zabel@pengutronix.de,
- dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Praveenkumar I <quic_ipkumar@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250128062708.573662-1-quic_varada@quicinc.com>
- <20250128062708.573662-7-quic_varada@quicinc.com>
- <cc1c34f0-0737-469d-a826-2df7f29f6cf3@kernel.org>
- <Z6NCSo98YRgG666Q@hu-varada-blr.qualcomm.com>
- <85f54baa-7d3d-43c3-9944-8f5f3c3006da@kernel.org>
- <Z6OFSr2vrmPJTp4u@hu-varada-blr.qualcomm.com>
- <d867f285-b639-4080-beeb-20b75ee3f4a2@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <d867f285-b639-4080-beeb-20b75ee3f4a2@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEXW_YSFtF=Vx2P73m0tdfAYgSui-KSzGnyqiTY1rwOfWfFycA@mail.gmail.com>
 
-On 05/02/2025 16:53, Krzysztof Kozlowski wrote:
-> On 05/02/2025 16:35, Varadarajan Narayanan wrote:
->> On Wed, Feb 05, 2025 at 02:47:13PM +0100, Krzysztof Kozlowski wrote:
->>> On 05/02/2025 11:49, Varadarajan Narayanan wrote:
->>>> On Mon, Feb 03, 2025 at 05:30:32PM +0100, Krzysztof Kozlowski wrote:
->>>>> On 28/01/2025 07:27, Varadarajan Narayanan wrote:
->>>>>>
->>>>>> @@ -479,6 +519,230 @@ frame@b128000 {
->>>>>>  				status = "disabled";
->>>>>>  			};
->>>>>>  		};
->>>>>> +
->>>>>> +		pcie1: pcie@18000000 {
->>>>>> +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
->>>>>> +			reg = <0x00088000 0x3000>,
->>>>>
->>>>> So as Konrad pointed out now, this was never tested. It's not we who
->>>>> should run tests for you. It's you.
->>>>
->>>> This was tested and it did not flag an error since it is having the order
->>>> specified in the bindings. qcom,pcie.yaml has 4 reg specifications. Two of
->>>
->>>
->>> Hm, then please paste results of dtbs_check W=1 testing. Here.
->>>
->>> I am 100% sure you have there warning and I don't understand your
->>> reluctance to run the tests even after pointing it out by two people.
->>
->> I ran the tests. Not sure which portions to paste. Have attached the full
->> output just in case you are interested in some other detail. Please take a
->> look.
->>
->> Thanks
->> Varada
->>
->> 	$ grep ipq.*dtb dtbs-check.log
+On Wed, Feb 05, 2025 at 10:45:08AM -0500, Joel Fernandes wrote:
+> On Wed, Feb 5, 2025 at 5:28 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, Feb 04, 2025 at 08:28:29PM -0500, Joel Fernandes wrote:
+> > > On Tue, Feb 4, 2025 at 3:22 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >
+> > > > On Tue, Feb 04, 2025 at 10:44:45AM -0500, Joel Fernandes wrote:
+> > > > > On Thu, Jan 30, 2025 at 12:56 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > > > By "where we were initially", one might reasonably guess that you meant
+> > > > > > that the initial value and the target are one and the same.  But I suspect
+> > > > > > that you are thinking of a third value, the value of the underlying
+> > > > > > grace-period sequence number at the time of the call to rcu_seq_snap().
+> > > > > > But you might be thinking of something else entirely.
+> > > > > >
+> > > > > > > Now we move rcu_seq_done_exact. It has the exact same behavior except
+> > > > > > > that instead of ULONG_MAX/2, the above situations are shrunk to about
+> > > > > > > 10 counts from the target. So if target is 28, then the initial
+> > > > > > > sequence should have been at least 18 to avoid false-positive, but
+> > > > > > > again it is possible and I certain see in the code that it cannot be
+> > > > > > > used this way.. (at least so far).. So all we are left with is the
+> > > > > > > false-negative band of ~2.5 GPs..
+> > > > > >
+> > > > > > Here, I have the same questions.  As you no doubt guessed.
+> > > > > >
+> > > > > > > About "what are the consequences of failing to get this right".  I
+> > > > > > > believe false-positive is unacceptable unless it is maybe debug code -
+> > > > > > > that can break functionality in code, too short GPs and all that.
+> > > > > > > However false-negative is OK as long as the usecase can retry later
+> > > > > > > and can afford to wait. Did I get that much correct?
+> > > > > >
+> > > > > > Maybe?
+> > > > > >
+> > > > > > Please look at this on a per-use-case basis.
+> > > > >
+> > > > > Sure. FWIW, I started a world-editable document here. I am planning to
+> > > > > work on this a bit more before our meeting this week. If others
+> > > > > knowledgeable like Frederic and others could make edits/comments,
+> > > > > that'd be welcomed. But I basically summarized this whole thread here:
+> > > > > https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb1aG4goOJAnS6c6gQ/edit?usp=sharing
+> > > > >
+> > > > > My thought is (AFAICS), this patch is still valid and
+> > > > > rcu_seq_done_exact is a potentially better replacement to
+> > > > > rcu_seq_done. But famous last words...
+> > > >
+> > > > Let's start with the use case where the sequence number is being used
+> > > > by rcu_barrier().  What happens?
+> > >
+> > > The rcu_state.barrier_sequence is used to keep track of barrier in
+> > > progress, as there can be concurrent rcu_barrier() calls happening so
+> > > we optimize by batching multiples of these calls.
+> > >
+> > > It also handles the case where the entrain IPI came through but no
+> > > rcu_barrier() is currently in-flight (which would be weird but maybe
+> > > it happens somehow).
+> > >
+> > > It is also used to make sure we don't need to entrain on a CPU again
+> > > if we already did an entraining for a certain rcu_barrier() invocation
+> > > already. This is tracked by rdp->barrier_seq_snap which copies the
+> > > value of rcu_state.barrier_sequence after the entraining. Al though I
+> > > am currently unable to envision why the IPI handler would be called
+> > > unnecessarily (hardware bug?) since we hold the rcu_barrier mutex
+> > > throughout the rcu_barrier() function, including while waiting on
+> > > CPUs.
+> > >
+> > > Going back to my first point, for the rcu_seq_done() in rcu_barrier(),
+> > > we are checking if someone else did our work:
+> > >     mutex_lock(&rcu_state.barrier_mutex);
+> > >     /* Did someone else do our work for us? */
+> > >     if (rcu_seq_done(&rcu_state.barrier_sequence, s))
+> > >
+> > > Here I think rcu_seq_done_exact() is better, because if too many
+> > > rcu_barrier() calls concurrently made at the same time, the mutex may
+> > > be contended. If enough time passes and we have a wrap around, we
+> > > might end up in false-negative land which is much larger with
+> > > rcu_seq_done() than ..done_exact(). However, that does seem to be a
+> > > bug to begin with if the mutex contended for that long. OTOH, doing an
+> > > rcu_barrier() again when we didn't need to doesn't seem like the end
+> > > of the world especially if we contended on the mutex for that long.
+> > > But at least it shows that rcu_seq_done_exact() cannot seem to hurt
+> > > here.
+> > >
+> > > Hmmm,
+> >
+> > So...  Do we really care about the difference between rcu_seq_done()
+> > and rcu_seq_done_exact() in the rcu_barrier() case?
 > 
-> Where is the command you have used?
+> In so far as to get rid of rcu_seq_done() API in favor of using
+> rcu_seq_done_exact() but should not cause any functional or robustness
+> changes to rcu_barrier() at least, AFAICS.
 
+OK, *that* I might be able to get behind.  ;-)
 
-Although that might not matter - you skipped several warnings with your
-grep. So maybe you need to fix your process, not sure.
-
-Best regards,
-Krzysztof
+							Thanx, Paul
