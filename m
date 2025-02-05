@@ -1,233 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EF7207A18;
-	Wed,  5 Feb 2025 22:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794105; cv=fail; b=IAumhY7Hy+i8RkxX5UIyMAY/dafevKk4he4dxL8rvrECGlLFELZna4ir5BOSUmPxVZBtpfDuhNOoKZrUHVcBy7VgsISraOSJb1JzBHI+Hbz0cT6eZlKYP3upZMbiYD6UsA2c4nddmR/BvjWquEVgUQaExtXlRARdLmZpcmCVUPA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794105; c=relaxed/simple;
-	bh=vbRTnfY+7QSYeSNOF3/AX3hYwRRQ2tOf6HvcipiO6fk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Bygr+D9bTzdFQqfIwqr8ZgvEmPz4vKrZDswDea3And7HeEf393cPGC47JGQMjudc+YnYJLr4/0OO1kDrxFegIi8aFTyShxNrTTJQ39NFH8qkwCU1EVAnNyCSYMVicOM1fWiDwSulpwZx//z+rMQernfhcikjlMW657peYrrbm9k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pt/2PXt9; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pt/2PXt9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738794103; x=1770330103;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=vbRTnfY+7QSYeSNOF3/AX3hYwRRQ2tOf6HvcipiO6fk=;
-  b=Pt/2PXt93DUamVGjwPQ5tJaOB2S8YAqWXgS/hiB3u4mtfevHAfIlXKeM
-   9oyxtK+GFsINIWHwhng6ms7jXpNnnUf6EQc7Vsb1WFhuR1dAB52dJtG31
-   8HUgHJ0kDu4y3etC9Gt0nD3kdoBg1bWQsBcI7PQM/3XFptyGwRweL1pEG
-   oK07m+bP7NqtfRJQDZ2pn1lPHkGr5cfdwlZeZ0pe++60DkGrNSslkbBlI
-   9ZQGXG77uvkUqhwIVzro2M7s3dCHSJQ0KzsUs5sGDPKo2ftCyKql8U3wp
-   szT4xjMzrx7byNmkhbaefVLM0oAva9Pc9KfBF7r6h0Y4x4ciYU1En/YCV
-   g==;
-X-CSE-ConnectionGUID: 8CDeMa3FQkKZSQl8r9CBcA==
-X-CSE-MsgGUID: eScUoK9wSS2wIK6lQzTcag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39407274"
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="39407274"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 14:21:41 -0800
-X-CSE-ConnectionGUID: 2Z2eHev/Qm+b2SGiLKWIYg==
-X-CSE-MsgGUID: trqswswtTymO7PUEPT/gmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="110925544"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 14:21:40 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 5 Feb 2025 14:21:39 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 14:21:39 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Feb 2025 14:21:39 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ljVI8H7HqQU/ddre//3IWR0qhXpi0Lq1QIeMc3T+FnBKsjM0mLc9HH9q4hle+Wp4mV5IiiW/HB90YvQ3vMKHbbPjrOec6jXPfwwcVQO/0NMyUyrj2aPS48tVQkm34q7FTD9fD06mpByPqem5bdhY3d6Qm7CHDXFTkULE9Tya/C97LotB3W39zSTvW83yd5esY23g/GWrYCNOE15ULtNt5DBwh9vnvsfA3ALeTUdsP1wotCUeFdp1U9rJOpfPk1RygvQ6uUuVMs3fZ69GdtyIOr+7fnONFBSFnHQGBWjALbAP2A2gig/e11CkdG+opFKLDj/EJ5xi+2tAcnSisJup9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JrSTEIehk1NsVm/aGNytfzzQztwmQ+ZkIPhYbxhVBNE=;
- b=Bjeu9IXETAOjqnI5m9AD5oMKCvbuDBtoPZV75pQbSGxGd0Udqr3qKbE2cCAyf9JXFbUHZHZu880WGw4f72Ahbnbi5YmyXURhq2zrFeJegE47O895odcv2GFdnd7ki1dBxNZbrXpcwICW+i4FFjTwgWGZvhb0sOqWSM5ga5XtddeYBT3YOMZxnFyyw9vMBYgigKBfqs4X88AFqnpHoveBVRur+BsVtE0vYUBgcDUv6QZiqjfvfl3DmZ91/nuiK4HT6UUjw7ymFcv13FuB5EFGnSWkkx+N+NFnvuTxhjgNmvel40t5xTq+pkb6sN4ziop0XScXkrg9d+FS62CY/No3CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ1PR11MB6153.namprd11.prod.outlook.com (2603:10b6:a03:488::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Wed, 5 Feb
- 2025 22:21:37 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 22:21:37 +0000
-Date: Wed, 5 Feb 2025 14:21:34 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
-	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
- Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v6 4/6] acpi/ghes, cper: Recognize and cache CXL Protocol
- errors
-Message-ID: <67a3e46e2d0ac_2d2c294d9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-5-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-5-Smita.KoralahalliChannabasappa@amd.com>
-X-ClientProxiedBy: MW4PR03CA0159.namprd03.prod.outlook.com
- (2603:10b6:303:8d::14) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51821FECBC
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738794144; cv=none; b=YccMcUoIAGyE471gQHq193qZHpjLNbi5qF/Eoqm81Rwtx42JvcJeqAoV0bE5hd4dKvxvxzoQw1d75EgBVoRc9Ilg9Z+mEE5B08F/aHcR21ITKvwFCz2qQPrYKqYQ67JwKERfbn5It3uF8JAAR+NXhoRJ4aqYTm2IcCnqKYhXK8g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738794144; c=relaxed/simple;
+	bh=bJFLp0XeWoy0Wbj14E0G32xDLGx8rBdaR0tauL5LNmU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pVlokepGoT+kD4KQNn91BFHqimGlOf63jxbgIItj6w/iSI/HLSo5pMhsndqja491H8H9p4/iFTBH7noGExuRJ85fT2HnHAE6mMpVx2P5zO1LUUVjt+EgUAkna7ok4JjqfuJTU5zkDL0X1hOfhC1RFczHTVT+cNRBZJ7xxmvmS5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce3bbb2b9dso1722225ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 14:22:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738794142; x=1739398942;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=avAw4ndW1Mba+XlAfaMHMADvM10uoCqU4hpvq784fbw=;
+        b=E+MAvyLRCrzale/4Ps0/T56tf54uf8+ApcSN/IRZ8GR/UhSwN7DueFju9iSOhBkkPA
+         6i540lQfETWGZkQjfV1jh5J/d5r1FeIvf0tvuHpftzH/CMlobIyPwb+Ff9b2++4u+cjV
+         NugfZM5njuH61knugKeFtQpsORmTkFnCKsVd4u+rgDDQfieOfQPDF2vyXU7oVEFg8csC
+         2CkxSS0BQk+dK0ofVmXs9041Wll9VeV4g1T+6rMldP45BywKWWj9bBV8SqmskYUO0+Dx
+         4URV/Z6gT1Keecr4inEDGwK7tH5q7+IBlVAG/1WkBLskkhYwgHBpw6SIjLXIoVZmyhe7
+         iezw==
+X-Forwarded-Encrypted: i=1; AJvYcCWz9UNxcq+JJjREK96hh3xHe82BctjVAzInXG2ukhxKnY2a1RenAFYPi5T6a16+cazkTuFknBvtTeC6/o0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxil086DUEk4mZXbQq0bFOJwY+pZpg6KIZnXt9MIZ7ca1DkRZII
+	llpPPIaVZHG0mFQyK3cCiY1NRk4hhN0TVmJEkRE0vsFolAmsPYutKDe1OL05XZSEs3ZFH1YQkJT
+	k1/1phstwrtJTEwFrWih/CEYGJFW6mYedpEsz6Nn44BxU6bC8LllBoIs=
+X-Google-Smtp-Source: AGHT+IGwUqYYLWvK4yfvYFIaFjyq97vE5KTxe7rnR/C7y8lPlKntf43pmuN1Gyx2ysJNWfrr8m+Am/QZgN58vRBT3P6GaLEgjl1i
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ1PR11MB6153:EE_
-X-MS-Office365-Filtering-Correlation-Id: 280023d2-fd1c-46e2-c9bc-08dd46337495
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?PkBD/LGLw8srYX0gaMd3UCXdmPO52/edHQDjZqPh61b5GSKhLj5wMpIjTjuY?=
- =?us-ascii?Q?PN+N/e/pqMyv23cRkPVwPjyevnmxEzAVgMckITKyXPS+H4Zg1tvCpLnEF/gI?=
- =?us-ascii?Q?pa6O1iE4IiAL1pqyL/HqkgbloiFOkn38uZNOOK83uWkhipd7TZQEe91AJ3yG?=
- =?us-ascii?Q?t/JHGzelAx+7ID8yh0WNyMglkhq8cJO+T4XIS2GX1pwk2N/tlxdmeOo7TtbM?=
- =?us-ascii?Q?mRiOr3owTLDpsH668UmH6R/bF31T1lHwJVwq8XeJsZwmxLoKPrI/cowxL5VR?=
- =?us-ascii?Q?LbvDKQwHzMoz5+ZfklT3/8N1jikvxrkFT+jG7OQ1lGJuUK4wGC7kkPP6iCq1?=
- =?us-ascii?Q?7xJXGmRDO6tnRSgRCqyxNjrUvnKHDEtitSd4P0R0rinu8HcSTktVHTmmDulW?=
- =?us-ascii?Q?oGmBGjAOIMUnAd4gl6uHXaEOG80llmeDTCWyjjvQCnGbwx9P4bB8ahUAlehS?=
- =?us-ascii?Q?diiCbVcoUx6Ae4H8RebH6I9pxV3SPZ75bKnzpR3l+LGLvwe7UhyrLXeWmEGe?=
- =?us-ascii?Q?+fNSnoY79Xf6TNBf3iOEzo5C1tKvaSigs3tZK6Edr2kMdJI8yqi1hYoK2B7T?=
- =?us-ascii?Q?GY1zYXfYRLpPafqDVG+Pm7o+P099mLN1FzqtQG6UFgJQ1o0eGSA729bUdiJq?=
- =?us-ascii?Q?9E9WbQZiTlepxnblLuBF/j6O09EKYDNecImN9xdU70/DteLb8XgkyJfNoY7q?=
- =?us-ascii?Q?u5cw5a/zkbos6sH0OFtL/kQ4tHuA7DeVrLbeZvSmDBW9Hqa9S4mKfx6tVLq7?=
- =?us-ascii?Q?j0O0X7RzekAj15LtI3T5RC876r9axEwAGecQFmcnQuV5Mf8xLs2knYGfCC/1?=
- =?us-ascii?Q?gnhCfdnxLNDSGpyCmiJWw5jLXC+7mbRasBASPCmVhBpXmXT/xa9KKVtBjSvr?=
- =?us-ascii?Q?MK+kVBv4//djOeHE9vuf+DvULTeFue2IkQztQvVIxFLYIBcWGQJmCSiQbonC?=
- =?us-ascii?Q?r+mKmDUu8qcxfYetCoUWH7dIJR2kgrQqTLc1ziYQEalsiG+K3AXfOnj+4nOO?=
- =?us-ascii?Q?S+y/pTHo1maUjt87DHkwlM58Fq+eyloBd0k5cSXA4W9LqIn3nrSusKEj6plU?=
- =?us-ascii?Q?wljJ7puTWfr+AcWRcxmv3NJj9UkD7SFq0UhEurcFcuzaJVjHexFxk/aHzmne?=
- =?us-ascii?Q?9bfrW0Q9uSu0dDzQb2b3BEGuAwcLa9UUrzdDSPYQLXOk4er69A8enH++xSJO?=
- =?us-ascii?Q?S7NSadfLqHIlH1HFe2rlVsC+ul1ZcfLD9XHyiFHrls654G8iJT7CwrNwCEqI?=
- =?us-ascii?Q?10YP06fMvXHkhJ7NsPCv2vWgU+GrJhTYxVua2hSZ3GMJUQJ0BqbzOeW64jyT?=
- =?us-ascii?Q?uyQ37Z0ip1XJtZZ1ebKyJG9yaxTsn+lXwAcoOaig/lN0QGT/Z+PuJTkQAcUS?=
- =?us-ascii?Q?FCUs/Gu/MKqlDAq8Psu7v6qDFHcT?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?i5QcC/YbcW5uUn4X+loWfFJ3tDQFFgol/0DJ5QNbwm1xW2PC94K0rsVADF+Y?=
- =?us-ascii?Q?k3rELDfaatC0sZICo+yLSZXAaduX2kj5WQ0qnZKPptmvhAUiE9B8aFHVQfpl?=
- =?us-ascii?Q?A/gUYetUIOrmf/HpywZPjqeknkrxJHKXBASqnCwR9f0gF5OBkDHeHgFwfvvi?=
- =?us-ascii?Q?e5p/P5V7w9C253D8gzBJ0cAT8e7pOo7QGq4nHRowt98V9Sr7N0DjO4G83AAK?=
- =?us-ascii?Q?K3RfUuvVe0cK/E8icoZDWkAO6crx2OyZrl2GtwP6UMEln4IXBtzF0fBAWYlk?=
- =?us-ascii?Q?7Myx5+eXhCPh5jRulvykkZOcpaUe+nsqUKY54nrQfBbS07c7D7jzrEtmiZgg?=
- =?us-ascii?Q?SmN5hOTurX1JFspT5jsYZjWiGz9H9J2yl87mPtw9P9z4XIUgyapfiOQHvArt?=
- =?us-ascii?Q?3qYPSiG29tpYi5U0j/TYEGq6RiqpE4//HFJFkE9NlsrHM0/YBQZ7KkDqz0SO?=
- =?us-ascii?Q?u8r5JGLP3FyW5E6mYHT6uNBwMUeJW5xJOnNGDO4QTKY04W6spOtqv9kEIacU?=
- =?us-ascii?Q?WWa7C7cCpZVCVPA27G94Dso+Im5NtqFZJo+RBY2Bir0lQOcAI0XyizOJfxgu?=
- =?us-ascii?Q?0cWg6DYPd2hC7t10KdsfKif3jUxkCeEyRMpd+hgMNAh15vI3fURf9inU1h1J?=
- =?us-ascii?Q?xim5bqF17cNIslNfjyF4NkkvFSY4nbQP3tXtSlnnNUAJR8Cv13O6AMFnQvxh?=
- =?us-ascii?Q?Crrb9DQflqmOWDRmfGSjbdBX8bCIMvO4wfEBea8+NZEWgxv7rsf9KORdohqb?=
- =?us-ascii?Q?SVn8sI154mFfC8LwKhLKoFE6tV5v3KPtVIFzz7OzIOyUMAdii8pzkLhB8/1T?=
- =?us-ascii?Q?vDk+2nCQdGMNsMUSMab1qfd00d1JmNMICARuozmoEsa6oSNvIf7GmwKfcjq8?=
- =?us-ascii?Q?5FZwEo5diwjcbK/baiKTeslEo1Ov0XQFIeMWvgnZ5FEy7n3h+H87YIs7Kryl?=
- =?us-ascii?Q?LMU9te6l86mCe/EsKjXN7s4dir6WqjF6rtxkF3RRhFOagfxEP4XcGbDa1zBt?=
- =?us-ascii?Q?qcT6oZT3J7wYWuhgGQ+tTO8tq2ok2JN9V5nvf3C8LaaiePq0TMiXGmNf6xWx?=
- =?us-ascii?Q?6hdJdrUjPRXWuxIvqDCErHL1t2ashZzWSR45m0Uvk9mu70/Hy7/Uv2hDUlFz?=
- =?us-ascii?Q?jFuCLwuKHvRiSeh4Wo1I3Js0iXmQ6AiIt8yaAwoymoeJz7iSLVwGub38kzWV?=
- =?us-ascii?Q?YchdjVG4emOgvfaYOGqTyGgyKHYakX+Go6zL6AxsKpE4NTRUFgCOQPiniZc4?=
- =?us-ascii?Q?pk0TFBqvqPEdVl8Vigfqs+V0FJXFfGQENw2It94a59r8TpOSVNCUe54fFusw?=
- =?us-ascii?Q?r8Lli6UmhYbpnONcp+vDoLIBuitZTUBPeo/Mfvu01mlOMj1nCFOMRPwSJjCn?=
- =?us-ascii?Q?r2TlXUWotu7Pk2lS44guaHCHuTLRuzyGcFKK0l9H4MDWMkYqb2EvsVAGF7+0?=
- =?us-ascii?Q?ihGv6IkjMBtfIA0GvG/AW7//JfTttZVevMgALVPgMm97eQp5tuNyzklmaE4R?=
- =?us-ascii?Q?Gp7AeY7TgGG6OJjD0i+9U54AKjLIp3YjlDj5pPhuasgviLGVOYHfqFWbuI5o?=
- =?us-ascii?Q?pUo4dZBHUnm5HuXAT0h8GImWKYn/PeNsXonXo96KaPgSTbsUyhyVPBe0OVqx?=
- =?us-ascii?Q?qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 280023d2-fd1c-46e2-c9bc-08dd46337495
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 22:21:37.1735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SsqglDzygYcSfaPLl1vwn4Se3jwG8qa4ErNUOScDJMHT8/ZwLQ1HToLxv3qrC95rcaXEr75ngRbxTBxCcCdgFTP9N77sic2/s72rLz7PnrE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6153
-X-OriginatorOrg: intel.com
+X-Received: by 2002:a05:6e02:3309:b0:3cf:fc11:90ca with SMTP id
+ e9e14a558f8ab-3d04f42561emr45209305ab.6.1738794141784; Wed, 05 Feb 2025
+ 14:22:21 -0800 (PST)
+Date: Wed, 05 Feb 2025 14:22:21 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a3e49d.050a0220.19061f.05f0.GAE@google.com>
+Subject: [syzbot] [autofs?] possible deadlock in pipe_write (2)
+From: syzbot <syzbot+25dd3743576b83be4773@syzkaller.appspotmail.com>
+To: autofs@vger.kernel.org, linux-kernel@vger.kernel.org, raven@themaw.net, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Smita Koralahalli wrote:
-> Add support in GHES to detect and process CXL CPER Protocol errors, as
-> defined in UEFI v2.10, section N.2.13.
-> 
-> Define struct cxl_cper_prot_err_work_data to cache CXL protocol error
-> information, including RAS capabilities and severity, for further
-> handling.
-> 
-> These cached CXL CPER records will later be processed by workqueues
-> within the CXL subsystem.
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/acpi/apei/ghes.c | 54 ++++++++++++++++++++++++++++++++++++++++
->  include/cxl/event.h      |  6 +++++
->  2 files changed, 60 insertions(+)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index b72772494655..4d725d988c43 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -674,6 +674,56 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  	schedule_work(&entry->work);
->  }
->  
-> +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				   int severity)
-> +{
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
+Hello,
 
-This is ok for now, but now that there are two of these functions I
-would not say "no" to a follow on patch that moves ghes_handle_aer() and
-cxl_cper_post_prot_err() to a new:
+syzbot found the following issue on:
 
-   drivers/acpi/apei/aer.c
+HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d2fddf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
+dashboard link: https://syzkaller.appspot.com/bug?extid=25dd3743576b83be4773
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-...that gets conditionally compiled instead of this minor coding-style
-nit. Certainly if a third instance like this arrives, a new aer.c
-becomes warranted.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-> +		return;
-> +	}
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7b9951b25c33/disk-69e858e0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3814bbc0e86f/vmlinux-69e858e0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/da44e7be7454/bzImage-69e858e0.xz
 
-I notice that the component event prints are not ratelimited, so a
-follow-on patch to add rate limiting to cxl_cper_post_event() would be
-welcome to match what you have here.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+25dd3743576b83be4773@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.13.0-syzkaller-09760-g69e858e0b8b2 #0 Not tainted
+------------------------------------------------------
+syz.1.2997/15256 is trying to acquire lock:
+ffff888011f30468 (&pipe->mutex){+.+.}-{4:4}, at: pipe_write+0x1c6/0x1a30 fs/pipe.c:456
+
+but task is already holding lock:
+ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_write fs/autofs/waitq.c:55 [inline]
+ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_notify_daemon+0x71a/0xf70 fs/autofs/waitq.c:164
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&sbi->pipe_mutex){+.+.}-{4:4}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       autofs_write fs/autofs/waitq.c:55 [inline]
+       autofs_notify_daemon+0x71a/0xf70 fs/autofs/waitq.c:164
+       autofs_wait+0x10b8/0x1b30 fs/autofs/waitq.c:426
+       autofs_mount_wait+0x170/0x330 fs/autofs/root.c:255
+       autofs_d_automount+0x555/0x710 fs/autofs/root.c:401
+       follow_automount fs/namei.c:1454 [inline]
+       __traverse_mounts+0x2ba/0x580 fs/namei.c:1499
+       traverse_mounts fs/namei.c:1528 [inline]
+       handle_mounts fs/namei.c:1631 [inline]
+       step_into+0x5e5/0x10b0 fs/namei.c:1952
+       lookup_last fs/namei.c:2612 [inline]
+       path_lookupat+0x16f/0x450 fs/namei.c:2636
+       filename_lookup+0x2a3/0x670 fs/namei.c:2665
+       kern_path+0x35/0x50 fs/namei.c:2773
+       lookup_bdev+0xc5/0x290 block/bdev.c:1163
+       resume_store+0x1a0/0x710 kernel/power/hibernate.c:1247
+       kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
+       new_sync_write fs/read_write.c:586 [inline]
+       vfs_write+0xacf/0xd10 fs/read_write.c:679
+       ksys_write+0x18f/0x2b0 fs/read_write.c:731
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (&of->mutex){+.+.}-{4:4}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       kernfs_fop_write_iter+0x1ea/0x500 fs/kernfs/file.c:325
+       iter_file_splice_write+0xbfa/0x1510 fs/splice.c:743
+       do_splice_from fs/splice.c:941 [inline]
+       do_splice+0xd68/0x18b0 fs/splice.c:1354
+       __do_splice fs/splice.c:1436 [inline]
+       __do_sys_splice fs/splice.c:1639 [inline]
+       __se_sys_splice+0x2e0/0x450 fs/splice.c:1621
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&pipe->mutex){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3163 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       pipe_write+0x1c6/0x1a30 fs/pipe.c:456
+       __kernel_write_iter+0x4b3/0x950 fs/read_write.c:612
+       __kernel_write+0x120/0x180 fs/read_write.c:632
+       autofs_write fs/autofs/waitq.c:57 [inline]
+       autofs_notify_daemon+0x72d/0xf70 fs/autofs/waitq.c:164
+       autofs_wait+0x10b8/0x1b30 fs/autofs/waitq.c:426
+       autofs_mount_wait+0x170/0x330 fs/autofs/root.c:255
+       autofs_d_automount+0x555/0x710 fs/autofs/root.c:401
+       follow_automount fs/namei.c:1454 [inline]
+       __traverse_mounts+0x2ba/0x580 fs/namei.c:1499
+       traverse_mounts fs/namei.c:1528 [inline]
+       handle_mounts fs/namei.c:1631 [inline]
+       step_into+0x5e5/0x10b0 fs/namei.c:1952
+       lookup_last fs/namei.c:2612 [inline]
+       path_lookupat+0x16f/0x450 fs/namei.c:2636
+       filename_lookup+0x2a3/0x670 fs/namei.c:2665
+       kern_path+0x35/0x50 fs/namei.c:2773
+       lookup_bdev+0xc5/0x290 block/bdev.c:1163
+       resume_store+0x1a0/0x710 kernel/power/hibernate.c:1247
+       kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
+       new_sync_write fs/read_write.c:586 [inline]
+       vfs_write+0xacf/0xd10 fs/read_write.c:679
+       ksys_write+0x18f/0x2b0 fs/read_write.c:731
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &pipe->mutex --> &of->mutex --> &sbi->pipe_mutex
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&sbi->pipe_mutex);
+                               lock(&of->mutex);
+                               lock(&sbi->pipe_mutex);
+  lock(&pipe->mutex);
+
+ *** DEADLOCK ***
+
+5 locks held by syz.1.2997/15256:
+ #0: ffff888030adcd38 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x254/0x320 fs/file.c:1192
+ #1: ffff8880359fa420 (sb_writers#8){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:3023 [inline]
+ #1: ffff8880359fa420 (sb_writers#8){.+.+}-{0:0}, at: vfs_write+0x225/0xd10 fs/read_write.c:675
+ #2: ffff88804665a888 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x1ea/0x500 fs/kernfs/file.c:325
+ #3: ffff8881412ffa58 (kn->active#59){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x20e/0x500 fs/kernfs/file.c:326
+ #4: ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_write fs/autofs/waitq.c:55 [inline]
+ #4: ffff888022e95140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_notify_daemon+0x71a/0xf70 fs/autofs/waitq.c:164
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 15256 Comm: syz.1.2997 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+ check_prev_add kernel/locking/lockdep.c:3163 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+ validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+ __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+ __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+ pipe_write+0x1c6/0x1a30 fs/pipe.c:456
+ __kernel_write_iter+0x4b3/0x950 fs/read_write.c:612
+ __kernel_write+0x120/0x180 fs/read_write.c:632
+ autofs_write fs/autofs/waitq.c:57 [inline]
+ autofs_notify_daemon+0x72d/0xf70 fs/autofs/waitq.c:164
+ autofs_wait+0x10b8/0x1b30 fs/autofs/waitq.c:426
+ autofs_mount_wait+0x170/0x330 fs/autofs/root.c:255
+ autofs_d_automount+0x555/0x710 fs/autofs/root.c:401
+ follow_automount fs/namei.c:1454 [inline]
+ __traverse_mounts+0x2ba/0x580 fs/namei.c:1499
+ traverse_mounts fs/namei.c:1528 [inline]
+ handle_mounts fs/namei.c:1631 [inline]
+ step_into+0x5e5/0x10b0 fs/namei.c:1952
+ lookup_last fs/namei.c:2612 [inline]
+ path_lookupat+0x16f/0x450 fs/namei.c:2636
+ filename_lookup+0x2a3/0x670 fs/namei.c:2665
+ kern_path+0x35/0x50 fs/namei.c:2773
+ lookup_bdev+0xc5/0x290 block/bdev.c:1163
+ resume_store+0x1a0/0x710 kernel/power/hibernate.c:1247
+ kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:586 [inline]
+ vfs_write+0xacf/0xd10 fs/read_write.c:679
+ ksys_write+0x18f/0x2b0 fs/read_write.c:731
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f504898cda9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f50498d2038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f5048ba5fa0 RCX: 00007f504898cda9
+RDX: 0000000000000012 RSI: 0000000020000000 RDI: 0000000000000008
+RBP: 00007f5048a0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f5048ba5fa0 R15: 00007ffe28e15a78
+ </TASK>
+PM: Image not found (code -6)
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
