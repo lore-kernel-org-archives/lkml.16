@@ -1,187 +1,151 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B121821D5AD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8D021516B;
+	Wed,  5 Feb 2025 11:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738755912; cv=none; b=fR6s8jcfPOGX46P6VaZ4yTAS+j7VHgUnnsMTK9OFHgyIRe/f1SQuWcQXKvIlasf+bkqj+8Df0gKXFCCcm2w9Er6yBINrAR4NhYiamcfA+lRYKWBsosMoRuoYM4uT3Rqw9o0SoXtvya2gt6KZTrq+Pg856uVbpVDMonwBEBLb7cg=
+	t=1738756175; cv=none; b=qyG/cgixTY/r6CqMgivO4oBFgoGCegHc25Qw46xBcFY7tYDwm233UkPQMhrJ+aw+wELlWKtYA0GDoB64NekYFUBGjL+COOhLeQJwx6x9cGS9lLIkeBKi60STNIu4/QnOZMriU8zLbgI/gONrYPk88nFpJvd3wo/KO4RrpKsUyTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738755912; c=relaxed/simple;
-	bh=oZAxtVET1wE2jhM9j8X99IZJQPcTavMHE2/2pQ3Gvdg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tqOUdKQK9eFbFQyxO+EUBBePXRYqShWK3UmWTjDiBaO4XwKYd7H09MS04hWFzxm2bB3U5rdcDE7kuMJoa7jEXpyZcaMdqud3HvZkF2ExuftdX+RAHxYfNnS+PWlxfvgXFrtSPZNc+S6cTRkXLIffeCMW9mDEHXYEKL51jAFWfoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I7O0dLY/; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738756175; c=relaxed/simple;
+	bh=3AfOgti5ZfBaHE+CdrEanIxg/k8HqDZAzPJO7xCFpUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+M/x4BOdDFwocK+otpJmBOf+h5VX3JdBhKFhd2HWilbcn0ameyoutEveWchdkt7vOIO0LgCu92HU8Ii8zvksWcngLyHsHOocPzrVewk98/0SEMagUlfyIYRlUgw79EgExUi+BA/KukE7iKWpZAmCo960E0EFXuovnTNonZqRvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9NV518q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7O0dLY/"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so66179795e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:45:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738755909; x=1739360709; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=krjyMR76l7n+8MIJbB1GUtKwk+G5MPaqLtVtT5uYKhc=;
-        b=I7O0dLY/oiibeO4CB2TEdbN/OwOmOQEtbqQabo+PTzROnA2Y+dn+uZaFyoOvPWXLN+
-         m+secgEJIVUwfSEk/SyMX12oEUeELeMtmWnyU2x0EF0Nou0ZgCrBqYQH3gSNuD+Woxut
-         s3YIAGcJKsneq181rpczGw8YxokU7445jzLrR5FLoaV0q5i5tjl88j/TScuGYArWx3bo
-         EBMVyaiiaonZhjCZPd/2ol+DDp0xbOk3yPwCUQ/hix2AjSPb5HJeU4Q9NAl/DOnEt9ls
-         MUo/StOCbyAu/k1DZHC+zf5hsDtSGG0dSkTK4B8Zzc/76d4W7+L6MN/Y/FrLnuUeeuWX
-         GbkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738755909; x=1739360709;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=krjyMR76l7n+8MIJbB1GUtKwk+G5MPaqLtVtT5uYKhc=;
-        b=ANfgYho9KV/r4PiGth5NddJiqBVtmIONfHFH8DRc2qmhhwA1Tb97JqAX78GH1krLQI
-         +UXnHHA47oMtHDt4PRqOLrj2UZC5zc1QKSHaozlfT3rftnT4ju6a21WBvtc408hMeHKB
-         /pRJ7S3HuMP1XfAPDRd/O35Bk8NGSFdcvPstMEHUYsPLHVhca5lOs24GaiWhrmCO3t2K
-         kIRe8ykuVBGq8qjU68i5WdZ3zqA2W7GhwKhN/qH9PZb1f67AgCLYTKbm4NCT/Jef6gwz
-         5of0JOWZYAI0C8Z4PrXvVjDAgk9G+KmwYAQKTkZNcJiy6mXakZQqhDxzsw4F3a5OaqtS
-         foWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbW6OrxXJqcwElbtRNXQFIP3SYcGxOD7U8g6CWPe0mfrai/v6W2ffjEAT5fJ9f0hKdU6vygAsCp03aWEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDUZtElFuZNAbaX5S6hSoInHf2cDEmfRORfxXcc5iLN7cBE9xs
-	WvNzkjH1iCvqfVN/d6hAl1eCsZ4KPxEdihNZNpwERx22sKYqnFKf5CeA8wuhnd4=
-X-Gm-Gg: ASbGncsbP1N/nT0K+gydZq0ToZH2+xrXRn68eNSE5cDuQt9TSMLCgN475jFZxh507He
-	419eqKo5omsAAG0JI/9wCNOKTgsVG0Zl6KDxGoZ5C2ihE279JNMZYpZhBjJ/3JjOhSBCsg1xlru
-	SvDP7s+q+EuPvdIOw7DfWyHLDnIq4MOLvF4fZLG8UJvpVldRBjn2YBjohoLOFC9pL5ZBobnUfIx
-	kGsmu6cTuOCQFCY0uJm30BbvbkD31MFSbyh7fD0Lq5p5+LpFdh2M/3vaS3vHol20/SWdhfzXVdw
-	uIeryc47iQp+SnY=
-X-Google-Smtp-Source: AGHT+IH5pA9nFsDUrM2gX20oCMgcw6Ettml2LCsg79WrwVjRsFnTcF1E4WteE/R+Se3LQcwvW0qvVg==
-X-Received: by 2002:a05:6000:1ac7:b0:385:ecdf:a30a with SMTP id ffacd0b85a97d-38db48e49e7mr1816903f8f.33.1738755908958;
-        Wed, 05 Feb 2025 03:45:08 -0800 (PST)
-Received: from [127.0.1.1] ([86.123.96.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38db15f7712sm3004674f8f.49.2025.02.05.03.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 03:45:08 -0800 (PST)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Wed, 05 Feb 2025 13:45:05 +0200
-Subject: [PATCH RFC] usb: typec: ucsi: Schedule connector worker on
- freezable workqueue
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9NV518q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2C6C4CEE2;
+	Wed,  5 Feb 2025 11:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738756174;
+	bh=3AfOgti5ZfBaHE+CdrEanIxg/k8HqDZAzPJO7xCFpUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s9NV518qlXg/IjdjRXBH4TsGPiTH94Qwfj5kmzHMf7qY1eT2JNFw9UtBzLKp9vH7c
+	 ct0jNW/lSlq9egugThdqPtD33GtHgzXzY+NAELSqFYfiKRd9ZnNuPrca7ugq5kiPZh
+	 Tm0+jf3eo/5b2Dz3lQJbhSdke2IRfRZ/yxkmQNZXfasGZS5+c1//mGJ/IJg21zhXiV
+	 0ThSU3JA6PV2W01kjZJWK5d7bYwvBXMscfnaStaAigiRG05IzU/dCxBiVVf0Cpa8Gg
+	 0DV8EoXAiF+z6DsRIMkwjru8uFI0p5fX3oGFz94ddBIPRa37+sy+iBDnaB09KBq7+2
+	 0x4zj8jw8mp/w==
+Date: Wed, 5 Feb 2025 12:49:30 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [GIT PULL] KVM changes for Linux 6.14
+Message-ID: <20250205-bauhof-fraktionslos-b1bedfe50db2@brauner>
+References: <20250124163741.101568-1-pbonzini@redhat.com>
+ <CAHk-=wg4Wm4x9GoUk6M8BhLsrhLj4+n8jA2Kg8XUQF=kxgNL9g@mail.gmail.com>
+ <20250126142034.GA28135@redhat.com>
+ <CAHk-=wiOSyfW3sgccrfVtanZGUSnjFidSbaP3tg9wapydb-u6g@mail.gmail.com>
+ <20250126185354.GB28135@redhat.com>
+ <CAHk-=wiA7wzJ9TLMbC6vfer+0F6S91XghxrdKGawO6uMQCfjtQ@mail.gmail.com>
+ <20250127140947.GA22160@redhat.com>
+ <CABgObfaar9uOx7t6vR0pqk6gU-yNOHX3=R1UHY4mbVwRX_wPkA@mail.gmail.com>
+ <20250204-liehen-einmal-af13a3c66a61@brauner>
+ <CABgObfaBizrwP6mh82U20Y0h9OwYa6OFn7QBspcGKak2r+5kUw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-ucsi-schedule-conn-worker-on-freezable-wq-v1-1-107d1356b77b@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAEBPo2cC/x2NQQrCMBAAv1L27MIaKIReBR/gVTwk6cYuSqK71
- Iqlfzf0OAzMrGCswgZDt4LyR0xqaXA8dJCmUO6MMjYGR64nRz3OyQQtTTzOT8ZUS8Gl6oMVa8G
- szL8Qm1jemHKm4D1F8hFa76Wc5bu/rnA5n+C2bX8PVqPpgAAAAA==
-X-Change-ID: 20250205-ucsi-schedule-conn-worker-on-freezable-wq-cff0a880b08b
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Caleb Connolly <caleb.connolly@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Johan Hovold <johan@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4279; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=oZAxtVET1wE2jhM9j8X99IZJQPcTavMHE2/2pQ3Gvdg=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBno09CCRtR5Dy9bc/rIkazVE1mNit6USh9YXNtJ
- oD6jfCXcyeJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ6NPQgAKCRAbX0TJAJUV
- Vt9nD/4w+He57MgwTdvrkVp36C2xPg/O4NazTm2AL5sAmMCHWow1b4tpoo19+zWgA4hQoOc97IS
- DBES7a1QBSotYb7F/gHjBW+Sz2WI18IcnauMBCW4YjklGiakJgf36h8NE9s85tRM/3cE1x0WHF/
- wrfDTUL5AMdj0hrSyS1GHWyjDRezBYId8BUSkiY489/waRLCq8Ma112k3iQTw8/K2/iceQX5dt2
- N2CuzwtAPcgGF99AdrqN1Yliicy77EjlWXO/S+GFnJDUhttBo1W8zbg/yRwayQtfFN8rx7butSD
- SHOTFZMCeZUz6+h4Y9aneXKNebLRDpjzvpVK9zzRHdAoqSEyEZ/6lgU0zM1RUeIrj4udlT4/1JQ
- pD3G8JhoPwAyKVOqRc8UByzWp142HN9jJ4DvBB63797pGj5gP2Upr16zc6p0OXIg5DqWlBCe4ES
- jM1o/ArCWlILzhWBFoSC2Q+1a0JCCbYrsFtcvUjohKp+DOnWUXv6moP8A40h1GWyTBW3GeHEaWE
- sixdYNLhe6CQRARMBy7fKS8lyttXcv2ExTpuYm+h4iq+Qm8369w6GsV7JHH8Jd+ZvouX0iSepyh
- PvPikb8YR6kE/6susty9FTGnmk7WicPHnYyclyZI/Bp65ryhoCxux1jJ9C2baidZFsTtGtTztv+
- dW8ct+AQGpsnPlw==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgObfaBizrwP6mh82U20Y0h9OwYa6OFn7QBspcGKak2r+5kUw@mail.gmail.com>
 
-Currently, the UCSI connector worker is scheduled on the non-freezable
-system workqueue. During system suspend, on a plug/unplug event, the
-worker can run before the devices have actually resumed. The UCSI
-instances can implement operations that might need to do some HW accesses
-while the devices are still suspended.
+On Tue, Feb 04, 2025 at 05:05:06PM +0100, Paolo Bonzini wrote:
+> On Tue, Feb 4, 2025 at 3:19 PM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > On Mon, Jan 27, 2025 at 04:15:01PM +0100, Paolo Bonzini wrote:
+> > > On Mon, Jan 27, 2025 at 3:10 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > > > On 01/26, Linus Torvalds wrote:
+> > > > > On Sun, 26 Jan 2025 at 10:54, Oleg Nesterov <oleg@redhat.com> wrote:
+> > > > > >
+> > > > > > I don't think we even need to detect the /proc/self/ or /proc/self-thread/
+> > > > > > case, next_tid() can just check same_thread_group,
+> > > > >
+> > > > > That was my thinking yes.
+> > > > >
+> > > > > If we exclude them from /proc/*/task entirely, I'd worry that it would
+> > > > > hide it from some management tool and be used for nefarious purposes
+> > > >
+> > > > Agreed,
+> > > >
+> > > > > (even if they then show up elsewhere that the tool wouldn't look at).
+> > > >
+> > > > Even if we move them from /proc/*/task to /proc ?
+> > >
+> > > Indeed---as long as they show up somewhere, it's not worse than it
+> > > used to be. The reason why I'd prefer them to stay in /proc/*/task is
+> > > that moving them away at least partly negates the benefits of the
+> > > "workers are children of the starter" model. For example it
+> > > complicates measuring their cost within the process that runs the VM.
+> > > Maybe it's more of a romantic thing than a real practical issue,
+> > > because in the real world resource accounting for VMs is done via
+> > > cgroups. But unlike the lazy creation in KVM, which is overall pretty
+> > > self-contained, I am afraid the ugliness in procfs would be much worse
+> > > compared to the benefit, if there's a benefit at all.
+> > >
+> > > > Perhaps, I honestly do not know what will/can confuse userspace more.
+> > >
+> > > At the very least, marking workers as "Kthread: 1" makes sense and
 
-Scheduling the USCI connector worker on the freezable system workqueue
-instead will ensure the devices are resumed by the time the worker is
-scheduled to run.
+You mean in /proc/<pid>/status? Yeah, we can do that. This expands the
+definition of Kthread a bit. It would now mean anything that the kernel
+spawned for userspace. But that is probably fine.
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
-Sending this as an RFC since I'm not really sure if this should be done
-in the ucsi generic implementation or in the pmic glink UCSI instance.
+But it won't help with the problem of just checking /proc/<pid>/task/ to
+figure out whether the caller is single-threaded or not. If the caller
+has more than 1 entry in there they need to walk through all of them and
+parse through /proc/<pid>/status to discount them if they're kernel
+threads.
 
-For context, on some Qualcomm Snapdragon X Elite laptops, there are some
-i2c interfaced USB Type-C retimers (ParadeTech PS8830) that need to be
-configured on each plug/unplug event. Since the i2c controller is
-suspended when the UCSI connector worker gets scheduled, it results in
-the following:
+> > > should not cause too much confusion. I wouldn't go beyond that unless
+> > > we get more reports of similar issues, and I'm not even sure how
+> > > common it is for userspace libraries to check for single-threadedness.
+> >
+> > Sorry, just saw this thread now.
+> >
+> > What if we did what Linus suggests and hide (odd) user workers from
+> > /proc/<pid>/task/* but also added /proc/<pid>/workers/*. The latter
+> > would only list the workers that got spawned by the kernel for that
+> > particular task? This would acknowledge their somewhat special status
+> > and allow userspace to still detect them as "Hey, I didn't actually
+> > spawn those, they got shoved into my workload by the kernel for me.".
+> 
+> Wouldn't the workers then disappear completely from ps, top or other
+> tools that look at /proc/$PID/task? That seems a bit too underhanded
+> towards userspace...
 
-[   70.036669] i2c i2c-4: Transfer while suspended
-[   70.036802] WARNING: CPU: 0 PID: 819 at drivers/i2c/i2c-core.h:56 __i2c_transfer+0xb4/0x57c [i2c_core]
-[   70.036945] CPU: 0 UID: 0 PID: 819 Comm: kworker/0:4 Tainted: G        W          6.13.0+ #84
-[   70.036949] Tainted: [W]=WARN
-[   70.036950] Hardware name: LENOVO 21N10007UK/21N10007UK, BIOS N42ET85W (2.15 ) 11/22/2024
-[   70.036952] Workqueue: events ucsi_handle_connector_change [typec_ucsi]
-[   70.036959] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[   70.036961] pc : __i2c_transfer+0xb4/0x57c [i2c_core]
-[   70.036963] lr : __i2c_transfer+0xb0/0x57c [i2c_core]
-[   70.036964] sp : ffff800082ffba90
-[   70.036966] x29: ffff800082ffba90 x28: 0000000000000000 x27: ffff1cc400dba0a0
-[   70.036969] x26: 0000000000000000 x25: ffff1cc4034bd500 x24: ffff1cc400010005
-[   70.036970] x23: 0000000000000000 x22: ffff1cc400dba0a1 x21: 0000000000000001
-[   70.036972] x20: ffff1cc4011ab0f0 x19: ffff1cc4011ab160 x18: 000000000009eb8a
-[   70.036974] x17: 00000005bf44b304 x16: 00000000000000cc x15: 0000000000000004
-[   70.036976] x14: ffffde65ecd46798 x13: 0000000000000fff x12: 0000000000000003
-[   70.036978] x11: ffff3e658f1f7000 x10: 00000000ffffffff x9 : 340eced73efb4000
-[   70.036980] x8 : 340eced73efb4000 x7 : 656c696877207265 x6 : 66736e617254203a
-[   70.036982] x5 : ffffde65ece89084 x4 : ffffde65c9120093 x3 : 0000000000000000
-[   70.036984] x2 : ffff800082ffb854 x1 : 00000000000000c0 x0 : 00000000ffffff94
-[   70.036987] Call trace:
-[   70.036989]  __i2c_transfer+0xb4/0x57c [i2c_core] (P)
-[   70.036994]  i2c_transfer+0x98/0xf0 [i2c_core]
-[   70.036995]  i2c_transfer_buffer_flags+0x54/0x88 [i2c_core]
-[   70.036997]  regmap_i2c_write+0x20/0x48 [regmap_i2c]
-[   70.037001]  _regmap_raw_write_impl+0x780/0x944
-[   70.037012]  _regmap_bus_raw_write+0x60/0x7c
-[   70.037014]  _regmap_write+0x134/0x184
-[   70.037016]  regmap_write+0x54/0x78
-[   70.037018]  ps883x_set+0x58/0xec [ps883x]
-[   70.037021]  ps883x_sw_set+0x60/0x84 [ps883x]
-[   70.037022]  typec_switch_set+0x48/0x74 [typec]
-[   70.037026]  typec_set_orientation+0x24/0x6c [typec]
-[   70.037027]  pmic_glink_ucsi_connector_status+0x30/0x7c [ucsi_glink]
-[   70.037032]  ucsi_handle_connector_change+0x98/0x614 [typec_ucsi]
-[   70.037034]  process_scheduled_works+0x1a0/0x2d0
-[   70.037045]  worker_thread+0x2a8/0x3c8
-[   70.037046]  kthread+0xfc/0x184
-[   70.037048]  ret_from_fork+0x10/0x20
----
- drivers/usb/typec/ucsi/ucsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So maybe, but then there's also the possibility to do:
 
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index fcf499cc9458c0d12015a7e36e5f1ac448c3a431..8c6081e0cd6155a59ca733070cd93e6b79398b3e 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -1307,7 +1307,7 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num)
- 	}
- 
- 	if (!test_and_set_bit(EVENT_PENDING, &ucsi->flags))
--		schedule_work(&con->work);
-+		queue_work(system_freezable_wq, &con->work);
- }
- EXPORT_SYMBOL_GPL(ucsi_connector_change);
- 
+- Have /proc/<pid>/status list all tasks.
+- Have /proc/<pid>/worker only list user workers spawned by the kernel for userspace.
 
----
-base-commit: 00f3246adeeacbda0bd0b303604e46eb59c32e6e
-change-id: 20250205-ucsi-schedule-conn-worker-on-freezable-wq-cff0a880b08b
+count(/proc/<pid>/status) - count(/proc/<pid>/workers) == 1 => (userspace) single threaded
 
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
+My wider point is that I would prefer we add something that is
+consistent and doesn't have to give the caller a different view than a
+foreign task. I think that will just create confusion in the long run.
 
+Btw, checking whether single-threaded this way:
+
+  fn is_single_threaded() -> io::Result<bool> {
+      match count_dir_entries("/proc/self/task") {
+          Ok(1) => Ok(true),
+          Ok(_) => Ok(false),
+          Err(e) => Err(e),
+      }
+  }
+
+can be simplified. It should be sufficient to do:
+
+stat("/proc/self/task", &st);
+if ((st->st_nlink - 2) == 1)
+	// single threaded
+
+Since procfs adds the number of tasks to st_nlink (Which is a bit weird
+given that /proc/<pid>/fd puts the number of file descriptors in
+st->st_size.).
