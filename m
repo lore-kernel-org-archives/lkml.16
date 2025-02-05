@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D89D22D4E4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D941722CBFA
 	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752244; cv=none; b=s7s2fHSWgee3TklOIcHZDQGvjSVsZndscVRu/z2MpiTW7vrDa9qGWHiM/4+RnPSkTaP06ttrR+RpabLzpjHRNYRDomaYbFREfcD3eQnxG79RaYF0Xga3EYbDsm+eZ3L1SzA3rd8j3fvSF9769rfxestJ7xxgifnbdEOJBTU8zIY=
+	t=1738752244; cv=none; b=fAaZLnxODho0Va5aPd7UehGPSratbHo2TkyVbz5sA/sCR+4EWFVnS+zaVn/wNXJToS8ZxY20dtACDTvWTZiWRI3S3CzGdXAps7Zkg2g3M+q5m4ZDEh+9GHGQppNEwiLqEUWGN0vDJDK8DnWKkqz8Nx/ouMkY0uj3eCrz85MGDAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738752244; c=relaxed/simple;
-	bh=bWAmgvL8Q34pHHBcCoZLxSJ/TleZDA4YnIXa8s01Rlg=;
+	bh=blqJcxnKg91LnxCDkdxlfYSVX/zKY1PoB7+5I7BbB9w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OaONUJNxRZG4wgyrfn+HF4ETarRiYkNUXLj9rXa9YcvvoIOzYJTqbJL2aQ7scSRIBJuMBYwhw32k18ouTlsGyAa/uA8gZHSP9t4YOtax1O1uZ3W5oa1NnDI1QD9P9cQFK9ZqN3wDW2K4Y8RUd+y30D9quNbDCxnpoGrfaCyzqEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OdwENkv3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rI4TChHn; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=DYjKa6WYgXec54tWzOepTQd+A+wsWurDGOSC4I7sGzmXl/rpMfcOWGBAlBMSeGm4IrmK2CA5Y3Z0Cq7l+nr3OFyWt63RQIuXKTSsJvLRBLWCxKCZ6ByX1JJkI4cO0t3aO7s0AWNwuHuDOBcjFTfGqSZIdYJCWY7UUtnYkDBBktY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=11U/V/OT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kNX80ONb; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OdwENkv3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rI4TChHn"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="11U/V/OT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kNX80ONb"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738752240;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r7+l+bSFOf1AIAubKWoKxwbu1mYKkSTXIgD44N7Bug8=;
-	b=OdwENkv3EdJfDwbCfgi3CMLKPEWqOCCyvrUEevj3kvFn8smJNUXGm7fwMzfhDcGLfTc7qc
-	436226HBvnkT4ZlTxCMBFSzqbfJxHqsSWKeYUeS4KQq7120+a4s5UCpL5WYElEfKMrOMOE
-	pOt9LK/8HXYk++Xi//WWekBZJKl0p4bwhWSs4iLpfo+y8tcHr+RkFpn5WQ+RNhkJy/EIYe
-	zI9mVRzKSW3LUUmg4n9zfq158Nd6q9XqddETkzfjJgAfCr0Yec9/KQYOH6GTf+i1TRqfkR
-	Waqn8vVnnSa/U1imupcI6FaPKIKwFcyr6XDh/gC481ktcea+vvQr7qMjvKvKiA==
+	bh=pB915+mRW6G1JuwVlEatRyv58a5CfnimTW+NxxsnfcI=;
+	b=11U/V/OT2E5+MJBFmmYRfGWtXA7HZVE9h6ckCd2vw2VIlrk02jzxHlh/zcJMP2K16MvbOF
+	MIpgQsCW1bNk+aqkoFvrq/jeKV3L1oZ0nkrh8cHqM9nBuzQSuTVzn+xyzUCVoVj9LjLAUW
+	myvglLi/xM9gdRPkpzG39ERRA1CWivuOjexvKfWufca86FioStMpwo46pDd3wVXdm3qAZJ
+	sEazul9eJEHeBUjONyTMuQOmx94q1PwsrMSGHpd/rK9EJkewgdKkACdbByi9Hv4g3255IN
+	yp0VFjQbUdgkwshgC0yUoF5HseZS2mgEUsW9ifM90/xEDecNNpIvFuUnXsMmlQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738752240;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r7+l+bSFOf1AIAubKWoKxwbu1mYKkSTXIgD44N7Bug8=;
-	b=rI4TChHntH8OH2NtaREpnPCUU9f0aEugIJmXREgQTvd481fAOOdcNx0d78Qpz5y4hZqIfC
-	x2Yn8Yd7Xi6CMiDA==
+	bh=pB915+mRW6G1JuwVlEatRyv58a5CfnimTW+NxxsnfcI=;
+	b=kNX80ONbo+lhShVXI9LpmvhBHhjAwBO8KpOdngAf1F0R4xDUkN0We4SHl+X/rM9snutYw5
+	IHFm2Gp09S+maYCg==
 To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -46,9 +46,9 @@ To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
 Cc: Nam Cao <namcao@linutronix.de>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH v2 10/24] net: ethernet: ec_bhf: Switch to use hrtimer_setup()
-Date: Wed,  5 Feb 2025 11:43:30 +0100
-Message-Id: <2d8fcf9bf83af507f1ca25cb068af2ac32cdcb2c.1738746872.git.namcao@linutronix.de>
+Subject: [PATCH v2 09/24] net: ethernet: cortina: Switch to use hrtimer_setup()
+Date: Wed,  5 Feb 2025 11:43:29 +0100
+Message-Id: <ddbeac1e5d81df33e9cccb099f520111cb8ce9c4.1738746872.git.namcao@linutronix.de>
 In-Reply-To: <cover.1738746872.git.namcao@linutronix.de>
 References: <cover.1738746872.git.namcao@linutronix.de>
 Precedence: bulk
@@ -71,24 +71,27 @@ Signed-off-by: Nam Cao <namcao@linutronix.de>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>
 ---
- drivers/net/ethernet/ec_bhf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/cortina/gemini.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ec_bhf.c b/drivers/net/ethernet/ec_bhf.c
-index 44af1d13d931..67275aa4f65b 100644
---- a/drivers/net/ethernet/ec_bhf.c
-+++ b/drivers/net/ethernet/ec_bhf.c
-@@ -416,8 +416,7 @@ static int ec_bhf_open(struct net_device *net_dev)
+diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/c=
+ortina/gemini.c
+index 991e3839858b..2b4bb74f21bf 100644
+--- a/drivers/net/ethernet/cortina/gemini.c
++++ b/drivers/net/ethernet/cortina/gemini.c
+@@ -1833,9 +1833,8 @@ static int gmac_open(struct net_device *netdev)
+ 	gmac_enable_tx_rx(netdev);
+ 	netif_tx_start_all_queues(netdev);
 =20
- 	netif_start_queue(net_dev);
+-	hrtimer_init(&port->rx_coalesce_timer, CLOCK_MONOTONIC,
+-		     HRTIMER_MODE_REL);
+-	port->rx_coalesce_timer.function =3D &gmac_coalesce_delay_expired;
++	hrtimer_setup(&port->rx_coalesce_timer, &gmac_coalesce_delay_expired, CLO=
+CK_MONOTONIC,
++		      HRTIMER_MODE_REL);
 =20
--	hrtimer_init(&priv->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	priv->hrtimer.function =3D ec_bhf_timer_fun;
-+	hrtimer_setup(&priv->hrtimer, ec_bhf_timer_fun, CLOCK_MONOTONIC, HRTIMER_=
-MODE_REL);
- 	hrtimer_start(&priv->hrtimer, polling_frequency, HRTIMER_MODE_REL);
+ 	netdev_dbg(netdev, "opened\n");
 =20
- 	return 0;
 --=20
 2.39.5
 
