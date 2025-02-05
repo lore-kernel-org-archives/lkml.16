@@ -1,160 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2932215062
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835B821C9F4;
+	Wed,  5 Feb 2025 20:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738786265; cv=none; b=uRtsiOf0sOaGKkkxPlBLaWpiSpUjjjDLDb6/wjovAUNzjHc0lftyb6JfdRGlWsAaKXByQyyQPKiEGgbDXhHr4SXCqmt54/czjUw/UaqPp2iBZvSX5jICiZAsKRGFKHtVKsoD0rET5edWBi/wu2I+zhWrievJNEepGo0xBgPXNVU=
+	t=1738786268; cv=none; b=jOoZHHqW2ggz74ZFR8+sHaD9q1cohUphJGhWo04xJ5v/xBcdTiSwBQcpDy5OT4Ab88JUt6MPOtjMMK1nkQx+sFkHqE0JlaNioPHX4M3sM50ihJ1M6/fG9Zx2arU+PUqByPjF7zG0aXESRSWvUFEQaq81pwust+XhaTdtLvzfiIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738786265; c=relaxed/simple;
-	bh=66gfH4HaVcJzuzQX0NHIOkeT0eso2EOo8AHIoNrPiQ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KNVVc7WM6a9ZQH23oESSv38HJUze3TtlTcel97ZUlkjnGNLTlur07BKhtFOXJgeVyWXLmpfObramHsSwf7nLMn0lRYT5yKJPgP6Am5xNm48yzvHLvCXcJ9rIHlIBcYbc+TrvHBrKKFCgANJsquN5sIC7NRc2C/PdNnJcz+esLPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jKicB4cE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738786268; c=relaxed/simple;
+	bh=9a7UioTVaxHTaOU4ZCX1Thsww93p8RmrWV73B+lK1Kk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d7X/qkmObnZP365cFbpWY9QNWiP50QrZSRuPZvoidcrgT5ePJmNEyKyy2aZR1zAxXVe/wxmshcVkyugq6dXLRBUT1dG1l1N1MoET4R6U3nESuVhTVteoAs2tddyTStMP6pZSqyTfZBIWkABZmK5/82gIZGxIpc83i9eWzd7TIUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbaX20jb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jKicB4cE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738786262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WV3CUjfdiDqmiVITg/ki0rg01TIBSPaLDwHXu/1B6+E=;
-	b=jKicB4cEtXwWiHo8KgvE0b3NyTlM0q6lpmvoqypVhhlv5cJ5sS3jbl/YgfhzV47/2rFzsG
-	tNbsaAKrJrawl+BP5gy132ZA2nYIKDSLythq3D0ChT6J0Kw3nt/Y+EXjYsY7SDF/D0cKbO
-	QueW984lXMdlLpJEkbAXS+pNCqLh6Xc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-492-CoVVi9HsMRyJys07a5LtpA-1; Wed,
- 05 Feb 2025 15:10:58 -0500
-X-MC-Unique: CoVVi9HsMRyJys07a5LtpA-1
-X-Mimecast-MFC-AGG-ID: CoVVi9HsMRyJys07a5LtpA
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2C003180087F;
-	Wed,  5 Feb 2025 20:10:57 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A058B19560A3;
-	Wed,  5 Feb 2025 20:10:46 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Wed, 05 Feb 2025 15:08:05 -0500
-Subject: [PATCH 09/12] drm/tegra: move to devm_platform_ioremap_resource()
- usage
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbaX20jb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E5B1C4CEE2;
+	Wed,  5 Feb 2025 20:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738786268;
+	bh=9a7UioTVaxHTaOU4ZCX1Thsww93p8RmrWV73B+lK1Kk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YbaX20jb69QW9712DGeaRktPyYTLbjGvUIeHEnQJjxvje2RXQYJQ7jmOfeEjyHR6s
+	 4ksGqB36ar0hkqXsZQhIWs5oZu43nJe9qNqeNZ+lxTQOmjlpBOPUV8Q4QTaavZSfIF
+	 yx8HvCtY/KN5KdM/Ke1G3obuPCQehan72WzNyQWjLG06siVQmbwwGrPLNp8zKyYXHT
+	 g+FZ2Yx3TPEzL0A4887/nJ8s8sE0xpaDz+HN/SQIiSwFMdsN5VBZrnyOZ0ycGHNana
+	 gX905bkuUcAiKBW+bPNrVzsrlhwk/thz8/86mNxkE0cgjK4mcy8O04zhQ+8BDsRo/R
+	 raa6q/H65C6mA==
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3ebc678b5c9so108022b6e.3;
+        Wed, 05 Feb 2025 12:11:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXZhtDIq6LBaqmI9P/TS3P7PNq0AmlPwN9hFcI4vqO1pebW9R96P2OHBVbIb9Ln4UDOHFb7zfYahX2RM80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymHeyz6qO47h78Db/3asuRel+O8vNlfolbBLeru2cmx8oGC9Rf
+	Jk7eSZKLzGJiaTBqb2jbWTwi0YH0TsOckGRS6/1E4LhiKnJI+0qnFQtKM5dwe2DSj24SkmNKdW8
+	5jqnDTMAft7lBsW8VyGrUTGSC+Zk=
+X-Google-Smtp-Source: AGHT+IH3wnWfxZRWb/zSgQ3nBGQosJZpmsv1OqAeGH25zYt8qfzjjEFNXvT27hs1V/QMRpSA5kjheYzCgtw9qY8vjDI=
+X-Received: by 2002:a05:6808:4495:b0:3ea:5413:1a24 with SMTP id
+ 5614622812f47-3f37c0c8dedmr3272201b6e.13.1738786267435; Wed, 05 Feb 2025
+ 12:11:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-mem-cocci-newapi-v1-9-aebf2b0e2300@redhat.com>
-References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
-In-Reply-To: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
-To: Joel Stanley <joel@jms.id.au>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
- Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, 
- Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Alain Volmat <alain.volmat@foss.st.com>, 
- Raphael Gallais-Pou <rgallaispou@gmail.com>, 
- Yannick Fertre <yannick.fertre@foss.st.com>, 
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
- Philippe Cornu <philippe.cornu@foss.st.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Alexey Brodkin <abrodkin@synopsys.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
- linux-rockchip@lists.infradead.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
- linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738786137; l=1560;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=66gfH4HaVcJzuzQX0NHIOkeT0eso2EOo8AHIoNrPiQ8=;
- b=M6WZh0GtYS5B4deJ9B3qzO3qNws7WyKrJNpqYJygKF9Hd54wmE5lZ9VrSBMuunB4vSfrq/v+B
- aoMAifGb953DS/z3pxTMJycEfckOvMXSVVatw6+5DoXKTwZ0HpUpzbU
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+References: <20250203194629.3731895-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250203194629.3731895-1-andriy.shevchenko@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 5 Feb 2025 21:10:56 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hr0W+MPFw99-TEf1_Lw6cb2gv3ScL06Jd8rZh06phgow@mail.gmail.com>
+X-Gm-Features: AWEUYZnUzJzHOUSIHC56AjJNqA-mcuwnwChvyv-JqDxZTeMxXOQcYAjFO0P6Fnw
+Message-ID: <CAJZ5v0hr0W+MPFw99-TEf1_Lw6cb2gv3ScL06Jd8rZh06phgow@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] ACPI: property: Fix return value for nval == 0 in acpi_data_prop_read()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace platform_get_resource + devm_ioremap_resource
-with just devm_platform_ioremap_resource()
+On Mon, Feb 3, 2025 at 8:47=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> While analysing code for software and OF node for the corner case when
+> caller asks to read zero items in the supposed to be an array of values
+> I found that ACPI behaves differently to what OF does, i.e.
+>
+> 1. It returns -EINVAL when caller asks to read zero items from integer
+> array, while OF returns 0, if no other errors happened.
+>
+> 2. It returns -EINVAL when caller asks to read zero items from string
+> array, while OF returns -ENODATA, if no other errors happened.
+>
+> Amend ACPI implementation to follow what OF does.
+>
+> Fixes: b31384fa5de3 ("Driver core: Unified device properties interface fo=
+r platform firmware")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/acpi/property.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index 1144c2368d89..7d7f4974c5b1 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -1189,8 +1189,6 @@ static int acpi_data_prop_read(const struct acpi_de=
+vice_data *data,
+>                         return -EOVERFLOW;
+>                 break;
+>         }
+> -       if (nval =3D=3D 0)
+> -               return -EINVAL;
+>
+>         if (obj->type =3D=3D ACPI_TYPE_BUFFER) {
+>                 if (proptype !=3D DEV_PROP_U8)
+> @@ -1214,9 +1212,10 @@ static int acpi_data_prop_read(const struct acpi_d=
+evice_data *data,
+>                 ret =3D acpi_copy_property_array_uint(items, (u64 *)val, =
+nval);
+>                 break;
+>         case DEV_PROP_STRING:
+> -               ret =3D acpi_copy_property_array_string(
+> -                       items, (char **)val,
+> -                       min_t(u32, nval, obj->package.count));
+> +               nval =3D min_t(u32, nval, obj->package.count);
+> +               if (nval =3D=3D 0)
+> +                       return -ENODATA;
+> +               ret =3D acpi_copy_property_array_string(items, (char **)v=
+al, nval);
+>                 break;
+>         default:
+>                 ret =3D -EINVAL;
+> --
 
-Used Coccinelle to do this change. SmPl patch:
-@rule_1@
-identifier res;
-expression ioremap_res;
-identifier pdev;
-@@
--struct resource *res;
-...
--res = platform_get_resource(pdev,...);
--ioremap_res = devm_ioremap_resource(...);
-+ioremap_res = devm_platform_ioremap_resource(pdev,0);
-
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/tegra/dsi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 4a8cd9ed0a9414b2f40b716fa8c02aff038a53e0..51f1ed897f8e473f45f89ff3e2d99f66d2c80f21 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1564,7 +1564,6 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *dsi)
- static int tegra_dsi_probe(struct platform_device *pdev)
- {
- 	struct tegra_dsi *dsi;
--	struct resource *regs;
- 	int err;
- 
- 	dsi = devm_kzalloc(&pdev->dev, sizeof(*dsi), GFP_KERNEL);
-@@ -1636,8 +1635,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 		goto remove;
- 	}
- 
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	dsi->regs = devm_ioremap_resource(&pdev->dev, regs);
-+	dsi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dsi->regs)) {
- 		err = PTR_ERR(dsi->regs);
- 		goto remove;
-
--- 
-2.47.0
-
+Applied as 6.14-rc material, thanks!
