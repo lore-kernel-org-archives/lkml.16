@@ -1,190 +1,524 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023134.outbound.protection.outlook.com [40.93.201.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC2114884F;
-	Wed,  5 Feb 2025 19:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738782141; cv=fail; b=W+me65TRIgFojA4cGTTfs8PhRe/JdVdTff2+//6JrqDt5PLuEujH8SI2MhyhiZe7ZsxkmD4xTEmstvte4Ot6ZJjsN8OuBEki4kJJwwOPDTwA4pZxOsV0fAOy060qATy7z5OFVpd/P6A1aToLmQXIbxFvDKdUTc+aswf9/YkKN64=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738782141; c=relaxed/simple;
-	bh=lMqVMS7fbVZHEW7Kaiz2ZMKFViOopX9VXiUy3sI18do=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=L72VtZBgFB2VqwDudLIWyfgQV1jZ6n0jtYfxc6ybK0128Q7bP2zekQ/dQbxc2L3m+Ti88vZSQ8t8FrkccT9k84btwP5xBlT3Yc8ylUlsSj9QY4ohvghwW/PQ7jV+LHtL4i/ap59uBDiU+LwJWZpSrrHoj95vfAkHc11g4gc151Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=BZmmU6gT; arc=fail smtp.client-ip=40.93.201.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF19944F;
+	Wed,  5 Feb 2025 19:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738782298; cv=none; b=QemWqcQXG3yZiDiRH0+iLsSxyvNn2MdikySRccqm/c11AF49thLyvx+blH7/cnQqQUhjRFskEbIn0N+eV2cje71VULIriOhgG6T75W8m9QCIyT04pE2vKvFkXS/RgEn8yLjLz19eD4raxyHJIEqi02ZGVdLt/woFWGYPKPuoano=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738782298; c=relaxed/simple;
+	bh=GhXYpdDvsqa1II2VwAHKJlIcHbZdk08WcB7kzMR/KAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rFkG4A7tIVqTrLMOaO0z5HSMiK5XEbpA3qXG3VeayquXkzQPvi661tkbRR57/UaliiCf4KHy2Wd2Uwmdo7KfTuuKgggPW/CHiCHzSLv60rCA8PffXdo6EVjPXPlOumCO8ikB11xZnDqCXnoI6ehW4iXfxsOpfHv0UV42tzsMxCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADt9XoQg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BZmmU6gT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JT7rkDpdeBSXp29vA0AwhWqHAXk1mcJW5QkJRK1EMI+jg1sMw9jJC7twjkwPbcYvP4mGqhCOYzo3VqkHPNmcTffZVoV36o7wYVZW9jb0S6mWdN0+5pqX74LmnUYJZLA3MNy3+JyCJ+A2tlfFpuGyy7bAFdlXLpXedKybm5N9fL6lLnlsLHLi8cz1FtOYSdL1t/sqAlCWwIAcXsxNISncZ4N9GqOzQUTVhnglBLC2W40SIUWszdFupdIR4i9pST/EMw/ZOqI5HtaxdK1Mu7hBt6Sq9YYvoTvkRy6HLKKINck0cbLFPGhPkg2X/Ye0jBVluvY/2gMDPnkZJOx81YXxDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w0WLur9qVlyPQwG0b6HTwMjyLUBxWZ75dyNQyjKo3yc=;
- b=wRCTQ0lHGgyQUELRuvPVtyyqx/hb14NXM+yqz8S49ufXrSyBclzkxL3UgrPenyO4sCU73Lg8fotd6yiALxU46N5Ugna7462MO2OF6096sdeqKNFVaXawReuejloMs5p25iC0lFdVRwqSw4ZoE6nS8yLbCSVKY9ZDQ2QBPfsQqJqEi4sUBKP7a+nMOqkRQWV3QV+n6XscBzOk0XYQ2D7K9wbHdILs9m+HWyFd8tiRLS249PDp/fZZlzGYDd1p0PwbTjst7bavX4r1ODNEnnIhJRMXsNnsVphYpSlQgSARTtID8y1+TOgeY2jh3tNlwnneo9+o2cstzOjQUdwjsfI+iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0WLur9qVlyPQwG0b6HTwMjyLUBxWZ75dyNQyjKo3yc=;
- b=BZmmU6gTueDw+wlU1+Lz0I5sBM5KBYFeuTDAXKrN8nOXGRzWTcxTvhGmHt4lGFBNBn9BAFk0QRku4Ufx8I48t8eE+E9VgFPHE2lusiEZG5o5siG4jKPuQUNsIMwsDiq5U763IkQQ01ZKif52dYVUOdviTBs5voIbWizpaOi32Eo=
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by SN3PEPF00013E00.namprd21.prod.outlook.com (2603:10b6:82c:400:0:4:0:5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.2; Wed, 5 Feb
- 2025 19:02:17 +0000
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff%3]) with mapi id 15.20.8445.005; Wed, 5 Feb 2025
- 19:02:17 +0000
-From: Long Li <longli@microsoft.com>
-To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Shiraz Saleem <shirazsaleem@microsoft.com>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>, "jgg@ziepe.ca"
-	<jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>
-CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH rdma-next 1/1] RDMA/mana_ib: Allocate PAGE aligned
- doorbell index
-Thread-Topic: [PATCH rdma-next 1/1] RDMA/mana_ib: Allocate PAGE aligned
- doorbell index
-Thread-Index: AQHbd7jz7xVcBxzHVEycom6LBryvGLM5EWlw
-Date: Wed, 5 Feb 2025 19:02:16 +0000
-Message-ID:
- <SA6PR21MB4231D37A20A3D862B5FB0392CEF72@SA6PR21MB4231.namprd21.prod.outlook.com>
-References: <1738751405-15041-1-git-send-email-kotaranov@linux.microsoft.com>
-In-Reply-To: <1738751405-15041-1-git-send-email-kotaranov@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2611f8d8-0f36-4537-9d4c-6ec00016aad1;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-02-05T19:01:57Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SN3PEPF00013E00:EE_
-x-ms-office365-filtering-correlation-id: 80f143d8-84d5-444d-22dc-08dd46179be6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?/cCJzKRSUJCy+aazkkE5YKcd6zZjhNsvdPUOht78DiCP0OmZedqQlMPGMDo9?=
- =?us-ascii?Q?1zRLuXAP2rTNbum+of/otWlNuaT7MoAt3rBekyz1zlf3dZ13jmTzgO1rlEyo?=
- =?us-ascii?Q?qo5EXKdORWQvsL1tJ8zjfQFdYHtG5LtsP/9AVFoI+7Oo0wTbGSxe/wy7uHuC?=
- =?us-ascii?Q?rk/wxvBD2wpFh1FTL70xw3wdm8o6U5vXAplZNDXbouGIbEqRsE4oYITFlaH0?=
- =?us-ascii?Q?4bwJXy2hR2ez3xIsn9PRQOuYhNF5Sgi54//S7dEK8gg41yiCo3QGptkVA8U2?=
- =?us-ascii?Q?UYvdZPXGNmTrtapq6F5A0vxGmT+exYXyFitsMbZcTKn87P7p4UghtysCGRi6?=
- =?us-ascii?Q?5QvWcz04YYEjHlrykJzBnsIhaYnjiaWu6DrP193CrSNdYLES/neQy5n7Kyd3?=
- =?us-ascii?Q?7FhZgLkg/YobZ4/Aw9uS65bL18erCQlWK3v4KPc0Az5QT9JjzcVqeYTfyU4w?=
- =?us-ascii?Q?l+5R4zgBa6E5jj/3Ai/mB39BVDngIU3E5BYXjoojKZsdMpmnE0+jiYqzSiRY?=
- =?us-ascii?Q?fS0GdnvV+a47Vi5PNRSVndq576Io4np6Imvp7cu40ddzYzVrvqXGWEolupwF?=
- =?us-ascii?Q?5CSQJwJoCVB0OSWH9/6EnqQqLRY3r9YpEp6qhI49GkwY1LiGEKe9uU8XxRVs?=
- =?us-ascii?Q?VflxsNcjEJxaUdpa0NDzbgzfm58TbHD6jrWRsmgYF5c3nm8iO+omQLCgT5Ph?=
- =?us-ascii?Q?EsGch3sDiQ78p0kdWV0LWS0Biwqlp7xqg5Wtz3tdB6H+aqCdSM4ZajIyxD1z?=
- =?us-ascii?Q?u22bHHhkFQGNt/R9EVlT9yt2N+R0oTzFTbhwpWRcaLMUvF/bTQ8lUo7oifc0?=
- =?us-ascii?Q?9NPJt8fuSabLIocg9hbjPpCovbwh6gvU83ZBbeypyOknJHewBTC3vjv6a6yL?=
- =?us-ascii?Q?39HU4I6kz5FYuaE5VqeB1imb8LrWPjDNt5er/b6jnNtWWbwgJZO+cHQJMBlm?=
- =?us-ascii?Q?YIe8xdqTKf8QR6U0qZ6VuOzIsc2PH0TglAYSBbNu9cBZfircGnPVDkWOx/O+?=
- =?us-ascii?Q?KBzKtQO/9EekeK75SGN/3478c7CGZDwTdoGX5sXXH1JX8QZXgejHEPr8f0Hu?=
- =?us-ascii?Q?3TfHrBRWsfTedFUeeDh0fftuHFTvU1KrK9WV26LwqriU4LI2Z5Qh2aBPw4qT?=
- =?us-ascii?Q?1YvhCAAssw4JCXONpibeiYs+KIi6o9iVEKpRewNMZVn1Zk7QduVk6rV0ybKN?=
- =?us-ascii?Q?EaQYSyOcRxoTTo9KVTCo1js3Bs9pwmST9wMh6lz4sCsXToPoJZNYs8nfQTks?=
- =?us-ascii?Q?Gl3Sp0NNvWUGr0jzAYtdW46OzJ9ctBz09H0Tadu7NT1uNIX0gNWo8uFU2drB?=
- =?us-ascii?Q?PWhsIaC/pB5rXglFQe7FZAcZImU4ANLY+nrZlvBiwVgBfaW9FpSCiCR7CSqp?=
- =?us-ascii?Q?yiV6S06ZuJu6CfcEJ38NvCzhk4ek9w7+pYYZWIivTHn3oox9+70EuChhQayq?=
- =?us-ascii?Q?Ukjztuln2RbH2rcZ3S4p9QV7lm2Jz91D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?3MB9N/SMoTLA9iRYjRPxordc6m9twlNU1btz9uPUZbFeOTcGbPRSGPBHVvuH?=
- =?us-ascii?Q?mTW/dsA3nLeu6NzxRBhHO7s4EMSTJWarqEW3gz1MLIPUjYxImZwAyQ9yY1h1?=
- =?us-ascii?Q?BwZFHQmuSHF6tWwPDpY/wKr8p7dHJ5TzkkgJh8ShWFVeSVRFFTNEjA37/2TE?=
- =?us-ascii?Q?y9tsRA0ZK/nFqdjKdf3t8ptY8vLtv/KVd+AMelXZHpnDUOWQuUo4sRbSmZ71?=
- =?us-ascii?Q?Ep41ooAmHdYpSt3PEkHxU4hJUzDsnhFh/ZlznjeuXHq8GL9/cg7qL8/Dx7vH?=
- =?us-ascii?Q?kxF6K8GtC4hVCU7xOl41YXQrTDRtVqIPM7yM0j5/VicJj4HgCwmxpQql5trI?=
- =?us-ascii?Q?zI/WgzWWFyOCkf1SiVhe7XfuOBrKXFcJBAy/lDFHhXXuFJ/fK8eq11jFlq+l?=
- =?us-ascii?Q?kBpXrrR4Ta57svXOkijArH2aSyYLwUCMtGbYcwzg7SQQPGXSYq9poA5FkKQI?=
- =?us-ascii?Q?c+jc6sjCrb8pg1gG6jCuVqUZQo0XlF5XPpsycvNfNNwOa4Gw+C6uGafqAqTA?=
- =?us-ascii?Q?EApuKUgdpYFvlW1a/w4W1TQU+lE1u4/qS7DxV60DdOrfkk1DT2RnDe96HNFA?=
- =?us-ascii?Q?sq5qAkfTbipXyuuuk2zvQTxpoHgC13z3aj4FR0pakV7F5Pajo8AIqhe9152Y?=
- =?us-ascii?Q?cf8nuyghmraqJyu21KzcUStA1Elk7cYep1CGWa0PD7IUexvv8tX4T7KbeGLc?=
- =?us-ascii?Q?hkE4+c5qnfsOKMYEmVT3Ljkgn6t0RNdQwB0v/iLBBCGt2PYM4s10Tw1npYyw?=
- =?us-ascii?Q?W5qnIJGeW4LwgY8ntxYrbasxjUh6grp1H5dztw8O9Z56OVcSifrjB3mI1hXT?=
- =?us-ascii?Q?+AeGrmO9I3VVlF/dzi0zFnLqeBT12Ljo4yuIEHeNc0SujmuNwKImeVBLOkvI?=
- =?us-ascii?Q?HnUNGDKge6kjmsUlHN0CVBl4MTsKp1sHlmd6uklXPE/oN4TWATct0IegOqBI?=
- =?us-ascii?Q?uLP1HL08xu0fCQV9D9B0up+VLhZeF2cMRdw8YdVrwkLr1Di9oIDgN0+tGhdS?=
- =?us-ascii?Q?0FuHKcTuFcjoqOCIN40CFk8fzxZqPmxsZ25N3hh6jIWZRttyXJiBwf51+POu?=
- =?us-ascii?Q?nzI5LIyVAHPhqoj9VEceWAULoeAM4kumoZ7rUVrD1fUiBkSrEOrKDJJZR2XY?=
- =?us-ascii?Q?exEVjIiBKsnVPScBGj0/l2Y6CkStVVpC+jDBT69diN9BixuX2S3h/rR24HEh?=
- =?us-ascii?Q?tW6QW3SlVjTUExDIe0N+XZ23S8gghzuohR0fYjAfNDKYqOiK0Efdhv2KGAhl?=
- =?us-ascii?Q?bSbHRvCTOO2RsklkoKaGy2kW02+H+dBhmm1tIhRjXBBUKDm0Cf75m2h77eof?=
- =?us-ascii?Q?GuffK/IJnsAuAeADG7U6er5VuJqRoqWQySPNdJYBJvS2y6sD+uofFKtNQ5Y0?=
- =?us-ascii?Q?+q5RRaYKCQHxyfOKSWZ0IBotLTd16Qeih9GaeyMYbV1bGTfD1wmo79hrHsEI?=
- =?us-ascii?Q?kG8oSr9Of7l1ZS9o4u0TO9rbh9SioqXjoYCcXrU6LS6J0k88nWgoZJDfU1+P?=
- =?us-ascii?Q?ELqJOc4ScAtNiZO5c+6vCWcbdVDXsj7w5+USMDcOpGjnXLFyKAGWON6w+E0W?=
- =?us-ascii?Q?41Cg6A+ElDKdqMTjs2ah8JDXah3SJ4b++TRjh3yB?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADt9XoQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793DBC4CED1;
+	Wed,  5 Feb 2025 19:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738782297;
+	bh=GhXYpdDvsqa1II2VwAHKJlIcHbZdk08WcB7kzMR/KAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ADt9XoQgnn9imP5KOVbvd/UzuWf/Eea2hwjCfIChOdtnuNigqS351mKgtdp2h7Qe0
+	 8DlpLC70ntrKIrpyh7s45TUg2O1YZfckGnn+OJ25F0ZvAl7JVQiH/giEvts83qP1RT
+	 hpy37n+QbUEMwuJJve+2v5xaKO3/p60gYFzPbOHGVoWjzs2Mwfv8hCDZnacjl3flJb
+	 26EZQtDlqXRohspS+XmpOE1tUBJv7p7ZLMnUPJGxIgtxvUhyAsahtOUOKsov16FhIR
+	 aEgg90NsWzk30iGc1ArrRwGyf7JJioUGktOt/7eh+ptR9Hm8N3ShEuD91XN7COzuFE
+	 zMuYjSprHik6w==
+Received: by pali.im (Postfix)
+	id C16264FC; Wed,  5 Feb 2025 20:04:45 +0100 (CET)
+Date: Wed, 5 Feb 2025 20:04:45 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	ronnie sahlberg <ronniesahlberg@gmail.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steve French <sfrench@samba.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Immutable vs read-only for Windows compatibility
+Message-ID: <20250205190445.ceffnr4vipxsybhn@pali>
+References: <20250117185947.ylums2dhmo3j6hol@pali>
+ <20250202152343.ahy4hnzbfuzreirz@pali>
+ <CAOQ4uxgjbHTyQ53u=abWhyQ81ATL4cqSeWKDfOjz-EaR0NGmug@mail.gmail.com>
+ <20250203221955.bgvlkp273o3wnzmf@pali>
+ <CAOQ4uxhkB6oTJm7DvQxFbxkQ1u_KMUFEL0eWKVYf39hnuYrnfQ@mail.gmail.com>
+ <20250203233403.5a5pcgl5xylj47nb@pali>
+ <CAOQ4uxisXgDOuE1oDH6qtLYoiFeG55kjpUJaXDxZ+tp2ck++Sg@mail.gmail.com>
+ <20250204212638.3hhlbc5muutnlluw@pali>
+ <CAOQ4uxg5k5FP43y93FRujj54kVk8TyXD2AeO_VFJ2m+aB=b1_Q@mail.gmail.com>
+ <20250205181645.4ps3kzafyasg4dgj@pali>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80f143d8-84d5-444d-22dc-08dd46179be6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2025 19:02:16.9858
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZVGlFGAHhZQXb09fZ/E7tKwInMbcCSWRlVDSKTK+BVrh1ceBrNvMV/Hke2RZDZI1USwIIhiwaVJTDYhrkZSFZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN3PEPF00013E00
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250205181645.4ps3kzafyasg4dgj@pali>
+User-Agent: NeoMutt/20180716
 
-> Subject: [PATCH rdma-next 1/1] RDMA/mana_ib: Allocate PAGE aligned doorbe=
-ll
-> index
->=20
-> From: Konstantin Taranov <kotaranov@microsoft.com>
->=20
-> Allocate a PAGE aligned doorbell index to ensure each process gets a sepa=
-rate
-> PAGE sized doorbell area space remapped to it in mana_ib_mmap
->=20
-> Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure
-> Network Adapter")
-> Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
-> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+On Wednesday 05 February 2025 19:16:45 Pali Rohár wrote:
+> On Wednesday 05 February 2025 17:33:30 Amir Goldstein wrote:
+> > On Tue, Feb 4, 2025 at 10:26 PM Pali Rohár <pali@kernel.org> wrote:
+> > >
+> > > On Tuesday 04 February 2025 12:54:01 Amir Goldstein wrote:
+> > > > On Tue, Feb 4, 2025 at 12:34 AM Pali Rohár <pali@kernel.org> wrote:
+> > > > >
+> > > > > On Tuesday 04 February 2025 00:02:44 Amir Goldstein wrote:
+> > > > > > On Mon, Feb 3, 2025 at 11:20 PM Pali Rohár <pali@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Monday 03 February 2025 22:59:46 Amir Goldstein wrote:
+> > > > > > > > On Sun, Feb 2, 2025 at 4:23 PM Pali Rohár <pali@kernel.org> wrote:
+> > > > > > > > > And there is still unresolved issue with FILE_ATTRIBUTE_READONLY.
+> > > > > > > > > Its meaning is similar to existing Linux FS_IMMUTABLE_FL, just
+> > > > > > > > > FILE_ATTRIBUTE_READONLY does not require root / CAP_LINUX_IMMUTABLE.
+> > > > > > > > >
+> > > > > > > > > I think that for proper support, to enforce FILE_ATTRIBUTE_READONLY
+> > > > > > > > > functionality, it is needed to introduce new flag e.g.
+> > > > > > > > > FS_IMMUTABLE_FL_USER to allow setting / clearing it also for normal
+> > > > > > > > > users without CAP_LINUX_IMMUTABLE. Otherwise it would be unsuitable for
+> > > > > > > > > any SMB client, SMB server or any application which would like to use
+> > > > > > > > > it, for example wine.
+> > > > > > > > >
+> > > > > > > > > Just to note that FreeBSD has two immutable flags SF_IMMUTABLE and
+> > > > > > > > > UF_IMMUTABLE, one settable only by superuser and second for owner.
+> > > > > > > > >
+> > > > > > > > > Any opinion?
+> > > > > > > >
+> > > > > > > > For filesystems that already support FILE_ATTRIBUTE_READONLY,
+> > > > > > > > can't you just set S_IMMUTABLE on the inode and vfs will do the correct
+> > > > > > > > enforcement?
+> > > > > > > >
+> > > > > > > > The vfs does not control if and how S_IMMUTABLE is set by filesystems,
+> > > > > > > > so if you want to remove this vfs flag without CAP_LINUX_IMMUTABLE
+> > > > > > > > in smb client, there is nothing stopping you (I think).
+> > > > > > >
+> > > > > > > Function fileattr_set_prepare() checks for CAP_LINUX_IMMUTABLE when
+> > > > > > > trying to change FS_IMMUTABLE_FL bit. This function is called from
+> > > > > > > ioctl(FS_IOC_SETFLAGS) and also from ioctl(FS_IOC_FSSETXATTR).
+> > > > > > > And when function fileattr_set_prepare() fails then .fileattr_set
+> > > > > > > callback is not called at all. So I think that it is not possible to
+> > > > > > > remove the IMMUTABLE flag from userspace without capability for smb
+> > > > > > > client.
+> > > > > > >
+> > > > > >
+> > > > > > You did not understand what I meant.
+> > > > > >
+> > > > > > You cannot relax the CAP_LINUX_IMMUTABLE for setting FS_IMMUTABLE_FL
+> > > > > > and there is no reason that you will need to relax it.
+> > > > > >
+> > > > > > The vfs does NOT enforce permissions according to FS_IMMUTABLE_FL
+> > > > > > The vfs enforces permissions according to the S_IMMUTABLE in-memory
+> > > > > > inode flag.
+> > > > > >
+> > > > > > There is no generic vfs code that sets S_IMMUTABLE inode flags, its
+> > > > > > the filesystems that translate the on-disk FS_IMMUTABLE_FL to
+> > > > > > in-memory S_IMMUTABLE inode flag.
+> > > > > >
+> > > > > > So if a filesystem already has an internal DOSATTRIB flags set, this
+> > > > > > filesystem can set the in-memory S_IMMUTABLE inode flag according
+> > > > > > to its knowledge of the DOSATTRIB_READONLY flag and the
+> > > > > > CAP_LINUX_IMMUTABLE rules do not apply to the DOSATTRIB_READONLY
+> > > > > > flag, which is NOT the same as the FS_IMMUTABLE_FL flag.
+> > > > > >
+> > > > > > > And it would not solve this problem for local filesystems (ntfs or ext4)
+> > > > > > > when Samba server or wine would want to set this bit.
+> > > > > > >
+> > > > > >
+> > > > > > The Samba server would use the FS_IOC_FS[GS]ETXATTR ioctl
+> > > > > > API to get/set dosattrib, something like this:
+> > > > > >
+> > > > > > struct fsxattr fsxattr;
+> > > > > > ret = ioctl_get_fsxattr(fd, &fsxattr);
+> > > > > > if (!ret && fsxattr.fsx_xflags & FS_XFLAG_HASDOSATTR) {
+> > > > > >     fsxattr.fsx_dosattr |= fs_dosattrib_readonly;
+> > > > > >     ret = ioctl_set_fsxattr(fd, &fsxattr);
+> > > > > > }
+> > > > >
+> > > > > Thanks for more explanation. First time I really did not understood it.
+> > > > > But now I think I understood it. So basically there would be two flags
+> > > > > which would result in setting S_IMMUTABLE on inode. One is the existing
+> > > > > FS_IMMUTABLE_FL which requires the capability and some new flag (e.g.
+> > > > > FS_XFLAG_HASDOSATTR) which would not require it and can be implemented
+> > > > > for cifs, vfat, ntfs, ... Right?
+> > > > >
+> > > >
+> > > > Well, almost right.
+> > > > The flag that would correspond to FILE_ATTRIBUTE_READONLY
+> > > > is FS_DOSATTRIB_READONLY from the new field fsx_dosattrib
+> > > > (see below)
+> > >
+> > > Thank you for example, it is for sure good starting point for me.
+> > >
+> > > > --- a/include/uapi/linux/fs.h
+> > > > +++ b/include/uapi/linux/fs.h
+> > > > @@ -145,7 +145,8 @@ struct fsxattr {
+> > > >         __u32           fsx_nextents;   /* nextents field value (get)   */
+> > > >         __u32           fsx_projid;     /* project identifier (get/set) */
+> > > >         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > > > -       unsigned char   fsx_pad[8];
+> > > > +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
+> > > > +       unsigned char   fsx_pad[4];
+> > > >  };
+> > > >
+> > > >  /*
+> > > > @@ -167,7 +168,16 @@ struct fsxattr {
+> > > >  #define FS_XFLAG_FILESTREAM    0x00004000      /* use filestream allocator */
+> > > >  #define FS_XFLAG_DAX           0x00008000      /* use DAX for IO */
+> > > >  #define FS_XFLAG_COWEXTSIZE    0x00010000      /* CoW extent size
+> > > > allocator hint */
+> > > > -#define FS_XFLAG_HASATTR       0x80000000      /* no DIFLAG for this   */
+> > > > +#define FS_XFLAG_HASATTR       0x80000000      /* has extended attributes */
+> > > > +
+> > > > +/*
+> > > > + * Flags for the fsx_dosattrib field
+> > > > + */
+> > > > +#define FS_DOSATTRIB_READONLY  0x00000001      /* R - read-only */
+> > > > +#define FS_DOSATTRIB_HIDDEN    0x00000002      /* H - hidden */
+> > > > +#define FS_DOSATTRIB_SYSTEM    0x00000004      /* S - system */
+> > > > +#define FS_DOSATTRIB_ARCHIVE   0x00000020      /* A - archive */
+> > > > +#define FS_DOSATTRIB_HASATTR   0x80000000      /* has dos attributes */
+> > >
+> > > Should these FS_DOSATTRIB_* constants follows the Windows
+> > > FILE_ATTRIBUTE_* constants? Because I see that you put a gap between
+> > > system and archive.
+> > >
+> > 
+> > Well, no, they do not need to follow Windows contestants,
+> > but then again, why not?
+> 
+> I have just few cons:
+> - there are gaps and unused bits (e.g. FILE_ATTRIBUTE_VOLUME)
+> - there are bits which have more meanings (FILE_ATTRIBUTE_EA / FILE_ATTRIBUTE_RECALL_ON_OPEN)
+> - there are bits used only by WinAPI and not by NT / SMB
+> - there are bits which have different NT meaning in readdir() and in stat()
+> - there are bits for which we already have FS_IOC_GETFLAGS API
+> 
+> I think it that is is bad a idea if bit N in our ioctl() would have
+> different meaning than in our statx().
+> 
+> Should we duplicate FS_IOC_GETFLAGS FS_COMPR_FL and FS_ENCRYPT_FL into
+> that new fsx_dosattrib? For me it sounds like that it is a better idea
+> to have compression bit and encryption bit only in one field and not
+> duplicated.
+> 
+> But we can slightly follow Windows constants. Not exactly, but remove
+> redundancy, remove reserved bits, modify bits to have exactly one
+> meaning, etc... So basically do some sane modifications.
+> 
+> > I mean if we only ever needed the 4 RHSA bits above, we could
+> > have used the FS_XFLAG_* flags space, but if we extend the API
+> > with a new 32bit field, why not use 1-to-1 mapping at least as a starting point.
+> 
+> I understand it, for me it looks also a good idea, just needs to resolve
+> those problems above... and it would result in incompatibility that it
+> would not be 1-to-1 mapping at the end.
+> 
+> > You can see that it is quite common that filesystems re-define the
+> > same constants for these flags (e.g. EXT4_IMMUTABLE_FL).
+> > I am a bit surprised that there is no build time assertion
+> > BUILD_BUG_ON(EXT4_IMMUTABLE_FL != FS_IMMUTABLE_FL)
+> > which would be the standard way to make sure that the constants
+> > stay in sync if they need to be in sync, but some filesystems don't
+> > even assume that these constants are in sync (e.g. f2fs_fsflags_map)
+> > 
+> > > > This last special flag is debatable and I am not really sure that we need it.
+> > >
+> > > This constant has very similar meaning to FILE_ATTRIBUTE_NORMAL. Both
+> > > has some compatibility meaning that "field is valid or something is set".
+> > > Just FILE_ATTRIBUTE_NORMAL is not 31th bit.
+> > >
+> > 
+> > No it does not. I don't think that you understood the meaning of
+> > FS_DOSATTRIB_HASATTR.
+> > Nevermind it was a bad idea anyway. see more below.
+> > 
+> > > > It is needed for proper backward compat with existing userspace tools.
+> > > > For example, if there was a backup tool storing the fsxattr blob result of
+> > > > FS_IOC_FSGETXATTR and sets it later during restore with
+> > > > FS_IOC_FSSETXATTR, then it would be better to ignore a zero
+> > > > value of fsx_dosattrib instead of resetting all of the on-disk dosattrib flags
+> > > > if the restore happens after ntfs gained support for setting dosattrib flags
+> > > > via FS_IOC_FSSETXATTR.
+> > > >
+> > > > When using the standard tools to set fsxattr (chattr and xfs_io -c chattr)
+> > > > the tool does FS_IOC_FSGETXATTR + modify + FS_IOC_FSSETXATTR,
+> > > > so those tools are expected to leave new bits in fsx_dosattrib at their
+> > > > value if ntfs gains support for get/set fsx_dosattrib.
+> > > >
+> > > > Setting the auxiliary FS_DOSATTRIB_HASATTR flag can help the
+> > > > kernel/fs to explicitly state that the values returned in fsx_dosattrib
+> > > > are valid and the tool to state that values set in fsx_dosattrib are valid.
+> > > > But using a single flag will not help expanding ntfs support for more
+> > > > fsx_dosattrib flags later, so I am not sure if it is useful (?).
+> > >
+> > > If the fsx_dosattrib would match all FILE_ATTRIBUTE_* then we can do it
+> > > as the ntfs matches FILE_ATTRIBUTE_* and no extension is needed for
+> > > future.
+> > >
+> > > And I think that this backward compatibility sounds good.
+> > >
+> > 
+> > That's only true if you can support ALL the dosattrib flags from the
+> > first version and that Windows will not add any of the reserved
+> > flags in the future, which is hard to commit to.
+> 
+> I see, it would not work. And Windows will for sure use some reserved
+> bits in future.
+> 
+> > > What could be useful for userspace is also ability to figure out which
+> > > FS_DOSATTRIB_* are supported by the filesystem. Because for example UDF
+> > > on-disk format supports only FS_DOSATTRIB_HIDDEN bit. And FAT only those
+> > > attributes which are in the lowest byte.
+> > >
+> > 
+> > Exactly.
+> > statx has this solved with the stx_attributes_mask field.
+> > 
+> > We could do the same for FS_IOC_FS[GS]ETXATTR, but because
+> > right now, this API does not verify that fsx_pad is zero, we will need to
+> > define a new set of ioctl consants FS_IOC_[GS]ETFSXATTR2
+> > with the exact same functionality but that userspace knows that they
+> > publish and respect the dosattrib mask:
+> 
+> I understand and this is a problem.
+> 
+> > --- a/fs/ioctl.c
+> > +++ b/fs/ioctl.c
+> > @@ -868,9 +868,11 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+> >         case FS_IOC_SETFLAGS:
+> >                 return ioctl_setflags(filp, argp);
+> > 
+> > +       case FS_IOC_GETFSXATTR2:
+> >         case FS_IOC_FSGETXATTR:
+> >                 return ioctl_fsgetxattr(filp, argp);
+> > 
+> > +       case FS_IOC_SETFSXATTR2:
+> >         case FS_IOC_FSSETXATTR:
+> >                 return ioctl_fssetxattr(filp, argp);
+> > --- a/include/uapi/linux/fs.h
+> > +++ b/include/uapi/linux/fs.h
+> > @@ -145,7 +145,8 @@ struct fsxattr {
+> >         __u32           fsx_nextents;   /* nextents field value (get)   */
+> >         __u32           fsx_projid;     /* project identifier (get/set) */
+> >         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > -       unsigned char   fsx_pad[8];
+> > +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
+> > +       __u32           fsx_dosattrib_mask; /* dosattrib field validity mask */
+> >  };
+> > 
+> >  /*
+> > @@ -238,6 +248,9 @@ struct fsxattr {
+> >  #define FS_IOC32_SETFLAGS              _IOW('f', 2, int)
+> >  #define FS_IOC32_GETVERSION            _IOR('v', 1, int)
+> >  #define FS_IOC32_SETVERSION            _IOW('v', 2, int)
+> > +#define FS_IOC_GETFSXATTR2              _IOR('x', 31, struct fsxattr)
+> > +#define FS_IOC_SETFSXATTR2              _IOW('x', 32, struct fsxattr)
+> > +/* Duplicate legacy ioctl numbers for backward compact */
+> >  #define FS_IOC_FSGETXATTR              _IOR('X', 31, struct fsxattr)
+> >  #define FS_IOC_FSSETXATTR              _IOW('X', 32, struct fsxattr)
+> >  #define FS_IOC_GETFSLABEL              _IOR(0x94, 49, char[FSLABEL_MAX])
+> > 
+> > We could also use this opportunity to define a larger fsxattr2 struct
+> > that also includes an fsx_xflags_mask field, so that the xflags namespace
+> > could also be extended in a backward compat way going forward:
+> > 
+> > @@ -145,7 +145,21 @@ struct fsxattr {
+> >         __u32           fsx_nextents;   /* nextents field value (get)   */
+> >         __u32           fsx_projid;     /* project identifier (get/set) */
+> >         __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> >         unsigned char   fsx_pad[8];
+> > 
+> >  };
+> > +
+> > +/*
+> > + * Structure for FS_IOC_[GS]ETFSXATTR2.
+> > + */
+> > +struct fsxattr2 {
+> > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
+> > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
+> > +       __u32           fsx_nextents;   /* nextents field value (get)   */
+> > +       __u32           fsx_projid;     /* project identifier (get/set) */
+> > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > +       __u32           fsx_xflags_mask; /* xflags field validity mask */
+> > +       __u32           fsx_dosattrib;  /* dosattrib field value (get/set) */
+> > +       __u32           fsx_dosattrib_mask; /* dosattrib field validity mask */
+> > +};
+> > 
+> > And you'd also need to flug those new mask and dosattrib
+> > via struct fileattr into filesystems - too much to explain.
+> > try to figure it out (unless someone objects) and if you can't figure
+> > it out let me know.
+> 
+> Yea, I think that this is thing which I should be able to figure out
+> once I start changing it.
+> 
+> Anyway, I have alternative idea to the problem with fsx_pad. What about
+> introducing new fsx_xflags flag which would say that fsx_pad=fsx_dosattrib
+> is present? E.g.
+> 
+> #define FS_XFLAG_HASDOSATTRIB 0x40000000
+> 
+> Then we would not need new FS_IOC_GETFSXATTR2/FS_IOC_SETFSXATTR2 ioctls.
+> 
+> Also fsx_pad has 8 bytes, which can store both attrib and mask, so new
+> struct fsxattr2 would not be needed too.
 
-Reviewed-by: Long Li <longli@microsoft.com>
+In case we decide to not do 1-to-1 mapping of Windows FILE_ATTRIBUTE_*
+constants to these new Linux DOSATTRIB_* constants then we do not need
+32-bit variable, but just 16-bit variable (I counted that we need just
+10 bits for now). fsx_pad has currently 64 bits and we could use it for:
+- 32 bits for fsx_xflags_mask
+- 16 bits for fsx_dosattrib
+- 16 bits for fsx_dosattrib_mask
+And therefore no need for FS_IOC_GETFSXATTR2/FS_IOC_SETFSXATTR2 iocl or
+struct fsxattr2. Just an idea how to simplify new API. Maybe together
+with new fsx_xflags bit to indicate that fsx_xflags_mask field is present:
+#define FS_XFLAG_HASXFLAGSMASK 0x20000000
 
-> ---
->  drivers/infiniband/hw/mana/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/hw/mana/main.c
-> b/drivers/infiniband/hw/mana/main.c
-> index ae1fb69..0b89fa0 100644
-> --- a/drivers/infiniband/hw/mana/main.c
-> +++ b/drivers/infiniband/hw/mana/main.c
-> @@ -177,7 +177,7 @@ static int mana_gd_allocate_doorbell_page(struct
-> gdma_context *gc,
->=20
->  	req.resource_type =3D GDMA_RESOURCE_DOORBELL_PAGE;
->  	req.num_resources =3D 1;
-> -	req.alignment =3D 1;
-> +	req.alignment =3D PAGE_SIZE / MANA_PAGE_SIZE;
->=20
->  	/* Have GDMA start searching from 0 */
->  	req.allocated_resources =3D 0;
-> --
-> 2.43.0
-
+> > > >
+> > > > > > For ntfs/ext4, you will need to implement on-disk support for
+> > > > > > set/get the dosattrib flags.
+> > > > >
+> > > > > ntfs has already on-disk support for FILE_ATTRIBUTE_READONLY.
+> > > > >
+> > > >
+> > > > This is interesting.
+> > >
+> > > I mean that ntfs filesystem has support for FILE_ATTRIBUTE_READONLY.
+> > > I did not mean linux ntfs implementation.
+> > >
+> > > But I'm aware of some of those details in linux fs implementations, but
+> > > I did not wanted to mentioned it as basically every linux fs
+> > > implementation has its own way how flags are handled or exported to
+> > > userspace. It is good to know, but not important when designing or
+> > > discussing the unified/generic standard API.
+> > >
+> > 
+> > A good API will describe what the existing filesystems already support
+> > and what they do not support.
+> > 
+> > > > fat/ntfs both already have a mount option sys_immutable to map
+> > > > FILE_ATTRIBUTE_SYSTEM to S_IMMUTABLE in-memory.
+> > > >
+> > > > fat does not support fileattr_set(), but has a proprietary ioctl
+> > > > FAT_IOCTL_SET_ATTRIBUTES which enforces
+> > > > CAP_LINUX_IMMUTABLE for changing S_IMMUTABLE.
+> > > >
+> > > > ntfs also maps FILE_ATTRIBUTE_SYSTEM to S_IMMUTABLE
+> > > > and it allows changing FILE_ATTRIBUTE_SYSTEM via ntfs_setxattr
+> > > > of system.{dos,ntfs}_attrib without enforcing CAP_LINUX_IMMUTABLE,
+> > > > or any other permissions at all (?)
+> > > > This does not change S_IMMUTABLE in-memory, so change will
+> > > > only apply on the next time inode is loaded from disk.
+> > > > Bottom line: seems like *any user at all* can change the READONLY
+> > > > and SYSTEM attributes on ntfs.
+> > > >
+> > > > OTOH, ntfs does support fileattr_set() - it allows changing
+> > > > S_IMMUTABLE and S_APPEND in-memory, but as far as I can
+> > > > tell, this change is not stored on-disk (?).
+> > > >
+> > > > Also in ntfs, FILE_ATTRIBUTE_READONLY is mapped
+> > > > to not having posix write permissions on-disk:
+> > > >                 /* Linux 'w' -> Windows 'ro'. */
+> > > >                 if (0222 & inode->i_mode)
+> > > >                         ni->std_fa &= ~FILE_ATTRIBUTE_READONLY;
+> > > >                 else
+> > > >                         ni->std_fa |= FILE_ATTRIBUTE_READONLY;
+> > > >
+> > > > So for ntfs, S_IMMUTABLE could be updated depending on three
+> > > > independent flags: SYSTEM, READONLY and  FS_XFLAG_IMMUTABLE.
+> > > >
+> > > > Having ntfs treat FILE_ATTRIBUTE_READONLY as S_IMMUTABLE
+> > > > internally, is completely confined to ntfs and has nothing to do with vfs
+> > > > or with a new standard API.
+> > > >
+> > > > > On-disk support for ext4 and other linux filesystems can be discussed
+> > > > > later. I think that this could be more controversial.
+> > > > >
+> > > >
+> > > > Obviously there are existing users that need this.
+> > > > Samba has its own xattr user.DOSATTRIB and if people really want
+> > > > to be able to export those attributes in a standard way, I doubt there
+> > > > will be objection to adding on-disk support (e.g. to ext4/xfs).
+> > > > But somebody has to do the work and adding new on-disk support
+> > > > is not so easy.
+> > >
+> > > Yes, it is not easy and on-disk support can be done later or basically
+> > > independently of this work here. So I will let it for other people.
+> > >
+> > > > I can help with that when the time comes.
+> > > > First thing first, try to propose patches to extend fsx_dosattrib and
+> > > > support them in ntfs/fat/smb.
+> > >
+> > > Ok. Thanks.
+> > >
+> > > > > > I can certainly not change the meaning of existing on-disk
+> > > > > > flag of FS_IMMUTABLE_FL to a flag that can be removed
+> > > > > > without CAP_LINUX_IMMUTABLE. that changes the meaning
+> > > > > > of the flag.
+> > > > > >
+> > > > > > If ext4 maintainers agrees, you may be able to reuse some
+> > > > > > old unused on-disk flags (e.g.  EXT4_UNRM_FL) as storage
+> > > > > > place for FS_DOSATTRIB_READONLY, but that would be
+> > > > > > quite hackish.
+> > > > > >
+> > > > > > > > How about tackling this one small step at a time, not in that order
+> > > > > > > > necessarily:
+> > > > > > > >
+> > > > > > > > 1. Implement the standard API with FS_IOC_FS[GS]ETXATTR ioctl
+> > > > > > > >     and with statx to get/set some non-controversial dosattrib flags on
+> > > > > > > >     ntfs/smb/vfat
+> > > > > > > > 2. Wire some interesting dosattrib flags (e.g. compr/enrypt) to local
+> > > > > > > >     filesystems that already support storing those bits
+> > > > > > > > 3. Wire network servers (e.g. Samba) to use the generic API if supported
+> > > > > > > > 4. Add on-disk support for storing the dosattrib flags to more local fs
+> > > > > > > > 5. Update S_IMMUTABLE inode flag if either FS_XFLAG_IMMUTABLE
+> > > > > > > >     or FS_DOSATTRIB_READONLY are set on the file
+> > > > > > > >
+> > > > > > > > Thoughts?
+> > > > > > > >
+> > > > > >
+> > > > > > Anything wrong with the plan above?
+> > > > > > It seems that you are looking for shortcuts and I don't think that
+> > > > > > it is a good way to make progress.
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Amir.
+> > > > >
+> > > > > If other developers agree that the FS_IOC_FS[GS]ETXATTR ioctl is the
+> > > > > right direction then for me it looks good.
+> > > >
+> > > > This thread has been going on for a while.
+> > > > I did not see any objections to this idea that Darrick proposed,
+> > > > so I think next step for you is to post patches, because some
+> > > > developers will only engage when there are patches to discuss.
+> > > >
+> > > > Thanks,
+> > > > Amir.
+> > >
+> > > Ok, I will try to prepare something. Just give me some weeks as would
+> > > not have time for this right now. I just wanted to be sure that this
+> > > is really the right direction and also that this is something which
+> > > makes sense. I did not wanted to start doing something which could be
+> > > completely useless... That is why I started rather longer discussion
+> > > first.
+> > 
+> > No rush on my side.
+> > You'd better wait a while to let other people comment before
+> > going to implement anything.
+> > 
+> > People often have many and different opinions when it comes
+> > to APIs design, so you will also need some patience to get to
+> > consensus.
+> > 
+> > Thanks,
+> > Amir.
+> 
+> Yes, that is fine. And thank you for your input.
