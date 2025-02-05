@@ -1,162 +1,108 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74901FBEBF;
-	Wed,  5 Feb 2025 17:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A451FC7F6;
+	Wed,  5 Feb 2025 17:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777559; cv=none; b=PMlk4sbVHuNhPhz9njxsO+K844Ca9uLzsXURJLZquzSZDQ5jwWcMJ/paMDuwjJEUVNewaL/WFF6Pl0WIlQHc25RsmERNyl//hg/plC4zn3ECwRFBtN/fLVzSTzu0l4n4pRufL5mtnQrt203SlQyldber5wUlrPBPiEAHg3mam/A=
+	t=1738777588; cv=none; b=muJGiBOI2dm/4U0qd0PssKEjinpAPuX+z7GMqWcwMWQET5X28Jr63+TZkZkqgrvKfwIyVMoI4RX4J9fKpz3rnQCWirmKqcbE4oKcqIsUUApKmX56SpCbojS2m8XDyCAkl6FJUfNYUHR5UH7fAnhYoEA7bG6baGmu8PUQhWyvGSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777559; c=relaxed/simple;
-	bh=z96CKr6jknS+Hxu/D84R57aD24diCTrCk7EtoEtNpsU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rNFTKxxuwui6irajbRBpHj2Bw8QDfIJ7pO4ViSGcEiXmxPXrxoT93pARylKNeDBeTkq8ZaMKYs/n5zp5fYabsCZbnSfVBzbrRul8Q6pMXKGk4PYApZLQR2vRTIlikumKzrz94epjzMukPGStiqFneiwDCO89+zHl7CFQugOpUDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=kIEwVyTn; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738777588; c=relaxed/simple;
+	bh=8C1HNH4qVUSwKDMJatvHx29Le0IdvOg84YisPyZytOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUxpHfaIIlh3kzTOP2TE1TPp+lRi2mfsb8pP7qq/K0MluGCCbnzBRqnk89qUztShLEcJc3dqd9raVsn305xRDYUeMyWmnr0iAIfFyr/7aF08sUDFHHNxivbq2EDzWENVthW1pC7AG6NbpYeG/doNggs5DYirTW+7zdLhCCwuEhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org; spf=none smtp.mailfrom=idosch.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=r2luspiz; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=idosch.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="kIEwVyTn"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 2CBB9A0748;
-	Wed,  5 Feb 2025 18:36:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=Rn6yddGTL+4r9BPnRCa7YNZbMZP/n2LoEprLl201Fhg=; b=
-	kIEwVyTn98fyHeB3ZPrtD11ZqobExsQeb9IkBVpo6AJPfeKxBLtFl5YPqyKDk196
-	K1ZRHGJtpBMIoJr2r3l4eRHbfVCjWkdMexBglv4viBCke4Xf7t/I47oYW8p7yo2p
-	/S4GOZvNuQWjp+KZAL9BPXrw6WiXlfaFbiT1yN+oDAtbUnHe3uSJFafrfVuDIfl3
-	F/8iHKneQUtkaWbIqN1zF9viyteAJAIuBHH1QuMcn8KF9bSvKDC2E4YVTU+6h/AB
-	K0Vwkwqk5JIa6xblQJ0eI1oreStRhF8+Mczx2qbjm3HTNl8a8g71dzSY6sZZh6zU
-	ibodccHUCc82AtIn60S2Zj/sHcMfCC76+O9ZStQmqiKzuYDSw6yGUZisJTXYow1l
-	oXvbGA5e8E7UsBD2Pt7AL3t9hnhKUO7JTeI8YFnP3UVF4l9vH+txvGLiBVwvHA5W
-	n949X020wpvNpjPuIseVRHy2hiBgsKeH7/QQIJV4NR1/9Doep76tkAxlb8kGxJB5
-	Wcepx7y4q9ATiL6ddDTFm8wUr9GdoLD+v8hI2rdRH20flJbLt5nwYGUVMVeR4qTZ
-	EwkcEV8S44DPThV0Drmr8tqP3JT4ez6CbT6kTY996uwQMPVILLDcA00vLwO2k/lL
-	ph6yWXu1yGfb4NhFRM33RzN/bATuqt2bFZ2fvWjnURc=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
- Tsai" <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Vinod
- Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Samuel Holland
-	<samuel@sholland.org>
-Subject: [PATCH v3] dma-engine: sun4i: Use devm functions in probe()
-Date: Wed, 5 Feb 2025 18:36:30 +0100
-Message-ID: <20250205173630.112020-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r2luspiz"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 243E12540196;
+	Wed,  5 Feb 2025 12:46:25 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Wed, 05 Feb 2025 12:46:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738777584; x=1738863984; bh=HEskk/2SpuLO/Xrp6JjdV4QHbWz2DrijKvj
+	/WGpMo98=; b=r2luspizoix2AEF4EaO2ehJhs7Fw4jAPTtpliuS8JBSUfGJyPua
+	qLdsjnxyl17PnEZrM4NHbR0U+29fas76j99i19IxBZURQBifLWxhbBqW55hLySrx
+	HAVXCsRLmha2HcqHknDjkL9Xeidf4rObORpsZyMfh5Sh3d027iSyZfBz4EzQqP+g
+	m01JL38qT4d+2xoffTqqVpTOqa0+KIuGWPiDNHhSa5VLQhJe1yIQwKQapH1D+A2w
+	MrEUldAKDRixrRe9FXa1hGt0oYIx1AP3k/BxL5lJIGHjq+LNbgWNgo19+fF9B1a2
+	7z4uNy2MiJ6gkm/dGMNt19qfUpvbLRREaDw==
+X-ME-Sender: <xms:76OjZxlYzksRscRa_qX5S04h1IkoM8bn-hTsZOcJs7JyXwTEf9lRwA>
+    <xme:76OjZ80UBNf8ydUkrTr-5DJ_vaOkIknryww7-2SJIuyzqEUoknba85E7p97tABPvO
+    HqhNu5PCTaAYnk>
+X-ME-Received: <xmr:76OjZ3phySEI9zZFX2fLzlWk0i1_zAvHzDKe_9rYPI_Jp7XAtN684i8eLv1I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedutdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpefkughoucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrd
+    horhhgqeenucggtffrrghtthgvrhhnpedvudefveekheeugeeftddvveefgfduieefudei
+    fefgleekheegleegjeejgeeghfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhgpdhnsggprhgtphht
+    thhopedvhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhdqmhgrlhhlrgguih
+    esthhirdgtohhmpdhrtghpthhtoheprhhoghgvrhhqsehkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopegurghnihhshhgrnhifrghrsehtihdrtghomhdprhgtphhtthhopehprggsvg
+    hnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
+    epuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfido
+    nhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:76OjZxmJrT1mw4cGC5Z3PVwsGehnoRCjZxYdJ_ABfe7RSiEUpwplPA>
+    <xmx:76OjZ_2ZX3nJ9G-5vJnVR0qR9wI4381VmwucynYbHX0TQW3fcgNk8w>
+    <xmx:76OjZwt7MG6j-mRcytoklvUnMHVjIFGoXdLvzheatidojseNs3d1tA>
+    <xmx:76OjZzXX8eMbKVIFytFckbC4ddt2sHqyb_DKlX_qbpoIeIP9ViJf-Q>
+    <xmx:8KOjZ6GI8IvEawqZnrxSUKqmofGTrPSXj8dpIMcsPw-APgDOhhVJr7tK>
+Feedback-ID: i494840e7:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 5 Feb 2025 12:46:22 -0500 (EST)
+Date: Wed, 5 Feb 2025 19:46:21 +0200
+From: Ido Schimmel <idosch@idosch.org>
+To: "Malladi, Meghana" <m-malladi@ti.com>
+Cc: rogerq@kernel.org, danishanwar@ti.com, pabeni@redhat.com,
+	kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+	andrew+netdev@lunn.ch, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, robh@kernel.org,
+	matthias.schiffer@ew.tq-group.com, dan.carpenter@linaro.org,
+	rdunlap@infradead.org, diogo.ivo@siemens.com,
+	schnelle@linux.ibm.com, glaroque@baylibre.com,
+	john.fastabend@gmail.com, hawk@kernel.org, daniel@iogearbox.net,
+	ast@kernel.org, srk@ti.com, Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [EXTERNAL] Re: [PATCH net 3/3] net: ti: icssg-prueth: Add AF_XDP
+ support
+Message-ID: <Z6Oj7eMRV9z9lF2I@shredder>
+References: <20250122124951.3072410-1-m-malladi@ti.com>
+ <20250122124951.3072410-4-m-malladi@ti.com>
+ <Z5J7kGFU_ZgneFAF@shredder>
+ <f1cf5bfc-e767-4ced-9aad-76a578c53706@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738777013;VERSION=7984;MC=1924755684;ID=266573;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852667D60
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1cf5bfc-e767-4ced-9aad-76a578c53706@ti.com>
 
-Clean up error handling by using devm functions
-and dev_err_probe(). This should make it easier
-to add new code, as we can eliminate the "goto
-ladder" in probe().
+On Tue, Feb 04, 2025 at 11:25:39PM +0530, Malladi, Meghana wrote:
+> On 1/23/2025 10:55 PM, Ido Schimmel wrote:
+> > XDP program could have changed the packet length, but driver seems to be
+> 
+> This will be true given, emac->xdp_prog is not NULL. What about when XDP is
+> not enabled ?
 
-Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
+I don't understand the question. My point is that the packet doesn't
+necessarily look the same after XDP ran.
 
-Notes:
-    Changes in v2:
-    * rebase on current next
-    Changes in v3:
-    * rebase on current next
-    * collect Jernej's tag
-
- drivers/dma/sun4i-dma.c | 31 ++++++-------------------------
- 1 file changed, 6 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 24796aaaddfa..b10639720efd 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -1249,10 +1249,9 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No clock specified\n");
--		return PTR_ERR(priv->clk);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Couldn't start the clock");
- 	}
- 
- 	if (priv->cfg->has_reset) {
-@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 		vchan_init(&vchan->vc, &priv->slave);
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Couldn't enable the clock\n");
--		return ret;
--	}
--
- 	/*
- 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
- 	 * likes to leave these dirty
-@@ -1344,32 +1337,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
- 			       0, dev_name(&pdev->dev), priv);
- 	if (ret) {
--		dev_err(&pdev->dev, "Cannot request IRQ\n");
--		goto err_clk_disable;
-+		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ");
- 	}
- 
--	ret = dma_async_device_register(&priv->slave);
-+	ret = dmaenginem_async_device_register(&priv->slave);
- 	if (ret) {
--		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
--		goto err_clk_disable;
-+		return dev_err_probe(&pdev->dev, ret, "Failed to register DMA engine device");
- 	}
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
- 					 priv);
- 	if (ret) {
--		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
--		goto err_dma_unregister;
-+		return dev_err_probe(&pdev->dev, ret, "Failed to register translation function");
- 	}
- 
- 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
- 
- 	return 0;
--
--err_dma_unregister:
--	dma_async_device_unregister(&priv->slave);
--err_clk_disable:
--	clk_disable_unprepare(priv->clk);
--	return ret;
- }
- 
- static void sun4i_dma_remove(struct platform_device *pdev)
-@@ -1380,9 +1364,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
- 	disable_irq(priv->irq);
- 
- 	of_dma_controller_free(pdev->dev.of_node);
--	dma_async_device_unregister(&priv->slave);
--
--	clk_disable_unprepare(priv->clk);
- }
- 
- static struct sun4i_dma_config sun4i_a10_dma_cfg = {
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.48.1
-
-
+> 
+> > building the skb using original length read from the descriptor.
+> > Consider using xdp_build_skb_from_buff()
+> > 
+> 
