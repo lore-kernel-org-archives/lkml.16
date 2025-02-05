@@ -1,51 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D5EA32;
-	Wed,  5 Feb 2025 13:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA2ABA2E;
+	Wed,  5 Feb 2025 13:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738760984; cv=none; b=DNVLZPklYDQ1xc5ZswwJcifqQdu4A1s0WcSOfaBv3trz3Z4HIuRJXhNbw/MrAprnTVn+cvBOlOusmP7671KDhgL7ICi2XoxTeZu14PqMfaM6M44D8JMb8dy5NBK2xwAcifiUEY6piPepqywHFR/Ay84MKL0TxTcna2Uwnu1QJwQ=
+	t=1738761014; cv=none; b=SgvMi5GDaWTDpGfuXO0Bq6xsNOt+/BSfW6ro0neBk3AXgbHVODHG8WqrRVG8Y5/sUI1tMgyt8COufJ9Wj/1caB1S4CeDYi053ll+2tm/t6EpUugveQIkYW/jehpMFE4YXEB8ILd1neCupqTbhurl+3/i0G/VMuy4rDr7x+6QE88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738760984; c=relaxed/simple;
-	bh=9sDaFK6pvtFS0KyaDEqOFYxir/auLO2wbEouokFe/Uw=;
+	s=arc-20240116; t=1738761014; c=relaxed/simple;
+	bh=vP7sRrLpj41lawYtrZLY+Fj27TIPlHVNPuj56Uh0acg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V6KPqjHJlNu/lPF5vY2wcRUatdI1KlR9yK9sBxrQPncaiXxwACVZq+SjAqgbxhdfh/La8WL5y22P1SOql61tkez7fYrK68XhJn0vfraH5pMtyOIYwGGup90mqbvZE+YDOME3GsA6bMq2cq7uy+tR+Zegsv2eafMJlXXxUpeoyLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685C2C4CED1;
-	Wed,  5 Feb 2025 13:09:40 +0000 (UTC)
-Date: Wed, 5 Feb 2025 08:10:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
- andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
- Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
- Molnar <mingo@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- joseph.salisbury@oracle.com, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250205081019.6f81f05a@gandalf.local.home>
-In-Reply-To: <20250205090736.GY7145@noisy.programming.kicks-ass.net>
-References: <20250201115906.GB8256@noisy.programming.kicks-ass.net>
-	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
-	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
-	<20250201180617.491ce087@batman.local.home>
-	<20250203084306.GC505@noisy.programming.kicks-ass.net>
-	<20250203114537.6a30c7c0@gandalf.local.home>
-	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-	<20250204075100.3fcbfda8@gandalf.local.home>
-	<20250204153053.GX7145@noisy.programming.kicks-ass.net>
-	<20250204111119.10ee37c8@gandalf.local.home>
-	<20250205090736.GY7145@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=qMqhb6N8MmUPFaMxSDBD4ejjL3RQf75fQuoz6uhGdVbfE6BFvhN4BDIyLCF/OARKNsMJeZW5Fe1BXFQsMgcrYXXi8wDANzHOGHivks0PQez8bpVHT11yk5ikeUX7xHY6Vc3JWF8PXT2mqDnAS7FtQL1Yjd6yNmZ9515nKiP8qJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=fInFzqJQ; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="fInFzqJQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1738760991; x=1739365791; i=ps.report@gmx.net;
+	bh=zK0CIvh2VCWpMSQgtk80bK0aRtIxPNeDOGHf2uy/QL4=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fInFzqJQhTL2fPw5JmiqAjUYuWFXTh7fo0YwC35U1Tb+cehRlkj3iG+bTr2TGhAq
+	 M5Tz0oc4sGM9vkFtwvrW5wTWZrYRNQTK3ohI3YCIa8TSrZzT/ZXLWVHAac24Iy7a3
+	 XjUFv/pA/7Q7bFTMsHXBUz1DpBlq2vpxYbYS8I7QeFVicwBJVKNuUBVON1GOe5xL7
+	 j36gMNJoCF0Y6+QSykDZnhaDRxRJUYai7FyG1waT9fRaZHuKxYIN6xLbHnF4NSjWV
+	 Nc8Ws92qkF60xcknyzX4haklzBesvrcT1HP+LUQrgLlyS0hJwXNQZVD4KMiO35s7q
+	 7JEMHSQF+D59PoaUOg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([82.135.81.162]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M26vL-1thay73Dar-007uDI; Wed, 05
+ Feb 2025 14:09:50 +0100
+Date: Wed, 5 Feb 2025 14:09:50 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Simon
+ Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Nam Cao
+ <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Frederic
+ Weisbecker <frederic@kernel.org>, Artem Chernyshev
+ <artem.chernyshev@red-soft.ru>
+Subject: Re: [PATCH net-next v3 08/10] net: pktgen: fix access outside of
+ user given buffer in pktgen_if_write()
+Message-ID: <20250205140950.12408311@gmx.net>
+In-Reply-To: <914e488e-af7d-4301-8be2-410db5325f14@redhat.com>
+References: <20250203170201.1661703-1-ps.report@gmx.net>
+	<20250203170201.1661703-9-ps.report@gmx.net>
+	<914e488e-af7d-4301-8be2-410db5325f14@redhat.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,67 +58,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kR5rFf1JCRth4wJipHJMrwrpORrllzA9qdCXcBYZhJKKJiwiWEh
+ P6aeLfhDvcbsTfPKe2IR3R8O0R94uTcDJvQsqjbmZU8LISbiu8yVjD/WT7b3jlYC4DYjoG+
+ t3C/PMI15B9bbOpTgUwSWZ3ShAbHdm3PbmTQKTc6UPtQKfYwuNcJJv6bBrL6Cn4ydZLd0BQ
+ +qF9w2/Xu6gVEkrMWsykA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:9fFu9GiEj2g=;ZmF143jywp5SfHraonSpJvDP2DB
+ j3nSavETqVCOu32XebhM8X1Dv8b6OeUFYt9VlaAejqNBQ2DrWYE6GCJSVa5OWKepQyf33Zx+O
+ 3FxtozUZgc72Sy3HmYde/nzRWr+DmyF/MFQYeiHjuwufkPXwC8Mk0/kGhtIlID4N/o6o5AoJy
+ YDtaMs06yAwyJ2a3NNSLs8yBec5uTtNMPphmW1TeeMbilb0dWeMJdXjc+QfLHeB5gE+MtRnwJ
+ V7Vln7Sk++LUfko3DWxwQ1GNtKOdTp+Gidxzgqkk7jgPgCex8ym8J+HsGSXGYdUCHuIgyJig6
+ 93EKo2gpNDYIIB9PTNo4fmp/6Ql22Ypczo4ZhagJ5frY0iMNDZaoETlr6KMx73Z5iTzuKFik7
+ rBv4HgbuTQvxyMR6dV7uBH9SxaHhZLaPEH+J8Hz2TP7SFTJ+iJcSED4aVCzQ7b8j/uTzD1wbL
+ 2yLanQd1kHoUWuXbeVHZKF+c6OPOCQshO0tPrGUhapSC5NkErFkwNBcPLbxzLmlB3KdOtDoYR
+ XSKB0VkBSJTGXsNa+Myc/zketEyOFKqrmyOJmX1jpdDvSp1ZMv0XVk49kjpuUDn0ToT6QifJ2
+ z+cmuSEUnZEx195tnEbUWlhGapS+N01soo/BvyHs1RfrXkltvDbJ/hLmxN0zszb64FSHg4i/L
+ aX0Rbud9IBmdmCnqXpIAeBaBKFHJStYZfu+9ZrEHVnc9xyxtJut4XVm6LKj5u7VVfYegkSR65
+ Xtj0GsrG3wunH2jCCpAULna+cInjnv0wegNdQBT581G4x39wPDpOvSDZZxRK0qR/G4f2kCgl0
+ 7OrrtNBiw5TB8jFrXpdP+4jS1igDwPXOAiEr+ws0geucZQC1pF/sbbHe3mL7jmJvJh9YJfops
+ G+fpvL7h4KjdEifDafjXy5tzCegLI1QWgk+JrhbfO25pOik9Kj7Pon7VkiImTdI0u282m2rng
+ inMh9ngLy5JIHvnJ2JxsGHhmklwf77p61dWIi92z/0dsEuvl08rAqq0pEupyyr8iJSpFuiRzJ
+ LH/o8WzVZosNUqZj8K74evONltU2oEpLeEmDITpWgo922ewQIXE4vEk+8ZiZ+wCsI8IjsDSZk
+ zvm+kKDD2nqOlCZj+14Y0GShhKfg+L7XHAKAxo7CtTDpR1Z11lGjpuI/D39WgL31+1S+uf1wG
+ nk96FgMeQjlKsAdHovyEEy4Deydcjs7V0p2kVHrCmXO7sKimA+71qbIyn188RbjiEgKbl3oau
+ 43wZbn8zX/mbdMzh+pYWYuwDenc9zeuU9y9IkcKcZcHuc5zYhiWuDOePsWZHjphgwpfBRT8tI
+ sgY0j8nIqE9NeBlkEVGeSNqO+HCf8Xz5PmcOEJ9inH+1Ls=
 
-On Wed, 5 Feb 2025 10:07:36 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+Hello Paolo,
 
-> > This is where we will disagree for the reasons I explained in my second
-> > email. This feature affects other tasks. And no, making it 20us doesn't
-> > make it better. Because from what I get from you, if we implement this, it
-> > will be available for all preemption methods (including PREEMPT_RT), where
-> > we do have less than 50us latency, and and even a 20us will break those
-> > applications.  
-> 
-> Then pick another number; RT too has a max scheduling latency number (on
-> some random hardware). If you stay below that, all is fine. 
+On Tue, 4 Feb 2025 11:40:21 +0100, Paolo Abeni <pabeni@redhat.com> wrote:
 
-So we set it to 1us?
+> Hi,
+>
+> On 2/3/25 6:01 PM, Peter Seiderer wrote:
+> > @@ -806,6 +812,9 @@ static long num_arg(const char __user *user_buffer=
+, unsigned long maxlen,
+> >  		if ((c >=3D '0') && (c <=3D '9')) {
+> >  			*num *=3D 10;
+> >  			*num +=3D c - '0';
+> > +		} else if (i =3D=3D 0) {
+> > +			// no valid character parsed, error out
+>
+> Minor nit: please don't use C99 comments, even for single line one.
 
-Or does this have to calculate what that latency number is for each random
-hardware?
+Fixed...
 
-> 
-> > This was supposed to be only a hint to the kernel, not a complete feature  
-> 
-> That's a contradiction in terms -- even a hint is a feature.
+>
+> > +			return -EINVAL;
+> >  		} else
+> >  			break;
+> >  	}
+> > @@ -816,6 +825,9 @@ static int strn_len(const char __user * user_buffe=
+r, unsigned int maxlen)
+> >  {
+> >  	int i;
+> >
+> > +	if (!maxlen)
+> > +		return -EINVAL;
+>
+> It looks like this check is not needed? strn_len() will return 0 and the
+> caller will read 0 bytes from the user_buffer.
 
-Yes, a hint is a feature, I meant "complete feature" meaning it being not
-just a hint, but guaranteed to do something.
+Checked all call sites, your are right, fixed in next patch iteration...
 
-> 
-> > that is hard coded and will override how other tasks behave.   
-> 
-> Everything has some effect. My point is that if you limit this effect to
-> be less than what it can already effect, you're not making things worse.
-> 
-> > As system
-> > calls themselves can make how things are scheduled depending on the
-> > preemption method,  
-> 
-> What?
+>
+> > @@ -882,39 +897,45 @@ static ssize_t get_imix_entries(const char __use=
+r *buffer,
+> >  		pkt_dev->imix_entries[pkt_dev->n_imix_entries].weight =3D weight;
+> >
+> >  		i +=3D len;
+> > +		pkt_dev->n_imix_entries++;
+> > +
+> > +		if (i >=3D maxlen)
+> > +			break;
+> >  		if (get_user(c, &buffer[i]))
+> >  			return -EFAULT;
+> > -
+> >  		i++;
+> > -		pkt_dev->n_imix_entries++;
+> >  	} while (c =3D=3D ' ');
+> >
+> >  	return i;
+> >  }
+> >
+> > -static ssize_t get_labels(const char __user *buffer, struct pktgen_de=
+v *pkt_dev)
+> > +static ssize_t get_labels(const char __user *buffer, int maxlen, stru=
+ct pktgen_dev *pkt_dev)
+> >  {
+> >  	unsigned int n =3D 0;
+> >  	char c;
+> > -	ssize_t i =3D 0;
+> > -	int len;
+> > +	int i =3D 0, max, len;
+>
+> Minor nit: since you are touching the variables declaration, please fix
+> them to respect the reverse christmas tree order.
 
-Read my last email:
+Fixed...
 
-  https://lore.kernel.org/all/20250204100555.1a641b9b@gandalf.local.home/
+>
+> This patch is quite large and mixes several things. I'll split out at
+> least the strn_len() caller fixes (possibly even the num_arg() and
+> hex32_arg() ones) and the refactoring in pktgen_if_write().
 
-I went into this in detail.
+Done in the next patch iteration....
 
+Thanks for review!
 
-> 
-> > I didn't want to add something that will change how
-> > things are scheduled that ignores the preemption method that was chosen.  
-> 
-> Userspace is totally oblivious to the preemption method chosen, and it
-> damn well should be.
+Regards,
+Peter
 
-Agreed, and user space doesn't have to know what preemption method was
-chosen for this. Where does this say that it needs to know?
+>
+> /P
+>
 
-All this does is to give the kernel a hint that it is in a critical section
-and the kernel decides to grant some more time or not.
-
-The preemption method will influence that decision, but user space doesn't
-need to be know.
-
--- Steve
