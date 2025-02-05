@@ -1,220 +1,268 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A6E22B8CD;
-	Wed,  5 Feb 2025 10:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC04F22A4E5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 10:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738750007; cv=none; b=hA/et4vnnNsx5ItXiWcQgDc70GVazv893ThE7OgeslWY1y4O+OvXMTPBZKmWtGWWLKKQpdJLk82pamlehCziP2VSu9ubq/t6+Mv13QQiIhusJdukVnqUvRUuvxdkEVFiazMN183JvQF/D/fFPOQqgeWqHzrCPsirEeCrO/Nq8vI=
+	t=1738750043; cv=none; b=Z27okAqxkcPpIMfTIzQjp6GSvOLshylRmlmtCmYuEOLVEkQGIzV6wXDHm4Y/dwqxCikxmgEzVinRm0qxUTiUFQr1/0XtU7wSkqNJGH+poKZ8FXSMAxyY/3dpFS3ZnUqNwMbueqEaYVSMU2alKEHhjsW9dGMqn+lFhTCdXv1G4Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738750007; c=relaxed/simple;
-	bh=fFhjq2DEu2HEEr5lJ+EZF//VqY7xrIinRhZDODnDdL0=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tvB5IvpbMqYnBJxOF6F37ObKjACOMr8jCbQgve2DxMuLYWKusjEkSYyUtW/khTGZEDAOebmPmN1D+9wZ0ahDBhx+rNBPMP8xG3cGR7RTSarIZl02iIjDZUJLgS45nL4TbJAxLOF/0VgwRHTM6FLNTkM6Ihwo/Zcdls9vg4bf4Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kkiedd5j; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738750043; c=relaxed/simple;
+	bh=xDqkv78Z4VKlEoX0OV/Gq1LIs7usdjD9zT1QQXDxqgc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oYesmu/GcxaDAd+UhaDDicwsavZprKCJd2/SG99gExEXTli6JMMoiydJX4N4gY42Gkovh9dJnEvv0rQd5vR9FOr66a9tjxo+wHC+qwyPnkl+ZJum1P6kL5+3nNFT8/HHcoMfoZw0H3TF2jDPtSJ6vi36VvVEU6qIRYzacDdNNN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LRcJ6tbw; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kkiedd5j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738750006; x=1770286006;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=fFhjq2DEu2HEEr5lJ+EZF//VqY7xrIinRhZDODnDdL0=;
-  b=Kkiedd5j3upsaFIOANc2wKxfPfnJmJ2xB4KtChk+orNJZB0RiMjleVVT
-   omj0WwsE1x/3sGFwkBy4rfvr9bGngbjXd6/GI5rev6yDlV7m270DVsqK5
-   xoW5v6NdocNspMViHGpaRU/g84l/nG5AovuyyyapmdxW4YzVQH/sCXW9J
-   cvU4zQXCfLFx1jGg+r+x/A9giEd1t2cgs10/o1hyNTSVdpaArH9HkyKF3
-   utht7DAWqW5oMgR5JNSWMdl0icM4OhSxXGYUwlNs6ucxVMQ27lPYWES7L
-   xYhzS0oYYGSEsOBNtI/TSxcRu0sv6sF+HjP7Ol0dwpw7PlZyadvRIr79a
-   Q==;
-X-CSE-ConnectionGUID: pfoLSpp4RFSXzYdoTq6Btg==
-X-CSE-MsgGUID: PT4RImN/Ri6Q+wSPEBJ4og==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50699279"
-X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
-   d="scan'208";a="50699279"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 02:06:45 -0800
-X-CSE-ConnectionGUID: xV8yFUh6StiwPorcvY0i8Q==
-X-CSE-MsgGUID: o6YrUHRwTm6fM0Qo58UzBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111297763"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa007.jf.intel.com with ESMTP; 05 Feb 2025 02:06:37 -0800
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Furong Xu <0x1207@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Petr Tesarik <petr@tesarici.cz>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v2 9/9] igc: Add support to get frame preemption statistics via ethtool
-Date: Wed,  5 Feb 2025 05:05:24 -0500
-Message-Id: <20250205100524.1138523-10-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LRcJ6tbw"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaeec07b705so1099534566b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 02:07:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738750040; x=1739354840; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xDqkv78Z4VKlEoX0OV/Gq1LIs7usdjD9zT1QQXDxqgc=;
+        b=LRcJ6tbw/Gfs3uPi+Z4IBJrENFqn8G1pkF4QnY4ImrWuEAOAItS5LEHTvTpHh1uoWV
+         Phv25Qvpdf62Bw16lG+25kkLIC5eFDDpVOKdeqpHO6kD/cVdPJ+4jtQcdfyqGkxVlCfp
+         2kBHWT6GVKFTfsaDELV7DD3hqVmtcdQpj+o1Ly6RLdSSYKGgwGdnoSNiCQkGy5KZ6g6L
+         kfYOMmuVIiZTF8fPqJt++9g5ZckreSZ2Cm/h9Qwe2cHEg/bwbyvbyTRVvOitDRZtMJpn
+         t2LKzkxdmaQ5cKASIPGNmAcU85CH08fj0I/V1sG93Y6ygaov/vmqHbHW9tg3uK7JbDDQ
+         Xpng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738750040; x=1739354840;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xDqkv78Z4VKlEoX0OV/Gq1LIs7usdjD9zT1QQXDxqgc=;
+        b=j2HtfWWfozx9p5Y0MZ7BKb1xGmLQSnBGaNU5gXarV6lvIJ1FanlMdNXFrzspqhqN+3
+         0HzLYNv1uTDA10flCb1fx21Dx86t9ZGwpbH1aDGWipEcaThPtGHSwn3KcOMBatEwUJP6
+         u3JAy3nYoaQcJOhlDeFPSth/81MNbJKlcTPb6wpK8bcV7veLtC3SmDBeMHh6DnndnXji
+         8zV8IJjeHDKHXLR8zN7gzx3O2uJpY/M0DAHp57LngArLp5bUKCHLi3vNEbujHGkHVK9T
+         mBRTYWgii2h0jBwFgvRJeSKOxmyBvU+w6mngB8arZgqBMqoU91yojkkkZ6KifnTC+/IU
+         FQwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXLncPotnwc8NFpsB+jf5xbi7JstS1zrGvaNzLMj70U6gD6U70Ddih0DgZiure6ST2PIBgcc3L3QU6f5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwypfnzezyK5KrrfxILpXez0M8V7pcJRwNWnVIOPe3NzoyoKl4z
+	IvoGCjkHV4D8NsP8r7hk+LQDKgxVfSKszOI5kO7SnpIUBvQnHYILfxX9tYi1IBw=
+X-Gm-Gg: ASbGncu5Kuo23MtXvwi8rIWsNbUSxxKHc8e2n2knEExrJXCPW988sXNSwDlxocX8O5T
+	kGPgKMy7cuFFaVc8R9OoMGqH027CEt7Rb6WLf1UefN4FIl8tLIZCM73VsmvHnofflWvuBQ8wNEo
+	V7POLKCAp2uAacw/3Ac8P7mMooBCAhV5hc3Ij7vOvGw9OIeG7Erzz1aniDjqGK0BAP9j7hGX2hi
+	bUyDI78/qUPn54KARXvqJSdcjGvBDkeI/1rKWB0VlLak+qwBxIHovByloYmdEPvqV91SJDKBCIj
+	33YbTggfIdXjwmnDx0a3SKLNL2ZcQkhSXYkO/MyP10UAKXF43CvyArd73L5lFUwYQfVM7wK+8un
+	WOtzUMVTWy+M8yLub+h29ouqQzJqyVl0a9Y1tdA==
+X-Google-Smtp-Source: AGHT+IEgbg4/gh5dYIQJjmoAudPWZKM8WAGDorx761jOgtXKUkMAtOVR3jzF6tIE3s9ctNTtKdD46Q==
+X-Received: by 2002:a17:906:4092:b0:ab7:6235:594d with SMTP id a640c23a62f3a-ab7623564c0mr135357466b.41.1738750039772;
+        Wed, 05 Feb 2025 02:07:19 -0800 (PST)
+Received: from ?IPV6:2003:e5:8714:500:2aea:6ec9:1d88:c1ef? (p200300e5871405002aea6ec91d88c1ef.dip0.t-ipconnect.de. [2003:e5:8714:500:2aea:6ec9:1d88:c1ef])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a81adsm1066406866b.36.2025.02.05.02.07.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 02:07:19 -0800 (PST)
+Message-ID: <3eff3975-ace9-4e09-b160-4330b9695e4c@suse.com>
+Date: Wed, 5 Feb 2025 11:07:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org
+References: <20250205091056.17796-1-jgross@suse.com>
+ <0b094f98-401b-4af6-be41-6cfe1bd91560@suse.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <0b094f98-401b-4af6-be41-6cfe1bd91560@suse.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------XxxnyBp1eDAW7yn5i9E9Alz4"
 
-Implemented "ethtool --include-statistics --show-mm" callback for IGC.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------XxxnyBp1eDAW7yn5i9E9Alz4
+Content-Type: multipart/mixed; boundary="------------VpJX8h6sbYwqajezu80uQj8r";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org
+Message-ID: <3eff3975-ace9-4e09-b160-4330b9695e4c@suse.com>
+Subject: Re: [PATCH] x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+References: <20250205091056.17796-1-jgross@suse.com>
+ <0b094f98-401b-4af6-be41-6cfe1bd91560@suse.com>
+In-Reply-To: <0b094f98-401b-4af6-be41-6cfe1bd91560@suse.com>
+Autocrypt-Gossip: addr=jbeulich@suse.com; keydata=
+ xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
+ hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
+ 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
+ /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
+ O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
+ MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
+ nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
+ 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
+ Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJ3BBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
+ AwECHgECF4AAIQkQoDSui/t3IH4WIQQ+pJkfkcoLMCa4X6CgNK6L+3cgfgn7AJ9DmMd0SMJE
+ ePbc7/m22D2v04iu7ACffXTdZQhNl557tJuDXZSBxDmW/tLOwU0EWTecRBAIAIK5OMKMU5R2
+ Lk2bbjgX7vyQuCFFyKf9rC/4itNwhYWFSlKzVj3WJBDsoi2KvPm7AI+XB6NIkNAkshL5C0kd
+ pcNd5Xo0jRR5/WE/bT7LyrJ0OJWS/qUit5eNNvsO+SxGAk28KRa1ieVLeZi9D03NL0+HIAtZ
+ tecfqwgl3Y72UpLUyt+r7LQhcI/XR5IUUaD4C/chB4Vq2QkDKO7Q8+2HJOrFIjiVli4lU+Sf
+ OBp64m//Y1xys++Z4ODoKh7tkh5DxiO3QBHG7bHK0CSQsJ6XUvPVYubAuy1XfSDzSeSBl//C
+ v78Fclb+gi9GWidSTG/4hsEzd1fY5XwCZG/XJJY9M/sAAwUH/09Ar9W2U1Qm+DwZeP2ii3Ou
+ 14Z9VlVVPhcEmR/AFykL9dw/OV2O/7cdi52+l00reUu6Nd4Dl8s4f5n8b1YFzmkVVIyhwjvU
+ jxtPyUgDOt6DRa+RaDlXZZmxQyWcMv2anAgYWGVszeB8Myzsw8y7xhBEVV1S+1KloCzw4V8Z
+ DSJrcsZlyMDoiTb7FyqxwQnM0f6qHxWbmOOnbzJmBqpNpFuDcz/4xNsymJylm6oXiucHQBAP
+ Xb/cE1YNHpuaH4SRhIxwQilCYEznWowQphNAbJtEKOmcocY7EbSt8VjXTzmYENkIfkrHRyXQ
+ dUm5AoL51XZljkCqNwrADGkTvkwsWSvCSQQYEQIACQUCWTecRAIbDAAKCRCgNK6L+3cgfuef
+ AJ9wlZQNQUp0KwEf8Tl37RmcxCL4bQCcC5alCSMzUBJ5DBIcR4BY+CyQFAs=
 
-Tested preemption scenario to check preemption statistics:
-1) Trigger verification handshake on both boards:
-    $ sudo ethtool --set-mm enp1s0 pmac-enabled on
-    $ sudo ethtool --set-mm enp1s0 tx-enabled on
-    $ sudo ethtool --set-mm enp1s0 verify-enabled on
-2) Set preemptible or express queue in taprio for tx board:
-    $ sudo tc qdisc replace dev enp1s0 parent root handle 100 taprio \
-      num_tc 4 map 3 2 1 0 3 3 3 3 3 3 3 3 3 3 3 3 \
-      queues 1@0 1@1 1@2 1@3 base-time 0 sched-entry S F 100000 \
-      fp E E P P
-3) Send large size packets on preemptible queue
-4) Send small size packets on express queue to preempt packets in
-   preemptible queue
-5) Show preemption statistics on the receiving board:
-   $ ethtool --include-statistics --show-mm enp1s0
-     MAC Merge layer state for enp1s0:
-     pMAC enabled: on
-     TX enabled: on
-     TX active: on
-     TX minimum fragment size: 64
-     RX minimum fragment size: 60
-     Verify enabled: on
-     Verify time: 128
-     Max verify time: 128
-     Verification status: SUCCEEDED
-     Statistics:
-     	MACMergeFrameAssErrorCount: 0
-	MACMergeFrameSmdErrorCount: 0
-	MACMergeFrameAssOkCount: 511
-	MACMergeFragCountRx: 764
-	MACMergeFragCountTx: 0
-	MACMergeHoldCount: 0
+--------------VpJX8h6sbYwqajezu80uQj8r
+Content-Type: multipart/mixed; boundary="------------imzL8DZzNZb3kqaqoUbDgxfa"
 
-Co-developed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_ethtool.c | 36 ++++++++++++++++++++
- drivers/net/ethernet/intel/igc/igc_regs.h    | 16 +++++++++
- 2 files changed, 52 insertions(+)
+--------------imzL8DZzNZb3kqaqoUbDgxfa
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-index 0140f2258823..521f5829cd02 100644
---- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-@@ -1817,6 +1817,41 @@ static int igc_ethtool_set_mm(struct net_device *netdev,
- 	return igc_tsn_offload_apply(adapter);
- }
- 
-+/**
-+ * igc_ethtool_get_frame_ass_error - Get the frame assembly error count.
-+ * @dev: Pointer to the net_device structure.
-+ * Return: The count of frame assembly errors.
-+ */
-+static u64 igc_ethtool_get_frame_ass_error(struct net_device *dev)
-+{
-+	struct igc_adapter *adapter = netdev_priv(dev);
-+	u32 ooo_smdc, ooo_frame_cnt, ooo_frag_cnt; /* Out of order statistics */
-+	struct igc_hw *hw = &adapter->hw;
-+	u32 miss_frame_frag_cnt;
-+	u32 reg_value;
-+
-+	reg_value = rd32(IGC_PRMEXPRCNT);
-+	ooo_smdc = FIELD_GET(IGC_PRMEXPRCNT_OOO_SMDC, reg_value);
-+	ooo_frame_cnt = FIELD_GET(IGC_PRMEXPRCNT_OOO_FRAME_CNT, reg_value);
-+	ooo_frag_cnt = FIELD_GET(IGC_PRMEXPRCNT_OOO_FRAG_CNT, reg_value);
-+	miss_frame_frag_cnt = FIELD_GET(IGC_PRMEXPRCNT_MISS_FRAME_FRAG_CNT,
-+					reg_value);
-+
-+	return ooo_smdc + ooo_frame_cnt + ooo_frag_cnt + miss_frame_frag_cnt;
-+}
-+
-+static void igc_ethtool_get_mm_stats(struct net_device *dev,
-+				     struct ethtool_mm_stats *stats)
-+{
-+	struct igc_adapter *adapter = netdev_priv(dev);
-+	struct igc_hw *hw = &adapter->hw;
-+
-+	stats->MACMergeFrameAssErrorCount = igc_ethtool_get_frame_ass_error(dev);
-+	stats->MACMergeFrameAssOkCount = rd32(IGC_PRMPTDRCNT);
-+	stats->MACMergeFragCountRx =  rd32(IGC_PRMEVNTRCNT);
-+	stats->MACMergeFragCountTx = rd32(IGC_PRMEVNTTCNT);
-+}
-+
- static int igc_ethtool_get_link_ksettings(struct net_device *netdev,
- 					  struct ethtool_link_ksettings *cmd)
- {
-@@ -2106,6 +2141,7 @@ static const struct ethtool_ops igc_ethtool_ops = {
- 	.get_channels		= igc_ethtool_get_channels,
- 	.get_mm			= igc_ethtool_get_mm,
- 	.set_mm			= igc_ethtool_set_mm,
-+	.get_mm_stats		= igc_ethtool_get_mm_stats,
- 	.set_channels		= igc_ethtool_set_channels,
- 	.get_priv_flags		= igc_ethtool_get_priv_flags,
- 	.set_priv_flags		= igc_ethtool_set_priv_flags,
-diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
-index 12ddc5793651..41dbfb07eb2f 100644
---- a/drivers/net/ethernet/intel/igc/igc_regs.h
-+++ b/drivers/net/ethernet/intel/igc/igc_regs.h
-@@ -222,6 +222,22 @@
- 
- #define IGC_FTQF(_n)	(0x059E0 + (4 * (_n)))  /* 5-tuple Queue Fltr */
- 
-+/* Time sync registers - preemption statistics */
-+#define IGC_PRMPTDRCNT		0x04284	/* Good RX Preempted Packets */
-+#define IGC_PRMEVNTTCNT		0x04298	/* TX Preemption event counter */
-+#define IGC_PRMEVNTRCNT		0x0429C	/* RX Preemption event counter */
-+
-+ /* Preemption Exception Counter */
-+#define IGC_PRMEXPRCNT					0x42A0
-+/* Received out of order packets with SMD-C */
-+#define IGC_PRMEXPRCNT_OOO_SMDC				0x000000FF
-+/* Received out of order packets with SMD-C and wrong Frame CNT */
-+#define IGC_PRMEXPRCNT_OOO_FRAME_CNT			0x0000FF00
-+/* Received out of order packets with SMD-C and wrong Frag CNT */
-+#define IGC_PRMEXPRCNT_OOO_FRAG_CNT			0x00FF0000
-+/* Received packets with SMD-S and wrong Frag CNT and Frame CNT */
-+#define IGC_PRMEXPRCNT_MISS_FRAME_FRAG_CNT		0xFF000000
-+
- /* Transmit Scheduling Registers */
- #define IGC_TQAVCTRL		0x3570
- #define IGC_TXQCTL(_n)		(0x3344 + 0x4 * (_n))
--- 
-2.34.1
+T24gMDUuMDIuMjUgMTA6NTQsIEphbiBCZXVsaWNoIHdyb3RlOg0KPiBPbiAwNS4wMi4yMDI1
+IDEwOjEwLCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPj4geGVuX2h5cGVyY2FsbF9odm0oKSwg
+d2hpY2ggaXMgdXNlZCB3aGVuIHJ1bm5pbmcgYXMgYSBYZW4gUFZIIGd1ZXN0IGF0DQo+PiBt
+b3N0IG9ubHkgb25jZSBkdXJpbmcgZWFybHkgYm9vdCwgaXMgY2xvYmJlcmluZyAlcmJ4LiBE
+ZXBlbmRpbmcgb24NCj4+IHdoZXRoZXIgdGhlIGNhbGxlciByZWxpZXMgb24gJXJieCB0byBi
+ZSBwcmVzZXJ2ZWQgYWNyb3NzIHRoZSBjYWxsIG9yDQo+PiBub3QsIHRoaXMgY2xvYmJlcmlu
+ZyBtaWdodCByZXN1bHQgaW4gYW4gZWFybHkgY3Jhc2ggb2YgdGhlIHN5c3RlbS4NCj4+DQo+
+PiBUaGlzIGNhbiBiZSBhdm9pZGVkIGJ5IG5vdCBtb2RpZnlpbmcgJXJieCBpbiB4ZW5faHlw
+ZXJjYWxsX2h2bSgpLg0KPj4NCj4+IEZpeGVzOiBiNDg0NWJiNjM4MzggKCJ4ODYveGVuOiBh
+ZGQgY2VudHJhbCBoeXBlcmNhbGwgZnVuY3Rpb25zIikNCj4+IFNpZ25lZC1vZmYtYnk6IEp1
+ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4+IC0tLQ0KPj4gICBhcmNoL3g4Ni94
+ZW4veGVuLWhlYWQuUyB8IDMgKy0tDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
+bigrKSwgMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYveGVu
+L3hlbi1oZWFkLlMgYi9hcmNoL3g4Ni94ZW4veGVuLWhlYWQuUw0KPj4gaW5kZXggOTI1MjY1
+MmFmZTU5Li40Mzc4YjgxN2VkMzIgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni94ZW4veGVu
+LWhlYWQuUw0KPj4gKysrIGIvYXJjaC94ODYveGVuL3hlbi1oZWFkLlMNCj4+IEBAIC0xMTcs
+OCArMTE3LDcgQEAgU1lNX0ZVTkNfU1RBUlQoeGVuX2h5cGVyY2FsbF9odm0pDQo+PiAgIAlw
+b3AgJWVieA0KPj4gICAJcG9wICVlYXgNCj4+ICAgI2Vsc2UNCj4+IC0JbGVhIHhlbl9oeXBl
+cmNhbGxfYW1kKCVyaXApLCAlcmJ4DQo+PiAtCWNtcCAlcmF4LCAlcmJ4DQo+IA0KPiBUaGVy
+ZSdzIG5vIG1lbW9yeSBhY2Nlc3MgaGVyZSwgYnV0IC4uLg0KPiANCj4+ICsJY21wIHhlbl9o
+eXBlcmNhbGxfYW1kKCVyaXApLCAlcmF4DQo+IA0KPiAuLi4geW91IG5vdyByZWFkIGZyb20g
+bWVtb3J5IGhlcmUuIFRoYXQgY2FuJ3QgYmUgcmlnaHQuIEFmYWljdCB0aGUgb3JpZ2luYWwN
+Cj4gdXNlIG9mIExFQSBuZWVkcyB0byBzdGF5LCBqdXN0IHdpdGggYSBkaWZmZXJlbnQgc2Ny
+YXRjaCByZWdpc3Rlci4NCg0KT2gsIHJpZ2h0LiBUaGFua3MgZm9yIG5vdGljaW5nLg0KDQoN
+Ckp1ZXJnZW4NCg==
+--------------imzL8DZzNZb3kqaqoUbDgxfa
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------imzL8DZzNZb3kqaqoUbDgxfa--
+
+--------------VpJX8h6sbYwqajezu80uQj8r--
+
+--------------XxxnyBp1eDAW7yn5i9E9Alz4
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmejOFYFAwAAAAAACgkQsN6d1ii/Ey/o
+dQf/SGa2i+YR36p0MBaVh1whjl46nYRUBvGG0a7F6H0QgQRnlVUgOHIX2uENKfysq090s4QbvCPb
+q1JRu6n9YXHAbQlTYZ9F88WEq/7d59ZdFOd4CSVEqbfUFS3Js/yNjTXYIetgKZuI59iwwdv93eYQ
+7a91fSltyjz6I+65sHMsAr3b9j8tph9TvCMJ/T9enslkLBqs1Rw0Tt7XpKXRQpbQ8Ubl156dXIvM
+lRRKhPHAc+/8G6RA67fQI7QA4AfdFch8m41yUrSjtm77nuc8ttCZN79JnyFn/VOmg6HBhuhqFHuv
+eHUJ9xyGiYYc3jDqMjroqXGUiTXpcmegYqw6fKb+GQ==
+=/5pX
+-----END PGP SIGNATURE-----
+
+--------------XxxnyBp1eDAW7yn5i9E9Alz4--
