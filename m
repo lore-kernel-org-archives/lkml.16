@@ -1,156 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C1781ACA;
-	Wed,  5 Feb 2025 06:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70121517A;
+	Wed,  5 Feb 2025 06:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738246; cv=none; b=H9/i2u+6qoiQAiBJPLBewl9NxZf5yUzp3gHI9wgqLo2QIvH7QILzriPysVepQTVjcvlz3+5PAYZDQHNMCotpuUV+pvaKpOgLplqsaZ0M6uMHkZOTttrUpq7ZTlrtRaI/5xZIUyaIZEhgw9oVM7ML/L0gI2QpwLjblC34v0MTUwA=
+	t=1738738306; cv=none; b=hEmUwMxFV8CfmkM4PA4o7/fshc2SDFWvtcGeXPC/sa0KUCFGo03hdzTbeCyeETm0NP6BR2rVK7Mxnhxx1baH+e5Jdcajuya7aa5S7n1oek73RxMU5nSfHBiQ8xXzfcRVzjcwmZem3sl8j5R7xGvXfZYG5++ed5BodRPrYNPW65c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738246; c=relaxed/simple;
-	bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e/EhxuY1VQiw0nvJF3TLZHpji+7makHByp2jbmjKgQFuMCoTmMEnNrRyTQ+5tvoyJ2ntJ/vhpV0UjfF/IzuwusTd+fXBvy9HWEI5ig48oIkCgcPAdofyQaXWY6CP4dOx9NXbSYKhTw+iOFJDlG1isczb4t+6KTagyHRt/N0XbyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhPqipja; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738738306; c=relaxed/simple;
+	bh=9L3ouej3/FjEPM8eSSsN0/ylTSUIsq7lgz1T2WQyOwk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MTTwva4pUpZYTZz8IZ2et4eBcePqo9/aaotziD9GXUfysTSsRyVqsyU1nIVuDiUAyi1AhIJQ1OjT13aJ5wY1YixA/sA2n/2G7GK7qyAX7cxwYKe86ARAG8W/OMqkekGF87R2VWBttx1fDnWKWx9p19Q04WGkYfxd6ZC0ngF6XEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=PyOUS7DV; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=KQF44lI1 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhPqipja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738738245; x=1770274245;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
-  b=nhPqipjarUlvAQgFPw0DZquSzEriwI7ib5RgFAzJdk267ojoBmHAK8Cy
-   tHcEyJtyYY78etwxTeKwx7b7qP2fTdNVKSjDjO+6/dO9zY2OOYH2bJset
-   8AJI1Rbg0ihZ3Aouhib5q0cbPUK4t2RBfHRh8TVGgQdmaJAexL7Z/HBJG
-   c1EgAtctSooBTjxZ6Y5Xb6Ua+vr2agnxh/k2EFmtrmWSeT8aT2vlCWQi4
-   UO+Igk8as8CqNoYLXyk772FCOBE7tZXbBOx4F8eWYL6g/SLyUkfJ5LDcM
-   yrSzfV/plUwaPp+0EbbvrRgxnwF2zL8tz/Kn7j2icxVHoSRL9nqLaZm8A
-   A==;
-X-CSE-ConnectionGUID: n1DyovVeSVm4N8O9bareYg==
-X-CSE-MsgGUID: vES0pDkRRKabU9xeLDhYaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39175591"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="39175591"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:44 -0800
-X-CSE-ConnectionGUID: oo32QqH1QrmHW2tYAHIDrw==
-X-CSE-MsgGUID: W8AT1xq9Tz+DU8R6MpUXgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="111400846"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.100.100]) ([10.247.100.100])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:35 -0800
-Message-ID: <c25c2da7-18fa-46b7-b992-fb5b17a01749@linux.intel.com>
-Date: Wed, 5 Feb 2025 14:50:31 +0800
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="PyOUS7DV";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="KQF44lI1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1738738303; x=1770274303;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KeHFLkjfWtRxfDUQFOy9gyg8C+i7BEnpkwJhjjc+Qik=;
+  b=PyOUS7DVl5HPeOyeJtFZvWwqJfRHR8BYOmhT2Hhmyua1lAuxlSrw02Ya
+   zNN7gyML0YZ7VwbzXEWZ0tG14UgNJs6e/8ESTxLpOEQALaurArJ1XwpOC
+   /Aufs3Kpqh/6FMcReMmvsMiQQbTHYpQzEH+qKVwHUAcbjCcSt1IKH3BLV
+   FU4h4zNsLFxcNwJ/+cRae2Zgi8chUO8l2H6TVSqxScrwj5YxzhCC823kf
+   1sIdYDc6GHkVtDWiEKD1m9rZ+maJQL0Vr9c1wjqD45s++WjDhbKqyhOiL
+   W5swqZFSJsqiUXOtEgIaLEdZE5Ape3f24pRhSIwZh1AA62noJH52PnvkA
+   Q==;
+X-CSE-ConnectionGUID: qXX3ANZUTFGznOjv2F6fwQ==
+X-CSE-MsgGUID: CvaGeVioTTKTcoJs2PiBKg==
+X-IronPort-AV: E=Sophos;i="6.13,260,1732575600"; 
+   d="scan'208";a="41557887"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 05 Feb 2025 07:51:32 +0100
+X-CheckPoint: {67A30A74-1-C6D8D88D-F91F9E6B}
+X-MAIL-CPID: 97E800B69666A87223C2F728F94B1646_2
+X-Control-Analysis: str=0001.0A682F29.67A30A76.0429,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C89E0160ABA;
+	Wed,  5 Feb 2025 07:51:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1738738287;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KeHFLkjfWtRxfDUQFOy9gyg8C+i7BEnpkwJhjjc+Qik=;
+	b=KQF44lI123mj3JI+bf1eNCEaDG/8mACwABZMZTbulko216vyebIMHv/cs1YCtv9nquxibY
+	pCX2ncwQbFbh1gKAYpIOhwy9+2QJMXch0x0twjmFmKD9a/T5W5w0pLxC7x0xJ8UTJ+Jwrs
+	zpkg9dv0FWNO4wEnGX1TZfh0fch/Wacc0HD2s1pMFy+o8J+QfDtCVujLIICSK8XX1PMy10
+	v44b6FbQtSK2ZJwAl2DFMlqhEPtfCAi7zrMSLxrvzeDWso1pZNLygVQdD1twcbIxy5CH6U
+	+JcjuC7fds99m02Uqwi2WGePQfZecM6qRukJYTCZ9hSBM7uzYb58gdDNUG56vQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] nvmem: imx-ocotp: Support accessing controller for i.MX8M Nano
+Date: Wed, 05 Feb 2025 07:51:23 +0100
+Message-ID: <6396921.lOV4Wx5bFT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <Z5z0/382k8MkcZpP@lizhi-Precision-Tower-5810>
+References: <20250130130101.1040824-1-alexander.stein@ew.tq-group.com> <4961006.GXAFRqVoOG@steina-w> <Z5z0/382k8MkcZpP@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 1/7] net: phylink: use act_link_an_mode to
- determine PHY
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>,
- David E Box <david.e.box@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Andrew Halaney <ahalaney@redhat.com>, Serge Semin <fancer.lancer@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
- <20250204061020.1199124-2-yong.liang.choong@linux.intel.com>
- <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
+Am Freitag, 31. Januar 2025, 17:06:23 CET schrieb Frank Li:
+> On Fri, Jan 31, 2025 at 02:54:06PM +0100, Alexander Stein wrote:
+> > Hi,
+> >
+> > Am Donnerstag, 30. Januar 2025, 17:42:32 CET schrieb Frank Li:
+> > > On Thu, Jan 30, 2025 at 02:01:00PM +0100, Alexander Stein wrote:
+> > > > i.MX8M OCOTP supports a specific peripheral or function being fused
+> > > > which means disabled, so
+> > > >  - Introduce disable_fuse for a list of possible fused peripherals.
+> > > >  - Iterate all nodes to check accessing permission. If not
+> > > >    allowed to be accessed, detach the node
+> > > >
+> > > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > > > ---
+> > > >  drivers/nvmem/Kconfig     |   3 ++
+> > > >  drivers/nvmem/imx-ocotp.c | 105 ++++++++++++++++++++++++++++++++++=
++++-
+> > > >  2 files changed, 107 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> > > > index 8671b7c974b93..ba5c928cab520 100644
+> > > > --- a/drivers/nvmem/Kconfig
+> > > > +++ b/drivers/nvmem/Kconfig
+> > > > @@ -84,6 +84,9 @@ config NVMEM_IMX_OCOTP
+> > > >  	  This driver can also be built as a module. If so, the module
+> > > >  	  will be called nvmem-imx-ocotp.
+> > > >
+> > > > +	  If built as modules, any other driver relying on this working
+> > > > +	  as access controller also needs to be a module as well.
+> > > > +
+> > > >  config NVMEM_IMX_OCOTP_ELE
+> > > >  	tristate "i.MX On-Chip OTP Controller support"
+> > > >  	depends on ARCH_MXC || COMPILE_TEST
+> > > > diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+> > > > index c5086a16450ac..e3ea026a37d0d 100644
+> > > > --- a/drivers/nvmem/imx-ocotp.c
+> > > > +++ b/drivers/nvmem/imx-ocotp.c
+> > > > @@ -23,6 +23,7 @@
+> > > >  #include <linux/of.h>
+> > > >  #include <linux/platform_device.h>
+> > > >  #include <linux/slab.h>
+> > > > +#include <dt-bindings/nvmem/fsl,imx8mn-ocotp.h>
+> > > >
+> > > >  #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address o=
+f the
+> > > >  					       * OTP Bank0 Word0
+> > > > @@ -91,11 +92,20 @@ struct ocotp_ctrl_reg {
+> > > >  	u32 bm_rel_shadows;
+> > > >  };
+> > > >
+> > > > +#define OCOTP_MAX_NUM_GATE_WORDS 4
+> > > > +
+> > > > +struct disable_fuse {
+> > > > +	u32 fuse_addr;
+> > > > +	u32 mask;
+> > > > +};
+> > > > +
+> > > >  struct ocotp_params {
+> > > >  	unsigned int nregs;
+> > > >  	unsigned int bank_address_words;
+> > > >  	void (*set_timing)(struct ocotp_priv *priv);
+> > > >  	struct ocotp_ctrl_reg ctrl;
+> > > > +	u32 num_disables;
+> > > > +	struct disable_fuse *disables;
+> > > >  };
+> > > >
+> > > >  static int imx_ocotp_wait_for_busy(struct ocotp_priv *priv, u32 fl=
+ags)
+> > > > @@ -552,11 +562,25 @@ static const struct ocotp_params imx8mm_param=
+s =3D {
+> > > >  	.ctrl =3D IMX_OCOTP_BM_CTRL_DEFAULT,
+> > > >  };
+> > > >
+> > > > +struct disable_fuse imx8mn_disable_fuse[] =3D {
+> > > > +		[IMX8MN_OCOTP_M7_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D BIT=
+(8) },
+> > > > +		[IMX8MN_OCOTP_M7_MPU_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D=
+ BIT(9) },
+> > > > +		[IMX8MN_OCOTP_M7_FPU_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D=
+ BIT(10) },
+> > > > +		[IMX8MN_OCOTP_USB_OTG1_DISABLE]	=3D { .fuse_addr =3D 20, .mask =
+=3D BIT(11) },
+> > > > +		[IMX8MN_OCOTP_GPU3D_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D =
+BIT(24) },
+> > > > +		[IMX8MN_OCOTP_MIPI_DSI_DISABLE]	=3D { .fuse_addr =3D 20, .mask =
+=3D BIT(28) },
+> > > > +		[IMX8MN_OCOTP_ENET_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
+IT(29) },
+> > > > +		[IMX8MN_OCOTP_MIPI_CSI_DISABLE]	=3D { .fuse_addr =3D 20, .mask =
+=3D BIT(30) },
+> > > > +		[IMX8MN_OCOTP_ASRC_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D B=
+IT(31) },
+> > > > +};
+> > >
+> > > Can we direct define IMX8MN_OCOTP_M7_DISABLE as BIT(8), so avoid this
+> > > map data?
+> >
+> > This would be possible for imx8mn, but not for imx8mp which uses
+> > multiples fuses for disables. This is an excerpt from imx8mp WIP
+> > > struct disable_fuse imx8mp_disable_fuse[] =3D {
+> > > 	[IMX8MP_OCOTP_CAN_DISABLE]		=3D { .fuse_addr =3D 16, .mask =3D BIT(2=
+8) },
+> > > 	[IMX8MP_OCOTP_CAN_FD_DISABLE]		=3D { .fuse_addr =3D 16, .mask =3D BI=
+T(29) },
+> > > 	[IMX8MP_OCOTP_VPU_VC8000E_DISABLE]	=3D { .fuse_addr =3D 16, .mask =
+=3D BIT(30) },
+> > > 	[IMX8MP_OCOTP_IMG_ISP1_DISABLE]		=3D { .fuse_addr =3D 20, .mask =3D =
+BIT(0) },
+> > > 	[IMX8MP_OCOTP_IMG_ISP2_DISABLE]		=3D { .fuse_addr =3D 20, .mask =3D =
+BIT(1) },
+> > > 	[IMX8MP_OCOTP_IMG_DEWARP_DISABLE]	=3D { .fuse_addr =3D 20, .mask =3D=
+ BIT(2) },
+> > > };
+> >
+> > Notice the fuse_addr of 16 and 20.
+>=20
+> Yes, I am not sure if it good idea to encode fuse_addr to IMX8MP_OCOTP_CA=
+N_DISABLE
+>=20
+> like
+>=20
+> #define IMX8MP_OCOTP_CAN_DISABLE  16 << 16 | BIT(28)
+>=20
+> So dt-bindings/nvmem/fsl,imx8mn-ocotp.h can be moved to dts directory.
 
+Mh, I personally don't like encoding offsets into bits. How about using
+> '#access-controller-cells =3D <2>'
+and using the defines like this
+> #define IMX8MP_OCOTP_CAN_DISABLE  16 0x10000000
 
-On 4/2/2025 8:04 pm, Russell King (Oracle) wrote:
-> On Tue, Feb 04, 2025 at 02:10:14PM +0800, Choong Yong Liang wrote:
->> When the interface mode is SGMII and act_link_an_mode is MLO_AN_INBAND,
->> switching to the 2500BASE-X interface mode will trigger
->> phylink_major_config, and act_link_an_mode will be updated to MLO_AN_PHY
->> in phylink_pcs_neg_mode when the PCS does not support in-band mode.
->> The MAC and PCS will configure according to the interface mode
->> and act_link_an_mode.
-> 
-> act_link_an_mode must only ever be updated by phylink_major_config()
-> since it defines state for the currently configured mode, and must
-> stay in sync with how the hardware has been programmed at all times.
-> 
->> However, when the interface goes link down and then link up again, the MAC
->> will attempt to attach the PHY.
-> 
-> Why is the MAC trying to disconnect and reconnect the PHY on link
-> changes? Do you really mean "link down" and "link up" as in "connection
-> with the link partner" or do you mean administratively taking the
-> interface down and up (which is a completely different thing.)
-> 
+DT stays the same:
+> access-controllers =3D <&ocotp IMX8MP_OCOTP_CAN_DISABLE>;
 
-The "link down" and "link up" I mention in this part refer to using the 
-command:
-ifconfig <interface> down/up
+Note: It seems BIT(x) is not usable in DT.
 
->> The interface mode remains as 2500BASE-X,
->> but cfg_link_an_mode still holds MLO_AN_INBAND. This causes a failure to
->> attach the PHY.
-> 
-> Hmm.
-> 
-> pl->link_interface is the configured setting from firmware etc and doesn't
-> change.
-> 
-> pl->cfg_link_an_mode is the configured mode from firmware etc which was
-> passed to phylink_create(), and again doesn't change.
-> 
-> So there should be no difference unless something weird is going on,
-> which as you're talking about stmmac, could be the case.
-> 
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-Thank you for pointing that out.
-
-I think I was confused between pl->link_interface and
-pl->link_config.interface. The function phylink_attach_phy() uses
-pl->link_interface, whereas phylink_expects_phy() uses
-pl->link_config.interface.
-
-When the interface switches from SGMII to 2500BASE-X,
-pl->link_config.interface is updated by phylink_major_config().
-So, when the STMMAC link goes down and comes up again,
-it is blocked by phylink_expects_phy().
-At this point, pl->cfg_link_an_mode is MLO_AN_INBAND and 
-pl->link_config.interface is 2500BASE-X.
-
-Since phylink_expects_phy() is trying to achieve the same checking 
-condition as phylink_attach_phy(), it should use pl->link_interface for the 
-check as well.
-
-Does that make sense to you?
-
-> More information needed, but as this patch currently stands, I deem it
-> to be incorrect, sorry.
-> 
 
