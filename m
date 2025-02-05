@@ -1,60 +1,40 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C791519AD;
-	Wed,  5 Feb 2025 17:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7908A1FBEBF;
+	Wed,  5 Feb 2025 17:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777683; cv=none; b=iY3SRomYppIr2Bgv426ptMh6KCBugU64cuaTkyG/N4N8OJ1mlSPifp9fuKF5+QVEBSwOlpbdZ6bDyPm+4UCERgH+jf/a2zfjBtM6+ycWkgloSde7tEGh3pnCr5xNYYdo9torvTDi5OSRIdbOT6Nzblbh1Ftyr8yk39bry9IidIM=
+	t=1738777739; cv=none; b=arK0GVSdrLkxO5p95kHcu+dGiSfkhcORrlaAZLnQgk9LPdlYPzeVt6UUxfXvBM5qsTr2QMae/GPqUGZICU8HfFfFcjro1u3RH60CVSOk10DIEgGO6TrEO1DH6k6GSGf6uMan+IFiW3f4gwNfPRuh/V+3HhmmOnf0wxPsdyfow0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777683; c=relaxed/simple;
-	bh=gRDZ8QX1t+MAuID6HIGuq2knMJylgXgnKzKelQUZhXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gSnnKl80NSDNceFD/dA22fc/g3JfCWXogywJs9bMZVu/yJUrk0/XSJH0y4js9gtEdxf56lAWRAu8xS658hM/ydQsts8ZFV9np6okD/cN1NUlewNBbUpIzb3FXI6pmeHFUMryccXYtLF5OeDLezkJjXRVQnTacIxzlJNYFrHmf5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EOHY/ok9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738777739; c=relaxed/simple;
+	bh=2wGvyYMnVgwfZDd+X3Vz5ct1HNuTyg4x337XNUZTx1A=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=CkUQ1mz6hGqemC1NK6/VD63H6qJkeQeO2obnw3bWgHtUS5ybtjWeIiYIvhJok1B7TrmllY2diUqKDJMgTIfKqJZMEVkVAD+jw3P0YMsbCfqemnOUVtPHMqHBFGutn1dShvouxc/9wJXbaLe7fpltQIaNuZr1Om8tH9X1zjsUcQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KToc3Ji9; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EOHY/ok9"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515F1bxO001663;
-	Wed, 5 Feb 2025 17:47:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=B1ja24
-	MtE/dfzDMGymMgwVB+uiPkGyxyQVny/o4LP5Y=; b=EOHY/ok92JzaIG9OEPxJUW
-	Dmr90Ndks6D4IREgjql+2e+5MosaZr4ZjvVIPeFn/IA++B75HtR7thzuMjkWYHTG
-	89TkWoLQHYBV21CTPgO6U5RKLwxn1oBxdCii3I8S+ZbaMey46wkxzort1WZPUq9K
-	vGK/rwbwbkugnQjETfUs2dTglG4pxzVQ5+5WKeEPtxq//2W1xx7W+0iRCpNWZHxN
-	WH3fFWZwg2spWk5P9/qoCGCnDrcUXp/mnjp+ZixuoCrj+zOhGLnHr0IxG0j7vDXI
-	fcqSHK4g/12ML9ai/oHqDtbPPkVMMz3gMcEgy/sEhX5O9D6+WotYQDFCgmYxTKLg
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ma8yry4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 17:47:58 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515FtNqd007130;
-	Wed, 5 Feb 2025 17:47:57 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxayt4h0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 17:47:57 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515HltBM21758638
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 17:47:56 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E73558056;
-	Wed,  5 Feb 2025 17:47:56 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7FA4258052;
-	Wed,  5 Feb 2025 17:47:55 +0000 (GMT)
-Received: from [9.61.82.181] (unknown [9.61.82.181])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 17:47:55 +0000 (GMT)
-Message-ID: <f1af50b3-f966-445d-ab89-3d213f55b93a@linux.ibm.com>
-Date: Wed, 5 Feb 2025 12:47:55 -0500
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KToc3Ji9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738777719; x=1739382519; i=markus.elfring@web.de;
+	bh=2wGvyYMnVgwfZDd+X3Vz5ct1HNuTyg4x337XNUZTx1A=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KToc3Ji9eKlJRjf9lLa5NGBwmaib1ECzHS9D5u+mYXvnUfFelN4U6VMVzOrH2DWF
+	 AUNIn6I4kQK56OVKS9dQY103EKmWgv0JmfFHBFOHAof5jFJJGj1IgU8dlqhkiVz2M
+	 GvzC2rU5wV//Dni/Dezv3nK3V/7yrkVTeojQslUaVI5zIbB3f/jInpf5OFoCZJDsb
+	 P8STSlmF9ZFa0tHRjSNSgtXBPRks5ExOenr4ImvZrZCkdYCb/SLGmLPFlfNF7CqsG
+	 IGA8MolEYDMlFrBTSnVifqAdZgKCqHjSRzqeFNTFrYdVhHMibVQdqj8HGcwYBEtcq
+	 Ft3y/z0bP2FHq1DL1A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.30]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MJWoe-1tzboc2sdE-00X3oZ; Wed, 05
+ Feb 2025 18:48:39 +0100
+Message-ID: <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
+Date: Wed, 5 Feb 2025 18:48:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,79 +42,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/vfio-ap: Signal eventfd when guest AP
- configuration is changed
-To: Rorie Reyes <rreyes@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, hca@linux.ibm.com, borntraeger@de.ibm.com,
-        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
-        alex.williamson@redhat.com
-References: <20250107183645.90082-1-rreyes@linux.ibm.com>
- <Z4U6iu5JidJUxDgX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
-Content-Language: en-US
-From: Anthony Krowiak <akrowiak@linux.ibm.com>
-In-Reply-To: <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: HJtPEgZxq8gYTsTa6QDXLnK6U8sHN_-Y
-X-Proofpoint-GUID: HJtPEgZxq8gYTsTa6QDXLnK6U8sHN_-Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050134
+To: Feng Tang <feng.tang@linux.alibaba.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Mf1TZS7zMuR+t1RajiJ5ezWp2B9JsBYz+0mHhuDgsZxlohT+5GG
+ uXNlnBicAwYLHxd7d2x3dLw8emHRubFR2inyRREgpVY/44B5qQvqzOhP8uqs3wsR+L8x35p
+ McfgO3rZi7FLC0gq3u7EhkwocNUThAkHItBqbB10NzFcqQxcUpH4tNv0UcoiVPZ2qxK4hUD
+ 20nTQTR6ae12xnt8iK7Pw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:67Xz/2/uR7Y=;o1APCCmxO+pUUFUCCtaP8J9jK6C
+ +o9/5SurHdnE93JNlRJqMiGWlK+fAvUqU3ybLF+FOPYUZ4TW/Y21r1ys/69a4DPLHMvSCpr2t
+ /ej8UBepJjyiVGz8DDCMYIgaepJjHLljaHdh4x6Bxrhe2ZUvilc4XjlmsvO3pw68qV5ejUgeU
+ lUDK4tWHfvlpFRqhlUJNzSxZOczKWIEpw1nZLhQpzgv7lUjaK0Pt5n4gwFyfeTeVtU05RuK7J
+ ZaGW2P9xSamj9Riyxx8uZh/xLL8aeFhmK5PU6PWy2KubdGsZbNa8IEIScOVOuqjxnwp/L8dNX
+ fmneLEb4pNQcxTl22fvhNM8U2AD9GGkp6uSt/CCu0Pxc3N0teSNxI7DQ+MkRZvB/yU1GpH9C9
+ 872zD5Iz+Jjv2gct3WiK4lVUOlNJrLnU/qapM0xZs/iI8kmYjeYpOqvzPlgQdudPc/5Ah3POd
+ ZO+cF46eDq0p7FFNram6sk47/Cqh7DedIn2eqsnXeb94PsxNh5LIVaOUHXx6hZBKhsLA14Kcx
+ W8MK1JEJhj4nWUD78kzqKDGKTmZS9bwdIQusx1kVLutAy5b8kzGhkxY451KTjAj5HHebi8GxW
+ /nWhbqlzCGgtWLY1ae4PuU0VuEKjsdUzXauVzsNoaWwutd0ACvFl1GmaHSHnSAs/q900fm8Sa
+ 62/rwqTxKjM39pJx6/bYLav7aDQYSeKF4n2PlGVAFG1cAcxJY6yc0iRVqZEMwztEoOzWFdKMV
+ q4eYk7NU6tfIIxrWF6el9OZDWu07A7MUJGP2X3PMYnp+xk2V2J2BJoHy4QmDoq5/OZHErUeEw
+ Pm37CKx6LSVZqz25R/9Z3dfpGiV4cwTt1kVo5ZG8bT+4pV86Qw66P2IAnjmPLj0OIkKzOXFVk
+ qVd9R4d5Q5pRxhZDV/54GUmqlKbshGZ8hma5cEJ72jCG4yJKsngsPizc5Po3HVaKHOiYJ1dQq
+ fTjCSSD+KeYygM18/2OLOz6G+8xov+r3ZkI66ob10tkn7gyET5dzpMmSRB6AbZD7SX/j73Adt
+ pcE+km3Db0NlUnYnOyZLL2hyY+QzXZAYcxiKttutC19xyJKdeLytn5CX+ymGuw0A/pyy8PTxl
+ Y7kEHm9RF0k7++Q0CmHSWTFAhk2aHXFunL19KJEXG7N5vGXtG8XUQtAhLx4vvB7PHKJdh0rIQ
+ z8saaldzHdx/YlbdsEuXJFGBph9SFmuVRzPjduJSO2L8MQJc7VDYqw7uIs+AGV+qSU3gG69Hy
+ StALmGar+wA27MjGrEOP8VFJF5NyTwcgI+rE/v6W73FDN7ySTSj81W91Rv7N3jyB8prZdchSk
+ /u0RAhMjzH+3KnqIFvW0KjlUvmucLCWO086sjUZCUJ+w0qDJcP2U5M/d6Da9pSbHEigmio823
+ JZTQOWUnm9BbZUhZYPHUanYKZtrto0pZelhwkqylNIxeAuBRCQGBvq0/zAsM1OLPa2lo+Gy+e
+ ymcGhWA==
+
+=E2=80=A6
+> Add the necessary wait to comply with PCIe spec. The waiting logic refer=
+s
+> existing pcie_poll_cmd().
+
+* How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and=
+ =E2=80=9CCc=E2=80=9D) accordingly?
+
+* Will cover letters be usually helpful for such patch series?
+
+* You would probably like to avoid a typo in an email address.
 
 
-
-
-On 2/5/25 12:33 PM, Rorie Reyes wrote:
->
-> On 1/13/25 11:08 AM, Alexander Gordeev wrote:
->> On Tue, Jan 07, 2025 at 01:36:45PM -0500, Rorie Reyes wrote:
->>
->> Hi Rorie, Antony,
->>
->>> Note that there are corresponding QEMU patches that will be shipped 
->>> along
->>> with this patch (see vfio-ap: Report vfio-ap configuration changes) 
->>> that
->>> will pick up the eventfd signal.
->> How this patch is synchronized with the mentioned QEMU series?
->> What is the series status, especially with the comment from Cédric Le 
->> Goater [1]?
->>
->> 1. 
->> https://lore.kernel.org/all/20250107184354.91079-1-rreyes@linux.ibm.com/T/#mb0d37909c5f69bdff96289094ac0bad0922a7cce
->>
->> Thanks!
->
-> Hey Alex, sorry for the long delay. This patch is synchronized with 
-> the QEMU series by registering an event notifier handler to process AP 
-> configuration
->
-> change events. This is done by queuing the event and generating a CRW. 
-> The series status is currently going through a v2 RFC after 
-> implementing changes
->
-> requested by Cedric and Tony.
->
-> Let me know if there's anything else you're concerned with
->
-> Thanks!
-
-I don't think that is what Alex was asking. I believe he is asking how 
-the QEMU and kernel patch series are going to be synchronized.
-Given the kernel series changes a value in vfio.h which is used by QEMU, 
-the two series need to be coordinated since the vfio.h file
-used by QEMU can not be updated until the kernel code is available. So 
-these two sets of code have
-to be merged upstream during a merge window. which is different for the 
-kernel and QEMU. At least I think that is what Alex is asking.
-
-
+Regards,
+Markus
