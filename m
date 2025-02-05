@@ -1,106 +1,92 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993621D7985;
-	Wed,  5 Feb 2025 09:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C1F21A458;
+	Wed,  5 Feb 2025 09:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738748441; cv=none; b=B2BcfmXKE3iK6h+5LXY/VcFfh+ij3Ngtxd1yrQpel6K1ZtS5p/Eprgd76Q13XYhW0DlDRVPCyCC9b5oaPuGh2puJubmmJVPQkB1mJv4raBG1CAjAxb4pMYA76faLVTi4ZcbOcnRvNl+0b4ru/LUDUesFlOVrI49JKdSlcF7qehg=
+	t=1738748692; cv=none; b=t8YufhxlUS2guBh2W+iiTFdykAPMaqda2+N+M9fW514c1ttNETiH7YXYz2oTbXJjdPtqAFjMh7xUDuAb85384XbKkSjzkNEi3zehzBm3XkpoZXscRcJuuKbleMyNsvsOZjdLOPmWeEYETLlQX44vrruXj/hDSZkZme5yFFKR6iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738748441; c=relaxed/simple;
-	bh=qDM7Khu2FuRIVqpPSG7C0/6QrPWtphywMAO4rTe5szw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YGfEnwUX24KlnDw5ACuzix/Q3I8JPja0V6jPBsnV7jp9vOlIdfoWPCgD2kpOkyopLWkqeWF0TFY5CI3KU1g8zPkafu9C9LNudDBZdARfjbt0Rfe2zQ1qN8vTINdlsGutxYlD/oZQdWbjr6Sb4uQThSHfP4gJYkIhwtLm03uby9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c/t+9pR8; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738748692; c=relaxed/simple;
+	bh=J6AXsn3lH7MBCqC6dF7yAkLsCQbHWrYkDB7bo9+iMlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AbG2fi4XSAo5IIn0B3LQixOnyr8BCzCBEVmow6zooqwNdBlxNeNsYVDXMX71XNq4eC9nC2X/SZOyXY6bs3v66vmgJYMtSfJ7DMwq9QMSdDALK6q4Ke9bUqClu2SluS/WGejnBzPYY5x76ecPgBJeexmZQg9WU18pN17wk4j6UNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUuCAvQK; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/t+9pR8"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21effc750d2so28631315ad.3;
-        Wed, 05 Feb 2025 01:40:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738748439; x=1739353239; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YNbzmIjyvLuPYAHPzzGu818yrvIvdE4ZiMGQe0p2pvo=;
-        b=c/t+9pR8I1EkxTAvRVcQOwp6GdztVuEFsCUbuDMQJsYkyEKFwQ2fuLSHotgbz5KQBr
-         wQhFjyh+w2F4uoQJ4oACHLRHR1dIRbmreotrIDHrbk25KK7NMbi26a+BSFQq08PldSGd
-         gIUQGrIvtlHtycfbbqDUnboNXH/HsoG9C2f4yJbyavktvimoNuV3fD7sHyhld0rrC8hs
-         mrrROS/w8pj/yZJnGPd6beNiiewsqlpI783l3po74ZxCIso7p0I4glqjgc82vDFzn3UV
-         q9cQ8yO2/5RStnI1iTO9JF8MmrY8IuZoRcocouXzvw867zFyk3Ys3ljOQDTBXdxwPZFD
-         0cIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738748439; x=1739353239;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YNbzmIjyvLuPYAHPzzGu818yrvIvdE4ZiMGQe0p2pvo=;
-        b=DNZxA2ROk2swQm1AoGkbKco0IJxG9vKIFsw6WsigHYnEvbTA5Rydgp6MZR2hgklDrF
-         QHnfi3gpXWQ60vv5LX4Zbuu7SmBuTztB3R+ON3rArzzgCf6QSVKbXDIiYsLKo+dteIJu
-         SPtvNC1OCml0APTYU5VezgQpthoIIX9v4CDm37s34Y9nSBzzpfV0xLXnFPkTEJIoWD9V
-         dYl3xDthj+mW7f7dkiTyKHwbGCOeYCKeLLOw/8Y/oRG0M/F53FXE49hVpCT4vfPCpHAZ
-         JXfCfIznmNs2zpCa12EHDcCFenKS8TI9P5jeRo0T6CjVe+hlqaET0YK5r7jeSHMbglip
-         1r6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUYDo7vW72G2vEUQzlLOf+CuZPAleKwjFSgT+2RwTE0xwv4kgeNqGtLRsW8Ny/m1iDYESPdvzdxsJM=@vger.kernel.org, AJvYcCUsW/IWWnluFsprobj2OjvL4WRSjWCllUP+c7bzVAy6RkhIsiHrnkgPs2FEpaXJc27vFMg+MqlxlnLBIpm5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrS4+F54mk8xKVKQ06JgXXJXaWTuh2a7xjhVKwR/2H0SakhvQU
-	LRDuYW+V1YRZF6lR8FTEKYKvgn0jD+/S8xLF2T7DjiUN/CQWPS+c
-X-Gm-Gg: ASbGncvD967UyUxobi+bihf58JqGICJ2/cgIYNkvRjeJGFZ84Nc1eUHege7dzRTe/va
-	jx3Q4/0IKVd2KFPx4qIJXT5hJ4S0Vqatl/fjWyw2ydXNht7mFKODiBvTDtBlqQoKBsnzicwpCUM
-	PH2NUCugiNJ4oYhnuQHIovGf21i8iM7XHvt09vTpHr8ysjvtz8g8k0+NnBqOzIeerhqNKPcfY9C
-	M511ggqLXT90q00ViykuJWXLGpjl8gmeTIWT8daiUPgOjKzqWbiFLgNyD30Ok2TMXqq4OyZojAa
-	jxMEXuqs0YLlxTJcYn9nSoiI2bGHCqQiGY59nPg41uXlA4f1/3KHoGDL19VMVQ==
-X-Google-Smtp-Source: AGHT+IGVepeVcR2w++x+9BNvro2+B6Cb/41IXf3zUjSDyO6ESbtJqvykmg2BaKlmAB6SMj4cXRWEOw==
-X-Received: by 2002:a17:902:cf12:b0:21f:134f:22ad with SMTP id d9443c01a7336-21f17eba99cmr40535235ad.38.1738748438750;
-        Wed, 05 Feb 2025 01:40:38 -0800 (PST)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de330462bsm109916355ad.204.2025.02.05.01.40.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 01:40:38 -0800 (PST)
-Message-ID: <2f9b3ec8-4877-4df1-99a1-f5ab3488add5@gmail.com>
-Date: Wed, 5 Feb 2025 18:40:31 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUuCAvQK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738748687; x=1770284687;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=J6AXsn3lH7MBCqC6dF7yAkLsCQbHWrYkDB7bo9+iMlY=;
+  b=fUuCAvQK1H9xny/lo4SBZ7vn2djeCn0cjUQvjQdVGNXliVydg8DXSrL0
+   6otbPX0dMwdG3l81Ge2JDaSolGbjqQ5RgUoIvBi9jm9lUrEDrAoPYjCcZ
+   QTqjunuJUw97Rn8mNsykiY8FlpzAenZTSPNxmMHZf65wJNiPlYbt9P1e9
+   RRsOiOnX5EgRk3/raTYQiaI+wb9lusS9C/a3pCT1K7lGqW3gVwYWSPKAS
+   dLPXqPRuwGvtnozMJrW6Hjh4qPR8fEWa1Xmvvse1JOtOApbxFt6Eq9fcP
+   /zPugS+q285zX5vyg6Q30iNtzBXlnqk6eR+P0jQ4Dpe8o4i1J+1Q8KTQh
+   w==;
+X-CSE-ConnectionGUID: RT2ZXwbQSuOb1x8C7ITICQ==
+X-CSE-MsgGUID: 67HaaBpVScmY2GbozbQ6Sw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39463536"
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="39463536"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:44:46 -0800
+X-CSE-ConnectionGUID: gsJi0kixTue3luxQo5W+OA==
+X-CSE-MsgGUID: JKqigt94Szu8N4LOKnQWqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="110707699"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 01:44:43 -0800
+Date: Wed, 5 Feb 2025 10:41:11 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
+	"Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"Knitter, Konrad" <konrad.knitter@intel.com>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Build error on
+ "drivers/net/ethernet/intel/ice/devlink/health.c:35:3: error: initializer
+ element is not constant"
+Message-ID: <Z6MyN8U6rt/6Ayye@mev-dev.igk.intel.com>
+References: <CY8PR11MB7134BF7A46D71E50D25FA7A989F72@CY8PR11MB7134.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/6] scripts/get_abi.py: make it backward-compatible with
- Python 3.6
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
-References: <cover.1738166451.git.mchehab+huawei@kernel.org>
- <6d74360f8cdabeb0bf628a6e870d10e134f396f0.1738166451.git.mchehab+huawei@kernel.org>
- <87r04dei1j.fsf@trenco.lwn.net>
- <4274a2f8-5ba5-45f3-80c5-2de54c44c06f@gmail.com>
- <20250205081501.160180bc@foz.lan>
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20250205081501.160180bc@foz.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CY8PR11MB7134BF7A46D71E50D25FA7A989F72@CY8PR11MB7134.namprd11.prod.outlook.com>
 
-Mauro Carvalho Chehab wrote:
-> Em Wed, 5 Feb 2025 11:37:52 +0900
-> Akira Yokosawa <akiyks@gmail.com> escreveu:
-[...]
->> I think rewording the summary to
->>
->>   "scripts/get_abi.py: make it backward-compatible with Python <3.11"
->>
->> would resolve Jon's confusion.
+On Wed, Feb 05, 2025 at 03:18:30AM +0000, Zhuo, Qiuxu wrote:
+> Hi,
 > 
-> Sure, but IMO it is still valuable to say somewhere that the script
-> was tested and it is known to work since Python 3.6.
+> I got the build error messages as below:
+> My GCC is: gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0.
 > 
 
-If you want "3.6" in the summary phrase, how about
+Try compiling with gcc 8.1 or newer.
 
-  "scripts/get_abi.py: make it backward-compatible with Python <3.12 >=3.6"
+Thanks,
+Michal
 
-?
-
-        Thanks, Akira
-
+> 
+>   CC [M]  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.o
+> drivers/net/ethernet/intel/ice/devlink/health.c:35:3: error: initializer element is not constant
+>    ice_common_port_solutions, {ice_port_number_label}},
+>    ^~~~~~~~~~~~~~~~~~~~~~~~~
