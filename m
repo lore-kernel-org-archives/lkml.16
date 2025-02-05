@@ -1,188 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A15212D8B;
-	Wed,  5 Feb 2025 02:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957B9212FAD
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738723333; cv=none; b=YwyeiEq2ap6m9Qr7DtKjsSmt4UVPkFNXh+OfLhViJDv3ia9RoIxJ7x6kMEXrMezbmDpQnyEv6EGPtH6x37Qgd5yZL2979V+nEWSZYcmQey1lAjo+6DYp0EqU2kXVe+2ikkq5mbrExwcmW+Vvh6qul7Cvx66i9BOV9WFaFq721s0=
+	t=1738723342; cv=none; b=oszwkZOlHux/OajZoHQzuOCLy5OIw3SzPITYrE946l3c37JJRUahh5zsX2v0qp0ZOusRT0/2e4N1qQC7m/A8fQHUtW+m+wLcYisd2siJM/54CzM0Ny/+N89OO02z/seHyAu6w2O0G5UAjUSCcNxFMcYKIbVKsL+TOTy3tlnTXy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738723333; c=relaxed/simple;
-	bh=Utj1UJhD/A+1VjVQheCreoYgsb9L8I5I4wm7q1juvCU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=inyI1Kxbww6gI5sxp33+c12X5EN2NDCh1eD7C58VmDuFCsLTmvUZzMUFF5PEG20VurJHQzoHJvLV9iQkuS0UE9Yv9tZzWrdtg+kxmomU8Y9E5nMrr4lLJT7ar3XWFbM+b++GXt//DBZ5nOysJz3/hdwNqvW75aMHsqxdmAGqcco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gf1fUbVr; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738723342; c=relaxed/simple;
+	bh=7YCuggeYk7vbWeyi6etgcTp8qXU+Swwh5GPai7VljGk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fePag4iMdW1amVrd6776rOwYnJ1zWdja9nBIAXuArtlQc99a9L3fr+IcpYYUddjNzdoM5mvzFnQh6A7Dy3xmw7DEi5AsnibI+AATMiNi5M/D8YybLV7EiV6QX+3AtC4UP4YZSgaurB1SEb91bbVHyjDOT61oU8xW/Hf+N3l0si0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NERR+Cu0; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gf1fUbVr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738723332; x=1770259332;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Utj1UJhD/A+1VjVQheCreoYgsb9L8I5I4wm7q1juvCU=;
-  b=gf1fUbVrCf1DaFM5hyQSb7tFM+4dqultICh69hURElxxE6v7q2Zi9qjY
-   cVhMHrJNnErygjldJuNdTDuWcy109f2p8pehn2jqbWgsIH1Tk6WXrJFmA
-   fNmHjNjuWKNytJIbFWNB93flyw4r+PwS7UjGcALdes8RhvSzEtdMZHc9v
-   cbzIjWM2R1MoyiiVCUQY+iIFOPPBMMcN4GPyFZCyPHDvOHWjzpX7YjNFE
-   weH0fvDTYuhhZKcg9zrS4cUMNFgmvcXs/ohQ0Ziwm0WmrvsUjfm7ZRik/
-   nlDXEPmdISfPrfJgoMXz1xDS7Iq1xWHW7biVWhD/p4y5+tRs75czJwc6S
-   w==;
-X-CSE-ConnectionGUID: lJms2Ea8Re+EKRb3t+iakA==
-X-CSE-MsgGUID: /y9rfCFeSVy39lRafs3yKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39303921"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="39303921"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 18:42:11 -0800
-X-CSE-ConnectionGUID: 6gh2BosHSB6Cim6S+Sj9AA==
-X-CSE-MsgGUID: +b9HroD5R5i5dhekZCM9VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="110666604"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Feb 2025 18:42:00 -0800
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Song Yoong Siang <yoong.siang.song@intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Bouska Zdenek <zdenek.bouska@siemens.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	intel-wired-lan@lists.osuosl.org,
-	xdp-hints@xdp-project.net
-Subject: [PATCH bpf-next v8 4/5] igc: Refactor empty packet insertion into a reusable function
-Date: Wed,  5 Feb 2025 10:41:15 +0800
-Message-Id: <20250205024116.798862-5-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205024116.798862-1-yoong.siang.song@intel.com>
-References: <20250205024116.798862-1-yoong.siang.song@intel.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NERR+Cu0"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f9dcc3f944so97400a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 18:42:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1738723340; x=1739328140; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9P6bfbaO1ayzZ+Zop/bs7QRHHtDwQNcmTGhPOOug4o=;
+        b=NERR+Cu0kEu1grx7lP7mu99mUcIUxGzTrECG56jyT75fqGZbLsrNKt8dFLLeWc/bA9
+         4FfFaRbWTwGKk/pDn7Roy/95ZDBjhHpN9FJkHwUbb3vT3eOcuxDM7WB2U6TAdO9g5hi0
+         NPfCuWgHRDd8eZoYl2hoTzqW6CREFp8/IJ8rLAUZZME1QMj1v9/0pBRmwS5GkzD36zw5
+         sakP/u/DchsuoJoNZoAqnup5a3u1QymP8nSOj7eRv3fIFFcPXYGVwChx/JIWNCfXGcwG
+         rsgshtfIMf0rKzWtwMwVnZHmle5IVXe7vi5o+2DJfLUnGVZ1iNg67gSJaC5r5JNVeqbu
+         5NSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738723340; x=1739328140;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9P6bfbaO1ayzZ+Zop/bs7QRHHtDwQNcmTGhPOOug4o=;
+        b=bUvC0lwRR/OKAOH0pAtp6ZIWe04A7B3dDDhZCM376bylvJvr35wOOFP+NjuC9kUazB
+         ATIYZ1JVbwJlDa4Z/RRBEvjYbajsCEFZDZ2u6Ed5J5BWJv+Lz8KDwZmU+//Fs72H+RHN
+         BVgug7y+d0zeJu8PED5xlzCCfU8nBwQBsMFc+4j/sIPkBK/0/2FqlBIlet2XLH/vvHVl
+         0gebsrVJZFBpzieXYWm7j8LEXi7M0g5oLoov+L0Ced7ArAXeYOzVtNmqRFxDDzwjOKxg
+         VMYEz6HYc64IqjDsUlwgejQ03OdeKBJboSrmlY4rmAvhljhDaZ9jjs8KuTTGchtTGpVs
+         fPWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvlYyr4geGwK3SjsX0isO7VYu/OV5GL6WTpz8RnOUqIKjcYMsqJbxFzlQTqfPT2PSdqYV5ia6R73RvuyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEsDXPzVPRxFK+TjW6B7SXpJINUlJaNuKDuYCZJMsZqdTeDJAh
+	Z8Q9smV+Jq+1xWajHDFDvAKM+xZY7rpvb2zPvh68Bac6IDz10kMrpVJ6CaQOCP0=
+X-Gm-Gg: ASbGncucmLQFIrfNvRQxBxZlsZm/QTwLIc4dLxBm0mjL9SSpdcsqaKU2vFAdM7tmZS6
+	FLME47mHzYqs+prCJNIvBTgcHjiyLLDC55Ta6KEUA8Fd/ju691mLZaaA2Xm/9zlpSdDhHKEV5xD
+	yPBWyhmAZzp0bE/BUtf1r4bze8KO52nxCDc/Khx1V2uj2v2k6Waresl8efksETwfE/F1SJ5XavV
+	Ig//4bloNFz6aQEV2WsHXxsr5W5t/JxzgVhmhoHTyiGPBxAxsuHUAgW17M3LHPtnyBCD4p7gXe8
+	XE5vJM4H/nyI/KHlGBo18sfoBviKEZzg96Xq
+X-Google-Smtp-Source: AGHT+IGxSXQuqSMk3bcYIZIkz63AGFvTGZucd9e/zkZKrSE5SKZNOcFEvlo7YbkBJWZQn51OYfPUZg==
+X-Received: by 2002:a17:90b:1e41:b0:2ee:713d:f536 with SMTP id 98e67ed59e1d1-2f9e0868686mr606696a91.7.1738723339652;
+        Tue, 04 Feb 2025 18:42:19 -0800 (PST)
+Received: from [10.4.234.23] ([139.177.225.244])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1dab45csm305094a91.40.2025.02.04.18.42.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 18:42:19 -0800 (PST)
+Message-ID: <db1391a1-2f25-4976-866f-d48ea6b16e11@bytedance.com>
+Date: Wed, 5 Feb 2025 10:42:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Re: [PATCH v2 0/3] Fix and cleanup and extend cpu.stat
+Content-Language: en-US
+To: Tejun Heo <tj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Yury Norov
+ <yury.norov@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Bitao Hu <yaoma@linux.alibaba.com>, Chen Ridong <chenridong@huawei.com>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250125052521.19487-1-wuyun.abel@bytedance.com>
+ <bb16ae49-f591-4ab3-8d27-f649619b266b@bytedance.com>
+ <Z6J8wbuXgiz_ly-q@slm.duckdns.org>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <Z6J8wbuXgiz_ly-q@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Refactor the code for inserting an empty packet into a new function
-igc_insert_empty_packet(). This change extracts the logic for inserting
-an empty packet from igc_xmit_frame_ring() into a separate function,
-allowing it to be reused in future implementations, such as the XDP
-zero copy transmit function.
+On 2/5/25 4:46 AM, Tejun Heo Wrote:
+> On Mon, Feb 03, 2025 at 04:11:27PM +0800, Abel Wu wrote:
+>> Ping :)
+>>
+>> On 1/25/25 1:25 PM, Abel Wu Wrote:
+>>> Patch 1: fixes an issue that forceidle time can be inconsistant with
+>>> other cputimes.
+>>>
+>>> Patch 2: cleans up the #ifdef mess in cpu.stat.
+> 
+> I wasn't sure whether the new code was materially better than the existing.
+> Can we try without this patch?
 
-This patch introduces no functional changes.
-
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
-Reviewed-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_main.c | 42 ++++++++++++-----------
- 1 file changed, 22 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 21f318f12a8d..553d6d82af0d 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -1566,6 +1566,26 @@ static bool igc_request_tx_tstamp(struct igc_adapter *adapter, struct sk_buff *s
- 	return false;
- }
- 
-+static void igc_insert_empty_packet(struct igc_ring *tx_ring)
-+{
-+	struct igc_tx_buffer *empty_info;
-+	struct sk_buff *empty;
-+	void *data;
-+
-+	empty_info = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
-+	empty = alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
-+	if (!empty)
-+		return;
-+
-+	data = skb_put(empty, IGC_EMPTY_FRAME_SIZE);
-+	memset(data, 0, IGC_EMPTY_FRAME_SIZE);
-+
-+	igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
-+
-+	if (igc_init_tx_empty_descriptor(tx_ring, empty, empty_info) < 0)
-+		dev_kfree_skb_any(empty);
-+}
-+
- static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
- 				       struct igc_ring *tx_ring)
- {
-@@ -1603,26 +1623,8 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
- 	skb->tstamp = ktime_set(0, 0);
- 	launch_time = igc_tx_launchtime(tx_ring, txtime, &first_flag, &insert_empty);
- 
--	if (insert_empty) {
--		struct igc_tx_buffer *empty_info;
--		struct sk_buff *empty;
--		void *data;
--
--		empty_info = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
--		empty = alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
--		if (!empty)
--			goto done;
--
--		data = skb_put(empty, IGC_EMPTY_FRAME_SIZE);
--		memset(data, 0, IGC_EMPTY_FRAME_SIZE);
--
--		igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
--
--		if (igc_init_tx_empty_descriptor(tx_ring,
--						 empty,
--						 empty_info) < 0)
--			dev_kfree_skb_any(empty);
--	}
-+	if (insert_empty)
-+		igc_insert_empty_packet(tx_ring);
- 
- done:
- 	/* record the location of the first descriptor for this packet */
--- 
-2.34.1
+Sure, will drop this one.
 
