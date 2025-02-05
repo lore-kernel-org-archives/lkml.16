@@ -1,63 +1,40 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5DF1D89F8;
-	Wed,  5 Feb 2025 16:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A5718CC1C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771321; cv=none; b=dCZ3kIJDY5z1/U3QIFe3qCJaQOEQMk6vWja7RuvdaM2uPf5I1uhg7pXB5tLwjVkjuWb3pLBuP1LALsD6eDuG51EqydtHoXdH/UxX3Fs3e6gILHmsqqeqp4+yFiUd5QyczzMjlweOf1auPPQSwYKqE1NVuE2wtSnsawYZhyAjZVw=
+	t=1738771353; cv=none; b=bQjU7KAl1CSmL9ufRxkFnTcfMNZCGXtFI0DSaJ4affc2/Urfqk2r5tJuNk8gh3qReEHjiqNjny5NIr3bjcrQYUgXgB6EthFv30EAlC33u+UJWTkyya0ZwbDTitaCVZ0j/joGtsbT+bbO4romiqy2trg15wRBvlejw1cJ5y292ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771321; c=relaxed/simple;
-	bh=7SHd8mXTl/j002K9wm5letf/0Hv/w7gBwrNHLDtLpuo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HctE4hyCT/eL+PHWjD/HQ4rTxY16JChkjHPfKRYcvRhwa/qCMtiUO1v+yjrJoXAXv0RJProkOqxdxeZzKdGal7LYv4fjqkBS1Ex57YD66hdNn4MHd1PWkRIM/CHw0UbRi1GjjmDkhFWr8+2kX1XlhR/8vdIPNKSud1bE6ZU73TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YNVMMHRw; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738771353; c=relaxed/simple;
+	bh=yu5I0Tytb8ykUcd1Cm9mqQfxQOKtln6I/FcAG0UK1zA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LC5m9bVxzFe5qmlIn6+z0JMnJ6t3jovbJjeFQZWOBqEgkMcShuR2HeJECE16c//XOkyDYaoeMSD9pSfK9IFWcXYy1UUpl8GK7UHwSr1628LCWgJPNe/ZFaE7WjrzW3w/WvTHfOsnwN+mq8KooIR+XPX6dgL6ePKrNVAzhvoS0Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrPi7x9B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YNVMMHRw"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515G1PD83452035
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 10:01:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738771286;
-	bh=FmbOdU2UgJjlXvsT6/EXT0PuXH5wF4u+Prc8j3Fq5gg=;
-	h=From:To:CC:Subject:Date;
-	b=YNVMMHRwpeJFkEEL/wIMfjDsCFR9TOQClIggFjiRIDBTCOflxB3hfN+tlQEjW1IKT
-	 7pcRHfqc5U9UCOLg7vtlht9LDJ0wd9ocUha8vH0DKxGL/xJur2zhqZWjUDE2oRK/FM
-	 eZzjhYCZJf2k4iL6hl5c0byZ7VJ1bBdkAyaB4FT8=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515G1P4U122486
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 10:01:25 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 10:01:25 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 10:01:25 -0600
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515G1OZS061878;
-	Wed, 5 Feb 2025 10:01:25 -0600
-From: Chintan Vankar <c-vankar@ti.com>
-To: Jason Reeder <jreeder@ti.com>, <vigneshr@ti.com>, <nm@ti.com>,
-        "Chintan
- Vankar" <c-vankar@ti.com>, Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski
-	<kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Thomas Gleixner
-	<tglx@linutronix.de>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <m-malladi@ti.com>
-Subject: [RFC PATCH 0/2] Add support for Timesync Interrupt Router
-Date: Wed, 5 Feb 2025 21:31:17 +0530
-Message-ID: <20250205160119.136639-1-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrPi7x9B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64EAC4CED1;
+	Wed,  5 Feb 2025 16:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738771353;
+	bh=yu5I0Tytb8ykUcd1Cm9mqQfxQOKtln6I/FcAG0UK1zA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mrPi7x9BEI5+gy1codsY62i9uSO/W6xP5dCiiUTT59n76gwUuGFCe/AFoUviYzS0x
+	 yXP+4qGpo9W+S/rmWEfuL9DqGwGTGLAf/e0Oj3aVzDc9nVRWb8wEelIB1SxNJCLLle
+	 dtYqLam/KO0I7skFv0GeJNCNS8LCrk/eVdRV3LcQnjlkfOExBYMfkSSs76Ic1tg9wz
+	 8O1xDv038Xc3H7Fg1s6wSgkmKEYizIC6WWrKDwFNMnFdYQVuek9ON37c0jl15HpAm/
+	 1NDL4IgGxidFF6V1dRXw94F6aryrMV3zxvQNW8Gr6rLemGU/TETci07YB5dHApWqvO
+	 034FcNeukOtrg==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	anna-maria@linutronix.de,
+	Matt Fleming <mfleming@cloudflare.com>
+Subject: [PATCH] timer/migration: Fix off-by-one root mis-connection
+Date: Wed,  5 Feb 2025 17:02:20 +0100
+Message-ID: <20250205160220.39467-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,56 +42,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This series introduces the driver support for Timesync Interrupt Router,
-I will appreciate feedback on the driver implementation.
+Before attaching a new root to the old root, the children counter of the
+new root is checked to verify that only the upcoming CPU's top group
+have been connected to it. However since the recently added commit:
 
-Timesync Interrupt Router is an instantiation of the generic interrupt
-router module. It provides a mechanism to mux M interrupt inputs to N
-interrupt outputs, where all M inputs are selectable to be driven as per N
-output. More details about interrupt router and timesync interrupt router
-can be found in sections 9.3 and 11.3.2 of TRM:
-https://www.ti.com/lit/ug/spruiu1d/spruiu1d.pdf
+	b729cc1ec21a ("timers/migration: Fix another race between hotplug and idle entry/exit")
 
-Timesync Interrupt Router's inputs are either from peripherals or from
-Device sync events. This series adds support on how we can map output
-of the Timesync Interrupt Router corresponding to the input received
-from peripherals.
+this check is not valid anymore because the old root is pre-accounted
+as a child to the new root. Therefore after connecting the upcoming
+CPU's top group to the new root, the children count to be expected must
+be 2 and not 1 anymore.
 
-As an instance, one of the input for Timesync Interrupt Router is,
-Generator function, which is an output from CPTS module. The CPTS hardware
-doesn't support PPS signal generation. Using the GenFx (periodic signal
-generator) function, it is possible to model a PPS signal followed by
-routing it via the Timesync Interrupt router to the CPTS_HWy_TS_PUSH
-(hardware time stamp) input, in order to generate timestamps at 1 second
-intervals.
+This omission results in the old root to not be connected to the new
+root. Then eventually the system may run with more than one top level,
+which defeats the purpose of a single idle migrator.
 
-To provide PPS support to am65-cpts driver we need to configure timesync
-interrupt router to route input received as GenFx output from CPTS module
-back to HWy_TS_PUSH input of CPTS module.
+Also the old root is pre-accounted but not connected upon the new root
+creation. But it can be connected to the new root later on. Therefore
+the old root may be accounted twice to the new root. The propagation of
+such overcommit can end up creating a double final top-level root with a
+groupmask incorrectly initialized. Although harmless given that the final
+top level roots will never have a parent to walk up to, this oddity
+opportunistically reported the core issue:
 
-AM62x is one of the SoCs which has Timesync Router and mapping for all its
-output corresponding to its input can be found on SDK documentation of
-TISCI at:
-https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/am62x/interrupt_cfg.html#timesync-event-router0-interrupt-router-output-destinations
+	 WARNING: CPU: 8 PID: 0 at kernel/time/timer_migration.c:543 tmigr_requires_handle_remoet
+	 CPU: 8 UID: 0 PID: 0 Comm: swapper/8
+	 RIP: 0010:tmigr_requires_handle_remote
+	 Call Trace:
+	  <IRQ>
+	  ? tmigr_requires_handle_remote
+	  ? hrtimer_run_queues
+	  update_process_times
+	  tick_periodic
+	  tick_handle_periodic
+	  __sysvec_apic_timer_interrupt
+	  sysvec_apic_timer_interrupt
+	  </IRQ>
 
-This series is based on linux-next tagged next-20250205.
+Fix the problem with taking into account the old root in the children
+count of the new root so the connection is not omitted.
 
+Also warn when more than one top level group coexist to better detect
+similar issues in the future.
 
-Chintan Vankar (2):
-  irqchip: ti-tsir: Add support for Timesync Interrupt Router
-  net: ethernet: ti: am65-cpts: Add support to configure GenF signal for
-    CPTS
+Reported-by: Matt Fleming <mfleming@cloudflare.com>
+Fixes: b729cc1ec21a ("timers/migration: Fix another race between hotplug and idle entry/exit")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ kernel/time/timer_migration.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
- drivers/irqchip/Kconfig             |   9 +++
- drivers/irqchip/Makefile            |   1 +
- drivers/irqchip/ti-timesync-intr.c  | 109 ++++++++++++++++++++++++++++
- drivers/net/ethernet/ti/am65-cpts.c |  21 ++++++
- 4 files changed, 140 insertions(+)
- create mode 100644 drivers/irqchip/ti-timesync-intr.c
-
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 9cb9b6584ea1..2f6330831f08 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -1675,6 +1675,9 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
+ 
+ 	} while (i < tmigr_hierarchy_levels);
+ 
++	/* Assert single root */
++	WARN_ON_ONCE(!err && !group->parent && !list_is_singular(&tmigr_level_list[top]));
++
+ 	while (i > 0) {
+ 		group = stack[--i];
+ 
+@@ -1716,7 +1719,12 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
+ 		WARN_ON_ONCE(top == 0);
+ 
+ 		lvllist = &tmigr_level_list[top];
+-		if (group->num_children == 1 && list_is_singular(lvllist)) {
++
++		/*
++		 * Newly created root level should have accounted the upcoming
++		 * CPU's child group and pre-accounted the old root.
++		 */
++		if (group->num_children == 2 && list_is_singular(lvllist)) {
+ 			/*
+ 			 * The target CPU must never do the prepare work, except
+ 			 * on early boot when the boot CPU is the target. Otherwise
 -- 
-2.34.1
+2.46.0
 
