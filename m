@@ -1,47 +1,55 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00A9822F397;
-	Wed,  5 Feb 2025 12:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAA622ACF3;
+	Wed,  5 Feb 2025 12:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757801; cv=none; b=LHYM20n9iDGooOuTB9TC/Z2zhWhwpjCUhnjEpOZbTHgGQczRWyultPnkwDW25p0Z0+IMN49FmNiS5ogFg3a0Nh87SFyBczvhrykCQVIJKzIZ8X7z0CSsf1lU4bZDinNtPijgzQnVKMN3y5yRrh7u5d41+o3/hGkD5cRlPoMUOyM=
+	t=1738757900; cv=none; b=RdUoWPAxufkT+394k7Ap+Gz90s5Hjq8XBxCMJUk9w5CbcTC/PRfhIn+wn1fIkeEXyvUHOLdn27MihObWRqMb5SMsUqHJq2arLOyxskYMSMRDdzHEIXEfNpyc66qA4GkYOTbRFy7pNkPaXj1aCyZ5UrEH1siooqk1kmSm01T2Tlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757801; c=relaxed/simple;
-	bh=uuMSNaBC9AotIkZWkOOsuQNqWhUw727k6l4k9GoefF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O7N8RWAX16LsQTEajgv0KW6cXc1RoAryIV0Rft1/jP+4SaD6cv2dlXzrlmtQQdS2fG60HoKjsBIDNdWmxeKxtwqo9ecwES7ohiLTUGDb51De28qKPQgt2g1FzAaT/S3FdnNuxdo3fvVvCnHv+rzGPbGnQR5CtaOZ9Ue/Hqd4LaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CFB01007;
-	Wed,  5 Feb 2025 04:17:03 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 450803F63F;
-	Wed,  5 Feb 2025 04:16:37 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Graham Woodward <graham.woodward@arm.com>
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 11/11] perf arm-spe: Support previous branch target (PBT) address
-Date: Wed,  5 Feb 2025 12:15:55 +0000
-Message-Id: <20250205121555.180606-12-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205121555.180606-1-leo.yan@arm.com>
-References: <20250205121555.180606-1-leo.yan@arm.com>
+	s=arc-20240116; t=1738757900; c=relaxed/simple;
+	bh=twv/zklPczSbnNe+2Biv8DEX5i3eV+yTDJPYWyQBI2w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=evnCOHbPIkJRGFlvriIvWtJ8HWJ+iA5pfBL2srSwZOBLjrx4ndikRoCqrIElhMUA31o+l2xEo7bf507O/eKcxDZcRaALMu6jrisWd3nUVr4pRU0NJkfpoDk9ICWd09Xy+UJF1Eq7n52QS4I/Jjm18zEtb+IVywyOzFmtuT20SLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BigginXc; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BigginXc"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 515CI9MH2529619
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 06:18:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738757889;
+	bh=urwHlgDO2lKuC9/wGjafEmW2fGbENgohK10qmloExbc=;
+	h=From:To:CC:Subject:Date;
+	b=BigginXcRnAdyEUjb12W009uOLlGrmFC2wMxOltdTIfpz/IolOl41kRFQmIrXP9rE
+	 hZ3HAsFj/mO0/ytFiJVRp5GWb6FIgQ9icVpZLzHkzpQTIXbLkyPEhLqoO2SeeCdVdn
+	 HVhFX7fAD4v1QMQMVY+FqF4bJ2RfZjVFzjTRrGc8=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 515CI9GN009081
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 5 Feb 2025 06:18:09 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
+ Feb 2025 06:18:09 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 5 Feb 2025 06:18:09 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.104])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 515CI6lk071061;
+	Wed, 5 Feb 2025 06:18:06 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-udma: Enable second resource range for BCDMA and PKTDMA
+Date: Wed, 5 Feb 2025 17:48:01 +0530
+Message-ID: <20250205121805.316792-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,238 +57,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-When FEAT_SPE_PBT is implemented, the previous branch target address
-(named as PBT) before the sampled operation, will be recorded.
+The SoC DMA resources for UDMA, BCDMA and PKTDMA can be described via a
+combination of up to two resource ranges. The first resource range handles
+the default partitioning wherein all resources belonging to that range are
+allocated to a single entity and form a continuous range. For use-cases
+where the resources are shared across multiple entities and require to be
+described via discontinuous ranges, a second resource range is required.
 
-This commit first introduces a 'prev_br_tgt' field in the record for
-saving the PBT address in the decoder.
+Currently, udma_setup_resources() supports handling resources that belong
+to the second range. Extend bcdma_setup_resources() and
+pktdma_setup_resources() to support the same.
 
-If the current operation is a branch instruction, by combining with PBT,
-it can create a chain with two consecutive branches.  As the branch
-stack stores branches in descending order, meaning a newer branch is
-stored in a lower entry in the stack.  Arm SPE stores the latest branch
-in the first entry of branch stack, and the previous branch coming from
-PBT is stored into the second entry.
-
-Otherwise, if current operation is not a branch, the last branch will be
-saved for PBT only.  PBT lacks associated information such as branch
-source address, branch type, and events.  The branch entry fills zeros
-for the corresponding fields and only set its target address.
-
-After:
-
-  perf script -f --itrace=bl -F flags,addr,brstack
-  jcc/not_taken/        ff00000000000000 0xffff80008141e920/0xff00000000000000/PN/-/-/1/COND/- 0x0/0xffff8000803607d8/-/-/-/0//-
-  jcc                   ffff800080187914 0xffff8000801878fc/0xffff800080187914/P/-/-/1/COND/-  0x0/0xffff8000801878f8/-/-/-/0//-
-  jcc                   ffff8000802d12d8 0xffff8000802d12f8/0xffff8000802d12d8/P/-/-/1/COND/-  0x0/0xffff8000802d12ec/-/-/-/0//-
-  jcc                   ffff8000813fe200 0xffff8000813fe20c/0xffff8000813fe200/P/-/-/1/COND/-  0x0/0xffff8000813fe200/-/-/-/0//-
-  jcc                   ffff8000813fe200 0xffff8000813fe20c/0xffff8000813fe200/P/-/-/1/COND/-  0x0/0xffff8000813fe200/-/-/-/0//-
-  jmp                   ffff800081410980 0xffff800081419108/0xffff800081410980/P/-/-/1//-  0x0/0xffff800081419104/-/-/-/0//-
-  return                ffff80008036e064 0xffff80008141ba84/0xffff80008036e064/P/-/-/1/RET/-  0x0/0xffff80008141ba60/-/-/-/0//-
-  jcc                   ffff8000803d54f0 0xffff8000803d54e8/0xffff8000803d54f0/P/-/-/1/COND/-  0x0/0xffff8000803d54e0/-/-/-/0//-
-  jmp                   ffff80008015e468 0xffff8000803d46dc/0xffff80008015e468/P/-/-/1//-  0x0/0xffff8000803d46c8/-/-/-/0//-
-  jmp                   ffff8000806e2d50 0xffff80008040f710/0xffff8000806e2d50/P/-/-/1//-  0x0/0xffff80008040f6e8/-/-/-/0//-
-  jcc                   ffff800080721704 0xffff8000807216b4/0xffff800080721704/P/-/-/1/COND/-  0x0/0xffff8000807216ac/-/-/-/0//-
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- .../util/arm-spe-decoder/arm-spe-decoder.c    |   5 +-
- .../util/arm-spe-decoder/arm-spe-decoder.h    |   1 +
- tools/perf/util/arm-spe.c                     | 114 ++++++++++--------
- 3 files changed, 70 insertions(+), 50 deletions(-)
+ drivers/dma/ti/k3-udma.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 52bd0a4ea96d..688fe6d75244 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -28,7 +28,8 @@ static u64 arm_spe_calc_ip(int index, u64 payload)
- 
- 	/* Instruction virtual address or Branch target address */
- 	if (index == SPE_ADDR_PKT_HDR_INDEX_INS ||
--	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH) {
-+	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH ||
-+	    index == SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH) {
- 		ns = SPE_ADDR_PKT_GET_NS(payload);
- 		el = SPE_ADDR_PKT_GET_EL(payload);
- 
-@@ -181,6 +182,8 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 				decoder->record.virt_addr = ip;
- 			else if (idx == SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS)
- 				decoder->record.phys_addr = ip;
-+			else if (idx == SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH)
-+				decoder->record.prev_br_tgt = ip;
- 			break;
- 		case ARM_SPE_COUNTER:
- 			if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 85b688a97436..5d232188643b 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -89,6 +89,7 @@ struct arm_spe_record {
- 	u32 latency;
- 	u64 from_ip;
- 	u64 to_ip;
-+	u64 prev_br_tgt;
- 	u64 timestamp;
- 	u64 virt_addr;
- 	u64 phys_addr;
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index c0176de6a51b..b4a2bc349b54 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -235,8 +235,9 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
- 	if (spe->synth_opts.last_branch) {
- 		size_t sz = sizeof(struct branch_stack);
- 
--		/* Allocate one entry for TGT */
--		sz += sizeof(struct branch_entry);
-+		/* Allocate up to two entries for PBT + TGT */
-+		sz += sizeof(struct branch_entry) *
-+			min(spe->synth_opts.last_branch_sz, 2U);
- 		speq->last_branch = zalloc(sz);
- 		if (!speq->last_branch)
- 			goto out_free;
-@@ -360,68 +361,83 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
- 
- static void arm_spe__prep_branch_stack(struct arm_spe_queue *speq)
- {
-+	struct arm_spe *spe = speq->spe;
- 	struct arm_spe_record *record = &speq->decoder->record;
- 	struct branch_stack *bstack = speq->last_branch;
- 	struct branch_flags *bs_flags;
-+	unsigned int last_branch_sz = spe->synth_opts.last_branch_sz;
-+	bool have_tgt = !!(speq->flags & PERF_IP_FLAG_BRANCH);
-+	bool have_pbt = last_branch_sz >= (have_tgt + 1U) && record->prev_br_tgt;
- 	size_t sz = sizeof(struct branch_stack) +
--		    sizeof(struct branch_entry) /* TGT */;
-+		    sizeof(struct branch_entry) * min(last_branch_sz, 2U) /* PBT + TGT */;
-+	int i = 0;
- 
- 	/* Clean up branch stack */
- 	memset(bstack, 0x0, sz);
- 
--	if (!(speq->flags & PERF_IP_FLAG_BRANCH))
-+	if (!have_tgt && !have_pbt)
- 		return;
- 
--	bstack->entries[0].from = record->from_ip;
--	bstack->entries[0].to = record->to_ip;
-+	if (have_tgt) {
-+		bstack->entries[i].from = record->from_ip;
-+		bstack->entries[i].to = record->to_ip;
- 
--	bs_flags = &bstack->entries[0].flags;
--	bs_flags->value = 0;
-+		bs_flags = &bstack->entries[i].flags;
-+		bs_flags->value = 0;
- 
--	if (record->op & ARM_SPE_OP_BR_CR_BL) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND_CALL;
--		else
--			bs_flags->type |= PERF_BR_CALL;
--	/*
--	 * Indirect branch instruction without link (e.g. BR),
--	 * take this case as function return.
--	 */
--	} else if (record->op & ARM_SPE_OP_BR_CR_RET ||
--		   record->op & ARM_SPE_OP_BR_INDIRECT) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND_RET;
--		else
--			bs_flags->type |= PERF_BR_RET;
--	} else if (record->op & ARM_SPE_OP_BR_CR_NON_BL_RET) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND;
--		else
--			bs_flags->type |= PERF_BR_UNCOND;
--	} else {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND;
--		else
--			bs_flags->type |= PERF_BR_UNKNOWN;
--	}
-+		if (record->op & ARM_SPE_OP_BR_CR_BL) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND_CALL;
-+			else
-+				bs_flags->type |= PERF_BR_CALL;
-+		/*
-+		 * Indirect branch instruction without link (e.g. BR),
-+		 * take this case as function return.
-+		 */
-+		} else if (record->op & ARM_SPE_OP_BR_CR_RET ||
-+			   record->op & ARM_SPE_OP_BR_INDIRECT) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND_RET;
-+			else
-+				bs_flags->type |= PERF_BR_RET;
-+		} else if (record->op & ARM_SPE_OP_BR_CR_NON_BL_RET) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND;
-+			else
-+				bs_flags->type |= PERF_BR_UNCOND;
-+		} else {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND;
-+			else
-+				bs_flags->type |= PERF_BR_UNKNOWN;
-+		}
- 
--	if (record->type & ARM_SPE_BRANCH_MISS) {
--		bs_flags->mispred = 1;
--		bs_flags->predicted = 0;
--	} else {
--		bs_flags->mispred = 0;
--		bs_flags->predicted = 1;
--	}
-+		if (record->type & ARM_SPE_BRANCH_MISS) {
-+			bs_flags->mispred = 1;
-+			bs_flags->predicted = 0;
-+		} else {
-+			bs_flags->mispred = 0;
-+			bs_flags->predicted = 1;
-+		}
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 7ed1956b4642..b223a7aacb0c 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4886,6 +4886,12 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 				irq_res.desc[i].start = rm_res->desc[i].start +
+ 							oes->bcdma_bchan_ring;
+ 				irq_res.desc[i].num = rm_res->desc[i].num;
 +
-+		if (record->type & ARM_SPE_BRANCH_NOT_TAKEN)
-+			bs_flags->not_taken = 1;
- 
--	if (record->type & ARM_SPE_BRANCH_NOT_TAKEN)
--		bs_flags->not_taken = 1;
-+		if (record->type & ARM_SPE_IN_TXN)
-+			bs_flags->in_tx = 1;
- 
--	if (record->type & ARM_SPE_IN_TXN)
--		bs_flags->in_tx = 1;
-+		bs_flags->cycles = min(record->latency, 0xFFFFU);
-+		i++;
-+	}
- 
--	bs_flags->cycles = min(record->latency, 0xFFFFU);
-+	if (have_pbt) {
-+		bs_flags = &bstack->entries[i].flags;
-+		bs_flags->type |= PERF_BR_UNKNOWN;
-+		bstack->entries[i].to = record->prev_br_tgt;
-+		i++;
-+	}
- 
--	bstack->nr = 1;
-+	bstack->nr = i;
- 	bstack->hw_idx = -1ULL;
- }
- 
-@@ -1566,8 +1582,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
++				if (rm_res->desc[i].num_sec) {
++					irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
++									oes->bcdma_bchan_ring;
++					irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
++				}
+ 			}
+ 		}
+ 	} else {
+@@ -4909,6 +4915,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 				irq_res.desc[i + 1].start = rm_res->desc[j].start +
+ 							oes->bcdma_tchan_ring;
+ 				irq_res.desc[i + 1].num = rm_res->desc[j].num;
++
++				if (rm_res->desc[j].num_sec) {
++					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
++									oes->bcdma_tchan_data;
++					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
++					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
++									oes->bcdma_tchan_ring;
++					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
++				}
+ 			}
+ 		}
  	}
- 
- 	if (spe->synth_opts.last_branch) {
--		if (spe->synth_opts.last_branch_sz > 1)
--			pr_debug("Arm SPE supports only one bstack entry (TGT).\n");
-+		if (spe->synth_opts.last_branch_sz > 2)
-+			pr_debug("Arm SPE supports only two bstack entries (PBT+TGT).\n");
- 
- 		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
- 		/*
+@@ -4929,6 +4944,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 				irq_res.desc[i + 1].start = rm_res->desc[j].start +
+ 							oes->bcdma_rchan_ring;
+ 				irq_res.desc[i + 1].num = rm_res->desc[j].num;
++
++				if (rm_res->desc[j].num_sec) {
++					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
++									oes->bcdma_rchan_data;
++					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
++					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
++									oes->bcdma_rchan_ring;
++					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
++				}
+ 			}
+ 		}
+ 	}
+@@ -5063,6 +5087,12 @@ static int pktdma_setup_resources(struct udma_dev *ud)
+ 			irq_res.desc[i].start = rm_res->desc[i].start +
+ 						oes->pktdma_tchan_flow;
+ 			irq_res.desc[i].num = rm_res->desc[i].num;
++
++			if (rm_res->desc[i].num_sec) {
++				irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
++								oes->pktdma_tchan_flow;
++				irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
++			}
+ 		}
+ 	}
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
+@@ -5074,6 +5104,12 @@ static int pktdma_setup_resources(struct udma_dev *ud)
+ 			irq_res.desc[i].start = rm_res->desc[j].start +
+ 						oes->pktdma_rchan_flow;
+ 			irq_res.desc[i].num = rm_res->desc[j].num;
++
++			if (rm_res->desc[j].num_sec) {
++				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
++								oes->pktdma_rchan_flow;
++				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
++			}
+ 		}
+ 	}
+ 	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
 -- 
-2.34.1
+2.43.0
 
