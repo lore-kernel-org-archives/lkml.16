@@ -1,98 +1,82 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B885F205AA1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 22:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA2421773D;
+	Wed,  5 Feb 2025 22:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738793603; cv=none; b=fZGCoLBxFUyvle/8zdMKAgePXX7Cxi12Aa9vz1lTTcdgV3d0cD0DW5pPdF4FjIcS96jqGYSA5ZpCqfOUdP8LFliz3eVtQZIvpEBsvTg6/igPh15yPVTLqsKf5UJi4a0kdBIw3VB3kh5dtsNFkvotHXQM1VU+gebaUiKDmbHU+xI=
+	t=1738793605; cv=none; b=nD6NeWIDLJ+LppflM5BOumQgiKBGEtdPZKYIhxx3bomBCGhm008LdJPzDkzkjklqhsYLpmAdx3iR2BOLETSnyyIf1s9+ZyilOcSwvhWQICHS3KE9FKDe5qih1UuTptkEVEX8uf6/zEjSoB8cDdntKYZ+H68ZIYXd2q+aZLAxzlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738793603; c=relaxed/simple;
-	bh=q7L8AfCkoiRYk6XD0LRMspwgS/hS3OT1u+Pk97yLlzY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YgEb+1IkUgZqqKIh8Xu+ViNSfrkxQ6w0i5j7V/t4wVwlAdHQrFmvlzfMN7acEu3LW/3vuj209L+Rqf7A2leztewH/3KQWrGSsAUpBChaiOlfo/NIzCReECkR6QG7MxUDK+6VFEcJrK1onDvzvBwtSYrHsG4/4B92d4Q2DUKRUH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KdC14nmM; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738793605; c=relaxed/simple;
+	bh=fKqU6t3xfMtBaiYlVeeCQ6y8NmC6vQ0DoLtKSLtTbLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VtPmX7fXRu46LUvHzH1ttvYEGrkBqsCU8gP5DVgMsLAuR8BMlGwYHyHDF8w8AssooHnluZbIxLPE89MOKfTw4S8euJ7i++J/Apw4Bjo5hluhv1NPywDOxfRa7uJaMI8BrhG0FftVPHWqUuve+LMW9+sp6IePbqTvyozHU6/a8OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvEFWAwX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KdC14nmM"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2efa0eb9cfeso486501a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 14:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738793601; x=1739398401; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dVdg6lU59UKb0/TD/si7cIrxJXLN5wRx2BqZWD8EZQ0=;
-        b=KdC14nmMVwfSBjR+yaLuVK4//ybFGHhfowGnSubwhaRVq+Phf9iYCvXV3cEw8JOUu8
-         q/TslWSyz30zYdNjIR/R2o7CxnYETMzWe+Qx0evCFggiHpaE/ToMUYcQaBrrsmownRNg
-         UR5fYmHymAU4LRLQHfQoZVbuINc2yCCAb33VRTxy8QGXQV7ZkCdM1mIGGhgupQfHCtyT
-         J94mhXtuQsccs/ei5wS71Hd2WjOIHOcYLfFAKKNgIdy53nPViXInD0M8rcy5j+8wesl2
-         iDUZEJ6jCvf5zVMgKu5b7s+c1CtAko6l3WLR6io6qodmmQpBjqhjUofnHNIPq09Npm28
-         +M7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738793601; x=1739398401;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dVdg6lU59UKb0/TD/si7cIrxJXLN5wRx2BqZWD8EZQ0=;
-        b=AjT9tEuiUWQFkOKjvuGcmuITuDL8gu7BaR0DWe7DZ8JpxtKs5oXwPIFx6qjtVesIsF
-         ahOIsKHKrC6UELy6oj4sscsswh/9ysfOGhy6jGp+coc0J5r++l37lyTXjmIqoNIrSmHX
-         NjHMx7BW/RK7uu9PtJW8NyyNtKwr/AgvaXTTE7nmhQHfcRkVBrscqySofl7nXFYqjKEd
-         uA07JVP0FmQTZmKXAHyzazjH2m9m3wqjYliaBRLqbpyf33ouLDWgVXkWkNDJp6NnkcHF
-         nQ3mi6ngWk+jqK8L3GnY4YXUxw3+hqMbjZFYQLWmmLmVd80XSvlDN46tUmYzCcLKP9UE
-         UFNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXmd2pv1ryQfCKDuOnXHq3QwLKLnSk+beD5UvSWl4sHdffT+X15EIDDqn0G+M3LGPD3wEOkvoz1hl6cIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPf7M0Boc1/KePVQrxilOsMilSO8/di+ipyDS8u9OwtThu5DQx
-	ltcOqKoj0Vh1qizz+ooSWOEnlFU1pBZBfReL9QZdnIJuO5Y8/xVGLGzWm3J3/XADiFoibfeiMGs
-	Ylg==
-X-Google-Smtp-Source: AGHT+IEzBJXIxqY+Exe441l1aJjABmGJq/OUJpRwmw6f4+fEJCNQJEg3bbzDZBjxuP/ajdzYJPIfpzBr2jA=
-X-Received: from pjbsi5.prod.google.com ([2002:a17:90b:5285:b0:2ea:4a74:ac2])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e707:b0:2f9:9c3a:ed3
- with SMTP id 98e67ed59e1d1-2f9ffb7ba78mr1633015a91.16.1738793601045; Wed, 05
- Feb 2025 14:13:21 -0800 (PST)
-Date: Wed, 5 Feb 2025 14:13:19 -0800
-In-Reply-To: <20250201021718.699411-2-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvEFWAwX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BF8C4CED1;
+	Wed,  5 Feb 2025 22:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738793604;
+	bh=fKqU6t3xfMtBaiYlVeeCQ6y8NmC6vQ0DoLtKSLtTbLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cvEFWAwX9RNNFHfnZOLz/jpjjY93zlmJSxV9MqbHiN3c8A6VBT3h+ELoRRyga7Ovj
+	 RVGhdm6FFU92Grp7LTTn8XP1eAmPNMb09qIfljYOT4Hha7fe3eTPg7kN7nvuT8TsIO
+	 iRXOZN3qdOLPcgmo95P2xY+vcXlRw6NyyfrsGmSypDC25feevs9osvCONNZ2i2fQ0n
+	 YRApkzuLk5uq+T+8E73urgVmh5Mex1ETT080Vx7Q0veBnLjh0vNCD0v42PyQivx928
+	 wh34IHe4xHHUvs6KC/E6W9VjUf5l4cPMYZZT5WO8u3tMCqYL4Fz3AkKwyJVAaHe3VD
+	 Nreg4+4r1UQSw==
+Date: Wed, 5 Feb 2025 22:13:18 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 000/393] 6.6.76-rc1 review
+Message-ID: <42879ad5-a1d7-4fd0-98a0-9b8b635a4eed@sirena.org.uk>
+References: <20250205134420.279368572@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-2-seanjc@google.com>
-Message-ID: <Z6Pif2CFE0o1eOnj@google.com>
-Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
- info from CPUID.0x15
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i5ohF/d3k1buxbG1"
+Content-Disposition: inline
+In-Reply-To: <20250205134420.279368572@linuxfoundation.org>
+X-Cookie: Earth is a beta site.
 
-On Fri, Jan 31, 2025, Sean Christopherson wrote:
-> +static inline int cpuid_get_tsc_freq(unsigned int *tsc_khz,
-> +				     unsigned int *crystal_khz)
-> +{
-> +	unsigned int denominator, numerator;
-> +
-> +	if (cpuid_get_tsc_info(tsc_khz, &denominator, &numerator))
 
-As pointed out by Dan, this is broken.  It should be crystal_khz, not tsc_khz.
-I fixed the bug in my test build but clobbered it before posting.
+--i5ohF/d3k1buxbG1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +		return -ENOENT;
-> +
-> +	if (!*crystal_khz)
-> +		return -ENOENT;
-> +
-> +	*tsc_khz = *crystal_khz * numerator / denominator;
-> +	return 0;
-> +}
+On Wed, Feb 05, 2025 at 02:38:39PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.76 release.
+> There are 393 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--i5ohF/d3k1buxbG1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmej4n4ACgkQJNaLcl1U
+h9Cr2Qf+OLovu27PIDWI3U2eNah4cgNcS0HSufcNATYtqL21entd5NKZtsbPzB11
+Ee5GiGKO8EOW0aSPlLO2DSt1TMC1vGunLUiC2Ju76jMZjfklFgaECeYmGwycCDUE
+RnF5ybsgy0zy4Tq0Ey35Z/5MWH/1bLpgAoS4ZJYh7XwmnhhETlyHr7Qa3CKhlc/C
+JMrVdHAlGK6NUjdc+lOl4DJIug/U0gint4aC3ANmu0FfAG2AOmsHDC9ZddY4xh6i
+GixbEmuhsYf+WLRoMmA1ZY5p6im/UEnypD0kuPN1kmyYyu7aIQXxTdHezv3Ra1jY
+qtotFhi7KPmi59oXc+ZuSfIyMMqVFQ==
+=e/h0
+-----END PGP SIGNATURE-----
+
+--i5ohF/d3k1buxbG1--
