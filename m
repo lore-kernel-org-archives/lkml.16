@@ -1,272 +1,391 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCBA221DA3;
-	Wed,  5 Feb 2025 06:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738736027; cv=none; b=CkvtVZiWWrjmFy5KJlaLXihES8LKwwAaVtup1oeSEvDZECSQxLMbgPqWl52rS7L4guS0vQHq8k4jmBJujyfo9Ql21FZmA+7qDpl/GrMAaHzwzjpxHw0+bF/5aVIEhLDKiJp+iYV9F6fpa93PL0ieMraUrxQorjzCSzSbi+b1d+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738736027; c=relaxed/simple;
-	bh=wp4BYmlHfTkLuIMdUrFAUM0htZkNnvijjGk3fNwIxBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kfSZjkpxBuUv9J8lOYZ3vOOXU93K/DADznnFieOnuC0YTvCW67LWvPbrI40rHLoJ0jSvnBmocV7AHdC85Q9i6YpIIyQ1vQ44Mc3BnvgRBtzk8Jd4IX/cxJf3hs3lVGITwlODRgTPfH5ye+7og21OuTXSBH6z8ZxMOpkZGhXYGbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YnqdK2XzPzrRgr;
-	Wed,  5 Feb 2025 14:12:05 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8EC9D14034D;
-	Wed,  5 Feb 2025 14:13:41 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 5 Feb
- 2025 14:13:40 +0800
-Message-ID: <e7fbfb9d-6889-4e78-985d-e18694c7cb9c@huawei.com>
-Date: Wed, 5 Feb 2025 14:13:40 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF71825A644;
+	Wed,  5 Feb 2025 06:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738736062; cv=fail; b=rllYEezL5GwZQm7uH3EIY5iDWU6UiqQF6IFu+APuezWT43r2/P9ZONyMEhXsXkhyf04QKMBJuxamzoqub9F9rylzAYTVIbNW0wHpHU2tLElc4v6DOKZaxzzv14shK0FA4TbCX62dzUnu8u1y5YztwTByorHGBDOjy8++SPKviRg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738736062; c=relaxed/simple;
+	bh=fdMzKEHwM9+ksucGuF84+5O+H5vWCz/Uka3Uw2xtnVY=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=nTJBuTd17A6H9jTK2hvRuI3IitKuO748N7dCqJBM5YKokv2K9e8IooUEyfRNyZBxd2x7s1XU7acfIYlfd2Y7iauOJ8zcscfEdU2biI+XvlT1sKdm1gcvHHnRgS6yh9oQ/c6so1z1bsG8FkpqS4lH2h4//Fr5WoB/mPekoUC/tqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bc5kMGlt; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bc5kMGlt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738736060; x=1770272060;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:mime-version;
+  bh=fdMzKEHwM9+ksucGuF84+5O+H5vWCz/Uka3Uw2xtnVY=;
+  b=bc5kMGltuUHoJPzF3Gi9q3zGuml8TRWj+WwArvcgiYs6+uAlmXvxyZR1
+   dE+oMEZsavK01m/joeQjwoIOQXHeVqoh9cFvOtV0UqajSbX+RSOMSvac1
+   JJlOU1eUMRtQ6kZVnm/YN+wqNICYgeranTqUMsww6fmJg5F3PyQ76Shen
+   OsUyY2PyNss53ZTkO6sdwf5uxQOgudEOtnBwfuZvgHTR3MwQIKIUF39dW
+   aR3MsTi3kiBMWHfFa0wNAXAG7JsJBY9LQvZ3Jtbez7Uthyr7R3M+YM5Yz
+   nhDKPVbt6h1ormxIieliVCARoe9v8EAf5h4j+UPnDeEZK/stCKwvh1wvL
+   w==;
+X-CSE-ConnectionGUID: +unNXDwBSyGrpAy/PomgXw==
+X-CSE-MsgGUID: vzDcbgSOThyvJ+08hvIAgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56822053"
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="56822053"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:14:19 -0800
+X-CSE-ConnectionGUID: 9n2Qp2TXQXyFKfpA76si/w==
+X-CSE-MsgGUID: aBPhlWE8S4q2MNCJAF6pZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="110695616"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 22:14:19 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 4 Feb 2025 22:14:18 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 22:14:18 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 4 Feb 2025 22:14:15 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bo4zUNu+BPCkbu3YevJzhsovbIYaxEhOTyNGXaqoFTACF0d3SG+KaOXEP57q2gzY6rqgfL+DrC94ZryVVuaFRGbAyf+2CKj4zCZNYm1M69ZdOBSMOtWzUijKVO2+lKYuMNZowUfPxHmFjwlBpzHc4Pup8JSWlRgi0S/QihyEpu9cdX5XJRpddfGnPmGy+HQj0LRi+0d8j+2nsz+wLqRtnFgs47h+46CQpPvLLuASaeLkfyHRsw7274xGSvm6Ezgzsse66sO4lqGYOri2RWl6z88cw8bh7xyaXYx82/99Z7hr+cRvQO9dQQ6JRbhnVxBicJUVBo7AXAKgW9ruGL5bdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HgVdpC390ejkH2EST8BydzPMZv8zWafnPRMCe1wJHqU=;
+ b=ABaxUbZd29NCqbjix7GI3e7LfTDe2OnGydeLYDslpM1DELw/gh6Z7K1qM4P3Og0OcF5eMRMeYs+YQutwnSaT32+hoo7BEe2ti51gYOKcQ5WFDVJ+4q5V4D3tK8Dqibe+ZtaJPhHLxOcUzCT+E7W6GlqecjovMiGMYZtaGYum0rbC8ijHW7MJNRZSkpehAJ+QUQx9uZ4eh7d6xCH8jUVct3m2BYKfHT4DSIMy7XqhM0ak+JlIP5hx4FNuzFE8Y//FGdGclXRTWGad+uM6dVjbLeYxgNNZeXJ6r49CQeiKkXfofWIPBSPfSGyQwwxfMGYTqm0qLPp3NcodgQZGiHFi0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Wed, 5 Feb
+ 2025 06:13:59 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
+ 06:13:59 +0000
+Date: Wed, 5 Feb 2025 14:13:48 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Vadim Fedorenko <vadfed@meta.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Willem de Bruijn <willemb@google.com>,
+	Jason Xing <kerneljasonxing@gmail.com>, <netdev@vger.kernel.org>,
+	<linux-alpha@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <oliver.sang@intel.com>
+Subject: [linus:master] [net_tstamp]  4aecca4c76:
+ redis.get_total_throughput_rps 1.5% improvement
+Message-ID: <202502051330.4d2f403b-lkp@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR01CA0043.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::12) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/6] cpufreq: CPPC: Support for autonomous selection in
- cppc_cpufreq
-To: Russell Haley <yumpusamongus@gmail.com>, Mario Limonciello
-	<mario.limonciello@amd.com>, Srinivas Pandruvada
-	<srinivas.pandruvada@linux.intel.com>, Pierre Gondois
-	<pierre.gondois@arm.com>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<robert.moore@intel.com>, <viresh.kumar@linaro.org>
-CC: <acpica-devel@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-	<gautham.shenoy@amd.com>, <ray.huang@amd.com>, <zhanjie9@hisilicon.com>,
-	<lihuisong@huawei.com>, <hepeng68@huawei.com>, <fanghao11@huawei.com>
-References: <20250113122104.3870673-1-zhenglifeng1@huawei.com>
- <20250113122104.3870673-7-zhenglifeng1@huawei.com>
- <21654032-a394-4da9-8ee9-d7cb9df8c855@gmail.com>
- <6909eef3-20aa-4341-9177-a42323a0d5c6@huawei.com>
- <270a1cce-8afe-497a-b30b-56157d75a863@amd.com>
- <0705775a-1040-4564-b97b-2ed397803723@huawei.com>
- <256a7620-2d21-4474-b64d-b1e8effbc975@arm.com>
- <32d084f3-f114-420e-affa-2f7ba107de0d@amd.com>
- <eadd291e-c797-4d7d-b1f9-f8778fa58b23@huawei.com>
- <6267261b-4e4a-475f-b17d-5473d72b2c2a@linux.intel.com>
- <9f5f8181-7d0e-415d-b473-0e3c6601ccc3@amd.com>
- <0c511da2-6a4a-4fa2-9d82-da45d1afe346@huawei.com>
- <6a54f96b-28c9-4cbc-8c8f-a07a3a7048e5@gmail.com>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <6a54f96b-28c9-4cbc-8c8f-a07a3a7048e5@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CO1PR11MB4820:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3f9a637-3f63-4568-19ed-08dd45ac4771
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?YuridmflQj7rADobsu+cKS20UCYXWLt17Y9yRiJjAw12JrD5eSlyCYmo0W?=
+ =?iso-8859-1?Q?1w6c66V+Hv2cC54InFA3rKGT9CERm50EMg1pgCaS4BphhDu2N4ECNMYkNZ?=
+ =?iso-8859-1?Q?ODxm/msOwu9uSofNhTP/h0x9phCcwgrkDuB3BOGThaqQl5rVxlrbTIQmnd?=
+ =?iso-8859-1?Q?4QxAFdxLbZxvxKEz0POFbT5eesKybbWdushUMP3M3eRbSoWo4x3x8ZDV4V?=
+ =?iso-8859-1?Q?oy46LdI2gLhcbibhx8AxC6SShd4hdcnowO7CKOF71C/Za7NgpUeqMSSVni?=
+ =?iso-8859-1?Q?6XvJOWf451PKx+HMvOuzNGYRnxfn/WP6D9OkX77LtXNUDX6eLV95b826l3?=
+ =?iso-8859-1?Q?8BMlBM6MIDPqDsAazfd8HWwhvpONS9XYQOUaeP5nAVcvfNopYPMW2xcCiV?=
+ =?iso-8859-1?Q?TK24syIBmqT5hJOS3nN3PyBMXF+dbpBiuD1CnMX4e/siU5Dv0vhOJLkSWq?=
+ =?iso-8859-1?Q?w3SjOlNg5J3YepLypQ1ieuStjRdZXh1R9vuzmC5IGy/D4FSx065XLy4LG2?=
+ =?iso-8859-1?Q?2F+kGvP6zg8AFhjKr5fpV1efHgzEabArqp08deG+zBx7wna+HOtVvfZjDi?=
+ =?iso-8859-1?Q?VITn8ICHY09FGxRyFUCJIzMG+8wqHZ/e95c/IQph1InvbEYog7uQwUAMiF?=
+ =?iso-8859-1?Q?cY+sysyhsr5bg5UOrIT/A0c25gxhs/Ybgymkh4hvedTY94e/33cud0Oawy?=
+ =?iso-8859-1?Q?bpaJjWEr3SLWB3exuPIkRKp2aLUVnl950QmocC6A2MtGtlMHDMg1VAWpcS?=
+ =?iso-8859-1?Q?ZqIC9pDUtOie/BV+mLCzj1nM8PPlpwUmfAQt9rwSm/7pUdoqGklfhQjWBl?=
+ =?iso-8859-1?Q?2d7jJv7y1ymj4QflLdAkn+PxEHY/4aqewVjXEIvZZ+Auks/GneEC5cC6/C?=
+ =?iso-8859-1?Q?bDCN+ITdLUH68hQyRS2v3XznQ04DFETHhF1C9NM9uR9mSiMtvbGz+qO0us?=
+ =?iso-8859-1?Q?gzNGTF5sqZgyttDAwnFl9o2h6+4A/wKaY5AZCeOSBsf8lUgmC4lGAiOP/g?=
+ =?iso-8859-1?Q?mhTi/syvISyCjwccG+qVO/lr0HzJ9/v95rQMfB9Mt4jz0u3xAlv+9QGRW9?=
+ =?iso-8859-1?Q?xjkN/gq2anL48oC8O9f99Y7HWJy65aw7lgqkgdA6zZuMZZshRf9X1kTaFW?=
+ =?iso-8859-1?Q?R8bgmREwSB+fD0asGuY2ZY2r7yb/HIzdpGeZdYJg/xvhb0VjgoUwnngXGh?=
+ =?iso-8859-1?Q?ZYcgRboUT4RfvM65CBOCkFpaFztBMTELirxeZv/g7HyJvBe3pbuRxEfcK8?=
+ =?iso-8859-1?Q?heF2YRxbe26lnb8+EhJduSzYW+dA5wxN4LTtGRJYmHzPtL3XJEF/4VsH/l?=
+ =?iso-8859-1?Q?VRLm7YurjWSDARtXUCngyAoBzk7YaF5X1iOjRILffah7N8j0NLDMdkOhbA?=
+ =?iso-8859-1?Q?CGKQE5+0SVHZxbR7lm/GISvD4vOtOSzA=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?6q4ksXm4ujZ9qQmiJ1nQNDa0hh3idpE7LOSvMTlYmEbf+nDr/GLQx5bpN2?=
+ =?iso-8859-1?Q?XUWnq85rbsbzLi/gjy3IFqt9Lj4JcFvTJnJjp/xn5jqnWfpc6RfmAp2BS6?=
+ =?iso-8859-1?Q?fXh+OdmUoYJMxXT7UBhJ1j8SCt2jfGB8nZ332NERw3RGfyu11x9xCeiyXL?=
+ =?iso-8859-1?Q?R7F73r1LGIm011XUiMb+0R/1/uGPjRhhDAaVck76jVpb/f0HJ0rd8pRe7/?=
+ =?iso-8859-1?Q?85zoPTNIuP6w2GFnH1C8x5kmB54irvPTZ/hs7pjz9ZDGABFY8qAZk8DEDl?=
+ =?iso-8859-1?Q?up2YXI6RmYFg6SuQeMhkSjFfPGKlVK9elj41/nScSxeSl/vvbel1vo04Ro?=
+ =?iso-8859-1?Q?Y0NVXtzPoo5/b589cyGLo6QCEffoMMzMoROAOr85c5tKnfrNK9ZpveKWva?=
+ =?iso-8859-1?Q?LTAnIFxfeZrSyu/XyB/9j7jiCyX7UczjWdWXJknZQUU+j1Th9YR/mWrNeF?=
+ =?iso-8859-1?Q?zUch4rVVGZ0nm0XTeR3TMcYl6hfrU8g3hqbmx1wfbu95baFMb9PtcIE+km?=
+ =?iso-8859-1?Q?gCkWwszJvNrzSNUzrTlSCWVOOezeA8mGo0/xTvoYvhylotif+YBogvbMv+?=
+ =?iso-8859-1?Q?WX9vUq+jO8hFOaHIn0xKRqNWjFpYdzi8wV50mn9RsrDDGV1YB63pBHT+EH?=
+ =?iso-8859-1?Q?BEjbzXhmpDBTZv5JYlnGHEXjjqsEZHNHj5KyBFc7FqSwuqV62RzUpV+VOY?=
+ =?iso-8859-1?Q?WSdexCHwNnAljild0SLx1c3IyMqP0OHnZU1u2IXBj7RmN+usBBmHRjkxG8?=
+ =?iso-8859-1?Q?P9ymC6bYMUVoVKBAVWurkEe/vjqVtN6MT6Zga+HCRlII39MQf3cUs/oYBk?=
+ =?iso-8859-1?Q?21F9ahf29uxxITVn7y+cTS6hmePYci4scFbAxjEmzcZFAdZSgjgN+SON3t?=
+ =?iso-8859-1?Q?9lF3AnF+CEXAsVJYkM0fh9yCPLDqH/4ESlaHfVCDNy0N9UjN3wrHs3GM/I?=
+ =?iso-8859-1?Q?mqXVd8v0chq+8lO/wO86raf1uFPO3dxNsVSU/6pcDla+lN/iX8ordkGETJ?=
+ =?iso-8859-1?Q?enNiSwIpLvLF/4pQObygjwQ79l5h5xuwhZdWpYXMMrcByG7Sm+2I/QPhyM?=
+ =?iso-8859-1?Q?u3H0tcvzeQB/tDRfDk0wfh4PAiszrHOfKuDL4sqy4XFDhL6JLnJl9zqdNj?=
+ =?iso-8859-1?Q?Vg57jCVkguPDYNML9SU/Cks7mW3Yw9M9vJGONuuM4vJX+LDcAXZ0q31Z5W?=
+ =?iso-8859-1?Q?oY0pk34eyQSvdmd6pM+FJSaZ66o0bUXmaGGerN5N2aer9TEs7VsifKV9u8?=
+ =?iso-8859-1?Q?bc4edLihHllEG3eUdJENIPr1kHgaf8FhO2lxM4fS8xxlmX67X1LIQezXwx?=
+ =?iso-8859-1?Q?mdAs0gxsCkTP0ZikZCMWYv7T+uEZYPM3jsOMqR/0dt3ZdVOfsz4/uTfInv?=
+ =?iso-8859-1?Q?gy+qqUdrNy+uL5BcRE7g0uY8hqGGepobEbqnPY/eaDYTcUVGwKeXCi9B3t?=
+ =?iso-8859-1?Q?D0IqlTI+8rT3EIAAcO54Z0BR58/o/PdalhD2EhtIubLHvUm/ltUy57J73k?=
+ =?iso-8859-1?Q?WTAYwxA6/OT/Xa9JMXUQeHXA1jVQtiWDJZaRcuJRUldzXAzaTDlcZSNQ1H?=
+ =?iso-8859-1?Q?K6E9CL1VdFmZjhZUwVbJAM5Gj89swl4MM4UyqSV4tfAkgC8m6KK51hho6E?=
+ =?iso-8859-1?Q?zti2NlYedHUteA0LXNSeSGwq6kvwdNytuvPsVZ5zqfOcs+WeqR//8Lhg?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3f9a637-3f63-4568-19ed-08dd45ac4771
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 06:13:59.2742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: naDAWKJ9unNpIAvC0aEpwM51dr3gKm5vrvXu6n4u0FJH0qJBEndGntbGu2H8H75hKwiJvpxMNfMjMQqKTWDvKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4820
+X-OriginatorOrg: intel.com
+
 
 Hello,
 
-Sorry for my delay due to the recent holiday.
+kernel test robot noticed a 1.5% improvement of redis.get_total_throughput_rps on:
 
-On 2025/1/24 22:32, Russell Haley wrote:
 
-> On 1/23/25 9:53 PM, zhenglifeng (A) wrote:
->> On 2025/1/24 1:05, Mario Limonciello wrote:
->>
->>> On 1/23/2025 10:46, Srinivas Pandruvada wrote:
->>>>
->>>> On 1/20/25 18:42, zhenglifeng (A) wrote:
->>>>> On 2025/1/21 1:44, Mario Limonciello wrote:
->>>>>
->>>>>> On 1/20/2025 08:49, Pierre Gondois wrote:
->>>>>>>
->>>>>>> On 1/20/25 04:15, zhenglifeng (A) wrote:
->>>>>>>> On 2025/1/17 22:30, Mario Limonciello wrote:
->>>>>>>>
->>>>>>>>> On 1/16/2025 21:11, zhenglifeng (A) wrote:
->>>>>>>>>> On 2025/1/16 19:39, Russell Haley wrote:
->>>>>>>>>>
->>>>>>>>>>> Hello,
->>>>>>>>>>>
->>>>>>>>>>> I noticed something here just as a user casually browsing the mailing list.
->>>>>>>>>>>
->>>>>>>>>>> On 1/13/25 6:21 AM, Lifeng Zheng wrote:
->>>>>>>>>>>> Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufreq
->>>>>>>>>>>> driver.
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
->>>>>>>>>>>> ---
->>>>>>>>>>>>     .../ABI/testing/sysfs-devices-system-cpu      |  54 +++++++++
->>>>>>>>>>>>     drivers/cpufreq/cppc_cpufreq.c                | 109 +++++++ ++++ +++++++
->>>>>>>>>>>>     2 files changed, 163 insertions(+)
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/ Documentation/ABI/testing/sysfs-devices-system-cpu
->>>>>>>>>>>> index 206079d3bd5b..3d87c3bb3fe2 100644
->>>>>>>>>>>> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
->>>>>>>>>>>> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
->>>>>>>>>>>> @@ -268,6 +268,60 @@ Description:    Discover CPUs in the same CPU frequency coordination domain
->>>>>>>>>>>>             This file is only present if the acpi-cpufreq or the cppc-cpufreq
->>>>>>>>>>>>             drivers are in use.
->>>>>>>>>>> [...snip...]
->>>>>>>>>>>
->>>>>>>>>>>> +What:        /sys/devices/system/cpu/cpuX/cpufreq/energy_perf
->>>>>>>>>>>> +Date:        October 2024
->>>>>>>>>>>> +Contact:    linux-pm@vger.kernel.org
->>>>>>>>>>>> +Description:    Energy performance preference
->>>>>>>>>>>> +
->>>>>>>>>>>> +        Read/write an 8-bit integer from/to this file. This file
->>>>>>>>>>>> +        represents a range of values from 0 (performance preference) to
->>>>>>>>>>>> +        0xFF (energy efficiency preference) that influences the rate of
->>>>>>>>>>>> +        performance increase/decrease and the result of the hardware's
->>>>>>>>>>>> +        energy efficiency and performance optimization policies.
->>>>>>>>>>>> +
->>>>>>>>>>>> +        Writing to this file only has meaning when Autonomous Selection is
->>>>>>>>>>>> +        enabled.
->>>>>>>>>>>> +
->>>>>>>>>>>> +        This file only presents if the cppc-cpufreq driver is in use.
->>>>>>>>>>> In intel_pstate driver, there is file with near-identical semantics:
->>>>>>>>>>>
->>>>>>>>>>> /sys/devices/system/cpu/cpuX/cpufreq/energy_performance_preference
->>>>>>>>>>>
->>>>>>>>>>> It also accepts a few string arguments and converts them to integers.
->>>>>>>>>>>
->>>>>>>>>>> Perhaps the same name should be used, and the semantics made exactly
->>>>>>>>>>> identical, and then it could be documented as present for either
->>>>>>>>>>> cppc_cpufreq OR intel_pstate?
->>>>>>>>>>>
->>>>>>>>>>> I think would be more elegant if userspace tooling could Just Work with
->>>>>>>>>>> either driver.
->>>>>>>>>>>
->>>>>>>>>>> One might object that the frequency selection behavior that results from
->>>>>>>>>>> any particular value of the register itself might be different, but they
->>>>>>>>>>> are *already* different between Intel's P and E-cores in the same CPU
->>>>>>>>>>> package. (Ugh.)
->>>>>>>>>> Yes, I should use the same name. Thanks.
->>>>>>>>>>
->>>>>>>>>> As for accepting string arguments and converting them to integers, I don't
->>>>>>>>>> think it is necessary. It'll be a litte confused if someone writes a raw
->>>>>>>>>> value and reads a string I think. I prefer to let users freely set this
->>>>>>>>>> value.
->>>>>>>>>>
->>>>>>>>>> In addition, there are many differences between the implementations of
->>>>>>>>>> energy_performance_preference in intel_pstate and cppc_cpufreq (and
->>>>>>>>>> amd-pstate...). It is really difficult to explain all this differences in
->>>>>>>>>> this document. So I'll leave it to be documented as present for
->>>>>>>>>> cppc_cpufreq only.
->>>>>>>>> At least the interface to userspace I think we should do the best we can to be the same between all the drivers if possible.
->>>>>>>>>
->>>>>>>>> For example; I've got a patch that I may bring up in a future kernel cycle that adds raw integer writes to amd-pstates energy_performance_profile to behave the same way intel-pstate does.
->>>>>>>> I agree that it's better to keep this interface consistent across different
->>>>>>>> drivers. But in my opinion, the implementation of intel_pstate
->>>>>>>> energy_performance_preference is not really nice. Someone may write a raw
->>>>>>>> value but read a string, or read strings for some values and read raw
->>>>>>>> values for some other values. It is inconsistent. It may be better to use
->>>>>>>> some other implementation, such as seperating the operations of r/w strings
->>>>>>>> and raw values into two files.
->>>>>>> I agree it would be better to be sure of the type to expect when reading the
->>>>>>> energy_performance_preference file. The epp values in the range 0-255 with 0
->>>>>>> being the performance value for all interfaces.
->>>>>>>
->>>>>>> In the current epp strings, it seems there is a big gap between the PERFORMANCE
->>>>>>> and the BALANCE_PERFORMANCE strings. Maybe it would be good to complete it:
->>>>>>> EPP_PERFORMANCE        0x00
->>>>>>> EPP_BALANCE_PERFORMANCE    0x40      // state value changed
->>>>>>> EPP_BALANCE        0x80      // new state
->>>>>>> EPP_BALANCE_POWERSAVE    0xC0
->>>>>>> EPP_POWERSAVE        0xFF
->>>>>>>
->>>>>>> NIT: The mapping seems to be slightly different for intel_pstate and amd-pstate
->>>>>>> currently:
->>>>>>> drivers/cpufreq/amd-pstate.c
->>>>>>> #define AMD_CPPC_EPP_PERFORMANCE        0x00
->>>>>>> #define AMD_CPPC_EPP_BALANCE_PERFORMANCE    0x80
->>>>>>> #define AMD_CPPC_EPP_BALANCE_POWERSAVE        0xBF
->>>>>>> #define AMD_CPPC_EPP_POWERSAVE            0xFF
->>>>>>>
->>>>>>> arch/x86/include/asm/msr-index.h
->>>>>>> #define HWP_EPP_PERFORMANCE        0x00
->>>>>>> #define HWP_EPP_BALANCE_PERFORMANCE    0x80
->>>>>>> #define HWP_EPP_BALANCE_POWERSAVE    0xC0   <------ Different from AMD_CPPC_EPP_BALANCE_POWERSAVE
->>>>>>> #define HWP_EPP_POWERSAVE        0xFF
->>>>>>>
->>>>>>>> I think it's better to consult Rafael and Viresh about how this should
->>>>>>>> evolve.
->>>>>>> Yes indeed
->>>>>> Maybe it's best to discuss what the goal of raw EPP number writes is to decide what to do with it.
->>>>>>
->>>>>> IE in intel-pstate is it for userspace to be able to actually utilize something besides the strings all the time?  Or is it just for debugging to find better values for strings in the future?
->>>>>>
->>>>>> If the former maybe we're better off splitting to 'energy_performance_preference' and 'energy_performance_preference_int'.
->>>>>>
->>>>>> If the latter maybe we're better off putting the integer writes and reads into debugfs instead and making 'energy_performance_preference' return -EINVAL while a non-predefined value is in use.
->>>>
->>>> In Intel case EPP values can be different based on processor. In some case they they end up sharing the same CPU model. So strings are not suitable for all cases. Also there is different preference of EPP between Chrome systems and non chrome distro. For example Chrome has some resource manager which can change and same on Intel distros with LPMD.
->>>>
->>>
->>> Thanks for confirming it is intentional and changing it would break existing userspace.
->>>
->>> And FWIW even in Windows there are more than 4 situational values used like we have in Linux today.
->>>
->>> As the status quo is there I personally feel that we should do the exact same for other implementation of energy_performance_preference.
->>
->> I still don't think this implementation is nice, for the following reasons:
->>
->> 1. Users may write raw value but read string. It's odd.
->>
->> 2. Sometimes a raw value is read and sometimes a character string is read.
->> The userspace tool needs to adapt this.
->>
->> 3. Reading and writing EPP strings is not really general in driver. It is
->> more reasonable to use the userspace tool to implement it.
->>
->> In order not to break existing userspace, I'll rename the file to
->> 'energy_performance_preference_int' or 'energy_performance_preference_val'
->> in cppc_cpufreq and only support reading and writing raw value. As for
->> accepting string arguments, it's not necessary for cppc_cpufreq for now.
->> It's easy to add this feature but hard to remove, so I'll leave it to the
->> future if it is really needed.
->>
->> As for amd-pstate and intel_pstate, you can decide how
->> energy_performance_preference should evolve. But I strongly recommend
->> splitting it.
->>
->> Regards,
->>
->> Lifeng
-> 
-> I agree that not being able to write-read-confirm a numeric value that
-> happens to match one of the strings is... ugly. I have seen cases of
-> userspace fighting with firmware for control of the EPP, and detecting
-> that's happening is difficult if there are *other* reasons you might not
-> get back what you just wrote.
-> 
-> However, the desktop userspace pretty much only uses the strings anyway,
-> and they serve to translate arbitrary non-linear hardware-specific
-> scales into something userspace can build policy on. They are somewhat
-> less magic than the raw values, although still, IMO, pretty magic.
-> 
-> The raw values don't have consistent interpretation other than that
-> higher numbers give monotonically increasing efficiency for that
-> specific core, and I use that wording particularly. Lower numbers may
-> not increase performance because of long-term power/thermal limits, and
-> on asymmetric-CPU machines, the same number may not mean the same thing
-> for different cores in the same CPU package.
-> 
-> Leaving it up to userspace means either you need machine-model-specific
-> golden images, manually tuned by a skilled administrator, or CPU model
-> checks and an out-of-tree hardware database that somehow everyone
-> collaborates on. That database would likely miss a lot of things that
-> aren't popular X86 CPUs less than 5 years old.
-> 
-> Thanks,
-> 
-> Russell
+commit: 4aecca4c76808f3736056d18ff510df80424bc9f ("net_tstamp: add SCM_TS_OPT_ID to provide OPT_ID in control message")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
-If userspace only uses the strings, then it makes more sense to split it I
-think.
 
->>>
->>
-> 
+testcase: redis
+config: x86_64-rhel-9.4
+compiler: gcc-12
+test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
+parameters:
+
+	all: 1
+	sc_overcommit_memory: 1
+	sc_somaxconn: 65535
+	thp_enabled: never
+	thp_defrag: never
+	cluster: cs-localhost
+	cpu_node_bind: even
+	nr_processes: 4
+	test: set,get
+	data_size: 1024
+	n_client: 5
+	requests: 68000000
+	n_pipeline: 3
+	key_len: 68000000
+	cpufreq_governor: performance
+
+
+
+
+
+
+Details are as below:
+-------------------------------------------------------------------------------------------------->
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250205/202502051330.4d2f403b-lkp@intel.com
+
+=========================================================================================
+all/cluster/compiler/cpu_node_bind/cpufreq_governor/data_size/kconfig/key_len/n_client/n_pipeline/nr_processes/requests/rootfs/sc_overcommit_memory/sc_somaxconn/tbox_group/test/testcase/thp_defrag/thp_enabled:
+  1/cs-localhost/gcc-12/even/performance/1024/x86_64-rhel-9.4/68000000/5/3/4/68000000/debian-12-x86_64-20240206.cgz/1/65535/lkp-icl-2sp7/set,get/redis/never/never
+
+commit: 
+  34ea1df802 ("Merge branch 'net-mlx5-hw-counters-refactor'")
+  4aecca4c76 ("net_tstamp: add SCM_TS_OPT_ID to provide OPT_ID in control message")
+
+34ea1df802f79d44 4aecca4c76808f3736056d18ff5 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+  18491785            +2.1%   18880098        proc-vmstat.numa_hint_faults
+  18483590            +2.0%   18850441        proc-vmstat.numa_hint_faults_local
+      8589 � 97%    +255.7%      30553 � 17%  proc-vmstat.numa_pages_migrated
+  21039386            +2.2%   21505792        proc-vmstat.numa_pte_updates
+      8589 � 97%    +255.7%      30553 � 17%  proc-vmstat.pgmigrate_success
+     25696 � 12%     +14.4%      29397        proc-vmstat.pgreuse
+    252371            +1.5%     256108        redis.get_avg_throughput_rps
+     67.36            -1.5%      66.38        redis.get_avg_time_sec
+   1009486            +1.5%    1024432        redis.get_total_throughput_rps
+    269.45            -1.5%     265.52        redis.get_total_time_sec
+    257.67            -1.1%     254.83        redis.time.percent_of_cpu_this_job_got
+    337.27            -2.4%     329.05        redis.time.system_time
+ 3.957e+09            +1.3%  4.008e+09        perf-stat.i.branch-instructions
+  38469227            +1.6%   39070923        perf-stat.i.branch-misses
+     32.20            +0.8       33.01        perf-stat.i.cache-miss-rate%
+    136208            +1.2%     137857        perf-stat.i.context-switches
+      1.34            -1.0%       1.32        perf-stat.i.cpi
+ 1.948e+10            +1.3%  1.974e+10        perf-stat.i.instructions
+      9.12            +2.2%       9.32        perf-stat.i.metric.K/sec
+    224090            +2.5%     229667        perf-stat.i.minor-faults
+    224090            +2.5%     229667        perf-stat.i.page-faults
+      1.33           -34.1%       0.88 � 70%  perf-stat.overall.cpi
+    714.76           -33.9%     472.47 � 70%  perf-stat.overall.cycles-between-cache-misses
+ 1.095e+08           -34.2%   72001076 � 70%  perf-stat.ps.cache-references
+     15.93            -0.8       15.15        perf-profile.calltrace.cycles-pp.tcp_write_xmit.__tcp_push_pending_frames.tcp_sendmsg_locked.tcp_sendmsg.sock_write_iter
+     15.95            -0.7       15.22        perf-profile.calltrace.cycles-pp.__tcp_push_pending_frames.tcp_sendmsg_locked.tcp_sendmsg.sock_write_iter.vfs_write
+     14.40            -0.7       13.72        perf-profile.calltrace.cycles-pp.tcp_write_xmit.__tcp_push_pending_frames.tcp_sendmsg_locked.tcp_sendmsg.__sys_sendto
+     14.43            -0.6       13.79        perf-profile.calltrace.cycles-pp.__tcp_push_pending_frames.tcp_sendmsg_locked.tcp_sendmsg.__sys_sendto.__x64_sys_sendto
+     21.35            -0.6       20.74        perf-profile.calltrace.cycles-pp.tcp_sendmsg_locked.tcp_sendmsg.sock_write_iter.vfs_write.ksys_write
+     21.50            -0.5       20.96        perf-profile.calltrace.cycles-pp.tcp_sendmsg.sock_write_iter.vfs_write.ksys_write.do_syscall_64
+     16.98            -0.5       16.44        perf-profile.calltrace.cycles-pp.tcp_sendmsg_locked.tcp_sendmsg.__sys_sendto.__x64_sys_sendto.do_syscall_64
+     17.15            -0.5       16.66        perf-profile.calltrace.cycles-pp.tcp_sendmsg.__sys_sendto.__x64_sys_sendto.do_syscall_64.entry_SYSCALL_64_after_hwframe
+     21.61            -0.5       21.14        perf-profile.calltrace.cycles-pp.sock_write_iter.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe
+     22.26            -0.4       21.84        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.write
+     21.76            -0.4       21.34        perf-profile.calltrace.cycles-pp.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
+     22.24            -0.4       21.82        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
+     21.95            -0.4       21.53        perf-profile.calltrace.cycles-pp.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
+     22.65            -0.4       22.24        perf-profile.calltrace.cycles-pp.write
+     17.28            -0.4       16.87        perf-profile.calltrace.cycles-pp.__sys_sendto.__x64_sys_sendto.do_syscall_64.entry_SYSCALL_64_after_hwframe.__send
+     17.30            -0.4       16.92        perf-profile.calltrace.cycles-pp.__x64_sys_sendto.do_syscall_64.entry_SYSCALL_64_after_hwframe.__send
+     17.49            -0.4       17.12        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.__send
+     17.51            -0.4       17.14        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.__send
+     17.92            -0.4       17.57        perf-profile.calltrace.cycles-pp.__send
+      0.57            +0.0        0.62 �  3%  perf-profile.calltrace.cycles-pp.skb_do_copy_data_nocache.tcp_sendmsg_locked.tcp_sendmsg.sock_write_iter.vfs_write
+      0.74 �  2%      +0.1        0.79 �  3%  perf-profile.calltrace.cycles-pp.tcp_stream_alloc_skb.tcp_sendmsg_locked.tcp_sendmsg.__sys_sendto.__x64_sys_sendto
+      1.34            +0.1        1.40        perf-profile.calltrace.cycles-pp.__inet_lookup_skb.tcp_v4_rcv.ip_protocol_deliver_rcu.ip_local_deliver_finish.__netif_receive_skb_one_core
+      3.85            +0.1        3.94        perf-profile.calltrace.cycles-pp.cpuidle_idle_call.do_idle.cpu_startup_entry.start_secondary.common_startup_64
+      1.87 �  3%      +0.1        1.97        perf-profile.calltrace.cycles-pp.intel_idle.cpuidle_enter_state.cpuidle_enter.cpuidle_idle_call.do_idle
+      5.14            +0.1        5.24        perf-profile.calltrace.cycles-pp.cpu_startup_entry.start_secondary.common_startup_64
+      5.14            +0.1        5.25        perf-profile.calltrace.cycles-pp.start_secondary.common_startup_64
+      5.54            +0.1        5.64        perf-profile.calltrace.cycles-pp.common_startup_64
+      5.13            +0.1        5.24        perf-profile.calltrace.cycles-pp.do_idle.cpu_startup_entry.start_secondary.common_startup_64
+     10.08            +0.1       10.20        perf-profile.calltrace.cycles-pp.do_epoll_ctl.__x64_sys_epoll_ctl.do_syscall_64.entry_SYSCALL_64_after_hwframe.epoll_ctl
+     10.48            +0.1       10.61        perf-profile.calltrace.cycles-pp.__x64_sys_epoll_ctl.do_syscall_64.entry_SYSCALL_64_after_hwframe.epoll_ctl
+     11.15            +0.1       11.28        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.epoll_ctl
+     11.03            +0.1       11.18        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.epoll_ctl
+      6.79            +0.2        6.95        perf-profile.calltrace.cycles-pp.dictFind
+     12.44            +0.2       12.62        perf-profile.calltrace.cycles-pp.epoll_ctl
+     15.91            +0.2       16.10        perf-profile.calltrace.cycles-pp.tcp_v4_rcv.ip_protocol_deliver_rcu.ip_local_deliver_finish.__netif_receive_skb_one_core.process_backlog
+     16.00            +0.2       16.21        perf-profile.calltrace.cycles-pp.ip_protocol_deliver_rcu.ip_local_deliver_finish.__netif_receive_skb_one_core.process_backlog.__napi_poll
+     16.03            +0.2       16.24        perf-profile.calltrace.cycles-pp.ip_local_deliver_finish.__netif_receive_skb_one_core.process_backlog.__napi_poll.net_rx_action
+     16.78            +0.2       17.01        perf-profile.calltrace.cycles-pp.process_backlog.__napi_poll.net_rx_action.handle_softirqs.do_softirq
+     16.54            +0.2       16.78        perf-profile.calltrace.cycles-pp.__netif_receive_skb_one_core.process_backlog.__napi_poll.net_rx_action.handle_softirqs
+     16.80            +0.2       17.04        perf-profile.calltrace.cycles-pp.__napi_poll.net_rx_action.handle_softirqs.do_softirq.__local_bh_enable_ip
+     20.70            +0.3       20.96        perf-profile.calltrace.cycles-pp.net_rx_action.handle_softirqs.do_softirq.__local_bh_enable_ip.__dev_queue_xmit
+     21.08            +0.3       21.34        perf-profile.calltrace.cycles-pp.handle_softirqs.do_softirq.__local_bh_enable_ip.__dev_queue_xmit.ip_finish_output2
+     21.15            +0.3       21.42        perf-profile.calltrace.cycles-pp.do_softirq.__local_bh_enable_ip.__dev_queue_xmit.ip_finish_output2.__ip_queue_xmit
+     21.23            +0.3       21.50        perf-profile.calltrace.cycles-pp.__local_bh_enable_ip.__dev_queue_xmit.ip_finish_output2.__ip_queue_xmit.__tcp_transmit_skb
+     22.73            +0.3       23.03        perf-profile.calltrace.cycles-pp.__dev_queue_xmit.ip_finish_output2.__ip_queue_xmit.__tcp_transmit_skb.tcp_write_xmit
+     23.44            +0.3       23.77        perf-profile.calltrace.cycles-pp.__ip_queue_xmit.__tcp_transmit_skb.tcp_write_xmit.__tcp_push_pending_frames.tcp_sendmsg_locked
+     22.94            +0.3       23.28        perf-profile.calltrace.cycles-pp.ip_finish_output2.__ip_queue_xmit.__tcp_transmit_skb.tcp_write_xmit.__tcp_push_pending_frames
+     26.32            +0.4       26.68        perf-profile.calltrace.cycles-pp.__tcp_transmit_skb.tcp_write_xmit.__tcp_push_pending_frames.tcp_sendmsg_locked.tcp_sendmsg
+     30.37            -1.5       28.92        perf-profile.children.cycles-pp.tcp_write_xmit
+     30.39            -1.4       29.03        perf-profile.children.cycles-pp.__tcp_push_pending_frames
+     38.37            -1.1       37.23        perf-profile.children.cycles-pp.tcp_sendmsg_locked
+     38.66            -1.0       37.67        perf-profile.children.cycles-pp.tcp_sendmsg
+      1.32            -0.9        0.38 �  2%  perf-profile.children.cycles-pp.tcp_event_new_data_sent
+      1.80 �  2%      -0.9        0.88 �  2%  perf-profile.children.cycles-pp.tcp_check_space
+      1.19 �  2%      -0.9        0.27 �  4%  perf-profile.children.cycles-pp.__mod_timer
+      1.22 �  2%      -0.9        0.30 �  3%  perf-profile.children.cycles-pp.sk_reset_timer
+     66.87            -0.5       66.34        perf-profile.children.cycles-pp.do_syscall_64
+     67.19            -0.5       66.67        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
+     21.61            -0.5       21.15        perf-profile.children.cycles-pp.sock_write_iter
+     21.82            -0.4       21.39        perf-profile.children.cycles-pp.vfs_write
+     22.02            -0.4       21.60        perf-profile.children.cycles-pp.ksys_write
+     17.29            -0.4       16.88        perf-profile.children.cycles-pp.__sys_sendto
+     22.78            -0.4       22.37        perf-profile.children.cycles-pp.write
+     17.31            -0.4       16.94        perf-profile.children.cycles-pp.__x64_sys_sendto
+     18.00            -0.4       17.65        perf-profile.children.cycles-pp.__send
+      0.23 �  5%      -0.1        0.16 �  6%  perf-profile.children.cycles-pp.tcp_event_data_recv
+      0.12 �  4%      +0.0        0.13 �  3%  perf-profile.children.cycles-pp.validate_xmit_skb
+      0.38 �  2%      +0.0        0.40 �  3%  perf-profile.children.cycles-pp.syscall_return_via_sysret
+      0.30 �  4%      +0.0        0.32 �  3%  perf-profile.children.cycles-pp.pick_next_task_fair
+      0.51 �  2%      +0.0        0.54 �  2%  perf-profile.children.cycles-pp._copy_from_iter
+      0.18 �  5%      +0.0        0.21 �  2%  perf-profile.children.cycles-pp.tcp_schedule_loss_probe
+      1.35            +0.1        1.40        perf-profile.children.cycles-pp.__inet_lookup_skb
+      1.49            +0.1        1.56        perf-profile.children.cycles-pp.tcp_stream_alloc_skb
+      0.76            +0.1        0.83        perf-profile.children.cycles-pp.skb_do_copy_data_nocache
+      4.02            +0.1        4.09        perf-profile.children.cycles-pp.cpuidle_enter
+      4.00            +0.1        4.07        perf-profile.children.cycles-pp.cpuidle_enter_state
+      0.24 �  5%      +0.1        0.32 �  5%  perf-profile.children.cycles-pp.release_sock
+      4.22            +0.1        4.32        perf-profile.children.cycles-pp.cpuidle_idle_call
+      1.93 �  2%      +0.1        2.03        perf-profile.children.cycles-pp.intel_idle
+      5.53            +0.1        5.63        perf-profile.children.cycles-pp.do_idle
+      5.14            +0.1        5.25        perf-profile.children.cycles-pp.start_secondary
+      5.54            +0.1        5.64        perf-profile.children.cycles-pp.common_startup_64
+      5.54            +0.1        5.64        perf-profile.children.cycles-pp.cpu_startup_entry
+     10.12            +0.1       10.24        perf-profile.children.cycles-pp.do_epoll_ctl
+     10.50            +0.1       10.63        perf-profile.children.cycles-pp.__x64_sys_epoll_ctl
+     12.76            +0.2       12.93        perf-profile.children.cycles-pp.epoll_ctl
+      6.88            +0.2        7.05        perf-profile.children.cycles-pp.dictFind
+     15.94            +0.2       16.13        perf-profile.children.cycles-pp.tcp_v4_rcv
+     16.04            +0.2       16.25        perf-profile.children.cycles-pp.ip_local_deliver_finish
+     16.02            +0.2       16.23        perf-profile.children.cycles-pp.ip_protocol_deliver_rcu
+     16.55            +0.2       16.78        perf-profile.children.cycles-pp.__netif_receive_skb_one_core
+     16.81            +0.2       17.05        perf-profile.children.cycles-pp.__napi_poll
+     16.78            +0.2       17.02        perf-profile.children.cycles-pp.process_backlog
+     21.54            +0.3       21.79        perf-profile.children.cycles-pp.handle_softirqs
+     20.72            +0.3       20.98        perf-profile.children.cycles-pp.net_rx_action
+     21.16            +0.3       21.43        perf-profile.children.cycles-pp.do_softirq
+     21.31            +0.3       21.60        perf-profile.children.cycles-pp.__local_bh_enable_ip
+     22.76            +0.3       23.06        perf-profile.children.cycles-pp.__dev_queue_xmit
+     22.96            +0.3       23.29        perf-profile.children.cycles-pp.ip_finish_output2
+     23.46            +0.3       23.80        perf-profile.children.cycles-pp.__ip_queue_xmit
+     26.38            +0.3       26.72        perf-profile.children.cycles-pp.__tcp_transmit_skb
+      1.13 �  2%      -1.0        0.18 �  3%  perf-profile.self.cycles-pp.__mod_timer
+      1.79 �  2%      -0.9        0.87 �  2%  perf-profile.self.cycles-pp.tcp_check_space
+      0.22 �  6%      -0.1        0.15 �  7%  perf-profile.self.cycles-pp.tcp_event_data_recv
+      0.48            +0.0        0.50 �  2%  perf-profile.self.cycles-pp.mod_objcg_state
+      0.32 �  2%      +0.0        0.34        perf-profile.self.cycles-pp.call
+      0.50 �  2%      +0.0        0.52 �  2%  perf-profile.self.cycles-pp._copy_from_iter
+      0.17 �  4%      +0.0        0.19 �  3%  perf-profile.self.cycles-pp.ip_finish_output2
+      0.11 �  9%      +0.0        0.14 �  3%  perf-profile.self.cycles-pp.tcp_event_new_data_sent
+      0.27 �  4%      +0.0        0.30 �  3%  perf-profile.self.cycles-pp.__alloc_skb
+      0.21            +0.0        0.24 �  3%  perf-profile.self.cycles-pp.kfree_skbmem
+      0.36 �  3%      +0.0        0.40        perf-profile.self.cycles-pp._raw_spin_lock_bh
+      0.56 �  2%      +0.0        0.60 �  2%  perf-profile.self.cycles-pp.kmem_cache_free
+      0.13 �  5%      +0.0        0.17 �  5%  perf-profile.self.cycles-pp.vfs_write
+      0.00            +0.1        0.06 �  9%  perf-profile.self.cycles-pp.__x64_sys_sendto
+      0.08 �  8%      +0.1        0.14 �  4%  perf-profile.self.cycles-pp.sock_write_iter
+      0.02 � 99%      +0.1        0.09 � 11%  perf-profile.self.cycles-pp.__sys_sendto
+      3.40            +0.1        3.50        perf-profile.self.cycles-pp.tcp_sendmsg_locked
+      1.93 �  2%      +0.1        2.03        perf-profile.self.cycles-pp.intel_idle
+      0.00            +0.1        0.11 �  5%  perf-profile.self.cycles-pp.__tcp_push_pending_frames
+      6.66            +0.1        6.78        perf-profile.self.cycles-pp.dictFind
+      0.00            +0.1        0.13 �  2%  perf-profile.self.cycles-pp.tcp_sendmsg
+
+
+
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
