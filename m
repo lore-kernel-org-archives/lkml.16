@@ -1,46 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C5E18FDDB;
-	Wed,  5 Feb 2025 15:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2771E195FEC
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738769643; cv=none; b=gGkTkPFxFAPauSlr25qa1QbJh7GYIokaoWviG62W3XixcD5dRbg7tnlvF0QHrsJ+obQiB2e2y3w+z/woy+KhAywLkAAxN2U8DfUhNFDim5GKSRM/xSjrZ4WKhl0JdBsSEFqkd/+CWdbyOgqFeRNf4w7DcRVZ/3oF/QZ0wF6/C4o=
+	t=1738769650; cv=none; b=tHenT8yp7GMZ/Q9mfDcfw2JF32msxkEppkTF9CGfb8HXkOkxXiV6JuhQ2HUOPEQ14shgVFhnaXiRa/PtPX6iJXUAuVFwRacl8A8WWvi1UipYtCjjfxAVmipAKy+OZwqkIRNwfIgenFTyAiEcpJxClL9mP1UGZxT+AQHODBiThoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738769643; c=relaxed/simple;
-	bh=M12Nqqv9nkqPky8w1t3lEr6Xd/aFGaPNlTvqIAysKiQ=;
+	s=arc-20240116; t=1738769650; c=relaxed/simple;
+	bh=CH4T9+TF1MUD6mj1IRko7WEeyjBYMqNwdCkEifawIK0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6Bj0fS/LW69yQZKs4Xh0eF6+WVE1BptvLaITEvpWnOE89yAjHHSpilNrlKCnmWjn8HXh5n4HA+z/7PABl7wjRZSj5z4Jc5jt4A42q3Js9c/tU9LzwSLMNKU/oe3N3BYQabeaiAxucg0fCsoC7ZfE2VzqQf0DySJhX8FFBdumm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsTkM56M; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=quxOCv2E9oCd+fR0t4hwfRHMKiZ4OtroLYyU+xgNl/+INR19S0J+Qk3nxJHgyXBHI0+sms9GBOWNF17qEA5Qob6kSa4dWrNkGSZxSguCvWVEtAClkNEGw8NJ2byx68lyavxwP5q/NvEbXUKJoKiyfj+v8wOV1VLDdDey8gaQEgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X8YtVjqC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsTkM56M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7215EC4CED1;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8YtVjqC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738769648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xfr2SzfrB4u2rCpY5Ho60tM6BgqInZ+FNLekjkmhEVw=;
+	b=X8YtVjqCqK/u0BGWT6A6roWdD2C5O/NUuKclqMSHkVnWYItUqnGPVssWcY+1tvB3M+9Ozo
+	ZJ2H93XKXhA7qoWGPxoA8nIo90jOOlApbtskN2H5R/3uk9jnz0T8rGPYWSGD6ZPSYrrIV9
+	Ruq/OcMV0F58ct1lWRHBfEnvfYInb6U=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-21-k8IT80GsNs2bJ6s1qdC2Mg-1; Wed,
+ 05 Feb 2025 10:34:04 -0500
+X-MC-Unique: k8IT80GsNs2bJ6s1qdC2Mg-1
+X-Mimecast-MFC-AGG-ID: k8IT80GsNs2bJ6s1qdC2Mg
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5430919560AA;
 	Wed,  5 Feb 2025 15:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738769642;
-	bh=M12Nqqv9nkqPky8w1t3lEr6Xd/aFGaPNlTvqIAysKiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TsTkM56MzvAwlMNLqN5RGgL1umJ8Kwj9usCi05sMoobKyE4pZjxQYheCebJKRPGuS
-	 wZuBmVp/8RwUiYiWfDRUsAiObHbI0IW5BuxHnpnZdKQtcoiUG+cYtvqBwoeTPC7yrT
-	 YyXdQzG4mCEF/RVAvV7Q18WBSwQdGzQ7VtI5CCDuPBrRnPHcIJ/dyU/iupnbywDh+i
-	 qJ/41lzqivR9S8HayGVyjn9sTPOBjTKTShNSSg8qiTC/5wILnNVL/WUKS098nbw/Lz
-	 42FanaAmSztg5P8RQsukHse/j1UkApmjiU784UW0QPofxuMxY+4HxU75dzAmfCCsh8
-	 NkH6brsmJDjBA==
-Date: Wed, 5 Feb 2025 07:34:00 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>, Ard Biesheuvel <ardb@kernel.org>,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Keith Busch <kbusch@kernel.org>, linux-crypto@vger.kernel.org,
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.10])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 94B89300018D;
+	Wed,  5 Feb 2025 15:33:57 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  5 Feb 2025 16:33:35 +0100 (CET)
+Date: Wed, 5 Feb 2025 16:33:29 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Howells <dhowells@redhat.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+	Oliver Sang <oliver.sang@intel.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: testmgr - drop unused static const arrays
-Message-ID: <20250205153400.GA1474@sol.localdomain>
-References: <20250205121342.344475-1-arnd@kernel.org>
+Subject: [PATCH v2 1/2] pipe: introduce struct file_operations pipeanon_fops
+Message-ID: <20250205153329.GA2255@redhat.com>
+References: <20250205153302.GA2216@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,37 +68,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205121342.344475-1-arnd@kernel.org>
+In-Reply-To: <20250205153302.GA2216@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, Feb 05, 2025 at 01:13:15PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The ones[] and zeroes[] definitions were previously used by the
-> rocksoft tests that are now gone. With extra warnings enabled,
-> gcc now complains about these:
-> 
-> crypto/testmgr.h:6021:17: error: 'ones' defined but not used [-Werror=unused-const-variable=]
->  6021 | static const u8 ones[4096] = { [0 ... 4095] = 0xff };
->       |                 ^~~~
-> crypto/testmgr.h:6020:17: error: 'zeroes' defined but not used [-Werror=unused-const-variable=]
->  6020 | static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
->       |                 ^~~~~~
-> 
-> Drop them as well.
-> 
-> Fixes: dad9cb81bc30 ("crypto: crc64-rocksoft - remove from crypto API")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  crypto/testmgr.h | 3 ---
->  1 file changed, 3 deletions(-)
-> 
+So that fifos and anonymous pipes could have different f_op methods.
+Preparation to simplify the next patch.
 
-Thanks!  You must have tested today's linux-next.  The fixed commit is from one
-of the patches of the series
-https://lore.kernel.org/r/20250204195456.GA1385@sol.localdomain which I applied
-to the crc tree yesterday.  I've folded in this fix, so it should be fixed in
-tomorrow's linux-next.
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ fs/internal.h |  1 +
+ fs/pipe.c     | 23 ++++++++++++++++++-----
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-Would be nice if these warnings were just on by default.
+diff --git a/fs/internal.h b/fs/internal.h
+index e7f02ae1e098..dfdc2b2cf2f5 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -229,6 +229,7 @@ extern void d_genocide(struct dentry *);
+  * pipe.c
+  */
+ extern const struct file_operations pipefifo_fops;
++extern const struct file_operations pipeanon_fops;
+ 
+ /*
+  * fs_pin.c
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 94b59045ab44..b05cded28d9b 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -895,7 +895,7 @@ static struct inode * get_pipe_inode(void)
+ 	inode->i_pipe = pipe;
+ 	pipe->files = 2;
+ 	pipe->readers = pipe->writers = 1;
+-	inode->i_fop = &pipefifo_fops;
++	inode->i_fop = &pipeanon_fops;
+ 
+ 	/*
+ 	 * Mark the inode dirty from the very beginning,
+@@ -938,7 +938,7 @@ int create_pipe_files(struct file **res, int flags)
+ 
+ 	f = alloc_file_pseudo(inode, pipe_mnt, "",
+ 				O_WRONLY | (flags & (O_NONBLOCK | O_DIRECT)),
+-				&pipefifo_fops);
++				&pipeanon_fops);
+ 	if (IS_ERR(f)) {
+ 		free_pipe_info(inode->i_pipe);
+ 		iput(inode);
+@@ -949,7 +949,7 @@ int create_pipe_files(struct file **res, int flags)
+ 	f->f_pipe = 0;
+ 
+ 	res[0] = alloc_file_clone(f, O_RDONLY | (flags & O_NONBLOCK),
+-				  &pipefifo_fops);
++				  &pipeanon_fops);
+ 	if (IS_ERR(res[0])) {
+ 		put_pipe_info(inode, inode->i_pipe);
+ 		fput(f);
+@@ -1107,8 +1107,8 @@ static void wake_up_partner(struct pipe_inode_info *pipe)
+ 
+ static int fifo_open(struct inode *inode, struct file *filp)
+ {
++	bool is_pipe = inode->i_fop == &pipeanon_fops;
+ 	struct pipe_inode_info *pipe;
+-	bool is_pipe = inode->i_sb->s_magic == PIPEFS_MAGIC;
+ 	int ret;
+ 
+ 	filp->f_pipe = 0;
+@@ -1241,6 +1241,17 @@ const struct file_operations pipefifo_fops = {
+ 	.splice_write	= iter_file_splice_write,
+ };
+ 
++const struct file_operations pipeanon_fops = {
++	.open		= fifo_open,
++	.read_iter	= pipe_read,
++	.write_iter	= pipe_write,
++	.poll		= pipe_poll,
++	.unlocked_ioctl	= pipe_ioctl,
++	.release	= pipe_release,
++	.fasync		= pipe_fasync,
++	.splice_write	= iter_file_splice_write,
++};
++
+ /*
+  * Currently we rely on the pipe array holding a power-of-2 number
+  * of pages. Returns 0 on error.
+@@ -1388,7 +1399,9 @@ struct pipe_inode_info *get_pipe_info(struct file *file, bool for_splice)
+ {
+ 	struct pipe_inode_info *pipe = file->private_data;
+ 
+-	if (file->f_op != &pipefifo_fops || !pipe)
++	if (!pipe)
++		return NULL;
++	if (file->f_op != &pipefifo_fops && file->f_op != &pipeanon_fops)
+ 		return NULL;
+ 	if (for_splice && pipe_has_watch_queue(pipe))
+ 		return NULL;
+-- 
+2.25.1.362.g51ebf55
 
-- Eric
+
