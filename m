@@ -1,162 +1,116 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460C6192D6B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AC91519B1;
+	Wed,  5 Feb 2025 16:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771639; cv=none; b=k1yObto9iCVYdKxTsz/y2I0onOgeb9AAy1xV/sB9HDs9ECLf2Ynw16PruyDVpnQAwsz2TWfzh1YZ7SfmjHi7zCCScQMjFpxwCuOLWuWV3Q7ZnBcuxwAByr4+UrdHWJCM7lNVH2fAwGbEUTg9Tb2WMv4kV7SzxulnSZJDhS8dqvY=
+	t=1738771696; cv=none; b=U1qnF7qBLPaEu4HcgX5IddcDwTDHedjKKYAvXCM2X+yjM9NLruGCjDHUXF+evlJfcWx8IRThLJ4m2YV2jn8gLCx4sHbnVsXGnNqB5a5n4qGfASmheQOY3+AK3xPecxiqGOlrAexNAgryJ/xuVGQjjlWFrMWqFGW6UT0uXP45EQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771639; c=relaxed/simple;
-	bh=rmpeGPxJSN2OrTcMVT865F6mveKL4GDGOlMZX9SAmFA=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=N/hQBlQUJI+XtUDuzM3IDy3oo8lxoLisPHFv9DGqP5YoQ9J2YNHNHBlfH/pdcVGFtfBrKr8+++tCakSqCf+ANUhFfrqwCY/ovPcCZmultLONhP2Oyuh9gCWq9/vpGwQPT1n8esjQbRy8xV2/z7zOFNBjUZsLJQfSKEcq5lYs3BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oIW0HSbc; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738771696; c=relaxed/simple;
+	bh=vVgyPSLuK8V9Z8ZoAgEifbf+M3HZpZDaonS3lABhZZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bG2lEvy0CqlLtI/NAoNhBKO91V9Zi6KZfdtyS4GwLcDlooc6TWpfVi0usq0I7HvqFRlLQdlTXB4Ma0esDU5b8fOR/KyjsBOoFIPBZTfYV0QjJf6pQHtX7mx91+F8z+M4DCyOERKnQKWu/0Lk39x7iGo4MA8qem4vFctoL1m+qUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=siNjltJ3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oIW0HSbc"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250205160709epoutp041134a8407789866add0d2a80bf732e9a~hW5WmwBhT0710307103epoutp04W
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:07:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250205160709epoutp041134a8407789866add0d2a80bf732e9a~hW5WmwBhT0710307103epoutp04W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738771629;
-	bh=2bByUiTilCfcRBjAZx/mUHa2iGdQsonj502SFhnDFDo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=oIW0HSbc9DEUMzFLOvTKkNWPvToLtHnIiexm/sePEpAzu8pRv3KsPZQ6lpiCfCe6b
-	 327ACFLhZ8PHqoIZFFkcKQaY4OLEe85Aldb3Llqowua3xT79BlXy58aN+LIllORVWo
-	 2M44/LV1sAxIYtwY8C/ROD8/fFpS26xJQriQi8sk=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20250205160708epcas5p295d47a52d8ad411be061ce90c0654e96~hW5VUTtmm1179611796epcas5p2s;
-	Wed,  5 Feb 2025 16:07:08 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Yp4qs5Phcz4x9Pp; Wed,  5 Feb
-	2025 16:07:05 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	EC.A3.19933.9AC83A76; Thu,  6 Feb 2025 01:07:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250205160705epcas5p4c645ccf4051eb12a252d7d9d4c3c300b~hW5SwVNy60758907589epcas5p4R;
-	Wed,  5 Feb 2025 16:07:05 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250205160705epsmtrp2113197f500872c205a384b66f5d74b61~hW5SveyX_0198701987epsmtrp2W;
-	Wed,  5 Feb 2025 16:07:05 +0000 (GMT)
-X-AuditID: b6c32a4a-c1fda70000004ddd-20-67a38ca90efb
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	85.89.18949.9AC83A76; Thu,  6 Feb 2025 01:07:05 +0900 (KST)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250205160703epsmtip2aa5667ef559938479af04ee473001a39~hW5RQ__Nz0781307813epsmtip2d;
-	Wed,  5 Feb 2025 16:07:03 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Sudeep Holla'" <sudeep.holla@arm.com>
-Cc: "'Devang Tailor'" <dev.tailor@samsung.com>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <faraz.ata@samsung.com>
-In-Reply-To: <Z5zPpz6WAbPJX701@bogus>
-Subject: RE: [PATCH v2] arm64: dts: add cpu cache information to
- ExynosAuto-v920
-Date: Wed, 5 Feb 2025 21:37:02 +0530
-Message-ID: <090c01db77e7$ffa892b0$fef9b810$@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="siNjltJ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F42C4CED1;
+	Wed,  5 Feb 2025 16:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738771695;
+	bh=vVgyPSLuK8V9Z8ZoAgEifbf+M3HZpZDaonS3lABhZZA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=siNjltJ3eiZzPl4eC+FZjpQopN9cXA5U6Wy+AtzLimxR+YRrGiPlN11BZhluCbtyT
+	 ZQHvsB+LpSLHMQBaizS9R1cIG0G9TDNxiAfwoykC3y8NsSJWcEQL9g6Hk6y6xX1nwI
+	 emjZnHbUlz2zioORAvQ8Y2rPxg11jtBYOFlBwj4jeajrwgcYvu3tpBLPKPM8F6q+hE
+	 1MxEUeZBch1jkIIExxHlj8yDFO4wspGzU4GQ7wUk1ObC+Dnjgro8Vm75u1s6eDhcfu
+	 0kx8DlSh+IJuhRAhhzGrNQnCjeI7nP7GMnlVYyQ8xU4NcAT8FDKfRQ8OsHc6uR0xrM
+	 uCcvlupTgZrvQ==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Andy Chiu <andybnac@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] Add some validation for vector, vector crypto and fp stuff
+Date: Wed,  5 Feb 2025 16:05:06 +0000
+Message-ID: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJnCMNmj1amGSmPwLixER7WDeLbQALDHLFMAzsAx8ICGgWRG7Hg+i6A
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmuu7KnsXpBpdb1CzW7D3HZHFvxzJ2
-	i/lHzrFaXLuxkN3i5ax7bBabHl9jtbi8aw6bxYzz+5gs/u/ZwW6x/NQOFgcujzXz1jB6bFrV
-	yeaxeUm9R9+WVYwenzfJBbBGZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynk
-	Jeam2iq5+AToumXmAB2lpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwKdArTswt
-	Ls1L18tLLbEyNDAwMgUqTMjOuNhZULCbu2LdoV2MDYwrObsYOTkkBEwk/r7cxN7FyMUhJLCb
-	UWL6pDXMEM4nRokvt3cyQTjfGCW+nexkhWl5tXsFVNVeRom3rzeyQjgvGSXmzuhlAaliE9CV
-	2LG4jQ3EFhHQlti8+xELSBGzwAwmid3LL4AVcQqoSkxs7WcHsYUFgiQWTD0CZrMIqEi87TzL
-	CGLzClhKNG9+xAJhC0qcnPkEzGYWkJfY/nYOM8RJChI/ny5jhVjmJvFk82JWiBpxiZdHj4B9
-	JyGwhUNiztG9UD+4SFxYtQbKFpZ4dXwLO4QtJfH53V42CLtaYv2GeSwQdgejROP2GgjbXmLn
-	o5tAcQ6gBZoS63fpQ+zik+j9/YQJJCwhwCvR0SYEUa0q0fzuKtQUaYmJ3d1QWz0k3l+bxTiB
-	UXEWks9mIflsFpIPZiEsW8DIsopRMrWgODc9tdi0wCgvtRwe4cn5uZsYwWlWy2sH48MHH/QO
-	MTJxMB5ilOBgVhLhPb19QboQb0piZVVqUX58UWlOavEhRlNgcE9klhJNzgcm+rySeEMTSwMT
-	MzMzE0tjM0Mlcd7mnS3pQgLpiSWp2ampBalFMH1MHJxSDUxblVVCP/CwBLebnpzyx7OE901I
-	yM1UvQPzeKVPTvf5Kcv6/zRXRbXuzMrjHMzlXpHGs3/OXDlvX4DH95lBqifeS+hr8R/9uPLj
-	vzovxW4ni2cfNt7JYjY0/SBmxBvEzZC+Oev+xtCyo1JLv66Tm7Hx0W0T/fUKE6U3Rr1lX9zc
-	tv7l3rmuHO/P79nTrL49xseyfdFVoQ3FnCUtgodXrZ/hovIn86vmpofL2u/fNY3/7nXKf9X8
-	E/u6BI3qts3/uXxq25Lw9zNtYxWf/Jn8s2jpHU/TBdb5hb98wlffsTjoo5J2UnrPkn6eE33O
-	cQpG3qU2Xt8/9C/Vutp194WFoH/CCxfBRZ+v/42ZJF/KV1qjxFKckWioxVxUnAgAYb4TWjwE
-	AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJXndlz+J0g7stXBZr9p5jsri3Yxm7
-	xfwj51gtrt1YyG7xctY9NotNj6+xWlzeNYfNYsb5fUwW//fsYLdYfmoHiwOXx5p5axg9Nq3q
-	ZPPYvKTeo2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDIudhYU7OauWHdoF2MD40rOLkZODgkB
-	E4lXu1cwdzFycQgJ7GaUeLR8LhNEQlri+sYJ7BC2sMTKf8/ZIYqeM0o8O36LDSTBJqArsWNx
-	G5gtIqAtsXn3IxaQImaBRUwSm5ZeZ4XouMYo8efRUxaQKk4BVYmJrf1Aozg4hAUCJA7skQYJ
-	swioSLztPMsIYvMKWEo0b37EAmELSpyc+YQFpJxZQE+ibSNYCbOAvMT2t3OYIY5TkPj5dBkr
-	xA1uEk82L2aFqBGXeHn0CPsERuFZSCbNQpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYsMMpLLdcr
-	TswtLs1L10vOz93ECI4zLa0djHtWfdA7xMjEwXiIUYKDWUmE9/T2BelCvCmJlVWpRfnxRaU5
-	qcWHGKU5WJTEeb+97k0REkhPLEnNTk0tSC2CyTJxcEo1MPGGTY1b1Ty7r3jVxBqjsi0HeAJN
-	YuNyzl+Nk+8R18ngvCqtzVIRvn9D1feXdzz4dh/avHqrVDXbnObMiXu/mHCkfBPe6327bcq9
-	lDfe890efZ0TFiaccIZvn0LV8/+6wQ1nTx6e+kTQ8+syh0kuUkZc4ctqm42eLeSSydnPs0JZ
-	pW7aYU3TuL1u684b/foX/ng9/4ptSx4di/f6Kl0tXV+X6zjtZfvrOT6Si6QPB+9fnHFDNT3S
-	i6fwbWvj2Yi1D9vXuGh+DpKdlfp6g3H/lwbeIx/dSpm2Po38vpZZZVZ6HkvpGg7HPfVv9zRu
-	WDnl0zTTZ9KHuhS+v3ve+ER0feC6lfVn0komXmQL5l9fraDEUpyRaKjFXFScCADJ6BzEIgMA
-	AA==
-X-CMS-MailID: 20250205160705epcas5p4c645ccf4051eb12a252d7d9d4c3c300b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250108054224epcas5p399f3d734f8d9f82e5ae75d183d1a5344
-References: <CGME20250108054224epcas5p399f3d734f8d9f82e5ae75d183d1a5344@epcas5p3.samsung.com>
-	<20250108055012.1938530-1-dev.tailor@samsung.com>
-	<006401db73d6$2af35fb0$80da1f10$@samsung.com> <Z5zPpz6WAbPJX701@bogus>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2079; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=kEfjLL/AKQiPww/DgCF2YWb+qxGGMYe1F7o2flNSwO0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOmLe8wCBZcIcX04ktn7hPfcxw9bHRUXnXxqvpfZbe7mU 4eUW+fe7ihlYRDjYJAVU2RJvN3XIrX+j8sO5563MHNYmUCGMHBxCsBEJnIxMpyWvxoQfi/i7U+u KgkVK9kdToWhZx+u3bb1kOQuqds7u4UYfrPLTZhkF3LfySPAUUzgiFW86nS2oBAdNpeM6uK8Jwl CjAA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-Hi Sudeep 
+From: Conor Dooley <conor.dooley@microchip.com>
 
-> -----Original Message-----
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> Sent: Friday, January 31, 2025 6:57 PM
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: 'Devang Tailor' <dev.tailor@samsung.com>; robh@kernel.org;
-> krzk+dt@kernel.org; conor+dt@kernel.org; devicetree@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org;
-> linux-kernel@vger.kernel.org; faraz.ata@samsung.com
-> Subject: Re: [PATCH v2] arm64: dts: add cpu cache information to
-> ExynosAuto-v920
-> 
-[snip]
-> > You can add one node for cl0 and cl1, say "l3_cache_cl0_cl1" and
-> > Remove the specific node for CL1, because both are same.
-> >
-> 
-> What do you mean by "both are same" ?
-> Do you mean both have exact same properties but are physically different
-> caches ? OR Do you mean it is just one shared cache ?
-> 
-Thanks for review and pointing it out, v920 has physically different caches 
-(two of them are same properties, but the 3rd has 1MB lesser size)
-Got you point about having distinct node for cacheinfo population
-So for this patch:
+Yo,
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+This series is partly leveraging Clement's work adding a validate
+callback in the extension detection code so that things like checking
+for whether a vector crypto extension is usable can be done like:
+	has_extension(<vector crypto>)
+rather than
+	has_vector() && has_extension(<vector crypto>)
+which Eric pointed out was a poor design some months ago.
 
-> If former, we still need distinct node to get the cacheinfo about
-shareability
-> correct. If this is about avoiding duplication of errors, you can probably
-define
-> some macro and avoid it, but we need 2 nodes in the devicetree.
-> 
-> If latter, you suggestion is correct.
-> 
-> --
-> Regards,
-> Sudeep
+The rest of this is adding some requirements to the bindings that
+prevent combinations of extensions disallowed by the ISA.
+
+There's a bunch of over-long lines in here, but I thought that the
+over-long lines were clearer than breaking them up.
+
+Cheers,
+Conor.
+
+v3:
+- rebase on v6.14-rc1
+- split vector crypto validation patch into vector validation and vector
+  crypto validation
+- fix zve64x requiring extension list to match Eric's PR
+
+v2:
+- Fix an inverted clause Clément pointed out
+- Add Zvbb validation, that I had missed accidentally
+- Drop the todo about checking the number of validation rounds,
+  I tried in w/ qemu's max cpu and things looked right
+
+CC: Eric Biggers <ebiggers@kernel.org>
+CC: Conor Dooley <conor@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Paul Walmsley <paul.walmsley@sifive.com>
+CC: Palmer Dabbelt <palmer@dabbelt.com>
+CC: "Clément Léger" <cleger@rivosinc.com>
+CC: Andy Chiu <andybnac@gmail.com>
+CC: linux-riscv@lists.infradead.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+
+Conor Dooley (6):
+  RISC-V: add vector extension validation checks
+  RISC-V: add vector crypto extension validation checks
+  RISC-V: add f & d extension validation checks
+  dt-bindings: riscv: d requires f
+  dt-bindings: riscv: add vector sub-extension dependencies
+  dt-bindings: riscv: document vector crypto requirements
+
+ .../devicetree/bindings/riscv/extensions.yaml |  85 +++++++++++
+ arch/riscv/include/asm/cpufeature.h           |   3 +
+ arch/riscv/kernel/cpufeature.c                | 133 +++++++++++++-----
+ 3 files changed, 183 insertions(+), 38 deletions(-)
+
+-- 
+2.45.2
 
