@@ -1,311 +1,90 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C324425A65E;
-	Wed,  5 Feb 2025 02:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C5B212B04
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 02:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738724126; cv=none; b=ofW1ajTsQ9RFBA7bg5ht+7kN08zwvUbjyeAYjMwt3kUFSOi9LxlHquKmXASvF/kW7T2vT/o0oShj4QaYxQMBGNzqV3vOrd6//LMnDJR+KQtOccsg1mGS6i8D4lG0fltD2pUljjvvQ0bqcfMaWqN5EMTc5PTfCcTzyGavqdEqExo=
+	t=1738724150; cv=none; b=NEgxTqs32/9ijY0NldSvGNBXF+unXFpihx2Tb6wImYWhAqcg1jdpoyJqyMtxD4vMpkRwfsuILHetvJ/6rJWjixXpLlq5WonWifTtaNo4nlrKnYaEM2p0iIC+fj31oRUJOj4q0OfurLPow6OTt9yPyMI99UunpVxbIZE2rPHGcLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738724126; c=relaxed/simple;
-	bh=/V/Zjz8kIHTNtZepNSRxcBEK1+xm8jlcLRBoKPJwAJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ap8Upq+1XKH62RvLYp0RbIzLVj39yTtvpydhwJBgZQH3+N0YqdeiHITdmDfmphdkXn2bir3+TsgQbPPRUk7+21zbqce5XxDvLCWPyjsICX4mnmp4Kay5+zf4iKDvkVM4CEbKxBz0dQha+JmR3ELdEDZlWivf0MADjlxg9Ulm1CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BiubrqWP; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738724150; c=relaxed/simple;
+	bh=Iy98cYZmlM0zfKAVbhzprR+xN12zDSTDaNyVInZr9pA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gw+5LsSoge0TiH8Qbb5CASPl/nICKYyx14BmfC7f77eK4pJ1SC5uZF7f7ZZyILsv0ZPBDOVs/0stwYAuvyRv56W7NVcUR5zmEaXrTmwcgiS5M06BPL3W/UEKfquZQSYulicBwJos77HpS5vPWZoQsdyDfyyz6kGRnk7RM9WzdaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=zp2t+0QT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiubrqWP"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6e9586b82so544900085a.1;
-        Tue, 04 Feb 2025 18:55:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738724123; x=1739328923; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PtLKwDOyG5ssKF/2Ji6TsEWHluRVJXZzIL3UD18keGw=;
-        b=BiubrqWPbbOGJtGTga40E8q7ZE7Az24uFQF0RBuqOh4pZUFjKhBSHUvumDgUrTcwkb
-         LP9fIDQ6Vx+TyhiF/0NBweoo3au5u1c2ihVBPn6nHp3iNrRTcibrTU4aekt1M36Mhzj4
-         aT+jexvlDCpybbRUeRPob41mJVLf7RMAWxsFtjzjQdma+QuESQqw9HP6PsnQFVuON9Fk
-         ih+T4MxMFhuv+XaD7Pcj0yZ9jTrNBzYd8EvXh1Aq0tcpNVVFfDchSlLDI5k3n64GVmv/
-         1rr7cqZuVWLtKFrWuCbZ5AbF803z8VKb73d87SPpAmyr1tFuGqubBxIbFhsfzFjaCIOn
-         /q7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738724123; x=1739328923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PtLKwDOyG5ssKF/2Ji6TsEWHluRVJXZzIL3UD18keGw=;
-        b=eUSCfez/JNqpe0FNCFM9ImZZrcIf1AdTTHm8BNOqZg3FK+0XdIKjQHoDdca0WPdAQu
-         K9xbITuFQrMAe7m3Oj16uTcPs5TnXSY9/NdpDM6ef0Y5EpCKqYtXU/RP65gQFGqGyJ/R
-         QMa1P5ujnEU7T+BQ/wwbV4vqMqRfpYr7FKDLg7YXuLXrISEh/74eTzVWTQbh432Frp9y
-         ybGN48+GDzEXID8pRH2rZPt9DwwrvSNpTiMbfnVGflyK9hxJH12rRQivXWnuB0fJkR+Z
-         8VSfdhcW6kaIQuinwpJ8zA31awfaKHIlGU0lFK2VnCTY2LmVNvUNlteHJMnGopBhEIFx
-         TJtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWptWv+Xkk7DqErhW9qkCE7bMVmpY4Yn2/dRztZPiRaxoMWnf1PMiQXBndmZFBGhAimdQpKw5Hm2+/B7brKFA==@vger.kernel.org, AJvYcCXOUS5PQixQAe6RR2fCtPrba5TRF/Q2U5NaA5v+sHGm3fJ5HfQ5HY90Ef2P90YidywnI3W9XiRBYqfIGU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWhPm7/yQcC67NelCwprZyoEXcU68R8tAEwImcd/KWglImgSgh
-	7Mso0PedrlonuAdRCSgpcVWYTcvyxTtWu2YIU2SagvRDzBIWzZZtZ8/ZBPJKBSvapC1nlUrTsDm
-	az7oUBZEZ3H1E2T+K8tmMXjCnf8E=
-X-Gm-Gg: ASbGncsTgc1QrFubxWy0wkCEMZ3H3z1Ut5gj9dfwTY6JJ8yVY4nHzwqq3oTOWzNbyGM
-	qn4v6FVVsF+tNULozvCur4dnhrbcMLm8T2A8O5YKZssfS97+oQnkMTiAbHj2z8w7iy3SXHhAcps
-	8=
-X-Google-Smtp-Source: AGHT+IHGCL4ookUzuGz8uWVm/jjfExcvqWstIF16/t1IbqN06yPmRlvLLgmV/lkGx91z+Pey2btDKbYBashYhwVdKg8=
-X-Received: by 2002:a05:620a:410e:b0:7b6:f34b:cdd2 with SMTP id
- af79cd13be357-7c03a04b810mr197896485a.53.1738724123511; Tue, 04 Feb 2025
- 18:55:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="zp2t+0QT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A18A8C4CEDF;
+	Wed,  5 Feb 2025 02:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738724149;
+	bh=Iy98cYZmlM0zfKAVbhzprR+xN12zDSTDaNyVInZr9pA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=zp2t+0QT8fNkRMUZvjHBFUUNdBviJZg+np/oXvDgPQB2Id6m6syhV6Frr1GroNoJ4
+	 uoGcXvZooe6z2E8NBDcwL48m5lS3DlFhfRPcrIsU3bhN+0XKfX3CI8s755s77aVDIC
+	 j5qhOGfvc7gwTaoMXV96zWvGvu0CB42PLVCNzKgo=
+Date: Tue, 4 Feb 2025 18:55:48 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
+ baolin.wang@linux.alibaba.com, chrisl@kernel.org, ioworker0@gmail.com,
+ kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
+ x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com
+Subject: Re: [PATCH v3 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+Message-Id: <20250204185548.75d95ac35aacccbc3982e935@linux-foundation.org>
+In-Reply-To: <0785a15e-29fb-4801-9743-3d08e381d506@redhat.com>
+References: <20250115033808.40641-1-21cnbao@gmail.com>
+	<20250115033808.40641-4-21cnbao@gmail.com>
+	<0785a15e-29fb-4801-9743-3d08e381d506@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <20250127063526.76687-3-laoar.shao@gmail.com>
- <Z5eYzcF5JLR4o5Yl@pathway.suse.cz> <CALOAHbANtpY+ee9Wd+HV6-uPOw+Kq1JcU5UdOXjz8m_UJ_-XRA@mail.gmail.com>
- <Z6IUcbeCSAzlZEGP@pathway.suse.cz>
-In-Reply-To: <Z6IUcbeCSAzlZEGP@pathway.suse.cz>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Wed, 5 Feb 2025 10:54:47 +0800
-X-Gm-Features: AWEUYZnC4hhtTeL3gZNIEwfBI1_Hl4vmuI4VMUT9NQO--gGLqdOyyHp3CE42e_U
-Message-ID: <CALOAHbBWKL5MJz3DB+y02oqOrxy5xa3WZwTg0JPpqeQsMSVXmA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] livepatch: Implement livepatch hybrid mode
-To: Petr Mladek <pmladek@suse.com>
-Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, 
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 4, 2025 at 9:21=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> On Mon 2025-01-27 23:34:50, Yafang Shao wrote:
-> > On Mon, Jan 27, 2025 at 10:31=E2=80=AFPM Petr Mladek <pmladek@suse.com>=
- wrote:
-> > >
-> > > On Mon 2025-01-27 14:35:26, Yafang Shao wrote:
-> > > > The atomic replace livepatch mechanism was introduced to handle sce=
-narios
-> > > > where we want to unload a specific livepatch without unloading othe=
-rs.
-> > > > However, its current implementation has significant shortcomings, m=
-aking
-> > > > it less than ideal in practice. Below are the key downsides:
-> > >
-> > > [...]
-> > >
-> > > > In the hybrid mode:
-> > > >
-> > > > - Specific livepatches can be marked as "non-replaceable" to ensure=
- they
-> > > >   remain active and unaffected during replacements.
-> > > >
-> > > > - Other livepatches can be marked as "replaceable," allowing target=
-ed
-> > > >   replacements of only those patches.
-> > > >
-> > > > This selective approach would reduce unnecessary transitions, lower=
- the
-> > > > risk of temporary patch loss, and mitigate performance issues durin=
-g
-> > > > livepatch replacement.
-> > > >
-> > > > --- a/kernel/livepatch/core.c
-> > > > +++ b/kernel/livepatch/core.c
-> > > > @@ -658,6 +658,8 @@ static int klp_add_nops(struct klp_patch *patch=
-)
-> > > >               klp_for_each_object(old_patch, old_obj) {
-> > > >                       int err;
-> > > >
-> > > > +                     if (!old_patch->replaceable)
-> > > > +                             continue;
-> > >
-> > > This is one example where things might get very complicated.
-> >
-> > Why does this example even exist in the first place?
-> > If hybrid mode is enabled, this scenario could have been avoided entire=
-ly.
->
+On Tue, 4 Feb 2025 12:38:31 +0100 David Hildenbrand <david@redhat.com> wrote:
 
-You have many questions, but it seems you haven=E2=80=99t taken the time to=
- read even
-a single line of this patchset. I=E2=80=99ll try to address them to save yo=
-u some time.
+> Hi,
+> 
+> >   	unsigned long hsz = 0;
+> >   
+> > @@ -1780,6 +1800,16 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+> >   				hugetlb_vma_unlock_write(vma);
+> >   			}
+> >   			pteval = huge_ptep_clear_flush(vma, address, pvmw.pte);
+> > +		} else if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
+> > +				can_batch_unmap_folio_ptes(address, folio, pvmw.pte)) {
+> > +			nr_pages = folio_nr_pages(folio);
+> > +			flush_cache_range(vma, range.start, range.end);
+> > +			pteval = get_and_clear_full_ptes(mm, address, pvmw.pte, nr_pages, 0);
+> > +			if (should_defer_flush(mm, flags))
+> > +				set_tlb_ubc_flush_pending(mm, pteval, address,
+> > +					address + folio_size(folio));
+> > +			else
+> > +				flush_tlb_range(vma, range.start, range.end);
+> >   		} else {
+> 
+> I have some fixes [1] that will collide with this series. I'm currently 
+> preparing a v2, and am not 100% sure when the fixes will get queued+merged.
+> 
+> I'll base them against mm-stable for now, and send them out based on 
+> that, to avoid the conflicts here (should all be fairly easy to resolve 
+> from a quick glimpse).
+> 
+> So we might have to refresh this series here if the fixes go in first.
+> 
+> [1] https://lkml.kernel.org/r/20250129115411.2077152-1-david@redhat.com
 
-> How exactly this scenario could be avoided, please?
->
-> In the real life, livepatches are used to fix many bugs.
-> And every bug is fixed by livepatching several functions.
->
-> Fix1 livepatches: funcA
-> Fix2 livepatches: funcA, funcB
-> Fix3 livepatches: funcB
->
-> How would you handle this with the hybrid model?
+It doesn't look like "mm: fixes for device-exclusive entries (hmm)"
+will be backportable(?) but yes, we should aim to stage your fixes
+against mainline and ahead of other changes to at least make life
+easier for anyone who chooses to backport your fixes into an earlier
+kernel.
 
-In your scenario, each Fix will replace the applied livepatches, so
-they must be set to replaceable.
-To clarify the hybrid model, I'll illustrate it with the following Fixes:
-
-Fix1 livepatches: funcA
-Fix2  livepatches: funcC
-Fix3 livepatches: funcA, funcB
-Fix4  livepatches: funcD
-Fix5 livepatches: funcB
-
-Each FixN represents a single /sys/kernel/livepatch/FixN.
-By default, all Fixes are set to non-replaceable.
-
-Step-by-step process:
-1. Loading Fix1
-   Loaded Fixes: Fix1
-2. Loading Fix2
-   Loaded Fixes: Fix1 Fix2
-3. Loading Fix3
-    Before loading, set Fix1 to replaceable and replace it with Fix3,
-which is a cumulative patch of Fix1 and Fix3.
-    Loaded Fixes:  Fix2 Fix3
-4. Loading Fix4
-    Loaded Fixes:  Fix2 Fix3 Fix4
-5. Loading Fix5
-    Similar to Step 3, set Fix3 to replaceable and replace it with Fix5.
-    Loaded Fixes:  Fix2 Fix4 Fix5
-
-This hybrid model ensures that irrelevant Fixes remain unaffected
-during replacements.
-
->
-> Which fix will be handled by livepatches installed in parallel?
-> Which fix will be handled by atomic replace?
-> How would you keep it consistent?
->
-> How would it work when there are hundreds of fixes and thousands
-> of livepatched functions?
-
-The key point is that if a new Fix modifies a function already changed
-by previous Fixes, all the affected old Fixes should be set to
-replaceable, merged into the new Fix, and then the old Fixes should be
-replaced with the new one.
-
->
-> Where exactly is the advantage of the hybrid model?
-
-That can be seen as a form of "deferred replacement"=E2=80=94in other words=
-,
-only replacing the old Fixes when absolutely necessary. This approach
-can significantly reduce unnecessary work.
-
->
-> > >
-> > > The same function might be livepatched by more livepatches, see
-> > > ops->func_stack. For example, let's have funcA and three livepatches:
-> > > a
-> > >   + lp1:
-> > >         .replace =3D false,
-> > >         .non-replace =3D true,
-> > >         .func =3D {
-> > >                         .old_name =3D "funcA",
-> > >                         .new_func =3D lp1_funcA,
-> > >                 }, { }
-> > >
-> > >   + lp2:
-> > >         .replace =3D false,
-> > >         .non-replace =3D false,
-> > >         .func =3D {
-> > >                         .old_name =3D "funcA",
-> > >                         .new_func =3D lp2_funcA,
-> > >                 },{
-> > >                         .old_name =3D "funcB",
-> > >                         .new_func =3D lp2_funcB,
-> > >                 }, { }
-> > >
-> > >
-> > >   + lp3:
-> > >         .replace =3D true,
-> > >         .non-replace =3D false,
-> > >         .func =3D {
-> > >                         .old_name =3D "funcB",
-> > >                         .new_func =3D lp3_funcB,
-> > >                 }, { }
-> > >
-> > >
-> > > Now, apply lp1:
-> > >
-> > >       + funcA() gets redirected to lp1_funcA()
-> > >
-> > > Then, apply lp2
-> > >
-> > >       + funcA() gets redirected to lp2_funcA()
-> > >
-> > > Finally, apply lp3:
-> > >
-> > >       + The proposed code would add "nop()" for
-> > >         funcA() because it exists in lp2 and does not exist in lp3.
-> > >
-> > >       + funcA() will get redirected to the original code
-> > >         because of the nop() during transition
-> > >
-> > >       + nop() will get removed in klp_complete_transition() and
-> > >         funcA() will get suddenly redirected to lp1_funcA()
-> > >         because it will still be on ops->func_stack even
-> > >         after the "nop" and lp2_funcA() gets removed.
-> > >
-> > >            =3D> The entire system will start using another funcA
-> > >               implementation at some random time
-> > >
-> > >            =3D> this would violate the consistency model
-> > >
-> > >
-> > > The proper solution might be tricky:
-> > >
-> > > 1. We would need to detect this situation and do _not_ add
-> > >    the "nop" for lp3 and funcA().
-> > >
-> > > 2. We would need a more complicate code for handling the task states.
-> > >
-> > >    klp_update_patch_state() sets task->patch_state using
-> > >    the global "klp_target_state". But in the above example,
-> > >    when enabling lp3:
-> > >
-> > >     + funcA would need to get transitioned _backward_:
-> > >          KLP_TRANSITION_PATCHED -> KLP_TRANSITION_UNPATCHED
-> > >       , so that it goes on ops->func_stack:
-> > >          lp2_funcA -> lp1->funcA
-> > >
-> > >    while:
-> > >
-> > >     + funcA would need to get transitioned forward:
-> > >          KLP_TRANSITION_UNPATCHED -> KLP_TRANSITION_PATCHED
-> > >       , so that it goes on ops->func_stack:
-> > >          lp2_funcB -> lp3->funcB
-> > >
-> > >
-> > > =3D> the hybrid mode would complicate the life for both livepatch
-> > >    creators/maintainers and kernel code developers/maintainers.
-> > >
-> >
-> > I don=E2=80=99t believe they should be held responsible for poor
-> > configurations. These settings could have been avoided from the start.
-> > There are countless tunable knobs in the system=E2=80=94should we try t=
-o
-> > accommodate every possible combination? No, that=E2=80=99s not how syst=
-ems are
-> > designed to operate. Instead, we should identify and follow best
-> > practices to ensure optimal functionality.
->
-> I am sorry but I do not understand the above paragraph at all.
->
-> Livepatches modify functions.
-> How is it related to system configuration or tunable knobs?
-
-/sys/kernel/livepatch/FixN/replaceable is a tunable knob.
-
-+static struct kobj_attribute replaceable_kobj_attr =3D __ATTR_RW(replaceab=
-le);
-
-> What best practices are you talking, please?
-
-As mentioned earlier.
-
---
-Regards
-Yafang
