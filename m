@@ -1,199 +1,134 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71BA2288C3;
-	Wed,  5 Feb 2025 12:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81797151986;
+	Wed,  5 Feb 2025 12:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738756897; cv=none; b=e69epGyTy8kytlhOBUCliS/p8qm8VvT/MuHiyJ142/kPhyrlPs8JEoSjDaea2rvCxOgcnPnUu8pSYBNGfxQqMwcr2p71ruFHLZsKrvnw+YMhEPRGXwSpaeDlT1SBtSV6VUUA8bkxSVfIHYJ5TQjitkVfJsXl6UiT2+9ZzzTnZus=
+	t=1738756913; cv=none; b=dsmLNoEI2tSpTNtP1d4yCxBQL2Dm8XmhFOEOoAXA2qvCc8iyfwOKBOyD1pIQOw54ouC7aYNnMVRLS8HB9YZsPYV2OYeiHFj++eRe2HZp1RVbb2sBS/cMNlPc76ognKEDt2ZMS43u46ZZpPQLmyixDk+QTTTQ7c+nDpIj3VZ9zQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738756897; c=relaxed/simple;
-	bh=WAeq4BEFXXSX6jShyygg3gjPfLk6uyqHt8itTUj+cwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EdzT0wSgfkZXsn7metGx3lhH5um+nOPjuqvjDzFFteJ9QpmBVkkW3NFniMA9tQPwRV5WAnqqHl1BzrbbxumA74foHsT0UXzM1AT5tigNmm7R7TWSBgJsOIl0djG4FVW8lHtnEqj8dvX+tkEG6udAz9LrlLosKivDL3Jg7PYZkO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 515C0S39015867;
-	Wed, 5 Feb 2025 06:00:28 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 515C0QIm015866;
-	Wed, 5 Feb 2025 06:00:26 -0600
-Date: Wed, 5 Feb 2025 06:00:26 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Greg Wettstein <greg@enjellic.com>, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmorris@namei.org
-Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
-Message-ID: <20250205120026.GA15809@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com>
+	s=arc-20240116; t=1738756913; c=relaxed/simple;
+	bh=6BQasaey9W7PwV1STrv5o5bzcUHC8qfu2pSTsn2njQ4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vx0+FpIh1NQLxPenNi7W75d9b+Ox/Yw1eoqRqi4IZH1tgEjGeAiC2kQTG4HV4uO8I5ZcFbizGQUjsadkroO74hH/e9cB/qegpJiOjoFQcR8rlRv24yC6Mt1KjXyqfq1wdOfBEjrFhQw1IxligtVdXZu0uOSYGDZAyi3Odc2JYcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I6atKqAE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ctoS39UF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I6atKqAE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ctoS39UF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I6atKqAE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ctoS39UF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I6atKqAE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ctoS39UF"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C6785211F7;
+	Wed,  5 Feb 2025 12:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738756909; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6CqGj5stDqragqzAWDoZyiGjBWDtRPGC39Hc2AozBl0=;
+	b=I6atKqAER8ZIAC1a7aUeCddgqnsI9GVrtqv9dzpec+4cXCAT5+8joOz2bpIL32X/egmM9Q
+	nkPuv1lkc3T1z+YnOiy59RRsebY2UEIzd1T1tpom472unEHhWwPqDjavpmBnyIMO2HGdfC
+	Bfr6VrjNsQjPhHT0aEP0h68+V9nGmFw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738756909;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6CqGj5stDqragqzAWDoZyiGjBWDtRPGC39Hc2AozBl0=;
+	b=ctoS39UFUeHRXriKTnb2ax5PJExg/sSfj5Apbxa6tcM5jLaGMV7kTBwLoJhtFr6pXeef7E
+	3fZ7m9j1ALXBZ/BA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738756909; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6CqGj5stDqragqzAWDoZyiGjBWDtRPGC39Hc2AozBl0=;
+	b=I6atKqAER8ZIAC1a7aUeCddgqnsI9GVrtqv9dzpec+4cXCAT5+8joOz2bpIL32X/egmM9Q
+	nkPuv1lkc3T1z+YnOiy59RRsebY2UEIzd1T1tpom472unEHhWwPqDjavpmBnyIMO2HGdfC
+	Bfr6VrjNsQjPhHT0aEP0h68+V9nGmFw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738756909;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6CqGj5stDqragqzAWDoZyiGjBWDtRPGC39Hc2AozBl0=;
+	b=ctoS39UFUeHRXriKTnb2ax5PJExg/sSfj5Apbxa6tcM5jLaGMV7kTBwLoJhtFr6pXeef7E
+	3fZ7m9j1ALXBZ/BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7D4C913694;
+	Wed,  5 Feb 2025 12:01:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sjBdHS1To2fvXgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 05 Feb 2025 12:01:49 +0000
+Date: Wed, 05 Feb 2025 13:01:49 +0100
+Message-ID: <87pljwzjki.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
+Cc: tiwai@suse.com,
+	perex@perex.cz,
+	kailang@realtek.com,
+	sbinding@opensource.cirrus.com,
+	simont@opensource.cirrus.com,
+	josh@joshuagrisham.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH]  ALSA: hda/realtek: Limit mic boost on Positivo ARN50
+In-Reply-To: <20250201143930.25089-1-edson.drosdeck@gmail.com>
+References: <20250201143930.25089-1-edson.drosdeck@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8642afa96650e02f50709aa3361b62c4@paul-moore.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 05 Feb 2025 06:00:28 -0600 (CST)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
-On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
-
-Good morning, I hope mid-week is going well for everyone.
-
-After the issue of the functionality of modern cryptographic
-primitives, a discussion of the second most important issue Paul
-raises.
-
-> > > > +In an externally modeled namespace, the event type and parameters are
-> > > > +exported to userspace for processing by a trust orchestrator with an
-> > > > +associated TMA.  The trust orchestrator communicates the result of the
-> > > > +modeling back to the kernel to support the setting of the process
-> > > > +trust status.
-> > > > +
-> > > > +The exception to this model are for security event handlers that are
-> > > > +called in atomic, ie. non-sleeping context.  The export of these
-> > > > +security event descriptions are done asynchronously in order to avoid
-> > > > +having the TSEM implementation attempt to sleep in atomic context
-> > > > +while the userspace trust orchestrator is scheduled for execution.
-> > > > +
-> > > > +It is up to the trust orchestrator and its security policy to
-> > > > +determine how it handles events that violate the security model being
-> > > > +enforced in this model.  The Quixote trust orchestrators shut down the
-> > > > +entire workload running in the security namespace if an asynchronously
-> > > > +modeled event violates the security model being enforced and the model
-> > > > +is running in enforcing mode.
-
-> > > I understand your desire to simply pass off the non-blocking/async
-> > > access control hole as a security policy issue, but it seems to me
-> > > that this is a fundamental flaw with an externally modeled TSEM
-> > > namespace.  If an externally modeled namespace was configured with
-> > > an enforcing policy, it doesn't appear that there is a mechanism for
-> > > TSEM to properly enforce that policy as there is an unbounded delay
-> > > between the undesired access and a denial verdict being processed by
-> > > the kernel.
-> > >
-> > > Unless you can resolve this somehow, and I'm not sure how, I would
-> > > suggest dropping external/userspace trust orchestrators.  They
-> > > simply don't seem able to reliably implement their security
-> > > policies.
-
-> > An important issue.
-> >
-> > Some reflections on why we would, respectfully, disagree.
-> >
-> > A business assessment of the current security market suggests that the
-> > mindset in security has changed from prevention to detection.  TSEM is
-> > about providing kernel infrastructure to enable better solutions for
-> > the detection model.
-
-> I believe the LSM can support both the enforcement of security policy
-> and the observation of security relevant events on a system.  In fact
-> most of the existing LSMs do both, at least to some extent.
+On Sat, 01 Feb 2025 15:39:30 +0100,
+Edson Juliano Drosdeck wrote:
 > 
-> However, while logging of security events likely needs to be
-> asynchronous for performance reasons, enforcement of security policy
-> likely needs to be synchronous to have any reasonable level of
-> assurance.  You are welcome to propose LSMs which provide
-> observability functionality that is either sync, async, or some
-> combination of both (? it would need to make sense to do both ?), but
-> I'm not currently interested in accepting LSMs that provide
-> asynchronous enforcement as I don't view that as a "reasonable"
-> enforcement mechanism.
+> The internal mic boost on the Positivo ARN50 is too high.
+> Fix this by applying the ALC269_FIXUP_LIMIT_INT_MIC_BOOST fixup to the machine
+> to limit the gain.
+> 
+> Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
 
-This is an artificial distinction that will prove limiting to the
-security that Linux will be able to deliver in the future.
-	
-Based on your response, is it your stated position as Linux security
-maintainer, that you consider modern Endpoint Detection and Response
-Systems (EDRS) lacking with respect to their ability to implement a
-"reasonable" enforcement and assurance mechanism?
+Applied now.  Thanks.
 
-If this is the case, your philosophy leaves Linux in a position that
-is inconsistent with how the industry is choosing to implement
-security.
 
-Let me cite an example from one of our project advisors.
-
-This individual is a senior principal at a reasonably large technology
-products company that depends on Linux almost exclusively to support
-its operations.  At any given instant he participates in supervising a
-fleet of around 6,000 virtual machines running about 50,000-60,000
-containerized workloads.
-
-All of the Linux deployments are Ansible orchestrated.  The security
-deployment consists of disabling SeLinux and installing an EDRS
-solution.  Doing the latter checks all the boxes they need for their
-corporate security compliance policies.
-
-He, and others, have watched this discussion closely over the last two
-years that we have tried to get TSEM reviewed and just recently phoned
-me with the following comment:
-
-"I think the problem is that these guys don't understand how security
-is being done and the reasons why".
-
-There is probably not a modern EDRS solution that does not involve
-going to the cloud for its decision making enforcement, in most cases
-based on Indicators Of Compromise (IOC) trained machine learning
-models.  Asynchronous detection, enforcement and remediation is now
-standard practice.  In the security industry, a 1 minute response to a
-security event is considered the 'gold' standard.
-
-For the sake of discussion, lets take a Quixote userspace Trusted
-Modeling Agent (TMA) running TSEM based deterministic modeling of a
-containerized workload.  As we've discussed previously, demonstrated
-average response times are on the order of 170 micro-seconds.
-
-For an event that needs asynchronous enforcement, ie. running in
-atomic context, that represents a 3.5 order of magnitude advantage in
-response over the industry standard, without the attendant challenges
-of going off machine or installing kernel based infrastructure.
-
-What would be the rationale or advantage of denying those that desire
-this type of security option, a 3,500 fold increase in security
-response times?
-
-Let's take another need for running in userspace, trusted execution
-environments.  Support is available in our userspace package for
-running a TMA model in either an SGX enclave or in an independent
-hypervisor protected execution context, both of which significantly
-harden the enforcement implementation against attack by adversaries.
-
-As Linux security maintainer, we assume that you have read Executive
-Order 14144 signed on January 16th 2025.  That document specifically
-calls out the requirement for the increased use of trusted execution
-environments in combination with advancements in endpoint detection.
-
-It shouldn't be a leap in imagination as to the regulatory compliance
-advantages associated with hardware attestation that the security
-implementation is operational and in a known good enforcement state.
-
-Finally, at this point in time, it would seem unwise in the technology
-industry, to discount the importance of 'AI', or more correctly
-machine learning.  As we've noted before in our discussions, it is
-unlikely that we are going to see synchronous LSM enforcement using a
-machine learning model trained on potentially trillions of data
-observations and indicators.
-
-The LSM is designed to provide security services to the users of
-Linux, not to be a kingdom.
-
-Linux is/was about 'choice' as to how users want to use their
-hardware.
-
-Artifically limiting the types of security that can be implemented by
-the LSM works to the detriment of the security innovation that Linux
-can deliver and the Linux user community writ large.
-
-> paul-moore.com
-
-Best wishes for a productive remainder of the week.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+Takashi
