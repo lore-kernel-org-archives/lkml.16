@@ -1,267 +1,149 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D206B22A7E2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37CA21A452
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 09:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738748092; cv=none; b=dolkz7U+eI7gSYyZlSbDtbYrit5EObSK5IhwcVcOBqj5YjBNVSjTS3SV1UFEGbmTdhvENEK2f79RoWypOxn2GUdqK9xZmz8JhBpRVEcl+bMq3KhjpD0uDksUvqYq6++heOEQmB9BMdcj9Fx1fWkMzZLaL1LkmBELzGYpShVu6oI=
+	t=1738748280; cv=none; b=bBZqSrPcXd6kLULbnHTRHbdMRtNYtBrIGq5N2S51svaH/kCjXoQcGu972xRYw5uQtYH7yY5wWaNUCdw3+VN6N+7xM7qPt9Iy2sAOm1nKqdvkcgRW4PnCoWnHD2E/JoBRbNRHdVTABHBXwc3W1IkdBxD7s8BIS9xfV335GvOqINI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738748092; c=relaxed/simple;
-	bh=1zBtiT801pepCprORdyCM08nsls2kANWhaHk8TfTpQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D+MPcmZsRBpL+QsbNPBTjQlNEAV+u6ucmxO5JVpRqJFAixOOtSYx88SBuGSM1ltx7eEuTuT764/BCPPlRBVODWIWhl/EKMFO+itLWgaAdVvBQxe7Jaz8vxiZ5uUzJitxEcqlUePr03d2Oiqc2ZGnEQsdiNHtn6bJvTOjAbhFUq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dtH1/6Bv; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738748280; c=relaxed/simple;
+	bh=6/eiW68AlupRawkJV8/2C2Vrs9Wcx17Vp72owwvoEcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SSNpM0Nqf7tmO7/gnRJ159U0IAJjnOb0ri+06A/6jW5gxNCLidw3OUdWe0ch+kEO0B2Rshrhn2WYfZjV151Ycl8FEaukkJf69IQzKAAVzZmLKgzewEC1frRfhlsuKIOvqKGWrAbkJ+S6zHR6GJRiHaV6QpU6Hen0MT2QiEnaSnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VgTWLXwJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dtH1/6Bv"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38db75230c2so36765f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 01:34:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738748089; x=1739352889; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=XME8GwkXK8bhfCVEpnNIXbNPEdxuzw7y0bc5Pucl5KI=;
-        b=dtH1/6Bv27W6NEFb5A3guctR2k5FZfPKj6RbQQot4x6bY+zF2O22Z5oBHUPBnNPSI5
-         FO8sAqULTb/3PRZjvimx+tUg6pDbiB6OJ0vyIZyb/zhGS9azVrdzeMwHtSh69ngXyPIY
-         hSEUSNrBuXod3Ipf2blgZq5AcfHAluq8LvJuPp+lCvOwDAAujjxhbQ7v/16KWcdEwWGL
-         GBcITJnwybMJ3mVbdwOCHzcGJjnfvCREF7N606aQvQwQ8rQLgJXLpvj1fgTKn8bwTeAS
-         5/y57V/bmnrB748PzRE8ggbO1/WkFsiIbuySUsf84N4JQCXyjfkdODQTToqW702aqwpb
-         LNLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738748089; x=1739352889;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XME8GwkXK8bhfCVEpnNIXbNPEdxuzw7y0bc5Pucl5KI=;
-        b=Qmj5HayOzAE/uOyTKQKYQtb/23uK7u97VCvFjsfoN4Dm9UfxF0ZiyZvkU80BRZYmYu
-         +QEivoVH7cwR8ZFTq87dSSpnpoOCiPEBLO6RDAhJeM7URCjFEob6W/Qj3lOkmrxaT7dr
-         oKkqklGLMz+esmx9jmbJBgOIa+j4UFzbvFuZOApbO0f5Q2PlX5kr4Q+zK3nuCKu7/1nk
-         uQQ6xtfHfEYrvOhVsVxBr89rUZS6rnd2aQAuBB3wZSDIG8mhsib7JXQ+JwSAwZm5PFdB
-         sUfqT+2lF7/eSsd3tYEt+ZX+ZIxsCiKiSy7l4zLhgmv6JCHzeCqp9agoC2XAdE828i+g
-         kl1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXJvRTIXTCSbxPbt5ccbs5Uk1r9O93gFC7ybQ2HIx275BBKyVOG60QZkAcIblkkToWPycSPhrV3RkUi63s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxozpj0VZ4WxaiFf7hHABNEOFPZ9XvwdQqlz+e5yk0ZhGi3kuKG
-	v87Tw11rjcLUXWZZHZk4WTjHoneD9juERMdu7RTdFeSmyCC2qED7XpsUKUnkPIo=
-X-Gm-Gg: ASbGncvdJ8psluZ8fGOetzb8q8Tefb0flx3WadJZ+etVmBxDp4lJDp2ANDW5ceMteEK
-	TTnMMDpHcx9dcoEXvIVtJV+2XWXbEsvB4+N8mQ4nPUnTZToldiQbgFGS06M4bLStfrIOt3njgfy
-	BGQqSx9ztRk/iY2h5Au1Yx7pWG2gPEap3/Xqfacvp+UHi+WndPfB5/Q2GWG7eN9Zw6xIqFDYJpu
-	giGTAA2RrfmefFgkBAmg/OqJ7F4kxqkObxBlUQf8Wu/pTSoF/9wlEAHTgNtOcE7ZOBnownF+lZf
-	SIl6xSLzyiq+sFFVbXXvz4gUEIXlmmFZ0LQ=
-X-Google-Smtp-Source: AGHT+IFId32xeOrxh0GKul0CUktRUdVt/4VLShRZOZ9U1CUAWE1uPKI5kfaxj9Vm/C7CanMsHqRQXA==
-X-Received: by 2002:a05:600c:1f96:b0:434:9cb7:7321 with SMTP id 5b1f17b1804b1-4390d430247mr5878735e9.1.1738748089060;
-        Wed, 05 Feb 2025 01:34:49 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d802sm15966595e9.12.2025.02.05.01.34.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 01:34:48 -0800 (PST)
-Message-ID: <6cba59b9-4852-4cad-95eb-dfecb2e44dc4@linaro.org>
-Date: Wed, 5 Feb 2025 10:34:46 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VgTWLXwJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Y49KMeEVQldDb5min9ftY/WefbLJ52mM/O6tYphFi2g=; b=VgTWLXwJMV1911Ifv4pZlGnY5s
+	o4/Ub2T9Jgz/5YubCuh1RVCgOnrdVOQLIGz3idDKJtwt6pLIjiatpLDXVyTqtQqA4LIFi9I20+qr/
+	dv2+avl+/uBIRWii7W7/1QH5e3bmH57h571Q1zWVXbjsqclcrxBLrQ5VhcKPHoLutg/ufhsBCa9Z7
+	d+5D7HULMRSxHxaUihP0bWfK6tdffzceth/4MHbDcQZZYSFH7N4sgMuradYZT4m9s1FoRtaYzf403
+	2foq4DembRWLmob9X17OPYsQ9krdFc4h0Gkv0HsgTJy/Nm+nUzROQCP6lHiVuZUYDPD3N7InVexEa
+	cjwUWdIQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfbqy-00000004CTw-2eRc;
+	Wed, 05 Feb 2025 09:37:52 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 34A7A3002F0; Wed,  5 Feb 2025 10:37:52 +0100 (CET)
+Date: Wed, 5 Feb 2025 10:37:52 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 08/15] futex: Prepare for reference counting of the
+ process private hash end of operation.
+Message-ID: <20250205093752.GA7145@noisy.programming.kicks-ass.net>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-9-bigeasy@linutronix.de>
+ <20250204094922.GS7145@noisy.programming.kicks-ass.net>
+ <20250205075405.7bX5uyf3@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
- clock driver
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
- <20250203-drm-msm-phy-pll-cfg-reg-v2-2-862b136c5d22@linaro.org>
- <u4qho7u2nu2x6qxkfxpeakotmbdgoha3e5csmsamaanlxziiif@22kzxupzibj7>
- <12275e11-eadc-48be-b8c3-9463cdf92698@linaro.org>
- <vfqfbpxc3zrerrb2hyis6h4kgk7aqfljwb7sxlduwlkqprmodg@rjjfsgwr5c6j>
- <2e96ae62-3114-4c7b-bea7-27f6e2009634@linaro.org>
- <t4zn2gv3mbn3nqlh5h3l3ej5zxs4wa74ncgymonci7v45w47ai@qmmtxbelichw>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <t4zn2gv3mbn3nqlh5h3l3ej5zxs4wa74ncgymonci7v45w47ai@qmmtxbelichw>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205075405.7bX5uyf3@linutronix.de>
 
-On 05/02/2025 03:51, Dmitry Baryshkov wrote:
-> On Tue, Feb 04, 2025 at 04:46:04PM +0100, Krzysztof Kozlowski wrote:
->> On 04/02/2025 15:26, Dmitry Baryshkov wrote:
->>> On Tue, Feb 04, 2025 at 10:21:25AM +0100, Krzysztof Kozlowski wrote:
->>>> On 03/02/2025 18:41, Dmitry Baryshkov wrote:
->>>>> On Mon, Feb 03, 2025 at 06:29:19PM +0100, Krzysztof Kozlowski wrote:
->>>>>> PHY_CMN_CLK_CFG1 register is updated by the PHY driver and by a mux
->>>>>> clock from Common Clock Framework:
->>>>>> devm_clk_hw_register_mux_parent_hws().  There could be a path leading to
->>>>>> concurrent and conflicting updates between PHY driver and clock
->>>>>> framework, e.g. changing the mux and enabling PLL clocks.
->>>>>>
->>>>>> Add dedicated spinlock to be sure all PHY_CMN_CLK_CFG1 updates are
->>>>>> synchronized.
->>>>>>
->>>>>> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
->>>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>>>
->>>>>> ---
->>>>>>
->>>>>> Changes in v2:
->>>>>> 1. Store BIT(4) and BIT(5) in local var in dsi_pll_enable_global_clk()
->>>>>> ---
->>>>>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 35 +++++++++++++++++++------------
->>>>>>  1 file changed, 22 insertions(+), 13 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
->>>>>> index c164f845653816291ad96c863257f75462ef58e7..e26f53f7cde8f0f6419a633f5d39784dc2e5bb98 100644
->>>>>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
->>>>>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
->>>>>> @@ -83,6 +83,9 @@ struct dsi_pll_7nm {
->>>>>>  	/* protects REG_DSI_7nm_PHY_CMN_CLK_CFG0 register */
->>>>>>  	spinlock_t postdiv_lock;
->>>>>>  
->>>>>> +	/* protects REG_DSI_7nm_PHY_CMN_CLK_CFG1 register */
->>>>>> +	spinlock_t pclk_mux_lock;
->>>>>> +
->>>>>>  	struct pll_7nm_cached_state cached_state;
->>>>>>  
->>>>>>  	struct dsi_pll_7nm *slave;
->>>>>> @@ -381,22 +384,32 @@ static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
->>>>>>  	spin_unlock_irqrestore(&pll->postdiv_lock, flags);
->>>>>>  }
->>>>>>  
->>>>>> -static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
->>>>>> +static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
->>>>>> +					u32 val)
->>>>>>  {
->>>>>> +	unsigned long flags;
->>>>>>  	u32 data;
->>>>>>  
->>>>>> +	spin_lock_irqsave(&pll->pclk_mux_lock, flags);
->>>>>>  	data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
->>>>>> -	writel(data & ~BIT(5), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
->>>>>> +	data &= ~mask;
->>>>>> +	data |= val & mask;
->>>>>> +
->>>>>> +	writel(data, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
->>>>>> +	spin_unlock_irqrestore(&pll->pclk_mux_lock, flags);
->>>>>> +}
->>>>>> +
->>>>>> +static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
->>>>>> +{
->>>>>> +	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
->>>>>>  }
->>>>>>  
->>>>>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
->>>>>>  {
->>>>>> -	u32 data;
->>>>>> +	u32 cfg_1 = BIT(5) | BIT(4);
->>>>>
->>>>> Please define these two bits too.
->>>>
->>>> Why? They were not defined before. This only moving existing code.
->>>
->>> Previously it was just a bit magic. Currently you are adding them as
->>
->> No, previous code:
->>
->> writel(data | BIT(5) | BIT(4), pll->phy->base +
->> REG_DSI_7nm_PHY_CMN_CLK_CFG1);
->>
->> This is a mask and update in the same time, because:
->> 	(data & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
->> is just redudant.
->>
->> I did not do any logical change, I did not add any mask or field.
->> Everything was already there.
+On Wed, Feb 05, 2025 at 08:54:05AM +0100, Sebastian Andrzej Siewior wrote:
+> On 2025-02-04 10:49:22 [+0100], Peter Zijlstra wrote:
+> > On Mon, Feb 03, 2025 at 02:59:28PM +0100, Sebastian Andrzej Siewior wrote:
+> > 
+> > > @@ -555,11 +558,12 @@ struct futex_hash_bucket *futex_q_lock(struct futex_q *q)
+> > >  	return hb;
+> > >  }
+> > >  
+> > > -void futex_q_unlock(struct futex_hash_bucket *hb)
+> > > +void futex_q_unlock_put(struct futex_hash_bucket *hb)
+> > >  	__releases(&hb->lock)
+> > >  {
+> > >  	futex_hb_waiters_dec(hb);
+> > >  	spin_unlock(&hb->lock);
+> > > +	futex_hash_put(hb);
+> > >  }
+> > 
+> > Here you don't
 > 
-> Yes... and no. Previously it was just writel(foo | BIT(5) | BIT(4)). Now
-
-You did not address my comment. Previous code was:
-
-(foo & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
-
-Just for shorter syntax it was written different way:
-
-foo | BIT(5) | BIT(4)
-
-> your code adds BIT(5) as a 'mask' parameter. Is it a correct mask for
-
-No, my code does not add it. It was already there, look:
-
-foo | BIT(5) | BIT(4)
-      ^^^^^^^ here
-
-
-> that field? That's why I'm asking you to define those - you have changed
-
-No, I did not change bitwrites. The code is 100% equivalent, both
-logically and assembly.
-
-You mistake maybe with some other part doing "writel(data & ~BIT(5)" in
-dsi_pll_disable_global_clk() but that's just poor diff.
-
-> bitwrites to the masked bit writes. Masks should be defined.
+> unlock + put.
 > 
->>
->>
->>> masks. I want to know if BIT(4) and BIT(5) are parts of the same
->>> bitfield (2 bits wide) or if they define two different bits.
->>
->> While in general you are right, it does not matter for this fix. If this
->> are separate bitfields - fix is correct. If this is one bitfield - fix
->> is still correct. You could claim that if this was one bitfield, using
->> 2xBIT() is not logical, but this was there already, so again my fix is
->> only fixing and keeping entire logic or inconsistencies intact.
+> > > @@ -288,23 +289,29 @@ extern void __futex_unqueue(struct futex_q *q);
+> > >  extern void __futex_queue(struct futex_q *q, struct futex_hash_bucket *hb);
+> > >  extern int futex_unqueue(struct futex_q *q);
+> > >  
+> > > +static inline void futex_hb_unlock_put(struct futex_hash_bucket *hb)
+> > > +{
+> > > +	spin_unlock(&hb->lock);
+> > > +	futex_hash_put(hb);
+> > > +}
+> > > +
+> > >  /**
+> > > - * futex_queue() - Enqueue the futex_q on the futex_hash_bucket
+> > > + * futex_queue_put() - Enqueue the futex_q on the futex_hash_bucket
+> > >   * @q:	The futex_q to enqueue
+> > >   * @hb:	The destination hash bucket
+> > >   *
+> > > - * The hb->lock must be held by the caller, and is released here. A call to
+> > > - * futex_queue() is typically paired with exactly one call to futex_unqueue().  The
+> > > - * exceptions involve the PI related operations, which may use futex_unqueue_pi()
+> > > - * or nothing if the unqueue is done as part of the wake process and the unqueue
+> > > - * state is implicit in the state of woken task (see futex_wait_requeue_pi() for
+> > > - * an example).
+> > > + * The hb->lock must be held by the caller, and is released here and the reference
+> > > + * on the hb is dropped. A call to futex_queue_put() is typically paired with
+> > > + * exactly one call to futex_unqueue(). The exceptions involve the PI related
+> > > + * operations, which may use futex_unqueue_pi() or nothing if the unqueue is
+> > > + * done as part of the wake process and the unqueue state is implicit in the
+> > > + * state of woken task (see futex_wait_requeue_pi() for an example).
+> > >   */
+> > > -static inline void futex_queue(struct futex_q *q, struct futex_hash_bucket *hb)
+> > > +static inline void futex_queue_put(struct futex_q *q, struct futex_hash_bucket *hb)
+> > >  	__releases(&hb->lock)
+> > >  {
+> > >  	__futex_queue(q, hb);
+> > > -	spin_unlock(&hb->lock);
+> > > +	futex_hb_unlock_put(hb);
+> > >  }
+> > 
+> > And here you do.
 > 
+> unlock + put. What do I don't do?
 
+Use this futex_hb_unlock_put() helper consistently :-)
 
-Best regards,
-Krzysztof
+> > > @@ -380,11 +387,13 @@ double_lock_hb(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
+> > >  }
+> > >  
+> > >  static inline void
+> > > -double_unlock_hb(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
+> > > +double_unlock_hb_put(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
+> > >  {
+> > >  	spin_unlock(&hb1->lock);
+> > >  	if (hb1 != hb2)
+> > >  		spin_unlock(&hb2->lock);
+> > > +	futex_hash_put(hb1);
+> > > +	futex_hash_put(hb2);
+> > >  }
+> > >  
+> > 
+> > This seems horribly inconsistent and makes my head hurt. Where are the
+> > matching gets for double_lock_hb() ?
+> 
+> There are in futex_hash().
+
+Yeah, that took me a very long while to find. And also, ARGH at the
+asymmetry of things.
