@@ -1,228 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031E921772B;
-	Wed,  5 Feb 2025 22:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796322; cv=fail; b=Jzzh0YsU0wA+/12qeelmNWI9F/owqZBghhguACpHXUBjXH3I5OQGKP+A96r8ZnkG8UjVm5bvjc2YeJ9tmoDZR+Qm/R/9hQeFNS4QiBv3V0Nfhe9lrnriTMVMIqqMC15btdS/D4NzNCA075M7QM/YTl+NoJcW6GW3ygO4hpvGOT0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796322; c=relaxed/simple;
-	bh=au7Asywiay+6QHdqts0aNZ17/lJ2WGYWjTnMJTCJq1o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hqObg3o1Es7z2UjH1/3+JvTEkBNUFSQIS6MD6FsT2oqVJuD32TCZhi3f7lXJKXdK6I58dMb3BGPJ9+V7tLeUGCcDo2SUa94Fshl5gOMMOSDhnFmfHDvRyUXFV6Pu0LpRDTsReWatY+JmI3KfhIKPatBDjCiyBW2d1q6vo1yhqjM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DD15rUK4; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C8C1519B4;
+	Wed,  5 Feb 2025 23:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738796439; cv=none; b=XnurpE2cjIRVovQ9Qjg05MPHhuqOGiXHmAI9CdEiIhWuRSDYeZXAn/n8WtPCL/4oO7MOOUfsGL6luwaGDLpiUEqql709lmTpoFH+zDxkaxlmA50zBhdjyaCNg7gc88U/uoX2fSiwfftZNsQf39cO3ZF1m1Wv8D1p8PjRYAWxGoE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738796439; c=relaxed/simple;
+	bh=LaTI9Ovfik3rTkSpQhtpIz4SEx0LeILc9RAC6ekVtHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kFfdcashOUDahu6HlHK8AXpJNVO8ZXcsDPiN29Tp9k3qBfYtfIerh4Z8i6DQAbr8qtd3RC55x8aAKNSXAcv7HuI0edkpqLljaDfq8GiTNJvgnASz6FwzdbWDt747GMbwLIVodbZT/bgWLDitu7u4O+fnRGfso6OeDIKU8hzKZNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EpL72wEA; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DD15rUK4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738796321; x=1770332321;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=au7Asywiay+6QHdqts0aNZ17/lJ2WGYWjTnMJTCJq1o=;
-  b=DD15rUK4fc9y1CvZknkjFOaEJMGswiiaAV1xidtGNDSEaDLuFBwzhFj5
-   Baq1hozhtBjBJQk/qpZTHZ0VXmryP7Kbuk0JfcqH6J6Kz1pWfzzqbUDuj
-   WJzRYS2nnUu3+BRef5In2lio6zuqeU+r00UfWsRCgtmc3hxNkoZBopVLW
-   bL0Qt7kU1FsOuQTHoBnY0UY6VaU4Bn+kXc35yEcWeEF4vkiS/Lka1tYoW
-   SAJRoZRRENUy0ac4Kid41OuPVQyqworDfJLT012cXvzEXSqtHsLumdj/N
-   MHgZirtv/hwJHLeUh/rLKZYdXP0kKbQv9TO3kOMOdPGh6xcqrDSe/eTPg
-   g==;
-X-CSE-ConnectionGUID: pww2LFU9QISd+qrGQZLEXQ==
-X-CSE-MsgGUID: 7knKCau3QSqCe5HxYh4Q7g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64738978"
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="64738978"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 14:58:39 -0800
-X-CSE-ConnectionGUID: KE3HjlWMR4+UejrNCbPTkw==
-X-CSE-MsgGUID: YTEFyRyIR+Wy5NatD51jVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
-   d="scan'208";a="116036057"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 14:58:39 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 5 Feb 2025 14:58:38 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 14:58:38 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Feb 2025 14:58:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UJY/ySEvXrBZQwYh0hCyx8wFMOeZJsmd4DMDZb+rYZvhgrsYTpfU+P1MFIPBLschB0FI5lr4eAFwmzQ4jemj3WYSP8evYUCiQrGzuFwnqVyHiRpMvm/8xn4Ku4HLWz7LJlvQR/tikoGLAZvxMbF39aGyCfKKU1QPIQNKJXkXW16Ams0dK5OMZkfnJGjXPze6RYlL032B7ftWcx68snKnbh4+PI+Fw9D4a8hJztWrmvaJTCY0zQQBreSGAfXuJT6Xp7cGQ8jjQCnvKolgYHIfOOrdPCCe/LCBmngTn/IfZkStZO46uYsXBgYFTtr/ocUu+MnBogStFnBm41c4MA6lmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g5Gqklw3jrnbDFBgWuPLt18Cbr/BtuxJOiJcV35xitA=;
- b=MyJp692z07kdyaLflbvKIfmFvF60fy4MSzg3RYK5gFXtMgX7YGkcrrwspnAHBZheA9XGq06juZpX4VAJRnQES5DXsRS0SeaaQZiFWLbm/G1wi587rNXRS/LzRN+XeHY4Cl/3HxZzGGoFnQFWwHd2XL0uWa4wYyxOw7PKg9VKCdnLRNNljwgIvIMgOYjGCJbbgqoBNo8rBQr736av/wTxjYcbucr5gQLidakWK1wZJ/N369c+fUmSvd0wQoAVkHIBQAHf8ptp/W9YZ6I/hqPa9jdPwRoUAlKaAh0yEPlFoxixHvb2pMhfCVDQS76OOEK1zDP2BuGgf0VjRlgi3wn1dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB4936.namprd11.prod.outlook.com (2603:10b6:510:42::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Wed, 5 Feb
- 2025 22:58:36 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 22:58:36 +0000
-Date: Wed, 5 Feb 2025 14:58:33 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
-	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
- Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v6 5/6] acpi/ghes, cxl/pci: Process CXL CPER Protocol
- Errors
-Message-ID: <67a3ed1947d5b_2d2c294a9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
-X-ClientProxiedBy: MW4PR03CA0170.namprd03.prod.outlook.com
- (2603:10b6:303:8d::25) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EpL72wEA"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515MWUX5011361;
+	Wed, 5 Feb 2025 23:00:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=Kyj4592/Vdaiqvqm+X1lwa8g7u23mB
+	IpzdJ84G1p7Lc=; b=EpL72wEAV2RCdpHNpIUMY5FRwchEr9BO8bLwc6tWB4nLux
+	n6Tqs7mdVK4NYBYvKJKRCkAEE7RSTjqtPB/6lzYOlaQykFg4T/WKZ5uWqvUvMLDA
+	GIJmC1aJNJvjEf6WVTWEKuQtfebLNKqjKblE1R+pGtoZ4hejLSWF9NvMttagWlsJ
+	KVGBhTdwGJa7sHREk/zFlVbGwv3WFfcuW0Vsu51M2bWzgv+3JbvbQF3OOkDT5ZbF
+	efns7zVnoS/JreYpTzGFZTsnYcZ1gZ84V0CJj+4VddaF6kemECV4dqQyb4sb63pl
+	RBKUJbGmUnWvivx4HZtQCXkkYHED1b+rl61v9YeQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kx29p39m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 23:00:25 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515Mx37w032396;
+	Wed, 5 Feb 2025 23:00:25 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kx29p39k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 23:00:25 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515KTrqk005251;
+	Wed, 5 Feb 2025 23:00:24 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05k31te-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 23:00:24 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515N0N8D16450056
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 23:00:23 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8DE705806A;
+	Wed,  5 Feb 2025 23:00:23 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6D93E58064;
+	Wed,  5 Feb 2025 23:00:23 +0000 (GMT)
+Received: from localhost (unknown [9.61.82.89])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 23:00:23 +0000 (GMT)
+Date: Wed, 5 Feb 2025 17:00:23 -0600
+From: Nick Child <nnac123@linux.ibm.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        virtualization@lists.linux.dev, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v2 02/13] virtio_net: simplify virtnet_set_affinity()
+Message-ID: <Z6PthznH5Tp-ZdHw@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+References: <20250128164646.4009-1-yury.norov@gmail.com>
+ <20250128164646.4009-3-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4936:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7b81ee2-f542-41a5-a8b5-08dd46389f2d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?cQM2dcK314SvzZncamv82gfwvrtc86InSFYSvKW2T4xoms0X2gx6na2vwlCQ?=
- =?us-ascii?Q?36MepR8roilVmQ7lSwt87KTOezN9mzMB4lKeBJk6LfqxxQ3gfU0Zc8/dIMbJ?=
- =?us-ascii?Q?qZdlx+nYWX//Fe7n0LUdndi+ePC8MVTj6dq6F0+nj8puJzlV4nt3sgO6n40H?=
- =?us-ascii?Q?ltEc0MA9ryVoeRCilArgEouKDWyfWWKV6vNQVvfwGUsUdZFfa2kx/670UO1p?=
- =?us-ascii?Q?NtJa23u1V8XSfpxPr69kwsAhfyTJfdflWfOU9H3qvaqE2BXUEJHXQZThORmn?=
- =?us-ascii?Q?xBh4eLP88uUMuYNwlFpVET42RmVH8cPffgUl/4sTmsjOpeJxH2C9njaASKTs?=
- =?us-ascii?Q?75eXCw3EvuJ3h9I7zkLusU6SvO113H1Z16+HegMMld/rNZE8Qs+CErGYVG7W?=
- =?us-ascii?Q?O0TLpGnvd+swNhymxPZfeh9WsD8ubXoVkSGYtBNJmpruOQhBd0YKqZTnTWYF?=
- =?us-ascii?Q?uLVyHmbFRgTGg7LNpe7B0omj/fW6JRHUX2Rj8hd0dUP44KeTKVtC9iiBO/Q5?=
- =?us-ascii?Q?rrEcoGwJkujjs/e8pyQJYQRppD05Kf4RIgZB5f1KUQhWOgEhvaLG12XPOHtj?=
- =?us-ascii?Q?E/Hpn8VqQcOOtO3RC67ObMrcZ2pzTW22bR+HApA+3aTyZGeuwvrC00YTLArK?=
- =?us-ascii?Q?2pDDL+z4YZuL58yReBVdPN2vUcT+/pG7kArnfnQ7OVwHAqCPCYpOGrnIaDy9?=
- =?us-ascii?Q?ZMeKCpJ7SRChcA1Fy6sEK4kfHGOiNWS12XoQNyoAydYh8C/TAwiqpCwn4Vz8?=
- =?us-ascii?Q?H/DfdSyZL1J73BxtnRfvAWkZjWyGc933cd6caY6gWHK37sOTB93zJzxvyMBY?=
- =?us-ascii?Q?pu399zifz/zVM4wYhcRWvZsOzPjqyiMKSdg//XATPvHu+vlnpAV8Qgyr+INZ?=
- =?us-ascii?Q?EPKZQUCpN+ckJe/CC4fs1Di/mwlcw+G9HBQNJpBMfZ6cApOe7TFHWuWaD0Uu?=
- =?us-ascii?Q?/J4cKlo7bI72/rpu/JQ3M32V0vCh5qc5X6B/7hLxhauvHtV4kqRQ/eTpm0oZ?=
- =?us-ascii?Q?XJdOY5yj/5K4EMX2EB9wXqkC/PcQAqOBGXJyNMeSXKhdutTa6m3oVCD4zWiC?=
- =?us-ascii?Q?QDUHots2JG52p0ShmBd6g1BkibCsbHzZG95QWumVuYjRypLR2jaaCr6urfTf?=
- =?us-ascii?Q?QznZTg3n8L8kRz7qJ3ew4/mkBUQrEwc2GhK+kVXB7E6AzRUDDWV1t+Dugk+w?=
- =?us-ascii?Q?GsR3Zbbp8h06KWCougujAUzE7a55tW5J1922skYcDtvWOYJte1sSQqZOqpuA?=
- =?us-ascii?Q?rmlkrN/JAP6d9bjbtEOa1LBlh5APPSTOqy/b4f+pjQqTPGsi+R1+EXZ1qhKJ?=
- =?us-ascii?Q?eLHJz+NDAO17NvNpXTzSNcF+9DbIydeSB4ecqX9r1Scg0jOXWxZCZ33GWVOz?=
- =?us-ascii?Q?9ID89LEu8WBhDQBZGauKU2oKmUhi?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?M8aU0BXyMJGeMzmnxYhk7cm2mlwD4pgWUFfpxJCuX3co37+nSudT7KQnVghI?=
- =?us-ascii?Q?n+DEfx/Hx/oXJTjJ7/9QtpOhqZjXn2YCg1OwOxhFLItfJsD0USRm6lwBiqLf?=
- =?us-ascii?Q?Pt8x97JfQCSHPh4WBBc2Z1bp48eIPebd2cLZ976TGqV+kEVhLFIuh9CqyJwD?=
- =?us-ascii?Q?Am16a30HfGpp1HCR8YXJWQGD4ZqS7jj9aNMEhFFmVDhInO5avR3HGUXDRqZK?=
- =?us-ascii?Q?I2rkIgcJAhTX0YxVLbQz0OM4WC+vZ6Dj9kcCrOl2WC8hZtSrCBUfDOBhX0xF?=
- =?us-ascii?Q?d/sIe0xQT5eMp6vzPDt70DLAMfQL/7xGPiHQAmokqnltzFfzHKtU/pzrDMuW?=
- =?us-ascii?Q?LFowsyZI7XPzU8U+poLkzKsnICbbWEGtGcTMgk4msB7DOPIXz0aI/AckDqAH?=
- =?us-ascii?Q?8h918bDtR8d/pHqRM8xYxs2PND5BNvWJp3xWZGoHV1CNQ1jGuuZPffQrSO7J?=
- =?us-ascii?Q?hhzNQoCgjZSb+GKTPY0C2pEZPD4x3iiMkRaJI44TakPJ6/PNDRWQ7qj8v6/z?=
- =?us-ascii?Q?p6g1j/OxJUO0d8Te/kgvTq2kdX2YCxOgdef4M7vgyVk6O4OZ2GMJBWWbusfl?=
- =?us-ascii?Q?n2nEZKfY5wxD8XwruPDJPAgOjAOET+UXdh9MFDWFa0aXGWH5tVyIbzkztTeb?=
- =?us-ascii?Q?QOk7C9v9+G5QyoFBLTpVIqUz9K4aHMP5tJuhE2zW2S3Gktb6YlmB+DHaPF+l?=
- =?us-ascii?Q?wni0Tm0SH4MUSM8rG/lFTsI3P/Xeq5WDNaj+VgWjofEENqF8xLS/LpXMh8Mp?=
- =?us-ascii?Q?ce/QOxahBkcYN6NUmKdVY2ZG1jNvLuUtr/JI9M7+SxVUG2rg1/jdxdNjbBKO?=
- =?us-ascii?Q?dmpwmoiLZVG8TXyUcHwjPqWwBvGkYJUB79EIDQncWYSjiJO3oe8MEJ/MLv2E?=
- =?us-ascii?Q?PGPK0E17T4S+jOsFyCu0A8YTOo9vmgvkcIGOSB7LsrL8kXL44zljaWoJfXP4?=
- =?us-ascii?Q?feX8ZJ4RzZJncAtBL/7cT7iC5tiiMeaRN1fMJrqyBCpo8CbqhI2wN29uL4vu?=
- =?us-ascii?Q?GdknLofqSZgstt2eNjZkzF3by1Mr/ILl9YfAiU+Xwz5n3cMhyCHfnuqvtYQ2?=
- =?us-ascii?Q?Vwa3zUljJf2spLueEohe+XbFGzqFpUOHooOs9KGddh129s/YKMVqqMoyvC3M?=
- =?us-ascii?Q?670Cktt1b/EICy0QiAeSMGvbjJeTKLIKrEBjlH923WgkWXOChwL3Yc54dj4V?=
- =?us-ascii?Q?QcyMQpQlKyozWQLpYhCTe4Vrsho3hKSGftmk4qzXqj7nuSBWYZzFJZMFnin9?=
- =?us-ascii?Q?kiBeoicPehhBi9sbAZPTo5n4M1HqXx+Lw/u0nd/Ib+FKwetA2nnbiFLWvhf4?=
- =?us-ascii?Q?lTxgWnDMYOfC99r3mk2njNdVZKfxKZ/9I45ThcDtCokC16yXJQ1xCHHAzSx0?=
- =?us-ascii?Q?lGZo8kdHPr5SyeyOexw7npokzFp969ICP3SemSnETNERuw8vJnKp2/A2vbCt?=
- =?us-ascii?Q?McCgj2548bE3Eh8/+idN/HdwXKUiI7xG2M3liBrE05U0AH7wzAAtk6SloB6R?=
- =?us-ascii?Q?6rserdrFU4APEwGPAy/6HRHzW5MCFHxDssPw09YBF2pZcrLVc6o5Qc5Vi2JS?=
- =?us-ascii?Q?jbO+SvaUhegw03BA4wbp2vzWGgRuU9nsjbyjErJUdtR51YYHulBpjuON0cc+?=
- =?us-ascii?Q?cg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7b81ee2-f542-41a5-a8b5-08dd46389f2d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 22:58:36.0806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LKpSEVCBpeFpXwGLkWPWigVlAg0melw3JG0314juPbnMw+rAoh6hM9kQBfLDsVhkmGoZ+69EcIP645zNTVrt+gJrgKh2H3gjz11PEpdBwg8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4936
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128164646.4009-3-yury.norov@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: K7D4TPrZFEYxpz2AL0sWv287fg2oxywf
+X-Proofpoint-ORIG-GUID: eJfy_3KbPsJRzD60u06T4ivUF-ntf4ce
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_08,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050176
 
-Smita Koralahalli wrote:
-> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
-> CPER records. Introduce support for handling and logging CXL Protocol
-> errors.
+On Tue, Jan 28, 2025 at 11:46:31AM -0500, Yury Norov wrote:
+> The inner loop may be replaced with the dedicated for_each_online_cpu_wrap.
+> It helps to avoid setting the same bits in the @mask more than once, in
+> case of group_size is greater than number of online CPUs.
+
+nit: Looking at the previous logic of how group_stride is calculated, I don't
+think there is possibility of "setting the same bits in the @mask more
+than once". group_stride = n_cpu / n_queues
+
+nit: I see this more as 2 patches. The introduction of a new core
+helper function is a bit buried.
+
 > 
-> The defined trace events cxl_aer_uncorrectable_error and
-> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
-> to trace FW-First Protocol errors.
-> 
-> Since the CXL code is required to be called from process context and
-> GHES is in interrupt context, use workqueues for processing.
-> 
-> Similar to CXL CPER event handling, use kfifo to handle errors as it
-> simplifies queue processing by providing lock free fifo operations.
-> 
-> Add the ability for the CXL sub-system to register a workqueue to
-> process CXL CPER protocol errors.
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> CC: Nick Child <nnac123@linux.ibm.com>
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+
+Don't know if my comments alone merit a v3 and I think the patch
+does simplify the codebase so:
+Reviewed-by: Nick Child <nnac123@linux.ibm.com>
+
 > ---
-
-This patch confuses me. The plumbing to route CXL component error
-records back to the cxl_pci driver was motivated by the driver having a
-significant amount of context about component state and code to handle
-OS first reporting of component errors from the device mailbox.
-
-Protocol errors are different. They implicate various ports where the
-cxl_pci driver may not have any additional information to add.
-
-I feel like this patch makes more sense after CXL protocol errors become
-a first class citizen in the core, and that generic CXL protocol error
-tracing lives in the core, not a cxl_pci driver callback.
-
-So, similar to how aer_recover_queue() traces all PCIe protocol errors
-and optionally lets endpoint drivers recover the link via
-pcie_do_recovery(), a cxl_recover_queue() is needed. That would be the
-place to land general CXL protocol error prints and optionally call back
-into drivers to add more device specific color if necessary.
-
-I am ok with the CXL core centralizing all protocol error processing
-like the built-in PCI core, but the generic CXL memory expander driver,
-cxl_pci, is the wrong place to handle system wide protocol errors across
-all device types.
-
-I expect this is new infrastructure that we will get from Terry's
-patches, but please do challenge me if you think I am missing something.
+>  drivers/net/virtio_net.c | 12 +++++++-----
+>  include/linux/cpumask.h  |  4 ++++
+>  2 files changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 7646ddd9bef7..9d7c37e968b5 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -3826,7 +3826,7 @@ static void virtnet_set_affinity(struct virtnet_info *vi)
+>  	cpumask_var_t mask;
+>  	int stragglers;
+>  	int group_size;
+> -	int i, j, cpu;
+> +	int i, start = 0, cpu;
+>  	int num_cpu;
+>  	int stride;
+>  
+> @@ -3840,16 +3840,18 @@ static void virtnet_set_affinity(struct virtnet_info *vi)
+>  	stragglers = num_cpu >= vi->curr_queue_pairs ?
+>  			num_cpu % vi->curr_queue_pairs :
+>  			0;
+> -	cpu = cpumask_first(cpu_online_mask);
+>  
+>  	for (i = 0; i < vi->curr_queue_pairs; i++) {
+>  		group_size = stride + (i < stragglers ? 1 : 0);
+>  
+> -		for (j = 0; j < group_size; j++) {
+> +		for_each_online_cpu_wrap(cpu, start) {
+> +			if (!group_size--) {
+> +				start = cpu;
+> +				break;
+> +			}
+>  			cpumask_set_cpu(cpu, mask);
+> -			cpu = cpumask_next_wrap(cpu, cpu_online_mask,
+> -						nr_cpu_ids, false);
+>  		}
+> +
+>  		virtqueue_set_affinity(vi->rq[i].vq, mask);
+>  		virtqueue_set_affinity(vi->sq[i].vq, mask);
+>  		__netif_set_xps_queue(vi->dev, cpumask_bits(mask), i, XPS_CPUS);
+> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+> index 5cf69a110c1c..30042351f15f 100644
+> --- a/include/linux/cpumask.h
+> +++ b/include/linux/cpumask.h
+> @@ -1036,6 +1036,8 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
+>  
+>  #define for_each_possible_cpu_wrap(cpu, start)	\
+>  	for ((void)(start), (cpu) = 0; (cpu) < 1; (cpu)++)
+> +#define for_each_online_cpu_wrap(cpu, start)	\
+> +	for ((void)(start), (cpu) = 0; (cpu) < 1; (cpu)++)
+>  #else
+>  #define for_each_possible_cpu(cpu) for_each_cpu((cpu), cpu_possible_mask)
+>  #define for_each_online_cpu(cpu)   for_each_cpu((cpu), cpu_online_mask)
+> @@ -1044,6 +1046,8 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
+>  
+>  #define for_each_possible_cpu_wrap(cpu, start)	\
+>  	for_each_cpu_wrap((cpu), cpu_possible_mask, (start))
+> +#define for_each_online_cpu_wrap(cpu, start)	\
+> +	for_each_cpu_wrap((cpu), cpu_online_mask, (start))
+>  #endif
+>  
+>  /* Wrappers for arch boot code to manipulate normally-constant masks */
+> -- 
+> 2.43.0
+> 
