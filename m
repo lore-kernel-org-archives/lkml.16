@@ -1,143 +1,180 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6B82144BE;
-	Wed,  5 Feb 2025 21:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D83523CE;
+	Wed,  5 Feb 2025 21:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738790516; cv=none; b=FlPIHL7qlkx3RU2hciqKg9nkLbdGYQz6Clo5YosXEHSBfRp6mIn0uEEEZOmAPM3befosDH11ZzWSFqSuDcpIuxPYtrrdWzSIqo2bBRSi5YcuPSWMNJSfHqB6t1FVyNAZBCrqWlMx2lnH0Hie2t0NQtJRcN3Sw+pGv1HOa5qn028=
+	t=1738790531; cv=none; b=VubE8QTu5PzihMUBkYcDKdl3jxUr1OEqcuOwTHtyzHEOcmTB9jbvZWDGQjLHn3Ufh0sFnUK6wyShlx8TslVhupzdao7XLU+rNFh+Zq/thtYXnmLQMO+UtLazv369Jujr+3fpkg43kBw1mJx4oK6FQW7ew4qx7zzQEJf1ID9Eb7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738790516; c=relaxed/simple;
-	bh=nEesjhAuTJziUxYVq7v1gWdsPVAbJrLdrW6QwCP71vM=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=DW/rTywRnkDIh7JvQP0seAY0EWIGZ89X9EbnXfKoG9GVpQTcEKno0eUDupKSV0prSYj/ldd67q58NT4Z0ZTSgo2NejHPJfqxCEYvxO768asmJxbMH9BGaiKisCcl/qmSxPp3jyfhPaKSbV7DWa6os61ol9Aoy6Z9qD150lzJVHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VjZhBnVE; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738790531; c=relaxed/simple;
+	bh=6UaFJ5dfXDsR86TEFbbJhO5+Tyug7OFwGGuIi56ZwVI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dVCIvgKEyODXT88Ja2gG5Tj0JjpsSjf7YrG19/ITW7vUAa+1o6ZqPaBC8TTIQK3jdpjGeBfr2sE18BI7Zka9bdHpOhH0ji7dKC6lwr1Jnhrr7ioUAoaapGakbd/Rha3fmB+fBgjpZkXQZhiRVEoua7TL6/a8LrKivGON601vv9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UMv2d5oc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pIJPJ0nA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjZhBnVE"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-85c4557fce0so47801241.3;
-        Wed, 05 Feb 2025 13:21:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738790514; x=1739395314; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oA59/b0HqiTbM3mdKAGWxKNjJnBpzxH7nv45X6IYWmY=;
-        b=VjZhBnVEL3E5tVFSPq0rvsF50L4DlbE1QAotoBrWaLz4H47k0Z7F7QTlCiEQZufVJX
-         hovbdqQbA0JICssqW91Ks9jD9d8m6J0S+il/5w7H0vbpnwyHsqRxz9JaVlTYic7btS7a
-         d0DTQKBVd1EL7o8LVRUVweEdeGtc13ntvBA8yRkGVl+K+0aDUjlYWPlgXo91ZVidvifC
-         K5qBOIPz3/m2yTfvoEKF756ykco1JLmtqmFQiatLJfsHOc6/6K2yxItxstxfWOBBkIZD
-         2X6qv9TsL1QyUeAfup8+iLav25CmH3CkT6BplkEBUjTQqCgL/FdXhIlHvGj4ipRAh5v0
-         MIgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738790514; x=1739395314;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oA59/b0HqiTbM3mdKAGWxKNjJnBpzxH7nv45X6IYWmY=;
-        b=DrS+ZR5+q/R3SVocOksICHvld+q65PJjufpn9a4Ndx1UisiAlqBpxmsXWBU1K8/xXY
-         gFazpZoLZbNTRHd9+Jnoq5Yw4AV25JfLci6orv4rIS+XfzF+lL6Ijxhlzd+F7HwTOPGe
-         OhdVyLrS4G/Oke6wGAI0TrzDklL6QEMJTWG14B2UhKvNVkPSf6l7Un1/ysY6BJCfG6EK
-         5D4hSpJd+/Zio5Pyuf093X01V+UBfP2YG2pxNUSOfv6RApX+7IANJkjKlOMp27zGkePR
-         ar8pFiqOG+PJYQM0sapr0HzsINmrEGkgss/67Z5yw7GhYQEAcTpkaGt4SLUAjVgmVrAM
-         sqeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFgb1n+kWhnawWvmdDHTJbTOv1XJP3vp/0TG/Sv270zyIqVqvgYhPUtBnDTZXhuBiNK4562ennoEmiEGhWyZKy@vger.kernel.org, AJvYcCUbgkBPom4+8J5QTZFtfgrIynAAD10yUm9e9BtavFoXO+Eifi09KijHkX+La4nKkhUCqJY=@vger.kernel.org, AJvYcCUsMYzQIRT3HIeY8C1guvA1OpQ6gXY1tvnlOHqLxDbeZGKx01h5f9Vj+KprMbbZNUKlwQwBjP5o@vger.kernel.org, AJvYcCWcag9Y/lpwDEWXECXxdN1p0xzgm4ye8nkOBki5hIE/3B83ZZVMqv4bMUIsIUWnsEjNTPQJc2PxVM8DifgT@vger.kernel.org, AJvYcCXJzEap0qFbbkkdTvEDMiGaq4eo7t7/s86ATIgMnuR+jP9RohzWYJMwsRcatdG+7n0q27tgQyvtFmAh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdXQuWGL4a6pEk31QAWgrEvfd1qxLPlDB6U6RAlEjuqfnc3qZ7
-	DEeOjmLXLA112PeN9uKS8/DH/OxJ6byxfrTEThhmm/70dE4lbSZw
-X-Gm-Gg: ASbGnctUXZ2mq3N9vOiUx6GcSKxXle/JjbWYpsuOWqbZJC+ny/BmCRliPQHgZCSNTtS
-	rHfROrHTlcdNd/+l9prRVVW2oF0wVecg1eDxOYu0CXbBOZcT8SVxn0bU47kxemHuDKDCSqIIvsG
-	MtDYUXL9+t3dcVj6OQJ7osNOqb2Y86lcL1LMfc0pHFGQ+4xrqQ8lsyFUiDtkMdom4mMkw5pTmQm
-	TiAjREJ/Khx1V4glHsHn7g6h8q1cQI6aJd13AHvqC0VGZP8OUGVrtHHPbjJ2eV2+u266Nx5DrA1
-	BGsd/aLpwK2q2JT9PlMC9t+VMSWJ0DYnVT8RH+Ow7pYCe8cGiObhNHsvzUUABFk=
-X-Google-Smtp-Source: AGHT+IGMnECoIZSQWPaeSS6dNPkAqETjHSQP+dcqfl8m4ZhiKsez3m+3zBDXaugCYi/i3Eptq/eBDQ==
-X-Received: by 2002:a05:6102:3f4c:b0:4b0:ccec:c9de with SMTP id ada2fe7eead31-4ba47ae88c3mr3894330137.24.1738790513631;
-        Wed, 05 Feb 2025 13:21:53 -0800 (PST)
-Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baadae67sm2516649137.15.2025.02.05.13.21.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 13:21:52 -0800 (PST)
-Date: Wed, 05 Feb 2025 16:21:52 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Akihiko Odaki <akihiko.odaki@daynix.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- Shuah Khan <shuah@kernel.org>, 
- linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- kvm@vger.kernel.org, 
- virtualization@lists.linux-foundation.org, 
- linux-kselftest@vger.kernel.org, 
- Yuri Benditovich <yuri.benditovich@daynix.com>, 
- Andrew Melnychenko <andrew@daynix.com>, 
- Stephen Hemminger <stephen@networkplumber.org>, 
- gur.stavi@huawei.com, 
- devel@daynix.com, 
- Akihiko Odaki <akihiko.odaki@daynix.com>
-Message-ID: <67a3d6706c01a_170d3929436@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250205-tun-v5-6-15d0b32e87fa@daynix.com>
-References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
- <20250205-tun-v5-6-15d0b32e87fa@daynix.com>
-Subject: Re: [PATCH net-next v5 6/7] tap: Keep hdr_len in tap_get_user()
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UMv2d5oc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pIJPJ0nA"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738790527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z/HAxvUTiJawdWe3C8a9yYvj7IQz7aWvPm5qvpIh5KI=;
+	b=UMv2d5ocRKG7Avi5xa5iV+eOVdYG6RUjbyXBhYe/tQuWBn29m0QVnCVVzzYVw+uoiA3SVT
+	NMQ+9dEwTz64G3qM9J4WKRHcJ7hOJyJ8hPoccPHGOlDq9uNY4eeDvJv0IfbX47B704pwhI
+	ckat09iDdRbwovwC5Lo4GZSn3TIRp5LL7ZAf5mi/KTqtVwrQCjKwBh5/RDxwdMG86F95Ge
+	fS3PLUSoJ3r/EJ/6IKGhfJ369BahGQ1k13oRLLHqDujVrPWqiQbS4YY3FDSLc+7UsKdAjL
+	bhISojgoqdZyhF9cb6n7Nomk9NRs9oWoNJX38ToRBK+J7VxtIBR/TMJeEid8cQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738790527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z/HAxvUTiJawdWe3C8a9yYvj7IQz7aWvPm5qvpIh5KI=;
+	b=pIJPJ0nADSN3rHUQSS9DVGmXy4gxYetpvYjDxXgLXZGT1fIEeHpHq9uVbbM68xKIUuwgTt
+	sso/tX7hvAfIiICg==
+To: paulmck@kernel.org, Petr Mladek <pmladek@suse.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, rcu@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
+ Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko
+ <andrii@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+In-Reply-To: <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
+ <20250204102611.OVuHn9rS@linutronix.de>
+ <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
+ <20250204163409.ueObHFje@linutronix.de>
+ <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
+ <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+ <84pljwi2w0.fsf@jogness.linutronix.de>
+ <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
+ <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
+Date: Wed, 05 Feb 2025 22:28:06 +0106
+Message-ID: <84ed0c1401.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Akihiko Odaki wrote:
-> hdr_len is repeatedly used so keep it in a local variable.
-> 
-> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+On 2025-02-05, "Paul E. McKenney" <paulmck@kernel.org> wrote:
+>> Would it make sense to put a call to pr_flush() at the beginning of the
+>> kernel_power_off() function?  I suspect that would take care of much
+>> more than just rcutorture.
+>> 
+>> Or maybe after the pr_emerg("Power down\n"), since that is normally
+>> the last thing that shows up on rcutorture's console logs.
 
-> @@ -682,11 +683,8 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
->  	if (msg_control && sock_flag(&q->sk, SOCK_ZEROCOPY)) {
->  		struct iov_iter i;
+Yes, after the pr_emerg("Power down\n"), as in your patch below.
+
+> And that does the trick!  I specified 500ms, but maybe -1 would be
+> better?  You tell me!  ;-)
+
+I probably would have chosen 1000ms, but if the kthread has made no
+forward progress after a few max timeslices, it probably is dead or will
+not be scheduled anyway.
+
+If there is no backlog, pr_flush() returns immediately.
+
+I recommend _not_ using timeout_ms=-1 here, in case the kthread cannot
+be scheduled (for whatever reason).
+
+> ------------------------------------------------------------------------
+>
+> commit 172b692a79ec5801eab57cb55d2f9c398f244c62
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Wed Feb 5 12:27:23 2025 -0800
+>
+>     printk: Flush console log from kernel_power_off()
+>     
+>     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
+>     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
+>     Therefore, make pr_flush() public and invoke it after then last print
+>     in kernel_power_off().
+>     
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+>     Cc: Petr Mladek <pmladek@suse.com>
+>     Cc: Steven Rostedt <rostedt@goodmis.org>
+>     Cc: John Ogness <john.ogness@linutronix.de>
+>     Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+>
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 4217a9f412b2..b3e88ff1ecc3 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -806,4 +806,6 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
+>  #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
+>  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
 >  
-> -		copylen = vnet_hdr.hdr_len ?
-> -			tap16_to_cpu(q, vnet_hdr.hdr_len) : GOODCOPY_LEN;
-> -		if (copylen > good_linear)
-> -			copylen = good_linear;
-> -		else if (copylen < ETH_HLEN)
-> +		copylen = min(hdr_len ? hdr_len : GOODCOPY_LEN, good_linear);
-> +		if (copylen < ETH_HLEN)
->  			copylen = ETH_HLEN;
+> +
+> +bool pr_flush(int timeout_ms, bool reset_on_progress);
 
-I forgot earlier: this can also use single line statement
+This will fail to link for !CONFIG_PRINTK.
 
-    copylen = max(copylen, ETH_HLEN);
+In kernel/printk/printk.c currently there is:
 
-And perhaps easiest to follow is
+#ifdef CONFIG_PRINTK
+static bool pr_flush(int timeout_ms, bool reset_on_progress);
+#else
+static bool pr_flush(int timeout_ms, bool reset_on_progress) { return true; }
+#endif
 
-    copylen = hdr_len ?: GOODCOPY_LEN;
-    copylen = min(copylen, good_linear);
-    copylen = max(copylen, ETH_HLEN);
+This would need to move to include/linux/printk.h
 
->  		linear = copylen;
->  		i = *from;
-> @@ -697,11 +695,9 @@ static ssize_t tap_get_user(struct tap_queue *q, void *msg_control,
+There you will find an existing CONFIG_PRINTK if/else block to move
+those to.
+
+>  #endif
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 80910bc3470c..e0c6e5a99897 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2461,7 +2461,7 @@ asmlinkage __visible int _printk(const char *fmt, ...)
+>  }
+>  EXPORT_SYMBOL(_printk);
 >  
->  	if (!zerocopy) {
->  		copylen = len;
-> -		linear = tap16_to_cpu(q, vnet_hdr.hdr_len);
-> -		if (linear > good_linear)
-> -			linear = good_linear;
-> -		else if (linear < ETH_HLEN)
-> -			linear = ETH_HLEN;
-> +		linear = min(hdr_len, good_linear);
-> +		if (copylen < ETH_HLEN)
-> +			copylen = ETH_HLEN;
+> -static bool pr_flush(int timeout_ms, bool reset_on_progress);
+> +bool pr_flush(int timeout_ms, bool reset_on_progress);
+>  static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress);
+>  
+>  #else /* CONFIG_PRINTK */
+> @@ -4466,7 +4466,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
+>   * Context: Process context. May sleep while acquiring console lock.
+>   * Return: true if all usable printers are caught up.
+>   */
+> -static bool pr_flush(int timeout_ms, bool reset_on_progress)
+> +bool pr_flush(int timeout_ms, bool reset_on_progress)
+>  {
+>  	return __pr_flush(NULL, timeout_ms, reset_on_progress);
+>  }
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index a701000bab34..3448e6ae3556 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -704,6 +704,7 @@ void kernel_power_off(void)
+>  	migrate_to_reboot_cpu();
+>  	syscore_shutdown();
+>  	pr_emerg("Power down\n");
+> +	pr_flush(500, 1);
 
-Same
+I would have chosen:
+
+	pr_flush(1000, true);
+
+but I really don't have an argument either way.
+
+>  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+>  	machine_power_off();
+>  }
+
+John Ogness
