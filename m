@@ -1,332 +1,188 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5887120C02A;
-	Wed,  5 Feb 2025 06:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C592165E0;
+	Wed,  5 Feb 2025 06:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738736241; cv=none; b=IpOdzV7Cwiscir466O1PprdEdglLn813Pw62zapnmzfSyaBF1F69Xdle67xvLDGFgTLx6vj66fMTrQgaqdHGeFm9Vd4EnSr0UNrdPsHdLcYmJWNWIGmnzAlkAhXZ3Fk225PrbKr4NDhXv1ZMbrNSpbDF8Vfk3FFYmqNeMiT1/o4=
+	t=1738736257; cv=none; b=fOIfNcWbN+wLUoeOLo3HKxgjrqtrWkQl+tjh1lg1/AemRLLIj5byaMeQBmepjtBBgzpKh6DSX0hGNq7lU75MgDTos2Sfaiykydg5vVVYx7wmJ36jhdGQl3LX9q73Gr6gtvnPJJuPbUUHLOYn0tUgTS4b0GzWUWzhY6shSY0IuUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738736241; c=relaxed/simple;
-	bh=pZVAyrBiEeTA4e6lbI11nddgrixvFpxatCAbBKmYYPA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kopMEIQBHFFBNpREu+2g6xkuoZFlbYNVlMw3ubVFWgu0t10dHq0CemnfpOONuLawaCaypt8oZgPPjJxt9Ez8XESfKBNijhKYoqscazojke3TBtzfRV80N3f5YdbQUJOdwPH6O+Cf7tz98MghanduaeanjiURmqLcw8e4NOI/uOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J1OE/RFg; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738736257; c=relaxed/simple;
+	bh=tqgeSNiL5pBeIt17AW330eomXgbp7TBHF4c6qsfUNDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OLOMgFhmD0TtVr2idteSgvsoskI8JYccOBq1mzmtoyqzvOvtpSQmX8XdIlFhbTLWIY2kREBb6PnCTBKVgXkJ9Qsdf8kWVtqggh3zel+gtt/jYEa+Krixg4ESH7crQYZ2UuC6cvEAj/zucx6hBI8EnIKj02NVB3Q/79Y7XZq2oZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ou5XS87t; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1OE/RFg"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b6fc3e9e4aso580949785a.2;
-        Tue, 04 Feb 2025 22:17:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738736238; x=1739341038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cCRgINirE+iODNY3WTd2udcTDH1gjU7AElssx8SU6Gg=;
-        b=J1OE/RFgdUfYLtaixuMx9rZo6PrwIcC0BPCRdMm5Wv3e1qoTs8bkrNEjkkURZDWbT2
-         PseBmYo1D0YOfuW2r9KFwsRLCtD6Kw7qqpMATYkcDLyuqgDnrgqvwVFGTs0uqdpYXl2s
-         968x2pgs9sHqnQP1gr1jzsvceOb99HpuEL7dAZIEu5USQCGybFLdLo7aaRhBeU8Vr+sr
-         XaZO0CtPUsVyL/638nYCiNUzrBEKL98ztG5UJqon3pnIZzzT+cor+HAR78Z1ZidzwQpw
-         OeOmyO7MOmnwMsOkNRNx2dQ8RUfURmWgeEmHkun51c/0gvDIonVbihxZhZ6bGUUlPrdq
-         gwvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738736238; x=1739341038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cCRgINirE+iODNY3WTd2udcTDH1gjU7AElssx8SU6Gg=;
-        b=okdsoZJ8i3zfAtXQCzDZypX5uGPOsxFu9QGCbmtx8RfZsaIycgMlBJ3/1gJwj4MiRl
-         I+w5rRPFwAy36Nt2Ph4MO/OosGrv1SdOas7LRC/soBpOH/2/gCPsUpY55LGCJuQkViSX
-         Q+Y+JUPmG3xe7jxUEr79+4iX/M3KSVOhYWAANczqsPFrh4n9U/4J5iYiKohhzZldQyA2
-         DWIK8dNBxLhbj+QeSV9fVpxQSyQ+M+1sKF2KLkNRTnEpntg3LYsbNCNzdtI9beAaPLcn
-         rqojMDfj8RQRCjGXDc9D1gajB8sa6RWmdNTePeJZpGrN1Vt5riytIacvjPkegZndOWWK
-         YUbg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1jmkmb2GRAdJZ2+Lz9NVbKsNRUEA/aoeXU0sW1GtQCvrEaWKeA6Q5Xhmmk3US2xztdv+wOE+EcSmI0gJIFg==@vger.kernel.org, AJvYcCUYPzi0h45tXusbujXBE0wQ6CaLpGtbK4x/ZUNDjXAS4FkQwyPBjwOUyDsdxsWIuxHjPf7M7v5NA5KP9kY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUkRftWZaOTHZnc86Tj8zkKXvGzIn1Bqe0uy++W6SvTBETpW12
-	f6meOZ57g505V2yr2rRYgnQJejyvoTqjXUzgzClf4SrLdtETqfC8AVgNtVHuxTWoQJfhgYSr+We
-	i2GSZ15AQ9c+O6KlaerPTDhNTTT8=
-X-Gm-Gg: ASbGncsbxc34RIzSqEEnPFZjT6F8qA7YNFSdbp9ZtPoOsI6iIlzp9bmPmFH+T8KbRDP
-	R/PW7P4zKYKZ1xElNZul7WDBBRND2pJyMzaasY2VFVzdCi0vfkl/rCG2abbVedXIOxcd7qK15Up
-	4=
-X-Google-Smtp-Source: AGHT+IH/y2iclPbXaJW7mxStcSEO5pl9GdFXvnP9pmwhLakoL/fmL3EI5CUZY9HYaHfsWB2jMgn2Gc5QYj9XWZeXLNI=
-X-Received: by 2002:a05:620a:2401:b0:7b6:eed4:695c with SMTP id
- af79cd13be357-7c039ff75c4mr293691385a.32.1738736238060; Tue, 04 Feb 2025
- 22:17:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ou5XS87t"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5151IQGp015623;
+	Wed, 5 Feb 2025 06:17:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	J6IK9WY8Uzi7WzFh6C2+V/Sv3sw7HBprbK9HmSbTDR4=; b=ou5XS87tn/0VoMPo
+	5uLvvGzMNePQwY1pMoSo+AXjPUCeQdJc8bECDv7uU9mzn0zSka9NjNbNObLachpp
+	MtafrVzAwaQIBeMfdF9yH5DgNqakl8nWOAgB/QkK9l43MnVvQA5LPCaIK8y3smLL
+	d9ce92ahBqeivHJBD8HrHHT+yIpzmHvqonCviFFFCN3WvseKpwZjXDR79zlleSF3
+	L2jFbIGQPWG1Z5152jNWm86rnk6OFSiFPY1PWtO7eWNgkMEraPi1mKP1MTY0uJbi
+	1TCwF51JU7kIYPIGrCfN3Hz33cKCFvkzJirrkskDAHNiZfbk1q5iOSmZaVN7G5Do
+	Ba2BOA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kx77rhag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 06:17:22 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5156HM4a032119
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Feb 2025 06:17:22 GMT
+Received: from [10.50.51.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
+ 22:17:15 -0800
+Message-ID: <69dc3c64-e0b7-a453-a73b-6a3c9dbded7d@quicinc.com>
+Date: Wed, 5 Feb 2025 11:47:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
- <Z6IQi4wpph0dnSD7@pathway.suse.cz>
-In-Reply-To: <Z6IQi4wpph0dnSD7@pathway.suse.cz>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Wed, 5 Feb 2025 14:16:42 +0800
-X-Gm-Features: AWEUYZlwxu766zS1EinatyqzFyllFw-NFGqizj8p3k56iZn2k_ASA6a0nvsxSzc
-Message-ID: <CALOAHbBktE_jYd5zSzvmbo_K7PkFDXrykTqV1-ZDQju64EYPyg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Petr Mladek <pmladek@suse.com>
-Cc: Miroslav Benes <mbenes@suse.cz>, jpoimboe@kernel.org, jikos@kernel.org, 
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Johan Hovold
+	<johan@kernel.org>
+CC: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>, <quic_vgarodia@quicinc.com>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <p.zabel@pengutronix.de>, <hverkuil@xs4all.nl>,
+        <sebastian.fricke@collabora.com>, <bryan.odonoghue@linaro.org>,
+        <neil.armstrong@linaro.org>, <nicolas@ndufresne.ca>,
+        <u.kleine-koenig@baylibre.com>, <stefan.schmidt@linaro.org>,
+        <lujianhua000@gmail.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <krzysztof.kozlowski@linaro.org>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+ <Z6HehbKL88LW1lxC@hovoldconsulting.com>
+ <hpcf7olw3ody7ns4ibdeoc5qrkmh3fgeqbhjd4eqwfuanevzoa@plenabtrjqi5>
+ <Z6I5nx2Wt3bbBmSI@hovoldconsulting.com>
+ <ilqfs6miq55ahyxjnhniv4k654vstfugmpswo5wld2ncgxxcx3@vsbr4bdl7y64>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <ilqfs6miq55ahyxjnhniv4k654vstfugmpswo5wld2ncgxxcx3@vsbr4bdl7y64>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 4, 2025 at 9:05=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> On Mon 2025-02-03 17:44:52, Yafang Shao wrote:
-> > On Fri, Jan 31, 2025 at 9:18=E2=80=AFPM Miroslav Benes <mbenes@suse.cz>=
- wrote:
-> > >
-> > > > >
-> > > > >   + What exactly is meant by frequent replacements (busy loop?, o=
-nce a minute?)
-> > > >
-> > > > The script:
-> > > >
-> > > > #!/bin/bash
-> > > > while true; do
-> > > >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
-> > > >         ./apply_livepatch_61.sh # it will sleep 5s
-> > > >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
-> > > >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
-> > > >         ./apply_livepatch_61.sh  # it will sleep 5s
-> > > > done
-> > >
-> > > A live patch application is a slowpath. It is expected not to run
-> > > frequently (in a relative sense).
-> >
-> > The frequency isn=E2=80=99t the main concern here; _scalability_ is the=
- key issue.
-> > Running livepatches once per day (a relatively low frequency) across al=
-l of our
-> > production servers (hundreds of thousands) isn=E2=80=99t feasible. Inst=
-ead, we need to
-> > periodically run tests on a subset of test servers.
->
-> I am confused. The original problem was a system crash when
-> livepatching do_exit() function, see
-> https://lore.kernel.org/r/CALOAHbA9WHPjeZKUcUkwULagQjTMfqAdAg+akqPzbZ7Byc=
-=3Dqrw@mail.gmail.com
-
-Why do you view this patchset as a solution to the original problem?
-
->
-> The rcu watchdog warning was first mentioned in this patchset.
-> Do you see rcu watchdog warning in production or just
-> with this artificial test, please?
-
-So, we shouldn=E2=80=99t run any artificial tests on the livepatch, correct=
-?
-What exactly is the issue with these test cases?
-
->
->
-> > > If you stress it like this, it is quite
-> > > expected that it will have an impact. Especially on a large busy syst=
-em.
-> >
-> > It seems you agree that the current atomic-replace process lacks scalab=
-ility.
-> > When deploying a livepatch across a large fleet of servers, it=E2=80=99=
-s impossible to
-> > ensure that the servers are idle, as their workloads are constantly var=
-ying and
-> > are not deterministic.
->
-> Do you see the scalability problem in production, please?
-
-Yes, the livepatch transition was stalled.
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: g1yqstij3JKZM-pW7MGK0YgJ2alVn5LK
+X-Proofpoint-GUID: g1yqstij3JKZM-pW7MGK0YgJ2alVn5LK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_02,2025-02-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 malwarescore=0 phishscore=0
+ clxscore=1015 suspectscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050048
 
 
-> And could you prove that it was caused by livepatching, please?
 
-When the livepatch transition is stalled, running `kpatch list` will
-display the stalled information.
+On 2/5/2025 4:39 AM, Dmitry Baryshkov wrote:
+> On Tue, Feb 04, 2025 at 05:00:31PM +0100, Johan Hovold wrote:
+>> On Tue, Feb 04, 2025 at 04:55:58PM +0200, Dmitry Baryshkov wrote:
+>>> On Tue, Feb 04, 2025 at 10:31:49AM +0100, Johan Hovold wrote:
+>>>> On Mon, Feb 03, 2025 at 05:16:50PM +0200, Dmitry Baryshkov wrote:
+>>>>> On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
+>>>>>> On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
+>>
+>>>> And we're still waiting to hear the answers to all of Hans' questions. I
+>>>> still haven't seen anyone explaining why any of this is needed. You
+>>>> could have just continued letting Venus support 8250 so presumably there
+>>>> is some benefit in using Iris instead. Which? And is that potential
+>>>> benefit important enough to not just wait until Iris is up to par
+>>>> feature wise?
+>>>
+>>> Because that's exactly opposite of what Iris developers are trying to
+>>> do: SM8250 and SM8550 belong to two different generations of the FW
+>>> interface. By supporting both of them in the Iris driver the developers
+>>> can verify that the internal driver abstractions are good enough. It has
+>>> been discussed in one of the threads (or in telcos) related to the first
+>>> iterations of this driver. We definitely don't want to end up in Venus
+>>> situation, where the abstractions were added afterwards and in some
+>>> cases they are not the best ones.
+>>
+>> Ok, but as I've said a number of times already, information like this
+>> needs to be included in the cover letter and commit message of what is
+>> posted to the list.
+>>
+>> Maintainers and reviewers obviously have no idea what you discussed in
+>> some internal teleconference and can't be expected to remember or dig
+>> this out from some old email thread either.
+>>
+>>> The plan is to use sm8250 as a "bridge" between two drivers, verifying
+>>> that they are on par during development, then drop sm8250 from Venus
+>>> driver. Then move sc7280 support too, drop all HFD_VERSION_6XX support
+>>> from Venus, cleanup the remnants.
+>>
+>> Ok, but venus would still remain for some older hardware? It's just the
+>> "hfi gen1" ones that would move to the iris eventually?
+> 
+> Yes. At least for the foreseable future. Nobody has explored an option
+> of moving older hardware to the Iris driver.
+> 
+>>
+>>> I think most of that information should have been a part of the main
+>>> Iris series. If it is not, please comment there, so that those commit
+>>> messages can be updated.
+>>
+>> Unfortunately it was not, which I also pointed in my comments to the
+>> Iris series.
+>>
+>>>> I'm sure you have some answers, but you need to provide them as part of
+>>>> the series.
+>>
+>>>> Unbinding and rebinding drivers is not part of any normal work flow
+>>>> expect possibly during development. And a developer can easily compare
+>>>> Venus and Iris for 8250 without a module parameter too.
+>>>
+>>> Yes, we are talking about development. And yes, modparam helps. If you'd
+>>> like to do two separate kernel builds, that's fine.
+>>
+>> Please just motivate why you think this is needed as part of the
+>> submission. And make sure that the implementation is sane (e.g. not some
+>> random probe defer indefinitely thing).
+>>
+>> Like I said, having two drivers for the same hardware is normally not
+>> something that is acceptable, and this would need to be a transitional
+>> thing as we both agree. One way to guarantee that is to not expose it to
+>> regular users until it is ready (e.g. a Kconfig hidden behind
+>> CONFIG_EXPERT or similar). Otherwise, I fear you'll end up supporting
+>> both forever (with at least one of them bitrotting behind that module
+>> parameter over time).
+> 
+> I think I'm fine with hiding IRIS behind CONFIG_EXPERT, might be a good
+> idea.
+Are you suggesting to add a dependency on CONFIG_EXPERT for IRIS driver?
+Something like:
+config VIDEO_QCOM_IRIS
+        tristate "Qualcomm iris V4L2 decoder driver"
+        depends on EXPERT
 
->
->
-> > The challenges are very different when managing 1K servers versus 1M se=
-rvers.
-> > Similarly, the issues differ significantly between patching a single
-> > function and
-> > patching 100 functions, especially when some of those functions are cri=
-tical.
-> > That=E2=80=99s what scalability is all about.
-> >
-> > Since we transitioned from the old livepatch mode to the new
-> > atomic-replace mode,
->
-> What do you mean with the old livepatch mode, please?
+This will impact the enablement of iris driver on SM8550 as well.
+And will this also be needed to be captured in cover letter?
 
-$ kpatch-build -R
-
->
-> Did you allow to install more livepatches in parallel?
-
-No.
-
-> What was the motivation to switch to the atomic replace, please?
-
-This is the default behavior of kpatch [1] after upgrading to a new version=
-.
-
-[1].  https://github.com/dynup/kpatch/tree/master
-
->
-> > our SREs have consistently reported that one or more servers become
-> > stalled during
-> > the upgrade (replacement).
->
-> What is SRE, please?
-
-From the wikipedia : https://en.wikipedia.org/wiki/Site_reliability_enginee=
-ring
-
-> Could you please show some log from a production system?
-
-When the SREs initially reported that the livepatch transition was
-stalled, I simply advised them to try again. However, after
-experiencing these crashes, I dug deeper into the livepatch code and
-realized that scalability is a concern. As a result, periodically
-replacing an old livepatch triggers RCU warnings on our production
-servers.
-
-[Wed Feb  5 10:56:10 2025] livepatch: enabling patch 'livepatch_61_release6=
-'
-[Wed Feb  5 10:56:10 2025] livepatch: 'livepatch_61_release6':
-starting patching transition
-[Wed Feb  5 10:56:24 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-1126113 is 10078 jiffies old.
-[Wed Feb  5 10:56:38 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-1126117 is 10199 jiffies old.
-[Wed Feb  5 10:56:52 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-1126121 is 10047 jiffies old.
-[Wed Feb  5 10:56:57 2025] livepatch: 'livepatch_61_release6': patching com=
-plete
-
-PS: You might argue again about the frequency. If you believe this is
-just a frequency issue, please suggest a suitable frequency.
-
->
->
-> > > > > > Other potential risks may also arise
-> > > > > >   due to inconsistencies or race conditions during transitions.
-> > > > >
-> > > > > What inconsistencies and race conditions you have in mind, please=
-?
-> > > >
-> > > > I have explained it at
-> > > > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse=
-.cz/T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
-> > > >
-> > > >  klp_ftrace_handler
-> > > >       if (unlikely(func->transition)) {
-> > > >           WARN_ON_ONCE(patch_state =3D=3D KLP_UNDEFINED);
-> > > >   }
-> > > >
-> > > > Why is WARN_ON_ONCE() placed here? What issues have we encountered =
-in the past
-> > > > that led to the decision to add this warning?
-> > >
-> > > A safety measure for something which really should not happen.
-> >
-> > Unfortunately, this issue occurs during my stress tests.
->
-> I am confused. Do you see the above WARN_ON_ONCE() during your
-> stress test? Could you please provide a log?
-
-Could you pls read my replyment seriously ?
-https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/T/#m=
-5058583fa64d95ef7ac9525a6a8af8ca865bf354
-
->
-> > > > > The main advantage of the atomic replace is simplify the maintena=
-nce
-> > > > > and debugging.
-> > > >
-> > > > Is it worth the high overhead on production servers?
-> > >
-> > > Yes, because the overhead once a live patch is applied is negligible.
-> >
-> > If you=E2=80=99re managing a large fleet of servers, this issue is far =
-from negligible.
-> >
-> > >
-> > > > Can you provide examples of companies that use atomic replacement a=
-t
-> > > > scale in their production environments?
-> > >
-> > > At least SUSE uses it as a solution for its customers. No many proble=
-ms
-> > > have been reported since we started ~10 years ago.
-> >
-> > Perhaps we=E2=80=99re running different workloads.
-> > Going back to the original purpose of livepatching: is it designed to a=
-ddress
-> > security vulnerabilities, or to deploy new features?
->
-> We (SUSE) use livepatches only for fixing CVEs and serious bugs.
->
->
-> > If it=E2=80=99s the latter, then there=E2=80=99s definitely a lot of ro=
-om for improvement.
->
-> You might be right. I am just not sure whether the hybrid mode would
-> be the right solution.
->
-> If you have problems with the atomic replace then you might stop using
-> it completely and just install more livepatches in parallel.
-
-Why do we need to install livepatches in parallel if atomic replace is disa=
-bled?
-We only need to install the additional new livepatch. Parallel
-installation is only necessary at boot time.
-
->
->
-> My view:
->
-> More livepatches installed in parallel are more prone to
-
-I=E2=80=99m confused as to why you consider this a parallel installation is=
-sue.
-
-> inconsistencies. A good example is the thread about introducing
-> stack order sysfs interface, see
-> https://lore.kernel.org/all/AAD198C9-210E-4E31-8FD7-270C39A974A8@gmail.co=
-m/
->
-> The atomic replace helps to keep the livepatched functions consistent.
->
-> The hybrid model would allow to install more livepatches in parallel exce=
-pt
-> that one livepatch could be replaced atomically. It would create even
-> more scenarios than allowing all livepatches in parallel.
->
-> What would be the rules, please?
->
-> Which functionality will be livepatched by the atomic replace, please?
->
-> Which functionality will be handled by the extra non-replaceable
-> livepatches, please?
->
-> How would you keep the livepatches consistent, please?
->
-> How would you manage dependencies between livepatches, please?
->
-> What is the advantage of the hybrid model over allowing
-> all livepatches in parallel, please?
-
-I can=E2=80=99t answer your questions if you insist on framing this as a
-parallel installation issue.
-
---
-Regards
-
-Yafang
+Thanks,
+Dikshita
+> 
