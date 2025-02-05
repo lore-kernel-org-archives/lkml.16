@@ -1,45 +1,46 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2068.outbound.protection.outlook.com [40.107.223.68])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2066.outbound.protection.outlook.com [40.107.94.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA3F126C03;
-	Wed,  5 Feb 2025 13:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DF413B2B8;
+	Wed,  5 Feb 2025 13:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738762670; cv=fail; b=Hjhkmr0AoEQJjoEfyJ5nJXFumHww0aJKQt0IRNgtF/Fhw8WLguwl4366GyLvj0Zh65naRoD5CT7ZWS+yTMOqWVtFkIhnRQaC/4nb9s001F3t+lE0nbswr5QYlx2ZVe+scwdYd5OKRHycLn3DmuF/IBllBOAHV/kt/ereQeL3IEQ=
+	t=1738762671; cv=fail; b=DONd2gC2yzdGgp+dcyntdEvbIKZ39tgbWfLGpVJ3cF+O52tVGdDG67ZIOHUhcLk9vlR7uHuxFellIyziLOwLECiVRrKDRndZ6M08559kkWQla822Ygp/YPURljE0ql+GhwC5LbS75WbphB444+DDBM70Kr6rogTEKvXeg0PdG4k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738762670; c=relaxed/simple;
-	bh=UZDyFGMgTDm9QveolAnHTNZTCq9S6cOnsnF7ZNrDelQ=;
+	s=arc-20240116; t=1738762671; c=relaxed/simple;
+	bh=u3Bt7b8J5xDxo+54EiW/CtmeF8znh6hAPIvNzGi1wNw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sq3NwIoexCYpQxOGwVs98CvfBnoIjsUuejmr097EuLCa7bNrr27MToeGAQaTLchtB4cQ+1viXHEqApxUNLBnsu7IwhwTmVsi7o/E/hgp1n7C/9D2EZi4dDmVJvi3E/GtIkawhQS4D5eg7DOwUlCmyAJ0QnUzIXqhzUzxDC46E2A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xcMJAbwb; arc=fail smtp.client-ip=40.107.223.68
+	 MIME-Version:Content-Type; b=clGJpf9nV/8eaneijLzqqDCmWrgg87l+/yoTP7qK87wE15Googo4Wgc0jlePHK7zGvpVHxDArRhcNVKOhi/UHuGyCa8HbqtOGMGMyiZ+OuPx+L9GEWrFF3WYRZftsbVhs1Acgj8FtCIz9u/wr8QEuKL43cBEzJhp0+zjo8/Ug08=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3ZdJJB/V; arc=fail smtp.client-ip=40.107.94.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xcMJAbwb"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3ZdJJB/V"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dPGesmiFQOuGY1MJJA9NAgI2l+bsUqiEleUfqTN05UIuw7XqdEkIGFiyeTbF5weHuRKU71mBesoFsOWy5oWwddW+LopKEaAjm5kMivyDey9Qset7W2kPk6CtkZWd6uzJbjR2JuIbZLZvb8Kawmw5mLLNds4El8sTF/DohlShWrzZ4XouozJ8Nk8inrgA3x8JY3/T6a6WGmpG4SY4ReNfnd9vnCSmD+bYD9AvdPZ5NoWrQA+gsRbvvF9bjDA5nTr8YZMmbpID85Pid6NPmHl/w7BuyqU/sdIAl2ugHggcoluCsa7bSnkyEJl10fJxWsj5vTkE4L50UwTsjckWxuBvjg==
+ b=u5cx7NAB1zWkCpU9/Qv7r7ju+5t1TDAHzIhc9Lum5ZtamKf3ENW7pXMfzgMOBZ4I2QcztMwkMnTk1e7RmnCROw8C5GX7LoEW6aybGhtH+gonxoJQ8zuBafgyB24UYwCrSWpYdjDsivemfxZyUy3Sj09ecTWQhQzkr8Af/OohOPqw4Ukh7Spdvl4CsEC7Q8uLfVMrO0GiWUBPrO0bCoACYjKj3jF9WLbsgzxfMmziFYmiVMvTkJo1KpmA/nHUy5rG6xULOnz9fyj6jbdDkqP5603899GsLmB7xz8AHOTBcvca8Ha5cfh/L9nrtHfeD/1gWbYdWXidi5UqYtiW3A8qGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sOaCrmzgt3ty3XF3orj5cCWII1wOJJTN56ty7LTSg0w=;
- b=qTUmnkly+PF7hbryGB1IydL4FFcZ5gUR6fEOQ1rXIiqfun0tPv0oMzcEujrmeyROxuKaep0Wklo9OyRf/ipKzluFZQ+mvzVJrxQybbyRIuJPZPAEly1romPSBwB4A+cKvZZyObZNmc07o6dKdLMO5LwTrLYNNjBOQoBjQZbCQf34Sq/ppn35i2FZiksu9o+BzzaYxTxiam+2pYjv23/zcDRCj99MCPGq2lRN4Ng6hFZgJSaNgfmM7yRUmOqN07HXOynoXOAl7bWovwBeQ0B7UydXPTNRv6+P+e+FDeB7JmyueRZ15dn7+fgcJ1yWJbCNVO3Y3VfcZX9iaGlBzHoBkA==
+ bh=yObSJOw1LqKBf4W7VNzSzL66WNn1WJS2eGn+hE8X68s=;
+ b=pR3AJOpseiqSQgniL/9dJfBm/LTdgYrcs+6MBE3YKeFdtRBKheSC5FuE0MSJC4gWyO2WOCrXueS3LLtH3JVTmp7HE740Ae7udp/JJ5Q15ZWjvNQDjlrhFhrffF65XFxD2NLwBuQEAPMObqwBHe+rY6xqyiZs9IAwfbpEJjjMmdF4qxrvn0WWvo7rDDYZzVjUpkF0Oy4bvB+Hdloc5cCspb3CEEDBLr9deUtnLKw9tPhnUM0vzbNv8eyF2EmJYmBMuXnYbjLvdGohCdTfHo7yOwD8HGG6bNnMjjjqhI2b6/mHGw46Qc8szTtV2EgKYV7/uDDRcmB6ZRzxfgOFDWqx1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sOaCrmzgt3ty3XF3orj5cCWII1wOJJTN56ty7LTSg0w=;
- b=xcMJAbwbBsiYzgd3l42KhqY2d+X+hBLKAlz9MmTDbBHMt3s7VofzNybjfpdMreycLL9hnx1FLlqZrWAjnhuOfJqCQE7hYuLBjIFoaY/ZbFFHizDTM5tS/NvnVnUGxRWywbg7TR6HIoOftWVraAPTccB97ogHzJwq5BpLWY+5uBI=
-Received: from MN2PR01CA0061.prod.exchangelabs.com (2603:10b6:208:23f::30) by
- CH2PR12MB4072.namprd12.prod.outlook.com (2603:10b6:610:7e::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.25; Wed, 5 Feb 2025 13:37:46 +0000
+ bh=yObSJOw1LqKBf4W7VNzSzL66WNn1WJS2eGn+hE8X68s=;
+ b=3ZdJJB/V6Irb3ZTk6+qPAuyuPdDsgPOWvGaoGYKJtx5650ubrpEzJcxjjEHT0JZdTc+fi3rFYnGIO4iqoad1nyEb9hsvW64Obxt6znuLOF5LJkZhXpxA8iYAMUNuoa426k1S0vj4kfz2DXgM9kRmO4oGRE8WJgmv+fY6gvlEwRw=
+Received: from MN2PR01CA0058.prod.exchangelabs.com (2603:10b6:208:23f::27) by
+ LV8PR12MB9418.namprd12.prod.outlook.com (2603:10b6:408:202::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Wed, 5 Feb
+ 2025 13:37:42 +0000
 Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
- (2603:10b6:208:23f:cafe::2d) by MN2PR01CA0061.outlook.office365.com
- (2603:10b6:208:23f::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.28 via Frontend Transport; Wed,
- 5 Feb 2025 13:37:46 +0000
+ (2603:10b6:208:23f:cafe::e3) by MN2PR01CA0058.outlook.office365.com
+ (2603:10b6:208:23f::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.27 via Frontend Transport; Wed,
+ 5 Feb 2025 13:37:42 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,27 +50,27 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
  BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8445.2 via Frontend Transport; Wed, 5 Feb 2025 13:37:46 +0000
+ 15.20.8445.2 via Frontend Transport; Wed, 5 Feb 2025 13:37:41 +0000
 Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 07:37:45 -0600
+ 2025 07:37:41 -0600
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
  (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 07:37:43 -0600
+ 2025 07:37:40 -0600
 Received: from xhdakumarma40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 5 Feb 2025 07:37:40 -0600
+ Transport; Wed, 5 Feb 2025 07:37:36 -0600
 From: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
 To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
 	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
 CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <git@amd.com>, <amitrkcian2002@gmail.com>,
 	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-Subject: [PATCH v12 2/3] mtd: Move struct mtd_concat definition to header file
-Date: Wed, 5 Feb 2025 19:07:29 +0530
-Message-ID: <20250205133730.273985-3-amit.kumar-mahapatra@amd.com>
+Subject: [PATCH v12 1/3] dt-bindings: mtd: Describe MTD partitions concatenation
+Date: Wed, 5 Feb 2025 19:07:28 +0530
+Message-ID: <20250205133730.273985-2-amit.kumar-mahapatra@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250205133730.273985-1-amit.kumar-mahapatra@amd.com>
 References: <20250205133730.273985-1-amit.kumar-mahapatra@amd.com>
@@ -83,109 +84,158 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|CH2PR12MB4072:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8878d442-59a6-43fd-ca9b-08dd45ea46be
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|LV8PR12MB9418:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9aaaee9-2829-4150-c608-08dd45ea43cf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024|7416014;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013|13003099007|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4nY+QSwQU1AgYGp9m9e/x8sJzthyCJuUQ8CAbg8CNYVGEUFnLiOYpo5z1ukr?=
- =?us-ascii?Q?ann1Pk6tT7nmRtyh6+7t0WkK4QpCKTCvTkRhQ+No48uPIDMsuoYwkpTKIpNH?=
- =?us-ascii?Q?Qowda0gqKdS+K7BBvzHpSDoA6lhyV3is1z6N555Hn4uLzzZMtJF/ZFG6zB7t?=
- =?us-ascii?Q?N1dkiR2fDvZ4KKhm0vBoMuBmtkMjcd7PSuz9jQLKA3pDNqoK2Uy1lL120y93?=
- =?us-ascii?Q?saQZhQ3UalsuzqHG8SVO3VDoPySEPPYB/W7TmdyHIpZtlZsMREA3IoXKqdkF?=
- =?us-ascii?Q?3+fs+62uGrQu6rzU0shCt/lAnKjrESA5Z0z1Llz6o31/WQJFyTNKUlZyD0UZ?=
- =?us-ascii?Q?sdndGuG5b3tae2wxWNr3aM1s3zqtNWYcKjj4syB7G6hT36ys4U9ApAfE+kkX?=
- =?us-ascii?Q?DDSKfLswC2vnLc2ZePLK81w1b4st6Zkf3YKX+G9jt50zQ3PhzZfG9j1vvqqf?=
- =?us-ascii?Q?sqEvfQgkBIwa8ceuV7qWAUtIvoikpOV8495u3E0oEXfeb2s3FkWNwGI2p9u7?=
- =?us-ascii?Q?WCO4Y8xh/TSvNP95Mt/AEQiivkRQrQ4PEMdFRCUsZZVMyYaZGcHUheuQ2oKW?=
- =?us-ascii?Q?fLehFx4mFUmNft30HALeNilykeLzPJx+AYVza6TJPNQbY+1AcclnGMLnSSRE?=
- =?us-ascii?Q?UY9V3Ru31PHdvosX18m0OZTFTEl/sie6mCfar39kcRqPbOC5o4W/4vy3nLjq?=
- =?us-ascii?Q?qSHDG7xztb0+APheTyUk2yhlnuvVzHBKaFcaG/YhN+FJ+5Oih2FcGyvRLx0R?=
- =?us-ascii?Q?fDOKdDbIFUe5iv72GWNU0jmz7Ez57H5S5yeWB058091l+FEvSQTtY31UXSCt?=
- =?us-ascii?Q?YWDi3yp9im1S99cjT3TnMWiIDIs6tizyXIJ1wLkopBwgg96x+6g5SctQ2Vdq?=
- =?us-ascii?Q?fFzorS83YW6u3Oi/2vVtcE8csFYrEgV7TnK0Zffu4JlAQeNpde09XuJE9MHK?=
- =?us-ascii?Q?3KS7Nf/AQit91ov8HU/35Nmn6dsnXC88dmJ1dLr05S+iZ1YnD1QnD3oyc5HD?=
- =?us-ascii?Q?hxQ32dYbOb/9Ha/P/IrbTjFOEGAV4C+5w4pl2sb4E2cHmyKb7DK2WInY6XQ1?=
- =?us-ascii?Q?oqJ4WbItD9RmMDO3B9l/or7ltKsYXGJKRyqbgecV0t++1ZLtPkRlG4JDOCAi?=
- =?us-ascii?Q?k+1C64akn6fokDDD0W+SVc4bBsHGi1EeBxQgcRHfTSyQqhQoz+QfG1G5YHMk?=
- =?us-ascii?Q?wGvmYAtV3kPzO1d3S43xJXrLv1TL/S6yUa1ZeVVVGQJeZ63oWj/+UXJJN7db?=
- =?us-ascii?Q?1rc5SkrnPcW3c1xWHX7pIXJvdTiLqF+5i0iNSNGEbB1OdiK5ib5j2x+affoe?=
- =?us-ascii?Q?6ajO9pNNjAjzkNLopQPPbnXkFu2EqWBG8pFuXddQ/OyE0XJe8WgZ8eKOnoDQ?=
- =?us-ascii?Q?HfRo7hWl5p4KX8Tjrk66sO4FIkbjesWdBCitP/7HHEyF0W5av7OQWuH6pBdl?=
- =?us-ascii?Q?Od6Slkss1rvlNCdWJ7jEdzYm8D8vK1wLcs2C/cWgbJqhN61niJhKH+3b+Egd?=
- =?us-ascii?Q?7yV/uPF5Zz4UFAk=3D?=
+	=?us-ascii?Q?J9Helc6zmA9V7Ep22rHUvFA4hzrWPwMbLcZvJ76f4UMt5CDsPucWo62SEuCG?=
+ =?us-ascii?Q?ST9NYHb0yZsY0PJ7S8g02nOezrXWB+VG9nAuvPt+UxyJOjNtQh4KThtHGq4c?=
+ =?us-ascii?Q?Df4hdx+X2FkDaj6CjZyHPRkMrJpMUuwV2x442gTa+N8XOL966p73HQsEtq/E?=
+ =?us-ascii?Q?F7V0N6beq65/V+Eh/Xysv6FJAU2fBws+grrdmBjfA6BdO7RAm3X8A5EajDc5?=
+ =?us-ascii?Q?f9jvMUIVo2CfpEnJzHQyZQ+4HYVLWx6BsevOIajVyS+aFCyzfcqfzmAFz0pU?=
+ =?us-ascii?Q?umy9MPFE5dqerEoH6P+1sMFYezKxoEUyYSwh0px6aSgFUlL4R0Iswrx37dB2?=
+ =?us-ascii?Q?s0u+smuxpRoSQPlMaRvN8GcKDWh+8W65Be0SnYD19d18/nOTSsrZcvHRQsgR?=
+ =?us-ascii?Q?iYqPSn080bl0sDNYJaJgi5FQdK990L0L4Q7MQ4OyIXpmeuy84LyLZ2T4W5Fh?=
+ =?us-ascii?Q?XBUS/P2FuL+FMs4RcggahF96l/KETRtYAxvs3oCT463cK2m/CTbo75FAgnRA?=
+ =?us-ascii?Q?F1oIxkF5l2WXmNsvGL/xmUAwk/i8F3DMk6J1Ifr7+Q3u+/P6OwlkFJgl6nQo?=
+ =?us-ascii?Q?bNyTeJ1fiY7k/1wQTu1ev3ZBoeMwSNTdnO+9CakgK8a3HEWXJ6l9JZGCZD4p?=
+ =?us-ascii?Q?SbjuUBUuIH9KAjBW2onK43bGG5etde0AY4LWfQ+4u6lEVIthZwYP4RndLcpL?=
+ =?us-ascii?Q?lcPILUNmFoZ8gS5ZpFNUtwrF0REw/eU6NxFOpyXJgJAwL+cIBDDK6AiM7uYH?=
+ =?us-ascii?Q?z6C17owFSaow+uyfJAqotFU31Kw3kV/ODZ5RVTww+MFJYYi5bSy/J8QoIfPd?=
+ =?us-ascii?Q?VqcGfsMsRkBJ0eb9X0Sd6CuGwUiL9/G75KiMeO3G8Qepk3IT37esBr1onPez?=
+ =?us-ascii?Q?pf67MX1j66jsHsRKRY127jTNElllBQUht2UsRGjCdwr5/8UBLeR7fBVZhBc9?=
+ =?us-ascii?Q?KfRSMaCqzX86sINljuSuEuzQBDJkbEATuTZTKrkamad4RXfy41pmBrV8nEqL?=
+ =?us-ascii?Q?YavyS7F7l86oNOvJDTPzMtKz40UEW0VI+n7MK9jYzWXDTX/D2g3Zlz+UZNQz?=
+ =?us-ascii?Q?DvpuLjyA399eRD68K5CXv7Opqzhdg8tS75OCU9W5zeraBWU3hXquFeT7S38P?=
+ =?us-ascii?Q?z7MpKvO8ZgvkOtCScnEOgz78HHpNqkNcP8OnIeEoMYGTJJxKdB0l+QoQS0zM?=
+ =?us-ascii?Q?dewUAEJCFdByPoqU83ysWV7lBbbCgml++Dejk6ao3+pltdMiBHOvDhohbd0p?=
+ =?us-ascii?Q?3jM+TjXfmeK+oXcE7XzXxDVwjzWkSfBy0TtpG4UrPBHKSkyFttF+1YY5DQSO?=
+ =?us-ascii?Q?9KdKsQ7U4VGvN7y66POZqNpXeyV8Acsg3d4gUQEuqWAAHwAtBcWaI5HmgDNa?=
+ =?us-ascii?Q?+jS58rH8FifP6hrIDWTfebEErTqRkBJhqGRAhCA19HWHf8deIKLShGChBPPE?=
+ =?us-ascii?Q?RAXtWmtZUDs=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024)(7416014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013)(13003099007)(7053199007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 13:37:46.7426
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 13:37:41.8207
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8878d442-59a6-43fd-ca9b-08dd45ea46be
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9aaaee9-2829-4150-c608-08dd45ea43cf
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BN3PEPF0000B36D.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4072
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9418
 
-To enable a more generic approach for concatenating MTD devices,
-struct mtd_concat should be accessible beyond the mtdconcat driver.
-Therefore, the definition is being moved to a header file.
+The AMD QSPI controller supports an advanced connection modes called
+Stacked mode which allow the controller to treat two different flashes
+as one storage.
 
+In Stacked connection mode flashes share the same SPI bus, but different CS
+line, controller driver asserts the CS of the flash to which it needs to
+communicate. Stacked mode is a software abstraction rather than a
+controller feature or capability. At any given time, the controller
+communicates with one of the two connected flash devices, as determined by
+the requested address and data length. If an operation starts on one flash
+and ends on the other, the mtd layer needs to split it into two separate
+operations and adjust the data length accordingly. For more information on
+the modes please feel free to go through the controller flash interface
+below [1].
+
+Introduce new DT property to specify which partitions are concatenated to
+each other.
+
+    flash@0 {
+            reg = <0>;
+            partitions {
+                    compatible = "fixed-partitions";
+                    part-concat = <&flash0_part1>, <&flash1_part0>;
+
+                    flash0_part0: part0@0 {
+                            label = "part0_0";
+                            reg = <0x0 0x800000>;
+                    };
+
+                    flash0_part1: part1@800000 {
+                            label = "part0_1";
+                            reg = <0x800000 0x800000>;
+                    };
+            };
+    };
+
+    flash@1 {
+            reg = <1>;
+            partitions {
+                    compatible = "fixed-partitions";
+
+                    flash1_part0: part1@0 {
+                            label = "part1_0";
+                            reg = <0x0 0x800000>;
+                    };
+
+                    flash1_part1: part1@800000 {
+                            label = "part1_1";
+                            reg = <0x800000 0x800000>;
+                    };
+            };
+    };
+
+The partitions that gets created are
+part0_0
+part1_1
+part0_1-part1_0-concat
+
+[1] https://docs.amd.com/r/en-US/am011-versal-acap-trm/QSPI-Flash-Device-Interface
+
+Suggested-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
 ---
- drivers/mtd/mtdconcat.c    | 12 ------------
- include/linux/mtd/concat.h | 12 ++++++++++++
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ .../bindings/mtd/partitions/partition.yaml      | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c
-index f56f44aa8625..6f2aaceac669 100644
---- a/drivers/mtd/mtdconcat.c
-+++ b/drivers/mtd/mtdconcat.c
-@@ -20,18 +20,6 @@
+diff --git a/Documentation/devicetree/bindings/mtd/partitions/partition.yaml b/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
+index 80d0452a2a33..f77fef368211 100644
+--- a/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
++++ b/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
+@@ -57,6 +57,12 @@ properties:
+       user space from
+     type: boolean
  
- #include <asm/div64.h>
- 
--/*
-- * Our storage structure:
-- * Subdev points to an array of pointers to struct mtd_info objects
-- * which is allocated along with this structure
-- *
-- */
--struct mtd_concat {
--	struct mtd_info mtd;
--	int num_subdev;
--	struct mtd_info **subdev;
--};
--
- /*
-  * how to calculate the size required for the above structure,
-  * including the pointer array subdev points to:
-diff --git a/include/linux/mtd/concat.h b/include/linux/mtd/concat.h
-index d6f653e07426..b42d9af87c4e 100644
---- a/include/linux/mtd/concat.h
-+++ b/include/linux/mtd/concat.h
-@@ -9,6 +9,18 @@
- #define MTD_CONCAT_H
- 
- 
-+/*
-+ * Our storage structure:
-+ * Subdev points to an array of pointers to struct mtd_info objects
-+ * which is allocated along with this structure
-+ *
-+ */
-+struct mtd_concat {
-+	struct mtd_info mtd;
-+	int num_subdev;
-+	struct mtd_info **subdev;
-+};
++  part-concat:
++    description: List of MTD partitions phandles that should be concatenated.
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 2
++    maxItems: 16
 +
- struct mtd_info *mtd_concat_create(
-     struct mtd_info *subdev[],  /* subdevices to concatenate */
-     int num_devs,               /* number of subdevices      */
+   align:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     minimum: 2
+@@ -125,6 +131,7 @@ examples:
+         compatible = "fixed-partitions";
+         #address-cells = <1>;
+         #size-cells = <1>;
++        part-concat = <&part0>, <&part1>;
+ 
+         partition@100000 {
+             compatible = "u-boot";
+@@ -138,4 +145,14 @@ examples:
+             reg = <0x200000 0x100000>;
+             align = <0x4000>;
+         };
++
++        part0: partition@400000 {
++            label = "part0_0";
++            reg = <0x400000 0x100000>;
++        };
++
++        part1: partition@800000 {
++            label = "part0_1";
++            reg = <0x800000 0x800000>;
++        };
+     };
 -- 
 2.34.1
 
