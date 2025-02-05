@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49DF41519A0;
-	Wed,  5 Feb 2025 12:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1455622CBDE;
+	Wed,  5 Feb 2025 12:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757773; cv=none; b=YR3Ils3jZ6X44Jq/LIn8/ZycKKjUG3pLEm2oLB9uDSodKI8r49QFw58ht7lyBucjYc08Yxzey933ro5zmiRf2RhtIFV0xRpR14OgvAa6gDyrWdF9x5RJBJNs33V0ab3cT99Gd2LWslm6IcGSA2LWWCVFyYFJvr+ugqvW4L8VD28=
+	t=1738757777; cv=none; b=Zz+2XuCKLt8UzX0pgwjRQ/wogfqJ+Rn7n0CZd4LisYe8jP2XbB1xGfgVsdS1/gZTvsNxDaHbCd5YJG06rbPMnXxMtGAM1K13wJIHA9dZPh9pJwS3uVf0PCRxtmspeGZPfLv/OAmz+AmvEZBkQYfvNhSi8uJXcOwYPJzld+uHKPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757773; c=relaxed/simple;
-	bh=PnrX7LRqf6LxC+SrcAB+LzJ5Es2hiwGk8s6CGixBO4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JGzRuQHMNgsFsgyKro2ovFfz6/BJHkYvDgCHV39JkZoOUBlnfzhb6GHXc76+1ngRogZSC2KqveJgFzLhOLiVf/K9om1OlyFv6Z8MZU+rr3mZzJPZsKFNmJWB2EUHW7SEQGPY/Tzu2RCbqaMIyD7x97GR9Dgb5sRbbi/i4SGxh9s=
+	s=arc-20240116; t=1738757777; c=relaxed/simple;
+	bh=Z/SxSfmfDy0svMu9NsmdhNqftvFCwRTYuYBI7lE/4ww=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZpT+Z755UkXo1fGj2Y2Cplf4Zl4+PyiFcjIAfTOSo/Fy6UQIeDlXij+vmOX198iB3h2/BO6qlbkPcenecYeqlXgkq76q96OH+xNRk/f6c5DOW0vlJPaypV266QrTW8D+mW/Q7PCKBs6YxXfx/ZHcdmBAsliavY3bRXSL/QCm92Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 160DE1007;
-	Wed,  5 Feb 2025 04:16:34 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F9971007;
+	Wed,  5 Feb 2025 04:16:39 -0800 (PST)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0C1163F63F;
-	Wed,  5 Feb 2025 04:16:07 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 589FF3F63F;
+	Wed,  5 Feb 2025 04:16:13 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -35,10 +36,12 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	Graham Woodward <graham.woodward@arm.com>
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 00/11] perf script: Refactor branch flags for Arm SPE
-Date: Wed,  5 Feb 2025 12:15:44 +0000
-Message-Id: <20250205121555.180606-1-leo.yan@arm.com>
+Subject: [PATCH v1 02/11] perf script: Refactor sample_flags_to_name() function
+Date: Wed,  5 Feb 2025 12:15:46 +0000
+Message-Id: <20250205121555.180606-3-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250205121555.180606-1-leo.yan@arm.com>
+References: <20250205121555.180606-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,106 +50,150 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series refactors branch flags for support Arm SPE.  The patch
-set is divided into two parts, the first part is for refactoring common
-code and the second part is for enabling Arm SPE.
+When generating a string for sample flags, the sample_flags_to_name()
+function lacks the ability to parse the trace start bit or trace end bit.
+Therefore, the function is invoked multiple times after clearing its
+unsupported bits.
 
-For refactoring branch flags, the sample flaghs are classified as branch
-types and events.  A program branch type can be conditional branch,
-function call, return or expection taken.  A branch event happens when
-taking a branch.  This series combines branch types and the associated
-events to present a sample flag.
+This commit improves the sample_flags_to_name() function to parse sample
+flags in one go for three kinds of information:
+- The prefix info for trace start, trace end, etc.
+- Branch types.
+- Extra info for transaction and interrupt related info.
 
-The second part is to enable Arm SPE's sample flags for expressing
-branch types and events, and support branch stack.
+As a result, the code is simplified to call the sample_flags_to_name()
+only once.  No expectation for any changes in the perf script output.
 
-Patches 01 - 03 are to refactor branch types and branch events.
-Patches 04, 05 extend to support not-taken event.
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/util/event.h                 |  5 ++
+ tools/perf/util/trace-event-scripting.c | 85 ++++++++++++++++---------
+ 2 files changed, 59 insertions(+), 31 deletions(-)
 
-Patches 06 - 09 enables branch flags in Arm SPE.  This allows to print
-out sample flags for samples.
-
-Patch 10 supports branch stack for Arm SPE.  Patch 11 is an enhancement
-for PBT feature.
-
-Before:
-  perf record -e arm_spe_0/load_filter=1,store_filter=1,branch_filter=1/ \
-    -- ~/perf-c2c-usage-files/false_sharing.exe 1
-  perf script --itrace=i1ibl -F,+flags,+addr,+brstack
-   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   jmp                   ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   jmp                   ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   jmp                   ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   jmp                   ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   br miss                   ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)
-   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   br miss                   ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)
-   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   br miss                   ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)
-   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   br miss                   ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)
-   false_sharing.e  414489 [005] 775348.899298:          1                                            instructions:                                        0 ffffc0fadaad6124 mas_walk+0x274 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899300:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:                                        0 ffffc0fad98c3dcc __sync_icache_dcache+0x5c ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899301:          1                                                  branch:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899306:          1                                            instructions:                                        0 ffffc0fad9b3f184 filemap_map_pages+0x178 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899307:          1                                                  branch:   jmp                   ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:   jmp                   ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899308:          1                                                  branch:   jmp                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899308:          1                                            instructions:   jmp                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899310:          1                                                  branch:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899310:          1                                            instructions:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms])
-   ...
-
-After:
-  perf script --itrace=i1ibl -F,+flags,+addr,+brstack
-   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   return                ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms]) 0xffffc0fad98b2c68 ([kernel.kallsyms])/0xffffc0fad9ef3d68 ([kernel.kallsyms])/P/-/-/5/RET/- 
-   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   return                ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms]) 0xffffc0fad98b2c68 ([kernel.kallsyms])/0xffffc0fad9ef3d68 ([kernel.kallsyms])/P/-/-/5/RET/- 
-   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   jcc/not_taken/        ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms]) 0xffffc0fad98b3704 ([kernel.kallsyms])/0xffffc0fad98b3708 ([kernel.kallsyms])/PN/-/-/6/COND/- 
-   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   jcc/not_taken/        ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms]) 0xffffc0fad98b3704 ([kernel.kallsyms])/0xffffc0fad98b3708 ([kernel.kallsyms])/PN/-/-/6/COND/- 
-   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   return/miss/              ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0) 0xffff8266dafc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/0xffff8266da60 (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/M/-/-/12/RET/- 
-   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   return/miss/              ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0) 0xffff8266dafc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/0xffff8266da60 (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/M/-/-/12/RET/- 
-   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   jcc/miss,not_taken/       ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so) 0xffff826a44e8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/0xffff826a44ec (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/MN/-/-/23/COND/- 
-   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   jcc/miss,not_taken/       ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so) 0xffff826a44e8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/0xffff826a44ec (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/MN/-/-/23/COND/- 
-   false_sharing.e  414489 [005] 775348.899298:          1                                            instructions:                                        0 ffffc0fadaad6124 mas_walk+0x274 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899300:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:                                        0 ffffc0fad98c3dcc __sync_icache_dcache+0x5c ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899301:          1                                                  branch:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms]) 0xffffc0fad9ba99c0 ([kernel.kallsyms])/0xffffc0fad9ba7f24 ([kernel.kallsyms])/P/-/-/8//- 
-   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms]) 0xffffc0fad9ba99c0 ([kernel.kallsyms])/0xffffc0fad9ba7f24 ([kernel.kallsyms])/P/-/-/8//- 
-   false_sharing.e  414489 [005] 775348.899306:          1                                            instructions:                                        0 ffffc0fad9b3f184 filemap_map_pages+0x178 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899307:          1                                                  branch:   jcc/not_taken/        ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms]) 0xffffc0fad9b3d7ac ([kernel.kallsyms])/0xffffc0fad9b3d7b0 ([kernel.kallsyms])/PN/-/-/15/COND/- 
-   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:   jcc/not_taken/        ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms]) 0xffffc0fad9b3d7ac ([kernel.kallsyms])/0xffffc0fad9b3d7b0 ([kernel.kallsyms])/PN/-/-/15/COND/- 
-   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
-   false_sharing.e  414489 [005] 775348.899308:          1                                                  branch:   jcc                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms]) 0xffffc0fad9ef3d70 ([kernel.kallsyms])/0xffffc0fad9ef3da4 ([kernel.kallsyms])/P/-/-/20/COND/- 
-   false_sharing.e  414489 [005] 775348.899308:          1                                            instructions:   jcc                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms]) 0xffffc0fad9ef3d70 ([kernel.kallsyms])/0xffffc0fad9ef3da4 ([kernel.kallsyms])/P/-/-/20/COND/- 
-   false_sharing.e  414489 [005] 775348.899310:          1                                                  branch:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms]) 0xffffc0fad98a159c ([kernel.kallsyms])/0xffffc0fad98a2158 ([kernel.kallsyms])/P/-/-/5//- 
-   false_sharing.e  414489 [005] 775348.899310:          1                                            instructions:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms]) 0xffffc0fad98a159c ([kernel.kallsyms])/0xffffc0fad98a2158 ([kernel.kallsyms])/P/-/-/5//- 
-   ...
-
-
-Leo Yan (11):
-  perf script: Make printing flags reliable
-  perf script: Refactor sample_flags_to_name() function
-  perf script: Separate events from branch types
-  perf script: Add not taken event for branches
-  perf script: Add not taken event for branch stack
-  perf arm-spe: Extend branch operations
-  perf arm-spe: Decode transactional event
-  perf arm-spe: Fill branch operations and events to record
-  perf arm-spe: Set sample flags with supplement info
-  perf arm-spe: Add branch stack
-  perf arm-spe: Support previous branch target (PBT) address
-
- tools/perf/builtin-script.c                   |  30 ++--
- .../util/arm-spe-decoder/arm-spe-decoder.c    |  23 ++-
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  11 +-
- .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  14 +-
- .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  12 +-
- tools/perf/util/arm-spe.c                     | 135 ++++++++++++++++++
- tools/perf/util/branch.h                      |   3 +-
- tools/perf/util/event.h                       |  12 +-
- tools/perf/util/trace-event-scripting.c       | 116 +++++++++++----
- tools/perf/util/trace-event.h                 |   2 +
- 10 files changed, 307 insertions(+), 51 deletions(-)
-
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 2744c54f404e..cd75efc09834 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -71,6 +71,11 @@ enum {
+ 
+ #define PERF_IP_FLAG_CHARS "bcrosyiABExghDt"
+ 
++#define PERF_ADDITIONAL_STATE_MASK	\
++	(PERF_IP_FLAG_IN_TX |		\
++	 PERF_IP_FLAG_INTR_DISABLE |	\
++	 PERF_IP_FLAG_INTR_TOGGLE)
++
+ #define PERF_BRANCH_MASK		(\
+ 	PERF_IP_FLAG_BRANCH		|\
+ 	PERF_IP_FLAG_CALL		|\
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+index 4e81e02a4f18..712ba3a51bbe 100644
+--- a/tools/perf/util/trace-event-scripting.c
++++ b/tools/perf/util/trace-event-scripting.c
+@@ -313,49 +313,72 @@ static const struct {
+ 	{0, NULL}
+ };
+ 
+-static const char *sample_flags_to_name(u32 flags)
++static int sample_flags_to_name(u32 flags, char *str, size_t size)
+ {
+ 	int i;
+-
+-	for (i = 0; sample_flags[i].name ; i++) {
+-		if (sample_flags[i].flags == flags)
+-			return sample_flags[i].name;
++	const char *prefix;
++	int pos = 0, ret;
++	u32 xf = flags & PERF_ADDITIONAL_STATE_MASK;
++	char xs[16] = { 0 };
++
++	/* Clear additional state bits */
++	flags &= ~PERF_ADDITIONAL_STATE_MASK;
++
++	if (flags & PERF_IP_FLAG_TRACE_BEGIN)
++		prefix = "tr strt ";
++	else if (flags & PERF_IP_FLAG_TRACE_END)
++		prefix = "tr end  ";
++	else
++		prefix = "";
++
++	ret = snprintf(str + pos, size - pos, "%s", prefix);
++	if (ret < 0)
++		return ret;
++	pos += ret;
++
++	flags &= ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
++
++	for (i = 0; sample_flags[i].name; i++) {
++		if (sample_flags[i].flags != flags)
++			continue;
++
++		ret = snprintf(str + pos, size - pos, "%s", sample_flags[i].name);
++		if (ret < 0)
++			return ret;
++		pos += ret;
++		break;
+ 	}
+ 
+-	return NULL;
++	if (!xf)
++		return pos;
++
++	snprintf(xs, sizeof(xs), "(%s%s%s)",
++		 flags & PERF_IP_FLAG_IN_TX ? "x" : "",
++		 flags & PERF_IP_FLAG_INTR_DISABLE ? "D" : "",
++		 flags & PERF_IP_FLAG_INTR_TOGGLE ? "t" : "");
++
++	/* Right align the string if its length is less than the limit */
++	if ((pos + strlen(xs)) < SAMPLE_FLAGS_STR_ALIGNED_SIZE)
++		ret = snprintf(str + pos, size - pos, "%*s",
++			       (int)(SAMPLE_FLAGS_STR_ALIGNED_SIZE - ret), xs);
++	else
++		ret = snprintf(str + pos, size - pos, " %s", xs);
++	if (ret < 0)
++		return ret;
++
++	return pos + ret;
+ }
+ 
+ int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
+ {
+-	u32 xf = PERF_IP_FLAG_IN_TX | PERF_IP_FLAG_INTR_DISABLE |
+-		 PERF_IP_FLAG_INTR_TOGGLE;
+ 	const char *chars = PERF_IP_FLAG_CHARS;
+ 	const size_t n = strlen(PERF_IP_FLAG_CHARS);
+-	const char *name = NULL;
+ 	size_t i, pos = 0;
+-	char xs[16] = {0};
+-
+-	if (flags & xf)
+-		snprintf(xs, sizeof(xs), "(%s%s%s)",
+-			 flags & PERF_IP_FLAG_IN_TX ? "x" : "",
+-			 flags & PERF_IP_FLAG_INTR_DISABLE ? "D" : "",
+-			 flags & PERF_IP_FLAG_INTR_TOGGLE ? "t" : "");
+-
+-	name = sample_flags_to_name(flags & ~xf);
+-	if (name)
+-		return snprintf(str, sz, "%-15s%6s", name, xs);
+-
+-	if (flags & PERF_IP_FLAG_TRACE_BEGIN) {
+-		name = sample_flags_to_name(flags & ~(xf | PERF_IP_FLAG_TRACE_BEGIN));
+-		if (name)
+-			return snprintf(str, sz, "tr strt %-7s%6s", name, xs);
+-	}
++	int ret;
+ 
+-	if (flags & PERF_IP_FLAG_TRACE_END) {
+-		name = sample_flags_to_name(flags & ~(xf | PERF_IP_FLAG_TRACE_END));
+-		if (name)
+-			return snprintf(str, sz, "tr end  %-7s%6s", name, xs);
+-	}
++	ret = sample_flags_to_name(flags, str, sz);
++	if (ret > 0)
++		return ret;
+ 
+ 	for (i = 0; i < n; i++, flags >>= 1) {
+ 		if ((flags & 1) && pos < sz)
 -- 
 2.34.1
 
