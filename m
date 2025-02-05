@@ -1,38 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A507521D598;
-	Wed,  5 Feb 2025 05:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD8221D596
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 05:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738733262; cv=none; b=G2eNKDnCGmsByCHAjw8x2ojHuwnIyqYXWXiLTV2dORK/NfFXQFzDckaB9PkIQl6N6f82MV9HOXUu+8rsS0tTgSBGKBXh4C5hBiOAwJbqk0cRvxZKAWrzd/7KcpKZV8zG+nN+Zrh/7wLMqnTlaDzhpsLfbB8LSxpV6uZcmOAqnUc=
+	t=1738733281; cv=none; b=pJwn4O6gL62z2ggGopBd/XHvJgccqkGrpHdJ0n0Un+PBW9xf+kzbXluk3Zu7WQLHPQdIoEacmLOwPNLdRT4kSIb8+OHxMqpS+NQVBoYlhO4D2hThkUqSxgvn6dsnSXqjeEVZOPI6zDn6SWgroaAVchtzcoJiXQRyfqBSDn9gsa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738733262; c=relaxed/simple;
-	bh=uFlIQiXs2x7XIDiqACOzZJ5pxuFZzNVLGY2VrrW5gKA=;
+	s=arc-20240116; t=1738733281; c=relaxed/simple;
+	bh=pK4jSL3Gygw3R6JbuHJk0Jewq96zcYqsIuw0skDpqq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyScspBAB9sdzJBKHHvmZ6gvIDw4gVQ7BXHHvfvVY3/HMobMHpVtf2QFvjjW1aYI0OED+3+1b/7C3bBzgJs3sMJCxFIJtIex8ggQnKs50/csg8sOg4W+fAUNwGG4wLEos+L4AZi4pd4Y7+Bxj65UhdWV4z1pQnNlCPNUMFvV+kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ai30CFmL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OOPokCwypCuSqJ6Z7T9lgwV03b1jOwz+StqEN7UQul3ygM+zJLCacFx8E5H2DndL0t+q7xV4SenfQ1GUtpEDILRMTW0zh3Q3Fgnf/qRHAVr/MRQ+vtwOkYXyr5ejeOHFFlKNhEpBnwwWG8aiIXQ0wj0/eaHntChsZyRynVZaerc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vMDDXSD4; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ai30CFmL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90E3C4CED1;
-	Wed,  5 Feb 2025 05:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738733261;
-	bh=uFlIQiXs2x7XIDiqACOzZJ5pxuFZzNVLGY2VrrW5gKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ai30CFmLox8XR+bbLL+XpV/6Ib8/k5tfn4bCBU0L8jcxQVMaGF+tq5RHI2FjmptKy
-	 IWQP9Ogqck1SjS2ST/FGTquIT6HpdXBWwkXyz3tv24jDR8vKfihQrW/TXS9s47/EXz
-	 HvzfLlivs86USOIsglcvHgFakyQjLE+YMrkhcEIo=
-Date: Wed, 5 Feb 2025 06:27:38 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: Thinh.Nguyen@synopsys.com, skhan@linuxfoundation.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: dwc3: Fix kernel-doc warning for sg member in
-Message-ID: <2025020552-sandstorm-thaw-132e@gregkh>
-References: <20250204134423.28051-1-purvayeshi550@gmail.com>
- <2025020439-bulgur-ludicrous-5071@gregkh>
- <cc1694bc-88fd-4557-b957-aabf1f444eaf@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vMDDXSD4"
+Date: Tue, 4 Feb 2025 21:27:47 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738733273;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yr/kEl344VtN8JcOTmPwoh4ga2bP215c4hyTIT5ZTRI=;
+	b=vMDDXSD4ut45yPfX2txcNftk5l9C5ldX6TFwkLReCHrtumv/Vl0odEIad0ry6rQQDz7zR8
+	1tv7yqycrgyqXYmAs8NwRAV8uVboWNIz5jqEKyjVenwHoTVSXn2hk3WEcCkjvADxUoWIP3
+	C2qoDmjcAXsDAiE8vR1Ywt6nHR1XL3A=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Brauner <christian@brauner.io>, 
+	Shuah Khan <shuah@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Oliver Sang <oliver.sang@intel.com>, John Hubbard <jhubbard@nvidia.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny <mkoutny@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 5/6] selftests: pidfd: add tests for PIDFD_SELF_*
+Message-ID: <23rf6rxqzezqa5zmuiwwairxatbmahboccwzp6p5tbvkjirvqc@h4qzhh3pvsun>
+References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+ <7ab0e48b26ba53abf7b703df2dd11a2e99b8efb2.1738268370.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,47 +49,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cc1694bc-88fd-4557-b957-aabf1f444eaf@gmail.com>
+In-Reply-To: <7ab0e48b26ba53abf7b703df2dd11a2e99b8efb2.1738268370.git.lorenzo.stoakes@oracle.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 05, 2025 at 02:15:08AM +0530, Purva Yeshi wrote:
-> On 04/02/25 19:15, Greg KH wrote:
-> > On Tue, Feb 04, 2025 at 07:14:23PM +0530, Purva Yeshi wrote:
-> > > Added description for the 'sg' member in struct dwc3_request to
-> > > resolve the kerneldoc warning when running 'make htmldocs'.
-> > > 
-> > > Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> > > ---
-> > >   drivers/usb/dwc3/core.h | 1 +
-> > >   1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> > > index f11570c8ffd0..5e4daec322b7 100644
-> > > --- a/drivers/usb/dwc3/core.h
-> > > +++ b/drivers/usb/dwc3/core.h
-> > > @@ -942,6 +942,7 @@ struct dwc3_hwparams {
-> > >    * @request: struct usb_request to be transferred
-> > >    * @list: a list_head used for request queueing
-> > >    * @dep: struct dwc3_ep owning this request
-> > > + * @sg: pointer to the scatter-gather list
-> > >    * @start_sg: pointer to the sg which should be queued next
-> > >    * @num_pending_sgs: counter to pending sgs
-> > >    * @remaining: amount of data remaining
-> > > -- 
-> > > 2.34.1
-> > > 
-> > 
-> > What kernel version/tree did you make this change against?
-> > 
-> > thanks,
-> > 
-> > greg k-h
+On Thu, Jan 30, 2025 at 08:40:30PM +0000, Lorenzo Stoakes wrote:
+> Add tests to assert that PIDFD_SELF* correctly refers to the current
+> thread and process.
 > 
-> The change was made against kernel version 6.13.0-rc7+.
+> We explicitly test pidfd_send_signal(), however We defer testing of
+> mm-specific functionality which uses pidfd, namely process_madvise() and
+> process_mrelease() to mm testing (though note the latter can not be
+> sensibly tested as it would require the testing process to be dying).
+> 
+> We also correct the pidfd_open_test.c fields which refer to .request_mask
+> whereas the UAPI header refers to .mask, which otherwise break the import
+> of the UAPI header.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Please always work against the latest development tree for the subsystem
-you are working on, OR against linux-next, so that you don't end up
-duplicating work that others have already done, like was done here.
-
-thanks,
-
-greg k-h
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
