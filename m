@@ -1,63 +1,239 @@
-Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582015199C;
-	Wed,  5 Feb 2025 11:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D85A21505A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 11:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738754574; cv=none; b=tFUFEmBbS1sFXFUPwgLMsP0eQ4HTVUFN2zFahqs4dnPntv+q6g7laT6IHUcUvuwnh/grwp18wwvzCN5pom4vfLzFivnykRYh/GNmq8cS0u6bOIuhRmw3za0eoa/Z3KuZ7XbM8qm047hwyfcGfwd7+7ELa/2vS75Q+sjpmYLL73Q=
+	t=1738754598; cv=none; b=h1NeEm7OZAP5qrhkDg7AbzDs/GMpPDqgHFxfrRTFoH6bQuWx2wUyUMb40h26A5ChZXtyGTuENlISSOcPcWvVI0Y939xGJc1wOTpz4jcmv7QZ9uKwuH57SwgnEW3hwr8LuDaq8dO0hVcjzZx9iuMsp8jelIL7RLY13Fm+ve32jYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738754574; c=relaxed/simple;
-	bh=QyEvI/N3ipcbkcYsMn/d6GIelXG2WQ5kG+9qYHmu/9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g/gUyd5/UljBXT/7XqM2vE1tInjLNDesNH/WvgMIXMc505dlUyvYSjuvp8HZC/PcIy3g8hNQgYB9/C7sLuurgjiZM09cX+QgxH5sXsrQ0O1TspNsXBBD4k0xlTN4fEldvGkkzxNgvTZJYGmkXfsr6GcJlVdrn/S4Ftu6pMKmLsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=tIQ7+reK; arc=none smtp.client-ip=178.154.239.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1738754598; c=relaxed/simple;
+	bh=AqZfcnSsRLIRU+F8qfTXzVLSe+zGLhUDza2QBN1I/Z4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AIMVpNeXQ6YOAB3CAh2Ur0N6TXCQnMZtV94/5NWUOnMbDUQfT0pMlk+8qjS7XacZ34Bmg0vjsOFSqomEzY2Bb9/reje2MLRR0MnKHFdKeKMDpEKrXP/xzZ+jFT6G6mXmo9y33WVtQ7BEbgmotBdDauf0vMmzD0RRwfQRHY4ItNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dYyDhUKj; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="tIQ7+reK"
-Received: from mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3f48:0:640:7695:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 8F91360AA6;
-	Wed,  5 Feb 2025 14:22:40 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:5::1:34])
-	by mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id tLjOom2IcOs0-0u7j7gwt;
-	Wed, 05 Feb 2025 14:22:39 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1738754559;
-	bh=QyEvI/N3ipcbkcYsMn/d6GIelXG2WQ5kG+9qYHmu/9I=;
-	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=tIQ7+reK7AeCN1t0TBACr0/dqTSrJaGdDKzg5hXfSy6dO7RYcojz6Lx0msEowa1TU
-	 7V0VW/24VulPUKneWWidKP8RmGRqicoBB8jjLVWZSJMkoOz806c11SmYgpodz6XSqE
-	 yG9MzXzZmisjRYm+ryh7uHw1if9h3llgWkNI0g6E=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Wen Yang <wenyang@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kniv@yandex-team.ru
-Subject: Re: [PATCH] ftrace: Avoid potential division by zero in function_stat_show()
-Date: Wed,  5 Feb 2025 14:21:54 +0300
-Message-Id: <20250205112154.1541872-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205103929.1538065-1-kniv@yandex-team.ru>
-References: <20250205103929.1538065-1-kniv@yandex-team.ru>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dYyDhUKj"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f47ed1f40dso42805807b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 03:23:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738754595; x=1739359395; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fa9aGxXl6mZVn+FME8FAQRbgYiaB3nWrpoQsGxnG/Q8=;
+        b=dYyDhUKjdWuAJLGCFK5b8enLJj+t2ejSufYWeSCIUOmzhm+jCt6bG3eNgXOrTGs7f/
+         F1VqjhIF5O4IWxEpN6UW2BtfzxtJzXAeYAHXtYDPyLrrrIjTk5FHxjy4t65gUBt+lsrB
+         AYeC1BWgS5vT8Dt7UADtWvCWRC7fNfRktkrjx5KrAZkFoDd/ItXqoSC6p3ibXbgizxyU
+         MrSmBY0MpVqWzyRIhNXtGpTGJ9ZYOm9Ud58NonNhQcLegImn3tspg3mYMH9wuvZ8/hnW
+         fCsnMlrdqNoj2jjMxsOUu6yc5CSOfu//Zo6EBhGRaZ5TRaEjra+s9/BgCNKn/fMyqti7
+         z01A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738754595; x=1739359395;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fa9aGxXl6mZVn+FME8FAQRbgYiaB3nWrpoQsGxnG/Q8=;
+        b=RSDMlw3PqISkDcrGYF0SQbCaB9BcWcqaqmGGDlqoH994r9oXrbxUraqdqku+Esyrt4
+         xCKRpBOPbwdvkPXIFwKiox+1t5Y2keiK5i4kLWT0ULdtLhThBeW7uiajEde0nigvdy3X
+         auKHRG7eqpYZcTEtH4W1ox0jZK7hE/aff5avV22BjTmC6gjjNjgvVJhOnA76eUp3cDJD
+         vij5Sw/gL0CGthAvCmyJcTiV1QGwaO1xDky5/SiFdX5mgjzEZJjBnpvbufk3+CPCXyR/
+         fiAAg+v3H1LlIA+vqbFi0nhse/zULQxsYS84/LX1nT0QhCdobY7k6u7oh+Argw5zebWL
+         1zEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcec7E8IhYaC0PXttF0DJ192vzXU/R2naYgTQDCfUeKXmEaF2yXsS4OkcxNxOIn07xumqtuN01wt+i4tU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzUuB3kvm0GihrMhD/VirCuluJu11+6fX5lox4S0v/suuRwe2v
+	gwvP8mueBgth/TPcdHAJUAjCyu76yMiadG8vD/jy4gzN+oHvE3KdG3I97LGC+XCqypfS6apISce
+	2+yuprwKlnfJ4KTSG4orj2QqVuGmWyb5lXrS5bA==
+X-Gm-Gg: ASbGncsDO+F+E9SXOPCoE0IP4bCYWk0Q37ZCQW5X07JOsPIFytkAukHAz06ncAMRHc/
+	3GGYP8xq0Tr9TzbBmVnvpesNlHGGWzmR4C0WwClJVHDb+nkmVMXNXQCrYEoIvU3ebTEseTGk=
+X-Google-Smtp-Source: AGHT+IEW6RD+5VnO+7EsCnCeyhyA9cslgU2OmzAS1vQAeudwMDWyr87z1JVVpYOmr30QsWroSZRBnjtOK3EDe6HFwcw=
+X-Received: by 2002:a05:690c:6a03:b0:6ee:6c7d:4888 with SMTP id
+ 00721157ae682-6f989ef890emr20596927b3.22.1738754595544; Wed, 05 Feb 2025
+ 03:23:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
+ <20250203-drm-msm-phy-pll-cfg-reg-v2-2-862b136c5d22@linaro.org>
+ <u4qho7u2nu2x6qxkfxpeakotmbdgoha3e5csmsamaanlxziiif@22kzxupzibj7>
+ <12275e11-eadc-48be-b8c3-9463cdf92698@linaro.org> <vfqfbpxc3zrerrb2hyis6h4kgk7aqfljwb7sxlduwlkqprmodg@rjjfsgwr5c6j>
+ <2e96ae62-3114-4c7b-bea7-27f6e2009634@linaro.org> <t4zn2gv3mbn3nqlh5h3l3ej5zxs4wa74ncgymonci7v45w47ai@qmmtxbelichw>
+ <6cba59b9-4852-4cad-95eb-dfecb2e44dc4@linaro.org>
+In-Reply-To: <6cba59b9-4852-4cad-95eb-dfecb2e44dc4@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 5 Feb 2025 13:23:06 +0200
+X-Gm-Features: AWEUYZlJPJ9hwhYV7xEOL3gLUNVn5kAppOzW5Vg3bQGz2sNQ7dCZrFHi0WhZq70
+Message-ID: <CAA8EJppUkLYfHUcNcJA5or4ZVJsbTe74a6GGV1CR6zqCWmVjRA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
+ clock driver
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Oops, this still does not fix an overflow because of
+Hi,
 
-> rec->time_square_sum += calltime * calltime;
+On Wed, 5 Feb 2025 at 11:34, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 05/02/2025 03:51, Dmitry Baryshkov wrote:
+> > On Tue, Feb 04, 2025 at 04:46:04PM +0100, Krzysztof Kozlowski wrote:
+> >> On 04/02/2025 15:26, Dmitry Baryshkov wrote:
+> >>> On Tue, Feb 04, 2025 at 10:21:25AM +0100, Krzysztof Kozlowski wrote:
+> >>>> On 03/02/2025 18:41, Dmitry Baryshkov wrote:
+> >>>>> On Mon, Feb 03, 2025 at 06:29:19PM +0100, Krzysztof Kozlowski wrote:
+> >>>>>> PHY_CMN_CLK_CFG1 register is updated by the PHY driver and by a mux
+> >>>>>> clock from Common Clock Framework:
+> >>>>>> devm_clk_hw_register_mux_parent_hws().  There could be a path leading to
+> >>>>>> concurrent and conflicting updates between PHY driver and clock
+> >>>>>> framework, e.g. changing the mux and enabling PLL clocks.
+> >>>>>>
+> >>>>>> Add dedicated spinlock to be sure all PHY_CMN_CLK_CFG1 updates are
+> >>>>>> synchronized.
+> >>>>>>
+> >>>>>> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
+> >>>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>>>>>
+> >>>>>> ---
+> >>>>>>
+> >>>>>> Changes in v2:
+> >>>>>> 1. Store BIT(4) and BIT(5) in local var in dsi_pll_enable_global_clk()
+> >>>>>> ---
+> >>>>>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 35 +++++++++++++++++++------------
+> >>>>>>  1 file changed, 22 insertions(+), 13 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+> >>>>>> index c164f845653816291ad96c863257f75462ef58e7..e26f53f7cde8f0f6419a633f5d39784dc2e5bb98 100644
+> >>>>>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+> >>>>>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+> >>>>>> @@ -83,6 +83,9 @@ struct dsi_pll_7nm {
+> >>>>>>          /* protects REG_DSI_7nm_PHY_CMN_CLK_CFG0 register */
+> >>>>>>          spinlock_t postdiv_lock;
+> >>>>>>
+> >>>>>> +        /* protects REG_DSI_7nm_PHY_CMN_CLK_CFG1 register */
+> >>>>>> +        spinlock_t pclk_mux_lock;
+> >>>>>> +
+> >>>>>>          struct pll_7nm_cached_state cached_state;
+> >>>>>>
+> >>>>>>          struct dsi_pll_7nm *slave;
+> >>>>>> @@ -381,22 +384,32 @@ static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
+> >>>>>>          spin_unlock_irqrestore(&pll->postdiv_lock, flags);
+> >>>>>>  }
+> >>>>>>
+> >>>>>> -static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+> >>>>>> +static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
+> >>>>>> +                                        u32 val)
+> >>>>>>  {
+> >>>>>> +        unsigned long flags;
+> >>>>>>          u32 data;
+> >>>>>>
+> >>>>>> +        spin_lock_irqsave(&pll->pclk_mux_lock, flags);
+> >>>>>>          data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >>>>>> -        writel(data & ~BIT(5), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >>>>>> +        data &= ~mask;
+> >>>>>> +        data |= val & mask;
+> >>>>>> +
+> >>>>>> +        writel(data, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >>>>>> +        spin_unlock_irqrestore(&pll->pclk_mux_lock, flags);
+> >>>>>> +}
+> >>>>>> +
+> >>>>>> +static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+> >>>>>> +{
+> >>>>>> +        dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
+> >>>>>>  }
+> >>>>>>
+> >>>>>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
+> >>>>>>  {
+> >>>>>> -        u32 data;
+> >>>>>> +        u32 cfg_1 = BIT(5) | BIT(4);
+> >>>>>
+> >>>>> Please define these two bits too.
+> >>>>
+> >>>> Why? They were not defined before. This only moving existing code.
+> >>>
+> >>> Previously it was just a bit magic. Currently you are adding them as
+> >>
+> >> No, previous code:
+> >>
+> >> writel(data | BIT(5) | BIT(4), pll->phy->base +
+> >> REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >>
+> >> This is a mask and update in the same time, because:
+> >>      (data & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
+> >> is just redudant.
+> >>
+> >> I did not do any logical change, I did not add any mask or field.
+> >> Everything was already there.
+> >
+> > Yes... and no. Previously it was just writel(foo | BIT(5) | BIT(4)). Now
+>
+> You did not address my comment. Previous code was:
+>
+> (foo & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
+>
+> Just for shorter syntax it was written different way:
+>
+> foo | BIT(5) | BIT(4)
 
-We can't eliminate overflows easily without both using u64 and converting
-ns to us prior to any squaring. I will send an appropriate patch later
-if needed. Maybe we're a way too paranoid about overflows and really want
-only not to divide by zero?
+Previously it was a simple writel() with some bit magic. Now you call
+dsi_pll_cmn_clk_cfg1_update() passing the register bit field through
+the 'mask' argument. I'm asking to get those masks defined. Is it
+possible?
+
+Yes, the code is equivalent and results in the same values being
+written to the same registers.
+At the same time you have added a logical entity, a masked write. I
+want to be able to understand if bits 4 and 5 are a part of the same
+register field or they belong to two different fields and can be
+written separately. I really don't understand why are we spending so
+much time arguing about a simple #define. Okay, in case of drm/msm it
+is not a #define, it is <reg><bitfield/></reg>. The net result is the
+same.
+
+>
+> > your code adds BIT(5) as a 'mask' parameter. Is it a correct mask for
+>
+> No, my code does not add it. It was already there, look:
+>
+> foo | BIT(5) | BIT(4)
+>       ^^^^^^^ here
+>
+>
+> > that field? That's why I'm asking you to define those - you have changed
+>
+> No, I did not change bitwrites. The code is 100% equivalent, both
+> logically and assembly.
+>
+> You mistake maybe with some other part doing "writel(data & ~BIT(5)" in
+> dsi_pll_disable_global_clk() but that's just poor diff.
+>
+> > bitwrites to the masked bit writes. Masks should be defined.
+> >
+> >>
+> >>
+> >>> masks. I want to know if BIT(4) and BIT(5) are parts of the same
+> >>> bitfield (2 bits wide) or if they define two different bits.
+> >>
+> >> While in general you are right, it does not matter for this fix. If this
+> >> are separate bitfields - fix is correct. If this is one bitfield - fix
+> >> is still correct. You could claim that if this was one bitfield, using
+> >> 2xBIT() is not logical, but this was there already, so again my fix is
+> >> only fixing and keeping entire logic or inconsistencies intact.
+> >
+>
+>
+> Best regards,
+> Krzysztof
+
+
+
+-- 
+With best wishes
+Dmitry
