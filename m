@@ -1,182 +1,155 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF75219A6E;
-	Wed,  5 Feb 2025 09:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9356D2288DA;
+	Wed,  5 Feb 2025 09:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746434; cv=none; b=ZFHpzvPsZZqzBi29UgqEFkwhKlj44+p4VHCP+qf5cW/PLhCt1fGCADXK6TBJnUX8xdlgyA0T0OvpWZnFRjUR5ZUupuZwLH4UhBHEtrJH7AKRfI0gAwS79iPKUFkBjXsQeWwtuHK8QzluZrfR68s8vlMlMQGl1jXM1NZfRvha0SU=
+	t=1738746464; cv=none; b=H1whDXDVcm56utccdjSDbnpEc2+4SZbRwji7YnBH1EOI2B+pVdq4CqJ9niBwh+x1uxSokVmKsyfUHIRPt/LucGrcl9C87X7Bt4NMuCKKemig0oJA0pZ6qSjRaOWqAjGXAnAStl+OmC6bT6eUZ6rQ6ynFzg+Ai9Z82SZTp3ejQZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746434; c=relaxed/simple;
-	bh=wjawX1358YXjCS0M3IDazo/IC2l7c+1IedZFz7GeuHA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lInPSJJ2jtlg3BLVBVWhFffCUI7zaeGrTPuLkolWJkKV8J/sbS6NEQ+/wgyZrPTOF8m/EBmxE204RiOVMVxO28nY9KsAxrmpDVKXa8mhEESMB+BtJMzzSyyFKX+0S2+4DhVBbF18lY2ai+rPtbSofuXgCnYOE+VTKCEuoaLGU3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cNp+yFz5; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738746464; c=relaxed/simple;
+	bh=dT+brue9bZJjCvucpVy58D22kI3f5XOtfMhs1uM9yK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f4UVkDdnXfZWkhyKA67M8ZOfC1WKjVMN64cuBIEqtfrJ3NvBg6ramp2j02RpA8A4XYKYX8oT6h9r2MApl2nsfQJEAQvIQ3RRqoJyL65YxhYEV4e2gcZsb0Ew/H/pZXdm4qafkya1RKHwUMd+VFyceLOn3io42KZphKWMYprsej8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MasVflAY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cNp+yFz5"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5151865m012355;
-	Wed, 5 Feb 2025 09:06:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=K2f0PH2cD7QKBWZ+FSllOE7GTYjRMh
-	2E/cknU+SKsVk=; b=cNp+yFz51eIzC2UuHdWsWEJXiNNA8k3bRPZbu7JDcY5f1I
-	/Cd8TS/z9xb5nuVVjLLHCZjNFUFB4N7QO64uQgHZ8YTpVOvjmldAv6t2isSvpZ6l
-	jV9ve5I+VMaB3RbcPtfnQoRBJx+09NzQeleksjLVIgk8cQFLTjRb0pQ6pDBQ3jnB
-	hoVAnbK5M+9OkV3JUx7nsCt3K3AeGMnv5gQ3gyE4ynago4WFFqV+e1wZkZs4Yzug
-	cOAkk20RFNMqlDO4j4nIi2bgt4IoNkPytr9fz4RpdKhypgk5NDXb00JCrCUte1vc
-	5JDJlaDJAldPMLUeGWOOnEZOm0KXVwk2pWBEOi5A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kx29hxh9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 09:06:43 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5158qO1C006065;
-	Wed, 5 Feb 2025 09:06:42 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kx29hxh6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 09:06:42 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5158CegV024533;
-	Wed, 5 Feb 2025 09:06:41 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxn7yrx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 09:06:41 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51596bDG17170796
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 09:06:37 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 564B620313;
-	Wed,  5 Feb 2025 09:06:37 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1E96020312;
-	Wed,  5 Feb 2025 09:06:37 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  5 Feb 2025 09:06:37 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Shuah Khan
- <shuah@kernel.org>,
-        Alexey Gladkov <legion@kernel.org>,
-        Eugene
- Syromyatnikov <evgsyr@gmail.com>,
-        Mike Frysinger <vapier@gentoo.org>, Renzo Davoli <renzo@cs.unibo.it>,
-        Davide Berardi
- <berardi.dav@gmail.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        strace-devel@lists.strace.io, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
-In-Reply-To: <20250204151420.GA30282@strace.io> (Dmitry V. Levin's message of
-	"Tue, 4 Feb 2025 17:14:20 +0200")
-References: <20250204151420.GA30282@strace.io>
-Date: Wed, 05 Feb 2025 10:06:36 +0100
-Message-ID: <yt9d8qqkyd43.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MasVflAY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A9BC4CED1;
+	Wed,  5 Feb 2025 09:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738746464;
+	bh=dT+brue9bZJjCvucpVy58D22kI3f5XOtfMhs1uM9yK4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MasVflAYp/mJcGP/oEgutBOTMVZYjWqhrZVQzSUYpte7GSgnZ77EO3c3VJetMUHMM
+	 e4Xifam28m02X3uq0qXEu22NGDZXt4OPqYmYMEwiTz4QPWlRuMExdKxQth5MROCJcE
+	 fSS5VxN5umHl95u1iepZp0T1J87sv7VOcdT3WsOqbRR523XDDyU8WZpVF1MRExeupF
+	 7JHAIqt/NczBDkAkgyUl3araUGwtyfEOX2n9MKf358Clfke0KECpzm3qzsUuVUfhkM
+	 G1MpEERMZOcq0RMob9+1g+sjWCnT5J8UnyCUwMcF1MGGHzOBfEI56nWKg7i6T4jKg9
+	 S8kM27RERuKnQ==
+Message-ID: <f8b8a39d-043a-4be0-9024-c080cf864e7b@kernel.org>
+Date: Wed, 5 Feb 2025 10:07:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7MffZGyFzaakFNQn2nT3hUSCU8OLe9Ad
-X-Proofpoint-ORIG-GUID: jC8ovOeJCCPOFj5pvJIzOaPypbBvtX3m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_03,2025-02-05_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
- suspectscore=0 adultscore=0 mlxlogscore=890 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050071
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/13] wifi: ath12k: add support for fixed QMI firmware
+ memory
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
+ <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
+ <7d5f7b4c-2a55-41c7-b85c-cb4cd76d553f@quicinc.com>
+ <962dc257-f7a6-49c7-b760-a31fd84e7a56@kernel.org>
+ <c7d9842a-96bf-41aa-8046-52c3e45f90d4@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c7d9842a-96bf-41aa-8046-52c3e45f90d4@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-"Dmitry V. Levin" <ldv@strace.io> writes:
+On 04/02/2025 10:06, Raj Kumar Bhagat wrote:
+> On 2/3/2025 3:42 PM, Krzysztof Kozlowski wrote:
+>> On 03/02/2025 10:44, Raj Kumar Bhagat wrote:
+>>> On 1/30/2025 1:16 PM, Krzysztof Kozlowski wrote:
+>>>> On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
+>>>>> @@ -2646,6 +2663,136 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
+>>>>>  	return ret;
+>>>>>  }
+>>>>>  
+>>>>> +static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
+>>>>> +{
+>>>>> +	struct device_node *mem_node;
+>>>>> +	struct resource res, m3_res;
+>>>>> +	u32 bdf_start_addr;
+>>>>> +	int i, idx, ret;
+>>>>> +
+>>>>> +	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
+>>>>> +		switch (ab->qmi.target_mem[i].type) {
+>>>>> +		case HOST_DDR_REGION_TYPE:
+>>>>> +			mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+>>>>
+>>>>
+>>>> Why cannot you use existing API for reserved memory -
+>>>> of_reserved_mem_lookup()?
+>>>>
+>>>
+>>> The of_reserved_mem_lookup() requires reserved memory node to read the memory and
+>>> return in the structure "struct reserved_mem".
+>>>
+>>> The of_reserved_mem_lookup() would be used after we get the reserved memory node
+>>> using the API - ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+>>>
+>>> In next version we would use of_reserved_mem_lookup(), Something like below:
+>>>     mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+>>
+>> Then why do you need ath12k_core_get_reserved_mem_by_name() in the first
+>> place? Just use of_reserved_mem_lookup() directly. Why do you need to
+>> parse phandle before of_reserved_mem_lookup()?
+>>
+> 
+> Sorry, I'm having difficulty understanding this.
+> We have the WiFi node at ab->dev->of_node, but we don't have a node for the reserved-memory
+> 'q6-region'. The of_reserved_mem_lookup() function requires the device node for 'q6-region'.
+> 
+> Could you please suggest how we can use of_reserved_mem_lookup() without obtaining the
+> 'q6-region' node first.
 
-> On Mon, Feb 03, 2025 at 12:35:42PM +0200, Dmitry V. Levin wrote:
->> On Mon, Feb 03, 2025 at 10:29:37AM +0100, Alexander Gordeev wrote:
->> > On Mon, Feb 03, 2025 at 08:58:49AM +0200, Dmitry V. Levin wrote:
->> > 
->> > Hi Dmitry,
->> > 
->> > > PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
->> > > PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
->> > > system calls the tracee is blocked in.
->> > ...
->> > 
->> > FWIW, I am getting these on s390:
->> > 
->> > # ./tools/testing/selftests/ptrace/set_syscall_info 
->> > TAP version 13
->> > 1..1
->> > # Starting 1 tests from 1 test cases.
->> > #  RUN           global.set_syscall_info ...
->> > # set_syscall_info.c:87:set_syscall_info:Expected exp_entry->nr (-1) == info->entry.nr (65535)
->> > # set_syscall_info.c:88:set_syscall_info:wait #3: PTRACE_GET_SYSCALL_INFO #2: syscall nr mismatch
->> > # set_syscall_info: Test terminated by assertion
->> > #          FAIL  global.set_syscall_info
->> > not ok 1 global.set_syscall_info
->> > # FAILED: 0 / 1 tests passed.
->> > # Totals: pass:0 fail:1 xfail:0 xpass:0 skip:0 error:0
->> > 
->> > I remember one of the earlier versions (v1 or v2) was working for me.
->> > 
->> > Thanks!
->> 
->> In v3, this test was extended to check whether PTRACE_GET_SYSCALL_INFO
->> called immediately after PTRACE_SET_SYSCALL_INFO returns the same syscall
->> number, and on s390 it apparently doesn't, thanks to its implementation
->> of syscall_get_nr() that returns 0xffff in this case.
->> 
->> To workaround this, we could either change syscall_get_nr() to return -1
->> in this case, or add an #ifdef __s390x__ exception to the test.
->> 
->> What would you prefer?
->
-> OK, I'm going to apply the following s390 workaround to the test:
->
-> diff --git a/tools/testing/selftests/ptrace/set_syscall_info.c b/tools/testing/selftests/ptrace/set_syscall_info.c
-> index 0ec69401c008..4198248ef874 100644
-> --- a/tools/testing/selftests/ptrace/set_syscall_info.c
-> +++ b/tools/testing/selftests/ptrace/set_syscall_info.c
-> @@ -71,6 +71,11 @@ check_psi_entry(struct __test_metadata *_metadata,
->  		const char *text)
->  {
->  	unsigned int i;
-> +	int exp_nr = exp_entry->nr;
-> +#if defined __s390__ || defined __s390x__
-> +	/* s390 is the only architecture that has 16-bit syscall numbers */
-> +	exp_nr &= 0xffff;
-> +#endif
->  
->  	ASSERT_EQ(PTRACE_SYSCALL_INFO_ENTRY, info->op) {
->  		LOG_KILL_TRACEE("%s: entry stop mismatch", text);
-> @@ -84,7 +89,7 @@ check_psi_entry(struct __test_metadata *_metadata,
->  	ASSERT_TRUE(info->stack_pointer) {
->  		LOG_KILL_TRACEE("%s: entry stop mismatch", text);
->  	}
-> -	ASSERT_EQ(exp_entry->nr, info->entry.nr) {
-> +	ASSERT_EQ(exp_nr, info->entry.nr) {
->  		LOG_KILL_TRACEE("%s: syscall nr mismatch", text);
->  	}
->  	for (i = 0; i < ARRAY_SIZE(exp_entry->args); ++i) {
 
-Fine with me. As you already noted only 16 bit of the syscall number is
-stored in pt_regs::int_code. A quick hack would be possible to do sign
-extensions, so -1 would work. But i think this would be odd, because
-positive numbers would still be limited.
+Hm, it seems you are not using it for this device, so indeed you need to
+parse phandle. You can still code it simpler -
+of_property_match_string() is not necessary and
+of_address_to_resource()+of_node_put()  could be in the
+ath12k_core_get_reserved_mem()
 
-So i think the patch you proposed is fine.
+Best regards,
+Krzysztof
