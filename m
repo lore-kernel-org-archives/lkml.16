@@ -1,189 +1,199 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA34217F23;
-	Wed,  5 Feb 2025 23:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796731; cv=none; b=UbdEHIuGdSeD+75KhVxADyaMZE2NG30fCvDfYcu3V9arnfoiYGdqkHWb7mbD/s/k/BXtOc7LzZIX+T+RMYu5/UUUT2YWc6iGbHX2tPMuGu/cKatmZzTYLp9XzEa1g/6QDOTQWxvXI4Cip0E/dlj083KChrcFaNxAfpc5HhSVxLQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796731; c=relaxed/simple;
-	bh=QZs8oI8epbJ/roNmknquSVLCgBNVCyGNwQL/Gy2TGl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fr6X8DxNn8hCvMjK0lhaKGTaZu3Kv68WCSClK1KL3Rk3Lo3T5g7P0+xzydNzq9YC4D6x23WHlz1WgQ1NxMGNb5lhjQEQ7lg6zyJaIsGkvn8Tb9XaK97iF84z2tdH+TzLgDDifYAdjGsRaKJX530pXKfyN2iVfvpG2m//yMTQG64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYzyVVpp; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF68215176;
+	Wed,  5 Feb 2025 23:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738796814; cv=fail; b=MDSSf4YjPTj9BtZLG5j+rkamd5Ler6Hnln33jAw9mQzK7lfC7TFNO5WHYttLYeVDZlBh3flBgzadXVDwdTqk52GPOkuQmur1GhgcZY58vAJIHRSMuD63GLyJzZ2jwRbiDqS9u3d0uDVEr/4bLySy9Vr4CL2CjNQ9xskcOOOSopc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738796814; c=relaxed/simple;
+	bh=lC91L1KmbOFsDm1nqjEpsdMeAPZ6rZJ/3zNASCGrL9Y=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XZk4lsIdt5RBj2eUfVVVKVcts9X1MGpJ13RF9VQZs/buBnxY94xIAkUy7MOwu7QQ8Trx6uAC/PTwJZBg7mVaBYpy/pHkY0lBay6ULS4TeeF7bzClC92Mc7nuFfddrx6UjLLvuxeytcMyxZsxYkQq9tKgknCQdLZLz/mJhKfcthQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dx3fEz4Z; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYzyVVpp"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f42992f608so357613a91.0;
-        Wed, 05 Feb 2025 15:05:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738796729; x=1739401529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Tg9fVecprHSBkd8RZVVGCGxOSrmcjXLqlZW+aeAZvM=;
-        b=kYzyVVppQtr/Iv4QJdbPvFEj7pkEKZd2Ol4+0pzvn9zC2epdh3pfAWNS+XsHHdFD2y
-         hGAUfmJH22ojL9Zz3V+ovK6+ir4DX0Dih6Z4utMkqDDCENX/gGBYdm+xJDt4UsvNlkH4
-         js2JsyfFbzaHVMimjRKEvAB/NU+tOH2vLOkzgbXy9ajAn4Usm2KEPXWNV0cH2s2rPSXk
-         jSIZCQQ13zb9TCzXBoIreE9/c6vgUi/tRAQ7egmcsZ5munR7zD/Bl/vex3mXKDBE+vrx
-         PZhdY+JjxXeVO9qbjk4SCb8I8sj1w+q97a6BV5N52kPWkQy8inVUHUfdau++shiN9Miz
-         9YZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738796729; x=1739401529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Tg9fVecprHSBkd8RZVVGCGxOSrmcjXLqlZW+aeAZvM=;
-        b=qhdy5Uv8Oh6VxkHiGkgZap2Gim/8PeUS56kMm7tQ0Yd7ap2LDDfx3NBnI2fI469neD
-         4BKZIGGJGyn5EFw2KEkS1Xk1antj1P+W4g0zCXuizcp0YoqyGjsNzYkR00Bx4oTluWBP
-         PXy2CvJaAehPTbaJUyWAg9unLhDIlABxvRuU3dTW7N3hf0pM94ZaGXA25gu9EVYiUPKb
-         WFxVtnT00ZAuqMjNXONt/7IsHpE1XaYB9xP5ghaUDhZfBftzRXx4QZ3IEBwQujxvOuSx
-         IrR/X+bkCINzHJc7quCfE2WmY5imZi8eVfyyr5Tcbm6mLdUDtf4auUP/TM+t7eP6miq0
-         Tb5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUhLo7oXvPfNzBOohOnCqrjXEH9GvdFdUuL6bIOZQFhcufh0HXByV40k/lYKyMn35CvnRM2sCJcAOpneok=@vger.kernel.org, AJvYcCUjyIQbXdDpG8hVj1P781mkuXIcfmQp+vN2pSsuvRiXHUrQk7TpaX48fjHcffToMJsxZbK39nsVnGJOKMo5cysOog==@vger.kernel.org, AJvYcCWNSLfweXgCHLtK2Lkv7KhvUg910k08dBmUVEsoqoFBXd4FPKafJjhO/Crj5XMF8aOfPMRRNWAuY0sEEUwWX3vmbTRw@vger.kernel.org, AJvYcCXMLgza4xSeSOfSwJI6JAwG+GA7r/FgQj+8Px0x3Bw2HI6i1/+HKTkUmifXySalCuQ4FWRxMYw1gnllGGS8gcIvVQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm3cTTnkYkjaC5+26PuO9gfFQD0LYEqF5iApfFsxKScDeF6Li8
-	iYqsfzljBA/Fw0cdSQ+WiCEs74i+xoQFe3aOIB3MzZnba7S6knEu0gWS8VWovaHGUqlN7CJ0pqJ
-	AmLZcRXL4ZAiPGNyo3VWuVEGGwiM=
-X-Gm-Gg: ASbGnculywJxGfpy/Pcl/DuiaA4HGNZV1y2z9S4WmRvCFvLwtHnIZkjU45ezys6msBa
-	QXtXAt+9vm7kgJPU5FN0wRGVk3YOA0QYfJoXQI2EbiGeddALo5M0N1LROxIepsOFHbWxgODkYMq
-	GjZsXy6js7CTta
-X-Google-Smtp-Source: AGHT+IFlLS0YdzB4OxO+h0dwZPUj3Z/hL14JGgioWJMbMELb4zIrgvsNEwJV6WCu1wieOrVzJst3AZIIsefRV+sM2cc=
-X-Received: by 2002:a17:90a:d604:b0:2ee:5111:a54b with SMTP id
- 98e67ed59e1d1-2f9e084041fmr6790567a91.31.1738796728715; Wed, 05 Feb 2025
- 15:05:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dx3fEz4Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738796812; x=1770332812;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=lC91L1KmbOFsDm1nqjEpsdMeAPZ6rZJ/3zNASCGrL9Y=;
+  b=Dx3fEz4Z61ZQkQHZ0HQJkqYA2RJcz1+vjbpnz/qjuZUtiTNSSSjN8SbE
+   +eig4d6I/iDTIxDoyI9LsNbO1jLeWgi6M8/XNsUzpBEJenaJU4/thtSKM
+   gm7/Tgg2u81ovXIf6D5v0uKwo5vOuLeEQvZvcngz9zYDEJcbo/FsUdoZy
+   gBUvsnpueEKyZiaO5Jt2s/2yZ+Opsn9kj8IV3XWXAyRSSDzOponq2z/lT
+   g+evmwHW2LraYCvGyEkpQwerOGdxngZRc4LZs39Nrp3kWNu9ICwdhzeWp
+   iIe3GiSGszYLwC9SxEY3pNBohTiGFJPCv2wUqXni8h/bQ2EZvQ/vSpdfj
+   Q==;
+X-CSE-ConnectionGUID: +0+GhwQ0RMeJrkKuIWDUDQ==
+X-CSE-MsgGUID: OM16RjW0RnC0bImvfMjk7g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26985415"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="26985415"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 15:06:51 -0800
+X-CSE-ConnectionGUID: xf+rXrxvT4GrEBtp/ZXwcQ==
+X-CSE-MsgGUID: /AebpmXqSgu2sGmNIiJf5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="134274058"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 15:06:51 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 5 Feb 2025 15:06:50 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 15:06:50 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.47) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 5 Feb 2025 15:06:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HKXh1R8Qo7+dRDgdccBzvmwuxEzC005aq+/rZ4dGixs0/gS0k9LmID3s1FN2M91xcagp1v36qWIbQs6MLpOo5pEMtBzzVm6G7gBloMOejw/TjuAoczC856c0+afhWE8UMJh3FrG4/JBn2n/RFuxHWEbC+oSCq33hNO/UU1jEIVLJvEVsoSWKkwZ4aIvv5qCYtnvMvk0p2OIrmxcxRsAZ3vnTF/6bmueI//06ymbvxRLOr8D/X9Yz97o1hebkLpkZdynq+qCp+gs00U0yHfmTAuE5V835mgJDOCWX9k+iGlbyV84jBUXEK5yCdA22Nl8d2RDZ5u+0z8qkqKPDbgnhmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wWm3YPWM7jvT8trwKQrQ7+Fj/LMPgIz+2nQ0CTbUKI0=;
+ b=tY0JO2Z26OQKUi44XV31U8k8w2oR2XqpvQT2h+MEYz3N6YvlAiFxYnH6jRV48ZVca6s7gpKcAt+hD44EcKLn0/9IGseW9n/QGWx9CsXya9dltm5JOSsYUvmcLpsuRF/+eTvPi6Jz4NFAxL98pCq12njn8nzdhsBCet6YfBv2y7OUG98PYgzlMHlRC553sSMS5EVEOhoM/dGEg3VtqiJ4N7cc3lKX/5ye2MsfEgQfJpX/wu2/ho+qRcxrMTXx5tR8H0JVC+MrM/M/l4nTD5ugUpoKQ63chbgs74k/HGkSrfuATV5EEPC9ZPI2MbSP2Oer/lGUwhaKkMzhTQhnYc4Z0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ2PR11MB8348.namprd11.prod.outlook.com (2603:10b6:a03:53a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Wed, 5 Feb
+ 2025 23:06:48 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
+ 23:06:48 +0000
+Date: Wed, 5 Feb 2025 15:06:45 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
+ Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v6 6/6] cxl/pci: Add trace logging for CXL PCIe Port RAS
+ errors
+Message-ID: <67a3ef05520fc_2d2c29451@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250123084421.127697-7-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250123084421.127697-7-Smita.KoralahalliChannabasappa@amd.com>
+X-ClientProxiedBy: MW4PR04CA0320.namprd04.prod.outlook.com
+ (2603:10b6:303:82::25) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737511963.git.jpoimboe@kernel.org> <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe> <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com> <0837be81-ec2e-4dac-bc42-91c626c22b9a@linux.ibm.com>
-In-Reply-To: <0837be81-ec2e-4dac-bc42-91c626c22b9a@linux.ibm.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 5 Feb 2025 15:05:14 -0800
-X-Gm-Features: AWEUYZmigCm675PTePq6ZBxFpy1cZX0yWJbw2d0okMyiHRAN7vj8ot3_pc-ooKE
-Message-ID: <CAEf4Bza2npJdh-aBcH98aNjiuwuw_kRB1fnMfTGCr+Y_Yv8gWA@mail.gmail.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Indu Bhagat <indu.bhagat@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
-	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB8348:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36daeb95-8299-4e2a-1561-08dd4639c455
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?yqv6LwWwtNBpUdMbB2/i8NohHdUKr1Frs9Q4pAIAEma0Njt3VbLuA5UAUbtJ?=
+ =?us-ascii?Q?ojPe42xWiyaWfOn5DCvp9rr7kF56Mqc0edr0sgvmKYEF5vfaA5m81YqZFXcI?=
+ =?us-ascii?Q?dKIKDdavHjY9/jzCjJ20ENYRuhedJOt/h75Rth0z/cVmqOUOeEvhgz+UoNQA?=
+ =?us-ascii?Q?2nDo1m+kszjA3ht8haBwzXBHE/AKrL4WJbhhrneePODjPPt28ivAHmVPcr+6?=
+ =?us-ascii?Q?t+WVZgkuZwtVs8tWcsKQHUvXWioKM5SwAlF7PkVNW0ysEzS17m4PxFrndlod?=
+ =?us-ascii?Q?v08+9a/EZsaA8x2r49QQDyaxD5iXWg1U3irnykQlsnOM9/5jeNczNPWZh9uB?=
+ =?us-ascii?Q?7z5Y7p87TJFz2MuxautccmOK4wiPLxcIMhahVeKxULtXwVeTPH4mljaWGv5s?=
+ =?us-ascii?Q?WLjQTawkjfgtaX6Q7WpsYd+Zx9esHEVJ4IFwoBUioLmi6J24qC53EgArd/no?=
+ =?us-ascii?Q?hAy8znPh31wGCV9sg1ZASySoyfAYPHKspvr/hXKPOuFjUQsmXrt1oumTMjfU?=
+ =?us-ascii?Q?EJ8jDqFiLadLxZOWqc4vsImsHdIBK6nNVRfN8aSLUCFnsGoE6VbU+g3PV4zu?=
+ =?us-ascii?Q?RFbllwBwwbrTasb7BsunkCumFm4MoSncPFuXikegoNLgZA/r8CppK3TkEU6j?=
+ =?us-ascii?Q?3WnprMi92RlR8juPPFLA2l+YcOingHp5kDyyq4f5LqZ1BlPNPLRMfw6drhTA?=
+ =?us-ascii?Q?d5RtFnDH8Mb01ZMknm7udiqTpba1/MFnv/Kk+Eo2z0qUASRQN8tgwKpvLQv8?=
+ =?us-ascii?Q?YOxgS5aS+GuLj3u9UbJb0TnJaaHePaJGFcyVV5vnToBFwGU6UVGd7vE4VsZZ?=
+ =?us-ascii?Q?QWoRHRQX25siyfq0QUMHShMZc9OsmnVKsUFTsARHJWu9kqnYFCOI4+dpsV1Q?=
+ =?us-ascii?Q?iNp4aAc4WZvOKCH24/OFzI1yceO5v8Btz9eRMyQrD5KyZLE7nxuFzv6kncfs?=
+ =?us-ascii?Q?CIbemY85GhyNGLXlz03Qa2XjNCiG/7LehkzFz1wgAA0thCs4jRFP1u/QiGVU?=
+ =?us-ascii?Q?UBsTuEeVFVoWTBGSRqW4OHcJpRwIdwKQ8zU8DR6TtBnSLhoOelu/I2Iu12f2?=
+ =?us-ascii?Q?bkB4QTe894cKqsIVhUINIPo/hDm1rGRGx7FIODzjBnuCW+7+/BCa+LeIo2qw?=
+ =?us-ascii?Q?XXzaV79KZ+yaZSYW+iyw8jgASP9PSoP2VXcHKCIRmzW9bonn/Sngud3Y5wr7?=
+ =?us-ascii?Q?+AL9P+4PqmRKMTCQZCpSCvTmJl/e7PooYi4PLnp/Iddl9fI142GDxJHquMDE?=
+ =?us-ascii?Q?UHoyEkCxO7Ig2H804rWW+49DNWC3KkTBFWO8TMKKGHd0a3+wDe4/Fa0s4sQE?=
+ =?us-ascii?Q?KrNLB9AISRjB5c98GIxUflSrw1Ix00zZEIH57DnM23lVYrP4ZSLzjYGLFTdC?=
+ =?us-ascii?Q?h1x1Z7lXkax8AscZ4OaUyJhFlQ6Z?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8lAbZ28nf7Iq/v5oBNNynmS64r/QctfDMcyNLjR47YflP1VRHaTB2p1q8usy?=
+ =?us-ascii?Q?wRlHfiUXUW0XjqlQ0E77qKOXrucLBk/Ni8yZWrJWJf1BwXAPBa60GmgyNnyr?=
+ =?us-ascii?Q?ts9y15Ar1uu1PL7rpX1EtZMmWDkbzIMSzA+l/DCZkEiRITGDRH73dHJw3Pbr?=
+ =?us-ascii?Q?KvpWfeg2zka1d3tuzHu/af2jAkyAo/ULqqwwd2BtIzHPuTReBC2OS5r7943m?=
+ =?us-ascii?Q?dxBuqdURslU6RiBQ/oMqSG3B3JQFR3lgJlPVLwgPYTGBwm0ejZoKDMjA8ZDT?=
+ =?us-ascii?Q?PyjLychSwVZpPcRVBvEWZgEtdA6p5ScCKHmWf1+5f2aya9RgF1IfsKXPy8Wr?=
+ =?us-ascii?Q?Tg7iKJvdtYrQNAlCm1xRnC2AVk8jbhC8bc5bZfVdrnBXy5LRNmL7mwlDgJGv?=
+ =?us-ascii?Q?P7Ul6JgnZY+7wPFAlAza86TT6tYzx2CixDOnFYrMnjh+Q0NNMbwOmAwininF?=
+ =?us-ascii?Q?qSmhH6vzzYmLjsXvmJlDldy+u3CglLrcpi4u89WW3q5w1jlf4ytzRdRzBy1l?=
+ =?us-ascii?Q?n1si3+gZhnZGWioJp2c8O03Cu8Ks9uoZm8Pm8lB9ng0dY0pJQ+UBlKQZ+Ymq?=
+ =?us-ascii?Q?gfDN3KXnBuntTC7rOOvufH6gqniz+Kw84PcyaxT+xFWKHzVVSQYX7XlXfrg9?=
+ =?us-ascii?Q?xhuNZowAwuvR0pbnAu9EHoURJBl2/fzID5NVvsU6HGI0neoWSiEZ6mQW3mTY?=
+ =?us-ascii?Q?i9DKKnTe5pnLCqA/hcMIIfqSdO8TwXLD1kOIC/V5caxC74+FKhUG+Mw/mnq7?=
+ =?us-ascii?Q?STQhOf6CryIFzo21oI14uaI+GMaQ2hu8GYTuN2T+k6UHaJ1u7R7gvNGlb5iS?=
+ =?us-ascii?Q?95nk4EK/9P6OVh1Ye0WolyOaG7eqdLoo24uwhkGrY3JPloficSImY4CfnIjO?=
+ =?us-ascii?Q?BwluTSbe0y1BfZquIV6DfMeHW6jAwzCAgNnA6SPrVg87dSkm0mtKn7CyK4Ei?=
+ =?us-ascii?Q?QpFyXElH7o9bsHeBHVQnXSte61RIauvYcO3VwL13tkui8lV5O5Uw+t0vM85g?=
+ =?us-ascii?Q?gMCMZbrH7PBQ4zTxHcqiDVm14fjDmLg5lTNU7bEY7e8d6WvbNa+1ydaN+RLr?=
+ =?us-ascii?Q?z+QWaghtKTxpa2kGFwVQSdVqjaxB1wHrWDj8IIi+XTlJY8yYLt2lTOA9qqru?=
+ =?us-ascii?Q?7T4pLjUdyK0UgusVT0X29VoQ8xw2i0f1C6Tt8N5rAuQ9S3DZslRKZJGLA/G8?=
+ =?us-ascii?Q?xOONA4cuoZYu0mlhKhKtgkjdKvnoOfDXNtduEAWM2ZBFHPAPZRE1MN1ZHsDK?=
+ =?us-ascii?Q?tN/t1s2UUuxE0RFUHhsVQBDx6I5OJCuBS5xMo9OeL4AzHuf8IdJ1mzqmp427?=
+ =?us-ascii?Q?7/fNFMBxvZlN+gOZ32/NB1cOC54DI0LJHLyfAH0UvxCeAumvNFjzV4xqwPtu?=
+ =?us-ascii?Q?98LiJc7QtzLwSwcu/X3VptXTGVgF3HY8hMh7NpYSXcejPq3AFoIghTvHhd3x?=
+ =?us-ascii?Q?kSLcAQHTYvbWAqGQAzTrWAweeMFpM3yhiAhkUflCagbXco7fG/DDfNJqBR4w?=
+ =?us-ascii?Q?769BlCVMioaZyeDICm/9g8SehDeQQqkcjT9oaFl3AE5Bd6/gY+YwGLC48ehm?=
+ =?us-ascii?Q?Wb30lg9IbrMFmdzPM+HmxZSjPNuIPgAqG1tqNljG/ekZ2royE6OVmcrmWB/8?=
+ =?us-ascii?Q?1A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36daeb95-8299-4e2a-1561-08dd4639c455
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 23:06:47.9654
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: I5ZHye7fdNEHPXa4uJcdsAS3bLDusZENEUvu+twebrny/R1evaJr9bsPcUucsmAASQvBZzeEmH6dmQ5aUSJm8Zv4q8Toaf84Uyl9H0Rymog=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8348
+X-OriginatorOrg: intel.com
 
-On Wed, Feb 5, 2025 at 3:02=E2=80=AFAM Jens Remus <jremus@linux.ibm.com> wr=
-ote:
->
-> On 28.01.2025 02:10, Andrii Nakryiko wrote:
->
-> > So, currently in v2, FREs within FDEs use an array-of-structs layout.
-> > If we use preudo-C type definitions, it would be something like this
-> > for FDE + its FREs:
-> >
-> > struct FDE_and_FREs {
-> >      struct sframe_func_desc_entry fde_metadata;
-> >
-> >      union FRE {
-> >          struct FRE8 {
-> >              u8 sfre_start_address;
-> >              u8 sfre_info;
-> >              u8|u16|u32 offsets[M];
-> >          }
-> >          struct FRE16 {
-> >              u16 sfre_start_address;
-> >              u16 sfre_info;
-> >              u8|u16|u32 offsets[M];
-> >          }
-> >          struct FRE32 {
-> >              u32 sfre_start_address;
-> >              u32 sfre_info;
-> >              u8|u16|u32 offsets[M];
-> >          }
-> >      } fres[N] __packed;
-> > };
-> >
-> > where all fres[i]s are one of those FRE8/FRE16/FRE32, so start
-> > addresses have the same size, but each FRE has potentially different
-> > offsets sizing, so there is no common alignment, and so everything has
-> > to be packed and unaligned.
->
-> Just for clarification of the SFrame V2 format, as there may be some
-> misconception. Using pseudo-C type definition:
->
-> struct sframe_fre8 {
->         u8 sfre_start_address;
->         u8 sfre_info;
->         s8|s16|s32 offsets[M];
-> };
-> struct sframe_fre16 {
->         u16 sfre_start_address;
->         u8 sfre_info;
->         s8|s16|s32 offsets[M];
-> };
-> struct sframe_fre32 {
->         u32 sfre_start_address;
->         u8 sfre_info;
->         s8|s16|s32 offsets[M];
-> };
->
+Smita Koralahalli wrote:
+> The CXL drivers use kernel trace functions for logging endpoint and
+> Restricted CXL host (RCH) Downstream Port RAS errors. Similar functionality
+> is required for CXL Root Ports, CXL Downstream Switch Ports, and CXL
+> Upstream Switch Ports.
+> 
+> Introduce trace logging functions for both RAS correctable and
+> uncorrectable errors specific to CXL PCIe Ports. Use them to trace
+> FW-First Protocol errors.
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-yeah, sorry, copy/paste error for those sfre_info, it's always u8
+I think this functionality moves to a central / non-cxl_pci location
+once we have a formal CXL AER path established.
 
-> struct sframe_section {
->         /* Headers. */
->         struct sframe_preamble preamble;
->         struct sframe_header header;
->         struct sframe_auxiliary_header auxhdr;
->
->         /* FDEs. */
->         struct sframe_fde fdes[N_FDE];
->
->         /* FRE8s / FRE16s / FRE32s per FDE. */
->         struct sframe_fre{8|16|32} fres_fde1[N_FRE_FDE1] __packed;
->         ...
->         struct sframe_fre{8|16|32} fres_fdeN[N_FRE_FDEN] __packed;
-> };
->
-> Where:
-> - fdes[] can be binary searched: All fdes[i] are of equal size and
->    sorted on start address.
-> - Each fdes[i] points at its fres_fdei[].
-> - fres_fdei[] cannot be binary searched: For each fdes[i] they are
->    one of those FRE8/FRE16/FRE32, so start addresses have the same
->    size, but each FRE has potentially different offsets sizing, so
->    there is no common alignment, and so everything has to be packed
->    and unaligned.
->
-
-yep
-
-> Regards,
-> Jens
-> --
-> Jens Remus
-> Linux on Z Development (D3303)
-> +49-7031-16-1128 Office
-> jremus@de.ibm.com
->
-> IBM
->
-> IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsra=
-ts: Wolfgang Wendt; Gesch=C3=A4ftsf=C3=BChrung: David Faller; Sitz der Gese=
-llschaft: B=C3=B6blingen; Registergericht: Amtsgericht Stuttgart, HRB 24329=
-4
-> IBM Data Privacy Statement: https://www.ibm.com/privacy/
->
+So, for this series you can add my Reviewed-by: to patches 1-4, but I am
+not yet convinced cxl_pci should play a role in emitting protocol errors
+compared to a centralized place in the core.
