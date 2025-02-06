@@ -1,96 +1,119 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1514214214;
-	Thu,  6 Feb 2025 05:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5789F13A41F;
+	Thu,  6 Feb 2025 05:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738818830; cv=none; b=ph7Qj7d5UvdVm4xYY9J0HW5SPU7YHgxJbTVGb5F0IwL2+bmhcL+vNhAqfS63W2lzLcOWWZ/JMfGM5lTjpmU7sxmmDF4p8HImvwEJ+GbuEldF4gnOVSWHf+TUHnDaypyIrQ8qEYpaGP18MZF9lojApI5LQdfGBo3xtDLif4H6dTM=
+	t=1738819095; cv=none; b=I6j1jq6cuACW8y/6HQ+aKVU6BxWFw5dfV9BdkYJJg0JBQLVxr4ViuWeuevh+Y0fi4UgtJBhsaDwM2VtIdcFeTiqCnuIUoy2I3b1fhsr0PkQrZUOly90veF+26iwIHJ9Ff1/QtcYcIhfxI900WmpxHPyTsOUI2Ij8NSaJ9Fjg0JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738818830; c=relaxed/simple;
-	bh=SMknFv3E/KYryEOBK8jDr418l7AEOXLkPPwuOK+Zkr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lPKnJBu/kcOp1vlAhAeiNiOgeB41Q2X7nv05zHBQnb9j9HkXVTqxZ0yBzV76XzhvNuth7oemR7dxd6Uj7P/9GtL6QkA95o10d/9RYxTHufzgZrVfTFLr1Yje1hs9uxrJ9CZlKGCv+auO28xKcqBjec/NSebi/fKRBysEhQfTaZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dYGMxAj4; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738819095; c=relaxed/simple;
+	bh=+aPBt3SpUMrDnxouQD6JSVQcqVP96/nYHNCsAKWPCA8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=MO5nCurpzf8sa0q4KYiEo7K58THBGUZIMH/vXwKcEN0WwW9USzPaOYs2TIOMGtb8A4mwsRDvHQ1kSVvLxdsRyGdkS7ZpssFIhxdN7sBZ2ognDuqucmrS+MCNtEsUg/DCGcdGvv2Zl/nbClMDtVsNbsAsLtnERtXuUJ1n5/ewd/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYyygQuQ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dYGMxAj4"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5165DPEk2668748
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 23:13:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738818805;
-	bh=PxNeor84lPrfwH3EeQJD/Mm6TsABEnRiymSE+ZgCbtE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=dYGMxAj4KeKtCAyobFN51ossH7Lzv680Z4sSpBuyi87HdTd9kB7sF/XVeFywrC1nY
-	 v4RZf+EXHxpCll/nzvcXK0WGZO/2K20ho7W9Ol5oU7k3rTzlGuIWsBRRQgqWc7+cE1
-	 AP3L9J+oJENSzj44NN+idd0iPGdpYSuoaRA2xmws=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5165DPKA060384
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Feb 2025 23:13:25 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Feb 2025 23:13:24 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Feb 2025 23:13:24 -0600
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5165DJLG106878;
-	Wed, 5 Feb 2025 23:13:20 -0600
-Message-ID: <bbbcba04-3e31-4282-a383-fb4daa7c6de3@ti.com>
-Date: Thu, 6 Feb 2025 10:43:19 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYyygQuQ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21effc750d2so8607285ad.3;
+        Wed, 05 Feb 2025 21:18:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738819093; x=1739423893; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cKJ2RPSDuexqAeZMky5ctWE7NpMtniAk7Eny0kdlQeM=;
+        b=NYyygQuQIrHofivXvaI+9UbWQ9cRuLcabGEFOBBr/AhypQXw1IyNi6yhCZqn2ZjGZ/
+         1rARNMgTsed/3bb9aTMx1ZV1U5pQi4dB8ksgLBlwjl9IcACVTxQR2hiBFRjxMl5XIWB2
+         EB1rOuhnBug4hZxlIt1+XGCv/ufgtxFRrN7nPaGM/DgihNbWypXV9ltL05X2Vzorn+7C
+         lLdB5Vz6lkrzxAW29MMZP10rbsKbe8vKXfHZ7WLx4cVc7ye2h8ycRoIHQ+91J/v2ZYb0
+         ajrj6llB3sY8WA3u08BIiqEoDD+8mxG1z4Ysej4b9RQ2OOcXEKXCBReWWnFGvglKFMXE
+         kbUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738819093; x=1739423893;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cKJ2RPSDuexqAeZMky5ctWE7NpMtniAk7Eny0kdlQeM=;
+        b=HOFEWVMjv+PKNClI3bSKmN1ze41ayI4x3IAtWoHx/NZSh4E74esEbVxDWTdwLuGMv1
+         By8pGGcpHM37lMqhRddjVpF5RJdAIicgOzlKgFxW1RcIjWcu6fgwvDDPT+HFt+pyAgYz
+         +ObdOyR1ISUp4dr/4YuAUnROoK+YZVeyoHBHT6KLAlgHC5k5AXFDMHu0lOYoIqHWlwVb
+         rsgC6fw1P3BjRVM6MUQ33USCoCfwBs+QoUoEIAHGlWA8UxTZnx1As7XU8073EiKE0LJK
+         0Ws8+gpLauSFklHeZMAhKkpKjgAZqt+yEgnB7w4dP2qcJL0BAWU8vTFCzF+w7VMY3ADP
+         38gw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5nAYY7hIrNkLafobialuvbvUjC1hNDoziMdbVpAzj4f6UbQNGUetMUp0tywSbiKDx+CbyPLhexCrEPQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwckF00UpYTAD+NKERHV4etwi813aOrXp1fgrtUTJxJiE/9t2j2
+	E68WLMOvXbGAeTyb4SLfYSXnhazyH/A6ttycr3Cn7GsCMaaib40e
+X-Gm-Gg: ASbGncuX70O52cP8ZedklMsM/ObNHdzjk09sfqwXBs20+6uszRZmMqI+dLnXCYj/oGe
+	sVVOhmJ5oDenthWuHdleWxH448JafXj4BVBmHLmNJHM5A3s+bQBeN0lrk2PiR2UAha+lA7hcCO+
+	MI+J8I+f6DvVPmSDycpmQJHi6lmbVtfw2l4zebf8VkUNQVPP3fEEfVLiyF/93iaSASxYEl7TKhn
+	I5swqoaI+s4unZO27xMIq6fA65mW28AOIdzSn3mvmhMOkpK1aCtmj4T91c56Lw/+Zi6GtnvNKL5
+	Etr1Kw/Wga6ALrOz
+X-Google-Smtp-Source: AGHT+IHYNK/bKk38i8gB/49HPtenACDdHmNk+tRiohB6DJbRrVthuDBMMV5Ry2pAZwrgDryfUL7k0g==
+X-Received: by 2002:a05:6a00:ad8a:b0:72f:d7ce:500f with SMTP id d2e1a72fcca58-730351f0926mr9240455b3a.21.1738819093262;
+        Wed, 05 Feb 2025 21:18:13 -0800 (PST)
+Received: from localhost ([111.229.209.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d1efsm394098b3a.25.2025.02.05.21.18.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Feb 2025 21:18:12 -0800 (PST)
+From: Tao Chen <chen.dylane@gmail.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	qmo@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chen.dylane@gmail.com
+Subject: [PATCH bpf-next v4 0/4] Add prog_kfunc feature probe
+Date: Thu,  6 Feb 2025 13:15:53 +0800
+Message-Id: <20250206051557.27913-1-chen.dylane@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Add support for Timesync Interrupt Router
-To: Chintan Vankar <c-vankar@ti.com>, Jason Reeder <jreeder@ti.com>,
-        <nm@ti.com>, Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski
-	<kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Thomas Gleixner
-	<tglx@linutronix.de>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <m-malladi@ti.com>
-References: <20250205160119.136639-1-c-vankar@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250205160119.136639-1-c-vankar@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+More and more kfunc functions are being added to the kernel.
+Different prog types have different restrictions when using kfunc.
+Therefore, prog_kfunc probe is added to check whether it is supported,
+and the use of this api will be added to bpftool later.
 
+Change list:
+- v3 -> v4:
+  - add fd_array init for kfunc in mod btf
+  - add test case for kfunc in mod btf
+  - refactor common part as prog load type check for
+    libbpf_probe_bpf_{helper,kfunc}
+- v3
+  https://lore.kernel.org/bpf/20250124144411.13468-1-chen.dylane@gmail.com
 
-On 05/02/25 21:31, Chintan Vankar wrote:
-> Chintan Vankar (2):
->   irqchip: ti-tsir: Add support for Timesync Interrupt Router
->   net: ethernet: ti: am65-cpts: Add support to configure GenF signal for
->     CPTS
-> 
->  drivers/irqchip/Kconfig             |   9 +++
->  drivers/irqchip/Makefile            |   1 +
->  drivers/irqchip/ti-timesync-intr.c  | 109 ++++++++++++++++++++++++++++
->  drivers/net/ethernet/ti/am65-cpts.c |  21 ++++++
->  4 files changed, 140 insertions(+)
->  create mode 100644 drivers/irqchip/ti-timesync-intr.c
+- v2 -> v3:
+  - rename parameter off with btf_fd
+  - extract the common part for libbpf_probe_bpf_{helper,kfunc}
+- v2
+  https://lore.kernel.org/bpf/20250123170555.291896-1-chen.dylane@gmail.com
 
-Where are the device-tree binding updates that need to go with
-individual driver changes?
+- v1 -> v2:
+  - check unsupported prog type like probe_bpf_helper
+  - add off parameter for module btf
+  - check verifier info when kfunc id invalid
+- v1
+  https://lore.kernel.org/bpf/20250122171359.232791-1-chen.dylane@gmail.com
+
+Tao Chen (4):
+  libbpf: Extract prog load type check from libbpf_probe_bpf_helper
+  libbpf: Init fd_array when prog probe load
+  libbpf: Add libbpf_probe_bpf_kfunc API
+  selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
+
+ tools/lib/bpf/libbpf.h                        |  18 ++-
+ tools/lib/bpf/libbpf.map                      |   1 +
+ tools/lib/bpf/libbpf_probes.c                 |  91 ++++++++++++--
+ .../selftests/bpf/prog_tests/libbpf_probes.c  | 118 ++++++++++++++++++
+ 4 files changed, 214 insertions(+), 14 deletions(-)
 
 -- 
-Regards
-Vignesh
-https://ti.com/opensource
+2.43.0
 
