@@ -1,255 +1,142 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B8C151991
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702B8151991;
+	Thu,  6 Feb 2025 11:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841726; cv=none; b=VaSAncrio0iT/tVsh2Fvk8oHlpVy4E2z+ks1ydcJLXal3/E8XO1q8cHdhshm9qJSHG4po9Uyvr0ncPb7A7/T84zsYONQoQasxYN8xoOxKlfAzJbI7mDQKF6aYIlcFz2+K7D5vWdpGF5gcTHKVnE/X8bREpDyrlZ9hdD2FVrinoI=
+	t=1738841759; cv=none; b=Db69Pj3jDduJbS6O0X/4Uvi9DZWi9c/oQZ7goP9T2wzef7h2zzopS34H/QXq3JYBnQ3VjYhyWfpI1Db5XUDJbGN1qaMrWX+m80PPORiDkRbAW8vwubumBioIFem/KFz+mfjw1Jwzs6ALAuwpm6edFjaQCGhDrsibw4PCvt4Deeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841726; c=relaxed/simple;
-	bh=UDr7FHoKjbHto2Di4zK3vw7iK/acx/wGpVWtjDTGbaw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sjuDGiPjp1ZMGnD+tm+12pZI9SwTq7ER8ABN4LWpe/Sb/ceDh3zfOTaR032RTC/dNIBrrMyp/hXGVv+o+O/k7j5Nx+bVPbrI1BG7DmkmpiGWSGcKQI9o2LUXNshbW4MyoT1kNAp+XReJFgmxgAH2MNxXqIAtYwL5oK9nZ888Jho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YEXSm6rh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/s5HOzpf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YEXSm6rh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/s5HOzpf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738841759; c=relaxed/simple;
+	bh=NjHnUE5wux5CDuoPXGUZzkj6X1RJFp49eBX0DR2mMt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QGhElMJfrbqzfpy4SYWiD4+9DNV+6vN0mq/1d9LvCtKh5cAr9zgQ5tp5fh7mNaGWobrKiqZpU9kFmNz2zeHLsWUzxL4lq8ssSwfcEuyfcjYCYVB3B8FOB/RlQKAzQnGc/u86Mh/Sm99QpAN2lV8ZcYsGxJuGLvkQ4yxv5YcgyxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kV4Bn1bt; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YEXSm6rh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/s5HOzpf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YEXSm6rh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/s5HOzpf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 933912115F;
-	Thu,  6 Feb 2025 11:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738841722; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aXuELRlGmTe2UpXOqpsEpwKWst7ihyZh1qroSp+CUOU=;
-	b=YEXSm6rhWudt0Dkj15/o6l5y9xvyjDt0qUVMgVQfKxGtJMby0oXG4tm6v+Iwdjt1DfJFha
-	BjLUEEHvD7qVOBW8yU7qrmmWvxlqcAfxMazEd97xRmiNhbBz9rrNxUfAN/6ZOakYKAk12p
-	YcbCzXreDS8POFq6CUpf4dHvUB6J9h4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738841722;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aXuELRlGmTe2UpXOqpsEpwKWst7ihyZh1qroSp+CUOU=;
-	b=/s5HOzpf+aEQnxclWh2HkcCZw0rgoYNr785MRp4cAYQ5L1hkmIidYULELT9r8sENoDtw1n
-	FysKWHM84121cSDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738841722; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aXuELRlGmTe2UpXOqpsEpwKWst7ihyZh1qroSp+CUOU=;
-	b=YEXSm6rhWudt0Dkj15/o6l5y9xvyjDt0qUVMgVQfKxGtJMby0oXG4tm6v+Iwdjt1DfJFha
-	BjLUEEHvD7qVOBW8yU7qrmmWvxlqcAfxMazEd97xRmiNhbBz9rrNxUfAN/6ZOakYKAk12p
-	YcbCzXreDS8POFq6CUpf4dHvUB6J9h4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738841722;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aXuELRlGmTe2UpXOqpsEpwKWst7ihyZh1qroSp+CUOU=;
-	b=/s5HOzpf+aEQnxclWh2HkcCZw0rgoYNr785MRp4cAYQ5L1hkmIidYULELT9r8sENoDtw1n
-	FysKWHM84121cSDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7035613697;
-	Thu,  6 Feb 2025 11:35:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ri0OG3qepGf1bAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 06 Feb 2025 11:35:22 +0000
-Message-ID: <47de9f52-e66a-4ecd-b561-6b97d2eab671@suse.cz>
-Date: Thu, 6 Feb 2025 12:35:22 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kV4Bn1bt"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso158481766b.1;
+        Thu, 06 Feb 2025 03:35:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738841756; x=1739446556; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kkJdmTYyXGOGzgmLgZvRSSjbQyWXhEcU3uhyFsKx7XQ=;
+        b=kV4Bn1btbY4S/8XORoeN70kEqfpyd+5foTM+6ujCQEXtADnlSPnXvGD3H2Hknuhh9a
+         IAqyI/naPNXyQgHaV+x4VDUtVJwhbgTJNQJ+GT6ZbaafciwxBB0ojJZ2b1IpkYEGNot+
+         BJgv4WmpMfq1wKbgy5XXit/+N0a5vfFAV0Hj3qF9S0fZeM/yNUfTL0zzrUmJ5jR4ElCF
+         xqCON/pf9HK2rM82gtYNXMkTYAXGLBelKClC2AJsIiTO0Sjf6NIRszzHr+WXkS+lr3+X
+         5lHjBOOvA5Pd/s/qA4L8X45LRVKZOcs3ZPbgEI2vGo4XEHRzQPKSnn29YzmXPwfS8j6Q
+         Cf7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738841756; x=1739446556;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kkJdmTYyXGOGzgmLgZvRSSjbQyWXhEcU3uhyFsKx7XQ=;
+        b=MxBVVcVyKbyfJhn9QwETpeZbUm7A6HfefagK4hPeG/azJzSuGh9KlibGuY69hv7P6d
+         tqxd6aCHUWly+YFySqH30cB5upK7JUMBnD/19F26FCqIGf8raaz/SG8+sGdp5i+V4Ta7
+         PpT6BpmbHBhIMNxo+juVi4lSp/JpHRfSP/cM7LytUYPab+uAnEiHRTuXE4OIEzNErSbt
+         Gws8QaCIwujZ/pDznPTg5O9S4/CcP2388bEXYs7AernVOGGOC64ZpJ05PmOCQ0RbnLaI
+         5aJyGq6XYOSUTncSv8Cs3GfxcpJc7Q2GVCTJPQOkDqFK3nX1okVz8o9DmYLHfS3PREec
+         mqng==
+X-Forwarded-Encrypted: i=1; AJvYcCVtp8P0Afi1XuL2AyRFOHlyuMzeM5yCxrccY3FTxqqiXvlTfIoVkAqwGzIxCR8Ll2jsqfgEaknqIXkXq9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF731zZWmxtAX1eObKzJGC67fgj2kaPO2HYxhDxpN0FIQ97e5S
+	5wp9EmqPP3ywTsOPLF6C4qDEdqpQpWE8mhE537Ci1gy3CeUq8N+K
+X-Gm-Gg: ASbGncu2YMVnZmDFYCTZ/fjae923NTBun/CNyfcdSgw3wea5N2xjlxk8lA8Tt5pPZes
+	FbTkrL96mkNFylEADJbpkPZtoPw1wiQujQd1QN1wPFhiOblWztd35Y+DcoRYQS/0Bk8OWspnjm4
+	j9CQnx4xz+ZMBWyHNZ48971ME7BvemAekQcV2q38NoFdj1NRxADgVvQcUNzdhxRTGJLDvvb/mO7
+	qByC3JxtZRndCrngQVaPFxcz0v4zj6+o0yKMh8vZUUjPnT11raA6yy1LaYX/AdBQSBvl20xDwoj
+	GmvBOLTLE6ERrDUsK4rTvFWcj65i3iBJ8sGQuw8RdTQe9/M=
+X-Google-Smtp-Source: AGHT+IErJD5msh+hOm6k6vXCVCW0zAkpZZnCO/7oNPw4zwJw7lnhiwQqQuUSqLtVIF+Avt40QZtBVQ==
+X-Received: by 2002:a17:907:1b14:b0:ab6:f688:dae5 with SMTP id a640c23a62f3a-ab75e2f1185mr719959366b.36.1738841755347;
+        Thu, 06 Feb 2025 03:35:55 -0800 (PST)
+Received: from lopk.local (c156-123.icpnet.pl. [85.221.156.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f49378sm87219766b.16.2025.02.06.03.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 03:35:54 -0800 (PST)
+From: =?UTF-8?q?Krzysztof=20=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+To: namhyung@kernel.org,
+	acme@kernel.org,
+	irogers@google.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Subject: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
+Date: Thu,  6 Feb 2025 12:33:15 +0100
+Message-ID: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: slub: call WARN() instead of pr_err on slab_fix.
-Content-Language: en-US
-To: Hyesoo Yu <hyesoo.yu@samsung.com>
-Cc: janghyuck.kim@samsung.com, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <CGME20250205004741epcas2p3081bc2c97b7c1c27a9797cd498c4bc64@epcas2p3.samsung.com>
- <20250205004615.1253389-1-hyesoo.yu@samsung.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20250205004615.1253389-1-hyesoo.yu@samsung.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[samsung.com,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On 2/5/25 01:46, Hyesoo Yu wrote:
-> If a slab object is corrupted or an error occurs in its internal
-> value, continuing after restoration may cause other side effects.
-> At this point, it is difficult to debug because the problem occurred
-> in the past. It is better to use WARN() instead of pr_err to catch
-> errors at the point of issue because WARN() could trigger panic for
-> system debugging when panic_on_warn is enabled. WARN() should be
-> called prior to fixing the value because when a panic is triggered by WARN(),
-> it allows us to check corrupted data.
-> 
-> Changes in v2:
-> - Replace direct calling with BUG_ON with the use of WARN in slab_fix.
-> 
-> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
+When testing perf trace on NixOS, I noticed significant startup delays:
+- `ls`: ~2ms
+- `strace ls`: ~10ms
+- `perf trace ls`: ~550ms
 
-Hi and thanks for the patch,
+Profiling showed that 51% of the time is spent reading files,
+26% in loading BPF programs, and 11% in `newfstatat`.
 
-I wonder if it would be better not to change slab_fix() but rather
-slab_err() and object_err(). It wouldn't then require to rearrange the fixup
-code. Also I think some error reporting paths don't go through slab_fix()
-and we still would like them to become a WARN too.
+This patch optimizes module path exploration by avoiding `stat()` calls
+unless necessary. For filesystems that do not implement `d_type`
+(DT_UNKNOWN), it falls back to the old behavior.
+See `readdir(3)` for details.
 
-Basically it would mean the last line in slab_err() would be a WARN and we'd
-drop the dump_stack() as that's redundant. Same in object_err() (no
-dump_stack() there). It would be a bit noisier as a result, but hopefully
-acceptable. The slab specific debugging info would still be printed before
-the WARN hits (and potentially results in a panic) so anyone investigating
-the crash dump would have that information.
+This reduces `perf trace ls` time to ~500ms.
 
-Hm but I see some places print stuff after slab_err(). slab_pad_check() and
-list_slab_objects(). We could create slab_err_start() and slab_err_end() for
-those, and slab_err() would just call both at once.
+A more thorough startup optimization based on command parameters would
+be ideal, but that is a larger effort.
 
-> ---
->  mm/slub.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 1f50129dcfb3..ea956cb4b8be 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1043,7 +1043,7 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
->  	va_start(args, fmt);
->  	vaf.fmt = fmt;
->  	vaf.va = &args;
-> -	pr_err("FIX %s: %pV\n", s->name, &vaf);
-> +	WARN(1, "FIX %s: %pV\n", s->name, &vaf);
->  	va_end(args);
->  }
->  
-> @@ -1106,8 +1106,8 @@ static bool freelist_corrupted(struct kmem_cache *s, struct slab *slab,
->  	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
->  	    !check_valid_pointer(s, slab, nextfree) && freelist) {
->  		object_err(s, slab, *freelist, "Freechain corrupt");
-> -		*freelist = NULL;
->  		slab_fix(s, "Isolate corrupted freechain");
-> +		*freelist = NULL;
->  		return true;
->  	}
->  
-> @@ -1445,9 +1445,9 @@ static int on_freelist(struct kmem_cache *s, struct slab *slab, void *search)
->  				set_freepointer(s, object, NULL);
->  			} else {
->  				slab_err(s, slab, "Freepointer corrupt");
-> +				slab_fix(s, "Freelist cleared");
->  				slab->freelist = NULL;
->  				slab->inuse = slab->objects;
-> -				slab_fix(s, "Freelist cleared");
->  				return 0;
->  			}
->  			break;
-> @@ -1464,14 +1464,14 @@ static int on_freelist(struct kmem_cache *s, struct slab *slab, void *search)
->  	if (slab->objects != max_objects) {
->  		slab_err(s, slab, "Wrong number of objects. Found %d but should be %d",
->  			 slab->objects, max_objects);
-> -		slab->objects = max_objects;
->  		slab_fix(s, "Number of objects adjusted");
-> +		slab->objects = max_objects;
->  	}
->  	if (slab->inuse != slab->objects - nr) {
->  		slab_err(s, slab, "Wrong object count. Counter is %d but counted were %d",
->  			 slab->inuse, slab->objects - nr);
-> -		slab->inuse = slab->objects - nr;
->  		slab_fix(s, "Object count adjusted");
-> +		slab->inuse = slab->objects - nr;
->  	}
->  	return search == NULL;
->  }
+Signed-off-by: Krzysztof Łopatowski <krzysztof.m.lopatowski@gmail.com>
+---
+ tools/perf/util/machine.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2d51badfbf2e..76b857fd752b 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1354,7 +1354,7 @@ static int maps__set_module_path(struct maps *maps, const char *path, struct kmo
+ 
+ static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, int depth)
+ {
+-	struct dirent *dent;
++	const struct dirent *dent;
+ 	DIR *dir = opendir(dir_name);
+ 	int ret = 0;
+ 
+@@ -1365,14 +1365,20 @@ static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, i
+ 
+ 	while ((dent = readdir(dir)) != NULL) {
+ 		char path[PATH_MAX];
+-		struct stat st;
++		unsigned char d_type = dent->d_type;
+ 
+-		/*sshfs might return bad dent->d_type, so we have to stat*/
+ 		path__join(path, sizeof(path), dir_name, dent->d_name);
+-		if (stat(path, &st))
+-			continue;
+ 
+-		if (S_ISDIR(st.st_mode)) {
++		if (d_type == DT_UNKNOWN) {
++			struct stat st;
++
++			if (stat(path, &st))
++				continue;
++			if (S_ISDIR(st.st_mode))
++				d_type = DT_DIR;
++		}
++
++		if (d_type == DT_DIR) {
+ 			if (!strcmp(dent->d_name, ".") ||
+ 			    !strcmp(dent->d_name, ".."))
+ 				continue;
+-- 
+2.47.2
 
