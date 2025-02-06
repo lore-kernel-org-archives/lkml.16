@@ -1,127 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD00200B9F;
-	Thu,  6 Feb 2025 07:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD38200B9F;
+	Thu,  6 Feb 2025 07:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738827517; cv=none; b=RrcBuuf0NsCV+WaH4W4haEIDGq3ltgqk+t1WJdIMsk9h6toy98kAXTUDP0+UOjWiAGRW+BS9/MOr5rfqQhcBaNcG8wQ0zH9gLPtyyjQpQdzITCgo4dK2qjIZq3PrsMHnO1QuMK83kmDNRAJXKqnzE8lw8lKTN9CFda/sBZSAqMc=
+	t=1738827543; cv=none; b=e+L6Jjew69qGgYchH6aMbUCRGn9DJKjNTNRqs4nZR5cX5BcUI1sv1GBLkv414LbU9fq0ly1E+M8O5JKF6v3lpwuQmI+iYnreFxmUQgrWuTrcJZ235WWJz1siagfp4oxX46lp+4pqP24L9WrEVZL2zdVhVkFp4u4LZy8qqUS85Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738827517; c=relaxed/simple;
-	bh=ZveI/hkfecp+mslVjj9PQ+ggQSUCl0WC4w4q9caS0Dk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hXGiGs11YIXoHlshhTak6poO+X1DxRjjyw0HZX4a3nIVqTr8Gp6FukLnc7aWXAqTZmQj7k8tIdr0996JU3so2aluIrOcRNGhgn931siEgGQdOpQpLr8zglKhm/cwK/+ZMiA13traV+qss+JgF/NhSKAa+i7t2OugyPi4iVkemOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm2+cq1C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738827543; c=relaxed/simple;
+	bh=MnmdLQx2ow682oD9+N9jYiapyYBpeN/iraHJhdE90E0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKDwzMPWED0qEhHOkhPv3+3yLSoEgSNK3wY4u+4FlDOgg2gF2eMenjXTxfnGs/8ziX2GMb7cNBnqmK511sk7ddYlU5g+zYKEgL9f+sOIHcb5s0rP57pPUtFOwNhDyYiKbiYDOE5MkOSAfvNoBqNt0wJhsX0HBUv4mFkqfyPc8+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K66GIEWM; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm2+cq1C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A29C4CEDD;
-	Thu,  6 Feb 2025 07:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738827516;
-	bh=ZveI/hkfecp+mslVjj9PQ+ggQSUCl0WC4w4q9caS0Dk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Hm2+cq1CMPN/gvf7qjhr5rXOSbn7xFmp4D9idW1wEnP5xQNWCgN4sfhSDmsFSVz0s
-	 UnP6Nj/D/tAatdx3NamDWD1H8lX3NPZq79hBAwsnZcPRwKFmF8fFOF2FGv9+OVKT9o
-	 ChuRoszhPYPuam4drBYV9G9Woe8JQ0MXMp1c2xIUVO3kZQH3t7sBhjhgybEqDpa9Iv
-	 JVOhZb1PFG2DSpZCyPDZre8LBMu3sSBrx6SpU8CQS/lWZLo3ALYVGUCn4CmfRyCudF
-	 SMx3cjFX18pjfTia0twRHLko+bohEnof/9xcUAXz7KQ8BiTAv4PKmltYC7lkWcSSmt
-	 htGYbxUvUFklA==
-Message-ID: <fc4c51e9-bd5a-4056-8e56-dd29ac0b4eca@kernel.org>
-Date: Thu, 6 Feb 2025 08:38:32 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K66GIEWM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738827541; x=1770363541;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MnmdLQx2ow682oD9+N9jYiapyYBpeN/iraHJhdE90E0=;
+  b=K66GIEWM+eVMd6+BXfJhnkUf6VXKdVkxUgwHEt4e6BX/3g7NkugZLjnk
+   NNpa6Q7bGoLwQzufwebl/engN+pWGY0hqP/LUcKOCq24ubtx3g/k9eYhB
+   HGJur9Q1unwXUS4WkfNqrcT104AV5K7fq7+pRvbpPubxMVJzHExTV+i6Y
+   VogAxJXo6f8y/pPDhYJvTCafrjE49oAzgYonLyfjULb2BbezWRxkxLlr3
+   hzJzbNrocihmZ7z8n/QQsp6w5q4goDqBPfmvakpiIYDcu1BF/IvMNlebt
+   pc0iOM+51vVgkTTk4PjhVTJfyVZlbzojGomNwI17w71CxA07YeXQQeFzy
+   g==;
+X-CSE-ConnectionGUID: 69LZdrY+QcawPbp3FVMZrA==
+X-CSE-MsgGUID: /1h6NWh/TICb3hZJAtpueA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61892063"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="61892063"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 23:38:11 -0800
+X-CSE-ConnectionGUID: 3CLQHxKVRJeM2YYSCs39Tw==
+X-CSE-MsgGUID: KcVbNmp5TRuIv5HBADv2Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115739722"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 05 Feb 2025 23:38:09 -0800
+Date: Thu, 6 Feb 2025 15:37:17 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Peter Colberg <peter.colberg@altera.com>
+Cc: Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+	Peter Colberg <peter.colberg@intel.com>
+Subject: Re: [PATCH] fpga: m10bmc-sec: update email address for Peter Colberg
+Message-ID: <Z6RmrcW7vvX1geBt@yilunxu-OptiPlex-7050>
+References: <20250127201634.17097-1-peter.colberg@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: iio: light: fix missing type definition
-To: Dharma.B@microchip.com
-Cc: m.gonella.bolduc@gmail.com, jic23@kernel.org, lars@metafoo.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- Jonathan.Cameron@huawei.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250205-brcm-binding-v1-1-a996a840d2d6@microchip.com>
- <20250205-enormous-wise-copperhead-c1c0a9@krzk-bin>
- <1e1ff244-098b-4b3b-b430-8bed9ca8188c@microchip.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <1e1ff244-098b-4b3b-b430-8bed9ca8188c@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250127201634.17097-1-peter.colberg@altera.com>
 
-On 06/02/2025 03:41, Dharma.B@microchip.com wrote:
-> On 05/02/25 5:07 pm, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On Wed, Feb 05, 2025 at 09:48:45AM +0530, Dharma Balasubiramani wrote:
->>> Add the missing type definition for ps-cancellation-current-picoamp property.
->>
->> It is not missing. You are using some older schema probably.
+On Mon, Jan 27, 2025 at 03:16:34PM -0500, Peter Colberg wrote:
+> Update my email address after Altera became a subsidiary of Intel on
+> January 1, 2025.
 > 
-> Sorry, if I miss something here..
-> 
-> There is no $Ref or type for ps-cancellation-current-picoamp property
+> Signed-off-by: Peter Colberg <peter.colberg@altera.com>
 
-There is a ref in dtschema.
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml#n39
-> 
-> I checked in other bindings as well.
-> 
-> I get the following warning while make dtbs_check or dt_binding_check
-> 
-> Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml: 
-> ps-cancellation-current-picoamp: missing type definition
-> 
-> Should I need to update anything?
-
-As I said - older schema, so yes, you need to update your dtschema or
-wait for new release.
-
-Best regards,
-Krzysztof
+Applied to for-next
