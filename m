@@ -1,90 +1,101 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BB523959B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F76A1990C1;
+	Thu,  6 Feb 2025 19:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869791; cv=none; b=EcquqMrzkTXtV03GRZxkg3a4B/5pLuSL3AozyRg645UqD5sLApHSWTtj0fFTVxybG9eBfpnHVdKnHVcQN7uSf94oI2tMnadXof4FdLk7yuwI5YPqlzXs6hesRL5JPCa3sS2brA1BMbYG6A+unhROLSjr4wBEHCQiuoKLg4ED2Tc=
+	t=1738869806; cv=none; b=VWoRgdXIPpepC0lTo//57p2kapdCIzoCHvKLYESw9d3dloBeTIZBt5wBF2sSmtdyvK8tKcVE4DCsJk5SuLpQ1d/ULBav+Q4mqvK2AOviMSpoPpsVjymg5yMGfa/9IlU1e8MoUeRgo1boflxjJQqcAy8rkUASGNS19b88YjAywz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869791; c=relaxed/simple;
-	bh=UVj4pVU1RhNhh1PShyNQhh8DN+E0P05HfoG34kJxJvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KAXcEkUq2mh87S2gB5cyOcqtUdwjL9+hSV1Os9Ha0i2sMAf+o+0AzervHQfGFmyLl/xelwP4oIqc7/qziPMRLcoC6cRWfMVueNhk9U4BWjBzTxA5L9jJstnyNWDtDPyLBUqJrx5sov4V8FCKOPzNoIjoq4QG9eM1GYVeaPJGHDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aMhQJ5uT; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738869806; c=relaxed/simple;
+	bh=7FQ91HxxZUZFwIqS9OHExe5Wo6tbMXSmIZFvEnHpG4Q=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=H50N0wMi/iG1EsBHWW2ZMayQdPrZvDDIsZ8fg7XIqEfbTLQNg9rT9wRnV+/M1lshLMAPJvOzzvShycys6poPxKf+Q0dNMZjW2OVBSsZpQRxV796M3OqfIzN4/+oH2PI9BkYbb4NzNJNKaIPrXOFw0LzTNuex6jj00rGQMlJdGY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NSfFJSpM; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aMhQJ5uT"
-Message-ID: <25e047ee-cc48-42a0-9ee2-88753114f4a4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738869781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k58zozcxpDbqArBqK1f/mzODhF7FvtZ36zmyRPTeT/Y=;
-	b=aMhQJ5uTKa6pKRQcvnIZm88D+ckRIaK1L3RHaUI15EgU/He2eKfvPKEgViPHeYNAcaiCbw
-	Q2uDZojiMnJGF02OJ9PjYaGgoAyGMUjnGoLmj/ITPTrDw4MV2iDtsQSQ5U4TbNUfdTeRCX
-	NI9eAZewjqXFTK2QaNL05GioegZIIDY=
-Date: Thu, 6 Feb 2025 14:22:56 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSfFJSpM"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f9bac7699aso1872395a91.1;
+        Thu, 06 Feb 2025 11:23:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738869804; x=1739474604; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vHNnmawOI8BEs8dzEepShX+Y+oBMZO48g0tiwba/q2I=;
+        b=NSfFJSpM872QUVWXdGsO0zOWYA62yb27v+4aeZMKFJdkU4A5d//SaT8S+Fus65wJvU
+         kTOOxHpvv2b/28DC/FSFvRyqZvay2lEQLulIlvGN3171heKUvSGjm6D4Ce64xXYul4yS
+         LjK4vQL5W9gicDgi3SHFa7FUPseWuQv2rcaa1zR3dVq9Esz6TJy5AJvynbf2NSIQpBnF
+         uCOCbkkauqSdDCNQoNzWHP1NWSVUmyRvEESr41VgQTx5iGorGRknTUINYpEO36dPXvQL
+         bd3cW5qHCrH8f9lQo2Om8NIk6Ch6S+TwnGI7pa03LfakSB6XefRRz0eBiqtZbrn3/14G
+         9L3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738869804; x=1739474604;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vHNnmawOI8BEs8dzEepShX+Y+oBMZO48g0tiwba/q2I=;
+        b=gn8bwxv7z9y2WsbBxcikBPyjLf+wjW4KymtdnqPSPKOitLj+vLc2N/hS8yz8NVPN1k
+         2MPIB++6/CQcN38+yZGpb959QQXGI1GDaXYOTWc+5w41f3tQQS1LR5mGxJy7ks9dKurS
+         prCsehgR4WS4ArDtcWM17zabv1kPOpht1MwcN4NNsHE4KsnoNllCZvyFLuf4ol1fJ862
+         kGuONoXk3ilVJeS829trWNruzdXo15yZcyZQ9TXljeDyXxEe4NpDTb82ob5sr3SHasQj
+         vHjgZ6kKfabttyl1bGH56KUdeNW5BbfQfevnbhM68pHg4FU/NaUmnRUVN2nUq+pa2uLN
+         eUdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxbVer843rv7/SdD5TaJQsLIgDbDmrcMtqTfPj1f/YusB8rXlYfIJm0/ODauaQ+qn5GvjUpA518/hHqTk=@vger.kernel.org, AJvYcCVlKhFXMMInePahpNlOIfmN3tThHIpYPZFqIHm+tmkAP6LTN4xUI9rOVoHonWgWcyu+JS+aU2Ahtz8m@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQCPwNFgSlPlbZY1eOmYW6yYtygEFNgCfpdV2yb6DQaiCJ1OEP
+	J01SGekI6v0PmSkFimRu+M0f+oZvNft08pNEhtDdQcko1IsoPPHqAoLPIxz9v8kaYibPEVOx0Xd
+	JOsCvsKYQGH7PIU0RZjAriG1o7ak=
+X-Gm-Gg: ASbGnctUwKpGS247N0efH0bW8Rsoq/cVrbLhx+KaYuSWdcgJaSUjVs52qpzbQQ+ZB80
+	W0yGAbB8fdNtnCDBtq39fg6oARTNiyY3siUmEJ44RlXiUmmmecF6O68KAxtLC5vQPVejbZlHQ
+X-Google-Smtp-Source: AGHT+IEanAKmRjGNZgbz5ESpSc8aIJ/ZpZ2uRJfyuK20Fvml0mR7X3Ju8RNx1Ka83OTcEBbV4M7I2rmTNjIajipzwHg=
+X-Received: by 2002:a17:90b:3903:b0:2fa:13e9:8cb0 with SMTP id
+ 98e67ed59e1d1-2fa2450d280mr288944a91.31.1738869804254; Thu, 06 Feb 2025
+ 11:23:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC 24/33] drm: zynqmp_dp: Fix a deadlock in
- zynqmp_dp_ignore_hpd_set()
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Bart Van Assche <bvanassche@acm.org>
-Cc: Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Marco Elver <elver@google.com>, Nick Desaulniers <ndesaulniers@google.com>,
- Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
- Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>
-References: <20250206175114.1974171-1-bvanassche@acm.org>
- <20250206175114.1974171-25-bvanassche@acm.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250206175114.1974171-25-bvanassche@acm.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+From: Jillian Donahue <jilliandonahue58@gmail.com>
+Date: Thu, 6 Feb 2025 12:23:13 -0700
+X-Gm-Features: AWEUYZmcY_HNrVVA1y_4WRrfNiT6j17LJzENL7TzDayJjqvZOwq7yKn3nySl4hE
+Message-ID: <CAArt=Lh0S6UPX0OAhudTWxE7g7xbukQqHmuDAwCDwjBUbuJUnw@mail.gmail.com>
+Subject: [PATCH] f_midi_complete to call tasklet_hi_schedule
+To: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/6/25 12:51, Bart Van Assche wrote:
-> Instead of attempting the same mutex twice, lock and unlock it.
-> 
-> This bug has been detected by the Clang thread-safety analyzer.
-> 
-> Cc: Sean Anderson <sean.anderson@linux.dev>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> Fixes: 28edaacb821c ("drm: zynqmp_dp: Add debugfs interface for compliance testing")
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> ---
->  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index 979f6d3239ba..189a08cdc73c 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -2295,7 +2295,7 @@ static int zynqmp_dp_ignore_hpd_set(void *data, u64 val)
->  
->  	mutex_lock(&dp->lock);
->  	dp->ignore_hpd = val;
-> -	mutex_lock(&dp->lock);
-> +	mutex_unlock(&dp->lock);
->  	return 0;
->  }
->  
+From 9cb2628740d9f55f6f3faa5cce2de5eb8590f434 Mon Sep 17 00:00:00 2001
+From: Jill Donahue <jilliandonahue58@gmail.com>
+Date: Thu, 6 Feb 2025 10:18:05 -0700
+Subject: [PATCH] f_midi_complete to call tasklet_hi_schedule
 
-Reviewed-by: Sean Anderson <sean.anderson@seco.com>
+When using USB MIDI, a lock is attempted to be acquired twice through a
+re-entrant call to f_midi_transmit, causing a deadlock.
 
-Since this patch is marked RFC will it be applied soon? I am about to
-send a patch which conflicts with this one. I would like to just add
-this patch to my series.
+Fix it by using tasklet_hi_schedule() to schedule the inner
+f_midi_transmit() via a tasklet from the completion handler.
 
---Sean
+Link: https://lore.kernel.org/all/CAArt=LjxU0fUZOj06X+5tkeGT+6RbXzpWg1h4t4Fwa_KGVAX6g@mail.gmail>
+
+Fixes: d5daf49b58661 ("USB: gadget: midi: add midi function driver")
+Signed-off-by: Jill Donahue <jilliandonahue58@gmail.com>
+---
+ drivers/usb/gadget/function/f_midi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/function/f_midi.c
+b/drivers/usb/gadget/function/f_midi.c
+index 837fcdfa3..37d438e5d 100644
+--- a/drivers/usb/gadget/function/f_midi.c
++++ b/drivers/usb/gadget/function/f_midi.c
+@@ -283,7 +283,7 @@ f_midi_complete(struct usb_ep *ep, struct usb_request *req)
+                        /* Our transmit completed. See if there's more to go.
+                         * f_midi_transmit eats req, don't queue it again. */
+                        req->length = 0;
+-                       f_midi_transmit(midi);
++                       tasklet_hi_schedule(&midi->tasklet);
+                        return;
+                }
+                break;
+-- 
+2.25.1
