@@ -1,324 +1,458 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A773CDF60
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 02:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738810254; cv=fail; b=G0JBCMidDmHn8T4/2Af+r2kvB2gCzn5BseftMD8lrFSJBjttyX1jy+TWu2YF6fmHYvJBgunX9nmMssv6RizpVVE79LB02NEsmJa1u5TFG8HZsJpohWIkMWd9qtauAZtrh/CirrCIzPJKBPgrWTJtHakOOvHgqKyCMm8wiO+zBPk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738810254; c=relaxed/simple;
-	bh=5X7WFT6R4JXHGJBgke7s9NuSX5hpmrdA5WqhdOfBDa0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NrnR/ebTgNrDeXc0fsUwlCiGTSHJLLhP2vfxaVPHvF8xHIceme51Ks8crqDVQhc111RPclomS1T1qY7X6ltgGL5xOGJN0uERRl1FhvlEFDhF+i9DhwzXsSEb9tJBE2KIY4XjYefoxJQF8NSs2PicNb8Hbu5gPLH1pyfFZHV5k5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzBzYr2J; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B232D28F1
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 02:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738810327; cv=none; b=Wrm3MJb6GdBuUBhnwfszQkuwgbjIieT33kht1ITDKH4+QrGOeAbGtE8XHVIj9jdjo/5fqlMDTeIriwNFfkT5Wc1sNBZnxiA911P8nubBnvAa4xXfzo6rMQ0kGrkIJmc9nTwrPX5i2oWhdMCm5bSTDXXKnq/++CDp8iY8EUxQMMg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738810327; c=relaxed/simple;
+	bh=WemBR2VjMG6nwx1XuTfnRH4LzKqdeN2MWp9gGJJKi9s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=q98zdWdoztBLzJw++GhN9OjWKPFilddnsIrtwMzMQHDkv71/bmsajt1aGD+gJsoumTQxYI8bEqyAdTnqKG7nwftcs6lEdeucgibBAro3QyI6W9agObzGGoubFCSIOiM4cnRs79yXyrovK7GJa+j7FO3aA/wIn5IvJ5BFbOIZ/aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3GwTAhs5; arc=none smtp.client-ip=209.85.160.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzBzYr2J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738810251; x=1770346251;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5X7WFT6R4JXHGJBgke7s9NuSX5hpmrdA5WqhdOfBDa0=;
-  b=XzBzYr2JH2Ltcdu4y73VDC7N+FqKFDLsY+bQSh0kQ4ZLn/VQXGDBitCr
-   nVNvc/+KzWLiCQlaEX5Prvz+/sxfpi8yrFg1Tmjz21nwaa8R9Y4oHY7Z9
-   wUjy2cwbiMXm65Bay/E3aum5YPS936zBxgRGS0gAOZ2hVmx8PIPwPjb5y
-   6vtsAOJtqK1DBBA40VAy57K2iGeSUCVYXHjS2nk4LuboFdGpqYI/0rSEX
-   bhyu3VoHXI13AeyGx7kUoMwvKHasjqm3CsC+u22ue3NqKosQkgDfMzQJS
-   pxuXfXx3+Dnr0id/qT0/qadyy4vvZ2mtJmvmHW/kPgL555gXZqYOTR+Wv
-   A==;
-X-CSE-ConnectionGUID: p0cnrpSvTzyfoeXRWhhS3g==
-X-CSE-MsgGUID: RznQCmSUS9+hM+RcbzbQUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39670553"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="39670553"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:50:50 -0800
-X-CSE-ConnectionGUID: CntbBoYMTIS0XSF6m66D/A==
-X-CSE-MsgGUID: DgYvAyazQiGH6QjuKyQaww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="134318026"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 18:50:50 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 5 Feb 2025 18:50:48 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 18:50:48 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Feb 2025 18:50:48 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sUx2DZyaOQAbL7DRZFTYc9OVlW0Si9zy3/o4SRXIQUBSUX1PONB4uBWw0RihcLsxoO+evV+A3xYD0zSATAr0FhbTqscgzIyiXH7Y4XP4SscmiKvv6r+a04+ZCNhAb5DV+KyF4Ec3M5OyXpzClNNnePc6sWbut7v3cewTTY4POleMLhzA8dCzXZelHHw3Z+Q59DXTe6gNaFCLiPmqjNUjBIN+SGK5ItWCDoNayMjS64uI/71vQjmqKRqocI8Ol3ogCXwqa4I7P+j1AKc1P3Mcf7x45eH46rPiwMyQJACq1y3qZ1Fewami71paUwrMIkm8BNcoB/29h97gfe+sXIM4ZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8yb8mxqYJCV5EJAoCIeI+bbjLJZCQesFjHgBQ9lWE9g=;
- b=NpGeDItO6poS5+mRax6Nz60M/t4yA0g/lyZLIIYuwM+yTQAXralwbPZ28AjhnncM+g8euTIn6CWYZz624+fCvUWrl36AoaNDK5nAfElvYfMO33wdvGbhvvvG/xplMPVdlSNPbN5sjA9Y2p34G4DYl0qCdTiuRyVmNYsap2sJYI00U9khZwbjQyLtPqbdqWeHaqiIj3Jqs8UeUuWRTj+/s5Uf5BpDjQau4sdX5DCtnKjw9yeIjhdG8hAJPzppcr0D1BmlyNswG+4z7oiBVljQUJAZxt+gJGrfas9Lbyl6yUTHV4a4XS8CEL8HNeQvMeMXnQfL8KgVvS4j3HgaBRhysg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA1PR11MB6098.namprd11.prod.outlook.com (2603:10b6:208:3d6::20)
- by SN7PR11MB7467.namprd11.prod.outlook.com (2603:10b6:806:34f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Thu, 6 Feb
- 2025 02:50:18 +0000
-Received: from IA1PR11MB6098.namprd11.prod.outlook.com
- ([fe80::cbbd:ed55:576c:fd55]) by IA1PR11MB6098.namprd11.prod.outlook.com
- ([fe80::cbbd:ed55:576c:fd55%3]) with mapi id 15.20.8398.025; Thu, 6 Feb 2025
- 02:50:17 +0000
-From: "Xu, Even" <even.xu@intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-CC: lkp <lkp@intel.com>, "oe-kbuild-all@lists.linux.dev"
-	<oe-kbuild-all@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, "Sun,
- Xinpeng" <xinpeng.sun@intel.com>, Srinivas Pandruvada
-	<srinivas.pandruvada@linux.intel.com>, Mark Pearson
-	<mpearson-lenovo@squebb.ca>
-Subject: RE: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38:
- sparse: sparse: dubious: !x | !y
-Thread-Topic: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38:
- sparse: sparse: dubious: !x | !y
-Thread-Index: AQHbclaGAK4opE2b9UeNi8wuYQCRp7MuU6qAgAm5uxCAAT+lAIAAUGyA
-Date: Thu, 6 Feb 2025 02:50:17 +0000
-Message-ID: <IA1PR11MB6098B4AFF412D34D2F62C535F4F62@IA1PR11MB6098.namprd11.prod.outlook.com>
-References: <202501292144.eFDq4ovr-lkp@intel.com>
-	<20250129222141.478c03df@pumpkin>
-	<IA1PR11MB6098ECA558A36C0EAA1F21FCF4F72@IA1PR11MB6098.namprd11.prod.outlook.com>
- <20250205215650.1a93dc58@pumpkin>
-In-Reply-To: <20250205215650.1a93dc58@pumpkin>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR11MB6098:EE_|SN7PR11MB7467:EE_
-x-ms-office365-filtering-correlation-id: 4a93ff00-d7e1-4db0-1ed6-08dd4658fd3a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018|13003099007;
-x-microsoft-antispam-message-info: =?us-ascii?Q?ZsBrmaga1+xsG48oXEo5cukmlok67t8d6nXCO3gCyq+XAdUEmkNONtTERhzE?=
- =?us-ascii?Q?JwkUon6YfLidNNQxVnypuJXHwEaAzd51TG8Dw8S9I43HMJLZIq48M139V0Y+?=
- =?us-ascii?Q?J0PsLwe+NnKpFlfzinA+vfDFnO94FU8xrDoTU0VsKdbkTC1e3TC4as2a7zSo?=
- =?us-ascii?Q?FwxAvd8aww92cBI4/+TAFbaUfkzNSVA+gp84jSNDPtUh8lJvk2FQ86Pl0CIi?=
- =?us-ascii?Q?dWHTHuqeMRR9k9pxlhe79ao5XrALi4fqd3KQOR+V6fBuhbKYAaQ2oJjzC7Hd?=
- =?us-ascii?Q?b1PoU108bkFThi+PD76R+MhVW1Q70dF+89Leaqi7TKVNiAR+L5mfB9eeqZJk?=
- =?us-ascii?Q?LR8QIJ1yj615xjXjQrjLZatmAtnJ86QJ2gg22Zaba6GK9edLE048JaS+khnl?=
- =?us-ascii?Q?V1dSJiR+FNFTzjWIV3cFKBuCTY3l8ZrLP7buH5ScApxAdXLcRf6K29F5bVeb?=
- =?us-ascii?Q?sUOnUH84rfMDs6/vzsWW0XOPQ8CrIfTQS0mRe8Z1HtbzJ+3KsFm2LaC7ONOM?=
- =?us-ascii?Q?+fR3+bqzVhLhFq24GAeU+F7YfdECqHT00rrc5AWjwOjlmi66a+BHGY100pQH?=
- =?us-ascii?Q?Dmb5852lbI0YhefV/c8ScORPhiRGdkwF8h5DcSRt7ft/9PEh9dWDLil385Yc?=
- =?us-ascii?Q?ZpA3N3kb+lvZ0bg7Gj6ICg6hPvX5VWGoezD8kECH1jCNIY9CBi1BIWZdW3Hf?=
- =?us-ascii?Q?VDp/jX/s/bI7bUW52BjGEX3YL3AQR1XaQSx+OdNJ3YS8rmHCLn/3gzm0kQX0?=
- =?us-ascii?Q?iI8Qer3pZkh9iBopuO0PJP5IPvXECdpnz3eHRWOSsTHiUrbbiQIoh/M2zVuZ?=
- =?us-ascii?Q?lh67eZxL4JLzqeFMpt6Ut7WpWiIb7q4EEpWqvAtxozAFkF+uITglR23wXNQ1?=
- =?us-ascii?Q?kWpb8s7PTR3seiymw3adW7n30QUFvp12a4aarNGIqMbAubbhnC54wxm2L/mo?=
- =?us-ascii?Q?n2d0G3AO2UDyLspHG85sCYwqO3JlPpbNWpyyTVvwd42iJz/vAB63l94bnzhh?=
- =?us-ascii?Q?aCwwmfNpuGiV8pkK3c9J/CIAWaQnHx9ha4i5Hdt7KULvVEWSySQNFy/LM10I?=
- =?us-ascii?Q?WE6+wXST4gLDVJlP6VlPbJzGHeWTqFDnDE9VR9sfBF3IWtdWZnZWHzll7/N3?=
- =?us-ascii?Q?wx29djmx83kSBPDVeVUJ3/zN76WnWKe6X0P1IKI/tCOolWNQZGgwml7KHHde?=
- =?us-ascii?Q?lwjTD5hLVGMLWKjl5VDBgb6r3J9f6dUffw/fW/aMk/psX7JGDaPw4nWFw2Q9?=
- =?us-ascii?Q?0kVqKIuCm7eY9LMe3sAn9gZlC9gX0sTtx11Bjx7weT1lJEQD7TN1mrJSMMKH?=
- =?us-ascii?Q?ftInBqwaMwv2onMsqtj8fMrgRPQhvCDmQdORdJS0wr4ftaP7WQgaP46/rJR7?=
- =?us-ascii?Q?5yaorPh9EWASZELtMB81T0MiXNlDquYhCxRwTe0EPTAtsW6lJw=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6098.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018)(13003099007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Hx2miebzgIv3tz0Dg+3eHBQpc11EiOCh8CSsfaVeNALcxqojKecgUPmowdvK?=
- =?us-ascii?Q?0/RZ0PMpGZcOToy+gg2o9kJpZQreQB5XdAOoCslSdbEUirCJtXa1gEo05GAV?=
- =?us-ascii?Q?cGZK3zKtQbjAl8jEFvvWMaY6JSn/VJM7geV2ckVZXRs6GST8DSXbyVBv828S?=
- =?us-ascii?Q?G+y3PDUQoACDLdWVFHty8blkLF+7xQBS5Wt34YNuJBp2ZvSTmbbIU8GenabJ?=
- =?us-ascii?Q?vOrtPDSYXRv36H3VXQkuMh44DPvIOWu1JRgxiE0PE0CAID3JzG4JYb8xl55Y?=
- =?us-ascii?Q?5Ga4M58s4JlWoroBGpP5eGfwnneuV/yFge8ymU70lUrdR81eU1JyNePFaG6K?=
- =?us-ascii?Q?ZL6wRaUhfQriBSdmgGlkh+ZimAs9GiMT6/8MCDGU7jPsN/mIyytBSxri3yra?=
- =?us-ascii?Q?/r6OO2YCZNNcdms23GbCbdFSQyy6PYbNxWjs894iCNZepbfhZTj5jYDxOlpr?=
- =?us-ascii?Q?El/AYZC8Dk9cfWLDhHyjxQDfeHAAFd9GxEGjtfq5SEQONGqeiP/z/3wf5ysd?=
- =?us-ascii?Q?gU8yHao7qe83ktxDyVW1kOO8ncWVcBySQKNDOGm54VOzIeLtaZoXT8NOhXny?=
- =?us-ascii?Q?7ATjlaeNP6IwhnY2pMqJ8TFddyyavys97ZUeimRcMypBESmFqaVYfgHNNohq?=
- =?us-ascii?Q?d7Uv/ARGiRA30BAR3TJcZlkS4qMD95XqbGuRY/sejmLYDuD9fDuJ7my0rI8p?=
- =?us-ascii?Q?9lzgFlf0p/3JfgOI6TZy+yAcoaBLDAURxBKmigV5bIeRRxCrBg+fq8YxAJPQ?=
- =?us-ascii?Q?OneY9HNCq0M2zjO4SD75PRatgoFuIMlP1EOxiZmFswMOO087GaO7oy5kepxr?=
- =?us-ascii?Q?ku69Ob7+fJAB+nmtvDyyNSwpb8vQrdnZvu9UT13yx8yQrFDnDmNS/MRmFXMP?=
- =?us-ascii?Q?SDWRuehsKsfT4quTkULVSDlI46k5vLEbtJ6JRMqKCJWxO+veGrXDa/FKo+Pv?=
- =?us-ascii?Q?HH5V+TuO99jdPkj0JZkk9/uEMBGs2WZsHyEH9jOr+EM3lfvFpEOzT9E3PlLu?=
- =?us-ascii?Q?auy5fJfKY2coxVOALMjfz60+7AwNfnxrlnIAJVbhmMgN0RJxwwJe5TIPXURy?=
- =?us-ascii?Q?Ne4URJLrbfbxaZ0pzZ1u01sKC/nHVvjGQPYYsdKy/OFyi00NO2ejvHy59syS?=
- =?us-ascii?Q?ISpHCxt8NyNucTiEyBehRf2E5g68kKV9MxBuOcO1nDWtN3EENc+Mb81xc9gM?=
- =?us-ascii?Q?eZ5ayUQA/QhpDpsM79TSVQcvfxAsLOap8+2u0AQ0o6v1C613jpCmzYDXmNAJ?=
- =?us-ascii?Q?Gf5cXEULYNogClL7cB594KKXCtKdNdakgkxp99AvwN4vfocoGVZQmWVWihqB?=
- =?us-ascii?Q?TstoxoFrahC0blOFHaTY7zaWVdERax/BBwWvNUMV7AiSmbPEIuwnpPkD2cK7?=
- =?us-ascii?Q?KIP2F3l+wiYa+Vab9BpQ9ZZoqshcGnU3ZV2FlLvyt5VgbIayop98/Dzg+J7W?=
- =?us-ascii?Q?5r7yC02/FjVLBpXmTFZwDqgiicRFVbb1/QsKRgCKstwRTCQKw1hrQD8sLnfH?=
- =?us-ascii?Q?boRUU6b/mdIxStzt7sQVnyk2VIExEzJtcAOvUXqvRiLxc0T1g6d8u2fM8IEE?=
- =?us-ascii?Q?B9wovrWrkIXl+X4lN5I=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3GwTAhs5"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2ad8e353167so335218fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 18:52:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738810325; x=1739415125; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uxxD+jAbhCcwO8C2DOIhXDyhe0riU6WFytq8OKh1XJE=;
+        b=3GwTAhs5PVvkNsO8RujJ4yRnpogX+TP+CoE9vKoKHoZ5+Sna+K4/WV1ztqm27Yf7by
+         y0/JW2Ogk4VGc7Pq5VJPi5Xjne7b4SeT8d12BVPqtwy9mS5nvTzcdVS4FbnQ+IQlTX5W
+         56du7Xm5cjFTqO/J+XOi/e9ottvEPWaC4g8/ugqzpwcbLAw+CExmLAnn9No7UusmUnEU
+         g+LW9iIEiHBhuB6xWyxexPnuDnHC/Lyr0DVY6/5+UMAESioNRn36G4B3zEzzzIclaUan
+         2UmoWDIrDSGgCSTJN+pJKvuSRx3vbCm1n3Wa+huIB9jajBy/CHvzUWAKbvrwkFx5cHRW
+         1i5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738810325; x=1739415125;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uxxD+jAbhCcwO8C2DOIhXDyhe0riU6WFytq8OKh1XJE=;
+        b=GqjX0ntfW3qD9LsF9AYjM9FuljWfFPwlpAVwFlIaDfNqMabMskA2QgHhbJ5RHk/qWd
+         TsWbsYMx4kLAu3TXAmJ6Od88KAKUbu5OJRPKFmi14aQ8/IRBQpCadmSTR5ke6l6Ji5eH
+         lNNZRmPmYzOVW5ETO4qwcYIpVdVifXgdDXgSk04W6duP5oGGLp/uCeaV69DRJBclKFTV
+         NL9OJWzHrLmRQgmISoUqvpJvNubV6MUVwTRcOYEYSVAaabRoeu0jpwORjQcKRdT6/1su
+         ctDQNVMnXcMrDMccd2fmUwQMPsND96EPe9EvUvMLKN2s9rsEdFzcRNia6eDFPIjWothl
+         Tb2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXfmd2UmZdvsHwcewUmvwYZFEyw9YUtagnhdGOYyG+CoxB07xSfQhwg4ai2wiW88ipgrbuQ+a5FYlIM9fU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4NPmDLsUSkmgwwvNxZxHv/2ZxhDdchD9TZJbWJQaauILrWavZ
+	M+uGAYwSnniBFeM7F6x5xv1WFH7H58x/bTM4beaC2kWY+GcIqFSBHOWER13dg0bnBMenn63FFWS
+	tIA==
+X-Google-Smtp-Source: AGHT+IH74Eck9OiEYfeZK3i/QiqSO/2Qq5MwDok2zuhwZZWt4EKmJxq6VEGkOuv1YlKKA8IvnfM/F+puuh4=
+X-Received: from oabso7.prod.google.com ([2002:a05:6871:8187:b0:2b3:580c:19f4])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:c3c3:b0:29e:3921:b1ea
+ with SMTP id 586e51a60fabf-2b80514453emr4246981fac.30.1738810324733; Wed, 05
+ Feb 2025 18:52:04 -0800 (PST)
+Date: Wed,  5 Feb 2025 18:52:01 -0800
+In-Reply-To: <CAJuCfpHJedxhZuuoKkKaQXsT-3tPSkhUwHadJRGEdTxSkzRc_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6098.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a93ff00-d7e1-4db0-1ed6-08dd4658fd3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2025 02:50:17.5642
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tzmLgXiUhWh7ctLbIfrZLOs86letETmpejgthL8pk8x0zloCmdZe5X43V7PBrLxQh/NXbXpXrjzgQkGzHMKodQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7467
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+References: <CAJuCfpHJedxhZuuoKkKaQXsT-3tPSkhUwHadJRGEdTxSkzRc_w@mail.gmail.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250206025201.979573-1-surenb@google.com>
+Subject: [PATCH 1/1] refcount: provide ops for cases when object's memory can
+ be reused
+From: Suren Baghdasaryan <surenb@google.com>
+To: peterz@infradead.org
+Cc: will@kernel.org, paulmck@kernel.org, boqun.feng@gmail.com, 
+	mark.rutland@arm.com, mjguzik@gmail.com, akpm@linux-foundation.org, 
+	willy@infradead.org, liam.howlett@oracle.com, lorenzo.stoakes@oracle.com, 
+	david.laight.linux@gmail.com, mhocko@suse.com, vbabka@suse.cz, 
+	hannes@cmpxchg.org, oliver.sang@intel.com, mgorman@techsingularity.net, 
+	david@redhat.com, peterx@redhat.com, oleg@redhat.com, dave@stgolabs.net, 
+	brauner@kernel.org, dhowells@redhat.com, hdanton@sina.com, hughd@google.com, 
+	lokeshgidra@google.com, minchan@google.com, jannh@google.com, 
+	shakeel.butt@linux.dev, souravpanda@google.com, pasha.tatashin@soleen.com, 
+	klarasmodin@gmail.com, richard.weiyang@gmail.com, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kernel-team@android.com, Suren Baghdasaryan <surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+For speculative lookups where a successful inc_not_zero() pins the
+object, but where we still need to double check if the object acquired
+is indeed the one we set out to acquire (identity check), needs this
+validation to happen *after* the increment.
+Similarly, when a new object is initialized and its memory might have
+been previously occupied by another object, all stores to initialize the
+object should happen *before* refcount initialization.
 
+Notably SLAB_TYPESAFE_BY_RCU is one such an example when this ordering
+is required for reference counting.
 
-> -----Original Message-----
-> From: David Laight <david.laight.linux@gmail.com>
-> Sent: Thursday, February 6, 2025 5:57 AM
-> To: Xu, Even <even.xu@intel.com>
-> Cc: lkp <lkp@intel.com>; oe-kbuild-all@lists.linux.dev; linux-
-> kernel@vger.kernel.org; Jiri Kosina <jikos@kernel.org>; Sun, Xinpeng
-> <xinpeng.sun@intel.com>; Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com>; Mark Pearson <mpearson-
-> lenovo@squebb.ca>
-> Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: =
-sparse:
-> sparse: dubious: !x | !y
->=20
-> On Wed, 5 Feb 2025 02:56:05 +0000
-> "Xu, Even" <even.xu@intel.com> wrote:
->=20
-> > > -----Original Message-----
-> > > From: David Laight <david.laight.linux@gmail.com>
-> > > Sent: Thursday, January 30, 2025 6:22 AM
-> > > To: lkp <lkp@intel.com>
-> > > Cc: Xu, Even <even.xu@intel.com>; oe-kbuild-all@lists.linux.dev;
-> > > linux- kernel@vger.kernel.org; Jiri Kosina <jikos@kernel.org>; Sun,
-> > > Xinpeng <xinpeng.sun@intel.com>; Srinivas Pandruvada
-> > > <srinivas.pandruvada@linux.intel.com>; Mark Pearson <mpearson-
-> > > lenovo@squebb.ca>
-> > > Subject: Re: drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:=
-38:
-> sparse:
-> > > sparse: dubious: !x | !y
-> > >
-> > > On Wed, 29 Jan 2025 22:02:59 +0800
-> > > kernel test robot <lkp@intel.com> wrote:
-> > >
-> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
-nux.git
-> master
-> > > > head:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
-> > > > commit: a688404b2e20f00cce6d0a2b888ef4ca9154e144 HID: intel-thc-hid=
-:
-> > > intel-thc: Add THC DMA interfaces
-> > > > date:   3 weeks ago
-> > > > config: x86_64-allyesconfig
-> > > > (https://download.01.org/0day-ci/archive/20250129/202501292144.eFD
-> > > > q4ov
-> > > > r-lkp@intel.com/config)
-> > > > compiler: gcc-12 (Debian 12.2.0-14) 12.2.0 reproduce (this is a
-> > > > W=3D1
-> > > > build):
-> > > > (https://download.01.org/0day-ci/archive/20250129/202501292144.eFD
-> > > > q4ov
-> > > > r-lkp@intel.com/reproduce)
-> > > >
-> > > > If you fix the issue in a separate patch/commit (i.e. not just a
-> > > > new version of the same patch/commit), kindly add following tags
-> > > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > > | Closes:
-> > > > | https://lore.kernel.org/oe-kbuild-all/202501292144.eFDq4ovr-lkp@
-> > > > | inte
-> > > > | l.com/
-> > > >
-> > > > sparse warnings: (new ones prefixed by >>)
-> > > > >> drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:38: spar=
-se:
-> > > > >> sparse: dubious: !x | !y
-> > > >    drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c: note: in
-> > > > included file
-> > > (through include/linux/mmzone.h, include/linux/gfp.h,
-> include/linux/mm.h, ...):
-> > > >    include/linux/page-flags.h:237:46: sparse: sparse:
-> > > > self-comparison always
-> > > evaluates to false
-> > > >    include/linux/page-flags.h:237:46: sparse: sparse:
-> > > > self-comparison always evaluates to false
-> > > >
-> > > > vim +298 drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
-> > > ...
-> > > >    297		for (i =3D 0; i < config->prd_tbl_num; i++) {
-> > > >  > 298			if (!config->sgls[i] | !config->sgls_nent[i])
-> > > >    299				continue;
-> > > ...
-> > >
-> > > If zeros are unlikely the bit-wise 'or' is pretty likely to generate
-> > > better code than a logical 'or'.
-> > >
-> > > 	David
-> >
-> > Good suggestion!
-> > So the code can be optimized to:
-> > 	for (i =3D 0; i < config->prd_tbl_num; i++) {
-> > 	         if (config->sgls[i] && config->sgls_nent[i]) {
-> >                                     ......
-> >                        }
->=20
-> That just adds a level of indentation to the source.
-> It'll generate much the same code as !x || !y.
-> Both will generate two conditional branches.
->=20
-> It almost certainly makes in immeasurable difference here, but !x | !y ca=
-n be
-> generated using (on x86) the 'sete' instruction to get a 0/1 from the x =
-=3D=3D 0
-> compare (that sets the flags), and then doing an 'or' and a single jump.
+Add refcount_{add|inc}_not_zero_acquire() to guarantee the proper ordering
+between acquiring a reference count on an object and performing the
+identity check for that object.
+Add refcount_set_release() to guarantee proper ordering between stores
+initializing object attributes and the store initializing the refcount.
+refcount_set_release() should be done after all other object attributes
+are initialized. Once refcount_set_release() is called, the object should
+be considered visible to other tasks even if it was not yet added into an
+object collection normally used to discover it. This is because other
+tasks might have discovered the object previously occupying the same
+memory and after memory reuse they can succeed in taking refcount for the
+new object and start using it.
 
-You are right.
-I do a simple testing:
+Object reuse example to consider:
 
-83 7d f8 00             cmpl   $0x0,-0x8(%rbp)
-0f 94 c2                sete   %dl
-83 7d fc 00             cmpl   $0x0,-0x4(%rbp)
-0f 94 c0                sete   %al
-09 d0                   or     %edx,%eax
-84 c0                   test   %al,%al
-74 0f                   je     1186 <main+0x3d>
+consumer:
+    obj = lookup(collection, key);
+    if (!refcount_inc_not_zero_acquire(&obj->ref))
+        return;
+    if (READ_ONCE(obj->key) != key) { /* identity check */
+        put_ref(obj);
+        return;
+    }
+    use(obj->value);
 
-Compare to:
+                 producer:
+                     remove(collection, obj->key);
+                     if (!refcount_dec_and_test(&obj->ref))
+                         return;
+                     obj->key = KEY_INVALID;
+                     free(obj);
+                     obj = malloc(); /* obj is reused */
+                     obj->key = new_key;
+                     obj->value = new_value;
+                     refcount_set_release(obj->ref, 1);
+                     add(collection, new_key, obj);
 
-83 7d f8 00             cmpl   $0x0,-0x8(%rbp)
-74 06                   je     116f <main+0x26>
-83 7d fc 00             cmpl   $0x0,-0x4(%rbp)
-75 0f                   jne    117e <main+0x35>
+refcount_{add|inc}_not_zero_acquire() is required to prevent the following
+reordering when refcount_inc_not_zero() is used instead:
 
-So you suggest I'd better keep the original (!x | !y) code, if just for unl=
-ikely Zero comparing?
+consumer:
+    obj = lookup(collection, key);
+    if (READ_ONCE(obj->key) != key) { /* reordered identity check */
+        put_ref(obj);
+        return;
+    }
+                 producer:
+                     remove(collection, obj->key);
+                     if (!refcount_dec_and_test(&obj->ref))
+                         return;
+                     obj->key = KEY_INVALID;
+                     free(obj);
+                     obj = malloc(); /* obj is reused */
+                     obj->key = new_key;
+                     obj->value = new_value;
+                     refcount_set_release(obj->ref, 1);
+                     add(collection, new_key, obj);
 
-Thanks!
+    if (!refcount_inc_not_zero(&obj->ref))
+        return;
+    use(obj->value); /* USING WRONG OBJECT */
 
-Best Regards,
-Even Xu
+refcount_set_release() is required to prevent the following reordering
+when refcount_set() is used instead:
 
->=20
-> 	David
->=20
-> > 	}
-> >
-> > Will create a patch for this.
-> >
-> > Best Regards,
-> > Even Xu
-> >
-> >
+consumer:
+    obj = lookup(collection, key);
+
+                 producer:
+                     remove(collection, obj->key);
+                     if (!refcount_dec_and_test(&obj->ref))
+                         return;
+                     obj->key = KEY_INVALID;
+                     free(obj);
+                     obj = malloc(); /* obj is reused */
+                     obj->key = new_key; /* new_key == old_key */
+                     refcount_set(obj->ref, 1);
+
+    if (!refcount_inc_not_zero_acquire(&obj->ref))
+        return;
+    if (READ_ONCE(obj->key) != key) { /* pass since new_key == old_key */
+        put_ref(obj);
+        return;
+    }
+    use(obj->value); /* USING STALE obj->value */
+
+                     obj->value = new_value; /* reordered store */
+                     add(collection, key, obj);
+
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+---
+ Documentation/RCU/whatisRCU.rst               |  10 ++
+ Documentation/core-api/refcount-vs-atomic.rst |  37 +++++-
+ include/linux/refcount.h                      | 106 ++++++++++++++++++
+ include/linux/slab.h                          |   9 ++
+ 4 files changed, 156 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
+index 1ef5784c1b84..53faeed7c190 100644
+--- a/Documentation/RCU/whatisRCU.rst
++++ b/Documentation/RCU/whatisRCU.rst
+@@ -971,6 +971,16 @@ unfortunately any spinlock in a ``SLAB_TYPESAFE_BY_RCU`` object must be
+ initialized after each and every call to kmem_cache_alloc(), which renders
+ reference-free spinlock acquisition completely unsafe.  Therefore, when
+ using ``SLAB_TYPESAFE_BY_RCU``, make proper use of a reference counter.
++If using refcount_t, the specialized refcount_{add|inc}_not_zero_acquire()
++and refcount_set_release() APIs should be used to ensure correct operation
++ordering when verifying object identity and when initializing newly
++allocated objects. Acquire fence in refcount_{add|inc}_not_zero_acquire()
++ensures that identity checks happen *after* reference count is taken.
++refcount_set_release() should be called after a newly allocated object is
++fully initialized and release fence ensures that new values are visible
++*before* refcount can be successfully taken by other users. Once
++refcount_set_release() is called, the object should be considered visible
++by other tasks.
+ (Those willing to initialize their locks in a kmem_cache constructor
+ may also use locking, including cache-friendly sequence locking.)
+ 
+diff --git a/Documentation/core-api/refcount-vs-atomic.rst b/Documentation/core-api/refcount-vs-atomic.rst
+index 79a009ce11df..9551a7bbfd38 100644
+--- a/Documentation/core-api/refcount-vs-atomic.rst
++++ b/Documentation/core-api/refcount-vs-atomic.rst
+@@ -86,7 +86,19 @@ Memory ordering guarantee changes:
+  * none (both fully unordered)
+ 
+ 
+-case 2) - increment-based ops that return no value
++case 2) - non-"Read/Modify/Write" (RMW) ops with release ordering
++-------------------------------------------
++
++Function changes:
++
++ * atomic_set_release() --> refcount_set_release()
++
++Memory ordering guarantee changes:
++
++ * none (both provide RELEASE ordering)
++
++
++case 3) - increment-based ops that return no value
+ --------------------------------------------------
+ 
+ Function changes:
+@@ -98,7 +110,7 @@ Memory ordering guarantee changes:
+ 
+  * none (both fully unordered)
+ 
+-case 3) - decrement-based RMW ops that return no value
++case 4) - decrement-based RMW ops that return no value
+ ------------------------------------------------------
+ 
+ Function changes:
+@@ -110,7 +122,7 @@ Memory ordering guarantee changes:
+  * fully unordered --> RELEASE ordering
+ 
+ 
+-case 4) - increment-based RMW ops that return a value
++case 5) - increment-based RMW ops that return a value
+ -----------------------------------------------------
+ 
+ Function changes:
+@@ -126,7 +138,20 @@ Memory ordering guarantees changes:
+    result of obtaining pointer to the object!
+ 
+ 
+-case 5) - generic dec/sub decrement-based RMW ops that return a value
++case 6) - increment-based RMW ops with acquire ordering that return a value
++-----------------------------------------------------
++
++Function changes:
++
++ * atomic_inc_not_zero() --> refcount_inc_not_zero_acquire()
++ * no atomic counterpart --> refcount_add_not_zero_acquire()
++
++Memory ordering guarantees changes:
++
++ * fully ordered --> ACQUIRE ordering on success
++
++
++case 7) - generic dec/sub decrement-based RMW ops that return a value
+ ---------------------------------------------------------------------
+ 
+ Function changes:
+@@ -139,7 +164,7 @@ Memory ordering guarantees changes:
+  * fully ordered --> RELEASE ordering + ACQUIRE ordering on success
+ 
+ 
+-case 6) other decrement-based RMW ops that return a value
++case 8) other decrement-based RMW ops that return a value
+ ---------------------------------------------------------
+ 
+ Function changes:
+@@ -154,7 +179,7 @@ Memory ordering guarantees changes:
+ .. note:: atomic_add_unless() only provides full order on success.
+ 
+ 
+-case 7) - lock-based RMW
++case 9) - lock-based RMW
+ ------------------------
+ 
+ Function changes:
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 35f039ecb272..4589d2e7bfea 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -87,6 +87,15 @@
+  * The decrements dec_and_test() and sub_and_test() also provide acquire
+  * ordering on success.
+  *
++ * refcount_{add|inc}_not_zero_acquire() and refcount_set_release() provide
++ * acquire and release ordering for cases when the memory occupied by the
++ * object might be reused to store another object. This is important for the
++ * cases where secondary validation is required to detect such reuse, e.g.
++ * SLAB_TYPESAFE_BY_RCU. The secondary validation checks have to happen after
++ * the refcount is taken, hence acquire order is necessary. Similarly, when the
++ * object is initialized, all stores to its attributes should be visible before
++ * the refcount is set, otherwise a stale attribute value might be used by
++ * another task which succeeds in taking a refcount to the new object.
+  */
+ 
+ #ifndef _LINUX_REFCOUNT_H
+@@ -125,6 +134,31 @@ static inline void refcount_set(refcount_t *r, int n)
+ 	atomic_set(&r->refs, n);
+ }
+ 
++/**
++ * refcount_set_release - set a refcount's value with release ordering
++ * @r: the refcount
++ * @n: value to which the refcount will be set
++ *
++ * This function should be used when memory occupied by the object might be
++ * reused to store another object -- consider SLAB_TYPESAFE_BY_RCU.
++ *
++ * Provides release memory ordering which will order previous memory operations
++ * against this store. This ensures all updates to this object are visible
++ * once the refcount is set and stale values from the object previously
++ * occupying this memory are overwritten with new ones.
++ *
++ * This function should be called only after new object is fully initialized.
++ * After this call the object should be considered visible to other tasks even
++ * if it was not yet added into an object collection normally used to discover
++ * it. This is because other tasks might have discovered the object previously
++ * occupying the same memory and after memory reuse they can succeed in taking
++ * refcount to the new object and start using it.
++ */
++static inline void refcount_set_release(refcount_t *r, int n)
++{
++	atomic_set_release(&r->refs, n);
++}
++
+ /**
+  * refcount_read - get a refcount's value
+  * @r: the refcount
+@@ -178,6 +212,52 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+ 	return __refcount_add_not_zero(i, r, NULL);
+ }
+ 
++static inline __must_check __signed_wrap
++bool __refcount_add_not_zero_acquire(int i, refcount_t *r, int *oldp)
++{
++	int old = refcount_read(r);
++
++	do {
++		if (!old)
++			break;
++	} while (!atomic_try_cmpxchg_acquire(&r->refs, &old, old + i));
++
++	if (oldp)
++		*oldp = old;
++
++	if (unlikely(old < 0 || old + i < 0))
++		refcount_warn_saturate(r, REFCOUNT_ADD_NOT_ZERO_OVF);
++
++	return old;
++}
++
++/**
++ * refcount_add_not_zero_acquire - add a value to a refcount with acquire ordering unless it is 0
++ *
++ * @i: the value to add to the refcount
++ * @r: the refcount
++ *
++ * Will saturate at REFCOUNT_SATURATED and WARN.
++ *
++ * This function should be used when memory occupied by the object might be
++ * reused to store another object -- consider SLAB_TYPESAFE_BY_RCU.
++ *
++ * Provides acquire memory ordering on success, it is assumed the caller has
++ * guaranteed the object memory to be stable (RCU, etc.). It does provide a
++ * control dependency and thereby orders future stores. See the comment on top.
++ *
++ * Use of this function is not recommended for the normal reference counting
++ * use case in which references are taken and released one at a time.  In these
++ * cases, refcount_inc_not_zero_acquire() should instead be used to increment a
++ * reference count.
++ *
++ * Return: false if the passed refcount is 0, true otherwise
++ */
++static inline __must_check bool refcount_add_not_zero_acquire(int i, refcount_t *r)
++{
++	return __refcount_add_not_zero_acquire(i, r, NULL);
++}
++
+ static inline __signed_wrap
+ void __refcount_add(int i, refcount_t *r, int *oldp)
+ {
+@@ -236,6 +316,32 @@ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
+ 	return __refcount_inc_not_zero(r, NULL);
+ }
+ 
++static inline __must_check bool __refcount_inc_not_zero_acquire(refcount_t *r, int *oldp)
++{
++	return __refcount_add_not_zero_acquire(1, r, oldp);
++}
++
++/**
++ * refcount_inc_not_zero_acquire - increment a refcount with acquire ordering unless it is 0
++ * @r: the refcount to increment
++ *
++ * Similar to refcount_inc_not_zero(), but provides acquire memory ordering on
++ * success.
++ *
++ * This function should be used when memory occupied by the object might be
++ * reused to store another object -- consider SLAB_TYPESAFE_BY_RCU.
++ *
++ * Provides acquire memory ordering on success, it is assumed the caller has
++ * guaranteed the object memory to be stable (RCU, etc.). It does provide a
++ * control dependency and thereby orders future stores. See the comment on top.
++ *
++ * Return: true if the increment was successful, false otherwise
++ */
++static inline __must_check bool refcount_inc_not_zero_acquire(refcount_t *r)
++{
++	return __refcount_inc_not_zero_acquire(r, NULL);
++}
++
+ static inline void __refcount_inc(refcount_t *r, int *oldp)
+ {
+ 	__refcount_add(1, r, oldp);
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 09eedaecf120..ad902a2d692b 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -136,6 +136,15 @@ enum _slab_flag_bits {
+  * rcu_read_lock before reading the address, then rcu_read_unlock after
+  * taking the spinlock within the structure expected at that address.
+  *
++ * Note that object identity check has to be done *after* acquiring a
++ * reference, therefore user has to ensure proper ordering for loads.
++ * Similarly, when initializing objects allocated with SLAB_TYPESAFE_BY_RCU,
++ * the newly allocated object has to be fully initialized *before* its
++ * refcount gets initialized and proper ordering for stores is required.
++ * refcount_{add|inc}_not_zero_acquire() and refcount_set_release() are
++ * designed with the proper fences required for reference counting objects
++ * allocated with SLAB_TYPESAFE_BY_RCU.
++ *
+  * Note that it is not possible to acquire a lock within a structure
+  * allocated with SLAB_TYPESAFE_BY_RCU without first acquiring a reference
+  * as described above.  The reason is that SLAB_TYPESAFE_BY_RCU pages
+
+base-commit: 92514ef226f511f2ca1fb1b8752966097518edc0
+-- 
+2.48.1.362.g079036d154-goog
 
