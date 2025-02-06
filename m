@@ -1,76 +1,48 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F874C8E;
-	Thu,  6 Feb 2025 17:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A65E239567
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861621; cv=none; b=KXPdNtH3mBNnBpmRtqYWnTnd8kLxqjhuoewp3ogUFSnf/xg4kCwKS4VcpEEY/EHvyFTe5UkC2dsMzmNdq/EOOP2LoPSm7Dseh3KQhKWvxjtsrKvHErt2N1M1mrDik//NIKuB5EYDGUHtK+IKYr6Z+EFKnXpdwI6AAdsXOdWVFUg=
+	t=1738861672; cv=none; b=U6AcPwGr+QVtOBiZQvTN1ltUzKNjJdvFsRYxsbxZY2fkUzw6wua7g5vb9ob3yLXG0MGydXBKu8Peo9iZdrB4vY5x4ecoSpAtUi840kgPBdtyj9yKox9r3Wxdf/fRMey+Bx4MpPhLC6m2tGQXOQ6bscfQUTRsCVEohMwu65CDm6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861621; c=relaxed/simple;
-	bh=0kk5EfgJcoV/YnLA0/m9y1CLQDc9MWJdcdbuMFNZn4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Opqc1Nfsf2V0vpQcVv4E02tU7kQicmXyFsoyJCB8JUxFkzCWylfpJ0KP8jOpIqMmng36t2ijLK5bZjdaSmX35H5oEwMxaCBMcCtgD6Pbbq2oU8m715E/18Py1lOuwehS3mO5ztI6ymc94kfbKGiWD6be4Eo0aa+gg2wfT5ws87Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SwuXJQoo; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738861672; c=relaxed/simple;
+	bh=NFOu8YkYKMLVSMWOlSerZdbn6qxsZhfGpBaw2vec+SM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uOo8iJDUBoNkK8BqWQveIQ47/crVys126HVerTN7171U2wpdW+4SVkWi1vvpkkDAgPrYS3V1lRm1P4DKJXFNnqq6qO4ktqFR/8spnKYoRasvlSw1n2C8lOcw4YVFMSzJx8qNmbUJdlUR06NZY5wdtFvICPn8HwtouzD80u6aCw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=V5tfF/Go; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwuXJQoo"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab6fb1851d4so230056866b.0;
-        Thu, 06 Feb 2025 09:06:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738861618; x=1739466418; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d+WojvuQOXgdMwuk0FbVWp823RIAXjccdAGX+eYPfmw=;
-        b=SwuXJQoojvrOc7kAOODQ54du14YApb/9+NIARK4SdYMxN3JBmu2IamYSIDh5MXuIQv
-         MdjnjgzMSioCgiybAGIPExN5X2CXVOptFc9sOqpCZCZSyfX/mRkaY+GrYxGjMAJ6FtLZ
-         YH2bPwbRLuIZ8ALPLwsPyhNxLeFm9DhSElp58x47wqIYaYsSLLP0Ju9lZH4FC6Rx1VIj
-         isG8UHhuu5oERVyvWAdi6+s1w6WXs0zpuL98MhM6lVFoRq3S74Qs/AOmH6DKjYhHI4De
-         o6tr83KMAb1X2rGRumo8UV7z8l6BSFvVw4tqRZ//gbvwa0eLFwreT0sgVqHSEDio/fh1
-         WxiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738861618; x=1739466418;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d+WojvuQOXgdMwuk0FbVWp823RIAXjccdAGX+eYPfmw=;
-        b=XtJIevM36oz0xW7Rdl+frbOubwiS4AWXpnkSnRHLBpc7wxxW1WW3EG792aQhr9FIZ+
-         PF1+MMAcOI5gCdrfrX95mkW+3p52AG/e2wx+J8yYYUGhCJYXbpTC9mcB/HgAOOxW0Ok8
-         TRm6kQmURGXZMdd15S2of++S8vg2TYdDaZDeeLmNNUUbbtp3WtnRp4WvFPoVW8YsErPz
-         nRoLA4MiSru9BqTVA9dO58rW2/wuJc8MCnClnJXRa36wMMx+TKuGTguUuJGB8REnL5g8
-         LdlC0Xp9LN+ihXmMzdtPh40aNEEr5A3EBuJ1uJ5caAGWpZXdh+zN8yw9OLBi/ZrXT9DK
-         HaQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSIvLFLg6DUjSEJJJyz9eJiwGaj84BaGjMco4PK7QlNQ+SC5/ERnKQ9rqc9/eUFhFV3LjXuKKl@vger.kernel.org, AJvYcCXXvrM1whCh76t7W4n8mFjfLrD5PT8dbqgd8T9dsrwRj+Y+/e7guiQz0vefA7ZaOD5sJ3fI2D21N5hrgOeg@vger.kernel.org, AJvYcCXcNuAwsyqlZOYGXpZrFvSG3T3j0lISS0tbyAYBKdfQHdY8Cdi0Kwj8azDbopxSEluQ7Hu2t/c2DfxZGGhQ1bc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxkpk9b3tpzpiv+o1tGh1oKPyTc1PCflOXOiX7OiZKBaEhJipUi
-	a5A8KUjX/X7eShvUjgRPZZoJtAgB3Lo5dJG602z2oO+fU+9RsiE=
-X-Gm-Gg: ASbGncv6APpF2h4jzoXJYEFgrVMqkCZ/iWflwvPn/q5z06pOKMrODtSdK9d4ZcB8zyb
-	Wj1n08N8BBll0Fju/WO57bcdBDmJFUtKcSxIMDhM/Tdc3qR8Xy74u5pBr/Ov7iC4NGSnfGtDXsP
-	riuGsnhx6zW1WDowuCxkPyv7deYl92+G3ChqdCEC2XfmB8lTbR1CwLtGgbWDY2IR4B3BlkHHUe1
-	QguwVgxThaK0FLSLuqC5sX4HvNUOcOR8/pCE2a3wHtON4Ld7uK2ABhWEZCYgf5D/DoGM9mVyJjf
-	5Q==
-X-Google-Smtp-Source: AGHT+IHYqtAGtHEQqeORbbkVWIWAYhFOaZj8V5aDzbyZG5IIIutbmMKbPa+/C2jnRxaFK469D27GJQ==
-X-Received: by 2002:a17:907:1c0f:b0:ab6:726e:b14d with SMTP id a640c23a62f3a-ab76e9d8cb5mr481473866b.23.1738861617771;
-        Thu, 06 Feb 2025 09:06:57 -0800 (PST)
-Received: from p183 ([46.53.254.78])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e70e7sm127281466b.87.2025.02.06.09.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 09:06:57 -0800 (PST)
-Date: Thu, 6 Feb 2025 20:06:55 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: less size_t please (was Re: [PATCH net] xfrm: fix integer
- overflow in xfrm_replay_state_esn_len())
-Message-ID: <3c8d42ca-fcaf-497d-ac86-cc2fc9cf984f@p183>
-References: <03997448-cd88-4b80-ab85-fe1100203339@p183>
- <1ee57015-a2c3-4dd1-99c2-53e9ff50a09f@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="V5tfF/Go"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6B855442BE;
+	Thu,  6 Feb 2025 17:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738861668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2taOfS6UmQKEI7wuUTCU2ak/Qb2Q0kvynZ5wujlAtSc=;
+	b=V5tfF/GoO7XLmaaGdKISt5kKntHgBSJf5ZjHNlComoZFQ4/xN5fjvGf4psMk1mDVcPqDWK
+	cl5W5kheP7+tDXNzuot35RvTtVCPKlVW0qBhj000Bm/CLuu8Nxw1dGzgh9b45G0O/Hp/Ch
+	e0nWUVWpXcApeNbkQXzcRW2XLn9Ak2Sedn2RbUbgCq5h81YBhbAPs/9Klp6SYl0Qa19GpT
+	4YgR78mABE65Jb+cpcIVcZ3ZtSl3C/o/FIml5jbVkjyGYvKDGzKEEddOvOq906QEaona1Y
+	r7nMH98CCbMvGxR4HRDKJM8Dg0A7tE3E3EV4L8gKAolYWwMnlyg15Es4BhMqew==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Cheng Ming Lin <linchengming884@gmail.com>
+Cc: vigneshr@ti.com,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  richard@nod.at,  alvinzhou@mxic.com.tw,
+  leoyu@mxic.com.tw,  Cheng Ming Lin <chengminglin@mxic.com.tw>
+Subject: Re: [PATCH v3 2/2] mtd: spi-nand: macronix: Add support for read retry
+In-Reply-To: <20250122065605.285145-3-linchengming884@gmail.com> (Cheng Ming
+	Lin's message of "Wed, 22 Jan 2025 14:56:05 +0800")
+References: <20250122065605.285145-1-linchengming884@gmail.com>
+	<20250122065605.285145-3-linchengming884@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Thu, 06 Feb 2025 18:07:46 +0100
+Message-ID: <87pljv3st9.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,84 +50,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1ee57015-a2c3-4dd1-99c2-53e9ff50a09f@stanley.mountain>
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieelgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihhntghhvghnghhmihhnghekkeegsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtp
+ dhrtghpthhtoheprghlvhhinhiihhhouhesmhigihgtrdgtohhmrdhtfidprhgtphhtthhopehlvghohihusehmgihitgdrtghomhdrthifpdhrtghpthhtoheptghhvghnghhmihhnghhlihhnsehmgihitgdrtghomhdrthif
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, Jan 30, 2025 at 07:15:15PM +0300, Dan Carpenter wrote:
-> On Thu, Jan 30, 2025 at 04:44:42PM +0300, Alexey Dobriyan wrote:
-> > > -static inline unsigned int xfrm_replay_state_esn_len(struct xfrm_replay_state_esn *replay_esn)
-> > > +static inline size_t xfrm_replay_state_esn_len(struct xfrm_replay_state_esn *replay_esn)
-> > >  {
-> > > -	return sizeof(*replay_esn) + replay_esn->bmp_len * sizeof(__u32);
-> > > +	return size_add(sizeof(*replay_esn), size_mul(replay_esn->bmp_len, sizeof(__u32)));
-> > 
-> > Please don't do this.
-> > 
-> > You can (and should!) make calculations and check for overflow at the
-> > same time. It's very efficient.
-> > 
-> > > 1) Use size_add() and size_mul().  This change is necessary for 32bit systems.
-> > 
-> > This bloats code on 32-bit.
-> > 
-> 
-> I'm not sure I understand.  On 32-bit systems a size_t and an unsigned
-> int are the same size.  Did you mean to say 64-bit?
+Hello,
 
-It looks like yes.
+On 22/01/2025 at 14:56:05 +08, Cheng Ming Lin <linchengming884@gmail.com> w=
+rote:
 
-> Declaring sizes as u32 leads to integer overflows like this one.
+> @@ -377,7 +424,9 @@ static const struct spinand_info macronix_spinand_tab=
+le[] =3D {
+>  		     SPINAND_HAS_QE_BIT,
+>  		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
+>  				     macronix_ecc_get_status),
+> -		     SPINAND_CONT_READ(macronix_set_cont_read)),
+> +		     SPINAND_CONT_READ(macronix_set_cont_read)
 
-No, the problem is unchecked C addition and mixing types which confuses
-people (in the opposite direction too -- there were fake CVEs because
-someone thought "size_t len" in write hooks could be big enough).
+I think there is a missing coma here and everywhere else where there is
+continuous read support?
 
-The answer is to use single type as much as possible and using checked
-additions on-the-go at every binary operator if possible.
+> +		     SPINAND_READ_RETRY(MACRONIX_NUM_READ_RETRY_MODES,
+> +					macronix_set_read_retry)),
+>  	SPINAND_INFO("MX35UF1GE4AC",
+>  		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x92, 0x01),
+>  		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
 
-Of course one bug could be fixed in multiple ways.
-
-> If you look at integer overflows with security implications there is a
-> 5 to 1 ratio of bugs that only affect 32-bit vs bugs that affect
-> everything because it's just so much easier to overflow a 32-bit size.
-> 
-> aab98e2dbd64 ("ksmbd: fix integer overflows on 32 bit systems")
-> 16ebb6f5b629 ("nfp: bpf: prevent integer overflow in nfp_bpf_event_output()")
-> 09c4a6101532 ("rtc: tps6594: Fix integer overflow on 32bit systems")
-> 55cf2f4b945f ("binfmt_flat: Fix integer overflow bug on 32 bit systems")
-> fbbd84af6ba7 ("chelsio/chtls: prevent potential integer overflow on 32bit")
-> bd96a3935e89 ("rdma/cxgb4: Prevent potential integer overflow on 32bit")
-> d0257e089d1b ("RDMA/uverbs: Prevent integer overflow issue")
-
-This one is good demonstration why BAO is better:
-https://godbolt.org/z/14ofdfvhc
-
-> 3c63d8946e57 ("svcrdma: Address an integer overflow")
-> 7f33b92e5b18 ("NFSD: Prevent a potential integer overflow")
-> 
-> > 	int len;
-> > 	if (__builtin_mul_overflow(replay_esn->bmp_len, 4, &len)) {
-> > 		return true;
-> > 	}
-> > 	if (__builtin_add_overflow(len, sizeof(*replay_esn), &len)) {
-> > 		return true;
-> > 	}
-> 
-> This is so ugly...  :/  I'd prefer to just do open code the check at
-> that point.
-> 
-> static inline int xfrm_replay_state_esn_len(struct xfrm_replay_state_esn *replay_esn)
-> {
-> 	if (replay_esn->bmp_len > (INT_MAX - sizeof(*replay_esn)) / sizeof(__u32))
-> 		return -EINVAL;
-> 	return sizeof(*replay_esn) + replay_esn->bmp_len * sizeof(__u32);
-> }
-
-You can't open code if you have something like this:
-
-	X = a * b + c;
-
-Second, the code is now effectively duplicated, once in overflow check,
-second time in actual calculation.
-
-BAO and BMO may look chatty but they're doing the right thing.
+Thanks,
+Miqu=C3=A8l
