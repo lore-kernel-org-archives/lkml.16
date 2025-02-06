@@ -1,82 +1,95 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F851F416D;
-	Thu,  6 Feb 2025 15:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB3B1F416D;
+	Thu,  6 Feb 2025 15:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857269; cv=none; b=QWI9ztV0betBxJvuJBhiWttEl3jlXmkzFvjGP+eyXLXwrh/FZevV+S8yyo7wXiYLm8a6UeTRtd/sJeqU4oNxSz4f0u/uwyBVAcJjpaZFr2Bzl6ZK5dTlbRC7yvX0As7t8fGOSUcilvlcIpVHb6hhEv+YH02pdtK+8LSIiQgUXug=
+	t=1738857336; cv=none; b=kRFRhawvNWs3JTrwUtq9Te1kpPK9aJm9JWFv5pH1q8TQqB02f9ssDcm/MJrKyHdT3/dnMqvlOmKwtOuZdK82F1+iMpBiQgvCKrgYR//DM7SQJ0FZznrRF1oRTEB8JnSlKOZcY2kdxC5No+Xg71AU2mgWsgVNTwFFoHHKi9lgAzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857269; c=relaxed/simple;
-	bh=MABX6xVCTVYjqfhW7HCIEvQlyd3hFI0FBMQSjwhEX4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gs4kI/7nuswsoLq6pAITHhKfJFnmXSGROsOt3MVVrkDnmhxgP86TWb0MdRZxZYoM7h4f2MlK2hQg1KPV6eqNa+lP+d/h5zB6qowOOsHln0GDxtNizmddW127pdW5vXpnAhT8wUDNlYwSthDYFeg+17ni7jaLIlcMIC7gKuuwUqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=WHoZLrHu; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1738857336; c=relaxed/simple;
+	bh=tD52tgT0ku1ofDDa7H4xHdYUEEdhBWYV8NOkuxPkEew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VH8BixmKU1QFvQ9xbmCSPlL/FJFWtosl7IxhQcdyJX1GhiNKsrcQN5je42/hixGpfCsqvU5ZGtMiCI89yLjr+y/RmmyxiRhqEAXSy9igbE7r/YFF22g8sZcuyXPxQqHhEoQTx6NWDWG7kTlN47F4IzJMMYmVCnsf4fzlNAA2ePA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMWyVKeQ; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="WHoZLrHu"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4YphVq52sRz6CmM6L;
-	Thu,  6 Feb 2025 15:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1738857265; x=1741449266; bh=MABX6xVCTVYjqfhW7HCIEvQl
-	yd3hFI0FBMQSjwhEX4M=; b=WHoZLrHuy62dhmq1EZlReF8SHjop/c2DkxYfpIGc
-	1vA6yatDwUnrR/UnnA7MCHNv+6cdsd4jXr1jis1T1nFBHAObCQW0LqvnPoPNvj9V
-	8l/c+36VidJGKJypyRT0a5wlJrUVNudDpmJBuFnkvcGeDSyepukjK8P8FFql/RMz
-	gIl847y4KBZDsYx/7tpXkB04nV4nEckhuncyam0q8Ca+dBN1dRymqWOihpT1vvy8
-	zHn6P78TMFk/8gKQ9oTGerhgFlnYIg9EnTfOUJCw5RE7aQa76+p02BDSZdhjWUrV
-	20EojEZ2pcZrncmy8jQA6p0SMC6Cpc3qY1r4mT09NgCEYw==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 69iNgM2IxfKn; Thu,  6 Feb 2025 15:54:25 +0000 (UTC)
-Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4YphVl72WZz6CmM6D;
-	Thu,  6 Feb 2025 15:54:23 +0000 (UTC)
-Message-ID: <b962df63-42c4-4bc9-9815-9871be1ce2d5@acm.org>
-Date: Thu, 6 Feb 2025 07:54:21 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMWyVKeQ"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f74e6c6cbcso244282a91.2;
+        Thu, 06 Feb 2025 07:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738857333; x=1739462133; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tD52tgT0ku1ofDDa7H4xHdYUEEdhBWYV8NOkuxPkEew=;
+        b=YMWyVKeQ+eJq4k4pnxJe8Czy1/TXw8TZU5zXaoWwjgv2KvM+jEHozZqMuCp8K1cbzp
+         JYPNTBw9QbOwvfs/PPOgVNUdGYRvHcdbSTSAbhX4Y2/wg4zCbC+4lIjMCb6AWrHRCjYP
+         44Dqv/y2I7vo95ZZKGwOF4B+69U9hyGm5gXnowwU7kpnuEMILRIR6IF3U6Ckzjj0gg2u
+         NMGAKrhTBZeLtsyac0CmOWIGBxiVtsAst/UHTGnzICatm9exXPnqOYrhzcq0Zug89l4e
+         8hXNuGUBASGrQQf0nmZU/LH0k7AD77s0ccS+C/WM6vI8EOUKhvKGv+flfa2noKbqXLa8
+         uT/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738857333; x=1739462133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tD52tgT0ku1ofDDa7H4xHdYUEEdhBWYV8NOkuxPkEew=;
+        b=NXjcavauHpn0JDFi0B1fPT7gej/QKCYggA6NogL1/wQBfBRGjizAtFZTT3CHepTWrL
+         9vm2u6dbNR3g4HugGYq/raVappvMvLCcTEAYHQxU2WFT9efyXM4HCA9oPWsKQCka0gKs
+         koQtopsJ9tZbxiyWfsoMyLbYIz1wo2HsaURC0xW422nYxhtB/HTYEJwM0F1F6dr8S6cF
+         GbwjrNtw/s4e4bP1y2Pb4GndBIjSzwxCDv5M3wVLTWTqM5kWdcmeHZMCF3ER4Xbp4a6r
+         4RJrLYcEvny31hKd6IwWZMwTeED3moglnyBr0NxVLXWCdaxznibhFTmnTdIJAvM3LXNz
+         SX2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXDUS9LRSk+uaBOaDEdW6qceGUL9tok6XC1u24FkXKh1pYPxJtpK/FD20LevTW3nO8KMFV3bebljOWphbw=@vger.kernel.org, AJvYcCXDfPcKut7EN3znF5P/4LFf4vmD7Y8LVvNx8FcNTAIKO+PzINWajbwYHLKF2T1/5b1kEqtE0ciqu8GTcjTWbjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqdgZ6r1EyGLzcXqdP/Ye6QG5bDmBwBKnnVdB9MYoodL+u2Y3d
+	l7RAzvousCRi/okqTft98fMVkR2DjSo6HbXaOnsauQEebzTKpHs72tJX6CK4+PQ+qOL8Udp9VQi
+	d6dWMYzSb3VRTYS3eZhkVAqT6lZY=
+X-Gm-Gg: ASbGncsyBUTb0kODhhBK6EiKIYi/kGcH5zKA2WkVwGV6PvJzBT87F13k9+38KwOO3KH
+	OgseDVQ8aMneq2BoR1GvWbKdQFoyGM/juo2O0ZLziLeVSRk8y89zr5IfsssX6Ll5xh1/8TEyj
+X-Google-Smtp-Source: AGHT+IEFA6bwsKfDtexNPcAT1Ijz76kY846Udajcpk3w58/MZZAQKzUIom5u6GuoKlIyvw24uIrDWLQCOmlW0KuvGmM=
+X-Received: by 2002:a17:90b:1c12:b0:2ee:f64b:9aab with SMTP id
+ 98e67ed59e1d1-2f9e083493dmr4903827a91.6.1738857333464; Thu, 06 Feb 2025
+ 07:55:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] scsi: ufs: critical health condition
-To: Avri Altman <Avri.Altman@wdc.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250204143124.1252912-1-avri.altman@wdc.com>
- <9ebbd6d9-149f-43cb-b188-bd3a6125654f@acm.org>
- <DM6PR04MB6575FACB152A64BDA4B4F5E8FCF72@DM6PR04MB6575.namprd04.prod.outlook.com>
- <DM6PR04MB65757320A1761FE473BFC5CCFCF62@DM6PR04MB6575.namprd04.prod.outlook.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <DM6PR04MB65757320A1761FE473BFC5CCFCF62@DM6PR04MB6575.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250129215003.1736127-1-jforbes@fedoraproject.org> <202502060744.6F701A4CBE@keescook>
+In-Reply-To: <202502060744.6F701A4CBE@keescook>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 6 Feb 2025 16:55:21 +0100
+X-Gm-Features: AWEUYZlz2JYC3NHGsOQJMV9SfXiXt-ES4SPKFNqmwUtWcJbz7DyUOVLVFqJMjho
+Message-ID: <CANiq72meqUFt136PQt=h6b5p+wJ5KvdYM2ci_QNKbHaR2wY71A@mail.gmail.com>
+Subject: Re: [PATCH] Add -fzero-init-padding-bits to bindgen_skip_cflags
+To: Kees Cook <kees@kernel.org>
+Cc: "Justin M. Forbes" <jforbes@fedoraproject.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/6/25 12:54 AM, Avri Altman wrote:
-> After some further internal discussions: The set conditions are
-> vendor specific; The device may set it as many times it wants
-> depending on its criticality. The spec does not define that nor what
-> the host should do. So there is this concern that some vendors will
-> report multiple times, while other wont. Hence, reading
-> critical_health = 1 might be misleading. What do you think?
+On Thu, Feb 6, 2025 at 4:45=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> Thanks for this! I keep forgetting to keep flags in sync. I wonder if
+> there is a way to automate some kind of warning for this (even when
+> CONFIG_RUST=3Dn)?
 
-How about emitting a uevent if a critical health condition has been
-reported by a UFS device? See also sdev_evt_send().
+You mean at editing time?
 
-Thanks,
+> Reviewed-by: Kees Cook <kees@kernel.org>
 
-Bart.
+Thanks! I will add it.
 
+> Miguel, I see you took this already -- is it planned to land for -rc2?
+
+Possibly, depends on how it goes; otherwise -rc3 -- why?
+
+Cheers,
+Miguel
