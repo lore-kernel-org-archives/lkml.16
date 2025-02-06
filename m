@@ -1,189 +1,137 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38242417C2;
-	Thu,  6 Feb 2025 22:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13DF2417C2;
+	Thu,  6 Feb 2025 22:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738882513; cv=none; b=lq3cfNg/X3ZDI/W2jipPHRn0J3pEAPHZ8a7ICARFOqLL+yy9KH2SQRISzBIKcFLtMx/TXugAMdvPuOAJW3K8N5BLU1JeRLuUK4eHKHIjMHUJhPUaZKXzy3N5z6G24L3KAUZFNVa2wqJGkZNsgsSKYdRxfWNXgS22s7LLMNvLaFY=
+	t=1738882608; cv=none; b=BjR+2MtnaJzEkYngoqtch5GJnEzKhGgwC83U5U9JgeAchc5ZtY4IFe4WwpUbb3mt9QP1WxJbz3v/oJX8feS5FaCMcNQvqXPwQEyljUCCaz9E0/1SBkG6wXjBcSsjDJ9t4YuxCf+rR7vLlX/E3KkWs0YnXJZrkKfPdLiQZep7/Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738882513; c=relaxed/simple;
-	bh=YYdN1Kt1DwBE5SingtFdRP/lncfdN0zEaD8UX3Cqml0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mVazMv1szAu1SAAAReJGpMm3LC5/xDlnZDqTmQkW3Pf4aPaDdeI8xiQ7qkMuA0rh4rkzL9YewTcz75/FbX7U2Z9uQOkB3tOkDprhnj0BJlQ+yXkRqbDL6Z8Xk7TAdLyo2blUYswwYALAM5qHV+0NwWJDQYHIHBUYdQv3nGQ4dfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=KjwVdq0g; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1738882608; c=relaxed/simple;
+	bh=x5knv2spfc9/uulG9Q53u3Mnpd7d2DiRafDOH5viDeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HyMywHaumj3x+a8gOCx2722iW+h2CjSwiz+HPTjiC0cglwsAA11yGffRHDOc699l7OXGY7bHo8A/B1FL4friielnIxgq1TYEyK/ZD0H7ImpDqpkQh5y3SeoGj+fDH/topnfRYK2fITikcPc5XZh9JaLMDXTYiIOwgBFwYn6vMsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7/Vflmj; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="KjwVdq0g"
-Received: from [192.168.42.27] (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 6917C2FC0175;
-	Thu,  6 Feb 2025 23:55:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1738882501;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=othQGzWmL0Q7Z0rMwroilwPIHL1b9SoaEjv46hzMfMc=;
-	b=KjwVdq0goTA1ITUjxDm6ydkwvUQTnEnJtsdg33IId/TeIjzcJTKYCpPq2Dde216qwyaF8C
-	/gCvh6S6sQodeaiVSFREvvjoES2lg20BdIH0Ldwm3aBUkV8/kFGJAry77K2BKlLJ+MnEYS
-	dT1hV3gODuphevqAebTsQOUWdAiCAlQ=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
-Date: Thu, 6 Feb 2025 23:55:01 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7/Vflmj"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dc8b5bb0bso121318f8f.1;
+        Thu, 06 Feb 2025 14:56:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738882603; x=1739487403; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oPdz+11/bNSSDH103V+kKB8X98fGo5sDYDlVXDLnzsQ=;
+        b=i7/VflmjxgLylq4uLhms9vSp6ZzibnU5RZ7OgvPc2xdV53XgNrVoghYaW/s3NOn+Wa
+         v67v9ractWYZJLIsdAxFPz7dgVVUMZWNkXoKGCEl2G/2XN+WcHvGwTo0nRifUHQnivCq
+         eCj5t0yFfmGeMKnzm2YN8RJCRRlsWTUIdrTdAjRGvSvI+9fMENNFm9dTI2u4x5hBhwme
+         OREpZu/8nsH+POCgUPZwJxpFz7tXs32BQoLvUyyfm7oNzBzcSz9Xmbd0pdXUEScmEFxz
+         yfb/zMexlKUZN9V+RrKxbtY5eWWdbGPpiUIWgB7enGpEnHYmxvIzZVb4iVognQlE2IJ7
+         Vuzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738882603; x=1739487403;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oPdz+11/bNSSDH103V+kKB8X98fGo5sDYDlVXDLnzsQ=;
+        b=YXEoPGEE+rL6auzxDKZEhkGxKwZ0+kRNcbP2d0TXeoHrF/gkbk3bvaNTMudiaRu/RP
+         L8wq3JKZvAzviYX9uzX4/7xgOrYkGYJ59VEo0iOijWZD7ecVGw9jtAWytaN+3KO9jhSt
+         Nw/8aXaPt42rRXAa2KdkBN2FsMut+wzI4xw5NXifbv6w5gwcUa7gZ7JzATV0ppwW0f/P
+         RLSs0QCKL3ueLCsm64IKB7SnGXvEkp35VztjCftC3d+MH+4lqwhCbTNIGKdtCGpaZQ0X
+         69rfcQqMQIc36kSP+uCzECRY/rS3ELyeegd8wUaRTbYAZI6eB2fwO5Ks6/7cIkIulUm/
+         l0hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUx7opPPU1I5gSl0jkrF8SlzPqL1ZTXhc14WaPapIGSIZ4NUnGJHe7npku1xAoinO1R+1Ii5s78Lyg=@vger.kernel.org, AJvYcCX7muHwJhc06nBu17rRDTDc+du2dmrnJ1SfFouXuf3I+S1tWutMRT9rMxWu63e8Yj/YsQ41DLkOSgCyDr80@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs4kcSU4qyWrA/rJ3eApISVWndpnkHw3TLv2VJBMIh6URnnaxV
+	fWcsYnQhgqimaRLjYTZ6vyOXR+ma0Yqb1NkymhTsTDEizW06xZKsrobHUtdPt+QvDzQVUtK2K+B
+	CknTpKHaVFhON4aH/Zihp9NVV944=
+X-Gm-Gg: ASbGncvcXh16sck6d5J4sITCjDFJ/PvHFGTqsegfLSOgjYbdYGkrVHTrh9KUkuPqwUV
+	GtFmCoKP1DapDqy3AYhLcXjrg54KUDnrFK1uBRdeAlMl+L7WSauZREAtdIlj8EXUJjLHWsiWXfu
+	8=
+X-Google-Smtp-Source: AGHT+IHgNzZylaM+zZeGmJCVW0wzeCzutFnm9tOjVqNinitAROSpEV6CxJxouNvJvwmUY/VWDRJbY8vF9dcNb2OIQgw=
+X-Received: by 2002:a05:6000:154b:b0:38a:8ed1:c5c7 with SMTP id
+ ffacd0b85a97d-38dc9491e7amr426795f8f.46.1738882602687; Thu, 06 Feb 2025
+ 14:56:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
- TFAN via hwmon
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ukleinek@kernel.org,
- jdelvare@suse.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20250205162109.222619-1-wse@tuxedocomputers.com>
- <20250205162109.222619-2-wse@tuxedocomputers.com>
- <767538f2-d79e-44e4-a671-4be56a3cfe44@roeck-us.net>
- <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
- <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+ <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org> <F974BA79-80D8-4414-9DFD-1EEF9395143C@jrtc27.com>
+ <72837fcd-97a8-c213-0098-c8f308c3415d@gentwo.org> <29A74A26-E922-4A4F-9B4A-8DB0336B99DF@jrtc27.com>
+ <94f81328-a135-b99b-7f73-43fb77bd7292@gentwo.org>
+In-Reply-To: <94f81328-a135-b99b-7f73-43fb77bd7292@gentwo.org>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Thu, 6 Feb 2025 23:56:31 +0100
+X-Gm-Features: AWEUYZmoPWHhToAFkBuF21oc_INOOZFv4ej_J9A_VfxRgRnaQMcmFMInFI5cvqQ
+Message-ID: <CA+fCnZfzPLiBcCLQTwkgBqP1D6Cw-gFrpKEpTHs5PYp07hYXug@mail.gmail.com>
+Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode for x86
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: Jessica Clarke <jrtc27@jrtc27.com>, 
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, luto@kernel.org, xin@zytor.com, 
+	kirill.shutemov@linux.intel.com, palmer@dabbelt.com, tj@kernel.org, 
+	brgerst@gmail.com, ardb@kernel.org, dave.hansen@linux.intel.com, 
+	jgross@suse.com, will@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, 
+	corbet@lwn.net, dvyukov@google.com, richard.weiyang@gmail.com, 
+	ytcoode@gmail.com, tglx@linutronix.de, hpa@zytor.com, seanjc@google.com, 
+	paul.walmsley@sifive.com, aou@eecs.berkeley.edu, justinstitt@google.com, 
+	jason.andryuk@amd.com, glider@google.com, ubizjak@gmail.com, jannh@google.com, 
+	bhe@redhat.com, vincenzo.frascino@arm.com, rafael.j.wysocki@intel.com, 
+	ndesaulniers@google.com, mingo@redhat.com, catalin.marinas@arm.com, 
+	junichi.nomura@nec.com, nathan@kernel.org, ryabinin.a.a@gmail.com, 
+	dennis@kernel.org, bp@alien8.de, kevinloughlin@google.com, morbo@google.com, 
+	dan.j.williams@intel.com, julian.stecklina@cyberus-technology.de, 
+	peterz@infradead.org, kees@kernel.org, kasan-dev@googlegroups.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, llvm@lists.linux.dev, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 6, 2025 at 8:21=E2=80=AFPM 'Christoph Lameter (Ampere)' via
+kasan-dev <kasan-dev@googlegroups.com> wrote:
+>
+> I cannot share details since this information has not been released to be
+> public yet. I hear that a whitepaper will be coming soon to explain this
+> feature. The AmpereOne processors have been released a couple of months
+> ago.
+>
+> I also see that KASAN_HW_TAGS exist but this means that the tags can only
+> be used with CONFIG_KASAN which is a kernel configuration for debug
+> purposes.
+>
+> What we are interested in is a *production* implementation with minimal
+> software overhead that will be the default on ARM64 if the appropriate
+> hardware is detected. That in turn will hopefully allow other software
+> instrumentation that is currently used to keep small objects secure and i=
+n
+> turn creates overhead.
 
-Am 06.02.25 um 19:57 schrieb Guenter Roeck:
-> On Thu, Feb 06, 2025 at 10:28:01AM +0100, Werner Sembach wrote:
->
-> [ ... ]
->
->>>> +        temp = retval * 100 - 272000;
->>>> +
->>>> +        for (j = 0; temp_levels[j].temp; ++j) {
->>>> +            temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
->>>> +            temp_high = temp_levels[j].temp;
->>>> +            if (driver_data->temp_level[i] > j)
->>>> +                temp_high -= 2000; // hysteresis
->>>> +
->>>> +            if (temp >= temp_low && temp < temp_high)
->>>> +                driver_data->temp_level[i] = j;
->>>> +        }
->>>> +        if (temp >= temp_high)
->>>> +            driver_data->temp_level[i] = j;
->>>> +
->>>> +        temp_level = driver_data->temp_level[i];
->>>> +        min_speed = temp_level == 0 ?
->>>> +            0 : temp_levels[temp_level-1].min_speed;
->>>> +        curr_speed = driver_data->curr_speed[i];
->>>> +        want_speed = driver_data->want_speed[i];
->>>> +
->>>> +        if (want_speed < min_speed) {
->>>> +            if (curr_speed < min_speed)
->>>> +                write_speed(dev, i, min_speed);
->>>> +        } else if (curr_speed != want_speed)
->>>> +            write_speed(dev, i, want_speed);
->>>> +    }
->>>> +
->>>> +    schedule_delayed_work(&driver_data->work, TUXI_SAFEGUARD_PERIOD);
->>>> +}
->>> This is not expected functionality of a hardware monitoring driver.
->>> Hardware monmitoring drivers should not replicate userspace or
->>> thermal subsystem functionality.
->>>
->>> This would be unacceptable in drivers/hwmon/.
->> Problem is: The thermal subsystem doesn't do this either as far as I can tell.
->>
->> See this: https://lore.kernel.org/all/453e0df5-416b-476e-9629-c40534ecfb72@tuxedocomputers.com/
->> and this: https://lore.kernel.org/all/41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com/
->> thread.
->>
->> The short version is: The Thermal subsystem always allows userspace to
->> select the "userspace" governor which has no way for the kernel to enforce a
->> minimum speed.
->>
-> You can specify thermal parameters / limits using devicetree. Also, drivers
-> can always enforce value ranges.
+Is there anything specific CONFIG_KASAN + CONFIG_KASAN_HW_TAGS do that
+is not good enough for a production environment?
 
-Sorry for my noob question: What do you mean with devicetree in x86 context?
+The last time I did some perf tests (a year+ ago on Pixel 8, I
+believe), the two expensive parts of CONFIG_KASAN_HW_TAGS were:
 
-I only want to enforce a value range at a certain temperature, if the 
-device is cool, the fan can be turned off for example.
+1. Collecting stack traces. Thus, this can now be disabled via
+kernel.stacktrace=3Doff. And there's a tracking bug to add a
+production-grade implementation [1];
 
->
->> As far as I can tell the Thermal subsystem would require a new governor for
->> the behavior i want to archive and more importantly, a way to restrict which
->> governors userspace can select.
->>
->> As to why I don't want grant userspace full control: The firmware is
->> perfectly fine with accepting potentially mainboard frying settings (as
->> mentioned in the cover letter) and the lowest level I can write code for is
->> the kernel driver. So that's the location I need to prevent this.
->>
-> It is ok for the kernel to accept and enforce _limits_ (such as lower and upper
-> ranges for temperatures) when they are written. That is not what the code here
-> does.
+2. Assigning memory tags to large allocations, specifically page_alloc
+allocations with large orders  (AFAIR is was specifically assigning
+the tags, not checking them). Thus, this can now be controlled via
+kasan.page_alloc.sample(.order).
 
-It conditionally enforces a minimum fanspeed.
+There's definitely room for optimization and additional config options
+that cut down KASAN checks (for example, disabling tag checking of
+mempool allocations; although arguably, people might want to have this
+in a production environment.)
 
-So is the problem that hwmon drivers are only allowed to enforce 
-unconditional limits?
+Otherwise, it's unclear to me what a new production-grade MTE
+implementation would do different compared to KASAN_HW_TAGS. But if
+there's something, we can just adjust KASAN_HW_TAGS instead.
 
->
->> Also hwmon is not purely a hardware monitoring, it also allows writing
->> fanspeeds. Or did I miss something and this shouldn't actually be used?
->>
-> If doesn't actively control fan speeds, though. It just tells the firmware what
-> the limits or target values are.
-What is the difference if it tells the firmware a target fanspeed, which 
-can be ignored by it, or a driver a target fanspeed, which can be 
-ignored by it?
->
->>> Personally I think this is way too complicated. It would make much more sense
->>> to assume a reasonable maximum (say, 16) and use fixed size arrays to access
->>> the data. The is_visible function can then simply return 0 for larger channel
->>> values if the total number of fans is less than the ones configured in the
->>> channel information.
->> Didn't know it was possible to filter extra entries out completely with the
->> is_visible function, thanks for the tip.
->>> Also, as already mentioned, there is no range check of fan_count. This will
->>> cause some oddities if the system ever claims to have 256+ fans.
->> Will not happen, but i guess a singular additional if in the init doesn't
->> hurt, i can add it.
-> You are making the assumption that the firmware always provides correct
-> values.
->
-> I fully agree that repeated range checks for in-kernel API functions are
-> useless. However, values should still be checked when a value enters
-> the kernel, either via userspace or via hardware, even more so if that value
-> is used to determine, like here, the amount of memory allocated. Or, worse,
-> if the value is reported as 32-bit value and written into an 8-byte variable.
-ok
->
->>>> +    *hwmdev = devm_hwmon_device_register_with_info(&pdev->dev,
->>>> +                               "tuxedo_nbxx_acpi_tuxi",
->>>> +                               driver_data, &hwminfo,
->>>> +                               NULL);
->>>> +    if (PTR_ERR_OR_ZERO(*hwmdev))
->>>> +        return PTR_ERR_OR_ZERO(*hwmdev);
->>>> +
->>> Why not just return hwmdev ?
->> because if hwmon is NULL it is still an error, i have to look again at what
->> actually is returned by PTR_ERR_OR_ZERO on zero.
-> That seems a bit philosophical. The caller would have to check for
-> PTR_ERR_OR_ZERO() instead of checking for < 0.
->
-> On a side note, the code now returns 0 if devm_hwmon_device_register_with_info()
-> returned NULL.  devm_hwmon_device_register_with_info() never returns NULL,
-> so that doesn't make a difference in practice, but, still, this should
-> at least use PTR_ERR().
-ok
->
-> Guenter
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D211785
