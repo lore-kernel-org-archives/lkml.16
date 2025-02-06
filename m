@@ -1,104 +1,93 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCEC23958C;
-	Thu,  6 Feb 2025 19:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C819F1A2872
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869409; cv=none; b=LRBg/Ww6W1EjCpLOVYD+iX0WtFO8Bjd62fMRJ5KK1ZAedH/LNetmAxTpDrLG031AwrUOsEE2OeLFJA4oV2fsE96xn+EQAQxC8Y57r6tY5Bb7J39RLaZrnArmwr60qn56ZXY38e5G7K/h5xDZhSZqFU/AaF0qpBqrgZjYyBQgUAc=
+	t=1738869411; cv=none; b=QyaQL4fDLt7qR9Gf7hvLh70lAqGN0d0FXruwex73bJAFmFUOVy/gSmZihtkpIGh08UL5Rqr9RQYsUq0zCig99nYCEIAIT+EJGsA0LGzNMuIgcSiuJ3bm6fZFb0/UBgC56PD+GAnWYrpuj19Cm1y2r17EgamdXTmQX0Ipwyw1cIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869409; c=relaxed/simple;
-	bh=oM+dvGNntOTrsnnoqCO4nuqA9d+f7sHywmyvc3SLuKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddg/zFlPBqg9vz3et5nlFUMwf1JdsKHron68SihhgUyeiZT4yRlz/WCxsD7yZo5NHwCOC2JWziOIvJjCkHXefgLS2DlWWSNewlXlL0iVValdKPyRmiQIJ8vTy6JWiJyiyWmrNbazlahDSp6VBo26NBTbbgBZv5lp/EPEijIhK30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wm4UMcH4; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738869411; c=relaxed/simple;
+	bh=w+f1RErILNMp1vIEzlV4xTxlGqblMtEY7MlRk8uRiJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AhzzwuH38Lt27BNdY+ySkyZYHNUwTPqE4+kMtbS0AWvZaacrN1EC4aqa9R3D5LIyVZapkGfr8mtWKEWjYlXUsUkY9TKzyfVQz/ZrS69Ph0BA4PxTquRE8+9FVpwwopu+mhHQ6iiNE0shfYno8/pKc1apT51QiS+k8ZYp6UxaZX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2sEw5qZ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wm4UMcH4"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9d5f8a4b9so2057320a91.0;
-        Thu, 06 Feb 2025 11:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738869407; x=1739474207; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GCdO692bHBghPfQRGV/NUxGlZvxVvv1uNkFJcvuit2M=;
-        b=Wm4UMcH4xMNxH5coaLFmBGd1EHq06NNMPNhcZaGljlXO5Fdq2SVyTkIzADQiumR6rq
-         qHrhOZDk5RIFxhnzRMJcK+RiFXVAsCnxc3/00FG+dFYaGvcIPz3DIw3r/+a+htnAhC8j
-         neg0434Gezx9/VyCLq9elA83Zb/Fu2sNKo8C8cSJHPGVQ3H128X+lSENxeJW51oRed3c
-         Ivv4W9b/n2URoB+TkYSD/SDchAhfKKbF4OwR5sz45JHNAnKHnehYz8SlV70skmbjerSy
-         P5+GUR348fN/1Lh6TjmFxfE9nlowDgPQ0f8yHqsoyctbBjscYA2u60JbCuWl9H1bj0iY
-         OZ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738869407; x=1739474207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GCdO692bHBghPfQRGV/NUxGlZvxVvv1uNkFJcvuit2M=;
-        b=k4AMssy5Vb3KkVIqRTMhQBKRpaIeoegQfyuuWW71vKjWT0h0VKyMXE+VOMEpYsQ7ve
-         6JWEv2rnXjZ09NBJnt5uWFOUKkK2lw+HTaoMg4EMHdnwWhRAq68Z9Ubzre9SKTJGu/f6
-         GmMxrwPApzZkqCgKSAbBnA4YjCrzghLzawAytZOTPk+LZB4XaEBcSbP+K9NqffK278MA
-         iycVMyyR1OQuDX14y/N+v3BGC3yVK5MKf0Ltcg9f1q/1vDmJMvh2uZLhD1w3HN58udV3
-         st4uo2VYq5cFcPwZ5ejte/ONXsurGDJABJggwfueDsMTpgC0jOKvACDtl5cWhm+O1pa+
-         XL9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU18SJCFbSev9MRjSFTkpWX1IXeYLZLzVXB/SofbV0ycCStlZIN2puPUc2JdvjJf6NqLDxR4mFn20Tt@vger.kernel.org, AJvYcCXiYzzyTgncGQI2oFWpI6da7mZ44VhTRzDeTcobl5YTmmG0zW5mfzQufvjUytfJZsZFD38IKQcLVbaeaG0W@vger.kernel.org
-X-Gm-Message-State: AOJu0YybjULq7l1IdygVaIxLBeZVD/P1ohsKcx4SNF9sahAQX3xqu7kx
-	WXerZovlq1rsH6xiJGs9uKJEeuzW7VgK2AgxsIAqaAxx2n2+CWWG
-X-Gm-Gg: ASbGncszzizcJSZEYAssCN3vVjLcRvxrKasGdAQ4Kw9buycU5LnBD59BlxuwCw6Ns62
-	Mn+xG+/2zV4SGtcNVh8x1hezXANNMuje2yFaov423qRCmA4llcComuBEM29UJ9SdAwlOnnSGPtJ
-	Ur4fW96Lg93eWX1MB+1hhd8JObzCk9tA+npwEvCqnu/rXSIDxMfjQT2KtyVKPnCX85iV9yCbpZH
-	dZNFYlgQqAppZgrpKnTaW40cSve4Ue3bvFNcgGNxy/sA8DcETByTiFxjuUxXYZSMu2fD1AZ7Fwy
-	8CrlIgj99bQqvNw=
-X-Google-Smtp-Source: AGHT+IGyBu8HGooogVECSDxGIUQ5Z40l4h+BQiOH7nR1Zf9Q9rLywn17YBVVdpSAMvv59KLxYaoxWQ==
-X-Received: by 2002:a17:90b:38c3:b0:2fa:13d9:39c with SMTP id 98e67ed59e1d1-2fa24064f31mr383637a91.14.1738869406961;
-        Thu, 06 Feb 2025 11:16:46 -0800 (PST)
-Received: from localhost ([216.228.125.131])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a1848asm1794373a91.12.2025.02.06.11.16.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 11:16:46 -0800 (PST)
-Date: Thu, 6 Feb 2025 14:16:44 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/2] gpio: xilinx: Replace custom bitmap APIs
-Message-ID: <Z6UKnNyf9cDVSUPF@thinkpad>
-References: <20250205093200.373709-1-andriy.shevchenko@linux.intel.com>
- <Z6MzExQFcIz9HlkN@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2sEw5qZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738869410; x=1770405410;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=w+f1RErILNMp1vIEzlV4xTxlGqblMtEY7MlRk8uRiJs=;
+  b=G2sEw5qZ5pTS/F8tqLC7SVW7xinniF95gFyuJtOR4fFwd6h3u+W8kz+L
+   kN8+R3Vy+h0ukFwHroaXH67otqoYCdMM/KjMlJPJS5XOK92vg5Jkei/33
+   5KixKxESatabRQDOcyhqw1+zrIjUs9Keyzluibgmtgc2V0rfGUGIBVpzb
+   +7mw8ztODiJ53rhH7NmKXxK+BuC5jZxxbKp70k2bXxEyghe4h4e8fQ4mM
+   OccePTkZ5ccVcc8tXH/KoXRYLkUu/Dwq84SmjBVgfnK6GDgtpvfYqC1lB
+   sQgHJnKcvBgNqN/86yAxqquO3vkRAS38IT+XVOIMI5nuWZvoOAmOW0J7X
+   A==;
+X-CSE-ConnectionGUID: vczaexE3QxuD5yp8M4VdpA==
+X-CSE-MsgGUID: uoSRGH1LSQGLtSaOfzsXsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64848245"
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="64848245"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:16:49 -0800
+X-CSE-ConnectionGUID: UMpSt+rVTd6aHsBpkxvTag==
+X-CSE-MsgGUID: 9LU7QzTdThSgCgsrQnZi4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="116334050"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 06 Feb 2025 11:16:47 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id DA31BEE; Thu, 06 Feb 2025 21:16:45 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/1] regmap: irq: Use one way of setting all bits in the register
+Date: Thu,  6 Feb 2025 21:16:30 +0200
+Message-ID: <20250206191644.1132869-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6MzExQFcIz9HlkN@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 11:44:51AM +0200, Andy Shevchenko wrote:
-> +Cc: Yury
-> 
-> On Wed, Feb 05, 2025 at 11:31:09AM +0200, Andy Shevchenko wrote:
-> > Relatively recently bitmap APIs gain a few new calls which may help
-> > to convert the GPIO Xilinx driver to use them and become shorter and
-> > nicer. This mini-series does exactly that.
-> > 
-> > Changelog v2:
-> > - fixed a regression in patch 2
-> > 
-> > Andy Shevchenko (2):
-> >   gpio: xilinx: Use better bitmap APIs where appropriate
-> >   gpio: xilinx: Replace custom variants of bitmap_read()/bitmap_write()
-> 
-> Yury, just FYI, after this series, if applied, the bitmap_remap() and
-> bitmap_bitremap() may be moved to the NUMA only APIs. Or i.o.w. the
-> commit cde3d0f81e67 ("bitmap: Make bitmap_remap() and bitmap_bitremap()
-> available to users") may be reverted.
+Currently there are two ways of how we represent all bits set, i.e.
+UINT_MAX and GENMASK(31, 0). Use the former as the single way of
+doing that, which is crystal clear on how we fill the unsigned int
+value.
 
-Thanks Andy, I'll keep an eye on it.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: used UINT_MAX (Mark)
+ drivers/base/regmap/regmap-irq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index 0bcd81389a29..e5631188d692 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -823,7 +823,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 		/* Ack masked but set interrupts */
+ 		if (d->chip->no_status) {
+ 			/* no status register so default to all active */
+-			d->status_buf[i] = GENMASK(31, 0);
++			d->status_buf[i] = UINT_MAX;
+ 		} else {
+ 			reg = d->get_irq_reg(d, d->chip->status_base, i);
+ 			ret = regmap_read(map, reg, &d->status_buf[i]);
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
+
