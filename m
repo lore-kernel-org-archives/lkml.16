@@ -1,99 +1,70 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5070B225788;
-	Thu,  6 Feb 2025 08:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0598822578A;
+	Thu,  6 Feb 2025 08:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832267; cv=none; b=O9vNockomQ4TiRfk8WZzfwCi9unAgmgpfFo+NeSLmRAKtcVqdhLBVKOl/vMLRvdSJMW6szWRTG7AYLRnOldwzluMYtpPsedSLDTz58qsNIHEwe0Le2imbKmox34WgXEbVQeb05OqeqqRFAt+YnLwj8yMnRcvOPS9a2HsK9X0IOY=
+	t=1738832291; cv=none; b=uoY1JY/qMnC54vu1s84A0q7j7lApTS9FGOoLkwmk2647EKIXsB1gbcTzKcWZ19NBjjJYTmPLOtIR2T02737utcILNJjoxYiZzXq+REyTsgivWyGWk4CwEO3cnWRMH+e0DyzZCsxg+1jaDNHOg0+Nx1/HPHNwynJMc4rrT2wnCCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832267; c=relaxed/simple;
-	bh=AHzmab3IVzOv4ljegaF3aCNXLSFt4v9KOiMp2XTVb7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TST5UiXkqj/2xGAuw3490LF95O9Pj/Bv0p5iX5g6g9K0e8oncE2wqQ+bFF6SsmZvvvCONq+uvupiyvXc9uM+ugdJZ45utnWYodjdqsLIbdjU5DhxMMeU2JdnIMxgkG06uocXHb8updvyOFCNTPzZqRn7H176adHcencn8z5jUwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q7qwVHLz; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q7qwVHLz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=QJF5K1Ld/qUFVxjLNweayOZydJ7o5XHCEFsT1AV7AK4=; b=Q7qwVHLzhq0fJJzbb+ZoRsBJ8j
-	8G6CfBsfI3lpwnXNYPy0L+RGJ9xNUGYoyaXe3CAzB0SRwe3ZL2TN3GGbdTJ+vNkCulBrEropyB78A
-	IshRUFM/6WwkLE957X7Wg3dVXsnehuhIOeKfeWnouGoo06LxHWGzWEHUoTzsHy1+cRjHZ6HQnSzxP
-	E7PHczQNDnhr6NiSZmAMdf8/B6371ngDWK9CN7irj27xOyiiZ5rek5mK+Bj65YzPw1lsmUEWNSVIo
-	Es78jP5IWZcjw+/C8nyrG4whhYOp8JMy9Jxha7WWE/FV+iUK2XLsnZ7ROrfX4CTjZGcfV3WwLua58
-	Y54aW3TQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfxhb-0000000GtCE-2Euw;
-	Thu, 06 Feb 2025 08:57:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 94C6330031C; Thu,  6 Feb 2025 09:57:38 +0100 (CET)
-Date: Thu, 6 Feb 2025 09:57:38 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250206085738.GL7145@noisy.programming.kicks-ass.net>
-References: <20250206080952.98478-1-gmonaco@redhat.com>
- <20250206080952.98478-4-gmonaco@redhat.com>
- <20250206081942.GJ7145@noisy.programming.kicks-ass.net>
- <d8187fcd53c62272d7e1a8dad327c4f2a5f07188.camel@redhat.com>
+	s=arc-20240116; t=1738832291; c=relaxed/simple;
+	bh=snZetSh+O+16zu7OB+zRKFnyhedhxJaN1GrQR/Z19oo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ApluwlwkSFqHw7g16h2jn6Js9H5uHHdTCwbVvZw75+OMD2Fm17PthmXAdKpW2Eh2c9UYo1wDYOvc1Y8tcQvLQpDWHLQGZNQt3UosuzL1RpQ0G+fl7n2B/54pjJ8LBGZMLwQLTAGKed5Sse9ooifFOVGeWwB/HrP2aydjGx63NiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 06 Feb 2025 17:58:08 +0900
+Received: from mail.mfilter.local (mail-arc02.css.socionext.com [10.213.46.40])
+	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 2FF02200F133;
+	Thu,  6 Feb 2025 17:58:08 +0900 (JST)
+Received: from kinkan2.css.socionext.com ([172.31.9.51]) by m-FILTER with ESMTP; Thu, 6 Feb 2025 17:58:08 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.245.39])
+	by kinkan2.css.socionext.com (Postfix) with ESMTP id E43ACAB187;
+	Thu,  6 Feb 2025 17:58:07 +0900 (JST)
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Kohei Ito <ito.kohei@socionext.com>
+Subject: [RESEND PATCH v1] spi: sn-f-ospi: Fix division by zero
+Date: Thu,  6 Feb 2025 17:57:47 +0900
+Message-Id: <20250206085747.3834148-1-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d8187fcd53c62272d7e1a8dad327c4f2a5f07188.camel@redhat.com>
 
-On Thu, Feb 06, 2025 at 09:36:41AM +0100, Gabriele Monaco wrote:
+When there is no dummy cycle in the spi-nor commands, both dummy bus cycle
+bytes and width are zero. Because of the cpu's warning when divided by
+zero, the warning should be avoided. Return just zero to avoid such
+calculations.
 
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index 165c90ba64ea9..fb5f8aa61ef5d 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -491,6 +491,12 @@ sched_core_dequeue(struct rq *rq, struct
-> > > task_struct *p, int flags) { }
-> > >  
-> > >  #endif /* CONFIG_SCHED_CORE */
-> > >  
-> > > +void trace_set_current_state(int state_value)
-> > > +{
-> > > +	trace_sched_set_state_tp(current, current->__state,
-> > > state_value);
-> > > +}
-> > > +EXPORT_SYMBOL(trace_set_current_state);
-> > 
-> > Urgh, why !?!
-> > 
-> 
-> Do you mean why exporting it?
-> At first I was puzzled too (this line is borrowed from Daniel), but the
-> thing is: set_current_state and friends are macros called by any sort
-> of code (e.g. modules), this seems the easiest way without messing up
-> with the current code.
-> 
-> I'm not sure if it would be cleaner to just drop this function and
-> define it directly in the header (including also trace/events/sched.h
-> there). It felt like files including sched shouldn't know about
-> tracepoints.
-> 
-> What do you think would be better?
+Fixes: 1b74dd64c861 ("spi: Add Socionext F_OSPI SPI flash controller driver")
+Co-developed-by: Kohei Ito <ito.kohei@socionext.com>
+Signed-off-by: Kohei Ito <ito.kohei@socionext.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ drivers/spi/spi-sn-f-ospi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-So I would think having the tracepoint in-line would be better. Because
-as is, everything gets to have this pointless CALL to an empty function.
-
-If this were x86_64 only, I would suggest using static_call(), but
-barring that, the static_branch() already in the tracepoint is the best
-we can do.
+diff --git a/drivers/spi/spi-sn-f-ospi.c b/drivers/spi/spi-sn-f-ospi.c
+index adac645732fe..56ef114effc9 100644
+--- a/drivers/spi/spi-sn-f-ospi.c
++++ b/drivers/spi/spi-sn-f-ospi.c
+@@ -116,6 +116,9 @@ struct f_ospi {
+ 
+ static u32 f_ospi_get_dummy_cycle(const struct spi_mem_op *op)
+ {
++	if (!op->dummy.nbytes)
++		return 0;
++
+ 	return (op->dummy.nbytes * 8) / op->dummy.buswidth;
+ }
+ 
+-- 
+2.25.1
 
