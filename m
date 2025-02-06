@@ -1,128 +1,77 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5146B19F11B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83A823956F;
+	Thu,  6 Feb 2025 18:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738867251; cv=none; b=GM9TdDvaGbIPhRMEcpbP+vuAqWwkRvtIqomWyC2Z8tjYz4XaDCFvVO7RLncsGTy01y66Md1KCyDSVlhTW+BEuSENVOsGos9CzRfx3WrcICk8cF5grThvz4qP9IuBNscjRs/iqNfOKFdcSfKXsWLgL6PC4dq4HXxQ98WiMjvfvhk=
+	t=1738867264; cv=none; b=jiC2//E8cCzx5wgUfgnmx9Qpbl+hreSOwtzdHJ2qweOT3cter/wHCEMX18HkRNmE9GOx4mMVl3JvYjBYnZapQ4DOdwtfxLM+gm4Vp+Mcq1pjCc+t1Q16rQcj6spKXvUG7vMe8Au4cQ4VGxtRcT9eju16pn6gkutO8hDoaM+QsA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738867251; c=relaxed/simple;
-	bh=Lf6xAoUU7NXYgLYtGsalOIOw/EEkhs0Vm3ezNCm6rGY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=huODoQiL+Vxn+ZXznVa/r8myXVlzZw8QH/iDZdF0lC16jAWZFMFxX1moLA7YYoy95kW50wmVVOoHtaZAp85pdPm1egnaluTWfXV+RYZnYtgPZuAyPCYc6RS3OZSYSbHOra2aKEzELL1EALAPhcNmcbEeMUQmpSnWWtOk3pUseO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a94DQrux; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738867264; c=relaxed/simple;
+	bh=emVKTAzwmxUz3Qb3XlAdo/xUrgGCZ7mWxQ/cr6rY+R0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P2tXHzba4pI/pNW0Qm/khFS1V36nmRawiCsq4mnvaLZ2vP7Akw0k2PFbRf/Ew9a0pe4RdA94NVf1eRZDmovznNOPfkGn+lABQZGksOwbzSN4JPL1j1tl75XP2FoMvg9ZdUiE8Q/9CRJUFm0SdGxnMgtgFLGhwOubHIb7s2OgCcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKCu6l9+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a94DQrux"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30229d5b21cso11111101fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738867247; x=1739472047; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/1KLNT4FmOlGoDXvAF/z9DFY3XvpbckXqXugGtWIbQ=;
-        b=a94DQruxT7agE1iI+jz5k711GH1Zt4b/y2JJsktdmNJl7WbFdm6QLTYYEUMK+sVzCR
-         CAokLQaiB+G5a84ZlH570s4hQxAbrdvHpeavR1ywQrJPl1pRV3Q2D4nxNa/8OXOnHf/6
-         KdY3MjspdQmYzx7gY0aN+sO4auX78zYm71TbWyqbCqUna5mHb3I10GUP9AQpX2EQ6TEL
-         p64pBZrWC0nyAc6+sqUw/nPDDQOZRHZ7s6rZlYEidrKXr746QH1364cJmGtl+TXBeGFq
-         9ugkeEn08pbgCHOYxCYyLDUL1MHqzJjq3c17Z7iQR2beh26uOGMYROWj7UZsmC7Jl6n9
-         60Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738867247; x=1739472047;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/1KLNT4FmOlGoDXvAF/z9DFY3XvpbckXqXugGtWIbQ=;
-        b=B8B20+FBHYdDZIE5Ej1re3vzUXKmQI4jnlIXy7Ei8eFvYqq+OLL9BhdNRqVGwB23Iy
-         u3om7WJNC+mtiQ6lPEUAsS1mO/rlQTM8S1bl7zSwicbpVFMRGqN/BLAlUUI8/mY/LMAs
-         OtdJna3J4ILcfDX7c6VI3dfvboN5rYCWX+2LaXN1C98orDFWljpbxyDW96U9YHY9RG43
-         hRONnPx+x2fXHAF+99v73VMzK9uCQoajDzELZPaQ4WlmHwIi6JonrQNUwDKDmiC1u7k6
-         zWy9YAOBCva8SHoJ+cpvoGKhCPcnn1O5IiNino4eQGvWSb7jAY2jDSyH+Byklm5KTsSE
-         be4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVlRH7ndtNFp+NOpmpV32II1FfEIrxU1z3aZzhPYHWkDQpMi4kZuvbEiNG7D7nqcIhrs8d0yPkMziXYQ3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9MAOjiSR6WbevrWiBqakIjp+3icGaSLSfJkzAz7W5VUUiqR1w
-	2T3rmdWg1QHoEdm269rrio6ikgZCJGth1Z0v6e0Y1gZfGe/hgKSEpmJSxt+KeyjWfezvuYz+w//
-	88hKp0GO079SmB/DSkfw22k9NVlKfp7brdzelvPrnVSXiQrha
-X-Gm-Gg: ASbGncs2mgp7Z2uQSL/FkHNUovqwPLCGThB82sz8BHK5pFRsBUvaUh+5Qyi8AOCe4T2
-	a9TTgVVNE6JWGkAdIDYzSzkhprcfep+/b6vhOeWs81N9GSLCas2b4pfqPnvnFVMygMq+w0Xo=
-X-Google-Smtp-Source: AGHT+IHspHnGQVYfpoYQGi9ctVZueJrpds613XgEY1o23R9cbS1fqYkeI3XWSr+wkrN1AUux/D6h/Xqji3ktxx+ndmY=
-X-Received: by 2002:a2e:bd8b:0:b0:300:38ff:f8de with SMTP id
- 38308e7fff4ca-307e57fd2f3mr198711fa.16.1738867247273; Thu, 06 Feb 2025
- 10:40:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKCu6l9+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639BFC4CEDD;
+	Thu,  6 Feb 2025 18:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738867264;
+	bh=emVKTAzwmxUz3Qb3XlAdo/xUrgGCZ7mWxQ/cr6rY+R0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KKCu6l9+MwD68V2HrkG1XFErNdBH0A2pkUiXudj2ij+8BwkCJ8lO2KYLVZEq0+eIJ
+	 1cb27sV8kr8KasLPI4CFVkJvN7Vbkya+MLIGY0mGgHPlevGPmFEHyxgcb+GjcV5YQ1
+	 qpY+DoQvMbzNHKdE+2ujELprh1J4uNxE5Y1c17ZTb1T/fMhcAhtf58niH6+MgnosAC
+	 BNV+B1hM/RdpRFXD55IF2T5PBqoM/KrZtmXxE2L9cuybVoXKnQHLlUSh+DNpKf6pbB
+	 fJiva7CONYh1xxTLTUg74eOnyXWW4D4NgMY+VZbkLsymzuXBhv8+mz93hp67SZyMhy
+	 KzXnQvTcG851w==
+From: cel@kernel.org
+To: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
+Subject: Re: [PATCH] nfsd: don't ignore the return code of svc_proc_register()
+Date: Thu,  6 Feb 2025 13:41:00 -0500
+Message-ID: <173886723523.80292.10168370789662544077.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250206-nfsd-fixes-v1-1-c6647b92ca6f@kernel.org>
+References: <20250206-nfsd-fixes-v1-1-c6647b92ca6f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131163408.2019144-1-laurentiu.palcu@oss.nxp.com> <20250131163408.2019144-11-laurentiu.palcu@oss.nxp.com>
-In-Reply-To: <20250131163408.2019144-11-laurentiu.palcu@oss.nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 19:40:36 +0100
-X-Gm-Features: AWEUYZmtqR_uDonJm17O7Egr0R6Qg4Q94CdBZrZSOSqXSwlcXN7zzDhUzAF6Dck
-Message-ID: <CACRpkdYo9690n57FYAM1heSU+zGTKuze8B3d+Q4Py=HJr34-Eg@mail.gmail.com>
-Subject: Re: [RFC 10/12] staging: media: max96712: add gpiochip functionality
-To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Laurentiu,
+From: Chuck Lever <chuck.lever@oracle.com>
 
-thanks for your patch!
+On Thu, 06 Feb 2025 13:12:13 -0500, Jeff Layton wrote:
+> Currently, nfsd_proc_stat_init() ignores the return value of
+> svc_proc_register(). If the procfile creation fails, then the kernel
+> will WARN when it tries to remove the entry later.
+> 
+> Fix nfsd_proc_stat_init() to return the same type of pointer as
+> svc_proc_register(), and fix up nfsd_net_init() to check that and fail
+> the nfsd_net construction if it occurs.
+> 
+> [...]
 
-On Fri, Jan 31, 2025 at 5:35=E2=80=AFPM Laurentiu Palcu
-<laurentiu.palcu@oss.nxp.com> wrote:
+Applied to nfsd-testing, thanks!
 
-> The deserializer has GPIOs that can be used for various purposes. Add
-> support for gpiochip.
->
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Added Cc: stable # v6.9
 
-Since you are using CONFIG_GPIOLIB unconditionally you need
-to add
+[1/1] nfsd: don't ignore the return code of svc_proc_register()
+      commit: 312aef1c1520c10cf035e27c0b0229bea71f0c68
 
-select GPIOLIB
+--
+Chuck Lever
 
-in the Kconfig for this driver, or the autobuilder will soon start to
-spam you with compilation errors.
-
-> +static int max96712_gpiochip_probe(struct max96712_priv *priv)
-> +{
-> +       struct device *dev =3D &priv->client->dev;
-> +       struct gpio_chip *gc =3D &priv->gpio_chip;
-> +       int i, ret =3D 0;
-> +
-> +       gc->label =3D dev_name(dev);
-> +       gc->parent =3D dev;
-
-I don't think you need to assign parent. (Default)
-
-> +       gc->owner =3D THIS_MODULE;
-
-Or this. (Default)
-
-> +       gc->ngpio =3D MAX96712_NUM_GPIO;
-> +       gc->base =3D -1;
-> +       gc->can_sleep =3D true;
-> +       gc->get_direction =3D max96712_gpio_get_direction;
-> +       gc->direction_input =3D max96712_gpio_direction_in;
-> +       gc->direction_output =3D max96712_gpio_direction_out;
-> +       gc->request =3D gpiochip_generic_request;
-> +       gc->set =3D max96712_gpiochip_set;
-> +       gc->get =3D max96712_gpiochip_get;
-> +       gc->of_gpio_n_cells =3D 2;
-
-Isn't that the default? Do you need to assign this?
-
-Other than that this looks good, so with the small fix above:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
