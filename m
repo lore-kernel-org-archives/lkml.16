@@ -1,369 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB0423645A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28502236F7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738878455; cv=none; b=rRFsZkMb9Qsyc459WbPCLlDnJDZGXolnOVre42uEHc5L5zYRZey/OyblQeW6XrUua//W6uMDNHCcytTmRJGmnUFfLwItu2yazHO2qX8gEIqhlTbJsCJb4M60DUjt02QfwxopS0quefbJ1rAbx5pnOnSd1m1pfD990zOEGsAM9SA=
+	t=1738878529; cv=none; b=eq75OFapUcG9DqwNuwdG9c4iW0KQeEWORWpWlot2NMqgKoIKuFmAAiRLNrTr6vdcrnQKRTxYbw7gROwo23DxTHva/ptwvUU5fwBprnUfa4slSDd1miRnivBVvweeIP92AOZb6MvwBGRqXS7AIfP86lK4WXWE42S7kwiPx3NASaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738878455; c=relaxed/simple;
-	bh=GE1DnEHlxBWpHOLwXbYJVVNLrRYgTNM0x+15R1Aw5Ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z9muW2YYIR8EGwpZlyApTuajwHB+rH9SgCC9gsopbma0IxkuBRwV+CbNRPgQbf6qiIxvCaVx4jWBk6AK6v1R0ETNwCA2I2aAHCv5hEvL8irWobFmA0QQ1PO4yTF3OgX1sgyHGaZ+bzHNnivXrQDbMHOOaOjmheG4t9DwydTG+Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=necEC6my; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738878529; c=relaxed/simple;
+	bh=fMifUbcKIH9GL+WlgPHCW9MRWEZw+luUyryUY67BA/g=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=izTlrUZT3xSdFi0mpjwC2UtH6WL810WgS3GrePahCem+ZwEn3YSebM6bbnSZAwGT03tiGW++wK+wQke5iFho7kxaQe3JigWr9bBp+fYEgI0s2pljIYWzHrGBBKvTZSNyRx2WQWR+Xsvt2l1cFSdZO11Td+MU0ifGk4DC+x1LW7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NAhBI6pz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sb9/RQfd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="necEC6my"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A261C4CEDD;
-	Thu,  6 Feb 2025 21:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738878455;
-	bh=GE1DnEHlxBWpHOLwXbYJVVNLrRYgTNM0x+15R1Aw5Ww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=necEC6mywPR6mPl2ov+CpKpsvbf2OUlUtooQzKnEsGT5knK3ogM/PFPk/8k8S/7gy
-	 CDKbbU+xgXD8h9lNAF5j7E0Ot6hBtmuS/1r9tdU5euc1lTqxEAM7zCdDbRQDh/MSY4
-	 7jAzn0myV8U4CWSJRNX/8YFjYgIg3VOa4M1DOJol9K6JH0+eyfTOHg0aPKbfF2o24q
-	 c/thjYA2ocbGntwqvUduWx0V2YtnNUc4/6nLwN7EKMQc+1rHhBas39wUw3k+eV05vB
-	 NKbJEXdMCni7Crj0U9Nh1JDFNnIaeCI6lbeo4BALuQEyLj6Fdn2CbmBCe85WfrlaSv
-	 c3Z4OFSDEYUuw==
-Date: Thu, 6 Feb 2025 21:47:33 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: quota: fix to avoid warning in
- dquot_writeback_dquots()
-Message-ID: <Z6Ut9S7ZpedBukp8@google.com>
-References: <20250206064451.3088028-1-chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NAhBI6pz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sb9/RQfd"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738878525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=okjra5JRtwM/IFJ9mPzxqaiBp8JvAfbCwj9QaFuulks=;
+	b=NAhBI6pzQjp7dYdfNRnYjGfq2iSE/6vkTzxenP9nrrLMKbAubz7cpwrtzrOsXS5ieLPucG
+	9qmxRXEP0nGPBiVu3DQUqrYTJrvqJyTvxBITXoRCZrmZ0pK6dMy8gucVrEp0SsbuZYcedB
+	7hG30fZpfn0bUCLLeN6yFxyhmR/bjyiDRm1a0blciWw9AuPfQAN1MS0oORIXXIQAdIuTPZ
+	X6YGbBgOoFPi7OKjGh7YTLEIUMYmkQykl7keW44GHVYzRFtgE7oV2/KPbmw54ILF6w+hS0
+	9HfJFJyyZrC02vE0LAUIvKnDtOf+gggLKhQk4nEdUgi/TYeTJmYJq69BfvcDUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738878525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=okjra5JRtwM/IFJ9mPzxqaiBp8JvAfbCwj9QaFuulks=;
+	b=sb9/RQfd5Np/5/WVrMUbkyeGhuOQjHHCsKmhI9dPw66FCgmMxX9mwt/m0YdnLeqjhxnHnk
+	K1EARZYwbyJxNcDA==
+To: Jens Axboe <axboe@kernel.dk>, Nam Cao <namcao@linutronix.de>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/12] io_uring: Use helper function
+ hrtimer_update_function()
+In-Reply-To: <4f317ca3-0ffd-4ee0-9da6-8b80a6366d0f@kernel.dk>
+References: <cover.1738746927.git.namcao@linutronix.de>
+ <9b33f490fb1d207d3918ef5e116dc3412ae35c1e.1738746927.git.namcao@linutronix.de>
+ <35d4b9be-3d08-4eaa-8750-7b34ec6e6064@kernel.dk> <87y0yjm4hi.ffs@tglx>
+ <4f317ca3-0ffd-4ee0-9da6-8b80a6366d0f@kernel.dk>
+Date: Thu, 06 Feb 2025 22:48:45 +0100
+Message-ID: <87h656n3r6.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206064451.3088028-1-chao@kernel.org>
+Content-Type: text/plain
 
-On 02/06, Chao Yu wrote:
-> F2FS-fs (dm-59): checkpoint=enable has some unwritten data.
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 6 PID: 8013 at fs/quota/dquot.c:691 dquot_writeback_dquots+0x2fc/0x308
-> pc : dquot_writeback_dquots+0x2fc/0x308
-> lr : f2fs_quota_sync+0xcc/0x1c4
-> Call trace:
-> dquot_writeback_dquots+0x2fc/0x308
-> f2fs_quota_sync+0xcc/0x1c4
-> f2fs_write_checkpoint+0x3d4/0x9b0
-> f2fs_issue_checkpoint+0x1bc/0x2c0
-> f2fs_sync_fs+0x54/0x150
-> f2fs_do_sync_file+0x2f8/0x814
-> __f2fs_ioctl+0x1960/0x3244
-> f2fs_ioctl+0x54/0xe0
-> __arm64_sys_ioctl+0xa8/0xe4
-> invoke_syscall+0x58/0x114
-> 
-> checkpoint and f2fs_remount may race as below, resulting triggering warning
-> in dquot_writeback_dquots().
-> 
-> atomic write                                    remount
->                                                 - do_remount
->                                                  - down_write(&sb->s_umount);
->                                                   - f2fs_remount
-> - ioctl
->  - f2fs_do_sync_file
->   - f2fs_sync_fs
->    - f2fs_write_checkpoint
->     - block_operations
->      - locked = down_read_trylock(&sbi->sb->s_umount)
->        : fail to lock due to the write lock was held by remount
->                                                  - up_write(&sb->s_umount);
->      - f2fs_quota_sync
->       - dquot_writeback_dquots
->        - WARN_ON_ONCE(!rwsem_is_locked(&sb->s_umount))
->        : trigger warning because s_umount lock was unlocked by remount
-> 
-> If checkpoint comes from mount/umount/remount/freeze/quotactl, caller of
-> checkpoint has already held s_umount lock, calling dquot_writeback_dquots()
-> in the context should be safe.
-> 
-> So let's record task to sbi->umount_lock_holder, so that checkpoint can
-> know whether the lock has held in the context or not by checking current
-> w/ it.
-> 
-> In addition, in order to misrepresent caller of checkpoint, we should not
-> allow to trigger async checkpoint for those callers: mount/umount/remount/
-> freeze/quotactl.
-> 
-> Fixes: af033b2aa8a8 ("f2fs: guarantee journalled quota data by checkpoint")
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c | 17 ++++++++-----
->  fs/f2fs/f2fs.h       |  3 ++-
->  fs/f2fs/super.c      | 59 +++++++++++++++++++++++++++++++++++---------
->  3 files changed, 60 insertions(+), 19 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index efda9a022981..baff639ac0c4 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1237,7 +1237,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
->  retry_flush_quotas:
->  	f2fs_lock_all(sbi);
->  	if (__need_flush_quota(sbi)) {
-> -		int locked;
-> +		bool need_lock = sbi->umount_lock_holder != current;
-> +		bool locked = false;
+On Thu, Feb 06 2025 at 13:05, Jens Axboe wrote:
+> On 2/6/25 9:18 AM, Thomas Gleixner wrote:
+>> On Wed, Feb 05 2025 at 11:45, Jens Axboe wrote:
+>>> On 2/5/25 3:55 AM, Nam Cao wrote:
+>>>> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+>>>> index ceacf6230e34..936f8b4106cf 100644
+>>>> --- a/io_uring/io_uring.c
+>>>> +++ b/io_uring/io_uring.c
+>>>> @@ -2421,7 +2421,7 @@ static enum hrtimer_restart io_cqring_min_timer_wakeup(struct hrtimer *timer)
+>>>>  			goto out_wake;
+>>>>  	}
+>>>>  
+>>>> -	iowq->t.function = io_cqring_timer_wakeup;
+>>>> +	hrtimer_update_function(&iowq->t, io_cqring_timer_wakeup);
+>>>>  	hrtimer_set_expires(timer, iowq->timeout);
+>>>>  	return HRTIMER_RESTART;
+>>>>  out_wake:
+>>>
+>>> The timer is known expired here, it's inside the callback. Is this
+>>> really necessary or useful?
+>> 
+>> It's not strictly required here, but in the end this allows to make the
+>> .function member private, which prevents stupid code fiddling with it
+>> without proper sanity checks in the debug case.
+>
+> While that makes sense, this is also a potentially hot path for min
+> timeout usage, which with small timeouts for batch/latency reasons
+> can be run tens of thousand times per second. Adding a lock and IRQ
+> dance would be counter productive.
 
-I removed the above unnecessary locked.
+I fundamentally hate the fact that C does not enforce encapsulation in
+the first place. :)
 
->  
->  		if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
->  			set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
-> @@ -1246,10 +1247,13 @@ static int block_operations(struct f2fs_sb_info *sbi)
->  		}
->  		f2fs_unlock_all(sbi);
->  
-> -		/* only failed during mount/umount/freeze/quotactl */
-> -		locked = down_read_trylock(&sbi->sb->s_umount);
-> -		f2fs_quota_sync(sbi->sb, -1);
-> -		if (locked)
-> +		/* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
-> +		if (need_lock && !down_read_trylock(&sbi->sb->s_umount)) {
-> +			cond_resched();
-> +			goto retry_flush_quotas;
-> +		}
-> +		f2fs_do_quota_sync(sbi->sb, -1);
-> +		if (need_lock)
->  			up_read(&sbi->sb->s_umount);
->  		cond_resched();
->  		goto retry_flush_quotas;
+> How about we just add a comment on why this is fine, rather than
 
-Modified to:
-		/* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
-		if (!need_lock) {
-			f2fs_do_quota_sync(sbi->sb, -1);
-		} else if (down_read_trylock(&sbi->sb->s_umount)) {
-			f2fs_do_quota_sync(sbi->sb, -1);
-			up_read(&sbi->sb->s_umount);
-		}
-  		cond_resched();
-  		goto retry_flush_quotas;
+Comments are the worst of a solution as you know.
 
-> @@ -1867,7 +1871,8 @@ int f2fs_issue_checkpoint(struct f2fs_sb_info *sbi)
->  	struct cp_control cpc;
->  
->  	cpc.reason = __get_cp_reason(sbi);
-> -	if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC) {
-> +	if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC ||
-> +		sbi->umount_lock_holder == current) {
->  		int ret;
->  
->  		f2fs_down_write(&sbi->gc_lock);
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 62b7fed1514a..7174dea641e9 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1670,6 +1670,7 @@ struct f2fs_sb_info {
->  
->  	unsigned int nquota_files;		/* # of quota sysfile */
->  	struct f2fs_rwsem quota_sem;		/* blocking cp for flags */
-> +	struct task_struct *umount_lock_holder;	/* s_umount lock holder */
->  
->  	/* # of pages, see count_type */
->  	atomic_t nr_pages[NR_COUNT_TYPE];
-> @@ -3652,7 +3653,7 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync);
->  void f2fs_inode_synced(struct inode *inode);
->  int f2fs_dquot_initialize(struct inode *inode);
->  int f2fs_enable_quota_files(struct f2fs_sb_info *sbi, bool rdonly);
-> -int f2fs_quota_sync(struct super_block *sb, int type);
-> +int f2fs_do_quota_sync(struct super_block *sb, int type);
->  loff_t max_file_blocks(struct inode *inode);
->  void f2fs_quota_off_umount(struct super_block *sb);
->  void f2fs_save_errors(struct f2fs_sb_info *sbi, unsigned char flag);
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index ef639a6d82e5..cb9d7b6fa3ad 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -1740,22 +1740,28 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
->  
->  static int f2fs_freeze(struct super_block *sb)
->  {
-> +	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-> +
->  	if (f2fs_readonly(sb))
->  		return 0;
->  
->  	/* IO error happened before */
-> -	if (unlikely(f2fs_cp_error(F2FS_SB(sb))))
-> +	if (unlikely(f2fs_cp_error(sbi)))
->  		return -EIO;
->  
->  	/* must be clean, since sync_filesystem() was already called */
-> -	if (is_sbi_flag_set(F2FS_SB(sb), SBI_IS_DIRTY))
-> +	if (is_sbi_flag_set(sbi, SBI_IS_DIRTY))
->  		return -EINVAL;
->  
-> +	sbi->umount_lock_holder = current;
-> +
->  	/* Let's flush checkpoints and stop the thread. */
-> -	f2fs_flush_ckpt_thread(F2FS_SB(sb));
-> +	f2fs_flush_ckpt_thread(sbi);
-> +
-> +	sbi->umount_lock_holder = NULL;
->  
->  	/* to avoid deadlock on f2fs_evict_inode->SB_FREEZE_FS */
-> -	set_sbi_flag(F2FS_SB(sb), SBI_IS_FREEZING);
-> +	set_sbi_flag(sbi, SBI_IS_FREEZING);
->  	return 0;
->  }
->  
-> @@ -2332,6 +2338,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->  	org_mount_opt = sbi->mount_opt;
->  	old_sb_flags = sb->s_flags;
->  
-> +	sbi->umount_lock_holder = current;
-> +
->  #ifdef CONFIG_QUOTA
->  	org_mount_opt.s_jquota_fmt = F2FS_OPTION(sbi).s_jquota_fmt;
->  	for (i = 0; i < MAXQUOTAS; i++) {
-> @@ -2555,6 +2563,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->  
->  	limit_reserve_root(sbi);
->  	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
-> +
-> +	sbi->umount_lock_holder = NULL;
->  	return 0;
->  restore_checkpoint:
->  	if (need_enable_checkpoint) {
-> @@ -2595,6 +2605,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->  #endif
->  	sbi->mount_opt = org_mount_opt;
->  	sb->s_flags = old_sb_flags;
-> +
-> +	sbi->umount_lock_holder = NULL;
->  	return err;
->  }
->  
-> @@ -2911,7 +2923,7 @@ static int f2fs_quota_sync_file(struct f2fs_sb_info *sbi, int type)
->  	return ret;
->  }
->  
-> -int f2fs_quota_sync(struct super_block *sb, int type)
-> +int f2fs_do_quota_sync(struct super_block *sb, int type)
->  {
->  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
->  	struct quota_info *dqopt = sb_dqopt(sb);
-> @@ -2959,6 +2971,16 @@ int f2fs_quota_sync(struct super_block *sb, int type)
->  	return ret;
->  }
->  
-> +static int f2fs_quota_sync(struct super_block *sb, int type)
-> +{
-> +	int ret;
-> +
-> +	F2FS_SB(sb)->umount_lock_holder = current;
-> +	ret = f2fs_do_quota_sync(sb, type);
-> +	F2FS_SB(sb)->umount_lock_holder = NULL;
-> +	return ret;
-> +}
-> +
->  static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
->  							const struct path *path)
->  {
-> @@ -2974,30 +2996,33 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
->  	if (path->dentry->d_sb != sb)
->  		return -EXDEV;
->  
-> -	err = f2fs_quota_sync(sb, type);
-> +	F2FS_SB(sb)->umount_lock_holder = current;
-> +
-> +	err = f2fs_do_quota_sync(sb, type);
->  	if (err)
-> -		return err;
-> +		goto out;
->  
->  	inode = d_inode(path->dentry);
->  
->  	err = filemap_fdatawrite(inode->i_mapping);
->  	if (err)
-> -		return err;
-> +		goto out;
->  
->  	err = filemap_fdatawait(inode->i_mapping);
->  	if (err)
-> -		return err;
-> +		goto out;
->  
->  	err = dquot_quota_on(sb, type, format_id, path);
->  	if (err)
-> -		return err;
-> +		goto out;
->  
->  	inode_lock(inode);
->  	F2FS_I(inode)->i_flags |= F2FS_QUOTA_DEFAULT_FL;
->  	f2fs_set_inode_flags(inode);
->  	inode_unlock(inode);
->  	f2fs_mark_inode_dirty_sync(inode, false);
-> -
-> +out:
-> +	F2FS_SB(sb)->umount_lock_holder = NULL;
->  	return 0;
->  }
->  
-> @@ -3009,7 +3034,7 @@ static int __f2fs_quota_off(struct super_block *sb, int type)
->  	if (!inode || !igrab(inode))
->  		return dquot_quota_off(sb, type);
->  
-> -	err = f2fs_quota_sync(sb, type);
-> +	err = f2fs_do_quota_sync(sb, type);
->  	if (err)
->  		goto out_put;
->  
-> @@ -3032,6 +3057,8 @@ static int f2fs_quota_off(struct super_block *sb, int type)
->  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
->  	int err;
->  
-> +	F2FS_SB(sb)->umount_lock_holder = current;
-> +
->  	err = __f2fs_quota_off(sb, type);
->  
->  	/*
-> @@ -3041,6 +3068,9 @@ static int f2fs_quota_off(struct super_block *sb, int type)
->  	 */
->  	if (is_journalled_quota(sbi))
->  		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-> +
-> +	F2FS_SB(sb)->umount_lock_holder = NULL;
-> +
->  	return err;
->  }
->  
-> @@ -4715,6 +4745,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->  	if (err)
->  		goto free_compress_inode;
->  
-> +	sbi->umount_lock_holder = current;
->  #ifdef CONFIG_QUOTA
->  	/* Enable quota usage during mount */
->  	if (f2fs_sb_has_quota_ino(sbi) && !f2fs_readonly(sb)) {
-> @@ -4841,6 +4872,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->  	f2fs_update_time(sbi, CP_TIME);
->  	f2fs_update_time(sbi, REQ_TIME);
->  	clear_sbi_flag(sbi, SBI_CP_DISABLED_QUICK);
-> +
-> +	sbi->umount_lock_holder = NULL;
->  	return 0;
->  
->  sync_free_meta:
-> @@ -4945,6 +4978,8 @@ static void kill_f2fs_super(struct super_block *sb)
->  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
->  
->  	if (sb->s_root) {
-> +		sbi->umount_lock_holder = current;
-> +
->  		set_sbi_flag(sbi, SBI_IS_CLOSE);
->  		f2fs_stop_gc_thread(sbi);
->  		f2fs_stop_discard_thread(sbi);
-> -- 
-> 2.48.1.502.g6dc24dfdaf-goog
+> slow down a case that's perfectly fine by wrapping it in something
+> much more expensive than a simple memory write? Or perhaps have
+> a basic helper to set it that doesn't do the unnecessary irq lock
+> guard? That would still allow you to make .function private.
+
+The right solution is to add a hotpath helper, which falls back to the
+more expensive variant with some anyway expensive debug option, or make
+the expensive part of hrtimer_update_function() depend on that debug
+option in the first place and otherwise fall back to a simple store.
+
+The latter is the right thing to do. Let me fix that up in mainline.
+
+Thanks,
+
+        tglx
+
+
