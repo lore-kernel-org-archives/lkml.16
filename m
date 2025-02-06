@@ -1,140 +1,133 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE864226554
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD1B22331F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738836595; cv=none; b=f5SHxh5wDr9cbOZHQiRDmCa6W4M7tbg67RWtc0+7bz5o/QhyOfI8Q41wC5bh0URUSPHPQ2VMHLM9yjXRctnbmajDivmp/oKqz+MaV5b2rvUy684SOTaR/CKpKrPWrjj9WXwMuY9sEg5np2FZVkTwtqCR3qVkBPj8f+kaE2vhdSg=
+	t=1738836631; cv=none; b=aQZC/AVXmZV3XdeIzvEAu2MKns2S7H46shhTUxCw8qVgobtD+CDZI2OheQzqWLso1d0zNuMZTBON+zZJV4/0+5AcqvTcL3L0WbTH5lVhgtI8wynz4HvCvzxeNBWfIRz5rf2EINkn/ASBL5YqIOa9D6KPqSv3T+In8fUO7OlVCtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738836595; c=relaxed/simple;
-	bh=ZKuwgtDky8Xhvl3M5A4riV3YCHfxsc86ad2FkrZnwH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Eypm1XJYpS+yqU/2fSHcN/fMuVvzQkuk+v6X/dCu8G3fB+Da95byTWnt8fj84nOXR8O0eqiJJ6N8ewjxb/tsgHCBoDLAoDUpcApxnhr40NI5ppkXxs7o/P2DReJDvV3z2RStuFYkWecD/r2fbJ3BrU3dZw3GaoxrnLfXSsD6hBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcE4Spji; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738836631; c=relaxed/simple;
+	bh=8f8034OL+cutSRceHZhMdda+h+5yVL61It9YemNpLfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N9lmJqYj8v/xeGjuh7F6isar0YfCeLwqffZUkmLr36zBMaabsI6E+Mt5PkRHgO5J3kXSR2Jley4zKaoVmXCjeamnjzP9OMqEIpsRGXdowbIsVysbMnQUFwaNgceExu5kXsvyy1J9ZJlocBPGl3FdDtf6itakArHxHDeBaR0zTAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iTA7Vug/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcE4Spji"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so1436810a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 02:09:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738836592; x=1739441392; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s/mS+2eKExtyTN8Vh4IHH9mnRtV5vHTtYoa32EFAd2o=;
-        b=XcE4Spji8nuxLrB+Hur+CsJpythTP+Uwzan3CkG3tKmbqsE6L7AUDrUGi9c296gOUo
-         V7/Z3OugoRIa8nsyvLydx8JdJ6r7eKhJFopjdr5LsthBUuVq/Ny5KISNamBxoZzkDyX/
-         HMFzESvx8/dWid8gBeffpdv4wilnm6MQAxAmkQ3KRWwJ1bxaBt5ferpAWHR8lFPA3XRY
-         nsxujNXXdwxXac0uglLBkf411eukbY70rhya+XDQ+U0g7j2oRD5+zep6AZODSlaujPfa
-         4kzAPuGhRWpaz2zy/juFXhm6RP8gs9SsG3mxhu6ryZ3IBFvjXVFsvj2cB4SBQwebTp+N
-         5xtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738836592; x=1739441392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s/mS+2eKExtyTN8Vh4IHH9mnRtV5vHTtYoa32EFAd2o=;
-        b=V9pJ13kOb4VsPXIV6+cxDhCZq6mxDVYS031HTN2/WU17YWhun76OZx10vA9yqxWv1X
-         1ykiD6Vyn7frUNC180AslwDQqyEOPuGlziNCdKSB2DqM4OPsaAeAscTysSDE6EReRGd0
-         dvE5H/IYyfBeVsLqPUSZUO9aM25UfqrRM5QpfwSlkJpfuWfdNHqsnSaDk0CysrDUtTPF
-         34U8oL2wjN142SD9RKsVhThSSsRkEF5ZK2EkUSJQbrVkIS80afwAw3INyKYZ2pPQZJl0
-         YR2PhvIDtZ0LqHHbG54hDJgSr5siO4xnms08pGj3DPyCl/TSpLFfzWjLSeiVB42eZvuE
-         +dBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDSpJvEvdNjBWRhzUTuGyegwH4lLF0GPOWEir783DAXm7Eh2A1p0DknI+oUV2s/PMTDOerR1gcOLKyMnE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxAlz2IgtKNUbTFK3+yepZtv8b41jUCMoQ7fCMtB+Pzbfsx3Os
-	e00jF05sjd9KoDqid+WodAjZ/x/gBLr+YyIvJr+dIJqbztaYWhjkwakRCD8+0hB5izW46q1MDxL
-	5UuorlCVolHj7PM5Ud/EFUev0rKXh2CwJpB3t
-X-Gm-Gg: ASbGnctRy+XEzmPcHLymwzBIw40mpSgbmNw24e3Tcc3TyuhtoO/z+drMJFSvSg0Sq90
-	uB55FvYhtdZLjuEWWVmd75Ss4f38HRjw97qFdQcdKB64J7QUO8RVS9Lpy6Ywa196DrMNOx/p+7w
-	==
-X-Google-Smtp-Source: AGHT+IGFKTjHRLId4nFdVIg3ODAcW2J4cs6ogAI1LmO1CoOh8Ex4tMJTJEHvJbynBPllxErs4E2UPC8o2j0J9lonb/4=
-X-Received: by 2002:a05:6402:5251:b0:5db:e88c:914f with SMTP id
- 4fb4d7f45d1cf-5dcecc86fc3mr2937575a12.4.1738836591837; Thu, 06 Feb 2025
- 02:09:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iTA7Vug/"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5167WkSv005463;
+	Thu, 6 Feb 2025 10:10:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=BKe363xUYdTGSVnLtLxWIoU4LNfPlnwqtWO22Dr3y
+	mo=; b=iTA7Vug/CC3rO2oOXdwjqHqu4z5sf185vohHhj8x0RNCoc5QCdpBYxydD
+	ZCXgvnZ4c9QMj3AXdBsc3IcyVc7jkZ3BXpEw7jCaMwb9E5yVSow4R3QOwyRANP69
+	Z/i2I2lnLXObE/LwVrO2kOKK6ThZrSF2YMt0o948/xxdc4Djg/iV1o0oB2Gmb3rs
+	2B45lgNo3Ilk9TzEw7g3ccZTtTbQw+1V0jZbTgu6SgqAYHKcbS3Y9/yHeYvgW9DB
+	iaKFWKpdG26l0o1zPTAPAzzFICSrIBCqmXwKTcEJII5uInTm8mLIWfLbs8JRSF5C
+	2W76XOCvp/AcDsF4VWPU1GssK6Q1Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44mrsp0pxp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 10:10:06 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5169tPLC031332;
+	Thu, 6 Feb 2025 10:10:05 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44mrsp0pxh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 10:10:05 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5166hIfF016288;
+	Thu, 6 Feb 2025 10:10:05 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsnv8t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 10:10:05 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 516AA1ME58327340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Feb 2025 10:10:01 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9873920043;
+	Thu,  6 Feb 2025 10:10:01 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1FB5F20040;
+	Thu,  6 Feb 2025 10:09:59 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  6 Feb 2025 10:09:58 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        naveen@kernel.org, maddy@linux.ibm.com, clg@kaod.org,
+        brking@linux.vnet.ibm.com, vaibhav@linux.ibm.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] powerpc/pseries/msi: Avoid reading PCI device registers in reduced power state
+Date: Thu,  6 Feb 2025 15:39:53 +0530
+Message-ID: <20250206100956.438888-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206085834.17590-1-kuniyu@amazon.com> <20250206094457.196837-1-buaajxlj@163.com>
-In-Reply-To: <20250206094457.196837-1-buaajxlj@163.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 6 Feb 2025 11:09:40 +0100
-X-Gm-Features: AWEUYZn8RPseVUE6PE6vSWtPVOwP4H5ImNtxgeSrgvVvG1jZvCKDknd4smT8iBI
-Message-ID: <CANn89iLYV+R1CQiuvjtU=aQinVAKyhQiJVUxWG7t=-M72ZsToA@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets
- autobind identifier length
-To: Liang Jie <buaajxlj@163.com>
-Cc: kuniyu@amazon.com, davem@davemloft.net, horms@kernel.org, kuba@kernel.org, 
-	liangjie@lixiang.com, linux-kernel@vger.kernel.org, mhal@rbox.co, 
-	netdev@vger.kernel.org, pabeni@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RygOwVXffmHk1_hoB5psPTYDI9SMW8yq
+X-Proofpoint-ORIG-GUID: v-t-pT3qbGANSnVigATCvmLFtqgu-MX5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_02,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ spamscore=0 phishscore=0 priorityscore=1501 mlxlogscore=828 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502060082
 
-On Thu, Feb 6, 2025 at 10:45=E2=80=AFAM Liang Jie <buaajxlj@163.com> wrote:
->
-> From: Kuniyuki Iwashima <kuniyu@amazon.com>
-> Date: Thu, 6 Feb 2025 17:58:34 +0900
-> > From: Liang Jie <buaajxlj@163.com>
-> > Date: Thu,  6 Feb 2025 16:19:05 +0800
-> > > Hi Kuniyuki,
-> > >
-> > > The logs from 'netdev/build_allmodconfig_warn' is as follows:
-> > >   ../net/unix/af_unix.c: In function =E2=80=98unix_autobind=E2=80=99:
-> > >   ../net/unix/af_unix.c:1222:52: warning: =E2=80=98snprintf=E2=80=99 =
-output truncated before the last format character [-Wformat-truncation=3D]
-> > >    1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", order=
-num);
-> > >         |                                                    ^
-> > >   ../net/unix/af_unix.c:1222:9: note: =E2=80=98snprintf=E2=80=99 outp=
-ut 6 bytes into a destination of size 5
-> > >    1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", order=
-num);
-> > >         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~
-> > >
-> > > snprintf() also append a trailing '\0' at the end of the sun_path.
-> >
-> > I didn't say snprintf() would work rather we need a variant of it that
-> > does not terminate string with \0.
-> >
-> >
-> > >
-> > > Now, I think of three options. Which one do you think we should choos=
-e?
-> > >
-> > > 1. Allocate an additional byte during the kzalloc phase.
-> > >     addr =3D kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun=
-_path) +
-> > >                    UNIX_AUTOBIND_LEN + 1, GFP_KERNEL);
-> > >
-> > > 2. Use temp buffer and memcpy() for handling.
-> > >
-> > > 3. Keep the current code as it is.
-> > >
-> > > Do you have any other suggestions?
-> >
-> > I'd choose 3. as said in v1 thread.  We can't avoid hard-coding and
-> > adjustment like +1 and -1 here.
->
-> The option 3 would result in a waste of ten bytes. Why not choose option =
-1.
->
-> I have a question about the initial use of the hardcoded value 16.
-> Why was this value chosen and not another?  sizeof(struct sockaddr)?
->
-> Its introduction felt abrupt and made understanding the code challenging =
-for me,
-> which is why I submitted a patch to address this.
+When a system is being suspended to RAM, the PCI devices are also
+suspended and the code ends up calling pseries_msi_compose_msg() and this
+triggers the BUG_ON() in __pci_read_msi_msg() because the device at that
+point is in reduced power state. In reduced power state, the memory
+mapped registers of the device are not accessible.
 
-To be clear, we are discussing here about using kmalloc-16 slab
-instead of kmalloc-32
+To replicate the bug:
+1. Make sure deep sleep is selected
+	# cat /sys/power/mem_sleep
+	s2idle [deep]
 
-I find this a bit distracting to be honest, given the cost of a file +
-inode + af_unix socket.
+2. Suspend the system
+	echo mem > /sys/power/state
 
-IMO it might be more interesting to document why abstract sockets
-names are limited to 5 hex digits...
+To fix this behaviour, read the cached msi message of the device when the
+device is not in PCI_D0 power state instead of touching the hardware.
+
+Fixes: a5f3d2c17b07 ("powerpc/pseries/pci: Add MSI domains")
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+---
+ arch/powerpc/platforms/pseries/msi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
+index fdc2f7f38dc9..458d95c8c755 100644
+--- a/arch/powerpc/platforms/pseries/msi.c
++++ b/arch/powerpc/platforms/pseries/msi.c
+@@ -525,7 +525,12 @@ static struct msi_domain_info pseries_msi_domain_info = {
+ 
+ static void pseries_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+-	__pci_read_msi_msg(irq_data_get_msi_desc(data), msg);
++	struct pci_dev *dev = msi_desc_to_pci_dev(irq_data_get_msi_desc(data));
++
++	if (dev->current_state == PCI_D0)
++		__pci_read_msi_msg(irq_data_get_msi_desc(data), msg);
++	else
++		get_cached_msi_msg(data->irq, msg);
+ }
+ 
+ static struct irq_chip pseries_msi_irq_chip = {
+-- 
+2.47.0
+
