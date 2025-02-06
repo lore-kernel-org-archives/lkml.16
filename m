@@ -1,211 +1,220 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9506D214210
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E858322540F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837240; cv=none; b=CzgmQQyfB+c6uGIdCS9KYF0Rlofmk1WsEAhdgzf4h+YDq4h1WwiEdUEhJvA9fK9Q2nfdFm1oy1oYu56CEFVwCd5hnxanB3Rn3hiH6MMoJXKFEgs6CH97zwb76pQs6AYLU9yhgfwPl7DxO/EAsZTenK/YarZj/7H0j2CLvVtTp/o=
+	t=1738837393; cv=none; b=q/lsXduEu4qMhcWfWrXusad0FobHp80+XQYNxM4m6AG8/z9PwYUJmnPUgXbdSEYm/x2Q6zgkehlVo9X7cF3nvRBZvqRxht74SkOZIeu80Gb+R6zV8XnAE/+Ifh380Qh1svK3cw/G7DeXVhTQIPkKCyXbt9v2ZklCPh0colujvyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837240; c=relaxed/simple;
-	bh=DHDNQ38VGunviutybUTG4AXV3T+KGBHmXKCRbokHlCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZfPTG8B6jj7DAzL8ZRmbmE4OKwJmECH7/X9Yr2QmdoboZKWTX5CepQsWSvGHF7mWfkH6DgdO97DrxlC32If57i20TySX7ihkTUtqfJSX0HYV5eptfmeULCFH3wWrmOVw27bjMWik5D+PDyTIM9bxzWVdWGkiyfFdIYC1nRz0Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=EG9VlXBH; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738837393; c=relaxed/simple;
+	bh=I/2Nm8vmGFjO7lpSMY9rk+JZkSB4AThuwdPNLeoVFfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iYf+t8/qb1hTW6u8CHKNVAfK6MgE5D76I1666oE0M3R2Rbha8PDFLN3E3t1e5V/SrEZR+SwHB+cEEvUj31uXe+KGXZQmqYbeWc8wbQTy3RhKxfo5N00TQxyshysQUT8vq6CmEzKVwsxhRJAxX5UFzfAw661RBai/YQFv83PpjZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=OgUgYJ6+; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="EG9VlXBH"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43622267b2eso7176075e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 02:20:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738837237; x=1739442037; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qYWLPuUcEyViHEWZl2OLoqFTH+F1AYzNF316tnzUCUk=;
-        b=EG9VlXBHngH+nJul2ca+dj3mOS0pksL45mUmyN0skqDRBMtz3yDzTFoqe3FPZALj0h
-         Hb+J+s9GJt6JcQgIuKpLZBMO/4YfbhoB1aLur4U9B3iJh0hwzLWuxth5ogqS4HtrbzgV
-         vSkXHn4lLjPFyTtSwrInTpPtSIMwloTJ0T5rqFhnsiahefw1N8ELFi53zgd98iHE0wsY
-         Wm6LN+6r4uVpCju/2aMCqq5l93f7S68n2c5FHdbplYU2UWieAY0nop7IppJ8kvR4sEyg
-         mZLwiwn7LRjJWc18B7xl+mJHtEsdVeh02kUjkAyCPS67zuoVxLY53YzbqLrJcyy9hlay
-         1rVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738837237; x=1739442037;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qYWLPuUcEyViHEWZl2OLoqFTH+F1AYzNF316tnzUCUk=;
-        b=GJsTlO0p8eUEHIll0Io3uyd41Af1VFlkv3h0hASLAhwRDCLGFPJb1d146qd9bWjB+E
-         MZNUywScwO0vOJQAZpePGb+jGzsRYxMXrk6WFgGOJ4ZzUb0MAlLX2vUtzJT1g1acjGNd
-         Qkp0b6k8p367LBzHGG5x7KVYUKPF86GRLPHJUUKwq61VCw4LpMLMB90eRPVkeXNS/kSc
-         IgU75CrDl/Y2Y2N0esgmcGd9cxN3P/MZ7k4W/hYnb1X6WqApooOJD8qExNIorJzjBQkY
-         akvLjczKZxXNxmsjbf47qVEK6xoSsLCTZc0DBO3kJ8gxStmZ0GgYFio9zQIZ41nYky03
-         RB0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUsSdqoOIz0H5uZYE36x9hfXr3qEbhV6SfK0sH/h11WZ0y51IWwHBnzG5ouDb9jVDZUif02t3AEhx0wed0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPlyKkh/RNQmcIGO+z6w5XIaa33CHNevvTDEoy9SkV5NY31Pn8
-	O6X1IJCOK6UFFYxvonc/HtaFS373ykg4ZpdEcNUpsj/3TQFwHjjkOGhQUVr1rJA=
-X-Gm-Gg: ASbGnctA2CU8vXtkpYMy74fT6WTPOfqOFQJUOzeVBpix3V3zEFsgUAbQjrRnWei3vwc
-	R20r/Ey0nJ4RVgnIdXxFm+/Ma7BWGfc258KTvpomMBNknFJsQHGdvCzD24zSUFChwwpiXz38OxO
-	ZvoJFWUrYEX6AbYFFZwAXSv9ST7eRfUC2o0LC0Q569WmfuM4m4IEbYpazH19gg4PsTpz73G9siR
-	klpeXHW+iDvSOpaERj0lNnb0H75Xowt3pAP6yAInUlrPbLET4/YYnPzRo3qRI/wloU38HYPmS5X
-	AKp9k6wzFPe4DMq5X5ErERCRZL9es8pOwjZ9B8xAjUrQar9OxYD0jAiNrR7x
-X-Google-Smtp-Source: AGHT+IF0A9SWlvxFTUWL4jBUWF4gwatSi74EHA8t1XR+t+JGyhlXqcyw5059y36rJQzknajfZ7Xdyg==
-X-Received: by 2002:a05:600c:458f:b0:434:f623:a004 with SMTP id 5b1f17b1804b1-4390d43ddaamr60637135e9.16.1738837236812;
-        Thu, 06 Feb 2025 02:20:36 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfc87desm14027315e9.25.2025.02.06.02.20.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 02:20:36 -0800 (PST)
-Message-ID: <00dc2fb7-da9b-42c3-9c3b-47d917df7cf6@rivosinc.com>
-Date: Thu, 6 Feb 2025 11:20:35 +0100
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="OgUgYJ6+"
+Received: from spock.localnet (unknown [212.20.115.26])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id 54C20631B6A8;
+	Thu, 06 Feb 2025 11:16:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1738836996;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U7kw1I115tCD+11cKEZwTMQVFhoqDkmGhsIcFH/+V4=;
+	b=OgUgYJ6+RR7evD5bkIqs1BmEsyvsetHX8b5kVdZCyAu7ecnrW7gFdwJqqK+6killEZWTow
+	cQQAMQ4T/eLmVfMhDLD4m093ibANfowtZsgXu6b72NvLq31uIcjvHPdjJUz0I1/X5T8skM
+	pHSYjXAsyFEcljFlOqII3HWiRZ/IjgE=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: x86@kernel.org, Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+ dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
+ mhklinux@outlook.com, andrew.cooper3@citrix.com
+Subject: Re: [PATCH v9 00/12] AMD broadcast TLB invalidation
+Date: Thu, 06 Feb 2025 11:16:21 +0100
+Message-ID: <12602226.O9o76ZdvQC@natalenko.name>
+In-Reply-To: <20250206044346.3810242-1-riel@surriel.com>
+References: <20250206044346.3810242-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
- checks
-To: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
- Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
- <20250205-quench-entrench-09bed8c8c823@spud>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250205-quench-entrench-09bed8c8c823@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="nextPart5856629.DvuYhMxLoT";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+
+--nextPart5856629.DvuYhMxLoT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: x86@kernel.org, Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v9 00/12] AMD broadcast TLB invalidation
+Date: Thu, 06 Feb 2025 11:16:21 +0100
+Message-ID: <12602226.O9o76ZdvQC@natalenko.name>
+In-Reply-To: <20250206044346.3810242-1-riel@surriel.com>
+References: <20250206044346.3810242-1-riel@surriel.com>
+MIME-Version: 1.0
+
+Hello.
+
+On =C4=8Dtvrtek 6. =C3=BAnora 2025 5:43:19, st=C5=99edoevropsk=C3=BD standa=
+rdn=C3=AD =C4=8Das Rik van Riel wrote:
+> Add support for broadcast TLB invalidation using AMD's INVLPGB instructio=
+n.
+>=20
+> This allows the kernel to invalidate TLB entries on remote CPUs without
+> needing to send IPIs, without having to wait for remote CPUs to handle
+> those interrupts, and with less interruption to what was running on
+> those CPUs.
+>=20
+> Because x86 PCID space is limited, and there are some very large
+> systems out there, broadcast TLB invalidation is only used for
+> processes that are active on 3 or more CPUs, with the threshold
+> being gradually increased the more the PCID space gets exhausted.
+>=20
+> Combined with the removal of unnecessary lru_add_drain calls
+> (see https://lkml.org/lkml/2024/12/19/1388) this results in a
+> nice performance boost for the will-it-scale tlb_flush2_threads
+> test on an AMD Milan system with 36 cores:
+>=20
+> - vanilla kernel:           527k loops/second
+> - lru_add_drain removal:    731k loops/second
+> - only INVLPGB:             527k loops/second
+> - lru_add_drain + INVLPGB: 1157k loops/second
+>=20
+> Profiling with only the INVLPGB changes showed while
+> TLB invalidation went down from 40% of the total CPU
+> time to only around 4% of CPU time, the contention
+> simply moved to the LRU lock.
+>=20
+> Fixing both at the same time about doubles the
+> number of iterations per second from this case.
+>=20
+> Some numbers closer to real world performance
+> can be found at Phoronix, thanks to Michael:
+>=20
+> https://www.phoronix.com/news/AMD-INVLPGB-Linux-Benefits
+>=20
+> My current plan is to implement support for Intel's RAR
+> (Remote Action Request) TLB flushing in a follow-up series,
+> after this thing has been merged into -tip. Making things
+> any larger would just be unwieldy for reviewers.
+>=20
+> v9:
+>  - print warning when start or end address was rounded (Peter)
+
+OK, I've just hit one:
+
+TLB flush not stride 200000 aligned. Start 7fffc0000000, end 7fffffe01000
+WARNING: CPU: 31 PID: 411 at arch/x86/mm/tlb.c:1342 flush_tlb_mm_range+0x57=
+b/0x600
+Modules linked in:
+CPU: 31 UID: 0 PID: 411 Comm: modprobe Not tainted 6.13.0-pf3 #1 1366679ca0=
+6f46d05d1e9d9c537b0c6b4c922b82
+Hardware name: ASUS System Product Name/Pro WS X570-ACE, BIOS 4902 08/29/20=
+24
+RIP: 0010:flush_tlb_mm_range+0x57b/0x600
+Code: 5f e9 39 b3 3f 00 e8 24 57 f5 ff e9 e9 fc ff ff 48 8b 0c 24 4c 89 e2 =
+48 c7 c7 78 59 27 b0 c6 05 3d 1a 31 02 01 e8 85 e4 01 00 <0f> 0b e9 35 fb f=
+f ff fa 0f 1f 44 00 00 48 89 df e8 a0 f4 ff ff fb
+RSP: 0018:ffffc137c11e7a38 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff9e6eaf1b5d80 RCX: 00000000ffffdfff
+RDX: 0000000000000000 RSI: 00000000ffffffea RDI: 0000000000000001
+RBP: ffff9e500244d800 R08: 00000000ffffdfff R09: ffff9e6eae1fffa8
+R10: 00000000ffffdfff R11: 0000000000000003 R12: 00007fffc0000000
+R13: 000000000000001f R14: 0000000000000015 R15: ffff9e6eaf180000
+=46S:  0000000000000000(0000) GS:ffff9e6eaf180000(0000) knlGS:0000000000000=
+000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000109966000 CR4: 0000000000f50ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ tlb_flush_mmu+0x125/0x1a0
+ tlb_finish_mmu+0x41/0x80
+ relocate_vma_down+0x183/0x200
+ setup_arg_pages+0x201/0x390
+ load_elf_binary+0x3a7/0x17d0
+ bprm_execve+0x244/0x630
+ kernel_execve+0x180/0x1f0
+ call_usermodehelper_exec_async+0xd0/0x190
+ ret_from_fork+0x34/0x50
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+
+What do I do with it?
+
+Thank you.
+
+>  - in the reclaim code, tlbsync at context switch time (Peter)
+>  - fix !CONFIG_CPU_SUP_AMD compile error in arch_tlbbatch_add_pending (Ja=
+n)
+> v8:
+>  - round start & end to handle non-page-aligned callers (Steven & Jan)
+>  - fix up changelog & add tested-by tags (Manali)
+> v7:
+>  - a few small code cleanups (Nadav)
+>  - fix spurious VM_WARN_ON_ONCE in mm_global_asid
+>  - code simplifications & better barriers (Peter & Dave)
+> v6:
+>  - fix info->end check in flush_tlb_kernel_range (Michael)
+>  - disable broadcast TLB flushing on 32 bit x86
+> v5:
+>  - use byte assembly for compatibility with older toolchains (Borislav, M=
+ichael)
+>  - ensure a panic on an invalid number of extra pages (Dave, Tom)
+>  - add cant_migrate() assertion to tlbsync (Jann)
+>  - a bunch more cleanups (Nadav)
+>  - key TCE enabling off X86_FEATURE_TCE (Andrew)
+>  - fix a race between reclaim and ASID transition (Jann)
+> v4:
+>  - Use only bitmaps to track free global ASIDs (Nadav)
+>  - Improved AMD initialization (Borislav & Tom)
+>  - Various naming and documentation improvements (Peter, Nadav, Tom, Dave)
+>  - Fixes for subtle race conditions (Jann)
+> v3:
+>  - Remove paravirt tlb_remove_table call (thank you Qi Zheng)
+>  - More suggested cleanups and changelog fixes by Peter and Nadav
+> v2:
+>  - Apply suggestions by Peter and Borislav (thank you!)
+>  - Fix bug in arch_tlbbatch_flush, where we need to do both
+>    the TLBSYNC, and flush the CPUs that are in the cpumask.
+>  - Some updates to comments and changelogs based on questions.
+
+=2D-=20
+Oleksandr Natalenko, MSE
+--nextPart5856629.DvuYhMxLoT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmeki/UACgkQil/iNcg8
+M0s9xBAAhvV0ILebNgTjqIo4d+UEGvsrLz3dmVk9jhPJpwop2gryj81D0mQ0xkg3
+TL7E8aFZKT327wtBbdg6sCSWKsK8xUl1MnxdR87jw6PbFU1mfAy6M2QFBCailiMe
+U5bM1gNPuCDckcntm3nKnDi+OM9ZPApkWQBmYYEoNTRNyWOTZ/EegTT78q2kEIOH
+xBgFLFZvbAfR4p4DtiUqWNlfXuynk1psDLyeZndOiFLKRYLKri36pZ/l4+kWTJpj
+o/hrPfOxpEMPjojjizMJGu2fIVzgqS6R4rQNhkxPFYp8MQEqu3t6btzHhPWmglEb
+SE6fHxT8GeIBna5n+nGkPcrqnvfykQu9r0K70oPZu864OpWNMKt6x8AgKtH07Fdj
+Ya1mvzjSpr84Qnpx/r8YS4eSfWvEZRxa4tC+MkUD7mzcODB7UXVBiGX4/4ED2kyE
+tDRFn50eZ8Lpla9OihtrXwgNjb1v1bVvEz4r/tf02MHIcT3VFW+49f/5ofhVTbjh
+PLvPc02OtZkNS5QNUNVRhbpd9kUVm0plPJdB4TCEhOEBXqyk9MU+K0EenQoZudab
+GcNWC/LpJZAJG+tBnhG0IKisVhqtD8zUu+nDyuAl3dliYVW0URPo+2N/af93zd+h
+abjNRhILQ05aJ6Wvefdjh01KyUUnDoh95nRS7PvvEEEPwHZYjqY=
+=Qeq8
+-----END PGP SIGNATURE-----
+
+--nextPart5856629.DvuYhMxLoT--
 
 
-
-On 05/02/2025 17:05, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Using Clement's new validation callbacks, support checking that
-> dependencies have been satisfied for the vector crpyto extensions.
-> Currently riscv_isa_extension_available(<vector crypto>) will return
-> true on systems that support the extensions but vector itself has been
-> disabled by the kernel, adding validation callbacks will prevent such a
-> scenario from occuring and make the behaviour of the extension detection
-> functions more consistent with user expectations - it's not expected to
-> have to check for vector AND the specific crypto extension.
-> 
-> The 1.0.0 Vector crypto spec states:
-> 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
-> 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
-> 	or application ("V") base Vector Extension. All of the other
-> 	Vector Crypto Extensions can be built on any embedded (Zve*) or
-> 	application ("V") base Vector Extension.
-> and this could be used as the basis for checking that the correct base
-> for individual crypto extensions, but that's not really the kernel's job
-> in my opinion and it is sufficient to leave that sort of precision to
-> the dt-bindings. The kernel only needs to make sure that vector, in some
-> form, is available.
-> 
-> Since vector will now be disabled proactively, there's no need to clear
-> the bit in elf_hwcap in riscv_fill_hwcap() any longer.
-
-Hey Conor,
-
-To which part of the commit does this refer to ?
-
-> 
-> Link: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
->  1 file changed, 33 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index 40a24b08d905..1c148ecea612 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -138,6 +138,23 @@ static int riscv_ext_vector_float_validate(const struct riscv_isa_ext_data *data
->  	return 0;
->  }
->  
-> +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext_data *data,
-> +					    const unsigned long *isa_bitmap)
-> +{
-> +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * It isn't the kernel's job to check that the binding is correct, so
-> +	 * it should be enough to check that any of the vector extensions are
-> +	 * enabled, which in-turn means that vector is usable in this kernel
-> +	 */
-> +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
->  static int riscv_ext_zca_depends(const struct riscv_isa_ext_data *data,
->  				 const unsigned long *isa_bitmap)
->  {
-> @@ -397,8 +414,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->  	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
->  	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
->  	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
-> -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
-> -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
-> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts, riscv_ext_vector_x_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vector_crypto_validate),
->  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve32f, RISCV_ISA_EXT_ZVE32F, riscv_zve32f_exts, riscv_ext_vector_float_validate),
->  	__RISCV_ISA_EXT_DATA_VALIDATE(zve32x, RISCV_ISA_EXT_ZVE32X, riscv_ext_vector_x_validate),
->  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64d, RISCV_ISA_EXT_ZVE64D, riscv_zve64d_exts, riscv_ext_vector_float_validate),
-> @@ -406,20 +423,20 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64x, RISCV_ISA_EXT_ZVE64X, riscv_zve64x_exts, riscv_ext_vector_x_validate),
->  	__RISCV_ISA_EXT_DATA(zvfh, RISCV_ISA_EXT_ZVFH),
->  	__RISCV_ISA_EXT_DATA(zvfhmin, RISCV_ISA_EXT_ZVFHMIN),
-> -	__RISCV_ISA_EXT_DATA(zvkb, RISCV_ISA_EXT_ZVKB),
-> -	__RISCV_ISA_EXT_DATA(zvkg, RISCV_ISA_EXT_ZVKG),
-> -	__RISCV_ISA_EXT_BUNDLE(zvkn, riscv_zvkn_bundled_exts),
-> -	__RISCV_ISA_EXT_BUNDLE(zvknc, riscv_zvknc_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvkned, RISCV_ISA_EXT_ZVKNED),
-> -	__RISCV_ISA_EXT_BUNDLE(zvkng, riscv_zvkng_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvknha, RISCV_ISA_EXT_ZVKNHA),
-> -	__RISCV_ISA_EXT_DATA(zvknhb, RISCV_ISA_EXT_ZVKNHB),
-> -	__RISCV_ISA_EXT_BUNDLE(zvks, riscv_zvks_bundled_exts),
-> -	__RISCV_ISA_EXT_BUNDLE(zvksc, riscv_zvksc_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvksed, RISCV_ISA_EXT_ZVKSED),
-> -	__RISCV_ISA_EXT_DATA(zvksh, RISCV_ISA_EXT_ZVKSH),
-> -	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkb, RISCV_ISA_EXT_ZVKB, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkg, RISCV_ISA_EXT_ZVKG, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkn, riscv_zvkn_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvknc, riscv_zvknc_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkned, RISCV_ISA_EXT_ZVKNED, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkng, riscv_zvkng_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknha, RISCV_ISA_EXT_ZVKNHA, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknhb, RISCV_ISA_EXT_ZVKNHB, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvks, riscv_zvks_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksc, riscv_zvksc_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksed, RISCV_ISA_EXT_ZVKSED, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksh, RISCV_ISA_EXT_ZVKSH, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
-
-I'm not sure if I already made that comment, so here we go again.
-Shouldn't Zvbb use riscv_ext_vector_crypto_validate() as well ?  The
-spec states that Zvbb is a superset of Zvkb and Zvkb uses the
-riscv_ext_vector_crypto_validate() validation callback. I guess Zvbc
-should also use it based on your spec excerpt in the commmit log.
-
-Thanks,
-
-Clément
-
->  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
->  	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
->  	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
 
