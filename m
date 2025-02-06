@@ -1,128 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03209239572;
-	Thu,  6 Feb 2025 17:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B430F239572;
+	Thu,  6 Feb 2025 17:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738862841; cv=none; b=lJxoNLuvIYaBCQwgQCagQSoiJU4ql9yEhV2m9qYyX2S7Zl/YBpn3Mtk1Ga235KpLb6XcA8v2oxvrF8RFz+UvV0Cx2+DGO/wTPW1M8KQloXMP4pM1WCv78xQSZtNPaB5z8Zcg40asLq2LnPmHn8OdHb6Lq+IULGW1HN1VIJDwQHk=
+	t=1738862937; cv=none; b=bgxWIzhcfJUyQWNEnrF+2EO77utgINv3KnnXoOjlGVUI+7CIn30Jx5mYWeW9LAGxKql3+jppQZAFHGJ4U5ES1J5dYIZ9Sth+Rg7zNAI0pCocNEafvGyohV6adWtRBTynhlmOLlUijOmiMtrpEA3Jipu1xs/cBfTZwu3A8yeJHvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738862841; c=relaxed/simple;
-	bh=pPmLZssZVb0h1amjrYDb6Gwl7U84SRos3SRqFBYvoCo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C0y0j8QgijPVDDz5q6YOawjctygh/QNNUS2gl0bIV6iB4UF4rcU9sVvOVdUED3algNEm5dzkkMoIAN5CyiiIe5z+u9up6NNrXwPw+vg9QGTaCOl1NxChgQs9EFNKIl/f9xCD1l7nj6R+i0DsWI2DBqkVIiD3Q/MiyU2/g5m9zik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYBURifi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738862937; c=relaxed/simple;
+	bh=ee6xhU/145JBRAaQuROyk8466EDmizhZTf8RLbkd/uQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sk8Ya9fuJdtaqHIq2UH/ZgPnuGq3uQ/nAXAXGjDwYvQEpioyLxivOF2S14ZYyI9Z6umjIVFL0AzPBHjoDBgiLQduOdjjcqj7Qed9jZQuI/vcA7A7uZ8T99AIo49XLoHJltGpHg8lxSXWqAwXve83H8N9b1BKiYR1Cblho4pCHjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZULBypIk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYBURifi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCF6C4CEDD;
-	Thu,  6 Feb 2025 17:27:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZULBypIk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11220C4CEDD;
+	Thu,  6 Feb 2025 17:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738862839;
-	bh=pPmLZssZVb0h1amjrYDb6Gwl7U84SRos3SRqFBYvoCo=;
-	h=From:Date:Subject:To:Cc:From;
-	b=bYBURifiYdmqDU+oTvDryxlGF6HdiUW+WvteWC1oxTFN+XGfdL1BNVaER58x8OtIE
-	 IdKrOpUoXHVeykjblCZ4ptC6a04lDIVjqsrj9c5rgGpj1bK6NXA0U48B+lFnoMObIE
-	 gYtgFeBqOog5L317/SLiPgBPKKtoESVsFBhkXYcuXNoky9w8UByRZ/8OYrrDiep3EV
-	 rsOfHBP2MyesRJroDTO5kPFpjUUbcWcgJB3B1P/o1hcvnu1j0WbBsPjCUsRnh47IDI
-	 aeTapHdfhAakZ39fwHXZ3BXCGThmljkoP7u8sr3XS+w6qzw4wzXor+jPiNTFNwYiPl
-	 IVNkCU6/AqYKg==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Thu, 06 Feb 2025 10:21:38 -0700
-Subject: [PATCH v3] arm64: Handle .ARM.attributes section in linker scripts
+	s=k20201202; t=1738862937;
+	bh=ee6xhU/145JBRAaQuROyk8466EDmizhZTf8RLbkd/uQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZULBypIkD5AIglypoJtktYFlMwU+W+KbSFtCQcB2xUM6oFDnJFtEKSzT+mQY6g+tV
+	 2ihit9vVUiULl5JYRgAePh9o2qZpZwJHdL7sQ8aVUumTp3XZuhdNo30d7WE5bW9X5p
+	 f2ax52WEafJru969HjYMPcLuAm/KN7iHDU96J6Aoy08xCQiA4tm3PnJyC9eSuU4OUx
+	 6kF+60xNf0KNSEg9iJswLdD+zOpRUCQeGQeAkUgaoMSqdHKI8SvLWhterPDQQSmIuQ
+	 8xEMws3RaHvW/PudnYR4jffNCp6Y3mjwBN1YZpwAhEPBKrqa4R2k4cwH1KTLQRIBiM
+	 S8478xKq7+Upw==
+Date: Thu, 6 Feb 2025 17:28:52 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Iuliana Prodan <iuliana.prodan@nxp.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v2 4/8] ASoC: SOF: imx8: shuffle structure and function
+ definitions
+Message-ID: <5d075a4b-f253-4203-8b44-dfccfdff3048@sirena.org.uk>
+References: <20250205203022.2754-1-laurentiumihalcea111@gmail.com>
+ <20250205203022.2754-5-laurentiumihalcea111@gmail.com>
+ <Z6TguAqGRS3eDhqa@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-arm64-handle-arm-attributes-in-linker-script-v3-1-d53d169913eb@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAKHvpGcC/5WNyw6CMBBFf4V07Rj6QnTlfxgXBQadiIVMK9EQ/
- t1CYoxLl+fe5JxJBGTCIA7ZJBhHCtT7BHqTifrq/AWBmsRC5crmUmlwfC8MpKvpcAFwMTJVj4g
- ByENH/oYMoWYaIpTKISqrpXa1SMqBsaXnmjudE18pxJ5fa32Uy/oJmf9CowQJOyO1rYq61WZ/T
- KfHbtvzRSylUX3tKv/XrpK9KUqT73ettdb82Od5fgPktuqQRwEAAA==
-X-Change-ID: 20250123-arm64-handle-arm-attributes-in-linker-script-82aee25313ac
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, stable@vger.kernel.org, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2841; i=nathan@kernel.org;
- h=from:subject:message-id; bh=pPmLZssZVb0h1amjrYDb6Gwl7U84SRos3SRqFBYvoCo=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOlLPnxV+6A67+IFds/l3b5sU1/8niS54G3eHR6XVy03n
- H2kn4fJdZSyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJKB1jZNhiENbys+tSl9w+
- rkVL94q4npbStW/y+bFusfHsh8rWLf8ZGVr7NlVukIz0WbhMdH7u8hsfLriuOKzteLeT/7rQas3
- FScwA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9ePzvpx/N0yDHpeJ"
+Content-Disposition: inline
+In-Reply-To: <Z6TguAqGRS3eDhqa@lizhi-Precision-Tower-5810>
+X-Cookie: With your bare hands?!?
 
-A recent LLVM commit [1] started generating an .ARM.attributes section
-similar to the one that exists for 32-bit, which results in orphan
-section warnings (or errors if CONFIG_WERROR is enabled) from the linker
-because it is not handled in the arm64 linker scripts.
 
-  ld.lld: error: arch/arm64/kernel/vdso/vgettimeofday.o:(.ARM.attributes) is being placed in '.ARM.attributes'
-  ld.lld: error: arch/arm64/kernel/vdso/vgetrandom.o:(.ARM.attributes) is being placed in '.ARM.attributes'
+--9ePzvpx/N0yDHpeJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  ld.lld: error: vmlinux.a(lib/vsprintf.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-  ld.lld: error: vmlinux.a(lib/win_minmax.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-  ld.lld: error: vmlinux.a(lib/xarray.o):(.ARM.attributes) is being placed in '.ARM.attributes'
+On Thu, Feb 06, 2025 at 11:18:00AM -0500, Frank Li wrote:
+> On Wed, Feb 05, 2025 at 03:30:18PM -0500, Laurentiu Mihalcea wrote:
 
-Discard the new sections in the necessary linker scripts to resolve the
-warnings, as the kernel and vDSO do not need to retain it, similar to
-the .note.gnu.property section.
+> > Shuffle the definitions of some structures and functions such that
+> > they are better grouped. This is purely a cosmetic change.
 
-Cc: stable@vger.kernel.org
-Fixes: b3e5d80d0c48 ("arm64/build: Warn on orphan section placement")
-Link: https://github.com/llvm/llvm-project/commit/ee99c4d4845db66c4daa2373352133f4b237c942 [1]
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-Changes in v3:
-- Update location of section discard in vDSO to align with
-  .note.gnu.property discard since the sectionss are similar in
-  nature (Will).
-- Link to v2: https://lore.kernel.org/r/20250204-arm64-handle-arm-attributes-in-linker-script-v2-1-d684097f5554@kernel.org
+> I don't think this patch is neccessary. It have not look better after
+> change position.
 
-Changes in v2:
-- Discard the section instead of adding it to the final artifacts to
-  mirror the .note.gnu.property section handling (Will).
-- Link to v1: https://lore.kernel.org/r/20250124-arm64-handle-arm-attributes-in-linker-script-v1-1-74135b6cf349@kernel.org
----
- arch/arm64/kernel/vdso/vdso.lds.S | 1 +
- arch/arm64/kernel/vmlinux.lds.S   | 1 +
- 2 files changed, 2 insertions(+)
+The rest of the patches depend on this one (or there's some other
+conflict with my current tree), please resend with this patch dropped.
 
-diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
-index 4ec32e86a8da..47ad6944f9f0 100644
---- a/arch/arm64/kernel/vdso/vdso.lds.S
-+++ b/arch/arm64/kernel/vdso/vdso.lds.S
-@@ -41,6 +41,7 @@ SECTIONS
- 	 */
- 	/DISCARD/	: {
- 		*(.note.GNU-stack .note.gnu.property)
-+		*(.ARM.attributes)
- 	}
- 	.note		: { *(.note.*) }		:text	:note
- 
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index f84c71f04d9e..e73326bd3ff7 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -162,6 +162,7 @@ SECTIONS
- 	/DISCARD/ : {
- 		*(.interp .dynamic)
- 		*(.dynsym .dynstr .hash .gnu.hash)
-+		*(.ARM.attributes)
- 	}
- 
- 	. = KIMAGE_VADDR;
+--9ePzvpx/N0yDHpeJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
----
-base-commit: 1dd3393696efba1598aa7692939bba99d0cffae3
-change-id: 20250123-arm64-handle-arm-attributes-in-linker-script-82aee25313ac
+-----BEGIN PGP SIGNATURE-----
 
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmek8VMACgkQJNaLcl1U
+h9AJ9Af+PpUdI9eSeMWcul/JsORox+wiE3dTzdAbUfma8OXASV/PxqngxwaNo9bS
+Jh5SixKRkRBt17Rg9dROy63iyzdKX7DQGsJLgHHatXrhzie06cLsVPWPDKwamM/1
+GG2w6qpPBYIdE14vEESpzA6TG+fTL0/IYE8R7gjY/tOn2LE9Xy7XJfwZ1PZKBaVt
+GMwoz64ly0LQ0VxJdbMaQsGTtdomLji5c1QIhEy/u91J7MwaC0KN1UPvG8GFmCn9
+X6jIUqcJrL7hvRE2FGQYDPmm9tJbBDuR56DUkSmvBmiPsw4skvk2bsVdOS+3xGBO
+Ztqw4CJ5HdjIMf3QAJciEd2Zbos18w==
+=4efS
+-----END PGP SIGNATURE-----
 
+--9ePzvpx/N0yDHpeJ--
