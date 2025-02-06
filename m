@@ -1,82 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA0A225760
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC4AA225777;
+	Thu,  6 Feb 2025 06:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738824388; cv=none; b=Q7Xf6VvAJj2FoqbenslFgJAzM1oyq5ihCepXMS6GDHjxGpn8kv8QtsOAMoANd4m4sAyKXSTINg1nLn+EZjl0DUbUn+9MQM4gf275CpkVKYetHpJj5po+uy1qhg7fHJBwn7XrXyEQmgJJZwiog3yly2MaNhLua9zJ/VH77o1BTUg=
+	t=1738824396; cv=none; b=f0CDwEwXZV3h1ly9Jd+GdYx0+I+ISuZ84iDivupb+w7JMj0HzSm4dUfydrd/DIEeV9KsFLqm2UAirWR8crkOnX5LxbdITkQ1W+tyLZlxm82stBsQZwuSmd66GxUje/Pr30soPqJZkRAy1+nLrVqc6QKySlptGIWsjddqlNOkYwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738824388; c=relaxed/simple;
-	bh=L/04Y76RLArXwdFii0mJtBTfcSdeQFU6jkHVLh9O17I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K8LkE4yQ0QsmdViNrqW5rZvMtSo32W89jdtgDYg8ghkcBBkVKDhLaqDnBnPy98fHsuqExnlW+TaM8gXeMhtb0DdmD4TVAzik+KrFYmE3YYEewJnZzQrQNVbYDzqDH87/8HDIPouCGK9d6UlqyEVBxSMAxJqDYmhQ7x4lq8ozPNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CoE5a86r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738824396; c=relaxed/simple;
+	bh=nJVzj/GB+5D8IS7nE4D55pupBxL7y06EhSJdhVOOu/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TcT/gn0mJ1A9MBJayuOvzAac9oBAY0PYyMQ6ZOrlOfdqJWJx8AlPvlVjPJ24L/1+AY9/jj3vi1YGqmhsGyTJtOV9r8AsAjc4jpXcPFNtMOKO3IZh/ko+9aDezb4ZK9Q0enS/GbrcBgIp43A7B0kj5knZNwL+1I8i8JmV0HQgZvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HpT7dBdF; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CoE5a86r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD725C4CEE5;
-	Thu,  6 Feb 2025 06:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738824388;
-	bh=L/04Y76RLArXwdFii0mJtBTfcSdeQFU6jkHVLh9O17I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CoE5a86ris0IpWocXajhAtzTjF7wF76YDX55jHiMlo14Mjc/i3UBb3864/TVtlzOi
-	 81Kl0BzNU7RrcHX5bhm53cYxkcc/T2hLaVlprbofXwWJ4Zz5YISrU9mlSHOuEN+2wf
-	 Pa/1UhWaxAmMW0cZbVvTvfAzTaV9iawAxSAsuebOB8OpmBXVSJw2xrYF5Ht2DrrcXQ
-	 Mw2xQu5W1Elzoxqg9/AublBW1yH6BqMF4FxyctC9a50tkGjfjpFxvuyHroCffZEP2H
-	 5Jq2etxnWlfhy4Z3yBjSLcnC29KHo9Yh2kCERYNxS0MzaanDQTXfuV5qbi5A6hB4dH
-	 j6ejlkS29g4NA==
-From: SeongJae Park <sj@kernel.org>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Bharata B Rao <bharata@amd.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Raghavendra K T <raghavendra.kt@amd.com>,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	lsf-pc@lists.linux-foundation.org,
-	gourry@gourry.net,
-	nehagholkar@meta.com,
-	abhishekd@meta.com,
-	ying.huang@linux.alibaba.com,
-	nphamcs@gmail.com,
-	feng.tang@intel.com,
-	kbusch@meta.com,
-	Hasan.Maruf@amd.com,
-	david@redhat.com,
-	willy@infradead.org,
-	k.shutemov@gmail.com,
-	mgorman@techsingularity.net,
-	vbabka@suse.cz,
-	hughd@google.com,
-	rientjes@google.com,
-	shy828301@gmail.com,
-	liam.howlett@oracle.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	nadav.amit@gmail.com,
-	shivankg@amd.com,
-	ziy@nvidia.com,
-	jhubbard@nvidia.com,
-	AneeshKumar.KizhakeVeetil@arm.com,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HpT7dBdF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=iV0y9
+	uGnwXVK7zkkSzMw7t+xjHXK+RMqrkX1IUPW04w=; b=HpT7dBdFhbn152lcQlzvq
+	uU72oiOuLv3ItWFl42lTdqJ3SouYqEsDgMLEVowrBw+dX5VQwINz+mKUsWwv1jEn
+	azbSoeWMModdvmGYgR7At0GmR+cZ9HuH7nEj5HJ0jRX4FRcwu8c38uKSh6h/HlwF
+	S3RbjyuBiJsQzsmt69zuVc=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3162wWqRnLu9OKA--.43572S2;
+	Thu, 06 Feb 2025 14:46:12 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com,
+	krzk+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	jon.grimm@amd.com,
-	santosh.shukla@amd.com,
-	Michael.Day@amd.com,
-	riel@surriel.com,
-	weixugc@google.com,
-	leesuyeon0506@gmail.com,
-	honggyu.kim@sk.com,
-	leillc@google.com,
-	kmanaouil.dev@gmail.com,
-	rppt@kernel.org,
-	dave.hansen@intel.com
-Subject: Re: [LSF/MM/BPF TOPIC] Unifying sources of page temperature information - what info is actually wanted?
-Date: Wed,  5 Feb 2025 22:46:24 -0800
-Message-Id: <20250206064624.3225-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250205160529.GB1183495@cmpxchg.org>
-References: 
+	linux-rockchip@lists.infradead.org,
+	derek.foreman@collabora.com,
+	detlev.casanova@collabora.com,
+	daniel@fooishbar.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v13 12/13] dt-bindings: display: vop2: Add rk3576 support
+Date: Thu,  6 Feb 2025 14:46:03 +0800
+Message-ID: <20250206064607.11495-1-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250206064457.11396-1-andyshrk@163.com>
+References: <20250206064457.11396-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,65 +51,164 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3162wWqRnLu9OKA--.43572S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWr1kWFWUuF4UtFW5trWkZwb_yoW5uFW3pa
+	93C3Z5XrW8Gr1UWw4ktF1rCwnYq3Z3Ar4akrn2ya13Krsxtr48Ww4agr98Zr9xWFy2vayj
+	9FsYkw17G3sFvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UCQ6XUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqAjrXmekT+DVewAAsX
 
-On Wed, 5 Feb 2025 11:05:29 -0500 Johannes Weiner <hannes@cmpxchg.org> wrote:
+From: Andy Yan <andy.yan@rock-chips.com>
 
-> On Wed, Feb 05, 2025 at 11:54:05AM +0530, Bharata B Rao wrote:
-> > On 31-Jan-25 6:39 PM, Jonathan Cameron wrote:
-> > > On Fri, 31 Jan 2025 12:28:03 +0000
-> > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-[...]
-> > Here is a compilation of available temperature sources and how the 
-> > hot/access data is consumed by different subsystems:
-> 
-> This is super useful, thanks for collecting this.
+Add vop found on rk3576, the main difference between rk3576 and the
+previous vop is that each VP has its own interrupt line.
 
-Indeed.  Thank you Bharata!
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-[...]
-> For the following table, it might be useful to add *when* the source
-> produces this information.  Sampling frequency is a likely challenge:
-> consumers have different requirements, and overhead should be limited
-> to the minimum required to serve enabled consumers.
+---
 
-+1
+Changes in v13:
+- Use maxItems constraint for clocks in allOf block
 
-> 
-> Here is an (incomplete) attempt - sorry about the long lines:
-> 
-> > And here is an attempt to compile how different subsystems
-> > use the above data:
-> > ==============================================================
-> > Source			Subsystem		Consumption         Activation/Frequency
-[...]
-> > ==============================================================
-> > PTE A bit via		DAMON		LRU activation,                     Continuous sampling (configurable)?
-> > rmap walk				hot page promotion,                 (I believe SJ is looking into
-> > 					demotion etc                         auto-tuning this).
+Changes in v12:
+- Split from patch 10/13
 
-You're right.  I'm working on auto-tuning of the sampling/aggregation intervals
-of DAMON based on its tuning guide theory[1].  Hopefully I will be able to post
-an RFC patch series within a couple of weeks.
+Changes in v11:
+- Remove redundant min/maxItems constraint
 
-> > ==============================================================
-> > Platform hints		NUMAB		NUMAB=1 Locality based
-> > (AMD IBS)				balancing and
-> > 					NUMAB=2 hot page
-> > 					promotion
-> > ==============================================================
-> > Device hints		NUMAB		NUMAB=2 hot page
-> > 					promotion
-> > ==============================================================
-> > The last two are listed as possibilities.
+Changes in v10:
+- Move interrupt-names back to top level
+- Add constraint of interrupts for all platform
+- Add constraint for all grf phandles
+- Reorder some properties
 
-I'm also trying to extend DAMON to use PROT_NONE faults and AMD IBS like access
-check sources.  Hopefully I will share more details of the plan and experiment
-results for the PROT_NONE faults extension by LSFMMBPF.
+Changes in v9:
+- Drop 'vop-' prefix of interrupt-names.
+- Add blank line between DT properties
+- Remove list interrupt-names in top level
 
-[1] https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org
+Changes in v8:
+- Fix dt_binding_check errors
+- ordered by soc name
+- Link to the previous version:
+  https://lore.kernel.org/linux-rockchip/6pn3qjxotdtpzucpul24yro7ppddezwuizneovqvmgdwyv2j7p@ztg4mqyiqmjf/T/#u
 
+Changes in v4:
+- describe constraint SOC by SOC, as interrupts of rk3576 is very
+  different from others
+- Drop Krzysztof's Reviewed-by, as this version changed a lot.
 
-Thanks,
-SJ
+Changes in v3:
+- ordered by soc name
+- Add description for newly added interrupt
 
-[...]
+Changes in v2:
+- Add dt bindings
+
+ .../display/rockchip/rockchip-vop2.yaml       | 61 ++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
+index cf68eb911118..2f5745255097 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
+@@ -21,6 +21,7 @@ properties:
+     enum:
+       - rockchip,rk3566-vop
+       - rockchip,rk3568-vop
++      - rockchip,rk3576-vop
+       - rockchip,rk3588-vop
+ 
+   reg:
+@@ -38,10 +39,21 @@ properties:
+       - const: gamma-lut
+ 
+   interrupts:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+     description:
+-      The VOP interrupt is shared by several interrupt sources, such as
+-      frame start (VSYNC), line flag and other status interrupts.
++      For VOP version under rk3576, the interrupt is shared by several interrupt
++      sources, such as frame start (VSYNC), line flag and other interrupt status.
++      For VOP version from rk3576 there is a system interrupt for bus error, and
++      every video port has it's independent interrupts for vsync and other video
++      port related error interrupts.
++
++  interrupt-names:
++    items:
++      - const: sys
++      - const: vp0
++      - const: vp1
++      - const: vp2
+ 
+   # See compatible-specific constraints below.
+   clocks:
+@@ -132,6 +144,11 @@ allOf:
+         clock-names:
+           maxItems: 5
+ 
++        interrupts:
++          maxItems: 1
++
++        interrupt-names: false
++
+         ports:
+           required:
+             - port@0
+@@ -145,6 +162,39 @@ allOf:
+       required:
+         - rockchip,grf
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3576-vop
++    then:
++      properties:
++        clocks:
++          maxItems: 5
++
++        clock-names:
++          maxItems: 5
++
++        interrupts:
++          minItems: 4
++
++        interrupt-names:
++          minItems: 4
++
++        ports:
++          required:
++            - port@0
++            - port@1
++            - port@2
++
++        rockchip,vo1-grf: false
++        rockchip,vop-grf: false
++
++      required:
++        - rockchip,grf
++        - rockchip,pmu
++
+   - if:
+       properties:
+         compatible:
+@@ -160,6 +210,11 @@ allOf:
+           minItems: 7
+           maxItems: 7
+ 
++        interrupts:
++          maxItems: 1
++
++        interrupt-names: false
++
+         ports:
+           required:
+             - port@0
+-- 
+2.34.1
+
