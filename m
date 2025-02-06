@@ -1,78 +1,78 @@
-Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EBF1CEAC8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A8A1DD886;
 	Thu,  6 Feb 2025 21:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738876089; cv=pass; b=dlxOGyRmehnQK0YndB+Dua3z+qPECV0VgLVwlJbIbqlDXkC5aZK0C4wpZNTt+cmbyk5TQlD/SsRgIUVlo+8RaMaBPbZRF4hVxr8U3M42I+ZeSy4ucRYuyMV+mmfNwPhdOsTp1axvMUBjnzDNGJRIrTjWYppTLh4WhvZED51GPNI=
+	t=1738876090; cv=pass; b=JpNFSNKCtyCkX2KhZ/MkNHQ84iTuLa17KGpeLnzM1lgocWUwWjc0HxIS7wU3sT4DCLLepd4p1sQBcUbIcMbap2qJlq9inAJAkPTXDTDhzEwHUmjVPW3vH6qg6JJD8yZc1HnoTkfTqZJksuc5X7KYAPwgRrZJnnNrPpUJ649Fm50=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738876089; c=relaxed/simple;
-	bh=7L31dPYGw7Pxe40Cf9TC1lYjwHWfvUUWN98ZTOblSOw=;
+	s=arc-20240116; t=1738876090; c=relaxed/simple;
+	bh=wLsWvO7G2CDgvUsTos23isyBxWnJ4B7OEzDo0wRP9YY=;
 	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=ae+oKpktqWMSBQociRFcI6RMsNzIPpcPtWbEiccaq8IxLeMeGCUE6Ot8pHfUIYiQR8ljBV8nu9+rBrBLaX0Abnit/366iYErhSGTGMVzEBfuafJ8YpWK4B8F35xgcNmjHe/C0Ev8yYgk2GM0MFYNAolU/MxtPeXbhLx8B3bhrVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=L+QWLl/N reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.223.165
+	 In-Reply-To:To:Cc:Date; b=jgV4bzhmrezO4/CcYpOe6Nv1ynKxgM4ZmoS9PcOAC2LGWcqDwMN1Z2NfcYzX5QPZl7DM7XSUBZ5vs68xUcIFMmvt/trtcc9jK62lbhEPX45IrGaVQZ+nrkfMUxidYn2hCKIXmJP7Lop+YXDI4FgbhZ1CfBTfZZYo4ciCsb4Qsvk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=dke2mQzD reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.218.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="L+QWLl/N"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="dke2mQzD"
 X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 309A64E4B48;
+	by relay.mailchannels.net (Postfix) with ESMTP id C3D2D843C48;
 	Thu,  6 Feb 2025 21:08:01 +0000 (UTC)
-Received: from fr-int-smtpout8.hostinger.io (trex-0.trex.outbound.svc.cluster.local [100.127.46.110])
+Received: from fr-int-smtpout8.hostinger.io (trex-9.trex.outbound.svc.cluster.local [100.124.213.208])
 	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 339CA4E563E;
-	Thu,  6 Feb 2025 21:07:56 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738876080; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id 44C3684430A;
+	Thu,  6 Feb 2025 21:07:57 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738876081; a=rsa-sha256;
 	cv=none;
-	b=3qk3bG01wNKYS3Z+8vCipPFu1fafB2gVQ8idDweUjahL4roEX1CAaTH/Wsh8fzFIbTKMwY
-	yDVcCjluTsMM3VwRFoNpVGXQvr4LDzB3+hN/WmtJ85CcvipdHg8YCU1aDUFeuIRHI2DJs8
-	EMmQTbvFOKS75GZO9H80olQj/Vuag5zWqnLbRUiL6e3NOypO4qUqgPldo+VgwjNX0Ya6pl
-	VR2ZtSPgkTgkM7KBybcs/AeMbg8r6Vn8ulToc9GUqW0j7sseuX/WU+/CYTsN3jKDHk1BRR
-	1vSMkH7MgcoqrfwDKLzFXd2dYtlqdqThK3Y1DZF0p+kAHKwzzcj2Qoi1Pr8oIg==
+	b=KjYspCEyLbv/6H/C7sYirwxoOFyx5/XWo1k8cD8iPHITFKGhTBtRXTpStFz1Y+wbUNYTJv
+	zaGKn6iuKPNeBKVvapPfNhA6NxRjQH4ptYuC/mnYyjqhd+bjKlN9Yq+ALgAH1pmmj8UA6m
+	/R+tK+tRiUCyTM50wEkpdJQ+WVrd3HXXKN2AxZ3GdtgDLeAcAYTTyYyNDVXoUc+hKFYU85
+	ilAaZ3Vjxtz9dunn89i8WfRiqt3HLIkFIjaEKKEp5yNx2aB92J/6HdqIvV58krkCn1OSLT
+	gobzjxbJUXe8zpIpvDQ3gmT5cC3Z2sj8CacxAbpV87KGVy5QA2ynAzehTvU8Pw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1738876080;
+	s=arc-2022; t=1738876081;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=mboWAuygJDRJOd489iUzrH063I+FbtqSBfcS25mYKxc=;
-	b=wDcNfOaR/miavz00fjUHj1sAX7Y7Ogdv8KP0IwFRxJTUll56iQUC9HlZ1iWy2XQEpbVmWD
-	S11DUCHoPCjfi63v4OeuB8mBBaZaIktjsKfwqaLgJkqAmxULSwRE8gkUsQVpNik3zGLga9
-	UqbJRFcH3QYTY67w4GkCWDRB4qgG8d7TbIUa1IBTxZ6EmBTdnKck/Pve3M3V+HsFAuDciD
-	FuD66l+yCOJwkSGfKqUREGtjpMa89UXG8VD9AMv2B5YSPJfHKKCkog32FtWMdfkj9Q46rD
-	Gt0a3PwH0oLbiYb4d+a5Bb0n5mT758gnXXvdT5digTYfBcWtQp81vw8P/evgQg==
+	bh=xe2WLiAkBcHSDkUXsXHhELtyJUZydrkz2mL+/UvVSF8=;
+	b=c0FQ7NzYDk2UGA9PdM7K4NWGAHSrJIDrfEEeVGkA7BP0PYf9hu6mLcJQasxThhd8+up4rr
+	7F0YysICHtSof+IpwrizZPTYeUyQxUpsvhH1we4BQFjL5XtaODUU/kM+ijPYm4C+vqhgFr
+	Ca6jgMSPQ5JxqnhpuOgVRwAo584ovpz8isbkLu6bhPp9haVCcNuFVjA52GRue1N8o2kh85
+	7Es8reKNmgu4lHmyrfQXZRWq0XXzjW3OUvu6bERNN+kz9dw8eDho7HdODp1CDHkMWUOSf9
+	X/gJNJsovEZrr+/263gkHGhqbnHBgwXe95P7+3Q6fqwiu+Wud4ktH2dHPRpdlQ==
 ARC-Authentication-Results: i=1;
-	rspamd-8586946c78-xmhdh;
+	rspamd-8586946c78-zkzf8;
 	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
 X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
 X-MailChannels-Auth-Id: hostingeremail
-X-Trouble-Callous: 7200ee0e378d10d3_1738876081058_1262071984
-X-MC-Loop-Signature: 1738876081058:3642678018
-X-MC-Ingress-Time: 1738876081058
+X-Cure-Plucky: 2d15b524697e6a68_1738876081662_2443359273
+X-MC-Loop-Signature: 1738876081662:3814102582
+X-MC-Ingress-Time: 1738876081662
 Received: from fr-int-smtpout8.hostinger.io (fr-int-smtpout8.hostinger.io
  [89.116.146.204])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.127.46.110 (trex/7.0.2);
+	by 100.124.213.208 (trex/7.0.2);
 	Thu, 06 Feb 2025 21:08:01 +0000
 From: Alban Kurti <kurti@invicto.ai>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
-	s=hostingermail-a; t=1738876074;
+	s=hostingermail-a; t=1738876075;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mboWAuygJDRJOd489iUzrH063I+FbtqSBfcS25mYKxc=;
-	b=L+QWLl/NIGljSUgPyFWB0NYmjel8p4RdAxtIbPYzN3RoZTFasyqPIN0TcwWC0wweDt6F3f
-	Wae/td6B5LnjGTEgJDcf1jxTsLdKlece/X2KKxS1PQZ8FfOM/Ydd2/kdYAWEXgQMoJyGRr
-	rSzh6yeqnMQtwoQyq9cizGTyAbAO0g8KLffMjD1MaJzzkB9cKCIZVo0VmRpF2qCynbztxi
-	e1tgkWFvhvELjp94fKyLWW9ShCAA1aX7pOTVh/rXfZB15XTIrjuMW2hAfikGwmTHq358NU
-	1bItBnuaRwZjxUB3hWBSWjit9K3CX5IRqqs8XAekFNZWnliMT88DEfEqcwBW9w==
-Subject: [PATCH v3 2/6] rust: error: add missing newline to pr_warn! calls
+	bh=xe2WLiAkBcHSDkUXsXHhELtyJUZydrkz2mL+/UvVSF8=;
+	b=dke2mQzDGh8SPTmOpPHa5ct2vJIz7vgu+ZEYTRaOWXYDC2ave2y17ToaC4vXgDN6Y1FiPe
+	YfonCxNpSJ/o7FPbNMH8GlriVDws9UaYv/x92+tyLhmiMyRJrrq+ZbMQZFZEV2nWF3oZme
+	UehaCzejoMvGwmDEm1epUROgpNwe5iLI20h90YLhqisR5eiXVSPQQI+NadiWDbsBai9dDw
+	H0pbQBBppkbdVdLiSWeged9SUmb1NzLfrdv2YEnpC1Xb4mIsYxwdGLmswvWBvRIOGNfa4r
+	JTkTu/arGexU07Hxh4zY9ibydBmagpXv9QI53LocwMHhKSNwXlWpaD29K+DXbQ==
+Subject: [PATCH v3 3/6] rust: init: add missing newline to pr_info! calls
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,7 +81,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-printing_fix-v3-2-a85273b501ae@invicto.ai>
+Message-Id: <20250206-printing_fix-v3-3-a85273b501ae@invicto.ai>
 References: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
 In-Reply-To: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -102,43 +102,124 @@ Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
  Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
  Fox Chen <foxhlchen@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738876070; l=1035;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738876070; l=3757;
  i=kurti@invicto.ai; s=20250206; h=from:subject:message-id;
- bh=7L31dPYGw7Pxe40Cf9TC1lYjwHWfvUUWN98ZTOblSOw=;
- b=5NY9J+xUMZNQlhO9wORf3WMxkYDAqjsEjCtxJK8zBrAIV7XPj9JP9Ro5v6D3uNgJWCm9XMLJy
- ob7o4tT+2VhBeOsvnpmhcjTGPmajbIXZUEwVmj6Ti3ejd5n1zIDqinY
+ bh=wLsWvO7G2CDgvUsTos23isyBxWnJ4B7OEzDo0wRP9YY=;
+ b=blNhu/kuzLz7yiGjHnvKuuO5uLg9p3v4Nqm53boJPkRRSrFD20BmDnHi4fGqLoWh+mxhRXP3Y
+ QOW9uTjo3xFDxqJPLzYgSAgZBUO9HPqm0EPqqp5eDPKX3dpAJJD6y7m
 X-Developer-Key: i=kurti@invicto.ai; a=ed25519;
  pk=D1lKs+JFapuEVI9zJ2QUTLSf5u4aT12tG0ny6vMMuOc=
-Date: Thu, 06 Feb 2025 21:07:53 +0000 (UTC)
-X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a524aa a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=IkcTkHD0fZMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=a7_a2XaVlCDEdv-p5PoA:9 a=QEXdDO2ut3YA:10
-X-CM-Envelope: MS4xfGaF6Dw32A7ngSBQwII2tyW85uHilPVB+nnbOOKMIurIo3X5lTWumOjJpiONd6WfhobJa0a8iyYUl1UOeV0RTUDSBC8ATVeZie9E+o+5f3B0LL3tEiKj W+n6ZC6yVV2L9Y4RyyqJAfdjyEbdIkp8prrs3FknMmYgq8U9Yj9NpZ8iQd9tth6sBmKtoQ5KY9c1hrF3/+zfwzseaqyVtpucqJOYMKf0XFQbyTgPVm8RZbu2 bpSskbFmTXpLfclX2YOvSmq/2b9g/7LhCzI3HIdHyqR8QuFnzx5pD0HwB9jS6dc99h2lJ7Uo3vGnkGUrxJsdKfujw3M2tFbCTq7C1AwD/nGo9sk6nOs4B53B 4AefMfFjZnBWWRKyOCUw7A9KCsRM5+anbbm8FdE0dhfvxlDwGKd1ifAEx1gvMqARall3RuSPAXjV3qAvJr6p7HnqtgCF2YSYzfmvJY2hCVSfC+LSR990yL2f RAn9GKmuXi19K/RpEp5AsBuf1zgOsMTthwGBINHHNY8HbMXvVf+N+GG1gizuAQVg2oBWpAdbBdiL4SnXAi0IrCJpRG72qjSGaM85ZFJx4fJV8Vsorp62Vj9r 7G3UQjvHjq1tfDif1KbzcxPsqoDdLwL5slI/XJlXhEWUb4BlBiBoaD24DIgTYBLnjfiY1P/L103qERPjV4HI7GNKbxUQhZZOq1UQvmmyAuljxS6T7T/8p47t 0asC7Be5OKTZxSzVSlAO3t+XdPJqHY+O1w8WvRdPn+q08c9FDGZLJj0URZwxUKMuMEdMJlYRS3yRt6zVNobxO90/KYLQZSosLmeI+KSKAOOY8ykASz4LtN+X JUbfqrQ4tjvXlgiXS5W+ksiohqCem21Hu0diFGoKm62kVGc3WTZbL34L2TJW4umrgGQGnWCvzBivtX59ozdqsvSNe9yVFT4nZkat1kIltDAdwMKoALhkuDjW QS6Kk/PeYaA/f9y
- IkOZ1INlKCkgL68dOn+usqQZ4/TouDeF8
+Date: Thu, 06 Feb 2025 21:07:54 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a524ab a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=IkcTkHD0fZMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=nqqMFtM_d8z4v-URY_sA:9 a=QEXdDO2ut3YA:10
+X-CM-Envelope: MS4xfI1QtWnQWDJVkIqxxdYYDI2N7/H3n6ylZ4xMK6AW5efifmRGYGF/gQ93xH4PKYnFzfGACypazeEmTS08dNiHZE+VDMU0Wx1bGzPUK/ZmT6mORtQdl6YZ kmmQMr05jUP2nbZ5DhkuM+MLNuNb5hW5wnHsxGq/YNoj/Z6+azZXBnoaGXxENRZD3HxZB8tAikIArKpYNhJzul9hxxGLN81zaxLYR71PW2eE9HGlskE3TDop N/pY7RUinWClmSKzIsGuCBg6P4AokQXsnxZcs9x/DN0wOxNaFzHszd91Rbxza919ex7HWFelOZrGbYMtNhWDv2ynw0H5jetE0+STe4g4kD2AyI3si9MRlIFg An38XVd7HV9RggzZCj+3gOBGRl4FemAEfI2quzShYKIJ5NwptrazPtw4yh5HBTUW908VXhm3dXHEkm+gPShAHj1WzU0eo23qQk1P5bx2KTvqNvlf/zYBDL/5 OdIY2QYQoDElHPMAWRj71HRu6y0t9mNuAwoZcIBl3Ivw6ZkABgwdiuVwjVfyEK6vbYqp92wJ/Ep/oUhRnXW30/Dek3ifMVowu1coDLbDGqooh2LObs44m8qH fSCDzx6RoYcgT2PwZao1gFUnTJ64f5J9kOOSZnmmTFemi9k9w3SM37k3yB0nGWC1IWCmOvNgMYuLqo06hyLyN3IZy8ghKwCo83Aq4ztk4/I1qy3T/Colz+C3 LfquipRHVgVNWUVbla6mJpWq9xs5k6tcUAwwD6kpRkhLxpEWLItJS9a7/XVg0joOVEdZsa/2LrIpOkyphR/LB2F0B03eC8x6RQyIhR4ZHVWHlSHtuXHMYYqa TupiEbk2N7ZqWoiz6eyRDhaSBDlyKBnGCAJvPG73VtOPvxq3x6qcO9Oy1yH5WyS5KM1ZCoskC97A99ME/MVqoGVPuogWdXI0zb2IA47MZiQxZN24KZBKmdBX FSbz4gY0X+H+7o0
+ o9mXu/gv3AZSxJiN88uD7hAaQhIPUAXoQ
 X-AuthUser: kurti@invicto.ai
 
-Added missing newline at the end of pr_warn! usage
-so the log is not missed.
+Several pr_info! calls in rust/kernel/init.rs (both in code examples
+and macro documentation) were missing a newline, causing logs to
+run together. This commit updates these calls to include a trailing
+newline, improving readability and consistency with the C side.
 
-Fixes: 6551a7fe0acb ("rust: error: Add Error::from_errno{_unchecked}()")
+Fixes: 6841d45a3030 ("rust: init: add `stack_pin_init!` macro")
+Fixes: 7f8977a7fe6d ("rust: init: add `{pin_}chain` functions to `{Pin}Init<T, E>`")
+Fixes: d0fdc3961270 ("rust: init: add `PinnedDrop` trait and macros")
 Reported-by: Miguel Ojeda <ojeda@kernel.org>
 Closes: https://github.com/Rust-for-Linux/linux/issues/1139
 Signed-off-by: Alban Kurti <kurti@invicto.ai>
 ---
- rust/kernel/error.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ rust/kernel/init.rs        | 12 ++++++------
+ rust/kernel/init/macros.rs |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index f6ecf09cb65f4ebe9b88da68b3830ae79aa4f182..a194d83e6835c03b84cc849b641ce8fff548047d 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -107,7 +107,7 @@ pub fn from_errno(errno: crate::ffi::c_int) -> Error {
-         } else {
-             // TODO: Make it a `WARN_ONCE` once available.
-             crate::pr_warn!(
--                "attempted to create `Error` with out of range `errno`: {}",
-+                "attempted to create `Error` with out of range `errno`: {}\n",
-                 errno
-             );
-             code::EINVAL
+diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+index 3f9236c1c9d56db33aea4b76f8116175b9b6ce23..8f57d164cdec8aee6c07e258a512ff8171a1b065 100644
+--- a/rust/kernel/init.rs
++++ b/rust/kernel/init.rs
+@@ -259,7 +259,7 @@
+ ///     },
+ /// }));
+ /// let foo: Pin<&mut Foo> = foo;
+-/// pr_info!("a: {}", &*foo.a.lock());
++/// pr_info!("a: {}\n", &*foo.a.lock());
+ /// ```
+ ///
+ /// # Syntax
+@@ -319,7 +319,7 @@ macro_rules! stack_pin_init {
+ ///     }, GFP_KERNEL)?,
+ /// }));
+ /// let foo = foo.unwrap();
+-/// pr_info!("a: {}", &*foo.a.lock());
++/// pr_info!("a: {}\n", &*foo.a.lock());
+ /// ```
+ ///
+ /// ```rust,ignore
+@@ -352,7 +352,7 @@ macro_rules! stack_pin_init {
+ ///         x: 64,
+ ///     }, GFP_KERNEL)?,
+ /// }));
+-/// pr_info!("a: {}", &*foo.a.lock());
++/// pr_info!("a: {}\n", &*foo.a.lock());
+ /// # Ok::<_, AllocError>(())
+ /// ```
+ ///
+@@ -882,7 +882,7 @@ pub unsafe trait PinInit<T: ?Sized, E = Infallible>: Sized {
+     ///
+     /// impl Foo {
+     ///     fn setup(self: Pin<&mut Self>) {
+-    ///         pr_info!("Setting up foo");
++    ///         pr_info!("Setting up foo\n");
+     ///     }
+     /// }
+     ///
+@@ -986,7 +986,7 @@ pub unsafe trait Init<T: ?Sized, E = Infallible>: PinInit<T, E> {
+     ///
+     /// impl Foo {
+     ///     fn setup(&mut self) {
+-    ///         pr_info!("Setting up foo");
++    ///         pr_info!("Setting up foo\n");
+     ///     }
+     /// }
+     ///
+@@ -1336,7 +1336,7 @@ fn write_pin_init<E>(mut self, init: impl PinInit<T, E>) -> Result<Pin<Self::Ini
+ /// #[pinned_drop]
+ /// impl PinnedDrop for Foo {
+ ///     fn drop(self: Pin<&mut Self>) {
+-///         pr_info!("Foo is being dropped!");
++///         pr_info!("Foo is being dropped!\n");
+ ///     }
+ /// }
+ /// ```
+diff --git a/rust/kernel/init/macros.rs b/rust/kernel/init/macros.rs
+index 1fd146a832416514a2bdcb269615509d75e3a559..b7213962a6a5ac167c445a4fdc77f3661639121d 100644
+--- a/rust/kernel/init/macros.rs
++++ b/rust/kernel/init/macros.rs
+@@ -45,7 +45,7 @@
+ //! #[pinned_drop]
+ //! impl PinnedDrop for Foo {
+ //!     fn drop(self: Pin<&mut Self>) {
+-//!         pr_info!("{self:p} is getting dropped.");
++//!         pr_info!("{self:p} is getting dropped.\n");
+ //!     }
+ //! }
+ //!
+@@ -412,7 +412,7 @@
+ //! #[pinned_drop]
+ //! impl PinnedDrop for Foo {
+ //!     fn drop(self: Pin<&mut Self>) {
+-//!         pr_info!("{self:p} is getting dropped.");
++//!         pr_info!("{self:p} is getting dropped.\n");
+ //!     }
+ //! }
+ //! ```
+@@ -423,7 +423,7 @@
+ //! // `unsafe`, full path and the token parameter are added, everything else stays the same.
+ //! unsafe impl ::kernel::init::PinnedDrop for Foo {
+ //!     fn drop(self: Pin<&mut Self>, _: ::kernel::init::__internal::OnlyCallFromDrop) {
+-//!         pr_info!("{self:p} is getting dropped.");
++//!         pr_info!("{self:p} is getting dropped.\n");
+ //!     }
+ //! }
+ //! ```
 
 -- 
 2.48.1
