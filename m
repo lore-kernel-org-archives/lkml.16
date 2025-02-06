@@ -1,185 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197D719C54E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10D19FA8D;
+	Thu,  6 Feb 2025 18:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865992; cv=none; b=HeTFGgK6x7VzvI5Mmu2/6Jep1kIi2k3ktyau+aHR2lNRymqB4fzavRtZ5QmJSU1AbUb27IwRJw4qQhtY7LrDsYaAMt9G8vxNV536Hk+oErRloUD092ccCmD91dBUViM1w6jNXktis/PlkJpLIp/njX0aBfYKexwto+K+x5ThUQE=
+	t=1738866015; cv=none; b=A9olNL2x1/eooj6JV614ifgXVMlSsNhTEEhkVcwCirywpe+BANsQWHge+Wtidcn5zdQch3sUiV864XoHJQfoDrKZtk4xgr6VQ8KRFLU93N/YDK3vIwSMoDyDtVMF50BF+SrlNsOeANvc9YzwA3PRl0iVoQQ6ScjvQdgZEigYaMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865992; c=relaxed/simple;
-	bh=tKYUJg7a4Ok12Xx2//mvcLjcTlv3dBKTuagHYLan4b0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sjiztatOc7KhaOMUzM9n4vd5kWUWPK742kQAbN7jekdrPyjJHU32F7okES0Sq3GF/VLyppKHm40cXkuxQn0AFjU7PxXGfzkmNiClpzpsfGc0p1Fi/YfgNQCWYUGMErFCqmCUE7G7Ck14MIC7nNQytIVI4SoMeef/V/xs0zTaUMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LD1hvnE+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738866015; c=relaxed/simple;
+	bh=7xGc49hCcHJZCMN59E//NooAH7ZW/6S1zhGVCmh/4iA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RFc5wynA32WaVoJ6aLzrSHG9uunwQTpGR5Nzi3IkOBEvsztc+VDwv+BDpkaxYBqXmWs08Pq5/vDT1FtFJnuTRsydMHJ1Irz3fyuSbsZ3lLIjJG86kOkhnF3U/KZLwmnaByXL97J/VUPWGNWvKG2ZX8XLHlsw2tkoURUaGWk/DaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKDHSTS+; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LD1hvnE+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738865990;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=CkQSy6cqAgy1u3QW6E44/eT6uTpmhDvVHTU1DNQm5z4=;
-	b=LD1hvnE+cZdzfr2Nkt8iLZXQLhxvxZqJFoZI0SNhW09Pu3KczacCcTnl0WkqbBAE6ct42s
-	CpYBT7j4EwIEGX2TKLf5nb6KAE87t8fypxVZncKFYVsGtLV4nVALrGERmnOWx012aqKcVQ
-	Bl1YVstZv7w3BXLOxYicLmdp8kPTmsY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-294-CCBJi2CKOYeV_sFrGLy3Hw-1; Thu, 06 Feb 2025 13:19:48 -0500
-X-MC-Unique: CCBJi2CKOYeV_sFrGLy3Hw-1
-X-Mimecast-MFC-AGG-ID: CCBJi2CKOYeV_sFrGLy3Hw
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4361eb83f46so9794565e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:19:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKDHSTS+"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7157cf352so454575766b.0;
+        Thu, 06 Feb 2025 10:20:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738866011; x=1739470811; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oNEi0kknlIjpUum1uoPVYlcdsr42AMJVcKjCrYsKSL0=;
+        b=YKDHSTS+Tp0Id/BDvaxQiNqc4ar/8NvOPtkHqox+IIkRacmc9uRdgd9fWl76S5w/Vf
+         jCbaLXooR1fXPYwOjGtiRdOx9Ho6vpQFAPN4Tmc3o7CPkoMivh3ddf889ndFED667ajZ
+         1HwSehhWy+yIthwFnTCxzm3cCk+KodCitpqWGwS51O2Oxf2e/2X4z/29eAfPE23pB7Y+
+         GXhGsmUlZ2sZxfgmWhIjG6ffolN15r0z1FCIX2djT52LtzKZBJDUfyyugUuBFowCFUbE
+         D5wuVCw+/EY2lpL6Id3v0O/0XfNSQHB4q0XtQWwMCd6Il9f51CvXAOSoNIpvmymg1zlh
+         sj+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865987; x=1739470787;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CkQSy6cqAgy1u3QW6E44/eT6uTpmhDvVHTU1DNQm5z4=;
-        b=P5jLPTX/59OgpLmRh/3tLc+iFR7nb3pNSm0MTnwQWIO0pxi/CFghk86/CiU3DiTaLu
-         dAY0s58ZeH3xe83oJdTAffVvanieqIYf9P/rPCxmFwtruePsPoFjq6+5d7nhv2HnxQdJ
-         5WvjjEXkjMH91phiEtnNiAxYbZGBfgOGvMC6j+VdlaTuD/2QNcXkNR0fw/CP18yf+mBs
-         yvsQ8StsP9l9zQ/VvJI/vE2csm9/TX+TSV7ivXpm4C1V/15O9m2IBGN/svrc7hhUiAbN
-         laOol6J9vQgXnPxpbbIsTdrRWzTmJT3WBn/5Vw6IUjbNYHh3O8zxOzMUKksl0BHKOIjs
-         87PA==
-X-Gm-Message-State: AOJu0YyZDaHfUA23E5Q67eeuCIJAUZFtcEGuh9+lhbApSqdLf1CsT9rS
-	zHqE2Fe7OBxO577ony63oyhfKUgEz1Bs9hrBZd43ExAeJxbna2oPril86ULvK1n9SNI3xrk1yvQ
-	sPNJz4KkVX0aTkAZkjaZkdx8FgFb0c+AZzxPUzP5Ep7n3jpRLOFtkjWi/ASWkBg==
-X-Gm-Gg: ASbGnctGXuSU3aSTepIB75XcAsOLXmh47+gLqnUpfSgHC7DIOyKEDpaZs7egQ06opJT
-	HQT8u9tCsCXjs7fu/X+uGlQiV5ENphP9BtaynGQpAxusTlspX6E7lYRQ/gM7vX0J5qwZgS40Q9T
-	PakSKsKx7TcIp9Of2LoItiqDDkTopgr9aHq0DKMcAWM/J7Aq+X1HW467h+xfnL5kYAK900Ev9J1
-	SHq/cBHZp1vYg9wVGb12j0to5BYOfPF09+KTHDzKI6E/gX0tzRDUA6IVpkXFkK3SNgyzAHb9BY5
-	/Emo054zRatx8YtwjWYK17nvkcJM4Zm4g3bKeQ/513WoLXMNCO9dK0ktat6iMqeAM/EbKREPMJu
-	U2sBkxjwXj7+8Qi0dApizvJqZ4nw84GRf
-X-Received: by 2002:a05:600c:4f90:b0:434:fd15:3ac9 with SMTP id 5b1f17b1804b1-439249af2camr3534305e9.22.1738865987550;
-        Thu, 06 Feb 2025 10:19:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/tmRvfDt5hznP58ghloamiqCzbFIyk3eMi0qwtJnaFoEO+AVzx7To/NK20+zwdQ1u5LjgdQ==
-X-Received: by 2002:a05:600c:4f90:b0:434:fd15:3ac9 with SMTP id 5b1f17b1804b1-439249af2camr3534025e9.22.1738865987193;
-        Thu, 06 Feb 2025 10:19:47 -0800 (PST)
-Received: from ?IPV6:2003:cb:c707:3000:a06b:56f1:d152:db83? (p200300cbc7073000a06b56f1d152db83.dip0.t-ipconnect.de. [2003:cb:c707:3000:a06b:56f1:d152:db83])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11064sm62537805e9.37.2025.02.06.10.19.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 10:19:46 -0800 (PST)
-Message-ID: <c633b429-0ad4-4b92-942c-0338a9801cb2@redhat.com>
-Date: Thu, 6 Feb 2025 19:19:43 +0100
+        d=1e100.net; s=20230601; t=1738866011; x=1739470811;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oNEi0kknlIjpUum1uoPVYlcdsr42AMJVcKjCrYsKSL0=;
+        b=c8hczAmdiQDm4YhlUj2QrSjx1fb0HTz3W2CK6nPuU7ae2JFvOIksy2ucXyEhh6jGk/
+         F7sA0iruA5GTxDhjo+Mh4hJPzu3cVbJklvzfsrJCSP0qmM12cNsDOwTLpKZde5Cl1tUH
+         OOO3NT10HYif3lYu4GRjX24pDpjp4JyVYKq8+Cx8V/NIpPchpUtd3OoSSGQC4BQfCmjS
+         dz1Lwd6rWpk34PcVtyBpUffMIOeqB69SfXRL2MmwSw3pGhHkXtsYtR3m6miY9tvVghhN
+         /Dr4/hauhVdqV9rdFdxw+36u5fQbxyWZlHfrF9LIt4g0G5ZrTwHxWMrbYt4yiG8dN4Ni
+         kyKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAJyYaXXDAv3v/jcamDaQ5+w9eOHJJDljtpjcp4vAWTUkijne7/3PH2lAD4Qo4910BuSlHyEKWFlE1rl66iaiJj4hA@vger.kernel.org, AJvYcCXT/eHdH0jXKFWfvZ3grEwDCvUXcKsMsNDrnoHHB1uHi5oI01CdXnk3OYAM9bRRr5ZwNuc801r4hZtkK3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV8goztwvYptIzTUygq6PYupXSky+o/rauWwibi5nBVho4w8hS
+	xvI10w71CjCY/T84QZ/mXM5DDSTyBjniGsf/eBbt73PznECjKvZ4oKTZ4TQYvoDbzNhPaaVsHyZ
+	hrBjTPj1i5osLghmVw8/x6GY/Cc4=
+X-Gm-Gg: ASbGncuoaBQT/HASaeoI6flaYVsa2vy4RjG9usNkBFqiJlqp6p07R1UmzndqtMWmGjF
+	r7o/7NW0vs6qWeWODKYO+un2gBE4eh33r9OnsS96q+ZwqUhApeGd2lYsWX52h/L2T6tZxP8jBG4
+	nzQFHmaiUHZ6INZiHfuRoPeYquLw8=
+X-Google-Smtp-Source: AGHT+IH0zOqsMJfbAGW7RIBKq/bHcuItMk/Hpd9Z0DEoPzQJLzkikiCPZ9hu9xh24sTJVpiZzgqLDfxTZ2hcolOJz4o=
+X-Received: by 2002:a17:907:3f22:b0:ab7:5983:13b5 with SMTP id
+ a640c23a62f3a-ab76e8e9017mr483401566b.20.1738866011273; Thu, 06 Feb 2025
+ 10:20:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/24] lockdep: Fix might_fault()
-To: Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
- ravi.bangoria@amd.com, lucas.demarchi@intel.com
-Cc: linux-kernel@vger.kernel.org, willy@infradead.org, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com
-References: <20250205102120.531585416@infradead.org>
- <20250205102448.348146549@infradead.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250205102448.348146549@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+In-Reply-To: <173881156244.211648.1242168038709680511.stgit@devnote2>
+From: Gabriel de Perthuis <g2p.code@gmail.com>
+Date: Thu, 6 Feb 2025 19:19:33 +0100
+X-Gm-Features: AWEUYZlWm6WvivHpQ9sKTR6x9MaTGCkLmLGJFxAPYpqPxRCl1X4z3C_99JN6be4
+Message-ID: <CAFEugPfsYVfHroc7W7PHjnRbs+KRj53AaCgeQHZediSoYm6E8g@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about get_kernel_nofault()
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Haiyue Wang <haiyuewa@163.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05.02.25 11:21, Peter Zijlstra wrote:
-> Turns out that commit 9ec23531fd48 ("sched/preempt, mm/fault: Trigger
-> might_sleep() in might_fault() with disabled pagefaults") accidentally
-> (and unnessecarily) put the lockdep part of __might_fault() under
-> CONFIG_DEBUG_ATOMIC_SLEEP.
-> 
-> Cc: David Hildenbrand <david@redhat.com>
-> Fixes: 9ec23531fd48 ("sched/preempt, mm/fault: Trigger might_sleep() in might_fault() with disabled pagefaults")
+Hello,
+I can confirm this solves the build issue alongside gendwarfksyms;
+much appreciated.
 
-Heh, that was 10 years ago, part one of my first not-kvm-specific patch 
-series.
-
-Very likely it was not by accident, but I don't have any memory on that 
-part :)
-
-Probably I actually wanted this to be
-
-  #if defined(CONFIG_PROVE_LOCKING)
-
-such that the function looked more similar to pre-662bbcb2747c
-
-
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Le jeu. 6 f=C3=A9vr. 2025 =C3=A0 04:12, Masami Hiramatsu (Google)
+<mhiramat@kernel.org> a =C3=A9crit :
+>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Fix a compile error about get_kernel_nofault() which is defined in the
+> linux/uaccess.h. Since asm/ftrace.h is widely used, including
+> linux/uaccess.h in asm/ftrace.h caused another error. Thus this
+> moves arch_ftrace_get_symaddr() into arch/x86/kernel/ftrace.c.
+>
+> The original errors look like:
+>
+> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+>                  from <stdin>:3:
+> ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
+> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of fun=
+ction 'get_kernel_nofault' [-Werror=3Dimplicit-function-declaration]
+>    46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip -=
+ ENDBR_INSN_SIZE)))
+>       |                     ^~~~~~~~~~~~~~~~~~
+>
+> This also makes ftrace_get_symaddr() available only when
+> CONFIG_HAVE_FENTRY=3Dy on x86.
+>
+> Reported-by: Gabriel de Perthuis <g2p.code@gmail.com>
+> Closes: https://lore.kernel.org/all/a87f98bf-45b1-4ef5-aa77-02f7e61203f4@=
+gmail.com/
+> Reported-by: Haiyue Wang <haiyuewa@163.com>
+> Closes: https://lore.kernel.org/all/20250205180116.88644-1-haiyuewa@163.c=
+om/
+> Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip=
+ to symaddr")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->   mm/memory.c |    2 --
->   1 file changed, 2 deletions(-)
-> 
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -6695,10 +6695,8 @@ void __might_fault(const char *file, int
->   	if (pagefault_disabled())
->   		return;
->   	__might_sleep(file, line);
-> -#if defined(CONFIG_DEBUG_ATOMIC_SLEEP)
->   	if (current->mm)
->   		might_lock_read(&current->mm->mmap_lock);
+>  arch/x86/include/asm/ftrace.h |   23 ++++-------------------
+>  arch/x86/kernel/ftrace.c      |   26 +++++++++++++++++++++++++-
+>  2 files changed, 29 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
+h
+> index f9cb4d07df58..1ed08f2de366 100644
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
+> @@ -34,26 +34,11 @@ static inline unsigned long ftrace_call_adjust(unsign=
+ed long addr)
+>         return addr;
+>  }
+>
+> -static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry=
+_ip)
+> -{
+> -#ifdef CONFIG_X86_KERNEL_IBT
+> -       u32 instr;
+> -
+> -       /* We want to be extra safe in case entry ip is on the page edge,
+> -        * but otherwise we need to avoid get_kernel_nofault()'s overhead=
+.
+> -        */
+> -       if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+> -               if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_I=
+NSN_SIZE)))
+> -                       return fentry_ip;
+> -       } else {
+> -               instr =3D *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+> -       }
+> -       if (is_endbr(instr))
+> -               fentry_ip -=3D ENDBR_INSN_SIZE;
 > -#endif
->   }
->   EXPORT_SYMBOL(__might_fault);
->   #endif
-> 
-> 
-
-
--- 
-Cheers,
-
-David / dhildenb
-
+> -       return fentry_ip;
+> -}
+> +/* This does not support mcount. */
+> +#ifdef CONFIG_HAVE_FENTRY
+> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip);
+>  #define ftrace_get_symaddr(fentry_ip)  arch_ftrace_get_symaddr(fentry_ip=
+)
+> +#endif
+>
+>  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 166bc0ea3bdf..7250118005fc 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -29,11 +29,35 @@
+>
+>  #include <trace/syscall.h>
+>
+> -#include <asm/kprobes.h>
+>  #include <asm/ftrace.h>
+> +#include <asm/ibt.h>
+> +#include <asm/kprobes.h>
+>  #include <asm/nops.h>
+>  #include <asm/text-patching.h>
+>
+> +#ifdef CONFIG_HAVE_FENTRY
+> +/* Convert fentry address to the symbol address. */
+> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+> +{
+> +#ifdef CONFIG_X86_KERNEL_IBT
+> +       u32 instr;
+> +
+> +       /* We want to be extra safe in case entry ip is on the page edge,
+> +        * but otherwise we need to avoid get_kernel_nofault()'s overhead=
+.
+> +        */
+> +       if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+> +               if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_I=
+NSN_SIZE)))
+> +                       return fentry_ip;
+> +       } else {
+> +               instr =3D *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+> +       }
+> +       if (is_endbr(instr))
+> +               fentry_ip -=3D ENDBR_INSN_SIZE;
+> +#endif
+> +       return fentry_ip;
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>
+>  static int ftrace_poke_late =3D 0;
+>
