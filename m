@@ -1,72 +1,119 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3A818A6A8;
-	Thu,  6 Feb 2025 04:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54991A2564;
+	Thu,  6 Feb 2025 04:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738817314; cv=none; b=V8BDJujkm5nGKDR4ZldD8RgULJwC4CX9oO62LbL0F0H6BbrDC91ZJgkqPJFPFggtraU+9rSq/KLBUV/cEgHKtoMX7b891v4ajenl0QrutIZzfxl5CXbcHTT78uR2iwernphsaYhnGbLeB8h03BYR7BNMv0gZp9Y4t2zj89y9W10=
+	t=1738817784; cv=none; b=XGg5OtnZXwT59sylT6I79me0HHQ8x3ugbll0afTgN13sQS2knkQTeqvUflWwlfkF+Z/T6/QPhzNUU7F+3xfydPUlAasxG8XfJ8yWBcOUzvxaxfCm4ugHuoOo0RYNGyUMP1aumbIubWfHlgfJUhMwbbam1xuXdi3ZlNyxeQh4kag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738817314; c=relaxed/simple;
-	bh=MNi7mcAWBRDY2SSGt0bepZ81pQN0hFOvCIGNtZNDud0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OO2qUVfk8p8FuKEZESOP1WV7TElRsnLBsWB9SOxmxZTJA+XhH0ORLJ6azhv087Q6vmV7j4rY+gKbGIIFH24B5Jzkzkv06B0QnfvXt95z4JDyiL0snpeGSoH6dZ8Q7X2WkRmGLJxPDHk3hVUu7jVVrd5s+jQcLHVz9qcxP7tBcss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PRpDxkhX; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738817784; c=relaxed/simple;
+	bh=553hF+T7BWF2LLgAhHz451B5EJreka9CG49KJHF3jzI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tmt8/paNMX8Z565sblI+rXrzvhSLWCIbvVCbmpdJHje0RoAN2E/4s1qGsKcRruHvfLjHb63YE0C74zGbRdxfh+rAKSBR9ykpTr/EtcZN7FzFbfnFBSDM7y2JFHMmYYzGL+ax7hH9h/6V3v+AhKINmrxPN7L9I+unQWMBcdsKZFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlgEm6MK; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PRpDxkhX"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id D513F20BCAF2; Wed,  5 Feb 2025 20:48:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D513F20BCAF2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738817312;
-	bh=OWuupa1UaQmJt5ljiVVqvWF1YiE/WgToQRN8ScivRUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PRpDxkhXHW6UiaI19CMB9sPZjhSuXDlEzclqTsmZ7PYbwazSRRjEO8D9ljTSdtyBB
-	 5gHij1UMy0QLHvEeAq3mI2IfK8orY2Y+cNBb4PGvoVOjZTzJnvNE8Xu45utJ03DN0J
-	 zdSxw1oo7VLbWtY70Wdx74a9qrmjyPNdUq4GNggw=
-Date: Wed, 5 Feb 2025 20:48:32 -0800
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH 2/2] hv_netvsc: Use VF's tso_max_size value when data
- path is VF
-Message-ID: <20250206044832.GA3614@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1738729257-25510-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1738729316-25922-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250205184319.360d2ca0@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlgEm6MK"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30761be8fa7so4629631fa.2;
+        Wed, 05 Feb 2025 20:56:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738817781; x=1739422581; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=553hF+T7BWF2LLgAhHz451B5EJreka9CG49KJHF3jzI=;
+        b=mlgEm6MKhabGIgmMxfaoNAwbkwi9SWfpClqcvzFNCIDLk7npQbBHNtDktNeKm+X5jF
+         c8Dk6SX1dvLN5vIxXWE+/tBNFry7XroF87KxuVP67vSKBbI3CwTnskN4+3xOdPUnePuG
+         LGAVqYLOVBvB5QMic6y8WefmOq48CtSpQV7ueXp3iHuFiHJ08KrFvGn+3urGBT69nTqW
+         zAAnBimUBNNRqVUhorqipzZOt3NnXte6JjR0J2d6dPU4kDqmY+RyP18m8PX1VydcOkcI
+         vQ9FGxeADgBD1pOF/bXRXR7gydfLUQrl70Z7Pg0esuLxJgLGC88kxQsoF6Li5O6UZtVH
+         5zvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738817781; x=1739422581;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=553hF+T7BWF2LLgAhHz451B5EJreka9CG49KJHF3jzI=;
+        b=RVn8U9OuPVMk6YW1kARGledhnYWFmGQbSrjvfXKmYPDTU0xISZw+vVqQ9LZXGBLNJC
+         K4cLXMXFMNy080PRKNhfKPYWvMEhvm7H5S19KYi2uz5CtB79XQ6g6oqeATlO/6mSes52
+         4zEVSYX17rAcvpIhaMkym9RhDTeosBqmpTJRz231VGlaoWQNkwNBrZX3Nb0N071DXwX7
+         /kb/yfQH9dqnMewgn3iVPnOLEMU4hnLMXKAfZmp+VboNLAFJNZZ4d6FCYWqNLJ+1wmMO
+         73RXRQ1+Koxc9gz9wmy59ObaX8GhgZqM59pk6BVGELuFLmDX1WeQXqwPQH0BIG7Hy3df
+         ggHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwNBwXrQs64CG5x3fCtO2rZ9aaX9QJquKCcr4KY8jPYWj/6ViylV4+gHZ3gPuaMLuL0lMVpOZ+iIi8w1TC@vger.kernel.org, AJvYcCXbaa5qoJ5Ate+B2R4H8xssICOpH0W7PiPcsxeXObIqv3uophbMrAeBFvFRPeRUzws4UeGieTPh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDWvJLonHbcBqoiHes6f9r7r1HbfcXItI8MeE8jwToLzWIjgqD
+	jM4pOoLZX4EU7MVEJDf048hid5a3Te4xtWUVQz5GaPgkYu1INwoT1fHkDudLRmReJaX5gQoP/CT
+	qh5SMFDcOgC2nFRfZuXq0r6YSSYU=
+X-Gm-Gg: ASbGncs1Bs9vE7cZD2D6aSivGn5mo6XFGE4c6D8/OzaBQq/i92i/8QIec4WZINpM6UL
+	M27LHpQEppiLCnZczRtg0MKSmf6l4Jdv+Dy7nD7lSwuVOdEZea90mzR4ObeQm+dpq1jz13IU=
+X-Google-Smtp-Source: AGHT+IFonN6lOudu0OFZFWXDq7UQ7mw0D1dsFuCqkLDlH0Ywbx7YEuGZX14bATC+gLWbyC0JYnl24IokY0f+9SOIW34=
+X-Received: by 2002:a05:651c:220b:b0:302:40ee:4c2e with SMTP id
+ 38308e7fff4ca-307cf301980mr21525041fa.2.1738817780478; Wed, 05 Feb 2025
+ 20:56:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205184319.360d2ca0@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <Z6OkXXYDorPrBvEQ@hm-sls2> <ccd67fd2-268a-4e83-9491-e401fa57229c@linux.microsoft.com>
+ <20250205180842.GC1183495@cmpxchg.org> <Z6Oq47ruBzfQh0do@google.com>
+In-Reply-To: <Z6Oq47ruBzfQh0do@google.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 6 Feb 2025 12:56:03 +0800
+X-Gm-Features: AWEUYZkWAfEEjK0QEPwBPRIyhrI2ANWH_0Fhnn48KPULDYSPjpkjIWKEHfuhVA4
+Message-ID: <CAMgjq7BjBoCWeB-MwUGYA=jLvigZ6tC3pLxz6SHAj3eVcsCgnA@mail.gmail.com>
+Subject: Re: A path forward to cleaning up dying cgroups?
+To: Yosry Ahmed <yosry.ahmed@linux.dev>, Muchun Song <muchun.song@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, 
+	linux-mm@kvack.org, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Michal Hocko <mhocko@kernel.org>, "Zach O'Keefe" <zokeefe@google.com>, Kinsey Ho <kinseyho@google.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, Allen Pais <apais@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 06:43:19PM -0800, Jakub Kicinski wrote:
-> On Tue,  4 Feb 2025 20:21:55 -0800 Shradha Gupta wrote:
-> > Therefore, we use netif_set_tso_max_size() to set max segment size
-> 
-> I think the term "segment" is used incorrectly throughout the patch ?
-> Isn't the right term "superframe", "aggregate" or some such ?
+On Thu, Feb 6, 2025 at 2:16=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev> =
+wrote:
+>
+> On Wed, Feb 05, 2025 at 01:08:42PM -0500, Johannes Weiner wrote:
+> > On Wed, Feb 05, 2025 at 12:50:19PM -0500, Hamza Mahfooz wrote:
+> > > Cc: Shakeel Butt <shakeel.butt@linux.dev>
+> > >
+> > > On 2/5/25 12:48, Hamza Mahfooz wrote:
+> > > > I was just curious as to what the status of the issue described in =
+[1]
+> > > > is. It appears that the last time someone took a stab at it was in =
+[2].
+> >
+> > If memory serves, the sticking point was whether pages should indeed
+> > be reparented on cgroup death, or whether they could be moved
+> > arbitrarily to other cgroups that are still using them.
+> >
+> > It's a bit unfortunate, because the reparenting patches were tested
+> > and reviewed, and the arbitrary recharging was just an idea that
+> > ttbomk nobody seriously followed up on afterwards.
+>
+> There was an RFC series [1] for the recharging, but all memcg
+> maintainers hated it :P
+>
+> https://lore.kernel.org/lkml/20230720070825.992023-1-yosryahmed@google.co=
+m/
 
-Thanks Jakub, I think you are right. 'aggregate' or 'aggregated pkt'
-would be a more accurate term. I'll have this incorporated in the next
-version.
+We have been suffering from dying cgroup issues for years too, and I
+just saw this series. Will it be a good idea to combine this with
+reparenting instead (if we will go with the reparenting approach)?
+Using objcg API to charge the folios does help speed up the
+reparenting, but also adds some overhead and complexity. Just walking
+and reparenting the folios seems a more direct approach.
 
-> -- 
-> pw-bot: cr
+And another idea is, per our observation, dying cgroups have few pages
+that are mapped, as the process has all exited. Most folios are just
+cache. Shared mapped pages are minor especially for containers. So a
+deferred recharge on access seems good enough? Mapped folios may also
+be finally unmap someday and get recharged. And at least this makes
+accounting more accurate.
