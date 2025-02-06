@@ -1,30 +1,32 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8959A1CEAC2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DFE1CBA02
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738872679; cv=none; b=dJlNLguOeYUpa/Gp28Qk2lsmnKdvj/1vL1i+z9jTu9Ot7sU9PP47DlgKBdOSytsc8rF++8clzPfUwxJ6I1wevTN5gw5YD9vBGvptRWi+OHHZJ4Cr+CAc+KzL2nyhNdiGt4RbWcPi3UVrSD1h5flbHpmANj04BOvaIB65f2zOvdA=
+	t=1738872678; cv=none; b=bifSIYawXQjSpYsqXhzpmLTzBpBwLYzLweTDpNcxFkVhJA3ipmi3w7zPA+YyA5hRZNZWBBd0OLWKeNkA+WFigYRMYgzBA/XjvyC9scyf0X7x5YMY5OXq75+igXBLAo3TtVoLrFLChfgDddAIZNj49Gc3eoO4oXwYt7CgROBGIkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738872679; c=relaxed/simple;
-	bh=zF2GTUIPiwpZtRyuD3tZkYBVIWDqJkM6QymEf7sCttQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M7z3jFsLetvcjgq5SX8eC+PFxKZTIfkze2XOldD95o8PRVwStXu6aV2eqB06Yu0FrvwOHOABn6iBnj95Jte1lKrhOxRux6lpUWB2Wpw+qNWaRVcj0+Dkkndvl8TZg+eovTqKpSsiy6v3BXGvFy+lpO9LjK/AsYJSC3hzWuAnxPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jrRNgvh7; arc=none smtp.client-ip=91.218.175.179
+	s=arc-20240116; t=1738872678; c=relaxed/simple;
+	bh=PaoYyX9t7tqM8bRg8ieWafEtr2LFhS0frCIApF6pVNw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=slCFW9+kJE7Xyt6ZVVA+yGxfzDMmf9oCBhA4UMLMFFs8TqSG9UcKuaaqoCn4k3nlv+E0SIwrHkAJAYK4u8dRbuLjXrl7Yi1c2o7ka7Zsjl/mmCoZJyDGsdrzUPfrFXDi+CWovUyMlbD71hGeTPP4rRQ0p1bE5Gm04folid4bdHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aHHojUsa; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jrRNgvh7"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aHHojUsa"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738872660;
+	t=1738872674;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hm2Uf5YJ2hWHInLH/3b42BvW9aIBajkPQfH1q2tc038=;
-	b=jrRNgvh7CVWlIakVHpsaXBRJNwY4y8pn1URL7cPbXu7sGoxEa1Appvxdk8/3FPLbWkh4/h
-	k2ZAUyTZXCa5/OEJ/vfDagwprvZaVtpzQhjurGYSlrLRpeSnzRvN7tOD4nudjGvnXmtHe1
-	41FqIzo9FRjy1XZ6uVgKuyT5NLF63y8=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ucz8WHXHQrZmtX6zVFVqijClIEz/ncYXeQ0FMRGrxpQ=;
+	b=aHHojUsagloUlarAAUsrzVVP0rvXHpGwLHzToVHemGr0G3mw5SonY8hx3CQxxBLGahCr9e
+	FwtPaitve2df9vtOOleuI1Dl1+aiiyblLkB3/7BkLg/UGoHFLNrRl3/sB4U0Ml5TEP/ULH
+	RWc2O/+HWxz0YXf8l1mO2QZTSsdyX9U=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: "David S . Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -36,11 +38,12 @@ Cc: Michal Simek <michal.simek@amd.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Shannon Nelson <shannon.nelson@amd.com>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Heng Qi <hengqi@linux.alibaba.com>
-Subject: [PATCH net-next v5 0/4] net: xilinx: axienet: Enable adaptive IRQ coalescing with DIM
-Date: Thu,  6 Feb 2025 15:10:32 -0500
-Message-Id: <20250206201036.1516800-1-sean.anderson@linux.dev>
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH net-next v5 2/4] net: xilinx: axienet: Support adjusting coalesce settings while running
+Date: Thu,  6 Feb 2025 15:10:34 -0500
+Message-Id: <20250206201036.1516800-3-sean.anderson@linux.dev>
+In-Reply-To: <20250206201036.1516800-1-sean.anderson@linux.dev>
+References: <20250206201036.1516800-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,28 +53,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-To improve performance without sacrificing latency under low load,
-enable DIM. While I appreciate not having to write the library myself, I
-do think there are many unusual aspects to DIM, as detailed in the last
-patch.
+In preparation for adaptive IRQ coalescing, we first need to support
+adjusting the settings at runtime. The existing code doesn't require any
+locking because
 
-Changes in v5:
-- Move axienet_coalesce_params doc fix to correct patch
-- Rebase onto net-next/master
+- dma_start is the only function that modifies rx/tx_dma_cr. It is
+  always called with IRQs and NAPI disabled, so nothing else is touching
+  the hardware.
+- The IRQs don't race with poll, since the latter is a softirq.
+- The IRQs don't race with dma_stop since they both just clear the
+  control registers.
+- dma_stop doesn't race with poll since the former is called with NAPI
+  disabled.
 
-Changes in v4:
-- Rebase onto net-next/master
-- Fix incorrect function name in doc comment for axienet_coalesce_params
+However, once we introduce another function that modifies rx/tx_dma_cr,
+we need to have some locking to prevent races. Introduce two locks to
+protect these variables and their registers.
+
+The control register values are now generated where the coalescing
+settings are set. Converting coalescing settings to control register
+values may require sleeping because of clk_get_rate. However, the
+read/modify/write of the control registers themselves can't sleep
+because it needs to happen in IRQ context. By pre-calculating the
+control register values, we avoid introducing an additional mutex.
+
+Since axienet_dma_start writes the control settings when it runs, we
+don't bother updating the CR registers when rx/tx_dma_started is false.
+This prevents any issues from writing to the control registers in the
+middle of a reset sequence.
+
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
+---
+
+(no changes since v3)
 
 Changes in v3:
-- Fix mismatched parameter name documentation for axienet_calc_cr
-- Integrate some cleanups originally included in
-  https://lore.kernel.org/netdev/20240909230908.1319982-1-sean.anderson@linux.dev/
 - Move spin (un)locking in IRQs inside the if condition of
   napi_schedule_prep. This lets us hold the lock just for the rmw.
 - Fix function name in doc comments for axienet_update_coalesce_rx/tx
-- Adjust axienet_local doc comment order to match the members
-- Rebase onto net-next/master
 
 Changes in v2:
 - Don't use spin_lock_irqsave when we know the context
@@ -80,24 +100,295 @@ Changes in v2:
 - Have axienet_update_coalesce_rx/tx take the cr value/mask instead of
   calculating it with axienet_calc_cr. This will make it easier to add
   partial updates in the next few commits.
-- Get coalesce parameters from driver state
-- Don't take the RTNL in axienet_rx_dim_work to avoid deadlock. Instead,
-  calculate a partial cr update that axienet_update_coalesce_rx can
-  perform under a spin lock.
-- Use READ/WRITE_ONCE when accessing/modifying rx_irqs
+- Split off CR calculation merging into another patch
 
-Sean Anderson (4):
-  net: xilinx: axienet: Combine CR calculation
-  net: xilinx: axienet: Support adjusting coalesce settings while
-    running
-  net: xilinx: axienet: Get coalesce parameters from driver state
-  net: xilinx: axienet: Enable adaptive IRQ coalescing with DIM
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |   8 ++
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 134 +++++++++++++++---
+ 2 files changed, 119 insertions(+), 23 deletions(-)
 
- drivers/net/ethernet/xilinx/Kconfig           |   1 +
- drivers/net/ethernet/xilinx/xilinx_axienet.h  |  29 +-
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 312 ++++++++++++++----
- 3 files changed, 264 insertions(+), 78 deletions(-)
-
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index 8fd3b45ef6aa..6b8e550c2155 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -484,7 +484,9 @@ struct skbuf_dma_descriptor {
+  * @regs:	Base address for the axienet_local device address space
+  * @dma_regs:	Base address for the axidma device address space
+  * @napi_rx:	NAPI RX control structure
++ * @rx_cr_lock: Lock protecting @rx_dma_cr, its register, and @rx_dma_started
+  * @rx_dma_cr:  Nominal content of RX DMA control register
++ * @rx_dma_started: Set when RX DMA is started
+  * @rx_bd_v:	Virtual address of the RX buffer descriptor ring
+  * @rx_bd_p:	Physical address(start address) of the RX buffer descr. ring
+  * @rx_bd_num:	Size of RX buffer descriptor ring
+@@ -494,7 +496,9 @@ struct skbuf_dma_descriptor {
+  * @rx_bytes:	RX byte count for statistics
+  * @rx_stat_sync: Synchronization object for RX stats
+  * @napi_tx:	NAPI TX control structure
++ * @tx_cr_lock: Lock protecting @tx_dma_cr, its register, and @tx_dma_started
+  * @tx_dma_cr:  Nominal content of TX DMA control register
++ * @tx_dma_started: Set when TX DMA is started
+  * @tx_bd_v:	Virtual address of the TX buffer descriptor ring
+  * @tx_bd_p:	Physical address(start address) of the TX buffer descr. ring
+  * @tx_bd_num:	Size of TX buffer descriptor ring
+@@ -566,7 +570,9 @@ struct axienet_local {
+ 	void __iomem *dma_regs;
+ 
+ 	struct napi_struct napi_rx;
++	spinlock_t rx_cr_lock;
+ 	u32 rx_dma_cr;
++	bool rx_dma_started;
+ 	struct axidma_bd *rx_bd_v;
+ 	dma_addr_t rx_bd_p;
+ 	u32 rx_bd_num;
+@@ -576,7 +582,9 @@ struct axienet_local {
+ 	struct u64_stats_sync rx_stat_sync;
+ 
+ 	struct napi_struct napi_tx;
++	spinlock_t tx_cr_lock;
+ 	u32 tx_dma_cr;
++	bool tx_dma_started;
+ 	struct axidma_bd *tx_bd_v;
+ 	dma_addr_t tx_bd_p;
+ 	u32 tx_bd_num;
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index bd95f2ba3bae..b70e65757454 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -266,16 +266,12 @@ static u32 axienet_calc_cr(struct axienet_local *lp, u32 count, u32 usec)
+  */
+ static void axienet_dma_start(struct axienet_local *lp)
+ {
++	spin_lock_irq(&lp->rx_cr_lock);
++
+ 	/* Start updating the Rx channel control register */
+-	lp->rx_dma_cr = axienet_calc_cr(lp, lp->coalesce_count_rx,
+-					lp->coalesce_usec_rx);
++	lp->rx_dma_cr &= ~XAXIDMA_CR_RUNSTOP_MASK;
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, lp->rx_dma_cr);
+ 
+-	/* Start updating the Tx channel control register */
+-	lp->tx_dma_cr = axienet_calc_cr(lp, lp->coalesce_count_tx,
+-					lp->coalesce_usec_tx);
+-	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, lp->tx_dma_cr);
+-
+ 	/* Populate the tail pointer and bring the Rx Axi DMA engine out of
+ 	 * halted state. This will make the Rx side ready for reception.
+ 	 */
+@@ -284,6 +280,14 @@ static void axienet_dma_start(struct axienet_local *lp)
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, lp->rx_dma_cr);
+ 	axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
+ 			     (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
++	lp->rx_dma_started = true;
++
++	spin_unlock_irq(&lp->rx_cr_lock);
++	spin_lock_irq(&lp->tx_cr_lock);
++
++	/* Start updating the Tx channel control register */
++	lp->tx_dma_cr &= ~XAXIDMA_CR_RUNSTOP_MASK;
++	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, lp->tx_dma_cr);
+ 
+ 	/* Write to the RS (Run-stop) bit in the Tx channel control register.
+ 	 * Tx channel is now ready to run. But only after we write to the
+@@ -292,6 +296,9 @@ static void axienet_dma_start(struct axienet_local *lp)
+ 	axienet_dma_out_addr(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
+ 	lp->tx_dma_cr |= XAXIDMA_CR_RUNSTOP_MASK;
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, lp->tx_dma_cr);
++	lp->tx_dma_started = true;
++
++	spin_unlock_irq(&lp->tx_cr_lock);
+ }
+ 
+ /**
+@@ -627,14 +634,22 @@ static void axienet_dma_stop(struct axienet_local *lp)
+ 	int count;
+ 	u32 cr, sr;
+ 
+-	cr = axienet_dma_in32(lp, XAXIDMA_RX_CR_OFFSET);
+-	cr &= ~(XAXIDMA_CR_RUNSTOP_MASK | XAXIDMA_IRQ_ALL_MASK);
++	spin_lock_irq(&lp->rx_cr_lock);
++
++	cr = lp->rx_dma_cr & ~(XAXIDMA_CR_RUNSTOP_MASK | XAXIDMA_IRQ_ALL_MASK);
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, cr);
++	lp->rx_dma_started = false;
++
++	spin_unlock_irq(&lp->rx_cr_lock);
+ 	synchronize_irq(lp->rx_irq);
+ 
+-	cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+-	cr &= ~(XAXIDMA_CR_RUNSTOP_MASK | XAXIDMA_IRQ_ALL_MASK);
++	spin_lock_irq(&lp->tx_cr_lock);
++
++	cr = lp->tx_dma_cr & ~(XAXIDMA_CR_RUNSTOP_MASK | XAXIDMA_IRQ_ALL_MASK);
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, cr);
++	lp->tx_dma_started = false;
++
++	spin_unlock_irq(&lp->tx_cr_lock);
+ 	synchronize_irq(lp->tx_irq);
+ 
+ 	/* Give DMAs a chance to halt gracefully */
+@@ -983,7 +998,9 @@ static int axienet_tx_poll(struct napi_struct *napi, int budget)
+ 		 * cause an immediate interrupt if any TX packets are
+ 		 * already pending.
+ 		 */
++		spin_lock_irq(&lp->tx_cr_lock);
+ 		axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, lp->tx_dma_cr);
++		spin_unlock_irq(&lp->tx_cr_lock);
+ 	}
+ 	return packets;
+ }
+@@ -1249,7 +1266,9 @@ static int axienet_rx_poll(struct napi_struct *napi, int budget)
+ 		 * cause an immediate interrupt if any RX packets are
+ 		 * already pending.
+ 		 */
++		spin_lock_irq(&lp->rx_cr_lock);
+ 		axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, lp->rx_dma_cr);
++		spin_unlock_irq(&lp->rx_cr_lock);
+ 	}
+ 	return packets;
+ }
+@@ -1287,11 +1306,14 @@ static irqreturn_t axienet_tx_irq(int irq, void *_ndev)
+ 		/* Disable further TX completion interrupts and schedule
+ 		 * NAPI to handle the completions.
+ 		 */
+-		u32 cr = lp->tx_dma_cr;
+-
+-		cr &= ~(XAXIDMA_IRQ_IOC_MASK | XAXIDMA_IRQ_DELAY_MASK);
+ 		if (napi_schedule_prep(&lp->napi_tx)) {
++			u32 cr;
++
++			spin_lock(&lp->tx_cr_lock);
++			cr = lp->tx_dma_cr;
++			cr &= ~(XAXIDMA_IRQ_IOC_MASK | XAXIDMA_IRQ_DELAY_MASK);
+ 			axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, cr);
++			spin_unlock(&lp->tx_cr_lock);
+ 			__napi_schedule(&lp->napi_tx);
+ 		}
+ 	}
+@@ -1332,11 +1354,15 @@ static irqreturn_t axienet_rx_irq(int irq, void *_ndev)
+ 		/* Disable further RX completion interrupts and schedule
+ 		 * NAPI receive.
+ 		 */
+-		u32 cr = lp->rx_dma_cr;
+-
+-		cr &= ~(XAXIDMA_IRQ_IOC_MASK | XAXIDMA_IRQ_DELAY_MASK);
+ 		if (napi_schedule_prep(&lp->napi_rx)) {
++			u32 cr;
++
++			spin_lock(&lp->rx_cr_lock);
++			cr = lp->rx_dma_cr;
++			cr &= ~(XAXIDMA_IRQ_IOC_MASK | XAXIDMA_IRQ_DELAY_MASK);
+ 			axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, cr);
++			spin_unlock(&lp->rx_cr_lock);
++
+ 			__napi_schedule(&lp->napi_rx);
+ 		}
+ 	}
+@@ -2002,6 +2028,62 @@ axienet_ethtools_set_pauseparam(struct net_device *ndev,
+ 	return phylink_ethtool_set_pauseparam(lp->phylink, epauseparm);
+ }
+ 
++/**
++ * axienet_update_coalesce_rx() - Set RX CR
++ * @lp: Device private data
++ * @cr: Value to write to the RX CR
++ * @mask: Bits to set from @cr
++ */
++static void axienet_update_coalesce_rx(struct axienet_local *lp, u32 cr,
++				       u32 mask)
++{
++	spin_lock_irq(&lp->rx_cr_lock);
++	lp->rx_dma_cr &= ~mask;
++	lp->rx_dma_cr |= cr;
++	/* If DMA isn't started, then the settings will be applied the next
++	 * time dma_start() is called.
++	 */
++	if (lp->rx_dma_started) {
++		u32 reg = axienet_dma_in32(lp, XAXIDMA_RX_CR_OFFSET);
++
++		/* Don't enable IRQs if they are disabled by NAPI */
++		if (reg & XAXIDMA_IRQ_ALL_MASK)
++			cr = lp->rx_dma_cr;
++		else
++			cr = lp->rx_dma_cr & ~XAXIDMA_IRQ_ALL_MASK;
++		axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, cr);
++	}
++	spin_unlock_irq(&lp->rx_cr_lock);
++}
++
++/**
++ * axienet_update_coalesce_tx() - Set TX CR
++ * @lp: Device private data
++ * @cr: Value to write to the TX CR
++ * @mask: Bits to set from @cr
++ */
++static void axienet_update_coalesce_tx(struct axienet_local *lp, u32 cr,
++				       u32 mask)
++{
++	spin_lock_irq(&lp->tx_cr_lock);
++	lp->tx_dma_cr &= ~mask;
++	lp->tx_dma_cr |= cr;
++	/* If DMA isn't started, then the settings will be applied the next
++	 * time dma_start() is called.
++	 */
++	if (lp->tx_dma_started) {
++		u32 reg = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
++
++		/* Don't enable IRQs if they are disabled by NAPI */
++		if (reg & XAXIDMA_IRQ_ALL_MASK)
++			cr = lp->tx_dma_cr;
++		else
++			cr = lp->tx_dma_cr & ~XAXIDMA_IRQ_ALL_MASK;
++		axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, cr);
++	}
++	spin_unlock_irq(&lp->tx_cr_lock);
++}
++
+ /**
+  * axienet_ethtools_get_coalesce - Get DMA interrupt coalescing count.
+  * @ndev:	Pointer to net_device structure
+@@ -2050,12 +2132,7 @@ axienet_ethtools_set_coalesce(struct net_device *ndev,
+ 			      struct netlink_ext_ack *extack)
+ {
+ 	struct axienet_local *lp = netdev_priv(ndev);
+-
+-	if (netif_running(ndev)) {
+-		NL_SET_ERR_MSG(extack,
+-			       "Please stop netif before applying configuration");
+-		return -EBUSY;
+-	}
++	u32 cr;
+ 
+ 	if (ecoalesce->rx_max_coalesced_frames > 255 ||
+ 	    ecoalesce->tx_max_coalesced_frames > 255) {
+@@ -2083,6 +2160,11 @@ axienet_ethtools_set_coalesce(struct net_device *ndev,
+ 	lp->coalesce_count_tx = ecoalesce->tx_max_coalesced_frames;
+ 	lp->coalesce_usec_tx = ecoalesce->tx_coalesce_usecs;
+ 
++	cr = axienet_calc_cr(lp, lp->coalesce_count_rx, lp->coalesce_usec_rx);
++	axienet_update_coalesce_rx(lp, cr, ~XAXIDMA_CR_RUNSTOP_MASK);
++
++	cr = axienet_calc_cr(lp, lp->coalesce_count_tx, lp->coalesce_usec_tx);
++	axienet_update_coalesce_tx(lp, cr, ~XAXIDMA_CR_RUNSTOP_MASK);
+ 	return 0;
+ }
+ 
+@@ -2862,10 +2944,16 @@ static int axienet_probe(struct platform_device *pdev)
+ 		axienet_set_mac_address(ndev, NULL);
+ 	}
+ 
++	spin_lock_init(&lp->rx_cr_lock);
++	spin_lock_init(&lp->tx_cr_lock);
+ 	lp->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
+ 	lp->coalesce_count_tx = XAXIDMA_DFT_TX_THRESHOLD;
+ 	lp->coalesce_usec_rx = XAXIDMA_DFT_RX_USEC;
+ 	lp->coalesce_usec_tx = XAXIDMA_DFT_TX_USEC;
++	lp->rx_dma_cr = axienet_calc_cr(lp, lp->coalesce_count_rx,
++					lp->coalesce_usec_rx);
++	lp->tx_dma_cr = axienet_calc_cr(lp, lp->coalesce_count_tx,
++					lp->coalesce_usec_tx);
+ 
+ 	ret = axienet_mdio_setup(lp);
+ 	if (ret)
 -- 
 2.35.1.1320.gc452695387.dirty
 
