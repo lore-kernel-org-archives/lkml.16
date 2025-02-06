@@ -1,104 +1,190 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515D24C76;
-	Thu,  6 Feb 2025 06:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6392561D;
+	Thu,  6 Feb 2025 06:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738822744; cv=none; b=p1OlxKKf8HW3pXmJkjgZkc+jNspIY95DEJ3bqpGaQYH4r1YVbCVORhEWoHE0ShnrScxtAl0pdhAe2cmgEN1WCdyWw2b+teYxPqeIo7COW4Y+uvoSaXmumRuWzeZbBnxPt2NdhI/soYFuaiMEaLzrjq16NBQUmzB/BriKmL1fNT8=
+	t=1738822780; cv=none; b=R+ainr23FYpwZ8GpH5DV/YmZ49uKFQuwoSHc7zNLgNVtI6p38C15RjHpkXzaKYKtF3j2NX0uzWexa+uIosR7qI6T6Ec0Z8eb8Rc8PoNBSIkNVfAt9ZOUgtwC1atQmkCDgLsVpASSGTIQaArQLALQaP3tUhnp6eHiWC7Q9wDkuSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738822744; c=relaxed/simple;
-	bh=65NOKSzb4RgUpAGuJG4ZIwRp90PqbEeynoqsVgo5Wdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aYC9c1XHSa0tC3IwgZPX3iDExwYaUA0GfKANEnFE3YcxU5zgsjKkT4LoQk5/sgXX0dDzradMTgn+XMnvyEnvD8HjdlieLNJdv7jC6bl4lKbhu5pWPEvLFhWBGY+Ok99TrRH5S1hQs3X32B55m90m7of65uaOwt1B2pL04N0gB6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SaO8TYF8; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738822780; c=relaxed/simple;
+	bh=/QQ6jrDpB/E4LRwZjoIf3gn2ExmXKKQY1XNXZMX+dLY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=epp07S0tu1MQsf9YgfRGTa8EFfOzYgFUGu1MTajimjlTUzl9U42hKNeLfylN9r1CoHJaQfTWLd9ZVDlNabmhxKjy5zJafddo1DkPKaaiGgER+Mxh0ANNkuNs79JmnsEkurW9CqEZCLhegzseP1iZEPan7RskwA6nbhzLjzDk4WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=p0T9wdEU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SaO8TYF8"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5166IkEp3572168
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Feb 2025 00:18:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738822726;
-	bh=y+B1tLhnx490D3c67MYqTu7vOV20MAOWuSnvm+C2xrE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=SaO8TYF8dw7KezI6AbasZqvVO9ik5Ojoo/S/K4JnasBMhXn0SV3OcVEFZoenqDISU
-	 jppkwGH9MC3C+k+EaZitviyVvU44qviahtGPaVf78JG+h6TCT2/eWjE/7jYngKAwA5
-	 4gHjzhlIpg3l5WkMAhaOhvmTdiu+s+PDLdkzALSE=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5166IkBQ018652
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Feb 2025 00:18:46 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Feb 2025 00:18:45 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Feb 2025 00:18:45 -0600
-Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5166IehD056873;
-	Thu, 6 Feb 2025 00:18:41 -0600
-Message-ID: <cecaf839-c203-43a5-aa11-f428ab0ba4c2@ti.com>
-Date: Thu, 6 Feb 2025 11:48:39 +0530
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="p0T9wdEU"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5161iwPS029805;
+	Thu, 6 Feb 2025 06:19:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=1GjdVUeIgEMWel2f4TkBw/gT
+	uyQzB8WZcxBa+28LGjA=; b=p0T9wdEU9Wm26EaiPU8pHANnL7yRIDT+PF0mhdQ4
+	aLCYFdRbC+UFUjQXrs9wnR9jfZIccDqBbZwHlGYiSlIBJe1ZlcN1bJf1L0TRtVk1
+	bWeb8ipW9qBNLVm4mAWAtLcKAM7zaavsllE2rLFyZrR6eUsGYNK8I9mUqXwoeJSa
+	2cA9A07INwAWrqOQp9n3+i1PxMvzsR07i9WHyYmSies5MZVpr/yU3pXDI1BAKnht
+	9iy8w7C8pylxFyUcpVpsTP2LUVXqosakoFSfObXyoaL/fDdw3CIW3eMo7u+1L+kW
+	6GWysLKu2DzbJRNkwsY/xMwv9yZq0gAMg3XjayrBMCPxHg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mkpjrgty-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 06:19:22 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5166JKgU025475
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Feb 2025 06:19:20 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 5 Feb 2025 22:19:14 -0800
+Date: Thu, 6 Feb 2025 11:49:11 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <p.zabel@pengutronix.de>, <dmitry.baryshkov@linaro.org>,
+        <quic_nsekar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        Praveenkumar I <quic_ipkumar@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v9 6/7] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Message-ID: <Z6RUX3ZbDbd3qvjs@hu-varada-blr.qualcomm.com>
+References: <20250128062708.573662-1-quic_varada@quicinc.com>
+ <20250128062708.573662-7-quic_varada@quicinc.com>
+ <cc1c34f0-0737-469d-a826-2df7f29f6cf3@kernel.org>
+ <Z6NCSo98YRgG666Q@hu-varada-blr.qualcomm.com>
+ <85f54baa-7d3d-43c3-9944-8f5f3c3006da@kernel.org>
+ <Z6OFSr2vrmPJTp4u@hu-varada-blr.qualcomm.com>
+ <d867f285-b639-4080-beeb-20b75ee3f4a2@kernel.org>
+ <1d78b30c-f71a-4769-b665-7425f00eb5ec@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Add support for Timesync Interrupt Router
-To: Vignesh Raghavendra <vigneshr@ti.com>, Jason Reeder <jreeder@ti.com>,
-        <nm@ti.com>, Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski
-	<kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Thomas Gleixner
-	<tglx@linutronix.de>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <m-malladi@ti.com>
-References: <20250205160119.136639-1-c-vankar@ti.com>
- <bbbcba04-3e31-4282-a383-fb4daa7c6de3@ti.com>
-Content-Language: en-US
-From: Chintan Vankar <c-vankar@ti.com>
-In-Reply-To: <bbbcba04-3e31-4282-a383-fb4daa7c6de3@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1d78b30c-f71a-4769-b665-7425f00eb5ec@kernel.org>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: cLEOi0dATr7nRvo4rsO8ih8xrrbRzmM9
+X-Proofpoint-GUID: cLEOi0dATr7nRvo4rsO8ih8xrrbRzmM9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_01,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 mlxlogscore=986 lowpriorityscore=0
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060050
 
+On Wed, Feb 05, 2025 at 04:54:38PM +0100, Krzysztof Kozlowski wrote:
+> On 05/02/2025 16:53, Krzysztof Kozlowski wrote:
+> > On 05/02/2025 16:35, Varadarajan Narayanan wrote:
+> >> On Wed, Feb 05, 2025 at 02:47:13PM +0100, Krzysztof Kozlowski wrote:
+> >>> On 05/02/2025 11:49, Varadarajan Narayanan wrote:
+> >>>> On Mon, Feb 03, 2025 at 05:30:32PM +0100, Krzysztof Kozlowski wrote:
+> >>>>> On 28/01/2025 07:27, Varadarajan Narayanan wrote:
+> >>>>>>
+> >>>>>> @@ -479,6 +519,230 @@ frame@b128000 {
+> >>>>>>  				status = "disabled";
+> >>>>>>  			};
+> >>>>>>  		};
+> >>>>>> +
+> >>>>>> +		pcie1: pcie@18000000 {
+> >>>>>> +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
+> >>>>>> +			reg = <0x00088000 0x3000>,
+> >>>>>
+> >>>>> So as Konrad pointed out now, this was never tested. It's not we who
+> >>>>> should run tests for you. It's you.
+> >>>>
+> >>>> This was tested and it did not flag an error since it is having the order
+> >>>> specified in the bindings. qcom,pcie.yaml has 4 reg specifications. Two of
+> >>>
+> >>>
+> >>> Hm, then please paste results of dtbs_check W=1 testing. Here.
+> >>>
+> >>> I am 100% sure you have there warning and I don't understand your
+> >>> reluctance to run the tests even after pointing it out by two people.
+> >>
+> >> I ran the tests. Not sure which portions to paste. Have attached the full
+> >> output just in case you are interested in some other detail. Please take a
+> >> look.
+> >>
+> >> Thanks
+> >> Varada
+> >>
+> >> 	$ grep ipq.*dtb dtbs-check.log
+> >
+> > Where is the command you have used?
 
+	export ARCH=arm64
+	export W=1
+	export DT_CHECKER_FLAGS='-v -m'
+	export DT_SCHEMA_FILES=qcom
+	export CHECK_DTBS=y
 
-On 06/02/25 10:43, Vignesh Raghavendra wrote:
-> 
-> 
-> On 05/02/25 21:31, Chintan Vankar wrote:
->> Chintan Vankar (2):
->>    irqchip: ti-tsir: Add support for Timesync Interrupt Router
->>    net: ethernet: ti: am65-cpts: Add support to configure GenF signal for
->>      CPTS
->>
->>   drivers/irqchip/Kconfig             |   9 +++
->>   drivers/irqchip/Makefile            |   1 +
->>   drivers/irqchip/ti-timesync-intr.c  | 109 ++++++++++++++++++++++++++++
->>   drivers/net/ethernet/ti/am65-cpts.c |  21 ++++++
->>   4 files changed, 140 insertions(+)
->>   create mode 100644 drivers/irqchip/ti-timesync-intr.c
-> 
-> Where are the device-tree binding updates that need to go with
-> individual driver changes?
-> 
+	make -j 16 dtbs_check &> dtbs-check.log
 
+> Although that might not matter - you skipped several warnings with your
+> grep. So maybe you need to fix your process, not sure.
 
-Hello Vignesh, This series is not specific to any use-case that Timesync
-Interrupt Router is implementing. Through this RFC series I am expecting
-a feedback on driver implementation so that later on we can make use of
-this driver to implement certain functionality.
+export W=1 is the problem. Kernel Makefile differentiates between 'W' being
+set from environment and from command line with this check
 
-Regards,
-Chintan.
+	ifeq ("$(origin W)", "command line")
+	  KBUILD_EXTRA_WARN := $(W)
+	endif
+
+I assumed similar to DT_SCHEMA_FILES and DT_CHECKER_FLAGS, W will also be
+taken. I was not aware of this differentiation, and the 'export W=1' never
+came into effect. I re-ran the command as below and see the warnings
+
+	$ make W=1 -j 16 dtbs_check &> dtbs-check2.log
+
+	$ grep Warning dtbs-check2.log | grep ipq.*dt
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:523.24-625.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:627.24-729.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:523.24-625.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:627.24-729.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:523.24-625.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:627.24-729.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:523.24-625.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq5332.dtsi:627.24-729.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq5424.dtsi:304.22-355.5: Warning (simple_bus_reg): /soc@0/usb2@1e00000: simple-bus unit address format error, expected "1ef8800"
+	arch/arm64/boot/dts/qcom/ipq5424.dtsi:395.22-448.5: Warning (simple_bus_reg): /soc@0/usb3@8a00000: simple-bus unit address format error, expected "8af8800"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:877.24-959.5: Warning (simple_bus_reg): /soc@0/pcie@10000000: simple-bus unit address format error, expected "f8000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:961.24-1043.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "f0000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1129.23-1210.5: Warning (simple_bus_reg): /soc@0/pci@28000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:877.24-959.5: Warning (simple_bus_reg): /soc@0/pcie@10000000: simple-bus unit address format error, expected "f8000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:961.24-1043.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "f0000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1129.23-1210.5: Warning (simple_bus_reg): /soc@0/pci@28000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:877.24-959.5: Warning (simple_bus_reg): /soc@0/pcie@10000000: simple-bus unit address format error, expected "f8000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:961.24-1043.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "f0000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1129.23-1210.5: Warning (simple_bus_reg): /soc@0/pci@28000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:877.24-959.5: Warning (simple_bus_reg): /soc@0/pcie@10000000: simple-bus unit address format error, expected "f8000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:961.24-1043.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "f0000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1129.23-1210.5: Warning (simple_bus_reg): /soc@0/pci@28000000: simple-bus unit address format error, expected "80000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:877.24-959.5: Warning (simple_bus_reg): /soc@0/pcie@10000000: simple-bus unit address format error, expected "f8000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:961.24-1043.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "f0000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1129.23-1210.5: Warning (simple_bus_reg): /soc@0/pci@28000000: simple-bus unit address format error, expected "80000"
+
+Will change pcie@xxx to match with the first reg entry and post the next
+version.
+
+Thanks
+Varada
