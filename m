@@ -1,54 +1,54 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6F71A83FB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630B61A01CC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738867892; cv=none; b=qS5Pp8c43vbAV0CF3Wg68EM2PgSVOJHM0FaEXQNv1/jV+eXHPCSs+XngWi+mFggEQkB61lFlxZ7KcZodT5PP3XEc1L+Kmlr4Fu+HWs+SpGZKjKO09VifHHa6sjtgYccGOhXyFOIxWBTRonGk3BPVWYKwu+FCTG+rTmKSuxQwz5s=
+	t=1738867894; cv=none; b=ZWcAkKG70pxkeLnei5Oh2tEAD0y73x8mYtDiQq2LBlGDYLmCL44NNsSchkiQy2jIZlUOEwfxEqq4Sp8oCTvBvL+0S7kOT05NEe54VfcW0nmvmnE59TgwKRV1If4ZiPWnNZOwmwBo5r3ThModPLxd6hfFzptEXCHV3/8DA2mm3NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738867892; c=relaxed/simple;
-	bh=RDfG0pFSr3X3Q9IKXCGuOFfzEP876n6PEgPL6g1GO+4=;
+	s=arc-20240116; t=1738867894; c=relaxed/simple;
+	bh=l5bPVm7m9Up4DS/ePsgdGmNzbRXRNd7MVW6ZKnyXIow=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eI3vCjjwaxhrFiv8KgEIfNc+iCl/n3oaeYyJkb5/fm6leozdaTtFjcDNjzRiqWc3vnrr5bBt7HfJLp0wtS5q0Ou6LkFsWy3Aa+XS+bI6cM8qNIzvySnC36N9Egw7Bj3uGBCGLWHNv92JlEP3KhpsPUVvpQgrD1lnYFKNR+sLRlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Szx3XdMw; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=s9LjslkGuxSLuIBHphHuBSwhGUi9k82UvAi5bbLIDkSsnSmML9SlEn4os6ozIcxTzXlH1Z10A4BfITk5x755ENI9UDrDY28Qk1IFnaQb7tsC3P+CYvOEoPJTTwkP7pdnC67dfrihV3JS32ANDbNujyZEXbQMcVdtSVb+YvkjEdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PMPRDgzy; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Szx3XdMw"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so2562106a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:51:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PMPRDgzy"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso3847098a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:51:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738867889; x=1739472689; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738867893; x=1739472693; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nTJNRf6LTiMkMlXPEOIwPpP06vsojDmaDWHwE95+Iic=;
-        b=Szx3XdMwWxmmFu1xKVpmjvp0ghb2Yw1IyRi8LxQIOfcI3C/wIZ0HZKX1XSaPOnSiRA
-         +0u4dD96SMpLj1Vo/cdnSiIYH1hgZD6zeYgA0yL0GaEBZJqbzHVg+/MtN4qqIgOLs9F9
-         5hPtrW7/iMI+uHIJpaH7wQ9rnQqcUcT26RBgUWvE8sHljV8Hi+pnRoy+HpzwwtDmPyS9
-         iza4y8/TmWlPBIHI2mECvp+Jhpg/V+gxlL7fWeXJFqqBG+kqFliZ6V5afvhdCNjNgqMV
-         ka6fo+8HORYtxhycKRl3CMWt/MQrGOqLHBF54WbbKCpZfqx24yV2oeSqMaBk1kyLqDQm
-         ULyQ==
+        bh=ZM2K7Fz2wY4XMJIGW8UIEY9GhsBMo7TuugczH48eoOc=;
+        b=PMPRDgzyUg5N4ZExgVnHTuEFu9A3XK67IXLt7pKEOhdHKrLW0zRsfZ3ZhjpO6KxYtX
+         5VQOFnFgM0ZzqZPQhE+DraJfPbf8Nk3sjgaBkAdxjhEcEPpXfzT1vC3NdgYNd/43lGS0
+         EggksKCjFa/h5hVjmh/oaSHyog31QxYmt/4BNPmDZajRgpd1DnM6ADOhN8UDrCS7xOao
+         Hraoe4GIfInKf0Q6IxXRMVnNt9neCswXP1V8oLZnYCRw5vdH7MUPCE2Hp++thDx3LZtM
+         RQFM1kR+USdc2KsSeVFQFNfCc/ik1Hf+TIKc4SP5XSGG5mdcaJNnCcubW9Y6rba3YPuB
+         ci3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738867889; x=1739472689;
+        d=1e100.net; s=20230601; t=1738867893; x=1739472693;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nTJNRf6LTiMkMlXPEOIwPpP06vsojDmaDWHwE95+Iic=;
-        b=kc7qQrxHikjLehwjbbI/EsU8uTfUaU0R2+PL4e/S7FB+dTWBQ+l02x92nZcJXd1Mna
-         yf5BP621xJjcIbIgNrfTR/+7gp9wfC0fUzf+HZoWKFfKAlwphh5gdq5RaM/8Zqhefjus
-         bpkca1zitpyDSCsbV+3IgRiZlZVsygCiNozlRUnE4y1yx7joVarJlrgetELupB4if0Vt
-         YaL4vz7ZRmPf1inTBKNlXcVgFMvD2AjsNKt/K5lUULrceCWVcnFUL7gr7jAsNlulZ1Im
-         YkasOUTX+ahQ4ylRGx6V3AOdFed9RhTebrY12lIye/XF9p5m/7zW90aWHLa8u6FI0rWU
-         2U1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW6nsan5pnq41bV7DMsdZIxR1Bv2dB021qKPATyjtK9prvoiD6b4FedZBm5v91MmOrEr7BD+gRNCTrXSXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyqb4YLCMA1Jxcg3aDtHVPQcTXrRwQQKjHzMvOKrgjcVp502Wu
-	07GILYVIEFMPpCRZNVngO45FUI3WdpZLZlJwrLjeawyba75Q2b64CquuKFfJOGesB0lxfw==
-X-Google-Smtp-Source: AGHT+IH3ZOjV9MQ9vVNRnnO7zW4cnOheRu/dHPje2DoECTojb4J2x2zX0jaHZ8pQaiYA+/kja/RHuYZU
-X-Received: from pjbpl16.prod.google.com ([2002:a17:90b:2690:b0:2e9:ee22:8881])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2ccf:b0:2ee:b666:d14a
- with SMTP id 98e67ed59e1d1-2fa24177fa6mr225873a91.17.1738867889615; Thu, 06
- Feb 2025 10:51:29 -0800 (PST)
-Date: Thu,  6 Feb 2025 18:50:48 +0000
+        bh=ZM2K7Fz2wY4XMJIGW8UIEY9GhsBMo7TuugczH48eoOc=;
+        b=MXqPt6sy3v/y2w08D6dfLjg7izE3UggTKeP8VadD5SRh6yBAms9elQgjkhA9SsHHLb
+         ESumV5CuzediPC9JzRVrinRGgm1Yewxzx3MZ2PlaoTC7eGe3u5AbRntI2Y/5wSIHUJgs
+         2aMv8IMBbtXyK0i7vC2sopDeXN1ENRzOBGCq+2aAY3Fae0ciDtnfOuIEXIby1Oh9yOia
+         AeYbnFZKVp2D935FEKbt0wIk1q+mGKYkf9UxoFjmEyToM2KeDKdCrZ35QlWEvTbSapqO
+         FrnARmlfE4+jK29nZ2H/83lGROuUwnVnxOpbVLMGOSw+PT8wees7GWyUizQZ+z8ew8M7
+         ro2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXzc/MMb2d5eqDRyfLmjWi+KdDkqZKQmcw4uzSq6ZngQbbjKhqhEobEzq5hyyCzAouQoebbt6HF2maWCug=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9/t0UhjYxzSsr7FtM0hli206I2bHdWTeoocVxoz7LfZ0YTK/T
+	eyhNx7drpiAfm4Ds5IeDB5XaAXmc75Zk4Gb3HRzryDkfmoNFec2Tea6a7qTB11JSqJo1IQ==
+X-Google-Smtp-Source: AGHT+IFVHLzvQXhhOOlHiOL7BAHshrKvK37YtrOlJQtEUP1k+IFRDA6RXf7GAghzr6oe2lWRYNCvHguW
+X-Received: from pfbha22.prod.google.com ([2002:a05:6a00:8516:b0:728:e76c:253f])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:84c:b0:72d:80da:aff
+ with SMTP id d2e1a72fcca58-7305d463bb9mr573392b3a.9.1738867892913; Thu, 06
+ Feb 2025 10:51:32 -0800 (PST)
+Date: Thu,  6 Feb 2025 18:50:50 +0000
 In-Reply-To: <20250206185109.1210657-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250206185109.1210657-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250206185109.1210657-9-fvdl@google.com>
-Subject: [PATCH v3 08/28] mm/hugetlb: convert cmdline parameters from setup to early
+Message-ID: <20250206185109.1210657-11-fvdl@google.com>
+Subject: [PATCH v3 10/28] mm/bootmem_info: export register_page_bootmem_memmap
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -67,347 +67,85 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Convert the cmdline parameters (hugepagesz, hugepages,
-default_hugepagesz and hugetlb_free_vmemmap) to early
-parameters.
+If other mm code wants to use this function for early
+memmap inialization (on the platforms that have it),
+it should be made available properly, not just
+unconditionally in mm.h
 
-Since parse_early_param might run before MMU setups
-on some platforms (powerpc), validation of huge page
-sizes as specified in command line parameters would
-fail. So instead, for the hstate-related values,
-just record the them and parse them on demand, from
-hugetlb_bootmem_alloc.
-
-The allocation of hugetlb bootmem pages is now done in
-hugetlb_bootmem_alloc, which is called explicitly at the
-start of mm_core_init().  core_initcall would be too late,
-as that happens with memblock already torn down.
-
-This change will allow earlier allocation and initialization
-of bootmem hugetlb pages later on.
-
-No functional change intended.
+Make this function available for such cases.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- include/linux/hugetlb.h |   6 ++
- mm/hugetlb.c            | 133 +++++++++++++++++++++++++++++++---------
- mm/hugetlb_vmemmap.c    |   6 +-
- mm/mm_init.c            |   3 +
- 4 files changed, 119 insertions(+), 29 deletions(-)
+ arch/powerpc/mm/init_64.c    | 4 ++++
+ include/linux/bootmem_info.h | 7 +++++++
+ include/linux/mm.h           | 3 ---
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index ec8c0ccc8f95..9cd7c9dacb88 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -174,6 +174,8 @@ struct address_space *hugetlb_folio_mapping_lock_write(struct folio *folio);
- extern int sysctl_hugetlb_shm_group;
- extern struct list_head huge_boot_pages[MAX_NUMNODES];
+diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+index d96bbc001e73..b6f3ae03ca9e 100644
+--- a/arch/powerpc/mm/init_64.c
++++ b/arch/powerpc/mm/init_64.c
+@@ -41,6 +41,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/memremap.h>
+ #include <linux/memory.h>
++#include <linux/bootmem_info.h>
  
-+void hugetlb_bootmem_alloc(void);
-+
- /* arch callbacks */
- 
- #ifndef CONFIG_HIGHPTE
-@@ -1250,6 +1252,10 @@ static inline bool hugetlbfs_pagecache_present(
- {
- 	return false;
- }
-+
-+static inline void hugetlb_bootmem_alloc(void)
-+{
-+}
- #endif	/* CONFIG_HUGETLB_PAGE */
- 
- static inline spinlock_t *huge_pte_lock(struct hstate *h,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index b4de3bbd010d..5a4b322e2bb2 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -40,6 +40,7 @@
- #include <asm/page.h>
  #include <asm/pgalloc.h>
- #include <asm/tlb.h>
-+#include <asm/setup.h>
- 
- #include <linux/io.h>
- #include <linux/hugetlb.h>
-@@ -62,6 +63,24 @@ static unsigned long hugetlb_cma_size __initdata;
- 
- __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
- 
-+/*
-+ * Due to ordering constraints across the init code for various
-+ * architectures, hugetlb hstate cmdline parameters can't simply
-+ * be early_param. early_param might call the setup function
-+ * before valid hugetlb page sizes are determined, leading to
-+ * incorrect rejection of valid hugepagesz= options.
-+ *
-+ * So, record the parameters early and consume them whenever the
-+ * init code is ready for them, by calling hugetlb_parse_params().
-+ */
-+
-+/* one (hugepagesz=,hugepages=) pair per hstate, one default_hugepagesz */
-+#define HUGE_MAX_CMDLINE_ARGS	(2 * HUGE_MAX_HSTATE + 1)
-+struct hugetlb_cmdline {
-+	char *val;
-+	int (*setup)(char *val);
-+};
-+
- /* for command line parsing */
- static struct hstate * __initdata parsed_hstate;
- static unsigned long __initdata default_hstate_max_huge_pages;
-@@ -69,6 +88,20 @@ static bool __initdata parsed_valid_hugepagesz = true;
- static bool __initdata parsed_default_hugepagesz;
- static unsigned int default_hugepages_in_node[MAX_NUMNODES] __initdata;
- 
-+static char hstate_cmdline_buf[COMMAND_LINE_SIZE] __initdata;
-+static int hstate_cmdline_index __initdata;
-+static struct hugetlb_cmdline hugetlb_params[HUGE_MAX_CMDLINE_ARGS] __initdata;
-+static int hugetlb_param_index __initdata;
-+static __init int hugetlb_add_param(char *s, int (*setup)(char *val));
-+static __init void hugetlb_parse_params(void);
-+
-+#define hugetlb_early_param(str, func) \
-+static __init int func##args(char *s) \
-+{ \
-+	return hugetlb_add_param(s, func); \
-+} \
-+early_param(str, func##args)
-+
- /*
-  * Protects updates to hugepage_freelists, hugepage_activelist, nr_huge_pages,
-  * free_huge_pages, and surplus_huge_pages.
-@@ -3488,6 +3521,8 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
- 
- 		for (i = 0; i < MAX_NUMNODES; i++)
- 			INIT_LIST_HEAD(&huge_boot_pages[i]);
-+		h->next_nid_to_alloc = first_online_node;
-+		h->next_nid_to_free = first_online_node;
- 		initialized = true;
- 	}
- 
-@@ -4550,8 +4585,6 @@ void __init hugetlb_add_hstate(unsigned int order)
- 	for (i = 0; i < MAX_NUMNODES; ++i)
- 		INIT_LIST_HEAD(&h->hugepage_freelists[i]);
- 	INIT_LIST_HEAD(&h->hugepage_activelist);
--	h->next_nid_to_alloc = first_online_node;
--	h->next_nid_to_free = first_online_node;
- 	snprintf(h->name, HSTATE_NAME_LEN, "hugepages-%lukB",
- 					huge_page_size(h)/SZ_1K);
- 
-@@ -4576,6 +4609,42 @@ static void __init hugepages_clear_pages_in_node(void)
- 	}
+ #include <asm/page.h>
+@@ -386,10 +387,13 @@ void __ref vmemmap_free(unsigned long start, unsigned long end,
  }
  
-+static __init int hugetlb_add_param(char *s, int (*setup)(char *))
+ #endif
++
++#ifdef CONFIG_HAVE_BOOTMEM_INFO_NODE
+ void register_page_bootmem_memmap(unsigned long section_nr,
+ 				  struct page *start_page, unsigned long size)
+ {
+ }
++#endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
+ 
+ #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+ 
+diff --git a/include/linux/bootmem_info.h b/include/linux/bootmem_info.h
+index d8a8d245824a..4c506e76a808 100644
+--- a/include/linux/bootmem_info.h
++++ b/include/linux/bootmem_info.h
+@@ -18,6 +18,8 @@ enum bootmem_type {
+ 
+ #ifdef CONFIG_HAVE_BOOTMEM_INFO_NODE
+ void __init register_page_bootmem_info_node(struct pglist_data *pgdat);
++void register_page_bootmem_memmap(unsigned long section_nr, struct page *map,
++				  unsigned long nr_pages);
+ 
+ void get_page_bootmem(unsigned long info, struct page *page,
+ 		enum bootmem_type type);
+@@ -58,6 +60,11 @@ static inline void register_page_bootmem_info_node(struct pglist_data *pgdat)
+ {
+ }
+ 
++static inline void register_page_bootmem_memmap(unsigned long section_nr,
++		struct page *map, unsigned long nr_pages)
 +{
-+	size_t len;
-+	char *p;
-+
-+	if (hugetlb_param_index >= HUGE_MAX_CMDLINE_ARGS)
-+		return -EINVAL;
-+
-+	len = strlen(s) + 1;
-+	if (len + hstate_cmdline_index > sizeof(hstate_cmdline_buf))
-+		return -EINVAL;
-+
-+	p = &hstate_cmdline_buf[hstate_cmdline_index];
-+	memcpy(p, s, len);
-+	hstate_cmdline_index += len;
-+
-+	hugetlb_params[hugetlb_param_index].val = p;
-+	hugetlb_params[hugetlb_param_index].setup = setup;
-+
-+	hugetlb_param_index++;
-+
-+	return 0;
 +}
 +
-+static __init void hugetlb_parse_params(void)
-+{
-+	int i;
-+	struct hugetlb_cmdline *hcp;
-+
-+	for (i = 0; i < hugetlb_param_index; i++) {
-+		hcp = &hugetlb_params[i];
-+
-+		hcp->setup(hcp->val);
-+	}
-+}
-+
- /*
-  * hugepages command line processing
-  * hugepages normally follows a valid hugepagsz or default_hugepagsz
-@@ -4595,7 +4664,7 @@ static int __init hugepages_setup(char *s)
- 	if (!parsed_valid_hugepagesz) {
- 		pr_warn("HugeTLB: hugepages=%s does not follow a valid hugepagesz, ignoring\n", s);
- 		parsed_valid_hugepagesz = true;
--		return 1;
-+		return -EINVAL;
- 	}
+ static inline void put_page_bootmem(struct page *page)
+ {
+ }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7b1068ddcbb7..6dfc41b461af 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3918,9 +3918,6 @@ static inline bool vmemmap_can_optimize(struct vmem_altmap *altmap,
+ }
+ #endif
  
- 	/*
-@@ -4649,24 +4718,16 @@ static int __init hugepages_setup(char *s)
- 		}
- 	}
- 
--	/*
--	 * Global state is always initialized later in hugetlb_init.
--	 * But we need to allocate gigantic hstates here early to still
--	 * use the bootmem allocator.
--	 */
--	if (hugetlb_max_hstate && hstate_is_gigantic(parsed_hstate))
--		hugetlb_hstate_alloc_pages(parsed_hstate);
+-void register_page_bootmem_memmap(unsigned long section_nr, struct page *map,
+-				  unsigned long nr_pages);
 -
- 	last_mhp = mhp;
- 
--	return 1;
-+	return 0;
- 
- invalid:
- 	pr_warn("HugeTLB: Invalid hugepages parameter %s\n", p);
- 	hugepages_clear_pages_in_node();
--	return 1;
-+	return -EINVAL;
- }
--__setup("hugepages=", hugepages_setup);
-+hugetlb_early_param("hugepages", hugepages_setup);
- 
- /*
-  * hugepagesz command line processing
-@@ -4685,7 +4746,7 @@ static int __init hugepagesz_setup(char *s)
- 
- 	if (!arch_hugetlb_valid_size(size)) {
- 		pr_err("HugeTLB: unsupported hugepagesz=%s\n", s);
--		return 1;
-+		return -EINVAL;
- 	}
- 
- 	h = size_to_hstate(size);
-@@ -4700,7 +4761,7 @@ static int __init hugepagesz_setup(char *s)
- 		if (!parsed_default_hugepagesz ||  h != &default_hstate ||
- 		    default_hstate.max_huge_pages) {
- 			pr_warn("HugeTLB: hugepagesz=%s specified twice, ignoring\n", s);
--			return 1;
-+			return -EINVAL;
- 		}
- 
- 		/*
-@@ -4710,14 +4771,14 @@ static int __init hugepagesz_setup(char *s)
- 		 */
- 		parsed_hstate = h;
- 		parsed_valid_hugepagesz = true;
--		return 1;
-+		return 0;
- 	}
- 
- 	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
- 	parsed_valid_hugepagesz = true;
--	return 1;
-+	return 0;
- }
--__setup("hugepagesz=", hugepagesz_setup);
-+hugetlb_early_param("hugepagesz", hugepagesz_setup);
- 
- /*
-  * default_hugepagesz command line input
-@@ -4731,14 +4792,14 @@ static int __init default_hugepagesz_setup(char *s)
- 	parsed_valid_hugepagesz = false;
- 	if (parsed_default_hugepagesz) {
- 		pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n", s);
--		return 1;
-+		return -EINVAL;
- 	}
- 
- 	size = (unsigned long)memparse(s, NULL);
- 
- 	if (!arch_hugetlb_valid_size(size)) {
- 		pr_err("HugeTLB: unsupported default_hugepagesz=%s\n", s);
--		return 1;
-+		return -EINVAL;
- 	}
- 
- 	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-@@ -4755,17 +4816,33 @@ static int __init default_hugepagesz_setup(char *s)
- 	 */
- 	if (default_hstate_max_huge_pages) {
- 		default_hstate.max_huge_pages = default_hstate_max_huge_pages;
--		for_each_online_node(i)
--			default_hstate.max_huge_pages_node[i] =
--				default_hugepages_in_node[i];
--		if (hstate_is_gigantic(&default_hstate))
--			hugetlb_hstate_alloc_pages(&default_hstate);
-+		/*
-+		 * Since this is an early parameter, we can't check
-+		 * NUMA node state yet, so loop through MAX_NUMNODES.
-+		 */
-+		for (i = 0; i < MAX_NUMNODES; i++) {
-+			if (default_hugepages_in_node[i] != 0)
-+				default_hstate.max_huge_pages_node[i] =
-+					default_hugepages_in_node[i];
-+		}
- 		default_hstate_max_huge_pages = 0;
- 	}
- 
--	return 1;
-+	return 0;
-+}
-+hugetlb_early_param("default_hugepagesz", default_hugepagesz_setup);
-+
-+void __init hugetlb_bootmem_alloc(void)
-+{
-+	struct hstate *h;
-+
-+	hugetlb_parse_params();
-+
-+	for_each_hstate(h) {
-+		if (hstate_is_gigantic(h))
-+			hugetlb_hstate_alloc_pages(h);
-+	}
- }
--__setup("default_hugepagesz=", default_hugepagesz_setup);
- 
- static unsigned int allowed_mems_nr(struct hstate *h)
- {
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 7735972add01..5b484758f813 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -444,7 +444,11 @@ DEFINE_STATIC_KEY_FALSE(hugetlb_optimize_vmemmap_key);
- EXPORT_SYMBOL(hugetlb_optimize_vmemmap_key);
- 
- static bool vmemmap_optimize_enabled = IS_ENABLED(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON);
--core_param(hugetlb_free_vmemmap, vmemmap_optimize_enabled, bool, 0);
-+static int __init hugetlb_vmemmap_optimize_param(char *buf)
-+{
-+	return kstrtobool(buf, &vmemmap_optimize_enabled);
-+}
-+early_param("hugetlb_free_vmemmap", hugetlb_vmemmap_optimize_param);
- 
- static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
- 					   struct folio *folio, unsigned long flags)
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 2630cc30147e..d2dee53e95dd 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -30,6 +30,7 @@
- #include <linux/crash_dump.h>
- #include <linux/execmem.h>
- #include <linux/vmstat.h>
-+#include <linux/hugetlb.h>
- #include "internal.h"
- #include "slab.h"
- #include "shuffle.h"
-@@ -2641,6 +2642,8 @@ static void __init mem_init_print_info(void)
-  */
- void __init mm_core_init(void)
- {
-+	hugetlb_bootmem_alloc();
-+
- 	/* Initializations relying on SMP setup */
- 	BUILD_BUG_ON(MAX_ZONELISTS > 2);
- 	build_all_zonelists(NULL);
+ enum mf_flags {
+ 	MF_COUNT_INCREASED = 1 << 0,
+ 	MF_ACTION_REQUIRED = 1 << 1,
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
