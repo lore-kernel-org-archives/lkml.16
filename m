@@ -1,299 +1,405 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8588C1662E7;
-	Thu,  6 Feb 2025 04:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABA16EB54;
+	Thu,  6 Feb 2025 04:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738816318; cv=fail; b=KE+LtvPRKfjtftWbOm3+8zzJDB786MfgbINJ+iKnUiPGhaKVCYGNl9ty3sgcjr35kZSSI8rxkkEqvPlU0aE0Bri98N4qjnlpbr5mF0UIOkIRnblFYCdORk/Fc9JfTq5ifsZ6G3ukeG85v4a6Ro0L3ZxG+OZYzTjc3LtmHvz5J2I=
+	t=1738816331; cv=fail; b=SLGUD5RxwSn22ZvlG6riEQKVig36Q+SmrSU2/LJ3/T/qHJytGGh9CgWlv6eO1RldPqXm7xOurMfhbceos0OQivdm8I9mVDVMRLwpf6l/XG055cyblVcFbWfxkEoAJUJ0oD/9DdD0jgII2FBKjFw8BEWZEEY9Q25/HlXBSWZ2h2E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738816318; c=relaxed/simple;
-	bh=5CHB9BpXY4ZVJ4hC+A/H1FFwIeX0DHYWwtd9/Org7YI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iEj6M7AwH35zbFHm0tLZOJoq/IfJGvskyrHkhoG9hU79AWNa+tryvzkCfDhIJ2gjjwmF98avcRb9dKViwaJ5CAs7/kh0l5rVMPAlUlSiEM18b5RJStWwsCzRPOlsDF5BO+Ms6m5vm4T72JTY6O7spScAkIEe7ScWxubgB7N6jQc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=z3XLQvGe; arc=fail smtp.client-ip=40.107.243.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1738816331; c=relaxed/simple;
+	bh=oImKCwuik/YXM2Johvgd1oc02EfXkfg8IW6WfyNiJaQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dPgzu2djtEShfzKKNrN37ayYrL9BDNdP4bn5IS9G8DUl/Z5dSLj+dtgz+36KwcGNEzy7Q7omEqR2Gph5PeSy/b4+sXyczz22gi0azVHFfv8LHgXPb4gEzEAohtuOJEUDSe7xHzB70ExgDbOVmK+mQWMcgQI+EPEU5JGZqWYP7w8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ia0gaxSa; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="z3XLQvGe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ia0gaxSa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738816328; x=1770352328;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=oImKCwuik/YXM2Johvgd1oc02EfXkfg8IW6WfyNiJaQ=;
+  b=ia0gaxSa4ysnS/rXpVPHwg7LzPT3dfZtBJ14/D4fNbiLDoclJRHOk9ob
+   VqjaKjtgQ2E6ZrGFH8mlmKJIUiKg0gPiQah2lSXpNm/LkfClwYqOwn0MS
+   tvtb0jJgtqH3cbmNIzOttdAhmogS1w+QtAE+LHHMekvQoypD+NqypqRW5
+   tW0nXxIvnDeSBzASeBVMoPps5aCSj5yW+MPkKo3Ek085tozdQh0SXMPjW
+   WK0e4QMeMVvP0N1ppNLOsSH3yUw8qwoMjyiy4siKd7maXmm8NGvC/PTFv
+   Ak+qz73V/GFMFPyB3sTT4kJ8mQrh9okMr/PjJqloqBiLxzRToELbuZeYX
+   Q==;
+X-CSE-ConnectionGUID: pLJZ0YGbT1ytB/WfgZI8Rg==
+X-CSE-MsgGUID: 2SUGMK+yQKWOkOicB3z8UA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39282452"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="39282452"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 20:32:07 -0800
+X-CSE-ConnectionGUID: Xt8YsoWYTFWIDesPOx4Afw==
+X-CSE-MsgGUID: OKOefC11Ty6pCMGFrQXouQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="111679806"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 20:32:05 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 5 Feb 2025 20:32:04 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 20:32:04 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 5 Feb 2025 20:32:04 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NTieAeOJxXkG0fxiu0n32JuUVqnN6/scEQxXV3FWy834EQeuVCuoEwnpCseE/mfhG4rAP8Zh4axOCIjZFFrK2CnM0fbwzDd9RNNbZzryTAB6smsxrXq5RA6hgqA80wSDHIgxj78e5tcUbQHqDUOz5MncHZ2F8Y6MYlWFywtVdAekbvQGBdglFl0hZv6ZkMaGJybSGOHjivQfFu/IRQI6GKEU/gNxG3R4i7j6DppOZua48U3KEvXK7nBT1mG2xkFhRY61B1ZtLhv7SsL8vKGTJqnmSXC4ENfY5JTq6XgyJa3Ij1OtdNUclb1OHzix6UWdeVxeQzVdwxBcFdV/jugLYA==
+ b=bmXvDB7gzjJa5YvltffhZKe/HBul5/TTn8NnXkSdjPX6Q+QFMZ2QVVG1w3ZqNtcjdguQdp8L/y22jwDRWI7LGbHlOQhdmM4xI65HY1sBL1Sfz0dMpYKENXnP94S2s+tX6tfVRwSSEa/csKEvfCh3NzH40U2hhX8JmJC51d7UljSPVBK/b1DUHPTqDbI2IjnmWARsDTeE2Wt0afISx/56wKxLSplYjTsqLIIvkhmO0gZriiozoDTE8lWXPnn29x5FHkl+QIO8Cwm4ETjT3iUrm/Xd34NsoXUcAxcgJb3QJFNEGrPatxBni4LG8mrzHXNB6FyG+caqnEcDlTLYxbPvJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qfw6ZvHdEYYDp/xqV+8K5CHGqDmtog4XlfDfjhJh0zM=;
- b=J3BaOgjmPq2HJtu0rSP3okM/UWUGA3UKEI5YIb7DDvI4VW7USf4h0cv/ZC8KRzjJ5DgeCMMAvGrq6hiX3vGsKEhEyWVI1qf8yEWRJ7cYgdf0gHr+Ds3CaB6fBHYtgTfJkAwe7dC4XlT/oBqPcq8IjyL5SZjgu3FrWHBtKHUFZinQi6uhovAYmVzZtsCZQLXmqmIu2BOOw2O6HQaJnOZ10AIoEp47ng7rbhxfPC5DIe5veTShEO3elA1Jp/1VawSOv04S1XFp5rvaQXwTV6Te/toaGIDWwr8biZmKA0bqHxh+ei2DYCakrZCnTnOzRVn2VqVWHH23JzqFFi94l3frCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qfw6ZvHdEYYDp/xqV+8K5CHGqDmtog4XlfDfjhJh0zM=;
- b=z3XLQvGeuRrTp1ui6jSxw4E/jfwZcrcEk0JZEpyIzeehaVNaCfsNKFTdDf6FiivvGbswXbE4F6d+LKFxJW+xwlMxkVTM7mshd8/GZ/aSgDdsxAmeW0XI9lwoGLx3moXL+kr1REk+E4RlTO1ttWg0LsV0sJUAZ484DcZwhzMa5m8=
-Received: from CH0PR03CA0341.namprd03.prod.outlook.com (2603:10b6:610:11a::18)
- by IA0PR12MB8839.namprd12.prod.outlook.com (2603:10b6:208:493::19) with
+ bh=mk+ZxzYKXiLDWtKu3AD0ty3j1GdvIxC1oJM1HmbL8iY=;
+ b=TiH7Jn29X7Z3uA9uLvWNspUqPlB/zgW/Tdj9zdagn8usSv/KIO2o7Tgfnok+tWTSFim68HBdX4LnBUSfkrBBZhj8qNzNWsZMwzOaeKDv1uoKt+kHh/mlW7qFLWQ1jYBP5o2m7Ka9DREEY/mNWJ1x+D90pk68HfbfRs4+/gDNl2BaTmAgc8B+mavM7RhDZi/eipCSUBobS9vj/ymGOfblSVXXoUHAolEVdLqv8X28YyYcGCy4U73lMmiUKoFyl3PwqAz2kXaONFQ8CbNSIk+v+qZnywU3O0cCbesjzdMtwPhrl5GnHcQqnWC91w/YYtMkkIj1p2KO94AWPKdhOi6/vQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH0PR11MB5830.namprd11.prod.outlook.com (2603:10b6:510:129::20)
+ by DS0PR11MB7802.namprd11.prod.outlook.com (2603:10b6:8:de::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 04:31:53 +0000
-Received: from CH2PEPF0000009B.namprd02.prod.outlook.com
- (2603:10b6:610:11a:cafe::76) by CH0PR03CA0341.outlook.office365.com
- (2603:10b6:610:11a::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.24 via Frontend Transport; Thu,
- 6 Feb 2025 04:31:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CH2PEPF0000009B.mail.protection.outlook.com (10.167.244.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Thu, 6 Feb 2025 04:31:52 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 22:31:51 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 22:31:51 -0600
-Received: from [172.19.74.139] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 5 Feb 2025 22:31:50 -0600
-Message-ID: <796e2826-a423-4d0c-977a-105ed236e067@amd.com>
-Date: Wed, 5 Feb 2025 20:31:50 -0800
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Thu, 6 Feb
+ 2025 04:32:01 +0000
+Received: from PH0PR11MB5830.namprd11.prod.outlook.com
+ ([fe80::c80d:3b17:3f40:10d6]) by PH0PR11MB5830.namprd11.prod.outlook.com
+ ([fe80::c80d:3b17:3f40:10d6%4]) with mapi id 15.20.8422.009; Thu, 6 Feb 2025
+ 04:32:01 +0000
+From: "Song, Yoong Siang" <yoong.siang.song@intel.com>
+To: "Fijalkowski, Maciej" <maciej.fijalkowski@intel.com>
+CC: "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Willem de Bruijn
+	<willemb@google.com>, "Bezdeka, Florian" <florian.bezdeka@siemens.com>,
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Topel <bjorn@kernel.org>, "Karlsson, Magnus"
+	<magnus.karlsson@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, "Damato, Joe"
+	<jdamato@fastly.com>, Stanislav Fomichev <sdf@fomichev.me>, Xuan Zhuo
+	<xuanzhuo@linux.alibaba.com>, Mina Almasry <almasrymina@google.com>, "Daniel
+ Jurgens" <danielj@nvidia.com>, Andrii Nakryiko <andrii@kernel.org>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, "Martin
+ KaFai Lau" <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Hao Luo
+	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Shuah Khan
+	<shuah@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>, "Jose
+ Abreu" <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
+	<przemyslaw.kitszel@intel.com>, Faizal Rahim
+	<faizal.abdul.rahim@linux.intel.com>, Choong Yong Liang
+	<yong.liang.choong@linux.intel.com>, "Bouska, Zdenek"
+	<zdenek.bouska@siemens.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"linux-stm32@st-md-mailman.stormreply.com"
+	<linux-stm32@st-md-mailman.stormreply.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "intel-wired-lan@lists.osuosl.org"
+	<intel-wired-lan@lists.osuosl.org>, "xdp-hints@xdp-project.net"
+	<xdp-hints@xdp-project.net>
+Subject: RE: [PATCH bpf-next v8 4/5] igc: Refactor empty packet insertion into
+ a reusable function
+Thread-Topic: [PATCH bpf-next v8 4/5] igc: Refactor empty packet insertion
+ into a reusable function
+Thread-Index: AQHbd3eRdwLqM9RAOUG+CEwq4T8dPbM4pMYAgAAd5GCAAB6EAIAAzl9w
+Date: Thu, 6 Feb 2025 04:32:01 +0000
+Message-ID: <PH0PR11MB583003D5657395162DD4253AD8F62@PH0PR11MB5830.namprd11.prod.outlook.com>
+References: <20250205024116.798862-1-yoong.siang.song@intel.com>
+ <20250205024116.798862-5-yoong.siang.song@intel.com> <Z6NaFkPBZA18oILE@boxer>
+ <PH0PR11MB58305176708A48DD8EA60B96D8F72@PH0PR11MB5830.namprd11.prod.outlook.com>
+ <Z6OMwvk9zANCD8jI@boxer>
+In-Reply-To: <Z6OMwvk9zANCD8jI@boxer>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR11MB5830:EE_|DS0PR11MB7802:EE_
+x-ms-office365-filtering-correlation-id: bd21ca59-1bf1-44bc-3099-08dd4667333e
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?gHf8zeb3MO2HWcZerOcIfn/0PTvqm3GdUWLfYeOUB4Ncd+knGbFwYbiZeBpT?=
+ =?us-ascii?Q?c+Amipwo9SZq9aH5jkmIfDURLXt9cMtKisFPgWGX8j0J3uLkvzMKGd8a85iC?=
+ =?us-ascii?Q?Hus3aWfrYzlppfaknxi9ZyKBbp942KLr77czudzvWmmFqnFidjPcIQdFOhag?=
+ =?us-ascii?Q?LW0rvQ1H0sd7u7m1cnJC6fu3w8p8Gr1QtEWjfrub7Rxws5zE84Q9RDnJIvc2?=
+ =?us-ascii?Q?TOvz2JFwOI8Uk9vQ894rDU8yDZbt/H7wasYX/MjStM1X+qsIGxcpr2a1zpub?=
+ =?us-ascii?Q?v/qjU6by3nX0lpm2xo/2BYXEfsmGbbUR4oXdy5JTCuoPw6nQ3fMdqJPquh8r?=
+ =?us-ascii?Q?pUSBKcwRoMo9jRoiRKWRVplEgCxnTeX+g8SUMwEHQVwe7E+899GnzosqNtcR?=
+ =?us-ascii?Q?mEzrzapNXtaZDoIZEboQ4JdDQFIg6unuhqI8dB+1iqgNEGtSJ7EJMerNvUdI?=
+ =?us-ascii?Q?Rp9HOz8y8s41UYPYUKVdMQQ867L9GYuNVWbdZxWGVv7WnytcSLy9LBjoU5dw?=
+ =?us-ascii?Q?J/Ts9Elv0Mr6qSnzva5L7eDzhqrcj6qmFM83Jsyk3a4RIM10iO3AFBs1CxA+?=
+ =?us-ascii?Q?FDsLxKXSWTVeMrfyspN9vj2RmS8d1hkzoeby/C6/xK0Y2g3n/Maqhj+OQyNQ?=
+ =?us-ascii?Q?E2c3u96wDAXvvs2f+VmM+eiC9HWlXteBUcXc+9uCpxzw35q6P2CV63Ech4Uq?=
+ =?us-ascii?Q?21oPYKJCju0vCTYLLrR6sa/4nVWDAM6MlOQwOribsQdII/Bv8enkMD98EGXW?=
+ =?us-ascii?Q?qQjdLmsEzsb6Sc5gHnsBCfHc8NnNo68jkV8dfPccMLIKEBV1ety5eq6THkHm?=
+ =?us-ascii?Q?vO7hgW1EOEvKlmTlNFugvepHyxSBzd00AvEf7Y0h3x2FVW+9QgSOzogpkqQZ?=
+ =?us-ascii?Q?VNIFKKl2LavF3zL5HtLjDhZ0o4tEGkxLy9W34urLM86Jtw9lP8kjYdBDpsOf?=
+ =?us-ascii?Q?R2X9OlT52C97p3k/YyAjpOAOh4nvAUo+vXle2IRGI1kiznT4SBOZ03QJZmYg?=
+ =?us-ascii?Q?a10K5+rCt6Ea0EDkLvXoz1bV/AE5z0WbFgHVFRdAcw3gXnciQMVBwhkOT66R?=
+ =?us-ascii?Q?qsaz0l8MAgQW8JP5bwDgRK7WCoAY4+0LWDRGJ9coMgJgZ5DxfDcUXhHsouo4?=
+ =?us-ascii?Q?DV+7QjKv1y9JkCF27XXQ30jB+RTHlM57ynMMRhw8vzYAyi8ndYVGW2YUBpj+?=
+ =?us-ascii?Q?rg+gbP6D+ty9tqghYrnIi/2jrvME7E+PqQxn72u5TlyqIkjTC2A0FyzocYm9?=
+ =?us-ascii?Q?73HHegdUrlULCtK8PVXIXkdt60qIUT+8IVUB5MFic4Au2S59wzNd3fuOXx5J?=
+ =?us-ascii?Q?vjDmJD7f4mgHHQ0XGx5unoeIDX17OaxVd4vr+N9di65mNz+/CdOyRBbG4X6D?=
+ =?us-ascii?Q?MUcpBA0oBQy4U0PQ1vxQCMSBeIs3810jh+tocbl02eagH5Dp80rlwCmRJe2h?=
+ =?us-ascii?Q?qg1Szo//GpT4eHJMCQG4bZjVPlo5x1Js?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5830.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?67kvq3ixt3beHEzAvhvPkJte2KK5J25N19sjd1gyyvAjvwvxCk1a7cjfsK/h?=
+ =?us-ascii?Q?xQlxbZWvSDmQOylVkbHps/q/I8grOXAx0iF4bOAZn0xUtq6WcE08LfmYjOeX?=
+ =?us-ascii?Q?EmY2LHOvlHJRiQarmjAQjzyzNZRUbSrFnF9lNI+ZWqKiu6YiiAct67rKGMxP?=
+ =?us-ascii?Q?3zVve8PZhJXIy9bc1yyjLecBebiZJe64qtaUDoLcpOy+dRbq0OYjYTqiRcCe?=
+ =?us-ascii?Q?Nu26NWRCqv+Tr5TjLaaaQ7g3AOZYBQgxmqMRHccQ8y/9ps7OYXb9SzpaAyba?=
+ =?us-ascii?Q?+s9XGcOFsSIicoTvLx3KIMkDrMWcGYImHhdiNDFuLZh4Uc1nAG5eByQxCtU2?=
+ =?us-ascii?Q?vxfr++aVb8d+4k1dRO8H73hwhjXtcvJpvqhz0hQDgKJ8+NxA/RK0pqXgluRQ?=
+ =?us-ascii?Q?gQK/WhFjbZ2lB4PedVe6xneFAEOAAOlH5WI1HafFQxfKQtI1QiSWRxCKgomZ?=
+ =?us-ascii?Q?YDsaZveCzH/xyUA/yduTEYVLiuVKlU2qhnrIbykwTvFPlVobur24/PsE8kIu?=
+ =?us-ascii?Q?j7ilveky1tMmcSghEOVjMoDFr07A3sg0zfsRbgibcUVuq99tjnGJZltM0ms8?=
+ =?us-ascii?Q?T2iDavpQ6ljA5W3gKgXNV8MWBNyQgBK2C1R1ow2rCKtaJIpC6/6i9cOjTaKi?=
+ =?us-ascii?Q?bW9ex8AZ7oep9F0BB6vOx9d06EHxS4GaH7nMRY2HKNKgTcts+p3PArPrKf80?=
+ =?us-ascii?Q?BuhIYa7X7WvZx/yx+IA/ZDNtMFYwkl/NkOQK8KfG7dmzmERYRaBK2L2NdNcz?=
+ =?us-ascii?Q?7DiCpsgH/WdP86OFkD5keG7jmGMcZK9t+mogLT+VNeWXmIUeGioWKdHjIrEf?=
+ =?us-ascii?Q?+EeKGrBpu2Jf90u/YWh/jKYZ8+ZwlVt4pYvbR0VaHCwTpneNXD7E+gJ7mf8C?=
+ =?us-ascii?Q?MokPOQtvvOvR3KdV8XR6Nd2d0x1K9VuKZGLjgn60zuppuR1ImhszWm1aIk0c?=
+ =?us-ascii?Q?3eLwHvwEcpRhhNvypfrWQC5k60ndyCCa0PEqLcXrXYlAYz57zXIySe3cpfM6?=
+ =?us-ascii?Q?Yk83Bu95QkNaPVoYxraqttus+8R5JYAy49D0dFyMpNOYkFYoKHI0cTll3Vvo?=
+ =?us-ascii?Q?598VTOpMlIvngVLKb5z5dk+gZH5BVAanajzie/EtA9JiCZyADsBoQPBooZOq?=
+ =?us-ascii?Q?9XUUqo6EUBzQPwcPbn67XplQZJM+SjEgXKmEwFbcVULFWp5pf6mB01a+JMIp?=
+ =?us-ascii?Q?/Pvk5UFhn2HYHYjyRinfTsZYUuyzBOlxsFAyfk31qpg2rpfiCY5AmXkJubS0?=
+ =?us-ascii?Q?tVsCBiQaYPuG79KeN9hYV6CWpWd+9+LNQwSYyXC661PbDdRnlfZmv294S/WX?=
+ =?us-ascii?Q?b7rxV09NlFiL5B4uKfcXfQ35EdW2+45ckBju2LtXwMV+vo/BhIT0vKqr3+EK?=
+ =?us-ascii?Q?QdQkyPDCEBjVBOhOEAVvQIXBgmu7L7XgBtRUrs44xnQbRx/0K6DUIai2c4UJ?=
+ =?us-ascii?Q?S/gWGkgAuZN1CbHnoQ6XLSLSR0FbwdSBkbHKgLtUN7Z1ZUKvIAsdrThm0BGM?=
+ =?us-ascii?Q?g6kV9lr7MMpvsYEUSoNjznPkdxaLemVnTUmXQvQxXo3ZCpCpzn1biKkiZBRO?=
+ =?us-ascii?Q?JdFuB/ykV7KGzbXx9lmrmyPCqyrsDrRqezij5qIWmFEB1LxZqHFBI9pTXLdy?=
+ =?us-ascii?Q?jw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
-To: Xu Yilun <yilun.xu@linux.intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
-	<mdf@kernel.org>, <hao.wu@intel.com>, <yilun.xu@intel.com>,
-	<lizhi.hou@amd.com>, DMG Karthik <Karthik.DMG@amd.com>, Nishad Saraf
-	<nishads@amd.com>, Prapul Krishnamurthy <prapulk@amd.com>, Hayden Laccabue
-	<hayden.laccabue@amd.com>
-References: <20241210183734.30803-1-yidong.zhang@amd.com>
- <20241210183734.30803-2-yidong.zhang@amd.com>
- <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
- <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
- <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
-Content-Language: en-US
-From: Yidong Zhang <yidong.zhang@amd.com>
-In-Reply-To: <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009B:EE_|IA0PR12MB8839:EE_
-X-MS-Office365-Filtering-Correlation-Id: 53e5cc65-d398-4f04-cee9-08dd46672def
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c2FhYW9VK2RXaWJ3RVFFUFhSNEdpbCtQOURPd2dPSjIrR2M4dUNZVXV3WXZ3?=
- =?utf-8?B?azByVyt2TVdVSHN6dHg1V0pOZFBXTGtNNnoreE1icEduMlhncVg3S09QcHVy?=
- =?utf-8?B?VXhqVzh0b2RRMzRybGhzeUsycDJMZnExQ21VREFPWXBPdlNMbmZHU1RNamVV?=
- =?utf-8?B?cXQ0Nm5vblJJaHZvZng1NTVHSG8wSTBWblFDQ2ExMzhFQUZTTFJDS2FnaTdt?=
- =?utf-8?B?UG5PbVVrRWxTWWFtbGlVa09zNEd1WnhsV2tISkRFVjdYcFErMGlxek04SmpR?=
- =?utf-8?B?NGZQUzV6dTNSRmZkZXRxMGZPc3ptRHl5RHhHM25SNmZnSmc3YVQ1MDhBd3p3?=
- =?utf-8?B?UExycExpMjNHWXE4Wjd6K0JIbmNXUVhMQUtmOVl5d2NqdldzTEJnSFg3K3FQ?=
- =?utf-8?B?YjFvaHdob3c4OUdVak04VzQvR3hvK2F4ZWhGUXM0cnZXTWFMZXpDam96L1dq?=
- =?utf-8?B?Vkp6NzJvRDZ5MjluNlNEUkppYUZRS2tqcHQ0eEZRZTB3VkVGV1BWWCtGdTZ1?=
- =?utf-8?B?d3h6RENzbHRMWm9TZy93c2JjTnZzVVpZMmZiNTBNa2hXNG9ta1dOMlJ3Zkhh?=
- =?utf-8?B?bldEZWVRNThmUWE4a2k5ZDVkOXgzOTJWaG8reFRXSFVramhsdkYvMGlUdUV5?=
- =?utf-8?B?cmNybWFFS3BpLy9ZeXliSW5nM0dhcXdWRDlyZnNnR2QvL25oUzBJTE5yU0ZN?=
- =?utf-8?B?WDZHZEo3VnRpWVJKUVJvZlNnekM2TFhDRVZsSUNXWGZ3UWdLeW5FZHpRaU9u?=
- =?utf-8?B?d2g2elY2QVdMeHp1VVlkaXJDOUI1eVNVcy92T3B1ZVo3bHBPY0tYWXJXamc3?=
- =?utf-8?B?UWdRT0tvTFlNWmRLYkErb0k5U2szU3pDM1NheU9kM1dYaG9ydk9JYTUyL2g0?=
- =?utf-8?B?VThpN3lFNXBPdDdQLzZrdnFZK3BIQ2E0SVR5RE5MTmtUUzNqcUUxMkZ2YUlx?=
- =?utf-8?B?OTlOZzJPL0QxL3UvV0gvTDY0T0UyRC9KUUJPQnJZRFVqUXRYdmxjSksxOXQ4?=
- =?utf-8?B?UTBOZVBQMEJKZFZMTjlyNVNKbVk5b0Y3ZzRpL3BHa3Y0UytWQjEwTzEwVE4y?=
- =?utf-8?B?ODcrYkNPb0lMbHk1bW9GQ1U5ZW5WNSs1enRrL0UvaDFvSHhRK0tOL0ZSRkMy?=
- =?utf-8?B?cGhwTFZxSGtITE1JR0dtdmFDaDRHQzZoNUx6WVR2cmpoR0JiVmFEbWd6bUhK?=
- =?utf-8?B?NEU5bDk0c0F4U0pJeFlzRkJ0Y0JBNDhSa2hQSVJGQlJsZEU5ZndubGhVQ2pC?=
- =?utf-8?B?ZjVETVdnc1lsdUZUMWhTc2NZczZob2JLWmZQOFlEbWtjM1BPVHpTbVVvNERr?=
- =?utf-8?B?QVBoTEMyT3F4Y1YzalBjUTJBSWN2MnJSY2xkWDVISElMa0hIZ0I1cEtOYldq?=
- =?utf-8?B?WkZwZE1raUJKRkRkRDVOZklJamk4a2NqY0JlQ0RuM2REUjAvc2ZweCs1cER2?=
- =?utf-8?B?eDEwbFp0V3hMWFg5Vk1ybEU4ZDJwM3JjVE56am0yUk5VTysyNDVHUmpRYnRN?=
- =?utf-8?B?NjlFNE9HM3JuTzhwRkc0eEFQcEVJTllYSCtFNzByalZ3MU5Sbk5BT1QwMXhS?=
- =?utf-8?B?TWxCWlowL1pyc09oWXNCcG1oV3hjR1l0VFM4VmxRd2p5VHREK1o3OVRSYjY3?=
- =?utf-8?B?TzZTSmV4M1krUklVYU5EWEFmcGpZWWgwSjFCd3Q2UUgvTUxxUy9EZkFXemtJ?=
- =?utf-8?B?bnNFbWY4am52bEdlQjBNN0U1NUlTL0wvK2NCalRNd0VveDJkcWU5eGJqRDIy?=
- =?utf-8?B?Z251NUdFejVlVTVybzg4YkVxcWpQMzVzRlBwdjdHN2tGdXJyUjdPNTJ2WjNI?=
- =?utf-8?B?ejdFWXpMbjh2M09ra3dHdUpEOUkyYUxHb2dzNnBxd3FvSmphSHA3dEE1NWU2?=
- =?utf-8?B?TCtoMlB5OUo0Q0FBUDRDcnJjZ0JBTjRaUUMwL29qZUtJTjhUR3dzMGJxQWFZ?=
- =?utf-8?B?Y1RML2h0aG0rQzhxdGxoOWFSZFFUOU9CNERWandLcWVaS1pUejhRMmRQZU9Z?=
- =?utf-8?Q?aZulIX32pLU3LXf+d571oxXYRAdfo8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 04:31:52.1963
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5830.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd21ca59-1bf1-44bc-3099-08dd4667333e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2025 04:32:01.1616
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53e5cc65-d398-4f04-cee9-08dd46672def
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009B.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8839
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7XUVbZCxYB9/hJBmWYIEp57+igpWrNQBlzQWc/UqCxFMY/30WXFED4ixrPLb6GuXDXiTIbBbIPomP/qUQi0IQZrOtMtcpDfIFzWC/HCVmwA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7802
+X-OriginatorOrg: intel.com
 
+On Thursday, February 6, 2025 12:08 AM, Fijalkowski, Maciej <maciej.fijalko=
+wski@intel.com> wrote:
+>On Wed, Feb 05, 2025 at 03:43:19PM +0100, Song, Yoong Siang wrote:
+>> On Wednesday, February 5, 2025 8:31 PM, Fijalkowski, Maciej<maciej.fijal=
+kowski@intel.com> wrote:
+>> >On Wed, Feb 05, 2025 at 10:41:15AM +0800, Song Yoong Siang wrote:
+>> >> Refactor the code for inserting an empty packet into a new function
+>> >> igc_insert_empty_packet(). This change extracts the logic for inserti=
+ng
+>> >> an empty packet from igc_xmit_frame_ring() into a separate function,
+>> >> allowing it to be reused in future implementations, such as the XDP
+>> >> zero copy transmit function.
+>> >>
+>> >> This patch introduces no functional changes.
+>> >>
+>> >> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+>> >
+>> >Your SoB should be last in the set of tags.
+>> >
+>>
+>> Noted. Thanks for the tips.
+>>
+>> >> Reviewed-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+>> >> ---
+>> >>  drivers/net/ethernet/intel/igc/igc_main.c | 42 ++++++++++++---------=
+--
+>> >>  1 file changed, 22 insertions(+), 20 deletions(-)
+>> >>
+>> >> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c
+>> >b/drivers/net/ethernet/intel/igc/igc_main.c
+>> >> index 21f318f12a8d..553d6d82af0d 100644
+>> >> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+>> >> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+>> >> @@ -1566,6 +1566,26 @@ static bool igc_request_tx_tstamp(struct igc_a=
+dapter
+>> >*adapter, struct sk_buff *s
+>> >>  	return false;
+>> >>  }
+>> >>
+>> >> +static void igc_insert_empty_packet(struct igc_ring *tx_ring)
+>> >> +{
+>> >> +	struct igc_tx_buffer *empty_info;
+>> >> +	struct sk_buff *empty;
+>> >> +	void *data;
+>> >> +
+>> >> +	empty_info =3D &tx_ring->tx_buffer_info[tx_ring->next_to_use];
+>> >> +	empty =3D alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
+>> >> +	if (!empty)
+>> >> +		return;
+>> >> +
+>> >> +	data =3D skb_put(empty, IGC_EMPTY_FRAME_SIZE);
+>> >> +	memset(data, 0, IGC_EMPTY_FRAME_SIZE);
+>> >> +
+>> >> +	igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
+>> >> +
+>> >> +	if (igc_init_tx_empty_descriptor(tx_ring, empty, empty_info) < 0)
+>> >> +		dev_kfree_skb_any(empty);
+>> >
+>> >I still don't like the fact igc_insert_empty_packet() doesn't communica=
+te
+>> >to caller whether it successfully produced descriptors or not.
+>> >
+>> >Look at this from igc_xmit_frame_ring() POV:
+>> >- at the beginning you peek at Tx ring whether there is required amount=
+ of
+>> >  descriptors free to be used
+>> >- but then here's your additional routine which might consume two more
+>> >  descs and you are not aware of the status
+>> >- then you continue to further produce descriptors assuming there is
+>> >  enough space in Tx ring
+>> >
+>> >Right now igc_init_tx_empty_descriptor() returns -EBUSY when ring is fu=
+ll.
+>> >How can that happen in the first place + what if it would *really* happ=
+en
+>> >though? You just continue with your Tx flow.
+>> >
+>> >What I'm trying to say here is, at least from correctness POV, you shou=
+ld
+>> >take into the account two potential descriptors for launchtime feature
+>> >when calling igc_maybe_stop_tx(). And igc_init_tx_empty_descriptor()
+>> >should not really care about space in ring, it should be a caller's job=
+ to
+>> >call it only when it will be sure it's safe to do so.
+>> >
+>>
+>> Agree with you.
+>>
+>> In db0b124f02ba ("igc: Enhance Qbv scheduling by using first flag bit"),
+>> the 2 descriptors needed by empty packet is already taken into
+>> consideration by changing igc_maybe_stop_tx(tx_ring, count + 3) to
+>> igc_maybe_stop_tx(tx_ring, count + 5), so not enough ring space issue wi=
+ll not
+>> happened. However, the comment session is not updated, maybe i can updat=
+e
+>> it in next version of this patch as below:
+>>
+>> @@ -1586,6 +1608,7 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_b=
+uff
+>*skb,
+>>          *      + 1 desc for skb_headlen/IGC_MAX_DATA_PER_TXD,
+>>          *      + 2 desc gap to keep tail from touching head,
+>>          *      + 1 desc for context descriptor,
+>> +        *      + 2 desc for inserting an empty packet for launch time,
+>>          * otherwise try next time
+>>          */
+>>         for (f =3D 0; f < skb_shinfo(skb)->nr_frags; f++)
+>
+>Ahh good then, I didn't pay enough attention to comment. So it meant that
+>first two entries from comment were covered by @count and 2 desc gap + 1
+>ctxt desc were behind '3', previously.
+>
 
+Yes, you are right.
 
-On 2/5/25 20:15, Xu Yilun wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> On Sun, Jan 26, 2025 at 11:46:54AM -0800, Yidong Zhang wrote:
 >>
+>> Since number of descriptor needed is guaranteed. I will take out the
+>> igc_desc_unused() checking in igc_init_tx_empty_descriptor().
+>
+>Yes
+>
+>> However, empty packet insertion might fail due to skb allocation failure
+>> and DMA mapping error. How about i make sure skb allocation and DMA
+>> mapping working, before proceed to fill in igc_tx_buffer, context desc,
+>> and data desc?
+>> IMHO, because these two errors are unlikely to happen, print a kernel
+>> warning msg should be enough.
 >>
->> On 1/26/25 02:32, Xu Yilun wrote:
->>> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
->>>
->>>
->>> On Tue, Dec 10, 2024 at 10:37:30AM -0800, Yidong Zhang wrote:
->>>> AMD Versal based PCIe card, including V70, is designed for AI inference
->>>> efficiency and is tuned for video analytics and natural language processing
->>>> applications.
->>>>
->>>> The driver architecture:
->>>>
->>>>     +---------+  Communication +---------+  Remote  +-----+------+
->>>>     |         |  Channel       |         |  Queue   |     |      |
->>>>     | User PF | <============> | Mgmt PF | <=======>| FW  | FPGA |
->>>>     +---------+                +---------+          +-----+------+
->>>>       PL Data                    base FW
->>>>                                  APU FW
->>>>                                  PL Data (copy)
->>>>    - PL (FPGA Program Logic)
->>>>    - FW (Firmware)
->>>>
->>>> There are 2 separate drivers from the original XRT[1] design.
->>>>    - UserPF driver
->>>>    - MgmtPF driver
->>>>
->>>> The new AMD versal-pci driver will replace the MgmtPF driver for Versal
->>>> PCIe card.
->>>>
->>>> The XRT[1] is already open-sourced. It includes solution of runtime for
->>>> many different type of PCIe Based cards. It also provides utilities for
->>>> managing and programming the devices.
->>>>
->>>> The AMD versal-pci stands for AMD Versal brand PCIe device management
->>>> driver. This driver provides the following functionalities:
->>>>
->>>>      - module and PCI device initialization
->>>>        this driver will attach to specific device id of V70 card;
->>>>        the driver will initialize itself based on bar resources for
->>>>        - communication channel:
->>>>          a hardware message service between mgmt PF and user PF
->>>>        - remote queue:
->>>>          a hardware queue based ring buffer service between mgmt PF and PCIe
->>>>          hardware firmware for programming FPGA Program Logic, loading
->>>>          firmware and checking card healthy status.
->>>>
->>>>      - programming FW
->>>>        - The base FW is downloaded onto the flash of the card.
->>>>        - The APU FW is downloaded once after a POR (power on reset).
->>>>        - Reloading the MgmtPF driver will not change any existing hardware.
->>>>
->>>>      - programming FPGA hardware binaries - PL Data
->>>>       - using fpga framework ops to support re-programing FPGA
->>>>       - the re-programming request will be initiated from the existing UserPF
->>>>         driver only, and the MgmtPF driver load the matched PL Data after
->>>>         receiving request from the communication channel. The matching PL
->>>
->>> I think this is not the way the FPGA generic framework should do. A FPGA
->>> region user (your userPF driver) should not also be the reprogram requester.
->>> The user driver cannot deal with the unexpected HW change if it happens.
->>> Maybe after reprogramming, the user driver cannot match the device
->>> anymore, and if user driver is still working on it, crash.
+>> @@ -1108,20 +1108,12 @@ static int igc_init_empty_frame(struct igc_ring =
+*ring,
+>>         return 0;
+>>  }
 >>
->> One thing to clarify. The current design is:
+>> -static int igc_init_tx_empty_descriptor(struct igc_ring *ring,
+>> +static void igc_init_tx_empty_descriptor(struct igc_ring *ring,
+>>                                         struct sk_buff *skb,
+>>                                         struct igc_tx_buffer *first)
+>>  {
+>>         union igc_adv_tx_desc *desc;
+>>         u32 cmd_type, olinfo_status;
+>> -       int err;
+>> -
+>> -       if (!igc_desc_unused(ring))
+>> -               return -EBUSY;
+>> -
+>> -       err =3D igc_init_empty_frame(ring, first, skb);
+>> -       if (err)
+>> -               return err;
 >>
->> The userPF driver is the only requester. The mgmtPF has no uAPI to reprogram
->> the FPGA.
+>>         cmd_type =3D IGC_ADVTXD_DTYP_DATA | IGC_ADVTXD_DCMD_DEXT |
+>>                    IGC_ADVTXD_DCMD_IFCS | IGC_TXD_DCMD |
+>> @@ -1140,8 +1132,6 @@ static int igc_init_tx_empty_descriptor(struct igc=
+_ring
+>*ring,
+>>         ring->next_to_use++;
+>>         if (ring->next_to_use =3D=3D ring->count)
+>>                 ring->next_to_use =3D 0;
+>> -
+>> -       return 0;
+>>  }
 >>
+>>  #define IGC_EMPTY_FRAME_SIZE 60
+>> @@ -1567,6 +1557,38 @@ static bool igc_request_tx_tstamp(struct igc_adap=
+ter
+>*adapter, struct sk_buff *s
+>>         return false;
+>>  }
 >>
->>>
->>> The expected behavior is, the FPGA region removes user devices (thus
->>> detaches user drivers), does reprogramming, re-enumerates/rescans and
->>> matches new devices with new drivers. And I think that's what Nava is
->>> working on.
->>>
->>
->> Nava's work is different than our current design, our current design is:
->>
->> the separate userPF driver will detach all services before requesting to the
->> mgmtPF to program the FPGA, and after the programming is done, the userPF
->> will re-enumerate/rescan the matching new devices.
-> 
-> That's not align with the Device-Driver Model, A device driver should not
-> re-enumerate/rescan a matching device.
+>> +static void igc_insert_empty_packet(struct igc_ring *tx_ring)
+>> +{
+>> +       struct igc_tx_buffer *empty_info;
+>> +       struct sk_buff *empty;
+>> +       void *data;
+>> +
+>> +       empty_info =3D &tx_ring->tx_buffer_info[tx_ring->next_to_use];
+>> +       empty =3D alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
+>> +       if (unlikely(!empty)) {
+>> +               netdev_warn(tx_ring->netdev,
+>> +                           "Fail to alloc skb for empty packet\n");
+>
+>That should be at least ratelimited I think, but what really is the
 
-Thanks! Yilun.
+No problem, I will add net_ratelimit() checking.
 
-I will need to discuss this in my team. Our current userPF driver 
-organize services (rom, sensor, msix, etc.) as platform driver and 
-re-enumerate (online/offline) when there is a hardware change.
+>problem to make these routines return status and check them on caller
+>side?
+>
 
+Ok, I will add return value and handle the case where the insertion of
+an empty frame fails and explain the reason behind.
 
-> 
->>
->> The mgmtPF is a util driver which is responsible for communicating with the
->> mgmtPF PCIe bar resources.
->>
->>
->>> BTW, AFAICS the expected flow is easier to implement for of-fpga-region,
->>> but harder for PCI devices. But I think that's the right direction and
->>> should try to work it out.
->>
->> Could I recap the suggested design if I understand that correctly...
->>
->> You are thinking that the mgmtPF (aka. versal-pci) driver should have a uAPI
-> 
-> This should be the unified fpga-region class uAPI.
-> 
->> to trigger the FPGA re-programing; and using Nava's callback ops to detach
->> the separate userPF driver; after re-programing is done, re-attch the userPF
-> 
-> No need to detach a specific driver, remove all devices in the
-> fpga-region. I imagine this could also be a generic flow for all PCI/e
-> based FPGA cards.
-
-I see your point. Is there an existing example in current fpga driver 
-for PCI/e based cards?
-
-We will need to talk to our management team and re-design our driver.
-I think we have 2 approaches:
-1) Align with linux fpga, having one driver for both userPF and mgmtPF; or
-2) find a different location (maybe driver/misc) for the version-pci 
-driver, because it is an utility driver, not need to be tied with fpga 
-framework.
-
-Please let me know you thoughts. Which way is acceptable by you.
-
-Thanks,
-David
-> 
-> Thanks,
-> Yilun
-> 
->> driver and allow the userPF driver re-enumerate all to match the new
->> hardware.
->>
->> I think my understanding is correct, it is doable.
->>
->> As long as we can keep our userPF driver as separate driver, the code change
->> won't be too big.
->>
->>>
->>> Thanks,
->>> Yilun
+Thanks & Regards
+Siang
