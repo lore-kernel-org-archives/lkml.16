@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02AE1DE3BD
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EBD1DE4D0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738867916; cv=none; b=rKvY45twInLJ/Vr6MNm0XomwGNWaa/ewLlRDT50wyJJgNoW7swE5nIJMPrecjhSvbtXBKaPa5PKTaIXAWGC44cMs3Z4b92iAEpbkWnukn0lvz3ZaAw+PCGCxq17j6Yv98OX0qTmAdF07PMZbHa1u7r+KApzZYr3EwluAfm4zRFI=
+	t=1738867917; cv=none; b=Nn3HZsRAQbhfcq67/cBOk03Gd7eHqLj7FtL4EPm6JSAWKPBNlZobbD8h9yVphwBRzBfi7vJPSF//qK/y1yelLmJFjLIFzMG0BSBFAN6U6vEJynGH/S0GuGGnskzOw3FwyYGC88tiZefG3kQvZJhuuSpf+nbm+m6YhWwyQ4z39rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738867916; c=relaxed/simple;
-	bh=/gVxm+CO3j4k2UrkTYq4821BXZp+btUj4aX7Ztv8FA4=;
+	s=arc-20240116; t=1738867917; c=relaxed/simple;
+	bh=ulolHMBM9mu2AADD0bujgm62JTsEMiIusrvyXP1wP4w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eyuuzkpfu6tnS6QNColswu4oDKloeUmauY1JBjxAs573vz9Sih0mlXPwLNk7FRAgKh+7yISTO+2/mjDhXwKJ03QEEu2xvmy+aifRjvW44Dq41nJrWi1RuM7AAV4JnoRFerYvy7Sjo0bP3pIQrsJ1RJPIvePWWqAwAAgZBgEo0HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QS4b/0r2; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Yynx71cPC0B47rRHDT/R8lK1j3jriv6SwfIklE/QUgv978Y5L+60ToYO6F3RHaQEpuH7KdffQ3l4UTIRI5eRHD+ZGA8cxYlYAxCS/DTKjED029TLFh5DZvAlBmySLJGoCTpjN/G93NGDsqLIPB1SG4qXWiIyySyEQ4JqsSij7eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PrSyFThs; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QS4b/0r2"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f9d1ca50c9so3896771a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:51:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PrSyFThs"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-216750b679eso20321185ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:51:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738867914; x=1739472714; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738867915; x=1739472715; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LNVYMIarRsr0t8rcUQ946hUXqx5cMeLkMOmL07Z29aU=;
-        b=QS4b/0r2A7wyd9WVSZ3ngjv0jYZUhbgBCm5QTJibvmhgQUmmh3qhfYPrek9kVRlM0Z
-         CiPVqZapVzFlvpnOjGWqjvwWnuJTcWT/mDJRMYkrKmKhiWiKzKUtYMdIzvjKMKazGtur
-         0OY4HtrKvNllCZKziNDjk5VqnxvedEtmgvzvGWrCfDv/biXcK6pDQDRkjdgUm62DxrfP
-         Sega3krKLjjhdqSG2sDTu9c32Vo2CvNQhfR8AHl4Srzx5855l0cdoWaHCoWeD7l8FYch
-         S/BntJIX/q6AP30SjPXMtUQpZSaRulFk0DrYUb1ZpzXPF8HvrPcwX2kh6Vn3FVARo4kt
-         9u9A==
+        bh=yt0ZJmO4eMnkUw1+mDBNXTwvRT3PLwjDe9mC0zKYM+w=;
+        b=PrSyFThsyPor2Ba6xE9XCi6OhR3pOjqPsjWQUWpxl6SlxUZdFTvD/l8EVJBzi164yX
+         hF7Uc8LYc8Fa307mGZYw9zOx1FjT96xBLHLa1FMkrtcPionnT4Aa7stC56sPmJjY92kt
+         z+E4ZcPAG028IK+R4r46OXzGjKUtBwcw/FavlaXFZ+RxLQlO5J1AMRAzg0qg85ipXu+T
+         VjI3ouiRY5UvPXbod/aY+AFKQcm4N484ZUmxrkzUctoxBguhxm3EdGivovLOJMQmz/cz
+         hLx0qg+U4cCR5zipzfslAvhugJEtQTZ7AKsXCFIKcOBGFRF7XueCJXSaBnCJJgs0pKbN
+         7Y/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738867914; x=1739472714;
+        d=1e100.net; s=20230601; t=1738867915; x=1739472715;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LNVYMIarRsr0t8rcUQ946hUXqx5cMeLkMOmL07Z29aU=;
-        b=CdqejdpKgMHuVNVJdVQ20OCoenmm/r0ZUBiDAH/7J8qDpKicGH1RUeqrTXiNNl5Jmw
-         NZ65eAEBi0cM2XbS31hsrw9EMKu+U4Se1yBNJscS0jsPxUZp3Wevg3QeDi1jwLXFvqJ+
-         +AoApvs9h0iRrRwmfSMcefZ8+lQEiwMj8MMizi0KI2umqcm8GiUg9Zow5NCVOK+W2iXq
-         Qyij7ujoa+XMGC6BIa7DqRBmAoHB5uG30/r7ErbbQFOqMld14FNTz5CwGeGUojCQ5nIk
-         OFU8i/qzos4pOL4R2nTtmNpLuh26AFBAYV9P3cdcd16Ddo8J1W/7GMk7mWOVt6A8/g7L
-         cttQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVL7lDs0wC4B/m09CPuda3yx9kBPy4LKMWTFFHrHzDpOvK+xgo3SKOoOw2CJQNNcrvssF97jo71Ho5HLbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJCdjtzXZI+dCiRw+A35sBIdVItmGoWNrsneOywXJlaHI0Zaqj
-	An27t3J4R240IucX/B0YJrqVqkWdct/xwP3luIlMgA/26ZE+R6TkiTTp3qCnUs2xvwLiNw==
-X-Google-Smtp-Source: AGHT+IFAHneXOb/4XfmdG9sW63Is4KRKWVRpRsXVSKXLK7gMZJrhr70i+wLMYHxanmPA9luzKj98Soc+
-X-Received: from pfbko5.prod.google.com ([2002:a05:6a00:4605:b0:730:5607:bee4])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:139c:b0:72a:a7a4:b4cd
- with SMTP id d2e1a72fcca58-7305d54712emr393600b3a.21.1738867913918; Thu, 06
- Feb 2025 10:51:53 -0800 (PST)
-Date: Thu,  6 Feb 2025 18:51:03 +0000
+        bh=yt0ZJmO4eMnkUw1+mDBNXTwvRT3PLwjDe9mC0zKYM+w=;
+        b=lZQ3cP4jhHQ47avmXU3uEtRhw/qIaP8Zlb67WuurSIfHzL82ZKmr485qff/kx3KUJA
+         tYJeV+havj7kvk4MUwNQVABzdVfT+NUXFbQclTpz4nFkDrrdnVgjZMsDA7HjtgVgE2YC
+         zkqltt0I2fZFfxUAqViYzkZ0mm2rQCzrGdSm69Ehd9adEC0DvxfSE9LgPOEMgUWjNSmz
+         MTNBycdWisQJM8VuWBPP4wqC86kDPA9LACSc1CcB1qHLsowG3QdmwZLcArWFijrGEzSb
+         Jjr/60n5zysSrVnQrfrfFyU66+vYLkG1BXh0RGGkFmnCs7/vcFwOzgrXY/1qv7peu3Wa
+         vmZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqEFLuBtd79Gp7I9fJCYHC6Vk7ccJQo1mQQfKvtODUVhEdW0RDijO8tf8Bp2ItNjOt4M0mbMuIPpfC8wg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFl1FFOO9OPeANMytVUQEej4XWwjs5f6KkiCykEO4XiEO7Rg8J
+	cUIaNFGyPC9sfy2HF824UxZl8qjE6RRSmQSzTiBC84FbSTPCWNyC6sL8gAuJQBrCFigrRw==
+X-Google-Smtp-Source: AGHT+IFZhH2u1+M+xFH2j0CpMHxi5A7C45tXR32gxTZbZ8iZD/tY8JR/54qpQpgRoE2PyZBUqmPt1YR+
+X-Received: from pgcv13.prod.google.com ([2002:a05:6a02:530d:b0:801:d724:5abd])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9f8e:b0:1e1:94a2:275c
+ with SMTP id adf61e73a8af0-1ee03a3f4camr941358637.18.1738867915504; Thu, 06
+ Feb 2025 10:51:55 -0800 (PST)
+Date: Thu,  6 Feb 2025 18:51:04 +0000
 In-Reply-To: <20250206185109.1210657-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250206185109.1210657-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250206185109.1210657-24-fvdl@google.com>
-Subject: [PATCH v3 23/28] mm/cma: simplify zone intersection check
+Message-ID: <20250206185109.1210657-25-fvdl@google.com>
+Subject: [PATCH v3 24/28] mm/cma: introduce a cma validate function
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -67,86 +67,163 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-cma_activate_area walks all pages in the area, checking
-their zone individually to see if the area resides in
-more than one zone.
+Define a function to check if a CMA area is valid, which means:
+do its ranges not cross any zone boundaries. Store the result
+in the newly created flags for each CMA area, so that multiple
+calls are dealt with.
 
-Make this a little more efficient by using the recently
-introduced pfn_range_intersects_zones() function. Store
-the NUMA node id (if any) in the cma structure to facilitate
-this.
+This allows for checking the validity of a CMA area early, which
+is needed later in order to be able to allocate hugetlb bootmem
+pages from it with pre-HVO.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- mm/cma.c | 13 ++++++-------
- mm/cma.h |  2 ++
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ include/linux/cma.h |  5 ++++
+ mm/cma.c            | 60 ++++++++++++++++++++++++++++++++++++---------
+ mm/cma.h            |  8 +++++-
+ 3 files changed, 60 insertions(+), 13 deletions(-)
 
+diff --git a/include/linux/cma.h b/include/linux/cma.h
+index 03d85c100dcc..62d9c1cf6326 100644
+--- a/include/linux/cma.h
++++ b/include/linux/cma.h
+@@ -60,6 +60,7 @@ extern void cma_reserve_pages_on_error(struct cma *cma);
+ #ifdef CONFIG_CMA
+ struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp);
+ bool cma_free_folio(struct cma *cma, const struct folio *folio);
++bool cma_validate_zones(struct cma *cma);
+ #else
+ static inline struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp)
+ {
+@@ -70,6 +71,10 @@ static inline bool cma_free_folio(struct cma *cma, const struct folio *folio)
+ {
+ 	return false;
+ }
++static inline bool cma_validate_zones(struct cma *cma)
++{
++	return false;
++}
+ #endif
+ 
+ #endif
 diff --git a/mm/cma.c b/mm/cma.c
-index c7116a5819c5..d0227af4bb71 100644
+index d0227af4bb71..4388d941d381 100644
 --- a/mm/cma.c
 +++ b/mm/cma.c
-@@ -103,7 +103,6 @@ static void __init cma_activate_area(struct cma *cma)
- {
- 	unsigned long pfn, base_pfn;
- 	int allocrange, r;
--	struct zone *zone;
- 	struct cma_memrange *cmr;
- 
- 	for (allocrange = 0; allocrange < cma->nranges; allocrange++) {
-@@ -124,12 +123,8 @@ static void __init cma_activate_area(struct cma *cma)
- 		 * CMA resv range to be in the same zone.
- 		 */
- 		WARN_ON_ONCE(!pfn_valid(base_pfn));
--		zone = page_zone(pfn_to_page(base_pfn));
--		for (pfn = base_pfn + 1; pfn < base_pfn + cmr->count; pfn++) {
--			WARN_ON_ONCE(!pfn_valid(pfn));
--			if (page_zone(pfn_to_page(pfn)) != zone)
--				goto cleanup;
--		}
-+		if (pfn_range_intersects_zones(cma->nid, base_pfn, cmr->count))
-+			goto cleanup;
- 
- 		for (pfn = base_pfn; pfn < base_pfn + cmr->count;
- 		     pfn += pageblock_nr_pages)
-@@ -261,6 +256,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
- 	cma->ranges[0].base_pfn = PFN_DOWN(base);
- 	cma->ranges[0].count = cma->count;
- 	cma->nranges = 1;
-+	cma->nid = NUMA_NO_NODE;
- 
- 	*res_cma = cma;
- 
-@@ -497,6 +493,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t total_size,
- 	}
- 
- 	cma->nranges = nr;
-+	cma->nid = nid;
- 	*res_cma = cma;
- 
- out:
-@@ -684,6 +681,8 @@ static int __init __cma_declare_contiguous_nid(phys_addr_t base,
- 	if (ret)
- 		memblock_phys_free(base, size);
- 
-+	(*res_cma)->nid = nid;
-+
- 	return ret;
+@@ -99,6 +99,49 @@ static void cma_clear_bitmap(struct cma *cma, const struct cma_memrange *cmr,
+ 	spin_unlock_irqrestore(&cma->lock, flags);
  }
  
++/*
++ * Check if a CMA area contains no ranges that intersect with
++ * multiple zones. Store the result in the flags in case
++ * this gets called more than once.
++ */
++bool cma_validate_zones(struct cma *cma)
++{
++	int r;
++	unsigned long base_pfn;
++	struct cma_memrange *cmr;
++	bool valid_bit_set;
++
++	/*
++	 * If already validated, return result of previous check.
++	 * Either the valid or invalid bit will be set if this
++	 * check has already been done. If neither is set, the
++	 * check has not been performed yet.
++	 */
++	valid_bit_set = test_bit(CMA_ZONES_VALID, &cma->flags);
++	if (valid_bit_set || test_bit(CMA_ZONES_INVALID, &cma->flags))
++		return valid_bit_set;
++
++	for (r = 0; r < cma->nranges; r++) {
++		cmr = &cma->ranges[r];
++		base_pfn = cmr->base_pfn;
++
++		/*
++		 * alloc_contig_range() requires the pfn range specified
++		 * to be in the same zone. Simplify by forcing the entire
++		 * CMA resv range to be in the same zone.
++		 */
++		WARN_ON_ONCE(!pfn_valid(base_pfn));
++		if (pfn_range_intersects_zones(cma->nid, base_pfn, cmr->count)) {
++			set_bit(CMA_ZONES_INVALID, &cma->flags);
++			return false;
++		}
++	}
++
++	set_bit(CMA_ZONES_VALID, &cma->flags);
++
++	return true;
++}
++
+ static void __init cma_activate_area(struct cma *cma)
+ {
+ 	unsigned long pfn, base_pfn;
+@@ -113,19 +156,12 @@ static void __init cma_activate_area(struct cma *cma)
+ 			goto cleanup;
+ 	}
+ 
++	if (!cma_validate_zones(cma))
++		goto cleanup;
++
+ 	for (r = 0; r < cma->nranges; r++) {
+ 		cmr = &cma->ranges[r];
+ 		base_pfn = cmr->base_pfn;
+-
+-		/*
+-		 * alloc_contig_range() requires the pfn range specified
+-		 * to be in the same zone. Simplify by forcing the entire
+-		 * CMA resv range to be in the same zone.
+-		 */
+-		WARN_ON_ONCE(!pfn_valid(base_pfn));
+-		if (pfn_range_intersects_zones(cma->nid, base_pfn, cmr->count))
+-			goto cleanup;
+-
+ 		for (pfn = base_pfn; pfn < base_pfn + cmr->count;
+ 		     pfn += pageblock_nr_pages)
+ 			init_cma_reserved_pageblock(pfn_to_page(pfn));
+@@ -145,7 +181,7 @@ static void __init cma_activate_area(struct cma *cma)
+ 		bitmap_free(cma->ranges[r].bitmap);
+ 
+ 	/* Expose all pages to the buddy, they are useless for CMA. */
+-	if (!cma->reserve_pages_on_error) {
++	if (!test_bit(CMA_RESERVE_PAGES_ON_ERROR, &cma->flags)) {
+ 		for (r = 0; r < allocrange; r++) {
+ 			cmr = &cma->ranges[r];
+ 			for (pfn = cmr->base_pfn;
+@@ -172,7 +208,7 @@ core_initcall(cma_init_reserved_areas);
+ 
+ void __init cma_reserve_pages_on_error(struct cma *cma)
+ {
+-	cma->reserve_pages_on_error = true;
++	set_bit(CMA_RESERVE_PAGES_ON_ERROR, &cma->flags);
+ }
+ 
+ static int __init cma_new_area(const char *name, phys_addr_t size,
 diff --git a/mm/cma.h b/mm/cma.h
-index 5f39dd1aac91..ff79dba5508c 100644
+index ff79dba5508c..bddc84b3cd96 100644
 --- a/mm/cma.h
 +++ b/mm/cma.h
-@@ -50,6 +50,8 @@ struct cma {
+@@ -49,11 +49,17 @@ struct cma {
+ 	/* kobject requires dynamic object */
  	struct cma_kobject *cma_kobj;
  #endif
- 	bool reserve_pages_on_error;
-+	/* NUMA node (NUMA_NO_NODE if unspecified) */
-+	int nid;
+-	bool reserve_pages_on_error;
++	unsigned long flags;
+ 	/* NUMA node (NUMA_NO_NODE if unspecified) */
+ 	int nid;
  };
  
++enum cma_flags {
++	CMA_RESERVE_PAGES_ON_ERROR,
++	CMA_ZONES_VALID,
++	CMA_ZONES_INVALID,
++};
++
  extern struct cma cma_areas[MAX_CMA_AREAS];
+ extern unsigned int cma_area_count;
+ 
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
