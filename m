@@ -1,116 +1,141 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E65322D4EB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA4E228CB7;
+	Thu,  6 Feb 2025 15:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856613; cv=none; b=JegDMTvQFTTM+8gHP7AY3ebVBqEZ+DWXQ3tszKKU6W173KluE/QFKX7ObGCzy02Q3+ycKaKqh6lfcFVpy49V/Q20dbowMcI00/JoHF+Z7wcDN+T5ABniHeD6YNCarDNKiRxFQkPqbNbW3EyBypSPPEBvYsTclilc8gdLbUaB0vk=
+	t=1738856657; cv=none; b=qwP+uyvHaqg9Y80ywaIEPoXmPI7ppmOEeZ9fx5Ni13ML9gO8E9E0y0ehI81v3Ipb0NmxzaS/kmZCxLTDM2Auq0jxJ0mtOhrBEtJ4Qx8An+0WwR64ID8ZUKovIq5nQyLKy4V8gs/EnmiTNGXqpWwGdh0WvK1AyXj40eNvcHLs5K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856613; c=relaxed/simple;
-	bh=7hdQjWzEotDVIDZcI30XgkThfzAt1j3JK+eP0FGi1Vk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AwAPOcPNf0nDK99PCLwqafHQIWb1YJzfMpjszq2ij0YLOzEIscCMRzb+ier78SFpILDlO9c1Nyft1sKlKms9TAo6JA2xrg/EVPpgIaC3BF/68LJ9wyns5XJ6MXrOrMdpsJXtqM/pb4MTpF0Afvl6gmbH1b8ijkX4Yh120d0LFO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ay5wzBy5; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ay5wzBy5"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso7272235e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:43:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738856609; x=1739461409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pBdMhdMtIUzIw4rMictCNzI6nR2pfFg19HEOqhQG/Qg=;
-        b=Ay5wzBy5EfYhylEQXRQr5Q6bg1PQ9tNbVKwhMwH+Wnfilm6CQB47wo17VibWasQS4s
-         mmxl1bxwymRMmqcQuj26Tj0FyCbSfc5F7q6RFzyFtYQYoCZ/jjDk94VhCex59VrCv09u
-         vs9N5alxm0s+1d+Mm2NPbsZBvcBs4SVfTgxm12bAgXGhK8H9UAouNA2guvFhiIQt8J+E
-         smEJAPKRS6ZsVBOoznsn7cX29j0dAysfU/BLxTXsWu9IsqPL0Lp+mmSqff7bdVk1lN/8
-         tAcTSTqhGlIyZbkNbl809QKhJ5fO+RhK/WHTpNWb4Cm6dfzuOm4UZkV6HkWCoT3RJZ+4
-         5iBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738856609; x=1739461409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pBdMhdMtIUzIw4rMictCNzI6nR2pfFg19HEOqhQG/Qg=;
-        b=CrVVOGv9nvH7UMZHeIwPFIAfO9IDycCxvVUxY6nGnrEuxNvneH/yQtmfOszEnmHA+y
-         wpGeERyS1ZheoRL4wgOfHpSLRaFH3EetlRaNfUb7p0KSlVmXiLzVutg1j3CnlaivXOsW
-         pZl98XoXjZooaWfmT80IAk/wil849h3iqtYS4tUmzXRTztxU79ThOKxxPSeXvRNG7Etx
-         gFWtuei6riJyDObuRwcwK4HNURlqkQIg2M1FeJE56r+Wj/jSoPfAflHKHGbDk831OJe6
-         S+ECiUtSOVACn70x7oUnznmLQXKKgEOon1qXJmegRzjYX1iisLmJKO78eQQ3XjoAXnsb
-         V99Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXhNFFxLfO2aT45c59A3F6Ci4iQES2ZNcEPsnMAtdvjXcO2JC4ze8BTnnujz3/3r0BuBO0UgP37HmUk05A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNJka63nDVxfzhYfm18xQ0KdGuEh+z0DUm2DJMoD35XrYHRANe
-	QBivJ5rl5FvaxEisv8EMUdhST7eHdtagx4ORy927TP6h9ip226KHTmUdXumvsN8qprLLWkG60jD
-	vPMPvyh5+utetIDvxqWlbxViyHC39E4nkzVxY
-X-Gm-Gg: ASbGnctQ7gJk5tJwdJXF5Cdq5AXEGsmJGARFnAIKIukP3UEeZeY60vQUT3L6GiLQPmH
-	ncskI0Jie2GAPny6/Ah8wmgbaSumGcx7OSzLjGWe2M+WVwQJPkmEg5dTo2vrjqnjKiYZrJlUd0X
-	ymNV9eBMlzkeGrIUjC8/rS82vUN74=
-X-Google-Smtp-Source: AGHT+IGVKvg7QdK0ZYKMFxbiI4Gc5AjnmbWA3Q/7JAZIvDr0g+zAH54rcHrrLRM1tKGEIK0vCNsE9h7xYg8y3lczKdM=
-X-Received: by 2002:a05:600c:3c9b:b0:436:a3a3:a70c with SMTP id
- 5b1f17b1804b1-4390d56f21amr55885475e9.28.1738856609308; Thu, 06 Feb 2025
- 07:43:29 -0800 (PST)
+	s=arc-20240116; t=1738856657; c=relaxed/simple;
+	bh=e9J0ABv+nplFGc8ZnorETN2itYO3cmolAlVJ2yap9/A=;
+	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
+	 In-Reply-To:References; b=gqWO1NO+1jomo44Rj3S7ueQCFpqSae8y8+EoaIQUQQLfgWbwYpo4Ll0e2hXaxcO3LV4bZ5bWaSOe26yUKP6CZr0mWdVmr+3xdWH0amwWWfQmb0pYOjYHvrEjfoTflbVU7HpukERz6L1TIhHxbJzbXTwkDaCiE6ZCmbUKjjyWAGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; arc=none smtp.client-ip=172.104.24.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
+Received: from quad.stoffel.org (syn-097-095-183-072.res.spectrum.com [97.95.183.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.stoffel.org (Postfix) with ESMTPSA id 9782421998;
+	Thu,  6 Feb 2025 10:36:07 -0500 (EST)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+	id E1004A0DB1; Thu,  6 Feb 2025 10:36:06 -0500 (EST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130220529.665896-3-daniel.almeida@collabora.com> <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
-In-Reply-To: <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 6 Feb 2025 16:43:17 +0100
-X-Gm-Features: AWEUYZl9AZYPANFjvhtBuOiK8XImDgpndW-XF_eT0_KkcgiqXMAivkukX7j73tQ
-Message-ID: <CAH5fLgi+Qf=o91XEPamjycdrGeso1yDEDOGNQRmmy-miakDaOg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
-To: Guangbo Cui <2407018371@qq.com>
-Cc: daniel.almeida@collabora.com, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
-	benno.lossin@proton.me, bjorn3_gh@protonmail.mco, boqun.feng@gmail.com, 
-	boris.brezillon@collabora.com, dakr@kernel.org, gary@garyguo.net, 
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, ojeda@kernel.org, 
-	rafael@kernel.org, robh@kernel.org, rust-for-linux@vger.kernel.org, 
-	tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <26532.55014.864941.551897@quad.stoffel.home>
+Date: Thu, 6 Feb 2025 10:36:06 -0500
+From: "John Stoffel" <john@stoffel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+    Christian Brauner <brauner@kernel.org>,
+    Jan Kara <jack@suse.cz>,
+    Linus Torvalds <torvalds@linux-foundation.org>,
+    Jeff Layton <jlayton@kernel.org>,
+    Dave Chinner <david@fromorbit.com>,
+    linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+X-Clacks-Overhead: GNU Terry Pratchett
+Subject: Re: [PATCH 00/19 v7?] RFC: Allow concurrent and async changes in a directory
+In-Reply-To: <20250206054504.2950516-1-neilb@suse.de>
+References: <20250206054504.2950516-1-neilb@suse.de>
+X-Mailer: VM 8.3.x under 28.2 (x86_64-pc-linux-gnu)
 
-On Wed, Feb 5, 2025 at 3:56=E2=80=AFPM Guangbo Cui <2407018371@qq.com> wrot=
-e:
->
-> > +/// A generic memory-mapped IO region.
-> > +///
-> > +/// Accesses to the underlying region is checked either at compile tim=
-e, if the
-> > +/// region's size is known at that point, or at runtime otherwise.
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// `IoMem` always holds an `IoRaw` inststance that holds a valid poin=
-ter to the
-> > +/// start of the I/O memory mapped region.
-> > +pub struct IoMem<const SIZE: usize =3D 0> {
-> > +    io: IoRaw<SIZE>,
-> > +}
->
-> Compile-time checks are only possible when CONFIG_RUST_BUILD_ASSERT_ALLOW=
-=3Dy.
-> Otherwise, using compile-time check APIs of Io will cause a modpost error
-> because the rust_build_error symbol is not exported. Details at the issue=
-[1].
->
-> Maybe Io should expose compile-time check APIs only when CONFIG_RUST_BUIL=
-D_ASSERT_ALLOW=3Dy?
-> The expectation is that a build error should occur when calling `Io::read=
-X` and
-> `Io::writeX` due to a boundary check failure, rather than because the
-> `rust_build_error` symbol is not exported.
->
-> Link: https://github.com/Rust-for-Linux/linux/issues/1141 [1]
+>>>>> "NeilBrown" == NeilBrown  <neilb@suse.de> writes:
 
-This compilation failure is correct. You're trying to use writeb even
-though the size is not known at compile time. You should use
-try_writeb instead.
+> This is my latest attempt at removing the requirement for an exclusive
+> lock on a directory which performing updates in this.  This version,
+> inspired by Dave Chinner, goes a step further and allow async updates.
 
-Alice
+This initial sentence reads poorly to me.  I think you maybe are
+trying to say:
+
+  This is my latest attempt to removing the requirement for writers to
+  have an exclusive lock on a directory when performing updates on
+  entries in that directory.  This allows for parallel updates by
+  multiple processes (connections? hosts? clients?) to improve scaling
+  of large filesystems. 
+
+I get what you're trying to do here, and I applaud it!  I just
+struggled over the intro here.  
+
+
+> The inode operation still requires the inode lock, at least a shared
+> lock, but may return -EINPROGRES and then continue asynchronously
+> without needing any ongoing lock on the directory.
+
+> An exclusive lock on the dentry is held across the entire operation.
+
+> This change requires various extra checks.  rmdir must ensure there is
+> no async creation still happening.  rename between directories must
+> ensure non of the relevant ancestors are undergoing async rename.  There
+> may be or checks that I need to consider - mounting?
+
+> One other important change since my previous posting is that I've
+> dropped the idea of taking a separate exclusive lock on the directory
+> when the fs doesn't support shared locking.  This cannot work as it
+> doeesn't prevent lookups and filesystems don't expect a lookup while
+> they are changing a directory.  So instead we need to choose between
+> exclusive or shared for the inode on a case-by-case basis.
+
+> To make this choice we divide all ops into four groups: create, remove,
+> rename, open/create.  If an inode has no operations in the group that
+> require an exclusive lock, then a flag is set on the inode so that
+> various code knows that a shared lock is sufficient.  If the flag is not
+> set, an exclusive lock is obtained.
+
+> I've also added rename handling and converted NFS to use all _async ops.
+
+> The motivation for this comes from the general increase in scale of
+> systems.  We can support very large directories and many-core systems
+> and applications that choose to use large directories can hit
+> unnecessary contention.
+
+> NFS can easily hit this when used over a high-latency link.
+> Lustre already has code to allow concurrent directory updates in the
+> back-end filesystem (ldiskfs - a slightly modified ext4).
+> Lustre developers believe this would also benefit the client-side
+> filesystem with large core counts.
+
+> The idea behind the async support is to eventually connect this to
+> io_uring so that one process can launch several concurrent directory
+> operations.  I have not looked deeply into io_uring and cannot be
+> certain that the interface I've provided will be able to be used.  I
+> would welcome any advice on that matter, though I hope to find time to
+> explore myself.  For now if any _async op returns -EINPROGRESS we simply
+> wait for the callback to indicate completion.
+
+> Test status:  only light testing.  It doesn't easily blow up, but lockdep
+> complains that repeated calls to d_update_wait() are bad, even though
+> it has balanced acquire and release calls. Weird?
+
+> Thanks,
+> NeilBrown
+
+>  [PATCH 01/19] VFS: introduce vfs_mkdir_return()
+>  [PATCH 02/19] VFS: use global wait-queue table for d_alloc_parallel()
+>  [PATCH 03/19] VFS: use d_alloc_parallel() in lookup_one_qstr_excl()
+>  [PATCH 04/19] VFS: change kern_path_locked() and
+>  [PATCH 05/19] VFS: add common error checks to lookup_one_qstr()
+>  [PATCH 06/19] VFS: repack DENTRY_ flags.
+>  [PATCH 07/19] VFS: repack LOOKUP_ bit flags.
+>  [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
+>  [PATCH 09/19] VFS: add _async versions of the various directory
+>  [PATCH 10/19] VFS: introduce inode flags to report locking needs for
+>  [PATCH 11/19] VFS: Add ability to exclusively lock a dentry and use
+>  [PATCH 12/19] VFS: enhance d_splice_alias to accommodate shared-lock
+>  [PATCH 13/19] VFS: lock dentry for ->revalidate to avoid races with
+>  [PATCH 14/19] VFS: Ensure no async updates happening in directory
+>  [PATCH 15/19] VFS: Change lookup_and_lock() to use shared lock when
+>  [PATCH 16/19] VFS: add lookup_and_lock_rename()
+>  [PATCH 17/19] nfsd: use lookup_and_lock_one() and
+>  [PATCH 18/19] nfs: change mkdir inode_operation to mkdir_async
+>  [PATCH 19/19] nfs: switch to _async for all directory ops.
+
