@@ -1,208 +1,201 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2059.outbound.protection.outlook.com [40.107.105.59])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443D621C9E1;
-	Thu,  6 Feb 2025 16:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738858740; cv=fail; b=r5hwZcwljx+s2J+YPBsPGsbAhfvildSsE/Zq2egOPosrMIBzbFsak4Ntu/Vta/IXYT0x7gAKuBhKMhuAZWsoRKx6KLVbDu6qLh6fYtxYqxaw1raZd2IWsvCPmq6UGfEAJ4+w2902+FbUPm5Y+kE9tSUCy1FgvsZDxGrl1yCKyE4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738858740; c=relaxed/simple;
-	bh=FqIDHvwYT80UuSkBAlx/DOl6u+MuuM6K3nTKGMKCCr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ErbAJyUHR+tNKjGbBRSi9+EFLtP39LSj+1MXzLMt6ztl7rNrkmDjjg1Cm6YTfu+FjgqeFbaNqMkcBq54AD0Fl1QX+zo6iTnT5A0NYs3vu3iCV2qI9InW7kTedlEowZj9O8QvRqb6lQJXitCWPuCsUOk3ALY2Tu59C1sltTfb5og=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ddLxF+TD; arc=fail smtp.client-ip=40.107.105.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018A3148FED
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738858789; cv=none; b=Mi4E8j2RyTF8lEqLAT4Cq7uOaCmqh7CTx3dkrlcj0D5wyDZ35Yyp9FmeK/LJn/7KIIxVT26RdVo5NN+/6AdXipUnu2Yj7b/Cnf4PC9T/y1zw6lPohuopQtkJiR+D/OBNDr0f6TFUdqb5+T8B1P5l+jElZIy5+ePQqVGwU2IdW3E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738858789; c=relaxed/simple;
+	bh=TCMa5vOc1lsFBKQAcraKmNUqTIVgOctKNk553gbeqU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PB3lOqcA8STlpbRcaltSoDQ+BAamXi0Q+kv4D92WosLru2KZavWis0sY4U5JqJUdI+yio1tzqT7J8F2+IDRrhDq0CLTTAW10UZiVA4inlbdVKZbsWo7CEiwaw2i06yE55lq3vXTj56x4avVS05rY/EgeSXlLiCNB7LFQRf1EDbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UquEWaf5; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ddLxF+TD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IV1vl+YL4X55RJ1ePMiFuULomn9bQYAzoHEXgkATJW6w8Bla0tnSPskXZrSn1tgI37XBgAZIb8itV/eKSgJiziS9hzA6W9r8qkqksWGIJ5Sq3FwjqWMuxpCVqJFInckOea7bzDVbkOX/1V0rFoUR7inrZOqBJBS9TmNadcN9KqMPCz7eC4w5V3UOXd+xZcJCPBX11gqkolCkoWV+b9u3AHiYRjFO8LvcNqyJ/3PFz/fOF3PcVmsjSsFJUcTs1x/HnhuB6e5n3WuME1bJgdWmJkDFkOMVPewxYV2els5ydR1PMvA+gZMrZh/tbpYvEwLQZalkk9kl7+wkdFwxQjcwKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0JYD+Ax2Ug27s8NU9GMnLLVoRUzz9AlvaV5Xk6UZn+c=;
- b=OI0dyWcitHWv/5nG/W/cire65b2ISVOUQtAXdqFvoW5kFb0ivzcMm/okZ30Ec8GuoKVCfY0jL65fgSelNrtvjDYLdYQoLE9cRC3k7BmWRyDlV1HZCFBLFCgKMuOtmN4mx+Kn2XUNcZSvspeofC0z9ODRj4JJ1LzI3raoZrvRnSTaEe44XGcGcRlbrsulYLO55M9V460TRafDzfX7JJSnXEygoj8cy2Jad0AqR9sX9vKH5FG322GI6aPC6HfBZfyZon4yKGZWnkSCgYA0yvF1itASEWQF5AGbOo+zbH76obzaHqB3OF8Lndix8VaTk9+sdpd+zFHO8ciPRL4NASZuFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0JYD+Ax2Ug27s8NU9GMnLLVoRUzz9AlvaV5Xk6UZn+c=;
- b=ddLxF+TDrOUCQfhkfvQpvnOJMVum3F9n4Yyx5CND0RNm0ktoD2lLfQbSdTVHYLisSZDnZX6/QZI4eoVsWJKrwCOQtsXmTocaTUxu5PRALKXzVAGcETdHZyCkuvHTzAHQdOwBVJQLRg3pa18jYCnpGDqfclMT2qCJJm8M6Wl8n28abKONP4+t8ZQzn29UO9FAAG7iSqT4gkcEuNMkQDgKBHxm8rSD6rJb9pTKLU3A1npYHjS3HvT42TlIL2rtsdTa22touEkz2hVqv9Rh6Bp8AzEgwgGhABO8HFlZMvdS8F8HcqBMGXTFHvtB4CRwJWlMUtfejzTP+06Icr6Dv1Lykw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by DB9PR04MB9752.eurprd04.prod.outlook.com (2603:10a6:10:4c2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Thu, 6 Feb
- 2025 16:18:49 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%7]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 16:18:49 +0000
-Date: Thu, 6 Feb 2025 11:18:41 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Iuliana Prodan <iuliana.prodan@nxp.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 5/8] ASoC: SOF: imx8: drop unneeded/unused
- macros/header includes
-Message-ID: <Z6Tg4eUowjXD2l+4@lizhi-Precision-Tower-5810>
-References: <20250205203022.2754-1-laurentiumihalcea111@gmail.com>
- <20250205203022.2754-6-laurentiumihalcea111@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205203022.2754-6-laurentiumihalcea111@gmail.com>
-X-ClientProxiedBy: SJ0PR03CA0283.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::18) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UquEWaf5"
+Date: Thu, 6 Feb 2025 16:19:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738858780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dw9izvEu2ay4lxLU8U0gIItbeRtUjvZQJv3a90hkz2I=;
+	b=UquEWaf59i0M+nwUCj76hQpLZJanFuEgpUVS3M7VeK3JOuVoeF6Tzg23QGtJxblpp4jFUI
+	nm7BAfUSRckrG4jRlkbEJHhFZCGP7PgGsjOQUZ/v7RosYyOR5h/rd4i/TAO9+KH/DBv0Eq
+	4NA2ihZfooDhFPcqL9zCGaZntpkGS5Q=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
+Message-ID: <Z6ThGFt6wyNpx9xi@google.com>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-15-senozhatsky@chromium.org>
+ <Z5zxlRkdseEJntFk@google.com>
+ <ecuos7w7m35fvzz7xvmvdvfxn7adzdahuulwn2j42mvjoqmlwi@ucel4kqetxg6>
+ <Z6Ew9AWNHacRIfhA@google.com>
+ <lxottj72e7jcqw634qwudpsyqckfrvpmlhra43en4zlrlz4cip@erufv6w4n5j6>
+ <Z6JMIKlO9U5P-5gE@google.com>
+ <6vtpamir4bvn3snlj36tfmnmpcbd6ks6m3sdn7ewmoles7jhau@nbezqbnoukzv>
+ <Z6O2oPP7lyRGXer_@google.com>
+ <6uhsj4bckhursiblkxe54azfgyqal6tq2de3lpkxw6omkised6@uylodcjruuei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DB9PR04MB9752:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cfe2513-e4bf-46cb-d1ce-08dd46c9f02b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?V3vTJkTT3y6RJqIqQfuLlgfVv5obO59vlSpEQLMPMobxbX98aLKjEx5arN0B?=
- =?us-ascii?Q?dcmj5sz5XPVNvDrDyJjGxztFU7hOr5PlfGc+kEZD/25RZ0NhTfVcqLSul/QZ?=
- =?us-ascii?Q?49W6WaD2rOzIIfBg1mX1kbqGOI/5DhwsW+dnLu3T/wuCJobzdivFQScpCFrA?=
- =?us-ascii?Q?iK4XAwgL+Yu16LTEY2HeNK1y4DKwUYtq7UwO/LcJRaLgGPcsx1VrsI/FaORQ?=
- =?us-ascii?Q?xccAJYiqqHGJHLWOvhH20/r/C5BS5ec7Zk8/zG9D50v2PYPxDeTffSpxXxUV?=
- =?us-ascii?Q?QL6CHFICxG65gyHVEPW8PTQcxP/20+gr4YEwiNtH1ONsoloG+qMveqrJ/+D7?=
- =?us-ascii?Q?8KOGMKi2pZRv8GsYf515TNeyDqm06qvqSKXxbN5a+vRgHqDjrecmqWqboQgV?=
- =?us-ascii?Q?KUJGIlwwLjgILzBZQpzgSRnypGVdFBLxcSazTSSmwggxSGOtd92/Dnj8pTYj?=
- =?us-ascii?Q?JxI8QrDs8DAYD1dw0kIsVBm6aY9TIDOiTz5Hnubi7phKV2jRmFU2ctOuJz9e?=
- =?us-ascii?Q?1dsWW9ucDWSrmf6AiassgchvMyaycsOY3BBeql9T2X0KcbaVoJwhErk/5PRF?=
- =?us-ascii?Q?5HeNRMWw5ag//FjuzRbmTJKx4JNWzt3h7/W6pG5bIZP4qN4asLPPt103Kyri?=
- =?us-ascii?Q?LGJQ3dP6YUrBNQdMX1SX4TCxfZ6CzJqJ2VyoAS8dgzH1aZFgOGehaOlzmQgb?=
- =?us-ascii?Q?ay9qjyV1prGwv6Ts1ZwxpLcbLsHIwW9761MZIeK9YZ9Xc8S88wM2LeM9nkyA?=
- =?us-ascii?Q?wZ+jXP+B8Z2cZRrJHlP01s/RpFoe51Bhaq3CEtJ7BFvuJQem7lykLWaPvRcd?=
- =?us-ascii?Q?fD/vsDmadoVz+Sq5MlMAWhRl9uDSAZl1kLtBS5mh+gLjtGBw8qgYFYEmQbAj?=
- =?us-ascii?Q?jXvNAq0iBr8wOTMSs60YguVD6PJAge7KbdlApMLT/JJ6TN/B+UdgS6WTOHfB?=
- =?us-ascii?Q?7f/R34nSnGC3uQjQlx4s/jydr7XjQZeBMyjjSEGINrkW4lWfWMkxEOTmr8HC?=
- =?us-ascii?Q?OXdPs7sKjwEExpVjgAz7ekcUifA44u4XRHs/9QQ7pB94ac0FgqANoWOnbECf?=
- =?us-ascii?Q?mztMWK7FiAuK6IELoGDWV1vbmRYKd4u7RLeQtkXS7czJeTeLl/EhjVX+fes9?=
- =?us-ascii?Q?TTPDJW6VkBEVVLGrnnicY7HX37CinzKNNQ4DI8nvQ3b6CpXkXFd/GFMOZ86G?=
- =?us-ascii?Q?WfQ/pVrxol4rPXJfP+KdFJdgUWU4T8NnOFqIcTgzhWgqvnFG3N3BX9hV4xjs?=
- =?us-ascii?Q?3iPa7l54LwuEYmeySkOITk016q5dfN/5st9VTEal+8l7GoDmhpfszKCaxVoI?=
- =?us-ascii?Q?QfWXDxn0FrPNYLMdGvOEigU7X3LBbpkaSTMZqkpLaHqJKs6jN/LKR4x22ECv?=
- =?us-ascii?Q?VChxiYWRDYRmOCXQO4LzwqZUhiYlsaLl3j5m+h9M1/K4q9AKZ8V/oc930Alv?=
- =?us-ascii?Q?G0/C4V7Zl5K/dUlAs+zYXhWe7BCqFTT/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Jo52aNVScjpbQx1CfatF6jTeySQnEudy2paeu0R8L3S7bkDgInQYM82W4tQv?=
- =?us-ascii?Q?w10xxwkqJ/0JgDgNHCg6BRErZG7reh33ebkTnxHrBSSxwIw0B5Ul0Pww+/2G?=
- =?us-ascii?Q?XBDpiAaXGhRJCZ9R4br/qPwhePIn9rRMnJ65CrlEdirGYWFLPERArCDhHGSv?=
- =?us-ascii?Q?BnjsDqWWPQqQVFQCW0+0ae8BtciGOSclNJmvTq59IXMzuR+6VRiEEwadyons?=
- =?us-ascii?Q?P9yRkTr6LP78Js6lHOJdvY3ePdHxC++GK7KG9+xD17pTj9xRijUWpkryIi36?=
- =?us-ascii?Q?0DFSI3L9BkoVkv0mCbm0YVA8zNpiYzDWDoD2lD+p0UsokJ3QI1lNO1f0bF4n?=
- =?us-ascii?Q?SsjZTgnIvF6yuEx10QOvvjqkt/dcVJONKCbDgNXNrTICeyY98V85WBgFtXIJ?=
- =?us-ascii?Q?A+kpLm1gPejTiTfi63lSKMwVCqGfzwfpyR/E62DoAxx53hf2WlwgulNRO5cJ?=
- =?us-ascii?Q?KwHVtEXHgzrTVlc5HOoWQLT3GkIRn3YhI5GkGxiHBc36EAgNEARecZAQAHDR?=
- =?us-ascii?Q?fzakxZJzgeEihvmbhnJ49p4Oh5/hyILU2LKMoGUTzU8VygfGyCXS8nttG4to?=
- =?us-ascii?Q?ccaBiGKaZzkIlVe4zBIuvw7b+yYobdmsf16PbrPiotEtTkZ8J8otTnUJj6oK?=
- =?us-ascii?Q?/44pOwgpAHGBmMDKRX1J08dijuEeW1Y19w8nw18+4N7qY/uAuJ9fIMfAkS44?=
- =?us-ascii?Q?SsCM5tIChvvlZsGKoXL2AOmNOiGoHQdXLxG+uBP+ojmd1E1Lw/t6XQI6k7tL?=
- =?us-ascii?Q?8UGO+Y47t7FVNnCiy7TqaXeobs96AN2IvMbz6wsqM21BRo58f4uJZkHkbPEE?=
- =?us-ascii?Q?BLn8S4Doiv61r4+levrbptCFLVwrOGAf+WflWK5ba40oQFA2pIQowHGo3j71?=
- =?us-ascii?Q?jKzlpT31zs1iBoLk40/RLY1T6a0+IJNaak/NNocjKUBihf2pAijpJ8BN2RDC?=
- =?us-ascii?Q?qm6XHbqeFcqPIN1Km2V0oE/K/IzXrVho+OB7ACI8a2116iaBDz9QtV+ziNMj?=
- =?us-ascii?Q?gP4xTzQq1DeJJbk1/M06cYaSxjgl51iZtQuEoaWZr10KJSiiJYzimWnOLFu2?=
- =?us-ascii?Q?oyHOZx7xdiwPQwt/k1EIuBA/fM08lUHq7W4hNfN2UrcZykOfNUZHe0VAfJsV?=
- =?us-ascii?Q?fTs0JV1FeYKNJhjqeRLGkN2RAm8Xdv881mSjTqIM06HLw+l9r8soLZ8UHpho?=
- =?us-ascii?Q?+cQ4of46N6OWGw0jflBIv+iTcyrBCRLC6KfuuFlAopmc/rkqYB9vCLyKDDwc?=
- =?us-ascii?Q?kXrcDq9WRcVuRtZAuy707H4+LVecRCyJJm1XZQqjj+pD8xFdO/iLpxZ6fe/1?=
- =?us-ascii?Q?2LJJ2pY4hP/w7bO8F0258EhnmzMlGlt78O9XnVv/e8hB9YTlt7i3J/cLkz4f?=
- =?us-ascii?Q?2iafPTbBEDl0SpNKdoFa53eam0tqPh39F8KAyn+3z5IwbNH1Sb92L2sI8twL?=
- =?us-ascii?Q?vngh75CQXfTPvOZE+rVFG0eXfWHc7l0PXH/BCiuyhTIndJtIAFndK9u/NqpJ?=
- =?us-ascii?Q?K2iPQWYkLb6ZmWP6duuu9xnvfOpAgCWemjlpw1xpDb/UWs+PYRnvgcQkUTeF?=
- =?us-ascii?Q?K4uNYa1DT1MtzSEtlvLKkNl4vsPbLDUSJeh86OOG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cfe2513-e4bf-46cb-d1ce-08dd46c9f02b
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:18:49.1982
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sdjMZ+VG6gw3T4K/BxDD1FidIE7IJhHc6X4CwdJDWq/uWkznc9BTKl9K8LPP1+/djd2reqCPMevIXaqcLsXzlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9752
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6uhsj4bckhursiblkxe54azfgyqal6tq2de3lpkxw6omkised6@uylodcjruuei>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 05, 2025 at 03:30:19PM -0500, Laurentiu Mihalcea wrote:
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->
-> Drop some unneeded/unused macro definitions and header includes.
->
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-> Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-> Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+On Thu, Feb 06, 2025 at 12:05:55PM +0900, Sergey Senozhatsky wrote:
+> On (25/02/05 19:06), Yosry Ahmed wrote:
+> > > > For example, the compaction/migration code could be sleeping holding the
+> > > > write lock, and a map() call would spin waiting for that sleeping task.
+> > > 
+> > > write-lock holders cannot sleep, that's the key part.
+> > > 
+> > > So the rules are:
+> > > 
+> > > 1) writer cannot sleep
+> > >    - migration/compaction runs in atomic context and grabs
+> > > 	 write-lock only from atomic context
+> > >    - write-locking function disables preemption before lock(), just to be
+> > > 	 safe, and enables it after unlock()
+> > > 
+> > > 2) writer does not spin waiting
+> > >    - that's why there is only write_try_lock function
+> > > 	  - compaction and migration bail out when they cannot lock the
+> > > 		zspage
+> > > 
+> > > 3) readers can sleep and can spin waiting for a lock
+> > >    - other (even preempted) readers don't block new readers
+> > >    - writers don't sleep, they always unlock
+> > 
+> > That's useful, thanks. If we go with custom locking we need to document
+> > this clearly and add debug checks where possible.
+> 
+> Sure.  That's what it currently looks like (can always improve)
+> 
 > ---
->  sound/soc/sof/imx/imx8.c | 29 -----------------------------
->  1 file changed, 29 deletions(-)
->
-> diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-> index 5d6524d695e2..5ce094943aa2 100644
-> --- a/sound/soc/sof/imx/imx8.c
-> +++ b/sound/soc/sof/imx/imx8.c
-> @@ -6,41 +6,12 @@
->  //
->  // Hardware interface for audio DSP on i.MX8
->
-> -#include <linux/firmware.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
-> -#include <linux/pm_domain.h>
-> -
-> -#include <linux/module.h>
-> -#include <sound/sof.h>
-> -#include <sound/sof/xtensa.h>
-> -#include <linux/firmware/imx/ipc.h>
-> -#include <linux/firmware/imx/dsp.h>
-> -
->  #include <linux/firmware/imx/svc/misc.h>
->  #include <dt-bindings/firmware/imx/rsrc.h>
-> -#include "../ops.h"
-> -#include "../sof-of-dev.h"
->  #include "imx-common.h"
->
-> -/* DSP memories */
-> -#define IRAM_OFFSET		0x10000
-> -#define IRAM_SIZE		(2 * 1024)
-> -#define DRAM0_OFFSET		0x0
-> -#define DRAM0_SIZE		(32 * 1024)
-> -#define DRAM1_OFFSET		0x8000
-> -#define DRAM1_SIZE		(32 * 1024)
-> -#define SYSRAM_OFFSET		0x18000
-> -#define SYSRAM_SIZE		(256 * 1024)
-> -#define SYSROM_OFFSET		0x58000
-> -#define SYSROM_SIZE		(192 * 1024)
-> -
->  #define RESET_VECTOR_VADDR	0x596f8000
->
-> -#define MBOX_OFFSET	0x800000
-> -#define MBOX_SIZE	0x1000
-> -
->  static struct snd_soc_dai_driver imx8_dai[] = {
->  	IMX_SOF_DAI_DRV_ENTRY_BIDIR("esai0", 1, 8),
->  	IMX_SOF_DAI_DRV_ENTRY_BIDIR("sai1", 1, 32),
-> --
-> 2.34.1
->
+> /*
+>  * zspage lock permits preemption on the reader-side (there can be multiple
+>  * readers).  Writers (exclusive zspage ownership), on the other hand, are
+>  * always run in atomic context and cannot spin waiting for a (potentially
+>  * preempted) reader to unlock zspage.  This, basically, means that writers
+>  * can only call write-try-lock and must bail out if it didn't succeed.
+>  *
+>  * At the same time, writers cannot reschedule under zspage write-lock,
+>  * so readers can spin waiting for the writer to unlock zspage.
+>  */
+> static void zspage_read_lock(struct zspage *zspage)
+> {
+>         atomic_t *lock = &zspage->lock;
+>         int old = atomic_read_acquire(lock);
+> 
+>         do {
+>                 if (old == ZS_PAGE_WRLOCKED) {
+>                         cpu_relax();
+>                         old = atomic_read_acquire(lock);
+>                         continue;
+>                 }
+>         } while (!atomic_try_cmpxchg_acquire(lock, &old, old + 1));
+> 
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>         rwsem_acquire_read(&zspage->lockdep_map, 0, 0, _RET_IP_);
+> #endif
+> }
+> 
+> static void zspage_read_unlock(struct zspage *zspage)
+> {
+>         atomic_dec_return_release(&zspage->lock);
+> 
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>         rwsem_release(&zspage->lockdep_map, _RET_IP_);
+> #endif
+> }
+> 
+> static bool zspage_try_write_lock(struct zspage *zspage)
+> {
+>         atomic_t *lock = &zspage->lock;
+>         int old = ZS_PAGE_UNLOCKED;
+> 
+>         preempt_disable();
+>         if (atomic_try_cmpxchg_acquire(lock, &old, ZS_PAGE_WRLOCKED)) {
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>                 rwsem_acquire(&zspage->lockdep_map, 0, 0, _RET_IP_);
+> #endif
+>                 return true;
+>         }
+> 
+>         preempt_enable();
+>         return false;
+> }
+> 
+> static void zspage_write_unlock(struct zspage *zspage)
+> {
+>         atomic_set_release(&zspage->lock, ZS_PAGE_UNLOCKED);
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>         rwsem_release(&zspage->lockdep_map, _RET_IP_);
+> #endif
+>         preempt_enable();
+> }
+> ---
+> 
+> Maybe I'll just copy-paste the locking rules list, a list is always cleaner.
+
+Thanks. I think it would be nice if we could also get someone with
+locking expertise to take a look at this.
+
+> 
+> > > > I wonder if there's a way to rework the locking instead to avoid the
+> > > > nesting. It seems like sometimes we lock the zspage with the pool lock
+> > > > held, sometimes with the class lock held, and sometimes with no lock
+> > > > held.
+> > > > 
+> > > > What are the rules here for acquiring the zspage lock?
+> > > 
+> > > Most of that code is not written by me, but I think the rule is to disable
+> > > "migration" be it via pool lock or class lock.
+> > 
+> > It seems like we're not holding either of these locks in
+> > async_free_zspage() when we call lock_zspage(). Is it safe for a
+> > different reason?
+> 
+> I think we hold size class lock there. async-free is only for pages that
+> reached 0 usage ratio (empty fullness group), so they don't hold any
+> objects any more and from her such zspages either get freed or
+> find_get_zspage() recovers them from fullness 0 and allocates an object.
+> Both are synchronized by size class lock.
+> 
+> > > Hmm, I don't know... zsmalloc is not "read-mostly", it's whatever data
+> > > patterns the clients have.   I suspect we'd need to synchronize RCU every
+> > > time a zspage is freed: zs_free() [this one is complicated], or migration,
+> > > or compaction?  Sounds like anti-pattern for RCU?
+> > 
+> > Can't we use kfree_rcu() instead of synchronizing? Not sure if this
+> > would still be an antipattern tbh.
+> 
+> Yeah, I don't know.  The last time I wrongly used kfree_rcu() it caused a
+> 27% performance drop (some internal code).  This zspage thingy maybe will
+> be better, but still has a potential to generate high numbers of RCU calls,
+> depends on the clients.  Probably the chances are too high.  Apart from
+> that, kvfree_rcu() can sleep, as far as I understand, so zram might have
+> some extra things to deal with, namely slot-free notifications which can
+> be called from softirq, and always called under spinlock:
+> 
+>  mm slot-free -> zram slot-free -> zs_free -> empty zspage -> kfree_rcu
+> 
+> > It just seems like the current locking scheme is really complicated :/
+> 
+> That's very true.
+
+Seems like we have to compromise either way, custom locking or we enter
+into a new complexity realm with RCU freeing.
