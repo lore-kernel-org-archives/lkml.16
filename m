@@ -1,170 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ED313AD18;
-	Thu,  6 Feb 2025 02:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A7413AD18;
+	Thu,  6 Feb 2025 02:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738810649; cv=none; b=QsZpDwlBq+YWwL821GIwwQJh9vALbB1oNN3Hz9iNdmVEiuoYnnza0k/JL8xAiddY9o/eASqkzqWf6k5Ja15kP7Z/aCBCBvLWmKDgCjVGpqCQCA54aewfi/H2nAp6Mh11p+qAjEeK5WwAmQl822d7DtAer9sKc5rwh6Ql2MMpXKY=
+	t=1738810737; cv=none; b=A/bGRifmqPOET1h58wYvY8hF9ZdeypJ3r7AdRftQ8L9xsI88gkMUnsBAlrVkchayYFARiI9RJ1NReadEhPv4JQCDxHQ9rZsNIBOpFsFFl2MLDBB51fZtzXiCvBDCKFh2lUhJt3696AZGM1jTlm2Tv30dJ8LCzzDqe863F/pUq7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738810649; c=relaxed/simple;
-	bh=iy6jIH4U54qu9X/c+xTUMCfGm9LV9nkbKu493Cy1nj4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IMg/UTYyWJp+DMlwOIMUSaEwVAIcS9vowR/Ot7Ooi5jrogCblkxPAPUJaN+JevVwniUbs1RUU1vUImXMV5RgON+W+HqhI7jdHko2HltJWzUlMSzN/VKazL3aGnbeazFqkBUjJ6+7ORUuLbnqYqySbvg1rHcAomMXgKaXwIBxlB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFHoV0qI; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738810737; c=relaxed/simple;
+	bh=3lGujLEmqlUQjlKf2gi/U8xopfYpsbu4CWP6k61asTU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=lPSoyQn5J41VW553nJ/opaq40Y31VuJOdh1YafAznAlbVQxq/hRi6pmCa7ZCyJ+dN4n9P0fUIgcWvDcmq0JEA88FeFy33OtwItrApODyFe6SMy/4eMWjkc8WveSVhWz2FHTJjkmaug5Td84gBdJesH1NDWUqaa4io/mmMfDwEBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=LCQasQWX; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFHoV0qI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738810647; x=1770346647;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iy6jIH4U54qu9X/c+xTUMCfGm9LV9nkbKu493Cy1nj4=;
-  b=XFHoV0qIwq5ZKldCsmBTTdClypZ+lL1LwSg9c5RIhQym9oJ/1O7iTiOd
-   LozjME3bvd5B7szjjIwiCpFvuQORIP/d0S2LS4J0yPCSdzrfj9W7yrHN+
-   BR1s1f29cz+2Cfc8a5sT5cNbIX0xAloKZxpKmq0qJpzRTvY5n/ffP11Np
-   pJN2lQdrQ3dUY5FSIJIjap2nDvJI+neRp6E6E+jymq1OfgwTpvxh/Isd1
-   m23HR126QY7IahyPb/pqXvFTp8odBAGU4Qmscprvqzjup5eDO7gQ387wr
-   Gog4LORYpUGQy8xhPqqkKsMDrjZCjo+B6gQr7+YTfcxycOmpfopM0fyLW
-   g==;
-X-CSE-ConnectionGUID: N6Ihh7pLTkuJ9qFDU0bnmg==
-X-CSE-MsgGUID: DE50dm7NSPeIXx/RYd+fiA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50386137"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="50386137"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:57:27 -0800
-X-CSE-ConnectionGUID: 33bgTqiEQ0i8/TCFOISRew==
-X-CSE-MsgGUID: SJ4mgJijT1KG3E0T4QPKAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115159985"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:57:19 -0800
-Message-ID: <539d243b-ca9e-4849-be81-e755dc4ba528@linux.intel.com>
-Date: Thu, 6 Feb 2025 10:57:16 +0800
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="LCQasQWX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1738810722; bh=W985aGojcuWiDeCnrhJs+9mBdeGzwhVtK3zQEyVa7sw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=LCQasQWXCG5oju5nromNGpgsuRjdbTvZo32vob+Y27CYPBGyP/RL+9+QYxi8v0stB
+	 mEu2IuKB+49ol23e6As91EVO4XTe71VzkQff0JYcrw9NkqofGO07UyWZ5p6ZZ1Mrzh
+	 FD/epYQ7DicdqszTbkta20K0/RNrAUEh+JxRqATc=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id D221B053; Thu, 06 Feb 2025 10:52:34 +0800
+X-QQ-mid: xmsmtpt1738810354t73r6gd7l
+Message-ID: <tencent_65865F89A52EED6ECB8C8D67E1C6FAD2FC06@qq.com>
+X-QQ-XMAILINFO: NIraPvLG0lH0CoSCUhMIVbU8V4XhVp+jmGf+3VjoHEpredbLtpUMxYzsi3X7FO
+	 z718x+wrjQILM/6CH/1ZAQpFQYJKKqGJ304iHqd4vpV+KTB5Fkf6JaSmqQQ92X6zhnH9YmA5xjEO
+	 UsTzVv72iDPqdVy3RbJSrAZJQa7J10RPiLsYUFLIeLq4shnBlISU0dfQjwrIvahH5jKg8j9654qR
+	 JaTgmpZ2t4+FkALQfsgNhrGvcfC2HEqIGqSSm97LCfjDpkhWMBLqF0BIdB4y4pRBvFf6VIds/nuI
+	 1tC4M4mfAC6wCuFpZzpMWPFB19pN5ZSYgIKRm1R74dxMS4QVsxvjQJIrAkoBtmJN9z+Kok/iChiF
+	 6IN+2BzH2uhl7i344M5FJ23w3VHsJq14ddEjhMMylXL00l89t1V/jg8jj3j9W9CEbx4p2T7CjGHt
+	 4gjQxuMvRjNFh7muFlgFsj6kNNh/BgM3f28oDpwEPzCVmztVuZ2tABYFwDqkW8qZO+iIwHhPsfqx
+	 RI0okVYceR5rR7d0CahTSv6k6AwiPhpkG6TEUeu54ivLVOy2lDBw4clD3jWTIyJR6qvsG73uQW7w
+	 CCeihqalLxjeSpf2vLv5GiB61dHOjIfMt8+1H3n0Ir2X5hJ7DRBAuQukV3jsrFBb3hJuQhOkangw
+	 4VE+6NeiWdtlXU1t0hb3e6vkkYLJnZ3sGlMt466IBX48ZV3vPvFmaofCfMdNFwdjqbTSBLxYDz37
+	 mEa2OHHVsMKgUkLmHybIdwaqOFQ1z5M63XIAm0xD6t32Hk7w444mymke0rP+76/qsJPGJERuReCw
+	 fJJtKHUA1lwbAACoMEOS4Rfvjh6qMF0Q0cnZSxpuBXha/0F+Xk1fCXFBz7gXv3+ku6YpwVB56thM
+	 9+ZTUpkP6sshsKHX82MQJIvW7RXtmjTE4fc+4ctiGV5uDEgEqPT+8=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
+Cc: gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] HID: corsair-void: add missing cancel delaywork
+Date: Thu,  6 Feb 2025 10:52:35 +0800
+X-OQ-MSGID: <20250206025234.107442-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <67a3a3b0.050a0220.19061f.05e8.GAE@google.com>
+References: <67a3a3b0.050a0220.19061f.05e8.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 17/20] perf tools: Support to show SSP register
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-18-dapeng1.mi@linux.intel.com>
- <CAP-5=fV-+3dU1CtUAYazv5L6VfNwDxv1C9Q=tQXzve9nqpaqrw@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fV-+3dU1CtUAYazv5L6VfNwDxv1C9Q=tQXzve9nqpaqrw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+syzbot report a slab-use-after-free Read in usbhid_raw_request. [1]
 
-On 1/24/2025 12:15 AM, Ian Rogers wrote:
-> On Wed, Jan 22, 2025 at 10:21 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> Add SSP register support.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/arch/x86/include/uapi/asm/perf_regs.h    | 4 +++-
->>  tools/perf/arch/x86/util/perf_regs.c           | 2 ++
->>  tools/perf/util/intel-pt.c                     | 2 +-
->>  tools/perf/util/perf-regs-arch/perf_regs_x86.c | 2 ++
->>  4 files changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
->> index 7c9d2bb3833b..158e353070c3 100644
->> --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
->> +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
->> @@ -27,9 +27,11 @@ enum perf_event_x86_regs {
->>         PERF_REG_X86_R13,
->>         PERF_REG_X86_R14,
->>         PERF_REG_X86_R15,
->> +       PERF_REG_X86_SSP,
-> nit: Would it be worth a comment here? SSP may not be apparent to
-> everyone. Perhaps something like:
-> ```
-> /* Shadow stack pointer (SSP) present on Clearwater Forest and newer models. */
+The delayed_status_work still runs after usb device is removed.
 
-Sure.
+[1]
+BUG: KASAN: slab-use-after-free in usb_control_msg+0x434/0x4b0 drivers/usb/core/message.c:157
+Read of size 4 at addr ffff88812223c67c by task kworker/0:3/2954
 
+CPU: 0 UID: 0 PID: 2954 Comm: kworker/0:3 Not tainted 6.13.0-syzkaller-09485-g72deda0abee6 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Workqueue: events corsair_void_status_work_handler
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0xc3/0x620 mm/kasan/report.c:489
+ kasan_report+0xd9/0x110 mm/kasan/report.c:602
+ usb_control_msg+0x434/0x4b0 drivers/usb/core/message.c:157
+ usbhid_set_raw_report drivers/hid/usbhid/hid-core.c:927 [inline]
+ usbhid_raw_request+0x233/0x700 drivers/hid/usbhid/hid-core.c:1295
+ __hid_hw_raw_request drivers/hid/hid-core.c:2457 [inline]
+ hid_hw_raw_request+0x10a/0x150 drivers/hid/hid-core.c:2479
+ corsair_void_request_status+0xc3/0x130 drivers/hid/hid-corsair-void.c:493
+ corsair_void_status_work_handler+0x3f/0xb0 drivers/hid/hid-corsair-void.c:512
+ process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-> ```
->>         /* These are the limits for the GPRs. */
->>         PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
->> -       PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
->> +       PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
->> +       PERF_REG_INTEL_PT_MAX = PERF_REG_X86_R15 + 1,
-> nit: It's a little peculiar to me the "+1" here - but that's
-> pre-existing. Perhaps comments above here too:
-> ```
-> /* The MAX_REG_X86_64 used generally, for PEBS, etc. */
-> PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
-> /* The MAX_REG_INTEL_PT ignores the SSP register. */
-> PERF_REG_INTEL_PT_MAX = PERF_REG_X86_R15 + 1,
-> ```
-> Otherwise:
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Allocated by task 2954:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x8f/0xa0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ usb_alloc_dev+0x55/0xdc0 drivers/usb/core/usb.c:650
+ hub_port_connect drivers/usb/core/hub.c:5426 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5663 [inline]
+ port_event drivers/usb/core/hub.c:5823 [inline]
+ hub_event+0x28f9/0x4f40 drivers/usb/core/hub.c:5905
+ process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-Sure. Thanks.
+Freed by task 2968:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x37/0x50 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x294/0x480 mm/slub.c:4757
+ device_release+0xa1/0x240 drivers/base/core.c:2567
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1e4/0x5a0 lib/kobject.c:737
+ put_device+0x1f/0x30 drivers/base/core.c:3773
+ hub_port_connect drivers/usb/core/hub.c:5363 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5663 [inline]
+ port_event drivers/usb/core/hub.c:5823 [inline]
+ hub_event+0x1bed/0x4f40 drivers/usb/core/hub.c:5905
+ process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
+Fixes: 6ea2a6fd3872 ("HID: corsair-void: Add Corsair Void headset family driver")
+Reported-by: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=90ac8355c8ac84b1b464
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ drivers/hid/hid-corsair-void.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> Thanks,
-> Ian
->
->>         /* These all need two bits set because they are 128bit */
->>         PERF_REG_X86_XMM0  = 32,
->> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
->> index 12fd93f04802..9f492568f3b4 100644
->> --- a/tools/perf/arch/x86/util/perf_regs.c
->> +++ b/tools/perf/arch/x86/util/perf_regs.c
->> @@ -36,6 +36,8 @@ static const struct sample_reg sample_reg_masks[] = {
->>         SMPL_REG(R14, PERF_REG_X86_R14),
->>         SMPL_REG(R15, PERF_REG_X86_R15),
->>  #endif
->> +       SMPL_REG(SSP, PERF_REG_X86_SSP),
->> +
->>         SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
->>         SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
->>         SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
->> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
->> index 30be6dfe09eb..86196275c1e7 100644
->> --- a/tools/perf/util/intel-pt.c
->> +++ b/tools/perf/util/intel-pt.c
->> @@ -2139,7 +2139,7 @@ static u64 *intel_pt_add_gp_regs(struct regs_dump *intr_regs, u64 *pos,
->>         u32 bit;
->>         int i;
->>
->> -       for (i = 0, bit = 1; i < PERF_REG_X86_64_MAX; i++, bit <<= 1) {
->> +       for (i = 0, bit = 1; i < PERF_REG_INTEL_PT_MAX; i++, bit <<= 1) {
->>                 /* Get the PEBS gp_regs array index */
->>                 int n = pebs_gp_regs[i] - 1;
->>
->> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
->> index 708954a9d35d..9a909f02bc04 100644
->> --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
->> +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
->> @@ -54,6 +54,8 @@ const char *__perf_reg_name_x86(int id)
->>                 return "R14";
->>         case PERF_REG_X86_R15:
->>                 return "R15";
->> +       case PERF_REG_X86_SSP:
->> +               return "ssp";
->>
->>  #define XMM(x) \
->>         case PERF_REG_X86_XMM ## x:     \
->> --
->> 2.40.1
->>
+diff --git a/drivers/hid/hid-corsair-void.c b/drivers/hid/hid-corsair-void.c
+index 6ece56b850fc..83d65fa29a5a 100644
+--- a/drivers/hid/hid-corsair-void.c
++++ b/drivers/hid/hid-corsair-void.c
+@@ -727,6 +727,7 @@ static void corsair_void_remove(struct hid_device *hid_dev)
+ 		power_supply_unregister(drvdata->battery);
+ 
+ 	cancel_delayed_work_sync(&drvdata->delayed_firmware_work);
++	cancel_delayed_work_sync(&drvdata->delayed_status_work);
+ 	sysfs_remove_group(&hid_dev->dev.kobj, &corsair_void_attr_group);
+ }
+ 
+-- 
+2.43.0
+
