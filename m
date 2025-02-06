@@ -1,67 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E80225A59;
-	Thu,  6 Feb 2025 13:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8213F21CFF7;
+	Thu,  6 Feb 2025 13:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738847068; cv=none; b=Tnv118zuA9lZ529Mg+Qg7mM5kcBkawOx4U5mVYfy1UjQZeDcBYziN7N5TdPmpl+Fz2qUsupTKRfhhzYxGVKyzEMlLhB6DJmB9xTBKihry7P8WR8kRyFX/wVFrRKyviZCYFoicWSDmOj+FyWOc1SmZr/EPDbHjsTBc2zehRyWZU8=
+	t=1738847087; cv=none; b=UAOiTNtbk22h7QOogXwAb2fb5c+T3s7HM+fnrAge0WLzEH6jmuF1t05cIsiSx2fobKcn9dSI442Scr/at6nkUA7bNSO4EaStcFl/Tufb5XDpT+Cr+joP0FZRwWHpGTvRfpJG1mIyYg8vyl7yRfBMeFgyqHXQ2qZ/SQ/63XTpJUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738847068; c=relaxed/simple;
-	bh=HcPtGRcTHAOfFGOkTyn/W0r0zfnZmlWtrN18FEpXJh8=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=KaoIKE64qzB+NmFTKD7vQ7akOHylnHXw1gfPtEtacVVQo6lJ3FdH1TdLItcoxWi7TvCW5h59WZI5hMFP8I8XaF7oPfH2Gg7+XY34SOp6UDG2GLBKV7kYh5LGZ3QsEjMNaPbGA4e6tWi7aqetlkx+LOhZuzHQDLodGWDx5C0g/EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDZ2ygPJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDZ2ygPJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 773E5C4CEDD;
-	Thu,  6 Feb 2025 13:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738847068;
-	bh=HcPtGRcTHAOfFGOkTyn/W0r0zfnZmlWtrN18FEpXJh8=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=pDZ2ygPJsmDFa8WwJ3UD3N5GE6qpleBBL5vG7ZH/EnrMA+YS+Euxx8GgnLzhwSC3e
-	 Mk5a0IwDMiUW13tzHVnwrZqM8PqUTbEt5UeLzUSdxFjSfBjh4f5hsk24BkpzE5m6Yf
-	 pJ8E2hhl4IYgr5mYL854fDdkqVJKP3nz5MsZA842RI+JCzvt65rFQtQL9dL+8Guvmo
-	 N0msJyO/UuXWpzRfEa6Az05uyqbHFlBAQ6l3fgz13Ho0DD4gSALD5xQz9JtQ+0l6/x
-	 i1W39I4VgyzT7A76IR5D+W2/rdNNy5jveHMG9NZmA2OeVjiSc/fTX+Q3byEdInWMXn
-	 IDVqw/q55Aw0A==
-Message-ID: <cc915f4a4aa81e1a26e768c54c26c195@kernel.org>
-Date: Thu, 06 Feb 2025 13:04:25 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Herve Codina" <herve.codina@bootlin.com>
-Subject: Re: [PATCH v5 3/4] drm/vc4: hdmi: Use
- drm_atomic_helper_reset_crtc()
-In-Reply-To: <20250203161607.223731-4-herve.codina@bootlin.com>
-References: <20250203161607.223731-4-herve.codina@bootlin.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, "Alexander
- Stein" <alexander.stein@ew.tq-group.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>, "Conor
- Dooley" <conor+dt@kernel.org>, "Dave Stevenson" <dave.stevenson@raspberrypi.com>, "David
- Airlie" <airlied@gmail.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Laurent
- Pinchart" <Laurent.pinchart@ideasonboard.com>, "Louis Chauvet" <louis.chauvet@bootlin.com>, "Luca
- Ceresoli" <luca.ceresoli@bootlin.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek
- Vasut" <marex@denx.de>, "Maxime Ripard" <mripard@kernel.org>,
- =?utf-8?b?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, "Neil Armstrong" <neil.armstrong@linaro.org>, "Raspberry
- Pi Kernel Maintenance" <kernel-list@raspberrypi.com>, "Rob Herring" <robh@kernel.org>, "Robert
- Foss" <rfoss@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1738847087; c=relaxed/simple;
+	bh=O2iuWnyL3MGZrBrFd0qyR8zp4O4+Fh7oAhLdcn03ZSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qNU+F5RktvP/z5da/nu2K9JeFszWbAMzGm6GnFkM3lI3x39qXGpjPw7qxOQcsNHkumwvFqiIPppSx8SVWA3Ii0SQVFeYrYsDqC4+A/OKyhb3in/M6/VhXSRyk1thu8ZIT4aK6pEcAnCmtK2A9OC8uBbkqEpSi2B2MPtPQEYgXiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6213FEC;
+	Thu,  6 Feb 2025 05:05:07 -0800 (PST)
+Received: from [10.57.80.166] (unknown [10.57.80.166])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4A733F5A1;
+	Thu,  6 Feb 2025 05:04:41 -0800 (PST)
+Message-ID: <b2485f33-73fb-44b3-be36-9c5b6bae4d09@arm.com>
+Date: Thu, 6 Feb 2025 13:04:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 03/16] arm64: hugetlb: Fix flush_hugetlb_tlb_range()
+ invalidation level
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-4-ryan.roberts@arm.com>
+ <e2809c59-6453-4a90-88ad-0b22e82f869f@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <e2809c59-6453-4a90-88ad-0b22e82f869f@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Feb 2025 17:16:05 +0100, Herve Codina wrote:
-> The current code uses a the reset_pipe() local function to reset the
-> CRTC outputs.
+On 06/02/2025 06:46, Anshuman Khandual wrote:
 > 
-> drm_atomic_helper_reset_crtc() has been introduced recently and it
-> performs exact same operations.
 > 
-> [ ... ]
+> On 2/5/25 20:39, Ryan Roberts wrote:
+>> commit c910f2b65518 ("arm64/mm: Update tlb invalidation routines for
+>> FEAT_LPA2") changed the "invalidation level unknown" hint from 0 to
+>> TLBI_TTL_UNKNOWN (INT_MAX). But the fallback "unknown level" path in
+>> flush_hugetlb_tlb_range() was not updated. So as it stands, when trying
+>> to invalidate CONT_PMD_SIZE or CONT_PTE_SIZE hugetlb mappings, we will
+>> spuriously try to invalidate at level 0 on LPA2-enabled systems.
+>>
+>> Fix this so that the fallback passes TLBI_TTL_UNKNOWN, and while we are
+>> at it, explicitly use the correct stride and level for CONT_PMD_SIZE and
+>> CONT_PTE_SIZE, which should provide a minor optimization.
+>>
+>> Cc: <stable@vger.kernel.org>
+>> Fixes: c910f2b65518 ("arm64/mm: Update tlb invalidation routines for FEAT_LPA2")
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  arch/arm64/include/asm/hugetlb.h | 20 ++++++++++++++------
+>>  1 file changed, 14 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+>> index 03db9cb21ace..8ab9542d2d22 100644
+>> --- a/arch/arm64/include/asm/hugetlb.h
+>> +++ b/arch/arm64/include/asm/hugetlb.h
+>> @@ -76,12 +76,20 @@ static inline void flush_hugetlb_tlb_range(struct vm_area_struct *vma,
+>>  {
+>>  	unsigned long stride = huge_page_size(hstate_vma(vma));
+>>  
+>> -	if (stride == PMD_SIZE)
+>> -		__flush_tlb_range(vma, start, end, stride, false, 2);
+>> -	else if (stride == PUD_SIZE)
+>> -		__flush_tlb_range(vma, start, end, stride, false, 1);
+>> -	else
+>> -		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, 0);
+>> +	switch (stride) {
+>> +	case PUD_SIZE:
+>> +		__flush_tlb_range(vma, start, end, PUD_SIZE, false, 1);
+>> +		break;
+> 
+> Just wondering - should not !__PAGETABLE_PMD_FOLDED and pud_sect_supported()
+> checks also be added here for this PUD_SIZE case ?
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Yeah I guess so. TBH, it's never been entirely clear to me what the benefit is?
+Is it just to remove (a tiny amount of) dead code when we know we don't support
+blocks at the level? Or is there something more fundamental going on that I've
+missed?
 
-Thanks!
-Maxime
+We seem to be quite inconsistent with the use of pud_sect_supported() in
+hugetlbpage.c.
+
+Anyway, I'll add this in, I guess it's preferable to follow the established pattern.
+
+Thanks,
+Ryan
+
+> 
+>> +	case CONT_PMD_SIZE:
+>> +	case PMD_SIZE:
+>> +		__flush_tlb_range(vma, start, end, PMD_SIZE, false, 2);
+>> +		break;
+>> +	case CONT_PTE_SIZE:
+>> +		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, 3);
+>> +		break;
+>> +	default:
+>> +		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, TLBI_TTL_UNKNOWN);
+>> +	}
+>>  }
+>>  
+>>  #endif /* __ASM_HUGETLB_H */
+
