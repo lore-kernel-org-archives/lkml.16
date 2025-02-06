@@ -1,90 +1,139 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97076A33B;
-	Thu,  6 Feb 2025 02:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7495E6A33B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 02:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738808015; cv=none; b=HtyW8RU5nnD4PUYV5urOWU6sTurCr1jwaVclfFlRoZrY3fnzr+gu9poXbDe7VBBE0oA5y+tiaUM9QpRmIsy125Ho5JHJTte7NwtVz5z5+GlgXMyIH6Nuj6TAX4ilbhSVsfIJGnRPwz0dPwVqkawZj2Tw/2qwO2CF7zQDeafKLcY=
+	t=1738808089; cv=none; b=nnK9n+yaUTNSqmRNQJbcAmklz3JuW7a6SGAScTtONiHTH6DEg+iqv9k3nwJ3PVsGqgfuDae0Byeh54BwU9Q7YhnXQ/iieadrypnysOkdULgzvYfGTuIdAQ6bbnkwqPggAQiRaNbB+LROysF1Fe0ycEX3YqIsCYHTtnHf8I/PkSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738808015; c=relaxed/simple;
-	bh=MPbnuZ1ow3tlM4Uv6Z/zyzk9+r7Hmhv9A/qr2lRAQ3Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=loiIcVwg2e47fYyrHBZd/U1enzpjMbyuOJM9BSnkRaC1GA5PYOTovsPcW3GXBnhd30Wv+CmfRloC63uia49fgbGPTzCIGc8YExLFcpWUdoRjub+Z3fy1HK5I7lHx1npsqa6iBXK8YNfeHkGJMZvd4PwzuUDsooIy41cL1PLZ06s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 3a7d4ce2e42f11efa216b1d71e6e1362-20250206
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:250f8590-452d-4961-83a0-296b1a9d160a,IP:10,
-	URL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-35
-X-CID-INFO: VERSION:1.1.45,REQID:250f8590-452d-4961-83a0-296b1a9d160a,IP:10,UR
-	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:-15,FILE:0,BULK:0,RULE:EDM_GN8D19FE,ACT
-	ION:release,TS:-35
-X-CID-META: VersionHash:6493067,CLOUDID:6aad5d02811ccb8a696d51ce0a976a2f,BulkI
-	D:2502061008201UDVF6YE,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
-	C:nil,Content:0|50,EDM:2,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:n
-	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 3a7d4ce2e42f11efa216b1d71e6e1362-20250206
-X-User: liuye@kylinos.cn
-Received: from localhost.localdomain [(223.70.160.239)] by mailgw.kylinos.cn
-	(envelope-from <liuye@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 407595292; Thu, 06 Feb 2025 10:08:16 +0800
-From: Liu Ye <liuye@kylinos.cn>
-To: shuah@kernel.org
-Cc: chenxiang66@hisilicon.com,
-	zhujun2@cmss.chinamobile.com,
-	iommu@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Liu Ye <liuye@kylinos.cn>
-Subject: [PATCH] selftests/dma: Fix bad array reference.
-Date: Thu,  6 Feb 2025 10:08:08 +0800
-Message-Id: <20250206020808.50561-1-liuye@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1738808089; c=relaxed/simple;
+	bh=Ojia6x7vJXX9k70zhKx2IgQUJd4PShe+C5jUbgyhcc8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E/sSkAApoqyKJh9N3YN24xH2v7yQ6F1oGO8vP6UxlUttLS2QwAbIirJLlCATclFyNtzWqdbAhbKflT6aEdP+TVX7UBR4aLP0dSrzKMUDMA0/JWxifzUfDjyeylyqogN99Mtm8cvTTkT2EQQRiv8NjQp8uIKA+MKNy46PGqY7K2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LGGx6wFi; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGGx6wFi"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3076262bfc6so3884851fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 18:14:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738808085; x=1739412885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sl7OpDreIMnTrM+4bCT93LEcjwLpBqwnjhWThvaWZWw=;
+        b=LGGx6wFi0MakdvXNgi/Ud5Z74QPtePsroctGCTvleL9QqIJ0q7XS+Hn+ZM65+7Tlgg
+         wvk/bLFuVELKNy50KL1/5y+1wdwoemr5Llz/0gpBA3a+99weDhDdCL/g6+slH9pDRmGg
+         BVTDAz7NJnOtX0ciqDjI9brvvxoFERxUMlWrxvIC1BApWdMtDoG0hHdMBs6310MR8QyU
+         qAWzjO4x5TSwIlkpReYq+nkjvtMBVlrwoQR5/EWMz1OSEHCqFKwcRg95bpTzSRwRS43A
+         mMtGIzwpDa9HyxE17TAdxEZybPDOEZKL7dh9OH9Eeud/etx0pGwIQ97idWp8cHI+Z5iw
+         ukiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738808085; x=1739412885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sl7OpDreIMnTrM+4bCT93LEcjwLpBqwnjhWThvaWZWw=;
+        b=o+TWsBftWvo8pDOCQKWMFNKe+54f21KdIxsw/yPiOVDe5aSbFAkwauFpcS6XL2l/+f
+         2gEOnA6T1rZqtIJarw5JpVIVZ0YItvNvjjxih214P60PoyvRoNFNEQL7nVkQtsbAQaGt
+         QMLw7m2ZPzzHGfu8tB8rRPT3Zg+PxZuocC98GR/GJGJgBD8klR5IFyId6U9Lo4OCIpan
+         U0R6rV+vC4KTfz9rm4Z5jPpbU2E2gAxj6/2m482Tg5F99uwRvNR1DNZFwNRBXHHLcZpS
+         D70w9S4J6U181/0ht6yUb4VCVky464kcwe+DzrwtN/qPvfYP4UeBHebNALbsVkLRwlnq
+         gJhg==
+X-Gm-Message-State: AOJu0YwhJVwpb6TagctACcqLjneNu299Aak3Zz5bCd3NWEt9jKA89/cg
+	DbbJgZs2VJtmz1GNI3RKwOmCDJyd+bFld8RI9eFypUoxvANS3vhslnzor8KSMwsFxnM4MKla9q7
+	shsOcnSyHc46MNVmyh4TYKV+L6Rc+ixp5rN8=
+X-Gm-Gg: ASbGncsnEzpohIa8ruP8ZFPb1+WVEWCKfdk2GGshlkz+3LIhpBhIsbTufn07HUzfuA6
+	Kw/fuMUaLlOVPIL1smp8gYfr5IflgpXOkOpWwvR6E14BxQ7RvIDw+NUGmRB+Lk4hOgnkeOQqZ
+X-Google-Smtp-Source: AGHT+IFzLRQCAD+8FQBF4AO0N4iNeN8l+6jugU/REtt6RJZGj0165s8OvgtOVActhwGVPx4CogH2IxLjEEaGykbWcDA=
+X-Received: by 2002:a2e:ab0a:0:b0:300:33b1:f0c4 with SMTP id
+ 38308e7fff4ca-307cf307693mr20171301fa.11.1738808085163; Wed, 05 Feb 2025
+ 18:14:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250205092721.9395-1-bhe@redhat.com> <20250205092721.9395-5-bhe@redhat.com>
+ <CAMgjq7CYC4xfAkp9Y7g=3rw=iqTj_pQAjrnwDC1orkdUhnOCSQ@mail.gmail.com> <Z6QTKQPKXDEpWWKb@fedora>
+In-Reply-To: <Z6QTKQPKXDEpWWKb@fedora>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 6 Feb 2025 10:14:28 +0800
+X-Gm-Features: AWEUYZmaTaHRs6ZOkVq_GXPR-0Sk_ZBvGZue39Bp6HjBZqbdZy6BtGM27a5ThMY
+Message-ID: <CAMgjq7DUpffkX66KCJzF92mHUrNCV7TOhW+0j4sgyqHtZvNbgw@mail.gmail.com>
+Subject: Re: [PATCH 04/12] mm/swap: skip scanning cluster range if it's empty cluster
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, chrisl@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-dir[directions] should be directions[dir] to correctly index the
-directions array.
+On Thu, Feb 6, 2025 at 9:41=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 02/06/25 at 01:07am, Kairui Song wrote:
+> > On Wed, Feb 5, 2025 at 5:27=E2=80=AFPM Baoquan He <bhe@redhat.com> wrot=
+e:
+> > >
+> > > Since ci->lock has been taken when isolating cluster from
+> > > si->free_clusters or taking si->percpu_cluster->next[order],
+> > > it's unnecessary to scan and check the cluster range availability
+> > > if i'ts empty cluster, and this can accelerate the huge page
+> > > swapping.
+> > >
+> > > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > > ---
+> > >  mm/swapfile.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/mm/swapfile.c b/mm/swapfile.c
+> > > index 9c9a4ec6d4c6..61efde853eea 100644
+> > > --- a/mm/swapfile.c
+> > > +++ b/mm/swapfile.c
+> > > @@ -729,6 +729,9 @@ static bool cluster_scan_range(struct swap_info_s=
+truct *si,
+> > >         unsigned long offset, end =3D start + nr_pages;
+> > >         unsigned char *map =3D si->swap_map;
+> > >
+> > > +       if (cluster_is_empty(ci))
+> > > +               return true;
+> > > +
+> >
+> > Hi Baoquan,
+> >
+> > Thanks for the series.
+>
+> Thanks for your reviewing.
+>
+> >
+> > Most commits are looking great, but this one is a bit questionable.
+> > cluster_scan_range is only called by alloc_swap_scan_cluster, and it
+> > already checks if the cluster has enough empty slots to use, so this
+> > might be redundant.
+>
+> Hmm, maybe no. Assume we want to allocate 2M space on system with 4K
+> page size. Even if a empty cluster is taken into consideration,
+> cluster_scan_range() will loop 512 times to check if each slot is
+> available. That for sure is not necessary in the case, while the added
+> empty cluster checking is very cheap.
+>
+> >
+> > It is possible that cluster_scan_range sees an empty cluster if the
+> > cluster lock was dropped for reclaiming HAS_CACHE, but the chance
+> > should be extremely low, that this might be a negative optimization.
+>
+> It may be not like that. If it's empty cluster, the added checking will
+> return directly. Then 'need_reclaim' is kept false, there's no chance to
+> drop cluster lock to do reclaiming for HAS_CACHE. Means for empty
+> cluster scanning, the ci->lock is kept held. Not sure if I missed
+> anything.
 
-Signed-off-by: Liu Ye <liuye@kylinos.cn>
----
- tools/testing/selftests/dma/dma_map_benchmark.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ah, right, sorry, I just understood your code wrongly. This makes
+sense to me now.
 
-diff --git a/tools/testing/selftests/dma/dma_map_benchmark.c b/tools/testing/selftests/dma/dma_map_benchmark.c
-index b12f1f9babf8..b925756373ce 100644
---- a/tools/testing/selftests/dma/dma_map_benchmark.c
-+++ b/tools/testing/selftests/dma/dma_map_benchmark.c
-@@ -118,7 +118,7 @@ int main(int argc, char **argv)
- 	}
- 
- 	printf("dma mapping benchmark: threads:%d seconds:%d node:%d dir:%s granule: %d\n",
--			threads, seconds, node, dir[directions], granule);
-+			threads, seconds, node, directions[dir], granule);
- 	printf("average map latency(us):%.1f standard deviation:%.1f\n",
- 			map.avg_map_100ns/10.0, map.map_stddev/10.0);
- 	printf("average unmap latency(us):%.1f standard deviation:%.1f\n",
--- 
-2.25.1
-
+>
+> Thanks
+> Baoquan
+>
