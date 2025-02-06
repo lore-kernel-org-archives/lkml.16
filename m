@@ -1,247 +1,169 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F99921CFF7;
-	Thu,  6 Feb 2025 12:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7284E13D897;
+	Thu,  6 Feb 2025 12:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738845981; cv=none; b=hyWro5ytiyZY84Fl69RqFajUEuwvHNiBCIoHdvzekh8vuj8ogerk1+DlqyluIxSuBQAl56y+X3nntv6ph2UOuSfvL1Owq1vukqVGzyM350+38V6BoN0r4tQ8Pa7FPLgdprstkNNpHdG+poyTkUif2vY4EnRxcsm6Fr6JIIPwAQQ=
+	t=1738846053; cv=none; b=c71bC8ZSjSl6iODv3tlQ2ASALFFxgmIDiEReUpyNtxQjD6TT2+EIidWf2CLjZukdB0fRbw3zkM72p8zGxfYs6+ecWe75Va0NQeFzTFHwpiPyMPxD/EnKCKaulWpC5jXMczy8zHnhYexFnht2UDUNK9rvPHeyEmr5gDxHgYQKulw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738845981; c=relaxed/simple;
-	bh=LzPmLR4NECVJzanm9D7VrWg3lHEbiyR22YsArEv+U6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTxeewmED3NLp6jy8ZlFBUEny9LSDLnnbVZgfAqOrROzhRyzwWCS+AEE9LCqUwA6IpLw1s9q5R8jINHTXTqqDm0A5zT3oFPqmdrXPK6O9qkDpq9zEvSl3LX07wizfT6MMc+xQooFe/P2V2nA/VK0K32YSoIhzQD7hgjzBCc2c3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 516CjkJa027957;
-	Thu, 6 Feb 2025 06:45:46 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 516CjiQD027956;
-	Thu, 6 Feb 2025 06:45:44 -0600
-Date: Thu, 6 Feb 2025 06:45:44 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Paul Moore <paul@paul-moore.com>, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmorris@namei.org
-Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
-Message-ID: <20250206124544.GA27587@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com> <20250205120026.GA15809@wind.enjellic.com> <e8ec2704-90bf-4e67-9e90-eb206e6d08c0@schaufler-ca.com>
+	s=arc-20240116; t=1738846053; c=relaxed/simple;
+	bh=hlPLCYaZIhAZc34hNxKd9PksJrrQZyULhCIlDD9ay/M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jaqUlEw362EzbqigiX3eP25s68jNLmYT/6061ZGnfrK8NadEyMfgYfCBW+TWgCUeHVKUZ3RTpmb8D81BjBjaGk8YitDnZvBSM1jsfASq1k6OSoqR/B5izmQ0Z3VBgF1d5awDZsy/kDLd4KkpVMMbv6A6pcqDfIIRnbaOiQlyddM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-866e49506a5so242851241.3;
+        Thu, 06 Feb 2025 04:47:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738846049; x=1739450849;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+G5tJ1SBCwqyhbBN/5U55ihfT4hs7XGR0NON5bWUjWY=;
+        b=cFnqwqyk+SQGxYOZ55+im8J7qCaUY+6JLcMGtdcElEwxINDOp3Ev/Rzb1PZ/VP6u2y
+         Y11elwEXtZXW8KLDhHK75XVMAQGzGQl6TkFTy2hhkc9iu6lJCeJFEixUvOT4ybtiDyZT
+         r0FhPPmpGQ3wZCW7+kl6/+bb6apU8chhNTKatpaOB1C94361GyJs82fpljGVZMTfGX9w
+         pOxvdGj3FeKzCawKBTUtoA3DH1rg6Ho37118vqghFhumgYnuolpm2efyrgxolF3zrWla
+         8ywWNxDKMFaVHcFQlhs1hfgEAjOio+UAVojtZKEhSvKAzKQ9QkWeu1dEoMtxmgoOJYkb
+         NmjA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8gMsb0FSrOw19VF0tburpnlIF3bhRfe68AajHpkEHm5a89bwhrcS1pIM48pZsTHRK6w/suy2udARh0FM=@vger.kernel.org, AJvYcCUoTq8IbM8TkCxnZlmWlTe57YrRAO+jHVnJ+l6a//Ty2dbfEzKcqqHIarxZmBnRWlpmYbPJJOSZG9MciihOxK++vpw=@vger.kernel.org, AJvYcCUwVOngqJoIjEuH35HJZoVWEhXI8MxfZUqBmhcoxI5ya2NyRuF6cdawX5ig20SdKcn2IZTQijwID+Knxfu3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMX79esiS2Mw/JovNVzQe6M3Wk+GN5KANOUM/7NRo18/VKNsJg
+	cvXAO6KWuE9Dc5MmYadeAAwQfsEGvGBdVCfU6My0UVv0Brt1UqBFtsvnAY8a
+X-Gm-Gg: ASbGncu0DjlCzjEyrno0QLr+MykrTrihUUBx7SowUz8Ht2RVhAqjtJySg6Ru/uMBj8v
+	w9a5NQKjQU+DyjOY5on+bvYyCGFvSIC/ZYNEHrwpNu8Hrsz+1TgQq+MSG6P3rBNzs/PTYd6GP9+
+	vtr8MHc4+fVX3FYSUsl+1fOL8fj2m+Fv57i11TFGkoZgFoj+uq8IVT+R98Faz/IJYJfzrF4dQlJ
+	bJHGjXLFIktxhBjdrEsZnIZz+4KTXsAHaarNsUtI28Ei2gjMGfIg9gkBC6SA3SfoyP4icT3yref
+	AGY/+gzbzmLQKpfEWJittlHF0SR8mdfxCp3yx1SHnBc6GYd/ZDca3A==
+X-Google-Smtp-Source: AGHT+IGwmfEtD+UxdUUBtaackkQ8ZYKteUeGf/3id88TCtAx0KF58l+FbDTyleFik7sgr51EcCQQIA==
+X-Received: by 2002:a05:6122:daa:b0:518:80fb:df24 with SMTP id 71dfb90a1353d-51f0c3ba2b1mr3979136e0c.3.1738846049163;
+        Thu, 06 Feb 2025 04:47:29 -0800 (PST)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f228ddaf3sm157815e0c.38.2025.02.06.04.47.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 04:47:28 -0800 (PST)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4aff5b3845eso281050137.2;
+        Thu, 06 Feb 2025 04:47:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUcwXvCMqQ3hgKn6eEut4gcOexY5W9mshzV3BSyGKP1ZNYV4Ok2lVBdNveN10cVNKeRUeaLOYE+y/sUANg=@vger.kernel.org, AJvYcCVuPb4o68eVNvuYD97DVTnRMnjLghkbes+tZlib9RKDck23faSaO9JjjfBpti3dboMoDRm9Z6d9SSIaGS4OVdNqVPw=@vger.kernel.org, AJvYcCWzB9CZJuuHb40OsOm6SemB3+xkVe1jT7DCuVGAATmA+kwgR0aMrxDyBKpW65Zdo8qFcRCdXMbyHCVfc34w@vger.kernel.org
+X-Received: by 2002:a05:6102:3f4c:b0:4b2:5d10:29db with SMTP id
+ ada2fe7eead31-4ba4788dc4bmr4048348137.7.1738846048176; Thu, 06 Feb 2025
+ 04:47:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8ec2704-90bf-4e67-9e90-eb206e6d08c0@schaufler-ca.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 06 Feb 2025 06:45:46 -0600 (CST)
+MIME-Version: 1.0
+References: <20250205093108.2027894-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250205093108.2027894-1-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Feb 2025 13:47:16 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVD-=n5LdRk42SicdH6MoffTfNGtAz_1AMQ1c7Mui7dFg@mail.gmail.com>
+X-Gm-Features: AWEUYZne_WBzKasHYk-6bHwEfEptlcy-SFLtTSYTxOaPCQ-1NvT_d103f7w8GZ8
+Message-ID: <CAMuHMdVD-=n5LdRk42SicdH6MoffTfNGtAz_1AMQ1c7Mui7dFg@mail.gmail.com>
+Subject: Re: [PATCH v5] serial: sh-sci: Update the suspend/resume support
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, p.zabel@pengutronix.de, 
+	wsa+renesas@sang-engineering.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 05, 2025 at 11:58:00AM -0800, Casey Schaufler wrote:
+Hi Claudiu,
 
-Good morning, I hope the week is progressing well.
+On Wed, 5 Feb 2025 at 10:31, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The Renesas RZ/G3S supports a power saving mode where power to most of the
+> SoC components is turned off. When returning from this power saving mode,
+> SoC components need to be re-configured.
+>
+> The SCIFs on the Renesas RZ/G3S need to be re-configured as well when
+> returning from this power saving mode. The sh-sci code already configures
+> the SCIF clocks, power domain and registers by calling uart_resume_port()
+> in sci_resume(). On suspend path the SCIF UART ports are suspended
+> accordingly (by calling uart_suspend_port() in sci_suspend()). The only
+> missing setting is the reset signal. For this assert/de-assert the reset
+> signal on driver suspend/resume.
+>
+> In case the no_console_suspend is specified by the user, the registers need
+> to be saved on suspend path and restore on resume path. To do this the
+> sci_console_save_restore() function was added. There is no need to
+> cache/restore the status or FIFO registers. Only the control registers.
+> The registers that will be saved/restored on suspend/resume are
+> specified by the struct sci_suspend_regs data structure.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> The v4 of this patch was part of a series with 4 patches. As the rest of
+> the patches were applied I dropped the cover letter. The v4 cover letter
+> is located here:
+> https://lore.kernel.org/all/20250120130936.1080069-1-claudiu.beznea.uj@bp.renesas.com
+>
+> Changes in v5:
+> - fixed typo in patch description
+> - adjusted the patch description to reflect the new patch content
+> - added struct sci_suspend_regs and dropped the suspend_cacheable
+>   flag introduced previously in struct plat_sci_reg; along with it
+>   the updates in sci_port_params[] were also dropped;
+>   also, the function (now sci_console_save_restore()) that saves
+>   and restores the registers content was adjusted accordingly
+> - s/sci_console_setup/sci_console_save_restore/g
 
-I need to climb on an airplane in less than 24 hours to fly to Aspen
-to spend some time skiing with the 'beautiful people', so only two
-comments.
+Thanks for the update!
 
-> On 2/5/2025 4:00 AM, Dr. Greg wrote:
-> > On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
-> >
-> > Good morning, I hope mid-week is going well for everyone.
-> >
-> > After the issue of the functionality of modern cryptographic
-> > primitives, a discussion of the second most important issue Paul
-> > raises.
-> >
-> >> I believe the LSM can support both the enforcement of security policy
-> >> and the observation of security relevant events on a system.  In fact
-> >> most of the existing LSMs do both, at least to some extent.
-> >>
-> >> However, while logging of security events likely needs to be
-> >> asynchronous for performance reasons, enforcement of security policy
-> >> likely needs to be synchronous to have any reasonable level of
-> >> assurance.  You are welcome to propose LSMs which provide
-> >> observability functionality that is either sync, async, or some
-> >> combination of both (? it would need to make sense to do both ?), but
-> >> I'm not currently interested in accepting LSMs that provide
-> >> asynchronous enforcement as I don't view that as a "reasonable"
-> >> enforcement mechanism.
-> > This is an artificial distinction that will prove limiting to the
-> > security that Linux will be able to deliver in the future.
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -3546,13 +3559,41 @@ static int sci_probe(struct platform_device *dev)
+>         return 0;
+>  }
+>
+> +static void sci_console_save_restore(struct sci_port *s, bool save)
+> +{
+> +       struct sci_suspend_regs *regs = &s->suspend_regs;
+> +       struct uart_port *port = &s->port;
+> +
+> +       if (save) {
+> +               regs->scsmr = sci_serial_in(port, SCSMR);
+> +               regs->scscr = sci_serial_in(port, SCSCR);
+> +               regs->scfcr = sci_serial_in(port, SCFCR);
+> +               regs->scsptr = sci_serial_in(port, SCSPTR);
+> +               regs->scbrr = sci_serial_in(port, SCBRR);
+> +               regs->semr = sci_serial_in(port, SEMR);
 
-> I'll apologize up front to everyone else for this response, but I
-> hope it is something you might understand.
-> 
-> A security guard scans a person's access pass. As the computer system that
-> processes the data is slow, the guard lets the person go through the gate.
-> An access denial finally comes through. The guard turns and shoots the
-> intruder. What other choice is available? The intruder may have seen what
-> should not have been seen. Now the guard has to file a fatal incident report
-> and slow down everything else while cleaning up the remains.
-> 
-> tl;dr - async access control is just messy.
+The SCFCR, SCSPTR, and SEMR registers do not exist on all
+variants.  Hence you should call sci_getreg() and check if
+plat_sci_reg.size is non-zero first, else you will trigger the WARN()
+in sci_serial_in().
 
-Stated more precisely, the model is asynchronous behavioral controls
-and model response.
+> +       } else {
+> +               sci_serial_out(port, SCSMR, regs->scsmr);
+> +               sci_serial_out(port, SCSCR, regs->scscr);
+> +               sci_serial_out(port, SCFCR, regs->scfcr);
+> +               sci_serial_out(port, SCSPTR, regs->scsptr);
+> +               sci_serial_out(port, SCBRR, regs->scbrr);
+> +               sci_serial_out(port, SEMR, regs->semr);
 
-It is currently what 100+ billion dollar security companies and their
-products are based on.  Which, in an increasingly wide swath of
-corporate IT, you are required to implement.
+Likewise for sci_serial_out().
 
-Kernel security maintainers can choose to ignore the issue, doesn't
-mean it isn't reality.
+> +       }
+> +}
 
-We have a very diverse team, members of which have been involved in
-international cybersecurity issues that have been in the news.  I've
-personally written white papers for the consumption of individuals
-that are in the news, as to the socio-technical issues that are behind
-why we can't have nice things in cybersecurity.
+Given there's nothing really shared anymore, I would split this in
+separate sci_console_save() and sci_console_restore() functions.
 
-We believe Linux can improve on this situation.  We at least look on
-it as fortunate to have a public record as to why that may not be
-possible, if that turns out to be the case.
+The rest LGTM.
 
-> > Based on your response, is it your stated position as Linux security
-> > maintainer, that you consider modern Endpoint Detection and Response
-> > Systems (EDRS) lacking with respect to their ability to implement a
-> > "reasonable" enforcement and assurance mechanism?
-> 
-> You are conflating issues. It isn't the purpose of the system, it is
-> the mechanism by which it is implemented that is the problem.
-> 
-> > If this is the case, your philosophy leaves Linux in a position that
-> > is inconsistent with how the industry is choosing to implement
-> > security.
-> >
-> > Let me cite an example from one of our project advisors.
-> >
-> > This individual is a senior principal at a reasonably large technology
-> > products company that depends on Linux almost exclusively to support
-> > its operations.  At any given instant he participates in supervising a
-> > fleet of around 6,000 virtual machines running about 50,000-60,000
-> > containerized workloads.
-> 
-> How can this possibly be a kernel problem?
-> 
-> > All of the Linux deployments are Ansible orchestrated.  The security
-> > deployment consists of disabling SeLinux and installing an EDRS
-> > solution.  Doing the latter checks all the boxes they need for their
-> > corporate security compliance policies.
-> 
-> Without insight regarding what these policies might be it is impossible
-> to say for sure, but I'll bet a refreshing beverage that they involve
-> all sorts of application level protocols, and other things the kernel
-> has no business moderating.
-> 
-> > He, and others, have watched this discussion closely over the last two
-> > years that we have tried to get TSEM reviewed and just recently phoned
-> > me with the following comment:
-> >
-> > "I think the problem is that these guys don't understand how security
-> > is being done and the reasons why".
-> 
-> Oh, make no mistake, I (at least) understand how security is being
-> done these days and find it terrifying. We do in the kernel what can
-> and should be done in the kernel, but adding general supply chain controls
-> as an LSM isn't gonna happen in my (admittedly limited) lifetime.
-> 
-> > There is probably not a modern EDRS solution that does not involve
-> > going to the cloud for its decision making enforcement,
-> 
-> Wow. The number and density of application and network protocols
-> necessary for that to work puts an Austrian pastry to shame. And
-> you want to put that in the kernel?
-> 
-> >  in most cases
-> > based on Indicators Of Compromise (IOC) trained machine learning
-> > models.  Asynchronous detection, enforcement and remediation is now
-> > standard practice.  In the security industry, a 1 minute response to a
-> > security event is considered the 'gold' standard.
-> 
-> A one minute delay in an openat() call ain't gonna happen.
-> 
-> > For the sake of discussion, lets take a Quixote userspace Trusted
-> > Modeling Agent (TMA) running TSEM based deterministic modeling of a
-> > containerized workload.  As we've discussed previously, demonstrated
-> > average response times are on the order of 170 micro-seconds.
-> >
-> > For an event that needs asynchronous enforcement, ie. running in
-> > atomic context, that represents a 3.5 order of magnitude advantage in
-> > response over the industry standard, without the attendant challenges
-> > of going off machine or installing kernel based infrastructure.
-> >
-> > What would be the rationale or advantage of denying those that desire
-> > this type of security option, a 3,500 fold increase in security
-> > response times?
-> >
-> > Let's take another need for running in userspace, trusted execution
-> > environments.  Support is available in our userspace package for
-> > running a TMA model in either an SGX enclave or in an independent
-> > hypervisor protected execution context, both of which significantly
-> > harden the enforcement implementation against attack by adversaries.
-> >
-> > As Linux security maintainer, we assume that you have read Executive
-> > Order 14144 signed on January 16th 2025.
-> 
-> Remember "C2 in '92"? Executive order. Industry invested ~$25 Million
-> in 1990's dollars in evaluation costs alone. Never enforced. I am not
-> shaking in my boots.
-> 
-> >   That document specifically
-> > calls out the requirement for the increased use of trusted execution
-> > environments in combination with advancements in endpoint detection.
-> >
-> > It shouldn't be a leap in imagination as to the regulatory compliance
-> > advantages associated with hardware attestation that the security
-> > implementation is operational and in a known good enforcement state.
-> 
-> When those technologies have developed some level of maturity and
-> acceptance they'll be worth considering more seriously.
-> 
-> > Finally, at this point in time, it would seem unwise in the technology
-> > industry, to discount the importance of 'AI', or more correctly
-> > machine learning.  As we've noted before in our discussions, it is
-> > unlikely that we are going to see synchronous LSM enforcement using a
-> > machine learning model trained on potentially trillions of data
-> > observations and indicators.
-> 
-> I'm not discounting AI. I'm questioning it's use in kernel access control
-> implementations. You cannot ignore the impact of access control on system
-> performance. Ever.
-> 
-> > The LSM is designed to provide security services to the users of
-> > Linux, not to be a kingdom.
-> 
-> It's never been more than a principality. ;)
-> 
-> > Linux is/was about 'choice' as to how users want to use their
-> > hardware.
-> 
-> Nah, it's about a Finish grad student's side project.
-> 
-> > Artifically limiting the types of security that can be implemented by
-> > the LSM works to the detriment of the security innovation that Linux
-> > can deliver and the Linux user community writ large.
-> 
-> If you can demonstrate a sane implementation of your mechanism we're
-> all ears. User space policy adjudication isn't sane. It wasn't in the
-> 1980's, it isn't now.
+Gr{oetje,eeting}s,
 
-For the official record, a number of your assessments above are
-incorrect and do not reflect our implementation or intentions.
+                        Geert
 
-It doesn't seem to be a worthwhile expenditure of anyone's time to
-discuss technical specifics.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-We will remain content to be 'The Ghost of Christmas Yet To Come'.
-
-Best wishes for a productive remainder of the week to everyone.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
