@@ -1,124 +1,140 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33988213240;
-	Thu,  6 Feb 2025 10:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE864226554
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738836581; cv=none; b=mpZoCe3MFnRctp/ID/6eo9g34SBqIrz48fmjj0eROuK/Eh/W617IvOqurGdnae6F5Qy9k3z1jQ8jaCxva3xg9thvtHj6zVr/mkzN/Tq8yjUnoBLAR/TsYvfjXFvbBO8C+7Fo7P4bV5HkZIy1w6apuaoVGG11FyiN7VhagQHKvwM=
+	t=1738836595; cv=none; b=f5SHxh5wDr9cbOZHQiRDmCa6W4M7tbg67RWtc0+7bz5o/QhyOfI8Q41wC5bh0URUSPHPQ2VMHLM9yjXRctnbmajDivmp/oKqz+MaV5b2rvUy684SOTaR/CKpKrPWrjj9WXwMuY9sEg5np2FZVkTwtqCR3qVkBPj8f+kaE2vhdSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738836581; c=relaxed/simple;
-	bh=7eqh7K858NH1AZrNBNH9wQrXQPBI8B/6RmUW1r2TAcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b9znx17xy551BBhEiEHRJE3J29yVwOQMqud3y77fCJDGB5+72+YaaoZo+1KBdNeo3otslleAehw9hlE73gDibSRyHiUWPmYR+w7F4s4p4PHBbCsmwuZb2NlLUA1DPsAc3lzHDeq/l/9pQbIfqiDVJFtopfyf7sr6jxxB5W/7ESs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJqjs/s5; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738836595; c=relaxed/simple;
+	bh=ZKuwgtDky8Xhvl3M5A4riV3YCHfxsc86ad2FkrZnwH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Eypm1XJYpS+yqU/2fSHcN/fMuVvzQkuk+v6X/dCu8G3fB+Da95byTWnt8fj84nOXR8O0eqiJJ6N8ewjxb/tsgHCBoDLAoDUpcApxnhr40NI5ppkXxs7o/P2DReJDvV3z2RStuFYkWecD/r2fbJ3BrU3dZw3GaoxrnLfXSsD6hBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcE4Spji; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJqjs/s5"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-543d8badc30so894729e87.0;
-        Thu, 06 Feb 2025 02:09:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcE4Spji"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so1436810a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 02:09:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738836578; x=1739441378; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3J7Bg0TmAUJrOo6sonChdz6dfz6pIJ+CpqIwcnqSIEA=;
-        b=QJqjs/s58/uaYmH3tIvsLFnrI90KUVSGpX2DD0NvD+rT32mYG51O8Q+ivpRx7r4Rq7
-         sRTRo0qF5lDzDljoehxVIdztat4ACUQkzC5MIV6Dv5VwLGWcugsJNgxwKAWcf7uxO821
-         9OqJ4w3YaVWqcnuFWAWnxYmSuU+YRcNnP55SuOaOlveGiVYSKNqOVDyIVZoW5o2vq9Rp
-         hviqZqpp4f4ti4NOemPy3JDddocBSExjtlojvr4Mr+ONdBXkAH+52lROGNMajOFNc3Mp
-         ppIU3YRET8aZSznEWZQsjnvt0vXCkCFndvJIKJDAuDQu/3JEZ9R3NaAjqqEaJnmeoGWJ
-         qSSA==
+        d=google.com; s=20230601; t=1738836592; x=1739441392; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s/mS+2eKExtyTN8Vh4IHH9mnRtV5vHTtYoa32EFAd2o=;
+        b=XcE4Spji8nuxLrB+Hur+CsJpythTP+Uwzan3CkG3tKmbqsE6L7AUDrUGi9c296gOUo
+         V7/Z3OugoRIa8nsyvLydx8JdJ6r7eKhJFopjdr5LsthBUuVq/Ny5KISNamBxoZzkDyX/
+         HMFzESvx8/dWid8gBeffpdv4wilnm6MQAxAmkQ3KRWwJ1bxaBt5ferpAWHR8lFPA3XRY
+         nsxujNXXdwxXac0uglLBkf411eukbY70rhya+XDQ+U0g7j2oRD5+zep6AZODSlaujPfa
+         4kzAPuGhRWpaz2zy/juFXhm6RP8gs9SsG3mxhu6ryZ3IBFvjXVFsvj2cB4SBQwebTp+N
+         5xtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738836578; x=1739441378;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3J7Bg0TmAUJrOo6sonChdz6dfz6pIJ+CpqIwcnqSIEA=;
-        b=hx+bQ2OOqL8Q0F6U3Obp2MUs639CXxECxYvvRRSlkoUEp/q048A4wSNVOw0APP1pRi
-         tVqSgWW6Wn16LGiWAy5pSFS6zBcrbxNu78rOavX3PBIAByBGR1ZTh6MMJnF6C9unXLW6
-         MB62KFFKLhxKTqOwxs1k1Lf4uuzcY/OIjUGiUetYttiRnTK3V1z+tpb+6Au1t6pmClk3
-         rWAdsNxr5Tijfk3TBhSh8rd2y5h/ckKnN7ChwdraToIi/nsisyVkQ1chKvTSNlVUpH6y
-         z9xxRqXYRy3JKsGSHuQnnFJsSXzbKzS/M+4iJJhKiX1K7Mj60YtvoO27AX5ZdBnADlIz
-         A4dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUEciFFBExJsdGEU3HPnE+kwRi9JKcmBbPNGgkpNxIPr/+WxjTNVq8dsOaBCt3qmXYq/2o7E93EAX3J0H+@vger.kernel.org, AJvYcCVCIyRVfFPSu31eiPySpN3hSOTMzUaE124Op4LlexCDMgqYBJ4yXuPQZYcdhrwfvhZjmC56MYxt6y9Atg==@vger.kernel.org, AJvYcCXHFGJz2wIHBA1HzWMvkx0vc+1Uo+if+kgxek9jW6aQKYLCqR5pkiSs8MUqbmLqsLO7mRd73M+GgzcQ@vger.kernel.org, AJvYcCXObyFbbAW84lPoRYWYTH2ax/d8cn6/A5Y/1IqAHSRCo0+hqAQPUkX0TLsMYF8bGnz2/LhIUJsoqObB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl5BVk+BVCDsIs02wUoFXFLMHxVcVCwa6dqF5zLpDZAqzV7J31
-	bvLya5HKi3Orest9yEBmVQ7rlrW/MJ0h1+5BVBpi4bCIiPNVy+00
-X-Gm-Gg: ASbGncvkDQGwJxJgZdwMn6rlymJ9yh5hAotqnza42TIDClsnLZTpLSQfyE3jhjVJ52S
-	b07clC2WkkzAj62r96WFnrpd14QxdDLA49zGzTXjd9+DRhs0z1W4+LVLc5VavopHWJBEBMgMG66
-	FyLAqxgKm/JVVdNeK7ZwYin++lsIRXHZ61FF4r/Jukdwan28fQpPgEpcYTZVadB472+kVfFkPC6
-	etWLHhyoruiq1NFC4ICdc2jh//QQz2PIBGy0u1hij/CpAfAYchedTOleJQ8hByfxfR5JwmGARA4
-	AzZg5q4QwxVxQeMDIze9gZeFyu6I
-X-Google-Smtp-Source: AGHT+IGpHJYo74+wxQ1D3J2yvrx6IQcEeGEY/UGt8IL44DX+DiZjLtuOLLwZrbFXWEFrFRiTbVt/Rg==
-X-Received: by 2002:a05:6512:2207:b0:542:214c:532 with SMTP id 2adb3069b0e04-54405a19d21mr2153436e87.13.1738836577877;
-        Thu, 06 Feb 2025 02:09:37 -0800 (PST)
-Received: from [172.16.183.207] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441053ed63sm93621e87.41.2025.02.06.02.09.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 02:09:36 -0800 (PST)
-Message-ID: <a52933a2-8b87-4e49-a346-91266fe3b675@gmail.com>
-Date: Thu, 6 Feb 2025 12:09:33 +0200
+        d=1e100.net; s=20230601; t=1738836592; x=1739441392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s/mS+2eKExtyTN8Vh4IHH9mnRtV5vHTtYoa32EFAd2o=;
+        b=V9pJ13kOb4VsPXIV6+cxDhCZq6mxDVYS031HTN2/WU17YWhun76OZx10vA9yqxWv1X
+         1ykiD6Vyn7frUNC180AslwDQqyEOPuGlziNCdKSB2DqM4OPsaAeAscTysSDE6EReRGd0
+         dvE5H/IYyfBeVsLqPUSZUO9aM25UfqrRM5QpfwSlkJpfuWfdNHqsnSaDk0CysrDUtTPF
+         34U8oL2wjN142SD9RKsVhThSSsRkEF5ZK2EkUSJQbrVkIS80afwAw3INyKYZ2pPQZJl0
+         YR2PhvIDtZ0LqHHbG54hDJgSr5siO4xnms08pGj3DPyCl/TSpLFfzWjLSeiVB42eZvuE
+         +dBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDSpJvEvdNjBWRhzUTuGyegwH4lLF0GPOWEir783DAXm7Eh2A1p0DknI+oUV2s/PMTDOerR1gcOLKyMnE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxAlz2IgtKNUbTFK3+yepZtv8b41jUCMoQ7fCMtB+Pzbfsx3Os
+	e00jF05sjd9KoDqid+WodAjZ/x/gBLr+YyIvJr+dIJqbztaYWhjkwakRCD8+0hB5izW46q1MDxL
+	5UuorlCVolHj7PM5Ud/EFUev0rKXh2CwJpB3t
+X-Gm-Gg: ASbGnctRy+XEzmPcHLymwzBIw40mpSgbmNw24e3Tcc3TyuhtoO/z+drMJFSvSg0Sq90
+	uB55FvYhtdZLjuEWWVmd75Ss4f38HRjw97qFdQcdKB64J7QUO8RVS9Lpy6Ywa196DrMNOx/p+7w
+	==
+X-Google-Smtp-Source: AGHT+IGFKTjHRLId4nFdVIg3ODAcW2J4cs6ogAI1LmO1CoOh8Ex4tMJTJEHvJbynBPllxErs4E2UPC8o2j0J9lonb/4=
+X-Received: by 2002:a05:6402:5251:b0:5db:e88c:914f with SMTP id
+ 4fb4d7f45d1cf-5dcecc86fc3mr2937575a12.4.1738836591837; Thu, 06 Feb 2025
+ 02:09:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] pinctrl: Support ROHM BD79124 pinmux / GPO
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <cover.1738328714.git.mazziesaccount@gmail.com>
- <3d85fe979fca352bed4d9841e3233c055dfaf154.1738328714.git.mazziesaccount@gmail.com>
- <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
- <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250206085834.17590-1-kuniyu@amazon.com> <20250206094457.196837-1-buaajxlj@163.com>
+In-Reply-To: <20250206094457.196837-1-buaajxlj@163.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 6 Feb 2025 11:09:40 +0100
+X-Gm-Features: AWEUYZn8RPseVUE6PE6vSWtPVOwP4H5ImNtxgeSrgvVvG1jZvCKDknd4smT8iBI
+Message-ID: <CANn89iLYV+R1CQiuvjtU=aQinVAKyhQiJVUxWG7t=-M72ZsToA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets
+ autobind identifier length
+To: Liang Jie <buaajxlj@163.com>
+Cc: kuniyu@amazon.com, davem@davemloft.net, horms@kernel.org, kuba@kernel.org, 
+	liangjie@lixiang.com, linux-kernel@vger.kernel.org, mhal@rbox.co, 
+	netdev@vger.kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/2025 11:39, Linus Walleij wrote:
-> On Wed, Feb 5, 2025 at 2:40 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
->> On 31/01/2025 15:38, Matti Vaittinen wrote:
->>> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The AIN pins can be
->>> used as ADC inputs, or as general purpose outputs.
->>>
->>> Support changing pin function (GPO / ADC) and the gpo output control.
->>>
->>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>> ---
->>>
->>> NOTE: This patch is not properly tested. More thorough testing is to be
->>> done prior v2 if this pinmux approach makes sense.
->>
->> Just a note to reviewers - I dropped the pinmux from v2. No need to
->> review this any further.
-> 
-> Why? Gave up on the idea or want to pursue it later?
+On Thu, Feb 6, 2025 at 10:45=E2=80=AFAM Liang Jie <buaajxlj@163.com> wrote:
+>
+> From: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Date: Thu, 6 Feb 2025 17:58:34 +0900
+> > From: Liang Jie <buaajxlj@163.com>
+> > Date: Thu,  6 Feb 2025 16:19:05 +0800
+> > > Hi Kuniyuki,
+> > >
+> > > The logs from 'netdev/build_allmodconfig_warn' is as follows:
+> > >   ../net/unix/af_unix.c: In function =E2=80=98unix_autobind=E2=80=99:
+> > >   ../net/unix/af_unix.c:1222:52: warning: =E2=80=98snprintf=E2=80=99 =
+output truncated before the last format character [-Wformat-truncation=3D]
+> > >    1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", order=
+num);
+> > >         |                                                    ^
+> > >   ../net/unix/af_unix.c:1222:9: note: =E2=80=98snprintf=E2=80=99 outp=
+ut 6 bytes into a destination of size 5
+> > >    1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", order=
+num);
+> > >         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~
+> > >
+> > > snprintf() also append a trailing '\0' at the end of the sun_path.
+> >
+> > I didn't say snprintf() would work rather we need a variant of it that
+> > does not terminate string with \0.
+> >
+> >
+> > >
+> > > Now, I think of three options. Which one do you think we should choos=
+e?
+> > >
+> > > 1. Allocate an additional byte during the kzalloc phase.
+> > >     addr =3D kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun=
+_path) +
+> > >                    UNIX_AUTOBIND_LEN + 1, GFP_KERNEL);
+> > >
+> > > 2. Use temp buffer and memcpy() for handling.
+> > >
+> > > 3. Keep the current code as it is.
+> > >
+> > > Do you have any other suggestions?
+> >
+> > I'd choose 3. as said in v1 thread.  We can't avoid hard-coding and
+> > adjustment like +1 and -1 here.
+>
+> The option 3 would result in a waste of ten bytes. Why not choose option =
+1.
+>
+> I have a question about the initial use of the hardcoded value 16.
+> Why was this value chosen and not another?  sizeof(struct sockaddr)?
+>
+> Its introduction felt abrupt and made understanding the code challenging =
+for me,
+> which is why I submitted a patch to address this.
 
-I just realized I should've shared the link to the v2 - which may not 
-include all the recipients (because it no longer touches all the 
-subsystems - and the get_maintainer.pl probably reduced the list of 
-recipients). So, for anyone interested, here's the v2:
+To be clear, we are discussing here about using kmalloc-16 slab
+instead of kmalloc-32
 
-https://lore.kernel.org/all/cover.1738761899.git.mazziesaccount@gmail.com/
+I find this a bit distracting to be honest, given the cost of a file +
+inode + af_unix socket.
 
-I do still appreciate all the reviews of the v2 even if it does not 
-target subsystem you're specifically watching ;) But reviewing the RFC 
-v1 patches does not make sense because the v2 dropped a few of them.
-
-Yours,
-	-- Matti
+IMO it might be more interesting to document why abstract sockets
+names are limited to 5 hex digits...
