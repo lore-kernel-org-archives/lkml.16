@@ -1,112 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC4022756A;
-	Thu,  6 Feb 2025 10:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F3E227560;
+	Thu,  6 Feb 2025 10:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837648; cv=none; b=XFr1orihEEpQQ+b/Uhtnmn1KZm0VHkL4sXEXNaWcOGFSeiND7p853wWHQDGAFbhTF+IMoVenh6mzhx4/dpUFGJGFIOvmgUlAAc5ldEOEf2nwkQjM7LztQ6BiFN/rw4nwIMHVdyWUML9OAjc3kekK8W5nbjyqTfxO5rTS04L7sFE=
+	t=1738837665; cv=none; b=gVPXYDlbF+al0cPy0QVnek6ARV58PlO472OWouGXf7wTmbcESMNX1kVBEJs09hL21mUROix8ARpkI3e6XJEd4zM3b6EFxXZsSCEDXx7ZHW57BA9wW7dpG6uuPpIcdO2R9RLPI7yPxkX9r3SbSWKMhwEYJu0xtXcpA2Dsp7NFs4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837648; c=relaxed/simple;
-	bh=jYnY+PAbF/WN3ltzf1lZC2RXNGS9Qd9KAU85uNCx1FM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JXpw2LEIYcwZmNQynEyPn2OlEPq+LnOfTlqHoWmEkCu2VmmDU44CECBM8XnQc+fcyEJ1x5XyCs9nVBY44FsgiyJZtXas463qkysaK5kvUM9iVXdktaImO193nshmvvFeA3p3PiqmZBXW2wGjDqoYF6qY7egi91vo+Jo3rDnc8rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPK2bkKS; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1738837665; c=relaxed/simple;
+	bh=B0aenSas7uI6VgQrWrZ3K7h+bbJCK1O9BDNE8yjWiV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9PEg/i3wZAHqfPQk/mgewHJA8B10Ta3HObhA36eTJuUteFGjQ5NciFutywNCVIvbd5xUy5LEJ8cb7Yhv8tj9cZlBjQSqY4V0Pd8CsXPgk8sCP+sNd8/XfQaf7ienJM+hAM+1aw7G/q9VBQZ99SGtOD3r4KHJ4z7Abfn9CfoX2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GaQytxVJ; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPK2bkKS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GaQytxVJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738837646; x=1770373646;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jYnY+PAbF/WN3ltzf1lZC2RXNGS9Qd9KAU85uNCx1FM=;
-  b=PPK2bkKSHXfsTiYvIRwaozmuXRo+kpg6lHf7pXLkF0/6B5gsA9z1ApKf
-   h9o6QawchFSGRHZwPAMFxtDbXZbOgs1Hb8CpgAYhfZ/ZrIiXw5fCHwJBr
-   ZIjTmzSI9J24pjwM/VGUxqbCgxJ6lsKZtztmHw4aPUa1gp0Ny6ep17ley
-   4Ka2hCr5UBlwEf8zzyYrx16JybzQH/tgwStMfxRgVFmt6wisb9+LLGwtS
-   hJAM2PlUOHplVpQtSHCpSDR9d7wwXiJlgJoToAOjDvaARHiu+Rojt3OxB
-   hwIpxbpu38l2B/IOxuVUiKFyXaZpViB8zGSJInPLny/hQHeooeizlWpq1
-   g==;
-X-CSE-ConnectionGUID: S5LJmuFITLG+msb7EpVKww==
-X-CSE-MsgGUID: +s9rN1FrT6u4O5LT0D+TFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39590329"
+  t=1738837664; x=1770373664;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B0aenSas7uI6VgQrWrZ3K7h+bbJCK1O9BDNE8yjWiV4=;
+  b=GaQytxVJEIHD9Dv4muk7bIQGI7QgHZpf4APR+Y2CVU31AtvvER/nDrfP
+   x+ouXde/m9QWxtPg+Kt7RTuEZetx0TA8VU8MsJIvJbi1EfklgEeXFtfzv
+   iZQQXSCrTZVa21SbK8ErYJ7NxRde+5ntOJA/C9uZpFiZy1F/3Hj8Fegzc
+   dJfF5/QmpE2UFsHImYTH0OlNADzvKFcIrwF988ZcY84Aw7/BGz22Y5jhL
+   3RH+/PGEbaaIeNQYeEyPbPUBz/D+quVDja7NZM/THhLgEFGR+Ami6Y5BW
+   U63QTQ9M0UJYhsqoLqYY5VU1GWNGXQHiEdLk4JgjGNFSxirZ8DSYy2tDa
+   w==;
+X-CSE-ConnectionGUID: VGB4zUVaSJOyOO2XYhanKg==
+X-CSE-MsgGUID: n3SOVOx9Rg+EDnqX3qNzkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64787105"
 X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39590329"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:27:26 -0800
-X-CSE-ConnectionGUID: fqpyoR3eQFaADrXPEAeHfg==
-X-CSE-MsgGUID: lrzwzj51Qx+4JmKGj2eZnA==
+   d="scan'208";a="64787105"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:27:42 -0800
+X-CSE-ConnectionGUID: XqbzmsnuTg+1aaXPoCj2Iw==
+X-CSE-MsgGUID: ETqe/vM9SHWZhA2ViQnQXg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148378342"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.165])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:27:23 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Feb 2025 12:27:19 +0200 (EET)
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-cc: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>, 
-    Joshua Grisham <josh@joshuagrisham.com>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
-In-Reply-To: <20250206133652.71bbf1d3@canb.auug.org.au>
-Message-ID: <3603e5e3-b8f9-54eb-c181-03cf2679cb7f@linux.intel.com>
-References: <20250206133652.71bbf1d3@canb.auug.org.au>
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="110998246"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:27:38 -0800
+Date: Thu, 6 Feb 2025 11:24:06 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	Breno Leitao <leitao@debian.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net, treewide: define and use MAC_ADDR_STR_LEN
+Message-ID: <Z6SNxrEteMx0/0sb@mev-dev.igk.intel.com>
+References: <20250205-netconsole-v3-0-132a31f17199@purestorage.com>
+ <20250205-netconsole-v3-1-132a31f17199@purestorage.com>
+ <Z6SEeO0QFx9Y52LJ@mev-dev.igk.intel.com>
+ <a2a26c7eaf20bb972289a804ecfe0e532f0f85ae.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2a26c7eaf20bb972289a804ecfe0e532f0f85ae.camel@sipsolutions.net>
 
-On Thu, 6 Feb 2025, Stephen Rothwell wrote:
-
-> Hi all,
+On Thu, Feb 06, 2025 at 10:50:36AM +0100, Johannes Berg wrote:
+> On Thu, 2025-02-06 at 10:44 +0100, Michal Swiatkowski wrote:
+> > 
+> > >  net/mac80211/debugfs_sta.c         | 5 +++--
+> > 
+> > What about ieee80211_sta_debugfs_add()? (net/mac80211/debugfs_sta.c)
 > 
-> After merging the drivers-x86 tree, today's linux-next build
-> (x86_64_allmodconfig) failed like this:
+> What about it? It's modified accordingly, just needs a bit more +/-1
+> now.
+
+I meant that it can be done in this patch too. 
+
 > 
-> In file included from include/linux/kobject.h:20,
->                  from include/linux/energy_model.h:7,
->                  from include/linux/device.h:16,
->                  from include/linux/acpi.h:14,
->                  from drivers/platform/x86/samsung-galaxybook.c:14:
-> drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_fw_attr_init':
-> drivers/platform/x86/samsung-galaxybook.c:1014:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
->  1014 |         sysfs_attr_init(&fw_attr.display_name);
->       |                                 ^
-> include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
->    55 |         (attr)->key = &__key;                           \
->       |          ^~~~
-> drivers/platform/x86/samsung-galaxybook.c:1020:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
->  1020 |         sysfs_attr_init(&fw_attr.current_value);
->       |                                 ^
-> include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
->    55 |         (attr)->key = &__key;                           \
->       |          ^~~~
+> For that:
+> Acked-by: Johannes Berg <johannes@sipsolutions.net>
 > 
-> Caused by commit
+> Thanks for the rename, per the robot report that just came in it looks
+> like that also saved you from some hassle in drivers that have their own
+> MAC_ADDR_LEN for some reason :)
 > 
->   f97634611408 ("platform/x86: samsung-galaxybook: Add samsung-galaxybook driver")
-> 
-> I guess this was never built with CONFIG_DEBUG_LOCK_ALLOC set.
-> 
-> I have used the drivers-x86 tree from next-20250205 for today.
-
-Apparently it wasn't.
-
-However, I've an LKP success report for f97634611408 (prior to pushing it 
-to for-next, I always wait for LKP).
-
-Why LKP didn't catch it despite claiming it built with x86_64_allyesconfig 
-(successfully)?? Did LKP not build the tree??
-
-I've pulled the commit from for-next until the problem is resolved to not 
-keep breaking builds. Joshua, could you please take a look at it.
-
--- 
- i.
-
+> johannes
