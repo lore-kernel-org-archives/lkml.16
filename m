@@ -1,89 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4275A1624C2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09101EA7F1
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738849478; cv=none; b=CBPBLmycQrOnkN+DT9/HyG/cGyc2zuo8vXz/9GEtkqh2236VI0qDuFtR+qQ+P0A+FmoJUkPmnLIJ0qmpUfH2hzwUv/fcuW85fgMpTQMLqfr74n1zgB+S71WgV+3pK2wfiS1V+ugiSbJU8kue4nPU65hNUkd6mtpp3vzfpyQYWa4=
+	t=1738849639; cv=none; b=KmjmF/pPcMI7HRL3L+Bupgfb7bG8tXIkSRYINqiNIMj/mnUzoXWjoaEIeRtKjNBERHVKkoZHArv3vNQjmnGHu+0pYTBc9HWhyzmMnITUXuXQxvG9/mBxwutEkHhHbog5EWTUVbrFwqSFOLV+4bz7OjRhcZHZCp0FjAXXAEYVYDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738849478; c=relaxed/simple;
-	bh=r2IggwQjUoQ0Z+clwyBtOBFZQ8z0oERJdaFJ0Ptt5Z0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABeQ23VfTyBJt3J/f5mGQjQl8TXv+qw0pyMp1US2op25Ka5V0/miGLWDhFOHwpciyFDS93HfwCic7ubsgss2FZ13C+IggBtZBEtImzO19tAxwm0g1dix1UDLnijEY0LBk87krUxANXy/VaJDn1OLqtkF99ywvL5A3VnBb8zqzXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpL5rhLx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738849639; c=relaxed/simple;
+	bh=8iEHX/rMdmM46NpCJ4QL9LafktkSchlktlovTx/K5+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ahuRcZkYfQoj7/R3WMaJGAtXZXoR6sQDmVQJjRWGR8XEzsm4jUxswTST97vvVsVUU3ciwhutFcIe4CrhJVWqzURR2regtgZ2X5M3jeVKcTK64j7IhdkyPbKo0czhC5Utc5f5q/QbB6W1tPQBucEY8VK6Sy16myApisxhJnRA848=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmqE9JBL; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpL5rhLx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D21C4CEDD;
-	Thu,  6 Feb 2025 13:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738849477;
-	bh=r2IggwQjUoQ0Z+clwyBtOBFZQ8z0oERJdaFJ0Ptt5Z0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jpL5rhLxlGBWUcm7/VOH675e4UCBZVZZ9VEHuPgwRFG1E2x2d4D+EJ2zrFwMXVh38
-	 Hmi1TTTxduyAIoLBxrSaGVdsZ1LoReLsKQ2rtzSFA0g31MErAgJg9Rw6c1TqXSwUdD
-	 Q6ZLgbBmWAPapjewDDra6Pkwa8MVurQ0Du2sm+vvc1+6uEgfzQRlFCAn1Pp4wz+n0K
-	 Ixh6YMNB/ya9G+aB9xh+mJYPqJXdwMtQV7YDTGA8devoqCdDFVoj0Pga9MfFlqTNQz
-	 CRdZws00kepPLacsX6Hoz8Gs/b0wiv+tofEBOWlFLF2X+w3kcRyYRCd7X6k0eYz3lv
-	 r0dbLmbI0+QBA==
-Date: Thu, 6 Feb 2025 13:44:33 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Isaac Scott <isaac.scott@ideasonboard.com>
-Cc: michael.hennerich@analog.com, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] regulator: ad5398: Correct the SW_POWER_DOWN bit
- number
-Message-ID: <28767ef9-0909-4d74-99fa-514c9bc99afc@sirena.org.uk>
-References: <20250206122459.197985-1-isaac.scott@ideasonboard.com>
- <20250206122459.197985-2-isaac.scott@ideasonboard.com>
- <c29affda-e769-4658-bb74-3b8c273e8262@sirena.org.uk>
- <2a0f24c61de73f7bd2bb495d697dcedd8462f4c0.camel@ideasonboard.com>
- <f81d5101-1dd2-4ff4-9a23-403b6efbcdf3@sirena.org.uk>
- <1afa0cd19e48014f3a59bfeaae58f85c9db92c1d.camel@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmqE9JBL"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f3c119fe6so11869675ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738849634; x=1739454434; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k+sjsR0TGjlYkPY95WD+GDrP0sLrBBkK9ZreKrBKyuM=;
+        b=GmqE9JBLUrlBwsMdrF5eBmQkLD2jGLzQ/dKRaWwJNEx3QupKTgEIMdo6ltOKovwgSa
+         +BaFoqB/+bkt7MSEebXUTVn5cnMts4ghOrMekl2xqpc+bw+DfB4mVf8wVjR8kXSNfyL4
+         WejkZ5s1ptacpZXc+LXDPYQ/dOSskhyuXIHNn/CmvjXk/ohsEBXqq5h0C14sjapXpQYs
+         4N0k4qTrATcr1MoEbzT1PcB2LjycJJ2iQQpLvDMA1jv4UskHeu6CsZzKgS1mmsV5ucVA
+         j8zImezaGnWoB+KtdHMmA1Q9Nzewxc7qxsgKnFxVO7OACwRP1O7N34cSGw1Qru1zrhJH
+         byVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738849634; x=1739454434;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k+sjsR0TGjlYkPY95WD+GDrP0sLrBBkK9ZreKrBKyuM=;
+        b=XmPPVOsRj1LFFP3GWuzx6ZN2grx4iVkcDqrv72P8E2/oE+x267v1/VhnwhHkt9DRSj
+         chyefAnWigpiK4hlZwjBZ1EEjOqkUiPBTla4B9zz5Gu6+nx0iZ4ZJaDkBm26tLFhioy7
+         vjWq37Ym7PQEqwMnk4GedMalgLfzAv64FDt5l2glFNO46Yvyw87lZ7hyO9BrFPpVoIGq
+         KpgcezofJ1LW24u727EOWQKxl1Xa5DgyEf+buw+m7krH9yTc95ZSh1eCTTnLTQ6d0SAZ
+         r851AvFmA3YfAaa9rIWOLiDuDHlvn78m/JmKTSXJ4I/fNE0UhLc32FFBo/SSyfUEkLnA
+         cQAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWG0h5QhwzHQSH10bMKr44v5JRA2dDvmbgj4zw1xOEQBGBfDTNmV5bM49Gcv8jJZKmoD8BAAQol3VoNXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcvcrs6I+lrY8SKXlXvnq1B+uABmJ4HOvfLeiGmPO2rlVFrgwp
+	Rqr4YD3IHHhYSg/A2uPutY4GJfv5y8z1bciw14X2DXVPDtlJWugw
+X-Gm-Gg: ASbGncu9LK8M4VYkjhEJm2nQcltTCLnOtJI3z61UWFR2nNSvns8yuhlm+Da3BT8u1Y4
+	FMWeq6O7Nn/CL+qKQ7EWdK8v6FVSdPWl7pqZD4lChotoqPWRcnqdu98QL3bp71/+WGQNhUDEWeN
+	FjPhSXA+XmDTvsOmbpqqw3ynE9S+U0MAadxwOSP4DrZ5oDoUgNkEnEFpcqKVCNG0+54BJRR0srg
+	Ul9Ckc7eRXSTryXLoV0f6mmORQcZmHto+jEUf10sCrXNW9MvIry01TV8H5jJW0KkKJvtMg+HXZT
+	poIQfs1iI6Su+5zGU9k=
+X-Google-Smtp-Source: AGHT+IHIWj5TBEZvrKQkfJtcsPBegkXHSYFiyuIxgjCbRiWoQPQaoe5UdHXHXpr3HmYIuRs7vMhqvA==
+X-Received: by 2002:a05:6a21:99a9:b0:1dc:2a02:913b with SMTP id adf61e73a8af0-1ede883b817mr12845474637.15.1738849634084;
+        Thu, 06 Feb 2025 05:47:14 -0800 (PST)
+Received: from HOME-PC ([223.185.135.17])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af77c63sm1144158a12.65.2025.02.06.05.47.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 05:47:13 -0800 (PST)
+From: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+To: lucas.demarchi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	rodrigo.vivi@intel.com
+Cc: airlied@gmail.com,
+	simona@ffwll.ch,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+Subject: [PATCH] drm/xe: Fix uninitialized pointer read in xe_vm_bind_kernel_bo
+Date: Thu,  6 Feb 2025 19:17:06 +0530
+Message-Id: <20250206134706.60200-1-dheeraj.linuxdev@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ABLaHBGVdySAwJso"
-Content-Disposition: inline
-In-Reply-To: <1afa0cd19e48014f3a59bfeaae58f85c9db92c1d.camel@ideasonboard.com>
-X-Cookie: With your bare hands?!?
+Content-Transfer-Encoding: 8bit
 
+xe_vm_bind_kernel_bo() declares the variable fence without initializing
+it. If an error occurs before fence is assigned a valid value, the
+function may return an uninitialized pointer.
 
---ABLaHBGVdySAwJso
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Specifically, this can happen if:
 
-On Thu, Feb 06, 2025 at 01:28:15PM +0000, Isaac Scott wrote:
-> On Thu, 2025-02-06 at 12:58 +0000, Mark Brown wrote:
+- vm_bind_ioctl_ops_create() fails, leading to release_vm_lock error
+  path
 
-> > You didn't include a Fixes tag or otherwise mention that this was a
-> > fix
-> > for a recent change so I was applying this as a fix for Linus' tree.
+Initialize fence to NULL at declaration.
 
-> To be clear, would you like me to resend the patch with the fixes tag?
+Fixes: dcdd6b84d9ac ("drm/xe/pxp: Allocate PXP execution resources")
+Signed-off-by: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+---
+ drivers/gpu/drm/xe/xe_vm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, like the message said please resend.  Though isn't this the same as
-the fix that Dheeraj already sent:
+diff --git a/drivers/gpu/drm/xe/xe_vm.c b/drivers/gpu/drm/xe/xe_vm.c
+index d664f2e418b2..b6ca53ede904 100644
+--- a/drivers/gpu/drm/xe/xe_vm.c
++++ b/drivers/gpu/drm/xe/xe_vm.c
+@@ -3184,7 +3184,7 @@ struct dma_fence *xe_vm_bind_kernel_bo(struct xe_vm *vm, struct xe_bo *bo,
+ {
+ 	struct xe_vma_ops vops;
+ 	struct drm_gpuva_ops *ops = NULL;
+-	struct dma_fence *fence;
++	struct dma_fence *fence = NULL;
+ 	int err;
+ 
+ 	xe_bo_get(bo);
+-- 
+2.34.1
 
-   https://lore.kernel.org/r/20250206103153.59114-1-dheeraj.linuxdev@gmail.com
-
---ABLaHBGVdySAwJso
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmekvMEACgkQJNaLcl1U
-h9AH5Af/eeCw9phep9Y5SWuGTTzHT6VCsrUqtdMpGUcuWNdGZ3DWdGeTnre21Y93
-jQAB97tBYpZrxWS2L/QfF33Sy1y6OfjykzME0ny8VDya/PulqAzM8kM4CVnK5/7C
-YJbqpxrrxqCcvmLAmDBFs3NnEPKr5NHUOtu0RRr8+oZaOFiunqTKxh4L0X5+cZyL
-1+x3XIaFLWf9mg3PplQoVce/vY6s7lLxg1U7mz+KRswR657J7halZFFWuYpfkki3
-HXJQchcoehoQF1x4908Pk1Hgh7I0Q+NfuRU/fhAYfwmqBhQWfIq6JzEBXFrbuqS0
-ITONuOlHbO7EQP0zwqWeckP/cbWeeg==
-=OtnM
------END PGP SIGNATURE-----
-
---ABLaHBGVdySAwJso--
