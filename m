@@ -1,87 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C91F1EA7C6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ADE199B9;
+	Thu,  6 Feb 2025 13:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738850106; cv=none; b=DMvwgENxVUK6qInfu6QJdZq76z7VQokcqVwzhb+fufdOM0r6v9ALAZi6KrhPvh/i5pwiAX3NQOpt+aHVdZyim0vBuN3ikHEgia96pnjNTFTUf/k1yA3jomb7gC28aw8gGMZs1zk4xOeCmUw2N8r9lvB8J2u/5bfUnncLMTMw+6A=
+	t=1738850128; cv=none; b=aZZlMiZvQsKf1BCLW6dqJna/JfHoGvJWK7Zebi/6C+Ptf5lH/i8WjpAu8PjmcupqJAoWLb0nQ3SqodDZ//r0gY5FeCpvRE8r2aPpS4tuvZ48wPtuEO9LJaWhAzzLb998xnPNJNihzVgcg8OAPEBkAhcw8ez9r/TmsNFU2uD8pvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738850106; c=relaxed/simple;
-	bh=IawJxZvxW/xqYSPpSBYaqyExppH6AxE3zLeLOoMEvII=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=S5jlSNFAmtUP7ZXO62yY5X7PMLpRqtig7XfRAQToN1QDUHaEqrwmqMNOpGMrX9U4/GZ+asC/s52RIrm9ovSAkntkDz0pf21vIwynTJMIyZzyYF+nPwyv+6aa2k3YJg8svO7VdKT9ktEo6MkIZ3RkYyUfl7Ocv3yDhTa+kXg7cLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUt6RviR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUt6RviR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB2DC4CEDF;
-	Thu,  6 Feb 2025 13:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738850106;
-	bh=IawJxZvxW/xqYSPpSBYaqyExppH6AxE3zLeLOoMEvII=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=UUt6RviR2tdvjWi5fY1N0xL4RauCMA4cVb99TGFv6Dku8Mw0IKFkLqBgbMC1skSKA
-	 GyAyMocLG0XP5Qt98wrrcAVyX/9GrGkrDG8n5NTbkxknvHTI3ajr7yvjr/yhC3Scea
-	 Ctq4flkS+QnBUlgFKB0bR4QSE4jTNmMBWJnSy7zCCf9AQd5gWMhG2A43zey8WcPKNW
-	 hNI8i7E/t0owOryL2V8zuMj1V1Q0janCQakYDZTCPUqcR5qWv7jBwvN8/M4v8fWHEL
-	 d40bgLTr2BwvrmX0AhCEOqAd6iPVsYJE6jGauwHTR8Vv/8zz3FRMavzThE8VqRSGw5
-	 FduUHzyYOBrKQ==
-From: Mark Brown <broonie@kernel.org>
-To: michael.hennerich@analog.com, 
- Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
-Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20250206103153.59114-1-dheeraj.linuxdev@gmail.com>
-References: <20250206103153.59114-1-dheeraj.linuxdev@gmail.com>
-Subject: Re: [PATCH drivers-next] regulator: ad5398: Fix incorrect power
- down bit mask
-Message-Id: <173885010497.175639.5929120087903015610.b4-ty@kernel.org>
-Date: Thu, 06 Feb 2025 13:55:04 +0000
+	s=arc-20240116; t=1738850128; c=relaxed/simple;
+	bh=ZCZr5sozyZgu0CY7jpLwBEURc5rUI6AVwu0Ci2grIBs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ArZvRJqwjHokGtguxN/Xd9OTuKxAuqpZo23VdhgPcqJAIQNThwJ+QKkU+72WKF7npbaaKznkAnOifApSPju15vJno+tO1PfExXD7KgrePGwpkw1hspq923+sriRc/WNEgGIhdxbwnv1C8c9tTFFCXUnSmWB/QAeDNCxBHDid+pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-866f414ccedso549180241.1;
+        Thu, 06 Feb 2025 05:55:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738850125; x=1739454925;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=udU39gsf+akq6HCw80QzG+NzxjMAWnoUTDvRFN/6jgM=;
+        b=qTs5t4VKeq8+4itNQQ7dQ26YCSA0tUWD0N0u4yIXIBTm5UTz/6vffQ7SE4xuCkxNF9
+         m91bzePkAUpIchvX5Z0kjbvoe/B7p/ylVr+RV31zvGI7KVOG7KuozYDOjqSEj2qhET1f
+         77EWEWirXovC13i4ki1fSivnWYyb7UHtemzbdzdpH91UOu7vNxsfre36Pjju5FSPRcXy
+         /Au/A/BpksczByNOCyBP6BnSX+xIjy55hhAd7vBQlgh1btHg0WJ3nrFUPGzI7nRVHSAG
+         axkIlUVxO2g8jSJXitSqariBA9LKch49D7Fk13HCo8TkqB2XlqXjS6xAowSYjrJMJUpe
+         bAmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZYrBi+DMrjIWbnsBMZTEvgoTSHzj84bvE21HSuwJwgSKg/6KVdj41nxK9l/l4iZdtM5DTc/IwcGMh6L56@vger.kernel.org, AJvYcCVanQ+m6rlfe+0TQ7uDdfJQan2VZxdLu80I38wlPvuEFxBNbYLC3FEvMnoVdguEigGxUOv3fvO6OIA8EKZK1LBMA3c=@vger.kernel.org, AJvYcCWmAmUyWPCqbSfx1n3h7dLo4p+Tmf/GOXfdjtLC00zTqNXWBExXotArv24IJiwJNb7SxLvKPhmglWBgueA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc5MS96HhEZ3FyEdyAUwyyHRcFFzifqxUGx4Oco9FlX0qEFVUN
+	W3sz+ZCDYz125KVTBDW+DPtx1gzf5PeZgJ5gwmuzvzwk8F1yJ/f476d8O4Dj
+X-Gm-Gg: ASbGncu9K7PhAVDI+FMhoqMzRD6jo95K8RMwvQrfZYiWK6ZUGXTuoCrG6NE/BSePAxk
+	u6UO+YhQIAB5WaBhxCgT/12cXCvkVLfg0aM03Mh38mfChNIn9P4Qpoq0yksg68BHVj/XRDqL6c9
+	aGwo50MbLMeFoxVO5D3Jr6y5KD3cDa2EY7uySXRm3uAKu/4l48O495B5i06cM833Mx+xYuMd2bC
+	jRb+IfgYS0vZDm98b9LdVJIdxk+kaPQwCBWynfC7Yy7As3BYX6L3lZqlwamFvN1n+uSHkLAYTK/
+	2cm8NBkMKz1ElbLpDJtPo5clTH79U2AI8E7BhILvlbhl5cKUUgGGa1HFOw==
+X-Google-Smtp-Source: AGHT+IHMzTpAr4ur5sVChtFu3Z8mUiP7yBFa/KRaAaQfjRgTABHAWsoFJ8VVwTT2TrUoDEAIV1JOXg==
+X-Received: by 2002:a05:6102:b10:b0:4b1:1b67:6a5c with SMTP id ada2fe7eead31-4ba47abab86mr4592666137.18.1738850124694;
+        Thu, 06 Feb 2025 05:55:24 -0800 (PST)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba76ebe373sm229823137.12.2025.02.06.05.55.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 05:55:24 -0800 (PST)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5189105c5f5so542473e0c.0;
+        Thu, 06 Feb 2025 05:55:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1+8jDYJeX4eQNBkQOCk0qIIa4wJxHYwTgPv2dgmzumYfjEYq3DDD7IBn9kWYK2siarIqKwh70QKlt0hEqKZ/IIJM=@vger.kernel.org, AJvYcCU9SISi/48XYi8VUfC/oS+d1r8qI7dMGAuyCYyN4rxnk+ckwJwVL3xc7sqyguwogxHQIDqYuqr+qk7nJfNu@vger.kernel.org, AJvYcCWocFMMkyJw2PXkQL0yXFuJekSGmidgSztC2f08SPCgc7xLeCDJ1SLDHpaRPpp2SeaTs5oxXn1kJx7P5eY=@vger.kernel.org
+X-Received: by 2002:a05:6102:292a:b0:4b2:4877:2de4 with SMTP id
+ ada2fe7eead31-4ba479df281mr4184465137.15.1738850124232; Thu, 06 Feb 2025
+ 05:55:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+References: <20250205093108.2027894-1-claudiu.beznea.uj@bp.renesas.com> <CAMuHMdVD-=n5LdRk42SicdH6MoffTfNGtAz_1AMQ1c7Mui7dFg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVD-=n5LdRk42SicdH6MoffTfNGtAz_1AMQ1c7Mui7dFg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Feb 2025 14:55:11 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVTifmJ82geKC5Ta2yM-uH6dFZab1_Tc_vTDWzZ3o4D1w@mail.gmail.com>
+X-Gm-Features: AWEUYZmaPrRwoy5Whha0O4pj7at87u5ymYx_wgG0HEUA78KoZ0A4m-0briIbJFU
+Message-ID: <CAMuHMdVTifmJ82geKC5Ta2yM-uH6dFZab1_Tc_vTDWzZ3o4D1w@mail.gmail.com>
+Subject: Re: [PATCH v5] serial: sh-sci: Update the suspend/resume support
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, p.zabel@pengutronix.de, 
+	wsa+renesas@sang-engineering.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 06 Feb 2025 16:01:53 +0530, Dheeraj Reddy Jonnalagadda wrote:
-> AD5398_SW_POWER_DOWN was defined with a bit position outside the valid
-> range of the device's 16-bit register. The bitwise operation with an
-> unsigned short would always evaluate to 0, making the power down check
-> ineffective.
-> 
-> Update AD5398_SW_POWER_DOWN to use a valid bit position within the
-> 16-bit range of the register.
-> 
-> [...]
+Hi Claudiu,
 
-Applied to
+On Thu, 6 Feb 2025 at 13:47, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, 5 Feb 2025 at 10:31, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> > @@ -3546,13 +3559,41 @@ static int sci_probe(struct platform_device *dev)
+> >         return 0;
+> >  }
+> >
+> > +static void sci_console_save_restore(struct sci_port *s, bool save)
+> > +{
+> > +       struct sci_suspend_regs *regs = &s->suspend_regs;
+> > +       struct uart_port *port = &s->port;
+> > +
+> > +       if (save) {
+> > +               regs->scsmr = sci_serial_in(port, SCSMR);
+> > +               regs->scscr = sci_serial_in(port, SCSCR);
+> > +               regs->scfcr = sci_serial_in(port, SCFCR);
+> > +               regs->scsptr = sci_serial_in(port, SCSPTR);
+> > +               regs->scbrr = sci_serial_in(port, SCBRR);
+> > +               regs->semr = sci_serial_in(port, SEMR);
+>
+> The SCFCR, SCSPTR, and SEMR registers do not exist on all
+> variants.  Hence you should call sci_getreg() and check if
+> plat_sci_reg.size is non-zero first, else you will trigger the WARN()
+> in sci_serial_in().
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+As expected, the WARN() is triggered on any R-Car platform during
+system suspend.
 
-Thanks!
+Gr{oetje,eeting}s,
 
-[1/1] regulator: ad5398: Fix incorrect power down bit mask
-      commit: 0a7c85b516830c0bb088b0bdb2f2c50c76fc531a
+                        Geert
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
