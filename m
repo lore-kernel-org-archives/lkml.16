@@ -1,124 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D02722FF5D;
-	Thu,  6 Feb 2025 22:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D185323716E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:51:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738882185; cv=none; b=mM10qHw1ArCs8R5ue6YgvbjNw3fb6ECcvVUWKb21huBpFfPPOb1nsfgOyfTjL97er5HiyT2MgGNnrDtyz51n/k4UoavC/9RAmcycJ01SXI76oY7Ro9hWwJhOgCS4dAFDlc6/0ZHCT5V5Bcq/XLtj3yrbZJQxNGn1uBXBnnQHxgk=
+	t=1738882268; cv=none; b=Q9pVMYY16yaxCmiw1yXxd0eVjm6ZFK/ClTCwtoPQD30xDE1i/+AfNw1Gl7mMDL+pUgAOvxNRNm8h8eiyFPlGd+UqbqVR9eTkgDc+B1jGENqz4NzNjPl7vEYl3L42tGsAv05bMEFZyeV7b5pW63KzA5QuUuxF2bktZ8uadzSD1nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738882185; c=relaxed/simple;
-	bh=q83gbOaTr0eMhOhyC3YcY1GYoT9LITTfvFLoRShhPEg=;
-	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l5C6hBvRHkq21PUDzfAvQUn0cn19KmxpJicFxUS1kOCYX5CH7lG85ZUmPwwvsfGnj/A0ft5SVm/fiMu+XH7HwNgIxjZU8B3CaBvWV/bnrKysIsLieWvKOR0UTFC+8zGh73HCg2Lkau2l9m5hr9lMEeIkVT7tdPtVTRx2tqdrV/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+ej2t1l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738882268; c=relaxed/simple;
+	bh=xm+FIbOibdj3SnNMdO85V07gJt2mpbO7LhliIXK/nbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpNYFmsCKbNwCSKRweF/gY4vTPerF58Rsb/d3idEAQ1oK6DAWAu0npTk9nu4hGwUhYjDRVuD6yHPx9fv0TjuNsqZl4TPspChRhxz8A/dHWZGav34Sskt5iKHPdjXnsWvmaly1I+C0u8k3q/OxaNx3EWpAhkq4GAAEHoTlaa7fWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMmlXNDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+ej2t1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B21C4CEDD;
-	Thu,  6 Feb 2025 22:49:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMmlXNDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B5BC4CEDD;
+	Thu,  6 Feb 2025 22:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738882184;
-	bh=q83gbOaTr0eMhOhyC3YcY1GYoT9LITTfvFLoRShhPEg=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=L+ej2t1lZULCcS0yfvXcZV7yoX22fH8kVQZCHeAZpFKbW1BNDUahohF/UzC1bUEmU
-	 H1yCmkrozEJvW5JNNTL7kSfOwtp7Nb6U8QCMs/NgxJHc5y3rima9yu0Ke5hziGeH5a
-	 T1cr7qNS2PwglQvvsrsDoX3UGjtAiQzA6MUZfI07YCj6it4zzNRkk2ycKZ47FVWZ40
-	 hPCZcbqVTGYdIUuudRtsnKio7OTFHPx2ZydfAD/1c0UHNmaqO46aRECuNoufU3v1vg
-	 qT3dV2fZMAnIiJn5GtAYP4smwi6bLpBO4eUcl6C9t1UxJ06fm6mT9wG2lN/jc2/9RS
-	 d45N90PGXLhZw==
-Date: Thu, 06 Feb 2025 14:49:44 -0800
-Subject: [PATCH 56/56] xfs/libxfs: replace kmalloc() and memcpy() with
- kmemdup()
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, aalbersh@kernel.org
-Cc: cem@kernel.org, chandanbabu@kernel.org, dchinner@redhat.com,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- mtodorovac69@gmail.com, cem@kernel.org, hch@lst.de, linux-xfs@vger.kernel.org
-Message-ID: <173888087646.2739176.5488711241017629414.stgit@frogsfrogsfrogs>
-In-Reply-To: <173888086703.2739176.18069262351115926535.stgit@frogsfrogsfrogs>
-References: <173888086703.2739176.18069262351115926535.stgit@frogsfrogsfrogs>
+	s=k20201202; t=1738882268;
+	bh=xm+FIbOibdj3SnNMdO85V07gJt2mpbO7LhliIXK/nbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rMmlXNDbTsukSq4JX0SjAXT37s/y/7eVxu6aVNk0TGBbtIZdvVx6lRi42/IntcoOK
+	 gpTTFNiZjaGo2fbw+Rbj8nquFYJhxvH92Pw0hsyU5BMHOAEA6xDc2FunHuouimDpqI
+	 vyhz/oM0Rl0pD1PhUYWxjnaGSbqS8j5Lhx1BN+iN70PBApLoFTSHnDA4Nt4OkVoQwu
+	 1GUDvX5CaoMyDE0Ka+LiMaQXxKukV8zqwzrn/e4dSoxEDXMlRL1D1k1vk5KBwAHlUB
+	 FHwXJe9lB7HXzeKv9c8nFhkVLRlGGTzsCEu7FKExcNty7S/ntk094dLfKuWAGAYQrX
+	 2kN278y2UzUIw==
+Date: Thu, 6 Feb 2025 14:51:08 -0800
+From: Kees Cook <kees@kernel.org>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, apopple@nvidia.com, jgg@nvidia.com,
+	jhubbard@nvidia.com, Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/kaslr: Revisit entropy when CONFIG_PCI_P2PDMA is
+ enabled
+Message-ID: <202502061450.0935BB9@keescook>
+References: <20250206023201.1481957-1-balbirs@nvidia.com>
+ <20250206081058.GH7145@noisy.programming.kicks-ass.net>
+ <202502061145.8AFAF053E4@keescook>
+ <47db7421-c796-4592-b223-d50277625dbd@nvidia.com>
+ <202502061343.44A6657E@keescook>
+ <08746633-d844-4dc1-90c7-7c3d63b5f4b2@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08746633-d844-4dc1-90c7-7c3d63b5f4b2@nvidia.com>
 
-From: Mirsad Todorovac <mtodorovac69@gmail.com>
+On Fri, Feb 07, 2025 at 09:23:50AM +1100, Balbir Singh wrote:
+> On 2/7/25 08:46, Kees Cook wrote:
+> > On Fri, Feb 07, 2025 at 08:22:23AM +1100, Balbir Singh wrote:
+> >> On 2/7/25 06:59, Kees Cook wrote:
+> >>> On Thu, Feb 06, 2025 at 09:10:58AM +0100, Peter Zijlstra wrote:
+> >>>> On Thu, Feb 06, 2025 at 01:32:01PM +1100, Balbir Singh wrote:
+> >>>>> When CONFIG_PCI_P2PDMA is enabled, it maps the PFN's via a
+> >>>>> ZONE_DEVICE mapping using devm_memremap_pages(). The mapped
+> >>>>> virtual address range corresponds to the pci_resource_start()
+> >>>>> of the BAR address and size corresponding to the BAR length.
+> >>>>>
+> >>>>> When KASLR is enabled, the direct map range of the kernel is
+> >>>>> reduced to the size of physical memory plus additional padding.
+> >>>>> If the BAR address is beyond this limit, PCI peer to peer DMA
+> >>>>> mappings fail.
+> >>>>>
+> >>>>> Fix this by not shrinking the size of direct map when CONFIG_PCI_P2PDMA
+> >>>>> is enabled. This reduces the total available entropy, but it's
+> >>>>> better than the current work around of having to disable KASLR
+> >>>>> completely.
+> >>>
+> >>> So, just to restate my understanding: this is about only the direct map
+> >>> (i.e. kaslr_region[0]). The notes (which I think should be left in the
+> >>> commit log) say that the entropy dropped from 49 TiB (46 bits) to 20 TiB
+> >>> (45 bits). If I'm reading right, the offset granularity is in PUD_SIZE
+> >>> (30 bits) steps, so the entropy is going from 16 bits to 15 bits. I don't
+> >>> see any general problem with that. Especially if the alternative is 0
+> >>> bits of entropy. :)
+> >>>
+> >>
+> >> Yes, this is about the direct map (kaslr_region[0]) and the data is from my
+> >> system which has 46 bits of physical address. On larger systems with LA57
+> >> the drop might be higher. I am happy to repost the patch with my testing notes
+> >> in the commit log, if you think it's useful to have in the commit log.
+> > 
+> > Actually, it might be more useful to note it in the CONFIG help
+> > text? "This may reduce direct map ASLR entropy by 1 bit with 46 physical
+> > bits, X bits with YY physical bits, [etc...]"
+> > 
+> 
+> I worded it as follows in drivers/pci/Kconfig
+> 
+> 	  Enabling this option will reduce the entropy of x86 KASLR memory
+> 	  regions. For example - on a 46 bit system, the entropy goes down
+> 	  from 16 bits to 15 bits. The actual reduction in entropy depends
+> 	  on the physical address bits, on processor features, kernel config
+> 	  (5 level page table) and physical memory present on the system.
+> 
+> Does that seem reasonable?
 
-Source kernel commit: 9d9b72472631262b35157f1a650f066c0e11c2bb
+Yeah, I like it. Thanks!
 
-The source static analysis tool gave the following advice:
-
-./fs/xfs/libxfs/xfs_dir2.c:382:15-22: WARNING opportunity for kmemdup
-
-→ 382         args->value = kmalloc(len,
-383                          GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_RETRY_MAYFAIL);
-384         if (!args->value)
-385                 return -ENOMEM;
-386
-→ 387         memcpy(args->value, name, len);
-388         args->valuelen = len;
-389         return -EEXIST;
-
-Replacing kmalloc() + memcpy() with kmemdump() doesn't change semantics.
-Original code works without fault, so this is not a bug fix but proposed improvement.
-
-Link: https://lwn.net/Articles/198928/
-Fixes: 94a69db2367ef ("xfs: use __GFP_NOLOCKDEP instead of GFP_NOFS")
-Fixes: 384f3ced07efd ("[XFS] Return case-insensitive match for dentry cache")
-Fixes: 2451337dd0439 ("xfs: global error sign conversion")
-Cc: Carlos Maiolino <cem@kernel.org>
-Cc: Darrick J. Wong <djwong@kernel.org>
-Cc: Chandan Babu R <chandanbabu@kernel.org>
-Cc: Dave Chinner <dchinner@redhat.com>
-Cc: linux-xfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-Signed-off-by: Mirsad Todorovac <mtodorovac69@gmail.com>
-Signed-off-by: Carlos Maiolino <cem@kernel.org>
----
- include/kmem.h    |    9 +++++++++
- libxfs/xfs_dir2.c |    3 +--
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
-
-diff --git a/include/kmem.h b/include/kmem.h
-index 16a7957f1acee3..66f8b1fbea8fdf 100644
---- a/include/kmem.h
-+++ b/include/kmem.h
-@@ -79,4 +79,13 @@ static inline void kfree_rcu_mightsleep(const void *ptr)
- __attribute__((format(printf,2,3)))
- char *kasprintf(gfp_t gfp, const char *fmt, ...);
- 
-+static inline void *kmemdup(const void *src, size_t len, gfp_t gfp)
-+{
-+	void *p = kmalloc(len, gfp);
-+
-+	if (p)
-+		memcpy(p, src, len);
-+	return p;
-+}
-+
- #endif
-diff --git a/libxfs/xfs_dir2.c b/libxfs/xfs_dir2.c
-index 29e64603d4ae82..1285019b674423 100644
---- a/libxfs/xfs_dir2.c
-+++ b/libxfs/xfs_dir2.c
-@@ -378,12 +378,11 @@ xfs_dir_cilookup_result(
- 					!(args->op_flags & XFS_DA_OP_CILOOKUP))
- 		return -EEXIST;
- 
--	args->value = kmalloc(len,
-+	args->value = kmemdup(name, len,
- 			GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_RETRY_MAYFAIL);
- 	if (!args->value)
- 		return -ENOMEM;
- 
--	memcpy(args->value, name, len);
- 	args->valuelen = len;
- 	return -EEXIST;
- }
-
+-- 
+Kees Cook
