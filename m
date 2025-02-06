@@ -1,167 +1,101 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2875C15A848
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D8815A848
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844270; cv=none; b=Vm9jwobxuV5wa2JqZN/J2FnkH8kX6rN9YeZ7pfvDuWTC37TpnHj+u8WqU9le+bdu46g64/rBzWUycMsPGoED1ouhRUFiqN578JwUdRF+IAayaqym0jYswJTGGx6Y7hGcQorn38fMWphkKzBVIxCU27NeMBUUJsQQAwsEEReBiII=
+	t=1738844317; cv=none; b=jg1UYoBnckw/+hhrqto2UJCv6aBEHqD2YzCP7+31sBdO2OiNzqgQF9ntwZfenndWLXBTMMQnl+yuA2FGHKPxcVmu/8Jxk7MpLSnAi7KumZrd4PLffhWhCDR/U0lx4oMs9I3R3ZD/cgcHFKRUYQtgrxt0exVlbSiKJC5DRCBX7ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844270; c=relaxed/simple;
-	bh=4cdFR+B95oVkXNiulG1qv9Pup9VHoxewsSMqD4dgVBM=;
+	s=arc-20240116; t=1738844317; c=relaxed/simple;
+	bh=WOMYa8K2NFuTiYjPw455ali5c1qxWdaSnodChnPmTqI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=US+o3QfnG7w9mn0RgcdT6PBSwvR5vdHfUKXwyETslLUmoKsWtmnNAP6RUbt7cbtjpIulgByl2f861jMRxHOtcHWPKiIhWvJ1vrjYGwFIY2xYyEgZfaG7G9e3KtT+nCouYt2gHB49cKDtQ9T8kAFppo33PxPviyXnWQmr1OSweXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=iaJ/HPQk; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 To:Cc:Content-Type; b=SQHzfl1YO/fRKholkbz19kCQ2XB85jj54mawhf1HV+8xieGml58KZBQKwq1UwE2NRV0UiJiAkTr1shqdwI/ZAT8dzl9f7cD6+lfmMV/rj8qLO1AndzBZ9g3mXMVOjOb943a7Hkkka+s8g6iLqkkuz0nqtPgICRVayOEEI+xlu3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=abIua/qw; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="iaJ/HPQk"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30034ad2ca3so6515981fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:17:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abIua/qw"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38da66ce63bso432476f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:18:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738844267; x=1739449067; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738844314; x=1739449114; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kVaPm6svnrZmjjZXaQ6INFYIHurE1c31ambChU45jvE=;
-        b=iaJ/HPQkyb/z3PjJ/QEpfQx0Xjpwjgah/jbqVvaqQWz0nNbb9eWZp0Y+ucFlEeziCC
-         N7RpO7V0Wkkfi8Qf8vVDQSQXVXokZBrd11qieJEjO5uHuNez7Te7Kooyg67uOh2BWAnv
-         l+R+IZM8Rzjw2+lVfb6F5EyGpFFZ/YKZ1tZhO1DwsF8PyTZb5Si+DKf9S4jXUdcJ2ttm
-         lWcE7bKU24fSwXHgyPXBXUAM+JKnUzDHjUhMhFE85bEB3BQ9Hcwq6CCAN7MN6BFi7E40
-         tzx4FVBokSZ0Ye5OrKnFmb5zlAs4BrXavuc4agTeQH7yF76OO3yeZz6u/vgh0JIIXQGU
-         FIgA==
+        bh=WOMYa8K2NFuTiYjPw455ali5c1qxWdaSnodChnPmTqI=;
+        b=abIua/qwo0L8mqcm4mMKrWQz/y6gyFgBM62fBmk91uF9wz2JdSe1k0C3KuBIk5mSIi
+         ToScA1AOtdcqOeMANusLPuQB0u4btxmLxvnRLg4INlDtInpNwjMbJEy6DHfNzijwl98F
+         XlYYTuOlNHNkTarAiEyvvMxHmLrW6vGJNgofljBekw8hu2n2uchkjhGXtar+5VFs34De
+         fQ5dOsxTF0mAZ99D2E+YVPipMFLy9Xhxf7WA/suJp1lB9Fu+FZilWEx8hAKV12UF9CCh
+         CRsrQndtlF+lxeGLXp7sMkCtX7GRiBr+FZzyDoqoLpVMvFKr1wTOqEXlp49nKppHZBrc
+         5PPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738844267; x=1739449067;
+        d=1e100.net; s=20230601; t=1738844314; x=1739449114;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kVaPm6svnrZmjjZXaQ6INFYIHurE1c31ambChU45jvE=;
-        b=r/EO6+UeyWQ0DFUzm1ooRuALAXNEJjecuiHzT8CB4N/epsJCaEQAvGTtfJtelFCtBd
-         EgpjuZ2MOiaaHS3hmUWlcYD311pf4dvM0LReGzfQHC3UNtbYmaaUi6RISyLc018FUH4N
-         2S6jV/7BhgVV60S539PPSDrW9Gw8pUUhVZ2DYyR/cuVhjl3SifV0pdn+iHzuQuWne097
-         pZ0sDkcDvXeR92wSeeAIEDtoR4pjcPhfxSI37cDXlKC/+0YlexV+92/a5D3HfVFyKi1c
-         yWYJYPq+21WnxhKnoSUsShZ4rrOMrJqxUuDMSzU19jSq9rcy/bjnR282LRHfWtuv5hKP
-         A8cA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsnKDajEiKJHOj3efjW560D5bho9twgx9a7OO3PO45q6FquPoiKTxXn75tw8wvFDAyWJKQ4eFc/Gc7ovA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2A1Aab+s/qnvR7R50hHFO50wEi/YAqb99Dta1P4X1phB4c+HX
-	cvpEaJn77OV9WK8ZDW4L97nrMQ9yPyJGTVtFpbpfrtud5xyPqagd5OAmLLzeQF/ZBcfroL1pzcj
-	CNEhb6sEbqZj34PET/G0jz7SA3PepJLx/I5vn/g==
-X-Gm-Gg: ASbGncvZ7yia8xuG9eXv7lXO2UEeZ2NvwhGB7zBBJt/HVh/gXuobSS6jPHEw7hflJpb
-	Lhju/RrEocPOpQ6WjDJy2n/LRjOQDA+QGSIlujdkcQWF6PXpN4A0jGoJll7caUhvjUKQm3NPk+Q
-	==
-X-Google-Smtp-Source: AGHT+IEdOcygqBJ9zpwt9AnW8YGVVzGNtNdwXSyeVHKPWBPAI82GsWsII++eZWvLHpNnJrehz+aGVI+bK2PH2gmRR6A=
-X-Received: by 2002:a05:651c:b08:b0:2ff:c242:29c8 with SMTP id
- 38308e7fff4ca-307cf386eaamr25840471fa.35.1738844267233; Thu, 06 Feb 2025
- 04:17:47 -0800 (PST)
+        bh=WOMYa8K2NFuTiYjPw455ali5c1qxWdaSnodChnPmTqI=;
+        b=NMprDz1GCZHHm0EIJX3VbRo19ml5oc+KgLJcd3sKxOs0DIgF68IUX0QBLQY9WQdS3i
+         EpR9ubeqU4GktWsHv3PBkTP111i7f1qCLXgKtpeDnIdkFkzDwMIKOAU20ry87RQflOEr
+         grB5TxcZ8nLJBDA6rPlWXLh6wji+bUcMIfGPLM4PHVYt65dF7nemGOv0HmIelkE9yeLq
+         +BNTCYUjKjI//tmM4OEhGPzsUSJMVb9+HdC03fm4qZRi74TcC/yxeFwA3kn7b4eQOxxP
+         GEwAmlLw1wU6YLD6gt7mnC5IxsU+vpUEnd6PgrVPcDixSOv6wcydCsqRnKJq9wWxdJ6E
+         JPyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWfH51fpGugxHoFYeAmK5ZoBJV43sJTN3qMIH2ThVqElLd8mK9ldVpQ4A5CZCI3SdGb6nkRojkBFUKE7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4uV2bTqt/cTNVmDE59haVrQOyZvpPRSMfU/3Hv4qF5gHuEMXm
+	H6XIQ7GuVdheIwfIDEgkjO5Sxl3bJv7sJyg/H1x42be0pYzVGSSmFC2mNZphsTUcH9QhgStcBQ8
+	odM7UiU499uX8IULOzVcgyVZTphMUji/F2Yma
+X-Gm-Gg: ASbGnct5ELNaFDjB2TrvgfpHQhItxdOPXose7dtQtqXj6WRwshta+QBsi/+N8ZKg5qg
+	rfDp1VewaQBOo3hlsDOixcbdGmucnWQ1H2KSxLiCgMebTJrVkjXGJt1W6fJUWuVKBzNHEwGYetL
+	WBGCeCiD2ixHT7Bcnjbf6ARxjWn9g=
+X-Google-Smtp-Source: AGHT+IFOoKb+OzuWf9fUikCWQwPXbC7CmrKQsMcm5bpYPVABC49nZhXS+WRvvbgynB14UA8L48nGGTwTH45X2LJuuRw=
+X-Received: by 2002:adf:e74b:0:b0:385:f195:2a8 with SMTP id
+ ffacd0b85a97d-38db489cc29mr3809901f8f.30.1738844313955; Thu, 06 Feb 2025
+ 04:18:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203084906.681418-1-apatel@ventanamicro.com>
- <20250203084906.681418-12-apatel@ventanamicro.com> <871pwfp272.ffs@tglx>
-In-Reply-To: <871pwfp272.ffs@tglx>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Thu, 6 Feb 2025 17:47:34 +0530
-X-Gm-Features: AWEUYZnkWoBjjXJZwQi6NEV8e_1cUvMnkW_wF5FuGhI66P5vlROSq0JSDO_qX_Y
-Message-ID: <CAK9=C2U537LvffPLGad=LsFsN27uW2UB2X=Oxrub9v2U5vneYQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 11/17] irqchip: Add driver for the RISC-V RPMI
- system MSI service group
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250131-configfs-v1-0-87947611401c@kernel.org> <20250131-configfs-v1-1-87947611401c@kernel.org>
+In-Reply-To: <20250131-configfs-v1-1-87947611401c@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 6 Feb 2025 13:18:22 +0100
+X-Gm-Features: AWEUYZmlHwHwwUI64UoRJt9bg3KwcBSLQQZ-F8Yg7yTDgIzxt0BHYMKwVLSFXg8
+Message-ID: <CAH5fLgiaxPyC88wCvm4-2zSxx=O+q+eji-guB_tpRXM__Do+Dw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] rust: types: add `ForeignOwnable::PointedTo`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Trevor Gross <tmgross@umich.edu>, 
+	Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+On Fri, Jan 31, 2025 at 2:32=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> From: Tamir Duberstein <tamird@gmail.com>
+>
+> Allow implementors to specify the foreign pointer type; this exposes
+> information about the pointed-to type such as its alignment.
+>
+> This requires the trait to be `unsafe` since it is now possible for
+> implementors to break soundness by returning a misaligned pointer.
+>
+> Encoding the pointer type in the trait (and avoiding pointer casts)
+> allows the compiler to check that implementors return the correct
+> pointer type. This is preferable to directly encoding the alignment in
+> the trait using a constant as the compiler would be unable to check it.
+>
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-On Mon, Feb 3, 2025 at 7:20=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
- wrote:
->
-> On Mon, Feb 03 2025 at 14:19, Anup Patel wrote:
-> > +
-> > +struct rpmi_sysmsi_priv {
-> > +     struct device *dev;
-> > +     struct mbox_client client;
-> > +     struct mbox_chan *chan;
-> > +     u32 nr_irqs;
-> > +     u32 gsi_base;
-> > +};
->
-> AS requested before please use tabular layout for structs:
->
-> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct=
--declarations-and-initializers
->
-> > +static int rpmi_sysmsi_set_msi_state(struct rpmi_sysmsi_priv *priv,
-> > +                                  u32 sys_msi_index, u32 sys_msi_state=
-)
-> > +{
-> > +     struct rpmi_sysmsi_set_msi_state_tx tx;
-> > +     struct rpmi_sysmsi_set_msi_state_rx rx;
-> > +     struct rpmi_mbox_message msg;
-> > +     int ret;
-> > +
-> > +     tx.sys_msi_index =3D sys_msi_index;
-> > +     tx.sys_msi_state =3D sys_msi_state;
-> > +     rpmi_mbox_init_send_with_response(&msg, RPMI_SYSMSI_SRV_SET_MSI_S=
-TATE,
-> > +                                       &tx, sizeof(tx), &rx, sizeof(rx=
-));
-> > +     ret =3D rpmi_mbox_send_message(priv->chan, &msg);
-> > +     if (ret)
-> > +             return ret;
-> > +     if (rx.status)
-> > +             return rpmi_to_linux_error(rx.status);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +#define rpmi_sysmsi_mask(__priv, __msi_index)                \
-> > +     rpmi_sysmsi_set_msi_state(__priv, __msi_index, 0)
-> > +#define rpmi_sysmsi_unmask(__priv, __msi_index)              \
-> > +     rpmi_sysmsi_set_msi_state(__priv, __msi_index, RPMI_SYSMSI_MSI_ST=
-ATE_ENABLE)
->
-> These macros are not really providing any value.
->
-> > +static void rpmi_sysmsi_irq_mask(struct irq_data *d)
-> > +{
-> > +     struct rpmi_sysmsi_priv *priv =3D irq_data_get_irq_chip_data(d);
-> > +     int ret;
-> > +
-> > +     ret =3D rpmi_sysmsi_mask(priv, d->hwirq);
-> > +     if (ret)
-> > +             dev_warn(priv->dev, "Failed to mask hwirq %d (error %d)\n=
-",
-> > +                      (u32)d->hwirq, ret);
->
->         if (ret) {
->                 ....
->         }
->
-> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#bracke=
-t-rules
->
-> > +     irq_chip_mask_parent(d);
-> > +}
->
-> Other than those nits, this looks reasonable.
+I would have gone a different route with this API, but I won't block it.
 
-I will address all above comments in the next revision.
-
-Thanks,
-Anup
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
