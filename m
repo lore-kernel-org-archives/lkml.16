@@ -1,173 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E729D213240
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2BE213240;
+	Thu,  6 Feb 2025 10:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738836282; cv=none; b=hxXWZLsLWzT4w7WA4jgoWgql4XMr91PmdgUOcHtrVF5vw5zp4qtj6ksW8j6iJvdQAV3cRcqwMhEzZyZB1rqFJwxJ42erXJJRSxE4z69rT/+7JOREI6gKiR7wodc3aPy+xwOYrTBkCwU6cDD/ssXOjM5zquLCmLDmeAxYwKC4nFA=
+	t=1738836336; cv=none; b=FFzruj+GtGw2YviiPeVDbBijKDXOOxeg9NONdqTfKhq+7qm1nhL8PzzouwhdU17Y2o3yZ0qAylrA6hyuPdMzljb+YlFp18GawQb04XsJP2xHL6vNROPiKEo0ZmJget9mvfh2sHLXsAqN+LGt/+LHrRfJoEIiw3/ON6dPbWRm67g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738836282; c=relaxed/simple;
-	bh=pzwXnf2CUivg5l0fXHjyl9Qf6NkaFqUJy/SQ9lNidzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snPND+8o+ubXWYkDckMdRXdAAirHhlMIMNHE/5Xm60+j+/cZz+uDZzMBPGOOuVVF9u6i1z6r2uxOfb3kHj6gCL3sEkvJQKhMApVXToNEA13MZ+TKHwaJKWStU+NmQWLvILf7vxWVacA9l2Q0V5+7EEnRSzotSZsPkkBurjvYG/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0VeLl4v; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738836336; c=relaxed/simple;
+	bh=0xrkmKKCIh/hLhu9vbvKOnwbrR9FaaokDbiLZ/MWetw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMh0uAxHyXhXN8PX9J75AU/+tONSL6bgkY5q8DbpVU76g5V4D+VWHaaboGuR8mcz/BahidWDi2ygxOKlUsw8FS/5dU4WX3I1CJFdhphsFIdWYaAp/isD0EK4eYOoQWeTGfXEJu1oKfkxD8DQi801RsC39h2XWonP0KK8ZHlAkZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMZYJT4E; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0VeLl4v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738836279; x=1770372279;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pzwXnf2CUivg5l0fXHjyl9Qf6NkaFqUJy/SQ9lNidzc=;
-  b=Q0VeLl4v1g6mVuL8Sfsh95anGdvjD+8kWLAvQweOg5VvTyQfQQ7xjGii
-   cj+m0Js1yVjKkXu+fmg4cdS748xkYTDw0FXgcHvbt4g6a3asmDvsNt7eK
-   tBIiKGbnm9huA+g6wyTGqIx6sYcv7vhQdM3SXEdFj9knvJ98saPx4c5YH
-   zsJ1dVqP1jwvLagrCscwSR9PXljx7dMSUz8p09YLIJJUp5dgP06niHN9y
-   KOniKNpAsEe188S8zYLkfnxV6FahYF23gCsAUXObbC1Tqd49Pkm25vaQ1
-   T5/QgFQcCVpDST7qwHZJLmFzA+PK8F1/RAPwSUXlreX50w9Gc13UpREuA
-   g==;
-X-CSE-ConnectionGUID: f7E3Tl6tQcqYpw3SLFN9fA==
-X-CSE-MsgGUID: W92Ui+EwQZ2sOgqa/ghlFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38660988"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="38660988"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:04:38 -0800
-X-CSE-ConnectionGUID: SsO8ILu0T5SHkrN1Q5HQ0w==
-X-CSE-MsgGUID: C60LQ62BS42v1VFSi0SVwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="111363400"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 06 Feb 2025 02:04:36 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id BFACE164; Thu, 06 Feb 2025 12:04:34 +0200 (EET)
-Date: Thu, 6 Feb 2025 12:04:34 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Eric Auger <eauger@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Zhenzhong Duan <zhenzhong.duan@intel.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Hongyu Ning <hongyu.ning@linux.intel.com>
-Subject: Re: [PATCH] virtio: Remove virtio devices on device_shutdown()
-Message-ID: <pnpkqz6keacwz4myydc6aak6gkdmomqn2lo376przlhb3mscsq@tdsfxwb2ujpk>
-References: <20240808075141.3433253-1-kirill.shutemov@linux.intel.com>
- <cc7312ca-2745-48a5-a5ac-9ee1d1c4bee0@redhat.com>
- <20250203094700-mutt-send-email-mst@kernel.org>
- <7cee3c9e-515e-41de-a15c-04c7591e83eb@redhat.com>
- <6bce0f4c-636f-456b-ab21-4a25d3dc8803@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMZYJT4E"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30613802a04so7182621fa.2;
+        Thu, 06 Feb 2025 02:05:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738836333; x=1739441133; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0virtW8kjtxzjH07RQqH53vaPJF5r5H3sxuVvOKAlHs=;
+        b=iMZYJT4E5hmBYg8tfq5wvmvxEfS3qLdYvNvlZgj6KbB68WbcWxXYZbCCX3uZ80Vshz
+         jI1aLdLih0UYnfrEugFDK7owLS9ypstA5C7Hd+YYC6GYNoKwsd0/SBd8wNH/63kCgDJe
+         APoGSSor2QCGqEgP71I6XarhVUsYnwZWFyWIrr6Scscv12cuJhxtG8piKZO+LjuzvRyl
+         e93oikjZdCQus5QjgbtdLNIolFXSGvxtxbJVnExMRRGcxxx8TQmL7pKqr6jeTIJ3QKid
+         QL4RFcdi1eLoOtOf7ojQ+NLvuPq8nPhXpjiPzVhii3d6XfsKkcRKxrFbFD0km8qTbzLe
+         RFHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738836333; x=1739441133;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0virtW8kjtxzjH07RQqH53vaPJF5r5H3sxuVvOKAlHs=;
+        b=fqZja1FOBo+XdHnn2lklFpdaaUdDGWWU5B4/MkJPh1JXnutULk+TmhFL7aqZ8c+6O/
+         9okSqubVqZy/7Jp0EfDPPXK7bwkAfUdJ6FnqO9ilE0VasVAjBgxd9za74a9p4oXBg4qo
+         7hEU5L/1AxY1O5OaB52GNCKV3+pqvkHw6uAM5T394/zZrCT/HORJ2BiJ6UOGbc/xvLoM
+         1ezhSqeNL3+HUyLzzTWcpNAMWaBpvXo+lFpR/Z30EtaVUgR1Dkc4rh0BvgeJjiOwlp6u
+         bnBHoqM9DanpPFcwHxTkbWDxLJh/iJJ+T0Y4nre/JA+h4NLZmZ94fskgnzf062fKrfxx
+         xDJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKOWsC056dDe0Cj0OTq+KVBhk3Hso/zMmt0RCnbdfQ1meMjDpMpnQd9G3WoNsBiFWIX+XuJNVXuIuV@vger.kernel.org, AJvYcCVTW2DpQlpR3hCwDd5nGU4F4UMtYXgUo5b95bhO3muSGtVud258CRV4N3JoMjMFyAaWvdvbtLhH1vetIz9g@vger.kernel.org, AJvYcCW/yPBGFummUcHT4s8vufoAC6jNl5r/e+3WEmuQXsQL1WjUD5JPGkjrN3d1Ysxd4jqNMjfYnvrZkhj8@vger.kernel.org, AJvYcCXFsejE0E97A18uexrEPDKvPw9PBSt3huifOZwciynTA88Qm2g1SWDgB6tUBBcytgp/cHTLK9nOv/jamQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIw7t8oIYCVvSDzFtwcN+dkF1TOmW+aErXD1QoN3+qbNW0s5DS
+	hkuK7PVT875K0Fn5s+KM28r583YDiiKB+2F/BL5O/9FIhfERhRQz
+X-Gm-Gg: ASbGncs0G98k5eB4e54K2gIv3Wbp5dFskZJmMGmFIf8N/VNYBeAWa/UhzKgwaYZ8pyq
+	tQRHkLrdZm7jFQpgUOsUaLAH4XNst3JshO0+87eUHXQxagDx5DrhTCnfjdd4vma8rfFdYZVSjos
+	4mOIZfsgAc+cz1+7SCdx9dJKtmbXDXiumOzU/4Gj+dXMUfQALCnBn+MOhOdEV9L1+H00mZA79G1
+	3u8j9AkTA2ifVfhqFbqck2CE+Wd5n2WQDXHWgSOIWVspLRApPziaOeT7T4iedg1cnOKfYHv1J70
+	+YPXuC4x2dBn4UNAwX+v8CiCu9Uv
+X-Google-Smtp-Source: AGHT+IG7xwkZ7DFUUTF2/ENv3MgBlQuaw/xM+8bfmpcHcjjYDrBy1rYTVka2WIebmc7Znq+Fi5LalQ==
+X-Received: by 2002:a05:651c:1555:b0:2ff:d3c6:9cf4 with SMTP id 38308e7fff4ca-307cf2e8331mr19706751fa.1.1738836332920;
+        Thu, 06 Feb 2025 02:05:32 -0800 (PST)
+Received: from [172.16.183.207] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de178201sm883971fa.16.2025.02.06.02.05.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 02:05:32 -0800 (PST)
+Message-ID: <7d13f5e1-174e-46e9-9c1d-7bd2c72d0d0e@gmail.com>
+Date: Thu, 6 Feb 2025 12:05:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6bce0f4c-636f-456b-ab21-4a25d3dc8803@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/5] pinctrl: Support ROHM BD79124 pinmux / GPO
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+ <3d85fe979fca352bed4d9841e3233c055dfaf154.1738328714.git.mazziesaccount@gmail.com>
+ <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
+ <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 09:59:58AM +0100, Eric Auger wrote:
-> Hi,
+Hi Linus,
+
+On 06/02/2025 11:39, Linus Walleij wrote:
+> On Wed, Feb 5, 2025 at 2:40 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+>> On 31/01/2025 15:38, Matti Vaittinen wrote:
+>>> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The AIN pins can be
+>>> used as ADC inputs, or as general purpose outputs.
+>>>
+>>> Support changing pin function (GPO / ADC) and the gpo output control.
+>>>
+>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>>> ---
+>>>
+>>> NOTE: This patch is not properly tested. More thorough testing is to be
+>>> done prior v2 if this pinmux approach makes sense.
+>>
+>> Just a note to reviewers - I dropped the pinmux from v2. No need to
+>> review this any further.
 > 
-> On 2/4/25 12:46 PM, Eric Auger wrote:
-> > Hi,
-> > 
-> > On 2/3/25 3:48 PM, Michael S. Tsirkin wrote:
-> >> On Fri, Jan 31, 2025 at 10:53:15AM +0100, Eric Auger wrote:
-> >>> Hi Kirill, Michael
-> >>>
-> >>> On 8/8/24 9:51 AM, Kirill A. Shutemov wrote:
-> >>>> Hongyu reported a hang on kexec in a VM. QEMU reported invalid memory
-> >>>> accesses during the hang.
-> >>>>
-> >>>> 	Invalid read at addr 0x102877002, size 2, region '(null)', reason: rejected
-> >>>> 	Invalid write at addr 0x102877A44, size 2, region '(null)', reason: rejected
-> >>>> 	...
-> >>>>
-> >>>> It was traced down to virtio-console. Kexec works fine if virtio-console
-> >>>> is not in use.
-> >>>>
-> >>>> Looks like virtio-console continues to write to the MMIO even after
-> >>>> underlying virtio-pci device is removed.
-> >>>>
-> >>>> The problem can be mitigated by removing all virtio devices on virtio
-> >>>> bus shutdown.
-> >>>>
-> >>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> >>>> Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
-> >>>
-> >>> Gentle ping on that patch that seems to have fallen though the cracks.
-> >>>
-> >>> I think this fix is really needed. I have another test case with a
-> >>> rebooting guest exposed with virtio-net (backed by vhost-net) and
-> >>> viommu. Since there is currently no shutdown for the virtio-net, on
-> >>> reboot, the IOMMU is disabled through the native_machine_shutdown()/
-> >>> x86_platform.iommu_shutdown() while the virtio-net is still alive.
-> >>>
-> >>> Normally device_shutdown() should call virtio-net shutdown before the
-> >>> IOMMU tear down and we wouldn't see any spurious transactions after
-> >>> iommu shutdown.
-> >>>
-> >>> With that fix, the above test case is fixed and I do not see spurious
-> >>> vhost IOTLB miss spurious requests.
-> >>>
-> >>> For more details, see qemu thread ([PATCH] hw/virtio/vhost: Disable
-> >>> IOTLB callbacks when IOMMU gets disabled,
-> >>> https://lore.kernel.org/all/20250120173339.865681-1-eric.auger@redhat.com/)
-> >>>
-> >>>
-> >>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> >>> Tested-by: Eric Auger <eric.auger@redhat.com>
-> >>>
-> >>> Thanks
-> >>>
-> >>> Eric
-> >>>
-> >>>> ---
-> >>>>  drivers/virtio/virtio.c | 10 ++++++++++
-> >>>>  1 file changed, 10 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> >>>> index a9b93e99c23a..6c2f908eb22c 100644
-> >>>> --- a/drivers/virtio/virtio.c
-> >>>> +++ b/drivers/virtio/virtio.c
-> >>>> @@ -356,6 +356,15 @@ static void virtio_dev_remove(struct device *_d)
-> >>>>  	of_node_put(dev->dev.of_node);
-> >>>>  }
-> >>>>  
-> >>>> +static void virtio_dev_shutdown(struct device *_d)
-> >>>> +{
-> >>>> +	struct virtio_device *dev = dev_to_virtio(_d);
-> >>>> +	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
-> >>>> +
-> >>>> +	if (drv && drv->remove)
-> >>>> +		drv->remove(dev);
-> >>
-> >>
-> >> I am concerned that full remove is a heavyweight operation.
-> >> Do not want to slow down reboots even more.
-> >> How about just doing a reset, instead?
-> > 
-> > I tested with
-> > 
-> > static void virtio_dev_shutdown(struct device *_d)
-> > {
-> >         struct virtio_device *dev = dev_to_virtio(_d);
-> > 
-> >         virtio_reset_device(dev);
-> > }
-> > 
-> > 
-> > and it fixes my issue.
-> > 
-> > Kirill, would that fix you issue too?
-> gentle ping.
+> Why? Gave up on the idea or want to pursue it later?
 
-I am on vacation this week. Will try to get around to it next week.
+I took the (simpler) approach suggested by Jonathan. Eg, I just required 
+all the ADC pins (channels) to be presented in the device-tree - and 
+then treat rest of the pins as GPO. Hence, the pinmux driver is not 
+really needed as the mux registers are initialized at the ADC driver 
+probe when the DT is parsed. (I did also drop the MFD and bundled the 
+GPO control in ADC driver).
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Yours,
+	-- Matti
