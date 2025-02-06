@@ -1,62 +1,62 @@
 Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB1D227B95;
-	Thu,  6 Feb 2025 10:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42092288D3;
+	Thu,  6 Feb 2025 10:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839281; cv=none; b=sEmOM+RXG6yEO98I5ugChd79RWD3pSG87PEBEs6sFhljJw6OzfZHwDfPR72RVt0uy2ztbRMkE0CwtN/XzT0r297payGW7j2uJxfvuQbC381yLjxp0OiK6WnOoIaJQ58LbcbHEKjGuyVJQ5XVbDs6JJwAC7qfCNNF+NG8FGVKgqo=
+	t=1738839284; cv=none; b=M5TbOVQcwMHX1BWL7R1kOPKGmIQI5u0MI3uww6eT5hGy18FylNHb14FKlCuAHdDVjKr3QrfCauM9znx+b92FZFLsgrMOnUfaeqLWojLN6XaYTuWtkFdk7B3i6NWEJwXQb0s5ynI4PK+pXH/Wfml+zMctaV//yyGhxmyK+3ssjcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839281; c=relaxed/simple;
-	bh=l+FzxzqcQOvCH8c5GurhKDmppajCdKyqii/WUkvzxT8=;
+	s=arc-20240116; t=1738839284; c=relaxed/simple;
+	bh=WHhXMqIdalfkSexlY5e1BRqspbIYdrDmDQT3rX3AKP8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NPAxdiuZu6K9UN3tNE59awP8CPcNnUFnKVZokZRF8AOFMEOmN8amNMUQq5TK4zhnCMvmyjgZj5fF5t7s8CtGDTgpmewP2i8+VPCzUzrLx723bjGapjKgSEb2S7+qwwaVFa8xCExNoROUbUp2SPQBUaCAtk5a4gcGwNQLWP875Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nXz3RrA/; arc=none smtp.client-ip=209.85.128.65
+	 MIME-Version:Content-Type; b=WbhUv8r2jzKsbygWGjzYox31gOJ6rwwPv6r4+iQZtuVBOsLffa7VKe5QLubEQ9GUoDnxQik65wcZUnMliHIhV+o/9r+UQPrsyn0PLKa9iGuJ9OGa0mowDp0o3fsCC8oetLQ234IWScYu/qUA7J/yhL5Wf14aRjDr68khVg3kOb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ExLgXyzM; arc=none smtp.client-ip=209.85.128.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXz3RrA/"
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-43690d4605dso4793825e9.0;
-        Thu, 06 Feb 2025 02:54:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExLgXyzM"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-43618283dedso7147175e9.3;
+        Thu, 06 Feb 2025 02:54:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738839278; x=1739444078; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738839281; x=1739444081; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y4Fpzu6vEVBo0wCJhRUrT6eOf6iL8Bnn94ks0el4cwM=;
-        b=nXz3RrA/8stgP+UsnGvRt4R51unV5VzltJAUGlkXRQXD1aP063mRHP6kMZOgDktG9q
-         VRyu9Z7sV2FNLfsuB/5Ohd24Afu6logdv8r5o1zXoy5xh7cmx4IcaRfD+gkwfFBESqu+
-         YaiP0Fyuf+CxggEDVijWTNSb6b/LeO8HS0cw35Uu7bUDuEh4ybsldeIHu6Z761RwZtfU
-         UetchwXeBKAs8qf0vIYEzUowNQmFrYMW98r6cz3JV6xjvDYsTv+paFxWMRyvSmXfxfJQ
-         V16jO2rT0+LTqRiWLhgZ5wkHMpeNMcg2V7ufujTLy6ygW+XvRpFPX2efbslYnZJHi31a
-         Hs7A==
+        bh=OWs3GXRlx91qlbus5IlQPX+xUrucb3RvojJ3Jxtdv6A=;
+        b=ExLgXyzMQ3wJtmyTQ3ChOhzAAOyDLmcgPnS3WhOqqdWSXUCGFGTRo04vhiwW3hQB7V
+         Xh+3RkprZZmmuXtC8GYwcS9Srz6h16Mx19lymY0nN9LuAQHqgxqdPh4ECMBmmRmNchYF
+         /WB61kCz4eGTDLuJWT1T9yUxY1DWKV+PdPOIvWOHqY8R/sLIb+KJhqJwJ9V6y8dksyQp
+         DAFxt0AxZTtekA+Lq6w5u8ue0YNQMIqn5B6l7qRt7niG+hjnimWJgaPzc20B3f+P2RIU
+         8AlqZ89NgfGHmGRABK0HYnTvp+KUhxHNMoL3j1HpJ92EyDqGr0iC0sql38HXwGLH+faW
+         D2Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738839278; x=1739444078;
+        d=1e100.net; s=20230601; t=1738839281; x=1739444081;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y4Fpzu6vEVBo0wCJhRUrT6eOf6iL8Bnn94ks0el4cwM=;
-        b=Vk7qJ/4lRRYM1R9qI+FzPnEyddNnjzxg2lsNntJDs3Q+WC3srto9xmrBxPy6vxwhm7
-         rQxKdxiX/guoh5f5NbFJDA/5urjDHDds3Oh3Jcs+xDXAv8jOxwi4mEHQ1tEEF7yN9qOr
-         j9cGaENIq641UIy8AuY6m8B7dyqQKVyRvwahJBH0wcOSzXyZi5VBULVcLmv0bNKgIW58
-         BFT9XydLJdTWBKYm4uKz0uyZqT+apNRxMOIs8awS9SYpM8FzNNCR+7CT3LdhkIHCVywv
-         yHQu5qigiRsA7imOrqw4vDxkfXL2jStPcA9OKS3DYwKVsgmiiwsvHHfQXQKyWNDCULYs
-         KvBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhT0aYtlpThzNU97MF0U6vLuvJGrcAQsh1IXHTpmBWJQba701f50saHuthFZoQCDCdOBt6o2UU3kyjMyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdY6o8sRfxgotEZA1al0b8DY8sn3NdKbnNjsWUh7nVYxmbjQnt
-	NQ1bp5wzjM21CzkzQOy6yiQhVTbLeZbLQOUcJdVcQj2HIYaJerBZ2s1tbGk1Xr8=
-X-Gm-Gg: ASbGncsL1towLfvTsaQykJjh/gAi7EYFF7o6COTxTGPSnKazKpUyi4SfYzr5B5+ocl/
-	chNs+iZ0IncTRs+eICYuNaFG8k2ABOnJ1+8p+vpI9+Rmilhb2JHj1Uq66P52tKTJmdYq/Z/qDAz
-	chAzl2I2FffX3FHMDeGM5gkAAsT96VhNr5x82Py3AzHk/l8lV1vVT1/MO6S8RhdsWCXHHIJ2Pj4
-	F7nzGJPHT2SmbCD/LtwcrRXGhfY9XNgbrnsqUVfdIV1VkZaxz1SSmqoETpp0aWapkKUQlYir8Mw
-	5LJEXw==
-X-Google-Smtp-Source: AGHT+IHM5vaMe7dQKG64EkTeSRsdLjRkMoUvLfANIG4QYK0OqXKUcNrK28QFEfWzU8iR33/xEot5Og==
-X-Received: by 2002:a05:6000:184c:b0:38d:b807:b894 with SMTP id ffacd0b85a97d-38db807bb8fmr3106134f8f.18.1738839277867;
-        Thu, 06 Feb 2025 02:54:37 -0800 (PST)
-Received: from localhost ([2a03:2880:31ff:72::])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc050d688sm912424f8f.24.2025.02.06.02.54.37
+        bh=OWs3GXRlx91qlbus5IlQPX+xUrucb3RvojJ3Jxtdv6A=;
+        b=CAi0ayEmAuAzMysbobT3eqcBPAtIWkG+NiRqonbqqhpcYAe847xxs1qk3cx8N9ORKC
+         OE5MgDJsgqs6erkQWXqmpSgOShLmQWMz5FKQFFS2Un9naee8uINUMM/IN2c0hHrjIM97
+         p3yLYZ9cPEqSZ3HyWr7DCb0rXl9y5X7gqMy4Z4xllHfkOJfzCmsbByHyQa97GljYohSZ
+         TxHXV3Xq4nraiQ/nE/Zkyw7LNwB/q0K/zTtDgDu9oG1JyBrrsJkRLePkLC8FlSuDjo/B
+         8FcGcqQElKW8TXdKRoaFljyVT7SXruG8G35AIvnhLE53dQTHIykK6k4S9FNrDpJseIYM
+         io0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUdmPVf1wTZmETKeGXLccQldUkbJW0cCyGJi8RWl/b5/+jFybcShZlSPGH+yd3ok9RVQmZr7lvU1XmFEFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcXQTapmcczyNg34+gQ9CGhTHsMIBxgm/18kxBtnKjR0VB26ZS
+	jWw/lZWL17fRuoU0td8/fTsQJHi8k9aJKDcXmy9G9fE9s3glOgS4eBXPzc680hY=
+X-Gm-Gg: ASbGncvw3KyZRUEZF+4CHEpVmNMDwy14aWq0FcTrOO6HhGM1RYxeV6mcpsCv3XkrqRw
+	RLCIK1wpQdv+nLwyxwlkcGhtiwP0S4ulzgeGKh6znxCaWI3JIqXfLWtss6AA2bTzN2sNDpzyoEs
+	KhyXiBpBMufbqDyeS/ZZF4bsddy1q5J3cd0kSCPoTTGLCoJoxe5Kob4OBmAlAWhw8DPQuiLrP+Y
+	XwPHSUif9VRVKc0ILfxhlAUg+dfyW39FlUWV01jRueik3WfJ/CUG6cJRI2D0STXRwlca+V0pezG
+	MsPpBQ==
+X-Google-Smtp-Source: AGHT+IHeU2y2+7O/uQKeXcLLdS77pnq5NJz5kvWtZprZ6uplDLOI4uMkvBsICSMk+DCJ+KCjzZMlhA==
+X-Received: by 2002:a05:600c:5114:b0:435:32e:8270 with SMTP id 5b1f17b1804b1-4390d43d8ecmr61035955e9.14.1738839280667;
+        Thu, 06 Feb 2025 02:54:40 -0800 (PST)
+Received: from localhost ([2a03:2880:31ff:1b::])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde0fd23sm1381770f8f.71.2025.02.06.02.54.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 02:54:37 -0800 (PST)
+        Thu, 06 Feb 2025 02:54:40 -0800 (PST)
 From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
 To: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: Barret Rhoden <brho@google.com>,
 	Dohyun Kim <dohyunkim@google.com>,
 	linux-arm-kernel@lists.infradead.org,
 	kernel-team@meta.com
-Subject: [PATCH bpf-next v2 01/26] locking: Move MCS struct definition to public header
-Date: Thu,  6 Feb 2025 02:54:09 -0800
-Message-ID: <20250206105435.2159977-2-memxor@gmail.com>
+Subject: [PATCH bpf-next v2 03/26] locking: Allow obtaining result of arch_mcs_spin_lock_contended
+Date: Thu,  6 Feb 2025 02:54:11 -0800
+Message-ID: <20250206105435.2159977-4-memxor@gmail.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250206105435.2159977-1-memxor@gmail.com>
 References: <20250206105435.2159977-1-memxor@gmail.com>
@@ -88,56 +88,39 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1522; h=from:subject; bh=l+FzxzqcQOvCH8c5GurhKDmppajCdKyqii/WUkvzxT8=; b=owEBbQKS/ZANAwAIAUzgyIZIvxHKAcsmYgBnpJRjghejvu1V67bqXOIvMlrdiOA5EFuq9ml673Px YVwX7L2JAjMEAAEIAB0WIQRLvip+Buz51YI8YRFM4MiGSL8RygUCZ6SUYwAKCRBM4MiGSL8RymRCD/ 9/YOhtMVXa4uhP+xTSUCPdwnoJ2e7ZwYDxog71LJ2HXxXg9/eSH8/Si/tA5gU1tWmG5QH+z9074vpJ vFqxdR0gSvIAsqQrBO0Tj1Qgtdyo22PRO5rV3ADONgAsBycwmCaZBA33dyS1teyYYdgun6rsOcUI+f 7pF1YCbr7dccOv8O7agZL2Y/864xfviCiuvbQTK+cwwdqybOxwT1eXhHNeK0iH7aUa6XsePpDTIUo+ Jjk3tHIskRifzXmI0/KTA1h/KRtLc8mbDdNugVNuuQ0Zglv9yZqIcVqy3z2l/OXaAVJlh5g0JO6dlM UFIZc61NIQP5h0n4mDGH9B1u7jcOYk+PiiJHCe89a2orxDwKXXe/wwnz5jKbllMykb9ikA9Ok+hW5d iP0uJ1ZTBE0OFUVJ7kZfX+CbwA9+l0dW6Sk5V88N8siHqhSZvKmyXQLvmnfjHCgGWq9VIkbzgNLFaZ yMEFQeShp0yCBfOTpqybarU2fc79rESPAl91vmwTkbkdGWUDl7ZmqaOlaNcnSsdyJIX4CxqqO0ad7h s2JcoMGOqNOzWMpcA7dkooTjlAydnB+BiivOD4kaYuS141fC0PntHgdN8c2hpVTrG9A64nnLBRMSVN wvOc8dXgBeQceXqmhiBDNuP6995mi4cgcucLwriFXse32y+vjJeqT2hqUBzA==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1052; h=from:subject; bh=WHhXMqIdalfkSexlY5e1BRqspbIYdrDmDQT3rX3AKP8=; b=owEBbQKS/ZANAwAIAUzgyIZIvxHKAcsmYgBnpJRkvzlsIk8Mh+hFnelZKKgCgtqU9iOBLKbPXk+b Hr7ixKqJAjMEAAEIAB0WIQRLvip+Buz51YI8YRFM4MiGSL8RygUCZ6SUZAAKCRBM4MiGSL8RypWCD/ 9a6wXeJpwHCx6Ry/+60+90gq49Vx2iM0Ni2K5/JZ/w1SQ1K45M6aFIB7872eGf0XNmEL8eeYRcg6ky oIbxfK6Dz0h4c4cjezC6IO7ADwiRf1nt9gfi3HEwqdWIzBMac9NGH1ITZzTSB9FZuAkqXAfpZZq0iW l9L7JT2bKDalL+4TjYIHnpQaWg+MzdyiUwK9daJqckornGM5bI4UFqkTtWU74gzcj9I8Ww9UAJmZll /0oSi0NI558EvQj/JozkqtizlLGWLPs8WdwyXca/O84yRKYAhzPQZ+Ebe9SP1IcoorQstTzGtBQLkN zeZqTP0CpGFfPZy9B3ND9iBY7eJQQxB2h2yT74z85HkKKEjc2v0asUqBT4vT+B5nCPzdr638w7FtGe emuAf5iymDVjVyVtnlOV9UV5465nfpUZv9DqAwksMUOVSc3qvTgbKcDN4XsiSIJPYVu+XDqiFZqx3Y WlVVJyTFe+L+QnTVi8xn2N/fICy+rFILllPSBpOso5O/9KXfpcu9vnaCtViVPakzRGJqLFeOjxAQNd hQxMdvz26zEoWX77OknnGmg7FcT6xSJ9eFK4uTMlDQbiikiPsGIMVPxVutFarPkQs5maZ7giuy1hnE iy/9siJLZmE3DRYLv0bOoj+wxlb6+yk1cnr9VBCzo9XnhvUEn57+U1QY9opw==
 X-Developer-Key: i=memxor@gmail.com; a=openpgp; fpr=4BBE2A7E06ECF9D5823C61114CE0C88648BF11CA
 Content-Transfer-Encoding: 8bit
 
-Move the definition of the struct mcs_spinlock from the private
-mcs_spinlock.h header in kernel/locking to the mcs_spinlock.h
-asm-generic header, since we will need to reference it from the
-qspinlock.h header in subsequent commits.
+To support upcoming changes that require inspecting the return value
+once the conditional waiting loop in arch_mcs_spin_lock_contended
+terminates, modify the macro to preserve the result of
+smp_cond_load_acquire. This enables checking the return value as needed,
+which will help disambiguate the MCS node’s locked state in future
+patches.
 
 Reviewed-by: Barret Rhoden <brho@google.com>
 Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
 ---
- include/asm-generic/mcs_spinlock.h | 6 ++++++
- kernel/locking/mcs_spinlock.h      | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/locking/mcs_spinlock.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/asm-generic/mcs_spinlock.h b/include/asm-generic/mcs_spinlock.h
-index 10cd4ffc6ba2..39c94012b88a 100644
---- a/include/asm-generic/mcs_spinlock.h
-+++ b/include/asm-generic/mcs_spinlock.h
-@@ -1,6 +1,12 @@
- #ifndef __ASM_MCS_SPINLOCK_H
- #define __ASM_MCS_SPINLOCK_H
- 
-+struct mcs_spinlock {
-+	struct mcs_spinlock *next;
-+	int locked; /* 1 if lock acquired */
-+	int count;  /* nesting count, see qspinlock.c */
-+};
-+
- /*
-  * Architectures can define their own:
-  *
 diff --git a/kernel/locking/mcs_spinlock.h b/kernel/locking/mcs_spinlock.h
-index 85251d8771d9..16160ca8907f 100644
+index 16160ca8907f..5c92ba199b90 100644
 --- a/kernel/locking/mcs_spinlock.h
 +++ b/kernel/locking/mcs_spinlock.h
-@@ -15,12 +15,6 @@
+@@ -24,9 +24,7 @@
+  * spinning, and smp_cond_load_acquire() provides that behavior.
+  */
+ #define arch_mcs_spin_lock_contended(l)					\
+-do {									\
+-	smp_cond_load_acquire(l, VAL);					\
+-} while (0)
++	smp_cond_load_acquire(l, VAL)
+ #endif
  
- #include <asm/mcs_spinlock.h>
- 
--struct mcs_spinlock {
--	struct mcs_spinlock *next;
--	int locked; /* 1 if lock acquired */
--	int count;  /* nesting count, see qspinlock.c */
--};
--
- #ifndef arch_mcs_spin_lock_contended
- /*
-  * Using smp_cond_load_acquire() provides the acquire semantics
+ #ifndef arch_mcs_spin_unlock_contended
 -- 
 2.43.5
 
