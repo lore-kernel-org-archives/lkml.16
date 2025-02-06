@@ -1,170 +1,135 @@
-Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ED81DF270;
-	Thu,  6 Feb 2025 21:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.161
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738876098; cv=pass; b=u3KzmXEa0EopA4R/s2HYFbr85gx7B2QKHPSWUFqoP8Y9Tt2wUDI53+u42BQ26oB21X3YSla1LJq1bte3AHx4SPIEQJKKVCduHE/868PQktKEKdXlT3Ds3zPKjjJsdj5Jl8/Zkho1GhDPDmSopasQahpN0vqCbC3pHIllEJW+7zM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738876098; c=relaxed/simple;
-	bh=Dk/Fa6RXmzhRQdv0qguvoAWvZrZfOdR+7TeALJAqGSU=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=YhCx5pulkj2ld3lGW0XcEVVB+lnq2kYG6wCVnWbrobsx+kT7XLYYm9YG21lEWvrtxIMEW5f57FGdjKM47uMMpEVxCXnTXqZxvt+cEW5lf5U91GwdduyoitrddXUoxjBRu24YMBfAcjS9xw3mryk7CM5pidyrgxu2g7W0CX+oKjY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=U7JYa2M6 reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.223.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5C31DDC04;
+	Thu,  6 Feb 2025 21:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738876175; cv=none; b=ra4CGm4TH+tYRgwGmEbolStLwil/gkh+s9xxKrh6sbTq4Y6DTJjELTwfzMvGXbDVkJNatpO1Y0Xp/TSianpGf4gw4fPOqAL1aB8YFOUIY0rtH+JX14VpvhOPvJVaAW0t1voK+FzRdsE1gHaJo4/4y15UKKUC1/bK6iBO8zLVGeU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738876175; c=relaxed/simple;
+	bh=WLG+5Ize6NTQ4vHNiLZ25t7qbylKa3tUlPCB7J7dRDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KbkSfGCcSL7VJ3enrp8zaXuT78tpggdMJcC82qQAX3FsSSMLAhhB8pbNSgp9B9smV71fmYSdEYretkbZxDKgQO5V8FD0KDI4NzyLEMclmOmaGneKqPBvtXt7+BrfBM6iUQNRWkYUHkxeYjH6qZgot//mg+SGJ0+JqT1V4FKScOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lS2Yuw/s; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="U7JYa2M6"
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 10B931645E9;
-	Thu,  6 Feb 2025 21:08:09 +0000 (UTC)
-Received: from fr-int-smtpout8.hostinger.io (trex-9.trex.outbound.svc.cluster.local [100.124.213.208])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A45EE163EE6;
-	Thu,  6 Feb 2025 21:08:01 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738876088; a=rsa-sha256;
-	cv=none;
-	b=bSP/4kCY+vXD9FHAxK3ECGmENi3QY9qfv3WNjT9q6RmtIe2NwGbacVflLTsg04thapOsw5
-	542Bh9ogmjPfH74tatv+o2zhd9nzx7Pm4jPvPjHnioAgLiNViSBTJyQOMpmChE5pa+cQ2J
-	mOSED40yGGEHzchoy9qT3vcaKJOV0KdLTTE/3CYyeV6sdiJRXtYV2jFFKxvMtSQjEhhQd5
-	odBn5V4Oa1XGALrhMQyf0YAiy2NqeeWKjdtPUIepTpapylqa0HzrXxchOTJS6b8YWe12An
-	5vDj5d/Wl+PoS9zNt9Ugi/eMyyZggVTroq+6LMrtbG2FMIHFdpgboZSMkOvc2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738876088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ZhpLIq9iFJvhqgLiSK+xAjgUUwQGLpQH0XTHM0rA0ss=;
-	b=JXkee8M3XhyFrvzjNs0CsX81WRQvumaYdDz21pSlZdeS7MdL4aAGmE6S47GowWOkFWRV0z
-	NDd8YCeQrRmYflseICMBc/BchCBofoGkzBUDqyWimBoUYVXQkp4KJvMGtrUZT90o8/Ujo9
-	7pGS2ZZ+t4NuLy9uQUJBIELfTWKJOtuYWvNVa8VX+w/pgijua/r+Hs62E2NepWgshPLR4R
-	DAFmZfQLBgdJTIG4JikCI6WLe0qHKv88k28Lm8lJ//IC0HQM/bg7qQBTH2HLImpknbtKYW
-	7GhsjVklkM3EhLtsriUkhFfuMsFEjK2pMBj0k7bO1bbATn35uiroOS1TJzIj/g==
-ARC-Authentication-Results: i=1;
-	rspamd-8586946c78-zkzf8;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
-X-MailChannels-Auth-Id: hostingeremail
-X-Plucky-Tart: 67652802074b8bf0_1738876088589_1794236910
-X-MC-Loop-Signature: 1738876088589:3020997883
-X-MC-Ingress-Time: 1738876088589
-Received: from fr-int-smtpout8.hostinger.io (fr-int-smtpout8.hostinger.io
- [89.116.146.204])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.124.213.208 (trex/7.0.2);
-	Thu, 06 Feb 2025 21:08:08 +0000
-From: Alban Kurti <kurti@invicto.ai>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
-	s=hostingermail-a; t=1738876078;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZhpLIq9iFJvhqgLiSK+xAjgUUwQGLpQH0XTHM0rA0ss=;
-	b=U7JYa2M6zLbgdq3dD+J/69XFuwQeETLwF7W9BocTEUKgIUrVBmITzyXod12WJrq+4nH/Y/
-	ZaZ4UsdUr3l9xWbdmaS1fCpfW8IQNvZeIaFEyQE2E027rfvbNNulBAwhZHpiEZ3EJQoX6h
-	2ZMy2xsBC5FZGgaEc9CyxefZOjbI1X5vlW9TwjbABqiCDi5Es2F+XaDasKdG0IejXiuA+i
-	G/UwIorbDOBolcL3JQ74WXQ956stcQPBfAcNTIIyGA88tYm8ukYpEcHVs85OwoscUbFLRp
-	gJJUgKrl0M/9cKDGWn3H/baEmzdw0bE0JQsdbHdbRYOsaCCJgGjIoVfT9LmKAg==
-Subject: [PATCH v3 6/6] rust: samples: add missing newline to pr_info!
- calls in rust_print_main
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lS2Yuw/s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738876173; x=1770412173;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WLG+5Ize6NTQ4vHNiLZ25t7qbylKa3tUlPCB7J7dRDU=;
+  b=lS2Yuw/s26un37Bu/ctzHmXKgAHdEzZHycvA6wloGPJBa9hxd80rqi44
+   mCDmYuVIIRQiPjeRSlbiRhMzvwppEfipdWZY6PWZIe7ho59Ktu3kgo7fP
+   abZC9s4FZNETwyfpCMeFFl7rKpBV2IUf8LqmH2zF+325z45uiFhS1XW1X
+   D26qy76FfcrI+SDP2c0GMGx0LxHNsppYfZmZdQEWxzR4B8kg/JqAAB6Tf
+   iChNun7SRiV5AoYC1grCQaR07PtGirzOGoWnELWRXaWaV+0/uwqhN52Z/
+   3nMICkUpez67NdudesYPrA4mI5wAWqDHDdQknmoS4SOJ+SfPawQxCXIb8
+   w==;
+X-CSE-ConnectionGUID: AaBak31HS4as8fnuNR00Og==
+X-CSE-MsgGUID: UoE2UbSmROaUqthI+82T9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39621286"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39621286"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 13:09:32 -0800
+X-CSE-ConnectionGUID: SG75rTwQRv+F4tpCnw8MFQ==
+X-CSE-MsgGUID: +61D17zNQzqGdJVe/01pPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="111524957"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.110.242]) ([10.125.110.242])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 13:09:30 -0800
+Message-ID: <d8cc2de3-32ae-4873-9dea-d78d619c2777@intel.com>
+Date: Thu, 6 Feb 2025 14:09:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/memdev: Remove unused partition values
+To: Ira Weiny <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Fan Ni <fan.ni@samsung.com>
+References: <20250206-cxl-cleanup-v1-1-9ddf26dd8433@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250206-cxl-cleanup-v1-1-9ddf26dd8433@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-printing_fix-v3-6-a85273b501ae@invicto.ai>
-References: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
-In-Reply-To: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>, 
- David Gow <davidgow@google.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
- Asahi Lina <lina@asahilina.net>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
- Wedson Almeida Filho <walmeida@microsoft.com>, 
- "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>, Tejun Heo <tj@kernel.org>, 
- Fiona Behrens <me@kloenk.dev>, 
- Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, 
- Xiangfei Ding <dingxiangfei2009@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Alban Kurti <kurti@invicto.ai>, 
- Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
- Fox Chen <foxhlchen@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738876070; l=1836;
- i=kurti@invicto.ai; s=20250206; h=from:subject:message-id;
- bh=Dk/Fa6RXmzhRQdv0qguvoAWvZrZfOdR+7TeALJAqGSU=;
- b=/d2nSDIhhSGGJCAwLpmENScPF0743qpkJbNwez1ylf7fHFNs9PHDMxMFTvGR1ulXE/IKNc9O8
- rn0sNEtWgyLBh7g6iVOTC4ifbPpn/mCxliUNgQjSo+niH0wXfM4ewem
-X-Developer-Key: i=kurti@invicto.ai; a=ed25519;
- pk=D1lKs+JFapuEVI9zJ2QUTLSf5u4aT12tG0ny6vMMuOc=
-Date: Thu, 06 Feb 2025 21:07:57 +0000 (UTC)
-X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a524ae a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=IkcTkHD0fZMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=FcvrMFPuEi2Jl8-4TIoA:9 a=QEXdDO2ut3YA:10
-X-CM-Envelope: MS4xfBc1mrP7eMiwYiSWN9lpbOhKgdKFPuGHKx/mBwefHzzLTAFz+TZoaVWCdSpFfFDYzHr3It4Ma8aGSRrsx/uEEeBd/FLUDMf9V3IaIKDNd0FBRpw+Gra1 KDMBpGiCMUz6b8sHhojlsOtJyll4454/+A/KQJ/10sFsWW//UpEpoK7d+3V0ocg5rf20FF+qdCqU3RAvUZlDEp69nRMG6VLmvRrOttd+PsPIOp3vXA3L0HF/ aW+gwaLUMlDUpLeZAavIhRIw7hJ9vC7N1JwnFFpcZmBbd7cVKoyznH/ZJMSqufXvhezcqiL+XRxH5ry+n+JESq78tuDH6tphGmsDEdEwYZdZcktcFspfW52a rY0CM6Jn+D+A3Scxpqq0XUjokT7MKgBmMoBfFFYyhGfOzgDF3iUwkLlsQ1lWj+ZKXXPpZDvcXmLWRk7BTfXl/4tGjffzd1WpwQf+yFehTmRWLGxkOChuEoJl g0TikBpKKS4lj4iVwJPubSTxjrLJlG6Pe1XbNq+/NN8osFfpd6eovj1xsF2DLcF217KH4111vifzlp1gKVUomP5iEn1lk/+JvCmICJIJj54OkYw15aCnddGa AsvQ1LeEsvcWAzp9D27EUj3JcW/+blfVydwGJW1gZH2kx6Owb4WU6AO9d4qJdvi+6vJFA0YCQ2xV3aD9rsG92ocY6xUsJcx0Bmiion20U7R6guNV1leZrU0w 0c9Vdq0SG9PAYnU+0zqCOUCQHATTYtq7e9+xdM3yaWe4EI16h9nidWptEfCDnVASvFfx7joWGdshXJTnG4nQ6tBmlhqgUR9qH4iBOL2fLofMJYkM9JBk24jB CnMNGwxzpxOV/WsgPUKxo2fA+AIw9zpIm83K2BpfCqwNFqdh7R/ZMb60gphRqSXyH6W7fUGvN9B4ekUo2zwdxo/ew964CaLpEMto8qelT7VnwyEfGr1yGGPX Q0taS07mn/Fl8mu
- KB/AjWO/b3zDfPvVNzxB3Iylb4ONl3WXg
-X-AuthUser: kurti@invicto.ai
 
-The sample code in samples/rust/rust_print_main.rs contained pr_info!
-calls without a newline. This commit updates those calls, ensuring
-that the output is properly formatted when the sample is run.
 
-Fixes: f431c5c581fa ("samples: rust: print: Add sample code for Arc printing")
-Fixes: 47cb6bf7860c ("rust: use derive(CoercePointee) on rustc >= 1.84.0")
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1139
-Signed-off-by: Alban Kurti <kurti@invicto.ai>
----
- samples/rust/rust_print_main.rs | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/samples/rust/rust_print_main.rs b/samples/rust/rust_print_main.rs
-index 7e8af5f176a33925881c7d65b34c823028b7b93b..7ef3cecc65a15627276699c691273608253c9df5 100644
---- a/samples/rust/rust_print_main.rs
-+++ b/samples/rust/rust_print_main.rs
-@@ -23,10 +23,10 @@ fn arc_print() -> Result {
-     let b = UniqueArc::new("hello, world", GFP_KERNEL)?;
- 
-     // Prints the value of data in `a`.
--    pr_info!("{}", a);
-+    pr_info!("{}\n", a);
- 
-     // Uses ":?" to print debug fmt of `b`.
--    pr_info!("{:?}", b);
-+    pr_info!("{:?}\n", b);
- 
-     let a: Arc<&str> = b.into();
-     let c = a.clone();
-@@ -42,7 +42,7 @@ fn arc_print() -> Result {
- 
-         use core::fmt::Display;
-         fn arc_dyn_print(arc: &Arc<dyn Display>) {
--            pr_info!("Arc<dyn Display> says {arc}");
-+            pr_info!("Arc<dyn Display> says {arc}\n");
-         }
- 
-         let a_i32_display: Arc<dyn Display> = Arc::new(42i32, GFP_KERNEL)?;
-@@ -53,7 +53,7 @@ fn arc_dyn_print(arc: &Arc<dyn Display>) {
-     }
- 
-     // Pretty-prints the debug formatting with lower-case hexadecimal integers.
--    pr_info!("{:#x?}", a);
-+    pr_info!("{:#x?}\n", a);
- 
-     Ok(())
- }
+On 2/6/25 12:34 PM, Ira Weiny wrote:
+> The next volatile and next persistent values are unused and are
+> cluttering the cxl_memdev_state.
+> 
+> Remove these values.
+> 
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
--- 
-2.48.1
+Applied to cxl/next
+
+> ---
+>  drivers/cxl/core/mbox.c | 4 ----
+>  drivers/cxl/cxlmem.h    | 4 ----
+>  2 files changed, 8 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 8d95281c52d4368cd28dcf48b6cdd13b95901429..c5eedcae3b022cfee8166eb13a1529ccf6200196 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1092,10 +1092,6 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
+>  		le64_to_cpu(pi.active_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+>  	mds->active_persistent_bytes =
+>  		le64_to_cpu(pi.active_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
+> -	mds->next_volatile_bytes =
+> -		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+> -	mds->next_persistent_bytes =
+> -		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index c0d2a8b6aaf694587ae321d257e74d5e92a20cd5..8e1e46c348f5a10f4fa15dce8ac57a3480c8c509 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -468,8 +468,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+>   * @partition_align_bytes: alignment size for partition-able capacity
+>   * @active_volatile_bytes: sum of hard + soft volatile
+>   * @active_persistent_bytes: sum of hard + soft persistent
+> - * @next_volatile_bytes: volatile capacity change pending device reset
+> - * @next_persistent_bytes: persistent capacity change pending device reset
+>   * @event: event log driver state
+>   * @poison: poison driver state info
+>   * @security: security driver state info
+> @@ -488,8 +486,6 @@ struct cxl_memdev_state {
+>  	u64 partition_align_bytes;
+>  	u64 active_volatile_bytes;
+>  	u64 active_persistent_bytes;
+> -	u64 next_volatile_bytes;
+> -	u64 next_persistent_bytes;
+>  
+>  	struct cxl_event_state event;
+>  	struct cxl_poison_state poison;
+> 
+> ---
+> base-commit: 861e232e15c278d6cfc5a675efe393b4838b1773
+> change-id: 20250206-cxl-cleanup-818a668841db
+> 
+> Best regards,
 
