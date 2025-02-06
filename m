@@ -1,325 +1,143 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3939B3B1A4;
-	Thu,  6 Feb 2025 07:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D398B20C032
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738827480; cv=none; b=fp2OSosP+/gbJPv20YTVgYYckTuGcRMyEJye0mIBbidIxs4ED2n1NvbrMSnC5Brd3nmjKVwRLE/8m8WdnMzszU3rDBq88p90FqV2vH9sBVpm7QycfO8xe4+nzR5Zxdz5lnnMzNEBZNAIcXepCdTk25nZONpO93IFvbAc2qQNERc=
+	t=1738827488; cv=none; b=SslKpdhX12EoBLOG2jUEz+aZLDJO1kyG3wbnUcSsoDLjvuCSTcdEL0ItzQwuFIL5aLIxTnqvZ/HvoWSYfB2VD6YyIXaNNMOzuKQneQtG8GOWzK+OA+eWdrAsvhW0dopxEI9aGXP8kwxt0EB8dupb/G+32Fr24daPUr5jGv0XMqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738827480; c=relaxed/simple;
-	bh=H8d1sShhjT3uHIDp1TezpEAnMZqghybj848d8k4y1Vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NPPBnW5oWxjVlZFDEuegzq9EhG3NYyIRf+knwnA44VkAmtWDmdZa5Cn0X/D+6fIoIqGuOvuh1PvdIkvi8G/PzfnVw4iZLth9gYSk2qOBujMv/qeSXY9xsv+z3fJ1Qz4z2nXorp/DO8/cYxYMX0sQL4yd2zdZC76HlQccgOhNnWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso1887955ab.1;
-        Wed, 05 Feb 2025 23:37:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738827477; x=1739432277;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J8p0zMadSpTCU/jRUCuNi7OSGRjIwWhEj+KL8cTH/bo=;
-        b=W9+Hzum85oSWAgOud9mGvvzAz0UOo/7TlObUx0XapXquaD5UPOPQ5rHbxNZ6Qo8/ut
-         Qf0QYnm+QssosCSj5M9+/NnUNQZN3mjV+WCIH/5X4jzRDdMCcE7MYHFy2OidGj/ssFlj
-         Ai2MeYU9YZcZk5rGWSbgtAgsTXdX9hDspcuio6drsZrOSQcEAMJe6R8r1lyQL9vS6xVK
-         ct0xbHoUrEzCOqGwrq0cTr/Lb6djPoxtbBT4IV4Lxe52dUQgxy0we4+rRCQa2r0WaFkG
-         LNI21fOhJlivm1QcqgYehlOnwvAYXRCshfr5gxFruQWkS42mnL9+AWtkTVtzyKdR3Oqr
-         JZ7A==
-X-Forwarded-Encrypted: i=1; AJvYcCVrxof67N09cv89xmfIuzn9zCszSRi8BVoWO+V6Nx9e4myUFYP8QKPBm1vLfwlTfi0Z4RGw21M3gQdxCy8D@vger.kernel.org, AJvYcCX+9WU+SZptI8uh/fmhqVQTu72I2iW6vP04LL6Geru17xlGtAevYfakEbLCt5k6NMp/f+zwsHzGkH73@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfqkjJs5dWvUNg3GdWNquXZ+bm6MjTu/TlGC3FHvQwMtA5rx3f
-	rn5LPT47JzOh0u/DHvZOtHOf2CkzxA56rvyRntlo6Dsw6VbTXG32XrBCTryD
-X-Gm-Gg: ASbGnctAlVE/ID7lSg7qyj8cGpPLNGHE967PAJbpoURPGUJxfaOfw/94eBYfJLTa0GH
-	x5U3sY7W9UaKGG68PxvB4W3BE4OAi1L5EaB7TKOJEn3LrHMxxJsxv32vOYR03viqZuvGhOano9C
-	F/Gtjf0ILuxammbT7pqujnZlCd1YMcWuGziE3hHsS1gnx9iEZHJVL7eSx9uOUBNsBkzPJS9hcdX
-	Kd5zOPd2+yAgzvf9PqwC24Lv3p+7vF0VsWV5xDkv1kciWq3n/YJ/tE/c2ERTfDZdpJsOvAqNbT6
-	2CZRxqubD7MnoSI5QLNQxx5JKKW/rQDOZhdPerBCwAdPOjzl17MtQE3F
-X-Google-Smtp-Source: AGHT+IHc8P36svqeoZqXL/4dz+s9z8OCfSc2PPPGAudeI6smflk5tW3s3lWm5St76dDMTnoTHntFng==
-X-Received: by 2002:a05:6e02:1449:b0:3a7:820c:180a with SMTP id e9e14a558f8ab-3d04f92276bmr63375255ab.19.1738827477134;
-        Wed, 05 Feb 2025 23:37:57 -0800 (PST)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eccfb028e1sm152914173.126.2025.02.05.23.37.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 23:37:56 -0800 (PST)
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-844eb33827eso21008439f.2;
-        Wed, 05 Feb 2025 23:37:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVWUtbjY6xYuPVkYY7zkJEhTv0JhbVxUjQod/hxB0heqC7ymtMVlHOXwWwsNcCxr3Hjfe7DAu39bfbJ@vger.kernel.org, AJvYcCWGFUvuepa6jsBrn326VwaWN0WxDHk8sbW2mVYe2pcGtVEauxXqfp4fgXGGdKMU1Fd++fEhFqCXqinw3g/w@vger.kernel.org
-X-Received: by 2002:a05:6e02:12eb:b0:3d0:124d:99e8 with SMTP id
- e9e14a558f8ab-3d04f47c699mr45839305ab.13.1738827476180; Wed, 05 Feb 2025
- 23:37:56 -0800 (PST)
+	s=arc-20240116; t=1738827488; c=relaxed/simple;
+	bh=EyGe1UfcXbMoU+uCUT8epWa9MjazPWv9ZvOrFkHKyhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rz4fRWDtkdMRvNIP67n5BoFmz+p0FnIpW2QsF7rreIfipVjAo7NI1eAG8fji7+4fVOx2LlwWiL3oHKAbc8cY6AcZqHhn8LntYsps4EUr0ndxMD1uXFtegu/jrTFrnkJhumdoKWeijStC53tEJvZ6nEKtDGZfebU66JJZhyx2VZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QwvIpg8C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OkBHMCTR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QwvIpg8C";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OkBHMCTR"
+Date: Thu, 6 Feb 2025 08:38:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738827484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dlnv+jpgMFjGanz60mPgQXAr/AkzQst+XBYrEHi1U8=;
+	b=QwvIpg8C8FaZdXC84w7m1q+UiRnLbTpcK+l7aQhqZOcWLchdGzVA1k6dwaqDBwJH3TviP4
+	Qhq4xJnRfKAcz7cbka76OsuWkz4BdCdwmOe3aR9Rh61WFVrrt4UFcnehti3cWZbv3L2/Mf
+	HZhiXqKH0USBiYmkq9g8NTTk5Kre3uMAX4siGOLgXOKQ4fp5nal+0JJpBJtuocQUB5IXF/
+	xgwLo2BUfbr/xyW5BFR3we42m4aewTQpTlPfx17T8xr4nwn18tKQf+QhbzXXPBWEYz8dZG
+	0IKei1JndN6sDmAVs97R0ft+cFk3bHPzP5sCEVEZsr83BSBACuNnQCOag3vGpw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738827484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dlnv+jpgMFjGanz60mPgQXAr/AkzQst+XBYrEHi1U8=;
+	b=OkBHMCTRR1gddF6WYTPazVl0aqmcDGmlNBBR0aUo4uUeaoffezWqgQ8OgSdxeDKL4gHPEu
+	GhXUgB2mSHaiiDDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+	Mike Galbraith <umgwanakikbuti@gmail.com>
+Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
+Message-ID: <20250206073803.c2tiyIq6@linutronix.de>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-2-senozhatsky@chromium.org>
+ <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
+ <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250125100711.70977-1-josh@joshuagrisham.com> <77eb01a6-2905-4776-96ce-eb936c04956b@gmx.de>
-In-Reply-To: <77eb01a6-2905-4776-96ce-eb936c04956b@gmx.de>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Thu, 6 Feb 2025 08:37:44 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeZrdkfwoab4zvBYJMuYaScCDFPbvijo9o6d-9CS96238g@mail.gmail.com>
-X-Gm-Features: AWEUYZm_TKLxriR3n9ajCDKvtvtR72txr1G8ZmRcQ8Mfk-CVFMqUgjGSrO1I34w
-Message-ID: <CAMF+KeZrdkfwoab4zvBYJMuYaScCDFPbvijo9o6d-9CS96238g@mail.gmail.com>
-Subject: Re: [PATCH v3] ACPI: fan: Add fan speed reporting for fans with only _FST
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
 
-Den tors 6 feb. 2025 kl 06:05 skrev Armin Wolf <W_Armin@gmx.de>:
->
-> Am 25.01.25 um 11:07 schrieb Joshua Grisham:
->
-> > Add support for ACPI fans with _FST to report their speed even if they do
-> > not support fan control.
-> >
-> > As suggested by Armin Wolf [1] and per the Windows Thermal Management
-> > Design Guide [2], Samsung Galaxy Book series devices (and possibly many
-> > more devices where the Windows guide was strictly followed) only implement
-> > the _FST method and do not support ACPI-based fan control.
-> >
-> > Currently, these fans are not supported by the kernel driver but this patch
-> > will make some very small adjustments to allow them to be supported.
-> >
-> > This patch is tested and working for me on a Samsung Galaxy Book2 Pro whose
-> > DSDT (and several other Samsung Galaxy Book series notebooks which
-> > currently have the same issue) can be found at [3].
->
-> Any updates on this patch? For me it seems ready for mainline.
->
-> Thanks,
-> Armin Wolf
->
+On 2025-02-06 16:01:12 [+0900], Sergey Senozhatsky wrote:
+> So I completely reworked this bit and we don't have that problem
+> anymore, nor the problem of "inventing locking schemes in 2025".
+>=20
+> In short - we are returning back to bit-locks, what zram has been using
+> until commit 9518e5bfaae19 ("zram: Replace bit spinlocks with a spinlock_=
+t),
+> not bit-spinlock these time around, that won't work with linux-rt, but
+> wait_on_bit and friends.  Entry lock is exclusive, just like before,
+> but lock owner can sleep now, any task wishing to lock that same entry
+> will wait to be woken up by the current lock owner once it unlocks the
+> entry.  For cases when lock is taken from atomic context (e.g. slot-free
+> notification from softirq) we continue using TRY lock, which has been
+> introduced by commit 3c9959e025472 ("zram: fix lockdep warning of free bl=
+ock
+> handling"), so there's nothing new here.  In addition I added some lockdep
+> annotations, just to be safe.
+>=20
+> There shouldn't be too many tasks competing for the same entry.  I can
+> only think of cases when read/write (or slot-free notification if zram
+> is used as a swap device) vs. writeback or recompression (we cannot have
+> writeback and recompression simultaneously).
 
-Hi Armin, thanks for checking in on this!
+So if I understand, you want to get back to bit spinlocks but sleeping
+instead of polling. But why? Do you intend to have more locks per entry
+so that you use the additional bits with the "lock"?
 
-For me I have no further updates that I planned or intended to send.
-If it looks good to Rafael or anyone else who wants or needs to review
-then I would be glad to see it applied.
+> It currently looks like this:
+>=20
+=E2=80=A6
+> static __must_check bool zram_slot_try_lock(struct zram *zram, u32 index)
+> {
+>         unsigned long *lock =3D &zram->table[index].flags;
+>=20
+>         if (!test_and_set_bit_lock(ZRAM_ENTRY_LOCK, lock)) {
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>                 mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET=
+_IP_);
+> #endif
+>                 return true;
+>         }
+>         return false;
+> }
 
-If needed then I can re-send with Armin's Reviewed-by tag inline in
-the commit message but otherwise everything is as I would have wished
-it to be, for what that is worth :)
+I hope the caller does not poll.
 
-Thanks again!
+> static void zram_slot_lock(struct zram *zram, u32 index)
+> {
+>         unsigned long *lock =3D &zram->table[index].flags;
+>=20
+>         WARN_ON_ONCE(!preemptible());
 
-Best regards,
-Joshua
+you want might_sleep() here instead. preemptible() works only on
+preemptible kernels. And might_sleep() is already provided by
+wait_on_bit_lock(). So this can go.
 
+>         wait_on_bit_lock(lock, ZRAM_ENTRY_LOCK, TASK_UNINTERRUPTIBLE);
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>         mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET_IP_);
+> #endif
 
-> >
-> > [1]: https://lore.kernel.org/platform-driver-x86/53c5075b-1967-45d0-937f-463912dd966d@gmx.de
-> > [2]: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/design-guide
-> > [3]: https://github.com/joshuagrisham/samsung-galaxybook-extras/tree/8e3087a06b8bdcdfdd081367af4b744a56cc4ee9/dsdt
-> >
-> > Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
-> > ---
-> >
-> > v1->v2:
-> > - Still allow acpi4_only_fst fans to update power state on
-> >    suspend/resume
-> > - Fix if / else if logic error
-> > - Also hide hwmon_power_input for acpi4_only_fst fans
-> >
-> > v2->v3:
-> > - Still allow acpi4_only_fst fans to set initial power state on probe
-> > ---
-> >   drivers/acpi/fan.h       |  1 +
-> >   drivers/acpi/fan_attr.c  | 37 ++++++++++++++++++++++---------------
-> >   drivers/acpi/fan_core.c  | 22 +++++++++++++++++-----
-> >   drivers/acpi/fan_hwmon.c | 12 ++++++++++++
-> >   4 files changed, 52 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
-> > index 488b51e2c..d0aad88a7 100644
-> > --- a/drivers/acpi/fan.h
-> > +++ b/drivers/acpi/fan.h
-> > @@ -49,6 +49,7 @@ struct acpi_fan_fst {
-> >
-> >   struct acpi_fan {
-> >       bool acpi4;
-> > +     bool acpi4_only_fst;
-> >       struct acpi_fan_fif fif;
-> >       struct acpi_fan_fps *fps;
-> >       int fps_count;
-> > diff --git a/drivers/acpi/fan_attr.c b/drivers/acpi/fan_attr.c
-> > index f4f6e2381..d83f88429 100644
-> > --- a/drivers/acpi/fan_attr.c
-> > +++ b/drivers/acpi/fan_attr.c
-> > @@ -75,15 +75,6 @@ int acpi_fan_create_attributes(struct acpi_device *device)
-> >       struct acpi_fan *fan = acpi_driver_data(device);
-> >       int i, status;
-> >
-> > -     sysfs_attr_init(&fan->fine_grain_control.attr);
-> > -     fan->fine_grain_control.show = show_fine_grain_control;
-> > -     fan->fine_grain_control.store = NULL;
-> > -     fan->fine_grain_control.attr.name = "fine_grain_control";
-> > -     fan->fine_grain_control.attr.mode = 0444;
-> > -     status = sysfs_create_file(&device->dev.kobj, &fan->fine_grain_control.attr);
-> > -     if (status)
-> > -             return status;
-> > -
-> >       /* _FST is present if we are here */
-> >       sysfs_attr_init(&fan->fst_speed.attr);
-> >       fan->fst_speed.show = show_fan_speed;
-> > @@ -92,7 +83,19 @@ int acpi_fan_create_attributes(struct acpi_device *device)
-> >       fan->fst_speed.attr.mode = 0444;
-> >       status = sysfs_create_file(&device->dev.kobj, &fan->fst_speed.attr);
-> >       if (status)
-> > -             goto rem_fine_grain_attr;
-> > +             return status;
-> > +
-> > +     if (fan->acpi4_only_fst)
-> > +             return 0;
-> > +
-> > +     sysfs_attr_init(&fan->fine_grain_control.attr);
-> > +     fan->fine_grain_control.show = show_fine_grain_control;
-> > +     fan->fine_grain_control.store = NULL;
-> > +     fan->fine_grain_control.attr.name = "fine_grain_control";
-> > +     fan->fine_grain_control.attr.mode = 0444;
-> > +     status = sysfs_create_file(&device->dev.kobj, &fan->fine_grain_control.attr);
-> > +     if (status)
-> > +             goto rem_fst_attr;
-> >
-> >       for (i = 0; i < fan->fps_count; ++i) {
-> >               struct acpi_fan_fps *fps = &fan->fps[i];
-> > @@ -109,18 +112,18 @@ int acpi_fan_create_attributes(struct acpi_device *device)
-> >
-> >                       for (j = 0; j < i; ++j)
-> >                               sysfs_remove_file(&device->dev.kobj, &fan->fps[j].dev_attr.attr);
-> > -                     goto rem_fst_attr;
-> > +                     goto rem_fine_grain_attr;
-> >               }
-> >       }
-> >
-> >       return 0;
-> >
-> > -rem_fst_attr:
-> > -     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
-> > -
-> >   rem_fine_grain_attr:
-> >       sysfs_remove_file(&device->dev.kobj, &fan->fine_grain_control.attr);
-> >
-> > +rem_fst_attr:
-> > +     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
-> > +
-> >       return status;
-> >   }
-> >
-> > @@ -129,9 +132,13 @@ void acpi_fan_delete_attributes(struct acpi_device *device)
-> >       struct acpi_fan *fan = acpi_driver_data(device);
-> >       int i;
-> >
-> > +     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
-> > +
-> > +     if (fan->acpi4_only_fst)
-> > +             return;
-> > +
-> >       for (i = 0; i < fan->fps_count; ++i)
-> >               sysfs_remove_file(&device->dev.kobj, &fan->fps[i].dev_attr.attr);
-> >
-> > -     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
-> >       sysfs_remove_file(&device->dev.kobj, &fan->fine_grain_control.attr);
-> >   }
-> > diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
-> > index 10016f52f..66aa1be64 100644
-> > --- a/drivers/acpi/fan_core.c
-> > +++ b/drivers/acpi/fan_core.c
-> > @@ -211,6 +211,11 @@ static bool acpi_fan_is_acpi4(struct acpi_device *device)
-> >              acpi_has_method(device->handle, "_FST");
-> >   }
-> >
-> > +static bool acpi_fan_has_fst(struct acpi_device *device)
-> > +{
-> > +     return acpi_has_method(device->handle, "_FST");
-> > +}
-> > +
-> >   static int acpi_fan_get_fif(struct acpi_device *device)
-> >   {
-> >       struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> > @@ -327,7 +332,12 @@ static int acpi_fan_probe(struct platform_device *pdev)
-> >       device->driver_data = fan;
-> >       platform_set_drvdata(pdev, fan);
-> >
-> > -     if (acpi_fan_is_acpi4(device)) {
-> > +     if (acpi_fan_is_acpi4(device))
-> > +             fan->acpi4 = true;
-> > +     else if (acpi_fan_has_fst(device))
-> > +             fan->acpi4_only_fst = true;
-> > +
-> > +     if (fan->acpi4) {
-> >               result = acpi_fan_get_fif(device);
-> >               if (result)
-> >                       return result;
-> > @@ -335,7 +345,9 @@ static int acpi_fan_probe(struct platform_device *pdev)
-> >               result = acpi_fan_get_fps(device);
-> >               if (result)
-> >                       return result;
-> > +     }
-> >
-> > +     if (fan->acpi4 || fan->acpi4_only_fst) {
-> >               result = devm_acpi_fan_create_hwmon(device);
-> >               if (result)
-> >                       return result;
-> > @@ -343,9 +355,9 @@ static int acpi_fan_probe(struct platform_device *pdev)
-> >               result = acpi_fan_create_attributes(device);
-> >               if (result)
-> >                       return result;
-> > +     }
-> >
-> > -             fan->acpi4 = true;
-> > -     } else {
-> > +     if (!fan->acpi4) {
-> >               result = acpi_device_update_power(device, NULL);
-> >               if (result) {
-> >                       dev_err(&device->dev, "Failed to set initial power state\n");
-> > @@ -391,7 +403,7 @@ static int acpi_fan_probe(struct platform_device *pdev)
-> >   err_unregister:
-> >       thermal_cooling_device_unregister(cdev);
-> >   err_end:
-> > -     if (fan->acpi4)
-> > +     if (fan->acpi4 || fan->acpi4_only_fst)
-> >               acpi_fan_delete_attributes(device);
-> >
-> >       return result;
-> > @@ -401,7 +413,7 @@ static void acpi_fan_remove(struct platform_device *pdev)
-> >   {
-> >       struct acpi_fan *fan = platform_get_drvdata(pdev);
-> >
-> > -     if (fan->acpi4) {
-> > +     if (fan->acpi4 || fan->acpi4_only_fst) {
-> >               struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-> >
-> >               acpi_fan_delete_attributes(device);
-> > diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
-> > index bd0d31a39..d0668ecc2 100644
-> > --- a/drivers/acpi/fan_hwmon.c
-> > +++ b/drivers/acpi/fan_hwmon.c
-> > @@ -43,6 +43,12 @@ static umode_t acpi_fan_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_
-> >               case hwmon_fan_input:
-> >                       return 0444;
-> >               case hwmon_fan_target:
-> > +                     /*
-> > +                      * Fans with only _FST do not support fan control.
-> > +                      */
-> > +                     if (fan->acpi4_only_fst)
-> > +                             return 0;
-> > +
-> >                       /*
-> >                        * When in fine grain control mode, not every fan control value
-> >                        * has an associated fan performance state.
-> > @@ -57,6 +63,12 @@ static umode_t acpi_fan_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_
-> >       case hwmon_power:
-> >               switch (attr) {
-> >               case hwmon_power_input:
-> > +                     /*
-> > +                      * Fans with only _FST do not support fan control.
-> > +                      */
-> > +                     if (fan->acpi4_only_fst)
-> > +                             return 0;
-> > +
-> >                       /*
-> >                        * When in fine grain control mode, not every fan control value
-> >                        * has an associated fan performance state.
+I would argue that you want this before the wait_on_bit_lock() simply
+because you want to see a possible deadlock before it happens.
+
+> }
+>=20
+> static void zram_slot_unlock(struct zram *zram, u32 index)
+> {
+>         unsigned long *lock =3D &zram->table[index].flags;
+>=20
+>         clear_and_wake_up_bit(ZRAM_ENTRY_LOCK, lock);
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>         mutex_release(&zram->table[index].lockdep_map, _RET_IP_);
+> #endif
+Also before. So it complains about release a not locked lock before it
+happens.
+> }
+
+Sebastian
