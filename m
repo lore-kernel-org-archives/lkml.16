@@ -1,160 +1,123 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C0D194A66
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AFD198842
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865191; cv=none; b=jn4bUZLMyYxgl8sP0glFW1bAWSDSfS1Yj2g6CBuNObci5zYmfFXNKN7ZG6CV2ch+iCxGtF8k70HtJ1eKh5Zjo3QZZLCcVd5xy/DfQaZLqKs6f93Iav5Qo6vrBc2Z24gIwQuCyEJk/KuCn1m7MrfoYX2lH7EwhpzFZ4YZ+MIn7sw=
+	t=1738865240; cv=none; b=IQERqizTITJNxjCl3KHdZprBz0IAXA3XzmlvCHc7rCKbYWZSiUWrUmKLqnTX/KdNfC8NuAg1Ps8L29sgINQZyyJsgW20p147QKT8RITzVno6Kyjq6i3+RAk3rAhq3Qu1/yKyNlyKPAoOtT4HD+o6wDzFnbSvgDqv+YqF6BUFCxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865191; c=relaxed/simple;
-	bh=my59ka0KwnOvnoUbiBsCzl/47DihOf9AdMsS1WsHy6M=;
+	s=arc-20240116; t=1738865240; c=relaxed/simple;
+	bh=LA6Op/VaTOhJKe72M7oQe6NRQa7SxDnVNr8EdMbdizM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WtvkW9jT1HTktCSFEbbOducfePiYAA5fJy0aQcAJU9Q+d2+VZSHz1X4tBzHOskslQRe+chyYKeGrf7O0YBLqtjJrJKQ1+Xjw9h8afv00srAMSwcogg7crSOU6KkVBC2EgUrwG91lbwr1ZrvgqX3FKUxcFLwRg36cmMah4sfIoNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pGuA2xjl; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=P5EK5b+EFGWXpgd2FG6RwEWMMyKqU3Bx0wwFjwyTgJItRycYup91sx+PEY2IeKv/20RWV+W/sGyM6ki/NfTyLWEvC9F2QbcVNZrTcmMXG6ipkjjIKRzCTDREMYef6yLIcHxZMjVF35Ct1w3+dqo0eGCaRfKrGWOjD69HgGcBD6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UMjqKrHC; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pGuA2xjl"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30738a717ffso11110251fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:06:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UMjqKrHC"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54411e3c610so750780e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:07:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738865187; x=1739469987; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1738865234; x=1739470034; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H5ijmrv1xMkTxvyrnG0sU8L3dMgDYIgFGyVBUXpmxA8=;
-        b=pGuA2xjlVbM2Sa2m1zO6Vo52jYisKWh6bvLjiZVBCNOdysNWt1UifN2Z+j2rrbQw4c
-         6ZxtanFeDwIb59z7k41t2RM6gVrHEnRpWMeLXuDnpvnwLQX4Qi8cGJ5xzqqqYomRIboM
-         Degf6h1rqRGMkToGq/JwvtVMu1PP6wWZzfKR8jcw8dwlriMB1Nhx16j4R9xK08dYJaYK
-         iSGWIIClYb8FXkTEWWBhJNJMYp8yFK2zuy78x8RJ8Ow4RUe5OxflXiHQCBQAOc4aInWB
-         gDv2SQVK9SS83YDalcE5T1JJzhzpZ17iJZD85JZUSLeWsTs4VgWpH+PX+tAmMCKjzjy1
-         KaaQ==
+        bh=5VkJ1I/mpTOj70lVolwV2vn4N+hDhU0UEmqKxlKybuw=;
+        b=UMjqKrHCUaZlS4KRlqSdFLKumcN8+7a3o+zarDsc65cg/qfr5HeLj03AVqlElc/JAZ
+         8Yuj5vSK96HpZ+fOaqBOWwvP8k9aKdoxYb3HiLxvGMvp1Bzl7e0yXX3SSjxxPGGaHzpK
+         VSc5grQLpV4cL4fXFdd/Dr0fkwbVMA24skbvA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865187; x=1739469987;
+        d=1e100.net; s=20230601; t=1738865234; x=1739470034;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=H5ijmrv1xMkTxvyrnG0sU8L3dMgDYIgFGyVBUXpmxA8=;
-        b=t64E7fCIk3/yt9/KIkzZ1w9G90f8Uea9ayKQnOr7SZ14DlYv2lmWDLaHfLfLqXFIyZ
-         l1bGcHHIt4Y9gi/EsgtYJ27s5y2a4XqXGNIrOvdfB22svKL0/mf9iO7FNBKGxMZg0q8H
-         CPWnfdNH2q9B+cDWEcbEdar5UTyo3tKbHS4BtrDQ7TJb1qZ5xZrZb5pqpzsceaoo/svV
-         IwwKh8UZGPNdD+yiwXDyqVkgiBQ0sKdwy48//9ofLJOxbqm5tOkvPQoRMY7F3VX/c88b
-         xfoZhEyxzWj/egySXPWEJXVkijqqbTPYed702FeCOmGXFW7eLb48vUhv43gWclA4H3Ui
-         9KvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCSDGZlYGY5GedTaqVRxr9uB6rF+E5V+sQ2eT7EAqsEAaQcXMqUqFRkVJ8rAGJxylKZ2Ujf9TwF3BezCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybDnwW11/Z0GOKDGMZuzH2kgRxtfV+2YNakrZBMbF2ZC3iQ4Mf
-	zR0pPcQJKKG1pdvCpaE7JiFmYaK/pubVBZgu7UCw373tTmrrepghFnxEdDlhShI20SxuqK6lFrG
-	EfQ0OajxpGcb9GZ7ehJczgo6E+8UwSY2NghTC
-X-Gm-Gg: ASbGncuZmcPf/VDHHlhlUAdIaiKpkiebF0LfNOphV2MRZgcHnT/WR3LWbx5049XkktZ
-	ES/zrQ2kxh6NYVEp9oW0zuR2rKB6Vz+F2gLBWdonMu1e8gfCU6Lf+6C8yqFcXL8U2hNJS7aB1Q7
-	NKcRmIYpkINse4mMBXUKw8QGtNlhkXzg==
-X-Google-Smtp-Source: AGHT+IFtL93N1CSknmLZbso3DBkiWJ+4cACr+iFlv5keotpZRTk0sb8bf1DhZDs2bZqric9fnxEreiNkHX/pOvsRKZ0=
-X-Received: by 2002:a05:651c:116:b0:307:95a1:2923 with SMTP id
- 38308e7fff4ca-307cf2f6bb5mr24494911fa.14.1738865187231; Thu, 06 Feb 2025
- 10:06:27 -0800 (PST)
+        bh=5VkJ1I/mpTOj70lVolwV2vn4N+hDhU0UEmqKxlKybuw=;
+        b=lm52R/PWmF9nC01lIv21xuAm28CeFpm2/7rYZPLneDf6IJe8twBCmmJVQmhg8qErMg
+         w7HyOFFtmC9sMuwwVhqEYZwmK2dOktJgPD+f4aMtxAJwKAvkc5EzY0yeRTKWKVripx4i
+         Ns3iuW5PwQwY/ZRss738TyXh9RIE1u8OJz56XZblyJhJHRaRCEYTiK6ZjKS2Sw+EnewF
+         lLS+afRN4zfeP6JmNBoHAmhDokvbeJ1JhNOyyeAYr0SFujx+S+sFa0E6Z2dCQ00xxlvK
+         wHsim87Y0sWumYKJY/eXMkgEdgJISCa2JLJfl6s/RJyjCFY/OFdoASMSks1aHBR7fDvE
+         43Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOEYDnCv7bcvujTJC8Zk8CINOEpu522e1RUTwac6Mh6c6NuTKHrs9e0QUnTdllf8V/gEA/TNJfva3oEsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtc4D94mnnVfqWctd7lHbk36kw+XL5h9seJAB5G/WQPSmwDd4b
+	/9fryhGJzTSTGgxbUNuNgIcLRZm+pRv3Ey5vfPF3W08zkirZiekhH2Wvt2EaNV/fJH4iCgWifMZ
+	3g1lu7g==
+X-Gm-Gg: ASbGncs11bnZhE0lfIIaDIbz1jgjjH1qGKFgOOtfgPBg0d72+aAgsnUz+ONAkVt/rTl
+	fNnFMbJkarx7IvblVE/Vxi99vUxskOIfNDszUJUtGQBPVrjPWyJsNFEXFIdV+NGGuptTaDxsqzv
+	+PMcdCN+vpaICk97tqD7YlLZCyaa1SYjfL+t046uzgv4vndg+oK2AnsgG73zIKlW3MF0QnL4b9/
+	Op4xL0Ym/+vf/llvggJC5IjKpJMP8fQo6pwpXaE8MQZnhzq7A045jfEXRrMyL4WAt7HrLkQCEhp
+	szjRfJHC8mTyG0mvtcwn+6EMUVslGPIBA0yg4QU5jsb26vS04k3hHtOpZn1WxdOvHMfP+w==
+X-Google-Smtp-Source: AGHT+IG8bt/iHJc31TwZABiryQZNh8vwVityChKEjK0bvn+1eANlZ27WVkauhPOtfI4pnhGnOpbXCQ==
+X-Received: by 2002:a05:6512:3d92:b0:540:1a40:ab0d with SMTP id 2adb3069b0e04-54405a2514dmr2701031e87.28.1738865233921;
+        Thu, 06 Feb 2025 10:07:13 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6c40sm1893511fa.49.2025.02.06.10.07.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 10:07:13 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-307b8e4fc25so12738321fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:07:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWElPB6lZwrnlsBCqpkvpzOZwF77Zp9nE4csdfdXxQMwOcM+KD/jtjETCKm2jPNLSz1vgRvbm+0Kd9EBxs=@vger.kernel.org
+X-Received: by 2002:a17:907:7f0f:b0:ab6:d6c3:f1e4 with SMTP id
+ a640c23a62f3a-ab75e2f2393mr881845566b.38.1738864732223; Thu, 06 Feb 2025
+ 09:58:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240802061318.2140081-4-aruna.ramakrishna@oracle.com> <20250204100134.1843654-1-dvyukov@google.com>
-In-Reply-To: <20250204100134.1843654-1-dvyukov@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Thu, 6 Feb 2025 19:06:15 +0100
-X-Gm-Features: AWEUYZk6bPEFmdnSpNpNh5rkNyV67hJtJGcgIZZUWBHSj4jnjpP0SWwzLiY7F-A
-Message-ID: <CACT4Y+Ziom32P0fWVG_mWM5Vrw9Y6Xem=mqH0Jt21VVVaNEODA@mail.gmail.com>
-Subject: Re: [PATCH v8 3/5] x86/pkeys: Update PKRU to enable all pkeys before XSAVE
-To: aruna.ramakrishna@oracle.com, mathieu.desnoyers@efficios.com, 
-	peterz@infradead.org, paulmck@kernel.org, boqun.feng@gmail.com
-Cc: dave.hansen@linux.intel.com, jannh@google.com, jeffxu@chromium.org, 
-	jorgelo@chromium.org, keescook@chromium.org, keith.lucas@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@kernel.org, 
-	rick.p.edgecombe@intel.com, sroettger@google.com, tglx@linutronix.de, 
-	x86@kernel.org
+References: <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux>
+ <20250128092334.GA28548@lst.de> <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
+ <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com> <2025013148-reversal-pessimism-1515@gregkh>
+ <20250131135421.GO5556@nvidia.com> <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+ <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local> <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
+ <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
+In-Reply-To: <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 6 Feb 2025 09:58:36 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
+X-Gm-Features: AWEUYZkS6oHFUn-g-IGnkz4FJ-irLv59VoaubaKbNOcXpu9gE5INymKIQSe6irw
+Message-ID: <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
+Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
+ coherent allocator abstraction.)
+To: Hector Martin <marcan@marcan.st>
+Cc: Dave Airlie <airlied@gmail.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, phasta@kernel.org, 
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com, 
+	aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>, 
+	open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	airlied@redhat.com, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, 
+	DRI Development <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 4 Feb 2025 at 11:02, Dmitry Vyukov <dvyukov@google.com> wrote:
+On Thu, 6 Feb 2025 at 01:19, Hector Martin <marcan@marcan.st> wrote:
 >
-> Re commit 70044df250d022572e26cd301bddf75eac1fe50e:
-> https://lore.kernel.org/all/20240802061318.2140081-4-aruna.ramakrishna@oracle.com/
->
-> > If the alternate signal stack is protected by a different pkey than the
-> > current execution stack, copying xsave data to the sigaltstack will fail
-> > if its pkey is not enabled in the PKRU register.
-> >
-> > We do not know which pkey was used by the application for the altstack,
-> > so enable all pkeys before xsave.
-> >
-> > But this updated PKRU value is also pushed onto the sigframe, which
-> > means the register value restored from sigcontext will be different from
-> > the user-defined one, which is unexpected. Fix that by overwriting the
-> > PKRU value on the sigframe with the original, user-defined PKRU.
->
-> Hi,
->
-> This unfortunatly seems to be broken for rseq user-space writes.
-> If the signal is caused by rseq struct being inaccessible due to PKEYs,
-> we try to write to rseq again at setup_rt_frame->rseq_signal_deliver,
-> which happens _before_ sig_prepare_pkru and won't succeed
-> (PKEY is still inaccessible, hard kills the process).
-> Any PKEY sandbox would want to restict untrusted access to rseq
-> as well (otherwise allows easy sandbox escapes).
->
-> If we do sig_prepare_pkru before rseq_signal_deliver (and generally
-> before any copy_to_userpace), then user-space handler gets SIGSEGV
-> and could unregister rseq and retry.
->
-> However, I am not sure if it's the best solution performance-
-> and complexity-wise (for user-space). A better solution may be to
-> change __rseq_handle_notify_resume to temporary switch to default
-> PKEY if user accesses fail.
-> Rseq is similar to signals in this respect. Since rseq updates
-> happen asynchronously with respect to user-space control flow,
-> if a program uses rseq and ever makes rseq inaccessible with PKEYs,
-> it's in trouble and will be randomly killed.
-> Since rseq updates are asynchronous as signals, they shouldn't
-> assume PKEY is set to default value that allows access
-> to rseq descriptor.
->
-> Thoughts?
+> If shaming on social media does not work, then tell me what does,
+> because I'm out of ideas.
 
-Another question about switching to pkey 0 and not switching back on all errors.
-Can it create security problems by allowing sandboxed code to escape?
+How about you accept the fact that maybe the problem is you.
 
-Namely, here:
+You think you know better. But the current process works.
 
-+        /* Update PKRU to enable access to the alternate signal stack. */
-+        pkru = sig_prepare_pkru();
-         /* save i387 and extended state */
--        if (!copy_fpstate_to_sigframe(*fpstate, (void __user
-*)buf_fx, math_size, pkru))
-+        if (!copy_fpstate_to_sigframe(*fpstate, (void __user
-*)buf_fx, math_size, pkru)) {
-+                /*
-+                 * Restore PKRU to the original, user-defined value; disable
-+                 * extra pkeys enabled for the alternate signal stack, if any.
-+                 */
-+                write_pkru(pkru);
-                 return (void __user *)-1L;
-+        }
+It has problems, but problems are a fact of life.  There is no perfect.
 
-we restore to the original pkru on this error, but there are other
-failure paths later, e.g.:
-https://elixir.bootlin.com/linux/v6.13.1/source/arch/x86/kernel/signal_64.c#L199
+However, I will say that the social media brigading just makes me not
+want to have anything at all to do with your approach.
 
-on these errors paths we will eventually get here to force_sig(SIGSEGV):
-https://elixir.bootlin.com/linux/v6.13.1/source/kernel/signal.c#L1685
-which just sends SIGSEGV and is not fatal.
+Because if we have issues in the kernel development model, then social
+media sure as hell isn't the solution. The same way it sure as hell
+wasn't the solution to politics.
 
-So hypothetically, if there is a SIGUSR1 handler without SA_ONSTACK,
-which fails, but SIGSEGV handler has SA_ONSTACK and doesn't fail, this
-will result in resetting PKRU to 0 without restoring it back.
-Or sandboxed code somehow arranges for the first signal setup for other reasons.
+Technical patches and discussions matter. Social media brigading - no
+than\k you.
 
-This is, of course, a tricky attack vector, and the program must
-resume after SIGSEGV somehow (there are some such cases, e.g. mmaping
-something lazily and retrying), but with security you never know how
-creative an attacker can get and what you are missing that they are
-not missing. So it looks safer to restore to the original PKRU on all
-errors.
+                 Linus
