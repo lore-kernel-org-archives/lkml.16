@@ -1,55 +1,55 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B1C194A6B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12FD1E7C10
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865889; cv=none; b=Q9E04rvH/TrATngun4ZTJurTOBvFjEPKdMZvibcTbEGSQ2TNQ8CbiPxTuzicUFl4P1K/5KQn3wzqWqPP201fqOjh5wKaJG5vWj311pVCuFuLOilsqughtkvSeTaYS7MOb3ZbZu3MzEeMWf3babs/xwehU2yNVqrbP0MK4ydiOxM=
+	t=1738865894; cv=none; b=e+rf4u7BMx2PdR1J5DwMXvkGTglh7LjXKELi9a3KD80aS520MbFqnMqS3S/uuDfD7fPvYU+Qv/zekDZVDEFgteEZrh/R4WoECR1qDGfMVIgY7DKz4wi33tMFyEZOhZq+DAFQdhQTQpoftd6BSsRKlocPTPq+gqu7Q0JCEoPMDHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865889; c=relaxed/simple;
-	bh=NC/giOsxEdW/2YEKwyZ/rqMsDsoQXLA5Fl9b5LdcKjw=;
+	s=arc-20240116; t=1738865894; c=relaxed/simple;
+	bh=V/8+QBogDMyq8h2947266ECzIEzGrAwlE/YZoBQH82U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=m8ZxKGCDy89Pltw4YlNdckHEUH0E5lWiEH3gMozDajYpCkDsoAC93xB0t0ZeQB31uJDy0gs1b2WNY4yI+Fp35xfbXGhGjF/cAHiVaQRYrZuzyF46ukVSp4EGmj2vxbGy273p3w8+r6VaiMZdEpBo8T0/gsbAIQyNwOMCJ4p7go8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LYpNoJMK; arc=none smtp.client-ip=209.85.218.74
+	 To:Cc:Content-Type; b=P5Qzz+//PRNlC2+3GAEDywMgTJO1hbbAxEKa93rkclWuMH/aO6NE7DXuJ5Pu/zSji3t62OeHh0pimxQ7zIeir+FMJ8JP+LDdI+kSRUYAdvif4RN0XiBBgOEdPU60fYPB1k4DOwlJYESFtrkCnpysv1xekSxpdVfEhIUDJh+s4dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zqC1cvdL; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LYpNoJMK"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-aa689b88293so130786866b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:18:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zqC1cvdL"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-38dc88ed7e6so16854f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:18:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738865886; x=1739470686; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738865891; x=1739470691; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9zo14rswWWzdXk+7RXhASP4eQAv2ef2DvmlHG5M+4Q=;
-        b=LYpNoJMKrv7QAgp9cXs2m1IV91l7Bzo+YU98sn32nTGzsEhZxs34RSpl4Ltx9Ranqh
-         Y4WvTY6cM7l5waJzCuRqpRc96GYq6Ex6mZ8MHhxRecMiHoR6nEnaf3Wu9J/JCv3eH1MR
-         wc2Z6oiqqEmGr6ovVaQvHDE5Va5fVs5ky8Gz00BD7iIyMLLVByj1H5lArIuJ/5YS5h8a
-         ZeSFnVtg0Ccya33GQzNJb7r2WqWzAWPv5DukjPKua57otUhFDrTQREeNFyU/T/lbWOGh
-         tEs0PeScPpCe5RVRET1TMyBvF9IKs2+YbA7RVlMPPioBmqJD+w1FgT0s9gP+m9Hefw/H
-         r5YA==
+        bh=Y0plDjCJ1B0qZbMeycYJk7FAuIdA1LrCIxvHWeEdHoU=;
+        b=zqC1cvdL5z4g+NzZXRFUwGumd9cF3Bw+U6gYvGOP0gY21Y8RsEaiQv16aOjF9LxCmQ
+         Oek0NSkm7CO8Oq+TYkkSDRl0z2C4BowmKAWZqULyP35oosbqo+ZpFm0VPSN8m1ujrvpJ
+         glMQ4U/CJIJWrQjtlB3sua3FNbdvhnxfDCZy7gXez2GswV0y82ZDPhgluoJjuiW/wBzO
+         sigB4eKBhdH3mqISAiozgVoew+YZqBVFtTVQWDAdVGveVzNzHnCdmXBlJhUGnu7GTu8Y
+         1DRPG8PBGCxM9EWuXCbEjVG9mfIKvQMwgnoHvkblJYbAmatJY/r9Ca7YaV1SOZOTPtbD
+         hm1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865886; x=1739470686;
+        d=1e100.net; s=20230601; t=1738865891; x=1739470691;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9zo14rswWWzdXk+7RXhASP4eQAv2ef2DvmlHG5M+4Q=;
-        b=TgBAwh83jEp1WlixGr8wGq9bXAMnt31lvOqUtm4dfSdH1wW6DUou052U+IrfYWbtU9
-         aoXoKHsGBXbit3cX3nB/EebhbdC5gm57bnHOLyAmmex1FNGsVE+pJ9OF8TwOZiraWJq6
-         dLFUpKhsrs9VsaGmWFS4/PiAxnCLS1Ulk9rlR79eLLHaiVIlN9lg8Je4QLOk/H/0wd/z
-         DQlnRLuxjko6KxXI2H3hm4UGiaol91PEThLvMLqt98mcpAAYGa2CoVPJhbeEWBoTz+Uj
-         1X3qspLP5wRCAwUrINTSqaC4jBB+JYeyIiCPK8OSlu+0RPDEEKRev9tV87xWlk5Qj9qL
-         Nb8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXW8LJFyU4gvgKqSTEVZ6+KnGuBBE3gQMUyDLVhNE/b7DA5d3RtpejPEH4by4DEa/wK8qD5ijPNTEjEgBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrrT2JcX+Bl+UmBTh8VOqWzU8Wh2gkVR1/LTHFOAeGPM6IwHDV
-	uFKsVgbfOQjCcQOiqcF+2fdfVuxRJmJ6nVZit3yw1d2FwzW+851jZYcaLcuPFYOK8U9+7b3TFA=
+        bh=Y0plDjCJ1B0qZbMeycYJk7FAuIdA1LrCIxvHWeEdHoU=;
+        b=HWkDcMFfGiVZHxHw2xVOHuLKvqQPgPYKgqSCqyphpbREiTyQlUEhcWPddD3yZNLYuY
+         XNd9ZNaTbWpZnISKkz3tTyPw7nOpt5Be0REoCTkmewXhn1xsaJ3kg9lDPYFX47oaqVO7
+         xo37r7EOsEPb7IrAZf53kQeMUCZg5eYQTF4llVGpbmxenpLYm81njFzWW+kEMAJZCsC8
+         nNo6g0iLxdDQuH/Jdq5Z6M8L2CwHK5Yc8ksz2DWeeu1U4gPtkbXhuX2O7Z9JeVFgjJUy
+         tcmmwZ4z55p8W+WVw9//Kt3KABCQoHP2sPt+3zB1r6TNjEJiXHw18KYVOy5Jbey5hDCP
+         a5EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYKvXQQVAtFavleRL7SEl0KcToG9PYO1saG6OOQyKffwRwM3nzQGagz5XJXae1FDGalZeFvywjSYUgX3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfSXpQwY53rxymP7MUNvq7nnJOqxBqxcd2PUHBvgvTechQMQWi
+	VecU8ZWpX7+c6qpF/G/0jvEGvp/njYaSRxN4gd48CY8+ekKzk1FcMiosMkIJ0r0B8Vx2QhOZGA=
 	=
-X-Google-Smtp-Source: AGHT+IFu7xPJdokZBAxGmpTaLRXegeAIT0R1AZB6cJDpPIO2PbBj0EGjZIpu4bBVqoqg73DZbQallQnyAQ==
-X-Received: from ejcvi3.prod.google.com ([2002:a17:907:d403:b0:aa6:90a8:f5f8])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7216:b0:ab7:647:d52d
- with SMTP id a640c23a62f3a-ab75e322c0dmr999272366b.51.1738865886143; Thu, 06
- Feb 2025 10:18:06 -0800 (PST)
-Date: Thu,  6 Feb 2025 19:10:02 +0100
+X-Google-Smtp-Source: AGHT+IEkg7Kc2bKGRgLgH3oGb3lUCUVYUhWVhdvv0Wl/Ah0jIHP7904jYfscr6wQzIioSc3ZaTf74I70+g==
+X-Received: from ejcvs8.prod.google.com ([2002:a17:907:a588:b0:aa6:8676:3b2b])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a5d:64af:0:b0:386:605:77e
+ with SMTP id ffacd0b85a97d-38dc933bd7amr24f8f.49.1738865890985; Thu, 06 Feb
+ 2025 10:18:10 -0800 (PST)
+Date: Thu,  6 Feb 2025 19:10:04 +0100
 In-Reply-To: <20250206181711.1902989-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250206181711.1902989-1-elver@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250206181711.1902989-9-elver@google.com>
-Subject: [PATCH RFC 08/24] lockdep: Annotate lockdep assertions for capability analysis
+Message-ID: <20250206181711.1902989-11-elver@google.com>
+Subject: [PATCH RFC 10/24] compiler-capability-analysis: Change
+ __cond_acquires to take return value
 From: Marco Elver <elver@google.com>
 To: elver@google.com
 Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
@@ -79,57 +80,175 @@ Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.
 	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Clang's capability analysis can be made aware of functions that assert
-that capabilities/locks are held.
+While Sparse is oblivious to the return value of conditional acquire
+functions, Clang's capability analysis needs to know the return value
+which indicates successful acquisition.
 
-Presence of these annotations causes the analysis to assume the
-capability is held after calls to the annotated function, and avoid
-false positives with complex control-flow; for example, where not all
-control-flow paths in a function require a held lock, and therefore
-marking the function with __must_hold(..) is inappropriate.
+Add the additional argument, and convert existing uses.
+
+No functional change intended.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- include/linux/lockdep.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/dlm/lock.c                                |  2 +-
+ include/linux/compiler-capability-analysis.h | 14 +++++++++-----
+ include/linux/refcount.h                     |  6 +++---
+ include/linux/spinlock.h                     |  6 +++---
+ include/linux/spinlock_api_smp.h             |  8 ++++----
+ net/ipv4/tcp_sigpool.c                       |  2 +-
+ 6 files changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 67964dc4db95..5cea929b2219 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -282,16 +282,16 @@ extern void lock_unpin_lock(struct lockdep_map *lock, struct pin_cookie);
- 	do { WARN_ON_ONCE(debug_locks && !(cond)); } while (0)
+diff --git a/fs/dlm/lock.c b/fs/dlm/lock.c
+index c8ff88f1cdcf..e39ca02b793e 100644
+--- a/fs/dlm/lock.c
++++ b/fs/dlm/lock.c
+@@ -343,7 +343,7 @@ void dlm_hold_rsb(struct dlm_rsb *r)
+ /* TODO move this to lib/refcount.c */
+ static __must_check bool
+ dlm_refcount_dec_and_write_lock_bh(refcount_t *r, rwlock_t *lock)
+-__cond_acquires(lock)
++      __cond_acquires(1, lock)
+ {
+ 	if (refcount_dec_not_one(r))
+ 		return false;
+diff --git a/include/linux/compiler-capability-analysis.h b/include/linux/compiler-capability-analysis.h
+index ca63b6513dc3..10c03133ac4d 100644
+--- a/include/linux/compiler-capability-analysis.h
++++ b/include/linux/compiler-capability-analysis.h
+@@ -231,7 +231,7 @@
+ # define __must_hold(x)		__attribute__((context(x,1,1)))
+ # define __must_not_hold(x)
+ # define __acquires(x)		__attribute__((context(x,0,1)))
+-# define __cond_acquires(x)	__attribute__((context(x,0,-1)))
++# define __cond_acquires(ret, x) __attribute__((context(x,0,-1)))
+ # define __releases(x)		__attribute__((context(x,1,0)))
+ # define __acquire(x)		__context__(x,1)
+ # define __release(x)		__context__(x,-1)
+@@ -277,12 +277,14 @@
+ /**
+  * __cond_acquires() - function attribute, function conditionally
+  *                     acquires a capability exclusively
++ * @ret: value returned by function if capability acquired
+  * @x: capability instance pointer
+  *
+  * Function attribute declaring that the function conditionally acquires the
+- * given capability instance @x exclusively, but does not release it.
++ * given capability instance @x exclusively, but does not release it. The
++ * function return value @ret denotes when the capability is acquired.
+  */
+-# define __cond_acquires(x)	__try_acquires_cap(1, x)
++# define __cond_acquires(ret, x) __try_acquires_cap(ret, x)
  
- #define lockdep_assert_held(l)		\
--	lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
-+	do { lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD); __assert_cap(l); } while (0)
+ /**
+  * __releases() - function attribute, function releases a capability exclusively
+@@ -349,12 +351,14 @@
+ /**
+  * __cond_acquires_shared() - function attribute, function conditionally
+  *                            acquires a capability shared
++ * @ret: value returned by function if capability acquired
+  * @x: capability instance pointer
+  *
+  * Function attribute declaring that the function conditionally acquires the
+- * given capability instance @x with shared access, but does not release it.
++ * given capability instance @x with shared access, but does not release it. The
++ * function return value @ret denotes when the capability is acquired.
+  */
+-# define __cond_acquires_shared(x) __try_acquires_shared_cap(1, x)
++# define __cond_acquires_shared(ret, x) __try_acquires_shared_cap(ret, x)
  
- #define lockdep_assert_not_held(l)	\
- 	lockdep_assert(lockdep_is_held(l) != LOCK_STATE_HELD)
+ /**
+  * __releases_shared() - function attribute, function releases a
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 35f039ecb272..f63ce3fadfa3 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -353,9 +353,9 @@ static inline void refcount_dec(refcount_t *r)
  
- #define lockdep_assert_held_write(l)	\
--	lockdep_assert(lockdep_is_held_type(l, 0))
-+	do { lockdep_assert(lockdep_is_held_type(l, 0)); __assert_cap(l); } while (0)
+ extern __must_check bool refcount_dec_if_one(refcount_t *r);
+ extern __must_check bool refcount_dec_not_one(refcount_t *r);
+-extern __must_check bool refcount_dec_and_mutex_lock(refcount_t *r, struct mutex *lock) __cond_acquires(lock);
+-extern __must_check bool refcount_dec_and_lock(refcount_t *r, spinlock_t *lock) __cond_acquires(lock);
++extern __must_check bool refcount_dec_and_mutex_lock(refcount_t *r, struct mutex *lock) __cond_acquires(1, lock);
++extern __must_check bool refcount_dec_and_lock(refcount_t *r, spinlock_t *lock) __cond_acquires(1, lock);
+ extern __must_check bool refcount_dec_and_lock_irqsave(refcount_t *r,
+ 						       spinlock_t *lock,
+-						       unsigned long *flags) __cond_acquires(lock);
++						       unsigned long *flags) __cond_acquires(1, lock);
+ #endif /* _LINUX_REFCOUNT_H */
+diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
+index 1646a9920fd7..de5118d0e718 100644
+--- a/include/linux/spinlock.h
++++ b/include/linux/spinlock.h
+@@ -362,7 +362,7 @@ static __always_inline void spin_lock_bh(spinlock_t *lock)
+ }
  
- #define lockdep_assert_held_read(l)	\
--	lockdep_assert(lockdep_is_held_type(l, 1))
-+	do { lockdep_assert(lockdep_is_held_type(l, 1)); __assert_shared_cap(l); } while (0)
+ static __always_inline int spin_trylock(spinlock_t *lock)
+-	__cond_acquires(lock) __no_capability_analysis
++	__cond_acquires(1, lock) __no_capability_analysis
+ {
+ 	return raw_spin_trylock(&lock->rlock);
+ }
+@@ -420,13 +420,13 @@ static __always_inline void spin_unlock_irqrestore(spinlock_t *lock, unsigned lo
+ }
  
- #define lockdep_assert_held_once(l)		\
- 	lockdep_assert_once(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
-@@ -389,10 +389,10 @@ extern int lockdep_is_held(const void *);
- #define lockdep_assert(c)			do { } while (0)
- #define lockdep_assert_once(c)			do { } while (0)
+ static __always_inline int spin_trylock_bh(spinlock_t *lock)
+-	__cond_acquires(lock) __no_capability_analysis
++	__cond_acquires(1, lock) __no_capability_analysis
+ {
+ 	return raw_spin_trylock_bh(&lock->rlock);
+ }
  
--#define lockdep_assert_held(l)			do { (void)(l); } while (0)
-+#define lockdep_assert_held(l)			__assert_cap(l)
- #define lockdep_assert_not_held(l)		do { (void)(l); } while (0)
--#define lockdep_assert_held_write(l)		do { (void)(l); } while (0)
--#define lockdep_assert_held_read(l)		do { (void)(l); } while (0)
-+#define lockdep_assert_held_write(l)		__assert_cap(l)
-+#define lockdep_assert_held_read(l)		__assert_shared_cap(l)
- #define lockdep_assert_held_once(l)		do { (void)(l); } while (0)
- #define lockdep_assert_none_held_once()	do { } while (0)
+ static __always_inline int spin_trylock_irq(spinlock_t *lock)
+-	__cond_acquires(lock) __no_capability_analysis
++	__cond_acquires(1, lock) __no_capability_analysis
+ {
+ 	return raw_spin_trylock_irq(&lock->rlock);
+ }
+diff --git a/include/linux/spinlock_api_smp.h b/include/linux/spinlock_api_smp.h
+index fab02d8bf0c9..9b6f7a5a0705 100644
+--- a/include/linux/spinlock_api_smp.h
++++ b/include/linux/spinlock_api_smp.h
+@@ -34,8 +34,8 @@ unsigned long __lockfunc _raw_spin_lock_irqsave(raw_spinlock_t *lock)
+ unsigned long __lockfunc
+ _raw_spin_lock_irqsave_nested(raw_spinlock_t *lock, int subclass)
+ 								__acquires(lock);
+-int __lockfunc _raw_spin_trylock(raw_spinlock_t *lock)		__cond_acquires(lock);
+-int __lockfunc _raw_spin_trylock_bh(raw_spinlock_t *lock)	__cond_acquires(lock);
++int __lockfunc _raw_spin_trylock(raw_spinlock_t *lock)		__cond_acquires(1, lock);
++int __lockfunc _raw_spin_trylock_bh(raw_spinlock_t *lock)	__cond_acquires(1, lock);
+ void __lockfunc _raw_spin_unlock(raw_spinlock_t *lock)		__releases(lock);
+ void __lockfunc _raw_spin_unlock_bh(raw_spinlock_t *lock)	__releases(lock);
+ void __lockfunc _raw_spin_unlock_irq(raw_spinlock_t *lock)	__releases(lock);
+@@ -84,7 +84,7 @@ _raw_spin_unlock_irqrestore(raw_spinlock_t *lock, unsigned long flags)
+ #endif
+ 
+ static inline int __raw_spin_trylock(raw_spinlock_t *lock)
+-	__cond_acquires(lock)
++	__cond_acquires(1, lock)
+ {
+ 	preempt_disable();
+ 	if (do_raw_spin_trylock(lock)) {
+@@ -177,7 +177,7 @@ static inline void __raw_spin_unlock_bh(raw_spinlock_t *lock)
+ }
+ 
+ static inline int __raw_spin_trylock_bh(raw_spinlock_t *lock)
+-	__cond_acquires(lock)
++	__cond_acquires(1, lock)
+ {
+ 	__local_bh_disable_ip(_RET_IP_, SOFTIRQ_LOCK_OFFSET);
+ 	if (do_raw_spin_trylock(lock)) {
+diff --git a/net/ipv4/tcp_sigpool.c b/net/ipv4/tcp_sigpool.c
+index d8a4f192873a..10b2e5970c40 100644
+--- a/net/ipv4/tcp_sigpool.c
++++ b/net/ipv4/tcp_sigpool.c
+@@ -257,7 +257,7 @@ void tcp_sigpool_get(unsigned int id)
+ }
+ EXPORT_SYMBOL_GPL(tcp_sigpool_get);
+ 
+-int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c) __cond_acquires(RCU_BH)
++int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c) __cond_acquires(0, RCU_BH)
+ {
+ 	struct crypto_ahash *hash;
  
 -- 
 2.48.1.502.g6dc24dfdaf-goog
