@@ -1,114 +1,109 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CAC22654E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4922687E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834423; cv=none; b=b3Nch7/nOWFLvUx9gsYhYgL+QX5aMh+4Nr/fhYQZQdhAKeVJSXJHROynSm/8gqGsbD9dpi9mlltOOdZWX5rYGxguPRodegjEQgp33X/RQXQZV4QBW0zW9w0Utj1RXuzrQf20aiwmHPyOJ7zjkaZ0DSD/xa4ukDddh7V6jEslm9Q=
+	t=1738834493; cv=none; b=MWI8q+R379V8eNmX2kTcMnN9SwnZ6geXC1PRD4e4Tby4ABY0PG4+WUs5NG4srWwlStX4LsY98opf4gVB3y5Ja2mIq9zTGLOUetLcDso9Vzkr+Jwca99MQQwiYKYqpMvj0R/XjSUP0APvXcwzWPZdf9txIcUAmGC8RTUtK9IVm7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834423; c=relaxed/simple;
-	bh=usdz62LURijbWQ2Ga/7vGTMaHUbDX8+cCgvM+iEDBJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pp6rtyR/Z65MJf/gB6X9/zUqDu1oVLNiMAt5V9GKz3/C5uPTidf3VKAVfbApqf+2fm9I03idDUeaXyVvWOwzd0va8+oF+y7mF0/7t3Jd8HTQifNJk4lXiLVCGTDFDmE2iGliDxhn11oDL+qhWDCxAc6dtfToWdDkB/bgUxq8Vvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=aksC4HcP; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1738834493; c=relaxed/simple;
+	bh=yfen1v4LAdqEiU+cdK+Argg9GudsmsZkygx2izTcW+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PcQQbMRTrVUT9Qjt07FfpUfVSdqtOwQM8oB8jd1blgRImBMRS0Fx5YtMEKSkxi4WzWSBHkjIEA+NvaYgTVbwHrp6XUr1Se/ZE5VxsATsIqYzCGrA3QHYt+W+EZ194CbFXAXiiK0kTFDGs5Jg/+LLtnfCVqwSzuR++h31E9SooEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dMGWQCXA; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="aksC4HcP"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id fxvptHcgcAfjwfyGMtA58c; Thu, 06 Feb 2025 09:33:34 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id fyGMtFRaCy3u7fyGMtf0s2; Thu, 06 Feb 2025 09:33:34 +0000
-X-Authority-Analysis: v=2.4 cv=e9YAS7p/ c=1 sm=1 tr=0 ts=67a481ee
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=g9OED4ookiJITInLTEIPWloDXRRtGC/+P9KCScsYSdQ=; b=aksC4HcP+RjmcglH6u/QW6svcJ
-	65bznwhEy5oTC4EiDMRHnltKotGFMshb75iryQCFGZptqeUmps6VPqYGgd6LnUgMTrlLhnjd5dlU3
-	ztmwecvyrQMR5u2g1JyOtpZjoY2/FIYP2szZbmOKgB9NJlrhBY0YxN9xDKkkxrkg2mQLoCOfzs9hb
-	j+MZLvBh08V9ECkvlZ0ZRa127r1FCpjQ0rMaN//yI0qg/+6wn6Ldj4/utFXa/jhdsO4LKpzSW3m7+
-	kagCOdf8zhwpGIiPxw4CJhxRhMkQqLgWkLwn3AoFiqiC6Xk3h/s/0PL1xCq1I1ugTMHYRPuvN7oZu
-	JTJvT5+Q==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:55396 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tfyGL-001iYW-03;
-	Thu, 06 Feb 2025 02:33:33 -0700
-Message-ID: <97713b4c-e3b5-4335-9827-a695f00a09ad@w6rz.net>
-Date: Thu, 6 Feb 2025 01:33:30 -0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dMGWQCXA"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30227ccf803so5822171fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738834489; x=1739439289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W7lAfvcqgrQXRVsX5y5Frx4KRAfRNlyaJq5G6Gadf7Q=;
+        b=dMGWQCXA33/TwduYz39zoY950RpkpCC/ivSEEO92hfX+GPsV4jACoASvA00FJE9flW
+         ar/FL55/moR28SJN7Zo2yK677416fA0Oi5A2ktnZqDjrQHNZbkSI2yjIsGLSA/2CaysD
+         rI4MqtUOcMa9PvmJAH9jYqks6KuU2i79lFFkYfhwbBm+kuQTYxMhgrHuD/7k4wpi6QAO
+         JF9RMudH8eTI1FUTImOdx36zzZsUSn0qw2cgguNXRi+tlDUSzYxu5InnejUwuvZ2Hmzu
+         43aCBK9qlCPthc0MMV54CtvTtkTqp5YAH0htzScfJrm39G9/farDg/dJntfvLslUQv1y
+         KlSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738834489; x=1739439289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W7lAfvcqgrQXRVsX5y5Frx4KRAfRNlyaJq5G6Gadf7Q=;
+        b=bBsM7eZMxi0RprxolSVAL6CL6PfBybDuXV0IA2uCqdxPbc3ctMy2djymXHa77nn2wl
+         QKoHms6dzSUcjYc8o+0l84419XSdUxT4MI1HW/mn3BbMLKNMGQNR5DnlzRg5CBCteOZ2
+         bnB7wgfFy953cLTLF3AuggZ86YwGci+8p+yKd++E71L97fw337sw3+2TTqzI3Q1/sQjn
+         R1uo2o9G2cjxh1/qunM8FmnzEYgxSsn/ygDsKreA+DTLcFxwO0j7cMfS4m4cmIM7VXA1
+         hHTmAWPjJdGMO+f070MBll7Yi7TUHAbCHnXarOxdMKzHDI9txwecR+X6AKXeEyJfIkAX
+         PDng==
+X-Forwarded-Encrypted: i=1; AJvYcCXy9mxqmcscW+uT21kizeZrdUoEJurCS0Cy8M57+Il9h9NKxRRBZ/1GGkNQ3yDN+1v0kDIy494cUaA78lQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxByikaxJqt8DzCD6jji8WxasF0yi7X5D3wnGFSGx6iA090GbOf
+	gEP4rIpT9Z/tYOuxLjHxsm/mb6ZP5ywvLxeGug6wonZZxjMvA1UXVGC8u+PxSEuqAj0MrQvgr+0
+	oVkQw54xe7XUEgTJI3QeIlJS4IZwKJzUttZF3LA==
+X-Gm-Gg: ASbGncs0S3qJJmpmwdPYb5QC7D7j154LOIYL7ZzVjQdh6FVviL5nTH4lzkURSLKPtZ8
+	AvNPl5g43LZLObItCdWAx5Yevmue29cmX3IdzVgU358nPLp2uTFaQRuOuxLYRSOkltwZNdhQ=
+X-Google-Smtp-Source: AGHT+IFJioIZ+SIeFji3yfZS6UpOkRsu94ORXpk38zbHIoNMqdqKledBEr+iDuLeIF3Zq4N/T1bFuhjDSADQ2+GpEfg=
+X-Received: by 2002:a05:651c:12c7:b0:306:10b5:6b3 with SMTP id
+ 38308e7fff4ca-307cf2e7a8emr19090411fa.5.1738834489196; Thu, 06 Feb 2025
+ 01:34:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250205134456.221272033@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tfyGL-001iYW-03
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:55396
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBW4b3JbfXWgTr5PcjqjjErYxctuNvYxeKJFFzzx6Uld5rUnkdoUsDtE0Ctm1PbAxR17u6CGFG/J08zs5bJCmXD3XAaloVm2m059bomxTA18gqorHOnU
- cyiJNUMEbP/yt/HoRDmYpBpS7fIlVgcFmvSHSEFC6UkCdeoUWjfMx3iO/4ucFqzMFgRly5+cKUhZ87Ua2sIxC+7Lsh3FVg0XMdE=
+References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
+In-Reply-To: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 10:34:38 +0100
+X-Gm-Features: AWEUYZkV6NwmyMBafvSPlxwwJhxpoXuuAWLayW3M3lEdMShuQhStxtyBnygw9vI
+Message-ID: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
+	Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
+	Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/5/25 05:35, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.2 release.
-> There are 623 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 07 Feb 2025 13:42:57 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.2-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Artur,
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+On Thu, Jan 30, 2025 at 6:10=E2=80=AFPM Artur Weber <aweber.kernel@gmail.co=
+m> wrote:
 
-Tested-by: Ron Economos <re@w6rz.net>
+> Fixes two issues that were preventing GPIO from working correctly:
+>
+> - Lock/unlock functions tried to write the wrong bit to the unlock
+>   registers for GPIOs with numbers larger than 32
+>
+> - GPIOs only initialized as IRQs did not unlock the configuration
+>   registers, causing IRQ-related configuration (e.g. setting the IRQ
+>   type) to fail.
+>
+> Also includes a minor fix to add a missing newline to an error message.
+>
+> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+> (DTS not yet in mainline).
+>
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
+Looks good to me, do you want to resend the patches picking up the
+Acks or do you want me to apply as-is?
+
+Should this go in as urgent fixes (-rcN) or as nonurgent?
+
+The DTS not being mainline suggests nonurgent but are there
+other systems suffering?
+
+Yours,
+Linus Walleij
