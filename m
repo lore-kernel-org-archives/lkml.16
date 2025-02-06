@@ -1,122 +1,183 @@
-Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC4C225A3E;
-	Thu,  6 Feb 2025 09:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CFF20E032;
+	Thu,  6 Feb 2025 09:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832543; cv=none; b=JaJ+9+/vZ7Iq5GmAuqu1uOoVWR3T/lOgkhVVj8DAWWWgEfabD6XaUibMbHJPSmy8SsUcfRfBpxCxRRxEiX5tOTeOWYZDWb4KWkYtfLdgT5DxdHcp/qBQGOvKToFtpKTOpslm0I9nWj+ZHvzgW0+Ugq+Y9I2Avq8Nue3pvW5tG8U=
+	t=1738832560; cv=none; b=RcaIDecsR87NQgTo58xBjz62Y9w8J0eR9us/usJbbGoOPRmIrxKYWwYY599bJFeAL0EmW8Lav+PC4A61KjKOkUgVIH6KyL/QrESwDfuUmLaBXMTqmAQoiY8iQg0jsm5BpveRGqhwjB8Lcyq5JPeEmz54FfXKpxyZv2/86fPsfq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832543; c=relaxed/simple;
-	bh=7jAIuBV+/kYZyNMP7HxSUsmu8APD8C6CGiLI6Xg+y6g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pHSlXTrDtozCGCXlLP03Viebr9ZKoyZMB7gVNy8KAWmijzNyGQdoJ5MbVk6h87torS/5OziWOJpDeuFQoG9UQfpdhDbONp2xxshnmaf+ksiGIIjeRp5HzNi1p8AZICqfTroTO3l7spg2VCqPz09y2dBcJWQSb6QaFcTXIDbndQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=Ln4KOAGF; arc=none smtp.client-ip=178.154.239.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1738832560; c=relaxed/simple;
+	bh=tkCI1kLUExHSS7JfbF9OB+d63f2Y0jbJBMMkHqhjSyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RbdSqOYwzz1cL0c2wi9ilFbmWDuiqh27Ws8bHMCd2ntbJp+EIeuP50/Et+bf+LUoR9W/5DEb8ItRRpREqgN8/zqhJ4mdr2IQHEsQUoRpOW2GHoN2hOHHUk5HU8on32/5Dqa84goEYNvVkWF1XX48/CZtApXxtnYK0x9lVP2DKjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q2/7Fomp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pir/qj0/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q2/7Fomp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pir/qj0/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ln4KOAGF"
-Received: from mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3f48:0:640:7695:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 27B2160A06;
-	Thu,  6 Feb 2025 12:02:17 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:1229::1:1a])
-	by mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 62ilp53IZKo0-nZUeuZcr;
-	Thu, 06 Feb 2025 12:02:16 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1738832536;
-	bh=tnsS/bGpQAwc8OLFLKLSqn0mhm9Mmm9Ui6vHfp9zubo=;
-	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=Ln4KOAGFUy4TsmmOk5INOj4rcLEJMVmXhmsWNyHY5q+l6LnqOWjsHMC7bnoRt0phD
-	 bn7z1unHY+T1+apewjfu+4JlQOzugcnGlqCg0F54xpCUr81zAd4DDyhJ7mW8hWszRY
-	 EKNcHpiNi8nz9ysnD7usP4fokf3tcWeh/ZGMal3E=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Wen Yang <wenyang@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kniv@yandex-team.ru,
-	stable@vger.kernel.org
-Subject: [PATCH v2] ftrace: Avoid potential division by zero in function_stat_show()
-Date: Thu,  6 Feb 2025 12:01:56 +0300
-Message-Id: <20250206090156.1561783-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205095021.15771b88@gandalf.local.home>
-References: <20250205095021.15771b88@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q2/7Fomp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pir/qj0/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q2/7Fomp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pir/qj0/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6A66121114;
+	Thu,  6 Feb 2025 09:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738832556; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
+	b=Q2/7FompWbxErPXX2RXUy1wzVHoFXBfKz23hJX8AH2Iths1/47EjP0vaia6N1zA2Hnvqbc
+	JQNvVunZkKr1isQKU693ML2IAcd/OZhMv1cPgui0M9z31YlkOr6pwvnPo+TRqHlWqgCzq6
+	aW+soTgBHAVvG9/22DD8N0kd1oGgCpY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738832556;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
+	b=Pir/qj0/cXlvWmVFCcDe55yIZxAaSVo/uG2ar/sFVOjvIIiUCc8mOW1tcpBMAuAFjZ6/b5
+	9PTozImR03UBfjAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738832556; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
+	b=Q2/7FompWbxErPXX2RXUy1wzVHoFXBfKz23hJX8AH2Iths1/47EjP0vaia6N1zA2Hnvqbc
+	JQNvVunZkKr1isQKU693ML2IAcd/OZhMv1cPgui0M9z31YlkOr6pwvnPo+TRqHlWqgCzq6
+	aW+soTgBHAVvG9/22DD8N0kd1oGgCpY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738832556;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
+	b=Pir/qj0/cXlvWmVFCcDe55yIZxAaSVo/uG2ar/sFVOjvIIiUCc8mOW1tcpBMAuAFjZ6/b5
+	9PTozImR03UBfjAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EFC313694;
+	Thu,  6 Feb 2025 09:02:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3v4qF6x6pGc4PgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 06 Feb 2025 09:02:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0A789A0889; Thu,  6 Feb 2025 10:02:36 +0100 (CET)
+Date: Thu, 6 Feb 2025 10:02:35 +0100
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] vfs: inline getname()
+Message-ID: <7exbpvo4svpmhk7n7sjq55wlaqhndk3qk2ijw7y4dvykqbhg3n@y5axd74zos5i>
+References: <20250206000105.432528-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206000105.432528-1-mjguzik@gmail.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-0.998];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.995];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-Check whether denominator expression x * (x - 1) * 1000 mod {2^32, 2^64}
-produce zero and skip stddev computation in that case.
+On Thu 06-02-25 01:01:05, Mateusz Guzik wrote:
+> It is merely a trivial wrapper around getname_flags which adds a zeroed
+> argument, no point paying for an extra call.
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-For now don't care about rec->counter * rec->counter overflow because
-rec->time * rec->time overflow will likely happen earlier.
+Well, the "extra call" in your changelog is a bit overrated. Such wrappers
+get compiled into a constant jump anyway - e.g. in my kernel:
 
-Cc: stable@vger.kernel.org
-Fixes: e31f7939c1c27 ("ftrace: Avoid potential division by zero in function profiler")
-Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
----
-v2: Instead of splitting the division into two store denominator into
-separate variable and zero-check it
+Dump of assembler code for function getname:
+   0xffffffff815edb80 <+0>:	endbr64 
+   0xffffffff815edb84 <+4>:	call   0xffffffff8131cad0 <__fentry__>
+   0xffffffff815edb89 <+9>:	xor    %esi,%esi
+   0xffffffff815edb8b <+11>:	jmp    0xffffffff815ed750 <getname_flags>
 
- kernel/trace/ftrace.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+And the jmp to constant is practically free on current CPUs.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 728ecda6e8d4..9ea6609588cf 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -540,6 +540,7 @@ static int function_stat_show(struct seq_file *m, void *v)
- 	static struct trace_seq s;
- 	unsigned long long avg;
- 	unsigned long long stddev;
-+	unsigned long long stddev_denom;
- #endif
- 	guard(mutex)(&ftrace_profile_lock);
- 
-@@ -559,23 +560,19 @@ static int function_stat_show(struct seq_file *m, void *v)
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	seq_puts(m, "    ");
- 
--	/* Sample standard deviation (s^2) */
--	if (rec->counter <= 1)
--		stddev = 0;
--	else {
--		/*
--		 * Apply Welford's method:
--		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
--		 */
-+	/*
-+	 * Variance formula:
-+	 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
-+	 * Maybe Welford's method is better here?
-+	 * Divide only by 1000 for ns^2 -> us^2 conversion.
-+	 * trace_print_graph_duration will divide by 1000 again.
-+	 */
-+	stddev = 0;
-+	stddev_denom = rec->counter * (rec->counter - 1) * 1000;
-+	if (stddev_denom) {
- 		stddev = rec->counter * rec->time_squared -
- 			 rec->time * rec->time;
--
--		/*
--		 * Divide only 1000 for ns^2 -> us^2 conversion.
--		 * trace_print_graph_duration will divide 1000 again.
--		 */
--		stddev = div64_ul(stddev,
--				  rec->counter * (rec->counter - 1) * 1000);
-+		stddev = div64_ul(stddev, stddev_denom);
- 	}
- 
- 	trace_seq_init(&s);
+Overall inline function for this is I guess a more common way how we do
+things like this so feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/namei.c         | 5 -----
+>  include/linux/fs.h | 5 ++++-
+>  2 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 3ab9440c5b93..3a4039acdb3f 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -218,11 +218,6 @@ struct filename *getname_uflags(const char __user *filename, int uflags)
+>  	return getname_flags(filename, flags);
+>  }
+>  
+> -struct filename *getname(const char __user * filename)
+> -{
+> -	return getname_flags(filename, 0);
+> -}
+> -
+>  struct filename *__getname_maybe_null(const char __user *pathname)
+>  {
+>  	struct filename *name;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index e73d9b998780..85d88dd5ab6c 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2840,7 +2840,10 @@ extern int filp_close(struct file *, fl_owner_t id);
+>  
+>  extern struct filename *getname_flags(const char __user *, int);
+>  extern struct filename *getname_uflags(const char __user *, int);
+> -extern struct filename *getname(const char __user *);
+> +static inline struct filename *getname(const char __user *name)
+> +{
+> +	return getname_flags(name, 0);
+> +}
+>  extern struct filename *getname_kernel(const char *);
+>  extern struct filename *__getname_maybe_null(const char __user *);
+>  static inline struct filename *getname_maybe_null(const char __user *name, int flags)
+> -- 
+> 2.43.0
+> 
 -- 
-2.34.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
