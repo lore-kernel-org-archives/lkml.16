@@ -1,105 +1,106 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB03376;
-	Thu,  6 Feb 2025 03:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBA315199B;
+	Thu,  6 Feb 2025 04:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738814344; cv=none; b=KV+1+SMgRJPatDwpsJrYUseOnCOaUD9r/Kzc74K3a+CDx8lArO5HRQ+9tVCfesM1R2ThzipN0RK/5/uW/zUACltGG0gXGw1Fe6uhYaYO5Nz4MKgSr37PkiG4+3Iq5twvvdHCJcdh65aTydwv2n3Eq4Ov7MAN2KqcX7jAhvvI/PM=
+	t=1738814497; cv=none; b=LM85b8aNPQkBrBj3NY5swPs+Nks9g4UyNPdlspvolETMnEI5O+ZuelNTrwkggrkZ13nVvqnCS9xySShJ75ieLtbYHqaGeR29BjU0gvqLSsGyuQpjeyCobOoB4KIODBLOOpDBngGfyeKHM3GwjQFtZhXHBwXhJjpLHEtIy+ffuRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738814344; c=relaxed/simple;
-	bh=NXrBsW1o62rRxCZBogrVabt+2lDIaLYgx0RRsmkSp/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mA2RyKrWVHIgfp+2KegiMWwOreILx8MzbJx32ycVLT31lacLJk5HUHqbOZrf0HmFCRtb7Z799B2iGX/bNTVSprTuM/q+Gc8CxCiL4+TGWMA1OJn4++KUvxwYqO1OkYGHvFCbTtLHVUTGhnhEkiP0+G71elyTwTbRNHP5OoGD6kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YpNXy0hBBz1V59F;
-	Thu,  6 Feb 2025 11:55:14 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A1551A0188;
-	Thu,  6 Feb 2025 11:58:52 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 6 Feb
- 2025 11:58:52 +0800
-Message-ID: <d7acce9e-fafc-4b1d-80f9-2ddc46b5a28d@huawei.com>
-Date: Thu, 6 Feb 2025 11:58:51 +0800
+	s=arc-20240116; t=1738814497; c=relaxed/simple;
+	bh=hYSddCZtH8T8rjaQx2PJ2jDZt4RdHTt6LhG4zQSBl44=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fOuXjKydzthpaAHbnKOpZPzNSdbWgFSMoyRCNuIjs9zYfDRKd+WYpISwbSwKTiS+SlpsQvBVfLOfOhwWm3zTOwdYi+kvQ65Oxe9chbpe8ZOE6UH6G3PeQUY5bR85gTidL6A0+xvZaX1FT0KXxhjyNHns36oUh58CKTDDfXMJpZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=mPyrtXhX; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mPyrtXhX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1738814497; x=1770350497;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=oRvIjo1WEL8mKSMjR4n9GdLWbnVqLd4mvq/PW2nGwEQ=;
+  b=mPyrtXhX/CEGqbltNrXkXrgwe2CcLPrmIZoovYwAKgpRYiTH+7WC88jr
+   c/HfkTcXTKfS4SYaPS1b5GjujLz6gCPiOpy048W7B2w1OFPjy2fnDLuI0
+   fvX1E5zkM7WJBcuASY6zzwE8GDYioS3/YIKoE+HWxnBJyq6jf5NeIeP/E
+   E=;
+X-IronPort-AV: E=Sophos;i="6.13,263,1732579200"; 
+   d="scan'208";a="694787366"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 04:01:33 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:39315]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.27:2525] with esmtp (Farcaster)
+ id 970b68e1-01c6-499f-9d06-ce978bf29ac2; Thu, 6 Feb 2025 04:01:32 +0000 (UTC)
+X-Farcaster-Flow-ID: 970b68e1-01c6-499f-9d06-ce978bf29ac2
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Thu, 6 Feb 2025 04:01:31 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.37.244.8) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Thu, 6 Feb 2025 04:01:27 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <buaajxlj@163.com>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <liangjie@lixiang.com>,
+	<linux-kernel@vger.kernel.org>, <mhal@rbox.co>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>
+Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind identifier length
+Date: Thu, 6 Feb 2025 13:01:18 +0900
+Message-ID: <20250206040118.77016-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250205100904.2534565-1-buaajxlj@163.com>
+References: <20250205100904.2534565-1-buaajxlj@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/15] cpufreq: cppc: Set policy->boost_supported
-To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>
-CC: <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
-	<linux-kernel@vger.kernel.org>
-References: <cover.1737707712.git.viresh.kumar@linaro.org>
- <c744751c8f61cae509959270176ebdef77326ba2.1737707712.git.viresh.kumar@linaro.org>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <c744751c8f61cae509959270176ebdef77326ba2.1737707712.git.viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D040UWA002.ant.amazon.com (10.13.139.113) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 2025/1/24 16:58, Viresh Kumar wrote:
+From: Liang Jie <buaajxlj@163.com>
+Date: Wed,  5 Feb 2025 18:09:04 +0800
+> The logs from 'netdev/build_allmodconfig_warn' indicate that the patch has
+> given rise to the following warning:
+> 
+>  - ../net/unix/af_unix.c: In function ‘unix_autobind’:
+>  - ../net/unix/af_unix.c:1227:48: warning: ‘sprintf’ writing a terminating nul past the end of the destination [-Wformat-overflow=]
+>  -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+>  -       |                                                ^
+>  - ../net/unix/af_unix.c:1227:9: note: ‘sprintf’ output 6 bytes into a destination of size 5
+>  -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
+>  -       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> It appears that the 'sprintf' call attempts to write a terminating null
+> byte past the end of the 'sun_path' array, potentially causing an overflow.
+> 
+> To address this issue, I am considering the following approach:
+> 
+> 	char orderstring[6];
+> 
+> 	sprintf(orderstring, "%05x", ordernum);
+> 	memcpy(addr->name->sun_path + 1, orderstring, 5);
+> 
+> This would prevent the buffer overflow by using 'memcpy' to safely copy the
+> formatted string into 'sun_path'.
 
-> With a later commit, the cpufreq core will call the ->set_boost()
-> callback only if the policy supports boost frequency. The
-> boost_supported flag is set by the cpufreq core if policy->freq_table is
-> set and one or more boost frequencies are present.
-> 
-> For other drivers, the flag must be set explicitly.
-> 
-> With this, the local variable boost_supported isn't required anymore.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cppc_cpufreq.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index 7fa89b601d2a..08117fb9c1eb 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -34,8 +34,6 @@
->   */
->  static LIST_HEAD(cpu_data_list);
->  
-> -static bool boost_supported;
-> -
->  static struct cpufreq_driver cppc_cpufreq_driver;
->  
->  #ifdef CONFIG_ACPI_CPPC_CPUFREQ_FIE
-> @@ -653,7 +651,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	 * is supported.
->  	 */
->  	if (caps->highest_perf > caps->nominal_perf)
-> -		boost_supported = true;
-> +		policy->boost_supported = true;
->  
->  	/* Set policy->cur to max now. The governors will adjust later. */
->  	policy->cur = cppc_perf_to_khz(caps, caps->highest_perf);
-> @@ -791,11 +789,6 @@ static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
->  	struct cppc_perf_caps *caps = &cpu_data->perf_caps;
->  	int ret;
->  
-> -	if (!boost_supported) {
-> -		pr_err("BOOST not supported by CPU or firmware\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	if (state)
->  		policy->max = cppc_perf_to_khz(caps, caps->highest_perf);
->  	else
+Finally new hard-coded values are introduced..
 
-I have a little question. With the old boost_supported flag as false, it
-will fail when you operate the global boost flag. But if you replace it
-with the per-policy boost_supported flag, the global boost_enabled flag can
-be set to true without any error, even no policy's boost_enabled flag
-changed. Is this interface behavior change OK?
+I'm not sure this is worth saving just 10 bytes, which is not excessive,
+vs extra 5 bytes memcpy(), so I'd rather not touch here.
+
+
+> 
+> Before proceeding with a patch submission, I wanted to consult with you to
+> see if you have any suggestions for a better or more elegant solution to
+> this problem.
+
+An elegant option might be add a variant of snprintf without terminating
+string by \0 ?
