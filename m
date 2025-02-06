@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED36224B04
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:15:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98404224B13
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738822524; cv=none; b=ITL9nRHKZ7auf4xAApAJgghyFc2yhISUWktIw/DAF2JRs2IM/ujdll5JEaeCM3fEKCy8CikNbwistWgXBjx35oYnYGKYM1ZPvG83snahVQbFfKc7RMDanvB4+NBMxjQ/YxDzwANsDI10rYA+Ma2KbEUjvu2k55TrYjeXdYT6AJA=
+	t=1738822525; cv=none; b=DLA+SS9NcFDjJ+HQCoOvRybrLuI4LH5Rd+wiTfXIODpxTXNFKixnQlXWK8pS+Z9/clxI98o8vD327iAHiBB/+Ck+EA3R6ZBtr+qz+mBup8MhuMquyMFmtsxEx/fHGifddCaPZtonRbNHUqaX2MLMLvuFR+yS5d4qj8Iq71z5gLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738822524; c=relaxed/simple;
-	bh=mfBMQDGwCijsuSEaM5RCGlWQCxDRxNtkNxhQORCqX0Y=;
+	s=arc-20240116; t=1738822525; c=relaxed/simple;
+	bh=+hjnCmx0FZ2b8X/9Br4bzXPNjaytMayZsysgOyR4ceE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ECys4QKAwbePByAcUfhiBTg5oLK0XTrsriP5EP1AifhpfrYgQyd34HuQEOIM0I+uviXslqmlb95Hp0HFbp7Z9lVtSA+gW6z7jqLQ1Q5NEHesS0Zj9OXenr0ZHam6/GdrE5/ahXzle8ALKyMGB1Bqb6VOJgKFMWesHJvWwvwlNOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1xkWOmc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F4qaHgSUWkkajvwCu8zc9gXFmJHzUXBNHfBhgo6K2lSpq2YMeEYsWFaFMyc1e2lDA5LyOM6sBFY7UOhWPezBljxgUFL3UU6y3yjvdwAWrRjKLeEPejwWIJyo+lakHPiHHBqf96jteTR3LPs3aUDU4QLp19C/208gO/p6WmV2N/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/3arlxO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1xkWOmc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACD7C4CEE5;
-	Thu,  6 Feb 2025 06:15:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/3arlxO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C383CC4CEE5;
+	Thu,  6 Feb 2025 06:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738822523;
-	bh=mfBMQDGwCijsuSEaM5RCGlWQCxDRxNtkNxhQORCqX0Y=;
+	s=k20201202; t=1738822525;
+	bh=+hjnCmx0FZ2b8X/9Br4bzXPNjaytMayZsysgOyR4ceE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E1xkWOmctRFfUviRHAuoF/YWqqtLhCLSeVJMBCIZ5GOfqX1Em3z6RE1AsxPdoFvDD
-	 DcmtmDzLgBMTvvl9UJA+Jpmt30YKmA5ghNeJS2A6DqzlEe5dDoE7SVFsK1znh2SXXT
-	 m8kJckllh6o8rTjHTiWiWPNXY3TwvPqqeRkdlvE+X0eUk1rxbmFdJZ0d7CXqty/uXB
-	 5vk5WFGbcI9uK2h/3oAZu064VNDhZGcd6TYV76rphB8u6smNhIJBi6Npo6PCYlWj02
-	 1vcsPrkLrYI7Gp5UPuIGgBGedOPuWnhC4dxe6EWSGe+Gxxj6S3PhBWLyYVz4sV36CU
-	 2vGrcVjrwY5IA==
+	b=K/3arlxOqIDaHiwNUfUWykQ8SDElT+W0dUaWTeLY7i0YEUNiktTduB7k3yK4gEaYf
+	 oK6SlGmzF25bAPkjWNd5Pqb4UF2JHmWaQRzVkvQ0HuA4br4Sqxqje2aWCdixuhjB+i
+	 KBm6fYYCM1QN2ZH7n4XXqvyITFZXT/aXmhx9oHtmuHlGBgYUqz5WXklyQ0nV1474md
+	 OsTGJV6+mPIVG3xq3BifF/4vf6+6hYpkg4mSZVve9pXPTG0zH94YvSTHv0guey0axZ
+	 yIM5ieBVsnOCNHth37flLuikLX6fnuHjDaQH10yps+aBuYBdimQCS645z/lHJlsDQT
+	 /58KitQjTM5fg==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -37,9 +37,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH 2/4] mm/madvise: split out madvise input validity check
-Date: Wed,  5 Feb 2025 22:15:15 -0800
-Message-Id: <20250206061517.2958-3-sj@kernel.org>
+Subject: [PATCH 3/4] mm/madvise: split out madvise() behavior execution
+Date: Wed,  5 Feb 2025 22:15:16 -0800
+Message-Id: <20250206061517.2958-4-sj@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250206061517.2958-1-sj@kernel.org>
 References: <20250206061517.2958-1-sj@kernel.org>
@@ -51,70 +51,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Split out the madvise parameters validation logic from do_madvise(), for
-easy reuse of the logic from a future change.
+Split out the madvise behavior applying logic from do_madvise() to make
+it easier to reuse from the following change.
 
 Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
 Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- mm/madvise.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ mm/madvise.c | 53 +++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 30 insertions(+), 23 deletions(-)
 
 diff --git a/mm/madvise.c b/mm/madvise.c
-index df5a87a1846a..efab2878be7c 100644
+index efab2878be7c..31e5df75b926 100644
 --- a/mm/madvise.c
 +++ b/mm/madvise.c
-@@ -1594,6 +1594,27 @@ static void madvise_unlock(struct mm_struct *mm, int behavior)
- 		mmap_read_unlock(mm);
+@@ -1615,6 +1615,35 @@ static bool is_valid_madvise(unsigned long start, size_t len_in, int behavior)
+ 	return true;
  }
  
-+static bool is_valid_madvise(unsigned long start, size_t len_in, int behavior)
++static int madvise_do_behavior(struct mm_struct *mm,
++		unsigned long start, size_t len_in, size_t len, int behavior)
 +{
-+	size_t len;
++	struct blk_plug plug;
++	unsigned long end;
++	int error;
 +
-+	if (!madvise_behavior_valid(behavior))
-+		return false;
++#ifdef CONFIG_MEMORY_FAILURE
++	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
++		return madvise_inject_error(behavior, start, start + len_in);
++#endif
++	start = untagged_addr_remote(mm, start);
++	end = start + len;
 +
-+	if (!PAGE_ALIGNED(start))
-+		return false;
-+	len = PAGE_ALIGN(len_in);
-+
-+	/* Check to see whether len was rounded up from small -ve to zero */
-+	if (len_in && !len)
-+		return false;
-+
-+	if (start + len < start)
-+		return false;
-+
-+	return true;
++	blk_start_plug(&plug);
++	switch (behavior) {
++	case MADV_POPULATE_READ:
++	case MADV_POPULATE_WRITE:
++		error = madvise_populate(mm, start, end, behavior);
++		break;
++	default:
++		error = madvise_walk_vmas(mm, start, end, behavior,
++					  madvise_vma_behavior);
++		break;
++	}
++	blk_finish_plug(&plug);
++	return error;
 +}
 +
  /*
   * The madvise(2) system call.
   *
-@@ -1673,20 +1694,11 @@ int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int beh
+@@ -1692,7 +1721,6 @@ int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int beh
+ 	unsigned long end;
+ 	int error;
  	size_t len;
- 	struct blk_plug plug;
+-	struct blk_plug plug;
  
--	if (!madvise_behavior_valid(behavior))
-+	if (!is_valid_madvise(start, len_in, behavior))
+ 	if (!is_valid_madvise(start, len_in, behavior))
  		return -EINVAL;
- 
--	if (!PAGE_ALIGNED(start))
--		return -EINVAL;
- 	len = PAGE_ALIGN(len_in);
+@@ -1706,28 +1734,7 @@ int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int beh
+ 	error = madvise_lock(mm, behavior);
+ 	if (error)
+ 		return error;
 -
--	/* Check to see whether len was rounded up from small -ve to zero */
--	if (len_in && !len)
--		return -EINVAL;
+-#ifdef CONFIG_MEMORY_FAILURE
+-	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
+-		return madvise_inject_error(behavior, start, start + len_in);
+-#endif
 -
- 	end = start + len;
--	if (end < start)
--		return -EINVAL;
+-	start = untagged_addr_remote(mm, start);
+-	end = start + len;
+-
+-	blk_start_plug(&plug);
+-	switch (behavior) {
+-	case MADV_POPULATE_READ:
+-	case MADV_POPULATE_WRITE:
+-		error = madvise_populate(mm, start, end, behavior);
+-		break;
+-	default:
+-		error = madvise_walk_vmas(mm, start, end, behavior,
+-					  madvise_vma_behavior);
+-		break;
+-	}
+-	blk_finish_plug(&plug);
+-
++	error = madvise_do_behavior(mm, start, len_in, len, behavior);
+ 	madvise_unlock(mm, behavior);
  
- 	if (end == start)
- 		return 0;
+ 	return error;
 -- 
 2.39.5
