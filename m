@@ -1,246 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C0A23536F;
-	Thu,  6 Feb 2025 16:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861150; cv=none; b=EZwy5QqNNDHOig0+8QGptbUwpp82WkX7Ye+OUADDE6XB1UjYLZFhHJgtdiTrjXB1ErlxvCMEpVEqt0IVvzDI5Ag6fU09xCMFpIUMHLkJ35XJ5bgElhhTqP+1Te9WBNOFr5H7WfVQDVp4MaddWv6XlKrZrGZMBhDcEECh3VWRnHQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861150; c=relaxed/simple;
-	bh=Vv1rWvEG1vtQbRCMEzpnWZNcYiEwH9BO7hPBylfcnqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gm43BaaJNOBEc/X7YKls8PHkmamsTz8/SOS+lsnAI1PVrD4wRHQVWDLdFLbe8cImxEgKapimPrBQd/Kz8WgCUehP7HT1t+RtuBjQGFcng0DLTWuwh+7gDrTtS2KMp0QGYhn6XowQtbNWpWAeKvXXqxa38KF9udNhOtazC19bXys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmpXJDUU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08611624ED
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738861170; cv=fail; b=PPEudt8GdjDMaRW1aoEEmOyBcUDLirZtxICCpLg1yGMk96Eb3f6t7963rmvpY2fPe3v7PZLPlmPHXSGVO3Wa9A6Io78tL0RFDrgcrvieGVAIoZmNPgMDo8oe4S+Lh0KZ07wqTHHQozHOKn25dowI4BPhkZiBX1L9JIp4VY9AxNE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738861170; c=relaxed/simple;
+	bh=zBGAgPmn+VcJeylcMx45UdYrTyoVRF28IeOM7tr0BCE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mio5t7WX5Kyn9MrtC9/qB+xzoVvMjNyES56HgaBa3V92uYI8BChc4x1L5ZaYDz3uWYiNoCZCvwfZGsA+/7Fsjy4FYDdF8REwUvm0mtbcIG+DDEa4vBp1hulM50xTyjRwniLwZ5oYenmJDcs9f9y4A1mjF95iBpXSYCOdc1WSdOs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K2Jtr6v5; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmpXJDUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5457C4CEDD;
-	Thu,  6 Feb 2025 16:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738861149;
-	bh=Vv1rWvEG1vtQbRCMEzpnWZNcYiEwH9BO7hPBylfcnqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lmpXJDUUVGGMlWAJid+2FOK3lSM/p42aJx+CyAFOpXl3mFdZbsBJvGvAWyEPbiJB1
-	 VIi+OZcHUBhhic2O4Ok9GUNl+y5TTNwxrcEPah4o5pmz/8sQRct4RQBbdRGEafWueD
-	 dAefxlReSkYNnCftvvdbTMUZUUVe851/SPJsN9ls4/inZdBHA9/0/V8rtDjXJ72Shv
-	 hmngHaSGc8qcbjw5bIG0uqkkQ/q8lxT8n57wOKo9byvjxtN99vBevjAuFfi6M+40cO
-	 HmvRXJwww9w3g6rWYlYWeg529j4Q4p1OQiUJISSaghkJ8axqnsOrudgVZ2JQ8sMny9
-	 JfJqcqP9nk+Qw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 3/3] tracing: Show last module text symbols in the stacktrace
-Date: Fri,  7 Feb 2025 01:59:05 +0900
-Message-ID: <173886114516.496116.8314066678313037503.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
-References: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K2Jtr6v5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738861168; x=1770397168;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=zBGAgPmn+VcJeylcMx45UdYrTyoVRF28IeOM7tr0BCE=;
+  b=K2Jtr6v5envHJ8wHM98ogJ0LCKJ+d62gj3GgfUzH4TXaVwJucf4GzBJ/
+   Wr0k55kqPBogNQ4EC86rr44HRw/w9iTVtJCBpc/xLcPyJCmGhpzD1Wn7C
+   piWtjEcHoRX3kR4jdTQ6NxBO7i7929wRSWUMVc2+cV9piXzM75xtAwEE6
+   G5NGjx7CLX9jrD9yUNvbEbmI1Ge5xRzItgtIZQhTgGeEynzG98nwLkt+T
+   3qJARDf/ZafkhfCWl87DIzcaalgSDjrlTLpV4RPj7YVixcQwGZ6uZgDCg
+   LDXhnO89cr4N/pg6ZIKRp8RaVZUiWJuwyA8VdguI8mzGYrQ4dNn5Q2LJa
+   Q==;
+X-CSE-ConnectionGUID: VytUA/M7RXytrGmz8dRcuA==
+X-CSE-MsgGUID: JMeCnmNwTNWnNqMzQrRRag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39348674"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="39348674"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:59:26 -0800
+X-CSE-ConnectionGUID: XJfF8rg7S9iDkwUdIMkcVg==
+X-CSE-MsgGUID: qs+FPc1GS4SWTZYHoqtLFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115354596"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Feb 2025 08:59:14 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 6 Feb 2025 08:59:13 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 6 Feb 2025 08:59:13 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 6 Feb 2025 08:59:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BNqbxjnpDpDKTVgHIg1Fqel1E3coMdmcj8zrVSzqH8aJnhusYDetzV5yMv4MlSJBGvHrT5OSNr5RnvM3m8LecPyhbSFXItSN8t+s36AGrYdZ+YEdjtIMyh5KaApsjAzQnHPagRoB/aOH52pwLdcAyZlcOV4raVuth5I4Vh4+wQdqQvxU7iwViAPq2h2g0FCeRr1Mmc7+GzSEM1blFgbCN+qQq9xKWSlyeYqe52ecgZEm47qmwGVnjTWVgC55nbWRf8UprM0Hu3RZWA4O+LYZ8xSe04lC+0cCWHy33tEz0cgZUjAJ1gAA5fvHH9xst24svd0N2iQwqfghmO7Hyezctg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kgqI/Jdik9C81NiOo7VkcsVW+QjgTqd7YPv/rWGUZNc=;
+ b=dQaCg4uJgQTTzHsV5NPCjV8xJvxP3tnI3dOKXVRsCjz3byI7k6sosjRglIRbx9yloXxoWAk2tSSXdbj/gVo66Rx365SUGNlvjbjJAcVClS5jGAz1eB44jh4iAgqIZLacv3QROwcx4ft/zQwjJGgL76iS3/Lhl792CSsldazZq+CQY5t3VZB69JQSGDCE7Qvymp1f5ewH7mwoBTNXtfSRkSpA2VaTfuY7du8xtxii4aNwb/OgAews+pFNuffhBmnZqhP6L7tQVFE2qNpbqLLI6Ept4oHxX8dp1JqJrLN6kxaUTc0ZsapzlOdb20rG4L91Sn5RgVSVk1AlLlYOWoOsNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by DS0PR11MB6496.namprd11.prod.outlook.com (2603:10b6:8:c0::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Thu, 6 Feb
+ 2025 16:58:41 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.8398.021; Thu, 6 Feb 2025
+ 16:58:41 +0000
+Date: Thu, 6 Feb 2025 10:58:38 -0600
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+CC: <thomas.hellstrom@linux.intel.com>, <rodrigo.vivi@intel.com>,
+	<airlied@gmail.com>, <simona@ffwll.ch>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/xe: Fix uninitialized pointer read in
+ xe_vm_bind_kernel_bo
+Message-ID: <guahdobdjkqgkxiqmcabakdgtjsqhry7lfbfvd4yghbgqg66ps@u53z7leyikry>
+References: <20250206134706.60200-1-dheeraj.linuxdev@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250206134706.60200-1-dheeraj.linuxdev@gmail.com>
+X-ClientProxiedBy: MW3PR05CA0004.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::9) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|DS0PR11MB6496:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1d19452-8aec-4248-5139-08dd46cf8224
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Kw4pNIxhqzJJHeaKW+pOt4YXV1xZEkYwtA6jmBMM2t7QXnIRu2qZ1fVG39Lv?=
+ =?us-ascii?Q?QV1Uq4XyQtdIg+Bx8G1mdkJYMbMLstbMd9VdHfhx6vda/skhlWy/eT2kG8mU?=
+ =?us-ascii?Q?7wptSWtl436mBi5s788fuOaHB8F7XTD8e+lRgnqSEiBD9IZeVRtP3Sf5kHQn?=
+ =?us-ascii?Q?/1reKCzbtklaJCiWw2N5NOoIww/dXkOIP2KKmmc2HV9C3VoX90kH9N/cVJTN?=
+ =?us-ascii?Q?v1ShZDS3nnqnm4Rsb1FV42m1Qz5CwhNtIYu5V9eTtAnr2H63OZhpf8sVqI6w?=
+ =?us-ascii?Q?iM3dMIliTPCk/T+v5NnvSvnDhejMvBiNY0OPqUmporgGGYapt+5yTxMq4Zf7?=
+ =?us-ascii?Q?lR1EBBHR3bDwtYRgM3IyUZ5dPEQJwJ57BORtaemEiiZvuqXZa+CGTrhNXBD5?=
+ =?us-ascii?Q?ej0W29qGon2kBgciNdRGC5apOrxRLu2rFa6Ig2VvIEJWDAtyeI2Jbr8Yrnm/?=
+ =?us-ascii?Q?kAIG3LiZHfGvTPeU+mLuZgfszbjMs7ZDO3joIy24xOncXwpqnlitVKjrHI3c?=
+ =?us-ascii?Q?zGmp+lxnBfDU9OaRpeBwiaHwUmW/2E3coUJJz7fXT/Ke8Cj/UjLiK/KIe1P7?=
+ =?us-ascii?Q?Ix+757zawAJ1pOhkhKmNFb3dwzGVonxQk5AnNVqpwc5uGa+Xhdd/ST9Fww6I?=
+ =?us-ascii?Q?UOB1WSboydup5XWx8j2KNAxWCeHsJGmyiU6oQaYJ9LGBWvzdiDPhhe+96AnJ?=
+ =?us-ascii?Q?iwbT0NTk8+1Qf6pkSSYvYs2yJHx5kivAF/UU/cw9eW1qVkWd4Q17XC4BVw+e?=
+ =?us-ascii?Q?Dd36sF0F1NUAQ/xj50eEcmydXHR0RBNtZirH/E1/6npxIsg/Shpe18Z/HITY?=
+ =?us-ascii?Q?bhYqG8zZL/bgM/L858ILMe5KbV+8rjlGquvuySyq+pGNXHvGfsLAuloQTwFQ?=
+ =?us-ascii?Q?3BqR7W2fZ7glMcXSE7ogHCVP2tBrQjdZUe95rAjCBV0LzfgUgEtZnmbv1CDw?=
+ =?us-ascii?Q?KiAUzFmVeBfettX1kCnxvDCy1I/tRkW3avSv/o5Bs4pvmuAT6nLL6UYz5gWH?=
+ =?us-ascii?Q?aaoLhpFLYlbd1hTOBrSpYM0Y4QXrMK1qi3aO4I0ofGKVUxUY/bfd84rq+kRX?=
+ =?us-ascii?Q?aUty6XM3eifXjQKqGylSST6/4TiY0MFLXYfAP6kqnV26cYvVEHJeznmgNoXh?=
+ =?us-ascii?Q?9LHvLgDuINluv9DFJIDyRYuBQ22iKsxpgoaeLNPe3Knv1/F1mEFQ8nWrvJnx?=
+ =?us-ascii?Q?k7gXo4QPG/V5bubwNixasuQhrS2WjgUl/cpyfw5ypKKXIg/wolAENl8StGkU?=
+ =?us-ascii?Q?Iqw+0gkDUiRLpbKiaG/QjFdMUgn1avJwbnNX9jPZ5P4C4QeIhc7OsvPJhxba?=
+ =?us-ascii?Q?lOy5xXpgOOYEYvuMiijm26SqYmdZ4JCEl6ijzWeOV962wY0J0ZH4P5JAAteq?=
+ =?us-ascii?Q?M1w2fhGns4JNH4+LMiFcAQLHLRP9?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2Mv59rcIvcoO02/2HUJ8YJ21NebfKj8WfxvDzdYrH0yz5A+/RuwyF63sGBB/?=
+ =?us-ascii?Q?O/03OGn1uAKIbZa30Jnkz2/K22tMKzG9sTUqJfW0ewOZKVMhJ2IINDA/E1hm?=
+ =?us-ascii?Q?PJq7Yc8BVI16mxCMisD3njBb0QINzIlu3cqs71hFFGFGaIPe6HWVBmpeXwGV?=
+ =?us-ascii?Q?MIhSiiWAdJXjgran9Ic3ekQSxyT4fSRFYHU7PkFhTl5uhsDVsKg+FdIWRtBC?=
+ =?us-ascii?Q?2yz/RT1/rJULszv+lGzcE/uLrUvHsXowefotfM1iRhp75GkvA8Pa5CWBYjeR?=
+ =?us-ascii?Q?sluLlnxqbPBTeIb0IHO4S3YU2anyty5ih7ihzpHKBtkXc1aAsX4cAHRFwI8+?=
+ =?us-ascii?Q?DstTadTO6cXw+I0JjGr7VB80dYG/3WE6lSLBsSsecgiSwwwl3j35gv7pane2?=
+ =?us-ascii?Q?lZGyEGZ75gVEohPo589vavMM9xSTmP0M91N+1poPZuxFMyCw3LYKxgfA9fDm?=
+ =?us-ascii?Q?+OXBT2Ne0tDjNbJhnalFT7GP15D666GB0BwdOUVgoPkjjHODcRStytupUncU?=
+ =?us-ascii?Q?ZJxbCT0/xFyHj5vP5CVn8U1GRwJo7IyXOfXWY5LqohQbG6yz3uEzMXGKzRIn?=
+ =?us-ascii?Q?BJiDhTYmF9Q2Y99sRn20JaMVp6FZ4LApr/A4TuTgudJmVshnVYen4AxJjxfg?=
+ =?us-ascii?Q?xVFUNhERDftVLr0k8qhCeGV4SUC5b0EiVwT+riKI9vXJSc5ZIXVJl6j3q8R9?=
+ =?us-ascii?Q?q7FTELYx9KOSb4AbxXcJ2IaJP5PVso4roHw8//zyrtxxoFl7eI0Hm89oy+a3?=
+ =?us-ascii?Q?RRmWS+HZhowhN80jY8sz/gid9UWJHp9gt9wmAx5p3VKMpl/If0l6QYDqzZnI?=
+ =?us-ascii?Q?ziwcMTaPeF0I5I4V6BJCBtEjgi9XTmaNwi0L4AXZSLxhmDyIiMIkdwDPu3jb?=
+ =?us-ascii?Q?oq2XwYHDG+Z67/ZmkwzfO2xfp2bIqUYOfq+DVuq5hvVIM/VZ/Nm2rbTGfXnk?=
+ =?us-ascii?Q?esRhg2xwmBGKj+vdStDa2d0g3U2LrxbkgmEtHVx8ye/mKH4awGp1V8Mioz+Q?=
+ =?us-ascii?Q?2wVIwpOV5W21WFyYdlIkfnMJt+yAI+ZLNbuK8Mn7dFxL6OfAbL+YrcZhyQcg?=
+ =?us-ascii?Q?dztoRuZz1fFiq+hZ+jrdLysz1FIHasD9qFWwY5QzFWlrplJxkTkzsLy3/302?=
+ =?us-ascii?Q?P0x0QL6wAsB7fyekTxtxHEIzliHWndtXU3+D2G18s+gvh8KLRrMEICE6zz9g?=
+ =?us-ascii?Q?6bKtFWKww/T6jBD/tD097KC4C2Z896zujUn9zBz1jxf/w794yFt3030ybEYD?=
+ =?us-ascii?Q?xGhb0jqofkqrnrMrVu1ZiiR6YTi+y3G0YW64LIlZPLYUbcEeBJceMSD84X6H?=
+ =?us-ascii?Q?ezepkuMKUQrxiPtC3IenI/PuFSI3D2IqscAKDDYSWcqSQfVZ0Q6sewQZ2pJv?=
+ =?us-ascii?Q?PySyW1ITOK4s7o1YSAzighgIdq6ROHfb5XHpe8FLN4XI+QAwAQc0Sm1yjDej?=
+ =?us-ascii?Q?BVladicOJk+dhb4jZq5kRm+a6v6ACenSS0DpAkWOYisHE2nCfYAJVgBod9K3?=
+ =?us-ascii?Q?zO0Wbg1Kg+jo8KB1sEvfDQfjtFR1lDTNDW5wfsM187sjSsmHvZbkVQEKd00c?=
+ =?us-ascii?Q?PRVflbTI+gGFwIro8ezGB52Elma80o4ETqYmBNmFIe+yt9KQzbEYnmH3Adjh?=
+ =?us-ascii?Q?Qw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1d19452-8aec-4248-5139-08dd46cf8224
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:58:41.4013
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: njJ7wMOuTv/b5HlJUGVni/RLYEvfOpM+hXN8x5Im7ah1uaQwsYm1TKsbEaOsv8eh0hwn2IJmDlb2OgRc/KO0O+rTlTIN2POOEjXgmenNxZM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6496
+X-OriginatorOrg: intel.com
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Feb 06, 2025 at 07:17:06PM +0530, Dheeraj Reddy Jonnalagadda wrote:
+>xe_vm_bind_kernel_bo() declares the variable fence without initializing
+>it. If an error occurs before fence is assigned a valid value, the
+>function may return an uninitialized pointer.
+>
+>Specifically, this can happen if:
+>
+>- vm_bind_ioctl_ops_create() fails, leading to release_vm_lock error
+>  path
 
-Since the previous boot trace buffer can include module text address in
-the stacktrace. As same as the kernel text address, convert the module
-text address using the module address information.
+are you actually seeing an error or does this come from (static) analysis?
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace.c        |   76 +++++++++++++++++++++++++++++++++++++++++--
- kernel/trace/trace.h        |    4 ++
- kernel/trace/trace_output.c |    3 +-
- 3 files changed, 78 insertions(+), 5 deletions(-)
+we are only on the error handling path when err is set to something.
+Using your example:
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5a064e712fd7..9d942b7c2651 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -49,6 +49,7 @@
- #include <linux/fsnotify.h>
- #include <linux/irq_work.h>
- #include <linux/workqueue.h>
-+#include <linux/sort.h>
- 
- #include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
- 
-@@ -6007,6 +6008,27 @@ struct trace_scratch {
- 
- static DEFINE_MUTEX(scratch_mutex);
- 
-+unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
-+{
-+	struct trace_scratch *tscratch;
-+	int i;
-+
-+	/* If we don't have last boot delta, return the address */
-+	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return addr;
-+
-+	tscratch = tr->scratch;
-+	if (tscratch && tr->module_delta && tscratch->entries[0].mod_addr < addr) {
-+		/* Note that entries are sorted */
-+		for (i = 0; i < tr->nr_modules; i++)
-+			if (addr < tscratch->entries[i].mod_addr)
-+				break;
-+		return addr + tr->module_delta[i - 1];
-+	}
-+
-+	return addr + tr->text_delta;
-+}
-+
- static int save_mod(struct module *mod, void *data)
- {
- 	struct trace_array *tr = data;
-@@ -6068,6 +6090,9 @@ static void update_last_data(struct trace_array *tr)
- 
- 	/* Using current data now */
- 	tr->text_delta = 0;
-+	kfree(tr->module_delta);
-+	tr->module_delta = NULL;
-+	tr->nr_modules = 0;
- 
- 	if (!tr->scratch)
- 		return;
-@@ -9351,10 +9376,37 @@ static struct dentry *trace_instance_dir;
- static void
- init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
- 
-+static int make_mod_delta(struct module *mod, void *data)
-+{
-+	struct trace_scratch *tscratch;
-+	struct trace_mod_entry *entry;
-+	struct trace_array *tr = data;
-+	int i;
-+
-+	tscratch = tr->scratch;
-+	for (i = 0; i < tr->nr_modules; i++) {
-+		entry = &tscratch->entries[i];
-+		if (!strcmp(mod->name, entry->mod_name)) {
-+			tr->module_delta[i] = (unsigned long)mod->mem[MOD_TEXT].base - entry->mod_addr;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int mod_addr_comp(const void *a, const void *b, const void *data)
-+{
-+	const struct trace_mod_entry *e1 = a;
-+	const struct trace_mod_entry *e2 = b;
-+
-+	return e1->mod_addr - e2->mod_addr;
-+}
-+
- static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned int size)
- {
- 	struct trace_scratch *tscratch = scratch;
- 	struct trace_mod_entry *entry;
-+	int i, nr_entries;
- 
- 	if (!scratch)
- 		return;
-@@ -9371,7 +9423,7 @@ static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned
- 		goto reset;
- 
- 	/* Check if each module name is a valid string */
--	for (int i = 0; i < tscratch->nr_entries; i++) {
-+	for (i = 0; i < tscratch->nr_entries; i++) {
- 		int n;
- 
- 		entry = &tscratch->entries[i];
-@@ -9385,6 +9437,20 @@ static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned
- 		if (n == MODULE_NAME_LEN)
- 			goto reset;
- 	}
-+	nr_entries = i;
-+	/* Allocate module delta array */
-+	tr->module_delta = kcalloc(nr_entries, sizeof(long), GFP_KERNEL);
-+	if (!tr->module_delta)
-+		goto reset;
-+	tr->nr_modules = nr_entries;
-+
-+	/* Sort module table by base address. */
-+	sort_r(tscratch->entries, nr_entries, sizeof(struct trace_mod_entry),
-+		mod_addr_comp, NULL, NULL);
-+
-+	/* Scan modules */
-+	module_for_each_mod(make_mod_delta, tr);
-+
- 	return;
-  reset:
- 	/* Invalid trace modules */
-@@ -10093,12 +10159,16 @@ static inline void trace_module_remove_evals(struct module *mod) { }
- static void trace_module_record(struct module *mod)
- {
- 	struct trace_array *tr;
-+	unsigned long flags;
- 
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		flags = tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT);
- 		/* Update any persistent trace array that has already been started */
--		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
--		    TRACE_ARRAY_FL_BOOT) {
-+		if (flags == TRACE_ARRAY_FL_BOOT) {
- 			save_mod(mod, tr);
-+		} else if (flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) {
-+			/* Update delta if the module loaded in previous boot */
-+			make_mod_delta(mod, tr);
- 		}
- 	}
- }
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 90493220c362..47c0742fe9ec 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -349,6 +349,8 @@ struct trace_array {
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
- 	long			text_delta;
-+	int			nr_modules;
-+	long			*module_delta;
- 	void			*scratch; /* pointer in persistent memory */
- 	int			scratch_size;
- 
-@@ -465,6 +467,8 @@ extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
- 
- extern bool trace_clock_in_ns(struct trace_array *tr);
- 
-+extern unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr);
-+
- /*
-  * The global tracer (top) should be the first trace array added,
-  * but we check the flag anyway.
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 03d56f711ad1..a5336c4ece8e 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1248,7 +1248,6 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 	struct trace_seq *s = &iter->seq;
- 	unsigned long *p;
- 	unsigned long *end;
--	long delta = iter->tr->text_delta;
- 
- 	trace_assign_type(field, iter->ent);
- 	end = (unsigned long *)((long)iter->ent + iter->ent_size);
-@@ -1265,7 +1264,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
- 			continue;
- 		}
--		seq_print_ip_sym(s, (*p) + delta, flags);
-+		seq_print_ip_sym(s, trace_adjust_address(iter->tr, *p), flags);
- 		trace_seq_putc(s, '\n');
- 	}
- 
+	ops = vm_bind_ioctl_ops_create(vm, bo, 0, addr, bo->size,    
+				       DRM_XE_VM_BIND_OP_MAP, 0, 0,  
+				       vm->xe->pat.idx[cache_lvl]);  
+	if (IS_ERR(ops)) {                                           
+		err = PTR_ERR(ops);                                  
+		goto release_vm_lock;
+	}
 
+all the other `goto ...`  before `fence = ...` assign err, too.
+On the the error handling we do:
+
+	if (err)
+		fence = ERR_PTR(err);
+
+So I'm not seeing the bug mentioned.
+
+Lucas De Marchi
+
+>
+>Initialize fence to NULL at declaration.
+>
+>Fixes: dcdd6b84d9ac ("drm/xe/pxp: Allocate PXP execution resources")
+>Signed-off-by: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+>---
+> drivers/gpu/drm/xe/xe_vm.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/drivers/gpu/drm/xe/xe_vm.c b/drivers/gpu/drm/xe/xe_vm.c
+>index d664f2e418b2..b6ca53ede904 100644
+>--- a/drivers/gpu/drm/xe/xe_vm.c
+>+++ b/drivers/gpu/drm/xe/xe_vm.c
+>@@ -3184,7 +3184,7 @@ struct dma_fence *xe_vm_bind_kernel_bo(struct xe_vm *vm, struct xe_bo *bo,
+> {
+> 	struct xe_vma_ops vops;
+> 	struct drm_gpuva_ops *ops = NULL;
+>-	struct dma_fence *fence;
+>+	struct dma_fence *fence = NULL;
+> 	int err;
+>
+> 	xe_bo_get(bo);
+>-- 
+>2.34.1
+>
