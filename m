@@ -1,212 +1,192 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A0115B99E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA3F22FF35
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738880721; cv=none; b=sEegJtl9Qm4hENNlAatJxy9ORQFyle55VxPyzBly24J3XB3fCiVfKmJ32B4o7pYqmR3+qbgRYwwBMcMMkP1dovQ1/kFG+k/jBlQJlyqXR5m/YtBlCbOVK0zSzVlonpf4R8gC+QqvyASBBXCQyeRcjgXhxsruiYYeBMYK8JZElh4=
+	t=1738880888; cv=none; b=SIrsusK7a2M3XXo1XVggPVDAISlJEsp3Ngug6bkXxl4xVIX3qw/y0JQUgi83jtr37h4y5v7fnYyj9U1GEPaQqlDatlLDmtiHr0PC1umXyEULjmzLNrcATd4j6V3z+joeUxXFMQKqZiqumuM8UKf1fJGcoaDdfzcsfLY23F44j+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738880721; c=relaxed/simple;
-	bh=dfMdBQnTIoJR1NrLVDNphLoaVaxP8OQUsnACicmOy/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmIhByG0Jn7fmUAiBLPrTZBBe5AZLDBhRxBrCFUHPRvlg7fSNhxAiYnxH/tJLO6LpQn2gBH+4bpJ/3jRWHsCTqI1o6KRy2rGugR6z7qg7cRCRsfj6qUG8+4o+7VoY7wbOW9S3OS7vUWrD2Iqj77QroMgcYevqg1k6YSJ12Jll3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uCNe0cuI; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738880888; c=relaxed/simple;
+	bh=68S+7ZlsuMe2fEeqhZuUrws52Dw8cqaMxh/N9g6qQgg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=f3x5gb3VZ9/wndrcX/TCpz4RuTMK/4k8aqa73y/SPb0P+T/aLEN0IaoAWvRYu17MQI93nLYTmhjkOlkY4YSOBWOCpc7xKdA/4ROWPFGZWI/MscNrjPBcAz8FAyIHwlhM2oV/rKPv1j2ReBv6mgee9LVz23zkDOKJG2ecWEupqTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l4KNDw16; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uCNe0cuI"
-Date: Thu, 6 Feb 2025 14:24:57 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738880702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XZC3HBgYRbFX8skSaRLQzvVidIad4jwNrhFzdcu67QU=;
-	b=uCNe0cuI0CbnlRlm9FFIHmQD1Y7uE2rhz3VVhFKhfsbWgMoZm+OP6/3ga0vjrttFXRdEVf
-	e3KmgUrP9YalEphxg+MocuQqQIHZvIa+oD8dk4jFrEv7sApU2PkUp0iDgiTmzJvZKmN6Ro
-	kxxB7xVkh6yvGzHIb5eHAtnp28Vi//4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-Message-ID: <6bs4tywynoay7q7uxgvwo5s2j2gk4osulsbdj2u4ujn55jcpne@qektqs6524xa>
-References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l4KNDw16"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f022fc6a3so29809305ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 14:28:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738880886; x=1739485686; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8P4AhcS+GNaWZWjxWYlbkE1kh/676R53jJusOmDR5nw=;
+        b=l4KNDw16bG8QRPPd7Ebi13w4o0rOGTUgkPBS8cwWl3BJAcaHR+P9SlYSmGkztr+sqV
+         NnpzvXIDeFEh/YJw4Uusk62+r04VY2++oi6cyspKtjfoNg5pO+vv96W9n7FsSvaRbRWu
+         cAsOdr+Bre8mm3I76ew2xoOxd9IZ3p0QgHKf5JB63ljn7cQxpVbTiKIoNdOfU2nS7VX/
+         kNo0lXv9O7090WhnlUg9pgfIbEjNoR93Rlvv7IkQTL0B/1jLvgeuK6ktfQ3MHtmJ147T
+         s0/F77Uw/PE0AFkeoTjLBmNlwi3SBtQNyVKoLDM6enlpUtb9I9DF68xsq4ASXu018xsc
+         RIKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738880886; x=1739485686;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8P4AhcS+GNaWZWjxWYlbkE1kh/676R53jJusOmDR5nw=;
+        b=G102xQwPNE4dWFeHAjiXzsNZFS/yy0+e8az21kLr6/loPWLK3UDassm3Gbe/uta2ex
+         JS4wPj+KNnjoSc2JnBqUzohzw0U60NtL8eb8n8EGNLaeGi0flCtM1nDyJ/tl+gyNao2O
+         +0lifA20gjH8ba7MjGzygDiXmr3jwR/9oMMP+ImOMdpPuCsWz6Nr5ytHTtrFyyDj2Vaf
+         grB66n3cJdaHCgZmdOyRNXCXFpovL+uE5FV/RsFvQWOUj8GPxZPFk18tcd8Kpo1dLWgj
+         7Nq6oSEiUGeCb3o1Jkr8d2V552cPd9n3p1kDxTzB+iByb1m7VK1FWd3Hsr4ZGFzU0g5Y
+         ZyCw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7+5CcFOsiziv382oWAVKeWoOuTup9es7PpIzn2yxWN6+K3KUWUOXqdtudaULPUp0xo019zJDzFe+v+x8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY6WuvGoo/dTVNmwjEl9IjPlI6+BgdFVwX2BcLINkuyU1d/82a
+	NUiBfy1paRUnHkcVmeW/X58F0W+nHhZHgSg+FETUSVMaFAACsayGF9PAP/DnuOhj/DarOmFT3WR
+	Cw1uWuUYl39A3GMta9g==
+X-Google-Smtp-Source: AGHT+IGV2oh05tX4Vjgo2rH9ZwUrNxYtXWIw0ieeSiG3VAWoKfP6hvB9RpQpAjOsrL8oZOFBbq18FpN8lc54sQDS
+X-Received: from plbx9.prod.google.com ([2002:a17:902:ea89:b0:21f:40e5:a651])
+ (user=vannapurve job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:ec89:b0:215:758c:52e8 with SMTP id d9443c01a7336-21f4f16fe8dmr10682555ad.12.1738880885742;
+ Thu, 06 Feb 2025 14:28:05 -0800 (PST)
+Date: Thu,  6 Feb 2025 22:27:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205222029.2979048-1-shakeel.butt@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250206222714.1079059-1-vannapurve@google.com>
+Subject: [PATCH V3 1/2] x86/tdx: Route safe halt execution via tdx_safe_halt()
+From: Vishal Annapurve <vannapurve@google.com>
+To: x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: pbonzini@redhat.com, seanjc@google.com, erdemaktas@google.com, 
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com, oupton@google.com, 
+	pgonda@google.com, kirill@shutemov.name, dave.hansen@linux.intel.com, 
+	linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com, 
+	isaku.yamahata@gmail.com, Vishal Annapurve <vannapurve@google.com>, stable@vger.kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Oops, I forgot to CC Andrew.
+Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shadow
+so IRQs need to remain disabled until the TDCALL to ensure that pending
+IRQs are correctly treated as wake events. So "sti;hlt" sequence needs to
+be replaced with "TDCALL; raw_local_irq_enable()" for TDX VMs.
 
-On Wed, Feb 05, 2025 at 02:20:29PM -0800, Shakeel Butt wrote:
-> Memcg-v1 exposes hierarchical_[memory|memsw]_limit counters in its
-> memory.stat file which applications can use to get their effective limit
-> which is the minimum of limits of itself and all of its ancestors. This
-> is pretty useful in environments where cgroup namespace is used and the
-> application does not have access to the full view of the cgroup
-> hierarchy. Let's expose effective limits for memcg v2 as well.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
->  Documentation/admin-guide/cgroup-v2.rst | 24 +++++++++++++
->  mm/memcontrol.c                         | 48 +++++++++++++++++++++++++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> index cb1b4e759b7e..175e9435ad5c 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -1311,6 +1311,14 @@ PAGE_SIZE multiple when read back.
->  	Caller could retry them differently, return into userspace
->  	as -ENOMEM or silently ignore in cases like disk readahead.
->  
-> +  memory.max.effective
-> +	A read-only single value file which exists on non-root cgroups.
-> +
-> +        The effective limit of the cgroup i.e. the minimum memory.max
-> +        of all ancestors including itself. This is useful for environments
-> +        where cgroup namespace is being used and the application does not
-> +        have full view of the hierarchy.
-> +
->    memory.reclaim
->  	A write-only nested-keyed file which exists for all cgroups.
->  
-> @@ -1726,6 +1734,14 @@ The following nested keys are defined.
->  	Swap usage hard limit.  If a cgroup's swap usage reaches this
->  	limit, anonymous memory of the cgroup will not be swapped out.
->  
-> +  memory.swap.max.effective
-> +	A read-only single value file which exists on non-root cgroups.
-> +
-> +        The effective limit of the cgroup i.e. the minimum memory.swap.max
-> +        of all ancestors including itself. This is useful for environments
-> +        where cgroup namespace is being used and the application does not
-> +        have full view of the hierarchy.
-> +
->    memory.swap.events
->  	A read-only flat-keyed file which exists on non-root cgroups.
->  	The following entries are defined.  Unless specified
-> @@ -1766,6 +1782,14 @@ The following nested keys are defined.
->  	limit, it will refuse to take any more stores before existing
->  	entries fault back in or are written out to disk.
->  
-> +  memory.zswap.max.effective
-> +	A read-only single value file which exists on non-root cgroups.
-> +
-> +        The effective limit of the cgroup i.e. the minimum memory.zswap.max
-> +        of all ancestors including itself. This is useful for environments
-> +        where cgroup namespace is being used and the application does not
-> +        have full view of the hierarchy.
-> +
->    memory.zswap.writeback
->  	A read-write single value file. The default value is "1".
->  	Note that this setting is hierarchical, i.e. the writeback would be
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index cae1c2e0cc71..8d21c1a44220 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4161,6 +4161,17 @@ static int memory_max_show(struct seq_file *m, void *v)
->  		READ_ONCE(mem_cgroup_from_seq(m)->memory.max));
->  }
->  
-> +static int memory_max_effective_show(struct seq_file *m, void *v)
-> +{
-> +	unsigned long max = PAGE_COUNTER_MAX;
-> +	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-> +
-> +	for (; memcg; memcg = parent_mem_cgroup(memcg))
-> +		max = min(max, READ_ONCE(memcg->memory.max));
-> +
-> +	return seq_puts_memcg_tunable(m, max);
-> +}
-> +
->  static ssize_t memory_max_write(struct kernfs_open_file *of,
->  				char *buf, size_t nbytes, loff_t off)
->  {
-> @@ -4438,6 +4449,11 @@ static struct cftype memory_files[] = {
->  		.seq_show = memory_max_show,
->  		.write = memory_max_write,
->  	},
-> +	{
-> +		.name = "max.effective",
-> +		.flags = CFTYPE_NOT_ON_ROOT,
-> +		.seq_show = memory_max_effective_show,
-> +	},
->  	{
->  		.name = "events",
->  		.flags = CFTYPE_NOT_ON_ROOT,
-> @@ -5117,6 +5133,17 @@ static int swap_max_show(struct seq_file *m, void *v)
->  		READ_ONCE(mem_cgroup_from_seq(m)->swap.max));
->  }
->  
-> +static int swap_max_effective_show(struct seq_file *m, void *v)
-> +{
-> +	unsigned long max = PAGE_COUNTER_MAX;
-> +	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-> +
-> +	for (; memcg; memcg = parent_mem_cgroup(memcg))
-> +		max = min(max, READ_ONCE(memcg->swap.max));
-> +
-> +	return seq_puts_memcg_tunable(m, max);
-> +}
-> +
->  static ssize_t swap_max_write(struct kernfs_open_file *of,
->  			      char *buf, size_t nbytes, loff_t off)
->  {
-> @@ -5166,6 +5193,11 @@ static struct cftype swap_files[] = {
->  		.seq_show = swap_max_show,
->  		.write = swap_max_write,
->  	},
-> +	{
-> +		.name = "swap.max.effective",
-> +		.flags = CFTYPE_NOT_ON_ROOT,
-> +		.seq_show = swap_max_effective_show,
-> +	},
->  	{
->  		.name = "swap.peak",
->  		.flags = CFTYPE_NOT_ON_ROOT,
-> @@ -5308,6 +5340,17 @@ static int zswap_max_show(struct seq_file *m, void *v)
->  		READ_ONCE(mem_cgroup_from_seq(m)->zswap_max));
->  }
->  
-> +static int zswap_max_effective_show(struct seq_file *m, void *v)
-> +{
-> +	unsigned long max = PAGE_COUNTER_MAX;
-> +	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-> +
-> +	for (; memcg; memcg = parent_mem_cgroup(memcg))
-> +		max = min(max, READ_ONCE(memcg->zswap_max));
-> +
-> +	return seq_puts_memcg_tunable(m, max);
-> +}
-> +
->  static ssize_t zswap_max_write(struct kernfs_open_file *of,
->  			       char *buf, size_t nbytes, loff_t off)
->  {
-> @@ -5362,6 +5405,11 @@ static struct cftype zswap_files[] = {
->  		.seq_show = zswap_max_show,
->  		.write = zswap_max_write,
->  	},
-> +	{
-> +		.name = "zswap.max.effective",
-> +		.flags = CFTYPE_NOT_ON_ROOT,
-> +		.seq_show = zswap_max_effective_show,
-> +	},
->  	{
->  		.name = "zswap.writeback",
->  		.seq_show = zswap_writeback_show,
-> -- 
-> 2.43.5
-> 
+Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+prevented the idle routines from using "sti;hlt". But it missed the
+paravirt routine which can be reached like this as an example:
+        acpi_safe_halt() =>
+        raw_safe_halt()  =>
+        arch_safe_halt() =>
+        irq.safe_halt()  =>
+        pv_native_safe_halt()
+
+Modify tdx_safe_halt() to implement the sequence "TDCALL;
+raw_local_irq_enable()" and invoke tdx_halt() from idle routine which just
+executes TDCALL without changing state of interrupts.
+
+If CONFIG_PARAVIRT_XXL is disabled, "sti;hlt" sequences can still get
+executed from TDX VMs via paths like:
+        acpi_safe_halt() =>
+        raw_safe_halt()  =>
+        arch_safe_halt() =>
+	native_safe_halt()
+There is a long term plan to fix these paths by carving out
+irq.safe_halt() outside paravirt framework.
+
+Cc: stable@vger.kernel.org
+Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>@linux.intel.com>
+Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+---
+Changes since V2:
+1) Addressed comments from Dave H and Kirill S.
+
+V2: https://lore.kernel.org/lkml/20250129232525.3519586-1-vannapurve@google.com/
+
+ arch/x86/coco/tdx/tdx.c    | 18 +++++++++++++++++-
+ arch/x86/include/asm/tdx.h |  2 +-
+ arch/x86/kernel/process.c  |  2 +-
+ 3 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 32809a06dab4..5e68758666a4 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -14,6 +14,7 @@
+ #include <asm/ia32.h>
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
++#include <asm/paravirt_types.h>
+ #include <asm/pgtable.h>
+ #include <asm/set_memory.h>
+ #include <asm/traps.h>
+@@ -398,7 +399,7 @@ static int handle_halt(struct ve_info *ve)
+ 	return ve_instr_len(ve);
+ }
+ 
+-void __cpuidle tdx_safe_halt(void)
++void __cpuidle tdx_halt(void)
+ {
+ 	const bool irq_disabled = false;
+ 
+@@ -409,6 +410,12 @@ void __cpuidle tdx_safe_halt(void)
+ 		WARN_ONCE(1, "HLT instruction emulation failed\n");
+ }
+ 
++static void __cpuidle tdx_safe_halt(void)
++{
++	tdx_halt();
++	raw_local_irq_enable();
++}
++
+ static int read_msr(struct pt_regs *regs, struct ve_info *ve)
+ {
+ 	struct tdx_module_args args = {
+@@ -1109,6 +1116,15 @@ void __init tdx_early_init(void)
+ 	x86_platform.guest.enc_kexec_begin	     = tdx_kexec_begin;
+ 	x86_platform.guest.enc_kexec_finish	     = tdx_kexec_finish;
+ 
++#ifdef CONFIG_PARAVIRT_XXL
++	/*
++	 * Avoid the literal hlt instruction in TDX guests. hlt will
++	 * induce a #VE in the STI-shadow which will enable interrupts
++	 * in a place where they are not wanted.
++	 */
++	pv_ops.irq.safe_halt = tdx_safe_halt;
++#endif
++
+ 	/*
+ 	 * TDX intercepts the RDMSR to read the X2APIC ID in the parallel
+ 	 * bringup low level code. That raises #VE which cannot be handled
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index b4b16dafd55e..393ee2dfaab1 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -58,7 +58,7 @@ void tdx_get_ve_info(struct ve_info *ve);
+ 
+ bool tdx_handle_virt_exception(struct pt_regs *regs, struct ve_info *ve);
+ 
+-void tdx_safe_halt(void);
++void tdx_halt(void);
+ 
+ bool tdx_early_handle_ve(struct pt_regs *regs);
+ 
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 6da6769d7254..d11956a178df 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -934,7 +934,7 @@ void __init select_idle_routine(void)
+ 		static_call_update(x86_idle, mwait_idle);
+ 	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+ 		pr_info("using TDX aware idle routine\n");
+-		static_call_update(x86_idle, tdx_safe_halt);
++		static_call_update(x86_idle, tdx_halt);
+ 	} else {
+ 		static_call_update(x86_idle, default_idle);
+ 	}
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+
