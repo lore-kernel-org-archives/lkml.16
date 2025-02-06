@@ -1,207 +1,342 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2083.outbound.protection.outlook.com [40.107.94.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0975F13AD18;
-	Thu,  6 Feb 2025 02:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738809294; cv=fail; b=T6/J40sVTVISGiTyzdq7ty3mJqPdMMQMGvx/Q/Y32GTDj5hwlYAuurPUv2MvxUYAWm9C8TDStjHnnfoUWy3d8uVRjGwb3WLT327OuUkQ1JtOKUee3GgwHt91T/lJidm7WPfcLLX+jXqRDj36wPpn74hS8eOFaS08RuV3l3IlcBg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738809294; c=relaxed/simple;
-	bh=3IWygZkKhCcZuM43jzXATvU/8HsYtfJ7tVlMqWNK2wU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=H03PN9EYirhKCPp4B+/ck3dHU8/uN4AJM+aCn7G7XN+eM+L1Ov1kTZCieDGbOCt0P22ichITbxFtDdeT34Ub/oUPMD9Xv2P62HKbB5gaxcJSpaeuChIQbgpgpoh/Lss7T6iw04xVcPPTCvj8QpueytNdyilOS84szCxu5cJTtd4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=DCfdsk0E; arc=fail smtp.client-ip=40.107.94.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55F32AC17;
+	Thu,  6 Feb 2025 02:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738809350; cv=none; b=Oo44+o+g2noyDngPfUBrqQN03mNIWaFVjkFzgCLMTNYhyJ/Vbzb7wsQF+XyBleulBD5A5N3PFsJkomzguVIC2mStPFtUAjMcSaDRlDTe31sOg8jRjHiRhG5mopwpcO3PLMZIgVtWpV+uTKbiG0B5B2+0NTgqYYczfdlR8z/dW+8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738809350; c=relaxed/simple;
+	bh=GYxfoo7ZBm6mTIjU4Y7seLQNtLz4FhrxLT8K9eLqyt0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fvQphcRpBHlmKSke8vTtUlNggjQ3iKAepNrLabD1kyXq9NnNZElBUM6N7Y1IBebfLvW0kEmQbxaHqH4tKER56w8sk87Auo5y9ke/q8vKkvXkVCd3US5xiOnKXzEf7eHSoqdXXGTYKhmK53ppzCeOzGhTUrGXVhyb1WGFO5pulGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9TM/wU6; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="DCfdsk0E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MNPpJHPGCSbbEkOjCa46pmk6j1VCwvlnvX4id8JnRp8exh8r+9xsr43KGxSKpJggsjnZmDDlv2ave2e5qRxk6Tqb1UIPK8an9PLKqsDMPd8XFPXXHBGZkKjxJxCsBqgxJG5Oq4IuyeSMHHLgxo8QLIm1G2j1K89Lr4KIQuiW+d0YIOHbYXPCFzXWrvm89Sp+E6AqdlvEGCuz0UCnOhq8MhXgDNmfd1FkXEz2GGihZ32pKpUFtfXH/qk8jAATiCXjW+EFNnrk4zMxBlcoXMr3GUEIg8bNlAp/HwgxUpdIV9KYxbdecDDEOolwM0fuzGkn0Fs+hwZI/M3WbtFWfSBamw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3IWygZkKhCcZuM43jzXATvU/8HsYtfJ7tVlMqWNK2wU=;
- b=xBcDgM6Of6f6S99yn3I2WeqHZKaRSG1sSeb1rYk4228/M97tNK3V8p/rfxnE8YszgvYLC3S5wjdT0LYC1JGdcA6GT8uYyz/CAbD3ipudWWi2KyLmD83dHhskMuWj0BoVKpjDsXYVOGZAuvGGjF/2loattxdui8dSZJCb0lLT6gqT5FT2wSSDXbwzvA82+wA92QU0I1IcGw3I/CluDIcXQdoQN9jOlbNwTBe+RcxxtQdHCbIrowNTYL3ICbPqoF08N25a628pqZdyWF4rvnqFakSe+m5pIMRgn8eHMW3lu7RgLFhoa2myGlfrH20zdc39O2558/OUny5yObdnajpfFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3IWygZkKhCcZuM43jzXATvU/8HsYtfJ7tVlMqWNK2wU=;
- b=DCfdsk0EEj5luimj9CXZDtwsBQJjumLiRcF020dHzpsgbnsR/SjiqwVtVPnsD4DzMFdNpNG0X0fSWk+C1aRey/1ETp621cp6zab3V16b/8czGhJThVZdyleEE2kcoquYG6dAVWZ9NrB8nEtxDDAEqMKkdeijeeKT8OciJBJnsH3NlfeAHkvgDsw7wt//r9ePcXBHxZvqJTqXixIm8ZFMnzxS1mYkFhVxyESjMOcTFxm4KshuL3zWXtE5ZLNolbjwkcv3G1NGc2NRx4nXWVcYlEx3cz3RbpLcW39S4u71Hr0NtdlN3vUf+DzL5OG2V/hMvpIStUedLSqxqwagg5aOsA==
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
- by MN0PR11MB6205.namprd11.prod.outlook.com (2603:10b6:208:3c7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Thu, 6 Feb
- 2025 02:34:50 +0000
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80a8:f388:d92e:41f8]) by PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80a8:f388:d92e:41f8%6]) with mapi id 15.20.8422.009; Thu, 6 Feb 2025
- 02:34:50 +0000
-From: <Dharma.B@microchip.com>
-To: <krzk@kernel.org>
-CC: <Ludovic.Desroches@microchip.com>, <vkoul@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<Charan.Pedumuru@microchip.com>, <linux-arm-kernel@lists.infradead.org>,
-	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <Tony.Han@microchip.com>,
-	<Cristian.Birsan@microchip.com>
-Subject: Re: [PATCH 2/2] dt-bindings: dma: at_xdmac: document dma-channels
- property
-Thread-Topic: [PATCH 2/2] dt-bindings: dma: at_xdmac: document dma-channels
- property
-Thread-Index: AQHbd5FxpxZOPWR/L0mgfGnIIneVmbM4llGAgAAmnACAAAUfAIAAzjOA
-Date: Thu, 6 Feb 2025 02:34:50 +0000
-Message-ID: <2158268e-7b85-42aa-98ff-193f9a7ef5b3@microchip.com>
-References: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
- <20250205-mchp-dma-v1-2-124b639d5afe@microchip.com>
- <20250205-dynamic-scorpion-of-climate-9e7b7b@krzk-bin>
- <74ac11e8-2285-436b-9186-4793cb2b7239@microchip.com>
- <870df4b8-fa96-47c1-b82a-5db52a5f0788@kernel.org>
-In-Reply-To: <870df4b8-fa96-47c1-b82a-5db52a5f0788@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|MN0PR11MB6205:EE_
-x-ms-office365-filtering-correlation-id: 37f965c7-db80-42e8-4365-08dd4656d499
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?eHJ2Z3FEMkdNekFROUU4VTE3Q2E5R0d3dWZ2SE1xUnhUM0VWVjVRNytnM3FC?=
- =?utf-8?B?alBnOTZJQ3hvN1VkMm9sSnV0akk5N0NBNksyTGFOZUl5c0lyUXRjVUR0bzJT?=
- =?utf-8?B?ODUvUCtVNVpiNjc5c0ZYeVJsOFVaMXJLTkhWTUQ0ZVNGOFpjUC93dXkyeEVv?=
- =?utf-8?B?YVRvZFBESGNFQ1JuVWRnZzB6QjRNY2JnVDdULytnWm8vazBvOVZtNTdYMWZq?=
- =?utf-8?B?MCtYYWNlaURIUHNHWnBiRUVHbHhqYzI4QUdWU3h2NU1lUmxlZUN1NHpFNDJz?=
- =?utf-8?B?Mk9LN1V5ZzcxbXIzWDhNOEw3WC8wVlIvd0N5NjhCSzFVdkwxUlljdkFhZm1O?=
- =?utf-8?B?T2lIRnRYdFJkN1JDaWh0dVBuV3JtdEZGV1E4NTRtQXdlZ09paGhHVXl5YW9I?=
- =?utf-8?B?aitoVXM0cE1lNkpYLzVqYmNML1RmQ08xOXhuNnFWTGYyZUJUR2tzK01RKytE?=
- =?utf-8?B?RW5LenhHUWlYaCtTUmM4Qm1RZGl6UXRtdkxzNmFsamlybnBvQlBRYVZ5ZnNj?=
- =?utf-8?B?eHlMWlVyRWFpVGNIWlRXa0NmbGgzSXo5d0ZzYzFFL1J6QkZvdThJaEk4aVl1?=
- =?utf-8?B?L1RmMHBjL0NIZVpIOEc1YlFueWczSFVLMy9OMmo4UyttajIybHhjUXhSUjEr?=
- =?utf-8?B?WDNLbGFoSWFLOVVwQmhySVJaTDJPQlNrR0tpTmV3Nm1mN3l4R1BQbWRGWjJ4?=
- =?utf-8?B?L3BWdmlTd01aN0pRaUJodUY1WmZ4SEVWTmorZkZiUzZWYXkrM29wSS9qc1cz?=
- =?utf-8?B?QzM4ZWUxeldYUVVQS1dYeHhQZWVSUlM2VUk4TnZOcEs1dk03VXZBWk9nUUNy?=
- =?utf-8?B?L2h6TjhveTNieWp0aDNnclpUdGNFaUhwSEM3eUIwZnFoU0tRVTJNVEo2SEQv?=
- =?utf-8?B?RG5NbCtXUElnYmt6bkNJRnFLcmp5cXc0MHg5RTE1QmtMN2swaXFEQ3JrZXQ2?=
- =?utf-8?B?M2NrenJBUVY3NHF0UmxhczJscUQ2TllDU2lTZW9hVFFRc2V6a0lUWXhHcVd2?=
- =?utf-8?B?NTBoNUxUM2NkbVA0T3RQdVNUYmhKRXFwOW50eGFMRFZ5SHRVZW5mM3kzOTlR?=
- =?utf-8?B?bGEzU2JMWGFTT3JsTGQzY0c3cWR4cGxJc09nWTNvZkJ5ZTdTd205QXQwZXBI?=
- =?utf-8?B?RDBpY1l4bU5WTVgyMkJXZjIzUnBwdGdldVlkQUJKM2dmVXY0Q2E2bk5GSVNn?=
- =?utf-8?B?MzluSWlUR0NUUFZxbXFRTnRSd1dzQVNYSGlhWStDVExmYVFKeXFaWGFObWdx?=
- =?utf-8?B?d3FHbWVOZGFjeDVUTDhoak9hV3ZpQWlMc1A3cGliaVFJU0hhWm1GOHlLU0ds?=
- =?utf-8?B?enF4ZExlYUlxTFZ4cGxJQTI3SXdJUkVrMGJkNkJtSmk3RkpiMDlLOURYQy9x?=
- =?utf-8?B?Nm5vZ3JqQ2JvbkQwd3ZrVkJGMHNjdmFEc2h4bzllS1NMRWNlbE13a3JYaEF1?=
- =?utf-8?B?RXE4aWVWTi9WR0NJcUF4OXNyZDRXVzZFWFNYQk55SWdUVVF5bExNdERwUnhh?=
- =?utf-8?B?SUh2VWtqaTd1empuRDBUN2hqZkdEVkpNN3ZvenJPVkkxWFB1Q2wySWU3YlFl?=
- =?utf-8?B?OHJJekp5NjNSZ0p5ZTdpTk0zTmdtOGtZREZBZ1lndVV4NWgxVU5iYkVRejdH?=
- =?utf-8?B?SUQwQmJrR1VmaS9zajI5Zy9kbjZjYnhGL0VNK3c5T0dZN21qRjlkaDNHTmtB?=
- =?utf-8?B?MXNWMzdrUVFWOWRlcVZtOUxNbWRNVVdnZ21NTnBaTEUybVQwcmxnV0FtRVNG?=
- =?utf-8?B?R2FQQWdpaU9lRHZ5TndYS1pNOXN1RWFVcUxPUXdtaTJ6UWR2Nzh1MjAwRmtX?=
- =?utf-8?B?dXpPbTNUditYZEV1YWs4ZXpRR2YycUhERmJFQ0dYc3Z2cGExM1daU3YvK21r?=
- =?utf-8?B?Z3kwY0s0dy91cEVJQkxIV1lwTk4xTEdVOVJBWUxwSkttSDVsWHdzT1N3U1ZE?=
- =?utf-8?Q?9Hqv8OGOhzRVZ4vWNmFaZUhqEpDLOug4?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?eEhOUXZvZEVEb3VpTFhFSTYvVTNEYTVzRDRLNWduaGxWWEE2OUxIWmxrQTl5?=
- =?utf-8?B?czZpUTNDYmswd0V5b0RiUVNTNXBQMlg5OTh4T0RDOERES0dPYzFNYTZmVUY3?=
- =?utf-8?B?MldLRExYa2YxbXkycjFXQ29zWUJkUUdOQ1BCbFhmeTBpUW10MWdOSktydHYx?=
- =?utf-8?B?QWlKdUUrV0RRVWlXYU1DaDRiTUtuWlZuVkprU2hubno2VWc3U2FFeldmVGpa?=
- =?utf-8?B?dkxQd1piTHFqNmExWTIrcnRrTVppNDBDRUZyN0FKQWpsajRHMGNHdGlMWlds?=
- =?utf-8?B?cVM0TTJ1RndXSHpmU0R5YjdGb01hZ3VIT1kwNXludFZvRGRqcFlzZ3diOStn?=
- =?utf-8?B?a1hwMWFzYlBnK0cySkFjNnNhanBsaVk3SXVXVjhnQWhiWS9ZcGMvbjlXU0ZC?=
- =?utf-8?B?RURzV0VTcGV3eURzV3JpblVqU3daQWxvcWdma2NpdU90UGFtZStBN1psZS9v?=
- =?utf-8?B?cmVJZ1ZmTW9ITFdFQ05ubTlYaXRtWWFxRTlScGl0RUx4VzEvMHdnV0huSEZR?=
- =?utf-8?B?RXRDaFFVcmVuL3hFdzJOYTRJZ0VNSWdmbi9sOWFBTzlqVWlrLzF1TjhEWE00?=
- =?utf-8?B?R0lDZXA3TFFsR0FMWFlrYkREUnR3MWVLUm02MjZLaTUrSVZXM093cFh2eDE5?=
- =?utf-8?B?aHJsME8xL0ExZzlMMnA4bHczamMvWEdKYjlITVk1aWs4d3BPMXFmOTg4a3Nx?=
- =?utf-8?B?YjY4c3dhWmhlZzhYeVQxMERKYXpqaE5UR2Fwa1d6SEFrYmNjbU5ZdUtoTElV?=
- =?utf-8?B?UGJFMDFmWTRuTFFydW05djJQVEY2UDNJYmZvT2ZWL1NiWFl0M0xzOW1pTVVG?=
- =?utf-8?B?NXhHOU1mSTZsVDZWQVAwZWE0M0lUd216RDQvSUMyQnN2T1FZbkpFbW11NU1o?=
- =?utf-8?B?Q2xTaWxmSkJkZmFrdXg0L0d4bTAxemFPMDQwTnYrV3RNOFZBakhYb0RuWVY0?=
- =?utf-8?B?MXlyVHowdE5RaTRMRHEzL2xDWHBqYTY5MlZtem96Z2VKV2FMS1FZWXNpRW5z?=
- =?utf-8?B?MlhBOWMwN3lmd2UxNWJDVHY3bDFIQTRRMlRvQVdUTVhIYjZPcUxQUCtUU2JD?=
- =?utf-8?B?dkh3R2d3U24ySmlrcGp3OEcxRTk4TWRMY0lwa0IrQjdvdkZkTjVMM0o5SC9x?=
- =?utf-8?B?bS9IRldUZkRYc0FSU1d2cFFBSnJHdHNGdytkZElZeHpYWnlmbTlDbE5ua0Fl?=
- =?utf-8?B?QzVvUDlzT2RYdmR1ZzFZUDF0Q1FHUXdyVDJJVllTSXpQek5ROGFKbEJIV0hq?=
- =?utf-8?B?Rm5wTWFTZ3ZwVGloUTZsQUtPZnJwbzZIZTgvRkdVbzk2MzJiNjJoTW5Hd3FL?=
- =?utf-8?B?R3c2UzE0dm01amNyYWF3UFNOMjdmcWFkVE00NWdXZXhuYWZwOEc1bW1ZMlR2?=
- =?utf-8?B?MDhUMTJhR3kwbm9vbUJyK0VKSUM1QkhQbmxDbC9jbGYzeFFMZVo1bHB3WURr?=
- =?utf-8?B?M1BLZDZwM2VvNksrTXVGazFHeUk4L3dDNy9UTEgwYTByL0tPNVlIVkZiaFR2?=
- =?utf-8?B?Qi84STQva1VCbVNrYUVLKzFzRW5heVpXdUR4OXFtc1lCa3dodUFGSlNCZXdy?=
- =?utf-8?B?T3FNNnJVY1Q2cHdQU2R2V09KZTRtRk9WcXAyZmVaRFFPU3JsQmlmOGdmYVRE?=
- =?utf-8?B?UklFYzNCcDlpZG1obUJkMW1tcUhtOFN4Z2cwZFpRbVUyRk9rc2pFWVBmYlUz?=
- =?utf-8?B?bmRPVEJ1NHlvVjNUM0Z6MEgvSk5iKzFEQ0N1d2tscEtkWDJicDlScFA5SnpE?=
- =?utf-8?B?Q0dPQms1NmR6SllhazFPc1J6Q0xnZE5OemM2Sll2cjdudGhJUUdmSXhTVXcx?=
- =?utf-8?B?blZSS3dBdFN4VmJaNno4dnpac3VUMGpaTktOa2JHQVFjSFRnZ1FuOXVWeSs1?=
- =?utf-8?B?UTRpWlQwaTBkSncybG1FVTVrNUlQd2VmWFM3ZUphb2pFbVhWKzJYRFVNNlVV?=
- =?utf-8?B?cTFhWUtOWUIzVDY2ci93OHppWkpGZW1kU3BuZnZRNFhtNWhzTWpuOFF0TU5r?=
- =?utf-8?B?eXpUUmtDTkJLVUZRQk1KUU9qMHpqWXVvZDh0U1VRMmhMalh4TlVpWlJWRzlK?=
- =?utf-8?B?VUw3bFp1TGZybEhIZkJXbXFWbmlrRlJUVVJzZzdzVGJ2QlBteDl4MitSZTE3?=
- =?utf-8?Q?Bnnxu13F7tHafp0hrgpHNmxqW?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <475CD05DA352304AB29EB9CFB843BE4C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9TM/wU6"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd420f82e2so6416926d6.1;
+        Wed, 05 Feb 2025 18:35:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738809347; x=1739414147; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MLi4zif5mqTQDl3T2SO7WuK6aO29RyLcLRZTs8ORW80=;
+        b=F9TM/wU6ncioWtXkPaPdaSyBYbFoBKAJRfflrwMBu9j5LY8xTruwwSPBvtei/Iq/OV
+         kDxzE4KlAofZrnR53P7ATS4EQYw6eyssVGyK2LunWljXH/5qTw1QEnHSqVx6lUzIcz65
+         ++W/A/K++aVvJLymbnVfxliowd6KmM3dCJv0QSG9m+/tbVKh+IWYDbg8s8cbeDp6hMj1
+         iR0NOtEPPC5TmWukquVsJ7mvPvX846rfjokO3ZpRaCT0V3189XywpJaeZZvSyOtsf3DP
+         9qqBqnWb0PNKSa9Cie65Z507lh2i4dcAf8H232tMxu6syERz+BEnRPBNa85RoPtetSst
+         7S1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738809347; x=1739414147;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MLi4zif5mqTQDl3T2SO7WuK6aO29RyLcLRZTs8ORW80=;
+        b=IIahdDHekYW3C8QXOfGAOkz20NowAW6zrLUX7YG/c/KtiWlb6y6w8YTy638cLyFyOA
+         7rd5nm5A+OeUKy1sYWQ86PLAOCL6Gd0NyE7jUyNlC57NLpncipg5tXt3JvSbsGinBVM/
+         1Pfn/gTcuWF9OQHlT4rPqB/VZbDU1OOqZslHy++z2r+ql6BRd0+JL+zYjc1J8zQCw5SA
+         LPW6QRbOL67yQBPvmjD5GIQm7CbkB1x/nKs23qW5pmOvssUxM1ZpsFXBP3jpgeaz0QkH
+         zlIbccx3EQ7e0uLoBsP/5M2zUuwfQNbWNvVAaGKS0jMDv5LqomcG8Z4qU1QlJfl0Lk2d
+         dZgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWN1qX8JNSHq0N+uaO3g5q4qBz/mv1Pgv+qlArL9GUfXt0/swJcHrRMAukdPEI/Aj+hqmDfNESOZ23agfo=@vger.kernel.org, AJvYcCXLAdyzVnhbvS6yWSMzL3DQUiDmdEfPdDe6lH5sBIrEO2JguHzvPtwSH7xhLPhr7OPs7HcgVPxPCZisB6n7EA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3ONw0/yNXGl+0H9qMtPqsTEpwFysWnXnA6bHefC3pGD3ggzaM
+	UH9LBkyg3hvWZOy1PFEj8XKq/AFJaTarFQRhg4Q0DxMHX0VDqz/2I92zhOEXIcPqWmaPMkaPTMZ
+	VE5lad8TWvC7KWYxZGOQ898OG4aY=
+X-Gm-Gg: ASbGncuIzMiT3pJ6Npa/7ZMIJ0b10twQKPMh3mKHlXubicvVZDrvG4YBb1L92tXcP7V
+	E+Qcdjs8Lfw5kW6J+arBJtOH5cE73Ja0czLLdmCKXmAbbo+cJplZJ/68BLfZcaWfTDm85foCrrQ
+	8=
+X-Google-Smtp-Source: AGHT+IHsoUXN3inN8ktMOVimyacNePTc4ICmj3KMYGqnked3c0oW71IUHwynTOyQXNuYhCHOxPnvdRIstLmzggY9erw=
+X-Received: by 2002:a05:6214:252f:b0:6d8:8d87:e5b4 with SMTP id
+ 6a1803df08f44-6e42fbb8f9dmr81394326d6.19.1738809347586; Wed, 05 Feb 2025
+ 18:35:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37f965c7-db80-42e8-4365-08dd4656d499
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2025 02:34:50.3818
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1wpXMYFYeYQNSfMvu+RX803NAtDRw1bL2llsTLT02AsGNCdPr+jdIaIzVFo6iP3e/WJu7YmmQq6jZinSTbC25w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6205
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <20250127063526.76687-3-laoar.shao@gmail.com>
+ <Z5eYzcF5JLR4o5Yl@pathway.suse.cz> <CALOAHbANtpY+ee9Wd+HV6-uPOw+Kq1JcU5UdOXjz8m_UJ_-XRA@mail.gmail.com>
+ <Z6IUcbeCSAzlZEGP@pathway.suse.cz> <CALOAHbBWKL5MJz3DB+y02oqOrxy5xa3WZwTg0JPpqeQsMSVXmA@mail.gmail.com>
+ <Z6OLvQ6KlVeuOkoO@pathway.suse.cz>
+In-Reply-To: <Z6OLvQ6KlVeuOkoO@pathway.suse.cz>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 6 Feb 2025 10:35:11 +0800
+X-Gm-Features: AWEUYZkljzn9UYPZgTB3spCJqskFhAEedfDcaRDsLR-Mi-zXJ59hitCjT4qYxWs
+Message-ID: <CALOAHbCJRce9-VYNgUO5szU4kMSktXyvkY9+ZFX_kyVXeoQ1ig@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] livepatch: Implement livepatch hybrid mode
+To: Petr Mladek <pmladek@suse.com>
+Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, 
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgS3J6eXN6dG9mLA0KDQpPbiAwNS8wMi8yNSA3OjQ2IHBtLCBLcnp5c3p0b2YgS296bG93c2tp
-IHdyb3RlOg0KPiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0
-YWNobWVudHMgdW5sZXNzIHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIDA1
-LzAyLzIwMjUgMTQ6NTgsIERoYXJtYS5CQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBIaSBLcnp5
-c3p0b2YsDQo+Pg0KPj4gT24gMDUvMDIvMjUgNToxMCBwbSwgS3J6eXN6dG9mIEtvemxvd3NraSB3
-cm90ZToNCj4+PiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0
-YWNobWVudHMgdW5sZXNzIHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4+Pg0KPj4+IE9u
-IFdlZCwgRmViIDA1LCAyMDI1IGF0IDExOjE3OjAzQU0gKzA1MzAsIERoYXJtYSBCYWxhc3ViaXJh
-bWFuaSB3cm90ZToNCj4+Pj4gQWRkIGRvY3VtZW50IGZvciB0aGUgcHJvcGVydHkgImRtYS1jaGFu
-bmVscyIgZm9yIFhETUEgY29udHJvbGxlci4NCj4+Pg0KPj4+IEkgZG9uJ3QgdW5kZXJzdGFuZCB3
-aHkuIFlvdSBhcmUgZHVwbGljYXRpbmcgZG1hIHNjaGVtYS4NCj4gDQo+IEhlcmUtLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLV5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eDQoNClRoYW5rcyBm
-b3IgcG9pbnRpbmcgaXQgb3V0Lg0KDQo+IA0KPj4+DQo+Pj4gVGhlIHNhbWUgYXMgd2l0aCBvdGhl
-ciBwYXRjaCAtIHlvdXIgY29tbWl0IG1zZyBpcyByZWR1bmRhbnQuIFlvdSBzYXkNCj4+PiB3aGF0
-IHdlIHNlZSB0aGUgZGlmZiBidXQgeW91IG5ldmVyIGV4cGxhaW4gd2h5IHlvdSBhcmUgZG9pbmcg
-dGhlc2UNCj4+PiBjaGFuZ2VzLiBBbmQgaW4gYm90aCBjYXNlcyB0aGlzIGlzIHJlYWxseSBub24t
-b2J2aW91cy4NCj4+Pg0KPj4+IEFwcGx5IHRoaXMgZmVlZGJhY2sgdG8gYWxsIGZ1dHVyZSBjb250
-cmlidXRpb25zIC0gc2F5IHdoeSB5b3UgYXJlIGRvaW5nDQo+Pj4gY2hhbmdlcyBpbnN0ZWFkIG9m
-IHJlcGVhdGluZyB3aGF0IHN1YmplY3QgYW5kIGRpZmYgYXJlIGFscmVhZHkgc2F5aW5nLg0KPj4N
-Cj4+IFRoYW5rcyBmb3IgeW91ciBmZWVkYmFjaywgZG8geW91IHdhbnQgbWUgdG8gaW5jbHVkZSB0
-aGUgZGVzY3JpcHRpb24gb2YNCj4+IGRtYS1jaGFubmVscyBmcm9tIHRoZSBkaWZmIGluIHRoZSBj
-b21taXQgbWVzc2FnZT8NCj4+DQo+PiBUaGUgcmVhc29uIGZvciB0aGlzIGNoYW5nZSBpczoNCj4+
-ICJUaGlzIHByb3BlcnR5IGlzIHJlcXVpcmVkIHdoZW4gdGhlIGNoYW5uZWwgY291bnQgY2Fubm90
-IGJlIHJlYWQgZnJvbQ0KPj4gdGhlIFhETUFDX0dUWVBFIHJlZ2lzdGVyICh3aGljaCBvY2N1cnMg
-d2hlbiBhY2Nlc3NpbmcgZnJvbSB0aGUNCj4+IG5vbi1zZWN1cmUgd29ybGQgb24gY2VydGFpbiBk
-ZXZpY2VzKS4iDQo+Pg0KPj4gSXNuJ3QgdGhpcyBhbHJlYWR5IGNsZWFyIGZyb20gdGhlIGRlc2Ny
-aXB0aW9uIGluIHRoZSBkaWZmPw0KPiANCj4gDQo+IE9LLCBzbyB0aGlzIGRlc2NyaWJlcyB3aHkg
-eW91IG5lZWQgdGhpcy4gSXQgZG9lcyBub3Qgc29sdmUgd2h5IGRvIHlvdQ0KPiBuZWVkIHRoaXMg
-cGF0Y2guIERvIHlvdSBzZWUgYW55IHdhcm5pbmdzPw0KDQpObywgSSBkb27igJl0IHNlZSBhbnkg
-d2FybmluZ3MgYmVjYXVzZSB0aGlzIHByb3BlcnR5IGlzIGFscmVhZHkgZGVmaW5lZCBpbiANCmBk
-bWEtY29tbW9uLnlhbWxgLCB3aGljaCB0aGlzIGJpbmRpbmcgcmVmZXJlbmNlcy4gWW914oCZcmUg
-cmlnaHTigJRJ4oCZbSANCnVubmVjZXNzYXJpbHkgZHVwbGljYXRpbmcgdGhlIERNQSBzY2hlbWEu
-IFBsZWFzZSBkcm9wIHRoaXMgcGF0Y2guIA0KQXBvbG9naWVzIGZvciB0aGUgaW5jb252ZW5pZW5j
-ZS4NCg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBLcnp5c3p0b2YNCj4gDQoNCg0KLS0gDQpXaXRo
-IEJlc3QgUmVnYXJkcywNCkRoYXJtYSBCLg0K
+On Thu, Feb 6, 2025 at 12:03=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> On Wed 2025-02-05 10:54:47, Yafang Shao wrote:
+> > On Tue, Feb 4, 2025 at 9:21=E2=80=AFPM Petr Mladek <pmladek@suse.com> w=
+rote:
+> > >
+> > > On Mon 2025-01-27 23:34:50, Yafang Shao wrote:
+> > > > On Mon, Jan 27, 2025 at 10:31=E2=80=AFPM Petr Mladek <pmladek@suse.=
+com> wrote:
+> > > > >
+> > > > > On Mon 2025-01-27 14:35:26, Yafang Shao wrote:
+> > > > > > The atomic replace livepatch mechanism was introduced to handle=
+ scenarios
+> > > > > > where we want to unload a specific livepatch without unloading =
+others.
+> > > > > > However, its current implementation has significant shortcoming=
+s, making
+> > > > > > it less than ideal in practice. Below are the key downsides:
+> > > > >
+> > > > > [...]
+> > > > >
+> > > > > > In the hybrid mode:
+> > > > > >
+> > > > > > - Specific livepatches can be marked as "non-replaceable" to en=
+sure they
+> > > > > >   remain active and unaffected during replacements.
+> > > > > >
+> > > > > > - Other livepatches can be marked as "replaceable," allowing ta=
+rgeted
+> > > > > >   replacements of only those patches.
+> > > > > >
+> > > > > > This selective approach would reduce unnecessary transitions, l=
+ower the
+> > > > > > risk of temporary patch loss, and mitigate performance issues d=
+uring
+> > > > > > livepatch replacement.
+> > > > > >
+> > > > > > --- a/kernel/livepatch/core.c
+> > > > > > +++ b/kernel/livepatch/core.c
+> > > > > > @@ -658,6 +658,8 @@ static int klp_add_nops(struct klp_patch *p=
+atch)
+> > > > > >               klp_for_each_object(old_patch, old_obj) {
+> > > > > >                       int err;
+> > > > > >
+> > > > > > +                     if (!old_patch->replaceable)
+> > > > > > +                             continue;
+> > > > >
+> > > > > This is one example where things might get very complicated.
+> > > >
+> > > > Why does this example even exist in the first place?
+> > > > If hybrid mode is enabled, this scenario could have been avoided en=
+tirely.
+> > >
+> >
+> > You have many questions, but it seems you haven=E2=80=99t taken the tim=
+e to read even
+> > a single line of this patchset. I=E2=80=99ll try to address them to sav=
+e you some time.
+>
+> What?
+
+Apologies if my words offended you.
+
+>
+> > > How exactly this scenario could be avoided, please?
+> > >
+> > > In the real life, livepatches are used to fix many bugs.
+> > > And every bug is fixed by livepatching several functions.
+> > >
+> > > Fix1 livepatches: funcA
+> > > Fix2 livepatches: funcA, funcB
+> > > Fix3 livepatches: funcB
+> > >
+> > > How would you handle this with the hybrid model?
+> >
+> > In your scenario, each Fix will replace the applied livepatches, so
+> > they must be set to replaceable.
+> > To clarify the hybrid model, I'll illustrate it with the following Fixe=
+s:
+> >
+> > Fix1 livepatches: funcA
+> > Fix2  livepatches: funcC
+> > Fix3 livepatches: funcA, funcB
+>
+> How does look the livepatched FuncA here?
+> Does it contain changes only for Fix3?
+> Or is it cummulative livepatches_funA includes both Fix1 + Fix3?
+
+It is cumulative livepatches_funA includes both Fix1 + Fix3.
+
+>
+> > Fix4  livepatches: funcD
+> > Fix5 livepatches: funcB
+> >
+> > Each FixN represents a single /sys/kernel/livepatch/FixN.
+> > By default, all Fixes are set to non-replaceable.
+> >
+> > Step-by-step process:
+> > 1. Loading Fix1
+> >    Loaded Fixes: Fix1
+> > 2. Loading Fix2
+> >    Loaded Fixes: Fix1 Fix2
+> > 3. Loading Fix3
+> >     Before loading, set Fix1 to replaceable and replace it with Fix3,
+> > which is a cumulative patch of Fix1 and Fix3.
+>
+> Who will modify the "replaceable" flag of "Fix1"? Userspace or kernel?
+
+Userspace scripts. Modify it before loading a new one.
+
+>
+> How the livepatch modules would get installed/removed to/from the
+> filesystem?
+
+It doesn't make any difference.
+
+>
+> We (SUSE) distribute the livepatches using RPM packages. Every new
+> version of the livepatch module is packaged in a RPM package with
+> the same name and higher version. A post install script loads
+> the module into the kernel and removes disabled livepatch modules.
+
+Similar to us.
+
+>
+> The package update causes that the new version of the livepatch module
+> is enabled and the old version is removed. And also the old version
+> of the module and is removed from the filesystem together with the old
+> version of the RPM package.
+>
+> This matches the behavior of the atomic replace. There is always only
+> one version of the livepatch RPM package installed and only one
+> livepatch module loaded/enabled. And when it works correcly then
+> the version of the installed package matches the version of the loaded
+> livepatch module.
+>
+> This might be hard to achieve with the hybrid model. Every livepatch
+> module would need to be packaged in a separate (different name)
+> RPM package.
+
+Before switching to atomic replace, we packaged all the livepatch
+modules into a single RPM. The RPM installation handled them quite
+well.
+
+> And some userspace service would need to clean up both
+> kernel modules and livepatch RPM packages (remove the unused ones).
+>
+> This might add a lot of extra complexity.
+
+It's not that complex=E2=80=94just like what we did before atomic replaceme=
+nt
+was enabled.
+
+>
+> >     Loaded Fixes:  Fix2 Fix3
+> > 4. Loading Fix4
+> >     Loaded Fixes:  Fix2 Fix3 Fix4
+> > 5. Loading Fix5
+> >     Similar to Step 3, set Fix3 to replaceable and replace it with Fix5=
+.
+> >     Loaded Fixes:  Fix2 Fix4 Fix5
+>
+> Let's imagine another situation:
+>
+> Fix1 livepatches: funcA, funcB
+> Fix2  livepatches: funcB, funcC
+> Fix3 livepatches: funcA, funcC
+>
+> Variant A:
+>
+>  1. Loading Fix1
+>     Loaded Fixes: Fix1
+>     In use:: funcA_fix1, funcB_fix1
+>
+>  2. Loading Fix2
+>     Loaded Fixes: Fix1 Fix2
+>     In use: funcA_fix1, funcB_fix2, funcC_fix2
+>
+>  3. Loading Fix3
+>     Loaded Fixes: Fix2 Fix3
+>     In use: funcA_fix3, funcB_fix2, funcC_fix3
+>
+>     This will be correct only when:
+>
+>         + funcA_fix3 contains both changes from Fix1 and Fix3
+>         + funcC_fix3 contains both changes from Fix2 and Fix3
+>
+>
+> Variant B:
+>
+>  1. Loading Fix1
+>     Loaded Fixes: Fix1
+>     In use:: funcA_fix1, funcB_fix1
+>
+>  2. Loading Fix2 (fails from some reason or is skipped)
+>     Loaded Fixes: Fix1
+>     In use:: funcA_fix1, funcB_fix1
+>
+>  3. Loading Fix3
+>     Loaded Fixes: Fix1 Fix2
+>     In use: funcA_fix3, funcB_fix1, funcC_fix3
+>
+>     This will be correct only when:
+>
+>         + funcA_fix3 contains both changes from Fix1 and Fix3
+>             and stays funcB_fix1 is compatible with funcA_fix3
+>         + funcC_fix3 contains changes only from Fix3,
+>             it must be compatible with the original funcB because
+>
+> I want to say that this would work only when all livepatches
+> are loaded in the right order. Otherwise, it might break
+> the system.
+>
+> How do you want to ensure this?
+
+As we discussed earlier, if there=E2=80=99s an overlap between two
+livepatches, we merge them into a cumulative patch and replace the old
+one.
+
+>
+> Is it really that easy?
+>
+> > 3. Loading Fix3
+> >     Before loading, set Fix1 to replaceable and replace it with Fix3,
+>
+> > This hybrid model ensures that irrelevant Fixes remain unaffected
+> > during replacements.
+>
+> It makes some some now. But IMHO, it is not as easy as it looks.
+> The complexity is in details.
+>
+> > >
+> > > Which fix will be handled by livepatches installed in parallel?
+> > > Which fix will be handled by atomic replace?
+> > > How would you keep it consistent?
+> > >
+> > > How would it work when there are hundreds of fixes and thousands
+> > > of livepatched functions?
+> >
+> > The key point is that if a new Fix modifies a function already changed
+> > by previous Fixes, all the affected old Fixes should be set to
+> > replaceable, merged into the new Fix, and then the old Fixes should be
+> > replaced with the new one.
+>
+> As I tried to explain above. This might be hard to use in practice.
+>
+> We would either need to enforce loading all livepatches in the right
+> order. It might be hard to make it user friendly.
+>
+> Or it would need a lot of extra code which would ensure that only
+> compatible livepatches can be loaded.
+
+That=E2=80=99s related to the configuration. If you decide to use it, you
+should familiarize yourself with the best practices. Once you
+understand those, it becomes much simpler and less complex.
+
+BTW, based on my experience, the likelihood of overlapping between two
+livepatches is very low in real production environments. I haven=E2=80=99t
+encountered that case so far in our production servers.
+
+--=20
+Regards
+Yafang
