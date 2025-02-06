@@ -1,216 +1,114 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D4C226549;
-	Thu,  6 Feb 2025 09:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CAC22654E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834373; cv=none; b=QlpRf4Q/dpv8C4fE//1TBJViCvIW/a7XWemcCcfFMC2lWrEQ3hYxjoxB+c5CLDsks8XbUAmQLH8PWC61hS+PvMO4X3fy3j4LGe2Y3FGgWnu/MWe5HNHiermrte+S6E9zaIa93DpZexDrN7fHI1d6dUeWFF9/WZbhRKFXqgEYMPE=
+	t=1738834423; cv=none; b=b3Nch7/nOWFLvUx9gsYhYgL+QX5aMh+4Nr/fhYQZQdhAKeVJSXJHROynSm/8gqGsbD9dpi9mlltOOdZWX5rYGxguPRodegjEQgp33X/RQXQZV4QBW0zW9w0Utj1RXuzrQf20aiwmHPyOJ7zjkaZ0DSD/xa4ukDddh7V6jEslm9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834373; c=relaxed/simple;
-	bh=o+Z0681jYsiHqmh3U0IYwEJZRDAlvJSN/vbRjprW+rk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WOQtt2RvYoSx5xf60QUgB5TETC7dHmzu55kmJsbaiQwDpeIA33JHiKmqpP035K0ZlvPSOvxSRMcG6qi311w3CL0H7oT46Q5cTF1QsTMWZuDC0sahafz99UhjEUUVbnR9TBMdpACZz1yPzI5n+2DQLAjlOr9dkVzZZ/LdW2Rj+dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ub5LxYYO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1738834423; c=relaxed/simple;
+	bh=usdz62LURijbWQ2Ga/7vGTMaHUbDX8+cCgvM+iEDBJE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pp6rtyR/Z65MJf/gB6X9/zUqDu1oVLNiMAt5V9GKz3/C5uPTidf3VKAVfbApqf+2fm9I03idDUeaXyVvWOwzd0va8+oF+y7mF0/7t3Jd8HTQifNJk4lXiLVCGTDFDmE2iGliDxhn11oDL+qhWDCxAc6dtfToWdDkB/bgUxq8Vvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=aksC4HcP; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ub5LxYYO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ygCyX4kIzHTkCMIYfhFggV+w58QHYc5sCxu+XxJ0VuY=; b=Ub5LxYYOtNPsBxcWCz/qYQ+WX4
-	912GkRIsrEX9TSN/bszxcLHH+DpQQY46NZqIZdqBSvshZenQO1rM7ipB/pWGF5WK67YhzgldvIjOS
-	7eebgxztX8C450yP9UK7d8huLYU+VU4SGE9ZwPvNvSJSAJEsRlvhv33RN/UuP93usPGDRk7byAFEY
-	+iM/qVTX3BwYOld1a5a5yz9TwJ7uK61w3cZcjmN9OCacvjJMvPym99zqddq2ryvHsaimV6QMYONQ3
-	Zac1W3JvkwqaP5CP5fHHpHQUCYBAnmfgJNS6m2IgeLj4+GTxjffClRIxzP6B7tthDHyW5qqI8wvpn
-	N6v8/LFA==;
-Received: from [54.239.6.187] (helo=freeip.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfyEc-00000005lug-1GF0;
-	Thu, 06 Feb 2025 09:31:46 +0000
-Message-ID: <ff83dc5c91b4e46bcf2d99680ec6af250fb05b27.camel@infradead.org>
-Subject: Re: [PATCH v3 00/18] vDSO: Introduce generic data storage
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
- Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>,  Thomas Gleixner
- <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>,  Andrew Morton <akpm@linux-foundation.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Theodore
- Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Russell King <linux@armlinux.org.uk>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,  Arnd Bergmann
- <arnd@arndb.de>, Guo Ren <guoren@kernel.org>
-Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
- loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
- linux-csky@vger.kernel.org, "Ridoux, Julien" <ridouxj@amazon.com>, "Luu,
- Ryan" <rluu@amazon.com>, kvm <kvm@vger.kernel.org>
-Date: Thu, 06 Feb 2025 09:31:42 +0000
-In-Reply-To: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
-References: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-TLRPvEdtMvxq/eM5U95X"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="aksC4HcP"
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+	by cmsmtp with ESMTPS
+	id fxvptHcgcAfjwfyGMtA58c; Thu, 06 Feb 2025 09:33:34 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id fyGMtFRaCy3u7fyGMtf0s2; Thu, 06 Feb 2025 09:33:34 +0000
+X-Authority-Analysis: v=2.4 cv=e9YAS7p/ c=1 sm=1 tr=0 ts=67a481ee
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=g9OED4ookiJITInLTEIPWloDXRRtGC/+P9KCScsYSdQ=; b=aksC4HcP+RjmcglH6u/QW6svcJ
+	65bznwhEy5oTC4EiDMRHnltKotGFMshb75iryQCFGZptqeUmps6VPqYGgd6LnUgMTrlLhnjd5dlU3
+	ztmwecvyrQMR5u2g1JyOtpZjoY2/FIYP2szZbmOKgB9NJlrhBY0YxN9xDKkkxrkg2mQLoCOfzs9hb
+	j+MZLvBh08V9ECkvlZ0ZRa127r1FCpjQ0rMaN//yI0qg/+6wn6Ldj4/utFXa/jhdsO4LKpzSW3m7+
+	kagCOdf8zhwpGIiPxw4CJhxRhMkQqLgWkLwn3AoFiqiC6Xk3h/s/0PL1xCq1I1ugTMHYRPuvN7oZu
+	JTJvT5+Q==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:55396 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1tfyGL-001iYW-03;
+	Thu, 06 Feb 2025 02:33:33 -0700
+Message-ID: <97713b4c-e3b5-4335-9827-a695f00a09ad@w6rz.net>
+Date: Thu, 6 Feb 2025 01:33:30 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250205134456.221272033@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1tfyGL-001iYW-03
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:55396
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBW4b3JbfXWgTr5PcjqjjErYxctuNvYxeKJFFzzx6Uld5rUnkdoUsDtE0Ctm1PbAxR17u6CGFG/J08zs5bJCmXD3XAaloVm2m059bomxTA18gqorHOnU
+ cyiJNUMEbP/yt/HoRDmYpBpS7fIlVgcFmvSHSEFC6UkCdeoUWjfMx3iO/4ucFqzMFgRly5+cKUhZ87Ua2sIxC+7Lsh3FVg0XMdE=
 
+On 2/5/25 05:35, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.2 release.
+> There are 623 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 07 Feb 2025 13:42:57 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.2-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
---=-TLRPvEdtMvxq/eM5U95X
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-On Tue, 2025-02-04 at 13:05 +0100, Thomas Wei=C3=9Fschuh wrote:
-> Currently each architecture defines the setup of the vDSO data page on
-> its own, mostly through copy-and-paste from some other architecture.
-> Extend the existing generic vDSO implementation to also provide generic
-> data storage.
-> This removes duplicated code and paves the way for further changes to
-> the generic vDSO implementation without having to go through a lot of
-> per-architecture changes.
->=20
-> Based on v6.14-rc1 and intended to be merged through the tip tree.
+Tested-by: Ron Economos <re@w6rz.net>
 
-Thanks for working on this. Is there a plan to expose the time data
-directly to userspace in a form which is usable *other* than by
-function calls which get the value of the clock at a given moment?
-
-For populating the vmclock device=C2=B9 we need to know the actual
-relationship between the hardware counter (TSC, arch timer, etc.) and
-real time in order to propagate that to the guest.
-
-I see two options for doing this:
-
- 1. Via userspace, exposing the vdso time data (and a notification when
-    it changes?) and letting the userspace VMM populate the vmclock.
-    This is complex for x86 because of TSC scaling; in fact userspace
-    doesn't currently know the precise scaling from host to guest TSC
-    so we'd have to be able to extract that from KVM.
-
- 2. In kernel, asking KVM to populate the vmclock structure much like
-    it does other pvclocks shared with the guest. KVM/x86 already uses
-    pvclock_gtod_register_notifier() to hook changes; should we expand
-    on that? The problem with that notifier is that it seems to be
-    called far more frequently than I'd expect.
-
-
-
-=C2=B9 https://gitlab.com/qemu-project/qemu/-/commit/3634039b93cc5
-
---=-TLRPvEdtMvxq/eM5U95X
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIwNjA5MzE0
-MlowLwYJKoZIhvcNAQkEMSIEIERZMz2IotRdbMhsT9qod1BX+F3d+8SGgb19TKs6OEngMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAdAWv7/Ma94ZM
-/9Fh3Sdl/S7OhQXyvMc8b43LE3FzqK8DOYqkP/jNcwUKRDutu6swQg1obN06fqixgD9ocNg6jm3y
-iqzKNbqbN37ui3CSU6fOt+/j0NMWTcH8btsG+qcVVz1NPFiuefroouvqP23zYR9x01B1iD4GtvdK
-CxNbkqhWuO90Kv50+8N8vzBPQ7Lus4aOgSWvtlJH61u9NZH9UeyiZ6+L6p2IHK+rDhGG5XDnrTNV
-7Jgr9942WqDnaiqCsCz3kMDpp5eZcdd9pDbtyhMSkLUdR3jjJwkUtQ5wtBmW1+bCxAZMDJ8jkmdh
-ruJQvaJEtgtMdQ3m/4w2zxdwepoQrvCDEMk6X6Cdn1QdR7IZ7iIiUINWq671aFTzSYNkOs64/tEE
-PNB8gSS3jnNV1ipd7QRFtClrO1qzhInJOXrlsNrkf74KthptIJcKBVniPMKN4b+HlGFvnd4cn98u
-yxbecezceueFkvpxTIE+9liAjiY1+hyJHWrMwuzKXR+hOiOvrM9AnG/KNL2bo2uQ7nAgAcsr5tCA
-l8bUeBG5Y80rAo+xp5MZlfa8G+W1DdWdheR51dM1Bh2TLq3llbuByHEX9mqq0xOSU5leYHY1fQOw
-JNMJ5gc7C12R8Sj/7a1SJGGKlxt7G83fq9quuuXIYyfLJkW2jRre3WesN7YavdIAAAAAAAA=
-
-
---=-TLRPvEdtMvxq/eM5U95X--
