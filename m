@@ -1,405 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E6E23AE72;
-	Thu,  6 Feb 2025 21:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306681D2F53
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879049; cv=none; b=CJexSLywMjN0/p8tovQKvqMX6VTDVPux9bsirBNFTlbn3prpq7XjYmPCB/g9t5LxHFObqc7mw7xY2UIk235mVr2EuyhSF3CYIYPo0YORAYbejHvm4umA6NvuV0yoQXgyEY0+XN7M92FPrN1Bm9sGjoQTrSMXZweYgvgmVrrsVuU=
+	t=1738879129; cv=none; b=ELZHLgHfFfuAjl9JKcbc8Kgcop7zBNWr+pbACbIUl8d7r55K7+KU9M9SRm/ZcEJscmet2c9IB1tnEDemnuwJqUiFUgq7K5Zg6GZ1VHnZXohQ20PEOcUU7/ZerVLAQ5usfF6bIoIRGgyHMzhHpRBABkIwJO0b5Tc3HbZpGdL+bGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738879049; c=relaxed/simple;
-	bh=u9GPeApfqBnpLETdA4XAmdHEiyobx9HnO8wtn+2eNYw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CLvqEXS/ioH6Tj9BJq7H6TsgHoDfbZbMKVkQYjg+tRwMQ2gNscVmxLYXSLX2JnggMX1LeKaQMrga0+eiqLXBttk/+56bGgYlNaltOzNBIPR5II2xfvqZKx+pUNshW4xgeymA6IrbTd397f2lLyp+pirHxbkedbuuNanfAugLjJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBai3MTb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738879129; c=relaxed/simple;
+	bh=PVuzEWiWGdU7/bhxXLzVugnQB2A6Ks+SP/VbQvRNZKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HmfAgrqjGvKtvjThf+t2xAmeC7rFbcMmuUflcUgOLHXNddqMTvNlpk14vN2vZ25mtuoBjgh6RKQfuxwH7gZQjmZXAkdDoLB5NJWcdVKtNR0CB1yx/EZL2FCeQIyMoVPhES4wRpFncq22MvtEi6EYeWtsCYikXqEQp0qbiSQUIiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=lgMqS8Fw; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBai3MTb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D70C4CEE2;
-	Thu,  6 Feb 2025 21:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738879049;
-	bh=u9GPeApfqBnpLETdA4XAmdHEiyobx9HnO8wtn+2eNYw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IBai3MTbfNDYYJjiIp3Q507yx2N8Vzr5tNzAnZe+luY2vDJWRHrvPxQHrqjqvPCF0
-	 A35MeJXQ49G5wbSekJhZVsps98dbAAN9SO6ke1QOo+LjDbFaYdkPRaiKyLHwje9S8U
-	 6A9VHt7mPPUKkwbNCIq5kPxkyaOKHv4NjWUQexxW5wIGug40RDyzBI1pnQoSb/dAKB
-	 q1kM5H4O87aEfILkhPOhJfEYMb6EHQReoyzrInCUnBtAziKXu828gisw+d1sKampnv
-	 Fk7DHCgj80pUvnHj5ZTf25dj6J7E8EiBWO870ELSoK4DuJ2OLgb7s1obtcxMLtbnA7
-	 cmpWcvdrylFXg==
-From: Mario Limonciello <superm1@kernel.org>
-To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 13/14] cpufreq/amd-pstate: Rework CPPC enabling
-Date: Thu,  6 Feb 2025 15:56:58 -0600
-Message-ID: <20250206215659.3350066-14-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250206215659.3350066-1-superm1@kernel.org>
-References: <20250206215659.3350066-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="lgMqS8Fw"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f48ebaadfso13784975ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 13:58:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738879125; x=1739483925; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T9pEwEvQtMTht7p8WbC44bsRYNPMffSNDG4Pb5DVy/U=;
+        b=lgMqS8FwYX9xWhM9kSZPql3Crx1UAQfys1VbpOJ3051C/p7QGVizCiPRKApgoLkAuR
+         G1uHSk8GqayOBHbRg6VSPC5T/Ohvh5WHd+eQCimgke4rn5AytLk1I6IMf1UPVOyxRmBs
+         nlz+hqo2I+H0DyWTcV6D4L5cwDE8aoWwp75bgiYDkHwWjbOpDS7Dbl+SnXeedEDRwUjZ
+         9z3hq1QkloPVTh0K7qF8ICV8IrpZb8W+bvUCLsmNYUhKjhfGcSqaOIM06t5ZTQOoPRls
+         d0ZD7i9Cpyu5kQRbVYyU246pK4CGvPklWVtDh/zqYT48ER/fGaisttKZ9futu9Tkqm8+
+         Zq2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738879125; x=1739483925;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T9pEwEvQtMTht7p8WbC44bsRYNPMffSNDG4Pb5DVy/U=;
+        b=Ib3eqMEDJ8ydlMXocQaP9TzhqxCYI0/5znlvV9v3H6V8zWNvibrvF/Dbz0kAo5bsWt
+         vicxjBkJrqpwwnq3YOJ5lygEZFEWUp9mDfOOvY9f42bYJHN3yMOkejU0lOEtfRTN1d6w
+         WhPR7UDHxxrPSGAp9UhQ1AWwKS9z7n6nPzL1TEw226wxqKun8aJeN3G9r1grIf1JUjLx
+         ejngIi+0BTxee7VfSN8X5EUlmTDA/abFquRdfi74CDJ4oCIQx/2TQx9rqMEzKRUu761M
+         XtBYcRfgLourjPA7kphi9J+onfbJAOD5dw2pyBH4w6YV05TNwI5igpk7m5T6qcvnNcEz
+         2sAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwGwgH9U0xwcjACNdhx+hri6pAodKDfP4fHIaibEpr9aN13l+Me7DkCyr+DZX9IwUDSXWB0P/snwT14MY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWFGy7KN0frmeRT6yJrCeMg3XVHjkY/xPOHLuyvikBvO9wlqyO
+	CfGtYnlTiYZcwFRqVzKyhwQjWZMHOgQuXLbVH2rWjiNUyJA1gRZmk/sBrHI95yA=
+X-Gm-Gg: ASbGncvZ6Z9cCqyzIYrDrMyV+ARsGYCGkKFjtZ/IH9bcvei4ljUnIBFno1/ppk252i2
+	E9oOd9OPBcCc+V82rhNyLmSvBMnQt8t3fGAbtADyzdnLwrXvJR6Tpcur70aWztx4JHfmQpsserE
+	XIxNA1+Odz3eGm07YRbZ9QwNLSaLta4gKHHpPoeBlf3xYtSiO3muHa4XjTdzLtRyB3+4l40sohq
+	045201LErnKdQicWLDsQCnpOtIHT2GSfVi1FYzQJ9uFvbNBLfoobsxHxpfmyrzgHEYQFi/fWdnL
+	GtvkPD0hvpJ/8gZIseDwdyqdJw==
+X-Google-Smtp-Source: AGHT+IEAeZdlOSa7aDkaxgunF100sJqK9vORD3h4QNYuoNX4V7Q49nJIgyQHGUMHbgK5Pow0L8i/Ig==
+X-Received: by 2002:a05:6a00:228d:b0:726:41e:b310 with SMTP id d2e1a72fcca58-7305d48010bmr1263832b3a.12.1738879125283;
+        Thu, 06 Feb 2025 13:58:45 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ae7c24sm1765047b3a.78.2025.02.06.13.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 13:58:44 -0800 (PST)
+Date: Thu, 6 Feb 2025 13:58:42 -0800
+From: Deepak Gupta <debug@rivosinc.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
+	Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+	"H.J. Lu" <hjl.tools@gmail.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, jannh@google.com,
+	Yury Khrustalev <yury.khrustalev@arm.com>,
+	Wilco Dijkstra <wilco.dijkstra@arm.com>,
+	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org,
+	Kees Cook <kees@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH RFT v14 2/8] Documentation: userspace-api: Add shadow
+ stack API documentation
+Message-ID: <Z6UwksPkdwb5DDcK@debug.ba.rivosinc.com>
+References: <20250206-clone3-shadow-stack-v14-0-805b53af73b9@kernel.org>
+ <20250206-clone3-shadow-stack-v14-2-805b53af73b9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250206-clone3-shadow-stack-v14-2-805b53af73b9@kernel.org>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, Feb 06, 2025 at 11:38:04AM +0000, Mark Brown wrote:
+>There are a number of architectures with shadow stack features which we are
+>presenting to userspace with as consistent an API as we can (though there
+>are some architecture specifics). Especially given that there are some
+>important considerations for userspace code interacting directly with the
+>feature let's provide some documentation covering the common aspects.
+>
+>Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+>Reviewed-by: Kees Cook <kees@kernel.org>
+>Tested-by: Kees Cook <kees@kernel.org>
+>Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+>Acked-by: Yury Khrustalev <yury.khrustalev@arm.com>
+>Signed-off-by: Mark Brown <broonie@kernel.org>
+>---
 
-The CPPC enable register is configured as "write once".  That is
-any future writes don't actually do anything.
+Reviewed-by: Deepak Gupta <debug@rivosinc.com>
 
-Because of this, all the cleanup paths that currently exist for
-CPPC disable are non-effective.
-
-Rework CPPC enable to only enable after all the CAP registers have
-been read to avoid enabling CPPC on CPUs with invalid _CPC or
-unpopulated MSRs.
-
-As the register is write once, remove all cleanup paths as well.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 188 +++++++++++------------------------
- 1 file changed, 59 insertions(+), 129 deletions(-)
-
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 5945b6c7f7e56..697fa1b80cf24 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -85,7 +85,6 @@ static struct cpufreq_driver *current_pstate_driver;
- static struct cpufreq_driver amd_pstate_driver;
- static struct cpufreq_driver amd_pstate_epp_driver;
- static int cppc_state = AMD_PSTATE_UNDEFINED;
--static bool cppc_enabled;
- static bool amd_pstate_prefcore = true;
- static struct quirk_entry *quirks;
- 
-@@ -375,91 +374,40 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
- 	return ret;
- }
- 
--static int amd_pstate_set_energy_pref_index(struct cpufreq_policy *policy,
--					    int pref_index)
-+static inline int msr_cppc_enable(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
--	u8 epp;
--
--	guard(mutex)(&cpudata->lock);
- 
--	if (!pref_index)
--		epp = cpudata->epp_default;
--	else
--		epp = epp_values[pref_index];
--
--	if (epp > 0 && policy->policy == CPUFREQ_POLICY_PERFORMANCE) {
--		pr_debug("EPP cannot be set under performance policy\n");
--		return -EBUSY;
--	}
--
--	return amd_pstate_set_epp(policy, epp);
-+	return wrmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_ENABLE, 1);
- }
- 
--static inline int msr_cppc_enable(bool enable)
-+static int shmem_cppc_enable(struct cpufreq_policy *policy)
- {
--	int ret, cpu;
--	unsigned long logical_proc_id_mask = 0;
--
--       /*
--        * MSR_AMD_CPPC_ENABLE is write-once, once set it cannot be cleared.
--        */
--	if (!enable)
--		return 0;
--
--	if (enable == cppc_enabled)
--		return 0;
--
--	for_each_present_cpu(cpu) {
--		unsigned long logical_id = topology_logical_package_id(cpu);
--
--		if (test_bit(logical_id, &logical_proc_id_mask))
--			continue;
--
--		set_bit(logical_id, &logical_proc_id_mask);
--
--		ret = wrmsrl_safe_on_cpu(cpu, MSR_AMD_CPPC_ENABLE,
--				enable);
--		if (ret)
--			return ret;
--	}
--
--	cppc_enabled = enable;
--	return 0;
--}
--
--static int shmem_cppc_enable(bool enable)
--{
--	int cpu, ret = 0;
-+	struct amd_cpudata *cpudata = policy->driver_data;
- 	struct cppc_perf_ctrls perf_ctrls;
-+	int ret;
- 
--	if (enable == cppc_enabled)
--		return 0;
-+	ret = cppc_set_enable(cpudata->cpu, 1);
-+	if (ret)
-+		return ret;
- 
--	for_each_present_cpu(cpu) {
--		ret = cppc_set_enable(cpu, enable);
-+	/* Enable autonomous mode for EPP */
-+	if (cppc_state == AMD_PSTATE_ACTIVE) {
-+		/* Set desired perf as zero to allow EPP firmware control */
-+		perf_ctrls.desired_perf = 0;
-+		ret = cppc_set_perf(cpudata->cpu, &perf_ctrls);
- 		if (ret)
- 			return ret;
--
--		/* Enable autonomous mode for EPP */
--		if (cppc_state == AMD_PSTATE_ACTIVE) {
--			/* Set desired perf as zero to allow EPP firmware control */
--			perf_ctrls.desired_perf = 0;
--			ret = cppc_set_perf(cpu, &perf_ctrls);
--			if (ret)
--				return ret;
--		}
- 	}
- 
--	cppc_enabled = enable;
- 	return ret;
- }
- 
- DEFINE_STATIC_CALL(amd_pstate_cppc_enable, msr_cppc_enable);
- 
--static inline int amd_pstate_cppc_enable(bool enable)
-+static inline int amd_pstate_cppc_enable(struct cpufreq_policy *policy)
- {
--	return static_call(amd_pstate_cppc_enable)(enable);
-+	return static_call(amd_pstate_cppc_enable)(policy);
- }
- 
- static int msr_init_perf(struct amd_cpudata *cpudata)
-@@ -1122,24 +1070,7 @@ static void amd_pstate_cpu_exit(struct cpufreq_policy *policy)
- 
- static int amd_pstate_cpu_resume(struct cpufreq_policy *policy)
- {
--	int ret;
--
--	ret = amd_pstate_cppc_enable(true);
--	if (ret)
--		pr_err("failed to enable amd-pstate during resume, return %d\n", ret);
--
--	return ret;
--}
--
--static int amd_pstate_cpu_suspend(struct cpufreq_policy *policy)
--{
--	int ret;
--
--	ret = amd_pstate_cppc_enable(false);
--	if (ret)
--		pr_err("failed to disable amd-pstate during suspend, return %d\n", ret);
--
--	return ret;
-+	return amd_pstate_cppc_enable(policy);
- }
- 
- /* Sysfs attributes */
-@@ -1241,8 +1172,10 @@ static ssize_t show_energy_performance_available_preferences(
- static ssize_t store_energy_performance_preference(
- 		struct cpufreq_policy *policy, const char *buf, size_t count)
- {
-+	struct amd_cpudata *cpudata = policy->driver_data;
- 	char str_preference[21];
- 	ssize_t ret;
-+	u8 epp;
- 
- 	ret = sscanf(buf, "%20s", str_preference);
- 	if (ret != 1)
-@@ -1252,7 +1185,31 @@ static ssize_t store_energy_performance_preference(
- 	if (ret < 0)
- 		return -EINVAL;
- 
--	ret = amd_pstate_set_energy_pref_index(policy, ret);
-+	if (!ret)
-+		epp = cpudata->epp_default;
-+	else
-+		epp = epp_values[ret];
-+
-+	if (epp > 0 && policy->policy == CPUFREQ_POLICY_PERFORMANCE) {
-+		pr_debug("EPP cannot be set under performance policy\n");
-+		return -EBUSY;
-+	}
-+
-+	if (trace_amd_pstate_epp_perf_enabled()) {
-+		union perf_cached perf = cpudata->perf;
-+
-+		trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf,
-+					  epp,
-+					  FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cpudata->cppc_req_cached),
-+					  FIELD_GET(AMD_CPPC_MAX_PERF_MASK, cpudata->cppc_req_cached),
-+					  policy->boost_enabled,
-+					  FIELD_GET(AMD_CPPC_EPP_PERF_MASK,
-+						    cpudata->cppc_req_cached) != epp);
-+	}
-+
-+	guard(mutex)(&cpudata->lock);
-+
-+	ret = amd_pstate_set_epp(policy, epp);
- 
- 	return ret ? ret : count;
- }
-@@ -1285,7 +1242,6 @@ static ssize_t show_energy_performance_preference(
- 
- static void amd_pstate_driver_cleanup(void)
- {
--	amd_pstate_cppc_enable(false);
- 	cppc_state = AMD_PSTATE_DISABLE;
- 	current_pstate_driver = NULL;
- }
-@@ -1319,14 +1275,6 @@ static int amd_pstate_register_driver(int mode)
- 
- 	cppc_state = mode;
- 
--	ret = amd_pstate_cppc_enable(true);
--	if (ret) {
--		pr_err("failed to enable cppc during amd-pstate driver registration, return %d\n",
--		       ret);
--		amd_pstate_driver_cleanup();
--		return ret;
--	}
--
- 	/* at least one CPU supports CPB */
- 	current_pstate_driver->boost_enabled = cpu_feature_enabled(X86_FEATURE_CPB);
- 
-@@ -1570,11 +1518,15 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
- 	policy->cpuinfo.max_freq = policy->max = perf_to_freq(perf,
- 							      cpudata->nominal_freq,
- 							      perf.highest_perf);
-+	policy->driver_data = cpudata;
-+
-+	ret = amd_pstate_cppc_enable(policy);
-+	if (ret)
-+		goto free_cpudata1;
- 
- 	/* It will be updated by governor */
- 	policy->cur = policy->cpuinfo.min_freq;
- 
--	policy->driver_data = cpudata;
- 
- 	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
- 
-@@ -1667,34 +1619,28 @@ static int amd_pstate_epp_set_policy(struct cpufreq_policy *policy)
- 	return 0;
- }
- 
--static int amd_pstate_epp_reenable(struct cpufreq_policy *policy)
-+static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 	union perf_cached perf = cpudata->perf;
- 	int ret;
- 
--	ret = amd_pstate_cppc_enable(true);
-+	pr_debug("AMD CPU Core %d going online\n", cpudata->cpu);
-+
-+	ret = amd_pstate_cppc_enable(policy);
- 	if (ret)
--		pr_err("failed to enable amd pstate during resume, return %d\n", ret);
-+		return ret;
- 
- 	guard(mutex)(&cpudata->lock);
- 
--	return amd_pstate_update_perf(policy, 0, 0, perf.highest_perf, cpudata->epp_cached, false);
--}
--
--static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
--{
--	struct amd_cpudata *cpudata = policy->driver_data;
--	int ret;
--
--	pr_debug("AMD CPU Core %d going online\n", cpudata->cpu);
--
--	ret = amd_pstate_epp_reenable(policy);
-+	ret = amd_pstate_update_perf(policy, 0, 0, perf.highest_perf, cpudata->epp_cached, false);
- 	if (ret)
- 		return ret;
-+
- 	cpudata->suspended = false;
- 
- 	return 0;
-+
- }
- 
- static int amd_pstate_epp_cpu_offline(struct cpufreq_policy *policy)
-@@ -1714,20 +1660,10 @@ static int amd_pstate_epp_cpu_offline(struct cpufreq_policy *policy)
- static int amd_pstate_epp_suspend(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
--	int ret;
--
--	/* avoid suspending when EPP is not enabled */
--	if (cppc_state != AMD_PSTATE_ACTIVE)
--		return 0;
- 
- 	/* set this flag to avoid setting core offline*/
- 	cpudata->suspended = true;
- 
--	/* disable CPPC in lowlevel firmware */
--	ret = amd_pstate_cppc_enable(false);
--	if (ret)
--		pr_err("failed to suspend, return %d\n", ret);
--
- 	return 0;
- }
- 
-@@ -1735,12 +1671,8 @@ static int amd_pstate_epp_resume(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 
--	if (cpudata->suspended) {
--		/* enable amd pstate from suspend state*/
--		amd_pstate_epp_reenable(policy);
- 
--		cpudata->suspended = false;
--	}
-+	cpudata->suspended = false;
- 
- 	return 0;
- }
-@@ -1752,7 +1684,6 @@ static struct cpufreq_driver amd_pstate_driver = {
- 	.fast_switch    = amd_pstate_fast_switch,
- 	.init		= amd_pstate_cpu_init,
- 	.exit		= amd_pstate_cpu_exit,
--	.suspend	= amd_pstate_cpu_suspend,
- 	.resume		= amd_pstate_cpu_resume,
- 	.set_boost	= amd_pstate_set_boost,
- 	.update_limits	= amd_pstate_update_limits,
-@@ -1768,8 +1699,8 @@ static struct cpufreq_driver amd_pstate_epp_driver = {
- 	.exit		= amd_pstate_epp_cpu_exit,
- 	.offline	= amd_pstate_epp_cpu_offline,
- 	.online		= amd_pstate_epp_cpu_online,
--	.suspend	= amd_pstate_epp_suspend,
--	.resume		= amd_pstate_epp_resume,
-+	.suspend        = amd_pstate_epp_suspend,
-+	.resume         = amd_pstate_epp_resume,
- 	.update_limits	= amd_pstate_update_limits,
- 	.set_boost	= amd_pstate_set_boost,
- 	.name		= "amd-pstate-epp",
-@@ -1920,7 +1851,6 @@ static int __init amd_pstate_init(void)
- 
- global_attr_free:
- 	cpufreq_unregister_driver(current_pstate_driver);
--	amd_pstate_cppc_enable(false);
- 	return ret;
- }
- device_initcall(amd_pstate_init);
--- 
-2.43.0
-
+> Documentation/userspace-api/index.rst        |  1 +
+> Documentation/userspace-api/shadow_stack.rst | 44 ++++++++++++++++++++++++++++
+> 2 files changed, 45 insertions(+)
