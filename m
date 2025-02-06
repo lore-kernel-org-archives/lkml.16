@@ -1,183 +1,93 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CFF20E032;
-	Thu,  6 Feb 2025 09:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F011E225A3E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832560; cv=none; b=RcaIDecsR87NQgTo58xBjz62Y9w8J0eR9us/usJbbGoOPRmIrxKYWwYY599bJFeAL0EmW8Lav+PC4A61KjKOkUgVIH6KyL/QrESwDfuUmLaBXMTqmAQoiY8iQg0jsm5BpveRGqhwjB8Lcyq5JPeEmz54FfXKpxyZv2/86fPsfq4=
+	t=1738832562; cv=none; b=a49Ru4G/r9bM6q1InM2sTr/OdA7c0pIVE52G9E/94iOz6LBnTtbDJb5Dz4qkMSGGtyXiAf7qZHzuBhHaLqdfNzG7ZhSnNvkwKuSUAhBAakGYiRlD3ZimjU9MVrUO4wpUeLA9rTF8f5OgBr1pFc4p1tPzK3tXmUuQFtHyofXRQog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832560; c=relaxed/simple;
-	bh=tkCI1kLUExHSS7JfbF9OB+d63f2Y0jbJBMMkHqhjSyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RbdSqOYwzz1cL0c2wi9ilFbmWDuiqh27Ws8bHMCd2ntbJp+EIeuP50/Et+bf+LUoR9W/5DEb8ItRRpREqgN8/zqhJ4mdr2IQHEsQUoRpOW2GHoN2hOHHUk5HU8on32/5Dqa84goEYNvVkWF1XX48/CZtApXxtnYK0x9lVP2DKjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q2/7Fomp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pir/qj0/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q2/7Fomp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pir/qj0/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738832562; c=relaxed/simple;
+	bh=Hp8D2UpUB8LSe0tS79Q/Ztz5i/h+c+LhDuD05ZQIBgY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UdEsAYJ1Urjs9jGFDR6EGc31b9zsin7Qt5DbbfiFjxXtK6pVv/aqTHjippCOU5gaSCwB+vHiSK3fQYWvmT+G5j+Dx1wAbOqVsrma8E5W+/FyjaaO/IeqA4XwX6NNUqpU2/kmHj1Eqi/f5uEGWoWk+khD2g0vwnYC/dCE8RLXEag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RkIIV9X2; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q2/7Fomp";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pir/qj0/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q2/7Fomp";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pir/qj0/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6A66121114;
-	Thu,  6 Feb 2025 09:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738832556; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
-	b=Q2/7FompWbxErPXX2RXUy1wzVHoFXBfKz23hJX8AH2Iths1/47EjP0vaia6N1zA2Hnvqbc
-	JQNvVunZkKr1isQKU693ML2IAcd/OZhMv1cPgui0M9z31YlkOr6pwvnPo+TRqHlWqgCzq6
-	aW+soTgBHAVvG9/22DD8N0kd1oGgCpY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738832556;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
-	b=Pir/qj0/cXlvWmVFCcDe55yIZxAaSVo/uG2ar/sFVOjvIIiUCc8mOW1tcpBMAuAFjZ6/b5
-	9PTozImR03UBfjAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738832556; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
-	b=Q2/7FompWbxErPXX2RXUy1wzVHoFXBfKz23hJX8AH2Iths1/47EjP0vaia6N1zA2Hnvqbc
-	JQNvVunZkKr1isQKU693ML2IAcd/OZhMv1cPgui0M9z31YlkOr6pwvnPo+TRqHlWqgCzq6
-	aW+soTgBHAVvG9/22DD8N0kd1oGgCpY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738832556;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tGJNfaiKYVRYotbnHADnx3rwAsOF2lsftBqriomn/k=;
-	b=Pir/qj0/cXlvWmVFCcDe55yIZxAaSVo/uG2ar/sFVOjvIIiUCc8mOW1tcpBMAuAFjZ6/b5
-	9PTozImR03UBfjAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EFC313694;
-	Thu,  6 Feb 2025 09:02:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 3v4qF6x6pGc4PgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 06 Feb 2025 09:02:36 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0A789A0889; Thu,  6 Feb 2025 10:02:36 +0100 (CET)
-Date: Thu, 6 Feb 2025 10:02:35 +0100
-From: Jan Kara <jack@suse.cz>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] vfs: inline getname()
-Message-ID: <7exbpvo4svpmhk7n7sjq55wlaqhndk3qk2ijw7y4dvykqbhg3n@y5axd74zos5i>
-References: <20250206000105.432528-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RkIIV9X2"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dce3adbc31so1185539a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:02:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738832559; x=1739437359; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nWDgCRG2JISUlyz37zwRV9Om7+HpOA4ggCmMt2lDU/E=;
+        b=RkIIV9X2gqDWG0Go/jFr3zuv/csRYXiv/AlmQryWQ6gg+MnDDjmwRtg/u/ttyCkJLA
+         W4018SSnL55Jljqv9tybsgBjWpCxQNqye61RXIfYTfwVKh2CtnP3luSn3A2itzLd9KYS
+         QbPvyH9DAyNbsRb59uAkMGs/1Wt4fe+p1z5H6kyiY6QeR6sSbrGbQoVz5el8FHQV2HWi
+         UAOW+fsuBXQj1K/ZbJ41wETNMgtWbPwkcQvzdQU/MMVWMF6qZlzdDjKtD34LAb/v+gdY
+         b1NAaLwGfQrcQuaqMoWnB21ResTPvfqGV439CT7b2Kri8RnZFY1WOP977k+WDdLk4Vti
+         24nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738832559; x=1739437359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nWDgCRG2JISUlyz37zwRV9Om7+HpOA4ggCmMt2lDU/E=;
+        b=rgAhblr+oeHI090WwRuNeK/BHbNQgzKPI6OIv1mTRAMnSDNOshLgmD2b9sS1eRQppa
+         r3bPUOHJm8WuTv4fpDDzVW8SYTGSn5217mSeGvW5JFQlqn4pDr4LUleCnt6X/xon+C3C
+         4vOG6aEsKJ9WD28RwimHSyaKcvWRKZAt/Ogfq1ld87JWIkIgUHoWmdfZCFMYaaTtVrq8
+         1UzqtmuXLoXppOnIdW29p3RiWRofD4N7mGTtqMHxyxzj1A/aW04P9zaCAGTW22g+ZpGM
+         /t7EBSfn8jXE0mpwmY659qNaRoCdFu4A+a8m3254uH/uzHanwaTlWffAdnV+uorhei++
+         TPxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNsBc5TdhIfCNn4Ixwhw6loUcFeBNhxJ300Lq22DgAgS/Slk8hovLPk+ZX+Bp9ISrIQjjbNxaX9mhVt5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCx498EtO37HP0JGk99hY6QiroXQ7KqQiJcXBj54qskciHY94W
+	s7D0oW0sZvycLsh7G2mKxRw9vnmjvoHDtyoWmfrabyWUzQz837fjzryJO+I/K1urXqFDY4qAfhY
+	gDL+7vQz66wnH0Sglu/We08ZbOCPsgptTDPJU
+X-Gm-Gg: ASbGncvVgSylP+H0GllHohAeAXJm0vqZww6fd0i+oagw3rg7cyZqx9Y+CpAvkv1zYaO
+	f2/45zmk+sdCgHebr1JUMVeIkipjM7N2hpd04RSHCXHKx/mOgMSmOLTG2iLg7Y2FPnhHGV8Jl1A
+	==
+X-Google-Smtp-Source: AGHT+IGL+Wm1jNd7m+ybFuNU2jUmMjfKTuc0LP5Om5chV7UKr+Zgv5802SmwxpVwxz449nrAcik/ICqttWRD07CJYKs=
+X-Received: by 2002:a05:6402:3205:b0:5dc:5ada:e0c7 with SMTP id
+ 4fb4d7f45d1cf-5dcdb762c7bmr16753959a12.26.1738832558911; Thu, 06 Feb 2025
+ 01:02:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206000105.432528-1-mjguzik@gmail.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-0.998];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.995];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+References: <20250205193751.297211-1-jdamato@fastly.com>
+In-Reply-To: <20250205193751.297211-1-jdamato@fastly.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 6 Feb 2025 10:02:27 +0100
+X-Gm-Features: AWEUYZlwJSqtqB-4OOyEFkAsstBoQxZIbRm3_DU4qBR6mr5PmsTTexdXeHatwjg
+Message-ID: <CANn89iKgEd+T717kP=Bq7cSssr8ibh5t-+g6Ztybd+mkJFt8mg@mail.gmail.com>
+Subject: Re: [PATCH net-next v4] netdev-genl: Elide napi_id when not present
+To: Joe Damato <jdamato@fastly.com>
+Cc: netdev@vger.kernel.org, pabeni@redhat.com, sridhar.samudrala@intel.com, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Amritha Nambiar <amritha.nambiar@intel.com>, Mina Almasry <almasrymina@google.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 06-02-25 01:01:05, Mateusz Guzik wrote:
-> It is merely a trivial wrapper around getname_flags which adds a zeroed
-> argument, no point paying for an extra call.
-> 
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+On Wed, Feb 5, 2025 at 8:38=E2=80=AFPM Joe Damato <jdamato@fastly.com> wrot=
+e:
+>
+> There are at least two cases where napi_id may not present and the
+> napi_id should be elided:
+>
+> 1. Queues could be created, but napi_enable may not have been called
+>    yet. In this case, there may be a NAPI but it may not have an ID and
+>    output of a napi_id should be elided.
+>
+> 2. TX-only NAPIs currently do not have NAPI IDs. If a TX queue happens
+>    to be linked with a TX-only NAPI, elide the NAPI ID from the netlink
+>    output as a NAPI ID of 0 is not useful for users.
+>
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
 
-Well, the "extra call" in your changelog is a bit overrated. Such wrappers
-get compiled into a constant jump anyway - e.g. in my kernel:
-
-Dump of assembler code for function getname:
-   0xffffffff815edb80 <+0>:	endbr64 
-   0xffffffff815edb84 <+4>:	call   0xffffffff8131cad0 <__fentry__>
-   0xffffffff815edb89 <+9>:	xor    %esi,%esi
-   0xffffffff815edb8b <+11>:	jmp    0xffffffff815ed750 <getname_flags>
-
-And the jmp to constant is practically free on current CPUs.
-
-Overall inline function for this is I guess a more common way how we do
-things like this so feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/namei.c         | 5 -----
->  include/linux/fs.h | 5 ++++-
->  2 files changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 3ab9440c5b93..3a4039acdb3f 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -218,11 +218,6 @@ struct filename *getname_uflags(const char __user *filename, int uflags)
->  	return getname_flags(filename, flags);
->  }
->  
-> -struct filename *getname(const char __user * filename)
-> -{
-> -	return getname_flags(filename, 0);
-> -}
-> -
->  struct filename *__getname_maybe_null(const char __user *pathname)
->  {
->  	struct filename *name;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index e73d9b998780..85d88dd5ab6c 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2840,7 +2840,10 @@ extern int filp_close(struct file *, fl_owner_t id);
->  
->  extern struct filename *getname_flags(const char __user *, int);
->  extern struct filename *getname_uflags(const char __user *, int);
-> -extern struct filename *getname(const char __user *);
-> +static inline struct filename *getname(const char __user *name)
-> +{
-> +	return getname_flags(name, 0);
-> +}
->  extern struct filename *getname_kernel(const char *);
->  extern struct filename *__getname_maybe_null(const char __user *);
->  static inline struct filename *getname_maybe_null(const char __user *name, int flags)
-> -- 
-> 2.43.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Reviewed-by: Eric Dumazet <edumazet@google.com>
