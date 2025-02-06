@@ -1,46 +1,46 @@
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D371A9B2A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760081AB6C8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864359; cv=none; b=TthtyFWjmZz6+gvFARbaHcyerdPI/UdSQqFM+54mAA1ju584ackxZXV0FEKdxnOzgJkLzw7MY40R3e/MewUf3/3rJ20LnTUWYr0NAySVJoGgKjsY42+ZMgyr15o/jCewBMBeSaXD5XV3gPNT28dpqd+jtgNumftsUNSx2zn3jbI=
+	t=1738864362; cv=none; b=FHrtnGIXE9A4K7a3J0lXrhLz7KSWst9mHqGHRscw2hhIBfQvP+N5kTatuqxdRg4KeWKJP17cDmzqB7diGHv59vQP7OVsEhqoq6KVxCiq7ywCPjnj3yGsWaDX6g/gm73WpMgtYshvUJ0OLlqsbAQJN63C+UVX2G41v9euFMCP70s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864359; c=relaxed/simple;
-	bh=4jeXmYT9XZLE4PA0fI3aucFc2etq3iYuQtGNNdGwnLI=;
+	s=arc-20240116; t=1738864362; c=relaxed/simple;
+	bh=1XhyyCCvHVGrgc2qZtzstVFnnuc2NyPCbJs6DX26leU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y3czmN1orcpKHwNzspQgoLBByXZFqwkeZ5YF8Sdpd6A7OslWrcqzLHC7Oj+atdtdcp82WNr499xOrjRZvWGXmZo1EOaPa/QLftXfxSvwPcgzTK1GwVEH+4WQJt5+lwb8yQKN0/I6oFBDD6V1HbNA0fzPJ53ehh/XP7pbLrIgDRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Ck548AX0; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=aU0KaBbiuX745gQlSMeSsfjsw2H5Qy9vKuLnTe2B53GTQy1lqb66ovhoE7Szl5x1BON1iOC7cqVH9DCuRZfoFOEiwZtEpu8dxknUIhLOAYgbIZpzXOtYxCMrwBjeuu325j20AVKGy6DPh9Dmj4N+HlRU9cqMQguX74Od9ICfrso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=gcR7aD4V; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Ck548AX0"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="gcR7aD4V"
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl793btPzlgTv3;
-	Thu,  6 Feb 2025 17:52:37 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl7C6MgkzlgTv6;
+	Thu,  6 Feb 2025 17:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1738864352; x=1741456353; bh=AVJ8W
-	uxC4yXkdDdbjZk8+oDzRdxvNMJrvKPxyZ0bnBc=; b=Ck548AX0abEuF+/rHfqYM
-	tCu+9JO2ClToIbovsPCoU4VdJ7Ofx/vaGsSjRE7Lcy/p2aAWdmYum201V9YttROy
-	GZwIFwqpSBG7o2dTds6lutKjDRCWX22YoGEM51jBBJtfwoFyNWWVSM51ZVJzAO9C
-	1eyRGOcjQRrGTcUGEI5MSfMs+AT7Qvw/Aut4c4JWv+3WacDYynM7K7Gw/u71O0Rf
-	CKW66K/aOTOKa8wESUQabtlB6GegSOY8xmo+o+ZNLdl+Np3OHgkd87fITCZ6A1K4
-	L8W49zgSG3lY1lFNhdd936WRPQ7pXru9wOoTemsVWCGcKpKAeypsZjQbmAoINXtj
-	A==
+	:received:received; s=mr01; t=1738864354; x=1741456355; bh=3R22f
+	ZRWf9R9uo/otMDq30qkrxjKCLk2WY+RvkyRibQ=; b=gcR7aD4VrhcP29h+PeFOw
+	1l71lAnu1nJfTTo+6nwdgwU8ISKksf+iViGKN7TwQAiccCXijZEFtf1o3+zPXX7j
+	QdJ8uyIHcKjD2KBD2YzXRW9HFSeBEes1+bY81I7zU29ojLBf0656X9eLk5jW/APF
+	kYKCz7QUe6Kl4f6gnnE7r+YXle7tv5vw9WLejDrup2BYAye1/6qt0mpT34R3tsIa
+	chohLkhs1bCZ0rEEtfpyMP4LMxE9yiCfVyJHT7rSOCGaBlV2aPpMmK4OphWXdRSV
+	EAu4srlQSo0cxORfS/6EtMBbE5xoBhr/etOw4FMDa1GvaN1igXBiKmDnhev0tdqS
+	w==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Ys3KC083puXr; Thu,  6 Feb 2025 17:52:32 +0000 (UTC)
+ id NbPqWYJZofjK; Thu,  6 Feb 2025 17:52:34 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl7147q7zlgTxg;
-	Thu,  6 Feb 2025 17:52:29 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl742vPTzlgTxr;
+	Thu,  6 Feb 2025 17:52:32 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>,
@@ -53,11 +53,11 @@ Cc: Will Deacon <will@kernel.org>,
 	Jann Horn <jannh@google.com>,
 	linux-kernel@vger.kernel.org,
 	Bart Van Assche <bvanassche@acm.org>,
-	Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: [PATCH RFC 25/33] wifi: ath12k: Fix locking in error paths
-Date: Thu,  6 Feb 2025 09:51:06 -0800
-Message-ID: <20250206175114.1974171-26-bvanassche@acm.org>
+	Leo Yang <Leo-Yang@quantatw.com>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH RFC 26/33] mctp i3c: Fix locking in error paths
+Date: Thu,  6 Feb 2025 09:51:07 -0800
+Message-ID: <20250206175114.1974171-27-bvanassche@acm.org>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 In-Reply-To: <20250206175114.1974171-1-bvanassche@acm.org>
 References: <20250206175114.1974171-1-bvanassche@acm.org>
@@ -69,42 +69,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If ag->mutex has been locked, unlock it before returning. If it has not
-been locked, do not unlock it before returning. These bugs have been
-detected by the Clang thread-safety analyzer.
+Only unlock mi->lock if it is locked. This bug has been detected by the C=
+lang
+thread-safety analyzer.
 
-Cc: Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Fixes: ee146e11b4d9 ("wifi: ath12k: refactor core start based on hardware=
- group")
+Cc: Leo Yang <Leo-Yang@quantatw.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Fixes: 2d2d4f60ed26 ("mctp i3c: fix MCTP I3C driver multi-thread issue")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/net/wireless/ath/ath12k/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/mctp/mctp-i3c.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireles=
-s/ath/ath12k/core.c
-index 0606116d6b9c..212cd935e60a 100644
---- a/drivers/net/wireless/ath/ath12k/core.c
-+++ b/drivers/net/wireless/ath/ath12k/core.c
-@@ -1122,16 +1122,18 @@ int ath12k_core_qmi_firmware_ready(struct ath12k_=
-base *ab)
- 		ath12k_core_stop(ab);
- 		mutex_unlock(&ab->core_lock);
+diff --git a/drivers/net/mctp/mctp-i3c.c b/drivers/net/mctp/mctp-i3c.c
+index d247fe483c58..360eb6490483 100644
+--- a/drivers/net/mctp/mctp-i3c.c
++++ b/drivers/net/mctp/mctp-i3c.c
+@@ -112,7 +112,7 @@ static int mctp_i3c_read(struct mctp_i3c_device *mi)
+ 	if (!skb) {
+ 		stats->rx_dropped++;
+ 		rc =3D -ENOMEM;
+-		goto err;
++		goto free_skb;
  	}
-+	mutex_unlock(&ag->mutex);
- 	goto exit;
 =20
- err_dp_free:
- 	ath12k_dp_free(ab);
- 	mutex_unlock(&ab->core_lock);
-+	mutex_unlock(&ag->mutex);
+ 	skb->protocol =3D htons(ETH_P_MCTP);
+@@ -170,8 +170,11 @@ static int mctp_i3c_read(struct mctp_i3c_device *mi)
+=20
+ 	mutex_unlock(&mi->lock);
+ 	return 0;
 +
- err_firmware_stop:
- 	ath12k_qmi_firmware_stop(ab);
-=20
- exit:
--	mutex_unlock(&ag->mutex);
- 	return ret;
+ err:
+ 	mutex_unlock(&mi->lock);
++
++free_skb:
+ 	kfree_skb(skb);
+ 	return rc;
  }
-=20
