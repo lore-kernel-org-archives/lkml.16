@@ -1,107 +1,159 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45A323716D;
-	Thu,  6 Feb 2025 16:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C65237169;
+	Thu,  6 Feb 2025 16:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859141; cv=none; b=e6Md8Wy1YdQ0UAA+WW90iKGYSw3vWO1k23UI/ya3erYUaSTBfALdHtNqTyYIouPAl6j6JopMAO8/SSA+c30u9bJHJon6LBIYZ7dgLrkATzgSXUkifpLznAuBtYZfnyJ9l4nO8eI5gr7dFAIe7zG0BCuvBMJ6m45bDMMtH0uuwOg=
+	t=1738859143; cv=none; b=Mfx+bLV1OLiFnF3VbAE3AwZRNyBPSIhmFO2Cc+Q4jXLXkf4SMOjmC26J8VsyQMb0BsZ38f10frSpW8dxXUxIxGqrZ1XZIGc9R9jB76S2hiLbleNyk0K6ycNL3LDN67TuTSlJGZEFKO9kFqNfpmHdqOKKcGw4gg98Ov+MhCJUPuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859141; c=relaxed/simple;
-	bh=4uqqJDB/ASXenA6nnqZ12gew3Hu5FHhd7UoYp33CQDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEN/htlSivc895t7KZ5gUdu77/mrj9gXRqx0k8sXKlxLYFz25exJPQ1vYk+nkW1r/5fg0gsfgCH+IAvZB4KQlOf3x4szCYvFCSGmj8GGG9uW5yhVq2abzEADi5m6pvmJZ+OJy6LgG7JFd1CV/5UZu+p6z0uZuf4AD8PBaADDtO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=NpgVwRp6; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1738859143; c=relaxed/simple;
+	bh=UBM7K5jIs1vjeXeRhtp2A/7wFqEP9V/8yrHRCTla9to=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VjRBYcZjIyNSsjVqExuPxMh1h4fLfmKatzVVdroOBH9/Qa2XIYlNhSlFENeyUf/cwg5SooxBO38ZT6X3YuSEw+BpZp63T/85kP+7Gvjfetxxd5TQQWkpPXoarb4qsFrKDw8ThInN+yuyFv4meWy2FE+87pPraiqrObqOehdtAgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CaDhJcyD; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="NpgVwRp6"
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516FT0UU013307;
-	Thu, 6 Feb 2025 15:30:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pps0720; bh=lVu6Q0uwocQaTsZq0ZI2bsWEks
-	bNWiitC2dNwQ1UD58=; b=NpgVwRp6phTqNU2j66HgQBfuiRUWQQbCLj3lu3iZ+t
-	YUeAq3ORuX7iNwGiyUKFEcTxmOYoH5Nfm3V9P4RvYcGGA+oKxKJpnkyLxbZCbnyH
-	zmOFtBKp6kw/1Zp3TUgELosoXtrhq8yleuWXjRSGdXlhXj6n7n0bMW9GGVhm30N5
-	GhKRndEmMv8RSeV0az4DBCd2Dlah10FNcWU8haWbp9oo1Sm4Th89V27LHOqfi3ah
-	HiUkk4vS3XXm69WUKSALUUwaxYlZENjkR7b8QQDt0jEXeuVi8Kpypvw4swnddrjQ
-	IkKoCIN9nrrpKwZvZBnqBJHvGC4XXQTzIsIe14/iIUeQ==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 44myrx80ht-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 15:30:28 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 4A2E5801AC8;
-	Thu,  6 Feb 2025 15:30:26 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 0629E80FDCB;
-	Thu,  6 Feb 2025 15:30:20 +0000 (UTC)
-Date: Thu, 6 Feb 2025 09:30:18 -0600
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Naman Jain <namjain@linux.microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-        srivatsa@csail.mit.edu, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
- for debug builds
-Message-ID: <Z6TVirifoG1c6TgX@swahl-home.5wahls.com>
-References: <20250203114738.3109-1-namjain@linux.microsoft.com>
- <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
- <20250205095506.GB7145@noisy.programming.kicks-ass.net>
- <0835864f-6dc5-430d-91c0-b5605007d9d2@amd.com>
- <20250205101600.GC7145@noisy.programming.kicks-ass.net>
- <e0774ea1-27ac-4aa1-9a96-5e27aa8328e6@amd.com>
- <xhsmhed0bjdum.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CaDhJcyD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738859142; x=1770395142;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UBM7K5jIs1vjeXeRhtp2A/7wFqEP9V/8yrHRCTla9to=;
+  b=CaDhJcyDodgwHnZnsXXn0Pv0mHF7WfbQ5pmlOQBGnTThJEnU25QeTCqX
+   jTLsCRjWhHF7Uug1bE4i7gnK3a3XTcz9KOBCUTlxPPLzARpc8x08H7yP3
+   veXRz8ZLl+INpTQIOUg73irWLaigKxJZqRDM5NTVhZPd7nOkPS+ILn5FZ
+   4qEPHJpezHlG1ccC7XDDsNDUYgHSxlvBj/fhsWuNxUHH97EYj5MQkCXUQ
+   tOuS5QbPzXKl5ikn1uIOWgsjz6jSQEf7CciLMZ5nUfGLmW2fv/JkvELQB
+   ZRmlsrptLxpy+P38gb5GB5L6Xf2G/i9at0NtuqTcYinszPkvtGcMBbsWz
+   w==;
+X-CSE-ConnectionGUID: pbKT6tIvQpey3d4V41arBg==
+X-CSE-MsgGUID: TNwajMkZRfOVK1NFXLlxeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50863587"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="50863587"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:25:17 -0800
+X-CSE-ConnectionGUID: L1SN4zSdQc+LBbC9Z5HnGQ==
+X-CSE-MsgGUID: 47pp94E+Q864Yq+XRGQzMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115338100"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 06 Feb 2025 08:25:14 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id ACF41EE; Thu, 06 Feb 2025 18:25:12 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Kevin Lu <kevin-lu@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH v1 1/1] ASoC: tas2781: Switch to use %ptTs
+Date: Thu,  6 Feb 2025 18:23:39 +0200
+Message-ID: <20250206162339.1127836-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmhed0bjdum.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-X-Proofpoint-GUID: mXK11XOH6znOrAJAuKKgKjL0OH5ZmHH6
-X-Proofpoint-ORIG-GUID: mXK11XOH6znOrAJAuKKgKjL0OH5ZmHH6
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 clxscore=1011 phishscore=0 lowpriorityscore=0
- mlxscore=0 priorityscore=1501 impostorscore=0 spamscore=0 mlxlogscore=428
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502060126
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 04:24:17PM +0100, Valentin Schneider wrote:
-> 
-> If/when possible I prefer to have sanity checks run unconditionally, as
-> long as they don't noticeably impact runtime. Unfortunately this does show
-> up in the boot time, though Steve had a promising improvement for that.
+Use %ptTs instead of open-coded variant to print contents of time64_t type
+in human readable form.
 
-Just to let you know, I had other tasks interrupt me, but I'm back to
-looking at this and you should see a new version from me within the
-next few days.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/sound/tas2781.h         | 1 -
+ sound/pci/hda/tas2781-spi.h     | 1 -
+ sound/pci/hda/tas2781_hda_i2c.c | 6 +-----
+ sound/pci/hda/tas2781_hda_spi.c | 3 ---
+ 4 files changed, 1 insertion(+), 10 deletions(-)
 
-Thanks,
-
---> Steve
-
+diff --git a/include/sound/tas2781.h b/include/sound/tas2781.h
+index 72d2060904f6..0f1e585635bb 100644
+--- a/include/sound/tas2781.h
++++ b/include/sound/tas2781.h
+@@ -161,7 +161,6 @@ struct tasdevice_priv {
+ 	struct mutex codec_lock;
+ 	struct regmap *regmap;
+ 	struct device *dev;
+-	struct tm tm;
+ 
+ 	enum device_catlog_id catlog_id;
+ 	unsigned char cal_binaryname[TASDEVICE_MAX_CHANNELS][64];
+diff --git a/sound/pci/hda/tas2781-spi.h b/sound/pci/hda/tas2781-spi.h
+index ecfc3c8bb821..7a0faceeb675 100644
+--- a/sound/pci/hda/tas2781-spi.h
++++ b/sound/pci/hda/tas2781-spi.h
+@@ -88,7 +88,6 @@ struct tasdevice_priv {
+ 	struct mutex codec_lock;
+ 	struct regmap *regmap;
+ 	struct device *dev;
+-	struct tm tm;
+ 
+ 	unsigned char crc8_lkp_tbl[CRC8_TABLE_SIZE];
+ 	unsigned char coef_binaryname[64];
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index 0e42b87dadb8..87dcbf88bff6 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -594,7 +594,6 @@ static int tas2781_save_calibration(struct tasdevice_priv *tas_priv)
+ 	efi_guid_t efi_guid = EFI_GUID(0x02f9af02, 0x7734, 0x4233, 0xb4, 0x3d,
+ 		0x93, 0xfe, 0x5a, 0xa3, 0x5d, 0xb3);
+ 	static efi_char16_t efi_name[] = L"CALI_DATA";
+-	struct tm *tm = &tas_priv->tm;
+ 	unsigned int attr, crc;
+ 	unsigned int *tmp_val;
+ 	efi_status_t status;
+@@ -629,10 +628,7 @@ static int tas2781_save_calibration(struct tasdevice_priv *tas_priv)
+ 		crc, tmp_val[21]);
+ 
+ 	if (crc == tmp_val[21]) {
+-		time64_to_tm(tmp_val[20], 0, tm);
+-		dev_dbg(tas_priv->dev, "%4ld-%2d-%2d, %2d:%2d:%2d\n",
+-			tm->tm_year, tm->tm_mon, tm->tm_mday,
+-			tm->tm_hour, tm->tm_min, tm->tm_sec);
++		dev_dbg(tas_priv->dev, "%ptTsr\n", tmp_val[20]);
+ 		tasdevice_apply_calibration(tas_priv);
+ 	} else
+ 		tas_priv->cali_data.total_sz = 0;
+diff --git a/sound/pci/hda/tas2781_hda_spi.c b/sound/pci/hda/tas2781_hda_spi.c
+index a42fa990e7b9..d91b19602485 100644
+--- a/sound/pci/hda/tas2781_hda_spi.c
++++ b/sound/pci/hda/tas2781_hda_spi.c
+@@ -802,7 +802,6 @@ static int tas2781_save_calibration(struct tasdevice_priv *tas_priv)
+ 	static efi_char16_t efi_name[] = TASDEVICE_CALIBRATION_DATA_NAME;
+ 	unsigned char data[TASDEVICE_CALIBRATION_DATA_SIZE], *buf;
+ 	unsigned int attr, crc, offset, *tmp_val;
+-	struct tm *tm = &tas_priv->tm;
+ 	unsigned long total_sz = 0;
+ 	efi_status_t status;
+ 
+@@ -849,7 +848,6 @@ static int tas2781_save_calibration(struct tasdevice_priv *tas_priv)
+ 		if (crc != tmp_val[3 + tmp_val[1] * 6])
+ 			return 0;
+ 
+-		time64_to_tm(tmp_val[2], 0, tm);
+ 		for (int j = 0; j < tmp_val[1]; j++) {
+ 			offset = j * 6 + 3;
+ 			if (tmp_val[offset] == tas_priv->index) {
+@@ -882,7 +880,6 @@ static int tas2781_save_calibration(struct tasdevice_priv *tas_priv)
+ 		 */
+ 		crc = crc32(~0, data, 84) ^ ~0;
+ 		if (crc == tmp_val[21]) {
+-			time64_to_tm(tmp_val[20], 0, tm);
+ 			for (int i = 0; i < CALIB_MAX; i++)
+ 				tas_priv->cali_data[i] =
+ 					tmp_val[tas_priv->index * 5 + i];
 -- 
-Steve Wahl, Hewlett Packard Enterprise
+2.43.0.rc1.1336.g36b5255a03ac
+
