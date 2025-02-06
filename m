@@ -1,110 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.65.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5BF226869;
-	Thu,  6 Feb 2025 10:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ABF226553;
+	Thu,  6 Feb 2025 10:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.65.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837492; cv=none; b=mzyzYSAUEQMh0tYwjPTn9t7oxF0+nHbfv2lh2IFKGGdQZW+TM5uQP75dpySQnXwHrwNhSHcrleckHZJAxuQUxxEwlcq4HNyj/RCiV55BALant9D9nZsrwRXBKd9nEC96ICFZKxCo4JoU1JevohzRy+jeiKHT6woqJum3BDP5x0E=
+	t=1738837645; cv=none; b=Ok3rQiepy+YWPfcxVQCLbxkCk0GUkRfr6ZLmWOIPF6JwoUAThpHTPxdNbMIsOCuE3BVR10KcFgNNEO1XaRskdQhojaA+/ITbWtJ1XO4OEY8GtxNhAspq2c1esFBZDFa5pjLZIS/TPLmYziIrch4+AJx0unlh6Evl2tajS4t07xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837492; c=relaxed/simple;
-	bh=8NibMNg1KpbAk3gyqnaDTpTU/kJdok1+bj45BuBRHt4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=J33u9SjfnnPm2r6XtmQTvXkrN+3Ml1Nydgj5RrF+LeulEyp4ygJl9P1BdtWbCpS5+yU9ZyxVUsoLjDKMaBjHu1jhK42W4iLzSNrZo7OUjYezBvFGmi8t+deiC7ciPLRVfRu4vmNcozadkVrMXXme8/HG8AOr6BYbp+iEbzMgWQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lW4fVloV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738837645; c=relaxed/simple;
+	bh=ty4Eujbi3JXutVV8JchgtpSnzXyS57fNPP7x8fwv3Cc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Elccwfj5ewuui8SUHiXhvwUYUCJBW5rJ/JWA890MSOvKgC/F3IkLXBV6xEYUogWI7LHbKua2mj6kA+J9rZ2lyuZxZCweFOCPVRKEFfg8J+mFwX7gKWsmjKZS4B9P+mlZpDWxO82YPqUJJETBTuT9o+O8I1TbNKni1ZjA2Hk3seM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dmumk0CX; arc=none smtp.client-ip=114.132.65.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lW4fVloV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6924FC4CEDD;
-	Thu,  6 Feb 2025 10:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738837491;
-	bh=8NibMNg1KpbAk3gyqnaDTpTU/kJdok1+bj45BuBRHt4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=lW4fVloVz9Io3J8oEN7v4cAKcg7dA4GPvPOKaTZAJwK5PjTxwESlWVLDPvcszxrDk
-	 Rs8hatmSaIqc+Rztpi9gUHO0hgVBuQESqNpWC7l5xBNKg/ycmcsV2OnI2eOxm+eIrl
-	 aadxYmUpzYn93Uljgk6s/jMnI7v6/P32GfVVicfFwQLcwZl+A1YP2SOSqyGNeo8Y12
-	 Ne1J132begwnVpNk3ZgHbP66V28voQXTMoI5Ms8w60i8pk83nbIBpZMA/Lh658Ekhv
-	 XJnI59/5yfStDblAYp/tG5czHQ9k9BNDnm/zH9TM9cK25GSOVaguqbykGq3Fh1GfPt
-	 KbbKjdSxVD6MQ==
-Date: Thu, 06 Feb 2025 04:24:50 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dmumk0CX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738837566;
+	bh=flV33qDbCktrhjYaUTG2DPPSAd2dWkCXdepsMeSnBJ8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=dmumk0CX8WGpa/Z82vdJ4IRu6Bf7eY4i+16r2YCJBPPqdHz1KUOPLZ6THwMWcWKfY
+	 oH34pGfYJAaJNC7xXJXIdhROnHnwvlDTn1iCL3vf+y1Fd3J/ngG/wQX+U918uuD9rO
+	 xuZfXNBYRvnegedfhl08AkhXr86RkexYGqzET4SM=
+X-QQ-mid: bizesmtpip4t1738837559tgprquo
+X-QQ-Originating-IP: YmVy3874EstnoparGauVHa6MhyYnp0d0n3DAgaqWRRQ=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 06 Feb 2025 18:25:57 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 5688250677626398646
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	tsbogend@alpha.franken.de,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	WangYuli <wangyuli@uniontech.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: [PATCH 5.4~6.13] MIPS: ftrace: Declare ftrace_get_parent_ra_addr() as static
+Date: Thu,  6 Feb 2025 18:25:48 +0800
+Message-ID: <6832B20AFE3B7328+20250206102548.95302-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Kamlesh Gurudasani <kamlesh@ti.com>, Will Deacon <will@kernel.org>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Praneeth Bajjuri <praneeth@ti.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Vignesh Raghavendra <vigneshr@ti.com>, 
- Manorit Chawdhry <m-chawdhry@ti.com>, linux-crypto@vger.kernel.org, 
- devicetree@vger.kernel.org
-To: T Pratham <t-pratham@ti.com>
-In-Reply-To: <20250206-dthe-v2-aes-v1-1-1e86cf683928@ti.com>
-References: <20250206-dthe-v2-aes-v1-0-1e86cf683928@ti.com>
- <20250206-dthe-v2-aes-v1-1-1e86cf683928@ti.com>
-Message-Id: <173883749024.411608.17744779894418319775.robh@kernel.org>
-Subject: Re: [PATCH RFC 1/3] dt-bindings: crypto: Add binding for TI DTHE
- V2 driver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: M135ko5REW2alb6372CGYhiZ+aMCzPVWw0sIl38J0eO6ryeBc6Ks962c
+	0j2G+sdqngN6dk/kIK+VYDL0hE737vMoAwUC2TGPKF28HN0ZRzBcfbBeuoIo1vjHJkQVT1h
+	ckRfpkFEV1s/Q7YSJKan95K+MpbjGv14ldicVHVv6kCy+gmqKYBbUeNX/vHL8lge0OQGfL/
+	eeIVG5dXGx8VkKoOTOFbaZvRPvz2g9IGH36jyGwxs6oFDtRKWT91zPVbhom+c1ro4TggioN
+	zzsn6/Hpm1Oc0LTW93MQ4f+iWQaAbagtE4erK1pYClcN99TFZswge9mSTKLYbWlZcHiYIIP
+	Asp0TPl6450JJgK16aFAUdogcrt8Awsq68Tagz/gjQL003dSkfw4qhJv+b9rGtK3MDhtbsc
+	VYuoruhLA7OHRjdVy9mtGEjr2GWGXa9JNsXtYV/bpEE/K/cjA7mWKA4PJAwBy614IzE6mtT
+	RRJE1a22a92e9dChwO+UaXJOTDk214L5BhGPRt9ijlZ6urypd6Aqm3m+9SAL5rTnrIviEP6
+	ejCw5wPE8UoHXOC8bunnN5jN+cUFzCTxQhqMMBvjiv64BEt9DA1uul+1zKz6uGefvmGysFS
+	Yhkexjloyj7OWXIft06NlctVwtVqqg7nkLQk2acpO5Xi0P3Xfc2fukPGJg0AJTrmzPOYSng
+	9Iy5iYQkKPJzUx2+jh0rR3j38Gr+n7Y66F0xxn4838QMk3OOCtKpS+j1IN4ocZx+LOQ6Hmp
+	1F43Iup9vyzeJRYj9vEjCrvH0NaUlB4f2RHKk1S+dOoanKA58GLrIGhBrCqANOi02s2RH/7
+	3Cv1e3MMeq0r/UYPwL07NAa8dC0FJFhk70mLSMFdtegU0Ia493oLHUBFBKIqOjqwEeIRaSV
+	crV5yWGeUEj+LSzgqs6nuE3VM9eHGnyTZmwaCt/sQ1WOrFTvsk3/N+mPom4BmJnXWYQditU
+	Dn2yYcUIMQh3FhwQFc8jQ3ca6w8u1eBhBDZcfbfQrDk4OzA5dV0F1HlPYDdV+3wJvkKspI6
+	z/syDtYQ==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
+commit ddd068d81445b17ac0bed084dfeb9e58b4df3ddd upstream.
 
-On Thu, 06 Feb 2025 14:44:30 +0530, T Pratham wrote:
-> Add new DT binding for Texas Instruments DTHE V2 crypto driver.
-> 
-> DTHE V2 is introduced as a part of TI AM62L SoC and can currently be
-> only found in it.
-> 
-> Signed-off-by: T Pratham <t-pratham@ti.com>
-> ---
-> PS: Please note that the dmas option in dt-bindings is subject to change in
-> future as dma driver is not finalized yet. Any updated changes will be
-> sent in the next version of the patch.
-> 
->  .../devicetree/bindings/crypto/ti,dthev2.yaml      | 50 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 +++
->  2 files changed, 56 insertions(+)
-> 
+Declare ftrace_get_parent_ra_addr() as static to suppress clang
+compiler warning that 'no previous prototype'. This function is
+not intended to be called from other parts.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Fix follow error with clang-19:
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/crypto/ti,dthev2.yaml:22:22: [error] string value is redundantly quoted with any quotes (quoted-strings)
-./Documentation/devicetree/bindings/crypto/ti,dthev2.yaml:23:22: [error] string value is redundantly quoted with any quotes (quoted-strings)
-./Documentation/devicetree/bindings/crypto/ti,dthev2.yaml:24:22: [error] string value is redundantly quoted with any quotes (quoted-strings)
-./Documentation/devicetree/bindings/crypto/ti,dthev2.yaml:45:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
+arch/mips/kernel/ftrace.c:251:15: error: no previous prototype for function 'ftrace_get_parent_ra_addr' [-Werror,-Wmissing-prototypes]
+  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+      |               ^
+arch/mips/kernel/ftrace.c:251:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+      | ^
+      | static
+1 error generated.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml: ignoring, error parsing file
-./Documentation/devicetree/bindings/crypto/ti,dthev2.yaml:45:1: found character '\t' that cannot start any token
-make[2]: *** Deleting file 'Documentation/devicetree/bindings/crypto/ti,dthev2.example.dts'
-Documentation/devicetree/bindings/crypto/ti,dthev2.yaml:45:1: found character '\t' that cannot start any token
-make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/crypto/ti,dthev2.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/mips/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-doc reference errors (make refcheckdocs):
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/crypto/ti,dthe-v2.yaml
-MAINTAINERS: Documentation/devicetree/bindings/crypto/ti,dthe-v2.yaml
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250206-dthe-v2-aes-v1-1-1e86cf683928@ti.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
+index 8c401e42301c..f39e85fd58fa 100644
+--- a/arch/mips/kernel/ftrace.c
++++ b/arch/mips/kernel/ftrace.c
+@@ -248,7 +248,7 @@ int ftrace_disable_ftrace_graph_caller(void)
+ #define S_R_SP	(0xafb0 << 16)	/* s{d,w} R, offset(sp) */
+ #define OFFSET_MASK	0xffff	/* stack offset range: 0 ~ PT_SIZE */
+ 
+-unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
++static unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+ 		old_parent_ra, unsigned long parent_ra_addr, unsigned long fp)
+ {
+ 	unsigned long sp, ip, tmp;
+-- 
+2.47.2
 
