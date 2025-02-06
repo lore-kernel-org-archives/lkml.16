@@ -1,99 +1,116 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED75199385
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E25194A67;
+	Thu,  6 Feb 2025 18:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865619; cv=none; b=ZYHbRAChj6qOx2yD7qD+QLlpVlmWETvgFzbWAVH2KamU30EWjZhiYdXno7JjdwRgCp/NZJ9I/t6s+wnn6/LRPQZGB3B35pVYTYp9NtHphJEEHGpSvcvgupfAe8S1yWEnW8kHv5kxPyMyxowOxYmMFFmCnip0ZSQmwuuw0K61hME=
+	t=1738865632; cv=none; b=RKUQN+xaU/bpSRVI8uDkxQnFLIVhJeFhwsOOkpvaYi6vRyLwoaY+92JpPmF+/diLyEKe4kU9Vn5ORIzuqrSpWrVW/+oXJ1zwuSw3GKI7HIouvyLu9a3ZAb3sPJEgjngCbjA4foiHX6Ik4zoP5AgtQYFeeniUznUs8P8nAQTCRsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865619; c=relaxed/simple;
-	bh=V79jeN0tsHJXSx3cEymAS1MszNtH6Y9+4E36m1Ag3NE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fozwflMlvwlFzPIJmYniaZNi12m9FiuFJCXHrm3PfSi47djjWGAgDSEV6rrRGMMgUjVQuChPIigHTsLleZZ9mXxuOEfdVOnFDrPcZGuptKMK0SQeVNPEBPLsIorit83PP1Cw1uMnk24sF5kLLyt9GBmWJjaSY+NnVeSo4y5Nggk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AaZ/UHGp; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738865632; c=relaxed/simple;
+	bh=qpRlHeJcZ8Rg6GiEylH3nJ6t0qFUQU58DAXj2IT1v4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/fup2cl6LSQC55H2Lg/dAAsxEGe8+HxelwJuqioLZ45Yp/BnC+eoOWG4kMyAdzBcq+T/zgOtou4GZOmBkLBwCB64HBy5Bk9zfrwMnPkJD/lagxseR9dwXYtJ/UrEI02ICS3jW/UqaTTcWJtXnAaD4UmOb64r9R0dzghiT0/kts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuAfXx4Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AaZ/UHGp"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54287a3ba3cso2053581e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:13:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738865615; x=1739470415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rsc6zr7PmrWPbYfK/47bMrwsd9aMEq1+Dk9kwGENv5o=;
-        b=AaZ/UHGpi7R63veGtDNUX/KUi0ollf5xpfU/DhTcTDQ4iA6uWb3yyrsjAeKZw/oePI
-         xW3EWZEapR+QkD+6uTztDcKl0r1rId57pmTOId9xkQ4josu68ip55NbiARgDk2UmKLHp
-         GMHC0Vpha4s2Cmfv/3po5DdsPmuc6vaN9fz7X+B5ZTLlumpRbvzEdXnE1WaQo3D9KMHk
-         ZV2vRNecSxhIAPFE/lozCh6fK+fogz5hoOktRheB90G60ojZIB34dUpqVLFPs/nKYInd
-         cT7mUM6y8dOw0CCmSxNQV9TZwTJlB9fgpCmQjV3bzXzVRXcTk2nFJ8a22fPzG90BG5Qb
-         lTZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865615; x=1739470415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rsc6zr7PmrWPbYfK/47bMrwsd9aMEq1+Dk9kwGENv5o=;
-        b=jXke56Z6zCEWgs57zJd9Ke9dcXrjlSCLr6PjAFrbCP07gLkHxF3pUqajgtBUi/zjXn
-         iaxD5qDOxIKP0h6B8CV3MZiy8cZqdXF5UK4LFQU66aEPW3KcIAwUI0GUmcN7VJ0XytWn
-         ZOrgBHaR07SEpKqTB4QWpvro6fZY2vHYBnctvCLNy44wfz4UZMpgKGXQyYlgGx/6UEB5
-         eQ6n2KxGL/2kB/ca9YF7pBz0VRZRlshaH5yOATbsHBJVr7iAEoY8Q2JirErnDeEE8od6
-         omLmx+/03I+7Ssg5cV20FovLugwP0NNPzOK1RWK8QZXEY4+rTqQeK2P6+8LP6CuP9H1r
-         ZbEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlSefw25qYDlfbaSRnjVM8xaDVvnM51rancZ1jsa6o4GdWIUQQc6SrBFNE770VICOT7S3DXrIzjuoIN+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+tMyOLLiieBJKPqRXxu6rTZmoDqpGOOhh+AacXPdbA2fdWUtu
-	CsgjsHEHD/nMod/WYCB9GONkXwWp4KoSl/KV1xPmX5BvUsTaa1/6uEEnXXKtCxNhbRxC+2l1Zii
-	yTP2JqTeVVI/mqP1Y75leNq5uAczRKFPQ9mGQpA==
-X-Gm-Gg: ASbGnct44GRafH0KRRlF30d9xLq0JzzcSrStIiAOyguY/T1lqbZSHoFjoTc8IVjKMK+
-	OF7lbJGo4F+f/3bl7HYPYjgQwTSYl+guvIKjMe/y8um2DzpIykmrpLjONEQm9zlLju7Rq4VA=
-X-Google-Smtp-Source: AGHT+IFwrBUSdTF33fVZo5ZV4gid8WDGNMNJOaEdEoEhmoUQDAR23eXv8h1spnhBCw68+AF8aIOa5q/drMpa+oLxkek=
-X-Received: by 2002:ac2:5f66:0:b0:540:2fbb:22fe with SMTP id
- 2adb3069b0e04-5440e6b96aemr1178814e87.26.1738865614800; Thu, 06 Feb 2025
- 10:13:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuAfXx4Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A66FC4CEDD;
+	Thu,  6 Feb 2025 18:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738865632;
+	bh=qpRlHeJcZ8Rg6GiEylH3nJ6t0qFUQU58DAXj2IT1v4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZuAfXx4ZNiYZ3TZP7ZCllR1EQpRwKvsaMCxW7EeC61cyMdVUePlhC8egRPP7pOOjT
+	 ybgmbOEqGeixDpRnUWEnwAgC/sjzJ57umRUGkIhKpHHZGKhyuRYjS+uTsar8qHREMP
+	 XCyXzAQNqTISYzEaeJeRc6SqI9YAoExu6ZkjGraoFR7Z02QKUxbckRMAJ6829veUxI
+	 i9irRJ3mbxm3gs5eyp9H3gh7zP3xK8IwYR43SmtPJWjyQG1LgZZ/+ZjHucmGxfo1Rp
+	 AbaD2a6rE3ujFdrrs1d/0wUMRcJjaFlrLCEvw/vRrMGX+lR93t1BsxP64h97TAlntu
+	 XscmKC2irtFNQ==
+Date: Thu, 6 Feb 2025 18:13:47 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>,
+	neil.armstrong@linaro.org, quic_jesszhan@quicinc.com,
+	airlied@gmail.com, simona@ffwll.ch,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: vendor: add csot
+Message-ID: <20250206-overlaid-eastward-610a0d6e34cd@spud>
+References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
+ <20250206131300.1295111-2-yelangyan@huaqin.corp-partner.google.com>
+ <CAD=FV=UfWJoUsKzYMkyU3U4Yn1ufAs=NHMCDL+db887Uec9fww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com>
-In-Reply-To: <20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 19:13:23 +0100
-X-Gm-Features: AWEUYZniqNW7wQtQ8_C815KDVnvw_narU0YUPqt-9SDoXe8RaCViVJAVIYjHGNM
-Message-ID: <CACRpkdb2fDukNdrzhcVi5+siY_HO=ndLBOCRH0Yxcs_bZFaaKA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] gpio: bcm-kona: Various GPIO fixups
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Markus Mayer <mmayer@broadcom.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BCdvD9ZIbZN+8WvF"
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UfWJoUsKzYMkyU3U4Yn1ufAs=NHMCDL+db887Uec9fww@mail.gmail.com>
+
+
+--BCdvD9ZIbZN+8WvF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 6:46=E2=80=AFPM Artur Weber <aweber.kernel@gmail.com=
-> wrote:
+On Thu, Feb 06, 2025 at 09:12:45AM -0800, Doug Anderson wrote:
+> Hi,
+>=20
+> On Thu, Feb 6, 2025 at 5:13=E2=80=AFAM Langyan Ye
+> <yelangyan@huaqin.corp-partner.google.com> wrote:
+> >
+> > Add "csot" to the Devicetree Vendor Prefix Registry.
+> >
+> > Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/D=
+ocumentation/devicetree/bindings/vendor-prefixes.yaml
+> > index 42d14899d584..375f1f7c79ef 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -336,6 +336,8 @@ patternProperties:
+> >      description: Crystalfontz America, Inc.
+> >    "^csky,.*":
+> >      description: Hangzhou C-SKY Microsystems Co., Ltd
+> > +  "^csot,.*":
+> > +    description: Guangzhou China Star Optoelectronics Technology Co., =
+Ltd
+>=20
+> Doing a `git log` on
+> `Documentation/devicetree/bindings/vendor-prefixes.yaml` shows that
+> most patches use the subject prefix `dt-bindings: vendor-prefixes`,
+> not `dt-bindings: vendor`. If device-tree folks care about this
+> difference and they don't want to fix it when applying, they might
+> request you to send a new version.
+>=20
+> In any case, that's fairly minor so I'm OK with:
+>=20
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>=20
+> I would assume this will go through the DT tree, not drm-misc. If this
+> is wrong then someone should shout.
 
-> Fixes two issues that were preventing GPIO from working correctly:
->
-> - Lock/unlock functions tried to write the wrong bit to the unlock
->   registers for GPIOs with numbers larger than 32
->
-> - GPIOs only initialized as IRQs did not unlock the configuration
->   registers, causing IRQ-related configuration (e.g. setting the IRQ
->   type) to fail.
->
-> Also includes a minor fix to add a missing newline to an error message.
->
-> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
-> (DTS not yet in mainline).
->
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+idk, probably the whole series should go together via drm-misc.
+%subject can change if there's a resubmission, otherwise
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+--BCdvD9ZIbZN+8WvF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yours,
-Linus Walleij
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T72wAKCRB4tDGHoIJi
+0j/SAPoC/C0pCB6Rfsu3yKehTDKPZcAfV2TvGOVKD5gwb5RWPgD+PFLgD3XA0PVE
+VHMkn6PRxKBvUAwsB1Vmq2uHw3SItQE=
+=gFPY
+-----END PGP SIGNATURE-----
+
+--BCdvD9ZIbZN+8WvF--
