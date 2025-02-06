@@ -1,148 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128F219CD01
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5588F19ADB0;
+	Thu,  6 Feb 2025 18:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865472; cv=none; b=WIBBUTx5/CUMW2d/MT9BhegGVaFhsLZPFVLlHSfS27IfSY0mfBw2+a5cfCblwrqPL5u4wyLg0GXS1ZA67GDh9yRT+fNgxCVx+BtICcYl09Q1lyvJLki/Rldpew5XaQOQ5FVT7f5gpPT1eGta1ZjpIOXiYIp2HJKFGlRUp87OWLQ=
+	t=1738865477; cv=none; b=mMgRQkcF7JCzQkH9l0LNvUelrstLuYPiI4pqQxd2KvvdqFmputyHA6YCGFV8hnUWJH/mTdXl/x1A1mcbl6h52s0QI76vvr98T8oFt0kbXf+ovQleBLv6VUkmSOKKeyc3qNSjpjg7xS2OnayRcjiS/sB5ZXus3Cm2JX9eerdtztE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865472; c=relaxed/simple;
-	bh=L1Ng9lldW/83WhLxtsVxj1Z34scX9+JOOnEphNXYxHw=;
+	s=arc-20240116; t=1738865477; c=relaxed/simple;
+	bh=9vRyEHJHFpcr3sE+aLJw6NFhHWVoNdgXB+W5Pdi5tVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTH2iDfNmiW7eGr1cs+EHZVkcwnvcX2wcobRCvXv4fXcAM8PlTHQIcUENMAMFU/NUyTdnSzBU4XCy9nw7M94kE8cHmAADVeKOvj65SB0sMHRk0++5PdlTqDOMNIMkE3aIw54hV9xa8mTGqHCAgJ9fSdC8sh3n34RoW+Zg86balU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JfcbzD8w; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jO19+uzlmN5qIlKyIr45LGf35tIL4WVanv2pyQrXxkV7ChX3FiA8mUicQXk8QCVX00DNm6jMOYbhT3xFYcPwb8t9ykhrdVdHy4GeXY/4brFFoXcycGMYPlukybCyjn7ClVcku+VtNS1jQd/9Pfo8uJJ17HACQ6HRyGnb7f156jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aXtKdv84; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JfcbzD8w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738865470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1Ng9lldW/83WhLxtsVxj1Z34scX9+JOOnEphNXYxHw=;
-	b=JfcbzD8w2MH4vZawEMef8waf1OIJ3Rzy94FfCrAcCE0qpdwq1/pAbxGDnJIMr4BTRcQBph
-	Ixl6rm8+ZFSYGcdGObKvRtSSciwo5c1OjtY2KFNoF1QR20DII/TvqN0MRhg0nYf89s6Gb6
-	ZUS1SEKsZ3A7oo0buZ6IkapUWwCiLWY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-257-8E3rdXJoPkCOp7n7f2PNnw-1; Thu,
- 06 Feb 2025 13:11:05 -0500
-X-MC-Unique: 8E3rdXJoPkCOp7n7f2PNnw-1
-X-Mimecast-MFC-AGG-ID: 8E3rdXJoPkCOp7n7f2PNnw
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B6E61955BC0;
-	Thu,  6 Feb 2025 18:10:26 +0000 (UTC)
-Received: from localhost (unknown [10.2.16.145])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EA005180087A;
-	Thu,  6 Feb 2025 18:10:21 +0000 (UTC)
-Date: Thu, 6 Feb 2025 13:10:19 -0500
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Albert Esteve <aesteve@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
-	German Maglione <gmaglione@redhat.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-Message-ID: <20250206181019.GA413673@fedora>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com>
- <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z6S7A-51SdPco_3Z@redhat.com>
- <20250206143032.GA400591@fedora>
- <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aXtKdv84"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738865477; x=1770401477;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9vRyEHJHFpcr3sE+aLJw6NFhHWVoNdgXB+W5Pdi5tVE=;
+  b=aXtKdv84E5An8lvTcMTlolTkvUGZz1pGk/JfPjDftDK7m/372GRBy8dl
+   fLOnH+XNWQwY8nvMZhAvKSJzqiaoX74HHlXHeLqs1lrzVqTVYbU+HgZGX
+   eHEH0pVVqJV+z3xLgSPHdWgm9Daq7Cf3j+71NKpNH/2ttmu4cGzIc5FU/
+   2xzGDN0QMs2mmatfyR3MF3/jyflSfGZ0kYU4MqL8xSly7nMScFgMSquet
+   SCHeEcjbOycic0iFYZGmqi6+hWU95QStxEoy+BRFlaSdsdfteYZJx/W8U
+   aaGTSY8IAqoderZ6fS5SW5TB4Acw5zqFEw//+rfryUpCHqWiCSO1ADEHo
+   A==;
+X-CSE-ConnectionGUID: VUoSYIK9S9+oEzOwHb9GYA==
+X-CSE-MsgGUID: /347yr5JSFWMQyueWESMRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56904265"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="56904265"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:11:16 -0800
+X-CSE-ConnectionGUID: Ju8QnR+iS3iwXTl/7oVP/A==
+X-CSE-MsgGUID: izyH6iwjThCvY8M+hQh3Gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111118158"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:11:11 -0800
+Date: Thu, 6 Feb 2025 20:11:08 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: kernel test robot <lkp@intel.com>, gregkh@linuxfoundation.org,
+	rafael@kernel.org, linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+	jic23@kernel.org, przemyslaw.kitszel@intel.com,
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 01/20] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <Z6T7PE2Qpw4VbQyn@black.fi.intel.com>
+References: <20250203080902.1864382-2-raag.jadav@intel.com>
+ <202502060025.XJwUub6I-lkp@intel.com>
+ <Z6RS-A2FFjYuPoyn@black.fi.intel.com>
+ <Z6TRcWCKe__oxCUV@smile.fi.intel.com>
+ <Z6TRveCRK7LFwSNV@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9gaKO0MQEl4+jp8i"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <Z6TRveCRK7LFwSNV@smile.fi.intel.com>
 
+On Thu, Feb 06, 2025 at 05:14:05PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 06, 2025 at 05:12:49PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 06, 2025 at 08:13:12AM +0200, Raag Jadav wrote:
+> > > On Thu, Feb 06, 2025 at 12:27:03AM +0800, kernel test robot wrote:
+> 
+> ...
+> 
+> > > >    102	
+> > > >    103	static inline
+> > > >    104	void __iomem *devm_ioremap_resource(struct device *dev, const struct resource *res)
+> > > >    105	{
+> > > >  > 106		return ERR_PTR(-EINVAL);
+> > > >    107	}
+> > > >    108	
+> > > 
+> > > Andy, are we expecting this?
+> > 
+> > Oh, no, it's sparse error, but easy to fix. Need to have
+> > 
+> > 		return IOMEM_ERR_PTR(-EINVAL);
+> 
+> But isn't it the original issue? I mean that it was already before this series.
 
---9gaKO0MQEl4+jp8i
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For all this time?
 
-On Thu, Feb 06, 2025 at 03:59:03PM +0100, Albert Esteve wrote:
-> Hi!
->=20
-> On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat.c=
-om> wrote:
-> >
-> > On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
-> > > And then there are challenges at QEMU level. virtiofsd needs addition=
-al
-> > > vhost-user commands to implement DAX and these never went upstream in
-> > > QEMU. I hope these challenges are sorted at some point of time.
-> >
-> > Albert Esteve has been working on QEMU support:
-> > https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redh=
-at.com/
-> >
-> > He has a viable solution. I think the remaining issue is how to best
-> > structure the memory regions. The reason for slow progress is not
-> > because it can't be done, it's probably just because this is a
-> > background task.
->=20
-> It is partially that, indeed. But what has me blocked for now on posting =
-the
-> next version is that I was reworking a bit the MMAP strategy.
-> Following David comments, I am relying more on RAMBlocks and
-> subregions for mmaps. But this turned out more difficult than anticipated.
->=20
-> I hope I can make it work this month and then post the next version.
-> If there are no major blockers/reworks, further iterations on the
-> patch shall go smoother.
->=20
-> I have a separate patch for the vhost-user spec which could
-> iterate faster, if that'd help.
+> If so, perhaps you can fix all sparse errors like this in the devres* code.
 
-Let's see if anyone needs the vhost-user spec extension now. Otherwise
-it seems fine to merge it together with the implementation of that spec.
+With a fixes tag?
 
-Stefan
-
---9gaKO0MQEl4+jp8i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmek+wsACgkQnKSrs4Gr
-c8iv1AgAtw36d3ZukmPTk9VmX0NGRgWskCoroH9Kztfi3UeYUTi5bn/AL9yD+73x
-aQ8w4QvmQQBq/U85J8DNgOJ6hXW4uE2XpHCEtdgVWRFatuEwWtlLNZ46gUMD+AJb
-QtUvCLNwOtMYbADhEDUiIDIZS3DxHUvTI8JZWN6tNCFme7tuoUiJ4hWEhHhQ07yS
-yebWMNRoW2UmDtVWBMsp/v7zhoroqrrIcRvAaLUBTIE/k2myl3zxEPRW7j69jl9S
-7XwGGLC9Odz8ssha4UIg5fbwuUqpbJQA/PwPQVeJWR0a4OXhbFWebWEGdrXiTKP4
-04dxu53buvDo8JePVLkCaQZfazl9Cg==
-=cm2Y
------END PGP SIGNATURE-----
-
---9gaKO0MQEl4+jp8i--
-
+Raag
