@@ -1,141 +1,363 @@
-Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA4E228CB7;
-	Thu,  6 Feb 2025 15:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370871E5B80
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856657; cv=none; b=qwP+uyvHaqg9Y80ywaIEPoXmPI7ppmOEeZ9fx5Ni13ML9gO8E9E0y0ehI81v3Ipb0NmxzaS/kmZCxLTDM2Auq0jxJ0mtOhrBEtJ4Qx8An+0WwR64ID8ZUKovIq5nQyLKy4V8gs/EnmiTNGXqpWwGdh0WvK1AyXj40eNvcHLs5K8=
+	t=1738856689; cv=none; b=tGNNCvACsbfIk+iTlK3LAoZGtw85A5qS2H6KYPK0xYBq5j0YpUhb5HBXrW5lQZhHv5jsMCBbCWqekBGY4q8WkuqhUIawbaP1NS09xRHqHp8qD7RlXO/b/+S0RLFuIMHMKlGjINd3Pugf2kVfSGhWZceHT7LAdWJf+PKy3KKo9nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856657; c=relaxed/simple;
-	bh=e9J0ABv+nplFGc8ZnorETN2itYO3cmolAlVJ2yap9/A=;
-	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
-	 In-Reply-To:References; b=gqWO1NO+1jomo44Rj3S7ueQCFpqSae8y8+EoaIQUQQLfgWbwYpo4Ll0e2hXaxcO3LV4bZ5bWaSOe26yUKP6CZr0mWdVmr+3xdWH0amwWWfQmb0pYOjYHvrEjfoTflbVU7HpukERz6L1TIhHxbJzbXTwkDaCiE6ZCmbUKjjyWAGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; arc=none smtp.client-ip=172.104.24.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
-Received: from quad.stoffel.org (syn-097-095-183-072.res.spectrum.com [97.95.183.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.stoffel.org (Postfix) with ESMTPSA id 9782421998;
-	Thu,  6 Feb 2025 10:36:07 -0500 (EST)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-	id E1004A0DB1; Thu,  6 Feb 2025 10:36:06 -0500 (EST)
+	s=arc-20240116; t=1738856689; c=relaxed/simple;
+	bh=ofH9plRtHW0mHPYZ+TgFZKYjkmZPqDoO4ZF5X0QC8QA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Prv3+lFAtLuzQeuaf8hSIjF2itYDeUsvOfakaGHbE/u/lmIvCT9MUp52yi2U/1/m8KQdfodUlYoPnI/QkMZ81BknV4NJaOzd8D/06UDzP4kzYr3+zJ+RefdKWD7lIKemFXRFqXmvNlglMtJlhgDCDFkYdF8GohvLiB2yqeD8j9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L/NsDecA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L/NsDecA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738856686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J9fdBjD/4I3d+CAz9Ee6Fxd/lPxcTaRBz6dKzZispYA=;
+	b=L/NsDecAfHR4yDp1QvCJHNKA0P+3GwR5KJLNcdsnFLg0d2zDIPLoI8Z8knM/S02+ntZq/S
+	sBxLzv+LWrc5hdmdoDJa9pUY/vlKYDKJVQ9T1PRPC5znDCzZmAZ3JsDvYiEr666YQEC589
+	AtzY4Qo8iKZsbzGi5qaEEd7rDhFw+GA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-96--AsK2uTrPpKSSPHl5UGO3A-1; Thu, 06 Feb 2025 10:44:43 -0500
+X-MC-Unique: -AsK2uTrPpKSSPHl5UGO3A-1
+X-Mimecast-MFC-AGG-ID: -AsK2uTrPpKSSPHl5UGO3A
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ab6d5363a4bso119202266b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:44:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738856682; x=1739461482;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J9fdBjD/4I3d+CAz9Ee6Fxd/lPxcTaRBz6dKzZispYA=;
+        b=KGXj2Vl0zdH5aO0eFm8+neDkzD0wIKOD3Sn47AAuQtX/svU3c0BLEdHAFEAgIjVcsX
+         dKt5P3jlRzsJGylM6QJcU4V9jCDirMvkSXNg5AQOr8OCD3pyOlXxkKeLIwIXy82o5AJD
+         NEWFIPr8eEviu6m6IrekpQ8fMPteHemcsqsn17vGKe0frQceE23ow89WuQi/TNVWSYwg
+         uBWBRZH1XrCWBvJzm3O9daoWVKOwOGyEKOpKKkG0O6/RETGDK5Glg0XVo+qMwhxvtyam
+         O3/UyqHioDTfclw6OKzjuQdHdM0CBT9d/STRT8TcxC/FveDt3TsfYk2VR7emgrNKQI0z
+         nfXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWw+WgvW05U09xmfr44AhX8+k0JBYhEis8hUlFJ3Ojibywisd/qHoHbrUKc+4/WLdrI7Lc8+1sXPOfCBHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp4nU9azcIKxKtq1LCZH859qopmiNNBnzQ+rr6SGnr/gvtNEnu
+	1wWnfThdMYq/Un9kfkxrfOCp8Kp3sYH2AXcH9qJV7rd9WEp8Nsxer0p4b4MCPgXVoTKwyvmQNTG
+	MIJPdpKP6sclJj/urn2LAWMDhdb8hIvGcjJ2NSKYchQBqlCouDBEAT3DMLuaAV3yNUJubRKEJ
+X-Gm-Gg: ASbGncs2w/zMzGrg22WiYWVig8864w35HItf0qJuvd6WeyBAxyUC49qfvV8EKPZ4OKa
+	pbBOTjjaUay8gTB/UUTs6c8QCD8uGDFsIQ8UJNw08/iUGlRh+1YMWUmupvgx2nQo/5PaKQvm7D3
+	ZhXjGmuSm1hMtQ99jksq3MRrVGX00rLCW4UG0j1vINcb5so8nRwZ1AmVwo1noCrIDUJA2095TIJ
+	ssMpwoOX/LvAPhJi9HAGPWXSRlnw63YgUxlOX0S7OXGP3r+EroB7AyYfshoBD023t3TcsIqIWej
+	rUezux/4oO3H4gMfMC5TQXvGxucN0RSjB9LKU5T3c69TGa/+27bdKt9IrEuoj1B8CfZJksWj6ia
+	EeJgW/lY1PqPyPvS7aEhpx2YIzn20Sdk5pmDtIlODk+xKQ/OC2zx8CfQ=
+X-Received: by 2002:a17:907:7f27:b0:ab6:58bc:715b with SMTP id a640c23a62f3a-ab75e363920mr780272466b.55.1738856681768;
+        Thu, 06 Feb 2025 07:44:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEKhZc+LkeyR5pkedwozP69m7lvDT4dC+KsUBu+nt/ZsSGuPe5iF4PXNAmdpyaEKoMQYbMQhw==
+X-Received: by 2002:a17:907:7f27:b0:ab6:58bc:715b with SMTP id a640c23a62f3a-ab75e363920mr780269666b.55.1738856681324;
+        Thu, 06 Feb 2025 07:44:41 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab77333522dsm114798266b.126.2025.02.06.07.44.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 07:44:40 -0800 (PST)
+Message-ID: <0bc7e884-fb62-4f75-b826-adaf96a98314@redhat.com>
+Date: Thu, 6 Feb 2025 16:44:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hid: hid-lg-g15: Use standard multicolor LED API
+To: Kate Hsuan <hpa@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250131140241.586305-1-hpa@redhat.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250131140241.586305-1-hpa@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <26532.55014.864941.551897@quad.stoffel.home>
-Date: Thu, 6 Feb 2025 10:36:06 -0500
-From: "John Stoffel" <john@stoffel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-    Christian Brauner <brauner@kernel.org>,
-    Jan Kara <jack@suse.cz>,
-    Linus Torvalds <torvalds@linux-foundation.org>,
-    Jeff Layton <jlayton@kernel.org>,
-    Dave Chinner <david@fromorbit.com>,
-    linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-X-Clacks-Overhead: GNU Terry Pratchett
-Subject: Re: [PATCH 00/19 v7?] RFC: Allow concurrent and async changes in a directory
-In-Reply-To: <20250206054504.2950516-1-neilb@suse.de>
-References: <20250206054504.2950516-1-neilb@suse.de>
-X-Mailer: VM 8.3.x under 28.2 (x86_64-pc-linux-gnu)
 
->>>>> "NeilBrown" == NeilBrown  <neilb@suse.de> writes:
+Hi Kate,
 
-> This is my latest attempt at removing the requirement for an exclusive
-> lock on a directory which performing updates in this.  This version,
-> inspired by Dave Chinner, goes a step further and allow async updates.
+On 31-Jan-25 3:02 PM, Kate Hsuan wrote:
+> Replace the custom "color" sysfs attribute with the standard multicolor
+> LED API.
+> 
+> This also removes the code for the custom "color" sysfs attribute,
+> the "color" sysfs attribute was never documented so hopefully, it is not
+> used by anyone.
+> 
+> If we get complaints, we can re-add the "color" sysfs attribute as
+> a compatibility wrapper setting the subleds intensity.
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
+> Changes in v2:
+> 1. The commit message was revised with the reviewer's suggestions.
+> 2. The incorrect parameters for container_of() were fixed.
+> 3. The brightness values were converted by led_mc_calc_color_components().
 
-This initial sentence reads poorly to me.  I think you maybe are
-trying to say:
+Thanks, this v2 looks good to me:
 
-  This is my latest attempt to removing the requirement for writers to
-  have an exclusive lock on a directory when performing updates on
-  entries in that directory.  This allows for parallel updates by
-  multiple processes (connections? hosts? clients?) to improve scaling
-  of large filesystems. 
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-I get what you're trying to do here, and I applaud it!  I just
-struggled over the intro here.  
+Regards,
+
+Hans
 
 
-> The inode operation still requires the inode lock, at least a shared
-> lock, but may return -EINPROGRES and then continue asynchronously
-> without needing any ongoing lock on the directory.
 
-> An exclusive lock on the dentry is held across the entire operation.
 
-> This change requires various extra checks.  rmdir must ensure there is
-> no async creation still happening.  rename between directories must
-> ensure non of the relevant ancestors are undergoing async rename.  There
-> may be or checks that I need to consider - mounting?
-
-> One other important change since my previous posting is that I've
-> dropped the idea of taking a separate exclusive lock on the directory
-> when the fs doesn't support shared locking.  This cannot work as it
-> doeesn't prevent lookups and filesystems don't expect a lookup while
-> they are changing a directory.  So instead we need to choose between
-> exclusive or shared for the inode on a case-by-case basis.
-
-> To make this choice we divide all ops into four groups: create, remove,
-> rename, open/create.  If an inode has no operations in the group that
-> require an exclusive lock, then a flag is set on the inode so that
-> various code knows that a shared lock is sufficient.  If the flag is not
-> set, an exclusive lock is obtained.
-
-> I've also added rename handling and converted NFS to use all _async ops.
-
-> The motivation for this comes from the general increase in scale of
-> systems.  We can support very large directories and many-core systems
-> and applications that choose to use large directories can hit
-> unnecessary contention.
-
-> NFS can easily hit this when used over a high-latency link.
-> Lustre already has code to allow concurrent directory updates in the
-> back-end filesystem (ldiskfs - a slightly modified ext4).
-> Lustre developers believe this would also benefit the client-side
-> filesystem with large core counts.
-
-> The idea behind the async support is to eventually connect this to
-> io_uring so that one process can launch several concurrent directory
-> operations.  I have not looked deeply into io_uring and cannot be
-> certain that the interface I've provided will be able to be used.  I
-> would welcome any advice on that matter, though I hope to find time to
-> explore myself.  For now if any _async op returns -EINPROGRESS we simply
-> wait for the callback to indicate completion.
-
-> Test status:  only light testing.  It doesn't easily blow up, but lockdep
-> complains that repeated calls to d_update_wait() are bad, even though
-> it has balanced acquire and release calls. Weird?
-
-> Thanks,
-> NeilBrown
-
->  [PATCH 01/19] VFS: introduce vfs_mkdir_return()
->  [PATCH 02/19] VFS: use global wait-queue table for d_alloc_parallel()
->  [PATCH 03/19] VFS: use d_alloc_parallel() in lookup_one_qstr_excl()
->  [PATCH 04/19] VFS: change kern_path_locked() and
->  [PATCH 05/19] VFS: add common error checks to lookup_one_qstr()
->  [PATCH 06/19] VFS: repack DENTRY_ flags.
->  [PATCH 07/19] VFS: repack LOOKUP_ bit flags.
->  [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
->  [PATCH 09/19] VFS: add _async versions of the various directory
->  [PATCH 10/19] VFS: introduce inode flags to report locking needs for
->  [PATCH 11/19] VFS: Add ability to exclusively lock a dentry and use
->  [PATCH 12/19] VFS: enhance d_splice_alias to accommodate shared-lock
->  [PATCH 13/19] VFS: lock dentry for ->revalidate to avoid races with
->  [PATCH 14/19] VFS: Ensure no async updates happening in directory
->  [PATCH 15/19] VFS: Change lookup_and_lock() to use shared lock when
->  [PATCH 16/19] VFS: add lookup_and_lock_rename()
->  [PATCH 17/19] nfsd: use lookup_and_lock_one() and
->  [PATCH 18/19] nfs: change mkdir inode_operation to mkdir_async
->  [PATCH 19/19] nfs: switch to _async for all directory ops.
+> ---
+>  drivers/hid/hid-lg-g15.c | 146 +++++++++++++++++----------------------
+>  1 file changed, 65 insertions(+), 81 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-lg-g15.c b/drivers/hid/hid-lg-g15.c
+> index 53e7b90f9cc3..f8605656257b 100644
+> --- a/drivers/hid/hid-lg-g15.c
+> +++ b/drivers/hid/hid-lg-g15.c
+> @@ -8,11 +8,13 @@
+>  #include <linux/device.h>
+>  #include <linux/hid.h>
+>  #include <linux/leds.h>
+> +#include <linux/led-class-multicolor.h>
+>  #include <linux/module.h>
+>  #include <linux/random.h>
+>  #include <linux/sched.h>
+>  #include <linux/usb.h>
+>  #include <linux/wait.h>
+> +#include <dt-bindings/leds/common.h>
+>  
+>  #include "hid-ids.h"
+>  
+> @@ -44,9 +46,13 @@ enum lg_g15_led_type {
+>  };
+>  
+>  struct lg_g15_led {
+> -	struct led_classdev cdev;
+> +	union {
+> +		struct led_classdev cdev;
+> +		struct led_classdev_mc mcdev;
+> +	};
+>  	enum led_brightness brightness;
+>  	enum lg_g15_led_type led;
+> +	/* Used to store initial color intensities before subled_info is allocated */
+>  	u8 red, green, blue;
+>  };
+>  
+> @@ -229,15 +235,15 @@ static int lg_g510_kbd_led_write(struct lg_g15_data *g15,
+>  				 struct lg_g15_led *g15_led,
+>  				 enum led_brightness brightness)
+>  {
+> +	struct mc_subled *subleds = g15_led->mcdev.subled_info;
+>  	int ret;
+>  
+> +	led_mc_calc_color_components(&g15_led->mcdev, brightness);
+> +
+>  	g15->transfer_buf[0] = 5 + g15_led->led;
+> -	g15->transfer_buf[1] =
+> -		DIV_ROUND_CLOSEST(g15_led->red * brightness, 255);
+> -	g15->transfer_buf[2] =
+> -		DIV_ROUND_CLOSEST(g15_led->green * brightness, 255);
+> -	g15->transfer_buf[3] =
+> -		DIV_ROUND_CLOSEST(g15_led->blue * brightness, 255);
+> +	g15->transfer_buf[1] = subleds[0].brightness;
+> +	g15->transfer_buf[2] = subleds[1].brightness;
+> +	g15->transfer_buf[3] = subleds[2].brightness;
+>  
+>  	ret = hid_hw_raw_request(g15->hdev,
+>  				 LG_G510_FEATURE_BACKLIGHT_RGB + g15_led->led,
+> @@ -258,8 +264,9 @@ static int lg_g510_kbd_led_write(struct lg_g15_data *g15,
+>  static int lg_g510_kbd_led_set(struct led_classdev *led_cdev,
+>  			       enum led_brightness brightness)
+>  {
+> +	struct led_classdev_mc *mc = lcdev_to_mccdev(led_cdev);
+>  	struct lg_g15_led *g15_led =
+> -		container_of(led_cdev, struct lg_g15_led, cdev);
+> +		container_of(mc, struct lg_g15_led, mcdev);
+>  	struct lg_g15_data *g15 = dev_get_drvdata(led_cdev->dev->parent);
+>  	int ret;
+>  
+> @@ -276,82 +283,20 @@ static int lg_g510_kbd_led_set(struct led_classdev *led_cdev,
+>  
+>  static enum led_brightness lg_g510_kbd_led_get(struct led_classdev *led_cdev)
+>  {
+> +	struct led_classdev_mc *mc = lcdev_to_mccdev(led_cdev);
+>  	struct lg_g15_led *g15_led =
+> -		container_of(led_cdev, struct lg_g15_led, cdev);
+> +		container_of(mc, struct lg_g15_led, mcdev);
+>  
+>  	return g15_led->brightness;
+>  }
+>  
+> -static ssize_t color_store(struct device *dev, struct device_attribute *attr,
+> -			   const char *buf, size_t count)
+> -{
+> -	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> -	struct lg_g15_led *g15_led =
+> -		container_of(led_cdev, struct lg_g15_led, cdev);
+> -	struct lg_g15_data *g15 = dev_get_drvdata(led_cdev->dev->parent);
+> -	unsigned long value;
+> -	int ret;
+> -
+> -	if (count < 7 || (count == 8 && buf[7] != '\n') || count > 8)
+> -		return -EINVAL;
+> -
+> -	if (buf[0] != '#')
+> -		return -EINVAL;
+> -
+> -	ret = kstrtoul(buf + 1, 16, &value);
+> -	if (ret)
+> -		return ret;
+> -
+> -	mutex_lock(&g15->mutex);
+> -	g15_led->red   = (value & 0xff0000) >> 16;
+> -	g15_led->green = (value & 0x00ff00) >> 8;
+> -	g15_led->blue  = (value & 0x0000ff);
+> -	ret = lg_g510_kbd_led_write(g15, g15_led, g15_led->brightness);
+> -	mutex_unlock(&g15->mutex);
+> -
+> -	return (ret < 0) ? ret : count;
+> -}
+> -
+> -static ssize_t color_show(struct device *dev, struct device_attribute *attr,
+> -			  char *buf)
+> -{
+> -	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> -	struct lg_g15_led *g15_led =
+> -		container_of(led_cdev, struct lg_g15_led, cdev);
+> -	struct lg_g15_data *g15 = dev_get_drvdata(led_cdev->dev->parent);
+> -	ssize_t ret;
+> -
+> -	mutex_lock(&g15->mutex);
+> -	ret = sprintf(buf, "#%02x%02x%02x\n",
+> -		      g15_led->red, g15_led->green, g15_led->blue);
+> -	mutex_unlock(&g15->mutex);
+> -
+> -	return ret;
+> -}
+> -
+> -static DEVICE_ATTR_RW(color);
+> -
+> -static struct attribute *lg_g510_kbd_led_attrs[] = {
+> -	&dev_attr_color.attr,
+> -	NULL,
+> -};
+> -
+> -static const struct attribute_group lg_g510_kbd_led_group = {
+> -	.attrs = lg_g510_kbd_led_attrs,
+> -};
+> -
+> -static const struct attribute_group *lg_g510_kbd_led_groups[] = {
+> -	&lg_g510_kbd_led_group,
+> -	NULL,
+> -};
+> -
+>  static void lg_g510_leds_sync_work(struct work_struct *work)
+>  {
+>  	struct lg_g15_data *g15 = container_of(work, struct lg_g15_data, work);
+> +	struct lg_g15_led *g15_led = &g15->leds[LG_G15_KBD_BRIGHTNESS];
+>  
+>  	mutex_lock(&g15->mutex);
+> -	lg_g510_kbd_led_write(g15, &g15->leds[LG_G15_KBD_BRIGHTNESS],
+> -			      g15->leds[LG_G15_KBD_BRIGHTNESS].brightness);
+> +	lg_g510_kbd_led_write(g15, g15_led, g15_led->brightness);
+>  	mutex_unlock(&g15->mutex);
+>  }
+>  
+> @@ -667,8 +612,46 @@ static void lg_g15_input_close(struct input_dev *dev)
+>  	hid_hw_close(hdev);
+>  }
+>  
+> +static void lg_g15_setup_led_rgb(struct lg_g15_data *g15, int index)
+> +{
+> +	int i;
+> +	struct mc_subled *subled_info;
+> +
+> +	g15->leds[index].mcdev.led_cdev.brightness_set_blocking =
+> +		lg_g510_kbd_led_set;
+> +	g15->leds[index].mcdev.led_cdev.brightness_get =
+> +		lg_g510_kbd_led_get;
+> +	g15->leds[index].mcdev.led_cdev.max_brightness = 255;
+> +	g15->leds[index].mcdev.num_colors = 3;
+> +
+> +	subled_info = devm_kcalloc(&g15->hdev->dev, 3, sizeof(*subled_info), GFP_KERNEL);
+> +	if (!subled_info)
+> +		return;
+> +
+> +	for (i = 0; i < 3; i++) {
+> +		switch (i + 1) {
+> +		case LED_COLOR_ID_RED:
+> +			subled_info[i].color_index = LED_COLOR_ID_RED;
+> +			subled_info[i].intensity = g15->leds[index].red;
+> +			break;
+> +		case LED_COLOR_ID_GREEN:
+> +			subled_info[i].color_index = LED_COLOR_ID_GREEN;
+> +			subled_info[i].intensity = g15->leds[index].green;
+> +			break;
+> +		case LED_COLOR_ID_BLUE:
+> +			subled_info[i].color_index = LED_COLOR_ID_BLUE;
+> +			subled_info[i].intensity = g15->leds[index].blue;
+> +			break;
+> +		}
+> +		subled_info[i].channel = i;
+> +	}
+> +	g15->leds[index].mcdev.subled_info = subled_info;
+> +}
+> +
+>  static int lg_g15_register_led(struct lg_g15_data *g15, int i, const char *name)
+>  {
+> +	int ret;
+> +
+>  	g15->leds[i].led = i;
+>  	g15->leds[i].cdev.name = name;
+>  
+> @@ -685,6 +668,7 @@ static int lg_g15_register_led(struct lg_g15_data *g15, int i, const char *name)
+>  		} else {
+>  			g15->leds[i].cdev.max_brightness = 1;
+>  		}
+> +		ret = devm_led_classdev_register(&g15->hdev->dev, &g15->leds[i].cdev);
+>  		break;
+>  	case LG_G510:
+>  	case LG_G510_USB_AUDIO:
+> @@ -697,12 +681,11 @@ static int lg_g15_register_led(struct lg_g15_data *g15, int i, const char *name)
+>  			g15->leds[i].cdev.name = "g15::power_on_backlight_val";
+>  			fallthrough;
+>  		case LG_G15_KBD_BRIGHTNESS:
+> -			g15->leds[i].cdev.brightness_set_blocking =
+> -				lg_g510_kbd_led_set;
+> -			g15->leds[i].cdev.brightness_get =
+> -				lg_g510_kbd_led_get;
+> -			g15->leds[i].cdev.max_brightness = 255;
+> -			g15->leds[i].cdev.groups = lg_g510_kbd_led_groups;
+> +			/* register multicolor LED */
+> +			lg_g15_setup_led_rgb(g15, i);
+> +			ret = devm_led_classdev_multicolor_register_ext(&g15->hdev->dev,
+> +									&g15->leds[i].mcdev,
+> +									NULL);
+>  			break;
+>  		default:
+>  			g15->leds[i].cdev.brightness_set_blocking =
+> @@ -710,11 +693,12 @@ static int lg_g15_register_led(struct lg_g15_data *g15, int i, const char *name)
+>  			g15->leds[i].cdev.brightness_get =
+>  				lg_g510_mkey_led_get;
+>  			g15->leds[i].cdev.max_brightness = 1;
+> +			ret = devm_led_classdev_register(&g15->hdev->dev, &g15->leds[i].cdev);
+>  		}
+>  		break;
+>  	}
+>  
+> -	return devm_led_classdev_register(&g15->hdev->dev, &g15->leds[i].cdev);
+> +	return ret;
+>  }
+>  
+>  /* Common input device init code shared between keyboards and Z-10 speaker handling */
 
