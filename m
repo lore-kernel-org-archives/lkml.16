@@ -1,176 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC5C1F4169
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB261A317B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857576; cv=none; b=q4xfRCeoPoj5LSV/SQMJ6VFcPuv+VFhUZOEAjMJEoyTEWMy34tQe30EqNsFf9M1B5O5OWVOlfcWQnhs8aNnS15Nf5eYAmRt0KjOyw5XCXM9gUxgqCdpeH20ndByrXDuzwNfw49hZNS5i0XNdBOBPxl2M18ejo+GxTmVmRFyIpO0=
+	t=1738857582; cv=none; b=uTYRlCuz1RziJjwUU0wnWZr7K3QjMhY1BG3A9sJBCwFyKsd6PKppYxeFTSITiwLINww/sq22WSoluFaXHQmPcW1bbKU5iXBvnFX6Cc0HjZvk7q1H6wsgqo2b/ICbG9cmlT19SWR7ZonSuonbjhYBl4t+zrUjHrtIhc53HmacVNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857576; c=relaxed/simple;
-	bh=u0/jakFwfN9d76kGg7FvdUfkSfylz69ks8azTcR7B0k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JrNRY8jqiVNTB3wWeWTk9b93YAv2DRc6bR5OyfKG38GGvt6+QRzlEAMCJPmfrsavo2fK3esQZVye8l+NtEng5xBbIxNOEsOYS5lTEelDGvqlgR6/CHW/s6o4aPjoQpvN6+CqG7kD/9mHT8sOw3JHe7R+qc8cpb0UkdSgCxRrnzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cmk8XJ9W; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738857582; c=relaxed/simple;
+	bh=wfWG1lBorKdXeSnfHeDzLFkNJVBsnc4Vd66lUdn9zGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNYpiDqq9KZ1v6F2/5x8KzObol20k7dg0OFhq5eUt4C2D0sHwrDXNcW10nWB2D/XDP3cQF/BwQYyEq0i8EYL2mnYJUNhF111elAqIjGaOUi24xUYMcb3S8gvyEo5fzKu4r2OqFIieniNkPheT7xNFknp1URse+KfiAI7lVscYyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Jam60QJw; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cmk8XJ9W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738857572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7Asmk/CC4AQOrPth5nbCgXULyPrJ8HPnOEMPbaEn44k=;
-	b=cmk8XJ9WoRpubc7KN0KlYlxtDwdfalJzs0n0uB9vR03J/Aj2+KG0caHI7T2yP7iXTM+K5y
-	3inxWO1wCyX6iLkoJXsxZsvoS3lcWnWvZqNOK+m86n/0Nhblg6FVrCrpq7S0ik1nanBWpf
-	HWj7t3eQIbBhIUFHIO0ELjcBQSEV2Ww=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-439-UY2LpMBiOAuySItftVIU_g-1; Thu,
- 06 Feb 2025 10:59:29 -0500
-X-MC-Unique: UY2LpMBiOAuySItftVIU_g-1
-X-Mimecast-MFC-AGG-ID: UY2LpMBiOAuySItftVIU_g
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 532A21800989;
-	Thu,  6 Feb 2025 15:59:28 +0000 (UTC)
-Received: from rusingh-thinkpadt14gen4.remote.csb (unknown [10.42.28.157])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78D2D30001AB;
-	Thu,  6 Feb 2025 15:59:25 +0000 (UTC)
-From: rusingh@redhat.com
-To: thierry.reding@gmail.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jonathanh@nvidia.com,
-	mperttunen@nvidia.com
-Cc: linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rupinderjit Singh <rusingh@redhat.com>
-Subject: [PATCH] gpu: host1x: Fix a use of uninitialized mutex
-Date: Thu,  6 Feb 2025 15:58:03 +0000
-Message-ID: <20250206155803.201942-1-rusingh@redhat.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Jam60QJw"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7be8f281714so89496185a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:59:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738857579; x=1739462379; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4rgX3enkDd37pO8Eu6+jW5LrbU18LPSV6Ey4Xi/pbpE=;
+        b=Jam60QJwtO8nYmi8PXsRfGX7Yl35tjWmgQ0Ui3Q1FNoRg3sCgKA31Xs13UoeI7CIBa
+         bglsgdc3S/QuQbWJde15hqWsAX9NDhmAv0kXkkJ43Ghg5URzJjyI3JZvjfowBA1ZIhND
+         3MOsLLCFHMDBYbwBuUhJmca1qSe+eE3Pjyz6A3SEYgFQEy1F56dzGPw3Kck932jbqSyB
+         8OsQMAYcbNxIxjZyU1MR3HuU8olV7wwhwqm56GkBV+ZMEuBbmdT3CRU72Ptc/y/nKT0a
+         +evArztY6vvkh8HdCItkFFbvkpuM4ulTvqRJS3voxK7AbqnvNxbKx1Zwb8OVzI1caYXn
+         0HAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738857579; x=1739462379;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4rgX3enkDd37pO8Eu6+jW5LrbU18LPSV6Ey4Xi/pbpE=;
+        b=X7GwsHhfXZ/n0oo9A7NT5WeWkcF3w/TsvTn2phOhulujc+Wkmy6e3Ii7ISVwHkgNJt
+         Dcgh5N7OfwkqcRAj/I0uS7U5n2plwVPkwsZbfYg2twyXLxHlj+KmZ93r8iu2JthSKHQJ
+         WxypEfHteZfeL7vIAPzRgFRTWYxb9s6FilrQsJ6e3wMqO9Zc0lJYXsOx5FY8cHBlCeEk
+         7glNNkjKLvw0teZqoX18rUZbv6FfQxnUPWLo9surt1iOC0T0+Ih81hHiMWK2DWfQkrWO
+         nd2qSjIjAqk/5nNhwQZRGQNjrAvpSKT6XQArxZlGqQT8w4QB03nWPGvDCB8rOutQZjjX
+         9xsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVU4VSWwLMiyRCgkKmc2yXQ4HOi1BEHz18MtbydFezcqiW5KdHOTpTGyexHAZT5/5LUvOBilQO7eOrViQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxORF6zEcclCg/ya0/l71IQqP5Z+rvlO9ge5Esus2rle7jHRUbw
+	fLH/Oc3pIz5aMCJ0u6az2dJT8iWNF2WSIGcAh2pigN46zX71/g/87EmzuItXBqg=
+X-Gm-Gg: ASbGncuv+bPI/o8p85LRA+NJu8JDShLpTfanVMcMEJbCCR4Jqo9DSQ755EhLiHEKSSr
+	ynZ8v0xUOjA8mkLteGzwtD2s2xxuW4R2Xi+8MJ7LXgeccIhaJa8DOixj6Qm0vYSzK06Fw9MUI0S
+	0LdxDj4rVrW6zEZv8IA4YxsaoCiHqepe21UxRXv55UrCAiu//CAVToSSPYFozcED8Vf1V7WN25d
+	A4eI1ezeyOO83M3eYPSoCTHG/1EzaqQ3uYhQacDxQE/hQx7dek8XachlaB4I2JXv9/EnoifVQn7
+	BUehwhkKcIBNvjksLIB4vRClVRrpBAsTAAWDQy8zufyRXAVBFRFFNfXkwiIxVFTUwJvAzr/sdg=
+	=
+X-Google-Smtp-Source: AGHT+IGVD8lviSGrZUHhDUeXaeng33mAdOdehqoxqNfFEFyKhbcfoqIeOcq35NP8wXT2MTIiiQ0kcA==
+X-Received: by 2002:a05:620a:40d4:b0:7b1:492c:ba83 with SMTP id af79cd13be357-7c039f95dfemr1002655885a.10.1738857579502;
+        Thu, 06 Feb 2025 07:59:39 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041ded12asm75286685a.5.2025.02.06.07.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 07:59:39 -0800 (PST)
+Date: Thu, 6 Feb 2025 10:59:37 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CXL Boot to Bash - Section 2: The Drivers
+Message-ID: <Z6TcaaScBWzZvLWW@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+ <67a4069572eab_2d2c294d4@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67a4069572eab_2d2c294d4@dwillia2-xfh.jf.intel.com.notmuch>
 
-From: Rupinderjit Singh <rusingh@redhat.com>
+On Wed, Feb 05, 2025 at 04:47:17PM -0800, Dan Williams wrote:
+> Gregory Price wrote:
+> > [/sys/bus/cxl/devices]# ls
+> > dax_region0  decoder0.0  decoder1.0  decoder2.0 .....
+> > dax_region1  decoder0.1  decoder1.1  decoder3.0 .....
+> > 
+> > ^^^ These dax regions require `CONFIG_DEV_DAX_CXL` enabled to fully
+> > surface as dax devices, which can then be converted to system ram.
+> 
+> At least for this problem the plan is to fall back to
+> CONFIG_DEV_DAX_HMEM [1] which skips all of the RAS and device
+> enumeration benefits and just shunts EFI_MEMORY_SP over to device_dax.
+> 
 
-commit c8347f915e67 ("gpu: host1x: Fix boot regression for Tegra")
-caused a use of uninitialized mutex leading to below warning when
-CONFIG_DEBUG_MUTEXES and CONFIG_DEBUG_LOCK_ALLOC are enabled.
+Hm, would this actually happen in the scenario where CONFIG_DEV_DAX_CXL
+is not enabled but everything else is?  The region0 still gets created
+and associated with the resource, but the dax_region0 never gets
+created.
 
-[   41.662843] ------------[ cut here ]------------
-[   41.663012] DEBUG_LOCKS_WARN_ON(lock->magic != lock)
-[   41.663035] WARNING: CPU: 4 PID: 794 at kernel/locking/mutex.c:587 __mutex_lock+0x670/0x878
-[   41.663458] Modules linked in: rtw88_8822c(+) bluetooth(+) rtw88_pci rtw88_core mac80211 aquantia libarc4 crc_itu_t cfg80211 tegra194_cpufreq dwmac_tegra(+) arm_dsu_pmu stmmac_platform stmmac pcs_xpcs rfkill at24 host1x(+) tegra_bpmp_thermal ramoops reed_solomon fuse loop nfnetlink xfs mmc_block rpmb_core ucsi_ccg ina3221 crct10dif_ce xhci_tegra ghash_ce lm90 sha2_ce sha256_arm64 sha1_ce sdhci_tegra pwm_fan sdhci_pltfm sdhci gpio_keys rtc_tegra cqhci mmc_core phy_tegra_xusb i2c_tegra tegra186_gpc_dma i2c_tegra_bpmp spi_tegra114 dm_mirror dm_region_hash dm_log dm_mod
-[   41.665078] CPU: 4 UID: 0 PID: 794 Comm: (udev-worker) Not tainted 6.11.0-29.31_1538613708.el10.aarch64+debug #1
-[   41.665838] Hardware name: NVIDIA NVIDIA Jetson AGX Orin Developer Kit/Jetson, BIOS 36.3.0-gcid-35594366 02/26/2024
-[   41.672555] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   41.679636] pc : __mutex_lock+0x670/0x878
-[   41.683834] lr : __mutex_lock+0x670/0x878
-[   41.688035] sp : ffff800084b77090
-[   41.691446] x29: ffff800084b77160 x28: ffffdd4bebf7b000 x27: ffffdd4be96b1000
-[   41.698799] x26: 1fffe0002308361c x25: 1ffff0001096ee18 x24: 0000000000000000
-[   41.706149] x23: 0000000000000000 x22: 0000000000000002 x21: ffffdd4be6e3c7a0
-[   41.713500] x20: ffff800084b770f0 x19: ffff00011841b1e8 x18: 0000000000000000
-[   41.720675] x17: 0000000000000000 x16: 0000000000000000 x15: 0720072007200720
-[   41.728023] x14: 0000000000000000 x13: 0000000000000001 x12: ffff6001a96eaab3
-[   41.735375] x11: 1fffe001a96eaab2 x10: ffff6001a96eaab2 x9 : ffffdd4be4838bbc
-[   41.742723] x8 : 00009ffe5691554e x7 : ffff000d4b755593 x6 : 0000000000000001
-[   41.749985] x5 : ffff000d4b755590 x4 : 1fffe0001d88f001 x3 : dfff800000000000
-[   41.756988] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000ec478000
-[   41.764251] Call trace:
-[   41.766695]  __mutex_lock+0x670/0x878
-[   41.770373]  mutex_lock_nested+0x2c/0x40
-[   41.774134]  host1x_intr_start+0x54/0xf8 [host1x]
-[   41.778863]  host1x_runtime_resume+0x150/0x228 [host1x]
-[   41.783935]  pm_generic_runtime_resume+0x84/0xc8
-[   41.788485]  __rpm_callback+0xa0/0x478
-[   41.792422]  rpm_callback+0x15c/0x1a8
-[   41.795922]  rpm_resume+0x698/0xc08
-[   41.799597]  __pm_runtime_resume+0xa8/0x140
-[   41.803621]  host1x_probe+0x810/0xbc0 [host1x]
-[   41.807909]  platform_probe+0xcc/0x1a8
-[   41.811845]  really_probe+0x188/0x800
-[   41.815347]  __driver_probe_device+0x164/0x360
-[   41.819810]  driver_probe_device+0x64/0x1a8
-[   41.823834]  __driver_attach+0x180/0x490
-[   41.827773]  bus_for_each_dev+0x104/0x1a0
-[   41.831797]  driver_attach+0x44/0x68
-[   41.835296]  bus_add_driver+0x23c/0x4e8
-[   41.839235]  driver_register+0x15c/0x3a8
-[   41.843170]  __platform_register_drivers+0xa4/0x208
-[   41.848159]  tegra_host1x_init+0x4c/0xff8 [host1x]
-[   41.853147]  do_one_initcall+0xd4/0x380
-[   41.856997]  do_init_module+0x1dc/0x698
-[   41.860758]  load_module+0xc70/0x1300
-[   41.864435]  __do_sys_init_module+0x1a8/0x1d0
-[   41.868721]  __arm64_sys_init_module+0x74/0xb0
-[   41.873183]  invoke_syscall.constprop.0+0xdc/0x1e8
-[   41.877997]  do_el0_svc+0x154/0x1d0
-[   41.881671]  el0_svc+0x54/0x140
-[   41.884820]  el0t_64_sync_handler+0x120/0x130
-[   41.889285]  el0t_64_sync+0x1a4/0x1a8
-[   41.892960] irq event stamp: 69737
-[   41.896370] hardirqs last  enabled at (69737): [<ffffdd4be6d7768c>] _raw_spin_unlock_irqrestore+0x44/0xe8
-[   41.905739] hardirqs last disabled at (69736): [<ffffdd4be59dcd40>] clk_enable_lock+0x98/0x198
-[   41.914314] softirqs last  enabled at (68082): [<ffffdd4be466b1d0>] handle_softirqs+0x4c8/0x890
-[   41.922977] softirqs last disabled at (67945): [<ffffdd4be44f02a4>] __do_softirq+0x1c/0x28
-[   41.931289] ---[ end trace 0000000000000000 ]---
+On one system I have I see the following:
 
-Inside the probe function when pm_runtime_enable() is called,
-the PM core invokes a resume callback if the device Host1x is
-in a suspended state. As it can be seen in the logs above,
-this leads to host1x_intr_start() function call which is
-trying to acquire a mutex lock. But, the function
-host_intr_init() only gets called after the pm_runtime_enable()
-where mutex is initialised leading to the use of mutex
-prior to its initialisation.
+c050000000-fcefffffff : Soft Reserved
+  c050000000-fcefffffff : CXL Window 0
+    c050000000-fcefffffff : region0
+      c050000000-fcefffffff : dax0.0
+        c050000000-fcefffffff : System RAM (kmem)
+fcf0000000-ffffffffff : Reserved
+10000000000-1035fffffff : Soft Reserved
+  10000000000-1035fffffff : CXL Window 1
+    10000000000-1035fffffff : region1
+      10000000000-1035fffffff : dax1.0
+        10000000000-1035fffffff : System RAM (kmem)
 
-Fix this by moving the mutex initialisation prior to the runtime
-PM enablement function pm_runtime_enable() in probe.
+I would expect the above HMEM/shunt to only work if everything down
+through CXL Window 0 is torn down.
 
-Fixes: c8347f915e67 ("gpu: host1x: Fix boot regression for Tegra")
-Signed-off-by: Rupinderjit Singh <rusingh@redhat.com>
----
- drivers/gpu/host1x/dev.c  | 2 ++
- drivers/gpu/host1x/intr.c | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+But if CONFIG_DEV_DAX_CXL is not enabled, everything "succeeds", it just
+doesn't "Do what you want"(TM) - dax0.0 and RAM entries are absent.
 
-diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
-index 7b1d091f3c09..46cae925b095 100644
---- a/drivers/gpu/host1x/dev.c
-+++ b/drivers/gpu/host1x/dev.c
-@@ -619,6 +619,8 @@ static int host1x_probe(struct platform_device *pdev)
- 		goto free_contexts;
- 	}
- 
-+	mutex_init(&host->intr_mutex);
-+
- 	pm_runtime_enable(&pdev->dev);
- 
- 	err = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
-diff --git a/drivers/gpu/host1x/intr.c b/drivers/gpu/host1x/intr.c
-index b3285dd10180..f77a678949e9 100644
---- a/drivers/gpu/host1x/intr.c
-+++ b/drivers/gpu/host1x/intr.c
-@@ -104,8 +104,6 @@ int host1x_intr_init(struct host1x *host)
- 	unsigned int id;
- 	int i, err;
- 
--	mutex_init(&host->intr_mutex);
--
- 	for (id = 0; id < host1x_syncpt_nb_pts(host); ++id) {
- 		struct host1x_syncpt *syncpt = &host->syncpt[id];
- 
--- 
-2.48.1
+It makes me wonder whether the driver over-componentized the build.
 
+> I am otherwise open to suggestions about a better model for how to
+> handle a type of memory capacity that elicits diverging opinions on
+> whether it should be treated as System RAM, dedicated application
+> memory, or some kind of cold-memory swap target.
+> 
+
+My gut tells me there's no "elegant solution" here given that user
+intent is fairly unknowable - i.e. best we can do is make the build
+and boot options easier to understand.
+
+> > ---------------------------------------------------------------
+> > Step 6: DAX surfacing Memory Blocks - First bit of User Policy.
+> > ---------------------------------------------------------------
+> > 
+> > The last step in surfacing memory to allocators is to convert a dax
+> > device into memory blocks. On most default kernel builds, dax devices
+> > are not automatically converted to SystemRAM.
+> 
+> I thought most distributions are shipping with
+> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE, or the default online udev rule?
+> For example Fedora is CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=y and RHEL is
+> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=n, but with the udev hotplug rule.
+> 
+
+Good point, my bias take showing up in the notes here.  I didn't know
+RHEL had gotten as far as a udev rule already. I'll adjust my notes.
+
+But this also hides some nuance as well - the default behavior onlines
+memory into ZONE_NORMAL with DEFAULT_ONLINE (next section).  
+
+> > Alternatively, this can be done at Build or Boot time using
+> >   CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE   (v6.13 or below)
+> >   CONFIG_MHP_DEFAULT_ONLINE_TYPE_*       (v6.14 or above)
+> >   memhp_default_state=*                  (boot param predating cxl)
+> 
+> Oh, TIL the new CONFIG_MHP_DEFAULT_ONLINE_TYPE_* option.
+> 
+
+It was only just added:
+https://lore.kernel.org/linux-mm/20241226182918.648799-1-gourry@gourry.net/
+
+Basically creates parity between memhp_default_state and build options.
+
+> > The base is 256MB aligned (the minimum for the CXL Spec), and the
+> > window size is 512MB.  This results in a loss of almost a full memory
+> > block worth of memory (~1280MB on the front, and ~512MB on the back).
+> > 
+> > This is a loss of ~0.7% of capacity (1.5GB) for that region (121.25GB).
+> 
+> This feels like an example, of "hey platform vendors, I understand
+> that spec grants you the freedom to misalign, please refrain from taking
+> advantage of that freedom".
+> 
+
+Only x86 appears to actually do this (presently) - so is this a real
+constraint or just a quirk of how the x86 arch code has chosen to
+"optimize memory block size"?
+
+Granted I'm a platform consumer, not a vendor - but I wouldn't even know
+where to look to see where this constraint is defined (if it is).
+
+All I'd know is "CXL Says I can align to 256MB, and minimum memory block
+size on linux is 256MB so allons y!"
+
+On the linux side - these platforms are now out there, in the wild.
+So the surface impression now appears to be that linux just throws
+away ~0.5% of your CXL capacity for no reason on these platforms.
+
+That said, I also understand that more memory blocks might affect
+allocation performance when the system is pressured - but losing
+gigabytes of memory can also reduce performance.
+(Preview of one of my next nuance additions in section 3)
+
+If this (advisement) change is unwelcome, then we should be spewing
+a really loud warning somewhere so vendors get signal for consumers.
+
+~Gregory
