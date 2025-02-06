@@ -1,67 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626A622DF89;
-	Thu,  6 Feb 2025 13:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C1322DFB3;
+	Thu,  6 Feb 2025 13:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738847107; cv=none; b=IOlZJMeoHzRaryH3ZvHPghQu+r72YoCjFTd5Tlo1Aj+LHCyUsHCvMetuYRzV32Hzch8O/vEql3QYn6ncDTjNEr/hloqKF9meHwwBOud9GaMRGqXXKgkKIucljbpFhiZsk45sQvhmbzGD2IX4Grfw0z1Kcr2HyFa/Kr3Z6VEtsuQ=
+	t=1738847131; cv=none; b=L241c31lRAVcodkrqj6GaTSBrhA/sI3PweoNPBKeNUe5kZgihxYZWqeTOfABOJ6rldUgO52wM8V+0Iga5b+pRngPJp7GtjNpE4uQKOQXEJdYBxyiLbUk0kmyAVzeDh5W/pz2IqI158EwwN3E5gOgzccbwSIZzVrBkaqNRIPPIAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738847107; c=relaxed/simple;
-	bh=W5AM9RZgg67GctX9POakdPYKIrGtt44fCA6cr2QIVSs=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=HLYPzi0pogA2wKTDRF91dR4XNjb45f+qomjpKeYLz4DtK7sC4vhqXiCPHdO835SGevEpjgluDVXzQsDvaNafVgAfaIBbTqiOAbtDR3KMn0SndymWzbwWqe57VHTNRwxqvKbq5L3721tj7zIQVw2qhL+uK5+29SQ2+mUPPWVxIl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNxLhGyH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738847131; c=relaxed/simple;
+	bh=rE1sy+FfaAGMIzwM8EZBoJ3Dv8Fmfq/jdRSMzL/N0zQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iLK+cF0u9qX33vg9xtrB/mUcEH1iIcuzGACyYc0fGX2pk5GkYZqmJhyhkPmuJNEsHtYoFL4ZReO3l6iwwqw795hqsgHuspk91EKFdqzSRI3L7WZYKLkTQ4KJ3NHooeHkLTvvdrlzYACF+qxl+9IJKM5WXs2SjeARb7/6WC/jYnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reHjMAq+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNxLhGyH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA308C4CEDD;
-	Thu,  6 Feb 2025 13:05:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reHjMAq+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423A4C4CEDD;
+	Thu,  6 Feb 2025 13:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738847107;
-	bh=W5AM9RZgg67GctX9POakdPYKIrGtt44fCA6cr2QIVSs=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=VNxLhGyHzxicglO/D5ivZIdSr/a93Mw7FYISk0ur0L+3tzsAuN/rzAcAXyOOb8ZRo
-	 aObTLjrNmcAou3cDDtxAN1CWE/ZOtshMUERgMTwb2njUdvTUMOq3qO4O1ZHD0EY6Cp
-	 xkVmBmlx6p4kuaXzGeF26Ivx/BUP0PGr/MwXYtJtZm++1wAwBKKKug/lTHWVUXNHKa
-	 3/mMDkGQDaXb1YItsZ9va2pNR5YfpzdKsyS6fP6Y0bpLJCkbK9P5NbaOogE5RZNUV6
-	 vOxXh39z9lzDCoy1a2lZbMdTI0Yt5qX8h4fxvWoYSf7Xqs+5ksyWzolVDE/+s+pfEo
-	 9k6B+CyOAU9zA==
-Message-ID: <5ef3905745ce4cc4ad43135c1e6a666e@kernel.org>
-Date: Thu, 06 Feb 2025 13:05:04 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Herve Codina" <herve.codina@bootlin.com>
-Subject: Re: [PATCH v5 4/4] drm: bridge: ti-sn65dsi83: Add error recovery
- mechanism
-In-Reply-To: <20250203161607.223731-5-herve.codina@bootlin.com>
-References: <20250203161607.223731-5-herve.codina@bootlin.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, "Alexander
- Stein" <alexander.stein@ew.tq-group.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>, "Conor
- Dooley" <conor+dt@kernel.org>, "Dave Stevenson" <dave.stevenson@raspberrypi.com>, "David
- Airlie" <airlied@gmail.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Laurent
- Pinchart" <Laurent.pinchart@ideasonboard.com>, "Louis Chauvet" <louis.chauvet@bootlin.com>, "Luca
- Ceresoli" <luca.ceresoli@bootlin.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek
- Vasut" <marex@denx.de>, "Maxime Ripard" <mripard@kernel.org>,
- =?utf-8?b?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, "Neil Armstrong" <neil.armstrong@linaro.org>, "Raspberry
- Pi Kernel Maintenance" <kernel-list@raspberrypi.com>, "Rob Herring" <robh@kernel.org>, "Robert
- Foss" <rfoss@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: 7bit
+	s=k20201202; t=1738847131;
+	bh=rE1sy+FfaAGMIzwM8EZBoJ3Dv8Fmfq/jdRSMzL/N0zQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=reHjMAq+muONPXIODduR0Z1IFIXihk/zEBurSpK6NU3cj6eHgP8XSkMWe8cgq16nn
+	 2Eq9+Msb4OXBJeQBkgf+VIOZvprx3ykRrLqbhaEO5ZCa3VBDfm9H3ln+I8jlviwYml
+	 L1q4qEZ5g4wo754Htix+d5qrmMaDXkxnW/DLpg3/Q0nhE9lpD1KWqjngA2k6+JghHR
+	 kT1Tf6v2RRSWQjphLkxr2B6m5IpfUeKhG/wy+SOzOlXYIv8pfQGOt4jMgWxx5qM3ps
+	 9H7D98c322tzHKBc32/i4H11zTyWs0Kj6tcQrED0+JvYrlRK71DoP05bz/dxEEqesn
+	 Bz58iDr4nW08A==
+Date: Thu, 6 Feb 2025 13:05:26 +0000
+From: Will Deacon <will@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: Handle .ARM.attributes section in linker
+ scripts
+Message-ID: <20250206130526.GB3204@willie-the-truck>
+References: <20250204-arm64-handle-arm-attributes-in-linker-script-v2-1-d684097f5554@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-arm64-handle-arm-attributes-in-linker-script-v2-1-d684097f5554@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, 3 Feb 2025 17:16:06 +0100, Herve Codina wrote:
-> In some cases observed during ESD tests, the TI SN65DSI83 cannot recover
-> from errors by itself. A full restart of the bridge is needed in those
-> cases to have the bridge output LVDS signals again.
+Hi Nathan,
+
+On Tue, Feb 04, 2025 at 10:48:55AM -0700, Nathan Chancellor wrote:
+> A recent LLVM commit [1] started generating an .ARM.attributes section
+> similar to the one that exists for 32-bit, which results in orphan
+> section warnings (or errors if CONFIG_WERROR is enabled) from the linker
+> because it is not handled in the arm64 linker scripts.
 > 
-> Also, during tests, cases were observed where reading the status of the
+>   ld.lld: error: arch/arm64/kernel/vdso/vgettimeofday.o:(.ARM.attributes) is being placed in '.ARM.attributes'
+>   ld.lld: error: arch/arm64/kernel/vdso/vgetrandom.o:(.ARM.attributes) is being placed in '.ARM.attributes'
 > 
-> [ ... ]
+>   ld.lld: error: vmlinux.a(lib/vsprintf.o):(.ARM.attributes) is being placed in '.ARM.attributes'
+>   ld.lld: error: vmlinux.a(lib/win_minmax.o):(.ARM.attributes) is being placed in '.ARM.attributes'
+>   ld.lld: error: vmlinux.a(lib/xarray.o):(.ARM.attributes) is being placed in '.ARM.attributes'
+> 
+> Discard the new sections in the necessary linker scripts to resolve the
+> warnings, as the kernel and vDSO do not need to retain it, similar to
+> the .note.gnu.property section.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b3e5d80d0c48 ("arm64/build: Warn on orphan section placement")
+> Link: https://github.com/llvm/llvm-project/commit/ee99c4d4845db66c4daa2373352133f4b237c942 [1]
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+> Changes in v2:
+> - Discard the section instead of adding it to the final artifacts to
+>   mirror the .note.gnu.property section handling (Will).
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Thanks for the v2. Just a minor nit:
 
-Thanks!
-Maxime
+> - Link to v1: https://lore.kernel.org/r/20250124-arm64-handle-arm-attributes-in-linker-script-v1-1-74135b6cf349@kernel.org
+> ---
+>  arch/arm64/kernel/vdso/vdso.lds.S | 1 +
+>  arch/arm64/kernel/vmlinux.lds.S   | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
+> index 4ec32e86a8da..8095fef66209 100644
+> --- a/arch/arm64/kernel/vdso/vdso.lds.S
+> +++ b/arch/arm64/kernel/vdso/vdso.lds.S
+> @@ -80,6 +80,7 @@ SECTIONS
+>  		*(.data .data.* .gnu.linkonce.d.* .sdata*)
+>  		*(.bss .sbss .dynbss .dynsbss)
+>  		*(.eh_frame .eh_frame_hdr)
+> +		*(.ARM.attributes)
+>  	}
+
+Can we chuck this in the earlier /DISCARD/ section along with
+.note.gnu.property? i.e.
+
+
+diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
+index 4ec32e86a8da..47ad6944f9f0 100644
+--- a/arch/arm64/kernel/vdso/vdso.lds.S
++++ b/arch/arm64/kernel/vdso/vdso.lds.S
+@@ -41,6 +41,7 @@ SECTIONS
+         */
+        /DISCARD/       : {
+                *(.note.GNU-stack .note.gnu.property)
++               *(.ARM.attributes)
+        }
+        .note           : { *(.note.*) }                :text   :note
+
+
+Will
