@@ -1,227 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D19A22DF9F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE114A59
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738845130; cv=none; b=SlUf9Zma6dAtKhgGgrVwzvWk0M7e8S4cOG/xeK0OBnPiWrne+TPTTNcFLIucBSeWdD5mzQrQWS628hIerpdUaYP3cANqIkfO798BIJGIe4vjY0F3vzVH3W+FKXFUSvKSTTWgoJF3l8awLkaKHLHIwBDeZTQTuoxsAMIWHRvx/tc=
+	t=1738845165; cv=none; b=DV2l+eClLC/fZUldcKM1KnmXpFBHIQ/FgnymPoBaAC1eqnFVi9iCCjlXU2uoT8XGauhQIzW6Izfv2HSTyTD0YEKmPpw02oXKqUXDrVb1T2zmunDyh3eU0RqA8I7Zlw5weizXbnclEV/h7ZzEMeGseFI3/joilkGlhxeGP23oSSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738845130; c=relaxed/simple;
-	bh=D6rSv5QJt8rljmi1u+LhaGbvWVdAvFOUbjBSD9nJTkE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lljR0AawnkMAxcC0bgBPFnZG2PAd1afjSLBS2f7vgbz1v262merWqvjeNAfgbiWclzQbyap8K4YRCsQLm4cPJ9wFa4yZfC8DF3yxp8Fu3IFvWRNvysqMm7W6UlQNJK9LParwsk3QIdOLMoScXX0yJTe0F58K6fLfxJ2YywLIJ/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DezFwXzy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738845165; c=relaxed/simple;
+	bh=dvdVwTK9ToyFCwd3FDpliJ5Z5+oj52zc7BeNYcjGMUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B7JVyuLpGR8CSlNxYHVSimXmyrcPaE171M+VmEwdX/LEhtQj6CjT28U/d978v+ekI6O8IEcNUYflUHZTTeNdZ3+wmO70y21xILCpUVIhIcWMLKyl0nUC0ETPsH0Jf5Zcf6BFSJ8itiBgLmQsY5mAoX38GDjJHXa8xwL5W0oeonA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Rqsta/t6; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DezFwXzy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738845126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K1Qok3qY+Sgc1nq8fGNVOEuzrOY5wRE4ZSW4ewvvA58=;
-	b=DezFwXzyrq6kOgIMc6jpKBmORs7FMPigpVibcXXg7tDFM5TZoxuQyZDQ/KI3xYfJo//aEo
-	h0XKIothlyyFPsWjE27yOVaVsNbIAfATIf1HnLydnVhK7rBDXLGZt1+WjV8ogzhD9cmZcx
-	J3TL/3wU8nNtoLlBN+mL9IU63VdOFLA=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-63-_goKTm1ENwuqRiiM2bRrZw-1; Thu,
- 06 Feb 2025 07:32:03 -0500
-X-MC-Unique: _goKTm1ENwuqRiiM2bRrZw-1
-X-Mimecast-MFC-AGG-ID: _goKTm1ENwuqRiiM2bRrZw
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0FA401955DD0;
-	Thu,  6 Feb 2025 12:32:02 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.32.200])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E0CE01800352;
-	Thu,  6 Feb 2025 12:31:59 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.14-rc2
-Date: Thu,  6 Feb 2025 13:31:06 +0100
-Message-ID: <20250206123106.37283-1-pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Rqsta/t6"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54025432becso881470e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:32:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738845162; x=1739449962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JWRkn692xu3fndHgX/PtDqTVcXyCxVQh1w1lZ4iFLSw=;
+        b=Rqsta/t6V1nx/SEg5Xj8LMvVz1MYDcpZ6HZduE/Igu82Y27KGCV87WXsmCERQejKUi
+         PjsMoSZiNU5wd4pfHKpic/mLuDHweNjVsyuyrznwHjwSdkYgpe6fDsXLxuMq8byktCPg
+         q5IZyuUCqZCNMGvnp887A2ljtqUDijNPJ922AU1RCXvS8zqFDhF7NL/gR+ZAo2v2rFZQ
+         SA5xz1J1MZkYruqK10hRlmvs7bv4IWJmFWUP5rzK32yPc0nBw8iRof/r78CjJjgh+adT
+         N8Bc9sTbKIWIO8ksverufKWD1eNKX8AKz6UOqBie5qjy01go28PGPoKD+iSPznikEtlS
+         Zufw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738845162; x=1739449962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JWRkn692xu3fndHgX/PtDqTVcXyCxVQh1w1lZ4iFLSw=;
+        b=hw+Nnb9+N2dCHwjHDWwKRTnoPfcMZtHFPcI8wwkvZpmACzw93zifl5QyADgTh2xOFY
+         CfeGZK1lslEMi2Bb16IqZLWq5pcRXCQ4YBNrRkco101B2Zt4LfI6agXZF121mqB91/Ct
+         /10qAM0HZonBwLSbPUtOzcy9gZdvfv0v0TSWxfg3HFZuDo6OjpifDtGj6gBv3AdB71YI
+         2N+QSN2zzfUn1Sb9jTFZERu4h6X/t1RACYg125cK8q/3I2S5sRuvcgPmUaIsz9yekkYF
+         JvYZsaw+VECRi9EiYpm4p8UEas0fsd84p/cuL8O8WRcELFHulP6VPFbC69/10MENL/C+
+         vQeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWw9bjs72xQ5rVvdA5gh8u1Srlou0ecY7UXqncdY0UssHAbq/2oJ9M2BHi0x5TvP5gg8IEJDw5QKbrczyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4nz0JndYeO2d1+s5Qw5lG/BS8m/zQv8S7omI9oqB+Ays8wtDX
+	VspjonvQhXlZ4jbNAscbV4W3+0e48Aav+mNdxZ2uffSkgQhuULyrdXmLxClbEyBZ0mnB/FnwE+c
+	oxnDl9oV6MdTEBBaMFiI+MVmIFAQuaPaCr0bo6g==
+X-Gm-Gg: ASbGncsh0f2n0D+Z8vnbaT0beKDR9RW76NNn+BzHL5unUiTB3KcTUpNNRFKENebPar7
+	tj6RsWCvVov6IFwwn57NCOXEo+8vvRpKcTgkJCmrGhMgcWd502XCj/23rUUAEEDPGL0KIcnPDMQ
+	==
+X-Google-Smtp-Source: AGHT+IHOno/KZ+CGEGcrQMo7/996cTTP2DtCCzvVKfHVrOt05I06XEuaoQXc/ObdS2ENzYO5jwzIxEyk9zg2zQOd/6g=
+X-Received: by 2002:a05:6512:b90:b0:542:19ef:95c2 with SMTP id
+ 2adb3069b0e04-54405a225f3mr2321112e87.23.1738845161587; Thu, 06 Feb 2025
+ 04:32:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-4-apatel@ventanamicro.com> <20250203224436.GA363790-robh@kernel.org>
+In-Reply-To: <20250203224436.GA363790-robh@kernel.org>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Thu, 6 Feb 2025 18:02:28 +0530
+X-Gm-Features: AWEUYZkAxRNuUmU_XWz__RY8mc4lXIPtw0_-vRmYJbJRtQCbjrwJyHKjevCNgIg
+Message-ID: <CAK9=C2WTbkT32ERGZBGHyu0R1OSjTpHBswbBvsxygoycfr_2Fg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 03/17] dt-bindings: mailbox: Add bindings for
+ RISC-V SBI MPXY extension
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus!
+On Tue, Feb 4, 2025 at 4:14=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Feb 03, 2025 at 02:18:52PM +0530, Anup Patel wrote:
+> > Add device tree bindings for the RISC-V SBI Message Proxy (MPXY)
+> > extension as a mailbox controller.
+> >
+> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> > ---
+> >  .../bindings/mailbox/riscv,sbi-mpxy-mbox.yaml | 54 +++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,sbi=
+-mpxy-mbox.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-m=
+box.yaml b/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.ya=
+ml
+> > new file mode 100644
+> > index 000000000000..8a05e089b710
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yam=
+l
+> > @@ -0,0 +1,54 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mailbox/riscv,sbi-mpxy-mbox.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: RISC-V SBI Message Proxy (MPXY) extension based mailbox
+> > +
+> > +maintainers:
+> > +  - Anup Patel <anup@brainfault.org>
+> > +
+> > +description: |
+> > +  The RISC-V SBI Message Proxy (MPXY) extension [1] allows supervisor
+> > +  software to send messages through the SBI implementation (M-mode
+> > +  firmware or HS-mode hypervisor). The underlying message protocol
+> > +  and message format used by the supervisor software could be some
+> > +  other standard protocol compatible with the SBI MPXY extension
+> > +  (such as RISC-V Platform Management Interface (RPMI) [2]).
+> > +
+> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +  References
+> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +  [1] RISC-V Supervisor Binary Interface (SBI)
+> > +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
+> > +
+> > +  [2] RISC-V Platform Management Interface (RPMI)
+> > +      https://github.com/riscv-non-isa/riscv-rpmi/releases
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    const: sbi-mpxy-mbox
+>
+> 'mailbox' is the defined name for mailbox providers.
 
-Interestingly the recent kmemleak improvements allowed our CI to
-catch a couple of percpu leaks addressed here.
-We (mostly Jakub, to be accurate) are working to increase review
-coverage over the net code-base tweaking the MAINTAINER entries.
+Okay, I will update.
 
-The following changes since commit c2933b2befe25309f4c5cfbea0ca80909735fd76:
+>
+> > +
+> > +  compatible:
+> > +    const: riscv,sbi-mpxy-mbox
+> > +
+> > +  "#mbox-cells":
+> > +    const: 2
+> > +    description:
+> > +      The first cell specifies channel_id of the SBI MPXY channel,
+> > +      the second cell specifies MSG_PROT_ID of the SBI MPXY channel
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#mbox-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    sbi-mpxy-mbox {
+> > +          compatible =3D "riscv,sbi-mpxy-mbox";
+> > +          #mbox-cells =3D <2>;
+>
+> Is there an SBI node? #mbox-cells could just be part of that along with
+> anything else that SBI is a provider for. And we already have the PMU
+> SBI binding. It's all one thing, so there should be one SBI node. Then
+> we can debate about child nodes of it.
 
-  Merge tag 'net-6.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-01-30 12:24:20 -0800)
+There is no SBI node for any other SBI extension.
 
-are available in the Git repository at:
+The PMU bindings for "riscv,pmu" compatible string is for the firmware
+driver (M-mode) which implements the SBI PMU extension not the Linux
+driver.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.14-rc2
+The "title" and "description" of
+<linux_source>/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+needs some clarification.
 
-for you to fetch changes up to 2a64c96356c87aa8af826605943e5524bf45e24d:
-
-  Revert "net: stmmac: Specify hardware capability value when FIFO size isn't specified" (2025-02-06 11:53:54 +0100)
-
-----------------------------------------------------------------
-Current release - regressions:
-
-  - core: harmonize tstats and dstats
-
-  - ipv6: fix dst refleaks in rpl, seg6 and ioam6 lwtunnels
-
-  - eth: tun: revert fix group permission check
-
-  - eth: stmmac: revert "specify hardware capability value when FIFO size isn't specified"
-
-Previous releases - regressions:
-
-  - udp: gso: do not drop small packets when PMTU reduces
-
-  - rxrpc: fix race in call state changing vs recvmsg()
-
-  - eth: ice: fix Rx data path for heavy 9k MTU traffic
-
-  - eth: vmxnet3: fix tx queue race condition with XDP
-
-Previous releases - always broken:
-
-  - sched: pfifo_tail_enqueue: drop new packet when sch->limit == 0
-
-  - ethtool: ntuple: fix rss + ring_cookie check
-
-  - rxrpc: fix the rxrpc_connection attend queue handling
-
-Misc:
-
-  - recognize Kuniyuki Iwashima as a maintainer
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Cong Wang (2):
-      netem: Update sch->q.qlen before qdisc_tree_reduce_backlog()
-      selftests/tc-testing: Add a test case for qdisc_tree_reduce_backlog()
-
-David Howells (3):
-      rxrpc: Fix the rxrpc_connection attend queue handling
-      rxrpc: Fix call state set to not include the SERVER_SECURING state
-      rxrpc: Fix race in call state changing vs recvmsg()
-
-Eric Dumazet (1):
-      net: rose: lock the socket in rose_bind()
-
-Florian Fainelli (1):
-      net: bcmgenet: Correct overlaying of PHY and MAC Wake-on-LAN
-
-Ido Schimmel (1):
-      net: sched: Fix truncation of offloaded action statistics
-
-Jacob Moroni (1):
-      net: atlantic: fix warning during hot unplug
-
-Jakub Kicinski (17):
-      net: ipv6: fix dst refleaks in rpl, seg6 and ioam6 lwtunnels
-      net: ipv6: fix dst ref loops in rpl, seg6 and ioam6 lwtunnels
-      Merge branch '100GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue
-      MAINTAINERS: list openvswitch docs under its entry
-      MAINTAINERS: add Kuniyuki Iwashima to TCP reviewers
-      MAINTAINERS: add a general entry for BSD sockets
-      MAINTAINERS: add entry for UNIX sockets
-      Merge branch 'maintainers-recognize-kuniyuki-iwashima-as-a-maintainer'
-      ethtool: rss: fix hiding unsupported fields in dumps
-      ethtool: ntuple: fix rss + ring_cookie check
-      selftests: drv-net: rss_ctx: add missing cleanup in queue reconfigure
-      selftests: drv-net: rss_ctx: don't fail reconfigure test if queue offset not supported
-      Merge branch 'ethtool-rss-minor-fixes-for-recent-rss-changes'
-      Merge branch 'net_sched-two-security-bug-fixes-and-test-cases'
-      Merge branch 'rxrpc-call-state-fixes'
-      MAINTAINERS: add entry for ethtool
-      MAINTAINERS: add a sample ethtool section entry
-
-Jiasheng Jiang (1):
-      ice: Add check for devm_kzalloc()
-
-Lenny Szubowicz (1):
-      tg3: Disable tg3 PCIe AER on system reboot
-
-Maciej Fijalkowski (3):
-      ice: put Rx buffers after being done with current frame
-      ice: gather page_count()'s of each frag right before XDP prog call
-      ice: stop storing XDP verdict within ice_rx_buf
-
-Matthieu Baerts (NGI0) (1):
-      selftests: mptcp: connect: -f: no reconnect
-
-Paolo Abeni (1):
-      net: harmonize tstats and dstats
-
-Quang Le (2):
-      pfifo_tail_enqueue: Drop new packet when sch->limit == 0
-      selftests/tc-testing: Add a test case for pfifo_head_drop qdisc when limit==0
-
-Russell King (Oracle) (1):
-      Revert "net: stmmac: Specify hardware capability value when FIFO size isn't specified"
-
-Sankararaman Jayaraman (1):
-      vmxnet3: Fix tx queue race condition with XDP
-
-Willem de Bruijn (1):
-      tun: revert fix group permission check
-
-Yan Zhai (1):
-      udp: gso: do not drop small packets when PMTU reduces
-
- MAINTAINERS                                        |  43 ++++++
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c    |   4 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  16 ++-
- drivers/net/ethernet/broadcom/tg3.c                |  58 ++++++++
- drivers/net/ethernet/intel/ice/devlink/devlink.c   |   3 +
- drivers/net/ethernet/intel/ice/ice_txrx.c          | 150 ++++++++++++++-------
- drivers/net/ethernet/intel/ice/ice_txrx.h          |   1 -
- drivers/net/ethernet/intel/ice/ice_txrx_lib.h      |  43 ------
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  35 +++--
- drivers/net/tun.c                                  |  14 +-
- drivers/net/vmxnet3/vmxnet3_xdp.c                  |  14 +-
- include/linux/netdevice.h                          |   2 +-
- include/net/sch_generic.h                          |   2 +-
- include/trace/events/rxrpc.h                       |   1 +
- net/core/dev.c                                     |  14 ++
- net/ethtool/ioctl.c                                |   2 +-
- net/ethtool/rss.c                                  |   3 +-
- net/ipv4/udp.c                                     |   4 +-
- net/ipv6/ioam6_iptunnel.c                          |  14 +-
- net/ipv6/rpl_iptunnel.c                            |  15 ++-
- net/ipv6/seg6_iptunnel.c                           |  15 ++-
- net/ipv6/udp.c                                     |   4 +-
- net/rose/af_rose.c                                 |  24 ++--
- net/rxrpc/ar-internal.h                            |   2 +-
- net/rxrpc/call_object.c                            |   6 +-
- net/rxrpc/conn_event.c                             |  21 +--
- net/rxrpc/conn_object.c                            |   1 +
- net/rxrpc/input.c                                  |  12 +-
- net/rxrpc/sendmsg.c                                |   2 +-
- net/sched/sch_fifo.c                               |   3 +
- net/sched/sch_netem.c                              |   2 +-
- tools/testing/selftests/drivers/net/hw/rss_ctx.py  |   9 +-
- tools/testing/selftests/net/mptcp/mptcp_connect.c  |   2 +-
- tools/testing/selftests/net/udpgso.c               |  26 ++++
- .../tc-testing/tc-tests/infra/qdiscs.json          |  34 ++++-
- .../selftests/tc-testing/tc-tests/qdiscs/fifo.json |  23 ++++
- 36 files changed, 446 insertions(+), 178 deletions(-)
-
+Regards,
+Anup
