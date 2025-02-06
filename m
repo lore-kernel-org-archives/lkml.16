@@ -1,99 +1,200 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38B32E64A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D0822332E;
+	Thu,  6 Feb 2025 06:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738822228; cv=none; b=Brtv7cy4JweZWPPNfvh9o01lV/l+YMasDhVlkiuDPGyE9ACJlLnwf7Ja8GerHi/Qvf0Uiap+hSIB83z/iLqor0+B9Gz3xoodl60vKprr60Bl4DeEmey0YGnkBtw+fi/8m+AmuWGru9C6+dUFfO4YFnu3TBVdxwGK2QoO82QD7xk=
+	t=1738822404; cv=none; b=BC0Ew2dc1cQRxL0e0RQ9H3DwOhdpXExJSjYre5bGbhmn+ObTPZ0cglIbfje3E84jHNwuexmnzD25H/FUIKqGDtfpLKZBDVBOqaPmxDTt/JqOv3dSl6ay2jO02oyjjZa7EUpf9m8Eht8oQojmKpHRFhPXPYQPfNqNccSG29AKyJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738822228; c=relaxed/simple;
-	bh=ZtlpYHD23tLGHnH7hpOv8dQNR/l/mCaUTTXICH/mnzg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qfyIF6G5VpchEuO8LX+hH2ToyGN3ni5A/5iTVCGz4BQbeepaZnkCgNRIcj+62AjaJ+ltLXV3yXIW8hDSfKZVhbJGb5v30Dy+AXiICTuujCnIR0a69s+JEsueTjYZHkk8DVkugXXA39WgieMn4Cr7VoommWZ6pMayU9vCw3zVOfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 045c96e6e45111efa216b1d71e6e1362-20250206
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:44d702fb-93e4-4758-8429-b0f8d9e70203,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.45,REQID:44d702fb-93e4-4758-8429-b0f8d9e70203,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:9f09ab7fcfe132fa70344e3d24284fec,BulkI
-	D:2502061410119BXMBQ43,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
-	C:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
-	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 045c96e6e45111efa216b1d71e6e1362-20250206
-X-User: liuye@kylinos.cn
-Received: from localhost.localdomain [(223.70.160.239)] by mailgw.kylinos.cn
-	(envelope-from <liuye@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1519787354; Thu, 06 Feb 2025 14:10:08 +0800
-From: Liu Ye <liuye@kylinos.cn>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Liu Ye <liuye@kylinos.cn>
-Subject: [PATCH] mm/memfd: Fix spelling and grammatical issues
-Date: Thu,  6 Feb 2025 14:09:58 +0800
-Message-Id: <20250206060958.98010-1-liuye@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1738822404; c=relaxed/simple;
+	bh=QPSFVvim1khGndp9G0sS+Fqd4kfhnsgI0vmM66bRMGI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JqsMcCboFPObI9STZSicRvhYp2US7S7TI8NHtdWglwovu2Lcp1f05oog2aOciCO9tG2Zq7Rd3VvoC2pCHR0Xf6hTmof/kmYAxKCau6Bgwn/+dMzCwNnkqKx1ODJ8rC/WZCm7dVXFHQmpuCLl5cGEpk0KKA+td9JBSWJdRgoDbo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YpRbs61Zhz4f3jks;
+	Thu,  6 Feb 2025 14:12:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id ABE591A058E;
+	Thu,  6 Feb 2025 14:13:13 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCF34UqRnpFU0DA--.34331S2;
+	Thu, 06 Feb 2025 14:13:13 +0800 (CST)
+Subject: Re: [PATCH v4 2/5] Xarray: move forward index correctly in
+ xas_pause()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: akpm@linux-foundation.org, willy@infradead.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+ linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <20241218154613.58754-1-shikemeng@huaweicloud.com>
+ <20241218154613.58754-3-shikemeng@huaweicloud.com>
+ <CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <82014768-2ea7-2a28-cade-99d5d8ebe59e@huaweicloud.com>
+Date: Thu, 6 Feb 2025 14:13:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCnCF34UqRnpFU0DA--.34331S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFW7Ww15Kw18XryUAF17GFg_yoWrCFWDpF
+	WDJa4xKFW8Jr1Ikr18ta10q3409w1Yka13KrW5GF10yrsrCrnaya1jgrZ8uFyDuF4qvry2
+	yF4vgw1qgw4DJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-The comment "If a private mapping then writability is irrelevant" contains
-a typo. It should be "If a private mapping then writability is irrelevant".
-The comment "SEAL_EXEC implys SEAL_WRITE, making W^X from the start."
-contains a typo. It should be "SEAL_EXEC implies SEAL_WRITE, making W^X
-from the start."
 
-Signed-off-by: Liu Ye <liuye@kylinos.cn>
----
- mm/memfd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memfd.c b/mm/memfd.c
-index 37f7be57c2f5..c64df1343059 100644
---- a/mm/memfd.c
-+++ b/mm/memfd.c
-@@ -259,7 +259,7 @@ static int memfd_add_seals(struct file *file, unsigned int seals)
- 	}
- 
- 	/*
--	 * SEAL_EXEC implys SEAL_WRITE, making W^X from the start.
-+	 * SEAL_EXEC implies SEAL_WRITE, making W^X from the start.
- 	 */
- 	if (seals & F_SEAL_EXEC && inode->i_mode & 0111)
- 		seals |= F_SEAL_SHRINK|F_SEAL_GROW|F_SEAL_WRITE|F_SEAL_FUTURE_WRITE;
-@@ -337,7 +337,7 @@ static int check_write_seal(unsigned long *vm_flags_ptr)
- 	unsigned long vm_flags = *vm_flags_ptr;
- 	unsigned long mask = vm_flags & (VM_SHARED | VM_WRITE);
- 
--	/* If a private matting then writability is irrelevant. */
-+	/* If a private mapping then writability is irrelevant. */
- 	if (!(mask & VM_SHARED))
- 		return 0;
- 
--- 
-2.25.1
+on 1/28/2025 12:21 AM, Geert Uytterhoeven wrote:
+> Hi Kemeng,
+> 
+> On Wed, 18 Dec 2024 at 07:58, Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+>> After xas_load(), xas->index could point to mid of found multi-index entry
+>> and xas->index's bits under node->shift maybe non-zero. The afterward
+>> xas_pause() will move forward xas->index with xa->node->shift with bits
+>> under node->shift un-masked and thus skip some index unexpectedly.
+>>
+>> Consider following case:
+>> Assume XA_CHUNK_SHIFT is 4.
+>> xa_store_range(xa, 16, 31, ...)
+>> xa_store(xa, 32, ...)
+>> XA_STATE(xas, xa, 17);
+>> xas_for_each(&xas,...)
+>> xas_load(&xas)
+>> /* xas->index = 17, xas->xa_offset = 1, xas->xa_node->xa_shift = 4 */
+>> xas_pause()
+>> /* xas->index = 33, xas->xa_offset = 2, xas->xa_node->xa_shift = 4 */
+>> As we can see, index of 32 is skipped unexpectedly.
+>>
+>> Fix this by mask bit under node->xa_shift when move forward index in
+>> xas_pause().
+>>
+>> For now, this will not cause serious problems. Only minor problem
+>> like cachestat return less number of page status could happen.
+>>
+>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> 
+> Thanks for your patch, which is now commit c9ba5249ef8b080c ("Xarray:
+> move forward index correctly in xas_pause()") upstream.
+> 
+>> --- a/lib/test_xarray.c
+>> +++ b/lib/test_xarray.c
+>> @@ -1448,6 +1448,41 @@ static noinline void check_pause(struct xarray *xa)
+>>         XA_BUG_ON(xa, count != order_limit);
+>>
+>>         xa_destroy(xa);
+>> +
+>> +       index = 0;
+>> +       for (order = XA_CHUNK_SHIFT; order > 0; order--) {
+>> +               XA_BUG_ON(xa, xa_store_order(xa, index, order,
+>> +                                       xa_mk_index(index), GFP_KERNEL));
+>> +               index += 1UL << order;
+>> +       }
+>> +
+>> +       index = 0;
+>> +       count = 0;
+>> +       xas_set(&xas, 0);
+>> +       rcu_read_lock();
+>> +       xas_for_each(&xas, entry, ULONG_MAX) {
+>> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
+>> +               index += 1UL << (XA_CHUNK_SHIFT - count);
+>> +               count++;
+>> +       }
+>> +       rcu_read_unlock();
+>> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
+>> +
+>> +       index = 0;
+>> +       count = 0;
+>> +       xas_set(&xas, XA_CHUNK_SIZE / 2 + 1);
+>> +       rcu_read_lock();
+>> +       xas_for_each(&xas, entry, ULONG_MAX) {
+>> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
+>> +               index += 1UL << (XA_CHUNK_SHIFT - count);
+>> +               count++;
+>> +               xas_pause(&xas);
+>> +       }
+>> +       rcu_read_unlock();
+>> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
+>> +
+>> +       xa_destroy(xa);
+>> +
+>>  }
+> 
+> On m68k, the last four XA_BUG_ON() checks above are triggered when
+> running the test.  With extra debug prints added:
+> 
+>     entry = 00000002 xa_mk_index(index) = 000000c1
+>     entry = 00000002 xa_mk_index(index) = 000000e1
+>     entry = 00000002 xa_mk_index(index) = 000000f1
+>     ...
+>     entry = 000000e2 xa_mk_index(index) = fffff0ff
+>     entry = 000000f9 xa_mk_index(index) = fffff8ff
+>     entry = 000000f2 xa_mk_index(index) = fffffcff
+>     count = 63 XA_CHUNK_SHIFT = 6
+>     entry = 00000081 xa_mk_index(index) = 00000001
+>     entry = 00000002 xa_mk_index(index) = 00000081
+>     entry = 00000002 xa_mk_index(index) = 000000c1
+>     ...
+>     entry = 000000e2 xa_mk_index(index) = ffffe0ff
+>     entry = 000000f9 xa_mk_index(index) = fffff0ff
+>     entry = 000000f2 xa_mk_index(index) = fffff8ff
+>      count = 62 XA_CHUNK_SHIFT = 6
+> 
+> On arm32, the test succeeds, so it's probably not a 32-vs-64-bit issue.
+> Perhaps a big-endian or alignment issue (alignof(int/long) = 2)?
+Hi Geert,
+Sorry for late reply. After check the debug info and the code, I think
+the test is failed because CONFIG_XARRAY_MULTI is off. I guess
+CONFIG_XARRAY_MULTI is on arm32 and is off on m68k so the test result
+diffs. Luckly it's only a problem of of test code.
+I will send patch to correct the test code soon. Thanks!
+
+Kemeng
+
+> 
+>> --- a/lib/xarray.c
+>> +++ b/lib/xarray.c
+>> @@ -1147,6 +1147,7 @@ void xas_pause(struct xa_state *xas)
+>>                         if (!xa_is_sibling(xa_entry(xas->xa, node, offset)))
+>>                                 break;
+>>                 }
+>> +               xas->xa_index &= ~0UL << node->shift;
+>>                 xas->xa_index += (offset - xas->xa_offset) << node->shift;
+>>                 if (xas->xa_index == 0)
+>>                         xas->xa_node = XAS_BOUNDS;
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
 
