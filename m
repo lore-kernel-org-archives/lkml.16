@@ -1,56 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144BD156C5E;
-	Thu,  6 Feb 2025 19:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADA5156C5E;
+	Thu,  6 Feb 2025 19:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738871604; cv=none; b=sEl4nkSfZsQxBw6krRxOXzAXOGMXiDNcSM3n3I5sfF620XXe1Nokn8QA7R1AdItJ/rLzfi1ZDWUN/7AI/uquk6Sj5fyN3a941cnmhnuAVoQwncMKA/CROw6XNHJ0a1MGFNGcUSmUpFDmMRBGBAY6JmBl6D62/N8KsGdVGRnMiNE=
+	t=1738871721; cv=none; b=sZL7MlReR0T+ehDhLoeZczZxU9nx54o8gM9P0wWGv0txSd+u05z44cRcF4SCkq2uUJVOZFpmO9C3dHRofI/s9a2FoPNtwkD2C2MuYtiuHMY40VLSgjnuA49Sgb2/BAVWXVgMosuErlRQ4I2ZidU3izu9npDoSK13zGHfYZcNnVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738871604; c=relaxed/simple;
-	bh=diAQwsnLHp7+loCA2RcUwjeKzdocP0elwX8QEeabCGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aq3oQJO1sDnh6m5Nbi4aaUlJeaRblB2qKyVEJ2IpAQQ+ubvpsqUbocDzUvIEd/a8BnG5atEHo1pNaPtUwYsfXNamF4PF1JxL/whRuBvI7DO0ZUDs+W7GpjmM0bUdM7jjKGCiRhKUCmY9JtBZiH28EEcW/nmZEZA40SsKYwHz2eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CoNLBikJ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738871721; c=relaxed/simple;
+	bh=KD3Tivuqec64/cv0h84BpbioMwkWOoscZUAaj+dmMeg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=DEEuu9BfNa5gtA5mIJCJU+fk2dQiKST4aTKjO7WR9LxJxzZuArSFO87FTy+Y4tIcSLz4yl1L+GBC6u48B1GKlFRR4/LuiSA6AZBApgOWfzrf4NHNhlacwpEMCq2PLPty4RiqEtnSMFdBXWGxWnAVUMcACVxYrFqWuDAuQfTTUBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fx65SnyR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CoNLBikJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738871603; x=1770407603;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=diAQwsnLHp7+loCA2RcUwjeKzdocP0elwX8QEeabCGI=;
-  b=CoNLBikJL0RNRPo/2moRLaY0oJ5tZ+c4WBF8T9abeHLSqEInoOK1u915
-   KD2i3M34Kbqt+er/jTtYTM+eEpGsxZi2aZAHrNcHaU70oPTZgRrVi+iTm
-   uFTyznL84109T5xzC6OAIKjxlhOiQMAvURH2PyN9mwer2z1F8AFRA4MUc
-   /oghR+SXLdyxT/zrDvFKKRy2st4uMsvJ30sYnh6M2G6UrD6dNuikLR3Kl
-   dwtXL0Rt96lMBvQbVrygIm9Zk5seSTIF6Meqy2w8ejsp2Y82sO1yPw0ED
-   7u3OYlZyRQ+UK1YHtvIk4w4OJBXNZMdlN+0u+mABsUqYvcC+uwK7L6Jh4
-   g==;
-X-CSE-ConnectionGUID: VjTddMpsTzm9GBku2Glo5g==
-X-CSE-MsgGUID: TVeUCbBLRk6FL0CtPvUVyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61977372"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="61977372"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:53:22 -0800
-X-CSE-ConnectionGUID: Al2rI4fSTsW7LyL5ZBCuoQ==
-X-CSE-MsgGUID: Tj0zKYmERGaymi13fnYepg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="116314294"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:53:22 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id AEA7920B5713;
-	Thu,  6 Feb 2025 11:53:19 -0800 (PST)
-Message-ID: <608077bc-4139-4a97-8dc4-7997177d95c4@linux.intel.com>
-Date: Thu, 6 Feb 2025 14:53:17 -0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fx65SnyR"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516GrTIK019088;
+	Thu, 6 Feb 2025 19:55:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vR/ei5/xB3V8KNV8RDZKjsSFuoqxaN8JLAQUcXW3D7M=; b=Fx65SnyRqqduSNA1
+	BJZh8DcobrYU7GaBjnG72/yLRDUeetD0/OFSDyr12BJI/cIvNhcHoTsuRsGQeCnT
+	hk0NWf/+fwSF0e5ASNGZLtm75N5dTVwo4wyoolSIZdlz+l8Fi9W3KeOjwIb64Hoe
+	OyJ60qBNVOawNspqYq3YFqUjwBVwMX73oPEpNKSQNiVOVQQI3lGW0HodPLsYBDiA
+	vWAkxQ0CtHRJoIW+jdbu82YKWz42fyeeuKdVUbM1sv4tmRvaP+Poyz/9ZAu7GvCK
+	yv+2iuy6Ilhgl2m8LLyEOaXkkASeO7jbysN+Tx7LsP4v5XgCmcISGGyjAagxeYG2
+	JYj9EA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n10h0f01-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 19:55:14 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516JtD3V020123
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Feb 2025 19:55:13 GMT
+Received: from [10.4.85.59] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
+ 11:55:10 -0800
+Message-ID: <f3b30e00-d6cd-44ee-88a5-e5a523563bb3@quicinc.com>
+Date: Fri, 7 Feb 2025 06:55:08 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,122 +50,182 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids
- events/metrics
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Falcon <thomas.falcon@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
- Samantha Alt <samantha.alt@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>
-References: <20250205173140.238294-1-irogers@google.com>
- <20250205173140.238294-12-irogers@google.com>
- <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com>
- <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
- <9fa56c75-2ee6-4901-9e04-0ec23412fd62@linux.intel.com>
- <CAP-5=fWpbXSwZq5biRZ1fjcSJY2DO4g=cv-0K8jZ1Gzv3bOfhA@mail.gmail.com>
- <58e08371-8d43-4f84-baaf-64b0af95c7cb@linux.intel.com>
- <CAP-5=fX+u_Un-WYKA35sc366kniuXFVfRDT+dzWd-axTG5PmpA@mail.gmail.com>
- <51732c12-b5d7-4b81-8ea5-79e87b87795d@linux.intel.com>
- <CAP-5=fWQj01O3WmGLoAf6O_uEeMHpOUqVWvHi3nW_kGj4VtZWg@mail.gmail.com>
- <145ce38d-67c5-47e5-9625-0ae9e9831fd9@linux.intel.com>
- <f0eb58c2-afba-4810-96d5-61f1c942ed57@linux.intel.com>
- <CAP-5=fW3eY70Vh_GuTVB=M2MFcpe-WqRy76cK++UMYT5OKMtLg@mail.gmail.com>
+From: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
+Subject: Re: [PATCH v2 0/8] Trusted Execution Environment (TEE) driver for
+ Qualcomm TEE (QTEE)
+To: Sumit Garg <sumit.garg@linaro.org>
+CC: Jens Wiklander <jens.wiklander@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <op-tee@lists.trustedfirmware.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+References: <20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com>
+ <CAFA6WYNGH_LP-R4hQx-+XMY3zFN74ij-JngwnuKOsz8=r_-bsQ@mail.gmail.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fW3eY70Vh_GuTVB=M2MFcpe-WqRy76cK++UMYT5OKMtLg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFA6WYNGH_LP-R4hQx-+XMY3zFN74ij-JngwnuKOsz8=r_-bsQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: G-vwhLYrK_AUV9xNpqFC9CQHg7gGbVkK
+X-Proofpoint-ORIG-GUID: G-vwhLYrK_AUV9xNpqFC9CQHg7gGbVkK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_06,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060157
 
 
 
-On 2025-02-06 2:05 p.m., Ian Rogers wrote:
-> On Thu, Feb 6, 2025 at 10:59 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->> On 2025-02-06 1:53 p.m., Liang, Kan wrote:
->>>>> However, when I dump the debug information,
->>>>> ./perf stat -M tma_frontend_bound -vvv
->>>>>
->>>>> I got below debug information. I have no idea where the slot is from.
->>>>> It seems the perf code mess up the p-core metrics with the e-core
->>>>> metrics. But why only slot?
->>>>> It seems a bug of perf tool.
->>>>>
->>>>> found event cpu_atom@CPU_CLK_UNHALTED.CORE@
->>>>> found event cpu_atom@TOPDOWN_FE_BOUND.ALL@
->>>>> found event slots
->>>>> Parsing metric events
->>>>>
->>>>> '{cpu_atom/CPU_CLK_UNHALTED.CORE,metric-id=cpu_atom!3CPU_CLK_UNHALTED.CORE!3/,cpu_atom/TOPDOWN_FE_BOUND.ALL,metric-id=cpu_atom!3TOPDOWN_FE_BOUND.ALL!3/,slots/metric-id=slots/}:W'
->>> It because the perf adds "slot" as a tool event for the e-core Topdown
->>> metrics.
->>> There is no "slot" event for e-core.
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/
->>> tools/perf/util/metricgroup.c#n1481
->>>
->>> I will check why "slot" event is added as a tool event for e-core?
->>> That doesn't make sense.
->>
->>
->> BTW: I checked the list of the tool events. Except the slots, others are
->> all SW (or non-HW) events which should always be available.
->> Slots is a HW event and only be available for p-core.
->> It doesn't look like a good fit here.
->>
->> static const char *const tool_pmu__event_names[TOOL_PMU__EVENT_MAX] = {
->>         NULL,
->>         "duration_time",
->>         "user_time",
->>         "system_time",
->>         "has_pmem",
->>         "num_cores",
->>         "num_cpus",
->>         "num_cpus_online",
->>         "num_dies",
->>         "num_packages",
->>         "slots",
->>         "smt_on",
->>         "system_tsc_freq",
->> };
+On 2/5/2025 4:38 PM, Sumit Garg wrote:
+> Hi Amirreza,
 > 
-> IIRC it was added on metric changes I wasn't a reviewer on:
-> https://lore.kernel.org/r/1673940573-90503-2-git-send-email-renyu.zj@linux.alibaba.com
-> and then carried forward by me. The event should only be enabled on aarch64:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/tool_pmu.c?h=perf-tools-next#n38
-> Where is the slots event added to the metric expr (expression) string?
-> The metric should have events pulled out, parsed and
-> parse_events__sort_events_and_fix_groups deal with related issues to
-> this. I thought it was a requirement that the slots be in the metric -
-> or else why is the converter script injecting them? :-)
+> On Mon, 3 Feb 2025 at 08:14, Amirreza Zarrabi <quic_azarrabi@quicinc.com> wrote:
+>>
+>> This patch series introduces a Trusted Execution Environment (TEE)
+>> driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
+>> and services to run securely. It uses an object-based interface, where
+>> each service is an object with sets of operations. Clients can invoke
+>> these operations on objects, which can generate results, including other
+>> objects. For example, an object can load a TA and return another object
+>> that represents the loaded TA, allowing access to its services.
+>>
+>> Kernel and userspace services are also available to QTEE through a
+>> similar approach. QTEE makes callback requests that are converted into
+>> object invocations. These objects can represent services within the
+>> kernel or userspace process.
+>>
+>> Note: This patch series focuses on QTEE objects and userspace services.
+>>
+>> Linux already provides a TEE subsystem, which is described in [1]. The
+>> tee subsystem provides a generic ioctl interface, TEE_IOC_INVOKE, which
+>> can be used by userspace to talk to a TEE backend driver. We extend the
+>> Linux TEE subsystem to understand object parameters and an ioctl call so
+>> client can invoke objects in QTEE:
+>>
+>>   - TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_*
+>>   - TEE_IOC_OBJECT_INVOKE
+>>
+>> The existing ioctl calls TEE_IOC_SUPPL_RECV and TEE_IOC_SUPPL_SEND are
+>> used for invoking services in the userspace process by QTEE.
+>>
+>> The TEE backend driver uses the QTEE Transport Message to communicate
+>> with QTEE. Interactions through the object INVOKE interface are
+>> translated into QTEE messages. Likewise, object invocations from QTEE
+>> for userspace objects are converted into SEND/RECV ioctl calls to
+>> supplicants.
+>>
+>> The details of QTEE Transport Message to communicate with QTEE is
+>> available in [PATCH 10/10] Documentation: tee: Add Qualcomm TEE driver.
+>>
+>> You can run basic tests with following steps:
+>> git clone https://github.com/quic/quic-teec.git
+>> cd quic-teec
+>> mkdir build
+>> cmake .. -DCMAKE_TOOLCHAIN_FILE=CMakeToolchain.txt -DBUILD_UNITTEST=ON
+>>
+>> https://github.com/quic/quic-teec/blob/main/README.md lists dependancies
+>> needed to build the above.
+>>
+>> This series has been tested for basic QTEE object invocations and
+>> callback requests, including loading a TA and requesting services form
+>> the TA.
+> 
+> Thanks for sharing these test user-space applications/libraries. Can I
+> know which platforms are currently supported by this QTEE driver? I
+> would like to run and understand the overall stack on a real device. I
+> do have rb3, rb5 and db410c on my desk to test with.
+> 
+> Also, platform support is important information you should put in the
+> cover letter as well as the QTEE documentation.
+> 
+> -Sumit
 > 
 
+I have tested it with sm8650-mtp. But would expect it to work with any platform.
+I'll update the cover letter with the details :).
 
-No, it's the perf tool which inject the "slots" event in parse_ids().
+- Amir
 
-In parse_groups(), the tool_events[] is constructed here.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/metricgroup.c#n1557
+>>
+>> [1] https://www.kernel.org/doc/Documentation/tee.txt
+>>
+>> Signed-off-by: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
+>> ---
+>> Changes in v2:
+>> - Clean up commit messages and comments.
+>> - Use better names such as ubuf instead of membuf or QCOMTEE prefix
+>>   instead of QCOM_TEE, or names that are more consistent with other
+>>   TEE-backend drivers such as qcomtee_context_data instead of
+>>   qcom_tee_context.
+>> - Drop the DTS patch and instantiate the device from the scm driver.
+>> - Use a single structure for all driver's internal states.
+>> - Drop srcu primitives and use the existing mutex for synchronization
+>>   between the supplicant and QTEE.
+>> - Directly use tee_context to track the lifetime of qcomtee_context_data.
+>> - Add close_context() to be called when the user closes the tee_context.
+>> - Link to v1: https://lore.kernel.org/r/20241202-qcom-tee-using-tee-ss-without-mem-obj-v1-0-f502ef01e016@quicinc.com
+>>
+>> Changes in v1:
+>> - It is a complete rewrite to utilize the TEE subsystem.
+>> - Link to RFC: https://lore.kernel.org/all/20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com
+>>
+>> ---
+>> Amirreza Zarrabi (8):
+>>       tee: allow a driver to allocate a tee_device without a pool
+>>       tee: add close_context to TEE driver operation
+>>       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+>>       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF
+>>       firmware: qcom: scm: add support for object invocation
+>>       tee: add Qualcomm TEE driver
+>>       qcomtee: add primordial object
+>>       Documentation: tee: Add Qualcomm TEE driver
+>>
+>>  Documentation/tee/index.rst            |   1 +
+>>  Documentation/tee/qtee.rst             | 150 ++++++
+>>  drivers/firmware/qcom/qcom_scm.c       | 128 ++++++
+>>  drivers/firmware/qcom/qcom_scm.h       |   7 +
+>>  drivers/tee/Kconfig                    |   1 +
+>>  drivers/tee/Makefile                   |   1 +
+>>  drivers/tee/qcomtee/Kconfig            |  10 +
+>>  drivers/tee/qcomtee/Makefile           |  10 +
+>>  drivers/tee/qcomtee/async.c            | 160 +++++++
+>>  drivers/tee/qcomtee/call.c             | 741 ++++++++++++++++++++++++++++++
+>>  drivers/tee/qcomtee/core.c             | 810 +++++++++++++++++++++++++++++++++
+>>  drivers/tee/qcomtee/primordial_obj.c   |  65 +++
+>>  drivers/tee/qcomtee/qcom_scm.c         |  36 ++
+>>  drivers/tee/qcomtee/qcomtee_msg.h      | 234 ++++++++++
+>>  drivers/tee/qcomtee/qcomtee_private.h  | 226 +++++++++
+>>  drivers/tee/qcomtee/release.c          |  59 +++
+>>  drivers/tee/qcomtee/shm.c              | 102 +++++
+>>  drivers/tee/qcomtee/user_obj.c         | 712 +++++++++++++++++++++++++++++
+>>  drivers/tee/tee_core.c                 | 121 ++++-
+>>  drivers/tee/tee_private.h              |   6 -
+>>  include/linux/firmware/qcom/qcom_scm.h |  27 ++
+>>  include/linux/firmware/qcom/qcom_tee.h | 286 ++++++++++++
+>>  include/linux/tee_core.h               |  15 +-
+>>  include/linux/tee_drv.h                |  18 +
+>>  include/uapi/linux/tee.h               |  54 ++-
+>>  25 files changed, 3964 insertions(+), 16 deletions(-)
+>> ---
+>> base-commit: dab2734f8e9ecba609d66d1dd087a392a7774c04
+>> change-id: 20241202-qcom-tee-using-tee-ss-without-mem-obj-362c66340527
+>>
+>> Best regards,
+>> --
+>> Amirreza Zarrabi <quic_azarrabi@quicinc.com>
+>>
 
-In the find_tool_events(), the tool_pmu__event_to_str() is used to
-compare the tool_events. It only check the event name, no PMU or arch.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/metricgroup.c#n1389
-
-So the tool_events[TOOL_PMU__EVENT_SLOTS] is set to true, because the
-p-core Topdown metrics has "slots" event.
-
-The tool_events is shared. So when parsing the e-core metrics, the
-"slots" is automatically added.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/metricgroup.c#n1476
-
-I think we may need a similar fix in the tool_pmu__event_to_str() to
-skip the "slots" for x86.
-
-Thanks,
-Kan
