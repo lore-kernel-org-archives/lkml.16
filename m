@@ -1,322 +1,288 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6F92144A8;
-	Thu,  6 Feb 2025 06:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73852248BB;
+	Thu,  6 Feb 2025 06:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738824006; cv=none; b=ghgHh8I0O99bXXPpISgAdgzmoMVpphkneOUIgxyeXRdXHnAnAchml2g3iW/Z5Y2ljjkv90MvZzGSVmmwS7BrT6curNEGPXNgzeRkQ62FWtwNYWgeviN+3b0TC/X69b+MaDDbkL1kfjdaE1rJlW9VKQLFWPo8G4Qyf8H2v6DPnKk=
+	t=1738824304; cv=none; b=juqb18MWrUdYghKqf5B/dVOaUHk5/BFrlgWqGbUV24fXP5cchrw8OwXH2eMB7DTPvX1KKKRHueZ1e7kjVexmf0bx/AOjRxAOzJaF5j4VCKwOYNvuayuTfi+PvwAKTQ/uhmWxNLSZV+DzCOPE5v6xH7gLW5H99S48KGTBP7bCe8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738824006; c=relaxed/simple;
-	bh=7xpXBJ9Lct3Eb6YdnfEBSq/oPX/CLPtDoIf+rWTizSs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=QiqDaKQ8vBxSAChvgM6K2Xshoq6OvVuBBX/N41/YsoMmDavTqc4GCPzybP8TAg4yaoJ+oJ575bAxr2ITqrQ0nBwdK1fORutE8xTT88iypwK1U15zzFE/jhbCm6oN4CCmqOwkgJlg6YWmxERxQldGlxGTilABDwfSpQ98tlFarhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YpSBd5jZyz4f3jQv;
-	Thu,  6 Feb 2025 14:39:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E46B51A148C;
-	Thu,  6 Feb 2025 14:39:58 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP4 (Coremail) with SMTP id gCh0CgB32Fw4WaRnSh82DA--.50974S2;
-	Thu, 06 Feb 2025 14:39:56 +0800 (CST)
-Subject: Re: [PATCH bpf] bpf: skip non existing key in
- generic_map_lookup_batch
-To: Yan Zhai <yan@cloudflare.com>, bpf@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Brian Vazquez <brianvv@google.com>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kernel-team@cloudflare.com
-References: <Z6OYbS4WqQnmzi2z@debian.debian>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <5f6610a1-3cd0-764e-0f49-91af1004ea50@huaweicloud.com>
-Date: Thu, 6 Feb 2025 14:39:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1738824304; c=relaxed/simple;
+	bh=YPubFNTNHiTO9oEaYaMjlzDAJl3LULtoi0tNf6Ahtes=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RGPDkTWe4cJyvPcJmT3ipCCqEzVU4wctdoFbAnjj5XxinQFe3uns/5yZen7F7EhNUGYY4g1J7+HTY0kdVCJz7unuyJr6YaFrwGO8oAvj3PlQY/CJhM+qbikuHgrKU50ZvlB6qbKxoUvr0unclrVH6cjsxoHKUDfMEK3EcwhkI/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=Rfrt9CYS; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="Rfrt9CYS"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YpSJj1XK3z9t6q;
+	Thu,  6 Feb 2025 07:44:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
+	s=MBO0001; t=1738824293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ngSjQ97qz0oyQvdkcgXvSO4Yt/j9uwxw/AxvaFeID7I=;
+	b=Rfrt9CYSCef0OItKwZRY65sHbw+p6DMMyzdhoxcB+mmplPtklE5mPffccbwR4naEcE+sxx
+	1YyYv5kOxdW+ziYtcOn2DaogDu0mHihyCj0+Z6wFSqeajV+1vl5BuC/lmG+uLw/tUJAdxJ
+	9DZbP7sJ1tsekU0DkIzR0ShdGGM5i0M4SK6wC/3iEgHBHW5e2MqDqDIM6Kmnwlz23WnxBE
+	sYVeprzel9fRZ/kVsyAXkq0wrhicpMqHTbbW+fAYuIkzmx2hL2KkebxPaFdow5pe9THjfY
+	unN+jBVuT36RkMHhxdLY7hh40G2U5NMJ0GtxBQh6+f2XSFE1xCzoXrYqjt67VQ==
+From: Frank Oltmanns <frank@oltmanns.dev>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,  Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>,  Chris Lew <quic_clew@quicinc.com>,
+  linux-arm-msm@vger.kernel.org,  linux-kernel@vger.kernel.org,  Stephan
+ Gerhold <stephan.gerhold@linaro.org>,  Johan Hovold
+ <johan+linaro@kernel.org>,  Caleb Connolly <caleb.connolly@linaro.org>,
+  Joel Selvaraj <joelselvaraj.oss@gmail.com>,  Alexey Minnekhanov
+ <alexeymin@postmarketos.org>,  stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
+In-Reply-To: <87y0yj1up1.fsf@oltmanns.dev> (Frank Oltmanns's message of "Thu,
+	06 Feb 2025 06:57:46 +0100")
+References: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
+	<2vfwtuiorefq64ood4k7y7ukt34ubdomyezfebkeu2wu5omvkb@c5h2sbqs47ya>
+	<87y0yj1up1.fsf@oltmanns.dev>
+Date: Thu, 06 Feb 2025 07:44:49 +0100
+Message-ID: <87msez1sim.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z6OYbS4WqQnmzi2z@debian.debian>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:gCh0CgB32Fw4WaRnSh82DA--.50974S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF4xAFy7Kr15tw43tr1DKFg_yoWfZF1kpF
-	WrCFnrGr4kWrW8t3y2ya47XFWv9r18Kw1jyas5J3s0krn7Wr17Cr10ka9rtry3uF1kZr1a
-	va12qryrXayYyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07jIksgUUUUU=
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 4YpSJj1XK3z9t6q
 
-Hi,
+Hi again,
 
-On 2/6/2025 12:57 AM, Yan Zhai wrote:
-> The generic_map_lookup_batch currently returns EINTR if it fails with
-> ENOENT and retries several times on bpf_map_copy_value. The next batch
-> would start from the same location, presuming it's a transient issue.
-> This is incorrect if a map can actually have "holes", i.e.
-> "get_next_key" can return a key that does not point to a valid value. At
-> least the array of maps type may contain such holes legitly. Right now
-> these holes show up, generic batch lookup cannot proceed any more. It
-> will always fail with EINTR errors.
+On 2025-02-06 at 06:57:46 +0100, Frank Oltmanns <frank@oltmanns.dev> wrote:
+> On 2025-02-05 at 20:54:53 -0600, Bjorn Andersson <andersson@kernel.org> w=
+rote:
+>> On Wed, Feb 05, 2025 at 10:57:11PM +0100, Frank Oltmanns wrote:
+>>> On xiaomi-beryllium and oneplus-enchilada audio does not work reliably
+>>> with the in-kernel pd-mapper. Deferring the probe solves these issues.
+>>> Specifically, audio only works reliably with the in-kernel pd-mapper, if
+>>> the probe succeeds when remoteproc3 triggers the first successful probe.
+>>> I.e., probes from remoteproc0, 1, and 2 need to be deferred until
+>>> remoteproc3 has been probed.
+>>>
+>>> Introduce a device specific quirk that lists the first auxdev for which
+>>> the probe must be executed. Until then, defer probes from other auxdevs.
+>>>
+>>> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+>>> ---
+>>> The in-kernel pd-mapper has been causing audio issues on sdm845
+>>> devices (specifically, xiaomi-beryllium and oneplus-enchilada). I
+>>> observed that Stephan=E2=80=99s approach [1] - which defers module prob=
+ing by
+>>> blocklisting the module and triggering a later probe - works reliably.
+>>>
+>>> Inspired by this, I experimented with delaying the probe within the
+>>> module itself by returning -EPROBE_DEFER in qcom_pdm_probe() until a
+>>> certain time (13.9 seconds after boot, based on ktime_get()) had
+>>> elapsed. This method also restored audio functionality.
+>>>
+>>> Further logging of auxdev->id in qcom_pdm_probe() led to an interesting
+>>> discovery: audio only works reliably with the in-kernel pd-mapper when
+>>> the first successful probe is triggered by remoteproc3. In other words,
+>>> probes from remoteproc0, 1, and 2 must be deferred until remoteproc3 has
+>>> been probed.
+>>>
+>>
+>> The remoteproc numbering is assigned at the time of registering each
+>> remoteproc driver, and does not necessarily relate to the order in which
+>> they are launched. That said, it sounds like what you're saying is that
+>> is that audio only works if we launch the pd-mapper after the
+>> remoteprocs has started?
 >
-> Rather, do not retry in generic_map_lookup_batch. If it finds a non
-> existing element, skip to the next key.
+> Almost, but not quite. You are right, that remoteproc3 in my setup is
+> always the last one that probes the pd-mapper.
 >
-> Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
-> Closes: https://lore.kernel.org/bpf/Z6JXtA1M5jAZx8xD@debian.debian/
-> Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> ---
->  kernel/bpf/syscall.c                          | 16 ++----
->  .../bpf/map_tests/map_in_map_batch_ops.c      | 54 ++++++++++++++-----
->  2 files changed, 45 insertions(+), 25 deletions(-)
+> However, when experimenting with different timings I saw that the
+> pd-mapper really do has to respond to the probe from remoteproc3 (I'm
+> not sure I'm using the right terminology here, but I hope my intent
+> comes across). If the pd-mapper responds to remoteproc3's probe with
+> -EPROBE_DEFER there will again be subsequent probes from the other
+> remoteprocs. If we act on those probes, there is a chance that audio
+> (mic in my case) does not work. So, my conclusion was that remoteproc3's
+> probe has to be answered first before responding to the other probes.
 >
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index c420edbfb7c8..5691fc0d370d 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -1979,7 +1979,7 @@ int generic_map_lookup_batch(struct bpf_map *map,
->  	void __user *values = u64_to_user_ptr(attr->batch.values);
->  	void __user *keys = u64_to_user_ptr(attr->batch.keys);
->  	void *buf, *buf_prevkey, *prev_key, *key, *value;
-> -	int err, retry = MAP_LOOKUP_RETRIES;
-> +	int err;
->  	u32 value_size, cp, max_count;
->  
->  	if (attr->batch.elem_flags & ~BPF_F_LOCK)
-> @@ -2026,14 +2026,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
->  		err = bpf_map_copy_value(map, key, value,
->  					 attr->batch.elem_flags);
->  
-> -		if (err == -ENOENT) {
-> -			if (retry) {
-> -				retry--;
-> -				continue;
-> -			}
-> -			err = -EINTR;
-> -			break;
-> -		}
-> +		if (err == -ENOENT)
-> +			goto next_key;
->  
->  		if (err)
->  			goto free_buf;
-> @@ -2048,12 +2042,12 @@ int generic_map_lookup_batch(struct bpf_map *map,
->  			goto free_buf;
->  		}
->  
-> +		cp++;
-> +next_key:
->  		if (!prev_key)
->  			prev_key = buf_prevkey;
->  
->  		swap(prev_key, key);
-> -		retry = MAP_LOOKUP_RETRIES;
-> -		cp++;
->  		cond_resched();
->  	}
->  
-
-Let's move the new thread for further discussion.
-
->We are probably not on the same page. Let me clarify:
-
->By "retry logic" I mean this code snippet:
->               if (err == -ENOENT) {
->                       if (retry) {
->                               retry--;
->                               continue;
->                       }
->                       err = -EINTR;
->                       break;
->               }
-
-
-Yes, the retry logic doesn't change the previous key. Thanks for the
-clarifying.
-> And by "skipping to the next key", it's simply
+> Further note that in my experiments remoteproc1 was always the first to
+> do the probing, followed by either remoteproc0 or remoteproc2.
+> remoteproc3 was always the last.
 >
->   if (err == -ENOENT)
->        goto next_key;
+>> Can you please confirm which remoteproc is which in your numbering? (In
+>> particular, which remoteproc instance is the audio DSP?)
 >
-> Note the "next_key" label was not in the current codebase. It is only
-> in my posted patch. I don't think this would break lpm_trie unless I
-> missed something.
+> remoteproc0: adsp
+> remoteproc1: cdsp
+> remoteproc2: slpi
+> remoteproc3: 4080000.remoteproc
 
-I was trying to say that the proposed patch may break the lookup_batch
-operation for lpm_trie, and let me explain step by step:
+I'm sorry but there's one additional thing that I really should have
+mentioned earlier: My issue is specifically with *call* audio.
 
-For LPM trie map:
-(1) ->map_get_next_key(map, prev_key, key) returns a valid key
+Call audio is only available using out-of-tree patches. The ones I'm
+currently using are here:
+https://gitlab.com/sdm845-mainline/linux/-/commits/sdm845-6.13-rc2-r2?ref_t=
+ype=3Dtags
 
-(2) bpf_map_copy_value() return -ENOMENT
-It means the key must be deleted concurrently.
+Best regards,
+  Frank
 
-(3) goto next_key
-It swaps the prev_key and key
-
-(4) ->map_get_next_key(map, prev_key, key) again
-prev_key points to a non-existing key, for LPM trie it will treat just
-like prev_key=NULL case, the returned key will be duplicated.
-
-
-> diff --git a/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c b/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
-> index 66191ae9863c..b38be71f06be 100644
-
-It is better to split the update of map_tests into a separated patch and
-it will be more friendly for stable backport.
-> --- a/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
-> +++ b/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
-> @@ -120,11 +120,12 @@ static void validate_fetch_results(int outer_map_fd,
->  
->  static void fetch_and_validate(int outer_map_fd,
->  			       struct bpf_map_batch_opts *opts,
-> -			       __u32 batch_size, bool delete_entries)
-> +			       __u32 batch_size, bool delete_entries,
-> +			       bool has_holes)
->  {
-> +	int err, max_entries = OUTER_MAP_ENTRIES - !!has_holes;
->  	__u32 *fetched_keys, *fetched_values, total_fetched = 0;
->  	__u32 batch_key = 0, fetch_count, step_size;
-> -	int err, max_entries = OUTER_MAP_ENTRIES;
->  	__u32 value_size = sizeof(__u32);
->  
->  	/* Total entries needs to be fetched */
-> @@ -135,9 +136,9 @@ static void fetch_and_validate(int outer_map_fd,
->  	      "error=%s\n", strerror(errno));
->  
->  	for (step_size = batch_size;
-> -	     step_size <= max_entries;
-> +	     step_size < max_entries + batch_size; /* allow read partial */
->  	     step_size += batch_size) {
-> -		fetch_count = step_size;
-> +		fetch_count = batch_size;
-
-The change "fetch_count = batch_size" may fail the lookup batch
-operation of hash table, because the element in one bucket may be
-greater than batch_size and it will return -ENOSPC constantly. And it
-seems the original implementation of fetch_and_validate() is buggy,
-because for hash map, the returned fetched_count may be less than the
-passed count when there are too many elements in the same bucket. I
-don't know the reason why the bug doesn't show up.
->  		err = delete_entries
->  		      ? bpf_map_lookup_and_delete_batch(outer_map_fd,
->  				      total_fetched ? &batch_key : NULL,
-> @@ -184,18 +185,19 @@ static void fetch_and_validate(int outer_map_fd,
->  }
->  
->  static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
-> -				  enum bpf_map_type inner_map_type)
-> +				  enum bpf_map_type inner_map_type,
-> +				  bool has_holes)
->  {
-> +	__u32 max_entries = OUTER_MAP_ENTRIES - !!has_holes;
->  	__u32 *outer_map_keys, *inner_map_fds;
-> -	__u32 max_entries = OUTER_MAP_ENTRIES;
->  	LIBBPF_OPTS(bpf_map_batch_opts, opts);
->  	__u32 value_size = sizeof(__u32);
->  	int batch_size[2] = {5, 10};
->  	__u32 map_index, op_index;
->  	int outer_map_fd, ret;
->  
-> -	outer_map_keys = calloc(max_entries, value_size);
-> -	inner_map_fds = calloc(max_entries, value_size);
-> +	outer_map_keys = calloc(OUTER_MAP_ENTRIES, value_size);
-> +	inner_map_fds = calloc(OUTER_MAP_ENTRIES, value_size);
->  	CHECK((!outer_map_keys || !inner_map_fds),
->  	      "Memory allocation failed for outer_map_keys or inner_map_fds",
->  	      "error=%s\n", strerror(errno));
-> @@ -209,6 +211,24 @@ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
->  			((outer_map_type == BPF_MAP_TYPE_ARRAY_OF_MAPS)
->  			 ? 9 : 1000) - map_index;
->  
-> +	/* This condition is only meaningful for array of maps.
-> +	 *
-> +	 * max_entries == OUTER_MAP_ENTRIES - 1 if it is true. Say
-> +	 * max_entries is short for n, then outer_map_keys looks like:
-> +	 *
-> +	 *   [n, n-1, ... 2, 1]
-> +	 *
-> +	 * We change it to
-> +	 *
-> +	 *   [n, n-1, ... 2, 0]
-> +	 *
-> +	 * So it will leave key 1 as a hole. It will serve to test the
-> +	 * correctness when batch on an array: a "non-exist" key might be
-> +	 * actually allocated and returned from key iteration.
-> +	 */
-> +	if (has_holes)
-> +		outer_map_keys[max_entries - 1]--;
-> +
->  	/* batch operation - map_update */
->  	ret = bpf_map_update_batch(outer_map_fd, outer_map_keys,
->  				   inner_map_fds, &max_entries, &opts);
-> @@ -219,12 +239,14 @@ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
->  	/* batch operation - map_lookup */
->  	for (op_index = 0; op_index < 2; ++op_index)
->  		fetch_and_validate(outer_map_fd, &opts,
-> -				   batch_size[op_index], false);
-> +				   batch_size[op_index], false,
-> +				   has_holes);
->  
->  	/* batch operation - map_lookup_delete */
->  	if (outer_map_type == BPF_MAP_TYPE_HASH_OF_MAPS)
->  		fetch_and_validate(outer_map_fd, &opts,
-> -				   max_entries, true /*delete*/);
-> +				   max_entries, true /*delete*/,
-> +				   has_holes);
->  
->  	/* close all map fds */
->  	for (map_index = 0; map_index < max_entries; map_index++)
-
-OUTER_MAP_ENTRIES instead of max_entries ?
-> @@ -237,16 +259,20 @@ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
->  
->  void test_map_in_map_batch_ops_array(void)
->  {
-> -	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_ARRAY);
-> +	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_ARRAY, false);
->  	printf("%s:PASS with inner ARRAY map\n", __func__);
-> -	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HASH);
-> +	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HASH, false);
->  	printf("%s:PASS with inner HASH map\n", __func__);
-> +	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_ARRAY, true);
-> +	printf("%s:PASS with inner ARRAY map with holes\n", __func__);
-> +	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HASH, true);
-> +	printf("%s:PASS with inner HASH map with holes\n", __func__);
->  }
->  
->  void test_map_in_map_batch_ops_hash(void)
->  {
-> -	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_ARRAY);
-> +	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_ARRAY, false);
->  	printf("%s:PASS with inner ARRAY map\n", __func__);
-> -	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_HASH);
-> +	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_HASH, false);
->  	printf("%s:PASS with inner HASH map\n", __func__);
->  }
-
+>
+> (I took them from the kernel messages "remoteproc remoteproc<X>: <xyz>
+> is available".)
+>
+>>> To address this, I propose introducing a quirk table (which currently
+>>> only contains sdm845) to defer probing until the correct auxiliary
+>>> device (remoteproc3) initiates the probe.
+>>>
+>>> I look forward to your feedback.
+>>>
+>>
+>> I don't think the proposed workaround is our path forward, but I very
+>> much appreciate your initiative and the insights it provides!
+>
+> Thank you! I was hoping that somebody with more experience in the QCOM
+> universe can draw further conclusions from this.
+>
+>> Seems to
+>> me that we have a race-condition in the pdr helper.
+>
+> If you need further experimenting or can give me rough guidance on where
+> to look next, I'll be glad to help.
+>
+> Thanks again,
+>   Frank
+>
+>>
+>> Regards,
+>> Bjorn
+>>
+>>> Thanks,
+>>>   Frank
+>>>
+>>> [1]: https://lore.kernel.org/linux-arm-msm/Zwj3jDhc9fRoCCn6@linaro.org/
+>>> ---
+>>>  drivers/soc/qcom/qcom_pd_mapper.c | 43 +++++++++++++++++++++++++++++++=
+++++++++
+>>>  1 file changed, 43 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_=
+pd_mapper.c
+>>> index 154ca5beb47160cc404a46a27840818fe3187420..34b26df665a888ac4872f56=
+e948e73b561ae3b6b 100644
+>>> --- a/drivers/soc/qcom/qcom_pd_mapper.c
+>>> +++ b/drivers/soc/qcom/qcom_pd_mapper.c
+>>> @@ -46,6 +46,11 @@ struct qcom_pdm_data {
+>>>  	struct list_head services;
+>>>  };
+>>>
+>>> +struct qcom_pdm_probe_first_dev_quirk {
+>>> +	const char *name;
+>>> +	u32 id;
+>>> +};
+>>> +
+>>>  static DEFINE_MUTEX(qcom_pdm_mutex); /* protects __qcom_pdm_data */
+>>>  static struct qcom_pdm_data *__qcom_pdm_data;
+>>>
+>>> @@ -526,6 +531,11 @@ static const struct qcom_pdm_domain_data *x1e80100=
+_domains[] =3D {
+>>>  	NULL,
+>>>  };
+>>>
+>>> +static const struct qcom_pdm_probe_first_dev_quirk first_dev_remotepro=
+c3 =3D {
+>>> +	.id =3D 3,
+>>> +	.name =3D "pd-mapper"
+>>> +};
+>>> +
+>>>  static const struct of_device_id qcom_pdm_domains[] __maybe_unused =3D=
+ {
+>>>  	{ .compatible =3D "qcom,apq8016", .data =3D NULL, },
+>>>  	{ .compatible =3D "qcom,apq8064", .data =3D NULL, },
+>>> @@ -566,6 +576,10 @@ static const struct of_device_id qcom_pdm_domains[=
+] __maybe_unused =3D {
+>>>  	{},
+>>>  };
+>>>
+>>> +static const struct of_device_id qcom_pdm_defer[] __maybe_unused =3D {
+>>> +	{ .compatible =3D "qcom,sdm845", .data =3D &first_dev_remoteproc3, },
+>>> +	{},
+>>> +};
+>>>  static void qcom_pdm_stop(struct qcom_pdm_data *data)
+>>>  {
+>>>  	qcom_pdm_free_domains(data);
+>>> @@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
+>>>  	return ERR_PTR(ret);
+>>>  }
+>>>
+>>> +static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
+>>> +{
+>>> +	const struct of_device_id *match;
+>>> +	struct device_node *root;
+>>> +	struct qcom_pdm_probe_first_dev_quirk *first_dev;
+>>> +
+>>> +	root =3D of_find_node_by_path("/");
+>>> +	if (!root)
+>>> +		return true;
+>>> +
+>>> +	match =3D of_match_node(qcom_pdm_defer, root);
+>>> +	of_node_put(root);
+>>> +	if (!match)
+>>> +		return true;
+>>> +
+>>> +	first_dev =3D (struct qcom_pdm_probe_first_dev_quirk *) match->data;
+>>> +	return (auxdev->id =3D=3D first_dev->id) && !strcmp(auxdev->name, fir=
+st_dev->name);
+>>> +}
+>>> +
+>>>  static int qcom_pdm_probe(struct auxiliary_device *auxdev,
+>>>  			  const struct auxiliary_device_id *id)
+>>>
+>>> @@ -647,6 +680,15 @@ static int qcom_pdm_probe(struct auxiliary_device =
+*auxdev,
+>>>  	mutex_lock(&qcom_pdm_mutex);
+>>>
+>>>  	if (!__qcom_pdm_data) {
+>>> +		if (!qcom_pdm_ready(auxdev)) {
+>>> +			pr_debug("%s: Deferring probe for device %s (id: %u)\n",
+>>> +				__func__, auxdev->name, auxdev->id);
+>>> +			ret =3D -EPROBE_DEFER;
+>>> +			goto probe_stop;
+>>> +		}
+>>> +		pr_debug("%s: Probing for device %s (id: %u), starting pdm\n",
+>>> +			__func__, auxdev->name, auxdev->id);
+>>> +
+>>>  		data =3D qcom_pdm_start();
+>>>
+>>>  		if (IS_ERR(data))
+>>> @@ -659,6 +701,7 @@ static int qcom_pdm_probe(struct auxiliary_device *=
+auxdev,
+>>>
+>>>  	auxiliary_set_drvdata(auxdev, __qcom_pdm_data);
+>>>
+>>> +probe_stop:
+>>>  	mutex_unlock(&qcom_pdm_mutex);
+>>>
+>>>  	return ret;
+>>>
+>>> ---
+>>> base-commit: 7f048b202333b967782a98aa21bb3354dc379bbf
+>>> change-id: 20250205-qcom_pdm_defer-3dc1271d74d9
+>>>
+>>> Best regards,
+>>> --
+>>> Frank Oltmanns <frank@oltmanns.dev>
+>>>
