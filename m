@@ -1,116 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FED1F4184
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF87230997
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738858963; cv=none; b=qysWoIakNe8WnL5xLJirFjm/UXUhXUNLKIMPGc3QMoa4cm1Z/D4G07u2xK2tIimKIh9321OZ3UdG0tSgOFnD2VQzUz6xu5h6TU6MT17MIywd08PS3rYKpY3aqmy3Yr8ybipRozLBsWNWbRNiXwukyVXP1qerdJNDiaDRhmI4mrg=
+	t=1738858984; cv=none; b=UVj8POkTBZvafNHyds4GnMXKZeVqUlMfMBOQhXhmbFndamkZuB8pnlnbceJMGZ8XcCGs8UZJFLVNh3F3uExcUScl0lPBIc/7NLrYH5lzRFn9QxcGYn71yE/gAx4dBZLocwMK4xYfJTRza0AxjWc/jqzHNSsB/GeEnG8RimoCltg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738858963; c=relaxed/simple;
-	bh=oJ/CEeO/y31Xa/N7LnXo8dj8B/drp63eh+v3L1lnfQ4=;
-	h=To:Cc:Subject:In-Reply-To:References:From:Date:Message-ID:
-	 MIME-Version:Content-Type; b=f3uq+3T832kAoIfhfoA7oMtRR+Qj+l5e/gaweA0Qqxe218DIahTMIn68VDf0bBMIWx5y2t5KGVJw3x8R/YidcABViAQ09B2KqoU7nlkEkkOmbHfErCMvrFYiwr0yaipWCQYuf7r3F2v8EO7VbtnEpEsB0hcnQdUlTumdwMI3CzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lJ5nb0gY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oxadQtsK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738858984; c=relaxed/simple;
+	bh=yQ/cMahOawtP4PxuyH9DWGJ4UyQFQnjW962HmXPyWh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ipxVLj1sRpIg9DFtQWQCO08RW1psoska3QO4ugIFhkGyt1qtn7xB+DNZHJ0kJcaG4OPqxYT/o1JAvAZU7b9QHDNpnobYVqt+soaQP/ldQavGOVEVsk80h567xA6XqxUTj1xAxPEMttqgY4FaLw/puLn1KOnrvJKgovzLIopMgFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qSAURHyB; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lJ5nb0gY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oxadQtsK"
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738858958;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l7qUbvLDBPgSgTvEM05+6AJd+0joqLoWTY6OS4Yqz2g=;
-	b=lJ5nb0gY9sLjDuri4ywxl+koNTS+9jRVCrX1d2anjaFPq5itSjwmePq2iqm8bZP67yE70F
-	K50nbSDp/90v02kmsN9uLfXk+9jXsGnaPr2zQOgbAtIhZpFjYW2BVi3DHXGC2j41hlQR2a
-	ClgcsjZaT6q/ljSu/jj0hrZlTOOTN83ev/Fe2qxSnQWtG1b/xPpQWuAkqMVoLDf3XiMIfG
-	LNO+SDQLxvLED242zYkJGPT1iCl1OcIPKOVzHTAklP6/082f/ELFCkmgq4nO/9tnO2HXfs
-	+j385f2ijzq+jL4NIA4frE6719ZOAGOOkl0FEw4egu784YM9SYHYnXIEAITk5Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738858958;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l7qUbvLDBPgSgTvEM05+6AJd+0joqLoWTY6OS4Yqz2g=;
-	b=oxadQtsK4nr1s1oqr2yppxVD3imMEjhcOt7EezwUE7+tQ9ykXGrpaCdcWmtajfBN638A3q
-	BcAy3LKUulogjJCA==
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org, "Jiri Slaby (SUSE)"
- <jirislaby@kernel.org>
-Subject: Re: [PATCH 09/18] irqdomain: Rename _add functions to _add_*_of_node
-In-Reply-To: <20250115085409.1629787-10-jirislaby@kernel.org>
-References: <20250115085409.1629787-1-jirislaby@kernel.org>
- <20250115085409.1629787-10-jirislaby@kernel.org>
-From: tglx <tglx@linutronix.de>
-Date: Thu, 06 Feb 2025 17:22:38 +0100
-Message-ID: <87wme3m4a9.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qSAURHyB"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2b832eabf39so192103fac.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 08:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738858981; x=1739463781; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cnC7VSfBG0ihPKxEu9pr9kDMCXHaSfGWdCeIs/YUaPw=;
+        b=qSAURHyB0MucZBOyEyuVQmqRltfrCih2RlPxOwn+Ccknf2jFEAE58Ngyb0outSC9Xc
+         gxYs5jitYNLO3Y62/z7/jEs2KgAEnlkm8yixp3TLREuWkvLO2xdeWxZ1WY2oOsHxzfsk
+         9nqq5v60hQNzykMqZTpAVkY2SZnEJzw0uuWnz+UFxSYOCPW4KAm7sMoCgLkSSI9TVZFJ
+         +CQMwBSNeEVeeF6H1/sYqsVkxaCzqR4s4fgiuK4jRY+3dA/VGgovuYOWSY+qnESOxFla
+         +l+MdyA1YQGlYJDrWEUmb4IHqoR7irDNIYDNRXIcwXxIDBQ3cr1NwGakxMUgxrx7ae5e
+         HzfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738858981; x=1739463781;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cnC7VSfBG0ihPKxEu9pr9kDMCXHaSfGWdCeIs/YUaPw=;
+        b=OCfNFwXPLfR0hZOqlcmCQUMubVXK4SLobvT8041BUEJo34v5aj7TUZIPvMEEsSAOpM
+         bOowGpD9iKp0/x7WnvmnZWskCVxKkDbZCLlWrqq/B405JSg8A5sw9Byh1vofu1pUvOu7
+         MoIzrjZ3+8D2YTeKBuC40u2g0T8EMsNsSzHbg7RBtICRgb18YlzdxKa4133nbT5uvbGF
+         eIdabxe8Kt7fuZDThiEZcK92tG+9lLv/OUXmex/LgMJ95M7OyL4OxbIsFU/ezb1cmQbd
+         ST/k6XMlcwbNxNFFgkZyLGSZ4MieK1Wxht+OWU0bw6Gkmk1dNFxKZMhVQk7rDPxFlLHw
+         F0rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkHPAxm6X2AJ3YBVubOr/rAoV67Ml0D1In/lyfwaA3xjewewOaG6CMLKl6/JX4hx2VdziYpf/p5OHQVvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf8F0G7lGG7grqtAhnNq4GumiltINC1IFHfkp4oqqEK7M6/t/1
+	LY/WltEZLVvIyj3OQMdz5Qyeg1zcdmFNlwC/1yraM+4gG+oazoaMkExhYRT2VEA=
+X-Gm-Gg: ASbGncsd9ay+1jrZ6pamumBtb810v2YOJbNpYvAQekazGhZl5hHJnvZFiVRAS0PikuW
+	McK2xnW4poGL3qE/Nt0F2/dBuqVqcKHGzh+FatLbc66m1Dr0UjG4+PjAnFva+uQL3tfxiBPOcCR
+	ZgHMEdFPWIeVpJkqRFZ8/wdClh6J8B9brgUOGXhyHd3XKcA7sLyDJ4BThwuOsGaWoSz/kfqmg6Y
+	lLsm/tYp171vMjQWALND9N/985EtSX8mshLCYRiN7nmWgmjdofwWc3/7Dx45b88+k2A9U3qfssR
+	D4J3lmYKYEq6J/png4rNap3mErMNkrlV1RbJWHFJ4LR34rrROqwy
+X-Google-Smtp-Source: AGHT+IGrVh/v5vcStALrqpNGUOb3jAVtv3FbIdsyoVlK6kALxIyavVWIb5C4oJiOS9AS6CkGcYPmgw==
+X-Received: by 2002:a05:6870:7e07:b0:2a3:8331:717c with SMTP id 586e51a60fabf-2b804f44ca7mr5095585fac.10.1738858981173;
+        Thu, 06 Feb 2025 08:23:01 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b8262622cesm348477fac.33.2025.02.06.08.22.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 08:23:00 -0800 (PST)
+Message-ID: <b06f6457-4be3-4404-8c41-618bad0c7099@baylibre.com>
+Date: Thu, 6 Feb 2025 10:22:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 8/8] iio: adc: ad4851: add ad485x driver
+To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>,
+ "jic23@kernel.org" <jic23@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+References: <20250127105726.6314-1-antoniu.miclaus@analog.com>
+ <20250127105726.6314-9-antoniu.miclaus@analog.com>
+ <c5722215-b720-49ab-9f0e-00b01eb4679d@baylibre.com>
+ <CY4PR03MB3399B389972E92742EA3060D9BF62@CY4PR03MB3399.namprd03.prod.outlook.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CY4PR03MB3399B389972E92742EA3060D9BF62@CY4PR03MB3399.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Jiri!
+On 2/6/25 4:00 AM, Miclaus, Antoniu wrote:
+>> On 1/27/25 4:57 AM, Antoniu Miclaus wrote:
+>>> Add support for the AD485X a fully buffered, 8-channel simultaneous
+>>> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
+>>> differential, wide common-mode range inputs.
+>>>
+>>> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+>>> ---
+>>
+>> I think we have the important bits sorted now (i.e. userspace-facing stuff).
+>> Just noticed a few minor things in the latest revision.
+>>
+>>
+>>> +static int ad4851_setup(struct ad4851_state *st)
+>>> +{
+>>> +	unsigned int product_id;
+>>> +	int ret;
+>>> +
+>>> +	if (st->pd_gpio) {
+>>> +		/* To initiate a global reset, bring the PD pin high twice */
+>>> +		gpiod_set_value(st->pd_gpio, 1);
+>>> +		fsleep(1);
+>>> +		gpiod_set_value(st->pd_gpio, 0);
+>>> +		fsleep(1);
+>>> +		gpiod_set_value(st->pd_gpio, 1);
+>>> +		fsleep(1);
+>>> +		gpiod_set_value(st->pd_gpio, 0);
+>>> +		fsleep(1000);
+>>> +	} else {
+>>> +		ret = regmap_set_bits(st->regmap,
+>> AD4851_REG_INTERFACE_CONFIG_A,
+>>> +				      AD4851_SW_RESET);
+>>> +		if (ret)
+>>> +			return ret;
+>>
+>> Do we also need fsleep() after software reset?
+> The datasheet doesn't mention any delay required after performing Software Reset.
+> Should I add something just as a safety measure?
 
-On Wed, Jan 15 2025 at 09:53, Jiri Slaby (SUSE) wrote:
-> For readers, it is very confusing that:
-> * irq_domain_add_*() functions are dedicated to of_nodes,
-> * irq_domain_create_*() ones to fwnodes, and
-> * irq_domain_instantiate() to the universal struct irq_domain_info.
->
-> Neither _create, nor _add designate any of those nodes. Despite the
-> naming, the functionality of them is the same: add an irq domain (by
-> generic irq_domain_instantiate()). So the source of the confusion is the
-> naming proper -- making the distinction based on _create, _add, and
-> _instantiate.
->
-> Therefore, here an "_of_node" suffix is added to all "_add" functions
-> (of_node ones). In the next patch, "_create" (fwnode ones) are switched
-> to "_add_fwnode". And finally, "_instantiate" is renamed to "_add".
->
-> So when all are applied, the interface is much easier to follow:
-> * dom = irq_domain_add_linear_of_node(of_node, ...)
-> * dom = irq_domain_add_linear_fwnode(fwnode, ...)
-> * dom = irq_domain_add(info)
-> * irq_domain_remove(dom)
-
-I'm not convinced that this _of_node() _fwnode() churn is actually
-valuable. I rather go and consolidate the code so that the core
-functions take a fwnode argument, i.e.
-
-   - irq_domain_add_xxx(node, ...)
-   + irq_domain_add_xxx(of_fwnode_handle(node), ....)
-
-It's not asked too much from the developer to use of_fwnode_handle() at
-the call site and the resulting treewide churn is pretty much the same
-as in any case all call sites need to be touched.
-
-But that brings me to the question of logistics for this overhaul. As
-this is a treewide change, there is quite some potential to create
-conflicts all over the place.
-
-So the obvious solution is to consolidate on the existing
-irq_domain_create_*() API, which is not the worst naming once everything
-is unified, i.e. 
-
-   - irq_domain_add_xxx(node, ...)
-   + irq_domain_create_xxx(of_fwnode_handle(node), ....)
-
-It allows to distribute these changes (except for the _nomap() oddity,
-which is OF only) right now to the relevant subsystems and I can collect
-the ignored changes in the irq tree. The final removal of the _add*()
-interfaces can then be done towards the end of the merge window.
-
-Thoughts?
-
-Thanks,
-
-        tglx
-
-
-
-
+I guess it is probably OK if the datasheet doesn't say it needs a delay.
