@@ -1,129 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFA04C8E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F144C8E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856942; cv=none; b=HFtGeRHw1PrkL8tD/EizPWmQs3sxxmmfPZChzCecGoBa4GYp3Lffb0kFQRvpQzrh6+j94M+8MFcB56XA11cNbHlHCTQyc9BVoBMOwnyMfooRrPFJ3gFHr1fdpe64ZVyR14bNnS0rGkj1bGLbaVxkL7Pd8tLnVM27pikjcVoxA9E=
+	t=1738856951; cv=none; b=s3HUJwfNQ+GW9H+2kUudpEmwrjIldtjJoG5pVKpdge65ATWusl044oHGXPdLbTwiSvvX0fN2dzeyIUWULcPlLO6/Z7Q9WedxgxSCscynzOp6Qy3SoA4VICxrOXac7ncBHNCL82SQ7MIiBZhIs6jstHpZjBBujh30Z13fhyHH+SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856942; c=relaxed/simple;
-	bh=zOY+ZCzmFJLL0Q8wdwGki3w85BL6fTQODYs1Wl3IQdw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f9TOBP7+REH6V+c+AY2mybk71u2bwbfw+GzgqIDV5NQTcndM08eZSZUReysqq8D2t6vvACzEwTsmSSn+Be6hj2xOJWtjG4O284Z9hOhkoDBIfAbSTox46CUltp8z2EXXnskvi3nLCFrGoZOoiY2Z+XK2/wzl7k8lOTGPF80C7tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CG0q0ltk; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738856951; c=relaxed/simple;
+	bh=gm5a18TPIE8jhjZVGIfDrBV0rkHyXJ5LhAXrIYfCdU8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YTEgm12FWhu/g7fAvOrWWuF4F4awQfUOp5VYP8iUdFhjxzWdI6WcOrA9hGmtD4JdUT5SRPf9nC0CUOXD6Ccc4nmfGD7vi4vmwbAzPJ65szFPuuw2ty83ewe67dvX3wBiESdY+s2YveXm6QzArGYcXaIzaPdzsgtIQWAMgKxMbME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Yq8KNIjC; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CG0q0ltk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738856941; x=1770392941;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zOY+ZCzmFJLL0Q8wdwGki3w85BL6fTQODYs1Wl3IQdw=;
-  b=CG0q0ltk00PJs1QHjf56mOyy/xXO49YAvIQSPcN+vES3VDKsbWSMH9/k
-   iDpz5UnI8y22/8wPWjhBkWDzPvP97iZRxVFNwiN385R1bDo9LYear+6UU
-   Y7EU0VfvZPUOfbVQ2JTInBVb/FsT5f/Hqosgbw4HlgKYrKoWbcSfIClCq
-   HncxKRzscDSzHh4A7KGDjKb7qXlDipC0BZ9xdpR3CKuqmeZU+56uIap8P
-   veiU13QETdpdddFXYv/Y7hSacJKOgwLqyd5n4B+xH0Ummr08Yw0M1cCl9
-   IJb0Q1DvwH3Ehau23XZp+N/OYXMZb69W3RHVoiYAdLH8BWosV6I+79kKB
-   A==;
-X-CSE-ConnectionGUID: FBrBF/qdQySQ5w5byG097g==
-X-CSE-MsgGUID: Xwf328HST9S5u+DjwNdalA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38697044"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="38697044"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:49:00 -0800
-X-CSE-ConnectionGUID: GAlsV9GUQxaWn7G3GmrZsA==
-X-CSE-MsgGUID: SLZklxN/T6i82CuUuEWhWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="116198640"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 06 Feb 2025 07:48:58 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C6FF3EE; Thu, 06 Feb 2025 17:48:56 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ofir Bitton <obitton@habana.ai>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Oded Gabbay <ogabbay@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] accel/habanalabs: Switch to use %ptTs
-Date: Thu,  6 Feb 2025 17:48:55 +0200
-Message-ID: <20250206154855.1125731-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Yq8KNIjC"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ef9b8b4f13so9557627b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:49:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1738856948; x=1739461748; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X4yZmynuAqAaX/fsICNG3Afvx5zVtUE7n592NM4a374=;
+        b=Yq8KNIjCfMI2J+h0DOOG2IrpKA1Yi2yuRVl51JeDauRaifHtFuyfJnuBEje0om/w4Z
+         vWEXZZEcaNAWMKEyV1YaAi21bCSGEENGm9wwuzagfDyH2IpWb5hJYTygBToTV6rYoRB5
+         treIbnP9hMtByXKYPH+5A8ejm5TEr/BkfwXHqoAiqK39USiH0qxE+01MEXMoXxoMrjWE
+         yV4Z9GBZsSsRLOdkhPZ1OAtGRrzo7p21kh06luTSomE4+OSijsCKfCVFYQsynYWUo/LQ
+         ixdskHv63SqrmQDKCai0T6qHGN6VftFBZsV9A6WJthprXigrFk6KEBPtl0+IlWmOCTpM
+         J22A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738856948; x=1739461748;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X4yZmynuAqAaX/fsICNG3Afvx5zVtUE7n592NM4a374=;
+        b=DqFFDKZNjwLyt2YgNMMNUWoo+dg1cceU7C5mtPmL++WkqC7cx/IAiA+MsM9rm8UpxK
+         5RNVnAg/4irqum2a1LRv5JHG0Yc66MbZMsNyWk65/Fcy13WRxFX+ZgYWW6T83ZWkzNJi
+         iPPRONSIhP5+UBUi5OftCGSOL+2UrmURCLHE73qKuSiw5b1jSkobIXM7VA0jWLiynPS9
+         P3mPzGts53Gnv247i0iWjIx5y/AnVJk3QOIWWuwrs0axSeO0yHScY8VTSyKxW1XnzSL2
+         y1skH5XqQfAkurIK4zHnWZMJW5lbIj8hpCrgMCKJaIQMknBM0KRlkvMgyJxBEP6EtypS
+         s3JA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8Zxy9Ulpn5t/yag407SlM35uRUvJBh1T0TmPfBwb0RpwDnAnHv1d8Mz6VM43EGmS8HphiSVYtkwi5TeE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf8KfTfk0yqIfYUX7F1i0+Z8I996lAYjFHrtbN1kc4syqV7l6S
+	eZV1RHYN7fshqKndRjxfPihZD23B87nkDXTuf7ECMlME4TMwTgOpoMvFJ0GI3/Q+sDo1+KummB7
+	cy0yb2H+sPoqB8uNqwSo7QP67kpd6gEzS6o64
+X-Gm-Gg: ASbGncuwRMtXPRIzeSILHltRKSDxunyG7D+1vQANsM8pRihbxipsVBFiznK7HDAQjV2
+	m0UjE4I+c3FVe/nqhwK4GpxD58SdswX1S2YcPEbLwmleQl9F1QIAU4hhxPpE9NMJjNqluwQ8=
+X-Google-Smtp-Source: AGHT+IFQMv8ErMjprARbuVDAhi7QMq8LWSphsU0CJhVswyKDLYm20gJ5SdMRSVF1SLnRrshn3RuDlYFo/kUPh+93LtY=
+X-Received: by 2002:a05:690c:6302:b0:6ee:7339:ab42 with SMTP id
+ 00721157ae682-6f989eb2e40mr67811147b3.14.1738856948282; Thu, 06 Feb 2025
+ 07:49:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com>
+ <20250205120026.GA15809@wind.enjellic.com>
+In-Reply-To: <20250205120026.GA15809@wind.enjellic.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 6 Feb 2025 10:48:57 -0500
+X-Gm-Features: AWEUYZnmKtRI9VO3HSoX82L6GrgusAeFSML7fobxuKG6UrraUu5tWEyugLuu98Y
+Message-ID: <CAHC9VhRq0PrH=0n6okkvfed=8QQOfv-ERA60NNWvLXetgrB_2w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
+To: "Dr. Greg" <greg@enjellic.com>
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jmorris@namei.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use %ptTs instead of open-coded variant to print contents of time64_t type
-in human readable form.
+On Wed, Feb 5, 2025 at 7:01=E2=80=AFAM Dr. Greg <greg@enjellic.com> wrote:
+> On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
+>
+> > I believe the LSM can support both the enforcement of security policy
+> > and the observation of security relevant events on a system.  In fact
+> > most of the existing LSMs do both, at least to some extent.
+> >
+> > However, while logging of security events likely needs to be
+> > asynchronous for performance reasons, enforcement of security policy
+> > likely needs to be synchronous to have any reasonable level of
+> > assurance.  You are welcome to propose LSMs which provide
+> > observability functionality that is either sync, async, or some
+> > combination of both (? it would need to make sense to do both ?), but
+> > I'm not currently interested in accepting LSMs that provide
+> > asynchronous enforcement as I don't view that as a "reasonable"
+> > enforcement mechanism.
+>
+> This is an artificial distinction that will prove limiting to the
+> security that Linux will be able to deliver in the future.
+>
+> Based on your response, is it your stated position as Linux security
+> maintainer, that you consider modern Endpoint Detection and Response
+> Systems (EDRS) lacking with respect to their ability to implement a
+> "reasonable" enforcement and assurance mechanism?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/accel/habanalabs/common/device.c | 25 +++---------------------
- 1 file changed, 3 insertions(+), 22 deletions(-)
+As stated previously: "I'm not currently interested in accepting LSMs
+that provide asynchronous enforcement as I don't view that as a
+reasonable enforcement mechanism."
 
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index 30277ae410d4..b5dad5a54d5a 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -1066,28 +1066,11 @@ static bool is_pci_link_healthy(struct hl_device *hdev)
- 	return (device_id == hdev->pdev->device);
- }
- 
--static void stringify_time_of_last_heartbeat(struct hl_device *hdev, char *time_str, size_t size,
--						bool is_pq_hb)
--{
--	time64_t seconds = is_pq_hb ? hdev->heartbeat_debug_info.last_pq_heartbeat_ts
--					: hdev->heartbeat_debug_info.last_eq_heartbeat_ts;
--	struct tm tm;
--
--	if (!seconds)
--		return;
--
--	time64_to_tm(seconds, 0, &tm);
--
--	snprintf(time_str, size, "%ld-%02d-%02d %02d:%02d:%02d (UTC)",
--		tm.tm_year + 1900, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
--}
--
- static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
- {
- 	struct eq_heartbeat_debug_info *heartbeat_debug_info = &hdev->heartbeat_debug_info;
- 	u32 cpu_q_id = heartbeat_debug_info->cpu_queue_id, pq_pi_mask = (HL_QUEUE_LENGTH << 1) - 1;
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
--	char pq_time_str[64] = "N/A", eq_time_str[64] = "N/A";
- 
- 	if (!prop->cpucp_info.eq_health_check_supported)
- 		return true;
-@@ -1095,17 +1078,15 @@ static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
- 	if (!hdev->eq_heartbeat_received) {
- 		dev_err(hdev->dev, "EQ heartbeat event was not received!\n");
- 
--		stringify_time_of_last_heartbeat(hdev, pq_time_str, sizeof(pq_time_str), true);
--		stringify_time_of_last_heartbeat(hdev, eq_time_str, sizeof(eq_time_str), false);
- 		dev_err(hdev->dev,
--			"EQ: {CI %u, HB counter %u, last HB time: %s}, PQ: {PI: %u, CI: %u (%u), last HB time: %s}\n",
-+			"EQ: {CI %u, HB counter %u, last HB time: %ptTs}, PQ: {PI: %u, CI: %u (%u), last HB time: %ptTs}\n",
- 			hdev->event_queue.ci,
- 			heartbeat_debug_info->heartbeat_event_counter,
--			eq_time_str,
-+			hdev->heartbeat_debug_info.last_eq_heartbeat_ts,
- 			hdev->kernel_queues[cpu_q_id].pi,
- 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci),
- 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci) & pq_pi_mask,
--			pq_time_str);
-+			hdev->heartbeat_debug_info.last_pq_heartbeat_ts);
- 
- 		hl_eq_dump(hdev, &hdev->event_queue);
- 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+> If this is the case, your philosophy leaves Linux in a position that
+> is inconsistent with how the industry is choosing to implement
+> security.
 
+In this case perhaps TSEM is not well suited for the upstream Linux
+kernel and your efforts are better spent downstream, much like the
+industry you appear to respect.
+
+--=20
+paul-moore.com
