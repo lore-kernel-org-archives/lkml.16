@@ -1,90 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A554823536F;
-	Thu,  6 Feb 2025 16:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A3015D5C4
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861061; cv=none; b=dWxsgH7t3ZGitK6Xcxx3UH6vJDKn2rTeqOvEvY1AkczWyZ4UG/4a6ZlxmHXa2ufEg6ehVLTObVDDVaXtVO3ZdYrsR5j8rVztWmofBz5GMx3AvqnJLeGLQHudkWLirPscijBgJ9rowojaGGjKxmcrSJIiv4U0WnXs/w6vsqyBKcA=
+	t=1738861129; cv=none; b=OR+5uAaehaOKcpSkxyVoJlfOaDtFwiH90Yj8SonODxlEP97/ZoE4GoEyZnW9tqo2sfxdH4cDtulu3rkcl51Y1DNitzbvqjuneURKWLW1yGAuER9o2JPUcgkrAgJxNS/lFKUp8begyd23hSwK7RfKuVNQNB5133mboUpwK8EChg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861061; c=relaxed/simple;
-	bh=RsuYz5vTRl4AIl9KHqvKGcfpK12ecn0BP4ne9KmTjqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q0nRG3LGNpTtsbzzH/cnOUz/q8XqUpCUhYpO/iVrz4M8kzp6mV0p148N1VqID0TZkA/xPpD6fPjInPOsrjWMeZZWPEq7/nuj7OBh2L6ptJLH9aKawotnJtgAIv9548WS8vdvrl67uBv3er5mx6z1C3nDiWZ56ugwtVmeMUaRTkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4XfvPJ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738861129; c=relaxed/simple;
+	bh=xKGzfXZ4PBTCrOXIHa2JGlq6uDtGA0t6GCPWqwsfEjY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HacUt5Q8kUw0o+iW+kWXgFlLApoHaf8VOel9T3R/ynvEoXN0BmWkBLaNOHv8DA/k94be92EsdvSa5LwHybyaFWdaywmnuHis0oLCr5O5eRvWykMGyDDhCum0mvXRaRm027mP6xJSbWQOvgMZ5FMfapdfGSbq6X/2rjrYoDlfPjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fxc9kl16; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4XfvPJ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C4DFC4CEDD;
-	Thu,  6 Feb 2025 16:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738861060;
-	bh=RsuYz5vTRl4AIl9KHqvKGcfpK12ecn0BP4ne9KmTjqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i4XfvPJ0EmXOGfDKHDd7X+K6kVxjfjdq191KJghcZdmrCyFnzgrQVU65tV8IHjTm6
-	 VgSvORoFFEZN276imJ4kj+F45Jdz169xyAbLjiul2bqcCplDF7NdEzqaXGX/87yqu8
-	 k6Re0YykG4hFwDaFjvQOBzTUVi4ixeIP4Fx3Pk7PD69TXIg9QhxGBQRVM1Ay7KfoYI
-	 TlnhFh7kuDvFvplForHo47HztIQhE2lluxwAEV1sdg8skdSESIDvxLnvFPQq+SOFxC
-	 hU86HUqxuUXRjPvsIGV2beyoEj7vqGPYdax5kTtlYUoYOQRnQIK3JRuKV8NPB5TXAc
-	 cABlEWqwaomzg==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-303548a9361so9637781fa.0;
-        Thu, 06 Feb 2025 08:57:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV8+v6EGLy4UB94ze0H3SoZw9wYfp7fWgfuMkDR+hYNMUus8mm0nWEysAWd/vfvjTnG96dgl/gN+qXFG1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2FKELH9C+6T5JdWC87rcmmv5XWg1FCMPg2tZnNv6tkKscTbeK
-	gaV8zrDvrXfx/XbFW0IUMsyOecnSnLCNyLz2NH5BCm6rZE5b5oO27Z+AY/Pb5mEmU2Vx6oi/Rue
-	eirGL1+IpfoWUHs55ZldvtebFAZg=
-X-Google-Smtp-Source: AGHT+IEo7OhVrpSv6ls3k4FNFsikTPTd9xK65RQgyNey6knAGv/QOhuLY6j6Wln7x7F6a7IFJmDxJQUEYHqxOP9ebd8=
-X-Received: by 2002:a2e:bd0d:0:b0:2ff:d49f:dd4b with SMTP id
- 38308e7fff4ca-307cf2fd84bmr29082171fa.15.1738861058434; Thu, 06 Feb 2025
- 08:57:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fxc9kl16"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5503344120;
+	Thu,  6 Feb 2025 16:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738861119;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=54udYs+xLDljQYkiA18WIt8yRAThdRISYzwfpUmkHzc=;
+	b=fxc9kl16k6rTWF7UcziTvb6qxwT5lUtLUKvlu/Pof52O9nKR4reeV3MssSEsgsnl43Heg+
+	d3i34yM2xytHudcfr6a8Y6mccKiMd3tutoqFGKY0Hj+fNAbDds3BxP/huA9u2MfF4Yw+lx
+	DVD8UaFj39pPRXe5FAa3BuVLuuzuHtQVs7/7B+3fR/fgvGkPBvPBYzpoOg7/S+uyN5eHqz
+	YD95D/txvilnz8wpEQ6n4dFjk8HCOGxDCnHQ9rdU5eUNJ1s/i4hu4Z15iD9F4VgPMg2Eej
+	9Cecr5pXTDt+zJsBnIXKGUphLJTqZYhmfm7SnBIhf6/vDz7Zq6YR2ra/cq0kDw==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com,
+  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org,
+  richard@nod.at,  syzkaller-bugs@googlegroups.com,  vigneshr@ti.com
+Subject: Re: [PATCH] mtd: capture device name setting failure when adding mtd
+In-Reply-To: <tencent_B7365D9CDDA8990DCF8C0DFE25B28DB31207@qq.com> (Edward
+	Adam Davis's message of "Sun, 2 Feb 2025 09:31:45 +0800")
+References: <679cd60e.050a0220.d7c5a.0045.GAE@google.com>
+	<tencent_B7365D9CDDA8990DCF8C0DFE25B28DB31207@qq.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Thu, 06 Feb 2025 17:58:37 +0100
+Message-ID: <87ikpn57sy.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204201108.48039-1-ebiggers@kernel.org> <CAMj1kXGjc6Abm1eHANt7w=D5eVpJXHHNo_7ZcyRMNMNwirZoHg@mail.gmail.com>
- <20250206163946.GB4283@sol.localdomain>
-In-Reply-To: <20250206163946.GB4283@sol.localdomain>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 6 Feb 2025 17:57:27 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGtmdCCXLrbcrmGaEZTfT6nz9P=FokdtHhjtuQooY3d0w@mail.gmail.com>
-X-Gm-Features: AWEUYZmUEU16fW4iYklv-4zqCTuFySJJKObCDU8KhxHEOLmb9SUJDrSJPLdSm8c
-Message-ID: <CAMj1kXGtmdCCXLrbcrmGaEZTfT6nz9P=FokdtHhjtuQooY3d0w@mail.gmail.com>
-Subject: Re: [PATCH] lib/crc-t10dif: remove digest and block size constants
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieelvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopegvrggurghvihhssehqqhdrtghomhdprhgtphhtthhopehshiiisghothdotdejgeejfedvrghffehftgeitgehvdekfhekrgdtsehshiiikhgrlhhlvghrrdgrphhpshhpohhtmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggru
+ gdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehshiiikhgrlhhlvghrqdgsuhhgshesghhoohhglhgvghhrohhuphhsrdgtohhmpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, 6 Feb 2025 at 17:39, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Thu, Feb 06, 2025 at 12:09:22PM +0100, Ard Biesheuvel wrote:
-> > On Tue, 4 Feb 2025 at 21:11, Eric Biggers <ebiggers@kernel.org> wrote:
-> > >
-> > > From: Eric Biggers <ebiggers@google.com>
-> > >
-> > > These constants are only used in crypto/crct10dif_generic.c, and they
-> > > are better off just hardcoded there.
-> > >
-> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > > ---
-> > >
-> > > I'm planning to take this via the crc tree.
-> > >
-> >
-> > Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Could you remind me why we are keeping this driver?
-> >
->
-> I don't know.  I had to keep "crc32" and "crc32c" around for now because they
-> are still used, and I just defaulted to doing the same for "crct10dif".  It
-> *looks like* "crct10dif" is different and we could indeed safely remove it like
-> I ended up doing for "crc64-rocksoft", though.  "crct10dif" has no remaining
-> references in the kernel; it has no references in cryptsetup, iwd, or libell;
-> and Debian Code Search doesn't find anything else.  It's over a decade old, so I
-> was worried there was time for users to have crept in, but that doesn't seem to
-> have happened.  So yeah, good idea.  I'll send a patch that removes it, with the
-> device-mapper folks Cc'd in case they know of anything else.
->
+Hello Edward,
 
-Good idea.
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 724f917f91ba..a71cd75858e4 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -741,7 +741,8 @@ int add_mtd_device(struct mtd_info *mtd)
+>  	mtd->dev.type =3D &mtd_devtype;
+>  	mtd->dev.class =3D &mtd_class;
+>  	mtd->dev.devt =3D MTD_DEVT(i);
+> -	dev_set_name(&mtd->dev, "mtd%d", i);
+> +	if (error =3D dev_set_name(&mtd->dev, "mtd%d", i))
+
+Thanks a lot for the analyse and for fixing this. May I ask however to
+follow a more common pattern for error checking that is:
+
+       error =3D dev_set_name(...);
+       if (error)
+                goto...
+
+This way it is closer to the usual error handling and also aligned with
+the rest of the file.
+
+Otherwise LGTM.
+
+Thanks,
+Miqu=C3=A8l
