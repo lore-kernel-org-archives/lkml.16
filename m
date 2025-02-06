@@ -1,52 +1,59 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F4422F3AB;
-	Thu,  6 Feb 2025 11:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723F022A7E1;
+	Thu,  6 Feb 2025 11:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839983; cv=none; b=oBaQnX+whqjdxcwyUu7QUjJZOW6ow4peXTRTNK4n9EVw4av3svD5qhbxdx/yL5yq/QNOnmKW/eNykUa0IhfjRyF2jW1U5TPnNln6nF4N4fMVGyKcjMJUumKVkCkM2Klors5qKjTr1WSp2XJpUvua3Ze0AfP43us4QeH7i0WJcGs=
+	t=1738839998; cv=none; b=ucrHXoaCltAPObEL8V5SmQMTBXCIvMIJzKyJWI2e4V9uBeeyFIbKce6nnVp4s/fyKGnNGUWtrQ64pPpwZH0vg4+dlGcCJd3bPpANRqs3yRwSN88hO7skIEhBfUxLOpVRtqIBYLUowbRco3eNnY6c9hp7Ku6eeeVlVBb0KLQg5/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839983; c=relaxed/simple;
-	bh=tamcCxHm3y1DTBqjP1FY4004ODbiDOOle1ZuKGQMC/k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Er5XyY5Sl4tcVq1OdwAM2P+plEGele6FAcLDSMCttqos/nLMDJwgz+PqbzXTRtI+jW3zqKTNvGZxYa9k8F42efTdY+xbq9Agl0EiYpIYh83CxAo3yHRUmKQSwmROtw7HD2/hvlt0Op92XDjJc8guo9NV0sWJGfcG9Uoj3qTuTng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaeef97ff02so136057466b.1;
-        Thu, 06 Feb 2025 03:06:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738839978; x=1739444778;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TpvAfT2xKK2DzPTMuzs3BntCPv5+DBlkGoA1AwbPHIc=;
-        b=hvUFP3bTUPvF102P0VqNyXxi10Qv29CBXCSuD0yvRuujgacW0wOih0aRCCdT5DrFyD
-         +Yn/Eml84LUVj4QSmlk+yMqFsVISfpEHCXkkHGfvJGK7yIISP4HBkrGqv2yt2NBmvgX2
-         kqDK5YOKXKxvTZ9xs2CZmYQkFZQILzEwLyLXsF8srjLDKYo6dw2voPyQhe3eYT1mSueq
-         NLqUcLLIA/DZ9BKeVQ3LZ812nYx+CEjFB2zATHylU42tizMFPipwZ4M3cVdsh6OWBdHw
-         /SYiny1WDOx6RtRRP8EAIKdausko7dbhB9cSL2jqxBr8AVbmbDOG4tnpCbm/VRRip3g6
-         wolg==
-X-Forwarded-Encrypted: i=1; AJvYcCUC0zyXyPVOXW4X4n0/qU/N9hbe1u7J5J7MJmQh7BAn6ZVhTfWwxZgy/U/CLllLaJ2qiNuFzf86/zrsyfHPhbhr@vger.kernel.org, AJvYcCUSkDnNObyH3/t/2S0AxlVBi9TX2Fp1sXWyB1+e9noOKI0ALu5FG9zzgjHD1IWc27lg1TF3NH/ppfo=@vger.kernel.org, AJvYcCXNtYG4cVx/22mgUp8/8Uof06BSgkKLjJd2KWJJtBc+bGLHsyB72K197RYwHi8W+4OIz0qm8cgcHyt0FFKF@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDiSCwGE1ajsMHYKQSCA0AjqOpdrjgvHZlGezUrrdzJhgtK8q4
-	p2jmUDrX12J1vFEymdA0rrouCzDID3+TdFGSoB1eLE4bZvBfXEls
-X-Gm-Gg: ASbGnctVG43YZ65hGFI3WizlsCWDNv4To4wVpqv10/dztMWPqXa+dVil+yuqiAtZJtw
-	zd9B8eDoXHSL035PZJ9nGF9QVc4NibDt8zgAYDi1n5RojyoqQfu8veke2V47EpDqKlR2sAi8qXO
-	MiiTrE97ZC5cXzSyugRQcvMBjyraHI0/pxwc5VKvj4Qyllg8c6qNbuYBzpNb5S+r3yyMFOHo8tH
-	SAGWrce+Jnt2apyCOXBNmJSaVls3keS/3ZLnaMLYCRASRn2Z0NjZRGEQXB1u6Gcz063jUSC6VrW
-	trrQew==
-X-Google-Smtp-Source: AGHT+IEXjLuBa1sEdPanHbL309t415dJgNNLyYgGBO6Jyc44lhGdhmYjk1F095sezbxN70cTox5t9g==
-X-Received: by 2002:a17:907:7b96:b0:ab7:6c4e:8e52 with SMTP id a640c23a62f3a-ab76c4e9dfdmr429966966b.5.1738839978140;
-        Thu, 06 Feb 2025 03:06:18 -0800 (PST)
-Received: from localhost ([2a03:2880:30ff:2::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e73a4sm82544666b.108.2025.02.06.03.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 03:06:17 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 06 Feb 2025 03:05:59 -0800
-Subject: [PATCH net-next v5 8/8] netconsole: docs: Add documentation for
- CPU number auto-population
+	s=arc-20240116; t=1738839998; c=relaxed/simple;
+	bh=424z3xeVy+hYuz4Bf4HOp0gRG11/ictunEFrBSj3B4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TjpRQEWg8kWBPF1df9yBRGvEgHZWYxqCFEX+FmiJYtlO+WYErSycdZDhuMvC0g5OSsUn8Zk874ieQr8IarGXxtb2ddnkX37RUW8zgmhvCA/O2mkSJmQa5vsQVWlOo6/o9Yx4oMvOzc9TrbzCXFs24mp6+Nz3glZb9dGBtPvJGbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=rSB9tvAR; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="rSB9tvAR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=BWU+tBeptG5VXeLCoxZwXjDE7C354LH6yguqmZtkpdM=; b=rSB9tvARdrfa7BAdYcz4C7dS4j
+	CI8hb2yV7C71BHBTL2D11wLUFi6Ijl70RQbIK4qqNJ1htZlpLHIZ2ZFHYcV6e0ZisApVIQuoMj5Od
+	VErVjBcFatKQeyu4ln/5BXkqq+QOSib3kqGgzfihVXfzA9WUH3y8Qg2KVX04tA2S+M1nU/mE7CTYa
+	USfWbNVK6e8VpBGXvg2hb/agC4cS66fXxkPtp7s42G4KoM5akCnnCcQWF2wk9IcmkYLvXzAKzpnfu
+	aH+XMYRuXL/UpCzqipVbSIpD7lrj69MJ3jJB7u3b9b5j+tUUD7LS19znpksN2pJy/9OVA+IYh7GqT
+	uHfUxHgA==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tfziG-0008NO-VZ; Thu, 06 Feb 2025 12:06:29 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Damon Ding <damon.ding@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v7 0/2] Fix label name of hdptxphy for RK3588
+Date: Thu,  6 Feb 2025 12:06:18 +0100
+Message-ID: <173883997040.679546.15610550275588618608.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250206030330.680424-1-damon.ding@rock-chips.com>
+References: <20250206030330.680424-1-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,119 +61,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-netcon_cpu-v5-8-859b23cc3826@debian.org>
-References: <20250206-netcon_cpu-v5-0-859b23cc3826@debian.org>
-In-Reply-To: <20250206-netcon_cpu-v5-0-859b23cc3826@debian.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- rdunlap@infradead.org, Breno Leitao <leitao@debian.org>, 
- kernel-team@meta.com
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3210; i=leitao@debian.org;
- h=from:subject:message-id; bh=tamcCxHm3y1DTBqjP1FY4004ODbiDOOle1ZuKGQMC/k=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnpJea6w5eCWTb5GW4BldBdPwcZG1M0KDuBZcua
- mxmxb3Uq7iJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6SXmgAKCRA1o5Of/Hh3
- bUNID/425UN9lskLXEizCZaIfjB3/tMcvhX6/cNzqJNcQrO/tt3S5x7EoSpWxBaVMUImw9+A7NZ
- vl8rfEDsQkhqIrE4mWbAhPa2WwHbYwj3OIbldhmriysTjtA3a6hdl+klJerN8xnj3Ow1QtMvtBc
- TBy2CPy2hxf+lr5Si92pXeUHXSSR4QGrRWBw+1XONZOqlNpuodUq2uMbmUnn0qtNl9EN6snHXT4
- PDuxHbMSHhKE+mPhdFLmCxdttkr4rT0C6SRDZ0rqI2PJqRXMv7vj7+ve8CN9AK1LpAXQpfCvOGS
- wMjKD+fUegV9xulQxfVD/IGELYrnyYvW8NsARBdnA8wQA65oSCv4xa4+inG3CyY2eDrqvspOEXn
- 86pI6BXxgIN14bzfuhlXFpi74+F2FZULvYBncZ/NgX5ZMH9G7SWCl0uIvMvQC3Ee+gPTy0LcFGi
- PcnXokaoTwL15swRG6oPoNXyRmlYS0F0ew0/DdSVPG9tBg7nqSq/axa6A/gJ8mvHMDPT125/SE2
- 5FV6WCPLCuY4p5VxKNin3ZTQDIfkcqhJFg6KecEhzl8W0bbkhwkgjoopxlcmsEkP213i9llkHUc
- h/+6TMGrkmhNMGdRWnTJZg4DzCcbaXFzfuMk5uH1wG+f1D5vyiTw+68Q7x86dFNr1QGSkZI224t
- QZgn23mBl2yPV4g==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Transfer-Encoding: 8bit
 
-Update the netconsole documentation to explain the new feature that
-allows automatic population of the CPU number.
 
-The key changes include introducing a new section titled "CPU number
-auto population in userdata", explaining how to enable the CPU number
-auto-population feature by writing to the "populate_cpu_nr" file in the
-netconsole configfs hierarchy.
+On Thu, 06 Feb 2025 11:03:28 +0800, Damon Ding wrote:
+> Picked from:
+> https://patchwork.kernel.org/project/linux-rockchip/list/?series=927102
+> 
+> The hdptxphy is a combo transmit-PHY for HDMI2.1 TMDS Link, FRL Link, DP
+> and eDP Link. Therefore, it is better to name it hdptxphy0 other than
+> hdptxphy_hdmi0, which will be referenced by both hdmi0 and edp0 nodes.
+> 
+> [...]
 
-This documentation update ensures users are aware of the new CPU number
-auto-population functionality and how to leverage it for better
-demultiplexing and visibility of parallel netconsole output.
+Applied, thanks!
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- Documentation/networking/netconsole.rst | 45 +++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+[2/2] arm64: dts: rockchip: Fix label name of hdptxphy for RK3588
+      commit: 2efdb041019fd6c58abefba3eb6fdc4d659e576c
 
-diff --git a/Documentation/networking/netconsole.rst b/Documentation/networking/netconsole.rst
-index 94c4680fdf3e7e1a0020d11b44547acfd68072a5..84803c59968a3237012fab821f432eb531aba45c 100644
---- a/Documentation/networking/netconsole.rst
-+++ b/Documentation/networking/netconsole.rst
-@@ -17,6 +17,8 @@ Release prepend support by Breno Leitao <leitao@debian.org>, Jul 7 2023
- 
- Userdata append support by Matthew Wood <thepacketgeek@gmail.com>, Jan 22 2024
- 
-+Sysdata append support by Breno Leitao <leitao@debian.org>, Jan 15 2025
-+
- Please send bug reports to Matt Mackall <mpm@selenic.com>
- Satyam Sharma <satyam.sharma@gmail.com>, and Cong Wang <xiyou.wangcong@gmail.com>
- 
-@@ -238,6 +240,49 @@ Delete `userdata` entries with `rmdir`::
- 
-    It is recommended to not write user data values with newlines.
- 
-+CPU number auto population in userdata
-+--------------------------------------
-+
-+Inside the netconsole configfs hierarchy, there is a file called
-+`cpu_nr` under the `userdata` directory. This file is used to enable or disable
-+the automatic CPU number population feature. This feature automatically
-+populates the CPU number that is sending the message.
-+
-+To enable the CPU number auto-population::
-+
-+  echo 1 > /sys/kernel/config/netconsole/target1/userdata/cpu_nr
-+
-+When this option is enabled, the netconsole messages will include an additional
-+line in the userdata field with the format `cpu=<cpu_number>`. This allows the
-+receiver of the netconsole messages to easily differentiate and demultiplex
-+messages originating from different CPUs, which is particularly useful when
-+dealing with parallel log output.
-+
-+Example::
-+
-+  echo "This is a message" > /dev/kmsg
-+  12,607,22085407756,-;This is a message
-+   cpu=42
-+
-+In this example, the message was sent by CPU 42.
-+
-+.. note::
-+
-+   If the user has set a conflicting `cpu` key in the userdata dictionary,
-+   both keys will be reported, with the kernel-populated entry appearing after
-+   the user one. For example::
-+
-+     # User-defined CPU entry
-+     mkdir -p /sys/kernel/config/netconsole/target1/userdata/cpu
-+     echo "1" > /sys/kernel/config/netconsole/target1/userdata/cpu/value
-+
-+   Output might look like::
-+
-+     12,607,22085407756,-;This is a message
-+      cpu=1
-+      cpu=42    # kernel-populated value
-+
-+
- Extended console:
- =================
- 
-
+Best regards,
 -- 
-2.43.5
-
+Heiko Stuebner <heiko@sntech.de>
