@@ -1,101 +1,89 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1111F1537
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707F2248AC;
+	Thu,  6 Feb 2025 08:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829611; cv=none; b=pXVj3maSxBEJEax+dHnHq/3x/a89Q8a8H2q28QufIfSwaM1s7GfvaKdq6DGON74VkP3ZHW3cvAvVxZnn9Ma+F681YanGNbQjaeFn3B6LfziH/htqp5BaB3YmEOe8LTbqtUVwsJTSLZDRFSDsWcVNeOr7zJPOOy8JM123sWGrbF0=
+	t=1738829691; cv=none; b=CK7znTscdhjJul/awVzEtFJKzuxL8MwwLZCARnb4CH6lGHZLNlkUJKEzjfChaxP4ioc+hSuL63Uj7hUt3/ZysOkguY9sFV7GwXTt4zJWTSevBo79YTp+vf6T80NKaQvi+9AxsPAalqUo5kYLdlJVtLORVhsF5OPXESy6yGe/Nxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829611; c=relaxed/simple;
-	bh=u81orweX9eJasGjUm606Z3vk612NAdvtbbjWqk30QZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L6I9CVz/J1JjQUFLHFIZkwWrw7qUe4WYlXqQe5G2fP8MRHzD/QcreZc0hyQAjqWCdAbs5AVsHX+eOf72v61eTKJjWvcjGo2XItjhJFThTRaDqTJeK4izcQIqVu/WmfpZwo97JgkdG+LTyGiAO7jisPeEWaFgKBE4Yz7Fej4a7+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Oe/tJGi3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oz+jz5G7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Oe/tJGi3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oz+jz5G7"
-Date: Thu, 6 Feb 2025 09:13:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738829607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DSHPctppgFx2T7kb8w2YlXg5yJ2iuC5dB380kfJlnXg=;
-	b=Oe/tJGi3G1xy7Z8YgIulGWCc3RaKrVWsdv8Pg3wJjyZ8YqrhPwzvPMYPVwAN8T7ZvuGMzX
-	IAqov2Mxcm2LTv8/1GEO7chMBJ1HjYuCUsec8yxqE+/Ur/lEzBL42JxtV6FmoAtNS0R5WV
-	X/hcwQQSog62ZbOFSqSUqbaCrGTvRFLck2+7ZAhWx/4zGXfmf7mC34pnZJtSMuYtaUwBZe
-	V09VrrvvcNzpt3JkMroH7PMFzW3hh56souMN43VXZXkcT/rxrcosFGsrCoWT+/05mKEgeb
-	Tzpjf2oivnEP8ORvkTmL2TXibJGDR8QhDhCtb0dF7DhAXNpDlX+BMIoVxDBsvA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738829607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DSHPctppgFx2T7kb8w2YlXg5yJ2iuC5dB380kfJlnXg=;
-	b=oz+jz5G74rb08mjGxe3fYTOBQCbcntiJJY1do5B5WkmVq0/LVjfZ0lR+6LeHzl5Pfn2mCE
-	LxbepFgS7bk46TAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-	Mike Galbraith <umgwanakikbuti@gmail.com>
-Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
-Message-ID: <20250206081326.xMa5Z5oJ@linutronix.de>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-2-senozhatsky@chromium.org>
- <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
- <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
- <20250206073803.c2tiyIq6@linutronix.de>
- <46ttdyaiweca7qou2t3mx5jy7hefg3htrv4covt5htcex7zaq4@p6is3ukmtbhy>
+	s=arc-20240116; t=1738829691; c=relaxed/simple;
+	bh=fZPJH3CSQdODZnXztNoSbNZTgj6pLu/fv3n0LbAubpQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m8hylalT506Fm2rX8+pRMWepEnB3I0M8kAHMOKeoBp/pjw3BrlkCrCGjYCkd3Pl/w7fUXzJUoWtL8oBaNV279NxtREZnJpYSz8yayHhrWFwOyV7z32bgZse+c5p71JkrLZdBR5UmXnyOmXJFcJztLn38JVJoHJDBRe9K4MSKJgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2164b662090so12596465ad.1;
+        Thu, 06 Feb 2025 00:14:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738829687; x=1739434487;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=shv9SKnTKLaSrjwCnFD2VxR1ja3MKQ6r1lsFRhAb5Ak=;
+        b=PDctM0uaUiYt1X0KnkmtoBZ1sjCN2YsB5maMPbCx6mfvAfmEIB/GtLSW3Ondt7R8QE
+         nYAaDK+FQ7qim2/yfk3R1cnvYvttGHEaw3fab/+vXFPfDVCgv5Z1vH5D3JUXs/sASxje
+         Axw6Jlgjh37dbcTB1BCCKGHE1Ah6LkF9qQwWTZ4dMFaY2ORndaV9B8ZmpEnPjJsX/QDf
+         9TDHfIg32Ye0Ej6tv3TSOSirFPO4TqZ5Fn1MJw+8MJiWI0uJtYA1tsO93LdnUta29nSg
+         9YMqz7hlcoNnLx1NV+VxaubQgIsBLYll727XNfxEUGaPuK6ppiC+kXa5aGfl8zjHQdAs
+         HIvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwB3Vn2WhJJXURUziVRAtlIf1FFxloJaykC/UmpJGr8pAY9u0FFD800FwVxFWZL+0vBkp7fAWcyZ1bYgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSernlf1Sg8XJkSwFH1hl7SayHFlnBL7/JLR882vhjJRsut08m
+	+SKwj9s9bLzexikyy7DNLyENWRIlU2pbtSFaXH7qGrE3Na8s3m9q
+X-Gm-Gg: ASbGncvvldY3NHKCjHPjjyMbnMHBGyJY1/Qw9uV5cHHnmdUAvkcvsBf/qB5p3ckmCjL
+	K7EWehzGRVu0Gygx961XgsU+9hFiSGPziZji6bHsMDToXxIi7Ts1TbI9sGXmyk4w/TkDvfQPn+s
+	s1DPYMizDqN+TXDBk1j0u/9LOrD/yUuIHHhSv8Ac68daBA+kmQSfNMsBPWbou4RUTLBq0GhNw78
+	hA/AJ7UFpxUX0e9EGoxQaOPJWnx4dpo0N4jpaSGN6wQuX2KacVPi1LDJOPB2E2LcJDgrOmA0xxW
+	uPNJTftpphdt1H2GFdgHRUc6veajYiXJk06B0iA=
+X-Google-Smtp-Source: AGHT+IEZTeo1QpxSxkiB3PklNj/CzA8+OdYiqecMnSaS1V5XcJOXplVmCulJZztjBU6ix5vCqvUGOA==
+X-Received: by 2002:a17:902:e74e:b0:216:7ee9:2227 with SMTP id d9443c01a7336-21f17ebbb5cmr102798745ad.36.1738829686461;
+        Thu, 06 Feb 2025 00:14:46 -0800 (PST)
+Received: from kylin-ThinkBook-15-G2-ITL.. ([116.128.244.171])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653acfesm6786855ad.65.2025.02.06.00.14.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 00:14:45 -0800 (PST)
+From: xueqin Luo <luoxueqin@kylinos.cn>
+To: rafael@kernel.org,
+	daniel.lezcano@linaro.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	xueqin Luo <luoxueqin@kylinos.cn>
+Subject: [PATCH] thermal: core: Remove duplicate struct declaration
+Date: Thu,  6 Feb 2025 16:14:36 +0800
+Message-Id: <20250206081436.51785-1-luoxueqin@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <46ttdyaiweca7qou2t3mx5jy7hefg3htrv4covt5htcex7zaq4@p6is3ukmtbhy>
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-06 16:47:02 [+0900], Sergey Senozhatsky wrote:
-> zram is atomic right now, e.g.
-> 
-> zram_read()
-> 	lock entry by index   # disables preemption
-> 	map zsmalloc entry    # possibly memcpy
-> 	decompress
-> 	unmap zsmalloc
-> 	unlock entry          # enables preemption
-> 
-> That's a pretty long time to keep preemption disabled (e.g. using slow
-> algorithm like zstd or deflate configured with high compression levels).
-> Apart from that that, difficult to use async algorithms, which can
-> e.g. wait for a H/W to become available, or algorithms that might want
-> to allocate memory internally during compression/decompression, e.g.
-> zstd).
-> 
-> Entry lock is not the only lock in zram currently that makes it
-> atomic, just one of.
+The struct thermal_zone_device is already declared on line 32, so the
+duplicate declaration has been removed.
 
-Okay. So there are requirements for the sleeping lock. A mutex isn't
-fitting the requirement because it is too large I guess.
+Fixes: b1ae92dcfa8e ("thermal: core: Make struct thermal_zone_device definition internal")
+Signed-off-by: xueqin Luo <luoxueqin@kylinos.cn>
+---
+ include/linux/thermal.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-> > > static void zram_slot_lock(struct zram *zram, u32 index)
-> > > {
-> > >         unsigned long *lock = &zram->table[index].flags;
-> > > 
-> > >         WARN_ON_ONCE(!preemptible());
-> > 
-> > you want might_sleep() here instead. preemptible() works only on
-> > preemptible kernels. And might_sleep() is already provided by
-> > wait_on_bit_lock(). So this can go.
-> 
-> wait_on_bit_lock() has might_sleep().
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 69f9bedd0ee8..0b5ed6821080 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -86,8 +86,6 @@ struct thermal_trip {
+ #define THERMAL_TRIP_PRIV_TO_INT(_val_)	(uintptr_t)(_val_)
+ #define THERMAL_INT_TO_TRIP_PRIV(_val_)	(void *)(uintptr_t)(_val_)
+ 
+-struct thermal_zone_device;
+-
+ struct cooling_spec {
+ 	unsigned long upper;	/* Highest cooling state  */
+ 	unsigned long lower;	/* Lowest cooling state  */
+-- 
+2.34.1
 
-My point exactly. This makes the WARN_ON_ONCE() obsolete.
-
-Sebastian
