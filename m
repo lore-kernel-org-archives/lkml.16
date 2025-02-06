@@ -1,83 +1,41 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2D7232378;
-	Thu,  6 Feb 2025 14:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EC01E5B93;
+	Thu,  6 Feb 2025 14:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852115; cv=none; b=NlHcR61REBTeR7LpuBauI6AL7tsyKbwdFEYe+Y0y+7j+tw3nz67rUmS/tiSjBel0KwyK2ZHjKLqmKu0XFS+AHNcydJ2hu5ZwfgAeV1333nfsYIXDFDg3ojxdW7Y3PruEKD8PRD+ZaizTeyeFrMgxvq4d1xvkWcjXGbI+Y5HK8hs=
+	t=1738852122; cv=none; b=iFrCTwGE4l0XeIjnwZUUIa9G/Y5Ft89c3MM53hPGW2kGx81ex4qFmps7GsBbbn+mJYKfNomqj+KKuOvQwo1GcYKUQknngdFu415RFDBQclRnfJAWLVu9mmnbcQwx9XMUXBvifNMgej9z6cDeU7sO7ACmUwXWv8j25e6rdhJqI+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852115; c=relaxed/simple;
-	bh=fgbY++RJ+ic/+i8oSfsHGyc3RLIXbYiasUWHSyg7s8g=;
+	s=arc-20240116; t=1738852122; c=relaxed/simple;
+	bh=cP18bAFLC5z20fm5XJqsusQj5NcGcW0quC9Mv6doxZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=laPSV5rg/xFBgrp9bz/St/nyvyoYP2ES/jeY7p4/FC6t93UaONQQXLGBVOpP0JHCMOZgXFYO9x6UNJ1m0YYLWWV2csovA5qdQdfYqpfuKxUDtFuZiVgpU/6gLGUA+ROH6heD/nG/IHgeqlUTJPtgHLIIErGIcUmke5Jowgek8cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=RuWL9TOo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LhKg4zX5; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RuOdLxhRk6J8Q4POxDt1GzCbwl4Kk7JiD4ix+Rco1CQyefinyhqpFPeSTxKDW6bTTzJNk8lKbzEOGtm2GmdHkedmtk2QH7TobInO0AmPyMc7mXuQVnnh2bHdKtL8AOwDeQ67KwPZvkRZ+TzHl5+8Co8E7CfrlHrTfHyomGr+NyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Hf7uM4Jr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="RuWL9TOo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LhKg4zX5"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0D35011400D2;
-	Thu,  6 Feb 2025 09:28:32 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Thu, 06 Feb 2025 09:28:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1738852112; x=1738938512; bh=i/bH1tcl0o
-	ISJAV1FYlk9k+MIHMSnj8viyqL/ewy+ko=; b=RuWL9TOobf/UkOOz4MlUi42/tn
-	DdIdvwR28xReC4dyCvNy8TszJQJi8ctXWU2/xAt17Oh3Z4aRWSobhPq6eGl+Bt7T
-	eXUsXRn4xNkexRBfdXluU3qFlgRuU+LL+soLDVSqKG066+qab2sLggojKGq5iQRf
-	4+0lrjgFCXwmOuWankVnqRaJc2VvFDPV7d2vS0r+aFEcZ4LGJk+cXMFP6D2uUF2t
-	NsJmmBjSpC/RITjQlpJsjNcbt57EuxT3PUEg82GUwfWMVbYwEEphdzTQ2/WYBMvg
-	cnicQo6pvBM6DHZSAb1lNF0jgKnwQiKBopMvmDhuYMAQSq7Vhwk8jHjNmT0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738852112; x=1738938512; bh=i/bH1tcl0oISJAV1FYlk9k+MIHMSnj8viyq
-	L/ewy+ko=; b=LhKg4zX5VxBHFbdx/p0fzlfcJpZ8N25P/k8rLVtbJPIQInsEY++
-	BJjrtgmu8C7n7DHn5fYhqEDPK7ioFtvnmJohPTheiPaNbT4AnbRPofvtXVZ4hi01
-	UTzNiezPPn2M9wbCDUbhmh+aguSyWlcV05R9U0ehH6pO9tn9iwU60DB8gxoRiKzb
-	xtFYPGeBuSKuTM3SFuM2rh6GoubdEiiSAiiR5e1QWe6a7wfNXjN3GLUaEMKG4ZBN
-	Lx30krc/zsMxYRAkjB7z0fgW6uzkIb13J5JVWiai7siEp0hd4lw+mguTfvCzQ6Jq
-	dA0CHNDNKqIv5mcuwCYlq63ERaG9X6bqZdw==
-X-ME-Sender: <xms:D8ekZ3jm1jSSu_ZHQXofuyLLi468QYb31-kxaDqyC-aBo4fNE11-zw>
-    <xme:D8ekZ0ANJmFBHW35_k5Ic-Y1eNZSbnjtFzIGER89aHbU8_f6OZqA5hFNEtSNBqSIf
-    7pIPoaIC-HPkw>
-X-ME-Received: <xmr:D8ekZ3F8eztWzqTKaF1fTKw7Kz47pgGVPK-XWCtQ7m1MC6i0oKQvdl7jsfZ84yBxsO8yw7ikBHIMKJLd3yXa1J3NyJSxbIfH7Moepw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeifecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeehgedvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueef
-    hffgheekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtohepsggvnhhjrghmihhnrdhlrghrshhsohhnsehgvghnvg
-    igihhsrdgvuhdprhgtphhtthhopehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:D8ekZ0TucECWBB0w4jf7uQLGs9G_qufSVQmFAuWxvLBI9t7aM79VlA>
-    <xmx:D8ekZ0xPGsH6Bv-Lzzs1-GA01A3Ku0guqRwrtYbvHDFMdhDJhGvJAQ>
-    <xmx:D8ekZ66naF48u5Mw9q5nGR24RheOjklxSeNYE7tEZXdyvFM5XijqmA>
-    <xmx:D8ekZ5xKOyQY5GF-ltltgwufnyOKYmoKhJ1enccfAbhrfttAyGqnwA>
-    <xmx:EMekZzljNgwDLk33bYbOkbdXfpK5wpKr0A7V8_3q8rEWWEM9luzYqF3l>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 6 Feb 2025 09:28:31 -0500 (EST)
-Date: Thu, 6 Feb 2025 09:14:02 +0100
-From: Greg KH <greg@kroah.com>
-To: Benjamin Larsson <benjamin.larsson@genexis.eu>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tty tree
-Message-ID: <2025020621-feeble-attire-0611@gregkh>
-References: <20250206135328.4bad1401@canb.auug.org.au>
- <647d4d6b-615d-4c0c-b001-fab43fb7ab4d@genexis.eu>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Hf7uM4Jr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB8FC4CEDD;
+	Thu,  6 Feb 2025 14:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738852121;
+	bh=cP18bAFLC5z20fm5XJqsusQj5NcGcW0quC9Mv6doxZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hf7uM4JrgK4bYWHFAvM3E8f8gZk0b/V6kmKZllWvjy3fFemWOJX+AvyIpfhRhSBiE
+	 Eyflp1MV1xb5xnbwSP+ihgCvDTom8R2XQ90IGcxSt5MbNWQLcQFJixdNVjupvkbb0x
+	 aTF044E0h+ibrKHG4Q2bPG6l9Zoa0LahMYqit0i8=
+Date: Thu, 6 Feb 2025 11:03:30 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: ardb@kernel.org, chenhuacai@kernel.org, chenhuacai@loongson.cn,
+	kernel@xen0n.name, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+	nicolas@fjasle.eu, sashal@kernel.org, stable@vger.kernel.org
+Subject: Re: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage
+ where possible
+Message-ID: <2025020611-olive-gluten-fa45@gregkh>
+References: <2024120635-wham-campsite-b62b@gregkh>
+ <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,41 +44,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <647d4d6b-615d-4c0c-b001-fab43fb7ab4d@genexis.eu>
+In-Reply-To: <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
 
-On Thu, Feb 06, 2025 at 08:40:34AM +0100, Benjamin Larsson wrote:
-> On 2025-02-06 03:53, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the tty tree, today's linux-next build (x86_64_allmodconfig)
-> > failed like this:
-> > 
-> > drivers/tty/serial/8250/8250_airoha.c:52:6: error: redefinition of 'airoha8250_set_baud_rate'
-> >     52 | void airoha8250_set_baud_rate(struct uart_port *port,
-> >        |      ^~~~~~~~~~~~~~~~~~~~~~~~
-> > In file included from drivers/tty/serial/8250/8250_airoha.c:10:
-> > drivers/tty/serial/8250/8250.h:328:20: note: previous definition of 'airoha8250_set_baud_rate' with type 'void(struct uart_port *, unsigned int,  unsigned int)'
-> >    328 | static inline void airoha8250_set_baud_rate(struct uart_port *port,
-> >        |                    ^~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >    e12ebf14fa36 ("serial: Airoha SoC UART and HSUART support")
-> > 
-> > I have used the tty tree from next-20250205 for today.
-> > 
-> COMPILE_TEST seems to be the cause for this.
+On Thu, Feb 06, 2025 at 04:37:02PM +0800, WangYuli wrote:
+> Hi, Greg,
 > 
-> +config SERIAL_8250_AIROHA
-> +	tristate "Airoha UART support"
-> +	depends on (ARCH_AIROHA || COMPILE_TEST) && OF && SERIAL_8250
+> It's rather unfortunate that currently, almost all Linux distributions
+> supporting LoongArch are using LTS kernels version v6.6 or older, such as
+> openEuler and deepin. [1][2]
 > 
+> If this bugfix isn't merged into linux-stable, then every single distro
+> kernel team will have to waste time fixing the same darn bug over and
+> over, even though it's already fixed in later kernels.
 > 
-> Should I send a patch removing this?
+> This would really make LTS look like it's failing to serve its intended
+> purpose. And I'm sure all of us do not want to see something so terrible
+> happen.
 
-No, you should allow COMPILE_TEST to build the code, right?  Odd that I
-can't build it here for some reason, I guess I need to enable OF on my
-test builds...
+LTS is here to ensure that the original release of these branches, keeps
+working for that branch.  Adding support for newer toolchains sometimes
+happens, but is not a requirement or a normal thing to do as that really
+isn't a "regression", right?
+
+Most of the time, fixing things up for newer compilers is simple.
+Sometimes it is not simple.  The "not simple" ones we usually just do
+not backport as that causes extra work for everyone over time.
+
+As for the distros like openEuler, and deepin, they are free to add
+these patches there, on top of their other non-LTS patches, right?
 
 thanks,
 
