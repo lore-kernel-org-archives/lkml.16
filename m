@@ -1,145 +1,164 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA560225779;
-	Thu,  6 Feb 2025 09:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953C422652D;
+	Thu,  6 Feb 2025 09:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834801; cv=none; b=S/sCYkfQAoapHOxJ51YZuZ/NmIUQEl0eZ43fW7ZOGENrGQxkHuTdb1Zwrdq4XSV53mna8o7JeY11/DsnEL1MpJVAxY0dDva1cWIZ1LUdd0jHMjd0FNmCiA9k97y0zz2WM/ANNEjazN3OcYQmwif+w4UfQ8dVnIjsY99nHVf7ujA=
+	t=1738834827; cv=none; b=bGZHXw3ooPx8JFhewDNwriLG8xfHsMtcZtM2ZVegIvZ2fkgx0SiZT+E2SckxlzpjqdM/z0PAlTA2UsIGRpHewae2/+eny9yMC6gPZmnMv0KxE+ybdFM2HoQWHzTmfCrSP2fqhSyGOoY5EjfLwREA1rc6kUfrzLYZmRVfxVojh8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834801; c=relaxed/simple;
-	bh=GlSiss/9xRV3Z/DGuoJIFrhcCv2WUb2A+bRioeMM7y8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BSTn0SzZ6xQc56M2LthUaZH8GC/M+pYusqqZrp9sqmqOPVn/N//4yYPwc4NRfa3QxriH1rVVycBxLskp7wiaxo/R4aHTA3fJf+mq43VnXWlerRQmQWVcPaAeJaM1axLhj4njh7+eUM/VjRDFsi1DN6uEsn3gHxOm5ogeYRmjkPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvURO0vi; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1738834827; c=relaxed/simple;
+	bh=5HaMqH6ACPaZZ+jYPKdOVGdO5CJDeUWtDjJRtpOQNSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJEIpkKf2BdUMuRJ7MFxcDDYOLG500WGvdKqljJZ9hH2ThiMyurBThXkWMCnRmoIRAOxya6x8xfu4ZEBEnwTBQfV1nMxDkdHO2aIxmu3+/Ltp1/RLRqdWIPoP5yJ4bJZoUdPgaC5RUYZLIAjivEmkiEZQ1Jh/ZOdSHnh2ai0sxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dYIgfyov; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvURO0vi"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso6632705e9.0;
-        Thu, 06 Feb 2025 01:39:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYIgfyov"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436326dcb1cso4272095e9.0;
+        Thu, 06 Feb 2025 01:40:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738834798; x=1739439598; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l/jkdfrZ08jX6WcmWMCx0fLw09dF088mHQgwhu4b5Bw=;
-        b=AvURO0viYRK2CHayCFwc1ABkHV6yrpmIiAAGjMWf26MWzjRrZPVleV0kY+YPaSEuoE
-         hVEa9VUgw+baGlwXS0qGVxSzZ1N9IjgC+dvDxbQSH1G6QTqeRUewq1JCgFuIvgUUWT/v
-         Ta6rHXGVtDpuQ2+jYcVzMeoFjCkajx34HopNXUbtfD7decCGZkr0IXzBkWHVsz3kF6Ys
-         QeuYM76ya7ZuqonDKgOL0MlNC8GoeWL77bDBvCpI4t1Ijk7Khc0htB5IoY4ReLcg42UT
-         /I30cElqiJf60qI7TB+uXTus1v9VQOo0yFLcXykseYCtYCH2BJ6GOS4gN62B8h33r7JL
-         +UhA==
+        d=gmail.com; s=20230601; t=1738834824; x=1739439624; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFKBSoOVGRBtSVzPGty71l+771OyWvjkU/yq+7DfWR4=;
+        b=dYIgfyovCiD/JMawQ/hnenbVlah/uWGR3rwxz8eNepX5rIl7wJVWtXwCXeuctYyjJH
+         43r4e8DZo3PmoOaIF1GGGEor4nOtii01iolE7WCO7b1br7tAzYj1d3kghl4w7D+vbdnB
+         sPChPNfcs8G63GDmg47082o3nAHDEuuafap8m6w+fY3p4rfTBbXNnkCZzMO1Ns8PlKXV
+         iDeVH3GdqQXWbZVoNn2ZSpfY/TOCM78m4cnfT44FJ5ARwA9lyIHWIRK76DvOkKbd7S5R
+         9ukCQw6VknVXTL2fst7iimXhNWxxN6EXlrsDCwmklFFtDAi8Pu4TARTtnZnJH921Z9+p
+         OTBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834798; x=1739439598;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l/jkdfrZ08jX6WcmWMCx0fLw09dF088mHQgwhu4b5Bw=;
-        b=p7S+MHL5MVfeTF7GUfc2lfNV1zkvzxnAwD+XiPVoSpx69XZoiPyb8jq7F3NNoSvCV1
-         cxgQc6QRrt3rFkBFR1w9hp4MJN534tcg8tnbFcqxBFOPV9J5ecjX/SEQ8YxoVtmwQ5ed
-         iM2snxWqwrDDa8qSe038KFElDmlrB/NQaWAR7JcJl72un1yUyhD8AvAwJoqwCdfJUrz3
-         eokJChLujDNF3DBpzBcuRtKDTBYbH0uJa1wXXPqh6YVrpUV6HQlJAe+yc5kynh2magE+
-         WyOy+qISyOSHrCzQqCAYsSFOgjNZn8bfECNWdo44SAD/vlziEnvdBqT29oTgLnwyMFEJ
-         2M8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWRTyrhF9AmB2l1OhGuyk8rJm+dym9k1Ajtrizcd711DOz+ZwRDq3CHgx9uPjs7EGVxXhyrSESeBWu6vHmpy80=@vger.kernel.org, AJvYcCXHMTwdEqeLxqc3Iif0Y8ynmmNcLF/lndPJ0zbwYX4sMb9YAJxkylw+KEhPz0K9D777wzEdsPOpFGVDM78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxENl0Nise/O3j351SWTEx6afK574zZEuXiXaMbc5zYrynnHG/d
-	8wouxjbV1hnoDu2/+jQHmPWiiIgQLQcfOTxPhYte2Bd9mu5fbbkGGMdpnnYH
-X-Gm-Gg: ASbGncvwbWu1I+r7wYMupSFQddkb2f8elhjQfxdNyoyK/xl8e5+jR/IPf9i6XanjW75
-	rHtMju9ErdD5VoXcD86u78/yIDX1Ovf0MGZhcRcoxasP+/CK38Bt8C0h5nXxwoHMZ+00X5FKd55
-	aMGZYS8nc/0Kt23ogApy/J/Hk2jA8tUQ8qCELjHVaRuGb3Stgkeeor1dTi6CH4KKs5T8qNQpFz6
-	WIA9lqnEpWLBN4CtnSzQ6zTYPRyXpwJyblpUhbUGr3VcSWL4U0yFjlSbybAueU2iNrn/l7BZ9Ki
-	7d2+ZaK5+z9bZzvZlqaEEAagcnFP/YoB2kQGT0//zjuB86Ro/1QL
-X-Google-Smtp-Source: AGHT+IGBzVXmnW+V09JM5cj0lj1ejZ6PtsqYBnWfyMAP4lVzXR/2TmoEhoDdYt7Jw/te+/+0sWsibw==
-X-Received: by 2002:a05:600c:4754:b0:435:1a2:2633 with SMTP id 5b1f17b1804b1-4390d43da3fmr53984655e9.15.1738834797789;
-        Thu, 06 Feb 2025 01:39:57 -0800 (PST)
-Received: from Junction.dargent.eu (242.76.29.93.rev.sfr.net. [93.29.76.242])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db10b17sm48170475e9.34.2025.02.06.01.39.57
+        d=1e100.net; s=20230601; t=1738834824; x=1739439624;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QFKBSoOVGRBtSVzPGty71l+771OyWvjkU/yq+7DfWR4=;
+        b=rq7az9lJ5elFLeUo5xpEbm8rhFlfzZGRhqc96/yKyNUsN6IuvkZBV51/0/WQI3le7n
+         AEOZemE6+jbrkpJLFVp029MFygcBGyDX6cWhEBjcRAcG7yCIJkHe0tieKRS8ZjycyUBz
+         aE6iYJjwY59iswQ9GNp8SStIYzpiwx9Nsezv4WsB1yGqG87W/H6NKZWf1pd7EH5HXnf5
+         e8Luw5i3zA1MjlELFaZwjPZxGxN0M2omYHe1t3kTwPjk2feHHXmxZqoNwynrQgitN2bV
+         /GS+0ruf661kVRFCNJh6hA+SH8xLUy2oJkzQOj8fCUtIowQzD1g2eBU12/FVuLl/EUcU
+         Y2BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVp3FOIBKn0JbzEN2SQKdsHhMvsoGjiDJfR+CpnJWI6CdynSaScOltqr/oih+nCpuNuw+0m4+3cKpRC@vger.kernel.org, AJvYcCWOnhF/2G5ednQg3mJ6ZOWcRHJp7ZI+XpJWJg3JMPpMvkoiAeMWTgHtk5Eim/SDVsoHkwnJvkLA@vger.kernel.org, AJvYcCX2DfWGrB8DVjnxqIWEzoiNp16FHu8M63QOZr27DEMDFC6cFVlUDAtzuZsVwcObLIqZgK7eqn5H/MSE5oyR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr6UsqmOPUk3UwAdSG2VG6LGIV+E41giQC10YceA+AI8u1BZWX
+	ScdZQlpyV5huevhwhd2pQctLoBG14TwXYMXziR5Pm3EX9PEORMmw
+X-Gm-Gg: ASbGncvywmdthgXxyQq+OAadBH+0+0KtBaX6/bHbC4fgxBsL9Eiu5alvE4Rdzc7PLYi
+	QsLpOMvF0vbtKFCORt2oiSUiXkX/rZZHwe9KsYNScwxlc4GtX4ghWi1UR/A98kyuhtnhWa4nsmj
+	zcHBXMHMDaHLRVAVQf/j06HJwv3a0E2LNh13siS/Ks0XfM1v5TVD9LXU5MF3nBBzYDyyHz45Szj
+	PsLlgx79YlVRmmBWmI7+/TBPt/psS8pzLGZZOWJaDXVLOhUarhMJtGo2z8emDCcJUXcg8i780/t
+	5LlykE3MA/Nf
+X-Google-Smtp-Source: AGHT+IGyKNrq+Ez6Do5rq2gjjPAYOznaKQ67YtgOLU60pod/oeG3KF49eKfnrIrBCjWw68ieGkh4Og==
+X-Received: by 2002:a05:600c:3112:b0:438:ad4d:cf09 with SMTP id 5b1f17b1804b1-4390d43542fmr47180615e9.9.1738834823682;
+        Thu, 06 Feb 2025 01:40:23 -0800 (PST)
+Received: from debian ([2a00:79c0:61a:4600:45fb:7d1a:5e4d:9727])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d964c7csm48555715e9.17.2025.02.06.01.40.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 01:39:57 -0800 (PST)
-From: Regis Dargent <regis.dargent@gmail.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-watchdog@vger.kernel.org,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Subject: [PATCH]: watchdog: Allow watchdog to remain enabled after probe
-Date: Thu,  6 Feb 2025 10:39:56 +0100
-Message-Id: <20250206093956.46593-1-regis.dargent@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 06 Feb 2025 01:40:22 -0800 (PST)
+Date: Thu, 6 Feb 2025 10:40:20 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	dimitri.fedrau@liebherr.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/3] net: phy: Add helper for getting tx
+ amplitude gain
+Message-ID: <20250206094020.GA4585@debian>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
+ <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
+ <20250205052218.GC3831@debian>
+ <b28755b0-9104-4295-8cd3-508818445a4b@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b28755b0-9104-4295-8cd3-508818445a4b@lunn.ch>
 
----
-The sunxi_wdt watchdog unconditionally stops the watchdog during probe (on my Allwinner H616).
+Am Wed, Feb 05, 2025 at 06:08:47PM +0100 schrieb Andrew Lunn:
+> On Wed, Feb 05, 2025 at 06:22:18AM +0100, Dimitri Fedrau wrote:
+> > Am Tue, Feb 04, 2025 at 05:54:53PM +0000 schrieb Russell King (Oracle):
+> > > On Tue, Feb 04, 2025 at 02:09:16PM +0100, Dimitri Fedrau via B4 Relay wrote:
+> > > >  #if IS_ENABLED(CONFIG_OF_MDIO)
+> > > > -static int phy_get_int_delay_property(struct device *dev, const char *name)
+> > > > +static int phy_get_u32_property(struct device *dev, const char *name)
+> > > >  {
+> > > >  	s32 int_delay;
+> > > >  	int ret;
+> > > > @@ -3108,7 +3108,7 @@ static int phy_get_int_delay_property(struct device *dev, const char *name)
+> > > >  	return int_delay;
+> > > 
+> > > Hmm. You're changing the name of this function from "int" to "u32", yet
+> > > it still returns "int".
+> > >
+> > 
+> > I just wanted to reuse code for retrieving the u32, I found
+> > phy_get_int_delay_property and renamed it. But the renaming from "int"
+> > to "u32" is wrong as you outlined.
+> > 
+> > > What range of values are you expecting to be returned by this function?
+> > > If it's the full range of u32 values, then that overlaps with the error
+> > > range returned by device_property_read_u32().
+> > >
+> > 
+> > Values are in percent, u8 would already be enough, so it wouldn't
+> > overlap with the error range.
+> > 
+> > > I'm wondering whether it would be better to follow the example set by
+> > > these device_* functions, and pass a pointer for the value to them, and
+> > > just have the return value indicating success/failure.
+> > >
+> > 
+> > I would prefer this, but this would mean changes in phy_get_internal_delay
+> > if we don't want to duplicate code, as phy_get_internal_delay relies on
+> > phy_get_int_delay_property and we change function parameters of
+> > phy_get_int_delay_property as you described. I would switch from
+> > static int phy_get_int_delay_property(struct device *dev, const char *name)
+> > to
+> > static int phy_get_u32_property(struct device *dev, const char *name, u32 *val)
+> > 
+> > Do you agree ?
+> 
+> This looks O.K. You should also rename the local variable int_delay.
+> 
+> Humm, that function has other issues.
+> 
+> static int phy_get_int_delay_property(struct device *dev, const char *name)
+> {
+> 	s32 int_delay;
+> 	int ret;
+> 
+> 	ret = device_property_read_u32(dev, name, &int_delay);
+> 	if (ret)
+> 		return ret;
+> 
+> 	return int_delay;
+> }
+> 
+> int_delay should really be a u32. if ret is not an error, there should
+> be a range check to ensure int_long actually fits in an s32, otherwise
+> -EINVAL, or maybe -ERANGE.
+> 
+> For delays, we never expect too much more than 2000ps, so no valid DT
+> blob should trigger issues here.
+> 
+I think you mention this because you want to avoid changes in
+phy_get_internal_delay because this would lead to changes in other
+drivers too. Is it worth fixing this ? Then we didn't have to workaround by
+checking if int_long actually fits in an s32.
 
-What I want to achieve with this patch is to start the watchdog in the bootloader (either manually or automatically), then boot Linux.
-The watchdog is about 16sec timeout maximum, while the full boot to userland lasts about 90sec, and I want the board to reset if, eg.
-the rootfs cannot be mounted. So I need the watchdog to be handled by the kernel during boot (which it can do pretty well).
-
-The thing is, the current driver stops the watchdog during probe, so it does not run during boot, and it also does not manages the "status"
-field, so the kernel would know that it must handle the HW watchdog.
-This avoids automatic reboot in case a problem occurs during boot (and for example handling in the bootloader).
-
-The driver should detect if the HW watchdog is already running during probe and set its appropriate status bit to allow the kernel to handle the watchdog pings itself.
-The call to sunxi_wdt_start/stop allows for proper driver and device configuration.
-By default, the kernel will then ping the HW watchdog at apropriate frequency, but the user can have it stop after a time with open_timeout parameter.
-
- drivers/watchdog/sunxi_wdt.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-index b85354a99582..20fe7da445ea 100644
---- a/drivers/watchdog/sunxi_wdt.c
-+++ b/drivers/watchdog/sunxi_wdt.c
-@@ -192,6 +192,16 @@ static int sunxi_wdt_start(struct watchdog_device *wdt_dev)
- 	return 0;
- }
- 
-+static int sunxi_wdt_enabled(struct sunxi_wdt_dev *wdt)
-+{
-+	u32 reg;
-+	void __iomem *wdt_base = wdt->wdt_base;
-+	const struct sunxi_wdt_reg *regs = wdt->wdt_regs;
-+
-+	reg = readl(wdt_base + regs->wdt_mode);
-+	return (reg & WDT_MODE_EN);
-+}
-+
- static const struct watchdog_info sunxi_wdt_info = {
- 	.identity	= DRV_NAME,
- 	.options	= WDIOF_SETTIMEOUT |
-@@ -268,6 +278,11 @@ static int sunxi_wdt_probe(struct platform_device *pdev)
- 	sunxi_wdt->wdt_dev.max_timeout = WDT_MAX_TIMEOUT;
- 	sunxi_wdt->wdt_dev.min_timeout = WDT_MIN_TIMEOUT;
- 	sunxi_wdt->wdt_dev.parent = dev;
-+	if (sunxi_wdt_enabled(sunxi_wdt)) {
-+		set_bit(WDOG_HW_RUNNING, &sunxi_wdt->wdt_dev.status);
-+	} else {
-+		clear_bit(WDOG_HW_RUNNING, &sunxi_wdt->wdt_dev.status);
-+	}
- 
- 	watchdog_init_timeout(&sunxi_wdt->wdt_dev, timeout, dev);
- 	watchdog_set_nowayout(&sunxi_wdt->wdt_dev, nowayout);
-@@ -275,7 +290,10 @@ static int sunxi_wdt_probe(struct platform_device *pdev)
- 
- 	watchdog_set_drvdata(&sunxi_wdt->wdt_dev, sunxi_wdt);
- 
--	sunxi_wdt_stop(&sunxi_wdt->wdt_dev);
-+	if (watchdog_hw_running(&sunxi_wdt->wdt_dev))
-+		sunxi_wdt_start(&sunxi_wdt->wdt_dev);
-+	else
-+		sunxi_wdt_stop(&sunxi_wdt->wdt_dev);
- 
- 	watchdog_stop_on_reboot(&sunxi_wdt->wdt_dev);
- 	err = devm_watchdog_register_device(dev, &sunxi_wdt->wdt_dev);
--- 
-2.25.1
-
+Best regards,
+Dimitri Fedrau
