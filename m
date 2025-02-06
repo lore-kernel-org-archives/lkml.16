@@ -1,271 +1,288 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2052.outbound.protection.outlook.com [40.107.92.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF811F60A;
-	Thu,  6 Feb 2025 05:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738821476; cv=none; b=cHNtfaRo3qhdH623jRLfgN7fmc8GweQ4ZYdMs9CIAtazAfIydidjt0w9XqZHk7/vG4DlauXr3KEs0XcnM6Xyb362XsAZL1lZ8IjVApoq862PDXT9niyMmtxZWugmzr9s2UFWgcz974TYxLbhcROGL7LiHWD4SxTTtXGuSsJqPEU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738821476; c=relaxed/simple;
-	bh=fDwpAEJyPDQ1yRNT009E4XeO+vTyO866axMUSdz9lSo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bMhPGrdAEKtm+EMxaiilPXSnRcGa++C4g+212GOVF3/rlcftd6XdUthbl5g5k5fURKPClnf1ZJ+Tzpt8wGuyzcKe3dKkIiEXFQK31/hMYgMM58Sh/XzePs5gYRcmPMBQ3v5ecOD4Nnb3oktEXwt8BNHLXbPp6WF9jh3q85p/MSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=tYLW2xkl; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EAE2E64A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738821628; cv=fail; b=dq8qkFkOguvoiuo2Qt6qbwstwnfGz/HuAR6EuUDwqHW2bqnjFeYQqEMZNz6i0sxj7qJG5G0qiz65Wwy+zTefCgL4T3KlTh47TFVxcG/593qcPGQgfFOZjagNKRToXRe5WvosJqo9F4Ejr0hjZ6HnFPmJpxR/bSNZaS1imuIThls=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738821628; c=relaxed/simple;
+	bh=IlPxH1Iaq9hcUblkHeUOIEkqH+QYtQHBqfZFBQLLo2Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mH4/1/DU3U4nCrf/Yg3ziPCk84UBv2lbq1nYDsXb59wgC22o+5TIFlZptWHth6fTVjp6hGngDew69d2B4JNmcssmP6vCUsdvxegPPgQUMyc/BsxMESRRsNB6LRGtG0wmRi+L03NbJ+1UNZypgHze7RPfBbgwR55jA8jBp5mMMik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2/Atb5y2; arc=fail smtp.client-ip=40.107.92.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="tYLW2xkl"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4YpRGP2QFjz9tnq;
-	Thu,  6 Feb 2025 06:57:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1738821469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Ld8HqJ/hoqu7n9BGE76lcE0Jn6hAsV2tNM2p2iCK10=;
-	b=tYLW2xklZ3tnCqE7IPctzlIUKPZEvhlkX3ZtKc7G4xGtzydfuHBkgRHbZHs039OVjlkEjJ
-	u3i+c6H1wKkxG1QnDyBkUujjUu42hLoKsNTkqIXGBU7oW4S1cTg2wia+WXdgtXn6yLn2Cj
-	uslTtHL9UGHk/K4mT+RGlshhrsOxqMl78tujBmBs/4QkDYTIy18oPZna6BcFDOVxHlW5XJ
-	0IIczs/QnI298yrN8BdE4LGsqsqqIjLRV1eEvwG5qD+msnBk+stvQHpJAnVqqsWdLbBAOn
-	Pf+FUFjfa6R+n8x7gnqF6DXIV449ns+7TjztdWY6RtHNa9AYMOSAcyOGa0jMWQ==
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,  Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>,  Chris Lew <quic_clew@quicinc.com>,
-  linux-arm-msm@vger.kernel.org,  linux-kernel@vger.kernel.org,  Stephan
- Gerhold <stephan.gerhold@linaro.org>,  Johan Hovold
- <johan+linaro@kernel.org>,  Caleb Connolly <caleb.connolly@linaro.org>,
-  Joel Selvaraj <joelselvaraj.oss@gmail.com>,  Alexey Minnekhanov
- <alexeymin@postmarketos.org>,  stable@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
-In-Reply-To: <2vfwtuiorefq64ood4k7y7ukt34ubdomyezfebkeu2wu5omvkb@c5h2sbqs47ya>
-	(Bjorn Andersson's message of "Wed, 5 Feb 2025 20:54:53 -0600")
-References: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
-	<2vfwtuiorefq64ood4k7y7ukt34ubdomyezfebkeu2wu5omvkb@c5h2sbqs47ya>
-Date: Thu, 06 Feb 2025 06:57:46 +0100
-Message-ID: <87y0yj1up1.fsf@oltmanns.dev>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2/Atb5y2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oG+zzmG4+IFu/A1wHu1/ske+8LklyYIp+1LXEMnCDtMWAye66i/XB4U2aZrfe+0x99n9H5Sq/LXwgxlHQGLeLN3Hu7V/g4J3BdJd18RrFogZjZc4qrUTDhODMv+ySTMt34S+bO7CPPqR8evnDFauDDoUgXp1Y2WJqZ7Bz76l8GAOKTAtQ0VUx8M8PTz07y5oJ9v5i5Ind6pUO0JUMGcvAJ+LB8BFGyrJBKpQ0Ogn/gExPYkU4OSWSCCvq6CIsoiyNa2ec8+ZmKmcx/Y1XGSAZS/3BXdTX4JkT+vteykdOGlxHG3Va9VQKTRTmlBe7NtkPgLITJ2yzgWcVL7pwDEJoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oA2uwsEccPhxkhFCtdX+eVutX0N+oOqzWlqg4ihKUjk=;
+ b=UtWONj6Y20PuxOz/n2iw/XJ7csSLld7ix3xnGV+3ifKcZngOPF/RbQj2wqvErD+4rK+PUAxOxy1DJ1ZzlQQlnxWajs+pLGtpF4CoAoLobvaRSO4e1h8jlR6wXTs9DC+Po1IytQp5mLibKw2B4IOmtA3I5cxYBJXkaXyI7qeSXsjrGZKQ26BciHd6oqzpB/N/yxyzgtmeHFN37FENjDOFgOiWSuOK0NSBoGoNubn1JYL0JaQsoGWI7b7X+B2fhVXM+KBXGK1LHqTs9Gdt/aU1QzhZgqq9YhfHnjfq+NUidoa3S6d8asRLhMBp/S1xqqMCSRAbtP9i7DTGQcgQaaSzRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oA2uwsEccPhxkhFCtdX+eVutX0N+oOqzWlqg4ihKUjk=;
+ b=2/Atb5y2/cbxg35+6bljSUUAO5uRWWHh3ChpllkJScjpTlvXuEmJqhbIEMt+72MOXYrBxN5VaDsMDgAhAVU2JlpTvAGX1BLTXhr1WsLcoLP234vx5ob52mmgula15bkTG0K5EIuuiRwzYNJulsuNgxwjASPejd6FP6ZKCATGtro=
+Received: from BN0PR02CA0025.namprd02.prod.outlook.com (2603:10b6:408:e4::30)
+ by LV3PR12MB9166.namprd12.prod.outlook.com (2603:10b6:408:19c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
+ 2025 06:00:22 +0000
+Received: from BN3PEPF0000B06B.namprd21.prod.outlook.com
+ (2603:10b6:408:e4:cafe::30) by BN0PR02CA0025.outlook.office365.com
+ (2603:10b6:408:e4::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.25 via Frontend Transport; Thu,
+ 6 Feb 2025 06:00:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B06B.mail.protection.outlook.com (10.167.243.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8445.2 via Frontend Transport; Thu, 6 Feb 2025 06:00:21 +0000
+Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
+ 2025 00:00:18 -0600
+From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+To: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
+	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
+	<iommu@lists.linux.dev>
+CC: <vasant.hegde@amd.com>
+Subject: [PATCH v3 0/8] Introduce debugfs support in IOMMU
+Date: Thu, 6 Feb 2025 11:29:55 +0530
+Message-ID: <20250206060003.685-1-dheerajkumar.srivastava@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 4YpRGP2QFjz9tnq
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06B:EE_|LV3PR12MB9166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 495e0db8-f075-41b3-f88f-08dd46738ac8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FkQjfCzxsc9FSuQXaqxzIXDL3rrXFonn0KRaV077va0XsHulnD4eWJa2mE+o?=
+ =?us-ascii?Q?2wXRj8b1FANY/3s6t/4sJpWAhu7oPkZ7ANrfvliXI979IquE+eINfHuR9wyT?=
+ =?us-ascii?Q?ncEkakQTD39fQ5jVDUbxBNs4f5AdX/NGwCcoNgBBC0zgrHx9ij0WISIEfpfj?=
+ =?us-ascii?Q?xB7w/CFX8VjM+TMjTP5gxdW1Wwcu1iBBQhdkUjATkNK7UZwCdM+NaQnx8g4f?=
+ =?us-ascii?Q?9TINM3BF0JWxagFPrJvujbO6xuLNRdF41Ya1KXWdVEeEKhWzsDCgHFG6IPmy?=
+ =?us-ascii?Q?YMaquI/GQ0J2j/Grjk4s/fVQdzGgWOjGKHzywV7JXtz4vtoSpUAiQBQ2pPbb?=
+ =?us-ascii?Q?lFs+vSIfIdmYV60Dzd4nz00LC/8k5at652qd1bmwP3bSfYyupc1jsw7MF0y3?=
+ =?us-ascii?Q?t5xcAhe9PsY8wOTtG9GViyN9n5gompmKzlw8R0tT5ewZHBZxF03MVyUgjYwX?=
+ =?us-ascii?Q?T3XJYPgpJpZudaekaOzUiJHr4I6FATjNaWgruAmELfmL9hnYWgMcrUuB9wHe?=
+ =?us-ascii?Q?DfD/Is3yd9JXr8exVhByPt750Vur4KWA84nXHpLDeSffejWiBn5CyH5IKjx1?=
+ =?us-ascii?Q?VSrPobonN23jADeJrOWcisM2J6Sp1Pk9p4tZgzJa2gFU5RrZ2QZ0L1mBO1d4?=
+ =?us-ascii?Q?sNQPOx8S6uAQyHzpWPeolxxlcHi6FoU3dXSxst8KYfkaNipRf11JxBS+OcOz?=
+ =?us-ascii?Q?p9wDOtTjnysFXXpfeDYpbkUaKs8cSgL7nQAODOA5EtRcEoQuTTXkxSn3lEYU?=
+ =?us-ascii?Q?swxGfNIlXlMIcz5dfZLLcnBmwvjQRFuJNjIEheXeKqS+wJDcHXyVFTWQjkCk?=
+ =?us-ascii?Q?KylQ56XSzretm+0VthCpKQMRn2Oqq6mhoOxfw7uRdLo80dRWbKyXq1Tn0xK6?=
+ =?us-ascii?Q?L+CgvG1gsmmC8GYmh74bnkWhJxmCNrARP6h+DRsXpJNE0OMjC4DrmBcA2CB3?=
+ =?us-ascii?Q?J7tZSRt+jBhxzTPTkQ+dCxdz3WP3++EvcXfL2Q9gfVsnThVo1Dh/eeB7fH+c?=
+ =?us-ascii?Q?vfTSRE6tkaoQN3HbJ8pernmC4oZ5PeEmNI9VTA0iCMc2FN4SEr8eCPW0iWCR?=
+ =?us-ascii?Q?E7yFVvSEFYFxmUomVtzZsaF5fMCTNCo3U3ckpkieIV821wf6rkS/tZqloZzD?=
+ =?us-ascii?Q?GwTg2kxyDtavxt2JMvzSeErR1gHzEN69Q+oDSAytLtYQ7dajQ6C97CKX3BuG?=
+ =?us-ascii?Q?V5qKtCJx33rZ3yNi3yo5qUZeyiyjRWqWzV9ecgSBk/WlNMTeH/vXYZnlRSCi?=
+ =?us-ascii?Q?k966PE2y56IkAAZUBWacH95Slu2TZU/3Y1tvY3nZ4BXX3TSTPi3wHWXqhrFM?=
+ =?us-ascii?Q?gjqe7CWYXwLD7HrhLuMVUe89vEdWUnkplLDnmGUUt4qQvcu7HP4kleqSD/bt?=
+ =?us-ascii?Q?STzhRCkswbetsxamhHR/t4+CuccF+L5fx7bwVHkZD8Ue/WDpyQGOxzP0SPuu?=
+ =?us-ascii?Q?HcW/MbDkED9BWL3EsntVRcrJwoqd/b/gsl1R71rrR+X+hTLdSsxTVRoMA/ki?=
+ =?us-ascii?Q?/OKNHyKZujDzB/Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 06:00:21.9307
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 495e0db8-f075-41b3-f88f-08dd46738ac8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B06B.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9166
 
-On 2025-02-05 at 20:54:53 -0600, Bjorn Andersson <andersson@kernel.org> wro=
-te:
-> On Wed, Feb 05, 2025 at 10:57:11PM +0100, Frank Oltmanns wrote:
->> On xiaomi-beryllium and oneplus-enchilada audio does not work reliably
->> with the in-kernel pd-mapper. Deferring the probe solves these issues.
->> Specifically, audio only works reliably with the in-kernel pd-mapper, if
->> the probe succeeds when remoteproc3 triggers the first successful probe.
->> I.e., probes from remoteproc0, 1, and 2 need to be deferred until
->> remoteproc3 has been probed.
->>
->> Introduce a device specific quirk that lists the first auxdev for which
->> the probe must be executed. Until then, defer probes from other auxdevs.
->>
->> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
->> ---
->> The in-kernel pd-mapper has been causing audio issues on sdm845
->> devices (specifically, xiaomi-beryllium and oneplus-enchilada). I
->> observed that Stephan=E2=80=99s approach [1] - which defers module probi=
-ng by
->> blocklisting the module and triggering a later probe - works reliably.
->>
->> Inspired by this, I experimented with delaying the probe within the
->> module itself by returning -EPROBE_DEFER in qcom_pdm_probe() until a
->> certain time (13.9 seconds after boot, based on ktime_get()) had
->> elapsed. This method also restored audio functionality.
->>
->> Further logging of auxdev->id in qcom_pdm_probe() led to an interesting
->> discovery: audio only works reliably with the in-kernel pd-mapper when
->> the first successful probe is triggered by remoteproc3. In other words,
->> probes from remoteproc0, 1, and 2 must be deferred until remoteproc3 has
->> been probed.
->>
->
-> The remoteproc numbering is assigned at the time of registering each
-> remoteproc driver, and does not necessarily relate to the order in which
-> they are launched. That said, it sounds like what you're saying is that
-> is that audio only works if we launch the pd-mapper after the
-> remoteprocs has started?
+From: root <root@BLRDHSRIVAS.amd.com>
 
-Almost, but not quite. You are right, that remoteproc3 in my setup is
-always the last one that probes the pd-mapper.
+Introducing debugfs support in AMD/IOMMU driver that will allow
+userspace to dump below IOMMU information
+1) MMIO and Capability register per IOMMU
+2) Command buffer
+3) Device table entry
+4) Interrupt remapping table entry
 
-However, when experimenting with different timings I saw that the
-pd-mapper really do has to respond to the probe from remoteproc3 (I'm
-not sure I'm using the right terminology here, but I hope my intent
-comes across). If the pd-mapper responds to remoteproc3's probe with
--EPROBE_DEFER there will again be subsequent probes from the other
-remoteprocs. If we act on those probes, there is a chance that audio
-(mic in my case) does not work. So, my conclusion was that remoteproc3's
-probe has to be answered first before responding to the other probes.
+Analyzing contents of IOMMU data structures helps in understanding IOMMU
+capabilities and behavior and debug issues faster.
 
-Further note that in my experiments remoteproc1 was always the first to
-do the probing, followed by either remoteproc0 or remoteproc2.
-remoteproc3 was always the last.
+1. MMIO and Capability registers - Add support to dump MMIO and Capability
+   registers per IOMMU.
 
-> Can you please confirm which remoteproc is which in your numbering? (In
-> particular, which remoteproc instance is the audio DSP?)
+   Example:
+   a. Write MMIO register offset to dump it
+      $ echo 0x18 > /sys/kernel/debug/iommu/amd/iommu00/mmio
+      $ cat /sys/kernel/debug/iommu/amd/iommu00/mmio
 
-remoteproc0: adsp
-remoteproc1: cdsp
-remoteproc2: slpi
-remoteproc3: 4080000.remoteproc
+      Output:
+      $ 0x0003f48d
 
-(I took them from the kernel messages "remoteproc remoteproc<X>: <xyz>
-is available".)
+    b. Write capability register offset to dump it
+       $ echo 0x10 > /sys/kernel/debug/iommu/amd/iommu00/capability
+       $ cat /sys/kernel/debug/iommu/amd/iommu00/capability
 
->> To address this, I propose introducing a quirk table (which currently
->> only contains sdm845) to defer probing until the correct auxiliary
->> device (remoteproc3) initiates the probe.
->>
->> I look forward to your feedback.
->>
->
-> I don't think the proposed workaround is our path forward, but I very
-> much appreciate your initiative and the insights it provides!
+       Output:
+       $ 0x00203040
 
-Thank you! I was hoping that somebody with more experience in the QCOM
-universe can draw further conclusions from this.
+2. Command buffer - Add support to dump per IOMMU command buffer.
 
-> Seems to
-> me that we have a race-condition in the pdr helper.
+   Example:
+   a. cat /sys/kernel/debug/iommu/amd/iommu00/cmdbuf
 
-If you need further experimenting or can give me rough guidance on where
-to look next, I'll be glad to help.
+   Output:
+   CMD Buffer Head Offset:339 Tail Offset:339
+     0: 00835001100000010000990000000000
+     1: 0000000030000005fffff0037fffffff
+     2: 00835001100000010000990100000000
+     3: 0000000030000005fffff0037fffffff
+     4: 00835001100000010000990200000000
+   ...................................
+   ...................................
+   ...................................
 
-Thanks again,
-  Frank
+3. Device table - Add support to dump device table per IOMMU.
 
->
-> Regards,
-> Bjorn
->
->> Thanks,
->>   Frank
->>
->> [1]: https://lore.kernel.org/linux-arm-msm/Zwj3jDhc9fRoCCn6@linaro.org/
->> ---
->>  drivers/soc/qcom/qcom_pd_mapper.c | 43 ++++++++++++++++++++++++++++++++=
-+++++++
->>  1 file changed, 43 insertions(+)
->>
->> diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_p=
-d_mapper.c
->> index 154ca5beb47160cc404a46a27840818fe3187420..34b26df665a888ac4872f56e=
-948e73b561ae3b6b 100644
->> --- a/drivers/soc/qcom/qcom_pd_mapper.c
->> +++ b/drivers/soc/qcom/qcom_pd_mapper.c
->> @@ -46,6 +46,11 @@ struct qcom_pdm_data {
->>  	struct list_head services;
->>  };
->>
->> +struct qcom_pdm_probe_first_dev_quirk {
->> +	const char *name;
->> +	u32 id;
->> +};
->> +
->>  static DEFINE_MUTEX(qcom_pdm_mutex); /* protects __qcom_pdm_data */
->>  static struct qcom_pdm_data *__qcom_pdm_data;
->>
->> @@ -526,6 +531,11 @@ static const struct qcom_pdm_domain_data *x1e80100_=
-domains[] =3D {
->>  	NULL,
->>  };
->>
->> +static const struct qcom_pdm_probe_first_dev_quirk first_dev_remoteproc=
-3 =3D {
->> +	.id =3D 3,
->> +	.name =3D "pd-mapper"
->> +};
->> +
->>  static const struct of_device_id qcom_pdm_domains[] __maybe_unused =3D {
->>  	{ .compatible =3D "qcom,apq8016", .data =3D NULL, },
->>  	{ .compatible =3D "qcom,apq8064", .data =3D NULL, },
->> @@ -566,6 +576,10 @@ static const struct of_device_id qcom_pdm_domains[]=
- __maybe_unused =3D {
->>  	{},
->>  };
->>
->> +static const struct of_device_id qcom_pdm_defer[] __maybe_unused =3D {
->> +	{ .compatible =3D "qcom,sdm845", .data =3D &first_dev_remoteproc3, },
->> +	{},
->> +};
->>  static void qcom_pdm_stop(struct qcom_pdm_data *data)
->>  {
->>  	qcom_pdm_free_domains(data);
->> @@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
->>  	return ERR_PTR(ret);
->>  }
->>
->> +static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
->> +{
->> +	const struct of_device_id *match;
->> +	struct device_node *root;
->> +	struct qcom_pdm_probe_first_dev_quirk *first_dev;
->> +
->> +	root =3D of_find_node_by_path("/");
->> +	if (!root)
->> +		return true;
->> +
->> +	match =3D of_match_node(qcom_pdm_defer, root);
->> +	of_node_put(root);
->> +	if (!match)
->> +		return true;
->> +
->> +	first_dev =3D (struct qcom_pdm_probe_first_dev_quirk *) match->data;
->> +	return (auxdev->id =3D=3D first_dev->id) && !strcmp(auxdev->name, firs=
-t_dev->name);
->> +}
->> +
->>  static int qcom_pdm_probe(struct auxiliary_device *auxdev,
->>  			  const struct auxiliary_device_id *id)
->>
->> @@ -647,6 +680,15 @@ static int qcom_pdm_probe(struct auxiliary_device *=
-auxdev,
->>  	mutex_lock(&qcom_pdm_mutex);
->>
->>  	if (!__qcom_pdm_data) {
->> +		if (!qcom_pdm_ready(auxdev)) {
->> +			pr_debug("%s: Deferring probe for device %s (id: %u)\n",
->> +				__func__, auxdev->name, auxdev->id);
->> +			ret =3D -EPROBE_DEFER;
->> +			goto probe_stop;
->> +		}
->> +		pr_debug("%s: Probing for device %s (id: %u), starting pdm\n",
->> +			__func__, auxdev->name, auxdev->id);
->> +
->>  		data =3D qcom_pdm_start();
->>
->>  		if (IS_ERR(data))
->> @@ -659,6 +701,7 @@ static int qcom_pdm_probe(struct auxiliary_device *a=
-uxdev,
->>
->>  	auxiliary_set_drvdata(auxdev, __qcom_pdm_data);
->>
->> +probe_stop:
->>  	mutex_unlock(&qcom_pdm_mutex);
->>
->>  	return ret;
->>
->> ---
->> base-commit: 7f048b202333b967782a98aa21bb3354dc379bbf
->> change-id: 20250205-qcom_pdm_defer-3dc1271d74d9
->>
->> Best regards,
->> --
->> Frank Oltmanns <frank@oltmanns.dev>
->>
+   Example:
+   a. Write device id to dump device table entry for that device
+      $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
+      $ cat /sys/kernel/debug/iommu/amd/devid
+
+      Output:
+      0000:01:00.0
+
+      Dump the device table entry for the input given
+      $ cat /sys/kernel/debug/iommu/amd/devtbl
+
+      Output:
+      DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
+      0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
+
+    b. Write device id to dump device table entry for that device
+      $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
+      $ cat /sys/kernel/debug/iommu/amd/devid
+
+      Output:
+      0000:01:00.0
+
+      Dump the device table entry for the input given
+      $ cat /sys/kernel/debug/iommu/amd/devtbl
+
+      Output:
+      DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
+      0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
+
+4. Interrupt remapping table - Add support to dump IRT table valid entries in
+   "iommu_irqtbl" file. This supports user input to dump IRT entry for a
+   specific pci device.
+
+   Example:
+   a. Write device id to dump device table entry for that device
+      $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
+      $ cat /sys/kernel/debug/iommu/amd/devid
+
+      Output:
+      0000:01:00.0
+
+      Dump the device table entry for the input given
+      $ cat /sys/kernel/debug/iommu/amd/irtbl
+
+      Output:
+      DeviceId 0000:01:00.0
+      IRT[0000] 00000000000000200000000000000241
+      IRT[0001] 00000000000000200000000000000841
+      IRT[0002] 00000000000000200000000000002041
+      IRT[0003] 00000000000000200000000000008041
+      IRT[0004] 00000000000000200000000000020041
+      ..........................................
+      ..........................................
+      ..........................................
+
+   b. Write device id to dump device table entry for that device
+      $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
+      $ cat /sys/kernel/debug/iommu/amd/devid
+
+      Output:
+      0000:01:00.0
+
+      Dump the device table entry for the input given
+      $ cat /sys/kernel/debug/iommu/amd/irttbl
+
+      Output:
+      Device 0000:01:00.0
+      IRT[0000] 00000000000000200000000000000241
+      IRT[0001] 00000000000000200000000000000841
+      IRT[0002] 00000000000000200000000000002041
+      IRT[0003] 00000000000000200000000000008041
+      IRT[0004] 00000000000000200000000000020041
+      ..........................................
+      ..........................................
+      ..........................................
+
+Open question:[Suggestion from Bjorn Helgaas] Instead of using device-id input with
+	      "/sys/kernel/debug/iommu/amd/devid", can we have something like other drivers
+	      have "/sys/kernel/debug/iommu/amd/<bdf>/".
+
+	      Each "/sys/kernel/debug/iommu/amd/<bdf>/" will have "devtbl" and "irqtbl" files
+              for device table and interrupt remapping table dump file.
+
+
+Changes since v2:
+-> Patch 2/8 and 3/8: Use single file mmio and capability for input and output registers
+   offset and registers dump respctively.
+-> Patch 8/8: Correct path for files "irqtbl" and "devtbl" in Documentation
+
+Changes since v1:
+-> Patch 2/8 and 3/8: Use kstrtou32_from_user() instead of memdup_user_nul() --> kstrtou32()
+-> Patch 4/8: Dump command buffer head and tail offset instead of head and tail pointer registers.
+-> Patch 8/8: Fix bot reported warning on v1 upstream.
+
+Dheeraj Kumar Srivastava (8):
+  iommu/amd: Refactor AMD IOMMU debugfs initial setup
+  iommu/amd: Add debugfs support to dump IOMMU MMIO registers
+  iommu/amd: Add debugfs support to dump IOMMU Capability registers
+  iommu/amd: Add debugfs support to dump IOMMU command buffer
+  iommu/amd: Add support for device id user input
+  iommu/amd: Add debugfs support to dump device table
+  iommu/amd: Add debugfs support to dump IRT Table
+  iommu/amd: Add documentation for AMD IOMMU debugfs support
+
+ Documentation/ABI/testing/debugfs-amd-iommu | 114 +++++++
+ drivers/iommu/amd/amd_iommu.h               |   4 +-
+ drivers/iommu/amd/amd_iommu_types.h         |   7 +
+ drivers/iommu/amd/debugfs.c                 | 350 +++++++++++++++++++-
+ drivers/iommu/amd/init.c                    |   5 +-
+ drivers/iommu/amd/iommu.c                   |   7 -
+ 6 files changed, 466 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-amd-iommu
+
+-- 
+2.25.1
+
