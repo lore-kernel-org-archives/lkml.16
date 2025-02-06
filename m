@@ -1,48 +1,63 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62221A9B23;
-	Thu,  6 Feb 2025 19:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E309A1ACED7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738871221; cv=none; b=rxfdiGtbsg43bqfNgEnw9nGbiPAAf+FtIpkxlHLu6KLYQGwcqfa6oPBa7OB/DTm6ZnbVBrMqri8xuXAFqpcIDqjkT5Cz25/KwUvaRSKjVS/WVZaolRWKpKPUPQc9V21D/M3k0bNS8ziAPDhhfftE5bu04n6yly0G3JYyY0gtJyY=
+	t=1738871225; cv=none; b=SUsn5Xzd9mdL6ncv8vUWYJzwTYbrCzRvV4nAoaao3aQNxqPigpPhOLC4y81Avog15tNGAokgmgE9ixk7ydSe1YXDPa0OsLfFMi7Wz9b9MYqS8OaNgYiY4IipanTAeEtUxoMMXX/e6lOAdRLeLm7DTcqiqadXMlj+B5hnUYitvuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738871221; c=relaxed/simple;
-	bh=RoTJBLUmCZznZlIN87HyUv2pCJM7GP1ktF6AXOFoNe4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ilKaQcYc6awq+7TbMiT0pNWGknN6sTZfdic0Rza/uSBo7DJvj5+7Gfs36YsUK5o1PDmrI68ojWh4Cvo1ZAAXYyoO/Gcf5YCD/qeA4ZLaNr96cIbcPHa1HV/iapOr+LXIKmzkgYAOVzChnyg6C/XRuS0uZ2yfK+hI0wZohl+fqlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XQGp3DZZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738871225; c=relaxed/simple;
+	bh=XTNSgJrJEclgdePfJNToDJor8F5x8uBa0UDEkcTlIIQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QeEOJ420Zr61zpvDbz8QDUsnAVd3KS+nSAOpMzyCzEMa3vIPtDtlserDzPtgXg7W7I4EP+mZcFD6YN4lwCC7SWdetH9NDWc2mXtiX/ghe70Z9+tYZ05+zoG59XjibUS6/5Hj8ZTzimJQBlPRyYCXvKBB3AM3mofj3dADqKRXGD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h9SeFq1g; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XQGp3DZZ"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516GdNqc003344;
-	Thu, 6 Feb 2025 19:46:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=oNGugbAHnmXqtkdwjUCdSC
-	Q/kxmMbftpw2Ct6FLIufk=; b=XQGp3DZZKyZ4rrhwog0EZOiJxzvIqhWeRZfYlw
-	ZwkhUIgrFxhy7dNGgLnxM+Gsppftja5BwgXf7pBD7MOvblHQ3NgiGx30haGqQey0
-	8XVGBV2ttR3zgex13LlAy8Vuw7d02fc0iWpDMXg/zsg9NVVYb8O1eTp/MF+PcUPQ
-	HZxrgJSkImSBRzC+i0cxetPPps4oXEUd7VkgFznqXJxEiXlheDCiZGzdzWvd0VVr
-	Kz5d4P5fCEosq5DB21QLGdnqP3gYzaBDhSEs4yTcvZ91IddQz7ItZZ7H1NCMVBvW
-	rfRkQC8CzHe86asy+aZ9Huka3Ck8ZumtfGKP/TqtixjBE7mg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n0sj0f5v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 19:46:50 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516Jko5W013459
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 19:46:50 GMT
-Received: from abhinavk-linux1.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Feb 2025 11:46:49 -0800
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Date: Thu, 6 Feb 2025 11:46:36 -0800
-Subject: [PATCH v2] drm/msm/dp: account for widebus and yuv420 during mode
- validation
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h9SeFq1g"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e43c9c8d08so9326106d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 11:47:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738871223; x=1739476023; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=igtmC9jgV1/HQ1d7Wdm7uxza0ZAAjdzHDVgS49iXFC4=;
+        b=h9SeFq1gVmoO0GQdADjV/pVVlR1fiaJUvsL4/RZb8t0sZTgHkzc6e2/54x0I0HOXDu
+         eEDu2oaM453ih79M1zQnoqDJNUJ0ZFbRqpGps7yhm4XucNL5U6qyguH1a8dN133swp/m
+         0dm7xyseg0gjMBCcuaJ4kqYeXAMXFZVtXuFnk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738871223; x=1739476023;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=igtmC9jgV1/HQ1d7Wdm7uxza0ZAAjdzHDVgS49iXFC4=;
+        b=T75JiMLeeA+Nmaz3GmHD/NrCig/oAhOULib9u49Tmq8xvwRpkgFtw21GJWofvxP81J
+         +EewJsMPmPhOBsuDNvRp+u0lVutdxm352B1ABjFOH9Jw2S9o6zQdEO2wx2ZOfd6E6hdL
+         LWL7s9NaWikj7mxf5d52uROQQqfcq7hZxdWwwntex9zfuDLb1133BDSFJUJ2VxYdev2o
+         yUgiEq43658R7TN/E16AqgLzWx297i+3PaHDEruaiQa1RbDvhdYFsBDbk0hZGWcIl3go
+         iY5IA4HeN0QenNl4/hoEVzxXAmTLvMcG6H9hZb5cxW74FzSxjvS5dCAZfmRkYrZiw421
+         DMdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXK4F6Qk7f7vuHWvp6o8Rg5kQvT0ubds+CZS0FbOrjOKI0BnDm7oVBalR4a/JgGg9f63IfEva9SVzh2FE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5eeHKMII4nojI8TCxQ5ngcqntdDi2NU+F8Ibo6ush3wuI52Zj
+	uY5tpeaYwJWxQognivOE0Lz89ktJP4pwdf4LwPruZ04sH7qvfVtAZVf06txt9Q==
+X-Gm-Gg: ASbGnctM4YGgO9eQBmKf4fMvPbZaQ7fNiNKoSLsc8X3iquKxUVEldTZ1ov6QNWWmA5E
+	VMe3renZTSs+TePQratJqoGvRXWVoxTwWL0qrMEyNDhOX3k5A3tBlDOPhCAbgPpWrvYKI723SOf
+	79qo7z4hxoSTftasRscr+hSgFS+jWlqNilCPqmWPwXpMB6e0PrfR1EpB85u6jHAZDqqCBCZFrvS
+	nLS/suqxCX65TNtzizmBS1nFUH08VOfCZYOkJpLAwWf8G0kpHqlYpcpqilPZuhYou1vIq/890hM
+	btwefh1iGyOCZNDLVBguOhxZyK2uyJgfpV0ST2M+NDVldZfuS7ZpDW4CPKyiO6O02A==
+X-Google-Smtp-Source: AGHT+IF6vyM30lmo4rLzFxc67TuSAmLMTXYr8s3jpkk4a0HE4QMK03rygp5IAu9Su7eRIqG5HefLFQ==
+X-Received: by 2002:a05:6214:f61:b0:6dd:84b7:dd86 with SMTP id 6a1803df08f44-6e4456eb684mr4186876d6.36.1738871222740;
+        Thu, 06 Feb 2025 11:47:02 -0800 (PST)
+Received: from denia.c.googlers.com (5.236.236.35.bc.googleusercontent.com. [35.236.236.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43bacb6c5sm8756386d6.102.2025.02.06.11.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 11:47:02 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Thu, 06 Feb 2025 19:47:00 +0000
+Subject: [PATCH v3 1/6] media: uvcvideo: Keep streaming state in the file
+ handle
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,121 +66,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250206-dp-widebus-fix-v2-1-cb89a0313286@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJsRpWcC/13MQQ6CMBCF4auQWTuGTqSgK+9hWNB2kFlYsJWqI
- dzdSuLG5f+S9y0QOQhHOBULBE4SZfQ5aFeAHTp/ZRSXG6ikqlRUo5vwKY7NHLGXF/amqxtjmA7
- kIJ+mwHnewEube5D4GMN785P6rj+q+aeSQoVGa0ekq+qozfk+ixVv93a8Qbuu6wdb7+phrgAAA
- A==
-X-Change-ID: 20250127-dp-widebus-fix-fba78bbe242d
-To: Rob Clark <robdclark@gmail.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        "Stephen
- Boyd" <swboyd@chromium.org>,
-        Paloma Arellano <quic_parellan@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738871209; l=2949;
- i=quic_abhinavk@quicinc.com; s=20240509; h=from:subject:message-id;
- bh=RoTJBLUmCZznZlIN87HyUv2pCJM7GP1ktF6AXOFoNe4=;
- b=knDL7+TbMcuDVfdalbfUEr2tvpon0ieGdB/S1ADb1UjPhpGX/QVeUoF+NUXwwAr1edBO4rX3Y
- H+LuNfI9DXKD3Q7tGjSD7HH1PKaPBmMNOWHryDhlaPjlJWvxwIHT0fu
-X-Developer-Key: i=quic_abhinavk@quicinc.com; a=ed25519;
- pk=SD3D8dOKDDh6BoX3jEYjsHrTFwuIK8+o0cLPgQok9ys=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kdQKtCZxVLi-KzdttD1AmWFMHiNkXGa1
-X-Proofpoint-ORIG-GUID: kdQKtCZxVLi-KzdttD1AmWFMHiNkXGa1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=901 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 impostorscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060157
+Message-Id: <20250206-uvc-granpower-ng-v3-1-32d0d7b0c5d8@chromium.org>
+References: <20250206-uvc-granpower-ng-v3-0-32d0d7b0c5d8@chromium.org>
+In-Reply-To: <20250206-uvc-granpower-ng-v3-0-32d0d7b0c5d8@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.13.0
 
-Widebus allows the DP controller to operate in 2 pixel per clock mode.
-The mode validation logic validates the mode->clock against the max
-DP pixel clock. However the max DP pixel clock limit assumes widebus
-is already enabled. Adjust the mode validation logic to only compare
-the adjusted pixel clock which accounts for widebus against the max DP
-pixel clock. Also fix the mode validation logic for YUV420 modes as in
-that case as well, only half the pixel clock is needed.
+Add a variable in the file handle state to figure out if a camera is in
+the streaming state or not.
+This variable will be used in the future for power management policies.
 
-Fixes: 757a2f36ab09 ("drm/msm/dp: enable widebus feature for display port")
-Fixes: 6db6e5606576 ("drm/msm/dp: change clock related programming for YUV420 over DP")
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Now that we are at it, make use of guards to simplify the code.
+
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
-Changes in v2:
-- move msm_dp_wide_bus_available() to the next line
-- Link to v1: https://lore.kernel.org/r/20250128-dp-widebus-fix-v1-1-b66d2265596b@quicinc.com
----
- drivers/gpu/drm/msm/dp/dp_display.c | 11 ++++++-----
- drivers/gpu/drm/msm/dp/dp_drm.c     |  5 ++++-
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/media/usb/uvc/uvc_v4l2.c | 15 +++++++++++----
+ drivers/media/usb/uvc/uvcvideo.h |  1 +
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 24dd37f1682bf5016bb0efbeb44489061deff060..3898850739abb90a777bc94ede0fb0ceef5e5162 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -930,16 +930,17 @@ enum drm_mode_status msm_dp_bridge_mode_valid(struct drm_bridge *bridge,
- 		return -EINVAL;
- 	}
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index 93c6cdb23881..856eaa23e703 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -835,11 +835,17 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+ 	if (!uvc_has_privileges(handle))
+ 		return -EBUSY;
  
--	if (mode->clock > DP_MAX_PIXEL_CLK_KHZ)
--		return MODE_CLOCK_HIGH;
--
- 	msm_dp_display = container_of(dp, struct msm_dp_display_private, msm_dp_display);
- 	link_info = &msm_dp_display->panel->link_info;
- 
--	if (drm_mode_is_420_only(&dp->connector->display_info, mode) &&
--	    msm_dp_display->panel->vsc_sdp_supported)
-+	if ((drm_mode_is_420_only(&dp->connector->display_info, mode) &&
-+	     msm_dp_display->panel->vsc_sdp_supported) ||
-+	     msm_dp_wide_bus_available(dp))
- 		mode_pclk_khz /= 2;
- 
-+	if (mode_pclk_khz > DP_MAX_PIXEL_CLK_KHZ)
-+		return MODE_CLOCK_HIGH;
+-	mutex_lock(&stream->mutex);
++	guard(mutex)(&stream->mutex);
 +
- 	mode_bpp = dp->connector->display_info.bpc * num_components;
- 	if (!mode_bpp)
- 		mode_bpp = default_bpp;
-diff --git a/drivers/gpu/drm/msm/dp/dp_drm.c b/drivers/gpu/drm/msm/dp/dp_drm.c
-index d3e241ea6941615b8e274dd17426c2f8557f09b5..16b7913d1eefa8c2deb44df201a1977db23f4531 100644
---- a/drivers/gpu/drm/msm/dp/dp_drm.c
-+++ b/drivers/gpu/drm/msm/dp/dp_drm.c
-@@ -257,7 +257,10 @@ static enum drm_mode_status msm_edp_bridge_mode_valid(struct drm_bridge *bridge,
- 		return -EINVAL;
- 	}
- 
--	if (mode->clock > DP_MAX_PIXEL_CLK_KHZ)
-+	if (msm_dp_wide_bus_available(dp))
-+		mode_pclk_khz /= 2;
++	if (handle->is_streaming)
++		return 0;
 +
-+	if (mode_pclk_khz > DP_MAX_PIXEL_CLK_KHZ)
- 		return MODE_CLOCK_HIGH;
+ 	ret = uvc_queue_streamon(&stream->queue, type);
+-	mutex_unlock(&stream->mutex);
++	if (!ret)
++		handle->is_streaming = true;
  
- 	/*
+ 	return ret;
++
+ }
+ 
+ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+@@ -851,9 +857,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+ 	if (!uvc_has_privileges(handle))
+ 		return -EBUSY;
+ 
+-	mutex_lock(&stream->mutex);
++	guard(mutex)(&stream->mutex);
++
+ 	uvc_queue_streamoff(&stream->queue, type);
+-	mutex_unlock(&stream->mutex);
++	handle->is_streaming = false;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index 5e388f05f3fc..bc87e1f2c669 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -618,6 +618,7 @@ struct uvc_fh {
+ 	struct uvc_streaming *stream;
+ 	enum uvc_handle_state state;
+ 	unsigned int pending_async_ctrls;
++	bool is_streaming;
+ };
+ 
+ struct uvc_driver {
 
----
-base-commit: 2bd7708f11777d4fd436fcba62b57cff6a92e389
-change-id: 20250127-dp-widebus-fix-fba78bbe242d
-
-Best regards,
 -- 
-Abhinav Kumar <quic_abhinavk@quicinc.com>
+2.48.1.502.g6dc24dfdaf-goog
 
