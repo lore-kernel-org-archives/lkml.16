@@ -1,137 +1,242 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51983802
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 01:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70242AD02;
+	Thu,  6 Feb 2025 01:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738804896; cv=none; b=mMORH7778eZlxCwil5VdbI6UevAq+Cqcq6g9W4d0wREvYvxuuWA3nJQ4938HBpDAyR7eor/bBaGnqDGAHa0Gk4ftBJVWTVLQ2rpiiFq2FFb9AlJ2U29dKKFCU8xzkzB4vxdib7uKgmubelO/kfjMyC6huep9l/xIIv8aUkEdsvs=
+	t=1738805315; cv=none; b=RxILStN5zBhr08A1OsEi7esIBrRnbAldxzWrPo8u1NwZC/cADJU4KFMY+eRtnBZpT7LIQjn287W+HbGGaNhv6bCs4JH/uUBAtAAaNulqDn38eKgZ8hKppjqwPts33m6rI6P9Z8u7ex30b+ixCtsCPG9afVlxCT/bquuAgCuVeMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738804896; c=relaxed/simple;
-	bh=85j0cLEH3Jun0j/a1VtVPQqXQhGntDxL37pEEZAMYpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cupHxmZ7OC9464yov30nixqdwmSkJQZLf59woUHL8oe7atbknokrw3k4Onc1iXBw3Wq8wd5vweSBHL7krn2iAjrGA2SqY4ZQ9w+RLWwEhLsTLDl2XR46i484QTwvRrbtFVolk2qvwB6ppLvkogXcXlUqUiZ0i9V83qDSI90hQsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Nt2egcsK; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738805315; c=relaxed/simple;
+	bh=clh2tfGXEKkbWkJuVRoDBfayvnFN0owsIXBdxYeNISk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HhhqsRPD5uMc36bTql7NljO3XaU0clZLqbD8ha7l7Q/Wd3N2luiNzRABzJm13YPnmjpXHNPdnUyoR0czOtxu3PyYFdkzA1F+65op2PwaSg+omQC94Ih9xWiQV1ZDqP5eeEgn6WodTKIE/owzfXdSKajAh6knn92D4J0QSHdWjnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQ6pAlI9; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Nt2egcsK"
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
-	by cmsmtp with ESMTPS
-	id fTystlaTlf1UXfqaDtskuf; Thu, 06 Feb 2025 01:21:33 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id fqaCtqd1MdY0ffqaCtxQMq; Thu, 06 Feb 2025 01:21:32 +0000
-X-Authority-Analysis: v=2.4 cv=NoUacNdJ c=1 sm=1 tr=0 ts=67a40e9c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
- a=Jz-cYIOdNbgjfAwdiPwA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dJiZry27tB91UlxKqxiEn2cr9OPE+9eec0f5I/cTcDQ=; b=Nt2egcsKTMzNithWbglF+twmWZ
-	6MUw7W2PF0UEbz/421fpnTmVzcuKK8sGBKhI4Stsggmn6Ec3WcaM5kpVGNfKJFcb5iQZ7qRD/uASg
-	TaEVwSN49B4MQ9SnqJiFB/mGpPqV+cvoneGIL7ekM2HaxcXOJLrfSeHexkG/wrhO+36f1mcNB7bNW
-	IlwaraHn1KwGSXwu+UbDg1mShqSlEwQgUo/HlgIBm/qx8mMHvHipW6KbtHyZ5BUwDoRwZzfQoIac8
-	Rno32jjDnLFPhavYys0R9Nv5/DhrHIoSN3U5RDpZNhRWQyHEL9b6sJRW6xG+2Y6Bm9G6JL3s6DBw/
-	jYHoceyA==;
-Received: from [45.124.203.140] (port=54605 helo=[192.168.0.152])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tfqaB-00102L-1x;
-	Wed, 05 Feb 2025 19:21:31 -0600
-Message-ID: <08963f1d-7ae8-4fc4-a7dd-133e314c0fb0@embeddedor.com>
-Date: Thu, 6 Feb 2025 11:51:12 +1030
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQ6pAlI9"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2166f1e589cso9735625ad.3;
+        Wed, 05 Feb 2025 17:28:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738805313; x=1739410113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eRvjh4lUXS/FqYAnsO+QmQYUHjBjCN0Nceh7ZqfHMtQ=;
+        b=SQ6pAlI9BkVTkqEVD7VhUlnajP1ySgf3sFAGDCm1Qkja/8bLWXKHkzjs1a9LRE5rIG
+         SQeQPR5k7EjWERy+hcJhcs9lJabogecDKUH9+wE+1pOuA0XUKTt+/JaFzQ6qhKRJYMvf
+         WcYYLdh2WwjLxO0SA3/h1JitBCnxtiM0tjbo4r+OxmrUImhiyeGp9YQ5xFKSUn6d1VGR
+         9tksp+B6zvNV9ZHxI1KPrH6sjqjfknxu+4j2G8P6WUQno/gKl/XgxzPdIQy2L1djcn1q
+         HEirOyh1w3V0r+mvmmRas2X8R5DrGV9B4rbIt71dya51+2R9bJ4n9rWW5Vlxai0Mchwq
+         QEWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738805313; x=1739410113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eRvjh4lUXS/FqYAnsO+QmQYUHjBjCN0Nceh7ZqfHMtQ=;
+        b=CBRrfuSpuhQ33ouXabseDNxYGzL8dRhsXrpnHzp1+Xbw2+nn7lbg4FSZ+DXHIPhecX
+         DOTzN7JZywWKws2k9/SMsE3/Tfv084c4YZ6blqoFWdxzPFmyD/nVvf4X02UqzzpYyWHU
+         JDNFMkX8RjANI+Fir7CLf+dMLaycpAtMVJUJxkZtQT0LOcJUw5NyEpzro65Y4FDEzZHQ
+         +lBnGbXCcELB5WuBDRj3LGpLVJP1tN9BJeApdKnTBYNWPlMQcyC9SkMgO0lIsm2bWaSq
+         9N3x+Aa2yr3Cm68cCkmQrUWm5cbPWn4JAtudsa4FTSqXYByncfypV4QIEvQpwfUFXM05
+         6HMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTxgY6hlNJuwhaRuaNNqmZMLLtTgPE3vtUb57fRtU4TIrvDmUlB8lU4ic5PWHtDsNK0uY=@vger.kernel.org, AJvYcCUsVOGNRNxZPpUKo7xu+TcWxXN+vxmojtI6ajukmiAR9ixp7bx2zcye2/B5LwcmeHBG0DrBVLwiy8bixCr2ZQEZ@vger.kernel.org, AJvYcCWFbB53Zkkwl5xYEWVRgjXn7LLqyNk2MhvQi12tYMhKgTEe7p7nGBA66QLNs6LGKOG+LWhUCly3IOlZRrdT6nBaqA==@vger.kernel.org, AJvYcCWWQR0/RQ2yJe/eyanSdlovSfvNZULBvvGmraT73mnYwWcXnbvEozu+2z+WdGhy8fYKNh2icIGnewtjFkMdsbc7fggT@vger.kernel.org, AJvYcCXCwfA9byXJC2JtL+eNRqDtzdYsLvcOvZqJzyawOhMZ5/V+uxoY3L44mj8iLVwTgSLei0zAeXVRXz14XuU=@vger.kernel.org, AJvYcCXcmMDVmJG6a6q3sf6+9h9mxbN8fnzTaThRyQ+rESAWmguVZSzbS9XTmIG6PXii+fEFVMHGt94j/O7CNiIc@vger.kernel.org, AJvYcCXm4l+FEs5zGxy49SCkD9SYNmn/k21Y3GZiXwJRluz+vbhQVpTKWkc47KbD9pG0R+V+7be0N9liwyE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXxP8iyNLY/eeUL5tKR9E80pqBh5KjHUm9yIjF9qlym+VPsVxF
+	CaFgIFEkW+bbn+N/xfScAD0XRBE1RipIwXYKp9FDVzK4IzIh3NYXtMMFOJkWhDK6bIfkJBng0Oh
+	WinPlf/lKFPUlpq9t6zIESeo22As=
+X-Gm-Gg: ASbGncttxrELntXGbXo4U4ZGng8uYEIG6+PnmKANHCFubMMFIWxQkCk06ESfx2CJn5i
+	G12rvWcYBP8jeCcj9e+Wda2Esb7kjsvkf1A9IBlO6+2+knKLMUmM8Z98BTnA+pFV266k9o1oa3P
+	k3rVyAvv4ZtziF
+X-Google-Smtp-Source: AGHT+IHbBLU9Yp+KgnLDKo9nDxmvDiMpB2P2eCS3pSqU+ciOVfvltT7NgM9NDohKwcgz1sTHUPwVZ1B1B8ZxWNOrSek=
+X-Received: by 2002:a05:6a20:c78d:b0:1e6:5323:58d1 with SMTP id
+ adf61e73a8af0-1ede88aa5dcmr8780768637.26.1738805312996; Wed, 05 Feb 2025
+ 17:28:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] fs: hpfs: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: Al Viro <viro@zeniv.linux.org.uk>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z6GM6WIg8f0Ql30E@kspp> <20250205130308.GC1977892@ZenIV>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250205130308.GC1977892@ZenIV>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1tfqaB-00102L-1x
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54605
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKQOrDfy3Gi6E3Iw01S1cMSqZVmnpukOqrPVqNu6ZLyciLcPfI/CUb/TUeMuKKCn/CqvhB5KS0Ylwys7JPYdxHHxxBN42kPLF1eO7nJL6FMDXaO6XWv3
- GEOW9gjh6ROWUxbKqo+exdGeLFiDMKMkQdWGnQvkQSP9cgx+8OlLYiJHU1Si7kseqtARC9dHoID8sf5B8utUSXFKXrdPZZYN4n/8IhaKRsHwKvNyUdhxdH5t
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost> <Z6JksXDRh8OSAh-u@google.com> <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+ <Z6Khl1rHIAb7wOXw@ghost>
+In-Reply-To: <Z6Khl1rHIAb7wOXw@ghost>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 5 Feb 2025 17:28:19 -0800
+X-Gm-Features: AWEUYZlPBcKhnlnzEHzYVL21RVck5Pbw-X3QYTAmjmTe7rjtAGdrSN0T9YRAupA
+Message-ID: <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Quentin Monnet <qmo@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
+	Linux Power Management <linux-pm@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 4, 2025 at 3:24=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.co=
+m> wrote:
+>
+> On Tue, Feb 04, 2025 at 11:02:42PM +0000, Alexei Starovoitov wrote:
+> > On Tue, Feb 4, 2025 at 7:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > > > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > > > On Tue, Feb 4, 2025 at 12:10=E2=80=AFAM Charlie Jenkins <charlie@=
+rivosinc.com> wrote:
+> > > > > >
+> > > > > > The quiet infrastructure was moved out of Makefile.build to acc=
+omidate
+> > > > > > the new syscall table generation scripts in perf. Syscall table
+> > > > > > generation wanted to also be able to be quiet, so instead of ag=
+ain
+> > > > > > copying the code to set the quiet variables, the code was moved=
+ into
+> > > > > > Makefile.perf to be used globally. This was not the right solut=
+ion. It
+> > > > > > should have been moved even further upwards in the call chain.
+> > > > > > Makefile.include is imported in many files so this seems like a=
+ proper
+> > > > > > place to put it.
+> > > > > >
+> > > > > > To:
+> > > > > >
+> > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > > > ---
+> > > > > > Charlie Jenkins (2):
+> > > > > >       tools: Unify top-level quiet infrastructure
+> > > > > >       tools: Remove redundant quiet setup
+> > > > > >
+> > > > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > > > >  tools/bpf/Makefile                        |  6 -----
+> > > > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > > > >  tools/build/Makefile                      |  8 +-----
+> > > > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > > > >
+> > > > > Nack.
+> > > > > libbpf and bpftool are synced independently to github
+> > > > > and released from there.
+> > > > > This change breaks it.
+> > >
+> > > Sorry, I overlooked this part and merged a change that touched the
+> > > common files into the perf tree.
+> > >
+> > > f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Make=
+file.perf")
+> > >
+> > > Unfortunately, it's already in v6.14-rc1.
+> > >
+> > > >
+> > > > Can you explain how it breaks it? Currently bpftool and resolve_btf=
+ids
+> > > > don't build quietly so this was an attempt to fix that.
+> > >
+> > > So I think you will need something like this for v6.14.  Again, sorry
+> > > about the trouble.
+> >
+> > Just revert f2868b1a66d4f40f that created this mess.
+>
+> Why are you opposed to unifying this helpers among the various projects
+> in tools? Can you explain what about this breaks the Github syncing flow
+> and why it cannot be resolved? It doesn't make sense to duplicate "Q=3D"
+> in every Makefile anybody ever wants to add to tools just because bpf
+> syncing isn't robust.
 
+Alexei's concern about Github mirrors of bpftool and libbpf isn't
+valid. Github versions of those projects use their own independent
+Makefiles anyways, so your change doesn't break that aspect.
 
-On 05/02/25 23:33, Al Viro wrote:
-> On Tue, Feb 04, 2025 at 02:13:37PM +1030, Gustavo A. R. Silva wrote:
-> 
->> +#define anode_btree	container_of(&anode->btree, struct bplus_header, __hdr)
->> +#define ranode_btree	container_of(&ranode->btree, struct bplus_header, __hdr)
->> +#define fnode_btree	container_of(&fnode->btree, struct bplus_header, __hdr)
->> +
->>   /* Find a sector in allocation tree */
->>   
->>   secno hpfs_bplus_lookup(struct super_block *s, struct inode *inode,
->> @@ -27,7 +31,7 @@ secno hpfs_bplus_lookup(struct super_block *s, struct inode *inode,
->>   				a = le32_to_cpu(btree->u.internal[i].down);
->>   				brelse(bh);
->>   				if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
->> -				btree = &anode->btree;
->> +				btree = anode_btree;
-> 
-> Just for this - NAK.  And then you proceed to add dozens more of the same.
-> 
-> If it looks like a variable name, it must not turn out to be a bloody macro;
-> if a macro expansion depends upon a local variable with given name existing
-> in scope of its use, make that name an explicit argument.  You manage to
-> violate both.
-> 
+But your change *does* break both libbpf's and bpftool's make output
+*in the kernel repo*. With this patch we basically don't have "quiet"
+mode anymore:
 
-Yeah, so the story is that I originally wrote this patch using container_of()
-to directly replace all those instances of `&anode->btree`, `&ranoce->btree`
-and `&fnode->btree`. But I really didn't like how it turned out, so I changed
-it to this form at the last minute, and well, as you pointed out, that wasn't
-the best decision.
+$ git co f2868b1a66d4f40f07e985b0beead606b2753602
+HEAD is now at f2868b1a66d4 perf tools: Expose quiet/verbose variables
+in Makefile.perf
+$ git log --oneline -n1
+f2868b1a66d4 (HEAD) perf tools: Expose quiet/verbose variables in Makefile.=
+perf
+$ pwd
+/home/andriin/linux/tools/lib/bpf
+$ make
+  gcc -Wp,-MD,/data/users/andriin/linux/tools/lib/bpf/staticobjs/.libbpf.o.=
+d
+-Wp,-MT,/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o -g
+-O2 -std=3Dgnu89 -Wbad-function-cast -Wdeclaration-after-statement
+-Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations
+-Wmissing-prototypes -Wnested-externs -Wno-system-headers
+-Wold-style-definition -Wpacked -Wredundant-decls -Wstrict-prototypes
+-Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
+-Wno-type-limits -Wstrict-aliasing=3D3 -Wshadow -Wno-switch-enum -Werror
+-Wall -I/data/users/andriin/linux/tools/lib/bpf/
+-I/data/users/andriin/linux/tools/include
+-I/data/users/andriin/linux/tools/include/uapi
+-I/data/users/andriin/linux/tools/arch/x86/include -fvisibility=3Dhidden
+-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D"BUILD_STR(s)=3D#s" -c -o
+/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o libbpf.c
+^Cmake[2]: *** [/data/users/andriin/linux/tools/build/Makefile.build:86:
+/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o] Interrupt
+make[1]: *** [Makefile:165:
+/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf-in.o]
+Interrupt
+make: *** [Makefile:143: all] Interrupt
 
-OK, so the options I see are either using container_of() directly (as I
-originally had it), or write a small wrapper to keep the lines shorter.
-Probably something like this:
+$ git co HEAD~
+Previous HEAD position was f2868b1a66d4 perf tools: Expose
+quiet/verbose variables in Makefile.perf
+HEAD is now at e9cbc854d8b1 perf config: Add a function to set one
+variable in .perfconfig
+$ make
+  CC      /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o
+^C
 
-#define GET_BTREE(ptr) \
-	container_of(ptr, struct bplus_header, __hdr);
+So, can you please check and fix?
 
-and then of course just using it like this:
+Also, looking at your patch:
 
-	btree = GET_BTREE(&anode->btree);
+a) you removed the `"$(origin V)", "command line"` check from both
+perf and libbpf, so that's not really an equivalent change/behavior
+now
 
--Gustavo
+b) a bit sloppy on assignment:
 
++ifeq ($(V),1)
++  quiet =3D
++  Q =3D
++else
++  quiet=3Dquiet_
++  Q=3D@
++endif
 
+note the spaces around '=3D', try to keep stuff like this consistent
+(and if this was shell, it would bite you as well)
 
-
+>
+> - Charlie
+>
