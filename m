@@ -1,45 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35BA22F3AF;
-	Thu,  6 Feb 2025 11:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9579A22AE71;
+	Thu,  6 Feb 2025 11:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738840611; cv=none; b=HhkHUIvMWRjpm1pE+jJr2PSLfSoc1dPJDQ90sg9XMknrT0bzXqBsvkwNRErbrm2Rc4374UMzkYTxP+iNz7PWhTT6wxd7TJIZ5sGPeMMhyTCxW5wIYiv2Fs7aEfhmGWQR2Dbz8+zQ31/eUJghbZbi+xWVRzbqyYjFaf8q/mOceBU=
+	t=1738840616; cv=none; b=RW7yNCdIP8u84S/j77PO5z4qhDfzwvjqv0TMH72mUZRDUFhmvw/68nrHY9z1ghmmYhzyizYPjLZCy0dhkmaYNM/ZHaovQWKLUBFms6qHa4KexS9HF5HAS34FT1FaHMhATQNkCps6TfpvVjJpSCiIycDIMlsu+68vYOIusNIllV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738840611; c=relaxed/simple;
-	bh=iZwKFclJKtM2PxFE5npr7RPT/KJnHeLBY1FkYMVECmI=;
+	s=arc-20240116; t=1738840616; c=relaxed/simple;
+	bh=BOwx6/aeZ2074a3PKyQcRGEZzSXU0flwFWloX/nzQVw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pTSoYgB4kQRPsj6hKT34ljUsXtIDw6/pXVCcA+2nhe0/eMxxc+Ms9koE7WViFbgDqDpatDJHElEwq05VftAf5VtdLVgzMYEdaFlZRhCYJkPMCr8Aq0AQ5GqoMaqPmdGKKDVkARM7BwnZLTDDGe4GWdEQttk5TQ0uaqtgsrwJ+gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N+kf4+4w; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=D0IrwJkdyHFWs3BU2ZUrzqmUY4LIz/ClyYIHmxh8CJ/wc8IaHS4jPQbUMSbWofv8JIh+cTkrHJiUntAMXxBFsKNF+mbtydotjqgixPUsNlLoUSukJM/2docgBmQhzHCgBxHAIPrJeIzwr84E3hKlvBqRhxUXLOoQRkZiqpKxqcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T9RQ880E; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N+kf4+4w"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5169mSer015123;
-	Thu, 6 Feb 2025 11:16:46 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T9RQ880E"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5169lxq3026763;
+	Thu, 6 Feb 2025 11:16:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=LSQCQv1LpjiPtEe4CCaUIoS8
-	iJ9SVY5WIpznOD8xYv4=; b=N+kf4+4wOA9xyVaUEz+O3hIPEKjghRz0GlyOneKq
-	z2CiVy5LuRoOfn0TsfKxRr3kUpRTNl1k6uvEK820rg6y0zdCYpe6/yK8o7+8Xnab
-	7n0oY0Tlf6sxDPglQEeEK4HgtmUCSVAUojPL0NAi8yNdT6Vb3kcXv87mt3ljl8jg
-	6M0TM6DHqAg2+gMYb1gS5QjPn6pTVHEoOVIv2Ww0ap0zk0oULYKnvk0e9EdiyG0y
-	6yHyyZ0+Wq59hCYXaNNljz82ZavFIUbKx+u240WgcoKinwsR5P+BzpPXcAAS1Oek
-	pX420YubzvFtSnNOaZ0/PoAdVncmto4JgfRNLmZ78pQX7A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mtsa06ue-1
+	:references:subject:to; s=qcppdkim1; bh=QYESYvG0Rvk/9d1tkzN2raXV
+	Ct2tQ610K/YF9iQM8a8=; b=T9RQ880E1rxSyrCTDjlp3mocvey7vXrWtfZ5k7Ez
+	82PzP/XJP3rdRe6EXFMeLnpK4ayAStVJtSYR3wqA/itsbeoKAzkBDeUS41kQB3SI
+	O40EmIbmMPw8mKOlBwxY3QZl7QmdFot3luM6VM36zQEn2+2ZR/k4qtsx5AGXBjcL
+	rbFxEXiPOkgFYumnmyFsEtVaIMHarC5rZBLJtQZpRd2/IdiNXp+rhSf1mwhmlj1L
+	tSU6k+SGkK1pCFNUNTW6XOy17mQWmr/4JmCPdcz5tdGNyel7KDnzKiXFmvl2NF3C
+	4yUcvsiYoIvwHUKC0V5SALhzCx+k3HoYDuV6lZ4g/rvirA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mtrx876f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 11:16:45 +0000 (GMT)
+	Thu, 06 Feb 2025 11:16:49 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BGiQM021843
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BGnGl014071
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 11:16:44 GMT
+	Thu, 6 Feb 2025 11:16:49 GMT
 Received: from hu-akakum-hyd.qualcomm.com (10.80.80.8) by
  nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Feb 2025 03:16:40 -0800
+ 15.2.1544.9; Thu, 6 Feb 2025 03:16:44 -0800
 From: Akash Kumar <quic_akakum@quicinc.com>
 To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
         Greg Kroah-Hartman
@@ -56,9 +56,9 @@ CC: Bjorn Andersson <andersson@kernel.org>,
  Vennapusa" <quic_vvreddy@quicinc.com>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Akash Kumar <quic_akakum@quicinc.com>
-Subject: [PATCH 09/18] arm64: dts: qcom: sc7280: Enable high bandwidth for hs isoc eps
-Date: Thu, 6 Feb 2025 16:45:34 +0530
-Message-ID: <20250206111543.17392-10-quic_akakum@quicinc.com>
+Subject: [PATCH 10/18] arm64: dts: qcom: sdm630: Enable high bandwidth for hs isoc eps
+Date: Thu, 6 Feb 2025 16:45:35 +0530
+Message-ID: <20250206111543.17392-11-quic_akakum@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250206111543.17392-1-quic_akakum@quicinc.com>
 References: <20250206111543.17392-1-quic_akakum@quicinc.com>
@@ -73,16 +73,16 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: G5FVtURwAzNOPSVHtZWPtmM0CNUaS8wh
-X-Proofpoint-ORIG-GUID: G5FVtURwAzNOPSVHtZWPtmM0CNUaS8wh
+X-Proofpoint-ORIG-GUID: FZAD6IxXctlWam2qw1z9heaFXMQreJFo
+X-Proofpoint-GUID: FZAD6IxXctlWam2qw1z9heaFXMQreJFo
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 priorityscore=1501
- clxscore=1011 mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=949
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060093
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 priorityscore=1501 mlxlogscore=979 clxscore=1011
+ adultscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060092
 
 It is observed while testing multiple audio devices,
 a glitch is observed during testing.
@@ -108,29 +108,29 @@ isoc eps are used and flicker is seen.
 
 Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/sdm630.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 0f2caf36910b..f4ea0eb0bb58 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -3717,6 +3717,7 @@
- 				snps,dis_enblslpm_quirk;
- 				snps,dis-u1-entry-quirk;
- 				snps,dis-u2-entry-quirk;
-+				snps,dwc3_guctl_resbwhseps_quirk;
- 				phys = <&usb_2_hsphy>;
- 				phy-names = "usb2-phy";
- 				maximum-speed = "high-speed";
-@@ -4248,6 +4249,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+index a2c079bac1a7..985f1252d7fd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+@@ -1302,6 +1302,7 @@
  				snps,parkmode-disable-ss-quirk;
  				snps,dis-u1-entry-quirk;
  				snps,dis-u2-entry-quirk;
 +				snps,dwc3_guctl_resbwhseps_quirk;
- 				phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
+ 
+ 				phys = <&qusb2phy0>, <&usb3_qmpphy>;
  				phy-names = "usb2-phy", "usb3-phy";
- 				maximum-speed = "super-speed";
+@@ -1509,6 +1510,7 @@
+ 				snps,dis_enblslpm_quirk;
+ 				snps,dis-u1-entry-quirk;
+ 				snps,dis-u2-entry-quirk;
++				snps,dwc3_guctl_resbwhseps_quirk;
+ 
+ 				/* This is the HS-only host */
+ 				maximum-speed = "high-speed";
 -- 
 2.17.1
 
