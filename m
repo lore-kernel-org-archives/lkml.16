@@ -1,174 +1,88 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71B322ACF2;
-	Thu,  6 Feb 2025 11:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC89209F3F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841316; cv=none; b=Utj9Qx8uHL8CCcU9/D0FTNtWxahrVi60g/hKz1yxAtbSbUPXB15v+AxWgpaSKlB5i3xsLU1t/nUpqCOk+Hv8AqpZoW2NcXWGSsrAUXJRreGOIhFKbSav17bjEtAbXnToUU4nF/KIpT1kzCPSpLCWpxBhDRgSxHPNJgXxkTag5Nc=
+	t=1738841417; cv=none; b=fQpdlJB4+Gkksx11L9Wsik1aZIjMEOgmJjDZYR570l1Vy3y/Bds6N/d2CxYAG3FfrLf1I3sf3E0CdjEOzSU1B1tat2CAOzcg2/YTHnQw4o4E7b+9qg8TOIX+DYlFY/iJAYNzFMH7GAfoV97+cd7xTJ/AFQK1wvOxxgl7zIvAf/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841316; c=relaxed/simple;
-	bh=bQno1xEKT067vGnwKFhWLIpLFTAbqDNiHrwCUnneeEU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qP/M7BAweofgtMYP87Ot0Mg8u80d74d6JyliTLdE+R0lGOgt4JFYze3aKZlAfvP4z9pWZcITnEdY/SdmToIisyYbWqdN4fZSq9xSC2AWI3RGybnoYUvKUOZaG3WgJgrlb1sSzTZYMcb2z+PeIc/ErEaqs58zUI+vmwn+13L00cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ku/eM1RK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738841417; c=relaxed/simple;
+	bh=WKkfTb4ABY013l9PqIJBcHOmDmRx+BBnw35XdS0s0D0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYSJu7JSGDAqoOQOiZM/obBeOLlScfPUOYGmIlT1VQlzaIVtIeKNOjNFKvHvxm/1kFGn3ca8Mh70BNe8/SPUCt3RfvwZHZcRlgwxAtxQteobaHN8OQx8rYApYeUe86SvpzMFl8Y2TZdFIEO8fED7IhzNtBKm/KZBz0CAZFF4y4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zr1jWUp+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ku/eM1RK"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516AEmqK022371;
-	Thu, 6 Feb 2025 11:28:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dp1a0XO8qhJhnpjGP+DDMuaAcnBopAYQqncEHWWEO+Q=; b=ku/eM1RKEwQtS7I+
-	m2E/PBWXzs8uueRTr8q0m/CFzLVyx1ub2qH+d0U3FWw/4UtS6oq67khpqAgM1oa9
-	NZUdq9q6gc2V44sqEZ1qzvWphjBuujvHF1HAu/orP+vEhsvDNGwBLwjng/1vr75f
-	eaITldrH/yX0WkW/tP41XvqUILexDQB+8o/t8FXm0+TeDYNkWTGDAdD0whUX7Cyg
-	lOOkZMOyWD9rWDWvpSOqZjVFpv84DHGmmxGE5c7duXHD0FdlPA5IrLHPKMzuNPpq
-	RyZCat5haROGqO5asRSmg09dPCqgC9aL3gyk1HMG00PjvLmCZSfH+eZLSI0ileJ6
-	Ftmawg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mu5gg5gw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 11:28:15 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BNAQV017708
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 11:23:10 GMT
-Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Feb 2025 03:23:05 -0800
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Bard Liao
-	<yung-chuan.liao@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, "Takashi
- Iwai" <tiwai@suse.com>
-CC: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-        Sanyog Kale
-	<sanyog.r.kale@intel.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_pkumpatl@quicinc.com>, <kernel@oss.qualcomm.com>,
-        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Subject: [PATCH v6 3/4] soundwire: qcom: Add set_channel_map api support
-Date: Thu, 6 Feb 2025 16:52:24 +0530
-Message-ID: <20250206112225.3270400-4-quic_mohs@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250206112225.3270400-1-quic_mohs@quicinc.com>
-References: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zr1jWUp+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBC3C4CEDD;
+	Thu,  6 Feb 2025 11:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738841417;
+	bh=WKkfTb4ABY013l9PqIJBcHOmDmRx+BBnw35XdS0s0D0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zr1jWUp+E4nq89ae5OuGghtoHIz+xipT4DQCgNyEzw96NrEHg1n1FpdR0ydLbwltW
+	 uOYPfaxcjvCe+ZbxD3cEN0lWAheVd3l6I0PaZWxuJPCFFzMSodTpnY/yBInuEWRfnz
+	 Y+UNO1JFjE5koH8DETGE9DoEzDAHogSIyVihIhHxLJ+E64YLGUOLD17MgQKIW85E0C
+	 RWHL0RBoZw1Ja92Q/1fFhWA8C3uxSe61hdFMLddNietr8fRsZPccjEnANUHP+FwXVm
+	 oVS691KxlbmmV3OOoaqUgcclN4fBTyIlEgR45kkZdlkpoIkIKAoZwht8osVBjFW/z+
+	 Scr05yXC59f9w==
+Date: Thu, 6 Feb 2025 11:30:13 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Isaac Scott <isaac.scott@ideasonboard.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, michael.hennerich@analog.com,
+	lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] regulator: ad5398: change enable bit name to
+ improve readibility
+Message-ID: <ae56f8b2-1ca5-463c-8a4e-a384ab0189f6@sirena.org.uk>
+References: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
+ <20250128173143.959600-2-isaac.scott@ideasonboard.com>
+ <bf646a72-1695-4305-be7e-a64ce9d32523@roeck-us.net>
+ <f66366da01ae84313f79b5990d9a906bf7a5eb1e.camel@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 7TZnxNU2gFmvhi2pwW1cefNSy22r3VG8
-X-Proofpoint-GUID: 7TZnxNU2gFmvhi2pwW1cefNSy22r3VG8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 impostorscore=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060093
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a5tcTbPdu0QLW/UH"
+Content-Disposition: inline
+In-Reply-To: <f66366da01ae84313f79b5990d9a906bf7a5eb1e.camel@ideasonboard.com>
+X-Cookie: With your bare hands?!?
 
-Added qcom_swrm_set_channel_map api to set the master channel mask for
-TX and RX paths based on the provided slots.
 
-Added a new field ch_mask to the qcom_swrm_port_config structure.
-This field is used to store the master channel mask, which allows more
-flexible to configure channel mask in runtime for specific active
-soundwire ports.
+--a5tcTbPdu0QLW/UH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Modified the qcom_swrm_port_enable function to configure master
-channel mask. If the ch_mask is set to SWR_INVALID_PARAM or is zero,
-the function will use the default channel mask.
+On Thu, Feb 06, 2025 at 09:59:13AM +0000, Isaac Scott wrote:
+> On Wed, 2025-02-05 at 10:45 -0800, Guenter Roeck wrote:
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/soundwire/qcom.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> > 0x8000 is BIT(15).
 
-diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-index 0f45e3404756..295a46dc2be7 100644
---- a/drivers/soundwire/qcom.c
-+++ b/drivers/soundwire/qcom.c
-@@ -156,6 +156,7 @@ struct qcom_swrm_port_config {
- 	u8 word_length;
- 	u8 blk_group_count;
- 	u8 lane_control;
-+	u8 ch_mask;
- };
- 
- /*
-@@ -1048,9 +1049,13 @@ static int qcom_swrm_port_enable(struct sdw_bus *bus,
- {
- 	u32 reg = SWRM_DP_PORT_CTRL_BANK(enable_ch->port_num, bank);
- 	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
-+	struct qcom_swrm_port_config *pcfg;
- 	u32 val;
- 
-+	pcfg = &ctrl->pconfig[enable_ch->port_num];
- 	ctrl->reg_read(ctrl, reg, &val);
-+	if (pcfg->ch_mask != SWR_INVALID_PARAM && pcfg->ch_mask != 0)
-+		enable_ch->ch_mask = pcfg->ch_mask;
- 
- 	if (enable_ch->enable)
- 		val |= (enable_ch->ch_mask << SWRM_DP_PORT_CTRL_EN_CHAN_SHFT);
-@@ -1270,6 +1275,26 @@ static void *qcom_swrm_get_sdw_stream(struct snd_soc_dai *dai, int direction)
- 	return ctrl->sruntime[dai->id];
- }
- 
-+static int qcom_swrm_set_channel_map(struct snd_soc_dai *dai,
-+				     unsigned int tx_num, const unsigned int *tx_slot,
-+				     unsigned int rx_num, const unsigned int *rx_slot)
-+{
-+	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
-+	int i;
-+
-+	if (tx_slot) {
-+		for (i = 0; i < tx_num; i++)
-+			ctrl->pconfig[i].ch_mask = tx_slot[i];
-+	}
-+
-+	if (rx_slot) {
-+		for (i = 0; i < rx_num; i++)
-+			ctrl->pconfig[i].ch_mask = rx_slot[i];
-+	}
-+
-+	return 0;
-+}
-+
- static int qcom_swrm_startup(struct snd_pcm_substream *substream,
- 			     struct snd_soc_dai *dai)
- {
-@@ -1306,6 +1331,7 @@ static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
- 	.shutdown = qcom_swrm_shutdown,
- 	.set_stream = qcom_swrm_set_sdw_stream,
- 	.get_stream = qcom_swrm_get_sdw_stream,
-+	.set_channel_map = qcom_swrm_set_channel_map,
- };
- 
- static const struct snd_soc_component_driver qcom_swrm_dai_component = {
--- 
-2.34.1
+> You're totally right! The reason this got through is because in my use
+> case, I am powering the regulator on and off in multiple ways. This
+> should definitely be BIT(15), so I will send a V3 shortly.
 
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
+
+--a5tcTbPdu0QLW/UH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeknUQACgkQJNaLcl1U
+h9CiIAf+KmuC4XxJoznAsUgf7gMUa2B6vSjT8Dc5BbU4x4KYzE5xRjudghzF2Tv8
+msTx9N6ZCKu/nj0xVpz4yQrV91w+2GE+UiczJ+3xn1krrHohux0vHyXSd2hDUrBe
+Ue4NlLaHfjMiRd2YN00J+ueadPcyllmcX8yTfe9pFr2elOrBgu5oYSdFgqPVMe++
+PKvMXO/sqOAFQ6dRvOAY6Cr2nEsSW0Ye8YYn7HEoXPCZLMB1VIeQVQaSbnGyMxA+
+z1TagqfxZTCMS23ekZDHWZXHGL9hoZkr/sxRRj4cEh14QrKsZvWl/1cPf11v7B00
+NXE6OqEi8KwV8R06HNcvmK21Mlz0Jg==
+=bZh7
+-----END PGP SIGNATURE-----
+
+--a5tcTbPdu0QLW/UH--
