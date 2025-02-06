@@ -1,139 +1,91 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD8622FF21
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870821D5AD3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879358; cv=none; b=Q+LhZLP7B4t7+DmtoYzS2UKOmnVpG14ex3KNjKojO9ObYZgrHBRCWyOtwa9pKBDiQRNzxhL2EFrthkpmRoytKwI9p7FeLLkmmlfa5JBDO6iyuHeNgmjRNKgPuIPv67HGFIHAL76cXt9NqTvINr4LQtb9SMoVjhyxQpaPjndSlEQ=
+	t=1738879399; cv=none; b=qQmEpg5RkX5rlenZ8YVKG0NzknO4szihXqR52RLAfHs4FrkXiVGCJK9wTpEx9HWENdtdpNuDzTQm85sFFc0W5AYnt2gw/FoL/C48XOVivn62yvj9dReKS1xXtwa1i0PawapAFdEU076ztjcm+Ei7Ll45BzMXv+WH02xQlZUFocU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738879358; c=relaxed/simple;
-	bh=yhX7RJVwaA+Lpx5zbK94yXYQtEnJwzrvecNure0CHC0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LfVZsyovw3SiPJhg4ESTO2nqsOINWGk0Gp+tOSFHynxAQn4v+MvXh+IRYZZ7j6KGHDbvtrfoUcW0LLk7paen/lPRPtJ+1ce8zclEjzsCcBOhpKo1/wDucc5gXLkPnRO6C0twfhsvQ0ZI0uY5AHSkwENIQ4zZJu8m7b+g6by18sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kxIVV+nl; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738879399; c=relaxed/simple;
+	bh=EpQ2y+Hp3CnOJ/dtUdnCQaoWc11gH1V1aVqpL3pPsG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YKGjtgZa9TdIHPCZLdFtfFq5TWnga8W6qhbhFN3itmbNQxPxSMK8M1IWoV4YPpUlFo2K4w4pFFr06vYwYOv2KfFqQp6UtdzkRemROxkWXA5vqYOMeEWvmrKIHOlVPUH3SujVgHTK8FOlNhpaVea68n29xATvv8+1+jcj8XSLOqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gSR3taQZ; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxIVV+nl"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso2315529a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 14:02:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738879356; x=1739484156; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+VZ6pc7yhUf3GbCnbHnQECLXNAA4wAPKI9VijFmeNYk=;
-        b=kxIVV+nlOzHE5Iqj8I8vuEVrs88qB4A69R7D27IpLydGzluqwEmvEeSeFI4g4aZVLZ
-         uyi37TBXdKGgF8z1hkcMXg192VnrJnBfWsqFfqhxTWKJYX8FpJRbpxlKtJmtsuo0EXsY
-         Jep6UxWiFFrn6uj73IuGYC8lGeXzD7J55V5P4jt75iLIs16WRizCYm9bj12JO6A77Tg7
-         qe68Nt0aaZ4/yEb2/NvTci9s3nd0EVg/ii1Ng9zOWSpidlOL7jReuregTMMFa4h6hGKe
-         NINmtRSHo3/YlblodsPrwC8AwpCvaONm0NecI/4PAwfmkb5qnInTbe2rS92+xBG/xemW
-         XvVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738879356; x=1739484156;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+VZ6pc7yhUf3GbCnbHnQECLXNAA4wAPKI9VijFmeNYk=;
-        b=H+5gU5kCnyWIKP4GdS5lV5aLrHRZPbqeZ8X9lzIPF7kcdRRrRpmS/UqKXz4cZarRId
-         TYyW4SGIUOCp5Sn3qCVVnoOe2sgrZp/IBDRqUhcP+WbnpHYquRCZx66EOv7tA6ObY/1G
-         d7UCmMFSdSmDLpTxzmmYcTaPj4NVZaUb+XEgoW9g1UFIRpqcy+3yNdOwrA20UR4TZkJd
-         CBx084zEb4phHlB7yImySTt69DpBTCC+vVfbHt2Z6qsSgvZnQagwitQ4FekpaS5QRnLc
-         diFZZoV2jhmC3V/qWM4RUKgHaVsj0ksdzQjypBTYUkJbSZz73RJ6SV7UBRR7qQb5/Gvg
-         /VVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrMPGM7QpW/WJW+gc2y2d3MJY82lhh3D4ZIbtjCYb0WTEDIVNdZEFq26hqxBjEXts9KsJ82vyTIKhB8aY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7MTr5N+phxnH2MgG+y/2wdOTvviF2FIxJRpsNa25mdVT/rJXA
-	H+U2V0I6BID79nHwd9S2YcnxELaDbcYG40OtU1kd25EHpz9uONa380w8r3y/jy8+Vvj0/w/GJvK
-	RHquhc+iG+a6eNq/9+6JT0Vhf66Zka2F9S8JT
-X-Gm-Gg: ASbGncufSZ1eRaYKyhET+X9cVPqUcdp8kEQUMpM3IOGwgE6DtL11jGVGqfchQzojEa2
-	LosyYGvwk3psDuFJu+kUaeVEwBf6nrBXcqt5eo752TzEDEcSV5yiEfSecac8f7VvGOMGWfDmAfJ
-	VlVV0AlY3m97NYOaemtx8UZnGO9r48
-X-Google-Smtp-Source: AGHT+IHT0gKSH+kblZFLx/Wzk00J8ULB9nNNudVm2CwEFSzub8EVmI8aYK9egI+4TLHMpy13Xtg4Kl5eKF+OeEA9kSk=
-X-Received: by 2002:a17:90b:1a91:b0:2ef:949c:6f6b with SMTP id
- 98e67ed59e1d1-2f9ffb38596mr8748127a91.13.1738879355643; Thu, 06 Feb 2025
- 14:02:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gSR3taQZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738879398; x=1770415398;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EpQ2y+Hp3CnOJ/dtUdnCQaoWc11gH1V1aVqpL3pPsG8=;
+  b=gSR3taQZ/U2f7jMzBOC+/ulv5AWlwsdot8ghohy5JV2LZGg5tlkDU7AV
+   0TjWu+mnhowUtv/V7z/K08SXpY1YNv81aRDvMz0vOhX0B7zqqfiRllsEp
+   fccFNx6a//oXmXV3G3BrwmP4WOEstgvRq7cGpEvhXXzKiuLWdLqW+wBk1
+   Zyu4N2a9cjdQdbSOA46EwZzZUt4MgJpAcRrx5CV+TxuJjK31zMFb6p6kk
+   LYjW573bfwPaE5Ok/T/9L5j7aNz5HSis8Db+QdAcMg4wbF94c9VIftnPa
+   SMm4O8BMFM6H/5eGIQAUzOmC7EsqKjO6p3XVaMX8XeGhzCgX2Svpl4S/o
+   Q==;
+X-CSE-ConnectionGUID: cMjX+A0uRPumR7DC56H9bw==
+X-CSE-MsgGUID: vy4PyoAwS42cvvyqFiqqCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39204589"
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="39204589"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 14:03:16 -0800
+X-CSE-ConnectionGUID: 4STsGXlsSPOTXN0FCidtEQ==
+X-CSE-MsgGUID: xNuqhQ9kRKSYEfdFdVMoOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112237487"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 06 Feb 2025 14:03:15 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8EC93125; Fri, 07 Feb 2025 00:03:13 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v1 1/1] eeprom: digsy_mtc: Make GPIO lookup table match the device
+Date: Fri,  7 Feb 2025 00:03:11 +0200
+Message-ID: <20250206220311.1554075-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206181711.1902989-1-elver@google.com> <20250206181711.1902989-8-elver@google.com>
- <4ce8f5f2-4196-43e7-88a2-0b5fa2af37fb@acm.org>
-In-Reply-To: <4ce8f5f2-4196-43e7-88a2-0b5fa2af37fb@acm.org>
-From: Marco Elver <elver@google.com>
-Date: Thu, 6 Feb 2025 23:01:59 +0100
-X-Gm-Features: AWEUYZnffMY9S6S6so6pFI6Su5ySq6ByivopC2ArucfUZC95P3tyJXAV2JoDeGo
-Message-ID: <CANpmjNMGH36vs8K9Z8tnJc=4xSeeQjeZGyhZj5KSUwh0kQ06MQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 07/24] cleanup: Basic compatibility with capability analysis
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
-	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Feb 2025 at 22:29, Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 2/6/25 10:10 AM, Marco Elver wrote:
-> > @@ -243,15 +243,18 @@ const volatile void * __must_check_fn(const volatile void *val)
-> >   #define DEFINE_CLASS(_name, _type, _exit, _init, _init_args...)             \
-> >   typedef _type class_##_name##_t;                                    \
-> >   static inline void class_##_name##_destructor(_type *p)                     \
-> > +     __no_capability_analysis                                        \
-> >   { _type _T = *p; _exit; }                                           \
-> >   static inline _type class_##_name##_constructor(_init_args)         \
-> > +     __no_capability_analysis                                        \
-> >   { _type t = _init; return t; }
->
-> guard() uses the constructor and destructor functions defined by
-> DEFINE_GUARD(). The DEFINE_GUARD() implementation uses DEFINE_CLASS().
-> Here is an example that I found in <linux/mutex.h>:
->
-> DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
->
-> For this example, how is the compiler told that mutex _T is held around
-> the code protected by guard()?
+The dev_id value in the GPIO lookup table must match to
+the device instance name, which in this case is combined
+of name and platform device ID, i.e. "spi_gpio.1". But
+the table assumed that there was no platform device ID
+defined, which is wrong. Fix the dev_id value accordingly.
 
-DEFINE_GUARD is the generic variant usable for more than just locking
-primitives. DEFINE_LOCK_GUARD_X is a specialization of DEFINE_GUARD
-intended for locking primitives, all of which should be
-capability-enabled.
+Fixes: 9b00bc7b901f ("spi: spi-gpio: Rewrite to use GPIO descriptors")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/misc/eeprom/digsy_mtc_eeprom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So I added automatic support for DEFINE_LOCK_GUARD_1 (keeping in mind
-the limitations as described in the commit message). All later patches
-that introduce support for a locking primitive that had been using
-DEFINE_GUARD are switched over to DEFINE_LOCK_GUARD. There's no
-additional runtime cost (_T is just a struct containing _T->lock). For
-example, the change for mutex [1] switches it to use
-DEFINE_LOCK_GUARD_1.
+diff --git a/drivers/misc/eeprom/digsy_mtc_eeprom.c b/drivers/misc/eeprom/digsy_mtc_eeprom.c
+index 88888485e6f8..ee58f7ce5bfa 100644
+--- a/drivers/misc/eeprom/digsy_mtc_eeprom.c
++++ b/drivers/misc/eeprom/digsy_mtc_eeprom.c
+@@ -50,7 +50,7 @@ static struct platform_device digsy_mtc_eeprom = {
+ };
+ 
+ static struct gpiod_lookup_table eeprom_spi_gpiod_table = {
+-	.dev_id         = "spi_gpio",
++	.dev_id         = "spi_gpio.1",
+ 	.table          = {
+ 		GPIO_LOOKUP("gpio@b00", GPIO_EEPROM_CLK,
+ 			    "sck", GPIO_ACTIVE_HIGH),
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-[1] https://lore.kernel.org/all/20250206181711.1902989-12-elver@google.com/
-
-(For every primitive added I have added tests in
-test_capability-analysis.c, including testing that the scoped guard()
-helpers work and do not produce false positives.)
-
-The RCU patch [15/24] also makes it work for LOCK_GUARD_0, by simply
-adding an optional helper macro to declare the attributes for lock and
-unlock. There's no need for additional variants of
-DEFINE_LOCK_GUARD_X.
-
-Should the need arise to add add annotations for DEFINE_GUARD, we can
-introduce DECLARE_GUARD_ATTRS(), similar to
-DECLARE_LOCK_GUARD_0_ATTRS() introduced in [15/24]. But it's omitted
-because DEFINE_GUARD() can be replaced by DEFINE_LOCK_GUARD for
-locking primitives.
-
-In general I wanted to keep the current interface for defining guards
-untouched, and keeping it simpler.
