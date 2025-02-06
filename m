@@ -1,197 +1,254 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020104.outbound.protection.outlook.com [52.101.85.104])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F546235367;
-	Thu,  6 Feb 2025 16:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.104
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738860336; cv=fail; b=tg32VPVf5tflIyAITx+lO551bqTx2j6DFizNTb/832dDxChTzisM3li+sxJGb2HF0zgaRjkhUU1wp325AhhBqAvXm80sEtSTcL00SgeG7jakrWQics/qHe0CQjimnEeli4lB48Kfyqy1vU7LphIKdEDsX8dQVhgh/az++XhHDDg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738860336; c=relaxed/simple;
-	bh=9vU8QcuUa5oqI8QxvokQx275MVpdLF8C+wM40CmE/z4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HYtO1SkAjClqUWQtRfNw35iJinwPXCrbX3BrPThpLzd+c6PXivkD7gUQ1UwUyXpQt3OgUBJTtS9p7fmadNjUje5ajTB92Que+a6mMw6ElPeb5nqrRFpUK/86Ftbp5+xYgXVUr6VpXpKtADBvv1I6BCynqAPiNBw40xtxS+n+vUM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=n2H4sTqu; arc=fail smtp.client-ip=52.101.85.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766D235361;
+	Thu,  6 Feb 2025 16:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738860409; cv=none; b=g2IfAwgT5nklH0LjKhGgWDU3CCF8+i6DF0b+oGcAWRuqz5L4P/asLpKguMrNWH8bSir3AC29VilaLN781VIRq4PSXKRFHAFUZsljWWNyZPXv7+XjPm2oMKasZlREJ4jnoQtdg+YL4B3ypwF1dnIw+b76+4AbdkkgxIUf7j2boTQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738860409; c=relaxed/simple;
+	bh=ATMIiU+Ci2luWIZJIX8XTUarrtJN3EZMmLUtcy7ySfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FXdrdXk9fs1r2kOWxXRR338EfRPw1vEbaaQt3fYyHMiSuMDELI0MQDBSoAYczcUViYXr4lUmHGkhF8BC23qhYhHN1UehZeNtIcwGEgaxYaclTjgN0qKaSWISy4laFSJyn0qAPD/IDcbAyqIrhcyVYSHDF/9/B4CVRmtiUWE6iWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eFCLfZYo; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="n2H4sTqu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bVVqQcuR02QR9Aj8OLC7LiAcLI37PgtrcScwECGtTikz5vjHSwRB3Fgb8zaX98eRgZoFBSsh8NE/U/tKbbliGPQdQV52QGoEVLoWhfKeH7feFXdlIaGM8EmVm3ZlBrdUi1u39RoNxo+/nxRR89KW+fzjnQ+GuC9jtt7xPlRaSq5wcu0V4VuwThwTOPwaswJoNC8X+AhwxJOiUSHDnhGeZWjp6niH7y46ppeKS5u4RWKEH/NURKmfelfJWOoy8RVgh0mXEBwTszQyb2Gbs/HGV0ktzdmiAbXnkaVb1r2N5f8FmjUEWS9U0Jl80CDl2hAZbe1+HAiCqb8FxdHY1xaLkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DHI2SDvexL558CF8R5g+IicOeC/l/9KRjwi4cjPDcN8=;
- b=nuNoHOlVDHXNnU+BJ0v+CbQ0Dqa6AsYO2XAKVqCeL2e6oBDWorQHBFTxX1L64HvczTkdq4QeOsXhJCUILul9myHGFlmSZXe/uPe3m8p9W4RI0wigl+BetRLNS4I6FykFv7foBxyECJCsYdnwXU1T0f+F0BTDUZwBl0V4CPeOjEyR7LvRYJpuQ2xke9yuZfLNuzzK6YJvT9V1/fcIb5PtZ/uEL+tdpSvkvV5mkjkHejaQlDhUoUAJhy6huPU88RzXPY+yBUX6TfeFFuVZWLdJ7/J/lvuM/NuiPqvSrqS8anIp8YmgLjEmgskiGTVlfFq2rGwNqc34goA/RQ6ssaEbgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHI2SDvexL558CF8R5g+IicOeC/l/9KRjwi4cjPDcN8=;
- b=n2H4sTqucUkRMDuf0S2oeea0BV7gHnjrS5Gen2GX1OVAz/c21W2HQiZbHvIxK6WLPYqEP1dHNGGx6dvidZLeu0g+lhM6dBGDNIV2jztRX5CGj4FjbesRfd37eEIKZqQ5+oUZmPGsjpGwAkTh3/Ef6IYQ+Wd+YpR+L/g9zKgst4c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from SJ2PR01MB8101.prod.exchangelabs.com (2603:10b6:a03:4f6::10) by
- SJ0PR01MB6478.prod.exchangelabs.com (2603:10b6:a03:298::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.10; Thu, 6 Feb 2025 16:45:31 +0000
-Received: from SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::292:6d9c:eb9a:95c9]) by SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::292:6d9c:eb9a:95c9%4]) with mapi id 15.20.8445.005; Thu, 6 Feb 2025
- 16:45:31 +0000
-Message-ID: <d16f9c1f-7788-451d-8f1d-9a068aef7f0d@os.amperecomputing.com>
-Date: Thu, 6 Feb 2025 22:15:24 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Add NV Selftest cases
-To: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
- suzuki.poulose@arm.com, darren@os.amperecomputing.com,
- scott@os.amperecomputing.com
-References: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
-Content-Language: en-US
-From: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-In-Reply-To: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR03CA0115.apcprd03.prod.outlook.com
- (2603:1096:4:91::19) To SJ2PR01MB8101.prod.exchangelabs.com
- (2603:10b6:a03:4f6::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eFCLfZYo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738860408; x=1770396408;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ATMIiU+Ci2luWIZJIX8XTUarrtJN3EZMmLUtcy7ySfw=;
+  b=eFCLfZYoIUcYaZuCR/V6K1S3EZ0ysEkQRW+iLJmdHJFMj1UHpU+Di0qv
+   Z1okRRUaacmqXr05rCvcRFOduoXjJScyDfpN8QbFGrGvK7z+CC3F1oSBu
+   xG3i1gmA0TTym71FUK+GJEY7ILyrD7r+RlF9hr+0ogUs5m+y8LI42+s9k
+   A8r5dySER3GKTKdFouwps7tjAkETcyILKAdbKDpwloOyoqf8XoJlECr8S
+   nThwwrEIT8U6bcQrfrOF7WOp1bZG32CXFSMxEsUtfSfAj2KWnjGITx+Q2
+   7zcHgk+YYo4keyn0yopqre83MpQLTbyPHXT0N7OR8uEEsPK3XDHKR+QOk
+   Q==;
+X-CSE-ConnectionGUID: OrrKYed7SciGuQ2XLa3xog==
+X-CSE-MsgGUID: qmLzls3zThy3NKxOGowl8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39346505"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="39346505"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:46:26 -0800
+X-CSE-ConnectionGUID: QIWgW/mPR46JvsO+fjSr2w==
+X-CSE-MsgGUID: vTDDBNblR1GMyl+aqdgkDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111176227"
+Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.238]) ([10.125.110.238])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:46:23 -0800
+Message-ID: <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
+Date: Thu, 6 Feb 2025 08:46:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR01MB8101:EE_|SJ0PR01MB6478:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66382f97-03c6-468e-c32d-08dd46cdab70
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SzUwNTNGd3M2SHkwM0FaQlp5S1pwc2YxNXR0cklTU3lJOHRFamxqSVNEUVhT?=
- =?utf-8?B?UjlzVHU3b2lRZmZXYUhGdGZSbHR3RUV0TUpnUmlQekRrVW8xbDd5TlJIS3Vj?=
- =?utf-8?B?bk8zYnl2MkdCQWVEUTV2MEZnNkRSMGlRdWZibXZCWUFpVVQ4WXpndlVGYm50?=
- =?utf-8?B?VTJLNmoxY1o5Njg3Nmlxb2tFd2hsUmRSdzNndW4ramxUcE96VG16QnIrUXdj?=
- =?utf-8?B?OXM5T2p6ZDB1RkJzTkRuRy9VNGNHa0dTUEpXd0ZpRTdFRVJNNUhSbVVWRnRF?=
- =?utf-8?B?Y09LREJGelRvSTVJNU05QTBCVUtlZkFFeUZ4QnZYWXlkb1pteERKUWhuc0lU?=
- =?utf-8?B?TDRHSDIzY0N5UDY5YWluWVNhMHVIZ2xtKzFsUE0xcDZIRm1FS2NzM1FMMURF?=
- =?utf-8?B?Y2JWMTVOdXZiSWJLaUNmcEJHNld4TER3RndwZE4xdzUwM1MwbzhhTjBSN0x1?=
- =?utf-8?B?Nm00RkpuMUVzNzl5M1JsYVVoWUhyNXRtdEpqV1gvTy9hZWl4Y0lzNzZJRDFt?=
- =?utf-8?B?WG5kVm4wWnUwd0RPYVpIV2NHTnZBOTllMWl0QXNPSGJFS0tlZXNVeTJ2WVZv?=
- =?utf-8?B?NmxsWVZVd3N5NHBoNDZzaml3TUdrV1lpVzU2ckxpRzJOQ0tMNUtmSFZ1SEtY?=
- =?utf-8?B?cjhoRzg1QUY3anFsZ0lPMnNiT2szN1VibjBPbVhMVXZWbXBiN3RSUWNYU2ZY?=
- =?utf-8?B?WHBob0o2S2NUMUtvVkp5NFMvVGgzQkVLSUNWYUhacHRDVHhNOXpxWXpGbTBp?=
- =?utf-8?B?M0FnT2lZcytOeUxFRWxJaGkzMTlyOGhBK2NSZEt4c0htTkpCdVdEUGN1cGhK?=
- =?utf-8?B?ZFJwVXc3ZFR3b3BCVi9GYmhOblYweEtMZHZ3dFRPU1oxSHBrSkxhdm5qNHVG?=
- =?utf-8?B?ME43MmxxNzVUUUEvaHZWbERzZWE4S1RWWWVtc2NRMWJ3dDlqUitKVUt0dWoz?=
- =?utf-8?B?enppSmxQV2UyNFBNSHVYcDZzTloxUjlqdUJxV3F6cWtTaWRueTNDd1hXZ04v?=
- =?utf-8?B?TDJUZ3FKUG1DbW5TNTNMV2Y0MXNkNENEaGFaeHN6UVArbUlsTUczcW1URXl3?=
- =?utf-8?B?d2R5MWh5N0MxMDNrWG9mYlNXTlJQT3YzQXh2VmQ3WG11YjZxWHpoQ2grUHFG?=
- =?utf-8?B?Y3BBaUFFQm8yb0Z4QzlxTTkxSFBvYmJXcU9NTnRjcHl5TitrNmlPcHhxSnRO?=
- =?utf-8?B?WnA1Q3R6THNRbmVGcyszdW53WHJCMXAwZHRNZ3pOZ3BXM0xYVkYyR3kvNDEv?=
- =?utf-8?B?Y3l2YmlTRXJoMm5VS08yKzZ0R0hWVW5ZbFl6ZVBVcSs3WTNQVE13cWZnZ1Q2?=
- =?utf-8?B?a0NVbjdCWFUrWXp2elJjVWZuWkMwMUx4NzcyOG04cWxxUnEvNmNQaTBsVkZm?=
- =?utf-8?B?QW9CMEhNUU1oZ3F5OFd6ZXBuQkFjdXFRdVZSbWtDcWdsa2tCNzVkN2gxMENC?=
- =?utf-8?B?WFpodUhXM0lWVllrVmJPcTNWSXdEakJKOU1OQk1DVC96eGUxNDlRMnUxdmJy?=
- =?utf-8?B?N1B5anRzbi9qSi9wSnkycjNSb3hab1pxdklXMDI5dlZ6dGd1NWRqcis1TTJH?=
- =?utf-8?B?emFwN0tSeWdVUTVRejEzSmlEQTdNdHdDQXlGcWI3M2lNS3ljQTRUZUlRM2Fo?=
- =?utf-8?B?aFdNTGZQSDZIMVZTZkpHUTJqcGxQYlNVSmFyLytJVWVGSzl4RldvVEREMXh3?=
- =?utf-8?B?OW5kNHZxVVFyQ1ppWkkxR1FvdkZBdEk3VGJhRmlHV1hCbm1YRjFtVks3VUV3?=
- =?utf-8?B?aUVoeW4rODFBN3B1OGNQdGJKVG5SZllVUjBPUFZXczFRRlBSWHhmKzFBZTNz?=
- =?utf-8?B?KzJLaDVFbE9GTVNkVG1pT1Y0QmRRTC9sOE9pY3ZsSTNoaUNYZkNrdVdQczlJ?=
- =?utf-8?Q?SXw+hieprouSe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8101.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OWRHVHFVUXgzcy9GTnZWR3JlT3JKYnFkcXUvSWFsa3hYYUNZdDZjUXdLeTZJ?=
- =?utf-8?B?T3Y5dDlBcEN5WFRZb2l1akJ3ZXRPRmZ3eDhHUEp1dnVzZkZVQXE1UjZYa2ZD?=
- =?utf-8?B?eXVtY2k3WlRpdkVNWkprTkd6UEF3VktnR3R0eWlFNGlNT1lYVTRCb2dCck0y?=
- =?utf-8?B?MHk2V0RUaUEyakxlMnVibi83aHcyaDJiV0VBMlBseWVsRjgvcC9tNnpSdVlk?=
- =?utf-8?B?UnNKV0dWNDdqZVd4TkVoOXNXVGlLTVJQdTQ0bXBZOE1GT0R0MmNaRXYyL3Zt?=
- =?utf-8?B?anByam1FMkNPYjdmR09OWlprY3pkSVJnY1orY003bjl0RW1iTE04akE4MU5Z?=
- =?utf-8?B?ejRNVFVCVURvUEpQeVBuNGpuNFpRaldZMlVCcHBiV2QwWnY0LzY0SERjRFZh?=
- =?utf-8?B?VnJkSWVRVUhQa0FyUkRkSFFiQUZRdmx6Ukw3NWRPLzFiM0s2NjBMNjNqUXVh?=
- =?utf-8?B?SnhrNVdlQlNXRWNPWExTSm8rY05hSFhqQTZQQWlCaGFEa3ZwcGRmb1dtMnVh?=
- =?utf-8?B?SGduNmhLc0FabE9NY2RVNVpmWnpHdG03a3VGZE1sR1l3U05vSm1kMk41THhH?=
- =?utf-8?B?Rm5IWm9zc0Q4bytteFdoVm9PNDI2Sy83dW5XdDJBYS8wK3RONXFWc0w3UG1P?=
- =?utf-8?B?SXhhNVhEbUFGMkc2VUJFVUtNbVdGczR0WW5zbnFsNjhacit5b0ZOajBnRFJn?=
- =?utf-8?B?MTFSL2ZoNjd6SXRPa0I3V3BzUzNZTnRLeFZSZktyWlNJc2dBcmZFL0pWeG1w?=
- =?utf-8?B?K2dWOWtpcSt1SzBDWVF1dk1yejlZaDB1M0hSQW1rS3o5UGlHRENucVZ4cXBz?=
- =?utf-8?B?VVNKSExsV2J5bVJXNFBTVUI2dXNhMUc5bDRxUUFnTEd6Y0ZQeTZSenR6VnM4?=
- =?utf-8?B?a1E1Y0Ixa1BrbFN6VHZ6RkZCQStKWS9CMGVjRkxiNHk0dzAwNW52Q0g4b2E4?=
- =?utf-8?B?MWF0US96KzM3UEc4VEwrYi9zQjd0dUVIRkpqNWd1Y0MwWDQ4Q2cxNElaTHRo?=
- =?utf-8?B?ZXlsOXBlYXYzak9lL0t5ZElWZFU5LzN1d2RtRGJXQ3NuaHplRlZkcEIzTHN3?=
- =?utf-8?B?cllxb1NWOWZkVDFvVjBUL3VjSCtDT1ZXdStYUnZMSmllNnI2YWRidnRVa2lZ?=
- =?utf-8?B?NGw2ZjRnWEpvNXUzT0JoTkFJbk9kQjhZakZuaUNlRi9hNE1CQWN0dG04b3Ux?=
- =?utf-8?B?M2hCdU5pRkVxcTBOS085bXBQZHZsbW51Sk9PeXFpZ1RGSk51Z0xLdjlRQnln?=
- =?utf-8?B?RDZuVXZFNlRjRE5kd0JhSmtnZk5iRUljS0FkSW1xMExQSUpzNFNXbDhOWnRT?=
- =?utf-8?B?WVczd3VWYkxkMlVQTWJaZmhreHJPNFVzV2FDOHIxZWtDWFlQUm5lTGRnMFE5?=
- =?utf-8?B?ZXhNa2ozZGxZY0pRbWcxa2owMTd0MGdYSFlHMnlla2hhcUdrblRoQjd4VTY5?=
- =?utf-8?B?eGMwMXN5U2taMDJ5YnU1T1pqZkREcWlTQVpjS2o1NFVBR2VPb0Ixd2lSVDBO?=
- =?utf-8?B?VUVTSjNrbW5zeFNvTUo4TUtKWjRQbDNRSnh0S1QyMnhLQnpRVmFJc2huVUVG?=
- =?utf-8?B?Tjk4RVpDdk9lUURDeEtmeTEzZUYvNjUyMDBLSFlZekdDV3VzWTZFRHQ4MUJD?=
- =?utf-8?B?NWpEbDRhcE0yU213a3E1N25taHdaV3dQUkRzRWF6RmsyU29NR2Rab0dyUEZX?=
- =?utf-8?B?R0dVYld0L0ZUNVVoZEdkUVp6OWRDanBGNXJ6N0ROb3Y0RTY5eUVrdnpRUGhQ?=
- =?utf-8?B?ZmNhOUJxR0ljK3BzZnJmeGFFZjRKUmtHZ1A0V2JnY3BHdDdGSndYaXovSEVx?=
- =?utf-8?B?U28rRnhDWnJBOXNlOUNPNXR1TG5UNkswcnNvRE0xcVgwTWhhZW0yL1NmT0o2?=
- =?utf-8?B?cnRSYTZBcHpXTUR1Y3Joci9nVGdrVVlKZFk0UXFEWXBScm5KbklzaEIzeVVV?=
- =?utf-8?B?dk4wMFM2VG1UM3ozN3c4blNSdGRibDBoUVVBZFhjcTZvQ0orTnlqcXR5NlVl?=
- =?utf-8?B?QU1lWngrWHBKQXhtTU5HOU4reXduaUhha0lJOE5qdks4MVdTNW1CN2Y3SEZ6?=
- =?utf-8?B?Q1BRVzlmRFQ0cHdDRHc5dEg2Rkl3N2JWVGxXZkVHeGE0U053WW8xQW9WRGRk?=
- =?utf-8?B?UHFUZjNXejNlZ3RWMWpmaFNtdHJHb1NiL2xzSUE0SEdsK2hOZ0RYeVNZQnQ5?=
- =?utf-8?Q?An9uptZ1a2FoOLtkLiMLkx5Bxqq4YhsLu8mkW2VrYNgz?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66382f97-03c6-468e-c32d-08dd46cdab70
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8101.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:45:31.7509
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iWwhNxKkU7nUUp0zV5XDyl6t50DYYpaxIIgmBTsxzPISD194yN+MmkbhFhGWemePQslCNR+ToSQL36+ZrzqvAePJQYVIfoUeeoFTvIrMd1SQMaIw2LzvO1livLefrT+w
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB6478
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7 3/7] arch: x86: add IPC mailbox accessor
+ function and add SoC register access
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+ Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 06-02-2025 10:11 pm, Ganapatrao Kulkarni wrote:
-> In this patch seried, modified kvm selftests code to enable
-> guest code to run in vEL2(As guest Hypervisor).
-> Also added test cases to test guest code booting in vEL2
-> and register access of VNCR mapped registers.
+On 2/6/25 05:18, Choong Yong Liang wrote:
 > 
-> This patchset is created as per discussions over ml[1].
-> Posting RFC patch for the early feedback and to
-> further explore requirements and test cases.
-> 
+> - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
+> - Add support to use IPC command allows host to access SoC registers 
+> through PMC firmware that are otherwise inaccessible to the host due
+> to security policies.
 
-[1] https://lore.kernel.org/linux-arm-kernel/871pz2th4b.wl-maz@kernel.org/
+I'm not quite parsing that second bullet as a complete sentence.
 
-> Ganapatrao Kulkarni (2):
->    KVM: arm64: nv: selftests: Add guest hypervisor test
->    KVM: arm64: nv: selftests: Access VNCR mapped registers
-> 
->   tools/testing/selftests/kvm/Makefile.kvm      |   2 +
->   .../selftests/kvm/arm64/nv_guest_hypervisor.c |  83 ++++++
->   .../selftests/kvm/arm64/nv_vncr_regs_test.c   | 255 ++++++++++++++++++
->   .../kvm/include/arm64/kvm_util_arch.h         |   3 +
->   .../selftests/kvm/include/arm64/nv_util.h     |  28 ++
->   .../testing/selftests/kvm/include/kvm_util.h  |   1 +
->   .../selftests/kvm/lib/arm64/processor.c       |  59 +++-
->   7 files changed, 417 insertions(+), 14 deletions(-)
->   create mode 100644 tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
->   create mode 100644 tools/testing/selftests/kvm/arm64/nv_vncr_regs_test.c
->   create mode 100644 tools/testing/selftests/kvm/include/arm64/nv_util.h
-> 
+But that sounds scary! Why is the fact that they are "otherwise
+inaccessible" relevant here?
 
--- 
-Thanks,
-Ganapat/GK
+...
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 87198d957e2f..631c1f10776c 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -688,6 +688,15 @@ config X86_AMD_PLATFORM_DEVICE
+>  	  I2C and UART depend on COMMON_CLK to set clock. GPIO driver is
+>  	  implemented under PINCTRL subsystem.
+>  
+> +config INTEL_PMC_IPC
+> +	tristate "Intel Core SoC Power Management Controller IPC mailbox"
+> +	depends on ACPI
+> +	help
+> +	  This option enables sideband register access support for Intel SoC
+> +	  power management controller IPC mailbox.
+> +
+> +	  If you don't require the option or are in doubt, say N.
 
+Could we perhaps beef this up a bit to help users figure out if they
+want to turn this on? Really the only word in the entire help text
+that's useful is "Intel".
+
+I'm not even sure we *want* to expose this to users. Can we just leave
+it as:
+
+	config INTEL_PMC_IPC
+		def_tristate n
+		depends on ACPI
+
+so that it only gets enabled by the "select" in the other patches?
+
+> + * Authors: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> + *          David E. Box <david.e.box@linux.intel.com>
+
+I'd probably just leave the authors bit out. It might have been useful
+in the 90's, but that's what git is for today.
+
+> +	obj = buffer.pointer;
+> +	/* Check if the number of elements in package is 5 */
+> +	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
+> +		const union acpi_object *objs = obj->package.elements;
+> +
+
+The comment there is just not super useful. It might be useful to say
+*why* the number of elements needs to be 5.
+
+> +EXPORT_SYMBOL(intel_pmc_ipc);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Intel PMC IPC Mailbox accessor");
+
+Honestly, is this even worth being a module? How much code are we
+talking about here?
+
+> diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
+> new file mode 100644
+> index 000000000000..d47b89f873fc
+> --- /dev/null
+> +++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Intel Core SoC Power Management Controller Header File
+> + *
+> + * Copyright (c) 2023, Intel Corporation.
+> + * All Rights Reserved.
+...
+
+This copyright is a _bit_ funky. It's worth at least saying in the cover
+letter that this patch has been sitting untouched for over a year, thus
+the old copyright.
+
+Or, if you've done actual work with it, I'd assume the copyright needs
+to get updated.
+
+> +struct pmc_ipc_cmd {
+> +	u32 cmd;
+> +	u32 sub_cmd;
+> +	u32 size;
+> +	u32 wbuf[4];
+> +};
+> +
+> +/**
+> + * intel_pmc_ipc() - PMC IPC Mailbox accessor
+> + * @ipc_cmd:  struct pmc_ipc_cmd prepared with input to send
+
+You probably don't need to restate the literal type of ipc_cmd.
+
+> + * @rbuf:     Allocated u32[4] array for returned IPC data
+
+The "Allocated" thing here threw me a bit. Does this mean it *must* be
+"allocated" as in it comes from kmalloc()? Or can it be on the stack? Or
+part of a static variable?
+
+> + * Return: 0 on success. Non-zero on mailbox error
+> + */
+> +int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
+
+Also, if it can *only* be u32[4], then the best way to declare it is:
+
+struct pmc_ipc_rbuf {
+	u32 buf[4];
+};
+
+and:
+
+int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd,
+		  struct pmc_ipc_rbuf rbuf *rbuf);
+
+Then you don't need a comment saying that it must be a u32[4]. It's
+implied in the structure.
