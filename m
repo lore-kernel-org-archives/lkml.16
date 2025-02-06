@@ -1,155 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF832226191;
-	Thu,  6 Feb 2025 09:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E329F225779
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834536; cv=none; b=dNHvFEC8U+upYjkgVz8QqH4Tt3vamJgzUQrRcrSnOA62Pf8EUOFfnOcI1O8P6mLv3+Ux5SckSTROhLbdL3oo0X10cDYVUcW/2Mz9lWaROYYPIFWGQcU7DzjUrsiNG7xzLVFhrn6YIpGBpyu/90bUIEYFyR02u3RcHL8+zl5N2a8=
+	t=1738834610; cv=none; b=Hqu6z6VxoLQ5Y8yeqOGk3DL+vASmZu+OStGzA/4C5yiaXkWDbeVL5a2F5MATy8JZMmygSXHKIt3+0I1R5EcbGXG0X3fEAnq5phc4cN0sG2lVQJ9iwKFFtaRWOFxzSr6LTxHEaWyJuW3uLf44vmh7MFgi46RJEtfbvTZdTXS2q7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834536; c=relaxed/simple;
-	bh=J8z4feXQofrPOrZAaMMCNtsMh5WCYVTCcVS4fYVxK8A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fGEipCuEt0UbJO/f8t4/DER2YzjWbrVJ+VRLWZVnMrf9VACsKwAMB7DfbcWEHN/s1rRU8/a9oow8Bwbl5e2hXUGsHpKQSLVJ/3oYJz3m1BE+UaMZK09qu+vDrgDNqlCpDRA+nvqnJ5YBTgFhpZFOApzq0fpbkdwaN0aCv1RvsKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4heFP41; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738834610; c=relaxed/simple;
+	bh=Kh16Wp8fAy3I7OTirw74yhvKe46+5odebHIHXPF1qa4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qlKM2h+MHqdf4WZIkzFaVOo5YDsDCcVwm/g7DjjGymzL1qDwUkSoPK6sIS5gHOPYvkk1cH0JAd9BH5DzIlMsiL59LfjwhNgqeFy2BXva2QMceNFcDKUG+us9MVoi1d+mz7RWuwvmaja14B4gMrBpFsWdgNQ83fL2kYZCSnLW9Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zTomzqFd; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4heFP41"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738834535; x=1770370535;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=J8z4feXQofrPOrZAaMMCNtsMh5WCYVTCcVS4fYVxK8A=;
-  b=l4heFP41YvSq6zskrWVL18XFoZD7E6968+olJidh3lO7VANytPYeMlmK
-   3F0GbITX2OgefqetUiFaSvarI4I5mYLvp/De3AEiXrWPBsVbA9soVJiD2
-   weYzNpe0Sq5eDXmJuiQ+rEdK3PL7TWgC6wYzAFfnKonN5qclnTISd9vz/
-   2EEknT2ceefVs8yR7Mkl9Opfe2akyVunejgvc0jXGALAC0/hbw+SLCbEF
-   KRFkucjhCECfinyOWRS1b7Xk2ruKBMiij446UqjpGiQpqMY8TicA9mj8y
-   k17nPZIsc5q85N2dMU7cAZ/UX5KFWLkOBmP1YLZ7Q7rZcRv6rDx62vHFt
-   A==;
-X-CSE-ConnectionGUID: uTYdHseCR4mrfHbd3mJDZA==
-X-CSE-MsgGUID: q7BJ2XqSTm6goy5kNzy5yQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43090699"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="43090699"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 01:35:34 -0800
-X-CSE-ConnectionGUID: jHqcwLsUTqeo83cfobT5Tw==
-X-CSE-MsgGUID: nXdd+6+FQy2qeI9/jGctmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="111126500"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 01:35:30 -0800
-Message-ID: <16417b83-af65-4ed2-9b9a-c82363abdd4a@linux.intel.com>
-Date: Thu, 6 Feb 2025 17:35:28 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zTomzqFd"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54411e3c610so183150e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:36:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738834606; x=1739439406; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+2fOiT1hShmWAzem6QrK7ODBNtOVKho77Ypt9RNsYGk=;
+        b=zTomzqFdGu2L36wsIEuPXt0D0GZmDhMLR8oujNZE8oWv8X4ONVT3BKbMFgP25PBScV
+         1mTlkpWekCu/5g3B78kFKlyPBkZQXr5KFUNmG/zWRC/99I29ibQGITo8jRka0fSDAx8+
+         MxMgpSy1ZMmlkqlpxWns4ZjxM1BN5ZbZLI7OqhsETo4R0KIZEn2n4Y0VmUOdPe68Fx7G
+         uPEp3NN/ljGwDuHcVO230c7xvyTc+DubmhSpLGx5Erjpvro4I5avakzm0CT0FPH6yLnN
+         8aqDaMCZt06P36ejgU3tsvUEJD/w70uynkiujmd/ywNf/saUqYskDmfYzy7QZFbQHNqG
+         YdaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738834606; x=1739439406;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+2fOiT1hShmWAzem6QrK7ODBNtOVKho77Ypt9RNsYGk=;
+        b=PMrhvIU+bkd1pmkGeqhomgWqCndYle8Vs2n9L0O1EocpX9hIQB/DRIA/8jR0p4Sq94
+         wO/IIm29TwSxq9Hnuh/ALDYgzELVAIqPeZzxVrtONP3JpNk69EaZEtvlb4D/44MUueVl
+         7kaxzNyEsGZDzwB5ugjNSvyirTIxzWi1Yqo/mSecML7HeBzPcEA2XqYFgzkBUR6BtQ2J
+         0V5792KLgX13RcO1e8aGyOycz849oBE3OTwpIavTVdWRR3Dk5+vuuF+s9bFaib653D4W
+         EzHx6Nhq064woxVgfaKp+foITBYDAhrjBar47hnY5f0/Pc48DitlxEUkhEpnvySJWLyg
+         od+A==
+X-Forwarded-Encrypted: i=1; AJvYcCU9fSVQih3lMU5pFK46144lwsX52/2svbonfEqqXQPGZ0vCDckdlZlfR3cXSEvLAjP+b1BEt57/Dd8WgaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwscVcXHTgeMhlvyQpLtyRuJ1PcUxMQMRuThDwC/nu6//k7cHeV
+	hWYbnR3Rj9NBgSAA0ypsNpJX75SHFE1cdeIpPEIsxAuE1UlF6u8LEcTCwgEywTObaO8IqLYts40
+	YYP2FB+6sgl4g4A94hm5+JZd2e5lkqfIY4KqOFA==
+X-Gm-Gg: ASbGncsYJpgPbKN84dFqxO0jh35ltmmSuVLLKYkd7uFmDS4Fn1o8dsc+JFSYod9MKED
+	OP9VJQ5T3/rJV2tTvYdtEj66mG9TVa3ZFjjDyimRpVB3q0V4H+1Q0r17x02NgTJG18Jesvfo=
+X-Google-Smtp-Source: AGHT+IGTk7OHZHlA5Lj/y+SkMVlyAK1YiPP71DuZPiW3j2C24cxgmg+ZfIh/5nUIZiV+mmjJFD2qxBxmd7B/Wz3cmmk=
+X-Received: by 2002:ac2:4f01:0:b0:542:6f59:f86d with SMTP id
+ 2adb3069b0e04-54405a24b55mr2378669e87.24.1738834605896; Thu, 06 Feb 2025
+ 01:36:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/20] perf/x86/intel: Add PMU support for Clearwater
- Forest
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-2-dapeng1.mi@linux.intel.com>
- <20250127162651.GL16742@noisy.programming.kicks-ass.net>
- <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
- <20250206075356.GF7145@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250206075356.GF7145@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com> <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 10:36:31 +0100
+X-Gm-Features: AWEUYZnuvQ5xC93XkWdpkWPDAjjF9Gk591-Ngc1pgTXmw3cRSAbzEVROjCVfbTA
+Message-ID: <CACRpkdY6PbUjEsQFTPjo=YrjyZ6L3gciAmSA16PFKdSVFVrR7w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
+	Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
+	Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2/6/2025 3:53 PM, Peter Zijlstra wrote:
-> On Thu, Feb 06, 2025 at 09:31:46AM +0800, Mi, Dapeng wrote:
->> On 1/28/2025 12:26 AM, Peter Zijlstra wrote:
->>> On Thu, Jan 23, 2025 at 02:07:02PM +0000, Dapeng Mi wrote:
->>>> From PMU's perspective, Clearwater Forest is similar to the previous
->>>> generation Sierra Forest.
->>>>
->>>> The key differences are the ARCH PEBS feature and the new added 3 fixed
->>>> counters for topdown L1 metrics events.
->>>>
->>>> The ARCH PEBS is supported in the following patches. This patch provides
->>>> support for basic perfmon features and 3 new added fixed counters.
->>>>
->>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>> ---
->>>>  arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++++
->>>>  1 file changed, 24 insertions(+)
->>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index b140c1473a9d..5e8521a54474 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -2220,6 +2220,18 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
->>>>  	EVENT_EXTRA_END
->>>>  };
->>>>  
->>>> +EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
->>>> +EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
->>>> +EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
->>>> +
->>>> +static struct attribute *skt_events_attrs[] = {
->>>> +	EVENT_PTR(td_fe_bound_skt),
->>>> +	EVENT_PTR(td_retiring_skt),
->>>> +	EVENT_PTR(td_bad_spec_cmt),
->>>> +	EVENT_PTR(td_be_bound_skt),
->>>> +	NULL,
->>>> +};
->>> The skt here is skymont, which is what Sierra Forest was based on, and
->>> you just said that these counters are new with Darkmont, and as such the
->>> lot should be called: dmt or whatever the proper trigraph is.
->> Sorry for late response since the Chinese new year holiday.
->>
->> Sierra Forest is based on Crestmont instead of Skymont. 
-> I hate all these names :-( But yeah, you're right.
+On Thu, Feb 6, 2025 at 10:34=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+> On Thu, Jan 30, 2025 at 6:10=E2=80=AFPM Artur Weber <aweber.kernel@gmail.=
+com> wrote:
 >
->> The 3 new fixed counters are introduced from Skymont and Darkmont
->> inherits them. So these attributes are named with "skt" suffix.
-> Fair enough.
+> > Fixes two issues that were preventing GPIO from working correctly:
+> >
+> > - Lock/unlock functions tried to write the wrong bit to the unlock
+> >   registers for GPIOs with numbers larger than 32
+> >
+> > - GPIOs only initialized as IRQs did not unlock the configuration
+> >   registers, causing IRQ-related configuration (e.g. setting the IRQ
+> >   type) to fail.
+> >
+> > Also includes a minor fix to add a missing newline to an error message.
+> >
+> > Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+> > (DTS not yet in mainline).
+> >
+> > Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 >
-> But how come this is new for darkmont and wasn't done for
-> arrowlake/lunarlake which have skymont based e-cores?
+> Looks good to me, do you want to resend the patches picking up the
+> Acks or do you want me to apply as-is?
 
-ARL/LNL are all hybrid platforms, all the event attributes are defined with
-a kind of P-core and E-core mixed format like below.
+Actually it's Bartosz applying, heh confused this for pinctrl.
 
-EVENT_ATTR_STR_HYBRID(topdown-retiring,      td_retiring_lnl, 
-"event=0xc2,umask=0x02;event=0x00,umask=0x80", hybrid_big_small);
-EVENT_ATTR_STR_HYBRID(topdown-fe-bound,      td_fe_bound_lnl, 
-"event=0x9c,umask=0x01;event=0x00,umask=0x82", hybrid_big_small);
-EVENT_ATTR_STR_HYBRID(topdown-be-bound,      td_be_bound_lnl, 
-"event=0xa4,umask=0x02;event=0x00,umask=0x83", hybrid_big_small);
+But most comments go anyway I think.
 
-static struct attribute *lnl_hybrid_events_attrs[] = {
-    EVENT_PTR(slots_adl),
-    EVENT_PTR(td_retiring_lnl),
-    EVENT_PTR(td_bad_spec_adl),
-    EVENT_PTR(td_fe_bound_lnl),
-    EVENT_PTR(td_be_bound_lnl),
-    EVENT_PTR(td_heavy_ops_adl),
-    EVENT_PTR(td_br_mis_adl),
-    EVENT_PTR(td_fetch_lat_adl),
-    EVENT_PTR(td_mem_bound_adl),
-    NULL
-};
-
-CWF is pure E-cores and can't directly use this existed attributes, so
-define these new attributes.
-
-
+Yours,
+Linus Walleij
