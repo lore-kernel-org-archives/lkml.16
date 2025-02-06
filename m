@@ -1,217 +1,78 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBC1226865;
-	Thu,  6 Feb 2025 11:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0CC2288D0;
+	Thu,  6 Feb 2025 11:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738840100; cv=none; b=bl5WSlxaCq1TDuKHFBI1Jb47SZ95YVyga2AIoHAAggZbtWqdEZd2r6josXepSjgVkRTdlSiui3kFaJgh3mJlsU4dCqogcDHHQ9CJ7VWFkciEL7zUJ+DgCP2TJFAjcUPlIJzClxX9M1gvP5ISetHnW8trG3ZhADr8ivawVE07h5w=
+	t=1738840128; cv=none; b=VW5kuDUX4RP+TX97VIl9rt0nrowS1Rm7qUWfbXta7/fD32cwuw7/+nIT6K5eA9/RkLoQLcqiLVTe9QE0s3Ha4TogClR5wLJB7atIo32SVY9uHYMbMpe0uZCvAWwbg3oi4Xfz7UvQSA0MRFqSoxh4N0NfkxDY3CQdM9wDNL47Mf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738840100; c=relaxed/simple;
-	bh=r08+YFVePrjR2DESEPzIzQ9ZPHAcHiFWCiN8lH5nWRU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nnoruQBTbgKkmnMyCGIDCQSazAmRefyxwp7RzOVDMEcF5EFMpDtTCdl07gcefvIfK8yqPyOfoICB34pGoh0htKKvr6eE29XhOoTNI8vXeA9O3uNSNet0aqyTJA2DyZv4go23/jyeLM7SvnjojAWBfhjn04bAooqjdqkVkGiCerI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=We8EEd3m; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738840128; c=relaxed/simple;
+	bh=YsyAjTedAN5lyZo0FlAMasVTbgpk/AriGqi3k2NqfyI=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JyWR7Lv7WiiS1s/9Mdrg08nwDWn3mO62AzNX/ZbijbYcbKrsL6A6vtP+wWGMPZxfEqBDui6ARRtxWd6sIwfsWrXQN8CNRZ0EcbfRU8zh6Uqya23skvIF9UdkwanFZcdsNPctCX0n5NtJV5rDrsZ9jg1zAPRIFFas70KkZdPnIqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YO9wn3cq; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="We8EEd3m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=UKqqouyRpRkZFe46RA14bQtyVvZtArDhuQtbwJN68Ik=; b=We8EEd3m3YMHf1ronTLetEm7Lw
-	CiS1MXCW6POfbDqJ6nk5MJf+70nGt4J0OCvCx0gnQKCn31nslvmPJJNELhhuXBu0dqMBm4zEtt18u
-	TFiL1RnrEhCN64CZAYCRFH7HmP69IPZ48OXGbO8R3PNesYgNIYIZZe8L/l9gp2azb0JV4GVSp/jEF
-	K0RYRUzou1Tn0kq1Jz9O7cPQHklZhp5XT62jQlrLL8kHlITnKsqzX4Wdz5btKwpQFOjSCbvYGvjLY
-	XnEjf+qlFB/iJLwrhX/LrwacjxTr9CQXjDArrW+AwGP0/hKZ0yH2dlkVYuGDYLjdYGul4F5iRuTKy
-	gvd7fhnw==;
-Received: from [216.24.213.56] (helo=[172.31.28.190])
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfzjk-00000005tep-24g4;
-	Thu, 06 Feb 2025 11:08:00 +0000
-Message-ID: <f8030dfc5086e4e4e3709d6fcdab1e38f01fc38d.camel@infradead.org>
-Subject: Re: [RFC PATCH 00/39] 1G page support for guest_memfd
-From: Amit Shah <amit@infradead.org>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
-	jgg@nvidia.com, peterx@redhat.com, david@redhat.com, rientjes@google.com, 
-	fvdl@google.com, jthoughton@google.com, seanjc@google.com,
- pbonzini@redhat.com, 	zhiquan1.li@intel.com, fan.du@intel.com,
- jun.miao@intel.com, 	isaku.yamahata@intel.com, muchun.song@linux.dev,
- mike.kravetz@oracle.com, 	erdemaktas@google.com, vannapurve@google.com,
- qperret@google.com, 	jhubbard@nvidia.com, willy@infradead.org,
- shuah@kernel.org, brauner@kernel.org, 	bfoster@redhat.com,
- kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com,
- maciej.wieczor-retman@intel.com, 	pgonda@google.com,
- oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 	linux-mm@kvack.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-fsdevel@kvack.org
-Date: Thu, 06 Feb 2025 12:07:58 +0100
-In-Reply-To: <diqzr04fpgsf.fsf@ackerleytng-ctop-specialist.c.googlers.com>
-References: <diqzr04fpgsf.fsf@ackerleytng-ctop-specialist.c.googlers.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YO9wn3cq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738840123;
+	bh=YsyAjTedAN5lyZo0FlAMasVTbgpk/AriGqi3k2NqfyI=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=YO9wn3cq+a2cUFa1ojHtArWBgvsEXO2/5exII35hqGFtERjeT/HUdGMicR8is2p42
+	 PMAh5yoAiaONcZ5/4ZQetDuCBICzQpnYXGBoN+uG6+5wuFo4EWdtL0F4/2TBj7JzuV
+	 UasLuj0oBb/g6Ciwbv1L0vAF5Cn9YUzs1zktw2IPiptsVngA6xzP6iywkOg4RTk1w1
+	 2D4FLbeSvEGL5truUC0NHAytEeqzTP6jgH4+KsvnQ3cNuKuHif5lBjICFaTbdt7SYF
+	 iYl3eJv7P2Bl8Jp+asbIRZQGHosjZqdxzph/GiLg8cVAE/sFtjaPIJV5MNXbrX0VFh
+	 PFtI27MiYf6ig==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 510A617E0F9F;
+	Thu,  6 Feb 2025 12:08:43 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Daniel Danzberger <dd@embedd.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, upstream@airoha.com, 
+ Christian Marangi <ansuelsmth@gmail.com>
+In-Reply-To: <20250105150328.15172-1-ansuelsmth@gmail.com>
+References: <20250105150328.15172-1-ansuelsmth@gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: airoha: en7581: Add Clock Controller
+ node
+Message-Id: <173884012324.110657.10404370781267442733.b4-ty@collabora.com>
+Date: Thu, 06 Feb 2025 12:08:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Mon, 2025-02-03 at 08:35 +0000, Ackerley Tng wrote:
-> Amit Shah <amit@infradead.org> writes:
->=20
-> > Hey Ackerley,
->=20
-> Hi Amit,
->=20
-> > On Tue, 2024-09-10 at 23:43 +0000, Ackerley Tng wrote:
-> > > Hello,
-> > >=20
-> > > This patchset is our exploration of how to support 1G pages in
-> > > guest_memfd, and
-> > > how the pages will be used in Confidential VMs.
-> >=20
-> > We've discussed this patchset at LPC and in the guest-memfd calls.=C2=
-=A0
-> > Can
-> > you please summarise the discussions here as a follow-up, so we can
-> > also continue discussing on-list, and not repeat things that are
-> > already discussed?
->=20
-> Thanks for this question! Since LPC, Vishal and I have been tied up
-> with
-> some Google internal work, which slowed down progress on 1G page
-> support
-> for guest_memfd. We will have progress this quarter and the next few
-> quarters on 1G page support for guest_memfd.
->=20
-> The related updates are
->=20
-> 1. No objections on using hugetlb as the source of 1G pages.
->=20
-> 2. Prerequisite hugetlb changes.
->=20
-> + I've separated some of the prerequisite hugetlb changes into
-> another
-> =C2=A0 patch series hoping to have them merged ahead of and separately
-> from
-> =C2=A0 this patchset [1].
-> + Peter Xu contributed a better patchset, including a bugfix [2].
-> + I have an alternative [3].
-> + The next revision of this series (1G page support for guest_memfd)
-> =C2=A0 will be based on alternative [3]. I think there should be no issue=
-s
-> =C2=A0 there.
-> + I believe Peter is also waiting on the next revision before we make
-> =C2=A0 further progress/decide on [2] or [3].
->=20
-> 3. No objections for allowing mmap()-ing of guest_memfd physical
-> memory
-> =C2=A0=C2=A0 when memory is marked shared to avoid double-allocation.
->=20
-> 4. No objections for splitting pages when marked shared.
->=20
-> 5. folio_put() callback for guest_memfd folio cleanup/merging.
->=20
-> + In Fuad's series [4], Fuad used the callback to reset the folio's
-> =C2=A0 mappability status.
-> + The catch is that the callback is only invoked when folio-
-> >page_type
-> =C2=A0 =3D=3D PGTY_guest_memfd, and folio->page_type is a union with foli=
-o's
-> =C2=A0 mapcount, so any folio with a non-zero mapcount cannot have a vali=
-d
-> =C2=A0 page_type.
-> + I was concerned that we might not get a callback, and hence
-> =C2=A0 unintentionally skip merging pages and not correctly restore
-> hugetlb
-> =C2=A0 pages
-> + This was discussed at the last guest_memfd upstream call (2025-01-
-> 23
-> =C2=A0 07:58 PST), and the conclusion is that using folio->page_type
-> works,
-> =C2=A0 because
-> =C2=A0=C2=A0=C2=A0 + We only merge folios in two cases: (1) when converti=
-ng to
-> private
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (2) when truncating folios (removing from =
-filemap).
-> =C2=A0=C2=A0=C2=A0 + When converting to private, in (1), we can forcibly =
-unmap all
-> the
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 converted pages or check if the mapcount i=
-s 0, and once
-> mapcount
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 is 0 we can install the callback by settin=
-g folio->page_type =3D
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PGTY_guest_memfd
-> =C2=A0=C2=A0=C2=A0 + When truncating, we will be unmapping the folios any=
-way, so
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mapcount is also 0 and we can install the =
-callback.
->=20
-> Hope that covers the points that you're referring to. If there are
-> other
-> parts that you'd like to know the status on, please let me know which
-> aspects those are!
+On Sun, 05 Jan 2025 16:03:02 +0100, Christian Marangi wrote:
+> Add Clock Controller node for EN7581 SoC to correctly expose supported
+> clock for any user in the SoC.
+> 
+> 
 
-Thank you for the nice summary!
+Applied to v6.14-next/dts64, thanks!
 
-> > Also - as mentioned in those meetings, we at AMD are interested in
-> > this
-> > series along with SEV-SNP support - and I'm also interested in
-> > figuring
-> > out how we collaborate on the evolution of this series.
->=20
-> Thanks all your help and comments during the guest_memfd upstream
-> calls,
-> and thanks for the help from AMD.
->=20
-> Extending mmap() support from Fuad with 1G page support introduces
-> more
-> states that made it more complicated (at least for me).
->=20
-> I'm modeling the states in python so I can iterate more quickly. I
-> also
-> have usage flows (e.g. allocate, guest_use, host_use,
-> transient_folio_get, close, transient_folio_put) as test cases.
->=20
-> I'm almost done with the model and my next steps are to write up a
-> state
-> machine (like Fuad's [5]) and share that.
->=20
-> I'd be happy to share the python model too but I have to work through
-> some internal open-sourcing processes first, so if you think this
-> will
-> be useful, let me know!
+[1/3] arm64: dts: airoha: en7581: Add Clock Controller node
+      commit: 7693017580e9be839fa5f27130bb6500f3597595
+[2/3] arm64: dts: airoha: en7581: Add SNAND node
+      commit: 8e2e6908a8919a8608866626e5b3bcf242f90b38
+[3/3] arm64: dts: airoha: en7581: Add default partition table for EVB board
+      commit: 34833a6f17f6ea99fa9d7788d93221f610061d23
 
-No problem.  Yes, I'm interested in this - it'll be helpful!
-
-The other thing of note is that while we have the kernel patches, a
-userspace to drive them and exercise them is currently missing.
-
-> Then, I'll code it all up in a new revision of this series (target:
-> March 2025), which will be accompanied by source code on GitHub.
->=20
-> I'm happy to collaborate more closely, let me know if you have ideas
-> for
-> collaboration!
-
-Thank you.  I think currently the bigger problem we have is allocation
-of hugepages -- which is also blocking a lot of the follow-on work.=20
-Vishal briefly mentioned isolating pages from Linux entirely last time
-- that's also what I'm interested in to figure out if we can completely
-bypass the allocation problem by not allocating struct pages for non-
-host use pages entirely.  The guest_memfs/KHO/kexec/live-update patches
-also take this approach on AWS (for how their VMs are launched).  If we
-work with those patches together, allocation of 1G hugepages is
-simplified.  I'd like to discuss more on these themes to see if this is
-an approach that helps as well.
+Cheers,
+Angelo
 
 
-		Amit
