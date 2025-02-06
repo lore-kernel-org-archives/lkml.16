@@ -1,121 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D33B2417DB;
-	Thu,  6 Feb 2025 23:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46ACB2417DB;
+	Thu,  6 Feb 2025 23:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738883297; cv=none; b=FImE3warO9Mz2ONjYeE1YsF/5Uuw/qCCnBl4nFS3P7d5JgYLWzELWll/nc0TQLiG30vdzPvbFpulKvz5TSbYAMQUDGBUAIuRs6oKmsandoR4sgZ/WUXsHKaNX9edhKpQnUJ80e7bF7D5CwL7vngdF5Q4hP7q7H2cDv9q+R0Gqns=
+	t=1738883377; cv=none; b=r9ephxbPmU4dVaPQhCHVp0QaJqkgbRebHWMEOHYTMTc1Jy7UU/l8YCC8j3+/eZTmiNUW4YM8rWsVLwCoN6K+oXmiU3c+8J4beGN8TTU1gh2pfud2Q+UEti0RzdHD8po05XWBWqHlw5fHNdEi9eZ47nCdDYrQx3AzHgsDXAVRlSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738883297; c=relaxed/simple;
-	bh=8FQjlt3C5deoEd3QTWe6DpBujfDYWMzaAktnGf/Yy8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RaiB3LHU3LLJRbbFQR/QcsFH1kkwvtDgb2UCwPsFRNH89bmB1ccQbKH/uWxMh5d1wobDeU6FcO5BakISmnJAH8amf+iEPHqGAipvHVhwGviL7b1oT/WDK0iUZWAjOyTQwF1HO37iPR7K2zygcNtusMZfRQQHqURtiDsilOvcRrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GFrR/kaG; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738883377; c=relaxed/simple;
+	bh=KfxhyXrH38jjr1oqIcH++dTxi7xm/REBXgyIzG8a2dU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cpIoFDvDA5EIlGsyr7TLG7aUEzCLuNyWycvH2wpIO6RhiXKQgGcn0Jx/LxQUioMQzVClSt0BmzPDvSMRCEKvrzQDHgQTbMetvbl7V+WMjuJVMr9jpihJi0j/yUDzqb+ZnzywOa4xFs5AdQPaIM5mH4xdDhwQ7AG0woxbVOUjMGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FGy3IzmX; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GFrR/kaG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738883297; x=1770419297;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8FQjlt3C5deoEd3QTWe6DpBujfDYWMzaAktnGf/Yy8Q=;
-  b=GFrR/kaGTcgxSukrCjSzG4wEJ3Q2WFVT/4uqYASL8F9ncXfXok1RaGUJ
-   fvYuPYzH16VZoSy+6Ptk2PqhX9yEYfTuFtZyNaEXdPcvKYzqnNhuTw9Z7
-   EBDaBcLLMwFfGWx75B0Cvp0K66VN6alra8+3rwK1AwJGGMP9jq3giyk1g
-   5dVW4JlRS40jcjwP5ilMs3I51QxZjSlWsVTQJhET1cytnzreikG3H0ra8
-   4531BqFXgGD8qMmw0GXfjkJtCpNUtUE4NbFl9HEK38MdTbAVbPCIav1MH
-   qqBqQgNrAEYYrSARY6Bp40+X0YQAhwszAlyYM4XNzgjaFTiZVxcHV3zHO
-   w==;
-X-CSE-ConnectionGUID: C1wzMDjwSCKgf3sMBSnbeQ==
-X-CSE-MsgGUID: ouLZ0NfeTe6yLxfJg4NP6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39386959"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="39386959"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 15:08:16 -0800
-X-CSE-ConnectionGUID: YQVnzYR3RTaXyjNwIey8ew==
-X-CSE-MsgGUID: HsYuZ7nGSKynKtEpwK4/Bg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="111186737"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.17]) ([10.125.111.17])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 15:08:14 -0800
-Message-ID: <e60b9d9c-01aa-4a87-8701-d5f18a5f4240@intel.com>
-Date: Thu, 6 Feb 2025 15:08:16 -0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FGy3IzmX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1738883357;
+	bh=rGqsljqGMX7xEW53BsyCyCBBe2QrE7QcUxT5WZRLVKg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FGy3IzmXSbGBahEdQPHj8MOOBoyIBKgjssNxyHUAGzxQ3IBBfFYrweun5bKy8FY2q
+	 pcyoQB1rUGRsUJC7qqUcewe6qWh/xzyffffT7ERAWFJpr8NVur9s9v0D/YZ7u6Wr0A
+	 th+4r0kv3NP8D3IUXQzB8EAmdu1VrideJohu10JqTGyTxCSjnJkL0qGFBGA7WXRJK2
+	 u20R8qkxYFdPlcewzV8lM2Hqfqlbs74hpF54U45O7TAPjNQJfRtstMzXfajuSJgGqd
+	 YwbfCHPJ4Aj5a9MPbftseQDHr43go9tBqIVpZ87+28Pz1Oiw6IR4FS4XegXgSpj0qq
+	 7e9m0Ts0r47xQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Ypt8X72l3z4wcl;
+	Fri,  7 Feb 2025 10:09:16 +1100 (AEDT)
+Date: Fri, 7 Feb 2025 10:09:25 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>
+Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tty tree
+Message-ID: <20250207100925.73f9acba@canb.auug.org.au>
+In-Reply-To: <2025020621-feeble-attire-0611@gregkh>
+References: <20250206135328.4bad1401@canb.auug.org.au>
+	<647d4d6b-615d-4c0c-b001-fab43fb7ab4d@genexis.eu>
+	<2025020621-feeble-attire-0611@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86: rust: set rustc-abi=x86-softfloat on rustc>=1.86.0
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Alice Ryhl <aliceryhl@google.com>
-Cc: x86@kernel.org, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250203-rustc-1-86-x86-softfloat-v1-1-220a72a5003e@google.com>
- <CANiq72kv_wE_ESNsW9qDiwnJkaoFb+WERJ6p796TCPAdK838Fw@mail.gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <CANiq72kv_wE_ESNsW9qDiwnJkaoFb+WERJ6p796TCPAdK838Fw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/_fsqgrR7x9TBSqbQS3By+qM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-First of all, thanks for cc'ing the x86 maintainers on this! I do think
-it would be best if you take this through the rust tree though:
+--Sig_/_fsqgrR7x9TBSqbQS3By+qM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com> # for x86
+Hi Greg,
+
+On Thu, 6 Feb 2025 09:14:02 +0100 Greg KH <greg@kroah.com> wrote:
+>
+> No, you should allow COMPILE_TEST to build the code, right?  Odd that I
+> can't build it here for some reason, I guess I need to enable OF on my
+> test builds...
+
+An allmodconfig build (even on x86_64) will do that ....
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_fsqgrR7x9TBSqbQS3By+qM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmelQSUACgkQAVBC80lX
+0GxqJgf/ZurobKHBqOrwdRzdnGc9u6wqcJv+jwrbiGsn6hMJzxcKSA7y8HKBREQ0
+mMn8EmggAprpn1YALkdMqO5A0rmFVPA+UrfLnnScZproEG2CLYXbmWur109aRddL
+R8yy4YPRS7cSyMbVqc4CSN+oYOhp3GcHsafBede4bUQVmLzhJJ+PlOLUcWbjreGV
+FhsaYZGyao7gHC/tD9880zbgyWdmCVnNryOTxHl9jb8KPHZ+qyO64MwhLSirXd+M
+zYfFT9U+niW3EghWUX5qvWAD6ajVZHBlr4H2qe3ADpnQeJ8T3KRWVpaofWnyKV9P
+LCW1e6IVSGPWYW4GeMh/06KTB+S12g==
+=iqlh
+-----END PGP SIGNATURE-----
+
+--Sig_/_fsqgrR7x9TBSqbQS3By+qM--
