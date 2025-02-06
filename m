@@ -1,125 +1,184 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0472E22257A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FE1524C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738825123; cv=none; b=e693q37Ct/AriE5ZPNhl0XskVex7j6sZSioxDQemSAEVZAvCLjyxpnjUAUF7aLIimvLiLIyuX0LqRiItHQ5QvXAT51nBgdKSIr/e6idlXylU1kphs7g6Pn2LSoWdyOkumnm1q3bC33fDiT5JH0QbvlmfBztZtHvWsYVMv9kyQbk=
+	t=1738825280; cv=none; b=oYzZ6N+v7gkT8iIC7M6nYEuL6bkEkjiEvXS76f/oSXXV5H9AL6mNZlsbihiKY54xzdCnWBiMs1luDPPkKFzbm6oc8R3VeSWXMIL0NhrCwjMaPAMffMAa3uLU2MA6VDCFJex5q5yJHD9rDKPmtEfMYcjl1XRIEdzAfBypjbrmqmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738825123; c=relaxed/simple;
-	bh=og3Aq1IjApPzY4pBlRJEpp2monYtKZMRFoZcCbo2WO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=g+TUOccyIKHocrh4bYdNWaj6DUiTyJCrTy1WFEe6GOlHqFDk+Jc4BNCIXdsD6h46k3TNsCrv5MPQKmYCHYrKpwV13+ojGq+66P25g6fmTpSI4T3TgfSTxscFp9vsjPadyfDkzrcYMTrtOq7wmsLM1o7rKv6i89HthCwXVGME2W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=vmnDxC7G; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1738825280; c=relaxed/simple;
+	bh=HSaiirMl170KNbwnqMjHyurpX7M/VsNxhb3VJsCI4M4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G73QZB9UTyqekSZ12cX2q8ndUvSD7RRTzkLwak+XqFBlhM8bfMXZjpZnJ0E/bWPjXXG5Ipy8YnaE1o0VPGQ6RXO3flBPs1ODsmxUZ1eEp0JERd8NfTjQQbjYPdxqhzRqnudcMmo88jcKriWPXgEomPwTC1Q3zLICQ6GCy57vOzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JdvPxkf8; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="vmnDxC7G"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f16af1f71so8572875ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 22:58:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JdvPxkf8"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21ddab8800bso8670385ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:01:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1738825121; x=1739429921; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MfkFHRY4BuNO95W0YyldJMDcWeJ1g/mRAGw+u9+CPB0=;
-        b=vmnDxC7Gxchxw1LtQ3i7bSdlDrG0ebeWraoMP4rauxsI9uiJ5x+WxrDyHSIEWhrb0p
-         wjraVaFlMkv16b6IYjG27lol78/n506Ws//dWuJ4sPiUyma+6x3CiRJVc7ZjhHFeEneU
-         yA5j0VaFe53ATkXIMJJ8zr1nAuQT1R2TpUOwnainI2C6d7kh4p4AmArZOLGoJ197SCFs
-         ngwx3rOENpKJlGX2wy8DLXNzl8vDSmoNgSBWiI3zfDp7FyKrxW9qDdhRXo4i61+y8DFm
-         kkfGhfHGGr3rrXObj5zbMB/3FQTxXVU397KqaGCwtPQKG0Qcs+9FdemWZTsf+yuamk0/
-         Hpgg==
+        d=chromium.org; s=google; t=1738825278; x=1739430078; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sxNsy78Ojle1Pdtt2/9uoDPHjLQXKw9uXc9cm/JVoXs=;
+        b=JdvPxkf8SjV+/NH8f+hyoPq4IpjYG/XsC8uUbiYw0XkKisJBmQ8O8LrwSoYOThB49C
+         kDPoMbO8l9m+bwk+Nmr+uCAwnmpurdHdU0dbLCM48pddiu8WhbmjtYyxCkC09TxCiOqt
+         YoW9pJi+1QLCvu86lF2hf3tsZeG0KaTSQE6rM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738825121; x=1739429921;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MfkFHRY4BuNO95W0YyldJMDcWeJ1g/mRAGw+u9+CPB0=;
-        b=YWyEoHUS/4JPB+JcWmZa3yyN3SWF1rCtgj9IKdTIUCxi/th3yXPNg2SnXZ2RevNdqJ
-         2vqaMqqIa0k58FYXOEwurNCXvfz7REbxkqRQPH7ComYd3foQ8teKf70LBS9unpzovtED
-         bIesmZZ5ogqaGRYREwwbpfNjWaPrP9Mv96ESsshjKfbDT5SR2jIrS9/AbHHCUuwBiXPQ
-         KrR/fXMfut5vC4rGl/p/GdhRnGzhFwR8kacSlIPjFZzImCMD6KoXuIVzQrIBo8/aMn6/
-         goeQamSq177FIRXkujXky5soqTrWe329q2Rmnxi7HMPs+JgtSSREaAk2HhimyAZIHfGP
-         nckQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGDFTrrXCxrBrDHJiFel2ou14xcEaqiQZMY3+m+QToeg6ZutVV60xskmYURNWE/AdUNPGgm9jnMlYATo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7gSmHvar1UT7DAx+g+1RojqUMgvk+xApseXRc2ApRw78xgutv
-	vJPG8dmtbfZeDhQFvq84FDGpWfT8f9DODacNSAwkjPzKwfq1bo/hVNggz2pUaJg=
-X-Gm-Gg: ASbGncvM0wEc9rEjw+EYXA0M3RKdPKMArFpS+EpDm958aTD6uQJ4fU2mNxBbBvwGiC7
-	43coiWSJa87AIM21qkx7d9NRuuFPGT0gZrGW5eHhnC2q5alaaKly7VQ6Uumq89KG9QgGygshIb8
-	LTG/Ll1XRM6sGHOIblug/wUh7eJRp+sPsbn3uTa9sDILW0WUj9k8oXz4cOxzYMY31cJ88XwXT6Q
-	Us+A1huoCbynzw2vRexmkn5GsDrEeruk20KKcBj2Y6BltD96ev1N7aqDZLy1VR15/6OS4OXlKj3
-	Y0iTYV39FrzmDqTbzCMV+XOLfk4s
-X-Google-Smtp-Source: AGHT+IHSHvbDEBE36nUTLqiZtQMOf3j/rI2OoIwM0kMRTh5vyxMjVD4DwGY5i/68BnM7I5tCX5GUew==
-X-Received: by 2002:a05:6a21:1805:b0:1ed:a6d7:3c07 with SMTP id adf61e73a8af0-1ede881f0b3mr9719443637.4.1738825121065;
-        Wed, 05 Feb 2025 22:58:41 -0800 (PST)
-Received: from [157.82.207.107] ([157.82.207.107])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ad292dsm590546b3a.61.2025.02.05.22.58.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 22:58:40 -0800 (PST)
-Message-ID: <1c2a1bd6-9ce9-47d8-b89d-1a647575ce07@daynix.com>
-Date: Thu, 6 Feb 2025 15:58:34 +0900
+        d=1e100.net; s=20230601; t=1738825278; x=1739430078;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sxNsy78Ojle1Pdtt2/9uoDPHjLQXKw9uXc9cm/JVoXs=;
+        b=g6PlEivXTtALXOGXaQM4CW11ZCbBOya0Kn6dACWtAuSTHa+DETNt2MiCWyJGcz3QJ4
+         gIjvgFShVNtWe4kXUtpKXACu2Lp1calezADt/WVLcKJ8MI9CL39KFTLiD8Vb+oW7w8Dr
+         B1FTltJBFEuw2317fZrCXFe4Ll3yRdofRdkU9K7mY0zJDG6NLCPRzKhhHiobVN/g6bhq
+         HPaQjvE6Nbcry7MPp7XvViXXS2UjiaybHvSRsEgqWUhWl7yv87FJjhirb87AoYE0ScdQ
+         YVNOD/rbEDSC9PhyD9YNg73VyBErK8xzYOg5UrtZYfP3lGbJip8lpUNBeb6tsIexeS/J
+         UjOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYDqZ/3SlUSAKMCaaOx28QrinuVPLZZYSvzyFwIjFX2cz1tRLxyBQ0hJav5DlHjwN7eJ473KvtMBNArcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM156QsOn02wyZHgJzHMBTvvDN+rqHH3YViBJEZ2I4wcZ6amLP
+	I00/rhrJg/KBGyuJfyiTPUZiLu0S3lbXOBgsHpctYsoImm9k0+Hp3Ehrw4Oq0n8Tx1169audJxk
+	=
+X-Gm-Gg: ASbGncvAIOyd/BKvQiVDxJg7a/VqNe/60yH9RLTcXh28QbWZRqfkdPUIGeYiwBENJLF
+	GSO8bBON12O6hj6lVHyahV0UoFEwPdHKrOb2wh2ma1ipTSNWQr6Uov5rVeGKWO7FUpPgYmC9LnD
+	OXbI2XD8FchCES1xDghjz3xsUPRCEwi0/C+CgeFxvCoiW2j5+hWJumuFqRMyvzqU8LIlCX3SF81
+	Rd/ZF+Ht+MSKx2agIQ9dgx8cZa2P+kpToTj2qtX/ipFsxn4mN8RLwowu3bct1fvK7NdYinUkTmC
+	s9oCopxjPmrvxBIp16E=
+X-Google-Smtp-Source: AGHT+IG4YvkGAKTcjpC9qozwv2pX6qryRKN7DcO5vmBTThC2QwtQnRZvkBNlJbFGOMFGr5/DKovTAQ==
+X-Received: by 2002:a05:6a21:a44:b0:1db:de38:294b with SMTP id adf61e73a8af0-1ede88ca7e2mr9801666637.38.1738825277996;
+        Wed, 05 Feb 2025 23:01:17 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:28ab:cea4:aa8a:127a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d903sm596092b3a.13.2025.02.05.23.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 23:01:17 -0800 (PST)
+Date: Thu, 6 Feb 2025 16:01:12 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Hillf Danton <hdanton@sina.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Mike Galbraith <umgwanakikbuti@gmail.com>
+Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
+Message-ID: <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-2-senozhatsky@chromium.org>
+ <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 5/7] tun: Extract the vnet handling code
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Jason Wang <jasowang@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, kvm@vger.kernel.org,
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
- Yuri Benditovich <yuri.benditovich@daynix.com>,
- Andrew Melnychenko <andrew@daynix.com>,
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com,
- devel@daynix.com
-References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
- <20250205-tun-v5-5-15d0b32e87fa@daynix.com>
- <67a3d44d44f12_170d392947c@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <67a3d44d44f12_170d392947c@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
 
-On 2025/02/06 6:12, Willem de Bruijn wrote:
-> Akihiko Odaki wrote:
->> The vnet handling code will be reused by tap.
->>
->> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
->> ---
->>   MAINTAINERS            |   2 +-
->>   drivers/net/tun.c      | 179 +----------------------------------------------
->>   drivers/net/tun_vnet.h | 184 +++++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 187 insertions(+), 178 deletions(-)
-> 
->> -static inline bool tun_legacy_is_little_endian(unsigned int flags)
->> -{
->> -	return !(IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) &&
->> -		 (flags & TUN_VNET_BE)) &&
->> -		virtio_legacy_is_little_endian();
->> -}
-> 
->> +static inline bool tun_vnet_legacy_is_little_endian(unsigned int flags)
->> +{
->> +	return !(IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) &&
->> +		 (flags & TUN_VNET_BE)) &&
->> +		virtio_legacy_is_little_endian();
->> +}
-> 
-> In general LGTM. But why did you rename functions while moving them?
-> Please add an explanation in the commit message for any non obvious
-> changes like that.
+Cc-ing Sebastian and Mike
 
-I renamed them to clarify they are in a distinct, decoupled part of 
-code. It was obvious in the previous version as they are static 
-functions contained in a translation unit, but now they are part of a 
-header file so I'm clarifying that with this rename. I will add this 
-explanation to the commit message.
+On (25/01/31 14:55), Andrew Morton wrote:
+> > +static void zram_slot_write_lock(struct zram *zram, u32 index)
+> > +{
+> > +	atomic_t *lock = &zram->table[index].lock;
+> > +	int old = atomic_read(lock);
+> > +
+> > +	do {
+> > +		if (old != ZRAM_ENTRY_UNLOCKED) {
+> > +			cond_resched();
+> > +			old = atomic_read(lock);
+> > +			continue;
+> > +		}
+> > +	} while (!atomic_try_cmpxchg(lock, &old, ZRAM_ENTRY_WRLOCKED));
+> > +}
+> 
+> I expect that if the calling userspace process has realtime policy (eg
+> SCHED_FIFO) then the cond_resched() won't schedule SCHED_NORMAL tasks
+> and this becomes a busy loop.  And if the machine is single-CPU, the
+> loop is infinite.
+> 
+> I do agree that for inventing new locking schemes, the bar is set
+> really high.
+
+So I completely reworked this bit and we don't have that problem
+anymore, nor the problem of "inventing locking schemes in 2025".
+
+In short - we are returning back to bit-locks, what zram has been using
+until commit 9518e5bfaae19 ("zram: Replace bit spinlocks with a spinlock_t),
+not bit-spinlock these time around, that won't work with linux-rt, but
+wait_on_bit and friends.  Entry lock is exclusive, just like before,
+but lock owner can sleep now, any task wishing to lock that same entry
+will wait to be woken up by the current lock owner once it unlocks the
+entry.  For cases when lock is taken from atomic context (e.g. slot-free
+notification from softirq) we continue using TRY lock, which has been
+introduced by commit 3c9959e025472 ("zram: fix lockdep warning of free block
+handling"), so there's nothing new here.  In addition I added some lockdep
+annotations, just to be safe.
+
+There shouldn't be too many tasks competing for the same entry.  I can
+only think of cases when read/write (or slot-free notification if zram
+is used as a swap device) vs. writeback or recompression (we cannot have
+writeback and recompression simultaneously).
+
+It currently looks like this:
+
+---
+
+struct zram_table_entry {
+        unsigned long handle;
+        unsigned long flags;
+#ifdef CONFIG_DEBUG_LOCK_ALLOC
+        struct lockdep_map lockdep_map;
+#endif
+#ifdef CONFIG_ZRAM_TRACK_ENTRY_ACTIME
+        ktime_t ac_time;
+#endif
+};
+
+/*
+ * entry locking rules:
+ *
+ * 1) Lock is exclusive
+ *
+ * 2) lock() function can sleep waiting for the lock
+ *
+ * 3) Lock owner can sleep
+ *
+ * 4) Use TRY lock variant when in atomic context
+ *    - must check return value and handle locking failers
+ */
+static __must_check bool zram_slot_try_lock(struct zram *zram, u32 index)
+{
+        unsigned long *lock = &zram->table[index].flags;
+
+        if (!test_and_set_bit_lock(ZRAM_ENTRY_LOCK, lock)) {
+#ifdef CONFIG_DEBUG_LOCK_ALLOC
+                mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET_IP_);
+#endif
+                return true;
+        }
+        return false;
+}
+
+static void zram_slot_lock(struct zram *zram, u32 index)
+{
+        unsigned long *lock = &zram->table[index].flags;
+
+        WARN_ON_ONCE(!preemptible());
+
+        wait_on_bit_lock(lock, ZRAM_ENTRY_LOCK, TASK_UNINTERRUPTIBLE);
+#ifdef CONFIG_DEBUG_LOCK_ALLOC
+        mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET_IP_);
+#endif
+}
+
+static void zram_slot_unlock(struct zram *zram, u32 index)
+{
+        unsigned long *lock = &zram->table[index].flags;
+
+        clear_and_wake_up_bit(ZRAM_ENTRY_LOCK, lock);
+#ifdef CONFIG_DEBUG_LOCK_ALLOC
+        mutex_release(&zram->table[index].lockdep_map, _RET_IP_);
+#endif
+}
