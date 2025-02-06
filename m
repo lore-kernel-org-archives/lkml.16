@@ -1,91 +1,62 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B1CDF60;
-	Thu,  6 Feb 2025 02:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD655136358;
+	Thu,  6 Feb 2025 02:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738809773; cv=none; b=VMiiSTdWxgMdLY1H0eUsLEwMzT4IZna58gySutF2BQd+UayASdTDlwJ42rwo26iByJRMIWBUMW9ZR2sGtdKqT3yJ1cR/fjHrpPu+zjoctP6m9TydygHV2PI5pL0gagjnX/L92FaOAwkqJ8YdieqabyTfphnfe2F19IjGAv1pNUo=
+	t=1738809801; cv=none; b=r9BQElYj3shGV28v3hsAPttKeJ6+gbjSmKserICo+S5i05im74jrvD28CUDOZYlHP0KdlgXmwaNJ7ipbmpGDzV5X8LW7SXqQfoe2go5M8B+V3fz811arNKDS710hlmzZHSP9SHXO92B9hvudeP+sNnaGz8LNCF2JnNLaIJ/9i2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738809773; c=relaxed/simple;
-	bh=obPsUTG9l7hlhoWWnQW+m78FONuYS+mMfGdELNaNUaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S04f4BnG8N8AT3yZBhrfc7VYmihADWCtqxyxURFqBYhNWYOmX5rsXTozVU8g1rhE5E9WoWSRliDjBrYRyveuZSw+rcYHWDBSGDJsznmIFJdYs6jXuJzxN+srMkF6ZDoAqRVw2Een+uJkErhdGVRr/BFGthiar4sHbWnMVFPl9yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Nt/IXHmh; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738809801; c=relaxed/simple;
+	bh=ZEZDfgRcu52nvjxYE1DABkW3ziDj/VmxqBcRU7+YjN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tPsLN5nbmipqJjV6nhceG3mQazCjsIM9ZFe/nHSfE/3FC0YLNXNd46lEA984AYDSB6lCuKn4thW/xl6vR0k6LFQ3YoiwnzOGYMavjUssZl7juB8S4RCWpvjaF02L8EWPCbQKURqA/aMD/SSPvS9GH7jICVCpTBdOJZ1Qzx7NZj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/NVjRFw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Nt/IXHmh"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738809766; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=tl7YeugdbGjrRop0ZKiaKnPCf8v2adSmHAleD7lAl1E=;
-	b=Nt/IXHmhE4NpZhZn562IsLZsRVMHjxb58869sP0HfnnXUZPcz346vuQ/eBGmA4wpc5HfbSf5eGtADI3dqyNgiPOgdcbQDbhwZCgR08VlW7tfaZVmuSPPOlcWyp9e7cwYMh07aJA7J8NrW/85BjhwLWoRT6U25XtGGiCIUbisQ2A=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOu.C-h_1738809765 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 06 Feb 2025 10:42:45 +0800
-Date: Thu, 6 Feb 2025 10:42:43 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	rafael.j.wysocki@intel.com
-Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
- hotplug events
-Message-ID: <Z6Qho7k_zj7NcA37@U-2FWC9VHC-2323.local>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
- <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/NVjRFw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0706C4CED1;
+	Thu,  6 Feb 2025 02:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738809800;
+	bh=ZEZDfgRcu52nvjxYE1DABkW3ziDj/VmxqBcRU7+YjN8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M/NVjRFwwIeAlxAKwgqOQTxrjZ4HeZLqVBqnX+eAs1OFPx6mnpNOSMc6ulQMtg6IR
+	 +FbqmzDG9jAUQhZ1pADXN/+Satl6CiXL7KHkE2uCYxYVRTWaoOKlvCMA7BgfgCNE52
+	 oF0B7OZbfVdVdTf4V/a6IMH0w7DuV2iCVdnZC6JiRl9D+GBpWlLAueaPmws1v9Ss5w
+	 fb6hj9GpxF9MHcsfLtX699hTovKmsPG+9wrI5ZCUu2Gb8vJFRNkZtMBHMk9BIV2/QE
+	 ETgh5zQ/sF67roxw7wd3EKFD7C6k+Icdou0sd7y+SW4ytFVqjyZButdy2EqxQQX/51
+	 RQFnxIl6g1RSQ==
+Date: Wed, 5 Feb 2025 18:43:19 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Long Li
+ <longli@microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>,
+ Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, Erick Archer
+ <erick.archer@outlook.com>, Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH 2/2] hv_netvsc: Use VF's tso_max_size value when data
+ path is VF
+Message-ID: <20250205184319.360d2ca0@kernel.org>
+In-Reply-To: <1738729316-25922-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1738729257-25510-1-git-send-email-shradhagupta@linux.microsoft.com>
+	<1738729316-25922-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Markus,
+On Tue,  4 Feb 2025 20:21:55 -0800 Shradha Gupta wrote:
+> Therefore, we use netif_set_tso_max_size() to set max segment size
 
-Thanks for the review and reminding!
-
-On Wed, Feb 05, 2025 at 06:48:35PM +0100, Markus Elfring wrote:
-> …
-> > Add the necessary wait to comply with PCIe spec. The waiting logic refers
-> > existing pcie_poll_cmd().
-> 
-> * How do you think about to add any tags (like “Fixes” and “Cc”) accordingly?
- 
-The code went through some refactor, and the related commit should be:
-
-	commit 2bd50dd800b52245294cfceb56be62020cdc7515
-	Author: Rafael J. Wysocki <rjw@rjwysocki.net>
-	Date:   Sat Aug 21 01:57:39 2010 +0200
-
-	    PCI: PCIe: Disable PCIe port services during port initialization
-	    
-	    In principle PCIe port services may be enabled by the BIOS, so it's
-	    better to disable them during port initialization to avoid spurious
-	    events from being generated.
-	    
-	    Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
-	    Reviewed-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-	    Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
-
-Add Rafael to cc.
-
-> * Will cover letters be usually helpful for such patch series?
-
-Initially I planned to send the 2 patches seprately as they handle
-different issues, but as 2/2 will reuse the helper function added
-by 1/2, I put them together. 
-
-> * You would probably like to avoid a typo in an email address.
-
-Could you be more specific? I got the mail addresses from get_maintainers.pl.
-thanks!
-
-- Feng
+I think the term "segment" is used incorrectly throughout the patch ?
+Isn't the right term "superframe", "aggregate" or some such ?
+-- 
+pw-bot: cr
