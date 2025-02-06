@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FAC2A8D0;
-	Thu,  6 Feb 2025 01:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D5214286;
+	Thu,  6 Feb 2025 01:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738805540; cv=none; b=ta9AQzQEF3cGzRqIFzpi42sZYJhgDPU3UDDerpbaJhVNy/392aKdDbNtNN86jHEx1sXlnw9wd0Q6tSyB0drdRhEiSwEOv5LTN7WS92LgFE8+voJHD1sE/mwJJES99mArm42urqt0UcaSevTcRuudciBp0xhaiKp22xFhOGU45NA=
+	t=1738805759; cv=none; b=HV+Y7cZ6xUnZ2e6F+Ht0bX1HiVZXJabolbG57oFWmIK8OX/7dNoyNseYVApt/uzFGBa7IxmaMJRtKr4njSTnuSU2kvCUNkMtgqBhwnoYA7njx4GDwsIIbHTzY9IdfGQhrH5MlqqYa1ijfVjg5d8KWxyxZBdtgok7tguxgsFZO3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738805540; c=relaxed/simple;
-	bh=SZUfLrOq5zFNJDq8tAihCiFfZ15937c+cni40sXRVgQ=;
+	s=arc-20240116; t=1738805759; c=relaxed/simple;
+	bh=Q4HZdbCcFW4AQEovlCAaAVzNXUQINEtWCnz78X28Sx4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uWi171AfvYbUa4KotEYdxS/cRQy4WsCLhMY5yzJXFUwIiAzQ7xLvHtC7x/BrsvfnIOV3Pw0gC3NfcDoLG9/orB1Kuqur6CPYSJUPQebZBTijywZ3TruI3tqu94malFsaX6izH4OFGk+n2+5tr0H/nhyHnBdP8fVFIqQWG79VDjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbjJQVjz; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=KMO+gKnEcdKDg7oXZNyA05COXYXdEFGzydVKgN0ydBwi6nszuY5V3c5JOVDYv5gOe+2V1CvDkT2z7MI4W3YW5668NG83PVTDb+b+p8aLDnZjT9cMjn5nSCaQXsigcg1Jwi9AiwhjnmB9iXS2jdd4Wh3/BxYgj7kSUorSqiOhV+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxVZoZov; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbjJQVjz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738805538; x=1770341538;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SZUfLrOq5zFNJDq8tAihCiFfZ15937c+cni40sXRVgQ=;
-  b=nbjJQVjzTV/YJQBYEIETYAV9RZ8/n2GNHxGprIEvrwdEfH5tu+B1SODv
-   38Xeuls3eaZTMI/WMVLD8DoDVzwUL+gcwcAQBktow8+pe+hNUOsu0G1CV
-   43fO2Kh07n4/GpFOn77SCP3Miv52BhVa5lkig+bL8N8pgPOxpNWq7l/L8
-   8X+f2nUKtvglmkd2OHLBve6UF5t+P2XjyH4JUIJ3riqln73PnFVAPB3tW
-   6SGtNVUysa6yKn74xweNh5GgG4oqBwaNA7w5dlmkdMrmzx3q/VExM4jX0
-   qB0y0Mw1XUBsGh+2pBgYQRr76UBIDNvCeBY3GGq0bIO6Cz5ZSaHMgbEI1
-   g==;
-X-CSE-ConnectionGUID: dTo1V/vtRKynkuYib3uWkA==
-X-CSE-MsgGUID: AECJC0WRTkiOcCLeHz55NQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26996302"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="26996302"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 17:32:16 -0800
-X-CSE-ConnectionGUID: qzTUOincTQuh3bw99CXjRg==
-X-CSE-MsgGUID: P6M9K01nSLqfWcroKRzTNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116258824"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 17:32:06 -0800
-Message-ID: <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
-Date: Thu, 6 Feb 2025 09:31:46 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxVZoZov"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF07C4CEDD;
+	Thu,  6 Feb 2025 01:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738805758;
+	bh=Q4HZdbCcFW4AQEovlCAaAVzNXUQINEtWCnz78X28Sx4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lxVZoZovRsjVLxMvu190nbANVY20g3GPuLMXGaOqRLlnJpS+r+lHkQZOtUEwh7dPn
+	 tP3HFnwrYcULRk5cgcy5/EkyJLtcPTeWJk3HR45f1FgANhyo2WBpuD8JVq28pBo8Yk
+	 grdyB0eqQ4okADAe/GMCTFVamhmOYSq4Mxagl2dZ7bMptv52of1uRl21FDW4RBJ+yT
+	 j8YULjoCqlm7QLQgwpuIsDOovIhTdT7OsMyRGoQeLD9IS0TbjBJDaY8u5raFP2ygNm
+	 311iY6SFyL7LdKsrQ4I1rbfn1W+9lA5dDtaqRC6LqAUuE0YaivP9PmgRfAj3tUYcov
+	 a85wubjW9NZ1w==
+Message-ID: <fa54a148-6016-429b-b494-490041564e51@kernel.org>
+Date: Thu, 6 Feb 2025 10:34:53 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,70 +35,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/20] perf/x86/intel: Add PMU support for Clearwater
- Forest
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-2-dapeng1.mi@linux.intel.com>
- <20250127162651.GL16742@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2] ata: libahci_platform: support non-consecutive port
+ numbers
+To: Klaus Kudielka <klaus.kudielka@gmail.com>,
+ Josua Mayer <josua@solid-run.com>, Niklas Cassel <cassel@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Jon Nettleton <jon@solid-run.com>,
+ Mikhail Anikin <mikhail.anikin@solid-run.com>,
+ Yazan Shhady <yazan.shhady@solid-run.com>,
+ Rabeeh Khoury <rabeeh@solid-run.com>, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250101-ahci-nonconsecutive-ports-v2-1-38a48f357321@solid-run.com>
+ <bcfa145c3227b13e7b9d8bb3b0f92c678464cfdc.camel@gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250127162651.GL16742@noisy.programming.kicks-ass.net>
+Organization: Western Digital Research
+In-Reply-To: <bcfa145c3227b13e7b9d8bb3b0f92c678464cfdc.camel@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-On 1/28/2025 12:26 AM, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2025 at 02:07:02PM +0000, Dapeng Mi wrote:
->> From PMU's perspective, Clearwater Forest is similar to the previous
->> generation Sierra Forest.
+On 2/6/25 3:03 AM, Klaus Kudielka wrote:
+> On Wed, 2025-01-01 at 13:13 +0100, Josua Mayer wrote:
+>> So far ahci_platform relied on number of child nodes in firmware to
+>> allocate arrays and expected port numbers to start from 0 without holes.
+>> This number of ports is then set in private structure for use when
+>> configuring phys and regulators.
 >>
->> The key differences are the ARCH PEBS feature and the new added 3 fixed
->> counters for topdown L1 metrics events.
+>> Some platforms may not use every port of an ahci controller.
+>> E.g. SolidRUN CN9130 Clearfog uses only port 1 but not port 0, leading
+>> to the following errors during boot:
+>> [    1.719476] ahci f2540000.sata: invalid port number 1
+>> [    1.724562] ahci f2540000.sata: No port enabled
 >>
->> The ARCH PEBS is supported in the following patches. This patch provides
->> support for basic perfmon features and 3 new added fixed counters.
+>> Update all accessesors of ahci_host_priv phys and target_pwrs arrays to
+>> support holes. Access is gated by hpriv->mask_port_map which has a bit
+>> set for each enabled port.
 >>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
+>> Update ahci_platform_get_resources to ignore holes in the port numbers
+>> and enable ports defined in firmware by their reg property only.
 >>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index b140c1473a9d..5e8521a54474 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -2220,6 +2220,18 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
->>  	EVENT_EXTRA_END
->>  };
->>  
->> +EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
->> +EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
->> +EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
+>> When firmware does not define children it is assumed that there is
+>> exactly one port, using index 0.
+>>
+> 
+> [...]
+> 
+>> @@ -625,6 +651,8 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
+>>  		 * If no sub-node was found, keep this for device tree
+>>  		 * compatibility
+>>  		 */
+>> +		hpriv->mask_port_map |= BIT(0);
 >> +
->> +static struct attribute *skt_events_attrs[] = {
->> +	EVENT_PTR(td_fe_bound_skt),
->> +	EVENT_PTR(td_retiring_skt),
->> +	EVENT_PTR(td_bad_spec_cmt),
->> +	EVENT_PTR(td_be_bound_skt),
->> +	NULL,
->> +};
-> The skt here is skymont, which is what Sierra Forest was based on, and
-> you just said that these counters are new with Darkmont, and as such the
-> lot should be called: dmt or whatever the proper trigraph is.
+>>  		rc = ahci_platform_get_phy(hpriv, 0, dev, dev->of_node);
+>>  		if (rc)
+>>  			goto err_out;
+>>
+> 
+> This very last hunk (when firmware does not define children...) causes some change in behaviour on my Turris Omnia
+> (Armada 385):
+> 
+> 6.13.0 bootlog
+> ==============
+> 
+> Feb 05 18:30:45 xxxx kernel: ahci-mvebu f10a8000.sata: AHCI vers 0001.0000, 32 command slots, 6 Gbps, platform mode
+> Feb 05 18:30:45 xxxx kernel: ahci-mvebu f10a8000.sata: 2/2 ports implemented (port mask 0x3)
+> Feb 05 18:30:45 xxxx kernel: ahci-mvebu f10a8000.sata: flags: 64bit ncq sntf led only pmp fbs pio slum part sxs 
+> Feb 05 18:30:45 xxxx kernel: scsi host0: ahci-mvebu
+> Feb 05 18:30:45 xxxx kernel: scsi host1: ahci-mvebu
+> Feb 05 18:30:45 xxxx kernel: ata1: SATA max UDMA/133 mmio [mem 0xf10a8000-0xf10a9fff] port 0x100 irq 40 lpm-pol 0
+> Feb 05 18:30:45 xxxx kernel: ata2: SATA max UDMA/133 mmio [mem 0xf10a8000-0xf10a9fff] port 0x180 irq 40 lpm-pol 0
+> 
+> Previously, both detected ports were automatically used, and no warning was emitted.
+> (hpriv->mask_port_map was 0x0)
+> 
+> 
+> 6.14.0-rc1 bootlog
+> ==================
+> 
+> Feb 05 18:36:40 xxxx kernel: ahci-mvebu f10a8000.sata: masking port_map 0x3 -> 0x1
+> Feb 05 18:36:40 xxxx kernel: ahci-mvebu f10a8000.sata: AHCI vers 0001.0000, 32 command slots, 6 Gbps, platform mode
+> Feb 05 18:36:40 xxxx kernel: ahci-mvebu f10a8000.sata: 1/2 ports implemented (port mask 0x1)
+> Feb 05 18:36:40 xxxx kernel: ahci-mvebu f10a8000.sata: flags: 64bit ncq sntf led only pmp fbs pio slum part sxs 
+> Feb 05 18:36:40 xxxx kernel: scsi host0: ahci-mvebu
+> Feb 05 18:36:40 xxxx kernel: scsi host1: ahci-mvebu
+> Feb 05 18:36:40 xxxx kernel: ata1: SATA max UDMA/133 mmio [mem 0xf10a8000-0xf10a9fff] port 0x100 irq 40 lpm-pol 0
+> Feb 05 18:36:40 xxxx kernel: ata2: DUMMY
+> 
+> Now, hpriv->mask_port_map is forced to 0x1, resulting in a kernel warning, and no more ata2 available.
+> In my particular case it is not a big deal, since nothing is connected to the 2nd port, and I can live with this obscure warning.
+> 
+> But that might not be the case for everybody?
 
-Sorry for late response since the Chinese new year holiday.
+Can you try this to see if it restores the probe for the second port:
 
-Sierra Forest is based on Crestmont instead of Skymont. The 3 new fixed
-counters are introduced from Skymont and Darkmont inherits them. So these
-attributes are named with "skt" suffix.
+diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+index 53b2c7719dc5..91d44302eac9 100644
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -651,8 +651,6 @@ struct ahci_host_priv *ahci_platform_get_resources(struct
+platform_device *pdev,
+                 * If no sub-node was found, keep this for device tree
+                 * compatibility
+                 */
+-               hpriv->mask_port_map |= BIT(0);
+-
+                rc = ahci_platform_get_phy(hpriv, 0, dev, dev->of_node);
+                if (rc)
+                        goto err_out;
 
 
->
+-- 
+Damien Le Moal
+Western Digital Research
