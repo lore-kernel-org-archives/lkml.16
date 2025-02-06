@@ -1,245 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA771FCCED;
-	Thu,  6 Feb 2025 05:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8194015199B;
+	Thu,  6 Feb 2025 05:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738818543; cv=none; b=qoVbdSQ4uASqXZhWaMtDMwtaP634adPKqbMZ33zfWue8Jwuh1IRS3FV1V8lnz+egZrhjUQiGBKFoxPvCj4sUf5z34clhiLr9AHzk3WlMZcampw6kz5XdqeNr6l3wNcPV0e/cGumr/T8dQdWfJ2WOjFg6Zstxg7zQxfzVgJdgfCo=
+	t=1738818629; cv=none; b=LLZplug9wkoxvEE693un3tzVS5FWBYmSnWH/OlFvtOdeYH9nOpBZj+QIzoNLXEyLX61YRYF3ljM5gjglt6gyTZVYsQtQ/t9hQchQfVe9gprWEgzMjxlc0oDIAT0OIYkvDjEfQ3+8P5xWkJLYCa2lIrtjKQAUMpDotXklZJrJews=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738818543; c=relaxed/simple;
-	bh=BM3EHrnwN7ELuwzLXads97EF6hGC4Psya3GZjPkDWsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JwCjkVDxkToMNoCypXyV9QjPacIwkN4zOzdWIxvxA5tOgV6tNzbNwi0LXKB0sbjv5XDLBffkAFzqVJwvpfinT6a/QBTJzkKW6wP6ulzT6+2G9uUpF+Syp8LCej/cktoU5EWNMOMPlt54PMhKPhS1V60wPp082K3OVLS3QRerIlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSql8nxU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738818629; c=relaxed/simple;
+	bh=l2fRbC/KyDGRVWRfklYmQ9B54PElxVsWGK7Y7BlAfmU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=HgFZoSI8QNzIaFqinA3JsZDMavUl63JWCQOYyi/6V3aMAtjKZSzw9NrO67pJGKXVpwT7mjxrQV6vevVwEGlPnFle8GfXNCnetLa2AmC4/qEtX3klKhEHGxIpqGtYYX4ONTwh8NdpBJ9GmLisQzimnWIc+T3P0wKuIV87MpgcSdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=gC27h4W+; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSql8nxU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34721C4CEDD;
-	Thu,  6 Feb 2025 05:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738818543;
-	bh=BM3EHrnwN7ELuwzLXads97EF6hGC4Psya3GZjPkDWsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSql8nxUuNkMHi0BTlIlo9nxun/736F0fVTV5XtseR8DLwgbLm9WidEJIx7G2O40u
-	 1gCyKtFn7uufd+DwXLf9vBzx99V6KnErRoxKWYHPdAu0xj4T+EvPqAB2DtSL6vZCJR
-	 VCDoR3WONPZ/T0TUu5J8Hz/3O20piX8fxQmAhwXrU9rjqnjUlFaL/hMrgnzBFxGKCu
-	 KadSxiveBHqJ96KVT5y+RNng/qucUvJCdGJyg/Z4muygIG7NSOwKHLvakdhDEuqDp+
-	 Tz0Czvw0w+/hxDR8bSZUgDxQN8PWFDbWz2IcnoexiH2T95vrSk9iMM1Pi1n7XUJgyv
-	 qxEBT5Ge4nD8g==
-Date: Wed, 5 Feb 2025 21:09:00 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Atish Kumar Patra <atishp@rivosinc.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
-	Beeman Strong <beeman@rivosinc.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-Message-ID: <Z6RD7NuT9IPhOkIV@google.com>
-References: <Z4f3fDXemAMpBNMS@google.com>
- <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com>
- <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
- <Z51RxQslsfSrW2ub@google.com>
- <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
- <Z6FcHJFYGc7HzSna@google.com>
- <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
- <Z6LFp5jiED7_-weN@google.com>
- <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="gC27h4W+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738818624; x=1739423424; i=w_armin@gmx.de;
+	bh=QXxQs2r+/obX6urWVSa+feM5gKDWPYKwhY4TuX5EafM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=gC27h4W+RpZtomkNGiDUE15D4eA9hPiZ65/w8zy22c7B64XAZc/fBL+a+kLKvoJu
+	 tIvpU/m0D2CUYWBJZDj4wTFs/0uKiNWg0Bhcmrgu/oVtH80H3IDS/4KnGr0H1AwEq
+	 Z9neFjC4CFYQaFryUhi777JULg36pa8pZqe23oKcTfmN/skJES0uZ9SkAgxjLYvTL
+	 BGH651WTO205w0uh9tWL0utJX0WB6e1tUkqMuO+lzsXlPa0J8g/xqPbPnaAMC7lIC
+	 193VY9QFmNefwyEiiJoOpoL9MqRHByMFXerws9NMnrZTEWUsSIF75G7VFQGmCbSzf
+	 WLu6HXCodJ2hx/MUdQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.238.232]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBUm7-1tZ4Xf1FOh-008gUz; Thu, 06
+ Feb 2025 06:10:24 +0100
+Message-ID: <b88e683e-9c9b-4c0f-9aab-0d3020064a53@gmx.de>
+Date: Thu, 6 Feb 2025 06:10:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: fenghua.yu@intel.com
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+From: Armin Wolf <W_Armin@gmx.de>
+Subject: Wrong CPU core numbers with the coremtemp driver
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:vVNH7tYnWc+jTuZ3lPaVMMta+gPZ0MNMiLHYjpSshOJcphEAi8T
+ 63jhcK6evTRItH86d1Jhj2WA+oSQ5UpywfBMdj7ag83G2dFOZrOf1fH9yG1a+TZRet4PaLW
+ nS5v0xjf2pm3ycSFFNk8yGZKhNProFlNYjcnWO/unFSHeqTehnIUNdHwIxAdt50276i10iu
+ NgZNkgxg2apNSSvaYGx1w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7V6b1GaOuvw=;VoJILjbrJSvQG8FUUOqpUbHfLCb
+ gcrJxD4fPWTGtUwO36M/UwguJHenNc/Q938ATZ9W0TKEgfXY52HevgVNyORSuSdyaMXNVD6nb
+ aCNxNmZLIF98aLwCz3FQhIrchAU4Th7P31mkBxsKl6MqCWdoa8/DgJonaQBQIm2+IssIyLBRf
+ HutEdZKlvZMnx3IFLAY+AxGlw9YQ+uBgUkFMU5P/y1DynSc6PAATh6AFVU9wxaOk2yG5gSBv6
+ f5m/VhU+SYUP4+iO0uooKUJ/3Kx+5VeR6xiUwxln6r2V1POxpMlOol0ENBZd6n4uw/H0v+Y0L
+ SP0u/54mDIdyU6RB17vXCRFEZk2fhvZmCHhZXlbqomY4evLYCUZtwEpDKp7aIKNEd8ABULX8r
+ 67FGKblAt3qYmjzVPbKMQTVPRKbPFKBpto7QlTmXvy4geiLIhoDHo1lYmIyiDJzmy+nX87VN2
+ iRVOq/u9uJnJwk/Q2tPZoLIMqU7/USXuZitFvxCYakWmrmcuThDtl1gSt9Lwyes0n7MU85aB0
+ MIzlIzg+xJ/JiU3sjXPtIFAlzvl5BN2PNoMEQRyL2qHaSN8m/TJTHEfpcTLehlZDHd8wEX+0w
+ IybZS7CGsVl3b23IopBvKlK6k96QS5etvqtMM6FgTTLpRVav//2bOWF/kE2rSbYMwQCgffftJ
+ p/U6VgzaHdhvCNwMmuh+cq0YKSJBLmRq/nmHvgPpOqtAzzJoszDRZmyAbIyPihdx31NUGy3rk
+ dheKgonhuE0AEw5qDyLxxH3A+W8Y0RalkLiaIpa7rl5xKjHgHfcu12IItT3nCABQ09rOS9PeA
+ Sgl44b1usQ2aAS0aXqfyt88UMsGCEzgCe55Ar3LhsOp5ahPMDAQcL4dGxL51nP7S6aJgzfYvG
+ RX0gu9b3HT4q1QI/Ap8YtHk9Ox55N1uX3e0WuWpg59M9KdH+WHjZKJehATanhCYryAsSEpK9Q
+ ryohbraMm5g3WVOlbG6QWGdftXIXfx3j64jc3/UYM7lnukY6KAOPMFGP2vCyLjVxjsCj1tW4S
+ uEkBDtWmkPS0YnXRsGDOkcZJOVfusutQjChjxJjBNjNbZ99ZZwG4A1VoaJjuViXKyDKL0x8ku
+ vwvutd36Qts5wTaXLw/nPhOzaYsdwWVnexmMkflqFa5tFwIHkE35KJqpcKEqsPJzV6g4CGsp8
+ fAqcSOcNYdCoRpKbaC2xreU9E0kfLdrEnYVXgiqZB0nAMCH45h7mN3biXEHTl16CNrqJj4Ojs
+ lyeVabGbr6TFsVvGmxYQdnI6KHYbTNr/TzqxBMe4iLTu4rQ5Rwf6ONqLMEqmMsxtK+R+pgcb9
+ z10c95kbbXwhgHvzRnil40msEcWnhNvKCYvvhto/j+mDixoCO5j5B4i98DewqxetJrpdc6LhB
+ 1uBlP6XeKxjOU+A9PvTvQsED+3ERd7ZfWqh2KT1uDdrcBK2fQ1O4fpBRCV4VM+0SmBAhCMBBq
+ g+QVSEt619GSwRjKV1x3ClGOLoK8=
 
-On Tue, Feb 04, 2025 at 08:48:20PM -0800, Ian Rogers wrote:
-> On Tue, Feb 4, 2025 at 5:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Feb 03, 2025 at 04:41:11PM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 3, 2025 at 4:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > [snip]
-> > > > Yep, I agree it's confusing.  So my opinion is to use legacy encoding
-> > > > and no default wildcard. :)
-> > >
-> > > Making it so that all non-legacy, non-core PMU events require a PMU is
-> > > a breaking change and a regression for all users, command line event
-> > > name suggesting, any tool built off of perf, and so on. Breaking all
-> > > perf users and requiring all perf metrics be rewritten is well..
-> > > something..
-> >
-> > Well, I guess the majority of users don't use non-core PMU events.  And
-> > we used to have PMU prefix on those events for years so old users should
-> > not be affected.  Actually perf list shows them with PMU prefix so I
-> > think new users are also expected to use the PMU name.
-> >
-> >   $ perf list pmu
-> >   ...
-> >   cstate_pkg/c2-residency/                           [Kernel PMU event]
-> >   ...
-> >   i915/actual-frequency/                             [Kernel PMU event]
-> >   i915/bcs0-busy/                                    [Kernel PMU event]
-> >   ...
-> >   msr/tsc/                                           [Kernel PMU event]
-> >   ...
-> >   power/energy-cores/                                [Kernel PMU event]
-> >   ...
-> >   uncore_clock/clockticks/                           [Kernel PMU event]
-> >   uncore_imc_free_running/data_read/                 [Kernel PMU event]
-> >   ...
-> >
-> > The exception is the JSON events like below.
-> >
-> >   uncore interconnect:
-> >     unc_arb_coh_trk_requests.all
-> >          [UNC_ARB_COH_TRK_REQUESTS.ALL. Unit: uncore_arb]
-> >
-> > which I hoped to be 'uncore_arb/unc_arb_coh_trk_requests.all/' or even
-> > 'uncore_arb/coh_trk_requests.all/'.  But it would be hard to change the
-> > all metric expressions now.  Also users can directly use them as they
-> > are listed by `perf list`.  So we need to support that without PMUs.
-> 
-> So there's nothing wrong with your proposal except it breaks non-core
-> events. We can't agree to flip the default on a flag for perf top:
-> https://lore.kernel.org/lkml/20240516222159.3710131-1-irogers@google.com/
-> to make perf top behave as, you know, top does as it could be an
-> option people depend on. A behavior that matters if you do user
-> filtering as exited processes stay in perf top (both confusing and
-> un-top like). Fwiw, that reminds me of another patch series being
-> unreviewed:
-> https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
+Hi,
 
-Ok, I'll review that later.  Sorry my review bandwidth is not very high.
+a number of users complained that the coretemp driver displays wrong CPU core numbers on some systems:
 
+	https://github.com/lm-sensors/lm-sensors/issues/486
 
-> Anyway, the perf top flag is one that no-one knows exists on a command
-> most people don't know exists - Julia Evans' zine of course loves it
-> and we love Julia's work and the zine.
-
-You mean the -z flag which is documented in the man page and also it the
-help message (perf top -h).  Anyone can read the doc can know it's
-there.  Of course, people would prefer reading zines than man pages. :)
-
-
-> So, it would seem to me that
-> changing something as fundamental as how all non-core events behave
-> would be seen as a regression.
-
-Yep, it'd be a regression.  And that's why we cannot simply change the
-behavior.  But I guess not much users would be affected by that since
-it's undocumented behavior.
-
-
-> Imagine the person going to
-> perfmon-events.intel.com, finding an event name and expecting to be
-> able to use it with perf. Now they need to grub around in perf list to
-> locate the PMU. What is appropriate for them to know about how
-> suffixes work and show in perf list..? Well that's assuming suffixes
-> work in the future as ARM will probably launch an a1000 CPU and the
-> PMU will look like a hex suffix and the whole naming convention
-> implodes.
-
-Which suffix do you mean?
-
-Anyway, the person looked up the intel webpage would be eager to learn
-about performance related things.  Can we also assume if they also want
-to learn about the perf tool itself? :)
-
-If it's not the case, we have this:
-
-  $ perf record -e xxx
-  event syntax error: 'xxx'
-                       \___ Bad event name
-  
-  Unable to find event on a PMU of 'xxx'
-  Run 'perf list' for a list of valid events
-  
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
-  
-      -e, --event <event>   event selector. use 'perf list' to list available events
-
-So it says twice to run 'perf list' to see the events.  Then they can
-run either:
-
-  $ perf list | grep xxx
-
-or
-
-  $ perf list xxx
-
-to see the actual name of the event available in the perf tool.
-
-> 
-> Even with this what would be the behavior of core events? You want
-> legacy events to have priority over sysfs/json when there is no PMU.
-> You know, and have stated not caring, RISC-V wants different and that
-> it breaks Apple-M's PMUs for a fairly large range of kernel releases
-> including 1 LTS kernel - the only reason I'm writing patches in this
-> area in the 1st place. Software is soft and you can go fix software
-> anywhere in the stack. Listening to vendors and not breaking everyone
-> is the point-of-view these patches have been coming from. I find it
-> very hard to have a conversation where this is just forgotten about
-> and we're working on hypotheticals which seem to be both unwanted and
-> implausible.
-
-Sorry I don't want to repeat that too.  Correct me if I'm wrong:
-
-1. RISC-V is working on a solution with the current status and it's not
-   absoluted needed to change the current behavior.
-
-2. Apple-M is fixed already.
-
-> 
-> I don't know why people (yourself, Linus) keep wanting to show me the
-> perf list output. It is arbitrary. I rewrote it and changed the
-> behavior of all uncore PMUs within it (we didn't used to deduplicate
-> based on the PMU suffix). It is nice that people think it reads like
-> some religious text.
-
-I think it's what we want users to know how to use the events.
-
-
-> Why is the formatting different in perf list for
-> json specified events? Well it is because json events have
-> descriptions and the events you are showing with a PMU don't have a
-> description. I think because there is no description, an effort was
-> made to keep the output compact and put the PMU and event name
-> together. It wasn't trying to enter some kind of long lasting marriage
-> that the event name should only ever be used with the PMU.
-
-I like the description but I don't like the formatting.  I think I
-understand why it looks like that but it could be different.  Anyway,
-I don't think showing PMU name is related to having descriptions.
-
-
-> What happens if an event is both in sysfs and json? Well the sysfs event
-> will get the description from the json and then I believe it won't
-> behave as you show. Did the event get broken, as perf list no longer
-> shows it with a PMU, by having a json description written? I think not
-> and I think having descriptions with events is a good thing.
-
-That's bad.  Probably we should fix it takes only one of the sources and
-change the JSON event not to clash with sysfs.
+Any ideas on how to solve this?
 
 Thanks,
-Namhyung
+Armin Wolf
 
