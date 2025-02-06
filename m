@@ -1,63 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BA81A5B8A;
-	Thu,  6 Feb 2025 23:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21A11D9A66;
+	Thu,  6 Feb 2025 23:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738883524; cv=none; b=BKN+qx5UwKhRcPZygPkqdR6JqmVpMDEGIHetGrwSPopQPDLVlM1K8IIN4y5xaVJY6EZ8FQZ+2IkdrNhHTl9tpyMDEC07wXCGtnvchhnQLrw0fTWJz17nVrYIY69KIaeV2iube9KbWuT7gL0SzquOAwnzriM8JsTOyfSedy37M7k=
+	t=1738883533; cv=none; b=djbX9njRDoZyNWg8OzlETGAGIEmG2JKAlAfL2lMJzZ2xsaXOvzDJuxcC9T2tN05iihZgmRgQEwOPj62omU7UtehhRXzJmLzbwZCMUEXqA59ThFSVG9GSy4o8mqre/tkhrPZpOAxQ9Q95MVciaFS/SaHgD7f9c+tvV2Uwj+/vNvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738883524; c=relaxed/simple;
-	bh=ZK/7DgiUCypzRJYLffPZjfN2UrT6nmKJM+6+XasLcyQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=bzG8JdzC38IzATIv21tGbRxtJqofjo+mGorSfPyBVNMWReu7FBZJ7rqlTRGf/peP5wBSnZfiKcwPIrJI9Ru2Jd2jIFIPKBn3HO2iDQXrFm6r5e/vJzTbprGRt8KtBxiuNKocINK3VqbhsZtYCIHbCL4ne1Ys8gTlEfqaiS1Af1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOxV7Awl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738883533; c=relaxed/simple;
+	bh=T0Wj0kmg/cSO81RHPcQC5+556wt9IZ2fZ3r/H844l0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aHak9jF3DPMNTSRvdvrCL3NZyPIjBxHoH6cwBejclgPz4ZJOht1vAUTnwGNRNc2vYPJCxskJ2Hkn545SRhgf7GG5bQzAr82e94LQanA0SSe7GN4fteu+AYfa701qnVnnHbb40TIz98bTl6nu9L7Ha5oqGobW2UYfELn/4rDzs2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IbEFh/Q6; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOxV7Awl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C1DCC4CEDD;
-	Thu,  6 Feb 2025 23:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738883524;
-	bh=ZK/7DgiUCypzRJYLffPZjfN2UrT6nmKJM+6+XasLcyQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=oOxV7AwlBsftJ5uUQDB46aYEqMiqyqU4bMi1M36R7JoggyAJQ+fCofDt+RIhqqvQ1
-	 0wwXnt9ocyfzNWzf96rLikOmGd1gxS/uPnHlZa3soeuwDL+Ku+u4yvzfhZ1HBGOFw3
-	 9C294a3eIbNqQurN+gmh8QR0C9r8uU7x0nx9ADyQohm0lMI8Tk6ZGTHTntXDpaOrLH
-	 ml5LxOgq5kf/+l7Bv8sR7ZZrE8G26C7780jic8UDRRB6ue4aJ4tmsDzzWvGxK433Tw
-	 LN57LwfnXoUmRyCrpR9L/rue8DMUC4CrKQC8UVqeJjoiENqUJQI1qbbLxHCYUieaF5
-	 Eq8jw0xfPnbtA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 341F8380AADE;
-	Thu,  6 Feb 2025 23:12:33 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.14
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250206194642.GA999100@bhelgaas>
-References: <20250206194642.GA999100@bhelgaas>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250206194642.GA999100@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.14-fixes-2
-X-PR-Tracked-Commit-Id: 6f64b83d9fe9729000a0616830cb1606945465d8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
-Message-Id: <173888355181.1693200.6359934363919903996.pr-tracker-bot@kernel.org>
-Date: Thu, 06 Feb 2025 23:12:31 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Wei Huang <wei.huang2@amd.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, =?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, Tasev Nikola <tasev.stefanoska@skynet.be>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbEFh/Q6"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f45526dea0so292308a91.1;
+        Thu, 06 Feb 2025 15:12:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738883531; x=1739488331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T0Wj0kmg/cSO81RHPcQC5+556wt9IZ2fZ3r/H844l0o=;
+        b=IbEFh/Q6AxPXCSeNRpZM1yp71wkHDqg/itKbYLjHPCs9JBvSe4qU2Qe+AyLRFQUATi
+         UdZuiGX/OICAQx/e70bbqt8e5bfrIe6ZlKqEXldqX2pINWimJZa8/tN8G/57325o5jhl
+         zrOgFK0Gq+zzz3aj+s/n+rXvHZHwDmqoxlxJXV53A2XIdtW1trpwVIqUfyTRJfTI4rCO
+         8s1uFzFziKQKtFky+IRaWxcyzk77WiuZLRuhpDCuBJWI29XKpN+43Cn4KD/K9Ut2geyz
+         uvnOA8wJMHuv3P0ApqllKwnuxkLFzaRdN+BVPXAcVPJSEAoryc7khRhCk8+eYY7Y2utA
+         Ly9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738883531; x=1739488331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T0Wj0kmg/cSO81RHPcQC5+556wt9IZ2fZ3r/H844l0o=;
+        b=wgP13LYOd5/vPQivTE6tLJ/8hNgVrixaa9wUb4fwWtMBeVWQeMJQd96J53bEKLbTiD
+         GLAVRhp21pHaHHsh9KqI4brdYac/x/UC+Q8Xkg4CbiGfi7JwrTY9k6bbbcwiIt7pPFv0
+         SeH/VtJ8n9J657pPa0modhX8NvxfFSdKQscR1QLJFm6+1f9MPZNKijEsgsnPEMdctolp
+         1/hgCrQfih1uCSPBNFvJa324j+xOYV/jAphKDMO1vS5zvoNtePv6UnrkDLyOVuUlfmbr
+         +bRZ1w7ldoAMGXlv6yuru2TIxqAO3fdEEV6TTJl6JdRyqxT/p8sETx2O6+GHSPZHbVtv
+         xewQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKr6rFzERhkQNHw5E0DizIXwmxPO1AmhPsQMMTuLV6bqDppNCEgQuYbtsSxpWbQYGoisqs2ffC@vger.kernel.org, AJvYcCWJhkeNKrPAiV1ftm3M12zLr97Ol/xYkU5htYMu0lOofqIObSUvWa02aA8HV0e0ooS2krVyleqb7hwRhW4=@vger.kernel.org, AJvYcCX6vKsrD6hf10b93RnGJ6TpR/BHr6yd7/SgCf7JxpSJkILLK0c/LBQpz1yN1Iqd9p8zEpYXCjxHNd6/Lg23w64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuxHBRhdh1263oQZaV41Scr8Z7T37af8AxdXI929L4Li/3AcJx
+	dI4tt7m6ph/sLEg/zKq6yhOJJNpx/diwBC1tLtJ+0UhdaZmvIoiLIU3Bldt6muyNg2hLTCrpB2R
+	wbI0gGYcOSlKCBGtYXsdj93EEbc0=
+X-Gm-Gg: ASbGnctbFscLInruYMuq/qUnshmO5VROf40UlGFKhXAR6unmE4Z9OxKv59Mr8MtITrK
+	WXEdzr60Pf6IZKmZISpeAwkc4uTNob+q+TK/dkR9ivgoL9A9bheA4veSvH9T4mVJD7qL1AgbO
+X-Google-Smtp-Source: AGHT+IEirwjMb2+Tte/ztOzcJVc6rz5/I99KNyU1w//C/vKkgniRyBjJrBeJwRRFR+mH2QpV5DbHOFYSgB6R4pJZWfc=
+X-Received: by 2002:a17:90b:1b44:b0:2ee:b665:12ce with SMTP id
+ 98e67ed59e1d1-2fa23f5ea82mr562072a91.1.1738883530889; Thu, 06 Feb 2025
+ 15:12:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250203-rustc-1-86-x86-softfloat-v1-1-220a72a5003e@google.com>
+ <CANiq72kv_wE_ESNsW9qDiwnJkaoFb+WERJ6p796TCPAdK838Fw@mail.gmail.com> <e60b9d9c-01aa-4a87-8701-d5f18a5f4240@intel.com>
+In-Reply-To: <e60b9d9c-01aa-4a87-8701-d5f18a5f4240@intel.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 7 Feb 2025 00:11:57 +0100
+X-Gm-Features: AWEUYZlN2l6DrxgrKrDDZ33vCZBQLuGXYij2RPkQSeOXJ--doc7yq3sVTxPUKS0
+Message-ID: <CANiq72kQhY8fh6tu-N17SDqEoz27-f6HXOTLnuua7FFKdXPT=A@mail.gmail.com>
+Subject: Re: [PATCH] x86: rust: set rustc-abi=x86-softfloat on rustc>=1.86.0
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, x86@kernel.org, rust-for-linux@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Thu, 6 Feb 2025 13:46:42 -0600:
+On Fri, Feb 7, 2025 at 12:08=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
+>
+> First of all, thanks for cc'ing the x86 maintainers on this! I do think
+> it would be best if you take this through the rust tree though:
+>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com> # for x86
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.14-fixes-2
+Great, thanks!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Cheers,
+Miguel
