@@ -1,117 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8E019D065;
-	Thu,  6 Feb 2025 18:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C121419D8A2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865819; cv=none; b=Z9+pYfnhjx/PTgpS6pkLOEXjum85K9FSzR8YNR4pQQJxq3yXcYjCw0TRcazHDvTUp/YaJGJwoiv5oNtbYAPSJhcc8dgUZ0NifVsTUD50XZEOt2xRvfF+ujr+/WBGgZrIPxDOt/VgQJ/PS2Rt8v+XFFNC1DMq9zWyM/uHcpY1noo=
+	t=1738865842; cv=none; b=rW8eV8uPMS47pYINSh62b65nAK0XhqWhBVdIMiWgLdrBcnB13Y8FyXBdUhNctTkXXeRb3CAz8tUO+GuMeZu1O+zThlTsdILcOdYf8J9ytJ8vhuml2Q9FrmB42WsxLI7wnhEZna2/W4PcYjZ9ZqcO7GEeTjcouQXWuDxmbq7c/s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865819; c=relaxed/simple;
-	bh=Rp16LPq4atzj/2x6NItOSbnkpm6bl24xu//HZAo9K8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J58JVtApoBeP8uncbnwkKgotzXSr5NLwt7y6wFCsbU+08SPVH2h2B0Y/VG8QAOJHyQfFge4BnhuqhKFQd0Q5qLgSWXJG7N19VuyPM+N7wQDhODvWygX3gbf4WRyvMrepGWPdw7ifJ8Q35r4pmsJN22NRa2U8RexWLEPc48wwZ8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qB9g1E0u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738865842; c=relaxed/simple;
+	bh=197lp3kzwItmnztsj2amEy4Ts4sUwvD5wd25DtZFya8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GN5WZmKYjTyiLpyZHde2DOQO7Rl+x7VKBxHGgsGenQRKxMGEQZEyB0t+6vAvQ261QpErCKTkD5Z4ufrtQySeOrAU1TjCZcL+tbSlMAC/MfcP5R0Ra/HmWnx9CqlQrz2zUfMsWIUhVf7q7ytx3Sd3XV5CU+lYk3DpFKRFqLCWBlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FFeOuAHu; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qB9g1E0u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10616C4CEDD;
-	Thu,  6 Feb 2025 18:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738865819;
-	bh=Rp16LPq4atzj/2x6NItOSbnkpm6bl24xu//HZAo9K8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qB9g1E0upVXKf0Yi89P9uYwDsXu+vZgSSwkQpbE5V2oFXY8LoptD3sOxNwtoptx87
-	 clCr33SJRha6h0v2A6pMZeFLQ6d+TR+gJXJln4QEaUyaFvkp67cfsw1mxCWowxmb1X
-	 YGwUfyV8zs2Wj7E31uzj6Djs4CtPalJlM2BGGiaP9KU0KmSwBK6ICwILUCbtXye1ul
-	 68vA3W4AM3+h/ByFlP20AfuXtcR3PzTLa4aBr1m3L+xZq+Zv2be7ImGkxAvENhcgCP
-	 B+eWVyimrgWPKZ8iRiGAyNP9+TYR08CY3b2pRnD9LLio+/oYpAzk2L3z+F3KQ5TwfK
-	 Res/TuGNQBJ9Q==
-Date: Thu, 6 Feb 2025 18:16:55 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: ROHM BD79124 ADC/GPO
-Message-ID: <20250206-supply-mortality-a2eca6c6a0fc@spud>
-References: <cover.1738761899.git.mazziesaccount@gmail.com>
- <4e6cd143d3e896587528a415c8623ecd610fac55.1738761899.git.mazziesaccount@gmail.com>
- <20250205-stalemate-shorthand-5a29fbc4081f@spud>
- <76858097-10a8-403d-83a1-f70064f97a6c@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFeOuAHu"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5439e331cceso1519460e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:17:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738865837; x=1739470637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5MVWUvrz6I/EjcUog/wJCigSBALMduOPBpWQgvDyB4o=;
+        b=FFeOuAHutN34rCWmRwBmVPING5Ib3EZINfkYy6HfqWluVEWJRLaxVVeteS4Wa0KTTR
+         KrrsDGOnbu7QS42Gun+ZpJSmaFc5BIkp20EOlq6R7Nev0DSZx6J+gVMpSDeX4oU0mPUr
+         Ifk60wpQX2/8Nk8ucszSWP7nJ53LExgPLOGNI6zRM6209XwrcTEgMWN63UogJUzDq3NU
+         5rUrmCqp7NPQqiQk32Xk4gEPm9NH6+9wTQtsw5H1QixGZzCUci9Ujdy+MMZ1mzl+gufE
+         fCmWCnpqXO7aTHP0uhpM7WIXbotRbxhuQs7zCVQ+ZksnfHLx30b/oC/VdCRelvuVx5FZ
+         JiAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738865837; x=1739470637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5MVWUvrz6I/EjcUog/wJCigSBALMduOPBpWQgvDyB4o=;
+        b=tjthTMecaN0iFhKY19h3sFRnQCLIS4hwJ/5IQOdyKzh5mltDGa18hbB6tlwNxzLNLT
+         k8E1g7nYI1vDIqzBsH/WVubyZYN+7Bzhmgl+2gpg2biCTvaFoIJQAMeir4jORaTJq8tX
+         M1UW2vsvPpEXG+yJwg9XTvkx4zKmYzIr4f/Af9JAo1LSuQqkAocaAMk8LxeqXkcQswSh
+         wyjBUC1UlnSETMKKfDCfGqeT38xr2YArqesktpJt8engS3g7to0vFfzQYgUSGeMSMPna
+         WBddM9dg5AldAEwVh5m0fjsYHe/iOv5Fo9xKuten623LhBREJ0aH8TWA4Q3XGGqL2LsV
+         lULQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNLEq3miNH6Pz6D3ShbFQeuX0XT9VV5E5RgULZhIponhH9h1zy0IsJfzdAcFvPV/xI7yYM13ZtCPii7l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6w628G+nh7uE2U5uD/M+m48+zX5ytiNtdGxVbf88kSALhwyKv
+	HqyI/aqeBWT6JS0LlAHyAG7m2DiLny2O4ALyAnNSaobkiFzbTIo0fhJ3acSseIho6Tx4l61NEsJ
+	jovd1RNg611dswqBV/DNV1izow9cJjAHAoANfIw==
+X-Gm-Gg: ASbGncsJr3a+tu/SqCOb86EaBmck0/shDbzGqukvD5iWKiH/FQbFguU1Hpv8RSyep0y
+	B9Getny4M+V1VzxXHlWMyGKnVxUAIgVwHn8y2D6wt5zs3FU9ADuaa9/lUvS33mVyhlWMyZpc=
+X-Google-Smtp-Source: AGHT+IH3sHYKWyOD5ia3rmPaUPdB8KYuQwRoGoxGcTpzNmXeS5xrmV3mgCN6Tr2QiY+B044QqFQhDWxhGS1tixCTg/o=
+X-Received: by 2002:a05:6512:1044:b0:540:1d37:e6e with SMTP id
+ 2adb3069b0e04-54405a438a5mr3117203e87.33.1738865836820; Thu, 06 Feb 2025
+ 10:17:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pyNYRsL6mXJEqMtn"
-Content-Disposition: inline
-In-Reply-To: <76858097-10a8-403d-83a1-f70064f97a6c@gmail.com>
-
-
---pyNYRsL6mXJEqMtn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250206143714.182230-1-brgl@bgdev.pl>
+In-Reply-To: <20250206143714.182230-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 19:17:05 +0100
+X-Gm-Features: AWEUYZmjY00VQRyj-wROvCwcjvRKMHYs9Ew0heG6nw4BijJkAe4FJsZiQNQlpkw
+Message-ID: <CACRpkdYKY-fZED=ZCjuXD5s0TYYxBsgFwJ2ga-rHkx4k6FE5Bg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't build HTE code with CONFIG_HTE disabled
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Dipen Patel <dipenp@nvidia.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, timestamp@lists.linux.dev, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 10:39:19AM +0200, Matti Vaittinen wrote:
-> On 05/02/2025 22:03, Conor Dooley wrote:
-> > On Wed, Feb 05, 2025 at 03:34:29PM +0200, Matti Vaittinen wrote:
-> > > Add binding document for the ROHM BD79124 ADC / GPO.
-> > >=20
-> > > ROHM BD79124 is a 8-channel, 12-bit ADC. The input pins can also be u=
-sed
-> > > as general purpose outputs.
-> > >=20
-> > > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> > > ---
-> > > Revision history:
-> > > RFC v1 =3D> v2:
-> > >   - drop MFD and represent directly as ADC
-> > >   - drop pinmux and treat all non ADC channel pins as GPOs
-> > > ---
->=20
-> ...
->=20
-> > > +patternProperties:
-> > > +  "^channel@[0-9a-f]+$":
-> >=20
-> > You can only have 8 channels, there's no need for this to be so
-> > permissive, right?
-> > Otherwise, this looks good enough to me.
->=20
-> Thanks Conor!
->=20
-> Indeed, I think we only need to accept channel@0 .. channel@7. Thanks!
-> (And reason for this being permissive is ... drum roll ... copy-paste :)
-> That's my main method of creating the yaml bindings. Swearing, sweating,
-> copying and running the 'make dt_binding_check'
-> :rolleyes:
->=20
-> I'll wait for a while for comments to the other patches and fix this for =
-v3
-> :)
+Hi Bartosz,
 
-with it reduced,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+On Thu, Feb 6, 2025 at 3:37=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-Cheers,
-Conor.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Hardware timestamping is only used on tegra186 platforms but we include
+> the code and export the symbols everywhere. Shrink the binary a bit by
+> compiling the relevant functions conditionally.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---pyNYRsL6mXJEqMtn
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
------BEGIN PGP SIGNATURE-----
+> +static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
+> +                                              unsigned long flags)
+> +{
+> +#if !IS_ENABLED(CONFIG_GPIOLIB)
+> +       WARN_ON(desc);
+> +#endif
+> +       return -ENOSYS;
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T8lgAKCRB4tDGHoIJi
-0u0fAP4hGiC88tfP2l+9PpU1bDRgbmosOv1HtZbaej4ko6+8TAD/RCgMp3IOuipP
-FCi+3GOAuqWBRZgMF0xHFYquJJ1Ghgc=
-=I437
------END PGP SIGNATURE-----
+I think you can just:
 
---pyNYRsL6mXJEqMtn--
+if (!IS_ENABLED(CONFIG_GPIOLIB))
+  WARN_ON()
+else
+  return -ENOSYS;
+
+here, so it's not so ifdeffy.
+The compiler will eliminate the second branch.
+
+Yours,
+Linus Walleij
