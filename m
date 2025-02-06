@@ -1,224 +1,241 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA0B19D062
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA191990C1;
+	Thu,  6 Feb 2025 19:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869541; cv=none; b=S7Xp2AiCJyCxxm1ErlkpukVy2zE40plKhLYUfnzlgpvny0KUCbXqTkkwEMNaRPrYzG5ebJmTAjo+wVjozX7JxQxDIz9T1zGMPoOyMhLU/O1lecdG8dnYaLldFMb4+eFmDgrlh1jvK+HVRnl8jMS4M2pZaj16K12l3j8przEg47s=
+	t=1738869540; cv=none; b=qMJFeMlW/5/l58lAczG/fN4WSX8mnI5HXIEZOawQdE9vZ3famfy3cpAC13ZK9nf/3VEYll4kF84W03S6OO/QSdD/zoC1KHQa8Np8e/FVmBwm1PlSzjhlO6A6IfVXu7LJVGYpgE0k+U5DtfbTQHRhjMEvGFPnPR2RJHeD5v2aeO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869541; c=relaxed/simple;
-	bh=NwhX1KnHyxjMGDH/lr4c6VEN2bxPU+NP0pnTfAFejxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EqbCjNZHS/1FLx3W508AKXWlBeFt1j//kZWw+osQN34n/MG8SohvQz2LubBNjZjNIBjAaMTrPWyTZnQhyvHTCYutzcsBQNmu9bvSiRxHkF+p3LclxZjrG7zd2lK6KQJnpBSZRfc74S3CXBXRMwHHp3p+CyVk4FoOWGRCs4pmex0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ErB0Q8Qy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738869540; c=relaxed/simple;
+	bh=ZL//EHotRWwQ+ac5qyjmVmFj7JZNLt25zwPXSoKAebc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PGvDZ7eurCvh8MQ0LAvi7rlLQi0wijJaFF6IPencXjmQvaYOBVynoKGcX6ebrZJA8OePAjerW+Yl7g/AZG4+02PTZcEz4f+TRZaxlHGBQmThzD8kEIWP8f2fZoguMtWseDsCgjvXpIgXTXP14cgSBsZOZcVl3PeSrANzYiTfqLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=g3QhZjxe; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErB0Q8Qy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738869538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EEQf7ryYSSLimnHt06zLnX/5wHpNkn2LEDmn102ciEw=;
-	b=ErB0Q8QyX2trVGB9HcpK2C1L3v8fKVR+Zb44jsvre5H1gvdWNrEc0Q2MKbHKISwmOpMq32
-	/EePsj+8M3gFt+EGRDxSfa4m9tRDFKewWgvMdKqezXgBmFkKpdXDuKICCM11cthKmc0Bkp
-	ah9WUhEjw3sqI5AVPEKE5TomVCb/aMM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-CrcOZk4BO1uMRSFJ4oT-BA-1; Thu,
- 06 Feb 2025 14:18:55 -0500
-X-MC-Unique: CrcOZk4BO1uMRSFJ4oT-BA-1
-X-Mimecast-MFC-AGG-ID: CrcOZk4BO1uMRSFJ4oT-BA
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="g3QhZjxe"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD1FD195604F;
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 748D943A93;
 	Thu,  6 Feb 2025 19:18:53 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.158])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4158019560AE;
-	Thu,  6 Feb 2025 19:18:50 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Rik van Riel <riel@surriel.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH v5] x86/nmi: Add an emergency handler in nmi_desc & use it in nmi_shootdown_cpus()
-Date: Thu,  6 Feb 2025 14:18:44 -0500
-Message-ID: <20250206191844.131700-1-longman@redhat.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738869535;
+	bh=ZL//EHotRWwQ+ac5qyjmVmFj7JZNLt25zwPXSoKAebc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=g3QhZjxedOMejOxLX7SKYeyUoBjljnaLGkVWFRt/nOQdqh1fMviXexyEi2ZKDYEbg
+	 FNj8ledgvUh1T4tFLuHvKmFN4f642ZowNR5fvdbADXe+PEJ2yMdQGwZqQSpp4HYQX+
+	 3f/BMw2f9uQbxmxZRbCEGXmDdWbhw+HTTlVQpJu2i0ZswSXqIwwpGaqA0O5Y+UkyNd
+	 d43qrhLcoTR1Zz/mRku1Gv1LmMZbfz0FsmFrJAe0K63ZNyMrmZjQKXwWk2kcR2/5+x
+	 D3khF1TK3QcCe/dmOQHDrhvr3ZFYwQxZs7g+WvHMjjy0Y+XCa8R9YSA5hiCrLAvNS2
+	 1sN62EZxHiTmg==
+Message-ID: <bfc81fb0-917a-4518-851b-c7fcf3a91c5b@asahilina.net>
+Date: Fri, 7 Feb 2025 04:18:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
+ physaddr conversion
+To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ asahi@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
+ Muchun Song <muchun.song@linux.dev>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+ <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
+ <37A0729B-A711-4D45-B9F0-328FDB9ADD28@nvidia.com>
+ <0e19e1c3-293b-4740-93f3-2c410893288b@redhat.com>
+ <82047858-480a-45e3-b826-3a46fbebe842@asahilina.net>
+ <f1498b22-0bc1-489a-8c2c-35aa48c7fe7d@redhat.com>
+ <1e9ae833-4293-4e48-83b2-c0af36cb3fdc@asahilina.net>
+ <026c1a0c-e53a-4a5e-92da-6e4f18ce0fee@redhat.com>
+ <cc1cd991-1871-4929-851e-d9672a45dcf0@asahilina.net>
+ <6bcd3315-a0f9-463c-ab97-a43736f9b4f4@redhat.com>
+ <2a513c3e-818c-4040-b3d3-7835861bab4f@asahilina.net>
+ <0dffaa7d-340f-4ce1-9a2e-54cfd9079266@redhat.com>
+Content-Language: en-US
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <0dffaa7d-340f-4ce1-9a2e-54cfd9079266@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Depending on the type of panics, it was found that the
-__register_nmi_handler() function can be called in NMI context from
-nmi_shootdown_cpus() leading to a lockdep splat like the following.
 
-  WARNING: inconsistent lock state
-  inconsistent {INITIAL USE} -> {IN-NMI} usage.
 
-   lock(&nmi_desc[0].lock);
-   <Interrupt>
-     lock(&nmi_desc[0].lock);
+On 2/7/25 2:58 AM, David Hildenbrand wrote:
+> On 04.02.25 22:06, Asahi Lina wrote:
+>>
+>>
+>> On 2/5/25 5:10 AM, David Hildenbrand wrote:
+>>> On 04.02.25 18:59, Asahi Lina wrote:
+>>>> On 2/4/25 11:38 PM, David Hildenbrand wrote:
+>>>>>>>> If the answer is "no" then that's fine. It's still an unsafe
+>>>>>>>> function
+>>>>>>>> and we need to document in the safety section that it should
+>>>>>>>> only be
+>>>>>>>> used for memory that is either known to be allocated and pinned and
+>>>>>>>> will
+>>>>>>>> not be freed while the `struct page` is borrowed, or memory that is
+>>>>>>>> reserved and not owned by the buddy allocator, so in practice
+>>>>>>>> correct
+>>>>>>>> use would not be racy with memory hot-remove anyway.
+>>>>>>>>
+>>>>>>>> This is already the case for the drm/asahi use case, where the pfns
+>>>>>>>> looked up will only ever be one of:
+>>>>>>>>
+>>>>>>>> - GEM objects that are mapped to the GPU and whose physical
+>>>>>>>> pages are
+>>>>>>>> therefore pinned (and the VM is locked while this happens so the
+>>>>>>>> objects
+>>>>>>>> cannot become unpinned out from under the running code),
+>>>>>>>
+>>>>>>> How exactly are these pages pinned/obtained?
+>>>>>>
+>>>>>> Under the hood it's shmem. For pinning, it winds up at
+>>>>>> `drm_gem_get_pages()`, which I think does a
+>>>>>> `shmem_read_folio_gfp()` on
+>>>>>> a mapping set as unevictable.
+>>>>>
+>>>>> Thanks. So we grab another folio reference via shmem_read_folio_gfp()-
+>>>>>> shmem_get_folio_gfp().
+>>>>>
+>>>>> Hm, I wonder if we might end up holding folios residing in
+>>>>> ZONE_MOVABLE/
+>>>>> MIGRATE_CMA longer than we should.
+>>>>>
+>>>>> Compared to memfd_pin_folios(), which simulates FOLL_LONGTERM and
+>>>>> makes
+>>>>> sure to migrate pages out of ZONE_MOVABLE/MIGRATE_CMA.
+>>>>>
+>>>>> But that's a different discussion, just pointing it out, maybe I'm
+>>>>> missing something :)
+>>>>
+>>>> I think this is a little over my head. Though I only just realized that
+>>>> we seem to be keeping the GEM objects pinned forever, even after unmap,
+>>>> in the drm-shmem core API (I see no drm-shmem entry point that would
+>>>> allow the sgt to be freed and its corresponding pages ref to be
+>>>> dropped,
+>>>> other than a purge of purgeable objects or final destruction of the
+>>>> object). I'll poke around since this feels wrong, I thought we were
+>>>> supposed to be able to have shrinker support for swapping out whole GPU
+>>>> VMs in the modern GPU MM model, but I guess there's no
+>>>> implementation of
+>>>> that for gem-shmem drivers yet...?
+>>>
+>>> I recall that shrinker as well, ... or at least a discussion around it.
+>>>
+>>> [...]
+>>>
+>>>>>
+>>>>> If it's only for crash dumps etc. that might even be opt-in, it makes
+>>>>> the whole thing a lot less scary. Maybe this could be opt-in
+>>>>> somewhere,
+>>>>> to "unlock" this interface? Just an idea.
+>>>>
+>>>> Just to make sure we're on the same page, I don't think there's
+>>>> anything
+>>>> to unlock in the Rust abstraction side (this series). At the end of the
+>>>> day, if nothing else, the unchecked interface (which the regular
+>>>> non-crash page table management code uses for performance) will let you
+>>>> use any pfn you want, it's up to documentation and human review to
+>>>> specify how it should be used by drivers. What Rust gives us here is
+>>>> the
+>>>> mandatory `unsafe {}`, so any attempts to use this API will necessarily
+>>>> stick out during review as potentially dangerous code that needs extra
+>>>> scrutiny.
+>>>>
+>>>> For the client driver itself, I could gate the devcoredump stuff behind
+>>>> a module parameter or something... but I don't think it's really worth
+>>>> it. We don't have a way to reboot the firmware or recover from this
+>>>> condition (platform limitations), so end users are stuck rebooting to
+>>>> get back a usable machine anyway. If something goes wrong in the
+>>>> crashdump code and the machine oopses or locks up worse... it doesn't
+>>>> really make much of a difference for normal end users. I don't think
+>>>> this will ever really happen given the constraints I described, but if
+>>>> somehow it does (some other bug somewhere?), well... the machine was
+>>>> already in an unrecoverable state anyway.
+>>>>
+>>>> It would be nice to have userspace tooling deployed by default that
+>>>> saves off the devcoredump somewhere, so we can have a chance at
+>>>> debugging hard-to-hit firmware crashes... if it's opt-in, it would only
+>>>> really be useful for developers and CI machines.
+>>>
+>>> Is this something that possibly kdump can save or analyze? Because that
+>>> is our default "oops, kernel crashed, let's dump the old content so we
+>>> can dump it" mechanism on production systems.
+>>
+>> kdump does not work on Apple ARM systems because kexec is broken and
+>> cannot be fully fixed, due to multiple platform/firmware limitations. A
+>> very limited version of kexec might work well enough for kdump, but I
+>> don't think anyone has looked into making that work yet...
+>>
+>>> but ... I am not familiar with devcoredump. So I don't know when/how it
+>>> runs, and if the source system is still alive (and remains alive --  in
+>>> contrast to a kernel crash).
+>>
+>> Devcoredump just makes the dump available via /sys so it can be
+>> collected by the user. The system is still alive, the GPU is just dead
+>> and all future GPU job submissions fail. You can still SSH in or (at
+>> least in theory, if enough moving parts are graceful about it) VT-switch
+>> to a TTY. The display controller is not part of the GPU, it is separate
+>> hardware.
+> 
+> 
+> Thanks for all the details (and sorry for the delay, I'm on PTO until
+> Monday ... :)
+> 
+> (regarding the other mail) Adding that stuff to rust just so we have a
+> devcoredump that ideally wouldn't exist is a bit unfortunate.
+> 
+> So I'm curious: we do have /proc/kcore, where we do all of the required
+> filtering, only allowing for reading memory that is online, not
+> hwpoisoned etc.
+> 
+> makedumpfile already supports /proc/kcore.
+> 
+> Would it be possible to avoid Devcoredump completely either by dumping /
+> proc/kcore directly or by having a user-space script that walks the page
+> tables to dump the content purely based on /proc/kcore?
+> 
+> If relevant memory ranges are inaccessible from /proc/kcore, we could
+> look into exposing them.
 
-  Call Trace:
-    _raw_spin_lock_irqsave
-    __register_nmi_handler
-    nmi_shootdown_cpus
-    kdump_nmi_shootdown_cpus
-    native_machine_crash_shutdown
-    __crash_kexec
+I'm not sure that's a good idea... the dump code runs when the GPU
+crashes, and makes copies of all the memory pages into newly allocated
+pages (this is around 16MB for a typical dump, and if allocation fails
+we just bail and clean up). Then userspace can read the coredump at its
+leisure. AIUI, this is exactly the intended use case of devcoredump. It
+also means that anyone can grab a core dump with just a `cp`, without
+needing any bespoke tools.
 
-In this particular case, the following panic message was printed before.
+After the snapshot is taken, the kernel will complete (fail) all GPU
+jobs, which means much of the shared memory will be freed and some
+structures will change contents. If we defer the coredump to userspace,
+then it would not be able to capture the state of all relevant memory
+exactly at the crash time, which could be very confusing.
 
-  Kernel panic - not syncing: Fatal hardware error!
+In theory I could change the allocators to not free or touch anything
+after a crash, and add guards to any mutations in the driver to avoid
+any changes after a crash... but that feels a lot more brittle and
+error-prone than just taking the core dump at the right time.
 
-This message seemed to be given out from __ghes_panic() running in
-NMI context.
-
-The __register_nmi_handler() function which takes the nmi_desc lock
-with irq disabled shouldn't be called from NMI context as this can
-lead to deadlock.
-
-The nmi_shootdown_cpus() function can only be invoked once. After the
-first invocation, all other CPUs should be stuck in the newly added
-crash_nmi_callback() and cannot respond to a second NMI.
-
-Fix it by adding a new emergency NMI handler to the nmi_desc
-structure and provide a new set_emergency_nmi_handler() helper to set
-crash_nmi_callback() in any context. The new emergency handler will
-preempt other handlers in the linked list. That will eliminate the need
-to take any lock and serve the panic in NMI use case.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: Rik van Riel <riel@surriel.com>
----
- arch/x86/include/asm/nmi.h |  2 ++
- arch/x86/kernel/nmi.c      | 42 ++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/reboot.c   | 10 +++------
- 3 files changed, 47 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 41a0ebb699ec..f677382093f3 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -56,6 +56,8 @@ int __register_nmi_handler(unsigned int, struct nmiaction *);
- 
- void unregister_nmi_handler(unsigned int, const char *);
- 
-+void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler);
-+
- void stop_nmi(void);
- void restart_nmi(void);
- void local_touch_nmi(void);
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index ed163c8c8604..9a95d00f1423 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -40,8 +40,12 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/nmi.h>
- 
-+/*
-+ * An emergency handler can be set in any context including NMI
-+ */
- struct nmi_desc {
- 	raw_spinlock_t lock;
-+	nmi_handler_t emerg_handler;
- 	struct list_head head;
- };
- 
-@@ -132,9 +136,22 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
- {
- 	struct nmi_desc *desc = nmi_to_desc(type);
-+	nmi_handler_t ehandler;
- 	struct nmiaction *a;
- 	int handled=0;
- 
-+	/*
-+	 * Call the emergency handler, if set
-+	 *
-+	 * In the case of crash_nmi_callback() emergency handler, it will
-+	 * return in the case of the crashing CPU to enable it to complete
-+	 * other necessary crashing actions ASAP. Other handlers in the
-+	 * linked list won't need to be run.
-+	 */
-+	ehandler = desc->emerg_handler;
-+	if (ehandler)
-+		return ehandler(type, regs);
-+
- 	rcu_read_lock();
- 
- 	/*
-@@ -224,6 +241,31 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- }
- EXPORT_SYMBOL_GPL(unregister_nmi_handler);
- 
-+/**
-+ * set_emergency_nmi_handler - Set emergency handler
-+ * @type:    NMI type
-+ * @handler: the emergency handler to be stored
-+ *
-+ * Set an emergency NMI handler which, if set, will preempt all the other
-+ * handlers in the linked list. If a NULL handler is passed in, it will clear
-+ * it. It is expected that concurrent calls to this function will not happen
-+ * or the system is screwed beyond repair.
-+ */
-+void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler)
-+{
-+	struct nmi_desc *desc = nmi_to_desc(type);
-+
-+	if (WARN_ON_ONCE(desc->emerg_handler == handler))
-+		return;
-+	desc->emerg_handler = handler;
-+
-+	/*
-+	 * Ensure the emergency handler is visible to other CPUs before
-+	 * function return
-+	 */
-+	smp_wmb();
-+}
-+
- static void
- pci_serr_error(unsigned char reason, struct pt_regs *regs)
- {
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index dc1dd3f3e67f..9aaac1f9f45b 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -926,15 +926,11 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
- 	shootdown_callback = callback;
- 
- 	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
--	/* Would it be better to replace the trap vector here? */
--	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
--				 NMI_FLAG_FIRST, "crash"))
--		return;		/* Return what? */
-+
- 	/*
--	 * Ensure the new callback function is set before sending
--	 * out the NMI
-+	 * Set emergency handler to preempt other handlers.
- 	 */
--	wmb();
-+	set_emergency_nmi_handler(NMI_LOCAL, crash_nmi_callback);
- 
- 	apic_send_IPI_allbutself(NMI_VECTOR);
- 
--- 
-2.48.1
+~~ Lina
 
