@@ -1,52 +1,66 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3C32144BE
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD956226530
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738835599; cv=none; b=gZnT4CfBCtfahZGO18DWC3nBpaOss5IvFPx3+jCDwbgQ/LoWk4ylTFCxADxy5htoIFfn7ppp6f7qRvjqBnQCt3llQtPtoNq7Bi+O4lYxviUEOgngB1rVOmP8JCpa1cXkFSv4q7vwx6ZiPFiWT6N5uww2DXX2yNwXQ5FBnIPe2UY=
+	t=1738835612; cv=none; b=KBu/yntSIo6em9sygEnBJWqy2Q+eXmf1/Vmx0FblW5C8wa2bJrRltyTkhwZzgMQUH8G0k5afmgFy7hvaGU15sSX/pskNVDO7knsppXIL8vzujpA6K4ZtE6lukAUH+MhgiuAJJA0MDW+t8y1tA1p6Gnrfb0cZsnu2BQGEZyxlAeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738835599; c=relaxed/simple;
-	bh=V39skD+/eTe9Gts1XP+dz8FWYa7ChamoYCoJzGWc1T0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iBVH++ryMs1UAZyGDyNco3ucCxfusw7bh4wCqAarzCDhhfDAGU0Vp0LDcIrk8T8X5m7dk5/yTwfvPtpQsBHJv5HUUZnAHtSNRATcgJws5EMeWaOQyVU+gaRDXNplu9InD6GXfFhCzGtfPGLyyj8C9+AvJ3TQ27jsrcb9tRHb1sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=FWCwd1uU; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1738835612; c=relaxed/simple;
+	bh=WUBT/dBT3hdEKftrm9ytaz0AxYAgi67qXEPM3/1/Jfg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sPLyo2x3KE+qozILBXeeMWRDWDPQoHzV6aNDIufJ+/JvGz5PdfQIS8v1TNXf4tM/MpGW1HFIPqyRHCroXVoCjA8LWgTI0W09ncHteFEp/mlJz0k6na4Dwuo8Ec2RNjni0lwkJJki3FruwLjetyeJH6/ZUjaz61caUhIRk/Byk2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XSvB18QO; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="FWCwd1uU"
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
-	by cmsmtp with ESMTPS
-	id fxl4tta7Kf1UXfyZLtvAzP; Thu, 06 Feb 2025 09:53:11 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id fyZKt3X6XO6xNfyZKtYhlC; Thu, 06 Feb 2025 09:53:10 +0000
-X-Authority-Analysis: v=2.4 cv=EaLOQumC c=1 sm=1 tr=0 ts=67a48686
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NrxwET5oIQlMPkpfD34350qDLLEVZjRr+OYwqmaMwJw=; b=FWCwd1uUJZ45ll5DV+TxNtLwwV
-	C007+cPyH9JRJF/ctmlH3wbiMHXEA7imn9asUi/g6VixDGEg5j7vZdnd30k5t1bl+SDmab/RfT0qs
-	J2LH0h8ySdr7yFDskoWpQADpQuvecZ3QM6Nm338wWA60f+BLsWvRhXdKAG2FACeUlG7OA4/+KSivw
-	5+/Z55U14A1IVjP3RSVduMd3OkBtjy4wlCqCxKCrd71duhnCaywDz4UQObzr/UxxfFPE/hBFlz0pb
-	g+uWbhN3EloJd7jRtk6OmRQNKgq1LL7ppe311tLR7jGvlDWxv0ydR9hYFzdj/1gKmbwQ/SqyB/S7I
-	aeTIka/g==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:45656 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tfyZJ-001qjF-0c;
-	Thu, 06 Feb 2025 02:53:09 -0700
-Message-ID: <66c87ad9-5987-42f1-b97f-75d53a0957d3@w6rz.net>
-Date: Thu, 6 Feb 2025 01:53:06 -0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XSvB18QO"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dba1cc632so384428f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:53:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738835609; x=1739440409; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y/Bse1dCSk7wlBTxWxrw+fvF90V1hOkdi4rEK3c8vEo=;
+        b=XSvB18QOuJFkJq9EC+rSNnHmv65O1/n5hZxQA+oOr6lzH1eCr7b2J9j7Y5CrPipyYk
+         7NqH4eJerTmIL1KqgFrlbGuwKaUOcs2L3gD8yBRgp/A29aGSX0Xj4obcInAA3PUcI8rg
+         xXxQB25VpkRtUP6QfV7K2h5THK/dF/bcefndRAlZWk3twtt2Siwo5PM6Tg01R/tj77m4
+         dXb10QhYSwtWdPhoZMSt0FYJa1FQl7eL0lXIR/NheMlZu4mBX/iubtGZdJ1OGJjnm4dw
+         /eSaEOIt8cQKCTEQHcPNBjyb3BSirYM9UPm8+sPpc7xt2fUfCpIZpB8c0qFtdtM3aD08
+         gm7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738835609; x=1739440409;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y/Bse1dCSk7wlBTxWxrw+fvF90V1hOkdi4rEK3c8vEo=;
+        b=DXBZJGxYQRnjAMzOJ9y31cizZBm4E4oGzugR3FBH0tJpP7Jn+K3WGtmNpeEdxDr06B
+         Z2qpbY2pbVdMgrD86jzr2vlFx5nOkGSwG3rIkqI+ascghKvRZak0hBQQXRTBiojEq0j3
+         DTgpLa+ukMnLj3u8RFYmtGT2XuH4PgvwkvztFS2WCdaj2Idtqq/JQUuLUbI9SjRUUtRt
+         boDLizwMWfaACKBOoNJ0pFVOcmnj2nYz0727fvgYYL/Z89U3fDW0Z0or82WCbjc12l7u
+         WoOqzh1njG6+JKfis+i+k+M4qKnoEuwlnTBfKiaWsuiTl9Hs8UAXfTfLmKE9Vkk3jN6U
+         d/NA==
+X-Forwarded-Encrypted: i=1; AJvYcCVR8CtJyO88JrCYgmvpWN3qi0f99aoo5qmFCjkseiC/sYLgEUnGku3dfnfnGtbEbV6PZTISM8caIV9ZUC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb52Et2sqxsspE+5kjgeMNNhkIZToy2DtbsBVCGPWQpn/3Ui/n
+	GpHgTRwWX43ztABgiFqxBgQXClnfulpToMy9kBEIfX7DKtujjg/0l86+MhvUvRQ=
+X-Gm-Gg: ASbGnctqTUSFXTh+KXRZ+WTvCM/WRn408ayX/dz4eoefjGTWBb2Jv5K3RUi3C5WgO5y
+	Z1oWXr3XWRd7psrbiso4pVhSp3xLsJ24BORoqXyP2MBg0d05LW0xFzW5r2KHQplrjPrg4+0EBkG
+	MtWaxflHfLA/e7HyGRQbhGku3J7J/UkelhmZi15NfnUzAEY/KKk4FkYN+4Pw2tIL/oO9r6UJC87
+	nTTrftxcd+Kfw7HH65E9e8ETEZnBswiROp0UCbDaNn38KFSHD1tmU7rukpYrylkifzAeoYKl11q
+	256Xed+PJGRUxCdzgm0ZXt0jwCQpIZLANeOEfVCfbd8a6MvpsaBtlhpl5es3fjyDnZYs
+X-Google-Smtp-Source: AGHT+IFZ/YD1C+lwl5UFVIadECKSzvAxjxJXg73+g+VHFrSip3JyQPnIew9WOECpn6y9hKaGtkaC7Q==
+X-Received: by 2002:a5d:5f4c:0:b0:385:fae2:f443 with SMTP id ffacd0b85a97d-38db48d5d49mr3733434f8f.34.1738835608907;
+        Thu, 06 Feb 2025 01:53:28 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6? ([2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc31b9394sm337288f8f.11.2025.02.06.01.53.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 01:53:28 -0800 (PST)
+Message-ID: <63578f71-e5f5-482a-98a7-779053b1caf7@linaro.org>
+Date: Thu, 6 Feb 2025 10:53:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +68,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/393] 6.6.76-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250205134420.279368572@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250205134420.279368572@linuxfoundation.org>
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v3 0/8] Support Multi-frequency scale for UFS
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com, junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "open list:ARM/Mediatek SoC support:Keyword:mediatek"
+ <linux-kernel@vger.kernel.org>,
+ "moderated list:ARM/Mediatek SoC support:Keyword:mediatek"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:ARM/Mediatek SoC support:Keyword:mediatek"
+ <linux-mediatek@lists.infradead.org>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tfyZJ-001qjF-0c
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:45656
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDqIjuVjfab2S0101R2Aa/0h2byWzdm9CRfMhPET+OVa1CyCVmv0iZV51KqFytVxHZC6AtOTXKQ9aclhXuTm2Qrp2IrGZPuCge31H2eqFGg9t0hMn3gv
- O/ly+pBgVGD+PwTFoQh14KEIiSuNgvdu/OhdkWCzcnTnpUJ3CPNzyAPzQSpMiXYkWoTS0W3hNIHQMxrWAUgyr9Kme4//Ns+KPQc=
+Content-Transfer-Encoding: 8bit
 
-On 2/5/25 05:38, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.76 release.
-> There are 393 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 07 Feb 2025 13:43:04 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.76-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 03/02/2025 09:11, Ziqi Chen wrote:
+> With OPP V2 enabled, devfreq can scale clocks amongst multiple frequency
+> plans. However, the gear speed is only toggled between min and max during
+> clock scaling. Enable multi-level gear scaling by mapping clock frequencies
+> to gear speeds, so that when devfreq scales clock frequencies we can put
+> the UFS link at the appropraite gear speeds accordingly.
+> 
+> This series has been tested on below platforms -
+> sm8550 mtp + UFS3.1
+> SM8650 MTP + UFS3.1
+> SM8750 MTP + UFS4.0
+> 
+> v1 -> v2:
+> 1. Withdraw old patch 8/8 "ARM: dts: msm: Use Operation Points V2 for UFS on SM8650"
+> 2. Add new patch 8/8 "ABI: sysfs-driver-ufs: Add missing UFS sysfs addributes"
+> 3. Modify commit message for  "scsi: ufs: core: Pass target_freq to clk_scale_notify() vops" and "scsi: ufs: qcom: Pass target_freq to clk scale pre and post change"
+> 4. In "scsi: ufs: qcom: Pass target_freq to clk scale pre and post change", use common Macro HZ_PER_MHZ in function ufs_qcom_set_core_clk_ctrl()
+> 5. In "scsi: ufs: qcom: Implement the freq_to_gear_speed() vops", print out freq and gear info as debugging message
+> 6. In "scsi: ufs: core: Enable multi-level gear scaling", rename the lable "do_pmc" to "config_pwr_mode"
+> 7. In "scsi: ufs: core: Toggle Write Booster during clock", initialize the local variables "wb_en" as "false"
+> 
+> v2 -> v3:
+> 1. Change 'vops' to 'vop' in all commit message
+> 2. keep the indentation consistent for clk_scale_notify() definition.
+> 3. In "scsi: ufs: core: Add a vop to map clock frequency to gear speed", "scsi: ufs: qcom: Implement the freq_to_gear_speed() vop"
+>     and "scsi: ufs: core: Enable multi-level gear scaling", remove the parameter 'gear' and use it as return result in function freq_to_gear_speed()
+> 4. In "scsi: ufs: qcom: Implement the freq_to_gear_speed(), removed the variable 'ret' in function ufs_qcom_freq_to_gear_speed()
+> 5. In "scsi: ufs: core: Enable multi-level gear scaling", use assignment instead memcpy() in function ufshcd_scale_gear()
+> 6. Improve the grammar of attributes' descriptions in “ABI: sysfs-driver-ufs: Add missing UFS sysfs attributes”
+> 7. Typo fixed for some commit messages.
+> 
+> Can Guo (6):
+>    scsi: ufs: core: Pass target_freq to clk_scale_notify() vop
+>    scsi: ufs: qcom: Pass target_freq to clk scale pre and post change
+>    scsi: ufs: core: Add a vop to map clock frequency to gear speed
+>    scsi: ufs: qcom: Implement the freq_to_gear_speed() vop
+>    scsi: ufs: core: Enable multi-level gear scaling
+>    scsi: ufs: core: Toggle Write Booster during clock scaling base on
+>      gear speed
+> 
+> Ziqi Chen (2):
+>    scsi: ufs: core: Check if scaling up is required when disable clkscale
+>    ABI: sysfs-driver-ufs: Add missing UFS sysfs attributes
+> 
+>   Documentation/ABI/testing/sysfs-driver-ufs | 33 ++++++++++
+>   drivers/ufs/core/ufshcd-priv.h             | 15 ++++-
+>   drivers/ufs/core/ufshcd.c                  | 76 +++++++++++++++++-----
+>   drivers/ufs/host/ufs-mediatek.c            |  1 +
+>   drivers/ufs/host/ufs-qcom.c                | 62 ++++++++++++++----
+>   include/ufs/ufshcd.h                       |  9 ++-
+>   6 files changed, 160 insertions(+), 36 deletions(-)
+> 
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-HDK
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
 
-Tested-by: Ron Economos <re@w6rz.net>
+I added some traces and played with devfreq max_freq while copying data
+from the UFS disk, no issues observed.
 
+Neil		
