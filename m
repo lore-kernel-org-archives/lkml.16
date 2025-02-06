@@ -1,147 +1,81 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2755013D897;
-	Thu,  6 Feb 2025 12:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBF917579;
+	Thu,  6 Feb 2025 13:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738846802; cv=none; b=gzaYN8NjKK4sZuUHvXbak34ynpz+qGq9u5zeBN6wiKUUY9OTe2TfooE11x9eAYta+MOYtGz0uvpi2OCxjZegHn6gWVOSKAbucP0g/GP+Kz86J/2eTSB6UZm3S9c7b2Oj7zyKJfpPGSguLdKKwlovn9CkuCG7Pou6ztDdPJcdask=
+	t=1738846983; cv=none; b=iYZ6quwU8Mt4O6VgThVQqAh5cT9qIVo5opi29guyVHKzs2GAYri5hwRSofB6OkbZgXohBlAYFooCVqJiLwnfPhAkc/LDD8edh/J/4/n9FHlRkqH+zl14TRNoc6E/NquldtLG2R5r3Y7hO93NK3Q+QmgJe+rm5Q3WqYZhknzPebs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738846802; c=relaxed/simple;
-	bh=xxbDZdqWo3K/8PCwFPnRCr7uf9tUfjynoOu26v/FlfU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZuhzFgN+1EUMMdGTKzY9wohWqLqLsr5yR6lTRXBtrVCFjXeni1e0io5iEI01QGXvZjJav2D9jX0/AYH1dm5VH3jvPV66XEZZ6ipgMoAI6Gumqy+8YTxiYsnkFdbiI8vV2E2EeHHx8N+G9kiKW/ItYmHJTzQjGJ7m7AjBsdJS0+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XrTLxR5w; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738846983; c=relaxed/simple;
+	bh=exKTE07mHM56JEN6zML1GUbV1qmMKOK94H5J27Lb5eQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=KvieR3pV4xKuFOFKPfaW6AcyjzFkYKMk6sx53ln5z4ShP0W0UvdXr+paiLptKh/3nUjvWtIr8kBiXoeOe40HRd7shv+zyOgVRwOHvrQo60cXpct7peUtTiUPEOJC+tzCTo8Kces7dydJe6XRe8H2jbnOdxzcHvdF4rFVBB3CLL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=t4zQE011; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XrTLxR5w"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 516Cxmmr3553666
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Feb 2025 06:59:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738846788;
-	bh=Mv0wdh7SmM7WMLkdwxSV1wkm7zvheEOu8m9g8tZ+KPI=;
-	h=From:To:CC:Subject:Date;
-	b=XrTLxR5wO8p6ersm33yDywbwUdJb5nIdCWOIuRR2+l8AnSWrgBBsCi40/sqGEZ9qq
-	 TRNHphQJO7WGmGZn2oiSJ8YrYp3kDbFjuilteo542lDVMKNSRma3Y/b+XGTqjm8M7X
-	 qW7ubqUEzu+OWEbVngTMOgwR7fLGI7RIeChkMwuo=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 516Cxm5T012943
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Feb 2025 06:59:48 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Feb 2025 06:59:48 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Feb 2025 06:59:48 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.104])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 516CxhVf101205;
-	Thu, 6 Feb 2025 06:59:44 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <peter.chen@kernel.org>, <pawell@cadence.com>, <rogerq@kernel.org>,
-        <gregkh@linuxfoundation.org>, <balbi@kernel.org>, <jun.li@nxp.com>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if FAST_REG_ACCESS cannot be set
-Date: Thu, 6 Feb 2025 18:29:36 +0530
-Message-ID: <20250206125943.786949-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="t4zQE011"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 1D8E8A02D7;
+	Thu,  6 Feb 2025 14:02:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=9IthvkQUSloN+jU4yaLe
+	CO+AOQgNxpCCwaPiXCqsXVs=; b=t4zQE011ccbQ89ZD9bPeDDyb4u4SUWP1glT9
+	CAupoRlmKb0Q77M6dRUMK5GRU2RSvRFlYrFI359l1VyHRWzhG0pIDgZltHDvB7eK
+	1MD5ehD267tm9vmkbmrsnUVH6wbZ3tqPcPcKNVjY9Kl6YX5S4y+DvocH42pgIrsO
+	p8ynpLwMWzEvHbsW5tiRd1xF8+NzACOA6YLLSld91DjjKvD+zQXd41caiYaBjlE5
+	nCw/2qKyupfEIC4R/B0chZxGxcM95EmPeuR1PAzLEZtsugvfXfQV2qXZkJwUplze
+	QuHBaOs40tNh43NwEE8U4GyzEerGZWszs5UnD16CTdhEUG4vI+LRjuvMWWWsip3i
+	TMtOysY7BQ6YcyOaQGxQVmTVhZegNI2vDmCGMfdVHWTPUYGWHi/gu7OKWpVrcOTd
+	1XR5m1PsUiNHuGdrT0VKlOmtma7Xa/6y998FiwYNalyDijB9hmWlcJ0m7Ct39QE1
+	hY2Atk+JGCC86+CoNdLiM9rrtRyUx2pOVtIqQUiiNQqiwshkUmdw+LY4+mHbeCFw
+	qTRzE5e5Hfy5tqJB90uqI488tRysXo4APELjb8Reb13nuPHIJyYNHOUE2IKptEfP
+	9DYlKvZjECogPJWqeLpBaBEP/2FxOTNxt+QVWFpiSvGvFjxeHfKAFzugMAU85Wev
+	Fu8LyBU=
+Message-ID: <299a1239-7149-42f1-b3fb-ba538ae2a30a@prolan.hu>
+Date: Thu, 6 Feb 2025 14:02:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+Subject: Re: [PATCH] net: fec: Refactor MAC reset to function
+To: Simon Horman <horms@kernel.org>
+CC: Laurent Badel <laurentbadel@eaton.com>, Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>, <imx@lists.linux.dev>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Michal Swiatkowski
+	<michal.swiatkowski@linux.intel.com>, Jacob Keller
+	<jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
+	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+References: <20250204093604.253436-2-csokas.bence@prolan.hu>
+ <20250205132832.GC554665@kernel.org> <20250205134824.GF554665@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250205134824.GF554665@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852667C62
 
-When the device is in a low power state, access to the following
-registers takes a long time:
-- EP_CFG
-- EP_TRADDR
-- EP_CMD
-- EP_SEL
-- EP_STS
-- USB_CONF
+Hi,
+sorry for the confusion. I accidentally sent that one while editing the 
+headers.
 
-To address this, the fast register access feature can be enabled by
-setting PUSB_PWR_FST_REG_ACCESS bit of the USB_PWR register, which
-allows quick access by software. Software is expected to poll on
-PUSB_PWR_FST_REG_ACCESS_STAT to ensure that fast register access has
-been enabled by the controller. Attempting to access any of the
-aforementioned registers after setting PUSB_PWR_FST_REG_ACCESS but
-before PUSB_PWR_FST_REG_ACCESS_STAT has been set will result in
-undefined behavior and potentially result in system hang.
+On 2025. 02. 05. 14:48, Simon Horman wrote:
+>> Reviewed-by: Simon Horman <horms@kernel.org>
+> 
+> Sorry, I think I have to take that back for now.
 
-Hence, poll on PUSB_PWR_FST_REG_ACCESS_STAT before proceeding with
-gadget configuration, and exit if it cannot be enabled.
+Would you keep it if I retargeted to net-next without the Fixes: tags?
 
-Fixes: b5148d946f45 ("usb: cdns3: gadget: set fast access bit")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
-
-Hello,
-
-This patch is based on commit
-92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-of Mainline Linux.
-
-Regards,
-Siddharth.
-
- drivers/usb/cdns3/cdns3-gadget.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
-index fd1beb10bba7..b62691944272 100644
---- a/drivers/usb/cdns3/cdns3-gadget.c
-+++ b/drivers/usb/cdns3/cdns3-gadget.c
-@@ -2971,8 +2971,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
- 	/* enable generic interrupt*/
- 	writel(USB_IEN_INIT, &regs->usb_ien);
- 	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
--	/*  keep Fast Access bit */
--	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
- 
- 	cdns3_configure_dmult(priv_dev, NULL);
- }
-@@ -2990,6 +2988,8 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
- 	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
- 	unsigned long flags;
- 	enum usb_device_speed max_speed = driver->max_speed;
-+	int ret;
-+	u32 reg;
- 
- 	spin_lock_irqsave(&priv_dev->lock, flags);
- 	priv_dev->gadget_driver = driver;
-@@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
- 	/* limit speed if necessary */
- 	max_speed = min(driver->max_speed, gadget->max_speed);
- 
-+	/*  keep Fast Access bit */
-+	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
-+	reg = readl(&priv_dev->regs->usb_pwr);
-+	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
-+		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
-+						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
-+						10, 1000);
-+		if (ret) {
-+			dev_err(priv_dev->dev, "Failed to enable fast access\n");
-+			spin_unlock_irqrestore(&priv_dev->lock, flags);
-+			return ret;
-+		}
-+	}
-+
- 	switch (max_speed) {
- 	case USB_SPEED_FULL:
- 		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
--- 
-2.43.0
+Bence
 
