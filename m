@@ -1,185 +1,166 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D881EA7CD
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7301EA7C0;
+	Thu,  6 Feb 2025 13:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848747; cv=none; b=f3+7jrTTbaXpcCFXBst3HUXcAN1XI9HfYs6AK7Ne04ksEsn65h8oLFFo+IHPy215uDBzcHDUkDbG/wcs3Ywbx6QEttqCsYBfAyz8Gh4tfjvQR37pvztkvAqepZtJxQZDel11gwtjnfvxDFP8UxBLDy1BaMUcQGcEOHpHj+SlLOw=
+	t=1738848906; cv=none; b=eCYsmn72DySuwLXp5CFd4IYWXX6CY50pljp8xXrWsjbB2ZtBF+2e6vTHICN7oxcJzSfoy0IrhO04/DSTAVwIVTmE/+bRCRmfEoFs8sa+/FU/AY++LRPn4K9ygruyzRmwFCiej9GK+OEanwgg/XzMblAtEzHczYmWKshcAunWm2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848747; c=relaxed/simple;
-	bh=DTZKQQioBnMwqumypWWor9mITJYoqJGzfS1zESGLYA4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qFnn5ObFByEP7E93Ym+c8Zrx1jx0FlWRueKob9qljdbKd6Grnkdb87rdwwd20Zr0/BhZ1kLpN0F+yFLf5DsEawqc3IHyUfFr+ZTciAKKhun5sRKlHMXDK05Zzlo8ClfnRxFU9/Xuf5dJ2pKj2udHMhd80LiTPQuDb6+VwncpdCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo5650675ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:32:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738848744; x=1739453544;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=caeipFMK9LSzj6Y/pd9FAx9dqXfLglZhdEiweSmy3Qs=;
-        b=Ut6Xb5s6FxK3EU0ZbFVfM+WdRxVAoJx7NwUnRByN/yRD/OUR24KL1xUYbhNsQzskr5
-         Pu8RAcGwxu+uFQNEqrCmaQETV4eMGUVM/cZS+/VZZN3PmbTOBfd28olFTXRKEvMa3A/B
-         xAHAuYWS9ox9Ah8SxnhmrMUDZT6A3pN/zj5QqLskubuAreeV+pJK2100gyfzye9xeIo0
-         IFsLd1GvBR/NulubX6S/HJ6fSp1lF/0SufsH4Betpn6ZlmPGSURl6MASdo1yaYH3JMa3
-         P7vG9iJCA81RXAKrbwVmpyPTdxg2LdaoCYOEwwKkRlKnh55XSfbIkZ205xsFHWhTq6ov
-         ldaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfH7IxUbyeU5N6mA4xTEdUxkMTteI0yhf6bDq1huEqb7NkM8FOPHjFDJjMfJ06yCIZ22qLXtLzceLu16Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhix3ZBIuZ9y3qGRitcyKkqerVfswpMmEh8iFBpgPWTfrlt//X
-	cm4oT9oPj7KBQlosrt/PhcBUWVNeq4HEjsjkt9vSKFLfQmEjdhVkRdtWPNFK+c9v4UC0vJvgJn7
-	Yjw4UWA9G1bL/zUYQdQ2cYB2zwJgANVbDHlPj+e9u6FTNLbV8g21mYlo=
-X-Google-Smtp-Source: AGHT+IF7qyEGqqywpW3bywnhxGPuZln9LlRICGT+piy6W7bOyXoz8xXxP0bAYvgMPvyIjNnXUl3og24BVIlS8ctTqNy4/nxLmcDU
+	s=arc-20240116; t=1738848906; c=relaxed/simple;
+	bh=tVoDQ7fDHYavMaIBf6OpSoHIN3J38dTXcwr8Ehd5Nz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VRdzdwvv5hIIW5zFNyrWDAey87QaZD5Tq5Vg/dbGsNUNMwUz+pcy99KtEMAlveOE+7J79mJPUWQEHLfQnLJg3LoMOXt5P7MfVgMu7IGeiEKkr4UCgCtKyT9DFc/5O8b5U7DLXG+se610DdVAjH0iuhdDM9JVnOZuUkOB4rFJCOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jx2rlSGh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jx2rlSGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C5FC4CEDD;
+	Thu,  6 Feb 2025 13:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738848905;
+	bh=tVoDQ7fDHYavMaIBf6OpSoHIN3J38dTXcwr8Ehd5Nz4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jx2rlSGh5E4lmD5Zr/uWi/14Fmj0ldgckXjrZASstnQCxiUQ/OABrw6gU7UqHBUoM
+	 VQuR+Vj2wgZYYMNCPpSPEN+9c3B5QQ1dnGDkDsI+WePYhVN1s5SUXCrN8oNve7ZvIb
+	 mcuhdKpHQrp+5EmMWGZkN/F6SXpx04SJO5Mwg9eRlrnW2aH/6RfxnJwFYUtSeS8NZW
+	 W5SrRamk0GBtGvDRI7+JH0vuHo5lrXHk92Gp6lQL3PTWrjo69Aru995L5/NJmJCc6p
+	 FI6fM4Fbn40c7OO63Hh2V61YRhvk+rhX0+SQxqa27MT87hmvDkl1TE4zPco3CGQYpO
+	 3nFcegO9GoeJg==
+Date: Thu, 6 Feb 2025 14:35:00 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Mike Yuan <me@yhndnzj.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
+	"cgzones@googlemail.com" <cgzones@googlemail.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] fs/xattr: actually support O_PATH fds in *xattrat()
+ syscalls
+Message-ID: <20250206-wisst-rangieren-d59f7882761a@brauner>
+References: <20250205204628.49607-1-me@yhndnzj.com>
+ <20250206-uhrwerk-faultiere-7a308565e2d3@brauner>
+ <Kn-2tlpxN8YNmh0j0udjQ8YIFNZMVVJYJh-LyBoYNBfpax28PNUkXuH6gnod7if2eX3NRVs3Ey8uCHRpwg_S5hPX_ADtrgMZbDTWFpHd_uU=@yhndnzj.com>
+ <20250206-erbauen-ornament-26f338d98f13@brauner>
+ <cfnfHaahrrXJJOgvNjb5hFbU0qh8gVXJ62R9uP9AItBEywyNH9vNBRzJbPR8xTv-LtFaUJYTHvyuLBfkznwJPt3fEcqNBFxf_yKJeZKwL3I=@yhndnzj.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1707:b0:3d0:23f6:2eed with SMTP id
- e9e14a558f8ab-3d04f44ce97mr53607355ab.11.1738848744668; Thu, 06 Feb 2025
- 05:32:24 -0800 (PST)
-Date: Thu, 06 Feb 2025 05:32:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a4b9e8.050a0220.d6d27.0000.GAE@google.com>
-Subject: [syzbot] [overlayfs?] general protection fault in clone_private_mount
-From: syzbot <syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, miklos@szeredi.hu, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cfnfHaahrrXJJOgvNjb5hFbU0qh8gVXJ62R9uP9AItBEywyNH9vNBRzJbPR8xTv-LtFaUJYTHvyuLBfkznwJPt3fEcqNBFxf_yKJeZKwL3I=@yhndnzj.com>
 
-Hello,
+On Thu, Feb 06, 2025 at 01:25:19PM +0000, Mike Yuan wrote:
+> On 2/6/25 11:03, Christian Brauner <brauner@kernel.org> wrote:
+> 
+> >  On Thu, Feb 06, 2025 at 09:51:33AM +0000, Mike Yuan wrote:
+> >  > On 2/6/25 10:31, Christian Brauner <brauner@kernel.org> wrote:
+> >  >
+> >  > >  On Wed, Feb 05, 2025 at 08:47:23PM +0000, Mike Yuan wrote:
+> >  > >  > Cited from commit message of original patch [1]:
+> >  > >  >
+> >  > >  > > One use case will be setfiles(8) setting SELinux file contexts
+> >  > >  > > ("security.selinux") without race conditions and without a file
+> >  > >  > > descriptor opened with read access requiring SELinux read permission.
+> >  > >  >
+> >  > >  > Also, generally all *at() syscalls operate on O_PATH fds, unlike
+> >  > >  > f*() ones. Yet the O_PATH fds are rejected by *xattrat() syscalls
+> >  > >  > in the final version merged into tree. Instead, let's switch things
+> >  > >  > to CLASS(fd_raw).
+> >  > >  >
+> >  > >  > Note that there's one side effect: f*xattr() starts to work with
+> >  > >  > O_PATH fds too. It's not clear to me whether this is desirable
+> >  > >  > (e.g. fstat() accepts O_PATH fds as an outlier).
+> >  > >  >
+> >  > >  > [1] https://lore.kernel.org/all/20240426162042.191916-1-cgoettsche@seltendoof.de/
+> >  > >  >
+> >  > >  > Fixes: 6140be90ec70 ("fs/xattr: add *at family syscalls")
+> >  > >  > Signed-off-by: Mike Yuan <me@yhndnzj.com>
+> >  > >  > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> >  > >  > Cc: Christian Göttsche <cgzones@googlemail.com>
+> >  > >  > Cc: Christian Brauner <brauner@kernel.org>
+> >  > >  > Cc: <stable@vger.kernel.org>
+> >  > >  > ---
+> >  > >
+> >  > >  I expanded on this before. O_PATH is intentionally limited in scope and
+> >  > >  it should not allow to perform operations that are similar to a read or
+> >  > >  write which getting and setting xattrs is.
+> >  > >
+> >  > >  Patches that further weaken or dilute the semantics of O_PATH are not
+> >  > >  acceptable.
+> >  >
+> >  > But the *at() variants really should be able to work with O_PATH fds, otherwise they're basically useless? I guess I just need to keep f*() as-is?
+> >  
+> >  I'm confused. If you have:
+> >  
+> >          filename = getname_maybe_null(pathname, at_flags);
+> >          if (!filename) {
+> >                  CLASS(fd, f)(dfd);
+> >                  if (fd_empty(f))
+> >                          error = -EBADF;
+> >                  else
+> >                          error = file_setxattr(fd_file(f), &ctx);
+> >  
+> >  Then this branch ^^ cannot use fd_raw because you're allowing operations
+> >  directly on the O_PATH file descriptor.
+> >  
+> >  Using the O_PATH file descriptor for lookup is obviously fine which is
+> >  why the other branch exists:
+> >  
+> >          } else {
+> >                  error = filename_setxattr(dfd, filename, lookup_flags, &ctx);
+> >          }
+> >  
+> >  IOW, your patch makes AT_EMPTY_PATH work with an O_PATH file descriptor
+> >  which isn't acceptable. However, it is already perfectly fine to use an
+> >  O_PATH file descriptor for lookup.
+> 
+> Well, again, [1] clearly stated the use case:
+> 
+> > Those can be used to operate on extended attributes,
+> especially security related ones, either relative to a pinned directory
+> or [on a file descriptor without read access, avoiding a
+> /proc/<pid>/fd/<fd> detour, requiring a mounted procfs].
+> 
+> And this surfaced in my PR to systemd:
+> 
+> https://github.com/systemd/systemd/pull/36228/commits/34fe16fb177d2f917570c5f71dfa8f5b9746b9a7
+> 
+> How are *xattrat() syscalls different from e.g. fchmodat2(AT_EMPTY_PATH) in that regard? I can agree that the semantics of f*xattr() ought to be left untouched, yet I fail to grok the case for _at variants.
 
-syzbot found the following issue on:
+man openat:
 
-HEAD commit:    808eb958781e Add linux-next specific files for 20250206
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=126e33df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=88b25e5d30d576e4
-dashboard link: https://syzkaller.appspot.com/bug?extid=62dfea789a2cedac1298
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16346df8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117e80e4580000
+       O_PATH (since Linux 2.6.39)
+              Obtain a file descriptor that can be used for two purposes: to indicate a location in the filesystem tree and to perform operations that act purely at the file descriptor level.
+              The file itself is not opened, and other file operations (e.g., read(2), write(2), fchmod(2), fchown(2), fgetxattr(2), ioctl(2), mmap(2)) fail with the error EBADF.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/493ef93f2e5f/disk-808eb958.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b41757cd41c9/vmlinux-808eb958.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/24f456104aad/bzImage-808eb958.xz
+              The following operations can be performed on the resulting file descriptor:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com
+              •  close(2).
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000009: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000048-0x000000000000004f]
-CPU: 0 UID: 0 PID: 5834 Comm: syz-executor772 Not tainted 6.14.0-rc1-next-20250206-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:is_anon_ns fs/mount.h:159 [inline]
-RIP: 0010:clone_private_mount+0x184/0x3e0 fs/namespace.c:2425
-Code: 89 d8 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc 48 83 c3 48 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 4d 89 fc 74 08 48 89 df e8 db dd e4 ff 48 8b 1b 31 ff
-RSP: 0018:ffffc90003e2f958 EFLAGS: 00010206
-RAX: 0000000000000009 RBX: 0000000000000048 RCX: dffffc0000000000
-RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888032eb2710
-RBP: 0000000000000000 R08: ffffffff8ea81ca7 R09: 1ffffffff1d50394
-R10: dffffc0000000000 R11: fffffbfff1d50395 R12: ffff888032eb2700
-R13: ffff888032eb2720 R14: 1ffff11006b34091 R15: ffff8880359a0488
-FS:  0000555584629380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000001000 CR3: 00000000786c2000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ovl_get_layers fs/overlayfs/super.c:1061 [inline]
- ovl_get_lowerstack fs/overlayfs/super.c:1156 [inline]
- ovl_fill_super+0x1a24/0x3560 fs/overlayfs/super.c:1404
- vfs_get_super fs/super.c:1280 [inline]
- get_tree_nodev+0xb7/0x140 fs/super.c:1299
- vfs_get_tree+0x90/0x2b0 fs/super.c:1814
- do_new_mount+0x2be/0xb40 fs/namespace.c:3659
- do_mount fs/namespace.c:3999 [inline]
- __do_sys_mount fs/namespace.c:4210 [inline]
- __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4187
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9d7cd98329
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdbd4bd438 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007f9d7cd98329
-RDX: 0000200000000180 RSI: 0000200000000140 RDI: 0000000000000000
-RBP: 00007f9d7ce0b610 R08: 00002000000001c0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffdbd4bd608 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:is_anon_ns fs/mount.h:159 [inline]
-RIP: 0010:clone_private_mount+0x184/0x3e0 fs/namespace.c:2425
-Code: 89 d8 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc 48 83 c3 48 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 4d 89 fc 74 08 48 89 df e8 db dd e4 ff 48 8b 1b 31 ff
-RSP: 0018:ffffc90003e2f958 EFLAGS: 00010206
-RAX: 0000000000000009 RBX: 0000000000000048 RCX: dffffc0000000000
-RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888032eb2710
-RBP: 0000000000000000 R08: ffffffff8ea81ca7 R09: 1ffffffff1d50394
-R10: dffffc0000000000 R11: fffffbfff1d50395 R12: ffff888032eb2700
-R13: ffff888032eb2720 R14: 1ffff11006b34091 R15: ffff8880359a0488
-FS:  0000555584629380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000066c7e0 CR3: 00000000786c2000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	89 d8                	mov    %ebx,%eax
-   2:	48 83 c4 10          	add    $0x10,%rsp
-   6:	5b                   	pop    %rbx
-   7:	41 5c                	pop    %r12
-   9:	41 5d                	pop    %r13
-   b:	41 5e                	pop    %r14
-   d:	41 5f                	pop    %r15
-   f:	5d                   	pop    %rbp
-  10:	c3                   	ret
-  11:	cc                   	int3
-  12:	cc                   	int3
-  13:	cc                   	int3
-  14:	cc                   	int3
-  15:	48 83 c3 48          	add    $0x48,%rbx
-  19:	48 89 d8             	mov    %rbx,%rax
-  1c:	48 c1 e8 03          	shr    $0x3,%rax
-  20:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx
-  27:	fc ff df
-* 2a:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1) <-- trapping instruction
-  2e:	4d 89 fc             	mov    %r15,%r12
-  31:	74 08                	je     0x3b
-  33:	48 89 df             	mov    %rbx,%rdi
-  36:	e8 db dd e4 ff       	call   0xffe4de16
-  3b:	48 8b 1b             	mov    (%rbx),%rbx
-  3e:	31 ff                	xor    %edi,%edi
+              •  fchdir(2), if the file descriptor refers to a directory (since Linux 3.5).
 
+              •  fstat(2) (since Linux 3.6).
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+              •  fstatfs(2) (since Linux 3.12).
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+              •  Duplicating the file descriptor (dup(2), fcntl(2) F_DUPFD, etc.).
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+              •  Getting and setting file descriptor flags (fcntl(2) F_GETFD and F_SETFD).
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+              •  Retrieving open file status flags using the fcntl(2) F_GETFL operation: the returned flags will include the bit O_PATH.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+              •  Passing  the  file  descriptor  as the dirfd argument of openat() and the other "*at()" system calls.  This includes linkat(2) with AT_EMPTY_PATH (or via procfs using AT_SYM‐
+                 LINK_FOLLOW) even if the file is not a directory.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+              •  Passing the file descriptor to another process via a UNIX domain socket (see SCM_RIGHTS in unix(7)).
 
-If you want to undo deduplication, reply with:
-#syz undup
+Both fchownat() and fchmodat() variants have had this behavior which
+is a bug. And not a great one because it breaks O_PATH guarantees.
+That's no reason to now also open up further holes such as getting and
+setting xattrs.
+
+If you want to perform read/write like operations you need a proper file
+descriptor for that and not continue to expand the meaning of O_PATH
+until it is indistinguishable from a regular file descriptor.
