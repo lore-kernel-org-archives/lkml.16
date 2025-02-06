@@ -1,146 +1,466 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6156513D897
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738846596; cv=none; b=ZYew3BHMbVzsD+MPqn/HfgPq5zQsJiqLoVPp8hU/QkDj2ZXF4Rxna8wvfqeebrpEBGSZ9mykrWnSYxCsO+QNC72yWVt3b375jSa4kQ6ztPa0JUzwD9oeiv4YWxccMSZ1VVzJen312eJQSBE3MS2gWZ6nGGUHQ2wMvIgdBhpY6AI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738846596; c=relaxed/simple;
-	bh=3g/wINSloqxIGUCYfp0t6LFlzfc4hL1rcpwnzCDRZUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R/iPMgIQNr50Wbv8HuWNKmuxLFR4dQmjILlqF3FErZVIwppgS6BnnW4B+iiShTQVFkXKxB4wEnJE3EGbUaY1huxmHjFmWk4RIl6yUrzpJKxQ4JluL07uHulmLoSchPKURP0rF8un9yF5DVCX24yeHZwePoTwCqf9HmFxfCm7LRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=A4amCw3V; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5081B22DF89;
+	Thu,  6 Feb 2025 12:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738846708; cv=fail; b=EoO4awihAi3hTGYA+Z1D3aqVgM+HGSzS6TxSev/Ig8TiE6p1AEPHueNugudLxI87rBdwe1zUPNSj+5KnB06fDmvAP9X6P3Y7MAXvT+CiW5TWfq3bPtDH0bvZhBgewEQRSEx/YLmuSvmpXMYoWKKbcLYlWUUnjIaOHkOOvP2BmW0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738846708; c=relaxed/simple;
+	bh=Ali9KIyuf9qAG4O8RAl7dDwQG2IvPt23GGSv0cQQKSE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lx/s0LGrZOdMPL9W6hAwkICH4+gu11l8ce7zQVn3EcBFke2T30NQjxN0GZT1JiBM0erZ2sCBfYdcm3Z6aUEOhzKrDUzsj9JKrL5J86iq5+3td4Gxa7sdfqr09F29U0FyvWSWHzU8WFMuvEvAaywkAz9zdLKOLRyurghCdsIPl7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Od9PK47l; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="A4amCw3V"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361c705434so5950175e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:56:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738846592; x=1739451392; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dSneZhQMz42NLjIZ9INmqk/5Ehqq2enW8mbh8jsOOB0=;
-        b=A4amCw3VFFd0gqBO/UFM9gSXELeRlXBB9b4KhozlMibnc0gaeTU7yXBJHWx5Z1yOvk
-         Cyq9Qvb/FQDfnCJPTCAJHZ/fq0+2oMknHkagt8Cz7RuajqbCbM1Mam9DfHm8MfQjsqi5
-         4Ic3/X5ATY7okVNjiH3YK3U4mFJ3SyD26weUHTLB3MRjR8wzUrvEJC+qwXUpJVlWcHeE
-         yR4ZN3te1+8kmQKsSkpVbDBcGCOj1k9KgyLJk41iBHTzP7/vuDKTxd+ayiLbHFyoPrD5
-         I7Gp/AOJgCxquSVSzB2M3u/hBJ/OO8O5eyrVboAKEGsf6XYuoFEVYiVY9Z5wD8IpAfz9
-         elVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738846592; x=1739451392;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dSneZhQMz42NLjIZ9INmqk/5Ehqq2enW8mbh8jsOOB0=;
-        b=mm6oF9UwAeR1F3eaxIJ2/MNhaz+6F3tHNZKKj4Gf4Z3ZZ6C6WZTiHXzJ5QoG2LCD7T
-         5UzGQ8Wof0M/fZVKgp7PaQChPay+amifjTkANUjG4dqbyJurQUmQy/YKQY8t8jDdo0Jq
-         FFCk+uEUmz8hGhgvt6/P8RIHj+Id8DeRSk4slIkpcfSr/m+tb4bzeIWrCKF6gcyTeNQG
-         SysQoYqy/kPGI1RwK4bUYbeF1t8lJbIOCYEXT+hjyGS/uEn2aigXOkKNKIQkl2sLS3XE
-         x8pxMUsxVI1XQTEG8I0Dpfmrfjd32yZoFuHnK9GWOkLrKiCcs7JFXmu5s+QpQ/rLQD7M
-         Y9Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4SyMwTQMd6chro7OTxHgw613bL7n+R8zV8X4iLYAbao0R1MmQ2m0Z4eQKu2IG3KgVjoE0Fb0sMu1jUj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymS09WL7DuoFjLfXO+YXkYDomZDMnMQS49ywokWZLkGamDOxmV
-	owjpxPk/S8aSxI3lWNVESjIlZHYJnc2qgkxRgCt2PKAJrU2xJClA///gzTsnJOI=
-X-Gm-Gg: ASbGncvWRtD6YB9MmzSHh8lVjXzYbr+OHeW61gIxOL3h31Y5IKph4VPYfVzCjpL6ZkB
-	RtXkCJaMhiRPqToidjHt/S7x23Kcniz9k+FQxXcg0C0T2e4rrumxGR0qnPOjFmsEQlACzGEHVrq
-	Mi9cTAgBoPSvjCO/X3lc69sMQh31XnnSxO66gZWWJjzL9ZIxEk3Z+j85rncr1CcQhRZBcnxFSGV
-	88U8Y64A0sjaQCuVGFNba41dMhs9QHHYUkqbJiorUY/n8WBQ8VPnEGUxdX6JOX9SUEc2LI6/pR9
-	c9YqtOHJkVL48qRlpSeBaSY7f+lKYEjt8lzku3x53KvWwH1E3lz+GPPvYn7H
-X-Google-Smtp-Source: AGHT+IHo0rAwCXLXwfKWz6RSqfUjc9Bk6Vt9OF485t+NIZ62i+CSdactAKssxCygX1CrtVfPW8ntaQ==
-X-Received: by 2002:a05:600c:3b0f:b0:434:a529:3b87 with SMTP id 5b1f17b1804b1-4390d434065mr56547865e9.10.1738846591542;
-        Thu, 06 Feb 2025 04:56:31 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd8000sm18420605e9.37.2025.02.06.04.56.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 04:56:31 -0800 (PST)
-Message-ID: <00485221-2343-4d5c-93ca-3a28a59427d2@rivosinc.com>
-Date: Thu, 6 Feb 2025 13:56:30 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Od9PK47l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738846706; x=1770382706;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=Ali9KIyuf9qAG4O8RAl7dDwQG2IvPt23GGSv0cQQKSE=;
+  b=Od9PK47lrfEaGh4G26iBolzfxCO8MAhRrRaKbg/damwgYfAPkTOliTXy
+   tvd0xXgx/Kr0T3YmyW9r3HN1Wdx710VtGd7PdQVpFOrEhnNEda4CvMcrA
+   s59Pg9BDQBKmEIH5RWrvIlx96kMeFZzt/RERfxHL7k8w2sIezT8UeXtgR
+   pAEwcoIIBBkMDzEqpnqjRgrhzu12eq1pkq76BBbnku1zgAZp4IhcalUvJ
+   OSOkWYmmEJX7X4VX+M9NQ/OG5Xez6tt+9zYqM3FDTVyWv8obS4YvzED7c
+   XIFLYzXdL1+nK/Z+Y6QhMqydPk9G9iEVLte6/K5igIMdNLH3bXjOGJrTs
+   g==;
+X-CSE-ConnectionGUID: WWCyqwOfSYq58zvQ1XLA8w==
+X-CSE-MsgGUID: wnn91NrSTXyVhnSCJpoyKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42281982"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="42281982"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 04:58:25 -0800
+X-CSE-ConnectionGUID: ttN44p78Spuc2cv8ztNT0Q==
+X-CSE-MsgGUID: 7tLQslnWQRiHeKlxYMZmMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111030285"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Feb 2025 04:58:23 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 6 Feb 2025 04:58:22 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 6 Feb 2025 04:58:22 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 6 Feb 2025 04:58:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DMxckqGEL/bR0I31J2oPbUYgDxOFYKXlY2OzbKiGc2EISsof/A+UnH2/HFcVCWVbn74jc7SUmmnUDlNkP+NsJgz2lG949w4LiBBn19ykwxejoZnj2bAiAfv9f+NodI488R+NOb9jqZ1rXjQsoddBFP5RpBaOd1kwAe0sFvLKzhqssh8JUKEUi05I07bqiX57eTgZFG4xA+aUcH7pUlDKgJ/cXckSG5QiV9YW4DfzD0mXxfKIDoj4EonSKIeuqWZUYqqhOnmlGwtYPo/ERboZB4WX0U72CdyfPNYcwPojEiaNmHXlz4bPFksIs3w8GjsNSc6bXj0ZO4LvSaWm9d0FUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3PQtbDOswEvWlnfSu7y84F88uLmn8i2rk+bytGB5RBQ=;
+ b=QdIX6NE1Yb4A7ruMLzRuuwhUf6iq7ailGizUVPLpPN66MyB/QZI8XsvMU82d277Y/7AgDHBy232eGccKZAASuEgG+IIK4Sm+8YyXe5lNdXiLQfgkaJxLYYsk6p7HTsFEamc0HslNhl3LXJgAgHSYz3CMkkCY/rQK2dyBkVVJwOy55zfnFqd4I/gIaZuqbIk2SGftBLjkMuqzTQRZ5A8a5jMO1O8Hb50thz8HBZl4tMoBhb5MwUDv0XFovQUstUB1DTWJ5TGiWFnR6OtseGh0BGWdf+DoxqmIZAAVzFPo6B+ItH1uelo32iovqBQYYHvM4IYdbzRT6Vpmm13FgLICbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6239.namprd11.prod.outlook.com (2603:10b6:8:a7::20) by
+ SN7PR11MB7465.namprd11.prod.outlook.com (2603:10b6:806:34e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
+ 2025 12:58:06 +0000
+Received: from DM4PR11MB6239.namprd11.prod.outlook.com
+ ([fe80::244e:154d:1b0b:5eb5]) by DM4PR11MB6239.namprd11.prod.outlook.com
+ ([fe80::244e:154d:1b0b:5eb5%4]) with mapi id 15.20.8398.021; Thu, 6 Feb 2025
+ 12:58:06 +0000
+Date: Thu, 6 Feb 2025 13:57:33 +0100
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: Andrey Konovalov <andreyknvl@gmail.com>
+CC: <luto@kernel.org>, <xin@zytor.com>, <kirill.shutemov@linux.intel.com>,
+	<palmer@dabbelt.com>, <tj@kernel.org>, <brgerst@gmail.com>,
+	<ardb@kernel.org>, <dave.hansen@linux.intel.com>, <jgross@suse.com>,
+	<will@kernel.org>, <akpm@linux-foundation.org>, <arnd@arndb.de>,
+	<corbet@lwn.net>, <dvyukov@google.com>, <richard.weiyang@gmail.com>,
+	<ytcoode@gmail.com>, <tglx@linutronix.de>, <hpa@zytor.com>,
+	<seanjc@google.com>, <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
+	<justinstitt@google.com>, <jason.andryuk@amd.com>, <glider@google.com>,
+	<ubizjak@gmail.com>, <jannh@google.com>, <bhe@redhat.com>,
+	<vincenzo.frascino@arm.com>, <rafael.j.wysocki@intel.com>,
+	<ndesaulniers@google.com>, <mingo@redhat.com>, <catalin.marinas@arm.com>,
+	<junichi.nomura@nec.com>, <nathan@kernel.org>, <ryabinin.a.a@gmail.com>,
+	<dennis@kernel.org>, <bp@alien8.de>, <kevinloughlin@google.com>,
+	<morbo@google.com>, <dan.j.williams@intel.com>,
+	<julian.stecklina@cyberus-technology.de>, <peterz@infradead.org>,
+	<cl@linux.com>, <kees@kernel.org>, <kasan-dev@googlegroups.com>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <llvm@lists.linux.dev>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH 01/15] kasan: Allocation enhancement for dense tag-based
+ mode
+Message-ID: <zwug3yr7p7x7276g5tpwsvuxefkxn2pwggozgq7krdaquqktc5@eefn3vi3tynu>
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+ <808cc6516f47d5f5e811d2c237983767952f3743.1738686764.git.maciej.wieczor-retman@intel.com>
+ <CA+fCnZd3sP1_x2c5FvztA6LzsBY3Fq3cD5cJ6FQ+FAnmawe06Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+fCnZd3sP1_x2c5FvztA6LzsBY3Fq3cD5cJ6FQ+FAnmawe06Q@mail.gmail.com>
+X-ClientProxiedBy: DB9PR02CA0022.eurprd02.prod.outlook.com
+ (2603:10a6:10:1d9::27) To DM4PR11MB6239.namprd11.prod.outlook.com
+ (2603:10b6:8:a7::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
- checks
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, Conor Dooley
- <conor.dooley@microchip.com>, Eric Biggers <ebiggers@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
- <20250205-quench-entrench-09bed8c8c823@spud>
- <00dc2fb7-da9b-42c3-9c3b-47d917df7cf6@rivosinc.com>
- <20250206-overcook-legibly-0350a9af8a2a@spud>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250206-overcook-legibly-0350a9af8a2a@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6239:EE_|SN7PR11MB7465:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f61d69c-7158-4439-4902-08dd46ade5fa
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?M3ZzUU5wK2xLa1dPZmpYNFR6OXZMOVZGZ093WXFaMGx0ekxLRCtDL0FvTXZw?=
+ =?utf-8?B?ZStIdHovbHY3NXJoSTAyTDA4dkVRb2JZMlIwRUl5SGN0eS93ZC80U0JNRTk5?=
+ =?utf-8?B?a2VGM2d6Y1JYcVduU2p3QmlkTGpKNnhwbW5TeVpXYmF1SHoveWlJb3FweUVn?=
+ =?utf-8?B?Ri9Pd09TaERxZFIzVGwxVzJXTThsOXJUOGtKNW5IQUZsUUIvMkRWWm1pM2NH?=
+ =?utf-8?B?OTlZTVBlMSs1UGpJVll4dEhxSGdrKzlxc3pDWUZUY0RhN29KeEl0MDY5dW9Y?=
+ =?utf-8?B?SktDaC96N0dtNEpUYlhUdzUrY1h0UkpPS3FJWDFVTGw4ZTJZMDNvTWhTLzhM?=
+ =?utf-8?B?azczaHQwU21OeWIyZHZpTmQvWGlCMFFtRUpCWUFxYjNTVnY4UGc5R3liQkRx?=
+ =?utf-8?B?bU16T1cyODFUWHlPa3phQUViWmZGb3ltbngyZmo0RFZ2WUw0b3o0aElqdk5E?=
+ =?utf-8?B?WnZ3eXBiWHpyVnZXaU8wWGdZT3RISGRRckk4MEhUMzF3SC81MkgzVk1vNUFE?=
+ =?utf-8?B?d3BBRmVvYUQ3SmtDMnl2NWdmQUJMTUlMdkZ5VjJxbGUxa3VSaU5zR1hQTDMw?=
+ =?utf-8?B?UDY0YVdUWVFkZjR3NGZSTUw5aWdseUZNSndnQWJwOUVaTmRlM2xqT0RIaEZp?=
+ =?utf-8?B?YTVhenIxc3ZZODZ6ckJodHdWbGxlMXZCVldSZnVIcUVFdkdsekJJNGZGWFh1?=
+ =?utf-8?B?NWJqc01HU25QL0Zid3ZlZlNCWkhkOFJPWE14UGp6Q2xvck1qQTF6QUtibmRv?=
+ =?utf-8?B?UEJmMDd3NFloR3RTdFAzZ28rdktnL0V0RTFmaEZjTnRNTUtveDFqWFFXNjFo?=
+ =?utf-8?B?QmpQR001L0JmeUdkY25zSkZGcy9GL1NQUng5dDlPNWQzMlR4WFRBK0ZEMjdD?=
+ =?utf-8?B?cDJxcWlIRVBDczAxV1dTeGV2K1lRZ0RFNGE2T3IvMTdkbEZoTkx5YXZQc1FH?=
+ =?utf-8?B?cTFpd2dWbnNpOWl3OWZQNWVjNzNsNktUd2hsbU5yaWJWaVc5NzkzWEE0bUxL?=
+ =?utf-8?B?cGk1WHVDbFg0dm0wWHIwNUlQOThVQm0rZjNYZGp2c29KSEFneXV1UGErU0RM?=
+ =?utf-8?B?eWw4ZGlseTVMQkFyRTEvVFJ2b2lwZVhGdzJjUXFEOU15bENZR2d4MC9ETWUx?=
+ =?utf-8?B?TzJVbm5XL1dXY1I0OGk0ZElTRE5qMjNmeldUQkEyY3pIb3lLSnYxMlE4KzF5?=
+ =?utf-8?B?MjNiT3FiSEU5SlVOTmR4ZVhMcmVSb096MDh1eU5LWHp1dFhLamhjRTBmUlJ5?=
+ =?utf-8?B?azA2L1FnejdlTjdwM1I5c3d0THAzYjhXZVIxQlRuamcrS0hqYU5qbGJvc3R6?=
+ =?utf-8?B?cGsxWWdEbWtnYjEvaWx6RUxSM1BRVUtERFAvZ215Q2YzbnpBOVYyeFR5RzRL?=
+ =?utf-8?B?Mjh4YzNaNWdhOEVGazJ5QlRSUDJjOThYN1FzbWl6VDlDYVZ0UXA2UU05WXpY?=
+ =?utf-8?B?UUY1dUw0NVRkblY3blRoMkNQTFF5TVdybEwvanRpTWg5TU5jQU1na1MySmJa?=
+ =?utf-8?B?M280ZEdUaDloWFk3NUVYVERhOTc5Y0ZhZUFWT0Y4dGg3bkZEa3N6bkVvdlAx?=
+ =?utf-8?B?c3REdG1wTkl1eWt2QThHRjFLMkVEQVN3UFdzSTRTUjdmNjR0OU43UTJ3bG95?=
+ =?utf-8?B?dDlyY3lpQVBNTGQzYVJMdzM1MjA2K0FTRkFqV2xXNDdkYjRZcDVjOXBGQjBv?=
+ =?utf-8?B?emVoQUJaYXhOWkNTK2h2MWF5VnR0ZTZWYjJtYTMwNEkyUm5adUxnZHhnSllJ?=
+ =?utf-8?B?QWxDYmtUc1o2UE5EZlVCMkx3L1dUMkh2WFFXNllHVVdhL3dkNVYraHVEUFdX?=
+ =?utf-8?B?SlpjazBnQUhSZjYxQlVQbEtsayt3cU01Y2RLNk9BazJ2K0RQZVRPN1JIbEFo?=
+ =?utf-8?Q?xNS6UoHwZYJl9?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6239.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1I1NGhjMXZjT2JHRkdQdWR4OVdYcm12bjBKSU9VZGszci96c20wcUlFYlJu?=
+ =?utf-8?B?dUlZS3gvNzFqdTRPS0FnNmttd2Z5T0JST0ZSU2JUQ054L2VNS3k0TWlZSFJW?=
+ =?utf-8?B?bU9Lelk2OXlodE0xZWw5RDJhZGt0bWR5TUhGTExRSUNGeThUMnBPejI5T1ZU?=
+ =?utf-8?B?ZWlxN2ZoQm4zelY1NDRhS0x1aWsvQjBIZGQxSDhmb2Z1KzFXdUpKOTBWS0NC?=
+ =?utf-8?B?NnRjekxFUWhXV0FMSXBOMlBMUmRtc3g3MFJVZXlrNGdmZjlpdmQvZXU1eEc4?=
+ =?utf-8?B?dFdNY2hqU1NWaVNKS2JsYTZ5ei9VRTJJMVhOS1NJNFJxRG9KYVRLWVJWRXJn?=
+ =?utf-8?B?VXhjcFNIeFZvZThDQW9iTzQxaUtTZnRyM3hTQllWTHFqeFdqem9nWTkyUlpl?=
+ =?utf-8?B?YWJhaGJFVG5ERWFlOHRSeThTRFBsTWpqbTlGR01rL0N6MW1lSzd3Zng0b2NQ?=
+ =?utf-8?B?MVRMbGdPViszSUFiSDJmYTBkVWE0czMwaDVJL2U0cGVadjAzTTNHaFE3WGJn?=
+ =?utf-8?B?SGNwdlNvUGlCbDJicjZUQVEwZzBmc25tZE9VbWI0QXF5ZStkMURZakVISVpS?=
+ =?utf-8?B?anVpT0RZZnZVZ09HMFFhL29TcjNMU0xUQU9nL1hDMkdYait1aFY1UTBsM0x5?=
+ =?utf-8?B?MUFnUXh6MjgrVWMzeTk5bHdVU1VGQnR5WFhlNlAvR1FPR3ZRT3cvWHVvVGtP?=
+ =?utf-8?B?c3VaRzhleW1xQlhpc3R4NWNRNTRIV3FTZEN6Q20rcUcvaGo1S2pPZFM0NGtZ?=
+ =?utf-8?B?UGcxL0dJMEpjU0NTTWVvWEVZZWliQjZ0ZEhOQzVzeklpVmpBUXJweVFtQklx?=
+ =?utf-8?B?VFNFSWdOOHdwTVo1ZXlWSnRWRDFRTDdIS3ZVQ3lKUmQ4NWRIN2VNSThlNjB6?=
+ =?utf-8?B?aSszanllTFBwY1A2dU84bTROODdUcDZxaktkNk81RGd1bFNhUXVEakFDQldL?=
+ =?utf-8?B?YlhaeC9zSkhHNmRSQU5TZTl4NmtTcTU1aHgydncramMrV2Yvcyt5ZzE1OVps?=
+ =?utf-8?B?cHhORjRCMUpna1pYNFlicEZSZW9IVFNnME90a3NNZ0xjQTJmNmVnVmcvRHEz?=
+ =?utf-8?B?QXJ4MDVtOGNJVGVIb3c1aFhhS0dXcDNJZzRESTV6ZTJsa0NzQ1U2VjNpYTBH?=
+ =?utf-8?B?WjloejQwcTNIMVRDbXRJZ1FnUnpvZnZIN3poRkJrZGMveHNkb3R5cnEyeHI1?=
+ =?utf-8?B?WjB0a3d5K3YyOHg3UWsrVUFDTXRZK2pBdm0zVmZUeVpSZHZqRXNyNEhaUEg5?=
+ =?utf-8?B?M25oTVBtaS9yQ3VSejkxU0N0MFZjN1hweHJ6bEtpYzZnWUlZN1dFY3ovc2xw?=
+ =?utf-8?B?eUlRSERnTkVKWXhrNkZIUlhzUlBFNjB3QmdGQzVmZUI3WG10djRMT1ViSUU5?=
+ =?utf-8?B?VWxqRDEvMzJMTXYvaE5rZDk1UUVINWs5MW5QK3F5WUcrd0NLOW1jTUVDRWNp?=
+ =?utf-8?B?VWVlczFmNmJ1Yng5ZUVRZFFiM2VYMFR5Vzl6YjJkajNMc3ZRcU4vN0g0cWJm?=
+ =?utf-8?B?RDk5cEt2dm1naHlzcHRUV1J4T3kzL1l6Y1NtbnRBek9YYWRjNGpPS1NmUVQy?=
+ =?utf-8?B?eUs3S2VDMEFNZURKclVNeFZXN2pRTFl0Z2tlcHBZNkY5bHBzeTVlak5zSGV5?=
+ =?utf-8?B?VlNoRjdrRHM4LzJ4SWYvSVJWdlduUFVROUdIRC9lVU1zVW1XTU5QTUxITCsw?=
+ =?utf-8?B?Y0VwSzlOT2NsZjhyaE04eWhqVE1PSnVBaWtnN0lzMndLZUlYWmJiTE9NOVg0?=
+ =?utf-8?B?TTY4VkZrVmlVZ0ErblBQNlg3RjUvRG84SUYycUg3WFUyWUNtYTBYVUFLU3d3?=
+ =?utf-8?B?WklZK0pGOWhQdmJMR09Md05CaEswT0pzN2JLT0FBUjZtREh6MDlNWER1Y0Nm?=
+ =?utf-8?B?QVcxOTNTNi9NekRTWWpPTWdmeUdkSnovTEFSY0dhQU82RWtLcVRSbzFUSHBy?=
+ =?utf-8?B?bXUzaUJnc3Rta1hDUWdheWNIWGFqWi9VQmprMWtPbkRMQUNGOVRpbDZiWTJo?=
+ =?utf-8?B?Vk5WWWV3OFdyak9lYVZtUlJqRWE5OEN4dEpJLytwQVExZ2J2bE9XRjdNbzFn?=
+ =?utf-8?B?SW1rUmFJNFhlT2JGNEVMb1dCSWYwWlUyNVJ6dUJCcjdUSzBSWFZMY3hGYmFY?=
+ =?utf-8?B?ajZsZjdPTFVJM0FGWWJUWitscGc5ZHJuTmV0Z1FpVkJwRlNiVy9NeSt6L01O?=
+ =?utf-8?Q?icNptX48dzWiD2B8/y2xlOQ=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f61d69c-7158-4439-4902-08dd46ade5fa
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6239.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 12:58:06.0421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hCJZ9Ci/6SmfQb0nmcwnv7xPL1zaIV/JoLbMQIXOb4yV+fxU1D1D6F6hAPK0/b692M5+Z8Zhmzut4gnTj2F+e11gfDmmdw/LdBYb1BqtuBk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7465
+X-OriginatorOrg: intel.com
 
-
-
-On 06/02/2025 12:24, Conor Dooley wrote:
-> On Thu, Feb 06, 2025 at 11:20:35AM +0100, Clément Léger wrote:
->> On 05/02/2025 17:05, Conor Dooley wrote:
->>> From: Conor Dooley <conor.dooley@microchip.com>
->>>
->>> Using Clement's new validation callbacks, support checking that
->>> dependencies have been satisfied for the vector crpyto extensions.
->>> Currently riscv_isa_extension_available(<vector crypto>) will return
->>> true on systems that support the extensions but vector itself has been
->>> disabled by the kernel, adding validation callbacks will prevent such a
->>> scenario from occuring and make the behaviour of the extension detection
->>> functions more consistent with user expectations - it's not expected to
->>> have to check for vector AND the specific crypto extension.
->>>
->>> The 1.0.0 Vector crypto spec states:
->>> 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
->>> 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
->>> 	or application ("V") base Vector Extension. All of the other
->>> 	Vector Crypto Extensions can be built on any embedded (Zve*) or
->>> 	application ("V") base Vector Extension.
->>> and this could be used as the basis for checking that the correct base
->>> for individual crypto extensions, but that's not really the kernel's job
->>> in my opinion and it is sufficient to leave that sort of precision to
->>> the dt-bindings. The kernel only needs to make sure that vector, in some
->>> form, is available.
->>>
->>> Since vector will now be disabled proactively, there's no need to clear
->>> the bit in elf_hwcap in riscv_fill_hwcap() any longer.
+On 2025-02-06 at 00:43:46 +0100, Andrey Konovalov wrote:
+>On Tue, Feb 4, 2025 at 6:34 PM Maciej Wieczor-Retman
+><maciej.wieczor-retman@intel.com> wrote:
 >>
->> To which part of the commit does this refer to ?
-> 
-> Copy-paste mistake when splitting in two, whoops.
-> 
->>> @@ -397,8 +414,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->>>  	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
->>>  	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
->>>  	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
->>> -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
->>> -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
->>> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts, riscv_ext_vector_x_validate),
->>> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vector_crypto_validate),
-> 
+>> Tag-based KASAN (on arm64) works by generating a random 8-bit tag and
+>> putting it in both the top byte of the pointer (that points to the
+>> allocated memory) and into all bytes of shadow memory that correspond to
+>> the chunk of allocated regular memory. Each byte of shadow memory covers
+>> a 16 byte chunk of allocated memory - a value called KASAN granularity.
+>> This means that out-of-bounds memory accesses that happen inside the 16
+>> bytes can't be caught.
 >>
->> I'm not sure if I already made that comment, so here we go again.
->> Shouldn't Zvbb use riscv_ext_vector_crypto_validate() as well ?  The
->> spec states that Zvbb is a superset of Zvkb and Zvkb uses the
->> riscv_ext_vector_crypto_validate() validation callback. I guess Zvbc
->> should also use it based on your spec excerpt in the commmit log.
-> 
-> Zvbc does use it, no? I'll amend the Zvbb one, there should only be two
-> users of the "x" variant.
+>> The dense mode offers reducing the tag width from 8 to 4 bits and
+>> storing two tags in one byte of shadow memory - one in the upper 4 bits
+>> of the byte and one in the lower 4. This way one byte of shadow memory
+>> can cover 32 bytes of allocated memory while still keeping the "16 bytes
+>> per one tag" granularity. The lower 4 bits of each shadow byte map bytes
+>> of memory with offsets 0-15 and the upper 4 bits map offsets 16-31.
+>>
+>> Example:
+>> The example below shows how the shadow memory looks like after
+>> allocating 48 bytes of memory in both normal tag-based mode and the
+>> dense mode. The contents of shadow memory are overlaid onto address
+>> offsets that they relate to in the allocated kernel memory. Each cell
+>> |    | symbolizes one byte of shadow memory.
+>>
+>> = The regular tag based mode:
+>> - Randomly generated 8-bit tag equals 0xAB.
+>> - 0xFE is the tag that symbolizes unallocated memory.
+>>
+>> Shadow memory contents:           |  0xAB  |  0xAB  |  0xAB  |  0xFE  |
+>> Shadow memory address offsets:    0        1        2        3        4
+>> Allocated memory address offsets: 0        16       32       48       64
+>>
+>> = The dense tag based mode:
+>> - Randomly generated 4-bit tag equals 0xC.
+>> - 0xE is the tag that symbolizes unallocated memory.
+>>
+>> Shadow memory contents:           |0xC 0xC |0xC 0xE |0xE 0xE |0xE 0xE |
+>> Shadow memory address offsets:    0        1        2        3        4
+>> Allocated memory address offsets: 0        32       64       96       128
+>>
+>> Add a new config option and defines that can override the standard
+>> system of one tag per one shadow byte.
+>>
+>> Add alternative version of the kasan_poison() that deals with tags not
+>> being aligned to byte size in shadow memory.
+>>
+>> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+>> ---
+>>  include/linux/kasan.h | 18 ++++++++++++++++++
+>>  lib/Kconfig.kasan     | 21 +++++++++++++++++++++
+>>  mm/kasan/kasan.h      |  4 +---
+>>  mm/kasan/shadow.c     | 33 ++++++++++++++++++++++++++++++---
+>>  4 files changed, 70 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+>> index 03b440658817..ea0f5acd875b 100644
+>> --- a/include/linux/kasan.h
+>> +++ b/include/linux/kasan.h
+>> @@ -35,6 +35,24 @@ typedef unsigned int __bitwise kasan_vmalloc_flags_t;
+>>
+>>  /* Software KASAN implementations use shadow memory. */
+>>
+>> +#ifdef CONFIG_KASAN_SW_TAGS_DENSE
+>> +#define KASAN_GRANULE_SHIFT    (KASAN_SHADOW_SCALE_SHIFT - 1)
+>> +#define KASAN_SHADOW_SCALE_SIZE        (1UL << KASAN_SHADOW_SCALE_SHIFT)
+>> +static inline u8 kasan_dense_tag(u8 tag)
+>> +{
+>> +       return (tag << KASAN_TAG_WIDTH | tag);
+>> +}
+>> +#else
+>> +#define KASAN_GRANULE_SHIFT    KASAN_SHADOW_SCALE_SHIFT
+>> +#define KASAN_SHADOW_SCALE_SIZE        (1UL << KASAN_GRANULE_SHIFT)
+>> +static inline u8 kasan_dense_tag(u8 tag)
+>> +{
+>> +       return tag;
+>> +}
+>> +#endif
+>> +
+>> +#define KASAN_GRANULE_SIZE     (1UL << KASAN_GRANULE_SHIFT)
+>> +
+>
+>Is there a reason these definitions are added to
+>include/linux/kasan.h? At least within this patch, they are only used
+>within mm/kasan, so let's keep them in mm/kasan/kasan.h.
 
-Oh yes Zvbc is already ok, forget that then.
+Parts of x86 arch use these later (minimal slab alignment, kasan shadow start
+address) so I thought it was convenient to already have it in place here?
 
-Clément
+Since I'll be reordering patches I can just move these changes together.
 
+>
+>>  #ifdef CONFIG_KASAN_SW_TAGS
+>>  /* This matches KASAN_TAG_INVALID. */
+>>  #define KASAN_SHADOW_INIT 0xFE
+>> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+>> index 98016e137b7f..d08b4e9bf477 100644
+>> --- a/lib/Kconfig.kasan
+>> +++ b/lib/Kconfig.kasan
+>> @@ -19,6 +19,13 @@ config ARCH_DISABLE_KASAN_INLINE
+>>           Disables both inline and stack instrumentation. Selected by
+>>           architectures that do not support these instrumentation types.
+>>
+>> +config ARCH_HAS_KASAN_SW_TAGS_DENSE
+>> +       bool
+>> +       help
+>> +         Enables option to compile tag-based KASAN with densely packed tags -
+>> +         two 4-bit tags per one byte of shadow memory. Set on architectures
+>> +         that have 4-bit tag macros.
+>> +
+>>  config CC_HAS_KASAN_GENERIC
+>>         def_bool $(cc-option, -fsanitize=kernel-address)
+>>
+>> @@ -223,4 +230,18 @@ config KASAN_EXTRA_INFO
+>>           boot parameter, it will add 8 * stack_ring_size bytes of additional
+>>           memory consumption.
+>>
+>> +config KASAN_SW_TAGS_DENSE
+>> +       bool "Two 4-bit tags in one shadow memory byte"
+>> +       depends on KASAN_SW_TAGS
+>> +       depends on ARCH_HAS_KASAN_SW_TAGS_DENSE
+>
+>I think this should also depend on KASAN_OUTLINE: Clang/GCC aren't
+>aware of the dense mode.
 
+I wasn't sure I fully understood how inline/outline interacts with clang/gcc on
+x86 (especially that I think some parts are still missing in x86 clang for
+tag-based KASAN). So I understand that compiling with inline doesn't do
+anything? If so, is it not doing anything because of missing compiler code or
+something in the kernel?
+
+>
+>> +       help
+>> +         Enables packing two tags into one shadow byte to half the memory usage
+>> +         compared to normal tag-based mode.
+>
+>But adds some performance impact?
+
+I tried to measure the performance impact of dense/non-dense but didn't see much
+more than noise in my tests. But I'll mention that there is some small
+performance impact due to more bit shifts.
+
+>
+>> +
+>> +         After setting this option, tag width macro is set to 4 and size macros
+>> +         are adjusted based on used KASAN_SHADOW_SCALE_SHIFT.
+>
+>I think this paragraph is an implementation detail and we can drop it.
+
+Okay, will do.
+
+>
+>> +
+>> +         ARCH_HAS_KASAN_SW_TAGS_DENSE is needed for this option since the
+>> +         special tag macros need to be properly set for 4-bit wide tags.
+>> +
+>>  endif # KASAN
+>> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+>> index 72da5ddcceaa..0e04c5e2c405 100644
+>> --- a/mm/kasan/kasan.h
+>> +++ b/mm/kasan/kasan.h
+>> @@ -128,9 +128,7 @@ static inline bool kasan_requires_meta(void)
+>>
+>>  #endif /* CONFIG_KASAN_GENERIC */
+>>
+>> -#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+>> -#define KASAN_GRANULE_SIZE     (1UL << KASAN_SHADOW_SCALE_SHIFT)
+>> -#else
+>> +#ifdef CONFIG_KASAN_HW_TAGS
+>>  #include <asm/mte-kasan.h>
+>>  #define KASAN_GRANULE_SIZE     MTE_GRANULE_SIZE
+>>  #endif
+>> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
+>> index d6210ca48dda..368503f54b87 100644
+>> --- a/mm/kasan/shadow.c
+>> +++ b/mm/kasan/shadow.c
+>> @@ -123,7 +123,8 @@ EXPORT_SYMBOL(__hwasan_memcpy);
+>>
+>>  void kasan_poison(const void *addr, size_t size, u8 value, bool init)
+>>  {
+>> -       void *shadow_start, *shadow_end;
+>> +       u8 *shadow_start, *shadow_end, *shadow_start_aligned, *shadow_end_aligned, tag;
+>> +       u64 addr64, addr_start_aligned, addr_end_aligned;
+>>
+>>         if (!kasan_arch_is_ready())
+>>                 return;
+>> @@ -134,16 +135,42 @@ void kasan_poison(const void *addr, size_t size, u8 value, bool init)
+>>          * addresses to this function.
+>>          */
+>>         addr = kasan_reset_tag(addr);
+>> +       addr64 = (u64)addr;
+>>
+>> -       if (WARN_ON((unsigned long)addr & KASAN_GRANULE_MASK))
+>> +       if (WARN_ON(addr64 & KASAN_GRANULE_MASK))
+>>                 return;
+>>         if (WARN_ON(size & KASAN_GRANULE_MASK))
+>>                 return;
+>>
+>>         shadow_start = kasan_mem_to_shadow(addr);
+>>         shadow_end = kasan_mem_to_shadow(addr + size);
+>> +       addr_start_aligned = round_up(addr64, KASAN_SHADOW_SCALE_SIZE);
+>> +       addr_end_aligned = round_down(addr64 + size, KASAN_SHADOW_SCALE_SIZE);
+>> +       shadow_start_aligned = kasan_mem_to_shadow((void *)addr_start_aligned);
+>> +       shadow_end_aligned = kasan_mem_to_shadow((void *)addr_end_aligned);
+>> +
+>> +       /* If size is empty just return. */
+>> +       if (!size)
+>> +               return;
+>>
+>> -       __memset(shadow_start, value, shadow_end - shadow_start);
+>> +       /* Memset the first unaligned tag in shadow memory. */
+>> +       if (addr64 % KASAN_SHADOW_SCALE_SIZE) {
+>
+>So this is required, because KASAN_SHADOW_SCALE_SIZE is 32 but minimal
+>slab alignment is still KASAN_GRANULE_SIZE == 16... We should at least
+>hide this check is under IS_ENABLED(KASAN_SW_TAGS_DENSE).
+
+...
+>
+>> +               tag = *shadow_start & KASAN_TAG_MASK;
+>> +               tag |= value << KASAN_TAG_WIDTH;
+>> +               *shadow_start = tag;
+>> +       }
+>> +
+>> +       /* Memset the middle aligned part in shadow memory. */
+>> +       tag = kasan_dense_tag(value);
+>> +       __memset(shadow_start_aligned, tag, shadow_end_aligned - shadow_start_aligned);
+>> +
+>> +       /* Memset the last unaligned tag in shadow memory. */
+>> +       if ((addr64 + size) % KASAN_SHADOW_SCALE_SIZE) {
+>
+>Would it be possible to move this part to kasan_poison_last_granule()?
+>That functions seems to be serving a similar purpose but for the
+>Generic mode.
+>
+>It might also be cleaner to add a kasan_poison_first_granule() that
+>contains the if (addr64 % KASAN_SHADOW_SCALE_SIZE) check.
+...
+sure, I'll try to move these checks to kasan_poison_first/last_granule.
+
+>
+>> +               tag = KASAN_TAG_MASK << KASAN_TAG_WIDTH;
+>> +               tag &= *shadow_end;
+>> +               tag |= value;
+>> +               *shadow_end = tag;
+>> +       }
+>>  }
+>>  EXPORT_SYMBOL_GPL(kasan_poison);
+>>
+>> --
+>> 2.47.1
+>>
+
+-- 
+Kind regards
+Maciej Wieczór-Retman
