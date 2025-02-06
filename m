@@ -1,46 +1,46 @@
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651451990D8
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795C31A2393
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864341; cv=none; b=iWW4FrRL+TDtHYFxDzQV+WGB2naG75/7qD1ADWG2EpePJcxMmhAY4eyHdbcfZWWNx6b+gGCeshrX8CyLMTCL2id3oram2ftmuDmNC+hVwh4Dv9FGXYRIT+l465J6Fy8fU/Erf3k8ysQN+BdyO6/hxkzZAztVKzbBH7VlWRwKd24=
+	t=1738864342; cv=none; b=fCym0R3itlduXGialo9KD4lZL9EAAJ3RXYZl4iHkj++rjLAlkENALrpYz/BxmYmD+IBkDGwIq9VlnyPt/3XkaxyrvMlwIbe1WS+dobrh9TTqBa3zQj3VaEFRi57L2VGUtPVtqlnOuWglspogxMuodwsOoEzQdbRiF2q7Tn68FVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864341; c=relaxed/simple;
-	bh=RNAqustES4OK6p5oN/Vmu6avKZrUeLUvSGhGpBh5hbg=;
+	s=arc-20240116; t=1738864342; c=relaxed/simple;
+	bh=KwLia4Gck5DwZzqPB9B+JkSil8Txx3IWqpZMhqiKKs0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AVWCRHvEqS++7zin4gD81zvrMSUbnrtpI9wePZXn4tToiDsUnm0mPdIKdCNz1xfVnFGGwRara0iXkw5jECxmYNitxQEyyDR6FyVpvcadpKbTTHt3sPo9+cvnlYQBBSMx9zGP0p2gBhxnaMxwXrsDa55IUIIBT5b2FbNt2bB7PYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=jL1ziJa9; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=S5Q0R5jOF5GFmqcIEyKUxAoLuPsdNOnHAsHQGhNaJmQeNs888C8YCBmIsGUJwl6zXEDx1SV/mJxw7kDc1Bwj7HobxLCrHymrYeBDWVCDv8/AWMUDjmugauS3GRlPR/0qaEN+G2ThKGD+tcy4xDVf7V84ZRLsXH4Pi+QjqY8P0nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=2lr+6HCF; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="jL1ziJa9"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="2lr+6HCF"
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl6p6JzqzlgTtq;
-	Thu,  6 Feb 2025 17:52:18 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl6s0kSSzlgTtt;
+	Thu,  6 Feb 2025 17:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1738864331; x=1741456332; bh=V9yWL
-	LcSqRHRnbYyCxjqer5jNNS7tSduS4eAGnoACHM=; b=jL1ziJa968JPaFM7T7OzN
-	Oj+dKrik6T5SCSLPr9wFqGpJwq/c746S0eRJ7R0fUoDg6OoVsnYI08BgOFBI02ys
-	X1+ULKoLrfYa8GwFjydy/lavwogE3/BlN69vc4eHATJiqOeAHptWpPAweEcyrRS3
-	RAtaF5gsKVLTRRZzrL/ScUt18w9enzjV21Vrjb91qmJhfogXYIIJucfMhvCocm7l
-	0asdDHNg8cU+yrE6X9XnSXKFWfu6I/I2+bFn7UhuB9PbKuvSx+/+jrjdcGpnEj1S
-	w5U4bpPJ1OnY0vWenKh2sM0A6pPxtOSpCkcKmiIcjxVw05JCySuLh/8R+etbSSbA
-	A==
+	:received:received; s=mr01; t=1738864334; x=1741456335; bh=mw3iX
+	vKWs6mZ2oRT7U139PljHiChkcfQtdX/j6Z6+TU=; b=2lr+6HCFkG83bkAIyHOH5
+	hiUaIB/GyVJDN2XsHu8hLQQQtjzf2ol6+WvpuhIGysFJqd+T4l8nFlJhjViOWnCY
+	s2e8ZzlwLKdE3wBKjCM9247oYejTEcXP2hZcUCnSIHZr1OnBzJFHZAcGvtIlRrjd
+	P3sj1x19og536u0S+Aju9LnpC20yHijrFVKRJm8yv/jvHDURZmq01qPsRwy8ZH6C
+	CTmqtKjZDvFR+qGUcvASYr3PYAXtziuQMra2E8FPhwyLGuDXaclsWPiULKJXb1X8
+	66zcZOoGmMYkbmlW4ZSjMyjqxnHpqySAlSGgsEa4UMe3mu2kGOminJVsupgH81mA
+	Q==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id qal9tX9QDsiV; Thu,  6 Feb 2025 17:52:11 +0000 (UTC)
+ id Pw1jULBuNDYo; Thu,  6 Feb 2025 17:52:14 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl6c5zkdzlgTxg;
-	Thu,  6 Feb 2025 17:52:08 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl6g6gh3zlgTtf;
+	Thu,  6 Feb 2025 17:52:11 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>,
@@ -53,11 +53,12 @@ Cc: Will Deacon <will@kernel.org>,
 	Jann Horn <jannh@google.com>,
 	linux-kernel@vger.kernel.org,
 	Bart Van Assche <bvanassche@acm.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH RFC 18/33] misc: nsm: Fix a locking bug in an error path
-Date: Thu,  6 Feb 2025 09:50:59 -0800
-Message-ID: <20250206175114.1974171-19-bvanassche@acm.org>
+	Yang Wang <kevinyang.wang@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH RFC 19/33] drm/amdgpu: Unlock a mutex before destroying it
+Date: Thu,  6 Feb 2025 09:51:00 -0800
+Message-ID: <20250206175114.1974171-20-bvanassche@acm.org>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 In-Reply-To: <20250206175114.1974171-1-bvanassche@acm.org>
 References: <20250206175114.1974171-1-bvanassche@acm.org>
@@ -69,27 +70,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If nsm->lock has not been locked, do not unlock it from any error path.
-This bug has been detected by the Clang thread-safety analyzer.
+Mutexes must be unlocked before these are destroyed. This has been detect=
+ed
+by the Clang thread-safety analyzer.
 
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Yang Wang <kevinyang.wang@amd.com>
+Cc: Hawking Zhang <Hawking.Zhang@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Fixes: f5e4cc8461c4 ("drm/amdgpu: implement RAS ACA driver framework")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/misc/nsm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/nsm.c b/drivers/misc/nsm.c
-index ef7b32742340..185900cdad4a 100644
---- a/drivers/misc/nsm.c
-+++ b/drivers/misc/nsm.c
-@@ -367,7 +367,7 @@ static long nsm_dev_ioctl(struct file *file, unsigned=
- int cmd,
- 	/* Copy user argument struct to kernel argument struct */
- 	r =3D -EFAULT;
- 	if (copy_from_user(&raw, argp, _IOC_SIZE(cmd)))
--		goto out;
-+		return r;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c b/drivers/gpu/drm/am=
+d/amdgpu/amdgpu_aca.c
+index 9d6345146495..069b004f941e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c
+@@ -572,6 +572,7 @@ static void aca_error_fini(struct aca_error *aerr)
+ 		aca_bank_error_remove(aerr, bank_error);
 =20
- 	mutex_lock(&nsm->lock);
+ out_unlock:
++	mutex_unlock(&aerr->lock);
+ 	mutex_destroy(&aerr->lock);
+ }
 =20
