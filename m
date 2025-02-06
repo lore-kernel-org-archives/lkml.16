@@ -1,138 +1,91 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7E62253F0
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D952253F0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844808; cv=none; b=QTAaw+jhOtOwzWXHFv7vAbGygyeFRQ8jCNcHV9h/wBJ50JixaTB+gPGJR3LRRmQXr1O/0/LKEW5h9CrF2ZmmbVsRztzT+NWd5ieJz//r9vh6xmunxkvdSvQQD5AYBW5YnOeu6NDUHjgkx8e7ef7e7NWOHent5lNzquIUtCgHqtU=
+	t=1738844822; cv=none; b=pLXaU6mwisJnwTuGObzlTs52zczJlrlgZe20QnMbs4B5GXUZF51SAe0jVwv9G5xJCNUbXu9ZO0DJJ7vI1qa8SuNr1dS+zaBPRqLb9BJqv/5MkoQVMnBoKb0haAqQEci7Ft01jYon2931W6rrW6v6kGn1kdEeYxxpmmcr1Xu6mA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844808; c=relaxed/simple;
-	bh=m1nil9l9StnDO9vegDBbLfnBPV+aD7OvqjUSNnPY/g0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dIEY8gZeMVOniL4EKWntQ9vga+eRTfKrvk47A+jGxut/4gAOcONE3LONUXtVadvy5b748znu37gSX+AONFD/w5GajsV1LP7N0rIv1OGkOpixrF556pNgW4eGoTJe+wdw8mik9D+mysgHQACBLosCOVB070ja+IXYwEKQWHvu1Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dce3763140so1908157a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:26:46 -0800 (PST)
+	s=arc-20240116; t=1738844822; c=relaxed/simple;
+	bh=FmVuyo7J1UIS37hmHDk2aCaFQ1BM1miP6doTc/aUOIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVMCFSDSGSReFBa3aZ57C1IzYXizyyGxRvN8jFtm3SlS7YxPMapp5plIGx3CSF/ZTZQ0pHtSGPKXU6kOKvZ/Ui8WBrRXrf9Ute4gkCNYHvn0uK2lEXMlway0HrK3/HZIyzYIG/oLE/9uhYwDhFrhBQHW0sEBJhCJjXpgEZx42GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AaOb8QeC; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AaOb8QeC"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f9e415fa42so1384029a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:27:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738844820; x=1739449620; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aYbODeMThtwO7AzFjGUKnV2FNIfB0WdLU2NQSNL7YFM=;
+        b=AaOb8QeCQwPoaR8NaS2Luz50t4xPqyZ2aglCY2ljULf2S8X9ZkJPM287q3uk5X2mcV
+         tY0ulaAHsh7PkYUWiaGnYTMge6tVAS67r83K45Q6sRzQPgl9PMyVSmeSSwREgMLm6EHw
+         Zbsyaq5Ru+spilGjmKecIDoxAbTE3G4iU15e4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738844805; x=1739449605;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ENmojTuiNJJ6xJld5L2Wko62wurcHkgzo9KyUFUcH5Q=;
-        b=E/GaV6ElOzxYKVAAwAh/PRpf6hAQvdtYCm4ZVlwhZIWkW1/BAMeZJysWJ4fFwfnl2l
-         i2i5xhRr0PduV7bOvd0+c8A2DIwPLqGljk9K4H8cBJu7pW35jOuEomVlD0cGYrlc73eL
-         5IGF3qr31j0l1xiJDBcCFNjqKiQnILA0nxKN7svgTI3d7fPfF/UnS4RqXrD0I2a9gV5R
-         0xm5vVabux4YR3QWkWK5VdEPVrsyy0FkCgU/oA6kYphEQlciny3/j64utDknOq5zgOiP
-         NPOk8BCB6IlrFasKMExbs81iOmqOM8/MSW5GInRAi1u9XruZGeD09hI8WcyphX+2uJ9T
-         YxRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSBncYEk8qAO6p1Pqe3wB1jOSEEyUozG2xP5jqNnYEMUqa2NcoW/UMk0ftwZR/H0bY6jERWcP5D9lfi+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDzej/RYMvMoCg9GFzmGOVAjsj1OAWTQuqcLieROTwOwEHXr68
-	PFukliQ/+VT2LeXyYHoiTXMC+yoWp2QrVQDZEiYFKdqTLxTRw1q2
-X-Gm-Gg: ASbGnct4QcucUGpHOweHK4UZVGAY9mUgFR+bPZ5H4zoNCJN9fjBEtyl5+nmocJTg6L3
-	HlYolmcVP3+ArIjoPEfKTJ4USxUUxID8DbcWQeNTzRKBD/AuU1ntOItJs6tXM7kmoeTyME3gU+N
-	Z3p7SirFQN6rSw09Fjs7yDNxwMHty4uAxf3+5M8c2XQncDtxDDJX3TFEp7i7gKaCWIcJZEjiWFk
-	X02szhtor/Z903jyRLQxSDPbtjy2sE75sJvzyTbv9acM2xT5KRqSTDz4f1z4hVG+cCDOkcMntr2
-	HAXloJpOyf2HBblM469Aj/FeMw68ohrwPGIMGUJCcm0HtCY=
-X-Google-Smtp-Source: AGHT+IH07CTI6uN+Ur6kpagu6CSzX6td+ByTSBwRYy3w/j/PvURMx/eBzeSKS3e+fVQSt/HBfbc9wg==
-X-Received: by 2002:a17:907:7da0:b0:ab6:ddbc:1488 with SMTP id a640c23a62f3a-ab75e245019mr651564266b.23.1738844804942;
-        Thu, 06 Feb 2025 04:26:44 -0800 (PST)
-Received: from localhost.localdomain (109-81-84-135.rct.o2.cz. [109.81.84.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f491dcsm91417066b.22.2025.02.06.04.26.44
+        d=1e100.net; s=20230601; t=1738844820; x=1739449620;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aYbODeMThtwO7AzFjGUKnV2FNIfB0WdLU2NQSNL7YFM=;
+        b=UJ7UVwC+7Uvf3zSFLFwF6RfOi4cVqw2+d3dti313nphrVzkBxKxgeNGij7oBLIT//d
+         dWyr2SoUbXlojyT5E4ErSFMsFzXCWKaCG6XzRSYp/RgD4ovW8I14Ih76LqsGenhU2ZUw
+         h9CIn4PjRhg772Pkw/POuDlGY8X3eo9R9/o2zgmYSzEImfnNpqrBTyFcozVUAcKWAakE
+         6qOIYpG68wBaTsRCjRwNA+I1nfHqhjglKN32ojavVz3hk25MLD4vluIz2Vb49TKGn4k4
+         8TXVV6A/8oAUXpeUEmOnjhj2vYCK+Wa9HKX8Sa22Bp/sdJQqDNvT3QWrsP2bYfs+47Ic
+         RdCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlFTBQiQGco7aNjaWo6RiLWR1mH7x0mOQQhM3MSUxHknXkWl87u8tV4BuQyCCE/+KjfDSA+jahd8bJbMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+zyCaho3zUDYctU8H3mbeazRutSLK5HswQoMRszCsu58Zn1SW
+	F75wXtwyBDxLCaHbvIe5mgacX+8ykryADjMPq3w35Bd3BLHXENmGUmOVA/cWhgDeXtP/rYozQOc
+	=
+X-Gm-Gg: ASbGncsziGSfpkKnPc7Vt3JFMP/Up7jm/WKEQoo/qHzW0ogEMmy2sk66JoiYBhqypP1
+	u/GUluTx5gPl/mxA6MT13vUggUCBFeDfTU9R9l0Ueb/nTdCa6f2ArdGAa8F4tRYJjGV5N2UEEDt
+	Khh/OB3DoH/HCFmTB4twUKGCJhVRAf1KDzY/MuSrqo7Hi/cBHzXAZ25vz1G5B4ADp14wUKruLT8
+	Ugl6qJKzrPsaSNIeBy1JpP+7/AljaKL7RoOgTQ9TqU7PxWCPaILHSs5SMh4jG9IqeH6P96VLWyF
+	txQCWbHpNGlFesp8Wl0=
+X-Google-Smtp-Source: AGHT+IHIWWb5em+bk4M0TeqsHxcvcjMaUycRJYd5VLi014NtN85Amc4U/et0/hqOWXTssd8etg9Dcw==
+X-Received: by 2002:a17:90b:3846:b0:2ea:a25d:3baa with SMTP id 98e67ed59e1d1-2f9e0753d70mr9559452a91.5.1738844819928;
+        Thu, 06 Feb 2025 04:26:59 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:28ab:cea4:aa8a:127a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653c9a2sm11470325ad.77.2025.02.06.04.26.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 04:26:44 -0800 (PST)
-From: Michal Hocko <mhocko@kernel.org>
-To: Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Filipe Manana <fdmanana@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	<linux-mm@kvack.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH] mm, percpu: do not consider sleepable allocations atomic
-Date: Thu,  6 Feb 2025 13:26:33 +0100
-Message-ID: <20250206122633.167896-1-mhocko@kernel.org>
-X-Mailer: git-send-email 2.48.1
+        Thu, 06 Feb 2025 04:26:59 -0800 (PST)
+Date: Thu, 6 Feb 2025 21:26:54 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Kairui Song <ryncsn@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 02/17] zram: do not use per-CPU compression streams
+Message-ID: <ramywnizfouh7iimkcbvpzeevzdveljwcplyptvica4vsd6b4c@lfjfezhq6hwq>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-3-senozhatsky@chromium.org>
+ <CAMgjq7BFUrUY5Xq5Eks4ibqbWgJcca1vqB4kq=otQVyG=23FRw@mail.gmail.com>
+ <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
+ <Z6EuZPYy_OOKu8JC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6EuZPYy_OOKu8JC@google.com>
 
-From: Michal Hocko <mhocko@suse.com>
+On (25/02/03 21:00), Yosry Ahmed wrote:
+> On Mon, Feb 03, 2025 at 12:49:42PM +0900, Sergey Senozhatsky wrote:
+> > On (25/02/01 17:21), Kairui Song wrote:
+> FWIW, I am not familiar at all with the zram code but zswap uses per-CPU
+> acomp contexts with a mutex instead of a spinlock. So the task uses the
+> context of the CPU that it started on, but it can be preempted or
+> migrated and end up running on a different CPU.
 
-28307d938fb2 ("percpu: make pcpu_alloc() aware of current gfp context")
-has fixed a reclaim recursion for scoped GFP_NOFS context. It has done
-that by avoiding taking pcpu_alloc_mutex. This is a correct solution as
-the worker context with full GFP_KERNEL allocation/reclaim power and which
-is using the same lock cannot block the NOFS pcpu_alloc caller.
-
-On the other hand this is a very conservative approach that could lead
-to failures because pcpu_alloc lockless implementation is quite limited.
-
-We have a bug report about premature failures when scsi array of 193
-devices is scanned. Sometimes (not consistently) the scanning aborts
-because the iscsid daemon fails to create the queue for a random scsi
-device during the scan. iscsid itslef is running with PR_SET_IO_FLUSHER
-set so all allocations from this process context are GFP_NOIO. This in
-turn makes any pcpu_alloc lockless (without pcpu_alloc_mutex) which
-leads to pre-mature failures.
-
-It has turned out that iscsid has worked around this by dropping
-PR_SET_IO_FLUSHER (https://github.com/open-iscsi/open-iscsi/pull/382)
-when scanning host. But we can do better in this case on the kernel side
-and use pcpu_alloc_mutex for NOIO resp.  NOFS constrained allocation
-scopes too.  We just need the WQ worker to never trigger IO/FS reclaim.
-Achieve that by enforcing scoped GFP_NOIO for the whole execution of
-pcpu_balance_workfn (this will imply NOFS constrain as well). This will
-remove the dependency chain and preserve the full allocation power of
-the pcpu_alloc call.
-
-While at it make is_atomic really test for blockable allocations.
-
-Fixes: 28307d938fb2 ("percpu: make pcpu_alloc() aware of current gfp context
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- mm/percpu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/mm/percpu.c b/mm/percpu.c
-index d8dd31a2e407..192c2a8e901d 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -1758,7 +1758,7 @@ void __percpu *pcpu_alloc_noprof(size_t size, size_t align, bool reserved,
- 	gfp = current_gfp_context(gfp);
- 	/* whitelisted flags that can be passed to the backing allocators */
- 	pcpu_gfp = gfp & (GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN);
--	is_atomic = (gfp & GFP_KERNEL) != GFP_KERNEL;
-+	is_atomic = !gfpflags_allow_blocking(gfp);
- 	do_warn = !(gfp & __GFP_NOWARN);
- 
- 	/*
-@@ -2204,7 +2204,12 @@ static void pcpu_balance_workfn(struct work_struct *work)
- 	 * to grow other chunks.  This then gives pcpu_reclaim_populated() time
- 	 * to move fully free chunks to the active list to be freed if
- 	 * appropriate.
-+	 *
-+	 * Enforce GFP_NOIO allocations because we have pcpu_alloc users
-+	 * constrained to GFP_NOIO/NOFS contexts and they could form lock
-+	 * dependency through pcpu_alloc_mutex
- 	 */
-+	unsigned int flags = memalloc_noio_save();
- 	mutex_lock(&pcpu_alloc_mutex);
- 	spin_lock_irq(&pcpu_lock);
- 
-@@ -2215,6 +2220,7 @@ static void pcpu_balance_workfn(struct work_struct *work)
- 
- 	spin_unlock_irq(&pcpu_lock);
- 	mutex_unlock(&pcpu_alloc_mutex);
-+	memalloc_noio_restore(flags);
- }
- 
- /**
--- 
-2.48.1
-
+Thank you for the idea.  We couldn't do that before (in zram), in a
+number of cases per-CPU stream was taken from atomic context (under
+zram table entry spinlock/bit-spinlock), but it's possible now
+because entry lock is preemptible.
