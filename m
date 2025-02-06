@@ -1,139 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2FD19B5B1;
-	Thu,  6 Feb 2025 19:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27BD1A5B95;
+	Thu,  6 Feb 2025 19:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738870453; cv=none; b=Q3kl6jrctArdyzsX6PzjkmNXhGBMcUBuiXr5dbeBCzHfQYBIQdKChBNFwH+iTjWX0DY2xdUWqDmOBBgdEPt7EXcHxI5LwxYGt3DRZtKyl/+FC6h6W6iV7P5UIcaNnpWANbt7MdayY2hghqR3QH96sA2FH/tTwSmjvO99SfUOmc0=
+	t=1738870586; cv=none; b=NhSfFWISQjBm33jXBz9lXSzt0ldmQvD9KrNqesX5VUAZK/j4xpoTgojwN7kXuGzwDH1oluX4YY92tuIx8FuBHX06MNmtPSPMKM33Z6yoguENswM3TLfw3ZLavsXKVHvcErI88dmU0+5Ni9Hi6poUgOz7juNcXMoEt0QnUuK5uHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738870453; c=relaxed/simple;
-	bh=5pwfBiktGa+U6uOm0fJhsuGUw45LvkiAIpC/OCXJmDU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tuaMOXD3boHQIm5Pc8kWszseMPZtljBK60qDzu+dnWyH4x5omJE4TFCUJK+p1nsOzicbPPwu0iuB1u8UTlkPSI5ZmM7saqYxg84Yqk2bmc56+YbJco+oj4l8ZokuPkVpT0vp58DcxYFCVWmb7pHvwh/pnTmH5oXHoZWwsq69pu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Htv/fzuN; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738870586; c=relaxed/simple;
+	bh=K8L03tJliCRfd299LkyvqtwoV+h0PEo6T6Ng3J9ccMc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=TKqs9OAbSYBBU6+m3FriqpM6krd3Q+MzeSyog8bdkBgG/YICPXmCt5RO3wSZoa8gWIzmuExnswQSeyTpeqoE8HV+acVzaxTaLNQr5N5Vqu8M4RP8uCaKiyWcr5ATfpBgtjhCvBpGVC3AdWjEIDfVf2W6kBSIJ21wcZzg/9Rrcpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eg8LoDC5; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Htv/fzuN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738870452; x=1770406452;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=5pwfBiktGa+U6uOm0fJhsuGUw45LvkiAIpC/OCXJmDU=;
-  b=Htv/fzuNwkTHoZnIjWnKJ67LT24SD3sdsdA4RqJLzy+ydulLHZxGsRk8
-   H+tVrJJWKKDGvZMigYVUZV+oi0l7/zMvrGOTAu1yQbfvjhxMzppeUwUIe
-   tdtVllAXIJABJvES2zGZIEoz3YeJf+6PJX16XoNvMa/RMP8wXNjiDhwhi
-   oi9oGKgsx+ekSZgrV+ooO0h7pZe8BujBxWUif11kPSt7L/W72Elpf5Xk7
-   qym/Yc4EwM8nC2i23mFQIAkcTMVKqlpHUdc6eEhbvoC5JP/LpZtr+FbM0
-   edvB6Hjupo/JrLyCVZuCInjIHY/Husv4cPWMqP9sNuMszPaNmkgVv20KF
-   Q==;
-X-CSE-ConnectionGUID: /FpZsjp+Sa+ROJos2CVoqQ==
-X-CSE-MsgGUID: 2gModmOtQV+o49/u7cFa4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39388145"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="39388145"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:34:11 -0800
-X-CSE-ConnectionGUID: XH0qffm3So+GEaX7Fw67Qw==
-X-CSE-MsgGUID: 8tG26UcdQO2JA/sEFSj4hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116493683"
-Received: from ldmartin-desk2.corp.intel.com (HELO localhost) ([10.125.110.241])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:34:09 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Thu, 06 Feb 2025 13:34:00 -0600
-Subject: [PATCH] cxl/memdev: Remove unused partition values
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg8LoDC5"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9bd7c480eso2377010a91.1;
+        Thu, 06 Feb 2025 11:36:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738870584; x=1739475384; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SnyfzxTA1eGjOVunTE6wEsUnj05Nc9jMZ4amWEHiQm4=;
+        b=eg8LoDC546AW5vJQ+8J0S0bTRoim688tw8JFH8fRDd3HVKmdJfEYMWE5ZM89DZIi/C
+         Qnq7dHEZgz8vNwsXj2kKeIymxvxoX1N0LtiASNduNxzzeZhqi2co0HZzL7fPTYPq9xFX
+         8fXFmCvxtlRupqx7a3P3Yff9ino3c4zhtvy2tvUgOJ+z0Li+Q+I2ZaOu4RD68qmIVdSr
+         o8DkGWDtmlyem14sfDkdfEprSFJRlPTDCBtsSqY4bcToWdmDq8B2KTdV5dDYLFyScfIy
+         NMIHKL+Ltap9JWFJrLIsjbSMiZM6kMZEqdKnaBlNaN3P87Qv+TqNzTRfrz763hjgKoBZ
+         m90w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738870584; x=1739475384;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SnyfzxTA1eGjOVunTE6wEsUnj05Nc9jMZ4amWEHiQm4=;
+        b=dBvxMsgsu4sXqm91zuxt3KCdXS/UZgEsbeBX08pCWhl90DL7lUpJmRH/x7jp4jJBki
+         jfXJncQqQ1DCFS4BxtPFwN9cljTV8C/6H7JNlu4f6i5krOZxv2JIPqCC8YyyhpToO8oj
+         1rLsxs4NfXZ0c97KG+T5VPjI7qFlYqEG9K6EOWEo8xMDw8qrjk7M9rNyZJ9iuB02IAey
+         UIsKihziovnLFR6DfBtR+NZTabeCf+l5cy0Qkgt3m8sbh3yv7eycyH90CM9SZzL4l/4V
+         h7nKUd1g2UxPDyXwGl40ZJFxU60sZaSwP5ZSXxGsy5FOg7LAMxwM1v1AuPP/OhIIX/Vy
+         Ht5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUhxHvytyx0jzkFII9ttShmZsWeyd26LVV/J6MBSFioF/p+6f6akoNhGwvt08IfNQMPM8CJ2+BnIyq1@vger.kernel.org, AJvYcCVJw5bfYV0TG0EP6ljfUlmi4bTxH81TFxyajNqkxe+zU0l8qP3K8aJzJgMVyZHyekqSxuKO/GcSfRjQtD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoqsvlTwCedYNwSH6/Ee4T2YLdyJminPU2QEJFzO7ugfzsEUBm
+	hAwTL7+qTthlvTiERlhoI1Jfjo/4mw7eEhONbEAHYbf2eFAhQUO1yyvu2JIo0PEWNqI/rc3vgAw
+	fbaXFfTCPHSvuM/AQQBY3069N41rOVVT2
+X-Gm-Gg: ASbGncsLg8ps0XLEIYguXNyjmF0oVRN5FzO0QMWgRmA+ZelYI2UqTEqV9FTJYKwDAZs
+	LHNdzS3Bg8FlH7jiUupDj71+S9EEB07rfElpOqjiwBno13f5KyBuO7Wud2DMUvfaJ2FGjIyrc
+X-Google-Smtp-Source: AGHT+IFZyNalL6Dv+DNIs0u7a+Vd1SnQhayDC+8IpIDDde57RO2mAplJELbXowuu9B5AkqT5OEftG+E8U38NbKI8Ams=
+X-Received: by 2002:a17:90a:ec85:b0:2ea:9ccb:d1f4 with SMTP id
+ 98e67ed59e1d1-2fa22b997b4mr650249a91.0.1738870584231; Thu, 06 Feb 2025
+ 11:36:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-cxl-cleanup-v1-1-9ddf26dd8433@intel.com>
-X-B4-Tracking: v=1; b=H4sIAKcOpWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwMz3eSKHN3knNTEvNICXQtDi0QzMwsLE8OUJCWgjoKi1LTMCrBp0bG
- 1tQDwMUlCXQAAAA==
-X-Change-ID: 20250206-cxl-cleanup-818a668841db
-To: Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Fan Ni <fan.ni@samsung.com>, 
- Ira Weiny <ira.weiny@intel.com>
-X-Mailer: b4 0.15-dev-2a633
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738870441; l=2437;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=5pwfBiktGa+U6uOm0fJhsuGUw45LvkiAIpC/OCXJmDU=;
- b=zPJcs7jhjijNjxh0jA0cvP7eboSCMSdDYNWnnYdjvIRUcaiQOJEaI7MAVWOMofhNSOq0zO+We
- wBCaNtPeLA1CPnZWneszV6puR9HgutFJvBJJm2f1xdqVo05onjuo/Pn
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+References: <CAArt=Lh0S6UPX0OAhudTWxE7g7xbukQqHmuDAwCDwjBUbuJUnw@mail.gmail.com>
+In-Reply-To: <CAArt=Lh0S6UPX0OAhudTWxE7g7xbukQqHmuDAwCDwjBUbuJUnw@mail.gmail.com>
+From: Jillian Donahue <jilliandonahue58@gmail.com>
+Date: Thu, 6 Feb 2025 12:36:13 -0700
+X-Gm-Features: AWEUYZngdHeWSApdgKMThK2XvC6HLyNDbBB3MWcgxuT5af83Hf9zSezAzn9GeXE
+Message-ID: <CAArt=LjGqL4bYyQ5=Exz4cNk-EEQaQKCBMY=PRck2_UVe6HaKw@mail.gmail.com>
+Subject: Re: [PATCH] f_midi_complete to call tasklet_hi_schedule
+To: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The next volatile and next persistent values are unused and are
-cluttering the cxl_memdev_state.
+Sent with a broken link, my mistake
 
-Remove these values.
-
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/cxl/core/mbox.c | 4 ----
- drivers/cxl/cxlmem.h    | 4 ----
- 2 files changed, 8 deletions(-)
-
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 8d95281c52d4368cd28dcf48b6cdd13b95901429..c5eedcae3b022cfee8166eb13a1529ccf6200196 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1092,10 +1092,6 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
- 		le64_to_cpu(pi.active_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
- 	mds->active_persistent_bytes =
- 		le64_to_cpu(pi.active_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
--	mds->next_volatile_bytes =
--		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
--	mds->next_persistent_bytes =
--		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
- 
- 	return 0;
- }
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index c0d2a8b6aaf694587ae321d257e74d5e92a20cd5..8e1e46c348f5a10f4fa15dce8ac57a3480c8c509 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -468,8 +468,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-  * @partition_align_bytes: alignment size for partition-able capacity
-  * @active_volatile_bytes: sum of hard + soft volatile
-  * @active_persistent_bytes: sum of hard + soft persistent
-- * @next_volatile_bytes: volatile capacity change pending device reset
-- * @next_persistent_bytes: persistent capacity change pending device reset
-  * @event: event log driver state
-  * @poison: poison driver state info
-  * @security: security driver state info
-@@ -488,8 +486,6 @@ struct cxl_memdev_state {
- 	u64 partition_align_bytes;
- 	u64 active_volatile_bytes;
- 	u64 active_persistent_bytes;
--	u64 next_volatile_bytes;
--	u64 next_persistent_bytes;
- 
- 	struct cxl_event_state event;
- 	struct cxl_poison_state poison;
-
----
-base-commit: 861e232e15c278d6cfc5a675efe393b4838b1773
-change-id: 20250206-cxl-cleanup-818a668841db
-
-Best regards,
--- 
-Ira Weiny <ira.weiny@intel.com>
-
+On Thu, Feb 6, 2025 at 12:23=E2=80=AFPM Jillian Donahue
+<jilliandonahue58@gmail.com> wrote:
+>
+> From 9cb2628740d9f55f6f3faa5cce2de5eb8590f434 Mon Sep 17 00:00:00 2001
+> From: Jill Donahue <jilliandonahue58@gmail.com>
+> Date: Thu, 6 Feb 2025 10:18:05 -0700
+> Subject: [PATCH] f_midi_complete to call tasklet_hi_schedule
+>
+> When using USB MIDI, a lock is attempted to be acquired twice through a
+> re-entrant call to f_midi_transmit, causing a deadlock.
+>
+> Fix it by using tasklet_hi_schedule() to schedule the inner
+> f_midi_transmit() via a tasklet from the completion handler.
+>
+> Link: https://lore.kernel.org/all/CAArt=3DLjxU0fUZOj06X+5tkeGT+6RbXzpWg1h=
+4t4Fwa_KGVAX6g@mail.gmail>
+>
+> Fixes: d5daf49b58661 ("USB: gadget: midi: add midi function driver")
+> Signed-off-by: Jill Donahue <jilliandonahue58@gmail.com>
+> ---
+>  drivers/usb/gadget/function/f_midi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/gadget/function/f_midi.c
+> b/drivers/usb/gadget/function/f_midi.c
+> index 837fcdfa3..37d438e5d 100644
+> --- a/drivers/usb/gadget/function/f_midi.c
+> +++ b/drivers/usb/gadget/function/f_midi.c
+> @@ -283,7 +283,7 @@ f_midi_complete(struct usb_ep *ep, struct usb_request=
+ *req)
+>                         /* Our transmit completed. See if there's more to=
+ go.
+>                          * f_midi_transmit eats req, don't queue it again=
+. */
+>                         req->length =3D 0;
+> -                       f_midi_transmit(midi);
+> +                       tasklet_hi_schedule(&midi->tasklet);
+>                         return;
+>                 }
+>                 break;
+> --
+> 2.25.1
