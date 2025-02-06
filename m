@@ -1,128 +1,295 @@
-Received: from mx0b-00300601.pphosted.com (mx0b-00300601.pphosted.com [148.163.142.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187541DBB19;
-	Thu,  6 Feb 2025 21:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.142.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE269194094;
+	Thu,  6 Feb 2025 21:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738876234; cv=none; b=U8QVJKyR1XkdBhvzFQvsf1Y9d5126Zk4TL+6f1z1VWXsjoidq2xWKXsw0BnCe69mlLGBVWU8RagxVTrn3MwwKBexYSd9PG+MTf7ukkej7v6Yva9ygnooo3Fgx0L9s01U50Er1MRBR3DEmU1DSnlP0Cauz94eVasSuoz93xgQjFw=
+	t=1738876485; cv=none; b=rKTQR+Qg6dR7YpIHDmhDl0siYRyWwnzSTtqQtuE5XNS6mdR4fyUadCQNfVcP1InXi78wkKJAWdQN80+HJPO+xZSgLallneOeibzvHvCHbs4+YwdguNJPnpUu465roKXdR2KDdwjtBeWQse0NqIr2utyU5vUzayUc736iv3SLFMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738876234; c=relaxed/simple;
-	bh=RrLWMiyMZoy4fFtEfdeI93ZCnoboO/JrPmZYqyjYgrI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BZX0V9P0GRbh+EOy5axCyagRPoyZivocWY8OGDAErIniBxOoIrpQhGbaV54a3KReDvGcAbTqZAZ+T9jYGbDEQhcqJMANWNJKN5gheGqx01ITL4YDZnVg2MAB1bPiyacJEll+B/QRgwuIGDKx7il7CVTEBARqEgxONcEnn6Vwpmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com; spf=pass smtp.mailfrom=ni.com; dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b=a8e4Zlei; arc=none smtp.client-ip=148.163.142.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ni.com
+	s=arc-20240116; t=1738876485; c=relaxed/simple;
+	bh=e2SOY182HjtRf1jcrCmT/yGU2J8GDiU314PnbVwrp7g=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ll4VZp4s2EFzWiDD57dzqERl5nkIvB7aGQtLbshfhIzpOJrlcvh9G7EZJufdu/T8DuLXBE+zvdsa//j5Ki4ptUHPyBZqX4hnQJmH/zrOT0VljgeBFlsPROGvEXUAb5x27UBEAHTHOPM/vnHcuUP1BJl6uPj3kTH8KPJK6uzvdAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gd1alUST; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b="a8e4Zlei"
-Received: from pps.filterd (m0144091.ppops.net [127.0.0.1])
-	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516JfnNe015975;
-	Thu, 6 Feb 2025 21:09:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ni.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=PPS11142024;
-	 bh=oaICba/RqJ8714I3emClCyshy0SN799APKvXL7xrVho=; b=a8e4Zleim4Or
-	OPzU5kJp1l5n+ElICKAZD74hddyBN8V3C7bsdPwjDH168mJwF71NFWxUgy3DFG28
-	haTBMBy58+hrwHwLYZiOmykaU1Kj55tFY4IddUn0DgvdU7T0HiR+j170Dckq0CVy
-	mciNEf+HJhBQ1LUJSxGQEwfBquCFMRe9b3h8XQKx2oBre97lpCPDuHRzob5XH3Eq
-	HjhV6CHbYYNd4ZMaeVzuXJTOCKuri6lQ2833ohDT9gTgJ5L381VceaGFQhZ3c7Sn
-	CPoZ7lI/KccGrdbHGG68I7BmqxP1RXzVafBLqEiWg12BS6eTBPm5giAkADufCohN
-	FQyzoqUJfw==
-Received: from us-aus-excas-p1.ni.corp.natinst.com ([130.164.94.73])
-	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 44n3fe0urn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 21:09:37 +0000 (GMT)
-Received: from us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) by
- us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 6 Feb 2025 15:09:36 -0600
-Received: from ershephe-ubuntu.amer.corp.natinst.com (172.18.68.32) by
- us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Thu, 6 Feb 2025 15:09:36 -0600
-From: Erick Shepherd <erick.shepherd@ni.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <linux-mmc@vger.kernel.org>, <ulf.hansson@linaro.org>,
-        <adrian.hunter@intel.com>, <avri.altman@wdc.com>,
-        <wsa+renesas@sang-engineering.com>, <quic_jjohnson@quicinc.com>,
-        <andy-ld.lu@mediatek.com>, <victor.shih@genesyslogic.com.tw>,
-        <keita.aihara@sony.com>, <dsimic@manjaro.org>,
-        <cw9316.lee@samsung.com>, <ricardo@marliere.net>,
-        Erick Shepherd <erick.shepherd@ni.com>
-Subject: [RFC PATCH V2 2/2] mmc: allow card to disable tuning
-Date: Thu, 6 Feb 2025 15:08:35 -0600
-Message-ID: <20250206210835.2980500-2-erick.shepherd@ni.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250206210835.2980500-1-erick.shepherd@ni.com>
-References: <20250206210835.2980500-1-erick.shepherd@ni.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gd1alUST"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD4FC4CEDD;
+	Thu,  6 Feb 2025 21:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738876483;
+	bh=e2SOY182HjtRf1jcrCmT/yGU2J8GDiU314PnbVwrp7g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gd1alUST0IO6Lv5wd3A05bXQe2+4UMAsApIHndqvLWYKsFxSJzLnSIV1pH9/FJEqq
+	 Oi/vtKp55eWJktVqKpkXp4yTqD78gZ2JEtTIG56M//S0kfut3Q3jDQb5ptyEq5BacG
+	 +wKIIYrqqsV3d4LGFrh7nZXDTaDYVpD6MxHmJYSvB41BRRfYFWNdwmkSspuGzhqrPP
+	 eEUwS7WCmQfGgwo58hQ1FGiPp0H/tp/WuNVSAJ6mvbyo9ELleMKAqT3Vsoj/DDL52s
+	 q71wajBFFmlPiKz/UXxG1M4pIua9Wx016A9MJYiMBWeMuD8VSVqvPOhkbjHAu/dzBN
+	 gwiHw8Tl3Pjgw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tg9Cq-001J8q-PU;
+	Thu, 06 Feb 2025 21:14:40 +0000
+Date: Thu, 06 Feb 2025 21:14:39 +0000
+Message-ID: <86o6zeu668.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Cc: kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	darren@os.amperecomputing.com,
+	scott@os.amperecomputing.com
+Subject: Re: [RFC PATCH 1/2] KVM: arm64: nv: selftests: Add guest hypervisor test
+In-Reply-To: <20250206164120.4045569-2-gankulkarni@os.amperecomputing.com>
+References: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
+	<20250206164120.4045569-2-gankulkarni@os.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 9F-rCK_0yXv7T_jWGicM_3CPTnuofjpx
-X-Proofpoint-ORIG-GUID: 9F-rCK_0yXv7T_jWGicM_3CPTnuofjpx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- spamscore=0 bulkscore=0 adultscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=857
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060167
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, darren@os.amperecomputing.com, scott@os.amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Add a new field to the mmc_card struct to disable tuning for the card.
-Currently the new field only gets set when a DDR50 card fails to tune,
-which indicates the card does not support tuning.
+On Thu, 06 Feb 2025 16:41:19 +0000,
+Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+> 
+> This patch adds the required changes to init vcpu in vEL2 context.
+> Also adds a KVM selftest to execute guest code as a guest hypervisor(L1).
+> 
+> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+> ---
+>  tools/testing/selftests/kvm/Makefile.kvm      |  1 +
+>  .../selftests/kvm/arm64/nv_guest_hypervisor.c | 83 +++++++++++++++++++
+>  .../kvm/include/arm64/kvm_util_arch.h         |  3 +
+>  .../selftests/kvm/include/arm64/nv_util.h     | 28 +++++++
+>  .../testing/selftests/kvm/include/kvm_util.h  |  1 +
+>  .../selftests/kvm/lib/arm64/processor.c       | 59 +++++++++----
+>  6 files changed, 161 insertions(+), 14 deletions(-)
+>  create mode 100644 tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
+>  create mode 100644 tools/testing/selftests/kvm/include/arm64/nv_util.h
+> 
+> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+> index 4277b983cace..a85d3bec9fb1 100644
+> --- a/tools/testing/selftests/kvm/Makefile.kvm
+> +++ b/tools/testing/selftests/kvm/Makefile.kvm
+> @@ -154,6 +154,7 @@ TEST_GEN_PROGS_arm64 += arm64/vgic_irq
+>  TEST_GEN_PROGS_arm64 += arm64/vgic_lpi_stress
+>  TEST_GEN_PROGS_arm64 += arm64/vpmu_counter_access
+>  TEST_GEN_PROGS_arm64 += arm64/no-vgic-v3
+> +TEST_GEN_PROGS_arm64 += arm64/nv_guest_hypervisor
+>  TEST_GEN_PROGS_arm64 += access_tracking_perf_test
+>  TEST_GEN_PROGS_arm64 += arch_timer
+>  TEST_GEN_PROGS_arm64 += coalesced_io_test
+> diff --git a/tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c b/tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
+> new file mode 100644
+> index 000000000000..5aeefe43aff7
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
+> @@ -0,0 +1,83 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 Ampere Computing LLC
+> + */
+> +#include <kvm_util.h>
+> +#include <nv_util.h>
+> +#include <processor.h>
+> +#include <vgic.h>
+> +
+> +static void guest_code(void)
+> +{
+> +	if (read_sysreg(CurrentEL) == CurrentEL_EL2)
+> +		GUEST_PRINTF("Executing guest code in vEL2\n");
+> +	else
+> +		GUEST_FAIL("Fail to run in vEL2\n");
+> +
+> +	GUEST_DONE();
+> +}
+> +
+> +static void guest_undef_handler(struct ex_regs *regs)
+> +{
+> +	GUEST_FAIL("Unexpected exception far_el1 = 0x%lx", read_sysreg(far_el1));
+> +}
+> +
+> +static void test_run_vcpu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct ucall uc;
+> +
+> +	do {
+> +		vcpu_run(vcpu);
+> +
+> +		switch (get_ucall(vcpu, &uc)) {
+> +		case UCALL_ABORT:
+> +			REPORT_GUEST_ASSERT(uc);
+> +			break;
+> +		case UCALL_PRINTF:
+> +			printf("%s", uc.buffer);
+> +			break;
+> +		case UCALL_DONE:
+> +			printf("Test PASS\n");
+> +			break;
+> +		default:
+> +			TEST_FAIL("Unknown ucall %lu", uc.cmd);
+> +		}
+> +	} while (uc.cmd != UCALL_DONE);
+> +}
+> +
+> +static void test_nv_guest_hypervisor(void)
+> +{
+> +	struct kvm_vcpu *vcpu;
+> +	struct kvm_vm *vm;
+> +	struct kvm_vcpu_init init;
+> +	int gic_fd;
+> +
+> +	vm = vm_create(1);
+> +	vm_ioctl(vm, KVM_ARM_PREFERRED_TARGET, &init);
+> +
+> +	init.features[0] = 0;
+> +	init_vcpu_nested(&init);
+> +	vcpu = aarch64_vcpu_add(vm, 0, &init, guest_code);
+> +
+> +	__TEST_REQUIRE(is_vcpu_nested(vcpu), "Failed to Enable NV");
+> +
+> +	vm_init_descriptor_tables(vm);
+> +	vcpu_init_descriptor_tables(vcpu);
+> +	gic_fd = vgic_v3_setup(vm, 1, 64);
+> +	__TEST_REQUIRE(gic_fd >= 0, "Failed to create vgic-v3");
+> +
+> +	vm_install_sync_handler(vm, VECTOR_SYNC_CURRENT,
+> +				ESR_ELx_EC_UNKNOWN, guest_undef_handler);
+> +
+> +	test_run_vcpu(vcpu);
+> +	kvm_vm_free(vm);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_EL2));
+> +
+> +	test_nv_guest_hypervisor();
+> +
+> +	return 0;
+> +}
+> diff --git a/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h b/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
+> index e43a57d99b56..ab5279c24413 100644
+> --- a/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
+> +++ b/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
+> @@ -2,6 +2,9 @@
+>  #ifndef SELFTEST_KVM_UTIL_ARCH_H
+>  #define SELFTEST_KVM_UTIL_ARCH_H
+>  
+> +#define CurrentEL_EL1		(1 << 2)
+> +#define CurrentEL_EL2		(2 << 2)
+> +
+>  struct kvm_vm_arch {};
+>  
+>  #endif  // SELFTEST_KVM_UTIL_ARCH_H
+> diff --git a/tools/testing/selftests/kvm/include/arm64/nv_util.h b/tools/testing/selftests/kvm/include/arm64/nv_util.h
+> new file mode 100644
+> index 000000000000..4fecf1f18554
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/include/arm64/nv_util.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Ampere Computing
+> + */
+> +#ifndef SELFTEST_NV_UTIL_H
+> +#define SELFTEST_NV_UTIL_H
+> +
+> +#include <linux/bitmap.h>
+> +
+> +/* NV helpers */
+> +static inline void init_vcpu_nested(struct kvm_vcpu_init *init)
+> +{
+> +	init->features[0] |= (1 << KVM_ARM_VCPU_HAS_EL2);
+> +}
+> +
+> +static inline bool kvm_arm_vcpu_has_el2(struct kvm_vcpu_init *init)
+> +{
+> +	unsigned long features = init->features[0];
+> +
+> +	return test_bit(KVM_ARM_VCPU_HAS_EL2, &features);
+> +}
+> +
+> +static inline bool is_vcpu_nested(struct kvm_vcpu *vcpu)
+> +{
+> +	return vcpu->nested;
+> +}
+> +
+> +#endif /* SELFTEST_NV_UTIL_H */
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index 4c4e5a847f67..8c53dbc17f8f 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -58,6 +58,7 @@ struct kvm_vcpu {
+>  	struct kvm_dirty_gfn *dirty_gfns;
+>  	uint32_t fetch_index;
+>  	uint32_t dirty_gfns_count;
+> +	bool nested;
+>  };
+>  
+>  struct userspace_mem_regions {
+> diff --git a/tools/testing/selftests/kvm/lib/arm64/processor.c b/tools/testing/selftests/kvm/lib/arm64/processor.c
+> index 7ba3aa3755f3..35ba2ace61a2 100644
+> --- a/tools/testing/selftests/kvm/lib/arm64/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/arm64/processor.c
+> @@ -10,6 +10,7 @@
+>  
+>  #include "guest_modes.h"
+>  #include "kvm_util.h"
+> +#include "nv_util.h"
+>  #include "processor.h"
+>  #include "ucall_common.h"
+>  
+> @@ -258,14 +259,47 @@ void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
+>  	}
+>  }
+>  
+> +static void aarch64_vcpu_set_reg(struct kvm_vcpu *vcpu, uint64_t sctlr_el1,
+> +			uint64_t tcr_el1, uint64_t ttbr0_el1)
+> +{
+> +	uint64_t fpen;
+> +
+> +	/*
+> +	 * Enable FP/ASIMD to avoid trapping when accessing Q0-Q15
+> +	 * registers, which the variable argument list macros do.
+> +	 */
+> +	fpen = 3 << 20;
+> +
+> +	if (is_vcpu_nested(vcpu)) {
+> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_CPTR_EL2), fpen);
+> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL2), sctlr_el1);
+> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL2), tcr_el1);
+> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MAIR_EL2), DEFAULT_MAIR_EL1);
+> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TTBR0_EL2), ttbr0_el1);
+> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TPIDR_EL2), vcpu->id);
 
-Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
----
- drivers/mmc/core/core.c  | 3 +++
- drivers/mmc/core/sd.c    | 1 +
- include/linux/mmc/card.h | 1 +
- 3 files changed, 5 insertions(+)
+How about some of the basics such as HCR_EL2, MDCR_EL2? A bunch of
+things there do have an impact on how the guest behaves, and relying
+on defaults feels like a bad idea.
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 5241528f8b90..ee91d53c45d5 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -934,6 +934,9 @@ int mmc_execute_tuning(struct mmc_card *card)
- 	u32 opcode;
- 	int err;
- 
-+	if (card->disable_tuning)
-+		return 0;
-+
- 	if (!host->ops->execute_tuning)
- 		return 0;
- 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index cc757b850e79..dd65485c61d8 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -676,6 +676,7 @@ static int mmc_sd_init_uhs_card(struct mmc_card *card)
- 		if (err && card->host->ios.timing == MMC_TIMING_UHS_DDR50) {
- 			pr_warn("%s: ddr50 tuning failed\n",
- 				mmc_hostname(card->host));
-+			card->disable_tuning = true;
- 			err = 0;
- 		}
- 	}
-diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-index 526fce581657..f9733c7ce430 100644
---- a/include/linux/mmc/card.h
-+++ b/include/linux/mmc/card.h
-@@ -332,6 +332,7 @@ struct mmc_card {
- 
- 	bool			written_flag;	/* Indicates eMMC has been written since power on */
- 	bool			reenable_cmdq;	/* Re-enable Command Queue */
-+	bool			disable_tuning;	/* Disables tuning for the card */
- 
- 	unsigned int		erase_size;	/* erase size in sectors */
-  	unsigned int		erase_shift;	/* if erase unit is power 2 */
+This also assumes VHE, without trying to enforce it.
+
+Finally, how to you plan to make all the existing tests run as EL2
+guests if TPIDR_EL1 isn't populated with the expected value? Surely
+you need to change the read side...
+
+	M.
+
 -- 
-2.43.0
-
+Without deviation from the norm, progress is not possible.
