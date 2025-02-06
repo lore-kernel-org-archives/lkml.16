@@ -1,106 +1,72 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBA315199B;
-	Thu,  6 Feb 2025 04:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A609E146A6F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 04:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738814497; cv=none; b=LM85b8aNPQkBrBj3NY5swPs+Nks9g4UyNPdlspvolETMnEI5O+ZuelNTrwkggrkZ13nVvqnCS9xySShJ75ieLtbYHqaGeR29BjU0gvqLSsGyuQpjeyCobOoB4KIODBLOOpDBngGfyeKHM3GwjQFtZhXHBwXhJjpLHEtIy+ffuRE=
+	t=1738815245; cv=none; b=EKB+IDiZ0hMz8Vzrp/ZujAbrT0Cbk5M6oYeZzcH+o5R912zH+95Ziq9F93WomoOZUsGPUtdKtkJifxR2DO47rE6QYEqTiRek9bXxd9y4hzlzCnNkcGLtWH32ciBuZbqh3ZHpASFgCm4eBMP3WTojKFk+q2uC94WTOAnS5AwD+ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738814497; c=relaxed/simple;
-	bh=hYSddCZtH8T8rjaQx2PJ2jDZt4RdHTt6LhG4zQSBl44=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fOuXjKydzthpaAHbnKOpZPzNSdbWgFSMoyRCNuIjs9zYfDRKd+WYpISwbSwKTiS+SlpsQvBVfLOfOhwWm3zTOwdYi+kvQ65Oxe9chbpe8ZOE6UH6G3PeQUY5bR85gTidL6A0+xvZaX1FT0KXxhjyNHns36oUh58CKTDDfXMJpZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=mPyrtXhX; arc=none smtp.client-ip=52.119.213.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mPyrtXhX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1738814497; x=1770350497;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oRvIjo1WEL8mKSMjR4n9GdLWbnVqLd4mvq/PW2nGwEQ=;
-  b=mPyrtXhX/CEGqbltNrXkXrgwe2CcLPrmIZoovYwAKgpRYiTH+7WC88jr
-   c/HfkTcXTKfS4SYaPS1b5GjujLz6gCPiOpy048W7B2w1OFPjy2fnDLuI0
-   fvX1E5zkM7WJBcuASY6zzwE8GDYioS3/YIKoE+HWxnBJyq6jf5NeIeP/E
-   E=;
-X-IronPort-AV: E=Sophos;i="6.13,263,1732579200"; 
-   d="scan'208";a="694787366"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 04:01:33 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:39315]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.27:2525] with esmtp (Farcaster)
- id 970b68e1-01c6-499f-9d06-ce978bf29ac2; Thu, 6 Feb 2025 04:01:32 +0000 (UTC)
-X-Farcaster-Flow-ID: 970b68e1-01c6-499f-9d06-ce978bf29ac2
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 6 Feb 2025 04:01:31 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.37.244.8) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 6 Feb 2025 04:01:27 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <buaajxlj@163.com>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <liangjie@lixiang.com>,
-	<linux-kernel@vger.kernel.org>, <mhal@rbox.co>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>
-Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind identifier length
-Date: Thu, 6 Feb 2025 13:01:18 +0900
-Message-ID: <20250206040118.77016-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250205100904.2534565-1-buaajxlj@163.com>
-References: <20250205100904.2534565-1-buaajxlj@163.com>
+	s=arc-20240116; t=1738815245; c=relaxed/simple;
+	bh=F+4xQ5qTrvJuJo35mJWNh/cQ6qhChTu2/BP37p56TjI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Ywyvb1xHxr+oggmE87xA69fhTDK/3e4w3lnjrBlqLwGdyqa5EO+QQmORl55p8XkBXEN52kzr8PiO0BaozOb6Nlcr9lYTQt4/Xdb+4IUF+bItN+bIjuhVbFWkQikPGx/wAKoioG+JxKWkQA2+b1gBIC3AsSoN6B8e8k8wi8lFmrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d04db7732cso11909365ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 20:14:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738815243; x=1739420043;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLObZFqUmhvJjEHToh0EYrUYWxwKIPdnzPfXdGavApE=;
+        b=k8qILgZYUScX7Yrx+gRnu365YXOJPkM7lM5tXnIQf+4hIZuJ/FqjBgujya+waA99Mk
+         knY0+r60UMDZbbBxl7Lfk25s/H7D9EPZkFH1Yp0KtN5NG3TifHw5A5GidcsR/0H8QOav
+         7DNmWY35jWdBsRH8uX/XCoo4dIUyAxJ1sLVr5KyOMECQzRypMb+yGxd20Z410ZD2s/1h
+         n3gwTCpHVaWjOdLE2R7EFRmB5jxO2gGpYUuPFHZQ3td987se50T5BpbGrT9kXmI56FWI
+         QakWf///+a3Dny9WbajHFq/AZUmwmlA4EeajJHjTy2TNvxJZd88z9syMpTba6QxhRZJ8
+         NNYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeMttaKh+t9QxZeZ1yL6akW/J4wiV4kTNH3idLjJkQ0H3iodY0I+Fua7GuYLDiF/jOhDJe3rxbD6aILqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOZpvMrTd6UAfBq6JRz/NapLvdbSr7q2Bh9NMqyrxqvtwv3gOf
+	eioXdlHG4KiyhK7ZGOOKf+Ra0VzK2vgtz/l4g3wIk9+CNOzgEIX7V7IRRfTaz5lsn9IVAXsQ6z8
+	fL54js61I+CzjxwFi03g1rWlJIlWK4AUWqTn/a5sKcP4YCgH7PKIitdg=
+X-Google-Smtp-Source: AGHT+IET5jTrlrcy/GSnxoV6CEdBQL6o+QlP8M4tm6nnRLqTI5o2Xo7DwE7+9qoRBnkWaZWtJ7aQLWrb+tm5376rwqMe6bikIVmg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1d1a:b0:3cf:fb97:c313 with SMTP id
+ e9e14a558f8ab-3d04f8f6ee9mr57356905ab.18.1738815242810; Wed, 05 Feb 2025
+ 20:14:02 -0800 (PST)
+Date: Wed, 05 Feb 2025 20:14:02 -0800
+In-Reply-To: <tencent_447A36884A8A75C577A166683D2336A09609@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a4370a.050a0220.19061f.05f4.GAE@google.com>
+Subject: Re: [syzbot] [usb?] KASAN: slab-use-after-free Read in usbhid_raw_request
+From: syzbot <syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D040UWA002.ant.amazon.com (10.13.139.113) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Liang Jie <buaajxlj@163.com>
-Date: Wed,  5 Feb 2025 18:09:04 +0800
-> The logs from 'netdev/build_allmodconfig_warn' indicate that the patch has
-> given rise to the following warning:
-> 
->  - ../net/unix/af_unix.c: In function ‘unix_autobind’:
->  - ../net/unix/af_unix.c:1227:48: warning: ‘sprintf’ writing a terminating nul past the end of the destination [-Wformat-overflow=]
->  -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
->  -       |                                                ^
->  - ../net/unix/af_unix.c:1227:9: note: ‘sprintf’ output 6 bytes into a destination of size 5
->  -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
->  -       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> It appears that the 'sprintf' call attempts to write a terminating null
-> byte past the end of the 'sun_path' array, potentially causing an overflow.
-> 
-> To address this issue, I am considering the following approach:
-> 
-> 	char orderstring[6];
-> 
-> 	sprintf(orderstring, "%05x", ordernum);
-> 	memcpy(addr->name->sun_path + 1, orderstring, 5);
-> 
-> This would prevent the buffer overflow by using 'memcpy' to safely copy the
-> formatted string into 'sun_path'.
+Hello,
 
-Finally new hard-coded values are introduced..
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-I'm not sure this is worth saving just 10 bytes, which is not excessive,
-vs extra 5 bytes memcpy(), so I'd rather not touch here.
+Reported-by: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
+Tested-by: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
 
+Tested on:
 
-> 
-> Before proceeding with a patch submission, I wanted to consult with you to
-> see if you have any suggestions for a better or more elegant solution to
-> this problem.
+commit:         9682c35f usb: typec: thunderbolt: Remove IS_ERR check ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=15ca81b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed7570f7f6046a71
+dashboard link: https://syzkaller.appspot.com/bug?extid=90ac8355c8ac84b1b464
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11b481b0580000
 
-An elegant option might be add a variant of snprintf without terminating
-string by \0 ?
+Note: testing is done by a robot and is best-effort only.
