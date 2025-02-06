@@ -1,51 +1,50 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9981E1C3F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE61F1DE4FC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738876023; cv=none; b=dGlXq3g2t4ybj9V0dqgP67Cpj1tWBBTSDZLbIOz1nc1m1IGH3JfbE9xAN4HVt3oLsSCiedz28lrq4/J0RV/1rrvWmG0ppB5RVXZpC6a5/FMXzvFQ/rk8+i9GIFB5o7vxoA7y3pvcmDfqEI5QvABqjpflzHqmK0dftEL+oW4aB6Q=
+	t=1738876030; cv=none; b=hUr76kuJsgW4g2iE2QO9B92NE87JG9FSabw62HYS9s1aqp5uSXkIHaiCTOnWVPOlWC0zXWIr7ZI+O20ErcsSXyQxQlao1v966//JWAZX+nrArCr4Bo2PbR370bhXEWjgTouz4fPewlPE3KDLoAB8khNPhJHg3a761q5cc/RMMOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738876023; c=relaxed/simple;
-	bh=wbE7uYVtdOIHzOUKy0i3iCZQQ5nZT49/uaoUYL3CwHc=;
+	s=arc-20240116; t=1738876030; c=relaxed/simple;
+	bh=+I+VRf68pub7QtDDgc2t195rQtaTteShHv9verWdpIw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q7g8zJbxTWo21QuFY/ocA6DTffboYHgtTXG6DBMIwxaRbCY/36TpoN5Yz120F+gFkki74pIIrfPNZwLLF6gapXa+kTkRRKRecLYmSiLgR3c4hhZKabADAKe18ubVR1lUk+JU+wpyvyaCJyg8YLWL2neMbfxVANI03+xrKyeRv/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OEV6zJ6M; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:To:Cc; b=FSesFLgnEEzib7iLGhZ8wcqnWmeDPJJZNJSR/TR9Ia2yjgVf0V/wizksnHbjApe+CnjiYfC58/81yf6askmwNyTwXVo4joz+SgbGhX0fm3chzN+uVZUI533P9fwmXq2cynXSNLBrjV4YWVBJqtDNknsJwct9srqKH1/ADeTgpOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pl6rGY12; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEV6zJ6M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pl6rGY12"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738876020;
+	s=mimecast20190719; t=1738876027;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GlXo7vmlnmgIEmQ11hFo3VRP0K3oPKPNV0eUfbJIu2g=;
-	b=OEV6zJ6Mkf8Ih6J6yDngBUMKcT1pvAQWpt8zMy6CfOle36+7D7HjMTSqTjUKhXBl8H9e6j
-	HXNSzFfiN5nudbJ85pKWzsm1bu8A6+NoR44kyWidwRVAJHVntms7lPwJ1ob2Xz8ufYYCPT
-	3eGgar9OVHCd1a8LkNjsFITfFWYaYCc=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=dJlrIKSurYkXvX4GL8/YLGu0FEvUvuu47DJYVtCqeOc=;
+	b=Pl6rGY12l5GcJQwFaU6UZ5k7zIGNcD3XY5Xe5HdSBhlhAP0usNkcGkp/qudTxZwFtoNvNd
+	xTskBOa8j5G2D2eYT0Lth+1ZqOotl/JefagZD6UpW2ilW4cY/UwpRvuHK4zv+VOSJvPCts
+	RT+gCtR+CvH2lp2XhYZqY9lXmuwAOrk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-EuK3b61WPpy92965OhANRQ-1; Thu,
- 06 Feb 2025 16:06:57 -0500
-X-MC-Unique: EuK3b61WPpy92965OhANRQ-1
-X-Mimecast-MFC-AGG-ID: EuK3b61WPpy92965OhANRQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-388-YVkz1SZNNr-bZSlU3stDsg-1; Thu,
+ 06 Feb 2025 16:07:04 -0500
+X-MC-Unique: YVkz1SZNNr-bZSlU3stDsg-1
+X-Mimecast-MFC-AGG-ID: YVkz1SZNNr-bZSlU3stDsg
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 30CCE1956094;
-	Thu,  6 Feb 2025 21:06:55 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C617180087A;
+	Thu,  6 Feb 2025 21:07:02 +0000 (UTC)
 Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C984E1800570;
-	Thu,  6 Feb 2025 21:06:51 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 204FD1800570;
+	Thu,  6 Feb 2025 21:06:58 +0000 (UTC)
 From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 06 Feb 2025 16:06:06 -0500
-Subject: [PATCH 11/14] drm/panel/xpp055c272: Move to using
- mipi_dsi_dcs_write_seq_multi()
+Date: Thu, 06 Feb 2025 16:06:08 -0500
+Subject: [PATCH 13/14] drm/panel: Remove deprecated functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-mipi-cocci-v1-11-4ff0c69e8897@redhat.com>
+Message-Id: <20250206-mipi-cocci-v1-13-4ff0c69e8897@redhat.com>
 References: <20250206-mipi-cocci-v1-0-4ff0c69e8897@redhat.com>
 In-Reply-To: <20250206-mipi-cocci-v1-0-4ff0c69e8897@redhat.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -68,168 +67,177 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
  Jonathan Corbet <corbet@lwn.net>
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738875969; l=7528;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738875969; l=6569;
  i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=wbE7uYVtdOIHzOUKy0i3iCZQQ5nZT49/uaoUYL3CwHc=;
- b=jQdUGcnvNdf/4KBe+E8PStHpNm8HebtJ1BK3hKjEtEraBRgTvXju35iVDDc5Wy1r/lbKtbJhR
- 2rfDRYLCV2HBX58nUJxpybf81tRMbw1kuCp/4s0N3jf5DE00KUfEohs
+ bh=+I+VRf68pub7QtDDgc2t195rQtaTteShHv9verWdpIw=;
+ b=86WSU2XQMSwXFeuen4F+p7w/uK6sDESQfX27w79MeRlm8DMZrXMCp/KxUEa7ui8IcMGzFpIlU
+ naV/bzeL4zXDp/MXiT3Ui/wDhIAHvdGldZcWLHgrT+roOBtxmn89Nel
 X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
  pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Use mipi_dsi_dcs_write_seq_multi() instead of
-mipi_dsi_dcs_write_seq()
-
-Used Coccinelle to do this change. SmPl patch:
-@rule_1@
-identifier dsi_var;
-expression dsi_device;
-expression list es;
-@@
-struct mipi_dsi_device *dsi_var = dsi_device;
-+struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi_var };
-<+...
--mipi_dsi_dcs_write_seq(dsi_var,es);
-+mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-...+>
+With transition to newer functions, remove
+older ones that are no longer used.
 
 Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
- drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c | 113 ++++++++++++-----------
- 1 file changed, 61 insertions(+), 52 deletions(-)
+ drivers/gpu/drm/drm_mipi_dsi.c | 56 ------------------------------------------
+ include/drm/drm_mipi_dsi.h     | 47 -----------------------------------
+ 2 files changed, 103 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
-index 22a14006765ed23da23da9cb39c637913c4f3090..b676253fdb46cd0ff75ad022e8bc14fae80c7344 100644
---- a/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
-+++ b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
-@@ -62,66 +62,75 @@ static inline struct xpp055c272 *panel_to_xpp055c272(struct drm_panel *panel)
- static int xpp055c272_init_sequence(struct xpp055c272 *ctx)
- {
- 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 	struct device *dev = ctx->dev;
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 5e5c5f84daacc6913a73f9dda0f49cc78f83479a..33f68d4057aadd772afe6cccbb7c27f1730b581f 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -768,34 +768,6 @@ ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
+ }
+ EXPORT_SYMBOL(mipi_dsi_generic_write);
  
- 	/*
- 	 * Init sequence was supplied by the panel vendor without much
- 	 * documentation.
- 	 */
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETEXTC, 0xf1, 0x12, 0x83);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETMIPI,
--			       0x33, 0x81, 0x05, 0xf9, 0x0e, 0x0e, 0x00, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
--			       0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4f, 0x01,
--			       0x00, 0x00, 0x37);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETPOWER_EXT, 0x25);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETPCR, 0x02, 0x11, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETRGBIF,
--			       0x0c, 0x10, 0x0a, 0x50, 0x03, 0xff, 0x00, 0x00,
--			       0x00, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETSCR,
--			       0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
--			       0x00);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETVDC, 0x46);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETPANEL, 0x0b);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETCYC, 0x80);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETDISP, 0xc8, 0x12, 0x30);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETEQ,
--			       0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
--			       0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETPOWER,
--			       0x53, 0x00, 0x1e, 0x1e, 0x77, 0xe1, 0xcc, 0xdd,
--			       0x67, 0x77, 0x33, 0x33);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETECO, 0x00, 0x00, 0xff,
--			       0xff, 0x01, 0xff);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETBGP, 0x09, 0x09);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETEXTC, 0xf1,
-+				     0x12, 0x83);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETMIPI, 0x33,
-+				     0x81, 0x05, 0xf9, 0x0e, 0x0e, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44,
-+				     0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
-+				     0x4f, 0x01, 0x00, 0x00, 0x37);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETPOWER_EXT,
-+				     0x25);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETPCR, 0x02,
-+				     0x11, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETRGBIF, 0x0c,
-+				     0x10, 0x0a, 0x50, 0x03, 0xff, 0x00, 0x00,
-+				     0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETSCR, 0x73,
-+				     0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
-+				     0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETVDC, 0x46);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETPANEL, 0x0b);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETCYC, 0x80);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETDISP, 0xc8,
-+				     0x12, 0x30);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETEQ, 0x07,
-+				     0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
-+				     0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETPOWER, 0x53,
-+				     0x00, 0x1e, 0x1e, 0x77, 0xe1, 0xcc, 0xdd,
-+				     0x67, 0x77, 0x33, 0x33);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETECO, 0x00,
-+				     0x00, 0xff, 0xff, 0x01, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETBGP, 0x09,
-+				     0x09);
- 	msleep(20);
+-/**
+- * mipi_dsi_generic_write_chatty() - mipi_dsi_generic_write() w/ an error log
+- * @dsi: DSI peripheral device
+- * @payload: buffer containing the payload
+- * @size: size of payload buffer
+- *
+- * Like mipi_dsi_generic_write() but includes a dev_err()
+- * call for you and returns 0 upon success, not the number of bytes sent.
+- *
+- * Return: 0 on success or a negative error code on failure.
+- */
+-int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
+-				  const void *payload, size_t size)
+-{
+-	struct device *dev = &dsi->dev;
+-	ssize_t ret;
+-
+-	ret = mipi_dsi_generic_write(dsi, payload, size);
+-	if (ret < 0) {
+-		dev_err(dev, "sending generic data %*ph failed: %zd\n",
+-			(int)size, payload, ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(mipi_dsi_generic_write_chatty);
+-
+ /**
+  * mipi_dsi_generic_write_multi() - mipi_dsi_generic_write_chatty() w/ accum_err
+  * @ctx: Context for multiple DSI transactions
+@@ -912,34 +884,6 @@ ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
+ }
+ EXPORT_SYMBOL(mipi_dsi_dcs_write_buffer);
  
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETVCOM, 0x87, 0x95);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETGIP1,
--			       0xc2, 0x10, 0x05, 0x05, 0x10, 0x05, 0xa0, 0x12,
--			       0x31, 0x23, 0x3f, 0x81, 0x0a, 0xa0, 0x37, 0x18,
--			       0x00, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80,
--			       0x01, 0x00, 0x00, 0x00, 0x48, 0xf8, 0x86, 0x42,
--			       0x08, 0x88, 0x88, 0x80, 0x88, 0x88, 0x88, 0x58,
--			       0xf8, 0x87, 0x53, 0x18, 0x88, 0x88, 0x81, 0x88,
--			       0x88, 0x88, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETGIP2,
--			       0x00, 0x1a, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x1f, 0x88, 0x81, 0x35,
--			       0x78, 0x88, 0x88, 0x85, 0x88, 0x88, 0x88, 0x0f,
--			       0x88, 0x80, 0x24, 0x68, 0x88, 0x88, 0x84, 0x88,
--			       0x88, 0x88, 0x23, 0x10, 0x00, 0x00, 0x1c, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x05,
--			       0xa0, 0x00, 0x00, 0x00, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, XPP055C272_CMD_SETGAMMA,
--			       0x00, 0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38, 0x36,
--			       0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13, 0x11,
--			       0x18, 0x00, 0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38,
--			       0x36, 0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13,
--			       0x11, 0x18);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETVCOM, 0x87,
-+				     0x95);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETGIP1, 0xc2,
-+				     0x10, 0x05, 0x05, 0x10, 0x05, 0xa0, 0x12,
-+				     0x31, 0x23, 0x3f, 0x81, 0x0a, 0xa0, 0x37,
-+				     0x18, 0x00, 0x80, 0x01, 0x00, 0x00, 0x00,
-+				     0x00, 0x80, 0x01, 0x00, 0x00, 0x00, 0x48,
-+				     0xf8, 0x86, 0x42, 0x08, 0x88, 0x88, 0x80,
-+				     0x88, 0x88, 0x88, 0x58, 0xf8, 0x87, 0x53,
-+				     0x18, 0x88, 0x88, 0x81, 0x88, 0x88, 0x88,
-+				     0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETGIP2, 0x00,
-+				     0x1a, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x1f, 0x88, 0x81,
-+				     0x35, 0x78, 0x88, 0x88, 0x85, 0x88, 0x88,
-+				     0x88, 0x0f, 0x88, 0x80, 0x24, 0x68, 0x88,
-+				     0x88, 0x84, 0x88, 0x88, 0x88, 0x23, 0x10,
-+				     0x00, 0x00, 0x1c, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x30, 0x05, 0xa0,
-+				     0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, XPP055C272_CMD_SETGAMMA, 0x00,
-+				     0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38, 0x36,
-+				     0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13,
-+				     0x11, 0x18, 0x00, 0x06, 0x08, 0x2a, 0x31,
-+				     0x3f, 0x38, 0x36, 0x07, 0x0c, 0x0d, 0x11,
-+				     0x13, 0x12, 0x13, 0x11, 0x18);
+-/**
+- * mipi_dsi_dcs_write_buffer_chatty - mipi_dsi_dcs_write_buffer() w/ an error log
+- * @dsi: DSI peripheral device
+- * @data: buffer containing data to be transmitted
+- * @len: size of transmission buffer
+- *
+- * Like mipi_dsi_dcs_write_buffer() but includes a dev_err()
+- * call for you and returns 0 upon success, not the number of bytes sent.
+- *
+- * Return: 0 on success or a negative error code on failure.
+- */
+-int mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *dsi,
+-				     const void *data, size_t len)
+-{
+-	struct device *dev = &dsi->dev;
+-	ssize_t ret;
+-
+-	ret = mipi_dsi_dcs_write_buffer(dsi, data, len);
+-	if (ret < 0) {
+-		dev_err(dev, "sending dcs data %*ph failed: %zd\n",
+-			(int)len, data, ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(mipi_dsi_dcs_write_buffer_chatty);
+-
+ /**
+  * mipi_dsi_dcs_write_buffer_multi - mipi_dsi_dcs_write_buffer_chatty() w/ accum_err
+  * @ctx: Context for multiple DSI transactions
+diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+index 94400a78031f1b5f515c4a1519f604c0df7f3e0c..8d191d211f4fc67b8f8760571091885a1924310c 100644
+--- a/include/drm/drm_mipi_dsi.h
++++ b/include/drm/drm_mipi_dsi.h
+@@ -287,8 +287,6 @@ void mipi_dsi_picture_parameter_set_multi(struct mipi_dsi_multi_context *ctx,
  
- 	msleep(60);
+ ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
+ 			       size_t size);
+-int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
+-				  const void *payload, size_t size);
+ void mipi_dsi_generic_write_multi(struct mipi_dsi_multi_context *ctx,
+ 				  const void *payload, size_t size);
+ ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
+@@ -326,8 +324,6 @@ enum mipi_dsi_dcs_tear_mode {
  
+ ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
+ 				  const void *data, size_t len);
+-int mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *dsi,
+-				     const void *data, size_t len);
+ void mipi_dsi_dcs_write_buffer_multi(struct mipi_dsi_multi_context *ctx,
+ 				     const void *data, size_t len);
+ ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd,
+@@ -380,27 +376,6 @@ void mipi_dsi_dcs_set_page_address_multi(struct mipi_dsi_multi_context *ctx,
+ void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
+ 					  u16 scanline);
+ 
+-/**
+- * mipi_dsi_generic_write_seq - transmit data using a generic write packet
+- *
+- * This macro will print errors for you and will RETURN FROM THE CALLING
+- * FUNCTION (yes this is non-intuitive) upon error.
+- *
+- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
+- * Please replace calls of it with mipi_dsi_generic_write_seq_multi().
+- *
+- * @dsi: DSI peripheral device
+- * @seq: buffer containing the payload
+- */
+-#define mipi_dsi_generic_write_seq(dsi, seq...)                                \
+-	do {                                                                   \
+-		static const u8 d[] = { seq };                                 \
+-		int ret;                                                       \
+-		ret = mipi_dsi_generic_write_chatty(dsi, d, ARRAY_SIZE(d));    \
+-		if (ret < 0)                                                   \
+-			return ret;                                            \
+-	} while (0)
+-
+ /**
+  * mipi_dsi_generic_write_seq_multi - transmit data using a generic write packet
+  *
+@@ -416,28 +391,6 @@ void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
+ 		mipi_dsi_generic_write_multi(ctx, d, ARRAY_SIZE(d)); \
+ 	} while (0)
+ 
+-/**
+- * mipi_dsi_dcs_write_seq - transmit a DCS command with payload
+- *
+- * This macro will print errors for you and will RETURN FROM THE CALLING
+- * FUNCTION (yes this is non-intuitive) upon error.
+- *
+- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
+- * Please replace calls of it with mipi_dsi_dcs_write_seq_multi().
+- *
+- * @dsi: DSI peripheral device
+- * @cmd: Command
+- * @seq: buffer containing data to be transmitted
+- */
+-#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                               \
+-	do {                                                                   \
+-		static const u8 d[] = { cmd, seq };                            \
+-		int ret;                                                       \
+-		ret = mipi_dsi_dcs_write_buffer_chatty(dsi, d, ARRAY_SIZE(d)); \
+-		if (ret < 0)                                                   \
+-			return ret;                                            \
+-	} while (0)
+-
+ /**
+  * mipi_dsi_dcs_write_seq_multi - transmit a DCS command with payload
+  *
 
 -- 
 2.47.0
