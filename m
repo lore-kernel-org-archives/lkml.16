@@ -1,137 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3F31DC9B4;
-	Thu,  6 Feb 2025 20:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBE11DD0D4;
+	Thu,  6 Feb 2025 20:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738875491; cv=none; b=Ixqxycbs+mbZPAdB/b6kWAQQzTZFMCP/jzcaSynWfB2oTCavKbfDGIrwh3FKeNA01M/874RaKSgCGm2LWKG1Usmpyos8c8JKy2tHH/P7G6T2HwGZgQqZNTok+IPr7PxKaKaLTU+JC+gU96zRsK/Au0PdkGzEMeO4uxYiKqvvhzE=
+	t=1738875517; cv=none; b=uPWBa0lI/pze6VfPHLp3bFVEPoXBvdS8UEjTat9NEIN8QrtWFoyhWPd9lN8udUc34ah/CIL+fI4nLbIAAfccNO5ZaDtCtvI2p8FAZpndpFOaaCWMaKzFwT9+BJBqb7X47ZafVYPTmMBEknZalAZPUsZWgY202nm/ojDiiK1EySs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738875491; c=relaxed/simple;
-	bh=/0pxhC+GTLTKTMJ14bnPQQWPb904pW8koG/0Y3LYbzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VyVETMk06qlKYFn9c+nhPeNzqpVh0ZyVPw6FoaYQDj4C2X5NYBmiXDrtSTzvg4P9YwdV5NmI0HItzts+cfB7Z1MhF3Buqqq65Ugwzzu5TEq8WftTkJT+J7V/uf8muMvIbV0xag6sZBA0mt0iDRorS866J0I4vfq6IpKS1q7RAgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ct79wcSR; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738875517; c=relaxed/simple;
+	bh=Vl1E5n4Tqgm2PGQzPBmSB+0qboSZss7zKm0zOFIQOIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOjvEqSK6w1CBdI4XPp2cEY9nMTax32VZD9XNyPQx/mP/J4uZsYlmWH6tB5dCzz/IDdaTTdOTAzvJ4cUJWOXlUtEFhTELfuqfkOos8Nf6LEUtThqmR6WUUq6L51UusHegqdkrCsy7t6sUrNOpAhbfl1Oh4GntJSucBe5X77uGxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KcjLPXXO; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ct79wcSR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738875489; x=1770411489;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/0pxhC+GTLTKTMJ14bnPQQWPb904pW8koG/0Y3LYbzU=;
-  b=Ct79wcSRsooELflExK73Ul9bMU3LhReyH3kgVROr1bu5Dyuc/+IhtYpZ
-   wOl4qoGFosqMG/oFRm5yDp1ViQ//tsv7FJy7eQ/8q3Lun5SEgp2kiZKfG
-   AOMMvwSRvQfQ3loF5/DdQE+jI+axCrDlZ7x6SBcAuSaoPMxWXJ5a88FwZ
-   Nm7ODuZ8Fv5T/hS6JR5UQSSjHlMyusL33okTAr557podgpgVGkLxKX4cn
-   s18Mcg5XKED+soqRglAzPY+pN9KKOcDwLsFh+RpvXdwI9Wa+NkhEKbMwc
-   +ZMV5FF1Fwl94UwPtKS6ydzuzcQtHzBcu0htoSiLpgHKPqJ5bc2YTW3rO
-   A==;
-X-CSE-ConnectionGUID: rNL5IQ9CR1K5jMCoGUHwhw==
-X-CSE-MsgGUID: ho1zCSgwSDu1RvqWiG4fbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50125056"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="50125056"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 12:58:08 -0800
-X-CSE-ConnectionGUID: JUPj4RINSo+3mL2t23/4wQ==
-X-CSE-MsgGUID: tx3sjQ9oRTCYKrH4T8h8TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="111945741"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.17]) ([10.125.111.17])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 12:58:06 -0800
-Message-ID: <4ab2efaf-867a-4b8a-8e4a-193f8218dd33@intel.com>
-Date: Thu, 6 Feb 2025 12:58:07 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcjLPXXO"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-46783d44db0so14372221cf.1;
+        Thu, 06 Feb 2025 12:58:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738875515; x=1739480315; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=t9cHsIps+BUS5q+gyi26JPt+JcfCXlNK6A88Ldomk2Q=;
+        b=KcjLPXXOX5c/J0vRBGeJl4bfPcBlKjF+pTuRpkdx6cF1pEJLFQCTDHW1dixVdB9vFq
+         74wCmvOfg/bay+nNAzj2I15hfujCz/xo4nXhBEKThTKF/8Mrb4bWFr/cmVP1zDVypSCN
+         +v9Et6cAB4Bzqc1W4Rt4oTvm7Q+aw8xdEg19fM6p1O2inKMHmBdE3k7yjwQ1BQm62TkG
+         TgT/7OcL8b/gqnpUo79lEjXOgutRAEt2FD2IqwJbxknXZsr/s/PCbdNQAEP+kvih/q/k
+         Vo2EKj/KwsqTMtbheDYbYqU5ROOnyP0u+3Vx+PDyMpfQW7dKsFBLupkOKlLhyQsl+mKx
+         S54g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738875515; x=1739480315;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t9cHsIps+BUS5q+gyi26JPt+JcfCXlNK6A88Ldomk2Q=;
+        b=Ycz+pX8ymcExi3zCSFOSbBzNawS1xRtIZWLlDivx2FNEHm1jtzBTM2Jvt9iPWiJx3Q
+         Jfxsu3JXAgECPCSEx1OPTJsW54qfj4fOkMfwsj90pb/EroCKWTuLCZ9IGvl8bnvKhR0k
+         ICAZOOz8dRnBw/Q+mX5QeaiLCXZLd7Hogrxxh3WxhTHs30eONCPIBOJaWbeRyavzIGMu
+         N/OpFLbDDlyEFBIIi+aVCVNEbdlHPlV8vR297jN2Dm+S2E24QGpHmqS3zwhDbKEq5jpN
+         n9Ydsn0oEHha+UeBAq4q7S8p7A/R+UvbxoKCJ4bxtjXEE7lq4iunt7La+XYZPmGeuHfu
+         4vpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKiFww705Gpry9IBSdfLmhKFjdYDrrRlrviZE4c2CZwnj7m9uIiObWx+B8yFBgpwhlEUv9ehj9/qjguAtN@vger.kernel.org, AJvYcCUgw9EdQ1uaylA9QLx+7wCSlNnCkFcHJYPer4/YBCj2Jk4K6iRInZRvyrcDNKoCou6zWNVtufSCQUqV@vger.kernel.org, AJvYcCXYZUT43SECbT1h0yRqTLkZ2aT4LAMUp7vWFYN847gjd6cncRPDy22+8o5Qo1480n6W+q0yewrspiHuPTDU@vger.kernel.org, AJvYcCXpGbDZlXNkwT0+DDFcXPffni1CCEBwEcNONThpuwRUxdeVAdsd6wKAkmhmYOLx7sUfmdnUMho5SVQD4b9FPXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSX2c/RispQsYA8foonbLMNObutV+3db/p4Ilx7+BN7yIJDFgm
+	4ihLCMeuT094NRNgL9og13wZGE2za0wvOs/621eSwTYvrmc21WeT/PU3RQ==
+X-Gm-Gg: ASbGncvFlwOeEVE1Flu2tRdCX+TNlT8mghCEo8UyG9VWk7A4jGq/Itn/7Cxlq71EqUf
+	WI3Lw9lBnbSkuLMbIrzr35Wn3rduZ6qhU2MHAEsdMOYak6HS/8oko1Ksf/7B7+hBh7BjlkLny4W
+	8pjRNOcL6lwCwkYHnwxNX3YTGs18pKWALVa3+AdR0tlXcjaQH6tgVsrbRJsXQqvC/QVcrQhR5Wf
+	Nnkpb7Hy+JrdQ9/eRtTp6rw3CZMPAkFkZwRadGRKIpDmK3AOBJjHd971Prbe5KuoRrX1AI0cAVY
+	Frq/7wOtFYD1hcvHB+gaPYcy7btEOtuS2a7FDe9JAx4o0oAp9rC5JirG/29XjDGC6cSvGfcoEtZ
+	L/8hVnA==
+X-Google-Smtp-Source: AGHT+IHuTiT1O9gWcNSlS8NNPtvRf1yXdSvvR+Laa0d93a1XUZSuNd8/pQ+BCFaC45iXFJm2+9asTg==
+X-Received: by 2002:a05:622a:6182:b0:461:22f0:4f83 with SMTP id d75a77b69052e-47167b07bddmr12791641cf.43.1738875515083;
+        Thu, 06 Feb 2025 12:58:35 -0800 (PST)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492a91b6sm9036151cf.34.2025.02.06.12.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 12:58:34 -0800 (PST)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 032F91200043;
+	Thu,  6 Feb 2025 15:58:34 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Thu, 06 Feb 2025 15:58:34 -0500
+X-ME-Sender: <xms:eSKlZ-P1XZZZwwOALGZsJMKMKTZ2t1mRy3hCWjVkS3UHSei6d_7tFA>
+    <xme:eSKlZ8-_JUCzgRLfxcmxTU-Sm-ozIqRpdmGSynfNwatc75aPWdaRuRIEdCH1J1h_X
+    1CE8JXdekWjdehfGA>
+X-ME-Received: <xmr:eSKlZ1T9moYcz8JW0s2M0BH9XYU7g4uZaygZXt35X2VTUEFwE6edd8C1M-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledt
+    hffgheegkeekiefgudekhffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvddupdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopehtrghmihhrugesghhmrghilhdrtghomh
+    dprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggu
+    rgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrg
+    hilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphht
+    thhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhope
+    gsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhn
+    uggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgtvghrhihhlhesgh
+    hoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:eSKlZ-vA6jXnYmz9tmLDBjDkBTik0K8rin_JOnOJ1N5fJD8kR5gw2g>
+    <xmx:eSKlZ2cKL70bfoHR9pQuTzAe62KtbtB-1gefbEKPqGA7GEqJGT7i2w>
+    <xmx:eSKlZy2UOjrX1g5N-lc-swWMPbTa_4dCp_M_BXa8oMT9W_CdmNnUIw>
+    <xmx:eSKlZ68WK37X8rB6-Gooz4quTAaqGD72W5lkjltOONiU8idJFqkbBw>
+    <xmx:eSKlZ1-vviK6heep0UHzWhKNK6u6vLVGhU_pR2xpMAvjje6BxjMwkSLz>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Feb 2025 15:58:33 -0500 (EST)
+Date: Thu, 6 Feb 2025 12:57:25 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Matthew Wilcox <willy@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v15 2/3] rust: xarray: Add an abstraction for XArray
+Message-ID: <Z6UiNYOTUshEKNcL@boqun-archlinux>
+References: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
+ <20250206-rust-xarray-bindings-v15-2-a22b5dcacab3@gmail.com>
+ <Z6Tu8E4r5ZEolFX1@Mac.home>
+ <CAJ-ks9nGZCMjgTTzeRz3DUCQyLVu-xWKau4AFkMGutLtomK-fA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86: rust: set rustc-abi=x86-softfloat on rustc>=1.86.0
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Alice Ryhl <aliceryhl@google.com>
-Cc: x86@kernel.org, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250203-rustc-1-86-x86-softfloat-v1-1-220a72a5003e@google.com>
- <CANiq72kv_wE_ESNsW9qDiwnJkaoFb+WERJ6p796TCPAdK838Fw@mail.gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <CANiq72kv_wE_ESNsW9qDiwnJkaoFb+WERJ6p796TCPAdK838Fw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9nGZCMjgTTzeRz3DUCQyLVu-xWKau4AFkMGutLtomK-fA@mail.gmail.com>
 
-On 2/6/25 10:51, Miguel Ojeda wrote:
-> x86: I will pick this up, but if x86 wants to do so, that would be
-> welcome -- in which case:
+On Thu, Feb 06, 2025 at 01:21:35PM -0500, Tamir Duberstein wrote:
+> Hi Boqun,
 > 
->     Acked-by: Miguel Ojeda <ojeda@kernel.org>
+> On Thu, Feb 6, 2025 at 12:18 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > Hi Tamir,
+> >
+> > This looks good to me overall, a few comments below:
+> >
+> > On Thu, Feb 06, 2025 at 11:24:44AM -0500, Tamir Duberstein wrote:
+> > [...]
+> > > +impl<'a, T: ForeignOwnable> Guard<'a, T> {
+> > [...]
+> > > +    /// Loads an entry from the array.
+> > > +    ///
+> > > +    /// Returns the entry at the given index.
+> > > +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
+> > > +        self.load(index, |ptr| {
+> > > +            // SAFETY: `ptr` came from `T::into_foreign`.
+> > > +            unsafe { T::borrow(ptr.as_ptr()) }
+> > > +        })
+> > > +    }
+> > > +
+> > > +    /// Loads an entry from the array.
+> >
+> > Nit: firstly, this function has the same description of `get()`, also
+> > I would prefer something like "Returns a [`T::Borrowed`] of the object
+> > at `index`" rather then "Loads an entry from the array", thoughts?
+> 
+> I was trying to avoid repeating the signature in the comment. In other
+> words I was trying to write a comment that wouldn't have to change if
+> the signature (but not the semantics) of the function changed. Since
 
-Hey Miguel,
+Understood. However, I think doc comments and function signatures (and
+name) can have the overlapped information, because they are for
+different users. Surely a developer who already knows what XArray is
+will make a good guess on what `get()` and `get_mut()` do, but it won't
+hurt to have the doc comments double-confirming the guess. Besides there
+could also be someone who is not that familiar with XArray and would
+like to seek the information from the doc comments at first, then having
+a more precise description would be helpful.
 
-Are you saying you'd prefer that we pick this up on the x86 side? I'm
-totally happy to do that, and it's obviously patching x86-specific
-sections of the rust scripts.
+> the difference between `get` and `get_mut` is completely described in
+> the type system, the two functions got the same comment. Shall I
+> change it?
+> 
 
-If I'm understanding the ask.... Just curious though, what makes that
-preferable? It's in a rust-specific file
-(scripts/generate_rust_target.rs) and I'd guess that it'd be easier to
-take it through the rust tree since it's more likely to collide with
-stuff there and also be closer to the folks that can competently resolve
-any merge problems.
+Your call ;-) It's a nitpicking after all, and you're the maintainer.
+However, I do want to make the point that being a bit more comprehensive
+won't hurt when providing an API.
 
+Regards,
+Boqun
 
+> > > +    ///
+> > > +    /// Returns the entry at the given index.
+> > > +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'_>> {
+> > > +        self.load(index, |ptr| {
+> > > +            // SAFETY: `ptr` came from `T::into_foreign`.
+> > > +            unsafe { T::borrow_mut(ptr.as_ptr()) }
+> > > +        })
+> > > +    }
+> > > +
+> > > +    /// Erases an entry from the array.
+> >
+> > Nit: s/Erases/Removes?
+> 
+> Will change. I used "erase" because that's the verb used in the C
+> function name but named it "remove" because that's the verb used in
+> the Rust standard library. The result is neither here nor there :)
+> 
+> >
+> > > +    ///
+> > > +    /// Returns the entry which was previously at the given index.
+> > > +    pub fn remove(&mut self, index: usize) -> Option<T> {
+> > > +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> > > +        //
+> > > +        // SAFETY: The caller holds the lock.
+> > > +        let ptr = unsafe { bindings::__xa_erase(self.xa.xa.get(), index) }.cast();
+> > > +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`.
+> >
+> > SAFETY comment here needs to mention why there is no alive `T::Borrowed`
+> > or `T::BorrowedMut` out there per the safety requirement.
+> 
+> Will do.
+> 
+> > Regards,
+> > Boqun
+> >
+> > > +        unsafe { T::try_from_foreign(ptr) }
+> > > +    }
+> > > +
+> > [...]
+> 
+> Thanks for the review!
