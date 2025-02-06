@@ -1,150 +1,151 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7E1225A2F;
-	Thu,  6 Feb 2025 12:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C02722DF99;
+	Thu,  6 Feb 2025 12:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738845859; cv=none; b=W2Y//yIangQBYQRfby74cCqxkRH/ef4JGLlASZwMh/K2/8lkh3UBj8Y+1rQILjs11tB1Ty21TUqwOcJ7SEVgU1j/DRXHB4SfOA9g+4AqGfSCZN9flY2AZexRc36LxTvR782aHINVvoYq7LSWjqBFT+HVhFxe1I/t8MdA665ggm4=
+	t=1738845859; cv=none; b=lfpOk6gT4g7F2CBLJJ9cl65//pOiXHiDMle8Xs+Bu4OKc91PlQtwm6aH792g6IXTqQkXek2kLN0rnRxTL49+1pZx7TDH4VtM4UjzvUSWFMbFDX9Z04yEG7JENhxQFPSB3Pnhbt+bsaE68YFhFYl/5830wRsd434/uSkg5xJaCWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738845859; c=relaxed/simple;
-	bh=W6jZDK8jApWktPMHm3xVv1mSc6QAOfCwzZr+TF7SbOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LoPhmjiIdWT+zxQItuauyBkqsohzItqA9aTPKaRmEHO4AGIOcsJkSRS4MAQHlffSRabyWBc1XwTB91zaezBdGwa22h+ldsshR5r3eytY6ffqU5r9MS8CAaYlqIkX5DgzQoGSnUb0td6crZg9nzfA02ftyQZdYT60VKMYIN2F0Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RlYu1OA8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=AI14gFOmTzGyATjTmSWsjNge/5pVrqKxGeFBT0xQKac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QBZQLJ8nmN3cuRu3wboGDo+XmS5cbdC/7Odr/9UQitWMXlAkbukrQx2uevb7tpAtDL8755UcJ3Kzei5+Xkm2nCdw4nZNsXxJrX/so1hguYhZ/EFeEVQR1GFPlj2Yqs2SAtlNkCDgwcmrCz87q4vupSN2DbEaUZqGCqPLq0pHy/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Emmv28mW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RlYu1OA8"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516AGVtk015699;
-	Thu, 6 Feb 2025 12:43:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	L+VuwwPUX96t/cvLAig0W9CrSmNSvF+GAw2WUICZpBM=; b=RlYu1OA8BRoZs37J
-	AlZng96pHzMmd5b/WS3mArhheJxQZkg6wK1Uu8SnYgsX7gZ4zD3Nwywdi2TrgQ/C
-	GyfiRQP7RNKoMpqdyOOGScg/0hvqvCllrhy6E0Y7u2sk1pY0wjXE+zTmvDcI1DZn
-	xnDdgS1E83WqXxVI/EZFbrOPZsAOr997ybn+R+beI6/3xzH4GKU4/HzFL9ogcebC
-	k3y7x/vCJsXs3cD0ZwTmJx1BeyIdu3GBrW8H5JuVZMpGT6jrS1itMQOOSlmtiCNR
-	7dQFerqlN+/t/eYGocVaXBAve+8g0Cfsne1qzTX/EHp5UMvpO+I8rLQL4g/Bqa+G
-	gk1Zbw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mu6f0b3a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 12:43:06 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516Ch5Z4004850
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 12:43:05 GMT
-Received: from [10.216.49.103] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
- 04:42:52 -0800
-Message-ID: <689302c6-8fba-4fd1-a4b7-557cb2f8fa4d@quicinc.com>
-Date: Thu, 6 Feb 2025 18:12:47 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Emmv28mW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B931BC4CEDD;
+	Thu,  6 Feb 2025 12:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738845858;
+	bh=AI14gFOmTzGyATjTmSWsjNge/5pVrqKxGeFBT0xQKac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Emmv28mWb6fV+T+Ro+GlrNq3CKTnAaicWv1UZay0wS2IngW/+bWCk7owMKT5XPPnZ
+	 5PZENti/fpwHiTaQi/hpLMiCQIvyuIlXC+3zTagdnSFkdZJmytBsdcTKJQalTORHWB
+	 2pOdi4FpKgSKQUv7/zrduRdBYdwusx0a8jgYRPlwYDDEz6cIRTNPIfJ2hiAP8WMyIq
+	 e5kqEqGUAD01ViBSmQ2bI294QCmJnW3jH35t0z8dPzjthZy3TiYhBZfS3x0jPH9efI
+	 TmAUL8tdl2524L6uO2JskN+PLjHOYcA6e1dbibMNDEfYeVt6W20Cfj9Zwd9oZZY5pm
+	 lNp8DJL8mFSEA==
+Date: Thu, 6 Feb 2025 13:44:13 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/19] VFS: repack LOOKUP_ bit flags.
+Message-ID: <20250206-wirren-ausfiel-99acf5b0ace8@brauner>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-8-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/9] dt-bindings: pci: Add fsl,mpc83xx-pcie bindings
-To: =?UTF-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-        Frank Li
-	<Frank.li@nxp.com>
-CC: <devicetree@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        Scott Wood
-	<oss@buserror.net>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael
- Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao
-	<naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Damien Le Moal
-	<dlemoal@kernel.org>,
-        Niklas Cassel <cassel@kernel.org>,
-        Herbert Xu
-	<herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Lee
- Jones <lee@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?J=2E_Neusch=C3=A4fer?=
-	<j.neuschaefer@gmx.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter
- Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-        Miquel Raynal
-	<miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-ide@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-6-50649f51c3dd@posteo.net>
- <Z5qx3jAFE81Ni2cJ@lizhi-Precision-Tower-5810> <Z6KkBEaGTkSyWiE_@probook>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <Z6KkBEaGTkSyWiE_@probook>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TE8H3f9cFLjJrvrDo3x9nlVxTSkbm7Tn
-X-Proofpoint-ORIG-GUID: TE8H3f9cFLjJrvrDo3x9nlVxTSkbm7Tn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=657 adultscore=0
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060105
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250206054504.2950516-8-neilb@suse.de>
 
+On Thu, Feb 06, 2025 at 04:42:44PM +1100, NeilBrown wrote:
+> The LOOKUP_ bits are not in order, which can make it awkward when adding
+> new bits.  Two bits have recently been added to the end which makes them
+> look like "scoping flags", but in fact they aren't.
+> 
+> Also LOOKUP_PARENT is described as "internal use only" but is used in
+> fs/nfs/
+> 
+> This patch:
+>  - Moves these three flags into the "pathwalk mode" section
+>  - changes all bits to use the BIT(n) macro
+>  - Allocates bits in order leaving gaps between the sections,
+>    and documents those gaps.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
 
+This is also a worthwhile cleanup independent of the rest of the series.
+But you've added LOOKUP_INTENT_FLAGS prior to packing the flags. Imho,
+this patch should've gone before the addition of LOOKUP_INTENT_FLAGS.
 
-On 2/5/2025 5:04 AM, J. Neuschäfer wrote:
-> On Wed, Jan 29, 2025 at 05:55:26PM -0500, Frank Li wrote:
->> On Sun, Jan 26, 2025 at 07:59:01PM +0100, J. Neuschäfer wrote:
->>> Supplement Documentation/devicetree/bindings/pci/fsl,pci.txt with a more
->>> formal binding in YAML format.
->>>
-neat: subject: since binding is already mentioned in the prefix of the 
-subject, no need to add bindings word again.
->>> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
->>> ---
->>>   .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 83 ++++++++++++++++++++++
->>>   1 file changed, 83 insertions(+)
-> [...]
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>> +
->>> +    pci1: pcie@e0009000 {
->>
->> needn't label here
-> 
-> Will change.
-> 
-> 
-> Thanks,
-> J. Neuschäfer
-> 
+And btw, what does this series apply to?
+Doesn't apply to next-20250206 nor to current mainline.
+I get the usual
 
+Patch failed at 0012 VFS: enhance d_splice_alias to accommodate shared-lock updates
+error: sha1 information is lacking or useless (fs/dcache.c).
+error: could not build fake ancestor
+
+when trying to look at this locally.
+
+>  include/linux/namei.h | 46 +++++++++++++++++++++----------------------
+>  1 file changed, 23 insertions(+), 23 deletions(-)
+> 
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 839a64d07f8c..0d81e571a159 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -18,38 +18,38 @@ enum { MAX_NESTED_LINKS = 8 };
+>  enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
+>  
+>  /* pathwalk mode */
+> -#define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
+> -#define LOOKUP_DIRECTORY	0x0002	/* require a directory */
+> -#define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
+> -#define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
+> -#define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
+> -#define LOOKUP_MOUNTPOINT	0x0080	/* follow mounts in the end */
+> -
+> -#define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
+> -#define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+> +#define LOOKUP_FOLLOW		BIT(0)	/* follow links at the end */
+> +#define LOOKUP_DIRECTORY	BIT(1)	/* require a directory */
+> +#define LOOKUP_AUTOMOUNT	BIT(2)  /* force terminal automount */
+> +#define LOOKUP_EMPTY		BIT(3)	/* accept empty path [user_... only] */
+> +#define LOOKUP_LINKAT_EMPTY	BIT(4) /* Linkat request with empty path. */
+> +#define LOOKUP_DOWN		BIT(5)	/* follow mounts in the starting point */
+> +#define LOOKUP_MOUNTPOINT	BIT(6)	/* follow mounts in the end */
+> +#define LOOKUP_REVAL		BIT(7)	/* tell ->d_revalidate() to trust no cache */
+> +#define LOOKUP_RCU		BIT(8)	/* RCU pathwalk mode; semi-internal */
+> +#define LOOKUP_CACHED		BIT(9) /* Only do cached lookup */
+> +#define LOOKUP_PARENT		BIT(10)	/* Looking up final parent in path */
+> +/* 5 spare bits for pathwalk */
+>  
+>  /* These tell filesystem methods that we are dealing with the final component... */
+> -#define LOOKUP_OPEN		0x0100	/* ... in open */
+> -#define LOOKUP_CREATE		0x0200	/* ... in object creation */
+> -#define LOOKUP_EXCL		0x0400	/* ... in target must not exist */
+> -#define LOOKUP_RENAME_TARGET	0x0800	/* ... in destination of rename() */
+> +#define LOOKUP_OPEN		BIT(16)	/* ... in open */
+> +#define LOOKUP_CREATE		BIT(17)	/* ... in object creation */
+> +#define LOOKUP_EXCL		BIT(18)	/* ... in target must not exist */
+> +#define LOOKUP_RENAME_TARGET	BIT(19)	/* ... in destination of rename() */
+>  
+>  #define LOOKUP_INTENT_FLAGS	(LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_EXCL |	\
+>  				 LOOKUP_RENAME_TARGET)
+> -
+> -/* internal use only */
+> -#define LOOKUP_PARENT		0x0010
+> +/* 4 spare bits for intent */
+>  
+>  /* Scoping flags for lookup. */
+> -#define LOOKUP_NO_SYMLINKS	0x010000 /* No symlink crossing. */
+> -#define LOOKUP_NO_MAGICLINKS	0x020000 /* No nd_jump_link() crossing. */
+> -#define LOOKUP_NO_XDEV		0x040000 /* No mountpoint crossing. */
+> -#define LOOKUP_BENEATH		0x080000 /* No escaping from starting point. */
+> -#define LOOKUP_IN_ROOT		0x100000 /* Treat dirfd as fs root. */
+> -#define LOOKUP_CACHED		0x200000 /* Only do cached lookup */
+> -#define LOOKUP_LINKAT_EMPTY	0x400000 /* Linkat request with empty path. */
+> +#define LOOKUP_NO_SYMLINKS	BIT(24) /* No symlink crossing. */
+> +#define LOOKUP_NO_MAGICLINKS	BIT(25) /* No nd_jump_link() crossing. */
+> +#define LOOKUP_NO_XDEV		BIT(26) /* No mountpoint crossing. */
+> +#define LOOKUP_BENEATH		BIT(27) /* No escaping from starting point. */
+> +#define LOOKUP_IN_ROOT		BIT(28) /* Treat dirfd as fs root. */
+>  /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
+>  #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
+> +/* 3 spare bits for scoping */
+>  
+>  extern int path_pts(struct path *path);
+>  
+> -- 
+> 2.47.1
+> 
