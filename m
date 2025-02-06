@@ -1,90 +1,122 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6133221CFE8
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BB321CFE8;
+	Thu,  6 Feb 2025 08:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738830176; cv=none; b=cUNZPvIBe45kZ2fhs5C7Ui/utAUQAafEjjFWcCk/Fs5qN0qTqwA/Whp/HaFVdG5U7CXv3OE+r5T6ftwB6dAmZiNdp1TMSNdrPIbRr7wzYqkuLqQjzM+mAUgVTbmNqOVk5aisgmpOQOWw6FieBAZekdAvNGW75vRnvVNPElZOX64=
+	t=1738830306; cv=none; b=WZ7CwwrPi4KMBiRtAkDQFCqP1hZodzpaDs/hSg8AmT6GE1hXJXfKmi3U5zcUG2UecSOfDJgwf9dKgpaSqcw8fO3HBZgF5EYDe6U7qH1rax1rhp+2DYpjKx/9Q7UaIajDe88nVXtxz2CUpMMHnnawZ7NARUiVx7aG3kRKLm3Jxd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738830176; c=relaxed/simple;
-	bh=bg9ujw7uFbNGZFUll1kPYLcYcu/ANgs+BUP6Ak4GHLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FGm+b3uBzpHYhLCtL32ULJtOqcMCAHAiVUS4Vt7NXvlxTswn23hULjjui5QWXfNfzz+XyNz/wwEsr7rgSU5UHjahfbLS3NMUMnU/8DN9blsUjsl7PtX8/N8xoFoRL17jV0ephLnqYe7HyqoI3iebE75jVNXvOqlt5bN2QH6K8a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XsMl03qQ; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738830306; c=relaxed/simple;
+	bh=ySVaukHavwMH59PZ1fdsFaHe3vmhRU6DIaV6J7dV46c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jH+pPcLW06NEnL6H+nlsV4Zzr3+c+GTIgH+5gtPltNxiPDq1Nh6P/o2UWtehU46Vsx2UfMPchKJGNyVCerEGGZGLWN8uoDFZQTFqTXmyFEw0Zcz7hJoaAjuj4AdmC1OpcieGS8X1BpS0wtjoa4y4vHCxJjPDiwdh0SyK4+2Hopc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lNyqhgtp; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XsMl03qQ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f3328f72aso5290445ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 00:22:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNyqhgtp"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5dced61e5a3so1041612a12.0;
+        Thu, 06 Feb 2025 00:25:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738830174; x=1739434974; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xBj4dEHovq6rmCikfKh4C+pq48sZ0tP9QKnuVG2mHfg=;
-        b=XsMl03qQBXlFKtBLpgSzLmpVIDC/fRMA+agb4Cg0L8i9zzIRvJEl0lIhUzkaVv8AB5
-         YHzX+3PBaSY5SnO9o07V14UL4MvGLKJD4qPZNl5b0Eiz4yv7oEgFtElYQi1BqRVSCHgF
-         6ezqQpvuyUOVxD6SgrHAvywLusFDERowo0QeQ=
+        d=gmail.com; s=20230601; t=1738830303; x=1739435103; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BF0kK7yHV3Y9vU7NQPyMhU1k5/+XykjSlEXscAENlAw=;
+        b=lNyqhgtpGXFAfgEafSZRam+LntMx4Ad87o5ON8G0DBnpZTyNyeA0IXDLOjpxrXZWgq
+         MVqMIti8klEGJTtqpyR4JZ3uIwpzMt2FWxkwsMpigNYX6p4Bf8kCJATywqSY4GuCltlG
+         sc21v68n5Nm8HWI9oIDZ94d1dPnx7TduYLMJz3KWBYu1H8wbDmuo4wfQbEtvRHf8JKJM
+         GfC3cG5SwX/IbQwJQN7SvP79FxQi5OQVUszlDbJw4b745vegXYro/gAkZl9/Tf4Ox+dg
+         xpNy0CQYSam1sQel3zmhklb9bfdzlDi3MZy5X1MbR6paNNKX15HoitfpkjWYIDPldDp0
+         YAEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738830174; x=1739434974;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xBj4dEHovq6rmCikfKh4C+pq48sZ0tP9QKnuVG2mHfg=;
-        b=psxE+ZzTOxZpbEcK7KDIFbIuy+GM1W5euw+voBKvCS4y1o7+Zttc3V4h6BO4x2Nbxs
-         fMOVnnWSOYjOhGnLawnx7ZQknlGxealRPrNRWRs6wJsOfWvBYn4w/T3bcYbOm+mw7ZHc
-         Tam98dZbs0T1/05ALtSdHGVcBfSF8yALOQ9EzN/Nc4xxztEckqxSsTge7WTVnzITEWPq
-         OhZ2AR2/gpCvZz9XlOhY7Mfexlyn0I6I7ge5B8rDheaXELnjnERDTKm2OfL9k9xpwZtT
-         6iRNc0ftHlY35+RtqxHT53xza2MGKPx5nNxzRyO1O8YWF5lUjPK9T22bSGenBi2UJzDf
-         zysA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXGIwZDa4dXnaCVeHKY2ANWbKDSma9uOkH1wFPPhtylwqp1ek9taDiNcsgrEAhUB1WDDgBFEpkRu+gquU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEMY80AGs3d+MnUrgWvgUopgkPDtujxz5V1BEyn8YRpW+mgoBt
-	oE3sDp+xOMVOT3rBZHRdT9nB87hw3I67uj7GUzyad6m+VjlUDC7UE2nt0AVez2gSMm9P7g4TxzU
-	=
-X-Gm-Gg: ASbGncse/fhRQXy9PR409FrNZkS++NSxto1hRc0h5QDxqA1ny6o8z62B1IOLE6WGW97
-	vfPP3UPzepJNA1rXZ+qLcwsFOqfBs495NWKTLfQzKdWQEcl7cREclQLNYhIYnrF+inG5HhTUZiq
-	T8GyrlUSpbAmT5w61wkYKlWJlpKqlwQogoKcRuC5GoqooddSnGOuslV3mb0dx4cdhU2LLiYiMMl
-	anrydLR919A+JY5MGkdMDHEKg++wlVkxVyppIsfD85MWyOqFrzEdNc+EHsFYDpOeHSr+tq78nL+
-	YDyAIyj8Q+B+ruMD5vI=
-X-Google-Smtp-Source: AGHT+IE4ctymN3GmJ2NIk9JDhOA2Q6JmpWiBbywcGEW09fGrHORU9ul0kl9mDT8VjfySxTOfHD/53Q==
-X-Received: by 2002:a17:902:db07:b0:21f:1c9:ce48 with SMTP id d9443c01a7336-21f17e47109mr93841085ad.26.1738830174528;
-        Thu, 06 Feb 2025 00:22:54 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:28ab:cea4:aa8a:127a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c4dcsm6875915ad.170.2025.02.06.00.22.52
+        d=1e100.net; s=20230601; t=1738830303; x=1739435103;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BF0kK7yHV3Y9vU7NQPyMhU1k5/+XykjSlEXscAENlAw=;
+        b=XKWD573EV/i5izJh1NNoxmDYaYEjgMeZpN8OebnHF4sZa9YmWx8haX3QJrfw4PHFkU
+         AbZPFRvn45MGRKLrDdkPyF3/TXs6Nt+h3Qa2iLYbmKUvHacF5ByeRyjnOut0Ghtg04NL
+         rQub3aTB3erU5LYP9WU1SpXV13fTt2YTC3UcI64EXPwEWFNVYHzYKYB1upZwjssdeeki
+         DdBzTsJL4Jw1xpLJkxhs7L/Wu1FgohiAEf4hDTX0mQij44nv5obvaKVhHyXZki+VZf6S
+         SWQlVoOp8apDWxhyYvKvWCMMr4302bEIezmLYIhq0HYuuVU/qAtzTtvsAQJB7j/wxitq
+         ew7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVbw6HslJSY7kkB8Ie+jhpr4w54MU8hEvMNCzgPQ/YlceGKUax/GA2dwjw1Va1MhQCDK0exYDKON8xtCiTkRxQ=@vger.kernel.org, AJvYcCXE7sC+XcISYgjHpa/cjtyYwb8YdP2GZnkiJiolCGCO3eh7NaNuZE2icQH1RkejJYGUHIQ2IY9s75d5l54D@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXImjbhJ+OIIX8KVDn1E8Z6IPUWLlX0lFnXVLTXwTihZvgeQzw
+	T1K8pQgEHuHAPo9u4FDdmMc2As6blYTqFfzsXhYHA8n/JAf3IuUo
+X-Gm-Gg: ASbGncuRnWjbgZtCMhVxnbPdm+nVFbJgO6O+6vGwKB0JtLs21PTNKx2QmB6HkMBkDPo
+	mVeKcDPXDcis2A5Gdiv6eml/BW0m5Pje4GuU1eh+BW4+vf87F+tuXp1G4gI+dB7migQn5YPdifx
+	dpWkFxr30a3RcMLHXXih8sHr7dwpRMby7mR9sBRtP4o3wd++7fDnigQeEUVUAR94AYXASuZMbmV
+	uVNyH1yWiClk0jjnbOMryQeoDVN/+8LTlZNYShOTrTiBsW6yTonh7FiUvOYOF/UBJI/H+tveaSJ
+	m9ktME2TO9LR+j+J
+X-Google-Smtp-Source: AGHT+IFU62aLjMmlDdSKTxRhCJyaarrv0BEa6Co4kNhymiutzIpO6lA2+J1QTbJS/FygEuSR1gkIvg==
+X-Received: by 2002:a17:907:7ba3:b0:aae:ee49:e000 with SMTP id a640c23a62f3a-ab75e27f2dbmr546468166b.18.1738830303031;
+        Thu, 06 Feb 2025 00:25:03 -0800 (PST)
+Received: from void.cudy.net ([46.210.137.151])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e7008sm60675966b.113.2025.02.06.00.25.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 00:22:54 -0800 (PST)
-Date: Thu, 6 Feb 2025 17:22:48 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Kairui Song <ryncsn@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
-Subject: Re: [PATCHv4 02/17] zram: do not use per-CPU compression streams
-Message-ID: <u3yog2zhhmqkiwhugvhslsn2nzacleoiiw4mylhocsevxr2h6p@q5s4exyjkfiv>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-3-senozhatsky@chromium.org>
- <CAMgjq7BFUrUY5Xq5Eks4ibqbWgJcca1vqB4kq=otQVyG=23FRw@mail.gmail.com>
- <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
- <CAMgjq7DKveiCJVb4ACSaLFV0Q1_Yd+sbL_X2dgXz6QGYwuNRTw@mail.gmail.com>
- <ysqyikz2jhnvjkhmkgwekbmz6dykvjssut6n3t746tpsscursu@zc6rg5xgk6sp>
+        Thu, 06 Feb 2025 00:25:02 -0800 (PST)
+From: Andrew Kreimer <algonell@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Andrew Kreimer <algonell@gmail.com>
+Subject: [PATCH net-next] wifi: rtlwifi: rtl8192de: Fix typos
+Date: Thu,  6 Feb 2025 10:24:12 +0200
+Message-ID: <20250206082457.9148-1-algonell@gmail.com>
+X-Mailer: git-send-email 2.48.1.220.gbc204b7427
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ysqyikz2jhnvjkhmkgwekbmz6dykvjssut6n3t746tpsscursu@zc6rg5xgk6sp>
+Content-Transfer-Encoding: 8bit
 
-On (25/02/06 16:22), Sergey Senozhatsky wrote:
-> I didn't know it was possible to use per-CPU data and still have
-> preemption enabled at the same time.  So I'm not opposed to the
-> idea of still having per-CPU streams and do what zswap folks did.
+There are some typos in comments/messages:
+ - althougth -> although
+ - asume -> assume
 
-Maybe that's actually a preferable option.   Allocation of streams
-on-demand has a problem that streams' constructors need to use proper
-GFP flags (they still use GFP_KERNEL, wrongly), and so on.  Keeping
-things the way they are (per-CPU) but adding a preemption is likely
-a safer and nicer option.
+Fix them via codespell.
+
+Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
+index d429560009bb..e07402e73ba3 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
+@@ -484,7 +484,7 @@ bool rtl92d_phy_config_rf_with_headerfile(struct ieee80211_hw *hw,
+ 	 * pathA or mac1 has to set phy0&phy1 pathA */
+ 	if ((content == radiob_txt) && (rfpath == RF90_PATH_A)) {
+ 		rtl_dbg(rtlpriv, COMP_INIT, DBG_LOUD,
+-			" ===> althougth Path A, we load radiob.txt\n");
++			" ===> although Path A, we load radiob.txt\n");
+ 		radioa_arraylen = radiob_arraylen;
+ 		radioa_array_table = radiob_array_table;
+ 	}
+@@ -750,7 +750,7 @@ static void _rtl92d_phy_switch_rf_setting(struct ieee80211_hw *hw, u8 channel)
+ 		    && rtlhal->interfaceindex == 1) {
+ 			need_pwr_down = rtl92d_phy_enable_anotherphy(hw, false);
+ 			rtlhal->during_mac1init_radioa = true;
+-			/* asume no this case */
++			/* assume no this case */
+ 			if (need_pwr_down)
+ 				rtl92d_phy_enable_rf_env(hw, path,
+ 							 &u4regvalue);
+@@ -1885,7 +1885,7 @@ static void _rtl92d_phy_reload_lck_setting(struct ieee80211_hw *hw,
+ 			bneed_powerdown_radio =
+ 				rtl92d_phy_enable_anotherphy(hw, false);
+ 			rtlpriv->rtlhal.during_mac1init_radioa = true;
+-			/* asume no this case */
++			/* assume no this case */
+ 			if (bneed_powerdown_radio)
+ 				rtl92d_phy_enable_rf_env(hw, erfpath,
+ 							 &u4regvalue);
+-- 
+2.48.1.220.gbc204b7427
+
