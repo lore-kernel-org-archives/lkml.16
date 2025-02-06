@@ -1,112 +1,89 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49232.qiye.163.com (mail-m49232.qiye.163.com [45.254.49.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB5413AD1C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 03:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B4AA32;
+	Thu,  6 Feb 2025 03:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811068; cv=none; b=UPBq15IQw0QI+oLq50z/biZw5zO4GZ5X9fTW92H3rW7cs6qlwRjeQ5M6S+8XPrEqjwdudfEECyWJZRIJKv4+G7EZWrox9B1ZdKg6y4Gf6lpdfweBA+9GqkB8l+fd/iRkTmSoBc6ui1hKMo9VXYypr+G6cbFkXipnt5d9frkZqFg=
+	t=1738811072; cv=none; b=vBhS3IvpPZcnAANBVtnD2cjtTjP9vWjm0xgzQEYZQxDWp5x/jXDqbDpjHflWLr67gNjgnXejhOCjKjKQQgyI84YyhnZ9WwgGH/PPuzeTMCbeQ2mHpamAQ9+0IPT7W+htkxj8ZZRbLFFO18PL0BjDnw69ZuznZQYl6jVso+L5B9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811068; c=relaxed/simple;
-	bh=bMNaySAiVfKEoMfLWjDwwedVnyphy/yHvzElicLmEuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DZyH17a1Blqr/XVXc0y4Hbm2TqGk8NVYndv4Nvnuj6eIw/Eskr53LnV/NajPU24Pj9n8tsTwOzKgjr0dg1c0epfjd2W2E0yaXn6sVtJ6ZZpbPwwQwp+n2E3piYyXGoxR9alUZpGcBESis4kJ8blCyXE2AP/N6fAuRZ1q8kpmmm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au; spf=pass smtp.mailfrom=gmail.com; dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b=VaGXHHb5; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738811072; c=relaxed/simple;
+	bh=gpPAqqBmjRC1v7achzvazt4UU3KoDdfWysgY310xIgI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lmrTTZCTGCWstOmV9leYskKQzLiHIm2JheJsMWJeeMmHssRdCUAVXGA+lIHaOgMZy6LIrTq4xpL1Wi784qhpkUP28qI6zhNAGZoA/sHjdtFUKYdJap+dOyAmyzlZde13dQRtMz7NJMqczOavkYIuHcn0Zf2xrVQwQ+A4LhWHCcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=d7YY+O85; arc=none smtp.client-ip=45.254.49.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="VaGXHHb5"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab6fb1851d4so84902066b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 19:04:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google; t=1738811063; x=1739415863; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kHXeN8LIM9w54fK8BX5YrWdpuop7tLiyGoSgZk7eNoc=;
-        b=VaGXHHb5uT/gczoARljDffZA8u7DIE4N9ZGLw1ixIg6UeD0adaGeTF96tDr5oIXYZL
-         p6/kMR71wrwBnMe0l2UxwRDtrVSWP9vTuDze33oA2Xp1NwdXN4xjFFheYN6aFWLAVlYp
-         f6xmfTjxm/IcB7ExAiAIBDR2GO1hIAEo1es6Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738811063; x=1739415863;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kHXeN8LIM9w54fK8BX5YrWdpuop7tLiyGoSgZk7eNoc=;
-        b=b6ZhRHF0oCkX+4obWBzB8UA+DBKsqpK+WfFa2hxgMDvx+T5Neth771353RNm4P2VKj
-         +wgIBSE93awZsbYjs3wR4cvYHNzd/6fobNs87El3NMYoS8agL1WAuTWFYyqgrtOmyNtM
-         pWO21g/2BHakJwRm1nTe9S2JpsanL68mhAb5+CN98MU1YJwE5FnweZflFdO/l4zdbyt6
-         xcEPyqW6NQKxkdgvR6QwtekE5OQ27SmW4Qph++/k0k3ywQZzG7oenqFXTI75PhNLPDFj
-         DyCaAXFczqqKgu37/4TmcDhBuu4dEi2KEguD+38dxj8eBbv7SSYJ8SJDd2p9fcX9hR9E
-         fyow==
-X-Forwarded-Encrypted: i=1; AJvYcCUrAgDnwJrpuJXz4lQdQmMUoEOTNp+pG3R/96uOU9k74J8PV27SOiv0+xyLhO8hfVDO3rN5xC9i31encrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY5DHqme5uZmJFq58NtB7nNijMV0nmSBZ4cHBc9npONIj+yVps
-	X1UXYPlms5c5CfLQCoZ5Es7p+pIfaCWNBMRlg5FeiqIfvrr29Dsrc1KQF2gMCe2Nf6yyVN55T50
-	au8TuAwLoP0V7CYpkM9XUytbI2TI=
-X-Gm-Gg: ASbGncvCD+N8I+GrCpVuNUUSP7hdDNOKPbH2qTQtfJyM5qOqDXRONkFTDVX02n3Awmh
-	xNAvtfFNH/ouKUglWy6Dk2CNnAKOt8o2G/q/qxK1KAA0Tfgqc8O80ixtZxfnFqLXStEs/+hWG
-X-Google-Smtp-Source: AGHT+IHqxAD/mAroNe/du82YKfNv9KCYjKV/xBzj38++g3h5xV+O074K8SXXeCFqLMo6ZY+71Vf5+TGBbTDseAZx9Xc=
-X-Received: by 2002:a17:907:72c1:b0:ab6:d575:3c4a with SMTP id
- a640c23a62f3a-ab76e878417mr125480566b.9.1738811063095; Wed, 05 Feb 2025
- 19:04:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="d7YY+O85"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id a47c7ad0;
+	Thu, 6 Feb 2025 11:04:23 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: [PATCH v7 1/2] dt-bindings: display: rockchip: Fix label name of hdptxphy for RK3588 HDMI TX Controller
+Date: Thu,  6 Feb 2025 11:03:29 +0800
+Message-Id: <20250206030330.680424-2-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250206030330.680424-1-damon.ding@rock-chips.com>
+References: <20250206030330.680424-1-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-aspeed-maintainer-v1-1-60bc3a5f0a7c@codeconstruct.com.au>
-In-Reply-To: <20250203-aspeed-maintainer-v1-1-60bc3a5f0a7c@codeconstruct.com.au>
-From: Joel Stanley <joel@jms.id.au>
-Date: Thu, 6 Feb 2025 13:34:10 +1030
-X-Gm-Features: AWEUYZnF0CfsV_4ImWi4JVAR627wkvGoxLYm6rTH2Jjlr9IDQ3zsK4d4k_9LZjU
-Message-ID: <CACPK8Xe_3t0n=BDcbFQLt+M1K-PTHMWGs37k=4B9P6tfsqEXeQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Mark Andrew as M: for ASPEED MACHINE SUPPORT
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: linux-aspeed@lists.ozlabs.org, arnd@arndb.de, soc@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh5IHVYZHUNPGUlOQx4aSU5WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a94d9373c9403a3kunma47c7ad0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ni46Szo*AjIXCglPFSoNFSkv
+	GgMaFBpVSlVKTEhDQ0pKS01PQk9OVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKSEtPNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=d7YY+O854XmgoVpBJXdIG4Nd9eU7aUyYRzKIpCa2tPl/vsYteLWnQTR8wH1gjRfOwP3Tu8QfwrXQNmKihJDxsS82hC7Tys00Tq8KRFn3sQuqlzlAAzHKfjgvSXpw+j8IWKqLlGGpTyAQ366M6B4ytht+6mewG3KV/RVqeObscK0=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=DsE1WkVNoF+Jwn/u5/eTYNhUxfmsWFSRl9E2p5GwmYk=;
+	h=date:mime-version:subject:message-id:from;
 
-On Mon, 3 Feb 2025 at 13:27, Andrew Jeffery <andrew@codeconstruct.com.au> wrote:
->
-> From discussion in [1] and in-person with Joel, flip my entry from R:
-> to M:.
+The hdptxphy is a combo transmit-PHY for HDMI2.1 TMDS Link, FRL Link, DP
+and eDP Link. Therefore, it is better to name it hdptxphy0 other than
+hdptxphy_hdmi0, which will be referenced by both hdmi0 and edp0 nodes.
 
-I'm off the hook!
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+---
+ .../bindings/display/rockchip/rockchip,rk3588-dw-hdmi-qp.yaml   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Joel Stanley <joel@jms.id.au>
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3588-dw-hdmi-qp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3588-dw-hdmi-qp.yaml
+index d8e761865f27..7a1ae31cc535 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3588-dw-hdmi-qp.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3588-dw-hdmi-qp.yaml
+@@ -156,7 +156,7 @@ examples:
+                      <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH 0>,
+                      <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH 0>;
+         interrupt-names = "avp", "cec", "earc", "main", "hpd";
+-        phys = <&hdptxphy_hdmi0>;
++        phys = <&hdptxphy0>;
+         power-domains = <&power RK3588_PD_VO1>;
+         resets = <&cru SRST_HDMITX0_REF>, <&cru SRST_HDMIHDP0>;
+         reset-names = "ref", "hdp";
+-- 
+2.34.1
 
->
-> Link: https://lore.kernel.org/all/CACPK8Xe8yZLXzEQPp=1D2f0TsKA7hBZG=pHHW6U51FMpp_BiRQ@mail.gmail.com/ [1]
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: soc@lists.linux.dev
-> Cc: linux-aspeed@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 896a307fa06545e2861abe46ea7029f9b4d3628e..305e5530560e53c10f0b610fa7b4456ca78fdfc2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2285,7 +2285,7 @@ F:        drivers/irqchip/irq-aspeed-i2c-ic.c
->
->  ARM/ASPEED MACHINE SUPPORT
->  M:     Joel Stanley <joel@jms.id.au>
-> -R:     Andrew Jeffery <andrew@codeconstruct.com.au>
-> +M:     Andrew Jeffery <andrew@codeconstruct.com.au>
->  L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  L:     linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
->  S:     Supported
->
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250203-aspeed-maintainer-dddbbe22da46
->
-> Best regards,
-> --
-> Andrew Jeffery <andrew@codeconstruct.com.au>
->
->
