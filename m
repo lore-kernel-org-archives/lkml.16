@@ -1,55 +1,55 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E481EDA0B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CC01F3D45
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865897; cv=none; b=W69xnbt4NiD8kvxbo7jd09xm3BSz9wyhQNN+SvdYeK6rgdeVAgOHT+11hg5jgHJ1xGeEsLJYZE7ZwGBsHrKjcN7iX7QAhl9RTwnn98ZLYM3QjUNGUyxVQfPKxNM5N445GTfk1eeQD/XFCs3mzKMyIl/oo8fZg08tyg3LCkjNeH0=
+	t=1738865902; cv=none; b=orcvgC6EK0SHgaNIkp4C6FYJgM+UaC6P7qFXjB6iB+Wec/EpBUCa5Cu9y+mn1jBUrxmBHYLQkzMtr19F+dZjgvw1y52VS8PaEOBEcXAsn1f0JsEARhZYtAunoBrp0dGwHczxogQcV+lvB8mwaYRtej1LKq+XVXWUsSfxYp0RLFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865897; c=relaxed/simple;
-	bh=tXHzFH0hmNiiQM92UIIdG/aT+1rtSn37gLNSxACIiw4=;
+	s=arc-20240116; t=1738865902; c=relaxed/simple;
+	bh=Y9ecdWWtlfdxtG756H0/OQ3twmMuyLw5QPOn7VZx5xo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OsmLQ8mUizQ4nWYPivGZIGVZo4YyA9mO+lu5gTSR6b9T67kMV8nahBbICmoU/oNKzyPmUN9WOnmkt3kVlFDnRa0XPXnJukPKPFnLLgLEYeUJwmV+XvWNEDh7QLVvvW2D4DuY/WyXVCBVROwNEQistu9R5ABJgWp6qKx2+1Qa/IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wOwr3KKh; arc=none smtp.client-ip=209.85.218.74
+	 To:Cc:Content-Type; b=Eovo/Porz7KDsSqt7WxkZMSMJ6uxdOPg3RmhCF7PbWOGtqDRS5Fu/ZCxIOqEHt3OPJklKRuDOrRJ5r0YyQNLST1WSnaI1LlQROdS/qGir4Rh0WzHsxPHCsYpRSFyTc3DSpqWPuPj7tQAn2yQge4Z0rliNMH8uaScKV5oFcI0Muw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hZPTZHaf; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wOwr3KKh"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab77dd2c243so101659466b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:18:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hZPTZHaf"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5d90a59999aso1400731a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:18:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738865894; x=1739470694; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738865899; x=1739470699; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=745NDxNXHBzGRxy9OOyVrOwCOzE5UpzdpD8KZdhsNVE=;
-        b=wOwr3KKhqV/HeGoKdVJNW1Hw+bQubemKoCJpm2b+bSwGWVAF5wHYfRWdLoYThAibDz
-         TcDrE0p4y7hvBdEL6boM0qvgmCyZSVA1PHki1ViOjSb6fySbx3DJ6GIUgFAGfsrg/n9q
-         Qpg51qGyTWbPm3vC68vjK5h7+hhjucUB4r6FUzC7ikJOJGbK2pwTroLIKbbKmeIaNqJ4
-         KvNC5ZQyLP2ahcdMJCELx+bQolcVIR8/uWh76sS/7gbc4hd9gieo+ZD7ayRjbCQY1K4P
-         pxcCWu1koGEsSlvooTEK+KT1ahYPXZic53jh7J1sv8+OepaxPgjfn5BfdYxnGbSJPwGl
-         wf6g==
+        bh=nywgR7jAINvHiuDVB4pmE7YTMO7Utfq2UN01exAeezk=;
+        b=hZPTZHaf5WSPoU5yoeyyjfqebZFC+khtx+219AqDn4G87F5WK08nKW9aOg0w/I7rbO
+         6B3bQXvYKm43fx7QtrWXBb3gXMuhxPdD+cybNbdsNS36X1BNNaomTroeqtZsumn++iPw
+         XA1Booery4+/REIbSd4fvGc68mNnKi6SMrxv7DoP3iolWp++2pm819CnBFhkkhYcDDXX
+         4gfO4z4RWJgnGrs+7073pvdNeXEAv/RiG5Rb9eF1FdmwYwdoIQxLvX2q6PDogaQJW9O8
+         1s98iEBrTHKoA+3eJIODb4YRj/YTvE4t43efauXfVBvCJeMFg/6MH7n44T5z2ymUPsZp
+         CvxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865894; x=1739470694;
+        d=1e100.net; s=20230601; t=1738865899; x=1739470699;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=745NDxNXHBzGRxy9OOyVrOwCOzE5UpzdpD8KZdhsNVE=;
-        b=LlWRuilQdS5/Sq7nBmX06ZX3tJ4+/rPlxYpcimsoGGRBRDzEIy09noCgQZH36Ct51D
-         EZmldh8/nXGgcgJA7zMcbYoij9OMzzD1bAjdbIKp3utbheDCiV1NiDDAi2XfaUc+qbe8
-         k9Max0okjGUT17WoKM0po1iysA46TczRkX9JrjDliQcVKEp3/B36gOctTACktTnU8GT4
-         whFYeFM8YFCyP6RjY97DbPj/wePBlnNmyK4Q1HFCgb27prR6qinH0K94r28Em5FCHVxy
-         C7cnKDGTLqMt6UBH1zPc2KST48ZG1yXJ+EIiVGGJRVwT7DWHIetKm2BOmGU9aPqmHHXO
-         qlTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfzNPCjUy86fxF0mSwP4RHUeLrZVf+5ckOnPcsdoujQu57S0YiszWu9+dY4DOcl/Megi/vhfktxTujUyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvhg7LE0Gwi8F5Q8j7sZc7LRuvV3hhSgyitMXQWLg55K1oqqhE
-	SPy3l3bD7HlY3xg1siV0mUJ7azwf0GLu6Chd3yBIH7tKA3aNUUXVPwUOKeExh6JRH0XiefCUew=
+        bh=nywgR7jAINvHiuDVB4pmE7YTMO7Utfq2UN01exAeezk=;
+        b=gvVcicpV1FLyB8bvDhTAYxSN/lgPiL/C5MJnfEpt+CEUBcIuAn5VVuQ1D3s9DJvH5Y
+         hxg72tl3shsUKAbuBiXI24jiHP3fa1Wi2KzM+npEVjcq2MqDlwDExKghH0h3Ha+ZBKOs
+         8up6v/x2+5bBT6Z//OzAF6n88BIE9HGTFCgiz9uVp+kp92jV0sh7nCcuR3Vnodh/FQrK
+         XaV5N9O+Vb0z4BVZFlxhQZdsI1EQVARlZ1OoZaSOTbgzwYECDJioVlZ7XgBwQM/GAbSr
+         nBnx7PKulLQTETgB1eqbE95cYXXRc31YtVfv70cP6ja7Sdg+0jNNrBIdtjQ0nahPFbCY
+         p2dA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1awQUQx57DMJPPulhRF8jjGM2dYtm4ewxYkhpnbMrLarugE6UlsSHW5l+JPgwzfUnJTuNMHl7cFVn0ak=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzqIipc6h/OoMPrMFk6mGKl3ZzutR39ct5osVhXw27FinzzKWv
+	GyxxPGxoeyTY7R44fP9l2EeqTRVGZhXh1k21wrdcIPJPBKWZZ3IMJfPnpYRK+ss05sLEnFEzDg=
 	=
-X-Google-Smtp-Source: AGHT+IHMP7tew/ZdA68jN08WfrON1P9W/R7nXqvhUxrwPbRPxt2UtuWHgLWteAVtIaGSz1y85zKMuqXJxA==
-X-Received: from ejchx5.prod.google.com ([2002:a17:906:8465:b0:ab7:8024:1fb3])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:c147:b0:aaf:117c:e929
- with SMTP id a640c23a62f3a-ab75e358d20mr804115566b.57.1738865893605; Thu, 06
- Feb 2025 10:18:13 -0800 (PST)
-Date: Thu,  6 Feb 2025 19:10:05 +0100
+X-Google-Smtp-Source: AGHT+IFTk3UeF0W3iesDJF4EyACnSXH4BTQBJaMsRlkE8Y124Sbz3T2V3DVtoGu6cpwiCqo9TIV5lxqZAg==
+X-Received: from edag6.prod.google.com ([2002:a05:6402:3206:b0:5de:3ce0:a49b])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:51cb:b0:5dc:88dd:38aa
+ with SMTP id 4fb4d7f45d1cf-5de45005a73mr490615a12.8.1738865898851; Thu, 06
+ Feb 2025 10:18:18 -0800 (PST)
+Date: Thu,  6 Feb 2025 19:10:07 +0100
 In-Reply-To: <20250206181711.1902989-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250206181711.1902989-1-elver@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250206181711.1902989-12-elver@google.com>
-Subject: [PATCH RFC 11/24] locking/mutex: Support Clang's capability analysis
+Message-ID: <20250206181711.1902989-14-elver@google.com>
+Subject: [PATCH RFC 13/24] bit_spinlock: Include missing <asm/processor.h>
 From: Marco Elver <elver@google.com>
 To: elver@google.com
 Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
@@ -79,196 +79,35 @@ Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.
 	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add support for Clang's capability analysis for mutex.
+Including <linux/bit_spinlock.h> into an empty TU will result in the
+compiler complaining:
+
+./include/linux/bit_spinlock.h:34:4: error: call to undeclared function 'cpu_relax'; <...>
+   34 |                         cpu_relax();
+      |                         ^
+1 error generated.
+
+Include <asm/processor.h> to allow including bit_spinlock.h where
+<asm/processor.h> is not otherwise included.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- .../dev-tools/capability-analysis.rst         |  2 +-
- include/linux/mutex.h                         | 29 +++++----
- include/linux/mutex_types.h                   |  4 +-
- lib/test_capability-analysis.c                | 64 +++++++++++++++++++
- 4 files changed, 82 insertions(+), 17 deletions(-)
+ include/linux/bit_spinlock.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/dev-tools/capability-analysis.rst b/Documentation/dev-tools/capability-analysis.rst
-index 904448605a77..31f76e877be5 100644
---- a/Documentation/dev-tools/capability-analysis.rst
-+++ b/Documentation/dev-tools/capability-analysis.rst
-@@ -85,7 +85,7 @@ Supported Kernel Primitives
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/include/linux/bit_spinlock.h b/include/linux/bit_spinlock.h
+index bbc4730a6505..f1174a2fcc4d 100644
+--- a/include/linux/bit_spinlock.h
++++ b/include/linux/bit_spinlock.h
+@@ -7,6 +7,8 @@
+ #include <linux/atomic.h>
+ #include <linux/bug.h>
  
- Currently the following synchronization primitives are supported:
--`raw_spinlock_t`, `spinlock_t`, `rwlock_t`.
-+`raw_spinlock_t`, `spinlock_t`, `rwlock_t`, `mutex`.
- 
- For capabilities with an initialization function (e.g., `spin_lock_init()`),
- calling this function on the capability instance before initializing any
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index 2bf91b57591b..09ee3b89d342 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -62,6 +62,7 @@ do {									\
- 	static struct lock_class_key __key;				\
- 									\
- 	__mutex_init((mutex), #mutex, &__key);				\
-+	__assert_cap(mutex);						\
- } while (0)
- 
- /**
-@@ -154,14 +155,14 @@ static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
-  * Also see Documentation/locking/mutex-design.rst.
-  */
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--extern void mutex_lock_nested(struct mutex *lock, unsigned int subclass);
-+extern void mutex_lock_nested(struct mutex *lock, unsigned int subclass) __acquires(lock);
- extern void _mutex_lock_nest_lock(struct mutex *lock, struct lockdep_map *nest_lock);
- 
- extern int __must_check mutex_lock_interruptible_nested(struct mutex *lock,
--					unsigned int subclass);
-+					unsigned int subclass) __cond_acquires(0, lock);
- extern int __must_check mutex_lock_killable_nested(struct mutex *lock,
--					unsigned int subclass);
--extern void mutex_lock_io_nested(struct mutex *lock, unsigned int subclass);
-+					unsigned int subclass) __cond_acquires(0, lock);
-+extern void mutex_lock_io_nested(struct mutex *lock, unsigned int subclass) __acquires(lock);
- 
- #define mutex_lock(lock) mutex_lock_nested(lock, 0)
- #define mutex_lock_interruptible(lock) mutex_lock_interruptible_nested(lock, 0)
-@@ -175,10 +176,10 @@ do {									\
- } while (0)
- 
- #else
--extern void mutex_lock(struct mutex *lock);
--extern int __must_check mutex_lock_interruptible(struct mutex *lock);
--extern int __must_check mutex_lock_killable(struct mutex *lock);
--extern void mutex_lock_io(struct mutex *lock);
-+extern void mutex_lock(struct mutex *lock) __acquires(lock);
-+extern int __must_check mutex_lock_interruptible(struct mutex *lock) __cond_acquires(0, lock);
-+extern int __must_check mutex_lock_killable(struct mutex *lock) __cond_acquires(0, lock);
-+extern void mutex_lock_io(struct mutex *lock) __acquires(lock);
- 
- # define mutex_lock_nested(lock, subclass) mutex_lock(lock)
- # define mutex_lock_interruptible_nested(lock, subclass) mutex_lock_interruptible(lock)
-@@ -193,13 +194,13 @@ extern void mutex_lock_io(struct mutex *lock);
-  *
-  * Returns 1 if the mutex has been acquired successfully, and 0 on contention.
-  */
--extern int mutex_trylock(struct mutex *lock);
--extern void mutex_unlock(struct mutex *lock);
-+extern int mutex_trylock(struct mutex *lock) __cond_acquires(1, lock);
-+extern void mutex_unlock(struct mutex *lock) __releases(lock);
- 
--extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock);
-+extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock) __cond_acquires(1, lock);
- 
--DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
--DEFINE_GUARD_COND(mutex, _try, mutex_trylock(_T))
--DEFINE_GUARD_COND(mutex, _intr, mutex_lock_interruptible(_T) == 0)
-+DEFINE_LOCK_GUARD_1(mutex, struct mutex, mutex_lock(_T->lock), mutex_unlock(_T->lock))
-+DEFINE_LOCK_GUARD_1_COND(mutex, _try, mutex_trylock(_T->lock))
-+DEFINE_LOCK_GUARD_1_COND(mutex, _intr, mutex_lock_interruptible(_T->lock) == 0)
- 
- #endif /* __LINUX_MUTEX_H */
-diff --git a/include/linux/mutex_types.h b/include/linux/mutex_types.h
-index fdf7f515fde8..e1a5ea12d53c 100644
---- a/include/linux/mutex_types.h
-+++ b/include/linux/mutex_types.h
-@@ -38,7 +38,7 @@
-  * - detects multi-task circular deadlocks and prints out all affected
-  *   locks and tasks (and only those tasks)
-  */
--struct mutex {
-+struct_with_capability(mutex) {
- 	atomic_long_t		owner;
- 	raw_spinlock_t		wait_lock;
- #ifdef CONFIG_MUTEX_SPIN_ON_OWNER
-@@ -59,7 +59,7 @@ struct mutex {
-  */
- #include <linux/rtmutex.h>
- 
--struct mutex {
-+struct_with_capability(mutex) {
- 	struct rt_mutex_base	rtmutex;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	struct lockdep_map	dep_map;
-diff --git a/lib/test_capability-analysis.c b/lib/test_capability-analysis.c
-index f63980e134cf..3410c04c2b76 100644
---- a/lib/test_capability-analysis.c
-+++ b/lib/test_capability-analysis.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/build_bug.h>
-+#include <linux/mutex.h>
- #include <linux/spinlock.h>
- 
++#include <asm/processor.h>  /* for cpu_relax() */
++
  /*
-@@ -144,3 +145,66 @@ TEST_SPINLOCK_COMMON(read_lock,
- 		     read_unlock,
- 		     read_trylock,
- 		     TEST_OP_RO);
-+
-+struct test_mutex_data {
-+	struct mutex mtx;
-+	int counter __var_guarded_by(&mtx);
-+};
-+
-+static void __used test_mutex_init(struct test_mutex_data *d)
-+{
-+	mutex_init(&d->mtx);
-+	d->counter = 0;
-+}
-+
-+static void __used test_mutex_lock(struct test_mutex_data *d)
-+{
-+	mutex_lock(&d->mtx);
-+	d->counter++;
-+	mutex_unlock(&d->mtx);
-+	mutex_lock_io(&d->mtx);
-+	d->counter++;
-+	mutex_unlock(&d->mtx);
-+}
-+
-+static void __used test_mutex_trylock(struct test_mutex_data *d, atomic_t *a)
-+{
-+	if (!mutex_lock_interruptible(&d->mtx)) {
-+		d->counter++;
-+		mutex_unlock(&d->mtx);
-+	}
-+	if (!mutex_lock_killable(&d->mtx)) {
-+		d->counter++;
-+		mutex_unlock(&d->mtx);
-+	}
-+	if (mutex_trylock(&d->mtx)) {
-+		d->counter++;
-+		mutex_unlock(&d->mtx);
-+	}
-+	if (atomic_dec_and_mutex_lock(a, &d->mtx)) {
-+		d->counter++;
-+		mutex_unlock(&d->mtx);
-+	}
-+}
-+
-+static void __used test_mutex_assert(struct test_mutex_data *d)
-+{
-+	lockdep_assert_held(&d->mtx);
-+	d->counter++;
-+}
-+
-+static void __used test_mutex_guard(struct test_mutex_data *d)
-+{
-+	guard(mutex)(&d->mtx);
-+	d->counter++;
-+}
-+
-+static void __used test_mutex_cond_guard(struct test_mutex_data *d)
-+{
-+	scoped_cond_guard(mutex_try, return, &d->mtx) {
-+		d->counter++;
-+	}
-+	scoped_cond_guard(mutex_intr, return, &d->mtx) {
-+		d->counter++;
-+	}
-+}
+  *  bit-based spin_lock()
+  *
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
