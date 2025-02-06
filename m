@@ -1,83 +1,119 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9211A9B46
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC94E188CB1;
+	Thu,  6 Feb 2025 20:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738873477; cv=none; b=bBlaqFf68rp7NCThA80z3fcfhqlzPZZRfEKygrCbX8kPBmL9oVjTI1aWosgxq/mE0W+aMgcCfWaWLW00NzQhhyPrUyhz+gJu+1uouPggJJQPxwPliv3pJGo0U7NTcBtzgs3eHXV04RBaBLMdR4VsdqVO3WsFW2GKdoimzNaeUV0=
+	t=1738873617; cv=none; b=gYGMSnCbKgg4Vi9cahDXfwO9SgzBdUhZTZ3FD6RhCIZbMOgE3hL0SRUrTmM47yhQ3IyRFhrqmelxvwlqqjOOHlF/vPaKuAI/cUEP0HR6ZnkwtdaR3XAqe+JzpGULERe+gD1E/Lv/BmhMI+uTrrf7rjAVhNt8hjn1mQb7OZcoTU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738873477; c=relaxed/simple;
-	bh=Ju/TUhVKE/cZ/J9yTpBKpw0jfk9S75VKJCf/VUiMoSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zelvu6GQOFpgVR69kiHD/+7lT2U3OMiQnVfljxPQ4W4hCLt0TgTKJTuumMtRx9evO/yzOtQpPNmy4CijWPMXNOunAxqUM+fzjrirXOewyzM+MneCJDAROFo/KarDh2M/B6a6z/werDxJGu8jMvW4erkZKoUSDjfScbpGaTwz6Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=PEri0RDL; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1738873617; c=relaxed/simple;
+	bh=sgPKDwRH/rtUBdMxUKBnDrkfhvUevPepAlFNSgD32KU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=slsnGatcCdOWxloVWSl2+09PxbFh+v1thKjgQj9tRwXi993wuBgf4IOhtXdD979ESzD/NkBiocKR2bKVSevekQjjl57eqexL9VGeCTo3L+A9vVKSVAnxCinGBrwwRxa2DKGQ/1FJKEeLqZRSiOVbFlkZcD53cY59zlwX8peG4xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caFWIi5w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="PEri0RDL"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YppVV4L75zlgTwF;
-	Thu,  6 Feb 2025 20:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1738873470; x=1741465471; bh=Ju/TUhVKE/cZ/J9yTpBKpw0j
-	fk9S75VKJCf/VUiMoSI=; b=PEri0RDLInev5yWByTM3RJ9U/N2QYfBcde3kXqHh
-	NvPhazYh92A54JmUMvWpbMUen6wCFZ/jbq8W64yh+xLOxB8nR9Jxv7N5lMONF1ZV
-	wdPDv73dXSnWSIpFEhdJPnZkbNcjS9xPBuzjWHih5f9CWFZ48/jIzWk2B/r9usyv
-	FvZZ/WXNcJ7zc9r+r1KPzByg2msjGNvSNlTSMjhd5JJaCsIJeMRF3pff7qsYZbtH
-	MIMzXDRFqKlCHYIhJlnZQuH8hEKKP/RSf0ZqSReFfWrDFa5OvhwD8EOyXuAhaecc
-	EvH8WxxZZA7fs368PYMKBoJJXO0s2NUfs1PY51j1I6/bxg==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id gnQPWVpISK2x; Thu,  6 Feb 2025 20:24:30 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YppVM67tZzlgTw4;
-	Thu,  6 Feb 2025 20:24:27 +0000 (UTC)
-Message-ID: <7e52f219-6a23-4e55-a719-0519267dd1e6@acm.org>
-Date: Thu, 6 Feb 2025 12:24:26 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caFWIi5w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 059F4C4CEDD;
+	Thu,  6 Feb 2025 20:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738873616;
+	bh=sgPKDwRH/rtUBdMxUKBnDrkfhvUevPepAlFNSgD32KU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=caFWIi5wTSOWCnxtU6v3RNc9lBJsUgxMeiA3ACtaPT3PSfM8MNQBdxSgGqWhpEIlc
+	 kXVYU8wxd9ZnS1ozYFxA/PUqrN0zQsswGCihLzPP2QvhPA/WyhI9jQGkXTK/or7fbH
+	 sRv1QcY/q/VKmBAFD4oyvN/T24ew0kZtqXOQAcGtGAFeSYBMMFJxTTVIekz1uqHZ+5
+	 nXyJRvCvisRIVcHMF6J8vfFZ30kevX4+a1U1F4qNzsIDTWwSxGPzaut1FrNui0lljW
+	 0kzS7vqUBK8Lyvqs3ZBiG3E/HHkv4AAT8yo35hzVGKkqcwbVlWJSlrQwxVFRGgZCJ3
+	 ljc1x5nFKNKTw==
+Date: Thu, 6 Feb 2025 14:26:54 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	"Simek, Michal" <michal.simek@amd.com>
+Subject: Re: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Message-ID: <20250206202654.GA1000968@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 24/33] drm: zynqmp_dp: Fix a deadlock in
- zynqmp_dp_ignore_hpd_set()
-To: Sean Anderson <sean.anderson@linux.dev>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Marco Elver <elver@google.com>, Nick Desaulniers <ndesaulniers@google.com>,
- Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
- Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>
-References: <20250206175114.1974171-1-bvanassche@acm.org>
- <20250206175114.1974171-25-bvanassche@acm.org>
- <25e047ee-cc48-42a0-9ee2-88753114f4a4@linux.dev>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <25e047ee-cc48-42a0-9ee2-88753114f4a4@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN7PR12MB7201C9D05D5E4AB4D5D091F88BF62@SN7PR12MB7201.namprd12.prod.outlook.com>
 
-On 2/6/25 11:22 AM, Sean Anderson wrote:
-> Since this patch is marked RFC will it be applied soon? I am about to
-> send a patch which conflicts with this one. I would like to just add
-> this patch to my series.
+On Thu, Feb 06, 2025 at 04:07:23PM +0000, Havalige, Thippeswamy wrote:
+> > -----Original Message-----
+> > From: Markus Elfring <Markus.Elfring@web.de>
+> > Sent: Wednesday, February 5, 2025 8:40 PM
+> > To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>; linux-
+> > pci@vger.kernel.org; devicetree@vger.kernel.org; Bjorn Helgaas
+> > <bhelgaas@google.com>; Conor Dooley <conor+dt@kernel.org>; Krzysztof
+> > Kozlowski <krzk+dt@kernel.org>; Krzysztof Wilczyński <kw@linux.com>;
+> > Lorenzo Pieralisi <lpieralisi@kernel.org>; Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org>; Rob Herring <robh@kernel.org>
+> > Cc: LKML <linux-kernel@vger.kernel.org>; Gogada, Bharat Kumar
+> > <bharat.kumar.gogada@amd.com>; Jingoo Han <jingoohan1@gmail.com>;
+> > Simek, Michal <michal.simek@amd.com>
+> > Subject: Re: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+> > 
+> > …
+> > > +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> > > @@ -0,0 +1,476 @@
+> > …
+> > > +static void amd_mdb_mask_intx_irq(struct irq_data *data)
+> > > +{
+> > …
+> > > +	raw_spin_lock_irqsave(&port->lock, flags);
+> > > +	val = pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
+> > > +	pcie_write(pcie, (val & (~mask)), AMD_MDB_TLP_IR_ENABLE_MISC);
+> > > +	raw_spin_unlock_irqrestore(&port->lock, flags);
+> > > +}
+> > …
+> > 
+> > Under which circumstances would you become interested to apply a
+> > statement like “guard(raw_spinlock_irqsave)(&port->lock);”?
+> > https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/spinlock.h#L551
+>
+> -Thanks for review comments, raw_spin_lock_irqsave is lightweight
+> and performance oriented. 
+>
+> Achieves it by not performing few checks related to preemption, lock
+> deprecation that was originally in spin_lock_irqsave.
+>
+> If you add guard around guard around the raw_spin_lock_irqsave then
+> it should provide those additional safety checks.
+>
+> Its need is based on the environment, if you needs those
+> checks/features.  We need to check the implementation/code to
+> exactly see what are those. So choose to prevent my interrupt
+> handler from being affected by latency pruning
 
-Hi Sean,
+IIUC, using guard() would not add any additional checks; it only helps
+prevent errors like returning from the function without releasing the
+lock.
 
-Thanks for having taken a look. Please include this patch in your patch
-series if you want it to be merged in the upstream kernel soon.
+That makes sense in larger functions with multiple exits, but IMO
+there's no real benefit in a case like this where the function is so
+short, there's only one exit, and it's completely obvious that we
+lock, do something, and unlock.
 
-Bart.
+I don't *really* like guard() anyway because it's kind of magic in
+that the unlock doesn't actually appear in the code, and it's kind of
+hard to unravel what guard() is and how it works.  But I guess that's
+mostly because it's just a new idiom that takes time to internalize.
 
+Bjorn
