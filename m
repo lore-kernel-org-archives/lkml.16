@@ -1,144 +1,95 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC25223309;
-	Thu,  6 Feb 2025 21:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1B319E7E2;
+	Thu,  6 Feb 2025 21:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738878288; cv=none; b=IrnrLvI7qE57UHpuLQQjspkjLYMe36XuJmc/J3bqbBcfxM7KNCMnDo53TBF6EttCZgec6rkodl/++MWxSwH1vnlU2FBFfGNGClC/B1wn9pPdrqWJV8LB/UcGFCpSqh/PBgyG4qKC7NAYjWVzEF3jLc4X8uiQP3BLZoVb63aE8Hc=
+	t=1738878318; cv=none; b=VSC/u1RzcEp0vPMjOMOWjfK8Vj48WSRFx6F06c87o5GN5zJduaAzSfa/mHTaFiFhHX9bhrEaYAmzD+uUO3tSwogJUSrkXkn0nqjqzgXphUCFiWIcH6VVxnb2DigcAi2FUAidCTZNyJV5NW3fNxoRsj1CIiuAjqLzdpR3oLkcltQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738878288; c=relaxed/simple;
-	bh=tMuc8lNWLyZacD543ngw7lyFrwdEqvWH9RTr+7RhSsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uvk10pU36ujhVgt2YNBts/k4ODs/CfLeIIlFXTV6ILPkvVPRqinLffxRleyJr47PvQS9smS8hJirSmC7lvx44bf0+rKuiZQuET1aX/+bZ3qp/attW/BA2Nvgrqwb6v2X/C8oVBNLAREEFSNs9Rs6uBVOb2+qkD9keOAs1px4WnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=pJBgoqRc; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738878318; c=relaxed/simple;
+	bh=vX1h7Y+mQLvT7+n3+LXKhW+DHYLbwB1DROYEtaVwbSU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nFL/RybjwrHxT4O0bdlpxXZwi+mIOJ6pS1tpMgVEyksuCFDgJ22oinKnO3legd28861kiPGQe6PSZAoXgEjrE6RqS06Oj1E1cTkQHPpRs75w5zvj/Dnj7xbGcqwgKyew9/2GtK+wZMue47usd/0/TemytQtvUB22dVVtfLpRxIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fn9MI+kY; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="pJBgoqRc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738878280;
-	bh=tMuc8lNWLyZacD543ngw7lyFrwdEqvWH9RTr+7RhSsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pJBgoqRcav3jlzs4U95lIYyvvuCPJnXj5hRHDdXREYXoi8e0zOGZ0tRrkbuTAcAIZ
-	 xNH16I5IYy/xs1sZlJmI9v2075YMV90X3aLxJKHDn65+EdiITVG9o+JqqQ2p1bUVOS
-	 t/4aVXuJLdoGeJ8OxFR+ePIMQYW+bmH/4wylAJWE=
-Date: Thu, 6 Feb 2025 22:44:39 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Xiangfei Ding <dingxiangfei2009@gmail.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rust/kernel: Add faux device bindings
-Message-ID: <7c2b7173-6979-497e-840c-7b82b0c69e01@t-8ch.de>
-References: <20250206210503.102061-2-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fn9MI+kY"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcc38c7c6bso2791151a12.1;
+        Thu, 06 Feb 2025 13:45:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738878314; x=1739483114; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vX1h7Y+mQLvT7+n3+LXKhW+DHYLbwB1DROYEtaVwbSU=;
+        b=fn9MI+kYyDtkYCiwVBkXMotlVWleTWg9jh9hid/ER+gImYZ/1ZOKgw7DgQlCB7HmsJ
+         epi3dpCnLdeozsxefLWmtvq4H2b92O7R2R/+AQlnqSHzTujauwnr00wn1m6uyWGzkiWT
+         +PQcfSMJFmh4SwcPmne76mDqA1FfjqVUY1MmPCnGEAtS4OO3j6F2iMjyy5ah6NQsYCHu
+         0PACmXCe5iA8m4TCI7vQsNV+ib6GjHtCWxpRQ4bl8ItkED8CCjmisoMXqgjnHAz9vamr
+         48tCh+4bNIoDl9lEOfBfUDB4H8wjbGH3cBlQH2c6v2OBj6b0/VhGU5qCNfYtNw8SdwQA
+         6Z4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738878314; x=1739483114;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vX1h7Y+mQLvT7+n3+LXKhW+DHYLbwB1DROYEtaVwbSU=;
+        b=HQg1XCnM0EcwIlR9uOml3K72XKP/XJKDjrtj1gy+BkmnpM5Zu3IWox5lxBi/aW43PX
+         3jc4G/T60+UIjinfm9o+rw9pDq6yAHNJs4wbiRfsmULx1vO9thsa1D8dp+SIpPFgDx2S
+         NhnqUCj8o5PTcBPZMtTkBiehgiLCt1xR/1dETQ/RO1sdFucWjZgExQDaI3mLKVOmSR2C
+         xDWh1+UQCL7XU4fnViDbaB8m12K5HJAPndvvGUFJdCx2ipbYHHm+YuFPRZw+83fyiHEs
+         i+Er+ZZoFyqf07ujkJeyGNObBfoqw5qzmsxHlEHuD+x2mNJBHw24ZnPs7gPSh82udAGv
+         aWSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm1dmCYmRURjawU6bYby5EyxFvB3KDyN/gV1qa/4/dkGbriJAldIdv7tTnW8A5/sfsY0gnxCrdySt55jA8AgD8CA==@vger.kernel.org, AJvYcCX5plQegFQ6xlKO3nJyeJLpdexR5PhOvemVKAplL6QlecmZSf4M5NOUoO1rMWL3thOWnIhcF0gRD6ePjF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+DRJPQpqTp42kowyH2Yq5/L36STt9f9CVmGSQ8cLGkyCNHGLV
+	vuqYZbGT7+uZH8TtDAUO6g8QQP0qf6Lo2BoFkY1s0vu7U+M2t6GcdFbcNuhruCVG0hiSJ+gkxT8
+	Gi/+y04iEJtcjjAsvKvc/Qyl61ZI=
+X-Gm-Gg: ASbGncu175RG8zw7yXvAQH7XGsEsDYe74MYUvqCSE8nyMn/poiyrXyBPVZ6SW732ilE
+	s1RuGebdLgk58lSO8BuNXse1/CgMajqD0lau6kJ310OHe5wU0m0mfTL02f/ojhNCAL1oqgmm7Ew
+	==
+X-Google-Smtp-Source: AGHT+IHLLhgmRm8MJ+Fo9/TF/JvBsAliCwDZAK2UkFFsTNUNICLPj39Kro+k8SiA6Bc7/r/NLcQvQhZXrMc3cAHPgWE=
+X-Received: by 2002:a05:6402:26cf:b0:5dc:7f96:6244 with SMTP id
+ 4fb4d7f45d1cf-5de45089cddmr929875a12.23.1738878314049; Thu, 06 Feb 2025
+ 13:45:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250206210503.102061-2-lyude@redhat.com>
+References: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com> <CAP-5=fXV6b2g9QxPe1EsSTcHZpSPq+EAR71jvpBGW7ehydN+Uw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXV6b2g9QxPe1EsSTcHZpSPq+EAR71jvpBGW7ehydN+Uw@mail.gmail.com>
+From: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Date: Thu, 6 Feb 2025 22:45:02 +0100
+X-Gm-Features: AWEUYZnTSSKe8kl3b6Y9y-9gjXy39Rhfv9CXEcZlMaO8WesZOliobsVqRWaUExo
+Message-ID: <CAOQCU64Fhoek2YEJjhtAsTqPa1Jt1X9z3_C4+pL+R-6hs-EdDg@mail.gmail.com>
+Subject: Re: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
+To: Ian Rogers <irogers@google.com>
+Cc: namhyung@kernel.org, acme@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-02-06 16:04:56-0500, Lyude Paul wrote:
-> This introduces a crate for working with faux devices in rust, along with
-> adding sample code to show how the API is used. Unlike other types of
-> devices, we don't provide any hooks for device probe/removal - since these
-> are optional for the faux API and are unnecessary in rust.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Maíra Canal <mairacanal@riseup.net>
-> ---
->  rust/bindings/bindings_helper.h  |  1 +
->  rust/kernel/faux.rs              | 60 ++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs               |  1 +
->  samples/rust/Kconfig             | 10 ++++++
->  samples/rust/Makefile            |  1 +
->  samples/rust/rust_driver_faux.rs | 29 +++++++++++++++
->  6 files changed, 102 insertions(+)
->  create mode 100644 rust/kernel/faux.rs
->  create mode 100644 samples/rust/rust_driver_faux.rs
+Hi Ian,
+Thank you for taking the time to look into this.
 
-<snip>
+> I did a series and a new io_dir set of primitives.
+> The last version of which is:
+> https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
+> I mention this as I think that series may be a better route than this
+> change as it solves a little bit more of the performance issue.
 
-> diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
-> new file mode 100644
-> index 0000000000000..5e58f397b747a
-> --- /dev/null
-> +++ b/rust/kernel/faux.rs
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +//! Abstractions for the faux bus.
-> +//!
-> +//! This crate provides bindings for working with faux devices in kernel modules. It should be
-> +//! preferred for creating virtual devices over the platform API.
-> +//!
-> +//! C header: [`include/linux/device/faux.h`]
-> +use crate::{bindings, device, error::from_err_ptr, prelude::*};
-> +use core::ptr::{addr_of_mut, null, NonNull};
-> +
-> +/// The faux device representation.
-> +///
-> +/// This type represents the registration of a [`struct faux_device`]. When an instance of this type
-> +/// is dropped, its respective faux device will be unregistered from the system.
-> +///
-> +/// # Invariants
-> +///
-> +/// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
-> +///
-> +/// [`struct faux_device`]: srctree/include/linux/device/faux.h
-> +#[repr(transparent)]
-> +pub struct Device(NonNull<bindings::faux_device>);
-> +
-> +impl Device {
-> +    /// Create and register a new faux device with the given name.
-> +    pub fn new(name: &CStr) -> Result<Self> {
-> +        // SAFETY:
-> +        // - `name` is copied by this function into its own storage
-> +        // - `faux_ops` is safe to leave NULL according to the C API
-> +        // - `faux_device_create` returns a valid non-null pointer to a `faux_device`, or error
+I'd much prefer to have your solution merged, as it covers more instances
+of the same directory exploration pattern and provides an explicit
+approach to memory allocation.
 
-In the v3 patch the C API returns NULL on error.
+> I stopped pursuing the series as the maintainers were complaining
+> about unpopular libcs/platforms missing system call definitions
+> (getdents) and the series breaking on those platforms.
 
-> +        from_err_ptr(unsafe { bindings::faux_device_create(name.as_char_ptr(), null()) })
-> +            .map(|d| Self(unsafe { NonNull::new_unchecked(d) }))
-> +    }
-> +
-> +    fn as_raw(&self) -> *mut bindings::faux_device {
-> +        self.0.as_ptr()
-> +    }
-> +}
-> +
-> +impl AsRef<device::Device> for Device {
-> +    fn as_ref(&self) -> &device::Device {
-> +        // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
-> +        // a valid initialized `device`.
-> +        unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
-> +    }
-> +}
-> +
-> +impl Drop for Device {
-> +    fn drop(&mut self) {
-> +        // SAFETY: self.0 is a valid registered faux_device via our type invariants.
-> +        unsafe { bindings::faux_device_destroy(self.as_raw()) }
-> +    }
-> +}
-> +
-> +// SAFETY: The faux device API is thread-safe
-> +unsafe impl Send for Device {}
-> +
-> +// SAFETY: The faux device API is thread-safe
-> +unsafe impl Sync for Device {}
+Yeah, I agree. I also don't think doing an #undef because of muslc is a
+good approach. Would you and Namhyung be open to bypassing libc and
+calling SYS_getdents64 directly instead?
 
-<snip>
+Best,
+Krzysztof
