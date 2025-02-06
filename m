@@ -1,102 +1,122 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFB8236443
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC6F1E5B9E;
+	Thu,  6 Feb 2025 15:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738854317; cv=none; b=m/CTV7kz/H+wfaP6YDI8RzFr+ZDpBsZwxnkJHb7FanUgIAMhdYSX3xDs5bHutKplZdVXnghvAHNy3flscSKk+1AUIrbJFvsMJmgp3yb2FRZJWe0cqJN00IJA7Mn4vPhYZTAxCCAjTWWED9qzyHgz/Ax/XUVc/N4PRBsk6D/jk/0=
+	t=1738854317; cv=none; b=JWrQuFDtadCV+VTppYR01qWVRI/cX778Li29plXp9x363oz3B4odk1gA1aawbZniLAC1+iayOixgLhEVdcWmwfZqJndE3MouMDUrisLklbem5d9FNlkhq4QSurdiJZrRLgBXWosYyYjwANeCcSmnmL05Ev96anj5TB90n1K6duc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738854317; c=relaxed/simple;
-	bh=Q7DJLmLwr0XFAEWblLv/OkaySaBTJfo5ihgl+jZHSmA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bTQzweWKnFZEUH6PJnj5xNpLk0Ug/1X/10oF0dOhsL4vyq196ofTydNEKjiGiaLd0+59jgNKV+DQuQ+cd7lx0RByeldMit1Z0SZ/WWlLFbfCZIkcrkI6ffTAsZunwmPtdXeeviNhs9NzfLpgW/z0tj55KS6gY0q5V9psyLUSxos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NcdR53XE; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=AVF+OBl6NdvnyfJRCSXawu1jNwQwVWV2ZYTBFZFKEmQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GliI0mGRGyqJhk5cQCDr0yAUeo5dJNjL/vw0/bOGseGTy81JWiqx2yNt+bhmt5IO9PpXzreoIcQVitsqy0ZuqBWEbGQjBRsJylt4/OCpgN35WhE560CQHYZXMfo2lPtipqq4EWPhb1/LysjTLp7NUGYEYJKsJrw7wrtG8luxXOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vi8+wcE1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NcdR53XE"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-467abce2ef9so39941cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:05:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738854313; x=1739459113; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q7DJLmLwr0XFAEWblLv/OkaySaBTJfo5ihgl+jZHSmA=;
-        b=NcdR53XEdhjPZIjtDHDUavBxP5MQp92qialmmHMqo7QGCEGvirzOSEiZtjMitv2BnI
-         fT0FzYsoZ77f2ERfbdXyhq4RnstHQNUUzqlUx3jDyXl/o6XCaHAmmvVSvOkM1f7jxUHj
-         TncBoUwEL6L+FRoYSRuR1kV6qKQJeWf1HVMANzyipqzDpG4TdyjIEswWse706jOQXHO+
-         lZvtrz99dYi3TAy3hFmG3ddLViFiV14vQlbnm/fr6FRTQbjOaVx0Yb1eqQtvGbGUKxHh
-         mJ/kpGXAMW/MhOb5bNCFpDFSLyxp/BwhsPT7bs3PnxOtjiwqDj8UVbF0i8vy2kO5d3OQ
-         dD1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738854313; x=1739459113;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q7DJLmLwr0XFAEWblLv/OkaySaBTJfo5ihgl+jZHSmA=;
-        b=E9EJLHIex1ttNPfZDzQbRh6Q8P2zINDo72tdaNA2sH0xJWOgKxY1S0dENfrP18BGDZ
-         SY4EeuY5/ryw5QHULwDxoo/ucKSbLKUV/xxtZ6nIlVuEjFIyeu3mFb/iegtpKCWR1h5E
-         m9gCPpXXNb+LWM0hZN9LnTQ3vUVv7uKVbFYikhYbVsAQjVB5hr/7u6z8po+p215HTlr4
-         mc2/aMOUR1aa0KuxoZJas6iuAISbO2IRlissE8sFX8pSsH1mfzDiGexpDV2ahFHntt/j
-         tc0nbzcBKj2qCwl+Ar39xZVTNZULp/L1xbG6bb7s7aigd+tAgODtwFCFYwy9iuRi1c/G
-         XKYg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/dYLM9cH6TP14NSNlLIhbmSnHmQZ1mpTPEib6jJt4V5eIbe9fGK3wPFN0qviNB15hUj5lxdb7fyyrwS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNs7ImVs/NSG5d924f6sh53c6WjstwpKQsgOK+yoABcC9IV8U0
-	KKstoUF2b64vx78t2U5M7OIrxz2jSICat+cu2bjVFUOuZEU+L8g2S1q01RKOcUSGgd6k6bDOhrM
-	13PY66qr1uStMO+nI0g4fiEs9TRyr/GPtx6kr
-X-Gm-Gg: ASbGnctCzu21xxuFsOKpLyx8iRJqNkaK7I2kEnewOuYg02uei3AzuGqDDj/lzRQWWwZ
-	uQs0xGUx/ry6/JHZtJN2x3ip6dpuRarVOs0e4lt1U3mnqwSfvZR7tYrskEbUITTtbWk9lbG6vVg
-	DCc8n1IYPQ+9HgUxEaVPuz7rhWEwU=
-X-Google-Smtp-Source: AGHT+IHmNYFb+KpFj1K1sY+xMUMyXhvudqbqsfAwqKTTOOsS4XwCtufELw97J6XPp5V6Xs0jbvW2D0z8QzALFoy4HLY=
-X-Received: by 2002:ac8:7e84:0:b0:463:95e2:71f8 with SMTP id
- d75a77b69052e-47165addc61mr318871cf.15.1738854312746; Thu, 06 Feb 2025
- 07:05:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vi8+wcE1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4CDC4CEE5;
+	Thu,  6 Feb 2025 15:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738854315;
+	bh=AVF+OBl6NdvnyfJRCSXawu1jNwQwVWV2ZYTBFZFKEmQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Vi8+wcE1RKFK9yrjLzo7EoY20c+kDBXpark5fdtKXCHSloo7Zqf4RX+puznR3rQZ6
+	 gArBXG6x1Z9KVVFbCOA4JQT1+Li6qbPuuClgAr7rYy26CbKsCfRlcOsS6NPoWRDQsK
+	 sCzykYaaYQn/bPcdOZuIaR+lkZqNbJLqTWOhKsPVZrT/ZCos4fgiXUBDn3gd5Lwaws
+	 PwEWSYn626S8GDxI1yOthVVYcq1qj74I7pIj1Wkq/3KTNinoGcxTbSmGdXLxZHyBCe
+	 VpDEm1qUdKBvwsrGXmijdHbKueliDEERRPUliyPans+M8d7oVmz1ro89j7MNY6jF8k
+	 BvzX/PhvHythg==
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id B9576184F95B; Thu, 06 Feb 2025 16:05:02 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
+To: Hou Tao <houtao@huaweicloud.com>, Hou Tao <hotforest@gmail.com>,
+ bpf@vger.kernel.org, rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
+ Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, "Paul E . McKenney"
+ <paulmck@kernel.org>
+Subject: Re: [RESEND] [PATCH bpf-next 2/3] bpf: Overwrite the element in
+ hash map atomically
+In-Reply-To: <cca6daf2-48f4-57b9-59a9-75578bb755b9@huaweicloud.com>
+References: <20250204082848.13471-1-hotforest@gmail.com>
+ <20250204082848.13471-3-hotforest@gmail.com>
+ <cca6daf2-48f4-57b9-59a9-75578bb755b9@huaweicloud.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Thu, 06 Feb 2025 16:05:02 +0100
+Message-ID: <8734gr3yht.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113-objtool-strict-v3-0-8b51f94957fb@google.com>
- <20250114001440.cagqlvjfvw6ghsj7@jpoimboe> <CA+i-1C0MFQCLOah56wWQhPhtk4p0ynhxh48eTmQ0-0x+pB6fvw@mail.gmail.com>
- <20250130183042.GB3394637@ax162> <CA+i-1C2rw6uNOpeY8fakco8T75udRhLJLxJ4CHgJNKBhbxGa_A@mail.gmail.com>
- <20250131204920.GA1974131@ax162>
-In-Reply-To: <20250131204920.GA1974131@ax162>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Thu, 6 Feb 2025 16:05:01 +0100
-X-Gm-Features: AWEUYZlQG1QNiSuRQV58qR_DOfSbU9LJ7SSXyKt5r-mzphkFPcuwXownjcLke68
-Message-ID: <CA+i-1C1A_0nkY6G+W3n=dYqEJHZGuEwNXK=xrWNwDh7561x_9A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] objtool: Add option to fail build on vmlinux warnings
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-OK, it would be interesting to spend a couple of hours staring at
-these errors and see if I can get a feel for the overal picture..
+Hou Tao <houtao@huaweicloud.com> writes:
 
-Also, now that I think about it I'm a bit embarrassed I didn't try
-building allmodconfig before sending this series (maybe I had
-forgotten it exists?)! Sorry about that :)
-
-On Fri, 31 Jan 2025 at 21:49, Nathan Chancellor <nathan@kernel.org> wrote:
-> > But I can also envisage a world where that creates exactly as much
-> > work for you, just introducing Kconfig hackery for no reason!
+> +cc Cody Haas
 >
-> Such is the nature of such changes. It is not that big of a deal for us
-> to work around in the short term but it would still need to be addressed
-> pretty quickly at that point.
+> Sorry for the resend. I sent the reply in the HTML format.
+>
+> On 2/4/2025 4:28 PM, Hou Tao wrote:
+>> Currently, the update of existing element in hash map involves two
+>> steps:
+>> 1) insert the new element at the head of the hash list
+>> 2) remove the old element
+>> 
+>> It is possible that the concurrent lookup operation may fail to find
+>> either the old element or the new element if the lookup operation starts
+>> before the addition and continues after the removal.
+>> 
+>> Therefore, replacing the two-step update with an atomic update. After
+>> the change, the update will be atomic in the perspective of the lookup
+>> operation: it will either find the old element or the new element.
+>> 
+>> Signed-off-by: Hou Tao <hotforest@gmail.com>
+>> ---
+>>  kernel/bpf/hashtab.c | 14 ++++++++------
+>>  1 file changed, 8 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+>> index 4a9eeb7aef85..a28b11ce74c6 100644
+>> --- a/kernel/bpf/hashtab.c
+>> +++ b/kernel/bpf/hashtab.c
+>> @@ -1179,12 +1179,14 @@ static long htab_map_update_elem(struct bpf_map *map, void *key, void *value,
+>>  		goto err;
+>>  	}
+>>  
+>> -	/* add new element to the head of the list, so that
+>> -	 * concurrent search will find it before old elem
+>> -	 */
+>> -	hlist_nulls_add_head_rcu(&l_new->hash_node, head);
+>> -	if (l_old) {
+>> -		hlist_nulls_del_rcu(&l_old->hash_node);
+>> +	if (!l_old) {
+>> +		hlist_nulls_add_head_rcu(&l_new->hash_node, head);
+>> +	} else {
+>> +		/* Replace the old element atomically, so that
+>> +		 * concurrent search will find either the new element or
+>> +		 * the old element.
+>> +		 */
+>> +		hlist_nulls_replace_rcu(&l_new->hash_node, &l_old->hash_node);
+>>  
+>>  		/* l_old has already been stashed in htab->extra_elems, free
+>>  		 * its special fields before it is available for reuse. Also
+>> 
+>
+> After thinking about it the second time, the atomic list replacement on
+> the update side is enough to make lookup operation always find the
+> existing element. However, due to the immediate reuse, the lookup may
+> find an unexpected value. Maybe we should disable the immediate reuse
+> for specific map (e.g., htab of maps).
 
-I can't quite parse what you're getting at here - is this an opinion
-about the idea to depend on !COMPILE_TEST, and if so are you in favour
-of it? My thinking is that if it defaults n and isn't in allmodconfig,
-the only people who will turn it on are those who actively care about
-clean objtool for their build. Which.. isn't really what we want long
-term, but it's better than not having the option at all and is already
-a step in the direction of something that can act as a "ratchet".
+Hmm, in an RCU-protected data structure, reusing the memory before an
+RCU grace period has elapsed is just as wrong as freeing it, isn't it?
+I.e., the reuse logic should have some kind of call_rcu redirection to
+be completely correct?
 
-If not, I'll go ahead with the OBJTOOL_FLAGS thing. (Which is still a
-nice step in that direction).
+-Toke
