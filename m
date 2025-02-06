@@ -1,107 +1,83 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B52B1FCCE4
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114071FCCE4;
+	Thu,  6 Feb 2025 09:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738833818; cv=none; b=qJzCAgxoUOLC2karMXE7evoCzdFYir5lMPuCqHnvMcPqI8Ty48jUisAdIidch0dOlWTROaCHUWCURctxyYBs8/s8VgBXhVtgSiFFaita+kXMHLM+/WiJgNjAgeMD53dgufywTBsuiHMvdU4MTqn1LrYhysAmR2WY9e/GAx2A4GA=
+	t=1738833844; cv=none; b=blf0nWPrysKkU8nr4wEWAS7A6SZQZcdfnEEKI2goDxO/GHuk/jCy2OjIQkdcJTssDLpeZ3jivaK8/KUuYrEyXzjEenAE3xee9DMRL4B7VOgSz2CVVuu8/KqGiqbHNG5zCgGzcdYtfozIvn4BRPiV625Ff5S3rGCd0fPCBbDGMF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738833818; c=relaxed/simple;
-	bh=Eb2tRU6/YVjaUsYLNRs1tRCxlDHWdhAUNvBHCA2Bqew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nqu3TIPa5i0fAk/Ytcn+l6iYEui91B+DHeTKcbVsbJA03i4mmAed7+kZkh7hcqWMCJXONuaV29tW//333oVBlP5zsNtrBB64huE6zENWGniiDngzRbRpsiwnUHBQXlalTdvMwAexVkq6QMJwg/AgH041RmLvqvp4eqtsHYkfsmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=fMOAm8hb; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738833844; c=relaxed/simple;
+	bh=cBrVqE/Ai4gYO2AtRV7S8oVyTssm0+1D47OVtk82Czc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vGdsXLO03MS0rZHXj6yw94YAK9FV+vqU0SPVQISJoSSwZBbANzzeeXPeafZZdLZkGVrrZme/GoZ3oRI0mqm6y6L0MJ2DyJcopwTvXWVnq+ZcE1ao6LZbjIyRp0HFio8CO/ybYJlSP06N7lZJwCDMRqCfvnxOpDr8QrQquu/jWs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9XOeX5n; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fMOAm8hb"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id fw2Ot7ThhzZPafy6ctzncy; Thu, 06 Feb 2025 09:23:30 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id fy6attVCmWvXpfy6atvsaI; Thu, 06 Feb 2025 09:23:29 +0000
-X-Authority-Analysis: v=2.4 cv=LtdZyWdc c=1 sm=1 tr=0 ts=67a47f91
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
- a=PX_z9cZZlryqIJpxFbEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PbrGCb5a5pQD3TxB7+lFg4Sxj2+E+oZPhiQNGM0TNkQ=; b=fMOAm8hb8idy4TF6zXMXwn0L+G
-	tZRKMARV6rG6Fpau2CG0FQGrNTdzygIgchyof9+g4JAIkzkkKPBxQHLdZoD6JTPNU2WsSdcCFFhig
-	eGdp5faY8vo8rMnf5DrQVNgwTIsUM3yz/fCFJ2X4g+W+LiNHYf6laKCANxAhY/HFVq8+x6HApgxNE
-	mNhgRHoe9Xu38SjPtXW12tdKvjq+q6m+DS9MQUO6ZdfMTcGbZpK+qeaxX1Gn9m55dgBvbObgJJkv7
-	mqxwm6YP5ZC0w1FPtnbkZoOFYKNNf95ei5HLXpWuz730wxJTvtACKjZcN4U6Sz46r/I8efUN/O/mF
-	nR8qDtfg==;
-Received: from [45.124.203.140] (port=54891 helo=[192.168.0.152])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tfy6Z-000xca-0C;
-	Thu, 06 Feb 2025 03:23:28 -0600
-Message-ID: <37d755b9-5d08-4b8f-a178-312d22651803@embeddedor.com>
-Date: Thu, 6 Feb 2025 19:53:12 +1030
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9XOeX5n"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f9bd7c480eso1216507a91.1;
+        Thu, 06 Feb 2025 01:24:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738833842; x=1739438642; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cBrVqE/Ai4gYO2AtRV7S8oVyTssm0+1D47OVtk82Czc=;
+        b=j9XOeX5nUVz7nvls0K/+RlEkmm1AfP9OC7VspUPRAER3b7qMmSmMumnjB/KdcEMB9g
+         osMko9MtszGKxR/wlLqLEC3X46IdbHqu5oBcFYPLH1L+RoJWBuCrL045YUY/DWBzBG86
+         wTymq4Um+8iWrlZ3P5b1l0W3YCQKx3oxdQrLbh85cpN01JPB7VIwI6SrwtAnarLXQdgM
+         +PqFNxm0iijVJK/pjpVVcnEcgAaE5AVPtsGYwnEScy2Jxhs4z9RrttsCuh+5qB4C5HJ+
+         V+/EKkQYmI2CysL17hnOZSf9DHm9xra1o+zv62VAAqw4kTQ3ACeUsYL+qnUOY3SoVGRD
+         lzHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738833842; x=1739438642;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cBrVqE/Ai4gYO2AtRV7S8oVyTssm0+1D47OVtk82Czc=;
+        b=D+57FMiagwS070mC/WCjV2IgXLY/tCLAbbhcH/77IyTYAEwKumfXjgRrQNl6xLJWAk
+         JRHvXer6EueYY1TSeCRMri3JsFEnCqEuKZ8W8UyQ8smyePtJehs7eou1evRF/MLfLX3p
+         Fjfx70/YrG9JYLVbZ+i0lEN4h/MtblsRJbaAv+aZZmLNOOk/lTz0qqGuhTqhGhg/ZseK
+         17YwF120iHDboZJF4XFettpWJusbAf2O+ro3tPMEzdLaIromSb2q7G1VbDAwuSqu3iFX
+         HuEGDiM8+qUiuoGqCXWTTp1aO4rcCSq2oVwGYWCHkGvHenVzfJHHxFI/kFGggnzxgRmq
+         msZw==
+X-Forwarded-Encrypted: i=1; AJvYcCV44Y08T9ZB/PuydJvHGUg26FkBkali4euiEhjVlWH9G7UBITAf7LCfZo5P/Ye3Se+i8ZmtFysMP4b6gbA=@vger.kernel.org, AJvYcCXu9JHbg+2zM4NhJ6AneeMEAoSe/UBWPfZjQ06oRJdgVyaIKjfp+P62RG2cZQ3zfyTHmPXHCJS7gknpraA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymJuwj200MCLhp1Nn0BM7o7MB+E5h10nydoStxnybff2Nsm8uZ
+	2YpijIhiDXBXoUhZQ4VW4yo3bjeZVJBjv8o8qsTEwT3UZfKOaqFqH79Ko6nRVyY31OMiCkVr5sX
+	IOMROcsr3efLgjBQIjbs3WXryJaA=
+X-Gm-Gg: ASbGnctB7bjd8M4KqTNAMJMxjBFIVK6KitzKiMNGJ9HfAaSsAMUvLKt+xp5tSoT+lw4
+	BwF9M1zNlZTngGuKhuCb0jzegrwYLARbPkIP7YOGZyl8w3Sn28KdmcQwYZbcXJiXPrdWdWw==
+X-Google-Smtp-Source: AGHT+IG1UyaKQAQJbeN4KZGYIOs3VNjrkC3xVxry+u2Wb/QFb/6PDyHk7CdpY+0ZJkhj4OcqqOOJQKsYVX+5bc0fZQ0=
+X-Received: by 2002:a17:90b:48cc:b0:2ee:aef4:2c5d with SMTP id
+ 98e67ed59e1d1-2f9e0810794mr8432938a91.26.1738833842188; Thu, 06 Feb 2025
+ 01:24:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] tty: tty_buffer: Avoid hundreds of
- -Wflex-array-member-not-at-end warnings
-To: Jiri Slaby <jirislaby@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z6QvAZxiQusdaDkH@kspp>
- <daea13b0-137c-4ab5-8388-1d46919b8609@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <daea13b0-137c-4ab5-8388-1d46919b8609@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1tfy6Z-000xca-0C
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54891
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfA92LX4XNoIF5lLsiE06X09oxef13zfxJNMswA/6MeFSmy96BWq7cKZFW4eA4TnGb3Vnlq9C0+E78Zd1sYmf/uZajhj1SCsfCSn2UeyQ6RteEcehGD1T
- C+Iy5QHE/mwLsxZ6QtxvXEY8gc4aMFAGDAMVDYFZ79UcasjaT2tKBCWgbSMYu1pqevyXuHouEriSXGzafU8csZj0Pa5SzUdDfv9uc1qVBdH/AV4j55hphVvO
+References: <20250205062444.1694810-1-shengjiu.wang@nxp.com>
+In-Reply-To: <20250205062444.1694810-1-shengjiu.wang@nxp.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Thu, 6 Feb 2025 11:25:33 +0200
+X-Gm-Features: AWEUYZmDUymm73unsdmbrTmXdaPc_qVh7iTw8Y2NHH7ijEwSdRi_QIcSX6j2Vxs
+Message-ID: <CAEnQRZArZK7sbUUPmPb9khfLVk4JSvn5ARwEh0MCPvyU9D=xMA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: dmic: Add DSD big endian format support
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, 
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	shengjiu.wang@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 5, 2025 at 8:27=E2=80=AFAM Shengjiu Wang <shengjiu.wang@nxp.com=
+> wrote:
+>
+> Add DSD big endian format support in this generic dmic driver:
+> DSD_U16_BE and DSD_U32_BE.
+>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-> 
->> @@ -576,11 +579,14 @@ int tty_insert_flip_string_and_push_buffer(struct tty_port *port,
->>   void tty_buffer_init(struct tty_port *port)
->>   {
->>       struct tty_bufhead *buf = &port->buf;
->> +    struct tty_buffer *buf_sentinel;
->> +
->> +    buf_sentinel = container_of(&buf->sentinel, struct tty_buffer, hdr);
-> 
-> Bah, so this is ugly and even dangerous if someone adds a member to tty_buffer outside _hdr.
-
-Precisely. :) This is one (more) of the reasons why of the struct_group()/static_assert()
-proposed changes.
-
--Gustavo
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
