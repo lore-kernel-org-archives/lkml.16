@@ -1,65 +1,65 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F031EA7F1
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C460B1624F0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738849876; cv=none; b=NDl3K7C5hI4hnHmP6P3kKJ9jKE5PH/BKWMAiC314SnldduYqyKdFf/qIebCb5U17xkXotVmSGHqXBWmIO9V1sbXRU1nsrMpDurTQg7VXjK69UoBwqDZfb4VCQz+r7EkdJmot21Y/VKKV5TOfcnIXeNnfaueHspZejM3fMnM5Tjw=
+	t=1738849877; cv=none; b=WkvFjMyDARhXYKveGSlDl8EumqUkcphsbyPXfZAM/78chdbrkuTA+61SZreT7ei0zINr5HiBqt6DpN56o+XrEPWlpvRzl5wTD1Y84X4YvEGZLNTz12yNeEQyIK+TNAuOnplVcISeQF5I64Joaghr+47LPudCk89LdvI6CJbKeDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738849876; c=relaxed/simple;
-	bh=jEfFPYjhhWYVQQFXyKASWQyErTdoY8Ap+ZCTd9eVCBE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rTwaDBNMoCGllaEhcS68XCgzSfDYQb57vjE2qbI0Ro9pRFgVlASxHUU1nV2N4wl6b1yvYlPD0VBLyhm1jSOHmuO+bgkry1P0FLZISVZhjCIYWtxSZtUBHgMIpK9BZaM8o9tenWBSvSjE4PcDvUYXyaebTQRyutz2Fql7kEo26nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UkAelZD/; arc=none smtp.client-ip=209.85.208.175
+	s=arc-20240116; t=1738849877; c=relaxed/simple;
+	bh=mpzXyzeB8MzX6qw01rpg9ImZYnr1dtKSgAZWq7ewrIQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=I5WihUIJfbSmU6xF9YTFrbDNq41kMprWbquB2ISnUvUHCABnzuDd6+LQ9yJnV64m18231pGv0Gmum+LRDVKJHcy8k3s5PVBHsTrQGnJpuI+ooXULP2/CFKiZT/v40tY5RnmJeS+KSEHBJmGz5AaP+s+ujmYUIpMOOh4jvqQfppg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EibCAnIv; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UkAelZD/"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3061f1e534bso9001301fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:51:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EibCAnIv"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-307bc125e2eso8021681fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:51:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738849872; x=1739454672; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlvRT/m0xJ3xAgqG1g5fsw9qNYmlNi8FJnlxC1TPJrQ=;
-        b=UkAelZD/aJN9ZMJUsUPuJhIFVj0TRqecMFf7ESNgUk76Pi2BNTORl2OJvX55Aq/P6A
-         Qgp0vi3ADSISzH3rXVT7U7sZNISgFFKp5+piPCPPrYTlcCgTIzlhjGcvvYPxfQBR1TpW
-         537uRYPZafkhdSxpU4WD8E9Sy74dkPDVqGet6dyDhSbWbVOsZWsxQlp2tRpokDpyWkf2
-         RytasquYnI5Wzus4nJRniQrxjwQ3EvuSPDp54fUC2yj4zmM2ecwnKkSZ3DB0EzTOI5jc
-         iEfVHfbOTnAz0rgZ0RBKNGUEZBiklsyl4AnGiAchfWwdDm6mSiGfVBa5Cvai5Jr5LhpZ
-         Wurg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738849872; x=1739454672;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1738849874; x=1739454674; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hlvRT/m0xJ3xAgqG1g5fsw9qNYmlNi8FJnlxC1TPJrQ=;
-        b=ewDil2C/uQ4S+JlNVkHCRdFlGgm0cIAGP2O6qbYcVn4gis2kXp0hDRZDdTwqEpgrKo
-         NQdHu0QdGxDLipT5swN04rEkU9Z8DB7umI8vo9i5O6dY/RUG5azJlTWSuQ8EfzJTzCmu
-         uBsdLbopTCY35cxEjD3aqjTmfwF8Z7/N1HX84da6uxQZEK8kIGiQVH2qtpad11MA+er2
-         RHRnxld0d5nLmdNIHITvAMWHUR5O1zoY1BdAbR6LNesErhMhqX0ap6IbfbBhPh/b+Hs3
-         wRCo53tXGqCcDPkDRFowdJPhkGmjNlPdQ2SvqVvG9qdoJ1KMoMv+oD8uj3CU355ikshC
-         K0HA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhReZLLxWeuT3EL0Qn5zW02chgU6Lrjj7pOnMrYDdUFV3Ovh0pZseYaSXkeLf4+SeGnBUZSFOodHy+2D0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2aNKI0LgddGnFlatn1ZLrwx+d2/4BtKGKAXzO8tRsO64MtmSx
-	2wYCZd7yYqwlKf2DcIdsITEHSyrVS1Fq+q2QCIGvDj5F59zSgS4B1N45AtvRoNo=
-X-Gm-Gg: ASbGnctV5/D3zc/ChyMTlHU+pHeTyompkRhxM8FJ2ZBsBKxQsQSK4FhiLfwn7tMRpsF
-	efTh40T6nuf2JcufAeKOFsvbwAbHO2EHjW0CXoy1vQdehmUStNsq3LO91806IgoWF36ZN1kaLs/
-	rMZ5V1uPi0rdEmeNA5WBk51z0UhEDxHl9Nwdmr1vmYN3ZYm6OQ7uplsB4iX6lLqYgUkK5tVX5zQ
-	WrpfVejyJwuhRN6UZYi008dGn3Q7hmKD0phlqTX4q/N3hKA7Sqgyqb6aw/ekVwMW6A+41xTtmer
-	jqLYaoqClZKJrkvcjHx0OK4=
-X-Google-Smtp-Source: AGHT+IFSoxJ0P0T7H5ffUZDnHS6utLPPhqQ0Xj+ZAE/hrtS9g7mDuzJ3rLQXiReVNulKoeE9NZoXiw==
-X-Received: by 2002:a2e:a988:0:b0:307:4fda:c544 with SMTP id 38308e7fff4ca-307cf312227mr26755631fa.17.1738849872268;
-        Thu, 06 Feb 2025 05:51:12 -0800 (PST)
+        bh=TXvHeC1Yf2GuOiuplAspcKQmKn7+kgoDshB/4Jadi1Q=;
+        b=EibCAnIvRsA1cH17dKRM8Ff8rPxSQyMtiEA1zE3SPkUHZMNUz2B/6rLt1I+yOT7tCz
+         jhk6Z8ZJpNvmo+QMuTPGZ2lZuIjHQn4sskKWkFXROrH5M1rjknZMp3g9PqTCnjvrYTKS
+         NQu22T2cEPwA3qY8uPtrcGsHnj1WbztbuRo3ac8bq7A7dw2H797DiVaxTkEzsQsCLtAW
+         pjXAOVhbTf/rJRHw8ktURfRwe7JvYG5dXJx67biW0mU6jph2q4+zkTW6Kw5DjGdcPemp
+         xu1fBTl33JdPbPNlbTIMQQaRqdWlVvCAf3XwabQXQzs0Flxj7ODeyVOcNlVm3BcY7WDN
+         dcHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738849874; x=1739454674;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TXvHeC1Yf2GuOiuplAspcKQmKn7+kgoDshB/4Jadi1Q=;
+        b=OMh4bVGI2l1bihlFe07LZZAfFY02+HopRxCaExYmRtgBp8PFifGKWY/+Pi5VoEc7uQ
+         OMER+NM046yQDsAkkqnaz/+9CvFYq39y5WJy3qJoJrESPSv/exofQNiNA6zOC2Ij7WMt
+         NZQxpTNHB5rQRZD0dGZNEp7H3RCJ3PcCr4TUfyH9kHAoAdtCb+MbR9NgU8OOdq2XobHv
+         LUpSGx11DPjBKyfjNtgR7f1mVX9/IKN6DiQq/g/kJ0hO7628hEqH0AU9s014aLwY0RLw
+         bLbkbeZer2WTLqODTvNTD6Yt/ZhkEGVXbHfpBgDLNcHJ9XziDEiBvTopHv5QBFuf+YqZ
+         GqVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBwM9ZrsrHH6n2vllDULNSNz0JwldXtzIQ5NWyCk19tpkapSZ76V1x8niI88vGQ27EgFT/7mJX8kG01tI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYaI+xfVu+xg8wDAYVTXH0Owf0yrcRF8VkLhs8HFQHW35V37OH
+	8d+Mdo4ZFbYwpebHD/Nkzav/6Zl89zFphKa+6OAuUmAp1tYQD0g6Q17SvDmOElQ=
+X-Gm-Gg: ASbGncssMZlhVSom7BU2SOo9sMcURzMhgDvT4cWYvtG7JQhiQzvTQzxoyFrqlcxhKWF
+	TvDITiYnkCUAtElJrY0d1Y85ViFmr9cQHR8BOH0OK6KXIIiKWhHlASb+ARA6mVmpGz3pT3lN48U
+	MxcJrehW8Oe6DfsXGpyzWZAfcnscOnKqtKJyYC+rRxTvZ50aM09paLAJ4iz77278QLadaXrO87A
+	KSWk4vgR+H34trdR75zxvHJvOx3CO5h2hvEtH50aNtckYVAYVJJ6TeVRHIPWSZog8b1Vb5sb4Nl
+	ZIE0o8eUYROCcgv870ewL3o=
+X-Google-Smtp-Source: AGHT+IFVFDfXSZjE1F/bGlISaWdVp07EGr0sKbBBMGoJ9tmIeAf61QXHP/XAxmfmNjKasQbwOOV15A==
+X-Received: by 2002:a05:651c:220e:b0:306:10d6:28a5 with SMTP id 38308e7fff4ca-307cf2fd818mr19782961fa.1.1738849873746;
+        Thu, 06 Feb 2025 05:51:13 -0800 (PST)
 Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2da11fsm1318521fa.92.2025.02.06.05.51.09
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2da11fsm1318521fa.92.2025.02.06.05.51.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 05:51:11 -0800 (PST)
+        Thu, 06 Feb 2025 05:51:13 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH 0/2] drm/bridge: reuse DRM HDMI Audio helpers for
- DisplayPort bridges
-Date: Thu, 06 Feb 2025 15:51:05 +0200
-Message-Id: <20250206-dp-hdmi-audio-v1-0-8aa14a8c0d4d@linaro.org>
+Date: Thu, 06 Feb 2025 15:51:06 +0200
+Subject: [PATCH 1/2] drm/display: bridge-connector: add DisplayPort bridges
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +68,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEm+pGcC/x3MQQqAIBBA0avErBtQocCuEi20GXMWWShFEN49a
- fkW/79QOAsXmLoXMt9S5EgNuu9gjS5tjELNYJQZlFEj0omRdkF3kRyoB7KBPHtvA7TmzBzk+X/
- zUusHO3u32V8AAAA=
-X-Change-ID: 20250206-dp-hdmi-audio-15d9fdbebb9f
+Message-Id: <20250206-dp-hdmi-audio-v1-1-8aa14a8c0d4d@linaro.org>
+References: <20250206-dp-hdmi-audio-v1-0-8aa14a8c0d4d@linaro.org>
+In-Reply-To: <20250206-dp-hdmi-audio-v1-0-8aa14a8c0d4d@linaro.org>
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
  Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
@@ -85,56 +84,171 @@ To: Andrzej Hajda <andrzej.hajda@intel.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1751;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5826;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=jEfFPYjhhWYVQQFXyKASWQyErTdoY8Ap+ZCTd9eVCBE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpL5N8UxuLafoSi1beUZMoklAK0KI+apFqYcXK
- zIpR+AMEJeJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6S+TQAKCRCLPIo+Aiko
- 1R90CACi7Ti+Y/t8thf8VuDZcV6zf2WGND598IR0eR6rFaQ0KTGdYwEqLjnjAGefiGxMz85EkOC
- IMghfm08/ysXE3DHac6U5HNPlQy0dpcn+fvRmjyVel7Lmt65gInbi0Wxz8vVdzmBYO6LqCZuWqU
- tDJhwMhmsDoCGFLXH7kBEZHRy4aoYFBw77aIAuSNRjuIm/nOBA1fEWNu25c56E+5n+z+HJRVl9F
- rGJaHzmMRSOS7rdOV7XzPAeVjojxZdKuu/MOu6P16S18LcjidgWRO+oHSANTm6C3uSK8iSKsiP6
- uJO2TE3WnRU3AyrTmgBAGLDE3BQZYGBtSSq2/hyvu6trgqcl
+ bh=mpzXyzeB8MzX6qw01rpg9ImZYnr1dtKSgAZWq7ewrIQ=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpL5NvB6ifjaYuLuKli9fRX9kVvhLcwV5zckkk
+ Lq5MI/ckfOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6S+TQAKCRCLPIo+Aiko
+ 1eMVB/9C5K8gG52o0STml3vvf1liB0s84Ks5LDHy2F5FdlMIwEL0AxG9pJhDTraRRWQxWhfcvdx
+ iWeHDlaCIXi8RzKjv0OpVXsU4Z03b8ZLePuqEpF1pc/SfnSNTeVvQOdgPpFoD0yOXQmcVRyWtDj
+ QiQuvB7cxu1O+bdPjgtmngnoXBpWlyGolJdbuOrPpPoC9OCfy8YGpbUDxmvG/ME1bajWeuVdKx/
+ 0/PLY8/irbp+KQlLRyb5y7WXztG2GuCyDVSzDHAXpkBKrF6/WilK//fdnEh+lM7/0CdHc4XPEFi
+ Rong0q0dDjjHWMLQ2OKVYrcH2DdiGB5rjyI8lfDLCpjvH/Hw
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-A lot of DisplayPort bridges use HDMI Codec in order to provide audio
-support. Present DRM HDMI Audio support has been written with the HDMI
-and in particular DRM HDMI Connector framework support, however those
-audio helpers can be easily reused for DisplayPort drivers too.
+DRM HDMI Codec framework is useful not only for the HDMI bridges, but
+also for the DisplayPort bridges. Add new DRM_BRIDGE_OP_DisplayPort
+define in order to distinguish DP bridges. Create HDMI codec device
+automatically for DP bridges which have declared audio support.
 
-Patches by Hermes Wu that targeted implementing HDMI Audio support in
-the iTE IT6506 driver pointed out the necessity of allowing one to use
-generic audio helpers for DisplayPort drivers, as otherwise each driver
-has to manually (and correctly) implement the get_eld() and plugged_cb
-support.
-
-Implement necessary integration in drm_bridge_connector and provide an
-example implementation in the msm/dp driver.
-
-The plan is to land core parts via the drm-misc-next tree and msm patch
-via the msm-next tree.
+Note, unlike HDMI devices, which already have a framework to handle HPD
+notifications in a standard way, DP drivers don't (yet?) have such a
+framework. As such it is necessary to manually call
+drm_connector_hdmi_audio_plugged_notify(). This requirement hopefully
+can be lifted later on, if/when DRM framework gets better DisplayPort
+ports support in the core layer.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Dmitry Baryshkov (2):
-      drm/display: bridge-connector: add DisplayPort bridges
-      drm/msm/dp: reuse generic HDMI codec implementation
+ drivers/gpu/drm/display/drm_bridge_connector.c | 66 ++++++++++++++++++++------
+ include/drm/drm_bridge.h                       | 14 +++++-
+ 2 files changed, 65 insertions(+), 15 deletions(-)
 
- drivers/gpu/drm/display/drm_bridge_connector.c |  66 ++++++++++---
- drivers/gpu/drm/msm/Kconfig                    |   1 +
- drivers/gpu/drm/msm/dp/dp_audio.c              | 131 +++----------------------
- drivers/gpu/drm/msm/dp/dp_audio.h              |  27 ++---
- drivers/gpu/drm/msm/dp/dp_display.c            |  28 +-----
- drivers/gpu/drm/msm/dp/dp_display.h            |   6 --
- drivers/gpu/drm/msm/dp/dp_drm.c                |   8 ++
- include/drm/drm_bridge.h                       |  14 ++-
- 8 files changed, 96 insertions(+), 185 deletions(-)
----
-base-commit: 93c7dd1b39444ebd5a6a98e56a363d7a4e646775
-change-id: 20250206-dp-hdmi-audio-15d9fdbebb9f
+diff --git a/drivers/gpu/drm/display/drm_bridge_connector.c b/drivers/gpu/drm/display/drm_bridge_connector.c
+index 30c736fc0067e31a97db242e5b16ea8a5b4cf359..5e031395b801f9a1371dcb4ac09f3da23e4615dd 100644
+--- a/drivers/gpu/drm/display/drm_bridge_connector.c
++++ b/drivers/gpu/drm/display/drm_bridge_connector.c
+@@ -98,6 +98,13 @@ struct drm_bridge_connector {
+ 	 * HDMI connector infrastructure, if any (see &DRM_BRIDGE_OP_HDMI).
+ 	 */
+ 	struct drm_bridge *bridge_hdmi;
++	/**
++	 * @bridge_dp:
++	 *
++	 * The bridge in the chain that implements necessary support for the
++	 * DisplayPort connector infrastructure, if any (see &DRM_BRIDGE_OP_DisplayPort).
++	 */
++	struct drm_bridge *bridge_dp;
+ };
+ 
+ #define to_drm_bridge_connector(x) \
+@@ -496,6 +503,25 @@ static const struct drm_connector_hdmi_audio_funcs drm_bridge_connector_hdmi_aud
+ 	.mute_stream = drm_bridge_connector_audio_mute_stream,
+ };
+ 
++static int drm_bridge_connector_hdmi_audio_init(struct drm_connector *connector,
++						struct drm_bridge *bridge)
++{
++	if (!bridge->hdmi_audio_max_i2s_playback_channels &&
++	    !bridge->hdmi_audio_spdif_playback)
++		return 0;
++
++	if (!bridge->funcs->hdmi_audio_prepare ||
++	    !bridge->funcs->hdmi_audio_shutdown)
++		return -EINVAL;
++
++	return drm_connector_hdmi_audio_init(connector,
++					     bridge->hdmi_audio_dev,
++					     &drm_bridge_connector_hdmi_audio_funcs,
++					     bridge->hdmi_audio_max_i2s_playback_channels,
++					     bridge->hdmi_audio_spdif_playback,
++					     bridge->hdmi_audio_dai_port);
++}
++
+ /* -----------------------------------------------------------------------------
+  * Bridge Connector Initialisation
+  */
+@@ -564,6 +590,8 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
+ 		if (bridge->ops & DRM_BRIDGE_OP_HDMI) {
+ 			if (bridge_connector->bridge_hdmi)
+ 				return ERR_PTR(-EBUSY);
++			if (bridge_connector->bridge_dp)
++				return ERR_PTR(-EINVAL);
+ 			if (!bridge->funcs->hdmi_write_infoframe ||
+ 			    !bridge->funcs->hdmi_clear_infoframe)
+ 				return ERR_PTR(-EINVAL);
+@@ -576,6 +604,16 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
+ 				max_bpc = bridge->max_bpc;
+ 		}
+ 
++		if (bridge->ops & DRM_BRIDGE_OP_DisplayPort) {
++			if (bridge_connector->bridge_dp)
++				return ERR_PTR(-EBUSY);
++			if (bridge_connector->bridge_hdmi)
++				return ERR_PTR(-EINVAL);
++
++			bridge_connector->bridge_dp = bridge;
++
++		}
++
+ 		if (!drm_bridge_get_next_bridge(bridge))
+ 			connector_type = bridge->type;
+ 
+@@ -612,21 +650,21 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
+ 		if (ret)
+ 			return ERR_PTR(ret);
+ 
+-		if (bridge->hdmi_audio_max_i2s_playback_channels ||
+-		    bridge->hdmi_audio_spdif_playback) {
+-			if (!bridge->funcs->hdmi_audio_prepare ||
+-			    !bridge->funcs->hdmi_audio_shutdown)
+-				return ERR_PTR(-EINVAL);
++		ret = drm_bridge_connector_hdmi_audio_init(connector, bridge);
++		if (ret)
++			return ERR_PTR(ret);
++	} else if (bridge_connector->bridge_dp) {
++		bridge = bridge_connector->bridge_dp;
+ 
+-			ret = drm_connector_hdmi_audio_init(connector,
+-							    bridge->hdmi_audio_dev,
+-							    &drm_bridge_connector_hdmi_audio_funcs,
+-							    bridge->hdmi_audio_max_i2s_playback_channels,
+-							    bridge->hdmi_audio_spdif_playback,
+-							    bridge->hdmi_audio_dai_port);
+-			if (ret)
+-				return ERR_PTR(ret);
+-		}
++		ret = drmm_connector_init(drm, connector,
++					  &drm_bridge_connector_funcs,
++					  connector_type, ddc);
++		if (ret)
++			return ERR_PTR(ret);
++
++		ret = drm_bridge_connector_hdmi_audio_init(connector, bridge);
++		if (ret)
++			return ERR_PTR(ret);
+ 	} else {
+ 		ret = drmm_connector_init(drm, connector,
+ 					  &drm_bridge_connector_funcs,
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 496dbbd2ad7edff7f091adfbe62de1e33ef0cf07..40f37444426b1b8ded25da9ba9e2963f18ad6267 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -811,9 +811,21 @@ enum drm_bridge_ops {
+ 	 *
+ 	 * Note: currently there can be at most one bridge in a chain that sets
+ 	 * this bit. This is to simplify corresponding glue code in connector
+-	 * drivers.
++	 * drivers. Having both HDMI and DisplayPort bridges in the same bridge
++	 * chain is also not allowed.
+ 	 */
+ 	DRM_BRIDGE_OP_HDMI = BIT(4),
++	/**
++	 * @DRM_BRIDGE_OP_DisplayPort: The bridge provides DisplayPort connector
++	 * operations. Currently this is limited to the optional HDMI codec
++	 * support.
++	 *
++	 * Note: currently there can be at most one bridge in a chain that sets
++	 * this bit. This is to simplify corresponding glue code in connector
++	 * drivers. Having both HDMI and DisplayPort bridges in the same bridge
++	 * chain is also not allowed.
++	 */
++	DRM_BRIDGE_OP_DisplayPort = BIT(5),
+ };
+ 
+ /**
 
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.39.5
 
