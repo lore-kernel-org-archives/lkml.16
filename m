@@ -1,116 +1,300 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A401F2253EB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B05978C91;
+	Thu,  6 Feb 2025 06:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738822526; cv=none; b=oAWkh7PFvyJP3RJ5hLzxketvjuSnChwwT8YdPTDi9xiRQBcQi6Kp4bFgx81eg9XV0MRYwHM+jlsr2Xo0Dc11V862rDPqsUH1ldO77ockxmmkgahh3TLXza4iL4obWmlIkCQPGx20RgCN96lOAWdB6RPdL9glFmZ1M1obrW+dX60=
+	t=1738822569; cv=none; b=Ve73lmIE/l8mcBT/e0KopCRu8rhwpvrMohG5pOGFx50eLzFy1FXZVzJJrA7TEH+0Kxlp4Ow0fsxREp1gRPPWv/1jJqiaxu+wu+ykFLo1LiV2QBkFGH7DH7EJowRpK5qpDNvejRuYXh3uUvtIbFw/a8lofXs++nq13LynwaUSxCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738822526; c=relaxed/simple;
-	bh=MP/17pf09yAFjnq6HfK1rSNsdKEXlrcNK/A1rjmLh9Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XFmwz9ImJdGaWghZqV/31fkrtmYZoHqHmE06CqRBRzq6l9jKTs6vuOE9qLnKW2muhBPWo6IJicCKd0VYIMXHPkQWVgkch3PQn5q12+O0iUvPZKISAW6GePSMijrwnyydsMa27QGM465306WgbE3sV0rhHaQaoOeJQ6Xgj/RjqUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeS+zBDr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeS+zBDr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5517C4CEE7;
-	Thu,  6 Feb 2025 06:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738822526;
-	bh=MP/17pf09yAFjnq6HfK1rSNsdKEXlrcNK/A1rjmLh9Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AeS+zBDrcocIE5whSD/5gWTiHktVgl4p1z2AIiKeTcCh7xmQYLD+OXL/RaZfFtNcu
-	 hV1sCJcNigWgqPbttaPV4aOO1TIGzB6zT9MtTB+m3BwqfA2+u4O+xc8GLeo8W9DGds
-	 x/93/07bnlYUuqh3x8jnyxl6WwwrXLZigIC2mljeqwpA2HmsX3TgbDO+Cm91Gdq4C+
-	 cBU/LRxPoRAAuv426uEieDoORu6nhMXi7jb0qNlNssLt7jWZwV6J4rVPBQ5G9ittRh
-	 Sb1TCC8ZuELFpKY3xHwi1CO6RGRYiv1weim8TPZB9h22iVgvfa+V83ScIn6iNEVS0V
-	 URqSXH8iKa+hg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 4/4] mm/madvise: remove redundant mmap_lock operations from process_madvise()
-Date: Wed,  5 Feb 2025 22:15:17 -0800
-Message-Id: <20250206061517.2958-5-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250206061517.2958-1-sj@kernel.org>
-References: <20250206061517.2958-1-sj@kernel.org>
+	s=arc-20240116; t=1738822569; c=relaxed/simple;
+	bh=ojjd4FrY02ShZ/OwPjwY87z7ZUxnJecv0E0BgD6XWJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sbe1J0xQ8n+kygb+PRa8UTHHFTPySw2dTnawSYjzBFLUJU3hDxgIspyuVAxrWJcG6O6WyvxXJMeBjxvcSljjn61jXZTdAT2awQzzwIJp34CdcbHTceSZvtsRrsLhvBGT0cAXJvuuGS4m1Rx+p/1Is922OEDw4v0PtTsIo4CU1Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8888612FC;
+	Wed,  5 Feb 2025 22:16:28 -0800 (PST)
+Received: from [10.163.34.115] (unknown [10.163.34.115])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF7AE3F63F;
+	Wed,  5 Feb 2025 22:15:59 -0800 (PST)
+Message-ID: <83103cbb-e2b8-4177-aeaf-c3b6e6b08008@arm.com>
+Date: Thu, 6 Feb 2025 11:45:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/16] arm64: hugetlb: Fix huge_ptep_get_and_clear()
+ for non-present ptes
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-3-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-3-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Optimize redundant mmap lock operations from process_madvise() by
-directly doing the mmap locking first, and then the remaining works for
-all ranges in the loop.
+On 2/5/25 20:39, Ryan Roberts wrote:
+> arm64 supports multiple huge_pte sizes. Some of the sizes are covered by
+> a single pte entry at a particular level (PMD_SIZE, PUD_SIZE), and some
+> are covered by multiple ptes at a particular level (CONT_PTE_SIZE,
+> CONT_PMD_SIZE). So the function has to figure out the size from the
+> huge_pte pointer. This was previously done by walking the pgtable to
+> determine the level, then using the PTE_CONT bit to determine the number
+> of ptes.
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- mm/madvise.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+Actually PTE_CONT gets used to determine if the entry is normal i.e
+PMD/PUD based huge page or cont PTE/PMD based huge page just to call
+into standard __ptep_get_and_clear() or specific get_clear_contig(),
+after determining find_num_contig() by walking the page table.
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 31e5df75b926..5a0a1fc99d27 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1754,9 +1754,26 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
- 
- 	total_len = iov_iter_count(iter);
- 
-+	ret = madvise_lock(mm, behavior);
-+	if (ret)
-+		return ret;
-+
- 	while (iov_iter_count(iter)) {
--		ret = do_madvise(mm, (unsigned long)iter_iov_addr(iter),
--				 iter_iov_len(iter), behavior);
-+		unsigned long start = (unsigned long)iter_iov_addr(iter);
-+		size_t len_in = iter_iov_len(iter);
-+		size_t len;
-+
-+		if (!is_valid_madvise(start, len_in, behavior)) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		len = PAGE_ALIGN(len_in);
-+		if (start + len == start)
-+			ret = 0;
-+		else
-+			ret = madvise_do_behavior(mm, start, len_in, len,
-+					behavior);
- 		/*
- 		 * An madvise operation is attempting to restart the syscall,
- 		 * but we cannot proceed as it would not be correct to repeat
-@@ -1772,12 +1789,17 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
- 				ret = -EINTR;
- 				break;
- 			}
-+
-+			/* Drop and reacquire lock to unwind race. */
-+			madvise_unlock(mm, behavior);
-+			madvise_lock(mm, behavior);
- 			continue;
- 		}
- 		if (ret < 0)
- 			break;
- 		iov_iter_advance(iter, iter_iov_len(iter));
- 	}
-+	madvise_unlock(mm, behavior);
- 
- 	ret = (total_len - iov_iter_count(iter)) ? : ret;
- 
--- 
-2.39.5
+PTE_CONT presence is only used to determine the switch above but not
+to determine the number of ptes for the mapping as mentioned earlier.
+
+There are two similar functions which determines the 
+
+static int find_num_contig(struct mm_struct *mm, unsigned long addr,
+                           pte_t *ptep, size_t *pgsize)
+{
+        pgd_t *pgdp = pgd_offset(mm, addr);
+        p4d_t *p4dp;
+        pud_t *pudp;
+        pmd_t *pmdp;
+
+        *pgsize = PAGE_SIZE;
+        p4dp = p4d_offset(pgdp, addr);
+        pudp = pud_offset(p4dp, addr);
+        pmdp = pmd_offset(pudp, addr);
+        if ((pte_t *)pmdp == ptep) {
+                *pgsize = PMD_SIZE;
+                return CONT_PMDS;
+        }
+        return CONT_PTES;
+}
+
+find_num_contig() already assumes that the entry is contig huge page and
+it just finds whether it is PMD or PTE based one. This always requires a
+prior PTE_CONT bit being set determination via pte_cont() before calling
+find_num_contig() in each instance.
+
+But num_contig_ptes() can get the same information without walking the
+page table and thus without predetermining if PTE_CONT is set or not.
+size can be derived from VMA argument when present.
+
+static inline int num_contig_ptes(unsigned long size, size_t *pgsize)
+{
+        int contig_ptes = 0;
+
+        *pgsize = size;
+
+        switch (size) {
+#ifndef __PAGETABLE_PMD_FOLDED
+        case PUD_SIZE:
+                if (pud_sect_supported())
+                        contig_ptes = 1;
+                break;
+#endif
+        case PMD_SIZE:
+                contig_ptes = 1;
+                break;
+        case CONT_PMD_SIZE:
+                *pgsize = PMD_SIZE;
+                contig_ptes = CONT_PMDS;
+                break;
+        case CONT_PTE_SIZE:
+                *pgsize = PAGE_SIZE;
+                contig_ptes = CONT_PTES;
+                break;
+        }
+
+        return contig_ptes;
+}
+
+On a side note, why cannot num_contig_ptes() be used all the time and
+find_num_contig() be dropped ? OR am I missing something here.
+
+> 
+> But the PTE_CONT bit is only valid when the pte is present. For
+> non-present pte values (e.g. markers, migration entries), the previous
+> implementation was therefore erroniously determining the size. There is
+> at least one known caller in core-mm, move_huge_pte(), which may call
+> huge_ptep_get_and_clear() for a non-present pte. So we must be robust to
+> this case. Additionally the "regular" ptep_get_and_clear() is robust to
+> being called for non-present ptes so it makes sense to follow the
+> behaviour.
+
+With VMA argument and num_contig_ptes() dependency on PTE_CONT being set
+and the entry being mapped might not be required.
+
+> 
+> Fix this by using the new sz parameter which is now provided to the
+> function. Additionally when clearing each pte in a contig range, don't
+> gather the access and dirty bits if the pte is not present.
+
+Makes sense.
+
+> 
+> An alternative approach that would not require API changes would be to
+> store the PTE_CONT bit in a spare bit in the swap entry pte. But it felt
+> cleaner to follow other APIs' lead and just pass in the size.
+
+Right, changing the arguments in the API will help solve this problem.
+
+> 
+> While we are at it, add some debug warnings in functions that require
+> the pte is present.
+> 
+> As an aside, PTE_CONT is bit 52, which corresponds to bit 40 in the swap
+> entry offset field (layout of non-present pte). Since hugetlb is never
+> swapped to disk, this field will only be populated for markers, which
+> always set this bit to 0 and hwpoison swap entries, which set the offset
+> field to a PFN; So it would only ever be 1 for a 52-bit PVA system where
+> memory in that high half was poisoned (I think!). So in practice, this
+> bit would almost always be zero for non-present ptes and we would only
+> clear the first entry if it was actually a contiguous block. That's
+> probably a less severe symptom than if it was always interpretted as 1
+> and cleared out potentially-present neighboring PTEs.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  arch/arm64/mm/hugetlbpage.c | 54 ++++++++++++++++++++-----------------
+>  1 file changed, 29 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> index 06db4649af91..328eec4bfe55 100644
+> --- a/arch/arm64/mm/hugetlbpage.c
+> +++ b/arch/arm64/mm/hugetlbpage.c
+> @@ -163,24 +163,23 @@ static pte_t get_clear_contig(struct mm_struct *mm,
+>  			     unsigned long pgsize,
+>  			     unsigned long ncontig)
+>  {
+> -	pte_t orig_pte = __ptep_get(ptep);
+> -	unsigned long i;
+> -
+> -	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++) {
+> -		pte_t pte = __ptep_get_and_clear(mm, addr, ptep);
+> -
+> -		/*
+> -		 * If HW_AFDBM is enabled, then the HW could turn on
+> -		 * the dirty or accessed bit for any page in the set,
+> -		 * so check them all.
+> -		 */
+> -		if (pte_dirty(pte))
+> -			orig_pte = pte_mkdirty(orig_pte);
+> -
+> -		if (pte_young(pte))
+> -			orig_pte = pte_mkyoung(orig_pte);
+> +	pte_t pte, tmp_pte;
+> +	bool present;
+> +
+> +	pte = __ptep_get_and_clear(mm, addr, ptep);
+> +	present = pte_present(pte);
+> +	while (--ncontig) {
+
+Although this does the right thing by calling __ptep_get_and_clear() once
+for non-contig huge pages but wondering if cont/non-cont separation should
+be maintained in the caller huge_ptep_get_and_clear(), keeping the current
+logical bifurcation intact.
+
+> +		ptep++;
+> +		addr += pgsize;
+> +		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
+> +		if (present) {
+
+Checking for present entries makes sense here.
+
+> +			if (pte_dirty(tmp_pte))
+> +				pte = pte_mkdirty(pte);
+> +			if (pte_young(tmp_pte))
+> +				pte = pte_mkyoung(pte);
+> +		}
+>  	}
+> -	return orig_pte;
+> +	return pte;
+>  }
+>  
+>  static pte_t get_clear_contig_flush(struct mm_struct *mm,
+> @@ -401,13 +400,8 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+>  {
+>  	int ncontig;
+>  	size_t pgsize;
+> -	pte_t orig_pte = __ptep_get(ptep);
+> -
+> -	if (!pte_cont(orig_pte))
+> -		return __ptep_get_and_clear(mm, addr, ptep);
+> -
+> -	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
+>  
+> +	ncontig = num_contig_ptes(sz, &pgsize);
+
+__ptep_get_and_clear() can still be called here if 'ncontig' is
+returned as 0 indicating a normal non-contig huge page thus
+keeping get_clear_contig() unchanged just to handle contig huge
+pages.
+
+>  	return get_clear_contig(mm, addr, ptep, pgsize, ncontig);
+>  }
+>  
+> @@ -451,6 +445,8 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>  	pgprot_t hugeprot;
+>  	pte_t orig_pte;
+>  
+> +	VM_WARN_ON(!pte_present(pte));
+> +
+>  	if (!pte_cont(pte))
+>  		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+>  
+> @@ -461,6 +457,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>  		return 0;
+>  
+>  	orig_pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
+> +	VM_WARN_ON(!pte_present(orig_pte));
+>  
+>  	/* Make sure we don't lose the dirty or young state */
+>  	if (pte_dirty(orig_pte))
+> @@ -485,7 +482,10 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+>  	size_t pgsize;
+>  	pte_t pte;
+>  
+> -	if (!pte_cont(__ptep_get(ptep))) {
+> +	pte = __ptep_get(ptep);
+> +	VM_WARN_ON(!pte_present(pte));
+> +
+> +	if (!pte_cont(pte)) {
+>  		__ptep_set_wrprotect(mm, addr, ptep);
+>  		return;
+>  	}
+> @@ -509,8 +509,12 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	size_t pgsize;
+>  	int ncontig;
+> +	pte_t pte;
+>  
+> -	if (!pte_cont(__ptep_get(ptep)))
+> +	pte = __ptep_get(ptep);
+> +	VM_WARN_ON(!pte_present(pte));
+> +
+> +	if (!pte_cont(pte))
+>  		return ptep_clear_flush(vma, addr, ptep);
+>  
+>  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
+
+In all the above instances should not num_contig_ptes() be called to determine
+if a given entry is non-contig or contig huge page, thus dropping the need for
+pte_cont() and pte_present() tests as proposed here.
