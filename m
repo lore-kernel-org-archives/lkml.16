@@ -1,153 +1,236 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5264622541C;
-	Thu,  6 Feb 2025 08:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2679A22541C;
+	Thu,  6 Feb 2025 08:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738830426; cv=none; b=YAN1nrxDQ0x5EhsF1jR2GU+aLi5lPa1Oxn+4S2uUGN+hLUi1P/8YnpYqxpiwQd/4T2CgmZYBHOtRVlbY/RSf7tq6sL7tKz3LzOV1TlpkAuVl6L+kTKLtfI6d1ebdTlseMzRLcrYRElpXKJvTwpdBQLW5vC3TIPfgF1MSpuDvoDk=
+	t=1738830431; cv=none; b=aAWXcgJ2/AMKp5AMDJDDRLIfd+WZAooGf1Y9kMWjQLT9Dl/69RWRLBvZLFMF+I8azZ2S3rQxmgXG1BhuExA9Lb69VGPYecHT3z08A0w5+YI2jyRkgYxoodVsR8MJHI8B1L6Tb5s7LvNzYZkkjoAZrq2L8PjzSkzPhcbQeUEL83s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738830426; c=relaxed/simple;
-	bh=CggEDzLVrJ/5LVza6ynbodRY6rSUx2uk81kQJmtuv2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JsuArUEiu8N1JR5vkUmfJwpXOeS27lGNM2AUf0Mxkv9i3gfGh2PZdOwsnQ/hNWF0pR6aCrKbMJykf/pJlvftQ28babxQQ72Lb1LyxRRetWENHZFwvxAU7WRu1GeDJ0mYxqJW3oui8NiG+aSaKnm39pQoGNwebpLCxj+B8Dlir0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-866f2f6ffb8so158423241.2;
-        Thu, 06 Feb 2025 00:27:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738830422; x=1739435222;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ow/L2GzL/jAzXYN2eE61/QWPEdvBuOGmNTlDQL9aSwc=;
-        b=rBwzTBX6i7FQalam3GDY/n9phs9vzjQdiNbPTAwUY15aft6olUGzz+jQNQgrBr9W9r
-         qzidEXLqLi4lyMcj60Ju3r7x6VSWpud9868XiQvOHZVzenNWtO9AqJi0iyyCoEX7vLDL
-         0nY4FzNGEb/OC0+NY++138U/ai/1wp63VhIgsxPCwyjddHXNZpK2LouZk1KtxowjKrmQ
-         m750zo7zzYUJFx28DOIR8DWFx0Njf3hDbUpnWixNQrDyC/y0z0OGC0alQ7rS89/8qJhA
-         PKPDqhVRs1XrS36lZrDs28CW6Htar342vCHi8A+yyWuepS295qwMRNjBE+gEp6iRwlE7
-         6dZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMZrcDumQkhaqM1JVNlsC8rbajHbtDToEtf2Rhp77z05rzItIcFIEdpGUXRS+93RMsAo+ncjxIbdo=@vger.kernel.org, AJvYcCUwLkJil/lw+ErNUz5K4Ht1IXF+dTHCY0+SQGPTy+CjXlKzrVV1aEvMBykl/PyYi1sBeJ9oFH53kCrL@vger.kernel.org, AJvYcCVEwJPK3YW3DOKtV1qzFsPHybAT3Dhva+e5Mdls7//zkh9B6YahuX+D0sk3/jq/Z1lx4xAIb4+WNK/XM6/Q@vger.kernel.org, AJvYcCW4Be5wzQBZLmWslYzolz8falUxVrLarTlTEMcLB5V8IqTWEsN8ozr+PhElqoW2jr7rbsXyadKH6v97twPx4rlrohE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1r+UHzbVJ2T7jDi/eyCGQwe+TDWMTHSBkrGvOuDzSDN79iLP0
-	u870CDEzv6bJzhoFcOGdrEjiOEiglx8gYe6vb7Zf6hOxActPkEHWDB/6eDp0
-X-Gm-Gg: ASbGncvhlTcPcqfFPGO/1XXlnPCG0iF900PJ42WEHuukKuBBSjfPCxU23NPM9eBviD/
-	/Gkj7JUwYWh541iTrL5jcvhfuKRhvYhPjnD/FPtvMCRVaZxXNe4xT0oc/sC5uStBg45/ghkIluC
-	XpJTybSd3TjcHF9aw18hrIw3AgJjHXjo2jBEftg/bMZUX5HWAzElTb/N5S3PyDBhr+xida0kXjX
-	jCv7ngN7sCCTr4BySdr8tQHzvAxvcimJ1dKlQWbtO9H2DPMy0x562RTuw8TISGEvDhfsNpxkM/p
-	u1ybuaiCi4NP9j8tsg9tv02doJQKeiMuA5Q4MW9YK79hbzlEF8jOsiB++g==
-X-Google-Smtp-Source: AGHT+IE+Tq46mXhzIQwHlKaelaP9p/cVp+b8AfbRwFaSDwnS7qL5oU0Auy4oJ9aMZxendPXz1CFsBg==
-X-Received: by 2002:a05:6102:3c92:b0:4af:fca2:1b7 with SMTP id ada2fe7eead31-4ba4791e09fmr3794560137.14.1738830422435;
-        Thu, 06 Feb 2025 00:27:02 -0800 (PST)
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f9636a9asm133155241.4.2025.02.06.00.27.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 00:27:02 -0800 (PST)
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-51eb1a6ca1bso176131e0c.1;
-        Thu, 06 Feb 2025 00:27:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVabSl0glEhPP8LYbZmoyZz7e26uju2d0u2DasM1BxKpLronMLv4VJg7R7uSzD0FWXaVD+ou4lsy4pRdW6FTain8nM=@vger.kernel.org, AJvYcCXDFflgPeIUn8nHks4Ar2WiMgpoiTJSpmeIy2EmPiZnchh5tIP4DEvd9Ox0u2HnWY4KIqLEZtFAvG8=@vger.kernel.org, AJvYcCXJNp18bE7OlILp/Y2Q8yQ69486ewezThaBCZdfp5z7R/b76S2x3rMZG4rTElABFre4V+YYL4OUjPT5Lew2@vger.kernel.org, AJvYcCXXmx0yPUESsDk5G6vFvjkq/AZrqNF2tJYTx2ngmBGUjsHSTHnGatjwJQZmQKukdZ16+0Kvhf6CRYjc@vger.kernel.org
-X-Received: by 2002:a05:6122:438d:b0:518:7ab7:afbb with SMTP id
- 71dfb90a1353d-51f0c51cba6mr3179751e0c.8.1738830421760; Thu, 06 Feb 2025
- 00:27:01 -0800 (PST)
+	s=arc-20240116; t=1738830431; c=relaxed/simple;
+	bh=0qtYGiPYsqYZLBqgJ+4cbTZlqzHvL7ZKnM+o5kglBH4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=foAgxFEx15b9pW8dQQ111qAN6JXVSFDDMWzt9MOMRcIe7ncKGBMnyidpGTe9Ptxsv+agF4iumYibynfLErEx2CGk4DbJn8tLtlRxdIxohvCLptmTh6iGYdosaHQbd6toEDXbxTklIfIwZXwFpw+/+bxqWRjQqbQzJ6RD8F+ZgmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/ecygOy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/ecygOy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7696BC4CEDD;
+	Thu,  6 Feb 2025 08:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738830430;
+	bh=0qtYGiPYsqYZLBqgJ+4cbTZlqzHvL7ZKnM+o5kglBH4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n/ecygOy6uKcaclmbQ12QrdKFZ7C2/0m+gI3kwhl3imre6Lv2sCXRBxobHM0niAfP
+	 TG8qr9FuyEenPumR3fFXnqKp6TG5fW/W3vaC+EXUsJ/9mt5MgyP3Vb8nqh24PPemuV
+	 dziSwQTFj2C1mr+6QmR79/tfzrVUyMK0Nb0NILWqj+wK+IX7wAzxDtQlbwZQF48amT
+	 cZC8HOdc0aCm2AH8P44vaBicHO4wU41uUo6MZmndlfenPuIV0VNMuxHE2ga9UPqF4r
+	 jqm0migL8XEdlIou78rSL1kpUbUaBXfpDP5+OE3d8pkZQFhHcYGghBlHyGKAuEDe/O
+	 01NVyRtseB++A==
+Received: from 82-132-235-183.dab.02.net ([82.132.235.183] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tfxE3-00131o-Fj;
+	Thu, 06 Feb 2025 08:27:07 +0000
+Date: Thu, 06 Feb 2025 08:27:08 +0000
+Message-ID: <87frkrtr4z.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2] KVM: arm64: Remove cyclical dependency in arm_pmuv3.h
+In-Reply-To: <20250206001744.3155465-1-coltonlewis@google.com>
+References: <20250206001744.3155465-1-coltonlewis@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250128145616.2691841-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250128145616.2691841-1-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 6 Feb 2025 09:26:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUQm0Mk3C7YC+kquXP6qR3-uEYbvhzfJJfL2EZeDosz7g@mail.gmail.com>
-X-Gm-Features: AWEUYZlVQ4f3o3IWlTN_KbdaT7BiYfwBQECNt_v-P5YDGTwkJCgpWNDjcVHsolE
-Message-ID: <CAMuHMdUQm0Mk3C7YC+kquXP6qR3-uEYbvhzfJJfL2EZeDosz7g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r9a08g045: Add OPP table
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.235.183
+X-SA-Exim-Rcpt-To: coltonlewis@google.com, kvm@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Claudiu,
+Colton,
 
-CC Energy Model
+On Thu, 06 Feb 2025 00:17:44 +0000,
+Colton Lewis <coltonlewis@google.com> wrote:
+> 
+> asm/kvm_host.h includes asm/arm_pmu.h which includes perf/arm_pmuv3.h
+> which includes asm/arm_pmuv3.h which includes asm/kvm_host.h This
+> causes confusing compilation problems why trying to use anything
+> defined in any of the headers in any other headers. Header guards is
+> the only reason this cycle didn't create tons of redefinition
+> warnings.
+> 
+> The motivating example was figuring out it was impossible to use the
+> hypercall macros kvm_call_hyp* from kvm_host.h in arm_pmuv3.h. The
+> compiler will insist they aren't defined even though kvm_host.h is
+> included. Many other examples are lurking which could confuse
+> developers in the future.
 
-On Tue, 28 Jan 2025 at 15:56, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Add OPP table for the Renesas RZ/G3S SoC.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Well, that's because contrary to what you have asserted in v1, not all
+include files are legitimate to use willy-nilly. You have no business
+directly using asm/kvm_host.h, and linux/kvm_host.h is what you need.
 
-Thanks for your patch!
+> 
+> Break the cycle by taking asm/kvm_host.h out of asm/arm_pmuv3.h
+> because asm/kvm_host.h is huge and we only need a few functions from
+> it. Move the required declarations to a new header asm/kvm_pmu.h.
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+> 
+> Possibly spinning more definitions out of asm/kvm_host.h would be a
+> good idea, but I'm not interested in getting bogged down in which
+> functions ideally belong where. This is sufficient to break the
 
-> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> @@ -28,6 +28,33 @@ audio_clk2: audio2-clk {
->                 clock-frequency = <0>;
->         };
->
-> +       cluster0_opp: opp-table-0 {
-> +               compatible = "operating-points-v2";
-> +               opp-shared;
+Tough luck. I'm not interested in half baked solutions, and "what
+belongs where" *is* the problem that needs solving.
+
+> cyclical dependency and get rid of the compilation issues. Though I
+> mention the one example I found, many other similar problems could
+> confuse developers in the future.
+> 
+> v2:
+> * Make a new header instead of moving kvm functions into the
+>   dedicated pmuv3 header
+> 
+> v1:
+> https://lore.kernel.org/kvm/20250204195708.1703531-1-coltonlewis@google.com/
+> 
+>  arch/arm64/include/asm/arm_pmuv3.h |  3 +--
+>  arch/arm64/include/asm/kvm_host.h  | 14 --------------
+>  arch/arm64/include/asm/kvm_pmu.h   | 26 ++++++++++++++++++++++++++
+>  include/kvm/arm_pmu.h              |  1 -
+>  4 files changed, 27 insertions(+), 17 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/kvm_pmu.h
+> 
+> diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
+> index 8a777dec8d88..54dd27a7a19f 100644
+> --- a/arch/arm64/include/asm/arm_pmuv3.h
+> +++ b/arch/arm64/include/asm/arm_pmuv3.h
+> @@ -6,9 +6,8 @@
+>  #ifndef __ASM_PMUV3_H
+>  #define __ASM_PMUV3_H
+> 
+> -#include <asm/kvm_host.h>
+> -
+>  #include <asm/cpufeature.h>
+> +#include <asm/kvm_pmu.h>
+>  #include <asm/sysreg.h>
+> 
+>  #define RETURN_READ_PMEVCNTRN(n) \
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 7cfa024de4e3..6d4a2e7ab310 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -1385,25 +1385,11 @@ void kvm_arch_vcpu_ctxflush_fp(struct kvm_vcpu *vcpu);
+>  void kvm_arch_vcpu_ctxsync_fp(struct kvm_vcpu *vcpu);
+>  void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu);
+> 
+> -static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
+> -{
+> -	return (!has_vhe() && attr->exclude_host);
+> -}
+> -
+>  #ifdef CONFIG_KVM
+> -void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr);
+> -void kvm_clr_pmu_events(u64 clr);
+> -bool kvm_set_pmuserenr(u64 val);
+>  void kvm_enable_trbe(void);
+>  void kvm_disable_trbe(void);
+>  void kvm_tracing_set_el1_configuration(u64 trfcr_while_in_guest);
+>  #else
+> -static inline void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr) {}
+> -static inline void kvm_clr_pmu_events(u64 clr) {}
+> -static inline bool kvm_set_pmuserenr(u64 val)
+> -{
+> -	return false;
+> -}
+>  static inline void kvm_enable_trbe(void) {}
+>  static inline void kvm_disable_trbe(void) {}
+>  static inline void kvm_tracing_set_el1_configuration(u64 trfcr_while_in_guest) {}
+> diff --git a/arch/arm64/include/asm/kvm_pmu.h b/arch/arm64/include/asm/kvm_pmu.h
+> new file mode 100644
+> index 000000000000..3a8f737504d2
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kvm_pmu.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
 > +
-> +               opp-137500000 {
-> +                       opp-hz = /bits/ 64 <137500000>;
-> +                       opp-microvolt = <940000>;
-> +                       clock-latency-ns = <300000>;
-> +               };
-> +               opp-275000000 {
-> +                       opp-hz = /bits/ 64 <275000000>;
-> +                       opp-microvolt = <940000>;
-> +                       clock-latency-ns = <300000>;
-> +               };
-> +               opp-550000000 {
-> +                       opp-hz = /bits/ 64 <550000000>;
-> +                       opp-microvolt = <940000>;
-> +                       clock-latency-ns = <300000>;
-> +               };
-> +               opp-1100000000 {
-> +                       opp-hz = /bits/ 64 <1100000000>;
-> +                       opp-microvolt = <940000>;
-> +                       clock-latency-ns = <300000>;
-> +                       opp-suspend;
-> +               };
-
-So all voltages are the same.  This means the Energy Model (if enabled)
-will always pick the operating point with the highest clock rate, just
-like on R-Car E3 and RZ/G2E.  Apparently that can be fixed by using
-"opp-microwatt" instead, but I am still waiting for feedback about
-some practical points[1] (yes, the Ebisu-4D is still on my desk for
-this reason, and thus unavailable for remote access).
-
-Thanks!
-
-> +       };
+> +#ifndef __KVM_PMU_H
+> +#define __KVM_PMU_H
 > +
->         cpus {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> @@ -40,6 +67,7 @@ cpu0: cpu@0 {
->                         next-level-cache = <&L3_CA55>;
->                         enable-method = "psci";
->                         clocks = <&cpg CPG_CORE R9A08G045_CLK_I>;
-> +                       operating-points-v2 = <&cluster0_opp>;
->                 };
+> +void kvm_vcpu_pmu_resync_el0(void);
+> +
+> +#ifdef CONFIG_KVM
+> +void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr);
+> +void kvm_clr_pmu_events(u64 clr);
+> +bool kvm_set_pmuserenr(u64 val);
+> +#else
+> +static inline void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr) {}
+> +static inline void kvm_clr_pmu_events(u64 clr) {}
+> +static inline bool kvm_set_pmuserenr(u64 val)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+> +static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
+> +{
+> +	return (!has_vhe() && attr->exclude_host);
+> +}
+> +
+> +#endif
+
+How does this solve your problem of using the HYP-calling macros?
+
+> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+> index 147bd3ee4f7b..2c78b1b1a9bb 100644
+> --- a/include/kvm/arm_pmu.h
+> +++ b/include/kvm/arm_pmu.h
+> @@ -74,7 +74,6 @@ int kvm_arm_pmu_v3_enable(struct kvm_vcpu *vcpu);
+>  struct kvm_pmu_events *kvm_get_pmu_events(void);
+>  void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu);
+>  void kvm_vcpu_pmu_restore_host(struct kvm_vcpu *vcpu);
+> -void kvm_vcpu_pmu_resync_el0(void);
+> 
+>  #define kvm_vcpu_has_pmu(vcpu)					\
+>  	(vcpu_has_feature(vcpu, KVM_ARM_VCPU_PMU_V3))
 >
->                 L3_CA55: cache-controller-0 {
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
 
-[1] https://lore.kernel.org/linux-renesas-soc/cover.1728377971.git.geert+renesas@glider.be
+I'm absolutely not keen on *two* PMU-related include files. They both
+describe internal APIs, and don't see a good reasoning for this
+arbitrary split other than "it works better for me and I don't want to
+do more than strictly necessary".
 
-Gr{oetje,eeting}s,
+For example, include/kvm was only introduced to be able to share files
+between architectures, and with 32bit KVM/arm being long dead, this
+serves no purpose anymore. Moving these things out of the way would be
+a good start and would provide a better base for further change.
 
-                        Geert
+So please present a rationale on what needs to go where and why based
+on their usage pattern rather than personal convenience, and then
+we'll look at a possible patch. But not the other way around.
+
+Thanks,
+
+	M.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Without deviation from the norm, progress is not possible.
