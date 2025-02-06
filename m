@@ -1,216 +1,222 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E1F22DF99
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E866522F174;
+	Thu,  6 Feb 2025 11:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839975; cv=none; b=GntZIPLhdiMoLs8FHJb7/tZ4d6WuMi0lT/Zyl30AWvakjeNiqbks+Zu6EWZ3Dd9axmeH2sVb6b7TI/la/Rqhlj7BUHGYTDqpAtP7dPiu5FTsVerQxPLRq4wy2bY9qjU2uDU9rtnjNFTR9kQTHT/LdJNb58UyX6Cw4N5zeP5o36Y=
+	t=1738839978; cv=none; b=Rp6QA8mbEcLVg1Dezo/MbFEXXG2IHkn/dbZp5BGtf5eCGmn3tdxNVeZ5hsAevLvcZrMY+2Qs1I8HbsQHoMF3MUDu+ETIW3RKxpEmXt4TSBwemAnSlt293imwRPgj4sjfW2lrzLxv4LIKszkn4wDaS+7LerV144cXQNm59O7Oi68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839975; c=relaxed/simple;
-	bh=uSTA4hN/FvLzpYyGHIJeFJQdyDYFG6AA9fA4OzHjNUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amIq1LZnNlm/OUO4JKdaoLJDbUBWGlwhHjouZDUN6rHWtYRkNYm+e/vUmEbT5JPNTySbCiWaibbfQvIqpAnxufzFaV7/S0J8b4SBP3kRMUPZ1E80e+8yPUQb4NqCp9Y74bYS4nN46JBxlQrBq69O3W72VKCSFLRiT1yM6kAAtBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dDKHOZlW; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dDKHOZlW"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab6f636d821so145453566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:06:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738839971; x=1739444771; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mXE47cCWyK4lBa3ePxOl4Tt4nUECCOpvFmKs5qWQUGE=;
-        b=dDKHOZlWs0MRD4cnIqPct58ikZBfEQNe/4gqQ8eKQDNd/mnV3aXMDX5UtWzdyH1gmj
-         55h63014ib5rYUNtAEmiY8awhsEQPIazNm1KufZpJmLILV/HYtmBTpnNmxybSjtveAo7
-         IpXBMwIAQKhHD3Wgp/uWVE58/NaaS4FcheTvsaT0IbeeperJDa4DyzM82cevYZoGaudK
-         PXcKgJImpVsMsO9DGREmQ0Srw74TtUbwJaDT57O1ygUaJ1TlZm/q73Ce6XN3z56aX8vk
-         w0UQH51aBDzEi5mj81HabwgCEhEQFfJTKQEUwhUXhpk1wcUiPLnfMtv6m8+7HDAW8hgH
-         8b4A==
+	s=arc-20240116; t=1738839978; c=relaxed/simple;
+	bh=olLcX7TZ87eKML1mxWhKNcr/zAKRgSsVekl7MomH2Qs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HTCbIU3S6H1WdOA7sR/5MNrYlUa3TBbrB8IhAJqW897/2Z9MZAuIpNkyL/dJf/eyaX9IV9iThuWzdMPb93otXnhYT2ItdFBY8BgagdesVbymoM1kB7UfQTtZs9Xo7e3pavci5E0z/zCppPRwN5FsVJzn1mjx9DYRmJZPUXP9V7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso143759466b.1;
+        Thu, 06 Feb 2025 03:06:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738839971; x=1739444771;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXE47cCWyK4lBa3ePxOl4Tt4nUECCOpvFmKs5qWQUGE=;
-        b=NM9GD40uHNizPbttw6OrgCugX3IFp25SWNqOqqdEtwc8AZcPABgFhAkTj+Rr4p9SSs
-         Ho5C32a6NuFr5hDvc3GsP6Isa1/Hg+YfhqNThWyE7XXqtirmNKM7ntdMqMjC7l7aF9d6
-         AIRb401w5o3BNVANksHqpkJuifHa0ATx8kPgLyvLQ2mkeJ+2s4bQ63tFhnBaIQcKH9sS
-         5+t5COq5ZlNQeqge75cnBxWoy4jbbrQLbSnQZf/S4kP0lZnkoYRJATUa4L1aVom0gHNN
-         EQr1DH97qcWdScBh9ZQ2683w2M3vi4ug2kh+vZPUpchZLzsjUHbKgprAb+eETjC+tIHN
-         taeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWh8x6x7vhTQEB9Cuqdtot3aCzIDi8n5Ov9KSRWSXc3Hgy81WzNTpJfPY8VzbipoTvGiUlhNHaSKVVUhp4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBD3RwEXk5TIrYFe6GM11oWMyYNuXF4VMb/nj0p0RiGZYMkqmF
-	kT/xAZuCZe4cpofD/Z4zRUg6MFj6COpDCDBbcD8mAbN1VluTdSAf18d+jmOHxXA=
-X-Gm-Gg: ASbGnctNGWPziJ9DsP53K90+kjOExqGiBWu4FJG4Bm71WIDxas4cGpv2m9sAzjXL/5C
-	OUMfl8WDd41TTiGxpjYbL0H5JROIvDe/SgHQ4dkqhY4YgirDDiUigwa5a3gPffkquMVD51vl012
-	8ZFlyPNMp5xODMJfWxrK87ghAo1Fs8oSmMZsJe0dnDu+aVoLlGJS8xgbzxCBX+a9HKXqFARiR4H
-	ct4b/RCLxibWzf4aBzAjUPgtAw9b6Qb+2tZLHlSS2HNEcxOnJ3HOAXlJU1RHVJgQ0MfyVkD3S6S
-	xnj0DoPuDQLC0aptaA==
-X-Google-Smtp-Source: AGHT+IHhw5tungS1WCfZTr9LIjTXHvl2yvbkxn0pkpTScc4ZbgAQ2fJW6rcViTk9NZQWzIkYKE9Ysw==
-X-Received: by 2002:a17:907:9728:b0:aa6:7933:8b26 with SMTP id a640c23a62f3a-ab75e213013mr687209966b.9.1738839970699;
-        Thu, 06 Feb 2025 03:06:10 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e7139sm82774866b.102.2025.02.06.03.06.10
+        d=1e100.net; s=20230601; t=1738839975; x=1739444775;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=922Jb88ShsF9zojgqCt8nRBp87kqrei03/FNLDK7/cg=;
+        b=NsDWQQZ1jpDtDvVJ4fHn3RvRYuTit94vH1pPno9aegeEGjRnrCzFQ1EizojZa/aGyq
+         Mq4OoS+W4MXfO2M45FbsFqbZR73TNQ+UPpdupelyMXc6pQZUrDQC2v8uabPQ4kGgLNvA
+         BZXRPa9fZOWfBgvmwPdVE2ZtxLjhyDv1orCCEwT9Z5AGPPnqjeXIFZj2VpWAnXZpaWVv
+         zSTJSmrkFl+Ktivgps+h3+y4oSeaBM/WfPdg7bOZkN2i0FgHOA9L5oICwN+T+6nqwWul
+         lfegwa+xPcmkFQZjx7hbMbiSRVGT0Pl3PuncX0Jd8rOz0butrREttz4VhPqJ0yWtjT2w
+         gN2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUiQ7V2m2SyUO0+jUOcWGfBlH5jyxbnC+9g/e37nAYnQjmI5TDVK/InL7NxLsQ1AI+c0EeMZU/MkiU=@vger.kernel.org, AJvYcCW5pmX2+UPQm3Iye3wAtr+soATvCuO3NfTt+1kxJp7c0yaUoVRW59KCtq8l7RfdB8HEHtW2sf4NNGejbgzYwuxv@vger.kernel.org, AJvYcCWFia55KpNSs6MmIW7DLWNRZzI867Li1xMVI3yUy1HqfNVcqw62wt8wUziY7nv1zzY49Bo+GMzBJ4SSbO6l@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjObA/zgog6mKkPcNSvbWK04+kSuJsyBHLTq0gOCawGn+qY1wu
+	7+yKHlWQuGc8ln1oJhCrPdABE3r/3q06D5z8cITcb/eeSde8NcD+
+X-Gm-Gg: ASbGncsRmVq5/0AP60Mv4TrUGJn4JVwIk3z6L676JY1w7YeYkhAXTqVt45V/B/C6oSa
+	OXQqEUW7ZFnL9DKK2XiG+RzfE0LdB0suI1z5/lM4VgAA+wgRqqE+ku37CT1ooemlASaHr6CcRLA
+	3f+DDbzvPdWBKF7GPksBQq6mhtn2LHCbLx1Q+cT6vcsANjwf0UDibOZaXXxsiiLAhW16rWQusO9
+	gR7XCmFLf5sxP2wdXJYq41cAy8HFXLO/Z86pkkM+DDbT9pAJpmHSlwHTV95YKovg4rJlhuZ1JRi
+	GziZLqk=
+X-Google-Smtp-Source: AGHT+IGaOLyDWXs3isW8mPzjr6+u3htmzKnxq7KaPaQzcrNY8/tWhK/7aukZ9QcsmSza8UIalg0Pzg==
+X-Received: by 2002:a17:907:3da7:b0:ab3:47cc:a7dc with SMTP id a640c23a62f3a-ab75e2467a4mr473420866b.22.1738839974855;
+        Thu, 06 Feb 2025 03:06:14 -0800 (PST)
+Received: from localhost ([2a03:2880:30ff:71::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b739e2sm681568a12.14.2025.02.06.03.06.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 03:06:10 -0800 (PST)
-Date: Thu, 6 Feb 2025 12:06:08 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <Z6SXoLnUw6D0xEqh@pathway.suse.cz>
-References: <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
- <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
- <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
- <84ed0c1401.fsf@jogness.linutronix.de>
- <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
- <841pwc11ae.fsf@jogness.linutronix.de>
- <84y0ykyqf6.fsf@jogness.linutronix.de>
- <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
+        Thu, 06 Feb 2025 03:06:14 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 06 Feb 2025 03:05:57 -0800
+Subject: [PATCH net-next v5 6/8] netconsole: add support for sysdata and
+ CPU population
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-netcon_cpu-v5-6-859b23cc3826@debian.org>
+References: <20250206-netcon_cpu-v5-0-859b23cc3826@debian.org>
+In-Reply-To: <20250206-netcon_cpu-v5-0-859b23cc3826@debian.org>
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ rdunlap@infradead.org, Breno Leitao <leitao@debian.org>, 
+ kernel-team@meta.com
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4633; i=leitao@debian.org;
+ h=from:subject:message-id; bh=olLcX7TZ87eKML1mxWhKNcr/zAKRgSsVekl7MomH2Qs=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnpJeaoPh0XqVo6dmiv+D53ntcP9S/lWj6AsTNI
+ NeyPQWL7iOJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6SXmgAKCRA1o5Of/Hh3
+ bVnuD/oDIPREbP6z4qEwICvlcekZXZksYvvamSH9siqOQzzyRe546G5o+ozC0d/ZO3JmMP2FfAW
+ R35PjCvn/BANLupgJMkWx7BCy9qzhX4C/VauvxzcMnpNQIhVDuGz7vi3xGHWa4nti+LDLBu6Vef
+ J3brK58mwkN7Esm2BuPBgpIPo8E55lith66if1MlqhAq+Orhu620cpOdxuKZOrq0RjJlIJMSNH0
+ fekjQdDPx9AOlPaafG1P/KFIxwWVCZ2gBxbGynK8e7EPdVx+x1er3p1g0hq9ndwAal1JZpL1EHm
+ 8JuySEBZyVx9s+rfHTHjGhDvQHWJr1gjXKmNhHN4iCYkePtyBGVW/fPiK8fCEiiMfcyn0JHZNpC
+ 8f7U1KjnBQp5TwIZFsllHsOTCXrQj24nltv4Np5m1AS1bFYKVEPbwjHuLxx4Xj37rHyGHjfzanR
+ t/nnLqvaOPPyt5+JDKBQTp42um6U1YGGzzYLdVzOnWy5jTfp2xheLgLsfydK8pmMouTakmMTLdV
+ lThkkLJTqKVGfEqWZPdNxu8u1cJY/WIlzpdRNZM2pvaKSjRzpdBUOYkt+8BeAbqFjY6zYLlzrXg
+ tXzBdQJyiNbdNqVOvYJ6i9rm+mx7HxQbeOLis11pJQi1/Wbu52JKxMZOatS9SlMK+Td55QoUTvA
+ h7Scz99TKnVzyTQ==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Wed 2025-02-05 15:50:14, Paul E. McKenney wrote:
-> On Wed, Feb 05, 2025 at 11:37:25PM +0106, John Ogness wrote:
-> > On 2025-02-05, John Ogness <john.ogness@linutronix.de> wrote:
-> > >> OK, so I don't need to add "if (IS_ENABLED(CONFIG_PREEMPT_RT))" to guard
-> > >> it, then?
-> > >
-> > > For !CONFIG_PREEMPT_RT, if there are legacy consoles registered,
-> > > pr_flush() will additionally perform a blocking lock on the
-> > > console_lock.
-> > 
-> > Sorry, I was just thinking about the flushing component of
-> > pr_flush(). Later in the function it takes the console_lock even for
-> > CONFIG_PREEMPT_RT. So please do _not_ have a guard.
+Add infrastructure to automatically append kernel-generated data (sysdata)
+to netconsole messages. As the first use case, implement CPU number
+population, which adds the CPU that sent the message.
 
-It should be possible to avoid this console_lock() when only NBCON
-consoles are registered. We take it in pr_flush() for reading con->seq
-and potential race with register_console(). But it can be handled
-another way, for example, by restarting the cycle when non-NBCON
-console suddenly appears.
+This change introduces three distinct data types:
+- extradata: The complete set of appended data (sysdata + userdata)
+- userdata: User-provided key-value pairs from userspace
+- sysdata: Kernel-populated data (e.g. cpu=XX)
 
-But it might be done later. We do not have NBCON consoles at the
-moment so the console_lock() is needed anyway.
+The implementation adds a new configfs attribute 'cpu_nr' to control CPU
+number population per target. When enabled, each message is tagged with
+its originating CPU. The sysdata is dynamically updated at message time
+and appended after any existing userdata.
 
-> > pr_flush() should never hang on the console_lock during shutdown, but if
-> > does, that is something that will need to be debugged and fixed.
-> > 
-> > @pmladek: Looking forward to reading your input on this.
+The CPU number is formatted as "cpu=XX" and is added to the extradata
+buffer, respecting the existing size limits.
 
-My only concern is that kernel_power_off() is called in many
-code paths so it is not easy to review all scenarios.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+ drivers/net/netconsole.c | 53 +++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 10 deletions(-)
 
-But I haven't found any code path where it would be an obvious problem.
-Especially, it seems that it is _not_ called in panic situations.
+diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+index 50739c7dbfb6ad5b1a65ef33325cf4dd6ed02031..f77eddf221850fe2778cd479e49c91ad695aba3c 100644
+--- a/drivers/net/netconsole.c
++++ b/drivers/net/netconsole.c
+@@ -1117,6 +1117,40 @@ static void populate_configfs_item(struct netconsole_target *nt,
+ 	init_target_config_group(nt, target_name);
+ }
+ 
++/*
++ * prepare_extradata - append sysdata at extradata_complete in runtime
++ * @nt: target to send message to
++ */
++static int prepare_extradata(struct netconsole_target *nt)
++{
++	int sysdata_len, extradata_len;
++
++	/* userdata was appended when configfs write helper was called
++	 * by update_userdata().
++	 */
++	extradata_len = nt->userdata_length;
++
++	if (!(nt->sysdata_fields & CPU_NR))
++		goto out;
++
++	/* Append cpu=%d at extradata_complete after userdata str */
++	sysdata_len = scnprintf(&nt->extradata_complete[nt->userdata_length],
++				MAX_EXTRADATA_ENTRY_LEN, " cpu=%u\n",
++				raw_smp_processor_id());
++
++	extradata_len += sysdata_len;
++
++	WARN_ON_ONCE(extradata_len >
++		     MAX_EXTRADATA_ENTRY_LEN * MAX_EXTRADATA_ITEMS);
++
++out:
++	return extradata_len;
++}
++#else /* CONFIG_NETCONSOLE_DYNAMIC not set */
++static int prepare_extradata(struct netconsole_target *nt)
++{
++	return 0;
++}
+ #endif	/* CONFIG_NETCONSOLE_DYNAMIC */
+ 
+ /* Handle network interface device notifications */
+@@ -1251,16 +1285,14 @@ static void append_release(char *buf)
+ 
+ static void send_fragmented_body(struct netconsole_target *nt,
+ 				 const char *msgbody, int header_len,
+-				 int msgbody_len)
++				 int msgbody_len, int extradata_len)
+ {
+ 	int sent_extradata, preceding_bytes;
+ 	const char *extradata = NULL;
+ 	int body_len, offset = 0;
+-	int extradata_len = 0;
+ 
+ #ifdef CONFIG_NETCONSOLE_DYNAMIC
+ 	extradata = nt->extradata_complete;
+-	extradata_len = nt->userdata_length;
+ #endif
+ 
+ 	/* body_len represents the number of bytes that will be sent. This is
+@@ -1341,7 +1373,8 @@ static void send_fragmented_body(struct netconsole_target *nt,
+ static void send_msg_fragmented(struct netconsole_target *nt,
+ 				const char *msg,
+ 				int msg_len,
+-				int release_len)
++				int release_len,
++				int extradata_len)
+ {
+ 	int header_len, msgbody_len;
+ 	const char *msgbody;
+@@ -1369,7 +1402,8 @@ static void send_msg_fragmented(struct netconsole_target *nt,
+ 	/* for now on, the header will be persisted, and the msgbody
+ 	 * will be replaced
+ 	 */
+-	send_fragmented_body(nt, msgbody, header_len, msgbody_len);
++	send_fragmented_body(nt, msgbody, header_len, msgbody_len,
++			     extradata_len);
+ }
+ 
+ /**
+@@ -1385,12 +1419,10 @@ static void send_msg_fragmented(struct netconsole_target *nt,
+ static void send_ext_msg_udp(struct netconsole_target *nt, const char *msg,
+ 			     int msg_len)
+ {
+-	int extradata_len = 0;
+ 	int release_len = 0;
++	int extradata_len;
+ 
+-#ifdef CONFIG_NETCONSOLE_DYNAMIC
+-	extradata_len = nt->userdata_length;
+-#endif
++	extradata_len = prepare_extradata(nt);
+ 
+ 	if (nt->release)
+ 		release_len = strlen(init_utsname()->release) + 1;
+@@ -1398,7 +1430,8 @@ static void send_ext_msg_udp(struct netconsole_target *nt, const char *msg,
+ 	if (msg_len + release_len + extradata_len <= MAX_PRINT_CHUNK)
+ 		return send_msg_no_fragmentation(nt, msg, msg_len, release_len);
+ 
+-	return send_msg_fragmented(nt, msg, msg_len, release_len);
++	return send_msg_fragmented(nt, msg, msg_len, release_len,
++				   extradata_len);
+ }
+ 
+ static void write_ext_msg(struct console *con, const char *msg,
 
-Also kernel_power_off() calls syscore_shutdown() which takes
-syscore_ops_lock mutex. So that is must be called only in
-a schedulable context even before this patch.
+-- 
+2.43.5
 
-Summary: I do not see any obvious problem in the end.
-	 Except, for some small details, see below.
-
-> Here is an updated commit, hopefully applying your feedback correctly.
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit 35679c18b062368855e183ee6712ca5c16145d8c
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Wed Feb 5 12:27:23 2025 -0800
-> 
->     printk: Flush console log from kernel_power_off()
->     
->     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
->     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
->     Therefore, make pr_flush() public and invoke it after then last print
->     in kernel_power_off().
->     
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
->  extern bool nbcon_device_try_acquire(struct console *con);
->  extern void nbcon_device_release(struct console *con);
->  void nbcon_atomic_flush_unsafe(void);
-> +bool pr_flush(int timeout_ms, bool reset_on_progress);
->  #else
->  static inline __printf(1, 0)
->  int vprintk(const char *s, va_list args)
-> @@ -315,6 +316,11 @@ static inline void nbcon_atomic_flush_unsafe(void)
->  {
->  }
->  
-> +static bool pr_flush(int timeout_ms, bool reset_on_progress)
-
-There is missing "inline":
-
-static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
-
-
-Otherwise, I get
-
-In file included from ./include/asm-generic/bug.h:22,
-                 from ./arch/x86/include/asm/bug.h:99,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/page-flags.h:10,
-                 from kernel/bounds.c:10:
-./include/linux/printk.h:319:13: warning: ‘pr_flush’ defined but not used [-Wunused-function]
-
-> +{
-> +	return true;
-> +}
-> +
->  #endif
->  
->  bool this_cpu_in_panic(void);
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -704,6 +704,7 @@ void kernel_power_off(void)
->  	migrate_to_reboot_cpu();
->  	syscore_shutdown();
->  	pr_emerg("Power down\n");
-> +	pr_flush(1000, 1);
-
-This should be pr_flush(1000, true) as suggested by Sebastian.
-
->  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
->  	machine_power_off();
->  }
-
-With the two changes:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Paul, I assume that you will pass this via the RCU tree together with
-the other changes. Or would you prefer to route this particular
-change via printk tree? Both ways are fine to me.
-
-Best Regards,
-Petr
