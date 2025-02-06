@@ -1,51 +1,39 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D1B237705
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 23:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9EF2417E2;
+	Thu,  6 Feb 2025 23:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738884226; cv=none; b=JwXNYXnBOlQftmyl0weWjLrnZd6VUZ279STe8vDrRTB0G7hdCVL5Rfyszm26bRyzymaxv0DW0wjiRYXSQ5ZTd6GSiNyeZRDegs4taTDrsfYkguWjQS/OUzK0V+3S4rVmfbtSXMKyTve03lRdl0EoOQe5lzVQzESWsCE6rl+W0kE=
+	t=1738884485; cv=none; b=lgmje8HQ3n8b74kSUo/K6VKBJRQ5/236TZsimZYe29A0E1gDpR4eAT/fRe7atN8fI+qKbb9UkSJ8dzbPpLdobrZqjBRFIQYW7TQnE57qJroyrns8UyxnMydNy0Xm1Ngin5mgYMdjP/eqGzkikUxGySHpVx6TXwqK5mPtB+F0v8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738884226; c=relaxed/simple;
-	bh=V2hDQVZfXi10myODsQHJDr1PrZbrGGSvhhbd4aHROEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OMJbadq3Cpsmx1Uo2X1p9Zb96sFWCIfuNlQbApAq9vnYuIgksFVa02r/UOiN4XTq3N72Wetn0H/KNBuTZWeIBMKnRC/Pa/5HCWDSTIDsPcuA8JXhiOd4RTGB9RDSRikKiPo+Pw2Y/ebmOdCewTj4tes7lvFzmK5BAB/hicp3Di0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=oUlCs0qD; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738884485; c=relaxed/simple;
+	bh=QlOTyoQRutUhDbYeblAFtLa22VXCRSrxf7eaRid7ykc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oxlSnyDD8ioYnb2PL3XRvn89qjtm/7Bddoi84tzSlv17BNA4EOVzLtFWWLZ2DMdoWg2/QuJp926ksoxnsqmwgWcmHmyQ1Yb8/qHWUiI9mXFb8SWzkF2c6isN27SvKT7YFfv1pCtqLpnKNVURkkvwrGvvyQAkwUO86xCJKz+ZFBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=GhBU9aw8; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oUlCs0qD"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id g08rtjExRXshwgBDjtRJMd; Thu, 06 Feb 2025 23:23:44 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id gBDitaicLs5XHgBDitHRyt; Thu, 06 Feb 2025 23:23:42 +0000
-X-Authority-Analysis: v=2.4 cv=avG0CzZV c=1 sm=1 tr=0 ts=67a5447e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
- a=KZ9MsSxUvLdQbKA6SOoA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mfsvnhoslxgxndnAvhSW95+TCDLQ1GuITfG+HDlgT28=; b=oUlCs0qDbMdKAYj2+6uqMqJRrx
-	MsZZvofjojXYWNPk8Z9owrj4Z14wf5sSw7Qkb7NTbyTQkcGkiIJB7o/f8MoSaoJcPVRUkF4qf0ayz
-	EFlEHL9GgxMa+g6NQQlRFlEcgv771zEKpm1Ec3LerlutSiy3FhhR0SNtxY5TlMB4aJUwrcNBZqH5S
-	XM/unbiol57DAa9ErB4zxTiA8rBEV+WvffsFtnrg11k1GbHmrTGVMvKeoXSyEYv0EHrp+NOQnimQH
-	FTXrnEi42x9+5lxm6g52j5Dhf9S5R6jFnXxmfqiq2e67gDhZLU099ELKkF/TdUs1rErgH0lQ8bUso
-	z3eaR1GA==;
-Received: from [45.124.203.140] (port=54722 helo=[192.168.0.152])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tgBDg-0025YQ-2y;
-	Thu, 06 Feb 2025 17:23:41 -0600
-Message-ID: <7c396d56-a2ea-4cb5-8a10-a2b78cebfaeb@embeddedor.com>
-Date: Fri, 7 Feb 2025 09:53:30 +1030
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="GhBU9aw8"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 7D3F54459F;
+	Thu,  6 Feb 2025 23:27:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1738884478; bh=QlOTyoQRutUhDbYeblAFtLa22VXCRSrxf7eaRid7ykc=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=GhBU9aw8TGPLHWJwo9N0ckjDZgW1uwyuWtksqgpUtCx8KQNNOsZejU9RC9RabqwyN
+	 ETkVWPzO698bkB6blKlA2VidgfiBi5QfGYrYx1j3cjFbvy5lP7O47IC3m/szYHWsH2
+	 7EzcLroSI+bVqFwk+hJWCZdBnyi8sCa51pAnU6D/957oyXyI9G5ujq3SoAnCwP6inr
+	 2BImm1PmeSWvnM8sJolcqzYd9woCsW1IbKosJ06rIJjCvfqYeFbiEv+0teZANlnuQE
+	 H3ZS8Vc5V4K/AijhK0HIrsXR1fSE7UGEdhbOHCeeLz1ahX80pFD+U4I9o0RGCYu8Ys
+	 8FtbzunZ3tjiA==
+Message-ID: <ecd655ca-61e7-4ef1-81ad-606c9ce95df4@marcan.st>
+Date: Fri, 7 Feb 2025 08:27:54 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,55 +41,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] tty: tty_buffer: Avoid hundreds of
- -Wflex-array-member-not-at-end warnings
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z6QvAZxiQusdaDkH@kspp>
- <2025020633-irritate-boogieman-4c35@gregkh>
+Subject: Re: [PATCH RESEND 0/9] Add Apple A7-A11, T2 SoC cpufreq nodes
+To: Nick Chan <towinchenmi@gmail.com>, Sven Peter <sven@svenpeter.dev>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, soc@lists.linux.dev,
+ Arnd Bergmann <arnd@arndb.de>
+References: <20250203124747.41541-1-towinchenmi@gmail.com>
+From: Hector Martin <marcan@marcan.st>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2025020633-irritate-boogieman-4c35@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20250203124747.41541-1-towinchenmi@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1tgBDg-0025YQ-2y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54722
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJLOVolIAMxpNl2tGqm+YeKVlCiFpWnWpxXwPjRlUK2qExiOxZEb67qJsL9sTkZJ8hsZHGppfsCKHbLpzMDVLvr0W18hdtKMM5I/KqA3kLk0dhTKySmq
- RU0efIMG2D5dNOpUdrC9gSCU1Q8YZvpXwALxOfm4xdG+tQtHl1bzR28iPkGaWJWnI0erSPFyT4H6cPtSKUMK76Xlo5SGQUaiiqNA77ejc94+/EUMNb+e2Hhm
 
+Hey Nick,
 
->>   	unsigned int used;
->>   	unsigned int size;
->>   	unsigned int commit;
->> -	unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
->> +	unsigned int lookahead; /* Lazy update on recv, can become less than "read" */
+I'm not sure if we're still waiting for DT reviews for these, but either
+way, please send DT and drivers/soc/apple changes to soc@lists.linux.dev
+going forward (or perhaps they should go through ARM64?), as I am no
+longer a maintainer for Apple DTs/SoC stuff myself. [1]
+
+[1]
+https://lore.kernel.org/asahi/CAEg-Je_SSTiiq5R9hce-7j5W02GaQqNUj=bFH+FwgjjxWugFqQ@mail.gmail.com/T/#t
+
+On 2025/02/03 21:43, Nick Chan wrote:
+> This series adds performance-controller and operating-points-v2 cpufreq
+> nodes for Apple A7-A11, T2 SoCs.
 > 
-> Coding style change?
+> Dependencies:
+> 
+> - arm64: dts: apple: Split s8000/s8003 SoC DTS files
+> https://lore.kernel.org/asahi/20250203113949.14760-1-towinchenmi@gmail.com/T
+> 
+> - Device Tree for Apple T2 (T8012) SoC devices
+> https://lore.kernel.org/asahi/20250203114417.16453-1-towinchenmi@gmail.com/T
+> 
+> Note, this will have conflicts with Apple A7-A11, T2 PMGR nodes [1] due to
+> both of the series adding things to the same part of the .dts files, they are
+> unrelated, so keep both of additions.
+> 
+> 1: https://lore.kernel.org/asahi/20250203121831.36053-1-towinchenmi@gmail.com/T
+> 
+> Nick Chan
+> 
+> ---
+> Nick Chan (9):
+>   arm64: dts: apple: s5l8960x: Add cpufreq nodes
+>   arm64: dts: apple: t7000: Add cpufreq nodes
+>   arm64: dts: apple: t7001: Add cpufreq nodes
+>   arm64: dts: apple: Add cpufreq nodes for S8000/S8003
+>   arm64: dts: apple: s8001: Add cpufreq nodes
+>   arm64: dts: apple: t8010: Add cpufreq nodes
+>   arm64: dts: apple: t8011: Add cpufreq nodes
+>   arm64: dts: apple: t8012: Add cpufreq nodes
+>   arm64: dts: apple: t8015: Add cpufreq nodes
+> 
+>  arch/arm64/boot/dts/apple/s5l8960x-5s.dtsi    |   1 +
+>  arch/arm64/boot/dts/apple/s5l8960x-air1.dtsi  |   1 +
+>  arch/arm64/boot/dts/apple/s5l8960x-mini2.dtsi |   1 +
+>  arch/arm64/boot/dts/apple/s5l8960x-opp.dtsi   |  45 +++++++
+>  arch/arm64/boot/dts/apple/s5l8960x.dtsi       |  10 ++
+>  arch/arm64/boot/dts/apple/s5l8965x-opp.dtsi   |  45 +++++++
+>  arch/arm64/boot/dts/apple/s800-0-3.dtsi       |  10 ++
+>  arch/arm64/boot/dts/apple/s8000.dtsi          |  53 +++++++-
+>  arch/arm64/boot/dts/apple/s8001.dtsi          |  59 +++++++++
+>  arch/arm64/boot/dts/apple/s8003.dtsi          |  53 +++++++-
+>  arch/arm64/boot/dts/apple/t7000-6.dtsi        |   4 +
+>  arch/arm64/boot/dts/apple/t7000-j42d.dts      |   4 +
+>  arch/arm64/boot/dts/apple/t7000-mini4.dtsi    |   4 +
+>  arch/arm64/boot/dts/apple/t7000.dtsi          |  46 +++++++
+>  arch/arm64/boot/dts/apple/t7001.dtsi          |  52 ++++++++
+>  arch/arm64/boot/dts/apple/t8010-7.dtsi        |   8 ++
+>  arch/arm64/boot/dts/apple/t8010-ipad6.dtsi    |   8 ++
+>  arch/arm64/boot/dts/apple/t8010.dtsi          |  86 ++++++++++++
+>  arch/arm64/boot/dts/apple/t8011.dtsi          |  79 +++++++++++
+>  arch/arm64/boot/dts/apple/t8012.dtsi          |  83 ++++++++++++
+>  arch/arm64/boot/dts/apple/t8015.dtsi          | 123 ++++++++++++++++++
+>  21 files changed, 773 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/apple/s5l8960x-opp.dtsi
+>  create mode 100644 arch/arm64/boot/dts/apple/s5l8965x-opp.dtsi
+> 
+> 
+> base-commit: a14d9039c2aea103eeedc5602ebab731ef3eb73e
 
-(Whaa? for some reason your response didn't reach my inbox until today)
-
-It seems I got a bit too proactive.
-
-What do you think about the rest of the patch?
-
-Thanks!
--Gustavo
+- Hector
 
