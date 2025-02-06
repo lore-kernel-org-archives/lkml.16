@@ -1,230 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08611624ED
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861170; cv=fail; b=PPEudt8GdjDMaRW1aoEEmOyBcUDLirZtxICCpLg1yGMk96Eb3f6t7963rmvpY2fPe3v7PZLPlmPHXSGVO3Wa9A6Io78tL0RFDrgcrvieGVAIoZmNPgMDo8oe4S+Lh0KZ07wqTHHQozHOKn25dowI4BPhkZiBX1L9JIp4VY9AxNE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861170; c=relaxed/simple;
-	bh=zBGAgPmn+VcJeylcMx45UdYrTyoVRF28IeOM7tr0BCE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mio5t7WX5Kyn9MrtC9/qB+xzoVvMjNyES56HgaBa3V92uYI8BChc4x1L5ZaYDz3uWYiNoCZCvwfZGsA+/7Fsjy4FYDdF8REwUvm0mtbcIG+DDEa4vBp1hulM50xTyjRwniLwZ5oYenmJDcs9f9y4A1mjF95iBpXSYCOdc1WSdOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K2Jtr6v5; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59882235363
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738861240; cv=none; b=fsBLtIIivdZ0QMiTJUkQh94KPQXD5G9pyb2YH/dR0/o/g1r5c79YeNP5Rx5P4P90PqShcQebya0feZFqprUpr/vKHUO+JMpjQOovwdRMo6zkmYz1uPwrQrD90b17H4HAWEJo3tSHIqddQJavlDlawBkqRyqC+SaksOp9cenR3fg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738861240; c=relaxed/simple;
+	bh=jtdzR9MANlBGwZOBviVAF91lKt4s45NqbVwQoGqaRGk=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UqNhoi75YtYAbmtGuRtq70IaERXDH1HbtG9awUIQ8UxtlMjif7aLe7l1p9NrAcLnTlm3Xc6Pl+ohpPi1oV9wH4dGFpQCHKmpdFqQJO3XS1/ASCEJ/3RBnhuYQXLHMLhl1O8UvusP/1IYUTY/t/F9G5wuN/jncBQUpWHtxh2i3cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E+gYUPez; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K2Jtr6v5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738861168; x=1770397168;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=zBGAgPmn+VcJeylcMx45UdYrTyoVRF28IeOM7tr0BCE=;
-  b=K2Jtr6v5envHJ8wHM98ogJ0LCKJ+d62gj3GgfUzH4TXaVwJucf4GzBJ/
-   Wr0k55kqPBogNQ4EC86rr44HRw/w9iTVtJCBpc/xLcPyJCmGhpzD1Wn7C
-   piWtjEcHoRX3kR4jdTQ6NxBO7i7929wRSWUMVc2+cV9piXzM75xtAwEE6
-   G5NGjx7CLX9jrD9yUNvbEbmI1Ge5xRzItgtIZQhTgGeEynzG98nwLkt+T
-   3qJARDf/ZafkhfCWl87DIzcaalgSDjrlTLpV4RPj7YVixcQwGZ6uZgDCg
-   LDXhnO89cr4N/pg6ZIKRp8RaVZUiWJuwyA8VdguI8mzGYrQ4dNn5Q2LJa
-   Q==;
-X-CSE-ConnectionGUID: VytUA/M7RXytrGmz8dRcuA==
-X-CSE-MsgGUID: JMeCnmNwTNWnNqMzQrRRag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39348674"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39348674"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:59:26 -0800
-X-CSE-ConnectionGUID: XJfF8rg7S9iDkwUdIMkcVg==
-X-CSE-MsgGUID: qs+FPc1GS4SWTZYHoqtLFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115354596"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Feb 2025 08:59:14 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 6 Feb 2025 08:59:13 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 6 Feb 2025 08:59:13 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 6 Feb 2025 08:59:10 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BNqbxjnpDpDKTVgHIg1Fqel1E3coMdmcj8zrVSzqH8aJnhusYDetzV5yMv4MlSJBGvHrT5OSNr5RnvM3m8LecPyhbSFXItSN8t+s36AGrYdZ+YEdjtIMyh5KaApsjAzQnHPagRoB/aOH52pwLdcAyZlcOV4raVuth5I4Vh4+wQdqQvxU7iwViAPq2h2g0FCeRr1Mmc7+GzSEM1blFgbCN+qQq9xKWSlyeYqe52ecgZEm47qmwGVnjTWVgC55nbWRf8UprM0Hu3RZWA4O+LYZ8xSe04lC+0cCWHy33tEz0cgZUjAJ1gAA5fvHH9xst24svd0N2iQwqfghmO7Hyezctg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kgqI/Jdik9C81NiOo7VkcsVW+QjgTqd7YPv/rWGUZNc=;
- b=dQaCg4uJgQTTzHsV5NPCjV8xJvxP3tnI3dOKXVRsCjz3byI7k6sosjRglIRbx9yloXxoWAk2tSSXdbj/gVo66Rx365SUGNlvjbjJAcVClS5jGAz1eB44jh4iAgqIZLacv3QROwcx4ft/zQwjJGgL76iS3/Lhl792CSsldazZq+CQY5t3VZB69JQSGDCE7Qvymp1f5ewH7mwoBTNXtfSRkSpA2VaTfuY7du8xtxii4aNwb/OgAews+pFNuffhBmnZqhP6L7tQVFE2qNpbqLLI6Ept4oHxX8dp1JqJrLN6kxaUTc0ZsapzlOdb20rG4L91Sn5RgVSVk1AlLlYOWoOsNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by DS0PR11MB6496.namprd11.prod.outlook.com (2603:10b6:8:c0::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Thu, 6 Feb
- 2025 16:58:41 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.8398.021; Thu, 6 Feb 2025
- 16:58:41 +0000
-Date: Thu, 6 Feb 2025 10:58:38 -0600
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
-CC: <thomas.hellstrom@linux.intel.com>, <rodrigo.vivi@intel.com>,
-	<airlied@gmail.com>, <simona@ffwll.ch>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/xe: Fix uninitialized pointer read in
- xe_vm_bind_kernel_bo
-Message-ID: <guahdobdjkqgkxiqmcabakdgtjsqhry7lfbfvd4yghbgqg66ps@u53z7leyikry>
-References: <20250206134706.60200-1-dheeraj.linuxdev@gmail.com>
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250206134706.60200-1-dheeraj.linuxdev@gmail.com>
-X-ClientProxiedBy: MW3PR05CA0004.namprd05.prod.outlook.com
- (2603:10b6:303:2b::9) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+gYUPez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738861237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fvCsKA8QVBw7QDnLdDBiIBvBpRR72PuKjO1Bp/VHQQo=;
+	b=E+gYUPeznO6cXnCkOv4MH9s2xZHl5Ndf8OgQDcHhh03xN3BbZWqDpqqNJsBPz7URNtsncE
+	yrVvH1wmJH7nogBcTEr3b5H47kYH+rGSbMWMXc7zEioNZNwqU1yNL/drTzW3InWr3/xUsN
+	FPI5ytXDAnR7/sp47dduFkI9LplYQTQ=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-246-iyGZr13cOIC4TTovAtLCjg-1; Thu, 06 Feb 2025 12:00:34 -0500
+X-MC-Unique: iyGZr13cOIC4TTovAtLCjg-1
+X-Mimecast-MFC-AGG-ID: iyGZr13cOIC4TTovAtLCjg
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-467b19b5641so22543981cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:00:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738861234; x=1739466034;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvCsKA8QVBw7QDnLdDBiIBvBpRR72PuKjO1Bp/VHQQo=;
+        b=WwN3rrZVx3Vz6GEfm7EuXtUpbX6nPVfGDYLjLWArrcZOhRoKvqVDuJw1AtaX1UcMim
+         wH7LMxh0CVHS39DAR6P3WNX8XJnY4JMVN8xvyfHxHu0/Kf9VxTYug4qfMye2V6TvfyO/
+         3PBhhCyd64T++nEYPrSkEVs+6oqUHZUtTKdnIEL2y4QDIpbqM6OvUt7PKbzd0ZiyGwM5
+         XnlgyAbemb3ecwzFJoXtnu1ox3Zi1nfFd8xa2O4kueaxEnzVketTqc+Ih8fL/8Qyv7+j
+         RFG/wG7wNctqiXWNsdbyXhLg2gByDQMFcg9xjvrr+c6yBUcXNePWzkma39YMcKjuwaMH
+         mEAw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8bunIGWGZBfuQ3d9dDENt63bJRRKQwuOdJfc2PTGOJhlaPDSi7hVOpeTDyiVj3SKSlV6vPdFtEIqjPYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNG3VofbCCG9LRIoNgjDLTnH4QCR4Gaqq292Etpy03GEfg8DIr
+	zo/d5fNN7Fi0BxYbAeNZFHybRgjB4wwrB23HzWr0Z353iyeqg5zpe/9GqljDubap1Ym4rdy9bp6
+	2XP2wyynyAVPIN07pCXoc6mshm7MGG6ZWh5GpnoAxVdFgNM31hUrXB4K3GozP1A==
+X-Gm-Gg: ASbGncu0SM5Jkybw73TQ/Clulm/2KbMtGgZMoQDz8fcl/OzS3eQmDDL2LSbTjPg4Lcn
+	UNtJiG+2uDLWY4MmR9YxoZhD7ZxG1dI6qGdjX/UOc9Pn2ZnRg1UVLa9TuHrZTlGP18ucLQOehlz
+	pErO1Q3rhG79803ESKEbvK6s4te4dk2cWFIzFiXrnNb9A2kR8/c4XNqnZV1xfgeA8OA7CLQcdEk
+	i3nU8EsmBKmrshzifQFQramS6cAMsLuErGvuelaU3PeVqVmlahZ0AuxsQqR2P2cWONoowVvei8t
+	KyQNoorC0vS/JSk83RCGQvEk8dsTXXdsIqGyFmV1cYphSu94
+X-Received: by 2002:ac8:7f50:0:b0:46c:870f:f625 with SMTP id d75a77b69052e-470281e9ff9mr107129071cf.29.1738861234164;
+        Thu, 06 Feb 2025 09:00:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEJHBVjFDA+2ZbDy5yUMfUknNB5yZftD3UlCDEvW8Q8Ah3Fd0uW6pON2he89Imb/0rgCrJ++Q==
+X-Received: by 2002:ac8:7f50:0:b0:46c:870f:f625 with SMTP id d75a77b69052e-470281e9ff9mr107128541cf.29.1738861233762;
+        Thu, 06 Feb 2025 09:00:33 -0800 (PST)
+Received: from ?IPV6:2601:188:c100:5710:627d:9ff:fe85:9ade? ([2601:188:c100:5710:627d:9ff:fe85:9ade])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492a90bcsm7026631cf.31.2025.02.06.09.00.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 09:00:33 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <2ed01b76-0a8d-48ec-a366-40bca78de93e@redhat.com>
+Date: Thu, 6 Feb 2025 12:00:31 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|DS0PR11MB6496:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1d19452-8aec-4248-5139-08dd46cf8224
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Kw4pNIxhqzJJHeaKW+pOt4YXV1xZEkYwtA6jmBMM2t7QXnIRu2qZ1fVG39Lv?=
- =?us-ascii?Q?QV1Uq4XyQtdIg+Bx8G1mdkJYMbMLstbMd9VdHfhx6vda/skhlWy/eT2kG8mU?=
- =?us-ascii?Q?7wptSWtl436mBi5s788fuOaHB8F7XTD8e+lRgnqSEiBD9IZeVRtP3Sf5kHQn?=
- =?us-ascii?Q?/1reKCzbtklaJCiWw2N5NOoIww/dXkOIP2KKmmc2HV9C3VoX90kH9N/cVJTN?=
- =?us-ascii?Q?v1ShZDS3nnqnm4Rsb1FV42m1Qz5CwhNtIYu5V9eTtAnr2H63OZhpf8sVqI6w?=
- =?us-ascii?Q?iM3dMIliTPCk/T+v5NnvSvnDhejMvBiNY0OPqUmporgGGYapt+5yTxMq4Zf7?=
- =?us-ascii?Q?lR1EBBHR3bDwtYRgM3IyUZ5dPEQJwJ57BORtaemEiiZvuqXZa+CGTrhNXBD5?=
- =?us-ascii?Q?ej0W29qGon2kBgciNdRGC5apOrxRLu2rFa6Ig2VvIEJWDAtyeI2Jbr8Yrnm/?=
- =?us-ascii?Q?kAIG3LiZHfGvTPeU+mLuZgfszbjMs7ZDO3joIy24xOncXwpqnlitVKjrHI3c?=
- =?us-ascii?Q?zGmp+lxnBfDU9OaRpeBwiaHwUmW/2E3coUJJz7fXT/Ke8Cj/UjLiK/KIe1P7?=
- =?us-ascii?Q?Ix+757zawAJ1pOhkhKmNFb3dwzGVonxQk5AnNVqpwc5uGa+Xhdd/ST9Fww6I?=
- =?us-ascii?Q?UOB1WSboydup5XWx8j2KNAxWCeHsJGmyiU6oQaYJ9LGBWvzdiDPhhe+96AnJ?=
- =?us-ascii?Q?iwbT0NTk8+1Qf6pkSSYvYs2yJHx5kivAF/UU/cw9eW1qVkWd4Q17XC4BVw+e?=
- =?us-ascii?Q?Dd36sF0F1NUAQ/xj50eEcmydXHR0RBNtZirH/E1/6npxIsg/Shpe18Z/HITY?=
- =?us-ascii?Q?bhYqG8zZL/bgM/L858ILMe5KbV+8rjlGquvuySyq+pGNXHvGfsLAuloQTwFQ?=
- =?us-ascii?Q?3BqR7W2fZ7glMcXSE7ogHCVP2tBrQjdZUe95rAjCBV0LzfgUgEtZnmbv1CDw?=
- =?us-ascii?Q?KiAUzFmVeBfettX1kCnxvDCy1I/tRkW3avSv/o5Bs4pvmuAT6nLL6UYz5gWH?=
- =?us-ascii?Q?aaoLhpFLYlbd1hTOBrSpYM0Y4QXrMK1qi3aO4I0ofGKVUxUY/bfd84rq+kRX?=
- =?us-ascii?Q?aUty6XM3eifXjQKqGylSST6/4TiY0MFLXYfAP6kqnV26cYvVEHJeznmgNoXh?=
- =?us-ascii?Q?9LHvLgDuINluv9DFJIDyRYuBQ22iKsxpgoaeLNPe3Knv1/F1mEFQ8nWrvJnx?=
- =?us-ascii?Q?k7gXo4QPG/V5bubwNixasuQhrS2WjgUl/cpyfw5ypKKXIg/wolAENl8StGkU?=
- =?us-ascii?Q?Iqw+0gkDUiRLpbKiaG/QjFdMUgn1avJwbnNX9jPZ5P4C4QeIhc7OsvPJhxba?=
- =?us-ascii?Q?lOy5xXpgOOYEYvuMiijm26SqYmdZ4JCEl6ijzWeOV962wY0J0ZH4P5JAAteq?=
- =?us-ascii?Q?M1w2fhGns4JNH4+LMiFcAQLHLRP9?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2Mv59rcIvcoO02/2HUJ8YJ21NebfKj8WfxvDzdYrH0yz5A+/RuwyF63sGBB/?=
- =?us-ascii?Q?O/03OGn1uAKIbZa30Jnkz2/K22tMKzG9sTUqJfW0ewOZKVMhJ2IINDA/E1hm?=
- =?us-ascii?Q?PJq7Yc8BVI16mxCMisD3njBb0QINzIlu3cqs71hFFGFGaIPe6HWVBmpeXwGV?=
- =?us-ascii?Q?MIhSiiWAdJXjgran9Ic3ekQSxyT4fSRFYHU7PkFhTl5uhsDVsKg+FdIWRtBC?=
- =?us-ascii?Q?2yz/RT1/rJULszv+lGzcE/uLrUvHsXowefotfM1iRhp75GkvA8Pa5CWBYjeR?=
- =?us-ascii?Q?sluLlnxqbPBTeIb0IHO4S3YU2anyty5ih7ihzpHKBtkXc1aAsX4cAHRFwI8+?=
- =?us-ascii?Q?DstTadTO6cXw+I0JjGr7VB80dYG/3WE6lSLBsSsecgiSwwwl3j35gv7pane2?=
- =?us-ascii?Q?lZGyEGZ75gVEohPo589vavMM9xSTmP0M91N+1poPZuxFMyCw3LYKxgfA9fDm?=
- =?us-ascii?Q?+OXBT2Ne0tDjNbJhnalFT7GP15D666GB0BwdOUVgoPkjjHODcRStytupUncU?=
- =?us-ascii?Q?ZJxbCT0/xFyHj5vP5CVn8U1GRwJo7IyXOfXWY5LqohQbG6yz3uEzMXGKzRIn?=
- =?us-ascii?Q?BJiDhTYmF9Q2Y99sRn20JaMVp6FZ4LApr/A4TuTgudJmVshnVYen4AxJjxfg?=
- =?us-ascii?Q?xVFUNhERDftVLr0k8qhCeGV4SUC5b0EiVwT+riKI9vXJSc5ZIXVJl6j3q8R9?=
- =?us-ascii?Q?q7FTELYx9KOSb4AbxXcJ2IaJP5PVso4roHw8//zyrtxxoFl7eI0Hm89oy+a3?=
- =?us-ascii?Q?RRmWS+HZhowhN80jY8sz/gid9UWJHp9gt9wmAx5p3VKMpl/If0l6QYDqzZnI?=
- =?us-ascii?Q?ziwcMTaPeF0I5I4V6BJCBtEjgi9XTmaNwi0L4AXZSLxhmDyIiMIkdwDPu3jb?=
- =?us-ascii?Q?oq2XwYHDG+Z67/ZmkwzfO2xfp2bIqUYOfq+DVuq5hvVIM/VZ/Nm2rbTGfXnk?=
- =?us-ascii?Q?esRhg2xwmBGKj+vdStDa2d0g3U2LrxbkgmEtHVx8ye/mKH4awGp1V8Mioz+Q?=
- =?us-ascii?Q?2wVIwpOV5W21WFyYdlIkfnMJt+yAI+ZLNbuK8Mn7dFxL6OfAbL+YrcZhyQcg?=
- =?us-ascii?Q?dztoRuZz1fFiq+hZ+jrdLysz1FIHasD9qFWwY5QzFWlrplJxkTkzsLy3/302?=
- =?us-ascii?Q?P0x0QL6wAsB7fyekTxtxHEIzliHWndtXU3+D2G18s+gvh8KLRrMEICE6zz9g?=
- =?us-ascii?Q?6bKtFWKww/T6jBD/tD097KC4C2Z896zujUn9zBz1jxf/w794yFt3030ybEYD?=
- =?us-ascii?Q?xGhb0jqofkqrnrMrVu1ZiiR6YTi+y3G0YW64LIlZPLYUbcEeBJceMSD84X6H?=
- =?us-ascii?Q?ezepkuMKUQrxiPtC3IenI/PuFSI3D2IqscAKDDYSWcqSQfVZ0Q6sewQZ2pJv?=
- =?us-ascii?Q?PySyW1ITOK4s7o1YSAzighgIdq6ROHfb5XHpe8FLN4XI+QAwAQc0Sm1yjDej?=
- =?us-ascii?Q?BVladicOJk+dhb4jZq5kRm+a6v6ACenSS0DpAkWOYisHE2nCfYAJVgBod9K3?=
- =?us-ascii?Q?zO0Wbg1Kg+jo8KB1sEvfDQfjtFR1lDTNDW5wfsM187sjSsmHvZbkVQEKd00c?=
- =?us-ascii?Q?PRVflbTI+gGFwIro8ezGB52Elma80o4ETqYmBNmFIe+yt9KQzbEYnmH3Adjh?=
- =?us-ascii?Q?Qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1d19452-8aec-4248-5139-08dd46cf8224
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:58:41.4013
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: njJ7wMOuTv/b5HlJUGVni/RLYEvfOpM+hXN8x5Im7ah1uaQwsYm1TKsbEaOsv8eh0hwn2IJmDlb2OgRc/KO0O+rTlTIN2POOEjXgmenNxZM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6496
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] x86/nmi: Add an emergency handler in nmi_desc & use it
+ in nmi_shootdown_cpus()
+To: Thomas Gleixner <tglx@linutronix.de>, Waiman Long <llong@redhat.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Rik van Riel <riel@surriel.com>
+References: <20241219150653.349177-1-longman@redhat.com> <87a5b0oihc.ffs@tglx>
+ <cf3a8f45-683e-4fbc-bee7-cfae73d9061c@redhat.com> <871pwbnj8k.ffs@tglx>
+Content-Language: en-US
+In-Reply-To: <871pwbnj8k.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 07:17:06PM +0530, Dheeraj Reddy Jonnalagadda wrote:
->xe_vm_bind_kernel_bo() declares the variable fence without initializing
->it. If an error occurs before fence is assigned a valid value, the
->function may return an uninitialized pointer.
+On 2/6/25 11:14 AM, Thomas Gleixner wrote:
+> On Wed, Feb 05 2025 at 21:46, Waiman Long wrote:
+>> On 2/5/25 4:20 AM, Thomas Gleixner wrote:
+>>>> +int set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler)
+>>>> +{
+>>>> +	struct nmi_desc *desc = nmi_to_desc(type);
+>>>> +	nmi_handler_t orig = NULL;
+>>>> +
+>>>> +	if (!handler) {
+>>>> +		orig = READ_ONCE(desc->emerg_handler);
+>>>> +		WARN_ON_ONCE(!orig);
+>>>> +	}
+>>>> +
+>>>> +	if (try_cmpxchg(&desc->emerg_handler, &orig, handler))
+>>>> +		return 0;
+>>> What's the point of this cmpxchg()? What's the concurrency problem this
+>>> tries to address?
+>> It is because I am not sure if there can only be one instance of
+>> nmi_shootdown_cpus() at any time. If there can't be more than one
+>> instance, I can remove the atomic instruction.
+> There are two ways to get there:
 >
->Specifically, this can happen if:
+>    1) crash(), which installs a handler
 >
->- vm_bind_ioctl_ops_create() fails, leading to release_vm_lock error
->  path
-
-are you actually seeing an error or does this come from (static) analysis?
-
-we are only on the error handling path when err is set to something.
-Using your example:
-
-	ops = vm_bind_ioctl_ops_create(vm, bo, 0, addr, bo->size,    
-				       DRM_XE_VM_BIND_OP_MAP, 0, 0,  
-				       vm->xe->pat.idx[cache_lvl]);  
-	if (IS_ERR(ops)) {                                           
-		err = PTR_ERR(ops);                                  
-		goto release_vm_lock;
-	}
-
-all the other `goto ...`  before `fence = ...` assign err, too.
-On the the error handling we do:
-
-	if (err)
-		fence = ERR_PTR(err);
-
-So I'm not seeing the bug mentioned.
-
-Lucas De Marchi
-
+>    2) emergency_reboot(), which sets the handler to NULL
 >
->Initialize fence to NULL at declaration.
->
->Fixes: dcdd6b84d9ac ("drm/xe/pxp: Allocate PXP execution resources")
->Signed-off-by: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
->---
-> drivers/gpu/drm/xe/xe_vm.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/gpu/drm/xe/xe_vm.c b/drivers/gpu/drm/xe/xe_vm.c
->index d664f2e418b2..b6ca53ede904 100644
->--- a/drivers/gpu/drm/xe/xe_vm.c
->+++ b/drivers/gpu/drm/xe/xe_vm.c
->@@ -3184,7 +3184,7 @@ struct dma_fence *xe_vm_bind_kernel_bo(struct xe_vm *vm, struct xe_bo *bo,
-> {
-> 	struct xe_vma_ops vops;
-> 	struct drm_gpuva_ops *ops = NULL;
->-	struct dma_fence *fence;
->+	struct dma_fence *fence = NULL;
-> 	int err;
->
-> 	xe_bo_get(bo);
->-- 
->2.34.1
->
+> If they interfere, then the callback is the least of your
+> worries. That's already broken today in so many other ways.
+
+OK, I will remove the atomic instruction in the next version. Thanks for 
+the explanation.
+
+Cheers,
+Longman
+
