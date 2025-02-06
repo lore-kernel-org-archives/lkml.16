@@ -1,116 +1,170 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58801514EE;
-	Thu,  6 Feb 2025 08:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8F771514EE;
+	Thu,  6 Feb 2025 08:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829988; cv=none; b=f1g3ZGncBWhGVOf8f68gBc0dIO/W1kZKs/8E72MQb2GyyQoBkCNf35tORlIyj+p8/+KtjEV8FaDhKWx38L9T0MVvWKZ1Ca1y5D9HJdrAFHIFK+e1tE0Qr2MCTdbIpdK+Vl6soMD8/xfbZYKlZiS/tsQ3znqM0tf75jGrZk8wjs0=
+	t=1738829997; cv=none; b=VhgIQnk7D+9ycjhheyMQ68S4nHup8qnIqTSTOOkFP27gWF3AqSjkB41vwrwOZm4Jx6t6jzStMajdr+C+e5FPFj1Bc7bBgocVTrOi9pqaMvDlZgtgrmCKPP99qbSKcdqxc3CEjZ3MCdfNJzNnXfywG2GDu+GyUsXU5pzpOpwaNvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829988; c=relaxed/simple;
-	bh=UjhJAx5LANpkIPy610Vv1aSkTacicPmELW+A2J/coHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A5o1onbaw5vaUgcMX3RVYMmBpgdhsSp/dnJK0tM6iP30T3zZAnvFbFjxTBE9jjFtLBpiAKtTK0rKunDmQH1zK8UdDmsLNPw7t+clmEm5ECAr/+gg/PLvcej8gPmN6Ubp/PlYmZZpnKQDvrbdgnSrkbr4NMTIQ+DHuFnxMDpm93s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e+cuqC3e; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738829997; c=relaxed/simple;
+	bh=L2gRW3mtn0VGLqNQM3n3c5dJ/52SMjaCVKCH6Z4OBLY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sLfaR0qmAmhVn5FhxLkCR71FBg+mBzhgy667102ZTeU7iZRzHWRe8hSfmw4Y92gCEX88AKQ5HjpwVeoftskk/OcjLcrxZIkOZ3rQ+pQCdAieEKoeQg39KAxILPQ3Jo/qXDS+z1bKA8KU77PiFGLS3PB7TGCTNQpc6jweLmuGqxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SpY9qOH9; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e+cuqC3e"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cekbhiScKH6qHE8Ivy8vR6tcjSV4jV1i0jovRwNgyJQ=; b=e+cuqC3e3AJEx4xjkAfRb62MdU
-	MpH7zT8EdbvQQBznPGmz+N8pvQrTwLKJ7pxqS1S31JmazuYTijpiRgC/5nhf0X+7gIzAboo/Y47Ya
-	ZmIMXrhyRi5xkOdFcMMgY1gFyr/ukVDym8kUk7GeF4AMkSEX6nGAcJm9Ms/wEvS1IngDlztBjt9Or
-	KoRxvBd9zP/yHyyEOlVQG9uiFtfA76l8rZljtB/YfXED5ZmX/fwBGrp5OuBqm9fZVdK6LDCQV2u7Z
-	aw0hgWAzB6Wl0e3xtjJdedvT1yJpLnOw4HBG605ljzaRWnQ6K8CgyX1gKwwQp5zxnEtyKPrvkPzSK
-	/blkU8LA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfx6u-0000000GsP7-05Lm;
-	Thu, 06 Feb 2025 08:19:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 04BC930031C; Thu,  6 Feb 2025 09:19:43 +0100 (CET)
-Date: Thu, 6 Feb 2025 09:19:42 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250206081942.GJ7145@noisy.programming.kicks-ass.net>
-References: <20250206080952.98478-1-gmonaco@redhat.com>
- <20250206080952.98478-4-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SpY9qOH9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=IJBf8XNwOo6fri2pdrpCdLIWZKkprwxpUeN1DLP/Kbc=;
+	b=SpY9qOH9VUpshaAYhfV2V0uRz45uoJl0VptqXXBb2HiV1y6HosohbNPC3i68r7
+	7Kd759O8vW2IPVPjbB+U9MFEYofayMvN6N4ty9vsG0FGySViaDB7YsXiXI19kFzP
+	vXb/ge//rdGM5kPayH1uE0o3hZjcSIwYkTv3jgWQgw/M4=
+Received: from hello.company.local (unknown [111.205.82.7])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDnN+R6cKRnk1MLNA--.58315S2;
+	Thu, 06 Feb 2025 16:19:08 +0800 (CST)
+From: Liang Jie <buaajxlj@163.com>
+To: buaajxlj@163.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	kuniyu@amazon.com,
+	liangjie@lixiang.com,
+	linux-kernel@vger.kernel.org,
+	mhal@rbox.co,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com
+Subject: Re: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets autobind identifier length
+Date: Thu,  6 Feb 2025 16:19:05 +0800
+Message-Id: <20250206081905.83029-1-buaajxlj@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250206054451.4070941-1-buaajxlj@163.com>
+References: <20250206054451.4070941-1-buaajxlj@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206080952.98478-4-gmonaco@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgDnN+R6cKRnk1MLNA--.58315S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF1kWw1fCr4fWFW5ZFykAFb_yoWrZr1DpF
+	Z5K34DZrZ8Jr47Wr4xta18Crs3ta1rJ34UCrWxW3WF9F42grW8GF1kKF4jg34DGrWxtw1a
+	qF4UK3ZruFyDA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUx-BtUUUUU=
+X-CM-SenderInfo: pexdtyx0omqiywtou0bp/1tbiNgTrIGekZbKgOQAAs0
 
-On Thu, Feb 06, 2025 at 09:09:39AM +0100, Gabriele Monaco wrote:
+Hi Kuniyuki,
 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 9632e3318e0d6..af9fa18035c71 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -226,12 +226,14 @@ struct user_event_mm;
->  #define __set_current_state(state_value)				\
->  	do {								\
->  		debug_normal_state_change((state_value));		\
-> +		trace_set_current_state(state_value);			\
->  		WRITE_ONCE(current->__state, (state_value));		\
->  	} while (0)
->  
->  #define set_current_state(state_value)					\
->  	do {								\
->  		debug_normal_state_change((state_value));		\
-> +		trace_set_current_state(state_value);			\
->  		smp_store_mb(current->__state, (state_value));		\
->  	} while (0)
->  
-> @@ -247,6 +249,7 @@ struct user_event_mm;
->  									\
->  		raw_spin_lock_irqsave(&current->pi_lock, flags);	\
->  		debug_special_state_change((state_value));		\
-> +		trace_set_current_state(state_value);			\
->  		WRITE_ONCE(current->__state, (state_value));		\
->  		raw_spin_unlock_irqrestore(&current->pi_lock, flags);	\
->  	} while (0)
-> @@ -282,6 +285,7 @@ struct user_event_mm;
->  		raw_spin_lock(&current->pi_lock);			\
->  		current->saved_state = current->__state;		\
->  		debug_rtlock_wait_set_state();				\
-> +		trace_set_current_state(TASK_RTLOCK_WAIT);		\
->  		WRITE_ONCE(current->__state, TASK_RTLOCK_WAIT);		\
->  		raw_spin_unlock(&current->pi_lock);			\
->  	} while (0);
-> @@ -291,6 +295,7 @@ struct user_event_mm;
->  		lockdep_assert_irqs_disabled();				\
->  		raw_spin_lock(&current->pi_lock);			\
->  		debug_rtlock_wait_restore_state();			\
-> +		trace_set_current_state(TASK_RUNNING);			\
->  		WRITE_ONCE(current->__state, current->saved_state);	\
->  		current->saved_state = TASK_RUNNING;			\
->  		raw_spin_unlock(&current->pi_lock);			\
+The logs from 'netdev/build_allmodconfig_warn' is as follows:
+  ../net/unix/af_unix.c: In function ‘unix_autobind’:
+  ../net/unix/af_unix.c:1222:52: warning: ‘snprintf’ output truncated before the last format character [-Wformat-truncation=]
+   1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
+        |                                                    ^
+  ../net/unix/af_unix.c:1222:9: note: ‘snprintf’ output 6 bytes into a destination of size 5
+   1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 165c90ba64ea9..fb5f8aa61ef5d 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -491,6 +491,12 @@ sched_core_dequeue(struct rq *rq, struct task_struct *p, int flags) { }
->  
->  #endif /* CONFIG_SCHED_CORE */
->  
-> +void trace_set_current_state(int state_value)
-> +{
-> +	trace_sched_set_state_tp(current, current->__state, state_value);
-> +}
-> +EXPORT_SYMBOL(trace_set_current_state);
+snprintf() also append a trailing '\0' at the end of the sun_path.
 
-Urgh, why !?!
+Now, I think of three options. Which one do you think we should choose?
+
+1. Allocate an additional byte during the kzalloc phase.
+	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
+		       UNIX_AUTOBIND_LEN + 1, GFP_KERNEL);
+
+2. Use temp buffer and memcpy() for handling.
+
+3. Keep the current code as it is.
+
+Do you have any other suggestions?
+
+Best regards,
+Liang
+
+> From: Liang Jie <liangjie@lixiang.com>
+> 
+> Refines autobind identifier length for UNIX pathname sockets, addressing
+> issues of memory waste and code readability.
+> 
+> The previous implementation in the unix_autobind function of UNIX pathname
+> sockets used hardcoded values such as 16 and 6 for memory allocation and
+> setting the length of the autobind identifier, which was not only
+> inflexible but also led to reduced code clarity. Additionally, allocating
+> 16 bytes of memory for the autobind path was excessive, given that only 6
+> bytes were ultimately used.
+> 
+> To mitigate these issues, introduces the following changes:
+>  - A new macro UNIX_AUTOBIND_LEN is defined to clearly represent the total
+>    length of the autobind identifier, which improves code readability and
+>    maintainability. It is set to 6 bytes to accommodate the unique autobind
+>    process identifier.
+>  - Memory allocation for the autobind path is now precisely based on
+>    UNIX_AUTOBIND_LEN, thereby preventing memory waste.
+>  - To avoid buffer overflow and ensure that only the intended number of
+>    bytes are written, sprintf is replaced by snprintf with the proper
+>    buffer size set explicitly.
+> 
+> The modifications result in a leaner memory footprint and elevated code
+> quality, ensuring that the functional aspect of autobind behavior in UNIX
+> pathname sockets remains intact.
+> 
+> Signed-off-by: Liang Jie <liangjie@lixiang.com>
+> Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> ---
+> 
+> Changes in v2:
+>  - Removed the comments describing AUTOBIND_LEN.
+>  - Renamed the macro AUTOBIND_LEN to UNIX_AUTOBIND_LEN for clarity and
+>    specificity.
+>  - Corrected the buffer length in snprintf to prevent potential buffer
+>    overflow issues.
+>  - Addressed warning from checkpatch.
+>  - Link to v1: https://lore.kernel.org/all/20250205060653.2221165-1-buaajxlj@163.com/
+> 
+>  net/unix/af_unix.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 34945de1fb1f..6c449f78f0a6 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1186,6 +1186,8 @@ static struct sock *unix_find_other(struct net *net,
+>  	return sk;
+>  }
+>  
+> +#define UNIX_AUTOBIND_LEN 6
+> +
+>  static int unix_autobind(struct sock *sk)
+>  {
+>  	struct unix_sock *u = unix_sk(sk);
+> @@ -1203,12 +1205,12 @@ static int unix_autobind(struct sock *sk)
+>  		goto out;
+>  
+>  	err = -ENOMEM;
+> -	addr = kzalloc(sizeof(*addr) +
+> -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
+> +	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
+> +			UNIX_AUTOBIND_LEN, GFP_KERNEL);
+>  	if (!addr)
+>  		goto out;
+>  
+> -	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
+> +	addr->len = offsetof(struct sockaddr_un, sun_path) + UNIX_AUTOBIND_LEN;
+>  	addr->name->sun_family = AF_UNIX;
+>  	refcount_set(&addr->refcnt, 1);
+>  
+> @@ -1217,7 +1219,7 @@ static int unix_autobind(struct sock *sk)
+>  	lastnum = ordernum & 0xFFFFF;
+>  retry:
+>  	ordernum = (ordernum + 1) & 0xFFFFF;
+> -	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
+> +	snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
+>  
+>  	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
+>  	unix_table_double_lock(net, old_hash, new_hash);
+> -- 
+> 2.25.1
+
