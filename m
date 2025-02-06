@@ -1,146 +1,320 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C521EA7C2;
-	Thu,  6 Feb 2025 13:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998CB1EA7C2;
+	Thu,  6 Feb 2025 13:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848420; cv=none; b=XxJ5S9GpYQUuSlO1ovrPsR+SVLU78Frwqic230B6sxo8j5bBCfcZInYq8mgHKzEDNK7GEdrRtLA0WmFNhCs/ev2CNfiymsQcPw3WwTqLK9YTUMln6AYtjoX2DsMlO8vgZxNbb2EtURi2u5YJ/mMx22Cxkkx+GHl3W5BYjLRyo/I=
+	t=1738848492; cv=none; b=JbhRkbIPWq3zHohp0aorHzsUNifXjS2zkXJKzhVnRP+rnhG4G1NoyVN+zRMX0//lK866RYEtqC1UesalCALRsNW68GX6IxrIr0GoL7ybatxGfniminB33TxVH6vFrtjl5tJ1q/ue4mv/AP+t97vssWI8SVofqf3PhGBwlgLvqHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848420; c=relaxed/simple;
-	bh=Xa2e6zZUE5Ypv/4gGdRlghgenoolHBoV4uJXpLNA0Ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g+vkSwPa4JciwKawbT5fTTrw0ecjwOx6x0vv+Ak5TgyP/OG4SUsdSnShs2ysDaJRkeSWFw+PeAk2Qp5254G6c8pGwWtsbnfpuQ3aT4LsB8YkYnMJIuEgVvJWRsebfC2ymKPMNl2gGkFPSNCSXJiz1EDzBl/YgvsYzm4r9QOvWRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DHBwf1PV; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1738848492; c=relaxed/simple;
+	bh=Gd1a6I/rgNkLBhg+heY/5rsHpIz19/CKISEK4EbgRGk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OYJustdyogVkqn1Q+ftHrdopEpcDAryfLMnm6dPi/faS7NCI+nPfS3imAAbnxO7nrkKn1PcbLkxOa5sXsroP/jzH9wTn+sTBC21gPtzKMyJGh8BKTMAcJsIwp/+Oez6DrPLAho3M3pEMTs3fbSYUr20xAw5LQVzXaiVQn2Ds+JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAzPesXY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DHBwf1PV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=cK6k51s+cBjVEgWYzrHKvOcp/x8Wau2Xj95c58xdXn8=;
-	b=DHBwf1PVLFgOtk7NSpBkgTPdRR9av3iy3CIn6Zj+IHZZ1A7DiWX9CjPUo3w5Lm
-	i+gbJE8DqqvFsEXuByrb/Im+47pp4acYiEfSBSpeNL6hUjatpeP0TVtRB5BsqjLm
-	wZ03TWW9+b4DENRy9fo6LP9F5e2Pnwqjn+JXLhrn1gg08=
-Received: from [192.168.31.211] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDHDzFSuKRnmF9+Bg--.16667S2;
-	Thu, 06 Feb 2025 21:25:39 +0800 (CST)
-Message-ID: <b4ef10d0-a1eb-4d9c-8ddc-d7815a2bb607@163.com>
-Date: Thu, 6 Feb 2025 21:25:37 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAzPesXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834C8C4CEDD;
+	Thu,  6 Feb 2025 13:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738848492;
+	bh=Gd1a6I/rgNkLBhg+heY/5rsHpIz19/CKISEK4EbgRGk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sAzPesXYT5XjA43mn9mjFSddx+URHz4e/EE+TI3tjsmUlMnvvxe3jqJrb2ZlJ1bFe
+	 B7+8xsYs0Lf82U6R5w7KQ/X3thA0P5Vsv1IuUIZmkZkTuKAjpJ4muaWX7EGNTjUhC4
+	 bZV2MS1WewT5ByL1wNIty3jPoHW4H3Vyor5VoLRrdG99UAFuY9bBiBQc4dDvz1yc/B
+	 m4Lis+O+AukrcalbjmakOOzhODUgl5kkuuVbQyLwPVyALQK8q98kZUlzRx0UPIQiAE
+	 OI2uNPgsj+QWMfQrPrWgpfkFk3ouWr/Kzq4PvmvXT8ljEvVyUKp1Hs2LJmIW688fhH
+	 LSkXPLg4eF0bg==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>,
+	devicetree@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+Date: Thu,  6 Feb 2025 15:27:40 +0200
+Message-ID: <20250206132754.2596694-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-To: Peter Zijlstra <peterz@infradead.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Gabriel de Perthuis <g2p.code@gmail.com>,
- Sami Tolvanen <samitolvanen@google.com>, Mark Rutland
- <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, linux-trace-kernel@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
- <20250206081225.GI7145@noisy.programming.kicks-ass.net>
- <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
- <20250206121328.GN7145@noisy.programming.kicks-ass.net>
- <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-From: Haiyue Wang <haiyuewa@163.com>
-In-Reply-To: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PygvCgDHDzFSuKRnmF9+Bg--.16667S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGry7Xry8GrW8Cr13CrW3KFg_yoW5Wr45pF
-	y3Crn3GFs5XFyYkrZrur109r15Zw1kCr1Sg347Gr95ZF1qvFyUJr1I9w1vyasFvasaga4r
-	tFW7ZFn09w1DZ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIZXrUUUUU=
-X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiShPra2ekp8XqkgAAsA
+Content-Transfer-Encoding: 8bit
+
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+
+Hi,
+
+This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
+series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
+just to make things simpler instead of ftrace we decided to preserve
+"reserve_mem" regions.
+
+The patches are also available in git:
+https://git.kernel.org/rppt/h/kho/v4
 
 
+Kexec today considers itself purely a boot loader: When we enter the new
+kernel, any state the previous kernel left behind is irrelevant and the
+new kernel reinitializes the system.
 
-On 2025/2/6 20:33, Peter Zijlstra wrote:
-> On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
-> 
->> No, it just cleans up this utter trainwreck. I also noticed this is a
->> second (new) copy of this garbage. Clearly I didn't yell loud enough
->> last time and people didn't think to vomit when doing the copy/paste :/
->>
->> Function will look something like:
->>
->> unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->> {
->> 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
->> 		fentry_op -= ENDBR_INSN_SIZE;
->> 	return fentry_ip;
->> }
->>
->> Let me finish local build test before I push out.
-> 
-> Bah, still waiting for a LLVM build, but patch should be here:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
-> 
-> I was supposed to merge this last cycle, but then akpm shat all over
-> arch/x86/kernel/alternative.c and we had to clean that up :/
-> 
-> Notably, this patch, not sure it applies out of order.
-> 
-> ---
-> 
-> Subject: x86/ibt: Clean up is_endbr()
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Nov 27 09:58:06 CET 2023
-> 
-> Pretty much every caller of is_endbr() actually wants to test something at an
-> address and ends up doing get_kernel_nofault(). Fold the lot into a more
-> convenient helper.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Alexei Starovoitov <ast@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->   arch/x86/events/core.c         |    2 +-
->   arch/x86/include/asm/ftrace.h  |   17 +++--------------
->   arch/x86/include/asm/ibt.h     |    5 +++--
->   arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
->   arch/x86/kernel/kprobes/core.c |   11 +----------
->   arch/x86/net/bpf_jit_comp.c    |    4 ++--
->   kernel/trace/bpf_trace.c       |   20 +++-----------------
->   7 files changed, 27 insertions(+), 52 deletions(-)
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
->   		return true;
->   
->   	/* endbr64 (64-bit only) */
-> -	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
-> +	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
->   		return true;
->   
->   	return false;
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -2,6 +2,7 @@
->   #ifndef _ASM_X86_FTRACE_H
->   #define _ASM_X86_FTRACE_H
->   
-> +#include "asm/ibt.h"
+However, there are use cases where this mode of operation is not what we
+actually want. In virtualization hosts for example, we want to use kexec
+to update the host kernel while virtual machine memory stays untouched.
+When we add device assignment to the mix, we also need to ensure that
+IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+need to do the same for the PCI subsystem. If we want to kexec while an
+SEV-SNP enabled virtual machine is running, we need to preserve the VM
+context pages and physical memory. See "pkernfs: Persisting guest memory
+and kernel/device state safely across kexec" Linux Plumbers
+Conference 2023 presentation for details:
 
-Then 
-https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/tree/arch/x86/include/asm/ftrace.h?h=x86/ibt#n17
+  https://lpc.events/event/17/contributions/1485/
 
-# include <asm/ibt.h> --> This line can be removed ?
+To start us on the journey to support all the use cases above, this patch
+implements basic infrastructure to allow hand over of kernel state across
+kexec (Kexec HandOver, aka KHO). As a really simple example target, we use
+memblock's reserve_mem.
+With this patch set applied, memory that was reserved using "reserve_mem"
+command line options remains intact after kexec and it is guaranteed to
+reside at the same physical address.
 
->   #include <asm/ptrace.h>
->   
->   #ifdef CONFIG_FUNCTION_TRACER
-> @@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
->   
->   static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->   {
+== Alternatives ==
+
+There are alternative approaches to (parts of) the problems above:
+
+  * Memory Pools [1] - preallocated persistent memory region + allocator
+  * PRMEM [2] - resizable persistent memory regions with fixed metadata
+                pointer on the kernel command line + allocator
+  * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+                  address location on the kernel command line
+  * PKRAM [4] - handover of user space pages using a fixed metadata page
+                specified via command line
+
+All of the approaches above fundamentally have the same problem: They
+require the administrator to explicitly carve out a physical memory
+location because they have no mechanism outside of the kernel command
+line to pass data (including memory reservations) between kexec'ing
+kernels.
+
+KHO provides that base foundation. We will determine later whether we
+still need any of the approaches above for fast bulk memory handover of for
+example IOMMU page tables. But IMHO they would all be users of KHO, with
+KHO providing the foundational primitive to pass metadata and bulk memory
+reservations as well as provide easy versioning for data.
+
+== Overview ==
+
+We introduce a metadata file that the kernels pass between each other. How
+they pass it is architecture specific. The file's format is a Flattened
+Device Tree (fdt) which has a generator and parser already included in
+Linux. When the root user enables KHO through /sys/kernel/kho/active, the
+kernel invokes callbacks to every driver that supports KHO to serialize
+its state. When the actual kexec happens, the fdt is part of the image
+set that we boot into. In addition, we keep a "scratch regions" available
+for kexec: A physically contiguous memory regions that is guaranteed to
+not have any memory that KHO would preserve.  The new kernel bootstraps
+itself using the scratch regions and sets all handed over memory as in use.
+When drivers initialize that support KHO, they introspect the fdt and
+recover their state from it. This includes memory reservations, where the
+driver can either discard or claim reservations.
+
+== Limitations ==
+
+Currently KHO is only implemented for file based kexec. The kernel
+interfaces in the patch set are already in place to support user space
+kexec as well, but it is still not implemented it yet inside kexec tools.
+
+== How to Use ==
+
+To use the code, please boot the kernel with the "kho=on" command line
+parameter.
+KHO will automatically create scratch regions. If you want to set the
+scratch size explicitly you can use "kho_scratch=" command line parameter.
+For instance, "kho_scratch=512M,256M" will create a global scratch area of
+512Mib and per-node scrath areas of 256Mib.
+
+Make sure to to have a reserved memory range requested with reserv_mem
+command line option. Then before you invoke file based "kexec -l", activate
+KHO:
+
+  # echo 1 > /sys/kernel/kho/active
+  # kexec -l Image --initrd=initrd -s
+  # kexec -e
+
+The new kernel will boot up and contain the previous kernel's reserve_mem
+contents at the same physical address as the first kernel.
+
+== Changelog ==
+
+v3 -> v4:
+  - Major rework of scrach management. Rather than force scratch memory
+    allocations only very early in boot now we rely on scratch for all
+    memblock allocations.
+  - Use simple example usecase (reserv_mem instead of ftrace)
+  - merge all KHO functionality into a single kernel/kexec_handover.c file
+  - rename CONFIG_KEXEC_KHO to CONFIG_KEXEC_HANDOVER
+
+v1 -> v2:
+  - Removed: tracing: Introduce names for ring buffers
+  - Removed: tracing: Introduce names for events
+  - New: kexec: Add config option for KHO
+  - New: kexec: Add documentation for KHO
+  - New: tracing: Initialize fields before registering
+  - New: devicetree: Add bindings for ftrace KHO
+  - test bot warning fixes
+  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Remove / reduce ifdefs
+  - Select crc32
+  - Leave anything that requires a name in trace.c to keep buffers
+    unnamed entities
+  - Put events as array into a property, use fingerprint instead of
+    names to identify them
+  - Reduce footprint without CONFIG_FTRACE_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - make kho_get_fdt() const
+  - Add stubs for return_mem and claim_mem
+  - make kho_get_fdt() const
+  - Get events as array from a property, use fingerprint instead of
+    names to identify events
+  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Leave the node generation code that needs to know the name in
+    trace.c so that ring buffers can stay anonymous
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Move kho enums out of ifdef
+  - Move from names to fdt offsets. That way, trace.c can find the trace
+    array offset and then the ring buffer code only needs to read out
+    its per-CPU data. That way it can stay oblivient to its name.
+  - Make kho_get_fdt() const
+
+v2 -> v3:
+
+  - Fix make dt_binding_check
+  - Add descriptions for each object
+  - s/trace_flags/trace-flags/
+  - s/global_trace/global-trace/
+  - Make all additionalProperties false
+  - Change subject to reflect subsysten (dt-bindings)
+  - Fix indentation
+  - Remove superfluous examples
+  - Convert to 64bit syntax
+  - Move to kho directory
+  - s/"global_trace"/"global-trace"/
+  - s/"global_trace"/"global-trace"/
+  - s/"trace_flags"/"trace-flags"/
+  - Fix wording
+  - Add Documentation to MAINTAINERS file
+  - Remove kho reference on read error
+  - Move handover_dt unmap up
+  - s/reserve_scratch_mem/mark_phys_as_cma/
+  - Remove ifdeffery
+  - Remove superfluous comment
+
+Alexander Graf (9):
+  memblock: Add support for scratch memory
+  kexec: Add Kexec HandOver (KHO) generation helpers
+  kexec: Add KHO parsing support
+  kexec: Add KHO support to kexec file loads
+  kexec: Add config option for KHO
+  kexec: Add documentation for KHO
+  arm64: Add KHO support
+  x86: Add KHO support
+  memblock: Add KHO support for reserve_mem
+
+Mike Rapoport (Microsoft) (5):
+  mm/mm_init: rename init_reserved_page to init_deferred_page
+  memblock: add MEMBLOCK_RSRV_KERN flag
+  memblock: introduce memmap_init_kho_scratch()
+  x86/setup: use memblock_reserve_kern for memory used by kernel
+  Documentation: KHO: Add memblock bindings
+
+ Documentation/ABI/testing/sysfs-firmware-kho  |   9 +
+ Documentation/ABI/testing/sysfs-kernel-kho    |  53 ++
+ .../admin-guide/kernel-parameters.txt         |  24 +
+ .../kho/bindings/memblock/reserve_mem.yaml    |  41 +
+ .../bindings/memblock/reserve_mem_map.yaml    |  42 +
+ Documentation/kho/concepts.rst                |  80 ++
+ Documentation/kho/index.rst                   |  19 +
+ Documentation/kho/usage.rst                   |  60 ++
+ Documentation/subsystem-apis.rst              |   1 +
+ MAINTAINERS                                   |   3 +
+ arch/arm64/Kconfig                            |   3 +
+ arch/x86/Kconfig                              |   3 +
+ arch/x86/boot/compressed/kaslr.c              |  52 +-
+ arch/x86/include/asm/setup.h                  |   4 +
+ arch/x86/include/uapi/asm/setup_data.h        |  13 +-
+ arch/x86/kernel/e820.c                        |  18 +
+ arch/x86/kernel/kexec-bzimage64.c             |  36 +
+ arch/x86/kernel/setup.c                       |  39 +-
+ arch/x86/realmode/init.c                      |   2 +
+ drivers/of/fdt.c                              |  36 +
+ drivers/of/kexec.c                            |  42 +
+ include/linux/cma.h                           |   2 +
+ include/linux/kexec.h                         |  37 +
+ include/linux/kexec_handover.h                |  10 +
+ include/linux/memblock.h                      |  38 +-
+ kernel/Kconfig.kexec                          |  13 +
+ kernel/Makefile                               |   1 +
+ kernel/kexec_file.c                           |  19 +
+ kernel/kexec_handover.c                       | 808 ++++++++++++++++++
+ kernel/kexec_internal.h                       |  16 +
+ mm/Kconfig                                    |   4 +
+ mm/internal.h                                 |   5 +-
+ mm/memblock.c                                 | 247 +++++-
+ mm/mm_init.c                                  |  19 +-
+ 34 files changed, 1775 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-firmware-kho
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-kho
+ create mode 100644 Documentation/kho/bindings/memblock/reserve_mem.yaml
+ create mode 100644 Documentation/kho/bindings/memblock/reserve_mem_map.yaml
+ create mode 100644 Documentation/kho/concepts.rst
+ create mode 100644 Documentation/kho/index.rst
+ create mode 100644 Documentation/kho/usage.rst
+ create mode 100644 include/linux/kexec_handover.h
+ create mode 100644 kernel/kexec_handover.c
+
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.47.2
 
