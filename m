@@ -1,129 +1,488 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46AB22FAC4
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAB122F3B6
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834180; cv=none; b=BEKMXHzesx/N8xOdVDNBQxvKzumbr1mlS8yhmhXEsOTiKboSNaX6lEHGPwwob/cx+8vlz5HCxJwbdr+ArWN4Q1igwM9sY/cGs1P9mFvscS/YL12c3yx0w8nZfhHVDnG5sHF/ckMx7X17Zm4Rd6ZhhaKHvCzPxV4BFPNSMLTm8Ak=
+	t=1738834178; cv=none; b=MtqQkbbBTqdNANuAywbWs2zNpm/gaoymJbVx6suXFRNJGp/gzcen0RJz/POJRV5t2COEkcVXo1GJ2+2P+APDr/qR7cqVvrBxyQa4aATWPPAXfwSULrVRUfeg8Lv/tJEOeiaP/MHgsZdlqwd0lXZk4kQlP+A+CddjynkyjdCzTsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834180; c=relaxed/simple;
-	bh=EYcX+Tl80Sl7d+CDd9SpGmBn5rsXiLy+uE7dn71Jszk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f7pBws8NbWP10Nj8sRFTWDOOBAsfkbk0124sN2Tvt+0h0s4bKjLsvpOC+F6vntiFNHaeQD1PGLtLSbGhCTV+zOl5jxz6RsxANca0iAezMk82N1QvLVnx2ghXn9+wTul9DyPPMlO2JIgjmMfKosHGuoR9r6x+tqylqqdMxYgf1w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IHQrJ32W; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738834178; c=relaxed/simple;
+	bh=hzuNhO1Q3IkyXCT/x1RQcToG9eFKeb1mwBR+qRFJhIU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=i330e4YRRwCN22N6RkXn5WvKFRKoa3JNzq6FwG4qC8A4OB1zJOHuUMtFxMJ8eAet1zJNrtUh42lEU3KIex4dNLsnJgynclyzSIOL9HLHXrbzFxErt7l8ByzDy/reh7FKXgmEluCJxOj5zdk0nQLm+TDvMa9Q1PXh9FfcDqxUwmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YrnBv0uV; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IHQrJ32W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738834177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KOagAZK7fofXxMgw0dAFRrT7sTcHKFQ+LQJsrXs9r54=;
-	b=IHQrJ32Wa3Wy9ahAdbzxKsxPZ5sEKscqRjiGZ4z+TeVpIrGqKWkId/K8DVkkTGahUdOMZG
-	e47tKBltyBTp32dBIHNCjxonDl3BlvpSme9gBp7ypcU9pg2SVksrb4J5Qc3dJvDThkJ42R
-	eSsfhF/zmk/MgypgMG5rM90RQCtHfAc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-435-J5OxNHLTP6K3T1I0tuSBkw-1; Thu, 06 Feb 2025 04:29:36 -0500
-X-MC-Unique: J5OxNHLTP6K3T1I0tuSBkw-1
-X-Mimecast-MFC-AGG-ID: J5OxNHLTP6K3T1I0tuSBkw
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dabace77aso256920f8f.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrnBv0uV"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f0bc811dbso26495415ad.1
         for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:29:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834175; x=1739438975;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738834176; x=1739438976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KOagAZK7fofXxMgw0dAFRrT7sTcHKFQ+LQJsrXs9r54=;
-        b=d1hHGSEvyaM+wtFawknFLcbY7SnIN1avPhJb6L2Kl7cBIq3j73LmpU4fGAwoRN3g/b
-         dbPOUJAhLeqobUO7oe3TQGyRsI3v7x8kj72xJeh+eyco6olWE6yzijlLheOHy1SGIIxi
-         I6mpA+9qIqEZ+rOHSE24OwTvZFF4mV2w9IXHZYTJO3iA2jLQXLtut1H0kZGL1JgY9BDc
-         9XqIJJgDgNM1Ffd7SdvLvNxEJuxHbZnLjhSa4r4kNYqTcQ/WhNgQ0Bs216qm+KeFB845
-         V5JGA5V1WME41juhNnY8j4iWP9+c33zHZe7rnbasssdzjnKjhCdOqP92fugCltaHPb1l
-         o8qA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBT8Qoxv31UNWiy0sSKV2T6irhKg0hzl0Og+RBKi3/S2iysh/5zs8ibRq0IHc2BRPVGhokOhFMzgowr8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydP6vs4f1ZiLpnyUpYsULLXpD7FDq7Hm2+Rw7TLiO0dS4Avepv
-	Vk/666WrY37A5E9nnnspaoYC/QMwP24fcCEgdwpeUZCT4YRjSNiZ3UVrjdFD5nDxEJM8X2wX675
-	vApaWv9wlDBaTnXhkkpdjfcxvY+Rfr8NwWav5pzJ/4yw1+WRHwDf9lZL6Re6r2g==
-X-Gm-Gg: ASbGncssngsxBhNvu30UXTapaKJjJWiIyu4b2QJffIGd1+mD+g9gcSo42UeAq2vfNg7
-	+hVZOm1ewZHDk4zZWiO0igOsWJ+hweKNMGIAnoLY1K6+d129j9AjQz5suFG5Xd/po1OSjEwcVwg
-	XpXdQ6h6Z2tXMPH2xeaP9z3Sv2qbH+wowA0uB0NVw+6yVmpCx7sbZ2nR5ILfmidWd0S24aXWUzT
-	nABJiJ2tzogzrD3doYVG1pUyOpSahIYgfpn65xSSdP967tkMqYmdeut1onkF9wVxvy2+hmftOwF
-	uBHAUS7nSbQYOdoNZJ9y1Qg4P6kBdinf7DUo
-X-Received: by 2002:a5d:5988:0:b0:38c:1362:41b5 with SMTP id ffacd0b85a97d-38db486108amr4535903f8f.6.1738834175189;
-        Thu, 06 Feb 2025 01:29:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEACMLPnRenHtTztqiW2IAcbQnqshOGTNeLp4rXCm+kaU1iNlAag5arspiSZQxoQu++qZxvNA==
-X-Received: by 2002:a5d:5988:0:b0:38c:1362:41b5 with SMTP id ffacd0b85a97d-38db486108amr4535875f8f.6.1738834174782;
-        Thu, 06 Feb 2025 01:29:34 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390692a66esm53015975e9.0.2025.02.06.01.29.33
+        bh=BewoLF4XXJE59tcPINPOfVWWxQlIhp/bpFbTZBnmMRo=;
+        b=YrnBv0uV3Yx55AZ0z2c3aNCCjwz2vbhEYI9GyJEyLpwU7TdDTe+f1s1VR8VbVhphbI
+         ZTKLRtbouMd0Oy6a02qtOg1LMqoCjyJIqMdFkG8ETjOloWLhXZZzI4k/K+TPeST+4qEz
+         lwfPIIIUELVLZxSfLcYtDQ/NATLxIjrWGxhfcosO3iiwJHZAl/NTZkkN2bWE3E/JWotP
+         APfWJarrCgzFMPbhoos8sKOej1osj9Cc3erZJlPQb8v9pIzsGO9M5ScqTv8zEARBM+78
+         WfPXwW/R2eJAO9c3iFT6ep52sGU+oRbatoBmm9xM44tgVa+CtSsv3aC9FNB6FsT34Cxe
+         VOTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738834176; x=1739438976;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BewoLF4XXJE59tcPINPOfVWWxQlIhp/bpFbTZBnmMRo=;
+        b=C41mqbBkChOUCeEJ1D60egNntU5B6/UthQ1XA0mm+9ann2rg8SMTxkhYcMVXrFKyMf
+         SjmGuTZbrNS7maxnEwHj4iemStUvkvgbHXUSwzqIbtvds9Md0r8sxeTDgGusT4f3H/QM
+         5eUybC2teI95dmtX5ojuJIQE8u0VDyZdusQ9FmBFpj9fo2WzHPb2ECY4zsdofXJuGXx1
+         Ot9eY3njfBDjeOMJH25s7WJDSFCjMS1ShoQcz646RjlPW2bFhTAISEXmzjZsKjJgUFzD
+         /oyiQR3EjqrwhDP4US3bd+AaEBrUGy/KfPe34doWHx67FyXv6OgdrAg9SuKkrRdYPLrS
+         HnHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUdlMGAjHcvqeLzGAGSF04vuk02lpi1NrnutaSQfeOkDvQr0P2gq7t8gLBH2fH5H3w8B81GwczjFGR2eE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysGJ7oCNhczbOe8L/Lv3gw2V4DhSnQ4KAlKgItc3EDG0PHRdiH
+	AmOklwXK/yrutG9Aq41RZVS6AAUo/oHOIv1tIEWWJWBaelGGLbtmnEq2F+EL8uE=
+X-Gm-Gg: ASbGncsdsElqTASG+535FQj6ZepOlgmPEsXRBpuG/UUJxaGpc6z/MdsYkG+1ZwTXlWB
+	eB4egerdRZcxgqBKNUNmuQE7/MD72xfbjVHgEko2ddfB4FSEwjgSlrXK24SAjteIQiJCZuyxBVa
+	CgRHtvCboCcARI/ofNhNoJ6kGUj4fvtW1ehMHBkuABIZMlrDzr2qKH79F6QSLKp0oHjfL066P2h
+	YvSN46plHfiOsYovXSHQYQjyOxW6U8zFqvuarHlLrfAIuT/S3Lkrh2uhlJ2FTkWH65ylvvIscvq
+	Wix//lFNi29DEU2lpQ==
+X-Google-Smtp-Source: AGHT+IHyxQAOrCYMKMTrZjWvo9bFWT1K8eOlTJFH1d5xana7tiWBgQrQ4rVBlR8ev+13dQ3LVmaKDg==
+X-Received: by 2002:a05:6a21:900b:b0:1e0:c166:18ba with SMTP id adf61e73a8af0-1edf367d34bmr4946817637.12.1738834176089;
+        Thu, 06 Feb 2025 01:29:36 -0800 (PST)
+Received: from localhost ([122.172.84.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d350sm877632b3a.11.2025.02.06.01.29.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 01:29:34 -0800 (PST)
-Date: Thu, 6 Feb 2025 10:29:31 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+        Thu, 06 Feb 2025 01:29:35 -0800 (PST)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>
+Cc: linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Aashish Sharma <shraash@google.com>,
-	Shin Kawamura <kawasin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-Message-ID: <Z6SA-1Eyr1zDTZDZ@jlelli-thinkpadt14gen4.remote.csb>
-References: <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
- <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
- <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
- <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
- <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
- <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
- <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
- <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
- <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
- <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
+	Stephen Boyd <sboyd@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V8 11/14] rust: Extend cpufreq bindings for policy and driver ops
+Date: Thu,  6 Feb 2025 14:58:32 +0530
+Message-Id: <d7601797a92d7aeeba93f11f6a62de2e83969e11.1738832119.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <cover.1738832118.git.viresh.kumar@linaro.org>
+References: <cover.1738832118.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On 05/02/25 16:56, Jon Hunter wrote:
+This extends the cpufreq bindings with bindings for cpufreq policy and
+driver operations.
 
-...
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ rust/kernel/cpufreq.rs | 357 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 355 insertions(+), 2 deletions(-)
 
-> Thanks! That did make it easier :-)
-> 
-> Here is what I see ...
-
-Thanks!
-
-Still different from what I can repro over here, so, unfortunately, I
-had to add additional debug printks. Pushed to the same branch/repo.
-
-Could I ask for another run with it? Please also share the complete
-dmesg from boot, as I would need to check debug output when CPUs are
-first onlined.
-
-Best,
-Juri
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 4546a70c7063..63ea816017c0 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -7,15 +7,20 @@
+ //! C header: [`include/linux/cpufreq.h`](srctree/include/linux/cpufreq.h)
+ 
+ use crate::{
+-    bindings,
+-    error::{code::*, to_result, Result},
++    bindings, clk, cpumask,
++    device::Device,
++    error::{code::*, from_err_ptr, to_result, Result, VTABLE_DEFAULT_ERROR},
+     prelude::*,
++    types::ForeignOwnable,
+ };
+ 
+ use core::{
+     pin::Pin,
++    ptr::self,
+ };
+ 
++use macros::vtable;
++
+ /// Default transition latency value.
+ pub const ETERNAL_LATENCY: u32 = bindings::CPUFREQ_ETERNAL as u32;
+ 
+@@ -226,3 +231,351 @@ pub fn data(&self, index: usize) -> Result<u32> {
+         Ok(unsafe { (*self.ptr.add(index)).driver_data })
+     }
+ }
++
++/// Equivalent to `struct cpufreq_policy` in the C code.
++pub struct Policy {
++    ptr: *mut bindings::cpufreq_policy,
++    put_cpu: bool,
++    cpumask: cpumask::Cpumask,
++}
++
++impl Policy {
++    /// Creates a new instance of [`Policy`].
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that `ptr` is valid and non-null.
++    pub unsafe fn from_raw_policy(ptr: *mut bindings::cpufreq_policy) -> Self {
++        Self {
++            ptr,
++            put_cpu: false,
++            // SAFETY: The pointer is guaranteed to be valid for the lifetime of `Self`. The `cpus`
++            // pointer is guaranteed to be valid by the C code.
++            cpumask: unsafe { cpumask::Cpumask::get_cpumask(&mut ((*ptr).cpus)) },
++        }
++    }
++
++    fn from_cpu(cpu: u32) -> Result<Self> {
++        // SAFETY: It is safe to call `cpufreq_cpu_get()` for any CPU.
++        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(cpu) })?;
++
++        // SAFETY: The pointer is guaranteed to be valid by the C code.
++        let mut policy = unsafe { Policy::from_raw_policy(ptr) };
++        policy.put_cpu = true;
++        Ok(policy)
++    }
++
++    /// Raw pointer to the underlying cpufreq policy.
++    #[inline]
++    pub fn as_raw(&self) -> *mut bindings::cpufreq_policy {
++        self.ptr
++    }
++
++    fn as_ref(&self) -> &bindings::cpufreq_policy {
++        // SAFETY: By the type invariants, we know that `self` owns a reference to the pointer.
++        unsafe { &(*self.ptr) }
++    }
++    fn as_mut_ref(&mut self) -> &mut bindings::cpufreq_policy {
++        // SAFETY: By the type invariants, we know that `self` owns a reference to the pointer.
++        unsafe { &mut (*self.ptr) }
++    }
++
++    /// Returns the primary CPU for a cpufreq policy.
++    pub fn cpu(&self) -> u32 {
++        self.as_ref().cpu
++    }
++
++    /// Returns the minimum frequency for a cpufreq policy.
++    pub fn min(&self) -> u32 {
++        self.as_ref().min
++    }
++
++    /// Set the minimum frequency for a cpufreq policy.
++    pub fn set_min(&mut self, min: u32) -> &mut Self {
++        self.as_mut_ref().min = min;
++        self
++    }
++
++    /// Returns the maximum frequency for a cpufreq policy.
++    pub fn max(&self) -> u32 {
++        self.as_ref().max
++    }
++
++    /// Set the maximum frequency for a cpufreq policy.
++    pub fn set_max(&mut self, max: u32) -> &mut Self {
++        self.as_mut_ref().max = max;
++        self
++    }
++
++    /// Returns the current frequency for a cpufreq policy.
++    pub fn cur(&self) -> u32 {
++        self.as_ref().cur
++    }
++
++    /// Sets the suspend frequency for a cpufreq policy.
++    pub fn set_suspend_freq(&mut self, freq: u32) -> &mut Self {
++        self.as_mut_ref().suspend_freq = freq;
++        self
++    }
++
++    /// Returns the suspend frequency for a cpufreq policy.
++    pub fn suspend_freq(&self) -> u32 {
++        self.as_ref().suspend_freq
++    }
++
++    /// Provides a wrapper to the generic suspend routine.
++    pub fn generic_suspend(&self) -> Result<()> {
++        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
++        // use it now.
++        to_result(unsafe { bindings::cpufreq_generic_suspend(self.as_raw()) })
++    }
++
++    /// Provides a wrapper to the generic get routine.
++    pub fn generic_get(&self) -> Result<u32> {
++        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
++        // use it now.
++        Ok(unsafe { bindings::cpufreq_generic_get(self.cpu()) })
++    }
++
++    /// Provides a wrapper to the register em with OPP routine.
++    pub fn register_em_opp(&self) {
++        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
++        // use it now.
++        unsafe { bindings::cpufreq_register_em_with_opp(self.as_raw()) };
++    }
++
++    /// Gets raw pointer to cpufreq policy's CPUs mask.
++    pub fn cpus(&mut self) -> &mut cpumask::Cpumask {
++        &mut self.cpumask
++    }
++
++    /// Sets clock for a cpufreq policy.
++    pub fn set_clk(&mut self, dev: &Device, name: Option<&CStr>) -> Result<clk::Clk> {
++        let clk = clk::Clk::new(dev, name)?;
++        self.as_mut_ref().clk = clk.as_raw();
++        Ok(clk)
++    }
++
++    /// Allows frequency switching code to run on any CPU.
++    pub fn set_dvfs_possible_from_any_cpu(&mut self) -> &mut Self {
++        self.as_mut_ref().dvfs_possible_from_any_cpu = true;
++        self
++    }
++
++    /// Get fast_switch_possible value.
++    pub fn fast_switch_possible(&self) -> bool {
++        self.as_ref().fast_switch_possible
++    }
++
++    /// Enable/disable fast frequency switching.
++    pub fn set_fast_switch_possible(&mut self, val: bool) -> &mut Self {
++        self.as_mut_ref().fast_switch_possible = val;
++        self
++    }
++
++    /// Sets transition latency for a cpufreq policy.
++    pub fn set_transition_latency(&mut self, latency: u32) -> &mut Self {
++        self.as_mut_ref().cpuinfo.transition_latency = latency;
++        self
++    }
++
++    /// Set cpuinfo.min_freq.
++    pub fn set_cpuinfo_min_freq(&mut self, min_freq: u32) -> &mut Self {
++        self.as_mut_ref().cpuinfo.min_freq = min_freq;
++        self
++    }
++
++    /// Set cpuinfo.max_freq.
++    pub fn set_cpuinfo_max_freq(&mut self, max_freq: u32) -> &mut Self {
++        self.as_mut_ref().cpuinfo.max_freq = max_freq;
++        self
++    }
++
++    /// Set transition_delay_us, i.e. time between successive freq. change requests.
++    pub fn set_transition_delay_us(&mut self, transition_delay_us: u32) -> &mut Self {
++        self.as_mut_ref().transition_delay_us = transition_delay_us;
++        self
++    }
++
++    /// Returns the cpufreq table for a cpufreq policy. The cpufreq table is recreated in a
++    /// light-weight manner from the raw pointer. The table in C code is not freed once this table
++    /// is dropped.
++    pub fn freq_table(&self) -> Result<Table> {
++        if self.as_ref().freq_table.is_null() {
++            return Err(EINVAL);
++        }
++
++        // SAFETY: The `freq_table` is guaranteed to be valid.
++        Ok(unsafe { Table::from_raw(self.as_ref().freq_table) })
++    }
++
++    /// Sets the cpufreq table for a cpufreq policy.
++    ///
++    /// The cpufreq driver must guarantee that the frequency table does not get freed while it is
++    /// still being used by the C code.
++    pub fn set_freq_table(&mut self, table: &Table) -> &mut Self {
++        self.as_mut_ref().freq_table = table.as_raw();
++        self
++    }
++
++    /// Returns the data for a cpufreq policy.
++    pub fn data<T: ForeignOwnable>(&mut self) -> Option<<T>::Borrowed<'_>> {
++        if self.as_ref().driver_data.is_null() {
++            None
++        } else {
++            // SAFETY: The data is earlier set by us from [`set_data()`].
++            Some(unsafe { T::borrow(self.as_ref().driver_data) })
++        }
++    }
++
++    // Sets the data for a cpufreq policy.
++    fn set_data<T: ForeignOwnable>(&mut self, data: T) -> Result<()> {
++        if self.as_ref().driver_data.is_null() {
++            // Pass the ownership of the data to the foreign interface.
++            self.as_mut_ref().driver_data = <T as ForeignOwnable>::into_foreign(data) as _;
++            Ok(())
++        } else {
++            Err(EBUSY)
++        }
++    }
++
++    // Returns the data for a cpufreq policy.
++    fn clear_data<T: ForeignOwnable>(&mut self) -> Option<T> {
++        if self.as_ref().driver_data.is_null() {
++            None
++        } else {
++            let data = Some(
++                // SAFETY: The data is earlier set by us from [`set_data()`]. It is safe to take
++                // back the ownership of the data from the foreign interface.
++                unsafe { <T as ForeignOwnable>::from_foreign(self.as_ref().driver_data) },
++            );
++            self.as_mut_ref().driver_data = ptr::null_mut();
++            data
++        }
++    }
++}
++
++impl Drop for Policy {
++    fn drop(&mut self) {
++        if self.put_cpu {
++            // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe
++            // to relinquish it now.
++            unsafe { bindings::cpufreq_cpu_put(self.as_raw()) };
++        }
++    }
++}
++
++/// Operations to be implemented by a cpufreq driver.
++#[vtable]
++pub trait Driver {
++    /// Driver specific data.
++    ///
++    /// Corresponds to the data retrieved via the kernel's
++    /// `cpufreq_get_driver_data()` function.
++    ///
++    /// Require that `Data` implements `ForeignOwnable`. We guarantee to
++    /// never move the underlying wrapped data structure.
++    type Data: ForeignOwnable;
++
++    /// Policy specific data.
++    ///
++    /// Require that `PData` implements `ForeignOwnable`. We guarantee to
++    /// never move the underlying wrapped data structure.
++    type PData: ForeignOwnable;
++
++    /// Policy's init callback.
++    fn init(policy: &mut Policy) -> Result<Self::PData>;
++
++    /// Policy's exit callback.
++    fn exit(_policy: &mut Policy, _data: Option<Self::PData>) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's online callback.
++    fn online(_policy: &mut Policy) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's offline callback.
++    fn offline(_policy: &mut Policy) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's suspend callback.
++    fn suspend(_policy: &mut Policy) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's resume callback.
++    fn resume(_policy: &mut Policy) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's ready callback.
++    fn ready(_policy: &mut Policy) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's verify callback.
++    fn verify(data: &mut PolicyData) -> Result<()>;
++
++    /// Policy's setpolicy callback.
++    fn setpolicy(_policy: &mut Policy) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's target callback.
++    fn target(_policy: &mut Policy, _target_freq: u32, _relation: Relation) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's target_index callback.
++    fn target_index(_policy: &mut Policy, _index: u32) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's fast_switch callback.
++    fn fast_switch(_policy: &mut Policy, _target_freq: u32) -> u32 {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's adjust_perf callback.
++    fn adjust_perf(_policy: &mut Policy, _min_perf: usize, _target_perf: usize, _capacity: usize) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's get_intermediate callback.
++    fn get_intermediate(_policy: &mut Policy, _index: u32) -> u32 {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's target_intermediate callback.
++    fn target_intermediate(_policy: &mut Policy, _index: u32) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's get callback.
++    fn get(_policy: &mut Policy) -> Result<u32> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's update_limits callback.
++    fn update_limits(_policy: &mut Policy) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's bios_limit callback.
++    fn bios_limit(_policy: &mut Policy, _limit: &mut u32) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's set_boost callback.
++    fn set_boost(_policy: &mut Policy, _state: i32) -> Result<()> {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Policy's register_em callback.
++    fn register_em(_policy: &mut Policy) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++}
+-- 
+2.31.1.272.g89b43f80a514
 
