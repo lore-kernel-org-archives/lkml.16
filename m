@@ -1,153 +1,150 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F1A22FF37;
-	Thu,  6 Feb 2025 22:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879859; cv=none; b=ObZ7YOfhbFfxemOfns3iUClK0Symy3VyV8VsYCVMO2hzlUfUc4zzEe7RDYeihFavGuUPy/OmAAi4eCu00j7XG0GV8b4y1yjnWkgwO0cVDniMCU5d3o4c/CVZtXTBVHp0mDhyjnfF3Vzs+kT2QKdzLVGWZMTayCmlA9iJfQah4Fc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738879859; c=relaxed/simple;
-	bh=2Y70HzxcQTGQ8pp24im9o2oCo4aDLht1LZCb/OG3xJk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bO17+d3+gQVoF7hoh/HErxnyn++Iz8wrS/IPBp3Y5wAyqPxu6lz98fCiEnsrVhQGteiqf1OPEq5xbUt8Aoeqmo97NvdSLV656NS90wKBqXpwACDBwBz/2vLSvqNViS9mXnxx8jvyr1X2US7Zh9XHAfBW/l2phpK3Sn2ktfYUhSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f+WePZI6; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA9323C367;
+	Thu,  6 Feb 2025 22:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738879954; cv=fail; b=ZCeZdJxR0ExPhe09g2aoF+fqtFRW1N003SYPPzz2w1wTNx63fQ/gIJ6FXG9n1E24CFySb7MMs+4pfin10Mxk8TS0RBWkkhWpmsHJVdbv2nnNGsF0hIzxUME69S6ia5d/LNdjl/SbWg4b16S1HuZThq8PGp7CSpNDKyLPps/ySNY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738879954; c=relaxed/simple;
+	bh=C/HKRQjA9Z/3lP6yQU6DF7LnU33UhbQComseguP5Vi4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oKFwcjW59ej1f7ldHKgDUSkRrwzhS8J6d74OPeY4jsz1l6Rd6v2pX5l5p4t/yHv2rWsNNi89OxXTU9aZRpxLZjzT7JynF1p+jsEVvu2qkqKgasjYPs7rr6g4teR7EKc9500efji7vOwFFCZNpNWcAMqHbzOujchAX4MwU0X773A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pZX2eWOK; arc=fail smtp.client-ip=40.107.220.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+WePZI6"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dc82e38c10so3075054a12.3;
-        Thu, 06 Feb 2025 14:10:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738879856; x=1739484656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JW4K88ZRfCDR2jOA2UBUFxi/kKP7aoGmXehZOk8p2EA=;
-        b=f+WePZI6w8ASafkII/yohWm+YErgbqA2iHQrd54JvpYBD3VdhlZQAQqcKibG8k4IQL
-         Ai8NOcPNL7rmNS5palle1ieR9s9/2xPAolxAVvb7bWAnNAncFLYINZ6JAH4qubopKFoP
-         sFK5HLnvbigouYoS/e7Cuz9gtI42ifMpt77SN8GQH0DkB0AbZwSWYOhovny1blPCLnS3
-         G+c/7bGZw72QHaKLI10u3PocjecuW6qSnCAyh3ExqBTyVNTf315hqeKkklJyhZ5Jyo6r
-         WnQPRjCzWaPeb9tRFRvu65AH5sPLeSNLhw4DAnkNPc/OF/TOuGpH/s0faz7QTqtWhyAT
-         K7ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738879856; x=1739484656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JW4K88ZRfCDR2jOA2UBUFxi/kKP7aoGmXehZOk8p2EA=;
-        b=QGEHCGRnxSEnsA0Rk6URgDdeObgD+i6BhFpcz07uQQAzT/IGGP2NmeIAIUhD2KaRpj
-         I1umMvpKAB1uHIudZc7ACZpWxTEJksW7hwr9fMQBKmk9TJMjFfcO1PV4VbHMECvHMY2z
-         Rn6jFBBj16j2zasFLSoGhwmHcKJm8eU+m0PZbwt8DfQrM75/C7XM0yuXcmfq5zO6A31a
-         DEuzB1tiZECj9Fc6n2a7BDLdYMVS4tsXwX5M9eZwILQXTceM5Y6R54gcI/+1abGeyBWx
-         SK6n0XiYKx6LmEdj4yV5AmJ/vl8CniI9V1fDng05rplHtFRD2BR5rqvHdLul+PQghFbN
-         t6LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVU5sysSxJ83I8j5xglgY+T+4b9/iMZoCTKAFnyDircVohdpv6mFBrOybBhvEkN56Iuv8zhUA==@vger.kernel.org, AJvYcCWki5Nj29ALCqrCkoPWB8mYFQ/0Zs/u9RUGqkB2jqfj1gaWA/3Ygx/vrMqQxQFx371iyjUd+nIJSLCuCFyu@vger.kernel.org, AJvYcCXgJ92Qv4QRydKxnun2t+YyTiBCHoSp2fFK4/LQzUjfBgGHNm890IYt7atS2Xp56JLp+23pJa+Lqv0Lziys9w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTkudiHjCZk407f+0vfci1eqGrnZloQfWIqd33wy8XFD8vIMT4
-	o2TLtt73vNdHjOeXfOrenTPtTAB1jNDkJsIqaah5GAx0QReyhhPLcJVAAtpCUzbauIUhiRD0AEm
-	kRuzz/PKpCnEZKi+HWYxUnvFQ9gM=
-X-Gm-Gg: ASbGnct1sqcEkNioMQ1x+DejEvlQw9vBS7HP1ceWW8H784RFXWp81QwSR1WIcfNk79V
-	sIFLwOoliQk+0HT2Xp3V+n2wiiFn29x9CDuIRfOjxD08wFz8xBrtUfH0TTsMK4UcTtOMpOb5v
-X-Google-Smtp-Source: AGHT+IG2oWQwkRpCjysgqfuWiM97pMeIC+nGnB0ZEcQS+BxA5ZSw1JZItpWr/Qw3z8w7GeyebbtowgqSYSm9aozev1c=
-X-Received: by 2002:a05:6402:5290:b0:5dc:74fd:ac0a with SMTP id
- 4fb4d7f45d1cf-5de45046dc3mr1016725a12.8.1738879855385; Thu, 06 Feb 2025
- 14:10:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pZX2eWOK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ersB1IOFRNxgKIsFageqvfLA6i2Xo1VdGCpT2VKdxdkgPF95Bo1N65i8WDYmVHfgCzoq0fJyLbjwQBVka1COjyIk5WVfN2x6BFFY07RZrvS5l+Li0A6bkSP3OyRGOdLxVbd0R4XkSOOqwVDZh7+amZCkZyr8aZ8jW4QO0XcK9IwKM97OU9zLas8Y86Qcxyb/H8BDj2k7KluV2+TkgOpnAPSmbedcBFGQO6NEWkrYwE45vP7ot4FAB7iZu7peWs/BSP3yHi0sBpDbvKBZ8ZKivxpZCDPVI7ZqIsSbYCvgUALT/GCP5IHmjG/gscql2wOKu8xIQ5iNOu/yX76e+JhAYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+QGH74ulhxXlF6AxmHSJwJMdnh62/b2+XypTETEFoX8=;
+ b=i4fufH+vop2a9/YpZhTWxZtzbhe+ltia09rvxXr4ncjdRMB8ZHkKNN2BbHwI9sjekwolXGEHwDspPuu+xvv09ki9V6bZgANJ46ulGNU5J9vLCCWBg60cWNR40JpX0Ch97sBPsFIZ6vY4FqVkCAqap1cZpuhy+WeRgEtCL6krVv/slV4FACoW0hEvRvq5aHDNS3V9O3uEnXTfbn7ekesanPEv1ANgq7WLtOUOzcWV8kTi6b2TmURp4+gvq3ZzrRWmGvw5d0DcjU+ntBD+0rRao0AH706hyLe2iWzrf9+uHRml8dgx9annJJHgSXgu9WXxhkcfJpQzn8DMu46Ksc99Qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gondor.apana.org.au smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+QGH74ulhxXlF6AxmHSJwJMdnh62/b2+XypTETEFoX8=;
+ b=pZX2eWOKV3Yr8wn6mQRuQ7ogknMYsWkK1oLcDL26HLHwvRzCM9zqgPi2vanhxuPP2mmcn9HfkVnaMWyt3GaJbPIlvQbty8Img2Jm1QIOfOi34E8SMqGrqWo/ROS4uPTJF25Vr/v2IjLunZAfcGOnqf/aDdaBnsFo4AwhwJv2/Co=
+Received: from MN2PR04CA0003.namprd04.prod.outlook.com (2603:10b6:208:d4::16)
+ by SA3PR12MB7830.namprd12.prod.outlook.com (2603:10b6:806:315::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Thu, 6 Feb
+ 2025 22:12:28 +0000
+Received: from BN1PEPF00006003.namprd05.prod.outlook.com
+ (2603:10b6:208:d4:cafe::46) by MN2PR04CA0003.outlook.office365.com
+ (2603:10b6:208:d4::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.22 via Frontend Transport; Thu,
+ 6 Feb 2025 22:12:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00006003.mail.protection.outlook.com (10.167.243.235) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Thu, 6 Feb 2025 22:12:27 +0000
+Received: from andbang9.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
+ 2025 16:12:23 -0600
+From: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+To: Tom Lendacky <Thomas.Lendacky@amd.com>, John Allen <john.allen@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller"
+	<davem@davemloft.net>, Mario Limonciello <Mario.Limonciello@amd.com>,
+	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>, Thomas Rijo-john
+	<Rijo-john.Thomas@amd.com>, Rajib Mahapatra <Rajib.Mahapatra@amd.com>,
+	"Nimesh Easow" <Nimesh.Easow@amd.com>
+Subject: [PATCH] crypto: ccp - Add support for PCI device 0x1134
+Date: Fri, 7 Feb 2025 03:41:52 +0530
+Message-ID: <8e2b6da988e7cb922010847bb07b5e9cf84bb563.1738879803.git.Devaraj.Rangasamy@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGudoHFLnmp3tQHOwUAFBKxrno=ejxHmJXta=sTxVMtN9L1T9w@mail.gmail.com>
- <956b43574bcb149579ecac7a3ab98ad29dddc275.camel@kernel.org> <CAGudoHGqYKTM979s13SAP7fukeAd4NHGTMsxnRWN7A5BpYaCzw@mail.gmail.com>
-In-Reply-To: <CAGudoHGqYKTM979s13SAP7fukeAd4NHGTMsxnRWN7A5BpYaCzw@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 6 Feb 2025 23:10:41 +0100
-X-Gm-Features: AWEUYZknvE-HOGP2RWK6mr0JD4I7AL0JTBX-Up_kPyHMEtp0w9NL4G3eskO-d6c
-Message-ID: <CAGudoHH8Rg=UA+gSDywkVCNHDofpAQCgJuiecZxrTa_7otrx-w@mail.gmail.com>
-Subject: Re: audit_reusename in getname_flags
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	audit@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00006003:EE_|SA3PR12MB7830:EE_
+X-MS-Office365-Filtering-Correlation-Id: a1cd5482-325a-4167-a13a-08dd46fb5751
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?MhXG6vTl0d5hUHSIQovpG/DAp1q09K49I5i/+fJjyXPs9bCIkrc1xBudRaDT?=
+ =?us-ascii?Q?2tr5+MVL3sZWI8LVH65ogO2SFVfFNa6mCMxr2bDNqxykUjuudeaScq7faTYd?=
+ =?us-ascii?Q?wIC+iRNI0eyx/oz5dJpGKteNHTVAHgUfYMxeSbwiJsoSskmZsITtPd5i1zDE?=
+ =?us-ascii?Q?CkPyMQlzJ6UbOk+bwj2VnUu/WbpatTLwYJEkIR6PTJshFW1kuaNHb4U2ybGG?=
+ =?us-ascii?Q?676c3R1Yn5fGuS1Tkp3tXNFxPjMszbH+sACc6DZwVF4+eywvyZ6/Y/YPtZD/?=
+ =?us-ascii?Q?YsOCbuhJQz07GJ2IzCccbb2Dpza0qN3yZvJ31ZTNnCqT1qmtlFgKHf3XnFc8?=
+ =?us-ascii?Q?BHSx3SogA/vCzEZjI/IwwlSHk6vsI8QC7P3/QiSlYizqgg/YEG9OjCt9+eqz?=
+ =?us-ascii?Q?cVem0nOpcrLZLyCjYx7Rl/2JyxsLYKKh99jtpOLT0MYncsfRPXaDSjMYSCDn?=
+ =?us-ascii?Q?lead0fTR1Q25M2769+xu6t2K1aWSTW5VKraFawqnbxW34ihtnc8rNPwZDlzV?=
+ =?us-ascii?Q?lod1xxa2VKQh25m6YA1gyLTj0wlTcNP1scNZrepnuGODEbhyIZUnQqWrqRea?=
+ =?us-ascii?Q?I7qTHu+QKV4BtrbHrJxKuBHVRUlgT3xG92pOR3t/9w6vhlDIcmat2tkKzpWZ?=
+ =?us-ascii?Q?FpnbJSdFRg/cUqGi76zbDyLoVSOu1jyj9tXysN/gSTPoRWNYN+3/OBrqsJuC?=
+ =?us-ascii?Q?AnFU2va4+2aNgbSV2x+RqUr452h9h+GeRoLBlLfiIJxkTGqRO3Yi7tw8TRWZ?=
+ =?us-ascii?Q?YaW+pBMvzuYImXPPSVheMMyhaEk+aDJPu4guD7CNDQO37W00gMKJc6LMi3w3?=
+ =?us-ascii?Q?6k2I81mCXbCDJq8qx/bGcLGSriix2kVbSTPmFI68x0kWNEgNawyMTnUoAI58?=
+ =?us-ascii?Q?qaFWKVqCpkvk6ofsvd8X7pwHrF95pdggr2onpaTxWtff6tkn40VqS7VYWz2+?=
+ =?us-ascii?Q?QhNh8mHl+/RK69p55uUce85723edwnzEfCTHm7GqmnSdVuurHmEZYPFwMbdE?=
+ =?us-ascii?Q?jit3e2hOK4GxJcx8lflNwbdxFYTBYw0NRrK40Ip/jQvo5jsXBnbsNQ+fKbaT?=
+ =?us-ascii?Q?0JtwW3pUBrBm7OndLpypVcFv0jCkgYXBziz2kLjnuGbSK4wOf6kT5KIhUd1X?=
+ =?us-ascii?Q?A/T8ULqmUkL77N7UHmlBDcLgY7Mn/OR9d98zfCR73rvGL5ojK0eyyyu9ZNTP?=
+ =?us-ascii?Q?VNaJJ1nDrfAnV2Ga/g3pIeY5xwxI/XMcrQxbPeTkCVFmARkSJK5Fkp+KsXMH?=
+ =?us-ascii?Q?+lPorONsd+AZNX8ZOC5YI1fnnKDP1R+65AJeuUc8pIMzJAqv/xizu/cMdv5P?=
+ =?us-ascii?Q?5sS38dTsrYM85NDdaUXLSnVXH+3a5oX2kjnU312Lesej0DTczeLFdd1BDx9I?=
+ =?us-ascii?Q?0mqw/OF4bTH4hpwn6zL6Uxpr6dQko9wA7ip19zBDlDvbf2dMk1mQWMJegLx6?=
+ =?us-ascii?Q?Ay5fN9C2RNHQ+sOBuJXM9dwlm3owpc5nEBW3uKZ9t1Bbvkyol8nnPhZHllbD?=
+ =?us-ascii?Q?wN+zhe7Rj/YAQEg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 22:12:27.1556
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1cd5482-325a-4167-a13a-08dd46fb5751
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00006003.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7830
 
-On Thu, Feb 6, 2025 at 9:34=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
-ote:
->
-> On Thu, Feb 6, 2025 at 9:24=E2=80=AFPM Jeff Layton <jlayton@kernel.org> w=
-rote:
-> >
-> > On Thu, 2025-02-06 at 20:07 +0100, Mateusz Guzik wrote:
-> > > You added it in:
-> > > commit 7ac86265dc8f665cc49d6e60a125e608cd2fca14
-> > > Author: Jeff Layton <jlayton@kernel.org>
-> > > Date:   Wed Oct 10 15:25:28 2012 -0400
-> > >
-> > >     audit: allow audit code to satisfy getname requests from its name=
-s_list
-> > >
-> > > Do I read correctly this has no user-visible impact, but merely tries
-> > > to shave off some memory usage in case of duplicated user bufs?
-> > >
-> > > This is partially getting in the way of whacking atomics for filename
-> > > ref management (but can be worked around).
-> > >
-> > > AFAIU this change is not all *that* beneficial in its own right, so
-> > > should not be a big deal to whack it regardless of what happens with
-> > > refs? Note it would also remove some branches in the common case as
-> > > normally audit either has dummy context or there is no match anyway.
-> >
-> >
-> > (cc'ing audit folks and mailing list)
-> >
-> > IIRC, having duplicate audit_names records can cause audit to emit
-> > extra name records in this loop in audit_log_exit():
-> >
-> >         list_for_each_entry(n, &context->names_list, list) {
-> >                 if (n->hidden)
-> >                         continue;
-> >                 audit_log_name(context, n, NULL, i++, &call_panic);
-> >         }
-> >
-> >
-> > ...which is something you probably want to avoid.
->
-> Well in this case I would argue the current code is buggy, unless I'm
-> misunderstanding something.
->
-> audit_log_name in particular logs:
->   1550 =E2=94=82       if (n->ino !=3D AUDIT_INO_UNSET)
->   1551 =E2=94=82               audit_log_format(ab, " inode=3D%lu dev=3D%=
-02x:%02x
-> mode=3D%#ho ouid=3D%u ogid=3D%u rdev=3D%02x
->   1552 =E2=94=82                                n->ino,
->   1553 =E2=94=82                                MAJOR(n->dev),
->   1554 =E2=94=82                                MINOR(n->dev),
->   1555 =E2=94=82                                n->mode,
->   1556 =E2=94=82                                from_kuid(&init_user_ns, =
-n->uid),
->   1557 =E2=94=82                                from_kgid(&init_user_ns, =
-n->gid),
->   1558 =E2=94=82                                MAJOR(n->rdev),
->   1559 =E2=94=82                                MINOR(n->rdev));
->
-> As in it grabs the properties of the found inode.
->
-> Suppose the 2 lookups of the same path name found 2 different inodes
-> as someone was mucking with the filesystem at the same time.
->
-> Then this is going to *fail* to record the next inode.
->
-> So if any dedup is necessary, it should be done by audit when logging imo=
-.
->
+PCI device 0x1134 shares same register features as PCI device 0x17E0.
+Hence reuse same data for the new PCI device ID 0x1134.
 
-I did more digging, audit indeed *does* handle it later in
-__audit_inode(), so this does work after all.
+Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+---
+ drivers/crypto/ccp/sp-pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm going to have to chew on it what to do here then.
+diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
+index 248d98fd8c48..5357c4308da0 100644
+--- a/drivers/crypto/ccp/sp-pci.c
++++ b/drivers/crypto/ccp/sp-pci.c
+@@ -529,6 +529,7 @@ static const struct pci_device_id sp_pci_table[] = {
+ 	{ PCI_VDEVICE(AMD, 0x14CA), (kernel_ulong_t)&dev_vdata[5] },
+ 	{ PCI_VDEVICE(AMD, 0x15C7), (kernel_ulong_t)&dev_vdata[6] },
+ 	{ PCI_VDEVICE(AMD, 0x1649), (kernel_ulong_t)&dev_vdata[6] },
++	{ PCI_VDEVICE(AMD, 0x1134), (kernel_ulong_t)&dev_vdata[7] },
+ 	{ PCI_VDEVICE(AMD, 0x17E0), (kernel_ulong_t)&dev_vdata[7] },
+ 	{ PCI_VDEVICE(AMD, 0x156E), (kernel_ulong_t)&dev_vdata[8] },
+ 	/* Last entry must be zero */
+--
+2.25.1
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
