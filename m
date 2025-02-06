@@ -1,104 +1,379 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2055.outbound.protection.outlook.com [40.107.22.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681CE2B9B7
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 00:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738802236; cv=none; b=ikaVTM3+CMSn4cS4cvbNqDo2ut53kxOIaEqd6sh20HKRGbu5buCtIQlEKOm/ZOY++XXe7/sk4Or6vrWep81ID0lSI5aAwvjzlGshQhIfFNQMRNYWyfHMNBBA9cZ2tlPekmPJPA4icyvcPrt2mgndYy+9ScfZM6bFa/gaUKUx+YQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738802236; c=relaxed/simple;
-	bh=9z/NlbEN8jSOw3hMYSM0ISuObqgiClju3/L+Fh35BN8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E/zmDw4KfTQ8hQTudw0QI6n7gZ9wqj07XGEyIIYpmyhkRUd1ZSAGuPztXYXQz1LzMOnmtMRNZV8xfOPRuyfirhmnZV9kLR998GylQMNiS5F8D73FNx9H/4EiI5V9EWhrVp9LP4pGrax6pxx8MTsS/h/V7JZ4txuLX4jwjnsLDP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jKsEJsa8; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A4D1A296;
+	Thu,  6 Feb 2025 00:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738802329; cv=fail; b=TVzv/EWJBQsexB49LlV0+dxNnSMK66+n4ma8pXXW++FhBHVxWb/YE5lN2C8Opj2uTElP8fVl6FCc2vTHthfRXIffOZmzoq6Qx1sEdBO971RX6AC94GJnENdQESoMtcOzM0eaQ2HKT+k394KKJXrmUNrIAF6JSHcwcZqrICePNXs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738802329; c=relaxed/simple;
+	bh=cxcGY51yGECloJBUMLu4p12PXKDjbyFT0+4IJHvskCE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZyYioaoKCSUwyGhLwlqIJTB2OFiMsgR/bia/VsHB+1xWV+qk1V0o4TB8W6Y/7onLlTgX0ALesZL11U2wiYd/ETVJr9LhyU61BkQp+CCZjLE+qQB6F0fMaw6HExfE5GklZocTomTQBM1GlXlLUV7Tr3xR7NVQq0Lf3k5sEcilfeA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=M6e2j1xX; arc=fail smtp.client-ip=40.107.22.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jKsEJsa8"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f9d5f6df4cso408228a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 16:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738802235; x=1739407035; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7u4XADLr/C5eZ7qkGhMI8Yv7tVqEObjjFDJ5fXQvZww=;
-        b=jKsEJsa8wqClIs5/nvZ2UJJGw76I8z4vidajJJ3fIKC4brix+6xGmevJetO3DdTUIh
-         B97waMLf9AoXhmARXarGdZXGMIbhRO604mb6qU+s9tfrq7uRTGhcrz/terX4xnwTvu1O
-         l48jSnNTcWnTiyu5sQkRIiSQggIWw53dNeM1loEG+IM87/JwqXfDbQpkfzPll3pteK0X
-         1644Ab2pUgr6l3MdvyShFHvBH/zqXX3iZMGCZiAgO7geD+jqFob34WOTbvLtYjp1o9x8
-         Ee/C+xTX0rKDUzxaakgZoBJQl2M48Km6Eus4fv9/UBSd3/qafHG0+TFfUYb78YNgcWdj
-         tdQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738802235; x=1739407035;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7u4XADLr/C5eZ7qkGhMI8Yv7tVqEObjjFDJ5fXQvZww=;
-        b=ZtHTas3eu8OW6aYwSeKcGiGyWcujMhmRakEnvzZu9/IEFX+37359/zPkwsxWdJQsxN
-         TPRwaeiWxK1zSLhsRf33+tlIB1LkD1QXTnJ/MDvTziHggkKr/QWMyd2T88/9Fa8wv5oH
-         ZJnWTss81ht659fCXhjb9tgkisDuY2C0axv0seP+n/Aafa2LKqlrYwgzIYyUn6qezl2R
-         oSlHKtEoH0+VGMuY9q9L6kk/HS9NX4pb1XZS3BuI5sm0mKZqLHGS1TpmksD8IAEemX37
-         mcYR3FHLixv7ZZ7Z6ryinCS7LBkU7l/5yJ+EmP/TrUAY/W5x5xPXXeZk5INusQtO+Nsa
-         espg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeYVAxkd4XBceG/kBg0hPfAgP6jU5mOvaB/NB5N2mAMYYiHrfRyPOd3jiq8/8LHIC/rO7Bz5sjc2tnkh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEVYMZZfuI5T5KaQ+hp0PysAB6RjtOLZak1UifF/cRBmmbygau
-	1km+E+XYuruZ7FJD2uc6bAzmCnxIou/jOKNFY6TSJk947KXTYn/8+7ShyfynkxgeUBV3/YRBHtS
-	z
-X-Gm-Gg: ASbGncs1v4FoIF4beNs6zVLxc9zLVIVECOKUADgea4uz9mn34GIq/pOjAE58KcUqlvN
-	OlDdYEoBhX6yWCy8MZUDe4z+TvZJv+Db65KasPXIHEWErH73Bl4uT9enybK6oZUsoCwa2zKC/M3
-	tF7MvRMqALIHXkotnvJl5KX+oQr71tgIb/IZD0oYW//1Grt8RcqU0f/5sM5payl1Ygpi+Yyi0w1
-	iT4psVeO2Bfgc9FUYL9bubynt5h8k86kxr5z+0MS7EheDfs0GxRWu9Ht5P7ygr7o8s3aoIvAnMF
-	i5NCz7pXIVijiw==
-X-Google-Smtp-Source: AGHT+IECtRNllbLpK+x9JkKsoGM9WVGfThDVXSbLPfFhNXjo7Zhdyn7+h2ahM/Hfy/0Z08HwPXvJQg==
-X-Received: by 2002:a05:6a00:1942:b0:728:9d19:d2ea with SMTP id d2e1a72fcca58-7303513cbe8mr7280503b3a.13.1738802234722;
-        Wed, 05 Feb 2025 16:37:14 -0800 (PST)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c15bb9sm61111b3a.122.2025.02.05.16.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 16:37:14 -0800 (PST)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Arnd Bergmann <arnd@kernel.org>
-Cc: soc@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
- Tony Lindgren <tony@atomide.com>, Masahiro Yamada <masahiroy@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250205121151.289535-1-arnd@kernel.org>
-References: <20250205121151.289535-1-arnd@kernel.org>
-Subject: Re: [PATCH] ARM: OMAP1: select CONFIG_GENERIC_IRQ_CHIP
-Message-Id: <173880223388.2488567.3141490107424057794.b4-ty@baylibre.com>
-Date: Wed, 05 Feb 2025 16:37:13 -0800
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="M6e2j1xX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uRMPKeXoV3icxHsRft7G7UNArPN1fcOowimip9Lt311AzO46IkPl/Ydjuvrl5zPaTDptFvEKhTT7n1LHScB0IxwVg0s7YjF+BPJ2Z8tnIYi/N8c+c5vbGKQskQ+Y6KwQnAng9Sva0z3bVeOf/+YW97A8u1Hz/538rdwItMoLdTkcH+ZT8bvymabV+bzyqOq9UMJex0rHyODkxxVYK9k4QZhRjUu0wICc2RkGJsZAj96tFo8rvIq91fF9Z9+BVbFrxUGqSq6Ijti+pdBCZXEY0VrtUFyrKspJz/KKh8Lbz+H37IIt90gIvO5yNo8MkX2XOeQ3+oe/fRgoXK7hUT2Wmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oI2kfgxuN7HioO65MIUQgFYFRBOyBB2R1bl2JgUa5GA=;
+ b=rEVBZkw2id13dW8Za7jDM8ZbTdf1qoaurzbEsgKkQiYKN6XitazDFWXNNvUx8cM0xevSCmcHZqYWcCmPi3niGgbIpdvXzQC7JJNfCSWlrmF47Ugb81y8ZevoPjiGK/YtZU59vEkNsxFcrRyBiXFYcBuBljdOxHp29M5s440Y4YjRNlrKIeRcfPBpGOSZU8nLjRx592WqNY2itQnlfkNu/0I0D17eIXzIV4a+QWz/MRGj4PId0GDONpRWAEYq3j2Aqt5Ob2NvS1iV0PbQ3D+h3n76U1amzi016qxldYyycnRW6BTB+CEn52Zco/Re+leoCwOZjSkiCXId3J5qZSlwSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oI2kfgxuN7HioO65MIUQgFYFRBOyBB2R1bl2JgUa5GA=;
+ b=M6e2j1xXCa3jKwSRQ3w4NE3iW4Xxcsjxh9rsnbzaEHXaau343vmftG/8MPqEDk21Om3kRUr38y5HMTkZzUzjtolHpdSJAgGC9TOnj3ZuhNHBNhZFalPrJwOvRWGwp2sGucYccOjmqG7jbzNLvRtUBH+PTxCtqqwFXeXVF7y9OqoP8VAqI1gEvqgzSklrMgtBJD93bnZPI/fT771qsG6z/TGIPVKNrDhhAgVW5DgWk0tDaX56mfQ0r0yOz4SPCzrYmXiYP4iA9fB8SDHlAUdL48zmJpuVnJt7TswKEGv5buhTYmgSG7f84I60qJSme4uH9NAzt24FXN5q49xOL0NYyQ==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PAXPR04MB8784.eurprd04.prod.outlook.com (2603:10a6:102:20f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Thu, 6 Feb
+ 2025 00:38:43 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
+ 00:38:42 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Marco Felsch <m.felsch@pengutronix.de>, "Peng Fan (OSS)"
+	<peng.fan@oss.nxp.com>
+CC: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+	<sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>, Sudeep Holla
+	<sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, Abel
+ Vesa <abelvesa@kernel.org>, Rob Herring <robh@kernel.org>, Pengutronix Kernel
+ Team <kernel@pengutronix.de>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, "arm-scmi@vger.kernel.org"
+	<arm-scmi@vger.kernel.org>, Dario Binacchi
+	<dario.binacchi@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v2 1/4] clk: Introduce clk_hw_set_spread_spectrum
+Thread-Topic: [PATCH v2 1/4] clk: Introduce clk_hw_set_spread_spectrum
+Thread-Index: AQHbd7NxpkaGxm6rAU+fLs8XnwVMJ7M4nDCAgADQBZA=
+Date: Thu, 6 Feb 2025 00:38:42 +0000
+Message-ID:
+ <PAXPR04MB8459CDBB65AE57CDE780339A88F62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250205-clk-ssc-v2-0-fa73083caa92@nxp.com>
+ <20250205-clk-ssc-v2-1-fa73083caa92@nxp.com>
+ <20250205120215.if3egfj6vbnynwl3@pengutronix.de>
+In-Reply-To: <20250205120215.if3egfj6vbnynwl3@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|PAXPR04MB8784:EE_
+x-ms-office365-filtering-correlation-id: e52c1567-b414-431f-9a10-08dd46469ba0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?OH3l8fGWIdNwibkx8Waqe5h+kqG//bysstEwmkbl6xdJuIU86lFimg+UozbW?=
+ =?us-ascii?Q?leJZtrgftLY1YKAGdI0HJG8tJvzC5U69hxCuAmDw1aTZOYz1WEW99eQpvMIe?=
+ =?us-ascii?Q?9fYJH6zqrDMD7e/bUexvpxhOlDTzwA2Zy32FsdJwTWxuxkZd2fyBs/CJZutv?=
+ =?us-ascii?Q?YN8DWhDz5mGvm4070obqBQ8S2jSrJhKxR9edHAT7PNVhKp1bepJMp38Ou8Cq?=
+ =?us-ascii?Q?MThwgEQbF8gL2Kyvzuj1i3jln/yUhOZ3zYlMsAu8VTz1ferrLbCOgGxHRiCV?=
+ =?us-ascii?Q?3h5JH/MgAUDh81LTgHFOc+oujGsmUPr0ol3MkXXuoOnZTU6/be9fCCpzp8H5?=
+ =?us-ascii?Q?RQ0qVVLPV1okHYv4kSCW7679QAruiQemV3fiJZZJjZVSy9xVPBStqSBFEYaK?=
+ =?us-ascii?Q?EYpFiu2rNjYFHz6EGyZFEq2bZnEIYWknyK3pXc0Zb7pGCgwQMZFVQojfa7zd?=
+ =?us-ascii?Q?cS/XDGBbjL12b+jzDU9D9oZ/ou1QM4PVB9l/nUUwkYb9QdfeR2wDBHPsfHp1?=
+ =?us-ascii?Q?4Pu26FCzEEw55vvDmG6vH0z70lE3QpYFPTDSvm01m765WeAjTAA8DkypMdgE?=
+ =?us-ascii?Q?3ejhNyPmKH7SBllqhJOQMlhI9Ki8sgbocSVzZpcWDjkw08jPUidwHmZdjsZ0?=
+ =?us-ascii?Q?eFo0DZonbMub3c2nV6O+YUux5ATWonZBp6PdvAPCoMrb90Y75prVI3pXUuGz?=
+ =?us-ascii?Q?5IRM2WonBQHLgM9RQYlDW2k2QQ0WTzMgN5zB09WgcTXUQJSQuQQGkg6bhOeb?=
+ =?us-ascii?Q?NLkN0P8Hc/BTVplacLekkepaWJo9JlduhYErPwj6dAfnoDFqM6DrQ/Mi/4bH?=
+ =?us-ascii?Q?e8En1LbS1xDSrRtyQ6Q9+BkQ6k+r2uAWKB1oQ3SKXv/DsPkX2JnyCnaGX/Dn?=
+ =?us-ascii?Q?ZY6ROX9ajj6QbJBRdeUUqDbXlJo4lpKZvYynUCkT/MeNQaMUs0wBsbKgzV65?=
+ =?us-ascii?Q?r8E5h6l5Q2sfRiyeu7WOdHZ+v/+AsI+oaSGlpDISdSN56eXHL40Kx0cmDHIX?=
+ =?us-ascii?Q?ex0QFQknd6lX5ONH8OHJ5ebWhyEoOdrbyAWoPovcbJvOMDQxMLjpqY/CDrBT?=
+ =?us-ascii?Q?zPD0L+6SN4H3MKGm8Wb91v/P+XV2+kFBtnywtZOO+lzFmDzVXXkiYdMOAob/?=
+ =?us-ascii?Q?fSF/BhO5rhL1ojK/YS4v4Ijf4eGTgQT+QBM7bfbiCAlFjQ1QCWPxPH/AOBDQ?=
+ =?us-ascii?Q?AJLfyrhTn0JLhAHJRXivvC0XbnV/teXprg/AjcttptfvjlCZyoJ/MDBl516y?=
+ =?us-ascii?Q?0Vhq0DLOlfiW5u9RULgqRVfUQKfXGjV965o8Ud5H3GcrQWu/NVy6WbHeE8h1?=
+ =?us-ascii?Q?Vf6krkyytde2PWNbDdTNPO3cFPghRRcdhON36T2HFhiMtvNQOcUstg0hVeKD?=
+ =?us-ascii?Q?Me+FaQaCy/CojGmWU95h4X9dSp3UDDdu1PBFhgd4PHJnWgh5mO5Uidr3nntC?=
+ =?us-ascii?Q?/bRmnEH9EkuafJ1UG4Q8RnzOuiMOw9v1?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?w1MaJusOvMn5IDBwrxPM8SNJNPInJ9oJ0qZ6s/Q1voJPU3s5J2tmoXymBe6E?=
+ =?us-ascii?Q?6+4eS4kx02rstX1vRGHuii1U7IJN/W9S3kBbiYr9vp+qjyibozWMd/UGkdwr?=
+ =?us-ascii?Q?5edWDnnr1gGu/JCWUDOIhdj76/fLcKh1+sr4c5ECHND1UAGd+H6HemfQDC5l?=
+ =?us-ascii?Q?/7fx3gmL99AfXHsDtdJeogO/4aMzFKIktWfepa2gotuBDoObDqAqlMvyTfee?=
+ =?us-ascii?Q?I9WbzqGAEIeMs8TIfLTaemIsF1r+dXA+pKApEWvY/FQ/IW11S8dB3lXIhY47?=
+ =?us-ascii?Q?PQadVVMKya5A/KmFe08ksTixuf9kOTEvSfQoApQCrsc8WagbWg2DzdXW/ixb?=
+ =?us-ascii?Q?KfblbEPyaFdx6pT9AoF4lU4g9xcPG111bB6HAnOtv2IZ3eCs3fsdiF2ibddw?=
+ =?us-ascii?Q?reGy2xPeRiLy1n10/at3o28hf29411/xX0PFrKSKr5Zci/EzXfLjNoqVzdpP?=
+ =?us-ascii?Q?PXmhKz6PjDziuKCNO9eLUqYHwB8OXXjMevibVMQ0GhCCK8J1eO0fiBIYezyN?=
+ =?us-ascii?Q?Bov3oVu1a2jDx35eUhJ4F8RWrvhg5AyzGBV3yeXqoVZdvHQ9ikHofxuWFJrR?=
+ =?us-ascii?Q?YxDGQ6LMjO4dN5gxGc4Xls2bcCL54LmzLkOObyB/f20tda33QQo5yq/LCbEA?=
+ =?us-ascii?Q?sxdi+8BUKHQM0Ks/06sR3ZP95ex+woqe+eeot/JPTmzldzTSdhp/JnXgXjo9?=
+ =?us-ascii?Q?z3SMAN5ieuLYTwjP6f/GRqdupQM4OK5Qt2RJsffBCAdCJ0aqzdsA0wTRXyef?=
+ =?us-ascii?Q?AfQuSewl6mbFf304G8sTdZjDRGmOFaliN6ObhEgzJbR826s/jSh4rdWX6M1Z?=
+ =?us-ascii?Q?Ir15mZnJEcFLZeZq117XXEX206U+nxc9h333MMDx+frouSUI8dBY2xluZ+Fg?=
+ =?us-ascii?Q?qeHXtF7NQoXs9mRzxtzUbQOoxqGSxJXQXYIzoWMLvOsG1cC8gBY5ERit+LWQ?=
+ =?us-ascii?Q?ZFZ26Snl6KwUcxM11nCT7nUwGYgdDWjJ4aVZ08UKAgn+Jl0+6jnC4B69AaHJ?=
+ =?us-ascii?Q?prY08kQLrekQ3yniVt8wwqDB+rBmnNTGSHDSqNjFS8bpFAOvc6hx4RGrPMcK?=
+ =?us-ascii?Q?qcEVz4TnvR0NCgSd03L0QHvKXltswbDIvrttXVQdUNuIFker6FvGr13e5FYp?=
+ =?us-ascii?Q?ORLV3EhoRM066oPDDaiza2AB8BOaMjZ+IPB/DkK6Mau1fwnxF4NJesBrxh6w?=
+ =?us-ascii?Q?/XthXqhnR7OmA11ys23McBEG7DSOmwuaWfwLH6xfq/vePk7oYGrCOIVlpms2?=
+ =?us-ascii?Q?t2/AvkAmE/UGkxvCJ5r+kCShfCh+isYr4pd38uXuENaMouutZem2HkpycW1n?=
+ =?us-ascii?Q?qKQ/VSGphWjAG7VbQc8uSaSJnRt2lXDqX/pWddI5ZanU7GIAt7reu05hY94K?=
+ =?us-ascii?Q?SbDiMWCLrT5ebWJExTv1AnwtpniQzuSBXI98gSUoe9IvDvbBNDeZcrYuPFts?=
+ =?us-ascii?Q?6FLiHXz/ATkzRmrS1a9u/hAL6i77JVjwutPiXdGl3+4C1XjtozOEsJB9FdxW?=
+ =?us-ascii?Q?03JSeHoKOrqE3c5YGz34uGe42TQqZK/+vgvURPIOWE6wo7gdcFwa4S2o7V8z?=
+ =?us-ascii?Q?7BYLk/mLAQDx1cN7p8I=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-94c79
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e52c1567-b414-431f-9a10-08dd46469ba0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2025 00:38:42.8973
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V2AakKGqPmKN5RtSF+RnBudKmA+SNscNR81CpzTSLuml8ajblK73cwztVjOE9C6AiOyeg0StXhjQEJcTLWqNSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8784
 
+> Subject: Re: [PATCH v2 1/4] clk: Introduce
+> clk_hw_set_spread_spectrum
+>=20
+> Hi Peng,
+>=20
+> On 25-02-05, Peng Fan (OSS) wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > Add clk_hw_set_spread_spectrum to configure a clock to enable
+> spread
+> > spectrum feature. set_spread_spectrum ops is added for clk drivers to
+> > have their own hardware specific implementation.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/clk/clk.c            | 34 ++++++++++++++++++++++++++++++++++
+> >  include/linux/clk-provider.h | 32
+> ++++++++++++++++++++++++++++++++
+> >  include/linux/clk.h          | 22 ++++++++++++++++++++++
+> >  3 files changed, 88 insertions(+)
+> >
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c index
+> >
+> cf7720b9172ff223d86227aad144e15375ddfd86..e11f9615e683af52c7
+> 19d4c8419b
+> > d30f369f301b 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -2790,6 +2790,40 @@ int clk_set_max_rate(struct clk *clk,
+> unsigned
+> > long rate)  }  EXPORT_SYMBOL_GPL(clk_set_max_rate);
+> >
+> > +int clk_hw_set_spread_spectrum(struct clk_hw *hw, unsigned int
+> modfreq,
+> > +			       unsigned int spreaddepth, enum
+> clk_ssc_method method,
+> > +			       bool enable)
+> > +{
+> > +	struct clk_spread_spectrum clk_ss;
+> > +	struct clk_core *core;
+> > +	int ret;
+> > +
+> > +	if (!hw)
+> > +		return 0;
+> > +
+> > +	core =3D hw->core;
+> > +
+> > +	clk_ss.modfreq =3D modfreq;
+> > +	clk_ss.spreaddepth =3D spreaddepth;
+> > +	clk_ss.method =3D method;
+> > +	clk_ss.enable =3D enable;
+> > +
+> > +	clk_prepare_lock();
+> > +
+> > +	ret =3D clk_pm_runtime_get(core);
+> > +	if (ret)
+> > +		goto fail;
+> > +
+> > +	if (core->ops->set_spread_spectrum)
+> > +		ret =3D core->ops->set_spread_spectrum(hw, &clk_ss);
+> > +
+> > +	clk_pm_runtime_put(core);
+> > +
+> > +fail:
+> > +	clk_prepare_unlock();
+> > +	return ret;
+> > +}
+> > +
+> >  /**
+> >   * clk_get_parent - return the parent of a clk
+> >   * @clk: the clk whose parent gets returned diff --git
+> > a/include/linux/clk-provider.h b/include/linux/clk-provider.h index
+> >
+> 2e6e603b749342931c0d0693c3e72b62c000791b..ac0270cc9ec13395
+> 4b1f8dcffed0
+> > 15723bd1ff5d 100644
+> > --- a/include/linux/clk-provider.h
+> > +++ b/include/linux/clk-provider.h
+> > @@ -84,6 +84,28 @@ struct clk_duty {
+> >  	unsigned int den;
+> >  };
+> >
+> > +/* Aligned with dtschema/schemas/clock/clock.yaml */ enum
+> > +clk_ssc_method {
+> > +	CLK_SSC_CENTER_SPREAD,
+> > +	CLK_SSC_UP_SPREAD,
+> > +	CLK_SSC_DOWN_SPREAD,
+> > +};
+> > +
+> > +/**
+> > + * struct clk_spread_spectrum - Structure encoding spread spectrum
+> of
+> > +a clock
+> > + *
+> > + * @modfreq:		Modulation frequency
+> > + * @spreadpercent:	Modulation percent
+> > + * @method:		Modulation method
+> > + * @enable:		Modulation enable or disable
+> > + */
+> > +struct clk_spread_spectrum {
+> > +	unsigned int modfreq;
+> > +	unsigned int spreaddepth;
+>=20
+> Please use per mil as unit since I noticed that 0.x% is a common value
+> too.
 
-On Wed, 05 Feb 2025 13:11:33 +0100, Arnd Bergmann wrote:
-> When GENERIC_IRQ_CHIP is disabled, OMAP1 kernels fail to link:
-> 
-> arm-linux-gnueabi-ld: arch/arm/mach-omap1/irq.o: in function `omap1_init_irq':
-> irq.c:(.init.text+0x1e8): undefined reference to `irq_alloc_generic_chip'
-> arm-linux-gnueabi-ld: irq.c:(.init.text+0x228): undefined reference to `irq_setup_generic_chip'
-> arm-linux-gnueabi-ld: irq.c:(.init.text+0x2a8): undefined reference to `irq_gc_set_wake'
-> arm-linux-gnueabi-ld: irq.c:(.init.text+0x2b0): undefined reference to `irq_gc_mask_set_bit'
-> arm-linux-gnueabi-ld: irq.c:(.init.text+0x2b4): undefined reference to `irq_gc_mask_clr_bit'
-> 
-> [...]
+I use " The modulation depth in permyriad " in dt-schema, since
+Dario said ST chips has permyriad.
 
-Applied, thanks!
+So change it to moddepth_per_myriad?
 
-[1/1] ARM: OMAP1: select CONFIG_GENERIC_IRQ_CHIP
-      commit: c2a5f8c4f28ffea8c93d10e509c5a6e61172cdca
+Thanks,
+Peng.
 
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
-
+>=20
+> Regards,
+>   Marco
+>=20
+>=20
+> > +	enum clk_ssc_method method;
+> > +	bool enable;
+> > +};
+> > +
+> >  /**
+> >   * struct clk_ops -  Callback operations for hardware clocks; these ar=
+e
+> to
+> >   * be provided by the clock implementation, and will be called by
+> > drivers @@ -178,6 +200,11 @@ struct clk_duty {
+> >   *		separately via calls to .set_parent and .set_rate.
+> >   *		Returns 0 on success, -EERROR otherwise.
+> >   *
+> > + * @set_spread_spectrum: Configure the modulation frequency,
+> modulation percentage
+> > + *		and method. This callback is optional for clocks that
+> does not
+> > + *		support spread spectrum feature or no need to enable
+> this feature.
+> > + *		Returns 0 on success, -EERROR otherwise.
+> > + *
+> >   * @recalc_accuracy: Recalculate the accuracy of this clock. The
+> clock accuracy
+> >   *		is expressed in ppb (parts per billion). The parent
+> accuracy is
+> >   *		an input parameter.
+> > @@ -255,6 +282,8 @@ struct clk_ops {
+> >  	int		(*set_rate_and_parent)(struct clk_hw *hw,
+> >  				    unsigned long rate,
+> >  				    unsigned long parent_rate, u8
+> index);
+> > +	int		(*set_spread_spectrum)(struct clk_hw *hw,
+> > +					       struct
+> clk_spread_spectrum *clk_ss);
+> >  	unsigned long	(*recalc_accuracy)(struct clk_hw *hw,
+> >  					   unsigned long
+> parent_accuracy);
+> >  	int		(*get_phase)(struct clk_hw *hw);
+> > @@ -1404,6 +1433,9 @@ void clk_hw_get_rate_range(struct clk_hw
+> *hw, unsigned long *min_rate,
+> >  			   unsigned long *max_rate);
+> >  void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long
+> min_rate,
+> >  			   unsigned long max_rate);
+> > +int clk_hw_set_spread_spectrum(struct clk_hw *hw, unsigned int
+> modfreq,
+> > +			       unsigned int spreaddepth, enum
+> clk_ssc_method method,
+> > +			       bool enable);
+> >
+> >  static inline void __clk_hw_set_clk(struct clk_hw *dst, struct clk_hw
+> > *src)  { diff --git a/include/linux/clk.h b/include/linux/clk.h index
+> >
+> b607482ca77e987b9344c38f25ebb5c8d35c1d39..49a7f7eb8b03233e
+> 11cd3b927688
+> > 96c4e45c4e7c 100644
+> > --- a/include/linux/clk.h
+> > +++ b/include/linux/clk.h
+> > @@ -858,6 +858,21 @@ int clk_set_rate(struct clk *clk, unsigned
+> long rate);
+> >   */
+> >  int clk_set_rate_exclusive(struct clk *clk, unsigned long rate);
+> >
+> > +/**
+> > + * clk_set_spread_spectrum - set the spread spectrum for a clock
+> > + * @clk: clock source
+> > + * @modfreq: modulation freq
+> > + * @spreadpercent: modulation percentage
+> > + * @method: down spread, up spread, center spread or else
+> > + * @enable: enable or disable
+> > + *
+> > + * Configure the spread spectrum parameters for a clock.
+> > + *
+> > + * Returns success (0) or negative errno.
+> > + */
+> > +int clk_set_spread_spectrum(struct clk *clk, unsigned int modfreq,
+> > +			    unsigned int spreadpercent, unsigned int
+> method,
+> > +			    bool enable);
+> >  /**
+> >   * clk_has_parent - check if a clock is a possible parent for another
+> >   * @clk: clock source
+> > @@ -1088,6 +1103,13 @@ static inline int
+> clk_set_rate_exclusive(struct clk *clk, unsigned long rate)
+> >  	return 0;
+> >  }
+> >
+> > +static inline int clk_set_spread_spectrum(struct clk *clk, unsigned
+> int modfreq,
+> > +					  unsigned int spreadpercent,
+> > +					  unsigned int method, bool
+> enable) {
+> > +	return 0;
+> > +}
+> > +
+> >  static inline long clk_round_rate(struct clk *clk, unsigned long
+> > rate)  {
+> >  	return 0;
+> >
+> > --
+> > 2.37.1
+> >
+> >
+> >
