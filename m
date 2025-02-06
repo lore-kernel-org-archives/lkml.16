@@ -1,170 +1,391 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8F771514EE;
-	Thu,  6 Feb 2025 08:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFC92253EB
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829997; cv=none; b=VhgIQnk7D+9ycjhheyMQ68S4nHup8qnIqTSTOOkFP27gWF3AqSjkB41vwrwOZm4Jx6t6jzStMajdr+C+e5FPFj1Bc7bBgocVTrOi9pqaMvDlZgtgrmCKPP99qbSKcdqxc3CEjZ3MCdfNJzNnXfywG2GDu+GyUsXU5pzpOpwaNvc=
+	t=1738830017; cv=none; b=RHYUs9mpW3OQz0cHhYN3GOcl1mtQunNuuJxQyHyIT47xSXyo2zXPJG/ApYWfm1Z6YD8BI06K2TWq2U6oYzW0bXZMampU5VQK8r2bZSwL2hVDK4Sv04Gnb9lqlGQ3ZKXGOAn4r86mWIIMNX5IX3lbN2OsBU8GBWy9sPjGhFYDtZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829997; c=relaxed/simple;
-	bh=L2gRW3mtn0VGLqNQM3n3c5dJ/52SMjaCVKCH6Z4OBLY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sLfaR0qmAmhVn5FhxLkCR71FBg+mBzhgy667102ZTeU7iZRzHWRe8hSfmw4Y92gCEX88AKQ5HjpwVeoftskk/OcjLcrxZIkOZ3rQ+pQCdAieEKoeQg39KAxILPQ3Jo/qXDS+z1bKA8KU77PiFGLS3PB7TGCTNQpc6jweLmuGqxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SpY9qOH9; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1738830017; c=relaxed/simple;
+	bh=rBPgLdYbPihyaky2hnQ8FQF68vDmlGkVz0ysOpo0/7E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=umorm4nskUVwfh8R6V6D6rJTzTw9HYRgpjWlZPMmbqUr/el0Fu22oNlDBUlEz0F87EGchNVR6uzevuTx/j3WPYj0dRctoU6CiSw7d7CNdTgatlWx1TyWMmjmld+F+n965sDJbwIsVFHOlCD+aSTNO7wu1ApIzb0EUvsrPMwe8YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=ATwaph+K; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SpY9qOH9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=IJBf8XNwOo6fri2pdrpCdLIWZKkprwxpUeN1DLP/Kbc=;
-	b=SpY9qOH9VUpshaAYhfV2V0uRz45uoJl0VptqXXBb2HiV1y6HosohbNPC3i68r7
-	7Kd759O8vW2IPVPjbB+U9MFEYofayMvN6N4ty9vsG0FGySViaDB7YsXiXI19kFzP
-	vXb/ge//rdGM5kPayH1uE0o3hZjcSIwYkTv3jgWQgw/M4=
-Received: from hello.company.local (unknown [111.205.82.7])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgDnN+R6cKRnk1MLNA--.58315S2;
-	Thu, 06 Feb 2025 16:19:08 +0800 (CST)
-From: Liang Jie <buaajxlj@163.com>
-To: buaajxlj@163.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	horms@kernel.org,
-	kuba@kernel.org,
-	kuniyu@amazon.com,
-	liangjie@lixiang.com,
-	linux-kernel@vger.kernel.org,
-	mhal@rbox.co,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com
-Subject: Re: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets autobind identifier length
-Date: Thu,  6 Feb 2025 16:19:05 +0800
-Message-Id: <20250206081905.83029-1-buaajxlj@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250206054451.4070941-1-buaajxlj@163.com>
-References: <20250206054451.4070941-1-buaajxlj@163.com>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ATwaph+K"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5dc82e38c10so1413916a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 00:20:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1738830014; x=1739434814; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+KKFRxvTKkIRVzPWFS+gc9L0xlnhlH0bcVyfiDKtFtA=;
+        b=ATwaph+KPWd55Fmd42l0m2iWqQfm/73qjFySUo77TbBrTAfFZzWh99ijOWD+pEB2YY
+         N5aNtjV9QWBJe/nOXszM/6bHAWDlF+5nLT7tKPu0CY0Qnf4ztN6QFtDBKIA9/7LtM27l
+         Vd1aw0j61e5sXrBL3nVaycEEKZWlLjEF6KVXMKViIf+iamlh0fAwNQs3hex3f9TP6iVG
+         ULihiHdCsOgWIvfo/7iN/4yNbgsJakxaEEtIaIlr0I5oaaWr2T9UWwNoaCMgyjh9GV7v
+         /j2UIS6UypwdzGnmbLnSb1xGj447/9bXiEL1HkZ9k7SITWhIrixi16i9TgRfK5YSLpAD
+         tAHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738830014; x=1739434814;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+KKFRxvTKkIRVzPWFS+gc9L0xlnhlH0bcVyfiDKtFtA=;
+        b=dQ/2WvDdQWkwIyRqqGTx48EF91TJAKC5venb4DE9XAjEcUoR+6DvpM46WIPe2sQlSt
+         Vw8EbDxKbmt1evQKK1m3GjSfKGGU8cLLRFpFcfeOA0U0ayY0JpRgDyAPZlQXLeeBC64x
+         usS7yZ+UqmuOXhjX1PlKOiTk49hnmLASra1cRlet8Qlwy9u71MfnBu1HnN02kAkzIGSi
+         M00ulU3Zh3RKLTeBwtD4/nJGkXEZBibDFrjNZ6PcKmvsNZhKAn/u6I2MbySWUOweCfdP
+         G8uboQEi5qB8OxS64Li7Q5KwnWyQzHgFBh9VkqrEHlUsyV3YXgbLmDkveB/voxroupEr
+         fOzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVacUDEUShaYyVL/mhcZsMKnZjIWq6/Ize0olbsFWrKwHYb+Pje/uZacZ2Jf/SD1DogdiKzDS8wNTT9384=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFAb+GFrGE3faBh0s649/nekwQLb2k61bcPkMj0C4atubeuUxL
+	SFTQACWeMzIA97b7L6yKAWZtNJ92E9BWYHE+d+pUgccb+1CatJIjPORFB8JElFZrGtyho0GfVOf
+	E5xjxV71jD2ekDoMliNVocYwBTp29ywjWWelZZg==
+X-Gm-Gg: ASbGncvNBOrRBRjUndVnjFsqcRHMTfjRpnmI07gqAT2FqdCqZbsxppf6OvDIvOaR79i
+	EXMaE4iQpG76OuJn46ro7i3F/BTVPRteYdygen+mPNy8l+++Oi1OSQU+Ecr6o4W5cdYTHaqkKPl
+	dyeICV+LToR9Yvajk=
+X-Google-Smtp-Source: AGHT+IEDiIJNdCd57ZfdtaEVN/3xhTrCwYfUmuU+1JMnppeSE8LzhQi+CD/IlSePCDmwgvmwDpW8jib+Im13pkW5O7c=
+X-Received: by 2002:a17:907:3e11:b0:a9a:bbcc:5092 with SMTP id
+ a640c23a62f3a-ab75e2f15ffmr684125066b.39.1738830013673; Thu, 06 Feb 2025
+ 00:20:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgDnN+R6cKRnk1MLNA--.58315S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF1kWw1fCr4fWFW5ZFykAFb_yoWrZr1DpF
-	Z5K34DZrZ8Jr47Wr4xta18Crs3ta1rJ34UCrWxW3WF9F42grW8GF1kKF4jg34DGrWxtw1a
-	qF4UK3ZruFyDA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUx-BtUUUUU=
-X-CM-SenderInfo: pexdtyx0omqiywtou0bp/1tbiNgTrIGekZbKgOQAAs0
+References: <Z6OYbS4WqQnmzi2z@debian.debian> <5f6610a1-3cd0-764e-0f49-91af1004ea50@huaweicloud.com>
+In-Reply-To: <5f6610a1-3cd0-764e-0f49-91af1004ea50@huaweicloud.com>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Thu, 6 Feb 2025 02:20:02 -0600
+X-Gm-Features: AWEUYZkiuqjywIeCSpX91jAJl2VLTme8PWd3srM8kIfgaH60HCogFdWij-XCr0I
+Message-ID: <CAO3-PbrGR-U0+TxgeUUZHSwvNw2Dx=o6_EYf60ND7BLiLA-xWQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf: skip non existing key in generic_map_lookup_batch
+To: Hou Tao <houtao@huaweicloud.com>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Brian Vazquez <brianvv@google.com>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kuniyuki,
+On Thu, Feb 6, 2025 at 12:40=E2=80=AFAM Hou Tao <houtao@huaweicloud.com> wr=
+ote:
+>
+> Hi,
+>
+> On 2/6/2025 12:57 AM, Yan Zhai wrote:
+> > The generic_map_lookup_batch currently returns EINTR if it fails with
+> > ENOENT and retries several times on bpf_map_copy_value. The next batch
+> > would start from the same location, presuming it's a transient issue.
+> > This is incorrect if a map can actually have "holes", i.e.
+> > "get_next_key" can return a key that does not point to a valid value. A=
+t
+> > least the array of maps type may contain such holes legitly. Right now
+> > these holes show up, generic batch lookup cannot proceed any more. It
+> > will always fail with EINTR errors.
+> >
+> > Rather, do not retry in generic_map_lookup_batch. If it finds a non
+> > existing element, skip to the next key.
+> >
+> > Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
+> > Closes: https://lore.kernel.org/bpf/Z6JXtA1M5jAZx8xD@debian.debian/
+> > Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> > ---
+> >  kernel/bpf/syscall.c                          | 16 ++----
+> >  .../bpf/map_tests/map_in_map_batch_ops.c      | 54 ++++++++++++++-----
+> >  2 files changed, 45 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index c420edbfb7c8..5691fc0d370d 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -1979,7 +1979,7 @@ int generic_map_lookup_batch(struct bpf_map *map,
+> >       void __user *values =3D u64_to_user_ptr(attr->batch.values);
+> >       void __user *keys =3D u64_to_user_ptr(attr->batch.keys);
+> >       void *buf, *buf_prevkey, *prev_key, *key, *value;
+> > -     int err, retry =3D MAP_LOOKUP_RETRIES;
+> > +     int err;
+> >       u32 value_size, cp, max_count;
+> >
+> >       if (attr->batch.elem_flags & ~BPF_F_LOCK)
+> > @@ -2026,14 +2026,8 @@ int generic_map_lookup_batch(struct bpf_map *map=
+,
+> >               err =3D bpf_map_copy_value(map, key, value,
+> >                                        attr->batch.elem_flags);
+> >
+> > -             if (err =3D=3D -ENOENT) {
+> > -                     if (retry) {
+> > -                             retry--;
+> > -                             continue;
+> > -                     }
+> > -                     err =3D -EINTR;
+> > -                     break;
+> > -             }
+> > +             if (err =3D=3D -ENOENT)
+> > +                     goto next_key;
+> >
+> >               if (err)
+> >                       goto free_buf;
+> > @@ -2048,12 +2042,12 @@ int generic_map_lookup_batch(struct bpf_map *ma=
+p,
+> >                       goto free_buf;
+> >               }
+> >
+> > +             cp++;
+> > +next_key:
+> >               if (!prev_key)
+> >                       prev_key =3D buf_prevkey;
+> >
+> >               swap(prev_key, key);
+> > -             retry =3D MAP_LOOKUP_RETRIES;
+> > -             cp++;
+> >               cond_resched();
+> >       }
+> >
+>
+> Let's move the new thread for further discussion.
+>
+> >We are probably not on the same page. Let me clarify:
+>
+> >By "retry logic" I mean this code snippet:
+> >               if (err =3D=3D -ENOENT) {
+> >                       if (retry) {
+> >                               retry--;
+> >                               continue;
+> >                       }
+> >                       err =3D -EINTR;
+> >                       break;
+> >               }
+>
+>
+> Yes, the retry logic doesn't change the previous key. Thanks for the
+> clarifying.
+> > And by "skipping to the next key", it's simply
+> >
+> >   if (err =3D=3D -ENOENT)
+> >        goto next_key;
+> >
+> > Note the "next_key" label was not in the current codebase. It is only
+> > in my posted patch. I don't think this would break lpm_trie unless I
+> > missed something.
+>
+> I was trying to say that the proposed patch may break the lookup_batch
+> operation for lpm_trie, and let me explain step by step:
+>
+> For LPM trie map:
+> (1) ->map_get_next_key(map, prev_key, key) returns a valid key
+>
+> (2) bpf_map_copy_value() return -ENOMENT
+> It means the key must be deleted concurrently.
+>
 
-The logs from 'netdev/build_allmodconfig_warn' is as follows:
-  ../net/unix/af_unix.c: In function ‘unix_autobind’:
-  ../net/unix/af_unix.c:1222:52: warning: ‘snprintf’ output truncated before the last format character [-Wformat-truncation=]
-   1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
-        |                                                    ^
-  ../net/unix/af_unix.c:1222:9: note: ‘snprintf’ output 6 bytes into a destination of size 5
-   1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I see what you mean now, thanks for the detailed explanation!
 
-snprintf() also append a trailing '\0' at the end of the sun_path.
+So for lpm_trie, if an element is deleted between get_next_key and
+copy_value, then retry would still proceed to its next tree node. But
+with or without retry, I think we cannot prevent the key from cycling
+back to the beginning: an element can be deleted after copy_value, so
+the key becomes invalid. After swap with prev_key and call
+bpf_get_next_key, it cycles back to the leftmost. Similar can happen
+if during retry the prev_key also gets invalidated. IIUC the rcu
+locking in lookup really cannot prevent the tree structure from
+changes.
 
-Now, I think of three options. Which one do you think we should choose?
+On the other hand, bpf_map_get_next_key manual already specifies "If a
+key is not found, the operation returns zero and sets the next_key
+pointer to the key of the first element.". IMHO it probably makes more
+sense that, regardless of normal or batch lookup, it is ultimately the
+user's responsibility to properly synchronize, or deduplicate what is
+returned from the kernel. I intend to keep the "skip to next" to save
+the unnecessary complexity here, unless there are strong objections
+that I should not.
 
-1. Allocate an additional byte during the kzalloc phase.
-	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
-		       UNIX_AUTOBIND_LEN + 1, GFP_KERNEL);
+> (3) goto next_key
+> It swaps the prev_key and key
+>
+> (4) ->map_get_next_key(map, prev_key, key) again
+> prev_key points to a non-existing key, for LPM trie it will treat just
+> like prev_key=3DNULL case, the returned key will be duplicated.
+>
+>
+> > diff --git a/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops=
+.c b/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
+> > index 66191ae9863c..b38be71f06be 100644
+>
+> It is better to split the update of map_tests into a separated patch and
+> it will be more friendly for stable backport.
 
-2. Use temp buffer and memcpy() for handling.
+Sure I can do that.
 
-3. Keep the current code as it is.
+> > --- a/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
+> > +++ b/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
+> > @@ -120,11 +120,12 @@ static void validate_fetch_results(int outer_map_=
+fd,
+> >
+> >  static void fetch_and_validate(int outer_map_fd,
+> >                              struct bpf_map_batch_opts *opts,
+> > -                            __u32 batch_size, bool delete_entries)
+> > +                            __u32 batch_size, bool delete_entries,
+> > +                            bool has_holes)
+> >  {
+> > +     int err, max_entries =3D OUTER_MAP_ENTRIES - !!has_holes;
+> >       __u32 *fetched_keys, *fetched_values, total_fetched =3D 0;
+> >       __u32 batch_key =3D 0, fetch_count, step_size;
+> > -     int err, max_entries =3D OUTER_MAP_ENTRIES;
+> >       __u32 value_size =3D sizeof(__u32);
+> >
+> >       /* Total entries needs to be fetched */
+> > @@ -135,9 +136,9 @@ static void fetch_and_validate(int outer_map_fd,
+> >             "error=3D%s\n", strerror(errno));
+> >
+> >       for (step_size =3D batch_size;
+> > -          step_size <=3D max_entries;
+> > +          step_size < max_entries + batch_size; /* allow read partial =
+*/
+> >            step_size +=3D batch_size) {
+> > -             fetch_count =3D step_size;
+> > +             fetch_count =3D batch_size;
+>
+> The change "fetch_count =3D batch_size" may fail the lookup batch
+> operation of hash table, because the element in one bucket may be
+> greater than batch_size and it will return -ENOSPC constantly. And it
+> seems the original implementation of fetch_and_validate() is buggy,
+> because for hash map, the returned fetched_count may be less than the
+> passed count when there are too many elements in the same bucket. I
+> don't know the reason why the bug doesn't show up.
 
-Do you have any other suggestions?
+ACK on the ENOSPC part. Should indeed increase the fetch size. The
+original code was buggy, my patch failed BPF CI for the unrelated hash
+of maps case. The fetch loop should not have assumed a full batch
+being returned. But it's purely luck whether tests would fail in
+practice, my local vmtests all passed >.< I will fix this in V2.
 
-Best regards,
-Liang
+> >               err =3D delete_entries
+> >                     ? bpf_map_lookup_and_delete_batch(outer_map_fd,
+> >                                     total_fetched ? &batch_key : NULL,
+> > @@ -184,18 +185,19 @@ static void fetch_and_validate(int outer_map_fd,
+> >  }
+> >
+> >  static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
+> > -                               enum bpf_map_type inner_map_type)
+> > +                               enum bpf_map_type inner_map_type,
+> > +                               bool has_holes)
+> >  {
+> > +     __u32 max_entries =3D OUTER_MAP_ENTRIES - !!has_holes;
+> >       __u32 *outer_map_keys, *inner_map_fds;
+> > -     __u32 max_entries =3D OUTER_MAP_ENTRIES;
+> >       LIBBPF_OPTS(bpf_map_batch_opts, opts);
+> >       __u32 value_size =3D sizeof(__u32);
+> >       int batch_size[2] =3D {5, 10};
+> >       __u32 map_index, op_index;
+> >       int outer_map_fd, ret;
+> >
+> > -     outer_map_keys =3D calloc(max_entries, value_size);
+> > -     inner_map_fds =3D calloc(max_entries, value_size);
+> > +     outer_map_keys =3D calloc(OUTER_MAP_ENTRIES, value_size);
+> > +     inner_map_fds =3D calloc(OUTER_MAP_ENTRIES, value_size);
+> >       CHECK((!outer_map_keys || !inner_map_fds),
+> >             "Memory allocation failed for outer_map_keys or inner_map_f=
+ds",
+> >             "error=3D%s\n", strerror(errno));
+> > @@ -209,6 +211,24 @@ static void _map_in_map_batch_ops(enum bpf_map_typ=
+e outer_map_type,
+> >                       ((outer_map_type =3D=3D BPF_MAP_TYPE_ARRAY_OF_MAP=
+S)
+> >                        ? 9 : 1000) - map_index;
+> >
+> > +     /* This condition is only meaningful for array of maps.
+> > +      *
+> > +      * max_entries =3D=3D OUTER_MAP_ENTRIES - 1 if it is true. Say
+> > +      * max_entries is short for n, then outer_map_keys looks like:
+> > +      *
+> > +      *   [n, n-1, ... 2, 1]
+> > +      *
+> > +      * We change it to
+> > +      *
+> > +      *   [n, n-1, ... 2, 0]
+> > +      *
+> > +      * So it will leave key 1 as a hole. It will serve to test the
+> > +      * correctness when batch on an array: a "non-exist" key might be
+> > +      * actually allocated and returned from key iteration.
+> > +      */
+> > +     if (has_holes)
+> > +             outer_map_keys[max_entries - 1]--;
+> > +
+> >       /* batch operation - map_update */
+> >       ret =3D bpf_map_update_batch(outer_map_fd, outer_map_keys,
+> >                                  inner_map_fds, &max_entries, &opts);
+> > @@ -219,12 +239,14 @@ static void _map_in_map_batch_ops(enum bpf_map_ty=
+pe outer_map_type,
+> >       /* batch operation - map_lookup */
+> >       for (op_index =3D 0; op_index < 2; ++op_index)
+> >               fetch_and_validate(outer_map_fd, &opts,
+> > -                                batch_size[op_index], false);
+> > +                                batch_size[op_index], false,
+> > +                                has_holes);
+> >
+> >       /* batch operation - map_lookup_delete */
+> >       if (outer_map_type =3D=3D BPF_MAP_TYPE_HASH_OF_MAPS)
+> >               fetch_and_validate(outer_map_fd, &opts,
+> > -                                max_entries, true /*delete*/);
+> > +                                max_entries, true /*delete*/,
+> > +                                has_holes);
+> >
+> >       /* close all map fds */
+> >       for (map_index =3D 0; map_index < max_entries; map_index++)
+>
+> OUTER_MAP_ENTRIES instead of max_entries ?
 
-> From: Liang Jie <liangjie@lixiang.com>
-> 
-> Refines autobind identifier length for UNIX pathname sockets, addressing
-> issues of memory waste and code readability.
-> 
-> The previous implementation in the unix_autobind function of UNIX pathname
-> sockets used hardcoded values such as 16 and 6 for memory allocation and
-> setting the length of the autobind identifier, which was not only
-> inflexible but also led to reduced code clarity. Additionally, allocating
-> 16 bytes of memory for the autobind path was excessive, given that only 6
-> bytes were ultimately used.
-> 
-> To mitigate these issues, introduces the following changes:
->  - A new macro UNIX_AUTOBIND_LEN is defined to clearly represent the total
->    length of the autobind identifier, which improves code readability and
->    maintainability. It is set to 6 bytes to accommodate the unique autobind
->    process identifier.
->  - Memory allocation for the autobind path is now precisely based on
->    UNIX_AUTOBIND_LEN, thereby preventing memory waste.
->  - To avoid buffer overflow and ensure that only the intended number of
->    bytes are written, sprintf is replaced by snprintf with the proper
->    buffer size set explicitly.
-> 
-> The modifications result in a leaner memory footprint and elevated code
-> quality, ensuring that the functional aspect of autobind behavior in UNIX
-> pathname sockets remains intact.
-> 
-> Signed-off-by: Liang Jie <liangjie@lixiang.com>
-> Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-> ---
-> 
-> Changes in v2:
->  - Removed the comments describing AUTOBIND_LEN.
->  - Renamed the macro AUTOBIND_LEN to UNIX_AUTOBIND_LEN for clarity and
->    specificity.
->  - Corrected the buffer length in snprintf to prevent potential buffer
->    overflow issues.
->  - Addressed warning from checkpatch.
->  - Link to v1: https://lore.kernel.org/all/20250205060653.2221165-1-buaajxlj@163.com/
-> 
->  net/unix/af_unix.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index 34945de1fb1f..6c449f78f0a6 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -1186,6 +1186,8 @@ static struct sock *unix_find_other(struct net *net,
->  	return sk;
->  }
->  
-> +#define UNIX_AUTOBIND_LEN 6
-> +
->  static int unix_autobind(struct sock *sk)
->  {
->  	struct unix_sock *u = unix_sk(sk);
-> @@ -1203,12 +1205,12 @@ static int unix_autobind(struct sock *sk)
->  		goto out;
->  
->  	err = -ENOMEM;
-> -	addr = kzalloc(sizeof(*addr) +
-> -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
-> +	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
-> +			UNIX_AUTOBIND_LEN, GFP_KERNEL);
->  	if (!addr)
->  		goto out;
->  
-> -	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
-> +	addr->len = offsetof(struct sockaddr_un, sun_path) + UNIX_AUTOBIND_LEN;
->  	addr->name->sun_family = AF_UNIX;
->  	refcount_set(&addr->refcnt, 1);
->  
-> @@ -1217,7 +1219,7 @@ static int unix_autobind(struct sock *sk)
->  	lastnum = ordernum & 0xFFFFF;
->  retry:
->  	ordernum = (ordernum + 1) & 0xFFFFF;
-> -	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
-> +	snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
->  
->  	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
->  	unix_table_double_lock(net, old_hash, new_hash);
-> -- 
-> 2.25.1
+Good catch!
 
+thanks
+Yan
+
+> > @@ -237,16 +259,20 @@ static void _map_in_map_batch_ops(enum bpf_map_ty=
+pe outer_map_type,
+> >
+> >  void test_map_in_map_batch_ops_array(void)
+> >  {
+> > -     _map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_AR=
+RAY);
+> > +     _map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_AR=
+RAY, false);
+> >       printf("%s:PASS with inner ARRAY map\n", __func__);
+> > -     _map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HA=
+SH);
+> > +     _map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HA=
+SH, false);
+> >       printf("%s:PASS with inner HASH map\n", __func__);
+> > +     _map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_AR=
+RAY, true);
+> > +     printf("%s:PASS with inner ARRAY map with holes\n", __func__);
+> > +     _map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HA=
+SH, true);
+> > +     printf("%s:PASS with inner HASH map with holes\n", __func__);
+> >  }
+> >
+> >  void test_map_in_map_batch_ops_hash(void)
+> >  {
+> > -     _map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_ARR=
+AY);
+> > +     _map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_ARR=
+AY, false);
+> >       printf("%s:PASS with inner ARRAY map\n", __func__);
+> > -     _map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_HAS=
+H);
+> > +     _map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_HAS=
+H, false);
+> >       printf("%s:PASS with inner HASH map\n", __func__);
+> >  }
+>
