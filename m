@@ -1,251 +1,210 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B645231CA4;
-	Thu,  6 Feb 2025 10:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479C423312B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839311; cv=none; b=YvpHI5v6klqUqvcOb4D8TKLm+9Y/5LeC0dW3EJc8GjcGgV/iCObwXogBorvTa5i3mZq7Yilw9df9uWeZJ/TkD/NnpBn3C5BT6ZzH2Ts1sYxg+HIlg/k5a11+77+nAZ3VOypqV7Bh4N7l8zGVakyFSiUgRc1x0R091jX/f3PaPcw=
+	t=1738839314; cv=none; b=JBOZj6SLfuIXIXdWLYenrUORJw3qAo6qyaLw44/C4s/KfCSDmGwVAH0pxq5376epnIarZP4H8PtPF+ekXMMUKw2rBqYzZZoh7udE7ypOkgEue9lpaE2paKnyaDoY6wXyHlWh8R5hdn+Y8RBOS7EdcZyL/evhM8QS467qUcaUyok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839311; c=relaxed/simple;
-	bh=U/xq8I6EBeEZJrIOy3nlwnF6weOW6zwHeOpg6R+a+Dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VeD/3r6MhnLE1QpOnR4vZXRCYEItul5H22zy5FW2lvYhmmG/Kdk0Jmy3SsC3oNZqncWLbUEYPlCruSYIrGxAcOQjextzoztJpy0hYtXFr80saUvTJktVx7k0hJmsXnRCWY8OL+yqypnLHPHdv38f15jFaerjynpItgwdBR6JPU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIFuvR+D; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIFuvR+D"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-38daf156e97so381910f8f.0;
-        Thu, 06 Feb 2025 02:55:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738839307; x=1739444107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WY5xY00eKUhPVaK5CMP9UKPxhBmvTRnKdfB0Ehrzj4c=;
-        b=iIFuvR+DEP18HjqK9dm7BqCGZxLhHCCmi3eZaAvdDnjQ3Mx1vzBOyv47zjXrtIMtBK
-         a116vPC1kzm73eO0Z/65rCC420wDEJ4WqDurT/pCAycacoBs75Lmr4pyWrbuN9GLhPl+
-         nJdUUG7lqIsuRnk4MnkbBWkVxm73WSGdyc0Lnnn5I3OF1l7JrMO+fJeeHjx45XlRPWud
-         Ztys+6itWc8RnKqhdHqeG5NuHZWqqJp3SH8H/7rJRx1BNL5F2plwhmsN/Rh7rRMa1GWu
-         S70YTAxOZPnnovhnK9JxL3rJzSxvUkuSpRFJfZ1mdH6WpeeCTYJTnVdtzXJ6/T7FPeeH
-         AIlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738839307; x=1739444107;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WY5xY00eKUhPVaK5CMP9UKPxhBmvTRnKdfB0Ehrzj4c=;
-        b=DvD/4+pHalowZivgcnJqeLAL+ioyqLR48V4folV59HDMN02i9WfD5Ii+zfV6V6Db1l
-         V+EVqK+tx8Qi+wsyDVWYrzkyW/OA8lA1D1IT+8QODYK54kEfp5sOGTDODXMw05qX7nQA
-         qgZc3/utC+WCfPsSLyq1poqNbYJKSvJ9/tUw5mu/mOELO454WFLG0D6uxtA2J6TbWmZX
-         IS437l3nhX23v6xUyJ2BfWXYoVjhRlZXhAu42E1lJDARIMAIs0lwyX0dX2Y7Ry9bgKXO
-         2iBOrKm1qlgbi+pTSG6M3kl+clEYcZc1Eerv/8gesAxq+cKgQpnFVUTl3IS9bLBhk865
-         f4NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJM5A818OAv5i9Pgp5vh7ZpGSG8knkQywXoTNpHE6p4ENdaiB1Ky50DujaqZDfEtzpr5Xgn8HKQ2gcHKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC8fEoR2FJhseytPFGJ41HQxjNMk3C6BArs/8KdWLRFdcNmX3l
-	jmhhnlnobX+fpbzwJ8XEWyb3TyjyxhVNbP4uhnC+Hstw94g7npEpGcnTx9filR0=
-X-Gm-Gg: ASbGnctWwVrB4fvOviLNFJVUgX4VqWn6qG6tyuOayNo951DWc5ldmSvgjWkxOJ2jyUh
-	gQOuKIeFkWFO1Gqggl6OlfFZ8/YsBCOtPvsRiOC7PIRnsojSU7jA6s69SZkcuEXZOfhAWbRYsxA
-	oC03Zm4ftVV6yeKqlmmcuy07S3CO/HoysYi2hiRtMn/dco9J1o+ud6w/5sorg3xD/EMDMVbx5TY
-	GwWiVCQ8bZ3tCbz38P9rrvjbuCcxUj+ZOV0AHXgjzJHuqBW4YjkmE75o3/0LA3VeN5kX6EGXvYZ
-	6nTJ
-X-Google-Smtp-Source: AGHT+IG9zXGoXyJKKHaq7JsfFOdulH8qStWXMMx7WVjIkbMNF6mgU4TITTZXCi7em7sIZ7mcLjLv5Q==
-X-Received: by 2002:a05:6000:1567:b0:38a:5ce8:df51 with SMTP id ffacd0b85a97d-38db4857bb6mr4346951f8f.2.1738839307068;
-        Thu, 06 Feb 2025 02:55:07 -0800 (PST)
-Received: from localhost ([2a03:2880:31ff:1::])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde1ddaesm1381571f8f.85.2025.02.06.02.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 02:55:06 -0800 (PST)
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-To: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>,
-	Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kernel-team@meta.com
-Subject: [PATCH bpf-next v2 22/26] bpf: Introduce rqspinlock kfuncs
-Date: Thu,  6 Feb 2025 02:54:30 -0800
-Message-ID: <20250206105435.2159977-23-memxor@gmail.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250206105435.2159977-1-memxor@gmail.com>
-References: <20250206105435.2159977-1-memxor@gmail.com>
+	s=arc-20240116; t=1738839314; c=relaxed/simple;
+	bh=jMcGVCI1J6kvORZQree7+zQxH4uuJbEvuZOH9DPiaXg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nbTiMipCQ4+1eZeT0/vZnFR+ybY6fLhw3P+Sg6naCGNyxCaedVaRK8XgH/Kjb+4WbwVbd6RocZj1UxYO4E/BCO70GLiL2d56gjN1eNp8XsmTm2nwMfrgG4NGqB7rptRiqCm9Upfn0f4wlURHVRRhv1xIEklTNzypciWErbEPtg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1D9712FC;
+	Thu,  6 Feb 2025 02:55:34 -0800 (PST)
+Received: from [10.163.34.115] (unknown [10.163.34.115])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D6723F5A1;
+	Thu,  6 Feb 2025 02:55:06 -0800 (PST)
+Message-ID: <d86b6d7f-0ab3-4737-85cd-70cddcffc1e8@arm.com>
+Date: Thu, 6 Feb 2025 16:25:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5071; h=from:subject; bh=U/xq8I6EBeEZJrIOy3nlwnF6weOW6zwHeOpg6R+a+Dg=; b=owEBbQKS/ZANAwAIAUzgyIZIvxHKAcsmYgBnpJRnGE3AZgPoVzGUtERg5LFCbq+DcCX9yF59ua8N n7+cbDKJAjMEAAEIAB0WIQRLvip+Buz51YI8YRFM4MiGSL8RygUCZ6SUZwAKCRBM4MiGSL8RylLaD/ 0VpOorKWab0lqsTn/JbqVIfhX2mJDl4AszKROjW7ZbWS/ibRaNsagLSEBcUQD0xf70owiN9Yu/4znW OJaUpWXS7tNbAxPV2AbNa13K/5M2I9XFuZ6Ma44gw7XUBL2+eLtpDnsloEntdH23CIdCBlFgVoMhZi /9B64BlcRvucuNxfRyundNxbRTbW+WL+gdtObdVpvurkEZPU7XSKLpbhrzZvQ4wxTGIf/25YvUVXE4 S4KSqSp0B49pkPN4G9xW/jIyjgX3WLAwBlhBHZ6f15+/NQ+pg/hwN9hKNNehLoCE2vircPueBHstEE KegTCjgg9BggHBOklhXRKvmGFOY2CVPkx96cbQhQZG615Mp2ODEKab08GpR6au3L0Lg1QT3JQbi+tU DKBdLQMl1MjDsazZBZ1VwoZL4CT5etgBB13PQWNVWlid9dl1osLUMQE9UJ/QAqUtZVfz88GpkskFmi ol2YvLHaQVsp/3n/N56wQok42wK/y+P/xvxYD1rz0ExOWlNuLbEBjbjgFZsEQ1KAlLg2XUnKJ4yMrB aBVOWnLHU2q3mFDWBNz/iUcF0U3KO0efHZsiu7NYItC7HDIgvosgX8QFMNIjDG1EfiEFvUcisgaxYH JcTYydI991Jqy6AeM9QpCB99Wg4k4tVqvmj18ICTymjWeNb7929I4r8679rA==
-X-Developer-Key: i=memxor@gmail.com; a=openpgp; fpr=4BBE2A7E06ECF9D5823C61114CE0C88648BF11CA
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/16] mm/page_table_check: Batch-check pmds/puds just
+ like ptes
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-6-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-6-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Introduce four new kfuncs, bpf_res_spin_lock, and bpf_res_spin_unlock,
-and their irqsave/irqrestore variants, which wrap the rqspinlock APIs.
-bpf_res_spin_lock returns a conditional result, depending on whether the
-lock was acquired (NULL is returned when lock acquisition succeeds,
-non-NULL upon failure). The memory pointed to by the returned pointer
-upon failure can be dereferenced after the NULL check to obtain the
-error code.
+On 2/5/25 20:39, Ryan Roberts wrote:
+> Convert page_table_check_p[mu]d_set(...) to
+> page_table_check_p[mu]ds_set(..., nr) to allow checking a contiguous set
+> of pmds/puds in single batch. We retain page_table_check_p[mu]d_set(...)
+> as macros that call new batch functions with nr=1 for compatibility.
+> 
+> arm64 is about to reorganise its pte/pmd/pud helpers to reuse more code
+> and to allow the implementation for huge_pte to more efficiently set
+> ptes/pmds/puds in batches. We need these batch-helpers to make the
+> refactoring possible.
 
-Instead of using the old bpf_spin_lock type, introduce a new type with
-the same layout, and the same alignment, but a different name to avoid
-type confusion.
+A very small nit.
 
-Preemption is disabled upon successful lock acquisition, however IRQs
-are not. Special kfuncs can be introduced later to allow disabling IRQs
-when taking a spin lock. Resilient locks are safe against AA deadlocks,
-hence not disabling IRQs currently does not allow violation of kernel
-safety.
+Although this justification here is reasonable enough but not sure if
+platform specific requirements, need to be spelled out in such detail
+for a generic MM change.
 
-__irq_flag annotation is used to accept IRQ flags for the IRQ-variants,
-with the same semantics as existing bpf_local_irq_{save, restore}.
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
 
-These kfuncs will require additional verifier-side support in subsequent
-commits, to allow programs to hold multiple locks at the same time.
+Regardless, LGTM.
 
-Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
----
- include/asm-generic/rqspinlock.h |  7 +++
- include/linux/bpf.h              |  1 +
- kernel/locking/rqspinlock.c      | 78 ++++++++++++++++++++++++++++++++
- 3 files changed, 86 insertions(+)
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-diff --git a/include/asm-generic/rqspinlock.h b/include/asm-generic/rqspinlock.h
-index 46119fc768b8..8249c2da09ad 100644
---- a/include/asm-generic/rqspinlock.h
-+++ b/include/asm-generic/rqspinlock.h
-@@ -23,6 +23,13 @@ struct rqspinlock {
- 	};
- };
- 
-+/* Even though this is same as struct rqspinlock, we need to emit a distinct
-+ * type in BTF for BPF programs.
-+ */
-+struct bpf_res_spin_lock {
-+	u32 val;
-+};
-+
- struct qspinlock;
- #ifdef CONFIG_QUEUED_SPINLOCKS
- typedef struct qspinlock rqspinlock_t;
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index f3f50e29d639..35af09ee6a2c 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -30,6 +30,7 @@
- #include <linux/static_call.h>
- #include <linux/memcontrol.h>
- #include <linux/cfi.h>
-+#include <asm/rqspinlock.h>
- 
- struct bpf_verifier_env;
- struct bpf_verifier_log;
-diff --git a/kernel/locking/rqspinlock.c b/kernel/locking/rqspinlock.c
-index b4cceeecf29c..d05333203671 100644
---- a/kernel/locking/rqspinlock.c
-+++ b/kernel/locking/rqspinlock.c
-@@ -15,6 +15,8 @@
- 
- #include <linux/smp.h>
- #include <linux/bug.h>
-+#include <linux/bpf.h>
-+#include <linux/err.h>
- #include <linux/cpumask.h>
- #include <linux/percpu.h>
- #include <linux/hardirq.h>
-@@ -686,3 +688,79 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val,
- EXPORT_SYMBOL(resilient_queued_spin_lock_slowpath);
- 
- #endif /* CONFIG_QUEUED_SPINLOCKS */
-+
-+__bpf_kfunc_start_defs();
-+
-+#define REPORT_STR(ret) ({ ret == -ETIMEDOUT ? "Timeout detected" : "AA or ABBA deadlock detected"; })
-+
-+__bpf_kfunc int bpf_res_spin_lock(struct bpf_res_spin_lock *lock)
-+{
-+	int ret;
-+
-+	BUILD_BUG_ON(sizeof(rqspinlock_t) != sizeof(struct bpf_res_spin_lock));
-+	BUILD_BUG_ON(__alignof__(rqspinlock_t) != __alignof__(struct bpf_res_spin_lock));
-+
-+	preempt_disable();
-+	ret = res_spin_lock((rqspinlock_t *)lock);
-+	if (unlikely(ret)) {
-+		preempt_enable();
-+		rqspinlock_report_violation(REPORT_STR(ret), lock);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+__bpf_kfunc void bpf_res_spin_unlock(struct bpf_res_spin_lock *lock)
-+{
-+	res_spin_unlock((rqspinlock_t *)lock);
-+	preempt_enable();
-+}
-+
-+__bpf_kfunc int bpf_res_spin_lock_irqsave(struct bpf_res_spin_lock *lock, unsigned long *flags__irq_flag)
-+{
-+	u64 *ptr = (u64 *)flags__irq_flag;
-+	unsigned long flags;
-+	int ret;
-+
-+	preempt_disable();
-+	local_irq_save(flags);
-+	ret = res_spin_lock((rqspinlock_t *)lock);
-+	if (unlikely(ret)) {
-+		local_irq_restore(flags);
-+		preempt_enable();
-+		rqspinlock_report_violation(REPORT_STR(ret), lock);
-+		return ret;
-+	}
-+	*ptr = flags;
-+	return 0;
-+}
-+
-+__bpf_kfunc void bpf_res_spin_unlock_irqrestore(struct bpf_res_spin_lock *lock, unsigned long *flags__irq_flag)
-+{
-+	u64 *ptr = (u64 *)flags__irq_flag;
-+	unsigned long flags = *ptr;
-+
-+	res_spin_unlock((rqspinlock_t *)lock);
-+	local_irq_restore(flags);
-+	preempt_enable();
-+}
-+
-+__bpf_kfunc_end_defs();
-+
-+BTF_KFUNCS_START(rqspinlock_kfunc_ids)
-+BTF_ID_FLAGS(func, bpf_res_spin_lock, KF_RET_NULL)
-+BTF_ID_FLAGS(func, bpf_res_spin_unlock)
-+BTF_ID_FLAGS(func, bpf_res_spin_lock_irqsave, KF_RET_NULL)
-+BTF_ID_FLAGS(func, bpf_res_spin_unlock_irqrestore)
-+BTF_KFUNCS_END(rqspinlock_kfunc_ids)
-+
-+static const struct btf_kfunc_id_set rqspinlock_kfunc_set = {
-+	.owner = THIS_MODULE,
-+	.set = &rqspinlock_kfunc_ids,
-+};
-+
-+static __init int rqspinlock_register_kfuncs(void)
-+{
-+	return register_btf_kfunc_id_set(BPF_PROG_TYPE_UNSPEC, &rqspinlock_kfunc_set);
-+}
-+late_initcall(rqspinlock_register_kfuncs);
--- 
-2.43.5
-
+>  include/linux/page_table_check.h | 30 +++++++++++++++++-----------
+>  mm/page_table_check.c            | 34 +++++++++++++++++++-------------
+>  2 files changed, 38 insertions(+), 26 deletions(-)
+> 
+> diff --git a/include/linux/page_table_check.h b/include/linux/page_table_check.h
+> index 6722941c7cb8..289620d4aad3 100644
+> --- a/include/linux/page_table_check.h
+> +++ b/include/linux/page_table_check.h
+> @@ -19,8 +19,10 @@ void __page_table_check_pmd_clear(struct mm_struct *mm, pmd_t pmd);
+>  void __page_table_check_pud_clear(struct mm_struct *mm, pud_t pud);
+>  void __page_table_check_ptes_set(struct mm_struct *mm, pte_t *ptep, pte_t pte,
+>  		unsigned int nr);
+> -void __page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd);
+> -void __page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp, pud_t pud);
+> +void __page_table_check_pmds_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd,
+> +		unsigned int nr);
+> +void __page_table_check_puds_set(struct mm_struct *mm, pud_t *pudp, pud_t pud,
+> +		unsigned int nr);
+>  void __page_table_check_pte_clear_range(struct mm_struct *mm,
+>  					unsigned long addr,
+>  					pmd_t pmd);
+> @@ -74,22 +76,22 @@ static inline void page_table_check_ptes_set(struct mm_struct *mm,
+>  	__page_table_check_ptes_set(mm, ptep, pte, nr);
+>  }
+>  
+> -static inline void page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp,
+> -					    pmd_t pmd)
+> +static inline void page_table_check_pmds_set(struct mm_struct *mm,
+> +		pmd_t *pmdp, pmd_t pmd, unsigned int nr)
+>  {
+>  	if (static_branch_likely(&page_table_check_disabled))
+>  		return;
+>  
+> -	__page_table_check_pmd_set(mm, pmdp, pmd);
+> +	__page_table_check_pmds_set(mm, pmdp, pmd, nr);
+>  }
+>  
+> -static inline void page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp,
+> -					    pud_t pud)
+> +static inline void page_table_check_puds_set(struct mm_struct *mm,
+> +		pud_t *pudp, pud_t pud, unsigned int nr)
+>  {
+>  	if (static_branch_likely(&page_table_check_disabled))
+>  		return;
+>  
+> -	__page_table_check_pud_set(mm, pudp, pud);
+> +	__page_table_check_puds_set(mm, pudp, pud, nr);
+>  }
+>  
+>  static inline void page_table_check_pte_clear_range(struct mm_struct *mm,
+> @@ -129,13 +131,13 @@ static inline void page_table_check_ptes_set(struct mm_struct *mm,
+>  {
+>  }
+>  
+> -static inline void page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp,
+> -					    pmd_t pmd)
+> +static inline void page_table_check_pmds_set(struct mm_struct *mm,
+> +		pmd_t *pmdp, pmd_t pmd, unsigned int nr)
+>  {
+>  }
+>  
+> -static inline void page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp,
+> -					    pud_t pud)
+> +static inline void page_table_check_puds_set(struct mm_struct *mm,
+> +		pud_t *pudp, pud_t pud, unsigned int nr)
+>  {
+>  }
+>  
+> @@ -146,4 +148,8 @@ static inline void page_table_check_pte_clear_range(struct mm_struct *mm,
+>  }
+>  
+>  #endif /* CONFIG_PAGE_TABLE_CHECK */
+> +
+> +#define page_table_check_pmd_set(mm, pmdp, pmd)	page_table_check_pmds_set(mm, pmdp, pmd, 1)
+> +#define page_table_check_pud_set(mm, pudp, pud)	page_table_check_puds_set(mm, pudp, pud, 1)
+> +
+>  #endif /* __LINUX_PAGE_TABLE_CHECK_H */
+> diff --git a/mm/page_table_check.c b/mm/page_table_check.c
+> index 509c6ef8de40..dae4a7d776b3 100644
+> --- a/mm/page_table_check.c
+> +++ b/mm/page_table_check.c
+> @@ -234,33 +234,39 @@ static inline void page_table_check_pmd_flags(pmd_t pmd)
+>  		WARN_ON_ONCE(swap_cached_writable(pmd_to_swp_entry(pmd)));
+>  }
+>  
+> -void __page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd)
+> +void __page_table_check_pmds_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd,
+> +		unsigned int nr)
+>  {
+> +	unsigned int i;
+> +	unsigned long stride = PMD_SIZE >> PAGE_SHIFT;
+> +
+>  	if (&init_mm == mm)
+>  		return;
+>  
+>  	page_table_check_pmd_flags(pmd);
+>  
+> -	__page_table_check_pmd_clear(mm, *pmdp);
+> -	if (pmd_user_accessible_page(pmd)) {
+> -		page_table_check_set(pmd_pfn(pmd), PMD_SIZE >> PAGE_SHIFT,
+> -				     pmd_write(pmd));
+> -	}
+> +	for (i = 0; i < nr; i++)
+> +		__page_table_check_pmd_clear(mm, *(pmdp + i));
+> +	if (pmd_user_accessible_page(pmd))
+> +		page_table_check_set(pmd_pfn(pmd), stride * nr, pmd_write(pmd));
+>  }
+> -EXPORT_SYMBOL(__page_table_check_pmd_set);
+> +EXPORT_SYMBOL(__page_table_check_pmds_set);
+>  
+> -void __page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp, pud_t pud)
+> +void __page_table_check_puds_set(struct mm_struct *mm, pud_t *pudp, pud_t pud,
+> +		unsigned int nr)
+>  {
+> +	unsigned int i;
+> +	unsigned long stride = PUD_SIZE >> PAGE_SHIFT;
+> +
+>  	if (&init_mm == mm)
+>  		return;
+>  
+> -	__page_table_check_pud_clear(mm, *pudp);
+> -	if (pud_user_accessible_page(pud)) {
+> -		page_table_check_set(pud_pfn(pud), PUD_SIZE >> PAGE_SHIFT,
+> -				     pud_write(pud));
+> -	}
+> +	for (i = 0; i < nr; i++)
+> +		__page_table_check_pud_clear(mm, *(pudp + i));
+> +	if (pud_user_accessible_page(pud))
+> +		page_table_check_set(pud_pfn(pud), stride * nr, pud_write(pud));
+>  }
+> -EXPORT_SYMBOL(__page_table_check_pud_set);
+> +EXPORT_SYMBOL(__page_table_check_puds_set);
+>  
+>  void __page_table_check_pte_clear_range(struct mm_struct *mm,
+>  					unsigned long addr,
