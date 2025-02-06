@@ -1,99 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FA91A0BF3;
-	Thu,  6 Feb 2025 18:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3761188736;
+	Thu,  6 Feb 2025 18:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865766; cv=none; b=uQHZTnoI265qVYTSCC3NjMmYfEgLQWnVwqvvLdKY4QoJh35tDV5Q/eMOZ677WoOIpfnPRDaDMqeUudbVAEx+nypsDKbQbhift01gJxJ/xsF6nr5lvIlJ7Vy0dLiSmar+Cm6qovNfyEHW7jnhAAm0JaIUhX/pUA2XZLpck5PjMVg=
+	t=1738865819; cv=none; b=YzuD/bM5E/Oqpe8fQPgjOsv5WgeTK9iOIYZoW6qbXELnhDiPiH5Uv5AEa6xf5/gqyP55lhIQHmk1HegrDiLWwfHApmmeOwaNqBd0hxKMLC0wuujQQFu+ImSW1/wxVnv9Dj81ZAt598cKGivbMvp9LFD1uif89kF7n1Mab0N3KpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865766; c=relaxed/simple;
-	bh=rkwyFkT1EbN8duRPnMT1XIUJb0V2Pm6NPMAaSFnGjjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QRfwmEeF657OT0ZWPj6zODx3SgntQ2d1IMQwzn1Gh2h6N0zoBJ1UsuaClqxseFxFB60OVLsuIan4XbAVTiYl+HhWGCwbnam6CBC1aU1Mzu+ipb1tt5E8ZrztR6ftGsh3GLkTkXh4fceD+TMsTPpMep68HBtvjgrtO49nuZmMIQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coSja6AX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738865819; c=relaxed/simple;
+	bh=5IoI4yTSML17q45NTtWasfD5ueDXQj2jKN3KqKyCm8M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D9YsH/xo2YNSjjHYyOpPQLMZGY5Ll6C7F8S04gGKGsjmouIOpwQ7Jru9EkRb0JAeK5McNtOHIOLVKcOTTFggpUC3BYVljgUFW7nkhB5YvvjXaDLrrjG02BgSnswxHY7lWhaoghwqiDsCj3AVTiasV2bbEgqnEsmMVko9nrtf6xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJ2CcHAU; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coSja6AX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A21C4CEE2;
-	Thu,  6 Feb 2025 18:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738865765;
-	bh=rkwyFkT1EbN8duRPnMT1XIUJb0V2Pm6NPMAaSFnGjjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=coSja6AXd6MQfZbRyxD/E3sRpcknEZ03tVCc0Apa6QVlNHbXnBBink2aFeGLkNBAV
-	 QleyaNLMjP0vjR9J7Dm25ZCb8pFgQuMVEa5CkW7Up4igdaxTlRDhnkIOAdliBl5Ncf
-	 145TKdFDrlFdKLJpaKdfBntD5elYD/5O1Jzb6/Lx199vnVfZrhGDSjzpxUczbPHzKt
-	 HJbzVEirIsDrcwMSPovznKofVpJ3sUmnjq6MNj7R4N07fjNEacLSYWXeTjHbothH7U
-	 HpLeapf6NFJp3SB+CP6pHUorhCyzDkmfLZ0rxtySgPiUXh6wFDf+F6Z/INWTDYxc/J
-	 8fgQlyoAZQiYQ==
-Date: Thu, 6 Feb 2025 18:15:59 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Johan Hovold <johan@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: usb: Add Parade PS8830 Type-C
- retimer bindings
-Message-ID: <20250206-poison-handmade-091e9cb58c5e@spud>
-References: <20250206-x1e80100-ps8830-v6-0-60b1e49cfa8d@linaro.org>
- <20250206-x1e80100-ps8830-v6-1-60b1e49cfa8d@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJ2CcHAU"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e3978c00a5aso885752276.1;
+        Thu, 06 Feb 2025 10:16:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738865816; x=1739470616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LCWngI2B1htW5cx83uUyl1FjlhlC5ksVMwFAqOIKXZg=;
+        b=IJ2CcHAUCgyljKDHiT3oHvtxzUCsDrtaQZZPDkjTtXuW+riS5mR6sWKERj5LyMnPPx
+         Rn7zjBsNKdx8gMpR/7fPXwfPDKXMp7053iOUpJkO3th8nqkbzF6VNOLso8IKp1IGazOe
+         gT708m1JCnqlt1JjVD1Ff5HR+Wh7lRZVUTLxcZFmjJuqZFFSU9Db5EH3BAvfvAjreohZ
+         Op72lRDW1EqqXMmt6WgjTcn52tt4d3hsfRoJWsl8jjpW4w6syjNhmoPFARdUn5dfriK4
+         OMt8jVe3eeli1sRqymRqSBTHcfsgLX663RiOLl4IZuc0bk2D5TD6NeGvlF810xsb6Yip
+         Er6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738865816; x=1739470616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LCWngI2B1htW5cx83uUyl1FjlhlC5ksVMwFAqOIKXZg=;
+        b=CJjgZ1bVHw3bG2xFgYSn549WoXB5TQjWZpwxXdUc8KEeU1+WF04lvLoLEqnl7kPHrI
+         hAkdpkA2htUA2KnNpzhGTWBGPK5YozKWC7monM7W4s/Q9NsQAi3G1dOUkHLJYF3+xmC5
+         E3R0dlVaPHmZ5KLy8nG0UIvokSUFiLYL5Qbo3iEtLRqvkVTeul5hon+Bi83JYI/wAbpt
+         cR+rxVTqivPPDhqCEFiH2fAKTymdKY14Ilw29/42m3Sj6cc3NWDG6d5tHRIBejtc89Pn
+         rP6eeRp+kR0qC7lPOMIig5BWFVg933qxJuydo1+KtMU32nzEnviHFC4TUTEc6wWVZg3v
+         F1Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUKfx5mL9dUZYL4hrwP6jrl07afB+q/3tpLJeS0dkFvJH5Z0o0v69n/nMDjNR5niy+1pBDMq68mbn0rPQ==@vger.kernel.org, AJvYcCUxKp6Th33ehXRq4fsYt5DLmDF2tdgk6aXzfl27SJpDoONNPywkzuYpljP1LiWdAWm9ETLD5gTvM3LyE1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT0FX6FACd4ZS0Dp3+rxVfukisJnVauDLYpjX81zlwLuFrogsO
+	OUx/e/I+CYlZssONdcJLUqrfO7qnzmNkkFy3wqNrzpDhyE+fE97kz0b1CODCAQvN5/Mx6gdYpyc
+	iFuONbjfayMdXQdRFzMsyl551nkJldsbs
+X-Gm-Gg: ASbGncuXk/u4ujfq+qsTRwX9N6lE9CH/m8OasBU5X9goUY3z8Ia4sh3ZgxeFfoo8LX2
+	FTz6VFby6Ltj+dLiYaToi/P7yW65yXGKmfPenJWXRTucNJXCfQ0LkIMnG7dvA/UOhmsTV8cJYog
+	==
+X-Google-Smtp-Source: AGHT+IGYHwT07IcKuuzqI2vVcoynHl75sNcEcwEyBQHbPyKXMMOwG1wh18V8QON9Ic15bZRM0v/ZWU9q75dVXk0dHaU=
+X-Received: by 2002:a05:6902:2589:b0:e4a:fc25:30ca with SMTP id
+ 3f1490d57ef6-e5b461e3742mr170284276.24.1738865815739; Thu, 06 Feb 2025
+ 10:16:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="L1/lhnsuiEdnY/9A"
-Content-Disposition: inline
-In-Reply-To: <20250206-x1e80100-ps8830-v6-1-60b1e49cfa8d@linaro.org>
-
-
---L1/lhnsuiEdnY/9A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250206155822.1126056-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250206155822.1126056-1-andriy.shevchenko@linux.intel.com>
+From: Justin Tee <justintee8345@gmail.com>
+Date: Thu, 6 Feb 2025 10:16:09 -0800
+X-Gm-Features: AWEUYZmE8YSSk5_YCRgZyoFIGCGTl9_7I2ZM7KyekN3zHJCn4cfr3i-oHV-VA44
+Message-ID: <CABPRKS-7c+8sQPzYugAeQ5OeC6P82XGDjKowkoJZFNaQz59CBw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] scsi: lpfc: Switch to use %ptTs
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Justin Tee <justin.tee@broadcom.com>, 
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 11:28:27AM +0200, Abel Vesa wrote:
-> The Parade PS8830 is a USB4, DisplayPort and Thunderbolt 4 retimer,
-> controlled over I2C. It usually sits between a USB/DisplayPort PHY and the
-> Type-C connector, and provides orientation and altmode handling.
->=20
-> Currently, it is found on all boards featuring the Qualcomm Snapdragon
-> X Elite SoCs.
->=20
-> Document bindings for its new driver. Future-proof the schema for the
-> PS8833 variant, which seems to be similar to PS8830.
->=20
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+Hi Andy,
 
-This seems fine, but usb switches aren't something I know much about..
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+The purpose of the lpfc_cgn_update_tstamp routine is more than just
+printf.  The *ts pointer argument is updated with cur_time, and is
+typically a pointer to a global statistics struct used by the device
+driver in various contexts.  Sorry, but we can=E2=80=99t remove the lines
+suggested in this patch.
 
-Cheers,
-Conor.
-
---L1/lhnsuiEdnY/9A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T8XwAKCRB4tDGHoIJi
-0ht7APUXSyfjFXBWF/j++c7tfhr4QQa2rEII3S0K9QsNpJAYAQDa+n2lghR/tl1C
-NbgIMl5r93WvXL9zcUxpyNf4YnW6Cg==
-=eH4j
------END PGP SIGNATURE-----
-
---L1/lhnsuiEdnY/9A--
+Regards,
+Justin Tee
