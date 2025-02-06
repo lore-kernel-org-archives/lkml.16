@@ -1,271 +1,95 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11EF225A44;
-	Thu,  6 Feb 2025 10:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7AB214A95;
+	Thu,  6 Feb 2025 10:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738836885; cv=none; b=lVwcuTJo3eF/2I4O3/JDNM4lF6MFLAtdkY+QJVgEQNVB5WSd/ls92SC+iHhjGS10CKMqOFoXR/GzHakNNlxJTZeBv5ycnm4nahP62Utuba5zcTD+hdXnAM6+4B64YcmER+estDI5caSfvm3FwJCU8fGNstrA7kLlZQllwqJ89LI=
+	t=1738836911; cv=none; b=IUXLyR/gpn4WbqbVOzCTvYG/0ibSr9ugcc+r4me1jyeTBffpQmSVsmxnFSXBfHeDFSi7sSZR0ccXlLgTOBFrv57A2TucbCDr6WWGj7EemWGkZUkV0wfoyKsYTO9dh/m6jQDjNB0dil43z2kk+RjYrhp8kyu3mRKn7vPlE0sLQbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738836885; c=relaxed/simple;
-	bh=pROxy4pf04TXH7Mq5LQ2jLXo6EmggJFwNOEavqeCF80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uu5nV6mG/AxOp+Eq0nMQdFYyrgiEPNyDWoIzrGXs7tY8NWdxo/aWPPSUf94N4GxTbNAuaiRAU6I6w1QWN43g56PxbEsqZ2nF/00ORWVHzSZR+jIW5one9Yq3EvfSeOyyqYQ5PVxr4FAsb9WOxVtE5v4p07AOzepz3qefxOf4/lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-303548a933aso6131791fa.3;
-        Thu, 06 Feb 2025 02:14:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738836879; x=1739441679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r2/IIP3n3Vq0jAraoBBXavMXEaBuRqCM8Y1vyh7jgZo=;
-        b=gV1reWNqoVGjOnFarerprx/7rzZe4b/Ohvrvl1bomsY7d5JguiJuTEHSE5IlQUqjF+
-         GfeADunoGmxh2wgce6iPBmK2XYKBTiGHWAbqwxlYzWmkmpG5L7a4XZSkBL/BqZbuw7xM
-         Pf5JI/VLSy5Izoohpnvn8y8qpNazQvcbpIhzhmtpfWI99f1HMujnaFgANe5cqA0u5dBd
-         pvVCHENCKhzM75Lbib8Z6Dj+PB4alzTihjcMuFMgaLcGNDXoTRn+95rgZ7xRVz88fhzh
-         HsENaPhAshmqNFvNi+MSfjwsfHnfuBH+23PLDXsz/tApJRakIU/elr3GfFJWTgGcNbvg
-         BjFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOTVncA9HLm3DDUWi5Uew+GWGrCy0K+26Ua+TMnmg/BkT5eivdIfYRzH9hXXcCAAvrM/pdcbjSGzVCd7w=@vger.kernel.org, AJvYcCVXinWQK2B0OrQHXvh0OMtSG3UikJ2FVHgXFhGqqpMn9nQQpmp1anhaRanCieLoUHTsIKwRRf7c7sNeNQHRENo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZCBgDDquq6KOqdl282EgI6D/wRFIdbZ6dW/0IkgUdby/L3W5c
-	hm6r4d7mhWksrmHhc9G96BqyWh/lcbZ70EsKZx52ztm5dKKjlfIviDy621pY
-X-Gm-Gg: ASbGncutl0ZSgY1Kk4NUyMkp3iU1q9fJq9tifuxCX1LOgIAFyqPhSoqzpy5cuH8G0+5
-	feC9dMCyd98TReqO53U5F8svEewLBq1RyUM69ypTqZD8OATuPhLL/SQmekIApOImhfi9hWzS5og
-	1FV/uQls7xflmCuxHz+ppr3UZVZC4iK7UqadbnLWMRRx8wIRjlvCJWpy+eJwdj/fOxwAdO/XQVM
-	M9g9OD/e/CCTQrm+Li+AGuy/kK01yp+O93ZqPsTM8E/srpbMge6DuU/PzqKUefDzgT1tOa6xmiO
-	oElNEWFgFugbqnanFdOF+0XgtMZtUpx5tGH4hySZaadhetNi
-X-Google-Smtp-Source: AGHT+IH5d/WuzAh1P+qwDxSs6bVKU0DlssLlQn8zsNWvkQaXTwAJfrkrn3entI26sNeVTAH4+8S/Pg==
-X-Received: by 2002:a05:651c:1149:b0:300:33b1:f0cc with SMTP id 38308e7fff4ca-307cf38ad62mr28196761fa.34.1738836879285;
-        Thu, 06 Feb 2025 02:14:39 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de190915sm943221fa.40.2025.02.06.02.14.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 02:14:38 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30613802a59so7851831fa.0;
-        Thu, 06 Feb 2025 02:14:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUlLxBx/ostG5YOFIk3WB1K94gL1VTk670GgWLcWOHpFESaufHVmi1aNKaatvZE6gSkABZLNSR3a7mXb1MQ8gE=@vger.kernel.org, AJvYcCXxplkiFxcEFqAZE2xGj47uRoAuJ42b2OSedcu6hFkmOKkSpwCYLpLikpT5DxBYzrIju24HKmbQ0qK1pYU=@vger.kernel.org
-X-Received: by 2002:a2e:a912:0:b0:301:12:1ef3 with SMTP id 38308e7fff4ca-307cf2ecc76mr23979521fa.4.1738836878292;
- Thu, 06 Feb 2025 02:14:38 -0800 (PST)
+	s=arc-20240116; t=1738836911; c=relaxed/simple;
+	bh=VG5HSHinGwYbVMpv2rQoOJ5GIadUMJ807SdOz+nKolY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jgj2jXyCea1O52LVEzDsOEWL+sE7npvpCEGGvtKhcJa2ENXL1QmylFmYpIYjIJQH32a0YF+TpNeHiLKWC97LgEUBlZg91clDFdgXGnnZEr290JJMAapYURuWJ0lAcPnjXXyX21ROvD5+AFZ16omtHdwkI3rvVwnoPhdtHgQM4IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVQ8L++7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVQ8L++7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D1FC4CEDD;
+	Thu,  6 Feb 2025 10:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738836910;
+	bh=VG5HSHinGwYbVMpv2rQoOJ5GIadUMJ807SdOz+nKolY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=lVQ8L++7Zvk75gXGftG4dn6oirX8L1BVfGsyYr/MtJ1+xNjeGoDW2Lhf/9+BK7eYM
+	 hmvDoeR5qWrUStzzWsiNMBu4iIf1ruI6abOfAXBAmHenvcqBTXWjBoa25ipUrLwTBF
+	 MQCdcgqJrHyxg/wvBGx2l3JWbwUOx5USE5B8+OQWYQ1AJ9rBYnUCYvDYiNfsos5Kcw
+	 x31tuvlg0c9cbY7v8S2SwpgMrKHmK5TSBLxF61oNur4WhEKrvVjPSl8er24KI2+nmV
+	 yOBJj9507ol+6A3yCx61mOd16AP++vCD3hrpLyPpIENomCqdxoatSCduHdtkKPDXE3
+	 nJWsrO/gV3wrg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 03193CE0B74; Thu,  6 Feb 2025 02:15:10 -0800 (PST)
+Date: Thu, 6 Feb 2025 02:15:09 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
+	leitao@debian.org, vschneid@redhat.com, frederic@kernel.org,
+	boqun.feng@gmail.com
+Subject: [PATCH rcu 6/5] Make RCU watch ct_kernel_exit_state() warning
+Message-ID: <bd911cd9-1fe9-447c-85e0-ea811a1dc896@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <7b24a850-7d56-4386-8544-be5e643b6b9f@paulmck-laptop>
+ <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206093956.46593-1-regis.dargent@gmail.com>
-In-Reply-To: <20250206093956.46593-1-regis.dargent@gmail.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Thu, 6 Feb 2025 18:14:26 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67tmzGfcFPchjzfSima-sT_u7viYd1UDGB9r6ZeJEgdyg@mail.gmail.com>
-X-Gm-Features: AWEUYZlm4gSn7cw1IB1gbPXGlwF-pdLLAGIdGOws-wlbxjHAlekI14cTphPxU20
-Message-ID: <CAGb2v67tmzGfcFPchjzfSima-sT_u7viYd1UDGB9r6ZeJEgdyg@mail.gmail.com>
-Subject: Re: [PATCH]: watchdog: Allow watchdog to remain enabled after probe
-To: Regis Dargent <regis.dargent@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
 
-On Thu, Feb 6, 2025 at 5:40=E2=80=AFPM Regis Dargent <regis.dargent@gmail.c=
-om> wrote:
+The WARN_ON_ONCE() in ct_kernel_exit_state() follows the call to
+ct_state_inc(), which means that RCU is not watching this WARN_ON_ONCE().
+This can (and does) result in extraneous lockdep warnings when this
+WARN_ON_ONCE() triggers.  These extraneous warnings are the opposite
+of helpful.
 
-Please format your commit subject correctly. See previous commits for
-examples.
+Therefore, invert the WARN_ON_ONCE() condition and move it before the
+call to ct_state_inc().  This does mean that the ct_state_inc() return
+value can no longer be used in the WARN_ON_ONCE() condition, so discard
+this return value and instead use a call to rcu_is_watching_curr_cpu().
+This call is executed only in CONFIG_RCU_EQS_DEBUG=y kernels, so there
+is no added overhead in production use.
 
-Please provide a commit message including justification for the change.
-The message below already makes sense, though it could be made more
-concise.
+Reported-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-Please also include your Signed-off-by.
-
-> ---
-> The sunxi_wdt watchdog unconditionally stops the watchdog during probe (o=
-n my Allwinner H616).
->
-> What I want to achieve with this patch is to start the watchdog in the bo=
-otloader (either manually or automatically), then boot Linux.
-> The watchdog is about 16sec timeout maximum, while the full boot to userl=
-and lasts about 90sec, and I want the board to reset if, eg.
-> the rootfs cannot be mounted. So I need the watchdog to be handled by the=
- kernel during boot (which it can do pretty well).
->
-> The thing is, the current driver stops the watchdog during probe, so it d=
-oes not run during boot, and it also does not manages the "status"
-> field, so the kernel would know that it must handle the HW watchdog.
-> This avoids automatic reboot in case a problem occurs during boot (and fo=
-r example handling in the bootloader).
->
-> The driver should detect if the HW watchdog is already running during pro=
-be and set its appropriate status bit to allow the kernel to handle the wat=
-chdog pings itself.
-> The call to sunxi_wdt_start/stop allows for proper driver and device conf=
-iguration.
-> By default, the kernel will then ping the HW watchdog at apropriate frequ=
-ency, but the user can have it stop after a time with open_timeout paramete=
-r.
-
-                                                           ^ appropriate
-
-Please wrap your messages under 80 characters per line.
-
->  drivers/watchdog/sunxi_wdt.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-> index b85354a99582..20fe7da445ea 100644
-> --- a/drivers/watchdog/sunxi_wdt.c
-> +++ b/drivers/watchdog/sunxi_wdt.c
-> @@ -192,6 +192,16 @@ static int sunxi_wdt_start(struct watchdog_device *w=
-dt_dev)
->         return 0;
->  }
->
-> +static int sunxi_wdt_enabled(struct sunxi_wdt_dev *wdt)
-
-Make it return bool.
-
-> +{
-> +       u32 reg;
-> +       void __iomem *wdt_base =3D wdt->wdt_base;
-> +       const struct sunxi_wdt_reg *regs =3D wdt->wdt_regs;
-> +
-> +       reg =3D readl(wdt_base + regs->wdt_mode);
-> +       return (reg & WDT_MODE_EN);
-
-          return !!(reg & WDT_MODE_EN);
-> +}
-> +
->  static const struct watchdog_info sunxi_wdt_info =3D {
->         .identity       =3D DRV_NAME,
->         .options        =3D WDIOF_SETTIMEOUT |
-> @@ -268,6 +278,11 @@ static int sunxi_wdt_probe(struct platform_device *p=
-dev)
->         sunxi_wdt->wdt_dev.max_timeout =3D WDT_MAX_TIMEOUT;
->         sunxi_wdt->wdt_dev.min_timeout =3D WDT_MIN_TIMEOUT;
->         sunxi_wdt->wdt_dev.parent =3D dev;
-> +       if (sunxi_wdt_enabled(sunxi_wdt)) {
-> +               set_bit(WDOG_HW_RUNNING, &sunxi_wdt->wdt_dev.status);
-
-Maybe also read back the current timeout? This should be done after
-watchdog_init_timeout(), so ...
-
-> +       } else {
-> +               clear_bit(WDOG_HW_RUNNING, &sunxi_wdt->wdt_dev.status);
-> +       }
-
-... you should just combine the if-else block with the one below.
-
->
->         watchdog_init_timeout(&sunxi_wdt->wdt_dev, timeout, dev);
->         watchdog_set_nowayout(&sunxi_wdt->wdt_dev, nowayout);
-> @@ -275,7 +290,10 @@ static int sunxi_wdt_probe(struct platform_device *p=
-dev)
->
->         watchdog_set_drvdata(&sunxi_wdt->wdt_dev, sunxi_wdt);
->
-> -       sunxi_wdt_stop(&sunxi_wdt->wdt_dev);
-> +       if (watchdog_hw_running(&sunxi_wdt->wdt_dev))
-> +               sunxi_wdt_start(&sunxi_wdt->wdt_dev);
-> +       else
-> +               sunxi_wdt_stop(&sunxi_wdt->wdt_dev);
-
-FWIW this is what the dw_wdt driver does as well.
-
-
-Thanks
-ChenYu
-
->         watchdog_stop_on_reboot(&sunxi_wdt->wdt_dev);
->         err =3D devm_watchdog_register_device(dev, &sunxi_wdt->wdt_dev);
-> --
-> 2.25.1
->
-
-On Thu, Feb 6, 2025 at 5:40=E2=80=AFPM Regis Dargent <regis.dargent@gmail.c=
-om> wrote:
->
-> ---
-> The sunxi_wdt watchdog unconditionally stops the watchdog during probe (o=
-n my Allwinner H616).
->
-> What I want to achieve with this patch is to start the watchdog in the bo=
-otloader (either manually or automatically), then boot Linux.
-> The watchdog is about 16sec timeout maximum, while the full boot to userl=
-and lasts about 90sec, and I want the board to reset if, eg.
-> the rootfs cannot be mounted. So I need the watchdog to be handled by the=
- kernel during boot (which it can do pretty well).
->
-> The thing is, the current driver stops the watchdog during probe, so it d=
-oes not run during boot, and it also does not manages the "status"
-> field, so the kernel would know that it must handle the HW watchdog.
-> This avoids automatic reboot in case a problem occurs during boot (and fo=
-r example handling in the bootloader).
->
-> The driver should detect if the HW watchdog is already running during pro=
-be and set its appropriate status bit to allow the kernel to handle the wat=
-chdog pings itself.
-> The call to sunxi_wdt_start/stop allows for proper driver and device conf=
-iguration.
-> By default, the kernel will then ping the HW watchdog at apropriate frequ=
-ency, but the user can have it stop after a time with open_timeout paramete=
-r.
->
->  drivers/watchdog/sunxi_wdt.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-> index b85354a99582..20fe7da445ea 100644
-> --- a/drivers/watchdog/sunxi_wdt.c
-> +++ b/drivers/watchdog/sunxi_wdt.c
-> @@ -192,6 +192,16 @@ static int sunxi_wdt_start(struct watchdog_device *w=
-dt_dev)
->         return 0;
->  }
->
-> +static int sunxi_wdt_enabled(struct sunxi_wdt_dev *wdt)
-> +{
-> +       u32 reg;
-> +       void __iomem *wdt_base =3D wdt->wdt_base;
-> +       const struct sunxi_wdt_reg *regs =3D wdt->wdt_regs;
-> +
-> +       reg =3D readl(wdt_base + regs->wdt_mode);
-> +       return (reg & WDT_MODE_EN);
-> +}
-> +
->  static const struct watchdog_info sunxi_wdt_info =3D {
->         .identity       =3D DRV_NAME,
->         .options        =3D WDIOF_SETTIMEOUT |
-> @@ -268,6 +278,11 @@ static int sunxi_wdt_probe(struct platform_device *p=
-dev)
->         sunxi_wdt->wdt_dev.max_timeout =3D WDT_MAX_TIMEOUT;
->         sunxi_wdt->wdt_dev.min_timeout =3D WDT_MIN_TIMEOUT;
->         sunxi_wdt->wdt_dev.parent =3D dev;
-> +       if (sunxi_wdt_enabled(sunxi_wdt)) {
-> +               set_bit(WDOG_HW_RUNNING, &sunxi_wdt->wdt_dev.status);
-> +       } else {
-> +               clear_bit(WDOG_HW_RUNNING, &sunxi_wdt->wdt_dev.status);
-> +       }
->
->         watchdog_init_timeout(&sunxi_wdt->wdt_dev, timeout, dev);
->         watchdog_set_nowayout(&sunxi_wdt->wdt_dev, nowayout);
-> @@ -275,7 +290,10 @@ static int sunxi_wdt_probe(struct platform_device *p=
-dev)
->
->         watchdog_set_drvdata(&sunxi_wdt->wdt_dev, sunxi_wdt);
->
-> -       sunxi_wdt_stop(&sunxi_wdt->wdt_dev);
-> +       if (watchdog_hw_running(&sunxi_wdt->wdt_dev))
-> +               sunxi_wdt_start(&sunxi_wdt->wdt_dev);
-> +       else
-> +               sunxi_wdt_stop(&sunxi_wdt->wdt_dev);
->
->         watchdog_stop_on_reboot(&sunxi_wdt->wdt_dev);
->         err =3D devm_watchdog_register_device(dev, &sunxi_wdt->wdt_dev);
-> --
-> 2.25.1
->
+diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+index 938c48952d26..fb5be6e9b423 100644
+--- a/kernel/context_tracking.c
++++ b/kernel/context_tracking.c
+@@ -80,17 +80,16 @@ static __always_inline void rcu_task_trace_heavyweight_exit(void)
+  */
+ static noinstr void ct_kernel_exit_state(int offset)
+ {
+-	int seq;
+-
+ 	/*
+ 	 * CPUs seeing atomic_add_return() must see prior RCU read-side
+ 	 * critical sections, and we also must force ordering with the
+ 	 * next idle sojourn.
+ 	 */
+ 	rcu_task_trace_heavyweight_enter();  // Before CT state update!
+-	seq = ct_state_inc(offset);
+-	// RCU is no longer watching.  Better be in extended quiescent state!
+-	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && (seq & CT_RCU_WATCHING));
++	// RCU is still watching.  Better not be in extended quiescent state!
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !rcu_is_watching_curr_cpu());
++	(void)ct_state_inc(offset);
++	// RCU is no longer watching.
+ }
+ 
+ /*
