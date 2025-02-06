@@ -1,120 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653FE2288F9;
-	Thu,  6 Feb 2025 12:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC60F18B477
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738843575; cv=none; b=mX/zoY/D1LHP9mLKwfN8dADhUf5BXzUxKx+bIGL02C441gLIXYkcm0E7UxHtJbNksiEUZ+zCqlpk/YP8YaL/36qG+TizRTi1dF7SciY3mAMKa8SmjRnXeLnyffsfq1gRJ77EFLrDT3skHZN/EVLJ40KiSfJM6Z1DmCw0tBeDgGA=
+	t=1738843621; cv=none; b=u4xY8zz2Ya6+chm5WGAXp0AImyGCRaRxkAJzpSMKiI4Dlla8LQD3DpL26zJqDHzPDqa/uhFGjG7UFibrvqo6gEatEN26CijNgaoncRmK/qtMtIm+Rn0yue8nSdNv7wmssdJnbDEoAgrVCpcESWL+nJSSocqalBhwZYHcbpODc/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738843575; c=relaxed/simple;
-	bh=U6gbIFqnWs8jLbyQIrKy4MQNtRukxtTcp/pPESXgDf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z08t76QIGx8HOX4gx8ZthAM692uDs9KsdILzI1lo7e++U603/kl6mwiTSQYhowGkE/yREFVAIYLAav8oWH6VMxtqk2vN849JFWujlNRFvgcnvnTZjFD5CT7GxvFVISThRX8ydPGUBuYy3BmuVSRGh0Wq7uRrkDp+KzQ4E5b78+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D11B212FC;
-	Thu,  6 Feb 2025 04:06:35 -0800 (PST)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D2013F63F;
-	Thu,  6 Feb 2025 04:06:10 -0800 (PST)
-Date: Thu, 6 Feb 2025 12:06:03 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 2/4] firmware: arm_scmi: Add machine_allowlist and
- machine_blocklist
-Message-ID: <Z6Slq4KjS_RJ3ItB@pluto>
-References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com>
- <20250120-scmi-fwdevlink-v2-2-3af2fa37dbac@nxp.com>
+	s=arc-20240116; t=1738843621; c=relaxed/simple;
+	bh=XR6UngKK7YAxtzb/EkX3tA43qlZhygKALi9P92gE+J4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AdLTKpY4tLBW2zpzhw36FoXse4vQtvWl7NdtE2IpQlAy78ozjNjLIaOgnyVvpZT8L7zDXBvfhQZgfWJQMLlUStmGV8w/K29YtGNs2dL7Z19dbb/eVMODn4YBOAJYNRyd80GrZAwINzYgWd7V8APKccWvmNXkQOrLD8n/nsxxpuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gT9F45P3; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gT9F45P3"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso5383955e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:06:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738843618; x=1739448418; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OUfwePobke013UujtEBYM1EhfzYZv2QC6Lwba6Ypk4s=;
+        b=gT9F45P3DqY5WYCpimpqa3dULx+SHUTsxZyiigNpBcoErCoaeBpUELiv5ZyFtu0YEq
+         XAtBg+flO1DWhP1M9uba3vaGjqJU8cN9BegwIafp9yg6mH4eksRL4sFDlfjew7jU+nzF
+         RzikmgJ2WB/KswQS90qFveHWPcnEXW7M00ThHaJ5r3iY27znxH3DG5KiAZp8qTq8BVRI
+         gjcO5YTiUAeK/CmGLTsycSmRbHup/9Y/e/AuE1NvMD4zRqyCjvVNAE61GXGbmKAGUMd+
+         0HGrhBcQR0w9y3QpXAmeoZmBf3BlVon61BzvlxMQKpPf07X6Y2/1Yu52UJlldsLKqR8b
+         URzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738843618; x=1739448418;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OUfwePobke013UujtEBYM1EhfzYZv2QC6Lwba6Ypk4s=;
+        b=qPBgfvfrMj+hFR5COOvt+okm02c2+dVQsBujBoO0ycK6kHrTyCcgED/6cwormARvL1
+         g2Fa+QnyQ/NF3Rijet8aEN7JPZP7Rcy3dPMqckCfmkK7tzrPfuGqsJtUZm7XPg8unkL8
+         ntcnvEeDRXTX6djgyMDRpYtEiw2KyYUSUkxrCa5uEQMz1MYfRmAEngmGK/kEW/ys+6PV
+         ISlZkr4PEMDlEvpiqFiCtqpYh3D8thPPiLVatOlRAkwuA4UAdciJk6UGTzLla2SNMtlc
+         BfPpCPppNTuyepnfBL5oMC/LTC/yvE7kZmjcb7Eks/XzBiVv8IZy4M511C2LFwqaQO0U
+         bbHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjWCNdBai6IWwD/JScHW9XHkPVFmLPesncQobTUyXtbF6eOmH4MV/XHTkaZY8IxU+ZFGGaBKa6jKu+WAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGxx7VrOuM3cy0jHIfodPu8+a1EUST7joFPybFB501qTJqRbaZ
+	kZOQOZDeNxRqONq6F3XLTrqRk1btCgX1I8Ajoho/rM0PstAEF9awRNPFU7QdqZTImRsPWrM07lx
+	W4W2c8KAdRm8TgWa2DaIPxcL6yysj6Dn5v3cG
+X-Gm-Gg: ASbGnculGyntmAiyn/L7QVd7pSju8OLFRt2o2kv9hRBkIVGoKQswpJcI/h+tiPjsYAm
+	eBz72NAsLAjNR4sXC4gFYF2MrggcUu14xHUPe3bcRAsN+mEPFEVid9WC3vu2la5Pv2fy+BBJ8zj
+	bhlLydnIwJebdhhKek3b2mNVN5V6I=
+X-Google-Smtp-Source: AGHT+IGYHvyT3czOoUO0G+LKb5bPp/nIfHsUp1lMa2tjLnY6ZozcU57eS2CINXvL/ohHtWBhkCKsP+i3csCOJXv72+g=
+X-Received: by 2002:a05:600c:1c91:b0:434:a902:97cd with SMTP id
+ 5b1f17b1804b1-4390d434b2bmr59528985e9.12.1738843618058; Thu, 06 Feb 2025
+ 04:06:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250120-scmi-fwdevlink-v2-2-3af2fa37dbac@nxp.com>
+References: <cover.1738832118.git.viresh.kumar@linaro.org> <5860ff88ff81d09838f7786507ec47a33cf16158.1738832119.git.viresh.kumar@linaro.org>
+ <Z6SlRZouQ-nPH2EP@pollux>
+In-Reply-To: <Z6SlRZouQ-nPH2EP@pollux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 6 Feb 2025 13:06:46 +0100
+X-Gm-Features: AWEUYZlj97JPy69AI1ZLmuMZb4cJY94hCErCw5XdWtEAWRu59P8TAU3ECjbd_Bw
+Message-ID: <CAH5fLgh3cosfVSJ-k_k2vjFT+PjPbmMqhmLSba=-VdU0vGmGCQ@mail.gmail.com>
+Subject: Re: [PATCH V8 12/14] rust: Extend cpufreq bindings for driver registration
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich <dakr@redhat.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, 
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 20, 2025 at 03:13:30PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-
-Hi,
-
-> There are two cases:
-> pinctrl-scmi.c and pinctrl-imx-scmi.c, both use SCMI_PROTOCOL_PINCTRL.
-> If both drivers are built in, and the scmi device with name "pinctrl-imx"
-> is created earlier, and the fwnode device points to the scmi device,
-> non-i.MX platforms will never have the pinctrl supplier ready.
-> 
-
-The pinctrl-imx case is an unfortunate exception because you have a
-custom Vendor SCMI driver using a STANDARD protocol: this was never
-meant to be an allowed normal practice: the idea of SCMI Vendor extensions
-is to allow Vendors to write their own Vendor protocols (>0x80) and their
-own SCMI drivers on top of their custom vendor protocols.
-
-This list-based generalization seems to me dangerous because allows the
-spreading of such bad practice of loading custom Vendor drivers on top of
-standard protocols using the same protocol to do the same thing in a
-slightly different manner, with all the rfelated issues of fragmentation
-
-...also I feel it could lead to an umaintainable mess of tables of
-compatibles....what happens if I write a 3rd pinctrl-cristian driver on
-top of it...both the new allowlist and the general pinctrl blocklist
-will need to be updated.
-
-The issue as we know is the interaction with devlink given that all of
-these same-protocol devices are created with the same device_node, since
-there is only one of them per-protocol in the DT....
-
-...not sure what Sudeep thinks..just my opinion...
-
-> Vendor A use 0x80 for feature X, Vendor B use 0x80 for feature Y.
-> With both drivers built in, two scmi devices will be created, and both
-> drivers will be probed. On A's patform, feature Y probe may fail, vice
-> verus.
+On Thu, Feb 6, 2025 at 1:04=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
 >
+> On Thu, Feb 06, 2025 at 02:58:33PM +0530, Viresh Kumar wrote:
+> > +            unsafe { drop(KBox::from_raw(drv.attr)) };
+>
+> This could just be
+>
+> let _ =3D unsafe { KBox::from_raw(drv.attr) };
+>
+> At least drop() should not be within the unsafe block.
 
-That's definitely an issue much worse than fw_devlink above....we indeed take
-care to pick the right vendor-protocol at runtime BUT no check is peformed
-against the SCMI drivers so you could end up picking up a completely unrelated
-protocol operations...damn...
+I think we usually write this as
 
-I think this is more esily solvable though....by adding a Vendor tag in
-the device_table (like the protocols do) you could skip device creation
-based on a mismatching Vendor, instead of using compatibles that are
-doomed to grow indefinitely as a list....
+drop(unsafe { KBox::from_raw(drv.attr) });
 
-So at this point you would have an optional Vendor and an optional flags
-(as mentioned in the other thread) in the device_table...
-
-I wonder if we can use the same logic for the above pinctrl case,
-without using compatibles ?
-I have not really thougth this through properly....
-
-In general, most of these issues are somehow Vendor-dependent, so I was
-also wondering if it was not the case to frame all of this in some sort
-of general vendor-quirks framework that could be used also when there
-are evident and NOT fixable issues on deployed FW SCMI server, so that
-we will have to flex a bit the kernel tolerance to cope with existing
-deployed HW that cannot be fixed fw-wise....
-
-...BUT I thought about this even less thoroughly :P...so it could be just a
-bad idea of mine...
-
-Thanks,
-Cristian
+Alice
