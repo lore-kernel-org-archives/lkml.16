@@ -1,232 +1,147 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2431A317C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C311624F1;
+	Thu,  6 Feb 2025 15:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738855816; cv=none; b=DGKrGT45TXJHrOIQa65I8oF5WImlShOEP+shHgQ82abci9p4RtXLuGzIkqaJRqKrBnJhJpu3lIO+9nikf2N1813eOzumuNfH6hE/YcMI0pJ9wvlQYYWn9+4eHlOJxwQmByMLMsrnI/BLslP5gqg1rTGbVz/1fRBtaVWK0iMJq24=
+	t=1738855893; cv=none; b=rSu0JAvOIZuZFP3vmfTTvzDJ94sXF5Rrz/DNqWkJx+lwrbvqDZ0YQb7RfBwC0HI4i5EiQgld1cpVUW/EypGqlUENUtWXAw6c4vTD5kNvdymq8dr9reeaGO//hrj8cm5CdJ3jdAR0H7DtUlNksuc6YTPkVPLl9eesKnkW+tuKn8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738855816; c=relaxed/simple;
-	bh=oL/EN/nl6O958Rm22BmCrabMDXCT96uo90M+Q954Hgo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bIjRwpIrpClBMstDuGFWla5xHa1eWdNdy8mXl6CCGyPvGo7Tj7S171Mv6IaXIn0psYyJMxzD5vWkcAydEeRUvcg4zNpgWJHrjvf3veBYhDEX3R41+rVv4LYdffMpaq46gkPsm6xXa5sHYeKCEvQyLO0RpP1z5OWjSQ/XsMGCADI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ypgvg6wwlz67TqW;
-	Thu,  6 Feb 2025 23:27:27 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D0E18140B38;
-	Thu,  6 Feb 2025 23:30:09 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Feb
- 2025 16:30:08 +0100
-Date: Thu, 6 Feb 2025 15:30:06 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-CC: Bharata B Rao <bharata@amd.com>, Raghavendra K T <raghavendra.kt@amd.com>,
-	<linux-mm@kvack.org>, <akpm@linux-foundation.org>,
-	<lsf-pc@lists.linux-foundation.org>, <gourry@gourry.net>,
-	<nehagholkar@meta.com>, <abhishekd@meta.com>, <ying.huang@linux.alibaba.com>,
-	<nphamcs@gmail.com>, <feng.tang@intel.com>, <kbusch@meta.com>,
-	<Hasan.Maruf@amd.com>, <sj@kernel.org>, <david@redhat.com>,
-	<willy@infradead.org>, <k.shutemov@gmail.com>, <mgorman@techsingularity.net>,
-	<vbabka@suse.cz>, <hughd@google.com>, <rientjes@google.com>,
-	<shy828301@gmail.com>, <liam.howlett@oracle.com>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <nadav.amit@gmail.com>, <shivankg@amd.com>,
-	<ziy@nvidia.com>, <jhubbard@nvidia.com>, <AneeshKumar.KizhakeVeetil@arm.com>,
-	<linux-kernel@vger.kernel.org>, <jon.grimm@amd.com>,
-	<santosh.shukla@amd.com>, <Michael.Day@amd.com>, <riel@surriel.com>,
-	<weixugc@google.com>, <leesuyeon0506@gmail.com>, <honggyu.kim@sk.com>,
-	<leillc@google.com>, <kmanaouil.dev@gmail.com>, <rppt@kernel.org>,
-	<dave.hansen@intel.com>
-Subject: Re: [LSF/MM/BPF TOPIC] Unifying sources of page temperature
- information - what info is actually wanted?
-Message-ID: <20250206153006.00003e0f@huawei.com>
-In-Reply-To: <20250205160529.GB1183495@cmpxchg.org>
-References: <20250123105721.424117-1-raghavendra.kt@amd.com>
-	<20250131122803.000031aa@huawei.com>
-	<20250131130901.00000dd1@huawei.com>
-	<de31971e-98fc-4baf-8f4f-09d153902e2e@amd.com>
-	<20250205160529.GB1183495@cmpxchg.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738855893; c=relaxed/simple;
+	bh=U7rfiEVLIQsb2FlQZ09+zMrIO5/nfqM6NR7c4p887yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUUdsufzHoU7VzVcbag+S9icZI83+mzTwhny2EonLN+Cr2kRG3kv/sHvxwLVYZb2no26z52RpzkXrLAimXmrfqEu2svWsymiBKRMMShw65b1IdlyOhwTDRUzyeSvSRNNaS/YVCaAWsjJUTltuDwUUS1jNwB0Z+TTK8bl5wR7x7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=wFMh7IIq; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wFMh7IIq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cQ0FdpNgHOekWmP2VoCpsk8gYuzsChIxdkx5orIICcA=; b=wFMh7IIqWLcDH4ZdUBSwhGC7hT
+	KAple1XmoomeYbrKzex41iFR/7byyI62Rmox1VtsvppXUxxDoq5L0fgJf4nGLPX9/4vdsjn81cIcy
+	ySrNV3KlsBTXGKznowYajXxOw6ivDfvB8TRz26mgBQTYCmh24NqZ1evcB+M7LXHGj6vc6TS7LZwGt
+	USN46/YhkZzAd1KiVjlJbJejwwc2xJVVdJyKafyppyyK0LukdKxmTHaXua2pWNERrsvpsyAy32jsO
+	UE3XUNH74+8kogXNTDPyepANF3PN20DY4ymDPjhitqNQzodxxNaaVwWXJoWHEdlingxOKpluTEzZH
+	vAXhaGEw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54766)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tg3py-0002c8-0a;
+	Thu, 06 Feb 2025 15:30:42 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tg3pp-0003WN-2X;
+	Thu, 06 Feb 2025 15:30:33 +0000
+Date: Thu, 6 Feb 2025 15:30:33 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
+ Auto-negotiation
+Message-ID: <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, 5 Feb 2025 11:05:29 -0500
-Johannes Weiner <hannes@cmpxchg.org> wrote:
-
-> On Wed, Feb 05, 2025 at 11:54:05AM +0530, Bharata B Rao wrote:
-> > On 31-Jan-25 6:39 PM, Jonathan Cameron wrote:  
-> > > On Fri, 31 Jan 2025 12:28:03 +0000
-> > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > >   
-> > >>> Here is the list of potential discussion points:  
-> > >> ...
-> > >>  
-> > >>> 2. Possibility of maintaining single source of truth for page hotness that would
-> > >>> maintain hot page information from multiple sources and let other sub-systems
-> > >>> use that info.  
-> > >> Hi,
-> > >>
-> > >> I was thinking of proposing a separate topic on a single source of hotness,
-> > >> but this question covers it so I'll add some thoughts here instead.
-> > >> I think we are very early, but sharing some experience and thoughts in a
-> > >> session may be useful.  
-> > > 
-> > > Thinking more on this over lunch, I think it is worth calling this out as a
-> > > potential session topic in it's own right rather than trying to find
-> > > time within other sessions.  Hence the title change.
-> > > 
-> > > I think a session would start with a brief listing of the temperature sources
-> > > we have and those on the horizon to motivate what we are unifying, then
-> > > discussion to focus on need for such a unification + requirements
-> > > (maybe with a straw man).  
-> > 
-> > Here is a compilation of available temperature sources and how the 
-> > hot/access data is consumed by different subsystems:  
+On Thu, Feb 06, 2025 at 09:18:54PM +0800, Choong Yong Liang wrote:
+> The xpcs_switch_interface_mode function was introduced to handle
+> interface switching.
 > 
-> This is super useful, thanks for collecting this.
+> According to the XPCS datasheet, a soft reset is required to initiate
+> Clause 37 auto-negotiation when the XPCS switches interface modes.
 
-Absolutely agree!
+Hmm. Given that description, taking it literally, claus 37
+auto-negotiation is 1000BASE-X, not Cisco SGMII (which isn't an IEEE
+802.3 standard.) Are you absolutely sure that this applies to Cisco
+SGMII?
 
-> 
-> > PA-Physical address available
-> > VA-Virtual address available
-> > AA-Access time available
-> > NA-accessing Node info available
-> > 
-> > I have left the slot blank for those which I am not sure about.
-> > ==================================================
-> > Temperature		PA	VA	AA	NA
-> > source
-> > ==================================================
-> > PROT_NONE faults	Y	Y	Y	Y
-> > --------------------------------------------------
-> > folio_mark_accessed()	Y		Y	Y
-> > --------------------------------------------------  
-> 
-> For fma(), the VA info is available in unmap, but usually it isn't -
-> or doesn't meaningfully exist, as in the case of unmapped buffered IO.
-> 
-> I'd say it's an N.
-> 
-> > PTE A bit		Y	Y	N	N
-> > --------------------------------------------------
-> > Platform hints		Y	Y	Y	Y
-> > (AMD IBS)
-> > --------------------------------------------------
-> > Device hints		Y
-> > (CXL HMU)
-> > ==================================================  
+If the reset is required when switching to SGMII, should it be done
+before or after configuring the XPCS for SGMII?
 
-For the use cases where we have relatively few 'pages' the cost of a reverse
-map look up doesn't look to be a problem.  Trick is to do it
-only after we've done what we can in PA space to cut down on the
-pages of interest. So maybe (Y) to reflect that it is indirect.
-Whether it makes sense to do that before or after some common
-layer is an interesting question.  That PA/VA mapping might be
-out of date anyway by the time we see the data.
+Also, if the reset is required, what happens if we're already using
+SGMII, but AN has been disabled temporarily and is then re-enabled?
+Is a reset required?
 
-> 
-> For the following table, it might be useful to add *when* the source
-> produces this information. Sampling frequency is a likely challenge:
-> consumers have different requirements, and overhead should be limited
-> to the minimum required to serve enabled consumers.
-> 
-> Here is an (incomplete) attempt - sorry about the long lines:
-> 
-> > And here is an attempt to compile how different subsystems
-> > use the above data:
-> > ==============================================================
-> > Source			Subsystem		Consumption         Activation/Frequency
-> > ==============================================================
-> > PROT_NONE faults	NUMAB		NUMAB=1 locality based              While task is running,
-> > via process pgtable			balancing                           rate varies on observed
-> > walk					NUMAB=2 hot page                    locality and sysctl knobs.
-> > 					promotion
-> > ==============================================================
-> > folio_mark_accessed()	FS/filemap/GUP	LRU list activation                 On cache access and unmap
-> > ==============================================================
-> > PTE A bit via		Reclaim:LRU	LRU list activation,	            During memory pressure
-> > rmap walk				deactivation/demotion
-> > ==============================================================
-> > PTE A bit via		Reclaim:MGLRU	LRU list activation,	            - During memory pressure
-> > rmap walk and process			deactivation/demotion               - Continuous sampling (configurable)
-> > pgtable walk                                                                for workingset reporting
-> > ==============================================================
-> > PTE A bit via		DAMON		LRU activation,                     Continuous sampling (configurable)?
-> > rmap walk				hot page promotion,                 (I believe SJ is looking into
-> > 					demotion etc                         auto-tuning this).
-> > ==============================================================
-> > Platform hints		NUMAB		NUMAB=1 Locality based
-> > (AMD IBS)				balancing and
-> > 					NUMAB=2 hot page
-> > 					promotion
-> > ==============================================================
-Based on the CXL one...
+What about 1000BASE-X when AN is enabled or disabled and then switching
+to SGMII?
 
-> > Device hints		NUMAB		NUMAB=2 hot page       Continuous sampling, frequency controllable.
-> > 					promotion                      Subsampling programable.
-> > ==============================================================
-> > The last two are listed as possibilities.
-> > 
-> > Feel free to correct/clarify and add more.
+> +static int xpcs_switch_to_aneg_c37_sgmii(const struct dw_xpcs_compat *compat,
+> +					 struct dw_xpcs *xpcs,
+> +					 unsigned int neg_mode)
+> +{
+> +	bool an_c37_enabled;
+> +	int ret, mdio_ctrl;
+> +
+> +	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED) {
+> +		mdio_ctrl = xpcs_read(xpcs, MDIO_MMD_VEND2, MII_BMCR);
+> +		if (mdio_ctrl < 0)
+> +			return mdio_ctrl;
+> +
+> +		an_c37_enabled = mdio_ctrl & BMCR_ANENABLE;
+> +		if (!an_c37_enabled) {
 
-The above covers what the use cases require. Maybe we need to do similar
-for the controls needed the other way (frequency already covered)
+I don't think that we need "an_c37_enabled" here, I think simply:
 
-Filtering.
-* Process ID
-* Address range (PA / VA)
-* Access type (read vs write) may matter for migration cost.
+		if (!(mdio_ctrl & BMCR_ANENABLE)) {
 
-Also frequency is more nuanced perhaps:
-- How often to give data (timeliness)
-- How much data to give (bandwidth)
-- When don't I care (threshold)
-- How precise do I want it to be (subsampling etc)
+would be sufficient.
 
-The layering is clearly to be complex, so maybe addressing each
-use case for what info that needs would be helpful?
+> +			//Perform soft reset to initiate C37 auto-negotiation
+> +			ret = xpcs_soft_reset(xpcs, compat);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +	return 0;
 
-The following is probably too simplistic.
+I'm also wondering (as above) whether this soft reset needs to happen
+_after_ xpcs_config_aneg_c37_sgmii() has done its work - this function
+temporarily disables AN while it's doing its work.
 
-==================================================================
-Usecase       Nature of data
-==================================================================
-NUMAB =1      Enough hot pages with remote source.
-Balancing
-==================================================================
-NUMAB =2      Enough hot pages in slow memory
-Tiering
-Promotion
-==================================================================
-NUMAB = 2     Enough cold pages in fast memory
-Tiering
-Demotion
-===================================================================
-LRU list      Specific pages of interest accessed
-activation
-===================================================================
-LRU list      Enough cold pages?
-deactivation
-====================================================================
+I'm also wondering whether AN being disabled is really a deciding
+factor (e.g. when switching from 1000BASE-X AN-enabled to SGMII, is a
+reset required?)
 
-
-Jonathan
-> > 
-> > Regards,
-> > Bharata.  
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
