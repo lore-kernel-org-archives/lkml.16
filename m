@@ -1,62 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE7E1547E9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4997C225A4C;
+	Thu,  6 Feb 2025 07:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738828340; cv=none; b=M2e4VfZn3Bfnsd983WYpEZigzZm93ujA/+SIC6zlsxsiZPUFGP0XgRSPkVZivLh2NEyH5RG89R9OSqTb36SeQGySVAIjjDaIjcIMqjPhaLwTYwhQ1hfQSbTOx0M1cHM1U90kmkghRdHwjl4eMrfYsKUIDaa0lZu/ASNTMGv3BiQ=
+	t=1738828351; cv=none; b=ngwG1BEdyx+UOgvE+qySrLSsHTaOhiUmJnZ/gsYrCT4l6lIUQ02zWrC7FI515k5HBwuw8aDCoPUM603EKHpz8YfycJOISa/Oarfda6x1UlgKtYB41vABTfxV/TNbXuMNdcfEMrRvsDXUie35CwCF6z1nKZH7UoHay5XPkXN3g24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738828340; c=relaxed/simple;
-	bh=88KiQixzKQj5rRXEekbKnJmhNWTZtXqiwpRxpjLPSJU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ChbtRQsxQf5aSZpEgejOwMMxrMHTuCYIvAcMU1vDyCc41keuBxjhg+OGxY8AyKArSHzvODELALJJctZqgTqmKfIsC6JtFm9b85tSpsUX7OStLkFU+n+Pk1HFQud3GovAKu76JwB3ZSCkJNSACRUwwCpiz7M/Wk6lg7W1G+bwPOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=s/04mWHL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738828351; c=relaxed/simple;
+	bh=JNGdLVOeh2u3LfPFwDeakrrHIl4B6WTrzvbCBTqoGeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ds4v4p3puQt/75hISuraQvw+EOapVHV+Jg/vFxcOaYvfi+Ld4p9uoCjSyYttsWwXn8fOaclAhXjFx4S/MvM2T3yMUY5wnUXhquNUYnX/5TzCLSV3Z8AIApvTgyn265Jzd7UG9Amtta8pGXul/KRDw5y3SY9V9O1lEUdJoboQvwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9fVOtFE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="s/04mWHL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C493C4CEDD;
-	Thu,  6 Feb 2025 07:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1738828340;
-	bh=88KiQixzKQj5rRXEekbKnJmhNWTZtXqiwpRxpjLPSJU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s/04mWHLv/q0fTizs8GnPLLAN21F3yucrVtVGTFut5UMv/abPKUv6mx1R+nfI1F86
-	 NYoh/PmmwupjFT8CL9zWItndkNSsA1RSpozAdPa+MRDLFXrkFaEQQgCR172XSZRqpa
-	 YUqUWLrX2t36zIOACa4NI6+RI8Z4OUDjcNgySxeo=
-Date: Wed, 5 Feb 2025 23:52:19 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Muchun Song <muchun.song@linux.dev>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Uladzislau Rezki <urezki@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Ard
- Biesheuvel <ardb@kernel.org>, Anshuman Khandual
- <anshuman.khandual@arm.com>, Dev Jain <dev.jain@arm.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Steve Capper <steve.capper@linaro.org>, Kevin
- Brodsky <kevin.brodsky@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/16] hugetlb and vmalloc fixes and perf
- improvements
-Message-Id: <20250205235219.3c3a4b968087d1386d708b04@linux-foundation.org>
-In-Reply-To: <20250205151003.88959-1-ryan.roberts@arm.com>
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9fVOtFE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BF1FC4AF0B;
+	Thu,  6 Feb 2025 07:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738828351;
+	bh=JNGdLVOeh2u3LfPFwDeakrrHIl4B6WTrzvbCBTqoGeY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=m9fVOtFErGQpnJf5/iN5CB1c0VupczSJaRHZaDv2SOKgQV7lqNh8LA0QBEoXhlgg6
+	 YBQmHjIonQrlf/Z8zr/h9bbXNzln+SaFYPyqeD+nrNunWuP1aQF40o38u6SZz5QAxt
+	 ZKFRZ+MSugUteJtAXmnal48H0sX0XwE0aOodcb63EWtOuCR1hQdMCFH5xgwoiJF2Mq
+	 PCigyV1dDo2eoXbnmY9TYVqsMwQsPXisHncM5P4G7Q+XS9W0je3rOaEOdCApfFUb+9
+	 o/fmQxpPFQuPA4UrfjQ13VgtWmxZE615O41KGTAdkcSzZg9/hbYa+xsctSjLZAUV0Y
+	 JF7cGdGA84W5A==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so1129294a12.0;
+        Wed, 05 Feb 2025 23:52:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUIWwlJIUUyGFbk8+EuO6CvwwJA5X5tbUauzVVirldbBG70HKv30MBNsYgmCBriYRfnTzaToEHz@vger.kernel.org, AJvYcCUfFiqZY5u/EthgWNd5S3tS4KTX1KByFUbRVwOeqmUNFQm6FmerhYoH7PxVnGpX+F9fOeO/3Y+qQDUogDk=@vger.kernel.org, AJvYcCVs894KtmQwqo32ltsoYqDoqf5tUZBS33OTHXSJ65sh7zYrfM5IJBLQ8cjnd7IIl1JkSL0ijVXO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh9wU7Obsvh1acgHWUFGV6H4sENHnqjvM9/K2Yzhb6r916Dw5l
+	Cix8IAJRklQ8gztAqI8n9IASsd274v0wEnkyld4fZcclWwmtRCr+8f8amNKkc35aB/4ndmblArF
+	G8KZ91Md3gEW6BNz5YI0RrBU2PB0=
+X-Google-Smtp-Source: AGHT+IH24vRXBYoqM/jKh3fYrGtREWzXUQuxr3aqDKc+0gt0XoP0E0jPFsfdnTA3uGJugs8u05hHKqeHbKBb9kMpP9U=
+X-Received: by 2002:a05:6402:4486:b0:5dc:74fd:abf1 with SMTP id
+ 4fb4d7f45d1cf-5dcdb728ea9mr15097911a12.15.1738828349606; Wed, 05 Feb 2025
+ 23:52:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250121093703.2660482-1-chenhuacai@loongson.cn> <20250127140607.6b3617df@kernel.org>
+In-Reply-To: <20250127140607.6b3617df@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 6 Feb 2025 15:52:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6oGvixPkPJ+fr8edxAu8rgjPwgaDh508cSzdAFG8Hrqg@mail.gmail.com>
+X-Gm-Features: AWEUYZm2wkOOP8qw23WLa1Zx8_PUScQBUh61vYQPDWNLR3cFPdaLul3L2ZbvAK0
+Message-ID: <CAAhV-H6oGvixPkPJ+fr8edxAu8rgjPwgaDh508cSzdAFG8Hrqg@mail.gmail.com>
+Subject: Re: [PATCH] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, loongarch@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Chong Qiao <qiaochong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  5 Feb 2025 15:09:40 +0000 Ryan Roberts <ryan.roberts@arm.com> wrote:
+Hi, Jakub,
 
->  I'm guessing that going in
-> through the arm64 tree is the right approach here?
+Sorry for the late reply.
 
-Seems that way, just from the line counts.
+On Tue, Jan 28, 2025 at 6:06=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Tue, 21 Jan 2025 17:37:03 +0800 Huacai Chen wrote:
+> > Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
+> > zero. This means dwmac-loongson doesn't support changing MTU,
+>
+> Please provide more details here than "doesn't support changing".
+> Does it return an error every time, but the device is operating
+> correctly?
+>
+> Do the flow control thresholds also get programmed incorrectly?
+OK, I will give more details, the root cause is stmmac_change_mtu()
+fails if txfifosz is zero.
 
-I suggest two series - one for the four cc:stable patches and one for
-the 6.14 material.  This depends on whether the ARM maintainers want to
-get patches 1-4 into the -stable stream before the 6.14 release.
+>
+> > so set the
+> > correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by channe=
+l
+> > counts).
+> >
+> > Note: the Fixes tag is not exactly right, but it is a key commit of the
+> > dwmac-loongson series.
+>
+> Please pick a better one, then. Oldest commit where issue can be
+> observed by the user is usually a safe choice.
+Emmm, the commit I picked is the oldest in the "stmmac: Add Loongson
+platform support".
+
+>
+> Please use 12 chars of the hash in the tag.
+OK, will do.
+
+>
+> > +     plat->tx_fifo_size =3D SZ_16K * plat->tx_queues_to_use;
+> > +     plat->rx_fifo_size =3D SZ_16K * plat->rx_queues_to_use;
+>
+> Is this really right? 16k times the number of queues seems like you're
+> just trying to get the main driver to calculate 16k.
+> What if user decreases the queue count? Maybe you should add a way to
+> communicate the fifo size regardless of the queue count to the main
+ > driver?
+Here {tx,rx}_fifo_size is initialised before stmmac_dvr_probe(), so it
+uses the maximum {tx,rx}_queues_to_use to calculate.
+
+If we use ethtool to decrease queue count, stmmac_change_mtu() will
+get txfifosz larger than 16K, but stmmac_change_mtu() can still work
+because there is a condition "if ((txfifosz < new_mtu) || (new_mtu >
+BUF_SIZE_16KiB))".
+
+This is not perfect, but it seems a perfect solution needs to rework
+the main driver, and dwmac-intel also uses {tx,rx}_queues_to_use to
+calculate {tx,rx}_fifo_size now.
+
+
+Huacai
+
+> --
+> pw-bot: cr
