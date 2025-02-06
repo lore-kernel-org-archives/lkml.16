@@ -1,95 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11DB1EDA29;
-	Thu,  6 Feb 2025 15:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC80B1624C2;
+	Thu,  6 Feb 2025 15:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856132; cv=none; b=bv/oD5RaKUHLtXbMzy1hFo39X9nwSnfeOmhBznI1GCvgcqyyOiRf7OKS8YqvLW7HOZk6vK0uJ6P3li4C+v/X3JIOS3Wsg63774wcBG6iKkszMkSEm+OT9FiqXbbD+8OnaqljkSCdxN72yEradwP5fwkgpLibnMzTJyK0vjneg/M=
+	t=1738856278; cv=none; b=FLSkmOMA+6Ao8tQ3WF9/HqBARsFRQtaaY+9LKveik2xjKBh+krVZbjEm81raEDB4E8R1MCfiFniLE2wIBHH5p0ZYAkQOsOk/5djX6uKO1Kece0GS9MV5rfq/OBvb1KfJGXUxtq5f1bHZd2jtNXfxjXD/R42LkmDEIe1cIuXX9vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856132; c=relaxed/simple;
-	bh=gOMHX2Q+w6hLohZgDMrr4HjRsOKoZUv4ynW5WakTNa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U1iZ8YiPrZnilUfG7TAm3K2rs5Q61C1qi5KuEuhHKeDi/Xlaomil49YQ75VEsgO49xoPMeM0/vgMuOw7Ougkr+jfIRdPN54ERDeGiWLQlsKGQgBQ1ew9H4yEmczB93NF3GRgKUkHSeyAWbzxFM0vhsqIZI6ZGOo0J7hGvyVsBfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB99C4CEDF;
-	Thu,  6 Feb 2025 15:35:30 +0000 (UTC)
-Date: Thu, 6 Feb 2025 10:36:12 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 8/8] tracing: Update modules to persistent instances
- when loaded
-Message-ID: <20250206103612.355a4be9@gandalf.local.home>
-In-Reply-To: <20250206190124.1518c3bf070e862da7993d9e@kernel.org>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225104.264333506@goodmis.org>
-	<20250206190124.1518c3bf070e862da7993d9e@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738856278; c=relaxed/simple;
+	bh=ZlzDWmhB7UIdqvn9ZA3N4/Cp//44ZgbIgvl9u6GBTSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hPVuupL5TWDSgocid7ZYElyJtA0dZlaDRt+7WATS7gbI1pMycLvu4UjX/f8rB6OoSOI6xMgqvu7VLERbVkd/Gj99VdLPMRSmtVZU1qWSRz8GSF8Yw8iJVJB5E0LoaceLOjhsLHWlJKLP0ur9p9D0rpFuRowrYoJv+WUmC6CZG/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mv0SQezA; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv0SQezA"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso1077534f8f.2;
+        Thu, 06 Feb 2025 07:37:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738856275; x=1739461075; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jEzCsc/q3svFkwQlOP5jPW9KfsGihf2HptC6MSm8Zw8=;
+        b=Mv0SQezAljSzDTXu4u4cmxroalFl3GXAAeFKfyIqPNn3mkkcd7yMKylhFVr6wrjfWT
+         E58bPFl6ifHLPsXQ0c4u5lPMhRRguPNwLgZe4HWSBJlbvzTQDzp+f7jGaVw6zannFijT
+         wzv0bkTUeQdV4NNa+X5XAn4Cn4F2hWyHRLwTpVes1Z64jzSLVpAZ+gN/wO414n/PgeH+
+         P3jjxjDKPpqfy8xulX1wDg2e+/8U8r/3iMgv6Lw3UfUv9TRyOWpKkSXfMJ5IeMl/6SKp
+         7hjhvrOxHV9yrUflLqGlvYVWA+LvVJinSxFNIXOPoR30UuWqkVkBXibW9lYrYAwHU2hd
+         kB2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738856275; x=1739461075;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jEzCsc/q3svFkwQlOP5jPW9KfsGihf2HptC6MSm8Zw8=;
+        b=Chkkk30bssbXQmW5UUAUMzdaFYnO8jxypap17a5TtxooL0sSHztm/iEKGXnGoLsAZt
+         491GfV+kcRFnxLlfPgqDI5TnpjJvrns+6DtQpyN23Kr3oTnCxkudZna++IIzcjC1QZED
+         vjagv6gIJrTt3TE0No5tUzvcU8bhCLzuSrm8jlQJgZsepWLm3/xkfUnYRouaIZCX6HjR
+         QfxbDRfbGhUYvlMA65v2J8zIEfmcqwH5cXT3xy4BqErfyPIEm+nAdaalMUe7yjYV3L5z
+         yKEzqG2SzHcq5aAQmMjCbxlg0F5ZlJh4aHGNovkrgX1iqAeisAD4kYJum5QlSFgFk20m
+         U0HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSHbG/BK83yFyWr3SzEfD+JwMjSiuYIsLSFp8ltTvJ//mof/gUr3Ib3ifkhjqu9d/4+lLV+UybodQj8bwx@vger.kernel.org, AJvYcCVykrwdB5bxB24Fi6XzBVqq+0EKFgHtOulxvResFtNYrIYbfgf9I4Xd8+P1WMxDnMmceX7tQhdqTzLi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy49IuxvybEbpFxozifQI5SBlRnNiSaK0i+432BMEoiZfAViiJC
+	r0P8CKC+Lmfe64nNgnwai8OedX58+d1UXwT0r0LAwP2OERSlBfla
+X-Gm-Gg: ASbGnctYTWROFHO13x9avT7bA4uGrOxaj6ZPyzUbG7+n3ehcbAAcJo3R3SaFKCoN1V1
+	5Ri6j4+Al35zLXiZI/P3vtLmMaonKjihtJ/sofU9XdDKPPr04FqAYuHMOuDrrclRYrxdfEmFHxm
+	qTq3Kbjs1FOUG3YwBGKsLZ9ClRgANICr0zUkPAiRDdZcAPSNy4am7boXJT+ipBy8AZ8n+3Ww9DW
+	L1moaDTn59FKYSEWGvB04Jdl1HX6HTFMYl7D0ELXNyVbzhwWGIJF4tKOYyB4Z3KiM+MGtxIn0zw
+	lMF5UnJT4xTQ1avpfILbZcVaRa7gVMHiTUAPNimdmuE8nVTRM/w1mltugzsE
+X-Google-Smtp-Source: AGHT+IHXKfLaVddaZ9De9vD/kKyUtDaf5GMgLO3NiS4kYqU17vHau1zvLc+wrE4ONfty4SCGtsNyqw==
+X-Received: by 2002:a05:6000:144f:b0:38a:88ac:ed14 with SMTP id ffacd0b85a97d-38db489322dmr7061870f8f.19.1738856274668;
+        Thu, 06 Feb 2025 07:37:54 -0800 (PST)
+Received: from [192.168.50.244] (83.8.206.8.ipv4.supernova.orange.pl. [83.8.206.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f84383sm116408566b.50.2025.02.06.07.37.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 07:37:54 -0800 (PST)
+Message-ID: <981d534a-a439-40c2-bd24-2e518846580e@gmail.com>
+Date: Thu, 6 Feb 2025 16:37:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Markus Mayer
+ <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
+ Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
+ Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
+ <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+Content-Language: en-US
+From: Artur Weber <aweber.kernel@gmail.com>
+In-Reply-To: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Feb 2025 19:01:24 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> > +static void trace_module_record(struct module *mod)
-> > +{
-> > +	struct trace_array *tr;
-> > +
-> > +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> > +		/* Update any persistent trace array that has already been started */
-> > +		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
-> > +		    TRACE_ARRAY_FL_BOOT) {
-> > +			/* Only update if the trace array is active */
-> > +			if (trace_array_active(tr))  
+On 6.02.2025 10:34, Linus Walleij wrote:
+> Hi Artur,
 > 
-> Do we really need this check? It seems that we can just save_mod() if the
-> above condition is true.
-
-It gets a little more  complicated if we need to add and remove modules.
-
+> On Thu, Jan 30, 2025 at 6:10 PM Artur Weber <aweber.kernel@gmail.com> wrote:
 > 
-> > +				save_mod(mod, tr);
-> > +		}
-> > +	}
-> > +}
-> > +
-> >  static int trace_module_notify(struct notifier_block *self,
-> >  			       unsigned long val, void *data)
-> >  {
-> > @@ -10096,6 +10120,7 @@ static int trace_module_notify(struct notifier_block *self,
-> >  	switch (val) {
-> >  	case MODULE_STATE_COMING:
-> >  		trace_module_add_evals(mod);
-> > +		trace_module_record(mod);
-> >  		break;
-> >  	case MODULE_STATE_GOING:
-> >  		trace_module_remove_evals(mod);  
+>> Fixes two issues that were preventing GPIO from working correctly:
+>>
+>> - Lock/unlock functions tried to write the wrong bit to the unlock
+>>    registers for GPIOs with numbers larger than 32
+>>
+>> - GPIOs only initialized as IRQs did not unlock the configuration
+>>    registers, causing IRQ-related configuration (e.g. setting the IRQ
+>>    type) to fail.
+>>
+>> Also includes a minor fix to add a missing newline to an error message.
+>>
+>> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+>> (DTS not yet in mainline).
+>>
+>> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 > 
-> Don't we need to remove the module entry when a module is removed?
-> (everytime we remove a module, trace data is cleared?)
+> Looks good to me, do you want to resend the patches picking up the
+> Acks or do you want me to apply as-is?
 
-I do have a patch that that removes entries, but I decided we don't really
-want to do that.
+I'll send a v2 in a second with the style fixes suggested by Markus[1].
+After that, it should be good to go.
 
-If we want to have events for modules that were removed. Note, the ring
-buffer is cleared if any module event was ever enabled and then the module
-is removed, as how to print it is removed too. But we could disable that
-for the persistent ring buffers as they should not be using the default
-trace event print format anyway.
+> Should this go in as urgent fixes (-rcN) or as nonurgent?
+> 
+> The DTS not being mainline suggests nonurgent but are there
+> other systems suffering?
 
-As for stack traces, we still want the module it was for when the stack
-trace happens. A common bug we see is when a module is removed, it can
-cause other bugs. We want to know about modules that were removed. Keeping
-that information about removed modules will allow us to see what functions
-were called by a stack trace for a module that was removed.
+Non-urgent is fine. AFAICT the only upstream-supported Broadcom Kona
+devices at the moment are old Broadcom dev boards; while they
+technically are also affected by the bug, I doubt anyone's actively
+using them. As for the devices I'm testing with, there's still quite
+a few fixups I plan to make before I consider them ready to upstream.
 
--- Steve
+Best regards
+Artur
+
+[1] https://lore.kernel.org/lkml/CAGt4E5sqd_Aojk+boD5K5EiRfOsiU+jYY5EV0DP6TFut291HnQ@mail.gmail.com/
