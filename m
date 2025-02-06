@@ -1,176 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEB8228CA2;
-	Thu,  6 Feb 2025 11:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467972288F0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738842018; cv=none; b=MXVLdaEazqeDxSihJ3bvc6XWWD/VQnh61YmB1p1Xp47CW5UirktG0UG6s7k1tiX5xa4XnhNTJl8o8V7GZDdkNH2WOs77JXDHP4/+oMqGfXmypuTaPQbpIBfpqZG61npcw2gb4g194nb/a3nW5gSHG9bHrNoMhYyLSVXQC2Cz/gM=
+	t=1738842019; cv=none; b=rgie6B2nGwAfkoZeMdYIWQFd2AMQL/mDCf90OmsnXa9o7Mgs+HPRCZ9ODYO4+je2y/gA66LrP/h3VejjfRgpLsMPph3QTTf83kRH67Sqngf26kc6+XCJsRk2XGDQDFKxeAspdhpW7U+C6sOUKcjtBxALf2rlruxswFRGNgedOkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738842018; c=relaxed/simple;
-	bh=DlNOYnxspap0qJgmVc/Gm5yAn5fxbHqq9onb8IXtjac=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YtVUtHaV7xbsbM9VlH93wCv8AM30+ZRHHqXaFDFhTAFb8tnw+6hcLg7+9nFArujT/voisSCUp8sPljr01890/WYMZcLavVY3lDbFDxqIgu+S2jzk97buuMzfe9rnwZh9sPuPFdwjO5kYIcd3czUKOQNjbe/fkS1i0Qaox7AzbUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dgxi0nIw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738842019; c=relaxed/simple;
+	bh=JwrnIDxa7fiK9DOXokfhuwLBPcCS07LencS6UDbMmbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mDEbiqtbeqWkr9HRmMYAxGpIMZyaas4ou7d1xBigjATwq2AEpcRCdV7zZzXxlhk6J6XjTTrVyq8oKb6nBzzvhxcvLFtWhKEIGQxpvG1ufV2Gow3nOobQ8zobjvIHwW5SUimW1DXpNBpHvh4JHohZdgHUjg5FzCiLTAjY4rTpac0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ERGVUPfd; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dgxi0nIw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8143EC4CEE6;
-	Thu,  6 Feb 2025 11:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738842017;
-	bh=DlNOYnxspap0qJgmVc/Gm5yAn5fxbHqq9onb8IXtjac=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Dgxi0nIwDdKrVkQofEEMxMlscerl5Nw6DPXyOwRRJuBy/nDPNnqqQxM0sLclTC9+r
-	 gCEEQHDHDwMB6TLNTVFfOySFgDlff1Uwjc4GvW10oEc/ErirLOs9yqBXmBks0WMRVf
-	 qbAcPotNiic38h4a/buIfXd3vWXt05qfhRZbm+DmUX0zurLRrhHzp+2D645xdwdmvt
-	 iI9N2wAuo+vsMpjaR08Sid90pybFh5AbnmhZa8xR6jsa31dquNZGTTZZOYg2E9Cldq
-	 mdoWkje2mn1yKEbpkHQahWX+Xmre+Oe30qC7lO9oHn+PzSS+P+CNz3/X/+XFda0Mcx
-	 uLMsvOigN/Lzw==
-From: Mark Brown <broonie@kernel.org>
-Date: Thu, 06 Feb 2025 11:38:03 +0000
-Subject: [PATCH RFT v14 1/8] arm64/gcs: Return a success value from
- gcs_alloc_thread_stack()
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERGVUPfd"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38db3a3cf1cso331233f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:40:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738842014; x=1739446814; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RKka8q8Has39PLR0Yd8RpCT4IAmN7UpWKg6ZilU2jFU=;
+        b=ERGVUPfd5717HiKZFuAUGPIxRt0qdPYNkojYyoouiXbzrvYxtiJ9f53ZENtnk3xf3g
+         ZavxoJLU+77BkKgbD/VleN228CftFaqR9EigNCmsy+sXxxkESaV4LbYB+7ePHgVdqGof
+         hgAtvQztdvjibJmSfdpVvwwuUPtTlFwXhv7EgTOl2IhDfpEPEkaDQ3mFEHPrMy8CZXkV
+         vxg8SG/wzsiYQJ6UIjurpMPC3ktzRI3fBC9lHSS9qEBiIunldKZopxCIYUnjZiSiJTvZ
+         1p8M94O1Ki5Z4qw6WqqrsZwdMvRVleTf934rjGSrzRFe8mJcAHI4tLIJJWNCx09p8eru
+         5lIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738842014; x=1739446814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RKka8q8Has39PLR0Yd8RpCT4IAmN7UpWKg6ZilU2jFU=;
+        b=n9u1MpR8OUhDTqdqmAoSjvBVU0eVduyZkG01c7CSR6ppwUQJ8R/lbjlBv1g5+0iNq9
+         rvwYVlCZK5TIA9lXmYsx+7rGQ/bfZznuBzYN13Ru38cA0RpLd0iE1A3h9pv1Dy8CLFHN
+         kN++kub/dYnSMjz0i5R1q6GGmlZOTODXJ0SymS76SzYJhNXd0STv8ZzOvoxV6W7xgjdN
+         1gK3GUYLWVODdHKqjKmi8zuqloAjj/OTPLduNVhNF83B+AVkrH1hMYhcAV3W71N+S/YS
+         r2ROV8x1mu1jtso0peNvhElzPOD8VYmV6hneaDnVVcip2KjDxo8VMqmcHLodOiibWRrY
+         Ol5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXS3fnY/8RLUDPYzgKILC5MeJVY4kxwRbEUjyCYfQwP+DW9oMgOZ/GBEXkighj0jazhQGWFq8Amp4QqQHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWldMgq8nkkl9EVAJ1qoUN7jgik8APytjEXEEWv7f6XJTXrVWc
+	aW9yQxZH5m0ptPwXFfMuckm69UMp5xcxJFRbQnpV6kO+UGcPEmfiw9rI/SZUDlA=
+X-Gm-Gg: ASbGncudbRzA6sy0WcpoBr1ugEtXUBJndahh+xKyOMNNXvlczu1vvPEL4e0z0VhOOJt
+	D5d5xk1UXk8o77UGuZHwZWOlecThJbiE2K9V3QGqvrjtEbQagU/Y/uCo3BOEPqteNrPwV674Mo7
+	9YBbOsyMITtMp53vjM3DaF4WP9/Pl/G/UCIQBI6fHAebkVv0IfhmEcBSEoHfOzPOS9vIfixqNFA
+	alA63tZHV5XrNhJNYBX1K1E03/oUuDnbjTJIhxt4fm31eZWeyZTZvN64GzGG0DKb9gGIyH5KPcM
+	TgjXihW+LVtTrFqsancT
+X-Google-Smtp-Source: AGHT+IHK7xN1+O0lC7SA+Z4hYlZwlXq1mhwhsAv5rC/JniJV62KNS95+EeAeYIVWA7BzbT+PnwAdWQ==
+X-Received: by 2002:a5d:588c:0:b0:38d:b6e6:4445 with SMTP id ffacd0b85a97d-38db6e647bamr3919617f8f.24.1738842014402;
+        Thu, 06 Feb 2025 03:40:14 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4390d9334e7sm52136505e9.6.2025.02.06.03.40.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 03:40:14 -0800 (PST)
+Date: Thu, 6 Feb 2025 14:40:11 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 2/4] firmware: arm_scmi: Add machine_allowlist and
+ machine_blocklist
+Message-ID: <15f20562-d5f3-4432-94e1-06c8174bf3c1@stanley.mountain>
+References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com>
+ <20250120-scmi-fwdevlink-v2-2-3af2fa37dbac@nxp.com>
+ <230612a4-92ee-4acc-85bf-f1c47dc3c35b@stanley.mountain>
+ <20250206110508.GB22527@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-clone3-shadow-stack-v14-1-805b53af73b9@kernel.org>
-References: <20250206-clone3-shadow-stack-v14-0-805b53af73b9@kernel.org>
-In-Reply-To: <20250206-clone3-shadow-stack-v14-0-805b53af73b9@kernel.org>
-To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
- "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
- Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
- Yury Khrustalev <yury.khrustalev@arm.com>, 
- Wilco Dijkstra <wilco.dijkstra@arm.com>, linux-kselftest@vger.kernel.org, 
- linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
- Kees Cook <kees@kernel.org>
-X-Mailer: b4 0.15-dev-1b0d6
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3931; i=broonie@kernel.org;
- h=from:subject:message-id; bh=DlNOYnxspap0qJgmVc/Gm5yAn5fxbHqq9onb8IXtjac=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnpJ+OQvnyT0+rhQer5acV2/sCH1Pqlw7zB3Ip1695
- PKG7w+iJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ6SfjgAKCRAk1otyXVSH0KSKB/
- 9sobupBvBfI999rxOHq6tTLahomeXanOvhTzdw4gSh/sB6fuvkKpJMWd+jUR3C6GAiOUjpkKOoLbjE
- Unywjx8DzIxE/UGAzt1muyCgt2SeMLtQq5PK3QMxGWjxpcC0/jeePol5GGMrnrJVfR9tgJH5SF2g9M
- 5+GORuAedV51e40Wi0l3Hv+irACfpR+CLYRmS6g8bGBT079TuXunFUjDKjozJNr75JFNXSmkearAgi
- VmOw9VCDWV2fUtespMpnhfHBGa8xJt2BTxjyEYfAlh+IS6K7zn/eUMws8Tw26mUg/oxM7/56+AThUF
- yGcTqpY4DvMWMkYctHTNTX0ix7zGlf
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206110508.GB22527@localhost.localdomain>
 
-Currently as a result of templating from x86 code gcs_alloc_thread_stack()
-returns a pointer as an unsigned int however on arm64 we don't actually use
-this pointer value as anything other than a pass/fail flag. Simplify the
-interface to just return an int with 0 on success and a negative error code
-on failure.
+On Thu, Feb 06, 2025 at 07:05:08PM +0800, Peng Fan wrote:
+> Hi Dan,
+> 
+> On Thu, Feb 06, 2025 at 11:02:04AM +0300, Dan Carpenter wrote:
+> >On Mon, Jan 20, 2025 at 03:13:30PM +0800, Peng Fan (OSS) wrote:
+> >> From: Peng Fan <peng.fan@nxp.com>
+> >> 
+> >> There are two cases:
+> >> pinctrl-scmi.c and pinctrl-imx-scmi.c, both use SCMI_PROTOCOL_PINCTRL.
+> >> If both drivers are built in, and the scmi device with name "pinctrl-imx"
+> >> is created earlier, and the fwnode device points to the scmi device,
+> >> non-i.MX platforms will never have the pinctrl supplier ready.
+> >> 
+> >> Vendor A use 0x80 for feature X, Vendor B use 0x80 for feature Y.
+> >> With both drivers built in, two scmi devices will be created, and both
+> >> drivers will be probed. On A's patform, feature Y probe may fail, vice
+> >> verus.
+> >> 
+> >> Introduce machine_allowlist and machine_blocklist to allow or block
+> >> the creation of scmi devices to address above issues.
+> >> 
+> >> machine_blocklist is non-vendor protocols, but vendor has its own
+> >> implementation. Saying need to block pinctrl-scmi.c on i.MX95.
+> >> machine_allowlist is for vendor protocols. Saying vendor A drivers only
+> >> allow vendor A machine, vendor B machines only allow vendor B machine.
+> >> 
+> >
+> >I think patches 2-4 should be combined into one patch.  This commit
+> 
+> They are in different subsystems, so I separate them.
+> 
 
-Acked-by: Deepak Gupta <debug@rivosinc.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/include/asm/gcs.h | 8 ++++----
- arch/arm64/kernel/process.c  | 8 ++++----
- arch/arm64/mm/gcs.c          | 8 ++++----
- 3 files changed, 12 insertions(+), 12 deletions(-)
+I mean if the i.MX driver prevents the generic driver from working then
+we need a Fixes tag.  It really makes it simpler to understand and backport
+if they're sent as one patch.  Normally we would collect Acks from the
+maintainers who're involved and but still do it as one patch.
 
-diff --git a/arch/arm64/include/asm/gcs.h b/arch/arm64/include/asm/gcs.h
-index f50660603ecf5dc09a92740062df3a089b02b219..d8923b5f03b776252aca76ce316ef57399d71fa9 100644
---- a/arch/arm64/include/asm/gcs.h
-+++ b/arch/arm64/include/asm/gcs.h
-@@ -64,8 +64,8 @@ static inline bool task_gcs_el0_enabled(struct task_struct *task)
- void gcs_set_el0_mode(struct task_struct *task);
- void gcs_free(struct task_struct *task);
- void gcs_preserve_current_state(void);
--unsigned long gcs_alloc_thread_stack(struct task_struct *tsk,
--				     const struct kernel_clone_args *args);
-+int gcs_alloc_thread_stack(struct task_struct *tsk,
-+			   const struct kernel_clone_args *args);
- 
- static inline int gcs_check_locked(struct task_struct *task,
- 				   unsigned long new_val)
-@@ -91,8 +91,8 @@ static inline bool task_gcs_el0_enabled(struct task_struct *task)
- static inline void gcs_set_el0_mode(struct task_struct *task) { }
- static inline void gcs_free(struct task_struct *task) { }
- static inline void gcs_preserve_current_state(void) { }
--static inline unsigned long gcs_alloc_thread_stack(struct task_struct *tsk,
--						   const struct kernel_clone_args *args)
-+static inline int gcs_alloc_thread_stack(struct task_struct *tsk,
-+					 const struct kernel_clone_args *args)
- {
- 	return -ENOTSUPP;
- }
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 42faebb7b712328a8bebd25c47b01f09daae3861..45130ea7ea6e8090f09297a32fa71fe86e6532b9 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -297,7 +297,7 @@ static void flush_gcs(void)
- static int copy_thread_gcs(struct task_struct *p,
- 			   const struct kernel_clone_args *args)
- {
--	unsigned long gcs;
-+	int ret;
- 
- 	if (!system_supports_gcs())
- 		return 0;
-@@ -305,9 +305,9 @@ static int copy_thread_gcs(struct task_struct *p,
- 	p->thread.gcs_base = 0;
- 	p->thread.gcs_size = 0;
- 
--	gcs = gcs_alloc_thread_stack(p, args);
--	if (IS_ERR_VALUE(gcs))
--		return PTR_ERR((void *)gcs);
-+	ret = gcs_alloc_thread_stack(p, args);
-+	if (ret != 0)
-+		return ret;
- 
- 	p->thread.gcs_el0_mode = current->thread.gcs_el0_mode;
- 	p->thread.gcs_el0_locked = current->thread.gcs_el0_locked;
-diff --git a/arch/arm64/mm/gcs.c b/arch/arm64/mm/gcs.c
-index 5c46ec527b1cdaa8f52cff445d70ba0f8509d086..1f633a482558b59aac5427963d42b37fce08c8a6 100644
---- a/arch/arm64/mm/gcs.c
-+++ b/arch/arm64/mm/gcs.c
-@@ -38,8 +38,8 @@ static unsigned long gcs_size(unsigned long size)
- 	return max(PAGE_SIZE, size);
- }
- 
--unsigned long gcs_alloc_thread_stack(struct task_struct *tsk,
--				     const struct kernel_clone_args *args)
-+int gcs_alloc_thread_stack(struct task_struct *tsk,
-+			   const struct kernel_clone_args *args)
- {
- 	unsigned long addr, size;
- 
-@@ -59,13 +59,13 @@ unsigned long gcs_alloc_thread_stack(struct task_struct *tsk,
- 	size = gcs_size(size);
- 	addr = alloc_gcs(0, size);
- 	if (IS_ERR_VALUE(addr))
--		return addr;
-+		return PTR_ERR((void *)addr);
- 
- 	tsk->thread.gcs_base = addr;
- 	tsk->thread.gcs_size = size;
- 	tsk->thread.gcspr_el0 = addr + size - sizeof(u64);
- 
--	return addr;
-+	return 0;
- }
- 
- SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsigned int, flags)
+> >message is a bit confusing.  I don't really understand how the
+> >"fwnode device points to the scmi device".  I understand vaguely
+> >what that means but in terms of code, I couldn't point to it.
+> 
+> Sorry for not being clear.
+> 
+> The devlink framework will take i.MX as pinctrl provider, because the
+> fwnode is occupied by i.MX pinctrl scmi device which is created earlier
+> than generic pinctrl scmi device.
+> 
 
--- 
-2.39.5
+Ah.  Got it.  Thanks.
+
+> >
+> >> Vendor A use 0x80 for feature X, Vendor B use 0x80 for feature Y.
+> >> With both drivers built in, two scmi devices will be created, and both
+> >> drivers will be probed. On A's patform, feature Y probe may fail, vice
+> >> verus.
+> >
+> >You're describing the code before.  Is it a problem that only one driver
+> >is probed successfully?  I thought that would be fine.  What's the
+> >problem?
+> 
+> VendorA 0x80
+> VendorB 0x80
+> 
+> If both drivers runs into probe, VenderB 0x80 driver may crash VendorA firmware
+> if the firmware not designed well.
+> 
+> Not big issue. I just think we should block the probe.
+> 
+
+This is a theoretical issue for now.  I would just leave it out of the
+commit message because it's kind of confusing and it might not even happen
+in real life.
+
+regards,
+dan carpenter
 
