@@ -1,174 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEBF225760;
-	Thu,  6 Feb 2025 09:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AE6226520
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834263; cv=none; b=EOj3vnbAhUgte0VNamDIyajvzk9+v8ucJar2WGymwFiDj23nLDfaTsVAa7P7wJ39MCCeWD6KlYMm9v5krCmeVs8gOaLdcQa9s+MWx6SkRk2t2BxSHXHxoxuRCaN7m6VUs+QFXtGfDtcE6LiG40Hug44QSy3wRTDU82cw4C1AI7g=
+	t=1738834292; cv=none; b=X5mmEctlXYB5sfDzd1piwfqBzCdOUYj5g9eVwxG4Jy1vOxCD5LSClncXQV5DZgbb0RxnGt6EF/Drq7w0APdPfvcdnGlV93MPYRvsdmIiQMNQpXgPPMSpKoHQP7UXTDK4mBPt7ME9d9hQPkaMRSkJSwsafAwnb6lCqyuSJtXbvZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834263; c=relaxed/simple;
-	bh=SOrWPcSoquNWpMyZy27wi/Q8SEueF+uvyv+XLXRcMtI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=goJ/v2c7tzrRbBcu/lwqWHkD5ZomrP7MS5zshrql+w73Lv8IKdXRVDe+ktWBe93NpnJWXsVpj95qH/6JwlvBBhFbIJdN3g8VhUb7uR24tmXr2DdM5st/VBYxUArEJlXv5qOQi+PMJo9XnGCUTKQ199KFCZiYaMBadD1HbJkaVQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKVZf0n4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738834292; c=relaxed/simple;
+	bh=DDYhcReaqTeAJ8Ct+nQyrID5qgSTAK+HyqV4S88yu+k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gkibBTFEIKWLfCJYvY1F1Nq8/W3tlezjrCsEXJUS1UO+z655sgQDD43sDEnC95Tia0/0P+7xDqz+qbYP/DXJKHPKrk2p6XzBa3JOzgveoGlMmfdJhls9DEAJp7avPrcP0aMktyZX+751suvSJzahUt+84gRYmOQZVNMUaqdjzxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=myoeHHPs; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKVZf0n4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E7610C4CEDD;
-	Thu,  6 Feb 2025 09:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738834263;
-	bh=SOrWPcSoquNWpMyZy27wi/Q8SEueF+uvyv+XLXRcMtI=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=dKVZf0n4e4dRMTQWnrkqyy3uilErXdJ0QaK3TdzfR8z6J6eaJuHOfV5Otk3J3aIqD
-	 d/YdC5i0d4JCBhnPOfvyBlxTI1s7YbDrpiPb6Acl5BmOYUTalO9mbzF8Rw9T+H63Y+
-	 ZR9HH+JkBmk4wBcNNKH6f+PMVphuch6wvZPmO0vUntMHKxZeC3PP0nM2sNzhjpE89Z
-	 H6OjLO/bjRaUFK5fkeKjjhgpYlsIXQ4R2i0NHhCZBtBDQekNrpHrB+z53U2B52OKa3
-	 1Fa+z/Qd22copyEQq+8HyQGbG0nJz6ToUd8rSJ9Pz+wjavIqmF6nEFPwHu32XpnL2o
-	 LEMWeR2VLULAQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93A0C02194;
-	Thu,  6 Feb 2025 09:31:02 +0000 (UTC)
-From: Krishanth Jagaduri via B4 Relay <devnull+Krishanth.Jagaduri.sony.com@kernel.org>
-Date: Thu, 06 Feb 2025 14:59:59 +0530
-Subject: [PATCH v2] Documentation/no_hz: Remove description that states
- boot CPU cannot be nohz_full
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="myoeHHPs"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30036310158so5997521fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:31:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738834288; x=1739439088; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DDYhcReaqTeAJ8Ct+nQyrID5qgSTAK+HyqV4S88yu+k=;
+        b=myoeHHPsMkmeeFshyk6tSKm+qtyjtMLf0z9k9jGNRWGWsvZL9TxFv17uz0SFiAwbCe
+         ul5R7qWdcpVgxpGxqBypMvzmeVxGQgMptGGp/IjF5zm+cwt6+rmGh3S/yYkv3f4E8mxg
+         +oQSZGbcOZfVcNCJXiYqfWKc3JUeV8cG22Q3eqsfRDulg/XdlWBpbnv1R/WhpgrowAZJ
+         DVt7sTbcStNBPV5JtrQ5yZRWHw/3PmydUKw4RsckQb/QB0fSPNbdLXNDERjG6ZGkSZ5k
+         WTdfaaIWA6yByLUWTfFOJkDns0iWjBMYSHMODgXDfmmTYucgzSb2weLlU/2ufHjMmjd7
+         WxMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738834288; x=1739439088;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DDYhcReaqTeAJ8Ct+nQyrID5qgSTAK+HyqV4S88yu+k=;
+        b=lq77EYBnjfQkUnD5hmtDPCwkOpEYeOG+ZPGcHPBPtM+Tv7yxXMOlSwjYdBNOAQiilg
+         XXFRq2GdOZBTzzK2V/yElfpE0rSlroXi02r4tApQoAzNExeAvyBCtt+V73aPLtLKL8KF
+         58fCzyB3n/4jxuzg1bg9igQQwIGxUey9Ijp83nODYRzSRwt257kKcEAlkQbJvk1u/jbY
+         uny6yI+TslP4dvVaib+dR32qeaOkGkA8HJOtkxmxxa1BBc2M+frLRhBred8YijKMkzSW
+         Q6LS1QP4b1wGzxwVdU0QZS8BSqzLRjb6ASXdbE6H1dLA1OP8+VoVyXLl/KpfADlr8oOj
+         zp/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVMsU3NdabSdtqSdL9yg5jtQjlEOpSCUMNZDg3+J+kvikC25vnbT0vcXgvvWJaHajt8STSqXnAhDzG0WWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT2yMD0h2v2xoyU21p5qP3vaNjEqeBYWAcScEHgxfBPPnXG8AJ
+	i0N9Fy5i+NChxoKVyxH932FmGNsPwEpKHpK2d5HJD4z9axgYphPaNOH12jfpwu1vA7ym/pBIAn/
+	yzOKmoAJV4323ahV6SHH6DfLvWT9f9/kdNHyKyg==
+X-Gm-Gg: ASbGncsOSrjVaOISmjJ3j1fc6IQrZIOTDgqtQKaFMMyZlZTvMjGmxgwmLNQy8oWXhVS
+	P3YEV+u7cprmal70QYDkhfyogL6LB36M6R1a88FJZNaiofoH7G5DO5RI8Sro5oNCLeJLcBXc=
+X-Google-Smtp-Source: AGHT+IHcFWo3xte3K/LEtEaJiM+DRe2msO38SbMIwC0bXZ5PX+6iklANjvHzTB6e1CWVgPfne7+PROlXtmg2N2jgE2w=
+X-Received: by 2002:a05:651c:222b:b0:302:3003:97e with SMTP id
+ 38308e7fff4ca-307cf38c85fmr22106041fa.30.1738834288265; Thu, 06 Feb 2025
+ 01:31:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-send-oss-20250129-v2-1-453755f58ae0@sony.com>
-X-B4-Tracking: v=1; b=H4sIABaBpGcC/22NQQrCMBBFr1Jm7UgyTSt15T2kC02mNgsTyUiwl
- NzdWMGVy/fgv7+CcPIscGxWSJy9+Bgq0K4BO1/CjdG7ykCKOqVpQOHgMIrgz7TWkLOT6Vu+Qt0
- 9Ek/+tTXPY+XZyzOmZbvI+mO/NVLdn1rWqNEZZQbS3LsDnySGZW/jHcZSyhu4p96TsQAAAA==
-X-Change-ID: 20250129-send-oss-20250129-3c42dcf463eb
-To: Thomas Gleixner <tglx@linutronix.de>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Atsushi Ochiai <Atsushi.Ochiai@sony.com>, 
- Daniel Palmer <Daniel.Palmer@sony.com>, Oleg Nesterov <oleg@redhat.com>, 
- Chris von Recklinghausen <crecklin@redhat.com>, 
- Ingo Molnar <mingo@kernel.org>, Phil Auld <pauld@redhat.com>, 
- Frederic Weisbecker <frederic@kernel.org>, stable@vger.kernel.org, 
- Krishanth Jagaduri <Krishanth.Jagaduri@sony.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738834214; l=4586;
- i=Krishanth.Jagaduri@sony.com; s=20250122; h=from:subject:message-id;
- bh=0sAqiurAdX4WtqSixtXBXrO6eSAPmKIpbmQxC16fIUQ=;
- b=hDy7sRE95Qphd9khrwPu6zkaHUaLc4tX4GPlhxcIbo1nJb0329SLQF28B1dY2SW2yulWnmT/+
- 8/xP9DJuCLLC72BGybpDoZaSCYsUvTiTnOr6bLexjE7YL/2fSlhMpJu
-X-Developer-Key: i=Krishanth.Jagaduri@sony.com; a=ed25519;
- pk=lx2tvWPqsnFN2XCeuuKdm7G2bXm/Grq1a1KTsSpFZSk=
-X-Endpoint-Received: by B4 Relay for Krishanth.Jagaduri@sony.com/20250122
- with auth_id=326
-X-Original-From: Krishanth Jagaduri <Krishanth.Jagaduri@sony.com>
-Reply-To: Krishanth.Jagaduri@sony.com
+References: <20250129145155.1746876-1-andriy.shevchenko@linux.intel.com> <20250129145155.1746876-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250129145155.1746876-2-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 10:31:17 +0100
+X-Gm-Features: AWEUYZmwoTYF2TuiKQlWq3AmlQqyzT0xz3waUTJAiHp5kUR0_yl7mdskuk2sj9E
+Message-ID: <CACRpkdZs9Y+GTHLeWBmpkaZrqiJGWj6s_q+6g=kkr7AmmeGMig@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: baytrail: Use dedicated helpers for
+ chained IRQ handlers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Oleg Nesterov <oleg@redhat.com>
+On Wed, Jan 29, 2025 at 3:52=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-sched/isolation: Prevent boot crash when the boot CPU is nohz_full
+> Instead of relying on the fact that the parent IRQ chip supports
+> fasteoi mode and calling the respective callback at the end of
+> the interrupt handler, surround it with enter and exit helpers
+> for chained IRQ handlers which will consider all possible cases.
+>
+> This in particular unifies how GPIO drivers handle IRQ.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 5097cbcb38e6e0d2627c9dde1985e91d2c9f880e ]
+Looks fine to me, also 2/2.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Documentation/timers/no_hz.rst states that the "nohz_full=" mask must not
-include the boot CPU, which is no longer true after:
+Expect to get this from you as pull request!
 
-  commit 08ae95f4fd3b ("nohz_full: Allow the boot CPU to be nohz_full").
-
-However after:
-
-  aae17ebb53cd ("workqueue: Avoid using isolated cpus' timers on queue_delayed_work")
-
-the kernel will crash at boot time in this case; housekeeping_any_cpu()
-returns an invalid CPU number until smp_init() brings the first
-housekeeping CPU up.
-
-Change housekeeping_any_cpu() to check the result of cpumask_any_and() and
-return smp_processor_id() in this case.
-
-This is just the simple and backportable workaround which fixes the
-symptom, but smp_processor_id() at boot time should be safe at least for
-type == HK_TYPE_TIMER, this more or less matches the tick_do_timer_boot_cpu
-logic.
-
-There is no worry about cpu_down(); tick_nohz_cpu_down() will not allow to
-offline tick_do_timer_cpu (the 1st online housekeeping CPU).
-
-[ Apply only documentation changes as commit which causes boot
-  crash when boot CPU is nohz_full is not backported to stable
-  kernels - Krishanth ]
-
-Fixes: aae17ebb53cd ("workqueue: Avoid using isolated cpus' timers on queue_delayed_work")
-Reported-by: Chris von Recklinghausen <crecklin@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Phil Auld <pauld@redhat.com>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/r/20240411143905.GA19288@redhat.com
-Closes: https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/
-Cc: stable@vger.kernel.org # 5.4+
-Signed-off-by: Krishanth Jagaduri <Krishanth.Jagaduri@sony.com>
----
-Hi,
-
-Before kernel 6.9, Documentation/timers/no_hz.rst states that
-"nohz_full=" mask must not include the boot CPU, which is no longer
-true after commit 08ae95f4fd3b ("nohz_full: Allow the boot CPU to be
-nohz_full").
-
-When trying LTS kernels between 5.4 and 6.6, we noticed we could use
-boot CPU as nohz_full but the information in the document was misleading. 
-
-This was fixed upstream by commit 5097cbcb38e6 ("sched/isolation: Prevent
-boot crash when the boot CPU is nohz_full").
-
-While it fixes the document description, it also fixes issue introduced
-by another commit aae17ebb53cd ("workqueue: Avoid using isolated cpus'
-timers on queue_delayed_work").
-
-It is unlikely that upstream commit as a whole will be backported to
-stable kernels which does not contain the commit that introduced the
-issue of boot crash when boot CPU is nohz_full.
-
-Could we fix only the document portion in stable kernels 5.4+ that
-mentions boot CPU cannot be nohz_full?
----
-Changes in v2:
-- Add original changelog and trailers to commit message.
-- Add backport note for why only document portion is modified.
-- Link to v1: https://lore.kernel.org/r/20250205-send-oss-20250129-v1-1-d404921e6d7e@sony.com
----
- Documentation/timers/no_hz.rst | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/timers/no_hz.rst b/Documentation/timers/no_hz.rst
-index 065db217cb04fc252bbf6a05991296e7f1d3a4c5..16bda468423e88090c0dc467ca7a5c7f3fd2bf02 100644
---- a/Documentation/timers/no_hz.rst
-+++ b/Documentation/timers/no_hz.rst
-@@ -129,11 +129,8 @@ adaptive-tick CPUs:  At least one non-adaptive-tick CPU must remain
- online to handle timekeeping tasks in order to ensure that system
- calls like gettimeofday() returns accurate values on adaptive-tick CPUs.
- (This is not an issue for CONFIG_NO_HZ_IDLE=y because there are no running
--user processes to observe slight drifts in clock rate.)  Therefore, the
--boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
--"nohz_full=" mask that includes the boot CPU will result in a boot-time
--error message, and the boot CPU will be removed from the mask.  Note that
--this means that your system must have at least two CPUs in order for
-+user processes to observe slight drifts in clock rate.) Note that this
-+means that your system must have at least two CPUs in order for
- CONFIG_NO_HZ_FULL=y to do anything for you.
- 
- Finally, adaptive-ticks CPUs must have their RCU callbacks offloaded.
-
----
-base-commit: 219d54332a09e8d8741c1e1982f5eae56099de85
-change-id: 20250129-send-oss-20250129-3c42dcf463eb
-
-Best regards,
--- 
-Krishanth Jagaduri <Krishanth.Jagaduri@sony.com>
-
-
+Yours,
+Linus Walleij
