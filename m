@@ -1,132 +1,82 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A761F4179;
-	Thu,  6 Feb 2025 15:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F851F416D;
+	Thu,  6 Feb 2025 15:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857199; cv=none; b=D2mIfoAgLORL/WkTtYBhf/QL5jtfYIfKsQ/DCyIlYV015zgatI0E/b1ojhuytORZNYo4n/nyx4brqCZtzA5to5hZUZW9fIPvP7fiIWfTKlS0VjO/U87dVZIKCzy2rX+GhlyAUXpQCuFsoYFjUxnSIHM4iS4wRR5a6WxTTWVkHhk=
+	t=1738857269; cv=none; b=QWI9ztV0betBxJvuJBhiWttEl3jlXmkzFvjGP+eyXLXwrh/FZevV+S8yyo7wXiYLm8a6UeTRtd/sJeqU4oNxSz4f0u/uwyBVAcJjpaZFr2Bzl6ZK5dTlbRC7yvX0As7t8fGOSUcilvlcIpVHb6hhEv+YH02pdtK+8LSIiQgUXug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857199; c=relaxed/simple;
-	bh=EEO+RXlJJn5oRvwqBCSKDUQQl6JRaHG1JbhOEhBfMOg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HN7fASnic8buDjtBDgFifRZJAp4mBLJBHHFFe6Ku/K+ctN/qbwETqYq+ohTzuSxNxBDDAypNTdumbkrXWsLFmiUGJvw/h4TF7afrGDSg1/XRKVmcms6lnoXO73tlQALIQblNGak7rPcjcruRp8THJA3CMp7cUqx0AE3Vn1zRc1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CXqSMZrk; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738857269; c=relaxed/simple;
+	bh=MABX6xVCTVYjqfhW7HCIEvQlyd3hFI0FBMQSjwhEX4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gs4kI/7nuswsoLq6pAITHhKfJFnmXSGROsOt3MVVrkDnmhxgP86TWb0MdRZxZYoM7h4f2MlK2hQg1KPV6eqNa+lP+d/h5zB6qowOOsHln0GDxtNizmddW127pdW5vXpnAhT8wUDNlYwSthDYFeg+17ni7jaLIlcMIC7gKuuwUqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=WHoZLrHu; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXqSMZrk"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dca4521b95so2364090a12.0;
-        Thu, 06 Feb 2025 07:53:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738857196; x=1739461996; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yVxGlWr5Hrz+6+AtcVGpT5mxcbq4sHMPEsoNU+9wudU=;
-        b=CXqSMZrkM96tejllFKRD0Q6p41/a7a9gM8+jR1HAGsNpqMbSRfXtHlwx6fF/JxsMfA
-         ioKH+zFB0aWExDr1FDtB79KFvlleTBPTa6PWiYom0jZ+hWXbBYSOmiSmhiMkqj03RHKj
-         J14oFzhV/8phDStnk6FeAoTvMceU44t+8QKf0nHcMGZTwwynHUtW7TleMw8UC0nOXOa+
-         tNbkZj+bMhP/Mwmt+EmVDuLZUIvwLvyVTw97UPdoU9SuBLwrS5ihM+EzswEJbG5atfu0
-         e2gPycZNo6OLL6O7SG7rtJsKRb1/OkJ4wU/VQISjE5/aSTzvNIm+i/obyVZOH5I1soTz
-         vgQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738857196; x=1739461996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yVxGlWr5Hrz+6+AtcVGpT5mxcbq4sHMPEsoNU+9wudU=;
-        b=bdun3wnJN5vHgS3Yc2uLDWDCc/6AXeubNrgT6u8iEF3baWg0aN+QgvQKkaGxkFfAh/
-         J5HLpZ2cFeBnKzc333Wo+KRsLAk3WM8pDGpdi3jFvUAi0B6EH34YE/fiiKNNfIIBDzS2
-         PxXRMHplJt8hhIjXrHrNsKltKjeranUDXgMAP79HU29FxnKUwY+T+svWEN9C+zPGAZGj
-         2iRAtDNtI2Rvto0pptbb7If0iESLlpR5RU8ZbtvBmkbD4Pq2gCMUqK3zZk+Han7UoxX9
-         YaR2yvOIValfXWKcy4D/Qt+zSG8bfLnkbY30qDLcMMBHX+nI7I5DOdpMQ74rnUYKAwrH
-         6LXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSVIWWTHF4ep9jUQUb2SgYAD15tzP+XqJMFnAmyTL4BRQOhcV4hGG1Swn0P9TyTVpafVx9Eyxg9TCFsFa9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEDovhO90DfVeL9hgbo726mrR6htZlFmW01RwC0hN+3B8RNxJ7
-	TWjAnG4DU/E6lQpli7qvFEi4kf/YKMAcmBUe+Tk2V8hrU74WtfTgY2t3GvM2mevY8uZbsisjsl+
-	jINBMoMNJyP/kvsW3IqfD4U6Qx3I=
-X-Gm-Gg: ASbGncuRHW5fU0cZ0Xzkg9bUVBL7CTVscaRucsaVfxUSzJxCNrp1jp38X0UhpWkv3sw
-	YnEqKp6r0rl//nm0VMGSDUNkuTkCvtpdkrt4w+LKEU3Mx9ARwog64DD9zWNKEjbLIDn6gBFK2
-X-Google-Smtp-Source: AGHT+IFycZ6gL4Awm5pVs5wqBHNfxA7H1dYPt4NLr1ogsVbl7kFMnrScv8wLouJRYwn1Uw12bM1M88UoUwulKi3giLI=
-X-Received: by 2002:a05:6402:13c8:b0:5dc:7fbe:730a with SMTP id
- 4fb4d7f45d1cf-5dcdb58fb0cmr7916596a12.0.1738857195654; Thu, 06 Feb 2025
- 07:53:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="WHoZLrHu"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4YphVq52sRz6CmM6L;
+	Thu,  6 Feb 2025 15:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738857265; x=1741449266; bh=MABX6xVCTVYjqfhW7HCIEvQl
+	yd3hFI0FBMQSjwhEX4M=; b=WHoZLrHuy62dhmq1EZlReF8SHjop/c2DkxYfpIGc
+	1vA6yatDwUnrR/UnnA7MCHNv+6cdsd4jXr1jis1T1nFBHAObCQW0LqvnPoPNvj9V
+	8l/c+36VidJGKJypyRT0a5wlJrUVNudDpmJBuFnkvcGeDSyepukjK8P8FFql/RMz
+	gIl847y4KBZDsYx/7tpXkB04nV4nEckhuncyam0q8Ca+dBN1dRymqWOihpT1vvy8
+	zHn6P78TMFk/8gKQ9oTGerhgFlnYIg9EnTfOUJCw5RE7aQa76+p02BDSZdhjWUrV
+	20EojEZ2pcZrncmy8jQA6p0SMC6Cpc3qY1r4mT09NgCEYw==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 69iNgM2IxfKn; Thu,  6 Feb 2025 15:54:25 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4YphVl72WZz6CmM6D;
+	Thu,  6 Feb 2025 15:54:23 +0000 (UTC)
+Message-ID: <b962df63-42c4-4bc9-9815-9871be1ce2d5@acm.org>
+Date: Thu, 6 Feb 2025 07:54:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a4b9e8.050a0220.d6d27.0000.GAE@google.com>
-In-Reply-To: <67a4b9e8.050a0220.d6d27.0000.GAE@google.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 6 Feb 2025 16:53:04 +0100
-X-Gm-Features: AWEUYZmgKzK1xJw4IXZd-sMvWkmdTWbA_Fhz8CZILqQtGkmFvVUh5v-lgCqY0aE
-Message-ID: <CAOQ4uxhS47k3q+QBSnFfWHUCarSR+MW8ms15jDpuCyWdX1RC4g@mail.gmail.com>
-Subject: Re: [syzbot] [overlayfs?] general protection fault in clone_private_mount
-To: syzbot <syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com>, 
-	Christian Brauner <brauner@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] scsi: ufs: critical health condition
+To: Avri Altman <Avri.Altman@wdc.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250204143124.1252912-1-avri.altman@wdc.com>
+ <9ebbd6d9-149f-43cb-b188-bd3a6125654f@acm.org>
+ <DM6PR04MB6575FACB152A64BDA4B4F5E8FCF72@DM6PR04MB6575.namprd04.prod.outlook.com>
+ <DM6PR04MB65757320A1761FE473BFC5CCFCF62@DM6PR04MB6575.namprd04.prod.outlook.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <DM6PR04MB65757320A1761FE473BFC5CCFCF62@DM6PR04MB6575.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 6, 2025 at 2:32=E2=80=AFPM syzbot
-<syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    808eb958781e Add linux-next specific files for 20250206
-> git tree:       linux-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D126e33df98000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D88b25e5d30d57=
-6e4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D62dfea789a2ceda=
-c1298
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D16346df8580=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D117e80e458000=
-0
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/493ef93f2e5f/dis=
-k-808eb958.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/b41757cd41c9/vmlinu=
-x-808eb958.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/24f456104aad/b=
-zImage-808eb958.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com
->
-> Oops: general protection fault, probably for non-canonical address 0xdfff=
-fc0000000009: 0000 [#1] PREEMPT SMP KASAN PTI
-> KASAN: null-ptr-deref in range [0x0000000000000048-0x000000000000004f]
-> CPU: 0 UID: 0 PID: 5834 Comm: syz-executor772 Not tainted 6.14.0-rc1-next=
--20250206-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 12/27/2024
-> RIP: 0010:is_anon_ns fs/mount.h:159 [inline]
-> RIP: 0010:clone_private_mount+0x184/0x3e0 fs/namespace.c:2425
+On 2/6/25 12:54 AM, Avri Altman wrote:
+> After some further internal discussions: The set conditions are
+> vendor specific; The device may set it as many times it wants
+> depending on its criticality. The spec does not define that nor what
+> the host should do. So there is this concern that some vendors will
+> report multiple times, while other wont. Hence, reading
+> critical_health = 1 might be misleading. What do you think?
 
-Christian,
-
-This obviously points to line:
-
-      /* Make sure this isn't something purely kernel internal. */
-     if (!is_anon_ns(old_mnt->mnt_ns))
-
-in commit:
-ae63304102ecd fs: allow detached mounts in clone_private_mount()
-
-Where old_mnt->mnt_ns can be NULL.
+How about emitting a uevent if a critical health condition has been
+reported by a UFS device? See also sdev_evt_send().
 
 Thanks,
-Amir.
+
+Bart.
+
