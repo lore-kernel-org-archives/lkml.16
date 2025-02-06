@@ -1,104 +1,72 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FA5AA2D;
-	Thu,  6 Feb 2025 04:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3A818A6A8;
+	Thu,  6 Feb 2025 04:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738817269; cv=none; b=d8hwWz3uCfOVZlFrqeO6BwRhcdAdJHJDM0OafMFddNFq3SR85Z/ySp7TKQnU6EiQgOhfzn3o5Iu+9xK7292OzBeGkepzgv/IFYK3pNIk+NaupJoGI038RjPVoYef/t3Qlos1aY6cpPxgFXRp62QB4PUeRX0WF81ZGQqvLl3KA24=
+	t=1738817314; cv=none; b=V8BDJujkm5nGKDR4ZldD8RgULJwC4CX9oO62LbL0F0H6BbrDC91ZJgkqPJFPFggtraU+9rSq/KLBUV/cEgHKtoMX7b891v4ajenl0QrutIZzfxl5CXbcHTT78uR2iwernphsaYhnGbLeB8h03BYR7BNMv0gZp9Y4t2zj89y9W10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738817269; c=relaxed/simple;
-	bh=zTJMwEQDpyIXC+zI5jGHk1tzEApj3e4XPeD9OYd7Hbs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iP0N81v317GbNO2FNDmNi1Sg5j83wwSZylvWWqTdEVASwhhNVUFQu+brtb8HN8IA+wjrfdIDgChLWr1S2nQ6R/yIQhk7scnITZPxIOWH+wtLCisCULkKRVSiO+qUGQ1dPlJnz/S5MA6ibJjpcXdt7sc7TmxWZ/taEssC0OZ6Xh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=c/ligPbZ; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1738817314; c=relaxed/simple;
+	bh=MNi7mcAWBRDY2SSGt0bepZ81pQN0hFOvCIGNtZNDud0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OO2qUVfk8p8FuKEZESOP1WV7TElRsnLBsWB9SOxmxZTJA+XhH0ORLJ6azhv087Q6vmV7j4rY+gKbGIIFH24B5Jzkzkv06B0QnfvXt95z4JDyiL0snpeGSoH6dZ8Q7X2WkRmGLJxPDHk3hVUu7jVVrd5s+jQcLHVz9qcxP7tBcss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PRpDxkhX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="c/ligPbZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=lRCb1p6vbOS9wVnuLjOyk+RxFhhCPf08U5liQjx+Ork=;
-	b=c/ligPbZKT3ELxH6dvS/O0XMkXlWSsAnBtfcwJn61L88hpVtujagHPm+GK0eEX
-	SDyXAwbDirrX/FCPf/YmH51a7nWVliezZm7o0N0JFji0WqwYvGrozBQ4WklgHBpm
-	8ThfZuckBNaK3xnd/68qJj2Fag+fSIZE8VI8oovwtvPwk=
-Received: from hello.company.local (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgBnr_RNOqRnkz4GGw--.7261S2;
-	Thu, 06 Feb 2025 12:27:58 +0800 (CST)
-From: Liang Jie <buaajxlj@163.com>
-To: kuniyu@amazon.com
-Cc: buaajxlj@163.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	horms@kernel.org,
-	kuba@kernel.org,
-	liangjie@lixiang.com,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PRpDxkhX"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id D513F20BCAF2; Wed,  5 Feb 2025 20:48:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D513F20BCAF2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738817312;
+	bh=OWuupa1UaQmJt5ljiVVqvWF1YiE/WgToQRN8ScivRUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PRpDxkhXHW6UiaI19CMB9sPZjhSuXDlEzclqTsmZ7PYbwazSRRjEO8D9ljTSdtyBB
+	 5gHij1UMy0QLHvEeAq3mI2IfK8orY2Y+cNBb4PGvoVOjZTzJnvNE8Xu45utJ03DN0J
+	 zdSxw1oo7VLbWtY70Wdx74a9qrmjyPNdUq4GNggw=
+Date: Wed, 5 Feb 2025 20:48:32 -0800
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	mhal@rbox.co,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com
-Subject: Re: [PATCH net-next] af_unix: Refine UNIX domain sockets autobind identifier length
-Date: Thu,  6 Feb 2025 12:27:57 +0800
-Message-Id: <20250206042757.3966975-1-buaajxlj@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250206040118.77016-1-kuniyu@amazon.com>
-References: <20250206040118.77016-1-kuniyu@amazon.com>
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH 2/2] hv_netvsc: Use VF's tso_max_size value when data
+ path is VF
+Message-ID: <20250206044832.GA3614@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1738729257-25510-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1738729316-25922-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250205184319.360d2ca0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgBnr_RNOqRnkz4GGw--.7261S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AFy5KFyrCry8Ww1rKr1UGFg_yoW8Zr47pa
-	y7t3W5JrWkJFnrtF4xtr17Arn0kw4fJ39xAF1DJF17Za1YgF9F9FnrKr1j93yqkr4Iqr15
-	trWYka429Fyjva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUx-BtUUUUU=
-X-CM-SenderInfo: pexdtyx0omqiywtou0bp/1tbiNgDrIGekLSi1UQAAsf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205184319.360d2ca0@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>,
-Date: Thu, 6 Feb 2025 13:01:18 +0900
-> > The logs from 'netdev/build_allmodconfig_warn' indicate that the patch has
-> > given rise to the following warning:
-> > 
-> >  - ../net/unix/af_unix.c: In function ‘unix_autobind’:
-> >  - ../net/unix/af_unix.c:1227:48: warning: ‘sprintf’ writing a terminating nul past the end of the destination [-Wformat-overflow=]
-> >  -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
-> >  -       |                                                ^
-> >  - ../net/unix/af_unix.c:1227:9: note: ‘sprintf’ output 6 bytes into a destination of size 5
-> >  -  1227 |         sprintf(addr->name->sun_path + 1, "%0*x", AUTOBIND_LEN - 1, ordernum);
-> >  -       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > It appears that the 'sprintf' call attempts to write a terminating null
-> > byte past the end of the 'sun_path' array, potentially causing an overflow.
-> > 
-> > To address this issue, I am considering the following approach:
-> > 
-> > 	char orderstring[6];
-> > 
-> > 	sprintf(orderstring, "%05x", ordernum);
-> > 	memcpy(addr->name->sun_path + 1, orderstring, 5);
-> > 
-> > This would prevent the buffer overflow by using 'memcpy' to safely copy the
-> > formatted string into 'sun_path'.
+On Wed, Feb 05, 2025 at 06:43:19PM -0800, Jakub Kicinski wrote:
+> On Tue,  4 Feb 2025 20:21:55 -0800 Shradha Gupta wrote:
+> > Therefore, we use netif_set_tso_max_size() to set max segment size
 > 
-> Finally new hard-coded values are introduced..
-> 
-> I'm not sure this is worth saving just 10 bytes, which is not excessive,
-> vs extra 5 bytes memcpy(), so I'd rather not touch here.
-> 
-> > 
-> > Before proceeding with a patch submission, I wanted to consult with you to
-> > see if you have any suggestions for a better or more elegant solution to
-> > this problem.
-> 
-> An elegant option might be add a variant of snprintf without terminating
-> string by \0 ?
+> I think the term "segment" is used incorrectly throughout the patch ?
+> Isn't the right term "superframe", "aggregate" or some such ?
 
-Thank you very much for your suggestions. It's an elegant solution that
-avoids additional overhead and neatly solves the problem. I appreciate your
-insight and will incorporate your idea into the updated patch.
+Thanks Jakub, I think you are right. 'aggregate' or 'aggregated pkt'
+would be a more accurate term. I'll have this incorporated in the next
+version.
 
-Best regards,
-Liang Jie
-
+> -- 
+> pw-bot: cr
