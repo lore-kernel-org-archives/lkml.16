@@ -1,103 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE4422DF89;
-	Thu,  6 Feb 2025 13:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626A622DF89;
+	Thu,  6 Feb 2025 13:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738847101; cv=none; b=NwNIm6kNbnY53zNvPhzmAnwrLjykxJ3uA6nBdS97nG4M2ZWFPgtQn37IEXmmsNsxOyHoOQsgAI0Tr5Hbels7U5BLdc/7DBBcc4TlKaLXfCVv+Oy4kLE4lw7h47G4arl6jxQollE4M3xAjXFQ999Rbw0DRoQ0IO1Nq2pyWegXpzY=
+	t=1738847107; cv=none; b=IOlZJMeoHzRaryH3ZvHPghQu+r72YoCjFTd5Tlo1Aj+LHCyUsHCvMetuYRzV32Hzch8O/vEql3QYn6ncDTjNEr/hloqKF9meHwwBOud9GaMRGqXXKgkKIucljbpFhiZsk45sQvhmbzGD2IX4Grfw0z1Kcr2HyFa/Kr3Z6VEtsuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738847101; c=relaxed/simple;
-	bh=t2o8FDsmLuwiGZddcqgwIo19XnRmyE8T3EKEBiZzF/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TcZ16Ehr/lfQPQ7E62/aaeAYL47sqNg1UH3dwc53GXkxfMhmq8153Y2LzXC/+TSnQX56w6bH1eLGB9zXo72Lo0L4Fuz4zlgHgF4kei3NRR7BsxxTWmyQY1jxQ1oTQiD6syW1kx+OEFHA89p5GNqvFxufdYV6sEA70VAw/mDxB7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihtyc1/W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738847107; c=relaxed/simple;
+	bh=W5AM9RZgg67GctX9POakdPYKIrGtt44fCA6cr2QIVSs=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=HLYPzi0pogA2wKTDRF91dR4XNjb45f+qomjpKeYLz4DtK7sC4vhqXiCPHdO835SGevEpjgluDVXzQsDvaNafVgAfaIBbTqiOAbtDR3KMn0SndymWzbwWqe57VHTNRwxqvKbq5L3721tj7zIQVw2qhL+uK5+29SQ2+mUPPWVxIl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNxLhGyH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihtyc1/W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BC5C4CEDF;
-	Thu,  6 Feb 2025 13:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNxLhGyH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA308C4CEDD;
+	Thu,  6 Feb 2025 13:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738847100;
-	bh=t2o8FDsmLuwiGZddcqgwIo19XnRmyE8T3EKEBiZzF/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ihtyc1/WHl258ovUgszYqsIr8IWqTe1ncsvqHxfzaMmzlMDAiZe5VKnwQJY5i7Ijr
-	 5DUMu69sWOS3YRh5S7dfBiPp5VISV52nS+ZUzM7B9kPDlFqM4OexEDCyiKcaIDYJ+2
-	 6NiFiQ7qgBEON37koggqPwjSeNw0u/GA94B3YgIWkUTob5cR6kFKRnhon3OudALTHD
-	 2xeQ8G1E2WOE4o7mjk4UzPmCC+Y4czRbe5QG1/yz1RF7czjt2MfKMslSCW7rxv4pjZ
-	 ObI/iAf9a1tL74Gg7WEvZtKH9m0SoK8VQQ6C5cb7UOKei5N4OLJs/Fv1EKuYyPTQ3y
-	 zBmUjIyZnBZpA==
-Date: Thu, 6 Feb 2025 13:04:56 +0000
-From: Simon Horman <horms@kernel.org>
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH net-next v4 12/17] net: pktgen: fix mpls maximum labels
- list parsing
-Message-ID: <20250206130456.GQ554665@kernel.org>
-References: <20250205131153.476278-1-ps.report@gmx.net>
- <20250205131153.476278-13-ps.report@gmx.net>
+	s=k20201202; t=1738847107;
+	bh=W5AM9RZgg67GctX9POakdPYKIrGtt44fCA6cr2QIVSs=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=VNxLhGyHzxicglO/D5ivZIdSr/a93Mw7FYISk0ur0L+3tzsAuN/rzAcAXyOOb8ZRo
+	 aObTLjrNmcAou3cDDtxAN1CWE/ZOtshMUERgMTwb2njUdvTUMOq3qO4O1ZHD0EY6Cp
+	 xkVmBmlx6p4kuaXzGeF26Ivx/BUP0PGr/MwXYtJtZm++1wAwBKKKug/lTHWVUXNHKa
+	 3/mMDkGQDaXb1YItsZ9va2pNR5YfpzdKsyS6fP6Y0bpLJCkbK9P5NbaOogE5RZNUV6
+	 vOxXh39z9lzDCoy1a2lZbMdTI0Yt5qX8h4fxvWoYSf7Xqs+5ksyWzolVDE/+s+pfEo
+	 9k6B+CyOAU9zA==
+Message-ID: <5ef3905745ce4cc4ad43135c1e6a666e@kernel.org>
+Date: Thu, 06 Feb 2025 13:05:04 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Herve Codina" <herve.codina@bootlin.com>
+Subject: Re: [PATCH v5 4/4] drm: bridge: ti-sn65dsi83: Add error recovery
+ mechanism
+In-Reply-To: <20250203161607.223731-5-herve.codina@bootlin.com>
+References: <20250203161607.223731-5-herve.codina@bootlin.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, "Alexander
+ Stein" <alexander.stein@ew.tq-group.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Dave Stevenson" <dave.stevenson@raspberrypi.com>, "David
+ Airlie" <airlied@gmail.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
+ Karlman" <jonas@kwiboo.se>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Laurent
+ Pinchart" <Laurent.pinchart@ideasonboard.com>, "Louis Chauvet" <louis.chauvet@bootlin.com>, "Luca
+ Ceresoli" <luca.ceresoli@bootlin.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek
+ Vasut" <marex@denx.de>, "Maxime Ripard" <mripard@kernel.org>,
+ =?utf-8?b?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, "Neil Armstrong" <neil.armstrong@linaro.org>, "Raspberry
+ Pi Kernel Maintenance" <kernel-list@raspberrypi.com>, "Rob Herring" <robh@kernel.org>, "Robert
+ Foss" <rfoss@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205131153.476278-13-ps.report@gmx.net>
 
-On Wed, Feb 05, 2025 at 02:11:48PM +0100, Peter Seiderer wrote:
-> Fix mpls maximum labels list parsing up to MAX_MPLS_LABELS/16 entries
-> (instead of up to MAX_MPLS_LABELS - 1).
+On Mon, 3 Feb 2025 17:16:06 +0100, Herve Codina wrote:
+> In some cases observed during ESD tests, the TI SN65DSI83 cannot recover
+> from errors by itself. A full restart of the bridge is needed in those
+> cases to have the bridge output LVDS signals again.
 > 
-> Fixes:
+> Also, during tests, cases were observed where reading the status of the
+> 
+> [ ... ]
 
-"Fixes: " has a special meaning, it  is recognised as a tag by tooling, and
-implies a bug fix. Please consider some other way of describing this, e.g.
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Addresses the following:
-
-> 
-> 	$ echo "mpls 00000f00,00000f01,00000f02,00000f03,00000f04,00000f05,00000f06,00000f07,00000f08,00000f09,00000f0a,00000f0b,00000f0c,00000f0d,00000f0e,00000f0f" > /proc/net/pktgen/lo\@0
-> 	-bash: echo: write error: Argument list too long
-> 
-> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-> ---
-> Changes v3 -> v4
->   - new patch (factored out of patch 'net: pktgen: fix access outside of user
->     given buffer in pktgen_if_write()')
-> ---
->  net/core/pktgen.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-> index 84fd88e48275..0fd15f21119b 100644
-> --- a/net/core/pktgen.c
-> +++ b/net/core/pktgen.c
-> @@ -908,6 +908,10 @@ static int get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
->  	pkt_dev->nr_labels = 0;
->  	do {
->  		__u32 tmp;
-> +
-> +		if (n >= MAX_MPLS_LABELS)
-> +			return -E2BIG;
-> +
->  		len = hex32_arg(&buffer[i], HEX_8_DIGITS, &tmp);
->  		if (len <= 0)
->  			return len;
-> @@ -919,8 +923,6 @@ static int get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
->  			return -EFAULT;
->  		i++;
->  		n++;
-> -		if (n >= MAX_MPLS_LABELS)
-> -			return -E2BIG;
->  	} while (c == ',');
->  
->  	pkt_dev->nr_labels = n;
-> -- 
-> 2.48.1
-> 
+Thanks!
+Maxime
