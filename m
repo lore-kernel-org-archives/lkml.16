@@ -1,94 +1,136 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AE6226520
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD20A2288EF;
+	Thu,  6 Feb 2025 09:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834292; cv=none; b=X5mmEctlXYB5sfDzd1piwfqBzCdOUYj5g9eVwxG4Jy1vOxCD5LSClncXQV5DZgbb0RxnGt6EF/Drq7w0APdPfvcdnGlV93MPYRvsdmIiQMNQpXgPPMSpKoHQP7UXTDK4mBPt7ME9d9hQPkaMRSkJSwsafAwnb6lCqyuSJtXbvZY=
+	t=1738834305; cv=none; b=mtiOf1IrUCAMPZ2R0zoZGio9meJyNTZdnaGZAUerl5kwWF/0l5+X9kQbpmbAFbAZYRVGd4CwghQLYTFbh9l+uv/whcJDYxmfoEETJf7IeDqM9ccOUFW77XpAE8cVsb0Zane12O/qnCz/TBFOFh0U+y8aEC6ScqjN89angzOQQZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834292; c=relaxed/simple;
-	bh=DDYhcReaqTeAJ8Ct+nQyrID5qgSTAK+HyqV4S88yu+k=;
+	s=arc-20240116; t=1738834305; c=relaxed/simple;
+	bh=Q6AG0Tb6OXFB7wV0ZyGe9g/9r8PLQ/Tcu0VVcSGy51Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gkibBTFEIKWLfCJYvY1F1Nq8/W3tlezjrCsEXJUS1UO+z655sgQDD43sDEnC95Tia0/0P+7xDqz+qbYP/DXJKHPKrk2p6XzBa3JOzgveoGlMmfdJhls9DEAJp7avPrcP0aMktyZX+751suvSJzahUt+84gRYmOQZVNMUaqdjzxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=myoeHHPs; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=DpQrZzQu1bc5Btl15ngnmskGGfC8ZZbJlFYi2KyYV5w5nduN+dVeWmOiPa3cZYphOphu5alp1/mp+UlJpW5odlalL+d3upeyIJUDNDBbO5Cnka+vgAt/Q5w7BHtpe45M4qdUxxDPOYWylggy2OqAh8RT2u8rvPqxiGeGC4lJOeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nR8qDONS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="myoeHHPs"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30036310158so5997521fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:31:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738834288; x=1739439088; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDYhcReaqTeAJ8Ct+nQyrID5qgSTAK+HyqV4S88yu+k=;
-        b=myoeHHPsMkmeeFshyk6tSKm+qtyjtMLf0z9k9jGNRWGWsvZL9TxFv17uz0SFiAwbCe
-         ul5R7qWdcpVgxpGxqBypMvzmeVxGQgMptGGp/IjF5zm+cwt6+rmGh3S/yYkv3f4E8mxg
-         +oQSZGbcOZfVcNCJXiYqfWKc3JUeV8cG22Q3eqsfRDulg/XdlWBpbnv1R/WhpgrowAZJ
-         DVt7sTbcStNBPV5JtrQ5yZRWHw/3PmydUKw4RsckQb/QB0fSPNbdLXNDERjG6ZGkSZ5k
-         WTdfaaIWA6yByLUWTfFOJkDns0iWjBMYSHMODgXDfmmTYucgzSb2weLlU/2ufHjMmjd7
-         WxMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834288; x=1739439088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DDYhcReaqTeAJ8Ct+nQyrID5qgSTAK+HyqV4S88yu+k=;
-        b=lq77EYBnjfQkUnD5hmtDPCwkOpEYeOG+ZPGcHPBPtM+Tv7yxXMOlSwjYdBNOAQiilg
-         XXFRq2GdOZBTzzK2V/yElfpE0rSlroXi02r4tApQoAzNExeAvyBCtt+V73aPLtLKL8KF
-         58fCzyB3n/4jxuzg1bg9igQQwIGxUey9Ijp83nODYRzSRwt257kKcEAlkQbJvk1u/jbY
-         uny6yI+TslP4dvVaib+dR32qeaOkGkA8HJOtkxmxxa1BBc2M+frLRhBred8YijKMkzSW
-         Q6LS1QP4b1wGzxwVdU0QZS8BSqzLRjb6ASXdbE6H1dLA1OP8+VoVyXLl/KpfADlr8oOj
-         zp/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVMsU3NdabSdtqSdL9yg5jtQjlEOpSCUMNZDg3+J+kvikC25vnbT0vcXgvvWJaHajt8STSqXnAhDzG0WWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT2yMD0h2v2xoyU21p5qP3vaNjEqeBYWAcScEHgxfBPPnXG8AJ
-	i0N9Fy5i+NChxoKVyxH932FmGNsPwEpKHpK2d5HJD4z9axgYphPaNOH12jfpwu1vA7ym/pBIAn/
-	yzOKmoAJV4323ahV6SHH6DfLvWT9f9/kdNHyKyg==
-X-Gm-Gg: ASbGncsOSrjVaOISmjJ3j1fc6IQrZIOTDgqtQKaFMMyZlZTvMjGmxgwmLNQy8oWXhVS
-	P3YEV+u7cprmal70QYDkhfyogL6LB36M6R1a88FJZNaiofoH7G5DO5RI8Sro5oNCLeJLcBXc=
-X-Google-Smtp-Source: AGHT+IHcFWo3xte3K/LEtEaJiM+DRe2msO38SbMIwC0bXZ5PX+6iklANjvHzTB6e1CWVgPfne7+PROlXtmg2N2jgE2w=
-X-Received: by 2002:a05:651c:222b:b0:302:3003:97e with SMTP id
- 38308e7fff4ca-307cf38c85fmr22106041fa.30.1738834288265; Thu, 06 Feb 2025
- 01:31:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nR8qDONS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61C33C4CEE9;
+	Thu,  6 Feb 2025 09:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738834304;
+	bh=Q6AG0Tb6OXFB7wV0ZyGe9g/9r8PLQ/Tcu0VVcSGy51Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nR8qDONS6rjfjxa3FFh6nYG9JIMOl4KGAdEs6Jwuugx9stgcrBRv6KO+JuoXcVhwM
+	 L7ByfBwuAbpYHIwxiUuBScNnLqW8k9A+xb2fOzdH3swsRIZ98s/f9hTWr+HpDWCB5b
+	 FnnB62NPLkcSXnTedhwRApgsTM0fO3JmY7erBPrn38e9SHOK/YdjBTr7TBRUDk1pd1
+	 hLjv4ftd0G4B9pS94/RyCozdhkpKYQReRu9A7sJ57GrBt+MBj3mkgbqbdw6/M5wZx5
+	 2qFrEe+M3CKA9ptLK+NELwbSJ/ux5BxWRRAeBbDIbqey6iSz4fxcv5ojemIPQRRK4i
+	 z4qK1ybB5I4Rg==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-543e47e93a3so768280e87.2;
+        Thu, 06 Feb 2025 01:31:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUgVy/3PsLifZER4P18I4NUAqWvgEsNuukrhZ2+wIZUTlRAGeZeyTDBuUbcyV4N/UyxhfFfwXXA9vxNUH4=@vger.kernel.org, AJvYcCVQnZ3xTtPcKCr+nrdxajWBqud9P3bau7suGc9TOHPp34t4UFIcinCrAX7VH39rDmGBogc9IqRO@vger.kernel.org, AJvYcCWrffx/lBU0Omr095cJpOHRQz8HvdjQ2HRWYIGcGnwLCUuKboj0vlSJ2PmNkInjT/PB27Ak4ra+KXgPc7kw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIXmywO2Z26a01s+9RMgOyMOsYUzSnKue6f1SpkrIZxHFImFsi
+	XTO2SGbQ0e8015QRHPovWc8HkTIRO82rV7U6GaysozPMDtvahgtrcc+MhOBXLtLaAd6e4G8mRP0
+	HBeypzS2+xsAau8Q1NokyT27gZts=
+X-Google-Smtp-Source: AGHT+IGebw4cig1cVqkZhlVHDqSescttcHIDn0kzKQ7R63gfmvspIXo0UlAHrss4F8BMyNGjIrTntmAMN/iOtL9dBeQ=
+X-Received: by 2002:a05:6512:686:b0:53e:37e4:1457 with SMTP id
+ 2adb3069b0e04-54405a6c0c4mr2506851e87.33.1738834302634; Thu, 06 Feb 2025
+ 01:31:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129145155.1746876-1-andriy.shevchenko@linux.intel.com> <20250129145155.1746876-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250129145155.1746876-2-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 10:31:17 +0100
-X-Gm-Features: AWEUYZmwoTYF2TuiKQlWq3AmlQqyzT0xz3waUTJAiHp5kUR0_yl7mdskuk2sj9E
-Message-ID: <CACRpkdZs9Y+GTHLeWBmpkaZrqiJGWj6s_q+6g=kkr7AmmeGMig@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] pinctrl: baytrail: Use dedicated helpers for
- chained IRQ handlers
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>
+References: <2024120635-wham-campsite-b62b@gregkh> <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
+In-Reply-To: <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 6 Feb 2025 10:31:31 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGJhrwg06Z2X9ZZKQ2XmgQ7N0_D-TJy+iySRmYzOMnGkw@mail.gmail.com>
+X-Gm-Features: AWEUYZnQdhaxLOzWRmPZht5-vA_YiVmsBJ92uwDIa3N1IikbOKyDzf36vMWnojY
+Message-ID: <CAMj1kXGJhrwg06Z2X9ZZKQ2XmgQ7N0_D-TJy+iySRmYzOMnGkw@mail.gmail.com>
+Subject: Re: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where possible
+To: WangYuli <wangyuli@uniontech.com>
+Cc: gregkh@linuxfoundation.org, chenhuacai@kernel.org, chenhuacai@loongson.cn, 
+	kernel@xen0n.name, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, masahiroy@kernel.org, nathan@kernel.org, 
+	ndesaulniers@google.com, nicolas@fjasle.eu, sashal@kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 3:52=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> Instead of relying on the fact that the parent IRQ chip supports
-> fasteoi mode and calling the respective callback at the end of
-> the interrupt handler, surround it with enter and exit helpers
-> for chained IRQ handlers which will consider all possible cases.
+On Thu, 6 Feb 2025 at 09:53, WangYuli <wangyuli@uniontech.com> wrote:
 >
-> This in particular unifies how GPIO drivers handle IRQ.
+> Hi, Greg,
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> It's rather unfortunate that currently, almost all Linux distributions
+> supporting LoongArch are using LTS kernels version v6.6 or older, such as
+> openEuler and deepin. [1][2]
+>
+> If this bugfix isn't merged into linux-stable, then every single distro
+> kernel team will have to waste time fixing the same darn bug over and
+> over, even though it's already fixed in later kernels.
+>
+> This would really make LTS look like it's failing to serve its intended
+> purpose. And I'm sure all of us do not want to see something so terrible
+> happen.
+>
+> On Fri, Dec 6, 2024 at 9:04=E2=80=AFPM Greg Kroah-Hartman wrote:
+> > Odd, why doesn't this affect other arches as well using new binutils?  =
+I
+> > hate to have to backport all of this just for one arch, as that feels
+> > odd.
+>
+> Could you help me understand why you expressed that you "hate" to have
+> to backport something for only one arch?
+> Given that we've historically done quite a bit of similar backporting for
+> architectures such as arm, powerpc, and x86...It's not exactly unpreceden=
+ted.
+> I just want to grasp the rationale, as it all seems perfectly justified
+> and necessary.
+>
+> Moreover, with all the active and strict code reviews by all developers,
+> such occurrences are not frequent on LoongArch. You could be not exactly
+> "always" backporting something like this just for LoongArch, so perhaps
+> that might make you and your colleagues feel a little less "hate" :-)
+>
+> As for your questions on the root cause of the issue and the effectivenes=
+s
+> of this fix, I reckon Xi Ruoyao's explanation and Ard Biesheuvel's
+> supplementary points have already provided ample details. [3][4][5]
+>
+> If, after your feedback, you still have any lingering doubts regarding th=
+e
+> issue itself or the LoongArch architecture, I believe that Xi Ruoyao,
+> Ard Biesheuvel, and Huacai Chen would all be more than willing to elabora=
+te
+> further.
+>
+> I'm bringing this up because we've encountered concrete issues in the
+> process of maintaining distributions. Furthermore, as an upstream resourc=
+e,
+> linux-stable can help us more effectively drive forward community
+> development efforts.
+> Plus, we realize this benefits all Linux community developers just the sa=
+me.
+>
+> Hoping you could spare a moment from your busy schedule to take another l=
+ook
+> at this patch series and perhaps reconsider the LTS inclusion of this bug=
+fix.
+>
+> [1]. https://gitee.com/openeuler/kernel/blob/openEuler-25.03/Makefile#L3
+> [2]. https://github.com/deepin-community/kernel/blob/linux-6.6.y/Makefile=
+#L3
+> [3]. https://lore.kernel.org/all/ccb1fa9034b177042db8fcbe7a95a2a5b466dc30=
+.camel@xry111.site/
+> [4]. https://lore.kernel.org/all/CAMj1kXEV+HC+2HMLhDaLfAufQLrXRs2J7akMNr1=
+mjejDYc7kdw@mail.gmail.com/#t
+> [5]. https://lore.kernel.org/all/c9a43e5da01ee2215393c0f3c50956171fe660ab=
+.camel@xry111.site/
+>
 
-Looks fine to me, also 2/2.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Expect to get this from you as pull request!
-
-Yours,
-Linus Walleij
+You might consider sending a Loongarch-only patch for mainline that
+adds weak definitions of these symbols, and backport that to -stable
+once it hits Linus's tree. That way, the weak references are always
+satisfied, even during the first linker pass.
