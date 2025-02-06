@@ -1,182 +1,148 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8152C23958E;
-	Thu,  6 Feb 2025 17:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738862327; cv=none; b=jB74kk9XEM+xFvUo5p82FJpRNKDscZ0gn8e1EZkUDTRW2F82DJyJfiYPb3eQBo9DPZ/+bcejgdtx/zG209awpoDb1bOQViYHWielaFceN7P8ctTgd3SjDrBFQBFmogeRdekhvo1RHAwjD0yhvZKOtOSNgTNrpSQ8FNQX1d1x8Hs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738862327; c=relaxed/simple;
-	bh=hign94Go9lk4AYPopq+TYKCuIxjzdqNnqTCBcL9Y1Bo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PMP/XZQA3YgHJIojBamNS1oJy5LzdatCGlMDVtNoh5kRavvJ65AVaiMvTYlef3eBnaYLpl3RDj1Gyj9R+KV5NZqsmXh6fPuQV7ZVZHQEFFw+mR72uZ+5PsgGLf3O7WpoGHpb+96x7VJXNAhhxmOMNH0/vdKP/RMFPuTy6lobvmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZA/RB2v1; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD7E23958E;
+	Thu,  6 Feb 2025 17:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738862341; cv=pass; b=o4DWjrMlIn+NCy9N1+vo5FrWyHMXAmn3/Uss4cXQph6SyNqJu1sXDCd5FD6wmbPV5O6TZg5IAQhh1E4PcP+epnBXJgl9vmbOgzUwEW5HQLBGMRoHMWmd1gjX2cdwuZePEOg2Pl5AuzwGrystc6XdTXSesaklQyIsBHioKzLPjVE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738862341; c=relaxed/simple;
+	bh=13ADaQAM9kvZCUBW6XBL7BIypPLNqmtIXMqDfUJRLjw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HheVcVHG1R+hAvk+0Ert3KAUcFt65FaLEusjJV8mqWejFVfDElpCYLdVkpRCVq3mmien2GdN8GD92JABgct1up4GtwlKsLvqLCOiqjbQ/WWJkLcOBpS7YsFo4kXq326w9SQuMUQxi1h5vripkvExHSc/PQLTUSmRhZPsjhbr0uw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Xnnm+nO0; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZA/RB2v1"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-46785fbb949so12981021cf.3;
-        Thu, 06 Feb 2025 09:18:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738862324; x=1739467124; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NWZE34TSmahB5AibwSst6U5NVP6NbGfoRI+yy3U6I1c=;
-        b=ZA/RB2v1bqUkieU5vUKFp22+J4mX4hKOqDCON8VcT6LPRTLt1yy0TTgLO46NO1CuHq
-         vtwSKxKsUX/IAsIpDyaM+1MKfpFNQ32tEGE2BffrGyxx77x29USTJLHcEPrw2cWXcj80
-         OJiTo7sdKCoszYDJcuEK1GonIm6GPnc0F5sW9LIjkEFKYL6E+OU+cvBXf0X6IGUiENkf
-         vI80ghXtEiImge1NBxi1xHJipd6FLuzj5cXlYHJUk3e6kcYMM1n8fyZs9WsVvortgmz+
-         jp3Pn75Bys/6IxbuW9IOBx53nyo/NWoLGbcYoHjh1uugDucKwBHaqBRtf8v+kpKXhMPO
-         KQNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738862324; x=1739467124;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NWZE34TSmahB5AibwSst6U5NVP6NbGfoRI+yy3U6I1c=;
-        b=LKUJEd7fA2Qzsp8tKWRxsVOG9HLWMzgB71EZ47H2j3DznuwLmfRAGYnFbWxtib6Bp5
-         ewsAESj+29Y4G2tT0cgOgCs+0SpGmHjANTd/0Tje7yZGEPetPZ0hDPCosfg+mp1pctQh
-         WlMUSMos1O2dE48ib4Gk/Lk87+7tzOGX49w+78Yg2zpSrQAXSmMutRNYlMOdQq3VOwFd
-         Ze3qzkvVeudRHN+ARP2C5BRWbb2Hqz9yHaQsrGeOd1oYis46c7oWOVGm57c5MevSTKGS
-         8vxQeLPZ+v5+BThqcT35QCovRdJh6jj8c3Ms3H3sizVTxfJba6Dw2TChd8NIzDas7gPE
-         O2vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGLrFA1BSw2JXwEjfqKfX49CYUkiFbjnXaNsfN8SMGniof1FTNNsdBY0XJXHnWCu99bz4v5QkaAdvfAWYT@vger.kernel.org, AJvYcCVRQFGPrsTTA7QuQOjMZ92XaIULfRQv89bHeaM7+vAqLCg4CYU/YYIbDRfQV84DMuzTkNHa+4phcuvlrL5l@vger.kernel.org, AJvYcCVqRTi/vJj4Kl9Lgl8jYtfpZyH3ag1+jCWpV9SK4zf0rztznxZSFs0ITn9vrPdv2xBguVVDe8YlUBIQ@vger.kernel.org, AJvYcCVtX5p8Nz9ILUVTNN3IA9gxX8e4rskc4wpqOfzw4G/dzZ7X4GlU4LqBNkCRCDi+4Mi9sah7Q1P3B4s4QIrwGeo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIcsaykhzv0v2DtCCzdP4dyoyeQcJCGSYcycNyVISoEBd9iu2e
-	IZOKqv3VE+NhJ8Yerq8u9KTfF2UEPd/JZT5IX9F4TgUQ6rEBMpgO
-X-Gm-Gg: ASbGncuz1h+pDKb6cr2GDV9i5nSfPkr+tAcM43XMobJt/vzOIy/5LLgD58dQzNNogWw
-	soMfFc3j10g8kPprUsHtRrlPUm+cvGZoGlJooaR9cEEDc0cnGpiTmJIUtuqhM+M3shky68UNAI3
-	UByk7veQQRI/INS+FOy55LDdxR/DU7Ahoafs7PfX+obPkewRbuOqWeaj1TQAsISF2IYPP0G/ZyR
-	VjnSAaWRDJQcRMkyW4EFMo7/HQTTzSYnjiQ2kuRZq6JkxHHzBNv+m8Cxf8bJNbqZWuBPsydSDni
-	WpGHjoAqyz5g56yBClQvWf5cupYS3uwJ61akkEgluDU1QWzskw2PbCN/mCNhRD0CbWWJcrKy7LZ
-	8u9MKwg==
-X-Google-Smtp-Source: AGHT+IFcuW/XgSmCC4i0dttCgM1I/hD7fjOkOntHg5kN5NTOknxD30oPuuJ8aQkhu6PUzCNg/tjPvQ==
-X-Received: by 2002:ac8:58cc:0:b0:467:61da:1ce2 with SMTP id d75a77b69052e-471679ec4f7mr702191cf.16.1738862324283;
-        Thu, 06 Feb 2025 09:18:44 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492c333csm7340371cf.48.2025.02.06.09.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 09:18:43 -0800 (PST)
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 2930C1200043;
-	Thu,  6 Feb 2025 12:18:43 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Thu, 06 Feb 2025 12:18:43 -0500
-X-ME-Sender: <xms:8-6kZ2l8XiVBWBm5rTzHC80qndFjsKbCkh2q1pLLO8MvZWSvxSPSZQ>
-    <xme:8-6kZ91qw9OuUgy5-3KXkSFwaW_JOgo3cnPHSL6zbgL_RjHlypxsNltxGhWjmKsjf
-    CiWcwl9xw7sW5Dh1Q>
-X-ME-Received: <xmr:8-6kZ0pmU93HoOzaieAtgeDEOdXXkLTRopFNeJl8RWO--t1uVd0hqUrFRQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeljecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvuddpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpd
-    hrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggr
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthht
-    ohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsg
-    gvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgu
-    sghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgoh
-    hoghhlvgdrtghomh
-X-ME-Proxy: <xmx:8-6kZ6l1hOeJT8v7TUBz8oSP12kpo96EKFsX0rJpOZRgEy7E6DznGQ>
-    <xmx:8-6kZ02zK9dLV6YF3Lt3D0t3Ln4ns7DVPytwZAVFFxAZSEMeLR3UEw>
-    <xmx:8-6kZxsilXIdZ2zjxFSP7Yc7CyKoQ4mfsjDpvJI9FVM16SuE21kCTw>
-    <xmx:8-6kZwVZpRPTpkNefKq8Quc9eyEh_VxSlbLZg2_gcyIQCupuC-JywQ>
-    <xmx:8-6kZ_0xrlqHvJgaeeV81Pe9a47bNufGsWDy7qO4vVMv5VssB0STMCOk>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 6 Feb 2025 12:18:42 -0500 (EST)
-Date: Thu, 6 Feb 2025 09:18:40 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Matthew Wilcox <willy@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v15 2/3] rust: xarray: Add an abstraction for XArray
-Message-ID: <Z6Tu8E4r5ZEolFX1@Mac.home>
-References: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
- <20250206-rust-xarray-bindings-v15-2-a22b5dcacab3@gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Xnnm+nO0"
+ARC-Seal: i=1; a=rsa-sha256; t=1738862280; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PPCYLM87aFcVCAfMPQQ0yXcTyrsvnyTkKS+eEJWcy9cBCCuvU9Z/z8+pzbkYFtSX/1MtKPTSysfLFbXWsfEn4byj3fWbAOF50Y5tLH18AvdCZkKxLHaumA6PPi+w7cpbrzAW/zHZKRqAzxiN4l2puMicJGcIhAlDALNZ/b9YfU8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738862280; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HVIqXYzlOehlZiy0ALlRjz1XQBncBUDd5NT43WUTgZ8=; 
+	b=lPCdyF7Zdv6I6M84wss5fyglm2/LO3RG4Et3v4lfGLGQtmGbCACYz2VhVdDLcJWcdkQycgDbkuk4ZGGxHhKk3iAeh8IIV+awP5nEJB6tY9fg6a7T5kzzIZdXZPuU8y+dOu74c75bQ/v04kDe4qTY+pxoFi38JCRIwNMDaaZrC74=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738862280;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=HVIqXYzlOehlZiy0ALlRjz1XQBncBUDd5NT43WUTgZ8=;
+	b=Xnnm+nO0wx4RBQFTK/tSarsm6Bq5OMFkZ+7cIhAlPgfpa8rlnBCfdv+urPIUC2vV
+	cVB821xhg1vXmN291QFqArQSM1Jav3BdpYYLbFovhHAs0as6IBcrW3FP/nqYb12ynyh
+	Wy1JW0YmE72r82iNQ0hiaJt67LjAQrKfsPFHG18w=
+Received: by mx.zohomail.com with SMTPS id 173886227382959.44952550211565;
+	Thu, 6 Feb 2025 09:17:53 -0800 (PST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Alexey Charkov <alchark@gmail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Dragan Simic <dsimic@manjaro.org>, Jianfeng Liu <liujianfeng1994@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>,
+ Kever Yang <kever.yang@rock-chips.com>, Johan Jonker <jbx6244@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Algea Cao <algea.cao@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>,
+ Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, kernel@collabora.com
+Subject:
+ Re: [PATCH v5 2/3] arm64: dts: rockchip: Add HDMI0 audio output for rk3588
+ SoC
+Date: Thu, 06 Feb 2025 12:17:51 -0500
+Message-ID: <2781606.mvXUDI8C0e@earth>
+In-Reply-To: <bfe9cb98-12ba-484c-95af-e5842edaab76@cherry.de>
+References:
+ <20250203171925.126309-1-detlev.casanova@collabora.com>
+ <20250203171925.126309-3-detlev.casanova@collabora.com>
+ <bfe9cb98-12ba-484c-95af-e5842edaab76@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206-rust-xarray-bindings-v15-2-a22b5dcacab3@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-Hi Tamir,
+On Tuesday, 4 February 2025 05:14:37 EST Quentin Schulz wrote:
+> Hi Detlev,
+> 
+> On 2/3/25 6:16 PM, Detlev Casanova wrote:
+> > Use the simple-audio-card driver with the hdmi0 QP node as CODEC and
+> > the i2s5 device as CPU.
+> > 
+> > The simple-audio-card,mclk-fs value is set to 128 as it is done in
+> > the downstream driver.
+> > 
+> > The #sound-dai-cells value is set to 0 in the hdmi0 node so that it can be
+> > used as an audio codec node.
+> > 
+> > Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> > ---
+> > 
+> >   arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 17 +++++++++++++++++
+> >   1 file changed, 17 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> > b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi index
+> > 8cfa30837ce72..767bdfc06b7ec 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+> > @@ -1369,6 +1369,22 @@ i2s9_8ch: i2s@fddfc000 {
+> > 
+> >   		status = "disabled";
+> >   	
+> >   	};
+> > 
+> > +	hdmi0_sound: hdmi0-sound {
+> > +		compatible = "simple-audio-card";
+> > +		simple-audio-card,format = "i2s";
+> > +		simple-audio-card,mclk-fs = <128>;
+> > +		simple-audio-card,name = "hdmi0";
+> > +		status = "disabled";
+> > +
+> > +		simple-audio-card,codec {
+> > +			sound-dai = <&hdmi0>;
+> > +		};
+> > +
+> > +		simple-audio-card,cpu {
+> > +			sound-dai = <&i2s5_8ch>;
+> > +		};
+> > +	};
+> > +
+> 
+> This is an address/bus-less device, so I believe it needs to be put
+> among other address/bus-less devices, which for Rockchip SoCs is at the
+> top of the DT? c.f.
+> https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.
+> html
+> 
+> **I** would put it between the firmware and the pmu-a55 nodes.
 
-This looks good to me overall, a few comments below:
+I wasn't sure about this. It makes sense to move it with address-less devices, 
+but the rk3399 device tree has it above the hdmi node, so I wanted to stay 
+consistent with that.
 
-On Thu, Feb 06, 2025 at 11:24:44AM -0500, Tamir Duberstein wrote:
-[...]
-> +impl<'a, T: ForeignOwnable> Guard<'a, T> {
-[...]
-> +    /// Loads an entry from the array.
-> +    ///
-> +    /// Returns the entry at the given index.
-> +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
-> +        self.load(index, |ptr| {
-> +            // SAFETY: `ptr` came from `T::into_foreign`.
-> +            unsafe { T::borrow(ptr.as_ptr()) }
-> +        })
-> +    }
-> +
-> +    /// Loads an entry from the array.
+> Tested-by: Quentin Schulz <quentin.schulz@cherry.de> # RK3588 Tiger Haikou
+> 
+> Thanks!
+> Quentin
 
-Nit: firstly, this function has the same description of `get()`, also
-I would prefer something like "Returns a [`T::Borrowed`] of the object
-at `index`" rather then "Loads an entry from the array", thoughts?
 
-> +    ///
-> +    /// Returns the entry at the given index.
-> +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'_>> {
-> +        self.load(index, |ptr| {
-> +            // SAFETY: `ptr` came from `T::into_foreign`.
-> +            unsafe { T::borrow_mut(ptr.as_ptr()) }
-> +        })
-> +    }
-> +
-> +    /// Erases an entry from the array.
 
-Nit: s/Erases/Removes?
 
-> +    ///
-> +    /// Returns the entry which was previously at the given index.
-> +    pub fn remove(&mut self, index: usize) -> Option<T> {
-> +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
-> +        //
-> +        // SAFETY: The caller holds the lock.
-> +        let ptr = unsafe { bindings::__xa_erase(self.xa.xa.get(), index) }.cast();
-> +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`.
-
-SAFETY comment here needs to mention why there is no alive `T::Borrowed`
-or `T::BorrowedMut` out there per the safety requirement.
-
-Regards,
-Boqun
-
-> +        unsafe { T::try_from_foreign(ptr) }
-> +    }
-> +
-[...]
