@@ -1,174 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747BF236420
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6417D236420;
+	Thu,  6 Feb 2025 14:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852566; cv=none; b=sm4gN1R94oHkIm208IhpfIGsBjXc1Na0+l6UHNOCEb0+bgI5bmWYQnszENvJys2KjpSc22arLxDpVtNgBMBFI6pKOilH6oyZH/vUvRa2pe1c3NMIJjbTRc2GzflrIodwpqRu8Ca8lWmXmc8gnn+DESAUf6K1Al6DeveR7zWEuQ8=
+	t=1738852622; cv=none; b=XfJMSoX1/xaR+ouftgRqMI9HKvje7x1wRY1YWfQ9B7c6XvUAE6viUFoCj6TPNM+/LJlDhfHWKU6PTRtqOiDSpzt+l6OlTL5w+Et0w5gPn6PDPOgU4mS6EBCapjNX/wphQric5+TS5e5adWoq8ThTVEEM6zPOZZb9WpkC0DOurWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852566; c=relaxed/simple;
-	bh=iO43D0PL+o1QdnLJZ0VQ/BtvTi+SA72B/I1+koMgHj8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EG45vd1A2vMfWqBc0hciGZgTu0kBRuSkI07spEVUVejMtCfPbDpW86zEenUOETNJx1pWtYSWcX7Q9DfzdePDI3Q8pGT9JrsJ5P2qcy5M40t/LNwvhjVtT8ir1zp8MxK4SPux+fbt7hYxIgu3LGr4m7kHtvzBLkCxczEX2VIkjbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SAZghjPX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738852622; c=relaxed/simple;
+	bh=7AJr7y54UdwEPLF34nyDqrZLW6GboqPkY0gsDWO6Di4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n2D9FDuUwBd5yPXq0+kXDaoX3q0mcHnwTQO8FEHC/UF2uz6VTo2NlFXKVGG9DK07RQGu4wng+VdVtPZ6U6k8X4ux/+WAw1tnquTirG/b5aWo0MWi4A0lqwsAgk4YETCJkmRg8Y/YQUgG317Tr493WH3ILNfQaiAEaZ92/OQmRCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yaap0JMx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SAZghjPX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738852563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yQmwnNYhVl7y4z+j+mWJ9koQSChBra4hwvud7jF7bEM=;
-	b=SAZghjPXd+hp0k547ZvN1y9wsFroTQmIwAP2/286JPkKu/YbiUu78aeNiIbFHMJ4HrykE7
-	01oRtfjAlyDSNA3BHrv+G6YgKaFd8mhcBg9z5iHwK2mrIb0fsHcW6AZTABS7+PEsjB3sbZ
-	c7/owoAmEcQFKzmjhRqw70lBbR0EFrQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-300-Tq0rMDKEMmyv-ds7oqK0Bw-1; Thu, 06 Feb 2025 09:36:02 -0500
-X-MC-Unique: Tq0rMDKEMmyv-ds7oqK0Bw-1
-X-Mimecast-MFC-AGG-ID: Tq0rMDKEMmyv-ds7oqK0Bw
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438e4e9a53fso8006435e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:36:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738852561; x=1739457361;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yQmwnNYhVl7y4z+j+mWJ9koQSChBra4hwvud7jF7bEM=;
-        b=pGGurbyZhzJiMbpR53a+2xVNiZG80W9CTTxtUkxXFDW0YONmDy0W4yHBfsg0MBYUFy
-         VXW9Tbl51XXL50y3MfogItSreUyn1nBDXsVE98QtJINbZXivcRsYzwDlbOFb8aTa0HdV
-         D7Njm7csD26NJhMTeZEtsfRFRiyLLD2BPO5z8KLdm7WVnTPjagzV2cJryz7zgUa31eLf
-         S8/bEwGWz9bdkyTsnVTEV3GuWCz31tOQ5AvdzvoDhFJSLZzZIqLJk4u4JuzwunxA6jzO
-         5WHs05VHio+4Eke6hPMXzS4TSOx8tPx0m/CoOF0/ayf5Vgxvx9o7oWa/WRukOyz5cy9E
-         Ab2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVMeZG14nWWV/U/JHWExENf0NBGlb1k8tVMeNHvbVGd9raz3CpS419cmTpXmpe4/fUMUplScusZ9cMn4/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN7HiN0I4Ghd48OFOIZxp3uefo+lb7ZBFTHGgTz0fy8+kjEfRc
-	evAGx2QXqjeumEROGt4FyTxv5qAj+yLmZl/6SdFOByqy2RBYB1699z7swHt01zwSBNudhXfq4md
-	ajqpOYnplYdZ7ncAqEHP0fLSPrPB9KDn+obKVNcAFGev/WnHZ83mfln9z/fuYoA==
-X-Gm-Gg: ASbGncsfteP18yc+a2KzFRLJUQT7oe6yQq4uBreeAvVKT6llRvqGsOZjotnR6UJPJli
-	5h6Ld+IWiutmCdGs/yQjPF0VjzjoW3VoVBKriKWfKTGTBOhi6KRJ3whrGWs4+WWxyVGEV3mWYaE
-	F8UlFXn3dUmc43tWLoGRKz68rnTr/7l5OEgvX5mXMAQtAIMvBUkihAFrGLIaVkBGT6GJHZsFsH5
-	aJOnw7un7TIm7HcP+Xn/yknePrzP/rhmSFm3BPc9FEWGpXrNo+Kbrf7UV1dndxXa03EPKAdE9si
-	wt+IdUgb6HG5bVqWmLqpiaoT3OTs5gfAKVkAp89vkW6wgx2WU1PTIQLRAfYZJerxkxrM4GBm7qQ
-	zjEQLevbmaloUm6gfin4dOC4+lNwgz5IJfkNQ4Yk=
-X-Received: by 2002:adf:f9ce:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-38db492a155mr5075621f8f.44.1738852560945;
-        Thu, 06 Feb 2025 06:36:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEWL+AzOHE6y1/ZV3p8MQR6Ck4yDVM/9HbJTRC8drQg9XkPqYLMfOUri6+TKbLHY9CtZKzhGw==
-X-Received: by 2002:adf:f9ce:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-38db492a155mr5075602f8f.44.1738852560598;
-        Thu, 06 Feb 2025 06:36:00 -0800 (PST)
-Received: from ?IPv6:2001:16b8:2d3c:3d00:a7b1:b563:1454:3233? (200116b82d3c3d00a7b1b56314543233.dip.versatel-1u1.de. [2001:16b8:2d3c:3d00:a7b1:b563:1454:3233])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d7c7sm56422415e9.14.2025.02.06.06.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 06:36:00 -0800 (PST)
-Message-ID: <7547778507b5e98e103c0cb54e7705b9d65f93e3.camel@redhat.com>
-Subject: Re: [PATCH] serial: 8250_pci: Fix Warning at
- drivers/pci/devres.c:603 pcim_add_mapping_to_legacy_table
-From: Philipp Stanner <pstanner@redhat.com>
-To: Helge Deller <deller@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-parisc@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Jiri Slaby <jirislaby@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Date: Thu, 06 Feb 2025 15:35:59 +0100
-In-Reply-To: <Z5XmLKzhKpLAlzHt@p100>
-References: <Z5XmLKzhKpLAlzHt@p100>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yaap0JMx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD787C4CEDD;
+	Thu,  6 Feb 2025 14:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738852621;
+	bh=7AJr7y54UdwEPLF34nyDqrZLW6GboqPkY0gsDWO6Di4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yaap0JMxBVh/eIte66ar9TLFP6tXbELWJEbk7EvrKwDZtOwhLMjwQbr8FcPr1cS/V
+	 e8b/kfoyOiZMELWXQHrMvT0EBF/6Ao3w/uKDoq56oJOeJ8+6ax2gpxSfNk7VOkKPPQ
+	 Zs0I39Dx0KwWAIiAIECXY6gAnFPn2w3qmbT/q3NPPRBopncWy15lID+ThHWHrYjh3e
+	 hIfEpJBGIUy80IRE1Zo4/T/AFP/oDVpc7KGbiwFUr9SdQ0gs6y41PbiTrGQnxrJz0A
+	 Gorc93VXw9Fn5MOqVrLpPSO82b/tWBlp6/ZpigGcUzQjGm/NiSx5/GBh0ckPe19O83
+	 83PhSZUUMTPSQ==
+Date: Thu, 6 Feb 2025 15:36:57 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/19 v7?] RFC: Allow concurrent and async changes in a
+ directory
+Message-ID: <20250206-pocken-entzwei-bd310c8d61b3@brauner>
+References: <20250206054504.2950516-1-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250206054504.2950516-1-neilb@suse.de>
 
-On Sun, 2025-01-26 at 08:37 +0100, Helge Deller wrote:
-> Some PA-RISC servers have BMC management cards (Diva) with up to 5
-> serial
-> UARTS per memory PCI bar. This triggers since at least kernel 6.12
-> for each of
-> the UARTS (beside the first one) the following warning in devres.c:
->=20
-> =C2=A00000:00:02.0: ttyS2 at MMIO 0xf0822000 (irq =3D 21, base_baud =3D
-> 115200) is a 16550A
-> =C2=A00000:00:02.0: ttyS3 at MMIO 0xf0822010 (irq =3D 21, base_baud =3D
-> 115200) is a 16550A
-> =C2=A0------------[ cut here ]------------
-> =C2=A0WARNING: CPU: 1 PID: 1 at drivers/pci/devres.c:603
-> pcim_add_mapping_to_legacy_table+0x5c/0x8c
-> =C2=A0CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.11+ #2621
-> =C2=A0Hardware name: 9000/778/B160L
-> =C2=A0
-> =C2=A0 IAOQ[0]: pcim_add_mapping_to_legacy_table+0x5c/0x8c
-> =C2=A0 IAOQ[1]: pcim_add_mapping_to_legacy_table+0x60/0x8c
-> =C2=A0 RP(r2): pcim_add_mapping_to_legacy_table+0x4c/0x8c
-> =C2=A0Backtrace:
-> =C2=A0 [<10c1eb10>] pcim_iomap+0xd4/0x10c
-> =C2=A0 [<10ca8784>] serial8250_pci_setup_port+0xa8/0x11c
-> =C2=A0 [<10ca9a34>] pci_hp_diva_setup+0x6c/0xc4
-> =C2=A0 [<10cab134>] pciserial_init_ports+0x150/0x324
-> =C2=A0 [<10cab470>] pciserial_init_one+0xfc/0x20c
-> =C2=A0 [<10c14780>] pci_device_probe+0xc0/0x190
-> =C2=A0 ...
-> =C2=A0---[ end trace 0000000000000000 ]---
->=20
-> I see three options to avoid this warning:
-> a) drop the WARNING() from devrec.c,
-> b) modify pcim_iomap() to return an existing mapping if it exists
-> =C2=A0=C2=A0 instead of creating a new mapping, or
-> c) change serial8250_pci_setup_port() to only create a new mapping
-> =C2=A0=C2=A0 if none exists yet.
->=20
-> This patch implements option c).
->=20
-> Signed-off-by: Helge Deller <deller@gmx.de>
-> Cc: <stable@vger.kernel.org> # v6.12+
->=20
->=20
-> diff --git a/drivers/tty/serial/8250/8250_pcilib.c
-> b/drivers/tty/serial/8250/8250_pcilib.c
-> index ea906d721b2c..fc024bf86c1f 100644
-> --- a/drivers/tty/serial/8250/8250_pcilib.c
-> +++ b/drivers/tty/serial/8250/8250_pcilib.c
-> @@ -19,7 +19,9 @@ int serial8250_pci_setup_port(struct pci_dev *dev,
-> struct uart_8250_port *port,
-> =C2=A0		return -EINVAL;
-> =C2=A0
-> =C2=A0	if (pci_resource_flags(dev, bar) & IORESOURCE_MEM) {
-> -		if (!pcim_iomap(dev, bar, 0) &&
-> !pcim_iomap_table(dev))
-> +		/* might have been mapped already with other offset
-> */
-> +		if (!pcim_iomap_table(dev) ||
-> !pcim_iomap_table(dev)[bar] ||
-> +			!pcim_iomap(dev, bar, 0))
-> =C2=A0			return -ENOMEM;
-> =C2=A0
-> =C2=A0		port->port.iotype =3D UPIO_MEM;
->=20
+On Thu, Feb 06, 2025 at 04:42:37PM +1100, NeilBrown wrote:
+> This is my latest attempt at removing the requirement for an exclusive
+> lock on a directory which performing updates in this.  This version,
+> inspired by Dave Chinner, goes a step further and allow async updates.
+> 
+> The inode operation still requires the inode lock, at least a shared
+> lock, but may return -EINPROGRES and then continue asynchronously
+> without needing any ongoing lock on the directory.
+> 
+> An exclusive lock on the dentry is held across the entire operation.
+> 
+> This change requires various extra checks.  rmdir must ensure there is
+> no async creation still happening.  rename between directories must
+> ensure non of the relevant ancestors are undergoing async rename.  There
+> may be or checks that I need to consider - mounting?
 
-[Answering despite the ignore-hint to provide some tips for a v2]
+Mounting takes an exclusive lock on the target inode in do_lock_mount()
+and finish_automount(). As long as dont_mount() can't happen
+asynchronously in vfs_rmdir(), vfs_unlink() or vfs_rename() it should be
+fine.
 
-Alright, so this worked before 6.12 because pcim_iomap() just silently
-returned NULL if a mapping already existed. Which it still does, but
-with a warning.
+> 
+> One other important change since my previous posting is that I've
+> dropped the idea of taking a separate exclusive lock on the directory
+> when the fs doesn't support shared locking.  This cannot work as it
+> doeesn't prevent lookups and filesystems don't expect a lookup while
+> they are changing a directory.  So instead we need to choose between
+> exclusive or shared for the inode on a case-by-case basis.
 
-If you have to rework 8250_pcilib.c anyways, would be good to get rid
-of pcim_iomap_table() as you're at it, because it's deprecated and
-problematic.
+Which is possibly fine if we do it similar to what I suggested in the
+series. As it stands with the separate methods it's a no-go for me. But
+that's a solvable problem, I think.
 
-It seems to me that this driver would be best of it could store in its
-state (uart_8250_port) whether that BAR has already been mapped, and if
-yes, take the existing addr and add the offset as needed for your new
-addr.
-
-Feel free to reach out if I can provide further tips
-
-
-Greetings
-P.
-
+> To make this choice we divide all ops into four groups: create, remove,
+> rename, open/create.  If an inode has no operations in the group that
+> require an exclusive lock, then a flag is set on the inode so that
+> various code knows that a shared lock is sufficient.  If the flag is not
+> set, an exclusive lock is obtained.
+> 
+> I've also added rename handling and converted NFS to use all _async ops.
+> 
+> The motivation for this comes from the general increase in scale of
+> systems.  We can support very large directories and many-core systems
+> and applications that choose to use large directories can hit
+> unnecessary contention.
+> 
+> NFS can easily hit this when used over a high-latency link.
+> Lustre already has code to allow concurrent directory updates in the
+> back-end filesystem (ldiskfs - a slightly modified ext4).
+> Lustre developers believe this would also benefit the client-side
+> filesystem with large core counts.
+> 
+> The idea behind the async support is to eventually connect this to
+> io_uring so that one process can launch several concurrent directory
+> operations.  I have not looked deeply into io_uring and cannot be
+> certain that the interface I've provided will be able to be used.  I
+> would welcome any advice on that matter, though I hope to find time to
+> explore myself.  For now if any _async op returns -EINPROGRESS we simply
+> wait for the callback to indicate completion.
+> 
+> Test status:  only light testing.  It doesn't easily blow up, but lockdep
+> complains that repeated calls to d_update_wait() are bad, even though
+> it has balanced acquire and release calls. Weird?
+> 
+> Thanks,
+> NeilBrown
+> 
+>  [PATCH 01/19] VFS: introduce vfs_mkdir_return()
+>  [PATCH 02/19] VFS: use global wait-queue table for d_alloc_parallel()
+>  [PATCH 03/19] VFS: use d_alloc_parallel() in lookup_one_qstr_excl()
+>  [PATCH 04/19] VFS: change kern_path_locked() and
+>  [PATCH 05/19] VFS: add common error checks to lookup_one_qstr()
+>  [PATCH 06/19] VFS: repack DENTRY_ flags.
+>  [PATCH 07/19] VFS: repack LOOKUP_ bit flags.
+>  [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
+>  [PATCH 09/19] VFS: add _async versions of the various directory
+>  [PATCH 10/19] VFS: introduce inode flags to report locking needs for
+>  [PATCH 11/19] VFS: Add ability to exclusively lock a dentry and use
+>  [PATCH 12/19] VFS: enhance d_splice_alias to accommodate shared-lock
+>  [PATCH 13/19] VFS: lock dentry for ->revalidate to avoid races with
+>  [PATCH 14/19] VFS: Ensure no async updates happening in directory
+>  [PATCH 15/19] VFS: Change lookup_and_lock() to use shared lock when
+>  [PATCH 16/19] VFS: add lookup_and_lock_rename()
+>  [PATCH 17/19] nfsd: use lookup_and_lock_one() and
+>  [PATCH 18/19] nfs: change mkdir inode_operation to mkdir_async
+>  [PATCH 19/19] nfs: switch to _async for all directory ops.
