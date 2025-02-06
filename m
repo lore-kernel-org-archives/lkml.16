@@ -1,50 +1,25 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E50214A99
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E6522CBCB
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738843177; cv=none; b=U1JqlJa9UEx1tW9cUTIXkAkf/i55J3kxjZqa1kXdAs1DmRzDhI96unFws6oOk8cvOOwO5p0DnZWQDfebb/p4eXT2umwWd4CnAxGgLEKRzhRIFyYRbsWusAQ6J4hzsoLi+YZIIpNljzR1E+ZniRX+XsdWJVABBxSNVhlgzHWt4IY=
+	t=1738843180; cv=none; b=s+RnsbEmGEz35LLf0ItsqVlUHrVfskyxqPXowAIddm1qQzOfR3fWKSlVup1BYmPRODUGATdth+pidzJQK4EYU91trzGeGarEoKTUoK+tkfKqcZlLsO94EHZ7PYg59rFy9CB+Jhu7xDwSXNQ4bALvEGlFhEmhJEM+WIIG1dyQFcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738843177; c=relaxed/simple;
-	bh=ioPTGCPofV7P0tYMQ4o8OJoZbYdhcIwWFsqfn2L38M4=;
+	s=arc-20240116; t=1738843180; c=relaxed/simple;
+	bh=14voOlX2mZun5mhrxgL/xuVpLxVjNxFu1AAWGDtNiQQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k2AO+Kmv/P02R2zRsDKnYJufixTuHJ4PJS01NJDn53gAu5pFgD/jZcdl5nQrfy5ePJIp1wTejdk4xy6YV8swt9CRCm0wcVE8bSX6+6wMKyU8F8Pps+k/KPy9/bNCG7Uhl/kEOUyHWt3XYL1lk/BLbri/C/oIrc2d8flJfCgbTFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QT+ylbYM; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QT+ylbYM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738843176; x=1770379176;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ioPTGCPofV7P0tYMQ4o8OJoZbYdhcIwWFsqfn2L38M4=;
-  b=QT+ylbYMNb1X550tKkO6ldrf7ZgEVylgSIp7tgKOD0UaopU4DSa+buy4
-   lJ1lNDyjLM70twhRbiMZ2o4WyAiYUYgggfr8QK+uiZhUQUFp2YcrPURxa
-   NgPSiWbOUll6p/4DAa+AXuK/Va7CRBlHQdM/2xLVA8fgpjABpf6oQDRUY
-   zWvWEvgZNneWLf7+tRLkCUA2Q9NU4jThaWtrlcKeLNCuB34AwHMi2lbYX
-   PgbXzhAlOR/5vcdhgIP19regmwliIwJR0Z6u4c0wfdL+9v7e+rAujZGZs
-   Zrspd7AFe7DT0RDgOe6rmrhiJpiqvOzOBmm/z6I3o0/ZCUs/ibUZcek0f
-   A==;
-X-CSE-ConnectionGUID: gpFxx3SASlOW2pE4wbjGqw==
-X-CSE-MsgGUID: F1OYwYpHRkeI5YlwlLsChw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39336030"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39336030"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 03:59:35 -0800
-X-CSE-ConnectionGUID: yYgjYDCMQByCg51kYtppzQ==
-X-CSE-MsgGUID: NM5ahS0wSIaMk76ftmKLVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="110972140"
-Received: from ettammin-mobl2.ger.corp.intel.com (HELO [10.245.245.197]) ([10.245.245.197])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 03:59:33 -0800
-Message-ID: <f94d793f-bfde-411c-afa1-3325692356a6@intel.com>
-Date: Thu, 6 Feb 2025 11:59:30 +0000
+	 In-Reply-To:Content-Type; b=inAHkCcHKqOmBZyOvCB/zZR2fNTGJAvOOqSMs7TUFcPAd0FJkm449j/ehyLo2vrLS/SvADBKHg64i0keEjzApxbzhn0SLAnHbvVKiAGGuO5fUoGCJ1lqIq/HPsRtmZvFkEN7XhX5O1d9IiJPjVKC7i/QmQgw9E2RQ87YholLLHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BBD312FC;
+	Thu,  6 Feb 2025 04:00:00 -0800 (PST)
+Received: from [192.168.68.112] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5253F63F;
+	Thu,  6 Feb 2025 03:59:35 -0800 (PST)
+Message-ID: <b0a6ccd0-205d-42d8-9b98-6efb34c117e4@arm.com>
+Date: Thu, 6 Feb 2025 11:59:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,50 +27,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Add TTM reviewers
-To: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- intel-xe@lists.freedesktop.org
-Cc: Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Dave Airlie <airlied@gmail.com>, Simona Vetter <simona.vetter@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250206103544.36971-1-thomas.hellstrom@linux.intel.com>
+Subject: Re: [PATCH v1 00/16] hugetlb and vmalloc fixes and perf improvements
 Content-Language: en-GB
-From: Matthew Auld <matthew.auld@intel.com>
-In-Reply-To: <20250206103544.36971-1-thomas.hellstrom@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky
+ <kevin.brodsky@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205235219.3c3a4b968087d1386d708b04@linux-foundation.org>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250205235219.3c3a4b968087d1386d708b04@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 06/02/2025 10:35, Thomas Hellström wrote:
-> Add Matthew Auld and Matthew Brost as TTM reviewers
+On 06/02/2025 07:52, Andrew Morton wrote:
+> On Wed,  5 Feb 2025 15:09:40 +0000 Ryan Roberts <ryan.roberts@arm.com> wrote:
 > 
-> Cc: Matthew Auld <matthew.auld@intel.com>
-> Cc: Matthew Brost <matthew.brost@intel.com>
-> Cc: Christian König <christian.koenig@amd.com>
-> Cc: Dave Airlie <airlied@gmail.com>
-> Cc: Simona Vetter <simona.vetter@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Thomas Hellström <thomas.hellstrom@linux.intel.com>
-> Reviewed-by: Christian König <christian.koenig@amd.com>
-
-Acked-by: Matthew Auld <matthew.auld@intel.com>
-
-> ---
->   MAINTAINERS | 2 ++
->   1 file changed, 2 insertions(+)
+>>  I'm guessing that going in
+>> through the arm64 tree is the right approach here?
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4dbf6a03e416..7a032ea9f109 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7931,6 +7931,8 @@ F:	include/drm/drm_privacy_screen*
->   DRM TTM SUBSYSTEM
->   M:	Christian Koenig <christian.koenig@amd.com>
->   M:	Huang Rui <ray.huang@amd.com>
-> +R:	Matthew Auld <matthew.auld@intel.com>
-> +R:	Matthew Brost <matthew.brost@intel.com>
->   L:	dri-devel@lists.freedesktop.org
->   S:	Maintained
->   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+> Seems that way, just from the line counts.
+> 
+> I suggest two series - one for the four cc:stable patches and one for
+> the 6.14 material.  This depends on whether the ARM maintainers want to
+> get patches 1-4 into the -stable stream before the 6.14 release.
 
+Thanks Andrew, I'm happy to take this approach assuming Catalin/Will agree.
+
+But to be pedantic for a moment, I nominated patches 1-3 and 13 as candidates
+for stable. 1-3 should definitely go via arm64. 13 is a pure mm fix. But later
+arm64 patches in the series depend on it being fixed. So I wouldn't want to put
+13 in through mm tree if it means 14-16 will be in the arm64 tree without the
+fix for a while.
+
+Anyway, 13 doesn't depend on anything before it in the series so I can gather
+the fixes in to a series of 4 as you suggest. Then the improvements become a
+series of 12. And both can go via arm64?
+
+I'll gather review comments then re-post as 2 series for v2; assuming
+Will/Catalin are happy.
+
+Thanks,
+Ryan
