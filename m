@@ -1,109 +1,113 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4922687E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9809E226525;
+	Thu,  6 Feb 2025 09:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834493; cv=none; b=MWI8q+R379V8eNmX2kTcMnN9SwnZ6geXC1PRD4e4Tby4ABY0PG4+WUs5NG4srWwlStX4LsY98opf4gVB3y5Ja2mIq9zTGLOUetLcDso9Vzkr+Jwca99MQQwiYKYqpMvj0R/XjSUP0APvXcwzWPZdf9txIcUAmGC8RTUtK9IVm7Q=
+	t=1738834510; cv=none; b=PIqJCB/WUI8/ImGan8Q9FAvZGAT/RC36BgctwTkJ+LyN3IL1/4PfVyOFVypw7YAt+x/SEdMGX3Mf8+F4eLZ+UPqmxSLkcT0S+DfvvSxXCZwaXzK89Rq949Nn2PilEfz6F7pzj6uEO0g23cKhWvQSr7BxZc/DiLuxwafWJRuPIc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834493; c=relaxed/simple;
-	bh=yfen1v4LAdqEiU+cdK+Argg9GudsmsZkygx2izTcW+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PcQQbMRTrVUT9Qjt07FfpUfVSdqtOwQM8oB8jd1blgRImBMRS0Fx5YtMEKSkxi4WzWSBHkjIEA+NvaYgTVbwHrp6XUr1Se/ZE5VxsATsIqYzCGrA3QHYt+W+EZ194CbFXAXiiK0kTFDGs5Jg/+LLtnfCVqwSzuR++h31E9SooEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dMGWQCXA; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dMGWQCXA"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30227ccf803so5822171fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:34:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738834489; x=1739439289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7lAfvcqgrQXRVsX5y5Frx4KRAfRNlyaJq5G6Gadf7Q=;
-        b=dMGWQCXA33/TwduYz39zoY950RpkpCC/ivSEEO92hfX+GPsV4jACoASvA00FJE9flW
-         ar/FL55/moR28SJN7Zo2yK677416fA0Oi5A2ktnZqDjrQHNZbkSI2yjIsGLSA/2CaysD
-         rI4MqtUOcMa9PvmJAH9jYqks6KuU2i79lFFkYfhwbBm+kuQTYxMhgrHuD/7k4wpi6QAO
-         JF9RMudH8eTI1FUTImOdx36zzZsUSn0qw2cgguNXRi+tlDUSzYxu5InnejUwuvZ2Hmzu
-         43aCBK9qlCPthc0MMV54CtvTtkTqp5YAH0htzScfJrm39G9/farDg/dJntfvLslUQv1y
-         KlSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834489; x=1739439289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W7lAfvcqgrQXRVsX5y5Frx4KRAfRNlyaJq5G6Gadf7Q=;
-        b=bBsM7eZMxi0RprxolSVAL6CL6PfBybDuXV0IA2uCqdxPbc3ctMy2djymXHa77nn2wl
-         QKoHms6dzSUcjYc8o+0l84419XSdUxT4MI1HW/mn3BbMLKNMGQNR5DnlzRg5CBCteOZ2
-         bnB7wgfFy953cLTLF3AuggZ86YwGci+8p+yKd++E71L97fw337sw3+2TTqzI3Q1/sQjn
-         R1uo2o9G2cjxh1/qunM8FmnzEYgxSsn/ygDsKreA+DTLcFxwO0j7cMfS4m4cmIM7VXA1
-         hHTmAWPjJdGMO+f070MBll7Yi7TUHAbCHnXarOxdMKzHDI9txwecR+X6AKXeEyJfIkAX
-         PDng==
-X-Forwarded-Encrypted: i=1; AJvYcCXy9mxqmcscW+uT21kizeZrdUoEJurCS0Cy8M57+Il9h9NKxRRBZ/1GGkNQ3yDN+1v0kDIy494cUaA78lQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxByikaxJqt8DzCD6jji8WxasF0yi7X5D3wnGFSGx6iA090GbOf
-	gEP4rIpT9Z/tYOuxLjHxsm/mb6ZP5ywvLxeGug6wonZZxjMvA1UXVGC8u+PxSEuqAj0MrQvgr+0
-	oVkQw54xe7XUEgTJI3QeIlJS4IZwKJzUttZF3LA==
-X-Gm-Gg: ASbGncs0S3qJJmpmwdPYb5QC7D7j154LOIYL7ZzVjQdh6FVviL5nTH4lzkURSLKPtZ8
-	AvNPl5g43LZLObItCdWAx5Yevmue29cmX3IdzVgU358nPLp2uTFaQRuOuxLYRSOkltwZNdhQ=
-X-Google-Smtp-Source: AGHT+IFJioIZ+SIeFji3yfZS6UpOkRsu94ORXpk38zbHIoNMqdqKledBEr+iDuLeIF3Zq4N/T1bFuhjDSADQ2+GpEfg=
-X-Received: by 2002:a05:651c:12c7:b0:306:10b5:6b3 with SMTP id
- 38308e7fff4ca-307cf2e7a8emr19090411fa.5.1738834489196; Thu, 06 Feb 2025
- 01:34:49 -0800 (PST)
+	s=arc-20240116; t=1738834510; c=relaxed/simple;
+	bh=SqQ8gnGSj8uW1Bp4Pzd61JpHuw3t5hDau+dUBaAn1eg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aMIfxHh0YXYUAFDYnumQX0iHMKBw05fzJVPq0TRivrchxwXDn/4Qh3k+DgB0a/S/eZzK1tVGc87oV2mDXaKAcx7NU++z14sRg2mZPEh+EmUYj7Lh0wYnxG4oMeLtNOVuEBrUnvRO+p4zfD8RHsBbqPi5+yuN8i4A0ozUjsCxdZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19E8F12FC;
+	Thu,  6 Feb 2025 01:35:31 -0800 (PST)
+Received: from [10.1.30.52] (e122027.cambridge.arm.com [10.1.30.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71C553F63F;
+	Thu,  6 Feb 2025 01:35:05 -0800 (PST)
+Message-ID: <de9aa254-dcfc-4a7d-b89d-79b41649a6b2@arm.com>
+Date: Thu, 6 Feb 2025 09:35:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
-In-Reply-To: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 10:34:38 +0100
-X-Gm-Features: AWEUYZkV6NwmyMBafvSPlxwwJhxpoXuuAWLayW3M3lEdMShuQhStxtyBnygw9vI
-Message-ID: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
-	Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
-	Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH netdev] net: stmmac: dwmac-rk: Provide FIFO sizes for
+ DWMAC 1000
+To: Chen-Yu Tsai <wens@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Heiko Stuebner <heiko@sntech.de>
+Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+ Chen-Yu Tsai <wens@csie.org>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, stable@vger.kernel.org
+References: <20250204161359.3335241-1-wens@kernel.org>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250204161359.3335241-1-wens@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Artur,
+On 04/02/2025 16:13, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The DWMAC 1000 DMA capabilities register does not provide actual
+> FIFO sizes, nor does the driver really care. If they are not
+> provided via some other means, the driver will work fine, only
+> disallowing changing the MTU setting.
+> 
+> The recent commit 8865d22656b4 ("net: stmmac: Specify hardware
+> capability value when FIFO size isn't specified") changed this by
+> requiring the FIFO sizes to be provided, breaking devices that were
+> working just fine.
+> 
+> Provide the FIFO sizes through the driver's platform data, to not
+> only fix the breakage, but also enable MTU changes. The FIFO sizes
+> are confirmed to be the same across RK3288, RK3328, RK3399 and PX30,
+> based on their respective manuals. It is likely that Rockchip
+> synthesized their DWMAC 1000 with the same parameters on all their
+> chips that have it.
+> 
+> Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
+> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-On Thu, Jan 30, 2025 at 6:10=E2=80=AFPM Artur Weber <aweber.kernel@gmail.co=
-m> wrote:
+I think it's better at this stage to apply the revert first. However
+I've run this on my board (Firefly RK3288) and it works, so when rebased
+onto the (reverted) revert:
 
-> Fixes two issues that were preventing GPIO from working correctly:
->
-> - Lock/unlock functions tried to write the wrong bit to the unlock
->   registers for GPIOs with numbers larger than 32
->
-> - GPIOs only initialized as IRQs did not unlock the configuration
->   registers, causing IRQ-related configuration (e.g. setting the IRQ
->   type) to fail.
->
-> Also includes a minor fix to add a missing newline to an error message.
->
-> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
-> (DTS not yet in mainline).
->
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+Tested-by: Steven Price <steven.price@arm.com>
 
-Looks good to me, do you want to resend the patches picking up the
-Acks or do you want me to apply as-is?
+Thanks,
+Steve
 
-Should this go in as urgent fixes (-rcN) or as nonurgent?
+> ---
+> The reason for stable inclusion is not to fix the device breakage
+> (which only broke in v6.14-rc1), but to provide the values so that MTU
+> changes can work in older kernels.
+> 
+> Since a fix for stmmac in general has already been sent [1] and a revert
+> was also proposed [2], I'll refrain from sending mine.
+> 
+> [1] https://lore.kernel.org/all/20250203093419.25804-1-steven.price@arm.com/
+> [2] https://lore.kernel.org/all/Z6Clkh44QgdNJu_O@shell.armlinux.org.uk/
+> 
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> index a4dc89e23a68..71a4c4967467 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> @@ -1966,8 +1966,11 @@ static int rk_gmac_probe(struct platform_device *pdev)
+>  	/* If the stmmac is not already selected as gmac4,
+>  	 * then make sure we fallback to gmac.
+>  	 */
+> -	if (!plat_dat->has_gmac4)
+> +	if (!plat_dat->has_gmac4) {
+>  		plat_dat->has_gmac = true;
+> +		plat_dat->rx_fifo_size = 4096;
+> +		plat_dat->tx_fifo_size = 2048;
+> +	}
+>  	plat_dat->fix_mac_speed = rk_fix_speed;
+>  
+>  	plat_dat->bsp_priv = rk_gmac_setup(pdev, plat_dat, data);
 
-The DTS not being mainline suggests nonurgent but are there
-other systems suffering?
-
-Yours,
-Linus Walleij
