@@ -1,100 +1,126 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14818226165
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36F722616E;
+	Thu,  6 Feb 2025 09:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834033; cv=none; b=JarCCxsG18965SwthpDR3kR6ZJ5oM2TbUg9U4BD7mWvFnppshtGV0Fr2RHEaLsVz1O/+0nRSsW+FJFKeBG1RKz8K3ahE09kDUGiLh6FqEuEFNF1sv4vjf52OrhFn6n6VF5V92Q+vSbuz8TCrbEUj5LRDtfRuJI4bjZ8YIwQcT/Q=
+	t=1738834062; cv=none; b=ikrqB6ckMoTq0go2mJRmlq+dKb9HpjDjKq0bCdQqlV7TqXuHPNva+VMKuUJBA5d0sxcdNGizMjNbN43zbxnbAKSXk0FkVJ0lhgMLyxQO5Avlgu2MbVq+MVAvQRff2sJd4YgYJvDu4uSLimWjZvkYJmtygwbjcT/ulDtWKgeyxQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834033; c=relaxed/simple;
-	bh=lP8L6P99Da7P5rOznCiD8xPrVuKAMRimkUUQabFUPq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lZNsHWr9hVmNHVINCHgplg0pL9i045as5JTWI8Hkac5RYlgx+gDpA6hiboaSgGlc6eWmcNOvUfgsCAz+zf41zFv5em/4EoPw1KN7dihi3nv3k7ifBK1TcEGjuOD5Ikqcj/XijFidJ6mKva5T+ZMfO6XlqfZeHH5mzncpPkoxLqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=TH0TLVUJ; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
+	s=arc-20240116; t=1738834062; c=relaxed/simple;
+	bh=LyHTHcOuwcsQP4J2Dc2/lsHvwt01hgkVgyl/XaItmlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pVUtahQxvrE0Dr3nkNldMpKqOh+WOjeg8FkdO3LPfxSMCqbjWBlmMoJoKLkt8Lv4swOxQF5hFSY/foNMIU/CBKeZquSMkuTzl48GrIIkm8zAzscR4V9LVo36FF7tXoOQGfXV7J2bsjasbaZ7mQ2uTNLP3UpNBCUlo3lAgTfUvJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=LA6Zp/2w; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TH0TLVUJ"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30227ccf803so5761811fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:27:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1738834029; x=1739438829; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lP8L6P99Da7P5rOznCiD8xPrVuKAMRimkUUQabFUPq8=;
-        b=TH0TLVUJozoM+l8rA7x6uprvrppR9ob008u3V/WitQQISEizgqD5C0tis9Jupnx/b8
-         0QEMp7hSmBeBCbBvEoMGoGEpb/tITgsUXcL6mpvMaxux7C9EeC1krxIBpe0nU+D1efGJ
-         oW3uV4L1wRykG1IqzPFJcSxd56zNut41yKqpo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834029; x=1739438829;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lP8L6P99Da7P5rOznCiD8xPrVuKAMRimkUUQabFUPq8=;
-        b=wcZuopBpHQj73l23AzG+Ex7mwulEZVvFP03wCDI2MRbxWW7ewKa3lNmaw4/Sko3Rn2
-         KHXonVU5XfwgnGlSBstsIiQdZfmX21t3eA1XrC39dNdRhy6w8HJZ0IA7U3rWPvsq/1Ia
-         B/XEBxCGUtbNTkNpdf3j31IHawW0Avle+Bcv3x7t6aqGD8AHIq3/LHSj/3iMdFMEbhWg
-         SyGwE+otj9At/Lu3YCJpzfiG7mfXtMm8eR6HVFh/MK+GAf+XVwQJ+kFM5gB8MQDUYfMT
-         RZsZo3KxJY1QL3F4QugMWJl9BojmDpkazqFSfW0FaF0aluSEKkJDd3+2Fe6qcbNLQlV6
-         rKHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZybllXYvum9qMTMgiX+CnTp/u1jZyxNIT2HeD7UXWO+Zx8PuS3uS+zERhW4Jys1jMVDf/QGifPD9xj60=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzyfm95XbjiONdMFpiJ7Ok90aq0JgGKtxGa9kmPmX6S4eHZOTD
-	Yc9/WXDpiZSbzIzN71npVoPyvZrQMmAZLQ/83TuIWKwImtTH4kvwccYj18rqYHB4IRcOozFgooD
-	f+FxGU5DfLbjjaJChtDSrNpxUCvs+DsZhlj3oQw==
-X-Gm-Gg: ASbGncvi6nD06+HO/4AHYtQlxl3ky52Cx/dnIHXOZUusjqFFfUQZuBtmjNOXSD6X+HM
-	jgDn2aJikTqc8OJPRyDbX60C1VH63qFsiY6nmCbeoXAR44IWnv/btbbhDmPCBAOADkM3Mch8V
-X-Google-Smtp-Source: AGHT+IHPnewXkffAiBGcrtmcy3j3cfhDwZ+2SPwIiAKww3nKVPkKcTuwbR6xs8hTWb+0K5c2LwrluhW6I8eg+D5eWiY=
-X-Received: by 2002:a05:651c:249:b0:302:17e7:e16d with SMTP id
- 38308e7fff4ca-307cf2e7ab2mr21136871fa.3.1738834029088; Thu, 06 Feb 2025
- 01:27:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="LA6Zp/2w"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1AD4C1047DC13;
+	Thu,  6 Feb 2025 10:27:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1738834057;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ow4+Kx+b/6PJn34QrN71STh7wSAG6yBiFGS8UWpuncE=;
+	b=LA6Zp/2wo0P6VbALjmsjed/MQvy4GAM2ttsACe/SkwUdMLQ4cBNr47XeRMu6ictuUbX+5J
+	bdOZpqyq7HrfqkTBr4tEa0YOfHCxIGYJB4+mBwh7HPpRe9pVNy6TqwdWVry0Uim34Mqh63
+	Y60/yPNOReKEzLRssWD3xJNAPVp/IGtB9cLaLLrIBZUOsVKmj/PWOEeUR5uzuKPuV1bBTR
+	MlDabpRtRZiLOnNo3/NIs1QKW1QacvXlEmcmL0O4iYFsuosGBKLQGY683eXfDc7UF1Ov87
+	SlhFqFs5ko0xJndF8IfMsLMNvSH3H5ZDeuk6H0/xfC8+iYcUqMzWZNHRqDqQyg==
+Date: Thu, 6 Feb 2025 10:27:32 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Shawn Guo <shawnguo2@yeah.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan
+ Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH v11 3/3] ARM: dts: mxs: Add descriptions for imx287
+ based btt3-[012] devices
+Message-ID: <20250206102732.0b44ba8f@wsk>
+In-Reply-To: <Z1aucR3ueKIxOjSX@dragon>
+References: <20241107085705.490940-1-lukma@denx.de>
+	<20241107085705.490940-3-lukma@denx.de>
+	<20241119165236.69438f75@wsk>
+	<Z1aucR3ueKIxOjSX@dragon>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
-In-Reply-To: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Date: Thu, 6 Feb 2025 10:26:57 +0100
-X-Gm-Features: AWEUYZnFSg2BHwTqUgiMh-7R8tClcKx1qxbeUbsIzoGqPOf06jI3u33zNtE0gIg
-Message-ID: <CAKwiHFi6SUCT7UjUTdKmLJ8kiAEqVg=d6ND60R05MJB85Eoj9w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] printf: convert self-test to KUnit
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/TNnnD=tRVbWvJPPGyD3z5Li";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, 4 Feb 2025 at 20:36, Tamir Duberstein <tamird@gmail.com> wrote:
->
-> This is one of just 3 remaining "Test Module" kselftests (the others
-> being bitmap and scanf), the rest having been converted to KUnit.
->
-> I tested this using:
->
-> $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 printf
->
-> I have also sent out a series converting scanf[0].
->
-> Link: https://lore.kernel.org/all/20250204-scanf-kunit-convert-v3-0-386d7c3ee714@gmail.com/T/#u [0]
->
+--Sig_/TNnnD=tRVbWvJPPGyD3z5Li
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, but NAK, not in this form.
+Hi Shawn,
 
-Please read the previous threads to understand what is wrong with this
-mechanical approach. Not only is it wrong, it also actively makes the
-test suite much less useful.
+> On Tue, Nov 19, 2024 at 04:52:36PM +0100, Lukasz Majewski wrote:
+> > Dear Community,
+> >  =20
+> > > The btt3 device' HW revisions from 0 to 2 use imx287 SoC and are
+> > > to some extend similar to already upstreamed XEA devices, hence
+> > > are using common imx28-lwe.dtsi file.
+> > >=20
+> > > New, imx28-btt3.dtsi has been added to embrace common DTS
+> > > properties for different HW revisions for this device.
+> > >=20
+> > > As a result - changes introduced in imx28-btt3-[012].dts are
+> > > minimal.
+> > >  =20
+> >=20
+> > Are there any more comments / suggestions for this patch set? =20
+>=20
+> Patch #2 and #3 look good to me.  That said, I'm waiting #1 to be
+> applied first.
+>=20
 
-https://lore.kernel.org/lkml/f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk/
-https://lore.kernel.org/lkml/876cc862-56f1-7330-f988-0248bec2fbad@rasmusvillemoes.dk/
-https://lore.kernel.org/lkml/0ab618c7-8c5c-00ae-8e08-0c1b99f3bf5c@rasmusvillemoes.dk/
+Patch #1 has just been applied by Rob :-)
 
-I think the previous attempt was close to something acceptable (around
-https://lore.kernel.org/lkml/57976ff4-7845-d721-ced1-1fe439000a9b@rasmusvillemoes.dk/),
-but I don't know what happened to it.
+Could you apply #2 and #3 then?
 
-Rasmus
+Thanks in advance.
+
+> Shawn
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/TNnnD=tRVbWvJPPGyD3z5Li
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmekgIQACgkQAR8vZIA0
+zr18oQgAl2stI3tobRyfonZpyXccZ+rabZN9WyDq8lTK8qDfu7Y7T8HBPad3M+un
+2ObYgvwKl6lA9Z7l02V0xfFq8pflb2xEAK8kNWuyi5164VgCGcU6ZQyqW/Yk6YhV
+92YjrbR6J7S5CUXYQ0mfxbrBX9Tkow7Gr0HA8iCUqrkVDky4VICbdOF60KD+S2Yg
+AaVfDqtsDaxGpvrcGCvXNM5at0y/GNfiKvmq7O4CSN1gGV0/LDKx2rY8qYuMsJ+U
+E44EJoiDnqA2n2s2qgkfdKiJKgubCkvWjkyEAZQrij3pPQU7yT8iDn7GoqkxZsi1
+SxSHsjD5W6AMZQwY9ncUmrvrECfKZQ==
+=YTKp
+-----END PGP SIGNATURE-----
+
+--Sig_/TNnnD=tRVbWvJPPGyD3z5Li--
