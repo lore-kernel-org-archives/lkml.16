@@ -1,140 +1,112 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5285E2561D;
-	Thu,  6 Feb 2025 06:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68FF17548;
+	Thu,  6 Feb 2025 06:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738822958; cv=none; b=JvZuQo3lOEaW/KT/50H7bwmuNeB7daOnW+TDqANf47mmbq23GIcCUK6r8hmxjYFs38kV7AvJPf0w5NVGKn9lCME7GHdJ134NmdiBWR6tpmsp6wWWR7/otb8AKPHMuEAnPKBA2ufAUdI1IVJkSqnAjn3x1jRQXbUjZTreghea0cw=
+	t=1738823053; cv=none; b=MrxAzfSugNf+1zl5mWWqqz5rWbFT9Jdy7AeUfPgNmvL8otAUqNkHDWm2kAJFwxiurI6W4oCbT8c1oia12kkvTwQYeALoPtutv1CrZJE11NrUq2Uy/k5xeygel+21CRnqTiKEjCUjgcZ1qplejBFST1KPNy/N71gp7dWNmqcdqzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738822958; c=relaxed/simple;
-	bh=Ttbeuq4RpY+y9yjf/TK7FVUqR3Vrh8rL7ngUwSa+n98=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m2uDR5D0Si1R4UuBcV/90Bv5hgdsyQwgrlg2IKSGHaHnDw5c26PGneuO9u6wbGJrVq7fpRL8U46/T/BqOCAz/dbcgi9TLQZsAZm0dWKOmJfdrw9IPeY0d8A5+LrNKrdoE1h+2JZkY6pgME/G3pp+2lmVblz3QzYcYAn8Gq71MXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DB3auvW0; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1738823053; c=relaxed/simple;
+	bh=c3wpzPfdqLCGAmYcDTPh2m3lzATJMiwuTyny02HoFmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iA/5GmG6mFt70KfZMgZNvAdl0/mhFD/AcRN3EY1AMbqmEdVwUpP8VhfNloqU9zhEelvU/dM4go9D+RFPsm71ZZ6JCDun7PRh2b98QGbxK8tYE/wGrpQMyoB0O3xRQ/f6jwck3yCuevVonPJPMYiMteff+7awZjjqX0elAXTUstA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cay6dfjS; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DB3auvW0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1738822956; x=1770358956;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=e7lODT0rdAkUuR95gD53p0noLcySrQExYoGtTuaJkiU=;
-  b=DB3auvW0jCAncVpxlzMBktQ/vtqWctNtcUYO5oOJol1hkvDLsq/3uGV8
-   Yy4vxjK5wGmXcuIpcpKv4pjFtspY6pqCUEYXKXEDOTpajhRFaUDlNUfIV
-   me7qUwpOeO+7f/xq+N13pOvUhOJ3qCkxP8QfxiQNPED8pIiFmmK+cfj7P
-   o=;
-X-IronPort-AV: E=Sophos;i="6.13,263,1732579200"; 
-   d="scan'208";a="63573970"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 06:22:32 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:41725]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.61.44:2525] with esmtp (Farcaster)
- id 98133ef0-9f04-44a4-947e-4b749013d6e0; Thu, 6 Feb 2025 06:22:31 +0000 (UTC)
-X-Farcaster-Flow-ID: 98133ef0-9f04-44a4-947e-4b749013d6e0
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 6 Feb 2025 06:22:30 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.37.244.8) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 6 Feb 2025 06:22:26 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <buaajxlj@163.com>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <liangjie@lixiang.com>,
-	<linux-kernel@vger.kernel.org>, <mhal@rbox.co>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>
-Subject: Re: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets autobind identifier length
-Date: Thu, 6 Feb 2025 15:22:17 +0900
-Message-ID: <20250206062217.94843-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250206054451.4070941-1-buaajxlj@163.com>
-References: <20250206054451.4070941-1-buaajxlj@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cay6dfjS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738823052; x=1770359052;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c3wpzPfdqLCGAmYcDTPh2m3lzATJMiwuTyny02HoFmc=;
+  b=Cay6dfjSJZOPHnrrsepFB7I8MZPtJd5QXrkm9Mk0qp7LVEcNXX5BB/bN
+   hlGjtgz7pn8fQ7uXwN7Cl2hy5hDtc+RIfCOkl2fSfQ667q8gQ3e585qw9
+   D5JS+q4CL0lzmrWWDjFNaSTsHhg29LrQgBivttKMnzEKUF/QMcwH6BSw7
+   yJSWujdRGtycNtQPXTN7W/jQnkii0BlcWAB1od/4gl7FVDD9I8hUkYhhW
+   hgmUex5jbSplTbbjOSJSb3lNxFGnjNcnCNO3EB6l5AI5qjP0PqZT+BzMH
+   kSSpnTXT890b0omd9+gZoXbknmksp5v6E2iUjfRqc9a8A1OjIlySySOLL
+   A==;
+X-CSE-ConnectionGUID: 37PGi6FHT+a3XeCXWfY6BQ==
+X-CSE-MsgGUID: AO19pTADTbqEDGuiB/FPMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39110549"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="39110549"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:24:12 -0800
+X-CSE-ConnectionGUID: rd/jEDFqR0m1qcxUNxGE/w==
+X-CSE-MsgGUID: 9rBTEl1NTLmbjbzGj348cQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="116150366"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa004.fm.intel.com with ESMTP; 05 Feb 2025 22:24:08 -0800
+Date: Thu, 6 Feb 2025 14:23:16 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Mahesh Rao <mahesh.rao@intel.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, dinguyen@kernel.org,
+	hao.wu@intel.com, krzk+dt@kernel.org,
+	krzysztof.kozlowski@linaro.org, linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mahesh.rao@altera.com, mdf@kernel.org,
+	robh@kernel.org, trix@redhat.com, yilun.xu@intel.com
+Subject: Re: [PATCH 3/3] firmware: stratix10-svc: Add
+ of_platform_default_populate()
+Message-ID: <Z6RVVGriTgZIM22k@yilunxu-OptiPlex-7050>
+References: <Z5XyR9QE3kcQDOPe@yilunxu-OptiPlex-7050>
+ <20250129180113.17219-1-mahesh.rao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D046UWB002.ant.amazon.com (10.13.139.181) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129180113.17219-1-mahesh.rao@intel.com>
 
-> Subject: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets autobind identifier length
-
-s/pathname/abstract/
-
-In the v1 thread, I meant "filesystem-based sockets" is now called
-pathname sockets.  sockets whose name starts with \0 are abstract
-sockets.
-
-
-From: Liang Jie <buaajxlj@163.com>
-Date: Thu,  6 Feb 2025 13:44:51 +0800
-> Refines autobind identifier length for UNIX pathname sockets, addressing
-
-same here, abstract sockets.
-
-
-> issues of memory waste and code readability.
+On Thu, Jan 30, 2025 at 02:01:13AM +0800, Mahesh Rao wrote:
+> Hi Yilun,
+> Thanks for reviewing the patch.
 > 
-> The previous implementation in the unix_autobind function of UNIX pathname
-> sockets used hardcoded values such as 16 and 6 for memory allocation and
-
-nit: 6 isn't used for mem alloc.
-
-
-> setting the length of the autobind identifier, which was not only
-> inflexible but also led to reduced code clarity. Additionally, allocating
-
-you need not mention inflexibility as the length are fixed and won't be
-changed (it was changed once though)
-
-
-> 16 bytes of memory for the autobind path was excessive, given that only 6
-> bytes were ultimately used.
+> On Sun, 26 Jan 2025 16:28:55 +0800, Xu Yilun wrote:
+> > > Add of_platform_default_populate() to stratix10-svc driver as the
+> > > firmware/svc node was moved out of soc.
+> > > This fixes the failed probing of child drivers of svc node.
+> > >
+> > > Fixes: 23c3ebed382a ("arm64: dts: socfpga: agilex: move firmware out
+> > > of soc node")
 > 
-> To mitigate these issues, introduces the following changes:
->  - A new macro UNIX_AUTOBIND_LEN is defined to clearly represent the total
->    length of the autobind identifier, which improves code readability and
->    maintainability. It is set to 6 bytes to accommodate the unique autobind
->    process identifier.
->  - Memory allocation for the autobind path is now precisely based on
->    UNIX_AUTOBIND_LEN, thereby preventing memory waste.
->  - To avoid buffer overflow and ensure that only the intended number of
->    bytes are written, sprintf is replaced by snprintf with the proper
->    buffer size set explicitly.
+> > > +	ret = of_platform_default_populate(dev_of_node(dev), NULL, dev);
+> > > +	if (ret < 0) {
+> > 
+> > 	if (ret)  is just fine.
 > 
-> The modifications result in a leaner memory footprint and elevated code
-> quality, ensuring that the functional aspect of autobind behavior in UNIX
-> pathname sockets remains intact.
+> ok ,I will make the change.
+> 
+> > 
+> > > +		of_platform_depopulate(dev);
+> > > +		goto err_unregister_fcs_dev;
+> > 
+> > You wanna destroy everything even if some child drivers work?
+> 
+> Currently, there is no requirement to retain the driver if a child component fails.
+> we will handle it if it is needed in the future.
 
-s/pathname/abstract/
+Does the previous "soc" style population did the same way?
 
-Overall, the commit message is a bit wordy.  It can be simplified just like
+Thanks,
+Yilun
 
-  unix_autobind() allocates 16 bytes but uses 6 bytes only.
-
-  Let's allocate 6 bytes only and use snprintf() to avoid
-  unwanted null-termination.
-
-
-> @@ -1203,12 +1205,12 @@ static int unix_autobind(struct sock *sk)
->  		goto out;
->  
->  	err = -ENOMEM;
-> -	addr = kzalloc(sizeof(*addr) +
-> -		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
-> +	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
-> +			UNIX_AUTOBIND_LEN, GFP_KERNEL);
-
-nit: indent is wrong here.
-
-If you are using emacs, add the following to your config:
-
-(setq-default c-default-style "linux")
+> 
+> > And do we need to do depopulation on driver remove?
+> 
+> I think yes , I have missed this. I will add depopulate in the remove callback().
+> 
+> > I'm actually a little confused how to handle populate() fail and depopulate().
+> 
+> I think this was a mistake on my side. I will make the change in next revision.
+> 
+> Best Regards,
+> Mahesh Rao
