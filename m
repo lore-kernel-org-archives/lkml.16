@@ -1,102 +1,112 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC60F18B477
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A1C151992;
+	Thu,  6 Feb 2025 12:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738843621; cv=none; b=u4xY8zz2Ya6+chm5WGAXp0AImyGCRaRxkAJzpSMKiI4Dlla8LQD3DpL26zJqDHzPDqa/uhFGjG7UFibrvqo6gEatEN26CijNgaoncRmK/qtMtIm+Rn0yue8nSdNv7wmssdJnbDEoAgrVCpcESWL+nJSSocqalBhwZYHcbpODc/Y=
+	t=1738844041; cv=none; b=NxUA/U1czrR+035/rgSh8V5s7Z1ondjMp0wf2PceGgDUkG8CTX2IKecJJWnlLHX45sU56OZLug/FINBMWe16+T480xuiJBETa7zYK6X/IAcU7BPI24tqZF5G1H47iUkxOYDrQPHOzNqPrr9QLJQN6nOFEan5RmVyNerrhpSg9DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738843621; c=relaxed/simple;
-	bh=XR6UngKK7YAxtzb/EkX3tA43qlZhygKALi9P92gE+J4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AdLTKpY4tLBW2zpzhw36FoXse4vQtvWl7NdtE2IpQlAy78ozjNjLIaOgnyVvpZT8L7zDXBvfhQZgfWJQMLlUStmGV8w/K29YtGNs2dL7Z19dbb/eVMODn4YBOAJYNRyd80GrZAwINzYgWd7V8APKccWvmNXkQOrLD8n/nsxxpuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gT9F45P3; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738844041; c=relaxed/simple;
+	bh=wxTCmkjY4k9wfr2fZONA+SFblWX9LuSqYnijep5bLIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bg/sJU+Xcz4dFJzNpIMP0CeYCEsFA4RMhqplogMtLKciblH2cR7QlnpXSxSRmus6Sa2kl+rc4WGRk5Rl/Z98Vl+utBxZ6Stwsw92jIBagO2Me+/E7eqw0wphkhS3nSWtg3eQJqznBwvws0JD2SUv7W+BYfdNeB52tjat6o97khM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gW9YDhDS; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gT9F45P3"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso5383955e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:06:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738843618; x=1739448418; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OUfwePobke013UujtEBYM1EhfzYZv2QC6Lwba6Ypk4s=;
-        b=gT9F45P3DqY5WYCpimpqa3dULx+SHUTsxZyiigNpBcoErCoaeBpUELiv5ZyFtu0YEq
-         XAtBg+flO1DWhP1M9uba3vaGjqJU8cN9BegwIafp9yg6mH4eksRL4sFDlfjew7jU+nzF
-         RzikmgJ2WB/KswQS90qFveHWPcnEXW7M00ThHaJ5r3iY27znxH3DG5KiAZp8qTq8BVRI
-         gjcO5YTiUAeK/CmGLTsycSmRbHup/9Y/e/AuE1NvMD4zRqyCjvVNAE61GXGbmKAGUMd+
-         0HGrhBcQR0w9y3QpXAmeoZmBf3BlVon61BzvlxMQKpPf07X6Y2/1Yu52UJlldsLKqR8b
-         URzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738843618; x=1739448418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OUfwePobke013UujtEBYM1EhfzYZv2QC6Lwba6Ypk4s=;
-        b=qPBgfvfrMj+hFR5COOvt+okm02c2+dVQsBujBoO0ycK6kHrTyCcgED/6cwormARvL1
-         g2Fa+QnyQ/NF3Rijet8aEN7JPZP7Rcy3dPMqckCfmkK7tzrPfuGqsJtUZm7XPg8unkL8
-         ntcnvEeDRXTX6djgyMDRpYtEiw2KyYUSUkxrCa5uEQMz1MYfRmAEngmGK/kEW/ys+6PV
-         ISlZkr4PEMDlEvpiqFiCtqpYh3D8thPPiLVatOlRAkwuA4UAdciJk6UGTzLla2SNMtlc
-         BfPpCPppNTuyepnfBL5oMC/LTC/yvE7kZmjcb7Eks/XzBiVv8IZy4M511C2LFwqaQO0U
-         bbHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjWCNdBai6IWwD/JScHW9XHkPVFmLPesncQobTUyXtbF6eOmH4MV/XHTkaZY8IxU+ZFGGaBKa6jKu+WAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGxx7VrOuM3cy0jHIfodPu8+a1EUST7joFPybFB501qTJqRbaZ
-	kZOQOZDeNxRqONq6F3XLTrqRk1btCgX1I8Ajoho/rM0PstAEF9awRNPFU7QdqZTImRsPWrM07lx
-	W4W2c8KAdRm8TgWa2DaIPxcL6yysj6Dn5v3cG
-X-Gm-Gg: ASbGnculGyntmAiyn/L7QVd7pSju8OLFRt2o2kv9hRBkIVGoKQswpJcI/h+tiPjsYAm
-	eBz72NAsLAjNR4sXC4gFYF2MrggcUu14xHUPe3bcRAsN+mEPFEVid9WC3vu2la5Pv2fy+BBJ8zj
-	bhlLydnIwJebdhhKek3b2mNVN5V6I=
-X-Google-Smtp-Source: AGHT+IGYHvyT3czOoUO0G+LKb5bPp/nIfHsUp1lMa2tjLnY6ZozcU57eS2CINXvL/ohHtWBhkCKsP+i3csCOJXv72+g=
-X-Received: by 2002:a05:600c:1c91:b0:434:a902:97cd with SMTP id
- 5b1f17b1804b1-4390d434b2bmr59528985e9.12.1738843618058; Thu, 06 Feb 2025
- 04:06:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gW9YDhDS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3B5a6rxdv9Tr08mPBuDoz30MTqmF7tY362uf4ZvrivE=; b=gW9YDhDSq2Mxq2we37wqKCX0YA
+	AbNF7dcEc5FolptcfjEwJtbnI8o69XgbNAgsCEJOOyORibQmNGXF3Ikz1uYV0UNqezSTho6ctxLX4
+	WTPfejmtCApyCC/xnufGuMWrYJ+LycQKsjmrAcEkap2B2AGdg3KrXz82kUUWe3t/gy80FCxfiUy8L
+	ymgUMHMaoRJKB1lFM8UYiq7XaNcQtctRAyw9DZ3+uZUDzpuMvn8/w2X21e1dytvab7lum/chS1ziP
+	RP2M+062O4M7RrPv20UfgHHTKQD2Dj1AlFwduHAF1TF7KP2N/2nGE67n0G0Ds1LNEZnBNr5QHVHxZ
+	yXVpsEAA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tg0l8-0000000Gvar-0Bvo;
+	Thu, 06 Feb 2025 12:13:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 49426300318; Thu,  6 Feb 2025 13:13:28 +0100 (CET)
+Date: Thu, 6 Feb 2025 13:13:28 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriel de Perthuis <g2p.code@gmail.com>,
+	Haiyue Wang <haiyuewa@163.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
+ get_kernel_nofault()
+Message-ID: <20250206121328.GN7145@noisy.programming.kicks-ass.net>
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+ <20250206081225.GI7145@noisy.programming.kicks-ass.net>
+ <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738832118.git.viresh.kumar@linaro.org> <5860ff88ff81d09838f7786507ec47a33cf16158.1738832119.git.viresh.kumar@linaro.org>
- <Z6SlRZouQ-nPH2EP@pollux>
-In-Reply-To: <Z6SlRZouQ-nPH2EP@pollux>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 6 Feb 2025 13:06:46 +0100
-X-Gm-Features: AWEUYZlj97JPy69AI1ZLmuMZb4cJY94hCErCw5XdWtEAWRu59P8TAU3ECjbd_Bw
-Message-ID: <CAH5fLgh3cosfVSJ-k_k2vjFT+PjPbmMqhmLSba=-VdU0vGmGCQ@mail.gmail.com>
-Subject: Re: [PATCH V8 12/14] rust: Extend cpufreq bindings for driver registration
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich <dakr@redhat.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, 
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, 
-	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
 
-On Thu, Feb 6, 2025 at 1:04=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
->
-> On Thu, Feb 06, 2025 at 02:58:33PM +0530, Viresh Kumar wrote:
-> > +            unsafe { drop(KBox::from_raw(drv.attr)) };
->
-> This could just be
->
-> let _ =3D unsafe { KBox::from_raw(drv.attr) };
->
-> At least drop() should not be within the unsafe block.
+On Thu, Feb 06, 2025 at 08:54:49PM +0900, Masami Hiramatsu wrote:
+> On Thu, 6 Feb 2025 09:12:25 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > 
+> > > +#ifdef CONFIG_HAVE_FENTRY
+> > > +/* Convert fentry address to the symbol address. */
+> > > +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+> > > +{
+> > > +#ifdef CONFIG_X86_KERNEL_IBT
+> > > +	u32 instr;
+> > > +
+> > > +	/* We want to be extra safe in case entry ip is on the page edge,
+> > > +	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
+> > > +	 */
+> > > +	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+> > > +		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
+> > > +			return fentry_ip;
+> > > +	} else {
+> > > +		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+> > > +	}
+> > > +	if (is_endbr(instr))
+> > > +		fentry_ip -= ENDBR_INSN_SIZE;
+> > > +#endif
+> > > +	return fentry_ip;
+> > > +}
+> > > +#endif
+> > 
+> > Urgh, that reminds, me. I have a pile of patches cleaning up this mess.
+> > Let me go find them.
+> 
+> Thanks for cleaning up! So would it change the location of ENDBR and
+> symbol address?
 
-I think we usually write this as
+No, it just cleans up this utter trainwreck. I also noticed this is a
+second (new) copy of this garbage. Clearly I didn't yell loud enough
+last time and people didn't think to vomit when doing the copy/paste :/
 
-drop(unsafe { KBox::from_raw(drv.attr) });
+Function will look something like:
 
-Alice
+unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+{
+	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
+		fentry_op -= ENDBR_INSN_SIZE;
+	return fentry_ip;
+}
+
+Let me finish local build test before I push out.
