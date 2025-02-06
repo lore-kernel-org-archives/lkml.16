@@ -1,404 +1,128 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D076E1A0BDB;
-	Thu,  6 Feb 2025 18:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26FF19ABBB
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866076; cv=none; b=NyjPGgQpIJI+tX7XzCDfBZDCOVCcPL9ROoN70ZDtod1+oO8va25YV/9LefHv8jZsGauLtun/SwBQVRHUMtxi8y67G9Z/MrRXLCBPLhu8IlkqS+29ZzS2EIzkhsqdESP5xhk6Wpupwg0+oUxCyLjzMT5Rkv5Bf3db8gFbdbHfV4w=
+	t=1738866110; cv=none; b=Pu8xidUU0iRF+Cku4p/a6EFNhE08asoQnjNxgduVY95O2WFQIOjLHtLhWQycmVVjUtUm+cbLmK5qrybetyizGGbLfZF8NPQlNDfrQZ7+fU+M1p6iE2VV1SaBTCnS4p6EWWvwFsxGRtln6WqPb1LADb2mWP+cC8N1b8dwi/cywMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866076; c=relaxed/simple;
-	bh=0Wxhqv+hLaWEyX27t7gpS6vBv9rE3kEqEk1rdoc+YuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+jVVQ6yoGYXXTpKVeVUc4jW6eKgxkU2YHQS6CiApyZPTHxn9rMEhgkva2Oksh3IkMdDvt1ErSGlVHJqyvsKbVqYA9WHs7f08RQi5X9rKCFJsBBZj39uyyHvWkeG/afybKwJCWLxPMuMa3N3DxRM9NHOXMOpWIL4w5bV+OQDcj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=kmXSdWxP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p3/Sme92; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1738866110; c=relaxed/simple;
+	bh=weAKqXf6Y8AhG7m0BqxFtr8VPRuv1H8LfjKFnuTDoZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LEIHOXRH6pEqMVPalwx9St2WRKuwRgZ+S1mOPSf0aT94E85TfBx3l+Adn3tdGFIGfL9PD7YgmZViDV6gIyLsz9cq26m6qPVJkr36exIpv56jTTO2jnCLPMJNXuee3Ax0bvO+wdy0CyieuDQpU7xQftOgB02cxqjEbGV7nqhOlL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUbfz5sr; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="kmXSdWxP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p3/Sme92"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id C392B114023E;
-	Thu,  6 Feb 2025 13:21:12 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Thu, 06 Feb 2025 13:21:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1738866072;
-	 x=1738952472; bh=LVWd6g0jNd2/cna7ay95TAMpwJ4DUTXCoUp9pBK29VA=; b=
-	kmXSdWxPiJJVi9L0ooGYjpowht5gG4g2kLMqB0tTfjwdqS5voSCtJ5Z+d5Xv78Nn
-	QaqrUPWqzVwwT3XyLqctVX2hzpuN0dicrty3vfzjjfbljmIHa/2xPxRV5jYbtQOM
-	NQXiM4qE7L5MQw+soHvfvwu+bsxj+x6dZpa+IBwXeBcyNzPzq6Md9A3glSntkxRg
-	Y9ERleElXLoWnSNOzqvnpz/aQlhs2kSzOyIqlV/9+hGsUGUBgfDSxtbO8eBOvbPd
-	XFamY44dYcRyi1c224cL6qG9d7dodx02ThOl9Fl8YfGmh/wIbCoNEP9hMlNXwv9V
-	2XG9iORCHsyx4W3DiXvrvg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738866072; x=1738952472; bh=LVWd6g0jNd2/cna7ay95TAMpwJ4DUTXCoUp
-	9pBK29VA=; b=p3/Sme92UbG4olaB/yg2IkafbNXzOIaDY6glUjyMt5P+FKdYTef
-	h+5twob+Eo+Ynj7HlCHj7gKSpNdDXxuc4iuE5PrWnwRdHqwkfhc9eUydKurRcbDK
-	wEDBQui3y6wL21I0dWiaTl05wiGl1HuF7caXj983mh3520CqiXHbuKDFu/HhiEJk
-	X/wrwUEX4J4RUt2s6MoPmzxJUMriSLyJsNuhaV2BZ2h0VRl3JpOV2ogbpYqkOtIe
-	yWYz2lSfQaPAyHMzrw2sICBGZMGU0v1Cmvg8/iCV1zGK7Sjkeko7qyKMWBlzafkh
-	OnHhulWFiELml3wB6GjolKuPMUpigPBlidA==
-X-ME-Sender: <xms:mP2kZ3phIyeacO6nHKoic5JKUJlW2p6ywz72awmxYH0DyaSXqr9S1w>
-    <xme:mP2kZxo5EmSV1iRI90sSES4KIwiaJHneP0be3R6rPNuyIC4IqMxd93VeWFjwATGAF
-    23nUkXrz4Hhuwo>
-X-ME-Received: <xmr:mP2kZ0MEaCIFxBXlaWCaTXfdNdyCKHlEC5_YyigHPA_2Qr37gEhDJMgcjE0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredttdej
-    necuhfhrohhmpeffvghmihcuofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihesihhnvh
-    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpedvjeet
-    geekhfetudfhgfetffegfffguddvgffhffeifeeikeektdehgeetheffleenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeguvghmihesihhnvhhi
-    shhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopedukedpmhhoug
-    gvpehsmhhtphhouhhtpdhrtghpthhtohephhhonhhglhgvihdurdhhuhgrnhhgsegrmhgu
-    rdgtohhmpdhrtghpthhtohepuggvmhhiohgsvghnohhurhesghhmrghilhdrtghomhdprh
-    gtphhtthhopehrrgihrdhhuhgrnhhgsegrmhgurdgtohhmpdhrtghpthhtohepshhtvghf
-    rghnohdrshhtrggsvghllhhinhhisegrmhgurdgtohhmpdhrtghpthhtohepvhhirhhtuh
-    grlhhiiigrthhiohhnsehlihhsthhsrdhlihhnuhigqdhfohhunhgurghtihhonhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopegrihhrlhhivggusehrvgguhhgrthdrtghomhdprhgtphhtthho
-    pegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtg
-    hpthhtohepughmihhtrhihrdhoshhiphgvnhhkohestgholhhlrggsohhrrgdrtghomh
-X-ME-Proxy: <xmx:mP2kZ65uxWYKQg8JStfQFyh0sordyZ9zExZ0crqmVbQUL8lUj0XP2g>
-    <xmx:mP2kZ244LEz3d5Z49_ZSJpCx9lGmq5S_q5beYIs3qLSjTestqEWCFg>
-    <xmx:mP2kZyh31RPT-xN1gkFgKyJnTbd0-vZn3p7K93YAbico6iT6UJ30cA>
-    <xmx:mP2kZ449bzYZEfS7xLe7azXw2pqLFrB9n2PbHaWyK6U2Rk2T5mF3Bg>
-    <xmx:mP2kZzw_Njbh6Z7Gd3x6Lk5QFvJ9TzOQx4kfZnNa3CRQ_4W-AJN2AdAc>
-Feedback-ID: iac594737:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 6 Feb 2025 13:21:11 -0500 (EST)
-Date: Thu, 6 Feb 2025 13:21:04 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: "Huang, Honglei1" <Honglei1.Huang@amd.com>
-Cc: Demi Marie Obenour <demiobenour@gmail.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Stefano Stabellini <stefano.stabellini@amd.com>,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, David Airlie <airlied@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Lingshan Zhu <Lingshan.Zhu@amd.com>,
-	Xen developer discussion <xen-devel@lists.xenproject.org>,
-	Kernel KVM virtualization development <kvm@vger.kernel.org>,
-	Xenia Ragiadakou <burzalodowa@gmail.com>,
-	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Subject: Re: [RFC PATCH 3/3] drm/virtio: implement blob userptr resource
- object
-Message-ID: <Z6T9lDSj8Y9ATE3k@itl-email>
-References: <20241220100409.4007346-1-honglei1.huang@amd.com>
- <20241220100409.4007346-3-honglei1.huang@amd.com>
- <Z2WO2udH2zAEr6ln@phenom.ffwll.local>
- <2fb36b50-4de2-4060-a4b7-54d221db8647@gmail.com>
- <de8ade34-eb67-4bff-a1c9-27cb51798843@amd.com>
- <Z36wV07M8B_wgWPl@phenom.ffwll.local>
- <c42ae4f7-f5f4-4906-85aa-b049ed44d7e9@gmail.com>
- <Z5waZsddenagCYtl@itl-email>
- <7b0bf2d5-700a-4cc7-b410-a9b2e2083b5d@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUbfz5sr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738866109; x=1770402109;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=weAKqXf6Y8AhG7m0BqxFtr8VPRuv1H8LfjKFnuTDoZ8=;
+  b=gUbfz5srUa9f57iX83lKfiIWKayZf3z24fdC0/wrs4Qsv7Gj4+tQrrVt
+   zw4dxh6COZPKcxeKwP8fe6FS4QyGb7Ri0vkvfii6Z9wTbIfa4GAg2oFRC
+   cKlNeeRowlMdtSfDyWbbjGoYqE6pxUeaeRBFoBphuYNvgg8bDuZMHDYLZ
+   tQXv/Fw5HqvKOqHd22Ys5OVWwE7UDANPnliJ2GTqP4bPHnVzmpIlVSRIT
+   9LUt9DXsXsqFFQFBocLTk+OlhSvv7Y2x2cAde1RrYuaw73NdPO4V3hRH9
+   GIaD+AlpVYkMGyy+JKEw/lvLrzKeXZ5RvZ2umQJwKsClJf+G6U4dFabBb
+   g==;
+X-CSE-ConnectionGUID: N1qeekNeRDuXAhDyEgI8eg==
+X-CSE-MsgGUID: PxsYwcU/RxGTLcVlywM/tA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43246757"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="43246757"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:21:36 -0800
+X-CSE-ConnectionGUID: 0VPAEPdzT9ONVf+us53e9A==
+X-CSE-MsgGUID: jDcTGLTCSEyB/s4rpfu72g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111892478"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.17]) ([10.125.111.17])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:21:34 -0800
+Message-ID: <1f3f60b3-1741-4ced-951c-8e103970170f@intel.com>
+Date: Thu, 6 Feb 2025 10:21:36 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Wy7U6lvUah8lMeg3"
-Content-Disposition: inline
-In-Reply-To: <7b0bf2d5-700a-4cc7-b410-a9b2e2083b5d@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 3/5] x86/pkeys: Update PKRU to enable all pkeys before
+ XSAVE
+To: Dmitry Vyukov <dvyukov@google.com>, aruna.ramakrishna@oracle.com,
+ mathieu.desnoyers@efficios.com, peterz@infradead.org, paulmck@kernel.org,
+ boqun.feng@gmail.com
+Cc: dave.hansen@linux.intel.com, jannh@google.com, jeffxu@chromium.org,
+ jorgelo@chromium.org, keescook@chromium.org, keith.lucas@oracle.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@kernel.org,
+ rick.p.edgecombe@intel.com, sroettger@google.com, tglx@linutronix.de,
+ x86@kernel.org
+References: <20240802061318.2140081-4-aruna.ramakrishna@oracle.com>
+ <20250204100134.1843654-1-dvyukov@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250204100134.1843654-1-dvyukov@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 2/4/25 02:01, Dmitry Vyukov wrote:
+>> But this updated PKRU value is also pushed onto the sigframe, which
+>> means the register value restored from sigcontext will be different from
+>> the user-defined one, which is unexpected. Fix that by overwriting the
+>> PKRU value on the sigframe with the original, user-defined PKRU.
+> 
+> This unfortunatly seems to be broken for rseq user-space writes.
 
---Wy7U6lvUah8lMeg3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 6 Feb 2025 13:21:04 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: "Huang, Honglei1" <Honglei1.Huang@amd.com>
-Cc: Demi Marie Obenour <demiobenour@gmail.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Stefano Stabellini <stefano.stabellini@amd.com>,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, David Airlie <airlied@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Lingshan Zhu <Lingshan.Zhu@amd.com>,
-	Xen developer discussion <xen-devel@lists.xenproject.org>,
-	Kernel KVM virtualization development <kvm@vger.kernel.org>,
-	Xenia Ragiadakou <burzalodowa@gmail.com>,
-	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Subject: Re: [RFC PATCH 3/3] drm/virtio: implement blob userptr resource
- object
+Hi Dmitry,
 
-On Thu, Feb 06, 2025 at 06:53:55PM +0800, Huang, Honglei1 wrote:
-> On 2025/1/31 8:33, Demi Marie Obenour wrote:
-> > On Wed, Jan 29, 2025 at 03:54:59PM -0500, Demi Marie Obenour wrote:
-> > > On 1/8/25 12:05 PM, Simona Vetter wrote:
-> > > > On Fri, Dec 27, 2024 at 10:24:29AM +0800, Huang, Honglei1 wrote:
-> > > > >=20
-> > > > > On 2024/12/22 9:59, Demi Marie Obenour wrote:
-> > > > > > On 12/20/24 10:35 AM, Simona Vetter wrote:
-> > > > > > > On Fri, Dec 20, 2024 at 06:04:09PM +0800, Honglei Huang wrote:
-> > > > > > > > From: Honglei Huang <Honglei1.Huang@amd.com>
-> > > > > > > >=20
-> > > > > > > > A virtio-gpu userptr is based on HMM notifier.
-> > > > > > > > Used for let host access guest userspace memory and
-> > > > > > > > notice the change of userspace memory.
-> > > > > > > > This series patches are in very beginning state,
-> > > > > > > > User space are pinned currently to ensure the host
-> > > > > > > > device memory operations are correct.
-> > > > > > > > The free and unmap operations for userspace can be
-> > > > > > > > handled by MMU notifier this is a simple and basice
-> > > > > > > > SVM feature for this series patches.
-> > > > > > > > The physical PFNS update operations is splited into
-> > > > > > > > two OPs in here. The evicted memories won't be used
-> > > > > > > > anymore but remap into host again to achieve same
-> > > > > > > > effect with hmm_rang_fault.
-> > > > > > >=20
-> > > > > > > So in my opinion there are two ways to implement userptr that=
- make sense:
-> > > > > > >=20
-> > > > > > > - pinned userptr with pin_user_pages(FOLL_LONGTERM). there is=
- not mmu
-> > > > > > >     notifier
-> > > > > > >=20
-> > > > > > > - unpinnned userptr where you entirely rely on userptr and do=
- not hold any
-> > > > > > >     page references or page pins at all, for full SVM integra=
-tion. This
-> > > > > > >     should use hmm_range_fault ideally, since that's the vers=
-ion that
-> > > > > > >     doesn't ever grab any page reference pins.
-> > > > > > >=20
-> > > > > > > All the in-between variants are imo really bad hacks, whether=
- they hold a
-> > > > > > > page reference or a temporary page pin (which seems to be wha=
-t you're
-> > > > > > > doing here). In much older kernels there was some justificati=
-on for them,
-> > > > > > > because strange stuff happened over fork(), but with FOLL_LON=
-GTERM this is
-> > > > > > > now all sorted out. So there's really only fully pinned, or t=
-rue svm left
-> > > > > > > as clean design choices imo.
-> > > > > > >=20
-> > > > > > > With that background, why does pin_user_pages(FOLL_LONGTERM) =
-not work for
-> > > > > > > you?
-> > > > > >=20
-> > > > > > +1 on using FOLL_LONGTERM.  Fully dynamic memory management has=
- a huge cost
-> > > > > > in complexity that pinning everything avoids.  Furthermore, thi=
-s avoids the
-> > > > > > host having to take action in response to guest memory reclaim =
-requests.
-> > > > > > This avoids additional complexity (and thus attack surface) on =
-the host side.
-> > > > > > Furthermore, since this is for ROCm and not for graphics, I am =
-less concerned
-> > > > > > about supporting systems that require swappable GPU VRAM.
-> > > > >=20
-> > > > > Hi Sima and Demi,
-> > > > >=20
-> > > > > I totally agree the flag FOLL_LONGTERM is needed, I will add it i=
-n next
-> > > > > version.
-> > > > >=20
-> > > > > And for the first pin variants implementation, the MMU notifier i=
-s also
-> > > > > needed I think.Cause the userptr feature in UMD generally used li=
-ke this:
-> > > > > the registering of userptr always is explicitly invoked by user c=
-ode like
-> > > > > "registerMemoryToGPU(userptrAddr, ...)", but for the userptr rele=
-ase/free,
-> > > > > there is no explicit API for it, at least in hsakmt/KFD stack. Us=
-er just
-> > > > > need call system call "free(userptrAddr)", then kernel driver wil=
-l release
-> > > > > the userptr by MMU notifier callback.Virtio-GPU has no other way =
-to know if
-> > > > > user has been free the userptr except for MMU notifior.And in UMD=
- theres is
-> > > > > no way to get the free() operation is invoked by user.The only wa=
-y is use
-> > > > > MMU notifier in virtio-GPU driver and free the corresponding data=
- in host by
-> > > > > some virtio CMDs as far as I can see.
-> > > > >=20
-> > > > > And for the second way that is use hmm_range_fault, there is a pr=
-edictable
-> > > > > issues as far as I can see, at least in hsakmt/KFD stack. That is=
- the memory
-> > > > > may migrate when GPU/device is working. In bare metal, when memor=
-y is
-> > > > > migrating KFD driver will pause the compute work of the device in
-> > > > > mmap_wirte_lock then use hmm_range_fault to remap the migrated/ev=
-icted
-> > > > > memories to GPU then restore the compute work of device to ensure=
- the
-> > > > > correction of the data. But in virtio-GPU driver the migration ha=
-ppen in
-> > > > > guest kernel, the evict mmu notifier callback happens in guest, a=
- virtio CMD
-> > > > > can be used for notify host but as lack of mmap_write_lock protec=
-tion in
-> > > > > host kernel, host will hold invalid data for a short period of ti=
-me, this
-> > > > > may lead to some issues. And it is hard to fix as far as I can se=
-e.
-> > > > >=20
-> > > > > I will extract some APIs into helper according to your request, a=
-nd I will
-> > > > > refactor the whole userptr implementation, use some callbacks in =
-page
-> > > > > getting path, let the pin method and hmm_range_fault can be choic=
-ed
-> > > > > in this series patches.
-> > > >=20
-> > > > Ok, so if this is for svm, then you need full blast hmm, or the sem=
-antics
-> > > > are buggy. You cannot fake svm with pin(FOLL_LONGTERM) userptr, thi=
-s does
-> > > > not work.
-> > > >=20
-> > > > The other option is that hsakmt/kfd api is completely busted, and t=
-hat's
-> > > > kinda not a kernel problem.
-> > > > -Sima
-> > >=20
-> > > On further thought, I believe the driver needs to migrate the pages to
-> > > device memory (really a virtio-GPU blob object) *and* take a FOLL_LON=
-GTERM
-> > > pin on them.  The reason is that it isn=E2=80=99t possible to migrate=
- these pages
-> > > back to "host" memory without unmapping them from the GPU.  For the r=
-easons
-> > > I mention in [1], I believe that temporarily revoking access to virti=
-o-GPU
-> > > blob objects is not feasible.  Instead, the pages must be treated as =
-if
-> > > they are permanently in device memory until guest userspace unmaps th=
-em
-> > > from the GPU, after which they must be migrated back to host memory.
-> >=20
-> > Discussion on IRC indicates that migration isn't reliable.  This is
-> > because Linux core memory management is largely lock-free for
-> > performance reasons, so there is no way to prevent temporary elevation
-> > of a page's reference count.  A page with an elevated reference count
-> > cannot be migrated.
-> >=20
-> > The only alternative I can think of is for the hypervisor to perform the
-> > migration.  The hypervisor can revoke the guest's access to the page
-> > without the guest's consent or involvement.  The host can then replace
-> > the page with one of its own pages, which might be on the CPU or GPU.
-> > Further migration between the CPU and GPU is controlled by the host
-> > kernel-mode driver (KMD) and host kernel memory management.  The guest
-> > kernel driver must take a FOLL_LONGTERM pin before telling the host to
-> > use the pages, but that is all.
-> >=20
-> > On KVM, this should be essentially automatic, as guest memory really is
-> > just host userspace memory.  On Xen, this requires that the backend
-> > domain can revoke fronted access to _any_ frontend page, or at least
-> > frontend pages that have been granted to the backend.  The backend will
-> > then need to be able to handle page faults for the frontend pages, and
-> > replace the frontend pages with its own pages at will.  Furthermore,
-> > revoking pages that the backend has installed into the frontend must
-> > never fail, because the backend will panic if it does fail.
-> >=20
-> > Sima, is putting guest pages under host kernel control the only option?
-> > I thought that this could be avoided by leaving the pages on the CPU if
-> > migration fails, but that won't work because there will be no way to
-> > migrate them to the GPU later, causing performance problems that would
-> > be impossible to debug.  Is waiting (possibly forever) on migration to
-> > finish an option?  Otherwise, this might mean extra complexity in the
-> > Xen hypervisor, as I do not believe the primitives needed are currently
-> > available.  Specifically, in addition to the primitives discussed at Xen
-> > Project Summit 2024, the backend also needs to intercept access to, and
-> > replace the contents of, arbitrary frontend-controlled pages.
->=20
-> Hi Demi,
->=20
-> I agree that to achieve the complete SVM feature in virtio-GPU, it is
-> necessary to have the hypervisor deeply involved and add new features.
-> It needs solid design, I saw the detailed reply in a another thread, it
-> is very helpful,looking forward to the response from the Xen/hypervisor
-> experts.
-
-=46rom further discussion with Sima, I suspect that virtio-GPU cannot
-support SVM with reasonable performance.  Native contexts have such good
-performance for graphics workloads because graphics workloads very rarely
-perform blocking waits for host GPU operations to complete, so one can
-make all frequently-used operations asynchronous and therefore hide the
-guest <=3D> host latency.  SVM seems to require many synchronous GPU
-operations, and I believe those will severely harm performance with
-virtio-GPU.
-
-If you need full SVM for your workloads, I recommend using hardware
-SR-IOV.  This should allow the guest to perform GPU virtual memory
-operations without host involvement, which I expect will be much faster
-than paravirtualizing these operations.  Scalable I/O virtualization
-might also work, but it might also require paravirtualizing the
-performance-critical address-space operations unless the hardware has
-stage 2 translation tables.
-
-> So for the current virito-GPU userptr implementation, It can not support =
-the
-> full SVM feature, it just can only let GPU access the user space memory,
-> maybe can be called by userptr feature. I think I will finish this small
-> part firstly and then to try to complete the whole SVM feature.
-
-I think you will still have problems if the host is able to migrate
-pages in any way.  This requires that the host install an MMU notifier
-for the pages it has received from the guest, which in turn implies that
-the host must be able to prevent the guest from accessing the pages.
-If the pages are used in grant table operations, this isn't possible.
-
-If you are willing to have the pages be pinned on the host side things
-are much simpler.  Such pages will always be in system memory, and will
-never be able to migrate to VRAM.  This will result in a performance
-penalty and will likely require explicit prefetching by programs using
-ROCm, but this may be acceptable for your use-cases.  The performance
-penalty is the same as that with XNACK disabled, which is the case for
-all RDNA2+ GPUs, so all code that aims to be portable to recent consumer
-hardware will have to account for it anyway.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---Wy7U6lvUah8lMeg3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmek/ZEACgkQszaHOrMp
-8lNGXw/+JUcT/GOzV8A1jCU1gkU9B3O6PrKXJSBccmciRNQBRhG/MkAFmCJW3Ygs
-aGnDjn1AxkaMpbgBi0Wo8nI0mAcs1WCKk4G98qIno6CoIFLB76mqA6x/6bI/atZO
-TP9lnrd6ERZrnmDobjxujKOP2pgXAKGX07xJWrPbUioi/BgDlSXShU0/Qs9o2jp5
-egERRdAi2CPDEQXPw8KKT6Agonl8IQNm1JHmknUeUFlIEkyDxRtdSISCYycCRir7
-zS44mhQDAfuL4jR0m3nOu9PUFjJdHdzssFiX1qAhdE1lZLu6aJWFpoTACqL1hYJf
-6sMv+VC6H+thwDXSUgvPepNYrwyS4kDKRWxfMV2JW0zoR8XVaXG4Y5gnNpClwz4I
-xIYqxmXUSWS9yPRL/MjtdrmrFqAhUY3YhxZ1PKE2KoEeNDqlkxPqJbAiBy5sNFDF
-OYRCprX1HWWcK76WAn1ZseV5V/pXMM1wYZ5iiIQd0Z2f5T4AE/u7mb5EQT8ZNiNv
-VNONuV9FMjcWqIEOcKsaVjYwHYT7CkWsoOw4R5zncapWzh4pK+1T8TQtQjwZG5os
-YkZxR8//nYf5eRUfWtSq3OsQdC4lxQBCi3xFDCOTqmu8E/FbJ9JY5vzOjr0NDrsa
-qtnwJbThJPqTXFvBQQ+luTLEo8tgLhsChI35gfQGv8fylU0Zc7o=
-=tP4G
------END PGP SIGNATURE-----
-
---Wy7U6lvUah8lMeg3--
+Are you saying that Aruna's patch caused a regression in the rseq code?
+Or that the rseq code has a separate but similar issue to the one that
+Aruna's patch fixed?
