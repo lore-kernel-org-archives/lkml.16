@@ -1,213 +1,339 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0984E223715;
-	Thu,  6 Feb 2025 05:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738819304; cv=fail; b=JgqexlEvR/VqZVwZ1bxSkl5Or+YwDU2W70mq/ZEQG+KUQIt8GmUeKqGbJL22Yzf8tfNB4iE3iaZviPIA+0OJqcTDwaqBbHbBPMUSOaOJ3dpZ8Q6eKw+KziIJrHNV6vVKrH9eMvsom1OQWdcrDlJSKL3Yzxqpc061QfbPDXvFdi8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738819304; c=relaxed/simple;
-	bh=RgG8BaPJLOhjX2Pb6jRzrbmJS35GDH+LhxgOSZHAEyc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y14ib0Za3keiO/VBIVUwyOvjNv5MPQqkzKbzO6eSQQg56DIfeUok7QHo+l6rN/7XZr1SGOdOOCYVU0bbkoI0qZNva5vf5uMR0JHwb5qcN2UshqIPJYGQn0n6F3Ns8bfQmlcftCK9cy2vnXSReOUANdBnu8iFlcnl4FXBQcBgxs4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fJ62Uygy; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BjQxvBQS; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678B18A6AD;
+	Thu,  6 Feb 2025 05:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738819355; cv=none; b=RxD28TNU2LFO2KykIfulUA+s1Lji/cwPp98H28J5fixqBX22VF3ZnQhkbnP2Hp7FbdJQyg1Q3Cyim7roqG194Mz6iQ0/HLqQAeScAeKckqQ4wi2NZv3PijYVqgiCky7zcyWd3QtfzofaX1XScy2NJx6Tb/2WG/HomCuvxhFxV5M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738819355; c=relaxed/simple;
+	bh=fXp5l+d6hVf0eMnKwpmt1GpjidcY0mNOjDjrEJ7fpTE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ePl1UThz07IaoJ672fsWIUZD40tfMxutVQsUfpFamGfKxEI8DPl+WFefIw7OnAgFlepGTue3p1Le/90lN7aRNlemA/W7mTeG1neQ0/TUbI/tqlBdpvdQOvCj+h/47ZPG3UtU18z/3wZOwUSkEhGa7jN4eFxZ6DZqkAIBAD2u/v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9lkfBfu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fJ62Uygy";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BjQxvBQS"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5161frC6003933;
-	Thu, 6 Feb 2025 05:21:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=NuWB3nr9aFUelh6RlTyd/wPTqab6XLOokiJLiXSppNk=; b=
-	fJ62Uygy0uEzs4D8jD/LJO2Qi5gi5Zkv/ephrBCF0IEox2TdcJrahBiaUpcsgg1K
-	FWhCJzzOAImQh5ZIDIjtR6ZJxDtKs/5JMpoPMBFOKea+gdcWvoF6ScFQ2VRASiRU
-	V+ZAlOcqK1pjZ2zWgar9VMbzRHSVqRIPrn9a6UR6sB8AhtlgrpUwliRNGDxxiTev
-	FVfXCNhQcwwLKjQzPoNZfsUAXH715cF0/2Fvephp1RfKeylJ/SirAQyADqxm9czo
-	5JDLxkJ3fr1k8XnmeT+xuhfJDlFWa4FsJepBQmY0459/DhLzLN2T4MeSfoh7ioYS
-	oaEUgWR5KwTtQi2ZVJZ73Q==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44hhju0j00-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Feb 2025 05:21:14 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5163inqw022622;
-	Thu, 6 Feb 2025 05:21:14 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2048.outbound.protection.outlook.com [104.47.58.48])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8ea15t0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Feb 2025 05:21:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dOR7ryOt6NNIPWCO1go6Bidzyz9tK0Xvq382tyGkYDLyp+F2QaaRDCGDlbhv+9CU4sQDUW44ScUO9JK8V2kD3salWpkzEC+WA50Hkye6Jiw6pdUZPwlvo9bmdFMT/xJkPjaYXJ+qK5D8sOxGRERk/gwikrfqhVgnREkyH9QhTQxbTPOb9ELuAiepK5mJPiZRAYlj0Ghmg/6yky5g09xyvX5GMwnGOYGMLG4PyrdSC/7YTMi9sNsVXjHf2kTjVGytloNobxFgy3JhIc+7+7OEy7k+rJEoFVJigl4b5fHR1B3mgX/iv3qIywhXeSPnbsgUsVbgFy92CL0bRMpbUgRMsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NuWB3nr9aFUelh6RlTyd/wPTqab6XLOokiJLiXSppNk=;
- b=J5fk03MIaTH2a80ZMt8Z7+GnbfK/wh0bieHdYlkt7rrXD9bD5OGCh9ej4EykZ5kDNAWEBJVROCGJHPtVbfyE/wkIZgOLjrO400qOre48G9qXA3Sp/PMfgExIrGu9g86QeHSjZ8FfNk6XNzDSANMLYT7+M8if/XpXUb/ogeU/gLKqHke54gRNsogorJytYudVRvmydPu4Bs61gJ5t+MnOlapgLoqTUq0OK5fDBYFVDQEgSDuxhm57cW87nKABc44glif6sXc2J+Z1YDYo/OlaIcW//qbUBMB4QqurTw3x4/EbgPyDi3aiTWyAu0X8BV9dznDCa2SspjlsCiRvmKbMXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NuWB3nr9aFUelh6RlTyd/wPTqab6XLOokiJLiXSppNk=;
- b=BjQxvBQSxi0ZsOZ7jTf06unMPsvYhQJt3g6vo1w5noUfZXe5HP2K4/aC5TV+1Phv//etcwv5vtAYPAQKwqyXzR1GL/XIajky0vb8/TL+Gq4YbWY/5kLy0X0M537UKoooaNh2mJDH7Wt9DwND3tlIP4gL1jnKVqdq8ZgpIhVol6M=
-Received: from DM4PR10MB6886.namprd10.prod.outlook.com (2603:10b6:8:102::10)
- by PH7PR10MB6402.namprd10.prod.outlook.com (2603:10b6:510:1ac::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Thu, 6 Feb
- 2025 05:21:11 +0000
-Received: from DM4PR10MB6886.namprd10.prod.outlook.com
- ([fe80::bdcc:98f5:ebd5:cd38]) by DM4PR10MB6886.namprd10.prod.outlook.com
- ([fe80::bdcc:98f5:ebd5:cd38%5]) with mapi id 15.20.8422.009; Thu, 6 Feb 2025
- 05:21:11 +0000
-Message-ID: <2beb334b-ffb0-4dea-a12a-3843f72e9dba@oracle.com>
-Date: Thu, 6 Feb 2025 10:51:00 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/393] 6.6.76-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
-        rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com,
-        broonie@kernel.org, Vegard Nossum <vegard.nossum@oracle.com>,
-        Darren Kenny <darren.kenny@oracle.com>
-References: <20250205134420.279368572@linuxfoundation.org>
-Content-Language: en-US
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <20250205134420.279368572@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0036.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::22) To DM4PR10MB6886.namprd10.prod.outlook.com
- (2603:10b6:8:102::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9lkfBfu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4D70C4CEDD;
+	Thu,  6 Feb 2025 05:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738819355;
+	bh=fXp5l+d6hVf0eMnKwpmt1GpjidcY0mNOjDjrEJ7fpTE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P9lkfBfu4+5CfywJRfN/7pTo6f9iV51Yk5WNCcAunUDxT1g9HUadD6kF1xU6zPOGr
+	 3AFjbOFn1/LVQ4KmCAMLyCSofIvHbwWaXRmjkYdN/dAojeI2MDef7JXKJ+zrta8+k6
+	 3BZjQ761SyJvywNLToOMwK1SVqgtDtLhWcM7jQMZD9UcWkf8+sdLyxJ0XfRUd37q+W
+	 4LrjXYyM3XloSDfX71UM8GhbVIQl000umMwiZvr5feffLASFieYOrh2XuSLrUiHvL9
+	 2fCsmoz3gjU8xRUeYQKqDogLbWTK52eWT3mbRkjWYbaV/dDOWz6+uAUZojOt1wDVm5
+	 QCMwKB7PU863A==
+Date: Thu, 6 Feb 2025 14:22:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH 4/8] tracing: Have persistent trace instances save KASLR
+ offset
+Message-Id: <20250206142232.5a10545649210f3b3ba172c2@kernel.org>
+In-Reply-To: <20250205225103.596907199@goodmis.org>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225103.596907199@goodmis.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB6886:EE_|PH7PR10MB6402:EE_
-X-MS-Office365-Filtering-Correlation-Id: 83494f81-61d5-476a-87e4-08dd466e116b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RFFjQ1BIRjJ5VUV4VEpJdDhwTnEzcWtEM0NvMEE1ZTdDYVdhdnA0akRpVm1u?=
- =?utf-8?B?ZFhNSXdPOHNQckdNWTg4ZU00UGVKV0ltcUNBSGJiMXo3VStWZXFMemJmZS90?=
- =?utf-8?B?Um00SWVvelUyQlFhZnhlNE9xT0Znc2tkQk9JbnVHUG05ZXVTV0Y3SWhrczVC?=
- =?utf-8?B?V0RGcTJZVjhqL0FkZmkydTJBSlFrUzRMTkY3OWQxb3BZWWhYNGFyeUFCUUR6?=
- =?utf-8?B?NFhCZytEdnRzOUQ2MGJkZmhDQTZUdDVoa2p0alU3VFhORlgrRVFmemNvYVRi?=
- =?utf-8?B?aytEZzBwanMwZTd2bDZOdTVtVnd2OWtpTVZRbG9tSitMNUVSRXU3cFNFVHkw?=
- =?utf-8?B?V1hOeVUrQlJwQlN1Y0ZrakFjUU1YTDFjM1RSMlBOL2o5OGhEMTJZSlV2djhZ?=
- =?utf-8?B?N21DTkN0WURFS0dwQ2s0bHd2a3MvTUkrblNDcVRiMU5KdEJ4ZUZyNW0wcjNl?=
- =?utf-8?B?YlhLcm5JZkxSWWx1cS84VFE4WnBnVmgxZWNzM0pjQXF0d3F5RWZiTTNXY1lP?=
- =?utf-8?B?Zm82aEtEUWYweFJIL2JSK0RYMDN0QTRVWkwvUE9NYSsyRlhCRUdRejRUL3R0?=
- =?utf-8?B?Z2JtdlBwR0psdTFEb2JtakpQOCtoVkV1SE8wMFJ4cmZpam1yVkUyNG9TYXpp?=
- =?utf-8?B?eisxVkVUd2JGYkFWbk1sQlB4azdBY3VZRXJlVUJFTUJRUUJzREZKR1FHT3R0?=
- =?utf-8?B?dmtFcmxleW4wRzJ5UjJaOG52MVZKVE5YVy9uZUxRbmJrRmFLUGFGbnYxQVpp?=
- =?utf-8?B?alBjdEdCU05NNDNJazZhc01vNGlRKzZwakV6RkVtMThsQVJkM2lkTVE2blRF?=
- =?utf-8?B?SFhXVnpDVTU0c1JyYnlYWExOWXNxWkVyRlJnKys3WitMeFBUaTY2MFl0VmVE?=
- =?utf-8?B?dE9qclJBNFZ4R0x0SG0rb3ZUNDZkT3JkN0V2VTVtSFpvSnIyQmRwRkVZODVp?=
- =?utf-8?B?R0FkaEZVaGQ5YVpvYmRSb0FyUjlpQldacG5vdUJUb0ZVbUg2UU5MblB1M2w1?=
- =?utf-8?B?NEhOaWhLMDROWmJmSVpUd1BFV3k5ZnIxaWdnUEVlci9lSDFLTHU1NkFnWVdu?=
- =?utf-8?B?N0J0SXBGV2Z6WmY5L25QckJ2cWZJKzJrUzhJdHE4LzdMWXhtTlFsUU51azhY?=
- =?utf-8?B?bUVMVFBnNmR4VHJITzZGazMrbXN3OGtSN2doSVRhUzhuTzY0MlVYd0laZnU5?=
- =?utf-8?B?cVpOMkhRcVlZK1d1SkFCU21VeDRnS25IWExmUjEwVUJ1NW1kRnl1TGprK1E5?=
- =?utf-8?B?T3B0M0pZTk1GRktxTVlUTUZXQmZIS0lSRkQxZjRxczBkTG9Ld2FyOXRaV1pQ?=
- =?utf-8?B?cDhHdVgxWW1DVGpJUXlWcWkxM21KNG43Q0lVQ2dtY2haS25HYkFTMDl5VHZT?=
- =?utf-8?B?RjNRY001SU96MVBobXVDeDliNGJMdysxOHdTaXBqV0NhVXgrY0t3YmNaeGg3?=
- =?utf-8?B?anc3WVNwVFBxc1RaWkZ4cnpkekxqMjFLeVRhUlVXSmlmamFoTGdpclVUTHZr?=
- =?utf-8?B?ajI4SjF4WlZ5RjN0T1dwTE9POXlFTVdMK0hnQjRicVBuSVRHeThQalhzRmlQ?=
- =?utf-8?B?aUZBOGNDZVRtV2w1Sms4bExpdkN0TW5aSFR3YThTc21LaThIdFRyMmpjWUl6?=
- =?utf-8?B?enFCbHhoM3RTajFveDVBNFZPTmljdkxMWkgySFEveW1UWWY3OUFnUEV0VEZR?=
- =?utf-8?B?bmo0c2xTdDk2SnBKSld0MS9mT2tJaldVQ29KQVFReitGUC9IL0MxRDMyci9R?=
- =?utf-8?B?SXRvU1JpejhuMzZmbkhVWjA4MFNUZ3R5L1p2VUNMNG1SaDF2NTZpdDFKdkw1?=
- =?utf-8?B?eksvTlo5ZitoVmxLTWsyY05hZGZvemU1WklDdVIrNThhRDVrZjlUK2hISURv?=
- =?utf-8?Q?KfOE2ApcNwabP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB6886.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UXdtczlMcUx5Y24yOTBadW54RTd5d2JOWFk3YVpBTml1R09CaEc5aE5qQkJu?=
- =?utf-8?B?cjJQbFBXN1FlNmZNdUlCNCs1WXIrZU9sdDBsSlQrdmV4V3hRY1VVMFU4U1FU?=
- =?utf-8?B?cEwyYkVERk5GWkQyTVRtakl6Y0IwSUZCa3ZTdE45YWxBRjNzRFBmSlp5bEt6?=
- =?utf-8?B?eW5qenhvSG43UTJ2Y1hiTTVza1Z1Z1dYNGpwZFJISXluOXRLMFhpTjFjbE5W?=
- =?utf-8?B?RWlpNDJMelBOdzRMSE9aVXBBdXFzT2NzajFyc1NCTWJ3MFVweG44Ny9NZGU5?=
- =?utf-8?B?UGVQUWpiSXdHNUJIaWhWTjhEL0dFU1hFWFRYeFByaU5PdlBydHhpRksrTUFH?=
- =?utf-8?B?cHpBQ2xnbXg5OVEvTTNSZkZxdEVOdnQ2RnFoZkdzQkxja3RFVWRoYjVKWEJh?=
- =?utf-8?B?bVZPeFQ5Mk1yaWs3ZkQ2aDZuVTlBYnorNnQ3eW5GSFU1WU9ZOUJIdVQzbE0w?=
- =?utf-8?B?RzI5OWNGUlpMczJ3TmJFZ2JlUU5zOEdwKy9tdDA0WHJhelRxM3dGNjY5K2xS?=
- =?utf-8?B?N0w5QkZrYkRJRnJGVTMxRHFGRXZEbTlValphQzFhMlJaaFdLUC9kM0NoZGp6?=
- =?utf-8?B?bEhyMEZxY2tGOWY2UTVOMzZCU0Y5dHpzaTExT3pmdWUrQ2w4MWJuRkY0bmNJ?=
- =?utf-8?B?UTBBWDZnZFVoVUxGaFNCc0xPb0VFTjJzemxZK3dubm16S2pVMmtWNks1ekhF?=
- =?utf-8?B?dXBhdXIyWmNueExRS3FUQkptK1RxOGFhaUtTQ3VkVGdGd0NiMnBKWW0reGhu?=
- =?utf-8?B?bUNtT2ZaUjUyYzZSNFRzcVJlMWxvQ08rMzFrS0l1SXY4eW82a1pnWUx0Wi9H?=
- =?utf-8?B?eTBmWGtUdk1XeERBQ3FiUHZ2TzkrUDYyVzBTT3RraXZJQitJVHZGcTVlQWZF?=
- =?utf-8?B?TWNjemdWOU1HSDl3blVyenBnVmppMW9YeU9NdDMzcEFKUHN4SUxBTkJ3OGlI?=
- =?utf-8?B?TWJVeEZKVXBpdXRrVGw1MW5NeURlemZQQWxXRkhiOHpsdlkwTHkrZDY5WDhI?=
- =?utf-8?B?bFFsamlmQ2tEQktSdHpWTytYUlpYZlpYVjN5dW9hRlR3U0dpcUUyc0FIRDRm?=
- =?utf-8?B?U1FKdzlmcS9Ba0U1UldwTlArclNicXhWQ041aERMSisyNmMyL01mZ3lnQUE1?=
- =?utf-8?B?TG9GdkF0d3ZoU1MyaGVzd005YXlhSFBYMWxtaHNOTDFkOWo5Yzk2ODV0a1Q0?=
- =?utf-8?B?eDdIZGN4akVXZXNJSHV3QkZkZ1FkOGtkV3BHOERheFRFWWJKQ2tIa0lnR2oy?=
- =?utf-8?B?NzIzUHlqNUtmck12djBpWnFPMk9sTHZQa3VnR1h5cUdwekJ5RkdUcDdWdktG?=
- =?utf-8?B?cForak1vRWRIR1BsZzVxODJDQUl6T1E4RkdhNldQeUp4Vld3MGw3S0UwSmRv?=
- =?utf-8?B?NkJyWkkwM3JUZi9oMmJxdTZKTVJpWE81WFdFbWVZaW1oVTc5VHhhbnI5Q0xu?=
- =?utf-8?B?Kzc2d3BkUVk4S21ZYkhSeHBqaFhQNVdKMmZTRGVicWV5THdYZXZOUVI2Z2Fs?=
- =?utf-8?B?OUxiZHcxSzFRZ2IvVTVqUXp2aVRIcTExR3VrWXJHWE94NG9ZMGhrYk1GMlRx?=
- =?utf-8?B?cnRYdC9ESVJNbW5XQy9CTmI4NDIzM0pFK2dZZTlUVklKbm4wcUVhSkgzaTZN?=
- =?utf-8?B?MW84NkxoZUlrRVFiLzB4dHBEUnMvcTNWM1FPdk4vbVBvK1U0RWcvbktlaVFv?=
- =?utf-8?B?WkZrTVc5ZllrKzgrb2JaYTFuQytpVlRlZXo1WUR4ZGE0OFdZUUc1K2YrSFha?=
- =?utf-8?B?WXd4YkRpcWx0Ti9WMGhEKzIwL3dZZENVYXJydS9iVnl6MVBSS3I2VmtQUEN2?=
- =?utf-8?B?Z1dHb3dUcFVSZ211eVR6QTc0bmxvTFFPZjdZUDU0WHFXYk9oN0Iyd2RJS3gw?=
- =?utf-8?B?MUsvMmZ4T2NyTTRxbDIrTG5LYWF4WVB6MGVEemdEU29Nait6YVNQcW9Dbm5M?=
- =?utf-8?B?SEFpTFJucDZxQ09xZDJVV2I1N0daZVRIMVAyVDVWMDVRd3Y2R3ExVDFPUkcy?=
- =?utf-8?B?V2o4V25CNGFEWXZ6ckpnNDlydWtnTWdaRTFnR2FpT0YvT3hteTdyMnUvWFIw?=
- =?utf-8?B?WFM4M0NKSHFwc05XMEtGRDh2ZnFPc1BEVmxCUHBkd0VXdnd3Z0ZLUXRla1p4?=
- =?utf-8?B?d1NIWjE4SHBzc010LzRKMkQxb3Bxc0Z0aWhTMjMxWU5aVGZxRlRkaGRML0RX?=
- =?utf-8?Q?F522/v/9mJR5lfb6g3tesdg=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rgEG3BOAVf0R/ETY/vBZZE5x6JY3+ewAh54+aS9mpu2RSYjkAswvdrUsAynQOQsg5ycJ1cI0GLqd5CJHEjSFopkL9uicn5Yiz5Cup/voqk36XkAQq0OrG2oAcLrhdiHU3yrEVWO/hBz3lv3Qv0ReHSGMVnDc7A2ll+rZlMWo1jurwkCnPMjMS5U0W98DGBB8nAKLflokX9LrGg3B1LwIS9z/fKd0Y8u7lbLgbrabzlzPxOm6vZd/3+AFpAeTippJGY/ujO2jQHwqjltAZMnFeat1IrD58VIyCi6PabcxiVBzU/bgd/5jIMdYoAB0IwcywpX3KvMWjefuFY2/vm3AOkz/08+W1d2a5XKdwLQjXUz3FqbYHYJn2ARuhiiSKJHulHmPAOBK7lbfiW1O4V6/+anjj6RwA83HbIGYCXxEob4HV5baqu0uNo4GKgP2bn0X4ckv1bZXy3PS9yGpdbR1FOKCxmmUWS1XNA5wDBkvb7ej/R/26joBZVFbm3KN7L/+F0Xhu/LvSjCuMtQPxzpJor57JSPkh9FTczAnBuk9pRDquDFY0ckWQnRmRWvVKp2FWxM9+aLfS5sdSMRWxUgjLrfNe5xVqtSOENZV6V/Xd10=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83494f81-61d5-476a-87e4-08dd466e116b
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB6886.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 05:21:11.2232
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hJ6sFQBN7X5xBXyZ0Ak6Rx0tiE14ZIDcs2o7RLZ4opdtYJfzagd2tei0huytBJOcr0K7gTkwfVju7x5lMNZ55qE9A9oIvs10yoy4xhidocjEGIW91fXwr7h6Kyrf1amJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6402
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_01,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2502060042
-X-Proofpoint-GUID: 85VzhaU8ZrbyUXzvJhFxBG_YIz36zJ_x
-X-Proofpoint-ORIG-GUID: 85VzhaU8ZrbyUXzvJhFxBG_YIz36zJ_x
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Greg,
+On Wed, 05 Feb 2025 17:50:35 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 05/02/25 19:08, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.76 release.
-> There are 393 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> There's no reason to save the KASLR offset for the ring buffer itself.
+> That is used by the tracer. Now that the tracer has a way to save data in
+> the persistent memory of the ring buffer, have the tracing infrastructure
+> take care of the saving of the KASLR offset.
+> 
 
-No problems seen on x86_64 and aarch64 with our testing.
+Looks good to me. But note that the scratchpad size may not enough for
+module table later, because 1 module requires at least the name[]
+(64byte - sizeof(ulong)) and the base address (ulong). This means
+1 entry consumes 64byte. Thus there can be only 63 entries + meta
+data in 4K page. My ubuntu loads 189(!) modules;
 
-Tested-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+$ lsmod | wc -l
+190
 
-Thanks,
-Harshit
+so we want 255 entries, which requires 16KB.
+
+Thank you,
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  include/linux/ring_buffer.h |  1 -
+>  kernel/trace/ring_buffer.c  | 47 -------------------------------------
+>  kernel/trace/trace.c        | 38 ++++++++++++++++++++++++++----
+>  kernel/trace/trace.h        |  6 +++--
+>  4 files changed, 38 insertions(+), 54 deletions(-)
+> 
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index b95f940fd07a..d6d9c94e8d8a 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+> @@ -94,7 +94,6 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+>  					       unsigned long range_size,
+>  					       struct lock_class_key *key);
+>  
+> -bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr);
+>  void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
+>  
+>  /*
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 5a81ff785665..a42406287281 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -55,7 +55,6 @@ struct ring_buffer_meta {
+>  };
+>  
+>  struct ring_buffer_cpu_meta {
+> -	unsigned long	kaslr_addr;
+>  	unsigned long	first_buffer;
+>  	unsigned long	head_buffer;
+>  	unsigned long	commit_buffer;
+> @@ -557,8 +556,6 @@ struct trace_buffer {
+>  
+>  	struct ring_buffer_meta		*meta;
+>  
+> -	unsigned long			kaslr_addr;
+> -
+>  	unsigned int			subbuf_size;
+>  	unsigned int			subbuf_order;
+>  	unsigned int			max_data_size;
+> @@ -1931,15 +1928,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+>  	}
+>  }
+>  
+> -static void rb_meta_init_text_addr(struct ring_buffer_cpu_meta *meta)
+> -{
+> -#ifdef CONFIG_RANDOMIZE_BASE
+> -	meta->kaslr_addr = kaslr_offset();
+> -#else
+> -	meta->kaslr_addr = 0;
+> -#endif
+> -}
+> -
+>  static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+>  {
+>  	struct ring_buffer_cpu_meta *meta;
+> @@ -1967,7 +1955,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+>  			meta->first_buffer += delta;
+>  			meta->head_buffer += delta;
+>  			meta->commit_buffer += delta;
+> -			buffer->kaslr_addr = meta->kaslr_addr;
+>  			continue;
+>  		}
+>  
+> @@ -1984,7 +1971,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+>  		subbuf = rb_subbufs_from_meta(meta);
+>  
+>  		meta->first_buffer = (unsigned long)subbuf;
+> -		rb_meta_init_text_addr(meta);
+>  
+>  		/*
+>  		 * The buffers[] array holds the order of the sub-buffers
+> @@ -2514,27 +2500,6 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+>  	return alloc_buffer(size, flags, order, start, start + range_size, key);
+>  }
+>  
+> -/**
+> - * ring_buffer_last_boot_delta - return the delta offset from last boot
+> - * @buffer: The buffer to return the delta from
+> - * @text: Return text delta
+> - * @data: Return data delta
+> - *
+> - * Returns: The true if the delta is non zero
+> - */
+> -bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr)
+> -{
+> -	if (!buffer)
+> -		return false;
+> -
+> -	if (!buffer->kaslr_addr)
+> -		return false;
+> -
+> -	*kaslr_addr = buffer->kaslr_addr;
+> -
+> -	return true;
+> -}
+> -
+>  void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size)
+>  {
+>  	if (!buffer || !buffer->meta)
+> @@ -6098,7 +6063,6 @@ static void reset_disabled_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+>  void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
+>  {
+>  	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
+> -	struct ring_buffer_cpu_meta *meta;
+>  
+>  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  		return;
+> @@ -6117,11 +6081,6 @@ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
+>  	atomic_dec(&cpu_buffer->record_disabled);
+>  	atomic_dec(&cpu_buffer->resize_disabled);
+>  
+> -	/* Make sure persistent meta now uses this buffer's addresses */
+> -	meta = rb_range_meta(buffer, 0, cpu_buffer->cpu);
+> -	if (meta)
+> -		rb_meta_init_text_addr(meta);
+> -
+>  	mutex_unlock(&buffer->mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
+> @@ -6136,7 +6095,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
+>  void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
+>  {
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+> -	struct ring_buffer_cpu_meta *meta;
+>  	int cpu;
+>  
+>  	/* prevent another thread from changing buffer sizes */
+> @@ -6164,11 +6122,6 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
+>  
+>  		reset_disabled_cpu_buffer(cpu_buffer);
+>  
+> -		/* Make sure persistent meta now uses this buffer's addresses */
+> -		meta = rb_range_meta(buffer, 0, cpu_buffer->cpu);
+> -		if (meta)
+> -			rb_meta_init_text_addr(meta);
+> -
+>  		atomic_dec(&cpu_buffer->record_disabled);
+>  		atomic_sub(RESET_BIT, &cpu_buffer->resize_disabled);
+>  	}
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index a9e8eaf1d47e..cb9f8e6878a0 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5994,8 +5994,14 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+>  	return ret;
+>  }
+>  
+> +struct trace_scratch {
+> +	unsigned long		kaslr_addr;
+> +};
+> +
+>  static void update_last_data(struct trace_array *tr)
+>  {
+> +	struct trace_scratch *tscratch;
+> +
+>  	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+>  		return;
+>  
+> @@ -6010,6 +6016,17 @@ static void update_last_data(struct trace_array *tr)
+>  	/* Using current data now */
+>  	tr->text_delta = 0;
+>  
+> +	if (!tr->scratch)
+> +		return;
+> +
+> +	tscratch = tr->scratch;
+> +
+> +	/* Set the persistent ring buffer meta data to this address */
+> +#ifdef CONFIG_RANDOMIZE_BASE
+> +	tscratch->kaslr_addr = kaslr_offset();
+> +#else
+> +	tscratch->kaslr_addr = 0;
+> +#endif
+>  	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
+>  }
+>  
+> @@ -6823,6 +6840,7 @@ static ssize_t
+>  tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+>  {
+>  	struct trace_array *tr = filp->private_data;
+> +	struct trace_scratch *tscratch = tr->scratch;
+>  	struct seq_buf seq;
+>  	char buf[64];
+>  
+> @@ -6835,10 +6853,10 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
+>  	 * Otherwise it shows the KASLR address from the previous boot which
+>  	 * should not be the same as the current boot.
+>  	 */
+> -	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+> +	if (!tscratch || !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+>  		seq_buf_puts(&seq, "Offset: current\n");
+>  	else
+> -		seq_buf_printf(&seq, "Offset: %lx\n", tr->kaslr_addr);
+> +		seq_buf_printf(&seq, "Offset: %lx\n", tscratch->kaslr_addr);
+>  
+>  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
+>  }
+> @@ -9212,6 +9230,8 @@ static int
+>  allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
+>  {
+>  	enum ring_buffer_flags rb_flags;
+> +	unsigned int scratch_size;
+> +	void *scratch;
+>  
+>  	rb_flags = tr->trace_flags & TRACE_ITER_OVERWRITE ? RB_FL_OVERWRITE : 0;
+>  
+> @@ -9222,10 +9242,20 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+>  						      tr->range_addr_start,
+>  						      tr->range_addr_size);
+>  
+> +		scratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
+> +		if (scratch) {
+> +			tr->scratch = scratch;
+> +			tr->scratch_size = scratch_size;
+> +
+>  #ifdef CONFIG_RANDOMIZE_BASE
+> -		if (ring_buffer_last_boot_delta(buf->buffer, &tr->kaslr_addr))
+> -			tr->text_delta = kaslr_offset() - tr->kaslr_addr;
+> +			{
+> +				struct trace_scratch *tscratch = tr->scratch;
+> +
+> +				if (tscratch->kaslr_addr)
+> +					tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
+> +			}
+>  #endif
+> +		}
+>  		/*
+>  		 * This is basically the same as a mapped buffer,
+>  		 * with the same restrictions.
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index abe8169c3e87..3a020fb82a34 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -348,8 +348,11 @@ struct trace_array {
+>  	unsigned int		mapped;
+>  	unsigned long		range_addr_start;
+>  	unsigned long		range_addr_size;
+> -	unsigned long		kaslr_addr;
+>  	long			text_delta;
+> +	void			*scratch; /* pointer in persistent memory */
+> +	int			scratch_size;
+> +
+> +	int			buffer_disabled;
+>  
+>  	struct trace_pid_list	__rcu *filtered_pids;
+>  	struct trace_pid_list	__rcu *filtered_no_pids;
+> @@ -367,7 +370,6 @@ struct trace_array {
+>  	 * CONFIG_TRACER_MAX_TRACE.
+>  	 */
+>  	arch_spinlock_t		max_lock;
+> -	int			buffer_disabled;
+>  #ifdef CONFIG_FTRACE_SYSCALLS
+>  	int			sys_refcount_enter;
+>  	int			sys_refcount_exit;
+> -- 
+> 2.45.2
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
