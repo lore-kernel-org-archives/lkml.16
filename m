@@ -1,107 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E0C3D561;
-	Thu,  6 Feb 2025 16:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D17E23537F;
+	Thu,  6 Feb 2025 16:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738860741; cv=none; b=TYdS/CW87Va0ihBaqbloONU3Nm9Kgvj8vo8NyPaHHy0eg/ymXWvsQGhZOxwGhOzv4GXANhGEA7jfezJHj3s5k3gHmVTJ6UvYHx/QEfiQFWb3DcOm+pHNk7Nog72cKpHzB8DjwtLCgKDOimKTtDLhwPRm/JyiSSO6rMAI+Dh3bHY=
+	t=1738860791; cv=none; b=PALGFYK/P/8CmMdnvhk70YwUSek9GP108ERXszfwjChPZbEv23E1CgISaImz3sHg0y9mPUN5GQVyMfsnnBNqBL8B3L7UFf8aNq6bFtbp97j637T4fSV0kt3ktn2tH4dL2wFqABTJLutBZfETBqUz6kkx8IYMvROK8tCEsTMlEDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738860741; c=relaxed/simple;
-	bh=rK2Twi7TCqnlhJuqwpHhdHS9abCCtkoTAleQPDOS90s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LzfKMHOEGKTwaaic+q1ZfyaZAH/opvSo7DRhL4QmOpF9puWQ/xZmzVroF/iEwWjXaqHAxq04Jb5ygYEgMIS1jhHHOn74jZ5rCQgB9c5cfmYlBsx+eBRyjemm5bI2XTi+T4xB1AKvwmcJtZRMmrOzbVXEjHyklSPHVUnGHuLmG4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WCIdJI/x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wqoQG0wD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738860791; c=relaxed/simple;
+	bh=sJiJEkNYXh2cchmUanQA7WTNGhbQyJm9RSJEg++jKqk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=H9SOCedMWflLFvVftUSBXJLwQZmQw7h0j7MW9188j2rpm1JRl0eQ+iol8P2ac0VqjH4pdaH31vglEKk74ISYbsrqCCwtUKyeJw+LlSTzBkW4k1QSJN6k1clMPhOICSMp/6IGJy8DRAZSKik8nprEJfjDZ1l3M+tmPx+YWffAev0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enUXRhMH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WCIdJI/x";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wqoQG0wD"
-Date: Thu, 6 Feb 2025 17:52:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738860738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=To/HERHXKuqedSH3EfTWa/Hor3NDrEMP+jRzMGiNHIU=;
-	b=WCIdJI/x9ItXroIFWG94Uz95J5phpoc9Jhx+A/focIsRKq2INmE9RTUtKba6hiu6borvog
-	d9K9JWlX3NQjgXfnNn/Spo1AzEJeV5kzM1YbZFp7YxZEDk9hLInC80FNFr2c8keo7eIctp
-	TDYOscznOXHMA7qx/JrXMiNV9opYvBFBPUtel1P7ijJt82+XOCluCjIAStM47IrlgTcad1
-	8jV9gmhSkrngUq2rgoOvjkHE3oMRI3vdcqQ+idy0306Gj+JYSsafdajmlNyrJA9n8rXukC
-	d7QcMuOU2rKZp5ELBYeiuIDS/1XrLYN09GAsDCiYIIPF1kLgAAhpyYLkhCqIVg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738860738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=To/HERHXKuqedSH3EfTWa/Hor3NDrEMP+jRzMGiNHIU=;
-	b=wqoQG0wDr5ywAGniJMbij2M/OtQL4PnU9/E3EkVqjmysbKh0DNTUFiMC+DqcCwUc4Z/w6A
-	YrrrviPLxrz7KECQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Justin Tee <justin.tee@broadcom.com>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
-Subject: Re: [PATCH v1 1/1] scsi: lpfc: Switch to use %ptTs
-Message-ID: <20250206174537-a38cd6ae-e0fe-4344-8655-2593e20fd394@linutronix.de>
-References: <20250206155822.1126056-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enUXRhMH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F11AC4CEDD;
+	Thu,  6 Feb 2025 16:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738860790;
+	bh=sJiJEkNYXh2cchmUanQA7WTNGhbQyJm9RSJEg++jKqk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=enUXRhMHDIRaCHdmKUCfCuhJBKDTzQh48rJsiPIUY0o9aoEKprc4G08aAlbsvvPrd
+	 WI2cOqIy1hmoGPbSD8x3d+emtdOPOlMAHAJyUpaaFycy7Ae/o4UIgnQcnMd2cyUVpa
+	 JbtT1/EY/DwewbexGzAGmPmUxbMsm0yXPLZVdgbbhUTsiT6wJnPt/Evq6H8y5H5rNU
+	 jPlL0U/OLAlsBUk5qcC/6pvRt3w729KMb6T+ly+nNCms0TpH0GeJk+L2Py2q+XzCPv
+	 csTNqhNRi0KJ6yoWl0UPwvuvdIjy2aGNUs1yZYUQsFrv3vtrzzq2ipCW0EBhkStN26
+	 rPnF4eBzZZ7qg==
+Date: Fri, 7 Feb 2025 01:53:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 6/8] tracing: Have persistent trace instances save
+ module addresses
+Message-Id: <20250207015307.ce9273f4cd5eee9335c335d3@kernel.org>
+In-Reply-To: <20250206102949.65493416@gandalf.local.home>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225103.930895467@goodmis.org>
+	<20250206172642.391c16d75dbce00518ef9688@kernel.org>
+	<20250206102949.65493416@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206155822.1126056-1-andriy.shevchenko@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 05:58:22PM +0200, Andy Shevchenko wrote:
-> Use %ptTs instead of open-coded variant to print contents of time64_t type
-> in human readable form.
+On Thu, 6 Feb 2025 10:29:49 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Thu, 6 Feb 2025 17:26:42 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/scsi/lpfc/lpfc_init.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
+> > This maybe too frequently scan the module because the update_last_data() is
+> > called when;
+> > - change tracer (this maybe OK)
+> > - update "set_event"
+> > - write 1 to "enable" under events
+> > - change pid filter
+> > - etc.
+> > 
+> > Once it is scanned, it should not scan again, but update by module
+> > callback, because usually events are enabled individually (thus
+> > write 1 to "event" can happen multiple time online).
+> > 
+> > I think we can move this after TRACE_ARRAY_FL_LAST_BOOT check,
+> > if TRACE_ARRAY_FL_LAST_BOOT flag is set, that flag should be cleared
+> > with updating the tscratch, and the flag is not set, we can skip updating
+> > the scratch.
 > 
-> diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-> index e360fc79b028..240e92143d73 100644
-> --- a/drivers/scsi/lpfc/lpfc_init.c
-> +++ b/drivers/scsi/lpfc/lpfc_init.c
-> @@ -5643,24 +5643,11 @@ void
->  lpfc_cgn_update_tstamp(struct lpfc_hba *phba, struct lpfc_cgn_ts *ts)
->  {
->  	struct timespec64 cur_time;
-> -	struct tm tm_val;
->  
->  	ktime_get_real_ts64(&cur_time);
-> -	time64_to_tm(cur_time.tv_sec, 0, &tm_val);
-> -
-> -	ts->month = tm_val.tm_mon + 1;
-> -	ts->day	= tm_val.tm_mday;
-> -	ts->year = tm_val.tm_year - 100;
-> -	ts->hour = tm_val.tm_hour;
-> -	ts->minute = tm_val.tm_min;
-> -	ts->second = tm_val.tm_sec;
->  
->  	lpfc_printf_log(phba, KERN_INFO, LOG_CGN_MGMT,
-> -			"2646 Updated CMF timestamp : "
-> -			"%u/%u/%u %u:%u:%u\n",
-> -			ts->day, ts->month,
-> -			ts->year, ts->hour,
-> -			ts->minute, ts->second);
-> +			"2646 Updated CMF timestamp : %ptTs\n", cur_time);
+> No, because we could enable it, disable it, and then the user could be
+> adding and removing modules all day long, and we only add and do not remove
+> (I do have a patch that does remove them).
 
-All %p<FOO> arguments need to be addresses.
-Also %ptT wants a time64_t, not a 'struct timespec64'.
-It would work by chance because tv_sec is the first member and time64_t.
+I think TRACE_ARRAY_FL_LAST_BOOT is something like one-way flag, it is set
+if the buffer is persistent, but cleared when it is reused (start writing)
+and never be back. Isn't it?
 
-Correct: "&cur_time.tv_sec".
-
->  }
->  
->  /**
-> -- 
-> 2.43.0.rc1.1336.g36b5255a03ac
 > 
+> But we can do the same check as patch 8 does, and only do this if the
+> tracer wasn't already active.
+
+Yeah, so I think this change needs patch 8 change.
+
+Thank you,
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
