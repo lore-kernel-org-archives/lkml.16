@@ -1,128 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E37199385;
-	Thu,  6 Feb 2025 18:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CA0199254;
+	Thu,  6 Feb 2025 18:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865494; cv=none; b=f6CpW+kRsjh5B/0g31EIbPNmdt7KICwDi129Q9UCYMpuEvAQFZAPMi+P7CvNTpDh7coOqJJGMCkkxl3q+UU31Dfm+jz/e5iEZ6yby+xmYP26S9UBsPlMnN8KpipnGaLw1vYwdvZBfc1Rg+hsSoF6CNuUbINCksGVXzmSMWrQRo4=
+	t=1738865546; cv=none; b=J9Xd4/eZ5dfkUKtOpD8vLnfcmfAOHchq/CTWquF6ZCwksi/sgi4Qi+DAW63Ej/cqq0DMTauzAmeYhRy2Yv9yQglRlCkqqvY0RJ5/qztkejoXxUwFRvENKt3yKabcbP+wwVU84wsrE8K4ojoU8ildhYACpbY/PFMEeUSr0oYICQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865494; c=relaxed/simple;
-	bh=91NW6YxsPuJbVe3TMPcFmsEh91512TgV/JV4nGsNPQE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b/LCcoibXkxk9ozMDeFuAh+kBrTlwJduJ/arQ/p5QrHXDlsZOub3AbGuzf1Hs85QNAazp591qXshXhHzkWB2ngUKj0w7Q7ezsrSpRyGuKxaLjij/zubT1837h+1lketRIXXV6iu7WI1FbMjympOOLF9fFdztW5wHoSntENDx4NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDZXDJqd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738865546; c=relaxed/simple;
+	bh=eotghPegvISqKU8cpLQF6imSf/cSxkWT1ARHgeqmNKY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DxuVkrvLUEcKe8BbKB80lPEgNS5166n9L/z4ItDtIkEI/M8rSckoxRN1BK3pLcU//BJyBMB6Pq3jUAveemaczJj0lDoTa5OO7Bf9Xr7RBTz4bvjpEdzq5CkTIR03efAOaeBzCJRx8VBotznL+/jNPMDl8TN7n5oeXymd7UztQfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtcOFGGj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDZXDJqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC5CC4CEDF;
-	Thu,  6 Feb 2025 18:11:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtcOFGGj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34576C4CEDD;
+	Thu,  6 Feb 2025 18:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738865493;
-	bh=91NW6YxsPuJbVe3TMPcFmsEh91512TgV/JV4nGsNPQE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hDZXDJqdsiDEJH8nm7vStlfBSE3tLcw1hTN9zCDU2AEJ3daWpqpW6QQghoNoTXpOX
-	 yllVXQ8dOIgBNnghe4QIyuxkLOMKJD3m1blrO6J9PustNQfsN8uoTvOpm7AIV8aB/4
-	 le7CAM7Po49M0BhZwdvOKqAI9vm2igVYZIp3GhL2FVwZZofYu0k2dCdYVEXri5zIk8
-	 azL90kGmmxKh+CBiMx8722jlCFT3HAVoL+itkrWIZRyh47Y45enPm0uJ+t1hfUk8VI
-	 XqIHYfG7LzajYpHkjoH3MIdmrza2lIQcitMsuIVRW2Y6fcAugnNdCGNerJFxcWZ5kL
-	 MJ3IY6jO/OWPg==
-From: Kees Cook <kees@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	nathan@kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Philipp Reisner <philipp.reisner@linbit.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH 3/3] string.h: Use ARRAY_SIZE() for memtostr*()/strtomem*()
-Date: Thu,  6 Feb 2025 10:11:30 -0800
-Message-Id: <20250206181133.3450635-3-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250206175216.work.225-kees@kernel.org>
-References: <20250206175216.work.225-kees@kernel.org>
+	s=k20201202; t=1738865546;
+	bh=eotghPegvISqKU8cpLQF6imSf/cSxkWT1ARHgeqmNKY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=UtcOFGGjSjoGnajY6js/+vJAoaoTgmj8jF0RwI60Y7OidY6VfIBJO8azfTH/pcHRg
+	 MSUe7kPkFAJ6wC1zCp82GNwVP+2ow7bF4d1a7+DqeqEJQxW3X7lSxMWsymv7tHHkhs
+	 3SWPOvpS7s4Nr1x2/gaefRNhCX2zVlymoKZ0S84vaBUUJB2svjoVvOBj65y0p9VxoN
+	 MZxqQPNd39Z4OzL562VNQlcobt13mggj7eXPmYai6p3Ydg+KAmVsRin1GSSavhfkX6
+	 nIrzaQiI9YBtxjH83Rd83UhBt4Myxzm8kyfD47tU8zdP2GFRORz3aiO3Jbzdy/5Gqp
+	 XgbuBJM6rWEuQ==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Thu, 06 Feb 2025 13:12:13 -0500
+Subject: [PATCH] nfsd: don't ignore the return code of svc_proc_register()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3185; i=kees@kernel.org; h=from:subject; bh=91NW6YxsPuJbVe3TMPcFmsEh91512TgV/JV4nGsNPQE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlLfge+aZ34u+olw66rrsfm/uO9Xzn7NduNMEE+sT2KW QwnPz6u6ChlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjInScM/6OPFn86LvD4iOxz C9aqBccCbsyo+NJZGfloi7B6hVp1YgojwwWR/JO3r/fkM97+N3PunTWZS8vOml75sfhMYWDA8Vl KR9gA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-nfsd-fixes-v1-1-c6647b92ca6f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHz7pGcC/x2LQQqAIBAAvyJ7TlAri74SHSrX2ouFCxGIf2/pO
+ MxMAcZMyDCpAhkfYrqSgG0U7OeaDtQUhMEZ1xtnvE6Rg470IusRvd1C9L7tBpDhzvgL6eel1g+
+ rPOruXAAAAA==
+X-Change-ID: 20250206-nfsd-fixes-8e61bdf66347
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Josef Bacik <josef@toxicpanda.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3964; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=eotghPegvISqKU8cpLQF6imSf/cSxkWT1ARHgeqmNKY=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnpPuF9CzAxhZftu/vThDq6LtT3x3LX4u5w/lZh
+ 1yeeY4hX8GJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6T7hQAKCRAADmhBGVaC
+ FckqD/9iUzZj0EEPbAtU2++/EFnJDvugzuuPibQMULy4oNYeoPbgeqANCuCQ7o5VKnFLv1LWI7C
+ lt7ylaBoz9pyGJHTFdnWeRwD6fOQATR1hT/MBeD6jNHTgV7us0bJgIOtmUxXyMmArJqOrs1ZzPw
+ +9IWtZ+n1k3nY4d82hi9bzCj9/6O/Kpxe6g2LvKz4bQ2N90mRTPtRg02ommxpLq7ICddXwYabV6
+ nFUD7ec1vHh7kQ3c1pCrKhlsGyjL9DyI3MDsgrMUA/IepoTmw0zZntkaRY3+cR51Sb7aiEAVluD
+ 5tsucwdCW+sRdb4XhTK0o4TqTJMEgro1Kj0PcQ2X0z6cL4tDQ2acq/xcqdoU6VxE+P4xQq7zdyD
+ kv41vqFsBkdHh017OSKjt+tqQQSb6VnKbgs2/0kF4TAATqFY/xTwpD37DYvCCiwsy8/RXG8QcDV
+ DAI7z1KeEzEJVH/j+6JHsuTz2WlnlVz5j67H8E78jxO3XHnyYi5BxZJTGx8GRLblnOTwfdHmV5r
+ MQ6LrohA7KLJ4w9tg/G1r++IltrdTWFo4H73EQdN8nPF8mPymaSDt+7eWYQKkn9zBwWuuV7YL3V
+ Hcwtj30oNr9qIQl1hszHs49xvpzGn1F1Q846l42pERByy1jVWHOd6Ndg7I1pEqjenAeHshm0UoE
+ SRHHjS92SzgweWw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-The destination argument of memtostr*() and strtomem*() must be a
-fixed-size char array at compile time, so there is no need to use
-__builtin_object_size() (which is useful for when an argument is
-either a pointer or unknown). Instead use ARRAY_SIZE(), which has the
-benefit of working around a bug in Clang (fixed[1] in 15+) that got
-__builtin_object_size() wrong sometimes.
+Currently, nfsd_proc_stat_init() ignores the return value of
+svc_proc_register(). If the procfile creation fails, then the kernel
+will WARN when it tries to remove the entry later.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@intel.com/
-Suggested-by: Kent Overstreet <kent.overstreet@linux.dev>
-Link: https://github.com/llvm/llvm-project/commit/d8e0a6d5e9dd2311641f9a8a5d2bf90829951ddc [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
+Fix nfsd_proc_stat_init() to return the same type of pointer as
+svc_proc_register(), and fix up nfsd_net_init() to check that and fail
+the nfsd_net construction if it occurs.
+
+svc_proc_register() can fail if the dentry can't be allocated, or if an
+identical dentry already exists. The second case is pretty unlikely in
+the nfsd_net construction codepath, so if this happens, return -ENOMEM.
+
+Fixes: 93483ac5fec6 ("nfsd: expose /proc/net/sunrpc/nfsd in net namespaces")
+Reported-by: syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/linux-nfs/67a47501.050a0220.19061f.05f9.GAE@google.com/
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: nathan@kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org
+I looked at the console log from the report, and syzkaller is doing
+fault injection on allocations. You can see the stack where the "nfsd"
+directory under /proc failed to be created due to one. This is a pretty
+unlikely bug under normal circumstances, but it's simple to fix. The
+problem predates the patch in Fixes:, but it's not worth the effort to
+backport this to anything earlier.
 ---
- include/linux/string.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ fs/nfsd/nfsctl.c | 9 ++++++++-
+ fs/nfsd/stats.c  | 4 ++--
+ fs/nfsd/stats.h  | 2 +-
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 493ac4862c77..01ac26be274d 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -411,7 +411,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
-  * must be discoverable by the compiler.
-  */
- #define strtomem_pad(dest, src, pad)	do {				\
--	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _dest_len = __must_be_char_array(dest) +		\
-+				ARRAY_SIZE(dest);			\
- 	const size_t _src_len = __builtin_object_size(src, 1);		\
- 									\
- 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
-@@ -434,7 +435,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
-  * must be discoverable by the compiler.
-  */
- #define strtomem(dest, src)	do {					\
--	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _dest_len = __must_be_char_array(dest) +		\
-+				ARRAY_SIZE(dest);			\
- 	const size_t _src_len = __builtin_object_size(src, 1);		\
- 									\
- 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
-@@ -453,7 +455,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
-  * Note that sizes of @dest and @src must be known at compile-time.
-  */
- #define memtostr(dest, src)	do {					\
--	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _dest_len = __must_be_char_array(dest) +		\
-+				ARRAY_SIZE(dest);			\
- 	const size_t _src_len = __builtin_object_size(src, 1);		\
- 	const size_t _src_chars = strnlen(src, _src_len);		\
- 	const size_t _copy_len = min(_dest_len - 1, _src_chars);	\
-@@ -478,7 +481,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
-  * Note that sizes of @dest and @src must be known at compile-time.
-  */
- #define memtostr_pad(dest, src)		do {				\
--	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _dest_len = __must_be_char_array(dest) +		\
-+				ARRAY_SIZE(dest);			\
- 	const size_t _src_len = __builtin_object_size(src, 1);		\
- 	const size_t _src_chars = strnlen(src, _src_len);		\
- 	const size_t _copy_len = min(_dest_len - 1, _src_chars);	\
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 95ea4393305bd38493b640fbaba2e8f57f5a501d..583eda0df54dca394de4bbe8d148be2892df39cb 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2204,8 +2204,14 @@ static __net_init int nfsd_net_init(struct net *net)
+ 					  NFSD_STATS_COUNTERS_NUM);
+ 	if (retval)
+ 		goto out_repcache_error;
++
+ 	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
+ 	nn->nfsd_svcstats.program = &nfsd_programs[0];
++	if (!nfsd_proc_stat_init(net)) {
++		retval = -ENOMEM;
++		goto out_proc_error;
++	}
++
+ 	for (i = 0; i < sizeof(nn->nfsd_versions); i++)
+ 		nn->nfsd_versions[i] = nfsd_support_version(i);
+ 	for (i = 0; i < sizeof(nn->nfsd4_minorversions); i++)
+@@ -2215,12 +2221,13 @@ static __net_init int nfsd_net_init(struct net *net)
+ 	nfsd4_init_leases_net(nn);
+ 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+ 	seqlock_init(&nn->writeverf_lock);
+-	nfsd_proc_stat_init(net);
+ #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+ 	INIT_LIST_HEAD(&nn->local_clients);
+ #endif
+ 	return 0;
+ 
++out_proc_error:
++	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
+ out_repcache_error:
+ 	nfsd_idmap_shutdown(net);
+ out_idmap_error:
+diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
+index bb22893f1157e4c159e123b6d8e25b8eab52e187..f7eaf95e20fc8758566f469c6c2de79119fea070 100644
+--- a/fs/nfsd/stats.c
++++ b/fs/nfsd/stats.c
+@@ -73,11 +73,11 @@ static int nfsd_show(struct seq_file *seq, void *v)
+ 
+ DEFINE_PROC_SHOW_ATTRIBUTE(nfsd);
+ 
+-void nfsd_proc_stat_init(struct net *net)
++struct proc_dir_entry *nfsd_proc_stat_init(struct net *net)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+-	svc_proc_register(net, &nn->nfsd_svcstats, &nfsd_proc_ops);
++	return svc_proc_register(net, &nn->nfsd_svcstats, &nfsd_proc_ops);
+ }
+ 
+ void nfsd_proc_stat_shutdown(struct net *net)
+diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
+index 04aacb6c36e2576ba231ee481e3a3e9e9f255a61..e4efb0e4e56d467c13eaa5a1dd312c85dadeb4b8 100644
+--- a/fs/nfsd/stats.h
++++ b/fs/nfsd/stats.h
+@@ -10,7 +10,7 @@
+ #include <uapi/linux/nfsd/stats.h>
+ #include <linux/percpu_counter.h>
+ 
+-void nfsd_proc_stat_init(struct net *net);
++struct proc_dir_entry *nfsd_proc_stat_init(struct net *net);
+ void nfsd_proc_stat_shutdown(struct net *net);
+ 
+ static inline void nfsd_stats_rc_hits_inc(struct nfsd_net *nn)
+
+---
+base-commit: ebbdc9429c39336a406b191cfe84bca2c12c2f73
+change-id: 20250206-nfsd-fixes-8e61bdf66347
+
+Best regards,
 -- 
-2.34.1
+Jeff Layton <jlayton@kernel.org>
 
