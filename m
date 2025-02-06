@@ -1,71 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465EF1AC44D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6138E15B10D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832409; cv=none; b=USCsC7tscZ/aLt2Jns0xVhcK0BgzKvOVxhSA3cZQqX506nWwbG6r723olfK5T0oVvYLuTpVH3rX7ldMOwLUoUYA54Xc5ZStCKkIx5D3f/yrVcMdW7wYtgCAHhTVfvihHUO9fQuIhxExOdXh5T1y6Y9E+THnqUWV29WpWkJsYmpk=
+	t=1738832538; cv=none; b=j7C18ufA1SuF+N+XZ9IRug75wNGCpD8l8dhr9rObcdsXK/FBOgSaRCeSjLASYcqxHqTmrIOfkMIsQu3B1+tm0FTh/8D8VBlqgCx4cOOKp5zpn3kbIkUEY152/V+v/TV5G5j0OO7xjwQa4AtOpx0MGMQK60hCwQBRFy7izhkN4uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832409; c=relaxed/simple;
-	bh=LjlOrTtDTIY8tiW1liZrr+DUZVRehS4/ozGmwLU8IRU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BQt6/zDivHm+TRY6haTa09jXLrvD/H5xav+d4Sd2bOEmh6jm1xOi50pNDZKfoKgsCl9uswo9L0zhY87LoKd3F1SmDH0iBpmYSMdTxjFAvTFa4huSxcYzhjnqATu+zXnM8SKpzYoE1XQXluyePftVOyylVkny2kYLNppMKPo8xCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VVf7lAYB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738832538; c=relaxed/simple;
+	bh=UAXyu6RSQTWRgiR0k2OETrZ560YXgX45bKcxld054/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kDKyqiwU5Dy15aKb/nOhjle/DJ4HHd0DhqvuyUiTm8g5RaqQ8N4+giv6NQnKkW8xAkRR4Qbn3mPXnmJsN6WbkwWQ+GVOtkTAQiEjMgfUglB40tNTCW0HcSTX38/WYMe4sfN0Vu710Cx0iPSxfknXZXJQcN/Y/GUfFh6uQJlX7p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jqjdhtwo; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VVf7lAYB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738832406;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+TJwvEW32zKDdEF39SKA5IofKy7f9WUxpmzy6CnaBzQ=;
-	b=VVf7lAYBKdQd8ncyUdz4GIHWZpVjuUIfczP0td5dT87eEkrj1uSdVtz7/jzlRYwIkDGPCK
-	vcay4NMeUPXFqwXzHV6NkMb5J4ZvnKVIETC2JewJsH3tdQT3FCcORl3jvsoPN0UgRhOfPH
-	P9Lzf2389IVvTxOK+jebiFKe6y457Vs=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-PoVqFr70MZ-pQmcvgkEUXA-1; Thu, 06 Feb 2025 04:00:03 -0500
-X-MC-Unique: PoVqFr70MZ-pQmcvgkEUXA-1
-X-Mimecast-MFC-AGG-ID: PoVqFr70MZ-pQmcvgkEUXA
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e43113ba01so16076086d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:00:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqjdhtwo"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43618283dedso6026865e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:02:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738832534; x=1739437334; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZPzy1Z8VbxCdd+MyKxJcvToGmvpLxSPc4zUEljsmwWY=;
+        b=jqjdhtwogrIdhNoEmFMU5484Um0Td/Vy5MBmHm+kN7yfLHJAEJY6z1GR8UPZTE8hvw
+         gKjPl/tuAGdH8l9kdFhgxfpWaoMRYxxH5NRZrJBDgWsKlJfP+W2jx2lYpbpiBdbvLDCY
+         CCmrS05HGXTFoCSUp/BVwL4uGSyR8gbIb9jDP+hrbxHNt+8R5inm8C/7sgBsYZ06A7hO
+         MDvp4y7EyjiT421hrX3SAjMLmWsQ74UDbjzismt/7Wos4iLsZpetE12OS6LNUzkd1iTq
+         5+KbHlkZ3KTyKM+iY1rpDHSPQ7/jTio2wWdY+Fe1osEVLMfnzGZrSyIrDUjSrMkVuFn+
+         ddDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738832403; x=1739437203;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738832534; x=1739437334;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+TJwvEW32zKDdEF39SKA5IofKy7f9WUxpmzy6CnaBzQ=;
-        b=K7ZpTNl9DT/6TkqeHyShzqx38O56xz/ml4PaWFLDBC9C1eECFufu/AK+x66vL/LlD4
-         CKZLZnuxLEjSQnx/Cai0EZKh3++Jsj2nNu6O/wApd4UlIf+uRniY2C39YOzAnMLmLGds
-         ApyHVBY7Z8sBy/UwIMnjGRSk0WhwuYShYCRfDQ6pXN8UucAIrxtUmUynZui6Gj+9QzaG
-         4S9PCpbZhaO8PbiN27N6NSVktfQloakav/9L0FtDSGPy1Lzl45LvI4/wDfWBzKHaollm
-         f/tPwmKk/3bbXIEuNMAtkGu8ohN8PQ1HvCl6MteNox8HCy+DhM3jIx7xKqi3ouwjXuvN
-         O3eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzXeL2c/R1HHcagOT4wSRE87La4ofz0W6UwmOoTtVaYY4Ri746nsiWfOQ+F4uNFWfTGrzwhGMs/3D9gKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIZTql6QbmzgQMh7Ly0e5nb9Yp72l+BxJOEo2u8UXwhQQWf/zs
-	zA1c0q59WHMcTQUND2XaFCNtTDChuiV66bVcyn2QIm7AL4ZBFJu7ZS0BB51y9SOlSr4YpUSH7pr
-	Wx6T+oEA2poOmlM3MlvHHxlHDiUuFJFATtHN2eJK88BmBn8j4CYg7hA2QSb8JYg==
-X-Gm-Gg: ASbGncs599FrM1qI87nYNDLPFX8Ey+rATYXLXL8yRkl0pqcsSBzbaKtNZukxhqd+WBz
-	wNOdZaAYsb9D0t3IgmtBNJp3WAA+5pf/I1rMU7/vrwFU/hUzT6SAi4DgqR2Gqx0lvr/0BfFeNdh
-	RRLenwGJTEBovuLHMRaXkWfF+UPKKETBbLm5b/+ONxjPm+kHUGjHkmYSZA4MVYdlsp1U6n6oXb1
-	bb4pBTloNhKDPQbRF1C7peDyYQZj6l0eyfRYalvVEibBo8XOU+OeMM+PgVZim+M5IABukSCZvcZ
-	dSiyW4tCoKWoOuOm46ZnGHl8drzDFyMlM3wYsOtdWChiCOk=
-X-Received: by 2002:a05:6214:21e3:b0:6d8:9ead:c665 with SMTP id 6a1803df08f44-6e42fbd51edmr96439836d6.27.1738832402950;
-        Thu, 06 Feb 2025 01:00:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHYQC4XdDItMbyh07bmHPxuEE32UvpW7deNCXyhsyd4BSYylNNtA0pzhaD8ir5M3ZLkefmmJA==
-X-Received: by 2002:a05:6214:21e3:b0:6d8:9ead:c665 with SMTP id 6a1803df08f44-6e42fbd51edmr96439516d6.27.1738832402619;
-        Thu, 06 Feb 2025 01:00:02 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43f221fb0sm1171876d6.56.2025.02.06.00.59.59
+        bh=ZPzy1Z8VbxCdd+MyKxJcvToGmvpLxSPc4zUEljsmwWY=;
+        b=EdlsbWy+xd5YqmsZqSuZtFXzkR1HoGWnxs1N6UJjaGpf0akV4DI5EVarrPXHw5FLt5
+         obgT0cwuwmKnMZN9jJckuxmE1FvlGSuC3hit7Tq1tpyTbv7ScvgUAIsa5DzPDQU0I7EK
+         t7Z/qUQphAEBtVGf/eHM+bFnUNHD/hSQcUOo3VfW8sKh5W4p/yurm0mvX1MjrXAQ3LUJ
+         QTiLxmGG/lVEjRaDiOfdK8k19xHYdxRiwdkpegxspeOwDKCY75rEj528lulV2A+I3qAF
+         oc0TC01xIJPt+0ZrqybG3sTGJSKTJuOhasHZkmt56SNqNGIqtvcxh/zSQ3CMBBgTupM8
+         B2sg==
+X-Gm-Message-State: AOJu0Yya4CcC2LIbbfS/hsTwV7HF/NgXucncwIJj2NSeQJs2oaYmEA8p
+	1Rsi0AyXCQa68HLLfhB99Ul18LcLs0v1WBMabZerTC5RjSZzsutf/WBAiBJSTDg=
+X-Gm-Gg: ASbGncsSFrmjYADAETws/F4+6Eo6peieE3cO8AXYxQkKpn743WzXcUqo0v9smn56tea
+	SR0IbzNNXGZr1c/tqomxuIX3IeIPLOqZ2KzzYQ03LpPMq2LhdwUHm6VqpujSU88A3AKtiUHRHO1
+	N3SSIixsE41yqvdNdRixfalIqbQ7QBVQx74ByQSvpdqSubL2HuGJqJXE/IbF46GqBwclrcQ+Nrb
+	FqTIBUsI1VqKc5SClRmu0eLwqVHeeLmGVejBp+qv+2zD3hoEpiiZeyq+TyhFgwBIttpEyUMcP3w
+	5kC01W0h51dAnG8M4deHQFjE
+X-Google-Smtp-Source: AGHT+IHb4g4QZ/ozYPa6vvDOHmEuKFym5OBNx5m4o6Nj8tDENoav/RWlv4fqN6xllweSDexUwkeGoQ==
+X-Received: by 2002:a05:6000:1a8b:b0:386:407c:40b9 with SMTP id ffacd0b85a97d-38db48d247amr4779823f8f.28.1738832534542;
+        Thu, 06 Feb 2025 01:02:14 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf6e4a4bsm786590f8f.92.2025.02.06.01.02.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 01:00:01 -0800 (PST)
-Message-ID: <6bce0f4c-636f-456b-ab21-4a25d3dc8803@redhat.com>
-Date: Thu, 6 Feb 2025 09:59:58 +0100
+        Thu, 06 Feb 2025 01:02:13 -0800 (PST)
+Message-ID: <1fa54c76-d82f-483b-b577-79322908fabc@linaro.org>
+Date: Thu, 6 Feb 2025 09:02:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,152 +65,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virtio: Remove virtio devices on device_shutdown()
+Subject: Re: [PATCH v6 2/3] firmware: add Exynos ACPM protocol driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com,
+ peter.griffin@linaro.org, daniel.lezcano@linaro.org,
+ vincent.guittot@linaro.org, ulf.hansson@linaro.org, arnd@arndb.de
+References: <20250116-gs101-acpm-v6-0-e3a2e1a3007c@linaro.org>
+ <20250116-gs101-acpm-v6-2-e3a2e1a3007c@linaro.org>
+ <f83ccdb0-4d22-441f-9311-d9a2c8cd3493@kernel.org>
 Content-Language: en-US
-From: Eric Auger <eauger@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Zhenzhong Duan <zhenzhong.duan@intel.com>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, Hongyu Ning <hongyu.ning@linux.intel.com>
-References: <20240808075141.3433253-1-kirill.shutemov@linux.intel.com>
- <cc7312ca-2745-48a5-a5ac-9ee1d1c4bee0@redhat.com>
- <20250203094700-mutt-send-email-mst@kernel.org>
- <7cee3c9e-515e-41de-a15c-04c7591e83eb@redhat.com>
-In-Reply-To: <7cee3c9e-515e-41de-a15c-04c7591e83eb@redhat.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <f83ccdb0-4d22-441f-9311-d9a2c8cd3493@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 2/4/25 12:46 PM, Eric Auger wrote:
-> Hi,
-> 
-> On 2/3/25 3:48 PM, Michael S. Tsirkin wrote:
->> On Fri, Jan 31, 2025 at 10:53:15AM +0100, Eric Auger wrote:
->>> Hi Kirill, Michael
->>>
->>> On 8/8/24 9:51 AM, Kirill A. Shutemov wrote:
->>>> Hongyu reported a hang on kexec in a VM. QEMU reported invalid memory
->>>> accesses during the hang.
->>>>
->>>> 	Invalid read at addr 0x102877002, size 2, region '(null)', reason: rejected
->>>> 	Invalid write at addr 0x102877A44, size 2, region '(null)', reason: rejected
->>>> 	...
->>>>
->>>> It was traced down to virtio-console. Kexec works fine if virtio-console
->>>> is not in use.
->>>>
->>>> Looks like virtio-console continues to write to the MMIO even after
->>>> underlying virtio-pci device is removed.
->>>>
->>>> The problem can be mitigated by removing all virtio devices on virtio
->>>> bus shutdown.
->>>>
->>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->>>> Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
->>>
->>> Gentle ping on that patch that seems to have fallen though the cracks.
->>>
->>> I think this fix is really needed. I have another test case with a
->>> rebooting guest exposed with virtio-net (backed by vhost-net) and
->>> viommu. Since there is currently no shutdown for the virtio-net, on
->>> reboot, the IOMMU is disabled through the native_machine_shutdown()/
->>> x86_platform.iommu_shutdown() while the virtio-net is still alive.
->>>
->>> Normally device_shutdown() should call virtio-net shutdown before the
->>> IOMMU tear down and we wouldn't see any spurious transactions after
->>> iommu shutdown.
->>>
->>> With that fix, the above test case is fixed and I do not see spurious
->>> vhost IOTLB miss spurious requests.
->>>
->>> For more details, see qemu thread ([PATCH] hw/virtio/vhost: Disable
->>> IOTLB callbacks when IOMMU gets disabled,
->>> https://lore.kernel.org/all/20250120173339.865681-1-eric.auger@redhat.com/)
->>>
->>>
->>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->>> Tested-by: Eric Auger <eric.auger@redhat.com>
->>>
->>> Thanks
->>>
->>> Eric
->>>
->>>> ---
->>>>  drivers/virtio/virtio.c | 10 ++++++++++
->>>>  1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
->>>> index a9b93e99c23a..6c2f908eb22c 100644
->>>> --- a/drivers/virtio/virtio.c
->>>> +++ b/drivers/virtio/virtio.c
->>>> @@ -356,6 +356,15 @@ static void virtio_dev_remove(struct device *_d)
->>>>  	of_node_put(dev->dev.of_node);
->>>>  }
->>>>  
->>>> +static void virtio_dev_shutdown(struct device *_d)
->>>> +{
->>>> +	struct virtio_device *dev = dev_to_virtio(_d);
->>>> +	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
->>>> +
->>>> +	if (drv && drv->remove)
->>>> +		drv->remove(dev);
->>
->>
->> I am concerned that full remove is a heavyweight operation.
->> Do not want to slow down reboots even more.
->> How about just doing a reset, instead?
-> 
-> I tested with
-> 
-> static void virtio_dev_shutdown(struct device *_d)
-> {
->         struct virtio_device *dev = dev_to_virtio(_d);
-> 
->         virtio_reset_device(dev);
-> }
-> 
-> 
-> and it fixes my issue.
-> 
-> Kirill, would that fix you issue too?
-gentle ping.
-
-this also fixes another issue with qemu vSMMU + virtio-scsi-pci. With
-the above addition I get rid of spurious warning in qemu on guest reboot.
-
-qemu-system-aarch64: virtio: zero sized buffers are not allowed
-qemu-system-aarch64: vhost vring error in virtqueue 0: Invalid argument (22)
-
-Would you mind if I respin?
-
-Thanks
-
-Eric
 
 
-
-
-> 
-> Thanks
-> 
-> Eric
->>
->>>> +}
->>>> +
->>>>  static const struct bus_type virtio_bus = {
->>>>  	.name  = "virtio",
->>>>  	.match = virtio_dev_match,
->>>> @@ -363,6 +372,7 @@ static const struct bus_type virtio_bus = {
->>>>  	.uevent = virtio_uevent,
->>>>  	.probe = virtio_dev_probe,
->>>>  	.remove = virtio_dev_remove,
->>>> +	.shutdown = virtio_dev_shutdown,
->>>>  };
->>>>  
->>>>  int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
->>
+On 2/5/25 4:52 PM, Krzysztof Kozlowski wrote:
+>> +static const struct acpm_handle *acpm_get_by_phandle(struct device *dev)
+> "by_phandle" takes the name of the property with phandle as an argument,
+> because otherwise you do not have here phandle part at all in the
+> interface (see syscon API).
 > 
 
+Indeed.
+
+> Other option would be by actual phandle - see of_find_node_by_phandle().
+> 
+> I would propose in such case only acpm_get() or maybe better of_acpm_get()?
+> 
+>> +{
+
+cut
+
+>> +	np = of_parse_phandle(dev->of_node, "exynos,acpm_ipc", 0);
+> You need bindings for this somewhere and fix the underscore->hyphen...
+> and vendor prefix. It really would not be accepted that way so please
+> post consumer bindings anywhere.
+
+There's no consumer upstreamed yet, I don't know where I shall specify
+it. How about keeping the function name and modify the declaration to
+
++static const struct acpm_handle *acpm_get_by_phandle(struct device_node
+*np,
++						     const char *property)
+
+This shall be in line with the syscon API and doesn't force me to
+introduce bindings for the consumers now.
+
+Thanks!
+ta
