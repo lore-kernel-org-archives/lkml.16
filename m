@@ -1,150 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF2A1A08C5;
-	Thu,  6 Feb 2025 19:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA0B19D062
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869423; cv=none; b=e2Q4i0IcdLnndTm5Th4pIu5+CUA4AqeBZ1q8yh8G/BDPr1PDAkPMJMfhIPgTrUSo158ykKuTphfZPyJu1qwkR6V23SzRRu08zO830UdySta1ngScHwH7M4tp168gALWD66VUDboBD+R9JZxGnTYHqtp+jS0IiQYmKE0zfKHKng4=
+	t=1738869541; cv=none; b=S7Xp2AiCJyCxxm1ErlkpukVy2zE40plKhLYUfnzlgpvny0KUCbXqTkkwEMNaRPrYzG5ebJmTAjo+wVjozX7JxQxDIz9T1zGMPoOyMhLU/O1lecdG8dnYaLldFMb4+eFmDgrlh1jvK+HVRnl8jMS4M2pZaj16K12l3j8przEg47s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869423; c=relaxed/simple;
-	bh=GdQnHoyLthlfKrlMEi6nzpGqWRjNbuL5NJ7PhAbGqhY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n+422ZEtNzX6DU6E76vJ6u271OYGoPeMEFDxNDzmzFLkIZlJP8jw/K7AXm02wU7S+kcw3XCCDQDK7+5nZrMIfZxTp3HKwY5bArszqWsMoSz2Z+ZcXvdhO4bChBgQj8uo+QYINq5wFJdvqFcLajU7/Xa/SdqxxYdoI+i/YrPIqTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rb2WXjwq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738869541; c=relaxed/simple;
+	bh=NwhX1KnHyxjMGDH/lr4c6VEN2bxPU+NP0pnTfAFejxI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EqbCjNZHS/1FLx3W508AKXWlBeFt1j//kZWw+osQN34n/MG8SohvQz2LubBNjZjNIBjAaMTrPWyTZnQhyvHTCYutzcsBQNmu9bvSiRxHkF+p3LclxZjrG7zd2lK6KQJnpBSZRfc74S3CXBXRMwHHp3p+CyVk4FoOWGRCs4pmex0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ErB0Q8Qy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rb2WXjwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8522C4CEDD;
-	Thu,  6 Feb 2025 19:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738869422;
-	bh=GdQnHoyLthlfKrlMEi6nzpGqWRjNbuL5NJ7PhAbGqhY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rb2WXjwqOldsyzOMUFT36EIf4r7j2kZDMeywaA0Roe+9GNIq17srbrpMF9vjCJASF
-	 BK5/qLDcNfSaqAE5cpIp1TdHZ20CWDpgLAWmcHbbs+C0LRjO0KQckNmSGvUxtdwF+1
-	 NyDPH8x8kJWZYFCCsdEx3/aD1IAkXZvQ/YMHmpAEdOGtUfLimCL+pY0JiM1tqNJivP
-	 pqVEKa82i1i5wGaIe4U7M/mnzQ/PPYLab4Ozh8TWSJhcwph0o73l7xIJTlquDc8qpg
-	 27mss/p/PZGlsGHdemB95viltUiu/2C2VxVu1rOw7hgFl1sRZbzEmz7MFE+LH435kE
-	 e+enZ/4BnZlUg==
-From: Kees Cook <kees@kernel.org>
-To: Eric Sandeen <sandeen@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pstore: Change kmsg_bytes storage size to u32
-Date: Thu,  6 Feb 2025 11:16:59 -0800
-Message-Id: <20250206191655.work.798-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErB0Q8Qy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738869538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EEQf7ryYSSLimnHt06zLnX/5wHpNkn2LEDmn102ciEw=;
+	b=ErB0Q8QyX2trVGB9HcpK2C1L3v8fKVR+Zb44jsvre5H1gvdWNrEc0Q2MKbHKISwmOpMq32
+	/EePsj+8M3gFt+EGRDxSfa4m9tRDFKewWgvMdKqezXgBmFkKpdXDuKICCM11cthKmc0Bkp
+	ah9WUhEjw3sqI5AVPEKE5TomVCb/aMM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-CrcOZk4BO1uMRSFJ4oT-BA-1; Thu,
+ 06 Feb 2025 14:18:55 -0500
+X-MC-Unique: CrcOZk4BO1uMRSFJ4oT-BA-1
+X-Mimecast-MFC-AGG-ID: CrcOZk4BO1uMRSFJ4oT-BA
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD1FD195604F;
+	Thu,  6 Feb 2025 19:18:53 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.158])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4158019560AE;
+	Thu,  6 Feb 2025 19:18:50 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Rik van Riel <riel@surriel.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v5] x86/nmi: Add an emergency handler in nmi_desc & use it in nmi_shootdown_cpus()
+Date: Thu,  6 Feb 2025 14:18:44 -0500
+Message-ID: <20250206191844.131700-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3509; i=kees@kernel.org; h=from:subject:message-id; bh=GdQnHoyLthlfKrlMEi6nzpGqWRjNbuL5NJ7PhAbGqhY=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlLuVa75wXcCJqRvHlF9YI4kapPi9b9d9q0uIgvarnBC YMZPi4aHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNxusHwV3zDh1efiubItmnE TS8XEp7WtCfO9+StV4cyXvgU6S20z2JkaMh6+fGVZCp//bnnH1hPyHr/bKle9XuCtLLAh5vXOE8 /4AYA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-The types around kmsg_bytes were inconsistent. The global was unsigned
-long, the argument to pstore_set_kmsg_bytes() was int, and the filesystem
-option was u32. Given other internal limits, there's not much sense
-in making a single pstore record larger than INT_MAX and it can't be
-negative, so use u32 everywhere. Additionally, use READ/WRITE_ONCE and a
-local variable in pstore_dump() to avoid kmsg_bytes changing during a
-dump.
+Depending on the type of panics, it was found that the
+__register_nmi_handler() function can be called in NMI context from
+nmi_shootdown_cpus() leading to a lockdep splat like the following.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
+  WARNING: inconsistent lock state
+  inconsistent {INITIAL USE} -> {IN-NMI} usage.
+
+   lock(&nmi_desc[0].lock);
+   <Interrupt>
+     lock(&nmi_desc[0].lock);
+
+  Call Trace:
+    _raw_spin_lock_irqsave
+    __register_nmi_handler
+    nmi_shootdown_cpus
+    kdump_nmi_shootdown_cpus
+    native_machine_crash_shutdown
+    __crash_kexec
+
+In this particular case, the following panic message was printed before.
+
+  Kernel panic - not syncing: Fatal hardware error!
+
+This message seemed to be given out from __ghes_panic() running in
+NMI context.
+
+The __register_nmi_handler() function which takes the nmi_desc lock
+with irq disabled shouldn't be called from NMI context as this can
+lead to deadlock.
+
+The nmi_shootdown_cpus() function can only be invoked once. After the
+first invocation, all other CPUs should be stuck in the newly added
+crash_nmi_callback() and cannot respond to a second NMI.
+
+Fix it by adding a new emergency NMI handler to the nmi_desc
+structure and provide a new set_emergency_nmi_handler() helper to set
+crash_nmi_callback() in any context. The new emergency handler will
+preempt other handlers in the linked list. That will eliminate the need
+to take any lock and serve the panic in NMI use case.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Rik van Riel <riel@surriel.com>
 ---
-Cc: Eric Sandeen <sandeen@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-hardening@vger.kernel.org
----
- fs/pstore/inode.c    |  2 +-
- fs/pstore/internal.h |  4 ++--
- fs/pstore/platform.c | 11 ++++++-----
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/nmi.h |  2 ++
+ arch/x86/kernel/nmi.c      | 42 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/reboot.c   | 10 +++------
+ 3 files changed, 47 insertions(+), 7 deletions(-)
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 56815799ce79..9de6b280c4f4 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -265,7 +265,7 @@ static void parse_options(char *options)
- static int pstore_show_options(struct seq_file *m, struct dentry *root)
+diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+index 41a0ebb699ec..f677382093f3 100644
+--- a/arch/x86/include/asm/nmi.h
++++ b/arch/x86/include/asm/nmi.h
+@@ -56,6 +56,8 @@ int __register_nmi_handler(unsigned int, struct nmiaction *);
+ 
+ void unregister_nmi_handler(unsigned int, const char *);
+ 
++void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler);
++
+ void stop_nmi(void);
+ void restart_nmi(void);
+ void local_touch_nmi(void);
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index ed163c8c8604..9a95d00f1423 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -40,8 +40,12 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/nmi.h>
+ 
++/*
++ * An emergency handler can be set in any context including NMI
++ */
+ struct nmi_desc {
+ 	raw_spinlock_t lock;
++	nmi_handler_t emerg_handler;
+ 	struct list_head head;
+ };
+ 
+@@ -132,9 +136,22 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
+ static int nmi_handle(unsigned int type, struct pt_regs *regs)
  {
- 	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
--		seq_printf(m, ",kmsg_bytes=%lu", kmsg_bytes);
-+		seq_printf(m, ",kmsg_bytes=%u", kmsg_bytes);
- 	return 0;
+ 	struct nmi_desc *desc = nmi_to_desc(type);
++	nmi_handler_t ehandler;
+ 	struct nmiaction *a;
+ 	int handled=0;
+ 
++	/*
++	 * Call the emergency handler, if set
++	 *
++	 * In the case of crash_nmi_callback() emergency handler, it will
++	 * return in the case of the crashing CPU to enable it to complete
++	 * other necessary crashing actions ASAP. Other handlers in the
++	 * linked list won't need to be run.
++	 */
++	ehandler = desc->emerg_handler;
++	if (ehandler)
++		return ehandler(type, regs);
++
+ 	rcu_read_lock();
+ 
+ 	/*
+@@ -224,6 +241,31 @@ void unregister_nmi_handler(unsigned int type, const char *name)
  }
+ EXPORT_SYMBOL_GPL(unregister_nmi_handler);
  
-diff --git a/fs/pstore/internal.h b/fs/pstore/internal.h
-index 801d6c0b170c..a0fc51196910 100644
---- a/fs/pstore/internal.h
-+++ b/fs/pstore/internal.h
-@@ -6,7 +6,7 @@
- #include <linux/time.h>
- #include <linux/pstore.h>
- 
--extern unsigned long kmsg_bytes;
-+extern unsigned int kmsg_bytes;
- 
- #ifdef CONFIG_PSTORE_FTRACE
- extern void pstore_register_ftrace(void);
-@@ -35,7 +35,7 @@ static inline void pstore_unregister_pmsg(void) {}
- 
- extern struct pstore_info *psinfo;
- 
--extern void	pstore_set_kmsg_bytes(int);
-+extern void	pstore_set_kmsg_bytes(unsigned int bytes);
- extern void	pstore_get_records(int);
- extern void	pstore_get_backend_records(struct pstore_info *psi,
- 					   struct dentry *root, int quiet);
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index f56b066ab80c..557cf9d40177 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -92,8 +92,8 @@ module_param(compress, charp, 0444);
- MODULE_PARM_DESC(compress, "compression to use");
- 
- /* How much of the kernel log to snapshot */
--unsigned long kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
--module_param(kmsg_bytes, ulong, 0444);
-+unsigned int kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
-+module_param(kmsg_bytes, uint, 0444);
- MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
- 
- static void *compress_workspace;
-@@ -107,9 +107,9 @@ static void *compress_workspace;
- static char *big_oops_buf;
- static size_t max_compressed_size;
- 
--void pstore_set_kmsg_bytes(int bytes)
-+void pstore_set_kmsg_bytes(unsigned int bytes)
++/**
++ * set_emergency_nmi_handler - Set emergency handler
++ * @type:    NMI type
++ * @handler: the emergency handler to be stored
++ *
++ * Set an emergency NMI handler which, if set, will preempt all the other
++ * handlers in the linked list. If a NULL handler is passed in, it will clear
++ * it. It is expected that concurrent calls to this function will not happen
++ * or the system is screwed beyond repair.
++ */
++void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler)
++{
++	struct nmi_desc *desc = nmi_to_desc(type);
++
++	if (WARN_ON_ONCE(desc->emerg_handler == handler))
++		return;
++	desc->emerg_handler = handler;
++
++	/*
++	 * Ensure the emergency handler is visible to other CPUs before
++	 * function return
++	 */
++	smp_wmb();
++}
++
+ static void
+ pci_serr_error(unsigned char reason, struct pt_regs *regs)
  {
--	kmsg_bytes = bytes;
-+	WRITE_ONCE(kmsg_bytes, bytes);
- }
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index dc1dd3f3e67f..9aaac1f9f45b 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -926,15 +926,11 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ 	shootdown_callback = callback;
  
- /* Tag each group of saved records with a sequence number */
-@@ -278,6 +278,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 			struct kmsg_dump_detail *detail)
- {
- 	struct kmsg_dump_iter iter;
-+	unsigned int	remaining = READ_ONCE(kmsg_bytes);
- 	unsigned long	total = 0;
- 	const char	*why;
- 	unsigned int	part = 1;
-@@ -300,7 +301,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 	kmsg_dump_rewind(&iter);
+ 	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+-	/* Would it be better to replace the trap vector here? */
+-	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
+-				 NMI_FLAG_FIRST, "crash"))
+-		return;		/* Return what? */
++
+ 	/*
+-	 * Ensure the new callback function is set before sending
+-	 * out the NMI
++	 * Set emergency handler to preempt other handlers.
+ 	 */
+-	wmb();
++	set_emergency_nmi_handler(NMI_LOCAL, crash_nmi_callback);
  
- 	oopscount++;
--	while (total < kmsg_bytes) {
-+	while (total < remaining) {
- 		char *dst;
- 		size_t dst_size;
- 		int header_size;
+ 	apic_send_IPI_allbutself(NMI_VECTOR);
+ 
 -- 
-2.34.1
+2.48.1
 
