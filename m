@@ -1,157 +1,163 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29581624F0
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6FE3207
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738851421; cv=none; b=F0l6rlEiCrLU3SpKsEFyL8hcRt0BUs1XdNk068kUZ0wp8vd6IaTPA4akumCBwU8SjUEAUSiUWXcbLsl1465PbMpWhbFESRBhncAD6ETYv3HfczMDNnMrlwM+xtNmrsFpmf8ZbvR/xDw0duSQpNYGUnsuwuvZA4kV8WB2ZUKjWfE=
+	t=1738851566; cv=none; b=H1hbhCLudhefe5+SGn7ihp3FmHJrS2g8Ohrhu+fB1QRnt+vhAzC/EwEzF9K11vfOVJGy2q73h2WuPIA1iqFAhYXgi8W6BXOY73EXP+LeD8i+F4f475fHk2k/FHMxiAtFihHxA9fqosHPdi5XoJvRtbssFNY1tQgfUGxtpfpslPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738851421; c=relaxed/simple;
-	bh=zq4fS8r4/aWRDgbaBenMpseavKiY8ZjtDsC2R64ddNE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XQTQDKkzeXmFspofR8oTHsXsrzajyFOgsQdcg0SIJHuBO7edJvOP53+yXCIEfpvJhXSRPenxnqAIHRrx/e4hLJRgtkVhAoGkU0D36XUG8Sz+LKpC+7AsSkZLWRLD2zDxZZlg2ewCcr1EGoLpZUNzad9xDsXpPLPhbZ2iYGBgQ0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tg2gF-000000004uj-3XlI;
-	Thu, 06 Feb 2025 09:16:35 -0500
-Message-ID: <8111558b52cec1152746b05a9c1d657d18df0fe2.camel@surriel.com>
-Subject: Re: [PATCH v9 00/12] AMD broadcast TLB invalidation
-From: Rik van Riel <riel@surriel.com>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org, 
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, 	thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, 	akpm@linux-foundation.org, jannh@google.com,
- mhklinux@outlook.com, 	andrew.cooper3@citrix.com
-Date: Thu, 06 Feb 2025 09:16:35 -0500
-In-Reply-To: <12602226.O9o76ZdvQC@natalenko.name>
-References: <20250206044346.3810242-1-riel@surriel.com>
-	 <12602226.O9o76ZdvQC@natalenko.name>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1738851566; c=relaxed/simple;
+	bh=4tmOaZRPX6vvDtOzYjrTsElIO1kFqWsrqkops+efmJ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cKcsKMYHDnI+NvazaIMCubNkk2Yhn6/xkBFl53j6CIkXXdeWPr5sePFd2cdZmRFToZ1gbAFpm582VqTZVC9e5lunPGXXNZds9fAk7MKLDCgBKRg24SLKFJPGxu7RAVx4XlEHfGZsHZtyl8iboUz3qnfAs+mIAidrsUlu2QvXboc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A0Me/iuT; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A0Me/iuT"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2b832eabf39so124543fac.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:19:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738851564; x=1739456364; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tksEl2KlAVxEf8W+lYv0ussSoMxCHLsGsx0wrvueTGs=;
+        b=A0Me/iuTYtZXGsK8Tnj9MrpGPKhBlzK1kEC6XaaRwYr57jKpaSo4rDz8GUmO9ka6yG
+         xd7T8VSLUeGICnsretDStFcrlZpeCRAEY8M5dGrNgCkcku01C5EvJd3SZnr6vOum/cqO
+         /DZlWDTlvM402ifK2alJsW7a/XLBClB52lgPTgzr47fOqo5reUZ7n9nXYECl+oRloGex
+         O5oyzCsAR4MTw+PMt/oM22MZujGRhaho17vPZKXrnOFspbmi/mv4RhnVLgX9UcrxHuaz
+         GmW64J9mRkB4jaWvNOaHFQ/rbD045tvIEqE5rhQ/LOGQf0w9BiVFFwoskVwfzHIhaNXS
+         fMcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738851564; x=1739456364;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tksEl2KlAVxEf8W+lYv0ussSoMxCHLsGsx0wrvueTGs=;
+        b=ujE1qoEkSQo9oIneHVEbeNk1yC1ocS6uCZe4AJnFcDSCIHxNHA55wgnypR1OxUGQlX
+         4rF7Knqg7ytarCzJ6Wjuql1eqJg7Dcw2SGTtGQbA203ZZYcL7ChjGQIlkFJiqr0UuwcF
+         6TPETtK/qwM4NVQu17+5pWb2bIJSBMYvSXrUgWVluCl/PrGOH1pf05jCe26o0dnYEhz1
+         i97e5GI0vb4o3cxk+IUNQCJo8gdKVulj/LRvyuDQOCmVX7LHhf2ZTVbyxYFEHyCyXdjT
+         8V/yRTTPfTzWAq8EdzSomHIS5Yb+wkpOipVV8audwOldJnZ0reF60a39a72PDocZC9j7
+         6+Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhtGJdiXzPj3YUqF9kM19uzzl0FP+2w2vr4EyQPG6RVyLj2GTxysezzFsYd5YmTu/MPOqAMxanGrPrwXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMGRODFbthkZ/Higim8eXldIHZ1y66ZXqELZInk4TIQ4L9Nuc1
+	bTKwXnNPFWVAKo0bw//qu/XtY+iScChglCbr+bgoVXNe7QrzABDLx3KMDh1r3wnxpRg2dZshXS6
+	uejuuCY7pHkIEynbcQR8RVTjQRBXkcMUcuMGN
+X-Gm-Gg: ASbGncvgF9d+qm4MR8T5yLa+fSUQtbwf5MDBVZqq3A4x1i2j2piVlC0q8gmiVJEa4OF
+	cirzIy6OAHAjww2kdb80XC/Wy+MYxDrIeOl/QZ1dl7Taf6v4phdQdL1EgvufkeAcI14SrJA==
+X-Google-Smtp-Source: AGHT+IEfLHpnvobMcgVrLSNbsfNw4AFRnCPQWXFAu2fq4BUPy8NoWcDtZg+st9iEyOh2nL29zJbCH2+K927euTM+iyE=
+X-Received: by 2002:a05:6870:8188:b0:296:fff8:817 with SMTP id
+ 586e51a60fabf-2b8051adbd4mr5104149fac.35.1738851563761; Thu, 06 Feb 2025
+ 06:19:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+References: <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+ <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
+ <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
+ <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
+ <ocstrhpyoyxzurvvxbrbnlzfqzo6hiqt7dxj7vu45ipj4min6z@ffnpao72slda>
+ <CAJgzZopv+jKmDncYDJEQTymqQ1oRpy8HNpOsmcoM7Chb=uBJzg@mail.gmail.com>
+ <l7pexkoo7t7p5u6gobgc46lxvpgpe2lywaqwa4b6vjddt3ccnq@mh6x72cxfhyv>
+ <CAJgzZopiyhq9Wpu+gxUssoNhQT7tNjiey0JGsKPJAXjraEBRiw@mail.gmail.com>
+ <881c3558-1101-496e-9ef4-5bef13f3f233@suse.cz> <CAJgzZoq29GzVsqAMrGiKoUpXFPVjPRQRO87SiagaQCVXfH90Lw@mail.gmail.com>
+ <Z5LE6BkIQjgyVfvb@casper.infradead.org>
+In-Reply-To: <Z5LE6BkIQjgyVfvb@casper.infradead.org>
+From: enh <enh@google.com>
+Date: Thu, 6 Feb 2025 09:19:12 -0500
+X-Gm-Features: AWEUYZkbH44gyYIM4OSRYeiM_40wARCJ9iHWw7ukWWa1MTVZt14y_2GEShpURoo
+Message-ID: <CAJgzZoovOhEFAcG93iQ2_iTLyqKf-TLzLJAX2vZnOWUC0Waq=A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Jeff Xu <jeffxu@chromium.org>, Pedro Falcato <pedro.falcato@gmail.com>, 
+	Benjamin Berg <benjamin@sipsolutions.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
+	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, 
+	ojeda@kernel.org, adobriyan@gmail.com, anna-maria@linutronix.de, 
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, hch@lst.de, 
+	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, gerg@kernel.org, 
+	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <0x7f454c46@gmail.com>, 
+	Mike Rapoport <mike.rapoport@gmail.com>, 
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>, 
+	Christopher Ferris <cferris@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-02-06 at 11:16 +0100, Oleksandr Natalenko wrote:
-> Hello.
->=20
-> On =C4=8Dtvrtek 6. =C3=BAnora 2025 5:43:19, st=C5=99edoevropsk=C3=BD stan=
-dardn=C3=AD =C4=8Das Rik
-> van Riel wrote:
-> >=20
-> > v9:
-> > =C2=A0- print warning when start or end address was rounded (Peter)
->=20
-> OK, I've just hit one:
->=20
-> TLB flush not stride 200000 aligned. Start 7fffc0000000, end
-> 7fffffe01000
+On Thu, Jan 23, 2025 at 5:38=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
 
-Beautiful, the caller wants to zap 2MB pages, but
-the end address is 4kB aligned.
+[heh, long time no see! haven't been on an email thread with you in a
+while :-) ]
 
-> WARNING: CPU: 31 PID: 411 at arch/x86/mm/tlb.c:1342
-> flush_tlb_mm_range+0x57b/0x600
-> Modules linked in:
-> CPU: 31 UID: 0 PID: 411 Comm: modprobe Not tainted 6.13.0-pf3 #1
-> 1366679ca06f46d05d1e9d9c537b0c6b4c922b82
-> Hardware name: ASUS System Product Name/Pro WS X570-ACE, BIOS 4902
-> 08/29/2024
-> RIP: 0010:flush_tlb_mm_range+0x57b/0x600
-> Code: 5f e9 39 b3 3f 00 e8 24 57 f5 ff e9 e9 fc ff ff 48 8b 0c 24 4c
-> 89 e2 48 c7 c7 78 59 27 b0 c6 05 3d 1a 31 02 01 e8 85 e4 01 00 <0f>
-> 0b e9 35 fb ff ff fa 0f 1f 44 00 00 48 89 df e8 a0 f4 ff ff fb
-> RSP: 0018:ffffc137c11e7a38 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: ffff9e6eaf1b5d80 RCX: 00000000ffffdfff
-> RDX: 0000000000000000 RSI: 00000000ffffffea RDI: 0000000000000001
-> RBP: ffff9e500244d800 R08: 00000000ffffdfff R09: ffff9e6eae1fffa8
-> R10: 00000000ffffdfff R11: 0000000000000003 R12: 00007fffc0000000
-> R13: 000000000000001f R14: 0000000000000015 R15: ffff9e6eaf180000
-> FS:=C2=A0 0000000000000000(0000) GS:ffff9e6eaf180000(0000)
-> knlGS:0000000000000000
-> CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000109966000 CR4: 0000000000f50ef0
-> PKRU: 55555554
-> Call Trace:
-> =C2=A0<TASK>
-> =C2=A0tlb_flush_mmu+0x125/0x1a0
-> =C2=A0tlb_finish_mmu+0x41/0x80
-> =C2=A0relocate_vma_down+0x183/0x200
-> =C2=A0setup_arg_pages+0x201/0x390
-> =C2=A0load_elf_binary+0x3a7/0x17d0
-> =C2=A0bprm_execve+0x244/0x630
-> =C2=A0kernel_execve+0x180/0x1f0
-> =C2=A0call_usermodehelper_exec_async+0xd0/0x190
-> =C2=A0ret_from_fork+0x34/0x50
-> =C2=A0ret_from_fork_asm+0x1a/0x30
-> =C2=A0</TASK>
->=20
-> What do I do with it?
+> On Thu, Jan 23, 2025 at 04:50:46PM -0500, enh wrote:
+> > yeah, at this point i should (a) drag in +cferris who may have actual
+> > experience of this and (b) admit that iirc i've never personally seen
+> > _evidence_ of this, just claims. most famously in the chrome source...
+> > if you `grep -r /proc/.*/maps` you'll find lots of examples, but
+> > something like https://chromium.googlesource.com/chromium/src/+/main/ba=
+se/debug/proc_maps_linux.h#61
+> > is quite representative of the "folklore" in this area.
+>
+> That folklore is 100% based on a true story!  I'm not sure that all of
+> the details are precisely correct, but it's true enough that I wouldn't
+> quibble with it.
+>
+> In fact, we want to make it worse.  Because the mmap_lock is such a
+> huge point of contention, we want to read /proc/PID/maps protected
+> only by RCU.  That will relax the guarantees to:
+>
+> a. If a VMA existed and was not modified during the duration of the
+>    read, it will definitely be returned.
+> b. If a VMA was added during the call, it might be returned.
+> c. If a VMA was removed during the call, it might be returned.
+> d. If an address was covered by a VMA before the call and that
+>    VMA was modified during the call, you might get the prior or
+>    posterior state of the VMA.  And you might get both!
+>
+> What might be confusing:
+>
+> e. If VMA A is added, then VMA B is added, your call might show you VMA
+>    B and not VMA A.
+> f. Similarly for deleted.
+> g. If you have, say, a VMA from (4000-9000) and you mprotect the region
+>    (5000-6000), you might see:
+>         4000-9000 oldA
+>    or
+>         4000-5000 newA
+>         4000-9000 oldA
+>    or
+>         4000-5000 newA
+>         5000-6000 newB
+>         4000-9000 oldA
+>    or
+>         4000-5000 newA
+>         5000-6000 newB
+>         6000-9000 newC
+>
+> (it's possible other combinations might be visible; i'm not working on
+> the details of this right now)
+>
+> We shouldn't be able to _skip_  a VMA.  That seems far worse than
+> returning duplicates; if your maps parser sees duplicates it can either
+> try to figure it out itself, or retry the whole read.
 
-Reporting it is the right thing. Let me dig into what
-setup_arg_pages and relocate_vma_down are doing to
-come up with a 2MB page size area where the end is
-not 2MB aligned.
-
-Reading through the relocate_vma_down code, and the
-free_pgd/p4d/pud/pmd_range code, it looks like that
-code always adds PAGE_SIZE to the address being zapped,
-even when zapping things at a larger granularity.
-
-On the flip side, the code in relocate_vma_down and
-free_pgd_range correctly set the TLB page size to
-the 4kB PAGE_SIZE.
-
-It looks like setting the stride_shift to something
-larger is done transparently by the x86 tlb_flush()
-implementation, specifically by tlb_get_unmap_shift(),
-which looks at which page table level got freed to
-determine what stride shift to use.
-
-This can result in flush_tlb_mm_range being called
-with a stride_shift for 2MB pages, but a range ending
-on a 4kB aligned (not 2MB aligned) boundary.
-
-Peter, how should we solve this one?
-
-Should tlb_flush() round the start & end addresses
-to match the found stride_shift?
-
---=20
-All Rights Reversed.
+yeah, fwiw i can't think i've seen a case where a duplicate would
+matter --- half the code i've seen ["tell me more about the VMA
+containing this address"] would just stop at the first match anyway
+(though that's exactly the case where i'd rather have "direct access"
+than have to search), and the other half ["give me a snapshot of all
+the VMAs for offline debugging purposes"] doesn't really bother with
+interpretation and leaves that up to humans.
