@@ -1,144 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1A41EA7F3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479301EA7C0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738849076; cv=none; b=kmZ/F5FIRL3VpjPvtJGrPy7+u/MzL8Vf4fJtEkho1ZXjGug0uBPum/ZOc6J1pXoeZ/n9BKgN/F+A2oI+klr2A78KbrIRaHfAF+LqL9AHO7638RkPrmqvTEGQlJ00nNjhxOsGHva0piIO7Ax6VdmQFR2X9sEZ1Cu12q4usRvUTak=
+	t=1738849106; cv=none; b=kISl8jdeot6+BxmdGkrAAIKqxPeghr80tB1nbZ9+2aPF6nFBtDCebB+3QAlZGsCTfcs0JTp/dUAWap4DG7W9npBRUeBLcwdVpgBQqE/tSap9QyCiXn+nT4zvPOQsqHfhtyyILhSbDuq25bZbNntMZDEeaYyu/4MHdJi86AMlsUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738849076; c=relaxed/simple;
-	bh=9Ytmps4fuBO/htaxCKDp7kdUCmpWXLYbMLnjp7sR0E8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G/HEDQEA2+pcBmkKKo604ZZ20EZ46gyFRpN3JDUyU6BR22npGQU7+UF2KbQJIupX0LlIrA7cHXAqm3P+tx1J9TERr8w6Wo7OyEIDD0YRuc8PX2nSjbFmewjQuOc/m7QFXD/Vt5BvFMmci1qaQW8xLf9+Evk8Jtb4eQh+N40CWBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dv5AuJBV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738849106; c=relaxed/simple;
+	bh=KjmqvWmcqyv2vZqMrhG78Gdr5LGgyYYlRAvm66CRgI8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WogOfiHZSGYqjVsPtl4sudH0orY2Yjz+LgyOp1Xq3GYIuaKllCqaurdw7j2RVWj/wF2/8Q+rtF1y944TxTBmuob/QVzXwoKlnggh0BoLzEPnvilymMDr2HYUDbrlIHX6saVLyknkGE6dmcdOFMBJYl+b6O3ee3EmcqfkBwChG9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pa0fSy0V; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dv5AuJBV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738849073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5N+Al59YmEDtBoKSzwKPTh6WUXLbEAKXSUpJ7QukWWw=;
-	b=dv5AuJBVq2vzNPk2BWqp0H0hPwA6KyS0YqU77gNaJp3QO5ql2aVRFKSbg2BmA9p47Lgodw
-	wGLvm+yTL1hgmb6cg+o6IuXdISKttoHM/p0pCqBPFjVX52KYATb06JBczmCw5XbnTPugEJ
-	D4gF07wt1CdLlj0Y86jQZ0/LOyNEcfY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-Z1CCXbCkNJ6JlHV_rykxEg-1; Thu,
- 06 Feb 2025 08:37:51 -0500
-X-MC-Unique: Z1CCXbCkNJ6JlHV_rykxEg-1
-X-Mimecast-MFC-AGG-ID: Z1CCXbCkNJ6JlHV_rykxEg
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A21C18DFE39;
-	Thu,  6 Feb 2025 13:37:14 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.64.235])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4FC6618004A7;
-	Thu,  6 Feb 2025 13:37:09 +0000 (UTC)
-Received: by fedora.redhat.com (Postfix, from userid 1000)
-	id 9E1E56AA45D; Thu,  6 Feb 2025 08:37:07 -0500 (EST)
-Date: Thu, 6 Feb 2025 08:37:07 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
-	German Maglione <gmaglione@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-Message-ID: <Z6S7A-51SdPco_3Z@redhat.com>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com>
- <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pa0fSy0V"
+Received: from isaac-ThinkPad-T16-Gen-2.lan (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 27E161198;
+	Thu,  6 Feb 2025 14:37:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738849030;
+	bh=KjmqvWmcqyv2vZqMrhG78Gdr5LGgyYYlRAvm66CRgI8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=pa0fSy0VR9+XRrI19lg2OCBvIiw7Y9HifKgpfL0mQDEAlPXxhVQxG1Cm/HpmGDMep
+	 IxR/xAK1O/ke8yR+bxHTADeucn659c6gz8OXiFAm3amMaZbOG2yEIrya7CDNiVPVcL
+	 VWZZnGV+j5dagjnaZBCxsQohjXzp0ABKNhO3W3dg=
+Message-ID: <92528d4cccd46c090c7840320e76277b18dfb3cd.camel@ideasonboard.com>
+Subject: Re: [PATCH v2 2/3] RFC: regulator: ad5398: Change selector division
+ calculation
+From: Isaac Scott <isaac.scott@ideasonboard.com>
+To: "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org"
+	 <broonie@kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 06 Feb 2025 13:38:20 +0000
+In-Reply-To: <PH0PR03MB65127833FDCEA37075CBB3F68EEE2@PH0PR03MB6512.namprd03.prod.outlook.com>
+References: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
+	 <20250128173143.959600-3-isaac.scott@ideasonboard.com>
+	 <PH0PR03MB65127833FDCEA37075CBB3F68EEE2@PH0PR03MB6512.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, Feb 05, 2025 at 04:10:15PM -0800, Dan Williams wrote:
-> Vivek Goyal wrote:
-> > On Fri, Jan 10, 2025 at 05:00:29PM +1100, Alistair Popple wrote:
-> > > FS DAX requires file systems to call into the DAX layout prior to unlinking
-> > > inodes to ensure there is no ongoing DMA or other remote access to the
-> > > direct mapped page. The fuse file system implements
-> > > fuse_dax_break_layouts() to do this which includes a comment indicating
-> > > that passing dmap_end == 0 leads to unmapping of the whole file.
-> > > 
-> > > However this is not true - passing dmap_end == 0 will not unmap anything
-> > > before dmap_start, and further more dax_layout_busy_page_range() will not
-> > > scan any of the range to see if there maybe ongoing DMA access to the
-> > > range. Fix this by passing -1 for dmap_end to fuse_dax_break_layouts()
-> > > which will invalidate the entire file range to
-> > > dax_layout_busy_page_range().
-> > 
-> > Hi Alistair,
-> > 
-> > Thanks for fixing DAX related issues for virtiofs. I am wondering how are
-> > you testing DAX with virtiofs. AFAIK, we don't have DAX support in Rust
-> > virtiofsd. C version of virtiofsd used to have out of the tree patches
-> > for DAX. But C version got deprecated long time ago.
-> > 
-> > Do you have another implementation of virtiofsd somewhere else which
-> > supports DAX and allows for testing DAX related changes?
-> 
-> I have personally never seen a virtiofs-dax test. It sounds like you are
-> saying we can deprecate that support if there are no longer any users.
-> Or, do you expect that C-virtiofsd is alive in the ecosystem?
+On Wed, 2025-01-29 at 08:34 +0000, Hennerich, Michael wrote:
+>=20
+>=20
+> > -----Original Message-----
+> > From: Isaac Scott <isaac.scott@ideasonboard.com>
+> > Sent: Tuesday, January 28, 2025 6:32 PM
+> > To: Hennerich, Michael <Michael.Hennerich@analog.com>
+> > Cc: lgirdwood@gmail.com; broonie@kernel.org;
+> > linux-kernel@vger.kernel.org;
+> > Isaac Scott <isaac.scott@ideasonboard.com>
+> > Subject: [PATCH v2 2/3] RFC: regulator: ad5398: Change selector
+> > division
+> > calculation
+> >=20
+> > [External]
+> >=20
+> > If the AD5398 is defined to have a current limit with no range,
+> > i.e.
+> > when max_Ua and min_Ua are equal, the DIV_ROUND_UP erroneously
+> > tries
+> > to set the current to a higher level than the max_Ua, which causes
+> > the driver to
+> > fail to set the current. Fix this so the driver slightly
+> > underestimates the current
+> > to set.
+> >=20
+> > Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
+> > ---
+> > =C2=A0drivers/regulator/ad5398.c | 3 +--
+> > =C2=A01 file changed, 1 insertion(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/regulator/ad5398.c
+> > b/drivers/regulator/ad5398.c index
+> > e6f45c6e750c..0c60ecd1f0f2 100644
+> > --- a/drivers/regulator/ad5398.c
+> > +++ b/drivers/regulator/ad5398.c
+> > @@ -98,8 +98,7 @@ static int ad5398_set_current_limit(struct
+> > regulator_dev
+> > *rdev, int min_uA, int
+> > =C2=A0	if (min_uA > chip->max_uA || max_uA < chip->min_uA)
+> > =C2=A0		return -EINVAL;
+> >=20
+> > -	selector =3D DIV_ROUND_UP((min_uA - chip->min_uA) * chip-
+> > > current_level,
+> > -				range_uA);
+> > +	selector =3D ((min_uA - chip->min_uA) * chip->current_level
+> > /
+> > range_uA);
+>=20
+> Not sure if this is a good idea. The rational was to set the limit
+> slightly higher.
+> This will do the opposite. The ranges are already checked.
+> Why not clamp() the calculated value?=20
+>=20
 
-Ashai Lina responded that they need and test DAX using libkrun.
+The documentation for set_current_limit says "the driver should select
+the current closest to max_uA". In this case, does DIV_ROUND_UP always
+choose the value closest to the limit?
 
-C version of virtiofsd is now gone. We are actively working and testing
-Rust version of virtiofsd. We have not been able to add DAX support to
-it yet for various reasons. 
+In the use case where you want to set the current to exactly the
+maximum, it does not make sense to overestimate the current (for
+example, when the regulator is powering an LED, and if the LED gets too
+hot from being over current, it could burn someone).
 
-Biggest unsolved problem with viritofsd DAX mode is guest process should
-get a SIGBUS if it tries to access a file beyond the file. This can happen
-if file has been truncated on the host (while it is still mapped inside
-the guest). 
+In the case where the user is setting a current that is within but is
+not close the configured max current, it makes sense to estimate
+slightly over. In the case where you configure the maximum, I think it
+should calculate the max current that can be set so that the final
+current does not exceed what is defined as the maximum in the device
+tree.
 
-I had tried to summarize the problem in this presentation in the section
-"KVM Page fault error handling".
+What are your thoughts?
 
-https://kvm-forum.qemu.org/2020/KVMForum2020_APF.pdf
+> > =C2=A0	if (ad5398_calc_current(chip, selector) > max_uA)
+> > =C2=A0		return -EINVAL;
+> >=20
+> > --
+> > 2.43.0
+>=20
 
-This is a tricky problem to handle. Once this gets handled, it becomes
-safer to use DAX with virtiofs. Otherwise you can't share the filesystem
-with other guests in DAX mode and use cases are limited.
-
-And then there are challenges at QEMU level. virtiofsd needs additional
-vhost-user commands to implement DAX and these never went upstream in
-QEMU. I hope these challenges are sorted at some point of time.
-
-I think virtiofs DAX is a very cool piece of technology. I would not like
-to deprecate it. It has its own problems and challenges and once we
-are able to solve these, it might see wider usage/adoption.
-
-Thanks
-Vivek
-
+Best wishes,
+Isaac
