@@ -1,344 +1,280 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2135.outbound.protection.outlook.com [40.107.223.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1772D235344;
-	Thu,  6 Feb 2025 16:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859563; cv=fail; b=h8pNLo37G+nfdtJ4wyENOgIi4vlg+YYDYJSnhBkFek2OGXqMhiMM+iRFO57QKMxZCs2gFWpxh5V1PogmekBKdxTog4+iEUDHMr7VlCZ9QWpeu4Wx4U4Mit3g4yaKgRKIDhIv4RIN+lLTVzyoWJRqc9frGIRD5OPZ77EsSrYmu4U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859563; c=relaxed/simple;
-	bh=l3NGm98dgtZtXOj0/Pij10Ww6JjvKp2nPsCbBQ7ebCM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sOkQv08NmOGrFVDXszlDzk3uSZmbZsTPKTDB/hOuYcfpUfAZZA/DFLd9jDzUyOIunrFckm98BSyC0VUeHDunbF7RbtH0zYwiv396oI19ZP62Etvovq8KwPzrMkGu/hH/HbSI38mTDL6vOq2HBHyhNoebYTjU1DLspqwSjoliACk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.223.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SRTpSOxcSl+5gc3grogOBWIAfgZ11DxcNr9cdA+mJBhO+fDwF6ko9lqM/8L7dwnZ0N1Alsw7rLFlezyMpMMj3Mza8DqmPxa01E9kWelzeVHdVzShVhOpIvCxujLh7rHJ7l+lyczGAZ32tuFkvFxTMkL/hZRN/jvEHNeOj6P0G1QXV4s6lQmGG3kO3VpcsM78Sw6CCgodz2CbLqwENwOHGuJ9AJ4xdD8HwVXtAbiLRqvBuBSS55isLlmGp+3XhmfyaessCgSdVDEJ94I0K9oDh01rBHEJfj67JQ7gp0V8kwgozZ/dj66myef0GhUsD+MmPT508ntqHxbLdsY+GT2l/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5SqWi4QK8QhX3skksSosg+rNTnbzCqMfR20nMJsmZjw=;
- b=OM3Cn4BYfVd1/x5czqkdwqNpTVgfC7S1vCJAmeuuRlIoetGAhIq9375584c9jnySmdD4ro2ChhWY2/YX2FjuA4UhdpU8RYK6l1tIA7ripSQDYyYH+pyyS5VD9rPfOYFHns0/itbWPbM9v+mfAIsPvgh3b31Ne5cfVgWbBOpR0WOPD4MonXLA3cIZKSdpYOyT62xjsNgEwjoSHzj6rOg4nz5dBiyrD1hMoDHC6pLh1RsC2YakVsypukamspXipsH89RvqEciMsexd7/d+zJVGZyKFMXTf4Ds75IAbOr5DB6f8zI07HAJlHWcYDWKtGNFvyPrh67ya7NZj7FdSTu9x+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
- SJ0PR01MB6447.prod.exchangelabs.com (2603:10b6:a03:299::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.6; Thu, 6 Feb 2025 16:32:37 +0000
-Received: from SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90%6]) with mapi id 15.20.8445.005; Thu, 6 Feb 2025
- 16:32:37 +0000
-Message-ID: <ae198c3e-42e3-486f-92b6-705bde953b4d@talpey.com>
-Date: Thu, 6 Feb 2025 08:32:36 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] smb: client: make lease state changes compliant with
- the protocol spec
-To: meetakshisetiyaoss@gmail.com, sfrench@samba.org, pc@manguebit.com,
- ronniesahlberg@gmail.com, sprasad@microsoft.com, nspmangalore@gmail.com,
- linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
- samba-technical@lists.samba.org, bharathsm.hsk@gmail.com,
- bharathsm@microsoft.com
-Cc: Meetakshi Setiya <msetiya@microsoft.com>, stable@vger.kernel.org
-References: <20250206065101.339850-1-meetakshisetiyaoss@gmail.com>
- <20250206065101.339850-2-meetakshisetiyaoss@gmail.com>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <20250206065101.339850-2-meetakshisetiyaoss@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0337.namprd03.prod.outlook.com
- (2603:10b6:303:dc::12) To SN6PR01MB5246.prod.exchangelabs.com
- (2603:10b6:805:d8::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2FF235370
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738859567; cv=none; b=WGauxR5K0o4j3scfN4Bt4xtlz/ufeT2qhTj3BGQ2vE4PaOQCa+n0XNTJROaOeFbijvqdyK/RAAzt9p9LvUS7/ksECaTfDlWNH1bP8u8ISvcYWouVJHDbRmR83Qn6OcKWJROZKht79z3k/Hq75WTnMJG1J08NLW/W+lnvCDbGrtQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738859567; c=relaxed/simple;
+	bh=jj2q4Y5/kinjIhFlJ7jl8lzGc1VVDeaMmYEb7/yxo7Y=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=L+C0rI8iH5zEOpSdYsMLcRPOVNhJPW8mV4/eZTeSZp9dznrTUPYkp4rbihER/OLu1V2igswtBQ46z87jascC4dq+lt41WOCwKlt+UX9KM1qSc5+82SfuONl6bzdXGbSd2WrxpXdujjxfy1eu7f5W6pAr/paWtavN1zp/Czv6LNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gcIDXJrA; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gcIDXJrA"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso11353265e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 08:32:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738859563; x=1739464363; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LrX4aXgNAaqC2pLZXXSBxJoznD/P2IXrnuC12Tf7uZY=;
+        b=gcIDXJrAaNgV49h36VNXxypManyOO+NNV1kTuIcupjTG8UKUgVHVovHX+uwQtEs/VI
+         EOe0vEA5XcKJRD3/tbEQ4kVvkXvCkiyVWaloXU9lKb1w1vhGQyf+m/IR0QdeTXVWj+Ab
+         7hLNkSzhDTeff1ZItiagXw7Ut9DH91bZW1UmFTt/K4nyc7aiSYRutx+D1AUewT1VuZii
+         pRKztqnrC7+bzBdDJXoaODDmn64a5jZC9sd3mypC8B8Vpr2ZlpLQGOHwnTNIuJtcr5D5
+         JTJ21t+Pa0hNrJ/TuJhHuSkIgtpaYE8tceiIDsb6JPpZzeWncmaDR3ys9/fY2TkTMEPR
+         YkcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738859563; x=1739464363;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LrX4aXgNAaqC2pLZXXSBxJoznD/P2IXrnuC12Tf7uZY=;
+        b=sebkDipfuOblKq7E8PYSrXRdo1By7zL7Id4h+otYSnPJwIl5R6VpzULFQh2DfU/xqG
+         NWb9G0f7CsGi8zDStifaAjTTkBmZDL8qgLFew4xT0mteRmz2QhZCm/Mip4Pb+nc1G/tf
+         Pkg7TJ2iQKuAnCBhQbrfk75FAVYkehBmkLThWTkXK5D2894z6OZtXi/kFpRiKy96foK/
+         pf1GevpCxRQOWdeEqlXwU4SK83dZbObazxLrHCdCLcZUeHU9crBUls9swtnAwAkAOfos
+         OID3vvXvvOC6jqFSYMnQgvbAI0fSwDB5yIBc4J2svmgXIsiepBa8sGn8t5JqhAeoiHy3
+         sSJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZcvIONXhQ5B449D6If1GDU54m9A/Ds3N+C5kJAfV3LZJeqdQjnId5eylnUyDrjlTIJfNv+2y/EsdyWpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy8JL1lc4E4PFQXhYv75o4/dNWqF8EyNyY24wZRwrH1AtBFbAu
+	5pd6Ib0lXPWYdtkQs8buJRowEzVMS80SoTMwHWoRJz1ctwn8tfHMCibx0o6iUK0=
+X-Gm-Gg: ASbGncvdXw2o7z/H641+5CDAhbVo/yeZY5tN+VSL33CwZmfBy8c4gRdFw6HtVPijLsL
+	Kfa6GlocOPx7zKadj63E+PrNFRJbZEeq3sIANpMtqBBod2U0Pzem97gcWYE7JG71mPqoJVFNrJt
+	xPUF3R+qahZfRSh0gCyeQhlIrCUvHugff8uvnx1Rsl559j4KIZi2ZoUapqfLnNkizXjBx+RUIkv
+	4lvx6sWYISDaqGhzE3gUC3EEqQAfoEbxG+a7xdVHrs9hB021vgLXmPOUgrpu8ejJrhJioemQi2y
+	kYN+LzH77XwWhco/iNaXw3s2bLmovfGAmzyMftCltPu0xLFi7cZhHDU3i+LIqdN3RA+y
+X-Google-Smtp-Source: AGHT+IE9K/O1p4oeSMlme4SzJ9IMsECI9mFi2Gjm929bnlAW5rnGP22AK3SfaB6uqKRF7LO/NDawPg==
+X-Received: by 2002:a05:600c:3d0b:b0:431:44f6:566f with SMTP id 5b1f17b1804b1-4392498fc5dmr630895e9.13.1738859562939;
+        Thu, 06 Feb 2025 08:32:42 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6? ([2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d40csm59722365e9.9.2025.02.06.08.32.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 08:32:42 -0800 (PST)
+Message-ID: <eb01b1a6-426e-49d6-a16e-3673157243ac@linaro.org>
+Date: Thu, 6 Feb 2025 17:32:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|SJ0PR01MB6447:EE_
-X-MS-Office365-Filtering-Correlation-Id: f26df627-888e-41f6-94c0-08dd46cbde1d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VXMrMGxjdjlIVkFUZlFGd2xvOGZiaEx3YXNoaVNGZGU3VjBzL2E0c25HTGdh?=
- =?utf-8?B?Y3pwc09YMHlCNENUNk9CR1A2ZE8rZUFtMWw0UHQxb2VjVklicDNrZFhtY3lp?=
- =?utf-8?B?b1BqTWJRS0haY3QrWDZqV3JRYlRtN2dhTEJBcE9TOXVkSXp3Q0lna0RSdmt6?=
- =?utf-8?B?QW42eGNKc0NTZkJhcUtDQTdUdVkwcnYvTXo4WjBZUUZsdnN3Qm5KeVJmcm9Y?=
- =?utf-8?B?bWNWeVM3MFVkMzZoUWc1VEh4QW4vUDN0V2xpVWdWWHVMYjNKSHZoOTRVVVRy?=
- =?utf-8?B?VUE4azByVXdKeDFhU2Q3UWFuajFCbDl5QUJ2b25KRkJEVnMvbnAwVmZJM1JO?=
- =?utf-8?B?RXh1TFJEb2RVWlJYbldFU3AzWlZ4bHRDaGlyOHUrNEpPcVFheXBXMHpWSTkz?=
- =?utf-8?B?SnVSck9sK2t5aER3MDIxWlRqMzlDYXhnQkQ3bUFlYStsN2d1VUVRTFBkSm8y?=
- =?utf-8?B?Vk9kQzJqRGU4WjlxY2ZONS81d1AzZmxEd1BJRWw0ZnZ1VUNjWVNHaUlTeE9Y?=
- =?utf-8?B?YjkwVmpwL21FMTBKNnVoV3dnZXVraWovSVNiNTg0cWc3WXN5QTZFNlI5VGdw?=
- =?utf-8?B?c1BMblhMRGhVb0ZraTVOYnJwSE5rbVllYk0yOHhXbDhTYXlSNnNWL3VyYXZp?=
- =?utf-8?B?czkyVXZwcmZKYTA1akVhTG4vZG1pMlptemlUc25YYnh2R053elg4S0MyeWV3?=
- =?utf-8?B?QXNNZ2h4LzhPSTdQWWsra280aGtFYjl1cGx1Q2pWR3NqUjVXMklaSmwySjhY?=
- =?utf-8?B?UnZtT2s3b3Rkc0FZMFlXbi91UEdYTXpWaVVBRXdBZUFTSjQvNkcydHo4WGFy?=
- =?utf-8?B?dlcrYXBFaG1PV0dHZGtnSTJHajRpNE1jbkpsUUgxd1BiMU1EQTNKb2hnemxF?=
- =?utf-8?B?dlVjbmVLT2UzbTM2b0dlMGtZWWg1RWd1VmpxeERRakdmS21OMHo1blkrUjFv?=
- =?utf-8?B?S0FGZUtqMmJ2M3JaNy8rbmJXUmFGNnZPT3c5cjlPU1VvVGdMYU4xMzV6ZERp?=
- =?utf-8?B?SmRkY2VRSmJpMUl1SVpwbVJGbjdWaWdISXVUSzJWUGpGVG55ekc5b25Edjdr?=
- =?utf-8?B?dENYYUpiSUFidy9mSWxmcnFjeVZkSjNWTjgyMjRLN3BHTlI4ZU5TR1lCd2R0?=
- =?utf-8?B?cE5yUUN1cTB3SmZrWFNCOTBXaVZHSlZJbllpTGlKMXBNM3RRNmNTNFA0TEhV?=
- =?utf-8?B?VDJudjBLOVBNY3hYTFNaL3pEeFdrdmdYM0tjbmZXQXNmK1c4QUdDZDRRQUNu?=
- =?utf-8?B?R1JJTk5SaFlpTGRhNzRlWG1zbU52SFFmeEh2OHJ6Q3M5dFhMbFF5cGVSZytF?=
- =?utf-8?B?Z2xucWMrK3J2SnFOSmt0U2FGM1laUExQdnQvaUYrTzBUMDlsZHhZdFpCN3ky?=
- =?utf-8?B?NHArMWlsM1pLN1ZvdDRSQ2xSdSs1ZHFLdW8zNWNBd0VDbnh5RjJZdmFseXBn?=
- =?utf-8?B?TlhvSjVwSVEzQ1RBcjlOeHN5d1JFYThCM1lzOFRlS2xrZnRuTkMzR0hkcVJC?=
- =?utf-8?B?SXp6M3EyTUloQXN4OVBNOHNjUnlMdnJQYnozQUtGUndTTGJwZ2RUOVc1OHZk?=
- =?utf-8?B?N2JEM09uSUkxWFg2elVjTU54VzQzdkhHSXYwSWQxM1pWSzJjbE13R2szclAv?=
- =?utf-8?B?YlFUZWg0VVlWSG4vRWgyYlBvNjkyQWJhRVp1MXA3dlRFZmlxRmJFa2RXTWR1?=
- =?utf-8?B?N1doSjNpSVJGbVFINWU2cENxcG5xTmxMTXkraGJYMCtTSHA5c0J6OGJnU25I?=
- =?utf-8?B?RXo5Zk5KV0lEdmpxUTNNOE1ORG5pa2s3UkZ5aFZpdTVrdTFkT3ZOZHZuWUY5?=
- =?utf-8?B?anZyUm8xZ2oyVkFjWmplYXA1aWg2WmR0VHBMYWxOVGNBQmQ1cGwzQTk1b1du?=
- =?utf-8?B?WEpWMUdUVHM3dUJFOFdNTjYxODJ2WVZXa2pLb05IQUo4SWhzU0s4ZGttdC9C?=
- =?utf-8?Q?5My/RimW7UY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S1YyTno2aC9SNHRmeGxqbitrRmw5R1dqWU4ydWxkOFBleXgxbXNnZmJ0UllY?=
- =?utf-8?B?bll3WXZvd0hENnU1OVlYaWF4N3prSktybEswRi82SXFhTG9BZnowZnhHMUZ1?=
- =?utf-8?B?R28vQXZwblE4SVFnZHBrUEJTL0pwV3pZZ1pzQW5WMklPYUZvY1B5YkdXbDJr?=
- =?utf-8?B?V3NCT29NTmtJSFdWRWtDSXFMQXVWZDJaRncxanExVlVMYThpa2FjNmIwTEdy?=
- =?utf-8?B?L2k2Q0tOS0NjUzR0OWowNjlEb1R6azYzbllicWxxYTBaQmhZVGp4Sk91NmNL?=
- =?utf-8?B?ei9BSXFwL2thWDB6OXRVTGNxOVlFOTVYV0ZDYk9LMXpia29PTEZZd1FncFEw?=
- =?utf-8?B?ck9YdldQUHErWStZS3NkdDlZWUhEUGI5R2VYVW9CQ3IrOGpqTjBiaHFFd2kr?=
- =?utf-8?B?cndNT0EvWXJqZnQ2YSsvbzYzU2ZkZWl0Y2ZnSndmZWxtZzI4RE91K2hWZzdr?=
- =?utf-8?B?eG5lMG8wSk40TTFjM1J1NGhPV3ljcWFteXIrcGNrV2JqY3pDWTVGcmFkYVRJ?=
- =?utf-8?B?THlDMVVXUDdsY0JYb3hKSGttb0djazlkUUkvR2pXTkpGTTBJRnJDMDBCNFov?=
- =?utf-8?B?MmFuY1YvOE1NcnV4cWhQSW5QQUhHdGdiZU9KTnR2TFlMMVR4eTR1YWx4Y3Jp?=
- =?utf-8?B?d1BXb0xYN3lidVFQRlNxeEIzQ0xSUFBadlVtZlNIajFUbGdRQlN5K24vb0px?=
- =?utf-8?B?NjI4bnlTQVdKR01UU2x6V3kxOEtpMmFOY21iK05lN1VKMkw2UU1waG53TVlk?=
- =?utf-8?B?eVJYcm9MSnN6MXRHeHEzcWp0Vi9HdTBhMDAwV2dJT0I5MW1JUkcxMk9XY0g4?=
- =?utf-8?B?czd5dmJmbmdoZDMzbXgxelZHN1g0bzA0ZUhxVmM3R1NqZWZmdFVwZ1dNYTdI?=
- =?utf-8?B?MURvTlVkbWk5OXU2L0JiS21PaGk2Y2tRMHVHY085elYwc3BzQmorZThQSmJm?=
- =?utf-8?B?VzB3MU9vTFBJMGxOQXhMa3BYQVNtc0thZ0k3K3E0eCtQYU9ZUzJpdmRHUDNG?=
- =?utf-8?B?Y3RIaVhoUEFPMjdOVHZPMXRYZHM0NHp5RXpWNjlobUdKbmFPaS84TzdlNHdK?=
- =?utf-8?B?QTVmYTBQYXpsZFBaRFlKYWhKS0d4ZjJ0UDdMbHhjdlo5QnZsWWdRdjFYc1k0?=
- =?utf-8?B?R0VGS3N3cFR1SHRZNzdnUzFyTm9vb2xyUTZ5dVkvbVprOUpFazJHS1JFRVB0?=
- =?utf-8?B?QVdFU2NOOHcyRzlybmxUWWdldTVabllpU2M1UDgzNnR4RFZxSy9NTmFZeW9u?=
- =?utf-8?B?SjhONHNyOTBxYktXSm0yWWpQMkpRQTN5V05DYk9KV3BIbndVL2xnREp5OU83?=
- =?utf-8?B?bTREcjYxcHFjYTVwT3g3Z3VLRDFnNHdzamlNUEI3V1BpcTZBMlVZaTdlRG5J?=
- =?utf-8?B?eVY2czNQQW9ISG8xNVRkMjhNdmYwSWJkeXhhQU9yQlpSdFdVRTFZMTVJSi9j?=
- =?utf-8?B?cWNSdGFxcUFJMW5wK096MStUVzRSM1BhU3gxbkJPT0U3aXdiUkk5WXo3UmdH?=
- =?utf-8?B?TG95dlpCcjZGdENpa2M2NXpTQ2VGVWZSc25ZaU14UCtEK0JsV3pGa1I3K1lH?=
- =?utf-8?B?clNsSkV2enN5b0FEMG5WNUxkZEs3VGJ3UklOUnBXcVl0T1FIUWV1V3NqT0Ro?=
- =?utf-8?B?NWlOYzhKNmdnUUxaeGxkTHAycklRanBDckVWb3lqcVhIR0wwM0dJakhOZzZz?=
- =?utf-8?B?aTE1amNwVmlBdm5DbHJhZVVOYU9oMzhxL3pCVzFEZThFQjVrVCtCL1RwMTZw?=
- =?utf-8?B?ajQrWCsyWmVMZnFlTm9DNGw3UEI0elNIZTEwd1Nkcm9ZeGhrRHFWcGY5UWp6?=
- =?utf-8?B?Sjh2Uk5LVEFqUDJnQ01pSGRiVDR1ZkVtOHEwclNHMDZ1d1JGb0dHS0pWT2Fz?=
- =?utf-8?B?SGVLY3NlS1dMRVBycEgwWWp1Sys3a2hCZnZmQytqLzFqcG1WMDdPVFc4K3VZ?=
- =?utf-8?B?K3dISDUrV1dpTHdSclhUNkRuRkdrVFhWUjlGZlRQT09jdS84UjlwRXJjZmlR?=
- =?utf-8?B?OUNOSGl1ZzF1VStyOWVrMFZLOW9zVFNQamRIOUo4TXI3cDVHbzJhTEJpMWwz?=
- =?utf-8?B?M1NoTWVuNzRoeDlKWUoyeVNQcTFKQUtCMFczdWIwdm10cjhEVWN0RWtYSTBR?=
- =?utf-8?Q?Y0yxejQ5UC+21XD2glvmxoiAO?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f26df627-888e-41f6-94c0-08dd46cbde1d
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:32:37.7170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FJP3sdxKKI/RsrW6MCZlOCphU2zoUen6fWuK/TdeX45yBB9SdxKoAVaDUIdAxKva
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB6447
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 3/3] drm/panel: panel-himax-hx83102: support for
+ csot-pna957qt1-1 MIPI-DSI panel
+To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>,
+ quic_jesszhan@quicinc.com, airlied@gmail.com, simona@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ dianders@chromium.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
+ <20250206131300.1295111-4-yelangyan@huaqin.corp-partner.google.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250206131300.1295111-4-yelangyan@huaqin.corp-partner.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2/5/2025 1:50 AM, meetakshisetiyaoss@gmail.com wrote:
-> From: Meetakshi Setiya <msetiya@microsoft.com>
+On 06/02/2025 14:13, Langyan Ye wrote:
+> The csot-pna957qt1-1 is a 10.95" TFT panel. The MIPI controller on this
+> panel is the same as the other panels here, so add this panel to this
+> driver.
 > 
-> MS-SMB2 section 3.2.5.7.5 specifies that client must evaluate
-> delta_epoch to compare the old and new epoch values. This delta_epoch
-> takes care of lease epoch wraparounds (e.g. when the server resets
-> the epoch from 65535 to 0). Currently, we just check if the old epoch
-> is numerically less than the new epoch, which can cause problems when
-> the server resets its epoch counter from 65535 to 0 - like causing
-> the client (with current epoch > 0) to not change its lease state.
-> This patch uses delta_epoch based comparisons while comparing lease
-> epochs in smb3_downgrade_oplock and smb3_set_oplock_level.
-> 
-> Also, in the current code for smb3_set_oplock_level, the client
-> changes the lease state for a file without comparing the epoch. This
-> patch adds the delta_epoch comparision before updating the lease
-> state, so that when the change in epoch is negative, the new lease
-> state is invalid too. This can protect the client from having an
-> inconsistent lease state because of a stale lease state change
-> response.
-> 
-> This patch also adds additional validations to check if the lease
-> state change is valid or not, before going through
-> smb3_set_oplock_level.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Meetakshi Setiya <msetiya@microsoft.com>
-> Reviewed-by: Shyam Prasad N <sprasad@microsoft.com>
-
-These changes look promising, but how have they been tested? I'm
-especially concerned with the cases where a lease update is becoming
-ignored. Combined with the rather subtle wraparound logic, that
-doesn't sound like these should go straight to stable.
-
-I'll attempt to find time to review in more detail next week.
-
-Tom.
-
-
+> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
 > ---
->   fs/smb/client/cifsglob.h |  6 +++
->   fs/smb/client/smb2ops.c  | 95 +++++++++++++++++++++++++++++++---------
->   2 files changed, 80 insertions(+), 21 deletions(-)
+>   drivers/gpu/drm/panel/panel-himax-hx83102.c | 123 ++++++++++++++++++++
+>   1 file changed, 123 insertions(+)
 > 
-> diff --git a/fs/smb/client/cifsglob.h b/fs/smb/client/cifsglob.h
-> index 2c1b0438fe7d..4417fa46885f 100644
-> --- a/fs/smb/client/cifsglob.h
-> +++ b/fs/smb/client/cifsglob.h
-> @@ -1558,6 +1558,12 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
->   #define CIFS_CACHE_HANDLE(cinode) (cinode->oplock & CIFS_CACHE_HANDLE_FLG)
->   #define CIFS_CACHE_WRITE(cinode) ((cinode->oplock & CIFS_CACHE_WRITE_FLG) || (CIFS_SB(cinode->netfs.inode.i_sb)->mnt_cifs_flags & CIFS_MOUNT_RW_CACHE))
+> diff --git a/drivers/gpu/drm/panel/panel-himax-hx83102.c b/drivers/gpu/drm/panel/panel-himax-hx83102.c
+> index 8b48bba18131..ba5e5b7df5fc 100644
+> --- a/drivers/gpu/drm/panel/panel-himax-hx83102.c
+> +++ b/drivers/gpu/drm/panel/panel-himax-hx83102.c
+> @@ -43,6 +43,7 @@
+>   #define HX83102_SETGIP1		0xd5
+>   #define HX83102_SETGIP2		0xd6
+>   #define HX83102_SETGIP3		0xd8
+> +#define HX83102_UNKNOWN_D9	0xd9
+>   #define HX83102_SETGMA		0xe0
+>   #define HX83102_UNKNOWN_E1	0xe1
+>   #define HX83102_SETTP1		0xe7
+> @@ -291,6 +292,103 @@ static int boe_nv110wum_init(struct hx83102 *ctx)
+>   	return dsi_ctx.accum_err;
+>   };
 >   
-> +#define IS_SAME_EPOCH(new, cur) ((__u16)new == (__u16)cur)
-> +#define IS_NEWER_EPOCH(new, cur) (((short)((__u16)new - (__u16)cur) <= (short)32767) && ((__u16)new != (__u16)cur))
-> +
-> +bool validate_lease_state_change(__u32 old_state, __u32 new_state,
-> +				__u16 old_epoch, __u16 new_epoch);
-> +
->   /*
->    * One of these for each file inode
->    */
-> diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
-> index ec36bed54b0b..6e0ce114fc08 100644
-> --- a/fs/smb/client/smb2ops.c
-> +++ b/fs/smb/client/smb2ops.c
-> @@ -3922,7 +3922,7 @@ smb3_downgrade_oplock(struct TCP_Server_Info *server,
->   	__u16 old_epoch = cinode->epoch;
->   	unsigned int new_state;
->   
-> -	if (epoch > old_epoch) {
-> +	if (IS_NEWER_EPOCH(epoch, old_epoch)) {
->   		smb21_set_oplock_level(cinode, oplock, 0, NULL);
->   		cinode->epoch = epoch;
->   	}
-> @@ -3998,39 +3998,92 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
->   		 &cinode->netfs.inode);
->   }
->   
-> +/* helper function to ascertain that the incoming lease state is valid */
-> +bool
-> +validate_lease_state_change(__u32 old_state, __u32 new_state,
-> +				__u16 old_epoch, __u16 new_epoch)
+> +static int csot_pna957qt1_1_init(struct hx83102 *ctx)
 > +{
-> +	if (new_state == 0)
-> +		return true;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
 > +
-> +	if (old_state == CIFS_CACHE_RH_FLG && new_state == CIFS_CACHE_READ_FLG)
-> +		return false;
+> +	msleep(60);
 > +
-> +	if (old_state == CIFS_CACHE_RHW_FLG) {
-> +		if (new_state == CIFS_CACHE_READ_FLG || new_state == CIFS_CACHE_RH_FLG)
-> +			return false;
-> +	}
+> +	hx83102_enable_extended_cmds(&dsi_ctx, true);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc4);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_D9, 0xd2);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x2c, 0xb3, 0xb3, 0x31, 0xf1, 0x33,
+> +				     0xe0, 0x54, 0x36, 0x36, 0x3a, 0x3a, 0x32, 0x8b, 0x11, 0xe5,
+> +				     0x98);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xd9);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x8b, 0x33);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETDISP, 0x00, 0x47, 0xb0, 0x80, 0x00, 0x2c,
+> +				     0x80, 0x3c, 0x9f, 0x22, 0x20, 0x00, 0x00, 0x98, 0x51);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCYC, 0x41, 0x41, 0x41, 0x41, 0x64, 0x64,
+> +				     0x40, 0x84, 0x64, 0x84, 0x01, 0x9d, 0x01, 0x02, 0x01, 0x00,
+> +				     0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETVDC, 0x1b, 0x04);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_BE, 0x20);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPTBA, 0xfc, 0xc4, 0x80, 0x9c, 0x36, 0x00,
+> +				     0x0d, 0x04);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSTBA, 0x32, 0x32, 0x22, 0x11, 0x22, 0xa0,
+> +				     0x31, 0x08, 0xf5, 0x03);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcc);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTCON, 0x80);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc6);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETRAMDMY, 0x97);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPWM, 0x00, 0x1e, 0x13, 0x88, 0x01);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x08, 0x13, 0x07, 0x00, 0x0f,
+> +				     0x36);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPANEL, 0x02, 0x03, 0x44);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPCTRL, 0x07, 0x06, 0x00, 0x02, 0x04, 0x2c,
+> +				     0xff);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x06, 0x00, 0x00, 0x00, 0x40, 0x04,
+> +				     0x08, 0x04, 0x08, 0x37, 0x07, 0x44, 0x37, 0x2b, 0x2b, 0x03,
+> +				     0x03, 0x32, 0x10, 0x22, 0x00, 0x25, 0x32, 0x10, 0x29, 0x00,
+> +				     0x29, 0x32, 0x10, 0x08, 0x00, 0x08, 0x00, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP1, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
+> +				     0x18, 0x18, 0x18, 0x18, 0x07, 0x06, 0x07, 0x06, 0x05, 0x04,
+> +				     0x05, 0x04, 0x03, 0x02, 0x03, 0x02, 0x01, 0x00, 0x01, 0x00,
+> +				     0x18, 0x18, 0x25, 0x24, 0x25, 0x24, 0x1f, 0x1f, 0x1f, 0x1f,
+> +				     0x1e, 0x1e, 0x1e, 0x1e, 0x20, 0x20, 0x20, 0x20);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0,
+> +				     0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGMA, 0x0a, 0x0e, 0x1a, 0x21, 0x28, 0x46,
+> +				     0x5c, 0x61, 0x63, 0x5e, 0x78, 0x7d, 0x80, 0x8e, 0x89, 0x90,
+> +				     0x98, 0xaa, 0xa8, 0x52, 0x59, 0x60, 0x6f, 0x06, 0x0a, 0x16,
+> +				     0x1d, 0x24, 0x46, 0x5c, 0x61, 0x6b, 0x66, 0x7c, 0x7d, 0x80,
+> +				     0x8e, 0x89, 0x90, 0x98, 0xaa, 0xa8, 0x52, 0x59, 0x60, 0x6f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0xe0, 0x10, 0x10, 0x0d, 0x1e, 0x9d,
+> +				     0x02, 0x52, 0x9d, 0x14, 0x14);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x01);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x01, 0x7f, 0x11, 0xfd);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc5);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x4f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x86);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_D2, 0x64);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc5);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0,
+> +				     0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0, 0x05, 0x15, 0x55, 0x45,
+> +				     0x55, 0x50, 0x05, 0x15, 0x55, 0x45, 0x55, 0x50);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0x02, 0x00, 0x24, 0x01, 0x7e, 0x0f,
+> +				     0x7c, 0x10, 0xa0, 0x00, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x02);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x03, 0x07, 0x00, 0x10, 0x7b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x0f, 0x3f, 0xff, 0xcf, 0xff, 0xf0,
+> +				     0x0f, 0x3f, 0xff, 0xcf, 0xff, 0xf0);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01,
+> +				     0x00, 0x00, 0x00, 0x23, 0x00, 0x23, 0x81, 0x02, 0x40, 0x00,
+> +				     0x20, 0x9d, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +				     0x01, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x03);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETDISP, 0x66, 0x81);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc6);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCYC, 0x03, 0xff, 0xf8);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0,
+> +				     0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0, 0x0f, 0x2a, 0xaa, 0x8a,
+> +				     0xaa, 0xf0, 0x0f, 0x2a, 0xaa, 0x8a, 0xaa, 0xf0, 0x0a, 0x2a,
+> +				     0xaa, 0x8a, 0xaa, 0xa0, 0x0a, 0x2a, 0xaa, 0x8a, 0xaa, 0xa0);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x00);
+> +	hx83102_enable_extended_cmds(&dsi_ctx, false);
 > +
-> +	// lease state changes should not be possible without a valid epoch change
-> +	if (old_state != new_state) {
-> +		if (IS_SAME_EPOCH(new_epoch, old_epoch))
-> +			return false;
-> +	} else {
-> +		if ((old_state & new_state) == CIFS_CACHE_RHW_FLG) {
-> +			if (!IS_SAME_EPOCH(new_epoch, old_epoch))
-> +				return false;
-> +		}
-> +	}
+> +	mipi_dsi_msleep(&dsi_ctx, 60);
 > +
-> +	return true;
-> +}
+> +	return dsi_ctx.accum_err;
+> +};
 > +
->   static void
->   smb3_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
->   		      __u16 epoch, bool *purge_cache)
+>   static int ivo_t109nw41_init(struct hx83102 *ctx)
 >   {
->   	unsigned int old_oplock = cinode->oplock;
-> +	unsigned int new_oplock = oplock;
-> +
-> +	if (!validate_lease_state_change(cinode->oplock, oplock, cinode->epoch, epoch)) {
-> +		cifs_dbg(FYI, "Invalid lease state change on inode %p\n", &cinode->netfs.inode);
-> +		return;
-> +	}
+>   	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
+> @@ -440,6 +538,28 @@ static const struct hx83102_panel_desc boe_nv110wum_desc = {
+>   	.init = boe_nv110wum_init,
+>   };
 >   
-> -	smb21_set_oplock_level(cinode, oplock, epoch, purge_cache);
-> +	/* if the epoch returned by the server is older than the current one,
-> +	 * the new lease state is stale.
-> +	 * In this case, just retain the existing lease level.
-> +	 */
-> +	if (IS_NEWER_EPOCH(cinode->epoch, epoch)) {
-> +		cifs_dbg(FYI,
-> +			 "Stale lease epoch received for inode %p, ignoring state change\n",
-> +			 &cinode->netfs.inode);
-> +		return;
-> +	}
->   
-> -	if (purge_cache) {
-> +	if (purge_cache && old_oplock != 0) {
->   		*purge_cache = false;
-> -		if (old_oplock == CIFS_CACHE_READ_FLG) {
-> -			if (cinode->oplock == CIFS_CACHE_READ_FLG &&
-> -			    (epoch - cinode->epoch > 0))
-> -				*purge_cache = true;
-> -			else if (cinode->oplock == CIFS_CACHE_RH_FLG &&
-> -				 (epoch - cinode->epoch > 1))
-> -				*purge_cache = true;
-> -			else if (cinode->oplock == CIFS_CACHE_RHW_FLG &&
-> -				 (epoch - cinode->epoch > 1))
-> -				*purge_cache = true;
-> -			else if (cinode->oplock == 0 &&
-> -				 (epoch - cinode->epoch > 0))
+> +static const struct drm_display_mode csot_pna957qt1_1_default_mode = {
+> +	.clock = 177958,
+> +	.hdisplay = 1200,
+> +	.hsync_start = 1200 + 124,
+> +	.hsync_end = 1200 + 124 + 80,
+> +	.htotal = 1200 + 124 + 80 + 40,
+> +	.vdisplay = 1920,
+> +	.vsync_start = 1920 + 88,
+> +	.vsync_end = 1920 + 88 + 8,
+> +	.vtotal = 1920 + 88 + 8 + 38,
+> +	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> +};
 > +
-> +		/* case 1: lease state remained the same,
-> +		 * - if epoch change is 0, no action
-> +		 * - if epoch change is > 0, purge cache
-> +		 */
-> +		if (old_oplock == new_oplock) {
-> +			if (IS_NEWER_EPOCH(epoch, cinode->epoch))
->   				*purge_cache = true;
-> -		} else if (old_oplock == CIFS_CACHE_RH_FLG) {
-> -			if (cinode->oplock == CIFS_CACHE_RH_FLG &&
-> -			    (epoch - cinode->epoch > 0))
-> +		}
+> +static const struct hx83102_panel_desc csot_pna957qt1_1_desc = {
+> +	.modes = &csot_pna957qt1_1_default_mode,
+> +	.size = {
+> +		.width_mm = 147,
+> +		.height_mm = 235,
+> +	},
+> +	.init = csot_pna957qt1_1_init,
+> +};
 > +
-> +		/* case 2: lease state upgraded,
-> +		 * - if epoch change is 1, upgrade
-> +		 * - if epoch change is > 1, upgrade and purge cache
-> +		 * we do not handle lease upgrades, so just purging the cache is ok.
-> +		 */
-> +		else if (old_oplock == (new_oplock & old_oplock)) {
-> +			if (IS_NEWER_EPOCH(epoch-1, cinode->epoch))
->   				*purge_cache = true;
-> -			else if (cinode->oplock == CIFS_CACHE_RHW_FLG &&
-> -				 (epoch - cinode->epoch > 1))
-> +		}
-> +
-> +		/* case 3: lease state downgraded,
-> +		 * - if epoch change > 0, purge cache
-> +		 */
-> +		else {
-> +			if (IS_NEWER_EPOCH(epoch, cinode->epoch))
->   				*purge_cache = true;
->   		}
-> -		cinode->epoch = epoch;
->   	}
-> +
-> +	smb21_set_oplock_level(cinode, new_oplock, epoch, purge_cache);
-> +	cinode->epoch = epoch;
->   }
->   
->   #ifdef CONFIG_CIFS_ALLOW_INSECURE_LEGACY
+>   static const struct drm_display_mode ivo_t109nw41_default_mode = {
+>   	.clock = 167700,
+>   	.hdisplay = 1200,
+> @@ -681,6 +801,9 @@ static const struct of_device_id hx83102_of_match[] = {
+>   	{ .compatible = "boe,nv110wum-l60",
+>   	.data = &boe_nv110wum_desc
+>   	},
+> +	{ .compatible = "csot,pna957qt1-1",
+> +	  .data = &csot_pna957qt1_1_desc
+> +	},
+>   	{ .compatible = "ivo,t109nw41",
+>   	  .data = &ivo_t109nw41_desc
+>   	},
 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
