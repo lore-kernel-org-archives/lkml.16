@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119391624C3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969EF1C700F;
 	Thu,  6 Feb 2025 14:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738850520; cv=none; b=r+93dTvcxEyK35UBUrLQqJGg4FodlulGPWa9z6w7Azx3jluZNlxcXvn5JfNFxDUTRL/cOpou4BpLD2Wxr0Ck6omMWBzP/nu6NcD6CxbZCBl+3emVYZ5mBD6icJSwP2UbjA9xEmIDNhWoVq8yHvk4KtONcqzTHBTB1kBvCj8sk4I=
+	t=1738850520; cv=none; b=LfWfTwKCC2rgDT+vXnnlXsfHmY1YCfkMzP5f0d6YvBs4hJwJDhMNsrpEi/sm+A0TXVohwQoT48P6MIsQF/IXSum8CbdYwEG9V3/0dmPraTbWY1y8tTEPWfvZRteuAR4mrA/IBJkQArfp7ZWtDPwXLYBvhTvBbkIo9UDL8ORZ+JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738850520; c=relaxed/simple;
-	bh=f+DglNqsF0GBhahZCan5DrNq0Oz15iuAvk2QpZMFvp4=;
+	bh=c90hMaO3LfY7MAQLAulRSS88BWYPAshA8QP0FmZt4W4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b/ctlB6fCEpjZxh/Wauj5Jl0gBI/QSZd5GKPTQa8FWszricAwKpJW+/85HILaa7VHS3CQSuetb/ni8h15TUONsJWeIEeYFUTNV7fnnNCFyOeLtH4Xv8XbDu1awqIYk1tfWAIufHaUy+1lA11adykZ0ge/vyrej43822UtgmW6IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUezUB13; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=glPKIDXF92olzZ1oqEuVv8j/rMveqn8tsm4b9PeziOlt8Xf2l1pwIqZ4rwltEgfdF14ULiJ82QYketDgvUn0CeffRR1uunZeoNaTTpA8EUa2RUZ6p55pTUVhj1RvSFSZ36iDfpw8az4bhey740NuMyAxWPC+bUADRfNwnb1HhOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNKVQ/zq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUezUB13"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D36D2C4CEE2;
-	Thu,  6 Feb 2025 14:01:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNKVQ/zq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C662C4CEEC;
+	Thu,  6 Feb 2025 14:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738850519;
-	bh=f+DglNqsF0GBhahZCan5DrNq0Oz15iuAvk2QpZMFvp4=;
+	s=k20201202; t=1738850520;
+	bh=c90hMaO3LfY7MAQLAulRSS88BWYPAshA8QP0FmZt4W4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=bUezUB13IeQei33hhzV9Hs5F8PjLZFhH/Z6OSLN75Yp63kDXhrwe8gF5LHeqcrwbL
-	 9GP1sOa196l0FB9EVu0zSQxHSrGqk+isuhYVTBBI2anKs6OWpdYilJ+r+rhqD/YUpN
-	 SD+zj2LGbVbSWyEqpVOnGPRf8HXYEKSb7a9nquLdK+SwqHhg8gP8dwTJXKbl84c3F+
-	 kwM2N8A8IBGtD2mCAtMXQtia1Rh/ahNzdBGBEZywHVCwS1dByCWX/XjIlVpyhXjF57
-	 vFL6kpe4cH9WdMa6mhZlE3jjEoUFkQuxVkUZW3bg25FC9UGTWDdOlL/do46fakOsPw
-	 V7hGmmvJOCL1w==
+	b=KNKVQ/zq2oeVVXcq81CgxUWBb0NRGuYYajkH6Ef+qOVcJ5vpYEqhIL74GpHM9JpJT
+	 X0EzTyOzcrYLiTJMtqrdlAo1vkS/Pf4fLlT5iGAGzEtXNr94JfQNPBvmnFeUR8b23s
+	 RUzCB7fX7j7Et1Y8bTpGI5ybEBcrSoxL50eBNQP3khzwoJ9jGiUh4WZWUj1ZCGk9II
+	 /v1iq+AOmExMmL3fFYjtbLe1FW/Dz5wNjQgMaeQShv2lSXrlSIvhjP8pAFvc+qYz4D
+	 xIxJXyoNARzdSLTxMPRZ1x8CPcLWzRE5e2+taSEvyspKIxoABOvATiTd6DkUqIDqHU
+	 6NUECkmeBYGJQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C030AC02196;
-	Thu,  6 Feb 2025 14:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C8BC02196;
+	Thu,  6 Feb 2025 14:02:00 +0000 (UTC)
 From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date: Thu, 06 Feb 2025 15:01:54 +0100
-Subject: [PATCH v6 1/5] dt-bindings: display: Add Apple pre-DCP display
- controller
+Date: Thu, 06 Feb 2025 15:01:56 +0100
+Subject: [PATCH v6 3/5] drm: panel: Add a panel driver for the Summit
+ display
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-adpdrm-v6-1-c8ab9348b853@gmail.com>
+Message-Id: <20250206-adpdrm-v6-3-c8ab9348b853@gmail.com>
 References: <20250206-adpdrm-v6-0-c8ab9348b853@gmail.com>
 In-Reply-To: <20250206-adpdrm-v6-0-c8ab9348b853@gmail.com>
 To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
@@ -57,13 +57,14 @@ To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
 Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alyssa Ross <hi@alyssa.is>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Nick Chan <towinchenmi@gmail.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738850518; l=7308;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738850518; l=6093;
  i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
- bh=L+DtRl+AoX1NvwfwdsVyCcuYMOPBNtcxaSIUYvQWNFA=;
- b=dgBEyqQi5Xk72a1JhW5rJ6lIgjvCUUAh+9Q6K7LsD+jtO4RZq+utP+GpkMhuXRvVdMS+08tq9
- XoDiHhwF5HwCKq0JoTWWXr7iksdgO4htLbyklIu4t1WDFUTM0zZlWSo
+ bh=dZPCmmw2dlzFublwHZZM31vEYHqYWVyzQLhge3ZDlNs=;
+ b=CUVkIntGXDEAD4K5Xl1fx+z8f3Yx/vsXggv1DCuuwqJFgnix7Kn8Kc6TQrK3zRMmGmvls5WIv
+ gx1psoblHThB2UBm23n4vP/xQfZa9ll/jcLDC9cZG2N+rvP+z0xK6HT
 X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
  pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
 X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
@@ -73,264 +74,189 @@ Reply-To: fnkl.kernel@gmail.com
 
 From: Sasha Finkelstein <fnkl.kernel@gmail.com>
 
-Add bindings for a secondary display controller present on certain
-Apple laptops.
+This is the display panel used for the touchbar on laptops that have it.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Co-developed-by: Nick Chan <towinchenmi@gmail.com>
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 ---
- .../display/apple,h7-display-pipe-mipi.yaml        | 83 ++++++++++++++++++++
- .../bindings/display/apple,h7-display-pipe.yaml    | 88 ++++++++++++++++++++++
- .../bindings/display/panel/apple,summit.yaml       | 58 ++++++++++++++
- 3 files changed, 229 insertions(+)
+ drivers/gpu/drm/panel/Kconfig        |   9 +++
+ drivers/gpu/drm/panel/Makefile       |   1 +
+ drivers/gpu/drm/panel/panel-summit.c | 132 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 142 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/apple,h7-display-pipe-mipi.yaml b/Documentation/devicetree/bindings/display/apple,h7-display-pipe-mipi.yaml
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index d7469c565d1db8b8e974dd6c45d03d9352d99d63..5085a82e4bc695e85cabbc3200859bbe10cb0f91 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -925,6 +925,15 @@ config DRM_PANEL_SIMPLE
+ 	  that it can be automatically turned off when the panel goes into a
+ 	  low power state.
+ 
++config DRM_PANEL_SUMMIT
++	tristate "Apple Summit display panel"
++	depends on OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y if you want to enable support for the "Summit" display panel
++	  used as a touchbar on certain Apple laptops.
++
+ config DRM_PANEL_SYNAPTICS_R63353
+ 	tristate "Synaptics R63353-based panels"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index 7dcf72646cacff11bab90c78e3b8b1f357e5f14a..10ac2e850f5cd6d6546439de75483466e4015d1a 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LS060T1SX01) += panel-sharp-ls060t1sx01.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
++obj-$(CONFIG_DRM_PANEL_SUMMIT) += panel-summit.o
+ obj-$(CONFIG_DRM_PANEL_SYNAPTICS_R63353) += panel-synaptics-r63353.o
+ obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
+ obj-$(CONFIG_DRM_PANEL_SONY_TD4353_JDI) += panel-sony-td4353-jdi.o
+diff --git a/drivers/gpu/drm/panel/panel-summit.c b/drivers/gpu/drm/panel/panel-summit.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..5e6da66499a508c001670f68fa00d6bab13591d6
+index 0000000000000000000000000000000000000000..e780faee18570c9970d381b3f7c65b95665469cd
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/apple,h7-display-pipe-mipi.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/apple,h7-display-pipe-mipi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpu/drm/panel/panel-summit.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+title: Apple pre-DCP display controller MIPI interface
++#include <linux/backlight.h>
++#include <drm/drm_device.h>
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_mode.h>
++#include <drm/drm_modes.h>
++#include <drm/drm_panel.h>
++#include <drm/drm_probe_helper.h>
++#include <video/mipi_display.h>
 +
-+maintainers:
-+  - Sasha Finkelstein <fnkl.kernel@gmail.com>
++struct summit_data {
++	struct mipi_dsi_device *dsi;
++	struct backlight_device *bl;
++	struct drm_panel panel;
++};
 +
-+description:
-+  The MIPI controller part of the pre-DCP Apple display controller
++static int summit_set_brightness(struct device *dev)
++{
++	struct summit_data *s_data = dev_get_drvdata(dev);
++	int level = backlight_get_brightness(s_data->bl);
 +
-+allOf:
-+  - $ref: dsi-controller.yaml#
++	return mipi_dsi_dcs_set_display_brightness(s_data->dsi, level);
++}
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apple,t8112-display-pipe-mipi
-+          - apple,t8103-display-pipe-mipi
-+      - const: apple,h7-display-pipe-mipi
++static int summit_bl_update_status(struct backlight_device *dev)
++{
++	return summit_set_brightness(&dev->dev);
++}
 +
-+  reg:
-+    maxItems: 1
++static const struct backlight_ops summit_bl_ops = {
++	.update_status	= summit_bl_update_status,
++};
 +
-+  power-domains:
-+    maxItems: 1
++static struct drm_display_mode summit_mode = {
++	.vdisplay = 2008,
++	.hdisplay = 60,
++	.hsync_start = 60 + 8,
++	.hsync_end = 60 + 8 + 80,
++	.htotal = 60 + 8 + 80 + 40,
++	.vsync_start = 2008 + 1,
++	.vsync_end = 2008 + 1 + 15,
++	.vtotal = 2008 + 1 + 15 + 6,
++	.clock = ((60 + 8 + 80 + 40) * (2008 + 1 + 15 + 6) * 60) / 1000,
++	.type = DRM_MODE_TYPE_DRIVER,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_NVSYNC,
++};
 +
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
++static int summit_get_modes(struct drm_panel *panel,
++			    struct drm_connector *connector)
++{
++	connector->display_info.non_desktop = true;
++	drm_object_property_set_value(&connector->base,
++				      connector->dev->mode_config.non_desktop_property,
++				      connector->display_info.non_desktop);
 +
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Input port. Always connected to the primary controller
++	return drm_connector_helper_get_modes_fixed(connector, &summit_mode);
++}
 +
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Output MIPI DSI port to the panel
++static const struct drm_panel_funcs summit_panel_funcs = {
++	.get_modes = summit_get_modes,
++};
 +
-+    required:
-+      - port@0
-+      - port@1
++static int summit_probe(struct mipi_dsi_device *dsi)
++{
++	struct backlight_properties props = { 0 };
++	struct device *dev = &dsi->dev;
++	struct summit_data *s_data;
++	int ret;
 +
-+required:
-+  - compatible
-+  - reg
-+  - ports
++	s_data = devm_kzalloc(dev, sizeof(*s_data), GFP_KERNEL);
++	if (!s_data)
++		return -ENOMEM;
 +
-+unevaluatedProperties: false
++	mipi_dsi_set_drvdata(dsi, s_data);
++	s_data->dsi = dsi;
 +
-+examples:
-+  - |
-+    dsi@28200000 {
-+        compatible = "apple,t8103-display-pipe-mipi", "apple,h7-display-pipe-mipi";
-+        reg = <0x28200000 0xc000>;
-+        power-domains = <&ps_dispdfr_mipi>;
++	ret = device_property_read_u32(dev, "max-brightness", &props.max_brightness);
++	if (ret)
++		return ret;
++	props.type = BACKLIGHT_RAW;
 +
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
++	s_data->bl = devm_backlight_device_register(dev, dev_name(dev),
++						    dev, s_data, &summit_bl_ops, &props);
++	if (IS_ERR(s_data->bl))
++		return PTR_ERR(s_data->bl);
 +
-+            port@0 {
-+                reg = <0>;
++	drm_panel_init(&s_data->panel, dev, &summit_panel_funcs,
++		       DRM_MODE_CONNECTOR_DSI);
++	drm_panel_add(&s_data->panel);
 +
-+                dfr_adp_out_mipi: endpoint {
-+                    remote-endpoint = <&dfr_adp_out_mipi>;
-+                };
-+            };
++	return mipi_dsi_attach(dsi);
++}
 +
-+            port@1 {
-+                reg = <1>;
++static void summit_remove(struct mipi_dsi_device *dsi)
++{
++	struct summit_data *s_data = mipi_dsi_get_drvdata(dsi);
 +
-+                dfr_panel_in: endpoint {
-+                    remote-endpoint = <&dfr_mipi_out_panel>;
-+                };
-+            };
-+        };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/display/apple,h7-display-pipe.yaml b/Documentation/devicetree/bindings/display/apple,h7-display-pipe.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..102fb1804c0c0b84f590e507ca2d526948e98f68
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/apple,h7-display-pipe.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/apple,h7-display-pipe.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++	mipi_dsi_detach(dsi);
++	drm_panel_remove(&s_data->panel);
++}
 +
-+title: Apple pre-DCP display controller
++static int summit_suspend(struct device *dev)
++{
++	struct summit_data *s_data = dev_get_drvdata(dev);
 +
-+maintainers:
-+  - Sasha Finkelstein <fnkl.kernel@gmail.com>
++	return mipi_dsi_dcs_set_display_brightness(s_data->dsi, 0);
++}
 +
-+description:
-+  A secondary display controller used to drive the "touchbar" on
-+  certain Apple laptops.
++static DEFINE_SIMPLE_DEV_PM_OPS(summit_pm_ops, summit_suspend,
++				summit_set_brightness);
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apple,t8112-display-pipe
-+          - apple,t8103-display-pipe
-+      - const: apple,h7-display-pipe
++static const struct of_device_id summit_of_match[] = {
++	{ .compatible = "apple,summit" },
++	{},
++};
 +
-+  reg:
-+    items:
-+      - description: Primary register block, controls planes and blending
-+      - description:
-+          Contains other configuration registers like interrupt
-+          and FIFO control
++MODULE_DEVICE_TABLE(of, summit_of_match);
 +
-+  reg-names:
-+    items:
-+      - const: be
-+      - const: fe
++static struct mipi_dsi_driver summit_driver = {
++	.probe = summit_probe,
++	.remove = summit_remove,
++	.driver = {
++		.name = "panel-summit",
++		.of_match_table = summit_of_match,
++		.pm = pm_sleep_ptr(&summit_pm_ops),
++	},
++};
++module_mipi_dsi_driver(summit_driver);
 +
-+  power-domains:
-+    description:
-+      Phandles to pmgr entries that are needed for this controller to turn on.
-+      Aside from that, their specific functions are unknown
-+    maxItems: 2
-+
-+  interrupts:
-+    items:
-+      - description: Unknown function
-+      - description: Primary interrupt. Vsync events are reported via it
-+
-+  interrupt-names:
-+    items:
-+      - const: be
-+      - const: fe
-+
-+  iommus:
-+    maxItems: 1
-+
-+  port:
-+    $ref: /schemas/graph.yaml#/properties/port
-+    description: Output port. Always connected to apple,h7-display-pipe-mipi
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/apple-aic.h>
-+    display-pipe@28200000 {
-+        compatible = "apple,t8103-display-pipe", "apple,h7-display-pipe";
-+        reg = <0x28200000 0xc000>,
-+              <0x28400000 0x4000>;
-+        reg-names = "be", "fe";
-+        power-domains = <&ps_dispdfr_fe>, <&ps_dispdfr_be>;
-+        interrupt-parent = <&aic>;
-+        interrupts = <AIC_IRQ 502 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 506 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "be", "fe";
-+        iommus = <&displaydfr_dart 0>;
-+
-+        port {
-+            dfr_adp_out_mipi: endpoint {
-+                remote-endpoint = <&dfr_mipi_in_adp>;
-+            };
-+        };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/display/panel/apple,summit.yaml b/Documentation/devicetree/bindings/display/panel/apple,summit.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..f081755325e97ad58b831893b84082cc10f8d5e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/apple,summit.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/apple,summit.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Apple "Summit" display panel
-+
-+maintainers:
-+  - Sasha Finkelstein <fnkl.kernel@gmail.com>
-+
-+description:
-+  An OLED panel used as a touchbar on certain Apple laptops.
-+  Contains a backlight device, which controls brightness of the panel itself.
-+  The backlight common properties are included for this reason
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+  - $ref: /schemas/leds/backlight/common.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apple,j293-summit
-+          - apple,j493-summit
-+      - const: apple,summit
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - max-brightness
-+  - port
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "apple,j293-summit", "apple,summit";
-+            reg = <0>;
-+            max-brightness = <255>;
-+
-+            port {
-+                endpoint {
-+                    remote-endpoint = <&dfr_bridge_out>;
-+                };
-+            };
-+        };
-+    };
-+...
++MODULE_DESCRIPTION("Summit Display Panel Driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.48.1
