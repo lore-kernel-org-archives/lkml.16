@@ -1,138 +1,146 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA512248AD
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895E21FC0ED
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738824815; cv=none; b=SbO3UtmSKF8KIivMYWJCi1WhZ/GSLpZTSte/YfMmMIeJPJ0+Li54gfS1DYDJOf8U7GD6JTzqepzA4SO6Gb4vgU+HWXbQb6tvl3HITRQIUhSXQssW7KAeChplTZFqZF7iLprpkXujpYXUSmrqYrRIim6kKRuykl5ef9hl3gvwOuI=
+	t=1738824942; cv=none; b=L2KgkFYHQx+7CJxqKCtO0PAXo+i5C81MB3TdKgm86eqyMmabO1FW8bQLLqhJJ76416fH+ixS1bhecJ+dGv/3rIsDAjdEUOWlgV6gI/3r0eDC+6wYPN7QCzlVlsQX8sglZxLqDTu0DYWSnSQo0aSZmV2YKTWR6OWQFx5KvJA1CO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738824815; c=relaxed/simple;
-	bh=QFOprhmkYAckDmLpj8OaQpl0QIRArOwxk2YuENHmzqo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWlOQAMy909A9kM23fut2WfuCgSs814zQTSkbZ02dCG5BVNJfJJjNx0zNGU9NbtLSDcDfSnDzZEiGbGeCJhYt0Z/lfUG6Tc5EwHGxHlRgfZQlwnKEFhpIvG/R5rFN4XbPGfHTVyU7GbDmtz2jDLjcbDa/HsfoHSn0L0c0+0waUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=F0mlw8j/; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1738824942; c=relaxed/simple;
+	bh=wvZpzFqsjPACbzTXMQdG48n0MCvr8dXwRSU6JwN/jLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k2JwLlHytTjnc34m5sk5HGWoHhTVLG7zwTk+ccM2hpd+0yoRisZLr6dPhTeEenR8SwSqtUViTXUFK4/3gMbwWrC7ojk9fOyNbv9uRqD20egrCY7azxoEIFO2AXYItkKI1GHilP5mFICPkoJa+TD0KkJjFFn/Ec1BpcWOTOG2HyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDPu49YZ; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="F0mlw8j/"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9bd7c480eso1012715a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 22:53:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDPu49YZ"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307325f2436so5154251fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 22:55:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1738824813; x=1739429613; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yfPzJgqGwInu62D/JbABqcLSTAUY1ivE7x32/lUlB+s=;
-        b=F0mlw8j/AG0MKEBcdJHMFfXXcLJ0ZHP9/2K6J65yteNpK+qdNKxi18sDLlaF6onQnk
-         7c70gicAMlBwDxssr+lPqXbLewbQ61RYZzGZA9AY1cZ3ojHEeFqPVvWp2W6wq6PdJ2bE
-         dhHzIGyD5t5vvHpYQ2LULeZ9rPFAIDAly6LNqJ5wLvylIZqJcjCrNgEQhbCKjwhNjzji
-         MMKSGqxhTzGYnejgMhOTdphd7HLFgxNBm+LPWbpTPy2vL60I1iVcWsL+XvNdoH43xudi
-         lGe7fCgaaruH+etviHr/ZmC0t4qH7k5F/h9dOxCCLMbehoxwPncy/r7dWoQ1vnfqnb7E
-         DR6g==
+        d=gmail.com; s=20230601; t=1738824938; x=1739429738; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EYxML1IvkX/tlwSsdd/qDyAsTAIzYWO3WovQD8yPps8=;
+        b=cDPu49YZw8i1CsC8Au+BB4N7Oga1AOH3d831FwpddTJmcES4aARgvOuPuVq6VfANb2
+         noiWBzyhA0+H3slBxzcgX/Tdut0+DlQPerdTLqw98U7kMzYst1Oiqb+E/FoPhx5AaI1b
+         2tKG38x6baM+tTzT5FvpUS5FeXFcptX06tNgVaOfWFFpd0cOYjnmUPGrmSjmg6enCqzX
+         5sbdHDvWuxpe6+492o2fb+gDciztWFPW4e0Xo+jVgJyVDOENR4LtUYYwe2AJYdbd6YsE
+         0Nz4ph/hhzSNPzAevBLz3iSDzXcCN0HFhVD02W2Z1RXX+M01Wp1FYAsC45x9YTGX54Bh
+         kzzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738824813; x=1739429613;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yfPzJgqGwInu62D/JbABqcLSTAUY1ivE7x32/lUlB+s=;
-        b=K8v1Vb+NKDJyZ3ExKliYDLVRNvfRdOSqx4efIGki2gxO5ewaA4KgosSsjeCPqOX49p
-         g5xZJfx8+KeZb7izUtroFwTnPrD4CzC7G7fZA50Od6waaglc/lOeOPEgk9hXDcc1Kf5Q
-         dCrd4twDon52EUAFtHkSTgxqcgVnmEp2TUIQOCQdGu6f6k1ZmsoLtpOB0WTSe8cvLG5k
-         4YuVHwngBhw1xKr8R7HLLXcMct+NSDd+vZRmrdVOMGSoUoTfBhV+NbMJNyJDxJ0Xu13L
-         8UXVOnB3Cjy0L3kdlXP5arxh8EzSKOL+TbMIIMOSyd5UnMTbm61c6tbwCHRIs7bFp9GO
-         +0Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJgFsU/BiBMfQh2B1hYp0GbNqiQgtR7dFjudkonHLO8lA5PSXl1Bp5gi6JE5DnCuVXH3yj4CWP3t6c9V8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywaf2rIJb/WwpeLGHEfvw5qVbq+5JGPWmczr563cu/j864hkWky
-	QqmK/3Xf4CX6YpEO/ZGXem5SNPv31H3ZdxZ+iKGRCpCut/uTUBCizQRtN6N63b0=
-X-Gm-Gg: ASbGnctpevtit8HupwupGq1IzJ9UWDRU5g1EEYNoZMzJJ7Ta/CN4hFYWHnFCnCNBPQ9
-	21s/4K5Qmo4Yo8ACV0l6k424HuB0vEgz4XdleFlhwqzLqs5Q8l7W2mmUh9wf2Lduuq8Q0xn+i/p
-	9qMEpmfRkrzvIU9VXGjyUGk5NmpqP2wObNmhNUiK6LS4P6rDobkBcxtXHGvMwD+eufdy0JBu1E7
-	mjyWo6eZjE7ao1Vn/i4AI8AywFmAdoPe1lc1Zm9SuGQkNIh5sKvcE/Lzo1ku8YMbd7Ewj9qyCNg
-	G7P22V4k70czfJXfMl6EGlLOdSta
-X-Google-Smtp-Source: AGHT+IER8psjFE80ifTWvoXn5WHFoV2OjIRpn8B020yOLPR0qnk21Bx82Mdy+x+4gwZSwLApBeX7OA==
-X-Received: by 2002:a17:90b:2d8e:b0:2ea:bf1c:1e3a with SMTP id 98e67ed59e1d1-2f9e0767573mr10783588a91.12.1738824813210;
-        Wed, 05 Feb 2025 22:53:33 -0800 (PST)
-Received: from [157.82.207.107] ([157.82.207.107])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1e24559sm2800958a91.31.2025.02.05.22.53.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 22:53:32 -0800 (PST)
-Message-ID: <12dbfa5e-32cc-4355-89e4-6c1cd4e12d1a@daynix.com>
-Date: Thu, 6 Feb 2025 15:53:26 +0900
+        d=1e100.net; s=20230601; t=1738824938; x=1739429738;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EYxML1IvkX/tlwSsdd/qDyAsTAIzYWO3WovQD8yPps8=;
+        b=rt1YKeuThcbtEU9p2BJxNsuWrQIu8ttXRDURxxe+jiHaEujDCazNfiCHji20tmG86I
+         YaC10PoV2V6Asw378/Z2SdCzQeSdlIpSQSpJdohh+8FCQbh+L5woz9IikCF0BUQRIAXr
+         z7R8cxg8VPJWw9S/ZkpR4occIktaXL1M5Iu60jTLLXUSP90CRGNaNOConeq2dsc9giBY
+         vgMpdgs9dCBb+Xd7tDRN2dyvomtipf0/kcugiwSz51T1WHv559077JBZpuHw3kPzC9y2
+         g3yuQbUcYFSyiE+U2oHL685GGIx6ZvGkk2NRaWQkeBUJIYjS4vyQHXfY5+5yY/Y/RkXO
+         JAqA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/hgVhF6YEULnVr7wjyOWYr2wxp9aPCOr9WWYM5d8L5eHHHR26R1f9jN9i5YTzkKa8B5pWzxk4rcABWuc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc5fiXS7SysVkWxlH+r1sghoZadZBV3t5Y6M6iUhfx2n3Md1y9
+	D7r2c9knR9yyJbzxUKVmcoTmP5gi0zELQZsZFjHjQrDlt15BrzW5/BXdbtFMs41BxqK5qT1RfeZ
+	GB1U5IH7VTJws1Y7/lA7k7pYctI0Hb6GOB+c=
+X-Gm-Gg: ASbGnctjkmTV8WR2LRySuFjKIbYHjIXNHE1USOfIEVaik2qOkIs289RGOx+/pYEaglH
+	I1MPtistNnASLgG101rK4zM0gn07udRrCBUH5T85/3estsfeRwHrzJ8+ZyLChXbqjQPno4M9L
+X-Google-Smtp-Source: AGHT+IEoRUgWvsN+VPa1Lnr21xtLoHTS1yZYhwFh18Q05mc2Z5sFhWyJRAYjCrkEH1KxoE2+BMFU2O8Zs1330IgxfMU=
+X-Received: by 2002:a05:651c:2225:b0:302:3c78:4ea4 with SMTP id
+ 38308e7fff4ca-307cf370fefmr19656601fa.30.1738824938259; Wed, 05 Feb 2025
+ 22:55:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 1/7] tun: Refactor CONFIG_TUN_VNET_CROSS_LE
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Jason Wang <jasowang@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, kvm@vger.kernel.org,
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
- Yuri Benditovich <yuri.benditovich@daynix.com>,
- Andrew Melnychenko <andrew@daynix.com>,
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com,
- devel@daynix.com
-Cc: Willem de Bruijn <willemb@google.com>
-References: <20250205-tun-v5-0-15d0b32e87fa@daynix.com>
- <20250205-tun-v5-1-15d0b32e87fa@daynix.com>
- <67a3d2efbba32_170d392944d@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <67a3d2efbba32_170d392944d@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-3-senozhatsky@chromium.org> <CAMgjq7BFUrUY5Xq5Eks4ibqbWgJcca1vqB4kq=otQVyG=23FRw@mail.gmail.com>
+ <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
+In-Reply-To: <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 6 Feb 2025 14:55:21 +0800
+X-Gm-Features: AWEUYZmxJd7uZ-US7tSScgg6iDTwpXgeuX_q0pRG49_fxDXdBe6tPR1AAidDZnY
+Message-ID: <CAMgjq7DKveiCJVb4ACSaLFV0Q1_Yd+sbL_X2dgXz6QGYwuNRTw@mail.gmail.com>
+Subject: Re: [PATCHv4 02/17] zram: do not use per-CPU compression streams
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/02/06 6:06, Willem de Bruijn wrote:
-> Akihiko Odaki wrote:
->> Check IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) to save some lines and make
->> future changes easier.
->>
->> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
->> Reviewed-by: Willem de Bruijn <willemb@google.com>
->> ---
->>   drivers/net/tun.c | 26 ++++++++------------------
->>   1 file changed, 8 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
->> index e816aaba8e5f2ed06f8832f79553b6c976e75bb8..452fc5104260fe7ff5fdd5cedc5d2647cbe35c79 100644
->> --- a/drivers/net/tun.c
->> +++ b/drivers/net/tun.c
->> @@ -298,10 +298,10 @@ static bool tun_napi_frags_enabled(const struct tun_file *tfile)
->>   	return tfile->napi_frags_enabled;
->>   }
->>   
->> -#ifdef CONFIG_TUN_VNET_CROSS_LE
->>   static inline bool tun_legacy_is_little_endian(struct tun_struct *tun)
->>   {
->> -	return tun->flags & TUN_VNET_BE ? false :
->> +	return !(IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) &&
->> +		 (tun->flags & TUN_VNET_BE)) &&
->>   		virtio_legacy_is_little_endian();
-> 
-> Since I have other comments to the series:
-> 
-> Can we make this a bit simpler to the reader, by splitting the test:
-> 
->      if (IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) && tun->flags & TUN_VNET_BE)
->              return false;
-> 
->      return virtio_legacy_is_little_endian();
-> 
+On Mon, Feb 3, 2025 at 11:49=E2=80=AFAM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (25/02/01 17:21), Kairui Song wrote:
+> > This seems will cause a huge regression of performance on multi core
+> > systems, this is especially significant as the number of concurrent
+> > tasks increases:
+> >
+> > Test build linux kernel using ZRAM as SWAP (1G memcg):
+> >
+> > Before:
+> > + /usr/bin/time make -s -j48
+> > 2495.77user 2604.77system 2:12.95elapsed 3836%CPU (0avgtext+0avgdata
+> > 863304maxresident)k
+> >
+> > After:
+> > + /usr/bin/time make -s -j48
+> > 2403.60user 6676.09system 3:38.22elapsed 4160%CPU (0avgtext+0avgdata
+> > 863276maxresident)k
+>
+> How many CPUs do you have?  I assume, preemption gets into way which is
+> sort of expected, to be honest...  Using per-CPU compression streams
+> disables preemption and uses CPU exclusively at a price of other tasks
+> not being able to run.  I do tend to think that I made a mistake by
+> switching zram to per-CPU compression streams.
+>
+> What preemption model do you use and to what extent do you overload
+> your system?
+>
+> My tests don't show anything unusual (but I don't overload the system)
+>
+> CONFIG_PREEMPT
 
-I kept all in one expression to show how different variables are reduced 
-into one bool value, but I agree it is too complicated.
+I'm using CONFIG_PREEMPT_VOLUNTARY=3Dy, and there are 96 logical CPUs
+(48c96t), make -j48 shouldn't be considered overload I think. make
+-j32 also showed an obvious slow down.
 
-I'm adding a new variable to simplify this. The return statement will 
-look like: return !be && virtio_legacy_is_little_endian();
+>
+> before
+> 1371.96user 156.21system 1:30.91elapsed 1680%CPU (0avgtext+0avgdata 82563=
+6maxresident)k
+> 32688inputs+1768416outputs (259major+51539861minor)pagefaults 0swaps
+>
+> after
+> 1372.05user 155.79system 1:30.82elapsed 1682%CPU (0avgtext+0avgdata 82568=
+4maxresident)k
+> 32680inputs+1768416outputs (273major+51541815minor)pagefaults 0swaps
+>
+> (I use zram as a block device with ext4 on it.)
 
-It means: for tun, whether the legacy format is in little endian will be 
-determined from the tun-specific big-endian flag and the virtio's common 
-logic.
+I'm testing with ZRAM as SWAP, and tmpfs as storage for the kernel
+source code, with memory pressure inside a 2G or smaller mem cgroup
+(depend on make -j48 or -j32).
+
+>
+> > `perf lock contention -ab sleep 3` also indicates the big spin lock in
+> > zcomp_stream_get/put is having significant contention:
+>
+> Hmm it's just
+>
+>         spin_lock()
+>         list first entry
+>         spin_unlock()
+>
+> Shouldn't be "a big spin lock", that's very odd.  I'm not familiar with
+> perf lock contention, let me take a look.
+
+I can debug this a bit more to figure out why the contention is huge
+later, but my first thought is that, as Yosry also mentioned in
+another reply, making it preemptable doesn't necessarily mean the per
+CPU stream has to be gone.
