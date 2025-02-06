@@ -1,326 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8866F18A6BD;
-	Thu,  6 Feb 2025 17:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0225313C809
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863046; cv=none; b=KwdS43G70sGCl5B/J3/pB0Vw0r9ZsJlBQZGpztx4jBpPHF1sQKQlvF+TGXBbWRpK5VkBhANL6nJI568K8cHpVHKD/66qvRpb66kZSHZsHQ/xWxTfoFZUrbY/rADLfLdhXq0sBycJnHsa3jlBKU9mxlN3NRYae2eKxo8pQTaq3Y4=
+	t=1738863140; cv=none; b=JWNwZnotss4zvsQXnqijBscB4WaLxH6Ihtr2NIj+b37ynQZIorEE1HiOUz1ZpCnAijfo5RkkVATqwvgldbWllAbVIB2RawsaTeLbexH5VbEyiXfW+vhqqJ9IUK/szTjR9ne9ZC6Ji9ouXGcDHOQdfzN84zxn4FpguGnNhKcgJCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863046; c=relaxed/simple;
-	bh=dEzyg2r4tZKWMxK6fgAdi9bkgZ+Gg97tUdv2KrGqngY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DGw3+mB9yZVN8ZDVG+Gmm81AcewxI2SOter146lkOAAi6vsQrSsXdhQpsXrN3Owl1fJIhT/2jGcqUb6zfYicIHfzjP4YMMMhn0EhwZkf345OXmPjcdA4ZlT2kK7tvfN1HeAH5OPyC90oTQGJ2JXxQmPkvENSzVO5B2Qaw91wW6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmJhN3pE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738863140; c=relaxed/simple;
+	bh=qXL4u5HtBh7zMGEdVRYSIwU4cTJd5ZFAEgvCBEfFL4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MU2wSJpLPzOW/QpPg8cxcRvpBJSq+ckK/FD5JXrs8ZxAA0nVPBbV3Oh/m+nJppXlV7DDSwIIJOkafZX/yZDYpl6kuIkydij01GrBTJAOwlXMtznmghh2c47EZXLboPzJnVEbXo/e8RwHI5SC5Sx3SNGUOr0k9IFyfybIq/UFWgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HbtTq2HJ; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmJhN3pE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEB6C4CEDD;
-	Thu,  6 Feb 2025 17:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738863046;
-	bh=dEzyg2r4tZKWMxK6fgAdi9bkgZ+Gg97tUdv2KrGqngY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kmJhN3pEUEX7HmbyYzousuk6RwyqiD+uQ0neynfv0Zzru2qTIJfYAYAQ9M15TgToN
-	 B8oYRMKQdkCh5HoMPT831dhlNYGZPK9b/aeb5P8Ts1mISgehqbU/yejenz2dRDFjS6
-	 SRlqjkQuUPrT4guXBqtotmRYS96p+1LCjZZaBDeI4v/YMhVZXj9MrfDuJeNmp3YINj
-	 4Wi7TyYvrfNr3ZXbxSp6U53QCPiLJAJfbG0F/R3ON0KY8lxSTOCk+MlJfvHU/cPcM0
-	 0x1Zee1z3BDwOh/2k1s43SwA0zFNFuxAfSvX0xwcinHTD1NBjz1GmXLv2ZUrLNshGz
-	 alEImmKigZ4ug==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tg5i7-001DLm-VD;
-	Thu, 06 Feb 2025 17:30:44 +0000
-Date: Thu, 06 Feb 2025 17:30:43 +0000
-Message-ID: <86pljvt1z0.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Cc: kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	darren@os.amperecomputing.com,
-	scott@os.amperecomputing.com
-Subject: Re: [RFC PATCH 2/2] KVM: arm64: nv: selftests: Access VNCR mapped registers
-In-Reply-To: <20250206164120.4045569-3-gankulkarni@os.amperecomputing.com>
-References: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
-	<20250206164120.4045569-3-gankulkarni@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HbtTq2HJ"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e42f82ab88so13144886d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:32:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738863138; x=1739467938; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kdXR13Nx3/oP+ZXCK66mPCS4i0K090PQPzNpGMGIMKk=;
+        b=HbtTq2HJnz8V8lPUqCjTbbkxzetcVylU6mZtZ0XDNr/3uUXPv4q+V9LmPPHlTwPSLR
+         1g1NcJftDolMVRPxoJ/B4gHQxdOgvnIbW2+5EGUl/e0RntWkjCmgAj5WmbuujZEW9UAV
+         ywPJ087jZCNglTiDHKDU0LoVQp1ivrlzhpUB8s0ceaicD4j56Q/6lD5j3V8Xb1sC7KDF
+         KaWKQx73vO1F1f1S6cOCdKG7xrCGtuMxzcKthPBoT7sp273hMe2VSakSVODYvwpyAAvb
+         aMVOUQxPWotsD+YiLyetUbts5nc+eSAvtNwpnSWwyNbMS38UYYviyh6odY3b4KY3dBnI
+         aYkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738863138; x=1739467938;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kdXR13Nx3/oP+ZXCK66mPCS4i0K090PQPzNpGMGIMKk=;
+        b=Q0EiIuze0fOR7oWra5VPSiJXywiPgLbGQb0UuaIsnN2AYgNjRmsdA3/PWT9BUkPLE2
+         5wlja1QZs1f7EKsHpeNLt9Wrj6OkxGpr2p3PHbfN0SyhjCBMK2ZUYsKAn8MdZlDMUSX0
+         uAe6d8yy0tCWt2wcGFesxta0I87uvQiMOL1SoPIOX5HtAOWlQSPLMQ/+HTsZaG+rET5M
+         DpshE0nLZmz99QgKTO+PjjcxY2pfgXUdL+4bzYNaJg3HZzPUzSV4BrZpMY5/YvEtFPpH
+         AljpE/AIikEBTOqUej623F6QWtc4ylS9qcpuRvMVrLqKYY6s8F9l0t0CfhgnrvjwIhwC
+         d2kA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+y1wAjgLgLb7fiREjnPyHkuZHqijJDvqrpzWH9AjWnoMCjsMSD0rqPEVYJyhDWJAm/drrNLO4Hs268Sw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrbahfk75Efq0941or6k+En98ecKOhjRYr2TTE1lrw6c6nI6ph
+	nuzeJ+TkXcpPG6Nq8nPFPdqrTpj5TToPHPqD5/QatcRq8taoCS0s6Ypv1g2q/9o=
+X-Gm-Gg: ASbGncuLXa7SOQCVeKKu3CDXRtlJfjlQqWxmNDgVoexZZBw+VQ7AXduBTVbOPi8abo+
+	18z5ysOuxLdjtaD4uks4JWGqaAtNTZIzSfpHtj6rpC4SsWgTWeBOGc0yhvvKcl3T6Iqcmovt52I
+	n0WMoQXr4rdrtQfi2OQuTU+Eo+aNr8Ng2wjUih+bxsNH0jm0q2P322e6gV9YcHUz94hbljnsSro
+	+K7BXJDQf49jaCluedtFU+ZpbqR3/GLrY/NKggYCgjZIqRIQxB15UTBkd4TIZHyIfQWZnEKrtxB
+	rPkNjhP7DQfCd7tHgE7k8/ZU1zSdn0FXMX79ME0ePdIya7pARm5lBD1yL7LAv54cNjMB1t5Neg=
+	=
+X-Google-Smtp-Source: AGHT+IH+rTWcE0XmrlwB22b0oxWBjkrRHByjuXKCpywQFJ2469+IJXhpsIXyAxZX6kYsM3joAVpyQw==
+X-Received: by 2002:a05:6214:5d85:b0:6d8:a148:9ac9 with SMTP id 6a1803df08f44-6e42fc53a18mr80698996d6.30.1738863137803;
+        Thu, 06 Feb 2025 09:32:17 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43babbaf3sm7680136d6.109.2025.02.06.09.32.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 09:32:17 -0800 (PST)
+Date: Thu, 6 Feb 2025 12:32:15 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v6 2/6] efi/cper, cxl: Make definitions and structures
+ global
+Message-ID: <Z6TyHwbrxTcbhtzy@gourry-fedora-PF4VCD3F>
+References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250123084421.127697-3-Smita.KoralahalliChannabasappa@amd.com>
+ <Z6O5JqL30lFr4S8Q@gourry-fedora-PF4VCD3F>
+ <20250206105403.00007062@huawei.com>
+ <Z6Tf0ZvZMfqth_t1@gourry-fedora-PF4VCD3F>
+ <20250206-pretty-gabby-loon-d4e4c4@lemur>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, darren@os.amperecomputing.com, scott@os.amperecomputing.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206-pretty-gabby-loon-d4e4c4@lemur>
 
-On Thu, 06 Feb 2025 16:41:20 +0000,
-Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+On Thu, Feb 06, 2025 at 12:14:03PM -0500, Konstantin Ryabitsev wrote:
+> On Thu, Feb 06, 2025 at 11:14:09AM -0500, Gregory Price wrote:
+> > trivia: The last upstream `Reveiwed` patch was 2017
+> > 
+> > Funny enough b4 takes the tag as-is.
 > 
-> With NV2 enabled, some of the EL1/EL2/EL12 register accesses are
-> transformed to memory accesses. This test code accesses all those
-> registers in guest code to validate that they are not trapped to L0.
->
-
-Traps to L0 are invisible to the guest -- by definition. What the
-guest can observe is an exception, be it injected by L0 or directly
-delivered by the HW.
-
-But the *absence* of an exception doesn't mean things are fine. Quite
-the opposite.
-
-> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-> ---
->  tools/testing/selftests/kvm/Makefile.kvm      |   1 +
->  .../selftests/kvm/arm64/nv_vncr_regs_test.c   | 255 ++++++++++++++++++
->  2 files changed, 256 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/arm64/nv_vncr_regs_test.c
+> Yeah, we can't possibly keep track of all the tags people use, with some
+> projects getting creative with "Reviewed-and-edited-by:" or similar combined
+> trailers. So, we just blanket accept any person-tags (that have a "Person Name
+> <adddress@example.com>" format).
 > 
-> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-> index a85d3bec9fb1..7790e4021013 100644
-> --- a/tools/testing/selftests/kvm/Makefile.kvm
-> +++ b/tools/testing/selftests/kvm/Makefile.kvm
-> @@ -155,6 +155,7 @@ TEST_GEN_PROGS_arm64 += arm64/vgic_lpi_stress
->  TEST_GEN_PROGS_arm64 += arm64/vpmu_counter_access
->  TEST_GEN_PROGS_arm64 += arm64/no-vgic-v3
->  TEST_GEN_PROGS_arm64 += arm64/nv_guest_hypervisor
-> +TEST_GEN_PROGS_arm64 += arm64/nv_vncr_regs_test
->  TEST_GEN_PROGS_arm64 += access_tracking_perf_test
->  TEST_GEN_PROGS_arm64 += arch_timer
->  TEST_GEN_PROGS_arm64 += coalesced_io_test
-> diff --git a/tools/testing/selftests/kvm/arm64/nv_vncr_regs_test.c b/tools/testing/selftests/kvm/arm64/nv_vncr_regs_test.c
-> new file mode 100644
-> index 000000000000..d05b20b828ff
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/arm64/nv_vncr_regs_test.c
-> @@ -0,0 +1,255 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2025 Ampere Computing LLC
-> + *
-> + * This is a test to validate Nested Virtualization.
-> + */
-> +#include <kvm_util.h>
-> +#include <nv_util.h>
-> +#include <processor.h>
-> +#include <vgic.h>
-> +
-> +#define __check_sr_read(r)					\
-> +	({							\
-> +		uint64_t val;					\
-> +								\
-> +		handled = false;				\
-> +		dsb(sy);					\
-> +		val = read_sysreg_s(SYS_ ## r);			\
-> +		val;						\
-> +	})
-> +
-> +#define __check_sr_write(r)					\
-> +	do {							\
-> +		handled = false;				\
-> +		dsb(sy);					\
-> +		write_sysreg_s(0, SYS_ ## r);			\
-> +		isb();						\
-> +	} while (0)
-> +
-> +
-> +#define check_sr_read(r)					  \
-> +	do {							  \
-> +		__check_sr_read(r);				  \
-> +		__GUEST_ASSERT(!handled, #r "Read Test Failed");  \
-> +	} while (0)
-> +
-> +#define check_sr_write(r)					  \
-> +	do {							  \
-> +		__check_sr_write(r);				  \
-> +		__GUEST_ASSERT(!handled, #r "Write Test Failed"); \
-> +	} while (0)
-> +
-> +#define check_sr_rw(r)				\
-> +	do {					\
-> +		GUEST_PRINTF("%s\n", #r);	\
-> +		check_sr_write(r);		\
-> +		check_sr_read(r);		\
-> +	} while (0)
+> -K
 
-Instead of lifting things from existing tests, you could move these
-things to an include file for everybody's benefit.
+Wasn't suggesting a change, I just found it kinda funny.
 
-> +
-> +static void test_vncr_mapped_regs(void);
-> +static void regs_test_ich_lr(void);
-> +
-> +static volatile bool handled;
-> +
-> +static void regs_test_ich_lr(void)
-> +{
-> +	int nr_lr, lr;
-> +
-> +	nr_lr  = (read_sysreg_s(SYS_ICH_VTR_EL2) & 0xf);
-> +
-> +	for (lr = 0; lr <= nr_lr;  lr++) {
-> +		switch (lr) {
-> +		case 0:
-> +			check_sr_rw(ICH_LR0_EL2);
-> +			break;
-> +		case 1:
-> +			check_sr_rw(ICH_LR1_EL2);
-> +			break;
-> +		case 2:
-> +			check_sr_rw(ICH_LR2_EL2);
-> +			break;
-> +		case 3:
-> +			check_sr_rw(ICH_LR3_EL2);
-> +			break;
-> +		case 4:
-> +			check_sr_rw(ICH_LR4_EL2);
-> +			break;
-> +		case 5:
-> +			check_sr_rw(ICH_LR5_EL2);
-> +			break;
-> +		case 6:
-> +			check_sr_rw(ICH_LR6_EL2);
-> +			break;
-> +		case 7:
-> +			check_sr_rw(ICH_LR7_EL2);
-> +			break;
-> +		case 8:
-> +			check_sr_rw(ICH_LR8_EL2);
-> +			break;
-> +		case 9:
-> +			check_sr_rw(ICH_LR9_EL2);
-> +			break;
-> +		case 10:
-> +			check_sr_rw(ICH_LR10_EL2);
-> +			break;
-> +		case 11:
-> +			check_sr_rw(ICH_LR11_EL2);
-> +			break;
-> +		case 12:
-> +			check_sr_rw(ICH_LR12_EL2);
-> +			break;
-> +		case 13:
-> +			check_sr_rw(ICH_LR13_EL2);
-> +			break;
-> +		case 14:
-> +			check_sr_rw(ICH_LR14_EL2);
-> +			break;
-> +		case 15:
-> +			check_sr_rw(ICH_LR15_EL2);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +/*
-> + * Validate READ/WRITE to VNCR Mapped registers for NV1=0
-> + */
-> +
-> +static void test_vncr_mapped_regs(void)
-> +{
-> +	/*
-> +	 * Access all VNCR Mapped registers, and fail if we get an UNDEF.
-> +	 */
+Should suggest tag-search on lwn.net to find all the fun typos.
 
-No. You are accessing a lot of random registers, irrespective of the
-configuration exposed to the guest. Being able to access it is not an
-indication of correctness. Seeing it UNDEF is not an indication of a
-bug.
-
-Also, this is supposed to be an EL2 test that doesn't deal with NV
-*itself*. There is no VNCR page in this test. The fact that the host
-uses VNCR as a way to virtualise EL2 has nothing to do with the test
-at all.
-
-> +
-> +	GUEST_PRINTF("VNCR Mapped registers access test:\n");
-> +	check_sr_rw(VTTBR_EL2);
-> +	check_sr_rw(VTCR_EL2);
-> +	check_sr_rw(VMPIDR_EL2);
-> +	check_sr_rw(CNTVOFF_EL2);
-> +	check_sr_rw(HCR_EL2);
-> +	check_sr_rw(HSTR_EL2);
-> +	check_sr_rw(VPIDR_EL2);
-> +	check_sr_rw(TPIDR_EL2);
-> +	check_sr_rw(VNCR_EL2);
-> +	check_sr_rw(CPACR_EL12);
-> +	check_sr_rw(CONTEXTIDR_EL12);
-> +	check_sr_rw(SCTLR_EL12);
-> +	check_sr_rw(ACTLR_EL1);
-> +	check_sr_rw(TCR_EL12);
-> +	check_sr_rw(AFSR0_EL12);
-> +	check_sr_rw(AFSR1_EL12);
-> +	check_sr_rw(ESR_EL12);
-> +	check_sr_rw(MAIR_EL12);
-> +	check_sr_rw(AMAIR_EL12);
-> +	check_sr_rw(MDSCR_EL1);
-> +	check_sr_rw(SPSR_EL12);
-> +	check_sr_rw(CNTV_CVAL_EL02);
-> +	check_sr_rw(CNTV_CTL_EL02);
-> +	check_sr_rw(CNTP_CVAL_EL02);
-> +	check_sr_rw(CNTP_CTL_EL02);
-> +	check_sr_rw(HAFGRTR_EL2);
-> +	check_sr_rw(TTBR0_EL12);
-> +	check_sr_rw(TTBR1_EL12);
-> +	check_sr_rw(FAR_EL12);
-> +	check_sr_rw(ELR_EL12);
-> +	check_sr_rw(SP_EL1);
-> +	check_sr_rw(VBAR_EL12);
-> +
-> +	regs_test_ich_lr();
-> +
-> +	check_sr_rw(ICH_AP0R0_EL2);
-> +	check_sr_rw(ICH_AP1R0_EL2);
-> +	check_sr_rw(ICH_HCR_EL2);
-> +	check_sr_rw(ICH_VMCR_EL2);
-> +	check_sr_rw(VDISR_EL2);
-
-This should absolutely UNDEF in the absence of FEAT_RAS exposed to the
-guest. And yet it won't. Why? That's because the architecture doesn't
-allow this to be trapped. Does it mean being able to access it is
-right? Absolutely not. This is an *architecture* bug.
-
-> +	check_sr_rw(MPAM1_EL12);
-
-This should UNDEF in the test if the configuration doesn't expose MPAM
-to the guest. And I really hope it explodes or this is a glaring bug,
-because MPAM should never be exposed to a guest.
-
-The conclusion is that blindly testing that you can R/W registers buys
-us nothing if you are not checking the validity of the access against
-the architecture rules.
-
-Any test should take as input:
-
-- the configuration of the guest
-
-- the expected outcome of the access for that particular configuration
-  and trap configuration, as described in the ARM ARM pseudocode (or,
-  even better, in the BSD-licensed JSON file that has all that
-  information)
-
-The result of the access must then be matched against these inputs and
-any discrepancy reported, either as fatal (because the outcome of the
-access wasn't the expected one) or as an expected, non-fatal failure
-(because we know that the architecture is not self-consistent).
-
-Yes, this looks a lot like a full CPU validation suite. What a
-surprise.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+~Gregory
