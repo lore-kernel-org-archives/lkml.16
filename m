@@ -1,72 +1,38 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E2622577F;
-	Thu,  6 Feb 2025 14:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0EC22D4C0;
+	Thu,  6 Feb 2025 14:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852058; cv=none; b=U6/DELhzG6+Bo99i59OkGYnNSvekcMs2BtCNELNls7ZWw8ddKkvrMHCPlbWKvsKTyzRQuLWw+IwGQoCgmQ9Sky4l9BDfoYD4cBL6qH1alHa3DoGcsPvprUBprcYJpbCfNVPwa9HyvWeeYb25Y4gPAc8pBo+j8OQm9GE0g3Z0U70=
+	t=1738852059; cv=none; b=s7UQ3iAat9JdF6ivrfbmjGaxtPT1bvKVxiPgf2EVtiIb/ceVpqA3sVnW5Jyz2ByD1TApqaSTN5w+3v8wTXccHMB9BMlmmz/pRPM6cDW4G07FPujpPzC4aJu7K5EZJ8uwLbpegqOumE546+onB8tEgvbQ32Y+C4bIf702tcXiBWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852058; c=relaxed/simple;
-	bh=BezN76/8VPt9jHagI6jVcVKYjsqhc56dWOvbCZY7qQQ=;
+	s=arc-20240116; t=1738852059; c=relaxed/simple;
+	bh=KHUYCR+ZDGP+wllo9nG3RLnnE5iJTx/Qd+4nf5VyrTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqyl0dc1eOZDiXc10WyemHCL1LUxAzIO5r7fCmoDrBum30d4fu3QKVtNqGCCWqpZHDf7C1LQyLom1/BRSPLwa6KlaobjkMHICLGrlMK11w4gK49EObeyqUYwuQm0In9/ksghrK6l8z0yuXzIhoP7TJUrMv8yK1YG8yNWstXnTwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=r/sXPZbY; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+VB0fAJO4zLn2UmTcwQKZTz10ryOADzYqTlFWbZRQ8wwF8tG4QR7bssENl7GCMSUXGkET2cDlALYgZRK3sXhYkqvSVUOzXw4MUTB9ev9mkDMcGhPPKWAQj6oSyDYfwzFXFKmraf9IsPHQKhh3z1yod8OgSSmXIIkSoYfteOg7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BCEaBwGj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r/sXPZbY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aHjwizHLsq1lp0fJhwaBPxokex1B77SgmxhHOi1t7L4=; b=r/sXPZbYGcHJakUNZ5H8VPoe8J
-	5t+SagAgodvqNeWJRNs61iA7b5jFFhQR6nvR6jI2szVVsvdl17Kt4HNUy/TTbDYQuwLwo9YaeF0Rl
-	kXU5rbHE+BjzmQ+zZXrvj4/+tgbxyqeZn3BchWXCTjtFa+5QkSPY3cX/IuT4Cdg9QJ8ZKd/wkRb2L
-	RT1S/LWVPiThEL9JUU+fgXykigzgHuuw1yldZBRp0abuKDxXxcwoacNCAuV76ChhVz/txX7RBEJgo
-	+Te0w0e0+MNi7kxnqjk/PTt5BFfACddZiyadZed8Tt5l0wY2fiQ2MIbgH5u8V13OEmfQrb1myD/bj
-	IjWlru7Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg2qb-000000067kn-3VUi;
-	Thu, 06 Feb 2025 14:27:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6802E30050D; Thu,  6 Feb 2025 15:27:17 +0100 (CET)
-Date: Thu, 6 Feb 2025 15:27:17 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Prakash Sangappa <prakash.sangappa@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
-	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
-	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250206142717.GS7145@noisy.programming.kicks-ass.net>
-References: <20250204220418.35949317@gandalf.local.home>
- <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
- <20250205081635.397eacb0@gandalf.local.home>
- <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
- <20250206083039.0916ad24@gandalf.local.home>
- <20250206134408.lD_POjuG@linutronix.de>
- <20250206134859.GP7145@noisy.programming.kicks-ass.net>
- <20250206135353.i1tp4vDv@linutronix.de>
- <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
- <20250206142234.-kcSg0xr@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BCEaBwGj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D92C4CEDF;
+	Thu,  6 Feb 2025 14:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738852059;
+	bh=KHUYCR+ZDGP+wllo9nG3RLnnE5iJTx/Qd+4nf5VyrTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BCEaBwGjkQmDQaqu05MZWwYn6HphD1loJB67od9Q9BVzvUqalgrWc1r941SqZnbe+
+	 J9rSCqOF4QNLIh1y4xFuZ4mRVy+XbmfPzsM5UaP2rp0980VPqHwC1bI14E/tnR4DcK
+	 mtEPaxU9RdB6Mt4GVcgz32y+uIOH37yD7OMtwl8s=
+Date: Thu, 6 Feb 2025 05:26:52 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] HID: corsair-void: add missing cancel delaywork
+Message-ID: <2025020642-uninsured-stipend-f22b@gregkh>
+References: <67a3a3b0.050a0220.19061f.05e8.GAE@google.com>
+ <tencent_65865F89A52EED6ECB8C8D67E1C6FAD2FC06@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,22 +41,138 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206142234.-kcSg0xr@linutronix.de>
+In-Reply-To: <tencent_65865F89A52EED6ECB8C8D67E1C6FAD2FC06@qq.com>
 
-On Thu, Feb 06, 2025 at 03:22:34PM +0100, Sebastian Andrzej Siewior wrote:
->  Then this feature adds 20us on top?
+On Thu, Feb 06, 2025 at 10:52:35AM +0800, Edward Adam Davis wrote:
+> syzbot report a slab-use-after-free Read in usbhid_raw_request. [1]
+> 
+> The delayed_status_work still runs after usb device is removed.
+> 
+> [1]
+> BUG: KASAN: slab-use-after-free in usb_control_msg+0x434/0x4b0 drivers/usb/core/message.c:157
+> Read of size 4 at addr ffff88812223c67c by task kworker/0:3/2954
+> 
+> CPU: 0 UID: 0 PID: 2954 Comm: kworker/0:3 Not tainted 6.13.0-syzkaller-09485-g72deda0abee6 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+> Workqueue: events corsair_void_status_work_handler
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:378 [inline]
+>  print_report+0xc3/0x620 mm/kasan/report.c:489
+>  kasan_report+0xd9/0x110 mm/kasan/report.c:602
+>  usb_control_msg+0x434/0x4b0 drivers/usb/core/message.c:157
+>  usbhid_set_raw_report drivers/hid/usbhid/hid-core.c:927 [inline]
+>  usbhid_raw_request+0x233/0x700 drivers/hid/usbhid/hid-core.c:1295
+>  __hid_hw_raw_request drivers/hid/hid-core.c:2457 [inline]
+>  hid_hw_raw_request+0x10a/0x150 drivers/hid/hid-core.c:2479
+>  corsair_void_request_status+0xc3/0x130 drivers/hid/hid-corsair-void.c:493
+>  corsair_void_status_work_handler+0x3f/0xb0 drivers/hid/hid-corsair-void.c:512
+>  process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+>  process_scheduled_works kernel/workqueue.c:3317 [inline]
+>  worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+>  kthread+0x3af/0x750 kernel/kthread.c:464
+>  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+>  </TASK>
+> 
+> Allocated by task 2954:
+>  kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+>  kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+>  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+>  __kasan_kmalloc+0x8f/0xa0 mm/kasan/common.c:394
+>  kmalloc_noprof include/linux/slab.h:901 [inline]
+>  kzalloc_noprof include/linux/slab.h:1037 [inline]
+>  usb_alloc_dev+0x55/0xdc0 drivers/usb/core/usb.c:650
+>  hub_port_connect drivers/usb/core/hub.c:5426 [inline]
+>  hub_port_connect_change drivers/usb/core/hub.c:5663 [inline]
+>  port_event drivers/usb/core/hub.c:5823 [inline]
+>  hub_event+0x28f9/0x4f40 drivers/usb/core/hub.c:5905
+>  process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+>  process_scheduled_works kernel/workqueue.c:3317 [inline]
+>  worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+>  kthread+0x3af/0x750 kernel/kthread.c:464
+>  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> 
+> Freed by task 2968:
+>  kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+>  kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+>  kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+>  poison_slab_object mm/kasan/common.c:247 [inline]
+>  __kasan_slab_free+0x37/0x50 mm/kasan/common.c:264
+>  kasan_slab_free include/linux/kasan.h:233 [inline]
+>  slab_free_hook mm/slub.c:2353 [inline]
+>  slab_free mm/slub.c:4609 [inline]
+>  kfree+0x294/0x480 mm/slub.c:4757
+>  device_release+0xa1/0x240 drivers/base/core.c:2567
+>  kobject_cleanup lib/kobject.c:689 [inline]
+>  kobject_release lib/kobject.c:720 [inline]
+>  kref_put include/linux/kref.h:65 [inline]
+>  kobject_put+0x1e4/0x5a0 lib/kobject.c:737
+>  put_device+0x1f/0x30 drivers/base/core.c:3773
+>  hub_port_connect drivers/usb/core/hub.c:5363 [inline]
+>  hub_port_connect_change drivers/usb/core/hub.c:5663 [inline]
+>  port_event drivers/usb/core/hub.c:5823 [inline]
+>  hub_event+0x1bed/0x4f40 drivers/usb/core/hub.c:5905
+>  process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+>  process_scheduled_works kernel/workqueue.c:3317 [inline]
+>  worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+>  kthread+0x3af/0x750 kernel/kthread.c:464
+>  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> 
+> Fixes: 6ea2a6fd3872 ("HID: corsair-void: Add Corsair Void headset family driver")
+> Reported-by: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=90ac8355c8ac84b1b464
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> ---
+>  drivers/hid/hid-corsair-void.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/hid/hid-corsair-void.c b/drivers/hid/hid-corsair-void.c
+> index 6ece56b850fc..83d65fa29a5a 100644
+> --- a/drivers/hid/hid-corsair-void.c
+> +++ b/drivers/hid/hid-corsair-void.c
+> @@ -727,6 +727,7 @@ static void corsair_void_remove(struct hid_device *hid_dev)
+>  		power_supply_unregister(drvdata->battery);
+>  
+>  	cancel_delayed_work_sync(&drvdata->delayed_firmware_work);
+> +	cancel_delayed_work_sync(&drvdata->delayed_status_work);
+>  	sysfs_remove_group(&hid_dev->dev.kobj, &corsair_void_attr_group);
+>  }
+>  
+> -- 
+> 2.43.0
+> 
 
-The point has always been for the number to be < the observable
-scheduling latency.
+Hi,
 
-I'm not sure what that number is, and it is always hardware dependent. I
-measured it on a random test box when I did the prototype a long while
-ago, and ended up at 50us, but for all I know that machine was running a
-lockdep enabled kernel at the time (won't be the first and certainly
-won't be the last time I try and do a performance measurement on a debug
-kernel).
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-That was not the important part -- but everybody fixates on the number,
-instead of the intent.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-I'm assuming you have a recent number around -- what's sane? 5us, less?
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
