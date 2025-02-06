@@ -1,142 +1,339 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C3F1A76AE;
-	Thu,  6 Feb 2025 18:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE271A83E8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865873; cv=none; b=E+HuSGBYqB9huGvsuEFlUvYtk5M981AZ4fWyZz76am6ee90JWhDbp9Ymumk8iv7/OavvwoOgnjnwfepe5p7LucIQ+f/Qryvu41i8bTqdSuFNGQmS4+0BdFMKaNJogQbm0JCcdht7j3MeUUiBdf05uoWGNPSufw8W0cvXyfQ3U3I=
+	t=1738865874; cv=none; b=T2NIQgga6h+MDqJudTxodDKiI1y39wUNpTKUEs2xVwWA52O9vo4cmZkuObw5oZjfqKzec9dcP2LWCGvBBOM97DgY8YTz8NCPOmQoFj2zpmsyUUtKDwVKCV0/aVEDmr18jyuXjH46zhFmouOrLx/Zp1LUoDHXJeqnDgZRF+zZzko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865873; c=relaxed/simple;
-	bh=GRCAegB/wH5JiqySA/UBwC45CXMIaQ+9IrhQdRxjPGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ij/bdLuX2KOSj3tbNk1lkP3EGDLwZUkW0SFFtTfkKyTPsRCiYVmHccYiZ7gE8cbP70Xibgw/JC1bQdFFjs/hTFDZ+GIWVi/STrVuHR6+Qv3gpaP4UhsD2a1f+FIMmtXJ8xr9bQJmyWNgpKkaC+7flwx9KiooUJ+6h1lTGRaiJ/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jzrIAGbd; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738865874; c=relaxed/simple;
+	bh=iyz037rEQeSBSVTGhzJ4Z6M1D6aGZ+4JptXyFE10Z/A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=O4YaRZWNCP5P/yTYp/eUHS/UxD7qKqnYOY8AD/UC/tpbMO4eqLRotcijDV4zXZCQAr0uufBTyiJMqItRKsokbUlCT+exO2vfSD2oEqgq/tt7IcQPMg5bBCK8UMYVmlHDOahgHPtuYeRcw7zeXFNE+MMgqBK253bTXZvNmOz3jls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4fANvAIb; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzrIAGbd"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-724a5d0427fso875709a34.1;
-        Thu, 06 Feb 2025 10:17:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4fANvAIb"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43651b1ba8aso10430005e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:17:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738865870; x=1739470670; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=j5XpTqIqaVSj1rGjaNE31tTcfGaWSmqchN1/36b6w9c=;
-        b=jzrIAGbdd3+agWTWfwORtVnz03DBQqseoCUoO8lOUBDM3UcytbRC7CHL4iRGhnBizI
-         YPA6fO6Cbdgyk8BAjsPDnkwj50CRQ4qFn3zqvoZGKvyFJIgH2hXZPq6YQl++CC4Agg80
-         aB+qR2s2fE3qRpfUuV0YyE4iFtBrXsJp0JGAZYYyu3st2V+xZEQAn7Pit1D0y/GaKHgU
-         elMHsSTpl7+9polxEfJzvuZ3/9l5Pa44QSNGVqQ+ZN/uKp+tIKTEV1ZpZabhZprlPt3z
-         vYDp5VNpJkMgA4cQcA8QDPFL/LoJKmYVg1+XzMdWtmSZSKxpQS+a4VTKbmbamDsJx4wG
-         KHBw==
+        d=google.com; s=20230601; t=1738865870; x=1739470670; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PGmsmIsXIBV39eIxfDyWh+XEHePbJneD0pcTBLdRlSI=;
+        b=4fANvAIboUIOjoZ20hLhSQdoNtFzsnDLJ4m74AAnwSWwIJl3Dzi1U7iTKzd+mQQSrp
+         J8JBBljauCH1x127RFb7ZAgXm1PZZRQ8pGgvtPpA8X8S1uT2/aip3heAEso6s9Xfr0Wa
+         3WD4zPlcxlJ0/XYN/D0gZlatGBUvfz+wyZe+3XT1XlSvSdtzT7DQDJDjB0/dCv1BMTZz
+         +uGDuq9RYMhzBxFw42w57Tyb8whvO3vKOHbd2P25bfcOAMFqjomutkvDXl3oeJUNPitg
+         RhWVJHWi1usn6KzAvpfjCPcqWdSApGNmvoDWMUoPiDKE7qJUhhFISNxRxBlPiEZ0wxjO
+         +Jwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738865870; x=1739470670;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j5XpTqIqaVSj1rGjaNE31tTcfGaWSmqchN1/36b6w9c=;
-        b=UdHEw9l0Y13NIIBVx7S8ydPYkVQtuJfwd2D4mfH7pJmBs9iN+lpHgIcWa+OkjimqjM
-         +GUsSYhvabi3vOFfmB69upxC/MZkcoLk/OxT7ZPwrVPNdqRL8bssIp5ck2CnODs053YP
-         6i7CECqJKF1euxvPBenw6SOJT5bMAMjz6OGUZ1y3Ibpefi05jEEfU/w4Wen72y841EIX
-         Jmq+h6F/Esl+5S6+9xuW93bQTTi4vgtHi8f8J4xTN0boy/S7mwKy5YtrCuLcP2mL26qM
-         SXf3aqbPHRd8q++dCcvnFrEgARfZpro3gIv/FOuU4X+8NPj7hgoMyxkLbxkvVer6ZLCG
-         X94g==
-X-Forwarded-Encrypted: i=1; AJvYcCU76oj53G+m10HxcODL7Yu1nHFW2vH2XjkRC51GurattJQjgLOt+mouG48cvi8aAfloU/cnQqcfNWqewxo=@vger.kernel.org, AJvYcCWa3tRf16wAcqmvjqbR/bEovPGdWA0g31jK5Zy6Bm8U1VShB12xFkzv0+G3TTCIJ/nNLRa9TEzi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrxOAJ0he1O/IZomca3OKFOkcTUjI6Bj+x+YHzQShFrVZk6mza
-	QfkmBYpky0vCIFZs34pdz86Elg6qQ6qgQFBXckFdK4noxAZqQ5jY
-X-Gm-Gg: ASbGncvuMUzPFntlrJE3I45j4nLsIPkJWElGU0vPxjJwN4ssRF2PeCoOatTPQWOCc9s
-	2lJiB1KJ/Btm+zX8wmgV9EaUH/KMG0Ci4QdOEnMXsZRg75yQUcHsPljLnMUksomVmaacQxi0i48
-	gf4PUrl+EaBS+SX8UeQidnaDsZP0EnqCMZ5rUrg97s69On07Jkq7zWjMSribwQn6vOSR0Ydff1X
-	H0UCv3YGyb4gWzSH4jT+Ma+ZeNu+wxdTlveMfytSLtn0bsOrbnm0PQGpdsG1IDOTiAtUI7nH0AV
-	Q0jcjZhcHNVZK1OdTeolkGcnpiFOWUtXx+ht+P3+nk4=
-X-Google-Smtp-Source: AGHT+IFo0FDI/ET2p6lxddvx2540ogdgK8A94ZRKUDy5Dg9g1II+NC9yCDqnEgMiSpfird2yUBDjug==
-X-Received: by 2002:a05:6830:7001:b0:71d:de27:8d32 with SMTP id 46e09a7af769-726b87b457bmr89740a34.2.1738865870511;
-        Thu, 06 Feb 2025 10:17:50 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726af9142c0sm398547a34.5.2025.02.06.10.17.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 10:17:49 -0800 (PST)
-Message-ID: <cbfdc3d3-dcaa-4414-b4a3-ee614803a094@gmail.com>
-Date: Thu, 6 Feb 2025 10:17:47 -0800
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PGmsmIsXIBV39eIxfDyWh+XEHePbJneD0pcTBLdRlSI=;
+        b=APVJPGxoVbm8bVdUYz84ncCBkFzV/TrNqgO0HejNLphdzyoEijvsnMIxqH/kmvTUbf
+         jD/afdcd7HqeGS/h+gtDy2bqbkdhsMiVYJ68QjARmrmgjdc2UsteC/nwT5xYkP89vWGS
+         MM4zeQWTwybLwCMAstkK/4TwEW1zzKT7INm1+IQjJJ7GZcjnVuTi1QjnJElBu0zcGqAR
+         qOV6vCTbhEcZVlPkxTdW05IFJui5mPKI6GLR3cgpZBL3ZHWmJ5pibD7/JzSZBdXo6ceL
+         A4yeGuiBcWuAAZaYw7jy50NEXfjNdJH69amPVkFuxU+IdkfOIrM02kfrsuLqnEHasZOP
+         jLAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVETPM7niqFeO1j+LlSvX9DLEb+81nDtAGfwzjwHaQ0sK5n9j6n8uIEdRo707i6+qhu/BQt1Krq69jO41c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3q8rzW7SpV8p703QoDcS5UOUrVodRqUBRn7JgSdf/82mDRjc/
+	ogeiUeUghC3/ge/3cLggSQRniN7yDywm4NsLPQKu8tTeacmS7rLAxn5q2fpxkitVdpf5gG2psg=
+	=
+X-Google-Smtp-Source: AGHT+IGDAkcn1bQ3IkfDNe8IDZP0C9GaYxa8QLVu0+68ezGhl3fk9usp9e5g9je1OprcIzBUfUjOK5kXzw==
+X-Received: from wmbhg20.prod.google.com ([2002:a05:600c:5394:b0:436:a247:a0e6])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1e15:b0:435:192:63fb
+ with SMTP id 5b1f17b1804b1-4392497d02amr4329395e9.3.1738865870730; Thu, 06
+ Feb 2025 10:17:50 -0800 (PST)
+Date: Thu,  6 Feb 2025 19:09:56 +0100
+In-Reply-To: <20250206181711.1902989-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/583] 6.12.13-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250206160711.563887287@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
-In-Reply-To: <20250206160711.563887287@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250206181711.1902989-1-elver@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250206181711.1902989-3-elver@google.com>
+Subject: [PATCH RFC 02/24] compiler-capability-analysis: Rename __cond_lock()
+ to __cond_acquire()
+From: Marco Elver <elver@google.com>
+To: elver@google.com
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
+	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
+	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/6/25 08:11, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.13 release.
-> There are 583 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 08 Feb 2025 16:05:14 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.13-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Just like the pairing of attribute __acquires() with a matching
+function-like macro __acquire(), the attribute __cond_acquires() should
+have a matching function-like macro __cond_acquire().
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+To be consistent, rename __cond_lock() to __cond_acquire().
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.h     |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/internal.h |  2 +-
+ include/linux/compiler-capability-analysis.h       |  4 ++--
+ include/linux/mm.h                                 |  6 +++---
+ include/linux/rwlock.h                             |  4 ++--
+ include/linux/rwlock_rt.h                          |  4 ++--
+ include/linux/sched/signal.h                       |  2 +-
+ include/linux/spinlock.h                           | 12 ++++++------
+ include/linux/spinlock_rt.h                        |  6 +++---
+ kernel/time/posix-timers.c                         |  2 +-
+ tools/include/linux/compiler_types.h               |  4 ++--
+ 11 files changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+index f6234065dbdd..560a5a899d1f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+@@ -1136,7 +1136,7 @@ void iwl_trans_set_bits_mask(struct iwl_trans *trans, u32 reg,
+ bool _iwl_trans_grab_nic_access(struct iwl_trans *trans);
+ 
+ #define iwl_trans_grab_nic_access(trans)		\
+-	__cond_lock(nic_access,				\
++	__cond_acquire(nic_access,				\
+ 		    likely(_iwl_trans_grab_nic_access(trans)))
+ 
+ void __releases(nic_access)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index 856b7e9f717d..a1becf833dc5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -560,7 +560,7 @@ void iwl_trans_pcie_free_pnvm_dram_regions(struct iwl_dram_regions *dram_regions
+ 
+ bool __iwl_trans_pcie_grab_nic_access(struct iwl_trans *trans);
+ #define _iwl_trans_pcie_grab_nic_access(trans)			\
+-	__cond_lock(nic_access_nobh,				\
++	__cond_acquire(nic_access_nobh,				\
+ 		    likely(__iwl_trans_pcie_grab_nic_access(trans)))
+ 
+ void iwl_trans_pcie_check_product_reset_status(struct pci_dev *pdev);
+diff --git a/include/linux/compiler-capability-analysis.h b/include/linux/compiler-capability-analysis.h
+index 7546ddb83f86..dfed4e7e6ab8 100644
+--- a/include/linux/compiler-capability-analysis.h
++++ b/include/linux/compiler-capability-analysis.h
+@@ -15,7 +15,7 @@
+ # define __releases(x)		__attribute__((context(x,1,0)))
+ # define __acquire(x)		__context__(x,1)
+ # define __release(x)		__context__(x,-1)
+-# define __cond_lock(x, c)	((c) ? ({ __acquire(x); 1; }) : 0)
++# define __cond_acquire(x, c)	((c) ? ({ __acquire(x); 1; }) : 0)
+ 
+ #else /* !__CHECKER__ */
+ 
+@@ -25,7 +25,7 @@
+ # define __releases(x)
+ # define __acquire(x)		(void)0
+ # define __release(x)		(void)0
+-# define __cond_lock(x, c)	(c)
++# define __cond_acquire(x, c)	(c)
+ 
+ #endif /* __CHECKER__ */
+ 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7b1068ddcbb7..a2365f4d6826 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2738,7 +2738,7 @@ static inline pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
+ 				    spinlock_t **ptl)
+ {
+ 	pte_t *ptep;
+-	__cond_lock(*ptl, ptep = __get_locked_pte(mm, addr, ptl));
++	__cond_acquire(*ptl, ptep = __get_locked_pte(mm, addr, ptl));
+ 	return ptep;
+ }
+ 
+@@ -3029,7 +3029,7 @@ static inline pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr,
+ {
+ 	pte_t *pte;
+ 
+-	__cond_lock(RCU, pte = ___pte_offset_map(pmd, addr, pmdvalp));
++	__cond_acquire(RCU, pte = ___pte_offset_map(pmd, addr, pmdvalp));
+ 	return pte;
+ }
+ static inline pte_t *pte_offset_map(pmd_t *pmd, unsigned long addr)
+@@ -3044,7 +3044,7 @@ static inline pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
+ {
+ 	pte_t *pte;
+ 
+-	__cond_lock(RCU, __cond_lock(*ptlp,
++	__cond_acquire(RCU, __cond_acquire(*ptlp,
+ 			pte = __pte_offset_map_lock(mm, pmd, addr, ptlp)));
+ 	return pte;
+ }
+diff --git a/include/linux/rwlock.h b/include/linux/rwlock.h
+index 5b87c6f4a243..58c346947aa2 100644
+--- a/include/linux/rwlock.h
++++ b/include/linux/rwlock.h
+@@ -49,8 +49,8 @@ do {								\
+  * regardless of whether CONFIG_SMP or CONFIG_PREEMPT are set. The various
+  * methods are defined as nops in the case they are not required.
+  */
+-#define read_trylock(lock)	__cond_lock(lock, _raw_read_trylock(lock))
+-#define write_trylock(lock)	__cond_lock(lock, _raw_write_trylock(lock))
++#define read_trylock(lock)	__cond_acquire(lock, _raw_read_trylock(lock))
++#define write_trylock(lock)	__cond_acquire(lock, _raw_write_trylock(lock))
+ 
+ #define write_lock(lock)	_raw_write_lock(lock)
+ #define read_lock(lock)		_raw_read_lock(lock)
+diff --git a/include/linux/rwlock_rt.h b/include/linux/rwlock_rt.h
+index 7d81fc6918ee..5320b4b66405 100644
+--- a/include/linux/rwlock_rt.h
++++ b/include/linux/rwlock_rt.h
+@@ -55,7 +55,7 @@ static __always_inline void read_lock_irq(rwlock_t *rwlock)
+ 		flags = 0;				\
+ 	} while (0)
+ 
+-#define read_trylock(lock)	__cond_lock(lock, rt_read_trylock(lock))
++#define read_trylock(lock)	__cond_acquire(lock, rt_read_trylock(lock))
+ 
+ static __always_inline void read_unlock(rwlock_t *rwlock)
+ {
+@@ -111,7 +111,7 @@ static __always_inline void write_lock_irq(rwlock_t *rwlock)
+ 		flags = 0;				\
+ 	} while (0)
+ 
+-#define write_trylock(lock)	__cond_lock(lock, rt_write_trylock(lock))
++#define write_trylock(lock)	__cond_acquire(lock, rt_write_trylock(lock))
+ 
+ #define write_trylock_irqsave(lock, flags)		\
+ ({							\
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index d5d03d919df8..3304cce4b1bf 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -741,7 +741,7 @@ static inline struct sighand_struct *lock_task_sighand(struct task_struct *task,
+ 	struct sighand_struct *ret;
+ 
+ 	ret = __lock_task_sighand(task, flags);
+-	(void)__cond_lock(&task->sighand->siglock, ret);
++	(void)__cond_acquire(&task->sighand->siglock, ret);
+ 	return ret;
+ }
+ 
+diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
+index 63dd8cf3c3c2..678e6f0679a1 100644
+--- a/include/linux/spinlock.h
++++ b/include/linux/spinlock.h
+@@ -212,7 +212,7 @@ static inline void do_raw_spin_unlock(raw_spinlock_t *lock) __releases(lock)
+  * various methods are defined as nops in the case they are not
+  * required.
+  */
+-#define raw_spin_trylock(lock)	__cond_lock(lock, _raw_spin_trylock(lock))
++#define raw_spin_trylock(lock)	__cond_acquire(lock, _raw_spin_trylock(lock))
+ 
+ #define raw_spin_lock(lock)	_raw_spin_lock(lock)
+ 
+@@ -284,7 +284,7 @@ static inline void do_raw_spin_unlock(raw_spinlock_t *lock) __releases(lock)
+ #define raw_spin_unlock_bh(lock)	_raw_spin_unlock_bh(lock)
+ 
+ #define raw_spin_trylock_bh(lock) \
+-	__cond_lock(lock, _raw_spin_trylock_bh(lock))
++	__cond_acquire(lock, _raw_spin_trylock_bh(lock))
+ 
+ #define raw_spin_trylock_irq(lock) \
+ ({ \
+@@ -499,21 +499,21 @@ static inline int rwlock_needbreak(rwlock_t *lock)
+  */
+ extern int _atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock);
+ #define atomic_dec_and_lock(atomic, lock) \
+-		__cond_lock(lock, _atomic_dec_and_lock(atomic, lock))
++		__cond_acquire(lock, _atomic_dec_and_lock(atomic, lock))
+ 
+ extern int _atomic_dec_and_lock_irqsave(atomic_t *atomic, spinlock_t *lock,
+ 					unsigned long *flags);
+ #define atomic_dec_and_lock_irqsave(atomic, lock, flags) \
+-		__cond_lock(lock, _atomic_dec_and_lock_irqsave(atomic, lock, &(flags)))
++		__cond_acquire(lock, _atomic_dec_and_lock_irqsave(atomic, lock, &(flags)))
+ 
+ extern int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock);
+ #define atomic_dec_and_raw_lock(atomic, lock) \
+-		__cond_lock(lock, _atomic_dec_and_raw_lock(atomic, lock))
++		__cond_acquire(lock, _atomic_dec_and_raw_lock(atomic, lock))
+ 
+ extern int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lock,
+ 					unsigned long *flags);
+ #define atomic_dec_and_raw_lock_irqsave(atomic, lock, flags) \
+-		__cond_lock(lock, _atomic_dec_and_raw_lock_irqsave(atomic, lock, &(flags)))
++		__cond_acquire(lock, _atomic_dec_and_raw_lock_irqsave(atomic, lock, &(flags)))
+ 
+ int __alloc_bucket_spinlocks(spinlock_t **locks, unsigned int *lock_mask,
+ 			     size_t max_size, unsigned int cpu_mult,
+diff --git a/include/linux/spinlock_rt.h b/include/linux/spinlock_rt.h
+index f6499c37157d..eaad4dd2baac 100644
+--- a/include/linux/spinlock_rt.h
++++ b/include/linux/spinlock_rt.h
+@@ -123,13 +123,13 @@ static __always_inline void spin_unlock_irqrestore(spinlock_t *lock,
+ }
+ 
+ #define spin_trylock(lock)				\
+-	__cond_lock(lock, rt_spin_trylock(lock))
++	__cond_acquire(lock, rt_spin_trylock(lock))
+ 
+ #define spin_trylock_bh(lock)				\
+-	__cond_lock(lock, rt_spin_trylock_bh(lock))
++	__cond_acquire(lock, rt_spin_trylock_bh(lock))
+ 
+ #define spin_trylock_irq(lock)				\
+-	__cond_lock(lock, rt_spin_trylock(lock))
++	__cond_acquire(lock, rt_spin_trylock(lock))
+ 
+ #define spin_trylock_irqsave(lock, flags)		\
+ ({							\
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 1b675aee99a9..dbada41c10ad 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -63,7 +63,7 @@ static struct k_itimer *__lock_timer(timer_t timer_id, unsigned long *flags);
+ 
+ #define lock_timer(tid, flags)						   \
+ ({	struct k_itimer *__timr;					   \
+-	__cond_lock(&__timr->it_lock, __timr = __lock_timer(tid, flags));  \
++	__cond_acquire(&__timr->it_lock, __timr = __lock_timer(tid, flags));  \
+ 	__timr;								   \
+ })
+ 
+diff --git a/tools/include/linux/compiler_types.h b/tools/include/linux/compiler_types.h
+index d09f9dc172a4..b1db30e510d0 100644
+--- a/tools/include/linux/compiler_types.h
++++ b/tools/include/linux/compiler_types.h
+@@ -20,7 +20,7 @@
+ # define __releases(x)	__attribute__((context(x,1,0)))
+ # define __acquire(x)	__context__(x,1)
+ # define __release(x)	__context__(x,-1)
+-# define __cond_lock(x,c)	((c) ? ({ __acquire(x); 1; }) : 0)
++# define __cond_acquire(x,c)	((c) ? ({ __acquire(x); 1; }) : 0)
+ #else /* __CHECKER__ */
+ /* context/locking */
+ # define __must_hold(x)
+@@ -28,7 +28,7 @@
+ # define __releases(x)
+ # define __acquire(x)	(void)0
+ # define __release(x)	(void)0
+-# define __cond_lock(x,c) (c)
++# define __cond_acquire(x,c) (c)
+ #endif /* __CHECKER__ */
+ 
+ /* Compiler specific macros. */
 -- 
-Florian
+2.48.1.502.g6dc24dfdaf-goog
+
