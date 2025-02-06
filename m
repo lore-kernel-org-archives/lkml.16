@@ -1,81 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361E7768FC;
-	Thu,  6 Feb 2025 01:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD781C68F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 01:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738803611; cv=none; b=dHBkoaDRvT3zICn/Yx0kYkRJ3xVb29wSfEjIAisoQnoHBG5wx0mt2KDuUYG4ZWklGMs5JEvA7iLyPNzQXjJrvRShFnQhotfJzTcUWyBMIfPVasoo6iko6qzICVRtP+yp0DbA5MNMA2STqdai2ieHW7MCjHz89+RE3iSZn9j8V2I=
+	t=1738803630; cv=none; b=MSntPuO/LjoxaT4UFC/Ka2VWhoWh28S6il01bykohj6OYq0uwSHgEVdEUwqkorSbpqv0W5nXFd8NiCCqVkYzI/Z9OOjo0hukxV4OUcTEouChUo7EOQHbe9kze7Wa6pUWt+rGiyU4Fj5KVIsR8NEbWVqzHQQGhuHtvcmmgDL5YSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738803611; c=relaxed/simple;
-	bh=P7/lRyUDtTea65Xs+PwXbOl2Vx4ZhhEsIK/YykjUdY4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=l0jfYzX8f9a1iAeLZyOAIWAsRKVStCLc1ZfFgyal1oT1AE//L+i/dYcA7pEwarHXvIa/ISsd2qtLeMU9YdA6zKplub7zXoRy9+w0JCqOqb/uthlvRApDfrW535CPEWcewIcmLZtQx5k6vZX0zW5wq8Wxcx/vBSJcM8aGYXzTbAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ip2Iwstt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738803630; c=relaxed/simple;
+	bh=YA9beyVyNV2UIf6sOTfOynJf8z+PiAQR/WP4EysO5Rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c2iC3SLhVgvBXJa1WNhP+e1aj+a0B3rauNKCrW3UoC8hoO8q3NURfuEdbLQkt75dFbKUMOVKW/TjVvqHB3gtk3Wt6M/wg73i8bPNdkFZZT4h+RqiYeAybHf8u0z8Fen8CN2q0lRDlO/mXBmrFlEL2VMIXH2RB1jvhw0iil/NQ5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uay2lbrI; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ip2Iwstt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14BEC4CED1;
-	Thu,  6 Feb 2025 01:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738803609;
-	bh=P7/lRyUDtTea65Xs+PwXbOl2Vx4ZhhEsIK/YykjUdY4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ip2IwsttyCSA67yriFrUsA4EC7qntWYmNz56I2MeUJ0QE+x7Rbo9IsPRC4BllsR6e
-	 ulSlZgMNmHxoj9y9Yg7rfNaJTTGD9oc/Z/o2c1yLlj827C2UeS5sbNHA4q7aRftkdd
-	 Re7UZurOe3IzhTGLvoT/ASQWkj67G925fwBbAi5EjgZKox9uQtbicKT8hvBn9xwQvA
-	 lh9/oi3buvYjhB8mEqHleUTQNo6cRx26mTvK5O5TR+NsCyivb5I07X/Nc/zQgA3mN8
-	 p8Pr2iRSyf/Co41Z3cZ5JLeR11RSI293pBCIBbR7XbPXy+K2NUYE8bXgw2iC8JzkZP
-	 zRhx4kgOXjYVA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E7B380AAD0;
-	Thu,  6 Feb 2025 01:00:38 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uay2lbrI"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5439e331cceso472640e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 17:00:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738803627; x=1739408427; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=64EGE0H9PZ2lu5z080wv8hkP5sMcDd9LMSd8Y5hei2c=;
+        b=uay2lbrIphuPFUCcLrqYtEIK6aI2VGKjw0uGP9Euye9HH/J1XQY5a0mLt10tTd31PT
+         4bfcNax+FhnkvznleBp5mGNp3gmuCziVgJNX69vAxh828AaeqRnfB4QHixvJEv4gwy8T
+         TES3F+MPpoxJy9dMSCr7PZ4x1wPdSbVlecmdcigDJQ+RhPp8aVij5lYLrhP/ctV5FGtK
+         na2Zkf0Gxc3aBq1iNJVxnjkSGMYUsxmKc+mnAGcCL+jOjCRfs/qk40d588O3HdLBjANk
+         q/RO3x0dWz0/kSU0j/R05aIMMp+tZWih1+YLiSqUA6dATahrX2I08Nk/QmwHTLcZTS1g
+         FMtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738803627; x=1739408427;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=64EGE0H9PZ2lu5z080wv8hkP5sMcDd9LMSd8Y5hei2c=;
+        b=ijsRgoRVQtFJMz9DJDNdF0eRhDaEOUcY4Q3mTPb3DKHjVKz+NjZ9/U2IvX0o8JIQyu
+         EiZ6XzRD1MBKXN5oUUCWCwav87rnp/yL+6Dm6Rl79N9E3mi6zPyhwtQNBHRfcHyI5DlT
+         zTnhUCBMMdiZggeuaCKACj1VLMRRNM7OJeqHFwfgLgkDurZNSi0Nz+0cEUx7hjWkqjqB
+         J69SEpO+xcaxKbqD0yCfacNFIoBc3XWTx8jNdvvC3/mSag2q74JfzOoFiHneGUoCPF7V
+         4HzJrHNtNMXcZ9DmCEnLeW/bu3nhDo6PA9CXMv8NItxlYJh0Ne+DqvYCCKAeQ/rKz8Kn
+         nu1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsDm8+whdmAybMQWH7h1f5DcgMGZ58nrJJikYh4aUW7wIszvKMrNz9tjL+WfRzhQYJBnT04D355YtMmyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyooscU6ROoebk29Eh2EErb1Xp+edlfXOcvTlA46dH/Jbvvz8H
+	+iN+Bz1AJhwsopEpyJXCDGdSloW78FPdwJEk811ZXn+dmpCB6bH4pEFCdPF6TYY=
+X-Gm-Gg: ASbGncsq3KWn3uQGLYSPE2iTnmrj6Orv8Y3g1qC7rk/4qhjkmcuNRtp5z+LMCEr6uTX
+	1OWPOdVossUXlflQpiS+6QlrGQkC6WMksEvKhYQFI86bFlcaCQUYtHiOXnePCyfVVZcSgdeqEJv
+	rfIKvU5zWVZCr0kBEghyyHCjsj3luMkWGBKp27uWJ6LLjt5wbjvJUrBMLWXVBB6LDgSpuiUgJcn
+	1b5FHZuzejYCNlW3lMCxTRA9Ka/sc9MJtuvcqWlFzLrRU46Kzx0KGKjZPx2Y+kTq/MxhWQYWr8O
+	Pll3IKh+g2C10prvuvWQqLyQtjZpf3+0g6vta8XTYaRjW+f1Xwl9x1QaXXMncxLgcWVkmJk=
+X-Google-Smtp-Source: AGHT+IHnLGYjiexVyjpyM2PLfRR2Axnq7Xdo6KWRYUCGpLamUudjFaOtVpU/Aplwgvu0XsO0JkhcgA==
+X-Received: by 2002:ac2:4e04:0:b0:540:353a:df90 with SMTP id 2adb3069b0e04-54405a6912emr1688393e87.43.1738803626872;
+        Wed, 05 Feb 2025 17:00:26 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105bfc8esm2878e87.127.2025.02.05.17.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 17:00:25 -0800 (PST)
+Date: Thu, 6 Feb 2025 03:00:23 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+Cc: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Odelu Kukatla <quic_okukatla@quicinc.com>, Mike Tipton <quic_mdtipton@quicinc.com>, 
+	Jeff Johnson <quic_jjohnson@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>, 
+	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V8 5/7] interconnect: qcom: sa8775p: Add dynamic icc node
+ id support
+Message-ID: <ujsy5e4u7inz5mzdh5m672zkfcrd6igoypgkak2assfpvlcrve@mmjlabr6rh5a>
+References: <20250205182743.915-1-quic_rlaggysh@quicinc.com>
+ <20250205182743.915-6-quic_rlaggysh@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] bpf: Add comment about helper freeze
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173880363701.959069.14322252522302513524.git-patchwork-notify@kernel.org>
-Date: Thu, 06 Feb 2025 01:00:37 +0000
-References: <20250204-bpf-helper-freeze-v1-1-46efd9ff20dc@outlook.com>
-In-Reply-To: <20250204-bpf-helper-freeze-v1-1-46efd9ff20dc@outlook.com>
-To: Levi Zim via B4 Relay <devnull+rsworktech.outlook.com@kernel.org>
-Cc: andrii@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, rsworktech@outlook.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205182743.915-6-quic_rlaggysh@quicinc.com>
 
-Hello:
+On Wed, Feb 05, 2025 at 06:27:41PM +0000, Raviteja Laggyshetty wrote:
+> Discard the static IDs from node data and set the default node ID
+> to -1 to indicate the for dynamic ID allocation.
+> Update the topology to use node pointers for links instead of static
+> IDs, and rearrange the node definitions to avoid undefined references.
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+I think it might be better to forward-declare all node entries at the
+top and then keep currently defined nodes in place. Otherwise the diff
+is pretty unreadable.
 
-On Tue, 04 Feb 2025 10:00:21 +0800 you wrote:
-> From: Levi Zim <rsworktech@outlook.com>
 > 
-> Put a comment after the bpf helper list in uapi bpf.h to prevent people
-> from trying to add new helpers there and direct them to kfuncs.
+> Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+> ---
+>  drivers/interconnect/qcom/sa8775p.c | 2194 ++++++++++++---------------
+>  1 file changed, 962 insertions(+), 1232 deletions(-)
 > 
-> Link: https://lore.kernel.org/bpf/CAEf4BzZvQF+QQ=oip4vdz5A=9bd+OmN-CXk5YARYieaipK9s+A@mail.gmail.com/
-> Link: https://lore.kernel.org/bpf/20221231004213.h5fx3loccbs5hyzu@macbook-pro-6.dhcp.thefacebook.com/
-> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Levi Zim <rsworktech@outlook.com>
-> 
-> [...]
 
-Here is the summary with links:
-  - [bpf-next] bpf: Add comment about helper freeze
-    https://git.kernel.org/bpf/bpf-next/c/0abff462d802
-
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+With best wishes
+Dmitry
