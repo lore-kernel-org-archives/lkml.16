@@ -1,143 +1,154 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2F123959B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D8F23959B;
+	Thu,  6 Feb 2025 19:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869718; cv=none; b=Ml2YLOVcIrorCwfa1ZMPJo80Y+s2RqvvPXO+tdEOSu9ioyeuudeMHxYQ5C28NtSntRWhRlHHd9hkjTQG6dna8pX92OmueWY3594leUggIAeLGIHFfX5NdfCjzjB1hZFmvSSTZ8PjU5i64sa5qnKvKqPK6knZZC6PUvtc7Af30hc=
+	t=1738869728; cv=none; b=FA52W7PcIm4EO456TqQKDpS/B7hRi7y2vf8T/y6VSJFIfj82trJk4hqLXT9fAz3BuSjdZsQDz2oPO4k+kRYwScRIWttwEcCvOhFT7bWNff0AM2HzHBMiQNXztMFnL9iMaTJO9hpr6G4iT0muvgK7Kk02u9vzvigvUZUJxDTaMvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869718; c=relaxed/simple;
-	bh=lUa04qjMr00cFMUz5RHZRTpCIbh7MZNzkqqom/3g3l4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GRxQu9/BkGOQc7kImMkV1FCzwjqY/7sdIG++Z42pjOv9IXS1Ic3mJZqQ5UGRA+JUT0zVMKc0+HQDONO/lUKYNfx9rWSQftioJdYGlexKeS9Ej3SnRP4KyCsIMRg3pYLMlL+F8y1H4G/xDNHgAxjHLxAigjWeRy2ajWH2Yfja+6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V9WbV33z; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738869728; c=relaxed/simple;
+	bh=ancX9lQlL/W6fW5Eb650QX3pEF4pVrkA46LQBCtXkRI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VBRufr8CQXyQIHL16ropneYw5p4TzOOG/rGA9+wdypfIIrUpyySRDybJb6aGZMATZRgf1F8rIpUJhQuEVavkgQGzB9FyMM27frIpjIsUU4V5ZPjrOCKGHxHNjswlaLsmQtvUDTbUUPoAvgH4F1yMLGWkUdqLFb0rtXDXS7O80yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkDBjTMs; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V9WbV33z"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30737db1aa9so12521771fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 11:21:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738869713; x=1739474513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iejGLtNphddMwsWcL999rzVMsajm+EjwWDRl83wuIdw=;
-        b=V9WbV33zvJD46WjyjAviUW8DFGv2fY+XkIZad35Iwv7T8YgvgsWUAYoYlF0NU6gJRS
-         CUj1El54Nadlq3eJXxkjtWyLBozzutekZ85W2B//GgYz9TA+GzAkmNTGQqxDlqwxwYzk
-         At5iyCSUoh1FdqsGOavT/65AVJXQKxSKPd/Rk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738869713; x=1739474513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iejGLtNphddMwsWcL999rzVMsajm+EjwWDRl83wuIdw=;
-        b=swmLs0ULa3ZZn8j/L5DymRgae0E76E3J+FU578jl2QSnTUJwfcUWzIlNtm+VppKe3A
-         oy9ILbokSyon2ZO/Vcd/PNyuuYzr2kYYU9ntbmLZFLrE2QSxTHSRQJB5/H0sWPXdEUOG
-         aI8i73dnfIvE7uYR5cTAfzsZftluhvyHrjPKZiLRCSNbbVAr8i94fOaF3XoLG5Budflg
-         SAjPez7Bomj/mYui9RObzSif6uuTADXtP55tT2WFDHNf+EU8OWsaDoFXA8flIUJIZYSz
-         rcUEpEdPRd6CPHoylTmr3/no6bH/Q58jG4AjqjDiRg4zM5Cj39xskt+cTorROzrinBIX
-         /qfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpmT/cy6FVLf5dRyah2/uto5ouIYMXsFZYyvPBtcCSTRNJT9G07eus63E+6u6d8/mLh9XfxnwJDzWf1U0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwRWDDGkYtH3aR17Osg0JYJCCHBsteavQP2Ttpr96nb9Cn3vgF
-	Vs5HSWV5bMXn/x38R9wrNvY0NruASuEiMRfoZ4eSmzptZKCzyFgQ1H3yKkq1t4B2+5lhN4Prtf/
-	cvTYh
-X-Gm-Gg: ASbGncuv2Kd7mDRa3BVlf9rF2kP/Uoej6xgjX7JpEfWBdr9JIheUSvVXnWy2jDEMaam
-	xcQgArND+gOtS+8bixWe/CUx8sOh0nx7Ccf02+kpfQZ0RBqPEm9D9AzQSagoVe6qbcD8C+e8Qds
-	74LTIyLlKmQ74bKBuusrzpw01iqQAdVZF3jSaLh37Z8V8kp84a/QEGRtgfllbbYDAVYXHJx/K3M
-	4gx6rz7uyce8fxFJD6bHCcrzNwOajV1nPx9ivl7D+WgTAmjJ5mB0vv7GiKbpQ4/yz37TVOdgVeh
-	Oug0zrnaMYoR7wxWkyGUbE5vFKDkT2WeH5UvjhQH/e2lopndY6TPXlPGE9U=
-X-Google-Smtp-Source: AGHT+IFY9jkp5SqBi+A3Bp6I+1IPjwYb/iun1Cyq1djmdoTGwjfOFK2lVcsro+C/yCA70hmtY1MVDQ==
-X-Received: by 2002:a05:651c:b0b:b0:302:3021:9b03 with SMTP id 38308e7fff4ca-307e57f028emr480851fa.17.1738869713168;
-        Thu, 06 Feb 2025 11:21:53 -0800 (PST)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2d71a0sm2029301fa.89.2025.02.06.11.21.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 11:21:52 -0800 (PST)
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30227ccf803so11183341fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 11:21:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXCBEfTRmseRH5eFacRhyBL1SCZMpIzKf7ulKrm6qCAMgIC2rCzKT+cO+bRJ4BTj/6rUfZH5z9A/BrNu2c=@vger.kernel.org
-X-Received: by 2002:a2e:be8d:0:b0:302:1d24:8db7 with SMTP id
- 38308e7fff4ca-307e57f026amr522881fa.19.1738869711621; Thu, 06 Feb 2025
- 11:21:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkDBjTMs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738869727; x=1770405727;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ancX9lQlL/W6fW5Eb650QX3pEF4pVrkA46LQBCtXkRI=;
+  b=QkDBjTMsSpG3D7dFHamxcH81FY8RC/hox079bvF+bxADABufko4fNtjo
+   5Zjf7TX8IWCjR1HfHKde8I9j0YogfBDdkOeSs+wE41+6NqvOdI/6XeQSi
+   bvVUh/fAD4OSBgvI10oTjDtjRJ2xOYNNaL0xEWSzRa9Wg7LjI3ya6fsmw
+   2XGguwpBim0ZM/8FgP9Ezuj7alqPecDqGcFehIOOlg0O+zVi4hszh6NLe
+   5v3rI3ozUKWF9msX1KN+eyM9oBg5VW8lQbOtW2oivm79Z80RPAD6LuaVn
+   uBc03rRzmizcuTLXoIWex+mtY7tY9BRtaWieXwGKQ0uv6OoXe7Lp5z1ta
+   w==;
+X-CSE-ConnectionGUID: IOhob7xURieni274pMJAmg==
+X-CSE-MsgGUID: rtdEgJ9PRu2l8rvczkva8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39608720"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39608720"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:22:06 -0800
+X-CSE-ConnectionGUID: gTpTUo9ZQXyzYRxYdODHNQ==
+X-CSE-MsgGUID: 9Fii5jmZSimwLYhxas+YWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="134547283"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.165])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:22:04 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 6 Feb 2025 21:22:02 +0200 (EET)
+To: Joshua Grisham <josh@joshuagrisham.com>
+cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+    Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
+In-Reply-To: <CAMF+Kea=zTSRAN6kmnp0u=Pxyt+gupeiBYXNa9qkWp0d8RssLg@mail.gmail.com>
+Message-ID: <3919fefb-13dc-699f-2355-fdbfb31dab8a@linux.intel.com>
+References: <20250206133652.71bbf1d3@canb.auug.org.au> <3603e5e3-b8f9-54eb-c181-03cf2679cb7f@linux.intel.com> <CAMF+Kea=zTSRAN6kmnp0u=Pxyt+gupeiBYXNa9qkWp0d8RssLg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
- <20250206131300.1295111-2-yelangyan@huaqin.corp-partner.google.com>
- <CAD=FV=UfWJoUsKzYMkyU3U4Yn1ufAs=NHMCDL+db887Uec9fww@mail.gmail.com> <20250206-overlaid-eastward-610a0d6e34cd@spud>
-In-Reply-To: <20250206-overlaid-eastward-610a0d6e34cd@spud>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 6 Feb 2025 11:21:40 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UqUkKXvEJr5JPHgjNnY_1ALv7TiRY1UQjVGD4_su8M_Q@mail.gmail.com>
-X-Gm-Features: AWEUYZmS9xcU_MiFvWfdau59tVoQMHbzAishOQlY882_MKeaoyXcwaaKzpaqmEY
-Message-ID: <CAD=FV=UqUkKXvEJr5JPHgjNnY_1ALv7TiRY1UQjVGD4_su8M_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: vendor: add csot
-To: Conor Dooley <conor@kernel.org>
-Cc: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>, neil.armstrong@linaro.org, 
-	quic_jesszhan@quicinc.com, airlied@gmail.com, simona@ffwll.ch, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-335955539-1738869722=:931"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Thu, Feb 6, 2025 at 10:13=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Thu, Feb 06, 2025 at 09:12:45AM -0800, Doug Anderson wrote:
-> > Hi,
+--8323328-335955539-1738869722=:931
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Thu, 6 Feb 2025, Joshua Grisham wrote:
+
+> Den tors 6 feb. 2025 kl 11:27 skrev Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com>:
 > >
-> > On Thu, Feb 6, 2025 at 5:13=E2=80=AFAM Langyan Ye
-> > <yelangyan@huaqin.corp-partner.google.com> wrote:
+> > On Thu, 6 Feb 2025, Stephen Rothwell wrote:
+> >
+> > > Hi all,
 > > >
-> > > Add "csot" to the Devicetree Vendor Prefix Registry.
+> > > After merging the drivers-x86 tree, today's linux-next build
+> > > (x86_64_allmodconfig) failed like this:
 > > >
-> > > Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> > >  1 file changed, 2 insertions(+)
+> > > In file included from include/linux/kobject.h:20,
+> > >                  from include/linux/energy_model.h:7,
+> > >                  from include/linux/device.h:16,
+> > >                  from include/linux/acpi.h:14,
+> > >                  from drivers/platform/x86/samsung-galaxybook.c:14:
+> > > drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_fw=
+_attr_init':
+> > > drivers/platform/x86/samsung-galaxybook.c:1014:33: error: 'fw_attr' i=
+s a pointer; did you mean to use '->'?
+> > >  1014 |         sysfs_attr_init(&fw_attr.display_name);
+> > >       |                                 ^
+> > > include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr=
+_init'
+> > >    55 |         (attr)->key =3D &__key;                           \
+> > >       |          ^~~~
+> > > drivers/platform/x86/samsung-galaxybook.c:1020:33: error: 'fw_attr' i=
+s a pointer; did you mean to use '->'?
+> > >  1020 |         sysfs_attr_init(&fw_attr.current_value);
+> > >       |                                 ^
+> > > include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr=
+_init'
+> > >    55 |         (attr)->key =3D &__key;                           \
+> > >       |          ^~~~
 > > >
-> > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b=
-/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > index 42d14899d584..375f1f7c79ef 100644
-> > > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > @@ -336,6 +336,8 @@ patternProperties:
-> > >      description: Crystalfontz America, Inc.
-> > >    "^csky,.*":
-> > >      description: Hangzhou C-SKY Microsystems Co., Ltd
-> > > +  "^csot,.*":
-> > > +    description: Guangzhou China Star Optoelectronics Technology Co.=
-, Ltd
+> > > Caused by commit
+> > >
+> > >   f97634611408 ("platform/x86: samsung-galaxybook: Add samsung-galaxy=
+book driver")
+> > >
+> > > I guess this was never built with CONFIG_DEBUG_LOCK_ALLOC set.
+> > >
+> > > I have used the drivers-x86 tree from next-20250205 for today.
 > >
-> > Doing a `git log` on
-> > `Documentation/devicetree/bindings/vendor-prefixes.yaml` shows that
-> > most patches use the subject prefix `dt-bindings: vendor-prefixes`,
-> > not `dt-bindings: vendor`. If device-tree folks care about this
-> > difference and they don't want to fix it when applying, they might
-> > request you to send a new version.
+> > Apparently it wasn't.
 > >
-> > In any case, that's fairly minor so I'm OK with:
+> > However, I've an LKP success report for f97634611408 (prior to pushing =
+it
+> > to for-next, I always wait for LKP).
 > >
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > Why LKP didn't catch it despite claiming it built with x86_64_allyescon=
+fig
+> > (successfully)?? Did LKP not build the tree??
 > >
-> > I would assume this will go through the DT tree, not drm-misc. If this
-> > is wrong then someone should shout.
->
-> idk, probably the whole series should go together via drm-misc.
-> %subject can change if there's a resubmission, otherwise
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > I've pulled the commit from for-next until the problem is resolved to n=
+ot
+> > keep breaking builds. Joshua, could you please take a look at it.
+> >
+> > --
+> >  i.
+> >
+>=20
+> Hi Ilpo and all,
+> Yes, great that there are tests in place :) Sorry this was one of the
+> later changes and I can't remember now when exactly I did the full
+> testing vs not as per the kernel documentation (as there were several
+> iterations to the patch for this driver) but I believe I have
+> identified what should be fixed and can send it shortly.
+>=20
+> Ilpo would you prefer a patch on top of the existing patch (i.e. just
+> a diff of these 2 lines) or would you rather that I create a v11 of
+> the original patch and send the whole thing again?
+>=20
+> Thanks again!
 
-Ah, I'm fine landing it with drm-misc. I'll land it tomorrow unless
-there are objections. I'll adjust the subject when landing.
+I've kept the change in review-ilpo-next branch. An incremental patch is=20
+fine (it's easier to see its correctness on a glance too).=20
 
--Doug
+--=20
+ i.
+
+--8323328-335955539-1738869722=:931--
