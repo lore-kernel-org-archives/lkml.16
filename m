@@ -1,62 +1,62 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC271ACEC7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBB51AAA05
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866227; cv=none; b=temKCCJwVffwWLSYIIKZ6wJnTu4DXHYB3GY/vTJY+5TDRfpLcX7J2WocYpEU4PY/V+SyEoSFBy1nV4F7+fE0PXRRZ9F0YR6JxnjIXkrZ2TPj44QcRf0Dm/AVy10UpT6jz08p6zSvLwPfBJV/elR6ZiSGzaKjDxrUcSb6MhrvyJ4=
+	t=1738866227; cv=none; b=mNHgK30WGD8xw1KEwwNFDnC62AZb8kfzeTdVemmqH6ssFloxEon5vAJgMGgvPEIdC3eiaZEVsb1LzlAukboYjX0vtq4ggaCQFK+oiIHjbjIFL/aSV6/QbQGbxfwHMjQpg6h0o6ggHTcw/POZ/FbmbqfEwm5o/cySFiSwIAsYELQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738866227; c=relaxed/simple;
-	bh=Udk5nT3zOhzUhLBcSwJhGyb7zx4j6w6RjAkkkWx25oY=;
+	bh=Jl16tNEPM6BDreyI7YdYngMWZcCbd/CzMR1YX33ZIyU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VymCpgiONHAHItF7HqzfjL6P6lj3mFxtP2TXDIPM0OS1HTVOqbgpVDMAtXtrHIjhCVdcrhCU0I5APiSAf/vZF8/dMjLA8WFOBV3LOr0WLrJ5qtx344T/mIUmGLgjU2UigOKDrj5SkzygEQxjDa4UhvaKwC8xY37IPr3TKwb2MBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TJUBwIve; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version:Content-Type; b=Js2nnGSxj1sgma69fs5mcLw0d+xo+Ctowz0yzcZEhW0z7p4L37FLD2jbmtX9Jq+2st+dJoqNz+9epI56rVO1ehrRc9E0HTcKCpoC7Db49EYLLUHyCsBBhSKj+fPn+7AAR+YMI0rBJEhK4TVDIdQvYnZWKKSz3eiydQKZmX09ctg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0DKAFqxe; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TJUBwIve"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43634b570c1so8979195e9.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0DKAFqxe"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dc0cd94a6so435558f8f.0
         for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:23:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738866223; x=1739471023; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0dr7K//uyab/fqg59KO812BXRhGQFW8v0mYDCcCd2z4=;
-        b=TJUBwIveWjxeREuZYhw6miA/NsDNFzOKVwockNeDWvhdZHp0Vq88bBhjSTKk4M4adq
-         nSbeeGie0o/RBcUP8xuKkx2HfYDoVJGZU2H6tc3mPkeyJ2b5wf62ViJxVdHAL5R27Yh0
-         MDoXccsvpNGUtXDg5ZE7BRemAd/1dV1TNWazTjNnRN2l3NBGay95Sm332MExZjRd5iUW
-         NecZxKQxpH68fLKOsEUTRPOQcL2TtPvPWjjPRnKd5IJbbrnXvnhbk7ZDxBFgp13i5xKm
-         XQs3DV+lecu5OkZyhX5srHEqj+NSQ4XdbE8uizcEFeGPR8imUGlY2wOiWoww0pxgKw9d
-         Qsmg==
+        bh=29W+xGQBf5MD/J2VvsVKDtGV401fRAN/4XA8662w0b0=;
+        b=0DKAFqxeX0VFHfH1fl/v4ayd1+YGqusx3ItTblWyhMWFeRdZTbFeBrhgrVtuGcsrtm
+         3WFy5teY4i+IFeTgZZoccvEC722mY7iRy7Vc2dqVQ7MvM7BxBV+j755b1PKr7Mtw/KIX
+         SYhElgmgPCIsAxoDiPbrklAM5BYPpVy36B1iU5RCr5McaJklKplTUbjKt/FmbaQifCTy
+         84iqsNPQkViIdjVx9TA4RS9sS1Y8vjNd+gWNci97/rr7AyDjbm0pW5mf71acVGQPEmwL
+         kSFCMEw341lLmlNvhKdfEV2+5lKCsOOY3CSu/rDDkgqIJonq8IyOHWfuCng8u+/LyyUy
+         74VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738866223; x=1739471023;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0dr7K//uyab/fqg59KO812BXRhGQFW8v0mYDCcCd2z4=;
-        b=JpPvyjzJVvCg5hSJJH3WPE0fCFQ9uLiVjuoLhASb/FvHGPfmT6TbovqAoeY8ILW5SX
-         Nvp5pU5Sj1BHU7yqfYmDjYnThtT17FoTbCNtBlH1s1r7pfIwJT8jVmHwknLpe7J3PVZa
-         BoDr3BJwu1iGUbuJecAppJ+syQxl4k4K6EMzfTbatFF0kOt6qczkVQM8HgSNjMZyTP+M
-         w461FFfu8sKSnrNGn/5a4NxSbsfrBck3XIxY2UH5z7lTB7KAPqgx/No+cTu1M2oL09uS
-         GeQBvY1WNd215mPOEaqltbDk95WczxALNSAfotVgVFilNMIHEy3Gs0it/4g7D3ks9QOF
-         MOQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGqJlBum7zm8P5qkb1FkRNgxXPYcI1oZ2do/A1CghVqggehyOQHcNRJ7zYHCyBtKzcmT9+k9lv9SwP01w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI9b5aC7uKNyxYbOu0ZKgvtgiokf/GJxhwxgZ2Fcy5ZqDyK0gZ
-	iWSvfhHOXBE9ktS0xDFyescm3jDtZSgSEYtJsgpJQ/+/thD9dQdFTRef0zd6nVM=
-X-Gm-Gg: ASbGncva7k/L7CudLJuvLLUz5GrFDoY8YAlZ1opIsI/TJi8pm6zf1WiSmkIx9WUHPOd
-	Jj7P9ACgkx167KoH++L4p9fCgmUZzh9JTR0ulnGEbLWoilKLj3lNBS4QN8s0QjLm63GwduRJNCq
-	m2Um7epM3008vLgSF7nCmUfSWsTq0VyJdGv8omB02SrUEVXr8asX/If5HT/7BHnK1MYAbZCnV4T
-	VtUt1SMGOf5CkENBD27ZX4px+IGFT4/WmN7EEug7PBTs0tIL5EOKyrB9OUOhXTYjSWjlN5upXKb
-	cpdxCRckTwrTA5RgRg==
-X-Google-Smtp-Source: AGHT+IHY++qgicgfSLoTd3fT03vxs7G/UPa+gyYqgZhlWCnDCydfaxDIJRCfQ4ZOWUZDrqb2mXRchQ==
-X-Received: by 2002:a05:600c:4703:b0:431:547e:81d0 with SMTP id 5b1f17b1804b1-43924988c5amr5024875e9.11.1738866223273;
-        Thu, 06 Feb 2025 10:23:43 -0800 (PST)
+        bh=29W+xGQBf5MD/J2VvsVKDtGV401fRAN/4XA8662w0b0=;
+        b=myzvHAU6akvRldwrxEQEWegQZQShmxHa+ixhZ2XNIU1tRaXXiGf7+FBZaMyKS+EY69
+         /SU+t5nH+7/wfJsWAx8c3RS7io/BBNQjcbKwqAZbZtjKw7r+LoQDYmPYIo2w2bT3xBbX
+         4tLJ9bV+z7De8D0pYA8Zqr9BNe3CXllJjJr7dOgUIVGXevd4LTkXiAPw17QeKRrC5RsE
+         aMWqK1z755FqOlySHqhDjlQoueNHmsCOEPWRbyJqHD1Ho+1EBH5Pc18m0v0IBqOvkNtN
+         eC9fh7ap+YAxigRlUSwriuTlD40d5UsPYykhHqxiRABhf6ZnFGbYTyV2gm9iTYB7zi/G
+         LiHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUYqQjR/bFS2fmLz4OS/YB0xPDoOSBhjZBKIMqNHTLVYXhqv1OWLKYgzHzjfIWeOvUIChWtnOW4IVl3Pc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxK4hXuWBw68L82YAgi5kaCLoTVhTzRZD1TpyXZv11n7cHoivL
+	i8V7UjzB6MornEYLYHp5eWkHqaHoN5Q6qzjxk+3yEeqOxy+fpXpTvlltts8VhCM=
+X-Gm-Gg: ASbGncvhYATOMKvqA+fyhOcPgNTnNt+7kYlLtRlT6jnhzrMQKWR6zFwIeG66GLKRERU
+	TYzkpsALPoF/ix5CP2y3l81ZTq0iVw+GhfPLfUjJuNFeGAxmZeCf0tXrTQy5YMFYJoDYJlVz/9b
+	87PMKUfNZfJgcclyd+16eO+WwaOvoZIjhRW08OIwl8wr5hJ835BBfZJmdgEklerI5a0AKp5XGhE
+	GJVmbIGRLeEBQO2ZUjQzxBbfNOqrLeFcK/Z76mDuZ3cyRX8tneBnAGXSZlwZnttgjs9V94oQkmp
+	M/0vQk7Bj3lj72UT9w==
+X-Google-Smtp-Source: AGHT+IHlUue1eKBzSa9ofHwkc+r/gZvS74Iyd57Rrk4ER92H+cffyUvvKLxWs3c1qxFz5pMlm9SmgQ==
+X-Received: by 2002:a05:6000:1a8b:b0:38b:ed7b:f78c with SMTP id ffacd0b85a97d-38dc90e6460mr28801f8f.6.1738866221944;
+        Thu, 06 Feb 2025 10:23:41 -0800 (PST)
 Received: from toaster.lan ([2a01:e0a:3c5:5fb1:a0d6:294f:5246:28d4])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4390d94d802sm66111445e9.12.2025.02.06.10.23.42
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4390d94d802sm66111445e9.12.2025.02.06.10.23.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 10:23:42 -0800 (PST)
+        Thu, 06 Feb 2025 10:23:41 -0800 (PST)
 From: Jerome Brunet <jbrunet@baylibre.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Dave Ertman <david.m.ertman@intel.com>,
@@ -66,9 +66,9 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Arnd Bergmann <arnd@arndb.de>
 Cc: Jerome Brunet <jbrunet@baylibre.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/7] clk: clk-imx8mp-audiomix: use the auxiliary device creation helper
-Date: Thu,  6 Feb 2025 19:23:16 +0100
-Message-ID: <20250206-aux-device-create-helper-v2-6-fa6a0f326527@baylibre.com>
+Subject: [PATCH v2 5/7] clk: eyeq: use the auxiliary device creation helper
+Date: Thu,  6 Feb 2025 19:23:15 +0100
+Message-ID: <20250206-aux-device-create-helper-v2-5-fa6a0f326527@baylibre.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250206-aux-device-create-helper-v2-0-fa6a0f326527@baylibre.com>
 References: <20250206-aux-device-create-helper-v2-0-fa6a0f326527@baylibre.com>
@@ -80,19 +80,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2872; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=Udk5nT3zOhzUhLBcSwJhGyb7zx4j6w6RjAkkkWx25oY=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBnpPrOX157nQq0f4MJRtXrV9MVQgvmMHfv+22/x
- TtnUaZigpqJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ6T6zgAKCRDm/A8cN/La
- hdApEACvlY8EgS1iQjIlxfMdHCxrZoQiZCQD+uvhkOr1wEBpepiLPFgsyMFbh1IrgUJ2422mp/7
- i5rlWSU7gcb1Wr1DOE35AYkNRwNGhqRqfKz3oUxB9E9RJX3OYFZDbgRAxo+ajCiaO0DSQIaWSuR
- WOj+K8d4gvNEspjj2x5XdFwbNVx9+n+jlk8ztamRmd7ZtQrt6uD8oWFq4ACJ9+uQphQIj66twOr
- kdeY9MJUOPVFOKgHA1cQ3DlvedHRKGOsiep+dXeiAMb/1ukJiYfy7wYXBhFXhDDiMhdbm2Zkz/i
- B/cxoKUzPLztHIFz/FCpRnsRMkLeCPRtIB9lGslasT/HcCMTaSsQ/pGNWccGtkUMOwz9i0LzFtz
- 65F8Jx1E2rBFGzvZM/bjDj4BrvRtMbd2c8dN6lqY8lhzw+8gqAjuV2DyDKdYNeJ7GjpevxGNMau
- m0WZ/Td+yPRWQ6KpH2DJtnb/qS0r+9jIp77Hd3fnx8c7wmA5EmwV3jFjt0E9ZPsuH+v2eq4D0i5
- ciTQmXjYehnqocnxzqTDMKIiybEA2XRwg9TGcmjXBb+K5NJKIlSWbcG8EBTb5uI09Sj5euSjJVv
- t994jsqs1GzpPEjjzrjl6xDmBzCcXYvprkRT8l3/oU4lKrllG8N7/6oVN4tibYhSEKWhl974NGg 0KbVFwJwKjys3qw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3054; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=Jl16tNEPM6BDreyI7YdYngMWZcCbd/CzMR1YX33ZIyU=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBnpPrNGoBW0SbiTYayeUTxC2RlUHuB19r1iaZoa
+ ZNxRO4lfHuJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ6T6zQAKCRDm/A8cN/La
+ hSoKD/49wqMtccrlfOJtnw1L5ApXvUBtcnDHmJnLwwi2Fhq035exPNS/nnY+msS7KL7cOrmMHF6
+ mxHmFt3q/tmaeLR5FBMosAyN5Bz8j2S1df1OmkMgsStHcg8n4fdwNhged6hc+l4zwy2FHp34utQ
+ B7G2PSL52y20bVzuaeiJ579jzgoh2Q03v7rS8wRWoCqLoE+2RdaM4wbHriDXVeT9bSouhtvjH+2
+ YiA5CjkYKZ5/GkM23UuIqOaFfCH02DOV3Uz3Tn6kV6KICvDeWcsucRoUPqsWsGusMbGV3/D8zo/
+ +VWt7FwxB14RxMLM/4y0Si5Tty2E7Z6ZCxntN7LybKyJEc2QMGcn7/WDoPPFXHOK+fsdCHApCXG
+ ImvJc7Si0yIzsCnfytpWEHD4cft3N+6MvcNt1H+s/bH7vpbLv4SGR3Vk84uQrtKBjcbC+fkDeyp
+ JOPxKOonOl0OxI17b44ufEDIjKS7poUolsYBxYmOI3Z9kn9KeYvlbh2s1lZleI6NdSox2TSMKRD
+ cOQ5Ti/EGj0hNyEBOxKrzOx+zA+YaF9JPsbb09AoCNxH8/uatDrkZSg0hHTHN7iYwhPHQXeuLn2
+ afLhmaYY0x+JgmyUm7+KvINkUZ1+oHQsQEKV1Am4uPDUlRj9PJ4r3RtxrsuND90qUtgoHOaaBMj UwL1FsEkOHajzpQ==
 X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp; fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 Content-Transfer-Encoding: 8bit
 
@@ -103,93 +103,94 @@ Use it and remove some boilerplate code.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/clk/imx/clk-imx8mp-audiomix.c | 57 +++++------------------------------
- 1 file changed, 7 insertions(+), 50 deletions(-)
+ drivers/clk/clk-eyeq.c | 57 +++++++++++---------------------------------------
+ 1 file changed, 12 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index c409fc7e061869988f83c7df3ef7860500426323..90e69e253ad5a30cd2a3cb3b63ebe85be1e6b059 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -228,64 +228,21 @@ struct clk_imx8mp_audiomix_priv {
- 	struct clk_hw_onecell_data clk_data;
- };
+diff --git a/drivers/clk/clk-eyeq.c b/drivers/clk/clk-eyeq.c
+index 640c25788487f8cf6fb4431ed6fb612cf099f114..e5d030abd61f05813d4df35189f046dbd4f4b185 100644
+--- a/drivers/clk/clk-eyeq.c
++++ b/drivers/clk/clk-eyeq.c
+@@ -322,38 +322,18 @@ static void eqc_probe_init_fixed_factors(struct device *dev,
+ 	}
+ }
  
--#if IS_ENABLED(CONFIG_RESET_CONTROLLER)
--
--static void clk_imx8mp_audiomix_reset_unregister_adev(void *_adev)
+-static void eqc_auxdev_release(struct device *dev)
 -{
--	struct auxiliary_device *adev = _adev;
--
--	auxiliary_device_delete(adev);
--	auxiliary_device_uninit(adev);
--}
--
--static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
-+static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev)
- {
 -	struct auxiliary_device *adev = to_auxiliary_dev(dev);
 -
 -	kfree(adev);
 -}
 -
--static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
--							 struct clk_imx8mp_audiomix_priv *priv)
--{
--	struct auxiliary_device *adev __free(kfree) = NULL;
+-static int eqc_auxdev_create(struct device *dev, void __iomem *base,
+-			     const char *name, u32 id)
++static void eqc_auxdev_create_optional(struct device *dev, void __iomem *base,
++				       const char *name)
+ {
+ 	struct auxiliary_device *adev;
 -	int ret;
-+	struct auxiliary_device *adev;
- 
- 	if (!of_property_present(dev->of_node, "#reset-cells"))
- 		return 0;
- 
+-
 -	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
 -	if (!adev)
 -		return -ENOMEM;
 -
--	adev->name = "reset";
+-	adev->name = name;
 -	adev->dev.parent = dev;
--	adev->dev.release = clk_imx8mp_audiomix_reset_adev_release;
--
+-	adev->dev.platform_data = (void __force *)base;
+-	adev->dev.release = eqc_auxdev_release;
+-	adev->id = id;
+ 
 -	ret = auxiliary_device_init(adev);
 -	if (ret)
 -		return ret;
 -
 -	ret = auxiliary_device_add(adev);
--	if (ret) {
+-	if (ret)
 -		auxiliary_device_uninit(adev);
--		return ret;
--	}
 -
--	return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_unregister_adev,
--					no_free_ptr(adev));
--}
--
--#else /* !CONFIG_RESET_CONTROLLER */
-+	adev = devm_auxiliary_device_create(dev, KBUILD_MODNAME,
-+					    "reset", NULL, 0);
-+	if (IS_ERR_OR_NULL(adev))
-+		return PTR_ERR(adev);
- 
--static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
--							 struct clk_imx8mp_audiomix_priv *priv)
--{
- 	return 0;
+-	return ret;
++	if (name) {
++		adev = devm_auxiliary_device_create(dev, KBUILD_MODNAME,
++						    name, (void __force *)base, 0);
++		if (IS_ERR(adev))
++			dev_warn(dev, "failed creating auxiliary device %s.%s: %ld\n",
++				 KBUILD_MODNAME, name, PTR_ERR(adev));
++	}
  }
  
--#endif /* !CONFIG_RESET_CONTROLLER */
+ static int eqc_probe(struct platform_device *pdev)
+@@ -365,7 +345,6 @@ static int eqc_probe(struct platform_device *pdev)
+ 	unsigned int i, clk_count;
+ 	struct resource *res;
+ 	void __iomem *base;
+-	int ret;
+ 
+ 	data = device_get_match_data(dev);
+ 	if (!data)
+@@ -379,21 +358,9 @@ static int eqc_probe(struct platform_device *pdev)
+ 	if (!base)
+ 		return -ENOMEM;
+ 
+-	/* Init optional reset auxiliary device. */
+-	if (data->reset_auxdev_name) {
+-		ret = eqc_auxdev_create(dev, base, data->reset_auxdev_name, 0);
+-		if (ret)
+-			dev_warn(dev, "failed creating auxiliary device %s.%s: %d\n",
+-				 KBUILD_MODNAME, data->reset_auxdev_name, ret);
+-	}
 -
- static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
- {
- 	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
-@@ -408,7 +365,7 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk_register;
+-	/* Init optional pinctrl auxiliary device. */
+-	if (data->pinctrl_auxdev_name) {
+-		ret = eqc_auxdev_create(dev, base, data->pinctrl_auxdev_name, 0);
+-		if (ret)
+-			dev_warn(dev, "failed creating auxiliary device %s.%s: %d\n",
+-				 KBUILD_MODNAME, data->pinctrl_auxdev_name, ret);
+-	}
++	/* Init optional auxiliary devices. */
++	eqc_auxdev_create_optional(dev, base, data->reset_auxdev_name);
++	eqc_auxdev_create_optional(dev, base, data->pinctrl_auxdev_name);
  
--	ret = clk_imx8mp_audiomix_reset_controller_register(dev, priv);
-+	ret = clk_imx8mp_audiomix_reset_controller_register(dev);
- 	if (ret)
- 		goto err_clk_register;
- 
+ 	if (data->pll_count + data->div_count + data->fixed_factor_count == 0)
+ 		return 0; /* Zero clocks, we are done. */
 
 -- 
 2.45.2
