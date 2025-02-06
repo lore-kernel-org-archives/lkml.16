@@ -1,89 +1,111 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707F2248AC;
-	Thu,  6 Feb 2025 08:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238B81FE453
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829691; cv=none; b=CK7znTscdhjJul/awVzEtFJKzuxL8MwwLZCARnb4CH6lGHZLNlkUJKEzjfChaxP4ioc+hSuL63Uj7hUt3/ZysOkguY9sFV7GwXTt4zJWTSevBo79YTp+vf6T80NKaQvi+9AxsPAalqUo5kYLdlJVtLORVhsF5OPXESy6yGe/Nxs=
+	t=1738829830; cv=none; b=RGEaWnOIPdX3AK2jc26A2RJW4lMbxbuwtAfLNE069VtDBTup4L5UfVwIzARzXWKxpKZcA1IZrk4Y7ptjYNCPrdpNZjiukdZy0JZxU9kRZLxSoMx5uiGcfK+hLSHq6X4HbQk/CrACCVxSfJyjx3vriovjfLCE2ldkUkAFS+FqusQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829691; c=relaxed/simple;
-	bh=fZPJH3CSQdODZnXztNoSbNZTgj6pLu/fv3n0LbAubpQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m8hylalT506Fm2rX8+pRMWepEnB3I0M8kAHMOKeoBp/pjw3BrlkCrCGjYCkd3Pl/w7fUXzJUoWtL8oBaNV279NxtREZnJpYSz8yayHhrWFwOyV7z32bgZse+c5p71JkrLZdBR5UmXnyOmXJFcJztLn38JVJoHJDBRe9K4MSKJgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2164b662090so12596465ad.1;
-        Thu, 06 Feb 2025 00:14:47 -0800 (PST)
+	s=arc-20240116; t=1738829830; c=relaxed/simple;
+	bh=jEJ+dzjS9jkqBg5sz39XNcksg28cvuzTKz0gQ8s/HRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Sgz709DOFfRzhew7kNQhkbxsn1TK1Ybx0Yf7XQb37l+FDm92sozYJqFDM7Fr7KYGjGU0tGiegdvYEX2pRp/zas72mxkjYKFx1gf1bvw8BeQQPmZZ57xc6JP6ypzUGOltM4EdNWaSF+J4lN9tU25AEa2gq7pGZAZjV19gUMY97Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EvfjblR5; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EvfjblR5"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38da88e6db0so245513f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 00:17:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738829826; x=1739434626; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ubql9r1omCt43g1m4gjLWGeKKiFiLncoJpuHUqF935k=;
+        b=EvfjblR5bg4TmIZW61dM0iXo3gfCZ8kQC3nV/am8kYd1I59JxHDrihw6kLGFERjhMn
+         btTW4SnHNdLthJ9y+iuo24NeT4JPjyww5BF4ViLyna5WXxoj/8U421BcfkYH9lW8Vt+R
+         iBNFDold/gBRSu80VHbjR/+uTVqF9Y37P7Gq1wX2xZ7b/Lv5X+xBZPEvOD5EQySRB/j1
+         UcOK+yoe35VVXiVqOTKakTOHr8/YfrHgkxbGjDlHgz1VisqO5F2A6Dbf9onMW2lID4Gt
+         yZdjt7wykIMqE++TrdxdB/W1Q2T12ST1ZsoiAzIsS2/40VQ+xAJqUX7VSBrfJDc2n5RY
+         gVrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738829687; x=1739434487;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=shv9SKnTKLaSrjwCnFD2VxR1ja3MKQ6r1lsFRhAb5Ak=;
-        b=PDctM0uaUiYt1X0KnkmtoBZ1sjCN2YsB5maMPbCx6mfvAfmEIB/GtLSW3Ondt7R8QE
-         nYAaDK+FQ7qim2/yfk3R1cnvYvttGHEaw3fab/+vXFPfDVCgv5Z1vH5D3JUXs/sASxje
-         Axw6Jlgjh37dbcTB1BCCKGHE1Ah6LkF9qQwWTZ4dMFaY2ORndaV9B8ZmpEnPjJsX/QDf
-         9TDHfIg32Ye0Ej6tv3TSOSirFPO4TqZ5Fn1MJw+8MJiWI0uJtYA1tsO93LdnUta29nSg
-         9YMqz7hlcoNnLx1NV+VxaubQgIsBLYll727XNfxEUGaPuK6ppiC+kXa5aGfl8zjHQdAs
-         HIvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwB3Vn2WhJJXURUziVRAtlIf1FFxloJaykC/UmpJGr8pAY9u0FFD800FwVxFWZL+0vBkp7fAWcyZ1bYgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSernlf1Sg8XJkSwFH1hl7SayHFlnBL7/JLR882vhjJRsut08m
-	+SKwj9s9bLzexikyy7DNLyENWRIlU2pbtSFaXH7qGrE3Na8s3m9q
-X-Gm-Gg: ASbGncvvldY3NHKCjHPjjyMbnMHBGyJY1/Qw9uV5cHHnmdUAvkcvsBf/qB5p3ckmCjL
-	K7EWehzGRVu0Gygx961XgsU+9hFiSGPziZji6bHsMDToXxIi7Ts1TbI9sGXmyk4w/TkDvfQPn+s
-	s1DPYMizDqN+TXDBk1j0u/9LOrD/yUuIHHhSv8Ac68daBA+kmQSfNMsBPWbou4RUTLBq0GhNw78
-	hA/AJ7UFpxUX0e9EGoxQaOPJWnx4dpo0N4jpaSGN6wQuX2KacVPi1LDJOPB2E2LcJDgrOmA0xxW
-	uPNJTftpphdt1H2GFdgHRUc6veajYiXJk06B0iA=
-X-Google-Smtp-Source: AGHT+IEZTeo1QpxSxkiB3PklNj/CzA8+OdYiqecMnSaS1V5XcJOXplVmCulJZztjBU6ix5vCqvUGOA==
-X-Received: by 2002:a17:902:e74e:b0:216:7ee9:2227 with SMTP id d9443c01a7336-21f17ebbb5cmr102798745ad.36.1738829686461;
-        Thu, 06 Feb 2025 00:14:46 -0800 (PST)
-Received: from kylin-ThinkBook-15-G2-ITL.. ([116.128.244.171])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653acfesm6786855ad.65.2025.02.06.00.14.42
+        d=1e100.net; s=20230601; t=1738829826; x=1739434626;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubql9r1omCt43g1m4gjLWGeKKiFiLncoJpuHUqF935k=;
+        b=aasmYmLjOk16kGrSFATG/pOzwMmiwLu+EEg0a6QnonXUh+kpNldX4cbDkkx4DmfIkI
+         BsbAInq+iET5V8OCLN/masoF5B1RlrNzyAR5HeS5HLGWmR/U6rAT2Vrpi/iOhyeFsUg2
+         anFtZXTOx8epkdbLUXXAwbsLTxvl4/oP1ePs6zwOfwjEhNz1Fkw6z2P09ttmV5xjFz9a
+         2NOlOrzk27cfz2aItL78ksVQyEyN+EuCwrxClFy4iAstuGueGiZILPrl+obATW5DUbix
+         kiUOti8OcA/rC4B2unxNedfTT50Nt1WYzv+pU6VPuWq/eJBsRWeCCTYiIkg6thZAPDsD
+         u1mg==
+X-Forwarded-Encrypted: i=1; AJvYcCW4bYc/+Q/OflSrP4GhKWwfGRthoLGvaIRudWimNi6QhVIPBdRfnoPxMfH6OE851L326hiNFL3ZkdjT6cw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMROa2AlkhBfCqdE6KZkmi92MLVSghEmvGnG+6FiPwtNE/jAw1
+	lkkDT7EO8Tyv0p6UxTFEShz8WI+wjnxwq9fTukV6lODi87rfgglT7f1h1hB10ik=
+X-Gm-Gg: ASbGncvVZANpogN/yBmjPLDwUApp9lCrpU3L4Bg6GMmIoe93iJEFMMf1DAZ/y22o1SI
+	aFVQ0sr8TFF1IA8UESQHcubjSXM1T0eWthD9mVJ2XO8py1NAGYM1Z5PIkwHNsGakGjVoWPkXytg
+	tuWHWHQe487GhPilXCLqLM/7S9abeLhr2VDhqH/J5dOeobP0SYsopPJdfOnN14ikR/IWMNV1tZo
+	Gkab87zkm91/zhwMSSDnbB041ui/hmrHvlOx1JbMqrOBuDVGgpZ0hzGvrez++KvVOCRJn2mL8BG
+	rT2cVvk6dFZtETU6bsBl
+X-Google-Smtp-Source: AGHT+IF7c/c3cT8gIKlZmV09tdvJuSUhNmFcmUl5w0RwgKRFabBb32VFjSdJlhbFnDoNrb4CYnO3Bw==
+X-Received: by 2002:a5d:64ec:0:b0:385:f7a3:fea6 with SMTP id ffacd0b85a97d-38db48ba435mr3619651f8f.13.1738829826339;
+        Thu, 06 Feb 2025 00:17:06 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38dbde1de32sm1040103f8f.83.2025.02.06.00.17.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 00:14:45 -0800 (PST)
-From: xueqin Luo <luoxueqin@kylinos.cn>
-To: rafael@kernel.org,
-	daniel.lezcano@linaro.org,
-	rui.zhang@intel.com,
-	lukasz.luba@arm.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xueqin Luo <luoxueqin@kylinos.cn>
-Subject: [PATCH] thermal: core: Remove duplicate struct declaration
-Date: Thu,  6 Feb 2025 16:14:36 +0800
-Message-Id: <20250206081436.51785-1-luoxueqin@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+        Thu, 06 Feb 2025 00:17:05 -0800 (PST)
+Date: Thu, 6 Feb 2025 11:17:02 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Brian Geffon <bgeffon@google.com>, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] drm/i915: Fix NULL vs IS_ERR() check in
+ __shmem_writeback()
+Message-ID: <7f99a56b-d517-40b0-92b7-421c4fd813f2@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-The struct thermal_zone_device is already declared on line 32, so the
-duplicate declaration has been removed.
+The filemap_lock_folio() function doesn't return NULL, it returns error
+pointers.
 
-Fixes: b1ae92dcfa8e ("thermal: core: Make struct thermal_zone_device definition internal")
-Signed-off-by: xueqin Luo <luoxueqin@kylinos.cn>
+Fixes: 25dd342f0cc8 ("drm/i915/gem: convert __shmem_writeback() to folios")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- include/linux/thermal.h | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 69f9bedd0ee8..0b5ed6821080 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -86,8 +86,6 @@ struct thermal_trip {
- #define THERMAL_TRIP_PRIV_TO_INT(_val_)	(uintptr_t)(_val_)
- #define THERMAL_INT_TO_TRIP_PRIV(_val_)	(void *)(uintptr_t)(_val_)
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+index a784fb44e59c..fb263b421958 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+@@ -319,7 +319,7 @@ void __shmem_writeback(size_t size, struct address_space *mapping)
+ 		struct folio *folio;
  
--struct thermal_zone_device;
--
- struct cooling_spec {
- 	unsigned long upper;	/* Highest cooling state  */
- 	unsigned long lower;	/* Lowest cooling state  */
+ 		folio = filemap_lock_folio(mapping, i);
+-		if (!folio)
++		if (IS_ERR(folio))
+ 			continue;
+ 
+ 		if (!folio_mapped(folio) && folio_clear_dirty_for_io(folio)) {
 -- 
-2.34.1
+2.47.2
 
