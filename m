@@ -1,140 +1,203 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF251A9B46;
-	Thu,  6 Feb 2025 19:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4068D1A9B3B;
+	Thu,  6 Feb 2025 19:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738870804; cv=none; b=tA2NITMRPkYEJnu7gJ9tN2s3LcnhD5FTZBcUb3zDr29ahUE7u94Hc4B/gRkkYKKjUIubR9VDsbdEkzlnr8vbUM7axW0klz+yX+ql70K/UBCZ++3+713BaMylhvOLl1CJQnkA6zYo4m+Uk0v//tehO722Kj7PTipEeCcNvWkjNTo=
+	t=1738870818; cv=none; b=u9XnGq+M5KGVAqMPOnr7H+fWDMrxegVk6kNITE6h5W7Gpgv1IP9KTS6N8EDrBuL9KFi6VucmcD16ZD7Cj0OYX7ECsG0AtreUOQRY3cMOvQZDIZk+i4kqRChqqBpXmgK/wuncZj2OuqhK40tJ5SgzTMi5O2Uu3sgvYLdslmNpFJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738870804; c=relaxed/simple;
-	bh=x/gRAVP5w48dDy3Q4GLG6EyEXkg923PyyQPCeIGWkXE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=nMz5Mm/1IoDuKA3y9n8CXvDpVtAMWXUBx0F+zSrXnOp4Vs5QSYBs4zjBqO65jWEQHrarqq+LguWKuvf7I/gWGAN4Pk2Lf+Y8f4YflhlPpnqVWfupSGZtQFmmXqraWdUy7CFvaVl+hisdkf3givPd4mQNCdsGlSWCGNtRD2/j5Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QrFbyYfQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1738870818; c=relaxed/simple;
+	bh=qrsn9zVKWwRovi9RIRnvia4cwbugC8QEz5mbs6fjMHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Wi3aEUnkJ7zqmbyrittSYdnhaOPDuMmJA1x4EUnQZ8D9S3DBBHtHF6OSFP9DQznx7PCO68f1crCv5BeB78BcuoS9LI1VC+cYswBomNZmaIXd9xdlXogrzcs9KVSHivxuCwtMgs2JxLCQPdouiMU8CXsLZj3HvnuU+N0+1wmAoNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=nARwccAx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=otK2CXBw; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QrFbyYfQ"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516Hrior018154;
-	Thu, 6 Feb 2025 19:39:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:message-id:subject:to; s=qcppdkim1; bh=N3DbkgSLvQT9
-	Mh8DpNYxq3rF29ncrXImS+5D27fnjTA=; b=QrFbyYfQWh1/ApBAiTMN02bPXADx
-	YVjKABqCc++ZnP0sQu60M3xazSMRRtJBDo2pIk4XkckFROXVPsCtfe6I3uPMf2S7
-	i2bNdTQIO6OmBKxTbqY3EckZvSK8NnEGEefTa7YGSDCiQ6iH5hYXJkLZj6LjO14u
-	dIdaYwm+4xjHgShlOZ+hDUlnd1bNiVqD43dm7Io5nJIYxCUEETshf+Z7Em28ZQOL
-	oXbSSkAU97Rykas5hGWu68FADDW8lJAFSwabqRjO5cM3tXlTV4kaD+AYxVENAbFo
-	c2H0fWA3bx+beITAtA2HXmLcQLaF6IeQ/1AXD+N+1P++UN9w5fRsTah36A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n1vng8dj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 19:39:56 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA04.qualcomm.com [127.0.0.1])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 516Jdtea012577;
-	Thu, 6 Feb 2025 19:39:55 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA04.qualcomm.com (PPS) with ESMTP id 44n335r65a-1;
-	Thu, 06 Feb 2025 19:39:55 +0000
-Received: from NALASPPMTA04.qualcomm.com (NALASPPMTA04.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 516JbT6X008333;
-	Thu, 6 Feb 2025 19:39:55 GMT
-Received: from hu-devc-lv-u18-c.qualcomm.com (hu-eserrao-lv.qualcomm.com [10.47.235.27])
-	by NALASPPMTA04.qualcomm.com (PPS) with ESMTP id 516JdsVD012557;
-	Thu, 06 Feb 2025 19:39:55 +0000
-Received: by hu-devc-lv-u18-c.qualcomm.com (Postfix, from userid 464172)
-	id C0DDC624CA9; Thu,  6 Feb 2025 11:39:54 -0800 (PST)
-From: Elson Roy Serrao <quic_eserrao@quicinc.com>
-To: gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
-        xu.yang_2@nxp.com
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Elson Roy Serrao <quic_eserrao@quicinc.com>, stable@vger.kernel.org
-Subject: [PATCH v2] usb: roles: set switch registered flag early on
-Date: Thu,  6 Feb 2025 11:39:50 -0800
-Message-Id: <20250206193950.22421-1-quic_eserrao@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mZCfhr0dpV2NxLO4jK71MJD8fEodPPjp
-X-Proofpoint-GUID: mZCfhr0dpV2NxLO4jK71MJD8fEodPPjp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060155
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="nARwccAx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="otK2CXBw"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 1A9E1114022E;
+	Thu,  6 Feb 2025 14:40:13 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Thu, 06 Feb 2025 14:40:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1738870813; x=
+	1738957213; bh=nKKMpkPQ7TxDzNtIBSN1wCZCkjwPSOwtVho/zkZsHWE=; b=n
+	ARwccAxOFNzQCv8UucPOYpHPEVEb77zbDvwpB2N9pNBMeKYNLMvGxK/uQtopOMcB
+	jSRQLr/aDki3XkP6tGvSo4RvAX5CVazWzfkQB8qccAHENpaoZz6A/ak6UMDHPL4S
+	/DzIe6L9WYMUU+ojjVta/0W0rhBOdzg3h7X8UYLuFPqvkf/Lvt4C13hojpi6hqBN
+	FOwKxtUSB60ZmeaaT1hgEpFqJU7KntKRJ3n8F0Gko3DVqejVaWUEOPV5T2nBFLW3
+	3QT+xikdtVYeQn4W+fZrMSHYoddsNbKQiXsMIxIyMqo2jpyOSrEYjUBdcuXdIvKP
+	S2yGM59qwlDW+4lIXmyXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1738870813; x=1738957213; bh=n
+	KKMpkPQ7TxDzNtIBSN1wCZCkjwPSOwtVho/zkZsHWE=; b=otK2CXBw/hFjz0Zp5
+	KjAkOPSvT5ZEQkIURSxuO2/3waqKnm8nTzIM0uLZlkZnvhZNzuWW1Sv0PbvaPfO9
+	XmgnU6KYkGTMJaMyNDmIc3l9iC50jQzn70CsvyE5uT1h2ra5PTKkzaYCQ7UhdLO9
+	OgPov3rBKYUjtIyCveHTvUw3fwHRldsLiAeEtaXFPVSBzFoiM5X77nUTx1AuwLHn
+	CYo4od88uJ8l2opFwVnpGM3WMShmfQKoZgDZMTapHCXudGLfxd9VeZCbPteH6kmw
+	NHZpgUZs4dMi+eVR5vy+6ocegoV0/loRMxVwyBKNzytnxVvBbmd4Tb2UgHtTn4Ka
+	ZOlmg==
+X-ME-Sender: <xms:HBClZ23pudtWYf5hFLsE3idL5CnPCYo_SjLQhjGgsutkTl9qcy3MKg>
+    <xme:HBClZ5FtUpQWAhzFsUNBUqbarmR_nUKUvze7Chj4XKDXprdIu-qEw-W_dhfMtUuxb
+    FY5sYHZkypgRvEY65s>
+X-ME-Received: <xmr:HBClZ-5Elewp8TifKCnG5spTIKP6Zoouiif4PzgdRrVqlHdaxR8FEsZR2isHJUEOsakqqR9Gwc93Yzaetjtzb72WXSnPG5rNf0RhQ8a-U5qvoVeFdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
+    dludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
+    peforghrkhcurfgvrghrshhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
+    gssgdrtggrqeenucggtffrrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteei
+    geeugfekhffhgeejudeuteehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdr
+    tggrpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
+    hmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpthhtohephhgu
+    vghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvih
+    hnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorhhm
+    qdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:HBClZ32ZxwvTLe6xf6vBxTgDAo5F2paQEGG7lOkIggtbrL9qEujWEA>
+    <xmx:HBClZ5FsYnnEIOSAn7m_JRAbImm77pk0r0oeyxUhFEOpQu2I62p5yA>
+    <xmx:HBClZw8cBXGWM4ywq29uYYvOBrDzsf2FWmQkyvVL1_tByflrRrYOag>
+    <xmx:HBClZ-n90wj_hFLH4wfYM5lJXEkl7hWMK3esc3q_aCtN58E5_JjLig>
+    <xmx:HRClZyNi2VKOumnAsNiTD7B1IvPpWPIuXSnml_pTDGW_UKiaUzNEDelj>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Feb 2025 14:40:11 -0500 (EST)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
+Date: Thu,  6 Feb 2025 14:39:41 -0500
+Message-ID: <20250206193953.58365-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The role switch registration and set_role() can happen in parallel as they
-are invoked independent of each other. There is a possibility that a driver
-might spend significant amount of time in usb_role_switch_register() API
-due to the presence of time intensive operations like component_add()
-which operate under common mutex. This leads to a time window after
-allocating the switch and before setting the registered flag where the set
-role notifications are dropped. Below timeline summarizes this behavior
+Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
+profiles used for PSC mode. Add support for this update.
+Tested on P14s G5 AMD
 
-Thread1				|	Thread2
-usb_role_switch_register()	|
-	|			|
-	---> allocate switch	|
-	|			|
-	---> component_add()	|	usb_role_switch_set_role()
-	|			|	|
-	|			|	--> Drop role notifications
-	|			|	    since sw->registered
-	|			|	    flag is not set.
-	|			|
-	--->Set registered flag.|
-
-To avoid this, set the registered flag early on in the switch register
-API.
-
-Fixes: b787a3e78175 ("usb: roles: don't get/set_role() when usb_role_switch is unregistered")
-cc: stable@vger.kernel.org
-Signed-off-by: Elson Roy Serrao <quic_eserrao@quicinc.com>
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 ---
 Changes in v2:
- - Set the switch registered flag from the get-go as suggested by
-   Heikki.
- - Modified subject line and commit next as per the new logic.
- - Link to v1: https://lore.kernel.org/all/20250127230715.6142-1-quic_eserrao@quicinc.com/
+ - cosmetic change adding extra newline as requested
 
- drivers/usb/roles/class.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 34 ++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index c58a12c147f4..30482d4cf826 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -387,8 +387,11 @@ usb_role_switch_register(struct device *parent,
- 	dev_set_name(&sw->dev, "%s-role-switch",
- 		     desc->name ? desc->name : dev_name(parent));
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 1fcb0f99695a..a6e6a18b0712 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10319,6 +10319,10 @@ static struct ibm_struct proxsensor_driver_data = {
+ #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
+ #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
  
-+	sw->registered = true;
++#define DYTC_MODE_PSCV9_LOWPOWER 1  /* Low power mode */
++#define DYTC_MODE_PSCV9_BALANCE  3  /* Default mode aka balanced */
++#define DYTC_MODE_PSCV9_PERFORM  4  /* High power mode aka performance */
 +
- 	ret = device_register(&sw->dev);
- 	if (ret) {
-+		sw->registered = false;
- 		put_device(&sw->dev);
- 		return ERR_PTR(ret);
- 	}
-@@ -399,8 +402,6 @@ usb_role_switch_register(struct device *parent,
- 			dev_warn(&sw->dev, "failed to add component\n");
- 	}
+ #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+ #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
  
--	sw->registered = true;
--
- 	/* TODO: Symlinks for the host port and the device controller. */
+@@ -10339,6 +10343,10 @@ static int dytc_capabilities;
+ static bool dytc_mmc_get_available;
+ static int profile_force;
  
- 	return sw;
++static int platform_psc_profile_lowpower = DYTC_MODE_PSC_LOWPOWER;
++static int platform_psc_profile_balanced = DYTC_MODE_PSC_BALANCE;
++static int platform_psc_profile_performance = DYTC_MODE_PSC_PERFORM;
++
+ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+ 		enum platform_profile_option *profile)
+ {
+@@ -10360,19 +10368,15 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+ 		}
+ 		return 0;
+ 	case DYTC_FUNCTION_PSC:
+-		switch (dytcmode) {
+-		case DYTC_MODE_PSC_LOWPOWER:
++		if (dytcmode == platform_psc_profile_lowpower)
+ 			*profile = PLATFORM_PROFILE_LOW_POWER;
+-			break;
+-		case DYTC_MODE_PSC_BALANCE:
++		else if (dytcmode == platform_psc_profile_balanced)
+ 			*profile =  PLATFORM_PROFILE_BALANCED;
+-			break;
+-		case DYTC_MODE_PSC_PERFORM:
++		else if (dytcmode == platform_psc_profile_performance)
+ 			*profile =  PLATFORM_PROFILE_PERFORMANCE;
+-			break;
+-		default: /* Unknown mode */
++		else
+ 			return -EINVAL;
+-		}
++
+ 		return 0;
+ 	case DYTC_FUNCTION_AMT:
+ 		/* For now return balanced. It's the closest we have to 'auto' */
+@@ -10393,19 +10397,19 @@ static int convert_profile_to_dytc(enum platform_profile_option profile, int *pe
+ 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+ 			*perfmode = DYTC_MODE_MMC_LOWPOWER;
+ 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+-			*perfmode = DYTC_MODE_PSC_LOWPOWER;
++			*perfmode = platform_psc_profile_lowpower;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+ 			*perfmode = DYTC_MODE_MMC_BALANCE;
+ 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+-			*perfmode = DYTC_MODE_PSC_BALANCE;
++			*perfmode = platform_psc_profile_balanced;
+ 		break;
+ 	case PLATFORM_PROFILE_PERFORMANCE:
+ 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+ 			*perfmode = DYTC_MODE_MMC_PERFORM;
+ 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+-			*perfmode = DYTC_MODE_PSC_PERFORM;
++			*perfmode = platform_psc_profile_performance;
+ 		break;
+ 	default: /* Unknown profile */
+ 		return -EOPNOTSUPP;
+@@ -10599,6 +10603,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 	if (output & BIT(DYTC_QUERY_ENABLE_BIT))
+ 		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
+ 
++	dbg_printk(TPACPI_DBG_INIT, "DYTC version %d\n", dytc_version);
+ 	/* Check DYTC is enabled and supports mode setting */
+ 	if (dytc_version < 5)
+ 		return -ENODEV;
+@@ -10637,6 +10642,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 		}
+ 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
+ 		pr_debug("PSC is supported\n");
++		if (dytc_version >= 9) { /* update profiles for DYTC 9 and up */
++			platform_psc_profile_lowpower = DYTC_MODE_PSCV9_LOWPOWER;
++			platform_psc_profile_balanced = DYTC_MODE_PSCV9_BALANCE;
++			platform_psc_profile_performance = DYTC_MODE_PSCV9_PERFORM;
++		}
+ 	} else {
+ 		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+ 		return -ENODEV;
 -- 
-2.17.1
+2.48.1
 
