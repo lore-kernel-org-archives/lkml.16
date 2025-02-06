@@ -1,120 +1,112 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.65.219])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ABF226553;
-	Thu,  6 Feb 2025 10:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.65.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC4022756A;
+	Thu,  6 Feb 2025 10:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837645; cv=none; b=Ok3rQiepy+YWPfcxVQCLbxkCk0GUkRfr6ZLmWOIPF6JwoUAThpHTPxdNbMIsOCuE3BVR10KcFgNNEO1XaRskdQhojaA+/ITbWtJ1XO4OEY8GtxNhAspq2c1esFBZDFa5pjLZIS/TPLmYziIrch4+AJx0unlh6Evl2tajS4t07xA=
+	t=1738837648; cv=none; b=XFr1orihEEpQQ+b/Uhtnmn1KZm0VHkL4sXEXNaWcOGFSeiND7p853wWHQDGAFbhTF+IMoVenh6mzhx4/dpUFGJGFIOvmgUlAAc5ldEOEf2nwkQjM7LztQ6BiFN/rw4nwIMHVdyWUML9OAjc3kekK8W5nbjyqTfxO5rTS04L7sFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837645; c=relaxed/simple;
-	bh=ty4Eujbi3JXutVV8JchgtpSnzXyS57fNPP7x8fwv3Cc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Elccwfj5ewuui8SUHiXhvwUYUCJBW5rJ/JWA890MSOvKgC/F3IkLXBV6xEYUogWI7LHbKua2mj6kA+J9rZ2lyuZxZCweFOCPVRKEFfg8J+mFwX7gKWsmjKZS4B9P+mlZpDWxO82YPqUJJETBTuT9o+O8I1TbNKni1ZjA2Hk3seM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dmumk0CX; arc=none smtp.client-ip=114.132.65.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1738837648; c=relaxed/simple;
+	bh=jYnY+PAbF/WN3ltzf1lZC2RXNGS9Qd9KAU85uNCx1FM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JXpw2LEIYcwZmNQynEyPn2OlEPq+LnOfTlqHoWmEkCu2VmmDU44CECBM8XnQc+fcyEJ1x5XyCs9nVBY44FsgiyJZtXas463qkysaK5kvUM9iVXdktaImO193nshmvvFeA3p3PiqmZBXW2wGjDqoYF6qY7egi91vo+Jo3rDnc8rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPK2bkKS; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dmumk0CX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738837566;
-	bh=flV33qDbCktrhjYaUTG2DPPSAd2dWkCXdepsMeSnBJ8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dmumk0CX8WGpa/Z82vdJ4IRu6Bf7eY4i+16r2YCJBPPqdHz1KUOPLZ6THwMWcWKfY
-	 oH34pGfYJAaJNC7xXJXIdhROnHnwvlDTn1iCL3vf+y1Fd3J/ngG/wQX+U918uuD9rO
-	 xuZfXNBYRvnegedfhl08AkhXr86RkexYGqzET4SM=
-X-QQ-mid: bizesmtpip4t1738837559tgprquo
-X-QQ-Originating-IP: YmVy3874EstnoparGauVHa6MhyYnp0d0n3DAgaqWRRQ=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 06 Feb 2025 18:25:57 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5688250677626398646
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	tsbogend@alpha.franken.de,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	WangYuli <wangyuli@uniontech.com>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH 5.4~6.13] MIPS: ftrace: Declare ftrace_get_parent_ra_addr() as static
-Date: Thu,  6 Feb 2025 18:25:48 +0800
-Message-ID: <6832B20AFE3B7328+20250206102548.95302-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPK2bkKS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738837646; x=1770373646;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jYnY+PAbF/WN3ltzf1lZC2RXNGS9Qd9KAU85uNCx1FM=;
+  b=PPK2bkKSHXfsTiYvIRwaozmuXRo+kpg6lHf7pXLkF0/6B5gsA9z1ApKf
+   h9o6QawchFSGRHZwPAMFxtDbXZbOgs1Hb8CpgAYhfZ/ZrIiXw5fCHwJBr
+   ZIjTmzSI9J24pjwM/VGUxqbCgxJ6lsKZtztmHw4aPUa1gp0Ny6ep17ley
+   4Ka2hCr5UBlwEf8zzyYrx16JybzQH/tgwStMfxRgVFmt6wisb9+LLGwtS
+   hJAM2PlUOHplVpQtSHCpSDR9d7wwXiJlgJoToAOjDvaARHiu+Rojt3OxB
+   hwIpxbpu38l2B/IOxuVUiKFyXaZpViB8zGSJInPLny/hQHeooeizlWpq1
+   g==;
+X-CSE-ConnectionGUID: S5LJmuFITLG+msb7EpVKww==
+X-CSE-MsgGUID: +s9rN1FrT6u4O5LT0D+TFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39590329"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="39590329"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:27:26 -0800
+X-CSE-ConnectionGUID: fqpyoR3eQFaADrXPEAeHfg==
+X-CSE-MsgGUID: lrzwzj51Qx+4JmKGj2eZnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148378342"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.165])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:27:23 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 6 Feb 2025 12:27:19 +0200 (EET)
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+cc: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>, 
+    Joshua Grisham <josh@joshuagrisham.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
+In-Reply-To: <20250206133652.71bbf1d3@canb.auug.org.au>
+Message-ID: <3603e5e3-b8f9-54eb-c181-03cf2679cb7f@linux.intel.com>
+References: <20250206133652.71bbf1d3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: M135ko5REW2alb6372CGYhiZ+aMCzPVWw0sIl38J0eO6ryeBc6Ks962c
-	0j2G+sdqngN6dk/kIK+VYDL0hE737vMoAwUC2TGPKF28HN0ZRzBcfbBeuoIo1vjHJkQVT1h
-	ckRfpkFEV1s/Q7YSJKan95K+MpbjGv14ldicVHVv6kCy+gmqKYBbUeNX/vHL8lge0OQGfL/
-	eeIVG5dXGx8VkKoOTOFbaZvRPvz2g9IGH36jyGwxs6oFDtRKWT91zPVbhom+c1ro4TggioN
-	zzsn6/Hpm1Oc0LTW93MQ4f+iWQaAbagtE4erK1pYClcN99TFZswge9mSTKLYbWlZcHiYIIP
-	Asp0TPl6450JJgK16aFAUdogcrt8Awsq68Tagz/gjQL003dSkfw4qhJv+b9rGtK3MDhtbsc
-	VYuoruhLA7OHRjdVy9mtGEjr2GWGXa9JNsXtYV/bpEE/K/cjA7mWKA4PJAwBy614IzE6mtT
-	RRJE1a22a92e9dChwO+UaXJOTDk214L5BhGPRt9ijlZ6urypd6Aqm3m+9SAL5rTnrIviEP6
-	ejCw5wPE8UoHXOC8bunnN5jN+cUFzCTxQhqMMBvjiv64BEt9DA1uul+1zKz6uGefvmGysFS
-	Yhkexjloyj7OWXIft06NlctVwtVqqg7nkLQk2acpO5Xi0P3Xfc2fukPGJg0AJTrmzPOYSng
-	9Iy5iYQkKPJzUx2+jh0rR3j38Gr+n7Y66F0xxn4838QMk3OOCtKpS+j1IN4ocZx+LOQ6Hmp
-	1F43Iup9vyzeJRYj9vEjCrvH0NaUlB4f2RHKk1S+dOoanKA58GLrIGhBrCqANOi02s2RH/7
-	3Cv1e3MMeq0r/UYPwL07NAa8dC0FJFhk70mLSMFdtegU0Ia493oLHUBFBKIqOjqwEeIRaSV
-	crV5yWGeUEj+LSzgqs6nuE3VM9eHGnyTZmwaCt/sQ1WOrFTvsk3/N+mPom4BmJnXWYQditU
-	Dn2yYcUIMQh3FhwQFc8jQ3ca6w8u1eBhBDZcfbfQrDk4OzA5dV0F1HlPYDdV+3wJvkKspI6
-	z/syDtYQ==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=US-ASCII
 
-commit ddd068d81445b17ac0bed084dfeb9e58b4df3ddd upstream.
+On Thu, 6 Feb 2025, Stephen Rothwell wrote:
 
-Declare ftrace_get_parent_ra_addr() as static to suppress clang
-compiler warning that 'no previous prototype'. This function is
-not intended to be called from other parts.
+> Hi all,
+> 
+> After merging the drivers-x86 tree, today's linux-next build
+> (x86_64_allmodconfig) failed like this:
+> 
+> In file included from include/linux/kobject.h:20,
+>                  from include/linux/energy_model.h:7,
+>                  from include/linux/device.h:16,
+>                  from include/linux/acpi.h:14,
+>                  from drivers/platform/x86/samsung-galaxybook.c:14:
+> drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_fw_attr_init':
+> drivers/platform/x86/samsung-galaxybook.c:1014:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
+>  1014 |         sysfs_attr_init(&fw_attr.display_name);
+>       |                                 ^
+> include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
+>    55 |         (attr)->key = &__key;                           \
+>       |          ^~~~
+> drivers/platform/x86/samsung-galaxybook.c:1020:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
+>  1020 |         sysfs_attr_init(&fw_attr.current_value);
+>       |                                 ^
+> include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
+>    55 |         (attr)->key = &__key;                           \
+>       |          ^~~~
+> 
+> Caused by commit
+> 
+>   f97634611408 ("platform/x86: samsung-galaxybook: Add samsung-galaxybook driver")
+> 
+> I guess this was never built with CONFIG_DEBUG_LOCK_ALLOC set.
+> 
+> I have used the drivers-x86 tree from next-20250205 for today.
 
-Fix follow error with clang-19:
+Apparently it wasn't.
 
-arch/mips/kernel/ftrace.c:251:15: error: no previous prototype for function 'ftrace_get_parent_ra_addr' [-Werror,-Wmissing-prototypes]
-  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
-      |               ^
-arch/mips/kernel/ftrace.c:251:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
-      | ^
-      | static
-1 error generated.
+However, I've an LKP success report for f97634611408 (prior to pushing it 
+to for-next, I always wait for LKP).
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/mips/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Why LKP didn't catch it despite claiming it built with x86_64_allyesconfig 
+(successfully)?? Did LKP not build the tree??
 
-diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
-index 8c401e42301c..f39e85fd58fa 100644
---- a/arch/mips/kernel/ftrace.c
-+++ b/arch/mips/kernel/ftrace.c
-@@ -248,7 +248,7 @@ int ftrace_disable_ftrace_graph_caller(void)
- #define S_R_SP	(0xafb0 << 16)	/* s{d,w} R, offset(sp) */
- #define OFFSET_MASK	0xffff	/* stack offset range: 0 ~ PT_SIZE */
- 
--unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
-+static unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
- 		old_parent_ra, unsigned long parent_ra_addr, unsigned long fp)
- {
- 	unsigned long sp, ip, tmp;
+I've pulled the commit from for-next until the problem is resolved to not 
+keep breaking builds. Joshua, could you please take a look at it.
+
 -- 
-2.47.2
+ i.
 
