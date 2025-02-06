@@ -1,189 +1,302 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE114A59
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C63E1DF24B;
+	Thu,  6 Feb 2025 12:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738845165; cv=none; b=DV2l+eClLC/fZUldcKM1KnmXpFBHIQ/FgnymPoBaAC1eqnFVi9iCCjlXU2uoT8XGauhQIzW6Izfv2HSTyTD0YEKmPpw02oXKqUXDrVb1T2zmunDyh3eU0RqA8I7Zlw5weizXbnclEV/h7ZzEMeGseFI3/joilkGlhxeGP23oSSs=
+	t=1738845209; cv=none; b=lSSkYhu8z7ojYBYYZ6ljOug41UHtAiJ0STJt44rY1K5igFbGsQW2eIfxhI3u9GQJR3UOVZGH3rB91Z8t+AMQUXFGXydP02UOzQ9wn1gxqvBlQEfUqgFa95FC++2Ee92R5+P48vRlrcOh9AS31GBa8FtQjmezvCRT1B8/Li++0sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738845165; c=relaxed/simple;
-	bh=dvdVwTK9ToyFCwd3FDpliJ5Z5+oj52zc7BeNYcjGMUo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B7JVyuLpGR8CSlNxYHVSimXmyrcPaE171M+VmEwdX/LEhtQj6CjT28U/d978v+ekI6O8IEcNUYflUHZTTeNdZ3+wmO70y21xILCpUVIhIcWMLKyl0nUC0ETPsH0Jf5Zcf6BFSJ8itiBgLmQsY5mAoX38GDjJHXa8xwL5W0oeonA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Rqsta/t6; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1738845209; c=relaxed/simple;
+	bh=VS3+/ltfODxJOEvI5TWa+1K83w8cilcFbj/cV/YLREg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pikDu/tV6r/3bUTO7qRAiYGJhpVxryjMIBuxeBDhEvQ23qRYNMg6OWRmo+lM83Cp6MF3HmuRee+/DVmexUTTfdAZh7vc5eag3Gvo5Pj4VBLNaUO+P8v5215W5hFVl/fxvGHCV23Lt59R3R03fwmekDdYkUV7kuvbPyrvd17hnA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DyHL76O9; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Rqsta/t6"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54025432becso881470e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:32:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738845162; x=1739449962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JWRkn692xu3fndHgX/PtDqTVcXyCxVQh1w1lZ4iFLSw=;
-        b=Rqsta/t6V1nx/SEg5Xj8LMvVz1MYDcpZ6HZduE/Igu82Y27KGCV87WXsmCERQejKUi
-         PjsMoSZiNU5wd4pfHKpic/mLuDHweNjVsyuyrznwHjwSdkYgpe6fDsXLxuMq8byktCPg
-         q5IZyuUCqZCNMGvnp887A2ljtqUDijNPJ922AU1RCXvS8zqFDhF7NL/gR+ZAo2v2rFZQ
-         SA5xz1J1MZkYruqK10hRlmvs7bv4IWJmFWUP5rzK32yPc0nBw8iRof/r78CjJjgh+adT
-         N8Bc9sTbKIWIO8ksverufKWD1eNKX8AKz6UOqBie5qjy01go28PGPoKD+iSPznikEtlS
-         Zufw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738845162; x=1739449962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JWRkn692xu3fndHgX/PtDqTVcXyCxVQh1w1lZ4iFLSw=;
-        b=hw+Nnb9+N2dCHwjHDWwKRTnoPfcMZtHFPcI8wwkvZpmACzw93zifl5QyADgTh2xOFY
-         CfeGZK1lslEMi2Bb16IqZLWq5pcRXCQ4YBNrRkco101B2Zt4LfI6agXZF121mqB91/Ct
-         /10qAM0HZonBwLSbPUtOzcy9gZdvfv0v0TSWxfg3HFZuDo6OjpifDtGj6gBv3AdB71YI
-         2N+QSN2zzfUn1Sb9jTFZERu4h6X/t1RACYg125cK8q/3I2S5sRuvcgPmUaIsz9yekkYF
-         JvYZsaw+VECRi9EiYpm4p8UEas0fsd84p/cuL8O8WRcELFHulP6VPFbC69/10MENL/C+
-         vQeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWw9bjs72xQ5rVvdA5gh8u1Srlou0ecY7UXqncdY0UssHAbq/2oJ9M2BHi0x5TvP5gg8IEJDw5QKbrczyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4nz0JndYeO2d1+s5Qw5lG/BS8m/zQv8S7omI9oqB+Ays8wtDX
-	VspjonvQhXlZ4jbNAscbV4W3+0e48Aav+mNdxZ2uffSkgQhuULyrdXmLxClbEyBZ0mnB/FnwE+c
-	oxnDl9oV6MdTEBBaMFiI+MVmIFAQuaPaCr0bo6g==
-X-Gm-Gg: ASbGncsh0f2n0D+Z8vnbaT0beKDR9RW76NNn+BzHL5unUiTB3KcTUpNNRFKENebPar7
-	tj6RsWCvVov6IFwwn57NCOXEo+8vvRpKcTgkJCmrGhMgcWd502XCj/23rUUAEEDPGL0KIcnPDMQ
-	==
-X-Google-Smtp-Source: AGHT+IHOno/KZ+CGEGcrQMo7/996cTTP2DtCCzvVKfHVrOt05I06XEuaoQXc/ObdS2ENzYO5jwzIxEyk9zg2zQOd/6g=
-X-Received: by 2002:a05:6512:b90:b0:542:19ef:95c2 with SMTP id
- 2adb3069b0e04-54405a225f3mr2321112e87.23.1738845161587; Thu, 06 Feb 2025
- 04:32:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DyHL76O9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RAnW4IvmuyMbXuvVXckxL3B43H4dovck5Gy8dGUFYkU=; b=DyHL76O9ovG7/dcqFdwyV0pZyx
+	yjacHaCzH3kYim+Q0MFGJS+KbsYe0Ij5Om9fgUOzG0QSXpbOdawhZUwVtWKmHyBzSKux2RuhnFLo2
+	ekaN2WGVuIqP0tcQsWofv8IBN/8FHT1WvDkwbQl5mqerkJrwW4weba/UNixjW2oHaHmKoFSuT2P3p
+	QBmkjZrvQGlT/sy5z1UFzBRjWjbCIljlT+hN7YjSXAS0nBlXAZJaqxYv0/UEHlmfYRVBTH369BSuU
+	df2OHhT6/EopfTvK4uXm0uTpNQg8tNMnOUWTV4DUQ4TmkVYUDc+SwFJk/kz8wXvSndsfQvk4mGuR1
+	UNvzN4VA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tg147-0000000Gvn7-2L6h;
+	Thu, 06 Feb 2025 12:33:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2348D300318; Thu,  6 Feb 2025 13:33:07 +0100 (CET)
+Date: Thu, 6 Feb 2025 13:33:07 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriel de Perthuis <g2p.code@gmail.com>,
+	Haiyue Wang <haiyuewa@163.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
+ get_kernel_nofault()
+Message-ID: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+ <20250206081225.GI7145@noisy.programming.kicks-ass.net>
+ <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+ <20250206121328.GN7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203084906.681418-1-apatel@ventanamicro.com>
- <20250203084906.681418-4-apatel@ventanamicro.com> <20250203224436.GA363790-robh@kernel.org>
-In-Reply-To: <20250203224436.GA363790-robh@kernel.org>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Thu, 6 Feb 2025 18:02:28 +0530
-X-Gm-Features: AWEUYZkAxRNuUmU_XWz__RY8mc4lXIPtw0_-vRmYJbJRtQCbjrwJyHKjevCNgIg
-Message-ID: <CAK9=C2WTbkT32ERGZBGHyu0R1OSjTpHBswbBvsxygoycfr_2Fg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 03/17] dt-bindings: mailbox: Add bindings for
- RISC-V SBI MPXY extension
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206121328.GN7145@noisy.programming.kicks-ass.net>
 
-On Tue, Feb 4, 2025 at 4:14=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Feb 03, 2025 at 02:18:52PM +0530, Anup Patel wrote:
-> > Add device tree bindings for the RISC-V SBI Message Proxy (MPXY)
-> > extension as a mailbox controller.
-> >
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > ---
-> >  .../bindings/mailbox/riscv,sbi-mpxy-mbox.yaml | 54 +++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,sbi=
--mpxy-mbox.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-m=
-box.yaml b/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.ya=
-ml
-> > new file mode 100644
-> > index 000000000000..8a05e089b710
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yam=
-l
-> > @@ -0,0 +1,54 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mailbox/riscv,sbi-mpxy-mbox.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: RISC-V SBI Message Proxy (MPXY) extension based mailbox
-> > +
-> > +maintainers:
-> > +  - Anup Patel <anup@brainfault.org>
-> > +
-> > +description: |
-> > +  The RISC-V SBI Message Proxy (MPXY) extension [1] allows supervisor
-> > +  software to send messages through the SBI implementation (M-mode
-> > +  firmware or HS-mode hypervisor). The underlying message protocol
-> > +  and message format used by the supervisor software could be some
-> > +  other standard protocol compatible with the SBI MPXY extension
-> > +  (such as RISC-V Platform Management Interface (RPMI) [2]).
-> > +
-> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +  References
-> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +  [1] RISC-V Supervisor Binary Interface (SBI)
-> > +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
-> > +
-> > +  [2] RISC-V Platform Management Interface (RPMI)
-> > +      https://github.com/riscv-non-isa/riscv-rpmi/releases
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    const: sbi-mpxy-mbox
->
-> 'mailbox' is the defined name for mailbox providers.
+On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
 
-Okay, I will update.
+> No, it just cleans up this utter trainwreck. I also noticed this is a
+> second (new) copy of this garbage. Clearly I didn't yell loud enough
+> last time and people didn't think to vomit when doing the copy/paste :/
+> 
+> Function will look something like:
+> 
+> unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+> {
+> 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
+> 		fentry_op -= ENDBR_INSN_SIZE;
+> 	return fentry_ip;
+> }
+> 
+> Let me finish local build test before I push out.
 
->
-> > +
-> > +  compatible:
-> > +    const: riscv,sbi-mpxy-mbox
-> > +
-> > +  "#mbox-cells":
-> > +    const: 2
-> > +    description:
-> > +      The first cell specifies channel_id of the SBI MPXY channel,
-> > +      the second cell specifies MSG_PROT_ID of the SBI MPXY channel
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#mbox-cells"
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    sbi-mpxy-mbox {
-> > +          compatible =3D "riscv,sbi-mpxy-mbox";
-> > +          #mbox-cells =3D <2>;
->
-> Is there an SBI node? #mbox-cells could just be part of that along with
-> anything else that SBI is a provider for. And we already have the PMU
-> SBI binding. It's all one thing, so there should be one SBI node. Then
-> we can debate about child nodes of it.
+Bah, still waiting for a LLVM build, but patch should be here:
 
-There is no SBI node for any other SBI extension.
+git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
 
-The PMU bindings for "riscv,pmu" compatible string is for the firmware
-driver (M-mode) which implements the SBI PMU extension not the Linux
-driver.
+I was supposed to merge this last cycle, but then akpm shat all over
+arch/x86/kernel/alternative.c and we had to clean that up :/
 
-The "title" and "description" of
-<linux_source>/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-needs some clarification.
+Notably, this patch, not sure it applies out of order.
 
-Regards,
-Anup
+---
+
+Subject: x86/ibt: Clean up is_endbr()
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Mon Nov 27 09:58:06 CET 2023
+
+Pretty much every caller of is_endbr() actually wants to test something at an
+address and ends up doing get_kernel_nofault(). Fold the lot into a more
+convenient helper.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ arch/x86/events/core.c         |    2 +-
+ arch/x86/include/asm/ftrace.h  |   17 +++--------------
+ arch/x86/include/asm/ibt.h     |    5 +++--
+ arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
+ arch/x86/kernel/kprobes/core.c |   11 +----------
+ arch/x86/net/bpf_jit_comp.c    |    4 ++--
+ kernel/trace/bpf_trace.c       |   20 +++-----------------
+ 7 files changed, 27 insertions(+), 52 deletions(-)
+
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
+ 		return true;
+ 
+ 	/* endbr64 (64-bit only) */
+-	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
++	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
+ 		return true;
+ 
+ 	return false;
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -2,6 +2,7 @@
+ #ifndef _ASM_X86_FTRACE_H
+ #define _ASM_X86_FTRACE_H
+ 
++#include "asm/ibt.h"
+ #include <asm/ptrace.h>
+ 
+ #ifdef CONFIG_FUNCTION_TRACER
+@@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
+ 
+ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+ {
+-#ifdef CONFIG_X86_KERNEL_IBT
+-	u32 instr;
++	if (is_endbr((void*)(fentry_ip - ENDBR_INSN_SIZE)))
++		fentry_ip -= ENDBENDBR_INSN_SIZE;
+ 
+-	/* We want to be extra safe in case entry ip is on the page edge,
+-	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
+-	 */
+-	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+-		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
+-			return fentry_ip;
+-	} else {
+-		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+-	}
+-	if (is_endbr(instr))
+-		fentry_ip -= ENDBR_INSN_SIZE;
+-#endif
+ 	return fentry_ip;
+ }
+ #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
+--- a/arch/x86/include/asm/ibt.h
++++ b/arch/x86/include/asm/ibt.h
+@@ -65,7 +65,7 @@ static __always_inline __attribute_const
+ 	return 0x001f0f66; /* osp nopl (%rax) */
+ }
+ 
+-static inline bool is_endbr(u32 val)
++static inline bool __is_endbr(u32 val)
+ {
+ 	if (val == gen_endbr_poison())
+ 		return true;
+@@ -74,6 +74,7 @@ static inline bool is_endbr(u32 val)
+ 	return val == gen_endbr();
+ }
+ 
++extern __noendbr bool is_endbr(u32 *val);
+ extern __noendbr u64 ibt_save(bool disable);
+ extern __noendbr void ibt_restore(u64 save);
+ 
+@@ -98,7 +99,7 @@ extern __noendbr void ibt_restore(u64 sa
+ 
+ #define __noendbr
+ 
+-static inline bool is_endbr(u32 val) { return false; }
++static inline bool is_endbr(u32 *val) { return false; }
+ 
+ static inline u64 ibt_save(bool disable) { return 0; }
+ static inline void ibt_restore(u64 save) { }
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -852,16 +852,24 @@ void __init_or_module noinline apply_ret
+ 
+ #ifdef CONFIG_X86_KERNEL_IBT
+ 
++__noendbr bool is_endbr(u32 *val)
++{
++	u32 endbr;
++
++	__get_kernel_nofault(&endbr, val, u32, Efault);
++	return __is_endbr(endbr);
++
++Efault:
++	return false;
++}
++
+ static void poison_cfi(void *addr);
+ 
+ static void __init_or_module poison_endbr(void *addr, bool warn)
+ {
+-	u32 endbr, poison = gen_endbr_poison();
+-
+-	if (WARN_ON_ONCE(get_kernel_nofault(endbr, addr)))
+-		return;
++	u32 poison = gen_endbr_poison();
+ 
+-	if (!is_endbr(endbr)) {
++	if (!is_endbr(addr)) {
+ 		WARN_ON_ONCE(warn);
+ 		return;
+ 	}
+@@ -984,7 +992,7 @@ static u32  cfi_seed __ro_after_init;
+ static u32 cfi_rehash(u32 hash)
+ {
+ 	hash ^= cfi_seed;
+-	while (unlikely(is_endbr(hash) || is_endbr(-hash))) {
++	while (unlikely(__is_endbr(hash) || __is_endbr(-hash))) {
+ 		bool lsb = hash & 1;
+ 		hash >>= 1;
+ 		if (lsb)
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -373,16 +373,7 @@ static bool can_probe(unsigned long padd
+ kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
+ 					 bool *on_func_entry)
+ {
+-	u32 insn;
+-
+-	/*
+-	 * Since 'addr' is not guaranteed to be safe to access, use
+-	 * copy_from_kernel_nofault() to read the instruction:
+-	 */
+-	if (copy_from_kernel_nofault(&insn, (void *)addr, sizeof(u32)))
+-		return NULL;
+-
+-	if (is_endbr(insn)) {
++	if (is_endbr((u32 *)addr)) {
+ 		*on_func_entry = !offset || offset == 4;
+ 		if (*on_func_entry)
+ 			offset = 4;
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -641,7 +641,7 @@ int bpf_arch_text_poke(void *ip, enum bp
+ 	 * See emit_prologue(), for IBT builds the trampoline hook is preceded
+ 	 * with an ENDBR instruction.
+ 	 */
+-	if (is_endbr(*(u32 *)ip))
++	if (is_endbr(ip))
+ 		ip += ENDBR_INSN_SIZE;
+ 
+ 	return __bpf_arch_text_poke(ip, t, old_addr, new_addr);
+@@ -3036,7 +3036,7 @@ static int __arch_prepare_bpf_trampoline
+ 		/* skip patched call instruction and point orig_call to actual
+ 		 * body of the kernel function.
+ 		 */
+-		if (is_endbr(*(u32 *)orig_call))
++		if (is_endbr(orig_call))
+ 			orig_call += ENDBR_INSN_SIZE;
+ 		orig_call += X86_PATCH_SIZE;
+ 	}
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1038,27 +1038,13 @@ static const struct bpf_func_proto bpf_g
+ 	.arg1_type	= ARG_PTR_TO_CTX,
+ };
+ 
+-#ifdef CONFIG_X86_KERNEL_IBT
+-static unsigned long get_entry_ip(unsigned long fentry_ip)
++static inline unsigned long get_entry_ip(unsigned long fentry_ip)
+ {
+-	u32 instr;
+-
+-	/* We want to be extra safe in case entry ip is on the page edge,
+-	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
+-	 */
+-	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+-		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
+-			return fentry_ip;
+-	} else {
+-		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+-	}
+-	if (is_endbr(instr))
++	if (is_endbr((void *)(fentry_ip - ENDBR_INSN_SIZE)))
+ 		fentry_ip -= ENDBR_INSN_SIZE;
++
+ 	return fentry_ip;
+ }
+-#else
+-#define get_entry_ip(fentry_ip) fentry_ip
+-#endif
+ 
+ BPF_CALL_1(bpf_get_func_ip_kprobe, struct pt_regs *, regs)
+ {
+
