@@ -1,77 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83A823956F;
-	Thu,  6 Feb 2025 18:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C519D09C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738867264; cv=none; b=jiC2//E8cCzx5wgUfgnmx9Qpbl+hreSOwtzdHJ2qweOT3cter/wHCEMX18HkRNmE9GOx4mMVl3JvYjBYnZapQ4DOdwtfxLM+gm4Vp+Mcq1pjCc+t1Q16rQcj6spKXvUG7vMe8Au4cQ4VGxtRcT9eju16pn6gkutO8hDoaM+QsA4=
+	t=1738867276; cv=none; b=k8CrAXnqrWF6VWOJH+m/x98CW4Cx0ar1yXmZogPLqp4baz71cWosh8rJhNxWfGMynbRtGUX6olywnpDzQ8A2fMAWopsFNWsAMgl08PjGb3+VakidktbCUbm9u/k/7inm32p3RHwyKYdJ6ieI+iDa4tAgRvrZjS3NMDK5RNUwivI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738867264; c=relaxed/simple;
-	bh=emVKTAzwmxUz3Qb3XlAdo/xUrgGCZ7mWxQ/cr6rY+R0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P2tXHzba4pI/pNW0Qm/khFS1V36nmRawiCsq4mnvaLZ2vP7Akw0k2PFbRf/Ew9a0pe4RdA94NVf1eRZDmovznNOPfkGn+lABQZGksOwbzSN4JPL1j1tl75XP2FoMvg9ZdUiE8Q/9CRJUFm0SdGxnMgtgFLGhwOubHIb7s2OgCcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKCu6l9+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738867276; c=relaxed/simple;
+	bh=nvffeYadc3fpJEHQH7BAtYU030TLHFW2jziAIX4uGTk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VycEndg035gst3DIFtw90uUQcAux/jfms2ZW5RRqofn9RASK5jyCGO+IhzO1lO/3DoHBhKXOIJA0/4OqsSuZ/v/qgfH3EL+5vI5U8QE8kLvGtAzc/fDymwVEkSMJezi3HFN46ho+rm1SidNjcnRo+d9ZMSEMFs7zp3FLm4+u8io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HHTeqURp; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKCu6l9+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639BFC4CEDD;
-	Thu,  6 Feb 2025 18:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738867264;
-	bh=emVKTAzwmxUz3Qb3XlAdo/xUrgGCZ7mWxQ/cr6rY+R0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KKCu6l9+MwD68V2HrkG1XFErNdBH0A2pkUiXudj2ij+8BwkCJ8lO2KYLVZEq0+eIJ
-	 1cb27sV8kr8KasLPI4CFVkJvN7Vbkya+MLIGY0mGgHPlevGPmFEHyxgcb+GjcV5YQ1
-	 qpY+DoQvMbzNHKdE+2ujELprh1J4uNxE5Y1c17ZTb1T/fMhcAhtf58niH6+MgnosAC
-	 BNV+B1hM/RdpRFXD55IF2T5PBqoM/KrZtmXxE2L9cuybVoXKnQHLlUSh+DNpKf6pbB
-	 fJiva7CONYh1xxTLTUg74eOnyXWW4D4NgMY+VZbkLsymzuXBhv8+mz93hp67SZyMhy
-	 KzXnQvTcG851w==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
-Subject: Re: [PATCH] nfsd: don't ignore the return code of svc_proc_register()
-Date: Thu,  6 Feb 2025 13:41:00 -0500
-Message-ID: <173886723523.80292.10168370789662544077.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250206-nfsd-fixes-v1-1-c6647b92ca6f@kernel.org>
-References: <20250206-nfsd-fixes-v1-1-c6647b92ca6f@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HHTeqURp"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5440f22aabdso1167061e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:41:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738867272; x=1739472072; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qk45u5eL6UrjO7ujgKkxwsztPQtoNsoUKCE3ySDBx+o=;
+        b=HHTeqURpL5ERyXOvt+kZWqGTgRxrNEP4yndbT4HAZIrVvZkOkyKElDzZvouy8KF5HP
+         3HsV04RJPqsRhNMjZDpudnTjg7pztxBLZI11WHWbUuvzfyEiMibqzH2TCauB9xeGdxuD
+         MSAb364tIZkIf4ACn9+3G9d1Rjc2aWtPrmRd5PXhO4a906/ylsMzDy8eUEz6J4871csx
+         S6/ZnR7hWtUZs/lcPW7ZEvaOfK+wtSy9JyR9YtRXq6wdjB/gcDDBLV6W71p5GzBHt8VX
+         iUA9ICG6fwEL5aiJdlfQUZ4XQQ5mBMFHv8CF/U4kK2FFDsjwl8lfA7iWcjPFeko/VvhU
+         AxIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738867272; x=1739472072;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qk45u5eL6UrjO7ujgKkxwsztPQtoNsoUKCE3ySDBx+o=;
+        b=Yi5Qu6KrAsDZJDtobtKCrJBbJp0mcj7n8HMNhHoVSvjPEXmRpplcm6gqgMEakWqlua
+         eQmbIt3cMhmJd+JP3aMWmPKNmMNW21qTMTfb/5ZLKEXYlRCKFpuXtJ7Fx1dB8OboxjnM
+         i7lfD6JySeFiOzsa0rppRS262tQ810vEcyM9gG5TkpSqQaEcnhCXMxiHJNNYLPOVr4qk
+         20MdzMc3As9dkxqcMuVUBR8hY5JwGYr0JEiUvhUET6PUIDu5xigNsJP8V+pa2nFY49DV
+         eweedQ5u5rlEsQYLEaW46Ugt5klVX1YbfmHo3/w/GxGWc137dzCdExODlApCNci23NBc
+         MsUw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0KDXjzYQRwLt9fH1CbeczmuTVDOfxKElu0e9kYwXlWTy0OMM4bZl40bms0r+aWx6K7MDUSgeMJeb3/vU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7POQNGbiE2pvmsIyBe5faapSK2Jz26xd6kzIJ0LINA6mXa+tz
+	G8WUUb/yzP0Gw+iuoIN6Y9d0bccXHRCWIyNh4hgy73OJ8jv0q1frs0Kd0glhqLcENWjrW9esNu3
+	xbEM/jrQB03VVKkUQ5tAzlZfIqzCcMr50LknG
+X-Gm-Gg: ASbGnctTCPZth6riE3WaMRnaSgYTyWObIeN+npWUTSUNTKXsDkullHAIDlom1cdu1R8
+	Z8wSf6kRBRLdRcAawylUdteTiqcaii4hvEdpGIPo8oNHM0LJsJkTY+RxXsf9bWOfbzXam+ujDQL
+	wJbYjosEeTcEYDcdCfrCUC3B/ZonLFWQ==
+X-Google-Smtp-Source: AGHT+IFLD0AMOveUgIxfuaFXAqWtATyO7+L5W8zqlnflXwDNc6nRZ8Py06TbH/yLATDOr7fr48Td6f9hVXFBvs+WP+E=
+X-Received: by 2002:a05:6512:6d2:b0:544:123e:331a with SMTP id
+ 2adb3069b0e04-544123e3555mr894484e87.14.1738867271542; Thu, 06 Feb 2025
+ 10:41:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
+In-Reply-To: <87ldujkjsi.fsf@linux.intel.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Thu, 6 Feb 2025 19:41:00 +0100
+X-Gm-Features: AWEUYZlYIYYrxtBDXZaUPnHA29Ll1mqyfEjy95EoBl8Vi8hkcfBXpCgUndmyCqA
+Message-ID: <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
+To: Andi Kleen <ak@linux.intel.com>
+Cc: namhyung@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
+>
+> Dmitry Vyukov <dvyukov@google.com> writes:
+>
+> > There are two notions of time: wall-clock time and CPU time.
+> > For a single-threaded program, or a program running on a single-core
+> > machine, these notions are the same. However, for a multi-threaded/
+> > multi-process program running on a multi-core machine, these notions are
+> > significantly different. Each second of wall-clock time we have
+> > number-of-cores seconds of CPU time.
+>
+> I'm curious how does this interact with the time / --time-quantum sort key?
+>
+> I assume it just works, but might be worth checking.
 
-On Thu, 06 Feb 2025 13:12:13 -0500, Jeff Layton wrote:
-> Currently, nfsd_proc_stat_init() ignores the return value of
-> svc_proc_register(). If the procfile creation fails, then the kernel
-> will WARN when it tries to remove the entry later.
-> 
-> Fix nfsd_proc_stat_init() to return the same type of pointer as
-> svc_proc_register(), and fix up nfsd_net_init() to check that and fail
-> the nfsd_net construction if it occurs.
-> 
-> [...]
+I will check later. But if you have some concrete commands to try, it
+will help. I never used --time-quantum before.
 
-Applied to nfsd-testing, thanks!
 
-Added Cc: stable # v6.9
+> It was intended to address some of these issues too.
+>
+> > Optimizing CPU overhead is useful to improve 'throughput', while
+> > optimizing wall-clock overhead is useful to improve 'latency'.
+> > These profiles are complementary and are not interchangeable.
+> > Examples of where latency profile is needed:
+> >  - optimzing build latency
+> >  - optimizing server request latency
+> >  - optimizing ML training/inference latency
+> >  - optimizing running time of any command line program
+> >
+> > CPU profile is useless for these use cases at best (if a user understands
+> > the difference), or misleading at worst (if a user tries to use a wrong
+> > profile for a job).
+>
+> I would agree in the general case, but not if the time sort key
+> is chosen with a suitable quantum. You can see how the parallelism
+> changes over time then which is often a good enough proxy.
 
-[1/1] nfsd: don't ignore the return code of svc_proc_register()
-      commit: 312aef1c1520c10cf035e27c0b0229bea71f0c68
+Never used it. I will look at what capabilities it provides.
 
---
-Chuck Lever
+> > We still default to the CPU profile, so it's up to users to learn
+> > about the second profiling mode and use it when appropriate.
+>
+> You should add it to tips.txt then
 
+It is done in the docs patch.
+
+> >  .../callchain-overhead-calculation.txt        |   5 +-
+> >  .../cpu-and-latency-overheads.txt             |  85 ++++++++++++++
+> >  tools/perf/Documentation/perf-record.txt      |   4 +
+> >  tools/perf/Documentation/perf-report.txt      |  54 ++++++---
+> >  tools/perf/Documentation/tips.txt             |   3 +
+> >  tools/perf/builtin-record.c                   |  20 ++++
+> >  tools/perf/builtin-report.c                   |  39 +++++++
+> >  tools/perf/ui/browsers/hists.c                |  27 +++--
+> >  tools/perf/ui/hist.c                          | 104 ++++++++++++------
+> >  tools/perf/util/addr_location.c               |   1 +
+> >  tools/perf/util/addr_location.h               |   7 +-
+> >  tools/perf/util/event.c                       |  11 ++
+> >  tools/perf/util/events_stats.h                |   2 +
+> >  tools/perf/util/hist.c                        |  90 ++++++++++++---
+> >  tools/perf/util/hist.h                        |  32 +++++-
+> >  tools/perf/util/machine.c                     |   7 ++
+> >  tools/perf/util/machine.h                     |   6 +
+> >  tools/perf/util/sample.h                      |   2 +-
+> >  tools/perf/util/session.c                     |  12 ++
+> >  tools/perf/util/session.h                     |   1 +
+> >  tools/perf/util/sort.c                        |  69 +++++++++++-
+> >  tools/perf/util/sort.h                        |   3 +-
+> >  tools/perf/util/symbol.c                      |  34 ++++++
+> >  tools/perf/util/symbol_conf.h                 |   8 +-
+>
+> We traditionally didn't do it, but in general test coverage
+> of perf report is too low, so I would recommend to add some simple
+> test case in the perf test scripts.
+
+What of this is testable within the current testing framework?
+Also how do I run tests? I failed to figure it out.
