@@ -1,107 +1,167 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F362288F5;
-	Thu,  6 Feb 2025 12:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2875C15A848
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844233; cv=none; b=EnhGyJaI7LCr90V2H8NLaCR1Tes7eLwaQq4edMwycdV+/Qr6a5UYNbEYgLWXScKaMCwRJ90du9ac2ZfxfWYoai0UCXvprUkd3E9emZ7Un2HqtHZ7t2TS3nn0CU3RcTBZPvpNwKWhtMlgLuTxb3/9Xuvkgyb23xq/kbD3kjFae0Y=
+	t=1738844270; cv=none; b=Vm9jwobxuV5wa2JqZN/J2FnkH8kX6rN9YeZ7pfvDuWTC37TpnHj+u8WqU9le+bdu46g64/rBzWUycMsPGoED1ouhRUFiqN578JwUdRF+IAayaqym0jYswJTGGx6Y7hGcQorn38fMWphkKzBVIxCU27NeMBUUJsQQAwsEEReBiII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844233; c=relaxed/simple;
-	bh=RF9i8fI99oiQlijX4zqgR1eMdrECioD43cBuNhfOr5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0xk9eDXNj+9tIPMGVjmswf4fKtvWd4htr+nLsIfJpydzm4dGtOaZb6k6KTLzttBtSBMWwdbgTLpCIowMj0h56ptiTSIZ2d5VraBSCx09I+e4B8txSm1+NXhP8+4m4eCuXsmLeAidKU0ZSKV7zOPvPVj6YfS0dy2SGAS/BfMlXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wTksTYYk; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738844270; c=relaxed/simple;
+	bh=4cdFR+B95oVkXNiulG1qv9Pup9VHoxewsSMqD4dgVBM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=US+o3QfnG7w9mn0RgcdT6PBSwvR5vdHfUKXwyETslLUmoKsWtmnNAP6RUbt7cbtjpIulgByl2f861jMRxHOtcHWPKiIhWvJ1vrjYGwFIY2xYyEgZfaG7G9e3KtT+nCouYt2gHB49cKDtQ9T8kAFppo33PxPviyXnWQmr1OSweXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=iaJ/HPQk; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wTksTYYk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738844188; x=1739448988; i=markus.elfring@web.de;
-	bh=RF9i8fI99oiQlijX4zqgR1eMdrECioD43cBuNhfOr5Q=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=wTksTYYkvIsG2xujOtK3UcYMVA0VasAxK8DxVJVHOorSp0feNoScQlhEbwL0/3+3
-	 3NwMnhgDJh02rFFRgDcjracDzoO+EWRID/NDO2lxGa72Mh8v2z0/GHRDPTyjzxAjp
-	 MbGyiFAKcSgSya15mreSwvmkB1klUfou2/A+AmkeBIiP2pXeHGAPCCCOQXbbB0VPk
-	 S55+T4BaKPyyf3CLuwfbU6hUBdrZWtw0C3457yZ58LfzYrnK6DJysV15iIzm04x0I
-	 FO0f1RgB2FneAPCISPf5zpk8zPRSrBx67sDeHsmexGerD/Ud7oo9KHo94hzo7FIXe
-	 QkC4WOTNH3wQJd3D8A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.8]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8kAN-1tkhlV1FWT-00FjKr; Thu, 06
- Feb 2025 13:16:28 +0100
-Message-ID: <c0bd1b97-bc6a-4842-baa3-98b1192fa2a3@web.de>
-Date: Thu, 6 Feb 2025 13:16:26 +0100
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="iaJ/HPQk"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30034ad2ca3so6515981fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:17:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738844267; x=1739449067; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kVaPm6svnrZmjjZXaQ6INFYIHurE1c31ambChU45jvE=;
+        b=iaJ/HPQkyb/z3PjJ/QEpfQx0Xjpwjgah/jbqVvaqQWz0nNbb9eWZp0Y+ucFlEeziCC
+         N7RpO7V0Wkkfi8Qf8vVDQSQXVXokZBrd11qieJEjO5uHuNez7Te7Kooyg67uOh2BWAnv
+         l+R+IZM8Rzjw2+lVfb6F5EyGpFFZ/YKZ1tZhO1DwsF8PyTZb5Si+DKf9S4jXUdcJ2ttm
+         lWcE7bKU24fSwXHgyPXBXUAM+JKnUzDHjUhMhFE85bEB3BQ9Hcwq6CCAN7MN6BFi7E40
+         tzx4FVBokSZ0Ye5OrKnFmb5zlAs4BrXavuc4agTeQH7yF76OO3yeZz6u/vgh0JIIXQGU
+         FIgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738844267; x=1739449067;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kVaPm6svnrZmjjZXaQ6INFYIHurE1c31ambChU45jvE=;
+        b=r/EO6+UeyWQ0DFUzm1ooRuALAXNEJjecuiHzT8CB4N/epsJCaEQAvGTtfJtelFCtBd
+         EgpjuZ2MOiaaHS3hmUWlcYD311pf4dvM0LReGzfQHC3UNtbYmaaUi6RISyLc018FUH4N
+         2S6jV/7BhgVV60S539PPSDrW9Gw8pUUhVZ2DYyR/cuVhjl3SifV0pdn+iHzuQuWne097
+         pZ0sDkcDvXeR92wSeeAIEDtoR4pjcPhfxSI37cDXlKC/+0YlexV+92/a5D3HfVFyKi1c
+         yWYJYPq+21WnxhKnoSUsShZ4rrOMrJqxUuDMSzU19jSq9rcy/bjnR282LRHfWtuv5hKP
+         A8cA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsnKDajEiKJHOj3efjW560D5bho9twgx9a7OO3PO45q6FquPoiKTxXn75tw8wvFDAyWJKQ4eFc/Gc7ovA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2A1Aab+s/qnvR7R50hHFO50wEi/YAqb99Dta1P4X1phB4c+HX
+	cvpEaJn77OV9WK8ZDW4L97nrMQ9yPyJGTVtFpbpfrtud5xyPqagd5OAmLLzeQF/ZBcfroL1pzcj
+	CNEhb6sEbqZj34PET/G0jz7SA3PepJLx/I5vn/g==
+X-Gm-Gg: ASbGncvZ7yia8xuG9eXv7lXO2UEeZ2NvwhGB7zBBJt/HVh/gXuobSS6jPHEw7hflJpb
+	Lhju/RrEocPOpQ6WjDJy2n/LRjOQDA+QGSIlujdkcQWF6PXpN4A0jGoJll7caUhvjUKQm3NPk+Q
+	==
+X-Google-Smtp-Source: AGHT+IEdOcygqBJ9zpwt9AnW8YGVVzGNtNdwXSyeVHKPWBPAI82GsWsII++eZWvLHpNnJrehz+aGVI+bK2PH2gmRR6A=
+X-Received: by 2002:a05:651c:b08:b0:2ff:c242:29c8 with SMTP id
+ 38308e7fff4ca-307cf386eaamr25840471fa.35.1738844267233; Thu, 06 Feb 2025
+ 04:17:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3?] scsi: qedf: Replace kmalloc_array() with kcalloc()
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>, linux-scsi@vger.kernel.org
-Cc: GR-QLogic-Storage-Upstream@marvell.com,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- Javed Hasan <jhasan@marvell.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Saurav Kashyap <skashyap@marvell.com>, LKML <linux-kernel@vger.kernel.org>,
- Arun Easi <arun.easi@cavium.com>, Bart Van Assche <bvanassche@acm.org>,
- Manish Rangankar <manish.rangankar@cavium.com>,
- Nilesh Javali <nilesh.javali@cavium.com>
-References: <d5d13945-da84-4886-bdc7-9a3ac182b2be@web.de>
- <20250202213239.49065-1-jiashengjiangcool@gmail.com>
- <6221018a-873d-4fd5-bfaa-5c83d09ea2ac@web.de>
- <CANeGvZX5gcYj+Wjp+t=GLtOePHBjMNmVxiPsk2nruqsbiRaqVQ@mail.gmail.com>
- <444d6d33-d916-467b-aea8-25c61977713a@web.de>
- <CANeGvZWWFk4HjFGnzqW9aGc_FPFw_8xx_vizY48AYsP2T7q_WQ@mail.gmail.com>
- <d4db5506-6ace-4585-972e-6b7a6fc882a4@web.de>
- <CANeGvZWVJQdCDDboHN7RPm2aq+oBZYQ0CSWcPF5mVQxh2fb_CA@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CANeGvZWVJQdCDDboHN7RPm2aq+oBZYQ0CSWcPF5mVQxh2fb_CA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-12-apatel@ventanamicro.com> <871pwfp272.ffs@tglx>
+In-Reply-To: <871pwfp272.ffs@tglx>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Thu, 6 Feb 2025 17:47:34 +0530
+X-Gm-Features: AWEUYZnkWoBjjXJZwQi6NEV8e_1cUvMnkW_wF5FuGhI66P5vlROSq0JSDO_qX_Y
+Message-ID: <CAK9=C2U537LvffPLGad=LsFsN27uW2UB2X=Oxrub9v2U5vneYQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 11/17] irqchip: Add driver for the RISC-V RPMI
+ system MSI service group
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pC4t54NqyGD8fqBiTRlHVHx6+SHr+bxotpIo7VPiO6QKCCmGpSP
- 2Mpdub+cgUrG0kHrrAn5ru2kq5P2eKOWCenLtMjQpu8YNsKPHv4jHokPbtIioSXAgpXjydf
- GTpohXL1fZXbKCCvdyvvUQ7YNNtPrMw/VnPKac5X9hGhqefiqrCE83BwopHVxhr6BxdNFeS
- uci4SNWhcd/SWAotk7MlQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ltxZIrZtu4Q=;RVZM4SPlL8iWJYk4VWw+0KZ15MZ
- DknNcum+pjghl4po9MbdFv0zD+yHT4migkoJ9n9Re4uU/GkrQNF1Lvtclqd8DnieefiuhVTdV
- PcijMgcv0jSCLzsdj97yB6H4BfR/RW6wRqHB005sqci7RTYgSiN8Os91HcN1aeXFzC8Et3BYX
- CR31N5SxwsGR6dxKDHWtI17QQE2DsVffPihBINqvcV5A0dtRmbCZBcXoz/73+mXSvHMFoY4b8
- TXPAs8mqBdkxo6NcPatUxZJiOp5AF8DBJDM+Vutz4NP2e5hYpP+9hl0IRleciDkQ97AN62IEb
- g/uHfcOwBCWp83AtTfGBidbre1hemriEwrTBKeiCUEjSzb+XnERe7+QpuyR9wBT4xXjkdEf5+
- nqycZnwe7AaL97hN44jn+Hn/kV9/tiLv4BRynk0dCQ7Mp+CVwXOhQujgrdsFxSQuPbqRwLi5n
- Xd7wOqL6u0KoUe+FH+GmImFCQVzTCpQrsbTZ5q/YV3uz3j51DY0VETy20/vvkMa0NrsnktCJ6
- j0vvT8GXQf6Ub+VulLM4tehDk5xcGv0KjX6hs/zVsC95NhPLQ4Krtnp0yxYGbo2nH4BLVNAhs
- Gqff+V2kSMj1DP2BY4zz0V67xCjNiIU2SJF5vssYBiq9TM5Rmy9gaIjcJQ8kMxEpViuvJhgiB
- pijiXXSrF2WqGAugJ0rJ2paoj3grxZUTTUFNjidk7lqEvKXwqGJvNfxOgHQLC1V2ZuDhZK+oN
- 7+WCA6QDnIQj3u2LuW+iKX3TpKMcvvu6d2MgQLDWhWcce78gT4cvJ0ZMMybw5k0fbCdQkpIqk
- HfYLyx2hz74+RyTnBjKs66hgc1ZcWm4nActPG4Oy8Dr4ZBH2u+BYmEasD1EXJ34lij825X9dn
- FnB4PDjgk1CD6qk3erAJwzBIrlp3buOwKkddv3iFLD7kEBYeC99Op/MZoZWZNuJpuCyIXyYcf
- OS+SFjGE4uesSEAaTb0u4G3Uhw4e3vvIS/+enwUIejB6h79d65IaSwa2a518A/rHGOIBPAb7G
- ONgMCWs1oF64eXxXm82MvN2rkZgO74hR1z86rImrcv1u4OrMIRnP71XHN2DaHI1M56Hux0G/L
- f/XWBOA+9CDfUBQM1ZPP+muLKmUrWPj0kW8cU3PoVJdMJFFdE9m2esHOaI6lKGvnTldSGrq3I
- E6gKoV+8wj+7PexAbfnDEwviXardFcEiCz2t1iIMnbsZsFViQ75Al8Z15JOIlw+Y8CkAfK3+d
- pyu0X0DUhV/bMKLemg4ZsNCA2JAafNFirDJVf1L/MQ3nlCndPXZty6EoplrDuaIHlHi3i1pdX
- KmVcw1//zqDyw4aTwkUhFFsAgflqDYj9z3+ReLZ4fPLeAKlwhgynkXRpfp+mYfLEYP8H1mwIW
- BAWe/jjCrCH80vEeabk3YvF6QswMwu4TVrDVviAyiag56gMLWfk+e0GvnZlgNAb25cSt0cC9w
- jzv/tkw==
 
->> * Is there a need to increase version numbers?
+Hi Thomas,
+
+On Mon, Feb 3, 2025 at 7:20=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
 >
-> Okay, I will keep v2.
-I hope that remaining communication difficulties will be resolved
-in other directions.
-Are you still looking for better guidance?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/researcher-guidelines.rst?h=3Dv6.13#n5
+> On Mon, Feb 03 2025 at 14:19, Anup Patel wrote:
+> > +
+> > +struct rpmi_sysmsi_priv {
+> > +     struct device *dev;
+> > +     struct mbox_client client;
+> > +     struct mbox_chan *chan;
+> > +     u32 nr_irqs;
+> > +     u32 gsi_base;
+> > +};
+>
+> AS requested before please use tabular layout for structs:
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct=
+-declarations-and-initializers
+>
+> > +static int rpmi_sysmsi_set_msi_state(struct rpmi_sysmsi_priv *priv,
+> > +                                  u32 sys_msi_index, u32 sys_msi_state=
+)
+> > +{
+> > +     struct rpmi_sysmsi_set_msi_state_tx tx;
+> > +     struct rpmi_sysmsi_set_msi_state_rx rx;
+> > +     struct rpmi_mbox_message msg;
+> > +     int ret;
+> > +
+> > +     tx.sys_msi_index =3D sys_msi_index;
+> > +     tx.sys_msi_state =3D sys_msi_state;
+> > +     rpmi_mbox_init_send_with_response(&msg, RPMI_SYSMSI_SRV_SET_MSI_S=
+TATE,
+> > +                                       &tx, sizeof(tx), &rx, sizeof(rx=
+));
+> > +     ret =3D rpmi_mbox_send_message(priv->chan, &msg);
+> > +     if (ret)
+> > +             return ret;
+> > +     if (rx.status)
+> > +             return rpmi_to_linux_error(rx.status);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +#define rpmi_sysmsi_mask(__priv, __msi_index)                \
+> > +     rpmi_sysmsi_set_msi_state(__priv, __msi_index, 0)
+> > +#define rpmi_sysmsi_unmask(__priv, __msi_index)              \
+> > +     rpmi_sysmsi_set_msi_state(__priv, __msi_index, RPMI_SYSMSI_MSI_ST=
+ATE_ENABLE)
+>
+> These macros are not really providing any value.
+>
+> > +static void rpmi_sysmsi_irq_mask(struct irq_data *d)
+> > +{
+> > +     struct rpmi_sysmsi_priv *priv =3D irq_data_get_irq_chip_data(d);
+> > +     int ret;
+> > +
+> > +     ret =3D rpmi_sysmsi_mask(priv, d->hwirq);
+> > +     if (ret)
+> > +             dev_warn(priv->dev, "Failed to mask hwirq %d (error %d)\n=
+",
+> > +                      (u32)d->hwirq, ret);
+>
+>         if (ret) {
+>                 ....
+>         }
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#bracke=
+t-rules
+>
+> > +     irq_chip_mask_parent(d);
+> > +}
+>
+> Other than those nits, this looks reasonable.
 
-Regards,
-Markus
+I will address all above comments in the next revision.
+
+Thanks,
+Anup
