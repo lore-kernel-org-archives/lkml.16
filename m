@@ -1,313 +1,287 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2085.outbound.protection.outlook.com [40.107.220.85])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5B92417C6;
-	Thu,  6 Feb 2025 22:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738882680; cv=fail; b=g8+uzZNWra4TewUFGOPSCuNfINZIOw/msWFKZ39gNNzTO5vCKmtR39MQCZTkKzfSygZhnsrhrDG1Xn5hpy2aIN5q4ntihEbPqiMb8rJbbhiv6i3QG57sZX4lHEO0by4ta2QWTX8fsvOuqVHKE39lQZzMNz/jKOABGG9syEdaYy0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738882680; c=relaxed/simple;
-	bh=bhXW/nYxnOw6U3dkRs6ye1aUW5k6aRY5nqKWv7w1KuE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=WWGT4VjBh3WV9Yjo/eBmwkcRjzcXh6JGBVthe8jYtO2ETuA/sl1b67cSheEOGnAA1pv8vzrprzag7l3wg5lrL9n5kvt9/upck+dxLzQgLMtLUsXa0o7URS+k23r0eoEe3pnLOrJbpTsKuGx21xXNcGFB06JtxPXwcurukBj2/8E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q57c1ejh; arc=fail smtp.client-ip=40.107.220.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB682417E2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738882755; cv=none; b=VufeBQGGsqX1GfNebKnlVI4k7LpiXrh0OiyX99tglDnp47HfzdHTXbVyRwu5HM6qLBFvijpHCIsLI9JJqg2W8S/2DoavmWggZ1fFZD8KKuv+tE3nZ4ak/LnUMm+0W2l/7DobCOwja7rxOQhpQFgwYs/eSbMezpGDfdsb9Oqcmag=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738882755; c=relaxed/simple;
+	bh=0ntnTKWhZutag/x3HVhP8VZ4Ui4mFuohPb6mz+tL+nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wrd/Dm5x4Oc0T1I9SDftlC3vLuHGXiEMI9/Jy9R33BKEc1OfTt5YxPjHKR3XLQALjrs/eAFZxPI8TAd64vVHPFMqus5/zzu6JPNWrhbGoqUJpvzoPKoUOF7u3OTNk+PxeE237W8ggQlppUBn35qNcDIPQ1nI+J58pYh9lTV9Kpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=p+RkgaMV; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q57c1ejh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qUroqiTx7OliXKFpinItOmedt07v3r9e+laJGcP8U49aw1aGHLNLSiddDvv2jBUO9Vb79jbywkkPs3q1S2S7L14KydlZSJxSqz7IfOhRtQgxYbeiJ8CtABBhCVsSq/oo6Zvouj+GVr3lljQ7ow938LFrOj5VfpLrkIV0QfvLbCBrpQXbR5LSbtP3Y82Fh0FEh+p4nkfmUgDKUzwQoTxz7hx7TmjI9e1WveFqTIE3VLW9RSkCOVAbUKt9EMYPF456v+YucXNMqKGUd5+wcuyJI7hWosBOb8CtjjUWIkoQQ6NzFfrnb61D+xqJlZo2OqHEw7aJlRmDR7jMh9EoyPIE+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6p/p9fzdQOgluKHnCZmQZo9dbjN1ePXCop1q1DtyhqE=;
- b=oc+q2FT/BAh2tWugyaHbLDHj9ym6phYogE//uyXk37AVgqnR7C+I6rIu3v+YZzXWq2bGs0mXIvQ4NlNxwIoxZM9+M3peIsoVU1nQs0jhkxz8m6d2KpwUfyT6pKv4wT7S44qeppBVpkkpELo4Zxu27RSTsRkpxH67FkStRXrRZZt2VW/6Un7/JkgoO3bDOIw8v9FL6NgPcP0koABSstdPCLQGlAkQZeKFBaMuKX6fFpvmGwdFULZQuqDgsScJE1qVTeomNrl3YmRlhZERBTK3rbBfQ4ioipCj6aNqtXHXIOyWJXBm312UKr+V1kTjyrHGhdzHcysPpTM9ON33Dpul9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6p/p9fzdQOgluKHnCZmQZo9dbjN1ePXCop1q1DtyhqE=;
- b=Q57c1ejhqG4AHzEu3WPn3qVBL6AHan9Ja7m67fmtYcjHSNuX/hvFviuhM5YM8FEQdMkczokd+jK4roBkgTBvUAMUA3yBPFO5reC7NFftXN6+CVgv1YQQZg7LZgJ0R5XSWUOgVV830p7tB/TI52gs4PZA3Kr+RPF3nOQkp/11vrw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by IA1PR12MB6283.namprd12.prod.outlook.com (2603:10b6:208:3e5::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Thu, 6 Feb
- 2025 22:57:54 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 22:57:53 +0000
-Message-ID: <c117f176-cc91-4f1d-84ef-cf19d07a1b7a@amd.com>
-Date: Thu, 6 Feb 2025 16:57:47 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 06/23] x86/resctrl: Add support to enable/disable AMD
- ABMC feature
-To: Reinette Chatre <reinette.chatre@intel.com>,
- Babu Moger <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- tony.luck@intel.com, peternewman@google.com
-Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
- akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
- xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
- daniel.sneddon@linux.intel.com, jpoimboe@kernel.org, perry.yuan@amd.com,
- sandipan.das@amd.com, kai.huang@intel.com, xiaoyao.li@intel.com,
- seanjc@google.com, xin3.li@intel.com, andrew.cooper3@citrix.com,
- ebiggers@google.com, mario.limonciello@amd.com, james.morse@arm.com,
- tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
- eranian@google.com
-References: <cover.1737577229.git.babu.moger@amd.com>
- <920cafec1920358ad0c8af2e78a8f8bbd8c0b77d.1737577229.git.babu.moger@amd.com>
- <8a6fe2e3-8853-4371-b73e-6ff689ccb695@intel.com>
- <ce173fa9-dad6-4bd4-8165-d6286c661340@amd.com>
- <9bd6b7d1-957b-47ef-8edb-88f9749fcb09@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <bmoger@amd.com>
-In-Reply-To: <9bd6b7d1-957b-47ef-8edb-88f9749fcb09@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH5PR05CA0020.namprd05.prod.outlook.com
- (2603:10b6:610:1f0::13) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="p+RkgaMV"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 5D07924002B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 23:59:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738882750; bh=0ntnTKWhZutag/x3HVhP8VZ4Ui4mFuohPb6mz+tL+nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=p+RkgaMV9VIAIT8MYZFio3VSfTcUJfYA5FEc+zjfP1EnW22lPFrmANL4PS3LwQnNT
+	 602ylrOf2+AntvRiDwn14Jhfy2V1nnrN9wFBJI/kI4PU/+5npRjv6xJ5/AKy/RW6Fv
+	 f2YlHOM7k210lFFssN1JAaYVF1YyIKI+GQ7tKJM9pc/jWJBzOM7DVXjYe2MOUXkiue
+	 adEt/Bw2fk5rtfWCmrCQoBw9fD94uNiGGmSrUf1QNQ80AgJUDYsJdGYQqwmqTTrn2R
+	 oMDGYBC4J4au3YLekaecSKppQGFujoThS8rsOtEJnu5EMXQ+xZWUsk7caf5RSxDEGG
+	 7rekhBdR5x3gA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ypswl20Tqz6txc;
+	Thu,  6 Feb 2025 23:59:02 +0100 (CET)
+Date: Thu,  6 Feb 2025 22:59:01 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH RFC 9/9] dt-bindings: nand: Convert fsl,elbc bindings to
+ YAML
+Message-ID: <Z6U-tVhmbwwULuzQ@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-9-50649f51c3dd@posteo.net>
+ <20250127042321.GA3067818-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|IA1PR12MB6283:EE_
-X-MS-Office365-Filtering-Correlation-Id: 028c292d-f994-4209-fad2-08dd4701b054
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TTZ1WWUzOHg4UzlSekxvSjdnR25qV3dTbWpVYUo0bHlsRTc0MXVsWDVyN2FD?=
- =?utf-8?B?TXdRcEdsanYwVncxQWk2bVp5STJ1aWpDcURkTDFEMXBkeERQNUgwSUtaK1p4?=
- =?utf-8?B?Z0pXUE9mZ0R3eG9TcjhPb1FHRUFtRTVSdDB0ZXRJYjdrbkUrVm53ZHdCR29l?=
- =?utf-8?B?ZzgvNEhIOEJZUi8xN3J0Tk5tWkRRT3VxNy9LV0p2S2dzZElqOTF1Vk9vMFdv?=
- =?utf-8?B?M1p4THoyZUs5Z2plQ2p5L0JTSlpmNTB1aTIzVEpxUGZRa2FGalZDQ2c4SzVa?=
- =?utf-8?B?VnZ6NG1EVjVNOUFqNmYrUW8zU2F0dUJNYXNKSEExbi9BTVBTcW5TWllFWExE?=
- =?utf-8?B?VWRBWDE1Y1R0Umg0OUl3c01USVRaYkFCS3JMZEZ6bDUybkdFRUxJVDBJa1V2?=
- =?utf-8?B?T1kyTjA3NlB3VUp2ZkdTRXUvZnNTSTE1d1Z3cmRFNG0wbGg5SENqYlBTQnlS?=
- =?utf-8?B?TnFpaGpDRW9TRElQczR0bGlmWkZJVGJadmJhaGVPbWNja29xVlJUU2IrY3NE?=
- =?utf-8?B?RDUyWm9tcTB4dmRKTytRRzRYV3VOejNkNGE1cytVQjVlRktpY1k5UmRONVY4?=
- =?utf-8?B?MkFwRGFxc3NoSFY2UE5Sb2pMS3BRQXJzSTdURzI3Y0tvRExVSG9LWHp5aXdo?=
- =?utf-8?B?NjFRTEpmVzZ0WXBRS3doVU1pcVk2VnYyQlB0N1ZqVlhMRVFhbGlUNWpOU0ZJ?=
- =?utf-8?B?c2FBTk5MUXgxV042REo0eWdXajRFNGNWU2F6SjVWSEtCcVBjNGNBMVFyOHRv?=
- =?utf-8?B?bmVad0hyREVNRC9mYUp3SmpZSHRNMm1iaEhJdVBtT2lwejdkVTJOamdOSlcw?=
- =?utf-8?B?OTgrR2FSVytpK1RMcE1QSkpFMW9GZThBVGNuVWYxeTZ3eExKVDh4YUd5QnNF?=
- =?utf-8?B?ZU12NlpsYjhJMU1WdXE1QXpkbGEyT1h0aEdMaFpxMWJtR3RZMTR2MlFDRFc3?=
- =?utf-8?B?bFE3M3AxVTZNT2JLMDVBWGNHZHFUNVphSVRYU29PRDQxUzQ2aENnSjR0UHdB?=
- =?utf-8?B?aXp3NkE3MHpYbVRBTVd1N1dxdVljUDFna2dnUysxa0hLam41SWNPYTN1T3Mx?=
- =?utf-8?B?Vzg1dGJuV3N6QVBRMlBzaFB4UGZaQXpaWE5UcHNrNzBhZVc1OWFrYUxnWVJB?=
- =?utf-8?B?UHQxV0ZDQXQ0NzRlcWtLN3g3OEhKM2Fwb2piOWJybWtOTDhoQlJpTElZNi9M?=
- =?utf-8?B?S09EcHYxMHlqZ21ha3RuY2J0ajBScjI0UkJDVGFNaWtNZEZQcTdPRGFHNVUy?=
- =?utf-8?B?WEZKUkZUS2c0VFhUYUlxWWJZOW1yR1NMYWZqbEZUUjF1L1kzMHNVMkxETnRK?=
- =?utf-8?B?TTlOWENLWXRpRVZBcTdzRW4xZExaaXV4SG02aEt2UFJEKzRqenc5QTFYT0Rl?=
- =?utf-8?B?US96dCtpNEEycjlEVFJNNFRJRnE5MkRPcjJjZEFjVUFMeHlmUlZ5dCtySHlT?=
- =?utf-8?B?MUtVWFJsTTdiMG5TSTZJc2pMUEg4SWV0RHFMUUtVMi9QQmpoaXZKWGJhenBY?=
- =?utf-8?B?S1p4V3owYXEwM1lqczJ0TWx1TXFHSU11TXVjekRhNkVIeEFiTGp4dmdwa2FS?=
- =?utf-8?B?WktsT0RNUlprYi8yMmIrd2hsd1F6R0VrOXFyek5XMzRTbEg0QTZWNi9zdUJx?=
- =?utf-8?B?cmM5OGFQeTVrZHNLQ3BmcUpVYmp5aFJhSUZCOVpEWHlvQkxxUmFaeGRCT0hh?=
- =?utf-8?B?N3p2WFZLUEpRdHFKcDFpR3lCQ2llWTgyYmpDaHQwU2M4Y0Fac21MTlhCNHNq?=
- =?utf-8?B?cXB5eFQ1R1Ezb0xtK0RSOHlrd2dhMVcyYkJOY0VlNEhudmRNVDRpaW5iTGFI?=
- =?utf-8?B?eFZkblEvYlAyWmdMWVcxQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Tm1ZNXJRWlliYWtKMGwzTjVLT3RiRHB3c09PeHJhRGJyMnlSZFRVM2hCaGVu?=
- =?utf-8?B?dkJsQlYwUzRDaXJSbytaYkE1TTlqY3ZRbVk5eC9QbUk1SG9oamJJa1VqK29k?=
- =?utf-8?B?aVB5UzRUYjZkUzVhMjlWMWpnZEs4aFA0aElLdllBeDVuWVhKdWxDQ05ZQUhO?=
- =?utf-8?B?QjUxWk5ubnpRMU5naVFpVjNlL0FJV2w4OHJ0cEprRVh3OFA4NlNjd3Zja3or?=
- =?utf-8?B?WlhGUk9FMWJhWC9CMkpqaFVKaXNpQzN2UjdvWVVzbXhtTDFRQm5DekVDZm84?=
- =?utf-8?B?V0RxeVJtZ2FHelE4ZmpQWWVMTWxPVFV2WEx5bE5JVWdpbEdQQkF3Rjd3dU9w?=
- =?utf-8?B?MUZtaUZHbWxIUmJrZ0VETW1aUlMvRHJSRnA2bm5UaVNJMUtpM2pjWG1wRTFH?=
- =?utf-8?B?T0lvTjdZdElCWEg2UWRHL1VNR3FwRll6TjdTU2ZELzY2VHFiSVYwRHovTEFu?=
- =?utf-8?B?S1BwZDJpZDB5dGxneTJtZGgwYmlUL3hlWWNnWURWdis4c2x1Q2Rjajc0NFdO?=
- =?utf-8?B?eU5WRHVFRzliZ2tubTRLMVZxdHkrOVZhL0Nic2FDSzd0OWxiT3IxakdmaGpa?=
- =?utf-8?B?eGY2M1FneUtjbWVXYkpLZENaZDFRcFFOSUNVLzJlUm9qbit2VTBzdE9wdmR0?=
- =?utf-8?B?QVgwTGx1MkVpTGd4Um03OXR4ZGZKZjVmQUM0VGNSbWVybjdiY09LdEprSCto?=
- =?utf-8?B?YW5vb0pHSzBRN3VNWE5ONmI0VExYeVU4bC91WG9XY3kwck1OZXlMaFNSeDJn?=
- =?utf-8?B?MWdoMFl2Q2h2dE1DZWd1M00yeHBsb2FaTS9QRVFWWnBZd1hKb1pZbWErNGlM?=
- =?utf-8?B?ZkV2YTJYYjYrWW1EWW45VFA1YmRvRzdHd09LUkQrSmxJZnRtQlZKTUVNTlJP?=
- =?utf-8?B?eDJVZEFpVHYxSTk4UFgxVnkwT1BQWnIrNzdrSS9CWXNMWW50MVNCTnFEWktq?=
- =?utf-8?B?TmEyMU53clJKellVTGlYazJHbTMrTG91dDJuZWVzZVZNRHpTejBHV3YvMEZR?=
- =?utf-8?B?ajF3THZDTzlqTjZHOTdxR1hEUzhIaFRueTdFUEphSEVGalNXY05STGo0MjNw?=
- =?utf-8?B?MHhIbVQxL1pTelVyL1JQT2dVcndrcXljTEFhd2xBMXlsaE9sTU5WUHZzQkRX?=
- =?utf-8?B?ZmlZeDdzZ3ptQ2VkdTI0eWNodEZ5Qm1vdDNlaTcrRkwxaEpuMk4vcWVyalpz?=
- =?utf-8?B?TjA5cmJoWm1NOWhPdFRrTnhGbS9EQUU4ckFjVGRTS0xSRE5DdlVGYXVtRFFS?=
- =?utf-8?B?bWxXQUI0YUxIdDRBSFhoWCt5ejZHcyt4bkQxMmx1U3FkTkVaMG9YWWRTY1FG?=
- =?utf-8?B?d0FXQVVlTjRZNkErNDc1NXAzZllITlRrVnhsUlcreU9kTkF4MU15TjdEMEhS?=
- =?utf-8?B?UExDeFlXT1BsbG1CNEttNTdiZklHU0RKNUZ1ZXZmZ1ZrNXBrZkNqL21hR1ky?=
- =?utf-8?B?aW9kcVdKYmJ6WlJrL3Q0eHZBc2tIeWw4RG5oNE52RkJsVTlMM284RkxPTHJT?=
- =?utf-8?B?STdKYlBUOTV0WnZiRmpmK3UrMm1WM1lVczY2VmRYK2hicCsxZFE1UGhwQ1hp?=
- =?utf-8?B?TWZjbm42eU1IZjhsYlQ4VU0xZW43R3QwOWkyQnZrMW83TU9adGNTY0JiWjE0?=
- =?utf-8?B?c3NWZERGN09UakpVaHoxLzJWZVc3U3BOZVNFa3ZPQzZqNHFGWUFuT2FVSURP?=
- =?utf-8?B?NEVxSzlCV051bGs3bVlINTVSVDZONkZYYmRDK3UrUGhaWHlvYmttUGU5ZW5V?=
- =?utf-8?B?U0VEN3ZXOCsxUHJYby9NbllLQmg0OGV6Z05DODIvYUtzdDEram1WTUdtdnlW?=
- =?utf-8?B?T3BZZ2krUjgwWFhMSk8rcklQL3ZzdzhRTzhvamVmK2tZdEVzaHBydklqSzJu?=
- =?utf-8?B?U0UrRUJ5QWhkUnVqaXZZa0xpK1EyRFFycUlVdkRBNU9ZVDR3Ymx0TUlyVmVq?=
- =?utf-8?B?eGlXcXdOY3BlNjFrUXYvMHF2dzZYMnpXejFXSG8xT002OE9RaHhoN1FHdTZx?=
- =?utf-8?B?OTU3amlWOVREcnFPRzg0cUZJWisxd2tuYzNBQkcrY3dORTk0eHUwbTJnM0lV?=
- =?utf-8?B?SHIxd3VEWFFPenVyazkzOTc0VmRCY0pLelcwelpvNVVjd0FZTkxnQjc3SlN4?=
- =?utf-8?Q?0gHW0NcaWevO+pSCkNj5Wmtkm?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 028c292d-f994-4209-fad2-08dd4701b054
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 22:57:53.7136
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4yiwspi0U818UbitKYjP8XtmKhgG4NF2LwlHrLaDJ8V20Q8HhCH86w7LvrZsxdXW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6283
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250127042321.GA3067818-robh@kernel.org>
 
-Hi Reinette,
-
-Lots of things in here.
-
-On 2/6/2025 12:42 PM, Reinette Chatre wrote:
-> Hi Babu,
+On Sun, Jan 26, 2025 at 10:23:21PM -0600, Rob Herring wrote:
+> On Sun, Jan 26, 2025 at 07:59:04PM +0100, J. Neuschäfer wrote:
+> > Convert the Freescale localbus controller bindings from text form to
+> > YAML. The list of compatible strings reflects current usage.
+> > 
+> > Changes compared to the txt version:
+> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
+> >    appears in this example and nowhere else
+> >  - added a new example with NAND flash
+> > 
+> > Remaining issues:
+> >  - The localbus is not really a simple-bus: Unit addresses are not simply
+> >    addresses on a memory bus. Instead, they have a format: The first cell
+> >    is a chip select number, the remaining one or two cells are bus
+> >    addresses.
 > 
-> On 2/6/25 8:15 AM, Moger, Babu wrote:
->> Hi Reinette,
->>
->> On 2/5/2025 4:49 PM, Reinette Chatre wrote:
->>> Hi Babu,
->>>
->>> On 1/22/25 12:20 PM, Babu Moger wrote:
->>>> Add the functionality to enable/disable AMD ABMC feature.
->>>>
->>>> AMD ABMC feature is enabled by setting enabled bit(0) in MSR
->>>> L3_QOS_EXT_CFG. When the state of ABMC is changed, the MSR needs
->>>> to be updated on all the logical processors in the QOS Domain.
->>>>
->>>> Hardware counters will reset when ABMC state is changed.
->>>
->>> I find that the state management in this series is organized better
->>> and easier to understand. I do think that it can be simplified more
->>> and a hint to this is that it is mentioned here but not done in the
->>> code introduced here but instead required from the caller. It seems
->>> simpler to me that the architectural state can just be reset at the
->>> same time as enable/disable of ABMC?
->>
->> Right now, it is done from mbm_cntr_reset(). It does both arch and non-arch state reset for all the RMIDs in all the domains. It is called in two places.
->>
->> 1 rdtgroup.c resctrl_mbm_assign_mode_write -> mbm_cntr_reset();
-> Please see my response to this usage in the related patch:
-> https://lore.kernel.org/lkml/b60b4f72-6245-46db-a126-428fb13b6310@intel.com/
-> In summary, I find mbm_cntr_reset() ended up being a catch-all for random
-> cleanup and creates confusion with the other mbm_cntr_*() calls.
+> That's every external parallel bus. See bindings/memory-controllers/*
+> 
+> Probably fine to leave 'simple-bus' if that's your question. It's more 
+> that there is configuration for the chipselect timings that make's this 
+> not a simple-bus. But the address translation should work just fine.
 
-Yes. It should work. Will respond that comment later.
+My concern mainly stems from the resulting warnings if I allow/use simple-bus:
 
->> 2 rdtgroup.c rdt_kill_sb()-> mbm_cntr_reset();
-> Please see my response to this usage in the related patch:
-> https://lore.kernel.org/lkml/8d04f824-d1cc-461c-9c57-0f26c6aa96e0@intel.com/
-> In summary, it does not solve the problem it originally set out to solve
-> and it can be eliminated.
+Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:77.23-84.15:
+  Warning (simple_bus_reg): /example-1/localbus@e0005000/flash@0,0: simple-bus unit address format error, expected "0"
+Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:86.22-92.15:
+  Warning (simple_bus_reg): /example-1/localbus@e0005000/nand@1,0: simple-bus unit address format error, expected "100000000"
 
-Yes. Should be fine. mbm_cntr_reset() can be completely removed.
-Will respond that comment later.
+Existing devicetrees specify the eLBC with compatible = ..., "simple-bus",
+which lead me to include the simple-bus compatible both in the binding
+itself and in the examples, which in turn leads to (correct) warnings
+from DTC about node names such as nand@1,0 (it expects 100000000).
+nand@1,0 was however completely correct for the eLBC bus, because it's
+not one big linear address, but rather a chip select (1) and an address (0).
+
+My current idea to resolve this contradiction is to remove simple-bus
+from the binding and change affected devicetrees later.
 
 > 
->>
->> I will have to introduce another function to reset RMIDs in all the domains. Also, make sure it is called from both these places.
->>
->> list_for_each_entry(dom, &r->mon_domains, hdr.list)
->>              resctrl_arch_reset_rmid_all(r, dom);
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml |  61 +++++++++
+> >  .../bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml    |  55 ++++++++
+> >  .../devicetree/bindings/powerpc/fsl/fsl,elbc.yaml  | 150 +++++++++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
+> >  4 files changed, 266 insertions(+), 43 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml b/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..127f164443972bbaf50fd9daa80c504577ddd7bd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NAND flash attached to Freescale eLBC
+> > +
+> > +maintainers:
+> > +  - J. Neuschäfer <j.ne@posteo.net>
+> > +
+> > +allOf:
+> > +  - $ref: nand-chip.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
 > 
-> I do not see need for new functions, except the one I mention in
-> https://lore.kernel.org/lkml/b60b4f72-6245-46db-a126-428fb13b6310@intel.com/
-> that suggests a new helper for reset of architectural state that does not
-> exist and ends up being open coded in two places in this series.
-> 
-> With only one place (resctrl_mbm_assign_mode_write()) remaining that needs
-> all state reset I think it will be easier to understand if the state reset
-> is open coded within it, replacing mbm_cntr_reset() with:
-> 
-> 	list_for_each_entry(dom, &r->mon_domains, hdr.list) {
-> 		mbm_cntr_free_all()
-> 		resctrl_reset_rmid_all() // Just for architectural state
-> 	}
+> Don't need oneOf.
 
-You meant "Just for non-architectural state" ?
+How would I express "either one of various chip-specific strings
+followed by fsl,elbc-fcm-nand, or fsl,elbc-fcm-nand alone"?
+
+> 
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8313-fcm-nand
+> > +              - fsl,mpc8315-fcm-nand
+> > +              - fsl,mpc8377-fcm-nand
+> > +              - fsl,mpc8378-fcm-nand
+> > +              - fsl,mpc8379-fcm-nand
+> > +              - fsl,mpc8536-fcm-nand
+> > +              - fsl,mpc8569-fcm-nand
+> > +              - fsl,mpc8572-fcm-nand
+> > +              - fsl,p1020-fcm-nand
+> > +              - fsl,p1021-fcm-nand
+> > +              - fsl,p1025-fcm-nand
+> > +              - fsl,p2020-fcm-nand
+> > +          - const: fsl,elbc-fcm-nand
+> > +      - const: fsl,elbc-fcm-nand
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#address-cells": true
+> > +
+> > +  "#size-cells": true
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> 
+> If you use anything from nand-chip.yaml, then you need 
+> unevaluatedProperties here.
+
+Noted, will fix.
+
+> 
+> > +
+> > +examples:
+> > +  - |
+> > +    localbus {
+> > +        #address-cells = <2>;
+> > +        #size-cells = <1>;
+> > +
+> > +        nand@1,0 {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <1>;
+> > +            compatible = "fsl,mpc8315-fcm-nand",
+> > +                         "fsl,elbc-fcm-nand";
+> > +            reg = <0x1 0x0 0x2000>;
+> > +        };
+> > +    };
+> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..60f849b79c11a4060f2fa4ab163f9fa9317df130
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml
+> > @@ -0,0 +1,55 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/powerpc/fsl/fsl,elbc-gpcm-uio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Userspace I/O interface for Freescale eLBC devices
+> > +
+> > +maintainers:
+> > +  - J. Neuschäfer <j.ne@posteo.net>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: fsl,elbc-gpcm-uio
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  elbc-gpcm-br:
+> > +    description: Base Register (BR) value to set
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  elbc-gpcm-or:
+> > +    description: Option Register (OR) value to set
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  device_type: true
+> 
+> This should be dropped.
+
+Will do
 
 
-> I would not insist on reset of architectural state within the
-> architectural helper. I find that it is best for architecture to
-> maintain its state but I also see there are many precedent for
-> resctrl explicitly managing the state.
+> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
+[...]
+> > +  "#address-cells":
+> > +    enum: [2, 3]
+> > +    description: |
 > 
->> I feel current code is much more cleaner.  What do you think?
-> 
-> It is better that previous versions, yes.
-> 
->>
->>>
->>>>
->>>> The ABMC feature details are documented in APM listed below [1].
->>>> [1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
->>>> Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
->>>> Monitoring (ABMC).
->>>>
->>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
->>>> Signed-off-by: Babu Moger <babu.moger@amd.com>
->>>> ---
->>>
->>> ...
->>>
-> 
-> ...
-> 
->>>> + */
->>>> +static void _resctrl_abmc_enable(struct rdt_resource *r, bool enable)
->>>> +{
->>>> +    struct rdt_mon_domain *d;
->>>> +
->>>> +    list_for_each_entry(d, &r->mon_domains, hdr.list)
->>>> +        on_each_cpu_mask(&d->hdr.cpu_mask,
->>>> +                 resctrl_abmc_set_one_amd, &enable, 1);
->>>> +}
->>>> +
->>>> +int resctrl_arch_mbm_cntr_assign_set(struct rdt_resource *r, bool enable)
->>>> +{
->>>> +    struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
->>>> +
->>>> +    if (r->mon.mbm_cntr_assignable &&
->>>> +        hw_res->mbm_cntr_assign_enabled != enable) {
->>>> +        _resctrl_abmc_enable(r, enable);
->>>> +        hw_res->mbm_cntr_assign_enabled = enable;
->>>
->>> Added benefit of resetting architectural state within this if statement
->>> (perhaps simpler to be done within _resctrl_abmc_enable()) is that it will
->>> not be done unnecessarily if ABMC is already in requested state.
->>
->> It will be
->>        list_for_each_entry(dom, &r->mon_domains, hdr.list)
->>              resctrl_arch_reset_rmid_all(r, dom);
-> 
-> I am not sure if you are actually planning a new loop here ... as
-> I suggested above this can be added to _resctrl_abmc_enable() where
-> there is already a loop over all monitor domains and all that is
-> needed is to add a call to resctrl_arch_reset_rmid_all(r, dom).
+> Don't need '|' unless there's some formatting.
 
-Sure.
+Will remove.
 
-> Even so, as I mentioned above, if after fixing automatic counter
-> unassignment you still find that resetting architectural and
-> non-architectural state together then we can go with that to match
-> the other flows (eg. mbm_config_write_domain()).
 > 
+> > +      The first cell is the chipselect number, and the remaining cells are the
+> > +      offset into the chipselect.
+> > +
+> > +  "#size-cells":
+> > +    enum: [1, 2]
+> > +    description: |
+> > +      Either one or two, depending on how large each chipselect can be.
+> > +
+> > +  ranges:
+> > +    description: |
+> > +      Each range corresponds to a single chipselect, and covers the entire
+> > +      access window as configured.
+> > +
+> > +patternProperties:
+> > +  "^.*@.*$":
+> 
+> You should define the unit-address format here: @<chipselect>,<offset>
 
-Sure.
-Thanks
-Babu
+Will do.
+
+
+
+Thanks,
+J. Neuschäfer
