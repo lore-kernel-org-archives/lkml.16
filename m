@@ -1,114 +1,95 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA1F1ACEDB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBF71B21AA
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866840; cv=none; b=S9TvYVXYCgXK72cQq06kRC1wy0vszpMR2DWl0JdH0XC4tNC7xxSSBSTUp7v2gy3/lXjVh0J0yDQsgRFBqlpyL9rVLPtMOxqX3yi8MP0ckd29lL39RYCafE2KY/WR3WDPvouN1WvGF94lKiTtRmBwtmdPrCTdPIVyGv8Dsb5tN+M=
+	t=1738866866; cv=none; b=WouWfMlP5B6GQqyf61F4sLl48aKZ+R8R4qDuZX7n0q9Oej/qNSwYQYMg7Mmz6XuDAoPM0fXXxCd1+xofUSS41zP6nIfixP2A0vyRFUG1EorDF4qdJeXgcH5lMWUWf/H7QhH6xbvVZTvIx2S6NnX48SQcEurEAwlu1SYruzqlqqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866840; c=relaxed/simple;
-	bh=IEHm0JVQD9vhqpPbUpsGp4ZoTO4v2nX596dwvqQ84pE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JjTwXUEA3aJe6A6Q+8/XzktHUd0Ez4ALQ7xPYstqFb8gtyHYkGsap/lK837VKcczQ8UB3tUOPVftM87YIVM5sFs9utZqdYuyR2BSNZRXmtIkErz9RxJlcen4Fojnr1pqhxBa7MlbG0bbTlIftYpyMKmW4iwR8ZudclotCxpnbfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Li4R5Y9X; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738866866; c=relaxed/simple;
+	bh=Z0UpJ7EKA6bZEYQzZnj/UmAdLN9lPHDs8IUGbD2Ej84=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BP+SDxAI/IKU6W+51CcC7vWCCEyLAXtlzA6ddgEyRAc7UhT305GdQamYivVAGcgFkD7f6uC94s9uHqjtkmqLpaxxq+R8qTEMMXZ00b9bF/GOT1TqwgQpCTAEWyjRvmTtbk52PAywY3ySCzyGUu7EPB+xB/rOuPKC8f6tMBalrdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=AU9KWyFe; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Li4R5Y9X"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6d8e8445219so9573566d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:33:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738866838; x=1739471638; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lg9/xO+vwu3u5wtcCTmy67FWpXasZ+8fpiM6pmfr8Ek=;
-        b=Li4R5Y9XkM17PZs3r3DkB19yehOhc4o7TkTqCJLRs+FFTMVzeeATNPX1npF2ikPknL
-         J8czNHbQ0jzAtX6Dx2QMtN67O/rRl5T8aJgFCcQNoZ+yyfrAKpxucVz3Vgj6NbhFUXE3
-         4qaaTiO0rVFgTb2EYpDM/wPfgAjLG7BHPqHQNZh6EFRv7GNW3QpH4TwYovNnpCQvzkdd
-         jq4V1m41Cy8Xo4UeAJO3riEhv7TJSpMDtdi9R6gES/8MQpNHl56kRmh5E5OyXkaOh0dc
-         tW7Fu+0yiMWi+HDpVw+mZfACH2BfbU2Jk0P9LqNV4p4sMxv0fQXMDQRldW/dCd+s6vpR
-         O7MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738866838; x=1739471638;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lg9/xO+vwu3u5wtcCTmy67FWpXasZ+8fpiM6pmfr8Ek=;
-        b=kOjx0J1BK7fZNK086WUjSf9JqVzyVGFk+3f+EWhPIcuKhQZpn0siL47NwYOoUsfGeN
-         c9TNpH9bitpLDlJm8eqsbdC8g87aMJdRu/Iyc67odF4fdBoM3uOSc8Xv2g5vGNjbeMJ6
-         WWjl7GgcFCKe2u9ezAyWMBbGlMM+DN6Ze903a11NZufFd4aIzV7ey1tQf+yugFrd+x8y
-         Z3FySYQI6YXa6xIbaRTPW0ikRn6iNyAFu5vIerhyqQzaMnGPBAInpSTY6aLaVs37QMfi
-         aifwqf3z92IZ9rm9jAzmNSfFARlVlf+a3in8y19nahhoKx0e4+dXXb+oG373mYMw41db
-         XxvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9BCObAP/gEk7sE6OWHu8G9MQEwxrZC7OZFoIFM/kz1oGSSzU/t4X7OrmSGI6wdcYsB5nX0buXrxj/OV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcLzq/eVHn8FWhi9SI8s0NVgrXj0Th3AaiyzVrXlfN/O47km4d
-	L69iplXXm2YQuBVOK6/yk+Ntkb2m4/2EktnikY8RFtJf7VvTHUE8eDX9ikwk+IA=
-X-Gm-Gg: ASbGncucNfnColp5R5dtizU3JDqRDak40cOGyFzibmhnO9zydRCVuEdUBwMtWyOR76x
-	sIbXBq+9piOTjVC5aiuQ+EjdcMzhmMuZ+hj3To7mMuLFarR3/ESJuMkMPAlz2ye3Owzdzt/6dmy
-	MpyWOTYycdE6zkKJATv1p7BNCPvI57dCqhqY/JDRMlFC6BC07YWCL2/qqFrXyx+K0N7zgx8QVzo
-	qJ+hOEfyBCTxUkjwNSgCyOBc1t+iYWDOWkXbjyYQQ6FUMIzqM8TyMLx8CLcRLkYzXdzrnoVJjEe
-	3Vqg0ng+//bijNCq4+tpb2jRYDZ978w3J0b3rCxqkQFTYLBW8iSOXDJewDRvouKPzZ0XlltSBA=
-	=
-X-Google-Smtp-Source: AGHT+IEw7WgSK/CFNZ9nsdIvcglDYx8Xa/A4d9Pce6M6QS8IzvMkCVSGYQct3kLg0drvssQpbMhwcA==
-X-Received: by 2002:a05:6214:2467:b0:6e2:4911:cd8a with SMTP id 6a1803df08f44-6e44568175dmr800536d6.26.1738866837885;
-        Thu, 06 Feb 2025 10:33:57 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43babcc32sm8154696d6.113.2025.02.06.10.33.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 10:33:57 -0800 (PST)
-Date: Thu, 6 Feb 2025 13:33:55 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 05/16] PCI/AER: Add CXL PCIe Port correctable error
- support in AER service driver
-Message-ID: <Z6UAk_L22eqiWCix@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-6-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="AU9KWyFe"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypm3G45Z7zlgTwF;
+	Thu,  6 Feb 2025 18:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738866853; x=1741458854; bh=VSCPWAXNUHFdqBkP4YrUW65Z
+	8TH6AZeQV7NNr3N5wNo=; b=AU9KWyFe7MY8ErpnV7qmPAYXo4w6tjW/Zj846x/P
+	hOP8VJxjMt8hMRcygxlIwshROdRG1FyCUf768NSVI9JJt/79Li2CRD+G7pUwD9mo
+	l44ePXv0pqwLdUuPWA69HqdxeNgjfehzqJoT+eMjxs835mE//2vTMh6VpX2uPaaY
+	EgSWeGDASkTt/C2Xf7c4J8FDz4D/izMDrTCIQcFMkWRQ9uvPoa+0r6kcI6c4aWYY
+	uPYBGB7YY+VNwUdUE0bLLzQfdXG1DJJjohZrYodFNoYw24TDNcTaBKqpRUnevmNG
+	boCCEsloh1TgNJMRaZnNrelpv1b8uRA26R/0XQHhPDt/ew==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id wm-TBsG1t9OO; Thu,  6 Feb 2025 18:34:13 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypm372JbCzlgTw4;
+	Thu,  6 Feb 2025 18:34:11 +0000 (UTC)
+Message-ID: <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org>
+Date: Thu, 6 Feb 2025 10:34:09 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-6-terry.bowman@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
+To: Marco Elver <elver@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
+ Christoph Hellwig <hch@lst.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
+ Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
+References: <20250206175114.1974171-1-bvanassche@acm.org>
+ <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 07, 2025 at 08:38:41AM -0600, Terry Bowman wrote:
-> The AER service driver supports handling Downstream Port Protocol Errors in
-> Restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
-> functionality for CXL PCIe Ports operating in Virtual Hierarchy (VH)
-> mode.[1]
+On 2/6/25 10:20 AM, Marco Elver wrote:
+> Combining approach #1 and #2 may somehow be possible, but it is
+> currently eluding me. Clearly, based on the bugs that Bart found, some
+> way to do tree-wide analysis is very useful!
+> One idea was to have "capability-selective tree-wide analysis" (such
+> as mutex only) be controllable via a Kconfig option - the
+> implementation of that (without excessive ifdefs sprinkled
+> everywhere), however, most likely requires compiler support.
 > 
-> CXL and PCIe Protocol Error handling have different requirements that
-> necessitate a separate handling path. The AER service driver may try to
-> recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
-> suitable for CXL PCIe Port devices because of potential for system memory
-> corruption. Instead, CXL Protocol Error handling must use a kernel panic
-> in the case of a fatal or non-fatal UCE. The AER driver's PCIe Protocol
-> Error handling does not panic the kernel in response to a UCE.
->
+> Depending on the feedback that results from these RFCs, I think we
+> will be able to plan better which direction things should go.
 
-Naive question: is a panic actually required if the memory is a userland
-resource?
+Thank you Marco for having explained clearly and in detail what the
+possible paths are for enabling thread-safety support in the Linux
+kernel. I agree that there are at least two possible approaches (maybe
+there are even more possible approaches?). I'm interested in enabling
+the Clang compiler flag -Wthread-safety across the entire kernel. Hence
+the choice to start with annotating struct mutex only and to make the
+necessary changes across the entire kernel tree.
 
-The code in arch/x86/kernel/cpu/mce/core.c suggests we may not panic
-if an uncorrectable error occurs in this fashion, but simply a SIGBUS.
+I'm looking forward to the feedback from others about what their opinion
+is about how to enable thread-safety checking in the Linux kernel.
 
-Unless this is down the wrong pipe - in which case disregard.
+Thanks,
 
-I'm still digging through background on this patch set so I may be
-barking up the wrong tree.
+Bart.
 
-~Gregory
