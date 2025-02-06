@@ -1,137 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5228423C367;
-	Thu,  6 Feb 2025 22:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD5223C395;
+	Thu,  6 Feb 2025 22:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738880009; cv=none; b=MeHF1v9/rlqG9TRZE7P7XBJeVdI3uh6uXa8hobDeezM7u3bmF2bWqPKEl/tHkZS4vBhGUEgyaJEV72CV+AcpleuBmZzM9H0a1soxeFRhTirYJrGwUncmk8bm+natAIAa7OvjEtgpUu7fe78sIoFS2uLpLOZzHvlTyl/unoL1D3w=
+	t=1738880038; cv=none; b=LKnz6o5VIYDqPS4vwv5yPqoZsOI19UG2Nzz1UZRZVGVRPO4zRjxoZsdlmg+n9v+UtpvaeHh7c6jtjiATeO92cKYiHu42k024VMf52W+AvHD0T+9wB7b1pd3mSYUzlIoJYfi/eY2DHm3Ut+WtCEGvi2EbWW1m4RHCD7gsE6fDUqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738880009; c=relaxed/simple;
-	bh=oB7yhd9eYYIy50bn91tuQKVReuuUgUvlw9L5hyQ859A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvbkOj3+PEIiLqVryCUM9Jtq+ydxSVDVFGoAJPaTomNWQj2Fy0fc+LLJIRELrvLsi+G1z+wWxMwNItl4zXX8LnIsU/L5SiA87ryxGD7gwSXsFsOB/Ez67cVvCNvUwQWBPiDNrtbpnIp0otfZR/mDw4a5SMBpWBcxklyLs/gzvMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIjdoy7V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738880038; c=relaxed/simple;
+	bh=QPSWX/xi0RPCGcHZ6ZN4i8VHsUL5re2rNucDfwV3lfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NCU8N0H0gcKCMwkIwHr0hKo3+iOuJ2B883QQvyVw4jyL+UWlyw/8gNqbWFhiKnpzeX6dOemNodjI/4whqvKiPacZLklNiv0+n/jdP+7iP5ixEWPbwLCsjl9sIkYU815To4vst4Uo1VE21haAxN5D1ocPzkMEfESUWoi4g1bBhMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=dPngntNj; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIjdoy7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC52EC4CEDD;
-	Thu,  6 Feb 2025 22:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738880008;
-	bh=oB7yhd9eYYIy50bn91tuQKVReuuUgUvlw9L5hyQ859A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MIjdoy7Vd5OFj15074wFBHEr6EniJi7CkUhhz5y2ENlEG3HfipzBgALFfE3qCDJt1
-	 8BioW4OVC7psiwLPRSUXmFACwijYeBAwW4umMm8YCQp1V/m4bKUZYag5zqD0dFZ3qP
-	 vob5LmL6nnk3zVX3R9Z8fCp6HCA6CZbqRqXQyOSWkwAeF9i5cXX9JIl5pEbwOwatJm
-	 k43cbSeeTWrCO9Uws65c4fAGmqzaZM1wqpl4rzx9WVzOhUHzYoEFlWTXC48bmoPV/B
-	 a+4QmuReWSWdBJy3DTFg4EaSGyG/bfDfyX0snZZQ/0j6uIftsALd3ceACmHg8QwIZs
-	 kJ1ioG+psjNxQ==
-Date: Thu, 6 Feb 2025 16:13:25 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Cc: konradybcio@kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Saranya R <quic_sarar@quicinc.com>, 
-	Johan Hovold <johan@kernel.org>, Frank Oltmanns <frank@oltmanns.dev>
-Subject: Re: [PATCH v2] soc: qcom: pdr: Fix the potential deadlock
-Message-ID: <nqsuml3jcblwkp6mcriiekfiz5wlxjypooiygvgd5fjtmfnvdc@zfoaolcjecpl>
-References: <20250129155544.1864854-1-mukesh.ojha@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="dPngntNj"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Yprwg2SJtzlgTxr;
+	Thu,  6 Feb 2025 22:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738880030; x=1741472031; bh=QPSWX/xi0RPCGcHZ6ZN4i8VH
+	sUL5re2rNucDfwV3lfE=; b=dPngntNjukDId1ecMG9utEC9mZI2JWRlN9xKSC/h
+	vsQOLLd8vMDsSyXIDlvD078U197CxSo72e9Myc4YtFeZehx9Ag8un0Kb6cPb0TCm
+	nRKj+rPjOSFwakAohOaZ9yjTEGS3CL30u9iLnys2vdZsZKIwm1zS3dCuQHnkQGsL
+	UOntFK2Vb0MEDssjAE/la5YtxRYunr+rTorYRcupoCkZH07nbvAyrc43viu/yXBf
+	/w42+aNksLxdj1Z7zlGnsVj3i5cUaNlpddFtVepcZfSuJD1V75/sLPFvc1h0Edx/
+	r+5LkvMwmjSc7/Q9GVsQ8Tlkpv/rUcXzM8dQKBPtPN2BDQ==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id J_o6Dsq11wuH; Thu,  6 Feb 2025 22:13:50 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YprwW2SzGzlgTw4;
+	Thu,  6 Feb 2025 22:13:46 +0000 (UTC)
+Message-ID: <335edb88-c850-44bc-ae1b-79349175bc8c@acm.org>
+Date: Thu, 6 Feb 2025 14:13:45 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129155544.1864854-1-mukesh.ojha@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 25/33] wifi: ath12k: Fix locking in error paths
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Marco Elver <elver@google.com>, Nick Desaulniers <ndesaulniers@google.com>,
+ Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
+ Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+ Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
+ linux-wireless <linux-wireless@vger.kernel.org>,
+ "ath12k@lists.infradead.org" <ath12k@lists.infradead.org>
+References: <20250206175114.1974171-1-bvanassche@acm.org>
+ <20250206175114.1974171-26-bvanassche@acm.org>
+ <7633c19b-2aab-4f2a-8c11-27425f7299ae@oss.qualcomm.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <7633c19b-2aab-4f2a-8c11-27425f7299ae@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 09:25:44PM +0530, Mukesh Ojha wrote:
-> When some client process A call pdr_add_lookup() to add the look up for
-> the service and does schedule locator work, later a process B got a new
-> server packet indicating locator is up and call pdr_locator_new_server()
-> which eventually sets pdr->locator_init_complete to true which process A
-> sees and takes list lock and queries domain list but it will timeout due
-> to deadlock as the response will queued to the same qmi->wq and it is
-> ordered workqueue and process B is not able to complete new server
-> request work due to deadlock on list lock.
-> 
->        Process A                        Process B
-> 
->                                      process_scheduled_works()
-> pdr_add_lookup()                      qmi_data_ready_work()
->  process_scheduled_works()             pdr_locator_new_server()
->                                          pdr->locator_init_complete=true;
->    pdr_locator_work()
->     mutex_lock(&pdr->list_lock);
-> 
->      pdr_locate_service()                  mutex_lock(&pdr->list_lock);
-> 
->       pdr_get_domain_list()
->        pr_err("PDR: %s get domain list
->                txn wait failed: %d\n",
->                req->service_name,
->                ret);
-> 
-> Fix it by removing the unnecessary list iteration as the list iteration
-> is already being done inside locator work, so avoid it here and just
-> call schedule_work() here.
-> 
+On 2/6/25 10:25 AM, Jeff Johnson wrote:
+> Can you submit this as a single patch and cc the ath12k and linux-wireless
+> lists (as I've done in this reply)
 
-I came to the same patch while looking into the issue related to
-in-kernel pd-mapper reported here:
-https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
+Done :-)
 
-So:
-Reviewed-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Tested-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 
-> Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Saranya R <quic_sarar@quicinc.com>
-
-Can we please use full names?
-
-> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-
-Unfortunately I can't merge this; Saranya's S-o-b comes first which
-implies that she authored the patch, but you're listed as author.
-
-Regards,
-Bjorn
-
-> ---
-> Changes in v2:
->  - Added Fixes tag,
-> 
->  drivers/soc/qcom/pdr_interface.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-> index 328b6153b2be..71be378d2e43 100644
-> --- a/drivers/soc/qcom/pdr_interface.c
-> +++ b/drivers/soc/qcom/pdr_interface.c
-> @@ -75,7 +75,6 @@ static int pdr_locator_new_server(struct qmi_handle *qmi,
->  {
->  	struct pdr_handle *pdr = container_of(qmi, struct pdr_handle,
->  					      locator_hdl);
-> -	struct pdr_service *pds;
->  
->  	mutex_lock(&pdr->lock);
->  	/* Create a local client port for QMI communication */
-> @@ -87,12 +86,7 @@ static int pdr_locator_new_server(struct qmi_handle *qmi,
->  	mutex_unlock(&pdr->lock);
->  
->  	/* Service pending lookup requests */
-> -	mutex_lock(&pdr->list_lock);
-> -	list_for_each_entry(pds, &pdr->lookups, node) {
-> -		if (pds->need_locator_lookup)
-> -			schedule_work(&pdr->locator_work);
-> -	}
-> -	mutex_unlock(&pdr->list_lock);
-> +	schedule_work(&pdr->locator_work);
->  
->  	return 0;
->  }
-> -- 
-> 2.34.1
-> 
