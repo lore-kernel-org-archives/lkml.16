@@ -1,326 +1,389 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1C5232364
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452DD2E64A;
+	Thu,  6 Feb 2025 07:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738826632; cv=none; b=Xxt69h3fzzJF4kkq3tWpcc3Aplgoy8hK3D0Mlq8tws7arN3joklrKc7EHKdiu4drKVyGGpYC9p9nUj9d4bwzihex8HLH8/eccgyC/MImFPviO9VwV+BheGZCmeK8tepG4iNJXOVaBM58xpqtM5OHk0iDbREc7ybltUNm3kCipjw=
+	t=1738826751; cv=none; b=W85zZjv/Chu7CcqsUi37pL/aeO18ALM5UYnQomnaXLoqRzUpY7mCy6hVqOq9h4SovyDhgUFbRL8hgnqY5RtDZfhkC5eq89t1GddOzDCz0CvBOcy8t/lct80+lIqJcsGmJodk1zaChIxfZ3RtiGvcN+Ptjt0/0jCjMDxbbfV6kaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738826632; c=relaxed/simple;
-	bh=BM3ov8+LAwFOyFwamgTeu1nplfS8DxldhKUk0Yt9AEc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BOMdKfIsnc/CzscnDsjEtNBlsJDmxX5BUw+0LNE50cO7LFABqPDiNWDYzw7jBibrLe3pdjK9fIIa+Ci8DbMiq8lPGdRGLbA1+YVNWhPY8Lw9NVAHbSh6epcCcTJTXghiIqoGPsjClCvw/l9mlMnX4UUc4JGoQP+EbHku3rFfo4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IjCYMQWd; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738826751; c=relaxed/simple;
+	bh=8EAGBqr/MIkuUASK7TFbf1Jri+T0dnJy3gwSyrQniJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kAWLA2avODt4lBJpiOSd7U5CMPZ+KZANGkU/m4czvfzPPqPo5NVsMa4nfYLtlVmhgM+llkpUZ9IKxKval7hNp96r2mkQPoTaPAxzf4pnwmM/9ToNy7Uk5vKCfj2ThFxSrbZB+0LGTdcXN+rLfj8bVObMc3k78EOWnRKeOkGFKLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQt5xEzI; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IjCYMQWd"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2166f1e589cso14581545ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:23:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQt5xEzI"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so85548966b.3;
+        Wed, 05 Feb 2025 23:25:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738826629; x=1739431429; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3rXBekgxwrWqHmt4oM/pU0sf9hDrHDVKf/jA5yAU2uU=;
-        b=IjCYMQWdPauzjXJSJOa9BIxMHWSryq8GxR0uLtc22PXUWygGiQRt09DRxtZ0+53ftE
-         1xLkn4ETMbuiM7XP+T/TYJYvhzoIQCpWURdGOqg+1tjLtWuak36A5vWKqWr+/gS65hI9
-         Vm597I0XawWuBg4z5rOPB81UAto/naiGKhktSUU2FPBRfCCSG8JwY751frSgbG4ua8SZ
-         ctKxyNCE2yAAP4M2JlbWpSJpOf+zuLAd5gTgnEzoarS+KqLILGQ/Uj/CsHE82BfkB0Nt
-         RNqF52rl26qpixpuVMfRw+OFcpwNdGVQzRXPw0dnS0wQ6RgKwbcEC4FMK44VwO+eSZrY
-         yYjQ==
+        d=gmail.com; s=20230601; t=1738826747; x=1739431547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Cg9Khwyhq95pFbex1Z5wYjxfR3pQRmUQz+ucT3SRC/M=;
+        b=KQt5xEzIG0Fg55qxAGTK9t2A5rYdK8YjQayAOU9xGz2ld1Y4yhcpKssO1qwM+Vb21b
+         I9kL1R2ofcHeP5xjfXrLKrJ9lNUdJGawb1y6YeF0mfx7Uve5ML2yiX/+Yib01ekkzDY7
+         yi4TYFvktWoEmsmBKeBvW9811yr5L4kpRVxaYZ2+SN38F/EDO7uFNYmAgpPrVVmAhMwc
+         jSpSLVl2Y+SEDgxx3n33dEtDi0tOXUcvAvuwd4fQ5rrigMmzPfOOAR0F5tc37cW8WCo5
+         LWKhMIB/H3vU+uagjWB+0guvgVSECz4hCq9eXy0aIqjmhyUYGMLnU2qUtn+upOzevKVS
+         YW5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738826629; x=1739431429;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3rXBekgxwrWqHmt4oM/pU0sf9hDrHDVKf/jA5yAU2uU=;
-        b=G2tiZrecJbChXDRj+H3usbo6ikVNz/LcjbeJ71HgurlthjNrT7phr90o8ocHbKpyXO
-         rUFzlILH/D35IKe9O4A0oViWbaOeqKfcnWHueeL6tOXhdSmT6CJmAmnAXsg0ntjr81Xg
-         nNL3d8Fmo2b5bd4cN8ZxDsfrJ+QoDilxjd6nTmM/J03+si5MozjUEaq08l/gm2YCHwOU
-         9MKcUOhc/QB7+OqQBQ0wX6x0/2OYP0y8xbTL2puSto2e5xw8h6ztM+30x1C9pIt14b4L
-         Jm9Hjxg++yBmYmzVE0F5JbV3hc/hsAFnFcJW91+50/aQzEcgqCd6sxMaD/qkXXFpe23e
-         QWcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbCprSghlA90PR6lKH6Pm6AxqLdpO6D2boa03XHxqSY+DIMp50sw+MP7neYj+Jhpbw2wZnBS+TXRi0IXs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTMfwin38C9ne6ozaydmampy9YpgRCbK/VcF5rAln/IC2gTeIR
-	vnuk7GEMbkux7ZK6uNGvmFF4g8EioI0nOr33FqoBsD5akYnPeF83N7bsJl0qv1o=
-X-Gm-Gg: ASbGnctUHZZ7RvzJdEkoumy4zXJ+nDSjE4YHnG3/3yjcLV4cyNV/OWuhOqRYLtKTp9i
-	1MIGsVVbmi06Voo59b98+qcoyjs7h0/LnxDELR1kt5y/H6jxao6xwJevPjQ2nGondF0lHnGK0GO
-	A/PpXEOAXu5Us52BfVpKVtrkNVkt6i3v+C8/d551TDReR0DNMzYcajn2ar6C5uQXD2SM7y3o1zX
-	qWo9/IVmBpE+fNfO3Y2YdJ2pVFkMjEJgAViM4VxdADRat+yMJnMe9eJCaH/fX6yoLvovZdoEAsH
-	cJNyyASgo/UaIQJL+vICCgSkqsBx
-X-Google-Smtp-Source: AGHT+IEa71V3dAQMzlW1coBP9GpcYnAZy8MgrA6Jkwq3aId/xS02HFJyHmPPn3F7l6BTr74BjlvPKQ==
-X-Received: by 2002:a17:903:1a06:b0:215:7719:24f6 with SMTP id d9443c01a7336-21f17e7472bmr101410705ad.23.1738826629449;
-        Wed, 05 Feb 2025 23:23:49 -0800 (PST)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a72292sm630883a91.27.2025.02.05.23.23.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 23:23:49 -0800 (PST)
-From: Atish Patra <atishp@rivosinc.com>
-Date: Wed, 05 Feb 2025 23:23:26 -0800
-Subject: [PATCH v4 21/21] Sync empty-pmu-events.c with autogenerated one
+        d=1e100.net; s=20230601; t=1738826747; x=1739431547;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cg9Khwyhq95pFbex1Z5wYjxfR3pQRmUQz+ucT3SRC/M=;
+        b=kT+fNXi2Wrsd06GwBH7myYNKMy2IctGdogqmKN9cyfYxxNhpTke+FdFjq+SFzOmMa3
+         4n1TADOvqOSZIWmwWr1DugBEqaqKkRMMj3/FsBvnvjq6psEuFx7e+id89rI/NqYXax+v
+         8AieaPJ0xeGqeDMVnGRr4Sc68VQQyL0DODJADsDqWYrfpQnF8WMmNPGLzH86PzXsZSsw
+         KXKrlWXT+txgw2bKHAPlqdn/mvfErh5CeOdKLQPn57TpGolO7jj5TQ5VORJe1bOkENOk
+         J4ZV9CRG+jeS0NLaoBCNKy8v83oHIlH5fSUlulL8wHh8pAI2GJpFvoUKM2qNem1n202J
+         NN5g==
+X-Forwarded-Encrypted: i=1; AJvYcCV/wYpzVmoizzK9LGa26vDk6u4hEWc8o2Y4Rkot8ZXRvNhG0CuUJTgXRCnzyeWRK2PR2EvvQByVP1y8D8lO2oI=@vger.kernel.org, AJvYcCWeGD/M/R1ZHcJ/xgxng1NTUlTs8rALqPlMIjtUMYoRXADdCharONezwcCEorwvd1an86ysw8Fp4fIDpQ5K@vger.kernel.org, AJvYcCX1OlW47nDafHp8oxBB1oVyIgAyxLZJQ32T3pPAaUSbolCl9dqQWHmGW/oJF9qgrWL5h7S3d3HGsC7xig==@vger.kernel.org
+X-Gm-Message-State: AOJu0YybbhTThKRQojMgzR0vd/Eb4jyGR6boNOZViUNumtVtUTi2Vds0
+	m8YB+hEtIoEYPC94kk4AhRR1VFzEkn6Kfq9dORM1/S1hVBpY22TS
+X-Gm-Gg: ASbGncsn+bxZ6gEaJtmpPHqO090Oouh6cG3L7HVHM72yR/HcAJFlww3Q3N6h0Nkgb+5
+	N1dGOBz6vWHvBN1LfndgySzGFT/QUsBTaJaiMxV7CldqkQS1pqIgRIhyxuilt3J4W1zJtoaL1MM
+	DMOK3A6Al5kTrudn4PXKGpyzIdakhwqG1BEfYqhRrvZIET+16H50Gwc2zkDATkI/W+XsU4vGUkI
+	0S1YI0kW2y350OB1iPthIBvNqRP21XXTpJU6LuoNu8jqFyUVOJl05RcFfFGdblGNFq6GzFkm0bU
+	JWZ0o2iO4R8JcifeF+QQVm5kaygHcpLzK44=
+X-Google-Smtp-Source: AGHT+IGsrtDuXD6FXW9urLfcwyk1il0KZcJ6c8Ns7Z7OqFGR1g/roqfZ7ur1jL2SHk6wK1fAtKXwVg==
+X-Received: by 2002:a17:907:9724:b0:ab7:ac0:24ea with SMTP id a640c23a62f3a-ab75e21e2dcmr523807766b.3.1738826746859;
+        Wed, 05 Feb 2025 23:25:46 -0800 (PST)
+Received: from [172.27.34.32] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772fd6ba1sm53678266b.79.2025.02.05.23.25.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 23:25:46 -0800 (PST)
+Message-ID: <8d06f07c-5bb4-473d-90af-5f57ce2b068f@gmail.com>
+Date: Thu, 6 Feb 2025 09:25:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-counter_delegation-v4-21-835cfa88e3b1@rivosinc.com>
-References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
-In-Reply-To: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>, 
- Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, 
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Atish Patra <atishp@rivosinc.com>
-X-Mailer: b4 0.15-dev-13183
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z6GCJY8G9EzASrwQ@kspp>
+ <4e556977-c7b9-4d37-b874-4f3d60d54429@embeddedor.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <4e556977-c7b9-4d37-b874-4f3d60d54429@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- tools/perf/pmu-events/empty-pmu-events.c | 144 +++++++++++++++----------------
- 1 file changed, 72 insertions(+), 72 deletions(-)
 
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index 3a7ec31576f5..22f0463dc522 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -36,42 +36,42 @@ static const char *const big_c_string =
- /* offset=1127 */ "bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000\000"
- /* offset=1187 */ "bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000\000"
- /* offset=1247 */ "l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000Attributable Level 3 cache access, read\000\000"
--/* offset=1343 */ "segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\0000,1\000"
--/* offset=1446 */ "dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\0000,1\000"
--/* offset=1580 */ "eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\0000,1\000"
--/* offset=1699 */ "hisi_sccl,ddrc\000"
--/* offset=1714 */ "uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000DDRC write commands\000\000"
--/* offset=1801 */ "uncore_cbox\000"
--/* offset=1813 */ "unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\0000,1\000"
--/* offset=2048 */ "event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000UNC_CBO_HYPHEN\000\000"
--/* offset=2114 */ "event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000UNC_CBO_TWO_HYPH\000\000"
--/* offset=2186 */ "hisi_sccl,l3c\000"
--/* offset=2200 */ "uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000Total read hits\000\000"
--/* offset=2281 */ "uncore_imc_free_running\000"
--/* offset=2305 */ "uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000Total cache misses\000\000"
--/* offset=2401 */ "uncore_imc\000"
--/* offset=2412 */ "uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000Total cache hits\000\000"
--/* offset=2491 */ "uncore_sys_ddr_pmu\000"
--/* offset=2510 */ "sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000"
--/* offset=2584 */ "uncore_sys_ccn_pmu\000"
--/* offset=2603 */ "sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000"
--/* offset=2678 */ "uncore_sys_cmn_pmu\000"
--/* offset=2697 */ "sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000"
--/* offset=2838 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000"
--/* offset=2860 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000"
--/* offset=2923 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000"
--/* offset=3089 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
--/* offset=3153 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
--/* offset=3220 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000"
--/* offset=3291 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000"
--/* offset=3385 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000"
--/* offset=3519 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000"
--/* offset=3583 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000"
--/* offset=3651 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000"
--/* offset=3721 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\00000"
--/* offset=3743 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\00000"
--/* offset=3765 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\00000"
--/* offset=3785 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000"
-+/* offset=1343 */ "segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80,counterid_mask=0x3\000\00000\000\0000,1\000"
-+/* offset=1465 */ "dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20,counterid_mask=0x3\000\00000\000\0000,1\000"
-+/* offset=1618 */ "eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000,counterid_mask=0x3\000\00000\000\0000,1\000"
-+/* offset=1756 */ "hisi_sccl,ddrc\000"
-+/* offset=1771 */ "uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000DDRC write commands\000\000"
-+/* offset=1858 */ "uncore_cbox\000"
-+/* offset=1870 */ "unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81,counterid_mask=0x3\000\00000\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\0000,1\000"
-+/* offset=2124 */ "event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000UNC_CBO_HYPHEN\000\000"
-+/* offset=2190 */ "event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000UNC_CBO_TWO_HYPH\000\000"
-+/* offset=2262 */ "hisi_sccl,l3c\000"
-+/* offset=2276 */ "uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000Total read hits\000\000"
-+/* offset=2357 */ "uncore_imc_free_running\000"
-+/* offset=2381 */ "uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000Total cache misses\000\000"
-+/* offset=2477 */ "uncore_imc\000"
-+/* offset=2488 */ "uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000Total cache hits\000\000"
-+/* offset=2567 */ "uncore_sys_ddr_pmu\000"
-+/* offset=2586 */ "sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000"
-+/* offset=2660 */ "uncore_sys_ccn_pmu\000"
-+/* offset=2679 */ "sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000"
-+/* offset=2754 */ "uncore_sys_cmn_pmu\000"
-+/* offset=2773 */ "sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000"
-+/* offset=2914 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000"
-+/* offset=2936 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000"
-+/* offset=2999 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000"
-+/* offset=3165 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
-+/* offset=3229 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
-+/* offset=3296 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000"
-+/* offset=3367 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000"
-+/* offset=3461 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000"
-+/* offset=3595 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000"
-+/* offset=3659 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000"
-+/* offset=3727 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000"
-+/* offset=3797 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\00000"
-+/* offset=3819 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\00000"
-+/* offset=3841 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\00000"
-+/* offset=3861 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000"
- ;
- 
- static const struct compact_pmu_event pmu_events__common_tool[] = {
-@@ -101,27 +101,27 @@ const struct pmu_table_entry pmu_events__common[] = {
- static const struct compact_pmu_event pmu_events__test_soc_cpu_default_core[] = {
- { 1127 }, /* bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000\000 */
- { 1187 }, /* bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000\000 */
--{ 1446 }, /* dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\0000,1\000 */
--{ 1580 }, /* eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\0000,1\000 */
-+{ 1465 }, /* dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20,counterid_mask=0x3\000\00000\000\0000,1\000 */
-+{ 1618 }, /* eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000,counterid_mask=0x3\000\00000\000\0000,1\000 */
- { 1247 }, /* l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000Attributable Level 3 cache access, read\000\000 */
--{ 1343 }, /* segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\0000,1\000 */
-+{ 1343 }, /* segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80,counterid_mask=0x3\000\00000\000\0000,1\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_ddrc[] = {
--{ 1714 }, /* uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000DDRC write commands\000\000 */
-+{ 1771 }, /* uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000DDRC write commands\000\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_l3c[] = {
--{ 2200 }, /* uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000Total read hits\000\000 */
-+{ 2276 }, /* uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000Total read hits\000\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_cbox[] = {
--{ 2048 }, /* event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000UNC_CBO_HYPHEN\000\000 */
--{ 2114 }, /* event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000UNC_CBO_TWO_HYPH\000\000 */
--{ 1813 }, /* unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\0000,1\000 */
-+{ 2124 }, /* event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000UNC_CBO_HYPHEN\000\000 */
-+{ 2190 }, /* event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000UNC_CBO_TWO_HYPH\000\000 */
-+{ 1870 }, /* unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81,counterid_mask=0x3\000\00000\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\0000,1\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc[] = {
--{ 2412 }, /* uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000Total cache hits\000\000 */
-+{ 2488 }, /* uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000Total cache hits\000\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc_free_running[] = {
--{ 2305 }, /* uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000Total cache misses\000\000 */
-+{ 2381 }, /* uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000Total cache misses\000\000 */
- 
- };
- 
-@@ -134,46 +134,46 @@ const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
- {
-      .entries = pmu_events__test_soc_cpu_hisi_sccl_ddrc,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_ddrc),
--     .pmu_name = { 1699 /* hisi_sccl,ddrc\000 */ },
-+     .pmu_name = { 1756 /* hisi_sccl,ddrc\000 */ },
- },
- {
-      .entries = pmu_events__test_soc_cpu_hisi_sccl_l3c,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_l3c),
--     .pmu_name = { 2186 /* hisi_sccl,l3c\000 */ },
-+     .pmu_name = { 2262 /* hisi_sccl,l3c\000 */ },
- },
- {
-      .entries = pmu_events__test_soc_cpu_uncore_cbox,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_cbox),
--     .pmu_name = { 1801 /* uncore_cbox\000 */ },
-+     .pmu_name = { 1858 /* uncore_cbox\000 */ },
- },
- {
-      .entries = pmu_events__test_soc_cpu_uncore_imc,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc),
--     .pmu_name = { 2401 /* uncore_imc\000 */ },
-+     .pmu_name = { 2477 /* uncore_imc\000 */ },
- },
- {
-      .entries = pmu_events__test_soc_cpu_uncore_imc_free_running,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc_free_running),
--     .pmu_name = { 2281 /* uncore_imc_free_running\000 */ },
-+     .pmu_name = { 2357 /* uncore_imc_free_running\000 */ },
- },
- };
- 
- static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_core[] = {
--{ 2838 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000 */
--{ 3519 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000 */
--{ 3291 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000 */
--{ 3385 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000 */
--{ 3583 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
--{ 3651 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
--{ 2923 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000 */
--{ 2860 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000 */
--{ 3785 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000 */
--{ 3721 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\00000 */
--{ 3743 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\00000 */
--{ 3765 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
--{ 3220 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000 */
--{ 3089 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
--{ 3153 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
-+{ 2914 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000 */
-+{ 3595 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000 */
-+{ 3367 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000 */
-+{ 3461 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000 */
-+{ 3659 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
-+{ 3727 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
-+{ 2999 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000 */
-+{ 2936 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000 */
-+{ 3861 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000 */
-+{ 3797 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\00000 */
-+{ 3819 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\00000 */
-+{ 3841 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
-+{ 3296 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000 */
-+{ 3165 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
-+{ 3229 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
- 
- };
- 
-@@ -186,13 +186,13 @@ const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
- };
- 
- static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ccn_pmu[] = {
--{ 2603 }, /* sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000 */
-+{ 2679 }, /* sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_cmn_pmu[] = {
--{ 2697 }, /* sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000 */
-+{ 2773 }, /* sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000 */
- };
- static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ddr_pmu[] = {
--{ 2510 }, /* sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000 */
-+{ 2586 }, /* sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000 */
- 
- };
- 
-@@ -200,17 +200,17 @@ const struct pmu_table_entry pmu_events__test_soc_sys[] = {
- {
-      .entries = pmu_events__test_soc_sys_uncore_sys_ccn_pmu,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ccn_pmu),
--     .pmu_name = { 2584 /* uncore_sys_ccn_pmu\000 */ },
-+     .pmu_name = { 2660 /* uncore_sys_ccn_pmu\000 */ },
- },
- {
-      .entries = pmu_events__test_soc_sys_uncore_sys_cmn_pmu,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_cmn_pmu),
--     .pmu_name = { 2678 /* uncore_sys_cmn_pmu\000 */ },
-+     .pmu_name = { 2754 /* uncore_sys_cmn_pmu\000 */ },
- },
- {
-      .entries = pmu_events__test_soc_sys_uncore_sys_ddr_pmu,
-      .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ddr_pmu),
--     .pmu_name = { 2491 /* uncore_sys_ddr_pmu\000 */ },
-+     .pmu_name = { 2567 /* uncore_sys_ddr_pmu\000 */ },
- },
- };
- 
 
--- 
-2.43.0
+On 06/02/2025 6:37, Gustavo A. R. Silva wrote:
+> Hi,
+> 
+> On 04/02/25 13:27, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> So, in order to avoid ending up with a flexible-array member in the
+>> middle of other structs, we use the `struct_group_tagged()` helper
+>> to create a new tagged `struct mlx5e_umr_wqe_hdr`. This structure
+>> groups together all the members of the flexible `struct mlx5e_umr_wqe`
+>> except the flexible array.
+>>
+>> As a result, the array is effectively separated from the rest of the
+>> members without modifying the memory layout of the flexible structure.
+>> We then change the type of the middle struct member currently causing
+>> trouble from `struct mlx5e_umr_wqe` to `struct mlx5e_umr_wqe_hdr`.
+>>
+>> We also want to ensure that when new members need to be added to the
+>> flexible structure, they are always included within the newly created
+>> tagged struct. For this, we use `static_assert()`. This ensures that the
+>> memory layout for both the flexible structure and the new tagged struct
+>> is the same after any changes.
+>>
+>> This approach avoids having to implement `struct mlx5e_umr_wqe_hdr` as
+>> a completely separate structure, thus preventing having to maintain two
+>> independent but basically identical structures, closing the door to
+>> potential bugs in the future.
+>>
+>> We also use `container_of()` whenever we need to retrieve a pointer to
+>> the flexible structure, through which we can access the flexible-array
+>> member, if necessary.
+>>
+>> So, with these changes, fix 124 of the following warnings:
+>>
+>> drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: 
+>> structure containing a flexible array member is not at the end of 
+>> another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   drivers/net/ethernet/mellanox/mlx5/core/en.h      | 13 +++++++++----
+>>   drivers/net/ethernet/mellanox/mlx5/core/en_main.c |  4 +++-
+>>   2 files changed, 12 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/ 
+>> net/ethernet/mellanox/mlx5/core/en.h
+>> index 979fc56205e1..c30c64eb346f 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+>> @@ -233,15 +233,20 @@ struct mlx5e_rx_wqe_cyc {
+>>   };
+>>   struct mlx5e_umr_wqe {
+>> -    struct mlx5_wqe_ctrl_seg       ctrl;
+>> -    struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>> -    struct mlx5_mkey_seg           mkc;
+>> +    /* New members MUST be added within the struct_group() macro 
+>> below. */
+>> +    struct_group_tagged(mlx5e_umr_wqe_hdr, hdr,
+>> +        struct mlx5_wqe_ctrl_seg       ctrl;
+>> +        struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>> +        struct mlx5_mkey_seg           mkc;
+>> +    );
+>>       union {
+>>           DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
+>>           DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+>>           DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
+>>       };
+>>   };
+>> +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == 
+>> sizeof(struct mlx5e_umr_wqe_hdr),
+>> +          "struct member likely outside of struct_group_tagged()");
+>>   enum mlx5e_priv_flag {
+>>       MLX5E_PFLAG_RX_CQE_BASED_MODER,
+>> @@ -660,7 +665,7 @@ struct mlx5e_rq {
+>>           } wqe;
+>>           struct {
+>>               struct mlx5_wq_ll      wq;
+>> -            struct mlx5e_umr_wqe   umr_wqe;
+>> +            struct mlx5e_umr_wqe_hdr umr_wqe;
+>>               struct mlx5e_mpw_info *info;
+>>               mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
+>>               __be32                 umr_mkey_be;
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/ 
+>> drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>> index bd41b75d246e..4ff4ff2342cf 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>> @@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct 
+>> mlx5e_rq *rq)
+>>   static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
+>>   {
+>> +    struct mlx5e_umr_wqe *umr_wqe =
+>> +        container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
+>>       int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
+>>       size_t alloc_size;
+>> @@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct 
+>> mlx5e_rq *rq, int node)
+>>           bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>>       }
+>> -    mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
+>> +    mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
+>>       return 0;
+>>   }
+> 
+> Here is another alternative for this.  And similarly to the 
+> struct_group_tagged()
+> change above, no struct members should be added before or after `struct
+> mlx5e_umr_wqe_hdr hdr;` in `struct mlx5e_umr_wqe`:
+> 
+
+Thanks for your patch.
+
+The change with the struct_group_tagged() uses advanced tag, and keeps 
+code cleaner.
+I prefer it.
+
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+
+Regards,
+Tariq
+
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ 
+> ethernet/mellanox/mlx5/core/en.h
+> index 979fc56205e1..912b97eeb4d6 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> @@ -232,10 +232,13 @@ struct mlx5e_rx_wqe_cyc {
+>          DECLARE_FLEX_ARRAY(struct mlx5_wqe_data_seg, data);
+>   };
+> 
+> -struct mlx5e_umr_wqe {
+> +struct mlx5e_umr_wqe_hdr {
+>          struct mlx5_wqe_ctrl_seg       ctrl;
+>          struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>          struct mlx5_mkey_seg           mkc;
+> +};
+> +struct mlx5e_umr_wqe {
+> +       struct mlx5e_umr_wqe_hdr hdr;
+>          union {
+>                  DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
+>                  DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+> @@ -660,7 +663,7 @@ struct mlx5e_rq {
+>                  } wqe;
+>                  struct {
+>                          struct mlx5_wq_ll      wq;
+> -                       struct mlx5e_umr_wqe   umr_wqe;
+> +                       struct mlx5e_umr_wqe_hdr umr_wqe;
+>                          struct mlx5e_mpw_info *info;
+>                          mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
+>                          __be32                 umr_mkey_be;
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c b/ 
+> drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+> index 1b7132fa70de..2b05536d564a 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+> @@ -123,7 +123,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, 
+> u16 ix)
+>          bitmap_zero(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>          wi->consumed_strides = 0;
+> 
+> -       umr_wqe->ctrl.opmod_idx_opcode =
+> +       umr_wqe->hdr.ctrl.opmod_idx_opcode =
+>                  cpu_to_be32((icosq->pc << 
+> MLX5_WQE_CTRL_WQE_INDEX_SHIFT) | MLX5_OPCODE_UMR);
+> 
+>          /* Optimized for speed: keep in sync with 
+> mlx5e_mpwrq_umr_entry_size. */
+> @@ -134,7 +134,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, 
+> u16 ix)
+>                  offset = offset * sizeof(struct mlx5_klm) * 2 / 
+> MLX5_OCTWORD;
+>          else if (unlikely(rq->mpwqe.umr_mode == 
+> MLX5E_MPWRQ_UMR_MODE_TRIPLE))
+>                  offset = offset * sizeof(struct mlx5_ksm) * 4 / 
+> MLX5_OCTWORD;
+> -       umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
+> +       umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
+> 
+>          icosq->db.wqe_info[pi] = (struct mlx5e_icosq_wqe_info) {
+>                  .wqe_type = MLX5E_ICOSQ_WQE_UMR_RX,
+> @@ -144,7 +144,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, 
+> u16 ix)
+> 
+>          icosq->pc += rq->mpwqe.umr_wqebbs;
+> 
+> -       icosq->doorbell_cseg = &umr_wqe->ctrl;
+> +       icosq->doorbell_cseg = &umr_wqe->hdr.ctrl;
+> 
+>          return 0;
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/ 
+> drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> index a814b63ed97e..bbd0b888d237 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> @@ -311,8 +311,8 @@ static inline void mlx5e_build_umr_wqe(struct 
+> mlx5e_rq *rq,
+>                                         struct mlx5e_icosq *sq,
+>                                         struct mlx5e_umr_wqe *wqe)
+>   {
+> -       struct mlx5_wqe_ctrl_seg      *cseg = &wqe->ctrl;
+> -       struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->uctrl;
+> +       struct mlx5_wqe_ctrl_seg      *cseg = &wqe->hdr.ctrl;
+> +       struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->hdr.uctrl;
+>          u16 octowords;
+>          u8 ds_cnt;
+> 
+> @@ -393,7 +393,9 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq 
+> *rq, int node)
+>                  bitmap_fill(wi->skip_release_bitmap, rq- 
+>  >mpwqe.pages_per_wqe);
+>          }
+> 
+> -       mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
+> +       mlx5e_build_umr_wqe(rq, rq->icosq,
+> +                           container_of(&rq->mpwqe.umr_wqe,
+> +                                        struct mlx5e_umr_wqe, hdr));
+> 
+>          return 0;
+>   }
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/ 
+> net/ethernet/mellanox/mlx5/core/en_rx.c
+> index 1963bc5adb18..5fd70b4d55be 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+> @@ -631,16 +631,16 @@ static void build_ksm_umr(struct mlx5e_icosq *sq, 
+> struct mlx5e_umr_wqe *umr_wqe,
+>                            __be32 key, u16 offset, u16 ksm_len)
+>   {
+>          memset(umr_wqe, 0, offsetof(struct mlx5e_umr_wqe, inline_ksms));
+> -       umr_wqe->ctrl.opmod_idx_opcode =
+> +       umr_wqe->hdr.ctrl.opmod_idx_opcode =
+>                  cpu_to_be32((sq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) |
+>                               MLX5_OPCODE_UMR);
+> -       umr_wqe->ctrl.umr_mkey = key;
+> -       umr_wqe->ctrl.qpn_ds = cpu_to_be32((sq->sqn << 
+> MLX5_WQE_CTRL_QPN_SHIFT)
+> +       umr_wqe->hdr.ctrl.umr_mkey = key;
+> +       umr_wqe->hdr.ctrl.qpn_ds = cpu_to_be32((sq->sqn << 
+> MLX5_WQE_CTRL_QPN_SHIFT)
+>                                              | 
+> MLX5E_KSM_UMR_DS_CNT(ksm_len));
+> -       umr_wqe->uctrl.flags = MLX5_UMR_TRANSLATION_OFFSET_EN | 
+> MLX5_UMR_INLINE;
+> -       umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
+> -       umr_wqe->uctrl.xlt_octowords = cpu_to_be16(ksm_len);
+> -       umr_wqe->uctrl.mkey_mask     = cpu_to_be64(MLX5_MKEY_MASK_FREE);
+> +       umr_wqe->hdr.uctrl.flags = MLX5_UMR_TRANSLATION_OFFSET_EN | 
+> MLX5_UMR_INLINE;
+> +       umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
+> +       umr_wqe->hdr.uctrl.xlt_octowords = cpu_to_be16(ksm_len);
+> +       umr_wqe->hdr.uctrl.mkey_mask     = 
+> cpu_to_be64(MLX5_MKEY_MASK_FREE);
+>   }
+> 
+>   static struct mlx5e_frag_page *mlx5e_shampo_hd_to_frag_page(struct 
+> mlx5e_rq *rq, int header_index)
+> @@ -704,7 +704,7 @@ static int mlx5e_build_shampo_hd_umr(struct mlx5e_rq 
+> *rq,
+> 
+>          shampo->pi = (shampo->pi + ksm_entries) & (shampo->hd_per_wq - 1);
+>          sq->pc += wqe_bbs;
+> -       sq->doorbell_cseg = &umr_wqe->ctrl;
+> +       sq->doorbell_cseg = &umr_wqe->hdr.ctrl;
+> 
+>          return 0;
+> 
+> @@ -814,12 +814,12 @@ static int mlx5e_alloc_rx_mpwqe(struct mlx5e_rq 
+> *rq, u16 ix)
+>          bitmap_zero(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>          wi->consumed_strides = 0;
+> 
+> -       umr_wqe->ctrl.opmod_idx_opcode =
+> +       umr_wqe->hdr.ctrl.opmod_idx_opcode =
+>                  cpu_to_be32((sq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) |
+>                              MLX5_OPCODE_UMR);
+> 
+>          offset = (ix * rq->mpwqe.mtts_per_wqe) * sizeof(struct 
+> mlx5_mtt) / MLX5_OCTWORD;
+> -       umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
+> +       umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
+> 
+>          sq->db.wqe_info[pi] = (struct mlx5e_icosq_wqe_info) {
+>                  .wqe_type   = MLX5E_ICOSQ_WQE_UMR_RX,
+> @@ -829,7 +829,7 @@ static int mlx5e_alloc_rx_mpwqe(struct mlx5e_rq *rq, 
+> u16 ix)
+> 
+>          sq->pc += rq->mpwqe.umr_wqebbs;
+> 
+> -       sq->doorbell_cseg = &umr_wqe->ctrl;
+> +       sq->doorbell_cseg = &umr_wqe->hdr.ctrl;
+> 
+>          return 0;
+> 
+> 
+> Thanks
+> -- 
+> Gustavo
+> 
 
