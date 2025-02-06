@@ -1,25 +1,30 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1B11EA7D2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C521EA7C2;
+	Thu,  6 Feb 2025 13:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848388; cv=none; b=U5N0jp8Nwdg5OgU3vgM7LzXwpFAKOQSPrNWqZP41ixeTxuclFgc0CAMD/+8uWHD+H3nz2qc0iITyjO+3rpRQ+6GaDFAHXYFvkq/lVKMPqdlZJMfj0J1c/7Y5IuASy+vYGBO3TPgR/jVbeZhgGWcLLvFih3dPDRPqHJlOIqXwNRo=
+	t=1738848420; cv=none; b=XxJ5S9GpYQUuSlO1ovrPsR+SVLU78Frwqic230B6sxo8j5bBCfcZInYq8mgHKzEDNK7GEdrRtLA0WmFNhCs/ev2CNfiymsQcPw3WwTqLK9YTUMln6AYtjoX2DsMlO8vgZxNbb2EtURi2u5YJ/mMx22Cxkkx+GHl3W5BYjLRyo/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848388; c=relaxed/simple;
-	bh=tabOUf0J1PS+QaLuE+rGM0sv83u5hH9wWnVBro9aaUA=;
+	s=arc-20240116; t=1738848420; c=relaxed/simple;
+	bh=Xa2e6zZUE5Ypv/4gGdRlghgenoolHBoV4uJXpLNA0Ho=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hRA3DzrXGSriNTTNJP2p4m+QXU1bA/5PzOhzPXjwYv+GRquipqi92e9QQl9qbTRf0iKzT7ozfVGO3nQyvDAhjvBWPuCBgfnpejLdHWUDvTYIyTXzhL3iKrkzteV4Nvv/ejrCyfk1pLq2SICSw7HpJU5ikKnU194eMqNOl8qJpSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D749FEC;
-	Thu,  6 Feb 2025 05:26:49 -0800 (PST)
-Received: from [10.57.80.166] (unknown [10.57.80.166])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 318D33F5A1;
-	Thu,  6 Feb 2025 05:26:23 -0800 (PST)
-Message-ID: <0538d186-470e-4c4d-974c-0d7f2c96e549@arm.com>
-Date: Thu, 6 Feb 2025 13:26:08 +0000
+	 In-Reply-To:Content-Type; b=g+vkSwPa4JciwKawbT5fTTrw0ecjwOx6x0vv+Ak5TgyP/OG4SUsdSnShs2ysDaJRkeSWFw+PeAk2Qp5254G6c8pGwWtsbnfpuQ3aT4LsB8YkYnMJIuEgVvJWRsebfC2ymKPMNl2gGkFPSNCSXJiz1EDzBl/YgvsYzm4r9QOvWRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DHBwf1PV; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DHBwf1PV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=cK6k51s+cBjVEgWYzrHKvOcp/x8Wau2Xj95c58xdXn8=;
+	b=DHBwf1PVLFgOtk7NSpBkgTPdRR9av3iy3CIn6Zj+IHZZ1A7DiWX9CjPUo3w5Lm
+	i+gbJE8DqqvFsEXuByrb/Im+47pp4acYiEfSBSpeNL6hUjatpeP0TVtRB5BsqjLm
+	wZ03TWW9+b4DENRy9fo6LP9F5e2Pnwqjn+JXLhrn1gg08=
+Received: from [192.168.31.211] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDHDzFSuKRnmF9+Bg--.16667S2;
+	Thu, 06 Feb 2025 21:25:39 +0800 (CST)
+Message-ID: <b4ef10d0-a1eb-4d9c-8ddc-d7815a2bb607@163.com>
+Date: Thu, 6 Feb 2025 21:25:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,273 +32,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 06/16] arm64/mm: Refactor __set_ptes() and
- __ptep_get_and_clear()
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-7-ryan.roberts@arm.com>
- <bdd08da7-d978-437a-849f-8a6115933e19@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <bdd08da7-d978-437a-849f-8a6115933e19@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
+ get_kernel_nofault()
+To: Peter Zijlstra <peterz@infradead.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Gabriel de Perthuis <g2p.code@gmail.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Mark Rutland
+ <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, x86@kernel.org, linux-trace-kernel@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+ <20250206081225.GI7145@noisy.programming.kicks-ass.net>
+ <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+ <20250206121328.GN7145@noisy.programming.kicks-ass.net>
+ <20250206123307.GO7145@noisy.programming.kicks-ass.net>
+From: Haiyue Wang <haiyuewa@163.com>
+In-Reply-To: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgDHDzFSuKRnmF9+Bg--.16667S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGry7Xry8GrW8Cr13CrW3KFg_yoW5Wr45pF
+	y3Crn3GFs5XFyYkrZrur109r15Zw1kCr1Sg347Gr95ZF1qvFyUJr1I9w1vyasFvasaga4r
+	tFW7ZFn09w1DZ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIZXrUUUUU=
+X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiShPra2ekp8XqkgAAsA
 
-On 06/02/2025 11:48, Anshuman Khandual wrote:
-> On 2/5/25 20:39, Ryan Roberts wrote:
->> Refactor __set_ptes(), set_pmd_at() and set_pud_at() so that they are
->> all a thin wrapper around a generic ___set_ptes(), which takes pgsize
-> 
-> s/generic/common - as generic might be misleading for being generic MM.
 
-Good spot. I'll make this change.
 
+On 2025/2/6 20:33, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
 > 
->> parameter. This cleans up the code to remove the confusing
->> __set_pte_at() (which was only ever used for pmd/pud) and will allow us
->> to perform future barrier optimizations in a single place. Additionally,
->> it will permit the huge_pte API to efficiently batch-set pgtable entries
->> and take advantage of the future barrier optimizations.
-> 
-> Makes sense.
-> 
+>> No, it just cleans up this utter trainwreck. I also noticed this is a
+>> second (new) copy of this garbage. Clearly I didn't yell loud enough
+>> last time and people didn't think to vomit when doing the copy/paste :/
 >>
->> ___set_ptes() calls the correct page_table_check_*_set() function based
->> on the pgsize. This means that huge_ptes be able to get proper coverage
->> regardless of their size, once it's plumbed into huge_pte. Currently the
->> huge_pte API always uses the pte API which assumes an entry only covers
->> a single page.
-> 
-> Right
-> 
+>> Function will look something like:
 >>
->> While we are at it, refactor __ptep_get_and_clear() and
->> pmdp_huge_get_and_clear() to use a common ___ptep_get_and_clear() which
->> also takes a pgsize parameter. This will provide the huge_pte API the
->> means to clear ptes corresponding with the way they were set.
-> 
-> __ptep_get_and_clear() refactoring does not seem to be related to the
-> previous __set_ptes(). Should they be separated out into two different
-> patches instead - for better clarity and review ? Both these clean ups
-> have enough change and can stand own their own.
-
-Yeah I think you're probably right... I was being lazy... I'll separate them.
-
-> 
+>> unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+>> {
+>> 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
+>> 		fentry_op -= ENDBR_INSN_SIZE;
+>> 	return fentry_ip;
+>> }
 >>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/arm64/include/asm/pgtable.h | 108 +++++++++++++++++++------------
->>  1 file changed, 67 insertions(+), 41 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index 0b2a2ad1b9e8..3b55d9a15f05 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -420,23 +420,6 @@ static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
->>  	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
->>  }
->>  
->> -static inline void __set_ptes(struct mm_struct *mm,
->> -			      unsigned long __always_unused addr,
->> -			      pte_t *ptep, pte_t pte, unsigned int nr)
->> -{
->> -	page_table_check_ptes_set(mm, ptep, pte, nr);
->> -	__sync_cache_and_tags(pte, nr);
->> -
->> -	for (;;) {
->> -		__check_safe_pte_update(mm, ptep, pte);
->> -		__set_pte(ptep, pte);
->> -		if (--nr == 0)
->> -			break;
->> -		ptep++;
->> -		pte = pte_advance_pfn(pte, 1);
->> -	}
->> -}
->> -
->>  /*
->>   * Hugetlb definitions.
->>   */
->> @@ -641,30 +624,59 @@ static inline pgprot_t pud_pgprot(pud_t pud)
->>  	return __pgprot(pud_val(pfn_pud(pfn, __pgprot(0))) ^ pud_val(pud));
->>  }
->>  
->> -static inline void __set_pte_at(struct mm_struct *mm,
->> -				unsigned long __always_unused addr,
->> -				pte_t *ptep, pte_t pte, unsigned int nr)
->> +static inline void ___set_ptes(struct mm_struct *mm, pte_t *ptep, pte_t pte,
->> +			       unsigned int nr, unsigned long pgsize)
+>> Let me finish local build test before I push out.
 > 
-> So address got dropped and page size got added as an argument.
+> Bah, still waiting for a LLVM build, but patch should be here:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
+> 
+> I was supposed to merge this last cycle, but then akpm shat all over
+> arch/x86/kernel/alternative.c and we had to clean that up :/
+> 
+> Notably, this patch, not sure it applies out of order.
+> 
+> ---
+> 
+> Subject: x86/ibt: Clean up is_endbr()
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Nov 27 09:58:06 CET 2023
+> 
+> Pretty much every caller of is_endbr() actually wants to test something at an
+> address and ends up doing get_kernel_nofault(). Fold the lot into a more
+> convenient helper.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Alexei Starovoitov <ast@kernel.org>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>   arch/x86/events/core.c         |    2 +-
+>   arch/x86/include/asm/ftrace.h  |   17 +++--------------
+>   arch/x86/include/asm/ibt.h     |    5 +++--
+>   arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
+>   arch/x86/kernel/kprobes/core.c |   11 +----------
+>   arch/x86/net/bpf_jit_comp.c    |    4 ++--
+>   kernel/trace/bpf_trace.c       |   20 +++-----------------
+>   7 files changed, 27 insertions(+), 52 deletions(-)
+> 
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
+>   		return true;
+>   
+>   	/* endbr64 (64-bit only) */
+> -	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
+> +	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
+>   		return true;
+>   
+>   	return false;
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
+> @@ -2,6 +2,7 @@
+>   #ifndef _ASM_X86_FTRACE_H
+>   #define _ASM_X86_FTRACE_H
+>   
+> +#include "asm/ibt.h"
 
-Yeah; addr is never used in our implementations so I figured why haul it around
-everywhere?
+Then 
+https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/tree/arch/x86/include/asm/ftrace.h?h=x86/ibt#n17
 
-> s/___set_ptes/___set_pxds ? to be more generic for all levels.
+# include <asm/ibt.h> --> This line can be removed ?
 
-So now we are into naming... I agree that in some senses pte feels specific to
-the last level. But it's long form "page table entry" seems more generic than
-"pxd" which implies only pmd, pud, p4d and pgd. At least to me...
-
-I think we got stuck trying to figure out a clear and short term for "page table
-entry at any level" in the past. I think ttd was the best we got; Translation
-Table Descriptor, which is the term the Arm ARM uses. But that opens a can of
-worms as now we need tdd_t and all the converters pte_tdd(), tdd_pte(),
-pmd_tdd(), ... and probably a bunch more stuff on top.
-
-So personally I prefer to take the coward's way out and just reuse pte.
-
-> 
->>  {
->> -	__sync_cache_and_tags(pte, nr);
->> -	__check_safe_pte_update(mm, ptep, pte);
->> -	__set_pte(ptep, pte);
->> +	unsigned long stride = pgsize >> PAGE_SHIFT;
->> +
->> +	switch (pgsize) {
->> +	case PAGE_SIZE:
->> +		page_table_check_ptes_set(mm, ptep, pte, nr);
->> +		break;
->> +	case PMD_SIZE:
->> +		page_table_check_pmds_set(mm, (pmd_t *)ptep, pte_pmd(pte), nr);
->> +		break;
->> +	case PUD_SIZE:
->> +		page_table_check_puds_set(mm, (pud_t *)ptep, pte_pud(pte), nr);
->> +		break;
-> 
-> This is where the new page table check APIs get used for batch testing.
-
-Yes and I anticipate that the whole switch block should be optimized out when
-page_table_check is disabled.
-
-> 
->> +	default:
->> +		VM_WARN_ON(1);
->> +	}
->> +
->> +	__sync_cache_and_tags(pte, nr * stride);
->> +
->> +	for (;;) {
->> +		__check_safe_pte_update(mm, ptep, pte);
->> +		__set_pte(ptep, pte);
->> +		if (--nr == 0)
->> +			break;
->> +		ptep++;
->> +		pte = pte_advance_pfn(pte, stride);
->> +	}
->>  }
-> 
-> LGTM
-> 
->>  
->> -static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
->> -			      pmd_t *pmdp, pmd_t pmd)
->> +static inline void __set_ptes(struct mm_struct *mm,
->> +			      unsigned long __always_unused addr,
->> +			      pte_t *ptep, pte_t pte, unsigned int nr)
->>  {
->> -	page_table_check_pmd_set(mm, pmdp, pmd);
->> -	return __set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd),
->> -						PMD_SIZE >> PAGE_SHIFT);
->> +	___set_ptes(mm, ptep, pte, nr, PAGE_SIZE);
->>  }
->>  
->> -static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
->> -			      pud_t *pudp, pud_t pud)
->> +static inline void __set_pmds(struct mm_struct *mm,
->> +			      unsigned long __always_unused addr,
->> +			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
->> +{
->> +	___set_ptes(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
->> +}
->> +#define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
->> +
->> +static inline void __set_puds(struct mm_struct *mm,
->> +			      unsigned long __always_unused addr,
->> +			      pud_t *pudp, pud_t pud, unsigned int nr)
->>  {
->> -	page_table_check_pud_set(mm, pudp, pud);
->> -	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
->> -						PUD_SIZE >> PAGE_SHIFT);
->> +	___set_ptes(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
->>  }
->> +#define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
-> 
-> LGTM
-> 
->>  
->>  #define __p4d_to_phys(p4d)	__pte_to_phys(p4d_pte(p4d))
->>  #define __phys_to_p4d_val(phys)	__phys_to_pte_val(phys)
->> @@ -1276,16 +1288,34 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
->>  }
->>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG */
->>  
->> -static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
->> -				       unsigned long address, pte_t *ptep)
->> +static inline pte_t ___ptep_get_and_clear(struct mm_struct *mm, pte_t *ptep,
->> +				       unsigned long pgsize)
-> 
-> So address got dropped and page size got added as an argument.
-> 
->>  {
->>  	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
->>  
->> -	page_table_check_pte_clear(mm, pte);
->> +	switch (pgsize) {
->> +	case PAGE_SIZE:
->> +		page_table_check_pte_clear(mm, pte);
->> +		break;
->> +	case PMD_SIZE:
->> +		page_table_check_pmd_clear(mm, pte_pmd(pte));
->> +		break;
->> +	case PUD_SIZE:
->> +		page_table_check_pud_clear(mm, pte_pud(pte));
->> +		break;
->> +	default:
->> +		VM_WARN_ON(1);
->> +	}
->>  
->>  	return pte;
->>  }
->>  
->> +static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
->> +				       unsigned long address, pte_t *ptep)
->> +{
->> +	return ___ptep_get_and_clear(mm, ptep, PAGE_SIZE);
->> +}
->> +
->>  static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
->>  				pte_t *ptep, unsigned int nr, int full)
->>  {
->> @@ -1322,11 +1352,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
->>  static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
->>  					    unsigned long address, pmd_t *pmdp)
->>  {
->> -	pmd_t pmd = __pmd(xchg_relaxed(&pmd_val(*pmdp), 0));
->> -
->> -	page_table_check_pmd_clear(mm, pmd);
->> -
->> -	return pmd;
->> +	return pte_pmd(___ptep_get_and_clear(mm, (pte_t *)pmdp, PMD_SIZE));
->>  }
->>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->>  
-> 
-> Although currently there is no pudp_huge_get_and_clear() helper on arm64
-> reworked ___ptep_get_and_clear() will be able to support that as well if
-> and when required as it now supports PUD_SIZE page size.
-
-yep.
-
-Thanks for all your review so far!
+>   #include <asm/ptrace.h>
+>   
+>   #ifdef CONFIG_FUNCTION_TRACER
+> @@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
+>   
+>   static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+>   {
 
