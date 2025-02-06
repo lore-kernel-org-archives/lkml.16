@@ -1,72 +1,40 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail115-118.sinamail.sina.com.cn (mail115-118.sinamail.sina.com.cn [218.30.115.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07000224AEE;
-	Thu,  6 Feb 2025 11:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6656214203
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841020; cv=none; b=GVRuhWKXppLnbT6UYcZrocDoHB8Ijn4RFveOWREJqlFB0vNV0rtQYCVkSCL6adhTfG7qx1GfYV6X1QqY3vFb622Rhj3Yz8q2x3jjj311PUN249PqB4Z/KrCJpYfDXL1DyMXeIXo66aOZ/GHSOZUBL3Am5qwSW0kwtnh3h+o703c=
+	t=1738841064; cv=none; b=bYA9+SLDUCO/D4yfzik7K2L7OQoxoWJruRVQnE8x9G9qF5YyersBvcxP7UqBIMta0XLWqiBIJco/W8mJCj2B9PFcTIdhlhklZRioxlAjAOhoDxxFFfgyo9/cQG0CVttn0LSj1w31nZiw2A5JrcdqIHOEOxQ4kx6pfgYsVnq+OD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841020; c=relaxed/simple;
-	bh=KByYSN9h6LBUAcDtidME8moJYCIICoPuGhNfzJw+SJc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ClsqKT3tEgCY7r+OGHFMoprRctqLHYznb3qfrrBy1MXT0QyxvWmAlx80PFQsWFuket9g1j65c+YpawSAPM5oGLuX4xuoVfCOnGwgjuB2uWwI61r9xauaqx9PJuIsYnG/+LHK6SNv8HSWkrxbsXrCCtK567WF8u5lUEQ5E7UfN2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X/v6u74k; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X/v6u74k"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5169mRPa014789;
-	Thu, 6 Feb 2025 11:23:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	odkYWQ7L6wu9+4Nd1/cDXXtaxBIc+VpriZgk761UQ5s=; b=X/v6u74kbTWhIN2/
-	zt19uYpDiw1yNATE1zL+B8BgeugGyTI2wj1BFL7K80LtOGtJ6Ts7vNAKKhocvYI5
-	70/DrGkpFz3iGBPr3TzlcJQV8Za3DWSIAnMk8NgsJ864iN/xsAqvdQV1PndprEfL
-	7ALVEtzr3yqysh88ttos5mC88t+Cnexlz+Ds1UJDoAOX72abvQ7jygbrlPgBW6gi
-	FkHdjCxAI039g9vhQBOcCPYE2BjemIhQH3/17fKGtJ2H8DKgvsYrq6tKY4MkzbFz
-	5jShxifOIWS5Bxb8H3twE6FqBkc1T61TeSEClt8UqK2PK+QhiijPMFR5vVPxVlpX
-	aipLyg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mtsa07a6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 11:23:17 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BNGJU030345
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 11:23:16 GMT
-Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Feb 2025 03:23:10 -0800
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Bard Liao
-	<yung-chuan.liao@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, "Takashi
- Iwai" <tiwai@suse.com>
-CC: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-        Sanyog Kale
-	<sanyog.r.kale@intel.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_pkumpatl@quicinc.com>, <kernel@oss.qualcomm.com>,
-        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Subject: [PATCH v6 4/4] ASoC: qcom: sdw: Add get and set channel maps support from codec to cpu dais
-Date: Thu, 6 Feb 2025 16:52:25 +0530
-Message-ID: <20250206112225.3270400-5-quic_mohs@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250206112225.3270400-1-quic_mohs@quicinc.com>
-References: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+	s=arc-20240116; t=1738841064; c=relaxed/simple;
+	bh=WjClwccFUceqf8OyNGoex9z/S6aa9VPU8oHYXKa7CZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F9qIlI/Nm29WZ/1AOAnpXC/975PVnJfY47QZ9VE2v9fuYcSarMs5lGZTF/ADh5dnYzozazlSAFS9O3XWS+P9onNyyMu32aiyjzb4ZmCmgjP+3bgzVngcKOUxioWzSsRiTz4V9h2ANQZzM4o0PM93Qdi31bDcJV7nSXrsYXi+y+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.10.105])
+	by sina.com (10.185.250.24) with ESMTP
+	id 67A49BDE00002003; Thu, 6 Feb 2025 19:24:16 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 17053010748321
+X-SMAIL-UIID: 062A265ABE8F4F29B86D516E34759EF4-20250206-192416-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+3201be560ebfa39bc6bd@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] general protection fault in ip6_pol_route (3)
+Date: Thu,  6 Feb 2025 19:24:16 +0800
+Message-ID: <20250206112417.1996-1-hdanton@sina.com>
+In-Reply-To: <67a21f26.050a0220.163cdc.0068.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,87 +42,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PEfJZebkLkf7O7gJ_glAwZmRC2i1uHJl
-X-Proofpoint-ORIG-GUID: PEfJZebkLkf7O7gJ_glAwZmRC2i1uHJl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060094
 
-Add get and set channel maps support from codec to cpu dais.
+On Tue, 04 Feb 2025 06:07:34 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f1b785f4c787 Merge tag 'for_linus' of git://git.kernel.org..
+> git tree:       upstream
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1209e4c0580000
 
-Implemented logic to get the channel map in case of only sdw stream and
-set channel map only for specific cpu dais.
+#syz test  upstream  master
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
----
- sound/soc/qcom/sdw.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/qcom/sdw.c b/sound/soc/qcom/sdw.c
-index f2eda2ff46c0..1d01b9329e08 100644
---- a/sound/soc/qcom/sdw.c
-+++ b/sound/soc/qcom/sdw.c
-@@ -23,9 +23,11 @@ int qcom_snd_sdw_startup(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
-+	u32 rx_ch[SDW_MAX_PORTS], tx_ch[SDW_MAX_PORTS];
- 	struct sdw_stream_runtime *sruntime;
- 	struct snd_soc_dai *codec_dai;
--	int ret, i;
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret, i, j;
+--- x/net/ipv6/route.c
++++ y/net/ipv6/route.c
+@@ -2258,7 +2258,7 @@ struct rt6_info *ip6_pol_route(struct ne
  
- 	sruntime = sdw_alloc_stream(cpu_dai->name);
- 	if (!sruntime)
-@@ -35,9 +37,35 @@ int qcom_snd_sdw_startup(struct snd_pcm_substream *substream)
- 		ret = snd_soc_dai_set_stream(codec_dai, sruntime,
- 					     substream->stream);
- 		if (ret < 0 && ret != -ENOTSUPP) {
--			dev_err(rtd->dev, "Failed to set sdw stream on %s\n",
--				codec_dai->name);
-+			dev_err(rtd->dev, "Failed to set sdw stream on %s\n", codec_dai->name);
- 			goto err_set_stream;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
-+
-+		ret = snd_soc_dai_get_channel_map(codec_dai, &tx_ch_cnt, tx_ch,
-+						  &rx_ch_cnt, rx_ch);
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			dev_err(rtd->dev, "Failed to get codec chan map %s\n", codec_dai->name);
-+			goto err_set_stream;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
-+	}
-+
-+	switch (cpu_dai->id) {
-+	case RX_CODEC_DMA_RX_0:
-+	case TX_CODEC_DMA_TX_3:
-+		if (tx_ch_cnt || rx_ch_cnt) {
-+			for_each_rtd_codec_dais(rtd, j, codec_dai) {
-+				ret = snd_soc_dai_set_channel_map(codec_dai,
-+								  tx_ch_cnt, tx_ch,
-+								  rx_ch_cnt, rx_ch);
-+				if (ret != 0 && ret != -ENOTSUPP)
-+					goto err_set_stream;
-+			}
+ 			return rt;
  		}
- 	}
- 
--- 
-2.34.1
+-	} else {
++	} else if (res.nh) {
+ 		/* Get a percpu copy */
+ 		local_bh_disable();
+ 		rt = rt6_get_pcpu_route(&res);
+--- a/drivers/hid/hid-corsair-void.c
++++ b/drivers/hid/hid-corsair-void.c
+@@ -727,6 +727,7 @@ static void corsair_void_remove(struct hid_device *hid_dev)
+ 		power_supply_unregister(drvdata->battery);
 
+ 	cancel_delayed_work_sync(&drvdata->delayed_firmware_work);
++	cancel_delayed_work_sync(&drvdata->delayed_status_work);
+ 	sysfs_remove_group(&hid_dev->dev.kobj, &corsair_void_attr_group);
+ }
+
+--
