@@ -1,267 +1,133 @@
-Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473541C6FFD;
-	Thu,  6 Feb 2025 15:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E3D1C6FFD
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738855153; cv=none; b=nZT/GiiynAgvCfVK/Ig4ZmOiyFRgQxmJqm6Y/pbC/ZW41nzmVklvS7vfV+J3pWfCv/3v/aaT5OuCRL3E48PjujmvZDb6wckoStqxQzKFgzU0Hg8XlekAH0KapERiLU3OosKRazZtbmd12pVcEJPKiWzqrzFSu4KDqVWO1/E26Yg=
+	t=1738855228; cv=none; b=pwavt/QrG/H1FSVpFbouc7KvDLUVitiGcD1NP2YBJduPXMc5iA55XEaEJsXBEmEee48GdwdNVcWOjMR1eqyc0dTexy934uqd3KzZPeKGH0YuTTxIDxyNQyDuX6jsIwu8RgumH/B7V7CyBRY5Crr/WmkrISJJWSnjlgLlupzN+a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738855153; c=relaxed/simple;
-	bh=+VIwXV35Cj3DhnNwPs0nSkxqBW3Bg74L/zNch9g8vHU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Srn10DQi9yupeclwb64dpM2lVbNL872pXuXthaGxgLqYPb8piRvhGbv6z7NIVXW6q8nqnU1cSSAwlaLPGiZOxM18gF+g+gMCThOxNLKxXBZp+Vs6xdxntyTgDkrdI227Dt0vmjlj9yK6+BNU17V5u9Px+wB4Z9/5mkcwd7ZuVAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com; spf=pass smtp.mailfrom=yhndnzj.com; dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b=YuZpdFg6; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yhndnzj.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b="YuZpdFg6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yhndnzj.com;
-	s=protonmail2; t=1738855148; x=1739114348;
-	bh=+VIwXV35Cj3DhnNwPs0nSkxqBW3Bg74L/zNch9g8vHU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=YuZpdFg641icbD9U9G6K0eaVcEBtX0IR2rzaiD0LJuHcCN/Fi3laUGePtsjhyh8mE
-	 l+g321K6zdIXfnapQ4O0KuATbL3l5kx2ShzR79RpUZ++Gw26PQI+s2WLLxl2XdcSE7
-	 3o6ysO6RbHmpZekjbqK3nJ/fCWHHbYAovqe/IWKMgrWmV/JYdvqN5mAKb4PgWMIrCn
-	 UVl71KHC2cXRfF1qtvl6lKejADVDCj/QNnE9ExQdOoTWcPE/p5bUwCLFYjTYhN4Za+
-	 oFEHJ5NoPoP4Su0ClSq2199pyYC0FgjTne0qoRGEAFo/9UOVFFZKcliHSEtxMPhRIR
-	 9ZoEFAXj8XooQ==
-Date: Thu, 06 Feb 2025 15:19:03 +0000
-To: Christian Brauner <brauner@kernel.org>
-From: Mike Yuan <me@yhndnzj.com>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "cgzones@googlemail.com" <cgzones@googlemail.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH] fs/xattr: actually support O_PATH fds in *xattrat() syscalls
-Message-ID: <xTJWqaYffvXfz-lTQmt2HHs8ryqde0VIbhIlW0DFCW3wxft7WfIDCRm03BsB4Gz4IgWHXwarpkIE880mjL63DVRfU-p1sGJGUFSQBmp_CXY=@yhndnzj.com>
-In-Reply-To: <20250206-steril-raumplanung-733224062432@brauner>
-References: <20250205204628.49607-1-me@yhndnzj.com> <20250206-uhrwerk-faultiere-7a308565e2d3@brauner> <Kn-2tlpxN8YNmh0j0udjQ8YIFNZMVVJYJh-LyBoYNBfpax28PNUkXuH6gnod7if2eX3NRVs3Ey8uCHRpwg_S5hPX_ADtrgMZbDTWFpHd_uU=@yhndnzj.com> <20250206-erbauen-ornament-26f338d98f13@brauner> <cfnfHaahrrXJJOgvNjb5hFbU0qh8gVXJ62R9uP9AItBEywyNH9vNBRzJbPR8xTv-LtFaUJYTHvyuLBfkznwJPt3fEcqNBFxf_yKJeZKwL3I=@yhndnzj.com> <20250206-wisst-rangieren-d59f7882761a@brauner> <Ah2vDyFwRPpHngjgEblSFQWijS6qnrD_LSbpUrdefKpgTotaT4CyzL4RqaWM7axQamVuGi3hPdIzuXl9qBlfHZ9m4-hcUWaWuaoc35Gt8D8=@yhndnzj.com> <20250206-steril-raumplanung-733224062432@brauner>
-Feedback-ID: 102487535:user:proton
-X-Pm-Message-ID: 51eb2528fddf369c09cedd60b3db1f373b2d27e3
+	s=arc-20240116; t=1738855228; c=relaxed/simple;
+	bh=eDOqP7+BXpHVhicCo7wyvj5oRo7WDsDZLNCNVn5vrec=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tz2Z1q5UDEmvbl/TNouX4rpQ79gk1OE7Ne1Y0w7UdCb4ObPwIFzzD18Gb+43+X1wdDydK/1FCP3GVrYT6JDJW3J2n1VlE88bsctmxSSJqCZGFbFSqBi+6T3QRTL8jZlAeg7pR+yyMr+KfzJQP4f9OkHlHPN1ZamOZOiNro9IwxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d0203cf90cso18813365ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:20:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738855226; x=1739460026;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oFl5kinqp9gWgJ6tj81uzJp2ykUIOW0B39E6YsNbxHk=;
+        b=SSCRIoNgxnQ8ft7P0n24ULFFTZ9swpatRiCfzf6jMHaNu5UC6QYjLTSUUr7dl9GHMt
+         uI5dVEuYtCRrAh7EAu9DNta+evvcEMyYiXxH3T+pKPGb5DWI+IdjbbBvrVIzp/ERCNmJ
+         kzhRCfEoWrWI2nPl3iZXdU23D45ADY2gpzeX7MjYBWY32uBfmCywhVvWlKNKRgNKbSz7
+         QkdDPn1nq3vbIak/v9MMyetOQ6Bx6j2V4DhrmaeQXHW7TKJU46TA099+BmBEZpJsbRnG
+         6basnmShm93gex+dLTwF556ad33Ww9+I8q4DZvLhK2ZmzfKDNuoVopfPPbcbYKBQXQjq
+         3TqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFJkUMQsUuRP6vHewaS2bFsqK6k+uPQhkDE5RSPKhxDFFQhjnMjRpTquay5kwcfb8MZlqAA6bHlr7L9Wc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD3fmARykC71UYgk7e5xAhKYLRIrkImP+ozwjp5CBRBGSz3jXO
+	nXu8mO3avOISe5Z1iHpvEbxP9NQyMzBczg4amFpj3wwbbJOqsrvI0HpHY3CN9qoW2EoNJ+vUtAN
+	ljwr6zxbb9l5sq1KB3TVdHt1ME4CpndFlnaNifHa/3/OZuE1hx6sribw=
+X-Google-Smtp-Source: AGHT+IG1TBbxPcDH0VtNoKmuHiOCibLk8WhoSRtt5DH6Mk+ghMjbBCAoPEk9GNVTz8/IEEyMT7PZRg5b+JXlMEO3Ym1EcZx5C0JJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:471b:b0:3d1:98e:4916 with SMTP id
+ e9e14a558f8ab-3d1098e4c9dmr2346685ab.9.1738855226087; Thu, 06 Feb 2025
+ 07:20:26 -0800 (PST)
+Date: Thu, 06 Feb 2025 07:20:26 -0800
+In-Reply-To: <671906e2.050a0220.1e4b4d.008d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a4d33a.050a0220.6230e.0002.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] WARNING: ODEBUG bug in ieee80211_led_exit (2)
+From: syzbot <syzbot+e84ecca6d1fa09a9b3d9@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-02-06 at 15:54, Christian Brauner <brauner@kernel.org> wrote:
->=20
-> On Thu, Feb 06, 2025 at 02:26:51PM +0000, Mike Yuan wrote:
->=20
-> > On 2025-02-06 at 14:35, Christian Brauner brauner@kernel.org wrote:
-> >=20
-> > > On Thu, Feb 06, 2025 at 01:25:19PM +0000, Mike Yuan wrote:
-> > >=20
-> > > > On 2/6/25 11:03, Christian Brauner brauner@kernel.org wrote:
-> > > >=20
-> > > > > On Thu, Feb 06, 2025 at 09:51:33AM +0000, Mike Yuan wrote:
-> > > > >=20
-> > > > > > On 2/6/25 10:31, Christian Brauner brauner@kernel.org wrote:
-> > > > > >=20
-> > > > > > > On Wed, Feb 05, 2025 at 08:47:23PM +0000, Mike Yuan wrote:
-> > > > > > >=20
-> > > > > > > > Cited from commit message of original patch [1]:
-> > > > > > > >=20
-> > > > > > > > > One use case will be setfiles(8) setting SELinux file con=
-texts
-> > > > > > > > > ("security.selinux") without race conditions and without =
-a file
-> > > > > > > > > descriptor opened with read access requiring SELinux read=
- permission.
-> > > > > > > >=20
-> > > > > > > > Also, generally all at() syscalls operate on O_PATH fds, un=
-like
-> > > > > > > > f() ones. Yet the O_PATH fds are rejected by *xattrat() sys=
-calls
-> > > > > > > > in the final version merged into tree. Instead, let's switc=
-h things
-> > > > > > > > to CLASS(fd_raw).
-> > > > > > > >=20
-> > > > > > > > Note that there's one side effect: f*xattr() starts to work=
- with
-> > > > > > > > O_PATH fds too. It's not clear to me whether this is desira=
-ble
-> > > > > > > > (e.g. fstat() accepts O_PATH fds as an outlier).
-> > > > > > > >=20
-> > > > > > > > [1] https://lore.kernel.org/all/20240426162042.191916-1-cgo=
-ettsche@seltendoof.de/
-> > > > > > > >=20
-> > > > > > > > Fixes: 6140be90ec70 ("fs/xattr: add *at family syscalls")
-> > > > > > > > Signed-off-by: Mike Yuan me@yhndnzj.com
-> > > > > > > > Cc: Al Viro viro@zeniv.linux.org.uk
-> > > > > > > > Cc: Christian G=C3=B6ttsche cgzones@googlemail.com
-> > > > > > > > Cc: Christian Brauner brauner@kernel.org
-> > > > > > > > Cc: stable@vger.kernel.org
-> > > > > > > > ---
-> > > > > > >=20
-> > > > > > > I expanded on this before. O_PATH is intentionally limited in=
- scope and
-> > > > > > > it should not allow to perform operations that are similar to=
- a read or
-> > > > > > > write which getting and setting xattrs is.
-> > > > > > >=20
-> > > > > > > Patches that further weaken or dilute the semantics of O_PATH=
- are not
-> > > > > > > acceptable.
-> > > > > >=20
-> > > > > > But the at() variants really should be able to work with O_PATH=
- fds, otherwise they're basically useless? I guess I just need to keep f() =
-as-is?
-> > > > >=20
-> > > > > I'm confused. If you have:
-> > > > >=20
-> > > > > filename =3D getname_maybe_null(pathname, at_flags);
-> > > > > if (!filename) {
-> > > > > CLASS(fd, f)(dfd);
-> > > > > if (fd_empty(f))
-> > > > > error =3D -EBADF;
-> > > > > else
-> > > > > error =3D file_setxattr(fd_file(f), &ctx);
-> > > > >=20
-> > > > > Then this branch ^^ cannot use fd_raw because you're allowing ope=
-rations
-> > > > > directly on the O_PATH file descriptor.
-> > > > >=20
-> > > > > Using the O_PATH file descriptor for lookup is obviously fine whi=
-ch is
-> > > > > why the other branch exists:
-> > > > >=20
-> > > > > } else {
-> > > > > error =3D filename_setxattr(dfd, filename, lookup_flags, &ctx);
-> > > > > }
-> > > > >=20
-> > > > > IOW, your patch makes AT_EMPTY_PATH work with an O_PATH file desc=
-riptor
-> > > > > which isn't acceptable. However, it is already perfectly fine to =
-use an
-> > > > > O_PATH file descriptor for lookup.
-> > > >=20
-> > > > Well, again, [1] clearly stated the use case:
-> > > >=20
-> > > > > Those can be used to operate on extended attributes,
-> > > > > especially security related ones, either relative to a pinned dir=
-ectory
-> > > > > or [on a file descriptor without read access, avoiding a
-> > > > > /proc/<pid>/fd/<fd> detour, requiring a mounted procfs].
-> > > >=20
-> > > > And this surfaced in my PR to systemd:
-> > > >=20
-> > > > https://github.com/systemd/systemd/pull/36228/commits/34fe16fb177d2=
-f917570c5f71dfa8f5b9746b9a7
-> > > >=20
-> > > > How are xattrat() syscalls different from e.g. fchmodat2(AT_EMPTY_P=
-ATH) in that regard? I can agree that the semantics of fxattr() ought to be=
- left untouched, yet I fail to grok the case for _at variants.
-> > >=20
-> > > man openat:
-> > >=20
-> > > O_PATH (since Linux 2.6.39)
-> > > Obtain a file descriptor that can be used for two purposes: to indica=
-te a location in the filesystem tree and to perform operations that act pur=
-ely at the file descriptor level.
-> > > The file itself is not opened, and other file operations (e.g., read(=
-2), write(2), fchmod(2), fchown(2), fgetxattr(2), ioctl(2), mmap(2)) fail w=
-ith the error EBADF.
-> > >=20
-> > > The following operations can be performed on the resulting file descr=
-iptor:
-> > >=20
-> > > =E2=80=A2 close(2).
-> > >=20
-> > > =E2=80=A2 fchdir(2), if the file descriptor refers to a directory (si=
-nce Linux 3.5).
-> > >=20
-> > > =E2=80=A2 fstat(2) (since Linux 3.6).
-> > >=20
-> > > =E2=80=A2 fstatfs(2) (since Linux 3.12).
-> > >=20
-> > > =E2=80=A2 Duplicating the file descriptor (dup(2), fcntl(2) F_DUPFD, =
-etc.).
-> > >=20
-> > > =E2=80=A2 Getting and setting file descriptor flags (fcntl(2) F_GETFD=
- and F_SETFD).
-> > >=20
-> > > =E2=80=A2 Retrieving open file status flags using the fcntl(2) F_GETF=
-L operation: the returned flags will include the bit O_PATH.
-> > >=20
-> > > =E2=80=A2 Passing the file descriptor as the dirfd argument of openat=
-() and the other "*at()" system calls. This includes linkat(2) with AT_EMPT=
-Y_PATH (or via procfs using AT_SYM=E2=80=90
-> > > LINK_FOLLOW) even if the file is not a directory.
-> > >=20
-> > > =E2=80=A2 Passing the file descriptor to another process via a UNIX d=
-omain socket (see SCM_RIGHTS in unix(7)).
-> > >=20
-> > > Both fchownat() and fchmodat() variants have had this behavior which
-> > > is a bug. And not a great one because it breaks O_PATH guarantees.
-> > > That's no reason to now also open up further holes such as getting an=
-d
-> > > setting xattrs.
-> >=20
-> > AFAICS that's not really what the kernel development has been after.
-> > fchmodat2(2) in particular was added fairly recently (6.6,
-> > https://github.com/torvalds/linux/commit/09da082b07bbae1c11d9560c850280=
-0039aebcea).
-> > One of the highlights was to add support for O_PATH + AT_EMPTY_PATH).
->=20
->=20
-> These system calls had pre-existing inconsistency. And allowing
-> fchownat() but then not fchmodat2() seemd asymmetric. But given the
-> discussion now I wish I hadn't even allowed that.
->=20
-> > And to me the semantics seem reasonably OK really: O_PATH fds are a way=
- to
-> > pin the inode (i.e. still within the boundry of getting a reference to
-> > a file system object (without opening it) if I shall put it). All the c=
-alls
-> > mentioned above operate on the file system object metadata, not the act=
-ual data,
-> > hence O_PATH is just providing a file location.
-> >=20
-> > The separation of at() and regular f() versions have remained pretty co=
-nsistent too
-> > (of cource, not with this patch, which is mostly an RFC) - fchmod() and=
- fchown()
-> > refuse O_PATH fds while the at() counterparts accept them. Did all thes=
-e suddenly
-> > change overnight?
-> >=20
-> > > If you want to perform read/write like operations you need a proper f=
-ile
-> > > descriptor for that and not continue to expand the meaning of O_PATH
-> > > until it is indistinguishable from a regular file descriptor.
-> >=20
-> > I definitely agree. But xattr is metadata, not data. listxattr() does n=
-ot even
-> > do any POSIX permission check...
->=20
->=20
-> That it's metadata is an interesting difference but really not that
-> important. Plus, the manpage also doesn't care about this distinction.
-> Ownership and mode changes are bad enough, setting and getting random
-> xattrs seems like a terrible idea.
->=20
-> If I sent an O_PATH file descriptor around today in a sandbox without
-> procfs mounted then I know no one can suddenly set posix acls using that
-> file descriptor. With this change they suddenly can.
->=20
-> This won't be enabled.
+syzbot has found a reproducer for the following issue on:
 
-OK, so I see the previous discussions now:
+HEAD commit:    9682c35ff6ec usb: typec: thunderbolt: Remove IS_ERR check ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=130e6df8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed7570f7f6046a71
+dashboard link: https://syzkaller.appspot.com/bug?extid=e84ecca6d1fa09a9b3d9
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170e6df8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=155c5318580000
 
-https://lore.kernel.org/all/20220622025715.upflevvao3ttaekj@senku/
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3c194e311f90/disk-9682c35f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/daad45c8e7c8/vmlinux-9682c35f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8a4e74467d7e/bzImage-9682c35f.xz
 
-> Since the current functionality cannot be retroactively disabled as it
-> is being used already through /proc/self/fd/$n, adding *xattrat(AT_EMPTY_=
-PATH)
-> doesn't really change what is currently possible by userspace.
->
-> I would say we should add *xattrat(2) and then we can add an upgrade
-> mask blocking it (and other operations) later.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e84ecca6d1fa09a9b3d9@syzkaller.appspotmail.com
 
-I suppose some of these points shifted over the years, which is also fine.
-It's unfortunate though that the commit message would remain misleading for=
-ever.
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object: ffff888114d18330 object type: timer_list hint: tpt_trig_timer+0x0/0x300 net/mac80211/led.c:145
+WARNING: CPU: 0 PID: 705 at lib/debugobjects.c:612 debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
+Modules linked in:
+
+CPU: 0 UID: 0 PID: 705 Comm: kworker/0:2 Not tainted 6.14.0-rc1-syzkaller-g9682c35ff6ec #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:debug_print_object+0x1a2/0x2b0 lib/debugobjects.c:612
+Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 54 48 8b 14 dd 40 d0 47 87 41 56 4c 89 e6 48 c7 c7 c0 c4 47 87 e8 af f6 c0 fe 90 <0f> 0b 90 90 58 83 05 96 71 d8 07 01 48 83 c4 18 5b 5d 41 5c 41 5d
+RSP: 0018:ffffc9000198f488 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: ffffffff813f4d09
+RDX: ffff88810b3d8000 RSI: ffffffff813f4d16 RDI: 0000000000000001
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000008 R12: ffffffff8747cb60
+R13: ffffffff872acb00 R14: ffffffff86f6b4e0 R15: ffffc9000198f598
+FS:  0000000000000000(0000) GS:ffff8881f5800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffebc06edcc CR3: 0000000008ca2000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __debug_check_no_obj_freed lib/debugobjects.c:1099 [inline]
+ debug_check_no_obj_freed+0x4b7/0x600 lib/debugobjects.c:1129
+ slab_free_hook mm/slub.c:2284 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x2e1/0x480 mm/slub.c:4757
+ ieee80211_led_exit+0x162/0x1c0 net/mac80211/led.c:210
+ ieee80211_unregister_hw+0x27e/0x3a0 net/mac80211/main.c:1706
+ rt2x00lib_remove_hw drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1085 [inline]
+ rt2x00lib_remove_dev+0x528/0x640 drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1550
+ rt2x00usb_disconnect+0x71/0x240 drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:872
+ usb_unbind_interface+0x1e2/0x960 drivers/usb/core/driver.c:458
+ device_remove drivers/base/dd.c:569 [inline]
+ device_remove+0x122/0x170 drivers/base/dd.c:561
+ __device_release_driver drivers/base/dd.c:1273 [inline]
+ device_release_driver_internal+0x44a/0x610 drivers/base/dd.c:1296
+ bus_remove_device+0x22f/0x420 drivers/base/bus.c:579
+ device_del+0x396/0x9f0 drivers/base/core.c:3854
+ usb_disable_device+0x36c/0x7f0 drivers/usb/core/message.c:1418
+ usb_disconnect+0x2e1/0x920 drivers/usb/core/hub.c:2305
+ hub_port_connect drivers/usb/core/hub.c:5363 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5663 [inline]
+ port_event drivers/usb/core/hub.c:5823 [inline]
+ hub_event+0x1bed/0x4f40 drivers/usb/core/hub.c:5905
+ process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
