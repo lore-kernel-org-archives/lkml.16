@@ -1,186 +1,325 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C983B1A4;
-	Thu,  6 Feb 2025 07:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3939B3B1A4;
+	Thu,  6 Feb 2025 07:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738827464; cv=none; b=E6ZN3+Qi1lvx97EjHd7cBmkZdVrtOm+zn6gexj6fbaTHldbJOQsBQghH/91QpsGKKp7nr77yWerYFYycEV2XeqxmPaHzyp3191eaQQUmHpItDbuItkMIu4/S3ilnhuIh1pxsKqi86QJqLxUUMtOmSO2C0bwrjUy/jDEChsK6UzI=
+	t=1738827480; cv=none; b=fp2OSosP+/gbJPv20YTVgYYckTuGcRMyEJye0mIBbidIxs4ED2n1NvbrMSnC5Brd3nmjKVwRLE/8m8WdnMzszU3rDBq88p90FqV2vH9sBVpm7QycfO8xe4+nzR5Zxdz5lnnMzNEBZNAIcXepCdTk25nZONpO93IFvbAc2qQNERc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738827464; c=relaxed/simple;
-	bh=vizkre/zlajIFCa+RvDbtt8gdcuEqWwVHRzJdLIek9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=izb1EUFE+O6A7PIdtgfPJVxgsgZ7jpeB4wexhVfXOLfVaeoWJUbLTfDdPZEhYzXTuGlpl2ZtUxT4wQVeFzF8j6ToTfxigcC3uNJwwqnQCBwvQZCLOUw0d/CQr/zigEy9YDNC9bHXEfzvaBRWvtvhhbymeMWIBJFJEmB9uM07nyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5V6IIUt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5V6IIUt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 931F4C4CEE0;
-	Thu,  6 Feb 2025 07:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738827464;
-	bh=vizkre/zlajIFCa+RvDbtt8gdcuEqWwVHRzJdLIek9c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L5V6IIUtxstXizci7m6Me4CY2b49KvUN4IWDYA2gQUgur/rZ5vPUQV5epwLpLKo4A
-	 yuln0OxHwudYH5zfxmndw4+1If1J8JCuColU/P5ZppapLrxjr9yOZFoCt4I4mGVeLg
-	 ejVEW0bZn9zEik9MVLvN3T6dyDfNbUgXFuWhB328KCQEdDSrZ+BJUEgWsfNWKceNfr
-	 aouLh0u3ZUcORjO/mXU2f9j6mv3Yrb7qtUYQC9a3vGZrohIQu9jIjZVJpOvP1KJTPx
-	 RKHhiNP2vy7omCmUlSS1RLWHbKRds1cdv3vLEb5H9+K8FKMKUCQ4s9QbU/HQOUFuH7
-	 KGrdaVw2Cc1pw==
-Message-ID: <81dfd162-84c1-4f34-b1f0-459ad88a62df@kernel.org>
-Date: Thu, 6 Feb 2025 08:37:35 +0100
+	s=arc-20240116; t=1738827480; c=relaxed/simple;
+	bh=H8d1sShhjT3uHIDp1TezpEAnMZqghybj848d8k4y1Vs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NPPBnW5oWxjVlZFDEuegzq9EhG3NYyIRf+knwnA44VkAmtWDmdZa5Cn0X/D+6fIoIqGuOvuh1PvdIkvi8G/PzfnVw4iZLth9gYSk2qOBujMv/qeSXY9xsv+z3fJ1Qz4z2nXorp/DO8/cYxYMX0sQL4yd2zdZC76HlQccgOhNnWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso1887955ab.1;
+        Wed, 05 Feb 2025 23:37:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738827477; x=1739432277;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J8p0zMadSpTCU/jRUCuNi7OSGRjIwWhEj+KL8cTH/bo=;
+        b=W9+Hzum85oSWAgOud9mGvvzAz0UOo/7TlObUx0XapXquaD5UPOPQ5rHbxNZ6Qo8/ut
+         Qf0QYnm+QssosCSj5M9+/NnUNQZN3mjV+WCIH/5X4jzRDdMCcE7MYHFy2OidGj/ssFlj
+         Ai2MeYU9YZcZk5rGWSbgtAgsTXdX9hDspcuio6drsZrOSQcEAMJe6R8r1lyQL9vS6xVK
+         ct0xbHoUrEzCOqGwrq0cTr/Lb6djPoxtbBT4IV4Lxe52dUQgxy0we4+rRCQa2r0WaFkG
+         LNI21fOhJlivm1QcqgYehlOnwvAYXRCshfr5gxFruQWkS42mnL9+AWtkTVtzyKdR3Oqr
+         JZ7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVrxof67N09cv89xmfIuzn9zCszSRi8BVoWO+V6Nx9e4myUFYP8QKPBm1vLfwlTfi0Z4RGw21M3gQdxCy8D@vger.kernel.org, AJvYcCX+9WU+SZptI8uh/fmhqVQTu72I2iW6vP04LL6Geru17xlGtAevYfakEbLCt5k6NMp/f+zwsHzGkH73@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfqkjJs5dWvUNg3GdWNquXZ+bm6MjTu/TlGC3FHvQwMtA5rx3f
+	rn5LPT47JzOh0u/DHvZOtHOf2CkzxA56rvyRntlo6Dsw6VbTXG32XrBCTryD
+X-Gm-Gg: ASbGnctAlVE/ID7lSg7qyj8cGpPLNGHE967PAJbpoURPGUJxfaOfw/94eBYfJLTa0GH
+	x5U3sY7W9UaKGG68PxvB4W3BE4OAi1L5EaB7TKOJEn3LrHMxxJsxv32vOYR03viqZuvGhOano9C
+	F/Gtjf0ILuxammbT7pqujnZlCd1YMcWuGziE3hHsS1gnx9iEZHJVL7eSx9uOUBNsBkzPJS9hcdX
+	Kd5zOPd2+yAgzvf9PqwC24Lv3p+7vF0VsWV5xDkv1kciWq3n/YJ/tE/c2ERTfDZdpJsOvAqNbT6
+	2CZRxqubD7MnoSI5QLNQxx5JKKW/rQDOZhdPerBCwAdPOjzl17MtQE3F
+X-Google-Smtp-Source: AGHT+IHc8P36svqeoZqXL/4dz+s9z8OCfSc2PPPGAudeI6smflk5tW3s3lWm5St76dDMTnoTHntFng==
+X-Received: by 2002:a05:6e02:1449:b0:3a7:820c:180a with SMTP id e9e14a558f8ab-3d04f92276bmr63375255ab.19.1738827477134;
+        Wed, 05 Feb 2025 23:37:57 -0800 (PST)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eccfb028e1sm152914173.126.2025.02.05.23.37.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 23:37:56 -0800 (PST)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-844eb33827eso21008439f.2;
+        Wed, 05 Feb 2025 23:37:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVWUtbjY6xYuPVkYY7zkJEhTv0JhbVxUjQod/hxB0heqC7ymtMVlHOXwWwsNcCxr3Hjfe7DAu39bfbJ@vger.kernel.org, AJvYcCWGFUvuepa6jsBrn326VwaWN0WxDHk8sbW2mVYe2pcGtVEauxXqfp4fgXGGdKMU1Fd++fEhFqCXqinw3g/w@vger.kernel.org
+X-Received: by 2002:a05:6e02:12eb:b0:3d0:124d:99e8 with SMTP id
+ e9e14a558f8ab-3d04f47c699mr45839305ab.13.1738827476180; Wed, 05 Feb 2025
+ 23:37:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/7] arm64: dts: qcom: ipq5332: Add PCIe related nodes
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, p.zabel@pengutronix.de,
- dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Praveenkumar I <quic_ipkumar@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250128062708.573662-1-quic_varada@quicinc.com>
- <20250128062708.573662-7-quic_varada@quicinc.com>
- <cc1c34f0-0737-469d-a826-2df7f29f6cf3@kernel.org>
- <Z6NCSo98YRgG666Q@hu-varada-blr.qualcomm.com>
- <85f54baa-7d3d-43c3-9944-8f5f3c3006da@kernel.org>
- <Z6OFSr2vrmPJTp4u@hu-varada-blr.qualcomm.com>
- <d867f285-b639-4080-beeb-20b75ee3f4a2@kernel.org>
- <1d78b30c-f71a-4769-b665-7425f00eb5ec@kernel.org>
- <Z6RUX3ZbDbd3qvjs@hu-varada-blr.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z6RUX3ZbDbd3qvjs@hu-varada-blr.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250125100711.70977-1-josh@joshuagrisham.com> <77eb01a6-2905-4776-96ce-eb936c04956b@gmx.de>
+In-Reply-To: <77eb01a6-2905-4776-96ce-eb936c04956b@gmx.de>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Thu, 6 Feb 2025 08:37:44 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeZrdkfwoab4zvBYJMuYaScCDFPbvijo9o6d-9CS96238g@mail.gmail.com>
+X-Gm-Features: AWEUYZm_TKLxriR3n9ajCDKvtvtR72txr1G8ZmRcQ8Mfk-CVFMqUgjGSrO1I34w
+Message-ID: <CAMF+KeZrdkfwoab4zvBYJMuYaScCDFPbvijo9o6d-9CS96238g@mail.gmail.com>
+Subject: Re: [PATCH v3] ACPI: fan: Add fan speed reporting for fans with only _FST
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 06/02/2025 07:19, Varadarajan Narayanan wrote:
-> On Wed, Feb 05, 2025 at 04:54:38PM +0100, Krzysztof Kozlowski wrote:
->> On 05/02/2025 16:53, Krzysztof Kozlowski wrote:
->>> On 05/02/2025 16:35, Varadarajan Narayanan wrote:
->>>> On Wed, Feb 05, 2025 at 02:47:13PM +0100, Krzysztof Kozlowski wrote:
->>>>> On 05/02/2025 11:49, Varadarajan Narayanan wrote:
->>>>>> On Mon, Feb 03, 2025 at 05:30:32PM +0100, Krzysztof Kozlowski wrote:
->>>>>>> On 28/01/2025 07:27, Varadarajan Narayanan wrote:
->>>>>>>>
->>>>>>>> @@ -479,6 +519,230 @@ frame@b128000 {
->>>>>>>>  				status = "disabled";
->>>>>>>>  			};
->>>>>>>>  		};
->>>>>>>> +
->>>>>>>> +		pcie1: pcie@18000000 {
->>>>>>>> +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
->>>>>>>> +			reg = <0x00088000 0x3000>,
->>>>>>>
->>>>>>> So as Konrad pointed out now, this was never tested. It's not we who
->>>>>>> should run tests for you. It's you.
->>>>>>
->>>>>> This was tested and it did not flag an error since it is having the order
->>>>>> specified in the bindings. qcom,pcie.yaml has 4 reg specifications. Two of
->>>>>
->>>>>
->>>>> Hm, then please paste results of dtbs_check W=1 testing. Here.
->>>>>
->>>>> I am 100% sure you have there warning and I don't understand your
->>>>> reluctance to run the tests even after pointing it out by two people.
->>>>
->>>> I ran the tests. Not sure which portions to paste. Have attached the full
->>>> output just in case you are interested in some other detail. Please take a
->>>> look.
->>>>
->>>> Thanks
->>>> Varada
->>>>
->>>> 	$ grep ipq.*dtb dtbs-check.log
->>>
->>> Where is the command you have used?
-> 
-> 	export ARCH=arm64
-> 	export W=1
-> 	export DT_CHECKER_FLAGS='-v -m'
-> 	export DT_SCHEMA_FILES=qcom
-> 	export CHECK_DTBS=y
-> 
-> 	make -j 16 dtbs_check &> dtbs-check.log
-> 
+Den tors 6 feb. 2025 kl 06:05 skrev Armin Wolf <W_Armin@gmx.de>:
+>
+> Am 25.01.25 um 11:07 schrieb Joshua Grisham:
+>
+> > Add support for ACPI fans with _FST to report their speed even if they do
+> > not support fan control.
+> >
+> > As suggested by Armin Wolf [1] and per the Windows Thermal Management
+> > Design Guide [2], Samsung Galaxy Book series devices (and possibly many
+> > more devices where the Windows guide was strictly followed) only implement
+> > the _FST method and do not support ACPI-based fan control.
+> >
+> > Currently, these fans are not supported by the kernel driver but this patch
+> > will make some very small adjustments to allow them to be supported.
+> >
+> > This patch is tested and working for me on a Samsung Galaxy Book2 Pro whose
+> > DSDT (and several other Samsung Galaxy Book series notebooks which
+> > currently have the same issue) can be found at [3].
+>
+> Any updates on this patch? For me it seems ready for mainline.
+>
+> Thanks,
+> Armin Wolf
+>
 
-No flags for DTC as I asked.
+Hi Armin, thanks for checking in on this!
 
->> Although that might not matter - you skipped several warnings with your
->> grep. So maybe you need to fix your process, not sure.
-> 
-> export W=1 is the problem. Kernel Makefile differentiates between 'W' being
-> set from environment and from command line with this check
+For me I have no further updates that I planned or intended to send.
+If it looks good to Rafael or anyone else who wants or needs to review
+then I would be glad to see it applied.
 
-So just don't export. Command is:
-make W=1 -j8 dtbs_check
+If needed then I can re-send with Armin's Reviewed-by tag inline in
+the commit message but otherwise everything is as I would have wished
+it to be, for what that is worth :)
 
-> 
-> 	ifeq ("$(origin W)", "command line")
-> 	  KBUILD_EXTRA_WARN := $(W)
-> 	endif
-> 
-> I assumed similar to DT_SCHEMA_FILES and DT_CHECKER_FLAGS, W will also be
-> taken. I was not aware of this differentiation, and the 'export W=1' never
-> came into effect. I re-ran the command as below and see the warnings
-> 
-> 	$ make W=1 -j 16 dtbs_check &> dtbs-check2.log
-> 
-> 	$ grep Warning dtbs-check2.log | grep ipq.*dt
-> 	arch/arm64/boot/dts/qcom/ipq5332.dtsi:523.24-625.5: Warning (simple_bus_reg): /soc@0/pcie@18000000: simple-bus unit address format error, expected "88000"
-> 	arch/arm64/boot/dts/qcom/ipq5332.dtsi:627.24-729.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "80000"
-
-Oh look! What surprise, who could expect that...
+Thanks again!
 
 Best regards,
-Krzysztof
+Joshua
+
+
+> >
+> > [1]: https://lore.kernel.org/platform-driver-x86/53c5075b-1967-45d0-937f-463912dd966d@gmx.de
+> > [2]: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/design-guide
+> > [3]: https://github.com/joshuagrisham/samsung-galaxybook-extras/tree/8e3087a06b8bdcdfdd081367af4b744a56cc4ee9/dsdt
+> >
+> > Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+> > ---
+> >
+> > v1->v2:
+> > - Still allow acpi4_only_fst fans to update power state on
+> >    suspend/resume
+> > - Fix if / else if logic error
+> > - Also hide hwmon_power_input for acpi4_only_fst fans
+> >
+> > v2->v3:
+> > - Still allow acpi4_only_fst fans to set initial power state on probe
+> > ---
+> >   drivers/acpi/fan.h       |  1 +
+> >   drivers/acpi/fan_attr.c  | 37 ++++++++++++++++++++++---------------
+> >   drivers/acpi/fan_core.c  | 22 +++++++++++++++++-----
+> >   drivers/acpi/fan_hwmon.c | 12 ++++++++++++
+> >   4 files changed, 52 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+> > index 488b51e2c..d0aad88a7 100644
+> > --- a/drivers/acpi/fan.h
+> > +++ b/drivers/acpi/fan.h
+> > @@ -49,6 +49,7 @@ struct acpi_fan_fst {
+> >
+> >   struct acpi_fan {
+> >       bool acpi4;
+> > +     bool acpi4_only_fst;
+> >       struct acpi_fan_fif fif;
+> >       struct acpi_fan_fps *fps;
+> >       int fps_count;
+> > diff --git a/drivers/acpi/fan_attr.c b/drivers/acpi/fan_attr.c
+> > index f4f6e2381..d83f88429 100644
+> > --- a/drivers/acpi/fan_attr.c
+> > +++ b/drivers/acpi/fan_attr.c
+> > @@ -75,15 +75,6 @@ int acpi_fan_create_attributes(struct acpi_device *device)
+> >       struct acpi_fan *fan = acpi_driver_data(device);
+> >       int i, status;
+> >
+> > -     sysfs_attr_init(&fan->fine_grain_control.attr);
+> > -     fan->fine_grain_control.show = show_fine_grain_control;
+> > -     fan->fine_grain_control.store = NULL;
+> > -     fan->fine_grain_control.attr.name = "fine_grain_control";
+> > -     fan->fine_grain_control.attr.mode = 0444;
+> > -     status = sysfs_create_file(&device->dev.kobj, &fan->fine_grain_control.attr);
+> > -     if (status)
+> > -             return status;
+> > -
+> >       /* _FST is present if we are here */
+> >       sysfs_attr_init(&fan->fst_speed.attr);
+> >       fan->fst_speed.show = show_fan_speed;
+> > @@ -92,7 +83,19 @@ int acpi_fan_create_attributes(struct acpi_device *device)
+> >       fan->fst_speed.attr.mode = 0444;
+> >       status = sysfs_create_file(&device->dev.kobj, &fan->fst_speed.attr);
+> >       if (status)
+> > -             goto rem_fine_grain_attr;
+> > +             return status;
+> > +
+> > +     if (fan->acpi4_only_fst)
+> > +             return 0;
+> > +
+> > +     sysfs_attr_init(&fan->fine_grain_control.attr);
+> > +     fan->fine_grain_control.show = show_fine_grain_control;
+> > +     fan->fine_grain_control.store = NULL;
+> > +     fan->fine_grain_control.attr.name = "fine_grain_control";
+> > +     fan->fine_grain_control.attr.mode = 0444;
+> > +     status = sysfs_create_file(&device->dev.kobj, &fan->fine_grain_control.attr);
+> > +     if (status)
+> > +             goto rem_fst_attr;
+> >
+> >       for (i = 0; i < fan->fps_count; ++i) {
+> >               struct acpi_fan_fps *fps = &fan->fps[i];
+> > @@ -109,18 +112,18 @@ int acpi_fan_create_attributes(struct acpi_device *device)
+> >
+> >                       for (j = 0; j < i; ++j)
+> >                               sysfs_remove_file(&device->dev.kobj, &fan->fps[j].dev_attr.attr);
+> > -                     goto rem_fst_attr;
+> > +                     goto rem_fine_grain_attr;
+> >               }
+> >       }
+> >
+> >       return 0;
+> >
+> > -rem_fst_attr:
+> > -     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
+> > -
+> >   rem_fine_grain_attr:
+> >       sysfs_remove_file(&device->dev.kobj, &fan->fine_grain_control.attr);
+> >
+> > +rem_fst_attr:
+> > +     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
+> > +
+> >       return status;
+> >   }
+> >
+> > @@ -129,9 +132,13 @@ void acpi_fan_delete_attributes(struct acpi_device *device)
+> >       struct acpi_fan *fan = acpi_driver_data(device);
+> >       int i;
+> >
+> > +     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
+> > +
+> > +     if (fan->acpi4_only_fst)
+> > +             return;
+> > +
+> >       for (i = 0; i < fan->fps_count; ++i)
+> >               sysfs_remove_file(&device->dev.kobj, &fan->fps[i].dev_attr.attr);
+> >
+> > -     sysfs_remove_file(&device->dev.kobj, &fan->fst_speed.attr);
+> >       sysfs_remove_file(&device->dev.kobj, &fan->fine_grain_control.attr);
+> >   }
+> > diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+> > index 10016f52f..66aa1be64 100644
+> > --- a/drivers/acpi/fan_core.c
+> > +++ b/drivers/acpi/fan_core.c
+> > @@ -211,6 +211,11 @@ static bool acpi_fan_is_acpi4(struct acpi_device *device)
+> >              acpi_has_method(device->handle, "_FST");
+> >   }
+> >
+> > +static bool acpi_fan_has_fst(struct acpi_device *device)
+> > +{
+> > +     return acpi_has_method(device->handle, "_FST");
+> > +}
+> > +
+> >   static int acpi_fan_get_fif(struct acpi_device *device)
+> >   {
+> >       struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> > @@ -327,7 +332,12 @@ static int acpi_fan_probe(struct platform_device *pdev)
+> >       device->driver_data = fan;
+> >       platform_set_drvdata(pdev, fan);
+> >
+> > -     if (acpi_fan_is_acpi4(device)) {
+> > +     if (acpi_fan_is_acpi4(device))
+> > +             fan->acpi4 = true;
+> > +     else if (acpi_fan_has_fst(device))
+> > +             fan->acpi4_only_fst = true;
+> > +
+> > +     if (fan->acpi4) {
+> >               result = acpi_fan_get_fif(device);
+> >               if (result)
+> >                       return result;
+> > @@ -335,7 +345,9 @@ static int acpi_fan_probe(struct platform_device *pdev)
+> >               result = acpi_fan_get_fps(device);
+> >               if (result)
+> >                       return result;
+> > +     }
+> >
+> > +     if (fan->acpi4 || fan->acpi4_only_fst) {
+> >               result = devm_acpi_fan_create_hwmon(device);
+> >               if (result)
+> >                       return result;
+> > @@ -343,9 +355,9 @@ static int acpi_fan_probe(struct platform_device *pdev)
+> >               result = acpi_fan_create_attributes(device);
+> >               if (result)
+> >                       return result;
+> > +     }
+> >
+> > -             fan->acpi4 = true;
+> > -     } else {
+> > +     if (!fan->acpi4) {
+> >               result = acpi_device_update_power(device, NULL);
+> >               if (result) {
+> >                       dev_err(&device->dev, "Failed to set initial power state\n");
+> > @@ -391,7 +403,7 @@ static int acpi_fan_probe(struct platform_device *pdev)
+> >   err_unregister:
+> >       thermal_cooling_device_unregister(cdev);
+> >   err_end:
+> > -     if (fan->acpi4)
+> > +     if (fan->acpi4 || fan->acpi4_only_fst)
+> >               acpi_fan_delete_attributes(device);
+> >
+> >       return result;
+> > @@ -401,7 +413,7 @@ static void acpi_fan_remove(struct platform_device *pdev)
+> >   {
+> >       struct acpi_fan *fan = platform_get_drvdata(pdev);
+> >
+> > -     if (fan->acpi4) {
+> > +     if (fan->acpi4 || fan->acpi4_only_fst) {
+> >               struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+> >
+> >               acpi_fan_delete_attributes(device);
+> > diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+> > index bd0d31a39..d0668ecc2 100644
+> > --- a/drivers/acpi/fan_hwmon.c
+> > +++ b/drivers/acpi/fan_hwmon.c
+> > @@ -43,6 +43,12 @@ static umode_t acpi_fan_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_
+> >               case hwmon_fan_input:
+> >                       return 0444;
+> >               case hwmon_fan_target:
+> > +                     /*
+> > +                      * Fans with only _FST do not support fan control.
+> > +                      */
+> > +                     if (fan->acpi4_only_fst)
+> > +                             return 0;
+> > +
+> >                       /*
+> >                        * When in fine grain control mode, not every fan control value
+> >                        * has an associated fan performance state.
+> > @@ -57,6 +63,12 @@ static umode_t acpi_fan_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_
+> >       case hwmon_power:
+> >               switch (attr) {
+> >               case hwmon_power_input:
+> > +                     /*
+> > +                      * Fans with only _FST do not support fan control.
+> > +                      */
+> > +                     if (fan->acpi4_only_fst)
+> > +                             return 0;
+> > +
+> >                       /*
+> >                        * When in fine grain control mode, not every fan control value
+> >                        * has an associated fan performance state.
