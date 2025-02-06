@@ -1,82 +1,43 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5850225A30;
-	Thu,  6 Feb 2025 14:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61F0225A30;
+	Thu,  6 Feb 2025 14:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852077; cv=none; b=ABHDLjkgtI3bmMEcB565TXYiZtCjP3A+GYs6h/NlkzkHjfylo+5fgBjMNox2wvOCLbi13HlPJrL6EfMuUkgaaMGsJEtNmURz1iSvocD7aYhpKbmLQ2fZXBULhW3cUuo0gDXsiKfaEPwDRFqlEPtlPcYFPdvwNgWIKat3gbvG2Wc=
+	t=1738852090; cv=none; b=RIkp3Lu/EHxYb+OwaBbGfXWk0IVf56ogvTRxgSm9bmAI6k9kgTuP+HE2VHaXePpLeeR7kdbLmYvrryodo7FPZiw73gVukcj8L7hb8QQVT6LmIQ55CONAKPdyRxANAhkAzsQ+bV0qhFuXiT1JJMmg6ViOp5eokoGuC2MIo+lsZgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852077; c=relaxed/simple;
-	bh=2cNmMRrjbMU+ZRP1p0rAJ5BG1SaRJHj8sVMoEn8RiOU=;
+	s=arc-20240116; t=1738852090; c=relaxed/simple;
+	bh=xEGVwu4ZhC6jHJ7DDWTDV+bZUvs+4SMtuUoW0awunFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PmXqmWy7gjCQOestFsb8eacdIhXV0CJnrVWZUZX2IFaqDg9dyBRRNDVy6guTMyo0i7DYH5Ikwl/2IVtaS6btJ1COf9E7YNJquOdxINh3D3/fqKeZZYc2bS/B9/NUAFd48HEk4FUxdfWw3T3TDYj45CHjiJQMGt0gHJZzEzlufOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=HqBo0e7s; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jBpmXNFF; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=p+Qfj/Q1QzcjF5pXbuILDLHLkICqGH9X9+Z3QLjHVnfdTqCoLfGtV1kd5JRTXTpnHFPwwYrX1uDG0uHwsGdCmM/4IFsmCxgld7ffLYaU2AlXgJRmaCpeF75KL7FUpYWK1iSqvE4SAdx8eAjd3FpgTo1cTaoAsU27O4o0tP5xH2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HUGgnhl2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="HqBo0e7s";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jBpmXNFF"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id E1BD211400F4;
-	Thu,  6 Feb 2025 09:27:53 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 06 Feb 2025 09:27:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1738852073; x=1738938473; bh=kffymrycT8
-	A8X7eXvYzY0zmmfkNntebL2JpumusSOlM=; b=HqBo0e7sung/aQHG1OUU2b6MCX
-	djg1TwyJKuuHHEGwBkuOmAjNht4B8oltU+D75Fk+n+ZJnMXGH8mvGF2+oDazvI0f
-	ExXAdueLApq8GMJcJKoqKWKfEDICZc5023a/uBWGUn8fg+9389FHftVOtNSgKvqG
-	8n5h93YKdu7V9CQyT+AcqPVEgxRIzvxj27dHUA1xAKypruCCyrwKyWCAY0dUKm0o
-	gZ6yu48xdys+O6bPPIDgF5lVDUVffZP1/ZCAGcdk3bvcu9g7DXJLZPd8mnUVBWP7
-	jmBqHcSbwUejmmTEQd0fJZ91T4LC+2H8L6/uIE3G0u6TBQfXs64Q8cl9aejA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738852073; x=1738938473; bh=kffymrycT8A8X7eXvYzY0zmmfkNntebL2Jp
-	umusSOlM=; b=jBpmXNFF2DEQDZXV029r06MPBdgGkrcndLzGFLMIBArprOTLRT4
-	LP/eBPORIEXZqEddrahQ+pprU3itHVl4sWidrmpQIdTGjBYBbUlOCs1PgEO9D+Jn
-	+i9yAQ5NtVX4+qegHX8u99dkXE/96hpJq0yLS5U3EbENYgLkovF632FqynrgxzzX
-	LKskAv6EU4SOkbrwp6LJfga25VlkI3EnNlj6xENRK2AjD53jyxh+0W4dbywUO/9r
-	CNqAf9MQZINFFVax8pQKZBi1n28rn8jDTkiXQZKtdS+fflEvg3ASiCAZdB98AzAT
-	tb4ktdAZoMZVCXMqyk0yzyWh7WftE+VrFrQ==
-X-ME-Sender: <xms:6MakZ-DeK_SW8M6EqsppoObAz6SZLBEj2WdPBkFyAAQNzmYilGD4SA>
-    <xme:6MakZ4hBYV_uaGmdy4Nn7tOi_UtIpghyX4IOt_VoeZpdE8kQilnCW_5x4E2Z-gu5X
-    EF2S9RA7hZymg>
-X-ME-Received: <xmr:6MakZxlvCU4cjpcj-GuL5X0lxnL2pZ-ZnGYs44mRKUYxxVaISmZQgXHyS9c95HB6on6DHhf3Y8g7AmMstNqvRdghCp9VZ8lgmfT6oQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeifecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeehgedvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueef
-    hffgheekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupd
-    hrtghpthhtohepsggvnhhjrghmihhnrdhlrghrshhsohhnsehgvghnvgigihhsrdgvuhdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:6MakZ8wvxBHgyiC2hiohHz51VMjoy56sfgn5GIUZNqeAQ59lDhs0lA>
-    <xmx:6MakZzRmzQcZmt7De3oSo9EU8nonF1sGRT18NYsgPdl6bYczqwWNPQ>
-    <xmx:6MakZ3bYHa06_j_yKu_924t5wIHp9fLtJ6hmL_LL_5B8vVXNK4RYxQ>
-    <xmx:6MakZ8S_lNlcC9KaiGupmrgHASUpLMb-47qSq0EkJC-BSANLcxVyVg>
-    <xmx:6cakZ-FPRtLe3dDVfwxYTCeINfzwYsiZZF2_YqIcKQFFGzacZqrMap3i>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 6 Feb 2025 09:27:52 -0500 (EST)
-Date: Thu, 6 Feb 2025 06:15:05 +0100
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tty tree
-Message-ID: <2025020622-preset-snowless-563b@gregkh>
-References: <20250206135328.4bad1401@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HUGgnhl2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0794DC4CEDD;
+	Thu,  6 Feb 2025 14:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738852090;
+	bh=xEGVwu4ZhC6jHJ7DDWTDV+bZUvs+4SMtuUoW0awunFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HUGgnhl2GzLq9a8ffCa+61N8TpO3Roa56omdYkUseeGeFN72Xr3FuRw32lTHD5qaO
+	 tdCNKofACxAhGpBrPxXcKC+zxcs2cR0sKg5xH5WlP6rS1vJB3wNLkToumdCs1GXwM3
+	 zRGvExUoUzqAYKfIFv8WyZ7ZBHf9IMCyzRVBR2hE=
+Date: Thu, 6 Feb 2025 06:36:58 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Cc: markus.elfring@web.de, GR-QLogic-Storage-Upstream@marvell.com,
+	James.Bottomley@hansenpartnership.com, arun.easi@cavium.com,
+	bvanassche@acm.org, jhasan@marvell.com,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	manish.rangankar@cavium.com, martin.petersen@oracle.com,
+	nilesh.javali@cavium.com, skashyap@marvell.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] scsi: qedf: Replace kmalloc_array() with kcalloc()
+Message-ID: <2025020626-purist-chrome-0dd6@gregkh>
+References: <d4db5506-6ace-4585-972e-6b7a6fc882a4@web.de>
+ <20250206052523.16683-1-jiashengjiangcool@gmail.com>
+ <20250206052523.16683-2-jiashengjiangcool@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,31 +46,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206135328.4bad1401@canb.auug.org.au>
+In-Reply-To: <20250206052523.16683-2-jiashengjiangcool@gmail.com>
 
-On Thu, Feb 06, 2025 at 01:53:28PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the tty tree, today's linux-next build (x86_64_allmodconfig)
-> failed like this:
-> 
-> drivers/tty/serial/8250/8250_airoha.c:52:6: error: redefinition of 'airoha8250_set_baud_rate'
->    52 | void airoha8250_set_baud_rate(struct uart_port *port,
->       |      ^~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/tty/serial/8250/8250_airoha.c:10:
-> drivers/tty/serial/8250/8250.h:328:20: note: previous definition of 'airoha8250_set_baud_rate' with type 'void(struct uart_port *, unsigned int,  unsigned int)'
->   328 | static inline void airoha8250_set_baud_rate(struct uart_port *port,
->       |                    ^~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   e12ebf14fa36 ("serial: Airoha SoC UART and HSUART support")
-> 
-> I have used the tty tree from next-20250205 for today.
+On Thu, Feb 06, 2025 at 05:25:22AM +0000, Jiasheng Jiang wrote:
+> Replace kmalloc_array() with kcalloc() to avoid old (dirty) data being
+> used/freed.
 
-Ick, sorry about that.  Benjamin, I'll go revert both of your commits in
-my tree now.  Please feel free to fix them up and send working ones in
-the future.
+Used/freed where?
+
+> 
+> Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
+> Cc: <stable@vger.kernel.org> # v5.10+
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> ---
+>  drivers/scsi/qedf/qedf_io.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+> index fcfc3bed02c6..d52057b97a4f 100644
+> --- a/drivers/scsi/qedf/qedf_io.c
+> +++ b/drivers/scsi/qedf/qedf_io.c
+> @@ -254,9 +254,7 @@ struct qedf_cmd_mgr *qedf_cmd_mgr_alloc(struct qedf_ctx *qedf)
+>  	}
+>  
+>  	/* Allocate pool of io_bdts - one for each qedf_ioreq */
+> -	cmgr->io_bdt_pool = kmalloc_array(num_ios, sizeof(struct io_bdt *),
+> -	    GFP_KERNEL);
+> -
+> +	cmgr->io_bdt_pool = kcalloc(num_ios, sizeof(*cmgr->io_bdt_pool), GFP_KERNEL);
+
+This is just an array that is then properly all initialized a few lines
+below this.
+
+So why does this need to be zeroed out at all?
 
 thanks,
 
