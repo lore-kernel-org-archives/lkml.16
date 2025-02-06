@@ -1,79 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823EA215778;
-	Thu,  6 Feb 2025 09:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE67E1FDE08;
+	Thu,  6 Feb 2025 09:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738835347; cv=none; b=vF0llld94bAlbhpTEXEp0FiKETCWMtY5Zbya4Q7Ox/EEmZ+gAg5gkX81KU+VQTwDutUeVYHvbUsNeWCltS9DJTILfaS0UEGBBia5MQCF4MedCGH/QTWQUViap9lMY29hDAV1L+xJozjDNaVc3XeVJjliji5/eEkCpD0tcbDpSbQ=
+	t=1738835450; cv=none; b=V2AmiO2h1yQ9/UfM0lo7+uJjr3SWSxhZiA4knc2yF4quTEccjydXw99ERl8qON6E6hqWkepxe3N5qAGuMieXknSGEntEM4CuDhT9ApEXWHbQ/0Cb364makuCXsPLp8db8XlIS0XZsRYkTWoj1PJ75JDsuy1EH8g7DVfRFbIb6Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738835347; c=relaxed/simple;
-	bh=VjgJG7HJO75EfEty4D/K3zMWxBje59/FhlZFefM2alU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNI01QHIrBfxpdLMQ7EMHz8pNiaanYCmG3FW6XYJ3lxC6gjXIr8WhT0RMh+Vh8Is+92nWkK1BT0htShkRkKu3weQQWAC54WUt2x9oEpzlOI9h/GUj2/hR1i0nAHcR4yTFfkBKUzE4IMyN6FzwtVParniMwCpNvUCGegow1677Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZG5ehmq4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738835450; c=relaxed/simple;
+	bh=itpKQpCOiq01Bdaito4FooOWsxu62KH60EMfJ0aSCaw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Tbb/SbUcIzJnIoPXPVkt+BJCTY8yHfMFqfT4ihMcDVXBmCnysRV8s14Kj/p3SVJV0CmamipDGU3J93ro9VRuKXVgeHN+yAOyP+6zA9DnviaO6NlPimo8tZobi4DWrRnXs3/8FwijzpfbjOjcPNcIbSscdekOs0q17xaLjzjWmM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=X0UJRU2P; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZG5ehmq4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94CF8C4CEDD;
-	Thu,  6 Feb 2025 09:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738835346;
-	bh=VjgJG7HJO75EfEty4D/K3zMWxBje59/FhlZFefM2alU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZG5ehmq4UYy1mNP0SdCXcmL9wsRj9oyyg2bctkHJ6n4I4JsxbFfQbc1uvp3nA5AS5
-	 Oj0FO3ueUGu7pSaTZw0ThblA8dlPye83QCtEkYR3YP1xTtCkmcjcrMg+I/fevKq/kw
-	 3/X5agh9j2A5gxMqYb01RmZ3thuSF+1N2SvfW3DBB8lWfEGKGqukeYHPIyu3Hx+sm2
-	 WNZ/XevBo8AoWB6oloY7jpJ+K3LCsDX+no8xxRldOxw+LT5XB3ytbXWpgHlt08CKkq
-	 vU+fUwnHz4DFrDwbk7rgpFx2x0JxOC1hhZ1RoZ60K82fquEGnB/pfQQGjvJHKUtqIf
-	 1gX/A3Hb2G0pA==
-Date: Thu, 6 Feb 2025 10:49:00 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Jeff Layton <jlayton@kernel.org>, David Howells <dhowells@redhat.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Mateusz Guzik <mjguzik@gmail.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, 
-	Oliver Sang <oliver.sang@intel.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pipe: introduce struct file_operations
- pipeanon_fops
-Message-ID: <20250206-gravierend-ungeduldig-d3af18bb6703@brauner>
-References: <20250205153302.GA2216@redhat.com>
- <20250205153329.GA2255@redhat.com>
- <CAHk-=wiqUibNm0W-KcCb3H+aiSVr4Uz3COZq=LjqGd__6guFEg@mail.gmail.com>
- <20250205161636.GA1001@redhat.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="X0UJRU2P"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=ziKVTMMA/mlYZVJuZda3dTpHoy6EjxMZx7k7VgkUGGc=;
+	t=1738835448; x=1740045048; b=X0UJRU2P5ks7EWOL5sQBl5twzbihPL3A+F+Z1tA8cdHeTi7
+	lvvOmeFHVoUHEnCRSsAWYdOZ0tDtKd2KAueWWoUurWhdUOPUiuj7Og5pyaqKkvq7H+rpc4MubFWjD
+	vfbtim9R2HVs9XJWJlDOHYO2MdpqKmldDwtO4cwBLoeypIBslHYQEy62zUuV8UJIFiADlDEZMV3pu
+	FsG+eXm1rhHMH3BOf3H6+t8XHNd/8SxodeM9fY5k4Q01dB7BZIMhRyUooZ5kasOKxyOuCrecnfQLG
+	UXnpNOSFF3oweMo0hIa+/gFI2YFv45mvXzEZrvci3ed3wKmZSXhhCUO/iW+ot8iQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tfyWr-00000004y1Y-1HxM;
+	Thu, 06 Feb 2025 10:50:37 +0100
+Message-ID: <a2a26c7eaf20bb972289a804ecfe0e532f0f85ae.camel@sipsolutions.net>
+Subject: Re: [PATCH v3 1/2] net, treewide: define and use MAC_ADDR_STR_LEN
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Uday Shankar
+	 <ushankar@purestorage.com>
+Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?=	 <rafal@milecki.pl>, Simon Horman
+ <horms@kernel.org>, Andrew Morton	 <akpm@linux-foundation.org>, Jonathan
+ Corbet <corbet@lwn.net>, 	netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-wireless@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Date: Thu, 06 Feb 2025 10:50:36 +0100
+In-Reply-To: <Z6SEeO0QFx9Y52LJ@mev-dev.igk.intel.com>
+References: <20250205-netconsole-v3-0-132a31f17199@purestorage.com>
+	 <20250205-netconsole-v3-1-132a31f17199@purestorage.com>
+	 <Z6SEeO0QFx9Y52LJ@mev-dev.igk.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250205161636.GA1001@redhat.com>
+X-malware-bazaar: not-scanned
 
-On Wed, Feb 05, 2025 at 05:16:37PM +0100, Oleg Nesterov wrote:
-> On 02/05, Linus Torvalds wrote:
-> >
-> > On Wed, 5 Feb 2025 at 07:34, Oleg Nesterov <oleg@redhat.com> wrote:
-> > >
-> > > So that fifos and anonymous pipes could have different f_op methods.
-> > > Preparation to simplify the next patch.
-> >
-> > Looks good, except:
-> >
-> > > +++ b/fs/internal.h
-> > >  extern const struct file_operations pipefifo_fops;
-> > > +extern const struct file_operations pipeanon_fops;
-> >
-> > I think this should just be 'static' to inside fs/pipe.c, no?
-> 
-> I swear, this is what I did initially ;)
-> 
-> But then for some reason I thought someone would ask me to export
-> pipeanon_fops along with pipefifo_fops for consistency.
-> 
-> OK, I will wait for other reviews and send V3.
+On Thu, 2025-02-06 at 10:44 +0100, Michal Swiatkowski wrote:
+>=20
+> >  net/mac80211/debugfs_sta.c         | 5 +++--
+>=20
+> What about ieee80211_sta_debugfs_add()? (net/mac80211/debugfs_sta.c)
 
-It's fine. Minor things like this I can just fix myself when pulling
-this. There's no need to generate more mail traffic for this.
+What about it? It's modified accordingly, just needs a bit more +/-1
+now.
+
+For that:
+Acked-by: Johannes Berg <johannes@sipsolutions.net>
+
+Thanks for the rename, per the robot report that just came in it looks
+like that also saved you from some hassle in drivers that have their own
+MAC_ADDR_LEN for some reason :)
+
+johannes
