@@ -1,151 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C02722DF99;
-	Thu,  6 Feb 2025 12:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BC621CFF7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738845859; cv=none; b=lfpOk6gT4g7F2CBLJJ9cl65//pOiXHiDMle8Xs+Bu4OKc91PlQtwm6aH792g6IXTqQkXek2kLN0rnRxTL49+1pZx7TDH4VtM4UjzvUSWFMbFDX9Z04yEG7JENhxQFPSB3Pnhbt+bsaE68YFhFYl/5830wRsd434/uSkg5xJaCWY=
+	t=1738845935; cv=none; b=C2GWcc6ltLRF6EMXoDS7ISoIyoAy3lITBVWvtyJ2jNMXwRyYvQH0NWuP4lNSQMDMLgccdNfTJ4d0DtCIA9uhwGPxzxUZBP+38m+cwqKYJl1S9H1sSskwICJKSPuVbO3yMhliVv5/A4GX+QfZOJr7isz6RUuXWXcXEkaUvLmfuRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738845859; c=relaxed/simple;
-	bh=AI14gFOmTzGyATjTmSWsjNge/5pVrqKxGeFBT0xQKac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBZQLJ8nmN3cuRu3wboGDo+XmS5cbdC/7Odr/9UQitWMXlAkbukrQx2uevb7tpAtDL8755UcJ3Kzei5+Xkm2nCdw4nZNsXxJrX/so1hguYhZ/EFeEVQR1GFPlj2Yqs2SAtlNkCDgwcmrCz87q4vupSN2DbEaUZqGCqPLq0pHy/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Emmv28mW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738845935; c=relaxed/simple;
+	bh=KMl9eVQKXnotHYNjQ0Ja1YvBxSkzHW5c8bITk0fe058=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tVbnmfEkDAKBRtxpRlwzNoZN/m36GExBnvnmNzSfDlkBq1d411m4O7RJTyu+uQ3U9SvJH3pqPdsah9c/Uhr//wrtrWQ1xzJwoq74FXhkVNSp37EYcazyA7THt/DjWSDJZZYSuT1MQRbLsqEduP3T6+9uCYYvFMPPPSEVEc2KpWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=E8pNIZSk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Emmv28mW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B931BC4CEDD;
-	Thu,  6 Feb 2025 12:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738845858;
-	bh=AI14gFOmTzGyATjTmSWsjNge/5pVrqKxGeFBT0xQKac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Emmv28mWb6fV+T+Ro+GlrNq3CKTnAaicWv1UZay0wS2IngW/+bWCk7owMKT5XPPnZ
-	 5PZENti/fpwHiTaQi/hpLMiCQIvyuIlXC+3zTagdnSFkdZJmytBsdcTKJQalTORHWB
-	 2pOdi4FpKgSKQUv7/zrduRdBYdwusx0a8jgYRPlwYDDEz6cIRTNPIfJ2hiAP8WMyIq
-	 e5kqEqGUAD01ViBSmQ2bI294QCmJnW3jH35t0z8dPzjthZy3TiYhBZfS3x0jPH9efI
-	 TmAUL8tdl2524L6uO2JskN+PLjHOYcA6e1dbibMNDEfYeVt6W20Cfj9Zwd9oZZY5pm
-	 lNp8DJL8mFSEA==
-Date: Thu, 6 Feb 2025 13:44:13 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, 
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/19] VFS: repack LOOKUP_ bit flags.
-Message-ID: <20250206-wirren-ausfiel-99acf5b0ace8@brauner>
-References: <20250206054504.2950516-1-neilb@suse.de>
- <20250206054504.2950516-8-neilb@suse.de>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="E8pNIZSk"
+Received: from isaac-ThinkPad-T16-Gen-2.lan (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 84B821193;
+	Thu,  6 Feb 2025 13:44:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738845858;
+	bh=KMl9eVQKXnotHYNjQ0Ja1YvBxSkzHW5c8bITk0fe058=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=E8pNIZSknmRNKrsljsdYOT+Z4wdx74yVpzRhjdUeFRxnuBaBhNLLZ2uyD7GPbseBm
+	 l95MWP/BOrQsPM2hsv64LHLCIQ8JLuRqr0+Vl7FOqF77PM4+ppA/mC8plFozSgn2cb
+	 K7kfB3gN0T54Scfra3YzODcJk0Q0PfRQKokn+rME=
+Message-ID: <2a0f24c61de73f7bd2bb495d697dcedd8462f4c0.camel@ideasonboard.com>
+Subject: Re: [PATCH 1/1] regulator: ad5398: Correct the SW_POWER_DOWN bit
+ number
+From: Isaac Scott <isaac.scott@ideasonboard.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: michael.hennerich@analog.com, lgirdwood@gmail.com, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 06 Feb 2025 12:45:28 +0000
+In-Reply-To: <c29affda-e769-4658-bb74-3b8c273e8262@sirena.org.uk>
+References: <20250206122459.197985-1-isaac.scott@ideasonboard.com>
+	 <20250206122459.197985-2-isaac.scott@ideasonboard.com>
+	 <c29affda-e769-4658-bb74-3b8c273e8262@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250206054504.2950516-8-neilb@suse.de>
 
-On Thu, Feb 06, 2025 at 04:42:44PM +1100, NeilBrown wrote:
-> The LOOKUP_ bits are not in order, which can make it awkward when adding
-> new bits.  Two bits have recently been added to the end which makes them
-> look like "scoping flags", but in fact they aren't.
-> 
-> Also LOOKUP_PARENT is described as "internal use only" but is used in
-> fs/nfs/
-> 
-> This patch:
->  - Moves these three flags into the "pathwalk mode" section
->  - changes all bits to use the BIT(n) macro
->  - Allocates bits in order leaving gaps between the sections,
->    and documents those gaps.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
+Hi Mark,
 
-This is also a worthwhile cleanup independent of the rest of the series.
-But you've added LOOKUP_INTENT_FLAGS prior to packing the flags. Imho,
-this patch should've gone before the addition of LOOKUP_INTENT_FLAGS.
+On Thu, 2025-02-06 at 12:28 +0000, Mark Brown wrote:
+> On Thu, Feb 06, 2025 at 12:24:59PM +0000, Isaac Scott wrote:
+> > The datasheet for the AD5398 regulator indicates that the Soft
+> > power
+> > down bit is bit 15, not 16 as represented in the driver. Correct
+> > this to
+> > ensure the functionality is implemented correctly.
+>=20
+> This doesn't apply against current code, please check and resend.
 
-And btw, what does this series apply to?
-Doesn't apply to next-20250206 nor to current mainline.
-I get the usual
+I have checked, and it applies on top of linux-next next-20250206,
+which includes my previous patch you have already applied:
 
-Patch failed at 0012 VFS: enhance d_splice_alias to accommodate shared-lock updates
-error: sha1 information is lacking or useless (fs/dcache.c).
-error: could not build fake ancestor
+[1/3] regulator: ad5398: change enable bit name to improve readibility
+      commit: 19d022d67d7353f0e6e9ba255435d3de93862ac4
+[3/3] regulator: ad5398: Add device tree support
+      commit: 5a6a461079decea452fdcae955bccecf92e07e97
 
-when trying to look at this locally.
+Have I applied it to the wrong branch?
 
->  include/linux/namei.h | 46 +++++++++++++++++++++----------------------
->  1 file changed, 23 insertions(+), 23 deletions(-)
-> 
-> diff --git a/include/linux/namei.h b/include/linux/namei.h
-> index 839a64d07f8c..0d81e571a159 100644
-> --- a/include/linux/namei.h
-> +++ b/include/linux/namei.h
-> @@ -18,38 +18,38 @@ enum { MAX_NESTED_LINKS = 8 };
->  enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
->  
->  /* pathwalk mode */
-> -#define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
-> -#define LOOKUP_DIRECTORY	0x0002	/* require a directory */
-> -#define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
-> -#define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
-> -#define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
-> -#define LOOKUP_MOUNTPOINT	0x0080	/* follow mounts in the end */
-> -
-> -#define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
-> -#define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
-> +#define LOOKUP_FOLLOW		BIT(0)	/* follow links at the end */
-> +#define LOOKUP_DIRECTORY	BIT(1)	/* require a directory */
-> +#define LOOKUP_AUTOMOUNT	BIT(2)  /* force terminal automount */
-> +#define LOOKUP_EMPTY		BIT(3)	/* accept empty path [user_... only] */
-> +#define LOOKUP_LINKAT_EMPTY	BIT(4) /* Linkat request with empty path. */
-> +#define LOOKUP_DOWN		BIT(5)	/* follow mounts in the starting point */
-> +#define LOOKUP_MOUNTPOINT	BIT(6)	/* follow mounts in the end */
-> +#define LOOKUP_REVAL		BIT(7)	/* tell ->d_revalidate() to trust no cache */
-> +#define LOOKUP_RCU		BIT(8)	/* RCU pathwalk mode; semi-internal */
-> +#define LOOKUP_CACHED		BIT(9) /* Only do cached lookup */
-> +#define LOOKUP_PARENT		BIT(10)	/* Looking up final parent in path */
-> +/* 5 spare bits for pathwalk */
->  
->  /* These tell filesystem methods that we are dealing with the final component... */
-> -#define LOOKUP_OPEN		0x0100	/* ... in open */
-> -#define LOOKUP_CREATE		0x0200	/* ... in object creation */
-> -#define LOOKUP_EXCL		0x0400	/* ... in target must not exist */
-> -#define LOOKUP_RENAME_TARGET	0x0800	/* ... in destination of rename() */
-> +#define LOOKUP_OPEN		BIT(16)	/* ... in open */
-> +#define LOOKUP_CREATE		BIT(17)	/* ... in object creation */
-> +#define LOOKUP_EXCL		BIT(18)	/* ... in target must not exist */
-> +#define LOOKUP_RENAME_TARGET	BIT(19)	/* ... in destination of rename() */
->  
->  #define LOOKUP_INTENT_FLAGS	(LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_EXCL |	\
->  				 LOOKUP_RENAME_TARGET)
-> -
-> -/* internal use only */
-> -#define LOOKUP_PARENT		0x0010
-> +/* 4 spare bits for intent */
->  
->  /* Scoping flags for lookup. */
-> -#define LOOKUP_NO_SYMLINKS	0x010000 /* No symlink crossing. */
-> -#define LOOKUP_NO_MAGICLINKS	0x020000 /* No nd_jump_link() crossing. */
-> -#define LOOKUP_NO_XDEV		0x040000 /* No mountpoint crossing. */
-> -#define LOOKUP_BENEATH		0x080000 /* No escaping from starting point. */
-> -#define LOOKUP_IN_ROOT		0x100000 /* Treat dirfd as fs root. */
-> -#define LOOKUP_CACHED		0x200000 /* Only do cached lookup */
-> -#define LOOKUP_LINKAT_EMPTY	0x400000 /* Linkat request with empty path. */
-> +#define LOOKUP_NO_SYMLINKS	BIT(24) /* No symlink crossing. */
-> +#define LOOKUP_NO_MAGICLINKS	BIT(25) /* No nd_jump_link() crossing. */
-> +#define LOOKUP_NO_XDEV		BIT(26) /* No mountpoint crossing. */
-> +#define LOOKUP_BENEATH		BIT(27) /* No escaping from starting point. */
-> +#define LOOKUP_IN_ROOT		BIT(28) /* Treat dirfd as fs root. */
->  /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
->  #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
-> +/* 3 spare bits for scoping */
->  
->  extern int path_pts(struct path *path);
->  
-> -- 
-> 2.47.1
-> 
+Thank you very much,
+
+Best wishes,
+
+Isaac
+
+
