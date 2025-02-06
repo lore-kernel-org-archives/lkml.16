@@ -1,117 +1,135 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811061C683;
-	Thu,  6 Feb 2025 00:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD823B1A4;
+	Thu,  6 Feb 2025 00:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738803045; cv=none; b=HF8E6IwUYCsxXElsXAMDLwKTMt7Fecofl/msWSR23AyCFe6mgyUUI95kONHr7QvMcSR5oHsVwTWYRcwQgx0Rt0PmLmjqUm55gKZQA3ajgoLm9cFNLxwKvqV45oSpL9VWTcVikPjBI2JD79wjk8OGTZIdkhwa25QCV1d68IArcuo=
+	t=1738803069; cv=none; b=RDDmuhn26e3U7MadqBN7Q1ryWamtsEXt8uiSVHO130QMiaoFNGMdF/VW4QkoeZNihBigAS51AdAkFtxAUAGrXiZomm/rHXKQgWOYDLjYWZDwhupmAAuzswUqEW/i/64zzs5QRFwSpCyLOwrjQM4J74kiWGPZq07hytH9am/6xhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738803045; c=relaxed/simple;
-	bh=sr51Vgm+nQeGaht5C28wzr0rYZR0dNDhabGn57YISJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k5LXNQVt/1/BJIt5Vfz8SqWM9jgMU4pX0WDSceluIe5puUHnvPdT7wwgglsS0XGJx5SRq7qd00xTiAIsKMExWhhKmKVwJQJKfyab3A33LFix2RQQUcHh9jKQtFjjJ3Lc4v2FQZoTwcX2ArR2/wHn9tADtHjlmvp2JtZHV1U2Puw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cMDaPIxN; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1738803069; c=relaxed/simple;
+	bh=0iL3E4VG0qImG8S0CCPnqbyKDS9qsWKgPru9TE81B6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o2ZufH+FTvdNYbzRfiqibWPS4+Yvn7vAR1t9SpUczDvIPdXHaAhZKsagKPwcfJoZcTFAOUa+3XC5ws7oWcqO393vOBxApSxHbwB0qS5lWcejAAylgES0C51oXPsRF4NOZ9QLnt5C0PY8ZILdYqKOHvXcWL4YxxObWbq2Y67b+Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jL23Zbz5; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cMDaPIxN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738803026;
-	bh=6u3JVO9UJT5fwx2hnzk3rwfwY6b9fPSJmjL8WIW+DXY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cMDaPIxN7rbKtuq0RGrRVIryhmzChzR2fXM5+ZgBlXNIo0XNisq1TRgo8buZOCLXC
-	 H6U1csgrMoEdQ8+ZJA89j0mpa/zoAtm2dusPG3TSrnLCqvgxO12UKnHt6iJiAHBtQj
-	 DPJ2xORvCsxJf4tYNc7PQES90o4pCUDZTcljViFN/Twlp4kQnRNkOD27MU69800eBc
-	 3beivt0klIomBVFhWLjyh5wnqjGKXG1/SzsAZQsgzV5uDZIxkf5lQCac9++SDJuMl+
-	 SfCC5l08VguNHlb1jVq0bZ34rxvUPeIqn4Vqc3Dq1ACTYcCjiUqmTgTTtfTM8/ljV2
-	 Kdi0Z4rJxtNZA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YpJRj5s0Dz4wcD;
-	Thu,  6 Feb 2025 11:50:25 +1100 (AEDT)
-Date: Thu, 6 Feb 2025 11:50:34 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki"
- <rjw@rjwysocki.net>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>
-Subject: linux-next: manual merge of the cpufreq-arm tree with the pm tree
-Message-ID: <20250206115034.5d3004c6@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jL23Zbz5"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f83a8afcbbso503826a91.1;
+        Wed, 05 Feb 2025 16:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738803067; x=1739407867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a4/keD5s03/Kq1V0kQTivHig4tZxw6U4TktrhJfP4+g=;
+        b=jL23Zbz5vb3Dzf7Raug8n3PPBu1N4Ow55KL4xtKbOt2sVfvI4+xaC9rp5ufi2j57oF
+         li631kwCwjVV7XpElpSYTjiLmfMAk4laRzlooPyp35G9Urzds6LnQ8wHhGpWSUx5zGqI
+         YNMc2RFre7o6dbqsSV+uhLfP6ti6BdOqTN2H3QXTJWdIA5oLR0EzrC6+JslMSTEv4ajx
+         7rggDhXUmKUPAf+cjRYeyDjPKzfS7ZxSdnrL65vwlxxbqu3YHyqsezHQf5Zqn7mJaKVk
+         mYjU3iRZLoz+Vf5m5STyep4rv65vjHA6yi5IHjDvr2xUOr87c33UCaQRXqACMF9sDxp5
+         CO5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738803067; x=1739407867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a4/keD5s03/Kq1V0kQTivHig4tZxw6U4TktrhJfP4+g=;
+        b=hgkQJZGOX3Tk4pCEb5H0yOhvCaMCM4z+dTjpUSPiI2qXbDIQzSa8wHgTEu4vvxRH+E
+         F2C2GXhUiaEaWtv+WgmBpL5J7cWTsUlv8Ppx0DDLndIJtUfKq289+vkdhFlGyytzWB5o
+         yhzEUFPAErE/XlfnS6BLr/O5ip27hMWocotlBOy38S25M5qBk+WFPjHI7N8TxemWQOcC
+         l8qxV+IbfKpJFPGJn1Ix8s/u6v4IaEAq5BO7a9FGpxWZGKAShS9MIeOBz7KT1wc18lUd
+         Hm9XAE4qp3N80uMlgUXv6W9I872ZHjTcKC5dR8bMtM8xzb+Yew79WgBmKuBQbCQ9VQQ6
+         nOgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUs92JX3vd81V5JWzuqoxqkJ3yFGON7NLBcCCMyJT7WWrtWdK/UgDiMkncZyV1SnalBVv0CqoKLijoHQEC@vger.kernel.org, AJvYcCUc5vDrMDdir5oDcGqlVs7VPlw8sK0dUIAxFplOSSz3JFyE7f8NspSIzlMCHxmYeM/mCCJeq3qKa4Wlgq5jy7kY@vger.kernel.org, AJvYcCXppAoY4DBEP15Qn9Yulm3gVfx3ZOe8sz3C1/eXy0URwPcnITj4bXp3r1KOhs+w1u0pW58=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNSWUGGTm/AQ4ebaQZFH0C8oKqvZ2RAK1A7YC5tAVhhNZYGjwb
+	EOOBAtj+itis/6aKh68/2I20GPUoEo2StLJ9KbkwleVdMa4g8zTneEKymgf1PFktudP+Xlr5rgt
+	wVTVXDvS1ScbaNAstfHuOLIfPOmg=
+X-Gm-Gg: ASbGncsjKb9jDdfQrakpVwmKDXTBUogkjoQFzYySExqP0T37NY26U2FJE9g4RPxkC2y
+	X5aPE2esqjx6TajLLTHaBVOhsxT8UyW8oEAZGPEmq8bsBYJdlbFQfd+PisniFFbv9hn0SSacd6a
+	Sg8wDD/yW94bRf
+X-Google-Smtp-Source: AGHT+IEM4edWMzxCplFBh9oI0xtCLtQLZ0y5dDP0e13Ujh/dgE6X3ojtv5NwWVk+GEEYMJadgwFWheoCJuIN3yavqGM=
+X-Received: by 2002:a17:90b:3b41:b0:2f7:4c7a:b5f with SMTP id
+ 98e67ed59e1d1-2f9ff786427mr2440811a91.2.1738803066751; Wed, 05 Feb 2025
+ 16:51:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TOz7FwC_ssdJKnqs+Ncq_DL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/TOz7FwC_ssdJKnqs+Ncq_DL
-Content-Type: text/plain; charset=US-ASCII
+References: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
+In-Reply-To: <872b64e93de9a6cd6a7a10e6a5c5e7893704f743.1738276344.git.dxu@dxuuu.xyz>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 5 Feb 2025 16:50:52 -0800
+X-Gm-Features: AWEUYZlmr6_GyGpRgTJA_Eakh3HYUq6e5lgl1acOQWCLsgKBEHoiIcewOpigSbQ
+Message-ID: <CAEf4BzbHQ6WajDTAWHmjvA2FaAQz37sd8RwFY9ysKK7D+uc_=A@mail.gmail.com>
+Subject: Re: [PATCH] selftests: bpf: Support dynamic linking LLVM if static
+ not available
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: shuah@kernel.org, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	nathan@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
+	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	mykolal@fb.com, ndesaulniers@google.com, morbo@google.com, 
+	justinstitt@google.com, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Thu, Jan 30, 2025 at 2:34=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Since 67ab80a01886 ("selftests/bpf: Prefer static linking for LLVM
+> libraries"), only statically linking test_progs is supported. However,
+> some distros only provide a dynamically linkable LLVM.
+>
+> This commit adds a fallback for dynamically linking LLVM if static
+> linking is not available. If both options are available, static linking
+> is chosen.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  tools/testing/selftests/bpf/Makefile | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>
 
-Today's linux-next merge of the cpufreq-arm tree got a conflict in:
+Note, we expect [PATCH bpf-next] as subject prefix and "selftests/bpf:
+" prefix for BPF selftest-related patches. Please help with
+consistency. I fixed it up while applying.
 
-  drivers/cpufreq/cpufreq.c
-
-between commit:
-
-  0813fd2e14ca ("cpufreq: prevent NULL dereference in cpufreq_online()")
-
-from the pm tree and commit:
-
-  60208a700f76 ("cpufreq: Restrict enabling boost on policies with no boost=
- frequencies")
-
-from the cpufreq-arm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/cpufreq/cpufreq.c
-index 30ffbddc7ece,3bb5cef263da..000000000000
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@@ -1571,7 -1590,7 +1590,7 @@@ static int cpufreq_online(unsigned int=20
-  		policy->cdev =3D of_cpufreq_cooling_register(policy);
- =20
-  	/* Let the per-policy boost flag mirror the cpufreq_driver boost during =
-init */
-- 	if (cpufreq_driver->set_boost &&
- -	if (policy->boost_supported &&
-++	if (cpufreq_driver->set_boost && policy->boost_supported &&
-  	    policy->boost_enabled !=3D cpufreq_boost_enabled()) {
-  		policy->boost_enabled =3D cpufreq_boost_enabled();
-  		ret =3D cpufreq_driver->set_boost(policy, policy->boost_enabled);
-
---Sig_/TOz7FwC_ssdJKnqs+Ncq_DL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmekB1oACgkQAVBC80lX
-0GxXTQf+J2DAyh71NS2hCLJISeRUhRNxkk0Gxvj5VvCElDUFohVAeH8kfWOq1T7K
-KXH73NG4+HonE/lDpwiRERNZEDQ3zuaX8qtPtq9At8fCwQM6wXLss43co0L1adMJ
-8D1z9H8wXMAI0NhK2K+3F+1BKrmkE3Sb54TvPpLZ4P9IQeK4SJzjc+SFoDIjhTU1
-UMU/lBf/m6d2Jw1jxsWvcMHjAW0fhmf5GV6iCXWht89MdxxJUXIzijqus6yUz2PL
-O5kQTpNAmTMdWyH3wUGeiH2hrUvOOaLqBNW2idpx7UJlnvs0CKRw2pblNRlWsd4y
-TnIcOQmLZ+TnvecJmdl76DLLuhcQ4w==
-=vGJn
------END PGP SIGNATURE-----
-
---Sig_/TOz7FwC_ssdJKnqs+Ncq_DL--
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
+ts/bpf/Makefile
+> index 6722080b2107..da514030a153 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -184,9 +184,14 @@ ifeq ($(feature-llvm),1)
+>    LLVM_CONFIG_LIB_COMPONENTS :=3D mcdisassembler all-targets
+>    # both llvm-config and lib.mk add -D_GNU_SOURCE, which ends up as conf=
+lict
+>    LLVM_CFLAGS  +=3D $(filter-out -D_GNU_SOURCE,$(shell $(LLVM_CONFIG) --=
+cflags))
+> -  LLVM_LDLIBS  +=3D $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM_C=
+ONFIG_LIB_COMPONENTS))
+> -  LLVM_LDLIBS  +=3D $(shell $(LLVM_CONFIG) --link-static --system-libs $=
+(LLVM_CONFIG_LIB_COMPONENTS))
+> -  LLVM_LDLIBS  +=3D -lstdc++
+> +  # Prefer linking statically if it's available, otherwise fallback to s=
+hared
+> +  ifeq ($(shell $(LLVM_CONFIG) --link-static --libs &> /dev/null && echo=
+ static),static)
+> +    LLVM_LDLIBS  +=3D $(shell $(LLVM_CONFIG) --link-static --libs $(LLVM=
+_CONFIG_LIB_COMPONENTS))
+> +    LLVM_LDLIBS  +=3D $(shell $(LLVM_CONFIG) --link-static --system-libs=
+ $(LLVM_CONFIG_LIB_COMPONENTS))
+> +    LLVM_LDLIBS  +=3D -lstdc++
+> +  else
+> +    LLVM_LDLIBS  +=3D $(shell $(LLVM_CONFIG) --link-shared --libs $(LLVM=
+_CONFIG_LIB_COMPONENTS))
+> +  endif
+>    LLVM_LDFLAGS +=3D $(shell $(LLVM_CONFIG) --ldflags)
+>  endif
+>
+> --
+> 2.47.1
+>
