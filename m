@@ -1,187 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7561624D4;
-	Thu,  6 Feb 2025 15:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DEA1624D4;
+	Thu,  6 Feb 2025 15:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738854113; cv=none; b=gPsTlHseSkXMzMhPm+dzFFcmorfEMTY4FqI5i+de3rPxsZ6ozK994pEC+ECDveKLbTo8dg94n1V+rrk6sekz7Id4HOUUumKzVpMOs0Cz3NiSrY983xh7cu6Psanmm/JTI1rjwgMFILKl/fxnQkmcY4mOSKKIvfmcOXqqlOC0Ev8=
+	t=1738854118; cv=none; b=Jbji9DYblD6uAglZQgqEyDLRHjcHfMdMDCX31ooe/wuvlbhqGbGETjQhKzMvVegn6zJIT6Imt+NEneEtwK4Ju2zsso593IqK0GyLGve1fP/E4O+jdXuuybHJKkJ9x4G5EQflxZvSi3KbNmDao9IxnaJA/LtYd6FsjXVzUoV371w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738854113; c=relaxed/simple;
-	bh=ygPGbTCM/PVy4HlH+Dd1yrCQqg3MzBk6HpQSOnvkrRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QgWrRGD5NlTgdTTXpSnEQLqtSeOsCblEwRrDRakMLc8AN8IunJbmUtmzUn5o4ztMDLXJ3lCCRCbp8XKXk3EZVY/SYvZ7IBVKsSkwSldqFqk3529FYymDs1R7sKUFt3+6jimvlkGWRuFgl82LvFq9HmoYtBp2rBEBNR7rrTBUGQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DbRsD7Nv; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738854118; c=relaxed/simple;
+	bh=eyn2sdaPok/G/aBgXiRX3kCtssTC7rXuok6dLWUrWbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJzu3vg7bUYab4yC8bUen1InNL+Dl557SgWtvI9soUivj/PN4AU71QC9UDh77CkmwOBlz0hKxCmglcxfiw6PLJ0uM6if9K25W3QqL3RCxiCDNhk5XAIyUwztpgUY66aOPzMELsbajTMeZNErpLsPVQSDGnCPhcSpAifMNGmXj1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WnqkPlDd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XMYuKqcg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DbRsD7Nv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738854112; x=1770390112;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ygPGbTCM/PVy4HlH+Dd1yrCQqg3MzBk6HpQSOnvkrRs=;
-  b=DbRsD7NvUf2NZ8O4I3QcqEKtQEeYv4v8aPKbIyoGcnoqQVtDJh4SrstD
-   uuDQNtybVmr5sgHWU+/wxPPyetFNh247Al6GZFLuLFo5b4dDwleclWLHC
-   xhMsMuN8FyVzmlQOCds5+VbKYP9s9XHiA9teU+LWHSjg49D7WNpdRFh2B
-   xU4pqUiD/myKKcCIx/JQ4hY+JqNsxdF7nOkFTygCZBsVqIvTA3bGt4H7C
-   zsSJPApiZqP057+eSpDoUMWlslqbEBEp4zvEJpGHI7ovWkTMzywvAwvmL
-   B57Uq9Ry1whGq4zzG9YoOjAvE3e57JkK6d62Nwp8Ju/Lb9OfkRbpmjEaf
-   A==;
-X-CSE-ConnectionGUID: iUBYHeeOR6OR3i63G2KISQ==
-X-CSE-MsgGUID: /Yn9MkcyQN6jc/aavkM/ew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39357494"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39357494"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:01:51 -0800
-X-CSE-ConnectionGUID: VoHBk7z0SGmokJKKgiWfIQ==
-X-CSE-MsgGUID: xSMmApdfRC2XgiFg9E9kNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="142115505"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:01:51 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E7B2720B5713;
-	Thu,  6 Feb 2025 07:01:48 -0800 (PST)
-Message-ID: <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
-Date: Thu, 6 Feb 2025 10:01:47 -0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WnqkPlDd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XMYuKqcg"
+Date: Thu, 6 Feb 2025 16:01:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738854114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C5we7CRCJYf2T2cXW5xWDkSUwqZKvYZDnh+kkqACzH4=;
+	b=WnqkPlDddQRrl/XcuWgQ/VRu658eVuS3UVGJqoeadcyglAswOtlV6AFprqFA/cNNUi0TWU
+	oIUn+c0sAewYOoDoFS15Bz5g2YH5abNebG8xMlQdWq7nTUI4eqiwFNT5aWVoZTQfs9gjax
+	RSrDx1+/stHyVygesSBRXnxIeP1g/1cUILn9M2P0Bsi47+kfzHjIQvLpiLuSoqcp8wRu00
+	oSeQhvp+AK72musR71bAsoEOyMVqUUXiSoiEp1tD5R6+4Pd1CrpRH2PWD7tgl24/fagTue
+	4x3kjHqsKHrYec0h8lXZFzumhpILpWpFxnBvNj0ivFxWrpkk/FD1LnVQZaKzlQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738854114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C5we7CRCJYf2T2cXW5xWDkSUwqZKvYZDnh+kkqACzH4=;
+	b=XMYuKqcgF0VIaIxYp9mnlOO4guMNYbWXyWJdZvYXzv+QYRkS5Ov+IPzonT9WICuo2W1qm4
+	ZPWI+RhxqMvk1rBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Prakash Sangappa <prakash.sangappa@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
+	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250206150152.-5Fauhtm@linutronix.de>
+References: <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+ <20250205081635.397eacb0@gandalf.local.home>
+ <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+ <20250206083039.0916ad24@gandalf.local.home>
+ <20250206134408.lD_POjuG@linutronix.de>
+ <20250206134859.GP7145@noisy.programming.kicks-ass.net>
+ <20250206135353.i1tp4vDv@linutronix.de>
+ <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
+ <20250206142234.-kcSg0xr@linutronix.de>
+ <20250206142717.GS7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/20] perf/x86/intel: Setup PEBS constraints base on
- counter & pdist map
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
- <f198c454-ff7c-42eb-80f8-45bc4b94210d@linux.intel.com>
- <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250206142717.GS7145@noisy.programming.kicks-ass.net>
 
+On 2025-02-06 15:27:17 [+0100], Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 03:22:34PM +0100, Sebastian Andrzej Siewior wrote:
+> >  Then this feature adds 20us on top?
+>=20
+> The point has always been for the number to be < the observable
+> scheduling latency.
+>=20
+> I'm not sure what that number is, and it is always hardware dependent. I
+> measured it on a random test box when I did the prototype a long while
+> ago, and ended up at 50us, but for all I know that machine was running a
+> lockdep enabled kernel at the time (won't be the first and certainly
+> won't be the last time I try and do a performance measurement on a debug
+> kernel).
 
+When I have lockdep enabled, I have scheduling latencies >1ms.
 
-On 2025-02-05 9:47 p.m., Mi, Dapeng wrote:
-> 
-> On 1/28/2025 12:07 AM, Liang, Kan wrote:
->>
->> On 2025-01-23 9:07 a.m., Dapeng Mi wrote:
->>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>> can be dynamically configured base on these counter and precise
->>> distribution bitmap instead of defining them statically.
->>>
->>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>> ---
->>>  arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
->>>  arch/x86/events/intel/ds.c   |  1 +
->>>  2 files changed, 21 insertions(+)
->>>
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index 7775e1e1c1e9..0f1be36113fa 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -3728,6 +3728,7 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>  			    struct perf_event *event)
->>>  {
->>>  	struct event_constraint *c1, *c2;
->>> +	struct pmu *pmu = event->pmu;
->>>  
->>>  	c1 = cpuc->event_constraint[idx];
->>>  
->>> @@ -3754,6 +3755,25 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>  		c2->weight = hweight64(c2->idxmsk64);
->>>  	}
->>>  
->>> +	if (x86_pmu.arch_pebs && event->attr.precise_ip) {
->>> +		u64 pebs_cntrs_mask;
->>> +		u64 cntrs_mask;
->>> +
->>> +		if (event->attr.precise_ip >= 3)
->>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).pdists;
->>> +		else
->>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).counters;
->>> +
->>> +		cntrs_mask = hybrid(pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED |
->>> +			     hybrid(pmu, cntr_mask64);
->>> +
->>> +		if (pebs_cntrs_mask != cntrs_mask) {
->>> +			c2 = dyn_constraint(cpuc, c2, idx);
->>> +			c2->idxmsk64 &= pebs_cntrs_mask;
->>> +			c2->weight = hweight64(c2->idxmsk64);
->>> +		}
->>> +	}
->> The pebs_cntrs_mask and cntrs_mask wouldn't be changed since the machine
->> boot. I don't think it's efficient to calculate them every time.
->>
->> Maybe adding a local pebs_event_constraints_pdist[] and update both
->> pebs_event_constraints[] and pebs_event_constraints_pdist[] with the
->> enumerated mask at initialization time.
->>
->> Update the intel_pebs_constraints() to utilize the corresponding array
->> according to the precise_ip.
->>
->> The above may be avoided.
-> 
-> Even we have these two arrays, we still need the dynamic constraint, right?
-> We can't predict what the event is, the event may be mapped to a quite
-> specific event constraint and we can know it in advance.
+> That was not the important part -- but everybody fixates on the number,
+> instead of the intent.
 
-The dynamic constraint is not necessary, but two arrays seems not
-enough. Because a PEBS event may fall back to the event_constraints as
-well. Sigh.
-Four arrays should be required. pebs_event_constraints[],
-pebs_event_constraints_pdist[], event_constraints_for_pebs[],
-event_constraints_for_pdist_pebs[].
-But it seems too complicated. It may not be implemented now.
+I don't mind to delay a SCHED_OTHER wakeup for the greater good. And
+here a number, 50us, be it. This is certainly not something I complain.
+I'm just asking not to delayed the wakeup of the RT task which should be
+on CPU based on its priority.
 
-But, at least the pebs_cntrs_mask and cntrs_mask can be calculated in
-the hw_config(), or even intel_pmu_init() once. It should not be
-calculated every time in the critical path.
+Depending on RT application, it is not just the interrupt and
+preempt-off section that you worry about. It could also involve to PI a
+SCHED_OTHER task on a different CPU to release the lock in question so
+that the RT application on _this_ CPU can make progress. So you have
+50us on the this CPU and 50us on the remote CPU because it also does
+LAZY thingy for performance reasons. And so the number doubled.
 
-Thanks,
-Kan
-> 
-> 
->>
->> Thanks,
->> Kan
->>
->>> +
->>>  	return c2;
->>>  }
->>>  
->>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>> index 2f2c6b7c801b..a573ce0e576a 100644
->>> --- a/arch/x86/events/intel/ds.c
->>> +++ b/arch/x86/events/intel/ds.c
->>> @@ -2941,6 +2941,7 @@ static void __init intel_arch_pebs_init(void)
->>>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
->>>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
->>>  	x86_pmu.pebs_capable = ~0ULL;
->>> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
->>>  }
->>>  
->>>  /*
-> 
+> I'm assuming you have a recent number around -- what's sane? 5us, less?
 
+As I tried to explain any additional delay hurts. If your application
+requires a latency of 1ms, you get max 100us based on testing then
+additional 50us certainly won't hurt you. However if you require 200us
+max, you already struggle with 160us especially if everything fires at
+once and the caches are gone. In this the 5us will still fit the
+requirement on paper but the buffer got smaller. Also, the 5us requires
+a timer to fire etc=E2=80=A6
+
+There are "bigger" x86 boxes with high clocked CPU and big caches which
+can be partitioned and so on and everything is nice.
+There are also smaller x86 boxes where you have two trace_printk() after
+each other in an IRQ-off region 2us apart and yell at the scheduler for
+taking 30us for a scheduling decision.
+
+Sebastian
