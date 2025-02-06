@@ -1,60 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996421FF5F4;
-	Thu,  6 Feb 2025 08:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70F62253EE
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738828873; cv=none; b=R8bZn2qd+7e5UCX329CcopJus6Z8ZR+6XldRNrDx2vusuxQZ4f8IMDTrRlXT+rrQg8mvmRDZ/B99ZTZR5eLjROJg0Ot5nyNiw40+KtV3kGfnFtJYbcUNPHLtJYMwbwO1eu8wihW5W56LEqHfske5Mu5xxwKQfRMDQQ1Y25nfC/k=
+	t=1738828876; cv=none; b=p570k7ye78CuIYQ1lgXuZLVADrJVgjRPR1J4aAS1ccoiJmS8SZIUqc4vryqQvII00AVWUFnN4g/WpPUJXw+D+w8cxsoVCmD1rUElKP50klG/3fRV2Z/JvaZpYdL8U1y03HY2T/lHfiN3kMqJVH7VfbKdt3xepFCtdj2R5ymDBac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738828873; c=relaxed/simple;
-	bh=X+mkxHZZA0xWTbLTZQyoZrgYBW00B7t5muB3mTV771U=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tu8I1W2jSHq8HC19WJV3+iAt3refNNH566lHJJX7twuS3ySxgWKSkw4R0YoOcjMConR0nj2CiUMqoGtg8+IRG9qcSVEdbFf7X7XNeH0DvpdRw8qy1ewYcBVuOWNgWFfoAxH/9e5dbWwPDspN7EkmwLJt3gGFv6ZMztUSYyVbqQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FfDN8xgs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FfDN8xgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914CBC4CEDD;
-	Thu,  6 Feb 2025 08:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1738828873;
-	bh=X+mkxHZZA0xWTbLTZQyoZrgYBW00B7t5muB3mTV771U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FfDN8xgsmCjvdk6+gwuZA4yDVQexqkywdMg+GJkrrho8FKjEfy9XxnpMcsaTykJlX
-	 /2VaS37/bokckQOiQPYclUsbfvrPpX7Fc0MPRjaohzvmLdLoSEqHNWDlve5TxrZyWg
-	 GTCz+tsdHGtuGGV9O7nf/wmgznW3YI+KyHWuHhgc=
-Date: Thu, 6 Feb 2025 00:01:11 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, "Kirill A . Shutemov"
- <kirill.shutemov@linux.intel.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Ryan Roberts <ryan.roberts@arm.com>, Hugh Dickins
- <hughd@google.com>, David Hildenbrand <david@redhat.com>, Yang Shi
- <yang@os.amperecomputing.com>, Miaohe Lin <linmiaohe@huawei.com>, Kefeng
- Wang <wangkefeng.wang@huawei.com>, Yu Zhao <yuzhao@google.com>, John
- Hubbard <jhubbard@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] Buddy allocator like (or non-uniform) folio
- split
-Message-Id: <20250206000111.6c54e67d1933f8bbc01a46cd@linux-foundation.org>
-In-Reply-To: <20250205031417.1771278-1-ziy@nvidia.com>
-References: <20250205031417.1771278-1-ziy@nvidia.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738828876; c=relaxed/simple;
+	bh=VQ5m3cvH3u/AFsPK3G4NSiEakzmd1XQfjHR8EDNe6YY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jaLJHRWizgWAKJOHmsh2+2kvGIa3UdWpgwHm4MnuNZ5SVs2hKM/CaqsD4zpTB+D2YD9pSRZnKH5jB5hqonThqXbgo9sgQxme3fNR53gcZbHheGlgD1tP28E57p9ZeSTIACosvJZXiLatR51s/XI1uNowle77nFuOG3wGsTvAuKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tfwov-0003kr-4c; Thu, 06 Feb 2025 09:01:09 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tfwou-003lj5-1x;
+	Thu, 06 Feb 2025 09:01:08 +0100
+Received: from pengutronix.de (pd9e59fec.dip0.t-ipconnect.de [217.229.159.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 46E2D3BB120;
+	Thu, 06 Feb 2025 08:01:08 +0000 (UTC)
+Date: Thu, 6 Feb 2025 09:01:08 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	yan kang <kangyan91@outlook.com>, yue sun <samsun1006219@gmail.com>
+Subject: Re: [PATCH] can: etas_es58x: fix potential NULL pointer dereference
+ on udev->serial
+Message-ID: <20250206-romantic-sloth-of-ecstasy-de9305-mkl@pengutronix.de>
+References: <20250204154859.9797-2-mailhol.vincent@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u2hwymt3mhe6d7bg"
+Content-Disposition: inline
+In-Reply-To: <20250204154859.9797-2-mailhol.vincent@wanadoo.fr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue,  4 Feb 2025 22:14:10 -0500 Zi Yan <ziy@nvidia.com> wrote:
 
-> This patchset adds a new buddy allocator like (or non-uniform) large folio
-> split to reduce the total number of after-split folios, the amount of memory
-> needed for multi-index xarray split, and keep more large folios after a split.
+--u2hwymt3mhe6d7bg
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] can: etas_es58x: fix potential NULL pointer dereference
+ on udev->serial
+MIME-Version: 1.0
 
-It would be useful (vital, really) to provide some measurements which
-help others understand the magnitude of these resource savings, please.
+On 05.02.2025 00:48:15, Vincent Mailhol wrote:
+> The driver assumed that es58x_dev->udev->serial could never be NULL.
+> While this is true on commercially available devices, an attacker
+> could spoof the device identity providing a NULL USB serial number.
+> That would trigger a NULL pointer dereference.
+>=20
+> Add a check on es58x_dev->udev->serial before accessing it.
+>=20
+> Reported-by: yan kang <kangyan91@outlook.com>
+> Reported-by: yue sun <samsun1006219@gmail.com>
+> Closes: https://lore.kernel.org/linux-can/SY8P300MB0421E0013C0EBD2AA46BA7=
+09A1F42@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM/
+> Fixes: 9f06631c3f1f ("can: etas_es58x: export product information through=
+ devlink_ops::info_get()")
+> Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
+Applied to linux-can.
+
+Thanks,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--u2hwymt3mhe6d7bg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmekbEEACgkQDHRl3/mQ
+kZwGFQgAoBQoNbnOJT0kFId0fK9EcDCobP6NiivFFRVAcE/WD4iXWTAigPBBMsjH
+1Vz3kK7SSg372Jh/TxulEI569WJYfYdDWu1W4RUbEbhUAh8putGeX/zX7gOKkyFn
+IIvhI+alssMetrQRttfPVJ3nu18zvA2VwRbMPUd6/ECZZAFrzlmu/TY2/3Pe1UEs
+6DWh6gAZTeQBEo60og5ZOR/mqKuMqsIhiCa5Txdy+SOWNlZf7a9NlUIrJy2w1TWZ
+Y4+E+aPb2AqxntShz9fbUmUfucjwiylkPb+/Q0g/7mL/fErVvpQOrqu/BsaT9Ww1
+1mE8u6Qa59Ro0S7+eJNm6UrF8YbYIQ==
+=W+kw
+-----END PGP SIGNATURE-----
+
+--u2hwymt3mhe6d7bg--
