@@ -1,67 +1,69 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAB122F3B6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0532A22FE19
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834178; cv=none; b=MtqQkbbBTqdNANuAywbWs2zNpm/gaoymJbVx6suXFRNJGp/gzcen0RJz/POJRV5t2COEkcVXo1GJ2+2P+APDr/qR7cqVvrBxyQa4aATWPPAXfwSULrVRUfeg8Lv/tJEOeiaP/MHgsZdlqwd0lXZk4kQlP+A+CddjynkyjdCzTsU=
+	t=1738834186; cv=none; b=iiP3KEaQSEgTVyBpR11qKRxx1lm1ZTgmn2P4xD2ouyk+0TPrZMJ++j5CK07xvFT4tkGgIdmbZxPsHGt38vUl2VXwSiiJwekHyrJOMdwYXdpOMms/gthIddgc2kU/lgdpQ6T2F3WqhFGog3gTk6Q7RaLF3oLIVVuVN7xHkL2tNz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834178; c=relaxed/simple;
-	bh=hzuNhO1Q3IkyXCT/x1RQcToG9eFKeb1mwBR+qRFJhIU=;
+	s=arc-20240116; t=1738834186; c=relaxed/simple;
+	bh=6Nr6juVTcJnK5KJdfVIW7dgp4mA/0Bv/HaCQhKWQ1L8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i330e4YRRwCN22N6RkXn5WvKFRKoa3JNzq6FwG4qC8A4OB1zJOHuUMtFxMJ8eAet1zJNrtUh42lEU3KIex4dNLsnJgynclyzSIOL9HLHXrbzFxErt7l8ByzDy/reh7FKXgmEluCJxOj5zdk0nQLm+TDvMa9Q1PXh9FfcDqxUwmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YrnBv0uV; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=D+pCovgCk/RcAMTaOVvW5gz4jYFxTzu2tiatgxDjoCzpTYZFfQwp9w00uRenj07blmOOR5OMYRXC/eEaIyTjV9oS9gC45ZvNVD/479UXkIM2/3l2EGzDzFmXW5wYJxgnvLAKnWtNSCBeOg9TZwoDiK32U/5+QLwEy0miSxBlIMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KvhZ2EcZ; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrnBv0uV"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f0bc811dbso26495415ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:29:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KvhZ2EcZ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f40deb941so2753995ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:29:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738834176; x=1739438976; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738834183; x=1739438983; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BewoLF4XXJE59tcPINPOfVWWxQlIhp/bpFbTZBnmMRo=;
-        b=YrnBv0uV3Yx55AZ0z2c3aNCCjwz2vbhEYI9GyJEyLpwU7TdDTe+f1s1VR8VbVhphbI
-         ZTKLRtbouMd0Oy6a02qtOg1LMqoCjyJIqMdFkG8ETjOloWLhXZZzI4k/K+TPeST+4qEz
-         lwfPIIIUELVLZxSfLcYtDQ/NATLxIjrWGxhfcosO3iiwJHZAl/NTZkkN2bWE3E/JWotP
-         APfWJarrCgzFMPbhoos8sKOej1osj9Cc3erZJlPQb8v9pIzsGO9M5ScqTv8zEARBM+78
-         WfPXwW/R2eJAO9c3iFT6ep52sGU+oRbatoBmm9xM44tgVa+CtSsv3aC9FNB6FsT34Cxe
-         VOTw==
+        bh=Q7GVksBxvKvwIJslQZYHPVaVtikmNSrbgR1tm3RBWUA=;
+        b=KvhZ2EcZwvUuhxtx2+tAV4tI4wJXGSUSnm+dMFMj6Q6RsEjGY0T3xNOGLZ+uo6gDdf
+         M+kvhYUlQiKV8GOcJO1OME4oyes4pBQeJdgixCsVFjcU5VRcSL5lRzA/NToGRpWhvj2+
+         fJTEQdyDSYTggC3PXegB9nuy6hF1Igm1pdkZK9Y/moSqGE0DrE9uVBXqj7G9SCIDg2uB
+         NDFougi7F0n93TStKRtEqlGpgd76C2pjHH30efWxYAwe5BLwOO4gKk8TCubMkwmdvPSB
+         R2Nhg+aEpJpqx5HVQN459D+0+k+4cvN8Hsi4vdaXctoCg5de7jFfYgq7PcdRbZbIL83D
+         2PbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834176; x=1739438976;
+        d=1e100.net; s=20230601; t=1738834183; x=1739438983;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BewoLF4XXJE59tcPINPOfVWWxQlIhp/bpFbTZBnmMRo=;
-        b=C41mqbBkChOUCeEJ1D60egNntU5B6/UthQ1XA0mm+9ann2rg8SMTxkhYcMVXrFKyMf
-         SjmGuTZbrNS7maxnEwHj4iemStUvkvgbHXUSwzqIbtvds9Md0r8sxeTDgGusT4f3H/QM
-         5eUybC2teI95dmtX5ojuJIQE8u0VDyZdusQ9FmBFpj9fo2WzHPb2ECY4zsdofXJuGXx1
-         Ot9eY3njfBDjeOMJH25s7WJDSFCjMS1ShoQcz646RjlPW2bFhTAISEXmzjZsKjJgUFzD
-         /oyiQR3EjqrwhDP4US3bd+AaEBrUGy/KfPe34doWHx67FyXv6OgdrAg9SuKkrRdYPLrS
-         HnHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUdlMGAjHcvqeLzGAGSF04vuk02lpi1NrnutaSQfeOkDvQr0P2gq7t8gLBH2fH5H3w8B81GwczjFGR2eE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysGJ7oCNhczbOe8L/Lv3gw2V4DhSnQ4KAlKgItc3EDG0PHRdiH
-	AmOklwXK/yrutG9Aq41RZVS6AAUo/oHOIv1tIEWWJWBaelGGLbtmnEq2F+EL8uE=
-X-Gm-Gg: ASbGncsdsElqTASG+535FQj6ZepOlgmPEsXRBpuG/UUJxaGpc6z/MdsYkG+1ZwTXlWB
-	eB4egerdRZcxgqBKNUNmuQE7/MD72xfbjVHgEko2ddfB4FSEwjgSlrXK24SAjteIQiJCZuyxBVa
-	CgRHtvCboCcARI/ofNhNoJ6kGUj4fvtW1ehMHBkuABIZMlrDzr2qKH79F6QSLKp0oHjfL066P2h
-	YvSN46plHfiOsYovXSHQYQjyOxW6U8zFqvuarHlLrfAIuT/S3Lkrh2uhlJ2FTkWH65ylvvIscvq
-	Wix//lFNi29DEU2lpQ==
-X-Google-Smtp-Source: AGHT+IHyxQAOrCYMKMTrZjWvo9bFWT1K8eOlTJFH1d5xana7tiWBgQrQ4rVBlR8ev+13dQ3LVmaKDg==
-X-Received: by 2002:a05:6a21:900b:b0:1e0:c166:18ba with SMTP id adf61e73a8af0-1edf367d34bmr4946817637.12.1738834176089;
-        Thu, 06 Feb 2025 01:29:36 -0800 (PST)
+        bh=Q7GVksBxvKvwIJslQZYHPVaVtikmNSrbgR1tm3RBWUA=;
+        b=uENp0Fzl2ze9und4QiNYfTmLL1Wl7V9vkfCnP4PL6YpOVIMdV30JFDoY3dVcmSz+pe
+         mF1exP3HZj0XgNwE1/miEysWqpRxkkBjQn7yVhZ/0Bp4EqalPHKtXUSq3/rQvdZYV8Y0
+         /nbP8fRtkMB1yPx89cDIwcseFSQyP6oxWcMC8fR6vwUm1GJuXqpI5elJGmidxpmSNmNU
+         QcstPSLD2VPwEnMH+cc+shuzH9JdJnfmZ0pM7hkro2KZiJ+TzK8DYMHMaQB0YDg4eP2r
+         07HsmdG+egK1pp6ieqoFco+MiXPDgx1rgHVc9InUD47dPylR4qJX1aP5ITRf0ByZWe4d
+         xweA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpnTQ7PJ+1BBPn24mG2aBy5AtNQjQCAml9OwxkcJd0roYSZJ5d8yMqfl3Y0pIu+fZoCB41PXL5BSuANQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzMavI6uMZncfBQDm+SspruNLjdyHwRucgBq07SZ4hlYSo6/tH
+	oBtsdaa621cpB52LkKjHVPb15aQLvpHQvv3820rzGroxT+ob/QQEnaaYcgWXcKg=
+X-Gm-Gg: ASbGncutf0YP4WvcJbENVRi00sW1QmjWAU/0RgJW/5R228UsgULJ574gSyCctc+P18P
+	ct82FCTIVyxT/vbQTc+LCIuRAS0s8HeCLPc4RXsOOSo4qaIgXqQUm7TMpaP4g1Uc9w+Z6Fu4LJc
+	M6sv5QtW5NDxkI+kxPKeZoFAU0CRjfEmj+NFJB3yDTP+Uxu9AqU8zJky6iiBGGZjLQuvBQG0g/c
+	KASgWsniGGS5/vW5ztbkt4TAgzh/p3BF4FlPoueHxo6kUnyLgM6WkfKj7/0T+uwHMlFyWo+5TOJ
+	V/vHMLhCV1GemRqbqQ==
+X-Google-Smtp-Source: AGHT+IGILzk1MC7IIM8lCYB+bVOwC6qPckXvdAEjdQCycRHBampUmw7KPycs3BkF8bGTuy8Qvqtp5g==
+X-Received: by 2002:a17:902:f54b:b0:21f:1553:12b5 with SMTP id d9443c01a7336-21f17ec7bcemr112601805ad.36.1738834183178;
+        Thu, 06 Feb 2025 01:29:43 -0800 (PST)
 Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d350sm877632b3a.11.2025.02.06.01.29.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d5a5sm8089985ad.128.2025.02.06.01.29.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 01:29:35 -0800 (PST)
+        Thu, 06 Feb 2025 01:29:42 -0800 (PST)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
 	Danilo Krummrich <dakr@redhat.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
@@ -71,10 +73,9 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>
-Cc: linux-pm@vger.kernel.org,
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
 	rust-for-linux@vger.kernel.org,
 	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
 	Erik Schilling <erik.schilling@linaro.org>,
@@ -82,9 +83,9 @@ Cc: linux-pm@vger.kernel.org,
 	Joakim Bech <joakim.bech@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V8 11/14] rust: Extend cpufreq bindings for policy and driver ops
-Date: Thu,  6 Feb 2025 14:58:32 +0530
-Message-Id: <d7601797a92d7aeeba93f11f6a62de2e83969e11.1738832119.git.viresh.kumar@linaro.org>
+Subject: [PATCH V8 13/14] rust: Extend OPP bindings with CPU frequency table
+Date: Thu,  6 Feb 2025 14:58:34 +0530
+Message-Id: <5dc8ce40dd0e0ce7defb002e7f6e614d5d8a5c18.1738832119.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1738832118.git.viresh.kumar@linaro.org>
 References: <cover.1738832118.git.viresh.kumar@linaro.org>
@@ -96,393 +97,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This extends the cpufreq bindings with bindings for cpufreq policy and
-driver operations.
+This commit adds bindings for CPUFreq core related API.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- rust/kernel/cpufreq.rs | 357 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 355 insertions(+), 2 deletions(-)
+ rust/kernel/opp.rs | 62 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index 4546a70c7063..63ea816017c0 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -7,15 +7,20 @@
- //! C header: [`include/linux/cpufreq.h`](srctree/include/linux/cpufreq.h)
- 
- use crate::{
--    bindings,
--    error::{code::*, to_result, Result},
-+    bindings, clk, cpumask,
-+    device::Device,
-+    error::{code::*, from_err_ptr, to_result, Result, VTABLE_DEFAULT_ERROR},
-     prelude::*,
-+    types::ForeignOwnable,
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index 8028245e94aa..4030953c2001 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -16,6 +16,12 @@
+     types::{ARef, AlwaysRefCounted, Opaque},
  };
  
- use core::{
-     pin::Pin,
-+    ptr::self,
- };
- 
-+use macros::vtable;
++#[cfg(CONFIG_CPU_FREQ)]
++use crate::cpufreq;
 +
- /// Default transition latency value.
- pub const ETERNAL_LATENCY: u32 = bindings::CPUFREQ_ETERNAL as u32;
++#[cfg(CONFIG_CPU_FREQ)]
++use core::ops::Deref;
++
+ use core::{marker::PhantomData, ptr};
  
-@@ -226,3 +231,351 @@ pub fn data(&self, index: usize) -> Result<u32> {
-         Ok(unsafe { (*self.ptr.add(index)).driver_data })
+ use macros::vtable;
+@@ -337,6 +343,56 @@ extern "C" fn config_regulators(
      }
  }
-+
-+/// Equivalent to `struct cpufreq_policy` in the C code.
-+pub struct Policy {
-+    ptr: *mut bindings::cpufreq_policy,
-+    put_cpu: bool,
-+    cpumask: cpumask::Cpumask,
+ 
++/// CPU Frequency table created from OPP entries.
++#[cfg(CONFIG_CPU_FREQ)]
++pub struct FreqTable {
++    dev: ARef<Device>,
++    table: cpufreq::Table,
 +}
 +
-+impl Policy {
-+    /// Creates a new instance of [`Policy`].
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `ptr` is valid and non-null.
-+    pub unsafe fn from_raw_policy(ptr: *mut bindings::cpufreq_policy) -> Self {
-+        Self {
-+            ptr,
-+            put_cpu: false,
-+            // SAFETY: The pointer is guaranteed to be valid for the lifetime of `Self`. The `cpus`
-+            // pointer is guaranteed to be valid by the C code.
-+            cpumask: unsafe { cpumask::Cpumask::get_cpumask(&mut ((*ptr).cpus)) },
-+        }
++#[cfg(CONFIG_CPU_FREQ)]
++impl FreqTable {
++    /// Creates new instance of [`FreqTable`] from raw pointer.
++    fn new(table: &Table) -> Result<Self> {
++        let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
++
++        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
++        // requirements.
++        to_result(unsafe {
++            bindings::dev_pm_opp_init_cpufreq_table(table.dev.as_raw(), &mut ptr)
++        })?;
++        Ok(Self {
++            dev: table.dev.clone(),
++            // SAFETY: The `ptr` is guaranteed by the C code to be valid.
++            table: unsafe { cpufreq::Table::from_raw(ptr) },
++        })
 +    }
 +
-+    fn from_cpu(cpu: u32) -> Result<Self> {
-+        // SAFETY: It is safe to call `cpufreq_cpu_get()` for any CPU.
-+        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(cpu) })?;
-+
-+        // SAFETY: The pointer is guaranteed to be valid by the C code.
-+        let mut policy = unsafe { Policy::from_raw_policy(ptr) };
-+        policy.put_cpu = true;
-+        Ok(policy)
++    /// Returns reference to the underlying [`cpufreq::Table`].
++    pub fn table(&self) -> &cpufreq::Table {
++        &self.table
 +    }
++}
 +
-+    /// Raw pointer to the underlying cpufreq policy.
++#[cfg(CONFIG_CPU_FREQ)]
++impl Deref for FreqTable {
++    type Target = cpufreq::Table;
++
 +    #[inline]
-+    pub fn as_raw(&self) -> *mut bindings::cpufreq_policy {
-+        self.ptr
-+    }
-+
-+    fn as_ref(&self) -> &bindings::cpufreq_policy {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference to the pointer.
-+        unsafe { &(*self.ptr) }
-+    }
-+    fn as_mut_ref(&mut self) -> &mut bindings::cpufreq_policy {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference to the pointer.
-+        unsafe { &mut (*self.ptr) }
-+    }
-+
-+    /// Returns the primary CPU for a cpufreq policy.
-+    pub fn cpu(&self) -> u32 {
-+        self.as_ref().cpu
-+    }
-+
-+    /// Returns the minimum frequency for a cpufreq policy.
-+    pub fn min(&self) -> u32 {
-+        self.as_ref().min
-+    }
-+
-+    /// Set the minimum frequency for a cpufreq policy.
-+    pub fn set_min(&mut self, min: u32) -> &mut Self {
-+        self.as_mut_ref().min = min;
-+        self
-+    }
-+
-+    /// Returns the maximum frequency for a cpufreq policy.
-+    pub fn max(&self) -> u32 {
-+        self.as_ref().max
-+    }
-+
-+    /// Set the maximum frequency for a cpufreq policy.
-+    pub fn set_max(&mut self, max: u32) -> &mut Self {
-+        self.as_mut_ref().max = max;
-+        self
-+    }
-+
-+    /// Returns the current frequency for a cpufreq policy.
-+    pub fn cur(&self) -> u32 {
-+        self.as_ref().cur
-+    }
-+
-+    /// Sets the suspend frequency for a cpufreq policy.
-+    pub fn set_suspend_freq(&mut self, freq: u32) -> &mut Self {
-+        self.as_mut_ref().suspend_freq = freq;
-+        self
-+    }
-+
-+    /// Returns the suspend frequency for a cpufreq policy.
-+    pub fn suspend_freq(&self) -> u32 {
-+        self.as_ref().suspend_freq
-+    }
-+
-+    /// Provides a wrapper to the generic suspend routine.
-+    pub fn generic_suspend(&self) -> Result<()> {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it now.
-+        to_result(unsafe { bindings::cpufreq_generic_suspend(self.as_raw()) })
-+    }
-+
-+    /// Provides a wrapper to the generic get routine.
-+    pub fn generic_get(&self) -> Result<u32> {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it now.
-+        Ok(unsafe { bindings::cpufreq_generic_get(self.cpu()) })
-+    }
-+
-+    /// Provides a wrapper to the register em with OPP routine.
-+    pub fn register_em_opp(&self) {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it now.
-+        unsafe { bindings::cpufreq_register_em_with_opp(self.as_raw()) };
-+    }
-+
-+    /// Gets raw pointer to cpufreq policy's CPUs mask.
-+    pub fn cpus(&mut self) -> &mut cpumask::Cpumask {
-+        &mut self.cpumask
-+    }
-+
-+    /// Sets clock for a cpufreq policy.
-+    pub fn set_clk(&mut self, dev: &Device, name: Option<&CStr>) -> Result<clk::Clk> {
-+        let clk = clk::Clk::new(dev, name)?;
-+        self.as_mut_ref().clk = clk.as_raw();
-+        Ok(clk)
-+    }
-+
-+    /// Allows frequency switching code to run on any CPU.
-+    pub fn set_dvfs_possible_from_any_cpu(&mut self) -> &mut Self {
-+        self.as_mut_ref().dvfs_possible_from_any_cpu = true;
-+        self
-+    }
-+
-+    /// Get fast_switch_possible value.
-+    pub fn fast_switch_possible(&self) -> bool {
-+        self.as_ref().fast_switch_possible
-+    }
-+
-+    /// Enable/disable fast frequency switching.
-+    pub fn set_fast_switch_possible(&mut self, val: bool) -> &mut Self {
-+        self.as_mut_ref().fast_switch_possible = val;
-+        self
-+    }
-+
-+    /// Sets transition latency for a cpufreq policy.
-+    pub fn set_transition_latency(&mut self, latency: u32) -> &mut Self {
-+        self.as_mut_ref().cpuinfo.transition_latency = latency;
-+        self
-+    }
-+
-+    /// Set cpuinfo.min_freq.
-+    pub fn set_cpuinfo_min_freq(&mut self, min_freq: u32) -> &mut Self {
-+        self.as_mut_ref().cpuinfo.min_freq = min_freq;
-+        self
-+    }
-+
-+    /// Set cpuinfo.max_freq.
-+    pub fn set_cpuinfo_max_freq(&mut self, max_freq: u32) -> &mut Self {
-+        self.as_mut_ref().cpuinfo.max_freq = max_freq;
-+        self
-+    }
-+
-+    /// Set transition_delay_us, i.e. time between successive freq. change requests.
-+    pub fn set_transition_delay_us(&mut self, transition_delay_us: u32) -> &mut Self {
-+        self.as_mut_ref().transition_delay_us = transition_delay_us;
-+        self
-+    }
-+
-+    /// Returns the cpufreq table for a cpufreq policy. The cpufreq table is recreated in a
-+    /// light-weight manner from the raw pointer. The table in C code is not freed once this table
-+    /// is dropped.
-+    pub fn freq_table(&self) -> Result<Table> {
-+        if self.as_ref().freq_table.is_null() {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY: The `freq_table` is guaranteed to be valid.
-+        Ok(unsafe { Table::from_raw(self.as_ref().freq_table) })
-+    }
-+
-+    /// Sets the cpufreq table for a cpufreq policy.
-+    ///
-+    /// The cpufreq driver must guarantee that the frequency table does not get freed while it is
-+    /// still being used by the C code.
-+    pub fn set_freq_table(&mut self, table: &Table) -> &mut Self {
-+        self.as_mut_ref().freq_table = table.as_raw();
-+        self
-+    }
-+
-+    /// Returns the data for a cpufreq policy.
-+    pub fn data<T: ForeignOwnable>(&mut self) -> Option<<T>::Borrowed<'_>> {
-+        if self.as_ref().driver_data.is_null() {
-+            None
-+        } else {
-+            // SAFETY: The data is earlier set by us from [`set_data()`].
-+            Some(unsafe { T::borrow(self.as_ref().driver_data) })
-+        }
-+    }
-+
-+    // Sets the data for a cpufreq policy.
-+    fn set_data<T: ForeignOwnable>(&mut self, data: T) -> Result<()> {
-+        if self.as_ref().driver_data.is_null() {
-+            // Pass the ownership of the data to the foreign interface.
-+            self.as_mut_ref().driver_data = <T as ForeignOwnable>::into_foreign(data) as _;
-+            Ok(())
-+        } else {
-+            Err(EBUSY)
-+        }
-+    }
-+
-+    // Returns the data for a cpufreq policy.
-+    fn clear_data<T: ForeignOwnable>(&mut self) -> Option<T> {
-+        if self.as_ref().driver_data.is_null() {
-+            None
-+        } else {
-+            let data = Some(
-+                // SAFETY: The data is earlier set by us from [`set_data()`]. It is safe to take
-+                // back the ownership of the data from the foreign interface.
-+                unsafe { <T as ForeignOwnable>::from_foreign(self.as_ref().driver_data) },
-+            );
-+            self.as_mut_ref().driver_data = ptr::null_mut();
-+            data
-+        }
++    fn deref(&self) -> &Self::Target {
++        &self.table
 +    }
 +}
 +
-+impl Drop for Policy {
++#[cfg(CONFIG_CPU_FREQ)]
++impl Drop for FreqTable {
 +    fn drop(&mut self) {
-+        if self.put_cpu {
-+            // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe
-+            // to relinquish it now.
-+            unsafe { bindings::cpufreq_cpu_put(self.as_raw()) };
-+        }
++        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
++        // requirements.
++        unsafe { bindings::dev_pm_opp_free_cpufreq_table(self.dev.as_raw(), &mut self.as_raw()) };
 +    }
 +}
 +
-+/// Operations to be implemented by a cpufreq driver.
-+#[vtable]
-+pub trait Driver {
-+    /// Driver specific data.
-+    ///
-+    /// Corresponds to the data retrieved via the kernel's
-+    /// `cpufreq_get_driver_data()` function.
-+    ///
-+    /// Require that `Data` implements `ForeignOwnable`. We guarantee to
-+    /// never move the underlying wrapped data structure.
-+    type Data: ForeignOwnable;
-+
-+    /// Policy specific data.
-+    ///
-+    /// Require that `PData` implements `ForeignOwnable`. We guarantee to
-+    /// never move the underlying wrapped data structure.
-+    type PData: ForeignOwnable;
-+
-+    /// Policy's init callback.
-+    fn init(policy: &mut Policy) -> Result<Self::PData>;
-+
-+    /// Policy's exit callback.
-+    fn exit(_policy: &mut Policy, _data: Option<Self::PData>) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
+ /// Operating performance point (OPP) table.
+ ///
+ /// Wraps the kernel's `struct opp_table`.
+@@ -540,6 +596,12 @@ pub fn adjust_voltage(
+         })
+     }
+ 
++    /// Create cpufreq table from OPP table.
++    #[cfg(CONFIG_CPU_FREQ)]
++    pub fn to_cpufreq_table(&mut self) -> Result<FreqTable> {
++        FreqTable::new(self)
 +    }
 +
-+    /// Policy's online callback.
-+    fn online(_policy: &mut Policy) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's offline callback.
-+    fn offline(_policy: &mut Policy) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's suspend callback.
-+    fn suspend(_policy: &mut Policy) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's resume callback.
-+    fn resume(_policy: &mut Policy) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's ready callback.
-+    fn ready(_policy: &mut Policy) {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's verify callback.
-+    fn verify(data: &mut PolicyData) -> Result<()>;
-+
-+    /// Policy's setpolicy callback.
-+    fn setpolicy(_policy: &mut Policy) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's target callback.
-+    fn target(_policy: &mut Policy, _target_freq: u32, _relation: Relation) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's target_index callback.
-+    fn target_index(_policy: &mut Policy, _index: u32) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's fast_switch callback.
-+    fn fast_switch(_policy: &mut Policy, _target_freq: u32) -> u32 {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's adjust_perf callback.
-+    fn adjust_perf(_policy: &mut Policy, _min_perf: usize, _target_perf: usize, _capacity: usize) {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's get_intermediate callback.
-+    fn get_intermediate(_policy: &mut Policy, _index: u32) -> u32 {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's target_intermediate callback.
-+    fn target_intermediate(_policy: &mut Policy, _index: u32) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's get callback.
-+    fn get(_policy: &mut Policy) -> Result<u32> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's update_limits callback.
-+    fn update_limits(_policy: &mut Policy) {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's bios_limit callback.
-+    fn bios_limit(_policy: &mut Policy, _limit: &mut u32) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's set_boost callback.
-+    fn set_boost(_policy: &mut Policy, _state: i32) -> Result<()> {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+
-+    /// Policy's register_em callback.
-+    fn register_em(_policy: &mut Policy) {
-+        build_error!(VTABLE_DEFAULT_ERROR)
-+    }
-+}
+     /// Sets a matching OPP based on frequency.
+     pub fn set_rate(&self, freq: usize) -> Result<()> {
+         // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
 -- 
 2.31.1.272.g89b43f80a514
 
