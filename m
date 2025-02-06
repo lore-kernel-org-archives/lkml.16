@@ -1,194 +1,113 @@
-Received: from mail-40136.proton.ch (mail-40136.proton.ch [185.70.40.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D5E1EA7C2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE41E1EA7DD;
+	Thu,  6 Feb 2025 13:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848332; cv=none; b=uT728nkV1vwo4PGbBlMATyz72HWHbuOS0x/mFIu4Fri5H8EaGJkbWaHFhu4wtGnXnEEmG0ajDHi/H/L7wh3sDzdcw//bOjEsI7rLz5MJGR8cXCoGEtrEcTee950vHQ6fxXsGRBVT/3A6BotXAV460L9QURXEp9PwcCBtrTQZIQo=
+	t=1738848343; cv=none; b=Pdw6SOCsRiDWhw1QKgAfT2Afj7uoqqi3zv3cnsuXNsYln/WMLP2ZLN6qhkVCIY7b0DwC+/U9YXJ8iEFq9eC6AuiYedHynjCtsWhddbVaob74RZ8otGur0yEl8au+viO97Dzncx7w8jJMTdgaD+N4FHWq3DakTXtVUNFB4aJzt1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848332; c=relaxed/simple;
-	bh=5NpQ4X93HhWFIWaadKzTlPn/L/mmiE35/1eMueqdciw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CIKmbrIV6jOknPauZIVPVdPnd30ltr8GltOUlUKimOR4Pqd5IDvn5nLfD5FxL7IP/clDCQe/5nH5lFLZ7JpCJH41CuE37Rs/V5kXPDyQR1v6es5xSHKACwmWTu/bmuU6X/voYQgr+wcE8tXLHIMeLml5PgY7E/ev9QLElxj0Txo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com; spf=pass smtp.mailfrom=yhndnzj.com; dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b=hw6cuxop; arc=none smtp.client-ip=185.70.40.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yhndnzj.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yhndnzj.com
+	s=arc-20240116; t=1738848343; c=relaxed/simple;
+	bh=866pCCQhevpJWNwi8p1iELys8f3WtUfiDfCwIsMMthg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YXngE4mYSUJ7LBMjZLCae2kYbBAgs4p+l0zSENiqdFFckx4o84hm8yDbpYWTiVJX7fnAnHF5pa1SdUDaU2YfZwZ42rqz3xtP4ROsL++nlsm/HKMnfxAOLNfIYG9yw0FEfVX45PJxC9JxhwsQI3maju+dkZ1PAXEbYbQ3V9gbbCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtqNQGBK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yhndnzj.com header.i=@yhndnzj.com header.b="hw6cuxop"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yhndnzj.com;
-	s=protonmail2; t=1738848326; x=1739107526;
-	bh=Ruke8ibh7q4d9OfDm4mTFJ0uMb4IfmsuXxLQqR6Dag0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=hw6cuxopyk6Q8KYNSARUXrVfUa2aW8/7mK3AvLCLF6j1hq7bJltQvmfCoQUwx5zRk
-	 ICg9FhiN52gLfepKxmLnc3i96cDYucmXMW+FuYA/19IM/9uTKPj2Iu352wiq9jI0bu
-	 0UGidB3fVNuO3XqmBHx7ZwVbg2DNamVBpu44MysWkqogioJ7BDxTGumyY8yirvJhRJ
-	 fdqFrFcaepMuI7txptEU8tv525XHQQOiac2PvC6Uc8cBLRuuJe1xd1f0G18UsLbQjK
-	 5Gs9mna1fStqhRqL5llCiZwB8JcwP5gJAWN2Z31CJxXYTD0sKOaw1csam4d+V/IJYw
-	 M34wXsih5cjjg==
-Date: Thu, 06 Feb 2025 13:25:19 +0000
-To: "brauner@kernel.org" <brauner@kernel.org>
-From: Mike Yuan <me@yhndnzj.com>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "cgzones@googlemail.com" <cgzones@googlemail.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] fs/xattr: actually support O_PATH fds in *xattrat() syscalls
-Message-ID: <cfnfHaahrrXJJOgvNjb5hFbU0qh8gVXJ62R9uP9AItBEywyNH9vNBRzJbPR8xTv-LtFaUJYTHvyuLBfkznwJPt3fEcqNBFxf_yKJeZKwL3I=@yhndnzj.com>
-In-Reply-To: <20250206-erbauen-ornament-26f338d98f13@brauner>
-References: <20250205204628.49607-1-me@yhndnzj.com> <20250206-uhrwerk-faultiere-7a308565e2d3@brauner> <Kn-2tlpxN8YNmh0j0udjQ8YIFNZMVVJYJh-LyBoYNBfpax28PNUkXuH6gnod7if2eX3NRVs3Ey8uCHRpwg_S5hPX_ADtrgMZbDTWFpHd_uU=@yhndnzj.com> <20250206-erbauen-ornament-26f338d98f13@brauner>
-Feedback-ID: 102487535:user:proton
-X-Pm-Message-ID: 11e3e903fb487a66c3ef10bdd2e7699505872930
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtqNQGBK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0030C4CEDD;
+	Thu,  6 Feb 2025 13:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738848342;
+	bh=866pCCQhevpJWNwi8p1iELys8f3WtUfiDfCwIsMMthg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VtqNQGBKLfddqn6boR38G7eUq2Q9yAMwesApOGhsoB0QP3dBZCzkzZ1c1q+9m+okc
+	 ky79W4u1Sn2zBDGgdtsDa3LdFKDb0v9eNyOek9qYZSLPll/Df92XhYZj56CcoFiYsG
+	 bevseac7utg8eXGsJNMGsAUYvr4HU3WrZIgIk+zmEx4iXDoK2kDJhZgJTWcQyNHR/+
+	 J9TH7sXhKkqIE3i8h3MzRwfQQ1IVb61YHAIogZAYXD2dYbHw9EA8JIq42cpdhpt6ki
+	 9BETlENeadQ0Sk/ygXrl5+wj/yDaIEfWPFk0b9m7n5kIcJ3iVa55UfsLRm3W5oANho
+	 fd90Fnfg3w/BA==
+Date: Thu, 6 Feb 2025 13:25:38 +0000
+From: Simon Horman <horms@kernel.org>
+To: Peter Seiderer <ps.report@gmx.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH net-next v4 09/17] net: pktgen: align some variable
+ declarations to the most common pattern
+Message-ID: <20250206132538.GU554665@kernel.org>
+References: <20250205131153.476278-1-ps.report@gmx.net>
+ <20250205131153.476278-10-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205131153.476278-10-ps.report@gmx.net>
 
-On 2/6/25 11:03, Christian Brauner <brauner@kernel.org> wrote:
+On Wed, Feb 05, 2025 at 02:11:45PM +0100, Peter Seiderer wrote:
+> Align some variable declarations (in get_imix_entries and get_labels) to
+> the most common pattern (int instead of ssize_t/long) and adjust function
+> return value accordingly.
+> 
+> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
 
->  On Thu, Feb 06, 2025 at 09:51:33AM +0000, Mike Yuan wrote:
->  > On 2/6/25 10:31, Christian Brauner <brauner@kernel.org> wrote:
->  >
->  > >  On Wed, Feb 05, 2025 at 08:47:23PM +0000, Mike Yuan wrote:
->  > >  > Cited from commit message of original patch [1]:
->  > >  >
->  > >  > > One use case will be setfiles(8) setting SELinux file contexts
->  > >  > > ("security.selinux") without race conditions and without a file
->  > >  > > descriptor opened with read access requiring SELinux read permi=
-ssion.
->  > >  >
->  > >  > Also, generally all *at() syscalls operate on O_PATH fds, unlike
->  > >  > f*() ones. Yet the O_PATH fds are rejected by *xattrat() syscalls
->  > >  > in the final version merged into tree. Instead, let's switch thin=
-gs
->  > >  > to CLASS(fd_raw).
->  > >  >
->  > >  > Note that there's one side effect: f*xattr() starts to work with
->  > >  > O_PATH fds too. It's not clear to me whether this is desirable
->  > >  > (e.g. fstat() accepts O_PATH fds as an outlier).
->  > >  >
->  > >  > [1] https://lore.kernel.org/all/20240426162042.191916-1-cgoettsch=
-e@seltendoof.de/
->  > >  >
->  > >  > Fixes: 6140be90ec70 ("fs/xattr: add *at family syscalls")
->  > >  > Signed-off-by: Mike Yuan <me@yhndnzj.com>
->  > >  > Cc: Al Viro <viro@zeniv.linux.org.uk>
->  > >  > Cc: Christian G=C3=B6ttsche <cgzones@googlemail.com>
->  > >  > Cc: Christian Brauner <brauner@kernel.org>
->  > >  > Cc: <stable@vger.kernel.org>
->  > >  > ---
->  > >
->  > >  I expanded on this before. O_PATH is intentionally limited in scope=
- and
->  > >  it should not allow to perform operations that are similar to a rea=
-d or
->  > >  write which getting and setting xattrs is.
->  > >
->  > >  Patches that further weaken or dilute the semantics of O_PATH are n=
-ot
->  > >  acceptable.
->  >
->  > But the *at() variants really should be able to work with O_PATH fds, =
-otherwise they're basically useless? I guess I just need to keep f*() as-is=
-?
-> =20
->  I'm confused. If you have:
-> =20
->          filename =3D getname_maybe_null(pathname, at_flags);
->          if (!filename) {
->                  CLASS(fd, f)(dfd);
->                  if (fd_empty(f))
->                          error =3D -EBADF;
->                  else
->                          error =3D file_setxattr(fd_file(f), &ctx);
-> =20
->  Then this branch ^^ cannot use fd_raw because you're allowing operations
->  directly on the O_PATH file descriptor.
-> =20
->  Using the O_PATH file descriptor for lookup is obviously fine which is
->  why the other branch exists:
-> =20
->          } else {
->                  error =3D filename_setxattr(dfd, filename, lookup_flags,=
- &ctx);
->          }
-> =20
->  IOW, your patch makes AT_EMPTY_PATH work with an O_PATH file descriptor
->  which isn't acceptable. However, it is already perfectly fine to use an
->  O_PATH file descriptor for lookup.
+Hi Peter,
 
-Well, again, [1] clearly stated the use case:
+These comments are is true in general of this patchset, but particularly so
+in the case of this patch:
 
-> Those can be used to operate on extended attributes,
-especially security related ones, either relative to a pinned directory
-or [on a file descriptor without read access, avoiding a
-/proc/<pid>/fd/<fd> detour, requiring a mounted procfs].
+* I think a more succinct subject would be nice.
+* I think the patch description should provide some reason
+  _why_ the change is being made.
 
-And this surfaced in my PR to systemd:
+Also, specifically relating to this patch, I wonder if it's scope ought to
+be extended. For example, the two callers of num_arg(), get_imix_entries() and
+pktgen_if_write() assign the return value of num_arg() to len, which is now
+an int in both functions. But num_args() returns a long.
 
-https://github.com/systemd/systemd/pull/36228/commits/34fe16fb177d2f917570c=
-5f71dfa8f5b9746b9a7
+> ---
+> Changes v3 -> v4
+>   - new patch (factored out of patch 'net: pktgen: fix access outside of user
+>     given buffer in pktgen_if_write()')
+> ---
+>  net/core/pktgen.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+> index 4f201a2db2dc..279910367ad4 100644
+> --- a/net/core/pktgen.c
+> +++ b/net/core/pktgen.c
+> @@ -850,12 +850,11 @@ static int strn_len(const char __user * user_buffer, unsigned int maxlen)
+>   * where each entry consists of size and weight delimited by commas.
+>   * "size1,weight_1 size2,weight_2 ... size_n,weight_n" for example.
+>   */
+> -static ssize_t get_imix_entries(const char __user *buffer,
+> -				struct pktgen_dev *pkt_dev)
+> +static int get_imix_entries(const char __user *buffer,
+> +			    struct pktgen_dev *pkt_dev)
+>  {
+> -	int i = 0;
+> -	long len;
+>  	char c;
+> +	int i = 0, len;
 
-How are *xattrat() syscalls different from e.g. fchmodat2(AT_EMPTY_PATH) in=
- that regard? I can agree that the semantics of f*xattr() ought to be left =
-untouched, yet I fail to grok the case for _at variants.
+Given it can be achieved with exactly the same lines changed, just in a
+different order, please arrange the local variable declarations in reverse
+xmas tree order - longest line to shortest.
 
->  >
->  > >  >  fs/xattr.c | 8 ++++----
->  > >  >  1 file changed, 4 insertions(+), 4 deletions(-)
->  > >  >
->  > >  > diff --git a/fs/xattr.c b/fs/xattr.c
->  > >  > index 02bee149ad96..15df71e56187 100644
->  > >  > --- a/fs/xattr.c
->  > >  > +++ b/fs/xattr.c
->  > >  > @@ -704,7 +704,7 @@ static int path_setxattrat(int dfd, const cha=
-r __user *pathname,
->  > >  >
->  > >  >  =09filename =3D getname_maybe_null(pathname, at_flags);
->  > >  >  =09if (!filename) {
->  > >  > -=09=09CLASS(fd, f)(dfd);
->  > >  > +=09=09CLASS(fd_raw, f)(dfd);
->  > >  >  =09=09if (fd_empty(f))
->  > >  >  =09=09=09error =3D -EBADF;
->  > >  >  =09=09else
->  > >  > @@ -848,7 +848,7 @@ static ssize_t path_getxattrat(int dfd, const=
- char __user *pathname,
->  > >  >
->  > >  >  =09filename =3D getname_maybe_null(pathname, at_flags);
->  > >  >  =09if (!filename) {
->  > >  > -=09=09CLASS(fd, f)(dfd);
->  > >  > +=09=09CLASS(fd_raw, f)(dfd);
->  > >  >  =09=09if (fd_empty(f))
->  > >  >  =09=09=09return -EBADF;
->  > >  >  =09=09return file_getxattr(fd_file(f), &ctx);
->  > >  > @@ -978,7 +978,7 @@ static ssize_t path_listxattrat(int dfd, cons=
-t char __user *pathname,
->  > >  >
->  > >  >  =09filename =3D getname_maybe_null(pathname, at_flags);
->  > >  >  =09if (!filename) {
->  > >  > -=09=09CLASS(fd, f)(dfd);
->  > >  > +=09=09CLASS(fd_raw, f)(dfd);
->  > >  >  =09=09if (fd_empty(f))
->  > >  >  =09=09=09return -EBADF;
->  > >  >  =09=09return file_listxattr(fd_file(f), list, size);
->  > >  > @@ -1079,7 +1079,7 @@ static int path_removexattrat(int dfd, cons=
-t char __user *pathname,
->  > >  >
->  > >  >  =09filename =3D getname_maybe_null(pathname, at_flags);
->  > >  >  =09if (!filename) {
->  > >  > -=09=09CLASS(fd, f)(dfd);
->  > >  > +=09=09CLASS(fd_raw, f)(dfd);
->  > >  >  =09=09if (fd_empty(f))
->  > >  >  =09=09=09return -EBADF;
->  > >  >  =09=09return file_removexattr(fd_file(f), &kname);
->  > >  >
->  > >  > base-commit: a86bf2283d2c9769205407e2b54777c03d012939
->  > >  > --
->  > >  > 2.48.1
->  > >  >
->  > >  >
->  > >
->  
+Likewise for the other hunk of this patch.  And I believe there are also
+other cases in this patchset where this comment applied.
+
+The following tool can be useful:
+https://github.com/ecree-solarflare/xmastree
+
+...
+
+-- 
+pw-bot: changes-requested
