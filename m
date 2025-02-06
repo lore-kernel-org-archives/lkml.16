@@ -1,195 +1,471 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E68316DC3C;
-	Thu,  6 Feb 2025 17:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864219; cv=fail; b=nPFTnVsW3XtT1wUNEc+cDSklY57KtmC/bDQN1I6iyakKnVvPvCjvdA9coVm7wm+ZnWqOZdWodSCHGhdnXG69ASdppGvo1IYc/YFWFcKST5gTp+jrEW0kQffBEN849/BPbJefpKMZd5rlG6ZA7ukOoI1UDjFJe54zFFkvsou7g1g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864219; c=relaxed/simple;
-	bh=Kq9xCxUqe55R57TvTaTvCjXbperwdSDrnV/dcKhpOcQ=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=EvQmxBYkd44VIrK45NWWns4Phcpw816cwe//2yT9rzo/5P7R96p038/U0/SL9fLIpVgOENxdZbKYEr9TlPfBvdVoR2kXkR08YL7xV2dWs+NjMOdXrO4b9wMZ8MqfUZdOkzXkQbRyhYvVqmxExmtf64RzbadJGMyfEeeE7vL+lJs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GxI07Ffp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=PY/iwv0t; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FAC42AB4
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738864306; cv=none; b=hme1tOEGGGZeH1snbd8lL6dnHQ3CzqzQPQUf67q2YEZef9mKMkglbEz++u62Y32KoSIru7RfsN2fnyEuJUBKROBacSARO84NhzjPU2JRLGm9RPbcegPFx8x/dBiShnhQCUjP7xU7lneDywPsHlPLGx/x+a+AYVuv/Xv708WlNLA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738864306; c=relaxed/simple;
+	bh=u3ko6WgmzTTetxwx3JM7rYtkUYpifNxeVSqSH+RuYoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HRjmylW727kKjs2qROOSa97LDcHuwptjqiGVOOP7Mhqgg3Fy5+BEsd/KedhwwnbxcatrCX7AxAEzRpmjZcPnPGdvOEI+P1NiUaxUd8HyL8N/A6A00YvF1rjEx5Xcou4KawlIxCFo+XO/7oqOa62sgLxCP4/KuXlodRcslBFOK18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=e9k+A3x/; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GxI07Ffp";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="PY/iwv0t"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516E5Nh8028724;
-	Thu, 6 Feb 2025 17:50:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=7x6wH9TKkcsuUzS3ll
-	PyXaZ0dtY6imkBOtBrPoWI3qU=; b=GxI07Ffp74idOUZ6R7Ps5qObf82JmOa9Rz
-	RgDr55VYIDDHbJEMKwR18LUqIqp8sxt7mCJV/PjlDTPVPttM0ycOkFfVFmqKdkMn
-	lR1LizMzvDFKuZ4KmS7GQQfEFNRrmizQxkqhoVEMN8IOOV25J3HFPnbnAEilYIjj
-	ywKkhXVN5pGvIVC/Rq4LKygvtPnFZfwk+e2ewGBVpaQH3ZbqmIhZWmgofugn+v/h
-	W5bY/9ol+iu9My/PWhJ2nA5Ffc+0B1NWyE7qUC6LIK8meZpizoYxjupHATcTlwzz
-	07hc+kpKC2ZNrdZUGIzaMeGy8UR1ZY4by0zm5X06tKQuI4G5TC/g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44kku4w48k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Feb 2025 17:50:08 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 516HNdhY020646;
-	Thu, 6 Feb 2025 17:50:07 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2177.outbound.protection.outlook.com [104.47.55.177])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44j8fs6dc4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Feb 2025 17:50:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BpjG0qPxht2JQt8Rc6Jh5W5dpg8B4Xv/w+ONolmCI7u1cH6F2YHjpCuE6F0ha7FkVVuruDQHlk0bs92J7KmUHiZo6maEOtY5CULvs3jxEMjAd5g5RqWPIbTHKT7Eddb1VzKzDNKEloWRemrbneusGzmNdf2cRFFlLfkzPyg2EsZNfyLGQDoiKRy5i1IlZvUUqB7We2skbbtk7pm0YKfJWbY6FeC4OCWua03nT1NA2y6ujdCjVv0yLwYQgP5K6cjXe5WlqEnkTIHlZTO/8cjNDpootCBU2wi7RZWqwSIWATdb+0U1iy/zSAYDbLz63pVqCoujUpvdmEX+533h/yLMDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7x6wH9TKkcsuUzS3llPyXaZ0dtY6imkBOtBrPoWI3qU=;
- b=PjX8MI39ypv2ACxBKvLoYxSVQ4aZyRTcKBXTLNVqflXuQFVBxvteLOIwQUug1Ydtbv4ntumd1tUoACNYbWt57HsU97qCxmnxMrOg+uO2UCuq8goHRQlX9zEWEudbirxnULuX3RDxt2g/xSsDQn4a4GmuxVYm6nkZ6gprbD4fQwEcKoDTGIA+WdfYIRJMcskq8qLtt1dxHupw9duorXzUMA2Hf3XJwgPg4kwphP4V0YtHjXlg5cloNBBTxGQcpY4Q3VaT76MuPgsy4/3c3Y14aBQ/7LfHX9DwKu7x3X0nYEmNqbrRv1nzLD97ACYEgB8SJBoerHyPYPeZ/Cz4/KGNmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7x6wH9TKkcsuUzS3llPyXaZ0dtY6imkBOtBrPoWI3qU=;
- b=PY/iwv0tkJxQvBcHBdAVF4e5vUek6/qtc820pyPJFJfk10fO5PeotKAeG7Kj9Eih4Ka+MiX7TjPsZNlcjJu9DUCMfIUggL98jz4i3F9IW7DTVF6VIp2JIPOxp9X5W5jnx47tpyy6eUy/3IqYbWRzD/UPy+s/mmCGNRnyI/7cXSc=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by CY8PR10MB7292.namprd10.prod.outlook.com (2603:10b6:930:7a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 17:50:05 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%4]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 17:50:05 +0000
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Ard
- Biesheuvel <ardb@kernel.org>, dm-devel@lists.linux.dev,
-        Mikulas Patocka
- <mpatocka@redhat.com>
-Subject: Re: [PATCH] crypto: crct10dif - remove from crypto API
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <20250206173857.39794-1-ebiggers@kernel.org> (Eric Biggers's
-	message of "Thu, 6 Feb 2025 09:38:57 -0800")
-Organization: Oracle Corporation
-Message-ID: <yq1r04b9d56.fsf@ca-mkp.ca.oracle.com>
-References: <20250206173857.39794-1-ebiggers@kernel.org>
-Date: Thu, 06 Feb 2025 12:50:02 -0500
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR01CA0031.prod.exchangelabs.com (2603:10b6:a02:80::44)
- To CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="e9k+A3x/"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl663c58zlgTy0;
+	Thu,  6 Feb 2025 17:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:from:from
+	:received:received; s=mr01; t=1738864284; x=1741456285; bh=7NdsE
+	CiBmN/leYtlS6fedda0Pp8yji8ADlgslThBtFM=; b=e9k+A3x/rL+5CYeM6G9L1
+	JfEbJSC0fT0c7kPhl6Urr+fuIOBMp3EB1uYtv8t2YUd5o5sEoua30cE20gmt/Tih
+	M/cJKBk7S5r7wGEhdr61/07UltXXxgcKlTZGZqkDD5xIClOOFq0CRQFryY9hdEFW
+	DbTZhfhFOBRgGTnpuujyVYuPJX6uBW8GUUYjlE7nFcMuIU5a1cbGLxE/572L/Q8b
+	hMqQqXjsiX1rgssaL8kkDZxSifuruDFKqiuafHv6rGcEb2hxr3GdGBB1/xEv2wWi
+	bibmop7YWd7Z/x30wLoJcjki3K4AA/meQtJgSbJGT16C5kKjoPQEYuan9HYpbgln
+	g==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id m9wEA0AhKJuV; Thu,  6 Feb 2025 17:51:24 +0000 (UTC)
+Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl5j6kRqzlgTwF;
+	Thu,  6 Feb 2025 17:51:21 +0000 (UTC)
+From: Bart Van Assche <bvanassche@acm.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Marco Elver <elver@google.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Jann Horn <jannh@google.com>,
+	linux-kernel@vger.kernel.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH RFC 01/33] scsi, usb: Rename the RESERVE and RELEASE constants
+Date: Thu,  6 Feb 2025 09:50:42 -0800
+Message-ID: <20250206175114.1974171-2-bvanassche@acm.org>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+In-Reply-To: <20250206175114.1974171-1-bvanassche@acm.org>
+References: <20250206175114.1974171-1-bvanassche@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|CY8PR10MB7292:EE_
-X-MS-Office365-Filtering-Correlation-Id: 382c6e21-61e1-48b1-0fed-08dd46d6b065
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vWtky6wibmEvBjexJoZ4yzcfcSTcxZJvXad/9BXA4PFqNFH0X5Iiwv6UVw+H?=
- =?us-ascii?Q?rS+TyARVTzrS4z3GkNwKCyxkzSaok8+EeG9j+IGYrnm0+9AxetDrIlPSLJrD?=
- =?us-ascii?Q?RQDlxlkgIlaN4mmGj6p1VTrR9VrkmwFN34YIbpmFizANZ9lSVEFY+IUqA5yl?=
- =?us-ascii?Q?0iyPwQu6QuIM634JMOnzxwvjbosoijte1IXTviDAXUYIdGi9+xZACxsz1HI9?=
- =?us-ascii?Q?NEW1mITQWBVEHflztOv/yw0OeKkfKsVQIOoS/heXGGa8rW4RKS5DkLMpRlOl?=
- =?us-ascii?Q?Pz6vxY87DUTjoenX6zkXYXWFQUHZND9SIb4JTF+ESubuiYm6AV+I2vrAKeHO?=
- =?us-ascii?Q?ho7eo/RZUMesG7LA7QEZnGOwyfz2y3BW/u/VD7V+z3/ti7MBnSQdbVrjG8tr?=
- =?us-ascii?Q?UY+kSHRA4vxt1xXXpnjkIDVUxoltcTRgYKgD7j/r+hrVls4Vk1sbVtvIaDVL?=
- =?us-ascii?Q?F9ijYFLynocPSUMopms2lsSq5M1v1KhQfQCF3i64e8iazwGKrek70moqfmBn?=
- =?us-ascii?Q?HXMiV0cPMaDfeKdZt1MXO1kI/VmvfS7sxZG6pX6C9gJvGVtBpT3z9bhPPci+?=
- =?us-ascii?Q?YBGJ35q6I95EifGYTRNz7CH+qi46GdTvqn5SwZZvuqH0qFwUmM2V50CFqDGl?=
- =?us-ascii?Q?mSXL0dixkX70iVvubdBCbL3vQdFiC9iRRT50tq5MXddhqz/THfl7d1bepchF?=
- =?us-ascii?Q?Ki9uJu1IDLeiXkOQ73kaPC8bbP5D2+F0yrFxHzv51b1BFtph2wIMpbyRfRXq?=
- =?us-ascii?Q?ephoDonbocRwdM3/07Lg4QPMqfBc7BGRE6Iv0X1+SJ2V4YJcj9nrhAjxkoqq?=
- =?us-ascii?Q?d7pQxWwR40wcdqqTfRvT1FV8+ZfIroRGUgkHRr8n8jUWFUnxLRTWWXMb7Mpu?=
- =?us-ascii?Q?V3xCkxKht+zJWHIkXPCJxTNM0sssvDarp31rILZP5wq+AFWB69dJ/cMojZM/?=
- =?us-ascii?Q?jyHvv795aXRYuAh4er6jF6GZFCRZ8ux7T+R4BlUdm/UvYcQ48TMw75pVccsp?=
- =?us-ascii?Q?TLkDTXORTusy8Wvz+Fo9psB5JuPRbwyZikL2NqZjMd+/wPfdSs9APrApp1IL?=
- =?us-ascii?Q?3JAb9feb7x9Hfmr1veUen7aYPDzAE/JS6p20FPYsFAr2vR6ZpX1prlCd5z47?=
- =?us-ascii?Q?VL4mzGJYlFRKBjSURKwL7MK7+V0B+6alalISGIF7DDBGNVBgP+Zo62Wn4Iz7?=
- =?us-ascii?Q?BLAIlOyWEsqT8FACJocrHxUHLQcS+Fpc8MDap6EI8ZIC6XrNGVg3lsyQuAWR?=
- =?us-ascii?Q?+MHPaap9LDfD1MnOW7mjNLmfwaeemkrmQ8lg58Fi7NyHUYXsEcTUboIy3LrC?=
- =?us-ascii?Q?Shp0OqRd9CsDWJbpxUaVwPO9+jMUqivFWJb1yZYFdtn4s8rl+LoTraY/vmip?=
- =?us-ascii?Q?J9Vo2SX558V9prXnuDYlzReh7GVL?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kBP/SSNW46mv7IoBFl/+g1sdfmByC6QnBFOUCVaxPNWxzF8y+jB6nnkcm0on?=
- =?us-ascii?Q?wk+8AbUTxojHVhX1Tnmy+IGpX7XdVcpCAmEBQ+F0KpX334kb1DqepkeGtbm7?=
- =?us-ascii?Q?9aZPa5dE3f6AdpZdb1UCl+XWfE2olRoZRw++MganeoCCLdpeUvJ9j9m+3W0o?=
- =?us-ascii?Q?VUu/3h9OcScJ4zHZs5kKLk0h3FeVVC/d66kbBF2D63cJ5Hbtv3Xfr+H9++rr?=
- =?us-ascii?Q?RJjPCB9amSxq7LiC4ArZk+Po9QypXVPkciaVeHWYXP6ZFq/3ONYzECeZn9MV?=
- =?us-ascii?Q?V2KsT03Vxwbu8z/iav9DwbPkYczZ6i+wVGi2jOIMD2l84RNChQL5IuMr4ZQ1?=
- =?us-ascii?Q?bCwsuZ3wISSEYEcgfiEhDjt0jVAldj0meL0D3n76zW0WbUMfqbvlcXiguUcv?=
- =?us-ascii?Q?M7dRlp2+oIowIM8Np0igsvtF52hIJKhZ4t0s6F7kR/dP9qeN4EPTlF01BLHR?=
- =?us-ascii?Q?kH4gD1Yx+/xl9f6hMt6thrbK687YbE3dC7sTG3zgUH9fF4Z6pt8GOdvd0sig?=
- =?us-ascii?Q?88HLKIakCuzW9k4CPNYvsXbY6Z2i2/aWvJPTtv2RI7omE23CvGNyk8+4cZth?=
- =?us-ascii?Q?5IAnvP00DSv4fgMz2XwdKAYB4IAmi3LEdfai1GBTWHFigyIBVQ2nKAsdr479?=
- =?us-ascii?Q?043AD0h9m6uO10QOyzU0Capjv9eeCCGtmQrs8v7Qd6x5lUQRyTtB8u+YaIj/?=
- =?us-ascii?Q?VR2qeFy99KB92tHm66ZL8fkqd21ShyF4WnPzeNnBJl43XklMXz76+kAZKkkT?=
- =?us-ascii?Q?NEJZYrb28mimozLWSHVHbixGRi7uK4Ab7NxJDdDcMvlLZ8WqBzd6ygryUumG?=
- =?us-ascii?Q?hDlRRkVny45SmcUgpQZcyJrgksc2JqvDUPjGQwYmbsDysaG9ZoESCmWTDwkx?=
- =?us-ascii?Q?WCAg9wQpb6JiPxazqOW6Tiz19sfnuDa7CyMXGxFql56i/18CONYZJgAxHwPN?=
- =?us-ascii?Q?BHgwQFxbpnyb1pfCXhkh5IpHMhUg+5ELYHk76BP+hLNKAqO1bKynEkFWVoam?=
- =?us-ascii?Q?MkamL02gpJKMXbBvY+lW5DL3zTZ/YDUjPLHNPW80kvXeIbio/ma41AnYjvC/?=
- =?us-ascii?Q?2/h7IfV8TlzH5wqdB+esHwdDV4yYyprFIeps+ixd02sjViOLIDZXFPcLIDfw?=
- =?us-ascii?Q?aE5i4xcl1hAjXb7xIyTVUeR1u7EQooNQ0tLVnI9ZRbpqiIjRzskRRrezjGES?=
- =?us-ascii?Q?zPOBUlOm5P4DqoThWsEjYlgHx4gAWGV3HPJxaqQWBd4aU4/QEbUdxo63s3cS?=
- =?us-ascii?Q?Gt1J4gYTDAWhqWb0n0o3o0vZFxj69c45m/HYYMpuimzrEc0j3nDzfpZ4GNXF?=
- =?us-ascii?Q?XyNWh1wTtDm4rWSlkf01H+GJ1nY5GqblaXjPQ25KBnyIviV3ox46SfKjtjID?=
- =?us-ascii?Q?8vf0kZERGOHlyA6k1Cdv+HVJ48Q6jkWi+ySWYb4CQO4lC8n7HeVH5qsa3rnI?=
- =?us-ascii?Q?HNYTzBPRM501zHByBSLbGfK0L4rjh5ojzqbpnyIMk3aB5KxQ157qN/+pZp9A?=
- =?us-ascii?Q?P+wVEoBZ0P18XfXfNF45DVhOKLnJ2JuUqwGSu8E1WUrKBUq9q7LP+LGJlf9j?=
- =?us-ascii?Q?LhU55gWqB9pfHJqjl2qoZPwh3TPF21L0VYDjGouyffF/omsyWeB5Effqv75i?=
- =?us-ascii?Q?Fw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	mslM2+nAIGXIthj6VuFnjGHz4HsDR02iKwW1/bV5MfHS0WJetY0CQ2rdyxMAqFH/YqIiBzoDyzeKrOyPUguXF5I9/jTSoNS+JTS95hpORE5SQSwSzhrNp60RaDzSojlHDZ8wFK7ouj3L50SblLtUqZI9QiazJNMEjvMwwDIoUk5f24h7U33ZXj8Yh2E95bS0AHt/RhoYPzPKjnDlGl4mjBxjN/EJaTGRh6Wur4AdHr0syod5VClKcVSsMrsnY4X5oRPpwvGXFG+h4dQaF6Wl2hmOVNDL+IoMJGZijlSJ8kUqzz6XWvQo7cfLqimkhnWAXxCP5pv9TCYVKb4zGopWSTUP4okC+XB64+rzrvmC9Jfon8x2sQgtlTHwp9c5zZ7jeXeedUvrZYXw0kr0yafnp9nUNtzTggjYm1oas8ePqfY+23WUnG1DDmbjwBjowfXwIOvdriSgQdohFvMHcVtZzJj6IAIiGK1n4ZYcRR6+kQgk4GTYvLJuyj0lR93lr2uLQJaK/IelZ2gGrw9mBFHp9aKPp5A0vGqvz2n15Plcfcpx+F5PjyokcZNfPDytEQNZki6J9J5t0OTXnfKSrQZjc9OAo7tZofJ2WT1fMuptIHs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 382c6e21-61e1-48b1-0fed-08dd46d6b065
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 17:50:05.4000
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rjEslxAn2MU5RqYg5Y3feSOP36GQsrMyVW5hYLFJvwOhjUhuyDw32tjGX1p/vyCkQUatulwa8a4OipwvlWw0nsXD2TlTKcXAITVJ8FL5m/U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB7292
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_05,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
- definitions=main-2502060143
-X-Proofpoint-GUID: eecbrpMx9dMX7jlsZSlLxwVtERgBDNg2
-X-Proofpoint-ORIG-GUID: eecbrpMx9dMX7jlsZSlLxwVtERgBDNg2
+Content-Transfer-Encoding: quoted-printable
 
+The RESERVE(6) and RELEASE(6) commands are obsolete SCSI commands defined
+in the SCSI-2 standard. These commands have been replaced by PERSISTENT
+RESERVE IN and PERSISTENT RESERVE OUT. Rename RESERVE into RESERVE_6 and
+RELEASE into RELEASE_6 in preparation of introducing a new RELEASE macro =
+in
+the new header file include/linux/thread_safety.h.
 
-Eric,
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ drivers/message/fusion/mptscsih.c            |  4 ++--
+ drivers/scsi/aacraid/aachba.c                |  4 ++--
+ drivers/scsi/arm/acornscsi.c                 |  2 +-
+ drivers/scsi/ips.c                           |  8 ++++----
+ drivers/scsi/megaraid.c                      | 10 +++++-----
+ drivers/scsi/megaraid/megaraid_mbox.c        | 10 +++++-----
+ drivers/target/target_core_device.c          |  8 ++++----
+ drivers/target/target_core_pr.c              |  6 +++---
+ drivers/target/target_core_spc.c             | 20 ++++++++++----------
+ drivers/usb/gadget/function/f_mass_storage.c |  4 ++--
+ drivers/usb/storage/debug.c                  |  4 ++--
+ include/scsi/scsi_proto.h                    |  4 ++--
+ include/trace/events/scsi.h                  |  4 ++--
+ include/trace/events/target.h                |  4 ++--
+ 14 files changed, 46 insertions(+), 46 deletions(-)
 
-> Remove the "crct10dif" shash algorithm from the crypto API. It has no
-> known user now that the lib is no longer built on top of it. It has no
-> remaining references in kernel code. The only other potential users
-> would be the usual components that allow specifying arbitrary hash
-> algorithms by name, namely AF_ALG and dm-integrity. However there are
-> no indications that "crct10dif" is being used with these components.
-> Debian Code Search and web searches don't find anything relevant, and
-> explicitly grepping the source code of the usual suspects (cryptsetup,
-> libell, iwd) finds no matches either. "crc32" and "crc32c" are used in
-> a few more places, but that doesn't seem to be the case for
-> "crct10dif".
-
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+diff --git a/drivers/message/fusion/mptscsih.c b/drivers/message/fusion/m=
+ptscsih.c
+index a9604ba3c805..f0746db92ca6 100644
+--- a/drivers/message/fusion/mptscsih.c
++++ b/drivers/message/fusion/mptscsih.c
+@@ -2915,14 +2915,14 @@ mptscsih_do_cmd(MPT_SCSI_HOST *hd, INTERNAL_CMD *=
+io)
+ 		timeout =3D 10;
+ 		break;
+=20
+-	case RESERVE:
++	case RESERVE_6:
+ 		cmdLen =3D 6;
+ 		dir =3D MPI_SCSIIO_CONTROL_READ;
+ 		CDB[0] =3D cmd;
+ 		timeout =3D 10;
+ 		break;
+=20
+-	case RELEASE:
++	case RELEASE_6:
+ 		cmdLen =3D 6;
+ 		dir =3D MPI_SCSIIO_CONTROL_READ;
+ 		CDB[0] =3D cmd;
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.=
+c
+index abf6a82b74af..0be719f38377 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -3221,8 +3221,8 @@ int aac_scsi_cmd(struct scsi_cmnd * scsicmd)
+ 			break;
+ 		}
+ 		fallthrough;
+-	case RESERVE:
+-	case RELEASE:
++	case RESERVE_6:
++	case RELEASE_6:
+ 	case REZERO_UNIT:
+ 	case REASSIGN_BLOCKS:
+ 	case SEEK_10:
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index e50a3dbf9de3..ef21b85cf014 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -591,7 +591,7 @@ datadir_t acornscsi_datadirection(int command)
+     case CHANGE_DEFINITION:	case COMPARE:		case COPY:
+     case COPY_VERIFY:		case LOG_SELECT:	case MODE_SELECT:
+     case MODE_SELECT_10:	case SEND_DIAGNOSTIC:	case WRITE_BUFFER:
+-    case FORMAT_UNIT:		case REASSIGN_BLOCKS:	case RESERVE:
++    case FORMAT_UNIT:		case REASSIGN_BLOCKS:	case RESERVE_6:
+     case SEARCH_EQUAL:		case SEARCH_HIGH:	case SEARCH_LOW:
+     case WRITE_6:		case WRITE_10:		case WRITE_VERIFY:
+     case UPDATE_BLOCK:		case WRITE_LONG:	case WRITE_SAME:
+diff --git a/drivers/scsi/ips.c b/drivers/scsi/ips.c
+index cce6c6b409ad..94adb6ac02a4 100644
+--- a/drivers/scsi/ips.c
++++ b/drivers/scsi/ips.c
+@@ -3631,8 +3631,8 @@ ips_send_cmd(ips_ha_t * ha, ips_scb_t * scb)
+=20
+ 			break;
+=20
+-		case RESERVE:
+-		case RELEASE:
++		case RESERVE_6:
++		case RELEASE_6:
+ 			scb->scsi_cmd->result =3D DID_OK << 16;
+ 			break;
+=20
+@@ -3899,8 +3899,8 @@ ips_chkstatus(ips_ha_t * ha, IPS_STATUS * pstatus)
+ 			case WRITE_6:
+ 			case READ_10:
+ 			case WRITE_10:
+-			case RESERVE:
+-			case RELEASE:
++			case RESERVE_6:
++			case RELEASE_6:
+ 				break;
+=20
+ 			case MODE_SENSE:
+diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
+index adab151663dd..2006094af418 100644
+--- a/drivers/scsi/megaraid.c
++++ b/drivers/scsi/megaraid.c
+@@ -855,8 +855,8 @@ mega_build_cmd(adapter_t *adapter, struct scsi_cmnd *=
+cmd, int *busy)
+ 			return scb;
+=20
+ #if MEGA_HAVE_CLUSTERING
+-		case RESERVE:
+-		case RELEASE:
++		case RESERVE_6:
++		case RELEASE_6:
+=20
+ 			/*
+ 			 * Do we support clustering and is the support enabled
+@@ -875,7 +875,7 @@ mega_build_cmd(adapter_t *adapter, struct scsi_cmnd *=
+cmd, int *busy)
+ 			}
+=20
+ 			scb->raw_mbox[0] =3D MEGA_CLUSTER_CMD;
+-			scb->raw_mbox[2] =3D ( *cmd->cmnd =3D=3D RESERVE ) ?
++			scb->raw_mbox[2] =3D *cmd->cmnd =3D=3D RESERVE_6 ?
+ 				MEGA_RESERVE_LD : MEGA_RELEASE_LD;
+=20
+ 			scb->raw_mbox[3] =3D ldrv_num;
+@@ -1618,8 +1618,8 @@ mega_cmd_done(adapter_t *adapter, u8 completed[], i=
+nt nstatus, int status)
+ 			 * failed or the input parameter is invalid
+ 			 */
+ 			if( status =3D=3D 1 &&
+-				(cmd->cmnd[0] =3D=3D RESERVE ||
+-					 cmd->cmnd[0] =3D=3D RELEASE) ) {
++			    (cmd->cmnd[0] =3D=3D RESERVE_6 ||
++			     cmd->cmnd[0] =3D=3D RELEASE_6) ) {
+=20
+ 				cmd->result |=3D (DID_ERROR << 16) |
+ 					SAM_STAT_RESERVATION_CONFLICT;
+diff --git a/drivers/scsi/megaraid/megaraid_mbox.c b/drivers/scsi/megarai=
+d/megaraid_mbox.c
+index 60cc3372991f..3ba837b3093f 100644
+--- a/drivers/scsi/megaraid/megaraid_mbox.c
++++ b/drivers/scsi/megaraid/megaraid_mbox.c
+@@ -1725,8 +1725,8 @@ megaraid_mbox_build_cmd(adapter_t *adapter, struct =
+scsi_cmnd *scp, int *busy)
+=20
+ 			return scb;
+=20
+-		case RESERVE:
+-		case RELEASE:
++		case RESERVE_6:
++		case RELEASE_6:
+ 			/*
+ 			 * Do we support clustering and is the support enabled
+ 			 */
+@@ -1748,7 +1748,7 @@ megaraid_mbox_build_cmd(adapter_t *adapter, struct =
+scsi_cmnd *scp, int *busy)
+ 			scb->dev_channel	=3D 0xFF;
+ 			scb->dev_target		=3D target;
+ 			ccb->raw_mbox[0]	=3D CLUSTER_CMD;
+-			ccb->raw_mbox[2]	=3D  (scp->cmnd[0] =3D=3D RESERVE) ?
++			ccb->raw_mbox[2]	=3D scp->cmnd[0] =3D=3D RESERVE_6 ?
+ 						RESERVE_LD : RELEASE_LD;
+=20
+ 			ccb->raw_mbox[3]	=3D target;
+@@ -2334,8 +2334,8 @@ megaraid_mbox_dpc(unsigned long devp)
+ 			 * Error code returned is 1 if Reserve or Release
+ 			 * failed or the input parameter is invalid
+ 			 */
+-			if (status =3D=3D 1 && (scp->cmnd[0] =3D=3D RESERVE ||
+-					 scp->cmnd[0] =3D=3D RELEASE)) {
++			if (status =3D=3D 1 && (scp->cmnd[0] =3D=3D RESERVE_6 ||
++					    scp->cmnd[0] =3D=3D RELEASE_6)) {
+=20
+ 				scp->result =3D DID_ERROR << 16 |
+ 					SAM_STAT_RESERVATION_CONFLICT;
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_=
+core_device.c
+index d1ae3df069a4..cc2da086f96e 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -1078,8 +1078,8 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ 	if (!dev->dev_attrib.emulate_pr &&
+ 	    ((cdb[0] =3D=3D PERSISTENT_RESERVE_IN) ||
+ 	     (cdb[0] =3D=3D PERSISTENT_RESERVE_OUT) ||
+-	     (cdb[0] =3D=3D RELEASE || cdb[0] =3D=3D RELEASE_10) ||
+-	     (cdb[0] =3D=3D RESERVE || cdb[0] =3D=3D RESERVE_10))) {
++	     (cdb[0] =3D=3D RELEASE_6 || cdb[0] =3D=3D RELEASE_10) ||
++	     (cdb[0] =3D=3D RESERVE_6 || cdb[0] =3D=3D RESERVE_10))) {
+ 		return TCM_UNSUPPORTED_SCSI_OPCODE;
+ 	}
+=20
+@@ -1101,7 +1101,7 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ 			return target_cmd_size_check(cmd, size);
+ 		}
+=20
+-		if (cdb[0] =3D=3D RELEASE || cdb[0] =3D=3D RELEASE_10) {
++		if (cdb[0] =3D=3D RELEASE_6 || cdb[0] =3D=3D RELEASE_10) {
+ 			cmd->execute_cmd =3D target_scsi2_reservation_release;
+ 			if (cdb[0] =3D=3D RELEASE_10)
+ 				size =3D get_unaligned_be16(&cdb[7]);
+@@ -1109,7 +1109,7 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ 				size =3D cmd->data_length;
+ 			return target_cmd_size_check(cmd, size);
+ 		}
+-		if (cdb[0] =3D=3D RESERVE || cdb[0] =3D=3D RESERVE_10) {
++		if (cdb[0] =3D=3D RESERVE_6 || cdb[0] =3D=3D RESERVE_10) {
+ 			cmd->execute_cmd =3D target_scsi2_reservation_reserve;
+ 			if (cdb[0] =3D=3D RESERVE_10)
+ 				size =3D get_unaligned_be16(&cdb[7]);
+diff --git a/drivers/target/target_core_pr.c b/drivers/target/target_core=
+_pr.c
+index 4f4ad6af416c..34cf2c399b39 100644
+--- a/drivers/target/target_core_pr.c
++++ b/drivers/target/target_core_pr.c
+@@ -91,7 +91,7 @@ target_scsi2_reservation_check(struct se_cmd *cmd)
+=20
+ 	switch (cmd->t_task_cdb[0]) {
+ 	case INQUIRY:
+-	case RELEASE:
++	case RELEASE_6:
+ 	case RELEASE_10:
+ 		return 0;
+ 	default:
+@@ -418,12 +418,12 @@ static int core_scsi3_pr_seq_non_holder(struct se_c=
+md *cmd, u32 pr_reg_type,
+ 			return -EINVAL;
+ 		}
+ 		break;
+-	case RELEASE:
++	case RELEASE_6:
+ 	case RELEASE_10:
+ 		/* Handled by CRH=3D1 in target_scsi2_reservation_release() */
+ 		ret =3D 0;
+ 		break;
+-	case RESERVE:
++	case RESERVE_6:
+ 	case RESERVE_10:
+ 		/* Handled by CRH=3D1 in target_scsi2_reservation_reserve() */
+ 		ret =3D 0;
+diff --git a/drivers/target/target_core_spc.c b/drivers/target/target_cor=
+e_spc.c
+index ea14a3835681..278ff93eff24 100644
+--- a/drivers/target/target_core_spc.c
++++ b/drivers/target/target_core_spc.c
+@@ -1674,9 +1674,9 @@ static bool tcm_is_pr_enabled(struct target_opcode_=
+descriptor *descr,
+ 		return true;
+=20
+ 	switch (descr->opcode) {
+-	case RESERVE:
++	case RESERVE_6:
+ 	case RESERVE_10:
+-	case RELEASE:
++	case RELEASE_6:
+ 	case RELEASE_10:
+ 		/*
+ 		 * The pr_ops which are used by the backend modules don't
+@@ -1828,9 +1828,9 @@ static struct target_opcode_descriptor tcm_opcode_p=
+ro_register_move =3D {
+=20
+ static struct target_opcode_descriptor tcm_opcode_release =3D {
+ 	.support =3D SCSI_SUPPORT_FULL,
+-	.opcode =3D RELEASE,
++	.opcode =3D RELEASE_6,
+ 	.cdb_size =3D 6,
+-	.usage_bits =3D {RELEASE, 0x00, 0x00, 0x00,
++	.usage_bits =3D {RELEASE_6, 0x00, 0x00, 0x00,
+ 		       0x00, SCSI_CONTROL_MASK},
+ 	.enabled =3D tcm_is_pr_enabled,
+ };
+@@ -1847,9 +1847,9 @@ static struct target_opcode_descriptor tcm_opcode_r=
+elease10 =3D {
+=20
+ static struct target_opcode_descriptor tcm_opcode_reserve =3D {
+ 	.support =3D SCSI_SUPPORT_FULL,
+-	.opcode =3D RESERVE,
++	.opcode =3D RESERVE_6,
+ 	.cdb_size =3D 6,
+-	.usage_bits =3D {RESERVE, 0x00, 0x00, 0x00,
++	.usage_bits =3D {RESERVE_6, 0x00, 0x00, 0x00,
+ 		       0x00, SCSI_CONTROL_MASK},
+ 	.enabled =3D tcm_is_pr_enabled,
+ };
+@@ -2267,9 +2267,9 @@ spc_parse_cdb(struct se_cmd *cmd, unsigned int *siz=
+e)
+ 	unsigned char *cdb =3D cmd->t_task_cdb;
+=20
+ 	switch (cdb[0]) {
+-	case RESERVE:
++	case RESERVE_6:
+ 	case RESERVE_10:
+-	case RELEASE:
++	case RELEASE_6:
+ 	case RELEASE_10:
+ 		if (!dev->dev_attrib.emulate_pr)
+ 			return TCM_UNSUPPORTED_SCSI_OPCODE;
+@@ -2313,7 +2313,7 @@ spc_parse_cdb(struct se_cmd *cmd, unsigned int *siz=
+e)
+ 		*size =3D get_unaligned_be32(&cdb[5]);
+ 		cmd->execute_cmd =3D target_scsi3_emulate_pr_out;
+ 		break;
+-	case RELEASE:
++	case RELEASE_6:
+ 	case RELEASE_10:
+ 		if (cdb[0] =3D=3D RELEASE_10)
+ 			*size =3D get_unaligned_be16(&cdb[7]);
+@@ -2322,7 +2322,7 @@ spc_parse_cdb(struct se_cmd *cmd, unsigned int *siz=
+e)
+=20
+ 		cmd->execute_cmd =3D target_scsi2_reservation_release;
+ 		break;
+-	case RESERVE:
++	case RESERVE_6:
+ 	case RESERVE_10:
+ 		/*
+ 		 * The SPC-2 RESERVE does not contain a size in the SCSI CDB.
+diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/g=
+adget/function/f_mass_storage.c
+index 2eae8fc2e0db..94d478b6bcd3 100644
+--- a/drivers/usb/gadget/function/f_mass_storage.c
++++ b/drivers/usb/gadget/function/f_mass_storage.c
+@@ -2142,8 +2142,8 @@ static int do_scsi_command(struct fsg_common *commo=
+n)
+ 	 * of Posix locks.
+ 	 */
+ 	case FORMAT_UNIT:
+-	case RELEASE:
+-	case RESERVE:
++	case RELEASE_6:
++	case RESERVE_6:
+ 	case SEND_DIAGNOSTIC:
+=20
+ 	default:
+diff --git a/drivers/usb/storage/debug.c b/drivers/usb/storage/debug.c
+index 576be66ad962..dda610f689b7 100644
+--- a/drivers/usb/storage/debug.c
++++ b/drivers/usb/storage/debug.c
+@@ -58,8 +58,8 @@ void usb_stor_show_command(const struct us_data *us, st=
+ruct scsi_cmnd *srb)
+ 	case INQUIRY: what =3D "INQUIRY"; break;
+ 	case RECOVER_BUFFERED_DATA: what =3D "RECOVER_BUFFERED_DATA"; break;
+ 	case MODE_SELECT: what =3D "MODE_SELECT"; break;
+-	case RESERVE: what =3D "RESERVE"; break;
+-	case RELEASE: what =3D "RELEASE"; break;
++	case RESERVE_6: what =3D "RESERVE"; break;
++	case RELEASE_6: what =3D "RELEASE"; break;
+ 	case COPY: what =3D "COPY"; break;
+ 	case ERASE: what =3D "ERASE"; break;
+ 	case MODE_SENSE: what =3D "MODE_SENSE"; break;
+diff --git a/include/scsi/scsi_proto.h b/include/scsi/scsi_proto.h
+index 70e1262b2e20..aeca37816506 100644
+--- a/include/scsi/scsi_proto.h
++++ b/include/scsi/scsi_proto.h
+@@ -33,8 +33,8 @@
+ #define INQUIRY               0x12
+ #define RECOVER_BUFFERED_DATA 0x14
+ #define MODE_SELECT           0x15
+-#define RESERVE               0x16
+-#define RELEASE               0x17
++#define RESERVE_6             0x16
++#define RELEASE_6             0x17
+ #define COPY                  0x18
+ #define ERASE                 0x19
+ #define MODE_SENSE            0x1a
+diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
+index 05f1945ed204..bf6cc98d9122 100644
+--- a/include/trace/events/scsi.h
++++ b/include/trace/events/scsi.h
+@@ -29,8 +29,8 @@
+ 		scsi_opcode_name(INQUIRY),			\
+ 		scsi_opcode_name(RECOVER_BUFFERED_DATA),	\
+ 		scsi_opcode_name(MODE_SELECT),			\
+-		scsi_opcode_name(RESERVE),			\
+-		scsi_opcode_name(RELEASE),			\
++		scsi_opcode_name(RESERVE_6),			\
++		scsi_opcode_name(RELEASE_6),			\
+ 		scsi_opcode_name(COPY),				\
+ 		scsi_opcode_name(ERASE),			\
+ 		scsi_opcode_name(MODE_SENSE),			\
+diff --git a/include/trace/events/target.h b/include/trace/events/target.=
+h
+index a13cbf2b3405..7e2e20ba26f1 100644
+--- a/include/trace/events/target.h
++++ b/include/trace/events/target.h
+@@ -31,8 +31,8 @@
+ 		scsi_opcode_name(INQUIRY),			\
+ 		scsi_opcode_name(RECOVER_BUFFERED_DATA),	\
+ 		scsi_opcode_name(MODE_SELECT),			\
+-		scsi_opcode_name(RESERVE),			\
+-		scsi_opcode_name(RELEASE),			\
++		scsi_opcode_name(RESERVE_6),			\
++		scsi_opcode_name(RELEASE_6),			\
+ 		scsi_opcode_name(COPY),				\
+ 		scsi_opcode_name(ERASE),			\
+ 		scsi_opcode_name(MODE_SENSE),			\
