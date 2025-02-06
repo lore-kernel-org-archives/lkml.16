@@ -1,91 +1,63 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21A11D9A66;
-	Thu,  6 Feb 2025 23:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FBD2417FE;
+	Thu,  6 Feb 2025 23:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738883533; cv=none; b=djbX9njRDoZyNWg8OzlETGAGIEmG2JKAlAfL2lMJzZ2xsaXOvzDJuxcC9T2tN05iihZgmRgQEwOPj62omU7UtehhRXzJmLzbwZCMUEXqA59ThFSVG9GSy4o8mqre/tkhrPZpOAxQ9Q95MVciaFS/SaHgD7f9c+tvV2Uwj+/vNvI=
+	t=1738883536; cv=none; b=SO7OilbQQnHt7iWEzr91aw6XSShEI5GUZ2M7gmFG0w3sPk6b03DJPInojuedp3982eLuePQFVo9PDtmAg0/T4wqN14DjXlef2+PNSj5p6rjiujhtk7be8I1S32a9BBLZHQyE3dJda1B6pR8tn2rzeiVmx81p51s3OvuP+0SWdvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738883533; c=relaxed/simple;
-	bh=T0Wj0kmg/cSO81RHPcQC5+556wt9IZ2fZ3r/H844l0o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aHak9jF3DPMNTSRvdvrCL3NZyPIjBxHoH6cwBejclgPz4ZJOht1vAUTnwGNRNc2vYPJCxskJ2Hkn545SRhgf7GG5bQzAr82e94LQanA0SSe7GN4fteu+AYfa701qnVnnHbb40TIz98bTl6nu9L7Ha5oqGobW2UYfELn/4rDzs2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IbEFh/Q6; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738883536; c=relaxed/simple;
+	bh=1npVm0n2p9HBT5ahkxhrDPzfusA+uX6S9yjzKYFO/Wk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HRqgtQ00/F4+Uzcg84MjF0ErTFEOe9OO9TpUye00eElqft19fC0bPd7t3IPQXQTIFz6ukB1RRJF7+oD+I+Y63My2L5VpjR1p2teIKT+QVt+o1YB3PnsalpY1f2NTYCYX2dxSkH5lKoKdC1uvweIShqQ1joc8IUfbcQDViZT7Q2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyG9LgW/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbEFh/Q6"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f45526dea0so292308a91.1;
-        Thu, 06 Feb 2025 15:12:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738883531; x=1739488331; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T0Wj0kmg/cSO81RHPcQC5+556wt9IZ2fZ3r/H844l0o=;
-        b=IbEFh/Q6AxPXCSeNRpZM1yp71wkHDqg/itKbYLjHPCs9JBvSe4qU2Qe+AyLRFQUATi
-         UdZuiGX/OICAQx/e70bbqt8e5bfrIe6ZlKqEXldqX2pINWimJZa8/tN8G/57325o5jhl
-         zrOgFK0Gq+zzz3aj+s/n+rXvHZHwDmqoxlxJXV53A2XIdtW1trpwVIqUfyTRJfTI4rCO
-         8s1uFzFziKQKtFky+IRaWxcyzk77WiuZLRuhpDCuBJWI29XKpN+43Cn4KD/K9Ut2geyz
-         uvnOA8wJMHuv3P0ApqllKwnuxkLFzaRdN+BVPXAcVPJSEAoryc7khRhCk8+eYY7Y2utA
-         Ly9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738883531; x=1739488331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T0Wj0kmg/cSO81RHPcQC5+556wt9IZ2fZ3r/H844l0o=;
-        b=wgP13LYOd5/vPQivTE6tLJ/8hNgVrixaa9wUb4fwWtMBeVWQeMJQd96J53bEKLbTiD
-         GLAVRhp21pHaHHsh9KqI4brdYac/x/UC+Q8Xkg4CbiGfi7JwrTY9k6bbbcwiIt7pPFv0
-         SeH/VtJ8n9J657pPa0modhX8NvxfFSdKQscR1QLJFm6+1f9MPZNKijEsgsnPEMdctolp
-         1/hgCrQfih1uCSPBNFvJa324j+xOYV/jAphKDMO1vS5zvoNtePv6UnrkDLyOVuUlfmbr
-         +bRZ1w7ldoAMGXlv6yuru2TIxqAO3fdEEV6TTJl6JdRyqxT/p8sETx2O6+GHSPZHbVtv
-         xewQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKr6rFzERhkQNHw5E0DizIXwmxPO1AmhPsQMMTuLV6bqDppNCEgQuYbtsSxpWbQYGoisqs2ffC@vger.kernel.org, AJvYcCWJhkeNKrPAiV1ftm3M12zLr97Ol/xYkU5htYMu0lOofqIObSUvWa02aA8HV0e0ooS2krVyleqb7hwRhW4=@vger.kernel.org, AJvYcCX6vKsrD6hf10b93RnGJ6TpR/BHr6yd7/SgCf7JxpSJkILLK0c/LBQpz1yN1Iqd9p8zEpYXCjxHNd6/Lg23w64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuxHBRhdh1263oQZaV41Scr8Z7T37af8AxdXI929L4Li/3AcJx
-	dI4tt7m6ph/sLEg/zKq6yhOJJNpx/diwBC1tLtJ+0UhdaZmvIoiLIU3Bldt6muyNg2hLTCrpB2R
-	wbI0gGYcOSlKCBGtYXsdj93EEbc0=
-X-Gm-Gg: ASbGnctbFscLInruYMuq/qUnshmO5VROf40UlGFKhXAR6unmE4Z9OxKv59Mr8MtITrK
-	WXEdzr60Pf6IZKmZISpeAwkc4uTNob+q+TK/dkR9ivgoL9A9bheA4veSvH9T4mVJD7qL1AgbO
-X-Google-Smtp-Source: AGHT+IEirwjMb2+Tte/ztOzcJVc6rz5/I99KNyU1w//C/vKkgniRyBjJrBeJwRRFR+mH2QpV5DbHOFYSgB6R4pJZWfc=
-X-Received: by 2002:a17:90b:1b44:b0:2ee:b665:12ce with SMTP id
- 98e67ed59e1d1-2fa23f5ea82mr562072a91.1.1738883530889; Thu, 06 Feb 2025
- 15:12:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyG9LgW/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B444FC4CEDD;
+	Thu,  6 Feb 2025 23:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738883536;
+	bh=1npVm0n2p9HBT5ahkxhrDPzfusA+uX6S9yjzKYFO/Wk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=qyG9LgW/XVnVmXek91Ju/frXFSol73Rw/SBlLZQgOEyQ0nQzTMmnu55ZpKK/Z9JS4
+	 v8eq7Sya9ArEbukx0X56HhkhPGPye3dLILsYe4QboIuPkGuykStqSSuMIGZaWATWop
+	 wzxWRg42sWuZQVyj+3Ih2ohWbCzwQe1Fqt1ZejxNQI8gTFZpI+KgpbCcehXNCW33KM
+	 92d4hJo6UVc2min2WgFtIcXosKFYo0TM4UQg3Itof535rnoNTSIumAtRuSD8QyCdiz
+	 jrYkoZLOeS8NMUPkwCMIgYUYmggfkvmrLy6Mh4ebM9l/oImxZWxgSyM7GhkR8/40pg
+	 9U/Z+pDi6W51w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD76380AADE;
+	Thu,  6 Feb 2025 23:12:45 +0000 (UTC)
+Subject: Re: [GIT PULL] Networking for v6.14-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250206123106.37283-1-pabeni@redhat.com>
+References: <20250206123106.37283-1-pabeni@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250206123106.37283-1-pabeni@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.14-rc2
+X-PR-Tracked-Commit-Id: 2a64c96356c87aa8af826605943e5524bf45e24d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3cf0a98fea776adb09087e521fe150c295a4b031
+Message-Id: <173888356428.1693200.10627873510500617874.pr-tracker-bot@kernel.org>
+Date: Thu, 06 Feb 2025 23:12:44 +0000
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250203-rustc-1-86-x86-softfloat-v1-1-220a72a5003e@google.com>
- <CANiq72kv_wE_ESNsW9qDiwnJkaoFb+WERJ6p796TCPAdK838Fw@mail.gmail.com> <e60b9d9c-01aa-4a87-8701-d5f18a5f4240@intel.com>
-In-Reply-To: <e60b9d9c-01aa-4a87-8701-d5f18a5f4240@intel.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 7 Feb 2025 00:11:57 +0100
-X-Gm-Features: AWEUYZlN2l6DrxgrKrDDZ33vCZBQLuGXYij2RPkQSeOXJ--doc7yq3sVTxPUKS0
-Message-ID: <CANiq72kQhY8fh6tu-N17SDqEoz27-f6HXOTLnuua7FFKdXPT=A@mail.gmail.com>
-Subject: Re: [PATCH] x86: rust: set rustc-abi=x86-softfloat on rustc>=1.86.0
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, x86@kernel.org, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 12:08=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> First of all, thanks for cc'ing the x86 maintainers on this! I do think
-> it would be best if you take this through the rust tree though:
->
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com> # for x86
+The pull request you sent on Thu,  6 Feb 2025 13:31:06 +0100:
 
-Great, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.14-rc2
 
-Cheers,
-Miguel
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3cf0a98fea776adb09087e521fe150c295a4b031
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
