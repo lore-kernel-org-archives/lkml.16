@@ -1,105 +1,182 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE0618B03
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FC918B03
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837923; cv=none; b=aUH7Z1lK0gVluqpAP1nMBhvcD8NohKE5XK6AWPKcuOPpMDdoSruiagor6BpGle2oWNaFMf5mZMndwyp1ecgxg2MQm3Dbv/VICfryw91nn3rpnsH91w2NLH4KefIjJrmGamtl/Q1j0fmfQ1GpF+hO6Rp/fgtk2yTGpbVtpdW1Y+A=
+	t=1738837942; cv=none; b=Q95kQ1AZ7OCTCb4AjK/HH42kDmPDTxFAllC6oHNlt+LyrB9Ap8raLNlO7ZorMNY5I/ZTaKk3UCQ+UDHBAMZ/F4j3xrDUHpQO929szeJVpzT087S+JnqZZ4ytXrqIzHAxvcEEELrtqxihF5DBkf6b1igq/lHjq32poC14l+WH4YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837923; c=relaxed/simple;
-	bh=bUGeXmWT5XSJqfUBD8u87jiMstXWrf8zNBVNAGPLRmU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DyimMDJS67iojAJWkC9+2tYDaorXOxI05aRxDXTrIE9JuGBc2xUMcYrhJ+NWVi//ghDI99g9ZtiE7At9TG/9XJrgB+RhWAlZXFO4tllBK/8S6FzzMc2NpNOH4b1IB+80JV+uBo+r/zHtb7bCXMDIkPr2KJYFW5l9Lz4ELtrIiYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KsoWnIYn; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsoWnIYn"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so1018299a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 02:32:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738837921; x=1739442721; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOv2q05Wc/8r3cHmnMTiInwipXGNLksWe6Qh8TWn+5Q=;
-        b=KsoWnIYnf6+wjsActtFDS4uLXK+zBsS1DFciRfk0gqoenoflcanYrxsBw/pF9S5XPB
-         KVQB1yrKZq1seU87QPOKwzFo2nmswPu9tIIhqYdGR1+VSYOwE8qUZ3LJtLVofD07Se3l
-         ALb79SOzK6/tSsFQHzBtmglPUVz5JKkDvreMoySJgTRGX3gBITUOCMIqdHMKNVP5mwnY
-         m8cP5m6nAt/9dQkTH/g0rD2DlF68urVdIkh5W02TA47tlLerF2TxlZELit63Eby0ju0W
-         6srsTL1TfiLvbI9S7lHCf4HCOyb2YbFj/bgHc/VDT48t8dx6SgPRsRWkFGYImrLEIVVQ
-         GmCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738837921; x=1739442721;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oOv2q05Wc/8r3cHmnMTiInwipXGNLksWe6Qh8TWn+5Q=;
-        b=bu4pTpz45W0OazhCGWuj1DWJwWFRXo0udQnyhwoyvRm5NHKoj1YKPDIqy1j6WwHdj6
-         8Ws5oVesyFl5GpV/TOP5NDGHbSVzWXiOt8J79kvEu1k0S6QV5XLO3vi9lRGK19Ghh8N4
-         S8JKCiqthhGzaSitK5nQ0ohuDUe/murkmxKqFOYvrxdcQ9xGb/0AShJmZob/WFdAYNRa
-         VSCkCbzaWTj8wcvGPGnUhSrOHH9qAvP1gHedv9XEWk8rq+bIaXCZZhzmYpSouxHQ5TOG
-         xGhX/XL/Ewi0HLDwxMGiiL/iCq63A9dAiewyEBRz7+pEXlrAoPWd3WtIgDXiWpjdZERr
-         c6UA==
-X-Forwarded-Encrypted: i=1; AJvYcCVA/AtnAA62Z0ReIAN2zJOpipRGb3xbCSvIC9o28NfdZZ9HRteEWTMTt2i0RaSDGAS4mhLkG3ywPdSbyZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw25OjL9s1BaD946KUN8yxsGSC+fc1Wwv3S2BaAaBR40IQLkFhJ
-	Lg/Y9Ghwb+/xTi3AgYOfFbDQJmLgUul/mjUvUnboI/FBidDtOCZmGCQ27g==
-X-Gm-Gg: ASbGncsm8PuUTO+jtUPMP0QgtMJd3K56ce5tA2JsrJQHq1YPyNMFFCAq6/YScJkiXdy
-	QuhZPU25Va7Ax9qCnJRmC6kOqqbkuCJGfA+gIRh7yVCw7Nvlv9E2cxgbVihBPzj/LwqQ7qD/5YZ
-	sHHYkA+u7I2tnx8XDtYG/IA1wRsFWinzWuD4Z71HDW6ckZEBugodkM8NhJJwCrsMO2WgnFXQhmL
-	IBSxQ6gJjJWt5v6AV0MAzaZJVBJnSUqMhgeBXS3mDkXfWkF/V4NNRkTOLVJ+tSSfB/aDBYPavtq
-	Mx/n3WY3bG7X3cNTlOo=
-X-Google-Smtp-Source: AGHT+IFZ2RiVwsZRFuasmx/shuC9Fbx8yXoXLOhOqYBu/h3MUD+eOdqS5z1t/mIinpFLRUwHbUGZtg==
-X-Received: by 2002:a17:90a:6fc4:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-2fa15ab5041mr566133a91.31.1738837921445;
-        Thu, 06 Feb 2025 02:32:01 -0800 (PST)
-Received: from HOME-PC ([223.185.135.17])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f59f0sm1010247a91.5.2025.02.06.02.32.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 02:32:01 -0800 (PST)
-From: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
-To: michael.hennerich@analog.com
-Cc: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
-Subject: [PATCH drivers-next] regulator: ad5398: Fix incorrect power down bit mask
-Date: Thu,  6 Feb 2025 16:01:53 +0530
-Message-Id: <20250206103153.59114-1-dheeraj.linuxdev@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738837942; c=relaxed/simple;
+	bh=A3UmOOPTkZ5V+nsffwzqYuX1GJ0nEl3W+c+g0TAZ/pc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ktp0ff6deMN9JAJZbCkddvyW89JKaeqPVVh8u6E84RtkmhlmqHuOrfzmqns2wHvFcUSZHHKYF7csqBIUL9yr+ysG72XjgVt3vSkVDmTi6mOkbHUVn3xRZpsd3jBp1/8edAg89R7zOsxaK2CnH5wt1IxXvlXrBjEERm0Fjacl0xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 413FA12FC;
+	Thu,  6 Feb 2025 02:32:42 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8722F3F63F;
+	Thu,  6 Feb 2025 02:32:18 -0800 (PST)
+Date: Thu, 6 Feb 2025 10:32:13 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	kernel@quicinc.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] coresight-tmc: stop disabling tmc when flush timeout
+Message-ID: <20250206103213.GB8855@e132581.arm.com>
+References: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
 
-AD5398_SW_POWER_DOWN was defined with a bit position outside the valid
-range of the device's 16-bit register. The bitwise operation with an
-unsigned short would always evaluate to 0, making the power down check
-ineffective.
+Hi Yuanfang,
 
-Update AD5398_SW_POWER_DOWN to use a valid bit position within the
-16-bit range of the register.
+On Fri, Jan 03, 2025 at 04:01:54PM +0800, Yuanfang Zhang wrote:
+> 
+> When multiple ETMs are enabled simultaneously, the time required
+> to complete a flush in the process of reading the TMC device node
+> may exceed the default wait time of 100us.
 
-Fixes: 19d022d67d73 ("regulator: ad5398: change enable bit name to improve readibility")
-Signed-off-by: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
----
- drivers/regulator/ad5398.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Have you tried how long time would be safe to wait for the
+TMCREADY_BIT bit to be set on your platform?
 
-diff --git a/drivers/regulator/ad5398.c b/drivers/regulator/ad5398.c
-index 0274f41d0233..eb2a666a45cb 100644
---- a/drivers/regulator/ad5398.c
-+++ b/drivers/regulator/ad5398.c
-@@ -16,7 +16,7 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
- 
--#define AD5398_SW_POWER_DOWN	BIT(16)
-+#define AD5398_SW_POWER_DOWN	BIT(15)
- 
- struct ad5398_chip_info {
- 	struct i2c_client *client;
--- 
-2.34.1
+> If the TMC capture is stopped while any ETM has not completed its
+> flush, it can cause the corresponding CPU to hang.
+>
+> Fix the by checking the TMCReady bit after the flush. If TMCReady
+> bit is set, TraceCaptEn bit can be clear; otherwise, return directly
+> and stop the TMC read.
 
+When a timeout for TMC flush and stop is detected, if the driver
+arbitrarily bails out without disabling TMC, this would leave the
+hardware always on.
+
+I would like first know if a longer timeout can fix the issue.
+
+Thanks,
+Leo
+
+> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-tmc-etf.c | 17 +++++++++++++++--
+>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 22 +++++++++++++++++-----
+>  2 files changed, 32 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> index d4f641cd9de69488fe3d1c1dc9b5a9eafb55ed59..bded290c42891d782344d9a6e63ebdbed6719133 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> @@ -80,11 +80,21 @@ static void tmc_etb_dump_hw(struct tmc_drvdata *drvdata)
+>         return;
+>  }
+> 
+> -static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> +static int __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+> +       int rc;
+> +
+>         CS_UNLOCK(drvdata->base);
+> 
+>         tmc_flush_and_stop(drvdata);
+> +
+> +       rc = tmc_wait_for_tmcready(drvdata);
+> +       if (rc) {
+> +               dev_err(&drvdata->csdev->dev,
+> +                       "Failed to disable : TMC is not ready\n");
+> +               CS_LOCK(drvdata->base);
+> +               return rc;
+> +       }
+>         /*
+>          * When operating in sysFS mode the content of the buffer needs to be
+>          * read before the TMC is disabled.
+> @@ -94,6 +104,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>         tmc_disable_hw(drvdata);
+> 
+>         CS_LOCK(drvdata->base);
+> +       return 0;
+>  }
+> 
+>  static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> @@ -650,7 +661,9 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
+>                         ret = -EINVAL;
+>                         goto out;
+>                 }
+> -               __tmc_etb_disable_hw(drvdata);
+> +               ret = __tmc_etb_disable_hw(drvdata);
+> +               if (ret)
+> +                       goto out;
+>         }
+> 
+>         drvdata->reading = true;
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index a48bb85d0e7f44a25b813f3c828cc3d705d16012..63a1f7501562fa0b5c2fe6ea53dce4d82842bec3 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1135,11 +1135,21 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
+>         }
+>  }
+> 
+> -static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> +static int __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+> +       int rc;
+> +
+>         CS_UNLOCK(drvdata->base);
+> 
+>         tmc_flush_and_stop(drvdata);
+> +
+> +       rc = tmc_wait_for_tmcready(drvdata);
+> +       if (rc) {
+> +               dev_err(&drvdata->csdev->dev,
+> +                       "Failed to disable : TMC is not ready\n");
+> +               CS_LOCK(drvdata->base);
+> +               return rc;
+> +       }
+>         /*
+>          * When operating in sysFS mode the content of the buffer needs to be
+>          * read before the TMC is disabled.
+> @@ -1150,7 +1160,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>         tmc_disable_hw(drvdata);
+> 
+>         CS_LOCK(drvdata->base);
+> -
+> +       return 0;
+>  }
+> 
+>  void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> @@ -1779,9 +1789,11 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
+>         }
+> 
+>         /* Disable the TMC if we are trying to read from a running session. */
+> -       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS)
+> -               __tmc_etr_disable_hw(drvdata);
+> -
+> +       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
+> +               ret = __tmc_etr_disable_hw(drvdata);
+> +               if (ret)
+> +                       goto out;
+> +       }
+>         drvdata->reading = true;
+>  out:
+>         spin_unlock_irqrestore(&drvdata->spinlock, flags);
+> 
+> ---
+> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+> change-id: 20250103-fix_cpu_hung-b5a95179ada4
+> 
+> Best regards,
+> --
+> Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> 
+> 
