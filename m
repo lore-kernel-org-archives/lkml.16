@@ -1,302 +1,145 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C63E1DF24B;
-	Thu,  6 Feb 2025 12:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E943225A2F;
+	Thu,  6 Feb 2025 12:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738845209; cv=none; b=lSSkYhu8z7ojYBYYZ6ljOug41UHtAiJ0STJt44rY1K5igFbGsQW2eIfxhI3u9GQJR3UOVZGH3rB91Z8t+AMQUXFGXydP02UOzQ9wn1gxqvBlQEfUqgFa95FC++2Ee92R5+P48vRlrcOh9AS31GBa8FtQjmezvCRT1B8/Li++0sI=
+	t=1738845232; cv=none; b=GFYIg7T8G4Qs9IeWydu2IQeUr9lAvgAJkHCZzTmP6o49F5rXb6s6tuLJbbYHc5gN3PCFca4aWzxIr6gAJOWkOZH+0QdM7z6GyjOyjWe0kfyFIxZ13Uj4DntYVPFhI5tVSTol0pLAH0nRLd+v3DCk5JlwHlB+zh9g9G6U82ukTTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738845209; c=relaxed/simple;
-	bh=VS3+/ltfODxJOEvI5TWa+1K83w8cilcFbj/cV/YLREg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pikDu/tV6r/3bUTO7qRAiYGJhpVxryjMIBuxeBDhEvQ23qRYNMg6OWRmo+lM83Cp6MF3HmuRee+/DVmexUTTfdAZh7vc5eag3Gvo5Pj4VBLNaUO+P8v5215W5hFVl/fxvGHCV23Lt59R3R03fwmekDdYkUV7kuvbPyrvd17hnA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DyHL76O9; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738845232; c=relaxed/simple;
+	bh=30X7nLLs9og8Mntm0uvpEp79xCkTtczYt2Z2skk7X0Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=G6X7CnetsAb1eon582903VwUy6fYlg9q6l0dyGTkKCB8fuBxK1H5HjtR7Ljj+yizQbRJB4ITTGFjFOhSYkQVVytJaPhXmWlIfWA7ExwbGLQCs/NjALFRGPma3BiluaDn7mkZHBmlYjE6/scpf0k4guYziExM4QMUDUfgkFW32wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVS49oS0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DyHL76O9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RAnW4IvmuyMbXuvVXckxL3B43H4dovck5Gy8dGUFYkU=; b=DyHL76O9ovG7/dcqFdwyV0pZyx
-	yjacHaCzH3kYim+Q0MFGJS+KbsYe0Ij5Om9fgUOzG0QSXpbOdawhZUwVtWKmHyBzSKux2RuhnFLo2
-	ekaN2WGVuIqP0tcQsWofv8IBN/8FHT1WvDkwbQl5mqerkJrwW4weba/UNixjW2oHaHmKoFSuT2P3p
-	QBmkjZrvQGlT/sy5z1UFzBRjWjbCIljlT+hN7YjSXAS0nBlXAZJaqxYv0/UEHlmfYRVBTH369BSuU
-	df2OHhT6/EopfTvK4uXm0uTpNQg8tNMnOUWTV4DUQ4TmkVYUDc+SwFJk/kz8wXvSndsfQvk4mGuR1
-	UNvzN4VA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg147-0000000Gvn7-2L6h;
-	Thu, 06 Feb 2025 12:33:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2348D300318; Thu,  6 Feb 2025 13:33:07 +0100 (CET)
-Date: Thu, 6 Feb 2025 13:33:07 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriel de Perthuis <g2p.code@gmail.com>,
-	Haiyue Wang <haiyuewa@163.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-ID: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
- <20250206081225.GI7145@noisy.programming.kicks-ass.net>
- <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
- <20250206121328.GN7145@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVS49oS0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DC05C4CEDF;
+	Thu,  6 Feb 2025 12:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738845231;
+	bh=30X7nLLs9og8Mntm0uvpEp79xCkTtczYt2Z2skk7X0Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=LVS49oS0xy6ZTsWVoL5GROP/K+g2hFhfaOHNcMgqs0xMeBa9kTWHtBfKcEMrQBRhu
+	 RHWECOGFu1CfLiOU/O0E7IT306I/X2DAw2du8P9io6xRwQtla+6jtuWC3zx12dG/0c
+	 71VSqecSY/3nL4DFmP79VOPGEYF09vGHL01HlO9bhtcxeWgj2Ner926g3RqZmLUoSE
+	 fyqMr4OssKsbqfBzy9wd5U0vHDhzFjskLX10pb+84eii2T/iUytc+1sK7PO3Vyd3vd
+	 ENjZ0Tk/jMEzksIsGKu79VtKE2WmdFvJTruQH8VpgMDspfBKjon1yrC2MhwrwJsg16
+	 vH7fx8w9SZgiA==
+Message-ID: <0babce16eeaf3bc7fb5ff28f7a769e2ce8f22abe.camel@kernel.org>
+Subject: Re: [PATCH v3 0/2] pipe: don't update {a,c,m}time for anonymous
+ pipes
+From: Jeff Layton <jlayton@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>, Christian Brauner <brauner@kernel.org>,
+  Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Howells <dhowells@redhat.com>, "Gautham R. Shenoy"	
+ <gautham.shenoy@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, Mateusz
+ Guzik <mjguzik@gmail.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+ Oliver Sang	 <oliver.sang@intel.com>, Swapnil Sapkal
+ <swapnil.sapkal@amd.com>, WangYuli	 <wangyuli@uniontech.com>,
+ linux-fsdevel@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Thu, 06 Feb 2025 07:33:49 -0500
+In-Reply-To: <20250205181716.GA13817@redhat.com>
+References: <20250205181716.GA13817@redhat.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206121328.GN7145@noisy.programming.kicks-ass.net>
 
-On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
+On Wed, 2025-02-05 at 19:17 +0100, Oleg Nesterov wrote:
+> OK, let me send v3 right now...
+>=20
+> Changes: make pipeanon_fops static.
+>=20
+> Link to v1: https://lore.kernel.org/all/20250204132153.GA20921@redhat.com=
+/
+> Link to v2: https://lore.kernel.org/all/20250205161636.GA1001@redhat.com/
+>=20
+> Oleg.
+> ---
+>=20
+>  fs/pipe.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++----------=
+-----
+>  1 file changed, 47 insertions(+), 15 deletions(-)
+>=20
 
-> No, it just cleans up this utter trainwreck. I also noticed this is a
-> second (new) copy of this garbage. Clearly I didn't yell loud enough
-> last time and people didn't think to vomit when doing the copy/paste :/
-> 
-> Function will look something like:
-> 
-> unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-> {
-> 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
-> 		fentry_op -= ENDBR_INSN_SIZE;
-> 	return fentry_ip;
-> }
-> 
-> Let me finish local build test before I push out.
-
-Bah, still waiting for a LLVM build, but patch should be here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
-
-I was supposed to merge this last cycle, but then akpm shat all over
-arch/x86/kernel/alternative.c and we had to clean that up :/
-
-Notably, this patch, not sure it applies out of order.
-
----
-
-Subject: x86/ibt: Clean up is_endbr()
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Mon Nov 27 09:58:06 CET 2023
-
-Pretty much every caller of is_endbr() actually wants to test something at an
-address and ends up doing get_kernel_nofault(). Fold the lot into a more
-convenient helper.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
----
- arch/x86/events/core.c         |    2 +-
- arch/x86/include/asm/ftrace.h  |   17 +++--------------
- arch/x86/include/asm/ibt.h     |    5 +++--
- arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
- arch/x86/kernel/kprobes/core.c |   11 +----------
- arch/x86/net/bpf_jit_comp.c    |    4 ++--
- kernel/trace/bpf_trace.c       |   20 +++-----------------
- 7 files changed, 27 insertions(+), 52 deletions(-)
-
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
- 		return true;
- 
- 	/* endbr64 (64-bit only) */
--	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
-+	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
- 		return true;
- 
- 	return false;
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -2,6 +2,7 @@
- #ifndef _ASM_X86_FTRACE_H
- #define _ASM_X86_FTRACE_H
- 
-+#include "asm/ibt.h"
- #include <asm/ptrace.h>
- 
- #ifdef CONFIG_FUNCTION_TRACER
-@@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
- 
- static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
- {
--#ifdef CONFIG_X86_KERNEL_IBT
--	u32 instr;
-+	if (is_endbr((void*)(fentry_ip - ENDBR_INSN_SIZE)))
-+		fentry_ip -= ENDBENDBR_INSN_SIZE;
- 
--	/* We want to be extra safe in case entry ip is on the page edge,
--	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
--	 */
--	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
--		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
--			return fentry_ip;
--	} else {
--		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
--	}
--	if (is_endbr(instr))
--		fentry_ip -= ENDBR_INSN_SIZE;
--#endif
- 	return fentry_ip;
- }
- #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
---- a/arch/x86/include/asm/ibt.h
-+++ b/arch/x86/include/asm/ibt.h
-@@ -65,7 +65,7 @@ static __always_inline __attribute_const
- 	return 0x001f0f66; /* osp nopl (%rax) */
- }
- 
--static inline bool is_endbr(u32 val)
-+static inline bool __is_endbr(u32 val)
- {
- 	if (val == gen_endbr_poison())
- 		return true;
-@@ -74,6 +74,7 @@ static inline bool is_endbr(u32 val)
- 	return val == gen_endbr();
- }
- 
-+extern __noendbr bool is_endbr(u32 *val);
- extern __noendbr u64 ibt_save(bool disable);
- extern __noendbr void ibt_restore(u64 save);
- 
-@@ -98,7 +99,7 @@ extern __noendbr void ibt_restore(u64 sa
- 
- #define __noendbr
- 
--static inline bool is_endbr(u32 val) { return false; }
-+static inline bool is_endbr(u32 *val) { return false; }
- 
- static inline u64 ibt_save(bool disable) { return 0; }
- static inline void ibt_restore(u64 save) { }
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -852,16 +852,24 @@ void __init_or_module noinline apply_ret
- 
- #ifdef CONFIG_X86_KERNEL_IBT
- 
-+__noendbr bool is_endbr(u32 *val)
-+{
-+	u32 endbr;
-+
-+	__get_kernel_nofault(&endbr, val, u32, Efault);
-+	return __is_endbr(endbr);
-+
-+Efault:
-+	return false;
-+}
-+
- static void poison_cfi(void *addr);
- 
- static void __init_or_module poison_endbr(void *addr, bool warn)
- {
--	u32 endbr, poison = gen_endbr_poison();
--
--	if (WARN_ON_ONCE(get_kernel_nofault(endbr, addr)))
--		return;
-+	u32 poison = gen_endbr_poison();
- 
--	if (!is_endbr(endbr)) {
-+	if (!is_endbr(addr)) {
- 		WARN_ON_ONCE(warn);
- 		return;
- 	}
-@@ -984,7 +992,7 @@ static u32  cfi_seed __ro_after_init;
- static u32 cfi_rehash(u32 hash)
- {
- 	hash ^= cfi_seed;
--	while (unlikely(is_endbr(hash) || is_endbr(-hash))) {
-+	while (unlikely(__is_endbr(hash) || __is_endbr(-hash))) {
- 		bool lsb = hash & 1;
- 		hash >>= 1;
- 		if (lsb)
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -373,16 +373,7 @@ static bool can_probe(unsigned long padd
- kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
- 					 bool *on_func_entry)
- {
--	u32 insn;
--
--	/*
--	 * Since 'addr' is not guaranteed to be safe to access, use
--	 * copy_from_kernel_nofault() to read the instruction:
--	 */
--	if (copy_from_kernel_nofault(&insn, (void *)addr, sizeof(u32)))
--		return NULL;
--
--	if (is_endbr(insn)) {
-+	if (is_endbr((u32 *)addr)) {
- 		*on_func_entry = !offset || offset == 4;
- 		if (*on_func_entry)
- 			offset = 4;
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -641,7 +641,7 @@ int bpf_arch_text_poke(void *ip, enum bp
- 	 * See emit_prologue(), for IBT builds the trampoline hook is preceded
- 	 * with an ENDBR instruction.
- 	 */
--	if (is_endbr(*(u32 *)ip))
-+	if (is_endbr(ip))
- 		ip += ENDBR_INSN_SIZE;
- 
- 	return __bpf_arch_text_poke(ip, t, old_addr, new_addr);
-@@ -3036,7 +3036,7 @@ static int __arch_prepare_bpf_trampoline
- 		/* skip patched call instruction and point orig_call to actual
- 		 * body of the kernel function.
- 		 */
--		if (is_endbr(*(u32 *)orig_call))
-+		if (is_endbr(orig_call))
- 			orig_call += ENDBR_INSN_SIZE;
- 		orig_call += X86_PATCH_SIZE;
- 	}
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1038,27 +1038,13 @@ static const struct bpf_func_proto bpf_g
- 	.arg1_type	= ARG_PTR_TO_CTX,
- };
- 
--#ifdef CONFIG_X86_KERNEL_IBT
--static unsigned long get_entry_ip(unsigned long fentry_ip)
-+static inline unsigned long get_entry_ip(unsigned long fentry_ip)
- {
--	u32 instr;
--
--	/* We want to be extra safe in case entry ip is on the page edge,
--	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
--	 */
--	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
--		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
--			return fentry_ip;
--	} else {
--		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
--	}
--	if (is_endbr(instr))
-+	if (is_endbr((void *)(fentry_ip - ENDBR_INSN_SIZE)))
- 		fentry_ip -= ENDBR_INSN_SIZE;
-+
- 	return fentry_ip;
- }
--#else
--#define get_entry_ip(fentry_ip) fentry_ip
--#endif
- 
- BPF_CALL_1(bpf_get_func_ip_kprobe, struct pt_regs *, regs)
- {
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
