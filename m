@@ -1,140 +1,192 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F0513AD18;
-	Thu,  6 Feb 2025 07:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC26513AD18;
+	Thu,  6 Feb 2025 07:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738827264; cv=none; b=irrnOpGFMz8i+BgYSfsYTdK87NdLcHUKbW9VuSe1HkTe0T03ULxzFImK1t5w7gRtvwVtp4l23MtdJRDQ12LPJsxLrax7R978hjKxbsAHicgX84mayjmd6/NNErrZi7BRjL+CbvGrMN5c2F75wJwYEp/3lYvI2/J60LSOhHNmDAU=
+	t=1738827274; cv=none; b=DDMFfFclHssV9tEVWcWXajWsl6qiQk1pGmwPV7Ni9Acb/0yyq1zS0mq6OUnDMHNd4dQXG0A8yIwMdo2RY5caiFHYdzLmFsP/B5bgc4Bk9X7+cbqB/nqpEQFN0HXf/0OFaQwxrdy6PveCMKz85NITV/VaWsFj6jqc907PkpucRJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738827264; c=relaxed/simple;
-	bh=2g4WGxLqw+k8j3lEeztBspCbb6fO27t/Rd0hquBq1zU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G6T9cm0TYHB5h5d63ytIdL69wE6o7UEsegjVnZaS2vqIU53Nc5cqHGMJQASm2NXmmahBZ6+u1MBdyM0AwLb47eRow9jFb2UJxZSzyvBAQbZW5V/Mnv0HPUBc2MBw+nmnWPlrjbUPAC8jAp0D5xqUU5luF55/CnoyZZRmdAnZfco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=btVR24li; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="btVR24li"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5163JoOM017544;
-	Thu, 6 Feb 2025 07:32:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WUlG3UNtQJExnVI2dfP6DGSLfDrec9VsYrxCHKK+B9Q=; b=btVR24liqNCeM9Pr
-	EtL5s5B+8EeiipP6Vg6GGPUkkKDE1MMbC3xyoyq3REh+1JVp9KskNuo/fHkey7FP
-	rmVGhSThcXEmbAj6xloDDepk5LKAZ+yIEF0IABfBjT+hp4ngRXGeILgxExmt60uU
-	7HoVQmVyJ5tnWVAtUPb7rRL/ASnTK+T9WJQCjbiDyn58fISm3eeBDQbVLypbMfoM
-	dAHKtOfZv/koM0V5d36dTJFFMOAG3bu/zkHG8fKTu4FMHBgSouRhDzhR4SVMcH92
-	vzUbxp5jK0VRvoRJrgtEeSv+vEyOV2TAAkETYtQNc3UMk5CvMxyUJnFbtxpGknc/
-	55Owzw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mn2ygge1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 07:32:39 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5167WcmY004871
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 07:32:38 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
- 23:32:32 -0800
-Message-ID: <a56ee502-658c-4189-a963-51b488da95a6@quicinc.com>
-Date: Thu, 6 Feb 2025 15:32:09 +0800
+	s=arc-20240116; t=1738827274; c=relaxed/simple;
+	bh=ZqC215pGfYAb7flXSAc08+IrFcFj62WGS6CVa6R7k4E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dRj70tATdZNtogNYh83igyOMIjqstO+CqiMwmYGLfLUkmYvPbWz7PC0/RxAVANmpS/W1V4i74gGUJFbXBVHZxFL1lg7aw6ga4DN/ds6xLtWRg6GUj6w9Iv3ZtwEjQIkYALtZ9ome381aH4UT1IIRPuhz2LGezTQIBw6wtH1v7Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-51f2830aa01so19822e0c.3;
+        Wed, 05 Feb 2025 23:34:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738827269; x=1739432069;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kYqxjen2ckyh6AMFJqNUH79gwyV2vSuAN69CefkfgXQ=;
+        b=X/f3ogkiJEQqtMGb1heI0ygtjfdNZ6as9aXYxUp9zWRI7su4sXGj44MqyYDTJ/meNf
+         iyta9+yw+76XXVS3JnNbWk7L1AZzQNpMIn1iWICfYwzK0RewyVjvejPCVH29Iq8aSHXX
+         cisYUegs+bJdW850sgv70HUp7Wjk2FOADMAxjURtHCiQuGhjygdzhVHAoj0QB6BBNO0c
+         J+bKw0XojJNIC5HXBIIHD02dqKSxH/R2wTlbNEXkZjP/o45FPKcNv1KPkN8atqIK9s2G
+         XlY455PuqaekMeSyINfv3HMrjFmzl+QxcF5QHqKmSebiC/RUdF2rX+vbwGQbsfkz56pA
+         xBxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUFAkGzmbH9WFngC5R1qWjZENsq2lMJwOewBuO8tODOpZmPnjNfkQoYFx+N8sSUa859H1t4DyIHLjn@vger.kernel.org, AJvYcCWCBJD+qcJ7oKEPvhAhB1WMaeRtIgZ95ujy1Vty5XkUw0/4dDqrLWp6TFNJw+zQn6ZuQsV54eJyFm1jnMib@vger.kernel.org, AJvYcCWJ8jYk/jTdWJdV2IMB5J/tZrq2bdQ15DFstZTiwZT38kCumKSZdI+z1nzK1TUI0g0ze4vzfL4Bv+wBq915@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKNKG3HaeATfUQQLCWp26xMOnwVaSeBAjY+h9YtXctsL4PalDZ
+	uLjDLRPAIz4qOtOLsy4sPF3v3PAHIQWhizU0GXZygDztco+sGbNb1Fw5rGDm
+X-Gm-Gg: ASbGncuVJLpGpf6RV/Ciu+qv1cMNKSEqjnRDzc0l+1NkIFxT1hkWA3EGF5yuiy6ya9H
+	2EUNdqV8tffGkUTNoBJ5JM1P/9iasMYhUiet2i9f2BKB81FkF3BkKJlFsFjG3nwA+SNPrKQiblp
+	M2LL00Wyh9rTn7S4u5IQDY6Kv/J+pROq6tyX+FA19QiLUWGSAqnU2yXYdKScvR8YPWrKYS8Ccyl
+	Yn/yoXzFcbsmN4SkR4mnuTkdn6UFb3lYJ2RdxhLHJYmnrWRMb1J1RYrZbBu9xVwsM1OhUpu7qFP
+	oD7fryKsRGLYxgqzW1DfShbsUWj2EwUR3rlO9jFgQ8tUsmfyaCjttg==
+X-Google-Smtp-Source: AGHT+IF9+B00D50HGqOy1mIN4fzg7WnjfsZJYzaZ08kFw+IQMPZ5iF1jeQ0WRxh19V9LoKjVuuxTIg==
+X-Received: by 2002:a05:6122:238c:b0:50c:9834:57b3 with SMTP id 71dfb90a1353d-51f0c383ea5mr3817133e0c.4.1738827269486;
+        Wed, 05 Feb 2025 23:34:29 -0800 (PST)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f228dabdfsm98727e0c.33.2025.02.05.23.34.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 23:34:29 -0800 (PST)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-866dc3cd96eso138467241.3;
+        Wed, 05 Feb 2025 23:34:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUW8cP4sY2fjDCpyp/DEuULSHXihuVGEbVLcN1HP/3tdWRf0y16KhvbEinL9a273OYGyFJ55+gP4TNqVCNA@vger.kernel.org, AJvYcCVJ3n1AuZar6+s9gRixuQTAmnFkLbPVOVNrJcV2bcwcXRKv2lhxC4FfStyH+GZthSIi5Nkcs0Benpe0@vger.kernel.org, AJvYcCXZ/y2oqgsPeO75yxcGrDf39CWsCzbGnPCVnPRpSHWXBfK97nLK3ZYGH0ts2m+eXf4hoAtKQ6ulAT16yrOU@vger.kernel.org
+X-Received: by 2002:a05:6102:cd3:b0:4b2:5c4b:b0aa with SMTP id
+ ada2fe7eead31-4ba47a69fd7mr3852490137.17.1738827268953; Wed, 05 Feb 2025
+ 23:34:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] scsi: ufs: core: Pass target_freq to
- clk_scale_notify() vop
-To: Bean Huo <huobean@gmail.com>, <quic_cang@quicinc.com>,
-        <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
-        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
-        <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
-        <quic_nitirawa@quicinc.com>, <quic_rampraka@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        Peter Wang
-	<peter.wang@mediatek.com>,
-        Stanley Jhu <chu.stanley@gmail.com>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        Matthias Brugger
-	<matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-        Andrew Halaney
-	<ahalaney@redhat.com>,
-        Eric Biggers <ebiggers@google.com>, Minwoo Im
-	<minwoo.im@samsung.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated
- list:UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER..."
-	<linux-mediatek@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC
- support:Keyword:mediatek" <linux-arm-kernel@lists.infradead.org>
-References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
- <20250203081109.1614395-2-quic_ziqichen@quicinc.com>
- <ceeee4f93b22ab53c4243eec85449a95b0305c70.camel@gmail.com>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <ceeee4f93b22ab53c4243eec85449a95b0305c70.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HCq-x5_05vsA-b4SdG6bzT-DOJeaUXeF
-X-Proofpoint-GUID: HCq-x5_05vsA-b4SdG6bzT-DOJeaUXeF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_01,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- impostorscore=0 spamscore=0 mlxlogscore=999 clxscore=1011
- lowpriorityscore=0 bulkscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502060061
+References: <20241218154613.58754-1-shikemeng@huaweicloud.com>
+ <20241218154613.58754-3-shikemeng@huaweicloud.com> <CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com>
+ <82014768-2ea7-2a28-cade-99d5d8ebe59e@huaweicloud.com>
+In-Reply-To: <82014768-2ea7-2a28-cade-99d5d8ebe59e@huaweicloud.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Feb 2025 08:34:17 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWT05uMjEassapuFr7podb_eH=T14SOyS4yW4Wh7DUcTQ@mail.gmail.com>
+X-Gm-Features: AWEUYZlF1WKVp8XKeZEs4N8gBdQGzZtMTGkdvJadBBpYovB0_UlZtliJmtMLsz0
+Message-ID: <CAMuHMdWT05uMjEassapuFr7podb_eH=T14SOyS4yW4Wh7DUcTQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] Xarray: move forward index correctly in xas_pause()
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	linux-m68k <linux-m68k@lists.linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Bean,
+Hi Kemeng,
 
-Thanks for your review ~
+On Thu, 6 Feb 2025 at 07:13, Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+> on 1/28/2025 12:21 AM, Geert Uytterhoeven wrote:
+> > On Wed, 18 Dec 2024 at 07:58, Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+> >> After xas_load(), xas->index could point to mid of found multi-index entry
+> >> and xas->index's bits under node->shift maybe non-zero. The afterward
+> >> xas_pause() will move forward xas->index with xa->node->shift with bits
+> >> under node->shift un-masked and thus skip some index unexpectedly.
+> >>
+> >> Consider following case:
+> >> Assume XA_CHUNK_SHIFT is 4.
+> >> xa_store_range(xa, 16, 31, ...)
+> >> xa_store(xa, 32, ...)
+> >> XA_STATE(xas, xa, 17);
+> >> xas_for_each(&xas,...)
+> >> xas_load(&xas)
+> >> /* xas->index = 17, xas->xa_offset = 1, xas->xa_node->xa_shift = 4 */
+> >> xas_pause()
+> >> /* xas->index = 33, xas->xa_offset = 2, xas->xa_node->xa_shift = 4 */
+> >> As we can see, index of 32 is skipped unexpectedly.
+> >>
+> >> Fix this by mask bit under node->xa_shift when move forward index in
+> >> xas_pause().
+> >>
+> >> For now, this will not cause serious problems. Only minor problem
+> >> like cachestat return less number of page status could happen.
+> >>
+> >> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> >
+> > Thanks for your patch, which is now commit c9ba5249ef8b080c ("Xarray:
+> > move forward index correctly in xas_pause()") upstream.
+> >
+> >> --- a/lib/test_xarray.c
+> >> +++ b/lib/test_xarray.c
+> >> @@ -1448,6 +1448,41 @@ static noinline void check_pause(struct xarray *xa)
+> >>         XA_BUG_ON(xa, count != order_limit);
+> >>
+> >>         xa_destroy(xa);
+> >> +
+> >> +       index = 0;
+> >> +       for (order = XA_CHUNK_SHIFT; order > 0; order--) {
+> >> +               XA_BUG_ON(xa, xa_store_order(xa, index, order,
+> >> +                                       xa_mk_index(index), GFP_KERNEL));
+> >> +               index += 1UL << order;
+> >> +       }
+> >> +
+> >> +       index = 0;
+> >> +       count = 0;
+> >> +       xas_set(&xas, 0);
+> >> +       rcu_read_lock();
+> >> +       xas_for_each(&xas, entry, ULONG_MAX) {
+> >> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
+> >> +               index += 1UL << (XA_CHUNK_SHIFT - count);
+> >> +               count++;
+> >> +       }
+> >> +       rcu_read_unlock();
+> >> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
+> >> +
+> >> +       index = 0;
+> >> +       count = 0;
+> >> +       xas_set(&xas, XA_CHUNK_SIZE / 2 + 1);
+> >> +       rcu_read_lock();
+> >> +       xas_for_each(&xas, entry, ULONG_MAX) {
+> >> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
+> >> +               index += 1UL << (XA_CHUNK_SHIFT - count);
+> >> +               count++;
+> >> +               xas_pause(&xas);
+> >> +       }
+> >> +       rcu_read_unlock();
+> >> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
+> >> +
+> >> +       xa_destroy(xa);
+> >> +
+> >>  }
+> >
+> > On m68k, the last four XA_BUG_ON() checks above are triggered when
+> > running the test.  With extra debug prints added:
+> >
+> >     entry = 00000002 xa_mk_index(index) = 000000c1
+> >     entry = 00000002 xa_mk_index(index) = 000000e1
+> >     entry = 00000002 xa_mk_index(index) = 000000f1
+> >     ...
+> >     entry = 000000e2 xa_mk_index(index) = fffff0ff
+> >     entry = 000000f9 xa_mk_index(index) = fffff8ff
+> >     entry = 000000f2 xa_mk_index(index) = fffffcff
+> >     count = 63 XA_CHUNK_SHIFT = 6
+> >     entry = 00000081 xa_mk_index(index) = 00000001
+> >     entry = 00000002 xa_mk_index(index) = 00000081
+> >     entry = 00000002 xa_mk_index(index) = 000000c1
+> >     ...
+> >     entry = 000000e2 xa_mk_index(index) = ffffe0ff
+> >     entry = 000000f9 xa_mk_index(index) = fffff0ff
+> >     entry = 000000f2 xa_mk_index(index) = fffff8ff
+> >      count = 62 XA_CHUNK_SHIFT = 6
+> >
+> > On arm32, the test succeeds, so it's probably not a 32-vs-64-bit issue.
+> > Perhaps a big-endian or alignment issue (alignof(int/long) = 2)?
+> Hi Geert,
+> Sorry for late reply. After check the debug info and the code, I think
+> the test is failed because CONFIG_XARRAY_MULTI is off. I guess
+> CONFIG_XARRAY_MULTI is on arm32 and is off on m68k so the test result
+> diffs. Luckly it's only a problem of of test code.
+> I will send patch to correct the test code soon. Thanks!
 
--Ziqi
+You are right: CONFIG_XARRAY_MULTI is enabled in my arm32 build,
+but not in my m68k build.
 
-On 2/3/2025 5:37 PM, Bean Huo wrote:
-> On Mon, 2025-02-03 at 16:11 +0800, Ziqi Chen wrote:
->> From: Can Guo <quic_cang@quicinc.com>
->>
->> Instead of only two frequencies, if OPP V2 is used, the UFS devfreq
->> clock
->> scaling may scale the clock among multiple frequencies, so just
->> passing
->> up/down to vop clk_scale_notify() is not enough to cover the
->> intermediate
->> clock freqs between the min and max freqs. Hence pass the target_freq
->> ,
->> which will be used in successive commits, to clk_scale_notify() to
->> allow
->> the vop to perform corresponding configurations with regard to the
->> clock
->> freqs.
->>
->> Signed-off-by: Can Guo <quic_cang@quicinc.com>
->> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-> 
-> I have reviewed patches [1/8], [2/8], [3/8], [4/8] in the v2, since you
-> just changed coding types, and typos , but no logic change in v3. Add
-> my review tag agaion:
-> 
-> Reviewed-by: Bean Huo <beanhuo@micron.com>
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
