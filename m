@@ -1,64 +1,65 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786EE1EDA2E;
-	Thu,  6 Feb 2025 16:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09BA246328;
+	Thu,  6 Feb 2025 16:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859093; cv=none; b=G5GbYnd2mqnBJIMr7+N1YKdQdw3i8nQLcI13SZ3y1x+sIK3Z4ieVla+YFemellwee+PZh83bhoUenQsJJwCKlEb73FoRnUYh8+mo7cu2hPtgB7mk1m468I6sYMdJ3yqq02GpMKsr8u1ETv8FA+mkmWQ3SxPvYGbRuYm2P5bIm5Y=
+	t=1738859098; cv=none; b=OmAdMCmBz2qkXTqtgBRn4TkdoxugF8VD6o94PczCdOGSFrCI3Hpbk+n+xOhzQrW5YQZP0DycP59ajSBKOVGNQXWH2zpM638Op1tHaU3EJg3r3s1Bq6PYCMTNgeKvClTx1ak8bvTFxajcIEX++pcxKgOFAkJxpR/mrYSN8m4w7e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859093; c=relaxed/simple;
-	bh=kju+6js0Yv4QtoktzUKTmIxCrstEL6CP7v4a5QxpKYM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ipf2CWwTXYaAZPWf4QV1iuwA1p7D+laWLy2exTJ0NhqPirt1p7dC+vJegknO+wXv7uXsxK/R+fvc8h2nAGUvXfxSJdtdyAG3G/H/2ECb59e4i1oxYnfUgKaUYgjpVadeH/uV2R9CU52mpwg9dM2i8657EqaYiotwowUBoCCsF6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gc9TE+Jh; arc=none smtp.client-ip=209.85.160.172
+	s=arc-20240116; t=1738859098; c=relaxed/simple;
+	bh=UaDVREG7/Sc3wMsZDfW00ioz6KhQBs0G60BDqwnSyiQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ehGCYECM54DaikOJTCDev4/E33xYRqtCCxOJKEYZk04DW9x0KVMHhYE8+QPbPOiol8339M/Wu7NfFw/45c88p+CDF0y650cz+6CmZ+nudHvVKcNKr5g8s7Kzl63P57xefQCcZebG5ubVemi80/iz0SafQAqpXxC527oxJ5kDB0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcCtTU0P; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gc9TE+Jh"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-467918c360aso13545301cf.0;
-        Thu, 06 Feb 2025 08:24:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcCtTU0P"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7be8f28172dso52986885a.3;
+        Thu, 06 Feb 2025 08:24:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738859090; x=1739463890; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eJ5WAraqa0Nl8T+8raEMefsUUiCCCAdvXMSJh5q+Lx8=;
-        b=gc9TE+JhUDXhv7Z8zlndXf7vQOWHWD3ChUwwXvadn4MV9eCBrXCtBNKysBM3uxxHgc
-         /6qH4VCkFWI18XKLJPFfo4NBJcoqKq13uMDzFvTHkk1S/Newg2cFhuiULSMfoyLhMaai
-         t40BYIkWax4yMAbefko2f9bANExZgXy7NLuSdwikZbwJrLbzI6YjtjWazqllhg5f+MXR
-         Tp53Km3D/dMdU3pMvP1rhdnscME2sSg16qNwBP83P70u4FkfoaOke/UYhcGncim2zKr+
-         uX3a7T7IVrNKUdxk5R2B28o1UltpST5+dNYKgKRw2rcTEpb4VHv0u/kqaUZyilndo1Jv
-         Dy3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738859090; x=1739463890;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1738859095; x=1739463895; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eJ5WAraqa0Nl8T+8raEMefsUUiCCCAdvXMSJh5q+Lx8=;
-        b=ZXAu7xKbca1osUdHz5LnmKZooV9/rdOTBiyO5lUR5YbSmxJCUWzyr78I0KEvxKppTz
-         HUEvEac8cwzHznX/Zphyee5CHcfRerhWrrELA3crFYj1GjJIX5KsAXIufej9mXRDE4ir
-         kgSvHJoHplJcCw/mF7WCv+WobkibVqTLyqRnZ8Ub+lVwtS4e44UDLEV9E6E2/HFgydSp
-         R6EJFVd/pS5bKI1bxFQqZe6J8kYbyUIYpfjL/IkGpC5B+vKssMdxgsPayGiiVIpAvC8A
-         IrsBmPcs9qdtYwT5qpst/bxdowZvihPsBk7yIhi2rQvSFJbiPIWBrcvTzl1l9q2/BIy6
-         w71w==
-X-Forwarded-Encrypted: i=1; AJvYcCUR4QyiNSmhj0aZci4HzPw7wgxJYEphXwdE45oNqHlVUnWvvi8JI9zitJsgvPCM98+A0t3/rqCEyxeG1ju4cME=@vger.kernel.org, AJvYcCUoBlaomvIrXm14NH43GII2YXR6pxi9eHF5haSXwj1Xl+Zoq4AYc+84dJwaOn4eYYiemURprSP3M4aq@vger.kernel.org, AJvYcCW7LpQL/lrmIfLTac8dqZEPJJT+tED/MGm0iK2GYSN4g9mFVYXFa1pwlq3onGeUIAg7jF92bdjXnV9l8Jz1@vger.kernel.org, AJvYcCXCju4Qt2Y2kFemi8PA7AGx9CkCGPm6Xb8Sw7bvZgoTAQvPLWDOa2IzYVd1I8xIxzzZ2k6C7fByeg2/29w6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAB5+hvu/bGKMXtoU8ccW00DvlFsennIEVNPEajLvJQEQwi3Q7
-	Q3J7Tc0BbENg1kOpibwbCoVVoMfuwyt48uGr3VHQ0PRQt+nnXS2U
-X-Gm-Gg: ASbGncu1qfty9qSI04sQqhyWF1v+OBrB1agPRarxWVTgRf3JqSxCHYaOg3WGGuJqAam
-	yCyfou6izoUWOV/wDU2DWGnojsNSVGnuKYpqaEc5vg+SES4bUxXUVWNTAkVzBfvPbLhmEZmInWG
-	C6Fn2MMsxNhrrJeuBPksvsn2SkBDwJ+uncuuvujG9TwxvRGwnox5LJbFOTDchtaHzsUu5j92Fcz
-	M25mTRLtCnmrCzahwlyctc5rzgmfuhm+gdumQfLy9VQcDK8sFAxHr2YzcrhYiAXWQsvhMaj+1z0
-	Fvgh/HYbVC1Mmsxo15tVMUZDMUV3F7gXW4Pg
-X-Google-Smtp-Source: AGHT+IFRa2BZCLdY5bYSDmAbikbdHdZnUcWOTwEJ3Uh+MykbfDWum/HFRL9Ixor8mou4qJSIrFBaRg==
-X-Received: by 2002:a05:620a:4094:b0:7b6:d736:55c1 with SMTP id af79cd13be357-7c03a02d577mr1122951885a.48.1738859090178;
-        Thu, 06 Feb 2025 08:24:50 -0800 (PST)
+        bh=3OVe41mTulKLQ9Ass6Rm3bcrGgxfqO9FwEz+pynI7pA=;
+        b=jcCtTU0P1vygwofxSw0IWes5zjq0Cej0OFlRGFHh/3MitCE5DrlOHbsD5SjOqaMAcP
+         NYquKrFHccGVHJKv95MjDWaxH5Tu0Z60KUScFWr/7sI3bX6JsZIn48riqHzDx8RYvSlx
+         cTkI+cDlYBuXYHoCGDml8qDoKKod/iVfbT26saY4Zsl/0RD7S2njtbpAeD75xpKqA75s
+         NjbxDKqkybkgw5xRFvj6KqGS4Gmi+qcUQPjP7MDD+lNYKdCrAWik5Wc4eZTL17DUACAT
+         FJ8OPIXxXxT8p5R8dNJq0kWqpYur88c/ljYBylZxDceGQc0PcsuynReG7Ukta/a9Ox4I
+         YF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738859095; x=1739463895;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3OVe41mTulKLQ9Ass6Rm3bcrGgxfqO9FwEz+pynI7pA=;
+        b=HXYepDDolmGtXVKroaCOjrFKj9ASI0JVdMFvG3H4fLuARCQX2b9K3BmrNzyss7FjAh
+         7mvz+gKhcblUPl6ECoWYjcSceZopuaT17v8PEJhDNVYleAXkdzLPoCs3A+qGIOydEYJk
+         Tz9oBOnZGtMsgMDFDq3PO8blvBOZjeWrQ2iHll/FBc2zv1yb7hH4yIyvVd6TJZGtO6Kw
+         C276O/CHcdg8j0l0JSzLU1d0Pir8EUjtCjkSCin5BJHjVhlBgkgPGrK8GMamQx5WwKTV
+         JB8zSSCX3ZdXshZYjzbZnBU4YXbNZcZOyqsyj31q2kR1xiwe6JBXn6EdpETAWu1ipA3R
+         z5vA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrL5h3weoMKh3tuTnXLd4TNV3X/IRfyGFex+6Cp038hT84i3eR543DD3deewNmL8dC7Ba+oSSX7rua7Y00iuE=@vger.kernel.org, AJvYcCV0XKYwNrYJF94c6GCcSeRlmFVpL5+Kc4FwL5rsaM3yV9As8P0cTidcRYIzxRN+QYVdnWo2iMYn+r7pWjKT@vger.kernel.org, AJvYcCW2VT8pXIPa6fQVNi6rwMwIp3ExtzWa1we2tnMEwvTyS6EwpPha9fLCRcqlgIdahpneec5weVv4IfmMUhqR@vger.kernel.org, AJvYcCWBkTzcdevk1EQO5IVVze/A1s+5kWrnQKNC1sJE4u92T1BublyIhPAMMbs30cUOsowPVFOVPLtg3DVk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbgH1JGX5HMTCGRIeu6awUJcqzhgOLs5R49tg+i1xrKPfz2r2s
+	zu80g0tO1wRhr637/YVj2G3MNb+At1hSPfadeAB2W0UzFeRQAV5u
+X-Gm-Gg: ASbGncvY5C2ObIlfkkRrPgqNKUIiZNrAOWw3rMt8wjfdpckwkRy3htaZ8e+vn3zCcSn
+	HaFPKqG437DK6csSL+q8640qRaFxdKbVuddTo4IpAMVmrQCzOR87TiLV9D0fv1RxD6K8/eMkT3r
+	xjTtSZPJ06htUhzqEEzh1CIItVyE8VFtmaUR00DhViDNRCGDI0UOoXR6bfh2D8VMe4hCyZH+C8q
+	CeyK03WGpuE4M9IjkBCaw/eTdCiYee37NsdH97QnJgDI7mFt0zPm+ybhR/zDRqg11DBjYs9OWkq
+	dRXvf7Bo/CPyhPD1OAwxpxaPMx05sfv4JgcJ
+X-Google-Smtp-Source: AGHT+IHWNmhtgJE3obCuD0D4KWQ3iey5+ZU7xrUgSbDtfGMX6Z8QSSJm4ck5+6NJKaCshFhDRRh8Iw==
+X-Received: by 2002:a05:620a:2710:b0:7b6:cedf:1b4e with SMTP id af79cd13be357-7c03a02ee89mr1001197585a.41.1738859095548;
+        Thu, 06 Feb 2025 08:24:55 -0800 (PST)
 Received: from tamird-mac.local ([2600:4041:5be7:7c00:fb:aded:686f:8a03])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041eb8e09sm76440685a.102.2025.02.06.08.24.48
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041eb8e09sm76440685a.102.2025.02.06.08.24.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 08:24:49 -0800 (PST)
+        Thu, 06 Feb 2025 08:24:55 -0800 (PST)
 From: Tamir Duberstein <tamird@gmail.com>
-Subject: [PATCH v15 0/3] rust: xarray: Add a minimal abstraction for XArray
-Date: Thu, 06 Feb 2025 11:24:42 -0500
-Message-Id: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
+Date: Thu, 06 Feb 2025 11:24:45 -0500
+Subject: [PATCH v15 3/3] MAINTAINERS: add entry for Rust XArray API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,14 +67,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAEripGcC/3XP0W6DIBSA4VdpvB4N5wAWdtX3WHYBeFCSqh1a0
- 6bpu4+6ZTVxXp4T+Pi5FwOlSEPxvrsXiaY4xL7LA6i3XeEb29XEYpUXBXKUwJGzdBlGdrUp2Rt
- zsatiVw/MUVAgQaIpdZGvnhOFeJ3dj888h9S3bGwS2T+MC25QKIOHPZTagGLIWm87ezrG2p6i3
- fu+/bUSfV1y2vgCmziMfbrN3ZN5bn8KAfT/hZNhnAkE4yunRKnVsW5tPM2PPMEJ+ELZ+mc+lRm
- LyqHjLiiNKwZeDHKxxUBmlLZGVSAO5NcMLhjALQafjLHOOAiyQloxYsls1ojM6FIpKCWVKMOKk
- UvmsMXIzJhAQXgK3klYMo/H4xubFwYTbQIAAA==
-X-Change-ID: 20241020-rust-xarray-bindings-bef514142968
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-rust-xarray-bindings-v15-3-a22b5dcacab3@gmail.com>
+References: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
+In-Reply-To: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
 To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
  Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
  Gary Guo <gary@garyguo.net>, 
@@ -91,82 +88,36 @@ Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
  linux-pci@vger.kernel.org
 X-Mailer: b4 0.15-dev
 
-This is a reimagining relative to earlier versions[0] by Asahi Lina and
-Maíra Canal.
+Add an entry for the Rust xarray abstractions.
 
-It is needed to support rust-binder, though this version only provides
-enough machinery to support rnull.
-
-Link: https://lore.kernel.org/rust-for-linux/20240309235927.168915-2-mcanal@igalia.com/ [0]
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
-Changes in v15:
-- Rebase on v6.14-rc1.
-- Add MAINTAINERS entry.
-- Link to v14: https://lore.kernel.org/r/20241217-rust-xarray-bindings-v14-0-9fef3cefcb41@gmail.com
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Changes in v14:
-- Remove TODO made stale by Gary Guo's FFI type series.
-- Link: https://lore.kernel.org/all/20240913213041.395655-5-gary@garyguo.net/
-- Link to v13: https://lore.kernel.org/r/20241213-rust-xarray-bindings-v13-0-8655164e624f@gmail.com
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..88282b6e689b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25749,6 +25749,17 @@ F:	lib/test_xarray.c
+ F:	lib/xarray.c
+ F:	tools/testing/radix-tree
+ 
++XARRAY API [RUST]
++M:	Tamir Duberstein <tamird@gmail.com>
++M:	Andreas Hindborg <a.hindborg@kernel.org>
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++B:	https://github.com/Rust-for-Linux/linux/issues
++C:	https://rust-for-linux.zulipchat.com
++T:	git https://github.com/Rust-for-Linux/linux.git rust-next
++F:	rust/kernel/xarray.rs
++
+ XBOX DVD IR REMOTE
+ M:	Benjamin Valentin <benpicco@googlemail.com>
+ S:	Maintained
 
-Changes in v13:
-- Replace `bool::then` with `if`. (Miguel Ojeda)
-- Replace `match` with `let` + `if`. (Miguel Ojeda)
-- Link to v12: https://lore.kernel.org/r/20241212-rust-xarray-bindings-v12-0-59ab9b1f4d2e@gmail.com
-
-Changes in v12:
-- Import `core::ptr::NonNull`. (Alice Ryhl)
-- Introduce `StoreError` to allow `?` to be used with `Guard::store`.
-  (Alice Ryhl)
-- Replace `{crate,core}::ffi::c_ulong` and clarify TODO with respect to
-  `usize`. (Alice Ryhl)
-- Drop `T: Sync` bound on `impl Sync for XArray<T>`. (Alice Ryhl)
-- Reword `Send` and `Sync` safety comments to match the style used in
-  `lock.rs`. (Alice Ryhl and Andreas
-  Hindborg)
-- Link to v11: https://lore.kernel.org/r/20241203-rust-xarray-bindings-v11-0-58a95d137ec2@gmail.com
-
-Changes in v11:
-- Consolidate imports. (Alice Ryhl)
-- Use literal `0` rather than `MIN`. (Alice Ryhl)
-- Use bulleted list in SAFETY comment. (Alice Ryhl)
-- Document (un)locking behavior of `Guard::store`. (Alice Ryhl)
-- Document Normal API behavior WRT `XA_ZERO_ENTRY`. (Alice Ryhl)
-- Rewrite `unsafe impl Sync` SAFETY comment. (Andreas Hindborg)
-- Link to v10: https://lore.kernel.org/r/20241120-rust-xarray-bindings-v10-0-a25b2b0bf582@gmail.com
-
-Changes in v10:
-- Guard::get takes &self instead of &mut self. (Andreas Hindborg)
-- Guard is !Send. (Boqun Feng)
-- Add Inspired-by tags. (Maíra Canal and Asahi Lina)
-- Rebase on linux-next, use NotThreadSafe. (Alice Ryhl)
-- Link to v9: https://lore.kernel.org/r/20241118-rust-xarray-bindings-v9-0-3219cdb53685@gmail.com
-
----
-Tamir Duberstein (3):
-      rust: types: add `ForeignOwnable::PointedTo`
-      rust: xarray: Add an abstraction for XArray
-      MAINTAINERS: add entry for Rust XArray API
-
- MAINTAINERS                     |  11 ++
- rust/bindings/bindings_helper.h |   6 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/xarray.c           |  28 ++++
- rust/kernel/alloc.rs            |   5 +
- rust/kernel/alloc/kbox.rs       |  38 +++---
- rust/kernel/lib.rs              |   1 +
- rust/kernel/miscdevice.rs       |   7 +-
- rust/kernel/pci.rs              |   5 +-
- rust/kernel/platform.rs         |   5 +-
- rust/kernel/sync/arc.rs         |  21 +--
- rust/kernel/types.rs            |  46 ++++---
- rust/kernel/xarray.rs           | 279 ++++++++++++++++++++++++++++++++++++++++
- 13 files changed, 408 insertions(+), 45 deletions(-)
----
-base-commit: e47e7490144c9fb26590447f73d90538e0934a75
-change-id: 20241020-rust-xarray-bindings-bef514142968
-
-Best regards,
 -- 
-Tamir Duberstein <tamird@gmail.com>
+2.48.1
 
