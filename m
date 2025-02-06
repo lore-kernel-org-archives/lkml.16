@@ -1,90 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5AF246339;
-	Thu,  6 Feb 2025 15:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E65322D4EB
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856564; cv=none; b=QrPkZlmz9/UFbMHFwnRcljnz76HBb5IvgSwxhAf+pOV7slwtBIlLjn7CLGubKW3uftW4rDViPcsLSe2QTUHFJ9lkjp8NRWhqCZ2oR3fYjOa5bmB6xbFj445xDX7WaC/m6r8RtNQNrct3PQhq2eA3tOnm8BgFNhDyMHv+4V8hcCU=
+	t=1738856613; cv=none; b=JegDMTvQFTTM+8gHP7AY3ebVBqEZ+DWXQ3tszKKU6W173KluE/QFKX7ObGCzy02Q3+ycKaKqh6lfcFVpy49V/Q20dbowMcI00/JoHF+Z7wcDN+T5ABniHeD6YNCarDNKiRxFQkPqbNbW3EyBypSPPEBvYsTclilc8gdLbUaB0vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856564; c=relaxed/simple;
-	bh=5+FTDlmQWovIleUiA1q3Ejj7y/6w0GAkmYeDjxkywuo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uN1Ixfv/+vAvQ5CkxlZGcGjiGQJM+ss9z573M/LohG84xRhi9sO5pImb5BprYfI24wrOwRCOUsx/ldhYI/vfW5gq5kozpPG3iS7lH27HgQvqkLLG3hJ5CldTKG+I61AddVvcPVAJbqqHblgTm0fPumFZTvmytCGwLpOVMi5DtAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWo1Xryo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738856613; c=relaxed/simple;
+	bh=7hdQjWzEotDVIDZcI30XgkThfzAt1j3JK+eP0FGi1Vk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AwAPOcPNf0nDK99PCLwqafHQIWb1YJzfMpjszq2ij0YLOzEIscCMRzb+ier78SFpILDlO9c1Nyft1sKlKms9TAo6JA2xrg/EVPpgIaC3BF/68LJ9wyns5XJ6MXrOrMdpsJXtqM/pb4MTpF0Afvl6gmbH1b8ijkX4Yh120d0LFO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ay5wzBy5; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWo1Xryo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACEDC4CEDF;
-	Thu,  6 Feb 2025 15:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738856563;
-	bh=5+FTDlmQWovIleUiA1q3Ejj7y/6w0GAkmYeDjxkywuo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qWo1XryojRSFF9wT8B7l4iOecPgHYZ7k5Ae2GLEIa0/ihek84O+EkuT1S1pqAzVDv
-	 0k38KtKYCeoauKmS7ue4uwAi21xOrY58QoogK6BQQfQuSkiWQKtcsa8KPV5ShDbKYF
-	 yResPzeAXpbUr5HnAt9WHoVqnRO+BVuLfoXwGW+KtluQ2Ipgu2QZyQXezBdjyJfJ9Y
-	 mF4cODLjdNx0HB/1O9g0PNoCMJAOpUKxcJe7MyWpjVWT9xDXsFxeFylps/Lds9q3b8
-	 GBemcQoPVLHTlgD2kQjMeLjuTRM1oS+9Z65kphdSaIpwR5yNL6lCDBE8Ch6moXsH/I
-	 Tn2tm3drx5/eg==
-From: Kees Cook <kees@kernel.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-alpha@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Michael Cree <mcree@orcon.net.nz>,
-	Sam James <sam@gentoo.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-	Chris Hofstaedtler <zeha@debian.org>,
-	util-linux@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2] alpha/elf: Fix misc/setarch test of util-linux by removing 32bit support
-Date: Thu,  6 Feb 2025 07:42:32 -0800
-Message-Id: <173885655037.1454207.17881331998395742818.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
-References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de> <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com> <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com> <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de> <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com> <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de> <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org> <2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de> <alpine.DEB.2.21.2501120146480.18889@angie.orcam.me.uk> <78f3ae1f68842a9d1af62caaac3929834ce6ecfa.camel@physik.fu-berlin.de> <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ay5wzBy5"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso7272235e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:43:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738856609; x=1739461409; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pBdMhdMtIUzIw4rMictCNzI6nR2pfFg19HEOqhQG/Qg=;
+        b=Ay5wzBy5EfYhylEQXRQr5Q6bg1PQ9tNbVKwhMwH+Wnfilm6CQB47wo17VibWasQS4s
+         mmxl1bxwymRMmqcQuj26Tj0FyCbSfc5F7q6RFzyFtYQYoCZ/jjDk94VhCex59VrCv09u
+         vs9N5alxm0s+1d+Mm2NPbsZBvcBs4SVfTgxm12bAgXGhK8H9UAouNA2guvFhiIQt8J+E
+         smEJAPKRS6ZsVBOoznsn7cX29j0dAysfU/BLxTXsWu9IsqPL0Lp+mmSqff7bdVk1lN/8
+         tAcTSTqhGlIyZbkNbl809QKhJ5fO+RhK/WHTpNWb4Cm6dfzuOm4UZkV6HkWCoT3RJZ+4
+         5iBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738856609; x=1739461409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pBdMhdMtIUzIw4rMictCNzI6nR2pfFg19HEOqhQG/Qg=;
+        b=CrVVOGv9nvH7UMZHeIwPFIAfO9IDycCxvVUxY6nGnrEuxNvneH/yQtmfOszEnmHA+y
+         wpGeERyS1ZheoRL4wgOfHpSLRaFH3EetlRaNfUb7p0KSlVmXiLzVutg1j3CnlaivXOsW
+         pZl98XoXjZooaWfmT80IAk/wil849h3iqtYS4tUmzXRTztxU79ThOKxxPSeXvRNG7Etx
+         gFWtuei6riJyDObuRwcwK4HNURlqkQIg2M1FeJE56r+Wj/jSoPfAflHKHGbDk831OJe6
+         S+ECiUtSOVACn70x7oUnznmLQXKKgEOon1qXJmegRzjYX1iisLmJKO78eQQ3XjoAXnsb
+         V99Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXhNFFxLfO2aT45c59A3F6Ci4iQES2ZNcEPsnMAtdvjXcO2JC4ze8BTnnujz3/3r0BuBO0UgP37HmUk05A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNJka63nDVxfzhYfm18xQ0KdGuEh+z0DUm2DJMoD35XrYHRANe
+	QBivJ5rl5FvaxEisv8EMUdhST7eHdtagx4ORy927TP6h9ip226KHTmUdXumvsN8qprLLWkG60jD
+	vPMPvyh5+utetIDvxqWlbxViyHC39E4nkzVxY
+X-Gm-Gg: ASbGnctQ7gJk5tJwdJXF5Cdq5AXEGsmJGARFnAIKIukP3UEeZeY60vQUT3L6GiLQPmH
+	ncskI0Jie2GAPny6/Ah8wmgbaSumGcx7OSzLjGWe2M+WVwQJPkmEg5dTo2vrjqnjKiYZrJlUd0X
+	ymNV9eBMlzkeGrIUjC8/rS82vUN74=
+X-Google-Smtp-Source: AGHT+IGVKvg7QdK0ZYKMFxbiI4Gc5AjnmbWA3Q/7JAZIvDr0g+zAH54rcHrrLRM1tKGEIK0vCNsE9h7xYg8y3lczKdM=
+X-Received: by 2002:a05:600c:3c9b:b0:436:a3a3:a70c with SMTP id
+ 5b1f17b1804b1-4390d56f21amr55885475e9.28.1738856609308; Thu, 06 Feb 2025
+ 07:43:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250130220529.665896-3-daniel.almeida@collabora.com> <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
+In-Reply-To: <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 6 Feb 2025 16:43:17 +0100
+X-Gm-Features: AWEUYZl9AZYPANFjvhtBuOiK8XImDgpndW-XF_eT0_KkcgiqXMAivkukX7j73tQ
+Message-ID: <CAH5fLgi+Qf=o91XEPamjycdrGeso1yDEDOGNQRmmy-miakDaOg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
+To: Guangbo Cui <2407018371@qq.com>
+Cc: daniel.almeida@collabora.com, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
+	benno.lossin@proton.me, bjorn3_gh@protonmail.mco, boqun.feng@gmail.com, 
+	boris.brezillon@collabora.com, dakr@kernel.org, gary@garyguo.net, 
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, ojeda@kernel.org, 
+	rafael@kernel.org, robh@kernel.org, rust-for-linux@vger.kernel.org, 
+	tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 12 Jan 2025 23:39:01 -0600, Eric W. Biederman wrote:
-> Richard Henderson <richard.henderson@linaro.org> writes[1]:
-> 
-> > There was a Spec benchmark (I forget which) which was memory bound and ran
-> > twice as fast with 32-bit pointers.
-> >
-> > I copied the idea from DEC to the ELF abi, but never did all the other work
-> > to allow the toolchain to take advantage.
-> >
-> > Amusingly, a later Spec changed the benchmark data sets to not fit into a
-> > 32-bit address space, specifically because of this.
-> >
-> > I expect one could delete the ELF bit and personality and no one would
-> > notice. Not even the 10 remaining Alpha users.
-> 
-> [...]
+On Wed, Feb 5, 2025 at 3:56=E2=80=AFPM Guangbo Cui <2407018371@qq.com> wrot=
+e:
+>
+> > +/// A generic memory-mapped IO region.
+> > +///
+> > +/// Accesses to the underlying region is checked either at compile tim=
+e, if the
+> > +/// region's size is known at that point, or at runtime otherwise.
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// `IoMem` always holds an `IoRaw` inststance that holds a valid poin=
+ter to the
+> > +/// start of the I/O memory mapped region.
+> > +pub struct IoMem<const SIZE: usize =3D 0> {
+> > +    io: IoRaw<SIZE>,
+> > +}
+>
+> Compile-time checks are only possible when CONFIG_RUST_BUILD_ASSERT_ALLOW=
+=3Dy.
+> Otherwise, using compile-time check APIs of Io will cause a modpost error
+> because the rust_build_error symbol is not exported. Details at the issue=
+[1].
+>
+> Maybe Io should expose compile-time check APIs only when CONFIG_RUST_BUIL=
+D_ASSERT_ALLOW=3Dy?
+> The expectation is that a build error should occur when calling `Io::read=
+X` and
+> `Io::writeX` due to a boundary check failure, rather than because the
+> `rust_build_error` symbol is not exported.
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1141 [1]
 
-Applied to for-next/topic/execve/core, thanks!
+This compilation failure is correct. You're trying to use writeb even
+though the size is not known at compile time. You should use
+try_writeb instead.
 
-[1/1] alpha/elf: Fix misc/setarch test of util-linux by removing 32bit support
-      https://git.kernel.org/kees/c/b029628be267
-
-Take care,
-
--- 
-Kees Cook
-
+Alice
