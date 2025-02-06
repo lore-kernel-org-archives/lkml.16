@@ -1,112 +1,58 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EDD13541B;
-	Thu,  6 Feb 2025 02:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E3C2AC17;
+	Thu,  6 Feb 2025 02:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738809438; cv=none; b=bmcECZBaIYOTFpNROZJTAA0L7Y2nWdePRHE1S63vDJOnSMK7Aze1mISEPxYZNUsAYp7guodgnjIavf2XpJ1aFgqyaVENPB6y+JiyqHcejCHI7ke/511NH2z826lOprX5QnLlgV3OE6S/bWBxuZQ1sRH1HFBLabZxJX9ytsdO3tQ=
+	t=1738809474; cv=none; b=BJfn/HPGeRu1lxTJPFRfaoAADB+fdVcOBAYtkklbkTboC0Tiji1zxQZaGmB4gffPuLn8hCGp/yhkYbXwvkoj2Xtny8hN+1MVExc9EWnmDaBJNBzAQMNK7i52d50sYLLgysLv+wfKoXIjPjbtfOZ7730dSm4Ua3GxPMvmb3MRkl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738809438; c=relaxed/simple;
-	bh=QvmmQKKeSGe6VAyxTOErcRrwSiJdSvhiPQ7lRKUHbdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lOCaNEjXlU5+O2FpJf2ci/cyVf1xw9KH4kmVXvaW7QbZs9XTaSJ1etIz4aeilKKGTOTR4P8z5KuDoC4C3PwYhlkGUtI9fbVJVrrLfzCg4fT1CPXHfaK0KNhVsmn9544uroNNiNNd9wiD/FnivJYs30mJGvt3edILsTDvYGlalfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sGvrb0fo; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1738809474; c=relaxed/simple;
+	bh=Ps4gQcDzgiXW8dkA1LVY3aArFd+5dNSRWTrIkIXRnzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sm5tXY9l6t7trG0fL8HJyYDP7Xsr/nUvcO2xvyaPQkJTqMPdaubsEYOOgsKa105AkCym7XrMOaUwq1Psamqc7WmM6KQ8KFNXBuWoIDspPHU1/xlEYqG9TcBv7CDv+l4fZjEqa8jG/hvnYG0MOb/VDTCoyYlXt7BggMvSq5W1+Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSgnTcni; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sGvrb0fo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738809422;
-	bh=ybkHOc7X7d3d3Jc8hznlsrswfB8qD/58Qh3INF3PR6M=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sGvrb0fo4c1KzwEGxpmklKSTAWQL/LOw2Cql7bsnMBJdh0pUHPvkiehUnaIc+8lbo
-	 vq3H4SDIQvcOm1dvU74gKaS+vJlKtp0Yktjwjh+WLcvwL5UBLXGbJ2SP5YMBH2ENX2
-	 9ShkPmRCRGVQv0SAT6Sqt1x6OGstZob1kk1TFpyPZmLCGWXwUXHn1BCpbt+C7uF3PA
-	 4+WOl2L2HolIRv5hpOeRmbJnYkZ+1+jJYqV8DqDo5KPsW58Ou7r5lje2tOuj0jW3jm
-	 jwhf8lPiu4h0bmmYXHFlBQBTgZOujdpsYXxG4xVRZwbFhti6nZDq/EmMV83gKXzR1r
-	 myugDGRd64SGA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YpLpj6D2Rz4wj2;
-	Thu,  6 Feb 2025 13:37:01 +1100 (AEDT)
-Date: Thu, 6 Feb 2025 13:36:52 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>
-Cc: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Joshua
- Grisham <josh@joshuagrisham.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the drivers-x86 tree
-Message-ID: <20250206133652.71bbf1d3@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSgnTcni"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F152FC4CED6;
+	Thu,  6 Feb 2025 02:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738809473;
+	bh=Ps4gQcDzgiXW8dkA1LVY3aArFd+5dNSRWTrIkIXRnzw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tSgnTcnilkWlobQkn1hq3tN/jsQVds+HgSKDYhtgrJpQyWCiZN4wobjw8OEFE+sLe
+	 Y4xTcR9eGtwceGUq0vpWttGDBtcIlV3E4EGD/sDlD4JME6EtNdk6N2sA9Adu69CQzW
+	 NtBH0RvbCqAu6juHc0NHVgqhaTqVdfQsjDnOkRa8A1aT7RyDZ9K0h1OQJ3v+KV6DlX
+	 7O9TRNaBv7YQZc337i6q/iYCzRCqWctLyDv2qNCJr9C7Y5sdhMmFY+KhyxQxcfLiAG
+	 ED4l/lJn0p74M45u5R0hU+sgNA4WGdd1JmxoSWCyzrUYMht+t4D3zO92guLJ2N09SU
+	 B+veZmoRL3BPg==
+Date: Wed, 5 Feb 2025 18:37:52 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Donald Hunter
+ <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH net v2] net: ethtool: tsconfig: Fix netlink type of
+ hwtstamp flags
+Message-ID: <20250205183752.31d8b220@kernel.org>
+In-Reply-To: <20250205110304.375086-1-kory.maincent@bootlin.com>
+References: <20250205110304.375086-1-kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/F9hvpMrShV+GQz.zEplzB8j";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/F9hvpMrShV+GQz.zEplzB8j
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Wed,  5 Feb 2025 12:03:01 +0100 Kory Maincent wrote:
+>  	data->hwtst_config.tx_type = BIT(cfg.tx_type);
+>  	data->hwtst_config.rx_filter = BIT(cfg.rx_filter);
+> -	data->hwtst_config.flags = BIT(cfg.flags);
+> +	data->hwtst_config.flags = cfg.flags;
 
-After merging the drivers-x86 tree, today's linux-next build
-(x86_64_allmodconfig) failed like this:
+This chunk feels a little unrelated, but okay:
 
-In file included from include/linux/kobject.h:20,
-                 from include/linux/energy_model.h:7,
-                 from include/linux/device.h:16,
-                 from include/linux/acpi.h:14,
-                 from drivers/platform/x86/samsung-galaxybook.c:14:
-drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_fw_attr_=
-init':
-drivers/platform/x86/samsung-galaxybook.c:1014:33: error: 'fw_attr' is a po=
-inter; did you mean to use '->'?
- 1014 |         sysfs_attr_init(&fw_attr.display_name);
-      |                                 ^
-include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
-   55 |         (attr)->key =3D &__key;                           \
-      |          ^~~~
-drivers/platform/x86/samsung-galaxybook.c:1020:33: error: 'fw_attr' is a po=
-inter; did you mean to use '->'?
- 1020 |         sysfs_attr_init(&fw_attr.current_value);
-      |                                 ^
-include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
-   55 |         (attr)->key =3D &__key;                           \
-      |          ^~~~
-
-Caused by commit
-
-  f97634611408 ("platform/x86: samsung-galaxybook: Add samsung-galaxybook d=
-river")
-
-I guess this was never built with CONFIG_DEBUG_LOCK_ALLOC set.
-
-I have used the drivers-x86 tree from next-20250205 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/F9hvpMrShV+GQz.zEplzB8j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmekIEQACgkQAVBC80lX
-0Gw0xgf8DzD3Eop/q76XI+rXUyR+8L6CyFp+vSR9SgKfULe9JQsIJ+f+ota/wbJu
-Xy2pvWbmfSONluWltWSkhxnexxbL0/Vg511Cj/3XuWFQH/S6q20ix/uxqd0mlFUF
-mbcSwuBEREG+uV9oK8EA/6RIFVj5mnqdp2/TH0q6jq9p4tUYh4vtRQSmI3UKtDV9
-YYM3uZC8LWoRWojncDmB+83FklIo3qEUNOjZnoMbgLkO9vBe287nK4bMV5D0kFxT
-d2rT8i8kwAQZxk7SCfUDPcP84iMrcbTc3AfzgMgMS2laCHAkljzSDlY5xrk6Dqhj
-T3IWzNnSH4zmLzajSLy9fChgGubvtg==
-=WK4d
------END PGP SIGNATURE-----
-
---Sig_/F9hvpMrShV+GQz.zEplzB8j--
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
