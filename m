@@ -1,49 +1,59 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B068226865;
-	Thu,  6 Feb 2025 11:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F2B228C99;
+	Thu,  6 Feb 2025 11:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738840128; cv=none; b=VdAle3Xc9S+nEDZ3IsCIXTwrsWVN0AufsZlaOHZhrWoaem4h5EYqoRrrY6oXb9N2PSvo+s4cKwIUMbhY7LohmhpxtIj1/JRxIJw0hs02EbrizptyMOyKrjGK8KrCgwqXs316PgpIQaEOWNyJSHej5XJevqEvsxokL/5da2e6B+k=
+	t=1738840129; cv=none; b=gnzaJI71/PiuPt1/d7suBY7ZZbNtDXOJEhW94JgY6uS3x+CGi1mZdxlmvUP716bjmVZWVzi2/QfP3LWuby8j40rI7eNDMIzGiCY/Ai++55hP0tPzB+TnuJrmlN47TP7Cs6FTacttX/OlgG9hLRTg3ylZkPhEbDI5lDub9sqJUoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738840128; c=relaxed/simple;
-	bh=B96pNeVP/csttWGc2+txPTceRHARr72NUxlrXzj7tYc=;
+	s=arc-20240116; t=1738840129; c=relaxed/simple;
+	bh=8iUqAlvy20/ugHD4XAj0Q41lxITTOI+gRyQEhcW7HYE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ODgmV8dH4WtTSARso0bEQ85Fi6B6cE36bkltb691mN2ghiIrlkcNWtR6JncjYNQc9dC2i2v9YuyWJuCydDcP31pZJc0yYa0rj/H5Al6dA2OI4Pe4Hfxoxg6kRaOOgGkJnreLdfgYaH07/y8gNeh9KT11MsP5d46tcjsC44sEJOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hexXYyR6; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version:Content-Type; b=VylRNZdd+rV1t0VO8fG9wqlqIokjDLIHVHseuvpvl4GWJFxfT+bmD7dw+Iq+i/Oq7MKmWNrE5+y005oOx8e9AYhDz9gI6mnsjnWbvXk8GTtuHZ/JskC4+i0N2Gf0GvgF5/71+SApfsf1VJsDMFTOVlsK8eEWPJRhN+qAd0aCfUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CZOj5nDp; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hexXYyR6"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CZOj5nDp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738840124;
-	bh=B96pNeVP/csttWGc2+txPTceRHARr72NUxlrXzj7tYc=;
+	s=mail; t=1738840125;
+	bh=8iUqAlvy20/ugHD4XAj0Q41lxITTOI+gRyQEhcW7HYE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=hexXYyR6Y7wgHWSYswcPQe36UCjRD6P/ph0NJHRow+198GyHWT4328ySIFBRnLTbn
-	 KHFnNJXAwfwG8vsnL1pRJtpaRTdv0G39UiBvAN2kglfzf1oQtcYsTiUhJRCdR0hmx8
-	 mfFv6RP+icHaW+3ACzhm1GEROHgoWYf4QxDto/r4t7pxv8eUqgars3ovtztCr+JRIy
-	 aLbKjX/87xczCfwOUTKjIdYyb9pYbU3S3fwv1LiUis+Dl7I+UOptiFyq5X9dJupu3u
-	 qHXGZzNlr9MBopCoJrdmD0Ygot8ZMgLoShUekFEpflN3V8+LJHduNBsIa274AuDWje
-	 IXA78/6WZDqvQ==
+	b=CZOj5nDpAp1zv5PZljzdV/FMlXFlD4v3Zb21YEOCZYH8SwwK1RMWv6skvvcp+rs3x
+	 IAwmpG89URgjHBJppYniq8fjNyKVN8ZC4Dp6r5XEySURd+4gT5TuXtFz7rug+7SUfj
+	 HYmnU8jzGNbEkijGY3BSh0bYiq8SnH5UzSGGSp47zjDk2z3uAeb21fk3nDy9M6wN4/
+	 /94x3YHscS4uLMrCOFt1h3RKKvzpDr/WjLTK5Kj/Dn/ohZAlUX5GWs3bAVZbWfue3o
+	 PjV5TjHdfugGkqgWe60+8NOAdWg/StUtwX/bSVa/uKnI0YDKhVMXm8bDa+ah4iYzNV
+	 JIvftXuxIoGtg==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2459917E0FC3;
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B615617E0FCC;
 	Thu,  6 Feb 2025 12:08:44 +0100 (CET)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>, 
- Chen-Yu Tsai <wenst@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- kernel test robot <lkp@intel.com>
-In-Reply-To: <20250108083424.2732375-1-wenst@chromium.org>
-References: <20250108083424.2732375-1-wenst@chromium.org>
-Subject: Re: [PATCH 1/3] arm64: dts: mediatek: mt8173-elm: Drop pmic's
- #address-cells and #size-cells
-Message-Id: <173884012408.110657.5683585328217308497.b4-ty@collabora.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Simona Vetter <simona@ffwll.ch>, Simona Vetter <simona.vetter@ffwll.ch>, 
+ amergnat@baylibre.com
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Fabien Parent <fparent@baylibre.com>
+In-Reply-To: <20231023-display-support-v7-0-6703f3e26831@baylibre.com>
+References: <20231023-display-support-v7-0-6703f3e26831@baylibre.com>
+Subject: Re: (subset) [PATCH v7 0/6] Add display support for the MT8365-EVK
+ board
+Message-Id: <173884012467.110657.7286906897029273506.b4-ty@collabora.com>
 Date: Thu, 06 Feb 2025 12:08:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,25 +65,35 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
-On Wed, 08 Jan 2025 16:34:21 +0800, Chen-Yu Tsai wrote:
-> The PMIC has child nodes for each of its functions. It is not an actual
-> bus and no addressing is involved.
+On Fri, 10 Jan 2025 14:31:10 +0100, amergnat@baylibre.com wrote:
+> The purpose of this series is to add the display support for the mt8365-evk.
 > 
-> Dropping the bogus properties fixes a DT validation error:
-> 
->     arch/arm64/boot/dts/mediatek/mt8173-elm.dtb: pmic: '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
->             from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
+> This is the list of HWs / IPs support added:
+> - Connectors (HW):
+>   - HDMI
+>   - MIPI DSI (Mobile Industry Processor Interface Display Serial Interface)
+> - HDMI bridge (it66121)
+> - DSI pannel (startek,kd070fhfid015)
+> - SoC display blocks (IP):
+>   - OVL0 (Overlay)
+>   - RDMA0 (Data Path Read DMA)
+>   - Color0
+>   - CCorr0 (Color Correction)
+>   - AAL0 (Adaptive Ambient Light)
+>   - GAMMA0
+>   - Dither0
+>   - DSI0 (Display Serial Interface)
+>   - RDMA1 (Data Path Read DMA)
+>   - DPI0 (Display Parallel Interface)
 > 
 > [...]
 
 Applied to v6.14-next/dts64, thanks!
 
-[1/3] arm64: dts: mediatek: mt8173-elm: Drop pmic's #address-cells and #size-cells
-      commit: aaa0b40e157c65aaa5e0ad903675f245333381bb
-[2/3] arm64: dts: mediatek: mt8173: Fix disp-pwm compatible string
-      commit: 46ad36002088eff8fc5cae200aa42ae9f9310ddd
-[3/3] arm64: dts: mediatek: mt8173: Fix some node names
-      commit: be035e4a26edf8fdcbc4fe95d16c28deade13bb0
+[5/6] arm64: dts: mediatek: add display blocks support for the MT8365 SoC
+      commit: ec207ea7f6f9abb5b0c50394b02f434aa1ca7e52
+[6/6] arm64: dts: mediatek: add display support for mt8365-evk
+      commit: b7b5052f6b13061db179cf2f0f16c3334e27239c
 
 Cheers,
 Angelo
