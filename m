@@ -1,98 +1,84 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7361FDE26
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7E1225A5D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738833317; cv=none; b=G3oZ95WirLLP9DWPvZbmnqAcIntEF7NB1JqVNhz3qLX3wIkTqjV6ekUm0zAGsztIXlnupqKMOhijcnlFnIIDjMrDFYzicl4Vnd15ffUEB7LDGTzZnnPoVUr671LUrk7E2UPG9O4QA76lzBiSiLjcK5EQH/DtTG8wsh2CtAimgUA=
+	t=1738833321; cv=none; b=NmbVsFwKB/wol2LL9LnqTUUsi8cJBYPQNgzn0FH5xGcxKdpYb/Qpf8TaAC/B5KuFBVbi2tpPzXn6YuTJfg8rWF56WHKrUvXVfn3+GZNQjtAJmxdpsTH157trYe0C0IiWhfWrI8XwI4qd9D4S7Jvp8ls5jzHInXMwkV08bHR83xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738833317; c=relaxed/simple;
-	bh=tRqJLc+O0FDbedoqglzuXzm6t6RtebcSpmdqWw4IkkM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ky/3ZfC/hJgEdCeHBtju6nYopVdiRM+NeFMyvaniZdiVEFMsNlJnRQhhBwTfXALyB4tHRiFIjZhiav/Z7fH9gOeu6m+lXQ/KSb7oOF9iVJFpBNvCC6lvYNOTfFCEhI2VdH4TS+/q/veVm0Qi51vuvLn+YPinkUrV6OmE82uakAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c+mW8Vch; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c+mW8Vch"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5401be44b58so786424e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:15:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738833313; x=1739438113; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tRqJLc+O0FDbedoqglzuXzm6t6RtebcSpmdqWw4IkkM=;
-        b=c+mW8VchR84wTHE4wz976PiIhW68sVJOmk8hjTs0OslgqjGgeYaf/sl6evTmncWqa/
-         5E02ZOU0pd+Hm9VPO2Cx4bSKO2UEqANmERWWpzdko7lXdbQOi/x8z76WdDrLwfXPdmRs
-         MRmLr385wOd8+U7coxDYpWM3QeS4Lr/iKtApNH5+cv2u3Kt3OklBseSp9ckkaDl5ls5b
-         qtjE49Y9HqoQkRz6W0k5UBhV1dUtbMHtefoaiQVAm/biZbVG5cNTf0czRj45FTuWcP9T
-         no3EJlWg7nw5PJXtad/WtPVFt0d5AdjvR3xQe52UfGqyIpw8AMg7Mo0AaIqH6Xy3PPFN
-         6yUw==
+	s=arc-20240116; t=1738833321; c=relaxed/simple;
+	bh=5hFr9r0+xVw070raBzXtRqNzSe0omxbKrZ3Wlaemwj8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kvBDfMCFka1einorwQXqY4f+7iJ3+yJEGLG1Pwdj4poiEmbNoLUr92BF81QfwuhAnJ1oxLHp08ZJOksXJWrpMAdWPzIxHOf2txDvHra37MLTX6sESDHCcugM81ZwRlyMKlzoG57l0XVghd9QGz77aUaGWnGK6AMBwkvXcnLAlC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d046dc219dso4758245ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:15:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738833313; x=1739438113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tRqJLc+O0FDbedoqglzuXzm6t6RtebcSpmdqWw4IkkM=;
-        b=waEUpqz9Gn7svqs56N8WwLDaSzybyNdkXPoXAJa6E+pHbc5Ud8kx+aLq/qAJJz3RrH
-         Fdbise69MVyAcH11G763SA7KA4J/x86f06N8wRSuKZAE5g8XeGrWJ5KjUysVt9BBz7BC
-         b7D4kIgNFVtfHeCX8KrJsTKhjavxRORm+I2+1IbExKt2kFO9rQ4YjplG3dCFd527KwTu
-         BeuEKW0GGEtT21/gFVka0mvoRddTd0Tdy5xWLjpL8jk6Q7aIsGPNKtzTOZ1wcgPzYcFo
-         xew/G0VySr8rklv89P1/Ggjp90hPhIn3XCQUz7OcBHg22HIm9wHMLUT8cA/2Yz+sIrQ2
-         88AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSma4IudiIbsjZzVTDiKHKEq7fuQOjgs7blL66guN/i56wqGoWvS02CeouvsH745Y91hXioRKdqbgXjSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjKhsAcQxOmh9rgExHyfcjjGozkymotNADnTSumUJtjOVU8nyu
-	kyiTT7jYo/Rhs51DJ+41J3VnkpaoQbgJ8mdqRk9VXFkCGc6qIovr8EfQSDlSFLRt81ERD4aUUlC
-	qyH7ifcjZA6OLBL3+PtDJaO+jBOQxu3KMZ1sQ8duwT6JU0Nm7
-X-Gm-Gg: ASbGncv8kZbY0QPC+oGQ/oVD7EDRRva67kzeRyRBeWIIJWra7SUnaIA7OJ5IDdgwttu
-	TR77v5GtI6D7O0RZ2jw5Ttr9Cd0njnKVsH2IjLruZZXFsMf1cCnsGdRgd1GxjUDa6JAlzQSk=
-X-Google-Smtp-Source: AGHT+IElLnUlOzbE8Puyjhx2m9fT2KJol5uqVVtfoRbXKJQshctEXy1e37MJc99UBpwywse23HEoui4DOzqO7+aQfjI=
-X-Received: by 2002:a2e:a912:0:b0:301:12:1ef3 with SMTP id 38308e7fff4ca-307cf2ecc76mr23223341fa.4.1738833312724;
- Thu, 06 Feb 2025 01:15:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738833319; x=1739438119;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xYOBYj7aJAB6p76ECKhTSVve+8W7ayGSimHBE//XKLw=;
+        b=v0pzkD6NnfZKvmt86zanPqldgsrp+by9DrCBw57FOWLr/xCFl6/zvMbdoHO5bQN37l
+         CvvPVWkcPHNZaf2e/8xMD/ws8ZL69SjQlvxWLZD23rGLw5Ol+hOM3IBeyexmpFjFSWax
+         NMmtOA7iQOVj9XfyNDKEEHBRHB4D2UJZnBFP1/52tyWH+fETSQH5KAOttVgUJCKs6ur7
+         yf0ZcDNXQYjIkM2eN9cfAaPrjQAfA2enHFa5FlWFrqn4nFIKGNSVXSml1fKRXo5QZlBm
+         +S7Lkl7ox7Nt0b3abA7hlfydBZ0NgJcPT/C87ECELXKMFWYkV3J7Wx926dEqPDR/8a7p
+         eQKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVP7BVmgbCORnMApdaPrYyI0OMlJq7jyLi7cFo0FJ4jfWtpeUwd+pnTLbJQB8QI9O9jZZmCDe7BCrK4quY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx310lvIT56zLjwLvmdPd3wo0gB1s7TBPe/fMzyQcJ7qLrNmbO6
+	8Y9fwNEVz6NVKXZcTpWP4VdRpDNodG22GfefYBkjHTzaOqAples5AR2P3cgR4g/Jd2Uz73wi7lZ
+	lifIdsbs1o4luHDSItysxvdvaRimm5yo51WpO4KNvS6vpg2ToLYK1uG4=
+X-Google-Smtp-Source: AGHT+IEAqn2vw/fSFk8xV6QOIyrYA4RUnDiruBcJFhNgf8a+1jZtTCFOWtpHjqNyI8XXA1cwYd00rCgCnpFDGVPthTAimqgwbmqr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205101058.2034860-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250205101058.2034860-1-claudiu.beznea.uj@bp.renesas.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 10:15:01 +0100
-X-Gm-Features: AWEUYZmZ6IZ3PcFl2s36i0IngD6WlXx7rnFQanVdV3a5Nwbe940ogp6JHOjNsb8
-Message-ID: <CACRpkdZh0mDkob62k=_v+eMqn-mKNpeetS3h38wpNHWyA+Eijw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinconf-generic: Print unsigned value if a
- format is registered
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: peng.fan@nxp.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+X-Received: by 2002:a05:6e02:1d88:b0:3cf:bc71:94ef with SMTP id
+ e9e14a558f8ab-3d04f901a64mr49860765ab.17.1738833319407; Thu, 06 Feb 2025
+ 01:15:19 -0800 (PST)
+Date: Thu, 06 Feb 2025 01:15:19 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a47da7.050a0220.19061f.05fa.GAE@google.com>
+Subject: [syzbot] Monthly fbdev report (Feb 2025)
+From: syzbot <syzbot+list52071043e7dbf4b67ce6@syzkaller.appspotmail.com>
+To: deller@gmx.de, dri-devel@lists.freedesktop.org, 
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 5, 2025 at 11:11=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
+Hello fbdev maintainers/developers,
 
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Commit 3ba11e684d16 ("pinctrl: pinconf-generic: print hex value")
-> unconditionally switched to printing hex values in
-> pinconf_generic_dump_one(). However, if a dump format is registered for t=
-he
-> dumped pin, the hex value is printed as well. This hex value does not
-> necessarily correspond 1:1 with the hardware register value (as noted by
-> commit 3ba11e684d16 ("pinctrl: pinconf-generic: print hex value")). As a
-> result, user-facing output may include information like:
-> output drive strength (0x100 uA).
->
-> To address this, check if a dump format is registered for the dumped
-> property, and print the unsigned value instead when applicable.
->
-> Fixes: 3ba11e684d16 ("pinctrl: pinconf-generic: print hex value")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+This is a 31-day syzbot report for the fbdev subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/fbdev
 
-Patch applied!
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 6 issues are still open and 25 have already been fixed.
 
-Yours,
-Linus Walleij
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 527     Yes   KASAN: vmalloc-out-of-bounds Write in imageblit (4)
+                  https://syzkaller.appspot.com/bug?extid=c4b7aa0513823e2ea880
+<2> 6       No    BUG: unable to handle kernel paging request in bitfill_aligned (4)
+                  https://syzkaller.appspot.com/bug?extid=66bde8e1e4161d4b2cca
+<3> 3       No    UBSAN: array-index-out-of-bounds in fbcon_info_from_console
+                  https://syzkaller.appspot.com/bug?extid=a7d4444e7b6e743572f7
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
