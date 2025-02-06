@@ -1,146 +1,123 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28A521C9E1;
-	Thu,  6 Feb 2025 14:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45961624F9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852176; cv=none; b=aBsiT0n+FAJ9Gaig8JRrWV2yeT/awnxgOJlNO085YPnSFs2RlAg+BDjT1PQ3w4vZ8XT4BoRLgvSYLbpFNOvNzr7W/qA1B0u3ZZCpB7SCJwRRcJc0qt2fB3wMMJv2B5z5d6zkRR9uaFP3qmW8OHiMqj4+jJ0gSbUSDNXOd1MlTIg=
+	t=1738852249; cv=none; b=MLXDn8Ivk5IQUuk0UvPkxGJI3QIgsUtRTNf6tEAt+Bzglhxr5xTsjORta07l695zVFbaGnvuOpRSZ24vT72eLo4fN3oCUc3hTci2f5fj/y5DIYkhsquEI2bYDMtZ8Yze0RzCPt4LP42XXw14lY0e8Owb8tfJ9/8QQAucSW6Rff8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852176; c=relaxed/simple;
-	bh=ErWXixg523GBpVutAwglAFanD0ZU/6hOsgeYkUyeJBk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T+gcrnKNVRAoG5NX3FM0av+sImFiVN0LTzcWi+1iVPe1ZvhK/7QEOR/9zgqfMb2B0njT9sCvpXhOVCrwG4AD0Oll7fpIo6Ipd6ofw6ANKVwOUwrv0tq6e8q1WT4nDTaZGBjaUpXnYqeZz0Bmf3NBimMRYpY6bp8bc0HUvIMwkf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=es0YU7PC; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1738852249; c=relaxed/simple;
+	bh=WdipNZI3y5wwEW1WPJkKmfPilkJ7iVaBxEPNzdzmX4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AB5r6Tkk7GkrOWq045F3wEcASVXDvsqnVz+uKjGcv2s2OoO80T20Cfh49FTBSC2uJVRLuZ123qmSqBdfmyC2M8axGTj96eUE6boX00I07s4F0GAdFrKWpdC4sQAvHTwqYtlSGrG4KZQ1qcBcDXUtlCslG49OLgE2iXhRkeFkFVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDkjfouy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="es0YU7PC"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id c532acd172b77253; Thu, 6 Feb 2025 15:29:26 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDkjfouy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738852246;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WdipNZI3y5wwEW1WPJkKmfPilkJ7iVaBxEPNzdzmX4E=;
+	b=CDkjfouyt5dauUvfIC7ViNGjW3fTIMDVyTCX3dsHs8Z5w4RfUfCxD+D5wQsK8l1cmH2SXN
+	0PHJPqTyne8Bmrr7LAmkIQccLhQ6aZwBgP3jzT8lmE3eTqGUXUJSD7kSh575dlDvoxt275
+	Bt6yi//cS5ogLeqN+q+v78ujJUn5+so=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-jpp1Wx5AN3GqEECzTVdKQg-1; Thu,
+ 06 Feb 2025 09:30:43 -0500
+X-MC-Unique: jpp1Wx5AN3GqEECzTVdKQg-1
+X-Mimecast-MFC-AGG-ID: jpp1Wx5AN3GqEECzTVdKQg
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 028836BA970;
-	Thu,  6 Feb 2025 15:29:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1738852166;
-	bh=ErWXixg523GBpVutAwglAFanD0ZU/6hOsgeYkUyeJBk=;
-	h=From:Subject:Date;
-	b=es0YU7PCzTwaqBv67FTPblqBOgY9joZxQI9Ae5YTIbV6kQ1U3jyDtFUCqWQIY5V1d
-	 QKxyj/CvsCdP2uqzIt/9EXC03y+2bE9Cv/sIksNdRgnF2Gr95OTySPb/jLaemWZtbD
-	 e/R6eFHEC8n4UdE6OZriJkkRRb7kLlX3cFfFAcTnfCS8/sR71yStUPT/jPuOq9F6Vv
-	 NHvWNEYMSdh4IRqKCYRlK70G6nwDWfe3W4Cp/N2GX6IkT3jKD3DPZUUC2s2Ipl+Ks7
-	 U7Ke+CRvHkcV25RzFIJjLSDPhLHF9K71UKs86k+CTYFCGY9TJGiyPFX20vHksQ3RN1
-	 7722br6kch0YA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Christian Loehle <christian.loehle@arm.com>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject:
- [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful information when
- processing recent idle intervals
-Date: Thu, 06 Feb 2025 15:21:58 +0100
-Message-ID: <1916668.tdWV9SEqCh@rjwysocki.net>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAACC1956086;
+	Thu,  6 Feb 2025 14:30:36 +0000 (UTC)
+Received: from localhost (unknown [10.2.16.145])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D97B1800878;
+	Thu,  6 Feb 2025 14:30:33 +0000 (UTC)
+Date: Thu, 6 Feb 2025 09:30:32 -0500
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
+	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
+	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
+	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
+	German Maglione <gmaglione@redhat.com>,
+	Albert Esteve <aesteve@redhat.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+Message-ID: <20250206143032.GA400591@fedora>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com>
+ <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeifecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeevkefffeehgfethfffteekvddvtdduueetvdfhjedukeehuedugfeileevueekjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhsphgvtgdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhlohgvhhhlvgesrghrmhdrtghomhd
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
-
-Hi Everyone,
-
-This work had been triggered by a report that commit 0611a640e60a ("eventpoll:
-prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS metric of
-the SPECjbb 2015 benchmark [1] to drop by around 50% even though it generally
-reduced kernel overhead.  Indeed, it was found during further investigation
-that the total interrupt rate while running the SPECjbb workload had fallen as
-a result of that commit by 55% and the local timer interrupt rate had fallen by
-almost 80%.
-
-That turned out to cause the menu cpuidle governor to select the deepest idle
-state supplied by the cpuidle driver (intel_idle) much more often which added
-significantly more idle state latency to the workload and that led to the
-decrease of the critical-jOPS score.
-
-Interestingly enough, this problem was not visible when the teo cpuidle
-governor was used instead of menu, so it appeared to be specific to the
-latter.  CPU wakeup event statistics collected while running the workload
-indicated that the menu governor was effectively ignoring non-timer wakeup
-information and all of its idle state selection decisions appeared to be
-based on timer wakeups only.  Thus, it appeared that the reduction of the
-local timer interrupt rate caused the governor to predict a idle duration
-much more often while running the workload and the deepest idle state was
-selected significantly more often as a result of that.
-
-A subsequent inspection of the get_typical_interval() function in the menu
-governor indicated that it might return UINT_MAX too often which then caused
-the governor's decisions to be based entirely on information related to timers.
-
-Generally speaking, UINT_MAX is returned by get_typical_interval() if it
-cannot make a prediction based on the most recent idle intervals data with
-sufficiently high confidence, but at least in some cases this means that
-useful information is not taken into account at all which may lead to
-significant idle state selection mistakes.  Moreover, this is not really
-unlikely to happen.
-
-One issue with get_typical_interval() is that, when it eliminates outliers from
-the sample set in an attempt to reduce the standard deviation (and so improve
-the prediction confidence), it does that by dropping high-end samples only,
-while samples at the low end of the set are retained.  However, the samples
-at the low end very well may be the outliers and they should be eliminated
-from the sample set instead of the high-end samples.  Accordingly, the
-likelihood of making a meaningful idle duration prediction can be improved
-by making it also eliminate low-end samples if they are farther from the
-average than high-end samples.  This is done in patch [4/5].
-
-Another issue is that get_typical_interval() gives up after eliminating 1/4
-of the samples if the standard deviation is still not as low as desired (within
-1/6 of the average or within 20 us if the average is close to 0), but the
-remaining samples in the set still represent useful information at that point
-and discarding them altogether may lead to suboptimal idle state selection.
-
-For instance, the largest idle duration value in the get_typical_interval()
-data set is the maximum idle duration observed recently and it is likely that
-the upcoming idle duration will not exceed it.  Therefore, in the absence of
-a better choice, this value can be used as an upper bound on the target
-residency of the idle state to select.  Patch [5/5] works along these lines,
-but it takes the maximum data point remaining after the elimination of
-outliers.
-
-The first two patches in the series are straightforward cleanups (in fact,
-the first patch is kind of reversed by patch [4/5], but it is there because
-it can be applied without the latter) and patch [3/5] is a cosmetic change
-made in preparation for the subsequent ones.
-
-This series turns out to restore the SPECjbb critical-jOPS metric on affected
-systems to the level from before commit 0611a640e60a and it also happens to
-increase its max-jOPS metric by around 3%.
-
-For easier reference/testing it is present in the git branch at
-
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=experimental/menu
-
-based on the cpuidle material that went into 6.14-rc1.
-
-If possible, please let me know if it works for you.
-
-Thanks!
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dVdFjdbROmPA0Gp+"
+Content-Disposition: inline
+In-Reply-To: <Z6S7A-51SdPco_3Z@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
 
-[1] Link: https://www.spec.org/jbb2015/
+--dVdFjdbROmPA0Gp+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+> And then there are challenges at QEMU level. virtiofsd needs additional
+> vhost-user commands to implement DAX and these never went upstream in
+> QEMU. I hope these challenges are sorted at some point of time.
 
+Albert Esteve has been working on QEMU support:
+https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redhat.com/
+
+He has a viable solution. I think the remaining issue is how to best
+structure the memory regions. The reason for slow progress is not
+because it can't be done, it's probably just because this is a
+background task.
+
+Please discuss with Albert if QEMU support is urgent.
+
+Stefan
+
+--dVdFjdbROmPA0Gp+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmekx4gACgkQnKSrs4Gr
+c8jOKwf/ZukZTp1v1Bj1iqbpAm6HBWN90Y4JWmyzZGuKRqLAwN8AyiIJ6Ms1fx+v
+WJLR47NztCQ3sDtsTQT1814wwXSpJlPguLu6isoWbCGpUwAZZk3JTpHNBofs7IKj
+04NWFZ9B2tOVgirm8OMtsVVJwzQhvQc7YtMhdB9naCzqcdC7ynKp6mLH9bd7Q+Ze
+K9CwEFtKcTm9Ge+t3U0E3Q7MI2D55far3KPi84MpfI9oEu6l0MOzzmKjaOBq9+wy
+XXZCisxWbGLZtfbY2BAQxTUhKq9TTXgeQm/Ti/SzsVLf/Qd7nrEkG1v51xs5HCnR
+FMQhDw7oBmFsGs5S/Qywvta1pcaYwg==
+=JZcT
+-----END PGP SIGNATURE-----
+
+--dVdFjdbROmPA0Gp+--
 
