@@ -1,148 +1,619 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3796D235348;
-	Thu,  6 Feb 2025 16:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5903B23534C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859860; cv=none; b=tAU0fWETMppvGv80BxgV/lK4ncMm1V6y+fI+enDTHnb0OOdihYR8WFz5TcU4LOHTJqMxi9k1xEgXLw1XSqmN7zrYj8S9JqHPwqvqWjzS00jcFbheHfJNut59nNPKGNY+myITlwt0CAkhU40LGkIsji465qdF/msc7bgbRVx4vDk=
+	t=1738859888; cv=none; b=XrTbNKnM5Qu1j+rJDlsAju1qvsMA/+z4gfc2PbwF67X91mgYlITMF2yQoaGjIULOlwTIHgfC+qfiGN948/OBjyQDQI/myl1HGpb7evD7WEjPAe7TMIWhLc7dR8RndyiCwTKnni1tDZhRTB55vR6Fu5uHXg5sAp7Q6wxgYisSMzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859860; c=relaxed/simple;
-	bh=sNvJvOF8y6VXiET6ilpfyyAjGJeJqktPKUEv7Nl8xfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/guPF7jDg3q/ZYV622WceoQKLO2jTl5bn84ojd95uGh8LSSCjEvfP5HFJHjAJIRg62bbapiiJsqt8xTlRhC1/9T7/xW8LGWsfyYXF8TM+m4kH4BlHKtO0zwcsjfmL1jMuedvq3L4GozsJVAI4DRXwCqF3KcMRNzsuZPwo5SL6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pv/P/fPM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Yr1rKdJF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738859888; c=relaxed/simple;
+	bh=uN0IEVrZOBL8PiHBuedt5JYRkOjD/zgets4xq5XjFOE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BvV6VuNbnnLWVkp7Cv2zTTWNdafO33saxQZC1SHCWDDJXCqG2VsQmnWdpvWAZSmQPOr1v3FYU6ALX/pl18nynqKZV7lptP5QAstwmM71PlOENqdCUd3812BkMiXjZnOMTwB8RdCYAjqFrWo0UgRoiH1wpGk1n6KsTQecD+pLqZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+HnH1in; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pv/P/fPM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Yr1rKdJF"
-Date: Thu, 6 Feb 2025 17:37:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738859857;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1cKpi3TqgXVRtiUpDMLIZvQ3+RhRyWRW43y/M0D5WBE=;
-	b=pv/P/fPMf5uh2H3P7A82LYI0NFBgvhnOb3HhM2tHkxgj6s8zvJHb/2NiLSVJqEEcDC53WS
-	O3Pk6tlW93BAUfpLCqlE+bOlZd6P7wzTlu6DvfQ41MJ3HguwzCrt2UbsPHfa7dMOVX4QB3
-	12bNbfX+K1zFkDk34x8kXWr06cuCX1Qsl/PxbPHgGLG97XLfSu253zId1WjaGinbETVo4/
-	spfF9ebEW7vnGIEyoJrQyJSHl0PDAuSoE/tm37GGgjMGMAiO9pmRfC58Nv8v7Eyoid/Blx
-	PVdMEVP1ynOljbR+sYtunFBv5FbhtjlkV0FzQNvFwNohQ6iHXAThyHDPeVldEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738859857;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1cKpi3TqgXVRtiUpDMLIZvQ3+RhRyWRW43y/M0D5WBE=;
-	b=Yr1rKdJFhTBpl9ZuDGcyRFDeMRr3Ci5sDxWUnGLuinFF6cpe7/u/+obL4UJDR6PchjhujV
-	LFfZefoUf0eFbzAA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: enh <enh@google.com>
-Cc: Jeff Xu <jeffxu@chromium.org>, Pedro Falcato <pedro.falcato@gmail.com>, 
-	Benjamin Berg <benjamin@sipsolutions.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
-	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, hch@lst.de, 
-	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, gerg@kernel.org, 
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, Liam.Howlett@oracle.com, 
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
-	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
-	Vlastimil Babka <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>, 
-	Dmitry Safonov <0x7f454c46@gmail.com>, Mike Rapoport <mike.rapoport@gmail.com>, 
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-Message-ID: <20250206172243-bec6d9b7-c0b5-44af-908d-c7190b63c0e4@linutronix.de>
-References: <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
- <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
- <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
- <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
- <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
- <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
- <20250206135150-6c770e7d-9af8-4924-b760-82cff5092586@linutronix.de>
- <CAJgzZoq4UOYXaOh=mdUxsNUug9uYWzPX56AtUDL0RgKOx_VnQA@mail.gmail.com>
- <20250206154810-8b7bf2b4-435c-4930-a787-f9238cd0045d@linutronix.de>
- <CAJgzZoqet77Ehd84Qcnz_NZQoKPzhB+7VyJYq4aP2Yo+=f9-jw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+HnH1in"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dba1cc632so700499f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 08:38:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738859884; x=1739464684; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f2FAB+iTgyf7DK0nqsLX/lCiNQbaaJsTbkBl60A84eA=;
+        b=C+HnH1inmip29lSYNfDu8DnW+lCveyOW2rkUQKDlG5fbHD79PiO/N5xo9d25cOmbqF
+         997v+wi8ldqW1BMBErxfLTEVdYYMP1Xo6wSOy51EAZaH3fCQXR2Nx07MOybxxxt5P4WT
+         lbJO5zzxNWGOKvqgzp6Ew5CHwlTf6siycLbakLli1Jo9reDEGq9cwb+/kTECsQ5cw8lH
+         kki18Dy/9BULiSKU+JOjFPYtywUCIKlBZSr1ju8R9KCYm52bAeiUDigDUPY3ZT5Zj8Js
+         KR0QNwQN/lm1iVzGeQbbctp5twzIhvXYKj5QUEkru8VB25yakfnTxVsXrsxmwxRQe2oW
+         ai5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738859884; x=1739464684;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f2FAB+iTgyf7DK0nqsLX/lCiNQbaaJsTbkBl60A84eA=;
+        b=jzD80AztEGZfLDkZg3N0SDI2GvLLxC2907m6eP7YAzvILZxysNne+/cjwDH+8DzEIn
+         tPsjpwVQ0wsDz9ZerzKEQ0/ROJkWYrCVPIy1m4ZfyugPHhINKv0jAFZIPX8f5zwErthp
+         mVNmbH3+8Y4x2M5DbPoVUwr3PBSmnHkqeZoTezowTDqA0zDgRbrVAGo+eojxXoFjfFKK
+         d4Ec5tpLQYPkNvn7HOGt9zbdwY1vfJLbs2LJ/UjBXtNB7sE3bVVXqD8ewig+hJlCudV8
+         dfzfxuN5mbGf8E8+gz7cSi515mK7i0rq6csWAV6WnqE9lXrILdS9hpURcYp5FA2o9wgZ
+         uZLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXADxUXEWOITX198OvroOaG2mN8Yf+oo9FmwAcKVeZqX/6U7jUbJjmpVBX4fViFHstIoIsjYaNCIplJ8EU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzANwr79Pl71I/U8y1AhkclCEL6KPA8IVZsdPsfj4fw6ygtUR7+
+	AdREJjO9VG2Y97VbY7rlGxgk7eArh/z/xjB2kKC607lVMInBBYn1PW+yX1aqgdM=
+X-Gm-Gg: ASbGnctFGT/Q87w6ky76+oITQoM2kxihLApIG+9vWsvOW379FiUWALuoawQzpEBzNB8
+	oeiPnisV+dIBYmarqpNQp0d1pXd4RTQkGq5qVDZR6CqYexpq8Mw1bYqLhZx0J2ddxScR0mj/rJD
+	Mbd6CgAC3jG4tT6olPCGdDzbHCqYHGux7V5+osQlIG2ucar9sfoXtuBh3zP4k5/3GtjaBZL7E2h
+	mPPhwK36II1lUHWS1Oeg2UdErN7E2xIPerKUdx+zfnpdqy+jFXsVcfVZ+BPiACYDGkioqfsN0De
+	1ehIEzdB2g4ScYM2MEs6PIVgJCF6BtPASgoM2aQhf6hsnaNQvaZvH83e/0CQM/KgWtom
+X-Google-Smtp-Source: AGHT+IGlqziDYgd+qIttUBo1t8lTgV41m6KBM7E7wDX7PChM3ilTHXoaQrEduT6TQpYPNTTVTKQCEA==
+X-Received: by 2002:a5d:6a03:0:b0:385:f638:c68a with SMTP id ffacd0b85a97d-38db4883bcbmr4850947f8f.30.1738859883521;
+        Thu, 06 Feb 2025 08:38:03 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6? ([2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde0fd23sm2118978f8f.71.2025.02.06.08.38.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 08:38:03 -0800 (PST)
+Message-ID: <da80b9bb-be2f-455c-961d-1d2a55b061ef@linaro.org>
+Date: Thu, 6 Feb 2025 17:38:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJgzZoqet77Ehd84Qcnz_NZQoKPzhB+7VyJYq4aP2Yo+=f9-jw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 2/4] drm/panel: Add Visionox RM692E5 panel driver
+To: Danila Tikhonov <danila@jiaxyga.com>, quic_jesszhan@quicinc.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+ robdclark@gmail.com, quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
+ sean@poorly.run, marijn.suijten@somainline.org, jonathan@marek.ca,
+ jun.nie@linaro.org, fekz115@gmail.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux@mainlining.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250203181436.87785-1-danila@jiaxyga.com>
+ <20250203181436.87785-3-danila@jiaxyga.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250203181436.87785-3-danila@jiaxyga.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 10:51:54AM -0500, enh wrote:
-> On Thu, Feb 6, 2025 at 10:28 AM Thomas Weißschuh
-> <thomas.weissschuh@linutronix.de> wrote:
-> >
-> > On Thu, Feb 06, 2025 at 09:38:59AM -0500, enh wrote:
-> > > On Thu, Feb 6, 2025 at 8:20 AM Thomas Weißschuh
-> > > <thomas.weissschuh@linutronix.de> wrote:
-> > > >
-> > > > On Fri, Jan 17, 2025 at 02:35:18PM -0500, enh wrote:
-> > > > > On Fri, Jan 17, 2025 at 1:20 PM Jeff Xu <jeffxu@chromium.org> wrote:
+Hi,
 
-<snip>
-
-> > > > x86 has two additional vvar pages for virtual clocks.
-> > > > (Since v6.13 even split into their own mapping)
-> > > > Loongarch has per-cpu vvar data which is larger than one page.
-> > > > The vdso mapping is however many pages the code ends up being compiled as,
-> > > > for example on my current x86_64 distro kernel it's two pages.
-> > > > In the near future, probably v6.14, vvars will be split over multiple
-> > > > pages in general [0].
-> > >
-> > > /me checks the nearest arm64 phone ... yeah, vdso is still only one
-> > > page there but vvars is already more than one.
-> >
-> > Probably due to CONFIG_TIME_NS, see below.
-> >
-> > > is there a TL;DR (or RTFM link) for why this is so big? a quick look
-> > > at the x86 suggests there should only be 640 bytes of various things
-> > > plus a handful of bytes for the rng, and while arm64 looks very
-> > > different, that looks like it's explicitly asking for a page (with the
-> > > vdso_data_store stuff)? (i've never had any reason to look at vvars
-> > > before, only vdso.)
-> >
-> > I don't think there is any real manual.
-> >
-> > The vvar data is *shared* between the kernel and userspace.
-> > This is done by mapping the *same* physical memory into the kernel
-> > ("vdso_data_store") and (read-only) into all userspace processes.
-> > As PTEs always cover a full page and the kernel can not expose random
-> > other internal kernel data into userspace, the vvars need to be in their
-> > own dedicated page.
-> > (The same is true for the vDSO code, uprobe trampoline, etc... mappings)
-> >
-> > The vDSO functions also need to be aware of time namespaces. This is
-> > implemented by allocating one page per namespace and mapping this
-> > in place of the regular vvar page. But the vDSO still needs to access
-> > the regular vvar page for some information, so both are mapped.
+On 03/02/2025 19:14, Danila Tikhonov wrote:
+> From: Eugene Lepshy <fekz115@gmail.com>
 > 
-> ah, i see. yeah, that makes sense. (amusingly, i almost quipped "it's
-> not like there are _that_ many clocks to go in there" in my previous
-> mail, forgetting that there are effectively an unbounded number of
-> clocks thanks to this feature!)
+> Add the driver for Visionox RM692E5 panel support found in Nothing
+> Phone (1).
+> 
+> Signed-off-by: Eugene Lepshy <fekz115@gmail.com>
+> Co-developed-by: Danila Tikhonov <danila@jiaxyga.com>
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>   drivers/gpu/drm/panel/Kconfig                 |  10 +
+>   drivers/gpu/drm/panel/Makefile                |   1 +
+>   .../gpu/drm/panel/panel-visionox-rm692e5.c    | 433 ++++++++++++++++++
+>   3 files changed, 444 insertions(+)
+>   create mode 100644 drivers/gpu/drm/panel/panel-visionox-rm692e5.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index d7469c565d1d..66b2827169fb 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -996,6 +996,16 @@ config DRM_PANEL_VISIONOX_RM69299
+>   	  Say Y here if you want to enable support for Visionox
+>   	  RM69299  DSI Video Mode panel.
+>   
+> +config DRM_PANEL_VISIONOX_RM692E5
+> +	tristate "Visionox RM692E5"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to enable support for Visionox RM692E5 amoled
+> +	  display panels, such as the one found in the Nothing Phone (1)
+> +	  smartphone.
+> +
+>   config DRM_PANEL_VISIONOX_VTDR6130
+>   	tristate "Visionox VTDR6130"
+>   	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 7dcf72646cac..6177f2d4113e 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -100,6 +100,7 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
+>   obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
+>   obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
+>   obj-$(CONFIG_DRM_PANEL_VISIONOX_RM69299) += panel-visionox-rm69299.o
+> +obj-$(CONFIG_DRM_PANEL_VISIONOX_RM692E5) += panel-visionox-rm692e5.o
+>   obj-$(CONFIG_DRM_PANEL_VISIONOX_VTDR6130) += panel-visionox-vtdr6130.o
+>   obj-$(CONFIG_DRM_PANEL_VISIONOX_R66451) += panel-visionox-r66451.o
+>   obj-$(CONFIG_DRM_PANEL_WIDECHIPS_WS2401) += panel-widechips-ws2401.o
+> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm692e5.c b/drivers/gpu/drm/panel/panel-visionox-rm692e5.c
+> new file mode 100644
+> index 000000000000..abaa035f3a92
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-visionox-rm692e5.c
+> @@ -0,0 +1,433 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree:
+> + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2025, Eugene Lepshy <fekz115@gmail.com>
+> + * Copyright (c) 2025, Danila Tikhonov <danila@jiaxyga.com>
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +#include <drm/display/drm_dsc.h>
+> +#include <drm/display/drm_dsc_helper.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_probe_helper.h>
+> +
+> +struct visionox_rm692e5 {
+> +	struct drm_panel panel;
+> +	struct mipi_dsi_device *dsi;
+> +	struct drm_dsc_config dsc;
+> +	struct gpio_desc *reset_gpio;
+> +	struct regulator_bulk_data *supplies;
+> +};
+> +
+> +static const struct regulator_bulk_data visionox_rm692e5_supplies[] = {
+> +	{ .supply = "vddio" },	/* 1p8 */
+> +	{ .supply = "vdd" },	/* 3p3 */
+> +};
+> +
+> +static inline
+> +struct visionox_rm692e5 *to_visionox_rm692e5(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct visionox_rm692e5, panel);
+> +}
+> +
+> +static void visionox_rm692e5_reset(struct visionox_rm692e5 *ctx)
+> +{
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	usleep_range(10000, 11000);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	usleep_range(1000, 2000);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	msleep(32);
+> +}
+> +
+> +static int visionox_rm692e5_on(struct visionox_rm692e5 *ctx)
+> +{
+> +	struct mipi_dsi_device *dsi = ctx->dsi;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x40);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbd, 0x07);
+> +	mipi_dsi_usleep_range(&dsi_ctx, 17000, 18000);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0xd2);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x50, 0x11);
+> +	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, 0x00ab);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x52, 0x30);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x09);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x54, 0x60);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_POWER_SAVE, 0x04);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x56, 0x38);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x58, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x59, 0x14);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5a, 0x02);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5b, 0x1c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5c, 0x02);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5d, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_CABC_MIN_BRIGHTNESS, 0x20);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5f, 0x01);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x60, 0xe8);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x61, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x62, 0x07);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x63, 0x0c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x64, 0x05);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x65, 0x0e);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x66, 0x05);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x67, 0x16);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x68, 0x18);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x69, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6a, 0x10);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6b, 0xf0);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6c, 0x07);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6d, 0x10);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6e, 0x20);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x70, 0x06);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x71, 0x0f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x72, 0x0f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x73, 0x33);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x74, 0x0e);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x75, 0x1c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x76, 0x2a);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x77, 0x38);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x78, 0x46);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x79, 0x54);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7a, 0x62);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7b, 0x69);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7c, 0x70);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7d, 0x77);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7e, 0x79);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7f, 0x7b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x80, 0x7d);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x81, 0x7e);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x82, 0x01);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x83, 0x02);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x84, 0x22);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x85, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x86, 0x2a);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x87, 0x40);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x88, 0x2a);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x89, 0xbe);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x8a, 0x3a);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x8b, 0xfc);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x8c, 0x3a);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x8d, 0xfa);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x8e, 0x3a);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x8f, 0xf8);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x90, 0x3b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x91, 0x38);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x92, 0x3b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x93, 0x78);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x94, 0x3b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x95, 0xb6);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x96, 0x4b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x97, 0xf6);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x98, 0x4c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x99, 0x34);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9a, 0x4c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9b, 0x74);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9c, 0x5c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9d, 0x74);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9e, 0x8c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9f, 0xf4);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_READ_PPS_START, 0x02);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xa3, 0x1c);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xa4, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xa5, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xa6, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xa7, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_READ_PPS_CONTINUE, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xaa, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xa0, 0x80);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0xa1);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xcd, 0x6b);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xce, 0xbb);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0xd1);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb4, 0x01);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x38);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x17, 0x0f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x18, 0x0f);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x00);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfa, 0x01);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc2, 0x08);
+> +	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
+> +	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, 0x000d);
+> +	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+> +	mipi_dsi_msleep(&dsi_ctx, 50);
+> +	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+> +	mipi_dsi_usleep_range(&dsi_ctx, 1000, 2000);
+> +
+> +	return dsi_ctx.accum_err;
+> +}
+> +
+> +static int visionox_rm692e5_disable(struct drm_panel *panel)
+> +{
+> +	struct visionox_rm692e5 *ctx = to_visionox_rm692e5(panel);
+> +	struct mipi_dsi_device *dsi = ctx->dsi;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
+> +	mipi_dsi_usleep_range(&dsi_ctx, 1000, 2000);
+> +	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+> +	mipi_dsi_usleep_range(&dsi_ctx, 1000, 2000);
+> +
+> +	return dsi_ctx.accum_err;
+> +}
+> +
+> +static int visionox_rm692e5_prepare(struct drm_panel *panel)
+> +{
+> +	struct visionox_rm692e5 *ctx = to_visionox_rm692e5(panel);
+> +	struct drm_dsc_picture_parameter_set pps;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
+> +
+> +	dsi_ctx.accum_err = regulator_bulk_enable(ARRAY_SIZE
+> +				(visionox_rm692e5_supplies), ctx->supplies);
+> +	if (dsi_ctx.accum_err)
+> +		return dsi_ctx.accum_err;
 
-Tiny clarification:
+This is quite unpretty, just add a additional ret, the compiler will
+optimize things much smarter, keep code readable.
 
-The additional, namespaced clocks do not use additional space in the
-global time vvar page. They live in a dedicated, dynamically allocated,
-per-namespace page. So the used space within a vvar page does not change
-at runtime and can never run out. The amount of vvar mappings per
-process is also constant.
+> +
+> +	visionox_rm692e5_reset(ctx);
+> +	visionox_rm692e5_on(ctx);
 
-The namespaced time vvar pages have the same structure layout as the
-global one, but not all fields are used and some are used differently.
-Specifically the namespace pages only contain the offsets to the base
-clock and the dynamic clock data is read from the global page.
+You don't check the return here, just pass the current dsi_ctx
 
-<snip>
+> +	drm_dsc_pps_payload_pack(&pps, &ctx->dsc);
+> +	mipi_dsi_picture_parameter_set_multi(&dsi_ctx, &pps);
+> +	mipi_dsi_compression_mode_ext_multi(&dsi_ctx, true, MIPI_DSI_COMPRESSION_DSC, 0);
+> +
+> +	mipi_dsi_msleep(&dsi_ctx, 28);
+> +
+> +	if (dsi_ctx.accum_err) {
+> +		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +		regulator_bulk_disable(ARRAY_SIZE(visionox_rm692e5_supplies),
+> +				       ctx->supplies);
+> +	}
+> +
+> +	return dsi_ctx.accum_err;
+> +}
+> +
+> +static int visionox_rm692e5_unprepare(struct drm_panel *panel)
+> +{
+> +	struct visionox_rm692e5 *ctx = to_visionox_rm692e5(panel);
+> +
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	regulator_bulk_disable(ARRAY_SIZE(visionox_rm692e5_supplies),
+> +			       ctx->supplies);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_display_mode visionox_rm692e5_modes[] = {
+> +	/* Let's initialize the highest frequency first */
+> +	{ /* 120Hz mode */
+> +		.clock = (1080 + 26 + 39 + 36) * (2400 + 16 + 21 + 16) * 120 / 1000,
+> +		.hdisplay = 1080,
+> +		.hsync_start = 1080 + 26,
+> +		.hsync_end = 1080 + 26 + 39,
+> +		.htotal = 1080 + 26 + 39 + 36,
+> +		.vdisplay = 2400,
+> +		.vsync_start = 2400 + 16,
+> +		.vsync_end = 2400 + 16 + 21,
+> +		.vtotal = 2400 + 16 + 21 + 16,
+> +		.width_mm = 68,
+> +		.height_mm = 152,
+> +		.type = DRM_MODE_TYPE_DRIVER,
+> +	},
+> +	{ /* 90Hz mode */
+> +		.clock = (1080 + 26 + 39 + 36) * (2400 + 16 + 21 + 16) * 90 / 1000,
+> +		.hdisplay = 1080,
+> +		.hsync_start = 1080 + 26,
+> +		.hsync_end = 1080 + 26 + 39,
+> +		.htotal = 1080 + 26 + 39 + 36,
+> +		.vdisplay = 2400,
+> +		.vsync_start = 2400 + 16,
+> +		.vsync_end = 2400 + 16 + 21,
+> +		.vtotal = 2400 + 16 + 21 + 16,
+> +		.width_mm = 68,
+> +		.height_mm = 152,
+> +		.type = DRM_MODE_TYPE_DRIVER,
+> +	},
+> +	{ /* 60Hz mode */
+> +		.clock = (1080 + 26 + 39 + 36) * (2400 + 16 + 21 + 16) * 60 / 1000,
+> +		.hdisplay = 1080,
+> +		.hsync_start = 1080 + 26,
+> +		.hsync_end = 1080 + 26 + 39,
+> +		.htotal = 1080 + 26 + 39 + 36,
+> +		.vdisplay = 2400,
+> +		.vsync_start = 2400 + 16,
+> +		.vsync_end = 2400 + 16 + 21,
+> +		.vtotal = 2400 + 16 + 21 + 16,
+> +		.width_mm = 68,
+> +		.height_mm = 152,
+> +		.type = DRM_MODE_TYPE_DRIVER,
+> +	},
+> +};
+> +
+> +static int visionox_rm692e5_get_modes(struct drm_panel *panel,
+> +						   struct drm_connector *connector)
+> +{
+> +	int count = 0;
+> +
+> +	for (int i = 0; i < ARRAY_SIZE(visionox_rm692e5_modes); i++) {
+> +		count += drm_connector_helper_get_modes_fixed(connector,
+> +						    &visionox_rm692e5_modes[i]);
+> +	}
+
+Nit: you can drop those {}
+
+> +
+> +	return count;
+> +}
+> +
+> +static const struct drm_panel_funcs visionox_rm692e5_panel_funcs = {
+> +	.prepare = visionox_rm692e5_prepare,
+> +	.unprepare = visionox_rm692e5_unprepare,
+> +	.disable = visionox_rm692e5_disable,
+> +	.get_modes = visionox_rm692e5_get_modes,
+> +};
+> +
+> +static int visionox_rm692e5_bl_update_status(struct backlight_device *bl)
+> +{
+> +	struct mipi_dsi_device *dsi = bl_get_data(bl);
+> +	u16 brightness = backlight_get_brightness(bl);
+> +	int ret;
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	return 0;
+> +}
+> +
+> +static int visionox_rm692e5_bl_get_brightness(struct backlight_device *bl)
+> +{
+> +	struct mipi_dsi_device *dsi = bl_get_data(bl);
+> +	u16 brightness;
+> +	int ret;
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	ret = mipi_dsi_dcs_get_display_brightness_large(dsi, &brightness);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	return brightness;
+> +}
+> +
+> +static const struct backlight_ops visionox_rm692e5_bl_ops = {
+> +	.update_status = visionox_rm692e5_bl_update_status,
+> +	.get_brightness = visionox_rm692e5_bl_get_brightness,
+> +};
+> +
+> +static struct backlight_device *
+> +visionox_rm692e5_create_backlight(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	const struct backlight_properties props = {
+> +		.type = BACKLIGHT_RAW,
+> +		.brightness = 2047,
+> +		.max_brightness = 4095,
+> +	};
+> +
+> +	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
+> +					      &visionox_rm692e5_bl_ops, &props);
+> +}
+> +
+> +static int visionox_rm692e5_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct visionox_rm692e5 *ctx;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_regulator_bulk_get_const(&dsi->dev,
+> +					    ARRAY_SIZE(visionox_rm692e5_supplies),
+> +					    visionox_rm692e5_supplies,
+> +					    &ctx->supplies);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->reset_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
+> +				     "Failed to get reset-gpios\n");
+> +
+> +	ctx->dsi = dsi;
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS;
+> +
+> +	drm_panel_init(&ctx->panel, dev, &visionox_rm692e5_panel_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +	ctx->panel.prepare_prev_first = true;
+> +
+> +	ctx->panel.backlight = visionox_rm692e5_create_backlight(dsi);
+> +	if (IS_ERR(ctx->panel.backlight))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
+> +				     "Failed to create backlight\n");
+> +
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	dsi->dsc = &ctx->dsc;
+> +	ctx->dsc.dsc_version_major = 1;
+> +	ctx->dsc.dsc_version_minor = 1;
+> +	ctx->dsc.slice_height = 20;
+> +	ctx->dsc.slice_width = 540;
+> +	ctx->dsc.slice_count = 1080 / ctx->dsc.slice_width;
+> +	ctx->dsc.bits_per_component = 10;
+> +	ctx->dsc.bits_per_pixel = 8 << 4;
+> +	ctx->dsc.block_pred_enable = true;
+> +
+> +	ret = devm_mipi_dsi_attach(dev, dsi);
+> +	if (ret < 0) {
+> +		drm_panel_remove(&ctx->panel);
+> +		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void visionox_rm692e5_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct visionox_rm692e5 *ctx = mipi_dsi_get_drvdata(dsi);
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +}
+> +
+> +static const struct of_device_id visionox_rm692e5_of_match[] = {
+> +	{ .compatible = "visionox,rm692e5" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, visionox_rm692e5_of_match);
+> +
+> +static struct mipi_dsi_driver visionox_rm692e5_driver = {
+> +	.probe = visionox_rm692e5_probe,
+> +	.remove = visionox_rm692e5_remove,
+> +	.driver = {
+> +		.name = "panel-visionox-rm692e5",
+> +		.of_match_table = visionox_rm692e5_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(visionox_rm692e5_driver);
+> +
+> +MODULE_AUTHOR("Eugene Lepshy <fekz115@gmail.com>");
+> +MODULE_AUTHOR("Danila Tikhonov <danila@jiaxyga.com>");
+> +MODULE_DESCRIPTION("DRM driver for Visionox RM692E5 cmd mode dsi panel");
+> +MODULE_LICENSE("GPL");
+
+Thanks,
+Neil
