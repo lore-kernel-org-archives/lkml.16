@@ -1,190 +1,197 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020104.outbound.protection.outlook.com [52.101.85.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F0A23645B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738860298; cv=none; b=nPgFvNEiN1iez+2/WkJqqqL1ltW4SfyNfqarZOKJG9oVOdnoqRZeYhdvbcU5KEPR6dHTf6idVFjfLpV/S74EaFfUNHKh4/X4VVtpxmWoqhLOmVNa3KlecWTMnzX410YKvKpxG45Z+54gO4dAKO1Sb4QinPRADIx1STeCfzljjsQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738860298; c=relaxed/simple;
-	bh=GJ2y/FCanDqhcGlPwrjJkUUipKVr30iT6x4rWzEDa78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rRwQogbhrK/jEcKNhGk3tKnTKg9puiQQtHgC9VNcRy7GvBHBdzhw1nva/Nbby9JFEnIyNvgWMGE4DTCpeFZVpNDBlgahZ0U0+qt+qajHLOS1yFs7MCugPS6eC9x3Zccu/OjrS+OXevRzERoH4Tn0RYslnbz1q9/5wTyDzlgtORw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VG1i3wRH; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F546235367;
+	Thu,  6 Feb 2025 16:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738860336; cv=fail; b=tg32VPVf5tflIyAITx+lO551bqTx2j6DFizNTb/832dDxChTzisM3li+sxJGb2HF0zgaRjkhUU1wp325AhhBqAvXm80sEtSTcL00SgeG7jakrWQics/qHe0CQjimnEeli4lB48Kfyqy1vU7LphIKdEDsX8dQVhgh/az++XhHDDg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738860336; c=relaxed/simple;
+	bh=9vU8QcuUa5oqI8QxvokQx275MVpdLF8C+wM40CmE/z4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HYtO1SkAjClqUWQtRfNw35iJinwPXCrbX3BrPThpLzd+c6PXivkD7gUQ1UwUyXpQt3OgUBJTtS9p7fmadNjUje5ajTB92Que+a6mMw6ElPeb5nqrRFpUK/86Ftbp5+xYgXVUr6VpXpKtADBvv1I6BCynqAPiNBw40xtxS+n+vUM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=n2H4sTqu; arc=fail smtp.client-ip=52.101.85.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VG1i3wRH"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaedd529ba1so148672666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 08:44:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="n2H4sTqu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bVVqQcuR02QR9Aj8OLC7LiAcLI37PgtrcScwECGtTikz5vjHSwRB3Fgb8zaX98eRgZoFBSsh8NE/U/tKbbliGPQdQV52QGoEVLoWhfKeH7feFXdlIaGM8EmVm3ZlBrdUi1u39RoNxo+/nxRR89KW+fzjnQ+GuC9jtt7xPlRaSq5wcu0V4VuwThwTOPwaswJoNC8X+AhwxJOiUSHDnhGeZWjp6niH7y46ppeKS5u4RWKEH/NURKmfelfJWOoy8RVgh0mXEBwTszQyb2Gbs/HGV0ktzdmiAbXnkaVb1r2N5f8FmjUEWS9U0Jl80CDl2hAZbe1+HAiCqb8FxdHY1xaLkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DHI2SDvexL558CF8R5g+IicOeC/l/9KRjwi4cjPDcN8=;
+ b=nuNoHOlVDHXNnU+BJ0v+CbQ0Dqa6AsYO2XAKVqCeL2e6oBDWorQHBFTxX1L64HvczTkdq4QeOsXhJCUILul9myHGFlmSZXe/uPe3m8p9W4RI0wigl+BetRLNS4I6FykFv7foBxyECJCsYdnwXU1T0f+F0BTDUZwBl0V4CPeOjEyR7LvRYJpuQ2xke9yuZfLNuzzK6YJvT9V1/fcIb5PtZ/uEL+tdpSvkvV5mkjkHejaQlDhUoUAJhy6huPU88RzXPY+yBUX6TfeFFuVZWLdJ7/J/lvuM/NuiPqvSrqS8anIp8YmgLjEmgskiGTVlfFq2rGwNqc34goA/RQ6ssaEbgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738860295; x=1739465095; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6DMFX6YMCCpHUnKPYix3pzepx5ItpSalkZSrvWGNgEw=;
-        b=VG1i3wRHYmjJhCgEjUG4hGISBW5r6Kuq1+o42K9Ufm8y7MrkIG3CtoN/AqsIwapLjA
-         Fva6hbXvUwZ8gbDKZQ7f0BR3sJRYmSaWMOtA4ITlQYb9U34PuwiPwfaZRZ2JVX6VziuV
-         1mT8DVKZbx7hi6C3nEXKdnYHkWc/MYH8gRO1V6eZMXrIglmf7HWYnYQ/gpWNxfPpYh4U
-         n3Eoh1d5o6IV3EMTkGk+Ptl2S3SAYHW1+hUhy3iAl/UEYUZKnyHtkZ/khUGfvpowKn5Z
-         DXMCI42xVaz8DQmPy5Y5RBvwfZtvDxCF36FHIxhGeZ1m8u25+pfZY7hHPErYF5jsNHPg
-         6/0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738860295; x=1739465095;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6DMFX6YMCCpHUnKPYix3pzepx5ItpSalkZSrvWGNgEw=;
-        b=EZyYtzDTA7xh0ySZSuV9N6FcHa3V+zmXz5nf1Lq0nPi8ukKrPMoHM5Q2jLCFYJlmik
-         BxK6Gk5iKIJmQ+XyKo6Y0i6CmOK3d4r0IVJAsPUezMZ0bW3ZQ7RDE34weXFbroGclH1h
-         wtC+o6nw3y2p5EwFETIVXjrzyUzoYRs7Pro4q+MQarkcOL2j9e/uap03vbD5NqN3iFbX
-         6Mcbw8Vh7b5guzXL6sli6DBv5OlZ10xaDEE2B5qIKelkqPeuGnPDVl+8Tv8sZk314gVO
-         0N5L19BaHFvct818ttYJdIoqxRp84K9rjQ66EKlG2gcsAXoteWrjTFY9+oTDsDhPfn5i
-         zm2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGr4XGXxwa8bvHVon+G/b3n8vPSNoXwPVGmWalLELh2bXIriPorB2V/vPgeHDGMW50HhVlezcf14/H9rg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3UoKB3HDs3CXm2zFtccUKXIgtXaVnjYeXRSA1p751w29oYH6J
-	Wj2ff08buMmn28vN1DoSg0coSCW1cBjUT21djTD6JjNY0TkGIhwH
-X-Gm-Gg: ASbGncuAkyQpO/8ku3VEx2q2CmZoixVde5+NKHODQ7GHJ+H9rbSsqExBNptQn0P2Yyu
-	vtLlAy4UFCcmQkanbHJCvbO826nFL0Az/XUqD5HeIRJiDvpMkvaFUs9f6lecQoKvOx0ILxRrngV
-	PaNMtii5c6mARdewTvQsU/Fm3sHg9Q35jdNqRJGgXMGshHjIhC3ry/pTSMJV0xKWcIbbNf9U35m
-	lUTcshJ2nwiqwpGLtWIulXlp7K0yYXv3Wx90+c+WiOq8+aohhUUtHNzCQgVO9ASbRQAHYLxG7ij
-	HMkkHaumuxkeddnwIc0oBFiT7hN6dLQ=
-X-Google-Smtp-Source: AGHT+IGOagMU3s4dSLwHCKRWQGm5DZx3LMYAR9bqVzPeh6m8lqHiM8BrELKuAU/htbOM8AWykF4F6A==
-X-Received: by 2002:a05:6402:210e:b0:5dc:58c8:3154 with SMTP id 4fb4d7f45d1cf-5de450800a4mr213355a12.28.1738860294539;
-        Thu, 06 Feb 2025 08:44:54 -0800 (PST)
-Received: from f.. (cst-prg-95-94.cust.vodafone.cz. [46.135.95.94])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf9f6fa69sm1121849a12.73.2025.02.06.08.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 08:44:53 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: ebiederm@xmission.com,
-	oleg@redhat.com
-Cc: brauner@kernel.org,
-	akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v6 5/5] pid: drop irq disablement around pidmap_lock
-Date: Thu,  6 Feb 2025 17:44:14 +0100
-Message-ID: <20250206164415.450051-6-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250206164415.450051-1-mjguzik@gmail.com>
-References: <20250206164415.450051-1-mjguzik@gmail.com>
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DHI2SDvexL558CF8R5g+IicOeC/l/9KRjwi4cjPDcN8=;
+ b=n2H4sTqucUkRMDuf0S2oeea0BV7gHnjrS5Gen2GX1OVAz/c21W2HQiZbHvIxK6WLPYqEP1dHNGGx6dvidZLeu0g+lhM6dBGDNIV2jztRX5CGj4FjbesRfd37eEIKZqQ5+oUZmPGsjpGwAkTh3/Ef6IYQ+Wd+YpR+L/g9zKgst4c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SJ2PR01MB8101.prod.exchangelabs.com (2603:10b6:a03:4f6::10) by
+ SJ0PR01MB6478.prod.exchangelabs.com (2603:10b6:a03:298::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8422.10; Thu, 6 Feb 2025 16:45:31 +0000
+Received: from SJ2PR01MB8101.prod.exchangelabs.com
+ ([fe80::292:6d9c:eb9a:95c9]) by SJ2PR01MB8101.prod.exchangelabs.com
+ ([fe80::292:6d9c:eb9a:95c9%4]) with mapi id 15.20.8445.005; Thu, 6 Feb 2025
+ 16:45:31 +0000
+Message-ID: <d16f9c1f-7788-451d-8f1d-9a068aef7f0d@os.amperecomputing.com>
+Date: Thu, 6 Feb 2025 22:15:24 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] Add NV Selftest cases
+To: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+ suzuki.poulose@arm.com, darren@os.amperecomputing.com,
+ scott@os.amperecomputing.com
+References: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
+Content-Language: en-US
+From: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+In-Reply-To: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR03CA0115.apcprd03.prod.outlook.com
+ (2603:1096:4:91::19) To SJ2PR01MB8101.prod.exchangelabs.com
+ (2603:10b6:a03:4f6::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR01MB8101:EE_|SJ0PR01MB6478:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66382f97-03c6-468e-c32d-08dd46cdab70
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SzUwNTNGd3M2SHkwM0FaQlp5S1pwc2YxNXR0cklTU3lJOHRFamxqSVNEUVhT?=
+ =?utf-8?B?UjlzVHU3b2lRZmZXYUhGdGZSbHR3RUV0TUpnUmlQekRrVW8xbDd5TlJIS3Vj?=
+ =?utf-8?B?bk8zYnl2MkdCQWVEUTV2MEZnNkRSMGlRdWZibXZCWUFpVVQ4WXpndlVGYm50?=
+ =?utf-8?B?VTJLNmoxY1o5Njg3Nmlxb2tFd2hsUmRSdzNndW4ramxUcE96VG16QnIrUXdj?=
+ =?utf-8?B?OXM5T2p6ZDB1RkJzTkRuRy9VNGNHa0dTUEpXd0ZpRTdFRVJNNUhSbVVWRnRF?=
+ =?utf-8?B?Y09LREJGelRvSTVJNU05QTBCVUtlZkFFeUZ4QnZYWXlkb1pteERKUWhuc0lU?=
+ =?utf-8?B?TDRHSDIzY0N5UDY5YWluWVNhMHVIZ2xtKzFsUE0xcDZIRm1FS2NzM1FMMURF?=
+ =?utf-8?B?Y2JWMTVOdXZiSWJLaUNmcEJHNld4TER3RndwZE4xdzUwM1MwbzhhTjBSN0x1?=
+ =?utf-8?B?Nm00RkpuMUVzNzl5M1JsYVVoWUhyNXRtdEpqV1gvTy9hZWl4Y0lzNzZJRDFt?=
+ =?utf-8?B?WG5kVm4wWnUwd0RPYVpIV2NHTnZBOTllMWl0QXNPSGJFS0tlZXNVeTJ2WVZv?=
+ =?utf-8?B?NmxsWVZVd3N5NHBoNDZzaml3TUdrV1lpVzU2ckxpRzJOQ0tMNUtmSFZ1SEtY?=
+ =?utf-8?B?cjhoRzg1QUY3anFsZ0lPMnNiT2szN1VibjBPbVhMVXZWbXBiN3RSUWNYU2ZY?=
+ =?utf-8?B?WHBob0o2S2NUMUtvVkp5NFMvVGgzQkVLSUNWYUhacHRDVHhNOXpxWXpGbTBp?=
+ =?utf-8?B?M0FnT2lZcytOeUxFRWxJaGkzMTlyOGhBK2NSZEt4c0htTkpCdVdEUGN1cGhK?=
+ =?utf-8?B?ZFJwVXc3ZFR3b3BCVi9GYmhOblYweEtMZHZ3dFRPU1oxSHBrSkxhdm5qNHVG?=
+ =?utf-8?B?ME43MmxxNzVUUUEvaHZWbERzZWE4S1RWWWVtc2NRMWJ3dDlqUitKVUt0dWoz?=
+ =?utf-8?B?enppSmxQV2UyNFBNSHVYcDZzTloxUjlqdUJxV3F6cWtTaWRueTNDd1hXZ04v?=
+ =?utf-8?B?TDJUZ3FKUG1DbW5TNTNMV2Y0MXNkNENEaGFaeHN6UVArbUlsTUczcW1URXl3?=
+ =?utf-8?B?d2R5MWh5N0MxMDNrWG9mYlNXTlJQT3YzQXh2VmQ3WG11YjZxWHpoQ2grUHFG?=
+ =?utf-8?B?Y3BBaUFFQm8yb0Z4QzlxTTkxSFBvYmJXcU9NTnRjcHl5TitrNmlPcHhxSnRO?=
+ =?utf-8?B?WnA1Q3R6THNRbmVGcyszdW53WHJCMXAwZHRNZ3pOZ3BXM0xYVkYyR3kvNDEv?=
+ =?utf-8?B?Y3l2YmlTRXJoMm5VS08yKzZ0R0hWVW5ZbFl6ZVBVcSs3WTNQVE13cWZnZ1Q2?=
+ =?utf-8?B?a0NVbjdCWFUrWXp2elJjVWZuWkMwMUx4NzcyOG04cWxxUnEvNmNQaTBsVkZm?=
+ =?utf-8?B?QW9CMEhNUU1oZ3F5OFd6ZXBuQkFjdXFRdVZSbWtDcWdsa2tCNzVkN2gxMENC?=
+ =?utf-8?B?WFpodUhXM0lWVllrVmJPcTNWSXdEakJKOU1OQk1DVC96eGUxNDlRMnUxdmJy?=
+ =?utf-8?B?N1B5anRzbi9qSi9wSnkycjNSb3hab1pxdklXMDI5dlZ6dGd1NWRqcis1TTJH?=
+ =?utf-8?B?emFwN0tSeWdVUTVRejEzSmlEQTdNdHdDQXlGcWI3M2lNS3ljQTRUZUlRM2Fo?=
+ =?utf-8?B?aFdNTGZQSDZIMVZTZkpHUTJqcGxQYlNVSmFyLytJVWVGSzl4RldvVEREMXh3?=
+ =?utf-8?B?OW5kNHZxVVFyQ1ppWkkxR1FvdkZBdEk3VGJhRmlHV1hCbm1YRjFtVks3VUV3?=
+ =?utf-8?B?aUVoeW4rODFBN3B1OGNQdGJKVG5SZllVUjBPUFZXczFRRlBSWHhmKzFBZTNz?=
+ =?utf-8?B?KzJLaDVFbE9GTVNkVG1pT1Y0QmRRTC9sOE9pY3ZsSTNoaUNYZkNrdVdQczlJ?=
+ =?utf-8?Q?SXw+hieprouSe?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8101.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OWRHVHFVUXgzcy9GTnZWR3JlT3JKYnFkcXUvSWFsa3hYYUNZdDZjUXdLeTZJ?=
+ =?utf-8?B?T3Y5dDlBcEN5WFRZb2l1akJ3ZXRPRmZ3eDhHUEp1dnVzZkZVQXE1UjZYa2ZD?=
+ =?utf-8?B?eXVtY2k3WlRpdkVNWkprTkd6UEF3VktnR3R0eWlFNGlNT1lYVTRCb2dCck0y?=
+ =?utf-8?B?MHk2V0RUaUEyakxlMnVibi83aHcyaDJiV0VBMlBseWVsRjgvcC9tNnpSdVlk?=
+ =?utf-8?B?UnNKV0dWNDdqZVd4TkVoOXNXVGlLTVJQdTQ0bXBZOE1GT0R0MmNaRXYyL3Zt?=
+ =?utf-8?B?anByam1FMkNPYjdmR09OWlprY3pkSVJnY1orY003bjl0RW1iTE04akE4MU5Z?=
+ =?utf-8?B?ejRNVFVCVURvUEpQeVBuNGpuNFpRaldZMlVCcHBiV2QwWnY0LzY0SERjRFZh?=
+ =?utf-8?B?VnJkSWVRVUhQa0FyUkRkSFFiQUZRdmx6Ukw3NWRPLzFiM0s2NjBMNjNqUXVh?=
+ =?utf-8?B?SnhrNVdlQlNXRWNPWExTSm8rY05hSFhqQTZQQWlCaGFEa3ZwcGRmb1dtMnVh?=
+ =?utf-8?B?SGduNmhLc0FabE9NY2RVNVpmWnpHdG03a3VGZE1sR1l3U05vSm1kMk41THhH?=
+ =?utf-8?B?Rm5IWm9zc0Q4bytteFdoVm9PNDI2Sy83dW5XdDJBYS8wK3RONXFWc0w3UG1P?=
+ =?utf-8?B?SXhhNVhEbUFGMkc2VUJFVUtNbVdGczR0WW5zbnFsNjhacit5b0ZOajBnRFJn?=
+ =?utf-8?B?MTFSL2ZoNjd6SXRPa0I3V3BzUzNZTnRLeFZSZktyWlNJc2dBcmZFL0pWeG1w?=
+ =?utf-8?B?K2dWOWtpcSt1SzBDWVF1dk1yejlZaDB1M0hSQW1rS3o5UGlHRENucVZ4cXBz?=
+ =?utf-8?B?VVNKSExsV2J5bVJXNFBTVUI2dXNhMUc5bDRxUUFnTEd6Y0ZQeTZSenR6VnM4?=
+ =?utf-8?B?a1E1Y0Ixa1BrbFN6VHZ6RkZCQStKWS9CMGVjRkxiNHk0dzAwNW52Q0g4b2E4?=
+ =?utf-8?B?MWF0US96KzM3UEc4VEwrYi9zQjd0dUVIRkpqNWd1Y0MwWDQ4Q2cxNElaTHRo?=
+ =?utf-8?B?ZXlsOXBlYXYzak9lL0t5ZElWZFU5LzN1d2RtRGJXQ3NuaHplRlZkcEIzTHN3?=
+ =?utf-8?B?cllxb1NWOWZkVDFvVjBUL3VjSCtDT1ZXdStYUnZMSmllNnI2YWRidnRVa2lZ?=
+ =?utf-8?B?NGw2ZjRnWEpvNXUzT0JoTkFJbk9kQjhZakZuaUNlRi9hNE1CQWN0dG04b3Ux?=
+ =?utf-8?B?M2hCdU5pRkVxcTBOS085bXBQZHZsbW51Sk9PeXFpZ1RGSk51Z0xLdjlRQnln?=
+ =?utf-8?B?RDZuVXZFNlRjRE5kd0JhSmtnZk5iRUljS0FkSW1xMExQSUpzNFNXbDhOWnRT?=
+ =?utf-8?B?WVczd3VWYkxkMlVQTWJaZmhreHJPNFVzV2FDOHIxZWtDWFlQUm5lTGRnMFE5?=
+ =?utf-8?B?ZXhNa2ozZGxZY0pRbWcxa2owMTd0MGdYSFlHMnlla2hhcUdrblRoQjd4VTY5?=
+ =?utf-8?B?eGMwMXN5U2taMDJ5YnU1T1pqZkREcWlTQVpjS2o1NFVBR2VPb0Ixd2lSVDBO?=
+ =?utf-8?B?VUVTSjNrbW5zeFNvTUo4TUtKWjRQbDNRSnh0S1QyMnhLQnpRVmFJc2huVUVG?=
+ =?utf-8?B?Tjk4RVpDdk9lUURDeEtmeTEzZUYvNjUyMDBLSFlZekdDV3VzWTZFRHQ4MUJD?=
+ =?utf-8?B?NWpEbDRhcE0yU213a3E1N25taHdaV3dQUkRzRWF6RmsyU29NR2Rab0dyUEZX?=
+ =?utf-8?B?R0dVYld0L0ZUNVVoZEdkUVp6OWRDanBGNXJ6N0ROb3Y0RTY5eUVrdnpRUGhQ?=
+ =?utf-8?B?ZmNhOUJxR0ljK3BzZnJmeGFFZjRKUmtHZ1A0V2JnY3BHdDdGSndYaXovSEVx?=
+ =?utf-8?B?U28rRnhDWnJBOXNlOUNPNXR1TG5UNkswcnNvRE0xcVgwTWhhZW0yL1NmT0o2?=
+ =?utf-8?B?cnRSYTZBcHpXTUR1Y3Joci9nVGdrVVlKZFk0UXFEWXBScm5KbklzaEIzeVVV?=
+ =?utf-8?B?dk4wMFM2VG1UM3ozN3c4blNSdGRibDBoUVVBZFhjcTZvQ0orTnlqcXR5NlVl?=
+ =?utf-8?B?QU1lWngrWHBKQXhtTU5HOU4reXduaUhha0lJOE5qdks4MVdTNW1CN2Y3SEZ6?=
+ =?utf-8?B?Q1BRVzlmRFQ0cHdDRHc5dEg2Rkl3N2JWVGxXZkVHeGE0U053WW8xQW9WRGRk?=
+ =?utf-8?B?UHFUZjNXejNlZ3RWMWpmaFNtdHJHb1NiL2xzSUE0SEdsK2hOZ0RYeVNZQnQ5?=
+ =?utf-8?Q?An9uptZ1a2FoOLtkLiMLkx5Bxqq4YhsLu8mkW2VrYNgz?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66382f97-03c6-468e-c32d-08dd46cdab70
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8101.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:45:31.7509
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iWwhNxKkU7nUUp0zV5XDyl6t50DYYpaxIIgmBTsxzPISD194yN+MmkbhFhGWemePQslCNR+ToSQL36+ZrzqvAePJQYVIfoUeeoFTvIrMd1SQMaIw2LzvO1livLefrT+w
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB6478
 
-It no longer serves any purpose now that the tasklist_lock ->
-pidmap_lock ordering got eliminated.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
- kernel/pid.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 73625f28c166..900193de4232 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -115,11 +115,10 @@ static void delayed_put_pid(struct rcu_head *rhp)
- void free_pid(struct pid *pid)
- {
- 	int i;
--	unsigned long flags;
- 
- 	lockdep_assert_not_held(&tasklist_lock);
- 
--	spin_lock_irqsave(&pidmap_lock, flags);
-+	spin_lock(&pidmap_lock);
- 	for (i = 0; i <= pid->level; i++) {
- 		struct upid *upid = pid->numbers + i;
- 		struct pid_namespace *ns = upid->ns;
-@@ -142,7 +141,7 @@ void free_pid(struct pid *pid)
- 		idr_remove(&ns->idr, upid->nr);
- 	}
- 	pidfs_remove_pid(pid);
--	spin_unlock_irqrestore(&pidmap_lock, flags);
-+	spin_unlock(&pidmap_lock);
- 
- 	call_rcu(&pid->rcu, delayed_put_pid);
- }
-@@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		}
- 
- 		idr_preload(GFP_KERNEL);
--		spin_lock_irq(&pidmap_lock);
-+		spin_lock(&pidmap_lock);
- 
- 		if (tid) {
- 			nr = idr_alloc(&tmp->idr, NULL, tid,
-@@ -237,7 +236,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
- 					      pid_max, GFP_ATOMIC);
- 		}
--		spin_unlock_irq(&pidmap_lock);
-+		spin_unlock(&pidmap_lock);
- 		idr_preload_end();
- 
- 		if (nr < 0) {
-@@ -271,7 +270,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- 	upid = pid->numbers + ns->level;
- 	idr_preload(GFP_KERNEL);
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	if (!(ns->pid_allocated & PIDNS_ADDING))
- 		goto out_unlock;
- 	pidfs_add_pid(pid);
-@@ -280,18 +279,18 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		idr_replace(&upid->ns->idr, pid, upid->nr);
- 		upid->ns->pid_allocated++;
- 	}
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 	idr_preload_end();
- 
- 	return pid;
- 
- out_unlock:
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 	idr_preload_end();
- 	put_pid_ns(ns);
- 
- out_free:
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	while (++i <= ns->level) {
- 		upid = pid->numbers + i;
- 		idr_remove(&upid->ns->idr, upid->nr);
-@@ -301,7 +300,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	if (ns->pid_allocated == PIDNS_ADDING)
- 		idr_set_cursor(&ns->idr, 0);
- 
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- 
- 	kmem_cache_free(ns->pid_cachep, pid);
- 	return ERR_PTR(retval);
-@@ -309,9 +308,9 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- void disable_pid_allocation(struct pid_namespace *ns)
- {
--	spin_lock_irq(&pidmap_lock);
-+	spin_lock(&pidmap_lock);
- 	ns->pid_allocated &= ~PIDNS_ADDING;
--	spin_unlock_irq(&pidmap_lock);
-+	spin_unlock(&pidmap_lock);
- }
- 
- struct pid *find_pid_ns(int nr, struct pid_namespace *ns)
+On 06-02-2025 10:11 pm, Ganapatrao Kulkarni wrote:
+> In this patch seried, modified kvm selftests code to enable
+> guest code to run in vEL2(As guest Hypervisor).
+> Also added test cases to test guest code booting in vEL2
+> and register access of VNCR mapped registers.
+> 
+> This patchset is created as per discussions over ml[1].
+> Posting RFC patch for the early feedback and to
+> further explore requirements and test cases.
+> 
+
+[1] https://lore.kernel.org/linux-arm-kernel/871pz2th4b.wl-maz@kernel.org/
+
+> Ganapatrao Kulkarni (2):
+>    KVM: arm64: nv: selftests: Add guest hypervisor test
+>    KVM: arm64: nv: selftests: Access VNCR mapped registers
+> 
+>   tools/testing/selftests/kvm/Makefile.kvm      |   2 +
+>   .../selftests/kvm/arm64/nv_guest_hypervisor.c |  83 ++++++
+>   .../selftests/kvm/arm64/nv_vncr_regs_test.c   | 255 ++++++++++++++++++
+>   .../kvm/include/arm64/kvm_util_arch.h         |   3 +
+>   .../selftests/kvm/include/arm64/nv_util.h     |  28 ++
+>   .../testing/selftests/kvm/include/kvm_util.h  |   1 +
+>   .../selftests/kvm/lib/arm64/processor.c       |  59 +++-
+>   7 files changed, 417 insertions(+), 14 deletions(-)
+>   create mode 100644 tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
+>   create mode 100644 tools/testing/selftests/kvm/arm64/nv_vncr_regs_test.c
+>   create mode 100644 tools/testing/selftests/kvm/include/arm64/nv_util.h
+> 
+
 -- 
-2.43.0
+Thanks,
+Ganapat/GK
 
