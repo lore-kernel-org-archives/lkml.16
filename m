@@ -1,103 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F462417E2;
-	Thu,  6 Feb 2025 23:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D1B237705
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 23:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738884041; cv=none; b=O+ayjn3DV8anUexpSWFWP2vfiAzUaTyrET/1mVnTmF/kdGVjTALfSfHHg+/8vttkCPlpP9QpnPM+oNV5rDtSaaxPN5lUDrccx9e2DmL8BTVfPizxwIpUtoSmp43b9YbcRDWvmNuMO+L9xN+NZUNFj62MLd8kcmL88qQ6pOBBqQU=
+	t=1738884226; cv=none; b=JwXNYXnBOlQftmyl0weWjLrnZd6VUZ279STe8vDrRTB0G7hdCVL5Rfyszm26bRyzymaxv0DW0wjiRYXSQ5ZTd6GSiNyeZRDegs4taTDrsfYkguWjQS/OUzK0V+3S4rVmfbtSXMKyTve03lRdl0EoOQe5lzVQzESWsCE6rl+W0kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738884041; c=relaxed/simple;
-	bh=hVCqKIDkPNn9wFCajGktnwPggu83Hd0xI4FypnD5poU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HAtZ9h9k+Z1/bGpOI92/T9S2tP5OfRHqCv+28+gCcm1RzrFutLav1s9AJ0LFE8d2zRK2fwydYrYbqxfq+kpQje63zblNCY5qIbY9qOcNYeUs/CR1n7RghXCeoxRvKnxA82VVlV38m3D0DswnCAIFyeM3GXbOrFZBqG1WDjiSGiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uuYZuu0B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738884226; c=relaxed/simple;
+	bh=V2hDQVZfXi10myODsQHJDr1PrZbrGGSvhhbd4aHROEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OMJbadq3Cpsmx1Uo2X1p9Zb96sFWCIfuNlQbApAq9vnYuIgksFVa02r/UOiN4XTq3N72Wetn0H/KNBuTZWeIBMKnRC/Pa/5HCWDSTIDsPcuA8JXhiOd4RTGB9RDSRikKiPo+Pw2Y/ebmOdCewTj4tes7lvFzmK5BAB/hicp3Di0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=oUlCs0qD; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uuYZuu0B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EDDCC4CEDF;
-	Thu,  6 Feb 2025 23:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738884039;
-	bh=hVCqKIDkPNn9wFCajGktnwPggu83Hd0xI4FypnD5poU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uuYZuu0Bjb+THpnDG4ki+arsS5mqxWemPkD4j5kYtNoExQUYkqwbL7bTTCrE9wcUa
-	 fniOZYvdGyl8uh3OSHFzDkt/UVJYFPe0WxModo68/+6eBhYIOyVB3xeKRNEmQg5dK8
-	 qhfe+wEarulaIayG3A4KV0yMNHQHJxy2U2PodOmoNJkouS0Qxgja8+VdGENcaYz4sQ
-	 cewRRmQ3f+bfSBlCVC8l5oZkfPMtCb+28BQNXnr9QRV1NxO1k9rbK6azjFCkEjBk+k
-	 tb1wBGn57d+N/l+SyC2mN4OSiMb7MmV558uMsmF1FYV+57tHZTNSERVNWHUuXlIBdz
-	 M5SdeRa8+FpoA==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Yutaro Ohno <yutaro.ono.418@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] rust: rbtree: fix overindented list item
-Date: Fri,  7 Feb 2025 00:20:22 +0100
-Message-ID: <20250206232022.599998-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oUlCs0qD"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id g08rtjExRXshwgBDjtRJMd; Thu, 06 Feb 2025 23:23:44 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id gBDitaicLs5XHgBDitHRyt; Thu, 06 Feb 2025 23:23:42 +0000
+X-Authority-Analysis: v=2.4 cv=avG0CzZV c=1 sm=1 tr=0 ts=67a5447e
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
+ a=KZ9MsSxUvLdQbKA6SOoA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=mfsvnhoslxgxndnAvhSW95+TCDLQ1GuITfG+HDlgT28=; b=oUlCs0qDbMdKAYj2+6uqMqJRrx
+	MsZZvofjojXYWNPk8Z9owrj4Z14wf5sSw7Qkb7NTbyTQkcGkiIJB7o/f8MoSaoJcPVRUkF4qf0ayz
+	EFlEHL9GgxMa+g6NQQlRFlEcgv771zEKpm1Ec3LerlutSiy3FhhR0SNtxY5TlMB4aJUwrcNBZqH5S
+	XM/unbiol57DAa9ErB4zxTiA8rBEV+WvffsFtnrg11k1GbHmrTGVMvKeoXSyEYv0EHrp+NOQnimQH
+	FTXrnEi42x9+5lxm6g52j5Dhf9S5R6jFnXxmfqiq2e67gDhZLU099ELKkF/TdUs1rErgH0lQ8bUso
+	z3eaR1GA==;
+Received: from [45.124.203.140] (port=54722 helo=[192.168.0.152])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tgBDg-0025YQ-2y;
+	Thu, 06 Feb 2025 17:23:41 -0600
+Message-ID: <7c396d56-a2ea-4cb5-8a10-a2b78cebfaeb@embeddedor.com>
+Date: Fri, 7 Feb 2025 09:53:30 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3][next] tty: tty_buffer: Avoid hundreds of
+ -Wflex-array-member-not-at-end warnings
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z6QvAZxiQusdaDkH@kspp>
+ <2025020633-irritate-boogieman-4c35@gregkh>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <2025020633-irritate-boogieman-4c35@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1tgBDg-0025YQ-2y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54722
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJLOVolIAMxpNl2tGqm+YeKVlCiFpWnWpxXwPjRlUK2qExiOxZEb67qJsL9sTkZJ8hsZHGppfsCKHbLpzMDVLvr0W18hdtKMM5I/KqA3kLk0dhTKySmq
+ RU0efIMG2D5dNOpUdrC9gSCU1Q8YZvpXwALxOfm4xdG+tQtHl1bzR28iPkGaWJWnI0erSPFyT4H6cPtSKUMK76Xlo5SGQUaiiqNA77ejc94+/EUMNb+e2Hhm
 
-Starting with Rust 1.86.0 (to be released 2025-04-03), Clippy will have
-a new lint, `doc_overindented_list_items` [1], which catches cases of
-overindented list items.
 
-The lint has been added by Yutaro Ohno, based on feedback from the kernel
-[2] on a patch that fixed a similar case -- commit 0c5928deada1 ("rust:
-block: fix formatting in GenDisk doc").
+>>   	unsigned int used;
+>>   	unsigned int size;
+>>   	unsigned int commit;
+>> -	unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
+>> +	unsigned int lookahead; /* Lazy update on recv, can become less than "read" */
+> 
+> Coding style change?
 
-Clippy reports a single case in the kernel, apart from the one already
-fixed in the commit above:
+(Whaa? for some reason your response didn't reach my inbox until today)
 
-    error: doc list item overindented
-        --> rust/kernel/rbtree.rs:1152:5
-         |
-    1152 | ///     null, it is a pointer to the root of the [`RBTree`].
-         |     ^^^^ help: try using `  ` (2 spaces)
-         |
-         = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#doc_overindented_list_items
-         = note: `-D clippy::doc-overindented-list-items` implied by `-D warnings`
-         = help: to override `-D warnings` add `#[allow(clippy::doc_overindented_list_items)]`
+It seems I got a bit too proactive.
 
-Thus clean it up.
+What do you think about the rest of the patch?
 
-Cc: Yutaro Ohno <yutaro.ono.418@gmail.com>
-Cc: <stable@vger.kernel.org> # Needed in 6.12.y and 6.13.y only (Rust is pinned in older LTSs).
-Fixes: a335e9591404 ("rust: rbtree: add `RBTree::entry`")
-Link: https://github.com/rust-lang/rust-clippy/pull/13711 [1]
-Link: https://github.com/rust-lang/rust-clippy/issues/13601 [2]
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- rust/kernel/rbtree.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-index ee2731dad72d..0d1e75810664 100644
---- a/rust/kernel/rbtree.rs
-+++ b/rust/kernel/rbtree.rs
-@@ -1149,7 +1149,7 @@ pub struct VacantEntry<'a, K, V> {
- /// # Invariants
- /// - `parent` may be null if the new node becomes the root.
- /// - `child_field_of_parent` is a valid pointer to the left-child or right-child of `parent`. If `parent` is
--///     null, it is a pointer to the root of the [`RBTree`].
-+///   null, it is a pointer to the root of the [`RBTree`].
- struct RawVacantEntry<'a, K, V> {
-     rbtree: *mut RBTree<K, V>,
-     /// The node that will become the parent of the new node if we insert one.
--- 
-2.48.1
+Thanks!
+-Gustavo
 
