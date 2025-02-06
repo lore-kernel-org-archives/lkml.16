@@ -1,94 +1,130 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C49922577D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EA041C92;
+	Thu,  6 Feb 2025 09:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832872; cv=none; b=YrAgfETztjyDgT0LkzpLyK6A0GxbFmsGtUUh/d4LVdyhLGOsvPw63ZPgDJ0hXSHhyFZWY2g2DmhDbTwAiyX8nl0nOaiQEAKBTXjK5LpcHELvJYCvpK4G8J7UtspTSjSUUviEQJo4nHAH/Y/VL+jSZj8ikkpEEJQU4Dnl/hnqTBE=
+	t=1738832913; cv=none; b=gjboNw/OGVUgnL5kuZJnJ8HZNLdpymkgkotEJ7Yg7ZkGb+Q+cb/k/mymEdbXaUlyCTTEQXwDhzOekiN+9FzM2miEsvAJIcpK1Of2U5KkRjDJ/r53UAJp6j6aYjgSokpOK9cQWyZBmPivFwYE4Czu/GUp1b3G1CTPMLIGZ8mc3e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832872; c=relaxed/simple;
-	bh=USBL3Bi8iE9n2Sl7YVwR873K49AsaDipUTVzCmvsvW0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dM1dxOsuDoyBKz3mFYzpO/xZH+3mPu0Y1/KqUJb7rMghAi1sVH6Pu0Cs+GXNKdcrUGJDf0BWIk5COBgL6Ns2Q82svLbMT6ZNOl626sUXzhP5vzuQlhzFPRuZJH/HLQ6HmFEcsgx99wj4o6Le3wzc8YzioJB5KEiczm1McIu0MW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TTeVRmYG; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738832913; c=relaxed/simple;
+	bh=pqeOdsrhQP0UVZr/cWWAMZcvGE9syj5Y/ICgwkE83yw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDF8s3G8nHzDEDhSO6RGioBT/2vkGEMYIKrvbVHZXnlFcBGB/MDuHJ1C2qrrVNuHCkEoaGTupJJA44rsDRyvlPUGgQxeMkW3NE03tdtZeQiRvs+TTE1eA0hWFpqHDIIvEUrT97THG4JkdYDSVOkC0Za1M9mxvrBV32On3HSjsfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oibyyYWU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TTeVRmYG"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30227ccf803so5622611fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:07:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738832868; x=1739437668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=USBL3Bi8iE9n2Sl7YVwR873K49AsaDipUTVzCmvsvW0=;
-        b=TTeVRmYG9yuGvQjpU85pWYUsAw4BWCBqf1IocAjyPXizPIbBjl1rwxJR2hWwRKCioe
-         XDdGVDgR5Yc6RQkrsiDb/SPhVypwgiriFLKvT3R8yKlGavjj5RCaPi9BST9TZpUpvItj
-         IDUSemjHvxnbm7kLFUbV3lz2Ee7F8pxNLBZVs+oY/ih47WKbsru5ilxLFjDMMeJdXR4Q
-         Tu4EgVoJZ2OGyJV5jevlCUefNh1RoYz6B7anDynHT64MtVtEtizFq6XRxAPhzoahG6ly
-         W552pMWU5aC4Iq0r9kxYSxI0pJL2CGPYw7EAAA9DZstwhQ33lPFLqrWc51DxxBh67J6B
-         ltuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738832868; x=1739437668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=USBL3Bi8iE9n2Sl7YVwR873K49AsaDipUTVzCmvsvW0=;
-        b=Xd+SFWYvTflr7QVhQzZt1QkXkD64VHqxlTtWyEir1FQhMrTqedQqg3K6rYkitipBSj
-         xdvjEKXgnTTs3X3MckLGC/8DesY0iMfWCAjWPOtetFzqIqvqdJUc6PFOQH697188LQSe
-         KBOWKjUlY27Qn3KDwuQgJ+LgP1bqUNtmMyf58gf+CYSqKGh0QyV4FnLsBC63RIeQXHfC
-         fRHU2S34tXZ+O5PCE286QpKV1omnKqvHMnV5fI/ci5q9fUvicXSsuunQsXvcoNvXE7fD
-         RZlSeRfv0S+GAgps42ynCZZzsCjausE8UWDinCVL736t9M7gJryte0GYYSRC6ymjsCAS
-         ZjAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmltEbrM+NIgKjHsEnH/9tFwOLd//u2QtvVv5Fjx8BSB6SltRLmUE812xLAdSHMu1OBokZrNrwvvZbQWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwu5pNg5jJdBaC9JiS1XA4XLonXR5QxSmnK+wI9PgYrq0BY28n
-	8anmcBQIWP8qiQvIZyXWhptl0Rp62rgQmuKtpNfBrg6WD8Bb2DVyoeYE3cQq311+j1zrnEbWxEq
-	nIcmIeUTMD7uydRIMnIPIhXFdTAHzkLX3QWHJqg==
-X-Gm-Gg: ASbGncuGOJx3f8qLoWZTwjEOnYG7EuZvYb/R5Itw5ADyeF6LgIb4emuiPKzpOfi0EY7
-	KL2POfhcTUNiTZDBub6R42Qm6WxLFYZS/AmKo2a99n3N46bc2YyPfk8+dJ8NebYhGQKLnRUc=
-X-Google-Smtp-Source: AGHT+IFMvokVoCNJp7A3lkxgigywWrPi05v98IDrumPEAYrql6H51kRCzThn+r8IlTxIEYbaKMGx7LiQg6tGfTHRK7I=
-X-Received: by 2002:a2e:a917:0:b0:300:1c9a:80ce with SMTP id
- 38308e7fff4ca-307cf385308mr20165081fa.33.1738832868506; Thu, 06 Feb 2025
- 01:07:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oibyyYWU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CED2C4CEDD;
+	Thu,  6 Feb 2025 09:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738832912;
+	bh=pqeOdsrhQP0UVZr/cWWAMZcvGE9syj5Y/ICgwkE83yw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oibyyYWUQVwc+Fv1TZMKg475NJ1djgJoShHHXzGpHSBcLt8A7Lb4ZkQ6Qiw+IVHYz
+	 wIuusyZ29ANbNK/p0gtd0OxHEZ502Z7Cobmd1gW2u76TaxgSnOSDA6oPA9w6/GyD/i
+	 IfMMwEPGwKmlo7DDdiSrDOzocQF4Xt46N3uZlAwwIQ7xaQvXELk4wZplP10NfRGCop
+	 3W7rk9d/T9KGzXa6upCvdJFlL9CBVRrKaLy6cS/7nmxUDH0NRQT2VdjWbAPEYwWANe
+	 j2tmHuHHr0Jgm85MgKdNBPkxXqUT3MRS8lIfqX8jN90iEGzcyLKqLae01Ap9EdIT0M
+	 12VJbNrjjFzWg==
+Date: Thu, 6 Feb 2025 11:08:28 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Konstantin Taranov <kotaranov@linux.microsoft.com>
+Cc: kotaranov@microsoft.com, shirazsaleem@microsoft.com,
+	sharmaajay@microsoft.com, longli@microsoft.com, jgg@ziepe.ca,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH rdma-next 1/1] RDMA/mana_ib: Add port statistics support
+Message-ID: <20250206090828.GP74886@unreal>
+References: <1738751527-15517-1-git-send-email-kotaranov@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com> <PAXPR04MB845925677F9AB860552A421988F42@PAXPR04MB8459.eurprd04.prod.outlook.com>
-In-Reply-To: <PAXPR04MB845925677F9AB860552A421988F42@PAXPR04MB8459.eurprd04.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 10:07:37 +0100
-X-Gm-Features: AWEUYZk9rGC_78qVqTxr81SNDU-6p5M6XpnmcdwLF8h4Nn9OhqhPBv8W52Ra8WI
-Message-ID: <CACRpkdZ1zBkagd478Ee+JAUWrXF1z-Hts=dH+_jgT3Vi26W84g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] scmi: Bypass set fwnode and introduce allow/block
- list to address devlink issue
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Cristian Marussi <cristian.marussi@arm.com>, Saravana Kannan <saravanak@google.com>, 
-	Aisheng Dong <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1738751527-15517-1-git-send-email-kotaranov@linux.microsoft.com>
 
-On Tue, Feb 4, 2025 at 4:31=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
+On Wed, Feb 05, 2025 at 02:32:07AM -0800, Konstantin Taranov wrote:
+> From: Shiraz Saleem <shirazsaleem@microsoft.com>
+> 
+> Implement alloc_hw_port_stats and get_hw_stats APIs to support querying
+> MANA VF port level statistics from rdma stat tool.
+> 
+> Example output from rdma stat tool:
+> 
+> $rdma statistic show link mana_0/1 -p
+> link mana_0/1
+>     requester_timeout 45
+>     requester_oos_nak 0
+>     requester_rnr_nak 0
+>     responder_rnr_nak 0
+>     responder_oos 0
+>     responder_dup_request 0
+>     requester_implicit_nak 0
+>     requester_readresp_psn_mismatch 0
+>     nak_inv_req 0
+>     nak_access_error 0
+>     nak_opp_error 0
+>     nak_inv_read 0
+>     responder_local_len_error 0
+>     requestor_local_prot_error 0
+>     responder_rem_access_error 0
+>     responder_local_qp_error 0
+>     responder_malformed_wqe 0
+>     general_hw_error 6
+>     requester_rnr_nak_retries_exceeded 0
+>     requester_retries_exceeded 5
+>     total_fatal_error 6
+>     received_cnps 0
+>     num_qps_congested 0
+>     rate_inc_events 0
+>     num_qps_recovered 0
+>     current_rate 100000
+> 
+> Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
+> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+> ---
+>  drivers/infiniband/hw/mana/Makefile   |   2 +-
+>  drivers/infiniband/hw/mana/counters.c | 105 ++++++++++++++++++++++++++
+>  drivers/infiniband/hw/mana/counters.h |  44 +++++++++++
+>  drivers/infiniband/hw/mana/device.c   |   7 ++
+>  drivers/infiniband/hw/mana/mana_ib.h  |  61 ++++++++++++---
+>  5 files changed, 206 insertions(+), 13 deletions(-)
+>  create mode 100644 drivers/infiniband/hw/mana/counters.c
+>  create mode 100644 drivers/infiniband/hw/mana/counters.h
 
-> > Subject: [PATCH v2 0/4] scmi: Bypass set fwnode and introduce
-> > allow/block list to address devlink issue
->
-> Any comments on this patchset?
+<...>
 
-The pinctrl changes look OK to me so for those 2 patches:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-in case you want to merge it through some other tree.
+>  enum mana_ib_command_code {
+> -	MANA_IB_GET_ADAPTER_CAP = 0x30001,
+> -	MANA_IB_CREATE_ADAPTER  = 0x30002,
+> -	MANA_IB_DESTROY_ADAPTER = 0x30003,
+> -	MANA_IB_CONFIG_IP_ADDR	= 0x30004,
+> -	MANA_IB_CONFIG_MAC_ADDR	= 0x30005,
+> -	MANA_IB_CREATE_UD_QP	= 0x30006,
+> -	MANA_IB_DESTROY_UD_QP	= 0x30007,
+> -	MANA_IB_CREATE_CQ       = 0x30008,
+> -	MANA_IB_DESTROY_CQ      = 0x30009,
+> -	MANA_IB_CREATE_RC_QP    = 0x3000a,
+> -	MANA_IB_DESTROY_RC_QP   = 0x3000b,
+> -	MANA_IB_SET_QP_STATE	= 0x3000d,
+> +	MANA_IB_GET_ADAPTER_CAP		= 0x30001,
+> +	MANA_IB_CREATE_ADAPTER		= 0x30002,
+> +	MANA_IB_DESTROY_ADAPTER		= 0x30003,
+> +	MANA_IB_CONFIG_IP_ADDR		= 0x30004,
+> +	MANA_IB_CONFIG_MAC_ADDR		= 0x30005,
+> +	MANA_IB_CREATE_UD_QP		= 0x30006,
+> +	MANA_IB_DESTROY_UD_QP		= 0x30007,
+> +	MANA_IB_CREATE_CQ		= 0x30008,
+> +	MANA_IB_DESTROY_CQ		= 0x30009,
+> +	MANA_IB_CREATE_RC_QP		= 0x3000a,
+> +	MANA_IB_DESTROY_RC_QP		= 0x3000b,
+> +	MANA_IB_SET_QP_STATE		= 0x3000d,
+> +	MANA_IB_QUERY_VF_COUNTERS	= 0x30022,
+>  };
 
-Yours,
-Linus Walleij
+Please stop to do vertical alignment. We don't need this churn.
+I fixed it locally.
+
+Thanks
