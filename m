@@ -1,56 +1,56 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481F822FF3B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC3E239090
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879806; cv=none; b=iKSGJddpHL0PegW0/kV9Bgkjmf5VUNvO6T/kKGqRUu+AiJrrJsYnyqKFaze0CuV0HrJYohrDSKXlRUGNAoxw9Mu0TVs0lVbn4xbUELDhV7dEp+fv9fQc0f3ME3G5B/cAvrCs1fE1ubjZhRqVERq/SD+4F0WhyWYL7bi9NPOLd0M=
+	t=1738879811; cv=none; b=EiYj5ty4omlnFr0e6NIYon/bZyKenCHPs2/nIX3t1qcHd1irWTDElSLBpfhWMTsOsy/bUfMi/BqkslgGHJ1S8buWSiz7dV0S9HWmb4FOPWy6zHjtABf5qyU8Wkhr+FfMN8syMiby7MHwcwtUbDLDm6Ftrb/q2tnLnXY9n3i8cJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738879806; c=relaxed/simple;
-	bh=AL/Q38C8GaSxB2X7k5q4eSMpVP3I19XETccxZ0i5coM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=h0b6y0Z6kKD+UHrrQZmjKgojA5LBeOLZfFUGUq5d+klNWN6DxDITnta3qsuJrSmIzPz4qaVmeXu6TSRsKLHCBqLiODdMWEDIG629A3Jcsg67LZO6Fea2f1gpwOlKoXx7yz0AJsdbeo7SFq0cIkPjOXAXLMcVk34AO4S3I141aCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=c4Qdvfg8; arc=none smtp.client-ip=209.85.161.54
+	s=arc-20240116; t=1738879811; c=relaxed/simple;
+	bh=2ltdpSYNJ4qp7eXJZyWR/TpXJn8oKt1mLyYkedoWIV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=g8u3R2SrBF9LkTfFwxv1s0f0najEMVyHUtoNKt8jKnb2wyA3r+BVnS/scG/DXkfAjpJwVVU/PmUDGQV1i5AuGz+MXBUqEu9sFEpNdtdrEbhO9yWBKPDVPAjmEpeSJVD0OOfShbmjzk10qGnKYG6gI9b3Y81pHIRGvT6ZXTNMpdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=AuRaHETx; arc=none smtp.client-ip=209.85.210.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="c4Qdvfg8"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fa22d0b88fso834615eaf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 14:10:04 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AuRaHETx"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-71ded02b779so862001a34.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 14:10:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738879804; x=1739484604; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1738879809; x=1739484609; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=O/a4xSagbqmb3UAk03PlQCeWIa4LP7rwRFx2VsXaGsc=;
-        b=c4Qdvfg8OlT6hyAxhE0d+XDrCrKjQhneFcw+wMCTWxYPXacw52kid/Jd/SC6Sl7evx
-         IdXx1uSIpY/Lr27wJa3GcPSYn0SzMe+EG4QFt1CApbBqizkLIZErceIuTUkpqgX6VCVe
-         DFHRdCvC5rDiUXNr8bwVYvglhWF8xfip6GBxQ=
+        bh=Lkz5Ief6/yedXCa2E82v4RvcWGp3Dzv7ilZTZRS1+D0=;
+        b=AuRaHETxL11y3S7exSjvwLVj4VYvHkWf4r7mjhENAtlltELCClEOEJR8TLz2s7XXWa
+         bdKwy5gFBqUMilUJxzKIemTJFBNUodxzGXUpNQRarB7VUKRR3DGcOn73P1eRFBZE2dwm
+         /IBaDvBWP3L8Fn7eM4rJIxv4yTELH+XuJYA0M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738879804; x=1739484604;
+        d=1e100.net; s=20230601; t=1738879809; x=1739484609;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/a4xSagbqmb3UAk03PlQCeWIa4LP7rwRFx2VsXaGsc=;
-        b=URmPTeMYGTub+qYvmhHUM3Mhw3WEEtxK1lDokQ6KYkOJsQ3QMVigp/CcpoOcburmlD
-         W0KyW2g1BDjJpileVSd0nEAa9q5yfksDS4Cp2wl38SzXSs7761v2My0JBW5o2hbAr3/p
-         qM8WhXCTgaeVA31KchYJLIgFaXeame0ezQg9HXtRtD/mmNsRcgZxdspyzpAHVBBM7ZjK
-         pPEGZzVgMTKkxW9Dy507ssR+OJ6oVmOXQLsCr+6z5NRgsZqCdk4d/MvHPmATRXCFTfGc
-         VvwrmRrpQJyQ6Ym2Pq/iajk/PKMvGyEegaN9pOn98tVAzBU90ebS3UEVAV3bENSJrBG8
-         8FGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsIP4/6pqiskarUFIgFuQ3FnCHa9nqBj1iS5xNCVhPsJLU2BasbML18Kqr857zpDcQS7ZAphz5LeD9XvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzivmiyvQ/kQ7chSnS1ISH34MiCXyjqOe/djf5DgbaOxL/ybK92
-	fYDhlw7KdfLUxNWM8nmZ5tlcVinWkd1YVIz0UMqr1RKQwry02hH10oVWyhlY3w==
-X-Gm-Gg: ASbGncttio3NxNOW92Mru6YVNvVB7kmjnoHEWdX+OL9KnMsYWjJpq3/ADBBpRNMBL5D
-	gx7F3vcHTo1WASTntL0//XAsdm//YadoRU1xN2Dw1DDtaVa9OWPrbztwCJo6p7QyXBaIkI1iyhB
-	ukllFB093oBHh8OGAKV1vCDRCATbAFw8uicpP0G4lY0hEU7O8cPPvCvG/MR5S0SXAnBjKDRgAB8
-	d4XW+H1meEOzIm4cnY9d+uz7GJctBlXr40vhft+VVy/skPzgFp4viWSx/Grk/6READWdCIycw1b
-	SXG8pL4dC5Gxebeat6W2wc8fXyJx1jSlyBTFX+H/vSj3qCn53Hk=
-X-Google-Smtp-Source: AGHT+IFUhC9g3GBMlrCIsfgANO5KdvzDEnLHzgT9bVl7MomkcLWvLwEBIiP+tF9jny8ui4xtcfFe6w==
-X-Received: by 2002:a05:6820:1689:b0:5f8:b916:2516 with SMTP id 006d021491bc7-5fc5e45b47fmr729717eaf.0.1738879804274;
-        Thu, 06 Feb 2025 14:10:04 -0800 (PST)
+        bh=Lkz5Ief6/yedXCa2E82v4RvcWGp3Dzv7ilZTZRS1+D0=;
+        b=i1lwYIPL8QoWS3UkXbYl6F6BgI/FwZ3Ee+kF8JIvHlvnyzUpFcD1qoHo86NWxulS05
+         oN3gO4LyGKiXzDIxM6l+MqMg53Kgp5yd9X/NwYO0YLQv6Is/WAsBDoG1KlPu0mC5aYgK
+         T3RGRh8+sQ9HbuBbvkH/Repf/83jSdUz6gcAilm3vLnCPCvjK0dalvFvQkHIzfw2PhTd
+         lnhkXUiRq72CorGutAqpUwMPN/bbYKZXOc/UwCsmbr25m+4NHmrVlmDlJRRKsvB8RURE
+         8tghakBSBn9MDhbTBCBfIdhZj8+RQoHx6i70lE3pwK8y3pvaegNzyhr1bwSMQBsObhfa
+         5MHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZkVmR7Cgsd7Q6ewNHJgCALUBy6Gc3z0BC+DMz56A1AG0nIIQJD5wOUu6je7Xc4icJIwkU+6VqCbt6MWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywPdo2ABxlGrMxLvEe60Ydqww1+WowJx71UuMTUSJ0d3NLfTTg
+	NxXFqiCfWSLXWENkfT5gioDYdeSBDGM+IvH3wOzjxWvpnp2Uf8w5/p5MbZiq5w==
+X-Gm-Gg: ASbGncuBNWug1+JpV0WuDy/UIwIV28pay/AtQ/fQgqeOey524Bl5ry5Ns8LKO86yy3G
+	Pw8FAhxvuZn7CSCrxQSRJ3cNHzQ5Asbn5WpDcgOban540fLOWHZxZnQawqhDPXC5kEy0kSLT0gx
+	MPVVRGOyEAcv6gQYjgrvPVArJoc+1g5mr5FNrqoc6LqtEO58F6tqek7v5y84cYgxz9XicZzqirP
+	o/ltTa6jcgTdppEHWq4XrT2sDm71vbJ6H9V3g2Kb6XWcDGIJ7hZNrUxoWY7wXMZd2gbzBj4gzyF
+	w518IkQPmxe20pndVifJFooCoLyjMsfmf9Z9nrGKbvaVtiMmquM=
+X-Google-Smtp-Source: AGHT+IFe5+HDp6jW4POK05lh6FZmTZaClwC8C9AdZB4KwfkTEdj/0zyU6GxhcMlShT6jCqkuU2sdmg==
+X-Received: by 2002:a05:6830:378c:b0:71e:946:80c4 with SMTP id 46e09a7af769-726b87f8463mr750227a34.12.1738879808913;
+        Thu, 06 Feb 2025 14:10:08 -0800 (PST)
 Received: from mail.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544cf88esm454109eaf.15.2025.02.06.14.10.02
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544cf88esm454109eaf.15.2025.02.06.14.10.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 14:10:03 -0800 (PST)
+        Thu, 06 Feb 2025 14:10:08 -0800 (PST)
 From: Kamal Dasu <kamal.dasu@broadcom.com>
 To: ulf.hansson@linaro.org,
 	linux-kernel@vger.kernel.org,
@@ -64,9 +64,9 @@ To: ulf.hansson@linaro.org,
 Cc: f.fainelli@gmail.com,
 	bcm-kernel-feedback-list@broadcom.com,
 	Kamal Dasu <kdasu@broadcom.com>
-Subject: [PATCH RFC 2/3] dt-bindings: mmc: brcm,sdhci-brcmstb: Add sdio sharing support
-Date: Thu,  6 Feb 2025 17:09:39 -0500
-Message-Id: <20250206220940.10553-3-kamal.dasu@broadcom.com>
+Subject: [PATCH RFC 3/3] mmc: sdhci-brcmstb: Add rpmb sharing support in host driver
+Date: Thu,  6 Feb 2025 17:09:40 -0500
+Message-Id: <20250206220940.10553-4-kamal.dasu@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250206220940.10553-1-kamal.dasu@broadcom.com>
 References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
@@ -78,62 +78,334 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Kamal Dasu <kdasu@broadcom.com>
 
-Introduce emmc flash sharing support using hardware semaphore
-and SDIO share register to synchronize between TZOS and linux.
+Adding sdio rpmb parition sharing support to brcmstb host driver.
+The sdhci-brcmstb controller driver uses SDIO_SHARE registers and
+HW semaphore register to synchronize access between linux and the
+trusted zone firmware.
 
 Signed-off-by: Kamal Dasu <kdasu@broadcom.com>
 ---
- .../bindings/mmc/brcm,sdhci-brcmstb.yaml         | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-brcmstb.c | 275 ++++++++++++++++++++++++++++++-
+ 1 file changed, 273 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-index eee6be7a7867..b0ee39aeccb1 100644
---- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-+++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-@@ -27,15 +27,23 @@ properties:
-           - const: brcm,sdhci-brcmstb
+diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+index 0ef4d578ade8..6ba90108cd5c 100644
+--- a/drivers/mmc/host/sdhci-brcmstb.c
++++ b/drivers/mmc/host/sdhci-brcmstb.c
+@@ -46,9 +46,32 @@
+ /* Select all SD UHS type I SDR speed above 50MB/s */
+ #define MMC_CAP_UHS_I_SDR_MASK	(MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104)
  
-   reg:
--    maxItems: 2
-+    minItems: 2
- 
-   reg-names:
-     items:
-       - const: host
-       - const: cfg
-+      - const: share        # Optional reg 
-+      - const: mmc_sem      # Optional reg
-+      - const: flshr_ipis0  # Optional reg
- 
-   interrupts:
--    maxItems: 1
-+    minItems: 1
++#define SDHCI_BRCMSTB_AGENT_LINUX		'L'
++#define SDHCI_BRCMSTB_AGENT_TZOS		'A'
++#define FLSHARE_IPIS0_INT_SEND_MASK		BIT(17)
++#define HWSEM_AQUIRE		1
++#define HWSEM_RELEASE		0
 +
-+  interrupt-names:
-+    items:
-+      - const: SDIO1_0
-+      - const: recv_ipi0   # Optional interrupt
++enum brcmstb_sdhci_share_reg {
++	BRCMSTB_SD_SHARE_REG_NEXT = 0x0,	/* Next Agent Register */
++	BRCMSTB_SD_SHARE_REG_PMC = 0x4,		/* Work Agent1 Register */
++	BRCMSTB_SD_SHARE_REG_TZOS = 0x8,	/* Work Agent2 Register */
++	BRCMSTB_SD_SHARE_REG_LINUX = 0xc,	/* Work Agent3 Register */
++};
++
++struct brcmstb_sdio_share_info {
++	void __iomem *share_reg;
++	void __iomem *sem_reg;
++	void __iomem *ipis0_reg;
++	int irq_recv;
++	wait_queue_head_t wq;
++};
++
++
+ struct sdhci_brcmstb_priv {
+ 	void __iomem *cfg_regs;
+ 	unsigned int flags;
++	struct brcmstb_sdio_share_info *si;
+ 	struct clk *base_clk;
+ 	u32 base_freq_hz;
+ };
+@@ -288,7 +311,7 @@ static const struct brcmstb_match_priv match_priv_7216 = {
+ 	.ops = &sdhci_brcmstb_ops_7216,
+ };
  
-   clocks:
-     minItems: 1
-@@ -76,6 +84,7 @@ required:
-   - compatible
-   - reg
-   - interrupts
-+  - interrupt-names
-   - clocks
-   - clock-names
+-static struct brcmstb_match_priv match_priv_74165b0 = {
++static const struct brcmstb_match_priv match_priv_74165b0 = {
+ 	.flags = BRCMSTB_MATCH_FLAGS_HAS_CLOCK_GATE,
+ 	.hs400es = sdhci_brcmstb_hs400es,
+ 	.ops = &sdhci_brcmstb_ops_74165b0,
+@@ -303,6 +326,176 @@ static const struct of_device_id __maybe_unused sdhci_brcm_of_match[] = {
+ 	{},
+ };
  
-@@ -111,7 +120,8 @@ examples:
-       supports-cqe;
-       non-removable;
-       bus-width = <0x8>;
--      interrupts = <0x0 0x27 0x4>;
-+      interrupts-extended = <0x1 0x0 0x1f 0x4 0x18 0x11>;
-+      interrupt-names = "SDIO1_0", "recv_ipi0";
-       clocks = <&scmi_clk 245>;
-       clock-names = "sw_sdio";
-     };
++static void sdhci_brcmstb_dbg_dump_sdio_share_regs(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si = priv->si;
++
++	dev_dbg(mmc_dev(host->mmc),
++		"sem:0x%x wn:0x%x wa:0x%x wl:0x%x\n",
++		readl(si->sem_reg),
++		readl(si->share_reg + BRCMSTB_SD_SHARE_REG_NEXT),
++		readl(si->share_reg + BRCMSTB_SD_SHARE_REG_TZOS),
++		readl(si->share_reg + BRCMSTB_SD_SHARE_REG_LINUX));
++}
++
++static bool sdhci_brcmstb_host_is_next(struct brcmstb_sdio_share_info *si)
++{
++	u32 wn;
++
++	/* if work queue is empty or we are next */
++	wn = readl(si->share_reg + BRCMSTB_SD_SHARE_REG_NEXT);
++	return (wn == 0 ? true : (wn == SDHCI_BRCMSTB_AGENT_LINUX));
++}
++
++#define SDHCI_BRCMSTB_HOST_TIMEOUT_MS  5
++
++static int sdhci_brcmstb_wait_for_host(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si = priv->si;
++	int ret = 0;
++
++	/* put self in wait queue if host not avialable  */
++	ret = wait_event_timeout(si->wq, sdhci_brcmstb_host_is_next(si),
++			 msecs_to_jiffies(SDHCI_BRCMSTB_HOST_TIMEOUT_MS) + 1);
++
++	return ret;
++}
++
++static u32 semreg_wrrdl(struct sdhci_host *host, u32 value, void __iomem *addr)
++{
++	writel(value, addr);
++	return readl(addr);
++}
++
++static void sdhci_brcmstb_hwsem(struct sdhci_host *host, int sem_op)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si = priv->si;
++	u32 wr_val;
++	u32 wa, sem_val;
++	bool is_next;
++	int ret = 0;
++
++	while (1) {
++		if (sem_op == HWSEM_AQUIRE)  {
++			/*
++			 * get hw sem :
++			 *
++			 * 1. write linux agent id to work register WL
++			 * 2. check if we are next in line or workqueue empty
++			 * 3. if linux is not next in queue go into waitq
++			 *
++			 * handle case where the next work agent was not set
++			 * but TZOS grabbed the semaphore before we could
++			 * in that case too we put ourselves in wait queue,
++			 * tzos shall remove linux from wait queue using IPI
++			 */
++			wr_val = SDHCI_BRCMSTB_AGENT_LINUX;
++			writel(wr_val, si->share_reg + BRCMSTB_SD_SHARE_REG_LINUX);
++			is_next = sdhci_brcmstb_host_is_next(si);
++			if (!is_next)
++				ret = sdhci_brcmstb_wait_for_host(host);
++		} else {
++			/*
++			 * release hw semphore
++			 * 1. set the next agent before releasing hw sem
++			 * 2. clear work agent
++			 * 3. Release hw semaphore
++			 */
++			wa = readl(si->share_reg + BRCMSTB_SD_SHARE_REG_TZOS);
++			writel(wa, si->share_reg + BRCMSTB_SD_SHARE_REG_NEXT);
++			writel(0, si->share_reg + BRCMSTB_SD_SHARE_REG_LINUX);
++			wr_val = 0;
++			sem_val = readl(si->sem_reg);
++			if (!sem_val || sem_val != SDHCI_BRCMSTB_AGENT_LINUX)
++				goto out;
++
++		}
++
++		/* try to grab/release hw semaphore */
++		sem_val = semreg_wrrdl(host, wr_val, si->sem_reg);
++
++		if (!wr_val || (sem_val == wr_val))
++			break;
++	}
++
++	return;
++out:
++	sdhci_brcmstb_dbg_dump_sdio_share_regs(host);
++	dev_dbg(mmc_dev(host->mmc), "%s ret:%d\n",
++		(sem_op == HWSEM_AQUIRE) ? "get" : "release", ret);
++}
++
++static bool sdhci_brcmstb_cqe_is_idle(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct mmc_host *mmc = host->mmc;
++	struct cqhci_host *cq_host;
++
++	if (!(priv->flags & BRCMSTB_PRIV_FLAGS_HAS_CQE))
++		return true;
++
++	cq_host = mmc->cqe_private;
++	/* still processing mrqs in cqe mode  */
++	return (cq_host->qcnt == 0 && !cq_host->recovery_halt) ? true : false;
++}
++
++static void sdhci_brcmstb_aquire_hwsem(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si = priv->si;
++	u32 wn = SDHCI_BRCMSTB_AGENT_LINUX;
++
++	sdhci_brcmstb_hwsem(host, HWSEM_AQUIRE);
++	/* indicate linux as next agent since it got the hw semaphore */
++	writel(wn, si->share_reg + BRCMSTB_SD_SHARE_REG_NEXT);
++	dev_dbg(mmc_dev(host->mmc), "hwsem get\n");
++	sdhci_brcmstb_dbg_dump_sdio_share_regs(host);
++}
++
++static void sdhci_brcmstb_release_hwsem(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si = priv->si;
++	u32 wn;
++
++	if (!sdhci_brcmstb_cqe_is_idle(host))
++		return;
++
++	wn = readl(si->share_reg + BRCMSTB_SD_SHARE_REG_NEXT);
++	/* release hw semaphore send IPI when done */
++	sdhci_brcmstb_hwsem(host, HWSEM_RELEASE);
++
++	if (wn == SDHCI_BRCMSTB_AGENT_TZOS)
++		writel(FLSHARE_IPIS0_INT_SEND_MASK, si->ipis0_reg);
++
++	dev_dbg(mmc_dev(host->mmc), "hwsem release\n");
++	sdhci_brcmstb_dbg_dump_sdio_share_regs(host);
++}
++
++static void sdhci_brcmstb_request_start(struct mmc_host *mmchost,
++					struct mmc_request *mrq)
++{
++	sdhci_brcmstb_aquire_hwsem(mmc_priv(mmchost));
++}
++
++static void sdhci_brcmstb_request_done(struct mmc_host *mmchost,
++				       struct mmc_request *mrq)
++{
++	struct sdhci_host *host = mmc_priv(mmchost);
++
++	if (!mmchost->ongoing_mrq)
++		sdhci_brcmstb_release_hwsem(host);
++}
++
+ static u32 sdhci_brcmstb_cqhci_irq(struct sdhci_host *host, u32 intmask)
+ {
+ 	int cmd_error = 0;
+@@ -316,6 +509,81 @@ static u32 sdhci_brcmstb_cqhci_irq(struct sdhci_host *host, u32 intmask)
+ 	return 0;
+ }
+ 
++static irqreturn_t sdhci_brcmstb_recv_ipi0_irq(int irq, void *dev_id)
++{
++	struct sdhci_host *host = dev_id;
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si = priv->si;
++	u32 wn;
++
++	wn = readl(si->share_reg + BRCMSTB_SD_SHARE_REG_NEXT);
++	dev_dbg(mmc_dev(host->mmc), "ipi irq %d wn 0x%x\n", irq, wn);
++
++	if (wn == SDHCI_BRCMSTB_AGENT_LINUX)
++		wake_up(&si->wq);
++
++	return IRQ_HANDLED;
++}
++
++static int sdhci_brcmstb_sdio_share_init(struct platform_device *pdev)
++{
++	struct sdhci_host *host = dev_get_drvdata(&pdev->dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	struct brcmstb_sdio_share_info *si;
++	void __iomem *sdio_sh_regs;
++	int ret;
++
++	/* sdio_share block */
++	sdio_sh_regs = devm_platform_ioremap_resource_byname(pdev, "share");
++	if (IS_ERR(sdio_sh_regs))
++		return 0;
++
++	si = kcalloc(1, sizeof(struct brcmstb_sdio_share_info),
++		     GFP_KERNEL);
++	if (!si)
++		return -ENOMEM;
++
++	si->share_reg = sdio_sh_regs;
++	si->sem_reg = devm_platform_ioremap_resource_byname(pdev,
++							    "mmc_sem");
++	if (IS_ERR(si->sem_reg)) {
++		ret = PTR_ERR(si->sem_reg);
++		dev_err(&pdev->dev, "mmc_sem register\n");
++		goto err;
++	}
++
++	si->irq_recv = platform_get_irq_byname_optional(pdev, "recv_ipi0");
++	if (si->irq_recv < 0) {
++		ret = si->irq_recv;
++		dev_err(&pdev->dev, "recv_ipi0 IRQ not found\n");
++		goto err;
++	}
++
++	ret = devm_request_irq(&pdev->dev, si->irq_recv,
++			       sdhci_brcmstb_recv_ipi0_irq,
++			       0, "mmc_recv_ipi0", host);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "mmc_recv_ipi0 IRQ request_irq failed\n");
++		goto err;
++	}
++
++	si->ipis0_reg = devm_platform_ioremap_resource_byname(pdev, "flshr_ipis0");
++	if (IS_ERR(si->ipis0_reg))
++		goto err;
++
++	priv->si = si;
++	init_waitqueue_head(&si->wq);
++	host->mmc_host_ops.request_start = sdhci_brcmstb_request_start;
++	host->mmc_host_ops.request_done = sdhci_brcmstb_request_done;
++
++	return 0;
++err:
++	kfree(si);
++	return ret;
++}
++
+ static int sdhci_brcmstb_add_host(struct sdhci_host *host,
+ 				  struct sdhci_brcmstb_priv *priv)
+ {
+@@ -482,8 +750,11 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+ 		goto err;
+ 
+ 	pltfm_host->clk = clk;
+-	return res;
++	res  = sdhci_brcmstb_sdio_share_init(pdev);
++	if (res)
++		goto err;
+ 
++	return res;
+ err:
+ 	sdhci_pltfm_free(pdev);
+ 	clk_disable_unprepare(base_clk);
 -- 
 2.17.1
 
