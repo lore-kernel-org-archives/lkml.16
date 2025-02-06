@@ -1,70 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012261EA7C0;
-	Thu,  6 Feb 2025 13:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE61910F2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848976; cv=none; b=YlE6VcB5XgnYqOhWArc6TW9gr5lVhrxmZ9qngh7S5AYiT4VaTdW0js4BaryanrxGcFfZkhvPv3HvGktHAT7JPV2RZAAw2YPCh28iqc2L5+fDYbHR4P6RrY5cYX/bYk0VEWCkgoTSUvkMr+dFzkntDNZ7qFu2Wp7VqIQixDXFAYs=
+	t=1738849038; cv=none; b=N/asmG44Xvh7zO7mLI1ujeNEYAelZeGOGTfr+00DOAg55IbbgRwqV0TbOIWvmZWO4dIO+N/DzdlgZd7KOUrPQZIhwjjgCAs5LlECoqrZcMik/CspsSqWgbuLmzM5IJH/NlC/extebEEJbtpUmOgZwLfuBrBqiySnUW9yHgD+YPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848976; c=relaxed/simple;
-	bh=X1X/47qLoyQJnJUNGHCpNtuoq2dYcD2wrDCVemNAsAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oHfHVUFDJy8VwKlndACTWU1cFDCNdKFxFymQn5JDhcHjevBOTF2X5b4w2tvdLasLsLIY4NQEBBfVTU0eAmtMUsL/dZkI9aXiiWYoTnuHPuyoJ2FlfPrH2OZwuPfdCsyGTXknXepGLhvVkdnj9H0buw8BKJvVdwyasdoQ6si21VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4CE0C4CEDD;
-	Thu,  6 Feb 2025 13:36:13 +0000 (UTC)
-Date: Thu, 6 Feb 2025 08:36:54 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 03/11] sched: Add sched tracepoints for RV task
- model
-Message-ID: <20250206083654.6ea1d3f9@gandalf.local.home>
-In-Reply-To: <1818165c4cbaedfb7314f4a200a273454ce49b63.camel@redhat.com>
-References: <20250206080952.98478-1-gmonaco@redhat.com>
-	<20250206080952.98478-4-gmonaco@redhat.com>
-	<20250206081942.GJ7145@noisy.programming.kicks-ass.net>
-	<d8187fcd53c62272d7e1a8dad327c4f2a5f07188.camel@redhat.com>
-	<20250206085738.GL7145@noisy.programming.kicks-ass.net>
-	<1818165c4cbaedfb7314f4a200a273454ce49b63.camel@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738849038; c=relaxed/simple;
+	bh=JeoPWRYSsCtlMc9oGmC8rZWn7AV4vxUYVEPc8Mjztfo=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TUtZECU1v8PWhLVtIeQJYKR+SI/C9JBf9phwuVb4j/+IkiwgB0F4TNmFg3Sz4Q5hEclZc0kQyck0b927kOXLGicBn8/UtgQ0tGtbmulRd/r9Sck59NZAKK9xbh81x6EfIqE4dWHnVFoFd446sRH2jr9bRdGYQzv+ct1TiM8doVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=yFW9V0fs; arc=none smtp.client-ip=185.70.43.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="yFW9V0fs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1738849027; x=1739108227;
+	bh=JeoPWRYSsCtlMc9oGmC8rZWn7AV4vxUYVEPc8Mjztfo=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=yFW9V0fsApW8vbPGI/2NV/lF1z6a9LTJ+UmMmhWu0Aozs3rrmG2YL8xAVtKJpjlFt
+	 CETQbSogN5DxImEBM/OphHod1BmZhTRladENgh3e7xrLtgvTtmvaIoIuod7m+rlgZH
+	 w5Nm+KP9gxqel9j8O53Qd1+OEBd1S8vfLyn7iykj50OppfXhzzllPrI75WR81OWeFd
+	 /DMf8lanklMjQ4uCeDN3/Qpe2Lu78v604/0XIyhPF3HKQAxsVlTht5tR5JJ3sHpu/o
+	 E5Y98pJ6ENub7WHv3dYUbQ2QABFcPhXBUNcD3CGz7QS9/lwcHG8Hr+OtWu9J6LPu8s
+	 MhlPEALcb4A8g==
+Date: Thu, 06 Feb 2025 13:37:01 +0000
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Turritopsis Dohrnii Teo En Ming <teo.en.ming@protonmail.com>
+Cc: "ceo@teo-en-ming-corp.com" <ceo@teo-en-ming-corp.com>
+Subject: Why can't I update my Android phone to the latest Linux Kernel 6.13.1?
+Message-ID: <dygRUEDz4LGT9qYwYL8tnMEQ7rAAyTcITo8Zs2jtdDwvzofdBF9jRMVqh9UZ-wSGpc4-aPJoZLrD5lM4v7wc2TQwHsCmi7dqlYmaN0_VdWk=@protonmail.com>
+Feedback-ID: 39510961:user:proton
+X-Pm-Message-ID: 65e2c54863dcc3f44a837e8d7a4f69f016a061db
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 06 Feb 2025 12:47:17 +0100
-Gabriele Monaco <gmonaco@redhat.com> wrote:
+Subject: Why can't I update my Android phone to the latest Linux Kernel 6.1=
+3.1?
 
-> > > What do you think would be better?  
-> > 
-> > So I would think having the tracepoint in-line would be better.
-> > Because
-> > as is, everything gets to have this pointless CALL to an empty
-> > function.
-> > 
-> > If this were x86_64 only, I would suggest using static_call(), but
-> > barring that, the static_branch() already in the tracepoint is the
-> > best
-> > we can do.
-> >   
-> 
-> Ok, I see your point now..
-> 
-> Adding the trace_ call inline seems far from trivial to me, but we
-> could indeed do what's suggested in tracepoint-defs.h and practically
-> use a static branch to call this trace_set_current_state, not sure if
-> this is already what you were suggesting, though.
+Good day from Singapore,
 
-Right, due to the macro magic of how tracepoints are created, you can't
-have them in header files. It causes too many side effects that can easily
-break the build.
+Even though I have updated my vivo V25 Pro 5G Android phone to the latest s=
+oftware update, the installed Linux Kernel is still 4.19.191+ #1 Tue Jan 7 =
+15:54:16 CST 2025 (Compile time: Jan 7, 2025 15:46:52).
 
--- Steve
+Why can't I update my Android phone to the latest Linux Kernel 6.13.1?
+
+Thank you.
+
+Regards,
+
+Mr. Turritopsis Dohrnii Teo En Ming
+Targeted Individuals in Singapore
+GIMP =3D Government-Induced Medical Problems
+6 Feb 2025 Thursday
+
+
+
+
+
