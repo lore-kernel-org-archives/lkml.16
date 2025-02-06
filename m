@@ -1,306 +1,206 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BDF17A586
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20FC0226548;
+	Thu,  6 Feb 2025 09:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738835267; cv=none; b=QIIFoEoztpwejZGGrVPp8MJj6i1Z2Haxh9UjYCFKkfo5t58atv7tgpyTLPMOCsVb0x0COOtK5BnkOf5bQFxQ4NTplCL22oTvbMU9EsuqYet54RkAVHa4Gr5LEcwOb4Pm9ZEm0sNJozlXM1fJK87X39Bso0EicZULwuu0z8ZoD/g=
+	t=1738835283; cv=none; b=J6O5H8MCRLP0IgYJZ+Yg8NXxRuQ5TL8TgteTEmDN/39lAy3BCPI29NADMKSjtuKzCs4e2o/YCJXFSXEjKKln27irgNMLePRlyeyQIeqFKFdqDqLxyVxvkabo0vA15dAEK+Y8TJXZYn+iM0e3zW7G2K3QQG8Tg+adQo74v4u7tHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738835267; c=relaxed/simple;
-	bh=4hgc0MuHG5FvWdrZpFfso+UT5CtO43uqX8XMsBNTa2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMw0BLM6m89qovJAlg2SGjchEW5F7Z1+KxwqDpJ9l+YPtd16tS6iPRd/1tyInQ5ubctpWGGW9ZsJWtuS75yAKKUEiD4RW/ls1TselT78ROCJXysW+40bMF8YDYdbVrZxinJ6AJGb+YN4uDoCHihJysGbIuP4aPbGYZnJ7BHY1LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1tfyTq-0008NS-9e; Thu, 06 Feb 2025 10:47:30 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1tfyTp-003meg-2S;
-	Thu, 06 Feb 2025 10:47:29 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1tfyTp-00HMaX-21;
-	Thu, 06 Feb 2025 10:47:29 +0100
-Date: Thu, 6 Feb 2025 10:47:29 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Abel Vesa <abelvesa@kernel.org>, Rob Herring <robh@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Fabio Estevam <festevam@gmail.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/4] clk: Introduce clk_hw_set_spread_spectrum
-Message-ID: <20250206094729.7ebs4ocruw6yrnxc@pengutronix.de>
-References: <20250205-clk-ssc-v2-0-fa73083caa92@nxp.com>
- <20250205-clk-ssc-v2-1-fa73083caa92@nxp.com>
- <20250205120215.if3egfj6vbnynwl3@pengutronix.de>
- <PAXPR04MB8459CDBB65AE57CDE780339A88F62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1738835283; c=relaxed/simple;
+	bh=KkN8KoXTOeZ8lZ3T82dFaZ8J/Dzj11SUyaxzwofgmG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IjgBPC5IIBpoTQEFc6jNCyV4IespliDSZdbxhfh3Zcoo34WHgBMbgkNJzBXtByBWi5/rXpll3lSfs5wb8He4HMDngkCC6Mq10eI4JtgwLVEPjOMWqV+yldM0Pyj9BziQQhV2u0g1QGs1paorecIYwxCUUq3hJtyiO8c1ame0OrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=s8GTSZbw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s8GTSZbw"
+Received: from [100.79.66.79] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B681C20BCAF2;
+	Thu,  6 Feb 2025 01:47:57 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B681C20BCAF2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738835281;
+	bh=YT/fFA4ucxm2xXcs7puYh3xl7FDSSE0Kjemi8yIfrZ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=s8GTSZbw/RyJkeq6c76yW5KffvRHoaNKXTiPKP4rrNZkF89JXrdX5n2MOSssqh5C7
+	 02obP9U3DcyT3AR2o9fS7qA+/FXRIKi1VSiw4WOustYQ6P4425dPhU90mxdEJG7qjK
+	 0awnnEo5EOynizMBsnkW4MyQRMgXE8LGjAeOikqg=
+Message-ID: <7042c53b-31b6-491d-8310-352d18334742@linux.microsoft.com>
+Date: Thu, 6 Feb 2025 15:17:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459CDBB65AE57CDE780339A88F62@PAXPR04MB8459.eurprd04.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
+ for debug builds
+To: K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steve Wahl <steve.wahl@hpe.com>,
+ Saurabh Singh Sengar <ssengar@linux.microsoft.com>, srivatsa@csail.mit.edu,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250203114738.3109-1-namjain@linux.microsoft.com>
+ <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
+ <20250205095506.GB7145@noisy.programming.kicks-ass.net>
+ <0835864f-6dc5-430d-91c0-b5605007d9d2@amd.com>
+ <20250205101600.GC7145@noisy.programming.kicks-ass.net>
+ <e0774ea1-27ac-4aa1-9a96-5e27aa8328e6@amd.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <e0774ea1-27ac-4aa1-9a96-5e27aa8328e6@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 25-02-06, Peng Fan wrote:
-> > Subject: Re: [PATCH v2 1/4] clk: Introduce
-> > clk_hw_set_spread_spectrum
-> > 
-> > Hi Peng,
-> > 
-> > On 25-02-05, Peng Fan (OSS) wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > Add clk_hw_set_spread_spectrum to configure a clock to enable
-> > spread
-> > > spectrum feature. set_spread_spectrum ops is added for clk drivers to
-> > > have their own hardware specific implementation.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  drivers/clk/clk.c            | 34 ++++++++++++++++++++++++++++++++++
-> > >  include/linux/clk-provider.h | 32
-> > ++++++++++++++++++++++++++++++++
-> > >  include/linux/clk.h          | 22 ++++++++++++++++++++++
-> > >  3 files changed, 88 insertions(+)
-> > >
-> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c index
-> > >
-> > cf7720b9172ff223d86227aad144e15375ddfd86..e11f9615e683af52c7
-> > 19d4c8419b
-> > > d30f369f301b 100644
-> > > --- a/drivers/clk/clk.c
-> > > +++ b/drivers/clk/clk.c
-> > > @@ -2790,6 +2790,40 @@ int clk_set_max_rate(struct clk *clk,
-> > unsigned
-> > > long rate)  }  EXPORT_SYMBOL_GPL(clk_set_max_rate);
-> > >
-> > > +int clk_hw_set_spread_spectrum(struct clk_hw *hw, unsigned int
-> > modfreq,
-> > > +			       unsigned int spreaddepth, enum
-> > clk_ssc_method method,
-> > > +			       bool enable)
-> > > +{
-> > > +	struct clk_spread_spectrum clk_ss;
-> > > +	struct clk_core *core;
-> > > +	int ret;
-> > > +
-> > > +	if (!hw)
-> > > +		return 0;
-> > > +
-> > > +	core = hw->core;
-> > > +
-> > > +	clk_ss.modfreq = modfreq;
-> > > +	clk_ss.spreaddepth = spreaddepth;
-> > > +	clk_ss.method = method;
-> > > +	clk_ss.enable = enable;
-> > > +
-> > > +	clk_prepare_lock();
-> > > +
-> > > +	ret = clk_pm_runtime_get(core);
-> > > +	if (ret)
-> > > +		goto fail;
-> > > +
-> > > +	if (core->ops->set_spread_spectrum)
-> > > +		ret = core->ops->set_spread_spectrum(hw, &clk_ss);
-> > > +
-> > > +	clk_pm_runtime_put(core);
-> > > +
-> > > +fail:
-> > > +	clk_prepare_unlock();
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  /**
-> > >   * clk_get_parent - return the parent of a clk
-> > >   * @clk: the clk whose parent gets returned diff --git
-> > > a/include/linux/clk-provider.h b/include/linux/clk-provider.h index
-> > >
-> > 2e6e603b749342931c0d0693c3e72b62c000791b..ac0270cc9ec13395
-> > 4b1f8dcffed0
-> > > 15723bd1ff5d 100644
-> > > --- a/include/linux/clk-provider.h
-> > > +++ b/include/linux/clk-provider.h
-> > > @@ -84,6 +84,28 @@ struct clk_duty {
-> > >  	unsigned int den;
-> > >  };
-> > >
-> > > +/* Aligned with dtschema/schemas/clock/clock.yaml */ enum
-> > > +clk_ssc_method {
-> > > +	CLK_SSC_CENTER_SPREAD,
-> > > +	CLK_SSC_UP_SPREAD,
-> > > +	CLK_SSC_DOWN_SPREAD,
-> > > +};
-> > > +
-> > > +/**
-> > > + * struct clk_spread_spectrum - Structure encoding spread spectrum
-> > of
-> > > +a clock
-> > > + *
-> > > + * @modfreq:		Modulation frequency
-> > > + * @spreadpercent:	Modulation percent
-> > > + * @method:		Modulation method
-> > > + * @enable:		Modulation enable or disable
-> > > + */
-> > > +struct clk_spread_spectrum {
-> > > +	unsigned int modfreq;
-> > > +	unsigned int spreaddepth;
-> > 
-> > Please use per mil as unit since I noticed that 0.x% is a common value
-> > too.
+
+
+On 2/6/2025 2:40 PM, K Prateek Nayak wrote:
+> Hello Peter,
 > 
-> I use " The modulation depth in permyriad " in dt-schema, since
-> Dario said ST chips has permyriad.
+> On 2/5/2025 3:46 PM, Peter Zijlstra wrote:
+>> On Wed, Feb 05, 2025 at 03:43:54PM +0530, K Prateek Nayak wrote:
+>>> Hello Peter,
+>>>
+>>> Thank you for the background!
+>>>
+>>> On 2/5/2025 3:25 PM, Peter Zijlstra wrote:
+>>>> On Wed, Feb 05, 2025 at 03:18:24PM +0530, K Prateek Nayak wrote:
+>>>>
+>>>>> Have there been any reports on an x86 system / VM where
+>>>>> topology_span_sane() was tripped?
+>>>>
+>>>> At the very least Intel SNC 'feature' tripped it at some point. They
+>>>> figured it made sense to have the LLC span two nodes.
+> 
+> I'm 99% sure that this might have been the topology_sane() check on
+> the x86 side and not the topology_span_sane() check in
+> kernel/sched/topology.c
+> 
+> I believe one of the original changes that did the plumbing for SNC was
+> commit 2c88d45edbb8 ("x86, sched: Treat Intel SNC topology as default,
+> COD as exception") from Alison where they mentions that they saw the
+> following splat when running with SNC:
+> 
+>      sched: CPU #3's llc-sibling CPU #0 is not on the same node! [node: 
+> 1 != 0]. Ignoring dependency.
+> 
+> This comes from the topology_sane() check in arch/x86/boot/smpboot.c
+> and match_llc() on x86 side was modified to work around that.
+> 
+>>>>
+>>>> But I think there were some really dodgy VMs too.
+> 
+> For VMs too, it is easy to trip topology_sane() check on x86 side. With
+> QEMU, I can run:
+> 
+>      qemu-system-x86_64 -enable-kvm -cpu host \
+>      -smp cpus=32,sockets=2,cores=8,threads=2 \
+>      ...
+>      -numa node,cpus=0-7,cpus=16-23,memdev=m0,nodeid=0 \
+>      -numa node,cpus=8-15,cpus=24-31,memdev=m1,nodeid=1 \
+>      ...
+> 
+> and I get:
+> 
+>      sched: CPU #8's llc-sibling CPU #0 is not on the same node! [node: 
+> 1 != 0]. Ignoring dependency.
+> 
+> This is because consecutive CPUs (0-1,2-3,...) are SMT siblings and
+> CPUs 0-15 are on the same socket as a result of how QEMU presents
+> MADT to the guest but then I go ahead and mess things up by saying
+> CPUs 0-7,16-23 are on one NUMA node, and the rest are on the other.
+> 
+> I still haven't managed to trip topology_span_sane() tho.
+> 
+>>>>
+>>>> But yeah, its not been often. But basically dodgy BIOS/VM data can mess
+>>>> up things badly enough for it to trip.
+>>>
+>>> Has it ever happened without tripping the topology_sane() check first
+>>> on the x86 side?
+> 
+> What topology_span_sane() does is, it iterates over all the CPUs at a
+> given topology level and makes sure that the cpumask for a CPU at
+> that domain is same as the cpumask of every other CPU set on that mask
+> for that topology level.
+> 
+> If two CPUs are set on a mask, they should have the same mask. If CPUs
+> are not set on each other's mask, the masks should be disjoint.
+> 
+> On x86, the way set_cpu_sibling_map() works, CPUs are set on each other's
+> shared masks iff match_*() returns true:
+> 
+> o For SMT, this means:
+> 
+>    - If X86_FEATURE_TOPOEXT is set:
+>      - pkg_id must match.
+>      - die_id must match.
+>      - amd_node_id must match.
+>      - llc_id must match.
+>      - Either core_id or cu_id must match. (*)
+>      - NUMA nodes must match.
+> 
+>    - If !X86_FEATURE_TOPOEXT:
+>      - pkg_id must match.
+>      - die_id must match.
+>      - core_id must match.
+>      - NUMA nodes must match.
+> 
+> o For CLUSTER this means:
+> 
+>    - If l2c_id is not populated (== BAD_APICID)
+>      - Same conditions as SMT.
+> 
+>    - If l2c_id is populated (!= BAD_APICID)
+>      - l2c_id must match.
+>      - NUMA nodes must match.
+> 
+> o For MC it means:
+> 
+>    - llc_id must be populated (!= BAD_APICID) and must match.
+>    - If INTEL_SNC: pkg_id must match.
+>    - If !INTEL_SNC: NUMA nodes must match.
+> 
+> o For PKG domain:
+>    - Inserted only if !x86_has_numa_in_package.
+>    - CPUs should be in same NUMA node.
+> 
+> All in all, other that the one (*) decision point, everything else has
+> to strictly match for CPUs to be set in each other's CPU mask. And if
+> they match with one CPU, they should match will all other CPUs in mask
+> and it they mismatch with one, they should mismatch with all leading
+> to link_mask() never being called.
+> 
+> This is why I think that the topology_span_sane() check is redundant
+> when the x86 bits have already ensured masks cannot overlap in all
+> cases except for potentially in the (*) case.
+> 
+> So circling back to my original question around "SDTL_ARCH_VERIFIED",
+> would folks be okay to an early bailout from topology_span_sane() on:
+> 
+>      if (!sched_debug() && (tl->flags & SDTL_ARCH_VERIFIED))
+>          return;
+> 
+> and more importantly, do folks care enough about topology_span_sane()
+> to have it run on other architectures and not just have it guarded
+> behind just "sched_debug()" which starts off as false by default?
+> 
+> (Sorry for the long answer explaining my thought process.)
+> 
 
-Ah okay, thanks for the explanation, this wasn't clear since also the
-comment says: "Modulation percent". I wouldn't call it permyriad or
-per_myriad since this unit is rather rare. Instead I would call it "basis
-point" so the variable name could be 'spread_bp'. While on it, we could
-rename modfreq to modfreq_hz to make it clear.
+
+Thanks for sharing your valuable insights.
+I am sorry, I could not find SDTL_ARCH_VERIFIED in linux-next tip. Am I
+missing something?
 
 Regards,
-  Marco
+Naman
 
-> 
-> So change it to moddepth_per_myriad?
-> 
-> Thanks,
-> Peng.
-> 
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > 
-> > > +	enum clk_ssc_method method;
-> > > +	bool enable;
-> > > +};
-> > > +
-> > >  /**
-> > >   * struct clk_ops -  Callback operations for hardware clocks; these are
-> > to
-> > >   * be provided by the clock implementation, and will be called by
-> > > drivers @@ -178,6 +200,11 @@ struct clk_duty {
-> > >   *		separately via calls to .set_parent and .set_rate.
-> > >   *		Returns 0 on success, -EERROR otherwise.
-> > >   *
-> > > + * @set_spread_spectrum: Configure the modulation frequency,
-> > modulation percentage
-> > > + *		and method. This callback is optional for clocks that
-> > does not
-> > > + *		support spread spectrum feature or no need to enable
-> > this feature.
-> > > + *		Returns 0 on success, -EERROR otherwise.
-> > > + *
-> > >   * @recalc_accuracy: Recalculate the accuracy of this clock. The
-> > clock accuracy
-> > >   *		is expressed in ppb (parts per billion). The parent
-> > accuracy is
-> > >   *		an input parameter.
-> > > @@ -255,6 +282,8 @@ struct clk_ops {
-> > >  	int		(*set_rate_and_parent)(struct clk_hw *hw,
-> > >  				    unsigned long rate,
-> > >  				    unsigned long parent_rate, u8
-> > index);
-> > > +	int		(*set_spread_spectrum)(struct clk_hw *hw,
-> > > +					       struct
-> > clk_spread_spectrum *clk_ss);
-> > >  	unsigned long	(*recalc_accuracy)(struct clk_hw *hw,
-> > >  					   unsigned long
-> > parent_accuracy);
-> > >  	int		(*get_phase)(struct clk_hw *hw);
-> > > @@ -1404,6 +1433,9 @@ void clk_hw_get_rate_range(struct clk_hw
-> > *hw, unsigned long *min_rate,
-> > >  			   unsigned long *max_rate);
-> > >  void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long
-> > min_rate,
-> > >  			   unsigned long max_rate);
-> > > +int clk_hw_set_spread_spectrum(struct clk_hw *hw, unsigned int
-> > modfreq,
-> > > +			       unsigned int spreaddepth, enum
-> > clk_ssc_method method,
-> > > +			       bool enable);
-> > >
-> > >  static inline void __clk_hw_set_clk(struct clk_hw *dst, struct clk_hw
-> > > *src)  { diff --git a/include/linux/clk.h b/include/linux/clk.h index
-> > >
-> > b607482ca77e987b9344c38f25ebb5c8d35c1d39..49a7f7eb8b03233e
-> > 11cd3b927688
-> > > 96c4e45c4e7c 100644
-> > > --- a/include/linux/clk.h
-> > > +++ b/include/linux/clk.h
-> > > @@ -858,6 +858,21 @@ int clk_set_rate(struct clk *clk, unsigned
-> > long rate);
-> > >   */
-> > >  int clk_set_rate_exclusive(struct clk *clk, unsigned long rate);
-> > >
-> > > +/**
-> > > + * clk_set_spread_spectrum - set the spread spectrum for a clock
-> > > + * @clk: clock source
-> > > + * @modfreq: modulation freq
-> > > + * @spreadpercent: modulation percentage
-> > > + * @method: down spread, up spread, center spread or else
-> > > + * @enable: enable or disable
-> > > + *
-> > > + * Configure the spread spectrum parameters for a clock.
-> > > + *
-> > > + * Returns success (0) or negative errno.
-> > > + */
-> > > +int clk_set_spread_spectrum(struct clk *clk, unsigned int modfreq,
-> > > +			    unsigned int spreadpercent, unsigned int
-> > method,
-> > > +			    bool enable);
-> > >  /**
-> > >   * clk_has_parent - check if a clock is a possible parent for another
-> > >   * @clk: clock source
-> > > @@ -1088,6 +1103,13 @@ static inline int
-> > clk_set_rate_exclusive(struct clk *clk, unsigned long rate)
-> > >  	return 0;
-> > >  }
-> > >
-> > > +static inline int clk_set_spread_spectrum(struct clk *clk, unsigned
-> > int modfreq,
-> > > +					  unsigned int spreadpercent,
-> > > +					  unsigned int method, bool
-> > enable) {
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static inline long clk_round_rate(struct clk *clk, unsigned long
-> > > rate)  {
-> > >  	return 0;
-> > >
-> > > --
-> > > 2.37.1
-> > >
-> > >
-> > >
-> 
+
