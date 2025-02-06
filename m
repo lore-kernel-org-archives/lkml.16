@@ -1,107 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3CA22688F;
-	Thu,  6 Feb 2025 11:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B9E20C473;
+	Thu,  6 Feb 2025 11:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841113; cv=none; b=HGKV/jnI7SZIg5tARO8k9moEEfnfe6qOPzs7Tul9psndupLLJWrvkk3dBxdDPJCECt/pi3AVeCMTymbPNA0bj9T05eA1ZKF1w/IRYD6T7RajYQryV2p0lxygg7icWD6w5PNJ8h5IGToO+3W1JdkpSK3Fvbqzluufw0RTrqFna4A=
+	t=1738841135; cv=none; b=UD+ShUcUZeKH4L9hcZp3LoZatR7aNoUn+hFf8wh4mJdTIRzUcNG6q9ailiZvsOmyYawh+gg5D5yIw8TEmMAU/AMW3cH5ieLDVqXqu6IN0Q/zdRCa9LsqYGDFGLL1yqLI2qAHZT29Yo28RiRzAyVbFMEcPveR09g/N5nsri6csVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841113; c=relaxed/simple;
-	bh=3QenPFoiIxwYoHLxjpQR+89yGAMCqcwZRL9xqsJbz4s=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=T81j2oMYLUkFs/X3XuhoBaH9TmQkWBhtJ1KSucldP3WylLBNEbREtNhrJhG9CXrZWzdbD/Z/3Vz3rvt5aeNzS7l1BmsLqdgdLy215BS4DZt2zlA+sXsztuqIDCjH2JoFrwgzK0Jp1yG43iMu+U9tzvPk3qz8qLx1/AJAu+dbQCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRKYoQ7q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRKYoQ7q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6843CC4CEDD;
-	Thu,  6 Feb 2025 11:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738841112;
-	bh=3QenPFoiIxwYoHLxjpQR+89yGAMCqcwZRL9xqsJbz4s=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QRKYoQ7qDIl0na9wnb7PijB/8D4fHcvdZUU4SQ8mwDb+jZ15mRpttChVLKFDhsxna
-	 FiEvmQi2FKMDRXKO18sF0fAkWrohSVBSqEmLPlwKI6E0vv+tuw/yrz26sskPAHCL0x
-	 OtLlVS9wTnIuRdJa4rOiMY/O9BYAz5UMK4WsutiZYTMeL+MzcuXa5RQKtd+aR8K2an
-	 oQxbfQiCF9POYSLrZxyR++BhL6VxUSpmiMB9Y7EHwSp51XAbkmGG228DfUJmw4AmCX
-	 UrXxazfw9WocXcErgNUM8tbSy8XcrMSjaUDmnLazJhZJeJFR35QWvM/g5FqRnAFM91
-	 7r9X67UNyUY/Q==
-Date: Thu, 06 Feb 2025 05:25:11 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1738841135; c=relaxed/simple;
+	bh=u8X0ml4wIaixcmWe/gklqLTQjMm8ZM1CyLHtSksZ8Nw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K3hnv9S6/bEauZGGDrzqI5+8cq/64gf+Co89heubSDiD5GMmKCz+dAP+fXY7eQ+Ph2TlNzZCmr7PWvzxsXpdIvXK2ISy34xy178gMvASffehcPObYACcQbE6DSrRXMOpix1CWOxp+dlU4ygYcduS1kf7g4Sjtiaih0VH5IaMkbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YpZTs6YKcz6H8VQ;
+	Thu,  6 Feb 2025 19:23:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0247F140520;
+	Thu,  6 Feb 2025 19:25:31 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Feb
+ 2025 12:25:30 +0100
+Date: Thu, 6 Feb 2025 11:25:28 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Sperling, Tobias" <Tobias.Sperling@Softing.com>
+CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, "linux-iio@vger.kernel.org"
+	<linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: adc: Add driver for ADS7128 / ADS7138
+Message-ID: <20250206112528.00005910@huawei.com>
+In-Reply-To: <BE1P281MB2420B7C7A95A913B486A2228EFF42@BE1P281MB2420.DEUP281.PROD.OUTLOOK.COM>
+References: <20241122-adc_ml-v1-0-0769f2e1bbc1@softing.com>
+	<20241122-adc_ml-v1-2-0769f2e1bbc1@softing.com>
+	<20241124124205.02453a0c@jic23-huawei>
+	<BE1P281MB24209585E1552B80272D5448EFF52@BE1P281MB2420.DEUP281.PROD.OUTLOOK.COM>
+	<20250204144309.000043e6@huawei.com>
+	<BE1P281MB2420B7C7A95A913B486A2228EFF42@BE1P281MB2420.DEUP281.PROD.OUTLOOK.COM>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, 
- Gerald Loacker <gerald.loacker@wolfvision.net>, 
- Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Sebastian Fricke <sebastian.fricke@collabora.com>, 
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- linux-rockchip@lists.infradead.org, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Val Packett <val@packett.cool>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Mehdi Djait <mehdi.djait@linux.intel.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Shiyan <eagle.alexander923@gmail.com>, devicetree@vger.kernel.org
-To: Michael Riesch <michael.riesch@wolfvision.net>
-In-Reply-To: <20250206-v6-8-topic-rk3568-vicap-v3-3-69d1f19e5c40@wolfvision.net>
-References: <20250206-v6-8-topic-rk3568-vicap-v3-0-69d1f19e5c40@wolfvision.net>
- <20250206-v6-8-topic-rk3568-vicap-v3-3-69d1f19e5c40@wolfvision.net>
-Message-Id: <173884111130.679176.4491485161610037414.robh@kernel.org>
-Subject: Re: [PATCH v3 3/7] media: dt-bindings: media: add bindings for
- rockchip rk3568 vicap
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 4 Feb 2025 15:50:18 +0000
+"Sperling, Tobias" <Tobias.Sperling@Softing.com> wrote:
 
-On Thu, 06 Feb 2025 10:57:41 +0100, Michael Riesch wrote:
-> Add documentation for the Rockchip RK3568 Video Capture (VICAP) unit.
+> Just one more question, as I've received a mail from the kernel test robot.
+> It reported two warnings regarding following unused functions
+> ads71x8_runtime_suspend() and ads71x8_runtime_resume().
+> I guess this is due PM not being used necessarily. So do I still have to use
+> #ifdef CONFIG_PM or what did I miss there?
 > 
-> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> ---
->  .../bindings/media/rockchip,rk3568-vicap.yaml      | 167 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 168 insertions(+)
+> static int ads71x8_runtime_suspend(struct device *dev)
+> {
+>         struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>         struct ads71x8_data *data = iio_priv(indio_dev);
 > 
+>         return ads71x8_set_conv_mode(data, ADS71x8_MODE_MANUAL);
+> }
+> 
+> static int ads71x8_runtime_resume(struct device *dev)
+> {
+>         struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>         struct ads71x8_data *data = iio_priv(indio_dev);
+> 
+>         return ads71x8_set_conv_mode(data, ADS71x8_MODE_AUTO);
+> }
+> 
+> static const struct dev_pm_ops ads71x8_pm_ops = {
+>         SET_RUNTIME_PM_OPS(ads71x8_runtime_suspend, ads71x8_runtime_resume, NULL)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Using SET_RUNTIME_PM_OPS() breaks the chain of references. Use
+RUNTIME_PM_OPS() instead.
 
-yamllint warnings/errors:
 
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/media/rockchip,rk3568-vicap.example.dts:73.3-74.1 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/media/rockchip,rk3568-vicap.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
+> };
+> 
+> ....
+> 
+> static struct i2c_driver ads71x8_driver = {
+>         .driver = {
+>                 .name = "ads7138",
+>                 .of_match_table = ads71x8_of_match,
+>                 .pm = pm_ptr(&ads71x8_pm_ops),
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250206-v6-8-topic-rk3568-vicap-v3-3-69d1f19e5c40@wolfvision.net
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+>         },
+>         .id_table = ads71x8_device_ids,
+>         .probe = ads71x8_probe,
+> };
+> module_i2c_driver(ads71x8_driver);
+> 
+>
 
