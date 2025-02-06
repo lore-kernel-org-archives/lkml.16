@@ -1,115 +1,172 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892E717548;
-	Thu,  6 Feb 2025 06:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F1A2248AC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738823190; cv=none; b=GpJwCu80mHW3VQ+hPgNhyJpa1ywmJq3MdIU1x7vsmCJ4Czjnrsa1V6pkkXZxRBKBijvqDY6uzQx4qs00ue5xdgLpaa+YIflD3AqwM8LrOs06vlpeubPitmc3Sj5RHOeQAzjVtnSAxajLEGGaT08hLXzLzzlqRKnjjoO5PR3V8LI=
+	t=1738823214; cv=none; b=gc1Gr4a2CReV0rSz4P0r+peLk5vZlzBKPzshyfDHaw2Gx718rCnCyYwhZRR8SAZlYt5ki/D7Wqoj0K3Wir0e68d8ci9EUuGwK2/9xKaPp7Bxj3xzXbP5eh/16B7xtl+KChFIQi15rhhgPCqtU+K9aTRE1iXSWzGC/5oC/PQc+V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738823190; c=relaxed/simple;
-	bh=mNpEFORjBAbxT8VDCvgklG+lds95zlbjusQeEH/Pgi0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WsGEw7AAHVTlWnTyiYQRISENsKVOdeZRh1STg7mcIrosbcOQ1EEUARUK49hawyZtYLdfN453Amyd8CnukivLG/dz5OWodoMCxJYJJNcs5SSYG2FKn02EqRKe44zn5VH9dwYd5dM30OiIjtM9CF3+0UupKD2AjH6P0spW/akkfZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lAccUspi; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1738823214; c=relaxed/simple;
+	bh=DqeZXYxlQUMWfDhfpNmpJNCxBahKqpqoaaTG93nE3v4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DygRu31kIfptLjBbSw7ysKyvZUZ7dsgUTkiKyxdSjU2WvGjMhkcvua2mKwj3h1b9N+d/ZNRnxRjvvfJTshLC7z85lUM5qgcv24svBbyPE8Aju93E6QeNx/OKskuuSE+v0iBsAKFmCnmL0Rg4cSFB/JcpmVlN3HPpjjrbPx8MgZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f7p6f/Ji; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lAccUspi"
-X-UUID: 2a588756e45111efb8f9918b5fc74e19-20250206
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=CRSfEf2M4ecLsopoPb2+M/Ujy7qVTEij8K5gI3vgVwo=;
-	b=lAccUspiT/xuAgYu2DRGu1gDbdjdzGX9EWvylloQN0SfVS84zYzi7+P0M3o25VrZL+4RQOpYcSPDwiAOynciatnrLFSOB5Vd2IDxP+bQ5iVaTEq77d3GMDHL53X3cJ7hZ3EraKZXJSk2c0hiSOe3NTgMLXdf2DKraQH3PVoveQA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:3c7f3ac0-acd2-46c1-a602-6a39a918a9fd,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:2625267f-427a-4311-9df4-bfaeeacd8532,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
-	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 2a588756e45111efb8f9918b5fc74e19-20250206
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
-	(envelope-from <jiande.lu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 685942944; Thu, 06 Feb 2025 14:11:12 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 6 Feb 2025 14:11:11 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Thu, 6 Feb 2025 14:11:11 +0800
-From: Jiande Lu <jiande.lu@mediatek.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
-CC: Sean Wang <sean.wang@mediatek.com>, Chris Lu <chris.lu@mediatek.com>,
-	Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>, Steve
- Lee <steve.lee@mediatek.com>, linux-bluetooth
-	<linux-bluetooth@vger.kernel.org>, linux-kernel
-	<linux-kernel@vger.kernel.org>, linux-mediatek
-	<linux-mediatek@lists.infradead.org>, Jiande Lu <jiande.lu@mediatek.com>
-Subject: [PATCH] Bluetooth: btusb: Add 2 HWIDs for MT7922
-Date: Thu, 6 Feb 2025 14:11:07 +0800
-Message-ID: <20250206061107.3541537-1-jiande.lu@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f7p6f/Ji"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-435b0df5dbdso34575e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 22:26:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738823210; x=1739428010; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=03yRrzqwkoQNcy0a5o+voo3nHbEC43zmbznaf95qV3A=;
+        b=f7p6f/JiSYs+9TIebmj9GbyRB9hYmRtYlqsQSwKCcnjgC00og8o85b0YGkpQWlSOI0
+         EoRK0ootfVKU+duytEwWBDFCHLGnEFRPYEaM9Yjvx1Jk1Gd8cZMl8yhyj9n1PPLSND7o
+         RtsC6OtOPzy/8QCnIKKEUvp6j0OeV1ThpBuaA4SCR2Ci/siblXixd0Nzds6gA0RQUVgP
+         WzlW0tVqeieoLGmgLoftjeY3nTV/1FVOHTzUrYBKKJFQPqIs2y18TwzdFrkyLJDemcRd
+         fH8LJMggqweM3JIN9cn6T44+3yKqATnFrf32oBjxGY2X8gnkTzF4qF2Z+K2BY1g1SU+c
+         eG0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738823210; x=1739428010;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=03yRrzqwkoQNcy0a5o+voo3nHbEC43zmbznaf95qV3A=;
+        b=ecoPstVSoiGbHVRWkip692L7Mcmc2yDk3BNOVYVyCH63jJ0RhOtZhdTfNjV72XSKBq
+         JQgZ6oERzEGDGzJpxLqYMWq49ipqyOTn7U/6Q/GPALO1dKClTpMn+Ndhw/tOvP/jrUO7
+         TGAC5UPGWe+N1ktUqkuCD0N3T2qbHqNF1iboKsIYM6xR9ai7V0U1j9k+K+QFUJ520bLm
+         b9tmLsWJTQFIG1MQriEwr6KSm7U79/7zWBETCf1rXZ4fo+p0SBdxsMSiCIhMESe17o1y
+         6DPwcOSkvE6GSHDaqKr1TvVG2xep4Nm78jPY8G8Gb9t1Pe1HpTdDDBXsrGN1ig1rr68v
+         6Yyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1Fd//iV2o1Hx3AJr0U/4W4taYZ8QuFTKuE4hjasxs2f2AP8cLOusW1iqelV/kPxw90s7P3OLQUizwT9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5MeajsiBIJQ1GR9wCujVTe8JFmP1iz7zKqEPePTRFXkUL5XU+
+	Z0dHrSZ2Itx2x3ND9mn0PXanMjNMaI4nCp4nMZiQMZcpnSPhjLBA43iaEvW5ADCzIYfJsKOWuzq
+	3K0UPJsUuoTz8aY0B9xr0LLwHD/k3NesVRxis
+X-Gm-Gg: ASbGncvmGOnnhgmVjbDvisVEdeS3ii+RIJ4QENF6+JQo3JIDVlgWLEbb/4s2gJPV1Ug
+	ymtHOIB3+zaA0GTae4ZXGED1aOhZpFbUMFiGaAgrx0xmmzchiJdIWyjX9GZyskC8hYlEQCgag2w
+	==
+X-Google-Smtp-Source: AGHT+IEVztvMJcFJufCLJxG+rqwnV37blaPqUEHHEG4/YPqrXsBOAtuTMRsxeRmxk2+eGpCVw71JruXFsZiuK4zhtvw=
+X-Received: by 2002:a05:600c:1f84:b0:436:186e:13a6 with SMTP id
+ 5b1f17b1804b1-439179d18e5mr495335e9.6.1738823210278; Wed, 05 Feb 2025
+ 22:26:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+References: <20250204213121.14195-1-jeroendb@google.com> <20250205162839.GH554665@kernel.org>
+In-Reply-To: <20250205162839.GH554665@kernel.org>
+From: Ziwei Xiao <ziweixiao@google.com>
+Date: Wed, 5 Feb 2025 22:26:38 -0800
+X-Gm-Features: AWEUYZn5QfQLmyauxa5E7e57SqvtCHGB3sOJiulqpZDH_lPqPTh9ZQ-BqHXPV_s
+Message-ID: <CAG-FcCMAT7Bvmxgo1aJh+Bv=z8MJKJN9LyzxOBuQVNMO2A=2qQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] gve: Add RSS cache for non RSS device option scenario
+To: Simon Horman <horms@kernel.org>
+Cc: Jeroen de Borst <jeroendb@google.com>, netdev@vger.kernel.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	pkaligineedi@google.com, shailend@google.com, andrew+netdev@lunn.ch, 
+	willemb@google.com, hramamurthy@google.com, linux-kernel@vger.kernel.org, 
+	Jeroen de Borst <jeroend@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add below HWIDs for MediaTek MT7922 USB Bluetooth chip.
-VID 0x0489, PID 0xe152
-VID 0x0489, PID 0xe153
-
-Patch has been tested successfully and controller is recognized
-device pair successfully.
-
-MT7922 module bring up message as below.
-Bluetooth: Core ver 2.22
-Bluetooth: HCI device and connection manager initialized
-Bluetooth: HCI socket layer initialized
-Bluetooth: L2CAP socket layer initialized
-Bluetooth: SCO socket layer initialized
-Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20241106163512
-Bluetooth: hci0: Device setup in 2284925 usecs
-Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
-Bluetooth: hci0: AOSP extensions version v1.00
-Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-Bluetooth: BNEP filters: protocol multicast
-Bluetooth: BNEP socket layer initialized
-Bluetooth: MGMT ver 1.22
-Bluetooth: RFCOMM TTY layer initialized
-Bluetooth: RFCOMM socket layer initialized
-Bluetooth: RFCOMM ver 1.11
-
-Signed-off-by: Jiande Lu <jiande.lu@mediatek.com>
----
- drivers/bluetooth/btusb.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 1caf7a071a73..6db25b8d6d42 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -667,6 +667,10 @@ static const struct usb_device_id quirks_table[] = {
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x0489, 0xe102), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH },
-+	{ USB_DEVICE(0x0489, 0xe152), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH },
-+	{ USB_DEVICE(0x0489, 0xe153), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x04ca, 0x3804), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x04ca, 0x38e4), .driver_info = BTUSB_MEDIATEK |
--- 
-2.45.2
-
+On Wed, Feb 5, 2025 at 8:28=E2=80=AFAM Simon Horman <horms@kernel.org> wrot=
+e:
+>
+> On Tue, Feb 04, 2025 at 01:31:21PM -0800, Jeroen de Borst wrote:
+> > From: Ziwei Xiao <ziweixiao@google.com>
+> >
+> > Not all the devices have the capability for the driver to query for the
+> > registered RSS configuration. The driver can discover this by checking
+> > the relevant device option during setup. If it cannot, the driver needs
+> > to store the RSS config cache and directly return such cache when
+> > queried by the ethtool. RSS config is inited when driver probes. Also t=
+he
+> > default RSS config will be adjusted when there is RX queue count change=
+.
+> >
+> > At this point, only keys of GVE_RSS_KEY_SIZE and indirection tables of
+> > GVE_RSS_INDIR_SIZE are supported.
+> >
+> > Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+> > Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> > Reviewed-by: Willem de Bruijn <willemb@google.com>
+> > Signed-off-by: Praveen Kaligineedi <pkaligineedi@google.com>
+> > Signed-off-by: Jeroen de Borst <jeroend@google.com>
+> > ---
+> > Changes in v2:
+> >  - Change to initialize RSS config when the driver is up instead of
+> >    doing that when the user setting the RSS.(Jakub Kicinski)
+> >  - Use NL_SET_ERR_MSG_MOD to log errors when there is extack
+> >    available.(Jakub Kicinski)
+> >  - Use ethtool_rxfh_indir_default to set default RSS indir
+> >    table.(Jakub Kicinski)
+> >  - Adjust the default RSS config when there is RX queue count change to
+> >    ensure the default RSS config is correct.
+> >
+> >  drivers/net/ethernet/google/gve/gve.h         | 16 +++-
+> >  drivers/net/ethernet/google/gve/gve_adminq.c  | 64 ++++++++++---
+> >  drivers/net/ethernet/google/gve/gve_ethtool.c | 60 ++++++++++--
+> >  drivers/net/ethernet/google/gve/gve_main.c    | 92 ++++++++++++++++++-
+> >  4 files changed, 209 insertions(+), 23 deletions(-)
+>
+> ...
+>
+> > diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/ne=
+t/ethernet/google/gve/gve_ethtool.c
+> > index bdfc6e77b2af..efcafc607b2a 100644
+> > --- a/drivers/net/ethernet/google/gve/gve_ethtool.c
+> > +++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
+> > @@ -482,6 +482,7 @@ static int gve_set_channels(struct net_device *netd=
+ev,
+> >       struct ethtool_channels old_settings;
+> >       int new_tx =3D cmd->tx_count;
+> >       int new_rx =3D cmd->rx_count;
+> > +     bool reset_rss;
+> >
+> >       gve_get_channels(netdev, &old_settings);
+> >
+> > @@ -498,16 +499,14 @@ static int gve_set_channels(struct net_device *ne=
+tdev,
+> >               return -EINVAL;
+> >       }
+> >
+> > -     if (!netif_running(netdev)) {
+> > -             priv->tx_cfg.num_queues =3D new_tx;
+> > -             priv->rx_cfg.num_queues =3D new_rx;
+> > -             return 0;
+> > -     }
+> > +     if (new_rx !=3D priv->rx_cfg.num_queues &&
+> > +         priv->cache_rss_config && !netif_is_rxfh_configured(netdev))
+> > +             reset_rss =3D true;
+>
+> Hi Jerome,
+>
+> This is not a full review (which I was working on but ran out of time for=
+ now).
+> But, if the condition above is not met then reset_rss will be used
+> uninitialised below.
+>
+> Flagged by W=3D1 build with clang-19.
+>
+Thank you for pointing that out. Will fix it on the V3 patch.
+> >
+> >       new_tx_cfg.num_queues =3D new_tx;
+> >       new_rx_cfg.num_queues =3D new_rx;
+> >
+> > -     return gve_adjust_queues(priv, new_rx_cfg, new_tx_cfg);
+> > +     return gve_adjust_queues(priv, new_rx_cfg, new_tx_cfg, reset_rss)=
+;
+> >  }
+> >
+> >  static void gve_get_ringparam(struct net_device *netdev,
+>
+> ...
+>
+> --
+> pw-bot: cr
