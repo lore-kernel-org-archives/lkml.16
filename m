@@ -1,143 +1,127 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D398B20C032
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD00200B9F;
+	Thu,  6 Feb 2025 07:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738827488; cv=none; b=SslKpdhX12EoBLOG2jUEz+aZLDJO1kyG3wbnUcSsoDLjvuCSTcdEL0ItzQwuFIL5aLIxTnqvZ/HvoWSYfB2VD6YyIXaNNMOzuKQneQtG8GOWzK+OA+eWdrAsvhW0dopxEI9aGXP8kwxt0EB8dupb/G+32Fr24daPUr5jGv0XMqc=
+	t=1738827517; cv=none; b=RrcBuuf0NsCV+WaH4W4haEIDGq3ltgqk+t1WJdIMsk9h6toy98kAXTUDP0+UOjWiAGRW+BS9/MOr5rfqQhcBaNcG8wQ0zH9gLPtyyjQpQdzITCgo4dK2qjIZq3PrsMHnO1QuMK83kmDNRAJXKqnzE8lw8lKTN9CFda/sBZSAqMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738827488; c=relaxed/simple;
-	bh=EyGe1UfcXbMoU+uCUT8epWa9MjazPWv9ZvOrFkHKyhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rz4fRWDtkdMRvNIP67n5BoFmz+p0FnIpW2QsF7rreIfipVjAo7NI1eAG8fji7+4fVOx2LlwWiL3oHKAbc8cY6AcZqHhn8LntYsps4EUr0ndxMD1uXFtegu/jrTFrnkJhumdoKWeijStC53tEJvZ6nEKtDGZfebU66JJZhyx2VZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QwvIpg8C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OkBHMCTR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738827517; c=relaxed/simple;
+	bh=ZveI/hkfecp+mslVjj9PQ+ggQSUCl0WC4w4q9caS0Dk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hXGiGs11YIXoHlshhTak6poO+X1DxRjjyw0HZX4a3nIVqTr8Gp6FukLnc7aWXAqTZmQj7k8tIdr0996JU3so2aluIrOcRNGhgn931siEgGQdOpQpLr8zglKhm/cwK/+ZMiA13traV+qss+JgF/NhSKAa+i7t2OugyPi4iVkemOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm2+cq1C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QwvIpg8C";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OkBHMCTR"
-Date: Thu, 6 Feb 2025 08:38:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738827484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Dlnv+jpgMFjGanz60mPgQXAr/AkzQst+XBYrEHi1U8=;
-	b=QwvIpg8C8FaZdXC84w7m1q+UiRnLbTpcK+l7aQhqZOcWLchdGzVA1k6dwaqDBwJH3TviP4
-	Qhq4xJnRfKAcz7cbka76OsuWkz4BdCdwmOe3aR9Rh61WFVrrt4UFcnehti3cWZbv3L2/Mf
-	HZhiXqKH0USBiYmkq9g8NTTk5Kre3uMAX4siGOLgXOKQ4fp5nal+0JJpBJtuocQUB5IXF/
-	xgwLo2BUfbr/xyW5BFR3we42m4aewTQpTlPfx17T8xr4nwn18tKQf+QhbzXXPBWEYz8dZG
-	0IKei1JndN6sDmAVs97R0ft+cFk3bHPzP5sCEVEZsr83BSBACuNnQCOag3vGpw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738827484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Dlnv+jpgMFjGanz60mPgQXAr/AkzQst+XBYrEHi1U8=;
-	b=OkBHMCTRR1gddF6WYTPazVl0aqmcDGmlNBBR0aUo4uUeaoffezWqgQ8OgSdxeDKL4gHPEu
-	GhXUgB2mSHaiiDDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-	Mike Galbraith <umgwanakikbuti@gmail.com>
-Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
-Message-ID: <20250206073803.c2tiyIq6@linutronix.de>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-2-senozhatsky@chromium.org>
- <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
- <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm2+cq1C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A29C4CEDD;
+	Thu,  6 Feb 2025 07:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738827516;
+	bh=ZveI/hkfecp+mslVjj9PQ+ggQSUCl0WC4w4q9caS0Dk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Hm2+cq1CMPN/gvf7qjhr5rXOSbn7xFmp4D9idW1wEnP5xQNWCgN4sfhSDmsFSVz0s
+	 UnP6Nj/D/tAatdx3NamDWD1H8lX3NPZq79hBAwsnZcPRwKFmF8fFOF2FGv9+OVKT9o
+	 ChuRoszhPYPuam4drBYV9G9Woe8JQ0MXMp1c2xIUVO3kZQH3t7sBhjhgybEqDpa9Iv
+	 JVOhZb1PFG2DSpZCyPDZre8LBMu3sSBrx6SpU8CQS/lWZLo3ALYVGUCn4CmfRyCudF
+	 SMx3cjFX18pjfTia0twRHLko+bohEnof/9xcUAXz7KQ8BiTAv4PKmltYC7lkWcSSmt
+	 htGYbxUvUFklA==
+Message-ID: <fc4c51e9-bd5a-4056-8e56-dd29ac0b4eca@kernel.org>
+Date: Thu, 6 Feb 2025 08:38:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: iio: light: fix missing type definition
+To: Dharma.B@microchip.com
+Cc: m.gonella.bolduc@gmail.com, jic23@kernel.org, lars@metafoo.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ Jonathan.Cameron@huawei.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250205-brcm-binding-v1-1-a996a840d2d6@microchip.com>
+ <20250205-enormous-wise-copperhead-c1c0a9@krzk-bin>
+ <1e1ff244-098b-4b3b-b430-8bed9ca8188c@microchip.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1e1ff244-098b-4b3b-b430-8bed9ca8188c@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-06 16:01:12 [+0900], Sergey Senozhatsky wrote:
-> So I completely reworked this bit and we don't have that problem
-> anymore, nor the problem of "inventing locking schemes in 2025".
->=20
-> In short - we are returning back to bit-locks, what zram has been using
-> until commit 9518e5bfaae19 ("zram: Replace bit spinlocks with a spinlock_=
-t),
-> not bit-spinlock these time around, that won't work with linux-rt, but
-> wait_on_bit and friends.  Entry lock is exclusive, just like before,
-> but lock owner can sleep now, any task wishing to lock that same entry
-> will wait to be woken up by the current lock owner once it unlocks the
-> entry.  For cases when lock is taken from atomic context (e.g. slot-free
-> notification from softirq) we continue using TRY lock, which has been
-> introduced by commit 3c9959e025472 ("zram: fix lockdep warning of free bl=
-ock
-> handling"), so there's nothing new here.  In addition I added some lockdep
-> annotations, just to be safe.
->=20
-> There shouldn't be too many tasks competing for the same entry.  I can
-> only think of cases when read/write (or slot-free notification if zram
-> is used as a swap device) vs. writeback or recompression (we cannot have
-> writeback and recompression simultaneously).
+On 06/02/2025 03:41, Dharma.B@microchip.com wrote:
+> On 05/02/25 5:07 pm, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On Wed, Feb 05, 2025 at 09:48:45AM +0530, Dharma Balasubiramani wrote:
+>>> Add the missing type definition for ps-cancellation-current-picoamp property.
+>>
+>> It is not missing. You are using some older schema probably.
+> 
+> Sorry, if I miss something here..
+> 
+> There is no $Ref or type for ps-cancellation-current-picoamp property
 
-So if I understand, you want to get back to bit spinlocks but sleeping
-instead of polling. But why? Do you intend to have more locks per entry
-so that you use the additional bits with the "lock"?
+There is a ref in dtschema.
 
-> It currently looks like this:
->=20
-=E2=80=A6
-> static __must_check bool zram_slot_try_lock(struct zram *zram, u32 index)
-> {
->         unsigned long *lock =3D &zram->table[index].flags;
->=20
->         if (!test_and_set_bit_lock(ZRAM_ENTRY_LOCK, lock)) {
-> #ifdef CONFIG_DEBUG_LOCK_ALLOC
->                 mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET=
-_IP_);
-> #endif
->                 return true;
->         }
->         return false;
-> }
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml#n39
+> 
+> I checked in other bindings as well.
+> 
+> I get the following warning while make dtbs_check or dt_binding_check
+> 
+> Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml: 
+> ps-cancellation-current-picoamp: missing type definition
+> 
+> Should I need to update anything?
 
-I hope the caller does not poll.
+As I said - older schema, so yes, you need to update your dtschema or
+wait for new release.
 
-> static void zram_slot_lock(struct zram *zram, u32 index)
-> {
->         unsigned long *lock =3D &zram->table[index].flags;
->=20
->         WARN_ON_ONCE(!preemptible());
-
-you want might_sleep() here instead. preemptible() works only on
-preemptible kernels. And might_sleep() is already provided by
-wait_on_bit_lock(). So this can go.
-
->         wait_on_bit_lock(lock, ZRAM_ENTRY_LOCK, TASK_UNINTERRUPTIBLE);
-> #ifdef CONFIG_DEBUG_LOCK_ALLOC
->         mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET_IP_);
-> #endif
-
-I would argue that you want this before the wait_on_bit_lock() simply
-because you want to see a possible deadlock before it happens.
-
-> }
->=20
-> static void zram_slot_unlock(struct zram *zram, u32 index)
-> {
->         unsigned long *lock =3D &zram->table[index].flags;
->=20
->         clear_and_wake_up_bit(ZRAM_ENTRY_LOCK, lock);
-> #ifdef CONFIG_DEBUG_LOCK_ALLOC
->         mutex_release(&zram->table[index].lockdep_map, _RET_IP_);
-> #endif
-Also before. So it complains about release a not locked lock before it
-happens.
-> }
-
-Sebastian
+Best regards,
+Krzysztof
