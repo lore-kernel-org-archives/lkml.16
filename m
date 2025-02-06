@@ -1,129 +1,103 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7A1226195;
-	Thu,  6 Feb 2025 09:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE8BE226193;
+	Thu,  6 Feb 2025 09:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738835179; cv=none; b=tyEPx+6Uobqv2cbV8WZFp3Y8Wg0TU4iRghZdDHWi5DR4y8lFo5oBDOkKxbgwpmie89CFGkBZfdT+FWObfRQj22VAHliMQHjW5u6iDckSQEKVFaD4HZVRzgHIuwjst6Etvetq5KrkPEJozv8QOT0BGw/hcCPWjdl92TV/u5oCYfM=
+	t=1738835181; cv=none; b=eFqYXqXNZQnVJEmfEzPbuHOh5y1h7NWMkr9MaQ3uhx+1CflLoV44gWdhb5oHmkVBRDObo09B9bIIF3d9qeLL/WHPgkBt+1fJggx/9ntE+ez9jDgKU3PPGj5p0hAxC/GgtZkAXF/BlR1bT9YJngixcsvHaKdPFJz95FV05g/2ov8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738835179; c=relaxed/simple;
-	bh=yHi42OoYXOYcDdfvKrierQhOyZCv7bVPZPo59KgjX4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GiHN5XYQ7jygbYJ6Jn3t6AdUK7RqZh0/otEhd2T39/IgMVUP4IPZvB4QzFDw0r1j8D9ahK1iq0ba7Fjf2TFDsyDn0I8qTOJ8U13tAiUWzafOVnuaZ7SuPMuZgLHpRNRZivK/aNp81jfN1oZDlurzqzpFj09Btttbt/DxMv8dxX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QzLwHb2p; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738835181; c=relaxed/simple;
+	bh=OciwV88ohOu6tEga8w5/A7cFo03Xlfs4DGnqeIwiR/M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JScltmne14Ee8J4YjC/OGZRH2SJmB4Npa0esh2puOsN2jrLygvFrpuJiUNxl9t7jncpG6/jAC/Sas1a55xCwU90NeRvv8uRUeu8wttm/NWx1iiS9meGA+OtaqErncYR/iKD9335HacxgUuLFzk1yP2gK4rchBr1PGjBt414Uub0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=h/aPps5Z; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzLwHb2p"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so936190a91.2;
-        Thu, 06 Feb 2025 01:46:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738835176; x=1739439976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tCPMC7StlyyKP7rDHpNBxbTd/AxRdGidh75hj0GUUPQ=;
-        b=QzLwHb2pIAu0B+jxkT8486kkf/YMMwirq1iMR5Nc4dDnuU7dEPxfsFSz8TEZBfVAMR
-         frQtcYGlzcx+MetF8WhnvBsFNJzp2N1WQ/F95eJw7Wtd50NNKWhVyuuWib71GTjHshK+
-         3QjKkoabaWsjjENAllDTPlZmzuFtsUSRBgEp0ZohS52pGhznjFOuS1T6p7SD5SrUOZnO
-         zr2jTt5m5e7qPmxeJROnwWcqyz3lyo+jIvjpL6A3zQIgggumICrrsbFELKVpf3BrSSdK
-         6chv0pJXH2/IJuQEVAm5vCoIwMvgXO/79mWFiHm6GubDcEnUUQDVGbQ1yojrQpfqSdCa
-         Y2KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738835176; x=1739439976;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tCPMC7StlyyKP7rDHpNBxbTd/AxRdGidh75hj0GUUPQ=;
-        b=J+3aIx+LdymrVr1eZvAboJsk9pgTfkEPFe8WtBdXtl8BOFFvwQrY4QYKrmZxft3EJI
-         ua+2gjKU61Jdg3ZuHDiPF+JBoPm1VKDUU0Y7qFWhwoJGnNstk9Rj8sEdfhym0FRMjKkK
-         2MjLqR11LNStXEb/LC0XGzBRmhNDbLo+jO/URc8NZJ6HObttfHjWdXkl2ADtAfItYhyp
-         F0XYcoTurACBshsPWTZ+K1YQyScYPmRW/dGQAjU1PI5Wsf1/NzKS4SO8tFnwSTAi7Q9d
-         2WKLEvHciyyjpl96OE4g0P06opuEM9WIDtQVRHIcjBiQyPdyQ+sL+srDu5WhRs6IJqq6
-         wYQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXCtzfbA9Bk3H69XIIbDJX6Z/smjQ93bIP8dzpBduk+WKLSyeHRihCKoIvo3yRtiX3EkR2LHizDXfwl1xua0NGf@vger.kernel.org, AJvYcCXHN5TzhrGY4wTxF9xz0ZnWg2ZO3twbhSgw7hLp/DSrN/p6p7S11CabUvq1IKuPH04HITMz3076y99xoYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSqE+i0yWDBKZh2/ol2G1Ik/UJwgs96ZcBPVd/3B1QaIJM0jiX
-	V9s6YQaXh59kwmgGlNM4oj7CnufANPzebAXGGi3b9kubes4nHWNtvN2WnVl6W0s=
-X-Gm-Gg: ASbGncvwhjfSC9jmtb64KC8Y5lUpOz2JsQxYkPmuMpYx7iQSwqH70J6mHyK9Mbqw1If
-	F03slIy+l7ozI/o2dGp6c04/kqG8Za6sTHL/ldpfwoCQ1IGDL/CFZFGgyzzBIDbkgwnRL+kshyS
-	TkwlixDJxoFDB76czOEUhd4OygePAMnIR4nacawTH7I2mMo+HvNlwHVvZr3ttCC0vrM7E4Cj0Xi
-	pO1JcdH3zO8THZpApCS0RtnkJPDtitzAuiT3FGM0kl417z7Ztr0LlbKBLNd2xy9+xUiPiA84zIN
-	kKieFYNUbqKUdPluax7drXiDC8eRJSTve0Y=
-X-Google-Smtp-Source: AGHT+IGUXIjSeh0EP5SREwFMbL/X/urQkGoF5NDe2OPP7UQ8Hibu24zP0GqYvQjbIBDu/waHpFddGA==
-X-Received: by 2002:a17:90b:4aca:b0:2ee:3fa7:ef4d with SMTP id 98e67ed59e1d1-2f9e0834424mr10823831a91.24.1738835176423;
-        Thu, 06 Feb 2025 01:46:16 -0800 (PST)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368da60bsm8394695ad.258.2025.02.06.01.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 01:46:16 -0800 (PST)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	Boris Pismenny <borisp@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="h/aPps5Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=HFB+Bawv3lBqMs7vEm+2pmHpbYdR99g6fi3SDpxKfB8=;
+	b=h/aPps5ZJ+I20lNC0VHDQ/kPCevoAKLrxhrSuMBrsLNRmyl5ZiiVhcg336TSyx
+	om0tVKJhSBdOozwLA2pCvtyoRcXxrJD+9NvReSSIu3jnCjxpMvfsmu9JsksKVJ17
+	aZIsu1hOKfZqleRpkiRQwuiGBzHoWbnKxn6AdETGmDrQM=
+Received: from hello.company.local (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3jWuZhKRn7M3tJw--.17672S2;
+	Thu, 06 Feb 2025 17:44:58 +0800 (CST)
+From: Liang Jie <buaajxlj@163.com>
+To: kuniyu@amazon.com
+Cc: buaajxlj@163.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	liangjie@lixiang.com,
 	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCHv2 net 1/2] bonding: fix incorrect MAC address setting to receive NS messages
-Date: Thu,  6 Feb 2025 09:45:59 +0000
-Message-ID: <20250206094600.357420-2-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250206094600.357420-1-liuhangbin@gmail.com>
-References: <20250206094600.357420-1-liuhangbin@gmail.com>
+	mhal@rbox.co,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com
+Subject: Re: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets autobind identifier length
+Date: Thu,  6 Feb 2025 17:44:57 +0800
+Message-Id: <20250206094457.196837-1-buaajxlj@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250206085834.17590-1-kuniyu@amazon.com>
+References: <20250206085834.17590-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3jWuZhKRn7M3tJw--.17672S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFWDWr13urWDCryftF43ZFb_yoW8AFykpF
+	W5Ka43JrZ5ArWxKr1Iqw10krs5ta15t3yUArW8XFy0kF4agrWxJF1SkrWj9w1DCr1Iqw1a
+	qr1rCa9FkryqvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUx-BtUUUUU=
+X-CM-SenderInfo: pexdtyx0omqiywtou0bp/xtbBzwvrIGekg7ALjgAAs6
 
-When validation on the backup slave is enabled, we need to validate the
-Neighbor Solicitation (NS) messages received on the backup slave. To
-receive these messages, the correct destination MAC address must be added
-to the slave. However, the target in bonding is a unicast address, which
-we cannot use directly. Instead, we should first convert it to a
-Solicited-Node Multicast Address and then derive the corresponding MAC
-address.
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+Date: Thu, 6 Feb 2025 17:58:34 +0900
+> From: Liang Jie <buaajxlj@163.com>
+> Date: Thu,  6 Feb 2025 16:19:05 +0800
+> > Hi Kuniyuki,
+> > 
+> > The logs from 'netdev/build_allmodconfig_warn' is as follows:
+> >   ../net/unix/af_unix.c: In function ‘unix_autobind’:
+> >   ../net/unix/af_unix.c:1222:52: warning: ‘snprintf’ output truncated before the last format character [-Wformat-truncation=]
+> >    1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
+> >         |                                                    ^
+> >   ../net/unix/af_unix.c:1222:9: note: ‘snprintf’ output 6 bytes into a destination of size 5
+> >    1222 |         snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
+> >         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > snprintf() also append a trailing '\0' at the end of the sun_path.
+> 
+> I didn't say snprintf() would work rather we need a variant of it that
+> does not terminate string with \0.
+> 
+> 
+> > 
+> > Now, I think of three options. Which one do you think we should choose?
+> > 
+> > 1. Allocate an additional byte during the kzalloc phase.
+> > 	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
+> > 		       UNIX_AUTOBIND_LEN + 1, GFP_KERNEL);
+> > 
+> > 2. Use temp buffer and memcpy() for handling.
+> > 
+> > 3. Keep the current code as it is.
+> > 
+> > Do you have any other suggestions?
+> 
+> I'd choose 3. as said in v1 thread.  We can't avoid hard-coding and
+> adjustment like +1 and -1 here.
 
-Fixes: 8eb36164d1a6 ("bonding: add ns target multicast address to slave device")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
----
- drivers/net/bonding/bond_options.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The option 3 would result in a waste of ten bytes. Why not choose option 1.
 
-diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
-index 327b6ecdc77e..63cf209dcdc9 100644
---- a/drivers/net/bonding/bond_options.c
-+++ b/drivers/net/bonding/bond_options.c
-@@ -1246,6 +1246,7 @@ static void slave_set_ns_maddrs(struct bonding *bond, struct slave *slave, bool
- {
- 	struct in6_addr *targets = bond->params.ns_targets;
- 	char slot_maddr[MAX_ADDR_LEN];
-+	struct in6_addr mcaddr;
- 	int i;
- 
- 	if (!slave_can_set_ns_maddr(bond, slave))
-@@ -1255,7 +1256,8 @@ static void slave_set_ns_maddrs(struct bonding *bond, struct slave *slave, bool
- 		if (ipv6_addr_any(&targets[i]))
- 			break;
- 
--		if (!ndisc_mc_map(&targets[i], slot_maddr, slave->dev, 0)) {
-+		addrconf_addr_solict_mult(&targets[i], &mcaddr);
-+		if (!ndisc_mc_map(&mcaddr, slot_maddr, slave->dev, 0)) {
- 			if (add)
- 				dev_mc_add(slave->dev, slot_maddr);
- 			else
--- 
-2.46.0
+I have a question about the initial use of the hardcoded value 16.
+Why was this value chosen and not another?  sizeof(struct sockaddr)?
+
+Its introduction felt abrupt and made understanding the code challenging for me,
+which is why I submitted a patch to address this.
 
