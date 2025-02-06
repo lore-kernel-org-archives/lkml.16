@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E25194A67;
-	Thu,  6 Feb 2025 18:13:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8955919ABAB;
+	Thu,  6 Feb 2025 18:14:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865632; cv=none; b=RKUQN+xaU/bpSRVI8uDkxQnFLIVhJeFhwsOOkpvaYi6vRyLwoaY+92JpPmF+/diLyEKe4kU9Vn5ORIzuqrSpWrVW/+oXJ1zwuSw3GKI7HIouvyLu9a3ZAb3sPJEgjngCbjA4foiHX6Ik4zoP5AgtQYFeeniUznUs8P8nAQTCRsE=
+	t=1738865651; cv=none; b=gt6CZIKgtgy727PlXO11B5gn6C1pnbaPKbM7fjwlJW2blSBYiUM+Cc3LRsu+l6xHdFxJfIOHaX/VwCZsnE13q5RPU5KdHq+OYQnIo7JmdVXtHYhW3h4BQNFTBp7/2XgPYFUww13vgmAuzK4S+CNXERZ4zGZ3Xi8d/lzbJD9kvHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865632; c=relaxed/simple;
-	bh=qpRlHeJcZ8Rg6GiEylH3nJ6t0qFUQU58DAXj2IT1v4s=;
+	s=arc-20240116; t=1738865651; c=relaxed/simple;
+	bh=dy+DMOoMSDp0jcd2rmqCEWg/B4n87lTgMHpZiZiqrEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G/fup2cl6LSQC55H2Lg/dAAsxEGe8+HxelwJuqioLZ45Yp/BnC+eoOWG4kMyAdzBcq+T/zgOtou4GZOmBkLBwCB64HBy5Bk9zfrwMnPkJD/lagxseR9dwXYtJ/UrEI02ICS3jW/UqaTTcWJtXnAaD4UmOb64r9R0dzghiT0/kts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuAfXx4Z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DiGxWjcAvHIHUKVVrrj6XY2YFpt3/Qd6YErMsJTrYYMlauyTiQgI+rcufrWI/eFZug6fepV3lZ3gDcGJ9Mq9WgFy5m42ZHLI6d7TzXnpfbFQ1QdETMWPMTzfisbkVmFV5tQXshzd+gDHkUdB5cJw24RcVMB7Qkr+8ge9nwmeqLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fzf4Oc6E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuAfXx4Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A66FC4CEDD;
-	Thu,  6 Feb 2025 18:13:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fzf4Oc6E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B317C4CEDD;
+	Thu,  6 Feb 2025 18:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738865632;
-	bh=qpRlHeJcZ8Rg6GiEylH3nJ6t0qFUQU58DAXj2IT1v4s=;
+	s=k20201202; t=1738865650;
+	bh=dy+DMOoMSDp0jcd2rmqCEWg/B4n87lTgMHpZiZiqrEU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZuAfXx4ZNiYZ3TZP7ZCllR1EQpRwKvsaMCxW7EeC61cyMdVUePlhC8egRPP7pOOjT
-	 ybgmbOEqGeixDpRnUWEnwAgC/sjzJ57umRUGkIhKpHHZGKhyuRYjS+uTsar8qHREMP
-	 XCyXzAQNqTISYzEaeJeRc6SqI9YAoExu6ZkjGraoFR7Z02QKUxbckRMAJ6829veUxI
-	 i9irRJ3mbxm3gs5eyp9H3gh7zP3xK8IwYR43SmtPJWjyQG1LgZZ/+ZjHucmGxfo1Rp
-	 AbaD2a6rE3ujFdrrs1d/0wUMRcJjaFlrLCEvw/vRrMGX+lR93t1BsxP64h97TAlntu
-	 XscmKC2irtFNQ==
-Date: Thu, 6 Feb 2025 18:13:47 +0000
+	b=Fzf4Oc6E5RNr689O2kugtZAGZ6ttSzviLz94XRVlA8tVfLOojh8PCAZil0o57K0U+
+	 wI46mvw3mDuOA6QABSys86j56ntUfeJo2WWZ/LU5Z/hE+5aM7S8VNWbfDcsv2E9V4T
+	 52JuW2v2xlIXSDdQ8BH2LlXzRAruzJOfVVoidv5sAoE7sLDBWKqy33k46C65aA+Mws
+	 7FlDXzlaTiyrJX2rwtySpfvHzz54SIhcNVIrGa0zd4U6vx1ZnXRVEm9DkTbvEEk2tO
+	 S9rSfT5djBrxAzc6id2kUt8lZXDMp9EQXyPKIICfUEjogi0CooJNrnoyUsqY5D0PrA
+	 FraEjYVOpLaHQ==
+Date: Thu, 6 Feb 2025 18:14:05 +0000
 From: Conor Dooley <conor@kernel.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>,
-	neil.armstrong@linaro.org, quic_jesszhan@quicinc.com,
-	airlied@gmail.com, simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: vendor: add csot
-Message-ID: <20250206-overlaid-eastward-610a0d6e34cd@spud>
+To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, airlied@gmail.com,
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, dianders@chromium.org,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: panel: Add compatible for
+ CSOT PNA957QT1-1
+Message-ID: <20250206-uselessly-riverbank-14c097e62ae2@spud>
 References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
- <20250206131300.1295111-2-yelangyan@huaqin.corp-partner.google.com>
- <CAD=FV=UfWJoUsKzYMkyU3U4Yn1ufAs=NHMCDL+db887Uec9fww@mail.gmail.com>
+ <20250206131300.1295111-3-yelangyan@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,69 +47,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BCdvD9ZIbZN+8WvF"
+	protocol="application/pgp-signature"; boundary="wll5mPIV/lTSeNrB"
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=UfWJoUsKzYMkyU3U4Yn1ufAs=NHMCDL+db887Uec9fww@mail.gmail.com>
+In-Reply-To: <20250206131300.1295111-3-yelangyan@huaqin.corp-partner.google.com>
 
 
---BCdvD9ZIbZN+8WvF
-Content-Type: text/plain; charset=utf-8
+--wll5mPIV/lTSeNrB
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 09:12:45AM -0800, Doug Anderson wrote:
-> Hi,
+On Thu, Feb 06, 2025 at 09:12:59PM +0800, Langyan Ye wrote:
+> Add a new compatible for the panel CSOT PNA957QT1-1. This panel uses
+> HX83102 IC, so add the compatible to the hx83102 binding files.
 >=20
-> On Thu, Feb 6, 2025 at 5:13=E2=80=AFAM Langyan Ye
-> <yelangyan@huaqin.corp-partner.google.com> wrote:
-> >
-> > Add "csot" to the Devicetree Vendor Prefix Registry.
-> >
-> > Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/D=
-ocumentation/devicetree/bindings/vendor-prefixes.yaml
-> > index 42d14899d584..375f1f7c79ef 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > @@ -336,6 +336,8 @@ patternProperties:
-> >      description: Crystalfontz America, Inc.
-> >    "^csky,.*":
-> >      description: Hangzhou C-SKY Microsystems Co., Ltd
-> > +  "^csot,.*":
-> > +    description: Guangzhou China Star Optoelectronics Technology Co., =
-Ltd
->=20
-> Doing a `git log` on
-> `Documentation/devicetree/bindings/vendor-prefixes.yaml` shows that
-> most patches use the subject prefix `dt-bindings: vendor-prefixes`,
-> not `dt-bindings: vendor`. If device-tree folks care about this
-> difference and they don't want to fix it when applying, they might
-> request you to send a new version.
->=20
-> In any case, that's fairly minor so I'm OK with:
->=20
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->=20
-> I would assume this will go through the DT tree, not drm-misc. If this
-> is wrong then someone should shout.
+> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
 
-idk, probably the whole series should go together via drm-misc.
-%subject can change if there's a resubmission, otherwise
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
---BCdvD9ZIbZN+8WvF
+--wll5mPIV/lTSeNrB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T72wAKCRB4tDGHoIJi
-0j/SAPoC/C0pCB6Rfsu3yKehTDKPZcAfV2TvGOVKD5gwb5RWPgD+PFLgD3XA0PVE
-VHMkn6PRxKBvUAwsB1Vmq2uHw3SItQE=
-=gFPY
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T77QAKCRB4tDGHoIJi
+0mbmAP94P8Cn/5ZgmegabpD8SSqFNPWR6gjGdIJczaNNPxnN6QD+OIIWROfuaczB
+9MQ4ipOv15tNQ08WfOiR2XqD0jORpQ0=
+=tuM0
 -----END PGP SIGNATURE-----
 
---BCdvD9ZIbZN+8WvF--
+--wll5mPIV/lTSeNrB--
