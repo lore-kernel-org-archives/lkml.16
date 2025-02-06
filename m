@@ -1,123 +1,239 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF3E214231;
-	Thu,  6 Feb 2025 08:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B24214231;
+	Thu,  6 Feb 2025 08:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738831753; cv=none; b=tRJdea6Te61v77Agw+yQM9oo0Gxs2FbMKSOjwej9NykEZZPsSqFK798jIm+K/VWO+XbMDGIsjbR+YTfWE1lXZgx2OeGeObrsZUuo0As9tlmE6sAUWpeMFdCb6D37C2itrv/msTZjhBgvApT/nAJQgLmU6PYGwJ7AC4LHrqiYp3A=
+	t=1738831759; cv=none; b=DoWEE7FjANrk3+kIaGNGVkCXCkbjjpqMRNVqi+XP6G5g/aYi5J9Q4EJkIv8/rQIw+DbA1fL1/wemdSvh8KCNbTz1UdHOchTV6QY57sjV3k+qxuG6XZDFz+zwYmaKS4KJ15/ECgQBOMkG6+eDWX52Y9WQ0zRHyV6285KzYZLXLnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738831753; c=relaxed/simple;
-	bh=djokZNGmgtaz0vzTbL/aVswcGa90JyNblLfQ9EqhcSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZOhOHA0XTzw1OJYXgQf/ch7CA8mqSmUbX3C2iYPgmgEC1A6aNAO3UbDivrOmEwU8ck1C4DSUwugOvk3Vebn5V+EOgvPgNd5GHrsTLuE39UlhR58abNfm7QHVv0tEt7tC8bWos3A3GqiMF0JRUFm9E8u+dO0RtduRpbCJiSSCtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghkMI+Gz; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738831759; c=relaxed/simple;
+	bh=7aG5/za7ruzMac1s3CS4suv9AvzYxTEakHWPMO2a+WM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=EwtRVdCGet8RR8iF3/ii3sPVNyc3Vbhzp74E4VbDZgoN/gGGuMD26mD+5Qoc5h7mpQ/zIf8g3+3DpHf/eGGby5/SZyg9xB7pGay3pFA/DqAwuD52u1RJPq1HIhcFepiAkSBYHxJNlzOgwGLbnCeWh/j5NfEIAiW876JV29yl61Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MNHCTiRu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghkMI+Gz"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa67ac42819so109686466b.0;
-        Thu, 06 Feb 2025 00:49:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738831750; x=1739436550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SKAx3jydy4wjMbI2a4R9TlCTNosKD1QK8YL3qB51DRk=;
-        b=ghkMI+GzeYiUP7TTU3B4t0xe2EsbWJdyyGwgZXqXmIfMd4nuznAIX3GsukBvXYynVS
-         8dNogQn+o1XCdA/O+Xj6ZidQ/UCurF1PjyWJJ0Ts8efnswdM7AE0t36Pmzl+sjE338p4
-         2Bj8sGH3rBCY60D+/0BGZp6HtmzAQ8vk1Ip2cx2OuOv40PF8q+2VdMOWocWAonmep62U
-         7lhiL3IOqLdgGnH7WWL+u7b1HZnDeTXEO187L0OY/4LtMqbylG8N8s+XM34vRSKH/a/P
-         grVpWbG8pVGQor95bFSdNf+7Zaj9nHPdlR2YqGD0PVgdxPSwH/o8+ZWE1mjgqXIoCx67
-         7l5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738831750; x=1739436550;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SKAx3jydy4wjMbI2a4R9TlCTNosKD1QK8YL3qB51DRk=;
-        b=p3hZqI0ECLd1D5MusVaz1sIQDV5BOX/+tz1KVSo4FcCqM4xbQ0CZZM0xAixQw6e/nd
-         0cmIkTdIklb0mdQw3gAZmGrhOSBQt3XtXXWvovUaHTDmdd3v5BfqHk9CvPzappixkCwz
-         OsjDus1i0FUM9/uE3o7R8Rb4PJN3jjQPdyPLoeIENMvbwRaJh0sHq6Cig3I3OblkNQik
-         oU4FcrzwW8vB02+OAL71OGyrTkXD+/6f+vA/yEFQKTff2ZRLo9lGcdIIeH04dKNG3R8c
-         tdKQLkJcANZnJJtsVNuo0kFo4D515YAlDW3I4nA3yQoa1ptg7sGVpm7ZzHOvWCdO9vna
-         o0Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIOUbNPbYUZM7GgDUekslj+sc+lfzTvdXRVjQ2MPF0biq9q1T39IvsHkmgn1GyAANiGkIDTMsdkxLrXvP6VOA=@vger.kernel.org, AJvYcCWrWH2U6Z/gtQZ4OiZbl8i9HFzgaowoYrjqu+2GGr57qAWFdbLRbI3yH2aPNrkbLqlYRRBHHGS0lP+OmwqV@vger.kernel.org, AJvYcCXbSUZv2LXjG3+xCB/QZTB34jPxXgMQxHVHTDG1ux0IwpXp2/qF/4NiEjARQMG6qc4/1OkSVr4c1VBlFdD9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXYMoWsfXPQ5Sp/QkW8fozVxaNDrqkLeAGMGJ8dRJXmwD4ybCL
-	YdGN4Y4nyeOOCModbiF3N2Lt06PSroPr6E6YM2K6VYzbIWXh0Pw7
-X-Gm-Gg: ASbGnct9EDa8y6pN1RUBvuIalm33o+abZs4tq8aNvN0tVzD94vfwS/cg3RfDfBpPpft
-	lIrdAMmP4UtGdEjkVAsnkm80ltTsjrlXP/9jKj3kuiLY/2711t5CEWk8st4ntYX15vVI7wxVzDk
-	F7Qdp+WFJc2soqRmE/ECNnOioODHoQOXztIlGIyxwniOamdmsxaJCkyiWlZv//GG603zEJ4+4P3
-	p9498IZQCGHgPFkCC7qgne9pznQZ0xvzxNa32mqa7s6/CFsd2QG7hJfjpQz2KmNCwc0w7Jaz03B
-	IhpVQgNPt064/zyk
-X-Google-Smtp-Source: AGHT+IHCL0zJ4Hhe4qIoL2dTmRs+3VCBXGoVXtOtsBgfMa7rYlx7UwqoDmkIrR+uRl7F+mMffmUvqA==
-X-Received: by 2002:a17:907:d88:b0:aa6:9176:61ed with SMTP id a640c23a62f3a-ab75e33cea1mr687924166b.48.1738831749750;
-        Thu, 06 Feb 2025 00:49:09 -0800 (PST)
-Received: from void.cudy.net ([46.210.137.151])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f49034sm65065766b.37.2025.02.06.00.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 00:49:09 -0800 (PST)
-From: Andrew Kreimer <algonell@gmail.com>
-To: "Martin K . Petersen" <martin.petersen@oracle.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Andrew Kreimer <algonell@gmail.com>
-Subject: [PATCH] scsi: target: iscsi: Fix typos
-Date: Thu,  6 Feb 2025 10:47:03 +0200
-Message-ID: <20250206084905.11327-1-algonell@gmail.com>
-X-Mailer: git-send-email 2.48.1.220.gbc204b7427
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MNHCTiRu"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5167xquF006451;
+	Thu, 6 Feb 2025 08:48:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HV7rdfOO37+bLA4QCT63lTmO77gcJONDjGXKxVKB6mQ=; b=MNHCTiRuJXvvYBfh
+	b2jUL9P8/F/1lpzXvgFaX/n7QhMKlCtbRXshaV4SOUlAicsDLPKS/ld879TaM/AK
+	l8JBFGZBEbJ4aVUWPpeB+KcjoOEiZcWPUjMLwYQ8IzURZS3Kr6Sd5ptBw6oecxTi
+	IGo1k8jukP4VE5Yjkt2vhf9vjlh30HzsRABMdFXu6owZqKBzcM7dRL4paIqFwhW0
+	bJutjtPFZNzJD0+AqdWw+vbWbnRR+uIU4DmG7z0tb8K9vLW4F04c65eDbKYl2plx
+	fDBu6+5T2DS6PCJaPfE+XITsuer1qr2+ym7SLs8+gxy+SiMiOuqHtKu4lyfMLf8G
+	uP3Faw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mp648hgu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 08:48:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5168mlmn017334
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Feb 2025 08:48:47 GMT
+Received: from [10.239.132.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
+ 00:48:43 -0800
+Message-ID: <10a970c0-e8f2-41c5-a68f-3ac4ae88d9d0@quicinc.com>
+Date: Thu, 6 Feb 2025 16:48:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] arm64: mm: Populate vmemmap/linear at the page level
+ for hotplugged sections
+From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+To: <anshuman.khandual@arm.com>, <catalin.marinas@arm.com>
+CC: <will@kernel.org>, <ardb@kernel.org>, <ryan.roberts@arm.com>,
+        <mark.rutland@arm.com>, <joey.gouly@arm.com>,
+        <dave.hansen@linux.intel.com>, <akpm@linux-foundation.org>,
+        <chenfeiyang@loongson.cn>, <chenhuacai@kernel.org>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <quic_tingweiz@quicinc.com>,
+        <stable@vger.kernel.org>
+References: <20250109093824.452925-1-quic_zhenhuah@quicinc.com>
+ <9ae36424-2cb6-491d-8ac2-95bfe39828a2@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <9ae36424-2cb6-491d-8ac2-95bfe39828a2@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: pK0AeNTT_iaLFAnCN66di-FsCCP3I7ts
+X-Proofpoint-ORIG-GUID: pK0AeNTT_iaLFAnCN66di-FsCCP3I7ts
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_01,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060071
 
-There are some typos in comments/messages:
- - Nin -> Min
- - occuring -> occurring
+Dear Catalin and Anshuman,
 
-Fix them via codespell.
+Given that it's a genuine bug affecting stability, we need to address it 
+:). Could you please let me know if you have any additional concerns or 
+thoughts?
 
-Signed-off-by: Andrew Kreimer <algonell@gmail.com>
----
- drivers/target/iscsi/iscsi_target_nego.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/target/iscsi/iscsi_target_nego.c b/drivers/target/iscsi/iscsi_target_nego.c
-index 16e3ded98c32..832588f21f91 100644
---- a/drivers/target/iscsi/iscsi_target_nego.c
-+++ b/drivers/target/iscsi/iscsi_target_nego.c
-@@ -212,7 +212,7 @@ int iscsi_target_check_login_request(
- 
- 	if ((login_req->max_version != login->version_max) ||
- 	    (login_req->min_version != login->version_min)) {
--		pr_err("Login request changed Version Max/Nin"
-+		pr_err("Login request changed Version Max/Min"
- 			" unexpectedly to 0x%02x/0x%02x, protocol error\n",
- 			login_req->max_version, login_req->min_version);
- 		iscsit_tx_login_rsp(conn, ISCSI_STATUS_CLS_INITIATOR_ERR,
-@@ -557,7 +557,7 @@ static void iscsi_target_do_login_rx(struct work_struct *work)
- 	 * before initial PDU processing in iscsi_target_start_negotiation()
- 	 * has completed, go ahead and retry until it's cleared.
- 	 *
--	 * Otherwise if the TCP connection drops while this is occuring,
-+	 * Otherwise if the TCP connection drops while this is occurring,
- 	 * iscsi_target_start_negotiation() will detect the failure, call
- 	 * cancel_delayed_work_sync(&conn->login_work), and cleanup the
- 	 * remaining iscsi connection resources from iscsi_np process context.
-@@ -1050,7 +1050,7 @@ static int iscsi_target_do_login(struct iscsit_conn *conn, struct iscsi_login *l
- 				/*
- 				 * Check to make sure the TCP connection has not
- 				 * dropped asynchronously while session reinstatement
--				 * was occuring in this kthread context, before
-+				 * was occurring in this kthread context, before
- 				 * transitioning to full feature phase operation.
- 				 */
- 				if (iscsi_target_sk_check_close(conn))
--- 
-2.48.1.220.gbc204b7427
+On 2025/1/15 10:13, Zhenhua Huang wrote:
+> Gentle reminder if you happened to miss it :)
+> 
+> On 2025/1/9 17:38, Zhenhua Huang wrote:
+>> On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
+>> to 27, making one section 128M. The related page struct which vmemmap
+>> points to is 2M then.
+>> Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
+>> vmemmap to populate at the PMD section level which was suitable
+>> initially since hot plug granule is always one section(128M). However,
+>> commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
+>> existing arm64 assumptions.
+>>
+>> Considering the vmemmap_free -> unmap_hotplug_pmd_range path, when
+>> pmd_sect() is true, the entire PMD section is cleared, even if there is
+>> other effective subsection. For example page_struct_map1 and
+>> page_strcut_map2 are part of a single PMD entry and they are hot-added
+>> sequentially. Then page_struct_map1 is removed, vmemmap_free() will clear
+>> the entire PMD entry freeing the struct page map for the whole section,
+>> even though page_struct_map2 is still active. Similar problem exists
+>> with linear mapping as well, for 16K base page(PMD size = 32M) or 64K
+>> base page(PMD = 512M), their block mappings exceed SUBSECTION_SIZE.
+>> Tearing down the entire PMD mapping too will leave other subsections
+>> unmapped in the linear mapping.
+>>
+>> To address the issue, we need to prevent PMD/PUD/CONT mappings for both
+>> linear and vmemmap for non-boot sections if corresponding size on the
+>> given base page exceeds SUBSECTION_SIZE(2MB now).
+>>
+>> Cc: stable@vger.kernel.org # v5.4+
+>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+>> ---
+>> Hi Catalin and Anshuman,
+>> I have addressed comments so far, please help review.
+>> One outstanding point which not finalized is in vmemmap_populate(): 
+>> how to judge hotplug
+>> section. Currently I am using system_state, discussion:
+>> https://lore.kernel.org/linux-mm/1515dae4-cb53-4645-8c72- 
+>> d33b27ede7eb@quicinc.com/
+>>   arch/arm64/mm/mmu.c | 46 ++++++++++++++++++++++++++++++++++++---------
+>>   1 file changed, 37 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index e2739b69e11b..8718d6e454c5 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -42,9 +42,13 @@
+>>   #include <asm/pgalloc.h>
+>>   #include <asm/kfence.h>
+>> -#define NO_BLOCK_MAPPINGS    BIT(0)
+>> -#define NO_CONT_MAPPINGS    BIT(1)
+>> -#define NO_EXEC_MAPPINGS    BIT(2)    /* assumes FEAT_HPDS is not 
+>> used */
+>> +#define NO_PMD_BLOCK_MAPPINGS    BIT(0)
+>> +#define NO_PUD_BLOCK_MAPPINGS    BIT(1)  /* Hotplug case: do not want 
+>> block mapping for PUD */
+>> +#define NO_BLOCK_MAPPINGS    (NO_PMD_BLOCK_MAPPINGS | 
+>> NO_PUD_BLOCK_MAPPINGS)
+>> +#define NO_PTE_CONT_MAPPINGS    BIT(2)
+>> +#define NO_PMD_CONT_MAPPINGS    BIT(3)  /* Hotplug case: do not want 
+>> cont mapping for PMD */
+>> +#define NO_CONT_MAPPINGS    (NO_PTE_CONT_MAPPINGS | 
+>> NO_PMD_CONT_MAPPINGS)
+>> +#define NO_EXEC_MAPPINGS    BIT(4)    /* assumes FEAT_HPDS is not 
+>> used */
+>>   u64 kimage_voffset __ro_after_init;
+>>   EXPORT_SYMBOL(kimage_voffset);
+>> @@ -224,7 +228,7 @@ static void alloc_init_cont_pte(pmd_t *pmdp, 
+>> unsigned long addr,
+>>           /* use a contiguous mapping if the range is suitably aligned */
+>>           if ((((addr | next | phys) & ~CONT_PTE_MASK) == 0) &&
+>> -            (flags & NO_CONT_MAPPINGS) == 0)
+>> +            (flags & NO_PTE_CONT_MAPPINGS) == 0)
+>>               __prot = __pgprot(pgprot_val(prot) | PTE_CONT);
+>>           init_pte(ptep, addr, next, phys, __prot);
+>> @@ -254,7 +258,7 @@ static void init_pmd(pmd_t *pmdp, unsigned long 
+>> addr, unsigned long end,
+>>           /* try section mapping first */
+>>           if (((addr | next | phys) & ~PMD_MASK) == 0 &&
+>> -            (flags & NO_BLOCK_MAPPINGS) == 0) {
+>> +            (flags & NO_PMD_BLOCK_MAPPINGS) == 0) {
+>>               pmd_set_huge(pmdp, phys, prot);
+>>               /*
+>> @@ -311,7 +315,7 @@ static void alloc_init_cont_pmd(pud_t *pudp, 
+>> unsigned long addr,
+>>           /* use a contiguous mapping if the range is suitably aligned */
+>>           if ((((addr | next | phys) & ~CONT_PMD_MASK) == 0) &&
+>> -            (flags & NO_CONT_MAPPINGS) == 0)
+>> +            (flags & NO_PMD_CONT_MAPPINGS) == 0)
+>>               __prot = __pgprot(pgprot_val(prot) | PTE_CONT);
+>>           init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
+>> @@ -358,8 +362,8 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned 
+>> long addr, unsigned long end,
+>>            * For 4K granule only, attempt to put down a 1GB block
+>>            */
+>>           if (pud_sect_supported() &&
+>> -           ((addr | next | phys) & ~PUD_MASK) == 0 &&
+>> -            (flags & NO_BLOCK_MAPPINGS) == 0) {
+>> +            ((addr | next | phys) & ~PUD_MASK) == 0 &&
+>> +            (flags & NO_PUD_BLOCK_MAPPINGS) == 0) {
+>>               pud_set_huge(pudp, phys, prot);
+>>               /*
+>> @@ -1177,7 +1181,13 @@ int __meminit vmemmap_populate(unsigned long 
+>> start, unsigned long end, int node,
+>>   {
+>>       WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+>> -    if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES))
+>> +    /*
+>> +     * Hotplugged section does not support hugepages as
+>> +     * PMD_SIZE (hence PUD_SIZE) section mapping covers
+>> +     * struct page range that exceeds a SUBSECTION_SIZE
+>> +     * i.e 2MB - for all available base page sizes.
+>> +     */
+>> +    if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES) || system_state != 
+>> SYSTEM_BOOTING)
+>>           return vmemmap_populate_basepages(start, end, node, altmap);
+>>       else
+>>           return vmemmap_populate_hugepages(start, end, node, altmap);
+>> @@ -1339,9 +1349,27 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>               struct mhp_params *params)
+>>   {
+>>       int ret, flags = NO_EXEC_MAPPINGS;
+>> +    unsigned long start_pfn = PFN_DOWN(start);
+>> +    struct mem_section *ms = __pfn_to_section(start_pfn);
+>>       VM_BUG_ON(!mhp_range_allowed(start, size, true));
+>> +    /* should not be invoked by early section */
+>> +    WARN_ON(early_section(ms));
+>> +
+>> +    /*
+>> +     * Disallow BlOCK/CONT mappings if the corresponding size exceeds
+>> +     * SUBSECTION_SIZE which now is 2MB.
+>> +     *
+>> +     * PUD_BLOCK or PMD_CONT should consistently exceed SUBSECTION_SIZE
+>> +     * across all variable page size configurations, so add them 
+>> directly
+>> +     */
+>> +    flags |= NO_PUD_BLOCK_MAPPINGS | NO_PMD_CONT_MAPPINGS;
+>> +    if (SUBSECTION_SHIFT < PMD_SHIFT)
+>> +        flags |= NO_PMD_BLOCK_MAPPINGS;
+>> +    if (SUBSECTION_SHIFT < CONT_PTE_SHIFT)
+>> +        flags |= NO_PTE_CONT_MAPPINGS;
+>> +
+>>       if (can_set_direct_map())
+>>           flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+> 
+> 
 
