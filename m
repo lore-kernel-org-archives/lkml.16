@@ -1,50 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09541A5B8F;
-	Thu,  6 Feb 2025 14:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2D7232378;
+	Thu,  6 Feb 2025 14:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852110; cv=none; b=iR46SPagbnd6Z1tkn0fCw03AA27eFyN7RPB2Y5/byA7SNM4MBQ1coaOZptA8xO+eJQkj1IdpwE5q5aJdBWe5X1sdYB5GnmT/Z67QI09vpC/oWMaN/bYRJh+/AC4okqmDO1aR+WSyeAwM7fTGnlJ7R/GjKwyY9De/TM3aNTJrZaY=
+	t=1738852115; cv=none; b=NlHcR61REBTeR7LpuBauI6AL7tsyKbwdFEYe+Y0y+7j+tw3nz67rUmS/tiSjBel0KwyK2ZHjKLqmKu0XFS+AHNcydJ2hu5ZwfgAeV1333nfsYIXDFDg3ojxdW7Y3PruEKD8PRD+ZaizTeyeFrMgxvq4d1xvkWcjXGbI+Y5HK8hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852110; c=relaxed/simple;
-	bh=iTfHKvbnhZt+g/hfLvuOilfEg1gjiVZgATfj6qx2TsQ=;
+	s=arc-20240116; t=1738852115; c=relaxed/simple;
+	bh=fgbY++RJ+ic/+i8oSfsHGyc3RLIXbYiasUWHSyg7s8g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uA8k64uceIvQuRKrg5xTWVnled+OF7FAh2akn6RKkGG1U99cOuKmLkMAvzreEzcmKrsx/BsK2hL0eJSfBddkV/ACn0Mb97er96uV6tAAh7uX2cy184H6qUJhJmDbig2l1vcN5LtrCAZpkOaxeWZQhB/WsmHv9Ob3OrBjqrI8fMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mTDoWcyY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=laPSV5rg/xFBgrp9bz/St/nyvyoYP2ES/jeY7p4/FC6t93UaONQQXLGBVOpP0JHCMOZgXFYO9x6UNJ1m0YYLWWV2csovA5qdQdfYqpfuKxUDtFuZiVgpU/6gLGUA+ROH6heD/nG/IHgeqlUTJPtgHLIIErGIcUmke5Jowgek8cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=RuWL9TOo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LhKg4zX5; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mTDoWcyY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449F2C4CEE2;
-	Thu,  6 Feb 2025 14:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738852109;
-	bh=iTfHKvbnhZt+g/hfLvuOilfEg1gjiVZgATfj6qx2TsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mTDoWcyYkRuZ0wTByIxvK7HVriZOqbhex3SP6cySEh0D6DVyYCx5JOB1sqgmRONpD
-	 1ygT8DDQlKMOd9Q09mlxWqVGyxCfyWmO6Pq+aK6v5Wlr31hdlAtzTUnHyT+8oGeItc
-	 rSFCLm+0iyZwl+m0qUbghwGgQeQ9vfuXWYhiYcB0=
-Date: Thu, 6 Feb 2025 08:44:14 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <2025020657-product-embody-dc2e@gregkh>
-References: <2025020421-poster-moisture-534b@gregkh>
- <2025020424-retrain-recharger-407c@gregkh>
- <28e9ed5a-9437-4a53-a099-a8df27ca8a91@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="RuWL9TOo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LhKg4zX5"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0D35011400D2;
+	Thu,  6 Feb 2025 09:28:32 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Thu, 06 Feb 2025 09:28:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1738852112; x=1738938512; bh=i/bH1tcl0o
+	ISJAV1FYlk9k+MIHMSnj8viyqL/ewy+ko=; b=RuWL9TOobf/UkOOz4MlUi42/tn
+	DdIdvwR28xReC4dyCvNy8TszJQJi8ctXWU2/xAt17Oh3Z4aRWSobhPq6eGl+Bt7T
+	eXUsXRn4xNkexRBfdXluU3qFlgRuU+LL+soLDVSqKG066+qab2sLggojKGq5iQRf
+	4+0lrjgFCXwmOuWankVnqRaJc2VvFDPV7d2vS0r+aFEcZ4LGJk+cXMFP6D2uUF2t
+	NsJmmBjSpC/RITjQlpJsjNcbt57EuxT3PUEg82GUwfWMVbYwEEphdzTQ2/WYBMvg
+	cnicQo6pvBM6DHZSAb1lNF0jgKnwQiKBopMvmDhuYMAQSq7Vhwk8jHjNmT0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738852112; x=1738938512; bh=i/bH1tcl0oISJAV1FYlk9k+MIHMSnj8viyq
+	L/ewy+ko=; b=LhKg4zX5VxBHFbdx/p0fzlfcJpZ8N25P/k8rLVtbJPIQInsEY++
+	BJjrtgmu8C7n7DHn5fYhqEDPK7ioFtvnmJohPTheiPaNbT4AnbRPofvtXVZ4hi01
+	UTzNiezPPn2M9wbCDUbhmh+aguSyWlcV05R9U0ehH6pO9tn9iwU60DB8gxoRiKzb
+	xtFYPGeBuSKuTM3SFuM2rh6GoubdEiiSAiiR5e1QWe6a7wfNXjN3GLUaEMKG4ZBN
+	Lx30krc/zsMxYRAkjB7z0fgW6uzkIb13J5JVWiai7siEp0hd4lw+mguTfvCzQ6Jq
+	dA0CHNDNKqIv5mcuwCYlq63ERaG9X6bqZdw==
+X-ME-Sender: <xms:D8ekZ3jm1jSSu_ZHQXofuyLLi468QYb31-kxaDqyC-aBo4fNE11-zw>
+    <xme:D8ekZ0ANJmFBHW35_k5Ic-Y1eNZSbnjtFzIGER89aHbU8_f6OZqA5hFNEtSNBqSIf
+    7pIPoaIC-HPkw>
+X-ME-Received: <xmr:D8ekZ3F8eztWzqTKaF1fTKw7Kz47pgGVPK-XWCtQ7m1MC6i0oKQvdl7jsfZ84yBxsO8yw7ikBHIMKJLd3yXa1J3NyJSxbIfH7Moepw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeifecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
+    frrghtthgvrhhnpeehgedvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueef
+    hffgheekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtohepsggvnhhjrghmihhnrdhlrghrshhsohhnsehgvghnvg
+    igihhsrdgvuhdprhgtphhtthhopehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:D8ekZ0TucECWBB0w4jf7uQLGs9G_qufSVQmFAuWxvLBI9t7aM79VlA>
+    <xmx:D8ekZ0xPGsH6Bv-Lzzs1-GA01A3Ku0guqRwrtYbvHDFMdhDJhGvJAQ>
+    <xmx:D8ekZ66naF48u5Mw9q5nGR24RheOjklxSeNYE7tEZXdyvFM5XijqmA>
+    <xmx:D8ekZ5xKOyQY5GF-ltltgwufnyOKYmoKhJ1enccfAbhrfttAyGqnwA>
+    <xmx:EMekZzljNgwDLk33bYbOkbdXfpK5wpKr0A7V8_3q8rEWWEM9luzYqF3l>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Feb 2025 09:28:31 -0500 (EST)
+Date: Thu, 6 Feb 2025 09:14:02 +0100
+From: Greg KH <greg@kroah.com>
+To: Benjamin Larsson <benjamin.larsson@genexis.eu>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tty tree
+Message-ID: <2025020621-feeble-attire-0611@gregkh>
+References: <20250206135328.4bad1401@canb.auug.org.au>
+ <647d4d6b-615d-4c0c-b001-fab43fb7ab4d@genexis.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,32 +86,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28e9ed5a-9437-4a53-a099-a8df27ca8a91@rowland.harvard.edu>
+In-Reply-To: <647d4d6b-615d-4c0c-b001-fab43fb7ab4d@genexis.eu>
 
-On Tue, Feb 04, 2025 at 10:31:46AM -0500, Alan Stern wrote:
-> On Tue, Feb 04, 2025 at 12:09:13PM +0100, Greg Kroah-Hartman wrote:
-> > Many drivers abuse the platform driver/bus system as it provides a
-> > simple way to create and bind a device to a driver-specific set of
-> > probe/release functions.  Instead of doing that, and wasting all of the
-> > memory associated with a platform device, here is a "faux" bus that
-> > can be used instead.
+On Thu, Feb 06, 2025 at 08:40:34AM +0100, Benjamin Larsson wrote:
+> On 2025-02-06 03:53, Stephen Rothwell wrote:
+> > Hi all,
 > > 
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
+> > After merging the tty tree, today's linux-next build (x86_64_allmodconfig)
+> > failed like this:
+> > 
+> > drivers/tty/serial/8250/8250_airoha.c:52:6: error: redefinition of 'airoha8250_set_baud_rate'
+> >     52 | void airoha8250_set_baud_rate(struct uart_port *port,
+> >        |      ^~~~~~~~~~~~~~~~~~~~~~~~
+> > In file included from drivers/tty/serial/8250/8250_airoha.c:10:
+> > drivers/tty/serial/8250/8250.h:328:20: note: previous definition of 'airoha8250_set_baud_rate' with type 'void(struct uart_port *, unsigned int,  unsigned int)'
+> >    328 | static inline void airoha8250_set_baud_rate(struct uart_port *port,
+> >        |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Caused by commit
+> > 
+> >    e12ebf14fa36 ("serial: Airoha SoC UART and HSUART support")
+> > 
+> > I have used the tty tree from next-20250205 for today.
+> > 
+> COMPILE_TEST seems to be the cause for this.
+> 
+> +config SERIAL_8250_AIROHA
+> +	tristate "Airoha UART support"
+> +	depends on (ARCH_AIROHA || COMPILE_TEST) && OF && SERIAL_8250
 > 
 > 
-> > +/**
-> > + * faux_device_create - create and register a faux device and driver
-> > + * @name: name of the device and driver we are adding
-> > + * @faux_ops: struct faux_driver_ops that the new device will call back into, can be NULL
-> > + *
-> > + * Create a new faux device and driver, both with the same name, and
-> > + * register them in the driver core properly.
-> 
-> Along the same lines as Danilo's comment, this routine does not create a 
-> new driver any more.
+> Should I send a patch removing this?
 
-Thanks, I'll re-read all the documentation and make sure it all makes
-sense now.
+No, you should allow COMPILE_TEST to build the code, right?  Odd that I
+can't build it here for some reason, I guess I need to enable OF on my
+test builds...
+
+thanks,
 
 greg k-h
