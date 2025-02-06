@@ -1,143 +1,97 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F992155757;
-	Thu,  6 Feb 2025 20:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17A6155757
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738874058; cv=none; b=uCveIvw/WQgsqpT6E9l2SCgSNMWWkxj9SbOvgaGNofF5yks+BSpkpZSy91KHpBc87gZ9Fo1/kRsSZleqEsAVWDw9qtTYYCwM2TAf21/e3px0+cE01dsKEd+qXnaVN3osbf+WjyD1s26Lk3Y2BM8QCEoWt7MCI5kKHBmhDV87d7s=
+	t=1738874277; cv=none; b=dpphDt9RHKK/EOMCMKitxOvNirnk7Ca0GI+AppiHTJincWPuBFPY7uMn6r5HnGoP+UrYdTgIxb0DmTDZZu6Im1iKOxM5auEDE9N8Lay1NG98nxbjzfJMquuhgP3d1mf7ocwIxyr/ocsEYcPOLbrPvuOfEPyy0EGrsaeYbrrpELg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738874058; c=relaxed/simple;
-	bh=oqiFVOKTgLGK5IlWs+5QuSuiN1dRojbtmAdK2ulzLig=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uMcYC/QMexQG7MOV+k3kIWg3uTwoGGMzXAVJ1PSZJDXONRIboAMkgRUq17VnzW4HKZYivoB5kqPmMT7/HJsqIEWDHSThpv0D1furQjQybSQ3n2OKmTwtkwqK2Q4zSyTVf3tNX6+hu+SkIuolkoiVFWDmjwZxpxqCCEeftil/Lpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EbPhZA9b; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738874277; c=relaxed/simple;
+	bh=d2S6LVuw5wM6nf1bhAaUGVYLS5mNaLkwan2nlfc8Qs8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aLLJITIotPBrykMreCIcAz2VYCRTYUEk9oYVlCIlC3vEco/fdtsRffe0edcRmv92jNgSYJnHldeqDz16VTC8MrwLyGn7O3XrZyZdkfNZwTnucsU2UYjFV+q0AJ6Oy9L0P91bbfYMQ+ANl9ElaHLFGgtLxE1zyPp157nSfEzPm3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pBG5+4mV; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EbPhZA9b"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dc75f98188so2538196a12.2;
-        Thu, 06 Feb 2025 12:34:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738874054; x=1739478854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ryjLasjPJHbQOeRTAhgEOuh33Ov07HZLps/T4GjAVqY=;
-        b=EbPhZA9bUeWGlsifUxVLxQV50wYP5ldlHaPC3hzBdftuJrzQ57DIw/1Aalcn9opQWi
-         dmPG3KpAKnBzqUi++Lsr5XSlG94SuNapMUUVr0OQi2QmVPnW62q3iXeIGqnuSvbPOrNK
-         jPNdvIUhphPNGlGe2atZOAHhl1gaIrB0omaFfG3mNGVeLXRm+JTYXybNHwaYnPXCQc/e
-         esMKEreDY6E+mwcynch32f9qjxO9jt3Z8iQRnTrzdGNhvflen7zPNjeigr0dEcHriVn3
-         f3XeN1RyElKrAyAm39SaLnueCGvG/Xa/vBZS2iNwWNQ5rpmRS58n0pRFJKVkMfSRtUuY
-         ydXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738874054; x=1739478854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ryjLasjPJHbQOeRTAhgEOuh33Ov07HZLps/T4GjAVqY=;
-        b=WKE7B/WJyEaUP8p5BO9Uqicyok61bRE/U21ttQcSzlq1uV2eNRHOlvC+xKFI4kzLWn
-         EqfcgloZPz8Wd3akeYULFh4WvyJ3XKmHSJy9JpERTfBZFaIv4YDHPmWIAQ/bCnv0lq3B
-         cwWvhX3Fux+6dGklgHK83X3ZwVzKido7ZmadiAMAtflyeh5pLuv39YaDkTd/P+4DKRsr
-         KB24rBN6Tj+BRd0Lo+KapgDH6+yWDMNYBXg61aBr4mrc8e800sMXOg2/mmCcNXnRELqK
-         My6sCRvMUekVpvNvq4RYHdoJD8DnPfKdBGzB9b7NTJj++BNWu9lllIZin1nDCHmGql1o
-         ynyw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9GUyW5o3qqFBp3wUcF61ZMCG8Fbz5lrVk1GW0BESQ2WWc182mkPpGgj3r+Wf8QRfEXx/aDwrPQxcLkU9c@vger.kernel.org, AJvYcCVDaY9y0fYvnuDD6lZGLGmrvj14/gKZENfTAO88+9jWD3kPuXhc5Bu34pq0CBiqqFXgmIpTRF3ATxuh9gCPrw==@vger.kernel.org, AJvYcCWyHSajS3/SJPDwxJmqvVXm2mANs8bykl5Kfx7mMPpSsMKXhUSV5+9kl/LdCSRjodoyGwIFOQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIYIryfy0Ao2WxthaI/9m2Jou0GlJ4gqu9L1LLTrEYUSJMVi9b
-	OsT8UvHQOcpN51Rbg9Pyw98/aKhRrMmA7/ZAk8hDyBXHsaI5vDzmupOLdTZk1uBNJ/wiG4NOQ2k
-	c7wI31NPV6DCI/gGWj3tznngzaqPZWx1RjUA=
-X-Gm-Gg: ASbGncsdoZ1lz0e7Zaqm1kXYm6S4Oqaqvypbtaqp0Wpxln80SlCIbuV6AwOn0Tavo7t
-	B9tBV7xIMYYBxUvw1he8SOsBjZLVT6YrDtE6a6NagOovIjc7FX/cIAm0sn5ImNSYPhSmAw8iC
-X-Google-Smtp-Source: AGHT+IGcLW2fGHCuS9KbvLrh0K0P84zzIEhsF/mLbQXzTwGdCOvMq9+eAxhSuSmuKugNubTuElD1rSAsnIm8JabxSUo=
-X-Received: by 2002:a05:6402:51cf:b0:5dc:57a5:c414 with SMTP id
- 4fb4d7f45d1cf-5de45088202mr808221a12.30.1738874054214; Thu, 06 Feb 2025
- 12:34:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pBG5+4mV"
+Message-ID: <c10a8643-6f6f-4428-91a7-e7f5c92a3f58@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738874272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/WyK6vRoG5SvaOVIStlOKOP4rX2lqtxKCb+Y8Y6C15k=;
+	b=pBG5+4mVjB1wCwVfamE6jbu2Sp4OgvrtK4kKPXsOUOYbYZ47J0onJi1xzn5vqNhXDlyRAY
+	rqs93SbLUS5C4BHgrpb7jrGORPH9aeagOaEDLkJ78/XP+gcJHXMaqfjexUnQQd6QPBd0gy
+	39hovJ3GT+kdg0GIvNOQlePzERbQnXU=
+Date: Thu, 6 Feb 2025 15:37:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGudoHFLnmp3tQHOwUAFBKxrno=ejxHmJXta=sTxVMtN9L1T9w@mail.gmail.com>
- <956b43574bcb149579ecac7a3ab98ad29dddc275.camel@kernel.org>
-In-Reply-To: <956b43574bcb149579ecac7a3ab98ad29dddc275.camel@kernel.org>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 6 Feb 2025 21:34:02 +0100
-X-Gm-Features: AWEUYZlNUdZw7sUCztW2JxsHnXY0Yl-f4pykpOS6BOMBOYK7tE-HfpiSpucXiUQ
-Message-ID: <CAGudoHGqYKTM979s13SAP7fukeAd4NHGTMsxnRWN7A5BpYaCzw@mail.gmail.com>
-Subject: Re: audit_reusename in getname_flags
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	audit@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] drm: zynqmp_dp: Use scope-based mutex helpers
+To: Bart Van Assche <bvanassche@acm.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ "open list:DRM DRIVERS FOR XILINX" <dri-devel@lists.freedesktop.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ "moderated list:ARM/ZYNQ ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>, David Airlie <airlied@gmail.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Michal Simek
+ <michal.simek@amd.com>, Maxime Ripard <mripard@kernel.org>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+References: <20250206194117.1496245-1-sean.anderson@linux.dev>
+ <20250206194117.1496245-3-sean.anderson@linux.dev>
+ <373d62da-810f-492c-af2f-53b32cc90b33@acm.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <373d62da-810f-492c-af2f-53b32cc90b33@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 6, 2025 at 9:24=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
-te:
->
-> On Thu, 2025-02-06 at 20:07 +0100, Mateusz Guzik wrote:
-> > You added it in:
-> > commit 7ac86265dc8f665cc49d6e60a125e608cd2fca14
-> > Author: Jeff Layton <jlayton@kernel.org>
-> > Date:   Wed Oct 10 15:25:28 2012 -0400
-> >
-> >     audit: allow audit code to satisfy getname requests from its names_=
-list
-> >
-> > Do I read correctly this has no user-visible impact, but merely tries
-> > to shave off some memory usage in case of duplicated user bufs?
-> >
-> > This is partially getting in the way of whacking atomics for filename
-> > ref management (but can be worked around).
-> >
-> > AFAIU this change is not all *that* beneficial in its own right, so
-> > should not be a big deal to whack it regardless of what happens with
-> > refs? Note it would also remove some branches in the common case as
-> > normally audit either has dummy context or there is no match anyway.
->
->
-> (cc'ing audit folks and mailing list)
->
-> IIRC, having duplicate audit_names records can cause audit to emit
-> extra name records in this loop in audit_log_exit():
->
->         list_for_each_entry(n, &context->names_list, list) {
->                 if (n->hidden)
->                         continue;
->                 audit_log_name(context, n, NULL, i++, &call_panic);
->         }
->
->
-> ...which is something you probably want to avoid.
+On 2/6/25 15:31, Bart Van Assche wrote:
+> On 2/6/25 11:41 AM, Sean Anderson wrote:
+>>   static int zynqmp_dp_enhanced_set(void *data, u64 val)
+>>   {
+>>       struct zynqmp_dp *dp = data;
+>> -    int ret = 0;
+>>   -    mutex_lock(&dp->lock);
+>> +    guard(mutex)(&dp->lock);
+>>       dp->test.enhanced = val;
+>>       if (dp->test.active)
+>> -        ret = zynqmp_dp_test_setup(dp);
+>> -    mutex_unlock(&dp->lock);
+>> +        return zynqmp_dp_test_setup(dp);
+>>   -    return ret;
+>> +    return 0;
+>>   }
+> 
+> Has it been considered to combine the two return statements into one
+> with the ternary operator (?:)?
 
-Well in this case I would argue the current code is buggy, unless I'm
-misunderstanding something.
+I didn't consider it, but the line is short enough that I can add it.
 
-audit_log_name in particular logs:
-  1550 =E2=94=82       if (n->ino !=3D AUDIT_INO_UNSET)
-  1551 =E2=94=82               audit_log_format(ab, " inode=3D%lu dev=3D%02=
-x:%02x
-mode=3D%#ho ouid=3D%u ogid=3D%u rdev=3D%02x
-  1552 =E2=94=82                                n->ino,
-  1553 =E2=94=82                                MAJOR(n->dev),
-  1554 =E2=94=82                                MINOR(n->dev),
-  1555 =E2=94=82                                n->mode,
-  1556 =E2=94=82                                from_kuid(&init_user_ns, n-=
->uid),
-  1557 =E2=94=82                                from_kgid(&init_user_ns, n-=
->gid),
-  1558 =E2=94=82                                MAJOR(n->rdev),
-  1559 =E2=94=82                                MINOR(n->rdev));
+>> @@ -2053,7 +2039,8 @@ static ssize_t zynqmp_dp_custom_read(struct file *file, char __user *user_buf,
+>>           return ret;
+>>         mutex_lock(&dp->lock);
+>> -    ret = simple_read_from_buffer(user_buf, count, ppos, &dp->test.custom,
+>> +    ret = simple_read_from_buffer(user_buf, count, ppos,
+>> +                      &dp->test.custom,
+>>                         sizeof(dp->test.custom));
+> 
+> This change has not been mentioned in the patch description and is not
+> related to the other changes in this patch?
 
-As in it grabs the properties of the found inode.
+I think I made this change while refactoring, but it turned out not to
+be necessary. I will remove it for the next revision.
 
-Suppose the 2 lookups of the same path name found 2 different inodes
-as someone was mucking with the filesystem at the same time.
-
-Then this is going to *fail* to record the next inode.
-
-So if any dedup is necessary, it should be done by audit when logging imo.
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+--Sean
