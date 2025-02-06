@@ -1,164 +1,146 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D751D5AD3;
-	Thu,  6 Feb 2025 20:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432931D86C6
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738872366; cv=none; b=JIOqIsn+UCsWFDZ/l8mb1Pbh0Bra4EXkt9Bky+5co1e/O15BIyHGr8x4t+LyYSRyqdQiDo6bSF5/gLJc3qtBYD3ZpZai7fnawrECtWsGOcQ3igaT6HcRJvHi5hZErfuuElwTA27n+78oKO1RxizHeOQDc/2N7p3xZc1KQSlu3bM=
+	t=1738872367; cv=none; b=UG2SK0Au945N0FiGfuTZ8bPIRk1rvqpMisW/xcYFgYImQ2CehpHD1n3DFFsCsctyYzSu2+JoNPI5Yq7vHgZ4qZva65/2bAUCdXIwaRrlhBPWqZc0DwjT5xvUr9jvDhLqh4a2he16lqJ+Wh7Z3GnPAkDUobzoF8kdXpq4ESwMFI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738872366; c=relaxed/simple;
-	bh=GqzyQ80y7ToCYhmy8tAK/9KoMbBvhfh6sjp3BzYq0lQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lNPiSdjw3v8JgZMDY/vnxPvzJ72LsooSqSIXaGFC/TQyFwUaIfCyw13LzW++I6+AAQWMk9sdN05EFLiJ2f3moSCSU4c6QWa+kHaBpSt8nNL/ZPP+p7M6+FCINDev9sORC+YANhTc8i/sUYfZ8Rlt7nW05y2UceQgijM7R1HTCK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=6fn7b+r5; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1738872367; c=relaxed/simple;
+	bh=84vy0v18hsCpTXEqIcc+uJNyLnMGsvVSFK6tssMtOvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ATdJ4/sj8fFAffeePAn6aEH/jjyag9+MmhmBF47k6QsHFz+eVRGkJWrP/ik3ywT+R/NtellAu6MYH+zm3l6KwDZyLXQt6CYa/qtD9GAxcl6HD4gYyMoNX0pxhOVUdSReNJ6P38Iyk4lOvhhDnt1Un+KoYrhkZhgBYNzwTVMkPlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n0+Ton2/; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="6fn7b+r5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1738871842; bh=GqzyQ80y7ToCYhmy8tAK/9KoMbBvhfh6sjp3BzYq0lQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=6fn7b+r5KEKbqejPzIckpvbgXUT5AUiI71zvFB+NSc0IlvENNDOcRp38EgMf8ZcD1
-	 HVxt2DPWC18ln1P1zfm3REIDUl6qdGpKLWz+OlvMGlnpS8P2Rt2XUwBMBQYO0gjCkA
-	 MugI0wo9o1uOX1baPHNo+RTg2Pw8J20/eaTRTxp4=
-From: Luca Weiss <luca@lucaweiss.eu>
-Date: Thu, 06 Feb 2025 20:56:47 +0100
-Subject: [PATCH v2 1/2] dt-bindings: remoteproc: qcom,wcnss-pil: Add
- support for single power-domain platforms
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n0+Ton2/"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21634338cfdso31899025ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 12:06:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738872365; x=1739477165; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8/u4VUWV7IwpnqrQYxCHgvEGqjARZvdCCoy9rQ5kXa0=;
+        b=n0+Ton2/W8MdPPuUYDeFH5hXrPdhHXl3Ba52h63XG/pbcA47BDnMbFUujlHq7Md1fF
+         +t0vsdC9jzPx0fwUwNwAoLvZ1xeUaSjbR/qjPy1vYS6Yy6H+hHutiazWYRD6PnSIHvjz
+         watrqmiMwzJ4egZfcFNfvUom0CU52fcDWjZ7s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738872365; x=1739477165;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8/u4VUWV7IwpnqrQYxCHgvEGqjARZvdCCoy9rQ5kXa0=;
+        b=TA66ydARx837i55OmxsYC+QAf/H0F8ll5+oEmnjE3qXEv84vnwAbelI73nfpQstMYb
+         LuZrm4sC/MFwS+BrDFCBBgAkFAMWXvVxomX+gWg0sgewrq3YPXwyaOUPK4Q8w6B3D+aw
+         nqSej+9/77t1abSTgVI44jgmgT7ej0pp3RsarJRPwYeD/T5JeAkUTy/vusjP7IZYMtZ5
+         vUrCBnbQysb36v6zSHyTNiOE+DwVSqOcpFdafO7SkM4RCo+2Z+2h249tqol79FN/IhfL
+         djG5wTB95WEdbIwxPDM4t9xXrlv9uqBowYKmK6ZUNNONaveh1OozV/vnQ9Nxy2XaA/BT
+         b3WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtdvDI5Un//cCn62jkAe23xOM/4cXBfaRjc4Twl4ysU3T3Q/LkEz+s3R3HkiOojA/sZPbmKy0CWr3p+uU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxOgKGuUMHw1ZDu9Pwzkr7o+/fSCvWVMwkVP5QVap88uADRN70
+	MiuXJpwO+QLLOsiKxiyYokKvigG2pl1sJRrIgg2phiS9bFEfWhmcEpfoSgZkwA==
+X-Gm-Gg: ASbGncvadnAADC/v8QN54AV/N7/7ISknkLkXgzYFPY0OCKsrKFfFIkgDYTpVfzpS5V0
+	8mO2zUSJ4OKucmpr/DbdwIbHtN7OGdqP1jjCGkA8aQyWAnqSH9veaTzXd+PgFaSSB7r6fF/0/JH
+	rgk5lhPHiUv+u3cyrIGQAxH2q0ky5kQrzSJI5o4muS1i+oi8TfFAzOE2oxhebZHAUJbOtNA2Pv2
+	V6LzHziMw1rMPRlyY6e9zn/4Ruai+RWN34E9rnG2sm5hDJhZTZa4a/S5uMy1FEj10A72yUdqxQh
+	v8DjOMXyOh0r/sybiCHzXnRnsVIFAspru6hiNmbfHXb2NbdrAvU=
+X-Google-Smtp-Source: AGHT+IHDs5Jb7xvrwadyJkSiEZ5Vz7JPHeYqsMXZFvAZu+zEsXp9YOcnzrTDl8UmMqxxrzlzgJgtmw==
+X-Received: by 2002:a05:6a20:d49a:b0:1e1:a0b6:9872 with SMTP id adf61e73a8af0-1ee03a45e2dmr1219140637.11.1738872365500;
+        Thu, 06 Feb 2025 12:06:05 -0800 (PST)
+Received: from localhost ([2a00:79e0:2e14:7:21:1cae:b81c:a516])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-ad51af667f1sm1510961a12.54.2025.02.06.12.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 12:06:05 -0800 (PST)
+Date: Thu, 6 Feb 2025 12:06:03 -0800
+From: Brian Norris <briannorris@chromium.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: Use level-triggered handler for MSI IRQs
+Message-ID: <Z6UWK6EvOLRrtRDH@google.com>
+References: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+ <87ed0btpfj.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250206-wcnss-singlepd-v2-1-9a53ee953dee@lucaweiss.eu>
-References: <20250206-wcnss-singlepd-v2-0-9a53ee953dee@lucaweiss.eu>
-In-Reply-To: <20250206-wcnss-singlepd-v2-0-9a53ee953dee@lucaweiss.eu>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Stephan Gerhold <stephan.gerhold@linaro.org>, 
- =?utf-8?q?Matti_Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca@lucaweiss.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3077; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=l+8YJNfDS903Eqh028X13FBAPbGMBhedBGZ2vx4lhHc=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnpRQfRJWflBdWfa9DM5hNTEQOLB2U75zZtrHlt
- p7nd8P//h+JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ6UUHwAKCRBy2EO4nU3X
- VqdqD/97qaNPVI0DUfgLlFKYK3YjydeEC+06RHLDGA+PU1t6u4C2IuHpHvd8+sKwlMvg+Y3OX08
- PN/KTwFe6ifQsZRi5gnat2290yKtH7/GJ7n9R/j9AAvViqpZhSSh3JRuDHns1lOk8cvxfoxykG2
- 6hGonVId3JyG+DusVSm2O9MBOQw7Nj5J4MZgHUJx7x+xPkldauAqH76BJFQYR9f9HlgWakdpUd3
- /HiqHNunDCCtfjHOw4oZ5QlGyAZcqbTTK7SkXcUNpO8GFMAlLWiutQ07WVGhVIm3KmAoTAEL7+m
- JcJLIyU/n6T5yLhVyPOvxIdX+734zbJqL3bUC2xDFr7FlWe08vxlC8773fGHnNrXa58Bfy2tyQJ
- H5Iq4+u/07AprzSXCwP+KyWPENuXsEUcYUcGZ3q8pJN+YMS/OChFaXQ/aqEpHosPEut0tmAazHM
- LVluDSOiPVFRc9fCsWDHicARQ12cj5uJM2bHwwidlDatnrAVrrgQSGo5uWxF+8NwVjnqg5XEkyG
- yJS4MmS/JFuVDBYJ5loN9l0pKcvq0rAJM99hq81q58Gs4ULrFvj9JXKdzPazAaT7OZmWeoOcvrY
- 5Q29T+50LUTWSXefMUtwZ/laEDb2Y4WvhwboYfhQBFHcdzsbdkZ3SXik1t6JR3MtfJ6Yd4h5X9J
- 9y9zNC7IhCMPWGQ==
-X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ed0btpfj.wl-maz@kernel.org>
 
-From: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+Hi Marc,
 
-Support platforms such as MSM8226 and MSM8974 with only one power rail
-(CX) modelled as power domain while MX and PX are regulators.
+First off, thanks for reviewing. I'm a bit unsure about some of this
+area, which is one reason I sent this patch. Maybe it could have been
+"RFC".
 
-Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
-[luca: reword commit message, expand based on feedback from
- Stephan Gerhold]
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
----
- .../bindings/remoteproc/qcom,wcnss-pil.yaml        | 45 +++++++++++++++++-----
- 1 file changed, 36 insertions(+), 9 deletions(-)
+(See also v1: https://lore.kernel.org/all/Z3ho7eJMWvAy3HHC@google.com/
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml
-index 8e033b22d28cfa8203234f744b3b408e976e20c3..117fb4d0c4ad2a3fad3cfe5d49ec2223b59358b2 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.yaml
-@@ -69,9 +69,11 @@ properties:
-       CX regulator to be held on behalf of the booting of the WCNSS core.
- 
-   power-domains:
-+    minItems: 1
-     maxItems: 2
- 
-   power-domain-names:
-+    minItems: 1
-     items:
-       - const: cx
-       - const: mx
-@@ -187,22 +189,43 @@ allOf:
-               - qcom,pronto-v1-pil
-               - qcom,pronto-v2-pil
-     then:
--      properties:
--        vddmx-supply:
--          deprecated: true
--          description: Deprecated for qcom,pronto-v1/2-pil
--
--        vddcx-supply:
--          deprecated: true
--          description: Deprecated for qcom,pronto-v1/2-pil
--
-+      # CX and MX must be present either as power domains or regulators
-       oneOf:
-+        # Both CX and MX represented as power domains
-         - required:
-             - power-domains
-             - power-domain-names
-+          properties:
-+            power-domains:
-+              minItems: 2
-+            power-domain-names:
-+              minItems: 2
-+            vddmx-supply: false
-+            vddcx-supply: false
-+        # CX represented as power domain, MX as regulator
-+        - required:
-+            - power-domains
-+            - power-domain-names
-+            - vddmx-supply
-+          properties:
-+            power-domains:
-+              maxItems: 1
-+            power-domain-names:
-+              maxItems: 1
-+            vddcx-supply: false
-+        # Both CX and MX represented as regulators
-         - required:
-             - vddmx-supply
-             - vddcx-supply
-+          properties:
-+            power-domains: false
-+            power-domain-names: false
-+            vddmx-supply:
-+              deprecated: true
-+              description: Deprecated for qcom,pronto-v1/2-pil
-+            vddcx-supply:
-+              deprecated: true
-+              description: Deprecated for qcom,pronto-v1/2-pil
- 
-   - if:
-       properties:
-@@ -212,6 +235,10 @@ allOf:
-               - qcom,pronto-v3-pil
-     then:
-       properties:
-+        power-domains:
-+          minItems: 2
-+        power-domain-names:
-+          minItems: 2
-         vddmx-supply: false
-         vddcx-supply: false
- 
+I'm dealing with HW bugs that cause me to have to configure the output
+signal -- msi_ctrl_int -- as EDGE-triggered on my GIC. This is adjacent
+to that problem, but doesn't really solve it.)
 
--- 
-2.48.1
+On Thu, Feb 06, 2025 at 09:04:00AM +0000, Marc Zyngier wrote:
+> On Wed, 05 Feb 2025 23:16:36 +0000,
+> Brian Norris <briannorris@chromium.org> wrote:
+> > 
+> > From: Brian Norris <briannorris@google.com>
+> > 
+> > Per Synopsis's documentation [1], the msi_ctrl_int signal is
+> > level-triggered, not edge-triggered.
+> > 
+> > The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
+> > ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
+> > which actually dropped preexisting use of handle_level_trigger().
+> > Looking at the patch history, this change was only made by request:
+> > 
+> >   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
+> >   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
+> > 
+> >   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
+> >    triggered, not level."
+> > 
+> > However, while the underlying MSI protocol is edge-triggered in a sense,
+> > the DesignWare IP is actually level-triggered.
+> 
+> You are confusing two things:
+> 
+> - MSIs are edge triggered. No ifs, no buts. That's because you can't
+>   "unwrite" something. Even the so-called level-triggered MSIs are
+>   build on a pair of edges (one up, one down).
+> 
+> - The DisgustWare IP multiplexes MSIs onto a single interrupt, and
+>   *latches* them, presenting a level sensitive signal *for the
+>   latch*. Not for the MSIs themselves.
 
+Indeed, I probably was a little confused, and distracted by my
+aforementioned HW bug, which can be at least partially mitigated by
+masking (which this patch does). I also didn't understand the original
+choices in various DW-based PCIe drivers, since their choice of
+handle_level_irq vs handle_edge_irq seemed a bit arbitrary.
+
+...
+
+> It also breaks the semantics of
+> interrupt being made pending while we were handling them (retrigger
+> being one).
+
+What do you mean here? Are you referring to SW state (a la
+IRQS_PENDING), or HW state? For HW state, MSIs are accumulated in the
+STATUS register even when we're masked, so they'll "retrigger" when
+we're done handling. But I'm less clear about some of the IRQ framework
+semantics here.
+
+All in all, I'm OK with dropping this patch, but I'd like to understand
+a little more of what you think breaks here.
+
+Thanks again,
+Brian
