@@ -1,122 +1,122 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6138E15B10D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC4C225A3E;
+	Thu,  6 Feb 2025 09:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832538; cv=none; b=j7C18ufA1SuF+N+XZ9IRug75wNGCpD8l8dhr9rObcdsXK/FBOgSaRCeSjLASYcqxHqTmrIOfkMIsQu3B1+tm0FTh/8D8VBlqgCx4cOOKp5zpn3kbIkUEY152/V+v/TV5G5j0OO7xjwQa4AtOpx0MGMQK60hCwQBRFy7izhkN4uw=
+	t=1738832543; cv=none; b=JaJ+9+/vZ7Iq5GmAuqu1uOoVWR3T/lOgkhVVj8DAWWWgEfabD6XaUibMbHJPSmy8SsUcfRfBpxCxRRxEiX5tOTeOWYZDWb4KWkYtfLdgT5DxdHcp/qBQGOvKToFtpKTOpslm0I9nWj+ZHvzgW0+Ugq+Y9I2Avq8Nue3pvW5tG8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832538; c=relaxed/simple;
-	bh=UAXyu6RSQTWRgiR0k2OETrZ560YXgX45bKcxld054/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kDKyqiwU5Dy15aKb/nOhjle/DJ4HHd0DhqvuyUiTm8g5RaqQ8N4+giv6NQnKkW8xAkRR4Qbn3mPXnmJsN6WbkwWQ+GVOtkTAQiEjMgfUglB40tNTCW0HcSTX38/WYMe4sfN0Vu710Cx0iPSxfknXZXJQcN/Y/GUfFh6uQJlX7p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jqjdhtwo; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738832543; c=relaxed/simple;
+	bh=7jAIuBV+/kYZyNMP7HxSUsmu8APD8C6CGiLI6Xg+y6g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pHSlXTrDtozCGCXlLP03Viebr9ZKoyZMB7gVNy8KAWmijzNyGQdoJ5MbVk6h87torS/5OziWOJpDeuFQoG9UQfpdhDbONp2xxshnmaf+ksiGIIjeRp5HzNi1p8AZICqfTroTO3l7spg2VCqPz09y2dBcJWQSb6QaFcTXIDbndQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=Ln4KOAGF; arc=none smtp.client-ip=178.154.239.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqjdhtwo"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43618283dedso6026865e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:02:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738832534; x=1739437334; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPzy1Z8VbxCdd+MyKxJcvToGmvpLxSPc4zUEljsmwWY=;
-        b=jqjdhtwogrIdhNoEmFMU5484Um0Td/Vy5MBmHm+kN7yfLHJAEJY6z1GR8UPZTE8hvw
-         gKjPl/tuAGdH8l9kdFhgxfpWaoMRYxxH5NRZrJBDgWsKlJfP+W2jx2lYpbpiBdbvLDCY
-         CCmrS05HGXTFoCSUp/BVwL4uGSyR8gbIb9jDP+hrbxHNt+8R5inm8C/7sgBsYZ06A7hO
-         MDvp4y7EyjiT421hrX3SAjMLmWsQ74UDbjzismt/7Wos4iLsZpetE12OS6LNUzkd1iTq
-         5+KbHlkZ3KTyKM+iY1rpDHSPQ7/jTio2wWdY+Fe1osEVLMfnzGZrSyIrDUjSrMkVuFn+
-         ddDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738832534; x=1739437334;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPzy1Z8VbxCdd+MyKxJcvToGmvpLxSPc4zUEljsmwWY=;
-        b=EdlsbWy+xd5YqmsZqSuZtFXzkR1HoGWnxs1N6UJjaGpf0akV4DI5EVarrPXHw5FLt5
-         obgT0cwuwmKnMZN9jJckuxmE1FvlGSuC3hit7Tq1tpyTbv7ScvgUAIsa5DzPDQU0I7EK
-         t7Z/qUQphAEBtVGf/eHM+bFnUNHD/hSQcUOo3VfW8sKh5W4p/yurm0mvX1MjrXAQ3LUJ
-         QTiLxmGG/lVEjRaDiOfdK8k19xHYdxRiwdkpegxspeOwDKCY75rEj528lulV2A+I3qAF
-         oc0TC01xIJPt+0ZrqybG3sTGJSKTJuOhasHZkmt56SNqNGIqtvcxh/zSQ3CMBBgTupM8
-         B2sg==
-X-Gm-Message-State: AOJu0Yya4CcC2LIbbfS/hsTwV7HF/NgXucncwIJj2NSeQJs2oaYmEA8p
-	1Rsi0AyXCQa68HLLfhB99Ul18LcLs0v1WBMabZerTC5RjSZzsutf/WBAiBJSTDg=
-X-Gm-Gg: ASbGncsSFrmjYADAETws/F4+6Eo6peieE3cO8AXYxQkKpn743WzXcUqo0v9smn56tea
-	SR0IbzNNXGZr1c/tqomxuIX3IeIPLOqZ2KzzYQ03LpPMq2LhdwUHm6VqpujSU88A3AKtiUHRHO1
-	N3SSIixsE41yqvdNdRixfalIqbQ7QBVQx74ByQSvpdqSubL2HuGJqJXE/IbF46GqBwclrcQ+Nrb
-	FqTIBUsI1VqKc5SClRmu0eLwqVHeeLmGVejBp+qv+2zD3hoEpiiZeyq+TyhFgwBIttpEyUMcP3w
-	5kC01W0h51dAnG8M4deHQFjE
-X-Google-Smtp-Source: AGHT+IHb4g4QZ/ozYPa6vvDOHmEuKFym5OBNx5m4o6Nj8tDENoav/RWlv4fqN6xllweSDexUwkeGoQ==
-X-Received: by 2002:a05:6000:1a8b:b0:386:407c:40b9 with SMTP id ffacd0b85a97d-38db48d247amr4779823f8f.28.1738832534542;
-        Thu, 06 Feb 2025 01:02:14 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf6e4a4bsm786590f8f.92.2025.02.06.01.02.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 01:02:13 -0800 (PST)
-Message-ID: <1fa54c76-d82f-483b-b577-79322908fabc@linaro.org>
-Date: Thu, 6 Feb 2025 09:02:11 +0000
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ln4KOAGF"
+Received: from mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3f48:0:640:7695:0])
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 27B2160A06;
+	Thu,  6 Feb 2025 12:02:17 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:1229::1:1a])
+	by mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 62ilp53IZKo0-nZUeuZcr;
+	Thu, 06 Feb 2025 12:02:16 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1738832536;
+	bh=tnsS/bGpQAwc8OLFLKLSqn0mhm9Mmm9Ui6vHfp9zubo=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=Ln4KOAGFUy4TsmmOk5INOj4rcLEJMVmXhmsWNyHY5q+l6LnqOWjsHMC7bnoRt0phD
+	 bn7z1unHY+T1+apewjfu+4JlQOzugcnGlqCg0F54xpCUr81zAd4DDyhJ7mW8hWszRY
+	 EKNcHpiNi8nz9ysnD7usP4fokf3tcWeh/ZGMal3E=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Wen Yang <wenyang@linux.alibaba.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kniv@yandex-team.ru,
+	stable@vger.kernel.org
+Subject: [PATCH v2] ftrace: Avoid potential division by zero in function_stat_show()
+Date: Thu,  6 Feb 2025 12:01:56 +0300
+Message-Id: <20250206090156.1561783-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250205095021.15771b88@gandalf.local.home>
+References: <20250205095021.15771b88@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] firmware: add Exynos ACPM protocol driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com,
- peter.griffin@linaro.org, daniel.lezcano@linaro.org,
- vincent.guittot@linaro.org, ulf.hansson@linaro.org, arnd@arndb.de
-References: <20250116-gs101-acpm-v6-0-e3a2e1a3007c@linaro.org>
- <20250116-gs101-acpm-v6-2-e3a2e1a3007c@linaro.org>
- <f83ccdb0-4d22-441f-9311-d9a2c8cd3493@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <f83ccdb0-4d22-441f-9311-d9a2c8cd3493@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Check whether denominator expression x * (x - 1) * 1000 mod {2^32, 2^64}
+produce zero and skip stddev computation in that case.
 
+For now don't care about rec->counter * rec->counter overflow because
+rec->time * rec->time overflow will likely happen earlier.
 
-On 2/5/25 4:52 PM, Krzysztof Kozlowski wrote:
->> +static const struct acpm_handle *acpm_get_by_phandle(struct device *dev)
-> "by_phandle" takes the name of the property with phandle as an argument,
-> because otherwise you do not have here phandle part at all in the
-> interface (see syscon API).
-> 
+Cc: stable@vger.kernel.org
+Fixes: e31f7939c1c27 ("ftrace: Avoid potential division by zero in function profiler")
+Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+---
+v2: Instead of splitting the division into two store denominator into
+separate variable and zero-check it
 
-Indeed.
+ kernel/trace/ftrace.c | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-> Other option would be by actual phandle - see of_find_node_by_phandle().
-> 
-> I would propose in such case only acpm_get() or maybe better of_acpm_get()?
-> 
->> +{
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 728ecda6e8d4..9ea6609588cf 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -540,6 +540,7 @@ static int function_stat_show(struct seq_file *m, void *v)
+ 	static struct trace_seq s;
+ 	unsigned long long avg;
+ 	unsigned long long stddev;
++	unsigned long long stddev_denom;
+ #endif
+ 	guard(mutex)(&ftrace_profile_lock);
+ 
+@@ -559,23 +560,19 @@ static int function_stat_show(struct seq_file *m, void *v)
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	seq_puts(m, "    ");
+ 
+-	/* Sample standard deviation (s^2) */
+-	if (rec->counter <= 1)
+-		stddev = 0;
+-	else {
+-		/*
+-		 * Apply Welford's method:
+-		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
+-		 */
++	/*
++	 * Variance formula:
++	 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
++	 * Maybe Welford's method is better here?
++	 * Divide only by 1000 for ns^2 -> us^2 conversion.
++	 * trace_print_graph_duration will divide by 1000 again.
++	 */
++	stddev = 0;
++	stddev_denom = rec->counter * (rec->counter - 1) * 1000;
++	if (stddev_denom) {
+ 		stddev = rec->counter * rec->time_squared -
+ 			 rec->time * rec->time;
+-
+-		/*
+-		 * Divide only 1000 for ns^2 -> us^2 conversion.
+-		 * trace_print_graph_duration will divide 1000 again.
+-		 */
+-		stddev = div64_ul(stddev,
+-				  rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev, stddev_denom);
+ 	}
+ 
+ 	trace_seq_init(&s);
+-- 
+2.34.1
 
-cut
-
->> +	np = of_parse_phandle(dev->of_node, "exynos,acpm_ipc", 0);
-> You need bindings for this somewhere and fix the underscore->hyphen...
-> and vendor prefix. It really would not be accepted that way so please
-> post consumer bindings anywhere.
-
-There's no consumer upstreamed yet, I don't know where I shall specify
-it. How about keeping the function name and modify the declaration to
-
-+static const struct acpm_handle *acpm_get_by_phandle(struct device_node
-*np,
-+						     const char *property)
-
-This shall be in line with the syscon API and doesn't force me to
-introduce bindings for the consumers now.
-
-Thanks!
-ta
