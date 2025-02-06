@@ -1,178 +1,170 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BBD13AD18
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 02:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ED313AD18;
+	Thu,  6 Feb 2025 02:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738810638; cv=none; b=IcfnVRTHhcfg1BuCGKAZeeyuO8kbcSD8KEMu3OZ6wAMCsUvfnsFC00KXvkubc26vEku4DDAhBu7J7A26mXKHn9KA+vjLtHyhRNae6sqiRDyw0VrEVERrhJE2xSzP2KchDgH5WBF6bgzRs90nkH8XrQea5o+1xbIChCEiMEbWf9E=
+	t=1738810649; cv=none; b=QsZpDwlBq+YWwL821GIwwQJh9vALbB1oNN3Hz9iNdmVEiuoYnnza0k/JL8xAiddY9o/eASqkzqWf6k5Ja15kP7Z/aCBCBvLWmKDgCjVGpqCQCA54aewfi/H2nAp6Mh11p+qAjEeK5WwAmQl822d7DtAer9sKc5rwh6Ql2MMpXKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738810638; c=relaxed/simple;
-	bh=3ynD3NlUnVjs22S+HquQouMWMFCpkHHGdtUCvmmji5M=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kDdQr8gI3lJVCY4li5oydoae9FyGR3osvxpSjfe1r5eoks0BMVgdFFn4kaB62enBAFf3bvMpE2x6mDHxgm6azyiogjVtxNyCynPep1CzgbYYi/7hZ1qC7h/8VfjjxGGrin/g9qjpwoNHVfIMVzL2wu2jyqt783MHXTneSGS3jYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WT8No3c2; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738810649; c=relaxed/simple;
+	bh=iy6jIH4U54qu9X/c+xTUMCfGm9LV9nkbKu493Cy1nj4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IMg/UTYyWJp+DMlwOIMUSaEwVAIcS9vowR/Ot7Ooi5jrogCblkxPAPUJaN+JevVwniUbs1RUU1vUImXMV5RgON+W+HqhI7jdHko2HltJWzUlMSzN/VKazL3aGnbeazFqkBUjJ6+7ORUuLbnqYqySbvg1rHcAomMXgKaXwIBxlB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFHoV0qI; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WT8No3c2"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-219f6ca9a81so25995ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 18:57:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738810635; x=1739415435; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mk6PiHA2jUMIAAc6GXP8rm3bb0PFPxp1kBvPr1tdqBE=;
-        b=WT8No3c2Nzz9/jsh3Sy2FyNGmz5Yuy18eR5f1FcHitrf7GkTnqD2Wg+l778YrpiMiT
-         /N0nEo/e0XXVZDKLC0TOrTm9wTAfWN0OPMiOMPPDEXq2cwdVSovYBJSVWq6kToc9wGYm
-         LG5N4ziqJ3NquLPfl1GEAhFolhwBLWUjpna4GxCUBEXR5KbtBjEgJD6C4owINtMhDJJc
-         og8SmGATrOAY1wpQdnP3kzQ313F8mBxK/EjMlUURUgc5HDXNJpvQcEsKgIUp2+0PiSYS
-         XHxjhB/u/E2+xd3nbvKBkO3/lgp9LN4u4KraC6+5y0wBpuNhxK4RhlJfW3/saolYYwYg
-         kB1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738810635; x=1739415435;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mk6PiHA2jUMIAAc6GXP8rm3bb0PFPxp1kBvPr1tdqBE=;
-        b=UFMMJr8/WZYsMXep8EEC2hJb/7y6vyyXhBa5dPAjZjVPENSyiJXoiNhgOPgDTsBubi
-         nf4LRGGjA8y9koHq/Nn06j4iBXoqg8u4TT4B05qjvcIUZmHnya8cJYmfvhH5nI0mVeiZ
-         //Jr8Z6OW7AaJVw+uIA2fUQ4NVeNZLTvSCGT1EvkfUWZglMYkorc1uibIujq59AuOM1M
-         DK8EomRcGp80r9SPfZ8SJg/XeEWuNRYgWPk2iZc7Ot0h7W2x+IsJ5ibvFl3nknVxSObN
-         7uUuhzmFFItMWMrxBVxQfXvF0zBGJIGs4gytJdVM9Nmx7+RJvsasbHiV47SwXZErP3aD
-         zIBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIyFDTHzFmpd7OXUyAxzR5FQxfpLMWhQ7nDovwz6SjsWlne0Y+XbOwxz6epplxDsvQ1bboQ0S463AyVQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPkT3MdYLuxLEa24azgX4imf26Q6iJm70o7spD1USx9U3MFJec
-	5hcthom2M5R5gyWuOFTyQdR0ojMA5pgnXafpuCTCAWoqL/3N5r1YhkHoq7xJBw==
-X-Gm-Gg: ASbGncsN1wa8jxxLMLQHLz88gU4TmWRWmA8AgOKx/lq4iQdMoLWYIRA6oeidvlsNR8s
-	viWptii3k4aLcs02SNeN5D33x92cjdelutDVr4SH06i4iig8oGe4u/1iq/Rcrf3yfh550O3dFnC
-	2eDAgBFsyvsepXrJAHakQEpeFoASQn+zcxMjPBjrkHBd2V9jAe1rqiWL6FBc6ev694kO5cvYv31
-	sZ/DRHSPPYN9NSw/uV8Qj/JfDaC7mVDpjB7NstjP+/SKMOUrJ9MyHjUl8ImoU6tFioVOGLvBOEA
-	35sLyUT3E7AFJqOefLoBPFur52E32rGQgF3tSOmvd5L60Cj2eIGpmXgjAbf/xO2Upv1gxxoqj1k
-	LPOmuIkhKZw==
-X-Google-Smtp-Source: AGHT+IFM1DuRCvSQG9hQ+ar4awv2YVkN6K8eMWqiCWTuOg17j/wgyyp0NwmSKpshMMQFbEAWd4kqPw==
-X-Received: by 2002:a17:902:8f86:b0:215:65f3:27ef with SMTP id d9443c01a7336-21f34910ed6mr720325ad.12.1738810635348;
-        Wed, 05 Feb 2025 18:57:15 -0800 (PST)
-Received: from [2a00:79e0:2eb0:8:23ad:2d69:b4a0:1176] ([2a00:79e0:2eb0:8:23ad:2d69:b4a0:1176])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf148dsm191432b3a.88.2025.02.05.18.57.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 18:57:14 -0800 (PST)
-Date: Wed, 5 Feb 2025 18:57:14 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-cc: Hyesoo Yu <hyesoo.yu@samsung.com>, janghyuck.kim@samsung.com, 
-    Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-    Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: slub: call WARN() instead of pr_err on
- slab_fix.
-In-Reply-To: <135f5cf7-6853-4715-bd7f-41c7f554ec31@suse.cz>
-Message-ID: <6c45ced8-3a01-0905-0d2c-f0e7b7acc2df@google.com>
-References: <CGME20250205004741epcas2p3081bc2c97b7c1c27a9797cd498c4bc64@epcas2p3.samsung.com> <20250205004615.1253389-1-hyesoo.yu@samsung.com> <55522d9a-7fd2-1df0-19df-1552644b009e@google.com> <135f5cf7-6853-4715-bd7f-41c7f554ec31@suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFHoV0qI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738810647; x=1770346647;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iy6jIH4U54qu9X/c+xTUMCfGm9LV9nkbKu493Cy1nj4=;
+  b=XFHoV0qIwq5ZKldCsmBTTdClypZ+lL1LwSg9c5RIhQym9oJ/1O7iTiOd
+   LozjME3bvd5B7szjjIwiCpFvuQORIP/d0S2LS4J0yPCSdzrfj9W7yrHN+
+   BR1s1f29cz+2Cfc8a5sT5cNbIX0xAloKZxpKmq0qJpzRTvY5n/ffP11Np
+   pJN2lQdrQ3dUY5FSIJIjap2nDvJI+neRp6E6E+jymq1OfgwTpvxh/Isd1
+   m23HR126QY7IahyPb/pqXvFTp8odBAGU4Qmscprvqzjup5eDO7gQ387wr
+   Gog4LORYpUGQy8xhPqqkKsMDrjZCjo+B6gQr7+YTfcxycOmpfopM0fyLW
+   g==;
+X-CSE-ConnectionGUID: N6Ihh7pLTkuJ9qFDU0bnmg==
+X-CSE-MsgGUID: DE50dm7NSPeIXx/RYd+fiA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50386137"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="50386137"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:57:27 -0800
+X-CSE-ConnectionGUID: 33bgTqiEQ0i8/TCFOISRew==
+X-CSE-MsgGUID: SJ4mgJijT1KG3E0T4QPKAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115159985"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:57:19 -0800
+Message-ID: <539d243b-ca9e-4849-be81-e755dc4ba528@linux.intel.com>
+Date: Thu, 6 Feb 2025 10:57:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 17/20] perf tools: Support to show SSP register
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+ <20250123140721.2496639-18-dapeng1.mi@linux.intel.com>
+ <CAP-5=fV-+3dU1CtUAYazv5L6VfNwDxv1C9Q=tQXzve9nqpaqrw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fV-+3dU1CtUAYazv5L6VfNwDxv1C9Q=tQXzve9nqpaqrw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 5 Feb 2025, Vlastimil Babka wrote:
 
-> On 2/5/25 18:10, David Rientjes wrote:
-> > On Wed, 5 Feb 2025, Hyesoo Yu wrote:
-> > 
-> >> If a slab object is corrupted or an error occurs in its internal
-> >> value, continuing after restoration may cause other side effects.
-> >> At this point, it is difficult to debug because the problem occurred
-> >> in the past. It is better to use WARN() instead of pr_err to catch
-> >> errors at the point of issue because WARN() could trigger panic for
-> >> system debugging when panic_on_warn is enabled. WARN() should be
-> >> called prior to fixing the value because when a panic is triggered by WARN(),
-> >> it allows us to check corrupted data.
-> >> 
-> > 
-> > I think this makes sense, but it doesn't document why the other changes 
-> > are being made, like moving the setting of *freelist to NULL.  This is 
-> > presumably something that you want in the crash dump when 
-> > kernel.panic_on_warn is enabled.  Probably best to call that out, but to 
-> > also indicate what you're relying on in the crash dump to make forward 
-> > progress on in diagnosing the issue.
-> 
-> Well the last sentence of the changelog above says exactly that, no?
-> 
+On 1/24/2025 12:15 AM, Ian Rogers wrote:
+> On Wed, Jan 22, 2025 at 10:21 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>> Add SSP register support.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  tools/arch/x86/include/uapi/asm/perf_regs.h    | 4 +++-
+>>  tools/perf/arch/x86/util/perf_regs.c           | 2 ++
+>>  tools/perf/util/intel-pt.c                     | 2 +-
+>>  tools/perf/util/perf-regs-arch/perf_regs_x86.c | 2 ++
+>>  4 files changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+>> index 7c9d2bb3833b..158e353070c3 100644
+>> --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
+>> +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+>> @@ -27,9 +27,11 @@ enum perf_event_x86_regs {
+>>         PERF_REG_X86_R13,
+>>         PERF_REG_X86_R14,
+>>         PERF_REG_X86_R15,
+>> +       PERF_REG_X86_SSP,
+> nit: Would it be worth a comment here? SSP may not be apparent to
+> everyone. Perhaps something like:
+> ```
+> /* Shadow stack pointer (SSP) present on Clearwater Forest and newer models. */
 
-Sorry, I should have been more clear.  It's unclear in the code why 
-choosing WARN() here is helpful given the stack would be known.  It makes 
-sense to enable kernel.panic_on_warn this way for debugging purposes, but 
-thought it should also carry a comment in the code on the rationale (and 
-the state we're trying to capture in a crash dump) so a future change 
-doesn't go and unravel this for us again.
+Sure.
 
-> >> Changes in v2:
-> >> - Replace direct calling with BUG_ON with the use of WARN in slab_fix.
-> >> 
-> >> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
-> >> ---
-> >>  mm/slub.c | 10 +++++-----
-> >>  1 file changed, 5 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/mm/slub.c b/mm/slub.c
-> >> index 1f50129dcfb3..ea956cb4b8be 100644
-> >> --- a/mm/slub.c
-> >> +++ b/mm/slub.c
-> >> @@ -1043,7 +1043,7 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
-> >>  	va_start(args, fmt);
-> >>  	vaf.fmt = fmt;
-> >>  	vaf.va = &args;
-> >> -	pr_err("FIX %s: %pV\n", s->name, &vaf);
-> >> +	WARN(1, "FIX %s: %pV\n", s->name, &vaf);
-> >>  	va_end(args);
-> >>  }
-> >>  
-> >> @@ -1106,8 +1106,8 @@ static bool freelist_corrupted(struct kmem_cache *s, struct slab *slab,
-> >>  	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
-> >>  	    !check_valid_pointer(s, slab, nextfree) && freelist) {
-> >>  		object_err(s, slab, *freelist, "Freechain corrupt");
-> >> -		*freelist = NULL;
-> >>  		slab_fix(s, "Isolate corrupted freechain");
-> >> +		*freelist = NULL;
-> >>  		return true;
-> >>  	}
-> >>  
-> >> @@ -1445,9 +1445,9 @@ static int on_freelist(struct kmem_cache *s, struct slab *slab, void *search)
-> >>  				set_freepointer(s, object, NULL);
-> >>  			} else {
-> >>  				slab_err(s, slab, "Freepointer corrupt");
-> >> +				slab_fix(s, "Freelist cleared");
-> >>  				slab->freelist = NULL;
-> >>  				slab->inuse = slab->objects;
-> >> -				slab_fix(s, "Freelist cleared");
-> >>  				return 0;
-> >>  			}
-> >>  			break;
-> >> @@ -1464,14 +1464,14 @@ static int on_freelist(struct kmem_cache *s, struct slab *slab, void *search)
-> >>  	if (slab->objects != max_objects) {
-> >>  		slab_err(s, slab, "Wrong number of objects. Found %d but should be %d",
-> >>  			 slab->objects, max_objects);
-> >> -		slab->objects = max_objects;
-> >>  		slab_fix(s, "Number of objects adjusted");
-> >> +		slab->objects = max_objects;
-> >>  	}
-> >>  	if (slab->inuse != slab->objects - nr) {
-> >>  		slab_err(s, slab, "Wrong object count. Counter is %d but counted were %d",
-> >>  			 slab->inuse, slab->objects - nr);
-> >> -		slab->inuse = slab->objects - nr;
-> >>  		slab_fix(s, "Object count adjusted");
-> >> +		slab->inuse = slab->objects - nr;
-> >>  	}
-> >>  	return search == NULL;
-> >>  }
-> >> -- 
-> >> 2.48.0
-> >> 
-> >> 
-> 
-> 
+
+> ```
+>>         /* These are the limits for the GPRs. */
+>>         PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+>> -       PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+>> +       PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
+>> +       PERF_REG_INTEL_PT_MAX = PERF_REG_X86_R15 + 1,
+> nit: It's a little peculiar to me the "+1" here - but that's
+> pre-existing. Perhaps comments above here too:
+> ```
+> /* The MAX_REG_X86_64 used generally, for PEBS, etc. */
+> PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
+> /* The MAX_REG_INTEL_PT ignores the SSP register. */
+> PERF_REG_INTEL_PT_MAX = PERF_REG_X86_R15 + 1,
+> ```
+> Otherwise:
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Sure. Thanks.
+
+
+>
+> Thanks,
+> Ian
+>
+>>         /* These all need two bits set because they are 128bit */
+>>         PERF_REG_X86_XMM0  = 32,
+>> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+>> index 12fd93f04802..9f492568f3b4 100644
+>> --- a/tools/perf/arch/x86/util/perf_regs.c
+>> +++ b/tools/perf/arch/x86/util/perf_regs.c
+>> @@ -36,6 +36,8 @@ static const struct sample_reg sample_reg_masks[] = {
+>>         SMPL_REG(R14, PERF_REG_X86_R14),
+>>         SMPL_REG(R15, PERF_REG_X86_R15),
+>>  #endif
+>> +       SMPL_REG(SSP, PERF_REG_X86_SSP),
+>> +
+>>         SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
+>>         SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
+>>         SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
+>> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+>> index 30be6dfe09eb..86196275c1e7 100644
+>> --- a/tools/perf/util/intel-pt.c
+>> +++ b/tools/perf/util/intel-pt.c
+>> @@ -2139,7 +2139,7 @@ static u64 *intel_pt_add_gp_regs(struct regs_dump *intr_regs, u64 *pos,
+>>         u32 bit;
+>>         int i;
+>>
+>> -       for (i = 0, bit = 1; i < PERF_REG_X86_64_MAX; i++, bit <<= 1) {
+>> +       for (i = 0, bit = 1; i < PERF_REG_INTEL_PT_MAX; i++, bit <<= 1) {
+>>                 /* Get the PEBS gp_regs array index */
+>>                 int n = pebs_gp_regs[i] - 1;
+>>
+>> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+>> index 708954a9d35d..9a909f02bc04 100644
+>> --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+>> +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+>> @@ -54,6 +54,8 @@ const char *__perf_reg_name_x86(int id)
+>>                 return "R14";
+>>         case PERF_REG_X86_R15:
+>>                 return "R15";
+>> +       case PERF_REG_X86_SSP:
+>> +               return "ssp";
+>>
+>>  #define XMM(x) \
+>>         case PERF_REG_X86_XMM ## x:     \
+>> --
+>> 2.40.1
+>>
