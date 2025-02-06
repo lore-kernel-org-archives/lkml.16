@@ -1,126 +1,91 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AEB2500CD;
-	Thu,  6 Feb 2025 14:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8A01624C3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738850542; cv=none; b=aVoOwREKNhiUNDSs7gfh/7FOb9tnCnnRXTEWF+/W5GBm6NlaKfSnuTsFLD4Uid0hj9G1wD4DuF1iQl7XV1MpOvfz8Zm4Eoj8m249p/272eEMpFapdffgwVFQtAV98yLNXh9VwYVhtrl7HkHLIgg2EE/nwSZ5noQecsjZ/5y5xYk=
+	t=1738850623; cv=none; b=LOC6gKzAwJfX1Fpt33DzBP2dtEe9pEIDk1LaMxPcYx9EzJ/jpbOYBzP9rPctIeRVSWO1cvH2rLmT2KZUA42b6jsiTwWCHdE8NqYKBpjKlgL9zZk2+kaShI1XBk2QRzoYMB0RdZV5k2qsg3eHlHcWAOvObgkz5Ku4i94FjDVtQrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738850542; c=relaxed/simple;
-	bh=n+gmocS/ZLxcXEBU+870i8PwgKdxr7b+1ALHXPXijHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=re1GnDFiBjqqJ4wuVKnRhblC1KOw04JT6KskSjyxdyZ8aDUE3PDl5ZZTcizgplnMGhYoOlYMJcktrWSWUm8G+zVMkxzK8tER/mw08mEGAwndb6muY4ezxeSPTuQA/f0DRksi1Ti3C+AfiILXgYMDG3JEDO1ZFbJzGNhrEifEbfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eCCp3949; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738850623; c=relaxed/simple;
+	bh=zP1g1SOPuwD6rfrBCH+KpqRIfxgUOgDdUeTG33sbxIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V8fHi0Icnt+OsxQllGKSEDJae04BfS2Ep6WfhTu5N7YQjKp11v054lvd/KLX2jxAWTijiZ/OtZFCTCARaXOn3SYbe4JNVidOLcBFR5aHx0SmZ1gfkzHnv4tfFcxJweradFl/E9LxmkQN+m57kFhneBDSLjwK30nx0Oo9Zrr2rcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkfyAmRW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eCCp3949"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 516E1Vbh2812418
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Feb 2025 08:01:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738850492;
-	bh=88iRX8irqERVHqBMl74vPIF+rogOEUfOrJex91RNWYg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=eCCp3949bwfLnkf8zD3DSkOK9WljWAwbZ1L/ni8wAQRp7eoOYixFjxg/Y61w9mHhu
-	 k8S7s75de3G+P08aQBdYm31veRoBRac5Czz1ZbEb1+v91Y+oU9lcc9lO+oZQ3UMY+1
-	 a+54Sf6OWM09GHBE+MJjPpkYPisjjRXZknApCiFY=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 516E1VJD057574
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Feb 2025 08:01:31 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Feb 2025 08:01:31 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Feb 2025 08:01:31 -0600
-Received: from [172.24.23.168] (lt9560gk3.dhcp.ti.com [172.24.23.168])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 516E1N6m039077;
-	Thu, 6 Feb 2025 08:01:24 -0600
-Message-ID: <04ff4911-de4b-4d68-b72f-f03915baa9c9@ti.com>
-Date: Thu, 6 Feb 2025 19:31:23 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkfyAmRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E310C4CEE6;
+	Thu,  6 Feb 2025 14:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738850622;
+	bh=zP1g1SOPuwD6rfrBCH+KpqRIfxgUOgDdUeTG33sbxIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IkfyAmRWlCkQ4Q1daEV9dcu2uoJG9q6ZJ9Y52AiF+LDZDY0gBO9qS7tqtyJkTWhC4
+	 gsLey/qFBjp+Mf9nUA/9orzx0LMG4CHeLU7Zql/x7j4Y8bY0HCVaQ7f07+wt+JL1bA
+	 wBVYvS2MDOUCXIhY89GKkHXaHOIf34FoYRqadHtBuXpLG1ulASEqa2uyyDN36mjl3/
+	 ppg9kzuLOiZIFKXtXDSb/2oDH6aRro8IxLJ0oSimiyagxjfFxEu/a/xFEUEeD1xQDR
+	 HoR5wymXPuHO03/Hlqg1qV4Q+CQf9QHJi7rV3vP02wk9KbrmrZut5i3uSE+nsfcVFQ
+	 pLhH7BEA55Kow==
+Date: Thu, 6 Feb 2025 14:03:33 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Isaac Scott <isaac.scott@ideasonboard.com>
+Cc: michael.hennerich@analog.com, lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org, dheeraj.linuxdev@gmail.com
+Subject: Re: [PATCH 1/1] regulator: ad5398: Correct the SW_POWER_DOWN bit
+ number
+Message-ID: <67355756-997a-47bc-b563-cb31cdbc37a3@sirena.org.uk>
+References: <20250206122459.197985-1-isaac.scott@ideasonboard.com>
+ <20250206122459.197985-2-isaac.scott@ideasonboard.com>
+ <c29affda-e769-4658-bb74-3b8c273e8262@sirena.org.uk>
+ <2a0f24c61de73f7bd2bb495d697dcedd8462f4c0.camel@ideasonboard.com>
+ <f81d5101-1dd2-4ff4-9a23-403b6efbcdf3@sirena.org.uk>
+ <1afa0cd19e48014f3a59bfeaae58f85c9db92c1d.camel@ideasonboard.com>
+ <28767ef9-0909-4d74-99fa-514c9bc99afc@sirena.org.uk>
+ <1da6b6e3f9cd1abd84cc5d3d73a2ad3d1340914d.camel@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH net 3/3] net: ti: icssg-prueth: Add AF_XDP
- support
-To: Ido Schimmel <idosch@idosch.org>
-CC: <rogerq@kernel.org>, <danishanwar@ti.com>, <pabeni@redhat.com>,
-        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
-        <andrew+netdev@lunn.ch>, <bpf@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <robh@kernel.org>,
-        <matthias.schiffer@ew.tq-group.com>, <dan.carpenter@linaro.org>,
-        <rdunlap@infradead.org>, <diogo.ivo@siemens.com>,
-        <schnelle@linux.ibm.com>, <glaroque@baylibre.com>,
-        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
-        <ast@kernel.org>, <srk@ti.com>, Vignesh Raghavendra
-	<vigneshr@ti.com>
-References: <20250122124951.3072410-1-m-malladi@ti.com>
- <20250122124951.3072410-4-m-malladi@ti.com> <Z5J7kGFU_ZgneFAF@shredder>
- <f1cf5bfc-e767-4ced-9aad-76a578c53706@ti.com> <Z6Oj7eMRV9z9lF2I@shredder>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <Z6Oj7eMRV9z9lF2I@shredder>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fzZ/jJpPKojkRDb+"
+Content-Disposition: inline
+In-Reply-To: <1da6b6e3f9cd1abd84cc5d3d73a2ad3d1340914d.camel@ideasonboard.com>
+X-Cookie: With your bare hands?!?
 
 
+--fzZ/jJpPKojkRDb+
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/5/2025 11:16 PM, Ido Schimmel wrote:
-> On Tue, Feb 04, 2025 at 11: 25: 39PM +0530, Malladi, Meghana wrote: > On 
-> 1/23/2025 10: 55 PM, Ido Schimmel wrote: > > XDP program could have 
-> changed the packet length, but driver seems to be > > This will be true 
-> given, emac->xdp_prog
-> ZjQcmQRYFpfptBannerStart
-> This message was sent from outside of Texas Instruments.
-> Do not click links or open attachments unless you recognize the source 
-> of this email and know the content is safe.
-> Report Suspicious
-> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
-> v9dnXdhkNoe0hkqlFZKoUhMAqXZwolk5zXhypw1qeZY8pxUHTuuleZBOKulyBnK9eA$>
-> ZjQcmQRYFpfptBannerEnd
-> 
-> On Tue, Feb 04, 2025 at 11:25:39PM +0530, Malladi, Meghana wrote:
->> On 1/23/2025 10:55 PM, Ido Schimmel wrote:
->> > XDP program could have changed the packet length, but driver seems to be
->> 
->> This will be true given, emac->xdp_prog is not NULL. What about when XDP is
->> not enabled ?
-> 
-> I don't understand the question. My point is that the packet doesn't
-> necessarily look the same after XDP ran.
-> 
+On Thu, Feb 06, 2025 at 01:57:14PM +0000, Isaac Scott wrote:
+> On Thu, 2025-02-06 at 13:44 +0000, Mark Brown wrote:
 
-emac_rx_packet() is a common function for both XDP and non-XDP use 
-cases. XDP will only run when emac->xdp_prog is not NULL. I understand 
-that when XDP ran, it can change the contents of the packet hence it is 
-advisable to use "xdp_build_skb_from_buff(const struct xdp_buff *xdp)", 
-but for cases when xdp doesn't run - the xdp struct has junk/zero value 
-which cannot be converted into some valid skb. But I think I will do 
-something like this:
+> > Yes, like the message said please resend.=A0 Though isn't this the same
+> > as
+> > the fix that Dheeraj already sent:
 
-if (emac->xdp_prog)
-	xdp_build_skb_from_buff(xdp);
-else
-	skb = napi_build_skb(pa, PAGE_SIZE);
+> Yes, we have both fixed the same thing! Although I wasn't CC'd so I
+> didn't know they fixed my patch.
 
-Hope this will address your comment.
+Yeah, that wasn't ideal.  In any case it's fixed now which is the main
+thing.
 
->> 
->> > building the skb using original length read from the descriptor.
->> > Consider using xdp_build_skb_from_buff()
->> > 
->> 
-> 
+--fzZ/jJpPKojkRDb+
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmekwTUACgkQJNaLcl1U
+h9AGtQf/Y5YasXRvR05PNOo8TFrnksclPMvp1bfX8xJ+hWA2F/5XfWk5nQ/LORkJ
+9m1EXGGbtXgaiFwLtmNN3cHcu+z7O7I6/HKfI6BNQV77T6dGsCErjmkdsONKGD+l
+/46gx0iBREjNOTA5EvyVS4RP+7zKsParlHSLWJV1Rox2vh5KOsxrCSmQYPkk7xnh
+mOzd0Vj1y1j2quAe8+OmtWWFUZHhzPVXp8gDx3ornMwCeDmcNdA4c5ywHh7nWiwY
+tn8IFNC7EdJgqXz0PffG4hhva2bCrxYDC6rGdZWm7V+O55W47Y6qQLkJqwtAnTDY
+6CeaBreu14ntEDjR7c1if3FLx4L+Dw==
+=KAkl
+-----END PGP SIGNATURE-----
+
+--fzZ/jJpPKojkRDb+--
