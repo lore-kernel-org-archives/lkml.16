@@ -1,28 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C527194C75;
-	Thu,  6 Feb 2025 17:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F5318A93C;
+	Thu,  6 Feb 2025 17:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863517; cv=none; b=mryDvhlYtG41Yp7pDxVTkxHVWAUn01AIaCxBa8iDbtvthNTmUsksSoUqo1ke+0wMZgmsTKrjbre30MMg9yhhmHhuNoa9sWlTycjXPv0pL5ih/xxDE8v51lY8Z3GDZ2/IlUIPnPcg7cNmcS9i2zAIEmECMV8Lq8YMM1EL82Rhp/U=
+	t=1738863521; cv=none; b=X001mD994/M/EeI4ipnpBL2zCmARwkRVmF+/n3/CT4peZxQjPlzjUU/YMlmh28ZvH8h+UhDJhXgEYvvPkACcEacrne4p6UDFiF3VqyDYOAP9jUSagRjSonvETmGh5LwgH4+w1PXWZEShTG2puS74vNBraydCUaCncAOJB9p1LqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863517; c=relaxed/simple;
-	bh=DeeEwrMxk15wFtTTk6UT9I61fCtbdBqCQIrXhHdA12w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IO0OCbPb3lPouAlrOyzvMq1hcvUFERp0K0xLA7n3AHiMDvJ35jxBmeY7/5z7B35LAuShndvWT8erIVT3k7PPBhabUyqfAGGVu6XMQkLS04RencDlp04qxlHZ6KpBjyN2jBuXDepWks/aQy8H4orKs7sTxV6ManfRa3KT33ot6Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hKboPcCy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738863521; c=relaxed/simple;
+	bh=pkYFJ4LaLF+Xd6E3ZdhXgUAOXThcaHR6MGn9iSLxnlM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m5NE9EF9E43d38Nh9Xltp7wVAM53eKgZr7oPHW22GE/HtPr8wCDeuD3fKLPj4umBnCaTvkrxjWS4s/V1tMnP1G+93HlZjLhGJ7fJqSQI9/EO3yLfbdfjPbkyJcGyIfgBYh/2kut7V1TWv/VDYdx0JZW/Mx+yZzfectM4eYezwX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=a3J6DA2E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hKboPcCy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D074BC4CEDD;
-	Thu,  6 Feb 2025 17:38:35 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="a3J6DA2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F117C4CEE3;
+	Thu,  6 Feb 2025 17:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738863516;
-	bh=DeeEwrMxk15wFtTTk6UT9I61fCtbdBqCQIrXhHdA12w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hKboPcCyGTiLHnX6A/gqVat18Uvi1yjrTmmcCPRio51nN4pbl9+zayUXKcIY4kHgm
-	 eFXNYxCJ63mTalqruoD+qm+n0GHyRatacCJ5KLVqTKnzGlEFQ/cp7LsuIefWAoRCy/
-	 UoOX8VGmsA/ZfB7++3O6f6PbmOeIqKlIEE2JN9H4=
+	s=korg; t=1738863519;
+	bh=pkYFJ4LaLF+Xd6E3ZdhXgUAOXThcaHR6MGn9iSLxnlM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=a3J6DA2EH1CsQ1hv/NHX2h/KPgrX2vQScmeJnLEtED6juMlR0jqqkG2Og42Vn9Bmf
+	 uPnhKCJ/S4katL2WWR6sTFiYaZBmBLpkFBTwtaSj+yT+AbdPUr0AodR8/b8sOjII8Y
+	 7AaOGoXNi+DXyGDySXjAAgZAC4QgLryW47qow2g0=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
@@ -42,110 +41,95 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Zijun Hu <quic_zijuhu@quicinc.com>,
 	linux-usb@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v3 2/8] regulator: dummy: convert to use the faux device interface
-Date: Thu,  6 Feb 2025 18:38:16 +0100
-Message-ID: <2025020623-september-drained-9fd2@gregkh>
+Subject: [PATCH v3 0/8] Driver core: Add faux bus devices
+Date: Thu,  6 Feb 2025 18:38:14 +0100
+Message-ID: <2025020620-skedaddle-olympics-1735@gregkh>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025020620-skedaddle-olympics-1735@gregkh>
-References: <2025020620-skedaddle-olympics-1735@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2848; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=DeeEwrMxk15wFtTTk6UT9I61fCtbdBqCQIrXhHdA12w=; b=owGbwMvMwCRo6H6F97bub03G02pJDOlLPvcvOx94ijHGeNm/gy4ZpzL4trM3WE14t26H10uFz 2ujzmvXdcSyMAgyMciKKbJ82cZzdH/FIUUvQ9vTMHNYmUCGMHBxCsBEupMYFuy7K39Stf3OHc9V 398w/xYJ1vvw0JxhrvyNXYevCnn9SZj+YKbEKrbHoYbKNwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3780; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=pkYFJ4LaLF+Xd6E3ZdhXgUAOXThcaHR6MGn9iSLxnlM=; b=owGbwMvMwCRo6H6F97bub03G02pJDOlLPvdqT821vXN4kauuOMOSqLtS+h5dOXYHy/a0c03hO s9cU/yzI5aFQZCJQVZMkeXLNp6j+ysOKXoZ2p6GmcPKBDKEgYtTACay5z7DgnlPxbSjI907j971 2brnqWRJ91qRUoa5IpNZHnqUi9ybcOzthLUr34Tvr/j+GgA=
 X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
 
-The dummy regulator driver does not need to create a platform device, it
-only did so because it was simple to do.  Change it over to use the
-faux bus instead as this is NOT a real platform device, and it makes
-the code even smaller than before.
+For years/decades now, I've been complaining when I see people use
+platform devices for things that are obviously NOT platform devices.
+To finally fix this up, here is a "faux bus" that should be used instead
+of a platform device for these tiny and "fake" devices that people
+create all over the place.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v3: - no change
-v2: - renamed vdev variable to fdev thanks to Mark
- drivers/regulator/dummy.c | 37 +++++++++----------------------------
- 1 file changed, 9 insertions(+), 28 deletions(-)
+The api is even simpler than the normal platform device api, just two
+functions, one to create a device and one to remove it.  When a device
+is created, if a probe/release callback is offered, they will be called
+at the proper time in the device's lifecycle.  When finished with the
+device, just destroy it and all should be good.
 
-diff --git a/drivers/regulator/dummy.c b/drivers/regulator/dummy.c
-index 5b9b9e4e762d..01cae1fc8009 100644
---- a/drivers/regulator/dummy.c
-+++ b/drivers/regulator/dummy.c
-@@ -13,7 +13,7 @@
- 
- #include <linux/err.h>
- #include <linux/export.h>
--#include <linux/platform_device.h>
-+#include <linux/device/faux.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
- 
-@@ -37,15 +37,15 @@ static const struct regulator_desc dummy_desc = {
- 	.ops = &dummy_ops,
- };
- 
--static int dummy_regulator_probe(struct platform_device *pdev)
-+static int dummy_regulator_probe(struct faux_device *fdev)
- {
- 	struct regulator_config config = { };
- 	int ret;
- 
--	config.dev = &pdev->dev;
-+	config.dev = &fdev->dev;
- 	config.init_data = &dummy_initdata;
- 
--	dummy_regulator_rdev = devm_regulator_register(&pdev->dev, &dummy_desc,
-+	dummy_regulator_rdev = devm_regulator_register(&fdev->dev, &dummy_desc,
- 						       &config);
- 	if (IS_ERR(dummy_regulator_rdev)) {
- 		ret = PTR_ERR(dummy_regulator_rdev);
-@@ -56,36 +56,17 @@ static int dummy_regulator_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static struct platform_driver dummy_regulator_driver = {
--	.probe		= dummy_regulator_probe,
--	.driver		= {
--		.name		= "reg-dummy",
--		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
--	},
-+struct faux_device_ops dummy_regulator_driver = {
-+	.probe = dummy_regulator_probe,
- };
- 
--static struct platform_device *dummy_pdev;
-+static struct faux_device *dummy_fdev;
- 
- void __init regulator_dummy_init(void)
- {
--	int ret;
--
--	dummy_pdev = platform_device_alloc("reg-dummy", -1);
--	if (!dummy_pdev) {
-+	dummy_fdev = faux_device_create("reg-dummy", &dummy_regulator_driver);
-+	if (!dummy_fdev) {
- 		pr_err("Failed to allocate dummy regulator device\n");
- 		return;
- 	}
--
--	ret = platform_device_add(dummy_pdev);
--	if (ret != 0) {
--		pr_err("Failed to register dummy regulator device: %d\n", ret);
--		platform_device_put(dummy_pdev);
--		return;
--	}
--
--	ret = platform_driver_register(&dummy_regulator_driver);
--	if (ret != 0) {
--		pr_err("Failed to register dummy regulator driver: %d\n", ret);
--		platform_device_unregister(dummy_pdev);
--	}
- }
+This simple api should also hopefully provide for a simple rust binding
+to it given the simple rules and lifecycle of the pointer passed back
+from the creation function (i.e. it is alive and valid for as long as
+you have not called destroy on it.)
+
+I've also converted four different examples of platform device abuse, the
+dummy regulator driver, the USB phy code, the x86 microcode dvice, and
+the "regulator" device that wifi uses to load the firmware tables, to
+use this api.  In all cases, the logic either was identical, or became
+simpler, than before, a good sign (side note, a bug was fixed in the usb
+phy code that no one ever noticed before).
+
+Note, unless there are major objections, I'm leaning toward getting
+patch 1 of this series merged during this -rc cycle so that all of the
+individual driver subsystem cleanups can go through those subsystems as
+needed, as well as allowing the rust developers to create a binding and
+get that merged easier.  Having patch 1 merged on its own isn't going to
+cause any changes if no one uses it, so that should be fine.
+
+Changes from v3:
+  - Dropped the USB phy porting, turned out to be incorrect, it really
+    did need a platform device
+  - converted more drivers to the faux_device api (tlclk, lis3lv02d,
+    vgem, and vkms)
+  - collected some reviewed-by
+  - lots of minor tweaks of the faux.c api, and documentation based on
+    review, see the changelog in patch 1 for details.
+
+Changes from v2:
+  - lots of cleanups to faux.c based on reviews, see patch 1 for details
+  - actually tested the destroy device path, it worked first try!
+  - added 3 more example drivers
+
+
+Greg Kroah-Hartman (8):
+  driver core: add a faux bus for use when a simple device/bus is needed
+  regulator: dummy: convert to use the faux device interface
+  x86/microcode: move away from using a fake platform device
+  wifi: cfg80211: move away from using a fake platform device
+  tlclk: convert to use faux_device
+  misc: lis3lv02d: convert to use faux_device
+  drm/vgem/vgem_drv convert to use faux_device
+  drm/vkms: convert to use faux_device
+
+ Documentation/driver-api/infrastructure.rst |   6 +
+ arch/x86/kernel/cpu/microcode/core.c        |  14 +-
+ drivers/base/Makefile                       |   2 +-
+ drivers/base/base.h                         |   1 +
+ drivers/base/faux.c                         | 228 ++++++++++++++++++++
+ drivers/base/init.c                         |   1 +
+ drivers/char/tlclk.c                        |  32 +--
+ drivers/gpu/drm/vgem/vgem_drv.c             |  30 +--
+ drivers/gpu/drm/vkms/vkms_drv.c             |  28 +--
+ drivers/gpu/drm/vkms/vkms_drv.h             |   4 +-
+ drivers/misc/lis3lv02d/lis3lv02d.c          |  26 +--
+ drivers/misc/lis3lv02d/lis3lv02d.h          |   4 +-
+ drivers/regulator/dummy.c                   |  37 +---
+ include/linux/device/faux.h                 |  65 ++++++
+ net/wireless/reg.c                          |  28 +--
+ 15 files changed, 383 insertions(+), 123 deletions(-)
+ create mode 100644 drivers/base/faux.c
+ create mode 100644 include/linux/device/faux.h
+
 -- 
 2.48.1
 
