@@ -1,278 +1,235 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011016.outbound.protection.outlook.com [40.107.74.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DC123BF8E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 23:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738884571; cv=none; b=nGP6a/UnNn8S7G/+xv7HaqV55LBBU9rDXeUu6DiMiPsKGHfe+DPEppTjLfDniWlJnyOwhTOceBYW2gCexQ128agzp9BRsJZr7EzVyCToz2z1OJpC7cXsm4ax+w7g46Xvg4wYsmBjQcIbgtqmvH9u5DV5zuO+xmBeeKiJ3ch6IZw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738884571; c=relaxed/simple;
-	bh=BgNsZ2EhBxd/BSWpqXyZykgbwBhLSUsbRTbb1BSQdUc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=twbgIzBAT5MOJMn9cf3Rlei/F8cbHCtkqU0+J51QuvV5XtAhylAfm6gFNB6bdidx7zDuCYZl6Mn3eLsLxKGNNNGnxUSHrcqBdrEO8WzKE13DjYrfA7i2wudUNFqsmFrKbroLDBEYsEJHkDXEE+VOYkWwByZjFtBroIQDPAZkSws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NfNNVWdA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C66D2417EF;
+	Thu,  6 Feb 2025 23:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738884658; cv=fail; b=l4m5qP9tXZECa2i1V+pklFjkKBgqHTcpwnCYAxG4NT556TAIIYTJSrTPt/EGbvFHJ9vU3+fpi/dMSuAw39ZPSMUmRuONjwwDrwyzcHtQEho4N84CRjvd+lWe3ik9wZwCn/rZI/mzLMVjLeinilDBMF7eRqt82d+co4YYdZeWVRk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738884658; c=relaxed/simple;
+	bh=vZTTXT2U+12pgKelODpBrlEONNiLoURjWi4y9IHyrxk=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=NzaVuj+MI96I7x3aUc6iLJEsWEvRhyFysro+HuRjP2wlNe8Vwhwz8Qd7GVtzAjizpFfhYFpr2CLi2LQzED+LnvnX15fpEzORLXTXJULfAnfIWb6ri81lUvB1yNagMeWqQPcFsJIltMYd+jX+Iw7YXEEfJS9B1iI27xDVlu6utTM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=Cy0b+ATZ; arc=fail smtp.client-ip=40.107.74.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NfNNVWdA"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516Iret6019029
-	for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2025 23:29:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	U+bqz9EHeHzQ2Pjn9rG9487ONwiuzpgqIzdaaOh917I=; b=NfNNVWdAWoboHRnz
-	+N4Zg7BpQUG/peh4iVo+XwQBbLfrD09C+v0ZykMi8vDnNRVjss7p2gl+XKRcMKQ7
-	CuVuRYIXCYcxZcvhsJOTqDceuWVfI4GuXFWg+ddPnZtiCQxR7LQ4mrT5sRV306gO
-	kbrBrvXpiHP6T3LBuec+ikVUmIiH2fHQTKPvHkYlJ7PDZJUNVTw+mM/eW+bXLobQ
-	r6JYDxbCVPXhzeU8Xq5j8BM07UOt04ljxdtcPgml3WGQXHqoXStRaFGEkzl2OARQ
-	Xy4u7aNv6E92mTlv+3HniBmlLNxbb02SjIXznACPURSLjRaXujwqeP+R9bKFdWmk
-	Gr0yLQ==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n2rt8hu9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 23:29:29 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2f9e1bf0a3bso4749096a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 15:29:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738884568; x=1739489368;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U+bqz9EHeHzQ2Pjn9rG9487ONwiuzpgqIzdaaOh917I=;
-        b=HpoPZXQ/V5DPQoZKSbKHhSJ7Ei4O7TmMdpPGn7zJfRPLAPUpcIlnqvM9OPPRWkCg43
-         GUgcizoQYifKKMCdO1CLddsGJd3U7iTUGI1yFs+rfBA6RQ2maOIcszOrbJApJ5UtMQXX
-         xX9miAYni2KSPeBfFxldASlc13z2YODphBpaD+AaI260v3yzZh94NZm1dyuPaLt3Mplq
-         nJWWExjlyvqDDYA3qyKrJZLxAIRTy9jLSDySvm9DRsMKfUZnhzT1OaK3CziQMPWBSl2U
-         7f7xhO2Ra9pl18PB1Gfcj2lz7aabinRChjHpXCkvvKvcC5HHRQZEzg+0g2wqrr6F5ErE
-         mHBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVf8huqbjq86r2aqNCg+efJYg8kA+2TJL0pj11YnTIOe0iatmz/Vp/xbjPGqx4mWPdiCo1iK6jF+x+OIOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGFaeKJe+fEAhLpp2KOSTxIlXrWK0OTDIUNrdbLvN+abke6NEk
-	71W+aN1fMK5iKEA2g3zLucx97+mwwGbaPd8FXk+1kbNgYvL1YIwsf98cb3u5yUklQ5QxDNzwLNc
-	ERxk/Rt5TweaXmkVwAkBziY9/XHFMIT//rR7xJLankXRHwYMhcolx/wxlo4Ms0TM=
-X-Gm-Gg: ASbGnct5i2t/bDq0REeIJW1fLkTiPuLxpY/1X0L0LUq/cc5FPMS1lbtVfBJsfyd26xE
-	JB+wZ7z668LxftNVPeaAws2zfViwB0Wqzdu1WgwgTwqMLg3LiKTdZnFpQIqL/e6bY+593V7lZaA
-	EAC7Pp/NWc0bQAzcbBGIDlpbfXahEPxs29AncLYSZT2m2wVFGVff8PuMpEToeD49V8T9t3mZNNJ
-	LDQJfE9yNmZNvmJHaTQhgiIL6SBUSqylieARgsbq0psXUuVPYV710rFKDGYZQ+Jxo6DLS2Md7ko
-	ADeSX2HsU2U4p+SpK1v8gWB2UbAJydRgcRl4BDNl
-X-Received: by 2002:a05:6a00:4303:b0:72a:83ec:b16e with SMTP id d2e1a72fcca58-7305d53a58fmr1438928b3a.21.1738884568597;
-        Thu, 06 Feb 2025 15:29:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE1nJAHgxkAN6yu/cuiRuyEu57hBwAYKzGaS3dQQShr42srddHjkm9PXWcqaHXZhbVEMDlPig==
-X-Received: by 2002:a05:6a00:4303:b0:72a:83ec:b16e with SMTP id d2e1a72fcca58-7305d53a58fmr1438906b3a.21.1738884568240;
-        Thu, 06 Feb 2025 15:29:28 -0800 (PST)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ae7f6esm1845905b3a.74.2025.02.06.15.29.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 15:29:27 -0800 (PST)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Fri, 07 Feb 2025 04:58:59 +0530
-Subject: [PATCH v4 4/4] PCI: qcom: Enable ECAM feature
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="Cy0b+ATZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wQINpaKOsjIdPYzoBsIxop3RwkVOBIV0t7oSjrYeyqQQTgomXCLP91Jgp2F2IZd4+wHz5pt0zK7CCCkb07N46rvX8lHyNNezMuN1WhaYgSjsaCOQGpKgOuVxaXkdBZ72EklYELKSZvy+F1GUXd05ddEoIyK51K6gWnmSvvLTIeULT2Xxqyk1EaQ5zS0P787xytNhnSFNjMDW4gMOUhtHGfEQLOqlbYO6ynsga97lgYI6rNqS8fcTtF1kngRzwtQrTnxgpOCKO7Li+UiUZy7ohloCf9c9ASgYa52JANf7NUkPxy4rNvIMcudAe2h6K6+Ro0i1ErkfX56xFlN9vf3mTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iFqttdw7Ym2+iqTF0keUos5ySf2BNW5nGTpT8lMnNEA=;
+ b=npCPO/9XhO2sSsNn3nRP9r358Rm2gxlxt/g4Tw0m9VIoR/u+vJUArBZD1GqEIFrmnMpRNC73bmTkCfvO86Tv3rU09SmHT88fZfwydRrApPaYQ9obR/Au7WV/tD9OYPMKEK46dzkGD0FYG4uYJ/n/DDf3D9kQeG0MEAR2L749rRFLEcQEp/6KliVRZc9VcZs9R9Gt20SJxnGYJzwbTIG4sKz2gi7h7og3gCTCAaVnjKoFg5HaMv7Tb6YJLq8cF+mQcmHXeP0jsI/XOwI02arnspURwoANgpCn0byQy4tyadF7/2XY3tsc4kql40eiR8pTJfRzVp5tVWNJDlqxccmVNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iFqttdw7Ym2+iqTF0keUos5ySf2BNW5nGTpT8lMnNEA=;
+ b=Cy0b+ATZXC+7US7wGI+tM9IfO/dmPuCIX2VNepVIce9/DzoZAnMOmI7cYDKPcVogSD592Q8EOQKKa037Kqa72sGr8YoFCgkBLFmqmmCiWFGtXgmHSWwJpqx55oIuBUloOTNHpB0QgvqqEOv1N5+C2ZQPTwcCZE/s8bzWjklQKWI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by TYYPR01MB13990.jpnprd01.prod.outlook.com
+ (2603:1096:405:19e::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Thu, 6 Feb
+ 2025 23:30:52 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%5]) with mapi id 15.20.8422.009; Thu, 6 Feb 2025
+ 23:30:51 +0000
+Message-ID: <87wme2irbo.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] ASoC: simple-card-utils: always find dlc using result of graph_get_dai_id()
+In-Reply-To: <20250206161831.2519-1-laurentiumihalcea111@gmail.com>
+References: <20250206161831.2519-1-laurentiumihalcea111@gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date: Thu, 6 Feb 2025 23:30:51 +0000
+X-ClientProxiedBy: TYWPR01CA0040.jpnprd01.prod.outlook.com
+ (2603:1096:400:17f::9) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
-References: <20250207-ecam_v4-v4-0-94b5d5ec5017@oss.qualcomm.com>
-In-Reply-To: <20250207-ecam_v4-v4-0-94b5d5ec5017@oss.qualcomm.com>
-To: cros-qcom-dts-watchers@chromium.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
-        quic_vpernami@quicinc.com, mmareddy@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738884540; l=6070;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=BgNsZ2EhBxd/BSWpqXyZykgbwBhLSUsbRTbb1BSQdUc=;
- b=LUuYaHAwc2zakqylAGfB988VMwU6n8H9p/Go6NO2jnuQGQwnPr1ZV2j/g3cwoTXFzmrXapBWG
- 5rIWwjQ4XseBpCb7AXnc0WZ9i67sgP/RrbMPxDYSABKTH+VjaJLT5im
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-ORIG-GUID: 3YKa4kSf9gsg_L9Pqcoy36jhbcHCelF1
-X-Proofpoint-GUID: 3YKa4kSf9gsg_L9Pqcoy36jhbcHCelF1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_07,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060182
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|TYYPR01MB13990:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c543541-2be1-4347-ecb3-08dd47064b74
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nDrvtfJbJrV5AaWJHpdK16o8uJC4pvWnYtZnWNllKO6IfMMo+RdFNqKBamTi?=
+ =?us-ascii?Q?afc1MSavFoAQ+53YbK2RJi4YFWJGiw6ONw60Ph8GeGZUWhOEVsL1g8OQms6D?=
+ =?us-ascii?Q?yIFBieLJn/vnVKAxX3RGIREGTMsyoMXN+7c3cC4CmNNrimI/zOpuPrBUKU+7?=
+ =?us-ascii?Q?ieb6Zhf6Ur70ch1zQplN+pSe5h2Hzp8e7VcVSCRcTHcRDZe3KDfnfl9jUlqk?=
+ =?us-ascii?Q?mBqdhr3PP/xDM0hOHWEvrxdAxAVV/FSHZv/G0N1CJL+06l2RWomewYwK14R1?=
+ =?us-ascii?Q?ZlKhjwuZ+KiJAwcV3rD446hUA9SFqGYkvxCS7ctDfDm0XBCbd5qfcb+ubfkD?=
+ =?us-ascii?Q?0FyuMMZHXaIZHlEACvpEcV7qahMAVsBjtypGyied1gSn0C57SWO1R9Ezixz7?=
+ =?us-ascii?Q?n/CeIDWKCRDFzu4U/6eJM46qmO5a7WtYuocd1JyK/dPRNNJxxYlWucBQveww?=
+ =?us-ascii?Q?pmQMC2fDMbIl1x7tqqY/+r8on0Evv5+H8LweptafHfo3L4wyyAjaCdvHbiXl?=
+ =?us-ascii?Q?BZWjEFpaBPuPZC2KHn7/mwq9UNguh9fhj9ZcLsCyAFgFZmDRHShcSNtNsoFA?=
+ =?us-ascii?Q?JKdqRwH5Ju/nnI2SI1C07kV5Le6hKH/FCsaJ3TcPJYE7BzWzQvt4gsxVjHTg?=
+ =?us-ascii?Q?uLAPvp2g7Te5SleZVJZ/HITSjQrIFrjNxt2WjCtJcN1trGbx4CgZLK5gxDNQ?=
+ =?us-ascii?Q?RE3t56LZ9Vj5wsw6mQDqFiFkh05994epNRab3fgBzhF/Wy00MRCct+WNPOwn?=
+ =?us-ascii?Q?wbiG+eYfl0kA1knzwzT1KzALyYJZl9LJIgUcOEN9jssXDiMfJAR55rTH1/fG?=
+ =?us-ascii?Q?1/SNAZ5+p4PzG4+CBsmmt1+LZUQAUJySL698lKQ89mrqjRlaewwdInfNmj2/?=
+ =?us-ascii?Q?fsaAWrBZ3dIn3WPS0kacXXCHVJXx+WAGm2XlcPBu/sQp2YfV7/1vcR5zSVwc?=
+ =?us-ascii?Q?BIeFJJG3fitIEimlK6y5AfJETDrTvI6XRHNg58tOcpO19flRoPBJ5pLPTHhr?=
+ =?us-ascii?Q?EUUj+1SizxXLDojakore+4/8/xFFeQFYpRMjTPuy/q5NRJO+nVVmncstiTDx?=
+ =?us-ascii?Q?nYbCY73Wmxo6/QQaEdTsRRQkRDkCCQCagZlRdjPa6B8YC25SEDCspHcBiu/M?=
+ =?us-ascii?Q?SPpKO3b1mM5jfPvG3cqPOwWhdwNtZbJMrrSwcQGhIFRUChloK9wdTMMrviGk?=
+ =?us-ascii?Q?korWCWuCeEnmfTuaXltBdiqYnaV/TcD1E1dKjPZe4XNDZXjubUVRivFr1mSK?=
+ =?us-ascii?Q?q4GsE/NUdwAWbucCHruu0MEI1Rg0/s1PWhDa/4azsAabXGPG7nhgtyPtdHHR?=
+ =?us-ascii?Q?wP85a7O1q8eVpJCIQLytYKXDfzRv/ovn/WPtefhOjPZS655yTotr9gFT38cl?=
+ =?us-ascii?Q?+Vwc6xgLV9hteuSWwhPOsV0sBkfY5xx+sOmWGKH/5AhjcC1XuCriFMdoA2oC?=
+ =?us-ascii?Q?kJXc+MZDrqVwtw/r9fOpDddV/2bAhLvr?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gfOOVXnIpuA6gIAsIbcanLspmR1p9jwvW3nHaxcEQsCSzq6dftjjsXxJCciy?=
+ =?us-ascii?Q?10KnZELzzCW1+4nwe8HfCzaWBoV11m8jsTX8DwICTJzqZ5sC3hexZuiJyfbT?=
+ =?us-ascii?Q?IK/FcVasqo//sCmRHT5nIl+yQXXZvg2+q4rtKm0V6UsgoNq+tzCteKhc0hm/?=
+ =?us-ascii?Q?TogMGCW59gaMSAU8PaEl+69/ceuKCbd5/urMSlglhFAR0tFavIEZioIyCAa/?=
+ =?us-ascii?Q?vFEDBrdH0TgnsVsjY7ND+eHSIyS2eYIwBQ2XB6t2N7CpojJ4CUIlzrHfB3FM?=
+ =?us-ascii?Q?GG/eFjHmVMpKk41Iw3LlGm7OD/edxoZ8jHMuA5dcJi6WHn4dGGVkCObd3AjH?=
+ =?us-ascii?Q?IMWhi4xuJAgCXL18H7wrsa1eZSLuGiMrWxsNVefNZTtGxZb0XgCWE/sxW1jA?=
+ =?us-ascii?Q?5OUUnSivMST37ZVbSFeIxVuzcWZhzq2UopKmr/rJ5lKvDn1ZqPYrRRZ7v4ZM?=
+ =?us-ascii?Q?J+gr2U4eBTwAPJxDmrCQj6JwUUZhioxvmj1Ay84tynhOvBWcpVVEmbXqYP8Z?=
+ =?us-ascii?Q?ONLGSGWlXpcZjY24ZHX2S7kbvJig/wY95FRY/9Q0pCeGqPWZV41inWjEMcH+?=
+ =?us-ascii?Q?VmOP3fneOklDoRy9iPxWfbxeR6gpHWG9y5jOguUrqfHlvOZVp00QjYuO7Wg8?=
+ =?us-ascii?Q?sRipQx8ho27a6J6mCcQ0lVZhsBKWMTGV7One6rnUO38A+Ewh/3L/83ZoM/xS?=
+ =?us-ascii?Q?FGGK3YP+hQ/UkBB9NZ8O5JqEH5QoOeBeNvXfFKP99lojRE4SOXHY9Trlz9LI?=
+ =?us-ascii?Q?MQXjk4T7svHaSFxVhBhha/q0OYzpwxhHmpZwTdWNBTrDz6PzjREJ7gd0cuRp?=
+ =?us-ascii?Q?BLvsywgsxdG00U4aicOYlbEtjwtKxLcbGsyFcotIYVkO5R5ft7vlpLi6DvqA?=
+ =?us-ascii?Q?fAjQGEOLScZlltd+ycPtNNv5gW1mnmaaq8vBI4p4R3y+tvwzIE9BagWuMNDc?=
+ =?us-ascii?Q?sMuTvuG/EeZySFB823qbHIijHK54oOdxNbRfdWxZD7BvYrCkie7LI30W4fYu?=
+ =?us-ascii?Q?or8JAm9U/edOpPl9VaBbsJsa3vP7LFaDkwvXvuqMgNtXaHHekJnCPvkd8VeX?=
+ =?us-ascii?Q?Qhgg3/5ciE0pi6LzWJg3BJ6QfZZoLOKJNEVTlWI4kXBa2NaAqbhCpEtzatJF?=
+ =?us-ascii?Q?cPnvgpdBgifMqBMtywBJx8Wz8U67PUNVa2G+BXQZ0Q9KB/N8IyAXpFtAAnap?=
+ =?us-ascii?Q?g7/+dWfNwsDdBkudsMoaIL+Wtn+ciJ67FwzMJvebQMfwxIgXYGGxRmqHcVyb?=
+ =?us-ascii?Q?TkKdl2SmAukSKBodlUGMqf07qJ699znnQEKNAfGS6Zm8riJnAaBQOQlq/K/w?=
+ =?us-ascii?Q?xvvQvG+bp8uE9h5OYM0npAxh4TviKP9ebrFNOirp/iLb2NntwWU0UnYAbyL7?=
+ =?us-ascii?Q?+ZE8njThEt9MXzjQm6SkcQ4OI+8rAEzZSbpn3ZO4TNfQiVf9CmALgMIaL51Z?=
+ =?us-ascii?Q?kIvSVcRV4QBtVWsGwuuyqZiR+pTumRyled1MOswrdhhGP9bt8h9F8WTEgxof?=
+ =?us-ascii?Q?XPwD5MpX243Crh0Kv+psvlzsk/1zzZiLR36rN3VKeOdGoNXXDoEXUg6PkLme?=
+ =?us-ascii?Q?eZcf2KKVAkhBpwii4sPjZhm9EiABVZRGuIRaYLKLyeBJjeely+l8w8IE2FZW?=
+ =?us-ascii?Q?sb5T0LhAtkBn7kW2rkTZjZI=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c543541-2be1-4347-ecb3-08dd47064b74
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 23:30:51.9244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +2VK+0ym+6N/ysjzXmW21xnppFlq7xm25zsuOzcNRWKe/bu39k8FkByyoPwjAQxPlt8uizKnwjZPeR7Eag0zbNURoNNxRDulqbDU+6vMqxpYHvn6fxT9dE0YVW2ol/bV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB13990
 
-The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
-gives us the offset from which ELBI starts. so use this offset and cfg
-win to map these regions instead of doing the ioremap again.
 
-On root bus, we have only the root port. Any access other than that
-should not go out of the link and should return all F's. Since the iATU
-is configured for the buses which starts after root bus, block the
-transactions starting from function 1 of the root bus to the end of
-the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
-outside the link through ECAM blocker through PARF registers.
+Hi Laurentiu
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Thank you for the patch
+
+
+> If the number of ports is 1, the DAI name will be the one corresponding
+> to dai_drv[0]. If ARRAY_SIZE(dai_drv) > 1, this means users are forced
+> to specify all ports corresponding to the DAIs. For instance:
+> 
+> 	(it is assumed that ARRAY_SIZE(dai_drv) is 2)
+> 
+> 	[snippet taken from DTS]
+> 	dai: my_dai@cafecafe {
+> 		/* some more properties go here */
+> 
+> 		ports {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			port@0 {
+> 				reg = <0>;
+> 				endpoint {
+> 					/* specify remote here */
+> 				};
+> 			};
+> 
+> 			port@1 {
+> 				reg = <1>;
+> 				endpoint {
+> 					/* specify remote here */
+> 				};
+> 			};
+> 		};
+> 	};
+> 	[/snippet taken from DTS]
+> 
+> This is problematic when users don't want to connect all ports. In the
+> above example, we're forced to specify all ports even if we want to
+> "connect" only port@1, for instance, to a remote endpoint.
+> 
+> Generally speaking, assuming that ARRAY_SIZE(dai_drv) is N, and we want to
+> connect a single port: i, we'd need to specify at least two ports in the
+> DTS so that "of_graph_get_endpoint_count(node) > 1" is evaluated to true
+> and the ID resulting from "graph_get_dai_id()" is taken into account.
+
+?? I think this is not a issue ?
+
+
+> Fix this by always using 1 as the number of arguments passed to
+> snd_soc_get_dlc(). This way, snd_soc_get_dlc() will use the ID computed
+> by graph_get_dai_id(), which takes the value of the 'reg' property into
+> account if specified.
+> 
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> ---
+>  sound/soc/generic/simple-card-utils.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+> index dd414634b4ac..a592617e1b0e 100644
+> --- a/sound/soc/generic/simple-card-utils.c
+> +++ b/sound/soc/generic/simple-card-utils.c
+> @@ -1103,7 +1103,7 @@ int graph_util_parse_dai(struct device *dev, struct device_node *ep,
+>  	/* Get dai->name */
+>  	args.np		= node;
+>  	args.args[0]	= graph_get_dai_id(ep);
+> -	args.args_count	= (of_graph_get_endpoint_count(node) > 1);
+> +	args.args_count = 1;
+>  
+>  	/*
+>  	 * FIXME
+
+It breaks existing many drivers / connections.
+
+And I'm not 100% understand the situation.
+Can I confirm ? your HW has N ports/DAIs, but want to use 2nd
+port/DAI only for example. It is OK so far.
+But you want to indicate only 1 port (= 2nd port) on DT,
+and, your driver registers N DAI drivers anyway ?
+
+If my assumption was correct, why you don't indicate N ports in DT ?
+You need to do is not hack to utils, but update your driver to match
+DT count and register driver count ?
+
+
+Thank you for your help !!
+
+Best regards
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 77 ++++++++++++++++++++++++++++++++--
- 1 file changed, 73 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index e4d3366ead1f..84297b308e7e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -52,6 +52,7 @@
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
- #define PARF_Q2A_FLUSH				0x1ac
- #define PARF_LTSSM				0x1b0
-+#define PARF_SLV_DBI_ELBI			0x1b4
- #define PARF_INT_ALL_STATUS			0x224
- #define PARF_INT_ALL_CLEAR			0x228
- #define PARF_INT_ALL_MASK			0x22c
-@@ -61,6 +62,17 @@
- #define PARF_DBI_BASE_ADDR_V2_HI		0x354
- #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
- #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
-+#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
-+#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
-+#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
-+#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
-+#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
-+#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
-+#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
-+#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
-+#define PARF_ECAM_BASE				0x380
-+#define PARF_ECAM_BASE_HI			0x384
-+
- #define PARF_NO_SNOOP_OVERIDE			0x3d4
- #define PARF_ATU_BASE_ADDR			0x634
- #define PARF_ATU_BASE_ADDR_HI			0x638
-@@ -84,6 +96,7 @@
- 
- /* PARF_SYS_CTRL register fields */
- #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
-+#define PCIE_ECAM_BLOCKER_EN			BIT(26)
- #define MST_WAKEUP_EN				BIT(13)
- #define SLV_WAKEUP_EN				BIT(12)
- #define MSTR_ACLK_CGC_DIS			BIT(10)
-@@ -294,6 +307,44 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
- 	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
- }
- 
-+static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	u64 addr, addr_end;
-+	u32 val;
-+
-+	/* Set the ECAM base */
-+	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
-+	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
-+
-+	/*
-+	 * The only device on root bus is the Root Port. Any access other than that
-+	 * should not go out of the link and should return all F's. Since the iATU
-+	 * is configured for the buses which starts after root bus, block the transactions
-+	 * starting from function 1 of the root bus to the end of the root bus (i.e from
-+	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
-+	 */
-+	addr = pci->dbi_phys_addr + SZ_4K;
-+	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
-+	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
-+
-+	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
-+	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
-+
-+	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
-+
-+	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
-+	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
-+
-+	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
-+	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
-+
-+	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
-+	val |= PCIE_ECAM_BLOCKER_EN;
-+	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
-+}
-+
- static int qcom_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-@@ -303,6 +354,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
- 		qcom_pcie_common_set_16gt_lane_margining(pci);
- 	}
- 
-+	if (pci->pp.ecam_mode)
-+		qcom_pci_config_ecam(&pci->pp);
-+
- 	/* Enable Link Training state machine */
- 	if (pcie->cfg->ops->ltssm_enable)
- 		pcie->cfg->ops->ltssm_enable(pcie);
-@@ -1233,6 +1287,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	u16 offset;
- 	int ret;
- 
- 	qcom_ep_reset_assert(pcie);
-@@ -1241,6 +1296,11 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (ret)
- 		return ret;
- 
-+	if (pp->ecam_mode) {
-+		offset = readl(pcie->parf + PARF_SLV_DBI_ELBI);
-+		pcie->elbi = pci->dbi_base + offset;
-+	}
-+
- 	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
- 	if (ret)
- 		goto err_deinit;
-@@ -1615,6 +1675,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pci->ops = &dw_pcie_ops;
- 	pp = &pci->pp;
- 
-+	pp->bridge = devm_pci_alloc_host_bridge(dev, 0);
-+	if (!pp->bridge) {
-+		ret = -ENOMEM;
-+		goto err_pm_runtime_put;
-+	}
-+
-+	pci->pp.ecam_mode = dw_pcie_ecam_supported(pp);
- 	pcie->pci = pci;
- 
- 	pcie->cfg = pcie_cfg;
-@@ -1631,10 +1698,12 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
- 	}
- 
--	pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
--	if (IS_ERR(pcie->elbi)) {
--		ret = PTR_ERR(pcie->elbi);
--		goto err_pm_runtime_put;
-+	if (!pp->ecam_mode) {
-+		pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
-+		if (IS_ERR(pcie->elbi)) {
-+			ret = PTR_ERR(pcie->elbi);
-+			goto err_pm_runtime_put;
-+		}
- 	}
- 
- 	/* MHI region is optional */
-
--- 
-2.34.1
-
+Kuninori Morimoto
