@@ -1,213 +1,109 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACEC236A81;
-	Thu,  6 Feb 2025 16:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AA1237175
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859533; cv=none; b=WmsveiaUYeNhbIPXE8Zram1f5UousyYUHjUYM4SdH2+F396wxCGzu9OoBzKPMbxvCGYamHIDfeCNk1cj1ZKI5x9jENmjxfO062dbA2TiOqNibEIkCc14KJe7pqPcOx7DvQiOSC/kKBiZxsyiUZbGkGcQGe2zjyDz6XnZlJXIi9A=
+	t=1738859544; cv=none; b=TYVHVJ70c9OXDCnZDg3mauQN3VgaHLhSwr5mhmeapwzQWymeS76Q5QYBP1y9DITagVv6oDhGpeLutnBS3IEB8s+xmTrJHJsSZB42ABc4pTUMgukUdKDd5dPsNZPjQzW2nXiE/rvvraGbY1n4VUK6pTcK+OHDjhVqai7f8Smrjdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859533; c=relaxed/simple;
-	bh=e2Gkb6kxm01Sbt508lQrlNCJRG4V3ju0OAt93agiUbs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QQHb/CsIK4nEQj4x1ZGwM8CGEX5IjP0G+4flcw9gv0EMJK5d//J9tEj7Xd/fm9K6AB5kAKSe8DABSzxSL0xGBycttBbL76zMpZrFZoX9jBAEv/8/9mlE8E3fEl3b34YtxrOF/nOjJ15CTHcV9+sT6h0EbmCA10sfxMRXgWmIbO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=0MrKyL1u; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1738859544; c=relaxed/simple;
+	bh=g3ZOYUXUmHrWdfJc6qzBihT+JpS7Xrr076CEZUDGYEw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lD31crwN6hwTZBpqnvmQdG3Js0r4xhpYaOStwjSqPLate3F/vuGzjx2EHBwgS309SGPsPaTM3N462k2uRqXFj/fbyRdsnfxsGgIg6kDCnjiReBSQWzMpZPYh7SKkxGWOmfv+6TK3WAoZ4KE1mtcO+ccc2cnJqDMHWwZxNuOdY3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A1vWhDuG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R8A8KVJN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="0MrKyL1u"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id F38D81FA97;
-	Thu,  6 Feb 2025 17:32:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1738859528;
-	bh=arFmatuJa82qP48/8w3Z6YT78OJ5e5wH4+NCkf77kB8=; h=From:To:Subject;
-	b=0MrKyL1upHmnHKNJgYB/0iiNVe7gY96eiX1JBXeyzntzOugpPBGCOzWVK3ZWPPkWL
-	 B08CyfbT16tFSm5qY9JMRUKNCPaYEz6FnJs9Ib+h68GUjnJADYox9pMWPmB8Iumzes
-	 U7abprShtVsoQ4bz2T3I1uRY48oOoyn07XdmCWRUO+iyKDrWrMCaJukhSFSngnzUtA
-	 Z7rthjiPE3RQ6VVq0U3hSXNwxGeGt6QdcwTBQLgYpC88+xa7zaLv1yTplpxr19p8GC
-	 QgwNAkMkDYtJSy9wGbbI7g/81JcBZLfCUyrxcyU4zQ4DFjrQ5GfYLDRplP+4PbBCti
-	 U9MSl/JX6qnhg==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	patches@opensource.cirrus.com
-Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v1 5/5] ASoC: wm8904: add DMIC support
-Date: Thu,  6 Feb 2025 17:31:52 +0100
-Message-Id: <20250206163152.423199-6-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250206163152.423199-1-francesco@dolcini.it>
-References: <20250206163152.423199-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A1vWhDuG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R8A8KVJN"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738859540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JlWQoMNpF9umnuqPuXzmf3G9EJj3qcG1KUOcch4+dHE=;
+	b=A1vWhDuGYplCfdcHYo8vagppvKW8eSLLP6AtrY+Qr8qv7lx5tNrgSHLEuIMbZwbw6N6iqs
+	2kH+W2vIDZfVvaO3sNquz51d4YBuk0oNga/s4s+B5eSItpAXW4ivAXYg+HTWpLjtv3J+Jx
+	uImhbA0I8tIzKJOx1tEjr2XtavcOZZcQpk4i3Wr9yZ+bCAM6rd41S/0Oi+1eAjXjDNFunl
+	YflKR5/k13yevMQ+uman0c1hy0ljUA3CbsYGVgjqbJMLgMwRRa6Ffuu8knAsHToNUxWzNe
+	eJB2hHMeOlP8LvIUUmaUTdK1zyhFtHjbuzEM5P87Q6oEHuQY0pU5msOnKWckFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738859540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JlWQoMNpF9umnuqPuXzmf3G9EJj3qcG1KUOcch4+dHE=;
+	b=R8A8KVJNk7qxeRY72pd64mTG+CGJClVVVJuu7H0w9f4FOtf9PQy2cgtVFNNexj3gSZKFWi
+	UFUZGC9tNn9JK/BA==
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Nam Cao
+ <namcao@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel
+ <sre@kernel.org>, Will Deacon <will@kernel.org>, Jon Mason
+ <jdmason@kudzu.us>, Jaehoon Chung <jh80.chung@samsung.com>, Hans Verkuil
+ <hverkuil-cisco@xs4all.nl>, Jassi Brar <jassisinghbrar@gmail.com>, Pavel
+ Machek <pavel@ucw.cz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Jonathan Cameron <jic23@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Rob Clark <robdclark@gmail.com>, Lucas De
+ Marchi <lucas.demarchi@intel.com>, Zack Rusin <zack.rusin@broadcom.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Uwe
+ =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Takashi Iwai
+ <tiwai@suse.com>,
+ alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v2 00/45] Consolidate hrtimer initialization - Part 4
+In-Reply-To: <87ldujz9a7.fsf@ubik.fi.intel.com>
+References: <cover.1738746904.git.namcao@linutronix.de>
+ <87ldujz9a7.fsf@ubik.fi.intel.com>
+Date: Thu, 06 Feb 2025 17:32:20 +0100
+Message-ID: <87tt97m3u3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+On Thu, Feb 06 2025 at 11:56, Alexander Shishkin wrote:
+> Nam Cao <namcao@linutronix.de> writes:
+>
+>> hrtimers is initialized with hrtimer_init(), and after that the timer's
+>> callback function is setup separately. This separate initialization is
+>> error prone and awkward to use.
+>>
+>> hrtimer_setup() combines the initialization and is simpler to use.
+>>
+>> Switch to use the new setup function. Most conversions were done with
+>> Coccinelle, see the sematic patch below.
+>>
+>> This series is intended to be applied to the tip tree
+>>
+>> v1 -> v2 https://lore.kernel.org/lkml/cover.1729865485.git.namcao@linutronix.de
+>>   - rebase onto v6.14-rc1
+>
+> Link to v2 of part 1 is missing. It's also somehow not in my notmuch
+> datadase (looked for "hrtimers: Switch to new hrtimer interface
+> functions" -- took a guess based on v1) and is not googleable. It's kind
+> of important for reviewing this one. v1 did have the links to the other
+> parts, at least.
 
-The WM8904 codec supports both ADC and DMIC inputs.
+It's archived and searchable on lore:
 
-Get input pin functionality from the platform data and add the necessary
-controls depending on the possible additional routing.
+  https://lore.kernel.org/all/?q=hrtimers%3A+Consolidate+hrtimer+initialization+-+Part+1
 
-The ADC and DMIC share the IN1L/DMICDAT1 and IN1R/DMICDAT2 pins.
+and the third google result points to:
 
-When both are connected to an analog input, only the ADC is used. When
-both are connected to a DMIC, only the DMIC is used, and a mux is added
-to select the DMIC source. When one line is a DMIC and the other an
-analog input, the DMIC source is set from the platform data and a mux is
-added to select whether to use the ADC or DMIC.
+https://patchwork.kernel.org/project/linux-wireless/patch/20241031-hrtimer_setup_p1_v2-v2-0-23400656575a@linutronix.de/
 
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- sound/soc/codecs/wm8904.c | 82 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 2 deletions(-)
+That part 1 series has been applied and is in mainline already.
 
-diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
-index 899ef6679f7e..a024cfc136c3 100644
---- a/sound/soc/codecs/wm8904.c
-+++ b/sound/soc/codecs/wm8904.c
-@@ -844,6 +844,26 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
- 	return 0;
- }
- 
-+static const char * const dmic_text[] = {
-+	"DMIC1", "DMIC2"
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(dmic_enum, WM8904_DIGITAL_MICROPHONE_0,
-+			    WM8904_DMIC_SRC_SHIFT, dmic_text);
-+
-+static const struct snd_kcontrol_new dmic_mux =
-+	SOC_DAPM_ENUM("DMIC Mux", dmic_enum);
-+
-+static const char * const cin_text[] = {
-+	"ADC", "DMIC"
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(cin_enum, WM8904_DIGITAL_MICROPHONE_0,
-+			    WM8904_DMIC_ENA_SHIFT, cin_text);
-+
-+static const struct snd_kcontrol_new cin_mux =
-+	SOC_DAPM_ENUM("Capture Input", cin_enum);
-+
- static const char *input_mode_text[] = {
- 	"Single-Ended", "Differential Line", "Differential Mic"
- };
-@@ -963,6 +983,15 @@ SND_SOC_DAPM_AIF_OUT("AIFOUTL", "Capture", 0, SND_SOC_NOPM, 0, 0),
- SND_SOC_DAPM_AIF_OUT("AIFOUTR", "Capture", 1, SND_SOC_NOPM, 0, 0),
- };
- 
-+static const struct snd_soc_dapm_widget wm8904_dmic_dapm_widgets[] = {
-+SND_SOC_DAPM_MUX("DMIC Mux", SND_SOC_NOPM, 0, 0, &dmic_mux),
-+};
-+
-+static const struct snd_soc_dapm_widget wm8904_cin_dapm_widgets[] = {
-+SND_SOC_DAPM_MUX("Left Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
-+SND_SOC_DAPM_MUX("Right Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
-+};
-+
- static const struct snd_soc_dapm_widget wm8904_dac_dapm_widgets[] = {
- SND_SOC_DAPM_AIF_IN("AIFINL", "Playback", 0, SND_SOC_NOPM, 0, 0),
- SND_SOC_DAPM_AIF_IN("AIFINR", "Playback", 1, SND_SOC_NOPM, 0, 0),
-@@ -1107,6 +1136,24 @@ static const struct snd_soc_dapm_route adc_intercon[] = {
- 	{ "ADCR", NULL, "Right Capture PGA" },
- };
- 
-+static const struct snd_soc_dapm_route dmic_intercon[] = {
-+	{ "DMIC Mux", "DMIC1", "IN1L" },
-+	{ "DMIC Mux", "DMIC2", "IN1R" },
-+
-+	{ "ADCL", NULL, "DMIC Mux" },
-+	{ "ADCR", NULL, "DMIC Mux" },
-+};
-+
-+static const struct snd_soc_dapm_route cin_intercon[] = {
-+	{ "Left Capture Input", "ADC", "Left Capture PGA" },
-+	{ "Left Capture Input", "DMIC", "IN1L" },
-+	{ "Right Capture Input", "ADC", "Right Capture PGA" },
-+	{ "Right Capture Input", "DMIC", "IN1R" },
-+
-+	{ "ADCL", NULL, "Left Capture Input" },
-+	{ "ADCR", NULL, "Right Capture Input" },
-+};
-+
- static const struct snd_soc_dapm_route dac_intercon[] = {
- 	{ "DACL Mux", "Left", "AIFINL" },
- 	{ "DACL Mux", "Right", "AIFINR" },
-@@ -2052,6 +2099,7 @@ static void wm8904_handle_retune_mobile_pdata(struct snd_soc_component *componen
- 
- static void wm8904_handle_pdata(struct snd_soc_component *component)
- {
-+	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
- 	struct wm8904_priv *wm8904 = snd_soc_component_get_drvdata(component);
- 	struct wm8904_pdata *pdata = wm8904->pdata;
- 	int ret, i;
-@@ -2062,6 +2110,35 @@ static void wm8904_handle_pdata(struct snd_soc_component *component)
- 		return;
- 	}
- 
-+	if (pdata->in1l_as_dmicdat1 && pdata->in1r_as_dmicdat2) {
-+		dev_dbg(component->dev, "Activating DMICDAT1 and DMICDAT2\n");
-+		snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
-+					      WM8904_DMIC_ENA_MASK,
-+					      1 << WM8904_DMIC_ENA_SHIFT);
-+
-+		/* Need a control and routing to switch between DMIC1 and 2 */
-+		snd_soc_dapm_new_controls(dapm, wm8904_dmic_dapm_widgets,
-+					  ARRAY_SIZE(wm8904_dmic_dapm_widgets));
-+		snd_soc_dapm_add_routes(dapm, dmic_intercon,
-+					ARRAY_SIZE(dmic_intercon));
-+	} else if (pdata->in1l_as_dmicdat1 || pdata->in1r_as_dmicdat2) {
-+		unsigned int dmic_src = pdata->in1l_as_dmicdat1 ? 0 : 1;
-+
-+		dev_dbg(component->dev, "DMIC_SRC (0 or 1): %d\n", dmic_src);
-+		snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
-+					      WM8904_DMIC_SRC_MASK,
-+					      dmic_src << WM8904_DMIC_SRC_SHIFT);
-+
-+		/* Need a control and routing to switch between DMIC and ADC */
-+		snd_soc_dapm_new_controls(dapm, wm8904_cin_dapm_widgets,
-+					  ARRAY_SIZE(wm8904_cin_dapm_widgets));
-+		snd_soc_dapm_add_routes(dapm, cin_intercon,
-+					ARRAY_SIZE(cin_intercon));
-+	} else {
-+		snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
-+					      WM8904_DMIC_ENA_MASK, 0);
-+	}
-+
- 	dev_dbg(component->dev, "%d DRC configurations\n", pdata->num_drc_cfgs);
- 
- 	if (pdata->num_drc_cfgs) {
-@@ -2117,10 +2194,11 @@ static int wm8904_probe(struct snd_soc_component *component)
- 		return -EINVAL;
- 	}
- 
--	wm8904_handle_pdata(component);
--
- 	wm8904_add_widgets(component);
- 
-+	/* This can add dependent widgets, so it is done after add_widgets */
-+	wm8904_handle_pdata(component);
-+
- 	return 0;
- }
- 
--- 
-2.39.5
+Thanks,
 
+        tglx
