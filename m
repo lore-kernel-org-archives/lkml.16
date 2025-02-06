@@ -1,46 +1,66 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5863C1925B8;
-	Thu,  6 Feb 2025 17:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D82199943;
+	Thu,  6 Feb 2025 17:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863972; cv=none; b=gg+3EfaYPdsndO+ISrXPHYszUByvCL52tLlpAAt7CwEUaPLeRB5ufp32MeE8oKEX2PurfLmeVzsxUjSsPtYmQeDAZnhulqr2dKIdCTCu/KgsxdAZPYfzpp1mc1fOPA4+XT/tuPxs55KlqmfmySC0WsnSxcVPGO2zKn2ghj2ytJw=
+	t=1738863973; cv=none; b=jfAHkbYIj/ps/nGRQ/+7Eme8L9TbOe8WX3GRs5V9SoTyTOin69lnoe+WO5XBr3RdBSrsU152enrbqRZbFFiUdT/w0HoNWTsiV/kIsu8/Otg4+vUcIwS0ooSRZKQAsmGJNdTisGVqEysuFMlwRtEV8QcSgaPXQcndTiZDPftAGbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863972; c=relaxed/simple;
-	bh=gTovkeAuc1k45/RNg29XG45qZ+duoj9ctG+BqWvkfwc=;
+	s=arc-20240116; t=1738863973; c=relaxed/simple;
+	bh=ovJm4j6SHLuDuaHzr21rDn835rvf8QGskDc9xQum3Zw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YqVAwjySwKH74FAjAuALLcTCigk0bQwPDwoCr3xvmcPPJxrvVnbP4tgqsMqWYdKP4CteMmdgABCzQl2OSs2UmXqUjvQnJmK54OyAxMnQbRKbr6NraGdoNxWmEtMHMskU0fUaF7dsONTUcljsYRqG5m60as1odTlxhAMlNk3Bdt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1EOONuJV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pvwf6yhh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 In-Reply-To:To:Cc; b=rbA8Y7nw+I8jW0Ichc8HL64t4JPHybBHgywna3jDpml6UDFSWyw+Sn1Y+3RJoMVLayP5UjJ0qtGOER6pbRt2SoqvH8OiDBzI9D26elhpA3lcYESpR2XZazhQwEay9mxVz4J9PDeuTECwKE5+cWlQVAyCC1bcTj3GA+oypsDiB4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TP1QehCH; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1EOONuJV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pvwf6yhh"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738863968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJACVaUgR6f3bBOq37IygZM3AouaTCTmenYGHYfPeqc=;
-	b=1EOONuJVDPGCFyBYF2NZeH9JaYOE7y7LyiIvz6xYYYs61mbwB+y0nMljnVlc7XESjX08YA
-	HUjCOBHLkkcdQNPRhFM04van1tQFzoxDmPUUvncFdH2EhMjp1R6wkkNxQSKEfT+dmqgj8p
-	/KpkV+um9gqXQV2NPbNLM5iGzcEpeehH+s3VBrvcgSGh9I7qFr59iGMlSP0IjiupSDtHiz
-	b2i36GhNVz4t6biD8L9F/MqUH/cRdNprH5+diRhAPqY05eHrG+yfNi0dti3dy1G/vafDQa
-	G+CAbUU3COiGWv7IskYOUo9d2EYOKCZmZWPJx45jOgOhIug6eDNEmk/+vbvPdA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738863968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJACVaUgR6f3bBOq37IygZM3AouaTCTmenYGHYfPeqc=;
-	b=Pvwf6yhhQnraLNiaPBbtfufGUknGLJXLMoqn6jmoVoBh76zpUs6XO3aiWSbMUymG9E1KJL
-	Orvae3YOpLQZ+QAg==
-Date: Thu, 06 Feb 2025 18:45:04 +0100
-Subject: [PATCH net-next 4/4] ptp: vmclock: Remove goto-based cleanup logic
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TP1QehCH"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab698eae2d9so216713966b.0;
+        Thu, 06 Feb 2025 09:46:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738863969; x=1739468769; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OkMsDoRO08lUjZHjBj1G6MqbNfCQFz6BCCmk32m907U=;
+        b=TP1QehCHhwfVqHEx8MeiCkME08E9hn82rmlFlHHQOvJ65KU3fF7mosfWK9T2IrTRoY
+         HHgp3qxgQL57JPNlF8mxXrkTJtmu6Wy3ogty6hVTtbVQQRbs04R3w1AeB2vP+i4R3NjZ
+         kHAd8TPFb0JKYv/k+pt31978aImqjrWWpo3MSa/MMbI27cI9ifa6RWqL6ueatKDh+X2u
+         PgRdSl96/JhWzO6p8Bba+CMjy4c5hbMfAxVrUa6hKqhzjKAjL+LofkSwLu5mnf3LbobE
+         T1pSA9SjHKWfpmkXIvnOYbawDbMqx+ecdiAgqJwq/GOyzzKBy5BBcV7Pl8QBtUJEcDBG
+         hVNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738863969; x=1739468769;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OkMsDoRO08lUjZHjBj1G6MqbNfCQFz6BCCmk32m907U=;
+        b=ue1OR+A1RI441zsO/IU9yWo7hp41CZqz6VYwM1wlu/SoUdIf0882nSzAv4uN6N1bR3
+         ZowO7c1rYf86RJ/2d1nLa7TA5vs9X+OKPs0gNrcR8cQM0VlFCGIeMtMUNd79ZBaTBfyz
+         aT49rOzPvUz4W8GczxMO5BSI+GRnzxI3awwXjDyLbxHbvCPhQRj4bd7sPXGu0rB8YYXl
+         FqTFI9v0gAQJYjq8m6gxXv2cC2TaHC5YvXyvmN8C7PNJxICGGAAlabacZpzseFA0PdVS
+         ObwEliaH0wgu5o4hqF8a38HzxpN9VTbBWxt3QP2a9lHpcMmoegXmpbuJURmZUVoG74wP
+         Mbdg==
+X-Forwarded-Encrypted: i=1; AJvYcCU28V21GqeLIZPkNyXqyvHdiBV4Bn9pr8LIawMTCqgrdFelFsoILibl+Oi6LAtcGbXW6StXDbBAvd7DN/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/06K/qw0VyebyFXKcMk4BHSJgMXu7z4X2X8KCkA/dRzSFWOXU
+	VhwDAkckhFCktYvu9O1cyElB11rpSc7ujAZU81yefoTk1UxO1x9c
+X-Gm-Gg: ASbGncsDamm+bj0d3XnPvFKtPmGRU7VP1ZHsU7MXxn0TNTn6wYPdtS03NQpGo54fogw
+	HgbSoEfbD/xTsOjFwzU4i4yKeEqz7f4FOIRq2OeZjI69hApGFmYbNak5dpxJ5nK1fk/rbrU+RRy
+	O+wCXXtQydkDZ2T0BRM+SI2kBzrjAjW+WpYolmLc9GWfPlknOMpzSS1BuBMeygItubccP1Z6d2K
+	AgjIG1jPRS7laBa70n3ARvNvYGePZku0g50iBHlJE172CRwtx5XhIonVd4Otyq1TMh1QYdvzamf
+	J1/KN3ERMhSsWy13Eb5IeiLRHtXTg0N2uP0701CWVDz9NgTip2D6OxIG
+X-Google-Smtp-Source: AGHT+IGc8hmMGDzbi0G/fvW9sBRYg6q5o2L5/Tc8kx9hnWYz5seKGV+N8E995p/KXWSRf3+U3tP77Q==
+X-Received: by 2002:a17:906:f5a0:b0:aa6:aa8e:c89c with SMTP id a640c23a62f3a-ab75e2f2042mr921993366b.39.1738863968638;
+        Thu, 06 Feb 2025 09:46:08 -0800 (PST)
+Received: from hex.my.domain (83.8.206.8.ipv4.supernova.orange.pl. [83.8.206.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772fdb84esm128911066b.80.2025.02.06.09.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 09:46:08 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Date: Thu, 06 Feb 2025 18:46:02 +0100
+Subject: [PATCH v2 3/3] gpio: bcm-kona: Add missing newline to dev_err
+ format string
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,141 +68,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250206-vmclock-probe-v1-4-17a3ea07be34@linutronix.de>
-References: <20250206-vmclock-probe-v1-0-17a3ea07be34@linutronix.de>
-In-Reply-To: <20250206-vmclock-probe-v1-0-17a3ea07be34@linutronix.de>
-To: David Woodhouse <dwmw2@infradead.org>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738863961; l=3397;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=gTovkeAuc1k45/RNg29XG45qZ+duoj9ctG+BqWvkfwc=;
- b=NJNbIqLK38DrSxmfOjF4hQ86H2W9H1exnGRxc8J42x7mQUxfZ75hkqgOZAIHVtiK0qdAbw44m
- xD9YlZVTee4AXsyKycYQP4mz3brzoLiRh8gssFwv9OLaomj13uY4q2W
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-kona-gpio-fixes-v2-3-409135eab780@gmail.com>
+References: <20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com>
+In-Reply-To: <20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com>
+To: Ray Jui <rjui@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Scott Branden <sbranden@broadcom.com>, Markus Mayer <mmayer@broadcom.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738863964; l=1019;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=ovJm4j6SHLuDuaHzr21rDn835rvf8QGskDc9xQum3Zw=;
+ b=n4/yA1oXA6PpcFFUmnyLhQ/BpICotwIQ1rCL8CuSUfkLBG4rWMq3P2G+AAFJP6lhTtTcnfEQv
+ 0b+4IhA4cYeBsp3Fsdj6uw0j5iLOKMaD8WssfRaRUA9KxDiJYib25AI
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-vmclock_probe() uses an "out:" label to return from the function on
-error. This indicates that some cleanup operation is necessary.
-However the label does not do anything as all resources are managed
-through devres, making the code slightly harder to read.
+Add a missing newline to the format string of the "Couldn't get IRQ
+for bank..." error message.
 
-Remove the label and just return directly.
-
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Fixes: 757651e3d60e ("gpio: bcm281xx: Add GPIO driver")
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Markus Mayer <mmayer@broadcom.com>
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 ---
- drivers/ptp/ptp_vmclock.c | 32 +++++++++++++-------------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+ drivers/gpio/gpio-bcm-kona.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ptp/ptp_vmclock.c b/drivers/ptp/ptp_vmclock.c
-index b7fa196975229cec6d27b34f7bb235c53b5b5732..26fcc1185ee72999a43842a59164498657799b1f 100644
---- a/drivers/ptp/ptp_vmclock.c
-+++ b/drivers/ptp/ptp_vmclock.c
-@@ -505,14 +505,13 @@ static int vmclock_probe(struct platform_device *pdev)
- 
- 	if (ret) {
- 		dev_info(dev, "Failed to obtain physical address: %d\n", ret);
--		goto out;
-+		return ret;
- 	}
- 
- 	if (resource_size(&st->res) < VMCLOCK_MIN_SIZE) {
- 		dev_info(dev, "Region too small (0x%llx)\n",
- 			 resource_size(&st->res));
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 	st->clk = devm_memremap(dev, st->res.start, resource_size(&st->res),
- 				MEMREMAP_WB | MEMREMAP_DEC);
-@@ -520,37 +519,34 @@ static int vmclock_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(st->clk);
- 		dev_info(dev, "failed to map shared memory\n");
- 		st->clk = NULL;
--		goto out;
-+		return ret;
- 	}
- 
- 	if (le32_to_cpu(st->clk->magic) != VMCLOCK_MAGIC ||
- 	    le32_to_cpu(st->clk->size) > resource_size(&st->res) ||
- 	    le16_to_cpu(st->clk->version) != 1) {
- 		dev_info(dev, "vmclock magic fields invalid\n");
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	ret = ida_alloc(&vmclock_ida, GFP_KERNEL);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	st->index = ret;
- 	ret = devm_add_action_or_reset(&pdev->dev, vmclock_put_idx, st);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	st->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "vmclock%d", st->index);
--	if (!st->name) {
--		ret = -ENOMEM;
--		goto out;
--	}
-+	if (!st->name)
-+		return -ENOMEM;
- 
- 	st->miscdev.minor = MISC_DYNAMIC_MINOR;
- 
- 	ret = devm_add_action_or_reset(&pdev->dev, vmclock_remove, st);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	/*
- 	 * If the structure is big enough, it can be mapped to userspace.
-@@ -564,7 +560,7 @@ static int vmclock_probe(struct platform_device *pdev)
- 
- 		ret = misc_register(&st->miscdev);
- 		if (ret)
--			goto out;
-+			return ret;
- 	}
- 
- 	/* If there is valid clock information, register a PTP clock */
-@@ -574,15 +570,14 @@ static int vmclock_probe(struct platform_device *pdev)
- 		if (IS_ERR(st->ptp_clock)) {
- 			ret = PTR_ERR(st->ptp_clock);
- 			st->ptp_clock = NULL;
--			goto out;
-+			return ret;
+diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+index 17f3f210fee9dbb5da3b26e1f86bf8f68089b1cd..64908f1a5e7f9b059a20217714c91ce9aab0c640 100644
+--- a/drivers/gpio/gpio-bcm-kona.c
++++ b/drivers/gpio/gpio-bcm-kona.c
+@@ -659,7 +659,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+ 		bank->irq = platform_get_irq(pdev, i);
+ 		bank->kona_gpio = kona_gpio;
+ 		if (bank->irq < 0) {
+-			dev_err(dev, "Couldn't get IRQ for bank %d", i);
++			dev_err(dev, "Couldn't get IRQ for bank %d\n", i);
+ 			ret = -ENOENT;
+ 			goto err_irq_domain;
  		}
- 	}
- 
- 	if (!st->miscdev.minor && !st->ptp_clock) {
- 		/* Neither miscdev nor PTP registered */
- 		dev_info(dev, "vmclock: Neither miscdev nor PTP available; not registering\n");
--		ret = -ENODEV;
--		goto out;
-+		return -ENODEV;
- 	}
- 
- 	dev_info(dev, "%s: registered %s%s%s\n", st->name,
-@@ -590,8 +585,7 @@ static int vmclock_probe(struct platform_device *pdev)
- 		 (st->miscdev.minor && st->ptp_clock) ? ", " : "",
- 		 st->ptp_clock ? "PTP" : "");
- 
-- out:
--	return ret;
-+	return 0;
- }
- 
- static const struct acpi_device_id vmclock_acpi_ids[] = {
 
 -- 
 2.48.1
