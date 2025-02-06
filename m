@@ -1,256 +1,274 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357591DE891
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0951DEFEC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 21:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738875998; cv=none; b=T4nVQdjJ1aPdr2fydjqYhby5TGCh+PNCPgkJrRHO/8tpRNGwguUGfm2o1eYcJAVD6BB2NHjSfoVYP8HOBhR9U3tVfeeSdXTn8EfR/pWEveUwSckSdyW9TEFHT/gw9LY+WMRbs+HVdxZ1eThhTgBrlK45zw35XCvkV7S/zHrq5qY=
+	t=1738876003; cv=none; b=OioUn4omhgfchj6CPfVhJX94vWayA4YFyu+aX+KfqMADuEcdMqFZWTbkQ8SCfSExthpTvL571whlT7XjmhgrAi3CR6fvXNq95c4XJ34AJu2Z47CM7t+s+VrkN5zQQL56Cm5rH72Xz0vIYXGzQ15IK3gGInQQ4noZMQRbOEQE2Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738875998; c=relaxed/simple;
-	bh=kOOEPl/veYhynAhhL0jpvHiTjC+U6g7X09NmSzkbB80=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OTRgxYNJysVpn52jq6A9arlj9PKw384ZpM/Kg8DrMB3O8aq8KFBxrubu/RQFFnvHXN+7tvPN3sX2BJcvYTw0+SmVqhbDZfmPmuRK9dO/vkoviLojpVfJ0354MEI2njDROaagZYn3zOGMLYWCjkk7HVu6dwCZbTh3UaFFM0vXL/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BT0JkoBg; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738876003; c=relaxed/simple;
+	bh=U89i+DA88VcxSD1PykNrx22CaQnRllVlhhQni/zEhYk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ckJodRpHsop67VBpA3AQ7WTvo8j2kvV9tj5ynFBjzO5lxVYr4cgocyLCtppfAC3ltTVdYEQp0O2sUwS4PkTlLrGQXTzwezoloe/8yDuSMQhG6VYE1qa+PnQYA+eH4qbsU3bYQPgKDBIJ/EfMt8wp5h8yVDRgDLXfnF4oQon0lmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hPVbscJg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BT0JkoBg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hPVbscJg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738875995;
+	s=mimecast20190719; t=1738876000;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GihRnkuZEyKR3tOEQSNi7Ep19r88LL1Tvr+PPotI6bE=;
-	b=BT0JkoBgqJr/5+y4gzkUEdQEhtjO43jIX+qNnu6A4HAZhZP4CvhtvU2DKhDrv6am06Ws+R
-	YrM6+k28LidoVnJd66Y7pm8dmKOJkfwvRGER4YzRHbEOv/bUUxc3H80PVUH4t53jp/ZRCY
-	DnSy6sjrhhG6TgKAheeST5xF7EfI5Sw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/UhG9vle5FlwgqCrHh16UYubGe5efDjOrrlvsHsEq8=;
+	b=hPVbscJgkm0B3B949i2QzZrFaB3nPywsO3OlfKezmwsuwGBMhSY592G91c+zsFZ8Qx1pRt
+	/UkeLyxJ3wiwpM1pysDQyKQzIPCcZjZxrzFEi890+laQY7y4qixagl3QIs696doSrDopxt
+	tbKqZh6oGAbhrYh3K3MQzNaJRRyRSGY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-1CgXrbzLOb677x8OZ5Bheg-1; Thu,
- 06 Feb 2025 16:06:32 -0500
-X-MC-Unique: 1CgXrbzLOb677x8OZ5Bheg-1
-X-Mimecast-MFC-AGG-ID: 1CgXrbzLOb677x8OZ5Bheg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-79-F_XVZp4ENem0mdFPQHBsJw-1; Thu,
+ 06 Feb 2025 16:06:35 -0500
+X-MC-Unique: F_XVZp4ENem0mdFPQHBsJw-1
+X-Mimecast-MFC-AGG-ID: F_XVZp4ENem0mdFPQHBsJw
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 798731800877;
-	Thu,  6 Feb 2025 21:06:29 +0000 (UTC)
-Received: from chopper.redhat.com (unknown [10.22.66.91])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C75D71955BCB;
-	Thu,  6 Feb 2025 21:06:25 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: rust-for-linux@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] rust/kernel: Add faux device bindings
-Date: Thu,  6 Feb 2025 16:04:56 -0500
-Message-ID: <20250206210503.102061-2-lyude@redhat.com>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC04A19560B5;
+	Thu,  6 Feb 2025 21:06:33 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.21])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A0CBE1800115;
+	Thu,  6 Feb 2025 21:06:30 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Thu, 06 Feb 2025 16:06:00 -0500
+Subject: [PATCH 05/14] drm/panel/samsung-s6d7aa0: Move to using
+ mipi_dsi_dcs_write_seq_multi()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-mipi-cocci-v1-5-4ff0c69e8897@redhat.com>
+References: <20250206-mipi-cocci-v1-0-4ff0c69e8897@redhat.com>
+In-Reply-To: <20250206-mipi-cocci-v1-0-4ff0c69e8897@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
+ Javier Martinez Canillas <javierm@redhat.com>, 
+ Artur Weber <aweber.kernel@gmail.com>, Jianhua Lu <lujianhua000@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738875969; l=7376;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=U89i+DA88VcxSD1PykNrx22CaQnRllVlhhQni/zEhYk=;
+ b=hs1fFQ2uWtD5bsImBN+zNhuVQxO27AqFGXhfh012E9QcnTd+2P8fA9/HN3y5imgmqSMqx7hyK
+ mi99ZVavQEkAC0E43wpQ9w+lN3+d+3RcEKjH7l4KPPXQa11/wKW67LA
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This introduces a crate for working with faux devices in rust, along with
-adding sample code to show how the API is used. Unlike other types of
-devices, we don't provide any hooks for device probe/removal - since these
-are optional for the faux API and are unnecessary in rust.
+Use mipi_dsi_dcs_write_seq_multi() instead of
+mipi_dsi_dcs_write_seq()
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Maíra Canal <mairacanal@riseup.net>
+Used Coccinelle to do this change. SmPl patch:
+@rule_1@
+identifier dsi_var;
+expression dsi_device;
+expression list es;
+@@
+struct mipi_dsi_device *dsi_var = dsi_device;
++struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi_var };
+<+...
+-mipi_dsi_dcs_write_seq(dsi_var,es);
++mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
+...+>
+
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
- rust/bindings/bindings_helper.h  |  1 +
- rust/kernel/faux.rs              | 60 ++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs               |  1 +
- samples/rust/Kconfig             | 10 ++++++
- samples/rust/Makefile            |  1 +
- samples/rust/rust_driver_faux.rs | 29 +++++++++++++++
- 6 files changed, 102 insertions(+)
- create mode 100644 rust/kernel/faux.rs
- create mode 100644 samples/rust/rust_driver_faux.rs
+ drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c | 88 ++++++++++++++++-----------
+ 1 file changed, 52 insertions(+), 36 deletions(-)
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 55354e4dec14e..f46cf3bb70695 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -11,6 +11,7 @@
- #include <linux/blk_types.h>
- #include <linux/blkdev.h>
- #include <linux/cred.h>
-+#include <linux/device/faux.h>
- #include <linux/errname.h>
- #include <linux/ethtool.h>
- #include <linux/file.h>
-diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
-new file mode 100644
-index 0000000000000..5e58f397b747a
---- /dev/null
-+++ b/rust/kernel/faux.rs
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+//! Abstractions for the faux bus.
-+//!
-+//! This crate provides bindings for working with faux devices in kernel modules. It should be
-+//! preferred for creating virtual devices over the platform API.
-+//!
-+//! C header: [`include/linux/device/faux.h`]
-+use crate::{bindings, device, error::from_err_ptr, prelude::*};
-+use core::ptr::{addr_of_mut, null, NonNull};
-+
-+/// The faux device representation.
-+///
-+/// This type represents the registration of a [`struct faux_device`]. When an instance of this type
-+/// is dropped, its respective faux device will be unregistered from the system.
-+///
-+/// # Invariants
-+///
-+/// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
-+///
-+/// [`struct faux_device`]: srctree/include/linux/device/faux.h
-+#[repr(transparent)]
-+pub struct Device(NonNull<bindings::faux_device>);
-+
-+impl Device {
-+    /// Create and register a new faux device with the given name.
-+    pub fn new(name: &CStr) -> Result<Self> {
-+        // SAFETY:
-+        // - `name` is copied by this function into its own storage
-+        // - `faux_ops` is safe to leave NULL according to the C API
-+        // - `faux_device_create` returns a valid non-null pointer to a `faux_device`, or error
-+        from_err_ptr(unsafe { bindings::faux_device_create(name.as_char_ptr(), null()) })
-+            .map(|d| Self(unsafe { NonNull::new_unchecked(d) }))
-+    }
-+
-+    fn as_raw(&self) -> *mut bindings::faux_device {
-+        self.0.as_ptr()
-+    }
-+}
-+
-+impl AsRef<device::Device> for Device {
-+    fn as_ref(&self) -> &device::Device {
-+        // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
-+        // a valid initialized `device`.
-+        unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
-+    }
-+}
-+
-+impl Drop for Device {
-+    fn drop(&mut self) {
-+        // SAFETY: self.0 is a valid registered faux_device via our type invariants.
-+        unsafe { bindings::faux_device_destroy(self.as_raw()) }
-+    }
-+}
-+
-+// SAFETY: The faux device API is thread-safe
-+unsafe impl Send for Device {}
-+
-+// SAFETY: The faux device API is thread-safe
-+unsafe impl Sync for Device {}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 496ed32b0911a..398242f92a961 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -46,6 +46,7 @@
- pub mod devres;
- pub mod driver;
- pub mod error;
-+pub mod faux;
- #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
- pub mod firmware;
- pub mod fs;
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 918dbead2c0b4..3b6eae84b2977 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -61,6 +61,16 @@ config SAMPLE_RUST_DRIVER_PLATFORM
+diff --git a/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c b/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c
+index f23d8832a1ad055483b1f513557cb3d2807e3692..b7cc98163db601a3c4c30c39818eb036f825001c 100644
+--- a/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c
++++ b/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c
+@@ -65,17 +65,24 @@ static void s6d7aa0_reset(struct s6d7aa0 *ctx)
+ static int s6d7aa0_lock(struct s6d7aa0 *ctx, bool lock)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
  
- 	  If unsure, say N.
+ 	if (lock) {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0xa5, 0xa5);
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0xa5, 0xa5);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_PASSWD1, 0xa5,
++					     0xa5);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_PASSWD2, 0xa5,
++					     0xa5);
+ 		if (ctx->desc->use_passwd3)
+-			mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD3, 0x5a, 0x5a);
++			mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_PASSWD3,
++						     0x5a, 0x5a);
+ 	} else {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0x5a, 0x5a);
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0x5a, 0x5a);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_PASSWD1, 0x5a,
++					     0x5a);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_PASSWD2, 0x5a,
++					     0x5a);
+ 		if (ctx->desc->use_passwd3)
+-			mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD3, 0xa5, 0xa5);
++			mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_PASSWD3,
++						     0xa5, 0xa5);
+ 	}
  
-+config SAMPLE_RUST_DRIVER_FAUX
-+	tristate "Faux Driver"
-+	help
-+	  This option builds the Rust Faux driver sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_driver_faux.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_HOSTPROGS
- 	bool "Host programs"
- 	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 5a8ab0df0567c..0dbc6d90f1ef9 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
-+obj-$(CONFIG_SAMPLE_RUST_DRIVER_FAUX)		+= rust_driver_faux.o
+ 	return 0;
+@@ -231,6 +238,7 @@ s6d7aa0_create_backlight(struct mipi_dsi_device *dsi)
+ static int s6d7aa0_lsl080al02_init(struct s6d7aa0 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 	struct device *dev = &dsi->dev;
+ 	int ret;
  
- rust_print-y := rust_print_main.o rust_print_events.o
+@@ -242,18 +250,19 @@ static int s6d7aa0_lsl080al02_init(struct s6d7aa0 *ctx)
+ 		return ret;
+ 	}
  
-diff --git a/samples/rust/rust_driver_faux.rs b/samples/rust/rust_driver_faux.rs
-new file mode 100644
-index 0000000000000..fb0d8527bdcb2
---- /dev/null
-+++ b/samples/rust/rust_driver_faux.rs
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust faux device sample.
-+
-+use kernel::{c_str, faux::*, prelude::*, Module};
-+
-+module! {
-+    type: SampleModule,
-+    name: "rust_faux_driver",
-+    author: "Lyude Paul",
-+    description: "Rust faux device sample",
-+    license: "GPL",
-+}
-+
-+struct SampleModule {
-+    _dev: Device,
-+}
-+
-+impl Module for SampleModule {
-+    fn init(_module: &'static ThisModule) -> Result<Self> {
-+        pr_info!("Initialising Rust Faux Device Sample\n");
-+
-+        let dev = Device::new(c_str!("rust-faux-sample-device"))?;
-+
-+        dev_info!(dev.as_ref(), "Hello from faux device!");
-+
-+        Ok(Self { _dev: dev })
-+    }
-+}
+-	mipi_dsi_dcs_write_seq(dsi, MCS_OTP_RELOAD, 0x00, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_OTP_RELOAD, 0x00, 0x10);
+ 	usleep_range(1000, 1500);
+ 
+ 	/* SEQ_B6_PARAM_8_R01 */
+-	mipi_dsi_dcs_write_seq(dsi, 0xb6, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb6, 0x10);
+ 
+ 	/* BL_CTL_ON */
+-	mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0x40, 0x00, 0x28);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_BL_CTL, 0x40, 0x00, 0x28);
+ 
+ 	usleep_range(5000, 6000);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_ADDRESS_MODE,
++				     0x04);
+ 
+ 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+ 	if (ret < 0) {
+@@ -262,7 +271,8 @@ static int s6d7aa0_lsl080al02_init(struct s6d7aa0 *ctx)
+ 	}
+ 
+ 	msleep(120);
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_ADDRESS_MODE,
++				     0x00);
+ 
+ 	ret = s6d7aa0_lock(ctx, true);
+ 	if (ret < 0) {
+@@ -282,9 +292,10 @@ static int s6d7aa0_lsl080al02_init(struct s6d7aa0 *ctx)
+ static int s6d7aa0_lsl080al02_off(struct s6d7aa0 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+ 	/* BL_CTL_OFF */
+-	mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0x40, 0x00, 0x20);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_BL_CTL, 0x40, 0x00, 0x20);
+ 
+ 	return 0;
+ }
+@@ -320,6 +331,7 @@ static const struct s6d7aa0_panel_desc s6d7aa0_lsl080al02_desc = {
+ static int s6d7aa0_lsl080al03_init(struct s6d7aa0 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 	struct device *dev = &dsi->dev;
+ 	int ret;
+ 
+@@ -332,35 +344,38 @@ static int s6d7aa0_lsl080al03_init(struct s6d7aa0 *ctx)
+ 	}
+ 
+ 	if (ctx->desc->panel_type == S6D7AA0_PANEL_LSL080AL03) {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0xc7, 0x00, 0x29);
+-		mipi_dsi_dcs_write_seq(dsi, 0xbc, 0x01, 0x4e, 0xa0);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfd, 0x16, 0x10, 0x11, 0x23,
+-				       0x09);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00, 0x02, 0x03, 0x21,
+-				       0x80, 0x78);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_BL_CTL, 0xc7, 0x00,
++					     0x29);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbc, 0x01, 0x4e, 0xa0);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfd, 0x16, 0x10, 0x11,
++					     0x23, 0x09);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x00, 0x02, 0x03,
++					     0x21, 0x80, 0x78);
+ 	} else if (ctx->desc->panel_type == S6D7AA0_PANEL_LTL101AT01) {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0x40, 0x00, 0x08);
+-		mipi_dsi_dcs_write_seq(dsi, 0xbc, 0x01, 0x4e, 0x0b);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfd, 0x16, 0x10, 0x11, 0x23,
+-				       0x09);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00, 0x02, 0x03, 0x21,
+-				       0x80, 0x68);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MCS_BL_CTL, 0x40, 0x00,
++					     0x08);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbc, 0x01, 0x4e, 0x0b);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfd, 0x16, 0x10, 0x11,
++					     0x23, 0x09);
++		mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfe, 0x00, 0x02, 0x03,
++					     0x21, 0x80, 0x68);
+ 	}
+ 
+-	mipi_dsi_dcs_write_seq(dsi, 0xb3, 0x51);
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x24);
+-	mipi_dsi_dcs_write_seq(dsi, 0xf2, 0x02, 0x08, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb3, 0x51);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_CONTROL_DISPLAY,
++				     0x24);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf2, 0x02, 0x08, 0x08);
+ 
+ 	usleep_range(10000, 11000);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, 0xc0, 0x80, 0x80, 0x30);
+-	mipi_dsi_dcs_write_seq(dsi, 0xcd,
+-			       0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e,
+-			       0x2e, 0x2e, 0x2e, 0x2e, 0x2e);
+-	mipi_dsi_dcs_write_seq(dsi, 0xce,
+-			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+-			       0x00, 0x00, 0x00, 0x00, 0x00);
+-	mipi_dsi_dcs_write_seq(dsi, 0xc1, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc0, 0x80, 0x80, 0x30);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xcd, 0x2e, 0x2e, 0x2e, 0x2e,
++				     0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e,
++				     0x2e, 0x2e);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xce, 0x00, 0x00, 0x00, 0x00,
++				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++				     0x00, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc1, 0x03);
+ 
+ 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+ 	if (ret < 0) {
+@@ -386,8 +401,9 @@ static int s6d7aa0_lsl080al03_init(struct s6d7aa0 *ctx)
+ static int s6d7aa0_lsl080al03_off(struct s6d7aa0 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+-	mipi_dsi_dcs_write_seq(dsi, 0x22, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x22, 0x00);
+ 
+ 	return 0;
+ }
 
-base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
-prerequisite-patch-id: f05ff916822e21eec452f9e5b8d11339c409265a
 -- 
-2.48.1
+2.47.0
 
