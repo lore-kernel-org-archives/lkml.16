@@ -1,101 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2113922A1C2;
-	Thu,  6 Feb 2025 11:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA46214209;
+	Thu,  6 Feb 2025 11:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738842314; cv=none; b=t61KXAu4IJdeoClgKRfM8KMA7aRJipffljp1MdsVAUDtwEAxHfSbu8aEPorLq8omP+iI8tDAWpHvgTjOUQTTx+DYUJKpG/lfbSBA3SxnRxnj0hNVYxj1D+V1C7AA6Ja9pUBin+I+OvIrzHAPrh6M5beO2mFkvhCi/fjU77lebRo=
+	t=1738842338; cv=none; b=Gn3388UbOu9/kFxSbtkHMxgu31wyRq538qrfOWFMITFabTUnd0G9W5lQUPfEj7dUkFTyQl/hVrRr6z+bMYXqXf+DT0zBnbv5YLKQGKDptvfPe051otmKFuMHaujHkAsi5sE91VGOCZpLUFpn5aafdldS7IfF2sGhVhiqWb67csI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738842314; c=relaxed/simple;
-	bh=noSQ+Xs1uJzUWnLdUjp+J+1wjOFITtMZFxGZIKDmVzs=;
+	s=arc-20240116; t=1738842338; c=relaxed/simple;
+	bh=4WMwn/PouydQAcfdYq9D0Bi/1e6v3nBuTp8T6kN0Uu4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mMlrfra7u4a9V1gARUAsj3EIG38uaaZ0FfImNt68PHOCk3vXLMIAQYDmcqKTB2E0Hf58sEDCBI63NBm0rWD95wNrCqBAs+kJTeBAQFhMSpC0lF/3UVRBZmdKm4uBpGhj5wSalogopVVV6AQLPiAx+2aYRMKn6QBWBj8YLLXgDYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ESd0vkMf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDWsRkKCvidr0F/wQR9haESztq6Ol54TpSUZ3obBXa6VSjEqQpdQe+UJn1scB2oM21zkeFgqXlIH+66N/hGOSDaAZQnyw1y6clVz5R3SEiWYRCzKe0wzZOtt4whBfg49nSDjEXDkjmtjzwr7bWLLINxY6ozrywdN6eQ6qRiAYVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwvBZ9eX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ESd0vkMf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC8EC4CEDD;
-	Thu,  6 Feb 2025 11:45:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwvBZ9eX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F16AC4CEDD;
+	Thu,  6 Feb 2025 11:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738842313;
-	bh=noSQ+Xs1uJzUWnLdUjp+J+1wjOFITtMZFxGZIKDmVzs=;
+	s=k20201202; t=1738842337;
+	bh=4WMwn/PouydQAcfdYq9D0Bi/1e6v3nBuTp8T6kN0Uu4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ESd0vkMfYhujEVmrRpUZ0wDb0ZV5NTnVgJUEpDrUPF4CQi+h/Cf9Esuiv0oCZ+YOG
-	 L/lUns9YVFIT4P4FAOpWwpNFQKeyKDHxOIYLi1P++4nH0Jo4CFAS5IuClaWlCnF1CV
-	 8BQ18cdpnGZ0IXjAqsYKtZd6XDMiqvUiEa5ChrKMKN/QXRNS5JX1bGigUNazj7+jPe
-	 20ER3q7r25ncTItfphqtkZWtT2K1gG37xBfSU7bB2GSZJxBrVax4UhouPuwuC6Yseb
-	 YrQsFhspM3H7f5mG8UVQuLB8pAAzX8R6Cr4B9yK/NrpKl0vx7ss2wgmOqIvIT2cGzJ
-	 FY0Inw1I72C8Q==
-Date: Thu, 6 Feb 2025 12:45:05 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <benno.lossin@proton.me>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Trevor Gross <tmgross@umich.edu>, Viresh Kumar <vireshk@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Anisse Astier <anisse@astier.eu>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 00/14] Rust bindings for cpufreq and OPP core + sample
- driver
-Message-ID: <Z6Sgwbgfp-9SCr8Y@pollux>
-References: <cover.1738832118.git.viresh.kumar@linaro.org>
+	b=cwvBZ9eX0/ic+Nq0scUr4+6X6SJ7CrmDohJF2qj4EzPjAC+f9g55SJWQU9DJcAO8N
+	 /pQmWPklWXtSshhzo3VtFXvurX+l0sRlsYcd+vhU4FwasVJtIDu374GLrlOS5TwyKo
+	 SNUsGX3vSckA0a48CbvDoC99bq7vIVvDfczVy+GwfofpdTwAjxxTmzDxSgU44d4cyg
+	 eeF4Dzi3bZQMYQUOPizexOYBDDk+s5hYG+Wrw3hkW7AoODIA5Zt1OVjpN2gP7aZBDN
+	 knmgwLvqmbsLITWu9nGxMpqKpqIklXWwg5iDesNlPSHTP/uGyrPh84lLr0XNWYPiny
+	 taJUbz74MXeUw==
+Date: Thu, 6 Feb 2025 12:45:34 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: krzk@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+Subject: Re: [v3 2/2] pwm: atcpit100: add Andes PWM driver support
+Message-ID: <pfqsycjocrlfsxmty7lm44niuv4723n74hyofpmvuvpandat5v@tvnahmf6zg7m>
+References: <20250123193534.874256-1-ben717@andestech.com>
+ <20250123193534.874256-3-ben717@andestech.com>
+ <5514fa03-139e-456e-b522-6a774b52eac1@kernel.org>
+ <Z6RuGrszOiPFWHyU@atctrx.andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n7l7m4k6emmmi2kp"
 Content-Disposition: inline
-In-Reply-To: <cover.1738832118.git.viresh.kumar@linaro.org>
+In-Reply-To: <Z6RuGrszOiPFWHyU@atctrx.andestech.com>
 
-Hi Viresh,
 
-On Thu, Feb 06, 2025 at 02:58:21PM +0530, Viresh Kumar wrote:
-> Hello,
-> 
-> I am seeking a few Acks for this patch series before merging it into the PM tree
-> for the 6.15 merge window, unless there are any objections.
-> 
-> This series introduces initial Rust bindings for two subsystems: cpufreq and
-> Operating Performance Points (OPP). The bindings cover most of the interfaces
-> exposed by these subsystems. It also includes minimal bindings for the clk and
-> cpumask frameworks, which are required by the cpufreq bindings.
-> 
-> Additionally, a sample cpufreq driver, rcpufreq-dt, is included. This is a
-> duplicate of the existing cpufreq-dt driver, which is a platform-agnostic,
-> device-tree-based driver commonly used on ARM platforms.
-> 
-> The implementation has been tested using QEMU, ensuring that frequency
-> transitions, various configurations, and driver binding/unbinding work as
-> expected. However, performance measurements have not been conducted yet.
-> 
-> For those interested in testing these patches, they can be found at:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git rust/cpufreq-dt
-> 
-> This version is rebased on v6.14-rc1.
+--n7l7m4k6emmmi2kp
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [v3 2/2] pwm: atcpit100: add Andes PWM driver support
+MIME-Version: 1.0
 
-I gave it a quick shot and it seems there are a few Clippy warnings, plus
-rustfmtcheck complains.
+Hello Ben,
 
-There are also two minor checkpatch complaints about line length.
+On Thu, Feb 06, 2025 at 04:08:58PM +0800, Ben Zong-You Xie wrote:
+> Also, I will remove "depends on RISCV" [...]
+
+Krzysztof didn't say so explicitly, but I think he wanted the dependency
+to be more restrictive, not less. At least that would be my concern
+here.
+
+The rational is: Don't annoy people who work on ARM or x86 with
+questions about this driver that they don't need anyhow. If there is no
+stricter dependency possible, I'm happy with
+
+	depends on RISCV || COMPILE_TEST
+
+. If however your driver is implemented in an FPGA, adding a dependency
+on a set of SoCs that have the known FPGA that provides that device
+would be a good idea.
+
+Best regards
+Uwe
+
+--n7l7m4k6emmmi2kp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmekoNwACgkQj4D7WH0S
+/k7/6gf9GqpAf+X8w6dCTLYj95mwQmBNhDGgBmjC9LHusgBKYdlIxNYMJglMJlMa
+SJCHwBx9G5T20HNhMZHifnQRBjvwBNLPV0cb9ZKM9ycFX5/ZPrJWj/DhI/XkOJwR
+J7rnvJIQ5Y8FGMArf0FTdvrxYJvXdHEwC9GlIkvIxTxPsnQrxCkssxwS4SZFVZlO
+sjP3AD2QsvrcTJZlCWzsf+sNLccHBbzszhk+XdOVpZg6l8SpFeff6no691nDhyl7
+XlW1F17XE3tJBQq0glwDO7YRNtoIGvALvNph8GtwMd7osugBdQa9U97RFbGOkkpm
+DydBvmPjP36Xr0og409Bl+UuuJMB9Q==
+=OOxv
+-----END PGP SIGNATURE-----
+
+--n7l7m4k6emmmi2kp--
