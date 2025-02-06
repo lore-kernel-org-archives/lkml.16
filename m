@@ -1,251 +1,200 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2071.outbound.protection.outlook.com [40.107.103.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7367D237160;
-	Thu,  6 Feb 2025 16:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859231; cv=fail; b=N7jgVMvuVsyKCzyNqxY3RmJMnwPa724yth1SfpaNgGaCC1MOdbj9XGIstlLy9bG+faL15rKG+nd5iQuiQr4jYVKpJkDdzNFuxGTBsSfeOZpbjUY+MjzwKL46iKEQvjq0ng/5916/5WJGuHqLKVX14mPGzWsN2NPDBWJlaLAALdY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859231; c=relaxed/simple;
-	bh=c26LbcA3C+ARDICZB6SB3npvyhC50Fyx5Da9wZ8VY+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TFlzeJ5YLyY3dxTgyL2CkieIcrLtitTiBcjoptCVu4ABzcfg0BQ9TXIvMglST3H6X/p4xVDbzxOnGQvzzeU2kVtDD3vdql6YYXyvb+aHE2YBp9/Szoaw8XdahG9LN5ppjlNenbYjmmff6IntOk/3P8X2J+IdpNbDACR1iG8UXaI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jLmaZrPk; arc=fail smtp.client-ip=40.107.103.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1952F237162
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738859232; cv=none; b=a4eFN/fS7OGQKIPShF2eWZvXU/T+gXk3P4Y76rAJHVPbsL1QUZNF+xBVrnweUUMTrvsWqh6KhgQdbw6rs+dW/B2KAlvyevqznPaIFuwnRR/l9JKoosc82/Xebw9QDZ2JOQVfIgbia5vqTaB07Ry0S1ZLy42OThyYaYeEeszIS6A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738859232; c=relaxed/simple;
+	bh=ftau5nnBcsyM3dzdxcNmsLfZUtbbOzIpxUgWT0DqxlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A0+2hFc5j0gWPIG6yTDoPfqYpOQQOY5iPb+fHPpLEWATEOHD9Mn6aW27cd5vK12M/1xHmw+DZ+ItFPUdVAqpUAbJRt8fDyMPvo2kKz15UX/aYzQjIKEZ7SFXO99vQZQuHAAA/VQUjfipgPrXeUyfWz5a7vGpf8w2xliVWI7yZ+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O+rPFByM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jLmaZrPk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w17DRpA2jczFIDseeK0/K4usF8EvaLjmTnhPCmRmvpGLJL1AxL17HDp2pYqNgFfVKe2gCWF3K7K8khmEDaSdh/oiyA9JqVdz/kJlhhDuJPaumCOQe5xtmNLxdxFeQagLgrAqdyXZe8vRlzWqziu/ArdVqUgZEMXFEaI6vAygBAIS3pnyL/ALSPxVocFjhRInqPFq6er3T25FhvNfYl66o0f4H8w3n/K/X3BVEkYItosSzDfdkKQ3aIj9oLPdYoDJF+gnw0h1/F7eBcmNt6bh6/4NkRHI7FlShkoieazvxEJVPK7tUUr6FOI2sNd8WfqKp8P3df+xvvBiOoKe0AXxYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+NE9cOK9nYZFSF76wgDzFZJ9qlrfW2vS8seS0hCd1Uk=;
- b=KYI4mxrzyfXMYfAbg3vor8kTr4ClvCC6O4Rz0TPeMfjoYJ3jO9wiuX0YnD9r8ospKbQLs3ThDi337Lfk0MZcsWIYDF++ChyegQXbvXUeealKuZJOgaZ/vGG0Rtonh7xNnGLph446i+PCoGBCRrwmFnfyEtk+QjwHdZJfOeSBDcK1VT7fjX97iEqY2jdCEAPNrYxQKgErRbiMG/DyUcTLHPwqAJZtmz5ZY5bBv/lDVyqiNBgA5Yyd0ycu3bUYtbzNG8tffffermWJZ83p3IJ+nqIf+6tRy76LJuV/BxD3pU9xDrPTG64+HUlZQZzIxcMgTW+fvh0Sr7985+xCSbEj3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+NE9cOK9nYZFSF76wgDzFZJ9qlrfW2vS8seS0hCd1Uk=;
- b=jLmaZrPkSLCPHU1BSV0qFgWISG4QXDPoUvsrt7ZmvvrahN+DIHIugadtYj5z+pZMLE86QP2eIRIGpyapbp0Sv6A8Rc3ITXY8P+iQvapetiZFKx991G6JHoKtE6ZxwzUnxbrZ7gfvFnbcb7rqDjINibccVFSZlwKkg946p5dsuzk2CYYmzPsWFgjXUNjqqv9Cuv+EWLhty6nO9omWSQUg3zK5Irb13kn6Rb1L+vIjd2bKDKAPse6KAQyJ3mllSeyIzZNo4XofEczKNJ+3wnj7hT/y7dlQo+wnXPKNb170fJNcJOQ3WTR2K4tzj7tpu70MsvMY57zr8OYjGOVHDnwgow==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by VI0PR04MB10464.eurprd04.prod.outlook.com (2603:10a6:800:218::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 16:27:04 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%7]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 16:27:04 +0000
-Date: Thu, 6 Feb 2025 11:26:58 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Iuliana Prodan <iuliana.prodan@nxp.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 6/8] ASoC: SOF: imx: merge imx8 and imx8m drivers
-Message-ID: <Z6Ti0hn+iANzm6wd@lizhi-Precision-Tower-5810>
-References: <20250205203022.2754-1-laurentiumihalcea111@gmail.com>
- <20250205203022.2754-7-laurentiumihalcea111@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205203022.2754-7-laurentiumihalcea111@gmail.com>
-X-ClientProxiedBy: BY5PR04CA0022.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::32) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+rPFByM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738859230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ORfSJ3EHGoP5AEVbNbK5PWa+JtoK9YX59lWJj18YO+c=;
+	b=O+rPFByMN1P3Oel96Pt6Gxf78uMdOnkj6puXofgXQBT31XTwplA4ywUMgyomL+GlfbeyI+
+	8FnVieaHiw3pNBbbFjyJL8UPVRS//7R4q4gjfRTeA2BtugOO1MJFPJ77P/6I0Dw3Bxv940
+	EjS0JJUl3ffqoE+G9bv6K941uEf8JVU=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-615-tFX4R3MRNmC7XoNrs6FVHg-1; Thu, 06 Feb 2025 11:27:09 -0500
+X-MC-Unique: tFX4R3MRNmC7XoNrs6FVHg-1
+X-Mimecast-MFC-AGG-ID: tFX4R3MRNmC7XoNrs6FVHg
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-46799aa9755so32224361cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 08:27:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738859228; x=1739464028;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORfSJ3EHGoP5AEVbNbK5PWa+JtoK9YX59lWJj18YO+c=;
+        b=k6kGEdTuq2lLDTEa0k0wOKQLNDZJ5TVR2M84e1xw9YFoY5aohd38U00B+PcPbEeJpq
+         z5ArnrXtGclA+H92aZmBwol9ysswlbwb95fM5B5v2O9+HIwjeLBoyTO05hf+RlrO+pNC
+         3d/8iA4Gp2lTYG59BVsrz3NRZaNRUaV/n45wmvM3Jj6Xw+dSZgj+lhivwgUfdO+f0/3n
+         CfKH081oCHAISgtB9aw4ean2+oR8bVBONtN6V5jgjLjZ0Wc11iVnTi8qFiCrpN/Jb6zt
+         3D8ERoh5JpE2kr9hmMGw+wIdqM1nm6UDzQnsiTZgSDxgf6waSYuuuaqwV7KpAOJW1zCf
+         vZ4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVYowCl0Ft6IoHBRhNtO0wwVFgEBIH2FSzXh+KiBNVb16qoM8/70F6oRSaX/6m8E7JA3JlZCSAd2Ws5j/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd1izl4bjAhd4M6qva2XGSJvmQyzpC7iMWCk+VjlIi8NKXgzva
+	hnlCyaDKZAmwidyTwRE34zTrCsV0FxToqai1zdoR3zfWwaDPvXZgm5vYMR1oqKVowLaOz3Ojr+h
+	Yilfckn6KxuEbf9It9Dh9/z/Utpzw81H8VOJNx1QJLbcaSb/Mp+DFRdtnI8gwPQ==
+X-Gm-Gg: ASbGncsMcBt98ZWUNG8JyGOZh9rTlhK06ENONGDSi15aMmGWZnj2prd3CKo2AlSy+/c
+	Qr1Pja7K087yuoeMIAq0QEIp8ZrX4pLIWAVP3Pwe6hbahRAMgPxmUroXbniUSjRq7V11JIIhFk7
+	a3cTTe/FhX294I8olJcaUw7+ODAVBJFPJuKuzALhaRM2ToDhwSr+eW35/HQjR1YRJiYQFliTqZS
+	9q6EFOFXO76+bd2jzl3mlOdq9dlSSDbcGuTavwh+bMwUar7GD5GHR31tBRQUVoMUoLpxxcH5EmB
+	TfxlN+P6yG2hfHImrOXaj71iL1EsI8GFijwMTC4CRbNuGsQ=
+X-Received: by 2002:a05:622a:1a90:b0:467:492b:617f with SMTP id d75a77b69052e-4702822e385mr86446221cf.40.1738859228504;
+        Thu, 06 Feb 2025 08:27:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEvcgibIGM8aGZG9wg0yw8o0j+eeVyK5m/Jf0cgWT4wBzwtzyrqOC36QaaH6GdJ23Q2Y15NDw==
+X-Received: by 2002:a05:622a:1a90:b0:467:492b:617f with SMTP id d75a77b69052e-4702822e385mr86445801cf.40.1738859228043;
+        Thu, 06 Feb 2025 08:27:08 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47153bc6ba7sm6648641cf.61.2025.02.06.08.27.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 08:27:07 -0800 (PST)
+Message-ID: <91f6b468-e851-4817-bb51-869a8ee8654f@redhat.com>
+Date: Thu, 6 Feb 2025 17:27:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|VI0PR04MB10464:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e3e81bd-7f8d-4417-cd71-08dd46cb178d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Go6gK8eVTYX4faje2IxkCsR1eWr4S9nk7LbWxio7aMajOu4FgOZgNR+rjkOc?=
- =?us-ascii?Q?/phN1zGUi1eW598YsnvRPMM48LRg7io5B5j1FODpbcc3J1+nPyeRKtpJ+U2j?=
- =?us-ascii?Q?3OkBEpayeHAPLKXtmR/IF81s8J6ibEr5EE6W3cwOPvcgEW9JzeA7CQRhT0gS?=
- =?us-ascii?Q?zjdeUI8P3v5debR1z9HxaTJ4l5VULdx3vFb6PrLiexLBHpKBa/Z2i9/6anXT?=
- =?us-ascii?Q?jEwBEDyTfj406mirGTaDH+sjqWUmTcfH36vQHSdukR8IJOL+iOUnujLjUIhH?=
- =?us-ascii?Q?2/8WQtlCd6LsoQ2bs2zBwtr4YAK1iNf67RuvshVOuADVvihq2zPSfnvFqM3R?=
- =?us-ascii?Q?m2obhrY/YVkTt+dkarSVhJoL3O9AA1+Wy2G+gnO9QzxVT+b4EqaX+GChLIoF?=
- =?us-ascii?Q?hobGrC1z2C1vyBtuxMaRNyuQdJZBF/8Ha2lJlLoYCtLNjlGesX/IYirPa8iJ?=
- =?us-ascii?Q?ch7ImPVLKMq0q4yI4fmBOCRjQgkkih8s2oQeaNg5u+MvVl4RysS5BAJOhs45?=
- =?us-ascii?Q?BWQeveouS8UcMYkDoX9ULtvcVg3cA2V2vOh5/bZJOZUs2dBeZtEsYBAqnxLh?=
- =?us-ascii?Q?8FKQGP64Ww/+YI5+SKwlHOogYv9IW8UdOrVg1p0iDAm1SeoyUKzM89roC13o?=
- =?us-ascii?Q?FmwOX6MirVxCen0DYmJv36FTF7eqb1TpB1Sg9R+3LIQedOGYOBvKiYhUHqeA?=
- =?us-ascii?Q?llOEO1Q8chYZZOmv3YWjSXbRPLRlOKFIMPtTi/Cft6n5pbpn7Yin7C1heTnb?=
- =?us-ascii?Q?EA/+QTzjGlk4ucBIGUssEoC0sq+o/ExVEGX5uTcxtOPQe8nHPfNI3XSyejlM?=
- =?us-ascii?Q?5ksolWu23N7CMitui6rJoY7fOWWS3GBBx/5X5to7/zC0Yz80jKSenGLTsSCH?=
- =?us-ascii?Q?Hvz4zQ7rQYpThVdpolHawpPtKXyMxnh2jXz08qAvwo8da3Mkzgk8Ty8YPfYs?=
- =?us-ascii?Q?qy4JLcIagWIjPXwGCVAvE8W69zBOYxv5+hO1jbS7rlu7Rgz9hOKDWGWWZKEw?=
- =?us-ascii?Q?PPORjtgzk4tdLq3xo6kukdG6/DzW8WehHp1QGWEotzW8DBiL7Apo2fORrBzD?=
- =?us-ascii?Q?KzU3eRamGf3PYo3sNrFQZhm3nRO6swLcxgZsoVWfogYAttGP+ZQB1HoafqBG?=
- =?us-ascii?Q?Jrq5m2eU7bFQyHFhZBnmpP2YRStgHbnBXrc2ndIpgejULpvhbk/LFJMN8Z1j?=
- =?us-ascii?Q?+kUh11V4fpab2f7nyC7Gqaqv9yjcGfgO3HZ7zCKNV22KPc4M29bMTnAlVLbL?=
- =?us-ascii?Q?bLuHQHlqfdwKr//Qv35BXhOGOW0e1/jW/9bSpkABKDS+cVNKMvLC/Ca/YNTe?=
- =?us-ascii?Q?NlN4ddPL4TBocYPmKSl5jmg0db8naXtSozm1VMwCwdxOceIYdQ8GUPqYvSPm?=
- =?us-ascii?Q?LdZFNnzFTPmva3QSa5cbO7+5aXC+mSAQaM+FrxjKQi9his9F3XyDqKfmua1y?=
- =?us-ascii?Q?8jZVkwqSQgrfyQls34g6bk99wDOb9ALa?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tvSqWWB6mBAWtxVqq4Q+8gxe0vPLwHzlErjibETMEFokB3B+rtbvSvZ+wolg?=
- =?us-ascii?Q?68Lyek5bU9ZWfx3c9nXYHgDwClLS422KdrK+rc4sotFB+WT9ZYte1ojm+Jqb?=
- =?us-ascii?Q?89pSF24as4c66AVeSzLYsgxZNoFQC8DxlP4tMKAtVd3bS10wJeYb6pdF38w9?=
- =?us-ascii?Q?f1iOiR/Aj2vbBk0Drc4k7pZyMzE48zuBq2hT8O/NwAD9touclS1g/UYAMqv7?=
- =?us-ascii?Q?ImGdXIy4qps2rSay7rfb2ExdPrXz8B1nYmjbwwH98ZbHIIsBLgP1KbHHGxUH?=
- =?us-ascii?Q?KOyLMi52cZA2lh+sYfsivxKRMH2VGgO0eoAmF5EXXcdx0Z1ED78hPje3p7Di?=
- =?us-ascii?Q?bvFOTksIMvhHvmmuLj1wyRyP6fOXI9//UIZsBqMkxyePtgSWLCwYfNTO07Fb?=
- =?us-ascii?Q?6y37A+I6+joGNsdUg14XYy7erHj1UT4MsYZ+2h7I31Jliomq5YOnKZgGTaZ+?=
- =?us-ascii?Q?tT0HczaWoy3vqVepkkkP9xQIvIB6u92dW5EH8niz4ZWTIz+Z6rKY6YxMOnjw?=
- =?us-ascii?Q?HGY6KHTqwCE8y6KBXan6goWuExk+xlsV4ahho6qV8H+FnfCuDDpY33e5WcWr?=
- =?us-ascii?Q?b++NSJ7rszR0zxvpBKYXwOfPQsQ7Od99uveuxWCfbLCkUiwu84LauAIDU9il?=
- =?us-ascii?Q?DZYvdlGK7qdSpXkO6knmx7itFHhofGsi8kpY3IT2sNrY6dwlXiltV1EYt69J?=
- =?us-ascii?Q?YhTDE0v81SxJ47ImpC3yPvqwZwGBUebswDHCDXCTdHRio0QXY43jDCHMq5eb?=
- =?us-ascii?Q?EiVVk2sG3UGZHrK7ghLa40pCZb3itO9NwWyXGQh3L2mHXwnEaRMBWWAu0wEi?=
- =?us-ascii?Q?wjISAyO+B9L2d9VVt4+a5/0YgFxbK19Q6YuCXkufRCbzLm2PsgdSn5KBLEtw?=
- =?us-ascii?Q?1sIKSa/5uUnNzubl9Yz6owKCKkz2qIJ+0j8RRO47owjsldAuC106OuVhJikv?=
- =?us-ascii?Q?p1YMoOFpwTu6E4g4TNpXFIOVE4QIJjb0alLJzcWAcZNWb48JR2h7LNAj/iZg?=
- =?us-ascii?Q?9HUZK/dt/1BNWXRm+el6lsMizuhQ9K0hWU5I8fzFzM6y/KmzJDV/FEkteMa3?=
- =?us-ascii?Q?dYybR5FWy9/Y5SLWX/Q4SErmAkRqOgDdpZH7xrs5QfA7IRnFrOOmuOf83NhA?=
- =?us-ascii?Q?HzEgoicTYNg6Pby/a9pwwKP0Z8w9Vrb1UyfrEB4NRJmyzxfLcTNSztg/27O2?=
- =?us-ascii?Q?YvLa+GizWtjHzThysuNTj2F8FmQ8guRTSoosgdHP2w8QiT6zzC4U9YeM0wAr?=
- =?us-ascii?Q?2eFzdn0B8Nd0hInKY1pyNdquMrSmCEoPI1mtY+DUnH1CXWDG1Jo9JvtfdDVO?=
- =?us-ascii?Q?p2c70rQjaev3C5oaRVavIgvEDOwuguGNLOzS29zz/YM70+cDXg90eBc7euSX?=
- =?us-ascii?Q?wqgNcaTkiXuKgfnwAY7JtuRFCV4ww/7qVYE3w5znE9KiI2RvhcUStmKiTzr5?=
- =?us-ascii?Q?EZ15uKDG0PyMM9KbUvEImEwre7s5pjZxnbi/dAtc0B+Icxm2ZX4ljlzTpj3i?=
- =?us-ascii?Q?gL1fzQyGCcnH8tYrQ9kX8LMAP0dZwUD90/1IjBXmv6tRyeo2Af1kisxD+ANS?=
- =?us-ascii?Q?RuIa5ZlsScd9D9mNtg4BGug6HBo2FRc+yPz35vbJ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e3e81bd-7f8d-4417-cd71-08dd46cb178d
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:27:04.5841
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PLIyIgFCatA+6JqNmqG9BIQa57Em+lTmLUpEIgIO8gVeKULZ63ZPQoDBMlLOR93d4BJQZbTnNE7+7JaQDIKNvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10464
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] virtio: Remove virtio devices on device_shutdown()
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Zhenzhong Duan <zhenzhong.duan@intel.com>,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Hongyu Ning <hongyu.ning@linux.intel.com>
+References: <20240808075141.3433253-1-kirill.shutemov@linux.intel.com>
+ <cc7312ca-2745-48a5-a5ac-9ee1d1c4bee0@redhat.com>
+ <20250203094700-mutt-send-email-mst@kernel.org>
+ <7cee3c9e-515e-41de-a15c-04c7591e83eb@redhat.com>
+ <6bce0f4c-636f-456b-ab21-4a25d3dc8803@redhat.com>
+ <pnpkqz6keacwz4myydc6aak6gkdmomqn2lo376przlhb3mscsq@tdsfxwb2ujpk>
+From: Eric Auger <eauger@redhat.com>
+In-Reply-To: <pnpkqz6keacwz4myydc6aak6gkdmomqn2lo376przlhb3mscsq@tdsfxwb2ujpk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 03:30:20PM -0500, Laurentiu Mihalcea wrote:
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->
-> Now that the common interface for imx chip has been introduced,
-> there's no longer a need to have a separate platform driver for
-> imx8m. As such, merge the driver with the imx8 driver. Furthermore,
-> delete the old driver as it's no longer useful.
->
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-> ---
->  sound/soc/sof/imx/Kconfig  |   9 -
->  sound/soc/sof/imx/Makefile |   2 -
->  sound/soc/sof/imx/imx8.c   | 136 ++++++++-
->  sound/soc/sof/imx/imx8m.c  | 567 -------------------------------------
->  4 files changed, 134 insertions(+), 580 deletions(-)
->  delete mode 100644 sound/soc/sof/imx/imx8m.c
->
-> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-> index 4751b04d5e6f..92fdf80d6e51 100644
-> --- a/sound/soc/sof/imx/Kconfig
-> +++ b/sound/soc/sof/imx/Kconfig
-> @@ -32,15 +32,6 @@ config SND_SOC_SOF_IMX8
->  	  Say Y if you have such a device.
->  	  If unsure select "N".
->
-> -config SND_SOC_SOF_IMX8M
-> -	tristate "SOF support for i.MX8M"
-> -	depends on IMX_DSP
-> -	select SND_SOC_SOF_IMX_COMMON
-> -	help
-> -	  This adds support for Sound Open Firmware for NXP i.MX8M platforms.
-> -	  Say Y if you have such a device.
-> -	  If unsure select "N".
-> -
->  config SND_SOC_SOF_IMX8ULP
->  	tristate "SOF support for i.MX8ULP"
->  	depends on IMX_DSP
-> diff --git a/sound/soc/sof/imx/Makefile b/sound/soc/sof/imx/Makefile
-> index be0bf0736dfa..852140bb8104 100644
-> --- a/sound/soc/sof/imx/Makefile
-> +++ b/sound/soc/sof/imx/Makefile
-> @@ -1,11 +1,9 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
->  snd-sof-imx8-y := imx8.o
-> -snd-sof-imx8m-y := imx8m.o
->  snd-sof-imx8ulp-y := imx8ulp.o
->
->  snd-sof-imx-common-y := imx-common.o
->
->  obj-$(CONFIG_SND_SOC_SOF_IMX8) += snd-sof-imx8.o
-> -obj-$(CONFIG_SND_SOC_SOF_IMX8M) += snd-sof-imx8m.o
->  obj-$(CONFIG_SND_SOC_SOF_IMX8ULP) += snd-sof-imx8ulp.o
->  obj-$(CONFIG_SND_SOC_SOF_IMX_COMMON) += imx-common.o
-> diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-...
->  	return 0;
->  }
->
-> +static int imx8m_probe(struct snd_sof_dev *sdev)
-> +{
-> +	struct imx_common_data *common;
-> +	struct imx8m_chip_data *chip;
-> +
-> +	common = sdev->pdata->hw_pdata;
-> +
-> +	chip = devm_kzalloc(sdev->dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return dev_err_probe(sdev->dev, -ENOMEM,
-> +				     "failed to allocate chip data\n");
-> +
-> +	chip->dap = devm_ioremap(sdev->dev, IMX8M_DAP_DEBUG, IMX8M_DAP_DEBUG_SIZE);
-> +	if (!chip->dap)
-> +		return dev_err_probe(sdev->dev, -ENODEV,
-> +				     "failed to ioremap DAP\n");
 
-It is okay for cleanup code. But I think the IMX8M_DAP_DEBUG should come
-from dts as one of reg.
 
-> +
-> +	chip->regmap = syscon_regmap_lookup_by_phandle(sdev->dev->of_node, "fsl,dsp-ctrl");
-> +	if (IS_ERR(chip->regmap))
-> +		return dev_err_probe(sdev->dev, PTR_ERR(chip->regmap),
-> +				     "failed to fetch dsp ctrl regmap\n");
+On 2/6/25 11:04 AM, Kirill A. Shutemov wrote:
+> On Thu, Feb 06, 2025 at 09:59:58AM +0100, Eric Auger wrote:
+>> Hi,
+>>
+>> On 2/4/25 12:46 PM, Eric Auger wrote:
+>>> Hi,
+>>>
+>>> On 2/3/25 3:48 PM, Michael S. Tsirkin wrote:
+>>>> On Fri, Jan 31, 2025 at 10:53:15AM +0100, Eric Auger wrote:
+>>>>> Hi Kirill, Michael
+>>>>>
+>>>>> On 8/8/24 9:51 AM, Kirill A. Shutemov wrote:
+>>>>>> Hongyu reported a hang on kexec in a VM. QEMU reported invalid memory
+>>>>>> accesses during the hang.
+>>>>>>
+>>>>>> 	Invalid read at addr 0x102877002, size 2, region '(null)', reason: rejected
+>>>>>> 	Invalid write at addr 0x102877A44, size 2, region '(null)', reason: rejected
+>>>>>> 	...
+>>>>>>
+>>>>>> It was traced down to virtio-console. Kexec works fine if virtio-console
+>>>>>> is not in use.
+>>>>>>
+>>>>>> Looks like virtio-console continues to write to the MMIO even after
+>>>>>> underlying virtio-pci device is removed.
+>>>>>>
+>>>>>> The problem can be mitigated by removing all virtio devices on virtio
+>>>>>> bus shutdown.
+>>>>>>
+>>>>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>>>> Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
+>>>>>
+>>>>> Gentle ping on that patch that seems to have fallen though the cracks.
+>>>>>
+>>>>> I think this fix is really needed. I have another test case with a
+>>>>> rebooting guest exposed with virtio-net (backed by vhost-net) and
+>>>>> viommu. Since there is currently no shutdown for the virtio-net, on
+>>>>> reboot, the IOMMU is disabled through the native_machine_shutdown()/
+>>>>> x86_platform.iommu_shutdown() while the virtio-net is still alive.
+>>>>>
+>>>>> Normally device_shutdown() should call virtio-net shutdown before the
+>>>>> IOMMU tear down and we wouldn't see any spurious transactions after
+>>>>> iommu shutdown.
+>>>>>
+>>>>> With that fix, the above test case is fixed and I do not see spurious
+>>>>> vhost IOTLB miss spurious requests.
+>>>>>
+>>>>> For more details, see qemu thread ([PATCH] hw/virtio/vhost: Disable
+>>>>> IOTLB callbacks when IOMMU gets disabled,
+>>>>> https://lore.kernel.org/all/20250120173339.865681-1-eric.auger@redhat.com/)
+>>>>>
+>>>>>
+>>>>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>>>>> Tested-by: Eric Auger <eric.auger@redhat.com>
+>>>>>
+>>>>> Thanks
+>>>>>
+>>>>> Eric
+>>>>>
+>>>>>> ---
+>>>>>>  drivers/virtio/virtio.c | 10 ++++++++++
+>>>>>>  1 file changed, 10 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+>>>>>> index a9b93e99c23a..6c2f908eb22c 100644
+>>>>>> --- a/drivers/virtio/virtio.c
+>>>>>> +++ b/drivers/virtio/virtio.c
+>>>>>> @@ -356,6 +356,15 @@ static void virtio_dev_remove(struct device *_d)
+>>>>>>  	of_node_put(dev->dev.of_node);
+>>>>>>  }
+>>>>>>  
+>>>>>> +static void virtio_dev_shutdown(struct device *_d)
+>>>>>> +{
+>>>>>> +	struct virtio_device *dev = dev_to_virtio(_d);
+>>>>>> +	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+>>>>>> +
+>>>>>> +	if (drv && drv->remove)
+>>>>>> +		drv->remove(dev);
+>>>>
+>>>>
+>>>> I am concerned that full remove is a heavyweight operation.
+>>>> Do not want to slow down reboots even more.
+>>>> How about just doing a reset, instead?
+>>>
+>>> I tested with
+>>>
+>>> static void virtio_dev_shutdown(struct device *_d)
+>>> {
+>>>         struct virtio_device *dev = dev_to_virtio(_d);
+>>>
+>>>         virtio_reset_device(dev);
+>>> }
+>>>
+>>>
+>>> and it fixes my issue.
+>>>
+>>> Kirill, would that fix you issue too?
+>> gentle ping.
+> 
+> I am on vacation this week. Will try to get around to it next week.
+OK. Enjoy your vacation!
 
-The same here, it should use standard reset interface instead.
+Eric
+> 
 
-Please remember two points, which need be improved later
-
-For this patch, it is fine because just copy old code to here.
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-
-> +
-> +	common->chip_pdata = chip;
-> +
-> +	return 0;
-> +}
-> +
-...
-> -module_platform_driver(snd_sof_of_imx8m_driver);
-> -
-> -MODULE_LICENSE("Dual BSD/GPL");
-> -MODULE_DESCRIPTION("SOF support for IMX8M platforms");
-> -MODULE_IMPORT_NS("SND_SOC_SOF_XTENSA");
-> --
-> 2.34.1
->
