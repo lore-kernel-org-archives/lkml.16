@@ -1,273 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EB0224AFC;
-	Thu,  6 Feb 2025 06:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9662248B8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738821908; cv=none; b=hjY/49Ezov7lgz5YUV6qwcdPw8z7lioXPV9mk4j2W5dnb3YozVbhqw9P9lRMGctYrc6OJrP2e1xKIk1rTUqWZbckml8O7uM3rofNKHnA3qxFnleDIftMR29cApwhVIIfgQ3ZWjC00wDJzFchjlBGDjYysc6HtTAmbtJEIAaVZxg=
+	t=1738821920; cv=none; b=dqZvli4XOncOcxydQNekE+26VBqQDbx+X2q1KnSO8pLHtbSiN73roXonRgdJt++TWA7JL5uUEzvsP4I9bCFqTRp8kFNqwn66qsNcTdHk0aSQrEbqfGDwnbiMKeEsHk2nBMBHBWZZBWiZguWUGO8zKoVeLaah9MnUQy01j8IOtrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738821908; c=relaxed/simple;
-	bh=hsttI7Aw2Sh3VKUep4bu2jyzKlGO2itiAb0VSt20X+g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qjVsR6ro2Qhm5RpJCimiJvjCTyuX516A1gWabID7JCOW5ZNpLWI6Z3TsKd2SF125m6nXp5j5WPK4ZWIGoaoJoktiyUUeyhzL7fLnJmtM9rvvEu18zIcEWyQMgAOeTT/kyAtj2L82wzEJfUGQhiXLFpiAUdEURalX3oc+LuH1/zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AAkudQ59; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AAkudQ59"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738821906; x=1770357906;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hsttI7Aw2Sh3VKUep4bu2jyzKlGO2itiAb0VSt20X+g=;
-  b=AAkudQ59WhSftxo70F2I3wsZKsmpaNRMVm250X5UIu7SdE6yxtffMdeb
-   bjnBC0+h30UhajHFBXUwhTWATACraDn8z4aIs1Pq8wQV8PN9abyORyIPf
-   1YxhVWi7eyPBejAJR1XMP/JJmZWJMOQ56D5RV+UXTqgTuXKjqWs9Wk5v+
-   VeGsWoahwnbO7yh3WOnixYg072fps0qdRupwXA9oJm8fX+LoNSwBZwIsa
-   s3tdJf7zabaMcU+NY1t0XHwYq/v3fVjSWzjtRH2FM8/ca3LEFulhWG4yB
-   fFdXWeIbogAMEx1SzyO/t2AQKofmC4qeW9PCi4Ey30FT4HI81GWg+9/x2
-   A==;
-X-CSE-ConnectionGUID: zGPzG7geRIm/7O5WWNO/bQ==
-X-CSE-MsgGUID: CuVaVTVMQH6IHRDbm5suVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50051168"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="50051168"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:05:05 -0800
-X-CSE-ConnectionGUID: 6iWEjDuUSLmW2osxdlgt7Q==
-X-CSE-MsgGUID: It7u2DqCQcy+0uGf0sALsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="110944374"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by fmviesa006.fm.intel.com with ESMTP; 05 Feb 2025 22:04:54 -0800
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Song Yoong Siang <yoong.siang.song@intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Bouska Zdenek <zdenek.bouska@siemens.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	intel-wired-lan@lists.osuosl.org,
-	xdp-hints@xdp-project.net
-Subject: [PATCH bpf-next v9 4/5] igc: Refactor empty frame insertion for launch time support
-Date: Thu,  6 Feb 2025 14:04:07 +0800
-Message-Id: <20250206060408.808325-5-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250206060408.808325-1-yoong.siang.song@intel.com>
-References: <20250206060408.808325-1-yoong.siang.song@intel.com>
+	s=arc-20240116; t=1738821920; c=relaxed/simple;
+	bh=tiaOYm5pYA+aGstwxdQX/EYDi0r3XD/mgYm932MZdqk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=c5qmQivPO/7MMQ0pINV3yHR8KMQLp6PujpTsnuoUnya3mXrIdehWgV+1Uor7yZMj/nzXMnjYBFTLq7n2z37MMaDv5wMw9RFSH9CyA84tBudiNtZD+ZOF/MPWNlMRAvEKqBw9bThUwLaEIQEo2YkQ9fxf/yMk/bhOtMx9uM7K/OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so3762685ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 22:05:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738821917; x=1739426717;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1TO+9rzBupMNMiq/QelljNSbWiGr9BXU5LdVRKfddWs=;
+        b=XL6rYW0oQu3Ik1TEC7Dc3TbEcEOFurkUUV42qf05OcnBb43G2vbYBw/8kUQd1OttOd
+         jUb0wdADZmbKNFcnLrHUU09SvTQVbS5bTH3OEdQT28QDVBz8NivvDXqwgR+YwRreUfQY
+         c1VLNoMzUgCGJ0RQmUU1t2qPA8nwE23vR8VRLXoqFoK2NQm46oWWIie6mmbQOgd6Z2H6
+         HhrioWWx6IHrBIeBA2u9MH8/k0+p3mdxocLmhtH7jB0W6HeaQyHeRHK2ohCoqkQoHNf4
+         BJIs86G0y6ilDPNsl99X+xMXSpJlH8rhIazszW8Koyn3Ol6CnNwfc3otvOYXAezviNfD
+         MPYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRdt61V8wrbs0l6Cg7hXlFJkWQJG7J2LuUiNhZoTLhL82BuAKoAZSscCYahxXnkeaw4q5Jo5R8ORkXwTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2KmPXW3+azM61HxRU2KWJzw0gHn8edGFYjgCRi8OAqhJw5m5+
+	y7+emGkpXVku9lwb8DoTRRTDE0BkkQaIIQgAKFLL1cwjdmwdauZEg77lFQIXqC9zKYvnOw21AzH
+	k2SVFnTxlAE34hza9aEY8IbxuDlk+1BfAvHtKLGYPOWSWhS0d3OoAhLE=
+X-Google-Smtp-Source: AGHT+IHXrAJssA2VQ4xK5u6Qf66UNd7a1rvB1Rp/Mk4i5onARVBr6UVxz4Lben11D22LMBOjbh+MKIxvR+//hl7rNmYXxUf2EQrq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:138c:b0:3d0:4b0d:b226 with SMTP id
+ e9e14a558f8ab-3d04f917cd9mr53494645ab.21.1738821917351; Wed, 05 Feb 2025
+ 22:05:17 -0800 (PST)
+Date: Wed, 05 Feb 2025 22:05:17 -0800
+In-Reply-To: <678d7183.050a0220.303755.005f.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a4511d.050a0220.19061f.05f7.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] WARNING in ieee80211_tdls_build_mgmt_packet_data
+From: syzbot <syzbot+e55106f8389651870be0@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Refactor the code for inserting an empty frame into a new function
-igc_insert_empty_frame(). This change extracts the logic for inserting
-an empty packet from igc_xmit_frame_ring() into a separate function,
-allowing it to be reused in future implementations, such as the XDP
-zero copy transmit function.
+syzbot has found a reproducer for the following issue on:
 
-Remove the igc_desc_unused() checking in igc_init_tx_empty_descriptor()
-because the number of descriptors needed is guaranteed.
+HEAD commit:    92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=137124a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+dashboard link: https://syzkaller.appspot.com/bug?extid=e55106f8389651870be0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167aadf8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117aadf8580000
 
-Ensure that skb allocation and DMA mapping work for the empty frame,
-before proceeding to fill in igc_tx_buffer info, context descriptor,
-and data descriptor.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-92514ef2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c4d8b91f8769/vmlinux-92514ef2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c24ec4365966/bzImage-92514ef2.xz
 
-Rate limit the error messages for skb allocation and DMA mapping failures.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e55106f8389651870be0@syzkaller.appspotmail.com
 
-Update the comment to indicate that the 2 descriptors needed by the empty
-frame are already taken into consideration in igc_xmit_frame_ring().
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5309 at net/mac80211/tdls.c:611 ieee80211_tdls_add_setup_cfm_ies net/mac80211/tdls.c:611 [inline]
+WARNING: CPU: 0 PID: 5309 at net/mac80211/tdls.c:611 ieee80211_tdls_add_ies net/mac80211/tdls.c:762 [inline]
+WARNING: CPU: 0 PID: 5309 at net/mac80211/tdls.c:611 ieee80211_tdls_build_mgmt_packet_data+0x329c/0x4080 net/mac80211/tdls.c:984
+Modules linked in:
+CPU: 0 UID: 0 PID: 5309 Comm: syz-executor211 Not tainted 6.14.0-rc1-syzkaller-00034-g92514ef226f5 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:ieee80211_tdls_add_setup_cfm_ies net/mac80211/tdls.c:611 [inline]
+RIP: 0010:ieee80211_tdls_add_ies net/mac80211/tdls.c:762 [inline]
+RIP: 0010:ieee80211_tdls_build_mgmt_packet_data+0x329c/0x4080 net/mac80211/tdls.c:984
+Code: f5 ff ff e8 06 49 3d f6 90 0f 0b 90 4c 8b 7c 24 10 e9 7e fe ff ff e8 f3 48 3d f6 90 0f 0b 90 e9 70 fe ff ff e8 e5 48 3d f6 90 <0f> 0b 90 e9 62 fe ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c c7
+RSP: 0018:ffffc9000d2270c0 EFLAGS: 00010293
+RAX: ffffffff8b82153b RBX: ffff888042af8d80 RCX: ffff888000ee8000
+RDX: 0000000000000000 RSI: ffffffff8c0ab8e0 RDI: ffffffff8c608a00
+RBP: ffffc9000d227260 R08: ffffffff901b5177 R09: 1ffffffff2036a2e
+R10: dffffc0000000000 R11: fffffbfff2036a2f R12: dffffc0000000000
+R13: 0000000000000017 R14: 0000000000000000 R15: ffff888041d91640
+FS:  0000555566989380(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00002000000021c0 CR3: 000000004515a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ieee80211_tdls_prep_mgmt_packet+0x3b6/0x860 net/mac80211/tdls.c:1058
+ ieee80211_tdls_mgmt+0x8cf/0x10a0 net/mac80211/tdls.c:1299
+ rdev_tdls_mgmt net/wireless/rdev-ops.h:927 [inline]
+ nl80211_tdls_mgmt+0x4d8/0x770 net/wireless/nl80211.c:12537
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:713 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:728
+ ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2568
+ ___sys_sendmsg net/socket.c:2622 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2654
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1284b95c69
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcdf2a63b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f1284b95c69
+RDX: 0000000000000000 RSI: 0000200000000000 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
 
-Handle the case where the insertion of an empty frame fails and explain
-the reason behind this handling.
 
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
 ---
- drivers/net/ethernet/intel/igc/igc_main.c | 84 ++++++++++++++---------
- 1 file changed, 52 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 84307bb7313e..3df608601a4b 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -1092,7 +1092,9 @@ static int igc_init_empty_frame(struct igc_ring *ring,
- 
- 	dma = dma_map_single(ring->dev, skb->data, size, DMA_TO_DEVICE);
- 	if (dma_mapping_error(ring->dev, dma)) {
--		netdev_err_once(ring->netdev, "Failed to map DMA for TX\n");
-+		if (net_ratelimit())
-+			netdev_err(ring->netdev,
-+				   "DMA mapping error for empty frame\n");
- 		return -ENOMEM;
- 	}
- 
-@@ -1108,20 +1110,12 @@ static int igc_init_empty_frame(struct igc_ring *ring,
- 	return 0;
- }
- 
--static int igc_init_tx_empty_descriptor(struct igc_ring *ring,
--					struct sk_buff *skb,
--					struct igc_tx_buffer *first)
-+static void igc_init_tx_empty_descriptor(struct igc_ring *ring,
-+					 struct sk_buff *skb,
-+					 struct igc_tx_buffer *first)
- {
- 	union igc_adv_tx_desc *desc;
- 	u32 cmd_type, olinfo_status;
--	int err;
--
--	if (!igc_desc_unused(ring))
--		return -EBUSY;
--
--	err = igc_init_empty_frame(ring, first, skb);
--	if (err)
--		return err;
- 
- 	cmd_type = IGC_ADVTXD_DTYP_DATA | IGC_ADVTXD_DCMD_DEXT |
- 		   IGC_ADVTXD_DCMD_IFCS | IGC_TXD_DCMD |
-@@ -1140,8 +1134,6 @@ static int igc_init_tx_empty_descriptor(struct igc_ring *ring,
- 	ring->next_to_use++;
- 	if (ring->next_to_use == ring->count)
- 		ring->next_to_use = 0;
--
--	return 0;
- }
- 
- #define IGC_EMPTY_FRAME_SIZE 60
-@@ -1567,6 +1559,41 @@ static bool igc_request_tx_tstamp(struct igc_adapter *adapter, struct sk_buff *s
- 	return false;
- }
- 
-+static int igc_insert_empty_frame(struct igc_ring *tx_ring)
-+{
-+	struct igc_tx_buffer *empty_info;
-+	struct sk_buff *empty_skb;
-+	void *data;
-+	int ret;
-+
-+	empty_info = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
-+	empty_skb = alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
-+	if (unlikely(!empty_skb)) {
-+		if (net_ratelimit())
-+			netdev_err(tx_ring->netdev,
-+				   "skb alloc error for empty frame\n");
-+		return -ENOMEM;
-+	}
-+
-+	data = skb_put(empty_skb, IGC_EMPTY_FRAME_SIZE);
-+	memset(data, 0, IGC_EMPTY_FRAME_SIZE);
-+
-+	/* Prepare DMA mapping and Tx buffer information */
-+	ret = igc_init_empty_frame(tx_ring, empty_info, empty_skb);
-+	if (unlikely(ret)) {
-+		dev_kfree_skb_any(empty_skb);
-+		return ret;
-+	}
-+
-+	/* Prepare advanced context descriptor for empty packet */
-+	igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
-+
-+	/* Prepare advanced data descriptor for empty packet */
-+	igc_init_tx_empty_descriptor(tx_ring, empty_skb, empty_info);
-+
-+	return 0;
-+}
-+
- static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
- 				       struct igc_ring *tx_ring)
- {
-@@ -1586,6 +1613,7 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
- 	 *	+ 1 desc for skb_headlen/IGC_MAX_DATA_PER_TXD,
- 	 *	+ 2 desc gap to keep tail from touching head,
- 	 *	+ 1 desc for context descriptor,
-+	 *	+ 2 desc for inserting an empty packet for launch time,
- 	 * otherwise try next time
- 	 */
- 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
-@@ -1605,24 +1633,16 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
- 	launch_time = igc_tx_launchtime(tx_ring, txtime, &first_flag, &insert_empty);
- 
- 	if (insert_empty) {
--		struct igc_tx_buffer *empty_info;
--		struct sk_buff *empty;
--		void *data;
--
--		empty_info = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
--		empty = alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
--		if (!empty)
--			goto done;
--
--		data = skb_put(empty, IGC_EMPTY_FRAME_SIZE);
--		memset(data, 0, IGC_EMPTY_FRAME_SIZE);
--
--		igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
--
--		if (igc_init_tx_empty_descriptor(tx_ring,
--						 empty,
--						 empty_info) < 0)
--			dev_kfree_skb_any(empty);
-+		/* Reset the launch time if the required empty frame fails to
-+		 * be inserted. However, this packet is not dropped, so it
-+		 * "dirties" the current Qbv cycle. This ensures that the
-+		 * upcoming packet, which is scheduled in the next Qbv cycle,
-+		 * does not require an empty frame. This way, the launch time
-+		 * continues to function correctly despite the current failure
-+		 * to insert the empty frame.
-+		 */
-+		if (igc_insert_empty_frame(tx_ring))
-+			launch_time = 0;
- 	}
- 
- done:
--- 
-2.34.1
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
