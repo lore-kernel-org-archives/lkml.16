@@ -1,66 +1,65 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523D019CC39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3051F19D093
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865015; cv=none; b=gU8FsLwA0X18S4tXv+bvkzmQg7cD53z4T3/Gjm5AVNSzXIyQ5j13CLAkcajQ/K5sufBLKgrS+AlpOItEiEI4ahblhdSGIqnCl4mOFr0ERZ0qnGJRsIXJ/i5fqretrqcxmQUZMYdbmKt7r5mUqxPOvZ2+wop+hzgq9wsL6GQHW9U=
+	t=1738865016; cv=none; b=r/W0Ihyj73u/kYqrgfU3MFBLC0uALbXY0TGss9hS4B1dPooROC99utO3FFNs8mIgZWD9UbDO7C2PymeThbCnocmv1HVANtmeb2Foi1hXT02pK/zrPvbihPM4YwPcAXeJkaDQI+TmBJ63mtUvCrlJkR21dhYA1Xx4b6hLCn0gUss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865015; c=relaxed/simple;
-	bh=r2UTtoxqsTQAE5NrTtzww1y1OS1gn30nWJe58icJu9M=;
+	s=arc-20240116; t=1738865016; c=relaxed/simple;
+	bh=JLtzbBvAzoLgpMCSxDT8+5G2iQll42daXycMfI5Pw00=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WS4KjAjKmj15Z8jzDnw8bOs2UiPif5s2seRorRWpOyZq/JcnbAdfit4W1YnDy3LB1Ge3EvEzC6OODsBJXNDOulnQ0p9qJR2QZMG3oCcAEwSuX9WF8sZIHx8niOR+xGQccp0sXxUQUlFt1Rqmrc9/LxdqZhDvaDGYeFmg6rjsQ2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=Z0123Wql; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:To:Cc; b=rr4/5IZ8ZmAwJhwA6dcYtaOoFlU9JG/7tj0TPgL8dxTKybwQsTYEo7TwPfzZMg8hXNPea1cgZz9a1G15/t7JIvi6U7AYKPOlmEeCfd7LaZ6QvQTgjYNnhbdlBQkuOKjEQIGDr/P+87u3cMxSHCkuij/R2GeuDnIR03RWuJYIK4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=o1Vz8BQd; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Z0123Wql"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436341f575fso14699295e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:03:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="o1Vz8BQd"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso8746975e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:03:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1738865011; x=1739469811; darn=vger.kernel.org;
+        d=raspberrypi.com; s=google; t=1738865012; x=1739469812; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6+Ptm0oRwTnL3Ocb32TjntW1tAXUnQly4a1T7oh0b/g=;
-        b=Z0123Wqll5wBV7vI7OHJlsWFhw8Z9L20teDRYSojY+JN0aZCuFg3SlrDuqx525Dqq/
-         PgkTsyJoi5dzCeAifYuouSqaKNtOSOjW4fMZqVFU/BqDYwJW8pi7Q08woNsRpyFl5mGa
-         9hxzmM/zk+gmx9nqJTqu7Nltgjn44+bK6+ECkM2mGzT+PNY6IdPBOqUMwsZKgBq4iHpA
-         75uG5VigAjkTo8QE/VyCyDh7KMNYNGPCfi8fzF6Mg+gJBU1be33r0dRY/8SWUwO7RpuK
-         Ib5GPv7CmJ7JN/BMemLTOBwYI2bibs+Sx9CCwl7VpvZk626a+2CbSj/4ncGpJziaqpJx
-         xuBQ==
+        bh=9j/Oa5YYyXRr2YC4IwFerwor4UG4DCkLhlqZUyCWpwA=;
+        b=o1Vz8BQdGyG6r70phXs0DmGJvo9HJHfnfjA5cqvFSMOVpvKtz1sLhUfn2RCxZudyAQ
+         B70JRVgbH6Vcs3YcTx3Df/KBeYBaCJuHzI27kYvwPWjigZhzE+7C/XCCzCy+Tg9U4Q13
+         2s9aRpZ8ZfjTPGTBtbtUw129xE/4/z9OyeNU8H85zVAlnil2RlBcdoreQO3B3V15H1Ef
+         lyLY8UgqKWJ0eepeY6d3rlTYp+u0EBKU5A9IJJyGkBf8409ZhCePPz8myZYunlzt6rtL
+         jz6+sCIFwkX/PUg8pJ/z4iwharMlBCF8Wlte6PqualktIK17Cs4Ss9GK+sIC/N9lIqQR
+         ncBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865011; x=1739469811;
+        d=1e100.net; s=20230601; t=1738865012; x=1739469812;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6+Ptm0oRwTnL3Ocb32TjntW1tAXUnQly4a1T7oh0b/g=;
-        b=SYMmlkji9V76v9uYoECJ+0VcSplUtcYSi6pFeky2ctgs7Stp0CDcP8F8y5/ph6WrhI
-         gW4fv9EnrVoeztQ4dVFVU5rT9rvCtbkN3rQee7VCrdn7K5lNClr+//c/uIQTTLFIw6v5
-         cMrF6w6TAWZzk64ldVtZ3YwZibfi2lHqW9E2Wqj2JUeSwDMUocVM+0xfaWy4QJ9jiYha
-         7BYiroXKDmuDO+OtbhIsmRWSMkrk59P8w7QMqsfVJbtnCCiC+U3S31lXkhV/J3JN4cdN
-         hw6YRKUEZ1S5nk90ktPdrTZJI+QJnPMygDkkbsGssoAzNmAEtzmOP1SrxQ6kaRs2qeWX
-         qJEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWtx2Avc8F2OmxGswE7PUcqyRnRDht+G6V93GNOjqyAc/KFNdqUA2KPHjt5rTfJy2NiOduUbVJPH5chSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHasTPQrDTebdB/pwdImem1za9u2N1kk/QfrXTbjBKGwWtdfwU
-	lDMCWFk9U7iLZypZ6BgUZsEer/Vq1aTZ2Khhuf4gQbx7cLbFZ6agq5jDrH/njYQ=
-X-Gm-Gg: ASbGncsFW4u9HqeQOg1C3dM8SFgHA8se/jyi5kpUtdttsifWoLzgCeXv4ztCtwaMPhi
-	YjYkYw/wURFEvdo39CjsKzMq/daaAxi1lsiZtqOIBBFUJUW+5r0grXaO3pNAXGAB4hvOqfq6n7U
-	BebJ7CgNPk8xDgr46ca1WgfyLNjxG3OKC9vSt57LRxxPcPVn0LDVaGRC0zptehgCB7nrTOww35p
-	qp7vAMQAz666vONK5PP7cPFZYADmhIIr4WkL/NZtSY/aQIVUEJKWLea8X9SVFWj+Q9zvIum2yKS
-	RKFdJoE=
-X-Google-Smtp-Source: AGHT+IEc40ueYLTteR1KlQ3fnrgzcK1xfXxwFu0xmwqnVwELnnEw0h737ayS1xCS2yNyZ8/F36GDAA==
-X-Received: by 2002:a05:600c:4f91:b0:436:916b:aaf4 with SMTP id 5b1f17b1804b1-4392498a1b5mr4704265e9.10.1738865010000;
-        Thu, 06 Feb 2025 10:03:30 -0800 (PST)
+        bh=9j/Oa5YYyXRr2YC4IwFerwor4UG4DCkLhlqZUyCWpwA=;
+        b=VVeL3CT2kZkpNEesmy7tuBUAEvEn5+QxqEcEK+Kqx06X0LchUdAkLNvBR+7JWYnu9d
+         qWNm+J/omlF9as6YTOm/MKPyaL6SfolRlFmwsPgKXTTkianrBZduxRmmUEHy+Hr9OVR2
+         8oYwxk6o/LXM80E1y2zEs0gSTN7L2Lwu/q4JmFoTbQcfoNbFW3EXk75z4sC7q1kTNmXq
+         7MRo4BzFrh0gDS48WTH0I4CNvB8Fwr91GH/b96tOmgA7IfutK4+zJymLbJOUowdvvW9e
+         e4Uk/kA+Na/X3Qq2hTmhbXOc2GGJ0UfoLzl3WzZ4j3+wKXQ5jXdg8FDntNPm0+eebWQi
+         O6vA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9A6nSiWf9FPXFKSjnxQoYmDEv3dohIXWqTxhLKdmbQKZIVkb+Zx4itB4JK0iTvA4K6XIlIWhmVRRVQBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKKVgcFM85wUTeIkZ8+FmDMQbIqdYU3T5IytOJ3edDSBvh7rX9
+	Twpvihwkm2tVx2xvcs+LnnF5+EvBLCerAuEIx8q2r1lCn3KJnRkgpFN6deGwIGU=
+X-Gm-Gg: ASbGncu8VJaK31gCerQOfN0Mm61Kn6kfARYXEeLNKJQVM0wIC9EGR5KhJO55oi7nJ2y
+	fNuKWpV6ONfiYZ560/D7vfVZF0FTx1o3N3/hn18dbxoBY3h+er0vZ65pbCCkyYfQY/2fLDVUS9X
+	6tt6TguUXSBtvCLEIvsOD9JqaykltwTc0TLzpujs+ODweNy/UXV1GedA+R7MhMIPudKgEwOQGio
+	p8geUt5Ys59Vl+PbkOY7v8yZvisnCiwKGkKVWnHBU/waYgRlRTR0B8AnTFB/Uyk5VuybM5AapJW
+	Hs6VB+8=
+X-Google-Smtp-Source: AGHT+IEGNVXFcPPbaAsAkKUz6RKFMzgdm3ieZv/CxcB2k8KxB6gUfL4TU2Ef/Sfmqg6Pd5YA7HWYzQ==
+X-Received: by 2002:a05:600c:46cb:b0:433:c76d:d57e with SMTP id 5b1f17b1804b1-43924972d1amr3677925e9.5.1738865012189;
+        Thu, 06 Feb 2025 10:03:32 -0800 (PST)
 Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38dbdd3856fsm2278858f8f.28.2025.02.06.10.03.29
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38dbdd3856fsm2278858f8f.28.2025.02.06.10.03.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 10:03:29 -0800 (PST)
+        Thu, 06 Feb 2025 10:03:31 -0800 (PST)
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Thu, 06 Feb 2025 18:02:36 +0000
-Subject: [PATCH v2 3/5] media: dt-bindings: media: Add binding for the
- Raspberry Pi HEVC decoder
+Date: Thu, 06 Feb 2025 18:02:38 +0000
+Subject: [PATCH v2 5/5] arm: dts: bcm2711-rpi: Add HEVC decoder node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-media-rpi-hevc-dec-v2-3-69353c8805b2@raspberrypi.com>
+Message-Id: <20250206-media-rpi-hevc-dec-v2-5-69353c8805b2@raspberrypi.com>
 References: <20250206-media-rpi-hevc-dec-v2-0-69353c8805b2@raspberrypi.com>
 In-Reply-To: <20250206-media-rpi-hevc-dec-v2-0-69353c8805b2@raspberrypi.com>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
@@ -88,87 +87,46 @@ Cc: John Cox <jc@kynesim.co.uk>, linux-media@vger.kernel.org,
  Dave Stevenson <dave.stevenson@raspberrypi.com>
 X-Mailer: b4 0.14.1
 
-Adds a binding for the HEVC decoder found on the BCM2711 / Raspberry Pi 4,
-and BCM2712 / Raspberry Pi 5.
+Add the configuration information for the HEVC decoder.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 ---
- .../bindings/media/raspberrypi,hevc-dec.yaml       | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi | 4 ++++
+ arch/arm/boot/dts/broadcom/bcm2711.dtsi     | 9 +++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/raspberrypi,hevc-dec.yaml b/Documentation/devicetree/bindings/media/raspberrypi,hevc-dec.yaml
-new file mode 100644
-index 000000000000..06db7004c765
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/raspberrypi,hevc-dec.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/raspberrypi,hevc-dec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi b/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi
+index 6bf4241fe3b7..56c633005941 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi
+@@ -105,3 +105,7 @@ &vchiq {
+ &xhci {
+ 	power-domains = <&power RPI_POWER_DOMAIN_USB>;
+ };
 +
-+title: Raspberry Pi HEVC Decoder
++&hevc_dec {
++	clocks = <&firmware_clocks 11>;
++};
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711.dtsi b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+index e4e42af21ef3..2931d93ba184 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+@@ -628,6 +628,15 @@ v3d: gpu@7ec00000 {
+ 			resets = <&pm BCM2835_RESET_V3D>;
+ 			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
 +
-+maintainers:
-+  - John Cox <john.cox@raspberrypi.com>
-+  - Dom Cobley <dom@raspberrypi.com>
-+  - Dave Stevenson <dave.stevenson@raspberrypi.com>
-+  - Raspberry Pi internal review list <kernel-list@raspberrypi.com>
-+
-+description:
-+  The Raspberry Pi HEVC decoder is a hardware video decode accelerator block
-+  found in the BCM2711 and BCM2712 processors used on Raspberry Pi 4 and 5
-+  boards respectively.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - raspberrypi,hevc-dec
-+
-+  reg:
-+    items:
-+      - description: The HEVC main register region
-+      - description: The Interrupt control register region
-+
-+  reg-names:
-+    items:
-+      - const: hevc
-+      - const: intc
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: The HEVC block clock
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    video-codec@7eb10000 {
-+        compatible = "raspberrypi,hevc-dec";
-+        reg = <0x7eb00000 0x10000>, /* HEVC */
-+              <0x7eb10000 0x1000>;  /* INTC */
-+        reg-names = "hevc",
-+                    "intc";
-+
-+        interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        clocks = <&clk 0>;
-+    };
-+
-+...
++		hevc_dec: codec@7eb10000 {
++			compatible = "raspberrypi,hevc-dec";
++			reg = <0x0 0x7eb00000  0x10000>, /* HEVC */
++			      <0x0 0x7eb10000  0x1000>;  /* INTC */
++			reg-names = "hevc",
++				    "intc";
++			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
+ };
+ 
 
 -- 
 2.34.1
