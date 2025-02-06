@@ -1,301 +1,733 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2086.outbound.protection.outlook.com [40.107.220.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C691F22FF5D;
-	Thu,  6 Feb 2025 22:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879530; cv=fail; b=be2qk/sx0XNjq2S4wdXwyGZN/0z0vPWcmzm8z0SHqFQJ4t5yd2ieRtc8iHat4+ToMzETFbmTnoWGYFxFDJGlmbWf5KipM2l1xjj4IhCpGznHtSQhaau5sxaAfJ6huCw7F1SND0KAroBwsntWt6E6ObpasLJckYIG9mw1czUoc/A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE3422FF51
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 22:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738879530; cv=none; b=H9qPvG0d7oivjcdEtMo1Rdo8NjO/kiBnduQlXC/6u7QzHdZGGM5nwrQIOKuF229+J7EWhLXexSDJ0TkxcmuSd8P+RzlxCJfFQKJ05NSsEe+Garlujugt2YVclzpTohnTvYuEmHaxT6hqLPoKed2Cy8RnAaYWi5pHR1q9ZJDSGwU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738879530; c=relaxed/simple;
-	bh=D2SJ5OhQ9jcaqVHMS39EHLFREBxkLwVgxKMGXQzzDlg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jp/5x3p62Nr8PlV9utPrbwBGKJRDsK8iQMbcrpI8Dc2BXd0IomgZTaiEMbTETkbYYvHXOO58D2kNSkgaqclt94cJJbu46nXPgVKW5VL1AH1HEFKOJ/cYma1Tny4V1IiNZ8v2Iw1Pu7qMPfBGQDYR/V7kgnok4sI3vjHLLDXbZms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sbJfiLCR; arc=fail smtp.client-ip=40.107.220.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sbJfiLCR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pM/B+5GXjzU5bELEyQezV/OeKzGy6q6bdo5Cp2PRgir4mWzj2RWl4k4fdjYXiswzIYDidNtKw0bFpji4k0rCQlUZi4HU/v2RDraOZj0obuhOSpUTiLTVvYHkzLp+c3TmsUqB9zyu3BxQQ76cLw60LqyYtvlplTHwWHYmbG4kwKRssooBCg0WcQKzrZGNfczkZGdre1kX1wgoj3THzjAyBhLWtszdhdojQrdCoYao3Wo3DpwUf9wEDgqZac4fgxJnY0uJ1xkbR5BZRcaYqZYoeAsuf3XRzp796JvMxvlWQ2K7Kt8gldQ+YXXD0k2doYYZWqrlivRsUcZSdV1mh7HPGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3SMswaJdqej7UXJBi+08WPkYJFhhCmYu3oATSu/6aNQ=;
- b=Kp0clCs2f7ZHfRYhdCqAODelL7l9rO/AWWqfUxjXiMBFTeLLynl9pDMVD8tYwyiXysXE2LWFCa2yWFXJRdhOK/niny6D9JtfPqvhOVn4X/n6Jk6TjilgaLheheLmurKPayztWYYU3tx+isjzmUmMbmq3HhSJ54Jb0cyNzAfYsA5fvZUgj62iOoU+VipF7mdZ5q1JpGqEWplvwX6kw4KzoziG/rOAu1l7hlpFt+PydRGBzHgI+YZubg68cOi5Xnyt+gfUmpqxP5BLERjSc11ljpHLYRjIO/VLOzb5Zdmp4Gpjj8f6hjTzbJWWFci+HoQ8RyqF+5ejiF8UvvK5e0voOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3SMswaJdqej7UXJBi+08WPkYJFhhCmYu3oATSu/6aNQ=;
- b=sbJfiLCRJKyqUqrTkzaxeYo+r+h8FR5+HKu20iqdkyNkXwKNgxCvzel7b4d/HiFwbD4lfglpoGXFNEjEkyyubXVYFtuqCv06UB0tumIgE+Y61IqVIlKAIo6yVnmlqF9XgZ7Rm9DMlS7KqZ78yhBcedQ8kB2OpvfKbT4lFUSHU4U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by SJ0PR12MB7006.namprd12.prod.outlook.com (2603:10b6:a03:486::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 22:05:27 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8422.012; Thu, 6 Feb 2025
- 22:05:27 +0000
-Message-ID: <fce6d203-6822-7bb6-ca9b-4427d0772312@amd.com>
-Date: Thu, 6 Feb 2025 16:05:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v7 3/3] KVM: SVM: Flush cache only on CPUs running SEV
- guest
-Content-Language: en-US
-To: Zheyun Shen <szy0127@sjtu.edu.cn>, seanjc@google.com,
- pbonzini@redhat.com, tglx@linutronix.de, kevinloughlin@google.com,
- mingo@redhat.com, bp@alien8.de
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250128015345.7929-1-szy0127@sjtu.edu.cn>
- <20250128015345.7929-4-szy0127@sjtu.edu.cn>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250128015345.7929-4-szy0127@sjtu.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0041.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:2d0::15) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	bh=u3wlRLDE2oLM6A2L5a6uoRLVF/kt/FnMdxo+CvzH7Jg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=FM86pPb6DceBgl68ahW1G8GBYC66SWah1jQLM/5wblX+Xnx7WUXHvvEy1KvuIei9QrgaCZwifYhzk7QskF1VUjpBsQem73s1bNQTki4Shig4DtP1NrqSYSIY5vGcDhEgEf5WgKAreP4lh6QfuT71RVZIQTS38gCDvjUfaVBKJTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-844d8831d43so109339039f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 14:05:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738879526; x=1739484326;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5C6M6B3sv1BVNtddHI0nNTUGRYEDHzEzqIA3J41Zknw=;
+        b=EtS2Uw6B6BnSmKxBEbgcvpsX6n4rmce6XCJg1iwY0l4wuJnHmvlc5JFGvSsNtpsAGu
+         mQ6NmAf0kCT+P0WgcdgB8owxGmfMFa7SNARpH8eVb0+rir+awBzl61JBCgFFKZG2mMOX
+         20IgLcenLiJ5ID4qc323FaFmbKweL9g+VdAnJWrK1f/ThQlJtcKfv4bWsy8vR470C/pf
+         hH+5XAJykBdoTwRnjKb4WIXM6z6FK+PFdK9vXehK9t1JrsNLi/q+oQ4xMJwNa6a2Qqkc
+         Fy1gm0+JArKzQXxG1g0HT0zdyH2AnQLrvWVeSwudeQ/Q+/NguEy2uebWQuTXbF5MGr/L
+         dv4w==
+X-Gm-Message-State: AOJu0Yxi8Za2RDyjQLJC9u2X5xMWPAmvfpd/34eAOU+0g+WayMTpP3U/
+	2wil8Fx0uCsiVHPdtr9yLbMpPjiK07f6qb/MUJee3edD9CeeC3Y/7grxIu4+1ItyM9cb858qw8Y
+	rhsooywTar4ACErnVNiVYJpSyDNiEty6xH5A6dd+FLbli7S0WABs6HUQ=
+X-Google-Smtp-Source: AGHT+IHp5NKHBmbeS0AgnW7A4PuDSqaHDZcbtVigxUWLIppA0Dl2YzM2VsgVrmCXqwDWjKsTFnCSRFrixCwEGSp0sMLqsuObIFCu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|SJ0PR12MB7006:EE_
-X-MS-Office365-Filtering-Correlation-Id: 071fd302-a49c-4ee6-5155-08dd46fa5cb1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WjByY1ArZEdxWTVNZWNaY1lRTEx4UHE0aXFJVnFEYnNXaklDNW9OVy9pVStR?=
- =?utf-8?B?NUUvK0hNbkhMbGUwRHBSQ052TFBsL0Q4K1FpRFVCc01tTU5XN1RHZSszZ09R?=
- =?utf-8?B?UWxSdTBPdUNoV1hSUmY4NXdjZTlOMjdqMGkyVGlmbGZrYTNmSUh4MWFKUXNZ?=
- =?utf-8?B?Mm8wdDUwMjBidW03bFRXcHl5N3NLcUpNa2dmbWtsNG5ZYmpLUFVIZXhXc1Rl?=
- =?utf-8?B?dHpwZ2ljUDZlSEVRemQ0VzBpWFA4L2UyUTZpVEV5aE90dENTL2YvWUswUDRC?=
- =?utf-8?B?dkZxYld3QVBOV3lBenhpeXpKMjI2VERlTG5CUnZuS1RxalBJV00wRitHVlh6?=
- =?utf-8?B?dnUxN3hKSlUrTWVrcEM4WnYrMW5SM1EzTjRDV1NrZ2FMV2ZTSUV5NVNuVk9v?=
- =?utf-8?B?SFFVam5rcmJpTWE3OWl6OG15TWdmNTl4YlJaVlFGM29SSEc5T016cDVjQVNJ?=
- =?utf-8?B?dkVNREpNekl1RW9uWXpNZjh2V3lZSDdQUFZLU1VNd3pIYlVWc1BwU1JWUlVQ?=
- =?utf-8?B?VHRSNmp1NWxxcCt3RGl6RUtIclI4QmtjMTc0ekJLZWlJa0hUVVgvbGFzc01s?=
- =?utf-8?B?SitRZUFDL3FibTcyUlV1b3RFS09kYnJYTnJUL0hMbkxFbzF6ekNhSW9jTmhO?=
- =?utf-8?B?dkw2Z25ETFJhRVZwYXg3TjVFazVZc2pmdjhxN3pZcGFrNkxQZEErYXErMmxQ?=
- =?utf-8?B?Y2tKaiszZU84a3V1bTNLQjBiTU5LQUZNUTdMc1lRTkg4WkIvaVFkWWQ2Tm12?=
- =?utf-8?B?WTRXVktsMmp4eXBTNHRWRTJ3ZGZjNG5pNW9uMUNOdVJmZzBNN1J3QnlHVHhy?=
- =?utf-8?B?S05RS2d4YWpPV2dacGhNYjliZkpnclVubzMyRFVwdThERWdDdXJ6eSs4a21M?=
- =?utf-8?B?UUx0cTZ0MlJsR255RTE4Q1dTWE9pNnNHcjV3WjVLSDUrTXZxRFpvcHJjd0Jn?=
- =?utf-8?B?OUpnQ29uT2RTa3dDekZhdExncG5ZVHg1STNTMWdvQVFCV3E2MkwreTgydExD?=
- =?utf-8?B?L2VhS3NzZVk1OXhMMWlwM1NYL0dkeldnOHU0NWx6VzFHak9kcUo2NHRvRk0z?=
- =?utf-8?B?Vkszc1hnOERWTlhQZm93MkVnTGtmcG9LWUQ4VW42UFgxOVZZR21qSDJDYkM0?=
- =?utf-8?B?d1Q0Y3BoTTgydjZibFFSUHYyWkU5OVdkUXRLdVB3NnZmcUxwdkdxYVFzMHdN?=
- =?utf-8?B?MlNZMnlPdHFwM1pveXdlcUNNWm9US09kRFlMYStWVXpSY0lQeHFEbU5BOVE4?=
- =?utf-8?B?cmdCdzBScjUyWWU0VjRDU2VzekhyY1hYQjNSejZVZUFZTUZYMEtOU01FTHUz?=
- =?utf-8?B?RVk3aitEMGt3VlhPSTJvNndQazJzRENVaXpGdFBld2FPL2FDUCthdmVrbC92?=
- =?utf-8?B?RDZVa2l6d0FRRDFYVmVzT3Eyc0pVSUZEeVlNS2E5N0JrR1d5UWZRU0VNN2VH?=
- =?utf-8?B?VDMyRFRRelZKUEFZV0M2M2FQZ3lwR2tPUTJjMWxnYjMvVVZCV1FuTkNQZndw?=
- =?utf-8?B?cXRaNlpjYWUrS1BVMTFXZVBla3dQWHR6enNidHptdHVPR05tTEF2UTdRNXU4?=
- =?utf-8?B?VGhYeXMvR0FaK1AvODdLWGxwclpQOUVUaHZkbWNnMTFBeldLaUdxL3dIcmNu?=
- =?utf-8?B?dWNXOHVoTmh2R3Era1AyYWFrSkJVeHJWeXJ2Vi9BUDVIZk5WQm15QndzMzZF?=
- =?utf-8?B?UW5pVkh5MVBsYjJGN21Qa0dWMWJjUHJ0M29ucFdmSVpzZEo2STdFUkE5K0Nk?=
- =?utf-8?B?ZE4xUm4vSjlvOXZsdHJsdmRJaVZYRW9raG1VZ2RFYkFHbEhPdjZSa0g3NjlK?=
- =?utf-8?B?TnBYYWZJOTdvcVI0OFV2YXNzemRoamhGUk1NOWlhQ1hXcUdWNTBnTk1EZitm?=
- =?utf-8?Q?2Z1dYcaL66Qmq?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TWFLS3FaVGx2K2lBVE9qRmNkcU1hNkxpRm1uSFlwT0RCWWdHMHdDQk45OWs1?=
- =?utf-8?B?SDNEV2kvZno3ZzRYbHlpNGR3ZUc2RTZCM1ArMUpHb0VQTTFFTkpYcEVkK3N4?=
- =?utf-8?B?TTJUR0hKeEpMaW9OMzJOcjhaMCs1dWRtNmhxQlpvNm9Ec09ncnllMDB0akN4?=
- =?utf-8?B?dTcvNE1uZmhscGlHWjQ3dkdLS1ZYb2NVQUpxZHFmZ0Zuc1RrbSsyb3VZUTNo?=
- =?utf-8?B?MDVYcVR5L0VHdGJTTVBWSlFja3BZLzBlM1MxUWttR1JDUGRhVksxY2xuWjhP?=
- =?utf-8?B?YzJteTI1QzVDMTFIb3EvTkZGVkE0S2dnOGVXaEFKcmJpa0Q4QVoyOHBRYkt0?=
- =?utf-8?B?QWJuL0REVXFSYzZUekVTcHB0aTNCZmY5TVcwRG9USUgwUFhRaXZ6SzNTVzdr?=
- =?utf-8?B?d1k0WlhiZllZYUk4M09ZOFNseUhzMUU3WVFoaXo5WHo5KzlsRXlHbjRtdStW?=
- =?utf-8?B?K3VzOTlENmVlakZaOGIrWlVQTTVlUjZRRGtNNXFpcGJFczhJSG9HWmdGTjMv?=
- =?utf-8?B?ZmFrS0lGbThpZWpFYnc4RlhvTFZXTGh1VnpKR0lwSG8weEdBTmFEVS81ZHlV?=
- =?utf-8?B?NGpOOEMxWk55N1JpRnNKNEEyOVlsaVBCRnFPMlNQbnozbmFlNEhjUWt2dHox?=
- =?utf-8?B?K0g1YnowNDRaVmQ5Wjl3WUV2TXBJY2FCeWY4V01ORFJ6bm9zOVVyL3RXUCti?=
- =?utf-8?B?VkM3UVRLOTNxUUkrbzJpZmxzaEYvN0JkMTMzaEpicmxoM3pydnhJUUhBcTd5?=
- =?utf-8?B?TXRERGQvU1hFODRJVW1oVjBneVg1VnZDZVpHWnBBRU0xR2tWaUF3QXpWZS8w?=
- =?utf-8?B?YndUczFKUFpESUJiZThRUnF6aTlEdmMwQ3BDWVdzQ1ZibUVTWjJmeHJFazZy?=
- =?utf-8?B?N0pBdFZ6NzVidGRxSTJDNXFaU2lIT2VyOXM0SFdtWCs1a04wQWlNVytqdkZk?=
- =?utf-8?B?dE8zL3pzZ3I2QU5paGlnRHZZdnhBSVR5My93ZTQ5aWY5NEdkM09MRkRQSHE2?=
- =?utf-8?B?eVVEaWdHVVF0NmdYajRSbkF2STV4dCtveVFETjZTRDYxMjl1akdLQzFGV2Y0?=
- =?utf-8?B?T3FBUTExSE45UGlNcnNNRE9kWFNzWThMS2xyMlE0RU1GZHZOdjdZSXROR1Aw?=
- =?utf-8?B?eDBqS09UVkY1cVd5RlZ0cjZnd0tLOGtsa3JscGp0MEp4WWJlcTI0V0ZnNGR4?=
- =?utf-8?B?ZEhseU0vR3pIdjVvWThNZTEvODU4Q05rNWY1NEVGMzVQUEV1WXB1NXpwVkRm?=
- =?utf-8?B?eldVZjFub3k5aEVna3Y0SnZBMmtTZTBEOTJWcGZ6MHUyQzFhdzZjU2hvOUJv?=
- =?utf-8?B?Tm8yZjFkY1YzT0hUamJWRUpuTVdXZ1hRWTFFYjB0U1RSalVCbjlNZGdldlVL?=
- =?utf-8?B?ZE4xN2ZhQVI1SDJUdDUrSVdoL2t2aEZ4bmxFeXRSQlRVRE9qc2l2MGg2MTN2?=
- =?utf-8?B?MmRQT3g0REJDOGZsQVBJZkJhRDRCVUJKL044amZVZHQzaTVCa2I1TUJCTEVh?=
- =?utf-8?B?a0dkUytBSHVwcE1BcmQvbk5wYnZCekhQWW8xZytXQXJrUEg5T0FzK1Y4aXRI?=
- =?utf-8?B?WE93RXdVK05Jb3hWcXpIbW5scWw4T3pKM0xDNG9WMEhTdW5NQitPekZORU9Z?=
- =?utf-8?B?MS9jdkJhdVQ3NHVsbnJSajFEYVRZa3pTQlBZQ0Q1Y055dXplTEJEU0k1RUkx?=
- =?utf-8?B?MWlMQW5DbUczMFdmUGhKL2l3RWRlYWdtOHFUQVNpWEcza1p4WXNPVUZxSXBN?=
- =?utf-8?B?OGxUWkMzSVArTDJkZ1B4cEJpZnZ4ZjB0bXRuUjFwdGp4ek02ZUxPM3IyaUM2?=
- =?utf-8?B?NHdHbTZSdWxZdFRtaFM2RkxqbWdkaEJpNnFzNmNtam1YYjl0NENOQnowSUxM?=
- =?utf-8?B?bmpIek92SHY2NnlCY3F6SXpFakh2ZXA4aU1Cc1dhVHY1V1hFektrZXdVWmFW?=
- =?utf-8?B?RVMrTEl3eWdwa2VlQmxQTDNSOWVLK0ZSV0diVkFLSzlMVldqcXpxMW9Ccy8z?=
- =?utf-8?B?NStqRnlKMU1CSFY0OEJ0c0NDTWVVOVNkd1U2NTY1Y1JmUGJkVW5FS2U4c2xs?=
- =?utf-8?B?N2tCOWJkY1lwUTM2amJKMXVtRGN4YkxoNFBRYmpjTGl5VzhYTTh3bnk2Z3RO?=
- =?utf-8?Q?hLtSDrHBVFyhuaYwRD8SwAD14?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 071fd302-a49c-4ee6-5155-08dd46fa5cb1
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 22:05:26.9634
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fj4qPPeNyuPD2GFb2BY+KEIimUWog9vCfGz+CPa7gXFGp5+/w5+8X/vBxlrJsmd/qJ2cVUGz7klhKUAC/9cMjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7006
+X-Received: by 2002:a05:6e02:1a41:b0:3cf:bac5:d90c with SMTP id
+ e9e14a558f8ab-3d13defdaebmr6579485ab.18.1738879526664; Thu, 06 Feb 2025
+ 14:05:26 -0800 (PST)
+Date: Thu, 06 Feb 2025 14:05:26 -0800
+In-Reply-To: <67a4b4c3.050a0220.264083.0005.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a53226.050a0220.2b1e6.0003.GAE@google.com>
+Subject: Re: [syzbot] Re: [PATCH v1] Bluetooth: L2CAP: Fix corrupted list in hci_chan_del
+From: syzbot <syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/27/25 19:53, Zheyun Shen wrote:
-> On AMD CPUs without ensuring cache consistency, each memory page
-> reclamation in an SEV guest triggers a call to wbinvd_on_all_cpus(),
-> thereby affecting the performance of other programs on the host.
-> 
-> Typically, an AMD server may have 128 cores or more, while the SEV guest
-> might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity
-> to bind these 8 vCPUs to specific physical CPUs.
-> 
-> Therefore, keeping a record of the physical core numbers each time a vCPU
-> runs can help avoid flushing the cache for all CPUs every time.
-> 
-> Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+***
 
+Subject: Re: [PATCH v1] Bluetooth: L2CAP: Fix corrupted list in hci_chan_de=
+l
+Author: luiz.dentz@gmail.com
+
+#syz test
+
+On Thu, Feb 6, 2025 at 4:01=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>
+> This fixes the following trace by reworking the locking of l2cap_conn
+> so instead of only locking when changing the chan_l list this promotes
+> chan_lock to a general lock of l2cap_conn so whenever it is being held
+> it would prevents the likes of l2cap_conn_del to run:
+>
+> list_del corruption, ffff888021297e00->prev is LIST_POISON2 (dead00000000=
+0122)
+> ------------[ cut here ]------------
+> kernel BUG at lib/list_debug.c:61!
+> Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+> CPU: 1 UID: 0 PID: 5896 Comm: syz-executor213 Not tainted 6.14.0-rc1-next=
+-20250204-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 12/27/2024
+> RIP: 0010:__list_del_entry_valid_or_report+0x12c/0x190 lib/list_debug.c:5=
+9
+> Code: 8c 4c 89 fe 48 89 da e8 32 8c 37 fc 90 0f 0b 48 89 df e8 27 9f 14 f=
+d 48 c7 c7 a0 c0 60 8c 4c 89 fe 48 89 da e8 15 8c 37 fc 90 <0f> 0b 4c 89 e7=
+ e8 0a 9f 14 fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 cb
+> RSP: 0018:ffffc90003f6f998 EFLAGS: 00010246
+> RAX: 000000000000004e RBX: dead000000000122 RCX: 01454d423f7fbf00
+> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+> RBP: dffffc0000000000 R08: ffffffff819f077c R09: 1ffff920007eded0
+> R10: dffffc0000000000 R11: fffff520007eded1 R12: dead000000000122
+> R13: dffffc0000000000 R14: ffff8880352248d8 R15: ffff888021297e00
+> FS:  00007f7ace6686c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f7aceeeb1d0 CR3: 000000003527c000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  __list_del_entry_valid include/linux/list.h:124 [inline]
+>  __list_del_entry include/linux/list.h:215 [inline]
+>  list_del_rcu include/linux/rculist.h:168 [inline]
+>  hci_chan_del+0x70/0x1b0 net/bluetooth/hci_conn.c:2858
+>  l2cap_conn_free net/bluetooth/l2cap_core.c:1816 [inline]
+>  kref_put include/linux/kref.h:65 [inline]
+>  l2cap_conn_put+0x70/0xe0 net/bluetooth/l2cap_core.c:1830
+>  l2cap_sock_shutdown+0xa8a/0x1020 net/bluetooth/l2cap_sock.c:1377
+>  l2cap_sock_release+0x79/0x1d0 net/bluetooth/l2cap_sock.c:1416
+>  __sock_release net/socket.c:642 [inline]
+>  sock_close+0xbc/0x240 net/socket.c:1393
+>  __fput+0x3e9/0x9f0 fs/file_table.c:448
+>  task_work_run+0x24f/0x310 kernel/task_work.c:227
+>  ptrace_notify+0x2d2/0x380 kernel/signal.c:2522
+>  ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+>  ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+>  syscall_exit_work+0xc7/0x1d0 kernel/entry/common.c:173
+>  syscall_exit_to_user_mode_prepare kernel/entry/common.c:200 [inline]
+>  __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+>  syscall_exit_to_user_mode+0x24a/0x340 kernel/entry/common.c:218
+>  do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f7aceeaf449
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 19 00 00 90 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f7ace668218 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+> RAX: fffffffffffffffc RBX: 00007f7acef39328 RCX: 00007f7aceeaf449
+> RDX: 000000000000000e RSI: 0000000020000100 RDI: 0000000000000004
+> RBP: 00007f7acef39320 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+> R13: 0000000000000004 R14: 00007f7ace668670 R15: 000000000000000b
+>  </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__list_del_entry_valid_or_report+0x12c/0x190 lib/list_debug.c:5=
+9
+> Code: 8c 4c 89 fe 48 89 da e8 32 8c 37 fc 90 0f 0b 48 89 df e8 27 9f 14 f=
+d 48 c7 c7 a0 c0 60 8c 4c 89 fe 48 89 da e8 15 8c 37 fc 90 <0f> 0b 4c 89 e7=
+ e8 0a 9f 14 fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 cb
+> RSP: 0018:ffffc90003f6f998 EFLAGS: 00010246
+> RAX: 000000000000004e RBX: dead000000000122 RCX: 01454d423f7fbf00
+> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+> RBP: dffffc0000000000 R08: ffffffff819f077c R09: 1ffff920007eded0
+> R10: dffffc0000000000 R11: fffff520007eded1 R12: dead000000000122
+> R13: dffffc0000000000 R14: ffff8880352248d8 R15: ffff888021297e00
+> FS:  00007f7ace6686c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f7acef05b08 CR3: 000000003527c000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+> Reported-by: syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com
+> Fixes: 6ab54a717189 ("Bluetooth: L2CAP: Fix slab-use-after-free Read in l=
+2cap_send_cmd")
+> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 > ---
->  arch/x86/kvm/svm/sev.c | 30 +++++++++++++++++++++++++++---
->  arch/x86/kvm/svm/svm.c |  2 ++
->  arch/x86/kvm/svm/svm.h |  5 ++++-
->  3 files changed, 33 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 1ce67de9d..4b80ecbe7 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -252,6 +252,27 @@ static void sev_asid_free(struct kvm_sev_info *sev)
->  	sev->misc_cg = NULL;
->  }
->  
-> +void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> +{
-> +	/*
-> +	 * To optimize cache flushes when memory is reclaimed from an SEV VM,
-> +	 * track physical CPUs that enter the guest for SEV VMs and thus can
-> +	 * have encrypted, dirty data in the cache, and flush caches only for
-> +	 * CPUs that have entered the guest.
-> +	 */
-> +	cpumask_set_cpu(cpu, to_kvm_sev_info(vcpu->kvm)->wbinvd_dirty_mask);
-> +}
-> +
-> +static void sev_do_wbinvd(struct kvm *kvm)
-> +{
-> +	/*
-> +	 * TODO: Clear CPUs from the bitmap prior to flushing.  Doing so
-> +	 * requires serializing multiple calls and having CPUs mark themselves
-> +	 * "dirty" if they are currently running a vCPU for the VM.
-> +	 */
-> +	wbinvd_on_many_cpus(to_kvm_sev_info(kvm)->wbinvd_dirty_mask);
-> +}
-> +
->  static void sev_decommission(unsigned int handle)
->  {
->  	struct sev_data_decommission decommission;
-> @@ -448,6 +469,8 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
->  	ret = sev_platform_init(&init_args);
->  	if (ret)
->  		goto e_free;
-> +	if (!zalloc_cpumask_var(&sev->wbinvd_dirty_mask, GFP_KERNEL_ACCOUNT))
-> +		goto e_free;
->  
->  	/* This needs to happen after SEV/SNP firmware initialization. */
->  	if (vm_type == KVM_X86_SNP_VM) {
-> @@ -2778,7 +2801,7 @@ int sev_mem_enc_unregister_region(struct kvm *kvm,
->  	 * releasing the pages back to the system for use. CLFLUSH will
->  	 * not do this, so issue a WBINVD.
->  	 */
-> -	wbinvd_on_all_cpus();
-> +	sev_do_wbinvd(kvm);
->  
->  	__unregister_enc_region_locked(kvm, region);
->  
-> @@ -2926,6 +2949,7 @@ void sev_vm_destroy(struct kvm *kvm)
->  	}
->  
->  	sev_asid_free(sev);
-> +	free_cpumask_var(sev->wbinvd_dirty_mask);
->  }
->  
->  void __init sev_set_cpu_caps(void)
-> @@ -3129,7 +3153,7 @@ static void sev_flush_encrypted_page(struct kvm_vcpu *vcpu, void *va)
->  	return;
->  
->  do_wbinvd:
-> -	wbinvd_on_all_cpus();
-> +	sev_do_wbinvd(vcpu->kvm);
->  }
->  
->  void sev_guest_memory_reclaimed(struct kvm *kvm)
-> @@ -3143,7 +3167,7 @@ void sev_guest_memory_reclaimed(struct kvm *kvm)
->  	if (!sev_guest(kvm) || sev_snp_guest(kvm))
->  		return;
->  
-> -	wbinvd_on_all_cpus();
-> +	sev_do_wbinvd(kvm);
->  }
->  
->  void sev_free_vcpu(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index dd15cc635..f3b03b0d8 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -1565,6 +1565,8 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->  	}
->  	if (kvm_vcpu_apicv_active(vcpu))
->  		avic_vcpu_load(vcpu, cpu);
-> +	if (sev_guest(vcpu->kvm))
-> +		sev_vcpu_load(vcpu, cpu);
->  }
->  
->  static void svm_vcpu_put(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 43fa6a16e..82ec80cf4 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -112,6 +112,8 @@ struct kvm_sev_info {
->  	void *guest_req_buf;    /* Bounce buffer for SNP Guest Request input */
->  	void *guest_resp_buf;   /* Bounce buffer for SNP Guest Request output */
->  	struct mutex guest_req_mutex; /* Must acquire before using bounce buffers */
-> +	/* CPUs invoked VMRUN call wbinvd after guest memory is reclaimed */
-> +	struct cpumask *wbinvd_dirty_mask;
+>  include/net/bluetooth/l2cap.h |   2 +-
+>  net/bluetooth/l2cap_core.c    | 123 +++++++++++-----------------------
+>  net/bluetooth/l2cap_sock.c    |   4 +-
+>  3 files changed, 41 insertions(+), 88 deletions(-)
+>
+> diff --git a/include/net/bluetooth/l2cap.h b/include/net/bluetooth/l2cap.=
+h
+> index d9c767cf773d..6b90cfa15d88 100644
+> --- a/include/net/bluetooth/l2cap.h
+> +++ b/include/net/bluetooth/l2cap.h
+> @@ -668,7 +668,7 @@ struct l2cap_conn {
+>         struct l2cap_chan       *smp;
+>
+>         struct list_head        chan_l;
+> -       struct mutex            chan_lock;
+> +       struct mutex            lock;
+>         struct kref             ref;
+>         struct list_head        users;
 >  };
->  
->  struct kvm_svm {
-> @@ -763,6 +765,7 @@ void sev_snp_init_protected_guest_state(struct kvm_vcpu *vcpu);
->  int sev_gmem_prepare(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
->  void sev_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
->  int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn);
-> +void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
->  #else
->  static inline struct page *snp_safe_alloc_page_node(int node, gfp_t gfp)
+> diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+> index adb8c33ac595..5eedd6611f6c 100644
+> --- a/net/bluetooth/l2cap_core.c
+> +++ b/net/bluetooth/l2cap_core.c
+> @@ -119,7 +119,6 @@ static struct l2cap_chan *l2cap_get_chan_by_scid(stru=
+ct l2cap_conn *conn,
 >  {
-> @@ -793,7 +796,7 @@ static inline int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn)
->  {
->  	return 0;
+>         struct l2cap_chan *c;
+>
+> -       mutex_lock(&conn->chan_lock);
+>         c =3D __l2cap_get_chan_by_scid(conn, cid);
+>         if (c) {
+>                 /* Only lock if chan reference is not 0 */
+> @@ -127,7 +126,6 @@ static struct l2cap_chan *l2cap_get_chan_by_scid(stru=
+ct l2cap_conn *conn,
+>                 if (c)
+>                         l2cap_chan_lock(c);
+>         }
+> -       mutex_unlock(&conn->chan_lock);
+>
+>         return c;
 >  }
+> @@ -140,7 +138,6 @@ static struct l2cap_chan *l2cap_get_chan_by_dcid(stru=
+ct l2cap_conn *conn,
+>  {
+>         struct l2cap_chan *c;
+>
+> -       mutex_lock(&conn->chan_lock);
+>         c =3D __l2cap_get_chan_by_dcid(conn, cid);
+>         if (c) {
+>                 /* Only lock if chan reference is not 0 */
+> @@ -148,7 +145,6 @@ static struct l2cap_chan *l2cap_get_chan_by_dcid(stru=
+ct l2cap_conn *conn,
+>                 if (c)
+>                         l2cap_chan_lock(c);
+>         }
+> -       mutex_unlock(&conn->chan_lock);
+>
+>         return c;
+>  }
+> @@ -418,7 +414,7 @@ static void l2cap_chan_timeout(struct work_struct *wo=
+rk)
+>         if (!conn)
+>                 return;
+>
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>         /* __set_chan_timer() calls l2cap_chan_hold(chan) while schedulin=
+g
+>          * this work. No need to call l2cap_chan_hold(chan) here again.
+>          */
+> @@ -439,7 +435,7 @@ static void l2cap_chan_timeout(struct work_struct *wo=
+rk)
+>         l2cap_chan_unlock(chan);
+>         l2cap_chan_put(chan);
+>
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  struct l2cap_chan *l2cap_chan_create(void)
+> @@ -641,9 +637,9 @@ void __l2cap_chan_add(struct l2cap_conn *conn, struct=
+ l2cap_chan *chan)
+>
+>  void l2cap_chan_add(struct l2cap_conn *conn, struct l2cap_chan *chan)
+>  {
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>         __l2cap_chan_add(conn, chan);
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  void l2cap_chan_del(struct l2cap_chan *chan, int err)
+> @@ -731,9 +727,9 @@ void l2cap_chan_list(struct l2cap_conn *conn, l2cap_c=
+han_func_t func,
+>         if (!conn)
+>                 return;
+>
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>         __l2cap_chan_list(conn, func, data);
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  EXPORT_SYMBOL_GPL(l2cap_chan_list);
+> @@ -745,7 +741,7 @@ static void l2cap_conn_update_id_addr(struct work_str=
+uct *work)
+>         struct hci_conn *hcon =3D conn->hcon;
+>         struct l2cap_chan *chan;
+>
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>
+>         list_for_each_entry(chan, &conn->chan_l, list) {
+>                 l2cap_chan_lock(chan);
+> @@ -754,7 +750,7 @@ static void l2cap_conn_update_id_addr(struct work_str=
+uct *work)
+>                 l2cap_chan_unlock(chan);
+>         }
+>
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  static void l2cap_chan_le_connect_reject(struct l2cap_chan *chan)
+> @@ -1507,8 +1503,6 @@ static void l2cap_conn_start(struct l2cap_conn *con=
+n)
+>
+>         BT_DBG("conn %p", conn);
+>
+> -       mutex_lock(&conn->chan_lock);
 > -
-> +static inline void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu) {}
->  #endif
->  
->  /* vmenter.S */
+>         list_for_each_entry_safe(chan, tmp, &conn->chan_l, list) {
+>                 l2cap_chan_lock(chan);
+>
+> @@ -1577,8 +1571,6 @@ static void l2cap_conn_start(struct l2cap_conn *con=
+n)
+>
+>                 l2cap_chan_unlock(chan);
+>         }
+> -
+> -       mutex_unlock(&conn->chan_lock);
+>  }
+>
+>  static void l2cap_le_conn_ready(struct l2cap_conn *conn)
+> @@ -1624,7 +1616,7 @@ static void l2cap_conn_ready(struct l2cap_conn *con=
+n)
+>         if (hcon->type =3D=3D ACL_LINK)
+>                 l2cap_request_info(conn);
+>
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>
+>         list_for_each_entry(chan, &conn->chan_l, list) {
+>
+> @@ -1642,7 +1634,7 @@ static void l2cap_conn_ready(struct l2cap_conn *con=
+n)
+>                 l2cap_chan_unlock(chan);
+>         }
+>
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>
+>         if (hcon->type =3D=3D LE_LINK)
+>                 l2cap_le_conn_ready(conn);
+> @@ -1657,14 +1649,10 @@ static void l2cap_conn_unreliable(struct l2cap_co=
+nn *conn, int err)
+>
+>         BT_DBG("conn %p", conn);
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         list_for_each_entry(chan, &conn->chan_l, list) {
+>                 if (test_bit(FLAG_FORCE_RELIABLE, &chan->flags))
+>                         l2cap_chan_set_err(chan, err);
+>         }
+> -
+> -       mutex_unlock(&conn->chan_lock);
+>  }
+>
+>  static void l2cap_info_timeout(struct work_struct *work)
+> @@ -1675,7 +1663,9 @@ static void l2cap_info_timeout(struct work_struct *=
+work)
+>         conn->info_state |=3D L2CAP_INFO_FEAT_MASK_REQ_DONE;
+>         conn->info_ident =3D 0;
+>
+> +       mutex_lock(&conn->lock);
+>         l2cap_conn_start(conn);
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  /*
+> @@ -1767,6 +1757,8 @@ static void l2cap_conn_del(struct hci_conn *hcon, i=
+nt err)
+>
+>         BT_DBG("hcon %p conn %p, err %d", hcon, conn, err);
+>
+> +       mutex_lock(&conn->lock);
+> +
+>         kfree_skb(conn->rx_skb);
+>
+>         skb_queue_purge(&conn->pending_rx);
+> @@ -1785,8 +1777,6 @@ static void l2cap_conn_del(struct hci_conn *hcon, i=
+nt err)
+>         /* Force the connection to be immediately dropped */
+>         hcon->disc_timeout =3D 0;
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         /* Kill channels */
+>         list_for_each_entry_safe(chan, l, &conn->chan_l, list) {
+>                 l2cap_chan_hold(chan);
+> @@ -1800,12 +1790,11 @@ static void l2cap_conn_del(struct hci_conn *hcon,=
+ int err)
+>                 l2cap_chan_put(chan);
+>         }
+>
+> -       mutex_unlock(&conn->chan_lock);
+> -
+>         if (conn->info_state & L2CAP_INFO_FEAT_MASK_REQ_SENT)
+>                 cancel_delayed_work_sync(&conn->info_timer);
+>
+>         hcon->l2cap_data =3D NULL;
+> +       mutex_unlock(&conn->lock);
+>         l2cap_conn_put(conn);
+>  }
+>
+> @@ -2924,8 +2913,6 @@ static void l2cap_raw_recv(struct l2cap_conn *conn,=
+ struct sk_buff *skb)
+>
+>         BT_DBG("conn %p", conn);
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         list_for_each_entry(chan, &conn->chan_l, list) {
+>                 if (chan->chan_type !=3D L2CAP_CHAN_RAW)
+>                         continue;
+> @@ -2940,8 +2927,6 @@ static void l2cap_raw_recv(struct l2cap_conn *conn,=
+ struct sk_buff *skb)
+>                 if (chan->ops->recv(chan, nskb))
+>                         kfree_skb(nskb);
+>         }
+> -
+> -       mutex_unlock(&conn->chan_lock);
+>  }
+>
+>  /* ---- L2CAP signalling commands ---- */
+> @@ -3960,7 +3945,6 @@ static void l2cap_connect(struct l2cap_conn *conn, =
+struct l2cap_cmd_hdr *cmd,
+>                 goto response;
+>         }
+>
+> -       mutex_lock(&conn->chan_lock);
+>         l2cap_chan_lock(pchan);
+>
+>         /* Check if the ACL is secure enough (if not SDP) */
+> @@ -4067,7 +4051,6 @@ static void l2cap_connect(struct l2cap_conn *conn, =
+struct l2cap_cmd_hdr *cmd,
+>         }
+>
+>         l2cap_chan_unlock(pchan);
+> -       mutex_unlock(&conn->chan_lock);
+>         l2cap_chan_put(pchan);
+>  }
+>
+> @@ -4106,27 +4089,19 @@ static int l2cap_connect_create_rsp(struct l2cap_=
+conn *conn,
+>         BT_DBG("dcid 0x%4.4x scid 0x%4.4x result 0x%2.2x status 0x%2.2x",
+>                dcid, scid, result, status);
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         if (scid) {
+>                 chan =3D __l2cap_get_chan_by_scid(conn, scid);
+> -               if (!chan) {
+> -                       err =3D -EBADSLT;
+> -                       goto unlock;
+> -               }
+> +               if (!chan)
+> +                       return -EBADSLT;
+>         } else {
+>                 chan =3D __l2cap_get_chan_by_ident(conn, cmd->ident);
+> -               if (!chan) {
+> -                       err =3D -EBADSLT;
+> -                       goto unlock;
+> -               }
+> +               if (!chan)
+> +                       return -EBADSLT;
+>         }
+>
+>         chan =3D l2cap_chan_hold_unless_zero(chan);
+> -       if (!chan) {
+> -               err =3D -EBADSLT;
+> -               goto unlock;
+> -       }
+> +       if (!chan)
+> +               return -EBADSLT;
+>
+>         err =3D 0;
+>
+> @@ -4164,9 +4139,6 @@ static int l2cap_connect_create_rsp(struct l2cap_co=
+nn *conn,
+>         l2cap_chan_unlock(chan);
+>         l2cap_chan_put(chan);
+>
+> -unlock:
+> -       mutex_unlock(&conn->chan_lock);
+> -
+>         return err;
+>  }
+>
+> @@ -4454,11 +4426,7 @@ static inline int l2cap_disconnect_req(struct l2ca=
+p_conn *conn,
+>
+>         chan->ops->set_shutdown(chan);
+>
+> -       l2cap_chan_unlock(chan);
+> -       mutex_lock(&conn->chan_lock);
+> -       l2cap_chan_lock(chan);
+>         l2cap_chan_del(chan, ECONNRESET);
+> -       mutex_unlock(&conn->chan_lock);
+>
+>         chan->ops->close(chan);
+>
+> @@ -4495,11 +4463,7 @@ static inline int l2cap_disconnect_rsp(struct l2ca=
+p_conn *conn,
+>                 return 0;
+>         }
+>
+> -       l2cap_chan_unlock(chan);
+> -       mutex_lock(&conn->chan_lock);
+> -       l2cap_chan_lock(chan);
+>         l2cap_chan_del(chan, 0);
+> -       mutex_unlock(&conn->chan_lock);
+>
+>         chan->ops->close(chan);
+>
+> @@ -4697,13 +4661,9 @@ static int l2cap_le_connect_rsp(struct l2cap_conn =
+*conn,
+>         BT_DBG("dcid 0x%4.4x mtu %u mps %u credits %u result 0x%2.2x",
+>                dcid, mtu, mps, credits, result);
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         chan =3D __l2cap_get_chan_by_ident(conn, cmd->ident);
+> -       if (!chan) {
+> -               err =3D -EBADSLT;
+> -               goto unlock;
+> -       }
+> +       if (!chan)
+> +               return -EBADSLT;
+>
+>         err =3D 0;
+>
+> @@ -4751,9 +4711,6 @@ static int l2cap_le_connect_rsp(struct l2cap_conn *=
+conn,
+>
+>         l2cap_chan_unlock(chan);
+>
+> -unlock:
+> -       mutex_unlock(&conn->chan_lock);
+> -
+>         return err;
+>  }
+>
+> @@ -4865,7 +4822,6 @@ static int l2cap_le_connect_req(struct l2cap_conn *=
+conn,
+>                 goto response;
+>         }
+>
+> -       mutex_lock(&conn->chan_lock);
+>         l2cap_chan_lock(pchan);
+>
+>         if (!smp_sufficient_security(conn->hcon, pchan->sec_level,
+> @@ -4931,7 +4887,6 @@ static int l2cap_le_connect_req(struct l2cap_conn *=
+conn,
+>
+>  response_unlock:
+>         l2cap_chan_unlock(pchan);
+> -       mutex_unlock(&conn->chan_lock);
+>         l2cap_chan_put(pchan);
+>
+>         if (result =3D=3D L2CAP_CR_PEND)
+> @@ -5065,7 +5020,6 @@ static inline int l2cap_ecred_conn_req(struct l2cap=
+_conn *conn,
+>                 goto response;
+>         }
+>
+> -       mutex_lock(&conn->chan_lock);
+>         l2cap_chan_lock(pchan);
+>
+>         if (!smp_sufficient_security(conn->hcon, pchan->sec_level,
+> @@ -5140,7 +5094,6 @@ static inline int l2cap_ecred_conn_req(struct l2cap=
+_conn *conn,
+>
+>  unlock:
+>         l2cap_chan_unlock(pchan);
+> -       mutex_unlock(&conn->chan_lock);
+>         l2cap_chan_put(pchan);
+>
+>  response:
+> @@ -5177,8 +5130,6 @@ static inline int l2cap_ecred_conn_rsp(struct l2cap=
+_conn *conn,
+>         BT_DBG("mtu %u mps %u credits %u result 0x%4.4x", mtu, mps, credi=
+ts,
+>                result);
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         cmd_len -=3D sizeof(*rsp);
+>
+>         list_for_each_entry_safe(chan, tmp, &conn->chan_l, list) {
+> @@ -5264,8 +5215,6 @@ static inline int l2cap_ecred_conn_rsp(struct l2cap=
+_conn *conn,
+>                 l2cap_chan_unlock(chan);
+>         }
+>
+> -       mutex_unlock(&conn->chan_lock);
+> -
+>         return err;
+>  }
+>
+> @@ -5378,8 +5327,6 @@ static inline int l2cap_le_command_rej(struct l2cap=
+_conn *conn,
+>         if (cmd_len < sizeof(*rej))
+>                 return -EPROTO;
+>
+> -       mutex_lock(&conn->chan_lock);
+> -
+>         chan =3D __l2cap_get_chan_by_ident(conn, cmd->ident);
+>         if (!chan)
+>                 goto done;
+> @@ -5394,7 +5341,6 @@ static inline int l2cap_le_command_rej(struct l2cap=
+_conn *conn,
+>         l2cap_chan_put(chan);
+>
+>  done:
+> -       mutex_unlock(&conn->chan_lock);
+>         return 0;
+>  }
+>
+> @@ -6849,8 +6795,12 @@ static void process_pending_rx(struct work_struct =
+*work)
+>
+>         BT_DBG("");
+>
+> +       mutex_lock(&conn->lock);
+> +
+>         while ((skb =3D skb_dequeue(&conn->pending_rx)))
+>                 l2cap_recv_frame(conn, skb);
+> +
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  static struct l2cap_conn *l2cap_conn_add(struct hci_conn *hcon)
+> @@ -6889,7 +6839,7 @@ static struct l2cap_conn *l2cap_conn_add(struct hci=
+_conn *hcon)
+>                 conn->local_fixed_chan |=3D L2CAP_FC_SMP_BREDR;
+>
+>         mutex_init(&conn->ident_lock);
+> -       mutex_init(&conn->chan_lock);
+> +       mutex_init(&conn->lock);
+>
+>         INIT_LIST_HEAD(&conn->chan_l);
+>         INIT_LIST_HEAD(&conn->users);
+> @@ -7080,7 +7030,7 @@ int l2cap_chan_connect(struct l2cap_chan *chan, __l=
+e16 psm, u16 cid,
+>                 }
+>         }
+>
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>         l2cap_chan_lock(chan);
+>
+>         if (cid && __l2cap_get_chan_by_dcid(conn, cid)) {
+> @@ -7121,7 +7071,7 @@ int l2cap_chan_connect(struct l2cap_chan *chan, __l=
+e16 psm, u16 cid,
+>
+>  chan_unlock:
+>         l2cap_chan_unlock(chan);
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>  done:
+>         hci_dev_unlock(hdev);
+>         hci_dev_put(hdev);
+> @@ -7333,7 +7283,7 @@ static void l2cap_security_cfm(struct hci_conn *hco=
+n, u8 status, u8 encrypt)
+>
+>         BT_DBG("conn %p status 0x%2.2x encrypt %u", conn, status, encrypt=
+);
+>
+> -       mutex_lock(&conn->chan_lock);
+> +       mutex_lock(&conn->lock);
+>
+>         list_for_each_entry(chan, &conn->chan_l, list) {
+>                 l2cap_chan_lock(chan);
+> @@ -7407,7 +7357,7 @@ static void l2cap_security_cfm(struct hci_conn *hco=
+n, u8 status, u8 encrypt)
+>                 l2cap_chan_unlock(chan);
+>         }
+>
+> -       mutex_unlock(&conn->chan_lock);
+> +       mutex_unlock(&conn->lock);
+>  }
+>
+>  /* Append fragment into frame respecting the maximum len of rx_skb */
+> @@ -7506,6 +7456,8 @@ void l2cap_recv_acldata(struct hci_conn *hcon, stru=
+ct sk_buff *skb, u16 flags)
+>
+>         BT_DBG("conn %p len %u flags 0x%x", conn, skb->len, flags);
+>
+> +       mutex_lock(&conn->lock);
+> +
+>         switch (flags) {
+>         case ACL_START:
+>         case ACL_START_NO_FLUSH:
+> @@ -7530,7 +7482,7 @@ void l2cap_recv_acldata(struct hci_conn *hcon, stru=
+ct sk_buff *skb, u16 flags)
+>                 if (len =3D=3D skb->len) {
+>                         /* Complete frame received */
+>                         l2cap_recv_frame(conn, skb);
+> -                       return;
+> +                       goto unlock;
+>                 }
+>
+>                 BT_DBG("Start: total len %d, frag len %u", len, skb->len)=
+;
+> @@ -7592,10 +7544,11 @@ void l2cap_recv_acldata(struct hci_conn *hcon, st=
+ruct sk_buff *skb, u16 flags)
+>                 break;
+>         }
+>
+> -       l2cap_conn_put(conn);
+> -
+>  drop:
+>         kfree_skb(skb);
+> +unlock:
+> +       mutex_unlock(&conn->lock);
+> +       l2cap_conn_put(conn);
+>  }
+>
+>  static struct hci_cb l2cap_cb =3D {
+> diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
+> index 46ea0bee2259..831ab9b97001 100644
+> --- a/net/bluetooth/l2cap_sock.c
+> +++ b/net/bluetooth/l2cap_sock.c
+> @@ -1366,14 +1366,14 @@ static int l2cap_sock_shutdown(struct socket *soc=
+k, int how)
+>
+>         if (conn)
+>                 /* mutex lock must be taken before l2cap_chan_lock() */
+> -               mutex_lock(&conn->chan_lock);
+> +               mutex_lock(&conn->lock);
+>
+>         l2cap_chan_lock(chan);
+>         l2cap_chan_close(chan, 0);
+>         l2cap_chan_unlock(chan);
+>
+>         if (conn) {
+> -               mutex_unlock(&conn->chan_lock);
+> +               mutex_unlock(&conn->lock);
+>                 l2cap_conn_put(conn);
+>         }
+>
+> --
+> 2.48.1
+>
+
+
+--=20
+Luiz Augusto von Dentz
