@@ -1,72 +1,45 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB261A317B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6471F416F;
+	Thu,  6 Feb 2025 16:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857582; cv=none; b=uTYRlCuz1RziJjwUU0wnWZr7K3QjMhY1BG3A9sJBCwFyKsd6PKppYxeFTSITiwLINww/sq22WSoluFaXHQmPcW1bbKU5iXBvnFX6Cc0HjZvk7q1H6wsgqo2b/ICbG9cmlT19SWR7ZonSuonbjhYBl4t+zrUjHrtIhc53HmacVNU=
+	t=1738857668; cv=none; b=tvPeLl4hjwq/tArrU0Ffp8jMHeX/OzM4Li/w3N3epBs+WFGmzwYrvxYbKBpP1bcvh2igHWGMH6b7SLDsyitjkzMvTSMVyD7j480fweUhE6DK83xKTw4x7thRkVQrMSKKteiwXDkOb5b8bhyp5Ly+gfbLWXnZ7QxGchL2qLFYlpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857582; c=relaxed/simple;
-	bh=wfWG1lBorKdXeSnfHeDzLFkNJVBsnc4Vd66lUdn9zGE=;
+	s=arc-20240116; t=1738857668; c=relaxed/simple;
+	bh=CRbUrt8hTzi7475aDlmDlLKM7hBdm42ThEEOGqT4H4g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LNYpiDqq9KZ1v6F2/5x8KzObol20k7dg0OFhq5eUt4C2D0sHwrDXNcW10nWB2D/XDP3cQF/BwQYyEq0i8EYL2mnYJUNhF111elAqIjGaOUi24xUYMcb3S8gvyEo5fzKu4r2OqFIieniNkPheT7xNFknp1URse+KfiAI7lVscYyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Jam60QJw; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tmz0rFm0bolvefaMWC7FfgyPdcsQZz3DfjlmvC2idh27Uw4V5vSp0XAzHYBpVjWKzNEwgbEkp/P9oyaikpW87eSAIWtJARx8tHrDCKXa60edwdb+7XwRl3TeaeYhxCCVODNcAlbIqVTuyzBDROv1g7jB8DFo4s86arwn2A2T9aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fxvu6Zx0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Jam60QJw"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7be8f281714so89496185a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738857579; x=1739462379; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4rgX3enkDd37pO8Eu6+jW5LrbU18LPSV6Ey4Xi/pbpE=;
-        b=Jam60QJwtO8nYmi8PXsRfGX7Yl35tjWmgQ0Ui3Q1FNoRg3sCgKA31Xs13UoeI7CIBa
-         bglsgdc3S/QuQbWJde15hqWsAX9NDhmAv0kXkkJ43Ghg5URzJjyI3JZvjfowBA1ZIhND
-         3MOsLLCFHMDBYbwBuUhJmca1qSe+eE3Pjyz6A3SEYgFQEy1F56dzGPw3Kck932jbqSyB
-         8OsQMAYcbNxIxjZyU1MR3HuU8olV7wwhwqm56GkBV+ZMEuBbmdT3CRU72Ptc/y/nKT0a
-         +evArztY6vvkh8HdCItkFFbvkpuM4ulTvqRJS3voxK7AbqnvNxbKx1Zwb8OVzI1caYXn
-         0HAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738857579; x=1739462379;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4rgX3enkDd37pO8Eu6+jW5LrbU18LPSV6Ey4Xi/pbpE=;
-        b=X7GwsHhfXZ/n0oo9A7NT5WeWkcF3w/TsvTn2phOhulujc+Wkmy6e3Ii7ISVwHkgNJt
-         Dcgh5N7OfwkqcRAj/I0uS7U5n2plwVPkwsZbfYg2twyXLxHlj+KmZ93r8iu2JthSKHQJ
-         WxypEfHteZfeL7vIAPzRgFRTWYxb9s6FilrQsJ6e3wMqO9Zc0lJYXsOx5FY8cHBlCeEk
-         7glNNkjKLvw0teZqoX18rUZbv6FfQxnUPWLo9surt1iOC0T0+Ih81hHiMWK2DWfQkrWO
-         nd2qSjIjAqk/5nNhwQZRGQNjrAvpSKT6XQArxZlGqQT8w4QB03nWPGvDCB8rOutQZjjX
-         9xsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVU4VSWwLMiyRCgkKmc2yXQ4HOi1BEHz18MtbydFezcqiW5KdHOTpTGyexHAZT5/5LUvOBilQO7eOrViQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxORF6zEcclCg/ya0/l71IQqP5Z+rvlO9ge5Esus2rle7jHRUbw
-	fLH/Oc3pIz5aMCJ0u6az2dJT8iWNF2WSIGcAh2pigN46zX71/g/87EmzuItXBqg=
-X-Gm-Gg: ASbGncuv+bPI/o8p85LRA+NJu8JDShLpTfanVMcMEJbCCR4Jqo9DSQ755EhLiHEKSSr
-	ynZ8v0xUOjA8mkLteGzwtD2s2xxuW4R2Xi+8MJ7LXgeccIhaJa8DOixj6Qm0vYSzK06Fw9MUI0S
-	0LdxDj4rVrW6zEZv8IA4YxsaoCiHqepe21UxRXv55UrCAiu//CAVToSSPYFozcED8Vf1V7WN25d
-	A4eI1ezeyOO83M3eYPSoCTHG/1EzaqQ3uYhQacDxQE/hQx7dek8XachlaB4I2JXv9/EnoifVQn7
-	BUehwhkKcIBNvjksLIB4vRClVRrpBAsTAAWDQy8zufyRXAVBFRFFNfXkwiIxVFTUwJvAzr/sdg=
-	=
-X-Google-Smtp-Source: AGHT+IGVD8lviSGrZUHhDUeXaeng33mAdOdehqoxqNfFEFyKhbcfoqIeOcq35NP8wXT2MTIiiQ0kcA==
-X-Received: by 2002:a05:620a:40d4:b0:7b1:492c:ba83 with SMTP id af79cd13be357-7c039f95dfemr1002655885a.10.1738857579502;
-        Thu, 06 Feb 2025 07:59:39 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041ded12asm75286685a.5.2025.02.06.07.59.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 07:59:39 -0800 (PST)
-Date: Thu, 6 Feb 2025 10:59:37 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: CXL Boot to Bash - Section 2: The Drivers
-Message-ID: <Z6TcaaScBWzZvLWW@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
- <67a4069572eab_2d2c294d4@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fxvu6Zx0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F367C4CEDD;
+	Thu,  6 Feb 2025 16:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738857667;
+	bh=CRbUrt8hTzi7475aDlmDlLKM7hBdm42ThEEOGqT4H4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fxvu6Zx0Q8P6eCMe27z0y2ijR0hj+oqqiDVgyU0FaM/WikmqoNkuynWHz8cFAweNB
+	 LprWdS7bUJcjd34W9B4dU/MK7oCkEYhrzXjsZ7zOhqHHRMaydF1h5r7VHl2x4UhALD
+	 XSrlvV8lpc6tAOP8PZU9JOodxhbDVhrMq2S4mCnc+aFZXZmht4LDL9ce00FuSV+XEp
+	 OKyIEwNtJqsLVHpriVmMqEUK1Nj+1Ep3Iu+HrJ2rK357D1pti3uo3RCuJq/UK4qB3m
+	 awo3jKHl0qZepCjaWzj2DYVRXjHjOwGT/Q5nBjutRntk+Ww5wVnm6hlKrobRRGtwUk
+	 +24DXo11ef+aw==
+Date: Thu, 6 Feb 2025 16:01:03 +0000
+From: Simon Horman <horms@kernel.org>
+To: Peter Seiderer <ps.report@gmx.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH net-next v4 13/17] net: pktgen: fix access outside of
+ user given buffer in pktgen_if_write()
+Message-ID: <20250206160103.GV554665@kernel.org>
+References: <20250205131153.476278-1-ps.report@gmx.net>
+ <20250205131153.476278-14-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,123 +48,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67a4069572eab_2d2c294d4@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250205131153.476278-14-ps.report@gmx.net>
 
-On Wed, Feb 05, 2025 at 04:47:17PM -0800, Dan Williams wrote:
-> Gregory Price wrote:
-> > [/sys/bus/cxl/devices]# ls
-> > dax_region0  decoder0.0  decoder1.0  decoder2.0 .....
-> > dax_region1  decoder0.1  decoder1.1  decoder3.0 .....
-> > 
-> > ^^^ These dax regions require `CONFIG_DEV_DAX_CXL` enabled to fully
-> > surface as dax devices, which can then be converted to system ram.
+On Wed, Feb 05, 2025 at 02:11:49PM +0100, Peter Seiderer wrote:
+> Honour the user given buffer size for the hex32_arg(), num_arg(),
+> strn_len(), get_imix_entries() and get_labels() calls (otherwise they will
+> access memory outside of the user given buffer).
 > 
-> At least for this problem the plan is to fall back to
-> CONFIG_DEV_DAX_HMEM [1] which skips all of the RAS and device
-> enumeration benefits and just shunts EFI_MEMORY_SP over to device_dax.
+> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+> ---
+> Changes v3 -> v4:
+>   - replace C99 comment (suggested by Paolo Abeni)
+>   - drop available characters check in strn_len() (suggested by Paolo Abeni)
+>   - factored out patch 'net: pktgen: align some variable declarations to the
+>     most common pattern' (suggested by Paolo Abeni)
+>   - factored out patch 'net: pktgen: remove extra tmp variable (re-use len
+>     instead)' (suggested by Paolo Abeni)
+>   - factored out patch 'net: pktgen: remove some superfluous variable
+>     initializing' (suggested by Paolo Abeni)
+>   - factored out patch 'net: pktgen: fix mpls maximum labels list parsing'
+>     (suggested by Paolo Abeni)
+>   - factored out 'net: pktgen: hex32_arg/num_arg error out in case no
+>     characters are available' (suggested by Paolo Abeni)
+>   - factored out 'net: pktgen: num_arg error out in case no valid character
+>     is parsed' (suggested by Paolo Abeni)
 > 
-
-Hm, would this actually happen in the scenario where CONFIG_DEV_DAX_CXL
-is not enabled but everything else is?  The region0 still gets created
-and associated with the resource, but the dax_region0 never gets
-created.
-
-On one system I have I see the following:
-
-c050000000-fcefffffff : Soft Reserved
-  c050000000-fcefffffff : CXL Window 0
-    c050000000-fcefffffff : region0
-      c050000000-fcefffffff : dax0.0
-        c050000000-fcefffffff : System RAM (kmem)
-fcf0000000-ffffffffff : Reserved
-10000000000-1035fffffff : Soft Reserved
-  10000000000-1035fffffff : CXL Window 1
-    10000000000-1035fffffff : region1
-      10000000000-1035fffffff : dax1.0
-        10000000000-1035fffffff : System RAM (kmem)
-
-I would expect the above HMEM/shunt to only work if everything down
-through CXL Window 0 is torn down.
-
-But if CONFIG_DEV_DAX_CXL is not enabled, everything "succeeds", it just
-doesn't "Do what you want"(TM) - dax0.0 and RAM entries are absent.
-
-It makes me wonder whether the driver over-componentized the build.
-
-> I am otherwise open to suggestions about a better model for how to
-> handle a type of memory capacity that elicits diverging opinions on
-> whether it should be treated as System RAM, dedicated application
-> memory, or some kind of cold-memory swap target.
+> Changes v2 -> v3:
+>   - no changes
 > 
+> Changes v1 -> v2:
+>   - additional fix get_imix_entries() and get_labels()
 
-My gut tells me there's no "elegant solution" here given that user
-intent is fairly unknowable - i.e. best we can do is make the build
-and boot options easier to understand.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-> > ---------------------------------------------------------------
-> > Step 6: DAX surfacing Memory Blocks - First bit of User Policy.
-> > ---------------------------------------------------------------
-> > 
-> > The last step in surfacing memory to allocators is to convert a dax
-> > device into memory blocks. On most default kernel builds, dax devices
-> > are not automatically converted to SystemRAM.
-> 
-> I thought most distributions are shipping with
-> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE, or the default online udev rule?
-> For example Fedora is CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=y and RHEL is
-> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=n, but with the udev hotplug rule.
-> 
+> ---
+>  net/core/pktgen.c | 176 ++++++++++++++++++++++++++++++----------------
 
-Good point, my bias take showing up in the notes here.  I didn't know
-RHEL had gotten as far as a udev rule already. I'll adjust my notes.
+...
 
-But this also hides some nuance as well - the default behavior onlines
-memory into ZONE_NORMAL with DEFAULT_ONLINE (next section).  
+> @@ -1015,7 +1025,8 @@ static ssize_t pktgen_if_write(struct file *file,
+>  	}
+>  
+>  	if (!strcmp(name, "min_pkt_size")) {
+> -		len = num_arg(&user_buffer[i], DEC_10_DIGITS, &value);
+> +		max = min(DEC_10_DIGITS, count - i);
+> +		len = num_arg(&user_buffer[i], max, &value);
+>  		if (len < 0)
+>  			return len;
+>  
 
-> > Alternatively, this can be done at Build or Boot time using
-> >   CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE   (v6.13 or below)
-> >   CONFIG_MHP_DEFAULT_ONLINE_TYPE_*       (v6.14 or above)
-> >   memhp_default_state=*                  (boot param predating cxl)
-> 
-> Oh, TIL the new CONFIG_MHP_DEFAULT_ONLINE_TYPE_* option.
-> 
+As an aside:
 
-It was only just added:
-https://lore.kernel.org/linux-mm/20241226182918.648799-1-gourry@gourry.net/
+The code immediately following the hunk above is as follows.
+And this block it is representative of many (all?) of the code
+modified by the hunks that make up the remainder of this patch.
 
-Basically creates parity between memhp_default_state and build options.
+My observation is that i is incremented but never used again -
+the function subsequently returns at the end of the if condition.
 
-> > The base is 256MB aligned (the minimum for the CXL Spec), and the
-> > window size is 512MB.  This results in a loss of almost a full memory
-> > block worth of memory (~1280MB on the front, and ~512MB on the back).
-> > 
-> > This is a loss of ~0.7% of capacity (1.5GB) for that region (121.25GB).
-> 
-> This feels like an example, of "hey platform vendors, I understand
-> that spec grants you the freedom to misalign, please refrain from taking
-> advantage of that freedom".
-> 
+So perhaps it would be a nice, as a follow-up, to clean this up
+be removing the increment of i from this and similar blocks.
 
-Only x86 appears to actually do this (presently) - so is this a real
-constraint or just a quirk of how the x86 arch code has chosen to
-"optimize memory block size"?
 
-Granted I'm a platform consumer, not a vendor - but I wouldn't even know
-where to look to see where this constraint is defined (if it is).
+		if (len < 0)
+			return len;
 
-All I'd know is "CXL Says I can align to 256MB, and minimum memory block
-size on linux is 256MB so allons y!"
+		i += len;
+		if (value < 14 + 20 + 8)
+			value = 14 + 20 + 8;
+		if (value != pkt_dev->min_pkt_size) {
+			pkt_dev->min_pkt_size = value;
+			pkt_dev->cur_pkt_size = value;
+		}
+		sprintf(pg_result, "OK: min_pkt_size=%d",
+			pkt_dev->min_pkt_size);
+		return count;
+	}
 
-On the linux side - these platforms are now out there, in the wild.
-So the surface impression now appears to be that linux just throws
-away ~0.5% of your CXL capacity for no reason on these platforms.
-
-That said, I also understand that more memory blocks might affect
-allocation performance when the system is pressured - but losing
-gigabytes of memory can also reduce performance.
-(Preview of one of my next nuance additions in section 3)
-
-If this (advisement) change is unwelcome, then we should be spewing
-a really loud warning somewhere so vendors get signal for consumers.
-
-~Gregory
+...
