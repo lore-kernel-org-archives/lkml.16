@@ -1,131 +1,218 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AAB1C6FE0;
-	Thu,  6 Feb 2025 14:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0003C6125;
+	Thu,  6 Feb 2025 14:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738851155; cv=none; b=fF0PAXYuGHtlLdoCEIAa71G4tvw9319WNCaSzLkzU9Is3B6RethBOGi9Men4Ak6O1qmUwGBoPpTaFNd4Kq48yN+XtvzrO6mxxWCcbcEk/iYDsay8Qo632HvhIf5v0lr6okk857Wc9oglLogCNo5rxE8443HDPn987BiIZhe6g1E=
+	t=1738851319; cv=none; b=qF6JRc5zgHsShPzr6O2Ju074bUsK+GraghyEsQ9YO/6zU2Pa3pPenr/iBwLBIWPeLygVXM5oGfSy+nFA4kW1TxtfIGs2KyUUlwIAYRnjzomJrieLEsH7cw+1ZMV+uNeYNnvXJw8ZKEOhwkhl64OyBu8zWfhI5WD++gKUuOrlmR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738851155; c=relaxed/simple;
-	bh=f9xA7XWmR1We7sDj+xor/lbZ7RmI0r/FRir2tEAOjkA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DCAWYz2eNIhplzkcpQqyQenZGz9ERZdCpFnx+yXlpVk5YviHPIbVNQRmaEU+4k5ItFbkU+shF8Gwxht5xZ54H6hrqQsYI+J5lNpQxPK1DkT4rb7ps4CiWYtDdAKBCmALAGiNO6CL7mpUKMR7Z2hs4lw/MbfNrg8mWlPWqlh7uFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=o5tn02Wp; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738851319; c=relaxed/simple;
+	bh=jIaknoI46pH98XJg7IGd20sMvKBtXZc+OdbHliQJ2ig=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mIyiq+lWA+dMnAD3X3tPVEtav+1IsUm/E84V+fx8GemKIxO80qn0r1Nq+BoNXXC8i+TYFLB6f0vuIaHFW4knAyP/ewuXuGltgAqXYYZUI4CKHa409e/yawo+WizjjC3oS+vn4N6R+bSI1NbXRwZoHQyyOPhWy/SgTA0XVS3+9dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K2otohJ0; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="o5tn02Wp"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516C7a0v024426;
-	Thu, 6 Feb 2025 14:12:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=f9xA7X
-	WmR1We7sDj+xor/lbZ7RmI0r/FRir2tEAOjkA=; b=o5tn02Wp3wpRVP9tx40Cnr
-	nh/1KQgf57b5pIRO0uH27Icpe4p3w9hEKLph+BfWKNZJ9Tce2eX3QR6lKuKit86P
-	C1ohyOs+WOevlDZ4wFzHcnp1NL42oRsCWuRTES0P8Ke9DnY5YuV+g55ZWNmLc2yB
-	8RvI6fatvtNB/y6XlyPBhtk7CKcd+VzztlobCn44f9sc6Q18PL9cGYH2lFqnw+0O
-	cL4GsR/v8BRxDmxtrQhbrTSllU5eW5cZOLSIC3WpOQapdsfUD6/JfmRTC5WQSi8o
-	vFHbyxjQIk+c3ipBNfQlq+wSr7yTj8EfswReMszUqCy8/dAN0gQbRJtUPdTYcJLQ
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44mattdwru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 14:12:31 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 516AgmWg007127;
-	Thu, 6 Feb 2025 14:12:30 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxayxs6j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 14:12:30 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 516ECTLj22938308
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Feb 2025 14:12:29 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5556B58062;
-	Thu,  6 Feb 2025 14:12:29 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 558A358055;
-	Thu,  6 Feb 2025 14:12:28 +0000 (GMT)
-Received: from [9.61.248.214] (unknown [9.61.248.214])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Feb 2025 14:12:28 +0000 (GMT)
-Message-ID: <02675184-0ce5-4f08-9d5d-f42987b77b5b@linux.ibm.com>
-Date: Thu, 6 Feb 2025 09:12:27 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2otohJ0"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f49837d36so2493675ad.3;
+        Thu, 06 Feb 2025 06:15:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738851317; x=1739456117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PtIoyen/3p+LgpeUZGdjWbDAFiF6GML9/9a6imyK+Q=;
+        b=K2otohJ0+ZKakSP82UYNWMQeud8DpGpgcypYMpXo/tPLuz5gEMAmwCRQmoEMYnFqKs
+         ucV1M//CxDgimTTksssjEzldvlnvPXotfwXcjYvYV/rlKqpP/ZQaAewKQM93ZGNeZ7pX
+         dPdHYwPD4lsnE7XKdeXYq2uuEhqOFk0ToF53AmDVFCFSZVWKm82YOTTyO68JIRhC+una
+         L89ccasSbqzX1KBhvaOG8FeBqQ7NHyFXLqu81cuB4ypYsrgSkYxPSVXFAJJvIdx5WbyD
+         wcuCh6I23hA/nBkJl+aQn4MjjcnVRiRy1781FGZT73hS8vu4pIGoNyf8zy61JDw83bZ1
+         Q9zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738851317; x=1739456117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4PtIoyen/3p+LgpeUZGdjWbDAFiF6GML9/9a6imyK+Q=;
+        b=mUvozYzDrAeZrbbdNA22PHYRmpGGGEnMEK7jieacPFS6uJba0weqUU/Rr9CXIFMOfC
+         HA9eiOss6Dzj2evPQNDH9odpW1hR+tnq/konhLc9yB8uczckgZtt+fvL5i3jaqeG8pCE
+         pMWJZUeOKg2utwqrw4u7WjFAND6bOVYcIkU6qXPWfiuGwRjMS6fCSPqkiGsLcQ/82jyf
+         J3CKXUmh7B1OlepjUXKc82XmS1tELb7j0sq6J6wYg4oxSO/RWnfLw+yfydWqv2VpztE9
+         zwvSzV6mZdQTcKmz8UgnrlBdZL7amrsMghSCwnywUxCbKhIBBSVQdbDi4GXue9f/EZti
+         abQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9fnp7Ce6twb8419ov9PE+bp8jTz1hHVFjyBLsYbtsy9ivnBx5iqsz8tdztlX8q6qzYj3eYtY9wKE/LaET@vger.kernel.org, AJvYcCVLhi/aLifjcnAIFBev4VW//YqymrbyP6jpAr9E1V1rk0aQoBR5gv2+pvGFh66vU1S7BhKjvJmSWpJm/MzP7AvHmCVX@vger.kernel.org, AJvYcCWXG1/LGVSk4/Fv/iY5TQtmcD51KmhaxJm0D1qF8F+sDqUUnABRCgmKQkRG8SnLUIWZLD2L+TJ0S/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/uIR9SNvyLHei89prjH2SRWH/l+XeqUBXCcp+4XbWXkrWWxXp
+	HJx7IouXn/ovDxEOLWA6dQVlp8z6tKKJ7TjoETqULdAD01+VUnNqRuRKhUZ9rKI=
+X-Gm-Gg: ASbGncsBVNUDoCHsCWWRcEvVLAgPufl8AQhNWgCFgjMXMu+AnIz30csg0Pa7q0wKkGR
+	fJTMCQQJkIUDrJR/2jhNN7pM3dVZZcQiMUIFn6LEeJ3V/kJhj5dwnZsSCYTLI+zhTpPii2TVTII
+	+VUuM07+OVzKAmQbQ3FK4Vy33W3EQgS+N79CNpsUAjJe5fD/od1HI6Jqtrooazps2jm5JkmZ1R9
+	NprNpJXu+OqFCZ1nakCxSZu7mUfjDLK0fUqju9OBBqQ43OFUwUgIRV8UhZEIeASA1XFa2DyXEBo
+	jl3GVdYT4Io8MG2FI3Y1sclhhFyaqRAOxC2eN8+o1t4qJ5q6eg==
+X-Google-Smtp-Source: AGHT+IFI6QxzMOyeIjRddoZIuBFLA2v8twGMenO5NobMxpp4M/GI/+e+PReJk4mZwPWLNrGNyhS8qA==
+X-Received: by 2002:a17:902:c947:b0:21f:7bd:57f1 with SMTP id d9443c01a7336-21f17ee3e26mr132014365ad.53.1738851317116;
+        Thu, 06 Feb 2025 06:15:17 -0800 (PST)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:101d:c4fc:c1b6:678a:7bd4:c9a3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368cf415sm13045525ad.246.2025.02.06.06.15.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 06:15:16 -0800 (PST)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	corbet@lwn.net
+Cc: skhan@linuxfoundation.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH v2] docs: trace: Refactor index documentation
+Date: Thu,  6 Feb 2025 19:44:53 +0530
+Message-Id: <20250206141453.139613-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/vfio-ap: Signal eventfd when guest AP
- configuration is changed
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Anthony Krowiak <akrowiak@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, borntraeger@de.ibm.com, pasic@linux.ibm.com,
-        jjherne@linux.ibm.com, alex.williamson@redhat.com
-References: <20250107183645.90082-1-rreyes@linux.ibm.com>
- <Z4U6iu5JidJUxDgX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
- <f1af50b3-f966-445d-ab89-3d213f55b93a@linux.ibm.com>
- <Z6RnfwawWop0v1CW@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Language: en-US
-From: Rorie Reyes <rreyes@linux.ibm.com>
-In-Reply-To: <Z6RnfwawWop0v1CW@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: dypPC_fK1VqygqcN5e7E83RU4fwU1aQ9
-X-Proofpoint-ORIG-GUID: dypPC_fK1VqygqcN5e7E83RU4fwU1aQ9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 suspectscore=0 adultscore=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 phishscore=0 malwarescore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060115
 
+Refactored Documentation/trace/index.rst to improve clarity, structure, 
+and organization. Reformatted sections, added appropriate headings.
 
-On 2/6/25 2:40 AM, Alexander Gordeev wrote:
-> On Wed, Feb 05, 2025 at 12:47:55PM -0500, Anthony Krowiak wrote:
->>>> How this patch is synchronized with the mentioned QEMU series?
->>>> What is the series status, especially with the comment from Cédric
->>>> Le Goater [1]?
->>>>
->>>> 1. https://lore.kernel.org/all/20250107184354.91079-1-rreyes@linux.ibm.com/T/#mb0d37909c5f69bdff96289094ac0bad0922a7cce
-> ...
->>> Hey Alex, sorry for the long delay. This patch is synchronized with the
->>> QEMU series by registering an event notifier handler to process AP
->>> configuration
->>>
->>> change events. This is done by queuing the event and generating a CRW.
->>> The series status is currently going through a v2 RFC after implementing
->>> changes
->>>
->>> requested by Cedric and Tony.
->>>
->>> Let me know if there's anything else you're concerned with
->>>
->>> Thanks!
->> I don't think that is what Alex was asking. I believe he is asking how the
->> QEMU and kernel patch series are going to be synchronized.
->> Given the kernel series changes a value in vfio.h which is used by QEMU, the
->> two series need to be coordinated since the vfio.h file
->> used by QEMU can not be updated until the kernel code is available. So these
->> two sets of code have
->> to be merged upstream during a merge window. which is different for the
->> kernel and QEMU. At least I think that is what Alex is asking.
-> Correct.
-> Thanks for the clarification, Anthony!
+Background of Patch:
+This patch is inspired by the maintainer's suggestion on the v1 patch to
+bring the documentation into real order, similar to commit '270beb5b2aae'
+from Linux 6.13, improving clarity, structure, and usability.
 
-Tony, thank you for the back up!
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+---
+V1 - https://lore.kernel.org/all/20250204133616.27694-1-purvayeshi550@gmail.com/
+V2 - Refined formatting and improved section organization.
 
-Alexander, is there anything else you need from my end for clarification?
+ Documentation/trace/index.rst | 86 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 75 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 2c991dc96..c4ff7e7de 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -1,39 +1,103 @@
+-==========================
+-Linux Tracing Technologies
+-==========================
++================================
++Linux Tracing Technologies Guide
++================================
++
++Tracing in the Linux kernel is a powerful mechanism that allows
++developers and system administrators to analyze and debug system
++behavior. This guide provides documentation on various tracing
++frameworks and tools available in the Linux kernel.
++
++Introduction to Tracing
++-----------------------
++
++This section provides an overview of Linux tracing mechanisms
++and debugging approaches.
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+-   ftrace-design
++   debugging
++   tracepoints
+    tracepoint-analysis
++
++Core Tracing Frameworks
++-----------------------
++
++The following are the primary tracing frameworks integrated into
++the Linux kernel.
++
++.. toctree::
++   :maxdepth: 1
++
+    ftrace
++   ftrace-design
+    ftrace-uses
+-   fprobe
+    kprobes
+    kprobetrace
+    uprobetracer
+    fprobetrace
+-   tracepoints
++   fprobe
++
++Event Tracing and Analysis
++--------------------------
++
++A detailed explanation of event tracing mechanisms and their
++applications.
++
++.. toctree::
++   :maxdepth: 1
++
+    events
+    events-kmem
+    events-power
+    events-nmi
+    events-msr
+-   mmiotrace
++   boottime-trace
+    histogram
+    histogram-design
+-   boottime-trace
+-   debugging
+    hwlat_detector
+    osnoise-tracer
+    timerlat-tracer
++
++Hardware and Performance Tracing
++--------------------------------
++
++This section covers tracing features that monitor hardware
++interactions and system performance.
++
++.. toctree::
++   :maxdepth: 1
++
+    intel_th
+    ring-buffer-design
+    ring-buffer-map
+    stm
+    sys-t
+    coresight/index
+-   user_events
+    rv/index
+    hisi-ptt
++
++User-space Tracing
++------------------
++
++These tools allow tracing user-space applications and
++interactions.
++
++.. toctree::
++   :maxdepth: 1
++
++   user_events
++   mmiotrace
++
++Additional Resources
++--------------------
++
++For more details, refer to the respective documentation of each
++tracing tool and framework.
++
++.. only:: subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+\ No newline at end of file
+-- 
+2.34.1
 
