@@ -1,182 +1,281 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FC918B03
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00CE18B03
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837942; cv=none; b=Q95kQ1AZ7OCTCb4AjK/HH42kDmPDTxFAllC6oHNlt+LyrB9Ap8raLNlO7ZorMNY5I/ZTaKk3UCQ+UDHBAMZ/F4j3xrDUHpQO929szeJVpzT087S+JnqZZ4ytXrqIzHAxvcEEELrtqxihF5DBkf6b1igq/lHjq32poC14l+WH4YY=
+	t=1738837985; cv=none; b=jBUFZJ8uHpToC7PBaDglHYPk2uCXVa/6b2GLbPWU43cNVJXY5A4JALXJ35FNFMss2yMzlny81y3GvKxLRprezu51sSilxllHjiNzhBCClk0dZ9JsHFVZzkOUPFmHbnweEb436rF+3rlcS6SZlSj0hxPkiQH/+1g+AzP4pp6YJdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837942; c=relaxed/simple;
-	bh=A3UmOOPTkZ5V+nsffwzqYuX1GJ0nEl3W+c+g0TAZ/pc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ktp0ff6deMN9JAJZbCkddvyW89JKaeqPVVh8u6E84RtkmhlmqHuOrfzmqns2wHvFcUSZHHKYF7csqBIUL9yr+ysG72XjgVt3vSkVDmTi6mOkbHUVn3xRZpsd3jBp1/8edAg89R7zOsxaK2CnH5wt1IxXvlXrBjEERm0Fjacl0xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 413FA12FC;
-	Thu,  6 Feb 2025 02:32:42 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8722F3F63F;
-	Thu,  6 Feb 2025 02:32:18 -0800 (PST)
-Date: Thu, 6 Feb 2025 10:32:13 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	kernel@quicinc.com, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coresight-tmc: stop disabling tmc when flush timeout
-Message-ID: <20250206103213.GB8855@e132581.arm.com>
-References: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
+	s=arc-20240116; t=1738837985; c=relaxed/simple;
+	bh=k4VcWdS+zI0w1iuIU8VcHoofzfGPypKeKc6+8uBbEBI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qPdsYYl8sFAqQRFUnmioSZzjfp9t6ozsP0qrVUj7shvKBemsN262/i+zuAzZIdWZiw9Pp8t4oHG6hxVrcSOBlmgqFI2mN+lUczoik6meEg4jeRSco3uuGowxSiqPKSns4LHtxYteDlscxlCkhWbNicu9FPMSHuBt4bjSGyQrHbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUvyIfr/; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUvyIfr/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738837983; x=1770373983;
+  h=date:from:to:cc:subject:message-id;
+  bh=k4VcWdS+zI0w1iuIU8VcHoofzfGPypKeKc6+8uBbEBI=;
+  b=fUvyIfr/O+W44fhnh1/wob7e1pFgcVqejfTKavGIpPO4T4Re/U/WqPBU
+   QZgbg0aprceBS0aFUZHw8v6iel5ty4dvT8gEDJWYYtYML79BQD6beNH6q
+   ROtOXAJmuSue14syej0QJNMlNNYd1N6C7JdLE4Zb+5TMZDEQnBXVU5W5a
+   hjS4MMjc22g+aX4wUxS61eq4N1h2CsGSpo8sRbSmb7I3va8vyw0Fc7dkS
+   v4Tos0xC9MUXoODiu2TZmWjgM4VICgalZ4hzQ1hhvual033lJgZ2AiEIV
+   bsvB4u9Blrgc2ioVt10r5ZRAPXQcn1MlHYT5vBOlRhbPwIQDkWefhkClP
+   Q==;
+X-CSE-ConnectionGUID: yS50XnGDSsmeXuL/F8TWVg==
+X-CSE-MsgGUID: mx1tbfxYTa2ShVKxc4U0Hw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43095894"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="43095894"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 02:33:03 -0800
+X-CSE-ConnectionGUID: 77JlahbpQEihLM0d2CHqRw==
+X-CSE-MsgGUID: SBqPHzgRRUuaXa8K5UjGgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="116152257"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 06 Feb 2025 02:33:01 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tfzBr-000wkX-0K;
+	Thu, 06 Feb 2025 10:32:59 +0000
+Date: Thu, 06 Feb 2025 18:32:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:perf/core] BUILD SUCCESS
+ e02e9b0374c378aab016ae8ace60d9d98ab8caa6
+Message-ID: <202502061850.ucSsZt18-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
 
-Hi Yuanfang,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+branch HEAD: e02e9b0374c378aab016ae8ace60d9d98ab8caa6  perf/x86/intel: Support PEBS counters snapshotting
 
-On Fri, Jan 03, 2025 at 04:01:54PM +0800, Yuanfang Zhang wrote:
-> 
-> When multiple ETMs are enabled simultaneously, the time required
-> to complete a flush in the process of reading the TMC device node
-> may exceed the default wait time of 100us.
+elapsed time: 1446m
 
-Have you tried how long time would be safe to wait for the
-TMCREADY_BIT bit to be set on your platform?
+configs tested: 204
+configs skipped: 3
 
-> If the TMC capture is stopped while any ETM has not completed its
-> flush, it can cause the corresponding CPU to hang.
->
-> Fix the by checking the TMCReady bit after the flush. If TMCReady
-> bit is set, TraceCaptEn bit can be clear; otherwise, return directly
-> and stop the TMC read.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-When a timeout for TMC flush and stop is detected, if the driver
-arbitrarily bails out without disabling TMC, this would leave the
-hardware always on.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-21
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250205    gcc-13.2.0
+arc                   randconfig-001-20250206    gcc-13.2.0
+arc                   randconfig-002-20250205    gcc-13.2.0
+arc                   randconfig-002-20250206    gcc-13.2.0
+arc                    vdk_hs38_smp_defconfig    clang-21
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                            mmp2_defconfig    clang-21
+arm                   randconfig-001-20250205    gcc-14.2.0
+arm                   randconfig-001-20250206    gcc-13.2.0
+arm                   randconfig-002-20250205    gcc-14.2.0
+arm                   randconfig-002-20250206    gcc-13.2.0
+arm                   randconfig-003-20250205    clang-16
+arm                   randconfig-003-20250206    gcc-13.2.0
+arm                   randconfig-004-20250205    gcc-14.2.0
+arm                   randconfig-004-20250206    gcc-13.2.0
+arm                           u8500_defconfig    clang-21
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250205    gcc-14.2.0
+arm64                 randconfig-001-20250206    gcc-13.2.0
+arm64                 randconfig-002-20250205    gcc-14.2.0
+arm64                 randconfig-002-20250206    gcc-13.2.0
+arm64                 randconfig-003-20250205    gcc-14.2.0
+arm64                 randconfig-003-20250206    gcc-13.2.0
+arm64                 randconfig-004-20250205    gcc-14.2.0
+arm64                 randconfig-004-20250206    gcc-13.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250205    gcc-14.2.0
+csky                  randconfig-001-20250206    gcc-14.2.0
+csky                  randconfig-002-20250205    gcc-14.2.0
+csky                  randconfig-002-20250206    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250205    clang-17
+hexagon               randconfig-001-20250206    gcc-14.2.0
+hexagon               randconfig-002-20250205    clang-19
+hexagon               randconfig-002-20250206    gcc-14.2.0
+i386                             allmodconfig    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-19
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-19
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250205    gcc-12
+i386        buildonly-randconfig-002-20250205    gcc-12
+i386        buildonly-randconfig-003-20250205    gcc-12
+i386        buildonly-randconfig-004-20250205    gcc-11
+i386        buildonly-randconfig-005-20250205    clang-19
+i386        buildonly-randconfig-006-20250205    clang-19
+i386                                defconfig    clang-19
+i386                  randconfig-011-20250206    gcc-12
+i386                  randconfig-012-20250206    gcc-12
+i386                  randconfig-013-20250206    gcc-12
+i386                  randconfig-014-20250206    gcc-12
+i386                  randconfig-015-20250206    gcc-12
+i386                  randconfig-016-20250206    gcc-12
+i386                  randconfig-017-20250206    gcc-12
+loongarch                        alldefconfig    clang-21
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250205    gcc-14.2.0
+loongarch             randconfig-001-20250206    gcc-14.2.0
+loongarch             randconfig-002-20250205    gcc-14.2.0
+loongarch             randconfig-002-20250206    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                        m5307c3_defconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-14.2.0
+microblaze                       alldefconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250205    gcc-14.2.0
+nios2                 randconfig-001-20250206    gcc-14.2.0
+nios2                 randconfig-002-20250205    gcc-14.2.0
+nios2                 randconfig-002-20250206    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250205    gcc-14.2.0
+parisc                randconfig-001-20250206    gcc-14.2.0
+parisc                randconfig-002-20250205    gcc-14.2.0
+parisc                randconfig-002-20250206    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    clang-16
+powerpc                     asp8347_defconfig    gcc-14.2.0
+powerpc                        icon_defconfig    gcc-14.2.0
+powerpc                      ppc44x_defconfig    clang-21
+powerpc               randconfig-001-20250205    clang-16
+powerpc               randconfig-001-20250206    gcc-14.2.0
+powerpc               randconfig-002-20250205    gcc-14.2.0
+powerpc               randconfig-002-20250206    gcc-14.2.0
+powerpc               randconfig-003-20250205    gcc-14.2.0
+powerpc               randconfig-003-20250206    gcc-14.2.0
+powerpc                  storcenter_defconfig    clang-21
+powerpc64             randconfig-001-20250205    clang-18
+powerpc64             randconfig-001-20250206    gcc-14.2.0
+powerpc64             randconfig-002-20250205    gcc-14.2.0
+powerpc64             randconfig-002-20250206    gcc-14.2.0
+powerpc64             randconfig-003-20250205    clang-18
+powerpc64             randconfig-003-20250206    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250205    gcc-14.2.0
+riscv                 randconfig-001-20250206    gcc-14.2.0
+riscv                 randconfig-002-20250205    gcc-14.2.0
+riscv                 randconfig-002-20250206    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250205    clang-17
+s390                  randconfig-001-20250206    gcc-14.2.0
+s390                  randconfig-002-20250205    clang-19
+s390                  randconfig-002-20250206    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                            migor_defconfig    clang-21
+sh                    randconfig-001-20250205    gcc-14.2.0
+sh                    randconfig-001-20250206    gcc-14.2.0
+sh                    randconfig-002-20250205    gcc-14.2.0
+sh                    randconfig-002-20250206    gcc-14.2.0
+sh                   rts7751r2dplus_defconfig    clang-21
+sh                   secureedge5410_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250205    gcc-14.2.0
+sparc                 randconfig-001-20250206    gcc-14.2.0
+sparc                 randconfig-002-20250205    gcc-14.2.0
+sparc                 randconfig-002-20250206    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250205    gcc-14.2.0
+sparc64               randconfig-001-20250206    gcc-14.2.0
+sparc64               randconfig-002-20250205    gcc-14.2.0
+sparc64               randconfig-002-20250206    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250205    gcc-11
+um                    randconfig-001-20250206    gcc-14.2.0
+um                    randconfig-002-20250205    clang-21
+um                    randconfig-002-20250206    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250205    clang-19
+x86_64      buildonly-randconfig-001-20250206    clang-19
+x86_64      buildonly-randconfig-002-20250205    clang-19
+x86_64      buildonly-randconfig-002-20250206    clang-19
+x86_64      buildonly-randconfig-003-20250205    clang-19
+x86_64      buildonly-randconfig-003-20250206    clang-19
+x86_64      buildonly-randconfig-004-20250205    gcc-12
+x86_64      buildonly-randconfig-004-20250206    clang-19
+x86_64      buildonly-randconfig-005-20250205    clang-19
+x86_64      buildonly-randconfig-005-20250206    clang-19
+x86_64      buildonly-randconfig-006-20250205    clang-19
+x86_64      buildonly-randconfig-006-20250206    clang-19
+x86_64                              defconfig    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                randconfig-001-20250206    gcc-12
+x86_64                randconfig-002-20250206    gcc-12
+x86_64                randconfig-003-20250206    gcc-12
+x86_64                randconfig-004-20250206    gcc-12
+x86_64                randconfig-005-20250206    gcc-12
+x86_64                randconfig-006-20250206    gcc-12
+x86_64                randconfig-007-20250206    gcc-12
+x86_64                randconfig-008-20250206    gcc-12
+x86_64                randconfig-071-20250206    gcc-12
+x86_64                randconfig-072-20250206    gcc-12
+x86_64                randconfig-073-20250206    gcc-12
+x86_64                randconfig-074-20250206    gcc-12
+x86_64                randconfig-075-20250206    gcc-12
+x86_64                randconfig-076-20250206    gcc-12
+x86_64                randconfig-077-20250206    gcc-12
+x86_64                randconfig-078-20250206    gcc-12
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250205    gcc-14.2.0
+xtensa                randconfig-001-20250206    gcc-14.2.0
+xtensa                randconfig-002-20250205    gcc-14.2.0
+xtensa                randconfig-002-20250206    gcc-14.2.0
+xtensa                    smp_lx200_defconfig    gcc-14.2.0
 
-I would like first know if a longer timeout can fix the issue.
-
-Thanks,
-Leo
-
-> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> ---
->  drivers/hwtracing/coresight/coresight-tmc-etf.c | 17 +++++++++++++++--
->  drivers/hwtracing/coresight/coresight-tmc-etr.c | 22 +++++++++++++++++-----
->  2 files changed, 32 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> index d4f641cd9de69488fe3d1c1dc9b5a9eafb55ed59..bded290c42891d782344d9a6e63ebdbed6719133 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> @@ -80,11 +80,21 @@ static void tmc_etb_dump_hw(struct tmc_drvdata *drvdata)
->         return;
->  }
-> 
-> -static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
-> +static int __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->  {
-> +       int rc;
-> +
->         CS_UNLOCK(drvdata->base);
-> 
->         tmc_flush_and_stop(drvdata);
-> +
-> +       rc = tmc_wait_for_tmcready(drvdata);
-> +       if (rc) {
-> +               dev_err(&drvdata->csdev->dev,
-> +                       "Failed to disable : TMC is not ready\n");
-> +               CS_LOCK(drvdata->base);
-> +               return rc;
-> +       }
->         /*
->          * When operating in sysFS mode the content of the buffer needs to be
->          * read before the TMC is disabled.
-> @@ -94,6 +104,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->         tmc_disable_hw(drvdata);
-> 
->         CS_LOCK(drvdata->base);
-> +       return 0;
->  }
-> 
->  static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
-> @@ -650,7 +661,9 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
->                         ret = -EINVAL;
->                         goto out;
->                 }
-> -               __tmc_etb_disable_hw(drvdata);
-> +               ret = __tmc_etb_disable_hw(drvdata);
-> +               if (ret)
-> +                       goto out;
->         }
-> 
->         drvdata->reading = true;
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> index a48bb85d0e7f44a25b813f3c828cc3d705d16012..63a1f7501562fa0b5c2fe6ea53dce4d82842bec3 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> @@ -1135,11 +1135,21 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
->         }
->  }
-> 
-> -static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
-> +static int __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->  {
-> +       int rc;
-> +
->         CS_UNLOCK(drvdata->base);
-> 
->         tmc_flush_and_stop(drvdata);
-> +
-> +       rc = tmc_wait_for_tmcready(drvdata);
-> +       if (rc) {
-> +               dev_err(&drvdata->csdev->dev,
-> +                       "Failed to disable : TMC is not ready\n");
-> +               CS_LOCK(drvdata->base);
-> +               return rc;
-> +       }
->         /*
->          * When operating in sysFS mode the content of the buffer needs to be
->          * read before the TMC is disabled.
-> @@ -1150,7 +1160,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->         tmc_disable_hw(drvdata);
-> 
->         CS_LOCK(drvdata->base);
-> -
-> +       return 0;
->  }
-> 
->  void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
-> @@ -1779,9 +1789,11 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
->         }
-> 
->         /* Disable the TMC if we are trying to read from a running session. */
-> -       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS)
-> -               __tmc_etr_disable_hw(drvdata);
-> -
-> +       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
-> +               ret = __tmc_etr_disable_hw(drvdata);
-> +               if (ret)
-> +                       goto out;
-> +       }
->         drvdata->reading = true;
->  out:
->         spin_unlock_irqrestore(&drvdata->spinlock, flags);
-> 
-> ---
-> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
-> change-id: 20250103-fix_cpu_hung-b5a95179ada4
-> 
-> Best regards,
-> --
-> Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> 
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
