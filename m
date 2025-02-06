@@ -1,152 +1,291 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E16224B1E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E56B13D52B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738826556; cv=none; b=MDsV3ujzJNS/aicBa/BkAIii/HJcRdMOqWQaxMocBw/Y8yEsQjAOwDlvEodlaCByc4kb9B6cQONj74HOePCaD+vApYz/CTEsnlNU5/OtaGKvpvSNVpuPwG790yMZK99DNVWTvMrPy5vLtxCHpxL9KRGMrj6HNJxltqvTyCngs70=
+	t=1738826598; cv=none; b=pCa3mpXlF7FP5nLNq1CnXMOqNfW7MKWDf6ZjNshanoYc0STqkpmqRTTOjvss4KnkKs4ZyDdDVbj8B2enJNQiLGFA+v1mdmdCSVcnMhWa1/hnsbAUQ39w9XfzMC9lIlUkEGc/o3eKpUGHZjQJIDCgwmp780q2ZJte2z+JKA1JtVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738826556; c=relaxed/simple;
-	bh=n0iVGn/x0ctPMtAMx95KVtwpFhg/mGbPc7w3e1BBHLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=thUdLV14nV0rg2L4hE0rYnk4DRoMCw2a5wC4yDONNVS6lZGvUg5ZCREoHTW7H6/EkYYyyISGTjirli19x6/76w3h817XLmxbfim2FZlxUM0izWTktMUm1B7kmL651TqRqmr2J/cBGzaSFVyDK9mqcKf0K+W95Yc4dntoHIXJciU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bXsCubjs; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738826598; c=relaxed/simple;
+	bh=bdbTzm2sfqN76SC74i+7NJCPhMid7XD0dN+qvDxxi4w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZObx2BWv+LqgywbNUEIscGUxN4UqZnJlq8FLazbe2hh3CkcwRLb/nHuFwI94IdpWiHrO9wu6oOwvkxXsBBiYV9PvrmuTkALtCxS0jU61KPWqK24lYsxIRMGO6Rgt4xBLsJ6ESddgFVLJOmJc6mMXzMiUwQh5zAtmqsXY5RpQJB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=J4bfwaBU; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bXsCubjs"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f20666e72so12248165ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:22:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="J4bfwaBU"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso800770a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:23:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738826554; x=1739431354; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ND3YwwZD7x/+hPDujpYDVCvxd5yZcP3jGfKq28g5ss=;
-        b=bXsCubjsqbv0WIh2Wavq3qk+iKD+ZJxqPNk9eAuSEHO/SlKdlsmE8kuikwEQLHyN6T
-         OM7kbhVKORUk2M1WM+t7nQXuVj/bgg7Mfna7muMwXl7NSu/RiOHs6/4+tQLq8vBIHDIA
-         lRiuXwv4Er7xXsjiz3hzWZELN0D6PJOmywXHg=
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738826595; x=1739431395; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XcfIWddzFd8yj6o0Xr4QawJxvmjYCrHgBJ9/YF34lAs=;
+        b=J4bfwaBULt3qZXDAZPXQLzXFUg5zCENLhy2InicTpxxN495wowo7i79yvLtyLoMtZf
+         mPG9gBtHi8FK5P3iw9wgs5c39QMPzeXba0ZYeNLKP6y79a504GCtmLic8TAmVT4Y5IjY
+         VvBBMk8M/oEvkHE4l60EAIJj3bh24D/fJPD/vQiOh3JHx4IyxsRwHf8KY1Aw+7f02hVu
+         PbKP/sPDyA/DrUx7CWFG51mAi8LOtP4C6tQqGlEw+xpsEb2sYTH3+DJf8T0dUtPSsEIl
+         tCqMwzuUDugfD6BbTQUHD5NiSFSc+FqB9PMGKPG42CBFynsnq60FeuN2F8aU6I5fEHz5
+         9Szw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738826554; x=1739431354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ND3YwwZD7x/+hPDujpYDVCvxd5yZcP3jGfKq28g5ss=;
-        b=ZGA4pre/TDxFICBXZlVlZUfinws+F/IZLx4JHC0x6Lq1JeapHrHpSp3OzuVI6uUZUg
-         aEt3WapVpZV7ArFd3GmZarHyqU1nbWoPEfbLUcb3/YUAAPWsQe/0lMzKCCH3FVm9d8y3
-         O1Ckz9/hkJ0PrLYZgS/utR1CuTVifG/kCyPmcF22Cz8xv16agHCUQdHaDw0tR/TYs8jc
-         2CoHusE5RjB1TQKoWCXNlTxTe09b1TakgeeOepEYTURHdQC27Kybg9SdLA466ZDOZRwp
-         1cWhP/6NJv1BL8SJfJmmm9Qmh+1PFoddWqwUF9gOkkDzmObcbLgL4OoH+Y18XLPfLuPz
-         Bc5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWf9/cvRkbChEbVObiT/aanv7/pfVzxwob9SR6bseUP2ZSB0uo+vIiQeDq2Z6pFXqHChd9E0v5G4lHCW7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxqkstxtc8jMg8k+V8LUda/9XBSN4R/30TEnysf3L88wcs/CtAV
-	CScNuY6Ks57HTvbHCdGJm8V/4YcU+95a9IKtCcbYslWtwVAvDLLtMhpuactgvg==
-X-Gm-Gg: ASbGncu5sH8ZsYNpO5GdwxxY3TvKccRiKvD3bUPEYiqr6h391/wfwEbL8uq0SetL1ek
-	Mn/bA3qxaCtXxD8ffZbMWY4PmeCKEpejFmyLly9ttCORs3lgBrZy8o7erz2pbI7tFxGtgHb0VUc
-	Dz2eFZUwbokuhbAKDymjaZTf4t4LKv9FYelHlFM8SpFvvg0LwSXK9ELcq1F6V5L+hCBZr6wOo34
-	KXN8nCiEDrRL68Wk+Hq+0q+n8VM6e3GqT1xgHe+R2DFoX/dKMIjuE0h3cLEFLOPIpgPFp+1y4pe
-	DxbF+XhqgPu5w9Zb6p4=
-X-Google-Smtp-Source: AGHT+IEWqlUmGEMZDMpp/ZVMExE1e2zM+lWtI6158t8LS5XpAGtkgzj7kcVIZOm7bY8N47//IfjoXA==
-X-Received: by 2002:a17:902:f64f:b0:215:b75f:a1cb with SMTP id d9443c01a7336-21f17e26cf8mr95007055ad.9.1738826554127;
-        Wed, 05 Feb 2025 23:22:34 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:28ab:cea4:aa8a:127a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8ffsm5632095ad.150.2025.02.05.23.22.31
+        d=1e100.net; s=20230601; t=1738826595; x=1739431395;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XcfIWddzFd8yj6o0Xr4QawJxvmjYCrHgBJ9/YF34lAs=;
+        b=Gv4NH97MhP9WhDeQwwSLMl/VqYBjqx2+aY9Ef+JqwAUmUyqGg4Y8hzPMlCc83MzFpI
+         4MLq77KjZU2xyOOBCDBSy1FuC1i6qI+65N/2EAcMHZmz+VljvBLgYflgSaJ/kPvK5Rk7
+         vMEPd1p5xrr+pm5dhgyeweUkt/tI/qASkhspbrQubJhK8XNz8RJ51bMLCE/WuUP1qIve
+         7kjPyYQbv0AXc0VAmcDPXrBfK8UGKCh/Gi+sBfL5ptx72GqGMCQIW/cUvg8WNP1Mu0Kh
+         SCu+ClBnoQwcZVq4nCsi59X/8E6Sy/6LstK76z6A0tTcmi3oyQpBFAtjWq9pJGKgzItB
+         BevA==
+X-Forwarded-Encrypted: i=1; AJvYcCVH5n0kILy0LuovU7E8UIxJpUc0fDHBmmYBys9OBmbp309ci1AayZ66eex2cwLdbzsY5yD/XCD2DZtKjnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyK1LmCfUHakkIFCyWigvXsVElLhXkPk8HtqO45q8XRK+G4VwVZ
+	MTfAEIo6cRS2Pyrc/4goZeNRgRIgUVM20TG/UO8AwOZ7eJBQawEoYhMTsvAgfps=
+X-Gm-Gg: ASbGncvWlc+Uf7j09hgulRfff9VIApZYoqYAMGVvNjpLv6HD0w+bzSyiMXhEdsoaTCL
+	u8YfE+Wejrf3QGpJ6h1j9rVD/viuioas8gJdPy8GrMQ1uFZuY2z5gSU4AWpPt/FauEQ+xtogOf0
+	LhSwPY93NNJxBFPHtDdpwiG9m8Zoy5GK1uZbJsyMvuoNb+HWCXOFDe69+900tXZHjtUJNc0U7IV
+	8WuiQSIo30cfiIXU8kWa+rQDVxUfEtOC8bzwxeU6//FoobptL9wscl1oPaTTiCu7v6dojxKj+qz
+	WvLa6a5D4psbFw6Eda1+MUeL7V4f
+X-Google-Smtp-Source: AGHT+IGo0IO4yjjuiyGHyaAJ0POQANwu/jLlGwAMMHLN1KwC0wmsSQAnJSPQ5JuyqcISwOKowqqUIA==
+X-Received: by 2002:a17:90b:268b:b0:2ee:d63f:d8f with SMTP id 98e67ed59e1d1-2f9e0762f8amr9118109a91.13.1738826595250;
+        Wed, 05 Feb 2025 23:23:15 -0800 (PST)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a72292sm630883a91.27.2025.02.05.23.23.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 23:22:33 -0800 (PST)
-Date: Thu, 6 Feb 2025 16:22:27 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
-Subject: Re: [PATCHv4 02/17] zram: do not use per-CPU compression streams
-Message-ID: <ysqyikz2jhnvjkhmkgwekbmz6dykvjssut6n3t746tpsscursu@zc6rg5xgk6sp>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-3-senozhatsky@chromium.org>
- <CAMgjq7BFUrUY5Xq5Eks4ibqbWgJcca1vqB4kq=otQVyG=23FRw@mail.gmail.com>
- <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
- <CAMgjq7DKveiCJVb4ACSaLFV0Q1_Yd+sbL_X2dgXz6QGYwuNRTw@mail.gmail.com>
+        Wed, 05 Feb 2025 23:23:14 -0800 (PST)
+From: Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v4 00/21] Add Counter delegation ISA extension support
+Date: Wed, 05 Feb 2025 23:23:05 -0800
+Message-Id: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMgjq7DKveiCJVb4ACSaLFV0Q1_Yd+sbL_X2dgXz6QGYwuNRTw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFljpGcC/23O0YrCMBAF0F+RPJuSmSRN3Kf9j0WWNhltQBtJu
+ sFF+u/GiiDSxzvMPTM3likFyuxrc2OJSsghjjWo7Ya5oRuPxIOvmaFAJQxo7uLfOFH69XSiYzf
+ Vdd6i7SQerNs5x2rxkugQrgv6s695CHmK6X+5UeAxfXIIRghtpG2kUQoQOPAq5uHynUKJOYyuc
+ fHMHkbBV08LALX2RkEuuO07o5zvrYZ+RZFvCppVRValVXanvCFovf5Q5nm+A0nshfA1AQAA
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>, 
+ Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, 
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ Atish Patra <atishp@rivosinc.com>, Kaiwen Xue <kaiwenx@rivosinc.com>, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.15-dev-13183
 
-On (25/02/06 14:55), Kairui Song wrote:
-> > On (25/02/01 17:21), Kairui Song wrote:
-> > > This seems will cause a huge regression of performance on multi core
-> > > systems, this is especially significant as the number of concurrent
-> > > tasks increases:
-> > >
-> > > Test build linux kernel using ZRAM as SWAP (1G memcg):
-> > >
-> > > Before:
-> > > + /usr/bin/time make -s -j48
-> > > 2495.77user 2604.77system 2:12.95elapsed 3836%CPU (0avgtext+0avgdata
-> > > 863304maxresident)k
-> > >
-> > > After:
-> > > + /usr/bin/time make -s -j48
-> > > 2403.60user 6676.09system 3:38.22elapsed 4160%CPU (0avgtext+0avgdata
-> > > 863276maxresident)k
-> >
-> > How many CPUs do you have?  I assume, preemption gets into way which is
-> > sort of expected, to be honest...  Using per-CPU compression streams
-> > disables preemption and uses CPU exclusively at a price of other tasks
-> > not being able to run.  I do tend to think that I made a mistake by
-> > switching zram to per-CPU compression streams.
-> >
-> > What preemption model do you use and to what extent do you overload
-> > your system?
-> >
-> > My tests don't show anything unusual (but I don't overload the system)
-> >
-> > CONFIG_PREEMPT
-> 
-> I'm using CONFIG_PREEMPT_VOLUNTARY=y, and there are 96 logical CPUs
-> (48c96t), make -j48 shouldn't be considered overload I think. make
-> -j32 also showed an obvious slow down.
+This series adds the counter delegation extension support. It is based on
+very early PoC work done by Kevin Xue and mostly rewritten after that.
+The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
+on multiple ISA extensions.
 
-Hmm, there should be more than enough compression streams then, the
-limit is num_online_cpus.  That's strange.  I wonder if that's zsmalloc
-handle allocation ("remove two-staged handle allocation" in the series.)
+1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
+   5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
+   RISC-V CSR address space.
+2. Smstateen: The stateen bit[60] controls the access to the registers
+   indirectly via the above indirect registers.
+3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
 
-[..]
-> > Hmm it's just
-> >
-> >         spin_lock()
-> >         list first entry
-> >         spin_unlock()
-> >
-> > Shouldn't be "a big spin lock", that's very odd.  I'm not familiar with
-> > perf lock contention, let me take a look.
-> 
-> I can debug this a bit more to figure out why the contention is huge
-> later
+The counter delegation extension allows Supervisor mode to program the
+hpmevent and hpmcounters directly without needing the assistance from the
+M-mode via SBI calls. This results in a faster perf profiling and very
+few traps. This extension also introduces a scountinhibit CSR which allows
+to stop/start any counter directly from the S-mode. As the counter
+delegation extension potentially can have more than 100 CSRs, the specification
+leverages the indirect CSR extension to save the precious CSR address range.
 
-That will be appreciated, thank you.
+Due to the dependency of these extensions, the following extensions must be
+enabled in qemu to use the counter delegation feature in S-mode.
 
-> but my first thought is that, as Yosry also mentioned in
-> another reply, making it preemptable doesn't necessarily mean the per
-> CPU stream has to be gone.
+"smstateen=true,sscofpmf=true,ssccfg=true,smcdeleg=true,smcsrind=true,sscsrind=true"
+or Virt machine users can just "max" cpu instead.
 
-Was going to reply to Yosry's email today/tomorrow, didn't have time to
-look into, but will reply here.
+When we access the counters directly in S-mode, we also need to solve the
+following problems.
 
+1. Event to counter mapping
+2. Event encoding discovery
 
-So for spin-lock contention - yes, but that lock really should not
-be so visible.  Other than that we limit the number of compression
-streams to the number of the CPUs and permit preemption, so it should
-be the same as the "preemptible per-CPU" streams, roughly.  The
-difference, perhaps, is that we don't pre-allocate streams, but
-allocate only as needed.  This has two sides: one side is that later
-allocations can fail, but the other side is that we don't allocate
-streams that we don't use.  Especially secondary streams (priority 1
-and 2, which are used for recompression).  I didn't know it was possible
-to use per-CPU data and still have preemption enabled at the same time.
-So I'm not opposed to the idea of still having per-CPU streams and do
-what zswap folks did.
+The RISC-V ISA doesn't define any standard either for event encoding or the
+event to counter mapping rules. Until now, the SBI PMU implementation relies
+on device tree binding[3] to discover the event to counter mapping in RISC-V
+platform in the firmware. The SBI PMU specification[4] defines event encoding
+for standard perf events as well. Thus, the kernel can query the appropriate
+counter for an given event from the firmware.
+
+However, the kernel doesn't need any firmware interaction for hardware
+counters if counter delegation is available in the hardware. Thus, the driver
+needs to discover the above mappings/encodings by itself without any assistance
+from firmware.
+
+Solution to Problem #1:
+This patch series solves the above problem #1 by extending the perf tool in a
+way so that event json file can specify the counter constraints of each event
+and that can be passed to the driver to choose the best counter for a given
+event. The perf stat metric series[5] from Weilin already extend the perf tool
+to parse "Counter" property to specify the hardware counter restriction.
+As that series was not revised in a while, I have rebased it and included in
+this series. I can only include the necessary parts from that patch required
+for this series if required. 
+
+This series extends that support by converting comma separated string to a
+bitmap. The counter constraint bitmap is passed to the perf driver via
+newly introduced "counterid_mask" property set in "config2".
+However, it results in the following event string which has repeated information
+about the counters both in list and bitmask format. I am not sure how I can pass
+the list information to the driver directly. That's why I added a
+counterid_mask property.
+
+Additionaly, the PATCH5 in [5] parses the bitmask information from the
+string and puts it into the metric group structure. We can just convert it in
+python easily and pass it to the metric group instead. The PATCH19 does exactly
+that and sets the counterid_mask property.
+
+@Weilin @Ian : Please let me know if there is a better way to solve the problem I
+described. 
+
+Due to the new counterid_mask property, the layout in empty-pmu-events.c got
+changed which is patched in PATCH 20 based on existing script.
+
+Possible solutions to Problem #2:
+
+1. Extend the PMU DT parsing support to kernel as well. However, that requires
+additional support in ACPI based system. It also needs more infrastructure in
+the virtualization as well.
+
+2. Rename perf legacy events to riscv specific names. This will require users to
+use perf differently than other ISAs which is not ideal.
+
+3. Define a architecture specific override function for legacy events. Earlier
+RFC version did that but it is not preferred as arch specific behavior in perf
+tool has other ramifications on the tests.
+
+4. Ian graciously helped and sent a generic fix[6] for #3 that prefers json
+over legacy encoding. Unfortunately, it had some regressions and the discussions
+are ongoing if it is a viable solution.
+
+5. Specify the encodings in the driver. There were earlier concerns of managing
+these in the driver as these encodings are vendor specific in absence of an ISA
+guidelines. However, we also need to support counter virtualization and legacy
+event users (without perf tool) as described in [7]. That's why, this series
+adapts this solution similar to other ISAs. The vendors can define their pmu
+event encoding and event to counter mapping in the driver.
+
+Note: This solution is still compatible with solution #4 by Ian. It gives vendors
+flexibility to define legacy event encoding in either the driver or json file
+if Ian's series [6] is merged. If we can get rid of the legacy events in the
+future, we can just rely on the json encodings. I have not added a json file for
+qemu as I have not included Ian's patches in this series. But I have verified them
+with a virt machine specific json file.
+
+The Qemu patches can be found here:
+https://github.com/atishp04/qemu/tree/b4/counter_delegation_v4
+
+The Linux kernel patches can be found here:
+https://github.com/atishp04/linux/tree/b4/counter_delegation_v4
+
+[1] https://github.com/riscv/riscv-indirect-csr-access
+[2] https://github.com/riscv/riscv-smcdeleg-ssccfg
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/perf/riscv%2Cpmu.yaml
+[4] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc
+[5] https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
+[6] https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
+[7] https://lore.kernel.org/lkml/20241026121758.143259-1-irogers@google.com/T/#m653a6b98919a365a361a698032502bd26af9f6ba
+
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+Changes in v4:
+- Added ISA depedancies as per dt schema instead of description. 
+- Fixed few compilation issues due to patch reordering in v3.
+- Link to v3: https://lore.kernel.org/r/20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com
+
+Changes in v3:
+- Fixed the dtb binding check failures.
+- Inlcuded the fix reported by Rajnesh Kanwal for guest counter overflow.
+- Rearranged the overflow handling more efficiently for better modularity.
+- Link to v2: https://lore.kernel.org/r/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com
+
+Changes in v2:
+- Dropped architecture specific overrides for event encoding.
+- Dropped hwprobe bits.
+- Added a vendor specific event encoding table to support vendor specific event
+  encoding and counter mapping.
+- Fixed few bugs and cleanup.
+- Link to v1: https://lore.kernel.org/r/20240217005738.3744121-1-atishp@rivosinc.com
+
+---
+Atish Patra (17):
+      RISC-V: Add Sxcsrind ISA extension definition and parsing
+      dt-bindings: riscv: add Sxcsrind ISA extension description
+      RISC-V: Define indirect CSR access helpers
+      RISC-V: Add Smcntrpmf extension parsing
+      dt-bindings: riscv: add Smcntrpmf ISA extension description
+      RISC-V: Add Ssccfg ISA extension definition and parsing
+      dt-bindings: riscv: add Counter delegation ISA extensions description
+      RISC-V: perf: Restructure the SBI PMU code
+      RISC-V: perf: Modify the counter discovery mechanism
+      RISC-V: perf: Add a mechanism to defined legacy event encoding
+      RISC-V: perf: Implement supervisor counter delegation support
+      RISC-V: perf: Use config2/vendor table for event to counter mapping
+      RISC-V: perf: Add legacy event encodings via sysfs
+      RISC-V: perf: Add Qemu virt machine events
+      tools/perf: Support event code for arch standard events
+      tools/perf: Pass the Counter constraint values in the pmu events
+      Sync empty-pmu-events.c with autogenerated one
+
+Charlie Jenkins (1):
+      RISC-V: perf: Skip PMU SBI extension when not implemented
+
+Kaiwen Xue (2):
+      RISC-V: Add Sxcsrind ISA extension CSR definitions
+      RISC-V: Add Sscfg extension CSR definition
+
+Weilin Wang (1):
+      perf pmu-events: Add functions in jevent.py to parse counter and event info for hardware aware grouping
+
+ .../devicetree/bindings/riscv/extensions.yaml      |  67 ++
+ MAINTAINERS                                        |   4 +-
+ arch/riscv/include/asm/csr.h                       |  57 ++
+ arch/riscv/include/asm/csr_ind.h                   |  42 +
+ arch/riscv/include/asm/hwcap.h                     |   8 +
+ arch/riscv/include/asm/kvm_vcpu_pmu.h              |   4 +-
+ arch/riscv/include/asm/kvm_vcpu_sbi.h              |   2 +-
+ arch/riscv/include/asm/sbi.h                       |   2 +-
+ arch/riscv/include/asm/vendorid_list.h             |   4 +
+ arch/riscv/kernel/cpufeature.c                     |   5 +
+ arch/riscv/kvm/Makefile                            |   4 +-
+ arch/riscv/kvm/vcpu_pmu.c                          |   2 +-
+ arch/riscv/kvm/vcpu_sbi.c                          |   2 +-
+ drivers/perf/Kconfig                               |  16 +-
+ drivers/perf/Makefile                              |   4 +-
+ drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}   |   0
+ drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c}  | 976 +++++++++++++++++----
+ include/linux/perf/riscv_pmu.h                     |  26 +-
+ .../perf/pmu-events/arch/riscv/arch-standard.json  |  10 +
+ tools/perf/pmu-events/empty-pmu-events.c           | 299 ++++---
+ tools/perf/pmu-events/jevents.py                   | 218 ++++-
+ tools/perf/pmu-events/pmu-events.h                 |  32 +-
+ 22 files changed, 1467 insertions(+), 317 deletions(-)
+---
+base-commit: 9d89551994a430b50c4fffcb1e617a057fa76e20
+change-id: 20240715-counter_delegation-628a32f8c9cc
+--
+Regards,
+Atish patra
+
