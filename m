@@ -1,143 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7057145B3E;
-	Thu,  6 Feb 2025 07:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D853FC0A;
+	Thu,  6 Feb 2025 07:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738825623; cv=none; b=aR6lgaKw6aK6UfpVFN5JII0R8lo3ESDfXho+cMAwmd5e1X8Qt1sobn02LxGcPapMCZHMRZszvjDMYXfTID+hdBcOSUoJ87du4jkk5zxZvS+yYheybmVdI7PrRyM8RS9bx2Lpyt7FFQbPbOA2tRxrKOLiKLozQgLOCL9T7olouTM=
+	t=1738825792; cv=none; b=m1aPQHd80eUGAG33BUcEuwpFXZ0T4xhyKaGDDop55oU34T0UTsWugDD/iSS9jqZ7oraitQqAVBumSntCvd44D7feptf76Fiwn/zX+hyAGuMlglYEacj47gCRBT++OLPmbRhc1Rdfm4gh/Ga3cpC2pEFSy5Wyd0Z6NPo5a6uV3RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738825623; c=relaxed/simple;
-	bh=4s/rd6ox4/7YQRDgSwO2fPO7qLeAZL+viGcf5t53deQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJWGwbEWa1sxacgCYMveKiCNz9xbu3kmGz5IF2Du2J75m5/dJewY9cDUB+fV0lCfTRTl5Mjlz0qCuVuWs+Eyy+IopcoAU+Zx9hArdAGNreac3JcPDilRWVDfIsY4UGnyaNgJIiI39kEYrGnTx9Vi/f/HKYT3UzsoCe6x9uvlRYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KmdDjhgS; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738825792; c=relaxed/simple;
+	bh=N5Xf48CCCLxk/fLOZMF3/waP8FdFK9yVMOKxJzMj3us=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P7yidX71ymnAqRMUK+ZyNjxP+IdTswLyghxlYOU6mdZuWWqQErVPlhCJZfTnIA3DcqFcpdQ/1R494gbVAqCldeywiWd18tpwVhjZ2XrIh8VHUX9xLKYn3ZTjMY0RBQSCPeynvT+QGqRPmOGU2Yf7PAASVtPHuTmxqVWluq67wzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPEfgNcM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KmdDjhgS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738825621; x=1770361621;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4s/rd6ox4/7YQRDgSwO2fPO7qLeAZL+viGcf5t53deQ=;
-  b=KmdDjhgSLdE2AqpmlwKIpYDdGv309Q2UM3CpzcanJTt2YNKC2urcAGpP
-   i4PFN7+KpE9yONaLaC2U56i/3lg87xT4jOfZuQrER8gwZq+HdHHMEjUA+
-   fKrWsKXFJV7o9GgY4zdYZnJyGPJgqM5KSCGTCNqa2R3PRXHhvEc4/Rky/
-   hMJHizYz6tfZR/Tc28chQ9qtOKB4IQG0EmmHChKg2gmT6d6kHAoqU0WVv
-   B+wZAwAxWzZBNfJn9LVVSmzkmpLtp4kwr5m2GB9KneeOc28jHmg8UH/A4
-   BDYT8T5VHOoO5m6Cs7+lrSzH9QBZBRXP55Rb/7n6E0SsLGwFhSVFWg6HF
-   g==;
-X-CSE-ConnectionGUID: HF9xww6BQQmgu0wPNz5s/Q==
-X-CSE-MsgGUID: DdR73e9vR5y/0gYByR15Sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50840507"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50840507"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 23:07:01 -0800
-X-CSE-ConnectionGUID: Ek0RWKdIQEqcK8J84mFO1A==
-X-CSE-MsgGUID: GeKq7cOFTQOPH6MIsu9jTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="116160577"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Feb 2025 23:06:58 -0800
-Date: Thu, 6 Feb 2025 15:06:05 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Mahesh Rao <mahesh.rao@intel.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>,
-	Niravkumar L Rabara <nirav.rabara@altera.com>,
-	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>
-Subject: Re: [PATCH v3 3/3] firmware: stratix10-svc: Add
- of_platform_default_populate()
-Message-ID: <Z6RfXSzMEVPlZAj6@yilunxu-OptiPlex-7050>
-References: <20250204-socfpga_sip_svc_misc-v3-0-697f7f153cfa@intel.com>
- <20250204-socfpga_sip_svc_misc-v3-3-697f7f153cfa@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPEfgNcM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 76C51C4CEDD;
+	Thu,  6 Feb 2025 07:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738825791;
+	bh=N5Xf48CCCLxk/fLOZMF3/waP8FdFK9yVMOKxJzMj3us=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=hPEfgNcMmTd2nLYO92k7fnNhL8jliQTrD+BFMT3a9d4cVc7GqKIA+MYfVJOWA4Mq9
+	 5SyeL2Sceef6CyUCrcmmuolNayb7nGNAi3ehate/k5elAE/qfT+mlVbSl0Gy97jPXW
+	 pfVwiLBtxuPe3Ju5TcJuw1StA/H+226xqlEvbo7om5n1t63sh80iOsT4ilp6oq1w5O
+	 wChZv+0OT5GgIkVrt9UP8srUOtVgQQWLAMTb5WqY/Sz/4OOYP6w7G5bNG6gp0I0blF
+	 VRHt9/84lY6MY4iX6bYo6jRPUQnuwPX7S5xVuHaJ1qwYwdaW3pNtkzx+JJKVSJ7ekH
+	 TBYs5u8a6+4CA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64661C02198;
+	Thu,  6 Feb 2025 07:09:51 +0000 (UTC)
+From: Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org>
+Date: Thu, 06 Feb 2025 15:09:42 +0800
+Subject: [PATCH] iio: imu: bmi270: Match ACPI ID found on newer GPD
+ firmware
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204-socfpga_sip_svc_misc-v3-3-697f7f153cfa@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-bmi270-gpd-acpi-v1-1-db638cfb9a3c@gmail.com>
+X-B4-Tracking: v=1; b=H4sIADVgpGcC/x3MQQqAIBBA0avErBvQoRK6SrRInWwWmShEIN09a
+ fkW/1conIULzF2FzLcUuWKD7jtwxxYDo/hmIEWjIjWhPYWMwpA8bi4Jeh68Jut4nAy0KmXe5fm
+ Py/q+HxuTkRdhAAAA
+X-Change-ID: 20250206-bmi270-gpd-acpi-de4d12bce567
+To: Alex Lanzano <lanzano.alex@gmail.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yao Zi <ziyao@disroot.org>, Cryolitia PukNgae <Cryolitia@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1657;
+ i=Cryolitia@gmail.com; h=from:subject:message-id;
+ bh=vGeYvEdVrXEykpDXoY202pSht7dfgKW3Zo+sT/kvXh0=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgprQTBEQUFvV1k1Z21DYUprZlR3Qnl5WmlBR
+ 2VrWUR1Z0F6MnBiUHAzYzJlV0U4bTVTSjVWL0VRRmJIQzJFM2xOCk5VanFnUVNaUTRoMUJBQVdD
+ Z0FkRmlFRXFCdzdrWDUwaW12VUg0UzhZNWdtQ2FKa2ZUd0ZBbWVrWURzQUNna1EKWTVnbUNhSmt
+ mVHdwNlFFQTVZODYrTnBvV1pKQmFxYVlQS1JCa1JEU09qaVdqZHdYWDB3ZVE4dk1qMHNBL1JqRQ
+ pPMm5uYjZtcjVZbFgvNWp0bUJRMXRxdTZZVU9ySERlSXo5NjZCK1lQCj0zVFB5Ci0tLS0tRU5EI
+ FBHUCBNRVNTQUdFLS0tLS0K
+X-Developer-Key: i=Cryolitia@gmail.com; a=openpgp;
+ fpr=1C3C6547538D7152310C0EEA84DD0C0130A54DF7
+X-Endpoint-Received: by B4 Relay for Cryolitia@gmail.com/default with
+ auth_id=186
+X-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
+Reply-To: Cryolitia@gmail.com
 
-On Tue, Feb 04, 2025 at 08:58:07PM +0800, Mahesh Rao wrote:
-> Add of_platform_default_populate() to stratix10-svc
-> driver as the firmware/svc node was moved out of soc.
-> This fixes the failed probing of child drivers of
-> svc node.
-> 
-> Fixes: 23c3ebed382a ("arm64: dts: socfpga: agilex: move firmware out of soc node")
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
-> ---
->  drivers/firmware/stratix10-svc.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-> index 3c52cb73237a43aac6984e497d75bab389e3eb9d..e3f990d888d71829f0ab22b8a59aa7af0316bea0 100644
-> --- a/drivers/firmware/stratix10-svc.c
-> +++ b/drivers/firmware/stratix10-svc.c
-> @@ -1224,22 +1224,28 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
->  	if (!svc->intel_svc_fcs) {
->  		dev_err(dev, "failed to allocate %s device\n", INTEL_FCS);
->  		ret = -ENOMEM;
-> -		goto err_unregister_dev;
-> +		goto err_unregister_rsu_dev;
->  	}
->  
->  	ret = platform_device_add(svc->intel_svc_fcs);
->  	if (ret) {
->  		platform_device_put(svc->intel_svc_fcs);
-> -		goto err_unregister_dev;
-> +		goto err_unregister_rsu_dev;
->  	}
->  
-> +	ret = of_platform_default_populate(dev_of_node(dev), NULL, dev);
+From: Cryolitia PukNgae <Cryolitia@gmail.com>
 
-I checked of_platform_populate/of_platform_bus_create() and see these
-functions will not error out if some sub device registration fails. So
-LGTM.
+Some GPD devices ship a buggy firmware that describes on-device BMI260 with ACPI ID "BMI0160". Since this is fixed in BIOS update v0.40[1], let's match the correct ID to detect the device. The buggy ID "BMI0160" is kept as well to maintain compatibility with older firmwares.
 
-Reviewed-by: Xu Yilun <yilun.xu@intel.com>
+---
+Some GPD devices ship a buggy firmware that describes on-device BMI260 with ACPI ID "BMI0160". Since this is fixed in BIOS update v0.40[1], let's match the correct ID to detect the device. The buggy ID "BMI0160" is kept as well to maintain compatibility with older firmwares.
 
-> +	if (ret)
-> +		goto err_unregister_fcs_dev;
-> +
->  	dev_set_drvdata(dev, svc);
->  
->  	pr_info("Intel Service Layer Driver Initialized\n");
->  
->  	return 0;
->  
-> -err_unregister_dev:
-> +err_unregister_fcs_dev:
-> +	platform_device_unregister(svc->intel_svc_fcs);
-> +err_unregister_rsu_dev:
->  	platform_device_unregister(svc->stratix10_svc_rsu);
->  err_free_kfifo:
->  	kfifo_free(&controller->svc_fifo);
-> @@ -1253,6 +1259,8 @@ static void stratix10_svc_drv_remove(struct platform_device *pdev)
->  	struct stratix10_svc *svc = dev_get_drvdata(&pdev->dev);
->  	struct stratix10_svc_controller *ctrl = platform_get_drvdata(pdev);
->  
-> +	of_platform_depopulate(ctrl->dev);
-> +
->  	platform_device_unregister(svc->intel_svc_fcs);
->  	platform_device_unregister(svc->stratix10_svc_rsu);
->  
-> 
-> -- 
-> 2.35.3
-> 
-> 
+Link: http://download.softwincn.com/WIN%20Max%202024/Max2-7840-BIOS-V0.41.zip
+
+[1]. See the update nodes in the archive file above
+
+Signed-off-by: Cryolitia PukNgae <Cryolitia@gmail.com>
+---
+ drivers/iio/imu/bmi270/bmi270_i2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/iio/imu/bmi270/bmi270_i2c.c b/drivers/iio/imu/bmi270/bmi270_i2c.c
+index 44699ab589097eaa0eec5f2172245496ed031185..f66ae01e301df24f1e563e059da8cc531fc173eb 100644
+--- a/drivers/iio/imu/bmi270/bmi270_i2c.c
++++ b/drivers/iio/imu/bmi270/bmi270_i2c.c
+@@ -40,6 +40,8 @@ static const struct i2c_device_id bmi270_i2c_id[] = {
+ static const struct acpi_device_id bmi270_acpi_match[] = {
+ 	/* GPD Win Mini, Aya Neo AIR Pro, OXP Mini Pro, etc. */
+ 	{ "BMI0160",  (kernel_ulong_t)&bmi260_chip_info },
++	/* GPD Win Max 2 2023(sincice BIOS v0.40), etc. */
++	{ "BMI0260",  (kernel_ulong_t)&bmi260_chip_info },
+ 	{ }
+ };
+ 
+
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250206-bmi270-gpd-acpi-de4d12bce567
+
+Best regards,
+-- 
+Cryolitia PukNgae <Cryolitia@gmail.com>
+
+
