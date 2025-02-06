@@ -1,179 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1BF19C55E;
-	Thu,  6 Feb 2025 22:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from harvie.cz (harvie.cz [77.87.242.242])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D2323C380;
+	Thu,  6 Feb 2025 22:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.87.242.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738880993; cv=none; b=XJYUY6HJNvOnLgM2Cvj+HKXSGwRVhYcYtTigz+2UlrWjHg8/bwf339PpckFDF4DEzweptjIdvP6w8dsi3AQP08d+cQy9Tp34/QQ00lL1m/9+mfD2v1JkjvEFVLYhAtrP3eZ0I4HQ1b6hrcxfRAlaBlY25qpzJN0eGqBWT7O/gdY=
+	t=1738881025; cv=none; b=Kv78z9JDqsEutH8wiTpnwQMq30kLeZnggE8HE30rsec7gU9Wqpq2AyOwJ5rk3oOWfep4mN/yrKnJdSHHpHDBof/1plJQOwMCDY+pJhwZONobHJ0eKqoUEosxvOacYvnU0pjGB8zSnEX5+Xww1qXameUOKxA9bKVitsMDRtgUVFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738880993; c=relaxed/simple;
-	bh=/PLIPgyGBzrsuvtgvd/c6lZJZiW64Jw51aLGkg/HfTo=;
-	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bSA+VUISupeEVdlgIe36K+RPCyObnYRxnQ4EirDmbJ9ayMCgcvgq6NFcdK2NT2Blh4ebdjy8+yRkpE28QqfhMCX2PhIQO8NQi2zxh6dgCaCZOAl74J2JzpWvq1jRfJK0gUPbdQd7EW5Aw6ooyczmlFJH3RWfwQo1CblQE5Z1i7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcgXxijA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcgXxijA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7392AC4CEDD;
-	Thu,  6 Feb 2025 22:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738880992;
-	bh=/PLIPgyGBzrsuvtgvd/c6lZJZiW64Jw51aLGkg/HfTo=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=UcgXxijASpIEK9dJTsTlU8TLFtkvhILhzOuKAw+4bLeiNhJIHaGKieF1zIoqiUBvT
-	 ruXP8uC51SEH9cT72EIpa2UOm34gOVXirkhxLgf9gu2EMzqEJ7Kh6Rs9xFJUlJZ0oT
-	 nqYbAHGhHdPC7zVAGGYy32E3TxumZTbr9j8BdZX2kL0WcnWid/d741VfScHvZveSKv
-	 sdHa1tNKyWO3P4iBA9D9Xa9e9l3xtGfvUaqg6DzAjuLjKinMzU57M4USBa6enw278C
-	 0ataHlcXysKdq2vxW1waGi2jxB0cRO7/s3gSOLuAfyKej8L1PEGakaQBv0M5kaCzua
-	 4tNbT+jQAFa5w==
-Date: Thu, 06 Feb 2025 14:29:51 -0800
-Subject: [PATCHSET 2/5] xfsprogs: new libxfs code from kernel 6.14
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, aalbersh@kernel.org
-Cc: david@fromorbit.com, alexjlzheng@tencent.com, chandanbabu@kernel.org,
- mtodorovac69@gmail.com, cem@kernel.org, dchinner@redhat.com,
- linux-kernel@vger.kernel.org, cmaiolino@redhat.com,
- linux-xfs@vger.kernel.org, hch@lst.de, hch@lst.de, linux-xfs@vger.kernel.org
-Message-ID: <173888086703.2739176.18069262351115926535.stgit@frogsfrogsfrogs>
-In-Reply-To: <20250206222122.GA21808@frogsfrogsfrogs>
-References: <20250206222122.GA21808@frogsfrogsfrogs>
+	s=arc-20240116; t=1738881025; c=relaxed/simple;
+	bh=Ocg2kVNSzvzPaTba3syGZjukuyu281TvoviNdI2kyRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E7uxe9obO9MIcOpNv2del/PKl72nIbwOwLlakWN4VzVKcBc4JaGSTUQ7cU38gCv04xh72rqDibmt5PhLK2MrCn+9vWNz2Nk+hcUS95UXswfdmkRUhFs2Ut/BHjM8AI32T9v6ECF1mj9gJ76or7Q3z7VHJLWQHV7cy49FV4kMgGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=77.87.242.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from anemophobia.local (unknown [77.87.240.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by harvie.cz (Postfix) with ESMTPSA id BD313180133;
+	Thu,  6 Feb 2025 23:30:13 +0100 (CET)
+From: Tomas Mudrunka <tomas.mudrunka@gmail.com>
+To: tomas.mudrunka@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	song@kernel.org,
+	yukuai3@huawei.com
+Subject: [PATCH v3] Export MDRAID bitmap on disk structure in UAPI header file
+Date: Thu,  6 Feb 2025 23:30:05 +0100
+Message-ID: <20250206223005.1759192-1-tomas.mudrunka@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20241231030929.246059-1-tomas.mudrunka@gmail.com>
+References: <20241231030929.246059-1-tomas.mudrunka@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+When working on software that manages MD RAID disks from
+userspace. Currently provided headers only contain MD superblock.
+That is not enough to fully populate MD RAID metadata.
+Therefore this patch adds bitmap superblock as well.
 
-Port kernel libxfs code to userspace.
-
-If you're going to start using this code, I strongly recommend pulling
-from my git trees, which are linked below.
-
-This has been running on the djcloud for months with no problems.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=libxfs-sync-6.14
+Signed-off-by: Tomas Mudrunka <tomas.mudrunka@gmail.com>
 ---
-Commits in this patchset:
- * xfs: tidy up xfs_iroot_realloc
- * xfs: refactor the inode fork memory allocation functions
- * xfs: make xfs_iroot_realloc take the new numrecs instead of deltas
- * xfs: make xfs_iroot_realloc a bmap btree function
- * xfs: tidy up xfs_bmap_broot_realloc a bit
- * xfs: hoist the node iroot update code out of xfs_btree_new_iroot
- * xfs: hoist the node iroot update code out of xfs_btree_kill_iroot
- * xfs: add some rtgroup inode helpers
- * xfs: prepare to reuse the dquot pointer space in struct xfs_inode
- * xfs: simplify the xfs_rmap_{alloc,free}_extent calling conventions
- * xfs: support storing records in the inode core root
- * xfs: allow inode-based btrees to reserve space in the data device
- * xfs: introduce realtime rmap btree ondisk definitions
- * xfs: realtime rmap btree transaction reservations
- * xfs: add realtime rmap btree operations
- * xfs: prepare rmap functions to deal with rtrmapbt
- * xfs: add a realtime flag to the rmap update log redo items
- * xfs: pretty print metadata file types in error messages
- * xfs: support file data forks containing metadata btrees
- * xfs: add realtime reverse map inode to metadata directory
- * xfs: add metadata reservations for realtime rmap btrees
- * xfs: wire up a new metafile type for the realtime rmap
- * xfs: wire up rmap map and unmap to the realtime rmapbt
- * xfs: create routine to allocate and initialize a realtime rmap btree inode
- * xfs: report realtime rmap btree corruption errors to the health system
- * xfs: scrub the realtime rmapbt
- * xfs: scrub the metadir path of rt rmap btree files
- * xfs: online repair of realtime bitmaps for a realtime group
- * xfs: online repair of the realtime rmap btree
- * xfs: create a shadow rmap btree during realtime rmap repair
- * xfs: namespace the maximum length/refcount symbols
- * xfs: introduce realtime refcount btree ondisk definitions
- * xfs: realtime refcount btree transaction reservations
- * xfs: add realtime refcount btree operations
- * xfs: prepare refcount functions to deal with rtrefcountbt
- * xfs: add a realtime flag to the refcount update log redo items
- * xfs: add realtime refcount btree inode to metadata directory
- * xfs: add metadata reservations for realtime refcount btree
- * xfs: wire up a new metafile type for the realtime refcount
- * xfs: wire up realtime refcount btree cursors
- * xfs: create routine to allocate and initialize a realtime refcount btree inode
- * xfs: update rmap to allow cow staging extents in the rt rmap
- * xfs: compute rtrmap btree max levels when reflink enabled
- * xfs: allow inodes to have the realtime and reflink flags
- * xfs: recover CoW leftovers in the realtime volume
- * xfs: fix xfs_get_extsz_hint behavior with realtime alwayscow files
- * xfs: apply rt extent alignment constraints to CoW extsize hint
- * xfs: enable extent size hints for CoW operations
- * xfs: report realtime refcount btree corruption errors to the health system
- * xfs: scrub the realtime refcount btree
- * xfs: scrub the metadir path of rt refcount btree files
- * xfs: fix the entry condition of exact EOF block allocation optimization
- * xfs: mark xfs_dir_isempty static
- * xfs: remove XFS_ILOG_NONCORE
- * xfs: constify feature checks
- * xfs/libxfs: replace kmalloc() and memcpy() with kmemdup()
----
- include/kmem.h                |    9 
- include/libxfs.h              |    2 
- include/xfs_inode.h           |    5 
- include/xfs_mount.h           |   27 +
- include/xfs_trace.h           |    7 
- io/inject.c                   |    1 
- libxfs/Makefile               |    4 
- libxfs/libxfs_priv.h          |   11 
- libxfs/xfs_ag_resv.c          |    3 
- libxfs/xfs_attr.c             |    4 
- libxfs/xfs_bmap.c             |   47 +-
- libxfs/xfs_bmap_btree.c       |  111 ++++
- libxfs/xfs_bmap_btree.h       |    3 
- libxfs/xfs_btree.c            |  410 +++++++++++++---
- libxfs/xfs_btree.h            |   28 +
- libxfs/xfs_btree_mem.c        |    1 
- libxfs/xfs_btree_staging.c    |   10 
- libxfs/xfs_defer.h            |    2 
- libxfs/xfs_dir2.c             |    9 
- libxfs/xfs_dir2.h             |    1 
- libxfs/xfs_errortag.h         |    4 
- libxfs/xfs_exchmaps.c         |    4 
- libxfs/xfs_format.h           |   51 ++
- libxfs/xfs_fs.h               |   10 
- libxfs/xfs_health.h           |    6 
- libxfs/xfs_inode_buf.c        |   65 ++-
- libxfs/xfs_inode_fork.c       |  201 +++-----
- libxfs/xfs_inode_fork.h       |    6 
- libxfs/xfs_log_format.h       |   16 -
- libxfs/xfs_metadir.c          |    3 
- libxfs/xfs_metafile.c         |  221 +++++++++
- libxfs/xfs_metafile.h         |   13 +
- libxfs/xfs_ondisk.h           |    4 
- libxfs/xfs_refcount.c         |  277 +++++++++--
- libxfs/xfs_refcount.h         |   23 +
- libxfs/xfs_rmap.c             |  178 ++++++-
- libxfs/xfs_rmap.h             |   12 
- libxfs/xfs_rtbitmap.c         |    2 
- libxfs/xfs_rtbitmap.h         |    9 
- libxfs/xfs_rtgroup.c          |   74 ++-
- libxfs/xfs_rtgroup.h          |   58 ++
- libxfs/xfs_rtrefcount_btree.c |  755 ++++++++++++++++++++++++++++++
- libxfs/xfs_rtrefcount_btree.h |  189 +++++++
- libxfs/xfs_rtrmap_btree.c     | 1034 +++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_rtrmap_btree.h     |  210 ++++++++
- libxfs/xfs_sb.c               |   14 +
- libxfs/xfs_shared.h           |   21 +
- libxfs/xfs_trans_resv.c       |   37 +
- libxfs/xfs_trans_space.h      |   13 +
- libxfs/xfs_types.h            |    7 
- repair/rmap.c                 |    2 
- repair/scan.c                 |    2 
- 52 files changed, 3822 insertions(+), 394 deletions(-)
- create mode 100644 libxfs/xfs_rtrefcount_btree.c
- create mode 100644 libxfs/xfs_rtrefcount_btree.h
- create mode 100644 libxfs/xfs_rtrmap_btree.c
- create mode 100644 libxfs/xfs_rtrmap_btree.h
+V1 -> V2: Also exported stuff needed by mdadm according to Mariusz Tkaczyk
+V2 -> V3: Fixed checkpatch errors
+
+ drivers/md/md-bitmap.c         |  9 ------
+ drivers/md/md-bitmap.h         | 42 +--------------------------
+ include/uapi/linux/raid/md_p.h | 53 +++++++++++++++++++++++++++++++++-
+ 3 files changed, 53 insertions(+), 51 deletions(-)
+
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index ec4ecd96e..247610f9a 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -32,15 +32,6 @@
+ #include "md.h"
+ #include "md-bitmap.h"
+ 
+-#define BITMAP_MAJOR_LO 3
+-/* version 4 insists the bitmap is in little-endian order
+- * with version 3, it is host-endian which is non-portable
+- * Version 5 is currently set only for clustered devices
+- */
+-#define BITMAP_MAJOR_HI 4
+-#define BITMAP_MAJOR_CLUSTERED 5
+-#define	BITMAP_MAJOR_HOSTENDIAN 3
+-
+ /*
+  * in-memory bitmap:
+  *
+diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+index 31c93019c..75bbe6b84 100644
+--- a/drivers/md/md-bitmap.h
++++ b/drivers/md/md-bitmap.h
+@@ -7,7 +7,7 @@
+ #ifndef BITMAP_H
+ #define BITMAP_H 1
+ 
+-#define BITMAP_MAGIC 0x6d746962
++#include <linux/raid/md_p.h>
+ 
+ typedef __u16 bitmap_counter_t;
+ #define COUNTER_BITS 16
+@@ -18,46 +18,6 @@ typedef __u16 bitmap_counter_t;
+ #define RESYNC_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 2)))
+ #define COUNTER_MAX ((bitmap_counter_t) RESYNC_MASK - 1)
+ 
+-/* use these for bitmap->flags and bitmap->sb->state bit-fields */
+-enum bitmap_state {
+-	BITMAP_STALE	   = 1,  /* the bitmap file is out of date or had -EIO */
+-	BITMAP_WRITE_ERROR = 2, /* A write error has occurred */
+-	BITMAP_HOSTENDIAN  =15,
+-};
+-
+-/* the superblock at the front of the bitmap file -- little endian */
+-typedef struct bitmap_super_s {
+-	__le32 magic;        /*  0  BITMAP_MAGIC */
+-	__le32 version;      /*  4  the bitmap major for now, could change... */
+-	__u8  uuid[16];      /*  8  128 bit uuid - must match md device uuid */
+-	__le64 events;       /* 24  event counter for the bitmap (1)*/
+-	__le64 events_cleared;/*32  event counter when last bit cleared (2) */
+-	__le64 sync_size;    /* 40  the size of the md device's sync range(3) */
+-	__le32 state;        /* 48  bitmap state information */
+-	__le32 chunksize;    /* 52  the bitmap chunk size in bytes */
+-	__le32 daemon_sleep; /* 56  seconds between disk flushes */
+-	__le32 write_behind; /* 60  number of outstanding write-behind writes */
+-	__le32 sectors_reserved; /* 64 number of 512-byte sectors that are
+-				  * reserved for the bitmap. */
+-	__le32 nodes;        /* 68 the maximum number of nodes in cluster. */
+-	__u8 cluster_name[64]; /* 72 cluster name to which this md belongs */
+-	__u8  pad[256 - 136]; /* set to zero */
+-} bitmap_super_t;
+-
+-/* notes:
+- * (1) This event counter is updated before the eventcounter in the md superblock
+- *    When a bitmap is loaded, it is only accepted if this event counter is equal
+- *    to, or one greater than, the event counter in the superblock.
+- * (2) This event counter is updated when the other one is *if*and*only*if* the
+- *    array is not degraded.  As bits are not cleared when the array is degraded,
+- *    this represents the last time that any bits were cleared.
+- *    If a device is being added that has an event count with this value or
+- *    higher, it is accepted as conforming to the bitmap.
+- * (3)This is the number of sectors represented by the bitmap, and is the range that
+- *    resync happens across.  For raid1 and raid5/6 it is the size of individual
+- *    devices.  For raid10 it is the size of the array.
+- */
+-
+ struct md_bitmap_stats {
+ 	u64		events_cleared;
+ 	int		behind_writes;
+diff --git a/include/uapi/linux/raid/md_p.h b/include/uapi/linux/raid/md_p.h
+index ff47b6f0b..2995528f9 100644
+--- a/include/uapi/linux/raid/md_p.h
++++ b/include/uapi/linux/raid/md_p.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+ /*
+    md_p.h : physical layout of Linux RAID devices
+-          Copyright (C) 1996-98 Ingo Molnar, Gadi Oxman
++	Copyright (C) 1996-98 Ingo Molnar, Gadi Oxman, Peter T. Breuer
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -426,4 +426,55 @@ struct ppl_header {
+ 	struct ppl_header_entry entries[PPL_HDR_MAX_ENTRIES];
+ } __attribute__ ((__packed__));
+ 
++#define MD_BITMAP_SUBERBLOCK_EXPORTED 1	/* Notify that kernel provides it */
++#define BITMAP_MAGIC 0x6d746962		/* This is actually "bitm" in ASCII :-) */
++#define BITMAP_MAJOR_LO 3
++/* version 4 insists the bitmap is in little-endian order
++ * with version 3, it is host-endian which is non-portable
++ */
++#define BITMAP_MAJOR_HI 4
++#define BITMAP_MAJOR_CLUSTERED 5
++#define BITMAP_MAJOR_HOSTENDIAN 3
++
++/* use these for bitmap->flags and bitmap->sb->state bit-fields */
++enum bitmap_state {
++	BITMAP_STALE	   = 1,  /* the bitmap file is out of date or had -EIO */
++	BITMAP_WRITE_ERROR = 2, /* A write error has occurred */
++	BITMAP_HOSTENDIAN  = 15,
++};
++
++/* the superblock at the front of the bitmap file -- little endian */
++typedef struct bitmap_super_s {
++	__le32 magic;        /*  0  BITMAP_MAGIC */
++	__le32 version;      /*  4  the bitmap major for now, could change... */
++	__u8  uuid[16];      /*  8  128 bit uuid - must match md device uuid */
++	__le64 events;       /* 24  event counter for the bitmap (1)*/
++	__le64 events_cleared;/*32  event counter when last bit cleared (2) */
++	__le64 sync_size;    /* 40  the size of the md device's sync range(3) */
++	__le32 state;        /* 48  bitmap state information */
++	__le32 chunksize;    /* 52  the bitmap chunk size in bytes */
++	__le32 daemon_sleep; /* 56  seconds between disk flushes */
++	__le32 write_behind; /* 60  number of outstanding write-behind writes */
++	__le32 sectors_reserved; /* 64 number of 512-byte sectors that are
++				  * reserved for the bitmap.
++				  */
++	__le32 nodes;        /* 68 the maximum number of nodes in cluster. */
++	__u8 cluster_name[64]; /* 72 cluster name to which this md belongs */
++	__u8  pad[256 - 136]; /* set to zero */
++} bitmap_super_t;
++
++/* notes:
++ * (1) This event counter is updated before the eventcounter in the md superblock
++ *    When a bitmap is loaded, it is only accepted if this event counter is equal
++ *    to, or one greater than, the event counter in the superblock.
++ * (2) This event counter is updated when the other one is *if*and*only*if* the
++ *    array is not degraded.  As bits are not cleared when the array is degraded,
++ *    this represents the last time that any bits were cleared.
++ *    If a device is being added that has an event count with this value or
++ *    higher, it is accepted as conforming to the bitmap.
++ * (3)This is the number of sectors represented by the bitmap, and is the range that
++ *    resync happens across.  For raid1 and raid5/6 it is the size of individual
++ *    devices.  For raid10 it is the size of the array.
++ */
++
+ #endif
+-- 
+2.48.1
 
