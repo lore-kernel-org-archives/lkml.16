@@ -1,56 +1,51 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E951DF25D;
-	Thu,  6 Feb 2025 21:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5FD1DF73D;
+	Thu,  6 Feb 2025 21:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738876697; cv=none; b=r6V4MwBSoBMcZKEmVBUfMbEnt4VnzLZbe1fNiwXO9k+qHPPWRaELPteSZgf+ZzMiXPKn1MIIUQaLTUsA8NBZvygdv9vZS4UtmOquAS26XAOuZjJZAoP1DshQiroMz+RPzCap9trTq3PTTlAUG8ugsyOuYqSjs/ZeuHgCAniqMfI=
+	t=1738876732; cv=none; b=JDqOo4NqR1DJgcfttjdzRVaWBmcW/kpeD9sxGzQQ5srGzD42wipyFaCJqurfvl/fKPfJxSFl9yH/ktAUzGltUIBAGwSuvF84aVLqhcjPjRJ2Cb1z50ZpsPtRfpqA6bzFiBEPlbSsffxNj3FLgywh5eXz0NXq6aFV51zXpQz2HRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738876697; c=relaxed/simple;
-	bh=a9o//Z3kQXp75IfK8oqW2d3xPTbgXldqgAgvPGnV6UM=;
+	s=arc-20240116; t=1738876732; c=relaxed/simple;
+	bh=52sdCJ0gvdsUmKwoKOX0xSR3RgArXDVFCwrU0SpjuCI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SXvHE4C+zi3P4IPq2FDYxsXeaad0zgF0FFXUA/Hn8d6okUUv79fFz7VbPKo8txyNtpxy9X+LFVkc7Y0RDt+c5ErilPznDIce8BO40h41ehQSoDqau69XsG1xQWa1WgrWaa7NdisWGPPgc16vSq7mAsMEtj7yX1nDRQSxjSwyKws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=HIcorzY5; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cs1kvCXOdju+cWLvGIkbLotB7LNjlh72WAth0Fw9mbZMYztSwQv7dfCVLYbwH5LXNdq9+LXjEZMbNvctt8rgipNFK82SXJHIcOOYK4mi2yypiZ5wJqMTumAX8nEDRXeyoYY1rjf10Et/BIwFy4/WT2bsxgf2xDSvUU/DR+2CMpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBSdBfcK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HIcorzY5"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B7341227;
-	Thu,  6 Feb 2025 22:16:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738876619;
-	bh=a9o//Z3kQXp75IfK8oqW2d3xPTbgXldqgAgvPGnV6UM=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBSdBfcK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EA5C4CEDD;
+	Thu,  6 Feb 2025 21:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738876731;
+	bh=52sdCJ0gvdsUmKwoKOX0xSR3RgArXDVFCwrU0SpjuCI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HIcorzY5kCIiui65WhPzYGRM2yHa4K+sORaYzMijC/QCL+w1+g4OPg1MU82u7stwj
-	 qq0M/mQLFxlNuwuD3PcZhQhIV8QhnSH527Yi+wT7+73hyynYN4wn/nfv/gdzOtSPRp
-	 rrkaAIDsNF3huY0t5AHXA+KyYP587Ae/UWijCJoo=
-Date: Thu, 6 Feb 2025 23:18:08 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Robby Cai <robby.cai@nxp.com>,
-	Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH v2 01/14] dt-bindings: phy: Add MIPI CSI PHY for i.MX8Q
-Message-ID: <20250206211808.GA24886@pendragon.ideasonboard.com>
-References: <20250205-8qxp_camera-v2-0-731a3edf2744@nxp.com>
- <20250205-8qxp_camera-v2-1-731a3edf2744@nxp.com>
+	b=fBSdBfcK+VfqF/f5FDvHEG1xVt7ZT2z8PWvc0ZYULQyeL5MN4AB6IE3zHRyyJqjhv
+	 uARZ26fNq3+XGMj6p9prkGP2aPyuEWmuB5knm9GiZTzNtdgcmQcbgCfNklH1XJ0Rja
+	 7RCn9wgqLOwMVXeU2kjT0W1a05/+NQ9TLQQzsdXc2UZC6NteuVYXOTYWRlbMO7PL0Q
+	 DL/kI7SOk/Jo2Ex5WTNq6UnOVCOJ/MpzQd4rsS3WIdIiUm1GyzcBwF3BvqiRsdP+Ih
+	 PRAi8Z3HsGb9bxevymg4CHXiutJlETc/PktaproWOd1jybGnFTP1E+R5JhG7L3XdtL
+	 6qsnPETXz+m9g==
+Date: Thu, 6 Feb 2025 13:18:51 -0800
+From: Kees Cook <kees@kernel.org>
+To: Eyal Birger <eyal.birger@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, luto@amacapital.net, wad@chromium.org,
+	oleg@redhat.com, mhiramat@kernel.org, andrii@kernel.org,
+	alexei.starovoitov@gmail.com, cyphar@cyphar.com,
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
+	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
+	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
+	bpf@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] selftests/seccomp: validate uretprobe syscall
+ passes through seccomp
+Message-ID: <202502061317.3B1F3D834@keescook>
+References: <20250202162921.335813-1-eyal.birger@gmail.com>
+ <20250202162921.335813-3-eyal.birger@gmail.com>
+ <Z5_a33NQwrVC9n3r@krava>
+ <CAHsH6GtpzR5_X4e0KphnyNSkKqBdgivfvyGQ1mbtA8fpnuu5sg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,104 +54,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250205-8qxp_camera-v2-1-731a3edf2744@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHsH6GtpzR5_X4e0KphnyNSkKqBdgivfvyGQ1mbtA8fpnuu5sg@mail.gmail.com>
 
-Hi Frank,
-
-Thank you for the patch.
-
-On Wed, Feb 05, 2025 at 12:18:10PM -0500, Frank Li wrote:
-> Add MIPI CSI phy binding doc for i.MX8QXP, i.MX8QM and i.MX8ULP.
-
-s/CSI/CSI-2/ in the subject line, here and below.
-s/phy/PHY/
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v1 to v2
-> - Add missed fsl,imx8qm-mipi-cphy, which failback to fsl,imx8qxp-mipi-cphy
-> - Move reg to required. Previous 8ulp use fsl,offset in downstream version.
-> which should be reg. So move it to required
-> ---
->  .../bindings/phy/fsl,imx8qxp-mipi-cphy.yaml        | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
+On Sun, Feb 02, 2025 at 01:13:28PM -0800, Eyal Birger wrote:
+> On Sun, Feb 2, 2025 at 12:51 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Sun, Feb 02, 2025 at 08:29:21AM -0800, Eyal Birger wrote:
+> >
+> > SNIP
+> >
+> > > +TEST_F(URETPROBE, uretprobe_default_block)
+> > > +{
+> > > +     struct sock_filter filter[] = {
+> > > +             BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
+> > > +                     offsetof(struct seccomp_data, nr)),
+> > > +             BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit_group, 1, 0),
+> > > +             BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL),
+> > > +             BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
+> > > +     };
+> > > +     struct sock_fprog prog = {
+> > > +             .len = (unsigned short)ARRAY_SIZE(filter),
+> > > +             .filter = filter,
+> > > +     };
+> > > +
+> > > +     ASSERT_EQ(0, run_probed_with_filter(&prog));
+> > > +}
+> > > +
+> > > +TEST_F(URETPROBE, uretprobe_block_uretprobe_syscall)
+> > > +{
+> > > +     struct sock_filter filter[] = {
+> > > +             BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
+> > > +                     offsetof(struct seccomp_data, nr)),
+> > > +#ifdef __NR_uretprobe
+> > > +             BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_uretprobe, 0, 1),
+> > > +#endif
+> >
+> > does it make sense to run these tests on archs without __NR_uretprobe ?
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8qxp-mipi-cphy.yaml b/Documentation/devicetree/bindings/phy/fsl,imx8qxp-mipi-cphy.yaml
-> new file mode 100644
-> index 0000000000000..7335b9262d0e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/fsl,imx8qxp-mipi-cphy.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/fsl,imx8qxp-mipi-cphy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX8 SoC MIPI CSI PHY
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - fsl,imx8qxp-mipi-cphy
-> +          - fsl,imx8ulp-mipi-cphy
-> +      - items:
-> +          - const: fsl,imx8qm-mipi-cphy
-> +          - const: fsl,imx8qxp-mipi-cphy
+> I considered ifdefing them out, but then thought that given it's not
+> a lot of code it'd be better for the tests to be compiling and
+> ready in case support is added on a new platform than to have to
+> worry about that at that point.
 
-Why are those called cphy when, as far as I can tell from the
-documentation, they are D-PHYs ? Does that stand for *C*SI PHY ? I find
-it slightly confusing, but not so much that I'd ask for a change. It's
-just a name at the end of the day.
+The trouble I had is that on other archs, the tests fail. I've added
+this, which retains build coverage, but doesn't trigger failures without
+__NR_uretprobe:
 
-Apart from that the binding looks fairly OK. Except maybe from the fact
-that this device is not a PHY :-( It has two PHY control registers, but
-the rest seems related to the glue logic at the output of the CSI-2
-receiver. I wonder if we should go the syscon route.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx8qxp-mipi-cphy
-> +    then:
-> +      required:
-> +        - power-domains
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    phy@58221000 {
-> +            compatible = "fsl,imx8qxp-mipi-cphy";
-> +            reg = <0x58221000 0x10000>;
-> +            #phy-cells = <0>;
-> +            power-domains = <&pd 0>;
-> +    };
-> +
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index bee4f424c5c3..14ba51b52095 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -4973,6 +4973,10 @@ FIXTURE_SETUP(URETPROBE)
+ 	ssize_t offset;
+ 	int type, bit;
+ 
++#ifndef __NR_uretprobe
++	SKIP(return, "__NR_uretprobe syscall not defined");
++#endif
++
+ 	if (!variant->attach)
+ 		return;
+ 
 
 -- 
-Regards,
-
-Laurent Pinchart
+Kees Cook
