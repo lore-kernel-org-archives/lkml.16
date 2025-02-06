@@ -1,46 +1,51 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8391F4184
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 16:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D4121F4184;
+	Thu,  6 Feb 2025 16:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738858583; cv=none; b=CeSJOVrDdERMMByBG20TIbTzmLj4RdBmG1Fq3HVv6jiEjO0FGH1MYObtUKvN7Q8mGPsPbJEsWWK4BsPgSpCb1E7UD407MIYT47T4STR6TN+4PaClKxfGDVeg2rnOJZtKwMRfwr4siYlD0LbfNuJw5NSZVhkmb9+ZH3gp5o/j71c=
+	t=1738858628; cv=none; b=SJA6IjKdyW/+HboYhau9gmwJbfb2s083NDvYSbP6sVhf0Vco+kbBN2bB8dueLMnRStCCbi9ts/0jHoFeZzzYaf4ubqT6HS6NUBp5b3Fkz5Y+ZXTdennXzsNacyPrm7Czc7qA9uoZiwHVwEz9GCUe0uwqL+pY/JUA9Rw9oLqpnjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738858583; c=relaxed/simple;
-	bh=PeXPpUOcWx4WaMghzP6YInvZVL6x/JAZkGEahIKRFBM=;
+	s=arc-20240116; t=1738858628; c=relaxed/simple;
+	bh=07oSBwgh/00XqU8S9NwC+z5K2Q1ohr8OmAinlMr1GuU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sdc3BgEQVtHDfAXxQLsVEj8BdAtwzVeRVQioVR50Ab4bco5uasI4f/yjXjOJZ3lf7XOUa/DEGci6goh6o1CyxEI3aJP96fi8qVLYpLFYTn4AEe9uBB1xK/pB1R9I2SWW3HZovK7xOnLoB9Hwv6Mi7NY5nCsHlB61kkMdSQNR2dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rzZMdbJE; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rzZMdbJE"
-Date: Thu, 6 Feb 2025 16:16:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738858576;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1IZlSqZZbQ+v7dFcZMYYg2FQblOSM6/wVM/2+9y0alo=;
-	b=rzZMdbJEnnIcq9IYLc44Jo9x4ffGAeJ9VX/E+mmwzKEmIeRirGj02td+vP2Yo7U86eb83f
-	/zBa//b2O9Ux3Tpf5JDfy+FTcjFBNfWsdW/TQnINajFl7V3MfnIFBtzaliZKX2hwUB3Yub
-	PTd5FtyoiEzmFkpZ6oIv593v6qMRyhk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Kairui Song <ryncsn@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 02/17] zram: do not use per-CPU compression streams
-Message-ID: <Z6TgSaYIf1DnOszP@google.com>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-3-senozhatsky@chromium.org>
- <CAMgjq7BFUrUY5Xq5Eks4ibqbWgJcca1vqB4kq=otQVyG=23FRw@mail.gmail.com>
- <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
- <CAMgjq7DKveiCJVb4ACSaLFV0Q1_Yd+sbL_X2dgXz6QGYwuNRTw@mail.gmail.com>
- <ysqyikz2jhnvjkhmkgwekbmz6dykvjssut6n3t746tpsscursu@zc6rg5xgk6sp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FKoGIGs6V9f7j9xxEovJbUyiRVhADQolLG+8A2XZMOZ0wl3jDIP4+cP1aDMwii87tD9ybvfzUuCAo2woi9jWraXzbsK8HB7lL42kjUkqHMk4jU5FJW/WbrBi+gJpdCOXOSUcHKQukX3qM1c7pouxQu4WvSnRJkeD0aTo3lRU9+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAA9912FC;
+	Thu,  6 Feb 2025 08:17:27 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 660E43F63F;
+	Thu,  6 Feb 2025 08:17:01 -0800 (PST)
+Date: Thu, 6 Feb 2025 16:16:58 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH v2 3/4] clk: imx: pll14xx: support spread spectrum clock
+ generation
+Message-ID: <Z6TgesTZklGvmI56@bogus>
+References: <20250205-clk-ssc-v2-0-fa73083caa92@nxp.com>
+ <20250205-clk-ssc-v2-3-fa73083caa92@nxp.com>
+ <CABGWkvqXf0ZmJKofrbahB5N5uer6ye6Q4s_PXz_Z61vG2pMu=g@mail.gmail.com>
+ <PAXPR04MB8459F1CE0E8049355ADC9F3C88F62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <CABGWkvrKe6az5XR=MvdMwBOfeXqd5yPoF4Yf4pqyyGPD4Kpvpg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,96 +54,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ysqyikz2jhnvjkhmkgwekbmz6dykvjssut6n3t746tpsscursu@zc6rg5xgk6sp>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CABGWkvrKe6az5XR=MvdMwBOfeXqd5yPoF4Yf4pqyyGPD4Kpvpg@mail.gmail.com>
 
-On Thu, Feb 06, 2025 at 04:22:27PM +0900, Sergey Senozhatsky wrote:
-> On (25/02/06 14:55), Kairui Song wrote:
-> > > On (25/02/01 17:21), Kairui Song wrote:
-> > > > This seems will cause a huge regression of performance on multi core
-> > > > systems, this is especially significant as the number of concurrent
-> > > > tasks increases:
-> > > >
-> > > > Test build linux kernel using ZRAM as SWAP (1G memcg):
-> > > >
-> > > > Before:
-> > > > + /usr/bin/time make -s -j48
-> > > > 2495.77user 2604.77system 2:12.95elapsed 3836%CPU (0avgtext+0avgdata
-> > > > 863304maxresident)k
-> > > >
-> > > > After:
-> > > > + /usr/bin/time make -s -j48
-> > > > 2403.60user 6676.09system 3:38.22elapsed 4160%CPU (0avgtext+0avgdata
-> > > > 863276maxresident)k
-> > >
-> > > How many CPUs do you have?  I assume, preemption gets into way which is
-> > > sort of expected, to be honest...  Using per-CPU compression streams
-> > > disables preemption and uses CPU exclusively at a price of other tasks
-> > > not being able to run.  I do tend to think that I made a mistake by
-> > > switching zram to per-CPU compression streams.
-> > >
-> > > What preemption model do you use and to what extent do you overload
-> > > your system?
-> > >
-> > > My tests don't show anything unusual (but I don't overload the system)
-> > >
-> > > CONFIG_PREEMPT
-> > 
-> > I'm using CONFIG_PREEMPT_VOLUNTARY=y, and there are 96 logical CPUs
-> > (48c96t), make -j48 shouldn't be considered overload I think. make
-> > -j32 also showed an obvious slow down.
-> 
-> Hmm, there should be more than enough compression streams then, the
-> limit is num_online_cpus.  That's strange.  I wonder if that's zsmalloc
-> handle allocation ("remove two-staged handle allocation" in the series.)
-> 
-> [..]
-> > > Hmm it's just
-> > >
-> > >         spin_lock()
-> > >         list first entry
-> > >         spin_unlock()
-> > >
-> > > Shouldn't be "a big spin lock", that's very odd.  I'm not familiar with
-> > > perf lock contention, let me take a look.
-> > 
-> > I can debug this a bit more to figure out why the contention is huge
-> > later
-> 
-> That will be appreciated, thank you.
-> 
-> > but my first thought is that, as Yosry also mentioned in
-> > another reply, making it preemptable doesn't necessarily mean the per
-> > CPU stream has to be gone.
-> 
-> Was going to reply to Yosry's email today/tomorrow, didn't have time to
-> look into, but will reply here.
-> 
-> 
-> So for spin-lock contention - yes, but that lock really should not
-> be so visible.  Other than that we limit the number of compression
-> streams to the number of the CPUs and permit preemption, so it should
-> be the same as the "preemptible per-CPU" streams, roughly.
+Hi Peng,
 
-I think one other problem is that with a pool of streams guarded by a
-single lock all CPUs have to be serialized on that lock, even if there's
-enough streams for all CPUs in theory.
+I apologise in advance for exploiting this thread to make my point.
 
-> The difference, perhaps, is that we don't pre-allocate streams, but
-> allocate only as needed.  This has two sides: one side is that later
-> allocations can fail, but the other side is that we don't allocate
-> streams that we don't use.  Especially secondary streams (priority 1
-> and 2, which are used for recompression).  I didn't know it was possible
-> to use per-CPU data and still have preemption enabled at the same time.
-> So I'm not opposed to the idea of still having per-CPU streams and do
-> what zswap folks did.
+On Thu, Feb 06, 2025 at 04:31:46PM +0100, Dario Binacchi wrote:
+>
+> Sorry if I miscounted the lines, but here we are not considering who
+> actually implemented
+> the algorithmic part of the SSC management and all the time spent
+> testing the code on more
+> than one platform/board with each submission of the series for all 9 versions.
+>
+> [1] https://lore.kernel.org/all/20250118124044.157308-18-dario.binacchi@amarulasolutions.com/
+>
+> Your changes, which are unnecessary for the clk-scmi.c changes, only
+> serve to support the
+> DT binding `assigned-clock-sscs`, which, as Krzysztof also reiterated:
+>
+> https://github.com/devicetree-org/dt-schema/pull/154
+>
+> you should have proposed during the review of series [1]. You are the
+> NXP reviewer.
+>
+> >
+> > If you think it is not fair, I could drop this patch in V3 and leave it to you to handle.
+> > I take this patch in the patchset, mainly to ease your work and make
+>
+> Sorry for quoting Krzysztof again, but:
+> "Three months iMX8 patchsets, multiple reviews and no single comment
+> from you till January!"
+>
+> So please, if you really want to ease my work, then remove this patch
+> from this series and resume
+> reviewing series [1].
+>
 
-Note that it's not a free lunch. If preemption is allowed there is
-nothing holding keeping the CPU that you're using its data, and it can
-be offlined. I see that zcomp_cpu_dead() would free the compression
-stream from under its user in this case.
+I had complained once in the past. I am repeating that again. You are not
+new to the kernel development, yet at times I get really surprised with
+the way you manage your patches and create so much confusion. It gets
+extremely difficult to track what is happening if one doesn't follow all
+your patches for a week(week is too lenient IMO, you manage sometime to
+create same amount of confusion in just 2 days).
 
-We had a similar problem recently in zswap and it took me a couple of
-iterations to properly fix it. In short, you need to synchronize the CPU
-hotplug callbacks with the users of the compression stream to make sure
-the stream is not freed under the user.
+And as usually you ignore merge window and post a whole set of new series
+on the first day of merge window. Which is fine especially if you are new
+to kernel development(not true in your case though) or even otherwise if
+you don't regularly track upstream cycle so much because of corporate
+commitments(which may be true in your case and I am fine with that). But
+you need to wait at-least a few days after the merge window so you give
+every one a chance to follow your work.
+
+And in this case, I would have avoided scmi changes are you have non-scmi
+specific driver to get the core clock changes review first and then added
+SCMI as it is OEM specific and we need to analyse it without other things
+in flux or under discussion.
+
+--
+Regards,
+Sudeep
