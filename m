@@ -1,88 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDB3232378;
-	Thu,  6 Feb 2025 13:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DBF226884
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848004; cv=none; b=YU81Pd/GbB+u5xvkQ7Hxp7aBxAc1B1VioPi1yIsT2SZSMqyT3anW9tXT9Te2Ae6iErUh90y73clJrem7oBYWGCoolE+uEJQVv+ydluMRB8ZNrPI7pEDGcjkUiBUFq2QD9FvODtZqaSR17DkMEPpHmSOi4WGiFEGzid8pSqrj2fw=
+	t=1738848011; cv=none; b=tEG21j14LlskQwgWQmkTHZ04KjFTYPrM+4oOJiU56wOtpYUHXyLxQtKGseyOJ8zmOT+nwBRB1O3Hf6VGRu8KWeobGyCYWjze/1GxpctbfFesSX5Kv9W//fDZQ4Rkllm3uYyleuASe06rvsU30GTpD759s44Yo00RkPCKCJBZiDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848004; c=relaxed/simple;
-	bh=lNtTlK3zrQ3pUqE98n7LamGp1Phad6RbqOSjmk69PnU=;
+	s=arc-20240116; t=1738848011; c=relaxed/simple;
+	bh=0F6nOjUetrXOfzInBD9D3roQgpO3tl7/CFQLwv11kZ8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tO8EKdFknWnczA1rPM8L6Lbu3X4j8MZsOAyFO/j2+FozCs9NvCjKGP1gV/Y3N5vNSK3O2/s3G9oGHmlJTfoEkVMND/ClCSrE4MHq3mJM2UzvP0Wi8qs/yahtxIGTzI2wk59u1Z8S94JgBSUj67W2ZY4alkuFM5dODn0LivfsTn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCupnhnO; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version; b=cddi2NO5+QZ7Iq4s6eQ0ZIw7NF56wLITZL/wg1TdLHTVyAAdUHG6pDHHpcOdvCbDt3LPMAW9VTMfHoABZkWr4Tp4UglfiBDH9QQwe9asueHtqKWrTggXOdJM2eT00Ba8VGbN6kdz8rwnErYJ9++UOMzjqOCWrMP3+WbjeUc0cKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hwJJM1ZR; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCupnhnO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738848003; x=1770384003;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lNtTlK3zrQ3pUqE98n7LamGp1Phad6RbqOSjmk69PnU=;
-  b=TCupnhnOXjCJnXrA/aCn5aRwpVzUx7BzW2vCMy5XkygeY1dOm5bnl68I
-   unE7PekAxWOFLYpVjKeBTjEIz+cHZHVY7/fEEwr2eIoB80O1Sy2zQrDz+
-   XSeNtZqCQ3M16UC5jbBXTJcXYLfm+3LuHj/E3vDNdx6vA7GTo+LgQQmCO
-   SGW/nG6jJID+Ym6R+fjxKQ7tHWLgDba9roV0V+z+JAbADT/izY/OsaD/Z
-   pczThrnythTBQrgypkZGhM9wXjZuu64aG1M0vKV75Vl0dtO+Yuj8xNPTh
-   tkqca8i6xUmRG9TbQPHfl5cozApRl0KlabPT16bjOeQyeYUo+qBjr2mNk
-   Q==;
-X-CSE-ConnectionGUID: ndGn5WeTSSepOHPP47sxLw==
-X-CSE-MsgGUID: ByIT6dl7SfurKcQKa6L/zg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43203659"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="43203659"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 05:20:02 -0800
-X-CSE-ConnectionGUID: 9/TJMZRrRaG+Sr4uP18YlA==
-X-CSE-MsgGUID: DZg8n8SMThKMUL8EM0SwPg==
-X-Ironport-Invalid-End-Of-Message: True
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116397203"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa005.jf.intel.com with ESMTP; 06 Feb 2025 05:19:55 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hwJJM1ZR"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2161eb95317so16777225ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1738848009; x=1739452809; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pf4go4iQL4QMflVyTQa4GngDZqe61egNHavae1e4JE8=;
+        b=hwJJM1ZRHaGTf0qSnB9Effwzv1/KyvXpNSTs8CxQavApMmDwPmVb04MMCYKqCwjtZa
+         0wZ7TMFwS0okfaaCIUbKwQAMHPcWQvkii33Va6Q1Yi57TjncuJOtQAVj8kj4OSL4qDbT
+         isADFT+3wPegsoQPvi2+cgj/eb5XYhrfPxtqSwPiHc17fnTzYPObXCgtbG//wwl1mssD
+         1tM9AyVhZ2/c8d30sWgsXRPUXi5lzfNle74UGN1Sq4We9cZnJDb7PgBXXZO1exC+ujE9
+         kMNU7h9dk+rxnEO6+49dP0pkQf6eW0GjxU7HREaUk9C+YxHeB02DWxbg5t4fs2T8bIRX
+         toMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738848009; x=1739452809;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pf4go4iQL4QMflVyTQa4GngDZqe61egNHavae1e4JE8=;
+        b=NfgBmASXZByYV6ud6zVelOTh5+jWjl0mUGqYOgDzK36jFP3wqv6iHPDiiWY7BmGwKV
+         +GXQCeTtPvMIQgEUx/RCWgaU9aqXeURORsAYffG5bwRKLREShibDd6csPpiYFluK4cHp
+         0AJvH/8LxHQHFgMyoaPsSzo5OyFeW3I7X6ZJGmXRRO/QvvTwqZ5LPQoSHbWzU/mb93+H
+         EmAt0Pwqqj/MWhPFsKCvtRjFaQdQqhwUIKVLCruYMBZk66zxBwFAfL34B5PpMegb43NA
+         VtsODb/GV0WCRYCtGzczw//3hQ+qZCqbANByREK9oALt7ljtjj3hp0dhVcsS7cgD/o7D
+         u3XA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfJEVKkleMtSzULziGOFgEM0VsYgjoQslsYs1Gru8hYKPje+e9tadl83DD9liDAmgFEGRGtZnVNsjYf+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP0fGKCUNssWNVkgn18Nk2++8KBCKeYB6Js/GVzoxBq4dD323g
+	RYrgB8VcnqRsbvQ/JUoCIUDHds6wf4nVP0Bb+j75OPipir/cywx+iDXm6RRWtbM=
+X-Gm-Gg: ASbGncuztN0h6opRMBnYNxb0YGyxj4uyDczjkKUx2kbxoROIivTnWEt0Qkg/D4SReEQ
+	VYZnovKam9K+vPYCt4RLBxA7uB+WQCOMYMiPsdRiMgq85CXhxsd9C7xa/PaZkpqmEDKtoLNYe/i
+	vCwPu97Zr2LDqPxrLCn/MnhPswPDgEKFEyMXaZOB+3m9BNYmC3ay7X0Kgx87FDKFaOorkMzDR2T
+	lfnoszYQEMpDRGsXPCYhaIrLlmllRKnlbdYYVGvOytk99RZNABpsppIrb2n2xo73eDYpyt8cxQH
+	tXdw9oRZ0Apik4ptZg==
+X-Google-Smtp-Source: AGHT+IGCPThNvLp+8va8nWxjbFE00U6UwUxIviEx1VgOqPw4pw4AKuRjGCX0YPWkMIbmGUsUZc9LiA==
+X-Received: by 2002:a17:902:cf12:b0:21f:46b:a25 with SMTP id d9443c01a7336-21f17df5701mr115615155ad.16.1738848009353;
+        Thu, 06 Feb 2025 05:20:09 -0800 (PST)
+Received: from L4CR4519N7.bytedance.net ([203.208.189.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d987sm12170775ad.120.2025.02.06.05.20.04
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 06 Feb 2025 05:20:09 -0800 (PST)
+From: Rui Qi <qirui.001@bytedance.com>
+X-Google-Original-From: Rui Qi
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	ardb@kernel.org,
+	haibo1.xu@intel.com,
+	guohanjun@huawei.com,
+	sunilvl@ventanamicro.com,
+	samuel.holland@sifive.com,
+	parri.andrea@gmail.com,
+	ericchancf@google.com
+Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v7 1/7] net: phylink: use pl->link_interface in phylink_expects_phy()
-Date: Thu,  6 Feb 2025 21:18:53 +0800
-Message-Id: <20250206131859.2960543-2-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+	linux-efi@vger.kernel.org,
+	Rui Qi <qirui.001@bytedance.com>
+Subject: [RFC 2/5] efi: add riscv APEI generic processor error printing support
+Date: Thu,  6 Feb 2025 21:19:23 +0800
+Message-Id: <20250206131926.91289-3-qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250206131926.91289-1-qirui.001@bytedance.com>
+References: <20250206131926.91289-1-qirui.001@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,48 +87,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The phylink_expects_phy() function allows MAC drivers to check if they are
-expecting a PHY to attach. The checking condition in phylink_expects_phy()
-aims to achieve the same result as the checking condition in
-phylink_attach_phy().
+From: Rui Qi <qirui.001@bytedance.com>
 
-However, the checking condition in phylink_expects_phy() uses
-pl->link_config.interface, while phylink_attach_phy() uses
-pl->link_interface.
+Add support for riscv Common Platform Error Record (CPER).
 
-Initially, both pl->link_interface and pl->link_config.interface are set
-to SGMII, and pl->cfg_link_an_mode is set to MLO_AN_INBAND.
-
-When the interface switches from SGMII to 2500BASE-X,
-pl->link_config.interface is updated by phylink_major_config().
-At this point, pl->cfg_link_an_mode remains MLO_AN_INBAND, and
-pl->link_config.interface is set to 2500BASE-X.
-Subsequently, when the STMMAC link goes down and comes up again,
-it is blocked by phylink_expects_phy().
-
-Since phylink_expects_phy() and phylink_attach_phy() aim to achieve the
-same result, phylink_expects_phy() should check pl->link_interface,
-which never changes, instead of pl->link_config.interface, which is
-updated by phylink_major_config().
-
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
 ---
- drivers/net/phy/phylink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/cper.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 214b62fba991..c173cd8db475 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -2046,7 +2046,7 @@ bool phylink_expects_phy(struct phylink *pl)
- {
- 	if (pl->cfg_link_an_mode == MLO_AN_FIXED ||
- 	    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
--	     phy_interface_mode_is_8023z(pl->link_config.interface)))
-+	     phy_interface_mode_is_8023z(pl->link_interface)))
- 		return false;
- 	return true;
- }
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index b69e68ef3f02..50f84a0f2801 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -110,6 +110,7 @@ static const char * const proc_type_strs[] = {
+ 	"IA32/X64",
+ 	"IA64",
+ 	"ARM",
++	"RISCV",
+ };
+ 
+ static const char * const proc_isa_strs[] = {
+@@ -118,6 +119,9 @@ static const char * const proc_isa_strs[] = {
+ 	"X64",
+ 	"ARM A32/T32",
+ 	"ARM A64",
++	"RISCV32",
++	"RISCV64",
++
+ };
+ 
+ const char * const cper_proc_error_type_strs[] = {
 -- 
-2.34.1
+2.20.1
 
