@@ -1,198 +1,181 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B2318D634;
-	Thu,  6 Feb 2025 17:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9732239568;
+	Thu,  6 Feb 2025 17:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863544; cv=none; b=KYyld8utXmhtMQ/Yu2zbBm/pQ7sT/MgHuLEKTWYkiWV4DFcNJBxKX+OFCNmmLPBriZUa/cuQSNEATEPDtXz4mtq/HJLIvqI28cP0TVgh5YUyzQcLr2xKUGUtN5JuSq+E9QQvcSX6fKlizoTLODaF38hq24JHLeOO8mCsYAeaTHM=
+	t=1738863575; cv=none; b=pCcFTZmwtLLGRBVKLA2z5kbgN2rr/1ynAyNEv3tMJqXyx8AY/xODXAAK09zn33lMxcP3xVNXlyAGRr9I/RZs2aTk9EXCbFQd1mDpdaY7Q1MWl9Nk3662SB/DaB0MIEsshtMbVRQDtotjXCUPYMDzrOBqR6QIsT/MqUcdARf5HdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863544; c=relaxed/simple;
-	bh=7OpNXCXkwCfC6x41rTgeEBlnwcyHWRj1BM3KYMm7Mww=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eILkcB6jejJ6vEbKtbZoFhgDXXyNqM+sA3pzq8VgFXDdLYloeqLIJyROt7pg6PEY/N/VWHuHLqknKNehDutvydXIOvjpprFHYjA2OeUwBLA8Ia05VB0s+cwiYX7djMPP5A3tLlgK8cT//F/B9oRJniKH5GhxQZPjVVWDkG9J9lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JDerHCeJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738863575; c=relaxed/simple;
+	bh=uKCgky6o7JLliLo5xg6T+BXoL+X3Gth14F53Io1F03E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CBW8/jZ3DmoRvLQu8GdMZcMW2rdhM+43vvMpkPhOcWFeAKnq+FYZSIUqevTYtbB+WK1BKBMeILP2v6tR6Xwu5GT32dreEY0HjG2YWwdnn6OvhY9YurL0KlAMxO7RC+StEKKgoI/7hcXDArZBBGKtqNNHMJYC/PhTFS0gFyBV51k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShheOfjS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JDerHCeJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A2BC4CEDD;
-	Thu,  6 Feb 2025 17:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738863544;
-	bh=7OpNXCXkwCfC6x41rTgeEBlnwcyHWRj1BM3KYMm7Mww=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JDerHCeJ4W03keHRez6h+GjSIGY4GFdkGQSWSfJbXc1zLSdsvlWwIrbN5ERjW1Wcz
-	 kqfeOeTLRF9qyd93qBLPcvlUgRKacjTxXgmUucP6JYg1fqrePA/m6vo7K2zGnuc+Dc
-	 NjBq4sePSC9dzHv7iyzOVb9vCYwhvkt7i3vcr5Rs=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Lyude Paul <lyude@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Louis Chauvet <louis.chauvet@bootlin.com>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v3 8/8] drm/vkms: convert to use faux_device
-Date: Thu,  6 Feb 2025 18:38:22 +0100
-Message-ID: <2025020625-unlaced-vagueness-ae34@gregkh>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025020620-skedaddle-olympics-1735@gregkh>
-References: <2025020620-skedaddle-olympics-1735@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShheOfjS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41768C4CEDD;
+	Thu,  6 Feb 2025 17:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738863575;
+	bh=uKCgky6o7JLliLo5xg6T+BXoL+X3Gth14F53Io1F03E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ShheOfjSzb9SrFQ9INefnYFUy8Fqync/Dbw/f6n+47EYE3UtIfr1OPNYpI8uF0uxp
+	 0Zq/o9NsCg4aSg6e1iIajEq5xTly4ZBw7Mg/uFOGQDzkqeJM2HUiYeDn21MRJgea1g
+	 BBvm+k4F4Q+RAmU11N0niEk3pdL8y91oS8soXuCbFOigcO6YAwcwag27SM4S2Mb0qo
+	 Rw9ia9uohcGjF7rkGKGWobcYDypKhyGpHjr2bkk7hlmxmQO5E5TAjMcvl0yE/HZGJL
+	 /2dg6yFcCAU4XQLHg18IEM+mS0t4PqR22njVLQnr7DNX6xtrFIi9jqItyjolTneaLU
+	 qr2/zPLWRJTpQ==
+Date: Thu, 6 Feb 2025 17:39:30 +0000
+From: Simon Horman <horms@kernel.org>
+To: Chintan Vankar <c-vankar@ti.com>
+Cc: Jason Reeder <jreeder@ti.com>, vigneshr@ti.com, nm@ti.com,
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, srk@ti.com, s-vadapalli@ti.com,
+	danishanwar@ti.com, m-malladi@ti.com
+Subject: Re: [RFC PATCH 1/2] irqchip: ti-tsir: Add support for Timesync
+ Interrupt Router
+Message-ID: <20250206173930.GZ554665@kernel.org>
+References: <20250205160119.136639-1-c-vankar@ti.com>
+ <20250205160119.136639-2-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4188; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=7OpNXCXkwCfC6x41rTgeEBlnwcyHWRj1BM3KYMm7Mww=; b=owGbwMvMwCRo6H6F97bub03G02pJDOlLPk86ZX7leq6P+Z6s3rAzi0rVHWbv6LM3iPa1u7Cu9 fZBr/95HbEsDIJMDLJiiixftvEc3V9xSNHL0PY0zBxWJpAhDFycAjAR3TcM82NMFEIi9n44OfWv /RvTxqmefRvWPWSYZyOxdtputdAzU2fWfDljLSHUnFWSCQA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250205160119.136639-2-c-vankar@ti.com>
 
-The vkms driver does not need to create a platform device, as there is
-no real platform resources associated it,  it only did so because it was
-simple to do that in order to get a device to use for resource
-management of drm resources.  Change the driver to use the faux device
-instead as this is NOT a real platform device.
+On Wed, Feb 05, 2025 at 09:31:18PM +0530, Chintan Vankar wrote:
+> Timesync Interrupt Router is an instantiation of generic interrupt router
+> module. It provides a mechanism to mux M interrupt inputs to N interrupt
+> outputs, where all M inputs are selectable to be driven as per N output.
+> Timesync Interrupt Router's inputs are either from peripherals or from
+> Device sync Events.
+> 
+> Add support for Timesync Interrupt Router driver to map input received
+> from peripherals with the corresponding output.
+> 
+> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
 
-Cc: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: Melissa Wen <melissa.srw@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- v3: new patch in the series.  For an example of the api working, does
-     not have to be merged at this time, but I can take it if the
-     maintainers give an ack.
- drivers/gpu/drm/vkms/vkms_drv.c | 28 ++++++++++++++--------------
- drivers/gpu/drm/vkms/vkms_drv.h |  4 ++--
- 2 files changed, 16 insertions(+), 16 deletions(-)
+...
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index e0409aba9349..b1269f984886 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -10,7 +10,7 @@
-  */
- 
- #include <linux/module.h>
--#include <linux/platform_device.h>
-+#include <linux/device/faux.h>
- #include <linux/dma-mapping.h>
- 
- #include <drm/clients/drm_client_setup.h>
-@@ -177,25 +177,25 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
- static int vkms_create(struct vkms_config *config)
- {
- 	int ret;
--	struct platform_device *pdev;
-+	struct faux_device *fdev;
- 	struct vkms_device *vkms_device;
- 
--	pdev = platform_device_register_simple(DRIVER_NAME, -1, NULL, 0);
--	if (IS_ERR(pdev))
--		return PTR_ERR(pdev);
-+	fdev = faux_device_create(DRIVER_NAME, NULL);
-+	if (!fdev)
-+		return -ENODEV;
- 
--	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
-+	if (!devres_open_group(&fdev->dev, NULL, GFP_KERNEL)) {
- 		ret = -ENOMEM;
- 		goto out_unregister;
- 	}
- 
--	vkms_device = devm_drm_dev_alloc(&pdev->dev, &vkms_driver,
-+	vkms_device = devm_drm_dev_alloc(&fdev->dev, &vkms_driver,
- 					 struct vkms_device, drm);
- 	if (IS_ERR(vkms_device)) {
- 		ret = PTR_ERR(vkms_device);
- 		goto out_devres;
- 	}
--	vkms_device->platform = pdev;
-+	vkms_device->faux_dev = fdev;
- 	vkms_device->config = config;
- 	config->dev = vkms_device;
- 
-@@ -229,9 +229,9 @@ static int vkms_create(struct vkms_config *config)
- 	return 0;
- 
- out_devres:
--	devres_release_group(&pdev->dev, NULL);
-+	devres_release_group(&fdev->dev, NULL);
- out_unregister:
--	platform_device_unregister(pdev);
-+	faux_device_destroy(fdev);
- 	return ret;
- }
- 
-@@ -259,19 +259,19 @@ static int __init vkms_init(void)
- 
- static void vkms_destroy(struct vkms_config *config)
- {
--	struct platform_device *pdev;
-+	struct faux_device *fdev;
- 
- 	if (!config->dev) {
- 		DRM_INFO("vkms_device is NULL.\n");
- 		return;
- 	}
- 
--	pdev = config->dev->platform;
-+	fdev = config->dev->faux_dev;
- 
- 	drm_dev_unregister(&config->dev->drm);
- 	drm_atomic_helper_shutdown(&config->dev->drm);
--	devres_release_group(&pdev->dev, NULL);
--	platform_device_unregister(pdev);
-+	devres_release_group(&fdev->dev, NULL);
-+	faux_device_destroy(fdev);
- 
- 	config->dev = NULL;
- }
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 00541eff3d1b..4668b0e29a84 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -209,13 +209,13 @@ struct vkms_config {
-  * struct vkms_device - Description of a VKMS device
-  *
-  * @drm - Base device in DRM
-- * @platform - Associated platform device
-+ * @faux_dev- Associated faux device
-  * @output - Configuration and sub-components of the VKMS device
-  * @config: Configuration used in this VKMS device
-  */
- struct vkms_device {
- 	struct drm_device drm;
--	struct platform_device *platform;
-+	struct faux_device *faux_dev;
- 	struct vkms_output output;
- 	const struct vkms_config *config;
- };
--- 
-2.48.1
+> diff --git a/drivers/irqchip/ti-timesync-intr.c b/drivers/irqchip/ti-timesync-intr.c
+> new file mode 100644
+> index 000000000000..11f26ca649d2
+> --- /dev/null
+> +++ b/drivers/irqchip/ti-timesync-intr.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL
 
+Hi Chintan,
+
+I think you need to be mores specific here wrt the version of the GPL.
+
+Link: https://www.kernel.org/doc/html/v6.13-rc6/process/license-rules.html
+
+Flagged by ./scripts/spdxcheck.py
+
+Also, compiling this file with GCC 14.2.0 for allmodconfig with W=1
+generates a significant number of warnings. You may wish to look into that.
+
+drivers/irqchip/ti-timesync-intr.c: In function ‘ts_intr_irq_domain_alloc’:
+drivers/irqchip/ti-timesync-intr.c:38:13: error: unused variable ‘ret’ [-Werror=unused-variable]
+   38 |         int ret;
+      |             ^~~
+drivers/irqchip/ti-timesync-intr.c: In function ‘ts_intr_irq_domain_free’:
+drivers/irqchip/ti-timesync-intr.c:82:32: error: conversion from ‘long unsigned int’ to ‘unsigned int’ changes value from ‘18446744073709486079’ to ‘4294901759’ [-Werror=overflow]
+   82 |                         writel(~TIMESYNC_INTRTR_INT_ENABLE, tsr_data.tsr_base + output_line_offset);
+drivers/irqchip/ti-timesync-intr.c:74:44: error: unused variable ‘n’ [-Werror=unused-variable]
+   74 |         struct output_line_to_virq *node, *n;
+      |                                            ^
+drivers/irqchip/ti-timesync-intr.c:74:37: error: unused variable ‘node’ [-Werror=unused-variable]
+   74 |         struct output_line_to_virq *node, *n;
+      |                                     ^~~~
+In file included from ./include/linux/irqchip.h:16,
+                 from drivers/irqchip/ti-timesync-intr.c:9:
+drivers/irqchip/ti-timesync-intr.c: At top level:
+./include/linux/minmax.h:24:35: error: comparison of distinct pointer types lacks a cast [-Werror=compare-distinct-pointer-types]
+   24 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+      |                                   ^~
+./include/linux/of.h:1525:31: note: in definition of macro ‘_OF_DECLARE’
+ 1525 |                      .data = (fn == (fn_type)NULL) ? fn : fn  }
+      |                               ^~
+./include/linux/irqchip.h:37:9: note: in expansion of macro ‘OF_DECLARE_2’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |         ^~~~~~~~~~~~
+./include/linux/irqchip.h:24:10: note: in expansion of macro ‘__typecheck’
+   24 |         (__typecheck(typecheck_irq_init_cb, &fn) ? fn : fn)
+      |          ^~~~~~~~~~~
+./include/linux/irqchip.h:37:45: note: in expansion of macro ‘typecheck_irq_init_cb’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |                                             ^~~~~~~~~~~~~~~~~~~~~
+drivers/irqchip/ti-timesync-intr.c:105:1: note: in expansion of macro ‘IRQCHIP_DECLARE’
+  105 | IRQCHIP_DECLARE(ts_intr, "ti,ts-intr", tsr_init);
+      | ^~~~~~~~~~~~~~~
+./include/linux/of.h:1525:34: error: comparison of distinct pointer types lacks a cast [-Werror=compare-distinct-pointer-types]
+ 1525 |                      .data = (fn == (fn_type)NULL) ? fn : fn  }
+      |                                  ^~
+./include/linux/of.h:1540:17: note: in expansion of macro ‘_OF_DECLARE’
+ 1540 |                 _OF_DECLARE(table, name, compat, fn, of_init_fn_2)
+      |                 ^~~~~~~~~~~
+./include/linux/irqchip.h:37:9: note: in expansion of macro ‘OF_DECLARE_2’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |         ^~~~~~~~~~~~
+drivers/irqchip/ti-timesync-intr.c:105:1: note: in expansion of macro ‘IRQCHIP_DECLARE’
+  105 | IRQCHIP_DECLARE(ts_intr, "ti,ts-intr", tsr_init);
+      | ^~~~~~~~~~~~~~~
+./include/linux/minmax.h:24:35: error: comparison of distinct pointer types lacks a cast [-Werror=compare-distinct-pointer-types]
+   24 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+      |                                   ^~
+./include/linux/of.h:1525:54: note: in definition of macro ‘_OF_DECLARE’
+ 1525 |                      .data = (fn == (fn_type)NULL) ? fn : fn  }
+      |                                                      ^~
+./include/linux/irqchip.h:37:9: note: in expansion of macro ‘OF_DECLARE_2’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |         ^~~~~~~~~~~~
+./include/linux/irqchip.h:24:10: note: in expansion of macro ‘__typecheck’
+   24 |         (__typecheck(typecheck_irq_init_cb, &fn) ? fn : fn)
+      |          ^~~~~~~~~~~
+./include/linux/irqchip.h:37:45: note: in expansion of macro ‘typecheck_irq_init_cb’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |                                             ^~~~~~~~~~~~~~~~~~~~~
+drivers/irqchip/ti-timesync-intr.c:105:1: note: in expansion of macro ‘IRQCHIP_DECLARE’
+  105 | IRQCHIP_DECLARE(ts_intr, "ti,ts-intr", tsr_init);
+      | ^~~~~~~~~~~~~~~
+./include/linux/minmax.h:24:35: error: comparison of distinct pointer types lacks a cast [-Werror=compare-distinct-pointer-types]
+   24 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+      |                                   ^~
+./include/linux/of.h:1525:59: note: in definition of macro ‘_OF_DECLARE’
+ 1525 |                      .data = (fn == (fn_type)NULL) ? fn : fn  }
+      |                                                           ^~
+./include/linux/irqchip.h:37:9: note: in expansion of macro ‘OF_DECLARE_2’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |         ^~~~~~~~~~~~
+./include/linux/irqchip.h:24:10: note: in expansion of macro ‘__typecheck’
+   24 |         (__typecheck(typecheck_irq_init_cb, &fn) ? fn : fn)
+      |          ^~~~~~~~~~~
+./include/linux/irqchip.h:37:45: note: in expansion of macro ‘typecheck_irq_init_cb’
+   37 |         OF_DECLARE_2(irqchip, name, compat, typecheck_irq_init_cb(fn))
+      |                                             ^~~~~~~~~~~~~~~~~~~~~
+drivers/irqchip/ti-timesync-intr.c:105:1: note: in expansion of macro ‘IRQCHIP_DECLARE’
+  105 | IRQCHIP_DECLARE(ts_intr, "ti,ts-intr", tsr_init);
+      | ^~~~~~~~~~~~~~~
+drivers/irqchip/ti-timesync-intr.c: In function ‘ts_intr_irq_domain_alloc’:
+drivers/irqchip/ti-timesync-intr.c:40:9: error: ‘output_line’ is used uninitialized [-Werror=uninitialized]
+   40 |         irq_domain_set_hwirq_and_chip(domain, virq, output_line,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   41 |                                       &ts_intr_irq_chip,
+      |                                       ~~~~~~~~~~~~~~~~~~
+   42 |                                       NULL);
+      |                                       ~~~~~
+drivers/irqchip/ti-timesync-intr.c:36:22: note: ‘output_line’ was declared here
+   36 |         unsigned int output_line, input_line, output_line_offset;
+      |                      ^~~~~~~~~~~
