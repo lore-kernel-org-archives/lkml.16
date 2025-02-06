@@ -1,106 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3CD226169;
-	Thu,  6 Feb 2025 09:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823EA215778;
+	Thu,  6 Feb 2025 09:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738835293; cv=none; b=YYmxqWiKNzjQJoGpez2cUFYGKeCPcax08nXK6CXwlRmDFe7Y6Sx9OEKpA0fHBMAb4CLPIk7g62MgHfVBSgfWZpv9QPbzCaUYzDc1pTXTTBcv6hJpO5IHgOGQSBokXeR69qSik0nSbAvS1NYji+6yLUT55NzqiXw2ZHNNq43UToM=
+	t=1738835347; cv=none; b=vF0llld94bAlbhpTEXEp0FiKETCWMtY5Zbya4Q7Ox/EEmZ+gAg5gkX81KU+VQTwDutUeVYHvbUsNeWCltS9DJTILfaS0UEGBBia5MQCF4MedCGH/QTWQUViap9lMY29hDAV1L+xJozjDNaVc3XeVJjliji5/eEkCpD0tcbDpSbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738835293; c=relaxed/simple;
-	bh=Zcs5Snf4g8flz7TYouYgDp3W2DHK3PiGIpAbCvqR+HM=;
+	s=arc-20240116; t=1738835347; c=relaxed/simple;
+	bh=VjgJG7HJO75EfEty4D/K3zMWxBje59/FhlZFefM2alU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckUfV97tuMhuYChCE+yZ7X9qq9vHk82MMkusYTWH+WkjEH5KVJ3AT2EYAWjDP9ps1Fn2EpWRRcXutkh1cnQKUH8gKrgkWCPLUuadiAa9b1HwOpCX1mM9U/p5mGkGiQ1xcAZR17xL2UUGDQzuR3HdUN+PFdZITWc6oMHrm+JFBi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hV7KPuI3; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZNI01QHIrBfxpdLMQ7EMHz8pNiaanYCmG3FW6XYJ3lxC6gjXIr8WhT0RMh+Vh8Is+92nWkK1BT0htShkRkKu3weQQWAC54WUt2x9oEpzlOI9h/GUj2/hR1i0nAHcR4yTFfkBKUzE4IMyN6FzwtVParniMwCpNvUCGegow1677Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZG5ehmq4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hV7KPuI3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738835292; x=1770371292;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zcs5Snf4g8flz7TYouYgDp3W2DHK3PiGIpAbCvqR+HM=;
-  b=hV7KPuI3JymAskwy1Gtbw2ZQ9bu2OLPmq7erGJeHDgLQAsA/XttsPsKd
-   iIiAF/DYA2j5r8FjU4o65Mwrug5dnqWsc4TfXeWsRHc7pNnco43l7+YvW
-   3TkQVJR0rFDciT3KGQUFQ98tcVAhW9i1tyvf8p40yZ6d8vatI1+TliL7A
-   mm5KSnRbStSymtUQOUl1sV8XS5xpAlsXU1SMz8P4LDKB2DhxLCTgO4NCP
-   Ulria1jUSjfj7CvP+EtS3ke3b33oa5Pi3HJOB9nI0ipHLviUCM4gApl1n
-   9/py0N/8ZFaiinPToQNN4xUVnIF58+Ia8+08RpQeLwMVUkSxat77LXBta
-   A==;
-X-CSE-ConnectionGUID: bsCNwcH5TpGXsdilmzNB4w==
-X-CSE-MsgGUID: om8mz04ORu67LojgRpyOUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43092133"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="43092133"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 01:48:11 -0800
-X-CSE-ConnectionGUID: moeHN7m+QPajiFGHxiYh3Q==
-X-CSE-MsgGUID: mmIcINAIRZ+fvr1HFc8qig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="111127724"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 01:48:07 -0800
-Date: Thu, 6 Feb 2025 10:44:34 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net, treewide: define and use MAC_ADDR_STR_LEN
-Message-ID: <Z6SEeO0QFx9Y52LJ@mev-dev.igk.intel.com>
-References: <20250205-netconsole-v3-0-132a31f17199@purestorage.com>
- <20250205-netconsole-v3-1-132a31f17199@purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZG5ehmq4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94CF8C4CEDD;
+	Thu,  6 Feb 2025 09:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738835346;
+	bh=VjgJG7HJO75EfEty4D/K3zMWxBje59/FhlZFefM2alU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZG5ehmq4UYy1mNP0SdCXcmL9wsRj9oyyg2bctkHJ6n4I4JsxbFfQbc1uvp3nA5AS5
+	 Oj0FO3ueUGu7pSaTZw0ThblA8dlPye83QCtEkYR3YP1xTtCkmcjcrMg+I/fevKq/kw
+	 3/X5agh9j2A5gxMqYb01RmZ3thuSF+1N2SvfW3DBB8lWfEGKGqukeYHPIyu3Hx+sm2
+	 WNZ/XevBo8AoWB6oloY7jpJ+K3LCsDX+no8xxRldOxw+LT5XB3ytbXWpgHlt08CKkq
+	 vU+fUwnHz4DFrDwbk7rgpFx2x0JxOC1hhZ1RoZ60K82fquEGnB/pfQQGjvJHKUtqIf
+	 1gX/A3Hb2G0pA==
+Date: Thu, 6 Feb 2025 10:49:00 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Jeff Layton <jlayton@kernel.org>, David Howells <dhowells@redhat.com>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Mateusz Guzik <mjguzik@gmail.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, 
+	Oliver Sang <oliver.sang@intel.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pipe: introduce struct file_operations
+ pipeanon_fops
+Message-ID: <20250206-gravierend-ungeduldig-d3af18bb6703@brauner>
+References: <20250205153302.GA2216@redhat.com>
+ <20250205153329.GA2255@redhat.com>
+ <CAHk-=wiqUibNm0W-KcCb3H+aiSVr4Uz3COZq=LjqGd__6guFEg@mail.gmail.com>
+ <20250205161636.GA1001@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250205-netconsole-v3-1-132a31f17199@purestorage.com>
+In-Reply-To: <20250205161636.GA1001@redhat.com>
 
-On Wed, Feb 05, 2025 at 10:21:30PM -0700, Uday Shankar wrote:
-> There are a few places in the tree which compute the length of the
-> string representation of a MAC address as 3 * ETH_ALEN - 1. Define a
-> constant for this and use it where relevant. No functionality changes
-> are expected.
+On Wed, Feb 05, 2025 at 05:16:37PM +0100, Oleg Nesterov wrote:
+> On 02/05, Linus Torvalds wrote:
+> >
+> > On Wed, 5 Feb 2025 at 07:34, Oleg Nesterov <oleg@redhat.com> wrote:
+> > >
+> > > So that fifos and anonymous pipes could have different f_op methods.
+> > > Preparation to simplify the next patch.
+> >
+> > Looks good, except:
+> >
+> > > +++ b/fs/internal.h
+> > >  extern const struct file_operations pipefifo_fops;
+> > > +extern const struct file_operations pipeanon_fops;
+> >
+> > I think this should just be 'static' to inside fs/pipe.c, no?
 > 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
->  drivers/net/netconsole.c           | 2 +-
->  drivers/nvmem/brcm_nvram.c         | 2 +-
->  drivers/nvmem/layouts/u-boot-env.c | 2 +-
->  include/linux/if_ether.h           | 3 +++
->  lib/net_utils.c                    | 4 +---
->  net/mac80211/debugfs_sta.c         | 5 +++--
->  6 files changed, 10 insertions(+), 8 deletions(-)
+> I swear, this is what I did initially ;)
 > 
-> diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-> index 86ab4a42769a49eebe5dd6f01dafafc6c86ec54f..6db5af2d8d059fa5c072194545d4408eec19b4a9 100644
-> --- a/drivers/net/netconsole.c
-> +++ b/drivers/net/netconsole.c
-> @@ -675,7 +675,7 @@ static ssize_t remote_mac_store(struct config_item *item, const char *buf,
->  
-[...]
-
-What about ieee80211_sta_debugfs_add()? (net/mac80211/debugfs_sta.c)
-
-In gerneal looks fine, thanks:
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
+> But then for some reason I thought someone would ask me to export
+> pipeanon_fops along with pipefifo_fops for consistency.
 > 
-> -- 
-> 2.34.1
+> OK, I will wait for other reviews and send V3.
+
+It's fine. Minor things like this I can just fix myself when pulling
+this. There's no need to generate more mail traffic for this.
