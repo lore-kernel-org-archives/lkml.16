@@ -1,64 +1,64 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C3C136352
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B347523642F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852765; cv=none; b=t+PQeNGYBYQ++1BSPoigPnS0o56hMSJMuZJjkBMQXlAXC1z/wY/weu7FwlXSYR+oxWxfiR07lx0CUctE25gMMpYOBTwp7z5lbxoCLHJ4Y4gwXo028neaeNRkhNLw1pt0E1FF2LLVWX5c53pVCfY4o5Qd5eVFZXDXsEPmjO9BcJ4=
+	t=1738852785; cv=none; b=i7Fl010OcqN99qb8iTw06aJjlSeD3lUSKlDL8L+cHJ+3ADIsZqcmSczpqOHmCTpYSkvlOYZJ6MWVlF0MoS4BTr2Lq8Av9mwM+hdH5J76T6Im2QJMLk9Of+UpFaE7Hvy2NZCSHtnqdt/hUjPr0EN0Z7nM8PQ/fpz8AvIPZAImnXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852765; c=relaxed/simple;
-	bh=Uu8aEP8VA8t1pCN7nvIDtXe9YZ0sStLUfZzdpt3Xdwk=;
+	s=arc-20240116; t=1738852785; c=relaxed/simple;
+	bh=czZSa8RE8rPjUA6bt67Tw98QD1nGxDQA7k8TsCfdCzU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=COUqeYSh+daDYPHhnEjswrYtbyRUsB6lLxKJugkoYhWu5Hln3YKK6Ri3G+9zNnn0aiu342xnLqaFHDfK+tBXrVllk3wQflKnobTORh+8VGLcFoN+xdKreOCyy704YqVLfHIO9uUahtjdvkp04JapEAhS/jkjT/bgJxeSsM4bOzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=nS58+4LO; arc=none smtp.client-ip=209.85.218.43
+	 In-Reply-To:Content-Type; b=MtIs+FXpaVfzesCcLSALMua7Q6zCKcoQ3ejIdb2WhvkZnmClWboF8/EruLC+woNKDY0u3YRWXpKGWEKJ6Fz4RblnB5NtHV6OQ0RYIFTlW+HeIgOxi2TOeArcNca/aIpSUYjnBbKb6cjt0aXuHdtvW9ey/QSsPEr40uLpDNN2pDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=JWdmmSnz; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="nS58+4LO"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab70043cd05so199395466b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:39:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="JWdmmSnz"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab744d5e567so182864666b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:39:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1738852761; x=1739457561; darn=vger.kernel.org;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1738852782; x=1739457582; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=THjRLKw27fymwkm9c9udCcZ4ry8EIlt6eJdjpKX8aMI=;
-        b=nS58+4LOG6u/Q5ccdch9G5EWZXlco1ayiEjfSMtXeD4KHtM0gHL3VN6RGk38uCmt5t
-         Oc1QT11cxpBtlZ7J6cMHsPLGuIWjxT8hf/GUer0jGV6PneXcnspl8Rx9f29MHYVY1knt
-         BODAkrTcImAboCfJIwCA7ot+15ooIr7DmrqOX0VyCEkeDCMNx1Q1YlaPhCrlwMKtE6qG
-         5vMd9IF3RURy/IG87UyUoWMOoDmZ4soLRScIXcgoTKVgUouv08GdLpqzxXE6rIfwPhwx
-         vd80oxE8H8nGLHk2HHU4TJclxaz0kZi4YTpb3h8w4X7fmMHz2ouYinsEs6FF5XwqF4Cv
-         UO8A==
+        bh=qwM9ak9hrD3h4qVx1yCYkLliO4mOGlB4YCv6ISmSjO4=;
+        b=JWdmmSnzoZq5RGgbQpuszpn6O6rOYZkznr+oAMvxumyfsRzbSEpzqR6aBqRCsbunXa
+         FAgAiHFq3lWqSe+H5cw1nOEPAgTYGQMhhgqjNQsyNJrsNT0yAi+h+BhvupGYxOmzvfQ4
+         eRXLZIj7fmgKXb22Gno2eEJw9qh0DTnkkUoJCezfRCp7ZXq7ekIf+pJpW10hh+l0qs2i
+         69hdisIWk9h27wElBpCz++2PhbJiPLBw9dxwO2KGXL0PZ+D90zQZjQktwxvCZnxq8WsU
+         iCcz/1vlzXs2Xku9lK//QhQcVGiqRcmgwQACQbq7GJsHtetRWXVex8KrWo5lt+YqNkaI
+         egyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738852761; x=1739457561;
+        d=1e100.net; s=20230601; t=1738852782; x=1739457582;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=THjRLKw27fymwkm9c9udCcZ4ry8EIlt6eJdjpKX8aMI=;
-        b=CKIqps2ltQF4AkGajQIw+5MMpKop41BN667yXrYiBZc/CONBep0uLgYJQhZC9i7Woj
-         CMO25ezvCpfT6DAGKyyITANIKODoYvYXEUWP98jQBSyAZrSyC8rfRH2rEPzo7RXM4vXb
-         AzcZ0O5BpC+zn5R3b6EFJ0RxdciJ6Sy7bpY/9USuKMy4Wg9Sf3FGDn+0I0gJVT5Au0IZ
-         0iKpFnhCyaj3eQGC/nRIQHAbKSFwcaiN+7LpBp3XtPIPQD9F3e4X5uFLrvq6oVX22NZ0
-         sNj0aboA31KBiLlIHELrTUtOWjkjHfk5AKdO8TxpEVESJ0WvhKORg/x7fu+N6FBS7NjQ
-         p1rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVdJGI1qFwuud+9UlcgJjssIZxCSeLOAH/6At5A8CXek/B/Duf0pnsW2IWEbGCXpFcynuZLiOBcPXY0rY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOv4GCYD/B+lTMPagP+8h5AbpWSm2HV+nAonhziBp5FcbJ96wG
-	dtZnD38mqmq701E3mCO8X4miRCiISHH5PKB51owMv/2y7uOLNZOjjRrsbFjW8uM=
-X-Gm-Gg: ASbGnctifo1vcAnY/9XGMXoymS4tJipkcUGdWyE5iHxJN4cn5fe4bWbvBXQIrjm71FS
-	hJN5owXUTtF/tLYDCZW9SWjbvYQDFeF38FeMsPAycuWkXmvdatwzir10TgRckn1ZCPlgpj8jrMg
-	4duLqTSiJ4keLg6Z1zfG6IJ+p9Zala4ncsshl7x3jfzcDrAjMbsyDgfMAI4Gb4206d+4DkY8VjR
-	LVvcm+U6+gB2S8QDtPK1kbHOh6gh72rMqKmI4KtB09tGhjM2U0/YCm1d8hyff8Kn99vAu7JFh6X
-	Z2X3uBWnhBfbfyrFUiTPWQul4sbudZIL/NX5DIYtVCd6/RQ=
-X-Google-Smtp-Source: AGHT+IFlbmeulV0zbsnKd23pIgbY7sXFFTYPJ1StMcXHIPOGJvEQyfJ18rL8z1Xxot6BGyZS0rrfLw==
-X-Received: by 2002:a17:906:ca48:b0:ab7:6e14:c03f with SMTP id a640c23a62f3a-ab76e14c0d5mr312575166b.21.1738852761390;
-        Thu, 06 Feb 2025 06:39:21 -0800 (PST)
+        bh=qwM9ak9hrD3h4qVx1yCYkLliO4mOGlB4YCv6ISmSjO4=;
+        b=TO5LWhDbtFqxBJVSanTM9MJCJwkSD+fOeI0TLQcusUmK7nVqi9ufZt9LsphIn9Go1z
+         Yp1EfRFzCqKHut9+JI+E64EC2u1sG+8Se+sXwCgum1OlJ2vYjy3qoL3hrNCv3rwlPxVY
+         VDXfcjnykpISE6OBbjSvMXuL6RUeOwwJyyOf6KjxcutEZjiD6B4F0lDZyNQo+ndtQ2Ep
+         qMaAOqLmKbHhC1o6QcxAFB0fLM4Cve2bYqGtneHqXxtOqb0mhzdxqmYc7eopmo5jXcwL
+         QhwqCvcV+FRA2a1kJsl3KOCHlv8ntgCkJncaNpM9LJ2aDO5ix7h+XLsKDRcRUdg+xaKl
+         TACQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2YcTyRWQIPRXGN64N+4uqBywmxf0ZCz1oLdecEUcFZx3QwJwmnQ3Bj75pRNVQYLF8XdUmTEYXjxDHr1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzvGuzX93AZTSKLWJiRNahTuqK2vSqzx+AVOzRwowgKEIZDzZo
+	tjwBecxkFny6eaM0vqfcFqeDH6dy8nIC+z+EoG2UUe++Qo9INJQq/yqfh+3HON4=
+X-Gm-Gg: ASbGncsf6SrR1CcF6j1Ok7qoG1tGH4ILPLKjchoyy+taGqKdkJB0C2p8TAavp2qy4Dj
+	yJgx+6LbuN9+ykhs3IoU+UpN39aL+yYwuvbl0ayLGMFowzDIKzHqhzrcexRXMFHDGTC0v3ao3MT
+	7CQmug5jU6pbBkewSH9oi/vqseSKnYS39bfXaMd0o1Rf6XKw5SfFhiGnehKHy8Svb6eSMg41vUD
+	dZTqECGxLF66w6ZWmMCo8Sf2p97tgKGxn/mOsG38+hChZGvRxuroTn3NpIZyNBPanrQH2k3oPBR
+	64jih0yMRSzre2BFC6eN8ipVX9MI/y/yoEDIUNA2w9WClaE=
+X-Google-Smtp-Source: AGHT+IGWp5+1BVne358ySyNOgZ1qVjbCgfUJUnYbiNP8cDVB4maBnu+CTyhvHYo+RSuyGyXRNdH4eA==
+X-Received: by 2002:a17:907:9611:b0:ab3:61e2:8aaf with SMTP id a640c23a62f3a-ab76e9dbe8amr395071966b.25.1738852782052;
+        Thu, 06 Feb 2025 06:39:42 -0800 (PST)
 Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f843a9sm109650266b.67.2025.02.06.06.39.19
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e70e7sm108777266b.87.2025.02.06.06.39.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 06:39:20 -0800 (PST)
-Message-ID: <114ff1da-c7f4-4851-af3e-1a4fdabde9f5@blackwall.org>
-Date: Thu, 6 Feb 2025 16:39:19 +0200
+        Thu, 06 Feb 2025 06:39:41 -0800 (PST)
+Message-ID: <46b7042c-8284-4523-b54f-38f97e70075a@blackwall.org>
+Date: Thu, 6 Feb 2025 16:39:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,8 +66,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 net-next 07/14] netfilter :nf_flow_table_offload: Add
- nf_flow_rule_bridge()
+Subject: Re: [PATCH v5 net-next 08/14] netfilter: nf_flow_table_inet: Add
+ nf_flowtable_type flowtable_bridge
 To: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
@@ -88,23 +88,20 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  bridge@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org
 References: <20250204194921.46692-1-ericwouds@gmail.com>
- <20250204194921.46692-8-ericwouds@gmail.com>
+ <20250204194921.46692-9-ericwouds@gmail.com>
 Content-Language: en-US
 From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250204194921.46692-8-ericwouds@gmail.com>
+In-Reply-To: <20250204194921.46692-9-ericwouds@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/4/25 21:49, Eric Woudstra wrote:
-> Add nf_flow_rule_bridge().
-> 
-> It only calls the common rule and adds the redirect.
+> This will allow a flowtable to be added to the nft bridge family.
 > 
 > Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
 > ---
->  include/net/netfilter/nf_flow_table.h |  3 +++
->  net/netfilter/nf_flow_table_offload.c | 13 +++++++++++++
->  2 files changed, 16 insertions(+)
+>  net/netfilter/nf_flow_table_inet.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 
 Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
