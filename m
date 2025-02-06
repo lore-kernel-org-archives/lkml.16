@@ -1,259 +1,185 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AFA221DA6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197D719C54E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865930; cv=none; b=H+uEwAks06l7vwHySbsNVKVKcPomnKnJiuDryLlxZhAst1MJeDEgqwW/d1Whg5fJkNuU+KlhC9mu7lT4kWziGzva4yLPAUek7NhTUkjV6QKhKH5/JLHUqqqH4L1Qv5QIuqOvhxRjIDiPF6KqYgdtU3c6PXT6FOUTmT6DiHNUg4k=
+	t=1738865992; cv=none; b=HeTFGgK6x7VzvI5Mmu2/6Jep1kIi2k3ktyau+aHR2lNRymqB4fzavRtZ5QmJSU1AbUb27IwRJw4qQhtY7LrDsYaAMt9G8vxNV536Hk+oErRloUD092ccCmD91dBUViM1w6jNXktis/PlkJpLIp/njX0aBfYKexwto+K+x5ThUQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865930; c=relaxed/simple;
-	bh=U9Zquo+I28n7D6l89QyMvjgCk9CUHGORATxUF8MOC08=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bw7jVbUFSI3yFvdBSveQm18oidZF6kvbzIpZNWRCl473Bbtujc8UvVaTb6qrVM80h6oM5Gr75IGfKNQgBhkXUiLp9VK+3dpYDNOpcJa+LQzCjsv1r5CE0UW+qU2IBGQvx58oe3xa5SjICAF/s0JEXYVXZHlrgHOuH0sxnbBlNQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K9kTI7MY; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1738865992; c=relaxed/simple;
+	bh=tKYUJg7a4Ok12Xx2//mvcLjcTlv3dBKTuagHYLan4b0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sjiztatOc7KhaOMUzM9n4vd5kWUWPK742kQAbN7jekdrPyjJHU32F7okES0Sq3GF/VLyppKHm40cXkuxQn0AFjU7PxXGfzkmNiClpzpsfGc0p1Fi/YfgNQCWYUGMErFCqmCUE7G7Ck14MIC7nNQytIVI4SoMeef/V/xs0zTaUMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LD1hvnE+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9kTI7MY"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab6e2b653a0so145212966b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:18:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738865926; x=1739470726; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3npqKmcD7idosYB3Rql5Qlei3J/L1gfZsrIz0sfHUY=;
-        b=K9kTI7MY6mQK9tOS73I2v9K0v65AtDd4n2pwmcc2R29p6EGO8u8elONw3yS7WssT8K
-         2FHQRGGn5qIIdvXVfYQH2et5AXGmhlmxy0BmuU3xEwqdcM/o8ba5J2zJcA1CL/xpeBdx
-         F4jVmtxMSilRSRL6zzEIXnSCGo4sRE06XlD2vkwUvbNqSfXTTu17vThH93vHfWfHUhqw
-         lBF8udw97YWafgY7Z7tih/DRm0fv7V9kgZyjbQX0MAWKUwbaKoFg8Ks9267UqO8bkIcL
-         cmLrOtlVN8sW1+T3WWfve5PL4QtjE3xGXyCfPiCfGQ27JIqGDQrC1CJqUmZNGH6BnJr6
-         kiFQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LD1hvnE+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738865990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CkQSy6cqAgy1u3QW6E44/eT6uTpmhDvVHTU1DNQm5z4=;
+	b=LD1hvnE+cZdzfr2Nkt8iLZXQLhxvxZqJFoZI0SNhW09Pu3KczacCcTnl0WkqbBAE6ct42s
+	CpYBT7j4EwIEGX2TKLf5nb6KAE87t8fypxVZncKFYVsGtLV4nVALrGERmnOWx012aqKcVQ
+	Bl1YVstZv7w3BXLOxYicLmdp8kPTmsY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-294-CCBJi2CKOYeV_sFrGLy3Hw-1; Thu, 06 Feb 2025 13:19:48 -0500
+X-MC-Unique: CCBJi2CKOYeV_sFrGLy3Hw-1
+X-Mimecast-MFC-AGG-ID: CCBJi2CKOYeV_sFrGLy3Hw
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4361eb83f46so9794565e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:19:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865926; x=1739470726;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3npqKmcD7idosYB3Rql5Qlei3J/L1gfZsrIz0sfHUY=;
-        b=s3SeG21Q2zXMAhOZt7VHwAi2Rzdq1QiOqkEKIRMYZeKnBip45JGwimXY6xpuLlX8We
-         qyc8rVc6Apjgh1zbOldP9ZJUTerteAfWZZI/gmxWcIeOo96y3qvT5/q5alky6z8k15+O
-         GjScaHOCMgPcwp8o9Z47sVa9U+LxBYT/kelN7zWYRwv9ueC1M8EDIkJZs5We8se4qrqd
-         kyTT0Lt+XS+YE9sfr4uSUQ/xrZOHwRtvg/dVYpBXqlzuBv6Z2kpfjQQkEiNmfrxesMxc
-         HjsHDd6HkUUqLIXA+lBQ6uni+c51ogvehwVar5ONpBPfHImZnv8O6uIttUJUuuFdpLPp
-         ZMrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUM/eoSNmFHScU/GpaNmA+JCBbOd5t++kOLs2tz9afZTuIjKUWSwKYlnmk2XVZIhMLXgCLka37IYyvSc64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGQrgwxboFSb9EangtWpPlfTZ/jr2G6Zy6R6ze0C4/cEbQQdEM
-	pNxaqwd82s3RtCNuPgquD5dWgPAta3d8ODCBYOqjB1fs5nJ0JKcVnUWzSj6VMqwdtkxffluBdg=
-	=
-X-Google-Smtp-Source: AGHT+IHaR4OtYgVkoAVUDStYqYv+9thvNuzjxTMXa8LJQryBI8+iut5U512tyfYG9g1hUPYb+umuGfZNFg==
-X-Received: from edben5.prod.google.com ([2002:a05:6402:5285:b0:5dc:c943:7c1])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:dc8d:b0:aac:622:8f6
- with SMTP id a640c23a62f3a-ab75e26558fmr633944866b.17.1738865926699; Thu, 06
- Feb 2025 10:18:46 -0800 (PST)
-Date: Thu,  6 Feb 2025 19:10:18 +0100
-In-Reply-To: <20250206181711.1902989-1-elver@google.com>
+        d=1e100.net; s=20230601; t=1738865987; x=1739470787;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CkQSy6cqAgy1u3QW6E44/eT6uTpmhDvVHTU1DNQm5z4=;
+        b=P5jLPTX/59OgpLmRh/3tLc+iFR7nb3pNSm0MTnwQWIO0pxi/CFghk86/CiU3DiTaLu
+         dAY0s58ZeH3xe83oJdTAffVvanieqIYf9P/rPCxmFwtruePsPoFjq6+5d7nhv2HnxQdJ
+         5WvjjEXkjMH91phiEtnNiAxYbZGBfgOGvMC6j+VdlaTuD/2QNcXkNR0fw/CP18yf+mBs
+         yvsQ8StsP9l9zQ/VvJI/vE2csm9/TX+TSV7ivXpm4C1V/15O9m2IBGN/svrc7hhUiAbN
+         laOol6J9vQgXnPxpbbIsTdrRWzTmJT3WBn/5Vw6IUjbNYHh3O8zxOzMUKksl0BHKOIjs
+         87PA==
+X-Gm-Message-State: AOJu0YyZDaHfUA23E5Q67eeuCIJAUZFtcEGuh9+lhbApSqdLf1CsT9rS
+	zHqE2Fe7OBxO577ony63oyhfKUgEz1Bs9hrBZd43ExAeJxbna2oPril86ULvK1n9SNI3xrk1yvQ
+	sPNJz4KkVX0aTkAZkjaZkdx8FgFb0c+AZzxPUzP5Ep7n3jpRLOFtkjWi/ASWkBg==
+X-Gm-Gg: ASbGnctGXuSU3aSTepIB75XcAsOLXmh47+gLqnUpfSgHC7DIOyKEDpaZs7egQ06opJT
+	HQT8u9tCsCXjs7fu/X+uGlQiV5ENphP9BtaynGQpAxusTlspX6E7lYRQ/gM7vX0J5qwZgS40Q9T
+	PakSKsKx7TcIp9Of2LoItiqDDkTopgr9aHq0DKMcAWM/J7Aq+X1HW467h+xfnL5kYAK900Ev9J1
+	SHq/cBHZp1vYg9wVGb12j0to5BYOfPF09+KTHDzKI6E/gX0tzRDUA6IVpkXFkK3SNgyzAHb9BY5
+	/Emo054zRatx8YtwjWYK17nvkcJM4Zm4g3bKeQ/513WoLXMNCO9dK0ktat6iMqeAM/EbKREPMJu
+	U2sBkxjwXj7+8Qi0dApizvJqZ4nw84GRf
+X-Received: by 2002:a05:600c:4f90:b0:434:fd15:3ac9 with SMTP id 5b1f17b1804b1-439249af2camr3534305e9.22.1738865987550;
+        Thu, 06 Feb 2025 10:19:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/tmRvfDt5hznP58ghloamiqCzbFIyk3eMi0qwtJnaFoEO+AVzx7To/NK20+zwdQ1u5LjgdQ==
+X-Received: by 2002:a05:600c:4f90:b0:434:fd15:3ac9 with SMTP id 5b1f17b1804b1-439249af2camr3534025e9.22.1738865987193;
+        Thu, 06 Feb 2025 10:19:47 -0800 (PST)
+Received: from ?IPV6:2003:cb:c707:3000:a06b:56f1:d152:db83? (p200300cbc7073000a06b56f1d152db83.dip0.t-ipconnect.de. [2003:cb:c707:3000:a06b:56f1:d152:db83])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11064sm62537805e9.37.2025.02.06.10.19.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 10:19:46 -0800 (PST)
+Message-ID: <c633b429-0ad4-4b92-942c-0338a9801cb2@redhat.com>
+Date: Thu, 6 Feb 2025 19:19:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250206181711.1902989-1-elver@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250206181711.1902989-25-elver@google.com>
-Subject: [PATCH RFC 24/24] rhashtable: Enable capability analysis
-From: Marco Elver <elver@google.com>
-To: elver@google.com
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
-	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
-	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/24] lockdep: Fix might_fault()
+To: Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+ ravi.bangoria@amd.com, lucas.demarchi@intel.com
+Cc: linux-kernel@vger.kernel.org, willy@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com
+References: <20250205102120.531585416@infradead.org>
+ <20250205102448.348146549@infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250205102448.348146549@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Enable capability analysis for rhashtable, which was used as an initial
-test as it contains a combination of RCU, mutex, and bit_spinlock usage.
+On 05.02.25 11:21, Peter Zijlstra wrote:
+> Turns out that commit 9ec23531fd48 ("sched/preempt, mm/fault: Trigger
+> might_sleep() in might_fault() with disabled pagefaults") accidentally
+> (and unnessecarily) put the lockdep part of __might_fault() under
+> CONFIG_DEBUG_ATOMIC_SLEEP.
+> 
+> Cc: David Hildenbrand <david@redhat.com>
+> Fixes: 9ec23531fd48 ("sched/preempt, mm/fault: Trigger might_sleep() in might_fault() with disabled pagefaults")
 
-Users of rhashtable now also benefit from annotations on the API, which
-will now warn if the RCU read lock is not held where required.
+Heh, that was 10 years ago, part one of my first not-kvm-specific patch 
+series.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- include/linux/rhashtable.h | 14 +++++++++++---
- lib/Makefile               |  2 ++
- lib/rhashtable.c           | 12 +++++++++---
- 3 files changed, 22 insertions(+), 6 deletions(-)
+Very likely it was not by accident, but I don't have any memory on that 
+part :)
 
-diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
-index 8463a128e2f4..c6374691ccc7 100644
---- a/include/linux/rhashtable.h
-+++ b/include/linux/rhashtable.h
-@@ -245,16 +245,17 @@ void *rhashtable_insert_slow(struct rhashtable *ht, const void *key,
- void rhashtable_walk_enter(struct rhashtable *ht,
- 			   struct rhashtable_iter *iter);
- void rhashtable_walk_exit(struct rhashtable_iter *iter);
--int rhashtable_walk_start_check(struct rhashtable_iter *iter) __acquires(RCU);
-+int rhashtable_walk_start_check(struct rhashtable_iter *iter) __acquires_shared(RCU);
- 
- static inline void rhashtable_walk_start(struct rhashtable_iter *iter)
-+	__acquires_shared(RCU)
- {
- 	(void)rhashtable_walk_start_check(iter);
- }
- 
- void *rhashtable_walk_next(struct rhashtable_iter *iter);
- void *rhashtable_walk_peek(struct rhashtable_iter *iter);
--void rhashtable_walk_stop(struct rhashtable_iter *iter) __releases(RCU);
-+void rhashtable_walk_stop(struct rhashtable_iter *iter) __releases_shared(RCU);
- 
- void rhashtable_free_and_destroy(struct rhashtable *ht,
- 				 void (*free_fn)(void *ptr, void *arg),
-@@ -325,6 +326,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket_insert(
- 
- static inline unsigned long rht_lock(struct bucket_table *tbl,
- 				     struct rhash_lock_head __rcu **bkt)
-+	__acquires(__bitlock(0, bkt))
- {
- 	unsigned long flags;
- 
-@@ -337,6 +339,7 @@ static inline unsigned long rht_lock(struct bucket_table *tbl,
- static inline unsigned long rht_lock_nested(struct bucket_table *tbl,
- 					struct rhash_lock_head __rcu **bucket,
- 					unsigned int subclass)
-+	__acquires(__bitlock(0, bucket))
- {
- 	unsigned long flags;
- 
-@@ -349,6 +352,7 @@ static inline unsigned long rht_lock_nested(struct bucket_table *tbl,
- static inline void rht_unlock(struct bucket_table *tbl,
- 			      struct rhash_lock_head __rcu **bkt,
- 			      unsigned long flags)
-+	__releases(__bitlock(0, bkt))
- {
- 	lock_map_release(&tbl->dep_map);
- 	bit_spin_unlock(0, (unsigned long *)bkt);
-@@ -402,13 +406,14 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
- 				     struct rhash_lock_head __rcu **bkt,
- 				     struct rhash_head *obj,
- 				     unsigned long flags)
-+	__releases(__bitlock(0, bkt))
- {
- 	if (rht_is_a_nulls(obj))
- 		obj = NULL;
- 	lock_map_release(&tbl->dep_map);
- 	rcu_assign_pointer(*bkt, (void *)obj);
- 	preempt_enable();
--	__release(bitlock);
-+	__release(__bitlock(0, bkt));
- 	local_irq_restore(flags);
- }
- 
-@@ -589,6 +594,7 @@ static inline int rhashtable_compare(struct rhashtable_compare_arg *arg,
- static inline struct rhash_head *__rhashtable_lookup(
- 	struct rhashtable *ht, const void *key,
- 	const struct rhashtable_params params)
-+	__must_hold_shared(RCU)
- {
- 	struct rhashtable_compare_arg arg = {
- 		.ht = ht,
-@@ -642,6 +648,7 @@ static inline struct rhash_head *__rhashtable_lookup(
- static inline void *rhashtable_lookup(
- 	struct rhashtable *ht, const void *key,
- 	const struct rhashtable_params params)
-+	__must_hold_shared(RCU)
- {
- 	struct rhash_head *he = __rhashtable_lookup(ht, key, params);
- 
-@@ -692,6 +699,7 @@ static inline void *rhashtable_lookup_fast(
- static inline struct rhlist_head *rhltable_lookup(
- 	struct rhltable *hlt, const void *key,
- 	const struct rhashtable_params params)
-+	__must_hold_shared(RCU)
- {
- 	struct rhash_head *he = __rhashtable_lookup(&hlt->ht, key, params);
- 
-diff --git a/lib/Makefile b/lib/Makefile
-index f40ba93c9a94..c7004270ad5f 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -45,6 +45,8 @@ lib-$(CONFIG_MIN_HEAP) += min_heap.o
- lib-y	+= kobject.o klist.o
- obj-y	+= lockref.o
- 
-+CAPABILITY_ANALYSIS_rhashtable.o := y
-+
- obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
- 	 bust_spinlocks.o kasprintf.o bitmap.o scatterlist.o \
- 	 list_sort.o uuid.o iov_iter.o clz_ctz.o \
-diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-index 3e555d012ed6..47a61e214621 100644
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -11,6 +11,10 @@
-  * pointer as suggested by Josh Triplett
-  */
- 
-+#include <linux/rhashtable.h>
-+
-+disable_capability_analysis();
-+
- #include <linux/atomic.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-@@ -22,10 +26,11 @@
- #include <linux/mm.h>
- #include <linux/jhash.h>
- #include <linux/random.h>
--#include <linux/rhashtable.h>
- #include <linux/err.h>
- #include <linux/export.h>
- 
-+enable_capability_analysis();
-+
- #define HASH_DEFAULT_SIZE	64UL
- #define HASH_MIN_SIZE		4U
- 
-@@ -358,6 +363,7 @@ static int rhashtable_rehash_table(struct rhashtable *ht)
- static int rhashtable_rehash_alloc(struct rhashtable *ht,
- 				   struct bucket_table *old_tbl,
- 				   unsigned int size)
-+	__must_hold(&ht->mutex)
- {
- 	struct bucket_table *new_tbl;
- 	int err;
-@@ -392,6 +398,7 @@ static int rhashtable_rehash_alloc(struct rhashtable *ht,
-  * bucket locks or concurrent RCU protected lookups and traversals.
-  */
- static int rhashtable_shrink(struct rhashtable *ht)
-+	__must_hold(&ht->mutex)
- {
- 	struct bucket_table *old_tbl = rht_dereference(ht->tbl, ht);
- 	unsigned int nelems = atomic_read(&ht->nelems);
-@@ -724,7 +731,7 @@ EXPORT_SYMBOL_GPL(rhashtable_walk_exit);
-  * resize events and always continue.
-  */
- int rhashtable_walk_start_check(struct rhashtable_iter *iter)
--	__acquires(RCU)
-+	__acquires_shared(RCU)
- {
- 	struct rhashtable *ht = iter->ht;
- 	bool rhlist = ht->rhlist;
-@@ -940,7 +947,6 @@ EXPORT_SYMBOL_GPL(rhashtable_walk_peek);
-  * hash table.
-  */
- void rhashtable_walk_stop(struct rhashtable_iter *iter)
--	__releases(RCU)
- {
- 	struct rhashtable *ht;
- 	struct bucket_table *tbl = iter->walker.tbl;
+Probably I actually wanted this to be
+
+  #if defined(CONFIG_PROVE_LOCKING)
+
+such that the function looked more similar to pre-662bbcb2747c
+
+
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>   mm/memory.c |    2 --
+>   1 file changed, 2 deletions(-)
+> 
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -6695,10 +6695,8 @@ void __might_fault(const char *file, int
+>   	if (pagefault_disabled())
+>   		return;
+>   	__might_sleep(file, line);
+> -#if defined(CONFIG_DEBUG_ATOMIC_SLEEP)
+>   	if (current->mm)
+>   		might_lock_read(&current->mm->mmap_lock);
+> -#endif
+>   }
+>   EXPORT_SYMBOL(__might_fault);
+>   #endif
+> 
+> 
+
+
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+Cheers,
+
+David / dhildenb
 
