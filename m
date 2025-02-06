@@ -1,101 +1,114 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65192561D;
-	Thu,  6 Feb 2025 06:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15B422370F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 06:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738823275; cv=none; b=crMrpwaqngQD7/YcAkZGrnbut1evD0sGR8dgsxafIn00ZsMo6JPGRBql0p1cYh7uRHJ9dqdkyOXJHqX7htwi9OS44uIT6GqUmzwQXHcwztN459Aiu2+7jorEQoPyYZIOZhfykokKmj02shk9EZ0iEDOxNtuwimORXwIzF2Ra8Co=
+	t=1738823285; cv=none; b=kzFOF7wMeeZ9vh00x7d3ByL592G0TZHTgflZaRuQK7M3gtLzivvjbmqhsBq6esdCbK+3+TKnavDsGNMAM3A2ljESaUic37GI/isp/flBXsdpFsr1JCBC1AXTSNA9hQrCAbpHf1YG0PCKq9vDS0H3u9vt1dSVpc6H37GFf12dOd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738823275; c=relaxed/simple;
-	bh=YBHaTZW+tpKp36RzIrAFZSbRfY45BlzSnxis70lzJM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=c9nGgK6QNkrEeJc6u2OPQvMndeXxeHupk44SbtMXoS00sW6ub/7ndUtbAgjuYI4twRxE42xhKT7ygIBZzOBJx/sdNacdusy2Xq0bmAonevEHTZoWrGP2ljAFOS9hXHCT6sKF8TXxWFc0ObWm9oKMer2ovqN77JE3sc1hxaJfSWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YpRsm60Jrz22mPq;
-	Thu,  6 Feb 2025 14:25:00 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 04AF41A016C;
-	Thu,  6 Feb 2025 14:27:47 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 6 Feb
- 2025 14:27:46 +0800
-Message-ID: <78c6dbea-ccbc-4380-a6e9-96dd76deb999@huawei.com>
-Date: Thu, 6 Feb 2025 14:27:45 +0800
+	s=arc-20240116; t=1738823285; c=relaxed/simple;
+	bh=0Fn2cLRgxvxvLS5p2V3DfVAHIHe9oV4dus+/QtcCaBc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PYRWS+YJ93veGCOiQXVBwkote/5E0xnrhAO637iilCGgigaEkGYSp8YwWM1utnX+ekaOcIOX8oXfwBDKEzi6AK+t5jkH+snZrgzZYh9nCCKJmvH4NiJNYGUk78NhsxgrUKwf7hd9um6oTvN2mYfvnjF9ia6t2/4ZQaHmXlpzo3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzL893b1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzL893b1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7C3C4CEDD;
+	Thu,  6 Feb 2025 06:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738823285;
+	bh=0Fn2cLRgxvxvLS5p2V3DfVAHIHe9oV4dus+/QtcCaBc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NzL893b1mj6iPva/1U9W4FLmyz0frrWv8kLwPRSVKO+vhptmf5Zn0XZQdkFTQLZ5i
+	 ZQaKoRcZe6o9OI+6XwBT8V5dBq/jftIEFA1sidpV60xFiFCXc53kkwSLxHWpi3FrW8
+	 UXu8d7F+bd6xHvdUL2Mq/sCspCgd96pw8eZiP3hXCym92pu6fGjLBeUrjVOXnEpKVj
+	 KjKJLqUhfVP8/ah318AUNET+7q7t1EcYkGnkVi56ZQUCEL7lrDFLkeSwl/0cQRpRJL
+	 c2FekF9hLX0GS7vcO8ptogh43xIoGPyYRNz7n1Dwt+lKQ+zlRfN2aZ28f66y8BsMjV
+	 lLMpX0eh6vQeQ==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 4/4] mm/madvise: remove redundant mmap_lock operations from process_madvise()
+Date: Wed,  5 Feb 2025 22:28:01 -0800
+Message-Id: <20250206062801.3060-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250204195343.16500-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/15] cpufreq: cppc: Set policy->boost_supported
-To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>
-CC: <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
-	<linux-kernel@vger.kernel.org>
-References: <cover.1737707712.git.viresh.kumar@linaro.org>
- <c744751c8f61cae509959270176ebdef77326ba2.1737707712.git.viresh.kumar@linaro.org>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <c744751c8f61cae509959270176ebdef77326ba2.1737707712.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Content-Transfer-Encoding: 8bit
 
-On 2025/1/24 16:58, Viresh Kumar wrote:
+On Tue,  4 Feb 2025 11:53:43 -0800 SeongJae Park <sj@kernel.org> wrote:
 
-> With a later commit, the cpufreq core will call the ->set_boost()
-> callback only if the policy supports boost frequency. The
-> boost_supported flag is set by the cpufreq core if policy->freq_table is
-> set and one or more boost frequencies are present.
+> On Fri, 31 Jan 2025 17:51:45 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 > 
-> For other drivers, the flag must be set explicitly.
+> > On Fri, Jan 31, 2025 at 12:47:24PM -0500, Liam R. Howlett wrote:
+> > > * Davidlohr Bueso <dave@stgolabs.net> [250131 12:31]:
+> > > > On Fri, 31 Jan 2025, Lorenzo Stoakes wrote:
+> > > >
+> > > > > On Thu, Jan 16, 2025 at 05:30:58PM -0800, SeongJae Park wrote:
+> > > > > > Optimize redundant mmap lock operations from process_madvise() by
+> > > > > > directly doing the mmap locking first, and then the remaining works for
+> > > > > > all ranges in the loop.
+> > > > > >
+> > > > > > Signed-off-by: SeongJae Park <sj@kernel.org>
+> > > > >
+> > > > > I wonder if this might increase lock contention because now all of the
+> > > > > vector operations will hold the relevant mm lock without releasing after
+> > > > > each operation?
+[...]
+> > 
+> > Keep in mind process_madvise() is not limited by IOV_MAX, which can be rather
+> > high, but rather UIO_FASTIOV, which is limited to 8 entries.
 > 
-> With this, the local variable boost_supported isn't required anymore.
+> process_madvise() indeed have iovec array of UIO_FASTIOV size, namely iovstack.
+> But, if I understood the code correctly, iostack is used only for a fast path
+> that the user requested advicing less than UIO_FASTIOV regions.
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cppc_cpufreq.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
+> I actually confirmed I can make the loop itrate 1024 times, using my
+> microbenchmark[1].  My step for the check was running the program with
+> 'eval_pmadv $((4*1024*1024)) $((4*1024)) $((4*1024*1024))' command, and
+> counting the number of the itration of the vector_madvise() main loop using
+> printk().  Please let me know if I'm missing something.
 > 
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index 7fa89b601d2a..08117fb9c1eb 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -34,8 +34,6 @@
->   */
->  static LIST_HEAD(cpu_data_list);
->  
-> -static bool boost_supported;
-> -
->  static struct cpufreq_driver cppc_cpufreq_driver;
->  
->  #ifdef CONFIG_ACPI_CPPC_CPUFREQ_FIE
-> @@ -653,7 +651,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	 * is supported.
->  	 */
->  	if (caps->highest_perf > caps->nominal_perf)
-> -		boost_supported = true;
-> +		policy->boost_supported = true;
->  
->  	/* Set policy->cur to max now. The governors will adjust later. */
->  	policy->cur = cppc_perf_to_khz(caps, caps->highest_perf);
-> @@ -791,11 +789,6 @@ static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
->  	struct cppc_perf_caps *caps = &cpu_data->perf_caps;
->  	int ret;
->  
-> -	if (!boost_supported) {
-> -		pr_err("BOOST not supported by CPU or firmware\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	if (state)
->  		policy->max = cppc_perf_to_khz(caps, caps->highest_perf);
->  	else
+> > 
+> > (Some have been surprised by this limitation...!)
+> > 
+> > So I think at this point scaling isn't a huge issue, I raise it because in
+> > future we may want to increase this limit, at which point we should think about
+> > it, which is why I sort of hand-waved it away a bit.
+> 
+> I personally think this may still not be a huge issue, especially given the
+> fact that users can test and tune the limit.  But I'd like to hear more
+> opinions if available.
 
-Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+Maybe I should wait more for the more opinions, but I just impatiently sent the
+next spin of this patch series[1].  Because Davidlohr and Lorenzo promised
+their tags based on the assumption of UIO_FASTIOV limit while I think that may
+not be an effective limit, I didn't add their tags on the fourth patch of the
+series.  Please let me know if you have any concern about that, either on this
+thread or on the new patch series thread[1].
+
+[1] https://lore.kernel.org/20250206061517.2958-1-sj@kernel.org
+
+> 
+> [1] https://github.com/sjp38/eval_proc_madvise/blob/master/eval_pmadv.c
+
+
+Thanks,
+SJ
+
+[...]
