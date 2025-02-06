@@ -1,113 +1,299 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE41E1EA7DD;
-	Thu,  6 Feb 2025 13:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1B11EA7D2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848343; cv=none; b=Pdw6SOCsRiDWhw1QKgAfT2Afj7uoqqi3zv3cnsuXNsYln/WMLP2ZLN6qhkVCIY7b0DwC+/U9YXJ8iEFq9eC6AuiYedHynjCtsWhddbVaob74RZ8otGur0yEl8au+viO97Dzncx7w8jJMTdgaD+N4FHWq3DakTXtVUNFB4aJzt1A=
+	t=1738848388; cv=none; b=U5N0jp8Nwdg5OgU3vgM7LzXwpFAKOQSPrNWqZP41ixeTxuclFgc0CAMD/+8uWHD+H3nz2qc0iITyjO+3rpRQ+6GaDFAHXYFvkq/lVKMPqdlZJMfj0J1c/7Y5IuASy+vYGBO3TPgR/jVbeZhgGWcLLvFih3dPDRPqHJlOIqXwNRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848343; c=relaxed/simple;
-	bh=866pCCQhevpJWNwi8p1iELys8f3WtUfiDfCwIsMMthg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YXngE4mYSUJ7LBMjZLCae2kYbBAgs4p+l0zSENiqdFFckx4o84hm8yDbpYWTiVJX7fnAnHF5pa1SdUDaU2YfZwZ42rqz3xtP4ROsL++nlsm/HKMnfxAOLNfIYG9yw0FEfVX45PJxC9JxhwsQI3maju+dkZ1PAXEbYbQ3V9gbbCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtqNQGBK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtqNQGBK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0030C4CEDD;
-	Thu,  6 Feb 2025 13:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738848342;
-	bh=866pCCQhevpJWNwi8p1iELys8f3WtUfiDfCwIsMMthg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VtqNQGBKLfddqn6boR38G7eUq2Q9yAMwesApOGhsoB0QP3dBZCzkzZ1c1q+9m+okc
-	 ky79W4u1Sn2zBDGgdtsDa3LdFKDb0v9eNyOek9qYZSLPll/Df92XhYZj56CcoFiYsG
-	 bevseac7utg8eXGsJNMGsAUYvr4HU3WrZIgIk+zmEx4iXDoK2kDJhZgJTWcQyNHR/+
-	 J9TH7sXhKkqIE3i8h3MzRwfQQ1IVb61YHAIogZAYXD2dYbHw9EA8JIq42cpdhpt6ki
-	 9BETlENeadQ0Sk/ygXrl5+wj/yDaIEfWPFk0b9m7n5kIcJ3iVa55UfsLRm3W5oANho
-	 fd90Fnfg3w/BA==
-Date: Thu, 6 Feb 2025 13:25:38 +0000
-From: Simon Horman <horms@kernel.org>
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH net-next v4 09/17] net: pktgen: align some variable
- declarations to the most common pattern
-Message-ID: <20250206132538.GU554665@kernel.org>
-References: <20250205131153.476278-1-ps.report@gmx.net>
- <20250205131153.476278-10-ps.report@gmx.net>
+	s=arc-20240116; t=1738848388; c=relaxed/simple;
+	bh=tabOUf0J1PS+QaLuE+rGM0sv83u5hH9wWnVBro9aaUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hRA3DzrXGSriNTTNJP2p4m+QXU1bA/5PzOhzPXjwYv+GRquipqi92e9QQl9qbTRf0iKzT7ozfVGO3nQyvDAhjvBWPuCBgfnpejLdHWUDvTYIyTXzhL3iKrkzteV4Nvv/ejrCyfk1pLq2SICSw7HpJU5ikKnU194eMqNOl8qJpSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D749FEC;
+	Thu,  6 Feb 2025 05:26:49 -0800 (PST)
+Received: from [10.57.80.166] (unknown [10.57.80.166])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 318D33F5A1;
+	Thu,  6 Feb 2025 05:26:23 -0800 (PST)
+Message-ID: <0538d186-470e-4c4d-974c-0d7f2c96e549@arm.com>
+Date: Thu, 6 Feb 2025 13:26:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205131153.476278-10-ps.report@gmx.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 06/16] arm64/mm: Refactor __set_ptes() and
+ __ptep_get_and_clear()
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-7-ryan.roberts@arm.com>
+ <bdd08da7-d978-437a-849f-8a6115933e19@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <bdd08da7-d978-437a-849f-8a6115933e19@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 02:11:45PM +0100, Peter Seiderer wrote:
-> Align some variable declarations (in get_imix_entries and get_labels) to
-> the most common pattern (int instead of ssize_t/long) and adjust function
-> return value accordingly.
+On 06/02/2025 11:48, Anshuman Khandual wrote:
+> On 2/5/25 20:39, Ryan Roberts wrote:
+>> Refactor __set_ptes(), set_pmd_at() and set_pud_at() so that they are
+>> all a thin wrapper around a generic ___set_ptes(), which takes pgsize
 > 
-> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+> s/generic/common - as generic might be misleading for being generic MM.
 
-Hi Peter,
+Good spot. I'll make this change.
 
-These comments are is true in general of this patchset, but particularly so
-in the case of this patch:
-
-* I think a more succinct subject would be nice.
-* I think the patch description should provide some reason
-  _why_ the change is being made.
-
-Also, specifically relating to this patch, I wonder if it's scope ought to
-be extended. For example, the two callers of num_arg(), get_imix_entries() and
-pktgen_if_write() assign the return value of num_arg() to len, which is now
-an int in both functions. But num_args() returns a long.
-
-> ---
-> Changes v3 -> v4
->   - new patch (factored out of patch 'net: pktgen: fix access outside of user
->     given buffer in pktgen_if_write()')
-> ---
->  net/core/pktgen.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
 > 
-> diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-> index 4f201a2db2dc..279910367ad4 100644
-> --- a/net/core/pktgen.c
-> +++ b/net/core/pktgen.c
-> @@ -850,12 +850,11 @@ static int strn_len(const char __user * user_buffer, unsigned int maxlen)
->   * where each entry consists of size and weight delimited by commas.
->   * "size1,weight_1 size2,weight_2 ... size_n,weight_n" for example.
->   */
-> -static ssize_t get_imix_entries(const char __user *buffer,
-> -				struct pktgen_dev *pkt_dev)
-> +static int get_imix_entries(const char __user *buffer,
-> +			    struct pktgen_dev *pkt_dev)
->  {
-> -	int i = 0;
-> -	long len;
->  	char c;
-> +	int i = 0, len;
+>> parameter. This cleans up the code to remove the confusing
+>> __set_pte_at() (which was only ever used for pmd/pud) and will allow us
+>> to perform future barrier optimizations in a single place. Additionally,
+>> it will permit the huge_pte API to efficiently batch-set pgtable entries
+>> and take advantage of the future barrier optimizations.
+> 
+> Makes sense.
+> 
+>>
+>> ___set_ptes() calls the correct page_table_check_*_set() function based
+>> on the pgsize. This means that huge_ptes be able to get proper coverage
+>> regardless of their size, once it's plumbed into huge_pte. Currently the
+>> huge_pte API always uses the pte API which assumes an entry only covers
+>> a single page.
+> 
+> Right
+> 
+>>
+>> While we are at it, refactor __ptep_get_and_clear() and
+>> pmdp_huge_get_and_clear() to use a common ___ptep_get_and_clear() which
+>> also takes a pgsize parameter. This will provide the huge_pte API the
+>> means to clear ptes corresponding with the way they were set.
+> 
+> __ptep_get_and_clear() refactoring does not seem to be related to the
+> previous __set_ptes(). Should they be separated out into two different
+> patches instead - for better clarity and review ? Both these clean ups
+> have enough change and can stand own their own.
 
-Given it can be achieved with exactly the same lines changed, just in a
-different order, please arrange the local variable declarations in reverse
-xmas tree order - longest line to shortest.
+Yeah I think you're probably right... I was being lazy... I'll separate them.
 
-Likewise for the other hunk of this patch.  And I believe there are also
-other cases in this patchset where this comment applied.
+> 
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  arch/arm64/include/asm/pgtable.h | 108 +++++++++++++++++++------------
+>>  1 file changed, 67 insertions(+), 41 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index 0b2a2ad1b9e8..3b55d9a15f05 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -420,23 +420,6 @@ static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
+>>  	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
+>>  }
+>>  
+>> -static inline void __set_ptes(struct mm_struct *mm,
+>> -			      unsigned long __always_unused addr,
+>> -			      pte_t *ptep, pte_t pte, unsigned int nr)
+>> -{
+>> -	page_table_check_ptes_set(mm, ptep, pte, nr);
+>> -	__sync_cache_and_tags(pte, nr);
+>> -
+>> -	for (;;) {
+>> -		__check_safe_pte_update(mm, ptep, pte);
+>> -		__set_pte(ptep, pte);
+>> -		if (--nr == 0)
+>> -			break;
+>> -		ptep++;
+>> -		pte = pte_advance_pfn(pte, 1);
+>> -	}
+>> -}
+>> -
+>>  /*
+>>   * Hugetlb definitions.
+>>   */
+>> @@ -641,30 +624,59 @@ static inline pgprot_t pud_pgprot(pud_t pud)
+>>  	return __pgprot(pud_val(pfn_pud(pfn, __pgprot(0))) ^ pud_val(pud));
+>>  }
+>>  
+>> -static inline void __set_pte_at(struct mm_struct *mm,
+>> -				unsigned long __always_unused addr,
+>> -				pte_t *ptep, pte_t pte, unsigned int nr)
+>> +static inline void ___set_ptes(struct mm_struct *mm, pte_t *ptep, pte_t pte,
+>> +			       unsigned int nr, unsigned long pgsize)
+> 
+> So address got dropped and page size got added as an argument.
 
-The following tool can be useful:
-https://github.com/ecree-solarflare/xmastree
+Yeah; addr is never used in our implementations so I figured why haul it around
+everywhere?
 
-...
+> s/___set_ptes/___set_pxds ? to be more generic for all levels.
 
--- 
-pw-bot: changes-requested
+So now we are into naming... I agree that in some senses pte feels specific to
+the last level. But it's long form "page table entry" seems more generic than
+"pxd" which implies only pmd, pud, p4d and pgd. At least to me...
+
+I think we got stuck trying to figure out a clear and short term for "page table
+entry at any level" in the past. I think ttd was the best we got; Translation
+Table Descriptor, which is the term the Arm ARM uses. But that opens a can of
+worms as now we need tdd_t and all the converters pte_tdd(), tdd_pte(),
+pmd_tdd(), ... and probably a bunch more stuff on top.
+
+So personally I prefer to take the coward's way out and just reuse pte.
+
+> 
+>>  {
+>> -	__sync_cache_and_tags(pte, nr);
+>> -	__check_safe_pte_update(mm, ptep, pte);
+>> -	__set_pte(ptep, pte);
+>> +	unsigned long stride = pgsize >> PAGE_SHIFT;
+>> +
+>> +	switch (pgsize) {
+>> +	case PAGE_SIZE:
+>> +		page_table_check_ptes_set(mm, ptep, pte, nr);
+>> +		break;
+>> +	case PMD_SIZE:
+>> +		page_table_check_pmds_set(mm, (pmd_t *)ptep, pte_pmd(pte), nr);
+>> +		break;
+>> +	case PUD_SIZE:
+>> +		page_table_check_puds_set(mm, (pud_t *)ptep, pte_pud(pte), nr);
+>> +		break;
+> 
+> This is where the new page table check APIs get used for batch testing.
+
+Yes and I anticipate that the whole switch block should be optimized out when
+page_table_check is disabled.
+
+> 
+>> +	default:
+>> +		VM_WARN_ON(1);
+>> +	}
+>> +
+>> +	__sync_cache_and_tags(pte, nr * stride);
+>> +
+>> +	for (;;) {
+>> +		__check_safe_pte_update(mm, ptep, pte);
+>> +		__set_pte(ptep, pte);
+>> +		if (--nr == 0)
+>> +			break;
+>> +		ptep++;
+>> +		pte = pte_advance_pfn(pte, stride);
+>> +	}
+>>  }
+> 
+> LGTM
+> 
+>>  
+>> -static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+>> -			      pmd_t *pmdp, pmd_t pmd)
+>> +static inline void __set_ptes(struct mm_struct *mm,
+>> +			      unsigned long __always_unused addr,
+>> +			      pte_t *ptep, pte_t pte, unsigned int nr)
+>>  {
+>> -	page_table_check_pmd_set(mm, pmdp, pmd);
+>> -	return __set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd),
+>> -						PMD_SIZE >> PAGE_SHIFT);
+>> +	___set_ptes(mm, ptep, pte, nr, PAGE_SIZE);
+>>  }
+>>  
+>> -static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+>> -			      pud_t *pudp, pud_t pud)
+>> +static inline void __set_pmds(struct mm_struct *mm,
+>> +			      unsigned long __always_unused addr,
+>> +			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
+>> +{
+>> +	___set_ptes(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
+>> +}
+>> +#define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
+>> +
+>> +static inline void __set_puds(struct mm_struct *mm,
+>> +			      unsigned long __always_unused addr,
+>> +			      pud_t *pudp, pud_t pud, unsigned int nr)
+>>  {
+>> -	page_table_check_pud_set(mm, pudp, pud);
+>> -	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
+>> -						PUD_SIZE >> PAGE_SHIFT);
+>> +	___set_ptes(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
+>>  }
+>> +#define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
+> 
+> LGTM
+> 
+>>  
+>>  #define __p4d_to_phys(p4d)	__pte_to_phys(p4d_pte(p4d))
+>>  #define __phys_to_p4d_val(phys)	__phys_to_pte_val(phys)
+>> @@ -1276,16 +1288,34 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+>>  }
+>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG */
+>>  
+>> -static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+>> -				       unsigned long address, pte_t *ptep)
+>> +static inline pte_t ___ptep_get_and_clear(struct mm_struct *mm, pte_t *ptep,
+>> +				       unsigned long pgsize)
+> 
+> So address got dropped and page size got added as an argument.
+> 
+>>  {
+>>  	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
+>>  
+>> -	page_table_check_pte_clear(mm, pte);
+>> +	switch (pgsize) {
+>> +	case PAGE_SIZE:
+>> +		page_table_check_pte_clear(mm, pte);
+>> +		break;
+>> +	case PMD_SIZE:
+>> +		page_table_check_pmd_clear(mm, pte_pmd(pte));
+>> +		break;
+>> +	case PUD_SIZE:
+>> +		page_table_check_pud_clear(mm, pte_pud(pte));
+>> +		break;
+>> +	default:
+>> +		VM_WARN_ON(1);
+>> +	}
+>>  
+>>  	return pte;
+>>  }
+>>  
+>> +static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+>> +				       unsigned long address, pte_t *ptep)
+>> +{
+>> +	return ___ptep_get_and_clear(mm, ptep, PAGE_SIZE);
+>> +}
+>> +
+>>  static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
+>>  				pte_t *ptep, unsigned int nr, int full)
+>>  {
+>> @@ -1322,11 +1352,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
+>>  static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+>>  					    unsigned long address, pmd_t *pmdp)
+>>  {
+>> -	pmd_t pmd = __pmd(xchg_relaxed(&pmd_val(*pmdp), 0));
+>> -
+>> -	page_table_check_pmd_clear(mm, pmd);
+>> -
+>> -	return pmd;
+>> +	return pte_pmd(___ptep_get_and_clear(mm, (pte_t *)pmdp, PMD_SIZE));
+>>  }
+>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>  
+> 
+> Although currently there is no pudp_huge_get_and_clear() helper on arm64
+> reworked ___ptep_get_and_clear() will be able to support that as well if
+> and when required as it now supports PUD_SIZE page size.
+
+yep.
+
+Thanks for all your review so far!
+
