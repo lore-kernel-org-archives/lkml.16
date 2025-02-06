@@ -1,128 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6471F416F;
-	Thu,  6 Feb 2025 16:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416F91F418B;
+	Thu,  6 Feb 2025 16:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857668; cv=none; b=tvPeLl4hjwq/tArrU0Ffp8jMHeX/OzM4Li/w3N3epBs+WFGmzwYrvxYbKBpP1bcvh2igHWGMH6b7SLDsyitjkzMvTSMVyD7j480fweUhE6DK83xKTw4x7thRkVQrMSKKteiwXDkOb5b8bhyp5Ly+gfbLWXnZ7QxGchL2qLFYlpM=
+	t=1738857765; cv=none; b=a/+6HAzn/rkBxJ7/oN7P2NmH8wylD5KBrRY0Y/hBcarazJPha64rKjdishvcaD5EdH8ta3PTs9+/tO7VLWNBS1gaNPnwbLBWBshnSCSoefy1ohSUVJ6GrlXoDsvGiCw2ksKIX3CcYswI40cBji9MiAK8ZuGEP5ZaXMf1BHInuVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857668; c=relaxed/simple;
-	bh=CRbUrt8hTzi7475aDlmDlLKM7hBdm42ThEEOGqT4H4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tmz0rFm0bolvefaMWC7FfgyPdcsQZz3DfjlmvC2idh27Uw4V5vSp0XAzHYBpVjWKzNEwgbEkp/P9oyaikpW87eSAIWtJARx8tHrDCKXa60edwdb+7XwRl3TeaeYhxCCVODNcAlbIqVTuyzBDROv1g7jB8DFo4s86arwn2A2T9aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fxvu6Zx0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738857765; c=relaxed/simple;
+	bh=x2gpS+dhI9K78ESB6TIOUjl5kGdcJeTQlkc7ugTmD8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=eoYJrTCTP3M7Q3AnV+/kyF7kBf7JuyiJBiSEIwDqWgXtjWeKyi3eLbD6cKpjV+UAl1ySN3qGtv5RE2KK6aFZMsdNYKOP6Ljm8qkvKQYSvkj0nAR0HrzYk2QDbDHYvoWaRJ2//VdqZUJJLcibvbIc9WesQjcbdzOYi244AaL1Hkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0jqkoAL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fxvu6Zx0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F367C4CEDD;
-	Thu,  6 Feb 2025 16:01:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0jqkoAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A70C4CEDD;
+	Thu,  6 Feb 2025 16:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738857667;
-	bh=CRbUrt8hTzi7475aDlmDlLKM7hBdm42ThEEOGqT4H4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fxvu6Zx0Q8P6eCMe27z0y2ijR0hj+oqqiDVgyU0FaM/WikmqoNkuynWHz8cFAweNB
-	 LprWdS7bUJcjd34W9B4dU/MK7oCkEYhrzXjsZ7zOhqHHRMaydF1h5r7VHl2x4UhALD
-	 XSrlvV8lpc6tAOP8PZU9JOodxhbDVhrMq2S4mCnc+aFZXZmht4LDL9ce00FuSV+XEp
-	 OKyIEwNtJqsLVHpriVmMqEUK1Nj+1Ep3Iu+HrJ2rK357D1pti3uo3RCuJq/UK4qB3m
-	 awo3jKHl0qZepCjaWzj2DYVRXjHjOwGT/Q5nBjutRntk+Ww5wVnm6hlKrobRRGtwUk
-	 +24DXo11ef+aw==
-Date: Thu, 6 Feb 2025 16:01:03 +0000
-From: Simon Horman <horms@kernel.org>
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH net-next v4 13/17] net: pktgen: fix access outside of
- user given buffer in pktgen_if_write()
-Message-ID: <20250206160103.GV554665@kernel.org>
-References: <20250205131153.476278-1-ps.report@gmx.net>
- <20250205131153.476278-14-ps.report@gmx.net>
+	s=k20201202; t=1738857765;
+	bh=x2gpS+dhI9K78ESB6TIOUjl5kGdcJeTQlkc7ugTmD8c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=I0jqkoALn105vNr6UekMx9bp4Yqy6RNwxreb6YwQCm1EkdfON9b4CUgmSsxPxZg3I
+	 p9QiBLC233isUkmx0OR3+Lkoxv3GNPZrCxrZufzXgWOu3r/OCbZ+/nOqOPeTYsnqdO
+	 z34KWJMCxAJRtWF/nc0l36XUpK5jV1KrB/YUGb0r1FfAIAWhZWrJJwJuTO72RLlKZl
+	 H3lR7XCtidM3qhwpdnTxmBNGKbJ9OOR/CPln+kTQMRdwyPWDBqzIaJ0/5BS9sPrUGu
+	 RgJj/PYWGqr6ll4sTxy4lLmQNzlSBD7GvrxlNvN8SobxPPdOvGIuWL46XkptPVSvrZ
+	 4sIdM1+Al0wmg==
+Date: Thu, 6 Feb 2025 10:02:42 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+	Juergen Gross <jgross@suse.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 3/3] pci/msi: remove pci_msi_ignore_mask
+Message-ID: <20250206160242.GA985980@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250205131153.476278-14-ps.report@gmx.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6Rz1o3CnnuUiaoI@macbook.local>
 
-On Wed, Feb 05, 2025 at 02:11:49PM +0100, Peter Seiderer wrote:
-> Honour the user given buffer size for the hex32_arg(), num_arg(),
-> strn_len(), get_imix_entries() and get_labels() calls (otherwise they will
-> access memory outside of the user given buffer).
+On Thu, Feb 06, 2025 at 09:33:26AM +0100, Roger Pau Monné wrote:
+> On Wed, Feb 05, 2025 at 09:17:31AM -0600, Bjorn Helgaas wrote:
+> > Please run git log --oneline and match the subject line capitalization
+> > style, i.e.,
+> > 
+> >   PCI/MSI: Remove ...
+> > 
+> > But it doesn't look like this actually *removes* the functionality, it
+> > just implements it differently so it can be applied more selectively.
+> > 
+> > So maybe the subject should say something like "control use of MSI
+> > masking per IRQ domain, not globally"
 > 
-> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-> ---
-> Changes v3 -> v4:
->   - replace C99 comment (suggested by Paolo Abeni)
->   - drop available characters check in strn_len() (suggested by Paolo Abeni)
->   - factored out patch 'net: pktgen: align some variable declarations to the
->     most common pattern' (suggested by Paolo Abeni)
->   - factored out patch 'net: pktgen: remove extra tmp variable (re-use len
->     instead)' (suggested by Paolo Abeni)
->   - factored out patch 'net: pktgen: remove some superfluous variable
->     initializing' (suggested by Paolo Abeni)
->   - factored out patch 'net: pktgen: fix mpls maximum labels list parsing'
->     (suggested by Paolo Abeni)
->   - factored out 'net: pktgen: hex32_arg/num_arg error out in case no
->     characters are available' (suggested by Paolo Abeni)
->   - factored out 'net: pktgen: num_arg error out in case no valid character
->     is parsed' (suggested by Paolo Abeni)
+> What about:
 > 
-> Changes v2 -> v3:
->   - no changes
+> PCI/MSI: convert pci_msi_ignore_mask to per MSI domain flag
 > 
-> Changes v1 -> v2:
->   - additional fix get_imix_entries() and get_labels()
+> Which is slightly shorter?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-> ---
->  net/core/pktgen.c | 176 ++++++++++++++++++++++++++++++----------------
-
-...
-
-> @@ -1015,7 +1025,8 @@ static ssize_t pktgen_if_write(struct file *file,
->  	}
->  
->  	if (!strcmp(name, "min_pkt_size")) {
-> -		len = num_arg(&user_buffer[i], DEC_10_DIGITS, &value);
-> +		max = min(DEC_10_DIGITS, count - i);
-> +		len = num_arg(&user_buffer[i], max, &value);
->  		if (len < 0)
->  			return len;
->  
-
-As an aside:
-
-The code immediately following the hunk above is as follows.
-And this block it is representative of many (all?) of the code
-modified by the hunks that make up the remainder of this patch.
-
-My observation is that i is incremented but never used again -
-the function subsequently returns at the end of the if condition.
-
-So perhaps it would be a nice, as a follow-up, to clean this up
-be removing the increment of i from this and similar blocks.
-
-
-		if (len < 0)
-			return len;
-
-		i += len;
-		if (value < 14 + 20 + 8)
-			value = 14 + 20 + 8;
-		if (value != pkt_dev->min_pkt_size) {
-			pkt_dev->min_pkt_size = value;
-			pkt_dev->cur_pkt_size = value;
-		}
-		sprintf(pg_result, "OK: min_pkt_size=%d",
-			pkt_dev->min_pkt_size);
-		return count;
-	}
-
-...
+Much better.  Also capitalize "Convert".
