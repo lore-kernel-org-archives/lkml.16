@@ -1,102 +1,72 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6111822577D;
-	Thu,  6 Feb 2025 08:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64972225419;
+	Thu,  6 Feb 2025 08:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738831177; cv=none; b=MUrhQv6++noeSvbrjsQQaAb6AOnQyn2U1U7ayfx6d76DZ01pcnXt/uvfAJQkwc8XyOOx3IW4CdXrS6IK615eQcwR3pXzLiB2KKdgGtyKHKlVUIVMOhbzsXRN9V3hJj3T3texh0yvJ5EpXFRB0bONqhLavFEk5mpCzurFjiB9jYI=
+	t=1738831320; cv=none; b=k5T+YqxEbHBvIplQ7ZbpMzOY22uZkE6tx9fa/J4g4yY1TstmcVZ0HcC5xHLTE0YeaoS9apTmltN3iUnSPpEXxFS9lowdf1xVSPQpFJTTAvDYa7j9Cy+43hhsR5DL+8w4UkK/6Y8yoQqrTadFX3dyhozNcB1442Zx9mgPthFs4FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738831177; c=relaxed/simple;
-	bh=NY5KMo4mSbDM2oc+61t64xOvH/Rr8aNKNrVv+vLhO9o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GwzPCfVJTU0+jri+lc7qd97cOUW5GH+OWtnEoacokhp53gqV1jC3bDQx2B2+GTEH1AFL6PebkU+zjZQAkG0ZAHKJgVvYWkTlbR15iCnUytshS1GwJ8rUr61WR+u4k+W4cDrV8bIYNhP/w7mw4WeTLvWxC6MibLQ0kF+zpAHjK5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 51689QX5012700;
-	Thu, 6 Feb 2025 16:09:26 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 51688w6s012525
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Thu, 6 Feb 2025 16:08:58 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.11) by ATCPCS34.andestech.com
- (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
- 2025 16:08:58 +0800
-Date: Thu, 6 Feb 2025 16:08:58 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: <krzk@kernel.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <ukleinek@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <ben717@andestech.com>
-Subject: Re: [v3 2/2] pwm: atcpit100: add Andes PWM driver support
-Message-ID: <Z6RuGrszOiPFWHyU@atctrx.andestech.com>
-References: <20250123193534.874256-1-ben717@andestech.com>
- <20250123193534.874256-3-ben717@andestech.com>
- <5514fa03-139e-456e-b522-6a774b52eac1@kernel.org>
+	s=arc-20240116; t=1738831320; c=relaxed/simple;
+	bh=RiJBfUsw7mp20XJjiZnxl3Q/Njadoq6t+e8HhaT6gOc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NfhuXa8z2xmQOmvOETDjW6L9V5bcPOF7hP7jltyln5GWug/qTwuYBh8LpaHbY+VpdcukQIetrxl/cJO0abmrwagT7i3zgHbtIt/rUQSk4eYxdjjevxsSJurignxOgI6ex4wLst7qREgZuB+LChKgi0DdzcoA3UIZtF+x3Mfn4XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBsEy3GG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBsEy3GG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB37EC4CEDD;
+	Thu,  6 Feb 2025 08:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738831319;
+	bh=RiJBfUsw7mp20XJjiZnxl3Q/Njadoq6t+e8HhaT6gOc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dBsEy3GGhbSBMYQEryBrXOa0Eee9rv6RrJkUqnJLcyLU1O5Ulmd9K73WWD4SCUwK3
+	 IyCfDMcXtoPsnUp75jNX4rzz3+UOD6Qfca1enzcTHJh9chWNtIBuvYjm7UmTepDr8W
+	 aAaBGNYEBko8OFAOUbu2jrQ/a7it0hSKXsXseqx67QArR+Kwusnjw+WowSkWo9DQji
+	 nAkYcBN4v7boYj9K6qsKSQYQ6/B8x42SnkXpHGlCrq0MvIsDYVWIjkBwUsgb7Jm0bN
+	 Um022lgCruX5mnlvvZBTyzqAHGW/gagdTwl9vBXjUA9jH9yPNIXPnBvWAkvH2cGTH2
+	 yBt0NJMn68bCQ==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ Maher Sanalla <msanalla@nvidia.com>
+In-Reply-To: <cover.1738586601.git.leon@kernel.org>
+References: <cover.1738586601.git.leon@kernel.org>
+Subject: Re: [PATCH rdma-next v1 0/3] Print link status when it is changed
+Message-Id: <173883131613.836691.6835376998242287770.b4-ty@kernel.org>
+Date: Thu, 06 Feb 2025 03:41:56 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5514fa03-139e-456e-b522-6a774b52eac1@kernel.org>
-User-Agent: Mutt/2.1.4 (2021-12-11)
-X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
- ATCPCS34.andestech.com (10.0.1.134)
-X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 51689QX5012700
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-37811
 
-On Fri, Jan 24, 2025 at 08:30:48AM +0100, Krzysztof Kozlowski wrote:
-> [EXTERNAL MAIL]
+
+On Mon, 03 Feb 2025 14:48:03 +0200, Leon Romanovsky wrote:
+> Changelog:
+> v1:
+>  * Changed print to include port number
+>  * Don't print anything on change state from NOP
+> v0: https://lore.kernel.org/all/cover.1737290406.git.leon@kernel.org
+> -----------------------------------------------------------------------
 > 
-> On 23/01/2025 20:35, Ben Zong-You Xie wrote:
-> >
-> > +config PWM_ATCPIT100
-> > +     tristate "Andes ATCPIT100 PWM support"
-> > +     depends on OF && HAS_IOMEM
-> > +     depends on RISCV || COMPILE_TEST
-> > +     select REGMAP_MMIO
-> > +     help
-> > +       Generic PWM framework driver for ATCPIT100 on Andes AE350 platform
-> 
-> 
-> Is AE350 a type of a SoC? Looks like. "depends on RISCV" is wrong -
-> there is nothing RISC-V specific here. You must depend on given
-> SoC/platform.
-> 
+> [...]
 
-Hi Krzysztof,
+Applied, thanks!
 
-AE350 is not a SoC. It's just a reference platform to verify Andes CPUs
-on FPGA. For further information on AE350, please refer to [1].
-
-Also, I will remove "depends on RISCV" and fix the coding style problems
-in the next patch. Thanks for your review.
-
-[1] https://www.andestech.com/en/products-solutions/andeshape-platforms/ae350-axi-based-platform-pre-integrated-with-n25f-nx25f-a25-ax25/
+[1/3] IB/cache: Add log messages for IB device state changes
+      https://git.kernel.org/rdma/rdma/c/5459f6523c1f1a
+[2/3] RDMA/core: Use ib_port_state_to_str() for IB state sysfs
+      https://git.kernel.org/rdma/rdma/c/1fd119c6db838d
+[3/3] IB/hfi1: Remove state transition log message and opa_lstate_name()
+      https://git.kernel.org/rdma/rdma/c/d9d9434a3fee5c
 
 Best regards,
-Ben
-
-> > +
-> > +       The ATCPIT100 Programmable Interval Timer (PIT) is a set of compact
-> > +       multi-function timers, which can be used as pulse width
-> > +       modulators (PWM) as well as simple timers. ATCPIT100 supports up to 4
-> > +       PIT channels. Each PIT channel can be a simple timer or PWM, or a
-> > +       combination of timer and PWM.
-> > +
-> > +       To compile this driver as a module, choose M here: the module
-> 
-> 
-> ...
-> 
+-- 
+Leon Romanovsky <leon@kernel.org>
 
