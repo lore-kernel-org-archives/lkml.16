@@ -1,76 +1,72 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D322417EF;
-	Thu,  6 Feb 2025 23:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3272417EF;
+	Thu,  6 Feb 2025 23:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738885329; cv=fail; b=B1KCdZmMSeIx3u0rJL3u4qCXBxOss4sCS/lV6PPTFQt5vRs+BteKmbbMgT9oKb9gWM6Bzsd2mUPOMGk5wGO4vzzwbeT+xaAqdyUfG11L0VEhMKQqqBKgmohqcsbzsf4f6CJMIyqXOpsDTKHKUp/YnB1F5R0oUEiPQQpcQdbOm48=
+	t=1738885369; cv=fail; b=a02nho/IoqQfrSIMdYBqBbWbhshNA/aEqm4qPhVxkPIutASNQ86NVYLlGT4js6jaIrwKbcfQJdfkuXTVqg26NMr3NOD+Iqz9qdhukjx3g6FRl/Or+GIQzD4xpxDNO0b297tERo1xy1n82gQ/4NnyI2QP2vYOtl+99hh5hxoEBXM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738885329; c=relaxed/simple;
-	bh=XvXOueZU0ZGoZs1SC+m3T9Vgfz/0QY+Qc1vi18TNoIo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=i9ArbRbXhwELHiri0rrTqxiXBWcWv3aveEkZRPAqJlEXwhFGtykKbdGIcfvFtwE/BeGA5O10ks0BJNURf5uUJJvLqwd1sJn1R+avGDowhQIomSSXTVrZ3st3tPhAs8uAp3nKpKJ35bk89FRYp+mMN1DX6uqYbm8b5GVtvA0UwQU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JwAftXKc; arc=fail smtp.client-ip=40.107.243.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1738885369; c=relaxed/simple;
+	bh=Qk8EPFORV5myx6IHohDk278zBDmQvG6geU0nijytT74=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cp9Tm3YJodLwnEKYDUnkyzIa/+r4xvYAsGEMubB/APdE/88mcsZbfENEagkHgvJOcmBgnstoO6E2RlCym/ABz+HDRrvPcHYnNhMVcR9X477hYHd0uyhWbm5wRagN0w88K1+6kOaNPOF1Nol3f54EaWice7x7RfxwMYxYIoqldmQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FdkH8nm5; arc=fail smtp.client-ip=40.107.93.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JwAftXKc"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FdkH8nm5"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SW5J71LNHdhV42aGUaGg1mflF8jUhZcykcvdv88rQlyacOYjMZKtt1SF2VR/1LJG8I7o39/UvCpeYBxFxpaHRXKPB+rkCgCOLHeUUnqmiS/2qrQMKt/rcP4oKnRINRU/wOna55nI3wlXhJec9LawqcXsxJGh3iNz2G3jBrUH/FooaOq3fCyMCdd+SBiIJCyHQjHnCQ8QXDq+A0eYgWd7w6WRidY7v3hojJimuRKRvnweVGmH73NN0K7Rpc7wghWGgHHc38nNvFFEOwnwNvJVwS+hbZDpCNxFcOyLddaXF78btEb9ml2Gn5BCZuZVjJViYIVbCq/Oj+FpbDJZCbrijw==
+ b=dTj1r7weWAW/pWZDhQT1TUOn4inCys4WYynHmpwVWUEitps8sStLCPcqQWjzLqJroKzJGJE4VxwUFhtHdFTq0myIShKKkxjeVPKIuWdx1Mi/RWWJbTfEKOuEyrq0s0ZqgTLvN/nMsiQQ2k97zIoMbeIo+ZmVXLdChQ1xm2BJfVeuMoCPeB97XlAg2rf3bqwdFsGA0pqquD8BZvPXkeUXuqmfFFOZcdnmx6MPzvLG4TDKmd3khTGHuu/P5lUYF8w2/5nvwdQPYGWnP41Or7/tvaiFFJVXVIklKdW8sa3L4q7IliupQNhmEfzMuS7v1EqvCt/DnYIulCzDaGJ1qmE7KA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HN12Af3aATEvO7LXScO8aQtnvFKkbK7D9oQ/Q8x8YqI=;
- b=onJatvAR5qTFSJBMo/heqIL44bjYRXu0Tir1O3nVCqWh+Gojp879fk5wZKbLNcSK9Taip+oaUH1H4RHYxr6cvC4jq9spuibKrmC/m6o2pI5wTWxSmmZ2m1nLSirNf0+pSC4xwXC9xR6mXO1FCtb1pr51kppuMJQY27pmjgpxKhp2/8J+cV4Kf9VFPNtGQaB0lqsqvP9XEuNW0d1CWVLpyyhetz7yrkQaeNQJO3CKqU7VVwRo0wL8XvBsKo0H+mCZEAGMxUwCvUQQeII+AOdIDkhDSmPIujygTk0qSpHZYnIK/PxOxKOXhLKk/e2FeDWSS9cKTEHwu/AMcSsntz3VDw==
+ bh=gtBVAeW+NdfKsfI9Tx/jhi34oQLL8DU7Fbu8PZLwZi8=;
+ b=GNxKaksMGu9Z2yVhzMBaBqm93/T/cxNMR5NZEZcPWEQ6SeWU5341yjK/zkMoSob2VhsGunZ1XBVFX1Dctv0h0d/t/7fpFVp76oq86jET2JSHgHaSBtF1HN3i/RfesCN08XOZF6XMs5jaHtLh2Hh+/+i/R/baUAUhxg8zUnZawCb5mahW3Eq28IPHXaFMj/5Vcx9ZY1c4Kby4TPMX1aMlLeoFXsarYejQBwy9PgIH2Yx//yXGKNVuwnC2g9Czom4HVCT01Dr9QB3Ee8B+wgs+xYM+0l07CEfdN9RGKgMdYvmtJAQZKzhGrC10TreEr8NHEXPQrh5kqdGwFoRPk6e9Jg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HN12Af3aATEvO7LXScO8aQtnvFKkbK7D9oQ/Q8x8YqI=;
- b=JwAftXKccvhqXINyXGDWTUoupv+/4iIV5wZOTXogzpBeD3JtkzW9Vd9Uu4u10/N+oXTH0E3+g4N8LauNXm4os7b2j3fq3xvDw5vELy1swGPlCtWu9qEFFUl9qCpHPYNandwkA8mk1RbwPLG2XOt0BeImE2t0kfSq6SXl+l0Jmf8=
+ bh=gtBVAeW+NdfKsfI9Tx/jhi34oQLL8DU7Fbu8PZLwZi8=;
+ b=FdkH8nm5AlTJhfiuMCTIQm5kirjCHd+mQm7rvhOHRvy1MBwBjNICLyd1gA03YXF74xBFoyrCCquCjL58ujhikAQ+EgRVcTOyshnC8rBTAp8Kq7X7nmAy/OVmGU7bbobKIlo+jfZ0+rV9f/VkCeNm8rK6mQEmBAWMpQnP7pEv1tgpMk0s/X38AOZX+U5WiQmYpVcCiQqXJ8gSXynLwqKPJVIrEVAxJ6rm97u9wpLaT8s0qQTNkJBKifVymRzU3wKZnscKgSjgGBoV50+pp/qIa7WBq3+ECoyxNESazvo2BNmr+R9IdEU4FDX07Mnr1OL7iUWcy4UUfCUqgCUbpA/6aQ==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by MW3PR12MB4492.namprd12.prod.outlook.com (2603:10b6:303:57::10) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SA1PR12MB7272.namprd12.prod.outlook.com (2603:10b6:806:2b6::7)
+ by SA1PR12MB7444.namprd12.prod.outlook.com (2603:10b6:806:2b3::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 23:42:05 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 23:42:05 +0000
-Message-ID: <7b1765c8-9944-44db-9a0b-fddd102f156b@amd.com>
-Date: Thu, 6 Feb 2025 17:41:59 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 07/23] x86/resctrl: Introduce the interface to display
- monitor mode
-To: Reinette Chatre <reinette.chatre@intel.com>,
- Babu Moger <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- tony.luck@intel.com, peternewman@google.com
-Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
- akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
- xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
- daniel.sneddon@linux.intel.com, jpoimboe@kernel.org, perry.yuan@amd.com,
- sandipan.das@amd.com, kai.huang@intel.com, xiaoyao.li@intel.com,
- seanjc@google.com, xin3.li@intel.com, andrew.cooper3@citrix.com,
- ebiggers@google.com, mario.limonciello@amd.com, james.morse@arm.com,
- tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
- eranian@google.com
-References: <cover.1737577229.git.babu.moger@amd.com>
- <b298391d4db5806c145ba0b92d79e02a4df8d8c5.1737577229.git.babu.moger@amd.com>
- <6d215925-ee84-4b39-b002-9e3b66c015b0@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <bmoger@amd.com>
-In-Reply-To: <6d215925-ee84-4b39-b002-9e3b66c015b0@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR19CA0011.namprd19.prod.outlook.com
- (2603:10b6:610:4d::21) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Thu, 6 Feb
+ 2025 23:42:44 +0000
+Received: from SA1PR12MB7272.namprd12.prod.outlook.com
+ ([fe80::a970:b87e:819a:1868]) by SA1PR12MB7272.namprd12.prod.outlook.com
+ ([fe80::a970:b87e:819a:1868%7]) with mapi id 15.20.8398.018; Thu, 6 Feb 2025
+ 23:42:43 +0000
+From: Balbir Singh <balbirs@nvidia.com>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	apopple@nvidia.com,
+	jhubbard@nvidia.com,
+	jgg@nvidia.com,
+	Balbir Singh <balbirs@nvidia.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <kees@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2] x86/kaslr: Revisit entropy when CONFIG_PCI_P2PDMA is enabled
+Date: Fri,  7 Feb 2025 10:42:34 +1100
+Message-ID: <20250206234234.1912585-1-balbirs@nvidia.com>
+X-Mailer: git-send-email 2.48.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SY6PR01CA0041.ausprd01.prod.outlook.com
+ (2603:10c6:10:e9::10) To SA1PR12MB7272.namprd12.prod.outlook.com
+ (2603:10b6:806:2b6::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,176 +74,184 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|MW3PR12MB4492:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f4f4a3b-3e4b-4272-88ae-08dd4707dce2
+X-MS-TrafficTypeDiagnostic: SA1PR12MB7272:EE_|SA1PR12MB7444:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2917f440-9095-4a1c-551b-08dd4707f3a5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eXBUOXhoaWJoaHkvWDJTQjBmcTdaODg2RmZxOGVXcWdGcmNwejRHTGdxTWdP?=
- =?utf-8?B?OXhHbnI1UThPa3dNaTFVeE9FTHpDNmZxR3N6endCakt2ZDJKZ0RnQjVQd2dL?=
- =?utf-8?B?UmhpaFV2dzN3VTRPRDBzNUFERkYxU2txK09hK3d5Z1NQaFhTY0VNNWtrMHpQ?=
- =?utf-8?B?MmVBTHljSFRoMzU2M2xVN2Nva2xWL0U4RVdldzhZMHlKYndBd1BJSTV6RWVU?=
- =?utf-8?B?TDFTOHhzczVvV1dvQ0lvY0VvRFdJTzZkbXJWMDRYQ2toVnFZZWVQV1VvSTFQ?=
- =?utf-8?B?cnVNNkY3SXNOR0Fac2M4UWVEd2hmOS9qaVR5TEZ0MG5GeGhqR2UyMmdxUGxo?=
- =?utf-8?B?NTNsT2t4bHdCVXNibHQxSUYzbHRNVjQ1eUxBM0daQWVCOEFkME94dmpXSzY5?=
- =?utf-8?B?N29ScVc0UTRtLzRxUkJLeStWZjM3c3JnVU9oSUtHd1dKOUZ3aVd3emVUMmRx?=
- =?utf-8?B?ZUFYSDhIeGNKNGFKZ1hWamlmM2tqTitBc1BUelVQZlgxZXpiSlRsOGhIOTVE?=
- =?utf-8?B?R3NhSFFrVkNaeTJ5RXZ4VjJ2di81b0J2MGVvRFBKS09PK0lSeHhBcTRFV25p?=
- =?utf-8?B?elkxMG92N3VPZFQ5NERWZTRYT0h0OGNIcG8zQmdDUEpqeGJ2c2I0cG85cm0z?=
- =?utf-8?B?bEJBcUpWMHBMSG1sc3hVT1ZxVEZoVE4yMGRZOHBDNnJkcTVhWXR2ODIxcS9Y?=
- =?utf-8?B?MjVCcmNyclJCUzhCNDVPcmhKNW1uTXVTN2pTdjJQTGk1ZStwS21lZjZ6Nm9R?=
- =?utf-8?B?ZjZkYU1RUUtaNXNQRVFiZEhkTXdiYkZ5UDUza1BoNFJCZTBzMWtlU1VZWm0r?=
- =?utf-8?B?dzF2ZUVjVGZlc2tGOGpVYWVocit5aEp6dHJ4STF3eG1hRUxvWnhvNnpMTWg3?=
- =?utf-8?B?S2c2Z3NDQ1ByU2RlZ0lJczk1NWNTb0RjWDJNdmdUQUh5alhCQW12NUVQY29J?=
- =?utf-8?B?Y29JZ3crVWt1eVFwVVZDN1VOV1BsaGRWdTZaT0V2WVR0SmxjakovQlZndVNt?=
- =?utf-8?B?ZElhWUxBTUVzZ0NYb3RqVURJa1NWK2wyVmRBY2RuN3g2dEQ2VGlzRDhGUTgv?=
- =?utf-8?B?OXdjRHU3VHVGUW14cWFYM0N5YnJqR2hsckRqN3hzSlpRYXM1b1Bld0lkZFVK?=
- =?utf-8?B?ZW1FemhQTGkvU1lCdDlZZEs4MWhtenNoMUVzSmw4UlExSjVMQjkxN3FtNEFh?=
- =?utf-8?B?R1phT0VoRldlYkZQYzVvZUJtVko3VVRYdE9ENFQ0QkJwWVNtcHpxbytOcUhX?=
- =?utf-8?B?NnhjN3dkb2p5T1JidnNmTHFOaU9tTlBjckkyKy92UFlkeUZ1UmxRNjNoc1RF?=
- =?utf-8?B?N1AwQlRrWkNCZ3ZWTUlMMzY5K2tXYnhscmdqZmIySkhMRFplRjRidHl4KytK?=
- =?utf-8?B?UTQxcVZVRFJuNWhGQWdwZmtuMGlwR3dKZjJWV0dCTnRnbDlUY2kwdFJ1SjZu?=
- =?utf-8?B?NWhjdHJ0U3V0T0R2RUExOUZGZnJ0MkdoaW1Hd0hyY3dNL3MyczFPVDAwRkd2?=
- =?utf-8?B?TnJEL3I0OURzUVAyMlFFakRWdHVzQ1RjSFVJbUFxZS9lYTRJV2Z1R3JQaWhq?=
- =?utf-8?B?cmc1YWh1T05OTFMyRUkzcXBBcmNMZHl5SWNEb0lZdkM4aWZRbnpvQmJPL1Z4?=
- =?utf-8?B?N3R4dTN4RUxRRTdsd29tUHJMc2YrVWwvOGZNTU1TTU9IUlErcHg2RGZJQjJn?=
- =?utf-8?B?YmlOVGxxbzhmVC9UYTFTcFRadzY2bkh3T2RnVUxnZHBLUGZybTZHYlcwSWVJ?=
- =?utf-8?B?NXBOclViZGZlUlEwRGpPd216VmtPdjBYNEE0Y3MvdktsVU4rZUx1N1B2bGtI?=
- =?utf-8?B?UmFlNWtBanJnUnBuanNBSk9FQ0UvdmNaWTVOZ3dmWGlDQnRLY3loR2ZqZG5W?=
- =?utf-8?Q?mSE2AvXFDVY62?=
+	=?us-ascii?Q?ysHWtZFT+JtPZiNvI4AzI5n8K6T89yNbE1MScfLUiGSKb4yZ+vhShyrFsWxe?=
+ =?us-ascii?Q?jkRgDL08eYoHZhvOBIoRLBeNoaHoCjwk5/gfaeqBx3SscnXlAAw4MLtZVsqE?=
+ =?us-ascii?Q?USLg83SDtpZ28rUrr6KpH9JnvSL1Cevphe7mFEFgQM9wByB75MTcigAeO3fn?=
+ =?us-ascii?Q?p9BYROZvtNR9/7/ulbHzHgXe8EapYbUlcGVzuGc/LBm9KzEvL1yABphpQS79?=
+ =?us-ascii?Q?hEEFPYAPKEvxpZP/b+17Fdsg9IP0G5Enwu1l6CJrIvy8GEyNxe3nkBmaCayw?=
+ =?us-ascii?Q?NrK9G4PzZaSJk05d3SsnAPVkF2GCwzoje3i1BXV754UTXhFzJmXU78QjLRPE?=
+ =?us-ascii?Q?hclbwuiLFpSlk0gJCRbRn4/KgYR1eeSv02vN0yRRB1jhV2fb7CcV1lEeoOe9?=
+ =?us-ascii?Q?yhM/K+TKG3W+hm+s4wjXqcGY/deMRHxyBtzEW534JG7lWvppUUCDU5MyfIFU?=
+ =?us-ascii?Q?yNQ493pgGCIQg+r8QVjX3EcCqG9n4bTEjhTLwD1mpFGEV39at2GplLISmBef?=
+ =?us-ascii?Q?at3bZZyuiAHT0n5Of7STgOhGZz2U2vASKjkfDohJI6VRX0rj8G+apTGrdku/?=
+ =?us-ascii?Q?Kd8Y9PPM9WbCLla1G4AR1lvw28oxXhwAXboMAOAG/T1V37jw9quw1GdrP+Wf?=
+ =?us-ascii?Q?xZZHvC2ygGlWi+uMI1FncFg20mBiIcMQBkXSgmN8aVVcakNmWgDM3hNwNvHs?=
+ =?us-ascii?Q?ag7mS+4fA2Wt/EOU2qD03Zou8xx8jUwL+e6Q+Ebz7k4ucU0dWQdUb6QoTq7C?=
+ =?us-ascii?Q?3QIxmG1wI1WdX+5J1zPzWkBjfSnA4676jc82CO1H6h187gvjLiwy8MK3hKyM?=
+ =?us-ascii?Q?VQP4/PyGTSkrg5hYDAkt3/+3LJGpRScY+3Df1jm6ApZ7LPIU/7iCBQj55e0+?=
+ =?us-ascii?Q?0DtO1GHmssZUf6GRh99T6ctXXPcSx/eA1m8lzDzzTdCsKOCHlsUvSLoNloTi?=
+ =?us-ascii?Q?gPiCg/rvvrQh3Xw4S6zRC7fNuhs+lTx8EebhETU584SdgGqgZaSGKdeejuWO?=
+ =?us-ascii?Q?XCLZjrwy883yazzEcjBuXI2XDY+BZe21Roi0SMBT5xJthoMCqvfDG6wa1iUE?=
+ =?us-ascii?Q?vtBwsmgdBqIvaTyUThLIWMdi4uR50IkJHp371VWKPzUmfazyfeebyUa2QdYz?=
+ =?us-ascii?Q?udxIugtg4QYRfuHqcZ4Eg8P/cW8EiXA97WAUREuNWXD/S3Fo3qrD4EIQhoc5?=
+ =?us-ascii?Q?uhszm/bUpjjS/EVVoGebH+fJBIygk5PdNa+2zw82vHA27NalKTJJyk6W0/Ip?=
+ =?us-ascii?Q?nOPEABk/WJx2uv0ntXhgI8x6MJopAhaQGa8ivDVrWUfzpEgZ9GC49gUMgB63?=
+ =?us-ascii?Q?4pPPBAFu57YHuBXrnWdqqw/Iu3xkanJRmbevnUUlp4hZxylu5F8RYbHHC61G?=
+ =?us-ascii?Q?TWYUXwDH8LhHF8JTR5s6n3ArDTs6?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7272.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UldnSENKWjVRUm1QWXppQlhmWUoyeWtNREY0WDlvN3d1ek9pM0krYXVNSUpV?=
- =?utf-8?B?ZnVOOEdiL21uWXhuMms0djBPVFN2YWhIdXhIbG5yUUY1UVB2azRLNUpZcThH?=
- =?utf-8?B?di9rWFZRQTMxWndIZGlPb2RnNkM5UHdZa2dkcTVkUTZMRjRTcnoycGJSdXNX?=
- =?utf-8?B?bDBBVXI3UG5seTRXdVBnNTZUWWF1aWhFc2tMMG5PSjBBQ1hCYmFUT3JWUDVQ?=
- =?utf-8?B?UWpPWEM4Q0xLOHFyOHcvU3JUbGNqaGtEc3c1K3VwR2lYQmQ4b2s4d25Hek1q?=
- =?utf-8?B?emh3dDEyejkwV3UvNU9odmRYaUF1UmVLMXpRMWQrS3BtNHI0Z3ZIaStxOW9S?=
- =?utf-8?B?RW1rRmVaM09jKzZIeXBxZ1RlMmZNL1Vkc2pza2JNZW9GL1pJT1NSZktGSUNi?=
- =?utf-8?B?dEl6aW8rc2tyVjUreThVNkpGUGw0ZmQ3a29aOEpVMkk3bFdJWnFhci9LQkt6?=
- =?utf-8?B?cVM1SmtzaHNsSDFJaEJ1VE9XSVdCcTdDVmNyTHg1TTE0U3VFVkJrNzc0VGdk?=
- =?utf-8?B?ZGlTTTYzVWdYbWJ3d3UxUU5zd29nUEFCYi9nQlF3Q2VGOUFDK2gwOHcxQzZC?=
- =?utf-8?B?dHd3UWVWS01QTCtxd1ZFUVhlMFBseENaME1HQVlSTDNxYjRDSzZnSHh6cDFW?=
- =?utf-8?B?ZXY4elZEZnJKaXd2Z0hyNVFCT1Z5SzJzcXhSaDZzRFJBay8wTzQvS3ZkUVFU?=
- =?utf-8?B?MW42eXF3ci9nZHZNMVBBeVRBemxPVzFGTlV5L09yUlJzTUR2a2JXanU3T2U5?=
- =?utf-8?B?N2ZKVDlOc21zSTE1WmJpN0YxQjJ6TUVhUGdHa0FxWTZDMWxSNWR5TWVXSUdH?=
- =?utf-8?B?MmRaZ3RTcVExOW5MNU9EUFBKWCt6TFduNGRtLzZRQ1pUVnpPTWY3VndTQXZD?=
- =?utf-8?B?OVMxODRiMnBhOVlTRUlETU1aaW1wTlYyc3V3aFhYMkQwbXY5UHY2RnJtdmhE?=
- =?utf-8?B?eFJhV05QelVTU2E5T3J1NkU0b2x6dTJ0cG0xQ044VEFibS9GajJhV0tyNDcv?=
- =?utf-8?B?V0VIRk5NMzFJNEo4alMzbzRIUHRuSVhNMm9LNWRHOUk5QlpuWERERDAySFJk?=
- =?utf-8?B?d2tTVUZCQStQQlBKRDRsT0krOXNIa2hsR2hlcHQyMVBtTXkzUVI5azhPL2ZY?=
- =?utf-8?B?bTRubmphLytXSGhuQ3ZCWjZrRzZNY3BObkRaV0RFZHlJamNJSkNMR0tUWWJl?=
- =?utf-8?B?cUtwOFZvU2pCNXUwZEI0UnZTcm9yUXUxc0ZIdUNyUlFmQ2hXMytkVU5PenBM?=
- =?utf-8?B?ZnV6MmFKV08xeUNHeUV1Y250K3BvbXl4UjhoTjE4aFl0RnYzNjRJSUNOUXVI?=
- =?utf-8?B?YVNKWlFJajVoU295WE1NVU01OTRwK3N2YThxL2VXU1hvUWh2ZmRvdlpjVFJB?=
- =?utf-8?B?MnFTQUpyRjZDSlZjNG9pT0hTTGwzaEpQc2NEM05CS2NMcVhJL1pqZCtPNUlR?=
- =?utf-8?B?UVRLUUJSN3psckRCa1hjRjJQejY4VEwxTnhqMksxYXNzVnBwTTRYU0hTdngy?=
- =?utf-8?B?c0RUTjgwdmVmekxnMHZGelM5RUtsTHpma2ZNUlN2VUFNRExEMzluK3J2dm5p?=
- =?utf-8?B?UEdRdmVSWXo5ejhiYlpQYytrQmtoMXBiMnEydWhGcUxSQ2pqczkrZmdyU1Yw?=
- =?utf-8?B?QmlaL1RhQmtPcnNxOEpCR2NtOSt2YWhpcHdDZXVQYW5MK2c3dCs0N0p0TlZz?=
- =?utf-8?B?cW1yalEwb2hMMkRETzhtTktFdXo0bmhURU1aeUtwMXY4a0VjY21MTUx2NnhK?=
- =?utf-8?B?UU1PMTJpNGdva3FZdDlvNG1TWDJZSmJ4TzIxY0J6MFo4Q2FnWlN2ZE5MTU5x?=
- =?utf-8?B?cy9veFZHS2ptaERTVktwbnVGejJCdUJLT1NQSjFGY0pyNmFOWHRZU0JUZHpm?=
- =?utf-8?B?Ym95cEkreXNqK2I5TUMwZ09WTVJjWVRSUStxV3ZaTE5kelJaUlhOTVRWZVcz?=
- =?utf-8?B?dWE3Slc2Z0VsNEJ6SW9XZVVxbFJkdko3OWJMM3JVMmkrUURBYk4zbFFGcXpx?=
- =?utf-8?B?OTBTTlk0aXVhK05ZK3JHWkJ3U3l3WU9WZFlFTWJ1REY1b2RjVzhvclZSOEUx?=
- =?utf-8?B?TUVDZURPVG9hcXJWdExkQjA5QmFVdzNJa2N2UitmVk5JWEpNdGdtSHlwTWtJ?=
- =?utf-8?Q?6xjiOtK3Lvwe5yHVPqSZocR/A?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f4f4a3b-3e4b-4272-88ae-08dd4707dce2
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+	=?us-ascii?Q?ZNIQ+0FurPIu8cx3Mxp2MbqRnmbPEAvLS5mInCd1Wdgg2P+TOcBohYWUQR5a?=
+ =?us-ascii?Q?mj2iozECGFPC7fdr/4fy6pO8jjA4kXEki44io/YZq/q2FwUgRGGbu+546ABy?=
+ =?us-ascii?Q?sVszk/TAaDYxc38YEAvV4/utYBxvMTHkVtwzGiQQl+kTNFl0UUfXrAg/Cdm4?=
+ =?us-ascii?Q?720B8RD39lPWbCip5h1O9b/1UKxb7XIwc9I1fICk2H6AyMLDS3sl6LR1Pi9i?=
+ =?us-ascii?Q?PDrAe504tPO0fwwdfLawDso/D3c9p8+8CDsafIo0RNYYred2YEs6aMLed+ok?=
+ =?us-ascii?Q?nIZ8CBD02FbrHWgKyFMTJvo02RGMUE8EPbM1KbgU955ETx/bET9UIttfyUpo?=
+ =?us-ascii?Q?NDPuVtbZCKWJuVV7O5vx5rwFfwY3K72wpeiCqLOWxCo4dlbR3WfbG0KqH75/?=
+ =?us-ascii?Q?Rcmog/3yO3jEMByGR0V6AnWVQuWhGk2JU2FpFjXQnNRQD3EYF+q38lH6T6HU?=
+ =?us-ascii?Q?WKQQXh4tQ6QtgwCxAgnKxy4phKShqMRH5WOYnXjENh7umI/YshdL3o5d0sy9?=
+ =?us-ascii?Q?g05zFSeTTuqTOfsqugs6sMRP4uGSM4vbvHAyEQZ+gLEO6LEgYqlBwFbCTZcu?=
+ =?us-ascii?Q?0QRIZ0MqAianHi6xO6BnrXuARpd3jDXareZ56alvQGX4FwzCBNzEguD9bgS4?=
+ =?us-ascii?Q?NG83AA20OHOQ8nr4FX3iyIOPK2Df7uFLC9qu7vMPg4QPaVzY/Ph764UHit67?=
+ =?us-ascii?Q?+7lxEJR5ZJrYWhuMFGyuLqb2uxHcf+kQptVIsQvMSdC8QYptpdB8gGRJ5Hxr?=
+ =?us-ascii?Q?ch1D4sSsQ9+KbJtyzwEgbyFG/ADeu7xVf/SX/jECNzzV8z1toD3iLNX3LF58?=
+ =?us-ascii?Q?/h4BiK7exo0Iz8et2kS1SU74JVZsfUjojbG1/aPbeqV7voqSbSkUf7GIlZ26?=
+ =?us-ascii?Q?22N+nIpzZQMHdhISJGBGG1yog5BEhEs0CNRdticaTihJ378bdTJydxk+BWUA?=
+ =?us-ascii?Q?HefjG0Ifm9vF0XpeENK7FWoev6GDYIX1v2RGJeTNSi2BsdOjumBMpBUWv/oS?=
+ =?us-ascii?Q?oB2+IBIDCeFTwJP+pgXxWHocs1FTdPqF81kXMvBF4KbnmN2INb26whR9LTx8?=
+ =?us-ascii?Q?22uXnX0n7AqQ8Z+gJ/eHsMH4oPHMAWgIzAJxF/GevuTNcYtAWIYqSNBMoCgT?=
+ =?us-ascii?Q?kwILrmpgh51K63ko/SN03bwrVzMrrgPz7RG2ltZSxzFT9UMG8oekSHsKrsPB?=
+ =?us-ascii?Q?NGlO+6cuQlwQbD7vUQKLJP7mBj2N6Bec6uyuynuVXz9PjYmL8OayQttRAFHD?=
+ =?us-ascii?Q?WKMywSkwvIUHAXZUJKw+/t07p858hQqFtIgWkbYUppad50QnujwuAeA2ImDi?=
+ =?us-ascii?Q?VUcsW+EavTFY0QNB07Kzi7yzqgfWx1hmOux9G3gVoXILq8QZ0AuVO99QlH0y?=
+ =?us-ascii?Q?yLJSbtgbme5HHMVpf35QWpgXhrINy3kdxmC+Rr/4t1SDD9EDH34AQbQTUHwv?=
+ =?us-ascii?Q?e3e5/9sTvWVr0G0PKljNt6Z9YXxeAdK2X3r6w7dPtszKuY/oZKMyAckXB/lr?=
+ =?us-ascii?Q?Oy9Bb+ExfypRCkQW9+c5TZx/uHl5vRyo6DN5XmMFnXRvN0CpEGUPvjSn6xSn?=
+ =?us-ascii?Q?ep6AOVooO9B+6bYsYaMIHYn0buDf3zAM/hzHV4kX?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2917f440-9095-4a1c-551b-08dd4707f3a5
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7272.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 23:42:05.4501
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 23:42:43.8263
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FlJeJBHlRjH+HCQeSrAFIyXv5bMhAaW7THNzsdy4jwC3QJnZ1QCF6o95cBX0F3my
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4492
+X-MS-Exchange-CrossTenant-UserPrincipalName: LuB61HV/G1ktEVUmW6G1pBDWQ4z56K3CDJ1kktIRw74aRdOjApeLwoFwxAY0cIPEp6H83Q+xNWbffkZ3u5wc9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7444
 
-Hi Reinette,
+When CONFIG_PCI_P2PDMA is enabled, it maps the PFN's via a
+ZONE_DEVICE mapping using devm_memremap_pages(). The mapped
+virtual address range corresponds to the pci_resource_start()
+of the BAR address and size corresponding to the BAR length.
 
-On 2/6/2025 12:01 PM, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 1/22/25 12:20 PM, Babu Moger wrote:
->> Introduce the interface file "mbm_assign_mode" to list monitor modes
->> supported.
->>
->> The "mbm_cntr_assign" mode provides the option to assign a counter to
->> an RMID, event pair and monitor the bandwidth as long as it is assigned.
->>
->> On AMD systems "mbm_cntr_assign" is backed by the ABMC (Assignable
-> 
-> ""mbm_cntr_assign" is backed" -> ""mbm_cntr_assign" mode is backed"?
+When KASLR is enabled, the direct map range of the kernel is
+reduced to the size of physical memory plus additional padding.
+If the BAR address is beyond this limit, PCI peer to peer DMA
+mappings fail.
 
-Sure.
-> 
->> Bandwidth Monitoring Counters) hardware feature and is enabled by default.
->>
->> The "default" mode is the existing monitoring mode that works without the
->> explicit counter assignment, instead relying on dynamic counter assignment
->> by hardware that may result in hardware not dedicating a counter resulting
->> in monitoring data reads returning "Unavailable".
->>
->> Provide an interface to display the monitor mode on the system.
->> $ cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
->> [mbm_cntr_assign]
->> default
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
-> 
-> 
->> ---
->>   Documentation/arch/x86/resctrl.rst     | 26 +++++++++++++++++++++
->>   arch/x86/kernel/cpu/resctrl/rdtgroup.c | 31 ++++++++++++++++++++++++++
->>   2 files changed, 57 insertions(+)
->>
->> diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
->> index fb90f08e564e..b5defc5bce0e 100644
->> --- a/Documentation/arch/x86/resctrl.rst
->> +++ b/Documentation/arch/x86/resctrl.rst
->> @@ -257,6 +257,32 @@ with the following files:
->>   	    # cat /sys/fs/resctrl/info/L3_MON/mbm_local_bytes_config
->>   	    0=0x30;1=0x30;3=0x15;4=0x15
->>   
->> +"mbm_assign_mode":
->> +	Reports the list of monitoring modes supported. The enclosed brackets
->> +	indicate which mode is enabled.
->> +	::
->> +
->> +	  # cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
->> +	  [mbm_cntr_assign]
->> +	  default
->> +
->> +	"mbm_cntr_assign":
->> +
->> +	In mbm_cntr_assign, monitoring event can only accumulate data while
-> 
-> "In mbm_cntr_assign, monitoring event" -> "In mbm_cntr_assign mode, a monitoring event"?
+Fix this by not shrinking the size of direct map when CONFIG_PCI_P2PDMA
+is enabled. This reduces the total available entropy, but it's
+better than the current work around of having to disable KASLR
+completely.
 
-Sure.
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/lkml/20250206023201.1481957-1-balbirs@nvidia.com/
 
-> 
->> +	it is backed by a hardware counter. The user-space is able to specify
->> +	which of the events in CTRL_MON or MON groups should have a counter
->> +	assigned using the "mbm_assign_control" file. The number of counters
->> +	available is described in the "num_mbm_cntrs" file. Changing the mode
->> +	may cause all counters on a resource to reset.
->> +
->> +	"default":
->> +
->> +	In default mode, resctrl assumes there is a hardware counter for each
->> +	event within every CTRL_MON and MON group. On AMD platforms, it is
->> +	recommended to use mbm_cntr_assign mode if supported, because reading
->> +	"mbm_total_bytes" or "mbm_local_bytes" will report 'Unavailable' if
-> 
-> Reinette
-> 
+Signed-off-by: Balbir Singh <balbirs@nvidia.com>
+---
+Changelog v2
+  - Add information about entropy drop when PCI_P2PDMA is
+    selected
 
-Thanks
-Babu
+Testing:
+
+  commit 0483e1fa6e09d ("x86/mm: Implement ASLR for kernel memory regions") mentions the
+  problems that the following problems need to be addressed.
+
+  1 The three target memory sections are never at the same place between
+    boots.
+  2 The physical memory mapping can use a virtual address not aligned on
+    the PGD page table.
+  3 Have good entropy early at boot before get_random_bytes is available.
+  4 Add optional padding for memory hotplug compatibility.
+
+  Ran an automated test to ensure that (1) holds true across several
+  iterations of automated reboot testing. 2, 3 and 4 are not impacted
+  by this patch.
+
+  Manual Testing on a system where the problem reproduces
+  
+  1. With KASLR
+
+     Hotplug memory [0x240000000000-0x242000000000] exceeds maximum addressable range [0x0-0xaffffffffff]
+     ------------[ cut here ]------------
+  2. With the fixes
+
+     added peer-to-peer DMA memory 0x240000000000-0x241fffffffff
+
+     KASLR is still enabled as seen by kaslr_offset() (difference
+     between __START_KERNEL and _stext)
+  3. Without the fixes and KASLR disabled
+
+
+ arch/x86/mm/kaslr.c | 10 ++++++++--
+ drivers/pci/Kconfig |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 11a93542d198..3c306de52fd4 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -113,8 +113,14 @@ void __init kernel_randomize_memory(void)
+ 	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
+ 		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
+ 
+-	/* Adapt physical memory region size based on available memory */
+-	if (memory_tb < kaslr_regions[0].size_tb)
++	/*
++	 * Adapt physical memory region size based on available memory,
++	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
++	 * device BAR space assuming the direct map space is large enough
++	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
++	 * to the physical BAR address.
++	 */
++	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
+ 	/*
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2fbd379923fd..5c3054aaec8c 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -203,6 +203,12 @@ config PCI_P2PDMA
+ 	  P2P DMA transactions must be between devices behind the same root
+ 	  port.
+ 
++	  Enabling this option will reduce the entropy of x86 KASLR memory
++	  regions. For example - on a 46 bit system, the entropy goes down
++	  from 16 bits to 15 bits. The actual reduction in entropy depends
++	  on the physical address bits, on processor features, kernel config
++	  (5 level page table) and physical memory present on the system.
++
+ 	  If unsure, say N.
+ 
+ config PCI_LABEL
+-- 
+2.48.1
+
