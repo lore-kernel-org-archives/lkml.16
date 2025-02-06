@@ -1,108 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70ED31F4174;
-	Thu,  6 Feb 2025 15:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFB01F4176
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857509; cv=none; b=QMAep6XV3jPqdK/W9vvQHt7pLaHCHU3zSI08ELqoGjUtp491yc/ByYt3SUjvPKRKjs7R0mvg4AXtUsyZW8WNw7x8jNkidDUS8oHmAKt9qfJMt1JrpEa50mQqwpXbpFoGynYPALJ39nfRYas3qOZe2p155VuCEOHfgIEcO1nlKAU=
+	t=1738857517; cv=none; b=JQ/o9s68xjmPTXM0bwRs53Es/VBwYaJxtkJApoBgf5FyDGLGOyw5EnKpFJv7vTPOAS7hsE2+UQgedaod8RJocvZP27q3PdYu81pYedG6ECXsVWj6SIk8ramLyfTTf4AX+JpyVTV3DnQfsMv9plUAXExat3v7UCuYKpCQdr82Ppk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857509; c=relaxed/simple;
-	bh=9CPQ4BItbToGb9+riTJJedrdZZnhQ++50987e9cUd4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G2k6NCG2s8MAjFgMtr/ZClwP0bjV+wqaIDFqXt7SPp+aEzDGh6QahH2E1YxmS3VCj7tpMkYoc1sv+CDbDPcHMiG4Q8rhSyuag3NTH0ii5O4NenY1tfIOAbDLFub2QtII5YtymWYBC0X+F8pZba5PeptNlEci3uDAZZ7BHC+3Mf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vzf7KWdn; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738857517; c=relaxed/simple;
+	bh=gWHYsRpoJpRnvV1mzCDmHcNTyR3nkauywhnXfvlkd7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=eM+8iwJMpSdoEgEVfFFIKIB0D1O/+HGQvGBFFZqBSlZzj2sb8wQQHzIdstPDHqQJolcZXOTXR23MN0OgFcdfFi0EOw8niXZBpElFmZEInbNsYgH6R1bTr6p5i/sluOW1XtqPEPKIZcfvqkSNRI2oj3cgrdMdNaU/f6vJLkMD0Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de; spf=pass smtp.mailfrom=simg.de; dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b=g/2uuf4N; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simg.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vzf7KWdn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738857508; x=1770393508;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9CPQ4BItbToGb9+riTJJedrdZZnhQ++50987e9cUd4w=;
-  b=Vzf7KWdnHRlUv5vSpqKBwt/MLFwjShQaz4bStEoLmUn18LrGA/XhuW3s
-   rbktpJkh64Mixz7abYhFJ8+lQlTdaHUZE6lo9bgDdrCD8lk7PVUWaYzFb
-   lFeFvk4rZpdm/vrGYd2UU3+lXhxrN8Q5a7eTeoepfRBth6XG/zSAz+gJ0
-   anK+5PcyK0PzZ+jDtLwHAkiDLHT02HG5wv3vcKWF1J9b7bNBhgug4lv9y
-   2gINBaA3rQBhvCC3dinC3HjiLXB2vbjda6J5zKO+9BVFr/6QlhUtpH+Od
-   T2OcU1bzlNx1VXM3MeMnYvjv+ry3F03fEN+S51J/yuhax+dro5P5QNbM/
-   g==;
-X-CSE-ConnectionGUID: cc2eMIcJRTyxbEp5zIu85A==
-X-CSE-MsgGUID: zlkFBWhfQRGAHkvwonfRNw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39621674"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39621674"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:58:28 -0800
-X-CSE-ConnectionGUID: LME2EmBtTzaZAEBIvucucA==
-X-CSE-MsgGUID: q/7+1q/RSl2f2Q9mKfQUkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111093995"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 06 Feb 2025 07:58:24 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 34677EE; Thu, 06 Feb 2025 17:58:23 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>,
-	Justin Tee <justin.tee@broadcom.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: James Smart <james.smart@broadcom.com>,
-	Dick Kennedy <dick.kennedy@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] scsi: lpfc: Switch to use %ptTs
-Date: Thu,  6 Feb 2025 17:58:22 +0200
-Message-ID: <20250206155822.1126056-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b="g/2uuf4N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simg.de;
+	s=s1-ionos; t=1738857482; x=1739462282; i=linux-kernel@simg.de;
+	bh=gWHYsRpoJpRnvV1mzCDmHcNTyR3nkauywhnXfvlkd7Q=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g/2uuf4N41dwRDdtE5XovlH0pNJ+3JvEL2n0YhZf2Q2I/d3kHdtATo6dn37MwQOR
+	 PB2O2srh2T5nUf140Bl7tkeRoXoFqifWs/Vhfgw5vB3b1a/IicaONZ0mof1H+6Rpb
+	 5qxhLxcnI1FZ3NTK0HLSk7XK9o5GLeiWDvoR11Tk4y+KiEYwdY8RZMjN/ZFHeHGD8
+	 DwsxbjjZZc4CWDXq7ps3nrFnMMH+IL7KTAU1BIMqqkWs/5aAP415KJddziLqRgzyb
+	 fpQZVXwo0IgYLvd3ufAPc1G3RePSPYslluB0EhFCKgqV1wRLpwG0fGpDhDEQvCId9
+	 M0bxJQ6i+suW1AoScA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.1.60] ([93.217.105.49]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N4A1h-1tFm5Q3XA9-00uuIp; Thu, 06 Feb 2025 16:58:01 +0100
+Message-ID: <45fe8146-ef86-40dd-919a-eb6c9438dafa@simg.de>
+Date: Thu, 6 Feb 2025 16:58:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX + Ryzen 8700G
+From: Stefan <linux-kernel@simg.de>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>, bugzilla-daemon@kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, Thorsten Leemhuis <linux@leemhuis.info>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Bruno Gravato <bgravato@gmail.com>, Keith Busch <kbusch@kernel.org>,
+ Adrian Huang <ahuang12@lenovo.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250109082849.GC20724@lst.de>
+ <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
+ <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
+ <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
+ <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info>
+ <20250117080507.GA25953@lst.de>
+ <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info>
+ <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info>
+ <20250128074133.GA22435@lst.de>
+ <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de> <Z5jTKTfKUeLm4uJT@gallifrey>
+ <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
+ <4270c0e3-161e-42d5-a6d3-f16b7fbcdc00@simg.de>
+Content-Language: en-US
+In-Reply-To: <4270c0e3-161e-42d5-a6d3-f16b7fbcdc00@simg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:k1tqh76+Har6RGaz/VaE+uZWjGChocgvAqDX3fJ6YM6Xm05pPfu
+ u02LSLCjBUwq963vTx14rAiS/9tuyTILfPvBfZfEfOzEcwFpVJE2UQ2NGGG78ArPXis3ono
+ Cp4PqPu7HldeU13zkGXnsY7dAKRLfc2xPtA5zaDcn/lRBWRoxpzI3/3sZbaySecooGwSwGi
+ Qvc4UY1pS+0WAxj1U/auA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aJV2oV3/oPY=;3FuGEm5c0qzlztPwYlDxEaf8mJH
+ LVd9FiAkoy2Wxy1jQaEwA0Yw7HOl+pq2bzZNm3dNcr70V6fMd0jM3AlzCZw0gEilhioUBOHTL
+ rQFeRpALCp2FYGP0KUln9E22IIrCdwcpbly5gsLRmgBa0AE8krEdyMTknv/zbwUjgay0ORjfX
+ 6JH29MdTN4M22Sj2A+WoN+1cPgxXt7NZ6n2qYNeq7gbYBtrrnoCxZDyfdX150angd5wNju8Ab
+ d3ddZJFLUN/kyWtGv4N07XOGWFdJl0JQERIUtHfbLiKJA9KTOFPPsJM2lNOkMgBtfvqBFDxEs
+ t3CHkTpsuQs7NAn/bD940ipN68zT1yURU2XpoM5fX1wZ+2AtySUfxdjB4S/b5pQnVej+AczfQ
+ mk/tQLRmDskFEpajmSVFMsForIUALL52IL57q+gwVKVNNxy2y0lgpKmkw6Mpc8XNcshkOhyZT
+ uwHQ0meZ3CX1m+OZRIFNTx5/QoIDX+E2WOXfSCWQvJJGmRUsV2SB8E3mODqYQNfJzWbooe7XH
+ 4aJ7QSerllN098muhfqgH9PSF+EV8IBP/pScS6i2hqjLcaaMbNU7bM9QgfKtrPLPn2F8WD2it
+ 7jI5OGC81JQAHQHEMuXLrlpYpILJsNpKSXsda1siW4V9xhdVEB4Qfx7wZl41Cuo08cEQPxODP
+ iFsbng3AAhsHpaQbpd/JlFcdX4qak7N6Bih4zVSqhc+F66a4q4a4gc7VwhHikZrgCFxQ3CkHi
+ QR0Nqv/zFg1MHlww9wdNxzzKUbbAz0xp4dOerq2YUQg7c2WTOnuC1KHUy72KPk11bs80IIWhO
+ 4DIrFygycqR3MzaNyHQ+CKRfFt9FLtyjX1AUEnrVfHNQQFQ06hkqpKykxQ+PHP4x0LV+TCgcJ
+ vSrTT+NgfVJvb1WqDJqlODSc/iZTK1aDcigUWBPLYO0oRVZJN3DjGCYaB7UmA+i3fiea4ndtK
+ d2OnCz7I38w8TavHM0w20AHEcSN7esOuqi7rHhr1LEYZcMFodaNvT09MnCq/eZymleiNel5uy
+ dbeNHUMie6DRNA5f7KHunct59Q/C+htaJriCN7p32IJe3oBreoTNDCtGXY+u5p0IootktNeGe
+ bsqdFZmPXNkf6W44/oYoupIPLK5MXuyJ9sEN+RHGlur+XOhNLDqAgvF896JT9ZWUDZ9hj2s4s
+ GMNHrLp/X452/sZSm+cURzh3/f917v2ib3qGASVsGlHs4a0G9gooCkl4MIf2LbHFTLDu0IiQ5
+ KD8KxgdcVbZdG/1BbS3vUJX380T2CBKK7jngJ3ahrIwm8GmAkkQSJ/wwbbzTffF+PUEkhmbD+
+ Xp9rVq3D4QgFOXyBZLouQ9/nOBvuePGCxJ7Xa7tsUlEuKR+i1F5svb5CVw//ilqQALlxxxepy
+ /zw2NjHASoINbWfw==
 
-Use %ptTs instead of open-coded variant to print contents of time64_t type
-in human readable form.
+Hi,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/scsi/lpfc/lpfc_init.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+after Matthias was so kind (more than me) to make a video (!) for the
+ASRock support, and after I once again referred to this thread and the
+many users who have the same problem, ASRock is able to reproduce the
+issues.
 
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index e360fc79b028..240e92143d73 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -5643,24 +5643,11 @@ void
- lpfc_cgn_update_tstamp(struct lpfc_hba *phba, struct lpfc_cgn_ts *ts)
- {
- 	struct timespec64 cur_time;
--	struct tm tm_val;
- 
- 	ktime_get_real_ts64(&cur_time);
--	time64_to_tm(cur_time.tv_sec, 0, &tm_val);
--
--	ts->month = tm_val.tm_mon + 1;
--	ts->day	= tm_val.tm_mday;
--	ts->year = tm_val.tm_year - 100;
--	ts->hour = tm_val.tm_hour;
--	ts->minute = tm_val.tm_min;
--	ts->second = tm_val.tm_sec;
- 
- 	lpfc_printf_log(phba, KERN_INFO, LOG_CGN_MGMT,
--			"2646 Updated CMF timestamp : "
--			"%u/%u/%u %u:%u:%u\n",
--			ts->day, ts->month,
--			ts->year, ts->hour,
--			ts->minute, ts->second);
-+			"2646 Updated CMF timestamp : %ptTs\n", cur_time);
- }
- 
- /**
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Ralph, all tests in comment #40 (including the network issue) where run
+twice, because I did not collect logs and lspci outputs the first time.
+(The corruptions seem to depend on which PCIe devices / lanes (?) are
+used. That's why I also included the lspci outputs.)
+
+(As announced in initial message, I cannot run tests ATM and for a while.)
+
+Regards Stefan
+
+
+Am 03.02.25 um 19:48 schrieb Stefan:
+> Hi,
+>
+> just got feedback from ASRock. They asked me to make a video from the
+> corruptions occurring on my remotely (and headless) running system.
+> Maybe I should make video of printing out the logs that can be found an
+> the Linux and Debian bug trackers ...
+>
+> Seems that ASRock is unwilling to solve the problem.
+>
+> Regards Stefan
+>
+>
+> Am 28.01.25 um 15:24 schrieb Stefan:
+>> Hi,
+>>
+>> Am 28.01.25 um 13:52 schrieb Dr. David Alan Gilbert:
+>>> Is there any characterisation of the corrupted data; last time I
+>>> looked at the bz there wasn't.
+>>
+>> Yes, there is. (And I already reported it at least on the Debian bug
+>> tracker, see links in the initial message.)
+>>
+>> f3 reports overwritten sectors, i.e. it looks like the pseudo-random
+>> test pattern is written to wrong position. These corruptions occur in
+>> clusters whose size is an integer multiple of 2^17 bytes in most cases
+>> (about 80%) and 2^15 in all cases.
+>>
+>> The frequency of these corruptions is roughly 1 cluster per 50 GB
+>> written.
+>>
+>> Can others confirm this or do they observe a different characteristic?
+>>
+>> Regards Stefan
+>>
+>>
+>>> I mean, is it reliably any of:
+>>> =C2=A0=C2=A0=C2=A0 a) What's the size of the corruption?
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 block, ca=
+che line, word, bit???
+>>> =C2=A0=C2=A0=C2=A0 b) Position?
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 e.g. last=
+ word in a block or something?
+>>> =C2=A0=C2=A0=C2=A0 c) Data?
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pile of z=
+ero's/ff's junk/etc?
+>>>
+>>> =C2=A0=C2=A0=C2=A0 d) Is it a missed write, old data, or partially wri=
+tten block?
+>>>
+>>> Dave
+>>>
+>>>>> Puh.=C2=A0 I'm kinda lost on what we could do about this on the Linu=
+x
+>>>>> side.
+>>>>
+>>>> Because it also depends on the CPU series, a firmware or hardware iss=
+ue
+>>>> seems to be more likely than a Linux bug.
+>>>>
+>>>> ATM ASRock is still trying to reproduce the issue. (I'm in contact wi=
+th
+>>>> them to. But they have Chinese new year holidays in Taiwan this week.=
+)
+>>>>
+>>>> If they can't reproduce it, they have to provide an explanation why t=
+he
+>>>> issues are seen by so many users.
+>>>>
+>>>> Regards Stefan
+>>>>
+>>>>
+>>
+>
 
