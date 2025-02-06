@@ -1,46 +1,46 @@
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4431119C553
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AB31C5F2C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864381; cv=none; b=PdCjGEtwAMbGhs4PxPn1e/0dvv9fvr8kcDSY2vI/Qpn6zacZ2VcVGzNHzdR/EN/EXbCQB3/QmOpi/dxivV+LKEbneyBmt/VBs9682QhnLseLoi8Jk80Jm2bgEMmEhZn4L06l1vbcedWh5Qez+oARwBtZlMixKE6ch3lgkdwTWfk=
+	t=1738864376; cv=none; b=UNv+R3sDYKoz9/8Ji17Pk2shGE5+m2W5+3oRsD6M/5tLeBRo8qzrCNE3N/TIx9FgdWNapeIBKqE643zDa0FhLMs/K6wgHlHtFQ5R1ZejfnG4FTOKqMEHmwtVrsL4COkvRFIIus9nV131v4OVKiQq4C1QPg6Z4U8YM5k3i03JXSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864381; c=relaxed/simple;
-	bh=VTS1Xqm6xOD646+JjW+PwAhdk794DP9lC6s0EyNlT3E=;
+	s=arc-20240116; t=1738864376; c=relaxed/simple;
+	bh=BalMlx8xkYzxCV0Zw1PuGcyGYWZ6wUeu5QZ+HYYGMGM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OgyZCBULeQmioF+z4iyyDBQrLDAyFdxQ3R/f+rtfd17BltPAhk6vT5fBgwSSmxl+WExlujOUyhDopuI2NHPyeiW3hCTL2EaBNBOHvlOFO8kONXixNvZVEGleVvsHSq6kyEVlnU/uwfG3IzOan58g/i9YTTML4TKrVy/CD7+YPvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=JFKACATQ; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=O+t3vrM55nd2X/V6R/UYmB4nLengJCePLRLcNgh65ZJwgAypz5D0ALIbfhNkV+qWgySJRFw6vwHkZMWpeBSIGxP2nZoJqPlupdb/UzGiX28T2oA2oweGYfBMXcP7CCzZ6o0gDI8C07DgRAEsA16vo22AkHO4bYI4g9tO4wfHvmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=ICmKEdj2; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="JFKACATQ"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="ICmKEdj2"
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl7b5XbNzlgTxg;
-	Thu,  6 Feb 2025 17:52:59 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl7S0zyNzlgTyC;
+	Thu,  6 Feb 2025 17:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1738864374; x=1741456375; bh=d6n+k
-	LpRjFHnf0pZY+IpQVKiY3FWXhXDHuKsIqw3PBQ=; b=JFKACATQfmZMQsc6DfZhJ
-	U6A/Btrjj+X318E8zzYpjRZJVHSHPsMAz+jJE7fh4CIHl183o9xRjuXpyByrp9QM
-	VHJFpQF4H4SNvZPqyJXgQxUdPmYtgMlq6/Pd6ea8hW/qecAurUksbb5agcX8yquR
-	Qf0VEw4k9YIAtcqZfF5jHCZIWUc+2PbbjNOu6cQr9LCDgW8Ahisw7+pY3WUowj9y
-	HY8Kg5nne4p+L0T1EqmgdUG4tz87FpMfnXLR152Qe9Jch+6i0C66pl2udTD/VJvZ
-	PF5T4uPG8rs6emqU+2AbTD7qy3JorZ7Qgvxt1Ng4NzsPOcjuxQx809SWN5GB0t7o
-	A==
+	:received:received; s=mr01; t=1738864317; x=1741456318; bh=Rv25K
+	ONK5PnYFwm9+it4AJ+7JxQIGURPEoVqiznVn5w=; b=ICmKEdj2vWCW5BmkzGCso
+	BS8xYFerQ0tYJ6tv7ddG4iQw6K1K0O9Nx5k4tacMypoXSQC2oZJKu7oJQe1CinpM
+	6E6TZdDzKjnj2B79Fef6Yr8WHOnUjCqiPFYkZBwQcELJkI0imguzSzIXIiXW7LLK
+	94eL18lHezDdqCsS0FbPmBvsFCapk7naK1YbI+DLld194FBVpcjiWMGUaQ0m92bH
+	emkrtoyhV1kRdtGrigPvM15DxvODVOmHwPheqKxhzG4UHJd4Ep4CYzRtFRW+mC6b
+	62FC81UfuseVWPSvyTKB0mi2uun16iGjv4vSqBGUecTWk9FdxXsyQI1wCiHJzA6j
+	g==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 6zEzgGXtcD3a; Thu,  6 Feb 2025 17:52:54 +0000 (UTC)
+ id cdn8Ye1iGPxC; Thu,  6 Feb 2025 17:51:57 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl7R397fzlgTy5;
-	Thu,  6 Feb 2025 17:52:51 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl691B36zlgTy2;
+	Thu,  6 Feb 2025 17:51:44 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>,
@@ -52,12 +52,10 @@ Cc: Will Deacon <will@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	Jann Horn <jannh@google.com>,
 	linux-kernel@vger.kernel.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: [PATCH RFC 33/33] kbuild: clang: Unconditionally enable thread-safety checking
-Date: Thu,  6 Feb 2025 09:51:14 -0800
-Message-ID: <20250206175114.1974171-34-bvanassche@acm.org>
+	Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH RFC 10/33] treewide: Modify mutex_lock_interruptible() return value checks
+Date: Thu,  6 Feb 2025 09:50:51 -0800
+Message-ID: <20250206175114.1974171-11-bvanassche@acm.org>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 In-Reply-To: <20250206175114.1974171-1-bvanassche@acm.org>
 References: <20250206175114.1974171-1-bvanassche@acm.org>
@@ -69,47 +67,2255 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Enable thread-safety checks for arm64 and x86. Do not enable it for other
-architectures yet - this will be done later. Disable thread-safety checki=
-ng
-for staging drivers. Fixing thread-safety bugs in staging drivers will ha=
-ve
-to be done when these drivers come out of staging.
+Change all checks of the mutex_lock_interruptible() return value and also
+all the checks of callers of this function into !=3D 0 or =3D=3D 0.
 
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch prepares for annotating mutex_lock_interruptible() and its
+callers with the thread-safety attribute TRY_ACQUIRE(0, mutex_ptr). This
+tells Clang that the return value 0 and only this return value indicates
+that the mutex has been locked. This change is necessary because checks
+like < 0 on the mutex_lock_interruptible() return value confuse the Clang
+thread-safety checker.
+
+This patch has been generated by applying the following Coccinelle semant=
+ic
+patch on the kernel tree:
+
+@@
+expression mutex, expr;
+statement stmnt;
+@@
+(
+-if (device_lock_interruptible(mutex) < 0) stmnt
++if (device_lock_interruptible(mutex)) stmnt
+|
+-if (mutex_lock_interruptible(mutex) < 0) stmnt
++if (mutex_lock_interruptible(mutex)) stmnt
+|
+-if (mutex_lock_killable(mutex) < 0) stmnt
++if (mutex_lock_killable(mutex)) stmnt
+|
+-if (mutex_lock_killable_nested(mutex) < 0) stmnt
++if (mutex_lock_killable_nested(mutex)) stmnt
+|
+-if (usb_lock_device_for_reset(mutex, expr) < 0) stmnt
++if (usb_lock_device_for_reset(mutex, expr)) stmnt
+)
+
+@@
+expression mutex, expr, expr1, expr2, expr3, tty;
+statement stmnt, stmnt1, stmnt2;
+identifier ret;
+@@
+(
+-ret =3D device_lock_interruptible(mutex);
+-if (ret < 0) stmnt
++ret =3D device_lock_interruptible(mutex);
++if (ret) stmnt
+|
+-if ((ret =3D get_ready_ep(expr1, expr2, expr3)) < 0) stmnt
++ret =3D get_ready_ep(expr1, expr2, expr3);
++if (ret) stmnt
+|
+-ret =3D mlxbf2_gpio_lock_acquire(mutex);
+-if (ret < 0) stmnt
++ret =3D mlxbf2_gpio_lock_acquire(mutex);
++if (ret) stmnt
+|
+-int ret =3D mutex_lock_interruptible(mutex);
+-if (ret < 0) stmnt
++int ret =3D mutex_lock_interruptible(mutex);
++if (ret) stmnt
+|
+-ret =3D mutex_lock_interruptible(mutex);
+-if (ret < 0) stmnt
++ret =3D mutex_lock_interruptible(mutex);
++if (ret) stmnt
+|
+-if ((ret =3D mutex_lock_interruptible(mutex)))
+-return ret;
++ret =3D mutex_lock_interruptible(&d->usb_mutex);
++if (ret) return ret;
+|
+-if (mutex_lock_interruptible(mutex) =3D=3D -EINTR) stmnt
++if (mutex_lock_interruptible(mutex)) stmnt
+|
+-ret =3D mutex_lock_killable(mutex);
+-if (ret < 0) stmnt
++ret =3D mutex_lock_killable(mutex);
++if (ret) stmnt
+|
+-ret =3D mutex_lock_killable_nested(mutex);
+-if (ret < 0) stmnt
++ret =3D mutex_lock_killable_nested(mutex);
++if (ret) stmnt
+|
+-ret =3D tty_write_lock(tty, expr);
+-if (ret < 0) stmnt
++ret =3D tty_write_lock(tty, expr);
++if (ret) stmnt
+|
+-if (tty_write_lock(tty, expr) < 0) stmnt
++if (tty_write_lock(tty, expr)) stmnt
+|
+-if (tty_write_lock(tty, expr) < 0) stmnt;
+-if (ret < 0) stmnt
++ret =3D tty_write_lock(tty, expr);
++if (ret) stmnt
+|
+-ret =3D usb_lock_device_for_reset(expr1, expr2);
+-if (ret < 0) stmnt
++ret =3D usb_lock_device_for_reset(expr1, expr2);
++if (ret) stmnt
+|
+-ret =3D usb_lock_device_for_reset(expr1, expr2);
+-if (ret < 0) stmnt1 else stmnt2
++ret =3D usb_lock_device_for_reset(expr1, expr2);
++if (ret) stmnt1 else stmnt2
+|
+-ret =3D usb_lock_device_for_reset(expr1, expr2);
+-if (ret >=3D 0) stmnt
++ret =3D usb_lock_device_for_reset(expr1, expr2);
++if (ret =3D=3D 0) stmnt
+|
+-ret =3D usb_lock_device_interruptible(expr);
+-if (ret < 0) stmnt
++ret =3D usb_lock_device_interruptible(expr);
++if (ret) stmnt
+|
+-ret =3D usblp_rwait_and_lock(mutex, expr);
+-if (ret < 0) stmnt
++ret =3D usblp_rwait_and_lock(mutex, expr);
++if (ret) stmnt
+)
+
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/staging/Makefile | 2 ++
- scripts/Makefile.clang   | 3 +++
- 2 files changed, 5 insertions(+)
+ drivers/gpio/gpio-mlxbf2.c                    |  4 +-
+ drivers/hwmon/asus_rog_ryujin.c               |  4 +-
+ drivers/hwmon/gigabyte_waterforce.c           |  2 +-
+ drivers/hwmon/nzxt-kraken3.c                  |  2 +-
+ drivers/infiniband/ulp/srp/ib_srp.c           |  2 +-
+ drivers/infiniband/ulp/srpt/ib_srpt.c         |  4 +-
+ drivers/leds/leds-blinkm.c                    |  2 +-
+ drivers/media/dvb-frontends/bcm3510.c         |  2 +-
+ drivers/media/dvb-frontends/dib0070.c         |  4 +-
+ drivers/media/dvb-frontends/dib0090.c         |  8 ++--
+ drivers/media/dvb-frontends/dib7000m.c        |  4 +-
+ drivers/media/dvb-frontends/dib7000p.c        |  4 +-
+ drivers/media/dvb-frontends/dib8000.c         | 10 ++---
+ drivers/media/dvb-frontends/dib9000.c         | 42 +++++++++----------
+ drivers/media/dvb-frontends/dibx000_common.c  | 10 ++---
+ drivers/media/usb/dvb-usb-v2/af9035.c         |  2 +-
+ drivers/media/usb/dvb-usb-v2/anysee.c         |  2 +-
+ drivers/media/usb/dvb-usb-v2/au6610.c         |  2 +-
+ drivers/media/usb/dvb-usb-v2/az6007.c         |  6 +--
+ drivers/media/usb/dvb-usb-v2/ce6230.c         |  2 +-
+ drivers/media/usb/dvb-usb-v2/dvbsky.c         |  2 +-
+ drivers/media/usb/dvb-usb-v2/ec168.c          |  2 +-
+ drivers/media/usb/dvb-usb-v2/lmedm04.c        |  2 +-
+ drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c   |  2 +-
+ drivers/media/usb/dvb-usb-v2/rtl28xxu.c       |  2 +-
+ drivers/media/usb/dvb-usb/af9005.c            |  2 +-
+ drivers/media/usb/dvb-usb/az6027.c            |  2 +-
+ drivers/media/usb/dvb-usb/cxusb.c             |  2 +-
+ drivers/media/usb/dvb-usb/dib0700_core.c      | 20 ++++-----
+ drivers/media/usb/dvb-usb/dibusb-common.c     |  2 +-
+ drivers/media/usb/dvb-usb/digitv.c            |  2 +-
+ drivers/media/usb/dvb-usb/dtv5100.c           |  2 +-
+ drivers/media/usb/dvb-usb/dvb-usb-urb.c       |  3 +-
+ drivers/media/usb/dvb-usb/dw2102.c            | 16 +++----
+ drivers/media/usb/dvb-usb/gp8psk.c            |  6 ++-
+ drivers/media/usb/dvb-usb/m920x.c             |  2 +-
+ drivers/media/usb/dvb-usb/opera1.c            |  4 +-
+ drivers/media/usb/dvb-usb/pctv452e.c          |  4 +-
+ drivers/media/usb/dvb-usb/technisat-usb2.c    | 10 ++---
+ drivers/media/usb/dvb-usb/ttusb2.c            |  2 +-
+ drivers/media/usb/dvb-usb/vp702x.c            |  5 ++-
+ .../media/usb/ttusb-budget/dvb-ttusb-budget.c |  4 +-
+ drivers/media/usb/uvc/uvc_ctrl.c              |  6 +--
+ drivers/net/ethernet/mellanox/mlxsw/i2c.c     |  4 +-
+ drivers/net/usb/cdc_subset.c                  |  2 +-
+ drivers/net/wireless/intersil/p54/p54usb.c    |  2 +-
+ drivers/net/wireless/ti/wlcore/sysfs.c        |  2 +-
+ drivers/platform/x86/thinkpad_acpi.c          | 12 +++---
+ drivers/scsi/hpsa.c                           |  2 +-
+ .../gpib/lpvo_usb_gpib/lpvo_usb_gpib.c        |  4 +-
+ drivers/tty/tty_io.c                          |  6 +--
+ drivers/usb/class/cdc-wdm.c                   |  3 +-
+ drivers/usb/class/usblp.c                     |  2 +-
+ drivers/usb/core/message.c                    |  2 +-
+ drivers/usb/core/sysfs.c                      | 24 +++++------
+ drivers/usb/gadget/legacy/inode.c             | 13 +++---
+ drivers/usb/misc/yurex.c                      |  2 +-
+ drivers/usb/storage/transport.c               |  2 +-
+ drivers/usb/usb-skeleton.c                    |  2 +-
+ drivers/usb/usbip/stub_dev.c                  |  2 +-
+ drivers/usb/usbip/stub_rx.c                   |  2 +-
+ drivers/w1/masters/omap_hdq.c                 |  8 ++--
+ fs/afs/validation.c                           |  2 +-
+ fs/afs/vl_alias.c                             |  6 +--
+ fs/fsopen.c                                   |  2 +-
+ fs/namespace.c                                |  2 +-
+ fs/orangefs/devorangefs-req.c                 |  2 +-
+ fs/proc/base.c                                |  2 +-
+ kernel/seccomp.c                              | 10 ++---
+ mm/kmemleak.c                                 |  4 +-
+ net/rxrpc/recvmsg.c                           |  2 +-
+ net/rxrpc/sendmsg.c                           |  2 +-
+ security/integrity/ima/ima_fs.c               |  2 +-
+ sound/pci/oxygen/oxygen_lib.c                 |  2 +-
+ 74 files changed, 181 insertions(+), 175 deletions(-)
 
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index e681e403509c..4eafda5b95eb 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -1,6 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for staging directory
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
+index 6f3dda6b635f..5ae07367955f 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -191,7 +191,7 @@ static int mlxbf2_gpio_direction_input(struct gpio_ch=
+ip *chip,
+ 	 * if it is still enabled to be able to write to the ModeX registers.
+ 	 */
+ 	ret =3D mlxbf2_gpio_lock_acquire(gs);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
 =20
-+KBUILD_CFLAGS +=3D -Wno-thread-safety
-+
- obj-y				+=3D media/
- obj-$(CONFIG_RTL8723BS)		+=3D rtl8723bs/
- obj-$(CONFIG_OCTEON_ETHERNET)	+=3D octeon/
-diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-index 2435efae67f5..d27688bddd95 100644
---- a/scripts/Makefile.clang
-+++ b/scripts/Makefile.clang
-@@ -36,5 +36,8 @@ CLANG_FLAGS	+=3D -Werror=3Dunknown-warning-option
- CLANG_FLAGS	+=3D -Werror=3Dignored-optimization-argument
- CLANG_FLAGS	+=3D -Werror=3Doption-ignored
- CLANG_FLAGS	+=3D -Werror=3Dunused-command-line-argument
-+
-+CLANG_FLAGS	+=3D -Wthread-safety
-+
- KBUILD_CPPFLAGS	+=3D $(CLANG_FLAGS)
- export CLANG_FLAGS
+ 	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE0_CLEAR);
+@@ -219,7 +219,7 @@ static int mlxbf2_gpio_direction_output(struct gpio_c=
+hip *chip,
+ 	 * ModeX registers.
+ 	 */
+ 	ret =3D mlxbf2_gpio_lock_acquire(gs);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE1_CLEAR);
+diff --git a/drivers/hwmon/asus_rog_ryujin.c b/drivers/hwmon/asus_rog_ryu=
+jin.c
+index e5e93a20723c..26387286a5c6 100644
+--- a/drivers/hwmon/asus_rog_ryujin.c
++++ b/drivers/hwmon/asus_rog_ryujin.c
+@@ -198,7 +198,7 @@ static int rog_ryujin_get_status(struct rog_ryujin_da=
+ta *priv)
+ {
+ 	int ret =3D mutex_lock_interruptible(&priv->status_report_request_mutex=
+);
+=20
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	if (!time_after(jiffies, priv->updated + msecs_to_jiffies(STATUS_VALIDI=
+TY))) {
+@@ -304,7 +304,7 @@ static int rog_ryujin_write_fixed_duty(struct rog_ryu=
+jin_data *priv, int channel
+ 		 * together, then write back with one of them modified.
+ 		 */
+ 		ret =3D mutex_lock_interruptible(&priv->status_report_request_mutex);
+-		if (ret < 0)
++		if (ret)
+ 			return ret;
+ 		ret =3D
+ 		    rog_ryujin_execute_cmd(priv, get_cooler_duty_cmd, GET_CMD_LENGTH,
+diff --git a/drivers/hwmon/gigabyte_waterforce.c b/drivers/hwmon/gigabyte=
+_waterforce.c
+index 27487e215bdd..43c3b300e11f 100644
+--- a/drivers/hwmon/gigabyte_waterforce.c
++++ b/drivers/hwmon/gigabyte_waterforce.c
+@@ -125,7 +125,7 @@ static int waterforce_get_status(struct waterforce_da=
+ta *priv)
+ {
+ 	int ret =3D mutex_lock_interruptible(&priv->status_report_request_mutex=
+);
+=20
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	if (!time_after(jiffies, priv->updated + msecs_to_jiffies(STATUS_VALIDI=
+TY))) {
+diff --git a/drivers/hwmon/nzxt-kraken3.c b/drivers/hwmon/nzxt-kraken3.c
+index d00409bcab93..9a3be62fef62 100644
+--- a/drivers/hwmon/nzxt-kraken3.c
++++ b/drivers/hwmon/nzxt-kraken3.c
+@@ -251,7 +251,7 @@ static int kraken3_read_z53(struct kraken3_data *priv=
+)
+ {
+ 	int ret =3D mutex_lock_interruptible(&priv->z53_status_request_lock);
+=20
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	if (!time_after(jiffies, priv->updated + msecs_to_jiffies(STATUS_VALIDI=
+TY))) {
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp=
+/srp/ib_srp.c
+index 1378651735f6..cf84e7423bb6 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -3731,7 +3731,7 @@ static ssize_t add_target_store(struct device *dev,
+ 	scsi_host_get(target->scsi_host);
+=20
+ 	ret =3D mutex_lock_interruptible(&host->add_target_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		goto put;
+=20
+ 	ret =3D srp_parse_options(target->net, buf, target);
+diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/u=
+lp/srpt/ib_srpt.c
+index 5dfb4644446b..0557617daa75 100644
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -3647,10 +3647,10 @@ static ssize_t srpt_tpg_attrib_use_srq_store(stru=
+ct config_item *item,
+ 		return -EINVAL;
+=20
+ 	ret =3D mutex_lock_interruptible(&sdev->sdev_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 	ret =3D mutex_lock_interruptible(&sport->mutex);
+-	if (ret < 0)
++	if (ret)
+ 		goto unlock_sdev;
+ 	enabled =3D sport->enabled;
+ 	/* Log out all initiator systems before changing 'use_srq'. */
+diff --git a/drivers/leds/leds-blinkm.c b/drivers/leds/leds-blinkm.c
+index 577497b9d426..79552b41f2c1 100644
+--- a/drivers/leds/leds-blinkm.c
++++ b/drivers/leds/leds-blinkm.c
+@@ -357,7 +357,7 @@ static int blinkm_transfer_hw(struct i2c_client *clie=
+nt, int cmd)
+=20
+ 	/* We start hardware transfers which are not to be
+ 	 * mixed with other commands. Aquire a lock now. */
+-	if (mutex_lock_interruptible(&data->update_lock) < 0)
++	if (mutex_lock_interruptible(&data->update_lock))
+ 		return -EAGAIN;
+=20
+ 	/* switch cmd - usually write before reads */
+diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-fr=
+ontends/bcm3510.c
+index d935fb10e620..f9f853e2ef80 100644
+--- a/drivers/media/dvb-frontends/bcm3510.c
++++ b/drivers/media/dvb-frontends/bcm3510.c
+@@ -225,7 +225,7 @@ static int bcm3510_do_hab_cmd(struct bcm3510_state *s=
+t, u8 cmd, u8 msgid, u8 *ob
+ 	dbufout(ob,olen+2,deb_hab);
+ 	deb_hab("\n");
+=20
+-	if (mutex_lock_interruptible(&st->hab_mutex) < 0)
++	if (mutex_lock_interruptible(&st->hab_mutex))
+ 		return -EAGAIN;
+=20
+ 	if ((ret =3D bcm3510_hab_send_request(st, ob, olen+2)) < 0 ||
+diff --git a/drivers/media/dvb-frontends/dib0070.c b/drivers/media/dvb-fr=
+ontends/dib0070.c
+index 9a8e7cdd2a24..ddbea15d69bb 100644
+--- a/drivers/media/dvb-frontends/dib0070.c
++++ b/drivers/media/dvb-frontends/dib0070.c
+@@ -70,7 +70,7 @@ static u16 dib0070_read_reg(struct dib0070_state *state=
+, u8 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -102,7 +102,7 @@ static int dib0070_write_reg(struct dib0070_state *st=
+ate, u8 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/media/dvb-frontends/dib0090.c b/drivers/media/dvb-fr=
+ontends/dib0090.c
+index 6cbbb351d545..de9bbdec07ab 100644
+--- a/drivers/media/dvb-frontends/dib0090.c
++++ b/drivers/media/dvb-frontends/dib0090.c
+@@ -201,7 +201,7 @@ static u16 dib0090_read_reg(struct dib0090_state *sta=
+te, u8 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -233,7 +233,7 @@ static int dib0090_write_reg(struct dib0090_state *st=
+ate, u32 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+@@ -262,7 +262,7 @@ static u16 dib0090_fw_read_reg(struct dib0090_fw_stat=
+e *state, u8 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -289,7 +289,7 @@ static int dib0090_fw_write_reg(struct dib0090_fw_sta=
+te *state, u8 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/media/dvb-frontends/dib7000m.c b/drivers/media/dvb-f=
+rontends/dib7000m.c
+index fdb22f32e3a1..b5cab2df9478 100644
+--- a/drivers/media/dvb-frontends/dib7000m.c
++++ b/drivers/media/dvb-frontends/dib7000m.c
+@@ -77,7 +77,7 @@ static u16 dib7000m_read_word(struct dib7000m_state *st=
+ate, u16 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -108,7 +108,7 @@ static int dib7000m_write_word(struct dib7000m_state =
+*state, u16 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/media/dvb-frontends/dib7000p.c b/drivers/media/dvb-f=
+rontends/dib7000p.c
+index c5582d4fa5be..28c224a450cb 100644
+--- a/drivers/media/dvb-frontends/dib7000p.c
++++ b/drivers/media/dvb-frontends/dib7000p.c
+@@ -96,7 +96,7 @@ static u16 dib7000p_read_word(struct dib7000p_state *st=
+ate, u16 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -126,7 +126,7 @@ static int dib7000p_write_word(struct dib7000p_state =
+*state, u16 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/media/dvb-frontends/dib8000.c b/drivers/media/dvb-fr=
+ontends/dib8000.c
+index 2f5165918163..cae8686042a8 100644
+--- a/drivers/media/dvb-frontends/dib8000.c
++++ b/drivers/media/dvb-frontends/dib8000.c
+@@ -150,7 +150,7 @@ static u16 dib8000_i2c_read16(struct i2c_device *i2c,=
+ u16 reg)
+ 		{.addr =3D i2c->addr >> 1, .flags =3D I2C_M_RD, .len =3D 2},
+ 	};
+=20
+-	if (mutex_lock_interruptible(i2c->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(i2c->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -197,7 +197,7 @@ static u16 dib8000_read_word(struct dib8000_state *st=
+ate, u16 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -213,7 +213,7 @@ static u32 dib8000_read32(struct dib8000_state *state=
+, u16 reg)
+ {
+ 	u16 rw[2];
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -231,7 +231,7 @@ static int dib8000_i2c_write16(struct i2c_device *i2c=
+, u16 reg, u16 val)
+ 	struct i2c_msg msg =3D {.addr =3D i2c->addr >> 1, .flags =3D 0, .len =3D=
+ 4};
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(i2c->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(i2c->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+@@ -252,7 +252,7 @@ static int dib8000_write_word(struct dib8000_state *s=
+tate, u16 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&state->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&state->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/media/dvb-frontends/dib9000.c b/drivers/media/dvb-fr=
+ontends/dib9000.c
+index 83cf6eadd49c..e71b3670ba1e 100644
+--- a/drivers/media/dvb-frontends/dib9000.c
++++ b/drivers/media/dvb-frontends/dib9000.c
+@@ -444,7 +444,7 @@ static int dib9000_risc_mem_read(struct dib9000_state=
+ *state, u8 cmd, u8 * b, u1
+ 	if (!state->platform.risc.fw_is_running)
+ 		return -EIO;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -460,7 +460,7 @@ static int dib9000_risc_mem_write(struct dib9000_stat=
+e *state, u8 cmd, const u8
+ 	if (!state->platform.risc.fw_is_running)
+ 		return -EIO;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -535,7 +535,7 @@ static int dib9000_mbx_send_attr(struct dib9000_state=
+ *state, u8 id, u16 * data,
+ 	if (!state->platform.risc.fw_is_running)
+ 		return -EINVAL;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mbx_if_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mbx_if_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -597,7 +597,7 @@ static u8 dib9000_mbx_read(struct dib9000_state *stat=
+e, u16 * data, u8 risc_id,
+ 	if (!state->platform.risc.fw_is_running)
+ 		return 0;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mbx_if_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mbx_if_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return 0;
+ 	}
+@@ -709,7 +709,7 @@ static int dib9000_mbx_process(struct dib9000_state *=
+state, u16 attr)
+ 	if (!state->platform.risc.fw_is_running)
+ 		return -1;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -1;
+ 	}
+@@ -1194,7 +1194,7 @@ static int dib9000_fw_get_channel(struct dvb_fronte=
+nd *fe)
+ 	struct dibDVBTChannel *ch;
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -1679,7 +1679,7 @@ static int dib9000_fw_component_bus_xfer(struct i2c=
+_adapter *i2c_adap, struct i2
+ 		p[12] =3D 0;
+ 	}
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return 0;
+ 	}
+@@ -1790,7 +1790,7 @@ int dib9000_fw_pid_filter_ctrl(struct dvb_frontend =
+*fe, u8 onoff)
+ 		return 0;
+ 	}
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -1825,7 +1825,7 @@ int dib9000_fw_pid_filter(struct dvb_frontend *fe, =
+u8 id, u16 pid, u8 onoff)
+ 		return 0;
+ 	}
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -1871,7 +1871,7 @@ static int dib9000_sleep(struct dvb_frontend *fe)
+ 	u8 index_frontend;
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -1902,7 +1902,7 @@ static int dib9000_get_frontend(struct dvb_frontend=
+ *fe,
+ 	int ret =3D 0;
+=20
+ 	if (state->get_frontend_internal =3D=3D 0) {
+-		if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++		if (mutex_lock_interruptible(&state->demod_lock)) {
+ 			dprintk("could not get the lock\n");
+ 			return -EINTR;
+ 		}
+@@ -2009,7 +2009,7 @@ static int dib9000_set_frontend(struct dvb_frontend=
+ *fe)
+ 	}
+=20
+ 	state->pid_ctrl_index =3D -1; /* postpone the pid filtering cmd */
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return 0;
+ 	}
+@@ -2172,7 +2172,7 @@ static int dib9000_read_status(struct dvb_frontend =
+*fe, enum fe_status *stat)
+ 	u8 index_frontend;
+ 	u16 lock =3D 0, lock_slave =3D 0;
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -2205,11 +2205,11 @@ static int dib9000_read_ber(struct dvb_frontend *=
+fe, u32 * ber)
+ 	u16 *c;
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		ret =3D -EINTR;
+ 		goto error;
+@@ -2240,7 +2240,7 @@ static int dib9000_read_signal_strength(struct dvb_=
+frontend *fe, u16 * strength)
+ 	u16 val;
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -2253,7 +2253,7 @@ static int dib9000_read_signal_strength(struct dvb_=
+frontend *fe, u16 * strength)
+ 			*strength +=3D val;
+ 	}
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		ret =3D -EINTR;
+ 		goto error;
+@@ -2284,7 +2284,7 @@ static u32 dib9000_get_snr(struct dvb_frontend *fe)
+ 	u32 n, s, exp;
+ 	u16 val;
+=20
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return 0;
+ 	}
+@@ -2323,7 +2323,7 @@ static int dib9000_read_snr(struct dvb_frontend *fe=
+, u16 * snr)
+ 	u8 index_frontend;
+ 	u32 snr_master;
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+@@ -2348,11 +2348,11 @@ static int dib9000_read_unc_blocks(struct dvb_fro=
+ntend *fe, u32 * unc)
+ 	u16 *c =3D (u16 *)state->i2c_read_buffer;
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(&state->demod_lock) < 0) {
++	if (mutex_lock_interruptible(&state->demod_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		return -EINTR;
+ 	}
+-	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock) < 0) {
++	if (mutex_lock_interruptible(&state->platform.risc.mem_mbx_lock)) {
+ 		dprintk("could not get the lock\n");
+ 		ret =3D -EINTR;
+ 		goto error;
+diff --git a/drivers/media/dvb-frontends/dibx000_common.c b/drivers/media=
+/dvb-frontends/dibx000_common.c
+index 63a4c6a4afb5..1db6a1dbeb01 100644
+--- a/drivers/media/dvb-frontends/dibx000_common.c
++++ b/drivers/media/dvb-frontends/dibx000_common.c
+@@ -21,7 +21,7 @@ static int dibx000_write_word(struct dibx000_i2c_master=
+ *mst, u16 reg, u16 val)
+ {
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&mst->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&mst->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+@@ -47,7 +47,7 @@ static u16 dibx000_read_word(struct dibx000_i2c_master =
+*mst, u16 reg)
+ {
+ 	u16 ret;
+=20
+-	if (mutex_lock_interruptible(&mst->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&mst->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return 0;
+ 	}
+@@ -296,7 +296,7 @@ static int dibx000_i2c_gated_gpio67_xfer(struct i2c_a=
+dapter *i2c_adap,
+=20
+ 	dibx000_i2c_select_interface(mst, DIBX000_I2C_INTERFACE_GPIO_6_7);
+=20
+-	if (mutex_lock_interruptible(&mst->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&mst->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+@@ -343,7 +343,7 @@ static int dibx000_i2c_gated_tuner_xfer(struct i2c_ad=
+apter *i2c_adap,
+=20
+ 	dibx000_i2c_select_interface(mst, DIBX000_I2C_INTERFACE_TUNER);
+=20
+-	if (mutex_lock_interruptible(&mst->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&mst->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+@@ -440,7 +440,7 @@ int dibx000_init_i2c_master(struct dibx000_i2c_master=
+ *mst, u16 device_rev,
+ 	int ret;
+=20
+ 	mutex_init(&mst->i2c_buffer_lock);
+-	if (mutex_lock_interruptible(&mst->i2c_buffer_lock) < 0) {
++	if (mutex_lock_interruptible(&mst->i2c_buffer_lock)) {
+ 		dprintk("could not acquire lock\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dv=
+b-usb-v2/af9035.c
+index 218f712f56b1..b873e39dbbbe 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -271,7 +271,7 @@ static int af9035_i2c_master_xfer(struct i2c_adapter =
+*adap,
+ 	struct state *state =3D d_to_priv(d);
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	/*
+diff --git a/drivers/media/usb/dvb-usb-v2/anysee.c b/drivers/media/usb/dv=
+b-usb-v2/anysee.c
+index bea12cdc85e8..a5b2832f0a24 100644
+--- a/drivers/media/usb/dvb-usb-v2/anysee.c
++++ b/drivers/media/usb/dvb-usb-v2/anysee.c
+@@ -188,7 +188,7 @@ static int anysee_master_xfer(struct i2c_adapter *ada=
+p, struct i2c_msg *msg,
+ 	int ret =3D 0, inc, i =3D 0;
+ 	u8 buf[52]; /* 4 + 48 (I2C WR USB command header + I2C WR max) */
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	while (i < num) {
+diff --git a/drivers/media/usb/dvb-usb-v2/au6610.c b/drivers/media/usb/dv=
+b-usb-v2/au6610.c
+index be223fc8aa14..016f37c0bb70 100644
+--- a/drivers/media/usb/dvb-usb-v2/au6610.c
++++ b/drivers/media/usb/dvb-usb-v2/au6610.c
+@@ -89,7 +89,7 @@ static int au6610_i2c_xfer(struct i2c_adapter *adap, st=
+ruct i2c_msg msg[],
+ 	if (num > 2)
+ 		return -EINVAL;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb-v2/az6007.c b/drivers/media/usb/dv=
+b-usb-v2/az6007.c
+index 2410054ddb2c..24eb74f521e5 100644
+--- a/drivers/media/usb/dvb-usb-v2/az6007.c
++++ b/drivers/media/usb/dvb-usb-v2/az6007.c
+@@ -128,7 +128,7 @@ static int az6007_read(struct dvb_usb_device *d, u8 r=
+eq, u16 value,
+ 	struct az6007_device_state *st =3D d->priv;
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&st->mutex) < 0)
++	if (mutex_lock_interruptible(&st->mutex))
+ 		return -EAGAIN;
+=20
+ 	ret =3D __az6007_read(d->udev, req, value, index, b, blen);
+@@ -175,7 +175,7 @@ static int az6007_write(struct dvb_usb_device *d, u8 =
+req, u16 value,
+ 	struct az6007_device_state *st =3D d->priv;
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&st->mutex) < 0)
++	if (mutex_lock_interruptible(&st->mutex))
+ 		return -EAGAIN;
+=20
+ 	ret =3D __az6007_write(d->udev, req, value, index, b, blen);
+@@ -752,7 +752,7 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, =
+struct i2c_msg msgs[],
+ 	int length;
+ 	u8 req, addr;
+=20
+-	if (mutex_lock_interruptible(&st->mutex) < 0)
++	if (mutex_lock_interruptible(&st->mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb-v2/ce6230.c b/drivers/media/usb/dv=
+b-usb-v2/ce6230.c
+index d3b5cb4a24da..615c6b9f4b75 100644
+--- a/drivers/media/usb/dvb-usb-v2/ce6230.c
++++ b/drivers/media/usb/dvb-usb-v2/ce6230.c
+@@ -94,7 +94,7 @@ static int ce6230_i2c_master_xfer(struct i2c_adapter *a=
+dap,
+=20
+ 	memset(&req, 0, sizeof(req));
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	while (i < num) {
+diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dv=
+b-usb-v2/dvbsky.c
+index 1221c924312a..bfe05efdd1e8 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
++++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+@@ -103,7 +103,7 @@ static int dvbsky_i2c_xfer(struct i2c_adapter *adap, =
+struct i2c_msg msg[],
+ 	int ret =3D 0;
+ 	u8 ibuf[64], obuf[64];
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	if (num > 2) {
+diff --git a/drivers/media/usb/dvb-usb-v2/ec168.c b/drivers/media/usb/dvb=
+-usb-v2/ec168.c
+index 0e4773fc025c..5cbafdc8e0aa 100644
+--- a/drivers/media/usb/dvb-usb-v2/ec168.c
++++ b/drivers/media/usb/dvb-usb-v2/ec168.c
+@@ -109,7 +109,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, s=
+truct i2c_msg msg[],
+ 	if (num > 2)
+ 		return -EINVAL;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	while (i < num) {
+diff --git a/drivers/media/usb/dvb-usb-v2/lmedm04.c b/drivers/media/usb/d=
+vb-usb-v2/lmedm04.c
+index f0537b741d13..2a7db30a50c6 100644
+--- a/drivers/media/usb/dvb-usb-v2/lmedm04.c
++++ b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+@@ -147,7 +147,7 @@ static int lme2510_usb_talk(struct dvb_usb_device *d,
+ 		return -EINVAL;
+=20
+ 	ret =3D mutex_lock_interruptible(&d->usb_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return -EAGAIN;
+=20
+ 	memcpy(st->usb_buffer, wbuf, wlen);
+diff --git a/drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c b/drivers/media/=
+usb/dvb-usb-v2/mxl111sf-i2c.c
+index 100a1052dcbc..2804c6dc27c1 100644
+--- a/drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c
++++ b/drivers/media/usb/dvb-usb-v2/mxl111sf-i2c.c
+@@ -804,7 +804,7 @@ int mxl111sf_i2c_xfer(struct i2c_adapter *adap,
+ 	int hwi2c =3D (state->chip_rev > MXL111SF_V6);
+ 	int i, ret;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c b/drivers/media/usb/=
+dvb-usb-v2/rtl28xxu.c
+index f7884bb56fcc..1bb5453bcbd7 100644
+--- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
++++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+@@ -166,7 +166,7 @@ static int rtl28xxu_i2c_xfer(struct i2c_adapter *adap=
+, struct i2c_msg msg[],
+ 	 * where write is more than one byte.
+ 	 */
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	if (num =3D=3D 2 && !(msg[0].flags & I2C_M_RD) &&
+diff --git a/drivers/media/usb/dvb-usb/af9005.c b/drivers/media/usb/dvb-u=
+sb/af9005.c
+index 13604e6acdb8..69fd71e0f7bd 100644
+--- a/drivers/media/usb/dvb-usb/af9005.c
++++ b/drivers/media/usb/dvb-usb/af9005.c
+@@ -407,7 +407,7 @@ static int af9005_i2c_xfer(struct i2c_adapter *adap, =
+struct i2c_msg msg[],
+ 	u8 reg, addr;
+ 	u8 *value;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	if (num > 2)
+diff --git a/drivers/media/usb/dvb-usb/az6027.c b/drivers/media/usb/dvb-u=
+sb/az6027.c
+index 2bc27710427d..4bef1850b598 100644
+--- a/drivers/media/usb/dvb-usb/az6027.c
++++ b/drivers/media/usb/dvb-usb/az6027.c
+@@ -962,7 +962,7 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, =
+struct i2c_msg msg[], int n
+ 	if (!data)
+ 		return -ENOMEM;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->i2c_mutex)) {
+ 		kfree(data);
+ 		return -EAGAIN;
+ 	}
+diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-us=
+b/cxusb.c
+index 1d98d3465e28..23f7931ccd95 100644
+--- a/drivers/media/usb/dvb-usb/cxusb.c
++++ b/drivers/media/usb/dvb-usb/cxusb.c
+@@ -183,7 +183,7 @@ static int cxusb_i2c_xfer(struct i2c_adapter *adap, s=
+truct i2c_msg msg[],
+ 	int ret;
+ 	int i;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb/dib0700_core.c b/drivers/media/usb=
+/dvb-usb/dib0700_core.c
+index 1caabb51ea47..38fae706a7ff 100644
+--- a/drivers/media/usb/dvb-usb/dib0700_core.c
++++ b/drivers/media/usb/dvb-usb/dib0700_core.c
+@@ -24,7 +24,7 @@ int dib0700_get_version(struct dvb_usb_device *d, u32 *=
+hwversion,
+ 	struct dib0700_state *st =3D d->priv;
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 		err("could not acquire lock");
+ 		return -EINTR;
+ 	}
+@@ -110,7 +110,7 @@ int dib0700_set_gpio(struct dvb_usb_device *d, enum d=
+ib07x0_gpios gpio, u8 gpio_
+ 	struct dib0700_state *st =3D d->priv;
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 		err("could not acquire lock");
+ 		return -EINTR;
+ 	}
+@@ -131,7 +131,7 @@ static int dib0700_set_usb_xfer_len(struct dvb_usb_de=
+vice *d, u16 nb_ts_packets)
+ 	int ret;
+=20
+ 	if (st->fw_version >=3D 0x10201) {
+-		if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++		if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 			err("could not acquire lock");
+ 			return -EINTR;
+ 		}
+@@ -171,7 +171,7 @@ static int dib0700_i2c_xfer_new(struct i2c_adapter *a=
+dap, struct i2c_msg *msg,
+=20
+ 	/* Ensure nobody else hits the i2c bus while we're sending our
+ 	   sequence of messages, (such as the remote control thread) */
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EINTR;
+=20
+ 	for (i =3D 0; i < num; i++) {
+@@ -229,7 +229,7 @@ static int dib0700_i2c_xfer_new(struct i2c_adapter *a=
+dap, struct i2c_msg *msg,
+=20
+ 		} else {
+ 			/* Write request */
+-			if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++			if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 				err("could not acquire lock");
+ 				result =3D -EINTR;
+ 				goto unlock;
+@@ -286,9 +286,9 @@ static int dib0700_i2c_xfer_legacy(struct i2c_adapter=
+ *adap,
+ 	struct dib0700_state *st =3D d->priv;
+ 	int i, len, result;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EINTR;
+-	if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 		err("could not acquire lock");
+ 		mutex_unlock(&d->i2c_mutex);
+ 		return -EINTR;
+@@ -404,7 +404,7 @@ static int dib0700_set_clock(struct dvb_usb_device *d=
+, u8 en_pll,
+ 	struct dib0700_state *st =3D d->priv;
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 		err("could not acquire lock");
+ 		return -EINTR;
+ 	}
+@@ -436,7 +436,7 @@ int dib0700_set_i2c_speed(struct dvb_usb_device *d, u=
+16 scl_kHz)
+ 	if (scl_kHz =3D=3D 0)
+ 		return -EINVAL;
+=20
+-	if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 		err("could not acquire lock");
+ 		return -EINTR;
+ 	}
+@@ -641,7 +641,7 @@ int dib0700_change_protocol(struct rc_dev *rc, u64 *r=
+c_proto)
+ 	struct dib0700_state *st =3D d->priv;
+ 	int new_proto, ret;
+=20
+-	if (mutex_lock_interruptible(&d->usb_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->usb_mutex)) {
+ 		err("could not acquire lock");
+ 		return -EINTR;
+ 	}
+diff --git a/drivers/media/usb/dvb-usb/dibusb-common.c b/drivers/media/us=
+b/dvb-usb/dibusb-common.c
+index 20f1ef3393a5..6b7de78d0d71 100644
+--- a/drivers/media/usb/dvb-usb/dibusb-common.c
++++ b/drivers/media/usb/dvb-usb/dibusb-common.c
+@@ -181,7 +181,7 @@ static int dibusb_i2c_xfer(struct i2c_adapter *adap,s=
+truct i2c_msg msg[],int num
+ 	struct dvb_usb_device *d =3D i2c_get_adapdata(adap);
+ 	int i;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb/digitv.c b/drivers/media/usb/dvb-u=
+sb/digitv.c
+index 32134be16914..8ea758176fda 100644
+--- a/drivers/media/usb/dvb-usb/digitv.c
++++ b/drivers/media/usb/dvb-usb/digitv.c
+@@ -56,7 +56,7 @@ static int digitv_i2c_xfer(struct i2c_adapter *adap,str=
+uct i2c_msg msg[],int num
+ 	struct dvb_usb_device *d =3D i2c_get_adapdata(adap);
+ 	int i;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	if (num > 2)
+diff --git a/drivers/media/usb/dvb-usb/dtv5100.c b/drivers/media/usb/dvb-=
+usb/dtv5100.c
+index 56c9d521a34a..dace8196fb61 100644
+--- a/drivers/media/usb/dvb-usb/dtv5100.c
++++ b/drivers/media/usb/dvb-usb/dtv5100.c
+@@ -72,7 +72,7 @@ static int dtv5100_i2c_xfer(struct i2c_adapter *adap, s=
+truct i2c_msg msg[],
+ 	if (num > 2)
+ 		return -EINVAL;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-urb.c b/drivers/media/usb/=
+dvb-usb/dvb-usb-urb.c
+index 2aabf90d8697..6a35a218d4de 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-urb.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-urb.c
+@@ -22,7 +22,8 @@ int dvb_usb_generic_rw(struct dvb_usb_device *d, u8 *wb=
+uf, u16 wlen, u8 *rbuf,
+ 		return -EINVAL;
+ 	}
+=20
+-	if ((ret =3D mutex_lock_interruptible(&d->usb_mutex)))
++	ret =3D mutex_lock_interruptible(&d->usb_mutex);
++	if (ret)
+ 		return ret;
+=20
+ 	deb_xfer(">>> ");
+diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-u=
+sb/dw2102.c
+index 79e2ccf974c9..fea99192c627 100644
+--- a/drivers/media/usb/dvb-usb/dw2102.c
++++ b/drivers/media/usb/dvb-usb/dw2102.c
+@@ -121,7 +121,7 @@ static int dw2102_i2c_transfer(struct i2c_adapter *ad=
+ap, struct i2c_msg msg[],
+=20
+ 	if (!d)
+ 		return -ENODEV;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	switch (num) {
+@@ -216,7 +216,7 @@ static int dw2102_serit_i2c_transfer(struct i2c_adapt=
+er *adap,
+=20
+ 	if (!d)
+ 		return -ENODEV;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	switch (num) {
+@@ -291,7 +291,7 @@ static int dw2102_earda_i2c_transfer(struct i2c_adapt=
+er *adap, struct i2c_msg ms
+=20
+ 	if (!d)
+ 		return -ENODEV;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	switch (num) {
+@@ -399,7 +399,7 @@ static int dw2104_i2c_transfer(struct i2c_adapter *ad=
+ap, struct i2c_msg msg[], i
+=20
+ 	if (!d)
+ 		return -ENODEV;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (j =3D 0; j < num; j++) {
+@@ -501,7 +501,7 @@ static int dw3101_i2c_transfer(struct i2c_adapter *ad=
+ap, struct i2c_msg msg[],
+=20
+ 	if (!d)
+ 		return -ENODEV;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	switch (num) {
+@@ -589,7 +589,7 @@ static int s6x0_i2c_transfer(struct i2c_adapter *adap=
+, struct i2c_msg msg[],
+ 	if (!d)
+ 		return -ENODEV;
+ 	udev =3D d->udev;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (j =3D 0; j < num; j++) {
+@@ -726,9 +726,9 @@ static int su3000_i2c_transfer(struct i2c_adapter *ad=
+ap, struct i2c_msg msg[],
+=20
+ 	state =3D d->priv;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+-	if (mutex_lock_interruptible(&d->data_mutex) < 0) {
++	if (mutex_lock_interruptible(&d->data_mutex)) {
+ 		mutex_unlock(&d->i2c_mutex);
+ 		return -EAGAIN;
+ 	}
+diff --git a/drivers/media/usb/dvb-usb/gp8psk.c b/drivers/media/usb/dvb-u=
+sb/gp8psk.c
+index 4cd21bb8805e..c0d617536127 100644
+--- a/drivers/media/usb/dvb-usb/gp8psk.c
++++ b/drivers/media/usb/dvb-usb/gp8psk.c
+@@ -35,7 +35,8 @@ static int gp8psk_usb_in_op(struct dvb_usb_device *d, u=
+8 req, u16 value,
+ 	if (blen > sizeof(st->data))
+ 		return -EIO;
+=20
+-	if ((ret =3D mutex_lock_interruptible(&d->usb_mutex)))
++	ret =3D mutex_lock_interruptible(&d->usb_mutex);
++	if (ret)
+ 		return ret;
+=20
+ 	while (ret >=3D 0 && ret !=3D blen && try < 3) {
+@@ -77,7 +78,8 @@ static int gp8psk_usb_out_op(struct dvb_usb_device *d, =
+u8 req, u16 value,
+ 	if (blen > sizeof(st->data))
+ 		return -EIO;
+=20
+-	if ((ret =3D mutex_lock_interruptible(&d->usb_mutex)))
++	ret =3D mutex_lock_interruptible(&d->usb_mutex);
++	if (ret)
+ 		return ret;
+=20
+ 	memcpy(st->data, b, blen);
+diff --git a/drivers/media/usb/dvb-usb/m920x.c b/drivers/media/usb/dvb-us=
+b/m920x.c
+index a2054b1b100f..0536d3d7152a 100644
+--- a/drivers/media/usb/dvb-usb/m920x.c
++++ b/drivers/media/usb/dvb-usb/m920x.c
+@@ -252,7 +252,7 @@ static int m920x_i2c_xfer(struct i2c_adapter *adap, s=
+truct i2c_msg msg[], int nu
+ 	int i, j;
+ 	int ret =3D 0;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb/opera1.c b/drivers/media/usb/dvb-u=
+sb/opera1.c
+index 268f05fc8691..075c1153e2ab 100644
+--- a/drivers/media/usb/dvb-usb/opera1.c
++++ b/drivers/media/usb/dvb-usb/opera1.c
+@@ -92,7 +92,7 @@ static int opera1_usb_i2c_msgxfer(struct dvb_usb_device=
+ *dev, u16 addr,
+ 		info("no usb_device");
+ 		return -EINVAL;
+ 	}
+-	if (mutex_lock_interruptible(&dev->usb_mutex) < 0)
++	if (mutex_lock_interruptible(&dev->usb_mutex))
+ 		return -EAGAIN;
+=20
+ 	switch (addr>>1){
+@@ -132,7 +132,7 @@ static int opera1_i2c_xfer(struct i2c_adapter *adap, =
+struct i2c_msg msg[],
+=20
+ 	if (!d)
+ 		return -ENODEV;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+diff --git a/drivers/media/usb/dvb-usb/pctv452e.c b/drivers/media/usb/dvb=
+-usb/pctv452e.c
+index 2aab49003493..71e4503968a8 100644
+--- a/drivers/media/usb/dvb-usb/pctv452e.c
++++ b/drivers/media/usb/dvb-usb/pctv452e.c
+@@ -478,7 +478,7 @@ static int pctv452e_i2c_xfer(struct i2c_adapter *adap=
+ter, struct i2c_msg *msg,
+ 	struct dvb_usb_device *d =3D i2c_get_adapdata(adapter);
+ 	int i;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+@@ -623,7 +623,7 @@ static int pctv452e_read_mac_address(struct dvb_usb_d=
+evice *d, u8 mac[6])
+ 	int ret;
+=20
+ 	ret =3D -EAGAIN;
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		goto failed;
+=20
+ 	ret =3D pctv452e_i2c_msg(d, I2C_ADDR_24C16,
+diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/u=
+sb/dvb-usb/technisat-usb2.c
+index df90c6c5f3b9..265059be66e1 100644
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -166,7 +166,7 @@ static int technisat_usb2_i2c_xfer(struct i2c_adapter=
+ *adap, struct i2c_msg *msg
+=20
+ 	/* Ensure nobody else hits the i2c bus while we're sending our
+ 	   sequence of messages, (such as the remote control thread) */
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	for (i =3D 0; i < num; i++) {
+@@ -259,7 +259,7 @@ static int technisat_usb2_set_led(struct dvb_usb_devi=
+ce *d, int red,
+ 		break;
+ 	}
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	ret =3D usb_control_msg(d->udev, usb_sndctrlpipe(d->udev, 0),
+@@ -280,7 +280,7 @@ static int technisat_usb2_set_led_timer(struct dvb_us=
+b_device *d, u8 red, u8 gre
+=20
+ 	b[0] =3D 0;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	ret =3D usb_control_msg(d->udev, usb_sndctrlpipe(d->udev, 0),
+@@ -550,7 +550,7 @@ static int technisat_usb2_frontend_attach(struct dvb_=
+usb_adapter *a)
+ 			if (a->fe_adap[0].fe->ops.init)
+ 				a->fe_adap[0].fe->ops.init(a->fe_adap[0].fe);
+=20
+-			if (mutex_lock_interruptible(&a->dev->i2c_mutex) < 0)
++			if (mutex_lock_interruptible(&a->dev->i2c_mutex))
+ 				return -EAGAIN;
+=20
+ 			ret =3D usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
+@@ -618,7 +618,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_devic=
+e *d)
+ 	buf[3] =3D MINIMUM_IR_BIT_TRANSITION_TICK_COUNT;
+ 	buf[4] =3D MAXIMUM_IR_BIT_TIME_TICK_COUNT;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+ 	ret =3D usb_control_msg(d->udev, usb_sndctrlpipe(d->udev, 0),
+ 			GET_IR_DATA_VENDOR_REQUEST,
+diff --git a/drivers/media/usb/dvb-usb/ttusb2.c b/drivers/media/usb/dvb-u=
+sb/ttusb2.c
+index 373ffa7f641e..3e0e4917f6a3 100644
+--- a/drivers/media/usb/dvb-usb/ttusb2.c
++++ b/drivers/media/usb/dvb-usb/ttusb2.c
+@@ -371,7 +371,7 @@ static int ttusb2_i2c_xfer(struct i2c_adapter *adap,s=
+truct i2c_msg msg[],int num
+ 	static u8 obuf[60], ibuf[60];
+ 	int i, write_read, read;
+=20
+-	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++	if (mutex_lock_interruptible(&d->i2c_mutex))
+ 		return -EAGAIN;
+=20
+ 	if (num > 2)
+diff --git a/drivers/media/usb/dvb-usb/vp702x.c b/drivers/media/usb/dvb-u=
+sb/vp702x.c
+index 5b6740cbd1d1..3c513c3ac578 100644
+--- a/drivers/media/usb/dvb-usb/vp702x.c
++++ b/drivers/media/usb/dvb-usb/vp702x.c
+@@ -99,7 +99,8 @@ int vp702x_usb_inout_op(struct dvb_usb_device *d, u8 *o=
+, int olen, u8 *i, int il
+ {
+ 	int ret;
+=20
+-	if ((ret =3D mutex_lock_interruptible(&d->usb_mutex)))
++	ret =3D mutex_lock_interruptible(&d->usb_mutex);
++	if (ret)
+ 		return ret;
+=20
+ 	ret =3D vp702x_usb_out_op_unlocked(d, REQUEST_OUT, 0, 0, o, olen);
+@@ -119,7 +120,7 @@ static int vp702x_usb_inout_cmd(struct dvb_usb_device=
+ *d, u8 cmd, u8 *o,
+ 	int buflen =3D max(olen + 2, ilen + 1);
+=20
+ 	ret =3D mutex_lock_interruptible(&st->buf_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	if (buflen > st->buf_len) {
+diff --git a/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c b/drivers/=
+media/usb/ttusb-budget/dvb-ttusb-budget.c
+index 9e016b71aa91..7a25e823f1f5 100644
+--- a/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
++++ b/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
+@@ -143,7 +143,7 @@ static int ttusb_cmd(struct ttusb *ttusb, u8 *data, i=
+nt len, int len_result)
+ 	int actual_len;
+ 	int err;
+=20
+-	if (mutex_lock_interruptible(&ttusb->semusb) < 0)
++	if (mutex_lock_interruptible(&ttusb->semusb))
+ 		return -EAGAIN;
+=20
+ 	if (debug >=3D 3)
+@@ -236,7 +236,7 @@ static int master_xfer(struct i2c_adapter* adapter, s=
+truct i2c_msg *msg, int num
+ 	int i =3D 0;
+ 	int inc;
+=20
+-	if (mutex_lock_interruptible(&ttusb->semi2c) < 0)
++	if (mutex_lock_interruptible(&ttusb->semi2c))
+ 		return -EAGAIN;
+=20
+ 	while (i < num) {
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc=
+_ctrl.c
+index 4e58476d305e..043dceb77754 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -1392,7 +1392,7 @@ int uvc_query_v4l2_ctrl(struct uvc_video_chain *cha=
+in,
+ 	int ret;
+=20
+ 	ret =3D mutex_lock_interruptible(&chain->ctrl_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return -ERESTARTSYS;
+=20
+ 	/* Check if the ctrl is a know class */
+@@ -1453,7 +1453,7 @@ int uvc_query_v4l2_menu(struct uvc_video_chain *cha=
+in,
+ 		return -EINVAL;
+=20
+ 	ret =3D mutex_lock_interruptible(&chain->ctrl_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return -ERESTARTSYS;
+=20
+ 	ctrl =3D uvc_find_control(chain, query_menu->id, &mapping);
+@@ -1760,7 +1760,7 @@ static int uvc_ctrl_add_event(struct v4l2_subscribe=
+d_event *sev, unsigned elems)
+ 	int ret;
+=20
+ 	ret =3D mutex_lock_interruptible(&handle->chain->ctrl_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return -ERESTARTSYS;
+=20
+ 	if (__uvc_query_v4l2_class(handle->chain, sev->id, 0) >=3D 0) {
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/i2c.c b/drivers/net/ethe=
+rnet/mellanox/mlxsw/i2c.c
+index f9f565c1036d..f1675908253c 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/i2c.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/i2c.c
+@@ -426,7 +426,7 @@ mlxsw_i2c_cmd(struct device *dev, u16 opcode, u32 in_=
+mod, size_t in_mbox_size,
+ 		reg_size =3D mlxsw_i2c_get_reg_size(in_mbox);
+ 		num =3D DIV_ROUND_UP(reg_size, mlxsw_i2c->block_size);
+=20
+-		if (mutex_lock_interruptible(&mlxsw_i2c->cmd.lock) < 0) {
++		if (mutex_lock_interruptible(&mlxsw_i2c->cmd.lock)) {
+ 			dev_err(&client->dev, "Could not acquire lock");
+ 			return -EINVAL;
+ 		}
+@@ -445,7 +445,7 @@ mlxsw_i2c_cmd(struct device *dev, u16 opcode, u32 in_=
+mod, size_t in_mbox_size,
+ 		reg_size =3D MLXSW_I2C_MAX_DATA_SIZE;
+ 		num =3D DIV_ROUND_UP(reg_size, mlxsw_i2c->block_size);
+=20
+-		if (mutex_lock_interruptible(&mlxsw_i2c->cmd.lock) < 0) {
++		if (mutex_lock_interruptible(&mlxsw_i2c->cmd.lock)) {
+ 			dev_err(&client->dev, "Could not acquire lock");
+ 			return -EINVAL;
+ 		}
+diff --git a/drivers/net/usb/cdc_subset.c b/drivers/net/usb/cdc_subset.c
+index f4a44f05c6ab..09e2c3bc1315 100644
+--- a/drivers/net/usb/cdc_subset.c
++++ b/drivers/net/usb/cdc_subset.c
+@@ -80,7 +80,7 @@ static void m5632_recover(struct usbnet *dev)
+ 	int r;
+=20
+ 	r =3D usb_lock_device_for_reset(udev, intf);
+-	if (r < 0)
++	if (r)
+ 		return;
+=20
+ 	usb_reset_device(udev);
+diff --git a/drivers/net/wireless/intersil/p54/p54usb.c b/drivers/net/wir=
+eless/intersil/p54/p54usb.c
+index cae47663b17b..a1c056612a83 100644
+--- a/drivers/net/wireless/intersil/p54/p54usb.c
++++ b/drivers/net/wireless/intersil/p54/p54usb.c
+@@ -455,7 +455,7 @@ static int p54u_device_reset(struct ieee80211_hw *dev=
+)
+=20
+ 	if (lock) {
+ 		ret =3D usb_lock_device_for_reset(priv->udev, priv->intf);
+-		if (ret < 0) {
++		if (ret) {
+ 			dev_err(&priv->udev->dev, "(p54usb) unable to lock "
+ 				"device for reset (%d)!\n", ret);
+ 			return ret;
+diff --git a/drivers/net/wireless/ti/wlcore/sysfs.c b/drivers/net/wireles=
+s/ti/wlcore/sysfs.c
+index 7c57d4c8744a..037d7dba9800 100644
+--- a/drivers/net/wireless/ti/wlcore/sysfs.c
++++ b/drivers/net/wireless/ti/wlcore/sysfs.c
+@@ -97,7 +97,7 @@ static ssize_t wl1271_sysfs_read_fwlog(struct file *fil=
+p, struct kobject *kobj,
+ 	int ret;
+=20
+ 	ret =3D mutex_lock_interruptible(&wl->mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return -ERESTARTSYS;
+=20
+ 	/* Check if the fwlog is still valid */
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+index 1fcb0f99695a..e4b823dbc996 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6462,7 +6462,7 @@ static void tpacpi_brightness_checkpoint_nvram(void=
+)
+ 	vdbg_printk(TPACPI_DBG_BRGHT,
+ 		"trying to checkpoint backlight level to NVRAM...\n");
+=20
+-	if (mutex_lock_killable(&brightness_mutex) < 0)
++	if (mutex_lock_killable(&brightness_mutex))
+ 		return;
+=20
+ 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
+@@ -6565,7 +6565,7 @@ static int brightness_set(unsigned int value)
+ 			"set backlight level to %d\n", value);
+=20
+ 	res =3D mutex_lock_killable(&brightness_mutex);
+-	if (res < 0)
++	if (res)
+ 		return res;
+=20
+ 	switch (brightness_mode) {
+@@ -6604,7 +6604,7 @@ static int brightness_get(struct backlight_device *=
+bd)
+ 	int status, res;
+=20
+ 	res =3D mutex_lock_killable(&brightness_mutex);
+-	if (res < 0)
++	if (res)
+ 		return 0;
+=20
+ 	res =3D tpacpi_brightness_get_raw(&status);
+@@ -7075,7 +7075,7 @@ static void tpacpi_volume_checkpoint_nvram(void)
+ 	else
+ 		ec_mask =3D TP_EC_AUDIO_MUTESW_MSK | TP_EC_AUDIO_LVL_MSK;
+=20
+-	if (mutex_lock_killable(&volume_mutex) < 0)
++	if (mutex_lock_killable(&volume_mutex))
+ 		return;
+=20
+ 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
+@@ -7147,7 +7147,7 @@ static int __volume_set_mute_ec(const bool mute)
+ 	int rc;
+ 	u8 s, n;
+=20
+-	if (mutex_lock_killable(&volume_mutex) < 0)
++	if (mutex_lock_killable(&volume_mutex))
+ 		return -EINTR;
+=20
+ 	rc =3D volume_get_status_ec(&s);
+@@ -7195,7 +7195,7 @@ static int __volume_set_volume_ec(const u8 vol)
+ 	if (vol > TP_EC_VOLUME_MAX)
+ 		return -EINVAL;
+=20
+-	if (mutex_lock_killable(&volume_mutex) < 0)
++	if (mutex_lock_killable(&volume_mutex))
+ 		return -EINTR;
+=20
+ 	rc =3D volume_get_status_ec(&s);
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 84d8de07b7ae..aff155682242 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -3176,7 +3176,7 @@ static int hpsa_do_reset(struct ctlr_info *h, struc=
+t hpsa_scsi_dev_t *dev,
+ 	int rc =3D 0;
+=20
+ 	/* We can really only handle one reset at a time */
+-	if (mutex_lock_interruptible(&h->reset_mutex) =3D=3D -EINTR) {
++	if (mutex_lock_interruptible(&h->reset_mutex)) {
+ 		dev_warn(&h->pdev->dev, "concurrent reset wait interrupted.\n");
+ 		return -EINTR;
+ 	}
+diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers=
+/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+index 85322af62c23..2939b9666729 100644
+--- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
++++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+@@ -1175,7 +1175,7 @@ static int usb_gpib_init_module(struct usb_interfac=
+e *interface)
+ 	int j, mask, rv;
+=20
+ 	rv =3D mutex_lock_interruptible(&minors_lock);
+-	if (rv < 0)
++	if (rv)
+ 		return rv;
+=20
+ 	if (!assigned_usb_minors) {
+@@ -1513,7 +1513,7 @@ static ssize_t skel_do_read(struct usb_skel *dev, c=
+har *buffer, size_t count)
+ 	DIA_LOG(2, "restart with %zd %zd.\n", dev->bulk_in_filled, dev->bulk_in=
+_copied);
+=20
+ 	rv =3D mutex_lock_interruptible(&dev->io_mutex);
+-	if (rv < 0)
++	if (rv)
+ 		return rv;
+=20
+ 	if (!dev->interface) {		      /* disconnect() was called */
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 449dbd216460..6f152d483123 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -965,7 +965,7 @@ static ssize_t iterate_tty_write(struct tty_ldisc *ld=
+, struct tty_struct *tty,
+ 	ssize_t ret, written =3D 0;
+=20
+ 	ret =3D tty_write_lock(tty, file->f_flags & O_NDELAY);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	/*
+@@ -1154,7 +1154,7 @@ int tty_send_xchar(struct tty_struct *tty, u8 ch)
+ 		return 0;
+ 	}
+=20
+-	if (tty_write_lock(tty, false) < 0)
++	if (tty_write_lock(tty, false))
+ 		return -ERESTARTSYS;
+=20
+ 	down_read(&tty->termios_rwsem);
+@@ -2486,7 +2486,7 @@ static int send_break(struct tty_struct *tty, unsig=
+ned int duration)
+ 		return tty->ops->break_ctl(tty, duration);
+=20
+ 	/* Do the work ourselves */
+-	if (tty_write_lock(tty, false) < 0)
++	if (tty_write_lock(tty, false))
+ 		return -EINTR;
+=20
+ 	retval =3D tty->ops->break_ctl(tty, -1);
+diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
+index 86ee39db013f..0f77547438d3 100644
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -523,9 +523,8 @@ static ssize_t wdm_read
+ 	int i =3D 0;
+ 	struct wdm_device *desc =3D file->private_data;
+=20
+-
+ 	rv =3D mutex_lock_interruptible(&desc->rlock); /*concurrent reads */
+-	if (rv < 0)
++	if (rv)
+ 		return -ERESTARTSYS;
+=20
+ 	cntr =3D READ_ONCE(desc->length);
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index e2527faa6592..c197e81e0307 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -849,7 +849,7 @@ static ssize_t usblp_read(struct file *file, char __u=
+ser *buffer, size_t len, lo
+ 		return -EINVAL;
+=20
+ 	rv =3D usblp_rwait_and_lock(usblp, !!(file->f_flags & O_NONBLOCK));
+-	if (rv < 0)
++	if (rv)
+ 		return rv;
+=20
+ 	if (!usblp->present) {
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index d2b2787be409..137e1dd964d0 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1900,7 +1900,7 @@ static void __usb_queue_reset_device(struct work_st=
+ruct *ws)
+ 	struct usb_device *udev =3D interface_to_usbdev(iface);
+=20
+ 	rc =3D usb_lock_device_for_reset(udev, iface);
+-	if (rc >=3D 0) {
++	if (rc =3D=3D 0) {
+ 		usb_reset_device(udev);
+ 		usb_unlock_device(udev);
+ 	}
+diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+index 23f3cb1989f4..0cff7f540c3a 100644
+--- a/drivers/usb/core/sysfs.c
++++ b/drivers/usb/core/sysfs.c
+@@ -32,7 +32,7 @@ static ssize_t field##_show(struct device *dev,				\
+ 									\
+ 	udev =3D to_usb_device(dev);					\
+ 	rc =3D usb_lock_device_interruptible(udev);			\
+-	if (rc < 0)							\
++	if (rc)								\
+ 		return -EINTR;						\
+ 	actconfig =3D udev->actconfig;					\
+ 	if (actconfig)							\
+@@ -58,7 +58,7 @@ static ssize_t bMaxPower_show(struct device *dev,
+=20
+ 	udev =3D to_usb_device(dev);
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+ 	actconfig =3D udev->actconfig;
+ 	if (actconfig)
+@@ -77,7 +77,7 @@ static ssize_t configuration_show(struct device *dev,
+=20
+ 	udev =3D to_usb_device(dev);
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+ 	actconfig =3D udev->actconfig;
+ 	if (actconfig && actconfig->string)
+@@ -100,7 +100,7 @@ static ssize_t bConfigurationValue_store(struct devic=
+e *dev,
+ 	if (sscanf(buf, "%d", &config) !=3D 1 || config < -1 || config > 255)
+ 		return -EINVAL;
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+ 	value =3D usb_set_configuration(udev, config);
+ 	usb_unlock_device(udev);
+@@ -130,7 +130,7 @@ static ssize_t  name##_show(struct device *dev,				\
+ 									\
+ 	udev =3D to_usb_device(dev);					\
+ 	retval =3D usb_lock_device_interruptible(udev);			\
+-	if (retval < 0)							\
++	if (retval)							\
+ 		return -EINTR;						\
+ 	retval =3D sysfs_emit(buf, "%s\n", udev->name);			\
+ 	usb_unlock_device(udev);					\
+@@ -279,7 +279,7 @@ static ssize_t avoid_reset_quirk_store(struct device =
+*dev,
+ 	if (kstrtobool(buf, &val) !=3D 0)
+ 		return -EINVAL;
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+ 	if (val)
+ 		udev->quirks |=3D USB_QUIRK_RESET;
+@@ -334,7 +334,7 @@ static ssize_t persist_store(struct device *dev, stru=
+ct device_attribute *attr,
+ 		return -EINVAL;
+=20
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+ 	udev->persist_enabled =3D !!value;
+ 	usb_unlock_device(udev);
+@@ -460,7 +460,7 @@ static ssize_t level_store(struct device *dev, struct=
+ device_attribute *attr,
+ 		len =3D cp - buf;
+=20
+ 	rv =3D usb_lock_device_interruptible(udev);
+-	if (rv < 0)
++	if (rv)
+ 		return -EINTR;
+=20
+ 	if (len =3D=3D sizeof on_string - 1 &&
+@@ -502,7 +502,7 @@ static ssize_t usb2_hardware_lpm_store(struct device =
+*dev,
+ 	int ret;
+=20
+ 	ret =3D usb_lock_device_interruptible(udev);
+-	if (ret < 0)
++	if (ret)
+ 		return -EINTR;
+=20
+ 	ret =3D kstrtobool(buf, &value);
+@@ -579,7 +579,7 @@ static ssize_t usb3_hardware_lpm_u1_show(struct devic=
+e *dev,
+ 	int rc;
+=20
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+=20
+ 	if (udev->usb3_lpm_u1_enabled)
+@@ -601,7 +601,7 @@ static ssize_t usb3_hardware_lpm_u2_show(struct devic=
+e *dev,
+ 	int rc;
+=20
+ 	rc =3D usb_lock_device_interruptible(udev);
+-	if (rc < 0)
++	if (rc)
+ 		return -EINTR;
+=20
+ 	if (udev->usb3_lpm_u2_enabled)
+@@ -1188,7 +1188,7 @@ static ssize_t supports_autosuspend_show(struct dev=
+ice *dev,
+ 	int s;
+=20
+ 	s =3D device_lock_interruptible(dev);
+-	if (s < 0)
++	if (s)
+ 		return -EINTR;
+ 	/* Devices will be autosuspended even when an interface isn't claimed *=
+/
+ 	s =3D (!dev->driver || to_usb_driver(dev->driver)->supports_autosuspend=
+);
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legac=
+y/inode.c
+index b6a30d88a800..c4c9ad6d8596 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -313,7 +313,7 @@ get_ready_ep (unsigned f_flags, struct ep_data *epdat=
+a, bool is_write)
+ 	}
+=20
+ 	val =3D mutex_lock_interruptible(&epdata->lock);
+-	if (val < 0)
++	if (val)
+ 		return val;
+=20
+ 	switch (epdata->state) {
+@@ -386,7 +386,7 @@ ep_release (struct inode *inode, struct file *fd)
+ 	int value;
+=20
+ 	value =3D mutex_lock_interruptible(&data->lock);
+-	if (value < 0)
++	if (value)
+ 		return value;
+=20
+ 	/* clean up if this can be reopened */
+@@ -406,7 +406,8 @@ static long ep_ioctl(struct file *fd, unsigned code, =
+unsigned long value)
+ 	struct ep_data		*data =3D fd->private_data;
+ 	int			status;
+=20
+-	if ((status =3D get_ready_ep (fd->f_flags, data, false)) < 0)
++	status =3D get_ready_ep(fd->f_flags, data, false);
++	if (status)
+ 		return status;
+=20
+ 	spin_lock_irq (&data->dev->lock);
+@@ -587,7 +588,8 @@ ep_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 	ssize_t value;
+ 	char *buf;
+=20
+-	if ((value =3D get_ready_ep(file->f_flags, epdata, false)) < 0)
++	value =3D get_ready_ep(file->f_flags, epdata, false);
++	if (value)
+ 		return value;
+=20
+ 	/* halt any endpoint by doing a "wrong direction" i/o call */
+@@ -647,7 +649,8 @@ ep_write_iter(struct kiocb *iocb, struct iov_iter *fr=
+om)
+ 	ssize_t value;
+ 	char *buf;
+=20
+-	if ((value =3D get_ready_ep(file->f_flags, epdata, true)) < 0)
++	value =3D get_ready_ep(file->f_flags, epdata, true);
++	if (value)
+ 		return value;
+=20
+ 	configured =3D epdata->state =3D=3D STATE_EP_ENABLED;
+diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
+index 70dff0db5354..b0a1357c7941 100644
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -442,7 +442,7 @@ static ssize_t yurex_write(struct file *file, const c=
+har __user *user_buffer,
+ 		goto error;
+=20
+ 	retval =3D mutex_lock_interruptible(&dev->io_mutex);
+-	if (retval < 0)
++	if (retval)
+ 		return -EINTR;
+=20
+ 	if (dev->disconnected) {		/* already disconnected */
+diff --git a/drivers/usb/storage/transport.c b/drivers/usb/storage/transp=
+ort.c
+index e6bc8ecaecbb..52b85acaf756 100644
+--- a/drivers/usb/storage/transport.c
++++ b/drivers/usb/storage/transport.c
+@@ -1427,7 +1427,7 @@ int usb_stor_port_reset(struct us_data *us)
+ 		return -EPERM;
+=20
+ 	result =3D usb_lock_device_for_reset(us->pusb_dev, us->pusb_intf);
+-	if (result < 0)
++	if (result)
+ 		usb_stor_dbg(us, "unable to lock device for reset: %d\n",
+ 			     result);
+ 	else {
+diff --git a/drivers/usb/usb-skeleton.c b/drivers/usb/usb-skeleton.c
+index 900a64ad25e4..dba27776a037 100644
+--- a/drivers/usb/usb-skeleton.c
++++ b/drivers/usb/usb-skeleton.c
+@@ -235,7 +235,7 @@ static ssize_t skel_read(struct file *file, char *buf=
+fer, size_t count,
+=20
+ 	/* no concurrent readers */
+ 	rv =3D mutex_lock_interruptible(&dev->io_mutex);
+-	if (rv < 0)
++	if (rv)
+ 		return rv;
+=20
+ 	if (dev->disconnected) {		/* disconnect() was called */
+diff --git a/drivers/usb/usbip/stub_dev.c b/drivers/usb/usbip/stub_dev.c
+index ce625b1ce9a5..2139930f25cb 100644
+--- a/drivers/usb/usbip/stub_dev.c
++++ b/drivers/usb/usbip/stub_dev.c
+@@ -218,7 +218,7 @@ static void stub_device_reset(struct usbip_device *ud=
+)
+ 	dev_dbg(&udev->dev, "device reset");
+=20
+ 	ret =3D usb_lock_device_for_reset(udev, NULL);
+-	if (ret < 0) {
++	if (ret) {
+ 		dev_err(&udev->dev, "lock for reset\n");
+ 		spin_lock_irq(&ud->lock);
+ 		ud->status =3D SDEV_ST_ERROR;
+diff --git a/drivers/usb/usbip/stub_rx.c b/drivers/usb/usbip/stub_rx.c
+index 9aa30ef76f3b..cecc3972c64a 100644
+--- a/drivers/usb/usbip/stub_rx.c
++++ b/drivers/usb/usbip/stub_rx.c
+@@ -156,7 +156,7 @@ static int tweak_reset_device_cmd(struct urb *urb)
+ 	dev_info(&urb->dev->dev, "usb_queue_reset_device\n");
+=20
+ 	err =3D usb_lock_device_for_reset(sdev->udev, NULL);
+-	if (err < 0) {
++	if (err) {
+ 		dev_err(&urb->dev->dev, "could not obtain lock to reset device\n");
+ 		return err;
+ 	}
+diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.=
+c
+index 69b1d145657a..f285368d3961 100644
+--- a/drivers/w1/masters/omap_hdq.c
++++ b/drivers/w1/masters/omap_hdq.c
+@@ -135,7 +135,7 @@ static int hdq_write_byte(struct hdq_data *hdq_data, =
+u8 val, u8 *status)
+ 	u8 tmp_status;
+=20
+ 	ret =3D mutex_lock_interruptible(&hdq_data->hdq_mutex);
+-	if (ret < 0) {
++	if (ret) {
+ 		ret =3D -EINTR;
+ 		goto rtn;
+ 	}
+@@ -235,7 +235,7 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
+ 	u8 tmp_status;
+=20
+ 	ret =3D mutex_lock_interruptible(&hdq_data->hdq_mutex);
+-	if (ret < 0) {
++	if (ret) {
+ 		dev_dbg(hdq_data->dev, "Could not acquire mutex\n");
+ 		ret =3D -EINTR;
+ 		goto rtn;
+@@ -305,7 +305,7 @@ static int hdq_read_byte(struct hdq_data *hdq_data, u=
+8 *val)
+ 	u8 status;
+=20
+ 	ret =3D mutex_lock_interruptible(&hdq_data->hdq_mutex);
+-	if (ret < 0) {
++	if (ret) {
+ 		ret =3D -EINTR;
+ 		goto rtn;
+ 	}
+@@ -374,7 +374,7 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+ 	}
+=20
+ 	err =3D mutex_lock_interruptible(&hdq_data->hdq_mutex);
+-	if (err < 0) {
++	if (err) {
+ 		dev_dbg(hdq_data->dev, "Could not acquire mutex\n");
+ 		goto rtn;
+ 	}
+diff --git a/fs/afs/validation.c b/fs/afs/validation.c
+index 0ba8336c9025..f7ff7a5b1b99 100644
+--- a/fs/afs/validation.c
++++ b/fs/afs/validation.c
+@@ -420,7 +420,7 @@ int afs_validate(struct afs_vnode *vnode, struct key =
+*key)
+ 	if (volume->cb_expires_at <=3D deadline ||
+ 	    atomic_read(&volume->cb_v_check) !=3D atomic_read(&volume->cb_v_bre=
+ak)) {
+ 		ret =3D mutex_lock_interruptible(&volume->cb_check_lock);
+-		if (ret < 0)
++		if (ret)
+ 			goto error_unlock;
+ 		locked_vol =3D true;
+ 	}
+diff --git a/fs/afs/vl_alias.c b/fs/afs/vl_alias.c
+index f9e76b604f31..e1c6a1df2745 100644
+--- a/fs/afs/vl_alias.c
++++ b/fs/afs/vl_alias.c
+@@ -188,7 +188,7 @@ static int afs_query_for_alias(struct afs_cell *cell,=
+ struct key *key)
+=20
+ 	_enter("%s", cell->name);
+=20
+-	if (mutex_lock_interruptible(&cell->net->proc_cells_lock) < 0)
++	if (mutex_lock_interruptible(&cell->net->proc_cells_lock))
+ 		return -ERESTARTSYS;
+=20
+ 	hlist_for_each_entry(p, &cell->net->proc_cells, proc_link) {
+@@ -204,7 +204,7 @@ static int afs_query_for_alias(struct afs_cell *cell,=
+ struct key *key)
+ 		if (afs_query_for_alias_one(cell, key, p) !=3D 0)
+ 			goto is_alias;
+=20
+-		if (mutex_lock_interruptible(&cell->net->proc_cells_lock) < 0) {
++		if (mutex_lock_interruptible(&cell->net->proc_cells_lock)) {
+ 			afs_unuse_cell(cell->net, p, afs_cell_trace_unuse_check_alias);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -318,7 +318,7 @@ int afs_cell_detect_alias(struct afs_cell *cell, stru=
+ct key *key)
+ 	struct afs_net *net =3D cell->net;
+ 	int ret;
+=20
+-	if (mutex_lock_interruptible(&net->cells_alias_lock) < 0)
++	if (mutex_lock_interruptible(&net->cells_alias_lock))
+ 		return -ERESTARTSYS;
+=20
+ 	if (test_bit(AFS_CELL_FL_CHECK_ALIAS, &cell->flags)) {
+diff --git a/fs/fsopen.c b/fs/fsopen.c
+index 094a7f510edf..ec97bc018090 100644
+--- a/fs/fsopen.c
++++ b/fs/fsopen.c
+@@ -33,7 +33,7 @@ static ssize_t fscontext_read(struct file *file,
+ 	int index, n;
+=20
+ 	ret =3D mutex_lock_interruptible(&fc->uapi_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	if (log->head =3D=3D log->tail) {
+diff --git a/fs/namespace.c b/fs/namespace.c
+index a3ed3f2980cb..dce085d51944 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -4198,7 +4198,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, =
+flags,
+ 	fc =3D fd_file(f)->private_data;
+=20
+ 	ret =3D mutex_lock_interruptible(&fc->uapi_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	/* There must be a valid superblock or we can't mount it */
+diff --git a/fs/orangefs/devorangefs-req.c b/fs/orangefs/devorangefs-req.=
+c
+index 33ee8cb32f83..faf655549aff 100644
+--- a/fs/orangefs/devorangefs-req.c
++++ b/fs/orangefs/devorangefs-req.c
+@@ -637,7 +637,7 @@ static long dispatch_ioctl_command(unsigned int comma=
+nd, unsigned long arg)
+ 		 * mounts to fail)
+ 		 */
+ 		ret =3D mutex_lock_interruptible(&orangefs_request_mutex);
+-		if (ret < 0)
++		if (ret)
+ 			return ret;
+ 		gossip_debug(GOSSIP_DEV_DEBUG,
+ 			     "%s: priority remount in progress\n",
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index cd89e956c322..630fad43d4d3 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -2841,7 +2841,7 @@ static ssize_t proc_pid_attr_write(struct file * fi=
+le, const char __user * buf,
+=20
+ 	/* Guard against adverse ptrace interaction */
+ 	rv =3D mutex_lock_interruptible(&current->signal->cred_guard_mutex);
+-	if (rv < 0)
++	if (rv)
+ 		goto out_free;
+=20
+ 	rv =3D security_setprocattr(PROC_I(inode)->op.lsmid,
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index f59381c4a2ff..84c9b42f11ef 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1603,7 +1603,7 @@ static long seccomp_notify_send(struct seccomp_filt=
+er *filter,
+ 		return -EINVAL;
+=20
+ 	ret =3D mutex_lock_interruptible(&filter->notify_lock);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	knotif =3D find_notification(filter, resp.id);
+@@ -1643,7 +1643,7 @@ static long seccomp_notify_id_valid(struct seccomp_=
+filter *filter,
+ 		return -EFAULT;
+=20
+ 	ret =3D mutex_lock_interruptible(&filter->notify_lock);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	knotif =3D find_notification(filter, id);
+@@ -1665,7 +1665,7 @@ static long seccomp_notify_set_flags(struct seccomp=
+_filter *filter,
+ 		return -EINVAL;
+=20
+ 	ret =3D mutex_lock_interruptible(&filter->notify_lock);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 	filter->notif->flags =3D flags;
+ 	mutex_unlock(&filter->notify_lock);
+@@ -1711,7 +1711,7 @@ static long seccomp_notify_addfd(struct seccomp_fil=
+ter *filter,
+ 	init_completion(&kaddfd.completion);
+=20
+ 	ret =3D mutex_lock_interruptible(&filter->notify_lock);
+-	if (ret < 0)
++	if (ret)
+ 		goto out;
+=20
+ 	knotif =3D find_notification(filter, addfd.id);
+@@ -1824,7 +1824,7 @@ static __poll_t seccomp_notify_poll(struct file *fi=
+le,
+=20
+ 	poll_wait(file, &filter->wqh, poll_tab);
+=20
+-	if (mutex_lock_interruptible(&filter->notify_lock) < 0)
++	if (mutex_lock_interruptible(&filter->notify_lock))
+ 		return EPOLLERR;
+=20
+ 	list_for_each_entry(cur, &filter->notif->notifications, list) {
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index c6ed68604136..9f81f4f30fca 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -1916,7 +1916,7 @@ static void *kmemleak_seq_start(struct seq_file *se=
+q, loff_t *pos)
+ 	int err;
+=20
+ 	err =3D mutex_lock_interruptible(&scan_mutex);
+-	if (err < 0)
++	if (err)
+ 		return ERR_PTR(err);
+=20
+ 	rcu_read_lock();
+@@ -2074,7 +2074,7 @@ static ssize_t kmemleak_write(struct file *file, co=
+nst char __user *user_buf,
+ 	buf[buf_size] =3D 0;
+=20
+ 	ret =3D mutex_lock_interruptible(&scan_mutex);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+=20
+ 	if (strncmp(buf, "clear", 5) =3D=3D 0) {
+diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
+index 32cd5f1d541d..bb385070a729 100644
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -368,7 +368,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr =
+*msg, size_t len,
+ 		if (flags & MSG_DONTWAIT)
+ 			goto error_requeue_call;
+ 		ret =3D -ERESTARTSYS;
+-		if (mutex_lock_interruptible(&call->user_mutex) < 0)
++		if (mutex_lock_interruptible(&call->user_mutex))
+ 			goto error_requeue_call;
+ 	}
+=20
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 0e8da909d4f2..216d9db6b9ac 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -487,7 +487,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
+ 	if (ret < 0)
+ 		goto maybe_error;
+ 	if (call->interruptibility =3D=3D RXRPC_INTERRUPTIBLE) {
+-		if (mutex_lock_interruptible(&call->user_mutex) < 0) {
++		if (mutex_lock_interruptible(&call->user_mutex)) {
+ 			ret =3D sock_intr_errno(timeo);
+ 			goto maybe_error;
+ 		}
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima=
+_fs.c
+index e4a79a9b2d58..42e0b2716483 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -370,7 +370,7 @@ static ssize_t ima_write_policy(struct file *file, co=
+nst char __user *buf,
+ 	}
+=20
+ 	result =3D mutex_lock_interruptible(&ima_write_mutex);
+-	if (result < 0)
++	if (result)
+ 		goto out_free;
+=20
+ 	if (data[0] =3D=3D '/') {
+diff --git a/sound/pci/oxygen/oxygen_lib.c b/sound/pci/oxygen/oxygen_lib.=
+c
+index 92ffe9dc20c5..02c4c05d1492 100644
+--- a/sound/pci/oxygen/oxygen_lib.c
++++ b/sound/pci/oxygen/oxygen_lib.c
+@@ -203,7 +203,7 @@ static void oxygen_proc_read(struct snd_info_entry *e=
+ntry,
+ 			snd_iprintf(buffer, " %02x", oxygen_read8(chip, i + j));
+ 		snd_iprintf(buffer, "\n");
+ 	}
+-	if (mutex_lock_interruptible(&chip->mutex) < 0)
++	if (mutex_lock_interruptible(&chip->mutex))
+ 		return;
+ 	if (chip->has_ac97_0) {
+ 		snd_iprintf(buffer, "\nAC97:\n");
