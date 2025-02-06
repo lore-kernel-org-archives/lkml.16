@@ -1,84 +1,120 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7480B12B94;
-	Thu,  6 Feb 2025 09:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550C8225A34;
+	Thu,  6 Feb 2025 09:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738833423; cv=none; b=bTrkyUSMA3MlufX1gnQLp6DXEEbFqVKHfjmBzu41pm9uKxgRJ/G2ZhCGxD4EQWDBsL6wkdW2rjC4TRcmsYAmoXv8tQGO2NLrDG1TVzfCyrNeptExvRiQbdFT8eP1AhLMWHk2F8LWGFPBB5pgXxU65lexXtmUCdV7G3Jcycalv1w=
+	t=1738833454; cv=none; b=cPZq65qXFAh4IEnXkIZIPMXSGNXX+dWYt10R5BB056J6kwAfii2yf1x5VGm8Arul9hD6jNe2jurW6j0/h8v5SqPpnpdjijZZOwgMACa+ZxHqesPWRt3ZTQ2JPEaDAx0U4QRv1kPUPh0qwV1VamBEydYw/FbbtoeATvZ6nbDS7oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738833423; c=relaxed/simple;
-	bh=J4Jw6hCfAnfFcT8LYUjoO+YszJi+kEUP6N7RQM56PQ0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J8+9ZIokNpglmlYxla245GvUH4As7F+S6GvFwyy+3f0XJTjw3KoBEoXIu8tNHzkmeXGEFHGXNC02QphYAPql5aFprl6dcH3ePCHP7d2z6g+94XWpdITGPyehW5YO4hfH4EQPqhUe/f7CRX8xlNIcn40bI/ocAqgR1xls+ZwCp3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from unicom146.biz-email.net
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id EDW00134;
-        Thu, 06 Feb 2025 17:15:34 +0800
-Received: from localhost.localdomain (10.94.12.153) by
- jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server id
- 15.1.2507.39; Thu, 6 Feb 2025 17:15:33 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <mkl@pengutronix.de>, <manivannan.sadhasivam@linaro.org>,
-	<thomas.kopp@microchip.com>, <mailhol.vincent@wanadoo.fr>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <cem@kernel.org>,
-	<djwong@kernel.org>, <corbet@lwn.net>
-CC: <linux-can@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
-Subject: [PATCH] Documentation: Remove repeated word in docs
-Date: Thu, 6 Feb 2025 17:15:29 +0800
-Message-ID: <20250206091530.4826-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1738833454; c=relaxed/simple;
+	bh=OprUX3sf+GllvjoTCMMHPEd9To8pLBDgBAKjQLuN4bk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZxdYPGZREZBgfQP3RiFHCXLdevmo9W6jwEpfIC4ngQZGDl8N20/orbAMlZY5my5hM24/GZF5pcL5EiGolS2WSQd1tBXVjHZclqNmfwk0oIh6KKYdEIrIy6bzaS198E+rOLd3oyQhIzQ1zhxJcgISR9KWprrnEPC22gCr6uqEVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlMqEO9y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlMqEO9y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE27C4CEDD;
+	Thu,  6 Feb 2025 09:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738833453;
+	bh=OprUX3sf+GllvjoTCMMHPEd9To8pLBDgBAKjQLuN4bk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mlMqEO9yqjddagGvhpyIFTCCScBLoIgdQQqQMCaV3jJZ5roJ3Rafcskhyg91jS88z
+	 xc9fT2zVeuM5WPf+6livRm1gQCXzW7oGbxdNYQ+/KVEUGbD1WvseO/ekE4tGTWcY70
+	 GEQY5xeGHhTx7J7YCnhVjokZcMMV/BvL1/7awqvro9cQ8JbJ5amYNcG8pC86iSRMZY
+	 bHFhuNo0O27tmaNs/EMKJTeS3TlYwayG0ddQng4Y3Qk4pb+qIV565y2Dzk08wYHNwC
+	 MzreoZNOVi/InNqbtYb8gJRqJLiAJELAABvnWp43MQ4EFpu29Tzfm2glpZGhG7CDZK
+	 xQXdLzaDPiX4w==
+Date: Thu, 6 Feb 2025 10:17:30 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: fnkl.kernel@gmail.com
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alyssa Ross <hi@alyssa.is>
+Subject: Re: [PATCH v5 5/5] MAINTAINERS: Add entries for touchbar display
+ driver
+Message-ID: <20250206-caped-premium-squid-595ecd@houat>
+References: <20250205-adpdrm-v5-0-4e4ec979bbf2@gmail.com>
+ <20250205-adpdrm-v5-5-4e4ec979bbf2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-tUid: 2025206171534bc23d4d50169965adca0608dc6528377
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="s5i444uyid5tefem"
+Content-Disposition: inline
+In-Reply-To: <20250205-adpdrm-v5-5-4e4ec979bbf2@gmail.com>
 
-Remove the repeated word "to" docs.
 
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
----
- .../devicetree/bindings/net/can/microchip,mcp251xfd.yaml        | 2 +-
- Documentation/filesystems/xfs/xfs-online-fsck-design.rst        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+--s5i444uyid5tefem
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 5/5] MAINTAINERS: Add entries for touchbar display
+ driver
+MIME-Version: 1.0
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-index 2a98b26630cb..c155c9c6db39 100644
---- a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-@@ -40,7 +40,7 @@ properties:
- 
-   microchip,rx-int-gpios:
-     description:
--      GPIO phandle of GPIO connected to to INT1 pin of the MCP251XFD, which
-+      GPIO phandle of GPIO connected to INT1 pin of the MCP251XFD, which
-       signals a pending RX interrupt.
-     maxItems: 1
- 
-diff --git a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-index 12aa63840830..994f9e5638ee 100644
---- a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-+++ b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-@@ -4521,7 +4521,7 @@ Both online and offline repair can use this strategy.
- | For this second effort, the ondisk parent pointer format as originally   |
- | proposed was ``(parent_inum, parent_gen, dirent_pos) → (dirent_name)``.  |
- | The format was changed during development to eliminate the requirement   |
--| of repair tools needing to to ensure that the ``dirent_pos`` field       |
-+| of repair tools needing to ensure that the ``dirent_pos`` field       |
- | always matched when reconstructing a directory.                          |
- |                                                                          |
- | There were a few other ways to have solved that problem:                 |
--- 
-2.43.0
+On Wed, Feb 05, 2025 at 11:10:54PM +0100, Sasha Finkelstein via B4 Relay wr=
+ote:
+> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+>=20
+> Add the MAINTAINERS entries for the driver
+>=20
+> Acked-by: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> ---
+>  MAINTAINERS | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a87ddad78e26f28ffd0f3433560d6db1518f9f95..4ce0d3bcf67910d909ba41261=
+535dcb14a24a7b7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2189,6 +2189,9 @@ F:	Documentation/devicetree/bindings/arm/apple.yaml
+>  F:	Documentation/devicetree/bindings/arm/apple/*
+>  F:	Documentation/devicetree/bindings/clock/apple,nco.yaml
+>  F:	Documentation/devicetree/bindings/cpufreq/apple,cluster-cpufreq.yaml
+> +F:	Documentation/devicetree/bindings/display/apple,h7-display-pipe-mipi.=
+yaml
+> +F:	Documentation/devicetree/bindings/display/apple,h7-display-pipe.yaml
+> +F:	Documentation/devicetree/bindings/display/panel/apple,summit.yaml
+>  F:	Documentation/devicetree/bindings/dma/apple,admac.yaml
+>  F:	Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+>  F:	Documentation/devicetree/bindings/interrupt-controller/apple,*
+> @@ -2208,6 +2211,8 @@ F:	drivers/bluetooth/hci_bcm4377.c
+>  F:	drivers/clk/clk-apple-nco.c
+>  F:	drivers/cpufreq/apple-soc-cpufreq.c
+>  F:	drivers/dma/apple-admac.c
+> +F:	drivers/gpu/drm/adp/
+> +F:	drivers/gpu/drm/panel/panel-summit.c
+>  F:	drivers/pmdomain/apple/
+>  F:	drivers/i2c/busses/i2c-pasemi-core.c
+>  F:	drivers/i2c/busses/i2c-pasemi-platform.c
 
+Sorry to figure it out that late, but how do you plan on maintaining it?
+Where will the patches go through, and who will you send PR to?
+
+Maxime
+
+--s5i444uyid5tefem
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6R+KQAKCRAnX84Zoj2+
+dpFcAX9vWLHvXu193dJYEBiwU4fhNxzryOdXkTE4drAdUIoskcpd7us4hCIDO00j
+dW3IY38BfRaxBKVSxfcDLKpB5L6e3vgphx4Fp+ODyheOilHTZ2A2Heqy+uVVhSmE
+jpTyN5zhyA==
+=D+sS
+-----END PGP SIGNATURE-----
+
+--s5i444uyid5tefem--
