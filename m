@@ -1,183 +1,174 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A5722619B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71B322ACF2;
+	Thu,  6 Feb 2025 11:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841312; cv=none; b=ejZazKVP6uPmK7N7/3JApC0XHJqJbrhvSq+JRC6gP6vLfDiynzf96z2iXt3g3W9+KCQ9DkzxPL6rAMhUEm8BxTsnNJDxj/6HRUup7si9kFDAowDfscVA90/xSwRfFvNAkAUgqkTjHsOucHro/ptrjXE+DR6uyfHw60K0aBYmdx8=
+	t=1738841316; cv=none; b=Utj9Qx8uHL8CCcU9/D0FTNtWxahrVi60g/hKz1yxAtbSbUPXB15v+AxWgpaSKlB5i3xsLU1t/nUpqCOk+Hv8AqpZoW2NcXWGSsrAUXJRreGOIhFKbSav17bjEtAbXnToUU4nF/KIpT1kzCPSpLCWpxBhDRgSxHPNJgXxkTag5Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841312; c=relaxed/simple;
-	bh=gkvL/tIQOpjbV+IEHUwsroudtsX79+gQy7ra+TBn9ms=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V+WX/u9zfxz8zIdUwyxWeIb3Q0nfcEaY5WEzoelsTgPa6DD7uYp7mDe5qhXLax+b2CQSJACnHImjd1rkk1rFq02AKezhPBqX0kQljJRh6x9fraTSCAjy4GpvkeZpSFbx4+PiySLTe6jqrtrdgGtkqjrHJA2My+WXvWS8AceNTMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RcJUMDl9; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738841316; c=relaxed/simple;
+	bh=bQno1xEKT067vGnwKFhWLIpLFTAbqDNiHrwCUnneeEU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qP/M7BAweofgtMYP87Ot0Mg8u80d74d6JyliTLdE+R0lGOgt4JFYze3aKZlAfvP4z9pWZcITnEdY/SdmToIisyYbWqdN4fZSq9xSC2AWI3RGybnoYUvKUOZaG3WgJgrlb1sSzTZYMcb2z+PeIc/ErEaqs58zUI+vmwn+13L00cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ku/eM1RK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RcJUMDl9"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso443591e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738841310; x=1739446110; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdTDdTuLvbbZnRC35I/8pWi+JuCtYdxpx4t0NnXNk6g=;
-        b=RcJUMDl9c/fVnUw+ISkKfans1zhXt3DMl2rFEkyk8cNx1sBVZbENiaD0gpE7rx8acr
-         5M1DORQ1rAy4jznxRCyblVbX/R2zyIs9nTg7VZZUaXOvVXCn9E5xmAPjGpM8yAYX6YEs
-         GXPPyeb6f2VN4uzhY2i7Vm04UaERoCJYmkXdqedgGUjiaaGAfNS3JpfFj9nANCrYBqeJ
-         2X3lz0TKgPT2hSMqLIWlQg84DSZnPZDKnIMwSsxDQFlxFja4/1zS1FTvuRi2gyvCcUIn
-         xQgR0GbXgnF1KHehAczb+gCSOTmrAmA4S5HSEhVaissAsAE7W6tpiQhOjNKAzG+THhwd
-         bIag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738841310; x=1739446110;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xdTDdTuLvbbZnRC35I/8pWi+JuCtYdxpx4t0NnXNk6g=;
-        b=fgpSeQlP7c+rhHh/ILXD2bCsJ/eaP7T8p+FLPf0754BkRewICCZQkhFMw7/ipQzY1d
-         UWG28TkNf6vMb60lSxcY17K0TU1u3+KUhkre0fQQHjSHVIuXFfNE9Mj8rd3F+sV97Zmn
-         +DNv0Zr8fWqWuJDx+/QJspgYd8TKebJqx4sufVzKrS9cxKiMMQ0JrPUUA3PUF1KkFneI
-         nXsYBgFdzUZxsePSwvCKZeLaEi7OHI8P1lwX4sVnEqOv15wEB1k4+6z5viS6pM6h9D9J
-         yTjkJEAMobTFgnYQhZTBk8wgtE4rteY2EENE/Pksg9UQxuPZx7SpWUzdjGu/qUkobzVh
-         2Khg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2SCeEsCCJN+Q+G0AwPNtFIyaGDkzW7QsPO3ErwjamN1MLXG3gl1veTM1N2DKpJvsLR0mhd/pz7FBvVrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMFWHeOno9RB1yustREsbVji+meq/rwzwAVoi2g4cmMwkfFlU/
-	PzFV+O+UYWG+ESFyewTe5Qemr6qIOD2vd8thu5Wbp0Uic3JJwfv+KdF4baWAMLc1PGnQNmXlJxR
-	VOi0GaGliJ9pcDeL4LgfSyD3eHDB4LZhMyKdo+w==
-X-Gm-Gg: ASbGncunD7+wnSEY6df0eVjlIASp8GfYJ/x8vLoxLqdJjNBmBz7Aj0J5/SUYYbjnQy2
-	uW+eojAQMh07pk7PFRlYc3gj09mebd7kVGgqjgR78oUrDjNF/LN+6aVAvcZxrlCR2jTByYODCTg
-	==
-X-Google-Smtp-Source: AGHT+IFVhSbR4SlXlIdBGR5/DW3hEWOyZBmOavtvcjBArrMJE2u+LJyOt+XjqQ6Rij82LJes4ZkKzTbmgfRma58x7Ns=
-X-Received: by 2002:a05:6122:3409:b0:51e:f800:f7cf with SMTP id
- 71dfb90a1353d-51f0c519723mr4006718e0c.10.1738841309685; Thu, 06 Feb 2025
- 03:28:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ku/eM1RK"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516AEmqK022371;
+	Thu, 6 Feb 2025 11:28:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dp1a0XO8qhJhnpjGP+DDMuaAcnBopAYQqncEHWWEO+Q=; b=ku/eM1RKEwQtS7I+
+	m2E/PBWXzs8uueRTr8q0m/CFzLVyx1ub2qH+d0U3FWw/4UtS6oq67khpqAgM1oa9
+	NZUdq9q6gc2V44sqEZ1qzvWphjBuujvHF1HAu/orP+vEhsvDNGwBLwjng/1vr75f
+	eaITldrH/yX0WkW/tP41XvqUILexDQB+8o/t8FXm0+TeDYNkWTGDAdD0whUX7Cyg
+	lOOkZMOyWD9rWDWvpSOqZjVFpv84DHGmmxGE5c7duXHD0FdlPA5IrLHPKMzuNPpq
+	RyZCat5haROGqO5asRSmg09dPCqgC9aL3gyk1HMG00PjvLmCZSfH+eZLSI0ileJ6
+	Ftmawg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mu5gg5gw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 11:28:15 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BNAQV017708
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Feb 2025 11:23:10 GMT
+Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Feb 2025 03:23:05 -0800
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Bard Liao
+	<yung-chuan.liao@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, "Takashi
+ Iwai" <tiwai@suse.com>
+CC: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+        Sanyog Kale
+	<sanyog.r.kale@intel.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_pkumpatl@quicinc.com>, <kernel@oss.qualcomm.com>,
+        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Subject: [PATCH v6 3/4] soundwire: qcom: Add set_channel_map api support
+Date: Thu, 6 Feb 2025 16:52:24 +0530
+Message-ID: <20250206112225.3270400-4-quic_mohs@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+References: <20250206112225.3270400-1-quic_mohs@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205134455.220373560@linuxfoundation.org>
-In-Reply-To: <20250205134455.220373560@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 6 Feb 2025 16:58:18 +0530
-X-Gm-Features: AWEUYZkLyxExF5EDZlJh2dRl_k_H3fRPFlRe5hOC4Smd0GjRAWK4R6ruu_jcYyU
-Message-ID: <CA+G9fYsREyVPJYFeVYK1yu1NxUdcLrLNcNtiP2Drjaczr4LgMg@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/590] 6.12.13-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Laight <david.laight.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 7TZnxNU2gFmvhi2pwW1cefNSy22r3VG8
+X-Proofpoint-GUID: 7TZnxNU2gFmvhi2pwW1cefNSy22r3VG8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 mlxlogscore=999 suspectscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060093
 
-On Wed, 5 Feb 2025 at 19:16, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.13 release.
-> There are 590 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 07 Feb 2025 13:43:01 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.13-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Added qcom_swrm_set_channel_map api to set the master channel mask for
+TX and RX paths based on the provided slots.
 
-Regressions on the arm64, builds failed with gcc-8 on Linux stable-rc
-6.12.13-rc1. But the gcc-13 and clang builds pass.
+Added a new field ch_mask to the qcom_swrm_port_config structure.
+This field is used to store the master channel mask, which allows more
+flexible to configure channel mask in runtime for specific active
+soundwire ports.
 
-This was also reported on Linus tree a few weeks back [1] and also seen on
-the stable-rc 6.13.2-rc1
+Modified the qcom_swrm_port_enable function to configure master
+channel mask. If the ch_mask is set to SWR_INVALID_PARAM or is zero,
+the function will use the default channel mask.
 
-Build regression: arm64, gcc-8 phy-fsl-samsung-hdmi.c __compiletime_assert_537
+Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/soundwire/qcom.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Good: v6.12.11
-Bad: 6.12.13-rc1 (v6.12.11-634-g9ca4cdc5e984)
+diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+index 0f45e3404756..295a46dc2be7 100644
+--- a/drivers/soundwire/qcom.c
++++ b/drivers/soundwire/qcom.c
+@@ -156,6 +156,7 @@ struct qcom_swrm_port_config {
+ 	u8 word_length;
+ 	u8 blk_group_count;
+ 	u8 lane_control;
++	u8 ch_mask;
+ };
+ 
+ /*
+@@ -1048,9 +1049,13 @@ static int qcom_swrm_port_enable(struct sdw_bus *bus,
+ {
+ 	u32 reg = SWRM_DP_PORT_CTRL_BANK(enable_ch->port_num, bank);
+ 	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
++	struct qcom_swrm_port_config *pcfg;
+ 	u32 val;
+ 
++	pcfg = &ctrl->pconfig[enable_ch->port_num];
+ 	ctrl->reg_read(ctrl, reg, &val);
++	if (pcfg->ch_mask != SWR_INVALID_PARAM && pcfg->ch_mask != 0)
++		enable_ch->ch_mask = pcfg->ch_mask;
+ 
+ 	if (enable_ch->enable)
+ 		val |= (enable_ch->ch_mask << SWRM_DP_PORT_CTRL_EN_CHAN_SHFT);
+@@ -1270,6 +1275,26 @@ static void *qcom_swrm_get_sdw_stream(struct snd_soc_dai *dai, int direction)
+ 	return ctrl->sruntime[dai->id];
+ }
+ 
++static int qcom_swrm_set_channel_map(struct snd_soc_dai *dai,
++				     unsigned int tx_num, const unsigned int *tx_slot,
++				     unsigned int rx_num, const unsigned int *rx_slot)
++{
++	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
++	int i;
++
++	if (tx_slot) {
++		for (i = 0; i < tx_num; i++)
++			ctrl->pconfig[i].ch_mask = tx_slot[i];
++	}
++
++	if (rx_slot) {
++		for (i = 0; i < rx_num; i++)
++			ctrl->pconfig[i].ch_mask = rx_slot[i];
++	}
++
++	return 0;
++}
++
+ static int qcom_swrm_startup(struct snd_pcm_substream *substream,
+ 			     struct snd_soc_dai *dai)
+ {
+@@ -1306,6 +1331,7 @@ static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
+ 	.shutdown = qcom_swrm_shutdown,
+ 	.set_stream = qcom_swrm_set_sdw_stream,
+ 	.get_stream = qcom_swrm_get_sdw_stream,
++	.set_channel_map = qcom_swrm_set_channel_map,
+ };
+ 
+ static const struct snd_soc_component_driver qcom_swrm_dai_component = {
+-- 
+2.34.1
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-* arm64:
-    build:
-     * gcc-8-defconfig
-     * gcc-8-defconfig-40bc7ee5
-     * gcc-8-lkftconfig-hardening
-
-## Build log
-n function 'fsl_samsung_hdmi_phy_configure_pll_lock_det.isra.10',
-    inlined from 'fsl_samsung_hdmi_phy_configure' at
-drivers/phy/freescale/phy-fsl-samsung-hdmi.c:523:2:
-include/linux/compiler_types.h:536:38: error: call to
-'__compiletime_assert_478' declared with attribute error: FIELD_PREP:
-value too large for the field
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-                                      ^
-include/linux/compiler_types.h:517:4: note: in definition of macro
-'__compiletime_assert'
-    prefix ## suffix();    \
-    ^~~~~~
-include/linux/compiler_types.h:536:2: note: in expansion of macro
-'_compiletime_assert'
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro
-'compiletime_assert'
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-include/linux/bitfield.h:68:3: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
-   ^~~~~~~~~~~~~~~~
-include/linux/bitfield.h:115:3: note: in expansion of macro '__BF_FIELD_CHECK'
-   __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-   ^~~~~~~~~~~~~~~~
-drivers/phy/freescale/phy-fsl-samsung-hdmi.c:401:9: note: in expansion
-of macro 'FIELD_PREP'
-  writeb(FIELD_PREP(REG12_CK_DIV_MASK, div), phy->regs + PHY_REG(12));
-         ^~~~~~~~~~
-make[6]: *** [scripts/Makefile.build:229:
-drivers/phy/freescale/phy-fsl-samsung-hdmi.o] Error 1
-
-
-## Source
-* kernel version: 6.12.13-rc1
-* git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git sha: 9ca4cdc5e9841a39adf2ea1fc8ae45d28b4c85ea
-* git describe: v6.12.11-634-g9ca4cdc5e984
-* project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.11-634-g9ca4cdc5e984
-
-## Build
-* build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.11-634-g9ca4cdc5e984/testrun/27199296/suite/build/test/gcc-8-defconfig/
-* build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.11-634-g9ca4cdc5e984/testrun/27199296/suite/build/test/gcc-8-defconfig/history/
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.11-634-g9ca4cdc5e984/testrun/27199296/suite/build/test/gcc-8-defconfig/
-* kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2scp7S3yK4hl95VryTZn5t3cUVh/config
-* architectures: arm64
-* toolchain version: gcc-8
-
-## Steps to reproduce
-tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
---kconfig defconfig
-
-## Links
- [1] https://lore.kernel.org/all/CA+G9fYsHGrgZsEEVvP0XMcAhLyCYnrCPgZJ1puT6cfQBCGUB9g@mail.gmail.com/
-
---
-Linaro LKFT
-https://lkft.linaro.org
