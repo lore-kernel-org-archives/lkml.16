@@ -1,76 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D339199385;
-	Thu,  6 Feb 2025 18:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED75199385
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865602; cv=none; b=FNjFceRSiH4iwWtPCSpPWlnkLClyRj7n3Bfq9z/5a1oLUH9rXRwXBMFJmsGYdU6nb6CLq6CtQJOhMGIzl0DPyaSSVLYx1DDF3AqCmkQELNcf4K8IP8euUigrqPFCwQ4ARlI3r9W83W6ScDcG8BFw8drViKr/rlYNJ1YmiIUrYLM=
+	t=1738865619; cv=none; b=ZYHbRAChj6qOx2yD7qD+QLlpVlmWETvgFzbWAVH2KamU30EWjZhiYdXno7JjdwRgCp/NZJ9I/t6s+wnn6/LRPQZGB3B35pVYTYp9NtHphJEEHGpSvcvgupfAe8S1yWEnW8kHv5kxPyMyxowOxYmMFFmCnip0ZSQmwuuw0K61hME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865602; c=relaxed/simple;
-	bh=zm/qQh7A8Swkkid0PIiYsRoSC0ki1h+Dn600rblvx7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ql5KlI9qFHl7uExrE4dE5SzruBNKGEFZmVFwPcaeDzg54KojcFl5iTPW/gisD+9PX1T8wrzbUemWC/Wh3oMVc/cUll7occFwM4gugniVXbvzWc/xCsl9GiTMekuZbjZQwTpVi6pnOw9+MxL1c/PqyR2zKbpAPRC1OYWzYOxfQP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3N7A39F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738865619; c=relaxed/simple;
+	bh=V79jeN0tsHJXSx3cEymAS1MszNtH6Y9+4E36m1Ag3NE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fozwflMlvwlFzPIJmYniaZNi12m9FiuFJCXHrm3PfSi47djjWGAgDSEV6rrRGMMgUjVQuChPIigHTsLleZZ9mXxuOEfdVOnFDrPcZGuptKMK0SQeVNPEBPLsIorit83PP1Cw1uMnk24sF5kLLyt9GBmWJjaSY+NnVeSo4y5Nggk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AaZ/UHGp; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3N7A39F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090E9C4CEDD;
-	Thu,  6 Feb 2025 18:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738865602;
-	bh=zm/qQh7A8Swkkid0PIiYsRoSC0ki1h+Dn600rblvx7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c3N7A39F+dLefEgu2q45RFYpyvOIEmAaOGNzkzVw2uKB2GRoJNsW6lRKsb0OUK+GP
-	 cN/BIpUWwabpPMBvLeSWEynr+Nf7a4eVH9CanUn+PF/+vCgKAiyGX+oKSb6+NxrRac
-	 I/VIZaQo+lCGxeEwcDNDgqocktPprxjIIRUL6Sk3rTOWgqdG5melRJHg2w9MITRFqa
-	 ebwNZ2tSCB2N/fTAmfLuOdn8yW4InGKJwcHh/VUNEWPkZZg0R4rXA7pxV3+GfHpam4
-	 bw0UL29sNEwGJDHSPN9XSBtwUhBoyaBl1Efhdppx52MiHHQ1pPPU6DKH6IPq+Kv1pH
-	 c0LNQmDU4bL9A==
-Date: Thu, 6 Feb 2025 10:13:21 -0800
-From: Kees Cook <kees@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
-	nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
-	justinstitt@google.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] alloc_tag: work around clang-14 issue with
- __builtin_object_size()
-Message-ID: <202502061011.BD9611CEA@keescook>
-References: <20250201200503.2532357-1-surenb@google.com>
- <202502051056.B910C691C@keescook>
- <jdnvctbd4kfzgjy4s4wpd24zpv66zsn3cjgnsialjbnrl3oa4e@vexb7u4ku2tr>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AaZ/UHGp"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54287a3ba3cso2053581e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:13:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738865615; x=1739470415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rsc6zr7PmrWPbYfK/47bMrwsd9aMEq1+Dk9kwGENv5o=;
+        b=AaZ/UHGpi7R63veGtDNUX/KUi0ollf5xpfU/DhTcTDQ4iA6uWb3yyrsjAeKZw/oePI
+         xW3EWZEapR+QkD+6uTztDcKl0r1rId57pmTOId9xkQ4josu68ip55NbiARgDk2UmKLHp
+         GMHC0Vpha4s2Cmfv/3po5DdsPmuc6vaN9fz7X+B5ZTLlumpRbvzEdXnE1WaQo3D9KMHk
+         ZV2vRNecSxhIAPFE/lozCh6fK+fogz5hoOktRheB90G60ojZIB34dUpqVLFPs/nKYInd
+         cT7mUM6y8dOw0CCmSxNQV9TZwTJlB9fgpCmQjV3bzXzVRXcTk2nFJ8a22fPzG90BG5Qb
+         lTZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738865615; x=1739470415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rsc6zr7PmrWPbYfK/47bMrwsd9aMEq1+Dk9kwGENv5o=;
+        b=jXke56Z6zCEWgs57zJd9Ke9dcXrjlSCLr6PjAFrbCP07gLkHxF3pUqajgtBUi/zjXn
+         iaxD5qDOxIKP0h6B8CV3MZiy8cZqdXF5UK4LFQU66aEPW3KcIAwUI0GUmcN7VJ0XytWn
+         ZOrgBHaR07SEpKqTB4QWpvro6fZY2vHYBnctvCLNy44wfz4UZMpgKGXQyYlgGx/6UEB5
+         eQ6n2KxGL/2kB/ca9YF7pBz0VRZRlshaH5yOATbsHBJVr7iAEoY8Q2JirErnDeEE8od6
+         omLmx+/03I+7Ssg5cV20FovLugwP0NNPzOK1RWK8QZXEY4+rTqQeK2P6+8LP6CuP9H1r
+         ZbEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlSefw25qYDlfbaSRnjVM8xaDVvnM51rancZ1jsa6o4GdWIUQQc6SrBFNE770VICOT7S3DXrIzjuoIN+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+tMyOLLiieBJKPqRXxu6rTZmoDqpGOOhh+AacXPdbA2fdWUtu
+	CsgjsHEHD/nMod/WYCB9GONkXwWp4KoSl/KV1xPmX5BvUsTaa1/6uEEnXXKtCxNhbRxC+2l1Zii
+	yTP2JqTeVVI/mqP1Y75leNq5uAczRKFPQ9mGQpA==
+X-Gm-Gg: ASbGnct44GRafH0KRRlF30d9xLq0JzzcSrStIiAOyguY/T1lqbZSHoFjoTc8IVjKMK+
+	OF7lbJGo4F+f/3bl7HYPYjgQwTSYl+guvIKjMe/y8um2DzpIykmrpLjONEQm9zlLju7Rq4VA=
+X-Google-Smtp-Source: AGHT+IFwrBUSdTF33fVZo5ZV4gid8WDGNMNJOaEdEoEhmoUQDAR23eXv8h1spnhBCw68+AF8aIOa5q/drMpa+oLxkek=
+X-Received: by 2002:ac2:5f66:0:b0:540:2fbb:22fe with SMTP id
+ 2adb3069b0e04-5440e6b96aemr1178814e87.26.1738865614800; Thu, 06 Feb 2025
+ 10:13:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jdnvctbd4kfzgjy4s4wpd24zpv66zsn3cjgnsialjbnrl3oa4e@vexb7u4ku2tr>
+References: <20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com>
+In-Reply-To: <20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 19:13:23 +0100
+X-Gm-Features: AWEUYZniqNW7wQtQ8_C815KDVnvw_narU0YUPqt-9SDoXe8RaCViVJAVIYjHGNM
+Message-ID: <CACRpkdb2fDukNdrzhcVi5+siY_HO=ndLBOCRH0Yxcs_bZFaaKA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] gpio: bcm-kona: Various GPIO fixups
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Markus Mayer <mmayer@broadcom.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 03:16:12PM -0500, Kent Overstreet wrote:
-> On Wed, Feb 05, 2025 at 11:18:35AM -0800, Kees Cook wrote:
-> > On Sat, Feb 01, 2025 at 12:05:03PM -0800, Suren Baghdasaryan wrote:
-> > To Kent's comment[1], I believe I was using __builtin_object_size() here
-> > because I have a knee-jerk aversion to sizeof() due to it blowing up on
-> > flexible arrays, but that's not relevant here. ARRAY_SIZE() would work,
-> > but only if type checking to "char *" succeeds, as Kent suggests.
-> 
-> Yeah, that rational for __builtin_object_size() makes sense - although
-> it's not what the gcc docs say, those talk about getting the size from
-> an attribute on the allocation function (!).
-> 
-> ARRAY_SIZE() is sizeof() underneath, just used creatively to guarantee
-> that the input is an array - although that property is probably what we
-> want here, since strtomem_pad() really only makes sense on static or
-> flex-arrays, no?
+On Thu, Feb 6, 2025 at 6:46=E2=80=AFPM Artur Weber <aweber.kernel@gmail.com=
+> wrote:
 
-Okay, here's my proposed fix, and confirmed that it solves the problem:
-https://lore.kernel.org/lkml/20250206175216.work.225-kees@kernel.org
+> Fixes two issues that were preventing GPIO from working correctly:
+>
+> - Lock/unlock functions tried to write the wrong bit to the unlock
+>   registers for GPIOs with numbers larger than 32
+>
+> - GPIOs only initialized as IRQs did not unlock the configuration
+>   registers, causing IRQ-related configuration (e.g. setting the IRQ
+>   type) to fail.
+>
+> Also includes a minor fix to add a missing newline to an error message.
+>
+> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+> (DTS not yet in mainline).
+>
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
--Kees
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
--- 
-Kees Cook
+Yours,
+Linus Walleij
