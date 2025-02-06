@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89E022F15F;
-	Thu,  6 Feb 2025 13:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CF61624F3;
+	Thu,  6 Feb 2025 13:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848610; cv=none; b=h9y77YS1ZStzmSvlo4bCX56DIJBTPQjFSGw+g0c4vOACbet6uhOGxLOWG/y/bBSv6+50WXV8Uz2bMh6VrZhk7QD7BQhEN0WKV5Mbf4LJrppuFAV2/lhAa/YZmJMgX0HnPyp0DN2Ji+sWYBe9pWE55yI6mi9ipNm5rS07Kxbx2O8=
+	t=1738848619; cv=none; b=OhgbIjJJCWa3f7TZzExgVFsTQoxDeyUdeDgfd31TW8Zz+q6oZUdIIU8wyEVWlJo7658sVO7sTtKxtrVF+YKQS/hktBu0ojvGEuS0bSP8pGZDnMb7v9BeB+iSgPXa7dnaZFwtUZXWLCxMt5XfVjIJg8QZI2PJEzs311CvPfgZPEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848610; c=relaxed/simple;
-	bh=DoJEW5UPWLB+Obb+G1lnBQtqt27Wrp5AJwpwp06AFOo=;
+	s=arc-20240116; t=1738848619; c=relaxed/simple;
+	bh=DEPWTj2lMxZNBMBbVuId7YwohjOTilwE4mRuWlbJrXA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VG1WLtqC5DgobyydKEL46jG4X3Fa3uv8T8pbHbmFRcpRJX+Bp13Rvogq0zLX7vWt46Tlt6CU/GDOwo4wK5I/WbFFxvwh+2U3OS2BpKqgp3o4yMmEPF1PCAlc8OLVGRgpcsHuIOA/3y3viNweD0rMgYjs2OQ283iqL94tXQRYoP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlLGwm05; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZjJA4jr+XA/UIa6hW8PTz42zv+nfi5nOleCefnUIeL+7OJh7OnZByfFJR8hCgscLbkjUeIaASX4rLWYX3F0eMoGcuE5EJILSeuwrOMTEe8NGnKtQ+IpZgzG5JAWoVFKqheRigex+/0VmUqebbjk9+nyxjoKvW0YJTUYSkhJS3CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHyCveIB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlLGwm05"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5DAC4CEE7;
-	Thu,  6 Feb 2025 13:30:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHyCveIB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB81C4CEE8;
+	Thu,  6 Feb 2025 13:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738848609;
-	bh=DoJEW5UPWLB+Obb+G1lnBQtqt27Wrp5AJwpwp06AFOo=;
+	s=k20201202; t=1738848618;
+	bh=DEPWTj2lMxZNBMBbVuId7YwohjOTilwE4mRuWlbJrXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UlLGwm05L5QcpmJWTDfel287vfdneKikF+X9x1PLxloCZkQFYSTdwfZk67H4CbACf
-	 SjpGYMrBglL1eCrzUUZK57n5/M23b+qmEwIJqInUyuIAYnn+TmqNQ3nPdRbyYMKuNl
-	 ZByOBYnqMEy5lY8CmeFvD9vgr6at+lROV7TfunAKx2CDVXwvh1AKBfFFfGVYMSC8vi
-	 EMegz5keLq3kHnLZZhSOtnzyesXeNk71x3PhY+aFp5TEzIu3szzKS+tzHxI8Radxu8
-	 EOITqVt3uvy9poaB8XIXos09+EVWO6TlgoFm05ynd9PhrdVKy6VE0uZZJFIrSgxsnl
-	 do126iSCoB9zQ==
+	b=JHyCveIB+H+hP369+oAVupUsNOhw1rXCFbz/HMMrekGHYAW5g4PNpWIwrA8MwexgL
+	 4yMDEsor1brMgVYnrKTNOKQMYqerjM3u2rtawVm++rzJDLZojHWhKDBkq33U5MfHSV
+	 NQtV2EFA/lMKTVnsQP2JZSAaMs3oEfA7VLfyV889coTXhhEVxMdqkij+tqxaqUj2Tc
+	 +ihizHttzw+XGMKcXveRsjk85ki9HH1SFWo0iThELJ22q8Xi9jHv9Q91sHpsMVossU
+	 ZgFgJe+G3yxv9QmNthG7QhvnBHAriJsMyUex426XIiM46CWpwr37AZ05MfQc08FbZ1
+	 R1sab0YI6csgw==
 From: Mike Rapoport <rppt@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Alexander Graf <graf@amazon.com>,
@@ -66,9 +66,9 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-doc@vger.kernel.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v4 13/14] memblock: Add KHO support for reserve_mem
-Date: Thu,  6 Feb 2025 15:27:53 +0200
-Message-ID: <20250206132754.2596694-14-rppt@kernel.org>
+Subject: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
+Date: Thu,  6 Feb 2025 15:27:54 +0200
+Message-ID: <20250206132754.2596694-15-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
 References: <20250206132754.2596694-1-rppt@kernel.org>
@@ -80,192 +80,129 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Graf <graf@amazon.com>
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Linux has recently gained support for "reserve_mem": A mechanism to
-allocate a region of memory early enough in boot that we can cross our
-fingers and hope it stays at the same location during most boots, so we
-can store for example ftrace buffers into it.
+We introduced KHO into Linux: A framework that allows Linux to pass
+metadata and memory across kexec from Linux to Linux. KHO reuses fdt
+as file format and shares a lot of the same properties of firmware-to-
+Linux boot formats: It needs a stable, documented ABI that allows for
+forward and backward compatibility as well as versioning.
 
-Thanks to KASLR, we can never be really sure that "reserve_mem"
-allocations are static across kexec. Let's teach it KHO awareness so
-that it serializes its reservations on kexec exit and deserializes them
-again on boot, preserving the exact same mapping across kexec.
+As first user of KHO, we introduced memblock which can now preserve
+memory ranges reserved with reserve_mem command line options contents
+across kexec, so you can use the post-kexec kernel to read traces from
+the pre-kexec kernel.
 
-This is an example user for KHO in the KHO patch set to ensure we have
-at least one (not very controversial) user in the tree before extending
-KHO's use to more subsystems.
+This patch adds memblock schemas similar to "device" device tree ones to
+a new kho bindings directory. This allows us to force contributors to
+document the data that moves across KHO kexecs and catch breaking change
+during review.
 
+Co-developed-by: Alexander Graf <graf@amazon.com>
 Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- mm/memblock.c | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+ .../kho/bindings/memblock/reserve_mem.yaml    | 41 ++++++++++++++++++
+ .../bindings/memblock/reserve_mem_map.yaml    | 42 +++++++++++++++++++
+ 2 files changed, 83 insertions(+)
+ create mode 100644 Documentation/kho/bindings/memblock/reserve_mem.yaml
+ create mode 100644 Documentation/kho/bindings/memblock/reserve_mem_map.yaml
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 84df96efca62..fdb08b60efc1 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -16,6 +16,9 @@
- #include <linux/kmemleak.h>
- #include <linux/seq_file.h>
- #include <linux/memblock.h>
-+#include <linux/kexec_handover.h>
-+#include <linux/kexec.h>
-+#include <linux/libfdt.h>
- 
- #include <asm/sections.h>
- #include <linux/io.h>
-@@ -2423,6 +2426,70 @@ int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *
- }
- EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
- 
-+static bool __init reserve_mem_kho_revive(const char *name, phys_addr_t size,
-+					  phys_addr_t align)
-+{
-+	const void *fdt = kho_get_fdt();
-+	const char *path = "/reserve_mem";
-+	int node, child, err;
+diff --git a/Documentation/kho/bindings/memblock/reserve_mem.yaml b/Documentation/kho/bindings/memblock/reserve_mem.yaml
+new file mode 100644
+index 000000000000..7b01791b10b3
+--- /dev/null
++++ b/Documentation/kho/bindings/memblock/reserve_mem.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
-+		return false;
++title: Memblock reserved memory
 +
-+	if (!fdt)
-+		return false;
++maintainers:
++  - Mike Rapoport <rppt@kernel.org>
 +
-+	node = fdt_path_offset(fdt, "/reserve_mem");
-+	if (node < 0)
-+		return false;
++description: |
++  Memblock can serialize its current memory reservations created with
++  reserve_mem command line option across kexec through KHO.
++  The post-KHO kernel can then consume these reservations and they are
++  guaranteed to have the same physical address.
 +
-+	err = fdt_node_check_compatible(fdt, node, "reserve_mem-v1");
-+	if (err) {
-+		pr_warn("Node '%s' has unknown compatible", path);
-+		return false;
-+	}
++properties:
++  compatible:
++    enum:
++      - reserve_mem-v1
 +
-+	fdt_for_each_subnode(child, fdt, node) {
-+		const struct kho_mem *mem;
-+		const char *child_name;
-+		int len;
++patternProperties:
++  "$[0-9a-f_]+^":
++    $ref: reserve_mem_map.yaml#
++    description: reserved memory regions
 +
-+		/* Search for old kernel's reserved_mem with the same name */
-+		child_name = fdt_get_name(fdt, child, NULL);
-+		if (strcmp(name, child_name))
-+			continue;
++required:
++  - compatible
 +
-+		err = fdt_node_check_compatible(fdt, child, "reserve_mem_map-v1");
-+		if (err) {
-+			pr_warn("Node '%s/%s' has unknown compatible", path, name);
-+			continue;
-+		}
++additionalProperties: false
 +
-+		mem = fdt_getprop(fdt, child, "mem", &len);
-+		if (!mem || len != sizeof(*mem))
-+			continue;
++examples:
++  - |
++    reserve_mem {
++      compatible = "reserve_mem-v1";
++        r1 {
++          compatible = "reserve_mem_map-v1";
++          mem = <0xc07c 0x2000000 0x01 0x00>;
++        };
++    };
+diff --git a/Documentation/kho/bindings/memblock/reserve_mem_map.yaml b/Documentation/kho/bindings/memblock/reserve_mem_map.yaml
+new file mode 100644
+index 000000000000..09001c5f2124
+--- /dev/null
++++ b/Documentation/kho/bindings/memblock/reserve_mem_map.yaml
+@@ -0,0 +1,42 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/memblock/reserve_mem_map.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		if (mem->addr & (align - 1)) {
-+			pr_warn("KHO reserved_mem '%s' has wrong alignment (0x%lx, 0x%lx)",
-+				name, (long)align, (long)mem->addr);
-+			continue;
-+		}
++title: Memblock reserved memory regions
 +
-+		if (mem->size != size) {
-+			pr_warn("KHO reserved_mem '%s' has wrong size (0x%lx != 0x%lx)",
-+				name, (long)mem->size, (long)size);
-+			continue;
-+		}
++maintainers:
++  - Mike Rapoport <rppt@kernel.org>
 +
-+		reserved_mem_add(mem->addr, mem->size, name);
-+		pr_info("Revived memory reservation '%s' from KHO", name);
++description: |
++  Memblock can serialize its current memory reservations created with
++  reserve_mem command line option across kexec through KHO.
++  This object describes each such region.
 +
-+		return true;
-+	}
++properties:
++  compatible:
++    enum:
++      - reserve_mem_map-v1
 +
-+	return false;
-+}
++  mem:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Array of { u64 phys_addr, u64 len } elements that describe a list of
++      memory ranges.
 +
- /*
-  * Parse reserve_mem=nn:align:name
-  */
-@@ -2478,6 +2545,11 @@ static int __init reserve_mem(char *p)
- 	if (reserve_mem_find_by_name(name, &start, &tmp))
- 		return -EBUSY;
- 
-+	/* Pick previous allocations up from KHO if available */
-+	if (reserve_mem_kho_revive(name, size, align))
-+		return 1;
++required:
++  - compatible
++  - mem
 +
-+	/* TODO: Allocation must be outside of scratch region */
- 	start = memblock_phys_alloc(size, align);
- 	if (!start)
- 		return -ENOMEM;
-@@ -2488,6 +2560,65 @@ static int __init reserve_mem(char *p)
- }
- __setup("reserve_mem=", reserve_mem);
- 
-+static int reserve_mem_kho_write_map(void *fdt, struct reserve_mem_table *map)
-+{
-+	int err = 0;
-+	const char compatible[] = "reserve_mem_map-v1";
-+	struct kho_mem mem = {
-+		.addr = map->start,
-+		.size = map->size,
-+	};
++additionalProperties: false
 +
-+	err |= fdt_begin_node(fdt, map->name);
-+	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-+	err |= fdt_property(fdt, "mem", &mem, sizeof(mem));
-+	err |= fdt_end_node(fdt);
-+
-+	return err;
-+}
-+
-+static int reserve_mem_kho_notifier(struct notifier_block *self,
-+				    unsigned long cmd, void *v)
-+{
-+	const char compatible[] = "reserve_mem-v1";
-+	void *fdt = v;
-+	int err = 0;
-+	int i;
-+
-+	switch (cmd) {
-+	case KEXEC_KHO_ABORT:
-+		return NOTIFY_DONE;
-+	case KEXEC_KHO_DUMP:
-+		/* Handled below */
-+		break;
-+	default:
-+		return NOTIFY_BAD;
-+	}
-+
-+	if (!reserved_mem_count)
-+		return NOTIFY_DONE;
-+
-+	err |= fdt_begin_node(fdt, "reserve_mem");
-+	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-+	for (i = 0; i < reserved_mem_count; i++)
-+		err |= reserve_mem_kho_write_map(fdt, &reserved_mem_table[i]);
-+	err |= fdt_end_node(fdt);
-+
-+	return err ? NOTIFY_BAD : NOTIFY_DONE;
-+}
-+
-+static struct notifier_block reserve_mem_kho_nb = {
-+	.notifier_call = reserve_mem_kho_notifier,
-+};
-+
-+static int __init reserve_mem_init(void)
-+{
-+	register_kho_notifier(&reserve_mem_kho_nb);
-+
-+	return 0;
-+}
-+core_initcall(reserve_mem_init);
-+
- #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
- static const char * const flagname[] = {
- 	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
++examples:
++  - |
++    reserve_mem {
++      compatible = "reserve_mem-v1";
++        r1 {
++          compatible = "reserve_mem_map-v1";
++          mem = <0xc07c 0x2000000 0x01 0x00>;
++        };
++    };
 -- 
 2.47.2
 
