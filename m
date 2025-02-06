@@ -1,141 +1,122 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F27225419;
-	Thu,  6 Feb 2025 08:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E6F225766
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738831045; cv=none; b=SzN2LwBqsFFSKTpfY2TTt1CVqw1tEmMeoBOP5ThL1SS1SxnwzYL67+4jT7UxH7hg72CI1YcIsKVKnDE8OJxMjVPR88S/+TFkHQaPUnCwhgCV/ZoK1YzEvLFREMit640jB3CyL238ElOn6SBmwGeQ2Z6YCH7QXDCgjyz9ryTrHg8=
+	t=1738831060; cv=none; b=MU4DzAdcILNAdooSKRXiFoyJxiiHm1bdR70dN6X3JLVxDCkTPtjjCNv8YTdhaFDXdvjXg3DcNoCk45VF4kwkq88LtQnjvZu58WlsmyMUmH4DBdZTCO/OOb2DObeXHVPKdp2z4QvbX1EcuwmC/jkGS1T3qpHDbCe4EM8F1T2ktyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738831045; c=relaxed/simple;
-	bh=O4Y99wLIZt5HigjK77gneneZZSdsJM7zvVgoZ8+vvJE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vqh+j8ppHydelougp+zkB9Xkqc6JVzs/fU5rqB4dIYO0ckJzGVAXCBGEroFUby93cGT9hJ4Q6iwHw4h+t3X+gczqp4yiz8eZQ9zWXCVlucqYUX5ufHqC3Zr1HSNrcNraKSTXogtfpescGdNQJLlF6z5HzBgAB8epwSt1yYNtldw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=jmMKnNXR; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1738831060; c=relaxed/simple;
+	bh=b61mwkGmKa7qLwio/HyZKSIj9qw2WfofAWA65lWGS5Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YTXzhpsbvC/eIT7fjOsRWwGUcBS9Wh7ozDMPGZflTrVYvYaHDOFAIkEcOg7DTqIVGNvtc330H4FAJ15ggte/Od6GiHccr+tmeDbfIuwN1gb7vaN5e/vi+NsDtaqEvyOs2XO56WYyQULoiFePijE+rYE5klpRtHPtXTy8eKWbXh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ivrbQ/e5; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="jmMKnNXR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738831031;
-	bh=OQ7iIR5qM+sWvITBpGMCDcVBhEoGye+nzy0tYomJPkM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=jmMKnNXRoOAA59hHuVFB06ArgotIS3jzSrhdumJ05N84iSEAxcxvxvb9CSGrcOACu
-	 eO1+5E9ZXa+YBkIA1IO6HV6E7hB6NddTDEPrIJ/gwNTuoZPmhlqFvd8HqpulgzRsis
-	 dK0vMk0DTIS4f27s3ehXyHr60FmFRNGabeyNSvGU=
-X-QQ-mid: bizesmtpip2t1738831027tx2q5lh
-X-QQ-Originating-IP: z49N5IvJbdUnc3tmQDxAkyLkZWVnWMWOUMvl/ipEl/Y=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 06 Feb 2025 16:37:05 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11712325770140657364
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org
-Cc: ardb@kernel.org,
-	chenhuacai@kernel.org,
-	chenhuacai@loongson.cn,
-	kernel@xen0n.name,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	ndesaulniers@google.com,
-	nicolas@fjasle.eu,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where possible
-Date: Thu,  6 Feb 2025 16:37:02 +0800
-Message-ID: <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <2024120635-wham-campsite-b62b@gregkh>
-References: <2024120635-wham-campsite-b62b@gregkh>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ivrbQ/e5"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dabb11eaaso279428f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 00:37:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738831055; x=1739435855; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6cGRhVGZQ/G+JhIHlnkJGdUnMYCYKnsKq6xNumw1bc8=;
+        b=ivrbQ/e5ShXADrc6AAc8BkSjaLLbr6Ez1K0/SiFxe5Z6vEmVZLSqv01sdDzBkhYCDP
+         5iAHuGn+VJpKEuGcgQpAHa67XiGjykeI6YboOUtUAXJpyjDn7GmB3eT2qf933RT77Wrr
+         EHMmIyOInibBXdCfQK+QSTtEIU0RChvXxmII7ZCa3QUfKBEy8EW4luHK2GzlXbJ03uy5
+         XRdmm15AIm6VrL4ahemVS+TCsu/AWSPo83lL0fneINAJjwne0916U7Wo5SpZjjEI4Od9
+         xYaAzvAXDYfzB+14gh68FQ4/YPKcyQxPS+UFArANUlgmtexYm3YX8+ji3ankmvk3cxDG
+         FV+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738831055; x=1739435855;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6cGRhVGZQ/G+JhIHlnkJGdUnMYCYKnsKq6xNumw1bc8=;
+        b=wK1HxS9amRe6p9kuGZvBwH2WhUqIDQnxD9VLw1n+bffyXPKA+IJ06NiIrdRTgfcFgF
+         x5yu4UJX9YD7y1uVOJGkpTtjSpPHYY4SjaaBh1KMR+Sv7AHEjpBIWlcoArOi4Ipl92X/
+         gllqIUtseEscBDhlbAlqpRHhFX6AJDaHxQksGyOrcV7xX7SVtfPW0Xu6rzyNj6Lm9cM2
+         mRMz9qnKAF9oXDqK4SBAqzEsNj1v/b/7VJ49PA5UQBtouPHxULNR0BPTN8MCQh/kthZU
+         sdJE+HYdsYed2d8Pm/N20Dem7TE4gj16OTbcFM8ryJ7mxTmgyDL9oHB2UL5QKhI8e+j5
+         dkWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPphjDwt/X+zINqX4zqVTmMPT8ODc7HPTz4cd102P7/DqxHy1q6nX9eKempZ+UsjoUrOL5H4E1etUXAKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwujGU+2gW+VpfUJ6uJA5Xeb8R+cdhp0IPwdA27wSOOF19vfJPJ
+	WHYclE2NiInpfMj+Z3zhqnWTVhH5o+FfMqSyzxTvdUHdoYiBMN60OLuI9E7NZLn6Ku/EIs3X4pk
+	o
+X-Gm-Gg: ASbGncuHUcQnzYDtaKX6wr7uLrtqNSonqJT+PA0pHhsgXcUTxQ1y8Jr9XNC1QYcC29j
+	LvDX4TLe6XjlDQmcSyNBSFMah2QYhEhmKSxOf1S254/+/oadz+mlfrUDeqmwb5cgV5eaSH2KVQR
+	W45UMTp0KrStGOtLDOYaQEIxAvGzqPn/f3SCibGAw6vIdzzBz2GMIEWlXbC5bhH7FVdfLOTZDxN
+	9YM9Wv+5aNsrAECQan2si5R90eXKGm3C7JRvIMDL6LKf05otSz+VQ3VSaFu3OGc4+6KMzcPWNY9
+	PvZWN9hPRo6g10Yqm3TYht/ry+QUgpi3kyOB6OqvrRmaKjEj79iY8S0XViCFQtO90Zbsx9w=
+X-Google-Smtp-Source: AGHT+IFEG8qEl6QSztrpodBzSY7VlToA8lHWWeoXxXNowmla1vTj/PrZ5CLSg0ktKg2rUsp7PG4yPg==
+X-Received: by 2002:a5d:6d09:0:b0:38a:88b8:97a9 with SMTP id ffacd0b85a97d-38db4861134mr4288492f8f.2.1738831055250;
+        Thu, 06 Feb 2025 00:37:35 -0800 (PST)
+Received: from [127.0.1.1] (host-95-244-234-244.retail.telecomitalia.it. [95.244.234.244])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da9648dsm11948095e9.7.2025.02.06.00.37.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 00:37:34 -0800 (PST)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Date: Thu, 06 Feb 2025 09:36:14 +0100
+Subject: [PATCH] iio: dac: adi-axi-dac: drop io_mode check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MFdGPHhuqhNowwLw5bWiHJVG1q7MoivVF5XyHlraL0CkG5N2UT9WvFe9
-	x6ajWDz9a3fCpMD21FEyiyus+jndNsTM426Xk5ZkVcOdevx39A8LbIw5fSoF+zkoQhC6N3E
-	7NlAziJuQpxxmxmSzzhsyuo/pQwFM725v1+AXGyUoWuWyNTCvZ9kRQ0VNQGzU8YYHf9kQ1d
-	46RtccoBpXq8oLqtA4UIE+h48+IJniaKlE7oJahQCvIx6ucR4gm907+jqOf4NvWIs7woKZV
-	8P29eXlw6rjp4VTz1rjhv9aDS70OinV8QpIItxQuvIGGLFtVHw+VKCoNmIko0rSRRlamSro
-	pIbVfrcSFs5SrPPRU4YA9TPEv5ei+noLb3noO5jPpXjYK8i8Z8slX9Br1hVXMEsn6AwNNve
-	0P4bmXkbnCQD6saDaFgrIqnPwUqa7qmaycKUf8qdG29YikqNjdAMi8gFKCDYGQ9QRXzbtmg
-	+a0avU4N7WpdIU0jgWYERjGQzpQhieKuQOgQAUMoar83ykeEsD++Sz9hrlISYLwMTg/+Wka
-	aiMWLCyHvAzK+SpVeD243PPjiIuoSMkfDfGh7MgBz+p0YPrh8zra0ldmesViq68K/xrVa6d
-	RXr2eJFVxD7ryb7Y2NDCtICzfvmWGRoxFRdfN2wUlYNRokj1W1h6v1UdAD/CL4RtjaFh8+H
-	jdw6Ykk3wFIYjZ7SErUqU28Jwc5Lzk8uu/miJmQurXbDgiw5xSffisOC4wyDN0gYz+vrYfT
-	8I8ypD1LoBpj7TgwWHawSp/V7sII+426GdGBRVmeyrS3kme3W93Wlbm0e8UQXjDG+Aaqj1i
-	JTXM8tRCvv3JnasM5qAJEcrdVvrbrBRAPKWrQk8eUcAGb6hxoWjYuUnJRXzUviU0c7bcwCZ
-	P10bGDd2lQSQ+i1wsD4ulfn0k7r6BCxlBaMjK4AzP8Z7RFtfXvCf8m7b+tXGtnmSUFj4IWf
-	Mjj2ltiNaao/AqVT9JBmpboYTd/7Sfavan197A9VJlAYJ+Fja7XBRD4E+G/kfYhAro2IG57
-	j0coZpBw==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-wip-bl-ad3552r-axi-v0-iio-testing-carlos-v1-1-863a4b2af4ea@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAH10pGcC/x3NQQrCQAxA0auUrA3EyFTwKuIincYaKDMlKbVQe
+ ncHl2/z/wGhbhrw6A5w3SyslobrpYP8kTIp2tgMTJyIqcevLTjMKOMtJXaU3XAjNKu4aqxWJsz
+ icw2kO2mWoZfEAi23uL5t/6+er/P8AWZr9qR6AAAA
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Nuno Sa <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.1
 
-Hi, Greg,
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-It's rather unfortunate that currently, almost all Linux distributions
-supporting LoongArch are using LTS kernels version v6.6 or older, such as
-openEuler and deepin. [1][2]
+Drop mode check, producing the following robot test warning:
 
-If this bugfix isn't merged into linux-stable, then every single distro
-kernel team will have to waste time fixing the same darn bug over and
-over, even though it's already fixed in later kernels.
+smatch warnings:
+drivers/iio/dac/adi-axi-dac.c:731 axi_dac_bus_set_io_mode()
+  warn: always true condition '(mode >= 0) => (0-u32max >= 0)'
 
-This would really make LTS look like it's failing to serve its intended
-purpose. And I'm sure all of us do not want to see something so terrible
-happen.
+The range check results not useful since these are the only
+plausible modes for enum ad3552r_io_mode.
 
-On Fri, Dec 6, 2024 at 9:04 PM Greg Kroah-Hartman wrote:
-> Odd, why doesn't this affect other arches as well using new binutils?  I
-> hate to have to backport all of this just for one arch, as that feels
-> odd.
+Fixes: 493122c53af1 ("iio: dac: adi-axi-dac: add bus mode setup")
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+ drivers/iio/dac/adi-axi-dac.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Could you help me understand why you expressed that you "hate" to have
-to backport something for only one arch?
-Given that we've historically done quite a bit of similar backporting for
-architectures such as arm, powerpc, and x86...It's not exactly unprecedented.
-I just want to grasp the rationale, as it all seems perfectly justified
-and necessary.
+diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
+index ac4c96c4ccf3..bcaf365feef4 100644
+--- a/drivers/iio/dac/adi-axi-dac.c
++++ b/drivers/iio/dac/adi-axi-dac.c
+@@ -728,9 +728,6 @@ static int axi_dac_bus_set_io_mode(struct iio_backend *back,
+ 	struct axi_dac_state *st = iio_backend_get_priv(back);
+ 	int ival, ret;
+ 
+-	if (!(mode >= AD3552R_IO_MODE_SPI && mode <= AD3552R_IO_MODE_QSPI))
+-		return -EINVAL;
+-
+ 	guard(mutex)(&st->lock);
+ 
+ 	ret = regmap_update_bits(st->regmap, AXI_DAC_CUSTOM_CTRL_REG,
 
-Moreover, with all the active and strict code reviews by all developers,
-such occurrences are not frequent on LoongArch. You could be not exactly
-"always" backporting something like this just for LoongArch, so perhaps
-that might make you and your colleagues feel a little less "hate" :-)
+---
+base-commit: c667ed738d7d1a01e9b946ef47cae113b0a05bee
+change-id: 20250206-wip-bl-ad3552r-axi-v0-iio-testing-carlos-070ecab6a52a
 
-As for your questions on the root cause of the issue and the effectiveness
-of this fix, I reckon Xi Ruoyao's explanation and Ard Biesheuvel's
-supplementary points have already provided ample details. [3][4][5]
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
 
-If, after your feedback, you still have any lingering doubts regarding the
-issue itself or the LoongArch architecture, I believe that Xi Ruoyao,
-Ard Biesheuvel, and Huacai Chen would all be more than willing to elaborate
-further.
-
-I'm bringing this up because we've encountered concrete issues in the
-process of maintaining distributions. Furthermore, as an upstream resource,
-linux-stable can help us more effectively drive forward community
-development efforts.
-Plus, we realize this benefits all Linux community developers just the same.
-
-Hoping you could spare a moment from your busy schedule to take another look
-at this patch series and perhaps reconsider the LTS inclusion of this bugfix.
-
-[1]. https://gitee.com/openeuler/kernel/blob/openEuler-25.03/Makefile#L3
-[2]. https://github.com/deepin-community/kernel/blob/linux-6.6.y/Makefile#L3
-[3]. https://lore.kernel.org/all/ccb1fa9034b177042db8fcbe7a95a2a5b466dc30.camel@xry111.site/
-[4]. https://lore.kernel.org/all/CAMj1kXEV+HC+2HMLhDaLfAufQLrXRs2J7akMNr1mjejDYc7kdw@mail.gmail.com/#t
-[5]. https://lore.kernel.org/all/c9a43e5da01ee2215393c0f3c50956171fe660ab.camel@xry111.site/
-
-Best Regards,
---
-WangYuli
