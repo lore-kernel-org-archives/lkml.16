@@ -1,118 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B501ACECD;
-	Thu,  6 Feb 2025 18:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB211A3176
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866446; cv=none; b=nXBpCmoSaUX3wk+GAl6c+RgW8LcRuAQ/xcDCsio8r+s9AppbyPxqbAz5oIl5qu9EXteIR2sY+ghQ2a7bPRJ0RUVX6XeNEu5WkPRHyNV5z1chE8yp4O09IyZJSCuR2kX2+Oz94E5VsGsZQn2Yy6f9sIjPAnlijhIbowMTEfng2gQ=
+	t=1738866480; cv=none; b=l7IM4A99o5JU3w9n5YIIHUs3WsdoA4b7uE/Cwk5gOsbOwHdkhhKirZuDC5DGaj6BF1EAruvaXv7ItzmGPWfItGSOpF/U/tKUWE2XMBVMT2j7qN2VsOXsF5o8G8hShdPUwgLZjvd2oSNPUgydeSpQVdzC2UiLyaFf0Neostq5f8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866446; c=relaxed/simple;
-	bh=IJL45hof8EZ76ZqW9H/9ssbUlriH90R7kETPe0qwoQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O5CE2ve93KeKDuYqqGPm2cJ4XFaqCtX+Q05xK+Q6R3vmmLVmbidirQVWffjq2UJLwneEKImSlnQzM46HNCfdI6ktz4qtILB6VHLOZdNq+SE1BmibPpW62alxWcWELrwZGm10GCDXTQ6oALOKGsKuZoHg1UxWNrcVroAWvP/BqZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFGuxbDO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738866480; c=relaxed/simple;
+	bh=HaIUoxKn8228AO66C/8oEOQ+lXf1OcY1mhvY9KmkDhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qty/o98+UHyhS4SDndGTAiFTAdz6Gd5BtOF2yJ0ebUsrhHtQBg1bBwrf9Txovqr62pcWLyO4FKTVGu8XABc3FimNM7YqohPDEJNX4SfFMSMiAZWPxiL0AM8p/4T79BUnynp4Nn7+vMnPtI8p10JgCDxt1jD0GBToHnIPPhEASls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YT7ngVGM; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFGuxbDO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C45CBC4CEDD;
-	Thu,  6 Feb 2025 18:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738866446;
-	bh=IJL45hof8EZ76ZqW9H/9ssbUlriH90R7kETPe0qwoQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RFGuxbDOBC88PRxt7HKAdOjq3A0i/bQ8+C5XbqjQB39QEv99MNFUclW2JE/Zthi++
-	 RmSkqwcMRCd4EacMzjQ7dY2MfrO7Ug21geRoyBE8dMtA0i4MCNzqkwi1MklY+at55d
-	 Cfue6yNhEVHtPtNFBcPsIgdk/lW5wYL+P9W360ClAPhRpde4/L6hfW1koeu/eYyhvS
-	 pjPAYcrX6ayQMQM6hDqaHbkR1XXbMcz8NyUS62uPQGoB/JTpRL2qQRLm2cdbc48rFr
-	 0+u62LdUEVbGsFdGmIg+pcoZQB/3yzATztpHkdJB3eFaxEIe1zjijZ5PmdZhCSnGgf
-	 cnod05VfazxDA==
-Date: Thu, 6 Feb 2025 18:27:21 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2] dt-bindings: mmc: mmc-slot: make compatible
- property optional
-Message-ID: <20250206-drainer-vastly-34a3c738e2bf@spud>
-References: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YT7ngVGM"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5440efe97baso1318076e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:27:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1738866476; x=1739471276; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RPs9xgQT5YZwaoCiFmXzU/52Mvrqkv8+Jf32eJpRgCs=;
+        b=YT7ngVGMZPjIAgKfjEtXIdQTmGQThQCrwY0zIOIYW7whCF0j3r8o/AnNPVWBD7Hyur
+         AWv1NgimBxjrxgUYdEzVmZuzED81qzLPzqYRoeCy5m2Q4W5elEmTFs8c/OCM6UeSUYBC
+         CnPpO4vkyp74TtzwlyebYmtg+0CYwZfZz+Boc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738866476; x=1739471276;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RPs9xgQT5YZwaoCiFmXzU/52Mvrqkv8+Jf32eJpRgCs=;
+        b=s0OztQYya6IgCg1Ct9i3XDAV1pchYr9jGHQiWtYq8MC0oNHppkCXRZ6uI1Tqumzv0H
+         AMWz92UvJGrn0c+CPfmRYCxTpuXHhCywL0TWuQ/ibf9QlW4CPj7TC14T6wmTuGg53/7v
+         wjc3Jk9DqePmUO5sr1VNVp9HZWAH0o1NFwsnBOOLTq/TtZN3c9lqIe5SDqVyM428ZrnM
+         tAY5IkK6aKcmT+F2fN0lO+krgfNNMEmeSC6MqAPhFqDwOgyMQTQNCR5Yhh/VlZi7LZ3b
+         YgW8XDq8CPWE65VS8bDSstE3azsmFknIZL+7Ra5xKzALYsF3BIqSBmSWSAxp+YU1zNqc
+         j4/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUpd1yXMvzwL/M0wDv/RVAFN86/+YvQBsOVoRdSfjVr8vmRVj16WnSWdJWMIvcUBoFKIhmpSsfzdUutF6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+2u0usYrBQE8Epma75hgia5Gen3uaUwy5W9Fp3zIV3qy0wwDr
+	8h5okA7SYCJxI7GoxlmTD7HGhxzJJU4Kw5yBPR8vNFAMPHhOznw74OvLHPTG2qtKIJgtU0AGe+1
+	7/k96siZmJpAKzsKTAi2dZj9l629l0xqQfcmK
+X-Gm-Gg: ASbGnct/VFTMi+NP4ZXk9m43JZgfZURLnyCZSRGXkYDO9tUStZEf/0YsUN5Q0DBN7U4
+	6t847s92UZggeE/zLHyctvU7iEXTEkrS9/ZrXrgb+jN6FkmJflGvQBLnVJRwBsyQD2sHjc3b20w
+	==
+X-Google-Smtp-Source: AGHT+IHIwsA+HwY8ulNZvcSdBQxkzlbi4o6HBlkMOETgMCnwsDth9saknsyrOUq1Z6JJqEXzkC2yxek+n9BEtEH4kSo=
+X-Received: by 2002:a05:6512:b20:b0:543:9a5c:1906 with SMTP id
+ 2adb3069b0e04-54405a23143mr2890762e87.17.1738866475817; Thu, 06 Feb 2025
+ 10:27:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gSRDlsoD+Bdf79l9"
-Content-Disposition: inline
-In-Reply-To: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
+References: <20250205191213.29202-2-james.quinlan@broadcom.com> <20250206170417.GA989059@bhelgaas>
+In-Reply-To: <20250206170417.GA989059@bhelgaas>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Thu, 6 Feb 2025 13:27:44 -0500
+X-Gm-Features: AWEUYZk-ZLpZaP6sZppE42gBAP8u6jWeeP564q0Ft05oiQwjuzu8e_bosC0DpdE
+Message-ID: <CA+-6iNwY-Fc-nfawc_EtDRBvYht_491v80THW=4F-iY7Nqa81w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] PCI: brcmstb: Refactor max speed limit functionality
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000a08177062d7d661b"
 
-
---gSRDlsoD+Bdf79l9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--000000000000a08177062d7d661b
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 09:18:40AM +0530, Dharma Balasubiramani wrote:
-> Remove the compatible property from the list of required properties and
-> mark it as optional.
->=20
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
-> Changes in v2:
-> - Instead of moving the compatible string to the other binding, just make=
- it
->   optional (remove from required list).
-> - Link to v1: https://lore.kernel.org/r/20241219-mmc-slot-v1-1-dfc747a3d3=
-fb@microchip.com
+On Thu, Feb 6, 2025 at 12:04=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Wed, Feb 05, 2025 at 02:12:01PM -0500, Jim Quinlan wrote:
+> > Make changes to the code that limits the PCIe max speed.
+> >
+> > (1) Do the changes before link-up, not after.  We do not want
+> >     to temporarily rise to a higher speed than desired.
+>
+> This is a functional change that should be split into its own patch.
+> That will also make it obvious that this is not simple refactoring as
+> the subject line advertises.
+ack
+>
+> > (2) Use constants from pci_reg.h when possible
+> > (3) Use uXX_replace_bits(...) for setting a register field.
+>
+> > (4) Use the internal link capabilities register for writing
+> >     the max speed, not the official config space register
+> >     where the speed field is RO.  Updating this field is
+> >     not necessary to limit the speed so this mistake was
+> >     harmless.
+>
+> Also a bug fix (though harmless in this case) that deserves to be
+> split out so the distinction between the internal and the architected
+> paths to the register is highlighted and may help prevent the same
+> mistake in the future.
+ack
+>
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index 546056f7f0d3..f8fc3d620ee2 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -47,6 +47,7 @@
+> >
+> >  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
+> >  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
+> > +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_SPEED_MASK       0=
+xf
+>
+> If the format of this internal register is different, of course we
+> need a new #define for this.  But if this is just a different path to
+> LNKCAP, and both paths read the same bits in the same format, I don't
+> see the point of a new #define.
+ack
+>
+> >  #define PCIE_RC_CFG_PRIV1_ROOT_CAP                   0x4f8
+> >  #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK   0xf8
+> > @@ -413,12 +414,12 @@ static int brcm_pcie_set_ssc(struct brcm_pcie *pc=
+ie)
+> >  static void brcm_pcie_set_gen(struct brcm_pcie *pcie, int gen)
+> >  {
+> >       u16 lnkctl2 =3D readw(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_L=
+NKCTL2);
+> > -     u32 lnkcap =3D readl(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LN=
+KCAP);
+> > +     u32 lnkcap =3D readl(pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILI=
+TY);
+> >
+> > -     lnkcap =3D (lnkcap & ~PCI_EXP_LNKCAP_SLS) | gen;
+> > -     writel(lnkcap, pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
+> > +     u32p_replace_bits(&lnkcap, gen, PCIE_RC_CFG_PRIV1_LINK_CAPABILITY=
+_MAX_LINK_SPEED_MASK);
+> > +     writel(lnkcap, pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> >
+> > -     lnkctl2 =3D (lnkctl2 & ~0xf) | gen;
+> > +     u16p_replace_bits(&lnkctl2, gen, PCI_EXP_LNKCTL2_TLS);
+>
+>
+> OK.  I am not really a fan of the uXX_replace_bits() thing because
+> it's not widely used (I found 341 instances tree-wide, compared to
+> 14000+ for FIELD_PREP()), grep can't find the definition easily, and
+> stylistically it doesn't fit with GENMASK(), FIELD_PREP(), etc.
+>
+> But it's already used throughout brcmstb.c, so we should be
+> consistent.
 
-Why is this RFC? I don't see any complaints from Rob's bot, so I am
-assuming that this actually works and the error you mentioned in the
-previously version has been resolved?
+And here I thought that uXX_replace_bits()  was the up-and-coming
+solution to be used :-)
 
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-slot.yaml | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml b/Docume=
-ntation/devicetree/bindings/mmc/mmc-slot.yaml
-> index 1f0667828063..ca3d0114bfc6 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
-> @@ -29,7 +29,6 @@ properties:
->      maxItems: 1
-> =20
->  required:
-> -  - compatible
->    - reg
-> =20
->  unevaluatedProperties: false
->=20
-> ---
-> base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
-> change-id: 20241219-mmc-slot-0574889daea3
->=20
-> Best regards,
-> --=20
-> Dharma Balasubiramani <dharma.b@microchip.com>
->=20
+Regards,
+Jim Quinlan
+Broadcom STB/CM
 
---gSRDlsoD+Bdf79l9
-Content-Type: application/pgp-signature; name="signature.asc"
+--000000000000a08177062d7d661b
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T/CQAKCRB4tDGHoIJi
-0heMAP9RIv6EPmFdFdH9C4KniHclVT6q7+ipdJy9MNtonSEGeAEAuKgviFIr+311
-YAtp4FSk/X/xf6nVb9pNP7sDITwXVgc=
-=vdJI
------END PGP SIGNATURE-----
-
---gSRDlsoD+Bdf79l9--
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCANktrH1vDidhFBB/uzZZo/sajJ5dAg
+TVfuzucy0mSZSjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAy
+MDYxODI3NTZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAj1cEfUeU2VC4QQUIb81R06nzsZgB5SsGR7sfsCVtiD/ZFoSV
+57gvTRaeG1407mgBMX568JFURoVFBZYTVQtkZw35TG0p0ASu9siVoPmGQ29KmDi/mZ7CorAlZb+P
+YHD1pw8OR8YW4d5ovoJkC7tz7Kw0mQ40FbgqUaNyy2aVK8yZua+/XMTVvCDqs/p+ze4R3GklfCsf
+rNmxKIt2vSZTF9Us7s/MXLjFfXavYFMpGRV2Jm2DrBQ5SYl2LxoGdAIHjgtaAekMJujtBxIjjIeR
+psWD0wrh+v76j3Louv/H3SDJsGBfrZzSS0B5skNdSzH8bbtDznLtfOHtOWgNwc/4Hg==
+--000000000000a08177062d7d661b--
