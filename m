@@ -1,129 +1,127 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC80B1624C2;
-	Thu,  6 Feb 2025 15:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479D71624C2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856278; cv=none; b=FLSkmOMA+6Ao8tQ3WF9/HqBARsFRQtaaY+9LKveik2xjKBh+krVZbjEm81raEDB4E8R1MCfiFniLE2wIBHH5p0ZYAkQOsOk/5djX6uKO1Kece0GS9MV5rfq/OBvb1KfJGXUxtq5f1bHZd2jtNXfxjXD/R42LkmDEIe1cIuXX9vM=
+	t=1738856323; cv=none; b=DVhGrE5GY+cZ0q36IURaO69fz/NomXIZUJ8OGPjx3TQ6Vgk3Nmhy1QQUlEmIgQ93biDjCeDI8Cj6EqhZBFvrsCgD69ufIvFcDH4JCGvy6SWaeKJoV+fhTJLOJiQSSfhKhY1y2r2O0rFMAMlGIWxUc4fCy7EGDNFj+d738WeZBRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856278; c=relaxed/simple;
-	bh=ZlzDWmhB7UIdqvn9ZA3N4/Cp//44ZgbIgvl9u6GBTSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hPVuupL5TWDSgocid7ZYElyJtA0dZlaDRt+7WATS7gbI1pMycLvu4UjX/f8rB6OoSOI6xMgqvu7VLERbVkd/Gj99VdLPMRSmtVZU1qWSRz8GSF8Yw8iJVJB5E0LoaceLOjhsLHWlJKLP0ur9p9D0rpFuRowrYoJv+WUmC6CZG/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mv0SQezA; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738856323; c=relaxed/simple;
+	bh=tUwyzTk3jgRlV2xPYe/NPEnqn1CPmxBKNXk4cnhiJgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=RqC/05f+As+lYgeJc3+AcQ20Qg5P7E1LXMvMUdCkWQaN+TN5a6GkGr78zEky33D60prZU+lO+BxTH0W/ww6gZ5GAMsdMCQOH3l37SaLhvun2kSV7iEMBUqNqlsCkYo8/d+fKX2FB51c2/GBkBJS2b5veHPN5W1y9sz1mi4E+auw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RrKd9AFO; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv0SQezA"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso1077534f8f.2;
-        Thu, 06 Feb 2025 07:37:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738856275; x=1739461075; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jEzCsc/q3svFkwQlOP5jPW9KfsGihf2HptC6MSm8Zw8=;
-        b=Mv0SQezAljSzDTXu4u4cmxroalFl3GXAAeFKfyIqPNn3mkkcd7yMKylhFVr6wrjfWT
-         E58bPFl6ifHLPsXQ0c4u5lPMhRRguPNwLgZe4HWSBJlbvzTQDzp+f7jGaVw6zannFijT
-         wzv0bkTUeQdV4NNa+X5XAn4Cn4F2hWyHRLwTpVes1Z64jzSLVpAZ+gN/wO414n/PgeH+
-         P3jjxjDKPpqfy8xulX1wDg2e+/8U8r/3iMgv6Lw3UfUv9TRyOWpKkSXfMJ5IeMl/6SKp
-         7hjhvrOxHV9yrUflLqGlvYVWA+LvVJinSxFNIXOPoR30UuWqkVkBXibW9lYrYAwHU2hd
-         kB2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738856275; x=1739461075;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jEzCsc/q3svFkwQlOP5jPW9KfsGihf2HptC6MSm8Zw8=;
-        b=Chkkk30bssbXQmW5UUAUMzdaFYnO8jxypap17a5TtxooL0sSHztm/iEKGXnGoLsAZt
-         491GfV+kcRFnxLlfPgqDI5TnpjJvrns+6DtQpyN23Kr3oTnCxkudZna++IIzcjC1QZED
-         vjagv6gIJrTt3TE0No5tUzvcU8bhCLzuSrm8jlQJgZsepWLm3/xkfUnYRouaIZCX6HjR
-         QfxbDRfbGhUYvlMA65v2J8zIEfmcqwH5cXT3xy4BqErfyPIEm+nAdaalMUe7yjYV3L5z
-         yKEzqG2SzHcq5aAQmMjCbxlg0F5ZlJh4aHGNovkrgX1iqAeisAD4kYJum5QlSFgFk20m
-         U0HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSHbG/BK83yFyWr3SzEfD+JwMjSiuYIsLSFp8ltTvJ//mof/gUr3Ib3ifkhjqu9d/4+lLV+UybodQj8bwx@vger.kernel.org, AJvYcCVykrwdB5bxB24Fi6XzBVqq+0EKFgHtOulxvResFtNYrIYbfgf9I4Xd8+P1WMxDnMmceX7tQhdqTzLi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy49IuxvybEbpFxozifQI5SBlRnNiSaK0i+432BMEoiZfAViiJC
-	r0P8CKC+Lmfe64nNgnwai8OedX58+d1UXwT0r0LAwP2OERSlBfla
-X-Gm-Gg: ASbGnctYTWROFHO13x9avT7bA4uGrOxaj6ZPyzUbG7+n3ehcbAAcJo3R3SaFKCoN1V1
-	5Ri6j4+Al35zLXiZI/P3vtLmMaonKjihtJ/sofU9XdDKPPr04FqAYuHMOuDrrclRYrxdfEmFHxm
-	qTq3Kbjs1FOUG3YwBGKsLZ9ClRgANICr0zUkPAiRDdZcAPSNy4am7boXJT+ipBy8AZ8n+3Ww9DW
-	L1moaDTn59FKYSEWGvB04Jdl1HX6HTFMYl7D0ELXNyVbzhwWGIJF4tKOYyB4Z3KiM+MGtxIn0zw
-	lMF5UnJT4xTQ1avpfILbZcVaRa7gVMHiTUAPNimdmuE8nVTRM/w1mltugzsE
-X-Google-Smtp-Source: AGHT+IHXKfLaVddaZ9De9vD/kKyUtDaf5GMgLO3NiS4kYqU17vHau1zvLc+wrE4ONfty4SCGtsNyqw==
-X-Received: by 2002:a05:6000:144f:b0:38a:88ac:ed14 with SMTP id ffacd0b85a97d-38db489322dmr7061870f8f.19.1738856274668;
-        Thu, 06 Feb 2025 07:37:54 -0800 (PST)
-Received: from [192.168.50.244] (83.8.206.8.ipv4.supernova.orange.pl. [83.8.206.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f84383sm116408566b.50.2025.02.06.07.37.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 07:37:54 -0800 (PST)
-Message-ID: <981d534a-a439-40c2-bd24-2e518846580e@gmail.com>
-Date: Thu, 6 Feb 2025 16:37:52 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RrKd9AFO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738856321; x=1770392321;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=tUwyzTk3jgRlV2xPYe/NPEnqn1CPmxBKNXk4cnhiJgI=;
+  b=RrKd9AFOLR/y+0s4XTeBhhi8NDaYwndYjO1/KTpcu26BHFHWiuj0lIcs
+   wZsddGOzzBKSFzODNbnJnO+92CCt9vGrE8oPw2SOiLQjCYyve4aRCvsJP
+   wgsgfiQLcGa3pYPjW2r/hlajxj06HeKzfTjPlxv/a+jZr45D7kPztXIle
+   5/vjE8V6Re7MpxKrtPr5r3Vz60DkH7OiB2CKQpuDeUnWSdLE5hFF+rKed
+   S4WqaMUrMR1qsSJnVS6xaCA7i1HUMjsJfPLRjqkAh7qDQMLnAqxcL046W
+   znykBAA9SFFaCjCHq4HfG2RUW9RmC+J2fKsEON0OS8rltLY/aE+7htRx7
+   g==;
+X-CSE-ConnectionGUID: xM2S5nCjRVOnOIYGE/KMXw==
+X-CSE-MsgGUID: EyL3/qwRSpSUIC8tf26Y6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="27067677"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="27067677"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:38:40 -0800
+X-CSE-ConnectionGUID: YDZxocitQoiwTcWnq8yilA==
+X-CSE-MsgGUID: 0sQzWjdCQVCg9IPpo3bS1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111433156"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 06 Feb 2025 07:38:39 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tg3xd-000x2g-15;
+	Thu, 06 Feb 2025 15:38:37 +0000
+Date: Thu, 6 Feb 2025 23:37:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: ld.lld: error: vmlinux.a(kernel/panic.o):(function panic:
+ .text.unlikely.+0x28): relocation R_RISCV_HI20 out of range: 533364 is not
+ in [-524288, 524287]; references 'panic_on_warn'
+Message-ID: <202502062306.dwioNmYP-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Markus Mayer
- <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
- Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
- <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
-Content-Language: en-US
-From: Artur Weber <aweber.kernel@gmail.com>
-In-Reply-To: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6.02.2025 10:34, Linus Walleij wrote:
-> Hi Artur,
-> 
-> On Thu, Jan 30, 2025 at 6:10 PM Artur Weber <aweber.kernel@gmail.com> wrote:
-> 
->> Fixes two issues that were preventing GPIO from working correctly:
->>
->> - Lock/unlock functions tried to write the wrong bit to the unlock
->>    registers for GPIOs with numbers larger than 32
->>
->> - GPIOs only initialized as IRQs did not unlock the configuration
->>    registers, causing IRQ-related configuration (e.g. setting the IRQ
->>    type) to fail.
->>
->> Also includes a minor fix to add a missing newline to an error message.
->>
->> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
->> (DTS not yet in mainline).
->>
->> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> 
-> Looks good to me, do you want to resend the patches picking up the
-> Acks or do you want me to apply as-is?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   92514ef226f511f2ca1fb1b8752966097518edc0
+commit: a07eb4f67ed085f32002a1af2b6073546d67de3f spi: omap2-mcspi: Correctly handle devm_clk_get_optional() errors
+date:   2 weeks ago
+config: riscv-randconfig-r111-20250205 (https://download.01.org/0day-ci/archive/20250206/202502062306.dwioNmYP-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce: (https://download.01.org/0day-ci/archive/20250206/202502062306.dwioNmYP-lkp@intel.com/reproduce)
 
-I'll send a v2 in a second with the style fixes suggested by Markus[1].
-After that, it should be good to go.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502062306.dwioNmYP-lkp@intel.com/
 
-> Should this go in as urgent fixes (-rcN) or as nonurgent?
-> 
-> The DTS not being mainline suggests nonurgent but are there
-> other systems suffering?
+All errors (new ones prefixed by >>):
 
-Non-urgent is fine. AFAICT the only upstream-supported Broadcom Kona
-devices at the moment are old Broadcom dev boards; while they
-technically are also affected by the bug, I doubt anyone's actively
-using them. As for the devices I'm testing with, there's still quite
-a few fixups I plan to make before I consider them ready to upstream.
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x28): relocation R_RISCV_HI20 out of range: 533364 is not in [-524288, 524287]; references 'panic_on_warn'
+   >>> referenced by panic.c:288 (kernel/panic.c:288)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x36): relocation R_RISCV_HI20 out of range: 533364 is not in [-524288, 524287]; references 'crash_kexec_post_notifiers'
+   >>> referenced by panic.c:296 (kernel/panic.c:296)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x118): relocation R_RISCV_HI20 out of range: 533364 is not in [-524288, 524287]; references 'panic_triggering_all_cpu_backtrace'
+   >>> referenced by panic.c:0 (kernel/panic.c:0)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x124): relocation R_RISCV_HI20 out of range: 531810 is not in [-524288, 524287]; references 'panic_notifier_list'
+   >>> referenced by panic.c:0 (kernel/panic.c:0)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x12c): relocation R_RISCV_HI20 out of range: 533369 is not in [-524288, 524287]; references 'panic.buf'
+   >>> referenced by panic.c:0 (kernel/panic.c:0)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x14c): relocation R_RISCV_HI20 out of range: 533364 is not in [-524288, 524287]; references 'panic_print'
+   >>> referenced by panic.c:0 (kernel/panic.c:0)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x40): relocation R_RISCV_HI20 out of range: 533340 is not in [-524288, 524287]; references '.LCPI6_0'
+   >>> referenced by panic.c:296 (kernel/panic.c:296)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0x6a): relocation R_RISCV_HI20 out of range: 533340 is not in [-524288, 524287]; references 'panic_cpu'
+   >>> referenced by panic.c:294 (kernel/panic.c:294)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0xd2): relocation R_RISCV_HI20 out of range: 531140 is not in [-524288, 524287]; references '.L.str.4'
+   >>> referenced by panic.c:296 (kernel/panic.c:296)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0xe0): relocation R_RISCV_HI20 out of range: 533340 is not in [-524288, 524287]; references 'tainted_mask'
+   >>> referenced by panic.c:303 (kernel/panic.c:303)
+   >>> defined in vmlinux.a(kernel/panic.o)
+--
+>> ld.lld: error: vmlinux.a(kernel/panic.o):(function panic: .text.unlikely.+0xee): relocation R_RISCV_HI20 out of range: 533364 is not in [-524288, 524287]; references 'oops_in_progress'
+   >>> referenced by panic.c:303 (kernel/panic.c:303)
+   >>> defined in vmlinux.a(kernel/printk/printk.o)
 
-Best regards
-Artur
-
-[1] https://lore.kernel.org/lkml/CAGt4E5sqd_Aojk+boD5K5EiRfOsiU+jYY5EV0DP6TFut291HnQ@mail.gmail.com/
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
