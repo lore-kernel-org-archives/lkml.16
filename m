@@ -1,126 +1,216 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459AC22E3EC;
-	Thu,  6 Feb 2025 11:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E1F22DF99
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839977; cv=none; b=Th3jzp6gOLXyk94blQcXil2YFp1iMnGH+82cdT9qxWk3p1uucw8q0As1SuXh3wYdyHMDscRd+lt0AffrMkM5HvWO7ZkYF0w+ZkDhY1VphhPu10qcq0Vj57xVySo07g8eGzzqcmch3cKAOOBd6Bgq9S4xe9c0h7GrJ+MmBvdZ51M=
+	t=1738839975; cv=none; b=GntZIPLhdiMoLs8FHJb7/tZ4d6WuMi0lT/Zyl30AWvakjeNiqbks+Zu6EWZ3Dd9axmeH2sVb6b7TI/la/Rqhlj7BUHGYTDqpAtP7dPiu5FTsVerQxPLRq4wy2bY9qjU2uDU9rtnjNFTR9kQTHT/LdJNb58UyX6Cw4N5zeP5o36Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839977; c=relaxed/simple;
-	bh=146+Fd7GMEHjIB2x3rHlp8/1LduCZ88lYbm9gyDIpfE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JxvVMOeq6+IALUnMtISrkls1onsPw4oiZG/9d3IZCsApTyh35UrHuGHsw/ceSEuAGnQpZQRpKXSXXIT2uE8X2qARlu7VKS2bO2fbBoXUNMv7UnMlsLKgPaFXbCoSBZ1K1+81iH2pKygKfFLgo8IcOCFLfD0jTpLMVvob0mJ8Ds8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dcedee4f7bso1188600a12.0;
-        Thu, 06 Feb 2025 03:06:14 -0800 (PST)
+	s=arc-20240116; t=1738839975; c=relaxed/simple;
+	bh=uSTA4hN/FvLzpYyGHIJeFJQdyDYFG6AA9fA4OzHjNUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=amIq1LZnNlm/OUO4JKdaoLJDbUBWGlwhHjouZDUN6rHWtYRkNYm+e/vUmEbT5JPNTySbCiWaibbfQvIqpAnxufzFaV7/S0J8b4SBP3kRMUPZ1E80e+8yPUQb4NqCp9Y74bYS4nN46JBxlQrBq69O3W72VKCSFLRiT1yM6kAAtBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dDKHOZlW; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dDKHOZlW"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab6f636d821so145453566b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:06:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738839971; x=1739444771; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mXE47cCWyK4lBa3ePxOl4Tt4nUECCOpvFmKs5qWQUGE=;
+        b=dDKHOZlWs0MRD4cnIqPct58ikZBfEQNe/4gqQ8eKQDNd/mnV3aXMDX5UtWzdyH1gmj
+         55h63014ib5rYUNtAEmiY8awhsEQPIazNm1KufZpJmLILV/HYtmBTpnNmxybSjtveAo7
+         IpXBMwIAQKhHD3Wgp/uWVE58/NaaS4FcheTvsaT0IbeeperJDa4DyzM82cevYZoGaudK
+         PXcKgJImpVsMsO9DGREmQ0Srw74TtUbwJaDT57O1ygUaJ1TlZm/q73Ce6XN3z56aX8vk
+         w0UQH51aBDzEi5mj81HabwgCEhEQFfJTKQEUwhUXhpk1wcUiPLnfMtv6m8+7HDAW8hgH
+         8b4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738839973; x=1739444773;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v60yw++ddCI3iUtxUgKCBy+AvjYXItQZQ0qYmmzPQnw=;
-        b=P4i8CDxsbtUCnaF+yiPtG3hBdpsOcjaxkpvRrTzd42I00jNkpmo4Hi4Mx9Yo27IgY0
-         u2YfOfJvdvOBAkOPwZGZA8Zoj5YvUYapABBLdkHrRXAhoWrGTuqmf2753X9Src1oJMSj
-         fYWFjTq5iSfVvnbzyg1KVP0MsDser62MaW5kxH0Jlh4qNN80GMZSzkHKO/VcsGMwzk9S
-         0ocDjWdMBJ2PoV9BPMLBm1/No467s9Ci18XrizZmx5fixPwGtJCaWUw4UbbOO02i5oDt
-         toZQVXQmLubCF+kbQRSMjNIvxHVKs0c3G5tVLsIhbeGurC4wFXCDCnyH8fpCE1DHRkdu
-         EB1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVWSIwiLYpvHQoe2iq3s7KdSe2q4eoC6R09rqt+AuDN0C0iZoF4FG9X975/gUAQnWdFBZ9QL6JHvzk=@vger.kernel.org, AJvYcCVgeIbarB4ETZZX4YwOcSE5S2LDxA88Uy4ErObOtwLwyAhLujlwPuEJA1/D2tIzTkHxWenxJmhU4wYyeyIYg81g@vger.kernel.org, AJvYcCWABgtDlFmvPgdAoXYDht7JOdR2EY5J909qXJTkqCxvcNdVhfYPHYNeDIBl4tvy2cTSeykN3bjxuao1i+MM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8p2vK0SZ8tRbQ2ncD4Lp3Dw5scXOWKcl8wbhEHZNAkhF7OF5c
-	FLYPD76eLrpaXXzjQSbQwaWKUvv8TkjuEpnnG0XbAD2+P3IPKpkk
-X-Gm-Gg: ASbGnctJxaLTb3h20ZqXLdj90etI/rI2gdHs7wLR9CFsSWuT2Lqymw7flLVmSjIOc97
-	40rNvO4qBVao+ES8mM9hGOtIXmx3RzxyWXQE3DUIFE8thOdMoAjr8Pu/ugDSazkoXoNvxx24Ugr
-	eAtDC/kO0UD9fDVpNbxOvlRSJk9ZQc3Ub3Fjic8AMx/7C0R5mmbeNI7cRysozwvJsZLOenxFSTF
-	9lu/w42fUjQfimwFSRwxCVnVvg4+OELSYkEobn+wY4X9sEe3XA3Xy2iigGSjIlxIjUCgPOmcu8+
-	OQyfTg==
-X-Google-Smtp-Source: AGHT+IG+p+1DmFFdJVRkJTROJXqXPU7O8SQKva/DWcOTuD4kF/FInXV/1u4PhkS+FyAj2Vl47BaWEw==
-X-Received: by 2002:a05:6402:388c:b0:5d9:8877:895a with SMTP id 4fb4d7f45d1cf-5dcdb732cd0mr7584773a12.17.1738839973305;
-        Thu, 06 Feb 2025 03:06:13 -0800 (PST)
-Received: from localhost ([2a03:2880:30ff:4::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b990b6sm696427a12.48.2025.02.06.03.06.12
+        d=1e100.net; s=20230601; t=1738839971; x=1739444771;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mXE47cCWyK4lBa3ePxOl4Tt4nUECCOpvFmKs5qWQUGE=;
+        b=NM9GD40uHNizPbttw6OrgCugX3IFp25SWNqOqqdEtwc8AZcPABgFhAkTj+Rr4p9SSs
+         Ho5C32a6NuFr5hDvc3GsP6Isa1/Hg+YfhqNThWyE7XXqtirmNKM7ntdMqMjC7l7aF9d6
+         AIRb401w5o3BNVANksHqpkJuifHa0ATx8kPgLyvLQ2mkeJ+2s4bQ63tFhnBaIQcKH9sS
+         5+t5COq5ZlNQeqge75cnBxWoy4jbbrQLbSnQZf/S4kP0lZnkoYRJATUa4L1aVom0gHNN
+         EQr1DH97qcWdScBh9ZQ2683w2M3vi4ug2kh+vZPUpchZLzsjUHbKgprAb+eETjC+tIHN
+         taeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWh8x6x7vhTQEB9Cuqdtot3aCzIDi8n5Ov9KSRWSXc3Hgy81WzNTpJfPY8VzbipoTvGiUlhNHaSKVVUhp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBD3RwEXk5TIrYFe6GM11oWMyYNuXF4VMb/nj0p0RiGZYMkqmF
+	kT/xAZuCZe4cpofD/Z4zRUg6MFj6COpDCDBbcD8mAbN1VluTdSAf18d+jmOHxXA=
+X-Gm-Gg: ASbGnctNGWPziJ9DsP53K90+kjOExqGiBWu4FJG4Bm71WIDxas4cGpv2m9sAzjXL/5C
+	OUMfl8WDd41TTiGxpjYbL0H5JROIvDe/SgHQ4dkqhY4YgirDDiUigwa5a3gPffkquMVD51vl012
+	8ZFlyPNMp5xODMJfWxrK87ghAo1Fs8oSmMZsJe0dnDu+aVoLlGJS8xgbzxCBX+a9HKXqFARiR4H
+	ct4b/RCLxibWzf4aBzAjUPgtAw9b6Qb+2tZLHlSS2HNEcxOnJ3HOAXlJU1RHVJgQ0MfyVkD3S6S
+	xnj0DoPuDQLC0aptaA==
+X-Google-Smtp-Source: AGHT+IHhw5tungS1WCfZTr9LIjTXHvl2yvbkxn0pkpTScc4ZbgAQ2fJW6rcViTk9NZQWzIkYKE9Ysw==
+X-Received: by 2002:a17:907:9728:b0:aa6:7933:8b26 with SMTP id a640c23a62f3a-ab75e213013mr687209966b.9.1738839970699;
+        Thu, 06 Feb 2025 03:06:10 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e7139sm82774866b.102.2025.02.06.03.06.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 03:06:12 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 06 Feb 2025 03:05:56 -0800
-Subject: [PATCH net-next v5 5/8] netconsole: Include sysdata in extradata
- entry count
+        Thu, 06 Feb 2025 03:06:10 -0800 (PST)
+Date: Thu, 6 Feb 2025 12:06:08 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: John Ogness <john.ogness@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, rostedt@goodmis.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+Message-ID: <Z6SXoLnUw6D0xEqh@pathway.suse.cz>
+References: <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
+ <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+ <84pljwi2w0.fsf@jogness.linutronix.de>
+ <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
+ <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
+ <84ed0c1401.fsf@jogness.linutronix.de>
+ <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
+ <841pwc11ae.fsf@jogness.linutronix.de>
+ <84y0ykyqf6.fsf@jogness.linutronix.de>
+ <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-netcon_cpu-v5-5-859b23cc3826@debian.org>
-References: <20250206-netcon_cpu-v5-0-859b23cc3826@debian.org>
-In-Reply-To: <20250206-netcon_cpu-v5-0-859b23cc3826@debian.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- rdunlap@infradead.org, Breno Leitao <leitao@debian.org>, 
- kernel-team@meta.com
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1363; i=leitao@debian.org;
- h=from:subject:message-id; bh=146+Fd7GMEHjIB2x3rHlp8/1LduCZ88lYbm9gyDIpfE=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnpJeanF6eo7+Yu1shhA89YfURblQQdN0terIOc
- aWg6lvKukCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6SXmgAKCRA1o5Of/Hh3
- bY/SD/0TrSjAMOxvmMn+XwfcZfbi59Hy7YGIfYsbKgPZ1iuBAePpFATHQgBZKlTjxz8KnVfuXaS
- NtXZG4mK3XStf3Nm1m3wAjd4s8hti4X7WKm51zVr7UYmIPGjnV9eleaqkj0bmirQZPrpGaNSUck
- oUC38DVhDL0m6uAmGQQxcdAE+Lr5n5GQ9khjDh8/H2VXAjSJsa1FjNNK2E8wF+Ni6uNh2h8+blx
- DWthQJTqQvmOf8RfEf0Wetk9ZagcdYGRgV1eeJ0ZCsg2TyGbCMo60wk0ark4dsXpmfATHpHRZzw
- 6jqtmVD7C4RsOMswXMXqO19ryfxokVksbZqsDWSMaWowzLR9tBH1652XEe7PV2LMZphzrJMdWEm
- Z8HGEQ8UHroaiAszJ00YeCLhFXPP+EP2Y0I2YBzBCfkWm24s60ucx2E5FZk3hD7VT6rC5vDOMrm
- RhAqw31LPIxS3lcDrl6C1YjD57aQ+eLkqSJnpSIV9WZEmbfUqRj2zGWusteoPhFv9u/Uq6d5gqn
- bo6oAmlYNEsmIsOsQ/V03Qgi/mCAk9e9ws1tUDb+x21MWGRVWXZuw/lqUR0YctOQfRLEc3759CR
- AupCNQMPUg0YNE3Pz+f8tYO5Sl5gd2xPMKpRfntR6c+l2F8afyve6eDK6NR52zO4AO5dGsffGZQ
- vr2Vq9XSO/VPE+w==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
 
-Modify count_extradata_entries() to include sysdata fields when
-calculating the total number of extradata entries. This change ensures
-that the sysdata feature, specifically the CPU number field, is
-correctly counted against the MAX_EXTRADATA_ITEMS limit.
+On Wed 2025-02-05 15:50:14, Paul E. McKenney wrote:
+> On Wed, Feb 05, 2025 at 11:37:25PM +0106, John Ogness wrote:
+> > On 2025-02-05, John Ogness <john.ogness@linutronix.de> wrote:
+> > >> OK, so I don't need to add "if (IS_ENABLED(CONFIG_PREEMPT_RT))" to guard
+> > >> it, then?
+> > >
+> > > For !CONFIG_PREEMPT_RT, if there are legacy consoles registered,
+> > > pr_flush() will additionally perform a blocking lock on the
+> > > console_lock.
+> > 
+> > Sorry, I was just thinking about the flushing component of
+> > pr_flush(). Later in the function it takes the console_lock even for
+> > CONFIG_PREEMPT_RT. So please do _not_ have a guard.
 
-The modification adds a simple check for the CPU_NR flag in the
-sysdata_fields, incrementing the entry count accordingly.
+It should be possible to avoid this console_lock() when only NBCON
+consoles are registered. We take it in pr_flush() for reading con->seq
+and potential race with register_console(). But it can be handled
+another way, for example, by restarting the cycle when non-NBCON
+console suddenly appears.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/netconsole.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+But it might be done later. We do not have NBCON consoles at the
+moment so the console_lock() is needed anyway.
 
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index 710330ae8ee462083dbb4aa889cb0ba0cb5a7475..50739c7dbfb6ad5b1a65ef33325cf4dd6ed02031 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -694,7 +694,15 @@ static ssize_t remote_ip_store(struct config_item *item, const char *buf,
-  */
- static size_t count_extradata_entries(struct netconsole_target *nt)
- {
--	return list_count_nodes(&nt->userdata_group.cg_children);
-+	size_t entries;
-+
-+	/* Userdata entries */
-+	entries = list_count_nodes(&nt->userdata_group.cg_children);
-+	/* Plus sysdata entries */
-+	if (nt->sysdata_fields & CPU_NR)
-+		entries += 1;
-+
-+	return entries;
- }
- 
- static ssize_t remote_mac_store(struct config_item *item, const char *buf,
+> > pr_flush() should never hang on the console_lock during shutdown, but if
+> > does, that is something that will need to be debugged and fixed.
+> > 
+> > @pmladek: Looking forward to reading your input on this.
 
--- 
-2.43.5
+My only concern is that kernel_power_off() is called in many
+code paths so it is not easy to review all scenarios.
 
+But I haven't found any code path where it would be an obvious problem.
+Especially, it seems that it is _not_ called in panic situations.
+
+Also kernel_power_off() calls syscore_shutdown() which takes
+syscore_ops_lock mutex. So that is must be called only in
+a schedulable context even before this patch.
+
+Summary: I do not see any obvious problem in the end.
+	 Except, for some small details, see below.
+
+> Here is an updated commit, hopefully applying your feedback correctly.
+> 
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> commit 35679c18b062368855e183ee6712ca5c16145d8c
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Wed Feb 5 12:27:23 2025 -0800
+> 
+>     printk: Flush console log from kernel_power_off()
+>     
+>     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
+>     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
+>     Therefore, make pr_flush() public and invoke it after then last print
+>     in kernel_power_off().
+>     
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
+>  extern bool nbcon_device_try_acquire(struct console *con);
+>  extern void nbcon_device_release(struct console *con);
+>  void nbcon_atomic_flush_unsafe(void);
+> +bool pr_flush(int timeout_ms, bool reset_on_progress);
+>  #else
+>  static inline __printf(1, 0)
+>  int vprintk(const char *s, va_list args)
+> @@ -315,6 +316,11 @@ static inline void nbcon_atomic_flush_unsafe(void)
+>  {
+>  }
+>  
+> +static bool pr_flush(int timeout_ms, bool reset_on_progress)
+
+There is missing "inline":
+
+static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
+
+
+Otherwise, I get
+
+In file included from ./include/asm-generic/bug.h:22,
+                 from ./arch/x86/include/asm/bug.h:99,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/page-flags.h:10,
+                 from kernel/bounds.c:10:
+./include/linux/printk.h:319:13: warning: ‘pr_flush’ defined but not used [-Wunused-function]
+
+> +{
+> +	return true;
+> +}
+> +
+>  #endif
+>  
+>  bool this_cpu_in_panic(void);
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -704,6 +704,7 @@ void kernel_power_off(void)
+>  	migrate_to_reboot_cpu();
+>  	syscore_shutdown();
+>  	pr_emerg("Power down\n");
+> +	pr_flush(1000, 1);
+
+This should be pr_flush(1000, true) as suggested by Sebastian.
+
+>  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+>  	machine_power_off();
+>  }
+
+With the two changes:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Paul, I assume that you will pass this via the RCU tree together with
+the other changes. Or would you prefer to route this particular
+change via printk tree? Both ways are fine to me.
+
+Best Regards,
+Petr
