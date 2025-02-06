@@ -1,94 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE79C1F60A;
-	Thu,  6 Feb 2025 10:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5948D22759D;
+	Thu,  6 Feb 2025 10:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839070; cv=none; b=ne7/GBkaIA7TG7lHsiWBX7y1oUq4mwhRmbnUocm8xygCVNjs4PSWTP92jgkJ9zX/eyCCWEouIqzcaaFHKa1o8rQw3ep1L2aBkCpRUX9Zf2e24YhRgefsROC2hJ5hwxuHBsfuW5W2Og3v6drvQKrpzJZYgTo9zoTIYw+z/i4L5/E=
+	t=1738839256; cv=none; b=CNRtJsEsSBngTjL4j53ssBpj3viNQCuBpLxxdMAbn4u33PAq/jFT+fbiua7B9uXsoEBtG7voZ8xd9yZIB4nzraEJ9EHFOcM+bDjPqEceFlDhz5xW7u+/IVglAOK44xxkfTzAh2uqNGxrJS0BEYmbSSOtNysLxSvzCrojkFXh8qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839070; c=relaxed/simple;
-	bh=BAc/DzaeLywP5/G7nSsTgMS/1oP0U4tjnQ8klgx+HLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U19E+iGfQl0IaTp4EspgeJAAOKUtIAOp/3YBMvojbmwloggZDqBfb7LKOyq8vq0R4soGuSrlVh2ugKaJlMsokfgt/iIM2xkl9QIkoRJNerZUpWoE+Cbix7TuPLG/K3CXU0F10Oi1aP/4UP5w016eOmEmPonh4TYj7H8G6/mFhpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdGg+q3X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdGg+q3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4F4C4CEDD;
-	Thu,  6 Feb 2025 10:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738839069;
-	bh=BAc/DzaeLywP5/G7nSsTgMS/1oP0U4tjnQ8klgx+HLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KdGg+q3XY0ZrBG5LQlQYmL7B3IpBT4V4qnZ7GHv5wEEx3b7Dr57ydkhDbFb5j3mwX
-	 tg6DhXoiHPjM0CDTr4gCjDdh+sIAUu9zc5Nb8aUXhAbZAAWpxn1f4d1qUkv05VWWUn
-	 MneCpfPJ3pH1tjVEASi7nDe6fkdz9Obkl4r9LiIsI7tfP7Z+NQevktY8zUigTG59uK
-	 KZMsb5jop8HVBJLbc90MuAsOc/c7QzCIkoJgEw/kYWfbjiPVyvo8rXLZsoPh16TSnO
-	 uX8D2NeK/SC0qI1AYpMoWVcpAfQgz+V9T1c2h+ONYXCc8e49/Ju7BrjtZHhbNX0Xsv
-	 mObGH9QVWJ9vw==
-Date: Thu, 6 Feb 2025 10:51:01 +0000
-From: Will Deacon <will@kernel.org>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 11/21] RISC-V: perf: Restructure the SBI PMU code
-Message-ID: <20250206105100.GA2971@willie-the-truck>
-References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
- <20250205-counter_delegation-v4-11-835cfa88e3b1@rivosinc.com>
+	s=arc-20240116; t=1738839256; c=relaxed/simple;
+	bh=JsxwIqP/N+Apmy+QdOX3v7imX3A6loX8bvM9cfenOMA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ooFVZ+WNe7vt4GHFedRtu+WZNVkWbpovS+EdoJ7ugHZcOpAn97AFWEIHcb4xXjvOksZ2vl3tHYfbV7IjtDNnunRRtwFcSDC78wI9rPp/mhqSPs11n4XYmWWZy4xW+YO0cN5jblKVHixCtcHbSMAWUlc5X3StHEOOu35cWoh32bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YpYnc26v2z67LmL;
+	Thu,  6 Feb 2025 18:51:48 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5680D140525;
+	Thu,  6 Feb 2025 18:54:05 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Feb
+ 2025 11:54:04 +0100
+Date: Thu, 6 Feb 2025 10:54:03 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Gregory Price <gourry@gourry.net>
+CC: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Terry
+ Bowman" <terry.bowman@amd.com>
+Subject: Re: [PATCH v6 2/6] efi/cper, cxl: Make definitions and structures
+ global
+Message-ID: <20250206105403.00007062@huawei.com>
+In-Reply-To: <Z6O5JqL30lFr4S8Q@gourry-fedora-PF4VCD3F>
+References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20250123084421.127697-3-Smita.KoralahalliChannabasappa@amd.com>
+	<Z6O5JqL30lFr4S8Q@gourry-fedora-PF4VCD3F>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205-counter_delegation-v4-11-835cfa88e3b1@rivosinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Feb 05, 2025 at 11:23:16PM -0800, Atish Patra wrote:
-> With Ssccfg/Smcdeleg, we no longer need SBI PMU extension to program/
-> access hpmcounter/events. However, we do need it for firmware counters.
-> Rename the driver and its related code to represent generic name
-> that will handle both sbi and ISA mechanism for hpmcounter related
-> operations. Take this opportunity to update the Kconfig names to
-> match the new driver name closely.
+On Wed, 5 Feb 2025 14:16:54 -0500
+Gregory Price <gourry@gourry.net> wrote:
+
+> On Thu, Jan 23, 2025 at 08:44:17AM +0000, Smita Koralahalli wrote:
+> > In preparation to add tracepoint support, move protocol error UUID
+> > definition to a common location, Also, make struct CXL RAS capability,
+> > cxl_cper_sec_prot_err and CPER validation flags global for use across
+> > different modules.
+> > 
+> > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>  
 > 
-> No functional change intended.
+> Reveiwed-by: Gregory Price <gourry@gourry.net>
+
+Reviewed...
+
+If Dave picks this up will need to tweak that.
 > 
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  MAINTAINERS                                       |   4 +-
->  arch/riscv/include/asm/kvm_vcpu_pmu.h             |   4 +-
->  arch/riscv/include/asm/kvm_vcpu_sbi.h             |   2 +-
->  arch/riscv/kvm/Makefile                           |   4 +-
->  arch/riscv/kvm/vcpu_sbi.c                         |   2 +-
->  drivers/perf/Kconfig                              |  16 +-
->  drivers/perf/Makefile                             |   4 +-
->  drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}  |   0
->  drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} | 214 +++++++++++++---------
 
-This seems... gratuitous? It feels like renaming the file could be a pain
-for managing backports and renaming the driver might cause some headaches
-in userspace.
-
-What do you gain from such an invasive change?
-
-Will
