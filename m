@@ -1,95 +1,124 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0B2237713;
-	Thu,  6 Feb 2025 22:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D02722FF5D;
+	Thu,  6 Feb 2025 22:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738882148; cv=none; b=nvuUPrTB2yjaAcbH7C+BIbOTNBtX+DesF6WyTULyQyYU5qLUC/6nA6QOjqAMQZV9KEwfwk8dSddYIWQehN/9knajOIbjBkDqMVGEZlk8AGiL4gvnH0nEfdfiyQRyfMWLocDq3CFPLNe1N2D3g04sBqqoeP9dBZx7tfEvIh6ezJI=
+	t=1738882185; cv=none; b=mM10qHw1ArCs8R5ue6YgvbjNw3fb6ECcvVUWKb21huBpFfPPOb1nsfgOyfTjL97er5HiyT2MgGNnrDtyz51n/k4UoavC/9RAmcycJ01SXI76oY7Ro9hWwJhOgCS4dAFDlc6/0ZHCT5V5Bcq/XLtj3yrbZJQxNGn1uBXBnnQHxgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738882148; c=relaxed/simple;
-	bh=QnQFc5ZW75ig736Zq4+Ro2NikvR2vGrF6BVl9X/+chs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWqmFl095VlHJFUL7wxYtjkRKWs+2jjGAdGMvq/WsuVux+L2N7OUyxsi533eKctKSf57ReCZYfk3BHNS7fw7iwNtUcB3ema9zJpOHIv2X1rWZwF2Fqv5fjY0WPv2PP2g37DCFRLYyZWxLE7jt+M5igyRXDUE2yLPc+bDsVsMrfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=juRHjv2n; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738882185; c=relaxed/simple;
+	bh=q83gbOaTr0eMhOhyC3YcY1GYoT9LITTfvFLoRShhPEg=;
+	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l5C6hBvRHkq21PUDzfAvQUn0cn19KmxpJicFxUS1kOCYX5CH7lG85ZUmPwwvsfGnj/A0ft5SVm/fiMu+XH7HwNgIxjZU8B3CaBvWV/bnrKysIsLieWvKOR0UTFC+8zGh73HCg2Lkau2l9m5hr9lMEeIkVT7tdPtVTRx2tqdrV/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+ej2t1l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="juRHjv2n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=XOSx2sfWIkI9mBDKykXkoY9x3FYft266g8j9/dZB04w=; b=juRHjv2n+fKYuD6WHRHIhhjvlh
-	Vtjwc9Xzmg7ts41hb/43PvfAfwxPd9MLLH/y29BoqJABpBBgu22W//cuSVwMjd2uxaAP2r23YSybs
-	v/04cy12RHHAmaMg3Q9oLy6gSYR1UdA3DKKT5UbSKLYry/46OQfOKlvTLQEujH8VaXTA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tgAfS-00Bemr-0z; Thu, 06 Feb 2025 23:48:18 +0100
-Date: Thu, 6 Feb 2025 23:48:18 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v7 3/7] arch: x86: add IPC mailbox accessor
- function and add SoC register access
-Message-ID: <9f6f009d-a2c0-4a6c-b9df-4045f767f8ab@lunn.ch>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
- <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+ej2t1l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B21C4CEDD;
+	Thu,  6 Feb 2025 22:49:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738882184;
+	bh=q83gbOaTr0eMhOhyC3YcY1GYoT9LITTfvFLoRShhPEg=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=L+ej2t1lZULCcS0yfvXcZV7yoX22fH8kVQZCHeAZpFKbW1BNDUahohF/UzC1bUEmU
+	 H1yCmkrozEJvW5JNNTL7kSfOwtp7Nb6U8QCMs/NgxJHc5y3rima9yu0Ke5hziGeH5a
+	 T1cr7qNS2PwglQvvsrsDoX3UGjtAiQzA6MUZfI07YCj6it4zzNRkk2ycKZ47FVWZ40
+	 hPCZcbqVTGYdIUuudRtsnKio7OTFHPx2ZydfAD/1c0UHNmaqO46aRECuNoufU3v1vg
+	 qT3dV2fZMAnIiJn5GtAYP4smwi6bLpBO4eUcl6C9t1UxJ06fm6mT9wG2lN/jc2/9RS
+	 d45N90PGXLhZw==
+Date: Thu, 06 Feb 2025 14:49:44 -0800
+Subject: [PATCH 56/56] xfs/libxfs: replace kmalloc() and memcpy() with
+ kmemdup()
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: djwong@kernel.org, aalbersh@kernel.org
+Cc: cem@kernel.org, chandanbabu@kernel.org, dchinner@redhat.com,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mtodorovac69@gmail.com, cem@kernel.org, hch@lst.de, linux-xfs@vger.kernel.org
+Message-ID: <173888087646.2739176.5488711241017629414.stgit@frogsfrogsfrogs>
+In-Reply-To: <173888086703.2739176.18069262351115926535.stgit@frogsfrogsfrogs>
+References: <173888086703.2739176.18069262351115926535.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 08:46:24AM -0800, Dave Hansen wrote:
-> On 2/6/25 05:18, Choong Yong Liang wrote:
-> > 
-> > - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
-> > - Add support to use IPC command allows host to access SoC registers 
-> > through PMC firmware that are otherwise inaccessible to the host due
-> > to security policies.
-> 
-> I'm not quite parsing that second bullet as a complete sentence.
-> 
-> But that sounds scary! Why is the fact that they are "otherwise
-> inaccessible" relevant here?
+From: Mirsad Todorovac <mtodorovac69@gmail.com>
 
-And i wounder what other interesting things can be accessed in this
-indirect manor, which the security policy would not otherwise allow.
+Source kernel commit: 9d9b72472631262b35157f1a650f066c0e11c2bb
 
-Somebody is going to have fun here. Or is already have fun here.
+The source static analysis tool gave the following advice:
 
-	 Andrew
+./fs/xfs/libxfs/xfs_dir2.c:382:15-22: WARNING opportunity for kmemdup
+
+→ 382         args->value = kmalloc(len,
+383                          GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_RETRY_MAYFAIL);
+384         if (!args->value)
+385                 return -ENOMEM;
+386
+→ 387         memcpy(args->value, name, len);
+388         args->valuelen = len;
+389         return -EEXIST;
+
+Replacing kmalloc() + memcpy() with kmemdump() doesn't change semantics.
+Original code works without fault, so this is not a bug fix but proposed improvement.
+
+Link: https://lwn.net/Articles/198928/
+Fixes: 94a69db2367ef ("xfs: use __GFP_NOLOCKDEP instead of GFP_NOFS")
+Fixes: 384f3ced07efd ("[XFS] Return case-insensitive match for dentry cache")
+Fixes: 2451337dd0439 ("xfs: global error sign conversion")
+Cc: Carlos Maiolino <cem@kernel.org>
+Cc: Darrick J. Wong <djwong@kernel.org>
+Cc: Chandan Babu R <chandanbabu@kernel.org>
+Cc: Dave Chinner <dchinner@redhat.com>
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Signed-off-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+Signed-off-by: Carlos Maiolino <cem@kernel.org>
+---
+ include/kmem.h    |    9 +++++++++
+ libxfs/xfs_dir2.c |    3 +--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+
+diff --git a/include/kmem.h b/include/kmem.h
+index 16a7957f1acee3..66f8b1fbea8fdf 100644
+--- a/include/kmem.h
++++ b/include/kmem.h
+@@ -79,4 +79,13 @@ static inline void kfree_rcu_mightsleep(const void *ptr)
+ __attribute__((format(printf,2,3)))
+ char *kasprintf(gfp_t gfp, const char *fmt, ...);
+ 
++static inline void *kmemdup(const void *src, size_t len, gfp_t gfp)
++{
++	void *p = kmalloc(len, gfp);
++
++	if (p)
++		memcpy(p, src, len);
++	return p;
++}
++
+ #endif
+diff --git a/libxfs/xfs_dir2.c b/libxfs/xfs_dir2.c
+index 29e64603d4ae82..1285019b674423 100644
+--- a/libxfs/xfs_dir2.c
++++ b/libxfs/xfs_dir2.c
+@@ -378,12 +378,11 @@ xfs_dir_cilookup_result(
+ 					!(args->op_flags & XFS_DA_OP_CILOOKUP))
+ 		return -EEXIST;
+ 
+-	args->value = kmalloc(len,
++	args->value = kmemdup(name, len,
+ 			GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_RETRY_MAYFAIL);
+ 	if (!args->value)
+ 		return -ENOMEM;
+ 
+-	memcpy(args->value, name, len);
+ 	args->valuelen = len;
+ 	return -EEXIST;
+ }
+
