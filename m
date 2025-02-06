@@ -1,152 +1,167 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8EF235363
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFAE1E5B67
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861256; cv=none; b=fEpZteRcQCppNRP+G/cYLPp5Wp6meEks+PjQb9zsKvCkblUoFB1SWluVwJHZbFPmx/vaKTMiH8MRKK4RHoQico/bEQSr9yN575rDaWSIjygOOdFhltR5c0lNEcW3WFAgS7zOHhiSeHezCExeaKYYzCz++7WP5Bo2Am5dUcbjM0w=
+	t=1738861286; cv=none; b=Iu2ITGzuGM/6GmYw1s+5gUHVm6ld9b9nI2s5NIu8k3829S+J+Zq07XGAd7iy5FYODRnroknhDbW7ZzZhyRiFyMuLYbwJFK+1fLflqyCt52gHtfhTG7zm8OEpCiDtgsfgPqapQK+I4+zmayXvBChpDVCgAjgoOS1F0WBONkGnShE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861256; c=relaxed/simple;
-	bh=2KESjK4QPH03vkAR9EEewv2R4WBBiPi2Wx/5YXeJpew=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZTmT3G45ZZTAwNQOlxyEgOx/YedcZ4ZbzxbrpPRj1d2bw5j99eo7JSIFicsOYODqxO7Sf584ETftvT1TbepUM+JsGAh4GslbwZqw01p0DT9+Hq6bUvtbr7f51WKLkxsZ1b/FMPvvkiBkwp/Vmk75OwixkLJuW91XsQ1+qZVbDwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=atAosGeH; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="atAosGeH"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436326dcb1cso8218155e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:00:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738861252; x=1739466052; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UDd73kAUDEiHLG7A2LulTx8Tyaqwjdf6PwKTrHpETEU=;
-        b=atAosGeHhouTpd4ADv7DDCOOsCPkmskv4uv+cfSnsbtQlplNroCfTicKdFuuNfb2pr
-         oUEOj1ATJAzsXU/NBPPnwPvqbaLDJLoRRHJ9CbDVB8kWuvRS5Tj/oQ+z6Z2cRyBy86cN
-         5y/DEdKPL/QMIo/UJvKGSkkFDLXrIBKNqI6mTBr3WudIXt38mt4nYR3Dxk+0KDcP2AYh
-         m6XgAQXjeHUsTFYWX0Est6gg//V0rOlfwQzuh0M6DOi5b/ufLwD97aneCIG8jP7MZmjh
-         tQftMYQbN6ZLSYnDFLyWwqMRVNw35Mi1IAsrWuKyHEnhsH6U+WxeO00PPZnlgSXqnn/g
-         Pnmw==
+	s=arc-20240116; t=1738861286; c=relaxed/simple;
+	bh=35j2mmdHtGPbna3dtlLGYBKk2u5qAlYpeQWSe1OFTu0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UwiTb4hWTdCP+c/YysvH4BHLe2751/pDUUzyMO3wJ1DsZk51UBOBzOFBK8YovfpR/C2WKQqfACvb5P1tf2RV2sb9UX33j9Ior1bdz7qEMHpATxaDESVeJApa+D29W0wAFV5EShx01OwOFSOT6JVQSHQmxdNYNIFd5u5t+ycF3BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d0203cf90cso20668215ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:01:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738861252; x=1739466052;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UDd73kAUDEiHLG7A2LulTx8Tyaqwjdf6PwKTrHpETEU=;
-        b=RdGxfXkdoxSh7Mi0/JBa7hLV+WSglrcGBU+Owrhafp3OHPkbWl3CL+C+h+NwAb/r2i
-         KMHSW00dtB9K/XhiwG37zgyq0hyywMpiSwFa200KvZj0qhLvwkuquhP8C6luH6jQHJ85
-         zLugu9p6GVwyHyZQYKm3lfO2lzi1yQ0nq91/D98rLhg9VNGH5ndBZOfGvyuJsgEyr6xE
-         fkdb0RVLoTO2GG2X4gFKPqJEx/JCq0eqF56GwnudNaKtCvjtALYSl2YJ6gYewH51ODXz
-         hhWSLnPkUEdnvvps5bPxr/DfnYAONS2sjWqWhGMVA4wc2IG8/uhGIhj4x0MQEYAaZuKa
-         PPHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtL9dZWaTW6KnX2M40OWdQ4u6D0VJKiM50VGAqjahQMi2wlrehAvTgKEowG5eHCVLZf+9T1MH3wh6P7Ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg8sEBBJW7oOOVQyoRaFJT8g5+BmWizWBGv5gfsnjrgHl2LD3N
-	Vsk5x2aHMA7hDNgmXc1z/Ih2LEznQP6DVK2qy2cPK7mX2889kLagK0Gnat3WF4M=
-X-Gm-Gg: ASbGncvaIyiACEE665hDZJWj5sC2tXcPaXOchZKK/b+YI6iRya/tX7bX5RVm7zOl17T
-	5HvEpmnocV2lyCwkllC1KSLlKrQl0p7OFUXNrZMHjy7ubbkL+jvd85ywh/NyUU5c8LaPFcMiCLq
-	NGUkpA2ZzbL+KMPsII8QHsN8nWZHLiDPs5kl1ZbD4S0KgKUJigD0qFK33duqHzCxa5SHUiOrxsc
-	f+Zo1bZklyjeEFKlN1GKyB0EEAa6aOV6xgRHGtfdxE+wwzNwL4b0fLtcXTSn0405tEJmRM9tuds
-	wCb1XpmqbIq5LinhyZLPqNxx6/aRICCURdGuDVoeA47+pESTuFE5iTuUfTW+eIIEBDBy
-X-Google-Smtp-Source: AGHT+IE6QUaFsjLZ1f1F4uXzw4S5+DVGxlv9mE8DgJQtpZhaoZcjaExCmvl9FN1EHzUrx1s8iY9aSQ==
-X-Received: by 2002:a05:600c:4748:b0:434:e9ee:c1e with SMTP id 5b1f17b1804b1-439249e6676mr1074135e9.31.1738861252003;
-        Thu, 06 Feb 2025 09:00:52 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6? ([2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbdd36346sm2173496f8f.27.2025.02.06.09.00.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 09:00:51 -0800 (PST)
-Message-ID: <ce212ff8-842b-4215-b2d7-c783a981f44c@linaro.org>
-Date: Thu, 6 Feb 2025 18:00:50 +0100
+        d=1e100.net; s=20230601; t=1738861283; x=1739466083;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z/hiCHJfcbDvdkipLSz1YoaD9QT2j2FRUXk5AghNWl8=;
+        b=k3vwxKhd9Q+OIz/A+D3Q1SqU5kFD57+essavEG/i3MApJmstjLTeChe2JHLoiyjknL
+         oFcaxCQgJBm/HX0ZxCD3pEsbY2mqOqB6AGyDbQIv3zVha5YlxCo6i0XaWJH+h+fbvbxd
+         PP9PR/TAPJ2Ua0RJAwu9yGg4q/eHeC6RtkTQGHF9Xbj0Bzli7v7o9MV3f47eQRv0Tupv
+         TIJDPkeiSs0hYiRsbZMkmOi5mJyRoKxZSCilY/bMU++sVLi/gtHThGNjhXpTfwJASqOT
+         DckrDFDMIVAFXUbFOKt9qgA3DWa9zNvXKyTJHmEqpHV7lUayphzuub3tJkyW6ECnladG
+         1bDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxA6hG1HCbwatqi5fi/Puf4wF+ZI6OhwSFI4g+jcJJFQfhBIA1mGxYEHRKv4YvooMpby60J7AxfScPdv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh4BmQytzmRlvriMiPsI3xknpMVFVhFvPqr+LpBvN7qVG+Q4fm
+	5VjFDclB2kpRhiaaclY1a1CvzN7snueSDyTOj0nvE8Dy/Bh1eial402CmD86Xyy+pHhoi3HDiJ8
+	V285lYee0cyMp8FWY5Kh4CjhAWEsUC4HPQmSTviw7oeuZKB6rsfgpPZI=
+X-Google-Smtp-Source: AGHT+IG3o8QswCxe6AjDj2dgxpf9xt+OpwHOkk/vmJ24sE8CTnOzkjTjjDFBMYmQnVBbA5G3PjiPX9/bfSj7CxtB6mpEfV37d+2e
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3 0/2] input: convert dlg,da7280.txt to dt-schema &
- update MAINTAINERS
-To: Support Opensource <support.opensource@diasemi.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Roy Im <roy.im.opensource@diasemi.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
- kernel test robot <lkp@intel.com>
-References: <20241211-topic-misc-da7280-convert-v3-0-4df87ac08881@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20241211-topic-misc-da7280-convert-v3-0-4df87ac08881@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:12ec:b0:3d0:4b0d:b22e with SMTP id
+ e9e14a558f8ab-3d04f43459cmr68262885ab.10.1738861283396; Thu, 06 Feb 2025
+ 09:01:23 -0800 (PST)
+Date: Thu, 06 Feb 2025 09:01:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a4eae3.050a0220.65602.0000.GAE@google.com>
+Subject: [syzbot] [ext4?] WARNING in inode_set_cached_link
+From: syzbot <syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmitry,
+Hello,
 
-On 11/12/2024 09:15, Neil Armstrong wrote:
-> Convert the Dialog Semiconductor DA7280 Low Power High-Definition
-> Haptic Driver bindings to dt-schema. and update the corresponding
-> MAINTAINERS entry.
+syzbot found the following issue on:
 
-Gentle ping, do you have any comments on this serie ?
+HEAD commit:    808eb958781e Add linux-next specific files for 20250206
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D14a46df8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D88b25e5d30d576e=
+4
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D2cca5ef7e5ed862c0=
+799
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D161241b058000=
+0
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D16ee80e4580000
 
-Thanks,
-Neil
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/493ef93f2e5f/disk-=
+808eb958.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b41757cd41c9/vmlinux-=
+808eb958.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/24f456104aad/bzI=
+mage-808eb958.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/fb0901f433df=
+/mount_0.gz
 
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> Changes in v3:
-> - Add conor's review
-> - Also fix the MAINTAINERS entry
-> - Link to v2: https://lore.kernel.org/r/20241206-topic-misc-da7280-convert-v2-1-1c3539f75604@linaro.org
-> 
-> Changes in v2:
-> - Switched to flag instead of boolean
-> - Switched the array to unit32_t, because this is how it was defined in the txt, DT and driver
-> - Link to v1: https://lore.kernel.org/r/20241204-topic-misc-da7280-convert-v1-1-0f89971beca9@linaro.org
-> 
-> ---
-> Neil Armstrong (2):
->        dt-bindings: input: convert dlg,da7280.txt to dt-schema
->        MAINTAINERS: update dlg,da72??.txt to yaml
-> 
->   .../devicetree/bindings/input/dlg,da7280.txt       | 108 ---------
->   .../devicetree/bindings/input/dlg,da7280.yaml      | 248 +++++++++++++++++++++
->   MAINTAINERS                                        |   2 +-
->   3 files changed, 249 insertions(+), 109 deletions(-)
-> ---
-> base-commit: c245a7a79602ccbee780c004c1e4abcda66aec32
-> change-id: 20241204-topic-misc-da7280-convert-20efaad588ca
-> 
-> Best regards,
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com
 
+EXT4-fs warning (device loop0): ext4_enable_quotas:7145: Failed to enable q=
+uota tracking (type=3D1, err=3D-22, ino=3D4). Please run e2fsck to fix.
+EXT4-fs (loop0): Cannot turn on quotas: error -22
+------------[ cut here ]------------
+bad length passed for symlink [
+=EF=BF=BD=01] (got 9000, expected 3)
+WARNING: CPU: 1 PID: 5832 at ./include/linux/fs.h:803 inode_set_cached_link=
++0xd0/0x110 include/linux/fs.h:802
+Modules linked in:
+CPU: 1 UID: 0 PID: 5832 Comm: syz-executor433 Not tainted 6.14.0-rc1-next-2=
+0250206-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 12/27/2024
+RIP: 0010:inode_set_cached_link+0xd0/0x110 include/linux/fs.h:802
+Code: 41 5f 5d c3 cc cc cc cc e8 ed 1b 44 ff c6 05 b5 51 8a 0d 01 90 48 c7 =
+c7 20 dc 1d 8c 4c 89 f6 44 89 fa 89 e9 e8 d1 c7 04 ff 90 <0f> 0b 90 90 e9 6=
+a ff ff ff 89 f9 80 e1 07 80 c1 03 38 c1 7c a1 e8
+RSP: 0018:ffffc90003967658 EFLAGS: 00010246
+RAX: b92553c73f221b00 RBX: ffff88807b3a02b0 RCX: ffff88802ef89e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000003 R08: ffffffff81803292 R09: fffffbfff1cfa5b8
+R10: dffffc0000000000 R11: fffffbfff1cfa5b8 R12: ffff88807b3a02b0
+R13: dffffc0000000000 R14: ffff88807b3a0000 R15: 0000000000002328
+FS:  00005555558f7380(0000) GS:ffff8880b8700000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff832fc000 CR3: 0000000028d14000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __ext4_iget+0x2ea4/0x3f30 fs/ext4/inode.c:5000
+ ext4_orphan_get+0x1bb/0x5f0 fs/ext4/ialloc.c:1389
+ ext4_orphan_cleanup+0xa19/0x13d0 fs/ext4/orphan.c:467
+ __ext4_fill_super fs/ext4/super.c:5602 [inline]
+ ext4_fill_super+0x5dd5/0x6760 fs/ext4/super.c:5722
+ get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3659
+ do_mount fs/namespace.c:3999 [inline]
+ __do_sys_mount fs/namespace.c:4210 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4187
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc90683b93a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 =
+00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff832fba58 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007fff832fba70 RCX: 00007fc90683b93a
+RDX: 0000200000000080 RSI: 0000200000000000 RDI: 00007fff832fba70
+RBP: 0000200000000000 R08: 00007fff832fbab0 R09: 00000000000004f5
+R10: 000000000200801f R11: 0000000000000202 R12: 0000200000000080
+R13: 0000000000000004 R14: 0000000000000003 R15: 00007fff832fbab0
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
