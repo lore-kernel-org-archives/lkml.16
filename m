@@ -1,100 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A880219F13B;
-	Thu,  6 Feb 2025 18:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F402419F13B;
+	Thu,  6 Feb 2025 18:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738868253; cv=none; b=IhngL7zPM0pZ88g5ZIaI+IBMO2NequwQ3yarQZDKLIBNyUo/nZrDWWj/2pm5Q2GSIoqTRUdfIa9Xrzhk40OQNv/2EmLCrRdKRJxGIypAQHVP4+haW6J634/lpuB6x4FXfdktUxU2V0KJBwKS/2d6knKn05IkI79kDP8Dz87kMTM=
+	t=1738868271; cv=none; b=S0qLs+s1/Qikdjsp68QvqjFHKd+4AmLRvUcHtXqi/GIEPjzAGBK5eaDKkwTBcR193DoE1pnbEsXhb0RFXclstI34GZQi3/IVgNuxpG9tqKF6yiRDsb/E5m17dsNYDeS70oIe9ypkqFMLUPqyAz7MdcJ1/Usl7/GMfgiYmIIevrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738868253; c=relaxed/simple;
-	bh=TAmjX8PAsGAtciV6BI/t/prkf5BEpJkD0CfbH/IQE/M=;
+	s=arc-20240116; t=1738868271; c=relaxed/simple;
+	bh=DHM/MNNzBPzxHpZ54WyXj4FW3t1bAt5L0WfNgXiYfho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmyA2C2RdK65zmdjFcWAdT/9MDv1Mm8w/xiz/SB1VQS+eFoagOoy50szy787Im/aRD5rms320DBWPFFTkalCh269AsFDmdHS91wlK1Eh4eBZDogGF6xubyScY8I1C2lyH4/9JbkJ1Jv+wbM/C9Ad220OIRFeiQpNzHhj6z3NAbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YyA1L68V; arc=none smtp.client-ip=198.175.65.13
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIxf2ghN2eIFB/RuiSnL1rHyZKlFSi6WiGbXwewv1Fw6aB2VECMPx19m3o0BR4/asrgS0MMKl3iTxPVYqJFsrzquZkw3DU6FKV8qRvcIJcaUjfWdDPwH658q5p49iIfBCS1uOb7ZChgx3yihA19PPxbeEQt+IY1Glo6kuVinh14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lBaLQQqm; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YyA1L68V"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lBaLQQqm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738868251; x=1770404251;
+  t=1738868271; x=1770404271;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=TAmjX8PAsGAtciV6BI/t/prkf5BEpJkD0CfbH/IQE/M=;
-  b=YyA1L68VMuatVbskTGvXG9WUTY7cQhLCIKVnpjfZql+4f4XkVlU8zTsb
-   CYBASK/QKBdAZWdvL57F3Z4p9ohbj2mNCque2k1GaUZu5nkUsMkBR46Hj
-   wqNSiZTNnn/X2MhEXbnPsS1xflGL3+UMMiB0G5DiuZg41n1V1YCl6ucGl
-   HWbPhqvs+6NWxdCQrozLE58q0AHyKdOkiInFsMtFerbVqLFsmAhJmgngS
-   E8gdBSDZnBYxlVmgG+e3IGwEgQCU6B7Sj+4SDXNvFyizAaHByNVv24S/A
-   duJYjR4eyFcE0DuIH2FQc8fRnwaK68QIXlbNQItdRXjQ6jxdzXtKC7274
-   w==;
-X-CSE-ConnectionGUID: 3omd/ZxYT9qY5KUXaA1TNg==
-X-CSE-MsgGUID: fAuUKiarTmy2XW8WAZO5RA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50476822"
+   mime-version:in-reply-to;
+  bh=DHM/MNNzBPzxHpZ54WyXj4FW3t1bAt5L0WfNgXiYfho=;
+  b=lBaLQQqmVAErb3HyfDzfeN8ZuRFNU12/W60aBedQYyOoU2o1EYrIalUN
+   2GhGrsO5lyMbZ3QJIlWSWyBESwPHI7xtUNu2rzDUbKzJW3CRN8+Q8p+22
+   JIl733tXf2FYqGa11dtX25vRl6+CI+p45YaQWqulTOYq2BAzCuH+l0vc6
+   uvW0zFvmV9CZ/bXsIhGMgp//Q40kDkxA2RWX/UBORylj4e3m1+juTotpe
+   J7vsEu9vGDZODutbrFdNM5uSi4lXt/J2zGePwx4RlquWYyasd44wtPKGT
+   dlnDZQ5mzUtEY9vJIwSzwak6l4YqzqcDuQQjj1zGLTi2WPLjNsUZIV5e3
+   Q==;
+X-CSE-ConnectionGUID: MwPd/lRaTKWGrRaK9lSu6A==
+X-CSE-MsgGUID: +6bOiuyqSrSiAJ4y/WNfTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43252820"
 X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="50476822"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:57:31 -0800
-X-CSE-ConnectionGUID: 8F1wNKrQSr+K6G6/dSox4g==
-X-CSE-MsgGUID: tq73ziQzQHmn6my/0tTz3Q==
+   d="scan'208";a="43252820"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:57:50 -0800
+X-CSE-ConnectionGUID: 5Q1UvcHBSayjamZFxc3BJw==
+X-CSE-MsgGUID: ytJq2VRUQ22lJOeYdS3PAQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="111270515"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:57:29 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tg742-00000008ozj-1tDw;
-	Thu, 06 Feb 2025 20:57:26 +0200
-Date: Thu, 6 Feb 2025 20:57:26 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-	Justin Tee <justin.tee@broadcom.com>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	James Smart <james.smart@broadcom.com>,
-	Dick Kennedy <dick.kennedy@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
-Subject: Re: [PATCH v1 1/1] scsi: lpfc: Switch to use %ptTs
-Message-ID: <Z6UGFoJbAGjI5VJW@smile.fi.intel.com>
-References: <20250206155822.1126056-1-andriy.shevchenko@linux.intel.com>
- <20250206174537-a38cd6ae-e0fe-4344-8655-2593e20fd394@linutronix.de>
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115385592"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:57:50 -0800
+Date: Thu, 6 Feb 2025 10:57:42 -0800
+From: Andi Kleen <ak@linux.intel.com>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: namhyung@kernel.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
+Message-ID: <Z6UGJuL5e5WQQL-M@tassilo>
+References: <cover.1738772628.git.dvyukov@google.com>
+ <87ldujkjsi.fsf@linux.intel.com>
+ <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250206174537-a38cd6ae-e0fe-4344-8655-2593e20fd394@linutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
 
-On Thu, Feb 06, 2025 at 05:52:16PM +0100, Thomas Weißschuh wrote:
-> On Thu, Feb 06, 2025 at 05:58:22PM +0200, Andy Shevchenko wrote:
-
-...
-
-> >  	lpfc_printf_log(phba, KERN_INFO, LOG_CGN_MGMT,
-> > -			"2646 Updated CMF timestamp : "
-> > -			"%u/%u/%u %u:%u:%u\n",
-> > -			ts->day, ts->month,
-> > -			ts->year, ts->hour,
-> > -			ts->minute, ts->second);
-> > +			"2646 Updated CMF timestamp : %ptTs\n", cur_time);
+On Thu, Feb 06, 2025 at 07:41:00PM +0100, Dmitry Vyukov wrote:
+> On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > Dmitry Vyukov <dvyukov@google.com> writes:
+> >
+> > > There are two notions of time: wall-clock time and CPU time.
+> > > For a single-threaded program, or a program running on a single-core
+> > > machine, these notions are the same. However, for a multi-threaded/
+> > > multi-process program running on a multi-core machine, these notions are
+> > > significantly different. Each second of wall-clock time we have
+> > > number-of-cores seconds of CPU time.
+> >
+> > I'm curious how does this interact with the time / --time-quantum sort key?
+> >
+> > I assume it just works, but might be worth checking.
 > 
-> All %p<FOO> arguments need to be addresses.
-> Also %ptT wants a time64_t, not a 'struct timespec64'.
-> It would work by chance because tv_sec is the first member and time64_t.
+> I will check later. But if you have some concrete commands to try, it
+> will help. I never used --time-quantum before.
+
+perf report --sort time,overhead,sym 
+
+It just slices perf.data into time slices so you get a time series
+instead of full aggregation.
+
+--time-quantum is optional, but sets the slice length,
+
+> > >  tools/perf/util/symbol_conf.h                 |   8 +-
+> >
+> > We traditionally didn't do it, but in general test coverage
+> > of perf report is too low, so I would recommend to add some simple
+> > test case in the perf test scripts.
 > 
-> Correct: "&cur_time.tv_sec".
+> What of this is testable within the current testing framework?
 
-Indeed, thanks!
+You can write a shell script that runs it and does 
+some basic sanity checking. tests/shell has a lot of examples.
 
--- 
-With Best Regards,
-Andy Shevchenko
+If you don't do that someone will break it like it happened 
+to some of my features :/
+
+> Also how do I run tests? I failed to figure it out.
+
+Just "perf test"
 
 
+-Andi
