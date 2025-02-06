@@ -1,84 +1,58 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4115622B8CD
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5D5214209;
+	Thu,  6 Feb 2025 11:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738842572; cv=none; b=qz6DwlvayovEVkLnXJiQY5DdHhXH6yIZREdoR4xmHKbM7gi5ht9sY9NW8Q2D2sCdcN4C+dRwFXxX3PBgNnWo1fXfmTV5ENcYx+B2sIMxN1FDh9s1++3wDKxuHo8fhqBPyhMJ7gCYDbymm/3vpJ31Ed5QNlrbbhwCZExTfVfPd2g=
+	t=1738842769; cv=none; b=h7nHgbov0lLOrf+8DeBnzwGaZx+Rh8xdT2Gs/5blQ66DGyQjrJDb4K0g9w6id+AZFjX49TC8MfRPkTbdcgnsMqJjmXHukUmm1Xof+tIHC7RYh92EPoM2Xa/6gQzPGniXMkWPuEWIrAEtCdCuE/VXySbPSc+RWxTgShsYqr5xEf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738842572; c=relaxed/simple;
-	bh=E8+d7rzKIQYxvCPsaoYc55cIInzpgJbkEM+e7bop0Aw=;
+	s=arc-20240116; t=1738842769; c=relaxed/simple;
+	bh=avabfQ8Dl/T55XPfuG4fHovvp9LBLIUXUO2RKxv80cU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=luShGzqcMVK84cMTj+mpA6HReU9LzhF533QpxFPVokrrisElFMZIYPQP3ox5zpQHnPnCN/BSN1lMtCuMGz05VGtk0RTWp2TXZ53FqGtotNy3faUyXPxMGLXjjUgItIIlEBWgoDIdDXrOHi+x2cgkNHJq4lB6MNrkejbaLlSV4qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i2INX94n; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3jYS/W8Bcfa0n3WesZ+2/LGFbD7sFnWcsNfr99leyDUVPlMBJyt/H8wML2IuRCCqDX7mJpFS1pPYUUq80W7APKOk73ouGyzyFbDbJ0tNSmob9AlSLWRnYuSpmLCI5mHFHzw+3U8osPRCSko37GMAIe3Qpuy8bLwjIQpA+Ei474=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qB8/8/mc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2INX94n"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436345cc17bso5603095e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:49:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738842568; x=1739447368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NX9ms/4I8NC6zrc1aMCv7TAeR5qd6HJ58Z3muKUA91A=;
-        b=i2INX94nzv1I+RFUk8aoJSG6QACu6LLaG8v2He3L2jxp68dSvdt6TOr9WmR0pwBdTv
-         oDghr28FuERI+3HnT9l67fmynAoVlwXmDRDernVRVFgBhI1OGlC3p6CaPQur0hKTMKf6
-         CZTj7YmLj40UrRPNjyW/oXef0tVxeJ2Ov/2+uiM3wTyEZzK8+MYDbirTOZe7TQsIG8X9
-         Z18YIl8vPE1WT0TEkbZlZDbDNvZJDGfjKcVHEvy+wrlKuMcuSCXVdPIIPyPrHajupXkM
-         6jFbfDzLsWFLQLDD+lHuJEG15e980QlMdH7tNzCFBASz+fckwTtvLAG0S2pFYL7Bzerq
-         rETw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738842568; x=1739447368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NX9ms/4I8NC6zrc1aMCv7TAeR5qd6HJ58Z3muKUA91A=;
-        b=WpDJO+wXZeNBBbrq5F7f3T+PCgjj2s70mNXEJFgWwmJ8Z3q6cbgALNzT2KA+LQkUJP
-         tBubmN9LAcBQfN73LCDk7cAJVC907ZmAQdqekkYxRa26oV3RHyaod9HhBXateOUqoPIO
-         gHe3sAUeVl3A/2ApGfXZCPUFQJEoRQtCHCvba/c70TSdvNnO1a4mG2hsQQJehvhiKtVE
-         XcLARQg4/nuloP90pibJ3ROTTlfbt4bAtpTf+ivWQWh7D1tUckWjLYgJ0484+i8ZH3by
-         KDpJxiw+6GYvBx2fHRy6znvMGh1dQvSIMe0voMbuJDMpgn9ijOZa9027cr3gDXW6cSTm
-         6G4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1rV8QMk/a96KKkTytp6cqAuJT4O2NnHPjf737e30sKUWLVEcM5gjqR4A1wr8ALb59bwJFVKMaDf/B2/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzITbWkoO1cIUTejk8lsxDZIn0jbqSJONeLHmXWQT60K2ou3Vyb
-	DleBH03MSUdP/jFpPqZhhUuOMgTALb3Uu2vArmAEOl+kpV1zJHsD4Hy2fcgjWjk=
-X-Gm-Gg: ASbGnctQiF7vaNRUZ77xUfJBQeZzC/wGb4qj4586QLdynp2E2SIkD/il/0mwvAt6Ej9
-	gVaAPT9b/LqfzgChfYsaMQQP1KbdcQ5Ye1mo+OPZJJcWCnPfDhz+qNEY1KqjGZ0r//8a7vFlQwg
-	wQI5NqRqF8MTGWRR47SBcPOWfZdG7df5DF8Ka227pxebjeqOG5H/boBYMRhAoEPsUA6RhZLDqtL
-	Q5hCPFTMsy8GGVYlaxV84J8qUipUkp1uBK/7x9ayrHyOupO3jA4b+NMfJDOAxrH1uuUs8hrvlyj
-	phCYCPq+30dojZE6gN4S
-X-Google-Smtp-Source: AGHT+IGBjV9LowhqFquW+OEjP5fmaVEQ40WZqgqqY5aomaJpQL2ZwcJcaosKDFlLLto2p8sEGWzZkQ==
-X-Received: by 2002:a05:600c:46d4:b0:434:f767:68ea with SMTP id 5b1f17b1804b1-4390d42ccb9mr56959955e9.5.1738842568525;
-        Thu, 06 Feb 2025 03:49:28 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4390d94d685sm52793145e9.13.2025.02.06.03.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 03:49:28 -0800 (PST)
-Date: Thu, 6 Feb 2025 14:49:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Peng Fan <peng.fan@oss.nxp.com>, Sudeep Holla <sudeep.holla@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 1/4] firmware: arm_scmi: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <1a420172-de2f-4602-a181-be79bff0bb2b@stanley.mountain>
-References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com>
- <20250120-scmi-fwdevlink-v2-1-3af2fa37dbac@nxp.com>
- <7a29ec8f-fef8-4f1c-a2eb-16a63f2b820c@stanley.mountain>
- <20250206105218.GA22527@localhost.localdomain>
- <e20415aa-517c-4e72-a1c3-9c02769c1149@stanley.mountain>
- <Z6SgFGb4Z88v783c@pluto>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qB8/8/mc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42364C4CEE0;
+	Thu,  6 Feb 2025 11:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738842769;
+	bh=avabfQ8Dl/T55XPfuG4fHovvp9LBLIUXUO2RKxv80cU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qB8/8/mcvuf/aOBOYUwqgFnMIFNSCCjNGwL+TafnUo9sqeTlzDRa2aW6qutGjj/P6
+	 9KsypobBkZc0rFIzBWN3cRc4eZeKO2QjGK6IYBdLE2FCmeUJr4C6DrHWqwZfl2Tg9+
+	 cJm8tAKJksto7L6R28xVhlKj6Gm1pBx41ZTAPvJh0HThmQ05hFwlz0WP9d4CD6U/+9
+	 nMMB50Pt7fod/0UxuNX3djEIjm/4WsdvjjQZUIO2HeAfKdCGJCGvP0KaJq5JzIgym0
+	 pCAN0rDweh5iaZEm+L/abPRGYqzYwzxNCiO3qhYKr6BhWAB9dAAimavE3trIa0hTUC
+	 ix4CoInDCDfIA==
+Date: Thu, 6 Feb 2025 12:52:41 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH V8 06/14] rust: Add bare minimal bindings for clk
+ framework
+Message-ID: <Z6SiiRubSXGInbgj@pollux>
+References: <cover.1738832118.git.viresh.kumar@linaro.org>
+ <c68081e18d939aefc7f6dac798df6b72e81bba4b.1738832118.git.viresh.kumar@linaro.org>
+ <Z6ShsuLykigNscz8@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,51 +61,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6SgFGb4Z88v783c@pluto>
+In-Reply-To: <Z6ShsuLykigNscz8@pollux>
 
-On Thu, Feb 06, 2025 at 11:42:12AM +0000, Cristian Marussi wrote:
-> On Thu, Feb 06, 2025 at 02:31:19PM +0300, Dan Carpenter wrote:
-> > On Thu, Feb 06, 2025 at 06:52:20PM +0800, Peng Fan wrote:
-> > > On Wed, Feb 05, 2025 at 03:45:00PM +0300, Dan Carpenter wrote:
-> > > >On Mon, Jan 20, 2025 at 03:13:29PM +0800, Peng Fan (OSS) wrote:
-> > > >> diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-> > > >> index 2c853c84b58f530898057e4ab274ba76070de05e..7850eb7710f499888d32aebf5d99df63db8bfa26 100644
-> > > >> --- a/drivers/firmware/arm_scmi/bus.c
-> > > >> +++ b/drivers/firmware/arm_scmi/bus.c
-> > > >> @@ -344,6 +344,21 @@ static void __scmi_device_destroy(struct scmi_device *scmi_dev)
-> > > >>  	device_unregister(&scmi_dev->dev);
-> > > >>  }
-> > > >>  
-> > > >> +static int
-> > > >> +__scmi_device_set_node(struct scmi_device *scmi_dev, struct device_node *np,
-> > > >> +		       int protocol, const char *name)
-> > > >> +{
-> > > >> +	/* cpufreq device does not need to be supplier from devlink perspective */
-> > > >> +	if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name, "cpufreq")) {
-> > > >
-> > > >I don't love this...  It seems like an hack.  Could we put a flag
-> > > >somewhere instead?  Perhaps in scmi_device?  (I'm just saying that
-> > > >because that's what we're passing to this function).
-> > > 
-> > > This means when creating scmi_device, a flag needs to be set which requires
-> > > to extend scmi_device_id to include a flag entry or else.
-> > > 
-> > > As below in scmi-cpufreq.c
-> > > { SCMI_PROTOCOL_PERF, "cpufreq", SCMI_FWNODE_NO }
-> > > 
+On Thu, Feb 06, 2025 at 12:49:14PM +0100, Danilo Krummrich wrote:
+> On Thu, Feb 06, 2025 at 02:58:27PM +0530, Viresh Kumar wrote:
+> > This adds very basic bindings for the clk framework, implements only
+> > clk_get() and clk_put(). These are the bare minimum bindings required
+> > for many users and are simple enough to add in the first attempt.
 > > 
-> > Yeah, I like that.
+> > These will be used by Rust based cpufreq / OPP core to begin with.
 > > 
-> > -	if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name, "cpufreq")) {
-> > +	if (scmi_dev->flags & SCMI_FWNODE_NO) {
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  MAINTAINERS                     |  1 +
+> >  rust/bindings/bindings_helper.h |  1 +
+> >  rust/kernel/clk.rs              | 48 +++++++++++++++++++++++++++++++++
+> >  rust/kernel/lib.rs              |  2 ++
+> >  4 files changed, 52 insertions(+)
+> >  create mode 100644 rust/kernel/clk.rs
 > > 
-> > Or we could do something like "if (scmi_dev->no_fwnode) {"
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ff4511914e0a..604717065476 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -5780,6 +5780,7 @@ F:	include/dt-bindings/clock/
+> >  F:	include/linux/clk-pr*
+> >  F:	include/linux/clk/
+> >  F:	include/linux/of_clk.h
+> > +F:	rust/kernel/clk.rs
+> >  X:	drivers/clk/clkdev.c
+> >  
+> >  COMMON INTERNET FILE SYSTEM CLIENT (CIFS and SMB3)
+> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> > index 59b4bc49d039..4eadcf645df0 100644
+> > --- a/rust/bindings/bindings_helper.h
+> > +++ b/rust/bindings/bindings_helper.h
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/blk-mq.h>
+> >  #include <linux/blk_types.h>
+> >  #include <linux/blkdev.h>
+> > +#include <linux/clk.h>
+> >  #include <linux/cpu.h>
+> >  #include <linux/cpumask.h>
+> >  #include <linux/cred.h>
+> > diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
+> > new file mode 100644
+> > index 000000000000..123cdb43b115
+> > --- /dev/null
+> > +++ b/rust/kernel/clk.rs
+> > @@ -0,0 +1,48 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +//! Clock abstractions.
+> > +//!
+> > +//! C header: [`include/linux/clk.h`](srctree/include/linux/clk.h)
+> > +
+> > +use crate::{
+> > +    bindings,
+> > +    device::Device,
+> > +    error::{from_err_ptr, Result},
+> > +    prelude::*,
+> > +};
+> > +
+> > +use core::ptr;
+> > +
+> > +/// A simple implementation of `struct clk` from the C code.
+> > +#[repr(transparent)]
+> > +pub struct Clk(*mut bindings::clk);
 > 
-> I proposed a flag a few review ago about this, it shoule come somehow
-> from the device_table above like Peng was proposing, so that a driver
-> can just declare that does NOT need fw_devlink.
+> Guess this should be Opaque<bindings::clk>.
 
-Great.  I think we're on the same page then.
+Sorry, I meant NonNull<bindings::clk>.
 
-regards,
-dan carpenter
+> 
+> > +
+> > +impl Clk {
+> > +    /// Creates `Clk` instance for a device and a connection id.
+> > +    pub fn new(dev: &Device, name: Option<&CStr>) -> Result<Self> {
+> > +        let con_id = if let Some(name) = name {
+> > +            name.as_ptr() as *const _
+> > +        } else {
+> > +            ptr::null()
+> > +        };
+> > +
+> > +        // SAFETY: It is safe to call `clk_get()`, on a device pointer earlier received from the C
+> > +        // code.
+> > +        Ok(Self(from_err_ptr(unsafe {
+> > +            bindings::clk_get(dev.as_raw(), con_id)
+> > +        })?))
+> > +    }
+> > +
+> > +    /// Obtain the raw `struct clk *`.
+> > +    pub fn as_raw(&self) -> *mut bindings::clk {
+> > +        self.0
+> > +    }
+> > +}
+> > +
+> > +impl Drop for Clk {
+> > +    fn drop(&mut self) {
+> > +        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
+> > +        // relinquish it now.
+> > +        unsafe { bindings::clk_put(self.0) };
+> > +    }
+> > +}
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index ccbf7fa087a0..77d3b1f82154 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -40,6 +40,8 @@
+> >  pub mod block;
+> >  #[doc(hidden)]
+> >  pub mod build_assert;
+> > +#[cfg(CONFIG_COMMON_CLK)]
+> > +pub mod clk;
+> >  pub mod cpu;
+> >  pub mod cpumask;
+> >  pub mod cred;
+> > -- 
+> > 2.31.1.272.g89b43f80a514
+> > 
+> > 
