@@ -1,134 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F29B44C94;
-	Thu,  6 Feb 2025 02:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD792E62B;
+	Thu,  6 Feb 2025 02:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738808774; cv=none; b=a4q7SO+9JQFVCY1BT24/CtNAqpx/JGvkZ90dF3zaNSk8Llgzsn7yV2ekNq1HFZhmubarTXQzp5zRS2HtxDvG69Tz56ebu9S+as9pu7yuODMEiNbFxkHp46OyJjX4uR/5jiEsQqwE1k0i2z9fyLdJwkItt8pps65aUx25Ur37vlI=
+	t=1738808885; cv=none; b=ET+yiP+iguZTyzgCSGoztPjlefNsnsekcVG9zq6CQ/+lCyklvYFBLegSx6HmwMtBDRvPnqFUsN5ZJjO3sn6dY4O2uRIEuKB88TO3vb92jwpTwqL5ZVB69M9Aoq2PnziJD35sOF6qYzMvhM65t1sBqbKDlA4hm4V7zryA9VbjWHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738808774; c=relaxed/simple;
-	bh=Ce/LAj70TOZue3UX1FV2yx0zOjmbrJlrGqVBFBMr7wE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jPMBLHORloKIInrlkJwW+T010jMvuukGQXUWr+Hnh2M2QVq/KUVmHfL0oVnbCn3iwpCJ24/o5bI2OQAoCegzGChObsvUqKWSfEIKXDdMf1qvaiuqu/ghJrt3wWVgCudhWn3+EJVJy0So7Ts7jJVqxIeDN3vo9L1O1xFTLyn1PUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HltVj3Eb; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738808885; c=relaxed/simple;
+	bh=DPw0go0Y18F04glHsPQpVXcm7nfmsAETxFGR+REmBFw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HYtu+tGIvbW5HJ/vZ2YDhEAI9Uf3RtQ/hG6yAyMW/zEXhLnKLHjtBztRT7/9a1BlATRxZj10S5PeTq0QmZ03kqfzDyuwiVtRdlaYpil2V2L9wXvfm4eMWMNu6fHsdrkOKraQB0aNhPuqXyVfuTphNomyvV0OWOmzzQdvCr89Tm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g4AAzhXm; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HltVj3Eb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738808773; x=1770344773;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ce/LAj70TOZue3UX1FV2yx0zOjmbrJlrGqVBFBMr7wE=;
-  b=HltVj3EbNZ24l9vcfAfZ4nvEHbMi9gq75hsS2x4QPAB9/9rC41TNmU0E
-   sJo1D3Axy/IS6013r6gx61wO0fbAL9cLQ7HMAJ+GM+wIXs3/imdH32scE
-   HKVt3hLq0d2ncomXqvTzqp8Bdg5JwXeF7KcLy514CqITuyHMDzRFjpHoY
-   8ldQtxrEaBHFCu+xMBFqct5M6NJ+F82iAAF5TPe22aQTNbi1L2xhls0vu
-   V0v9IVNuAU0g9f7sXeQ1fPd+T0UZdbZrovygmi8a+oF8fAMeB8r7cVEnm
-   XwRU1PasT2j/RwcxCLxmDr23SnThqmdsy4C+jhm9tzU8aDupfqzn/Q9WZ
-   A==;
-X-CSE-ConnectionGUID: T4A9ibPHSlasJN8aVk03Ag==
-X-CSE-MsgGUID: dYA07eNsS6enzt21zDNsag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56815412"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="56815412"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:26:12 -0800
-X-CSE-ConnectionGUID: WIiYFZmXSxS00ld9/ptZCg==
-X-CSE-MsgGUID: pVMeW+KrR6i9EDcRi5JvcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115154167"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:26:02 -0800
-Message-ID: <7a03fdf5-f080-4580-8850-20dc88003d14@linux.intel.com>
-Date: Thu, 6 Feb 2025 10:25:59 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4AAzhXm"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2165448243fso11809435ad.1;
+        Wed, 05 Feb 2025 18:28:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738808883; x=1739413683; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f//6Pfy0m+QkunQmAbDm03FlQjJ3Qr3k1+W3orkRYWI=;
+        b=g4AAzhXmV0+eOREkR4jruxqwuWxQOxvXA9uS7fTf2HDCmyfJdZlDrJ6G3TmaGwd9YK
+         MC14vVRWf3qKVaFeAq+GrGAaTu5TSsYDbDL3BpZrRAMWOsIJ9kWlphbmOLtDn4rVTS24
+         IL59wFwoyyKCNZwbOxCJp4d4yshJZD6Kdn8vG77GGXE3EK5TO35UvAq53WXOmRCCRbIz
+         L450wXFzV+uC300F5w1/WNXSv4bbt6WqF7BHEXjT+jmN0R69KE5k1bzWnZlo1aXV4898
+         2GYp9VCycLTvV1oUVwJ+qU+Xa0hflz0liOw11NE5CcFloBHLKNG0AFY1SzoVRCd86elv
+         Ynew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738808883; x=1739413683;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f//6Pfy0m+QkunQmAbDm03FlQjJ3Qr3k1+W3orkRYWI=;
+        b=VAEC798W3BOco/GG+Cuk3BnU0qXIB8Ouf9oqV4DvKUsOJ85KLbCWGSV+rsAAAr1KVa
+         lmWWRtre+moPa4/SD3nUrHrsDM9PKadbTFxkIL0oXMv4ccxH4Aef4eucbS22RoVC8uD9
+         5k8avZFhL7YcFkjt7eoUZB5CiHvQ7o+ayT96aHQfxtVGBxagfYptKRnqM9OYyAGNGB+S
+         AkB9JirJAPrgNXGCZpRGIeC/JEIcMnsCFRJsqgh522MuqXKpUUHaV8BmxFrhd6GzDMWA
+         HygdNDUWqM5Dg1aPNBM3Ohzm5E0+EffFQi+5uSNiQ7adAAFizwPyxi2I2LvW0UNggZEb
+         6oQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYxV2lwN8W0IeAydSholWwvdXOjQOmH2DWGyYMjG+gUxgGSE0iNl6A0WdZmCwOSVUx47+OjFghQVxMf8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVN19oGX5vKCgW6Av+kKWrdPrsLk/XqMh29C7i5ygqnCocUkdO
+	yXBfFB/1D8OB1KbU+PsDp/Lki1960cjerXLdUtIWoTeMHWkFVL7c1gLvyE/7ixY=
+X-Gm-Gg: ASbGnct3ncMsra3/1O0cSvBn7Welif/ugFSpFJgLUSC3q6VX9GSLkVrMAFZIzyQzpUt
+	+wItFGiz0HV4LYcaPmbvXnVRpRmOab4gCtAdl3tbw7ZC9RNkkclSHU0dZJFiCJkb6MqR9poRTmP
+	dm8p99KIKWrL1jcabDdovJs9ZA2ZZQBK/di8ql+ydAalAinxxxfWT2+67V/+oJXgwuRNuDXRvOf
+	P/0Q5aqwsznxNkKWYp52Ifv8fenf12f9YYW9MAR898dkjiwNnL90ArqvIrnzJEKPUjW4nGDOi/2
+	WbO8fzzUWH3vMfdZEdO16ZrFGIyWqz4=
+X-Google-Smtp-Source: AGHT+IF7i4Ie6oj57/Bqz7uVn9oDviSllTX9XOv0hdUACzbYl5F3ZNLVVNVU2I6gCiRA49ou8epBsw==
+X-Received: by 2002:a05:6a21:7101:b0:1e0:c50c:9842 with SMTP id adf61e73a8af0-1ede88ab965mr10830856637.31.1738808882916;
+        Wed, 05 Feb 2025 18:28:02 -0800 (PST)
+Received: from localhost.localdomain ([116.196.121.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048e20bb4sm151605b3a.164.2025.02.05.18.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 18:28:02 -0800 (PST)
+From: fuqiang wang <fuqiang.wng@gmail.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	wangfuqiang49 <wangfuqiang49@jd.com>
+Subject: [PATCH] kvm: delete unused variables iommu_noncoherent in struct kvm_arch
+Date: Thu,  6 Feb 2025 10:26:56 +0800
+Message-ID: <20250206022656.3752383-1-fuqiang.wng@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/20] perf/x86/intel: Initialize architectural PEBS
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-7-dapeng1.mi@linux.intel.com>
- <20250128112202.GA7145@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250128112202.GA7145@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The code of legacy device assignment is deleted entirely in commit
+ad6260da1e23 ("KVM: x86: drop legacy device assignment") and the
+variable iommu_noncoherent in struct kvm_arch is also not referenced by
+any other code. So it is deleted in this patch.
 
-On 1/28/2025 7:22 PM, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2025 at 02:07:07PM +0000, Dapeng Mi wrote:
->
->
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index e8a06c8486af..1b33a6a60584 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -1537,6 +1537,9 @@ void intel_pmu_pebs_enable(struct perf_event *event)
->>  
->>  	cpuc->pebs_enabled |= 1ULL << hwc->idx;
->>  
->> +	if (x86_pmu.arch_pebs)
->> +		return;
->> +
->>  	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) && (x86_pmu.version < 5))
->>  		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
->>  	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
->> @@ -1606,6 +1609,11 @@ void intel_pmu_pebs_disable(struct perf_event *event)
->>  
->>  	cpuc->pebs_enabled &= ~(1ULL << hwc->idx);
->>  
->> +	hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
->> +
->> +	if (x86_pmu.arch_pebs)
->> +		return;
->> +
->>  	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
->>  	    (x86_pmu.version < 5))
->>  		cpuc->pebs_enabled &= ~(1ULL << (hwc->idx + 32));
->> @@ -1616,15 +1624,13 @@ void intel_pmu_pebs_disable(struct perf_event *event)
->>  
->>  	if (cpuc->enabled)
->>  		wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
->> -
->> -	hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
->>  }
->>  
->>  void intel_pmu_pebs_enable_all(void)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>  
->> -	if (cpuc->pebs_enabled)
->> +	if (!x86_pmu.arch_pebs && cpuc->pebs_enabled)
->>  		wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
->>  }
->>  
->> @@ -1632,7 +1638,7 @@ void intel_pmu_pebs_disable_all(void)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>  
->> -	if (cpuc->pebs_enabled)
->> +	if (!x86_pmu.arch_pebs && cpuc->pebs_enabled)
->>  		__intel_pmu_pebs_disable_all();
->>  }
-> So there's a ton of if (arch_pebs) sprinkled around. Can't we avoid that
-> by using a few static_call()s ?
+Signed-off-by: wangfuqiang49 <wangfuqiang49@jd.com>
+---
+ arch/x86/include/asm/kvm_host.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-Sure. Let me try it.
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index b15cde0a9b5c..98555afb6f10 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1354,7 +1354,6 @@ struct kvm_arch {
+ 	u64 shadow_mmio_value;
+ 
+ 	struct iommu_domain *iommu_domain;
+-	bool iommu_noncoherent;
+ #define __KVM_HAVE_ARCH_NONCOHERENT_DMA
+ 	atomic_t noncoherent_dma_count;
+ #define __KVM_HAVE_ARCH_ASSIGNED_DEVICE
+-- 
+2.47.0
 
