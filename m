@@ -1,45 +1,45 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC46230262;
-	Thu,  6 Feb 2025 11:17:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2564230983;
+	Thu,  6 Feb 2025 11:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738840623; cv=none; b=XEpnyvhavgpv461fhOHyvkaS575W6k9sIPBNcCvRx9RC7l1qZJ049khCmyiQMniegqL8c34j6m7RfJ8vjXnD4CgYmrNw1ERc+0t3nOVH3wSDJz8J4FihgzkRNv5uBqLsJX9I2P49ddVeiBU4/UeaPJ+zXPmGTOx+Tr6Z+Xzp8uk=
+	t=1738840628; cv=none; b=W+YIx0hecsmtt7mHAxLhNEqb+m0G+zv/GByEDJLxmjyPMknD9FkooP3PfztwCB32+5YNMtVeKoLwYPCMI1mSPotvXdTR+llOVabif6snJ9w7u+9LnxOA0Siy1bSFUZYEVRvwgHwdRfKXuvWdPZ4EJO4ZhqRu6LlBEMdCsMc9ROE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738840623; c=relaxed/simple;
-	bh=NRN3FST4wbsPvxGfOs6e4A67Mh7/7uHbNhqp9HX7Aow=;
+	s=arc-20240116; t=1738840628; c=relaxed/simple;
+	bh=nB39MbOoR84Rj8q1VIGsiuD3LYZlNJK5iv03P0nDhhY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bMgY5MdlFBlQav/3acq8GjyBQuKi9wv+HpJZ/Dq6N0l/C8WGF0tBBHnCLZPvLbTdpjEO4tdWRMyFKTk8Ry6TxbiZr8+QKEUQK+ZIbWcDVAbxGTNDbPQ/Y02eEEUA1DvqbjeQQ8GbeCJPq0FyIodwG4tUmwO41+RQhQBfj8XCoGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Itz6GE/C; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=UiprbccaCjP7QEnPZ75UG/75XFttB04n1+58r/MdhDli75FRZAQvstn5A54uMCGIu1qDxr1Ab+jx7b/shyg+Oh80Nwxoocp59nXNg6++E1W2Rwjf4CNXBJtIv3enQc3vL/hk3ZuOrYuxOxvLbIcZlk7OFSnw6QSpcvFTC8Xhi+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i2ZF+pIm; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Itz6GE/C"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5169lqYh026712;
-	Thu, 6 Feb 2025 11:16:58 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i2ZF+pIm"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5169Ke7B012152;
+	Thu, 6 Feb 2025 11:17:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=CVO0rFyy+d07RgYwM5IY3u1Y
-	rBdA6/FHVGadO6eOr5g=; b=Itz6GE/ClkIqjxTdcFxdQuYc4yk4lQTjwhSr8pwn
-	p065dGvJVF48Y12NO4/bUJK4o/ayKKLNBsZL5fF8Rl7jS3dHLaFIDeLCDpRCwWi3
-	/z3aluOEbxvXOhvhd84QU1A53aGMIW4oJWmt7FNQ61++iJnLS7nks29dGC27sV+l
-	Cv9dvXXSFfB2Fc2vCPq7JJCqtD/DfJZf2VEMoPobv2OZ2gqoNOR9hIDdKIOvoJb/
-	coTJjUdnvn9v4qJLSyY3C/K4GmpRKF2ipwTkH/wXhvzntS8HZcOKmO7afBi+y/4V
-	BFBo/NwAxG3Toiqqlgnvid65CCpMgp+J/qg9zMOt6fRTjQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mtrx876x-1
+	:references:subject:to; s=qcppdkim1; bh=NKQuFdYUKAL7/HWUK1KlszxQ
+	cit8mu8v0ZjCVUWed8Q=; b=i2ZF+pIm99AVV9R15e6DlkbjjTOsACTwNSNC/h9Y
+	3AmuKYVwLU+vKvKSum9bF52LTQ/PoFYzE3WU8BbfATf9upah4WIBqiiVlZlpaD+J
+	Nd38iujd/Ph/BkpIB7jEkrSCBGX5JlxxTW10zxLDs9smYPBJvxY/2LBdp5u9MgNb
+	kjxB/wCypSLEi2Z0wqJBdw8noMtMRojmMLVQDtysBM1rI2UMXT+TC8khTnt8USv0
+	XeVUv/+pereJsx8dCbUCpj0OeVeCh+LTGjkKOXRImQApihUVIaR7jtiOOCIntZ4Y
+	PQy/aIPDsPdD/pYbIgTlaBA6p3JvcV2Dkxezf5SSTI2Crg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mtc68a45-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 11:16:58 +0000 (GMT)
+	Thu, 06 Feb 2025 11:17:02 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BGvUr014183
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BH1vN002648
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 11:16:57 GMT
+	Thu, 6 Feb 2025 11:17:01 GMT
 Received: from hu-akakum-hyd.qualcomm.com (10.80.80.8) by
  nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Feb 2025 03:16:53 -0800
+ 15.2.1544.9; Thu, 6 Feb 2025 03:16:57 -0800
 From: Akash Kumar <quic_akakum@quicinc.com>
 To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
         Greg Kroah-Hartman
@@ -56,9 +56,9 @@ CC: Bjorn Andersson <andersson@kernel.org>,
  Vennapusa" <quic_vvreddy@quicinc.com>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Akash Kumar <quic_akakum@quicinc.com>
-Subject: [PATCH 12/18] arm64: dts: qcom: sdx75: Enable high bandwidth for hs isoc eps
-Date: Thu, 6 Feb 2025 16:45:37 +0530
-Message-ID: <20250206111543.17392-13-quic_akakum@quicinc.com>
+Subject: [PATCH 13/18] arm64: dts: qcom: qcs404: Enable high bandwidth for hs isoc eps
+Date: Thu, 6 Feb 2025 16:45:38 +0530
+Message-ID: <20250206111543.17392-14-quic_akakum@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250206111543.17392-1-quic_akakum@quicinc.com>
 References: <20250206111543.17392-1-quic_akakum@quicinc.com>
@@ -73,16 +73,16 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XSOrxTQYojEvnw5jwr3DJZtUsNKAVAUU
-X-Proofpoint-GUID: XSOrxTQYojEvnw5jwr3DJZtUsNKAVAUU
+X-Proofpoint-ORIG-GUID: IqhfAidhr1KV4lAqznP6c9YmIGAy1mdX
+X-Proofpoint-GUID: IqhfAidhr1KV4lAqznP6c9YmIGAy1mdX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1015
- adultscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502060092
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ spamscore=0 clxscore=1015 mlxlogscore=948 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502060093
 
 It is observed while testing multiple audio devices,
 a glitch is observed during testing.
@@ -108,21 +108,29 @@ isoc eps are used and flicker is seen.
 
 Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/sdx75.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdx75.dtsi b/arch/arm64/boot/dts/qcom/sdx75.dtsi
-index b0a8a0fe5f39..f46374fd785c 100644
---- a/arch/arm64/boot/dts/qcom/sdx75.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdx75.dtsi
-@@ -1039,6 +1039,7 @@
- 				snps,dis_enblslpm_quirk;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 5a9df6b12305..4a4126b9b45d 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -696,6 +696,7 @@
+ 				snps,usb3_lpm_capable;
  				snps,dis-u1-entry-quirk;
  				snps,dis-u2-entry-quirk;
 +				snps,dwc3_guctl_resbwhseps_quirk;
- 				phys = <&usb_hsphy>,
- 				       <&usb_qmpphy>;
- 				phy-names = "usb2-phy",
+ 				dr_mode = "otg";
+ 			};
+ 		};
+@@ -735,6 +736,7 @@
+ 				snps,usb3_lpm_capable;
+ 				snps,dis-u1-entry-quirk;
+ 				snps,dis-u2-entry-quirk;
++				snps,dwc3_guctl_resbwhseps_quirk;
+ 				dr_mode = "peripheral";
+ 			};
+ 		};
 -- 
 2.17.1
 
