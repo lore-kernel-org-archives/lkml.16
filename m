@@ -1,104 +1,75 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E70B672;
-	Thu,  6 Feb 2025 00:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4848FB672;
+	Thu,  6 Feb 2025 00:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738802369; cv=none; b=DHC58P3PQ9ycObUc8GuQSQoU3AesfSgFQmLoFamOwO13UFndAFvQ+hXxaTKyAx09siAQGyAsKwIJTWo4tvlj2ggl5lE1u/oExCNxQPfrwmRDc5eh9mnqhlzN9c6qQTjl78uytvn8cjZfvs9OfZ+7mulP5bkzkAsu7M7a0+QdwPI=
+	t=1738802428; cv=none; b=Cr6tBib2g+WUQp7cej7Bu5no00sp0PiFZ+bOmjAeECcQfCqwcFmw+FxJ7+YDVTYwWqa+al6/MNhWrcEg0nl7oH7pmzHIQU2yj9YdT402luM5w2V0VI0W/dq+RYLtZ+WdZeX78xS4VmWxbJBltcpOnkDmHj05MVBCGO1/G0LtOSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738802369; c=relaxed/simple;
-	bh=dSSyBXccQbzzqU9ow0bKyliJTGRZAtxTLvrCXZNNAa4=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=sxS1EBCbPSCwWWIOqjDucTkNhxFkdTVm92JoY5vscYe7ac5/SnOl/j1SBsaNRGYhqD33sxRdBre+V7EoOVyTyognWsiyD7xqYiyk5v3BFAs13KTk2wa2sJlehwMmv6m5xjh+oOcM3Fhauj42Zd5+5i/AUGW6nplVcbOfQKcNj3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OSV4l1mt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/KJZS2aU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738802428; c=relaxed/simple;
+	bh=2gcmewSNCs1rYEw6/auIliKLembJYl1ijg4/FCsFzwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ujpYfmTdfIlpTKAWqzqjp6H1PeNbN/3t8pYA4B3MCsfqht+Vp7mo7WM/vHW92zni6WFQBp3yvEVKsoQ8zBSgpxs+yTLRf6eCPLC7E2CMnUhgRTNXvBVmm7MAelS2TlvuswWhtVH2ri1pDqhVKQy37feEMipPmQJqpE+fvoTvcGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NArn4Ehn; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OSV4l1mt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/KJZS2aU"
-Date: Thu, 06 Feb 2025 00:39:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738802365;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=Byo077Hg3W7wtTTe8y9nW+rnNGEnTJlmN8DzLq/ojxc=;
-	b=OSV4l1mtVueamIDPP76s4CfnkVPk8VytGZ7vQDMxd8gzpFy+uOlHber8LelQ+/SSNS4o9d
-	XNUB1IDSq68BbUx/EYhzVG5Tbw81J6YEJ2sT0IBCRYvojp3AYMqJx1KFkFRK8bvpxu+WQp
-	VE3JiQYllyTmhQ003YoocFz1EUVPhwJmcmT3Ql4EQEr/T1PWYssCzfLmF7nNYqRKlyFOPT
-	8jRtxrNArpaQVl3efgYLeTZd58uY3G3r8bsacvs7YmvsiPMoh/0xvgeSAgYSMk8EKhNpdn
-	qwINnk58MwXcIX0PvNQoLytvUkDQjdHEbHWFNUG6emF/rxbGReoLzdZIzt7e8g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738802365;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=Byo077Hg3W7wtTTe8y9nW+rnNGEnTJlmN8DzLq/ojxc=;
-	b=/KJZS2aUH5tgKCFgxSmUCjABH32IRpYz6u/yR/vfSNHucKI9KDs9uIqEL5Uwbyq+oyTJQQ
-	eu3oTX18CiVUNMAA==
-From: "tip-bot2 for Maciej Wieczor-Retman" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86: Compare physical instead of virtual PGD addresses
-Cc: "Maciej Wieczor-Retman" <maciej.wieczor-retman@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NArn4Ehn"
+Received: by linux.microsoft.com (Postfix, from userid 1158)
+	id B8DA1203F59D; Wed,  5 Feb 2025 16:40:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B8DA1203F59D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738802426;
+	bh=o9pxRZ5D+TirzYAIHkhdLuS0mPP+I9Xajs1MpkehhCU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NArn4EhnMBXPUDdE1lmRY9Vnx41KSINRNKoYfYXRUzBz8IAeaaiz1QK/U0j2P+HkI
+	 YHt5dHokC4FOqrHqjNXB/7IRrLEg7sJQd4U9uovq12ONzFJP0WKt3MQzIHhqocrvT7
+	 lFBC4ZTbQF6Otk7Z897gVTJIQHunt2RwUUqRC/xc=
+From: Hardik Garg <hargar@linux.microsoft.com>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 6.6] 6.6.76-rc1 review
+Date: Wed,  5 Feb 2025 16:40:26 -0800
+Message-Id: <1738802426-6863-1-git-send-email-hargar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <20250205134420.279368572@linuxfoundation.org>
+References: <20250205134420.279368572@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <173880236261.10177.14147520520179813519.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/mm branch of tip:
+The kernel, bpf tool, perf tool, and kselftest builds fine for v6.6.76-rc1 on x86 and arm64 Azure VM.
 
-Commit-ID:     63887c9f02030afd042c125052ad60680f7c21b2
-Gitweb:        https://git.kernel.org/tip/63887c9f02030afd042c125052ad60680f7c21b2
-Author:        Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-AuthorDate:    Tue, 04 Feb 2025 18:33:50 +01:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Wed, 05 Feb 2025 16:23:17 -08:00
+Kernel binary size for x86 build:
+text      data      bss      dec       hex      filename
+27313564  16700078  4653056  48666698  2e6984a  vmlinux
 
-x86: Compare physical instead of virtual PGD addresses
+Kernel binary size for arm64 build:
+text      data      bss     dec       hex      filename
+34662827  13840370  970368  49473565  2f2e81d  vmlinux
 
-This is a preparatory patch for when pointers have tags in their
-upper address bits. But it's a harmless change on its own.
 
-The mm->pgd virtual address may be tagged because it came out of
-the allocator at some point. The __va(read_cr3_pa()) address will
-never be tagged (the tag bits are all 1's). A direct pointer value
-comparison would fail if one is tagged and the other is not.
+Tested-by: Hardik Garg <hargar@linux.microsoft.com>
 
-To fix this, just compare the physical addresses which are never
-affected by tagging.
 
-[ dhansen: subject and changelog munging ]
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/fde443d0e67f76a51e7ab4e96647705840f53ddb.1738686764.git.maciej.wieczor-retman%40intel.com
----
- arch/x86/mm/tlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 6cf881a..ffc25b3 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1325,7 +1325,7 @@ bool nmi_uaccess_okay(void)
- 	if (loaded_mm != current_mm)
- 		return false;
- 
--	VM_WARN_ON_ONCE(current_mm->pgd != __va(read_cr3_pa()));
-+	VM_WARN_ON_ONCE(__pa(current_mm->pgd) != read_cr3_pa());
- 
- 	return true;
- }
+Thanks,
+Hardik
