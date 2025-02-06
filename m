@@ -1,24 +1,50 @@
-Received: from cosmicgizmosystems.com (cosmicgizmosystems.com [63.249.102.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19A6148FF5;
-	Thu,  6 Feb 2025 03:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145B1148850;
+	Thu,  6 Feb 2025 03:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811519; cv=none; b=rig7Yf2qIDw58tjeVqvVQpo64WJlvgl9a5jEzl/SZazL4ud5IWhRpEcgMcd2gzsdEVjfBzjCS3+RNmeuhvzNcRtS/wt9x2hES164NeMApalii0ZU9GeEAQwOhCLDcyWu5jHXPzujEdf2ZEetn5fuHhkgoRIIlbmB81Cr1/uQhaw=
+	t=1738811555; cv=none; b=PHys7cw37P75IwLjtOAgv0uqoKlAm5C0ftrjP3KEn/1s7TszZSDMkKYgVdYtwrbGKHjCZb8HIJc4iwjpoto7ZJq2avTBQB3UgMI3QtidYNSjrWydBobsyIKWGQZtajDhNFVqWL0LzJMNFOSnJ7EyIVtTwNaCUwG7Rtkzi34FJhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811519; c=relaxed/simple;
-	bh=ruwprGVpgf2x/B1GvPWylp94rMFLTqQMKzlbnkdvPRc=;
+	s=arc-20240116; t=1738811555; c=relaxed/simple;
+	bh=iODPrNx1dk56YaKfu87qN/BW2hURimkorrDdNFYrzIo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KQ42uGKVORsHo4CoOxlFcF/9sgtQaxb6CM5UUwbYvt18nXjkl/j6qqd3HvXI5raZn1vrAr8OdhAxOh5+5wHi+6mQonvUjCM9spl0MsUA0/82BD5hw4UciXqb+gfnr/QJv322n23Y6gbF/ZOMYl9x5CNri9fpfGr/Gjl1UF+T5bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
-Received: from [192.168.12.108] (unknown [172.56.152.117])
-	by host11.cruzio.com (Postfix) with ESMTPSA id 2BD2026F8C75;
-	Wed,  5 Feb 2025 19:02:37 -0800 (PST)
-Message-ID: <dd0d2992-ed72-4f9f-b0f6-8b8ff1d9b377@cosmicgizmosystems.com>
-Date: Wed, 5 Feb 2025 19:02:34 -0800
+	 In-Reply-To:Content-Type; b=pgv9DfCuFL49SpApUcDxoTMkCKQp9HQqwwz82WBkv1zERICojtW7C+h2tE4+9C0L8xYNRM/iSeOc75yhW8qy0ya+pdZywcHcyYl5Gu09kG6wOZ502wQ70/SG9ahYY5K0APJw7dBbW+Sz17U2s4uZvlfYEx5RTFMTBbWV3SU3jFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGFlWdoz; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGFlWdoz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738811552; x=1770347552;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iODPrNx1dk56YaKfu87qN/BW2hURimkorrDdNFYrzIo=;
+  b=eGFlWdozDC2Iw6xxnVWVL4XqGTPc6iU7mJEkIICu8GWovv4iReSQDG4i
+   vKFBANVRw1uR+kw9I9M9Z+5586oqE6xQYxxQi/+JH8N5nig0S+G7Ecoza
+   uKnQ4TYKMLQ/vUS+8UssjtpOT6ZWoz38k8G4jHeIW4K7/uidnHbav1goW
+   EMC2gcYzVEAbFr6Pe6ET0/cylWIm7iIcAqfLwPDuurFa/O/saQIyQezpE
+   pOhzToSoF/K0hJrT3ICusNaiZ7Dgr0ksFR9OTyYFVzaFvTBm5IVN9x0ER
+   qPJOX7uCAq3FLWzKgW55NyWmAxiX99UhsGAyyvqB6D/0jmo81BC9LLeMk
+   A==;
+X-CSE-ConnectionGUID: 8U19sg/6RqyQAsTH/AGFOA==
+X-CSE-MsgGUID: D1tqdgChQ3u2EGFr3WvHiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="27002231"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="27002231"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 19:12:28 -0800
+X-CSE-ConnectionGUID: 8SPOwasaSl6uhDtlMXlhXQ==
+X-CSE-MsgGUID: 4NOKRKp8RFu3kslDaaZCjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="116120989"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 19:12:19 -0800
+Message-ID: <01c47def-ae42-421c-8d1c-9c3f8b162d6e@linux.intel.com>
+Date: Thu, 6 Feb 2025 11:12:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,244 +52,674 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
- Kees Cook <kees@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-usb@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- syzbot <syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
- syzkaller-bugs@googlegroups.com, lvc-project@linuxtesting.org
-References: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
- <202501311205.DB75F95@keescook>
- <27f8c5a1-6671-4e23-862f-4c5bf888684a@fintech.ru>
+Subject: Re: [PATCH 18/20] perf tools: Support to capture more vector
+ registers (common part)
+To: "Liang, Kan" <kan.liang@linux.intel.com>, Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+ <20250123140721.2496639-19-dapeng1.mi@linux.intel.com>
+ <CAP-5=fUjn8Xuhe-OQTdMXaqtqfemrbT7rAiy5KbORbKGJr6gaw@mail.gmail.com>
+ <ffedeac7-bb47-4fab-a0b4-23c75d133e44@linux.intel.com>
 Content-Language: en-US
-From: Terry Junge <linuxhid@cosmicgizmosystems.com>
-In-Reply-To: <27f8c5a1-6671-4e23-862f-4c5bf888684a@fintech.ru>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ffedeac7-bb47-4fab-a0b4-23c75d133e44@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/2/25 1:55 AM, Nikita Zhandarovich wrote:
-> 
-> 
-> On 1/31/25 23:12, Kees Cook wrote:
->> On Fri, Jan 31, 2025 at 06:15:58PM +0300, Nikita Zhandarovich wrote:
->>> Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
->>> descriptors supposedly having unpredictable bNumDescriptors values in
->>> usbhid_parse().
+
+On 1/27/2025 11:50 PM, Liang, Kan wrote:
+>
+> On 2025-01-23 11:42 a.m., Ian Rogers wrote:
+>> On Wed, Jan 22, 2025 at 10:21 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>>> Intel architectural PEBS supports to capture more vector registers like
+>>> OPMASK/YMM/ZMM registers besides already supported XMM registers.
 >>>
->>> The issue stems from the fact that hid_class_descriptor is supposed
->>> to be a flexible array, however it was sized as desc[1], using only
->>> one element. Therefore, going beyond 1 element, courtesy of
->>> bNumDescriptors, may lead to an error.
+>>> arch-PEBS vector registers (VCER) capturing on perf core/pmu driver
+>>> (Intel) has been supported by previous patches. This patch adds perf
+>>> tool's part support. In detail, add support for the new
+>>> sample_regs_intr_ext register selector in perf_event_attr. This 32 bytes
+>>> bitmap is used to select the new register group OPMASK, YMMH, ZMMH and
+>>> ZMM in VECR. Update perf regs to introduce the new registers.
 >>>
->>> Modify struct hid_descriptor by employing __counted_by macro, tying
->>> together struct hid_class_descriptor desc[] and number of descriptors
->>> bNumDescriptors. Also, fix places where this change affects work with
->>> newly updated struct.
->>>
->>> [1] Syzbot report:
->>>
->>> UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
->>> index 1 is out of range for type 'struct hid_class_descriptor[1]'
->>> ...
->>> Workqueue: usb_hub_wq hub_event
->>> Call Trace:
->>>  <TASK>
->>>  __dump_stack lib/dump_stack.c:88 [inline]
->>>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->>>  ubsan_epilogue lib/ubsan.c:231 [inline]
->>>  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
->>>  usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
->>>  hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
->>>  usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
->>>  usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
->>>  really_probe+0x2b8/0xad0 drivers/base/dd.c:656
->>>  __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
->>>  driver_probe_device+0x50/0x430 drivers/base/dd.c:828
->>>  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
->>>  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
->>>  __device_attach+0x333/0x520 drivers/base/dd.c:1028
->>>  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
->>>  device_add+0x8ff/0xca0 drivers/base/core.c:3720
->>>  usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
->>>  usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
->>>  usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
->>>
->>> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
->>> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
->>> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+>>> This single patch only introduces the common support, x86/intel specific
+>>> support would be added in next patch.
+>> Could you break down what the individual changes are? I see quite a
+>> few, some in printing, some with functions like arch__intr_reg_mask.
+>> I'm sure the changes are well motivated but there is little detail in
+>> the commit message. Perhaps there is some chance to separate each
+>> change into its own patch. By detail I mean something like, "change
+>> arch__intr_reg_mask to taking a pointer so that REG_MASK and array
+>> initialization is possible."
+
+Sure.
+
+
+>>
+>> It is a shame arch__intr_reg_mask doesn't match arch__user_reg_mask
+>> following this change. Perhaps update them both for the sake of
+>> consistency.
+> Yes, it sounds cleaner. The same size but different mask. It may waste
+> some space but it should be OK.
+
+Good idea. Thanks.
+
+
+>
+>> Out of scope here, I wonder in general how we can get this code out of
+>> the arch directory? For example, it would be nice if we have say an
+>> arm perf command running on qemu-user on an x86 that we perhaps want
+>> to do the appropriate reg_mask for x86.
+> Different ARCH has a different pt_regs. It seems hard to general a
+> generic reg list.
+>
+> Thanks,
+> Kan
+>> Thanks,
+>> Ian
+>>
+>>> Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >>> ---
->>> v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
+>>>  tools/include/uapi/linux/perf_event.h      | 13 +++++++++
+>>>  tools/perf/arch/arm/util/perf_regs.c       |  5 +---
+>>>  tools/perf/arch/arm64/util/perf_regs.c     |  5 +---
+>>>  tools/perf/arch/csky/util/perf_regs.c      |  5 +---
+>>>  tools/perf/arch/loongarch/util/perf_regs.c |  5 +---
+>>>  tools/perf/arch/mips/util/perf_regs.c      |  5 +---
+>>>  tools/perf/arch/powerpc/util/perf_regs.c   |  9 ++++---
+>>>  tools/perf/arch/riscv/util/perf_regs.c     |  5 +---
+>>>  tools/perf/arch/s390/util/perf_regs.c      |  5 +---
+>>>  tools/perf/arch/x86/util/perf_regs.c       |  9 ++++---
+>>>  tools/perf/builtin-script.c                | 19 ++++++++++---
+>>>  tools/perf/util/evsel.c                    | 14 +++++++---
+>>>  tools/perf/util/parse-regs-options.c       | 23 +++++++++-------
+>>>  tools/perf/util/perf_regs.c                |  5 ----
+>>>  tools/perf/util/perf_regs.h                | 18 +++++++++++--
+>>>  tools/perf/util/record.h                   |  2 +-
+>>>  tools/perf/util/sample.h                   |  6 ++++-
+>>>  tools/perf/util/session.c                  | 31 +++++++++++++---------
+>>>  tools/perf/util/synthetic-events.c         |  7 +++--
+>>>  19 files changed, 116 insertions(+), 75 deletions(-)
 >>>
->>> v2: Instead of essentially forcing usbhid_parse() to only check
->>> the first descriptor, modify hid_descriptor struct to anticipate
->>> multiple hid_class_descriptor in desc[] by utilizing __counted_by
->>> macro. This change, in turn, requires several other ones wherever
->>> that struct is used. Adjust commit description accordingly.
+>>> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+>>> index 4842c36fdf80..02d8f55f6247 100644
+>>> --- a/tools/include/uapi/linux/perf_event.h
+>>> +++ b/tools/include/uapi/linux/perf_event.h
+>>> @@ -379,6 +379,13 @@ enum perf_event_read_format {
+>>>  #define PERF_ATTR_SIZE_VER6    120     /* add: aux_sample_size */
+>>>  #define PERF_ATTR_SIZE_VER7    128     /* add: sig_data */
+>>>  #define PERF_ATTR_SIZE_VER8    136     /* add: config3 */
+>>> +#define PERF_ATTR_SIZE_VER9    168     /* add: sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE] */
+>>> +
+>>> +#define PERF_EXT_REGS_ARRAY_SIZE       4
+>>> +#define PERF_NUM_EXT_REGS              (PERF_EXT_REGS_ARRAY_SIZE * 64)
+>>> +
+>>> +#define PERF_NUM_INTR_REGS             (PERF_EXT_REGS_ARRAY_SIZE + 1)
+>>> +#define PERF_NUM_INTR_REGS_SIZE                ((PERF_NUM_INTR_REGS) * 64)
 >>>
->>> P.S. Since syzbot currently breaks trying to reproduce the issue,
->>> with or without this patch, I only managed to test it locally with
->>> syz repros. Would greatly appreciate other people's effort to test
->>> it as well.
+>>>  /*
+>>>   * Hardware event_id to monitor via a performance monitoring event:
+>>> @@ -522,6 +529,12 @@ struct perf_event_attr {
+>>>         __u64   sig_data;
 >>>
->>> P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
->>> different approach to this issue, see:
->>> Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
->>>
->>>  drivers/hid/usbhid/hid-core.c       |  2 +-
->>>  drivers/usb/gadget/function/f_fs.c  |  3 ++-
->>>  drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
->>>  include/linux/hid.h                 |  2 +-
->>>  4 files changed, 18 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
->>> index a6eb6fe6130d..eb4807785d6d 100644
->>> --- a/drivers/hid/usbhid/hid-core.c
->>> +++ b/drivers/hid/usbhid/hid-core.c
->>> @@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
->>>  		return -ENODEV;
->>>  	}
->>>  
->>> -	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
->>> +	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
->>>  		dbg_hid("hid descriptor is too short\n");
->>>  		return -EINVAL;
->>>  	}
->>
->> I don't think you want this hunk in the patch. The existing logic will
->> correctly adapt num_descriptors to a size that fits within
->> hdesc->bLength. In theory, the above change could break a weird but
->> working device that reported too high bNumDescriptors but still worked
->> with what num_descriptors walks.
->>
-> 
-> Thank you for mentioning this and you are right about possibly breaking
-> a working device.
-> 
-> However, sizeof(struct hid_descriptor) doesn't count flex array sizes.
-> So, leaving this check as is will miss cases when hdesc->bLength >=
-> sizeof(struct hid_descriptor) but short enough to have a desc[0]
-> element. Maybe doing struct_size(hdesc, desc, 1) is better? Then we
-> make sure that at least one mandatory hid_class_desriptor is there.
-> 
->>> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
->>> index 2dea9e42a0f8..a4b6d7cbf56d 100644
->>> --- a/drivers/usb/gadget/function/f_fs.c
->>> +++ b/drivers/usb/gadget/function/f_fs.c
->>> @@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
->>>  	case USB_TYPE_CLASS | 0x01:
->>>  		if (*current_class == USB_INTERFACE_CLASS_HID) {
->>>  			pr_vdebug("hid descriptor\n");
->>> -			if (length != sizeof(struct hid_descriptor))
->>> +			if (length < sizeof(struct hid_descriptor) +
->>> +				     sizeof(struct hid_class_descriptor))
-
-Don't change the logic of the if statement in this function, leave it as !=
-if it failed before this change it should still fail with this change.
-
->>>  				goto inv_length;
->>>  			break;
->>>  		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
->>
->> Same here, I think? This isn't needed unless I'm misunderstanding
->> something about the fix.
-> 
-> Once again, sizeof(struct hid_descriptor) will not count struct
-> hid_class_descriptor desc[] __counted_by(...) so even correct and
-> predictable lengths will fail the check. We need to test length against
-> hid_descriptor with at least one element of its flex array.
-> 
-> I would prefer struct_size() here as well but it's not optimal in this
-> case.
->>
->>> diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
->>> index 740311c4fa24..ec8c2e2d6812 100644
->>> --- a/drivers/usb/gadget/function/f_hid.c
->>> +++ b/drivers/usb/gadget/function/f_hid.c
->>> @@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
+>>>         __u64   config3; /* extension of config2 */
+>>> +
+>>> +       /*
+>>> +        * Extension sets of regs to dump for each sample.
+>>> +        * See asm/perf_regs.h for details.
+>>> +        */
+>>> +       __u64   sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE];
 >>>  };
->>>  
->>>  static struct hid_descriptor hidg_desc = {
->>> -	.bLength			= sizeof hidg_desc,
->>> +	.bLength			= struct_size(&hidg_desc, desc, 1),
->>>  	.bDescriptorType		= HID_DT_HID,
->>>  	.bcdHID				= cpu_to_le16(0x0101),
->>>  	.bCountryCode			= 0x00,
->>>  	.bNumDescriptors		= 0x1,
->>> -	/*.desc[0].bDescriptorType	= DYNAMIC */
->>> -	/*.desc[0].wDescriptorLenght	= DYNAMIC */
->>> +	.desc				= {
->>> +		{
->>> +			.bDescriptorType	= 0, /* DYNAMIC */
->>> +			.wDescriptorLength	= 0, /* DYNAMIC */
->>> +		}
->>> +	}
+>>>
+>>>  /*
+>>> diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
+>>> index f94a0210c7b7..3a3c2779efd4 100644
+>>> --- a/tools/perf/arch/arm/util/perf_regs.c
+>>> +++ b/tools/perf/arch/arm/util/perf_regs.c
+>>> @@ -6,10 +6,7 @@ static const struct sample_reg sample_reg_masks[] = {
+>>>         SMPL_REG_END
 >>>  };
->>>  
->>>  /* Super-Speed Support */
->>> @@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
->>>  		switch (value >> 8) {
->>>  		case HID_DT_HID:
->>>  		{
->>> -			struct hid_descriptor hidg_desc_copy = hidg_desc;
->>> +			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
->>> +				desc, bNumDescriptors, 1);
->>> +			*hidg_desc_copy = hidg_desc;
->>>  
->>>  			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
->>> -			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
->>> -			hidg_desc_copy.desc[0].wDescriptorLength =
->>> +			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
->>> +			hidg_desc_copy->desc[0].wDescriptorLength =
->>>  				cpu_to_le16(hidg->report_desc_length);
->>>  
->>>  			length = min_t(unsigned short, length,
->>> -						   hidg_desc_copy.bLength);
->>> -			memcpy(req->buf, &hidg_desc_copy, length);
->>> +						   hidg_desc_copy->bLength);
->>> +			memcpy(req->buf, hidg_desc_copy, length);
->>>  			goto respond;
->>>  			break;
->>>  		}
->>> diff --git a/include/linux/hid.h b/include/linux/hid.h
->>> index cdc0dc13c87f..85a58ae2c4a0 100644
->>> --- a/include/linux/hid.h
->>> +++ b/include/linux/hid.h
->>> @@ -739,7 +739,7 @@ struct hid_descriptor {
->>>  	__u8  bCountryCode;
->>>  	__u8  bNumDescriptors;
->>>  
->>> -	struct hid_class_descriptor desc[1];
->>> +	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->>>  } __attribute__ ((packed));
->>>  
->>>  #define HID_DEVICE(b, g, ven, prod)					\
->>
->> Otherwise, this looks correct to me.
->>
-> 
-> Regards,
-> Nikita
-> 
-
-In drivers/hid/hid-hyperv.c there are additional struct hid_descriptor references
-
-struct synthhid_device_info {
-	struct synthhid_msg_hdr header;
-	struct hv_input_dev_info hid_dev_info;
-	struct hid_descriptor hid_descriptor;
-};
-
-Have you checked that there are no changes necessary in that file due to the
-size change of struct hid_descriptor?
-
-Regards,
-Terry
-
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+>>> index 09308665e28a..754bb8423733 100644
+>>> --- a/tools/perf/arch/arm64/util/perf_regs.c
+>>> +++ b/tools/perf/arch/arm64/util/perf_regs.c
+>>> @@ -140,10 +140,7 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>>>         return SDT_ARG_VALID;
+>>>  }
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
+>>> index 6b1665f41180..9d132150ecb6 100644
+>>> --- a/tools/perf/arch/csky/util/perf_regs.c
+>>> +++ b/tools/perf/arch/csky/util/perf_regs.c
+>>> @@ -6,10 +6,7 @@ static const struct sample_reg sample_reg_masks[] = {
+>>>         SMPL_REG_END
+>>>  };
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
+>>> index f94a0210c7b7..3a3c2779efd4 100644
+>>> --- a/tools/perf/arch/loongarch/util/perf_regs.c
+>>> +++ b/tools/perf/arch/loongarch/util/perf_regs.c
+>>> @@ -6,10 +6,7 @@ static const struct sample_reg sample_reg_masks[] = {
+>>>         SMPL_REG_END
+>>>  };
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
+>>> index 6b1665f41180..9d132150ecb6 100644
+>>> --- a/tools/perf/arch/mips/util/perf_regs.c
+>>> +++ b/tools/perf/arch/mips/util/perf_regs.c
+>>> @@ -6,10 +6,7 @@ static const struct sample_reg sample_reg_masks[] = {
+>>>         SMPL_REG_END
+>>>  };
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
+>>> index e8e6e6fc6f17..08ab9ed692fb 100644
+>>> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+>>> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+>>> @@ -186,7 +186,7 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>>>         return SDT_ARG_VALID;
+>>>  }
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> +void arch__intr_reg_mask(unsigned long *mask)
+>>>  {
+>>>         struct perf_event_attr attr = {
+>>>                 .type                   = PERF_TYPE_HARDWARE,
+>>> @@ -198,7 +198,9 @@ uint64_t arch__intr_reg_mask(void)
+>>>         };
+>>>         int fd;
+>>>         u32 version;
+>>> -       u64 extended_mask = 0, mask = PERF_REGS_MASK;
+>>> +       u64 extended_mask = 0;
+>>> +
+>>> +       *(u64 *)mask = PERF_REGS_MASK;
+>>>
+>>>         /*
+>>>          * Get the PVR value to set the extended
+>>> @@ -223,9 +225,8 @@ uint64_t arch__intr_reg_mask(void)
+>>>         fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+>>>         if (fd != -1) {
+>>>                 close(fd);
+>>> -               mask |= extended_mask;
+>>> +               *(u64 *)mask |= extended_mask;
+>>>         }
+>>> -       return mask;
+>>>  }
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>> diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+>>> index 6b1665f41180..9d132150ecb6 100644
+>>> --- a/tools/perf/arch/riscv/util/perf_regs.c
+>>> +++ b/tools/perf/arch/riscv/util/perf_regs.c
+>>> @@ -6,10 +6,7 @@ static const struct sample_reg sample_reg_masks[] = {
+>>>         SMPL_REG_END
+>>>  };
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
+>>> index 6b1665f41180..9d132150ecb6 100644
+>>> --- a/tools/perf/arch/s390/util/perf_regs.c
+>>> +++ b/tools/perf/arch/s390/util/perf_regs.c
+>>> @@ -6,10 +6,7 @@ static const struct sample_reg sample_reg_masks[] = {
+>>>         SMPL_REG_END
+>>>  };
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> -{
+>>> -       return PERF_REGS_MASK;
+>>> -}
+>>> +void arch__intr_reg_mask(unsigned long *mask) {}
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>>  {
+>>> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+>>> index 9f492568f3b4..52f08498d005 100644
+>>> --- a/tools/perf/arch/x86/util/perf_regs.c
+>>> +++ b/tools/perf/arch/x86/util/perf_regs.c
+>>> @@ -283,7 +283,7 @@ const struct sample_reg *arch__sample_reg_masks(void)
+>>>         return sample_reg_masks;
+>>>  }
+>>>
+>>> -uint64_t arch__intr_reg_mask(void)
+>>> +void arch__intr_reg_mask(unsigned long *mask)
+>>>  {
+>>>         struct perf_event_attr attr = {
+>>>                 .type                   = PERF_TYPE_HARDWARE,
+>>> @@ -295,6 +295,9 @@ uint64_t arch__intr_reg_mask(void)
+>>>                 .exclude_kernel         = 1,
+>>>         };
+>>>         int fd;
+>>> +
+>>> +       *(u64 *)mask = PERF_REGS_MASK;
+>>> +
+>>>         /*
+>>>          * In an unnamed union, init it here to build on older gcc versions
+>>>          */
+>>> @@ -320,10 +323,8 @@ uint64_t arch__intr_reg_mask(void)
+>>>         fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+>>>         if (fd != -1) {
+>>>                 close(fd);
+>>> -               return (PERF_REG_EXTENDED_MASK | PERF_REGS_MASK);
+>>> +               *(u64 *)mask |= PERF_REG_EXTENDED_MASK;
+>>>         }
+>>> -
+>>> -       return PERF_REGS_MASK;
+>>>  }
+>>>
+>>>  uint64_t arch__user_reg_mask(void)
+>>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>>> index 9e47905f75a6..66d3923e4040 100644
+>>> --- a/tools/perf/builtin-script.c
+>>> +++ b/tools/perf/builtin-script.c
+>>> @@ -704,10 +704,11 @@ static int perf_session__check_output_opt(struct perf_session *session)
+>>>  }
+>>>
+>>>  static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask, const char *arch,
+>>> -                                    FILE *fp)
+>>> +                               unsigned long *mask_ext, FILE *fp)
+>>>  {
+>>>         unsigned i = 0, r;
+>>>         int printed = 0;
+>>> +       u64 val;
+>>>
+>>>         if (!regs || !regs->regs)
+>>>                 return 0;
+>>> @@ -715,7 +716,15 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask, cons
+>>>         printed += fprintf(fp, " ABI:%" PRIu64 " ", regs->abi);
+>>>
+>>>         for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
+>>> -               u64 val = regs->regs[i++];
+>>> +               val = regs->regs[i++];
+>>> +               printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r, arch), val);
+>>> +       }
+>>> +
+>>> +       if (!mask_ext)
+>>> +               return printed;
+>>> +
+>>> +       for_each_set_bit(r, mask_ext, PERF_NUM_EXT_REGS) {
+>>> +               val = regs->regs[i++];
+>>>                 printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r, arch), val);
+>>>         }
+>>>
+>>> @@ -776,14 +785,16 @@ static int perf_sample__fprintf_iregs(struct perf_sample *sample,
+>>>                                       struct perf_event_attr *attr, const char *arch, FILE *fp)
+>>>  {
+>>>         return perf_sample__fprintf_regs(&sample->intr_regs,
+>>> -                                        attr->sample_regs_intr, arch, fp);
+>>> +                                        attr->sample_regs_intr, arch,
+>>> +                                        (unsigned long *)attr->sample_regs_intr_ext,
+>>> +                                        fp);
+>>>  }
+>>>
+>>>  static int perf_sample__fprintf_uregs(struct perf_sample *sample,
+>>>                                       struct perf_event_attr *attr, const char *arch, FILE *fp)
+>>>  {
+>>>         return perf_sample__fprintf_regs(&sample->user_regs,
+>>> -                                        attr->sample_regs_user, arch, fp);
+>>> +                                        attr->sample_regs_user, arch, NULL, fp);
+>>>  }
+>>>
+>>>  static int perf_sample__fprintf_start(struct perf_script *script,
+>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>> index f745723d486b..297b960ac446 100644
+>>> --- a/tools/perf/util/evsel.c
+>>> +++ b/tools/perf/util/evsel.c
+>>> @@ -1314,9 +1314,11 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>>>         if (callchain && callchain->enabled && !evsel->no_aux_samples)
+>>>                 evsel__config_callchain(evsel, opts, callchain);
+>>>
+>>> -       if (opts->sample_intr_regs && !evsel->no_aux_samples &&
+>>> -           !evsel__is_dummy_event(evsel)) {
+>>> -               attr->sample_regs_intr = opts->sample_intr_regs;
+>>> +       if (bitmap_weight(opts->sample_intr_regs, PERF_NUM_INTR_REGS_SIZE) &&
+>>> +                       !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
+>>> +               attr->sample_regs_intr = opts->sample_intr_regs[0];
+>>> +               memcpy(attr->sample_regs_intr_ext, &opts->sample_intr_regs[1],
+>>> +                               PERF_NUM_EXT_REGS / 8);
+>>>                 evsel__set_sample_bit(evsel, REGS_INTR);
+>>>         }
+>>>
+>>> @@ -3097,10 +3099,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>>>
+>>>                 if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
+>>>                         u64 mask = evsel->core.attr.sample_regs_intr;
+>>> +                       unsigned long *mask_ext =
+>>> +                               (unsigned long *)evsel->core.attr.sample_regs_intr_ext;
+>>> +                       u64 *intr_regs_mask;
+>>>
+>>>                         sz = hweight64(mask) * sizeof(u64);
+>>> +                       sz += bitmap_weight(mask_ext, PERF_NUM_EXT_REGS) * sizeof(u64);
+>>>                         OVERFLOW_CHECK(array, sz, max_size);
+>>>                         data->intr_regs.mask = mask;
+>>> +                       intr_regs_mask = (u64 *)&data->intr_regs.mask_ext;
+>>> +                       memcpy(&intr_regs_mask[1], mask_ext, PERF_NUM_EXT_REGS);
+>>>                         data->intr_regs.regs = (u64 *)array;
+>>>                         array = (void *)array + sz;
+>>>                 }
+>>> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+>>> index cda1c620968e..666c2a172ef2 100644
+>>> --- a/tools/perf/util/parse-regs-options.c
+>>> +++ b/tools/perf/util/parse-regs-options.c
+>>> @@ -12,11 +12,13 @@
+>>>  static int
+>>>  __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>  {
+>>> +       unsigned int size = intr ? PERF_NUM_INTR_REGS * 64 : 64;
+>>>         uint64_t *mode = (uint64_t *)opt->value;
+>>>         const struct sample_reg *r = NULL;
+>>>         char *s, *os = NULL, *p;
+>>>         int ret = -1;
+>>> -       uint64_t mask;
+>>> +       DECLARE_BITMAP(mask, size);
+>>> +       DECLARE_BITMAP(mask_tmp, size);
+>>>
+>>>         if (unset)
+>>>                 return 0;
+>>> @@ -24,13 +26,14 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>         /*
+>>>          * cannot set it twice
+>>>          */
+>>> -       if (*mode)
+>>> +       if (bitmap_weight((unsigned long *)mode, size))
+>>>                 return -1;
+>>>
+>>> +       bitmap_zero(mask, size);
+>>>         if (intr)
+>>> -               mask = arch__intr_reg_mask();
+>>> +               arch__intr_reg_mask(mask);
+>>>         else
+>>> -               mask = arch__user_reg_mask();
+>>> +               *(uint64_t *)mask = arch__user_reg_mask();
+>>>
+>>>         /* str may be NULL in case no arg is passed to -I */
+>>>         if (str) {
+>>> @@ -47,7 +50,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>                         if (!strcmp(s, "?")) {
+>>>                                 fprintf(stderr, "available registers: ");
+>>>                                 for (r = arch__sample_reg_masks(); r->name; r++) {
+>>> -                                       if (r->mask & mask)
+>>> +                                       bitmap_and(mask_tmp, mask, r->mask_ext, size);
+>>> +                                       if (bitmap_weight(mask_tmp, size))
+>>>                                                 fprintf(stderr, "%s ", r->name);
+>>>                                 }
+>>>                                 fputc('\n', stderr);
+>>> @@ -55,7 +59,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>                                 goto error;
+>>>                         }
+>>>                         for (r = arch__sample_reg_masks(); r->name; r++) {
+>>> -                               if ((r->mask & mask) && !strcasecmp(s, r->name))
+>>> +                               bitmap_and(mask_tmp, mask, r->mask_ext, size);
+>>> +                               if (bitmap_weight(mask_tmp, size) && !strcasecmp(s, r->name))
+>>>                                         break;
+>>>                         }
+>>>                         if (!r || !r->name) {
+>>> @@ -64,7 +69,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>                                 goto error;
+>>>                         }
+>>>
+>>> -                       *mode |= r->mask;
+>>> +                       bitmap_or((unsigned long *)mode, (unsigned long *)mode, r->mask_ext, size);
+>>>
+>>>                         if (!p)
+>>>                                 break;
+>>> @@ -75,8 +80,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>>         ret = 0;
+>>>
+>>>         /* default to all possible regs */
+>>> -       if (*mode == 0)
+>>> -               *mode = mask;
+>>> +       if (!bitmap_weight((unsigned long *)mode, size))
+>>> +               bitmap_or((unsigned long *)mode, (unsigned long *)mode, mask, size);
+>>>  error:
+>>>         free(os);
+>>>         return ret;
+>>> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+>>> index 44b90bbf2d07..b36eafc10e84 100644
+>>> --- a/tools/perf/util/perf_regs.c
+>>> +++ b/tools/perf/util/perf_regs.c
+>>> @@ -11,11 +11,6 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
+>>>         return SDT_ARG_SKIP;
+>>>  }
+>>>
+>>> -uint64_t __weak arch__intr_reg_mask(void)
+>>> -{
+>>> -       return 0;
+>>> -}
+>>> -
+>>>  uint64_t __weak arch__user_reg_mask(void)
+>>>  {
+>>>         return 0;
+>>> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+>>> index f2d0736d65cc..5018b8d040ee 100644
+>>> --- a/tools/perf/util/perf_regs.h
+>>> +++ b/tools/perf/util/perf_regs.h
+>>> @@ -4,18 +4,32 @@
+>>>
+>>>  #include <linux/types.h>
+>>>  #include <linux/compiler.h>
+>>> +#include <linux/bitmap.h>
+>>> +#include <linux/perf_event.h>
+>>> +#include "util/record.h"
+>>>
+>>>  struct regs_dump;
+>>>
+>>>  struct sample_reg {
+>>>         const char *name;
+>>> -       uint64_t mask;
+>>> +       union {
+>>> +               uint64_t mask;
+>>> +               DECLARE_BITMAP(mask_ext, PERF_NUM_INTR_REGS * 64);
+>>> +       };
+>>>  };
+>>>
+>>>  #define SMPL_REG_MASK(b) (1ULL << (b))
+>>>  #define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
+>>>  #define SMPL_REG2_MASK(b) (3ULL << (b))
+>>>  #define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
+>>> +#define SMPL_REG_EXT(n, b)     \
+>>> +       { .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0x1ULL << (b % __BITS_PER_LONG) }
+>>> +#define SMPL_REG2_EXT(n, b)    \
+>>> +       { .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0x3ULL << (b % __BITS_PER_LONG) }
+>>> +#define SMPL_REG4_EXT(n, b)    \
+>>> +       { .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0xfULL << (b % __BITS_PER_LONG) }
+>>> +#define SMPL_REG8_EXT(n, b)    \
+>>> +       { .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0xffULL << (b % __BITS_PER_LONG) }
+>>>  #define SMPL_REG_END { .name = NULL }
+>>>
+>>>  enum {
+>>> @@ -24,7 +38,7 @@ enum {
+>>>  };
+>>>
+>>>  int arch_sdt_arg_parse_op(char *old_op, char **new_op);
+>>> -uint64_t arch__intr_reg_mask(void);
+>>> +void arch__intr_reg_mask(unsigned long *mask);
+>>>  uint64_t arch__user_reg_mask(void);
+>>>  const struct sample_reg *arch__sample_reg_masks(void);
+>>>
+>>> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+>>> index a6566134e09e..16e44a640e57 100644
+>>> --- a/tools/perf/util/record.h
+>>> +++ b/tools/perf/util/record.h
+>>> @@ -57,7 +57,7 @@ struct record_opts {
+>>>         unsigned int  auxtrace_mmap_pages;
+>>>         unsigned int  user_freq;
+>>>         u64           branch_stack;
+>>> -       u64           sample_intr_regs;
+>>> +       u64           sample_intr_regs[PERF_NUM_INTR_REGS];
+>>>         u64           sample_user_regs;
+>>>         u64           default_interval;
+>>>         u64           user_interval;
+>>> diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+>>> index 70b2c3135555..98c9c4260de6 100644
+>>> --- a/tools/perf/util/sample.h
+>>> +++ b/tools/perf/util/sample.h
+>>> @@ -4,13 +4,17 @@
+>>>
+>>>  #include <linux/perf_event.h>
+>>>  #include <linux/types.h>
+>>> +#include <linux/bitmap.h>
+>>>
+>>>  /* number of register is bound by the number of bits in regs_dump::mask (64) */
+>>>  #define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
+>>>
+>>>  struct regs_dump {
+>>>         u64 abi;
+>>> -       u64 mask;
+>>> +       union {
+>>> +               u64 mask;
+>>> +               DECLARE_BITMAP(mask_ext, PERF_NUM_INTR_REGS * 64);
+>>> +       };
+>>>         u64 *regs;
+>>>
+>>>         /* Cached values/mask filled by first register access. */
+>>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+>>> index 507e6cba9545..995f5c2963bc 100644
+>>> --- a/tools/perf/util/session.c
+>>> +++ b/tools/perf/util/session.c
+>>> @@ -909,12 +909,13 @@ static void branch_stack__printf(struct perf_sample *sample,
+>>>         }
+>>>  }
+>>>
+>>> -static void regs_dump__printf(u64 mask, u64 *regs, const char *arch)
+>>> +static void regs_dump__printf(bool intr, struct regs_dump *regs, const char *arch)
+>>>  {
+>>> +       unsigned int size = intr ? PERF_NUM_INTR_REGS * 64 : 64;
+>>>         unsigned rid, i = 0;
+>>>
+>>> -       for_each_set_bit(rid, (unsigned long *) &mask, sizeof(mask) * 8) {
+>>> -               u64 val = regs[i++];
+>>> +       for_each_set_bit(rid, regs->mask_ext, size) {
+>>> +               u64 val = regs->regs[i++];
+>>>
+>>>                 printf(".... %-5s 0x%016" PRIx64 "\n",
+>>>                        perf_reg_name(rid, arch), val);
+>>> @@ -935,16 +936,22 @@ static inline const char *regs_dump_abi(struct regs_dump *d)
+>>>         return regs_abi[d->abi];
+>>>  }
+>>>
+>>> -static void regs__printf(const char *type, struct regs_dump *regs, const char *arch)
+>>> +static void regs__printf(bool intr, struct regs_dump *regs, const char *arch)
+>>>  {
+>>> -       u64 mask = regs->mask;
+>>> +       if (intr) {
+>>> +               u64 *mask = (u64 *)&regs->mask_ext;
+>>>
+>>> -       printf("... %s regs: mask 0x%" PRIx64 " ABI %s\n",
+>>> -              type,
+>>> -              mask,
+>>> -              regs_dump_abi(regs));
+>>> +               printf("... intr regs: mask 0x");
+>>> +               for (int i = 0; i < PERF_NUM_INTR_REGS; i++)
+>>> +                       printf("%" PRIx64 "", mask[i]);
+>>> +               printf(" ABI %s\n", regs_dump_abi(regs));
+>>> +       } else {
+>>> +               printf("... user regs: mask 0x%" PRIx64 " ABI %s\n",
+>>> +                      regs->mask,
+>>> +                      regs_dump_abi(regs));
+>>> +       }
+>>>
+>>> -       regs_dump__printf(mask, regs->regs, arch);
+>>> +       regs_dump__printf(intr, regs, arch);
+>>>  }
+>>>
+>>>  static void regs_user__printf(struct perf_sample *sample, const char *arch)
+>>> @@ -952,7 +959,7 @@ static void regs_user__printf(struct perf_sample *sample, const char *arch)
+>>>         struct regs_dump *user_regs = &sample->user_regs;
+>>>
+>>>         if (user_regs->regs)
+>>> -               regs__printf("user", user_regs, arch);
+>>> +               regs__printf(false, user_regs, arch);
+>>>  }
+>>>
+>>>  static void regs_intr__printf(struct perf_sample *sample, const char *arch)
+>>> @@ -960,7 +967,7 @@ static void regs_intr__printf(struct perf_sample *sample, const char *arch)
+>>>         struct regs_dump *intr_regs = &sample->intr_regs;
+>>>
+>>>         if (intr_regs->regs)
+>>> -               regs__printf("intr", intr_regs, arch);
+>>> +               regs__printf(true, intr_regs, arch);
+>>>  }
+>>>
+>>>  static void stack_user__printf(struct stack_dump *dump)
+>>> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+>>> index a58444c4aed1..35c5d58aa45f 100644
+>>> --- a/tools/perf/util/synthetic-events.c
+>>> +++ b/tools/perf/util/synthetic-events.c
+>>> @@ -1538,7 +1538,9 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+>>>         if (type & PERF_SAMPLE_REGS_INTR) {
+>>>                 if (sample->intr_regs.abi) {
+>>>                         result += sizeof(u64);
+>>> -                       sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+>>> +                       sz = bitmap_weight(sample->intr_regs.mask_ext,
+>>> +                                          PERF_NUM_INTR_REGS * 64) *
+>>> +                            sizeof(u64);
+>>>                         result += sz;
+>>>                 } else {
+>>>                         result += sizeof(u64);
+>>> @@ -1741,7 +1743,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+>>>         if (type & PERF_SAMPLE_REGS_INTR) {
+>>>                 if (sample->intr_regs.abi) {
+>>>                         *array++ = sample->intr_regs.abi;
+>>> -                       sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+>>> +                       sz = bitmap_weight(sample->intr_regs.mask_ext,
+>>> +                                          PERF_NUM_INTR_REGS * 64) * sizeof(u64);
+>>>                         memcpy(array, sample->intr_regs.regs, sz);
+>>>                         array = (void *)array + sz;
+>>>                 } else {
+>>> --
+>>> 2.40.1
+>>>
