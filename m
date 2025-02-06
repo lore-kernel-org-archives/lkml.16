@@ -1,57 +1,62 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A1C151992;
-	Thu,  6 Feb 2025 12:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D9D22CBFE
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844041; cv=none; b=NxUA/U1czrR+035/rgSh8V5s7Z1ondjMp0wf2PceGgDUkG8CTX2IKecJJWnlLHX45sU56OZLug/FINBMWe16+T480xuiJBETa7zYK6X/IAcU7BPI24tqZF5G1H47iUkxOYDrQPHOzNqPrr9QLJQN6nOFEan5RmVyNerrhpSg9DE=
+	t=1738844135; cv=none; b=hwT3ls92TyfhQpXpSaiUSs9Pmk5Sx2YPc3M+YCVUQVWMPmSS7p2ADDCpEm1GLb8BVf74vOD6PgNSre/Oug4av9NTAU3hFYmZo5C/Frtsh66GeouSZFDPNf5NHoDveFvftS2M8CA+AqhuNHKpwyNr/sKGmhDjohKwsKjWnY8IgCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844041; c=relaxed/simple;
-	bh=wxTCmkjY4k9wfr2fZONA+SFblWX9LuSqYnijep5bLIU=;
+	s=arc-20240116; t=1738844135; c=relaxed/simple;
+	bh=V8M5eY61GCMMz3rkfHxM0Lk1h4svb/yBZN9UaaHwtVs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bg/sJU+Xcz4dFJzNpIMP0CeYCEsFA4RMhqplogMtLKciblH2cR7QlnpXSxSRmus6Sa2kl+rc4WGRk5Rl/Z98Vl+utBxZ6Stwsw92jIBagO2Me+/E7eqw0wphkhS3nSWtg3eQJqznBwvws0JD2SUv7W+BYfdNeB52tjat6o97khM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gW9YDhDS; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=FZ0Z1pdAJLDsd7VfLM4UKcPdAD0NhnEkOlynlVrwYXnofvnnqrR9kek9Golt5ETzLdnNg80jPLH/+93QuPiyzNni27X+vF7GSZ68v4YofB9td3jNQoEP0JhzNqsJA1ldVgUNejZvBdOWrl2cs4f/44sDIvr7WgTBxUoOe+kDYow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F5DgDi9Q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gW9YDhDS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3B5a6rxdv9Tr08mPBuDoz30MTqmF7tY362uf4ZvrivE=; b=gW9YDhDSq2Mxq2we37wqKCX0YA
-	AbNF7dcEc5FolptcfjEwJtbnI8o69XgbNAgsCEJOOyORibQmNGXF3Ikz1uYV0UNqezSTho6ctxLX4
-	WTPfejmtCApyCC/xnufGuMWrYJ+LycQKsjmrAcEkap2B2AGdg3KrXz82kUUWe3t/gy80FCxfiUy8L
-	ymgUMHMaoRJKB1lFM8UYiq7XaNcQtctRAyw9DZ3+uZUDzpuMvn8/w2X21e1dytvab7lum/chS1ziP
-	RP2M+062O4M7RrPv20UfgHHTKQD2Dj1AlFwduHAF1TF7KP2N/2nGE67n0G0Ds1LNEZnBNr5QHVHxZ
-	yXVpsEAA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg0l8-0000000Gvar-0Bvo;
-	Thu, 06 Feb 2025 12:13:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 49426300318; Thu,  6 Feb 2025 13:13:28 +0100 (CET)
-Date: Thu, 6 Feb 2025 13:13:28 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriel de Perthuis <g2p.code@gmail.com>,
-	Haiyue Wang <haiyuewa@163.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F5DgDi9Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738844132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V8M5eY61GCMMz3rkfHxM0Lk1h4svb/yBZN9UaaHwtVs=;
+	b=F5DgDi9Q6O1uPeAqLysNC3Rq0vqyh87cap0mm00nlJZL6RwG5cEJoFUIz58A7/tc6OaFYY
+	vGs2LR/J8S+/FBQ+PWzREhy2lxgsTUx/rnFBx6l82AREuOv9VsaqULR+HsSynfTCx6rLgj
+	eIw+XvOyQ+6v5qxqmv6+SU+7rP/bvc4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-zAkiP20rO6GTfp9wqVNRrw-1; Thu,
+ 06 Feb 2025 07:15:25 -0500
+X-MC-Unique: zAkiP20rO6GTfp9wqVNRrw-1
+X-Mimecast-MFC-AGG-ID: zAkiP20rO6GTfp9wqVNRrw
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9967D1800373;
+	Thu,  6 Feb 2025 12:15:24 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.53])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 93B151800570;
+	Thu,  6 Feb 2025 12:15:21 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  6 Feb 2025 13:14:58 +0100 (CET)
+Date: Thu, 6 Feb 2025 13:14:54 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-ID: <20250206121328.GN7145@noisy.programming.kicks-ass.net>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
- <20250206081225.GI7145@noisy.programming.kicks-ass.net>
- <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] exit: change the release_task() paths to call
+ flush_sigqueue() lockless
+Message-ID: <20250206121453.GA5209@redhat.com>
+References: <20250205175136.GA8702@redhat.com>
+ <20250205175159.GA8714@redhat.com>
+ <Z6PjzA61v6s732JF@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,53 +65,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+In-Reply-To: <Z6PjzA61v6s732JF@pavilion.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Feb 06, 2025 at 08:54:49PM +0900, Masami Hiramatsu wrote:
-> On Thu, 6 Feb 2025 09:12:25 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > 
-> > > +#ifdef CONFIG_HAVE_FENTRY
-> > > +/* Convert fentry address to the symbol address. */
-> > > +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-> > > +{
-> > > +#ifdef CONFIG_X86_KERNEL_IBT
-> > > +	u32 instr;
-> > > +
-> > > +	/* We want to be extra safe in case entry ip is on the page edge,
-> > > +	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-> > > +	 */
-> > > +	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> > > +		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-> > > +			return fentry_ip;
-> > > +	} else {
-> > > +		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> > > +	}
-> > > +	if (is_endbr(instr))
-> > > +		fentry_ip -= ENDBR_INSN_SIZE;
-> > > +#endif
-> > > +	return fentry_ip;
-> > > +}
-> > > +#endif
-> > 
-> > Urgh, that reminds, me. I have a pile of patches cleaning up this mess.
-> > Let me go find them.
-> 
-> Thanks for cleaning up! So would it change the location of ENDBR and
-> symbol address?
+On 02/05, Frederic Weisbecker wrote:
+>
+> Looks good to me, except for this TIF_SIGPENDING removal which I'm less
+> sure about, I see a lot of places where it is added/removed. Well it's
+> probably only checked locally on entry code. Would it make sense to move
+> this chunk to a separate preceding patch?
 
-No, it just cleans up this utter trainwreck. I also noticed this is a
-second (new) copy of this garbage. Clearly I didn't yell loud enough
-last time and people didn't think to vomit when doing the copy/paste :/
+OK, will do.
 
-Function will look something like:
+Thanks!
 
-unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-{
-	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
-		fentry_op -= ENDBR_INSN_SIZE;
-	return fentry_ip;
-}
+Oleg.
 
-Let me finish local build test before I push out.
