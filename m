@@ -1,198 +1,111 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2052.outbound.protection.outlook.com [40.107.236.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8884D230D37;
-	Thu,  6 Feb 2025 14:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738851789; cv=fail; b=qonM24HpSo0fIHAtBeR2AS+CKK95a3eNjrtB65YRr7UgGNH21vvLi4zaYazkE3csd+FOQko4qJ+9hUU1finzzXnkxyIrisG00ftzVSbNCb+Tzf7zMkbo8WCUW8MZCTpyLrmm2yid8ody6UBGcYyXqJcJCJ5oHSwquguCphmdFjI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738851789; c=relaxed/simple;
-	bh=H4N+TzrogRjCk0MmAzTL9PPHQWV/y6ylM2i+TV0rTto=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bs5tcKKGSAU3jZz/7eMrn4tCJ0fcgKDFCAnqqtkXc4uPUCqa7/UZv1sWj9Q7O/pyjH8ie6F2Wn8V34LL1sRGyErds36o8j6YrB3IVQ8VL2sB7hrWXGuaVVHfxCBCs1awt7MiP9I0JeMlkmGv8lB+Bln1zjYYuI9Vb4mM7wHL0O0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I4wzMd7X; arc=fail smtp.client-ip=40.107.236.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F5522617B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738851798; cv=none; b=N9FdLLw8Y27c25AOC2CcogEi0M2kPaqMK10UX+RBhdMMqbxhclHAgIZtR+zPYY/VpZ+KYSQFgFFQNi0UsU1imbmlUsZLBfufULSKOZ+Oz0usWL4detebc8icVUYpHUqAHPwAk3lRlHriOKgkFMrkFEPCMPMU1KNqndtU7Vhkj2s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738851798; c=relaxed/simple;
+	bh=hYNDYZyhU3vPLzYPSaPWEcPzJSNHuY39jWh45uxHumU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D+xgsc9tbArYkFPrAVTrvV3JdTrllCvuOY07CGomceXcg7V9UdEOecXZDWrrSyGlQFIfCrSNFWZSI6LCJpwrXQz0ixKV36VrpXx4oJgYo4qlVfklUmM42gDk6T0h9cDSBYKVlw83K0uXyfqr2QojlJnKJhtYvtxC/3/PhTnKvL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=w4WBJPzX; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I4wzMd7X"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pfmoSwXTBmBaaNXRfH8L/HSGQ8DL60MNKtN0J55X3vk2WSistNmMz/fstbZ91aDPRLcDon2scHCTpnCMhiWF9nfcm6wV2M5XIAfk2qHcVG2d262IwxvT+wI4/K8OYEKpE9sKd1gqacmlNNBn0ppv7q1N7gX+c3t1CI/2ET3hUbgFhSmDc/EwCfmwbE1qz56i84eihYjNv4//eagQQGI6ixwmePQl4MlCg39Z6SQN6L5hYY2B5CpdRr6AL13vB/t5amSb2t3iHbLmnuCB2GrLZP01T05kkZrDb00lKkC/s0L8tSsYvxS2Bb5OUBFAdg5wla76HIVu0CztgdWu9QZ5oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EQLekWKCfC8iUgnCdBkNohqR9d90w2vuznCXXlYowbE=;
- b=F7usRoyZYBV6sMN6j5dC6bYDUhwDTANpDboEwB+CdhdwODKUzqoGZVP8aTBH9sIehybmPFsiXwjpfxJiEXwcE94mHVKP5EzoTHwaQrz0Fte8Y+dniez93awW8t7mwc9wxFsdPepJHvQr+Huutx95VlEbfHpLHwoL+S8zd84qyv/DysB+849m40NW70NlJj/xnpsnSZcAZOHL3tusPKz4heY3f1nWOYby6SC8kRDMnj3Q5z3C+VXFiVXoYD8QQvD1cEoEPnuiXt+JzwiWvX/rJ8GdAQ0xg5HhuiHm6xTTvF7VzBAlTBQw0vZV1uxdsqplCvMfG1VbOOjyS4RA/9CG9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EQLekWKCfC8iUgnCdBkNohqR9d90w2vuznCXXlYowbE=;
- b=I4wzMd7XS/LsMpBpA1tX4KsMXdhm8isWhS7ccPdZkJ4PPMlUHeqUEdHf6qiWAFwv1TZUb2/RfqaJnrvWsjlf/Z2RFmZm30o7GCymDl5OU9FFgwzEP64gFSibN9ruwCiOMuN4hsvfVYcd7pEw/ksHkLzAIe+X8TNCCfIz4D4lYkE=
-Received: from BN0PR07CA0003.namprd07.prod.outlook.com (2603:10b6:408:141::15)
- by DS0PR12MB7802.namprd12.prod.outlook.com (2603:10b6:8:145::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Thu, 6 Feb
- 2025 14:23:02 +0000
-Received: from BN2PEPF000044A0.namprd02.prod.outlook.com
- (2603:10b6:408:141:cafe::96) by BN0PR07CA0003.outlook.office365.com
- (2603:10b6:408:141::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.27 via Frontend Transport; Thu,
- 6 Feb 2025 14:23:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN2PEPF000044A0.mail.protection.outlook.com (10.167.243.151) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Thu, 6 Feb 2025 14:23:01 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
- 2025 08:22:57 -0600
-Received: from xsjwillw50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 6 Feb 2025 08:22:56 -0600
-From: Ronak Jain <ronak.jain@amd.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<michal.simek@amd.com>, <nava.kishore.manne@amd.com>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Ronak Jain <ronak.jain@amd.com>
-Subject: [PATCH 2/3] dt-bindings: firmware: xilinx: Add conditional pinctrl schema
-Date: Thu, 6 Feb 2025 06:22:43 -0800
-Message-ID: <20250206142244.2553237-3-ronak.jain@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250206142244.2553237-1-ronak.jain@amd.com>
-References: <20250206142244.2553237-1-ronak.jain@amd.com>
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="w4WBJPzX"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaeef97ff02so171473466b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:23:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1738851794; x=1739456594; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gFMFd8yvXqVnAGCGrRETRe/V8KRYdG7T8ArDcX9VBwI=;
+        b=w4WBJPzX5UOyQ4pAoq2W+LwYbdYtyhv13tvBJnEyAwICDjjNPnZJdDRsX1IFceliKl
+         4hD8mN066oU7ph/Y+RIveutEVH3p95RV7bChlz5h0viKFz1CfIB4G3oRIvDEt1KzziC/
+         ZT6r19Aa1ISdkPQzzRxSrq37Pf78WKrbKwdP1LEkDD+8WHG6Q3kqZa5v2uPDaTba1Trr
+         g2hEIDczbeLjDtzpWJTEawV5dNbp7aFPxf0Km5LPPuhLjdjybpBq28lp1sWjmWb08qjv
+         KbLbOvUj7i8WEWfdScP3L26R4oNps+CVHb3VxOHsOGaHnsM+9kjbTGXXPkd08fUew9XN
+         OYLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738851794; x=1739456594;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gFMFd8yvXqVnAGCGrRETRe/V8KRYdG7T8ArDcX9VBwI=;
+        b=M90o4K3DiudVr45cRWJYoJqqzR7sGzL5a2o0IVe/zvjUXxS0gC4Cs50HMBHOtOKrUq
+         vGbGP68nOTDd9piVuTnuZZxIE5hG5C4KJYcmwR04xfJjmY0wXJMtfcodwLfcHqw5ca1S
+         t96XjeMtfmxZZovx50PYbmzF95tnguP6kZRg4UtAM3xOTaV4+dRcN39CtiMbUtFH+5lZ
+         azzkYVGKSYh+TYwK0eKUcIhNj9SZIW2h29E+lcco+HjPSnKzPNah9uX5ZSLmcil211B0
+         GTCEAqaP18UtLMdiYWjpaV4S9tFfDuc60Zfv39EAL/mo25lLYtdpKzYwbBxIsIGsxp4v
+         a48Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWIzDy419wediotv3X5E8Ul5G7cHUbk+NQs7N+qrSYr0NMPTHyOZOt+eMWYkEPok0vSTLv6QjnRTyYoKc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2aOsa8qppfRsaBxyZHxHXHL3KtxuYQ7si1lmwkxKhQBwB5YdJ
+	NGTjvez3gP3p8KOuk2gweXSUUURZkwrhbw/pqsWzYi6lp3vQhg+nyzYBqJvQCm4=
+X-Gm-Gg: ASbGncvc2XdiNazBvhUzEWCc2hWgABVPfKgwPiapM422MHmpaFrL2m4vYtoYiA0fOFI
+	c04svrt4qqwELqdD5EEkAP3fvHMwbcjNsl8OpyCEET6gcmF3CWTQbGKNp7032uZsG4jbF1LVeKf
+	XyMgCiaLKfHnJUH3lM+QpMj2h0vCi8ZniN+SUUnn5MZcn996bFLKV0k9FvvMMjwj2zFKjK0gfFQ
+	ZmQWk8umKtRlb5D+AtdsU7Lv/E1wCXh7+LxTo4q5gzHZEV7yPqBKfjq/oxdoxdHjImRparCSdST
+	FlwKUx0Kkv+vfMa70YEKkr5N4nnzYS1t2nx3K3UHYodbG+M=
+X-Google-Smtp-Source: AGHT+IFFyvQfINAl6lz2A01y9ohntI7gR0hYfp3ILlqctgCUIUMFbzNkfcNhO1QK5iS0p6NSxCJe9w==
+X-Received: by 2002:a17:907:8694:b0:ab7:b93:f77d with SMTP id a640c23a62f3a-ab75e245be1mr816768366b.3.1738851793676;
+        Thu, 06 Feb 2025 06:23:13 -0800 (PST)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f486c7sm106211766b.23.2025.02.06.06.23.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 06:23:13 -0800 (PST)
+Message-ID: <5de6707a-6a77-41d1-8964-19667a0e91b2@blackwall.org>
+Date: Thu, 6 Feb 2025 16:23:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: ronak.jain@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A0:EE_|DS0PR12MB7802:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea61c532-6eaa-4bda-2e59-08dd46b9c364
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZBGJEoEtKb5zi3saJpv7gcDKIZZAY2vR7yPL8U9DrDGvBf06HanjkbVnfcWd?=
- =?us-ascii?Q?vgQ8Gnkt2Kg8mFnz9wRZYX6Xrx17GoI7VLK1SFvw2hwQgSLNsKknCBsXm0rP?=
- =?us-ascii?Q?LUXQmzzP55/vFAwu7zqaDUL+K/YOwlZuSS6lYzwq+FDsYZdMAiQybLKY0AwW?=
- =?us-ascii?Q?7h839K/DeKzstdVa0RtgPydbqI2n8VE0J2ju9EmH7AHve56pUyBoQZGAx5Nx?=
- =?us-ascii?Q?sVLasqUQwlLhhFG2jEqbAQ1rY+NL+A7iJNRqOrfEzUW/Rvdbiq2dJFghW/5a?=
- =?us-ascii?Q?8PJRjcBDW2RCTE8Nd7730G1XFwWV6sxFaZCkjU4PaRmNQUKwkcZ6fBrbsHyu?=
- =?us-ascii?Q?Zd0DR6c93+JW6GU2tX7LiBUyRqFAga8DaOKUAPntF6EIRPHiKg8Ip8xk5Zze?=
- =?us-ascii?Q?wJBpxsHnO4M1QgWswB1m/Ju5UyIalrxZB0jHL43UfoFMbU5ootTYhj7qiJL5?=
- =?us-ascii?Q?dv4cJCkq5z40hhYd5LHTjC3rzOUOTqjbeOynsBWCSXCsBs+Vb6lEvzDVacuJ?=
- =?us-ascii?Q?sPxnT5+OmEQKE6+LEhyKJ4/XSwUjKRKTYXQtXVfUHDtrY+TZeZnq1O8LoThD?=
- =?us-ascii?Q?nq/kJNAqD2Gd2zyBfz+ZzEwSmCQEBNBFx4uysTqxR5nz9jhUymawVWunmhG0?=
- =?us-ascii?Q?EIWVbkr/b0WWhFtnuryEbbVMZgNFa9oHgdlvGvQRXoRwvo1q+uh5pOiFf4HW?=
- =?us-ascii?Q?faJ2wLANv6z7n7yGjBdnh5ub4RgZ/gbH3QOKX5zUWL9Z7FCXZhK+DD5NxSxW?=
- =?us-ascii?Q?jmGkzSEkpILP2eP8oIzDI1+6u8Hof9H+hfrIsBKyTgKNHFB000PAOeciPTKj?=
- =?us-ascii?Q?amQF2x1uQ30HFSnJTcQX/hMYM6O0c8Ev6ojFsX6XBrw6ItKqqrQj3dJQbjJN?=
- =?us-ascii?Q?jURDgnH89jZEJCWgszAi8cx8dglPq2LdP/D9pWD0lAuejutir6NDvc6FLFdm?=
- =?us-ascii?Q?UukTFMXRI3O9Mu4rLFw4Z1S/v0Seac5q6RjUoCFHvajzZpOhIKA6CjcBI43T?=
- =?us-ascii?Q?K6VYj0+9Z+FZk4TwCvNv382sA+sDEPdspfz1/i8EGa/iT6yfZMVHQ2Twu/ni?=
- =?us-ascii?Q?NGZj/oETMJS6Dz8V+TmgYAkgvGyyR4XFyZ6J1wSDboLxxcOstbgdmF03ETDg?=
- =?us-ascii?Q?MA4qOkJsYyEWRtTxQSR5cC1HZuQAoRwOvDNwHDCpIFstuKyYD5RlR5zJP/Rz?=
- =?us-ascii?Q?YOsK+zEa3a6BnpSZqrit+MZEMdwlWW8Ol95qoLXIQWQb8XHWkoq4AJ4lLwhi?=
- =?us-ascii?Q?KsBOZi++A5ErfCn2DSoCyVD+Mv5Mtaz9cATOp39VGOQbV9lVKUvulraNLSBK?=
- =?us-ascii?Q?uwJkgmVZgFMcxNK81BasNjeKUjj9bAEKHpJdqyU7R3lUmgNgSilVmxW/sMDi?=
- =?us-ascii?Q?SI0udI03F+B7I0eSkQmMEm9UXM8yAcylQGbm866z7JEUW7J2lmjzKw84jVne?=
- =?us-ascii?Q?VkOg+/csLuGuetkN7vfps7tEIUuzz4xtVKYBQB8DjA2VtBkyl7sky8mKE47G?=
- =?us-ascii?Q?4534nl5pCLaY/pE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 14:23:01.6713
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea61c532-6eaa-4bda-2e59-08dd46b9c364
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A0.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7802
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 net-next 06/14] net: core: dev: Add
+ dev_fill_bridge_path()
+To: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>,
+ Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Vladimir Oltean <olteanv@gmail.com>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ bridge@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250204194921.46692-1-ericwouds@gmail.com>
+ <20250204194921.46692-7-ericwouds@gmail.com>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20250204194921.46692-7-ericwouds@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Updates the Device Tree bindings for Xilinx firmware by introducing
-conditional schema references for the pinctrl node.
+On 2/4/25 21:49, Eric Woudstra wrote:
+> New function dev_fill_bridge_path(), similar to dev_fill_forward_path().
+> It handles starting from a bridge port instead of the bridge master.
+> The structures ctx and nft_forward_info need to be already filled in with
+> the (vlan) encaps.
+> 
+> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
+> ---
+>  include/linux/netdevice.h |  2 ++
+>  net/core/dev.c            | 66 +++++++++++++++++++++++++++++++--------
+>  2 files changed, 55 insertions(+), 13 deletions(-)
+> 
 
-Previously, the pinctrl node directly referenced
-xlnx,zynqmp-pinctrl.yaml. However, this patch modifies the schema to
-conditionally apply the correct pinctrl schema based on the compatible
-property. Specifically:
-- If compatible contains "xlnx,zynqmp-pinctrl", reference
-  xlnx,zynqmp-pinctrl.yaml.
-- If compatible contains "xlnx,versal-pinctrl", reference
-  xlnx,versal-pinctrl.yaml.
-
-Additionally, an example entry for "xlnx,versal-pinctrl" has been
-added under the examples section.
-
-Signed-off-by: Ronak Jain <ronak.jain@amd.com>
----
- .../firmware/xilinx/xlnx,zynqmp-firmware.yaml | 20 ++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml
-index 2b72fb9d3c22..d50438b0fca8 100644
---- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml
-+++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml
-@@ -76,7 +76,6 @@ properties:
-     type: object
- 
-   pinctrl:
--    $ref: /schemas/pinctrl/xlnx,zynqmp-pinctrl.yaml#
-     description: The pinctrl node provides access to pinconfig and pincontrol
-       functionality available in firmware.
-     type: object
-@@ -106,6 +105,21 @@ properties:
-     type: object
-     deprecated: true
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: xlnx,zynqmp-firmware
-+    then:
-+      properties:
-+        pinctrl:
-+          $ref: /schemas/pinctrl/xlnx,zynqmp-pinctrl.yaml#
-+    else:
-+      properties:
-+        pinctrl:
-+          $ref: /schemas/pinctrl/xlnx,versal-pinctrl.yaml#
-+
- required:
-   - compatible
- 
-@@ -164,6 +178,10 @@ examples:
-         compatible = "xlnx,versal-fpga";
-       };
- 
-+      pinctrl {
-+        compatible = "xlnx,versal-pinctrl";
-+      };
-+
-       xlnx_aes: zynqmp-aes {
-         compatible = "xlnx,zynqmp-aes";
-       };
--- 
-2.34.1
-
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
