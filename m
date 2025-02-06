@@ -1,121 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BAB22370D;
-	Thu,  6 Feb 2025 06:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90A222370D;
+	Thu,  6 Feb 2025 06:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738821947; cv=none; b=k9lzbjKDPxzT6c+1ia5j7MaTAXtHdSVhe2ZdP/IUjrdM9OqhmqVVcM/aJ75fD/Y9gaH1k8wNDVGBbnvmKyu6caZ5oK/QGn9mPCNRDdf7lkAdaifCUcz04NkETKu4HY+6gZohkU7RjOVzZSIf10+R1uFbSrQB01vPJAuXHHZWC/A=
+	t=1738821971; cv=none; b=e5frxMPtpn9HDj9nxUNY01tbENjQqvTEoZ7hHiF8mOvQVFdRyfmsW87yisxTvmvv4XxvgFUBLOWeOOTBK68ALNl8tC3EKIi2Dbf4ye0yryY9lq/8c3oEeWTZeG9aFV4VJmJZ7rCu0bdkOGwSQYfkUGavN15H1Yau9/9LTczRfac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738821947; c=relaxed/simple;
-	bh=ncXxcvgdUa5DjwY3qx7h1Jbj3YQk22S0tZsM/G1hMds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LS7YrjYEDk6pAeNDYMW7eDxGFhYIYI+aAAEFgY5f8OBdcJ1a+P8AuUJRWo21Ij8wxhBP7aqUGDoBKuwwTxdKT6FWyMETAvrX5/X7m8EmQ7rwbx262z5jBDk2KlwJNy1ufIwzB+jvIKarg1QGPdmEMAVeGwJQRmsFKYTXpKGShO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6o3wCtQ; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1738821971; c=relaxed/simple;
+	bh=+sxzlzrNtZjx+em7KXC8/phrKF6st5ThSNbzCs5vdJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LZJYvBDGheg/V3vTwtB0hXpoh7YwX1tHFueLeWuFB8T8mBopo6KxOIiwVqv76256ye1TxvcOqTfIWO2SqnWpBmXO+xbEsOXPOvAL97dgOY5QxH74I1jIGmQhNGFx0i7D+PcO4q8EpBLsRXdOw5GlvAQRV50eGwluCjL1jGq6RcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZLnlOQg; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6o3wCtQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZLnlOQg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738821946; x=1770357946;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ncXxcvgdUa5DjwY3qx7h1Jbj3YQk22S0tZsM/G1hMds=;
-  b=f6o3wCtQjHOjCwFCSqGhpUYBb/wr6UkHgH0Azy09gPhAs7F1A0zS5ST4
-   hLgjyHLvWX8GTSrDHFqAwNy7hQozBT/TAs69GSKYFj150ZKSsjYUAlBOO
-   izfGIPF0LREey6WMumZysF795SgBh76oSkLv0q6s1cVrMJZsXnPLGbvLf
-   imEGYvKuvQu1vlNkB6WLak9gMWkf+jXObCN7qKTxt4i7KUN3KU65R7QQu
-   /fHZz51/p1P+87RH3gy8Jj4Rn3DI5UW9unpMKnQzh8MeAyOXRaMiBi0og
-   l848HHtXX8BmV/fwIk5zgWuSfcRtI5lkLIcwrY8DVb1YOLa/9kC0WZtsW
-   w==;
-X-CSE-ConnectionGUID: nXzfySC3QG6f+xPxSfa3Ww==
-X-CSE-MsgGUID: LZbNVdcUThSWsRMhlAYvwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39543965"
+  t=1738821970; x=1770357970;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+sxzlzrNtZjx+em7KXC8/phrKF6st5ThSNbzCs5vdJw=;
+  b=nZLnlOQgNSDiIgCCrK9eh6WgdVlxHteI1NRNW9jZGPCkV5V9UpQ3H1A0
+   IvSx2P44upHmjWtZWxyufbFQV94Nak5k94lJf2yuAphUAo122RnNepOh5
+   jmo6P08ZW1g7jv7AotXIDfln6svwPyx5TkCjOXqJFdUxcuqw0VhBaayj6
+   R3jSMZN5/SaEWkFI1AZZaIB0/D1JiINE6zZiKAVio7wnFHCl8yPKTnofo
+   f91kA36Yq4D+MxnSdYftwABlpRS7yzKmBI3mUPIkQ5YRhkKS/G0Fuuapf
+   6VrY/eeVjv9r8WsC5DVXZTCZ1VMTygbG9pNt+17B54SRt1xcMeqVP3kix
+   Q==;
+X-CSE-ConnectionGUID: 8atJGDo0QR2SKyTmwT/kyg==
+X-CSE-MsgGUID: ImgnSc87RTSIfsMuQjHUIw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43071761"
 X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="39543965"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:05:45 -0800
-X-CSE-ConnectionGUID: Cn3VOvX9TAOlWmjEIqCSXg==
-X-CSE-MsgGUID: LPqCElsjTI+VafDokhy3VA==
+   d="scan'208";a="43071761"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:06:09 -0800
+X-CSE-ConnectionGUID: JJOacnduSKmwDmmFhlOoXQ==
+X-CSE-MsgGUID: Tu0xr7jmRRKiRISW8l/LIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="111646767"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Feb 2025 22:05:42 -0800
-Date: Thu, 6 Feb 2025 14:04:49 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marco.pagani@linux.dev>
-Cc: Nava kishore Manne <nava.kishore.manne@amd.com>, git@amd.com,
-	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
-	trix@redhat.com, robh@kernel.org, saravanak@google.com,
-	linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [RFC v2 1/1] fpga-region: Add generic IOCTL interface for
- runtime FPGA programming
-Message-ID: <Z6RRAXocxWHsZZLF@yilunxu-OptiPlex-7050>
-References: <20241029091734.3288005-1-nava.kishore.manne@amd.com>
- <20241029091734.3288005-2-nava.kishore.manne@amd.com>
- <ZzwQrYeWVF6cRtgA@yilunxu-OptiPlex-7050>
- <9bfaf1cf-3313-4cb3-9963-2b4bad2d3165@redhat.com>
- <Z0fIiQPCS69O2d/n@yilunxu-OptiPlex-7050>
- <00e5c1c1-a98e-4360-b7e5-ffaa384e1036@linux.dev>
+   d="scan'208";a="110896776"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:06:06 -0800
+Message-ID: <688e9a7f-0b98-4f8a-b575-90d7de244589@linux.intel.com>
+Date: Thu, 6 Feb 2025 13:42:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00e5c1c1-a98e-4360-b7e5-ffaa384e1036@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2 v3] perf test: Change event in perf test 114 perf
+ record test subtest test_leader_sampling
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ acme@kernel.org, linux-s390@vger.kernel.org, james.clark@linaro.org,
+ agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+ <20250131102756.4185235-3-tmricht@linux.ibm.com>
+ <Z6GMmxKvXd0-fd_-@google.com>
+ <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> >> I'm currently working on an RFC to propose a rework of the fpga
-> >> subsystem in order to make it more aligned with the device model. One of
-> >> the ideas I'm experimenting with is having a bus (struct bus_type) for
-> >> fpga regions (devices) so that we can have region drivers that could
-> >> handle internal device enumeration/management whenever a new region is
-> >> configured on the fabric. Does this make sense in your opinions?
-> > 
-> > mm.. I didn't fully understand the need to have a region driver, what's
-> > the issue to solve?
-> > 
-> 
-> Sorry for the late reply. The general idea is to handle regions in a way
-> that is more aligned with the device model without having to resort to
-> extra ops and additional devices.
-> 
-> Having an fpga bus would allow us to handle enumeration using proper
-> region drivers (in the device model sense of the term, i.e., struct
-> device_driver) instead of derived region devices.
-> 
-> On second thought, I think having a reconfiguration interface at the
-> fpga manager level is sounder than having it at the region level (one
-> for each region).
 
-I don't think so. A firmware image may contain enumeration info, e.g.
-of-fpga-region. And I think the fpga-region should parse these
-enumeration info rather than fpga manager. fpga manager should only deal
-with content writing stuff and not be exposed to user.
+On 2/4/2025 11:55 PM, Liang, Kan wrote:
+>
+> On 2025-02-03 10:42 p.m., Namhyung Kim wrote:
+>> Add Kan and Dapeng to CC.
+>>
+>> Thanks,
+>> Namhyung
+>>
+>>
+>> On Fri, Jan 31, 2025 at 11:27:56AM +0100, Thomas Richter wrote:
+>>> On s390 the event instructions can not be used for recording.
+>>> This event is only supported by perf stat.
+>>>
+>>> Change the event from instructions to cycles in
+>>> subtest test_leader_sampling.
+>>>
+>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>> Suggested-by: James Clark <james.clark@linaro.org>
+>>> Reviewed-by: James Clark <james.clark@linaro.org>
+>>> ---
+>>>  tools/perf/tests/shell/record.sh | 10 +++++-----
+>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>>> index fe2d05bcbb1f..ba8d873d3ca7 100755
+>>> --- a/tools/perf/tests/shell/record.sh
+>>> +++ b/tools/perf/tests/shell/record.sh
+>>> @@ -231,7 +231,7 @@ test_cgroup() {
+>>>  
+>>>  test_leader_sampling() {
+>>>    echo "Basic leader sampling test"
+>>> -  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
+>>> +  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
+>>>      perf test -w brstack 2> /dev/null
+>
+> As a non-precise test, using cycles instead should be fine. But we
+> should never use it for precise test, e.g., with p. Because cycles is a
+> non-precise event. It would not surprise me if there is a skid when
+> reading two cycles events at the point when the event overflow occurs.
+>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-> 
-> With that in place, the fpga manager could request a firmware image,
-> parse it, write the content into the fpga configuration memory, and then
-> instantiate the region devices and add them to its fpga bus. Then, if
+Kan, I suppose you mean only the case without counter snapshot, right? With
+counter snapshot's help, there would be same period even for non-precise
+events, right?
 
-I think an fpga-region is always there no matter it is cleared, being
-reprogrammed, or working. So I don't think an fpga-region needs to be
-re-instantated. The sub devices inside fpga-region needs
-re-instantating. That's also why I'm hesitating to fpga bus.
 
-Thanks,
-Yilun
-
-> there is a match, a specific region driver can handle the enumeration
-> within the new region.
-> 
-> What do you think?
-> 
+>
 > Thanks,
-> Marco
-> 
+> Kan
+>
+>>>    then
+>>>      echo "Leader sampling [Failed record]"
+>>> @@ -243,15 +243,15 @@ test_leader_sampling() {
+>>>    while IFS= read -r line
+>>>    do
+>>>      # Check if the two instruction counts are equal in each record
+>>> -    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
+>>> -    if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
+>>> +    cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>>> +    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>>>      then
+>>> -      echo "Leader sampling [Failed inconsistent instructions count]"
+>>> +      echo "Leader sampling [Failed inconsistent cycles count]"
+>>>        err=1
+>>>        return
+>>>      fi
+>>>      index=$(($index+1))
+>>> -    prev_instructions=$instructions
+>>> +    prev_cycles=$cycles
+>>>    done < $script_output
+>>>    echo "Basic leader sampling test [Success]"
+>>>  }
+>>> -- 
+>>> 2.48.1
+
+The code changes look good for me.
+
+
+>
