@@ -1,66 +1,65 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B674226549
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7FF22654A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738826609; cv=none; b=lkG63cvbAgCORpfasNmIi0uI8Z8stcG8DDP33xXfjQeY21OpMyceq0iHGNFxck+OVePhgYSHM7uXa8MFhqaJOFluFgiOjTKgZ1LoH1o2L2SdjRZ/HrEHxgya+Pf2iQGt2mkybIRQlt4WEIcGHELP2CyHJCK9/bah7T7Gy0jVcQQ=
+	t=1738826610; cv=none; b=cph2Nz0i0WvT8yyU7yr13XKz/d2pDh1CknIgfRPAihf4UNuHDa0cXPMifXal2nSVz21DX0iMYYeiB9SzEBEP/PZ7Te8elM+RSZxs4Y3AJlHkuhlGAd2tDGTzAweC7Xw1tZX5huwVmyAk5g183NgurgRvhfGI4+Q011xoGojH3uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738826609; c=relaxed/simple;
-	bh=YU98hLOSiq4vVYKNXLYyYXjb/N8ZYLqR11qx50WHeNE=;
+	s=arc-20240116; t=1738826610; c=relaxed/simple;
+	bh=HHH1zghcNvQXpV5wj4QvWZZiP+q6wghkX5W0XvlVWCI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JAQL+NXeKFsnYM9dRhcUX6wbru7Hy5J99E9aE6WvhNtstPtAASektFFmJ+1/+Q1XdZ++/XJdt8vvQksC+ZCF9TkIzC9DHc5M5VyKCgsv4BY2zHbGiMNNC3fY7RNPGURzrIePJ//nbuTtmfuy3naUI26kywGPxgTVWfPXj+LrI0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SB2rQw4N; arc=none smtp.client-ip=209.85.216.51
+	 In-Reply-To:To:Cc; b=PTxA3VAX25bDww5XJPXJDI6MZ/eOgeKFCADzgYeZEXprzkwSYaoRqUIowcFSLyE14vpBO4WQ83PNxR/ki5cFPM88mvRVN84WFpX6BZO5/N97F3/ENCa49uvCISYmJpnG3GVKkl3LkzMgQPR1oEoRe0xdw47SJPS2kf4M5hS0eLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Ye+lZv22; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SB2rQw4N"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f441791e40so770611a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:23:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Ye+lZv22"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f9c3124f31so798819a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:23:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738826607; x=1739431407; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738826608; x=1739431408; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d05MBVkD267pj0+O4130zpeTcKFWk4W9qDVXtG5klp0=;
-        b=SB2rQw4NVuE78iGw0lPH6MPeT0z2tL1md4Lfy70fAXDPl0GZEKVFTlWDnG7O92nHoB
-         6Pt88DOx83fddLI4RymBfClnnbQp+bD4HU+dhmM+/kPtjo+4YvP1s9S6ZSsFnNciArvI
-         Ox5nbygNdGYX86dLtP1MZRVDWqWinMrs9S4XryUEJDnqpMrATmIi69wsaVuiIdJ5HRR1
-         qQRKflVrGgzvlVsEXPwTkpSlaL1pxSPy9LXhuOVY00ln/0ER3D1rTq13+b+znKAQUkRR
-         ARFENvkA3A3n8p9l+Uw5R9lHsiTDzEsdMfvz0V/hzN88BSkMznNBmEng8AHDV5SKZ2uS
-         Tjtw==
+        bh=S1ycQPnopfj+lIzIUm/dRgw4jBMxR4nO8n6QcQamF/g=;
+        b=Ye+lZv22CEuz7dWWpIM2ZTiVPxBwpKOSbRhu00GGh0FjXLSnrV1OWsoeb/TkThAJHE
+         mzMowQHjO5q5HfVMUoagdVA9p1XcydJydamHWhWB620LKqMTIJQ+AhfTKy2UADwiGJGt
+         P/HR7nMFjVm26+xWm26fqiCd9mNez0A+3/SHWad/38+YqUhHcnsF9HbX79r26IqByUhE
+         0ro2qvteimqhiK9Yl7D8YmDd2ld8AZc6zbvNu0+R9sCzQmiM0Gcq8NHrJEdXFXFbeAIk
+         qfcJP0XAVge/Ev15fbEzxq9Iu8k5DSAU5+M+WH2L6vn/etiIlBTijZL/xgX/0/VQJDmZ
+         Hbqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738826607; x=1739431407;
+        d=1e100.net; s=20230601; t=1738826608; x=1739431408;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d05MBVkD267pj0+O4130zpeTcKFWk4W9qDVXtG5klp0=;
-        b=Qr65Xoj/2la6Idx/Ox8h6ShkIhmOg12bTw+Dn8RjVRpHQilQZ9aquCU91mRzOSZJ9s
-         yHNfxz+oxbu3mHJZa6sO2nSZUz0R/9ziolVF2qWc4YlMcvnk7M7Mi/rv0F2tJxYGpK8v
-         zow+LZ84ajBkfsDWdBDqMra1C/a9ETHwxrWIcLuwwLxC4zXsDdHMWxOQ3NVWesFzhDCR
-         mp7VOU9fRuq2L5q2QafB2cIQuAnC4ueV10MM93LGTIUHhBkObxPVyJ7iP7/pe+8BORZY
-         tqE4AHVq/n0V+yVhZ+eeLChARL00gMywskR8EF96ObEkxGJm6fRhgWf08/TtxsUfiK2i
-         TBhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmeoZq2FEcfpLeMgfho/UiThXSbs+kVwxc0pCUq7MjxitVY75ZzWQOnsP0wNdRxxXR+FqwxH/5c8XBgjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcb/1JJTTkCg9jxoccf97am5oWaZuHMW9W50v2z9KBNewwzxtJ
-	FjtYxg35QtUqjzG0WbXNCR4KKJXpFNHnwx+AItMcCKJZzoMwXqBuKqyx9QFWxts=
-X-Gm-Gg: ASbGncu6Hh2luCJFKb+XR825lJS1XKQFlFx9piE4hrOrX48mysa66AZDpkApPOg+yb7
-	ExMVkeyRbEowJmRb78+8UVKIJFySYTOMbd527v1fnTGtI7BhAjn4w6v26WjskPMOuS9njZ5D3nu
-	aOuc/sTFrV7nCnjvvldSzlDUUs/0kkIpd+0V5Qz4BQoD+IjiBE/IE5jlCz69BVtJOdz6OF/215w
-	GnaRL3YSRAD+xLvZtJdKPhx1vgrME0MAItChiFsXMQ1CsgXNCf8W5KPZnL+K/OK8PsDNg5aHWFP
-	BL4Wpvx7bQC1TbK6+1hxUbpp2RvV
-X-Google-Smtp-Source: AGHT+IFKe2kQczxclY80PslHuvYzWPmjNnKAp1q2ypYQZ9arePKPx5YXWSLFOApkuW37i5EznoN6cQ==
-X-Received: by 2002:a17:90a:d410:b0:2ee:cd83:8fe7 with SMTP id 98e67ed59e1d1-2f9e08682a8mr9427110a91.35.1738826606814;
-        Wed, 05 Feb 2025 23:23:26 -0800 (PST)
+        bh=S1ycQPnopfj+lIzIUm/dRgw4jBMxR4nO8n6QcQamF/g=;
+        b=wjjn6ALwXdwD6MADbwTRUlkeVcBVVssHHPxOwUAfSHMnTlJ8j4vUGeUA8BBlZnZQWZ
+         k3bIBcTjm6jQy9eVgPRdcO5B+vYAKxWIrd3CTHCEYIrRoaOANlb89AOg2uhu8ggvJTE5
+         jNEWh+nXm48m+D9aR/+vuE2VaAcjUcIUBTnPi5StsvFuO6RaAAmuYyZUajIgmbiHVwVP
+         9cczmAXhTL1USUWyVgsKXwSw0y9Vp1lbpp4LiZLJb/fDWE2mGkrgYUx1irGIEz8UwvnG
+         SwYYMyGj8m0bT3nlfdHCqbCsX0PURXH8eh7n6c4ft34UR7S44sM3FmgACo/WkESexN2Y
+         +i8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLopLmgv2gBDWSVK5wR2HalCTGAFixPybJ+6FfDOVHpSWbIuZLd2V38Bo8/Jl9UByyWbmRHOUw7yyvPVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzKDfrMsfg930ysSBwGVtiqdA4YAZltlQzVWDqVQLJl0l6OGnm
+	lBd5CeQVBzM3YgXp2ZZ05POMkzl6ewM+4uMnuaYmxtIulENRhE/woHidA+v2bqM=
+X-Gm-Gg: ASbGncu0y6vKvv2s6t0fOsK0/TkQ2pJFXwMlbnU1+Zf+TBb/yAELpFwk0du/OZH5n7P
+	Ud4ULWrJj/++6mYz21miXQ2+3afHqCBCq6lmxdw3Luny3xNWJp4FaRxxS+CJqFh7To4XC8LeHK2
+	slUG7mFJVNli9W+lLp8+wPq+RcJHvmWAJPQPWYaXjUi0YVJF1GLIlHbs1Dp9V0eP/3fxY5Y77no
+	frFRUEfcK9ssLcHz2DhB+uEC/a3k4GoiJWVvk3CrUDgxZPT5/El6qo6NIGVfCw1VQRn/FKU5Lkl
+	Hmsd2degMvkASZM4a/viJvzDu42L
+X-Google-Smtp-Source: AGHT+IFwe864GICHNnq9EVCYpLvbwfcMr9HibfAj+2D5yDDYG7ZeHAVPjVfRo7yQfH146FLB/di+WQ==
+X-Received: by 2002:a17:90b:1d87:b0:2ee:edae:780 with SMTP id 98e67ed59e1d1-2f9e0793401mr10185856a91.15.1738826608431;
+        Wed, 05 Feb 2025 23:23:28 -0800 (PST)
 Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a72292sm630883a91.27.2025.02.05.23.23.25
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a72292sm630883a91.27.2025.02.05.23.23.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 23:23:26 -0800 (PST)
+        Wed, 05 Feb 2025 23:23:28 -0800 (PST)
 From: Atish Patra <atishp@rivosinc.com>
-Date: Wed, 05 Feb 2025 23:23:12 -0800
-Subject: [PATCH v4 07/21] dt-bindings: riscv: add Smcntrpmf ISA extension
- description
+Date: Wed, 05 Feb 2025 23:23:13 -0800
+Subject: [PATCH v4 08/21] RISC-V: Add Sscfg extension CSR definition
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-counter_delegation-v4-7-835cfa88e3b1@rivosinc.com>
+Message-Id: <20250205-counter_delegation-v4-8-835cfa88e3b1@rivosinc.com>
 References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
 In-Reply-To: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -87,33 +86,66 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, 
  kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Atish Patra <atishp@rivosinc.com>
+ Atish Patra <atishp@rivosinc.com>, Kaiwen Xue <kaiwenx@rivosinc.com>
 X-Mailer: b4 0.15-dev-13183
 
-Add the description for Smcntrpmf ISA extension
+From: Kaiwen Xue <kaiwenx@rivosinc.com>
 
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
+This adds the scountinhibit CSR definition and S-mode accessible hpmevent
+bits defined by smcdeleg/ssccfg. scountinhibit allows S-mode to start/stop
+counters directly from S-mode without invoking SBI calls to M-mode. It is
+also used to figure out the counters delegated to S-mode by the M-mode as
+well.
+
+Signed-off-by: Kaiwen Xue <kaiwenx@rivosinc.com>
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/riscv/include/asm/csr.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 42e2494b126d..be9ebe927a64 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -136,6 +136,12 @@ properties:
-             mechanism in M-mode as ratified in the 20240326 version of the
-             privileged ISA specification.
- 
-+        - const: smcntrpmf
-+          description: |
-+            The standard Smcntrpmf supervisor-level extension for the machine mode
-+            to enable privilege mode filtering for cycle and instret counters as
-+            ratified in the 20240326 version of the privileged ISA specification.
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 2ad2d492e6b4..42b7f4f7ec0f 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -224,6 +224,31 @@
+ #define SMSTATEEN0_HSENVCFG		(_ULL(1) << SMSTATEEN0_HSENVCFG_SHIFT)
+ #define SMSTATEEN0_SSTATEEN0_SHIFT	63
+ #define SMSTATEEN0_SSTATEEN0		(_ULL(1) << SMSTATEEN0_SSTATEEN0_SHIFT)
++/* HPMEVENT bits. These are accessible in S-mode via Smcdeleg/Ssccfg */
++#ifdef CONFIG_64BIT
++#define HPMEVENT_OF			(_UL(1) << 63)
++#define HPMEVENT_MINH			(_UL(1) << 62)
++#define HPMEVENT_SINH			(_UL(1) << 61)
++#define HPMEVENT_UINH			(_UL(1) << 60)
++#define HPMEVENT_VSINH			(_UL(1) << 59)
++#define HPMEVENT_VUINH			(_UL(1) << 58)
++#else
++#define HPMEVENTH_OF			(_ULL(1) << 31)
++#define HPMEVENTH_MINH			(_ULL(1) << 30)
++#define HPMEVENTH_SINH			(_ULL(1) << 29)
++#define HPMEVENTH_UINH			(_ULL(1) << 28)
++#define HPMEVENTH_VSINH			(_ULL(1) << 27)
++#define HPMEVENTH_VUINH			(_ULL(1) << 26)
 +
-         - const: smmpm
-           description: |
-             The standard Smmpm extension for M-mode pointer masking as
++#define HPMEVENT_OF			(HPMEVENTH_OF << 32)
++#define HPMEVENT_MINH			(HPMEVENTH_MINH << 32)
++#define HPMEVENT_SINH			(HPMEVENTH_SINH << 32)
++#define HPMEVENT_UINH			(HPMEVENTH_UINH << 32)
++#define HPMEVENT_VSINH			(HPMEVENTH_VSINH << 32)
++#define HPMEVENT_VUINH			(HPMEVENTH_VUINH << 32)
++#endif
++
++#define SISELECT_SSCCFG_BASE		0x40
+ 
+ /* mseccfg bits */
+ #define MSECCFG_PMM			ENVCFG_PMM
+@@ -305,6 +330,7 @@
+ #define CSR_SCOUNTEREN		0x106
+ #define CSR_SENVCFG		0x10a
+ #define CSR_SSTATEEN0		0x10c
++#define CSR_SCOUNTINHIBIT	0x120
+ #define CSR_SSCRATCH		0x140
+ #define CSR_SEPC		0x141
+ #define CSR_SCAUSE		0x142
 
 -- 
 2.43.0
