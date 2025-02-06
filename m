@@ -1,74 +1,247 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58395748D;
-	Thu,  6 Feb 2025 00:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6EF3207
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 00:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738802587; cv=none; b=eTxdjYoTIdCstREryDJkZo8aJd8r6gNnQXGQni7xdM0uLGxdw1yaqTF5w5BWofqT2ErH7NyBGY4ZyDmbmf5aLdqABLZwE+PxAzXh4EKiFCWCObJAwvhPBnRGd/MljcIO2wlnfjcLquUuV4tqxTFemOofZazPiwd6LdX3ME/Dr9M=
+	t=1738802664; cv=none; b=sGG0rgCkXpMtzltVPsCJdQwZh72xr5IX55ZHtQWF8yQotAkEbbd/0F1aAvA/ySvzn9OlaH7asFmdPLxNbGDeEeCYz7X8XuGPyLgoPVJi7U90nm/txm+0M/AiOA7sN+UabEyDMOmbccuRh9hftUjJlzgetl19/JTcv4v0ANXuQEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738802587; c=relaxed/simple;
-	bh=CVam0VoRlro27aOD85pFmHY/BVhpvSSqgMYdVCgMOTE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=mWFnQvJR7qnog+jvvULQImefw8S8L7EdLK7tdVOzdnL7gPcjcqTnU6/9IX4FzVw+JFqilIjckulEYjju7vI+EC8uag9e5o0RmsvD7xosSM65vT9ZXhrRGFoe92U3q4SzM6Vrqj6pBX+rMkxmzuaT4JHBiTCQjz/Hnr9AATsK49o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nYM5y1x+; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738802664; c=relaxed/simple;
+	bh=EQQLrFGQsq4JhGA/+QDYNiDVoTwbaEef9lSVoItJWRU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sfrISY0qbxNjGQlOxXnJo5UNcytbVNh8h9t8z0nWkLDP1P68oH+opDbkOxZnLaCbose8AaeBJWAP/IQY4CEaTP2q8BWpNHpvcy1NvgSGDekatiO3BNrYnIe6A4/JmX01ttUiP1kSuZ+Hdh7iBUMhC8SaUNfib+lz4nVIDaAN4AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ei3yaTOF; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nYM5y1x+"
-Received: by linux.microsoft.com (Postfix, from userid 1158)
-	id 011FC203F59D; Wed,  5 Feb 2025 16:43:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 011FC203F59D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738802585;
-	bh=SzpZerjWhpXXWQnk7unro/Q81J60Yam8AxZGhGncv4c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nYM5y1x+FwhoWjVPD7GAss3U5GypcwmZqUIfc/pkcrhO3O5mMTwTZbc55AP4t7omP
-	 L/NVtBkMu4uKSyp67zRumqHIXAd9k332fRcQjL10neGi1Tkl9NnExeCEiWgh5trmaK
-	 dGzgX60nilY2z0cbKclSPJ6oaPbejFZxjvRKFP4Q=
-From: Hardik Garg <hargar@linux.microsoft.com>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org
-Subject: Re: [PATCH 6.13] v6.13.2-rc1 review
-Date: Wed,  5 Feb 2025 16:43:04 -0800
-Message-Id: <1738802584-7549-1-git-send-email-hargar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
-References: <20250205134456.221272033@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ei3yaTOF"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f98dc0d923so3012757b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 16:44:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738802660; x=1739407460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qLFXL5qxaklKeOm2DkSpNNYxp/l7tGeiPRy2dgmV3sA=;
+        b=Ei3yaTOFc52QEHloJ5SIF9H2W5KU9U1fGtVMRJBp+7t6axowdOipZ13O6okP4I2eXZ
+         +SgVEmOOXdtTe2wzqyjVvJiqnRfB6f/jyNOu7lAsJqC/XSy+nwHa5XRHS9wQ/UnAf0yb
+         +m3YupNyn8+4m9LY1GTjUWux/2OLynuke3Ildk14gt0PnJfWLuVByrQcnic2DjbadL7P
+         ZT8UUa+hxXEtAkzHE0+SFK1TzRXWkavWMw3mAemABhH6Yhy1bk/KDVR2mNm/XQu59NWf
+         RVefn4iK5KqM0VakHAOpdsT+91tVuBKKLCt75Kg7aUQ3UAZyoMdF745sF7iNY48oF00w
+         9uYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738802660; x=1739407460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qLFXL5qxaklKeOm2DkSpNNYxp/l7tGeiPRy2dgmV3sA=;
+        b=AwXu0WX6H6z1RX3GAKg05qU8nFAzyA89eK0nKjn6hj28zFNeC+gwiEEkcUNhcygKMm
+         iBYGRixv/vwUsqRrVrqyh+s2h+EsNjFx+VYlo8ET+kNk8a4dKqkQIgzuafZBLODydsPS
+         vrHG4XhwwXOtM+uBJKYBeZcOquO6yvjqPjeYvW9+hSrMr+YOu3B+HS0sD6UukKUyRjER
+         dIGotrl0m5jn8UqdZLmjWZudR3sXWrecL48kg1i5ZIp5HqP/yLZyOp4P08I/OkA0b4DN
+         eoWluLBgwSP61hA8bGN/NRSKnKawJXzw8askbPh0+Ua7ehf4OdyeD3J+L7D4jAzIHIIH
+         fBbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWe9mpe75VKHtZKSqoVcFiqbJyVV3fOh+WRfYS+e3L9asG1SRqEWRwJ9mH2WPprqgAhTh0mFYHV/AE/FxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC6lo7hYg6uKCwQGFOvpYRVSnNlC1xrC/2ox9IkEUz9cIpEDgB
+	rLFGYgsMwMufYFWhMbiSN3ZBWhoTNve/J5Cu6Aj121K9KI29KbPs6sD/t7S91o4AhjtLlPklbd8
+	VZ8iLqZA5UmqjeU+RAcNURzZwUzY/3ipRhSpeTA==
+X-Gm-Gg: ASbGncto5r0uqXTjKe/1XYbQlRMcBVE7mAbCNv93TjWLmrJwg2Mr3/vL9zAnFHNMEvh
+	pq7OUtj+RQmqRpCnVVuXr83Ta560pe0DZNpUk6sVDxTctjDGkYRKtlIrRSOcryJuvyw5PkE0=
+X-Google-Smtp-Source: AGHT+IHcArC22rfqV9GebXmnmZNJ+EWmMMIkRH5PCP2+Qr1gXB1p0Gq1CcX1OR7QdPrsne22h0eM6VZtTAH26gmOUn4=
+X-Received: by 2002:a05:690c:4a09:b0:6f9:47ad:f5f1 with SMTP id
+ 00721157ae682-6f99a61905cmr12637167b3.17.1738802660585; Wed, 05 Feb 2025
+ 16:44:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
+In-Reply-To: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 6 Feb 2025 02:44:09 +0200
+X-Gm-Features: AWEUYZlnbtqe34pgwwJQThD_POqE1_KtQaDmPFa5m-khspJzxbaTVlA3b0RflWs
+Message-ID: <CAA8EJpqiv5116E_dW4CB6Az3zuOeQ+nPnOp+icYREjJSSQTX=Q@mail.gmail.com>
+Subject: Re: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
+To: Frank Oltmanns <frank@oltmanns.dev>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Chris Lew <quic_clew@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Johan Hovold <johan+linaro@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Joel Selvaraj <joelselvaraj.oss@gmail.com>, 
+	Alexey Minnekhanov <alexeymin@postmarketos.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The kernel, bpf tool, perf tool, and kselftest builds fine for v6.13.2-rc1 on x86 and arm64 Azure VM.
+On Wed, 5 Feb 2025 at 23:57, Frank Oltmanns <frank@oltmanns.dev> wrote:
+>
+> On xiaomi-beryllium and oneplus-enchilada audio does not work reliably
+> with the in-kernel pd-mapper. Deferring the probe solves these issues.
+> Specifically, audio only works reliably with the in-kernel pd-mapper, if
+> the probe succeeds when remoteproc3 triggers the first successful probe.
+> I.e., probes from remoteproc0, 1, and 2 need to be deferred until
+> remoteproc3 has been probed.
 
-Kernel binary size for x86 build:
-text      data      bss      dec       hex      filename
-29934632  17832666  6320128  54087426  3394f02  vmlinux
+The cause for such issues also must be identified. I mean, in-kernel
+pd-mapper uncovered a lot of issues that were not noticed because
+usually the starting order was a bit different. But we need to
+understand how to actually fix those issues instead of working them
+around.
 
-Kernel binary size for arm64 build:
-text      data      bss      dec       hex      filename
-36664336  15075873  1054416  52794625  3259501  vmlinux
+>
+> Introduce a device specific quirk that lists the first auxdev for which
+> the probe must be executed. Until then, defer probes from other auxdevs.
+>
+> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+> ---
+> The in-kernel pd-mapper has been causing audio issues on sdm845
+> devices (specifically, xiaomi-beryllium and oneplus-enchilada). I
+> observed that Stephan=E2=80=99s approach [1] - which defers module probin=
+g by
+> blocklisting the module and triggering a later probe - works reliably.
+>
+> Inspired by this, I experimented with delaying the probe within the
+> module itself by returning -EPROBE_DEFER in qcom_pdm_probe() until a
+> certain time (13.9 seconds after boot, based on ktime_get()) had
+> elapsed. This method also restored audio functionality.
+>
+> Further logging of auxdev->id in qcom_pdm_probe() led to an interesting
+> discovery: audio only works reliably with the in-kernel pd-mapper when
+> the first successful probe is triggered by remoteproc3. In other words,
+> probes from remoteproc0, 1, and 2 must be deferred until remoteproc3 has
+> been probed.
+>
+> To address this, I propose introducing a quirk table (which currently
+> only contains sdm845) to defer probing until the correct auxiliary
+> device (remoteproc3) initiates the probe.
+>
+> I look forward to your feedback.
+>
+> Thanks,
+>   Frank
+>
+> [1]: https://lore.kernel.org/linux-arm-msm/Zwj3jDhc9fRoCCn6@linaro.org/
+> ---
+>  drivers/soc/qcom/qcom_pd_mapper.c | 43 +++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_pd=
+_mapper.c
+> index 154ca5beb47160cc404a46a27840818fe3187420..34b26df665a888ac4872f56e9=
+48e73b561ae3b6b 100644
+> --- a/drivers/soc/qcom/qcom_pd_mapper.c
+> +++ b/drivers/soc/qcom/qcom_pd_mapper.c
+> @@ -46,6 +46,11 @@ struct qcom_pdm_data {
+>         struct list_head services;
+>  };
+>
+> +struct qcom_pdm_probe_first_dev_quirk {
+> +       const char *name;
+> +       u32 id;
+> +};
+> +
+>  static DEFINE_MUTEX(qcom_pdm_mutex); /* protects __qcom_pdm_data */
+>  static struct qcom_pdm_data *__qcom_pdm_data;
+>
+> @@ -526,6 +531,11 @@ static const struct qcom_pdm_domain_data *x1e80100_d=
+omains[] =3D {
+>         NULL,
+>  };
+>
+> +static const struct qcom_pdm_probe_first_dev_quirk first_dev_remoteproc3=
+ =3D {
+> +       .id =3D 3,
+> +       .name =3D "pd-mapper"
+> +};
+> +
+>  static const struct of_device_id qcom_pdm_domains[] __maybe_unused =3D {
+>         { .compatible =3D "qcom,apq8016", .data =3D NULL, },
+>         { .compatible =3D "qcom,apq8064", .data =3D NULL, },
+> @@ -566,6 +576,10 @@ static const struct of_device_id qcom_pdm_domains[] =
+__maybe_unused =3D {
+>         {},
+>  };
+>
+> +static const struct of_device_id qcom_pdm_defer[] __maybe_unused =3D {
+> +       { .compatible =3D "qcom,sdm845", .data =3D &first_dev_remoteproc3=
+, },
+> +       {},
+> +};
+>  static void qcom_pdm_stop(struct qcom_pdm_data *data)
+>  {
+>         qcom_pdm_free_domains(data);
+> @@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
+>         return ERR_PTR(ret);
+>  }
+>
+> +static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
+> +{
+> +       const struct of_device_id *match;
+> +       struct device_node *root;
+> +       struct qcom_pdm_probe_first_dev_quirk *first_dev;
+> +
+> +       root =3D of_find_node_by_path("/");
+> +       if (!root)
+> +               return true;
+> +
+> +       match =3D of_match_node(qcom_pdm_defer, root);
+> +       of_node_put(root);
+> +       if (!match)
+> +               return true;
+> +
+> +       first_dev =3D (struct qcom_pdm_probe_first_dev_quirk *) match->da=
+ta;
+> +       return (auxdev->id =3D=3D first_dev->id) && !strcmp(auxdev->name,=
+ first_dev->name);
+> +}
+> +
+>  static int qcom_pdm_probe(struct auxiliary_device *auxdev,
+>                           const struct auxiliary_device_id *id)
+>
+> @@ -647,6 +680,15 @@ static int qcom_pdm_probe(struct auxiliary_device *a=
+uxdev,
+>         mutex_lock(&qcom_pdm_mutex);
+>
+>         if (!__qcom_pdm_data) {
+> +               if (!qcom_pdm_ready(auxdev)) {
+> +                       pr_debug("%s: Deferring probe for device %s (id: =
+%u)\n",
+> +                               __func__, auxdev->name, auxdev->id);
+> +                       ret =3D -EPROBE_DEFER;
+> +                       goto probe_stop;
+> +               }
+> +               pr_debug("%s: Probing for device %s (id: %u), starting pd=
+m\n",
+> +                       __func__, auxdev->name, auxdev->id);
+> +
+>                 data =3D qcom_pdm_start();
+>
+>                 if (IS_ERR(data))
+> @@ -659,6 +701,7 @@ static int qcom_pdm_probe(struct auxiliary_device *au=
+xdev,
+>
+>         auxiliary_set_drvdata(auxdev, __qcom_pdm_data);
+>
+> +probe_stop:
+>         mutex_unlock(&qcom_pdm_mutex);
+>
+>         return ret;
+>
+> ---
+> base-commit: 7f048b202333b967782a98aa21bb3354dc379bbf
+> change-id: 20250205-qcom_pdm_defer-3dc1271d74d9
+>
+> Best regards,
+> --
+> Frank Oltmanns <frank@oltmanns.dev>
+>
 
 
-Tested-by: Hardik Garg <hargar@linux.microsoft.com>
-
-
-
-Thanks,
-Hardik
+--=20
+With best wishes
+Dmitry
