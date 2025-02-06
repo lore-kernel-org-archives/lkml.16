@@ -1,87 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from slateblue.cherry.relay.mailchannels.net (slateblue.cherry.relay.mailchannels.net [23.83.223.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12041EA7CC;
-	Thu,  6 Feb 2025 13:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848059; cv=none; b=XvQlB69JnGvbP4ypCm4mSqpbFBKq1aTD4QLX2rLvwiP5hO/FRdgj+Kg+nox3MKZuZryv34g+hdZTohnGaUmw2fxfNua9yzauC+qDKUvPo6ouh0g1ap5iGDl5F+TE3T8SlBB/Pye8gmzftPQ3YM4Jt+YUVntJVlgxmEsfHqUQ2rQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848059; c=relaxed/simple;
-	bh=hT7NSA/l3aMroGSu2cyNt3ynK/yQYq7ZddlADf7SbYA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kBJ7XdWkyQDD+lIomvrEBLanNcOAUezjR2yeafe85GOG4ucNP7ZRZHKh0C4FECQfF0yC3/xc6SQkUrHRROoQOwxHxzIRScgP2RSmxTGfOxvrsvk0qBXXZdYRljm+XcBcX3qPktbkKD++6G5D0WYMXMK21/mDauYDTyCXxdEoKR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RNt2XCdY; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFD61A3165;
+	Thu,  6 Feb 2025 13:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738848069; cv=pass; b=Q6UWoMVKHnAp3dQ1HK6XSTU4OTtQGwDD4ey/fQRUEiu2vm/0gfbGxSFsh7EuQPXHe78JKesDFfgA22vJEVpxzb2U4fWMAtTMoBT8WburXuMaYiySkLNCOzLBEK9BcRcvh/EYexL60OiGMvw3KHAGicvNr8j63pvoQk+Ho+b35l4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738848069; c=relaxed/simple;
+	bh=QQ1sksRTflALfRywfKYPKVjO29Sf5P0qnE52M0N2ncs=;
+	h=From:To:Cc:Subject:Message-ID:MIME-Version:Date; b=R+rI+zn0BGdSlb3P1mF3pnwqTyBSx7kmWpXqIxLpze9tSOaa+tr7DXc2XHJoyFsIdYc74MbFTeHbCih4gOrhJkShNLuTomrMmr4Gc8vfY/5Ky+YmSoQRZrEcvqqvYcIvVfFMnhGmAT1PeDf0Z2elTQQfr+EEO1+VvtNOfVTK+H8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=S8/z1DMv reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.223.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RNt2XCdY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738848058; x=1770384058;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hT7NSA/l3aMroGSu2cyNt3ynK/yQYq7ZddlADf7SbYA=;
-  b=RNt2XCdYmAS8LKYqytCmoVF2owQmfqMuAjmGhzVWxYsZmYCEvIZgqcWx
-   hSVmqNOe7QLUCuSSD2ED2eugKTuOa354ClXmvVULotN6R6/pCmP6Q7poJ
-   D3EIGtJICqA/H0EXZ6c47GlqjET+kduXfQUPDa7EN2hGcRkJNPodaBigV
-   teEycIxn8cniMIDm28s1T94CFUwhH0oIG/LZSKpMiMFu4hGeZcoovsJus
-   zRKpjJ3JhKfgEhEAELwhVvwroeX1erE+8pr430kDDkjHDqUAbswTbvmru
-   hP70OnbBeT6k2ta2nwpBwsWbkzvFPkW5HYyiA4yCHl/lXwjdTHLjEVaJY
-   Q==;
-X-CSE-ConnectionGUID: Cvni7USLQ82/L0YPRWzMlA==
-X-CSE-MsgGUID: dGLhg/MRQTS0XKVv2lVwxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43203835"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="43203835"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 05:20:56 -0800
-X-CSE-ConnectionGUID: T5NWu9vAQ0KYrL99V3+rdQ==
-X-CSE-MsgGUID: xtK+/EDIRn2oxDpWwSO5YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116397387"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa005.jf.intel.com with ESMTP; 06 Feb 2025 05:20:49 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="S8/z1DMv"
+X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E292116320D;
+	Thu,  6 Feb 2025 12:04:16 +0000 (UTC)
+Received: from fr-int-smtpout8.hostinger.io (trex-6.trex.outbound.svc.cluster.local [100.127.158.245])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 625FB161A40;
+	Thu,  6 Feb 2025 12:04:15 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738843456; a=rsa-sha256;
+	cv=none;
+	b=7IIj6Nk6GEeNG6esz0PPXjdK+6ieZWle1uOhye2DNhaa/A3HkLXphtx9Nx1leE7ZmByPz6
+	QdFQ/+L/NYh6hSQd0if3s3TPlQmcTzO0sYX0mDgu41kWgs1UBuBoQvi0bgHQprPG4dLMjB
+	iicQHPdG0rm431nLkXNf6q9bowDrxY4XdaVv+dOr/fGj4XRVW0q1kbyWwa8nRAjvblQS3k
+	LDVr2mHpxqOvESA0AuqaGTz4RFPdzwhy4GjTjUeKC1uwwB+ZSahqxYMA/VljABG77Z5dq/
+	gxSGe5gsKJ7r735WG2o4rg0k+jViZ8gYMbfrB29+YPOb7j3FIjVDvd8QjodqPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738843456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=mjCsJoNg8ewzPGErTYrEIhf6SKdcXmfhMWvqFCbwvHw=;
+	b=sBwZzipb9zPKe/V/drhliXJQvzFneIKDgiMzKkq+L8XlnevI3utvhNWylHxqqy+itTDqgX
+	DiL0oyIECy7IPXKc64KhDC5vsLTm3Q4A4/XsSignJpzPvemEYQ2uOdl2VKNsaiAJQKAtYr
+	Hi+60feOPMpmX6520T9pboHRKsp0tbtsJit58cqxEucVIZkdPkIRoe3WkVERrtnBKIe8jX
+	tyWnNwb6pDUldvgps03WbHnddilKI+LGD+uXZOzXymn1Mkcm1IwGPToVHEDkBFiDtDDTSj
+	XEeDR6ahsfmBNQtSDqmoiBxBLEKEVG0QEusGpboDQsJlBidFBXFtF072h3TVNg==
+ARC-Authentication-Results: i=1;
+	rspamd-8586946c78-fkmbs;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
+X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
+X-MailChannels-Auth-Id: hostingeremail
+X-Slimy-Reaction: 3500dae4304d9544_1738843456792_2763434041
+X-MC-Loop-Signature: 1738843456792:3983901780
+X-MC-Ingress-Time: 1738843456792
+Received: from fr-int-smtpout8.hostinger.io (fr-int-smtpout8.hostinger.io
+ [89.116.146.204])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.158.245 (trex/7.0.2);
+	Thu, 06 Feb 2025 12:04:16 +0000
+From: Alban Kurti <kurti@invicto.ai>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
+	s=hostingermail-a; t=1738843453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mjCsJoNg8ewzPGErTYrEIhf6SKdcXmfhMWvqFCbwvHw=;
+	b=S8/z1DMvT5JG1wOtbRVfk8P2iju0xLd8lKxDMmgfkJk/cOeW5pGuPJ2kvwS9hYBjgUZEU5
+	HkH2sAw28x4QL0wJxiplq7D292yloFIFj9TXoLi4dAPqipwDDMVP28FGh8ne/FyDD9LAhQ
+	Pvr6Q+8kI1qyzdZA9+6HuOtAZPONor8UkCxAPKRjaLO+ICkiezIxjIRZCmmd555Lj08JL2
+	HcD+Ses6+JDNqH8R7GnUr5bFreO92N6gPmtLGMawOoc+3k6rrXa2qcvwESF4+2X/bBFFTc
+	UIYERKthrDa2PAq8LkvYXzgYV5I4ZQwcvhaYTvGv77xy2jm/fd+11KzKqLV2LA==
+To: Joe Perches <joe@perches.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Charalampos Mitrodimas <charmitro@posteo.net>,
+	Mugel Ojeda <ojeda@kernel.org>,
+	Alban Kurti <kurti@invicto.ai>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v7 7/7] stmmac: intel: interface switching support for ADL-N platform
-Date: Thu,  6 Feb 2025 21:18:59 +0800
-Message-Id: <20250206131859.2960543-8-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v2 RESEND 1/1] checkpatch: add warning for pr_* and dev_* macros without a trailing newline
+Message-ID: <20250206120412.171171-1-kurti@invicto.ai>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,96 +86,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Date: Thu, 06 Feb 2025 12:04:13 +0000 (UTC)
+X-CM-Envelope: MS4xfJdn7o0qsmaTwgLc2DMlNs9qKtJvh0fViXEaN9Piichtm0kIFevorYTgp0TtcqesuTiI3C1T1FEpUnwKDu1+hMDWFQZTPowv7AKxHH4YaWrS6OiqBiA8 Tz57E0VcRXAW+Ipoa6MPNxyZPd0/V2SPqESwdD5pw1OMBw8C/x7jw16IlJ/4ooZNHAlDAQ+Df8Vj0bPrswFOYYzPRQ+pCYLNHOsZEBWmNDafO0YT7epLDuDe X49NtUSUxRSYuHV0bBtYBwOXeazC8t+QBZRmBFGGCZr5lco+t9DnoZA954yXiFLwKSHgWKXSWCZQY832x3s/4qaHMoYp28dB5wfnEjfXQ0mFnRD+SqWTmk4h mj6988OqznLtxXAYk8bracrDYmOcHVIx86Hn5zZW4rVhdj7Up34=
+X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a4a53d a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=LxQgENTTcpZERYXGLXgA:9
+X-AuthUser: kurti@invicto.ai
 
-The intel_config_serdes function was provided to handle interface mode
-changes for the ADL-N platform.
+Add a new check in scripts/checkpatch.pl to detect usage of pr_(level)
+and dev_(level) macros (for both C and Rust) when the string literal
+does not end with '\n'. Missing trailing newlines can lead to incomplete
+log lines that do not appear properly in dmesg or in console output.
+To show an example of this working after applying the patch we can run
+the script on the commit that likely motivated this need/issue:
+  ./scripts/checkpatch.pl --strict -g f431c5c581fa176f608ba3fdebb3c1051bad5774
 
-The Modphy register lane was provided to configure the serdes when
-changing interface modes.
-
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1140
+Signed-off-by: Alban Kurti <kurti@invicto.ai>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 52 ++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
+Changelog since v1:
+ - Strip comments before matching to avoid false positives.
+ - Refactored the macro patterns for clarity.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index e7f5d023eaf2..4958b9a32879 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -87,6 +87,7 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- };
+ scripts/checkpatch.pl | 46 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9eed3683ad76..3256b5f31835 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3888,6 +3888,52 @@ sub process {
+ 			}
+ 		}
  
- static const int ehl_tsn_lane_regs[] = {7, 8, 9, 10, 11};
-+static const int adln_tsn_lane_regs[] = {6};
- 
- static int stmmac_pci_find_phy_addr(struct pci_dev *pdev,
- 				    const struct dmi_system_id *dmi_list)
-@@ -1006,6 +1007,55 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
++# check for pr_* and dev_* logs without a newline for C and Rust files to avoid missing log messages
++    my $log_macro_pattern = qr{
++        \b
++        (
++            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
++          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
++        )
++        (!?)
++        \s*
++        \(
++        \s*
++        "([^"]*)"
++    }x;
 +
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
++    if ($realfile =~ /\.(?:c|h|rs)$/) {
++        if ($rawline =~ /^\+/) {
++            my $cleanline = $rawline;
 +
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
++            $cleanline =~ s/^[+\s]+//;
++            $cleanline =~ s/\r?$//;
 +
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
++            $cleanline =~ s{/\*.*?\*/}{}g;
++            $cleanline =~ s{//.*}{}g;
 +
-+	intel_priv->tsn_lane_regs = adln_tsn_lane_regs;
-+	intel_priv->max_tsn_lane_regs = ARRAY_SIZE(adln_tsn_lane_regs);
++            if ($cleanline =~ /$log_macro_pattern/) {
++                my $macro_call = $1;
++                my $maybe_excl  = $2;
++                my $string_arg  = $3;
 +
-+	return intel_mgbe_common_data(pdev, plat);
-+}
++                $string_arg =~ s/\s+$//;
++                if ($realfile =~ /\.rs$/ && $maybe_excl ne '!') {
++                    return;
++                }
 +
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
++                if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
++                    my $lang = ($realfile =~ /\.rs$/) ? "Rust" : "C";
++                    WARN("${lang}_LOG_NO_NEWLINE",
++                         "Usage of $macro_call without a trailing newline. Consider adding '\\n'.\n" .
++                         $herecurr);
++                }
++            }
++        }
++    }
 +
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->mac_finish = intel_mac_finish;
 +
-+	intel_priv->pid_1g.regs = pid_modphy1_1g_regs;
-+	intel_priv->pid_1g.num_regs = ARRAY_SIZE(pid_modphy1_1g_regs);
-+	intel_priv->pid_2p5g.regs = pid_modphy1_2p5g_regs;
-+	intel_priv->pid_2p5g.num_regs = ARRAY_SIZE(pid_modphy1_2p5g_regs);
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1388,7 +1438,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
+ # check for .L prefix local symbols in .S files
+ 		if ($realfile =~ /\.S$/ &&
+ 		    $line =~ /^\+\s*(?:[A-Z]+_)?SYM_[A-Z]+_(?:START|END)(?:_[A-Z_]+)?\s*\(\s*\.L/) {
 -- 
-2.34.1
+2.48.1
 
