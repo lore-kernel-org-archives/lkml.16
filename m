@@ -1,125 +1,117 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263D41547F3;
-	Thu,  6 Feb 2025 20:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0341F5FA
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738872997; cv=none; b=ZFGd50XpHFBEQEoFlsUz3b/d2ZrLth20HZ+cI+TBtHSXezDFcuvuNFN8gmhPaISGhdCdD1Fd0iify1q0yjMe3aQ7zbaY9SqGDg40HFye69wDfDB29B8ORo348kc3BsfnQxQMCoKhbc9hl/ILHunTe12wnW+NXGb7Ixs3sVk3jvw=
+	t=1738873036; cv=none; b=eWW98gVVjhED39Wwfy7a2OtqUwLYzn8w5chMUwiR3eD6Hc04OITwlbzCIjZyyaI2rhMl0DtLU/NxSUmuJNbcHAjwH7UoEeuw/Z/E3Aak6j44P+yHDp21VyeQNQeBfueNE09M2HU0UpfJfLSghOtLndHfwTrEKiM35lX0c7o9lq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738872997; c=relaxed/simple;
-	bh=dVmSeA3RVfgoXEDG2BHXWi9s1id5dEEj/10AB/V328c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SOdFabr1Hds688EiG6gtx6NOdE1wz9Fa2Wx77jPZboqMDmXNLzrKdGe63kxBxsh8SR/zmFBFDiSalCNQAyX1ERpukzLYvjty6QI/FecxwLK9/bSyXKGk/ZylHjjDnu9yeGSojhVKd2yUgJQNKfzY7j7vE/Z3aeeckIg33cz9Cyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=jqDv2pxs; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
+	s=arc-20240116; t=1738873036; c=relaxed/simple;
+	bh=RQPvCWsY/BQguRfUzo+fpG8pR53URrLFzf89Pab/HXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Kb9vX3fUoPIdPtRej3LICxLUAGhUvjarQ7q0dKQXf/otXA/EgXY5DVrjvZDlKYgoe2WNeHXHRPGydNlg6tNaBUpNNhLgTBpzHOrfxaYJWYK9h4rQ6pMQ0lMx/QdQe1ft/cG6GGxF+W3uOdQB8xp1JNYsogXmXjNnUr/V1q0ClSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtqZIiry; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="jqDv2pxs"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id A663343A93;
-	Thu,  6 Feb 2025 20:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1738872991; bh=dVmSeA3RVfgoXEDG2BHXWi9s1id5dEEj/10AB/V328c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jqDv2pxs24XMA/Mh3ALyWty1xNykwX8hsRBd2TGCr7bGuK4azwnZ+PGk0XigOjkMj
-	 JVTSYvDYLontyV+BE/OTk3LnBsjz5V1gVmb3hbC0XPeT05lXRczLcaMXZICLe/wdwn
-	 GiM3qYJDnR2O5i8oBf2HOScSJYpn8sr1YQMlTKb+DvCHl0eFzyJ1fFfJwwfl2L37pE
-	 oluPWB2/5lrBNcDa+/qNgxPq8ZiZgCvLmvtc02ukBnZRWRq0zgAtALZb4/dIUyrNlP
-	 te5o9xsEOES567rGqcNWsPZwr6kzl/Cez5BGr1TejE6ObhokRigzIFIhhjN2eCaxA4
-	 YuB6Y7PkcZz4g==
-Message-ID: <4c0a7cf9-26e1-4a19-8a6e-7c30bc3aef86@marcan.st>
-Date: Fri, 7 Feb 2025 05:16:28 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtqZIiry"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738873035; x=1770409035;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=RQPvCWsY/BQguRfUzo+fpG8pR53URrLFzf89Pab/HXw=;
+  b=NtqZIirypvdzdN7f6rtT/gLNn+iG1LOUpjqAoZUONNhj5HTLdW8Xt0Lf
+   PQCkJuwhW5UFEhtglEo93RM2uaAq/lk1/FhUjpyVFVAzZrzMNlWga5q2a
+   O5CbwCVmXqaabIOIr08E3oFdWS3jT1gKp/jOQ3dONmk382A589CWDIMBa
+   964UpMnKU0x4O35yh92y/MDBbpzqVKstdAKttPJ73zE/i/5qHIRNhkUwT
+   wqLB2zCkvYRXNCLBzgonnZ5PKjrdFsSWMs/Bcuk2tT8evcWhgevsU++1i
+   PHfEbGUe1dEK4sc9TOKimhQCLuULlkrX43+Ssv0HjfcMULIc45Fq7peFc
+   w==;
+X-CSE-ConnectionGUID: izUKoMXvSJ+0My7alNIqUQ==
+X-CSE-MsgGUID: lvYczGx2TlSQ2+yZwVaqHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56916264"
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="56916264"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 12:17:15 -0800
+X-CSE-ConnectionGUID: 5SEnKldTReuLMMfamp8bEg==
+X-CSE-MsgGUID: Yyt/L7V6Ti6BaqvcooCXcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="111515726"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 06 Feb 2025 12:17:08 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tg8J8-000xI5-0d;
+	Thu, 06 Feb 2025 20:17:06 +0000
+Date: Fri, 7 Feb 2025 04:16:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: undefined reference to `gen_pool_size'
+Message-ID: <202502070436.5MKqMPJW-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Dave Airlie <airlied@gmail.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
- Christoph Hellwig <hch@lst.de>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
- aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- DRI Development <dri-devel@lists.freedesktop.org>
-References: <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
- <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
- <Z6UPXxEJYpanU9iU@cassiopeiae>
-From: Hector Martin <marcan@marcan.st>
-Content-Language: en-US
-In-Reply-To: <Z6UPXxEJYpanU9iU@cassiopeiae>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Grygorii,
 
+FYI, the error/warning still remains.
 
-On 2025/02/07 4:37, Danilo Krummrich wrote:
-> On Thu, Feb 06, 2025 at 06:19:42PM +0900, Hector Martin wrote:
->>
->> If shaming on social media does not work, then tell me what does,
-> 
-> Most importantly be *consistent* with good technical arguments, calmly focus on
-> your actual matter rather than escalating any surrounding details.
-> 
-> Accept that sometimes things can't be reached directly, but additional work is
-> needed to change the preconditions.
-> 
-> Goals aren't reached by burning bridges, but by building them. Sometimes you
-> may not be able to build a bridge where you would like to. But you can still
-> look for alternative routes with and within the community.
-> 
-> Surely, it does take time and energy, but certainly there's no shortcut.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   92514ef226f511f2ca1fb1b8752966097518edc0
+commit: 99f629718272974405e8d180d2fa70c03c06d61f net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
+date:   6 years ago
+config: alpha-randconfig-r004-20230123 (https://download.01.org/0day-ci/archive/20250207/202502070436.5MKqMPJW-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250207/202502070436.5MKqMPJW-lkp@intel.com/reproduce)
 
-I'm not talking about individual technical problems. You cannot solve
-social and community problems with technical arguments.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502070436.5MKqMPJW-lkp@intel.com/
 
-Yes, given enough patience and technical argumentation, you can get code
-into the kernel, or maybe even get some existing code refactored. That
-doesn't change the fact that the process is often quite terrible,
-hostile to newcomers, demoralizing, and by wide consensus much worse
-than practically any other FOSS project, even those of similar scope to
-the kernel.
+All errors (new ones prefixed by >>):
 
-And what I see, is very little effort to improve that status quo, or at
-least very little that yields any actual change that isn't just
-band-aids (e.g. tooling like b4, which is nice and appreciated, but
-doesn't fix any underlying issues). And that's not going to change no
-matter how many long technical arguments we have on the MLs (or even off
-MLs, since MLs are also not particularly good for this, and I've seen
-multiple arguments only reach a resolution after being redirected to IRC).
+   alpha-linux-ld: warning: arch/alpha/lib/styncpy.o: missing .note.GNU-stack section implies executable stack
+   alpha-linux-ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+   alpha-linux-ld: warning: arch/alpha/lib/styncpy.o: missing .note.GNU-stack section implies executable stack
+   alpha-linux-ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+   alpha-linux-ld: warning: .tmp_vmlinux1 has a LOAD segment with RWX permissions
+   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_desc_pool_destroy':
+>> (.text+0x34): undefined reference to `gen_pool_size'
+>> alpha-linux-ld: (.text+0x38): undefined reference to `gen_pool_size'
+>> alpha-linux-ld: (.text+0x48): undefined reference to `gen_pool_avail'
+   alpha-linux-ld: (.text+0x50): undefined reference to `gen_pool_avail'
+   alpha-linux-ld: (.text+0xb4): undefined reference to `gen_pool_size'
+   alpha-linux-ld: (.text+0xb8): undefined reference to `gen_pool_size'
+   alpha-linux-ld: (.text+0xc8): undefined reference to `gen_pool_avail'
+   alpha-linux-ld: (.text+0xd0): undefined reference to `gen_pool_avail'
+   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_desc_pool_create.constprop.0':
+>> (.text+0x3f4): undefined reference to `devm_gen_pool_create'
+>> alpha-linux-ld: (.text+0x428): undefined reference to `devm_gen_pool_create'
+   alpha-linux-ld: (.text+0x4a4): undefined reference to `gen_pool_add_virt'
+   alpha-linux-ld: (.text+0x4ac): undefined reference to `gen_pool_add_virt'
+   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `__cpdma_chan_free':
+>> (.text+0x714): undefined reference to `gen_pool_free'
+   alpha-linux-ld: (.text+0x71c): undefined reference to `gen_pool_free'
+   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_chan_submit':
+>> (.text+0x1bcc): undefined reference to `gen_pool_alloc'
+   alpha-linux-ld: (.text+0x1bd8): undefined reference to `gen_pool_alloc'
+   alpha-linux-ld: (.text+0x205c): undefined reference to `gen_pool_free'
+   alpha-linux-ld: (.text+0x206c): undefined reference to `gen_pool_free'
+   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_check_free_tx_desc':
+>> (.text+0x20f4): undefined reference to `gen_pool_avail'
+   alpha-linux-ld: (.text+0x20f8): undefined reference to `gen_pool_avail'
 
-But I've used up all my spoons for this, and clearly Linus doesn't think
-there's a problem in this thread worth replying to other than myself, so
-I'm giving up on fighting for any change or being part of the kernel
-maintainer community. Whether the rest of the kernel community chooses
-to continue to live in an ugly bubble or actually try to fix some of
-these systemic issues, is up to them.
-
-- Hector
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
