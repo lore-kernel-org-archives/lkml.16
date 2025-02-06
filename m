@@ -1,173 +1,195 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808D218C03D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864162; cv=none; b=gzY9lDiKOgHD5kYSXTnBfLOLVeTiGrtAJORacq/rBgrGW6w0o7mY8exPow9AInkvKcvjz4TYaTQfU5ZMtSvRUShIUjmtJ9hXoqPCPYKtJAMU03sm0KUVUs/GfZA5T0pfouU+EPDZogphUpRJDsB5TzLriINjDd4aAxkr46Ijg0I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864162; c=relaxed/simple;
-	bh=TnSlwLd9zv7yWxZOIiCgJu1jIh3lzoIbU82IlFG4G7U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=frbFX+h7LI5H3uhEdLMXY92dZ0IOD3HvTIxohZNejwsENPz0pYHi1LSvT/rOhVRmJ8RXkcrPN846E3M9KPo/hacFEykBz6eykBDT2fObaY5voxLqJ8MrovTaoDtvwLWZvOttREVaclYeSYHVB7ITLSnzIoMZhUjd6CTKGRreaws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mVWsbPV2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E68316DC3C;
+	Thu,  6 Feb 2025 17:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738864219; cv=fail; b=nPFTnVsW3XtT1wUNEc+cDSklY57KtmC/bDQN1I6iyakKnVvPvCjvdA9coVm7wm+ZnWqOZdWodSCHGhdnXG69ASdppGvo1IYc/YFWFcKST5gTp+jrEW0kQffBEN849/BPbJefpKMZd5rlG6ZA7ukOoI1UDjFJe54zFFkvsou7g1g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738864219; c=relaxed/simple;
+	bh=Kq9xCxUqe55R57TvTaTvCjXbperwdSDrnV/dcKhpOcQ=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=EvQmxBYkd44VIrK45NWWns4Phcpw816cwe//2yT9rzo/5P7R96p038/U0/SL9fLIpVgOENxdZbKYEr9TlPfBvdVoR2kXkR08YL7xV2dWs+NjMOdXrO4b9wMZ8MqfUZdOkzXkQbRyhYvVqmxExmtf64RzbadJGMyfEeeE7vL+lJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GxI07Ffp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=PY/iwv0t; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mVWsbPV2"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516D1lgT009519
-	for <linux-kernel@vger.kernel.org>; Thu, 6 Feb 2025 17:49:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XEShK7QmONl4wom7y3IXWD4phv5eFUloOdL0xIQxHUY=; b=mVWsbPV2C1oKpdkj
-	aYnNe/bMpospjWSp6jNLBcc4h99B8MMDQ1cathh4f9+EfLW8hZGG8GDKSe8DCGCA
-	O2ivZqx/N/nXA4CBOVCV2JFyB+vf4sbi1m8/DOS6bie82pmdf6LxuVGi+gZt/lzv
-	JgzWfWFusiaVF3fm6/PSkuPsmb6CvCS9B57SG7jEokaWVpzJF15WtTbbw6ausEvL
-	DU1H86IbxSLqyV56VzrTMDTVx2KCliOaAb0YwSobKi22y8LX6GsHQe4KfSJ6UK0D
-	gsChi7BXmOLyyZDVC+2gsetolDeC7cd1IONxdk9/YXctzggQMnMqPTKYa8rWS567
-	fUdmTg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mwkugqs2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 17:49:19 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c013ef320aso12023485a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:49:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738864158; x=1739468958;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XEShK7QmONl4wom7y3IXWD4phv5eFUloOdL0xIQxHUY=;
-        b=erI8W3LzSoEcYWo1A3I2mBtzBIg0N5WvwUuZgOVJZlDDxkl6pGw284aAthEMbxwgqS
-         LBsv7dOki47GXKWTOm3gIwim9ntb+rXeMmrDZSCH/et0gqXOEGWS+8dhuAUnqfNn9lRD
-         aTE3dH/MgOPkmEJhTrSgaExlbIP+6Sx99ohHFzfjYzDP00fU4d0DjxZqcSrSLHkQjQMc
-         CJnule8CYtuZz+TFLSu1cP51iI8hVuMVFJ51DmIg6/VtJLuVQ9IAOcfcInF2ERKkxETm
-         aUbGlobauOesnLuysLN6QaKsw46qBJAY71NixaRezEyoQPE5V73WpiHnZNW4vTVTHZ6h
-         UgVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXz+ZE2BkqJTspdhm+zFtDgJIBSV9h6jAuAEKwieWxp1ZoIJLwvNdkcCKCjD+sV+sjoJMgF1GNhNMreQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxULmK5kmElWB8ZIcQ3Z9m9+dkKOtHKWn0KmgmUUdqaKbLvt0y6
-	l4UKpCR3ZYAm/lHE3v3V6zMy7onQ6Uvt9N0HLNvjO/ECxo40zmteRRTYSFPUYhFuSAzSyEuRGws
-	SuMoC6Sgb82ol3RJnycCAYDR52HGkqOpYIutcBVAgpLTYZX2FWnoOxAhA5z242ao=
-X-Gm-Gg: ASbGncs/40uyaXOg3vWpEpi4KhNsElABS7sbtjbQiKDvsGTT2obQqWP04yaBfjeAzd6
-	sZlSuVqCAnpcx55VtP0G2RFZZ3LW1qi4Y5dp6Bi0E1LX9qUtaEDtlYmrTWDtEKm2bMwr8Rj5iv6
-	hlqx2A452iALEEIQjjJJqKmGOaXpRdDpKZwoB3jdXpm0QmMC600gUDVJmTD6Bgxjcz9SxQxu42o
-	zLsFkwl6d4xiS5iE69L7pJEsFsv91ecy+z83ahCHSEkMrdDxOjv+o7uMrT/HrFZHYL2kEfVnq5R
-	EP4iHy3U3atcAm3v71iMNiQoX/UsG11/VQ0Ttz0Qk4t6FxJg1Ma3dWUbsUc=
-X-Received: by 2002:a05:622a:149:b0:462:fb51:7801 with SMTP id d75a77b69052e-47167a27b02mr954711cf.8.1738864158032;
-        Thu, 06 Feb 2025 09:49:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFuJQ26PfCn6TWOYNKdpVCmuBfRLXs1MT5XO1ZO3huajwUMemKFLWySchNBBV8m3a6QVtoPmg==
-X-Received: by 2002:a05:622a:149:b0:462:fb51:7801 with SMTP id d75a77b69052e-47167a27b02mr954461cf.8.1738864157598;
-        Thu, 06 Feb 2025 09:49:17 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab773339e6bsm131278766b.152.2025.02.06.09.49.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 09:49:17 -0800 (PST)
-Message-ID: <d0b86591-7bac-42a0-aeac-1f7f6b75b75e@oss.qualcomm.com>
-Date: Thu, 6 Feb 2025 18:49:14 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GxI07Ffp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="PY/iwv0t"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516E5Nh8028724;
+	Thu, 6 Feb 2025 17:50:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=7x6wH9TKkcsuUzS3ll
+	PyXaZ0dtY6imkBOtBrPoWI3qU=; b=GxI07Ffp74idOUZ6R7Ps5qObf82JmOa9Rz
+	RgDr55VYIDDHbJEMKwR18LUqIqp8sxt7mCJV/PjlDTPVPttM0ycOkFfVFmqKdkMn
+	lR1LizMzvDFKuZ4KmS7GQQfEFNRrmizQxkqhoVEMN8IOOV25J3HFPnbnAEilYIjj
+	ywKkhXVN5pGvIVC/Rq4LKygvtPnFZfwk+e2ewGBVpaQH3ZbqmIhZWmgofugn+v/h
+	W5bY/9ol+iu9My/PWhJ2nA5Ffc+0B1NWyE7qUC6LIK8meZpizoYxjupHATcTlwzz
+	07hc+kpKC2ZNrdZUGIzaMeGy8UR1ZY4by0zm5X06tKQuI4G5TC/g==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44kku4w48k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 06 Feb 2025 17:50:08 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 516HNdhY020646;
+	Thu, 6 Feb 2025 17:50:07 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2177.outbound.protection.outlook.com [104.47.55.177])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44j8fs6dc4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 06 Feb 2025 17:50:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BpjG0qPxht2JQt8Rc6Jh5W5dpg8B4Xv/w+ONolmCI7u1cH6F2YHjpCuE6F0ha7FkVVuruDQHlk0bs92J7KmUHiZo6maEOtY5CULvs3jxEMjAd5g5RqWPIbTHKT7Eddb1VzKzDNKEloWRemrbneusGzmNdf2cRFFlLfkzPyg2EsZNfyLGQDoiKRy5i1IlZvUUqB7We2skbbtk7pm0YKfJWbY6FeC4OCWua03nT1NA2y6ujdCjVv0yLwYQgP5K6cjXe5WlqEnkTIHlZTO/8cjNDpootCBU2wi7RZWqwSIWATdb+0U1iy/zSAYDbLz63pVqCoujUpvdmEX+533h/yLMDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7x6wH9TKkcsuUzS3llPyXaZ0dtY6imkBOtBrPoWI3qU=;
+ b=PjX8MI39ypv2ACxBKvLoYxSVQ4aZyRTcKBXTLNVqflXuQFVBxvteLOIwQUug1Ydtbv4ntumd1tUoACNYbWt57HsU97qCxmnxMrOg+uO2UCuq8goHRQlX9zEWEudbirxnULuX3RDxt2g/xSsDQn4a4GmuxVYm6nkZ6gprbD4fQwEcKoDTGIA+WdfYIRJMcskq8qLtt1dxHupw9duorXzUMA2Hf3XJwgPg4kwphP4V0YtHjXlg5cloNBBTxGQcpY4Q3VaT76MuPgsy4/3c3Y14aBQ/7LfHX9DwKu7x3X0nYEmNqbrRv1nzLD97ACYEgB8SJBoerHyPYPeZ/Cz4/KGNmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7x6wH9TKkcsuUzS3llPyXaZ0dtY6imkBOtBrPoWI3qU=;
+ b=PY/iwv0tkJxQvBcHBdAVF4e5vUek6/qtc820pyPJFJfk10fO5PeotKAeG7Kj9Eih4Ka+MiX7TjPsZNlcjJu9DUCMfIUggL98jz4i3F9IW7DTVF6VIp2JIPOxp9X5W5jnx47tpyy6eUy/3IqYbWRzD/UPy+s/mmCGNRnyI/7cXSc=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by CY8PR10MB7292.namprd10.prod.outlook.com (2603:10b6:930:7a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
+ 2025 17:50:05 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%4]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
+ 17:50:05 +0000
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Ard
+ Biesheuvel <ardb@kernel.org>, dm-devel@lists.linux.dev,
+        Mikulas Patocka
+ <mpatocka@redhat.com>
+Subject: Re: [PATCH] crypto: crct10dif - remove from crypto API
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250206173857.39794-1-ebiggers@kernel.org> (Eric Biggers's
+	message of "Thu, 6 Feb 2025 09:38:57 -0800")
+Organization: Oracle Corporation
+Message-ID: <yq1r04b9d56.fsf@ca-mkp.ca.oracle.com>
+References: <20250206173857.39794-1-ebiggers@kernel.org>
+Date: Thu, 06 Feb 2025 12:50:02 -0500
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR01CA0031.prod.exchangelabs.com (2603:10b6:a02:80::44)
+ To CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/18] usb: dwc3: Reserve Higher Bandwidth for HS Periodic
- EPs
-To: Akash Kumar <quic_akakum@quicinc.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jack Pham <quic_jackp@quicinc.com>, kernel@oss.qualcomm.com,
-        Wesley Cheng <quic_wcheng@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Vijayavardhan Vennapusa <quic_vvreddy@quicinc.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250206111543.17392-1-quic_akakum@quicinc.com>
- <20250206111543.17392-2-quic_akakum@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250206111543.17392-2-quic_akakum@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 0RPZZAr1QyTv8P-BllNHUbA8ZFsicStI
-X-Proofpoint-GUID: 0RPZZAr1QyTv8P-BllNHUbA8ZFsicStI
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|CY8PR10MB7292:EE_
+X-MS-Office365-Filtering-Correlation-Id: 382c6e21-61e1-48b1-0fed-08dd46d6b065
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vWtky6wibmEvBjexJoZ4yzcfcSTcxZJvXad/9BXA4PFqNFH0X5Iiwv6UVw+H?=
+ =?us-ascii?Q?rS+TyARVTzrS4z3GkNwKCyxkzSaok8+EeG9j+IGYrnm0+9AxetDrIlPSLJrD?=
+ =?us-ascii?Q?RQDlxlkgIlaN4mmGj6p1VTrR9VrkmwFN34YIbpmFizANZ9lSVEFY+IUqA5yl?=
+ =?us-ascii?Q?0iyPwQu6QuIM634JMOnzxwvjbosoijte1IXTviDAXUYIdGi9+xZACxsz1HI9?=
+ =?us-ascii?Q?NEW1mITQWBVEHflztOv/yw0OeKkfKsVQIOoS/heXGGa8rW4RKS5DkLMpRlOl?=
+ =?us-ascii?Q?Pz6vxY87DUTjoenX6zkXYXWFQUHZND9SIb4JTF+ESubuiYm6AV+I2vrAKeHO?=
+ =?us-ascii?Q?ho7eo/RZUMesG7LA7QEZnGOwyfz2y3BW/u/VD7V+z3/ti7MBnSQdbVrjG8tr?=
+ =?us-ascii?Q?UY+kSHRA4vxt1xXXpnjkIDVUxoltcTRgYKgD7j/r+hrVls4Vk1sbVtvIaDVL?=
+ =?us-ascii?Q?F9ijYFLynocPSUMopms2lsSq5M1v1KhQfQCF3i64e8iazwGKrek70moqfmBn?=
+ =?us-ascii?Q?HXMiV0cPMaDfeKdZt1MXO1kI/VmvfS7sxZG6pX6C9gJvGVtBpT3z9bhPPci+?=
+ =?us-ascii?Q?YBGJ35q6I95EifGYTRNz7CH+qi46GdTvqn5SwZZvuqH0qFwUmM2V50CFqDGl?=
+ =?us-ascii?Q?mSXL0dixkX70iVvubdBCbL3vQdFiC9iRRT50tq5MXddhqz/THfl7d1bepchF?=
+ =?us-ascii?Q?Ki9uJu1IDLeiXkOQ73kaPC8bbP5D2+F0yrFxHzv51b1BFtph2wIMpbyRfRXq?=
+ =?us-ascii?Q?ephoDonbocRwdM3/07Lg4QPMqfBc7BGRE6Iv0X1+SJ2V4YJcj9nrhAjxkoqq?=
+ =?us-ascii?Q?d7pQxWwR40wcdqqTfRvT1FV8+ZfIroRGUgkHRr8n8jUWFUnxLRTWWXMb7Mpu?=
+ =?us-ascii?Q?V3xCkxKht+zJWHIkXPCJxTNM0sssvDarp31rILZP5wq+AFWB69dJ/cMojZM/?=
+ =?us-ascii?Q?jyHvv795aXRYuAh4er6jF6GZFCRZ8ux7T+R4BlUdm/UvYcQ48TMw75pVccsp?=
+ =?us-ascii?Q?TLkDTXORTusy8Wvz+Fo9psB5JuPRbwyZikL2NqZjMd+/wPfdSs9APrApp1IL?=
+ =?us-ascii?Q?3JAb9feb7x9Hfmr1veUen7aYPDzAE/JS6p20FPYsFAr2vR6ZpX1prlCd5z47?=
+ =?us-ascii?Q?VL4mzGJYlFRKBjSURKwL7MK7+V0B+6alalISGIF7DDBGNVBgP+Zo62Wn4Iz7?=
+ =?us-ascii?Q?BLAIlOyWEsqT8FACJocrHxUHLQcS+Fpc8MDap6EI8ZIC6XrNGVg3lsyQuAWR?=
+ =?us-ascii?Q?+MHPaap9LDfD1MnOW7mjNLmfwaeemkrmQ8lg58Fi7NyHUYXsEcTUboIy3LrC?=
+ =?us-ascii?Q?Shp0OqRd9CsDWJbpxUaVwPO9+jMUqivFWJb1yZYFdtn4s8rl+LoTraY/vmip?=
+ =?us-ascii?Q?J9Vo2SX558V9prXnuDYlzReh7GVL?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kBP/SSNW46mv7IoBFl/+g1sdfmByC6QnBFOUCVaxPNWxzF8y+jB6nnkcm0on?=
+ =?us-ascii?Q?wk+8AbUTxojHVhX1Tnmy+IGpX7XdVcpCAmEBQ+F0KpX334kb1DqepkeGtbm7?=
+ =?us-ascii?Q?9aZPa5dE3f6AdpZdb1UCl+XWfE2olRoZRw++MganeoCCLdpeUvJ9j9m+3W0o?=
+ =?us-ascii?Q?VUu/3h9OcScJ4zHZs5kKLk0h3FeVVC/d66kbBF2D63cJ5Hbtv3Xfr+H9++rr?=
+ =?us-ascii?Q?RJjPCB9amSxq7LiC4ArZk+Po9QypXVPkciaVeHWYXP6ZFq/3ONYzECeZn9MV?=
+ =?us-ascii?Q?V2KsT03Vxwbu8z/iav9DwbPkYczZ6i+wVGi2jOIMD2l84RNChQL5IuMr4ZQ1?=
+ =?us-ascii?Q?bCwsuZ3wISSEYEcgfiEhDjt0jVAldj0meL0D3n76zW0WbUMfqbvlcXiguUcv?=
+ =?us-ascii?Q?M7dRlp2+oIowIM8Np0igsvtF52hIJKhZ4t0s6F7kR/dP9qeN4EPTlF01BLHR?=
+ =?us-ascii?Q?kH4gD1Yx+/xl9f6hMt6thrbK687YbE3dC7sTG3zgUH9fF4Z6pt8GOdvd0sig?=
+ =?us-ascii?Q?88HLKIakCuzW9k4CPNYvsXbY6Z2i2/aWvJPTtv2RI7omE23CvGNyk8+4cZth?=
+ =?us-ascii?Q?5IAnvP00DSv4fgMz2XwdKAYB4IAmi3LEdfai1GBTWHFigyIBVQ2nKAsdr479?=
+ =?us-ascii?Q?043AD0h9m6uO10QOyzU0Capjv9eeCCGtmQrs8v7Qd6x5lUQRyTtB8u+YaIj/?=
+ =?us-ascii?Q?VR2qeFy99KB92tHm66ZL8fkqd21ShyF4WnPzeNnBJl43XklMXz76+kAZKkkT?=
+ =?us-ascii?Q?NEJZYrb28mimozLWSHVHbixGRi7uK4Ab7NxJDdDcMvlLZ8WqBzd6ygryUumG?=
+ =?us-ascii?Q?hDlRRkVny45SmcUgpQZcyJrgksc2JqvDUPjGQwYmbsDysaG9ZoESCmWTDwkx?=
+ =?us-ascii?Q?WCAg9wQpb6JiPxazqOW6Tiz19sfnuDa7CyMXGxFql56i/18CONYZJgAxHwPN?=
+ =?us-ascii?Q?BHgwQFxbpnyb1pfCXhkh5IpHMhUg+5ELYHk76BP+hLNKAqO1bKynEkFWVoam?=
+ =?us-ascii?Q?MkamL02gpJKMXbBvY+lW5DL3zTZ/YDUjPLHNPW80kvXeIbio/ma41AnYjvC/?=
+ =?us-ascii?Q?2/h7IfV8TlzH5wqdB+esHwdDV4yYyprFIeps+ixd02sjViOLIDZXFPcLIDfw?=
+ =?us-ascii?Q?aE5i4xcl1hAjXb7xIyTVUeR1u7EQooNQ0tLVnI9ZRbpqiIjRzskRRrezjGES?=
+ =?us-ascii?Q?zPOBUlOm5P4DqoThWsEjYlgHx4gAWGV3HPJxaqQWBd4aU4/QEbUdxo63s3cS?=
+ =?us-ascii?Q?Gt1J4gYTDAWhqWb0n0o3o0vZFxj69c45m/HYYMpuimzrEc0j3nDzfpZ4GNXF?=
+ =?us-ascii?Q?XyNWh1wTtDm4rWSlkf01H+GJ1nY5GqblaXjPQ25KBnyIviV3ox46SfKjtjID?=
+ =?us-ascii?Q?8vf0kZERGOHlyA6k1Cdv+HVJ48Q6jkWi+ySWYb4CQO4lC8n7HeVH5qsa3rnI?=
+ =?us-ascii?Q?HNYTzBPRM501zHByBSLbGfK0L4rjh5ojzqbpnyIMk3aB5KxQ157qN/+pZp9A?=
+ =?us-ascii?Q?P+wVEoBZ0P18XfXfNF45DVhOKLnJ2JuUqwGSu8E1WUrKBUq9q7LP+LGJlf9j?=
+ =?us-ascii?Q?LhU55gWqB9pfHJqjl2qoZPwh3TPF21L0VYDjGouyffF/omsyWeB5Effqv75i?=
+ =?us-ascii?Q?Fw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	mslM2+nAIGXIthj6VuFnjGHz4HsDR02iKwW1/bV5MfHS0WJetY0CQ2rdyxMAqFH/YqIiBzoDyzeKrOyPUguXF5I9/jTSoNS+JTS95hpORE5SQSwSzhrNp60RaDzSojlHDZ8wFK7ouj3L50SblLtUqZI9QiazJNMEjvMwwDIoUk5f24h7U33ZXj8Yh2E95bS0AHt/RhoYPzPKjnDlGl4mjBxjN/EJaTGRh6Wur4AdHr0syod5VClKcVSsMrsnY4X5oRPpwvGXFG+h4dQaF6Wl2hmOVNDL+IoMJGZijlSJ8kUqzz6XWvQo7cfLqimkhnWAXxCP5pv9TCYVKb4zGopWSTUP4okC+XB64+rzrvmC9Jfon8x2sQgtlTHwp9c5zZ7jeXeedUvrZYXw0kr0yafnp9nUNtzTggjYm1oas8ePqfY+23WUnG1DDmbjwBjowfXwIOvdriSgQdohFvMHcVtZzJj6IAIiGK1n4ZYcRR6+kQgk4GTYvLJuyj0lR93lr2uLQJaK/IelZ2gGrw9mBFHp9aKPp5A0vGqvz2n15Plcfcpx+F5PjyokcZNfPDytEQNZki6J9J5t0OTXnfKSrQZjc9OAo7tZofJ2WT1fMuptIHs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 382c6e21-61e1-48b1-0fed-08dd46d6b065
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 17:50:05.4000
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rjEslxAn2MU5RqYg5Y3feSOP36GQsrMyVW5hYLFJvwOhjUhuyDw32tjGX1p/vyCkQUatulwa8a4OipwvlWw0nsXD2TlTKcXAITVJ8FL5m/U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB7292
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-06_05,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- impostorscore=0 phishscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 mlxscore=0 clxscore=1015 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
  definitions=main-2502060143
+X-Proofpoint-GUID: eecbrpMx9dMX7jlsZSlLxwVtERgBDNg2
+X-Proofpoint-ORIG-GUID: eecbrpMx9dMX7jlsZSlLxwVtERgBDNg2
 
-On 6.02.2025 12:15 PM, Akash Kumar wrote:
-> On targets using synopsys usb dwc3 controller, it is observed while testing
-> multiple audio devices, a glitch is observed during testing.
-> As per dwc datasheet,By default, HC reserves 80% of the bandwidth
-> for periodic EPs which can be increased with GUCTL Bit 16.
 
-It is observed a glitch is observed.. please massage this paragraph
-a bit.
+Eric,
 
-> 
-> Add quirk to set GUCTL register BIT 16 to accommodate higher
-> bandwidth for 2 isoc eps.
-> 
-> If this bit is set, the bandwidth is relaxed to 85% to
-> accommodate two high speed, high bandwidth ISOC EPs.
-> USB 2.0 required 80% bandwidth allocated for ISOC traffic. If
-> two High-bandwidth ISOC devices (HD Webcams) are
-> connected, and if each requires 1024-bytes X 3 packets per
-> Micro-Frame, then the bandwidth required is around 82%. If
-> this bit is set, then it is possible to connect two Webcams of
-> 1024bytes X 3 paylod per Micro-Frame each. Alternatively, you
-> might need to lower the resolution of the webcams.
-> This bit is valid in Host and DRD configuration and is used in
-> host mode operation only.
-> Set this bit for host mode uvc uac usecases where two isoc eps
-> are used and flicker is seen.
+> Remove the "crct10dif" shash algorithm from the crypto API. It has no
+> known user now that the lib is no longer built on top of it. It has no
+> remaining references in kernel code. The only other potential users
+> would be the usual components that allow specifying arbitrary hash
+> algorithms by name, namely AF_ALG and dm-integrity. However there are
+> no indications that "crct10dif" is being used with these components.
+> Debian Code Search and web searches don't find anything relevant, and
+> explicitly grepping the source code of the usual suspects (cryptsetup,
+> libell, iwd) finds no matches either. "crc32" and "crc32c" are used in
+> a few more places, but that doesn't seem to be the case for
+> "crct10dif".
 
-Re-format your commit text to wrap at ~72 characters
-> 
-> Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
-> ---
->  drivers/usb/dwc3/core.c | 11 +++++++++++
->  drivers/usb/dwc3/core.h |  4 ++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index dfa1b5fe48dc..7e55c234e4e5 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -1461,6 +1461,14 @@ static int dwc3_core_init(struct dwc3 *dwc)
->  		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
->  	}
->  
-> +	if (dwc->revision >= DWC3_REVISION_250A) {
-> +		if (dwc->dwc3_guctl_resbwhseps_quirk) {
-> +			reg = dwc3_readl(dwc->regs, DWC3_GUCTL);
-> +			reg |= DWC3_GUCTL_RESBWHSEPS;
-> +			dwc3_writel(dwc->regs, DWC3_GUCTL, reg);
-> +		}
-> +	}
-> +
->  	dwc3_config_threshold(dwc);
->  
->  	/*
-> @@ -1818,6 +1826,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
->  	dwc->dis_split_quirk = device_property_read_bool(dev,
->  				"snps,dis-split-quirk");
->  
-> +	dwc->dwc3_guctl_resbwhseps_quirk = device_property_read_bool(dev,
-> +				"snps,dwc3_guctl_resbwhseps_quirk");
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 
-This needs a dt-bindings entry. Also, underscores are forbidden in property
-names, use hyphens instead.
-
-Konrad
+-- 
+Martin K. Petersen	Oracle Linux Engineering
