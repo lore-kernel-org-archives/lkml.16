@@ -1,117 +1,125 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A605610C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6787C1C6FEB;
+	Thu,  6 Feb 2025 14:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738851739; cv=none; b=gx/JsT69rVVdvPaqnoewy+PFBE6jMh00XFadnJaIthDY7kf8OTPGca/7erR9LEYnEqXzXOtIOBSGXMTmyQ0GhplT4H4NMfHuWbBNytHlf5C633tadIeTySH6fmccLxw06wWQ9ZrY9n4uT/zLfuW5XKryORMr2FoZKS28qOLBHks=
+	t=1738851759; cv=none; b=SF5JKTVwV/FZhp+xuKkBLLs1xUdyGAAlJA9B1DuPPTrC5Ie3SaC+918NJJPBLMP4xWcWIson+GRJRJg42CaICdDkDRP5461Kvsw9ifiOi58pWx5jfmyNCIYQJ4d/ILmZwYQNpFTMt4zjaR/S6816mu7d84jf2zfqQNINtvsN1Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738851739; c=relaxed/simple;
-	bh=bi07utj+cl2ojuyIDCD/sVJyWBo4xWIZEqhSrnnju3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cuZ/qiU+9h71tsK9YwVtaE515jy2SZzxhNI9gOwI69qdOatLi6xT0ptd4z43BRV3VZkZKYtK1S6SkgIsUpoaUQlKZQLcaogjFhNagpwZlNRPwRSSh1qBwPGz3oDBwDTMo1jw80xsOOzHizhE2vTqx2M5Nd1oJGmZY7N2K4Rq1gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=uZ+qeQm9; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1738851759; c=relaxed/simple;
+	bh=Ql2qwMDAvI/A3hP4Gi3+MQih4sdMF7M/cEfdxpPlaBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VK9FddVIHOUOFUeS/72nsFogwE9px+cmmFenLtASeAFeh7l0pEVkZlBpwZLLFJ/nQlMRmFCyVsWfoQZGRD4rQTpK/ldoD8olLucpq0JE4WbhsHNX7ZU2ApGgfb7HCLgw6xB9hooaFPC6J7U1IUOSbM3hxpt9dEEZDWhuOhAPZFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zi5eh1B/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QMI2yJw2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="uZ+qeQm9"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aa67ac42819so159107666b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:22:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1738851736; x=1739456536; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qy52E7wooPVVAtEuLO+Qhyc2iLHEhNjVLiIzlhHyrWs=;
-        b=uZ+qeQm9brCkwUX2IlQbdo6PogOK5wqma0tQpCl5QXM9OTv3+zPygQModsM9Og6xS+
-         ZQAgt/ONb1PL5Niqi+awOJgIuFcYBl4yEj4lzr1IqS55psmhB3Fp8tR0s7ANVy77EQoQ
-         FAgZ0oiOZQNCLctnAuqOra4sJGN5VwxnbtMKkUDHnVgj/hVJLa6Y3wEGZnEEKJvuWWAG
-         E4RgLV9A83clu45ydks0UgZXY1XRJoL5z3ycfydyC0FasUdOCFtYwKcO3PFHPug/xTOV
-         NiBHrFZPuB+wAyJ4n9YXBE6CqZW7DD6LcXGYZrtwAI3VR226ooJn9+FjOFTjg4hTlX3G
-         /yvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738851736; x=1739456536;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qy52E7wooPVVAtEuLO+Qhyc2iLHEhNjVLiIzlhHyrWs=;
-        b=IIvybKV6AJgHiDU6uR2lAgKLCUe+gMVhg4r/Jtz9G0OiPdtJodIC2GsxQqGuPjj2oW
-         dH3E4ohdHIVPWuPGr15AFPGpoKIpcU0LYJWqzN+guFVkUt/Ce3zP6Wn/RDA7C6bHC2u2
-         QmDsRNam6BreeW4HSWHqBs1BhIeysnctjeo2urD3VlOyeSgMpCJUMd+o7qKnUwmL+KJv
-         le67aNbgSa9+yrY/VhtVTFG0l8bawYS9HAbcYOjktsyOr7PcPCHJ+PdIaK+FwT8Bx5MF
-         GvL162ywEg2+6odGUxrPrRoItKn+Yx+DSg2BjNWBie0EvGjRTN1XNd1uNJzmdMo2lMIE
-         +O+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVWhphrQYAYArmyKdBbI9T9KkPSzblwRfxcVWWed5knwgifPEP1NKsIph9aQAvweSBKp5n13vA0vV5A3M8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7qysIYGf0I/OEVdQbJRUC+2SkNQOogKaauABCJKLhLMieEmVt
-	sWwXkxh+GPHOMv3pil4yGB/X0uguAUsU/ogAxXv7XD8ZPjO1gEIDd+bca3jvkOw=
-X-Gm-Gg: ASbGnculHLGkSTLWqyGaBud6j929MWySW41jw2kjzDDdnYV/ZuuZnjR5KCaPoPsxxNL
-	XUXbAM/QUDr54AMZuqt2JatUjUhkcctf7JI/DN8VXn+HjNW1zv0JloQEy2ovbh0uMy2dOxtGBLT
-	pXE4tXGpUk9xSTDQiK0ADmMuVS2rQ67AU8/IyI+AbXNwXB4kJchGgOCW2XXEq8Zbup5+upmMqq8
-	kHfMXCo5vWCSKF+YTcuws20UZvMVMu40RFS4nWPCEQI3kkM4RtKF6/SKSAxP5tDf9AQdU7ZpWPg
-	rc/bLOL3vXw/3lGTUwwYOlWRI6FqvRFZwbQ47Fibc9oeAPo=
-X-Google-Smtp-Source: AGHT+IG6aiDjgy1nFvIKHnHHwV2g9kBo0v+xziTDZFU9m8b3NS4nlzYz1Qp3ZZ0dcQwrhEvWNvqV8Q==
-X-Received: by 2002:a17:907:7249:b0:ab6:36fd:1c8f with SMTP id a640c23a62f3a-ab75e2f655emr719799466b.39.1738851735691;
-        Thu, 06 Feb 2025 06:22:15 -0800 (PST)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab77f5f5a0esm40785966b.155.2025.02.06.06.22.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 06:22:15 -0800 (PST)
-Message-ID: <cc8b741a-72a4-4059-bbcd-3f32c7ef56d0@blackwall.org>
-Date: Thu, 6 Feb 2025 16:22:13 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zi5eh1B/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QMI2yJw2"
+Date: Thu, 6 Feb 2025 15:22:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738851756;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/GZ0eW3ydhChOWf2KoO0stzIjEJNWi+XUy5NFjSLt4Q=;
+	b=zi5eh1B/VgIhag2+mS2V58qg96ULzdik12zgp3j8dOlt6fSvQLG+VIo2b3WW6lzxuwlKtP
+	T6GCFUrIsKEW4PFa/n9dX5cP87vwjnKxnOvVgxoqA6TTCBJjyladBCQC8hTAgDHKJkauvE
+	XgnP/6FAaMl5xRxCnmMlUDZarAMVUQ4PetGJJUvVFhcgKyvheKKrIijp07PirsfrVpRWhO
+	4i0Gf3BSnrNPA6geu2ZSB7m6iYLSvsy4g44wtDABn62BR+NRhREMEMv99cwdkFCJTOnn4A
+	dp9+KtCDzvhuIkjyjXQkHz3/OM8G4zE+m1TTApNIUDH6ppb16To8VDKfD0gSNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738851756;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/GZ0eW3ydhChOWf2KoO0stzIjEJNWi+XUy5NFjSLt4Q=;
+	b=QMI2yJw2GyINqfZEYUCNRybW6orTAhTQPXCGAfKk1EOA+92G0S40wkoeFJ8DuqsDqv1a2u
+	/R29RuTIMfWrpMBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Prakash Sangappa <prakash.sangappa@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
+	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250206142234.-kcSg0xr@linutronix.de>
+References: <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+ <20250204220418.35949317@gandalf.local.home>
+ <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+ <20250205081635.397eacb0@gandalf.local.home>
+ <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+ <20250206083039.0916ad24@gandalf.local.home>
+ <20250206134408.lD_POjuG@linutronix.de>
+ <20250206134859.GP7145@noisy.programming.kicks-ass.net>
+ <20250206135353.i1tp4vDv@linutronix.de>
+ <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 net-next 13/14] bridge: Introduce
- DEV_PATH_BR_VLAN_KEEP_HW for bridge-fastpath
-To: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>,
- Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Vladimir Oltean <olteanv@gmail.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- bridge@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250204194921.46692-1-ericwouds@gmail.com>
- <20250204194921.46692-14-ericwouds@gmail.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250204194921.46692-14-ericwouds@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
 
-On 2/4/25 21:49, Eric Woudstra wrote:
-> This patch introduces DEV_PATH_BR_VLAN_KEEP_HW. It is needed in the
-> bridge fastpath for switchdevs supporting SWITCHDEV_OBJ_ID_PORT_VLAN.
+On 2025-02-06 14:57:44 [+0100], Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 02:53:53PM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-02-06 14:48:59 [+0100], Peter Zijlstra wrote:
+> > > On Thu, Feb 06, 2025 at 02:44:08PM +0100, Sebastian Andrzej Siewior wrote:
+> > > > SCHED_OTHER vs SCHED_OTHER after all. But please don't delay a wakeup of
+> > > > SCHED_FIFO/ RR/ DL because of this LAZY hint.
+> > > 
+> > > Thing will get delayed if interrupts are disabled or kernel has
+> > > preemption disabled too. So as long as we ensure hint crap is of equal
+> > > order, nothing cares if you do.
+> > > 
+> > > If you can't tell the difference between task does hint crap in
+> > > userspace and task is in the middle of syscall, you can't tell the
+> > > difference.
+> > 
+> > I can tell the difference if I see a trace where an interrupt fires,
+> > performs a wakeup and the SCHED_OTHER task remains on CPU while the task
+> > SCHED_FIFO task sits on the runqueue until a timer fires.
 > 
-> It is similar to DEV_PATH_BR_VLAN_TAG, with the correcponding bit in
-> ingress_vlans set.
-> 
-> In the forward fastpath it is not needed.
-> 
-> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
-> ---
->  include/linux/netdevice.h        |  1 +
->  net/bridge/br_device.c           |  4 ++++
->  net/bridge/br_vlan.c             | 18 +++++++++++-------
->  net/netfilter/nft_flow_offload.c |  3 +++
->  4 files changed, 19 insertions(+), 7 deletions(-)
-> 
+> Right, but so what? Same delay will happen if interrupt fires in the
+> middle of a preempt_disable() region.
 
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
+But I do see an interrupt and a wakeup in the middle of a
+preempt-disable section based on the preempt-counter. Then once the
+preempt-disabled section is done, sched-switch is expected.
 
+> Or if interrupt gets pending while interrupts are disabled, except your
+> trace will not show that.
+
+That is true. In general we try not to have a lot of these. Also pushing
+the "unexpected" part of the CPU such as unrelated interrupts. So may
+end up a RT thread and SCHED_OTHER threads on the same CPU. It would be
+very unfortunate if this "let me give a bit extra time so I get out of
+my critical section" within this SCHED_OTHER application affects the RT
+application.
+You run SCHED_OTHER tasks and a cyclic interrupt wakes your RT task
+every ms. You expect to be scheduled asap, so ideally 0us but 70us in
+real world. Then this feature adds 20us on top?
+
+> Your worst case response time isn't affected. That's all that matters.
+
+Sebastian
