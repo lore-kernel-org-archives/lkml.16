@@ -1,210 +1,271 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65ED1F416B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0CE1F416D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857129; cv=none; b=buLnsQ1eZwtZy81RGVauNZvqZg8gpnFCPZoKngmhD+vPn/QsrIycfg8FXSOFwShveBPWe/jWScdCkp5p5eR/McJN3TVg6UJ5XgB1ZM+MM8JL/QXX/CbWGZGd12+LDKcb2Mk/qdCJ9QgfGUUMWzQce9wQPENJcKbFtWpJGUMXxr4=
+	t=1738857196; cv=none; b=JBAmn5Ply3iysKIH3BHqNQ5DaItPYg3A19X10NEd/wqfHdfgQiTbxi9OEt8QeDclT6LL8nbb6Aa3O69i3UaZWez+35fkEO4zbmgiqkN8oVaw1weatB60ah9lFoGQ+SfL+8rOm8+ls+VoSZ24fgKUHsoRLcFuE/pT/YFl7dU3fro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857129; c=relaxed/simple;
-	bh=ncyCUMlwr1q4MwNPZcdzv/OPKNB5ERDfxDAcdsQ59wc=;
+	s=arc-20240116; t=1738857196; c=relaxed/simple;
+	bh=G0+4gHfoHpexNr7egTrMeyzu2XAKFcF5lA1JG6mWO0g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U5Gt7rgGb2rJ7TpCQdgRO0bqd1DOAAXQAgDGlJfAyy5fm/fLKqak2SnhQEFNciTP8X5ROV59S9aLg6puEAS6hwHCEnH5WOVOEO6DzDQV7bUJnxkGBV60hihIOmSRoqKRlGh5YAs7JrDuXzgA30BCk9/HWcRd4sai22iQttAfKO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i7krfYcD; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=J2C6sOZa7isoGp/krFY8xarHLaPcxm0blzlMH84+jRomrZMadlWAUWPwXkPQs90NG26MxSbG2ymqjVt8u58Z1zlr53iBD816/PPdch2wriUWIFjvRwNAmhHe5wAvS5eTEV4Wf2Inq17KOAY5Mn9/GyUwLg8rfqFP1OAEzs2YXhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=C5AywYWB; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i7krfYcD"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f31b3db5ecso477357eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:52:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="C5AywYWB"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2165448243fso27514535ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:53:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738857126; x=1739461926; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ncyCUMlwr1q4MwNPZcdzv/OPKNB5ERDfxDAcdsQ59wc=;
-        b=i7krfYcDWGYyZ7Kq5CczAS8wSacEHpta3hhW6GPNk2hnywz54HEykJc+N0WwN15z1r
-         yWLKD3uwkF52yiK9AwI14QK8zUhWYt5hTWhRm8MuzIpaGf6Sp1cwhNeMyOlOPdTzVRAa
-         LFA2EUfIKRqfPHszNshdc7T/kfnkGMq8vPmxVy5kcp0u/B5HEUtScYN97+4KPgnm2Oq7
-         /83ksbHXmd3igvd/jjtv1EqU5oJX7PwU4T4YJexP31y82ZdmB91pOQ+xqbA5OwD8QtQR
-         UqRz0fsd336GUPxIJBYIuukuWKBKSwUR/nhfCIqAbun2PNwGoIFUBgOmxH2Nwc48wyXe
-         nm9w==
+        d=9elements.com; s=google; t=1738857194; x=1739461994; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=44CBlstICEoDfNsqXMKX1ZM0Vyw2oohU1OJv4L8OWmM=;
+        b=C5AywYWBr5U7TcV3Bess/Ddc81ivkLWNuSxtLq1vGLpWzTHRw7f8MOmCVBk1ydsM/I
+         vFy1pFQcbpSeNkzvanrcjsekJgbMLinq0WaGIwag/emMlx0bvirk36pMvE51pG8VMsC2
+         ej/PLWhr5KRk9AQYr/Wv0nWXftgQ3rUTPvn5mthGPP6658wBLTFXWPDFb2iPz9aTqtI+
+         tttRG3oKmPqj1hiuGseu5I9JuBVEuOn4aBfwHvaU819MgOt2PdAGL2XX1Eq3GaFOygLU
+         eEeH2WgOMnDx9CkRVMDGTCSkC9lTwtIAMleVzSE/9CyCpx2J6xLTILLMRvMPPkC3tTHl
+         jtBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738857126; x=1739461926;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ncyCUMlwr1q4MwNPZcdzv/OPKNB5ERDfxDAcdsQ59wc=;
-        b=EbE8PwbTxBV7ufG49c1QZzsbxqYsxi9BFYATwMiNE5vhv9bCMlW86+zhWe/+WsvM1C
-         K1NeFdu3pXlzAFBDeynbehuWWbarVNUK69K/4gUcVr6RkqaVh3oDUrAWpf9XhCGbE6TM
-         ymWC4xxPTp+c0HAvqfZySmItrMRkvhU23MaUhidspLMInd70FnBIa6U0YytgNG6mA097
-         55mAqTbSRtnqrKpzgJMXcmyOWrB9yUpS7LniInf6Y2Zu10wMNf8BOqPuLkq7uzX9dyUg
-         as1zwrumVxyc7SmiWEbPT+9hmee+c6YXSAP/m0d/cdAegdFnCUwKAsy7DkDxhWOhvPiT
-         dh/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVBpgu0XKwJCwf5mVCEbc4Ny3xuPcNA6zzhDoPVOv+lMiLQDvaaz5t3tppa+tgg3Jfg/Nv5wR4JXEtD0WM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw69GbDy3DYSzIVd7bJusH1KadW5EwPaTi03C5ZHaRNTuQWswPK
-	/20tgSrLGJZO2aJQ2K8deqfQrhqwGeraa252muWi9F/wjlCt0lgpbHwR7Jl1/220sciPjQN/UyE
-	UxJOsohTj06qQnA9TgGYwG5UXP4T3dNiqFJ+4
-X-Gm-Gg: ASbGncuKhSaUFOiEKcPp3975I47wM13zN7Sx7Q8/m8m3ZqqYz1M7AjTpmP6QA7e50N3
-	zyAPQSaNH7gw9mPyMXIRembr6WaB8Z6ucxF6hWj3iID4oDSkNOPS6ZzoB2Muq6MEoojmkqw==
-X-Google-Smtp-Source: AGHT+IGHI7yAVXLvlNlCs3v0SKEotepWb9UfWcG+OprdiS+5n+vsUc8hOcDdllOoto/wJReH3eO28XCwjOAKCK2X1vY=
-X-Received: by 2002:a05:6870:80c9:b0:29e:5a89:8ed8 with SMTP id
- 586e51a60fabf-2b804f728f1mr4716147fac.11.1738857126288; Thu, 06 Feb 2025
- 07:52:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738857194; x=1739461994;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=44CBlstICEoDfNsqXMKX1ZM0Vyw2oohU1OJv4L8OWmM=;
+        b=JCl7fw/EAZ2PJwT5x4/Pm/WAhUyoSIWs0phv9XgxmeA9LVl35Z4WI9C7Hec+cYeqtA
+         dqpd62OOhV103EHAuuYMq5z98PrRgttnAEq3u0D6BYNSd6W6STyobhNxerue0XqDuPi3
+         vmt2ZrUjmv+ojNql13vUTD4/ttlkTNQkQPD4pTZToDYDWqod/TQ1k6eESmqwlTbwZC2z
+         bseuY6OUn5eumo1qiiQXhzgcjAnOw1LKtl+Hc5RJ9EnklgdWmkKvUlLkBHmHx6/Aw8NQ
+         JNbkZSX5lnIfYl9yyBRuyYlpjmgl77RhG5rJWoiLytAavKBFlApym0sMP8nsrcWm+Qc9
+         bROw==
+X-Forwarded-Encrypted: i=1; AJvYcCUv7xGarFLBPTw+J85rF7SJTKLIRPziXnskQl87831cTibksgfM5hiHw2TxBdVf/pg/SZz5AaY9SB1lx2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCe3RS5lxdS6F1qokTuTKg3Y56Kl4NZJqyChYcRue5rw24rCoY
+	vfWK7ycTrVULRBkFh7IshFhjmPpXWK6kEQM0YIiXZbWS5QaOt23NRZqr5PqArT3mxhQkiQlmdxa
+	dcxWQCPyUCSObjTDiqXcu/AsTGkCU9Y6Cu0siGw==
+X-Gm-Gg: ASbGncujCgDoTjSoqNeMpCRMz+fB5oI/4XG5XogiG+MJYBnEgQcNowVra15bfCZNK8U
+	O5XVxNRhcFquxdepAqBdjJjOKXkoz+0wI1qT/XNWTmrNcifz/uamqUFZsV5+UBbA2WTKEhn9t
+X-Google-Smtp-Source: AGHT+IEIk4sMS7wpGpYZqR8dP/iGnda26suYR568bnUwxaDwBwynzuwK8Y/KsMxTB5sMPOwEMRlV7ZjwLuGUpDQHj7o=
+X-Received: by 2002:a17:902:cccc:b0:21f:164d:93fe with SMTP id
+ d9443c01a7336-21f17eeb2b8mr132300495ad.53.1738857194183; Thu, 06 Feb 2025
+ 07:53:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
- <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local> <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
- <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local> <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
- <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
- <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
- <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
- <20250206135150-6c770e7d-9af8-4924-b760-82cff5092586@linutronix.de>
- <CAJgzZoq4UOYXaOh=mdUxsNUug9uYWzPX56AtUDL0RgKOx_VnQA@mail.gmail.com> <20250206154810-8b7bf2b4-435c-4930-a787-f9238cd0045d@linutronix.de>
-In-Reply-To: <20250206154810-8b7bf2b4-435c-4930-a787-f9238cd0045d@linutronix.de>
-From: enh <enh@google.com>
-Date: Thu, 6 Feb 2025 10:51:54 -0500
-X-Gm-Features: AWEUYZn6CPh2B4zyNHxi4kuReb_Dep_OpvVIHc-KSEs4_biKleMDcUfMPCucf6k
-Message-ID: <CAJgzZoqet77Ehd84Qcnz_NZQoKPzhB+7VyJYq4aP2Yo+=f9-jw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jeff Xu <jeffxu@chromium.org>, Pedro Falcato <pedro.falcato@gmail.com>, 
-	Benjamin Berg <benjamin@sipsolutions.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
-	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, 
-	ojeda@kernel.org, adobriyan@gmail.com, anna-maria@linutronix.de, 
-	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, hch@lst.de, 
-	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, gerg@kernel.org, 
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
-	Liam.Howlett@oracle.com, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <0x7f454c46@gmail.com>, 
-	Mike Rapoport <mike.rapoport@gmail.com>, 
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+References: <20250204180306.2755444-1-naresh.solanki@9elements.com>
+ <20250204-mulled-evaluate-8a690cdfbd4d@spud> <CABqG17jHKfwJEfZxto_YA4opS8=QwqTqfNdkku8kcEv2_iW+XA@mail.gmail.com>
+ <20250205-purge-debating-21273d3b0f40@spud>
+In-Reply-To: <20250205-purge-debating-21273d3b0f40@spud>
+From: Naresh Solanki <naresh.solanki@9elements.com>
+Date: Thu, 6 Feb 2025 21:23:03 +0530
+X-Gm-Features: AWEUYZkAKhXGMKy7DR6fQH0nL7Ht2cwBrY4vis0FiW-K6mVUZy62FPhpGq6RejE
+Message-ID: <CABqG17j4tKXnMZ5=vcjBvfe6JwCLQ6NbkQmJC9ySK_bmGEv=iQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ir38060: Move & update dt binding
+To: Conor Dooley <conor@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, broonie@kernel.org, 
+	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, linux-hwmon@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 10:28=E2=80=AFAM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
+Hi Conor,
+
+On Thu, 6 Feb 2025 at 01:43, Conor Dooley <conor@kernel.org> wrote:
 >
-> On Thu, Feb 06, 2025 at 09:38:59AM -0500, enh wrote:
-> > On Thu, Feb 6, 2025 at 8:20=E2=80=AFAM Thomas Wei=C3=9Fschuh
-> > <thomas.weissschuh@linutronix.de> wrote:
-> > >
-> > > On Fri, Jan 17, 2025 at 02:35:18PM -0500, enh wrote:
-> > > > On Fri, Jan 17, 2025 at 1:20=E2=80=AFPM Jeff Xu <jeffxu@chromium.or=
-g> wrote:
-> > >
-> > > <snip>
-> > >
-> > > > > There are technical difficulties to seal vdso/vvar from the glibc
-> > > > > side. The dynamic linker lacks vdso/vvar mapping size information=
-, and
-> > > > > architectural variations for vdso/vvar also means sealing from th=
-e
-> > > > > kernel side is a simpler solution. Adhemerval has more details in=
- case
-> > > > > clarification is needed from the glibc side.
+> On Wed, Feb 05, 2025 at 03:51:25PM +0530, Naresh Solanki wrote:
+> > On Wed, 5 Feb 2025 at 00:52, Conor Dooley <conor@kernel.org> wrote:
+> > > On Tue, Feb 04, 2025 at 11:33:03PM +0530, Naresh Solanki wrote:
+> > > > Move dt binding under hwmon/pmbus & align accordingly.
 > > > >
-> > > > as a maintainer of a different linux libc, i've long wanted a "tell=
- me
-> > > > everything there is to know about this vma" syscall rather than hav=
-ing
-> > > > to parse /proc/maps...
+> > > > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> > > > ---
+> > > >  .../hwmon/pmbus/infineon,ir38060.yaml         | 61 +++++++++++++++++++
+> > > >  .../bindings/regulator/infineon,ir38060.yaml  | 45 --------------
+> > > >  2 files changed, 61 insertions(+), 45 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
+> > > >  delete mode 100644 Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
 > > > >
-> > > > ...but in this special case, is the vdso/vvar size ever anything ot=
-her
-> > > > than "one page" in practice?
+> > > > diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..e1f683846a54
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
+> > > > @@ -0,0 +1,61 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/hwmon/pmbus/infineon,ir38060.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Infineon Buck Regulators with PMBUS interfaces
+> > > > +
+> > > > +maintainers:
+> > > > +  - Not Me.
 > > >
-> > > x86 has two additional vvar pages for virtual clocks.
-> > > (Since v6.13 even split into their own mapping)
-> > > Loongarch has per-cpu vvar data which is larger than one page.
-> > > The vdso mapping is however many pages the code ends up being compile=
-d as,
-> > > for example on my current x86_64 distro kernel it's two pages.
-> > > In the near future, probably v6.14, vvars will be split over multiple
-> > > pages in general [0].
-> >
-> > /me checks the nearest arm64 phone ... yeah, vdso is still only one
-> > page there but vvars is already more than one.
+> > > How the hell did this get merged!
+> > >
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - infineon,ir38060
+> > > > +      - infineon,ir38064
+> > > > +      - infineon,ir38164
+> > > > +      - infineon,ir38263
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  regulators:
+> > > > +    type: object
+> > > > +    description:
+> > > > +      list of regulators provided by this controller.
+> > >
+> > > Can you explain why this change is justified? Your commit message is
+> > > explaining what you're doing but not why it's okay to do.
 >
-> Probably due to CONFIG_TIME_NS, see below.
+> > This is based on other similar dt-bindings under hwmon/pmbus.
 >
-> > is there a TL;DR (or RTFM link) for why this is so big? a quick look
-> > at the x86 suggests there should only be 640 bytes of various things
-> > plus a handful of bytes for the rng, and while arm64 looks very
-> > different, that looks like it's explicitly asking for a page (with the
-> > vdso_data_store stuff)? (i've never had any reason to look at vvars
-> > before, only vdso.)
+> Okay, but what I am looking for is an explanation of why it is okay to
+> change the node from
 >
-> I don't think there is any real manual.
+> | regulator@34 {
+> |   compatible = "infineon,ir38060";
+> |   reg = <0x34>;
+> |
+> |   regulator-min-microvolt = <437500>;
+> |   regulator-max-microvolt = <1387500>;
+> | };
+As I have understood the driver, this isn't supported.
 >
-> The vvar data is *shared* between the kernel and userspace.
-> This is done by mapping the *same* physical memory into the kernel
-> ("vdso_data_store") and (read-only) into all userspace processes.
-> As PTEs always cover a full page and the kernel can not expose random
-> other internal kernel data into userspace, the vvars need to be in their
-> own dedicated page.
-> (The same is true for the vDSO code, uprobe trampoline, etc... mappings)
+> to
 >
-> The vDSO functions also need to be aware of time namespaces. This is
-> implemented by allocating one page per namespace and mapping this
-> in place of the regular vvar page. But the vDSO still needs to access
-> the regular vvar page for some information, so both are mapped.
+> | regulator@34 {
+> |     compatible = "infineon,ir38060";
+> |     reg = <0x34>;
+> |
+> |     regulators {
+> |         vout {
+> |             regulator-name = "p5v_aux";
+> |             regulator-min-microvolt = <437500>;
+> |             regulator-max-microvolt = <1387500>;
+> |         };
+> |     };
+Above is the typical approach in other pmbus dt bindings.
+Even pmbus driver expects this approach.
+>
+> ?
+>
+> Will the driver handle both of these identically? Is backwards
+> compatibility with the old format maintained? Was the original format
+> wrong and does not work? Why is a list of regulators needed when the
+> device only provides one?
+Driver doesn't support both.
+Based on the pmbus driver original format was wrong.
+pmbus driver looks for a regulator node to start with.
 
-ah, i see. yeah, that makes sense. (amusingly, i almost quipped "it's
-not like there are _that_ many clocks to go in there" in my previous
-mail, forgetting that there are effectively an unbounded number of
-clocks thanks to this feature!)
+Reference:
+https://github.com/torvalds/linux/blob/master/drivers/hwmon/pmbus/pmbus.h#L515
 
-> Then on top come the rng state and some architecture-specific data.
-> These are currently part of the time page. So they also have to dance
-> around the time namespace mapping shenanigans. In addition they have to
-> coexist with the actual time data, which is currently done by manually
-> calculating byte offsets for them in the time page and hardcoding those.
+Regards,
+Naresh
 >
-> The linked series cleans this up by moving things into dedicated pages.
-> To make the code easier to understand and to make it possible to
-> add new data to the time page without running out of space or
-> introducing conflicts which need to be detected manually.
-> While this needs to allocate more pages, these are shared between the
-> whole system, so effectively it's cheap. It also requires more virtual
-> memory space in each process, but that shouldn't matter.
+> Cheers,
+> Conor.
 >
->
-> As for arm64 looking very different from x86: Hopefully not for long :-)
-
-(even as someone who doesn't work on the kernel, things like this are
-always helpful --- just having one thing to understand/your first grep
-being relevant is much nicer than "oh, wait ... which architecture was
-that?".)
-
-> > > Figuring out the start and size from /proc/maps, or the new
-> > > PROCMAP_QUERY ioctl, is not trivial, due to architectural variations.
-> >
-> > (obviously it's unsatisfying as a general interface, but in practice
-> > the VMAs i see asked about about directly -- rather than just rounded
-> > up in a diagnostic dump -- are either stacks ["what are the bounds of
-> > this stack, and does it have guard pages already?"] or code ["what
-> > file was the code at this pc mapped in from?"]. so while the vdso
-> > would come up, we'd never notice if vvars didn't work. if your sp/pc
-> > point there, we were already just going to bail anyway :-) )
->
-> Fair enough.
->
-> This information was also a response to Jeff's parent mail,
-> as it would be relevant when sealing the mappings from ld.so.
->
-> <snip>
->
-> > > [0] https://lore.kernel.org/lkml/20250204-vdso-store-rng-v3-0-13a4669=
-dfc8c@linutronix.de/
+> > > > +    properties:
+> > > > +      vout:
+> > > > +        $ref: /schemas/regulator/regulator.yaml#
+> > > > +        type: object
+> > > > +
+> > > > +        unevaluatedProperties: false
+> > > > +
+> > > > +    additionalProperties: false
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +
+> > > > +unevaluatedProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    i2c {
+> > > > +        #address-cells = <1>;
+> > > > +        #size-cells = <0>;
+> > > > +
+> > > > +        regulator@34 {
+> > > > +            compatible = "infineon,ir38060";
+> > > > +            reg = <0x34>;
+> > > > +
+> > > > +            regulators {
+> > > > +                vout {
+> > > > +                    regulator-name = "p5v_aux";
+> > > > +                    regulator-min-microvolt = <437500>;
+> > > > +                    regulator-max-microvolt = <1387500>;
+> > > > +                };
+> > > > +            };
+> > > > +        };
+> > > > +    };
+> > > > diff --git a/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml b/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
+> > > > deleted file mode 100644
+> > > > index e6ffbc2a2298..000000000000
+> > > > --- a/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
+> > > > +++ /dev/null
+> > > > @@ -1,45 +0,0 @@
+> > > > -# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > -%YAML 1.2
+> > > > ----
+> > > > -$id: http://devicetree.org/schemas/regulator/infineon,ir38060.yaml#
+> > > > -$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > -
+> > > > -title: Infineon Buck Regulators with PMBUS interfaces
+> > > > -
+> > > > -maintainers:
+> > > > -  - Not Me.
+> > > > -
+> > > > -allOf:
+> > > > -  - $ref: regulator.yaml#
+> > > > -
+> > > > -properties:
+> > > > -  compatible:
+> > > > -    enum:
+> > > > -      - infineon,ir38060
+> > > > -      - infineon,ir38064
+> > > > -      - infineon,ir38164
+> > > > -      - infineon,ir38263
+> > > > -
+> > > > -  reg:
+> > > > -    maxItems: 1
+> > > > -
+> > > > -required:
+> > > > -  - compatible
+> > > > -  - reg
+> > > > -
+> > > > -unevaluatedProperties: false
+> > > > -
+> > > > -examples:
+> > > > -  - |
+> > > > -    i2c {
+> > > > -      #address-cells = <1>;
+> > > > -      #size-cells = <0>;
+> > > > -
+> > > > -      regulator@34 {
+> > > > -        compatible = "infineon,ir38060";
+> > > > -        reg = <0x34>;
+> > > > -
+> > > > -        regulator-min-microvolt = <437500>;
+> > > > -        regulator-max-microvolt = <1387500>;
+> > > > -      };
+> > > > -    };
+> > > >
+> > > > base-commit: bfbb730c4255e1965d202f48e7aa71baa9a7c65b
+> > > > --
+> > > > 2.42.0
+> > > >
