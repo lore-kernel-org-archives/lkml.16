@@ -1,74 +1,48 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485CC1514EE
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58801514EE;
+	Thu,  6 Feb 2025 08:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829870; cv=none; b=dgMueemKa5FZ05cy6AslQgbYJsDjxaBvgnKalbO16wQGdTeTmch+4sNEuTfmsDL3iyIzJIDxRnWrgRVq5fxkS2ygmauQQUI1vdHq72HMSTOs6TX377lUHvtNs27AdM37K3rDuPkSLXuTAGN9kh39DlC7jdWXlj88nbF5FNjZvcs=
+	t=1738829988; cv=none; b=f1g3ZGncBWhGVOf8f68gBc0dIO/W1kZKs/8E72MQb2GyyQoBkCNf35tORlIyj+p8/+KtjEV8FaDhKWx38L9T0MVvWKZ1Ca1y5D9HJdrAFHIFK+e1tE0Qr2MCTdbIpdK+Vl6soMD8/xfbZYKlZiS/tsQ3znqM0tf75jGrZk8wjs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829870; c=relaxed/simple;
-	bh=czouCpqQfjVttyULuEmK+T2XOCbpSZFdhFe3OY88D5g=;
+	s=arc-20240116; t=1738829988; c=relaxed/simple;
+	bh=UjhJAx5LANpkIPy610Vv1aSkTacicPmELW+A2J/coHA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRkqOYgzodZ6A81MzXh3GF6Un10PWMdqqYYmRD36GTTtY+zx+sTzVX/CN8rr8k2tWeeYwAL/psThd1rwNGIBhJF9NkbfBajwRtqZWpF5JssAJ9ZeCY23hMIJutXv2O7nELFkPNigSVOCzaJLZcMervkHo4w1reL/C49picmvajk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MwtQRCzd; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=A5o1onbaw5vaUgcMX3RVYMmBpgdhsSp/dnJK0tM6iP30T3zZAnvFbFjxTBE9jjFtLBpiAKtTK0rKunDmQH1zK8UdDmsLNPw7t+clmEm5ECAr/+gg/PLvcej8gPmN6Ubp/PlYmZZpnKQDvrbdgnSrkbr4NMTIQ+DHuFnxMDpm93s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e+cuqC3e; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MwtQRCzd"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fa0892f9bdso493651a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 00:17:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738829868; x=1739434668; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9oe91G9hNaSNgYF503OR+S362GbG5+I1hQS7YeBtShE=;
-        b=MwtQRCzdXFT0KcantDg+qgQrG3ScbIntZpCrdfr0Hu9hbtTuZJCOC96sxDofCFSgVw
-         C9df3spV1nrFJlR7dM1S9j0GyhzxejXN65iHgUgj5Sy9hTIqLGVE4e/WeQxG02jnGbSy
-         pV7mo7AqswVpdYqnFg5dfRgeO30T2jZg6p/tA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738829868; x=1739434668;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9oe91G9hNaSNgYF503OR+S362GbG5+I1hQS7YeBtShE=;
-        b=o9kOVwhfrDQw7/G33XHCMrkxrJ/uZ4+6K/M4FeBUA3kkMXUZIU1bYUDd8XrRUmfmdr
-         aN5US5RdG7A7UBjKjfh38U7FZMsvO9XUcavBBwYrUyYZTOSZt+u8Udlsq+g4OE+XC0N/
-         c+r9HqbqRKhl4B7v20ss/LKkjjVhklJx8DzgZS7FqWMICijInBhv0AXGkDyRLk8dMqXJ
-         bIsFOjF+uW3+bHLBQ6KPqAtGw7jgrhN8mpCnFieV0jr+3I1ZtSc+aN4BSlPwDajAR7Xc
-         ecoSjFS+uah1H0P7piiGWywTmxXOg8srHIfdRJR3qoapKVUDIGedC1TqNCHM2EzaUCbv
-         17Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGh2eek7t50B3Z58fs1L/Ww+ou6c+72CA0+NcbWnKkJu8zGWCkrpa15VYgUgud7cU3EBw9fX56xTkQUho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVfn4mvezlcEbS9Kx54CGcf97886F+AtQqScuSUIseXVguEs6O
-	IWwj4CuDUuJOe/OWFDnbUyScnNZKHFgbiGtpJrClR9w1dB7OwWdGY/dTYyiyWg==
-X-Gm-Gg: ASbGnct6iCrWxRJ/JgEkzGTUfDiN3CiA9L8DkAE5Aj/iFJe+xubXw+DkZf/hPDS4Wb9
-	Hi55O7hS/NFQJHl/gYl2UebfantkC8lfmJ86bpk7PpKTY8K0BOPPbNTx0ablVr9Z/XOksNarRPg
-	zwCr/Nae5Xyaj55BiQ1TpkpxwtLGyuXaJryDDLdhEIYuOItmk40vPsUQnPUBoQHhpvyMHD22ml6
-	D+qQbR7jgXLUHiKFDt6o9Xak1Ym2KI2SY7ci7rZS6SFUfySeIG/4btQ4iKNwYBDLjTEdJhUD8qb
-	XEoO6AwVqMdrLec6XxA=
-X-Google-Smtp-Source: AGHT+IEk4LAp45w4mBnPz0SZo6Gix5e57Ek87byk1GF2LNYFwZOzzfnGW41X9gquKkKnPHTSNDoewQ==
-X-Received: by 2002:a17:90b:3a88:b0:2ee:964e:67ce with SMTP id 98e67ed59e1d1-2f9e074c8c0mr8662855a91.3.1738829868521;
-        Thu, 06 Feb 2025 00:17:48 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:28ab:cea4:aa8a:127a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687bb28sm6783035ad.162.2025.02.06.00.17.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 00:17:47 -0800 (PST)
-Date: Thu, 6 Feb 2025 17:17:41 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>, 
-	Mike Galbraith <umgwanakikbuti@gmail.com>
-Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
-Message-ID: <zgaitute72xlzukunnhioqk4e2copgtkonxtn7iuvjq6gufwhr@yg4kry4wq3p2>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-2-senozhatsky@chromium.org>
- <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
- <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
- <20250206073803.c2tiyIq6@linutronix.de>
- <46ttdyaiweca7qou2t3mx5jy7hefg3htrv4covt5htcex7zaq4@p6is3ukmtbhy>
- <20250206081326.xMa5Z5oJ@linutronix.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e+cuqC3e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cekbhiScKH6qHE8Ivy8vR6tcjSV4jV1i0jovRwNgyJQ=; b=e+cuqC3e3AJEx4xjkAfRb62MdU
+	MpH7zT8EdbvQQBznPGmz+N8pvQrTwLKJ7pxqS1S31JmazuYTijpiRgC/5nhf0X+7gIzAboo/Y47Ya
+	ZmIMXrhyRi5xkOdFcMMgY1gFyr/ukVDym8kUk7GeF4AMkSEX6nGAcJm9Ms/wEvS1IngDlztBjt9Or
+	KoRxvBd9zP/yHyyEOlVQG9uiFtfA76l8rZljtB/YfXED5ZmX/fwBGrp5OuBqm9fZVdK6LDCQV2u7Z
+	aw0hgWAzB6Wl0e3xtjJdedvT1yJpLnOw4HBG605ljzaRWnQ6K8CgyX1gKwwQp5zxnEtyKPrvkPzSK
+	/blkU8LA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfx6u-0000000GsP7-05Lm;
+	Thu, 06 Feb 2025 08:19:44 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 04BC930031C; Thu,  6 Feb 2025 09:19:43 +0100 (CET)
+Date: Thu, 6 Feb 2025 09:19:42 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 03/11] sched: Add sched tracepoints for RV task model
+Message-ID: <20250206081942.GJ7145@noisy.programming.kicks-ass.net>
+References: <20250206080952.98478-1-gmonaco@redhat.com>
+ <20250206080952.98478-4-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,49 +51,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206081326.xMa5Z5oJ@linutronix.de>
+In-Reply-To: <20250206080952.98478-4-gmonaco@redhat.com>
 
-On (25/02/06 09:13), Sebastian Andrzej Siewior wrote:
-> On 2025-02-06 16:47:02 [+0900], Sergey Senozhatsky wrote:
-> > zram is atomic right now, e.g.
-> > 
-> > zram_read()
-> > 	lock entry by index   # disables preemption
-> > 	map zsmalloc entry    # possibly memcpy
-> > 	decompress
-> > 	unmap zsmalloc
-> > 	unlock entry          # enables preemption
-> > 
-> > That's a pretty long time to keep preemption disabled (e.g. using slow
-> > algorithm like zstd or deflate configured with high compression levels).
-> > Apart from that that, difficult to use async algorithms, which can
-> > e.g. wait for a H/W to become available, or algorithms that might want
-> > to allocate memory internally during compression/decompression, e.g.
-> > zstd).
-> > 
-> > Entry lock is not the only lock in zram currently that makes it
-> > atomic, just one of.
-> 
-> Okay. So there are requirements for the sleeping lock. A mutex isn't
-> fitting the requirement because it is too large I guess.
+On Thu, Feb 06, 2025 at 09:09:39AM +0100, Gabriele Monaco wrote:
 
-Correct.
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 9632e3318e0d6..af9fa18035c71 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -226,12 +226,14 @@ struct user_event_mm;
+>  #define __set_current_state(state_value)				\
+>  	do {								\
+>  		debug_normal_state_change((state_value));		\
+> +		trace_set_current_state(state_value);			\
+>  		WRITE_ONCE(current->__state, (state_value));		\
+>  	} while (0)
+>  
+>  #define set_current_state(state_value)					\
+>  	do {								\
+>  		debug_normal_state_change((state_value));		\
+> +		trace_set_current_state(state_value);			\
+>  		smp_store_mb(current->__state, (state_value));		\
+>  	} while (0)
+>  
+> @@ -247,6 +249,7 @@ struct user_event_mm;
+>  									\
+>  		raw_spin_lock_irqsave(&current->pi_lock, flags);	\
+>  		debug_special_state_change((state_value));		\
+> +		trace_set_current_state(state_value);			\
+>  		WRITE_ONCE(current->__state, (state_value));		\
+>  		raw_spin_unlock_irqrestore(&current->pi_lock, flags);	\
+>  	} while (0)
+> @@ -282,6 +285,7 @@ struct user_event_mm;
+>  		raw_spin_lock(&current->pi_lock);			\
+>  		current->saved_state = current->__state;		\
+>  		debug_rtlock_wait_set_state();				\
+> +		trace_set_current_state(TASK_RTLOCK_WAIT);		\
+>  		WRITE_ONCE(current->__state, TASK_RTLOCK_WAIT);		\
+>  		raw_spin_unlock(&current->pi_lock);			\
+>  	} while (0);
+> @@ -291,6 +295,7 @@ struct user_event_mm;
+>  		lockdep_assert_irqs_disabled();				\
+>  		raw_spin_lock(&current->pi_lock);			\
+>  		debug_rtlock_wait_restore_state();			\
+> +		trace_set_current_state(TASK_RUNNING);			\
+>  		WRITE_ONCE(current->__state, current->saved_state);	\
+>  		current->saved_state = TASK_RUNNING;			\
+>  		raw_spin_unlock(&current->pi_lock);			\
 
-> > > > static void zram_slot_lock(struct zram *zram, u32 index)
-> > > > {
-> > > >         unsigned long *lock = &zram->table[index].flags;
-> > > > 
-> > > >         WARN_ON_ONCE(!preemptible());
-> > > 
-> > > you want might_sleep() here instead. preemptible() works only on
-> > > preemptible kernels. And might_sleep() is already provided by
-> > > wait_on_bit_lock(). So this can go.
-> > 
-> > wait_on_bit_lock() has might_sleep().
-> 
-> My point exactly. This makes the WARN_ON_ONCE() obsolete.
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 165c90ba64ea9..fb5f8aa61ef5d 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -491,6 +491,12 @@ sched_core_dequeue(struct rq *rq, struct task_struct *p, int flags) { }
+>  
+>  #endif /* CONFIG_SCHED_CORE */
+>  
+> +void trace_set_current_state(int state_value)
+> +{
+> +	trace_sched_set_state_tp(current, current->__state, state_value);
+> +}
+> +EXPORT_SYMBOL(trace_set_current_state);
 
-Right, might_sleep() can be disabled, as far as I understand,
-via CONFIG_DEBUG_ATOMIC_SLEEP, unlike WARN_ON_ONCE().  But I
-can drop it and then just rely on might_sleep(), should be
-enough.
+Urgh, why !?!
