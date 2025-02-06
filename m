@@ -1,90 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033861A0BFE
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3343D16A95B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738868418; cv=none; b=PKfws4jJttoegr8d0uepau9p8bOAQ1RldjykpoFpKaOuP8jnBEq3nXHn2aqXrzTfLHoruOTTNZOlO8U3lvy2lYHjv9b9gx26swGFH37s3GmFnhGR9vCwzV6OJpfYb2jng3DxvOjPzivqeiwkwQcNqe/oqVVvwoszedrdCnJkS6Y=
+	t=1738868510; cv=none; b=JVNpu6cKGPXfJ6QVyXNravqJx85Tp5/Gxuyw4O57f+XayDkDl1fKZBj3g5U/k+ViYG4cNxZaYIZW7vaAf9reXQE/9x6tvSld836zBXnaw0I5GeOeFn4FdW4POyQwhvlblRZt1iCly+mLEl2Y+5UOZ0wE3NY8ilpIgGqbXYnWdp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738868418; c=relaxed/simple;
-	bh=Cn4eq1k8dAgyWfxUeHjyHTRscbHZbWgjF1bOTfoBM6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LOPf/Ng9VtYrGVPjUHjAGGx7y2uezxktOEauEmVBHkYkRo9CqHMy8U0YliDAG1zQfojCfsD+qNxKuVS37DzgoTXXRRctHTmbN0EgZjSwSO71gxVJVdwo2SeBouSmH9WiE0KFW0CTqPCnkgiHA09sL1BMm3FozxjodzQRoRXDPJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJtxcMRz; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738868510; c=relaxed/simple;
+	bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kJwMHfg9xIUEApyN+Jda35pzqyppZRJfXB7FYhvsZlMbBTH7iFK8XXAbaUAwte1TpQ1Z5kN2SeXLgZ0NbdrLNLDcQHIkmOlnZ+3cPoKnlWURoR40HOa/Kr6gIX0pbqVCT/tdycNyt2SfNHNpr5iFWoBsMhdccWJOCF/kA5817XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Df9zaj9+; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJtxcMRz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738868416; x=1770404416;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Cn4eq1k8dAgyWfxUeHjyHTRscbHZbWgjF1bOTfoBM6o=;
-  b=GJtxcMRzd7d9w39GGwrV8VCEwa+c8VijYZOxCZLhD0T7uI8Hutq9Uibs
-   rf66TwqdCsyibI+8cnArBSlgqzFd8OdqeN4YRwfllZQfNy5thnLNFpc7G
-   nOlUMK2zDKsw2OoVFJ9rLysOtDKkwjyLuThd7/nIk7i/q51L7/eAv6VcY
-   9iuzjSg8E4be4VBSbgLZ35+PgQYznxdjOLix0qvKmxBUMrK1Xz1Q8sVGo
-   VCA6Uo+I6R6DMhqC1l2vAlIIMkqi08ElKVOzPJ1LtmQQyQMossZ/mN71i
-   ZZMPuwrZ5Bc6731+qjDD4p6VvkbKtBL1gV81juP8h1Em6p7uFFI9yKhZs
-   Q==;
-X-CSE-ConnectionGUID: bvX75ahZRL2a/lzxNQJ6/A==
-X-CSE-MsgGUID: VKh0Xi9nSSul18rBKP0WWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="49738406"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="49738406"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:00:15 -0800
-X-CSE-ConnectionGUID: mHIofV3ESaWWbCdPLrZeMA==
-X-CSE-MsgGUID: tgD2jQYDQU+Mi+WRiW2QCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="111137652"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:00:12 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tg76g-00000008p36-0yNR;
-	Thu, 06 Feb 2025 21:00:10 +0200
-Date: Thu, 6 Feb 2025 21:00:09 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH v1 1/1] regmap: irq: Use one way of setting all bits in
- the register
-Message-ID: <Z6UGue-OUujUKYi6@smile.fi.intel.com>
-References: <20250206162933.1127937-1-andriy.shevchenko@linux.intel.com>
- <1a60ef2d-365b-49ea-99b1-b83faee910c2@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Df9zaj9+"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54410d769f7so952235e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 11:01:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738868506; x=1739473306; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
+        b=Df9zaj9+9IC8fyTO+LAviJqdFOO+UMN+s8gst16NahaFc+p4lgpT4YEJq0CXNYBFzy
+         OWfFYa0NN4RaQNZhnbj7LmZ9b/yueA6QhqKJbxYG/CyNm3eQEJrkMdOATr2cs8seI6tu
+         /uXzKdrWzliPFuIeJKSo489feKxHv93RgA8bQikFHvosorOY7Zx5KPi5Ya129+AXBQHx
+         rp1+RQ1bOEwiLhbTJAU3WxqVbocryHEAd3SI7dKALSTzaN+omfaOVF16ZAd3/wF1e27S
+         LQ32TWqDJ9atsiS9nGSWVOgvbxWtLDudcUuNZLDmmhF7cabHFJncgHfubH8SMak93Rxk
+         SoxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738868506; x=1739473306;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
+        b=OJ4A6gxCgKXoiTeRvHnrdJozpzGviCrnoEQjbW2JH0zCb1zGhcu7Nlkptp1mQIDk3n
+         SnqtK8Y+nmt/3leOFwPinxyrjA9+g5eFS5EpEyB1C3Zg2XZajKekRQUp19Dn7KBXtEi1
+         XlMFz46IngbJtInoccvtofVT/vCcYJRBXTQMjWmN0KBPfDjE++bbRPh3X+jPLSCsJD4n
+         sIZNCE8wpHBAXnn46RZNDdzmHyFLUZ4v9zUJ5ifdTyD9a9ncdGbfZD/qAsXcCH+g18IY
+         X21eiRHNob+ufvX93H3IPwI9DX0TQbOnE0erR0WbNy/PlWmjnsqxhlEyP1Xk/MiIOC4V
+         yRSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzolA58DeW+K3QmTeeIfSN5lA8DR5bVPFcvyM44ssK4C+6CBKjVBNEfbDymEzVfiJtycPbQLta3ZQdb0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo661XIyUyXIbBdkl9upgK7ARXLnW2AYDlYMjhaOACgxVZ0bvZ
+	TbZJ1gSkFHuN13NjUN1eNGp6WK+8eiYUY12HghD4rg3qga1amMnf8YYLT6YS604OGFsyIkt3a1M
+	ppC0k9vpNEx2/iZr0Xyq2XdUUbPMVlVjeqz0GLAKzDg8LIO+2
+X-Gm-Gg: ASbGncsPCCs47l2ZSAYQD2UYbMAPe1iC8vJNM1+gs/P6cMWtcUwARpu9rntVCmWHSIJ
+	5QEVCzVkSxq4BoN/BJ6th2z24N4Ag9kXRg5wLI/Klm0T6XRdl0tc6g1qaC4AcTCKdtZnlWw4=
+X-Google-Smtp-Source: AGHT+IGYbTW64WX7v4eRIud9aI7sO+r6eN6uxSXvFM2flvdaMCaTnXZkw1PV8dpsvo+PKiCDP3tZfZA6qctV7ZLyAak=
+X-Received: by 2002:a2e:a10c:0:b0:302:3de5:b039 with SMTP id
+ 38308e7fff4ca-307e57bc6b9mr333711fa.8.1738868506188; Thu, 06 Feb 2025
+ 11:01:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a60ef2d-365b-49ea-99b1-b83faee910c2@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250203101839.1223008-1-kevin.brodsky@arm.com> <20250203101839.1223008-9-kevin.brodsky@arm.com>
+In-Reply-To: <20250203101839.1223008-9-kevin.brodsky@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 20:01:34 +0100
+X-Gm-Features: AWEUYZkf3utqCGGAYFw3Wd0K9HPUGk1pvzmcRu62yuHXXkM5758Qny3DAHNgUk4
+Message-ID: <CACRpkdZ_eGsfZh2vkG8dtSyZDbStMfDUuj7s7TQ4FcDwThJVkg@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 08/15] mm: Introduce kernel_pgtables_set_pkey()
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>, 
+	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Pierre Langlois <pierre.langlois@arm.com>, 
+	Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 04:51:35PM +0000, Mark Brown wrote:
-> On Thu, Feb 06, 2025 at 06:29:33PM +0200, Andy Shevchenko wrote:
-> > Currently there are two ways of how we represent all bits set, i.e.
-> > UINT_MAX and GENMASK(31, 0). Use the latter as the single way of
-> > doing that, which is crystal clear on how many bits we are talking
-> > about.
-> 
-> I think I'd rather go to UINT_MAX since it's more obviously correct if
-> we see platforms with int that isn't 32 bits.
+Hi Kevin,
 
-Okay!
+thanks for your patch!
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Feb 3, 2025 at 11:20=E2=80=AFAM Kevin Brodsky <kevin.brodsky@arm.co=
+m> wrote:
 
+> kernel_pgtables_set_pkey() allows setting the pkey of all page table
+> pages in swapper_pg_dir, recursively. This will be needed by
+> kpkeys_hardened_pgtables, as it relies on all PTPs being mapped with
+> a non-default pkey. Those initial kernel page tables cannot
+> practically be assigned a non-default pkey right when they are
+> allocated, so mutating them during (early) boot is required.
+>
+> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 
+(...)
+
+> +static int set_page_pkey(void *p, int pkey)
+> +static int set_pkey_pte(pmd_t *pmd, int pkey)
+> +static int set_pkey_pmd(pud_t *pud, int pkey)
+> +static int set_pkey_pud(p4d_t *p4d, int pkey)
+> +static int set_pkey_p4d(pgd_t *pgd, int pkey)
+> +int kernel_pgtables_set_pkey(int pkey)
+
+Aren't these all discardable after boot, so the whole set should
+be tagged with __init?
+
+Other than that it LGTM.
+
+Yours,
+Linus Walleij
