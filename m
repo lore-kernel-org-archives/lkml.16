@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF73D18B495
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 04:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA91E189BB6
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 04:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738817060; cv=none; b=sY5fqKKEvn0oKFdROc1NPoW+nddQWxVUdkzC9m/P+O2DuwhWmyPgYWlx5TEwlXPPxHAqaqTKZwFi+TRg/b6dC4mErhut5qIv2WUNT2y9UWY28cxr1nNf+Xq0+cPEVIpM8AvwXrfGNC37SOozBZQyJL/8KtL7dZnQgovM+HtwqZQ=
+	t=1738817059; cv=none; b=fj9FMmHxDW6KTXSefw1hopgEKTOmDbYABSMvZZT27tCikCWxuNWpEnmSPazd2G5GPUixcUJqRPbdV1+JjokLvhpT0UV0ChxJOkwyLdqEj4V2upzV3/At1ntGIiU7X6OOovUlhG8Hg+otNzMJ1oKx49GwLyjGV2LW8tRgXkHEMxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738817060; c=relaxed/simple;
-	bh=RoHX08f5WUpOFwLuvdVuIL0HLXGMm3PPDQ5II45y/Ik=;
+	s=arc-20240116; t=1738817059; c=relaxed/simple;
+	bh=E94THg2duCTh/xh3gJKFEDQqGaOiKEIqeLqJBzZmqdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iisXc5uh7dgMV485JXEF5mzJIROeWRYQsXAggGf+lySfAayevKUX17/krexgIZiOIvNSyY8ICnNeYVeovToLN1kvLF7rfO7liPO7usSa0qREU7IBSZGo3VOY00MzeIDk3/7BaaviV/JvNgC1qIuNO3RakH0C7R/n4LyNAysOzTE=
+	 MIME-Version; b=Tr2db2QVUYVsHWH0oqiTB7pd30NHvIIAF3g9v3ioJZiyCLQDwzNAuNAqbVN31zsTq8v9cSJ/epx89HNT6kvmkjZPZyqq2aUCLWHDzV6EV7G6kuqHF4gYVX+5CfY7uQSYSURDBpaBJ3vUzHjI1iaocUw/NoX6kPAUVUo9FUdWST0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tftjw-000000004tQ-2pH3;
+	id 1tftjw-000000004tQ-1ilY;
 	Wed, 05 Feb 2025 23:43:48 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -37,9 +37,9 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Rik van Riel <riel@surriel.com>,
 	Manali Shukla <Manali.Shukla@amd.com>
-Subject: [PATCH v9 11/12] x86/mm: enable AMD translation cache extensions
-Date: Wed,  5 Feb 2025 23:43:30 -0500
-Message-ID: <20250206044346.3810242-12-riel@surriel.com>
+Subject: [PATCH v9 01/12] x86/mm: make MMU_GATHER_RCU_TABLE_FREE unconditional
+Date: Wed,  5 Feb 2025 23:43:20 -0500
+Message-ID: <20250206044346.3810242-2-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250206044346.3810242-1-riel@surriel.com>
 References: <20250206044346.3810242-1-riel@surriel.com>
@@ -52,87 +52,131 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-With AMD TCE (translation cache extensions) only the intermediate mappings
-that cover the address range zapped by INVLPG / INVLPGB get invalidated,
-rather than all intermediate mappings getting zapped at every TLB invalidation.
+Currently x86 uses CONFIG_MMU_GATHER_TABLE_FREE when using
+paravirt, and not when running on bare metal.
 
-This can help reduce the TLB miss rate, by keeping more intermediate
-mappings in the cache.
+There is no real good reason to do things differently for
+each setup. Make them all the same.
 
-From the AMD manual:
+Currently get_user_pages_fast synchronizes against page table
+freeing in two different ways:
+- on bare metal, by blocking IRQs, which block TLB flush IPIs
+- on paravirt, with MMU_GATHER_RCU_TABLE_FREE
 
-Translation Cache Extension (TCE) Bit. Bit 15, read/write. Setting this bit
-to 1 changes how the INVLPG, INVLPGB, and INVPCID instructions operate on
-TLB entries. When this bit is 0, these instructions remove the target PTE
-from the TLB as well as all upper-level table entries that are cached
-in the TLB, whether or not they are associated with the target PTE.
-When this bit is set, these instructions will remove the target PTE and
-only those upper-level entries that lead to the target PTE in
-the page table hierarchy, leaving unrelated upper-level entries intact.
+This is done because some paravirt TLB flush implementations
+handle the TLB flush in the hypervisor, and will do the flush
+even when the target CPU has interrupts disabled.
+
+Always handle page table freeing with MMU_GATHER_RCU_TABLE_FREE.
+Using RCU synchronization between page table freeing and get_user_pages_fast()
+allows bare metal to also do TLB flushing while interrupts are disabled.
+
+Various places in the mm do still block IRQs or disable preemption
+as an implicit way to block RCU frees.
+
+That makes it safe to use INVLPGB on AMD CPUs.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 ---
- arch/x86/include/asm/msr-index.h       | 2 ++
- arch/x86/kernel/cpu/amd.c              | 4 ++++
- tools/arch/x86/include/asm/msr-index.h | 2 ++
- 3 files changed, 8 insertions(+)
+ arch/x86/Kconfig           |  2 +-
+ arch/x86/kernel/paravirt.c |  7 +------
+ arch/x86/mm/pgtable.c      | 16 ++++------------
+ 3 files changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 3ae84c3b8e6d..dc1c1057f26e 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -25,6 +25,7 @@
- #define _EFER_SVME		12 /* Enable virtualization */
- #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
- #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
-+#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
- #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
- 
- #define EFER_SCE		(1<<_EFER_SCE)
-@@ -34,6 +35,7 @@
- #define EFER_SVME		(1<<_EFER_SVME)
- #define EFER_LMSLE		(1<<_EFER_LMSLE)
- #define EFER_FFXSR		(1<<_EFER_FFXSR)
-+#define EFER_TCE		(1<<_EFER_TCE)
- #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
- 
- /*
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index bcf73775b4f8..21076252a491 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1071,6 +1071,10 @@ static void init_amd(struct cpuinfo_x86 *c)
- 
- 	/* AMD CPUs don't need fencing after x2APIC/TSC_DEADLINE MSR writes. */
- 	clear_cpu_cap(c, X86_FEATURE_APIC_MSRS_FENCE);
-+
-+	/* Enable Translation Cache Extension */
-+	if (cpu_feature_enabled(X86_FEATURE_TCE))
-+		msr_set_bit(MSR_EFER, _EFER_TCE);
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 9d7bd0ae48c4..e8743f8c9fd0 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -274,7 +274,7 @@ config X86
+ 	select HAVE_PCI
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+-	select MMU_GATHER_RCU_TABLE_FREE	if PARAVIRT
++	select MMU_GATHER_RCU_TABLE_FREE
+ 	select MMU_GATHER_MERGE_VMAS
+ 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index fec381533555..2b78a6b466ed 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -59,11 +59,6 @@ void __init native_pv_lock_init(void)
+ 		static_branch_enable(&virt_spin_lock_key);
  }
  
- #ifdef CONFIG_X86_32
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 3ae84c3b8e6d..dc1c1057f26e 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -25,6 +25,7 @@
- #define _EFER_SVME		12 /* Enable virtualization */
- #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
- #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
-+#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
- #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+-static void native_tlb_remove_table(struct mmu_gather *tlb, void *table)
+-{
+-	tlb_remove_page(tlb, table);
+-}
+-
+ struct static_key paravirt_steal_enabled;
+ struct static_key paravirt_steal_rq_enabled;
  
- #define EFER_SCE		(1<<_EFER_SCE)
-@@ -34,6 +35,7 @@
- #define EFER_SVME		(1<<_EFER_SVME)
- #define EFER_LMSLE		(1<<_EFER_LMSLE)
- #define EFER_FFXSR		(1<<_EFER_FFXSR)
-+#define EFER_TCE		(1<<_EFER_TCE)
- #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+@@ -191,7 +186,7 @@ struct paravirt_patch_template pv_ops = {
+ 	.mmu.flush_tlb_kernel	= native_flush_tlb_global,
+ 	.mmu.flush_tlb_one_user	= native_flush_tlb_one_user,
+ 	.mmu.flush_tlb_multi	= native_flush_tlb_multi,
+-	.mmu.tlb_remove_table	= native_tlb_remove_table,
++	.mmu.tlb_remove_table	= tlb_remove_table,
  
- /*
+ 	.mmu.exit_mmap		= paravirt_nop,
+ 	.mmu.notify_page_enc_status_changed	= paravirt_nop,
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 5745a354a241..3dc4af1f7868 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -18,14 +18,6 @@ EXPORT_SYMBOL(physical_mask);
+ #define PGTABLE_HIGHMEM 0
+ #endif
+ 
+-#ifndef CONFIG_PARAVIRT
+-static inline
+-void paravirt_tlb_remove_table(struct mmu_gather *tlb, void *table)
+-{
+-	tlb_remove_page(tlb, table);
+-}
+-#endif
+-
+ gfp_t __userpte_alloc_gfp = GFP_PGTABLE_USER | PGTABLE_HIGHMEM;
+ 
+ pgtable_t pte_alloc_one(struct mm_struct *mm)
+@@ -54,7 +46,7 @@ void ___pte_free_tlb(struct mmu_gather *tlb, struct page *pte)
+ {
+ 	pagetable_pte_dtor(page_ptdesc(pte));
+ 	paravirt_release_pte(page_to_pfn(pte));
+-	paravirt_tlb_remove_table(tlb, pte);
++	tlb_remove_table(tlb, pte);
+ }
+ 
+ #if CONFIG_PGTABLE_LEVELS > 2
+@@ -70,7 +62,7 @@ void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd)
+ 	tlb->need_flush_all = 1;
+ #endif
+ 	pagetable_pmd_dtor(ptdesc);
+-	paravirt_tlb_remove_table(tlb, ptdesc_page(ptdesc));
++	tlb_remove_table(tlb, ptdesc_page(ptdesc));
+ }
+ 
+ #if CONFIG_PGTABLE_LEVELS > 3
+@@ -80,14 +72,14 @@ void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
+ 
+ 	pagetable_pud_dtor(ptdesc);
+ 	paravirt_release_pud(__pa(pud) >> PAGE_SHIFT);
+-	paravirt_tlb_remove_table(tlb, virt_to_page(pud));
++	tlb_remove_table(tlb, virt_to_page(pud));
+ }
+ 
+ #if CONFIG_PGTABLE_LEVELS > 4
+ void ___p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d)
+ {
+ 	paravirt_release_p4d(__pa(p4d) >> PAGE_SHIFT);
+-	paravirt_tlb_remove_table(tlb, virt_to_page(p4d));
++	tlb_remove_table(tlb, virt_to_page(p4d));
+ }
+ #endif	/* CONFIG_PGTABLE_LEVELS > 4 */
+ #endif	/* CONFIG_PGTABLE_LEVELS > 3 */
 -- 
 2.47.1
 
