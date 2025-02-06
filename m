@@ -1,103 +1,101 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD781C68F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 01:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D708716419;
+	Thu,  6 Feb 2025 01:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738803630; cv=none; b=MSntPuO/LjoxaT4UFC/Ka2VWhoWh28S6il01bykohj6OYq0uwSHgEVdEUwqkorSbpqv0W5nXFd8NiCCqVkYzI/Z9OOjo0hukxV4OUcTEouChUo7EOQHbe9kze7Wa6pUWt+rGiyU4Fj5KVIsR8NEbWVqzHQQGhuHtvcmmgDL5YSI=
+	t=1738803971; cv=none; b=UJdtUX1gHgRDgHXHlLTjcFY8gRx4YOIzxb7NYU0IMqR0vr7zpdLqNQsQTWuooXoh6um8mgIR1YOcTqdbv/736oONS15bI9tvtvjZA55ipplqgH4+/PhOLfqg8OhnF4dgV294E5PzpvUfeEf1XCqtxwWpK/cjkvZOjYd5PzncG9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738803630; c=relaxed/simple;
-	bh=YA9beyVyNV2UIf6sOTfOynJf8z+PiAQR/WP4EysO5Rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c2iC3SLhVgvBXJa1WNhP+e1aj+a0B3rauNKCrW3UoC8hoO8q3NURfuEdbLQkt75dFbKUMOVKW/TjVvqHB3gtk3Wt6M/wg73i8bPNdkFZZT4h+RqiYeAybHf8u0z8Fen8CN2q0lRDlO/mXBmrFlEL2VMIXH2RB1jvhw0iil/NQ5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uay2lbrI; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738803971; c=relaxed/simple;
+	bh=HOdWJzeU3v6e7PDsfUyTV4ESJ3IStwKy6Qzl2uh6TyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xal2Td+qTNgT7daJeMZsfp70eiu6A9UNjML8TJ3gzW05b1Cv9TBKEBhAq1Xp0DFrEzLa4a4lpyqkN/KVdylpiTu1L7qhfu7U4HoKM95I+nkBllpD+TEtPntPxj0dTxhSXwk6Z3bSYIE1RXWxp0fUTulEItjraphkSyHHzwGIYgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b19ESuv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uay2lbrI"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5439e331cceso472640e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 17:00:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738803627; x=1739408427; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=64EGE0H9PZ2lu5z080wv8hkP5sMcDd9LMSd8Y5hei2c=;
-        b=uay2lbrIphuPFUCcLrqYtEIK6aI2VGKjw0uGP9Euye9HH/J1XQY5a0mLt10tTd31PT
-         4bfcNax+FhnkvznleBp5mGNp3gmuCziVgJNX69vAxh828AaeqRnfB4QHixvJEv4gwy8T
-         TES3F+MPpoxJy9dMSCr7PZ4x1wPdSbVlecmdcigDJQ+RhPp8aVij5lYLrhP/ctV5FGtK
-         na2Zkf0Gxc3aBq1iNJVxnjkSGMYUsxmKc+mnAGcCL+jOjCRfs/qk40d588O3HdLBjANk
-         q/RO3x0dWz0/kSU0j/R05aIMMp+tZWih1+YLiSqUA6dATahrX2I08Nk/QmwHTLcZTS1g
-         FMtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738803627; x=1739408427;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=64EGE0H9PZ2lu5z080wv8hkP5sMcDd9LMSd8Y5hei2c=;
-        b=ijsRgoRVQtFJMz9DJDNdF0eRhDaEOUcY4Q3mTPb3DKHjVKz+NjZ9/U2IvX0o8JIQyu
-         EiZ6XzRD1MBKXN5oUUCWCwav87rnp/yL+6Dm6Rl79N9E3mi6zPyhwtQNBHRfcHyI5DlT
-         zTnhUCBMMdiZggeuaCKACj1VLMRRNM7OJeqHFwfgLgkDurZNSi0Nz+0cEUx7hjWkqjqB
-         J69SEpO+xcaxKbqD0yCfacNFIoBc3XWTx8jNdvvC3/mSag2q74JfzOoFiHneGUoCPF7V
-         4HzJrHNtNMXcZ9DmCEnLeW/bu3nhDo6PA9CXMv8NItxlYJh0Ne+DqvYCCKAeQ/rKz8Kn
-         nu1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVsDm8+whdmAybMQWH7h1f5DcgMGZ58nrJJikYh4aUW7wIszvKMrNz9tjL+WfRzhQYJBnT04D355YtMmyQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyooscU6ROoebk29Eh2EErb1Xp+edlfXOcvTlA46dH/Jbvvz8H
-	+iN+Bz1AJhwsopEpyJXCDGdSloW78FPdwJEk811ZXn+dmpCB6bH4pEFCdPF6TYY=
-X-Gm-Gg: ASbGncsq3KWn3uQGLYSPE2iTnmrj6Orv8Y3g1qC7rk/4qhjkmcuNRtp5z+LMCEr6uTX
-	1OWPOdVossUXlflQpiS+6QlrGQkC6WMksEvKhYQFI86bFlcaCQUYtHiOXnePCyfVVZcSgdeqEJv
-	rfIKvU5zWVZCr0kBEghyyHCjsj3luMkWGBKp27uWJ6LLjt5wbjvJUrBMLWXVBB6LDgSpuiUgJcn
-	1b5FHZuzejYCNlW3lMCxTRA9Ka/sc9MJtuvcqWlFzLrRU46Kzx0KGKjZPx2Y+kTq/MxhWQYWr8O
-	Pll3IKh+g2C10prvuvWQqLyQtjZpf3+0g6vta8XTYaRjW+f1Xwl9x1QaXXMncxLgcWVkmJk=
-X-Google-Smtp-Source: AGHT+IHnLGYjiexVyjpyM2PLfRR2Axnq7Xdo6KWRYUCGpLamUudjFaOtVpU/Aplwgvu0XsO0JkhcgA==
-X-Received: by 2002:ac2:4e04:0:b0:540:353a:df90 with SMTP id 2adb3069b0e04-54405a6912emr1688393e87.43.1738803626872;
-        Wed, 05 Feb 2025 17:00:26 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105bfc8esm2878e87.127.2025.02.05.17.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 17:00:25 -0800 (PST)
-Date: Thu, 6 Feb 2025 03:00:23 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
-Cc: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Odelu Kukatla <quic_okukatla@quicinc.com>, Mike Tipton <quic_mdtipton@quicinc.com>, 
-	Jeff Johnson <quic_jjohnson@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>, 
-	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 5/7] interconnect: qcom: sa8775p: Add dynamic icc node
- id support
-Message-ID: <ujsy5e4u7inz5mzdh5m672zkfcrd6igoypgkak2assfpvlcrve@mmjlabr6rh5a>
-References: <20250205182743.915-1-quic_rlaggysh@quicinc.com>
- <20250205182743.915-6-quic_rlaggysh@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b19ESuv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27AEC4CED1;
+	Thu,  6 Feb 2025 01:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738803970;
+	bh=HOdWJzeU3v6e7PDsfUyTV4ESJ3IStwKy6Qzl2uh6TyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b19ESuv5mEuDrPXgD70hvQXK7YAywPGwzw4sRD6Wfy+xdLrg37nMo1SyGtvIr5h2y
+	 vO5cXwRu3wADzq7QGgQqhGOLSH6hwyDpq3oiluwHkFOpMK7l65XiB+vj5TEZCkbRRL
+	 F5dFbEcOtYgQcPIH7rnYU8dvBHEnaXosbELCA2vJp7vDP3X8y9YOFKr8LoQxDIhOkI
+	 DJwxHcKWrl9Z/tePl0Igu7AFKMbGZrFVEs49BelDbgwHx8da52nZnlbS30pGnGAtpF
+	 KP+OQ+v8+OLcqnD/eZyQyd4b/RfVIfxEQV8+T0bs6dDBZm1xn6O2H+RCeVA7F5xU08
+	 5mk/JE4jZp2Cg==
+Date: Wed, 5 Feb 2025 17:06:08 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: =?UTF-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
+Cc: Laurent Badel <laurentbadel@eaton.com>, Andrew Lunn <andrew@lunn.ch>,
+ <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+ "Simon Horman" <horms@kernel.org>, Michal Swiatkowski
+ <michal.swiatkowski@linux.intel.com>, Jacob Keller
+ <jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
+ <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net v3] net: fec: Refactor MAC reset to function
+Message-ID: <20250205170608.15076b93@kernel.org>
+In-Reply-To: <7501c8ee-9272-4c13-91a9-5c614c585fcf@prolan.hu>
+References: <20250122163935.213313-2-csokas.bence@prolan.hu>
+	<20250204093756.253642-2-csokas.bence@prolan.hu>
+	<20250204074504.523c794c@kernel.org>
+	<7501c8ee-9272-4c13-91a9-5c614c585fcf@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205182743.915-6-quic_rlaggysh@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 06:27:41PM +0000, Raviteja Laggyshetty wrote:
-> Discard the static IDs from node data and set the default node ID
-> to -1 to indicate the for dynamic ID allocation.
-> Update the topology to use node pointers for links instead of static
-> IDs, and rearrange the node definitions to avoid undefined references.
+On Wed, 5 Feb 2025 14:53:50 +0100 Cs=C3=B3k=C3=A1s Bence wrote:
+> On 2025. 02. 04. 16:45, Jakub Kicinski wrote:
+>  > Please don't post new versions in-reply-to, and add lore links to
+>  > the previous version in the changelog. =20
+>=20
+> Will do. Is it okay to only include the last version, or should I=20
+> collect them going back to v1?
 
-I think it might be better to forward-declare all node entries at the
-top and then keep currently defined nodes in place. Otherwise the diff
-is pretty unreadable.
+All.
 
-> 
-> Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
-> ---
->  drivers/interconnect/qcom/sa8775p.c | 2194 ++++++++++++---------------
->  1 file changed, 962 insertions(+), 1232 deletions(-)
-> 
+> > On Tue, 4 Feb 2025 10:37:54 +0100 Cs=C3=B3k=C3=A1s, Bence wrote: =20
+> >> For instance, as of now, `fec_stop()` does not check for
+> >> `FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
+> >> a PM power-down event; and `fec_restart()` missed the refactor renaming
+> >> the "magic" constant `1` to `FEC_ECR_RESET`. =20
+> >=20
+> > Laurent responded to v1 saying this was intentional. Please give more
+> > details on what problem you're seeing and on what platforms. Otherwise
+> > this is not a fix but refactoring. =20
+>=20
+> True, but he also said:
+> On 2025. 01. 21. 17:09, Badel, Laurent wrote:
+>  > If others disagree and there's a consensus that this change is ok,  =20
+> I'm happy
+>  > for the patch to get through, but I tend to err on the side of  =20
+> caution in such
+>  > cases. =20
+>=20
+> I understand he is cautious, but I'd argue that the fact that two people=
+=20
+> already posted Reviewed-by: (not counting Simon, who since withdrew it),=
+=20
+> means that others also agree that we should err on the OTHER side of=20
+> caution, and do the check in both cases. He also mentions that the=20
+> reason he didn't do the check in `fec_stop()` was that he believed that=20
+> the only time that gets called is on driver/interface remove, but that=20
+> is not the case, as I outlined in the message already.
 
--- 
-With best wishes
-Dmitry
+That's a bit of a he said, she said. Either you're see a problem=20
+and you can describe clearly the behavior you see, and on what
+platform. Or you're just improving the code speculatively, and=20
+it's not a fix. The patch as is would end up in stable.
+
+To be clear, nobody is against the patch itself, the question is
+whether its a fix or refactoring.
